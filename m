@@ -1,139 +1,142 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB52149DF0;
-	Fri, 16 May 2025 06:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F1149DF0
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747376588; cv=none; b=svhXFLyeKpYMeowW92sztrxhZMwQeW59osxkvorgHPu42SA5pl5JRz2KL1zA4Im5uPMQjaeYdpCuSu46frRfS5ihwZ2lLDfL+2N1jTWRqZ9iQWJ/gqpal068OE25Pp7LDpr/AwbQWOmVt7wG2kRy7LV0pgIBbdPw9ebefAjhpSI=
+	t=1747376594; cv=none; b=J2L9RnhMOeF+acUuG091FOOAjml/zl1CZZ9LgyhwLyV+mok+h+PmV8r3KfFkqcQSTlwz8aiSrTkjT8lYO2YMP9WWc6AfA8NFH27GLtkOLr5Encf9he4tNMgJqOjpIj6pFl2k8hzE4LXtvk+btzqD9PkjxUR2WRDfSCM3a4fxOD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747376588; c=relaxed/simple;
-	bh=kAqlUSjGQ7XVoDiauuw37jXI/mkgMBH06rOVBpOtey0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=O298mUFAGj0sD0ZyOO78Q5heuk+y6/5zAHj7/f3J2z6avFgqOgZVhCyt3thARSqs4ISeUcFjSTGGBaAG0LFkJV8aLxpohmTfs8OOyVL3B/Qi7TmnJPGzi+jzAon1iZhz0LiIbyk3EkPLVOkwSGAPAAjBl8CHCZH011skeBg9qsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=buN4rWEW; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747376594; c=relaxed/simple;
+	bh=7djLhBvRkeKVCMCJwc7CAWFlYXM/pr3zm3nApTBdIGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JDg+FciKnGHBrC5zTtPJa/TuCpB2w0bbWGsJuos1ZwCvwpe7qDqITD9LcTUPywHfFIhYMOWdwuYvn3iOSYs142tKL3oyUpimab/RHkYtry913ShqzRleS9NQ6Ct2+wO6PoY9Zr/tsmnUyp+cWeR0FZZ5SiHR3PwTdDKDsFrucaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fcpdEcBC; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="buN4rWEW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747376583;
-	bh=61rzR6yyeTYJhtqbC+3q3R5b8i5Ra9N5t38Ao6d8M0I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=buN4rWEWF/jjUmGcRJtc4l/VrnFLg7pPtF7tHJtxyrllYG51iApcIajfGeJLWiiA3
-	 LUnw2PQFT+HevhmbRJZ1LdXXlwKURQxaB7ljsTQpydgMWZl6XHRAguImrlMWfMV/vx
-	 lAIuYdoRSE92cAi4lHdelqQh1iCH0lI8RO1J87SJPxUWLzadcp9jhkX6QKSQCJ9XN6
-	 4wJL1t9f3nBOTNZoV04OVEkD+rX6avj2O+l73id+OAzU4YfZcFBsW7Mi8g7p26pumJ
-	 6codrccu5DvskmC60gG6sWRjMe7tF1HvcHbF5Scs6sKRjTM4g4NxWrq2iBbo5tTz43
-	 ZpawER16lsy5Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzH7p45zbz4xG4;
-	Fri, 16 May 2025 16:23:01 +1000 (AEST)
-Date: Fri, 16 May 2025 16:23:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, David Miller <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, Breno Leitao <leitao@debian.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the ftrace tree with the net-next tree
-Message-ID: <20250516162301.6c5d2d3c@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fcpdEcBC"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399838db7fso1757126b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1747376592; x=1747981392; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=91sS53x9K40/gNlwhJVZ6vBGCpnRL10lMaDDn0jrpIo=;
+        b=fcpdEcBCItuF7lzMZfO90wJoueY40PcSTvUu7MgehP0NlH4aUgVq66mkbkyuetW5dU
+         PhenQXSMaK33KlaKvQ2KyQO65fs9SWIxbyUWJcmbUuPB82/L1ZoHr4l+aPetxkS6gtRs
+         zjqlfXlr6/Ju0Hoh7yVkbY1OHIksdQSivmwb8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747376592; x=1747981392;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=91sS53x9K40/gNlwhJVZ6vBGCpnRL10lMaDDn0jrpIo=;
+        b=mqLh5P0k423lgZkRRbgmYrc7eyuLAERNa5YrDRknddjSglicHVRJEKsAzBx0NgbCI+
+         O4mSINxxPdoubL6WOBzgBx80tWD15R1TM0eXASfAqrU9MzV/mjYEgS9BNBmnG5u1W9j+
+         dyqoqfE0kDR5039W8jlbFEgvOYhfaX65voAZEWFndNcRdj0dzvEpuwwUSHi3yZj1UFua
+         OXr5UMPYfDwJjDP/S8OSFOVnIlyREZYRH1xhkhf0A3fJLHmRuTtWkw/baaefa/i3KtbH
+         /a7SjBicdL2F0dm7keP46oacDDY1zd6ZpbfBZ9CEOUXBhA57Alzu5BATeOmd6/+5wgPs
+         jTmA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4WYAQCQxDvnfPyWuvbb6sYsSIg/8W8Ft6NIt4C1daH9gX9YvBShNn5v960Id+NDan7ps6+EK6gLfItd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw58YvLdFJoOIKy6CrvAvmTk5peHmfcyXRHmKLaHU57OtziF1E
+	EGrXC2S9cqNLrO4RM6VUajExbh8X8G8J6egoWwFVns1mGO6a6iPpv4jjnxqJ2Ytw/w==
+X-Gm-Gg: ASbGnctxAbCe00iRsIMOi1dSS1zBwB5OWpR9Bj05/8/y8YdrXKPRqo6aHtbJcoVbzXi
+	5trVXX7zaZkSSNgrRCrIq1Y6dvMJWF9Mc0ghOWoEuA2y3K/H9jaFm8KdJjHfSlW6IxfzekLVosS
+	jLCsKILEgCmRUSgQNlN9pFzViXfrpFf/1BsMcyoPXP/e+tw21SKxvDof1Z9iLBZCMqcIQMtNXv5
+	FAV74ZCRXyt8+yu2lbPuqP1uTsCUMzrAwHwrqEfeB/icq79X5Uba8skKKfmjkSdG/CDd7Qo4+1p
+	PJruHlXhcMVrWrc5Ruv7hfMRtv688FE3A6+i9smuidu+rr/VQbPkzj2EiqfhKpSjFK4vTkjQHPU
+	zfDy+uDjjGKo=
+X-Google-Smtp-Source: AGHT+IEymG0Hs9Aj4aSM2JFAQrsi7mocElYcrPA68mKddL1UVULiRC5o/kM2Om+UQBQ6+bG24lIVPw==
+X-Received: by 2002:a05:6a00:2885:b0:742:8cd7:740a with SMTP id d2e1a72fcca58-742a9a2b40emr2890027b3a.5.1747376591744;
+        Thu, 15 May 2025 23:23:11 -0700 (PDT)
+Received: from ubuntu.. ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96dfaa8sm824501b3a.6.2025.05.15.23.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 23:23:11 -0700 (PDT)
+From: Ronak Doshi <ronak.doshi@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: Ronak Doshi <ronak.doshi@broadcom.com>,
+	Guolin Yang <guolin.yang@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net v2] vmxnet3: correctly report gso type for UDP tunnels
+Date: Fri, 16 May 2025 06:05:22 +0000
+Message-ID: <20250516060523.10352-1-ronak.doshi@broadcom.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MhmGtAwXzQPCV1yRg=qNL6I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/MhmGtAwXzQPCV1yRg=qNL6I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Commit 3d010c8031e3 ("udp: do not accept non-tunnel GSO skbs landing
+in a tunnel") added checks in linux stack to not accept non-tunnel
+GRO packets landing in a tunnel. This exposed an issue in vmxnet3
+which was not correctly reporting GRO packets for tunnel packets.
 
-Hi all,
+This patch fixes this issue by setting correct GSO type for the
+tunnel packets.
 
-Today's linux-next merge of the ftrace tree got a conflict in:
+Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
+Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+Changes v1-->v2:
+  Do not set encapsulation bit as inner fields are not updated
+---
+ drivers/net/vmxnet3/vmxnet3_drv.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-  include/trace/events/tcp.h
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index c676979c7ab9..287b7c20c0d6 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -1568,6 +1568,30 @@ vmxnet3_get_hdr_len(struct vmxnet3_adapter *adapter, struct sk_buff *skb,
+ 	return (hlen + (hdr.tcp->doff << 2));
+ }
+ 
++static void
++vmxnet3_lro_tunnel(struct sk_buff *skb, __be16 ip_proto)
++{
++	struct udphdr *uh = NULL;
++
++	if (ip_proto == htons(ETH_P_IP)) {
++		struct iphdr *iph = (struct iphdr *)skb->data;
++
++		if (iph->protocol == IPPROTO_UDP)
++			uh = (struct udphdr *)(iph + 1);
++	} else {
++		struct ipv6hdr *iph = (struct ipv6hdr *)skb->data;
++
++		if (iph->nexthdr == IPPROTO_UDP)
++			uh = (struct udphdr *)(iph + 1);
++	}
++	if (uh) {
++		if (uh->check)
++			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL_CSUM;
++		else
++			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL;
++	}
++}
++
+ static int
+ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
+ 		       struct vmxnet3_adapter *adapter, int quota)
+@@ -1881,6 +1905,8 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
+ 			if (segCnt != 0 && mss != 0) {
+ 				skb_shinfo(skb)->gso_type = rcd->v4 ?
+ 					SKB_GSO_TCPV4 : SKB_GSO_TCPV6;
++				if (encap_lro)
++					vmxnet3_lro_tunnel(skb, skb->protocol);
+ 				skb_shinfo(skb)->gso_size = mss;
+ 				skb_shinfo(skb)->gso_segs = segCnt;
+ 			} else if ((segCnt != 0 || skb->len > mtu) && !encap_lro) {
+-- 
+2.45.2
 
-between commit:
-
-  0f08335ade71 ("trace: tcp: Add tracepoint for tcp_sendmsg_locked()")
-
-from the net-next tree and commit:
-
-  ac01fa73f530 ("tracepoint: Have tracepoints created with DECLARE_TRACE() =
-have _tp suffix")
-
-from the ftrace tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/trace/events/tcp.h
-index 006c2116c8f6,4f9fa1b5b89b..000000000000
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@@ -332,31 -259,7 +332,31 @@@ TRACE_EVENT(tcp_retransmit_synack
-  		  __entry->saddr_v6, __entry->daddr_v6)
-  );
- =20
- +TRACE_EVENT(tcp_sendmsg_locked,
- +	TP_PROTO(const struct sock *sk, const struct msghdr *msg,
- +		 const struct sk_buff *skb, int size_goal),
- +
- +	TP_ARGS(sk, msg, skb, size_goal),
- +
- +	TP_STRUCT__entry(
- +		__field(const void *, skb_addr)
- +		__field(int, skb_len)
- +		__field(int, msg_left)
- +		__field(int, size_goal)
- +	),
- +
- +	TP_fast_assign(
- +		__entry->skb_addr =3D skb;
- +		__entry->skb_len =3D skb ? skb->len : 0;
- +		__entry->msg_left =3D msg_data_left(msg);
- +		__entry->size_goal =3D size_goal;
- +	),
- +
- +	TP_printk("skb_addr %p skb_len %d msg_left %d size_goal %d",
- +		  __entry->skb_addr, __entry->skb_len, __entry->msg_left,
- +		  __entry->size_goal));
- +
-- DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+ DECLARE_TRACE(tcp_cwnd_reduction,
-  	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
-  		 int newly_lost, int flag),
-  	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
-
---Sig_/MhmGtAwXzQPCV1yRg=qNL6I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgm2cUACgkQAVBC80lX
-0Gy1XAf/TQNrX/392lAmxGaLAFewkcu0ip+zR8lrguAon5p8FrCWHj4SSCuxtDXu
-JtzjbscSAqXI79g2B1wV4V/nSnFtHap4hlck41s6OR+hRK3TnzBj44mzOJ22mF3M
-1+gkfAaCA/zmyk2FuGL7tH+AdqOyozOgISi8iSU6P9zLcj1ubLclarC0hWf3+Vv/
-rNbjN37pL7QnZ8TMMq2Wknb/5QrXJphmFaMHrqGl8w9lOyDYaiDI+yqsPLz0t5gr
-RRinFkOV+pO8dKgvBGRLC1YtKTI+xctsu2JhOltRfs10ad5dt8/jUps8i1HOPq47
-BCn28/dbzl5d4fc4N/7Y31wEx6Zqdw==
-=ELlq
------END PGP SIGNATURE-----
-
---Sig_/MhmGtAwXzQPCV1yRg=qNL6I--
