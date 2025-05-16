@@ -1,123 +1,177 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from jeth.damsy.net (jeth.damsy.net [51.159.152.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC49320B807;
-	Fri, 16 May 2025 08:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DA521FF4A;
+	Fri, 16 May 2025 08:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.152.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747382479; cv=none; b=FoKFV2Q77hFqR9yd+VFjHMgfFRXaBduUFIhy88fGwHgmSgjAriy/LzbJ5hU3WyVKY1778lMWOEZ28saCf/+Xmlmx1EjLJCIDxzyvIcZ6/HifmmA9XugG4054CYv2f1Bdd/HXGa8HhGoJzN3wKjt4noLjHxNP3mgdPyfTFdbL/18=
+	t=1747382503; cv=none; b=tcT6pRHErEd3c1YN1VyfjTN8ZGTaa2wsQh5Mp36xOisC4hrfDR+medADCpSlwNbDQQ5UArnFq6U0fHK1/SPMx7fW1Z/0uOAXjM7T1wOFaQ6DbyZCU8hHP2wBxlBzuzeJ5Xfx5orqBTWZPv5jrbYpWu5SIsm55rcAT8G2D2KSVr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747382479; c=relaxed/simple;
-	bh=wIjTiwi1RCwoRNBe09BLJXxzhYLSf+aCXPd/oQh3fI0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U+hJtlG0MCPCXt4hRTSKZb//QS3/z61GkCTed6On+OBd/hklpzSoyHJyZ4oRduDM217RF0muAsUBKcQR3AmUsyMbuBtKpF0EdgW8WUnNuGGiYSv/YpTrwd0ySLcl/22HtF6Pf2tAz1hnJc78SRMvdcgVsYSEisAzlF7ongLT+Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NckPpyb9; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1747382503; c=relaxed/simple;
+	bh=yUSd1lLOUTfXqwk/RalMi6aO3FyaQpO1WZ3T1xPz8kY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aJ3uUunyhD1mAMJAYKlbzcGg7ZN1wZy62MfFsHPjWmY7j/fpl8n8XOBvzfx06/Q8Cz3U54FPnUDi8W4CJ14SDXt/gDgar6qNEFuQTrtS50c3FQGQxTpejrTvEWa1sYgMX/Cx28gyY76XmFOxHHt1k7yHlfXcWYWdFrc7NvSKBhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damsy.net; spf=pass smtp.mailfrom=damsy.net; dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b=CgXcYEZX; dkim=permerror (0-bit key) header.d=damsy.net header.i=@damsy.net header.b=cr+6076D; arc=none smtp.client-ip=51.159.152.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damsy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damsy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NckPpyb9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=X1HXctmWs4+Ph3l5TlPhcon/Scqg6QqLW4qi06AARVA=;
-	t=1747382477; x=1748592077; b=NckPpyb9AnoSGYjUTsdxMl2Wx52BUVz7npBhjgQs+hRJA9k
-	uXvLNAIeoYE0XPPT6RNkPUkL0Ww0hxmuhdL1r7G4h5VWx9g7kx5JV9OzjGVeyP12Ho0aiZBt9RKN8
-	hcChsB0I/B5A7W3SZIbuXOmWshJjvfDgHYPxbKHuwhPZo6C1uzQ+L5bs+YLvn4TV7iBsnOn8fFLxJ
-	miF2tHdz6LbQ8V8lgzhOizDJ9Wkkqtk0MpCc0JWiMcNpkZXXk+/aM52oF2KrS4rv4ineZAECRx/fn
-	ZyxjgPB7lY+XmtczTQOtRIG4lTuR4ltQd2Q66qhpL7/5jo2f65d5hXr1mesdOwzg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uFq0G-0000000E1g6-0yF3;
-	Fri, 16 May 2025 10:01:12 +0200
-Message-ID: <d23e55879c6d8b6cabcc8357f153ae0622a4c53a.camel@sipsolutions.net>
-Subject: Re: [PATCH wireless-next 2/3] wifi: mac80211: Allow scan on a radio
- while operating on DFS on another radio
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 16 May 2025 10:01:11 +0200
-In-Reply-To: <20250514-mlo-dfs-acs-v1-2-74e42a5583c6@quicinc.com>
-References: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
-	 <20250514-mlo-dfs-acs-v1-2-74e42a5583c6@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b="CgXcYEZX";
+	dkim=permerror (0-bit key) header.d=damsy.net header.i=@damsy.net header.b="cr+6076D"
+DKIM-Signature: v=1; a=rsa-sha256; s=202408r; d=damsy.net; c=relaxed/relaxed;
+	h=From:To:Subject:Date:Message-ID; t=1747382182; bh=YPy+tEZL6apKgfvAMCRSsSk
+	8zKBxHWC7t2m1Vfn3jPs=; b=CgXcYEZX8hN/Q2e8M/80XSvSboXrdC5slsIEaxO8MEjbT6Mt06
+	NdM43xSHHG2AVxLNrAJ4Z/rw82f8ujBNTnDLilcOjG59X7I7rVHF//JMltYERkh69ySJFndsqSx
+	2HhmYqvQC7SUV5omtgvmMwLo0ARUefbpfAS/r+YYeQl/GundzUUsICBAzgrplwocwNIoenYkdiW
+	goHq/TnW15uWBkrP31QDMpLX2C8+q4Gm30YK12rfwlU0W2q4vIPu1XLqmwTw79bf5dWhsKd/qJi
+	RepcAKpFb9Gsi4geYsjwp19Die7hbGY4GrXm9agLG5xJ3BpvoG7HBdb1iKUDvsec6cQ==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202408e; d=damsy.net; c=relaxed/relaxed;
+	h=From:To:Subject:Date:Message-ID; t=1747382182; bh=YPy+tEZL6apKgfvAMCRSsSk
+	8zKBxHWC7t2m1Vfn3jPs=; b=cr+6076Dkxypklpp92ebvSZPCsy2GPT7BKIzpqigg57qRQwr/u
+	kl/P0+TezIcHj+VIk3KIKeqKsYydjFqRI+Aw==;
+Message-ID: <7f04847e-9549-47cc-9b61-7b32df24ef8e@damsy.net>
+Date: Fri, 16 May 2025 09:56:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 09/10] drm/doc: document some tracepoints as uAPI
+To: phasta@kernel.org,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Jonathan Corbet <corbet@lwn.net>, Matthew Brost <matthew.brost@intel.com>,
+ Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Lucas Stach <l.stach@pengutronix.de>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
+ <20250424083834.15518-10-pierre-eric.pelloux-prayer@amd.com>
+ <27825c551adeda28f4b329f44c316ad2ab67fa5d.camel@mailbox.org>
+Content-Language: en-US
+From: Pierre-Eric Pelloux-Prayer <pierre-eric@damsy.net>
+In-Reply-To: <27825c551adeda28f4b329f44c316ad2ab67fa5d.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-05-14 at 16:58 +0530, Raj Kumar Bhagat wrote:
-> Currently, in multi-radio wiphy cases, if one radio is operating on a DFS
-> channel, -EBUSY is returned even when a scan is requested on a different
-> radio. Because of this, an MLD AP with one radio (link) on a DFS channel
-> and Automatic Channel Selection (ACS) on another radio (link) cannot be
-> brought up.
->=20
-> In multi-radio wiphy cases, multiple radios are grouped under a single
-> wiphy. Hence, if a radio is operating on a DFS channel and a scan is
-> requested on a different radio of the same wiphy, the scan can be allowed
-> simultaneously without impacting the DFS operations.
->=20
-> Add logic to check the underlying radio used for the requested scan. If t=
-he
-> radio on which DFS is already running is not being used, allow the scan
-> operation; otherwise, return -EBUSY.
+Hi,
 
-So while I agree in principle, I think this needs to be more carefully
-constructed because it relies on an unstated (?) assumption that each
-radio is going to ever be used for scanning on a certain band. That
-seems to make sense, and a radio will certainly only ever be able to
-_operate_ on the frequencies listed for it (due to chanctx etc.), but is
-it really true that it will never be able to operate at all on other
-frequencies?
+Le 14/05/2025 à 14:53, Philipp Stanner a écrit :
+> On Thu, 2025-04-24 at 10:38 +0200, Pierre-Eric Pelloux-Prayer wrote:
+>> This commit adds a document section in drm-uapi.rst about
+>> tracepoints,
+>> and mark the events gpu_scheduler_trace.h as stable uAPI.
+>>
+>> The goal is to explicitly state that tools can rely on the fields,
+>> formats and semantics of these events.
+>>
+>> Acked-by: Lucas Stach <l.stach@pengutronix.de>
+>> Acked-by: Maíra Canal <mcanal@igalia.com>
+>> Reviewed-by: Christian König <christian.koenig@amd.com>
+>> Signed-off-by: Pierre-Eric Pelloux-Prayer
+>> <pierre-eric.pelloux-prayer@amd.com>
+>> ---
+>>   Documentation/gpu/drm-uapi.rst                | 19
+>> +++++++++++++++++++
+>>   .../gpu/drm/scheduler/gpu_scheduler_trace.h   | 19
+>> +++++++++++++++++++
+>>   2 files changed, 38 insertions(+)
+>>
+>> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-
+>> uapi.rst
+>> index 69f72e71a96e..4863a4deb0ee 100644
+>> --- a/Documentation/gpu/drm-uapi.rst
+>> +++ b/Documentation/gpu/drm-uapi.rst
+>> @@ -693,3 +693,22 @@ dma-buf interoperability
+>>   
+>>   Please see Documentation/userspace-api/dma-buf-alloc-exchange.rst
+>> for
+>>   information on how dma-buf is integrated and exposed within DRM.
+>> +
+>> +
+>> +Trace events
+>> +============
+>> +
+>> +See Documentation/trace/tracepoints.rst for information about using
+>> +Linux Kernel Tracepoints.
+>> +In the DRM subsystem, some events are considered stable uAPI to
+>> avoid
+>> +breaking tools (e.g.: GPUVis, umr) relying on them. Stable means
+>> that fields
+>> +cannot be removed, nor their formatting updated. Adding new fields
+>> is
+>> +possible, under the normal uAPI requirements.
+>> +
+>> +Stable uAPI events
+>> +------------------
+>> +
+>> +From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
+>> +
+>> +.. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+>> +   :doc: uAPI trace events
+>> \ No newline at end of file
+>> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+>> b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+>> index 781b20349389..7e840d08ef39 100644
+>> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+>> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+>> @@ -32,6 +32,25 @@
+>>   #define TRACE_SYSTEM gpu_scheduler
+>>   #define TRACE_INCLUDE_FILE gpu_scheduler_trace
+>>   
+>> +/**
+>> + * DOC: uAPI trace events
+>> + *
+>> + * ``drm_sched_job_queue``, ``drm_sched_job_run``,
+>> ``drm_sched_job_add_dep``,
+>> + * ``drm_sched_job_done`` and ``drm_sched_job_unschedulable`` are
+>> considered
+>> + * stable uAPI.
+>> + *
+>> + * Common trace events attributes:
+>> + *
+>> + * * ``dev``   - the dev_name() of the device running the job.
+>> + *
+>> + * * ``ring``  - the hardware ring running the job. Together with
+>> ``dev`` it
+>> + *   uniquely identifies where the job is going to be executed.
+>> + *
+>> + * * ``fence`` - the &dma_fence.context and the &dma_fence.seqno of
+>> + *   &drm_sched_fence.finished
+>> + *
+>> + */
+> 
+> For my understanding, why do you use the double apostrophes here?
 
-I'm not sure I find the notion of e.g. having a 5 and 6 GHz radio that
-are used for operating on those bands, but being able to scan 5 GHz
-channels using the 6 GHz radio completely unimaginable? Maybe it is
-though and I'm just overly paranoid?
+To get similar formatting to function arguments and make the output a bit nicer to read.
 
-We could also just leave that up to the drivers, of course, but then I
-think we should _state_ this assumption somewhere in the docs/header
-file(s)?
+> 
+> Also, the linking for the docu afair here two requires you to write
+> 
+> &struct dma_fence.seqno
+> 
+> If I am not mistaken
+> 
+> https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#highlights-and-cross-references
 
-> +bool ieee80211_is_radio_idx_in_scan_req(struct wiphy *wiphy,
-> +					struct cfg80211_scan_request *scan_req,
-> +					int radio_idx)
-> +{
-> +	struct ieee80211_channel *chan;
-> +	int i, chan_radio_idx;
-> +
-> +	if (!scan_req)
-> +		return false;
+Indeed, thanks. I fixed this.
 
-That seems overly paranoid, or maybe it should be WARN_ON()? I mean,
-asking something about a scan request and then not giving one is just
-the wrong thing to do in the first place, no?
+Pierre-Eric
 
-And if you're going to be paranoid then this probably shouldn't be
-called with an invalid/negative radio_idx either :)
+> 
+> 
+> P.
+> 
+>> +
+>>   DECLARE_EVENT_CLASS(drm_sched_job,
+>>   	    TP_PROTO(struct drm_sched_job *sched_job, struct
+>> drm_sched_entity *entity),
+>>   	    TP_ARGS(sched_job, entity),
 
-
-> +	for (i =3D 0; i < scan_req->n_channels; i++) {
-> +		chan =3D scan_req->channels[i];
-> +		chan_radio_idx =3D cfg80211_get_radio_idx_by_chan(wiphy, chan);
-> +		/*
-> +		 * Skip channels with an invalid radio index and continue
-> +		 * checking. If any channel in the scan request matches the
-> +		 * given radio index, return true.
-> +		 */
-> +		if (chan_radio_idx < 0)
-> +			continue;
-
-This seems ... wrong? If there's a channel in the scan request that
-didn't map to _any_ radio then how are we even scanning there? And the
-comment seems even stranger, why would we _want_ to ignore it (which it
-conveniently doesn't answer)?
-
-johannes
