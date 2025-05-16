@@ -1,65 +1,65 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D2572619
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148A144C77
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402500; cv=none; b=OJAATzcXGCG76inwNoBpLDfeRyCQ1uML9MhE32Fud0/VRyuXcO/MeB2nd172GIxUQziOtgebVNU7R5fLcN5Gtr55hofDBw1iLVs0Oq2Mh0XTzdxYUnrfmtQ/zdFwgOOtCuC52/1acpyAmlXLw9+6KRWN9waSap3t+EvN48mSVnE=
+	t=1747402546; cv=none; b=o2RAod/gYThDwwtPutB0XtpE03h6Ucco/J2yGU8ma+SO1i8VyEJHoGqmPVEJAzkmCryczocyYVD5blBkkKui15EAAbO1v1HhBy2hlKprWCYyWOqOaFj3eXxFYRPgOQm6f5OpzA2J35ggPKr1ntreGedDisxtuoh7W7PiTw4D03c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402500; c=relaxed/simple;
-	bh=XZ67zxckQNWX2u4GAkUhy4uGKDY0CIx1jcYW19gYh5A=;
+	s=arc-20240116; t=1747402546; c=relaxed/simple;
+	bh=mbNJO6rbhRMwuIoVTU8ZDSG2mOIuj9eAx47BnBtUGTw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jeFs/oFeX1RMBsKfT6JDrY3MVQ44vzPg9H1sf2D6LOhgrMLqBBi5/TdG6YxING/L50U2xp3n8AFR80c0lvQ/W4hqtqI1Se+FG6NAjiigE8NO1Ynvql3MhMKzOYRzGWVpyGTpz94l5UT262d9eIvlTe/ngAcCRvYM52Z3asC0hlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h6TxgVnd; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=row8toJT/HqLQze+yl3wNASY12dHZbXVCmWSFXEFBctOSQLq01qztdGtdgHlZ3WZcmV4rt+vWG+BHUVqUTMF5miA44055cXQS3owQlcrQgLHpozFqP8pD9ac21VX9+FmO6HCj0etTdFOOiOvd6ARkTKDyN5UG2oR441vZJAw9XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XCZwYujY; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6TxgVnd"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26f30486f0so529512a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:34:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCZwYujY"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22fb8cfff31so16382805ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747402498; x=1748007298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747402544; x=1748007344; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCKX2+ubPZmRS49k2Vh1SgSk5f8TvOPmMU2uJSUuFS4=;
-        b=h6TxgVndGQHappGd+FzJsGxGYHOJsYWjSTvxPqMa6FHfl4H9fnbSgyxj30YjDoZjTq
-         Zh/G8qkFBln8Wfb0x0xrBYw02Q9f6Gq3mkEx5Aw0tJhLqFV1eFmwIaPDDc/9c+QocaOm
-         r2FhljLoVkFiyk6u0vvmzUVyU7IDQ/BwKHhY8cKDvMx2COUt/dJ9odiNykCwpoqu6dD9
-         nNHNv72+dyjtv08E9BgpFHD1dbqM70kbxGlDUCA0g6ohaqg4f/IrMXo6W6k9ZAeqTQkG
-         Nf1QIbRqlXgw++owhq80lkFcIjEzh5fI5HwMkvFudDVhewia+UpASulWYaScvDIXT/WP
-         9P8A==
+        bh=LnEPS5xIYcZ/9QBFlM2YvgXWlEvCitmvF/+QPuGAd2E=;
+        b=XCZwYujYQfYJsx/wj/myE0yvEc3xR3IA8lSVucuBObUMrXF0cIxgmbGCIv0rkbooja
+         xSeje9BnYXphJu5V8YW6g3C+pEvb9XPeeRzWczYqzkNtme49LMmGawLHABx5QNK2Kzur
+         TLzRs5MURdmLNJ3sDfhFVD+RIIg1TgxHKgbhMKfcvQyycJvB/G5/0dADnJiOugPh45gH
+         srDS0nC447YKE2NFgChNM9iNTe34/ArNk43WTAkuB03R8jFIL7yOgef67XMZUUaTaNLt
+         nNEr4dE+N7eyVAcFYZxfCJImugtEfmd4CtbLkmBbZAYaDOHz+Qok1Fhu3poTvbDrxmqQ
+         ZXkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747402498; x=1748007298;
+        d=1e100.net; s=20230601; t=1747402544; x=1748007344;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCKX2+ubPZmRS49k2Vh1SgSk5f8TvOPmMU2uJSUuFS4=;
-        b=GsrE7kWjuafgX9hztt1/mXHu68dz11kTe06X0fiasoY8DyaYkvtIxdQ13Wlvtv9nsv
-         2BCfVTSIiIHndEsUJNHaeynmyZyk1SQC174Af0I4G3lItqLJNeqI6tZ9OkuFSnU33T89
-         kxJNYR+Z4kI7MTdFL55XP9Hzo3bR5e+VnbypFuHXemb9JjiFOI+LHFmzewX95g+y78T3
-         GyteJ2AzoZSYq0NMueRgcbpZF5JV6BBl1/8RN/07290K7Sh7LXQvLoX5Fr485SIQdOBG
-         dNdjuDNxwyDdq8lqv0z/gPzEVhbxGup/sMpxENgUH5pMRaBDPOq9tu5srjdQmg6iyXL4
-         mg2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWHonQf8cvQYHhgSkRECjyeylWvviDhutUafD6j5OvzE4J6Np6BObRDgrRgjZUohdv/1tyQ4ef8Xs0TWPw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz57icVgXBJz6X046yHUER4jgiLmf87wy3b0Nd7VMmK4i+ENCJP
-	o7c1Lqzh9nYu3KVLfBh16MRqREc0I6sd6HYrR0SNbdXnUcsi5PhrKSi9c20xkW5iPL9C6pPnGV2
-	hQFg/Jw==
-X-Google-Smtp-Source: AGHT+IHLZNDF6HDiaoIz/4c+rIDHTeF2k0UX9aFwOocIQqarWYVmipuqs3QX1FVECT5G/EZSswsfILH07BU=
-X-Received: from pjbpt6.prod.google.com ([2002:a17:90b:3d06:b0:30a:7da4:f075])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2ce:b0:2f9:c56b:6ec8
- with SMTP id 98e67ed59e1d1-30e7d52214amr5168883a91.10.1747402498195; Fri, 16
- May 2025 06:34:58 -0700 (PDT)
-Date: Fri, 16 May 2025 06:34:56 -0700
-In-Reply-To: <20250324173121.1275209-24-mizhang@google.com>
+        bh=LnEPS5xIYcZ/9QBFlM2YvgXWlEvCitmvF/+QPuGAd2E=;
+        b=fV6yT4vkiIumyazefJGV6dJglobLphJJnurBsiSdNV7QgZvdWQB0dLvuFcz/Yb2O/5
+         sqKItbxM/ppKqm8eIjEwHBchJTKTMvNzJ8Fbj2Ds4zP6LYDoWaIEM6194ct3ot/+gH8N
+         dv9xr1mqs32Rb1yreBOQpZ95KY755/iFPMIwQ8diCLUCEYc2+4o6votOBdaCIOLYZfh8
+         VOlLN3auwYLQHLVjVTvfnDhuMIiYDR2M2IKraO0MZlC3kLKLs/EIyOBglF5GzMNFgEeU
+         me0h1Hn0J4qbuC8Q7iSo9Xv/EBQx56fLehblz7dqAHfefqz/sukALVJFIvDde40QUVRx
+         hTAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU67yKARr8t7quL+UrtF8x1758zuohqzhTEiG/k3LVa78krAtSPjod30CJisJshAWRsqskN0bSQnz5ceAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXpahG4mAJJ3IeCWuqn6Eg3WfaxV7auYWprmGcJDIx1+79D5QI
+	iOFFKpU2pLlQsas8LEDgnyJF3CGe6NUgjRLVmVb0yCqjvcjqTIIfxftF5yDp6bz4IYgYjZ7A/IP
+	DUYjuiw==
+X-Google-Smtp-Source: AGHT+IGYPJLPbPNyk9fQYDfhkPqOAQlx8+ac872IbMGJ++7mqndtzn4UY6HAjcLA0ay95SrGo+cLkFm5AkA=
+X-Received: from plblm14.prod.google.com ([2002:a17:903:298e:b0:220:ca3c:96bc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1ca:b0:221:78a1:27fb
+ with SMTP id d9443c01a7336-231d438a223mr46909995ad.11.1747402544334; Fri, 16
+ May 2025 06:35:44 -0700 (PDT)
+Date: Fri, 16 May 2025 06:35:42 -0700
+In-Reply-To: <20250324173121.1275209-25-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-24-mizhang@google.com>
-Message-ID: <aCc_AMOUiw69SiQr@google.com>
-Subject: Re: [PATCH v4 23/38] KVM: x86/pmu: Configure the interception of PMU MSRs
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-25-mizhang@google.com>
+Message-ID: <aCc_LmORNibXBt8V@google.com>
+Subject: Re: [PATCH v4 24/38] KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -78,20 +78,47 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> +static void amd_pmu_update_msr_intercepts(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct vcpu_svm *svm = to_svm(vcpu);
-> +	int msr_clear = !!(kvm_mediated_pmu_enabled(vcpu));
-> +	int i;
-> +
-> +	for (i = 0; i < min(pmu->nr_arch_gp_counters, AMD64_NUM_COUNTERS); i++) {
-> +		/*
-> +		 * Legacy counters are always available irrespective of any
-> +		 * CPUID feature bits and when X86_FEATURE_PERFCTR_CORE is set,
-> +		 * PERF_LEGACY_CTLx and PERF_LEGACY_CTRx registers are mirrored
-> +		 * with PERF_CTLx and PERF_CTRx respectively.
-> +		 */
-> +		set_msr_interception(vcpu, svm->msrpm, MSR_K7_EVNTSEL0 + i, 0, 0);
+> Reject PMU MSRs interception explicitly in
+> vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+> specially handled in intel_passthrough_pmu_msrs().
+> 
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 38ecf3c116bd..7bb16bed08da 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -165,7 +165,7 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+>  
+>  /*
+>   * List of MSRs that can be directly passed to the guest.
+> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
+>   */
+>  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+>  	MSR_IA32_SPEC_CTRL,
+> @@ -691,6 +691,16 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+>  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+>  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+>  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> +	case MSR_IA32_PMC0 ...
+> +		MSR_IA32_PMC0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> +	case MSR_IA32_PERFCTR0 ...
+> +		MSR_IA32_PERFCTR0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> +	case MSR_CORE_PERF_FIXED_CTR0 ...
+> +		MSR_CORE_PERF_FIXED_CTR0 + KVM_MAX_NR_FIXED_COUNTERS - 1:
+> +	case MSR_CORE_PERF_GLOBAL_STATUS:
+> +	case MSR_CORE_PERF_GLOBAL_CTRL:
+> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+> +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+>  		return -ENOENT;
+>  	}
 
-This is pointless.  Simply do nothing and KVM will always intercept event selectors.
+This belongs in the patch that configures interception.  A better split would be
+to have an Intel patch and an AMD patch, not three patches with logic splattered
+all over.
