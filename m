@@ -1,98 +1,126 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D11ADC90
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1982CCC1
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414017; cv=none; b=kVBZo0eLPJfxhBESOvaaneP5ufqTF+K3NpN9evwmbt5zBgSDkmkj6racMyVATqkQusQ0z4j9WBnZ1SvrM+gJyFhxdz7kPIzBRMJ96TwE26xrpODABlCzuAMGsyDe7wrA/ecRLMaTtJLAnjSNreeO2llUuz6h1y9zMLDJCNo8rMU=
+	t=1747414125; cv=none; b=XRubk4J9xw2Tczt20Rly06xLod55tufhy0yLaeM13VUB3T8b5/upV+lWqYCTG5StLt8R4sjrce8nZrrjLNGEX/SdXc6ygaNu3aUnjMoH75Sdg4dyBeIvu0ZChVL5TzEjQfVqihq/DLpHpM/w0mfUuAsvadd8z86yULhOtaM77XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414017; c=relaxed/simple;
-	bh=GdgwDP/G2YbRSycSz415s/ivN3fJsMLeSCALtGmBj4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hj5bMrEZWM+NvvfAJuVCartwhgERkawyA7tN+jVUuX6fAfZE35F9PNOCQbeNu1RS9gjSaAOAioZGilfy6z8MLez3afPbMYbT1pBMxdmHbdMb9SuB6A/Yhr2K8q/0GR6LmbY8k0DCuUilqL0j6M8/B7mm7it2MNFxnaoJr/JEnJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJMZwbGO; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747414125; c=relaxed/simple;
+	bh=1zqbrZGpx4267oH+VbULHqmi+QRRaZj0YbEMM5o2fIo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eT3Zpoka4h6DCVwMVoTWgnTfmI5oeJhnqP8E9IxGGUKPjg2O5nwDlpF6o4r8vJXsS20E7yX0kpbrba0wm6044ZVIPDPC8G5R8rCIv6sCk1F4XosAQ/cQjxos3ejKmtMsdzRkbenW+haBt8pcpaG8HWc+sx8PGvcvLrXqJRg5JNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p6mv6D9G; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJMZwbGO"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7426159273fso2555219b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747414016; x=1748018816; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YBuEoZux2UjBM1AWnVLvCpSSM8NTgAGMcC8oduqU5XA=;
-        b=QJMZwbGOk6J5TBNeFfsRY83yHpKfXJ5LcdKDcj4Ptf89b7mlHFBaKdBvXy/p+wyWxd
-         zLiwgN31r8vyYm/CMTXRLhhpGHv4wta2J8KaWdTq5qC0tnVlCn2UlgQoj1JDS/+NG0BS
-         gS3Rk3tMUAD7B1AZUWsxsvkxABJY3a3aTVPBruuQGGQJ+QtHse/ytOgRONA2yCbWy0BL
-         YxdWp2Ze2G6f3wAaxsvRsSmDpg6EVXeC7ONshKaBL8aFCDvrGPjV56Po2IuDPyacyI9o
-         eWH/Hfei6Ngr9aH2qmyFzfHS4FSf2dlKrysmaIUFha3bjIVdSeS1+1HQqayoC8/9hOHA
-         GllQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747414016; x=1748018816;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YBuEoZux2UjBM1AWnVLvCpSSM8NTgAGMcC8oduqU5XA=;
-        b=XrbPV7PgQwn9J3bq2M6Jo2rj19/Ft+qy7VTQnY3oEDACLdaVFH8zJ19niifGfywMCY
-         Mf99I2/a35996Yh5LTKKkCiZ+MbL1VHRoFNfP4o4IJG9H2LdMSvjXh5B/4kjEGtpFZt/
-         lMVmDhqmR0cYvDVHaxnuu+L70RDwzlBOA5PErAzDUgwCPd55OMuGyoKaHDtL3qJAfaC3
-         7vcQNyR0xXsm7ayIutrdnD/ycWXO/976gv61nZ3WE9TLiECu+3ByZpj7xM87CmmslDT2
-         XECHHtDuIjVZUiuBGL8LjWlbJJDSUOIaFkqhyNhaL/arU/IYXnRDTVVLs0I0glS8WiVL
-         RANg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTTt6Lym1GMyM9NT3eGc5uSM6ZauJE8oyi+uzpNUwfS3wuKTMc4aZwEfrcSzOgEF2T4qJ+BYUIzVsvqLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNuPGG/zrEufLbYSxg4Q7B6XKYRtIUd9DWoe77olNb+OUd+sIs
-	691HOiCSdx9Fclz0ZJAwFrH/pSeB1aDZjew7aLrpI8U2OWf9BQ/Jh9/P
-X-Gm-Gg: ASbGncs9OkMG57R84oXjtdjIM1oF5/1Fhf/T2ByKGpUUI5cjcp5BHLTK67t4sz5iTpc
-	PE9jBmQIMr3f23TJSjeYHsaV5TIkcMtltzgCrxna/yotoxPlnDH4Q7PlDWGBJUKvOLCw+LR8O8U
-	a7UAj3eg6byhJzlWLOgzN2kSfROOjvhV2MK2yTAJK04vFZOonJvWslGTd9tLy33qR6/jAclOwTT
-	Z2YiNCa+PnY5/OqWSM2IRGEni1zc4jUgTxz9DlpQY722qt0v1yGtfzPdsqEU+N6pF0L9oOOG+g4
-	gN0CfSlJ9jb6zqPxFxBrkBuaXs6r5Z27UbJnVgMMKGdSgMk6J/48
-X-Google-Smtp-Source: AGHT+IE7BWc1FIRYbVEI+k1bCx13USqZPfGcgw7ksFwL7J0sVNYerNVONgPi2LwWYbdG9vKS9dPfnQ==
-X-Received: by 2002:a05:6a20:6a28:b0:201:4061:bd94 with SMTP id adf61e73a8af0-2170ccaf4e4mr4769760637.19.1747414015546;
-        Fri, 16 May 2025 09:46:55 -0700 (PDT)
-Received: from fedora.. ([103.102.144.172])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a32f8sm1791702b3a.173.2025.05.16.09.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 09:46:55 -0700 (PDT)
-From: Nidhish Chauhan <solemnsquire@gmail.com>
-To: skhan@linuxfoundation.org
-Cc: Nidhish Chauhan <solemnsquire@gmail.com>,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: filesystems: removed repeated word
-Date: Fri, 16 May 2025 22:16:43 +0530
-Message-ID: <20250516164648.15396-1-solemnsquire@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p6mv6D9G"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 427F6439B2;
+	Fri, 16 May 2025 16:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747414120;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=u67y+PxjqNGnhDEAS0aXR4UPt8Hc/le9hjcGHqYdEHU=;
+	b=p6mv6D9GJeRLeZED5h3yANz4ZPQLeix8vhRp1vxligLK4ImCq07Ci8X3eap0IMVpypq6Td
+	ZiR84hhLwi83tKGUaMKTqbdCVboLErpoliz4difn2vqIHdACf3kIGlAzm42YkQlHpZ7SNU
+	m4qp6q+b2hDVdQrwx8fMIYuPDzxKKas//d9DEOytowPTvJeDJRaPDLLgm+h5Aq7n9AMq5y
+	Dcp1a/jQaRfKt/t5cSKFy1kruQjl4pe9OfBEBsL0H15KvH0jHPryWsy9kgdXheJnuK3dpe
+	qbsczp1/UHJgzXKV9oFnywZwDSETs1qHD9guOotjZnIKeFayAq73rbWzPf6y4A==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH v8 0/3] drm/bridge: add kunit tests for
+ devm_drm_bridge_alloc()
+Date: Fri, 16 May 2025 18:48:36 +0200
+Message-Id: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGRsJ2gC/32NQQ6CMBBFr0Jm7ZgGwRZX3sOwKO1UJgFK2qbRE
+ O5uJXHrYhbv//w3G0QKTBFu1QaBMkf2SwF1qsCMenkSsi0Mtahb0QiFNsw4BLal0dPkDdpyiWL
+ C+iqtE5acUgLKfg3k+HW4H33hkWPy4X28yvKb/qzdH2uWKFBfjG6GTraddPfB+zTxcjZ+hn7f9
+ w/8ZL2BxAAAAA==
+X-Change-ID: 20250408-drm-bridge-alloc-doc-test-267df0def880
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejjefhgfffleevhefhfeduhedtfedttedtkefgkeeuieehtdeifeduveejffevgeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhis
+ hhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehprghulhhksehshihsqdgsrghsvgdrihhopdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Removed a repeated word 'at' from journalling.rst at line no. 96 in
-filesystems directory.
+This small series adds a few kunit tests for the new DRM bridge allocation
+flow, based on the recently introduced devm_drm_bridge_alloc() [0].
 
-Signed-off-by: Nidhish Chauhan <solemnsquire@gmail.com>
+It is part of the work towards removal of bridges from a still existing DRM
+pipeline without use-after-free.
+
+The steps in the grand plan [1] are:
+
+ 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
+ 2. handle gracefully atomic updates during bridge removal
+ 3. avoid DSI host drivers to have dangling pointers to DSI devices
+ 4. finish the hotplug bridge work, removing the "always-disconnected"
+    connector, moving code to the core and potentially removing the
+    hotplug-bridge itself (this needs to be clarified as points 1-3 are
+    developed)
+
+This series is part of step 1 of the grand plan.
+
+Current tasks in step 1 of the grand plan:
+
+ A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
+ B. … convert all bridge drivers to new API (in progress)
+ C. ➜ kunit tests (this series)
+ D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
+ E. after (B), convert accessors; this is a large work and can be done
+    in chunks
+ F. debugfs improvements
+
+[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
+[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
+
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- Documentation/filesystems/journalling.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v8:
+- Remove documentation patch
+- Add patch to convert existing kunit tests to use devm_drm_bridge_alloc()
+- Add tests for bridge deallocation (based on adding a .destroy callback)
+- Link to v7: https://lore.kernel.org/r/20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com
 
-diff --git a/Documentation/filesystems/journalling.rst b/Documentation/filesystems/journalling.rst
-index 863e93e623f7..2825f6c030c2 100644
---- a/Documentation/filesystems/journalling.rst
-+++ b/Documentation/filesystems/journalling.rst
-@@ -93,7 +93,7 @@ easily as on jbd2_journal_start().
- 
- Try to reserve the right number of blocks the first time. ;-). This will
- be the maximum number of blocks you are going to touch in this
--transaction. I advise having a look at at least ext4_jbd.h to see the
-+transaction. I advise having a look at least ext4_jbd.h to see the
- basis on which ext4 uses to make these decisions.
- 
- Another wriggle to watch out for is your on-disk block allocation
+---
+Luca Ceresoli (3):
+      drm/tests: bridge: convert to devm_drm_bridge_alloc() API
+      dmr/bridge: add a .destroy func
+      drm/tests: bridge: add KUnit tests for devm_drm_bridge_alloc()
+
+ drivers/gpu/drm/drm_bridge.c            |   2 +
+ drivers/gpu/drm/tests/drm_bridge_test.c | 179 +++++++++++++++++++++++++-------
+ include/drm/drm_bridge.h                |  10 ++
+ 3 files changed, 151 insertions(+), 40 deletions(-)
+---
+base-commit: aec8a40228acb385d60feec59b54573d307e60f3
+change-id: 20250408-drm-bridge-alloc-doc-test-267df0def880
+
+Best regards,
 -- 
-2.49.0
+Luca Ceresoli <luca.ceresoli@bootlin.com>
 
