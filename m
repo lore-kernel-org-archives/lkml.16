@@ -1,371 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC5772601;
-	Fri, 16 May 2025 13:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BB978F5E;
+	Fri, 16 May 2025 13:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403731; cv=none; b=HBtJkYhr7mOgcu6xakLFwCMLV1dwaReKuU3B3Q05hV7JTAEJC0lGxPNM5Qb3CctgDxLaxehXzpotkl6UnY1T5eUTeH1HPYb9v/gl4jVI2seIOGzdY2WuVxQZvS22B5LxNagiAZQGtjO46oEht+lgk2fBr01pzQs7EungjrokaZk=
+	t=1747403775; cv=none; b=Ldjhg9i8nv/iAXR80yz5057yA0q4LKHPQu94e/ki6FD2IjDpgwc6KmYBCMjcf1Rdn2U5vqgTL0kOyKU7+ojUDupJw6Zmp7JdbPBojmHn2FP6YOMplwsgdvjNxMht+/n9p9+gzEOP54y81Kka2cYfrRuDnd/rbipb1v1C/9Nl9Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403731; c=relaxed/simple;
-	bh=kXogt4iFZiSuDOpJ1zpztLcK0rga4wuTYqF+xCSgbUA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bGB7Le431tZGg5Hu4cm7XBO59mGBVAHKwzoZTQKpLMbxIId973bPcBDLwJiAQMBMyNx5pcqY50leql+OrEdZe2+W95Hq5L27TpOae15rHoYlKL7b3P7yiTCBbvvsXs5otQxDNq7bLPlcLJRi0XfS8W697YwblFjG0HqSUbCLl/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=krPohU+b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747403775; c=relaxed/simple;
+	bh=RcvThd/w/vxl6XWWU8Y+ukSVSVXtWFY8ae5nUArXFOo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mXUaeoYQPKDZ8eUCLZttg6QIpN1KmLO5TjkYbbopM9Hsd+p8PeGw8qwQ3rohmLNitXfrwE2SRHZDc3cJOVZvXZuAbv7cyVKxpuR4n7l/BBgd6iHXzj8+t5C8Q1TzwgoyqGK2EHzBNo3s2KZmj5Tzfxs9BfRIf2t2fuKuzdpvroE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=prNvNtn8; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="krPohU+b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33606C4CEE4;
-	Fri, 16 May 2025 13:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747403730;
-	bh=kXogt4iFZiSuDOpJ1zpztLcK0rga4wuTYqF+xCSgbUA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=krPohU+bQPLALzxQxCOYbyNE0JlUjbZL1llaENNkLxxhIO1ety0ZCKuWQXROnCIPq
-	 uFVOuGuZTcifZAF6u9gtSiFqTBAV7jJvYcOdF1nKulYhx8QE5H1IIJy4bcNh8h/30O
-	 fZ/20rGdYex1Ax73T9756NO2Sp+TIaRvZVhBu5POiIDJ6zpmjNCv/6V9TZTPnTIh/q
-	 PGFgQkvyogowh2uaKzlh3vNQSUfH1503gxwd1TZzLNsb5mQBZB8GS3fSrMel3WCCJA
-	 8yrYWWjZnZfR1mRp89bSvXww797lysxXkeF/KmV5Vt6msKRCBivdxa1BWnv337+MaQ
-	 SehUL8Q1tli4Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFvX5-00FZrY-Sr;
-	Fri, 16 May 2025 14:55:28 +0100
-Date: Fri, 16 May 2025 14:55:27 +0100
-Message-ID: <864ixkfynk.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-In-Reply-To: <20250509131706.2336138-11-vdonnefort@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
-	<20250509131706.2336138-11-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="prNvNtn8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=qU1qVMNi0qMy5Blos1rCviLL0yU0/cw8rCcjhi3fPbg=;
+	t=1747403773; x=1748613373; b=prNvNtn8nGnOwHRtCAzVlfQF/cgv98PiAMlwP3WK5meqjge
+	SuavXx/e8VXTkdA7tGiuxPtCj6pK8hX1BGosx5r4wGn/iek7yxjcY78eisu3PXv2379DDtXbjR+hS
+	pdpdOZHjoxAieaatPRrSc4NCGY3F8DRq4TkMhScoc9CtWowihnB/muGR7s0Si4pTaG08GshVzZ8HJ
+	f5QPJ1MqGS8BiIMY/FiSVTG+Wl5JRJ+q8gn56RculpXnxmKRz+8n/RT2+hb+X1U5Bj+HqlDCXn+NQ
+	rPRg4TgEtOKFV9OMUmcyVzdbXR5mrZ/jCGVPrSRA5v6X/wUs8qEs8vmDviOg9UTw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uFvXj-0000000EqOS-3pVe;
+	Fri, 16 May 2025 15:56:08 +0200
+Message-ID: <ab918cc3d5e26a6c38b3331172b60b6676bc32c5.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Markus Elfring <Markus.Elfring@web.de>, vulab@iscas.ac.cn, 
+	linux-wireless@vger.kernel.org, Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date: Fri, 16 May 2025 15:56:07 +0200
+In-Reply-To: <22ba7622-a838-47a8-b0f8-29a90d6df34c@web.de>
+References: <20250516083842.903-1-vulab@iscas.ac.cn>
+	 <22ba7622-a838-47a8-b0f8-29a90d6df34c@web.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-On Fri, 09 May 2025 14:17:06 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> With the introduction of stage-2 huge mappings in the pKVM hypervisor,
-> guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
-> PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
-> to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
-> 
-> Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
-> to improve guest page CMOs when stage-2 huge mappings are installed.
-> 
-> On a Pixel6, the iterative solution resulted in a latency of ~700us,
-> while the PMD_SIZE fixmap reduces it to ~100us.
-> 
-> Because of the horrendous private range allocation that would be
-> necessary, this is disabled for 64KiB pages systems.
-> 
-> Suggested-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> Signed-off-by: Quentin Perret <qperret@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-> index 1b43bcd2a679..2888b5d03757 100644
-> --- a/arch/arm64/include/asm/kvm_pgtable.h
-> +++ b/arch/arm64/include/asm/kvm_pgtable.h
-> @@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
->  
->  #define KVM_PHYS_INVALID		(-1ULL)
->  
-> +#define KVM_PTE_TYPE			BIT(1)
-> +#define KVM_PTE_TYPE_BLOCK		0
-> +#define KVM_PTE_TYPE_PAGE		1
-> +#define KVM_PTE_TYPE_TABLE		1
-> +
->  #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
->  
->  #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> index 230e4f2527de..b0c72bc2d5ba 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> @@ -13,9 +13,11 @@
->  extern struct kvm_pgtable pkvm_pgtable;
->  extern hyp_spinlock_t pkvm_pgd_lock;
->  
-> -int hyp_create_pcpu_fixmap(void);
-> +int hyp_create_fixmap(void);
->  void *hyp_fixmap_map(phys_addr_t phys);
->  void hyp_fixmap_unmap(void);
-> +void *hyp_fixblock_map(phys_addr_t phys);
-> +void hyp_fixblock_unmap(void);
->  
->  int hyp_create_idmap(u32 hyp_va_bits);
->  int hyp_map_vectors(void);
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> index 97e0fea9db4e..9f3ffa4e0690 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> @@ -220,16 +220,52 @@ static void guest_s2_put_page(void *addr)
->  	hyp_put_page(&current_vm->pool, addr);
->  }
->  
-> +static void *__fixmap_guest_page(void *va, size_t *size)
-> +{
-> +	if (IS_ALIGNED(*size, PMD_SIZE)) {
-> +		void *addr = hyp_fixblock_map(__hyp_pa(va));
-> +
-> +		if (addr)
-> +			return addr;
-> +
-> +		*size = PAGE_SIZE;
-> +	}
-> +
-> +	if (IS_ALIGNED(*size, PAGE_SIZE))
-> +		return hyp_fixmap_map(__hyp_pa(va));
-> +
-> +	WARN_ON(1);
-> +
-> +	return NULL;
-> +}
-> +
-> +static void __fixunmap_guest_page(size_t size)
-> +{
-> +	switch (size) {
-> +	case PAGE_SIZE:
-> +		hyp_fixmap_unmap();
-> +		break;
-> +	case PMD_SIZE:
-> +		hyp_fixblock_unmap();
-> +		break;
-> +	default:
-> +		WARN_ON(1);
-> +	}
+On Fri, 2025-05-16 at 15:50 +0200, Markus Elfring wrote:
+> =E2=80=A6
+> > Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+> > log an error message via dev_err().
+>=20
+> Please avoid duplicate exception handling code.
+> Can another jump target become nicer for this purpose?
+>=20
 
-This is pretty ugly. How can we end-up there the first place? I'd
-rather you make sure we can't reach this default path at all. See also
-towards the end of this patch (tl;dr: hyp_fixblock_unmap() should
-never explode).
+<form letter>
+(stolen from Greg)
 
-> +}
-> +
->  static void clean_dcache_guest_page(void *va, size_t size)
->  {
->  	WARN_ON(!PAGE_ALIGNED(size));
->  
->  	while (size) {
-> -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> -					  PAGE_SIZE);
-> -		hyp_fixmap_unmap();
-> -		va += PAGE_SIZE;
-> -		size -= PAGE_SIZE;
-> +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
-> +		void *addr = __fixmap_guest_page(va, &fixmap_size);
-> +
-> +		__clean_dcache_guest_page(addr, fixmap_size);
-> +		__fixunmap_guest_page(fixmap_size);
-> +
-> +		size -= fixmap_size;
-> +		va += fixmap_size;
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
-Can this ever be called with a *multiple* of PMD_SIZE? In this case
-you'd still end-up doing PAGE_SIZEd-bite CMOs until there is only
-PMD_SIZE left, ruining the optimisation.
-
-I think this needs fixing.
-
->  	}
->  }
->  
-> @@ -238,11 +274,14 @@ static void invalidate_icache_guest_page(void *va, size_t size)
->  	WARN_ON(!PAGE_ALIGNED(size));
->  
->  	while (size) {
-> -		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> -					       PAGE_SIZE);
-> -		hyp_fixmap_unmap();
-> -		va += PAGE_SIZE;
-> -		size -= PAGE_SIZE;
-> +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
-> +		void *addr = __fixmap_guest_page(va, &fixmap_size);
-> +
-> +		__invalidate_icache_guest_page(addr, fixmap_size);
-> +		__fixunmap_guest_page(fixmap_size);
-> +
-> +		size -= fixmap_size;
-> +		va += fixmap_size;
->  	}
->  }
->  
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
-> index f41c7440b34b..e3b1bece8504 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mm.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mm.c
-> @@ -229,9 +229,8 @@ int hyp_map_vectors(void)
->  	return 0;
->  }
->  
-> -void *hyp_fixmap_map(phys_addr_t phys)
-> +static void *fixmap_map_slot(struct hyp_fixmap_slot *slot, phys_addr_t phys)
->  {
-> -	struct hyp_fixmap_slot *slot = this_cpu_ptr(&fixmap_slots);
->  	kvm_pte_t pte, *ptep = slot->ptep;
->  
->  	pte = *ptep;
-> @@ -243,10 +242,21 @@ void *hyp_fixmap_map(phys_addr_t phys)
->  	return (void *)slot->addr;
->  }
->  
-> +void *hyp_fixmap_map(phys_addr_t phys)
-> +{
-> +	return fixmap_map_slot(this_cpu_ptr(&fixmap_slots), phys);
-> +}
-> +
->  static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
->  {
->  	kvm_pte_t *ptep = slot->ptep;
->  	u64 addr = slot->addr;
-> +	u32 level;
-> +
-> +	if (FIELD_GET(KVM_PTE_TYPE, *ptep) == KVM_PTE_TYPE_PAGE)
-> +		level = KVM_PGTABLE_LAST_LEVEL;
-> +	else
-> +		level = KVM_PGTABLE_LAST_LEVEL - 1; /* create_fixblock() guarantees PMD level */
-
-Seeing this, (KVM_PGTABLE_LAST_LEVEL - 1) looks nicee than the "2" I
-suggested in one of the previous patches.
-
->
->  	WRITE_ONCE(*ptep, *ptep & ~KVM_PTE_VALID);
->  
-> @@ -260,7 +270,7 @@ static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
->  	 * https://lore.kernel.org/kvm/20221017115209.2099-1-will@kernel.org/T/#mf10dfbaf1eaef9274c581b81c53758918c1d0f03
->  	 */
->  	dsb(ishst);
-> -	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), KVM_PGTABLE_LAST_LEVEL);
-> +	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), level);
->  	dsb(ish);
->  	isb();
->  }
-> @@ -273,9 +283,9 @@ void hyp_fixmap_unmap(void)
->  static int __create_fixmap_slot_cb(const struct kvm_pgtable_visit_ctx *ctx,
->  				   enum kvm_pgtable_walk_flags visit)
->  {
-> -	struct hyp_fixmap_slot *slot = per_cpu_ptr(&fixmap_slots, (u64)ctx->arg);
-> +	struct hyp_fixmap_slot *slot = (struct hyp_fixmap_slot *)ctx->arg;
->  
-> -	if (!kvm_pte_valid(ctx->old) || ctx->level != KVM_PGTABLE_LAST_LEVEL)
-> +	if (!kvm_pte_valid(ctx->old) || (ctx->end - ctx->start) != kvm_granule_size(ctx->level))
->  		return -EINVAL;
->  
->  	slot->addr = ctx->addr;
-> @@ -296,13 +306,73 @@ static int create_fixmap_slot(u64 addr, u64 cpu)
->  	struct kvm_pgtable_walker walker = {
->  		.cb	= __create_fixmap_slot_cb,
->  		.flags	= KVM_PGTABLE_WALK_LEAF,
-> -		.arg = (void *)cpu,
-> +		.arg = (void *)per_cpu_ptr(&fixmap_slots, cpu),
-
-Do you really need this cast?
-
->  	};
->  
->  	return kvm_pgtable_walk(&pkvm_pgtable, addr, PAGE_SIZE, &walker);
->  }
->  
-> -int hyp_create_pcpu_fixmap(void)
-> +#ifndef CONFIG_ARM64_64K_PAGES
-
-I don't have much faith in this symbol. We have changed the config
-stuff so often over the years that I wouldn't trust it long term.
-
-Using something like PAGE_SIZE or PAGE_SHIFT is likely to be more
-robust.
-
-> +static struct hyp_fixmap_slot hyp_fixblock_slot;
-> +static DEFINE_HYP_SPINLOCK(hyp_fixblock_lock);
-> +
-> +void *hyp_fixblock_map(phys_addr_t phys)
-> +{
-> +	hyp_spin_lock(&hyp_fixblock_lock);
-> +	return fixmap_map_slot(&hyp_fixblock_slot, phys);
-> +}
-> +
-> +void hyp_fixblock_unmap(void)
-> +{
-> +	fixmap_clear_slot(&hyp_fixblock_slot);
-> +	hyp_spin_unlock(&hyp_fixblock_lock);
-> +}
-> +
-> +static int create_fixblock(void)
-> +{
-> +	struct kvm_pgtable_walker walker = {
-> +		.cb	= __create_fixmap_slot_cb,
-> +		.flags	= KVM_PGTABLE_WALK_LEAF,
-> +		.arg = (void *)&hyp_fixblock_slot,
-> +	};
-> +	unsigned long addr;
-> +	phys_addr_t phys;
-> +	int ret, i;
-> +
-> +	/* Find a RAM phys address, PMD aligned */
-> +	for (i = 0; i < hyp_memblock_nr; i++) {
-> +		phys = ALIGN(hyp_memory[i].base, PMD_SIZE);
-> +		if (phys + PMD_SIZE < (hyp_memory[i].base + hyp_memory[i].size))
-> +			break;
-> +	}
-> +
-> +	if (i >= hyp_memblock_nr)
-> +		return -EINVAL;
-> +
-> +	hyp_spin_lock(&pkvm_pgd_lock);
-> +	addr = ALIGN(__io_map_base, PMD_SIZE);
-> +	ret = __pkvm_alloc_private_va_range(addr, PMD_SIZE);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	ret = kvm_pgtable_hyp_map(&pkvm_pgtable, addr, PMD_SIZE, phys, PAGE_HYP);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	ret = kvm_pgtable_walk(&pkvm_pgtable, addr, PMD_SIZE, &walker);
-> +
-> +unlock:
-> +	hyp_spin_unlock(&pkvm_pgd_lock);
-> +
-> +	return ret;
-> +}
-> +#else
-> +void hyp_fixblock_unmap(void) { WARN_ON(1); }
-> +void *hyp_fixblock_map(phys_addr_t phys) { return NULL; }
-> +static int create_fixblock(void) { return 0; }
-> +#endif
-
-I can't say I like this. Can't you have a fallback that does the
-iteration rather than these placeholders that are only there to make
-things catch fire?
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
