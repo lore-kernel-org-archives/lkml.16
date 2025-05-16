@@ -1,122 +1,111 @@
-Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BECD21FF2E;
-	Fri, 16 May 2025 06:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D921FF7DC;
+	Fri, 16 May 2025 06:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747377136; cv=none; b=kI1zAk9Vxp2rYyNrpR//7YT5VbDaSzG4B3HtewG5Lu0gXfkvVdvsFc3DaF1hDDiCDzoXr6qvMs30KO+bFCCD+9zn7YnTdgfVn5QTo8tjz74NMr7XRzqRO2EQqrEQykwtlRVvhuTmQW/M88j4f1dp25/+61YDIyRLEPRvR2kSMn8=
+	t=1747377176; cv=none; b=Rf5hyJ4MHik0Ky87cH5XoPhG1uwIsbK97tMXmOV8u+M9eljuiFcNzhV0dDHh+1jeSb8QoF77oNHOLCli8H6paOHmE0S7/YczoNss+W+tYd2dpsNC73qkyBNJ39vQEuNM0k19z0Abmzg3mhF3imm34N2pbLnzN19KrFc2LuYbREA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747377136; c=relaxed/simple;
-	bh=WYB4PC4/QumY6RXKi4PlhSQ9Xaobg1iGGK4yZ9AeIBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BQ4XlyFueZsn1/F5gPczWFHwe/5rulT8UNkpGSeEjfdLrXJ1dk9d3MF0QOVAwQfS4PDMH9vBtAQtEvaItf16OZ/U6Spui8EqLUTVrFmG2VEM+dS88ep8Xt2/UDEpaw2hjk21mY1H6UQR/mEvbhs1raGKbfYslhczdHy53ztteK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilLN8OAY; arc=none smtp.client-ip=209.85.219.193
+	s=arc-20240116; t=1747377176; c=relaxed/simple;
+	bh=NtEGmOTZqNuMiz2OCMtuAQv0Feqa6Dit7H5OY+B8VmM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMYQPpnKCM3t0sSUkK6EMRTsIt4nQLOyBLpKnhOk1OZdVMIV3VrZj70rQSnUu9qF2wJw6LQ6+fBpaXymSNPn6d+jURd0eNMtyuexoNMi2r/5a5rHxvJwbj6F/egzeeuijJ+38J3pDZPk7u9m9/jNAsW7ieAIQAvUt7rfTk1fs8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wqr4JEkB; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilLN8OAY"
-Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e7904da218aso1327833276.2;
-        Thu, 15 May 2025 23:32:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wqr4JEkB"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-550d09d4daaso1669835e87.2;
+        Thu, 15 May 2025 23:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747377134; x=1747981934; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QGXKAGF1/FsCyJWkLL4R/6PrQ05F+0Yz4eEuU1kLWsU=;
-        b=ilLN8OAYf67E72OyApYO9KjHMyGsVuhI7NRnxQfqDqj3zGF7YhwsPiirSXPEvcAxUk
-         HRubqd5flNAsGTbnlGbn++lzNYk+cQ0sFivPp5OGhVSy4wR02fj/jfWqAzcNdykZGYNX
-         t6XAZ/ojpNDutpJMNrPdjW/8JDW2z0bERi28uA68jaI4dc39GYXcCEDFGSv74zVxy4Su
-         1KlgxXu+1NUR1Zy3JxDJQiPO817HRKrE/5ZTRLTdIjX41UqJWSKTbe+rFJhIuC1IdeLx
-         qWmb9+0ijN2a936Vzlta12mMIWu2APBzcuGEeuitZJy+q0ZC+WYpABC4WjSHtS7Mqy4U
-         SrSw==
+        d=gmail.com; s=20230601; t=1747377173; x=1747981973; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUJKtPVwdVcpqXmFstCnFFaHnVm1C/pmwz6nmZZHgzI=;
+        b=Wqr4JEkBgQvfK/neI+C1bIzjlWhCLxhRUmlxm8ixsHSQ61qJ9Ku+U69mbPyA1MAqdW
+         DFmBoRjKdR6XucjBQMsGHaw0mRXsl7JHVG2MOnSBm3gehOIGbitrBYLRFAx8TmZFf/Xx
+         OvdTMpDnumb6AR/InivmA1Nd3/28lj3k2c57454Vc6MbGNGiu9/HzQupPQewhFrIH+Ky
+         VEE3XH3Obf9u6pg+okOatnVWxSEz8pbE+xB77J/60fcWrb75PciaNLaqYVsSs2Fp4uzO
+         ID7Gk3ChFDF+dWAxteBhaNxHShnY303uDiUiKy7LhO9uVF3jrGeWj9akLZU4DVdTqXQk
+         kwMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747377134; x=1747981934;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QGXKAGF1/FsCyJWkLL4R/6PrQ05F+0Yz4eEuU1kLWsU=;
-        b=pKp5rOHrfyFSoqUe9rxv7TYDiTSE/5iZV/WKPvcwIUmcKyKeoAopJmdrZSJJD/K8aA
-         01e/bKKVyyktkFYAxndRlSrrG3sEnp1EdS3Xchcnu5CLvbSnBMlzFq3TpSOLICPygmwo
-         rvwucyfAcw84BAJmT9wL6q98C4ZFsT+ZWxpGLwesdukg+rj/v6UkW0rRnZ5dyYqShF/D
-         Aa4OVKHeRL/E4iwBt5+UUq3m/enu90nDJW8GnNrtoRfG8hSNkfdDhE4Ihs8B/Dw9aAP9
-         msUreoskgmwmZ8DTo1p9MCSVoNh/coK6PbAcryZ403XW/w5TXsLqhOMATx0qleTbMKGn
-         +DWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRI+5+U1UEms9g/TxiT1OHmGRzB5BylWj91zJLGaPvcpvb0w5H5FakPxfQi+1D22qE5KTnafI08SkmyV8w@vger.kernel.org, AJvYcCWzfEnAThXR0fFtunb81vSySE+NtDhY/M9YmCL/rccT3kHDtcuLpmjR8g7nhgPstllGihgYW3GcIS7p@vger.kernel.org
-X-Gm-Message-State: AOJu0YyncuLerw6WWCHPZwZxY9Q/vTznXmnqFSRTvzn9t0ms2JAm1Faq
-	e5TxiUdpYaxgm5OdKGflYCSTEZAn84UafmoWHCfprmicl5DLfunAFQLHy8eY3v9E2jWhpLx4/5s
-	4/BqMaxB48pwl2Y3lKo7eft0BgCtTXqRADah+aazL2w==
-X-Gm-Gg: ASbGnctd8iwjnJsWCrZGh6qaymDH0Nfi5U2+yJ27zLQ+qWKPkQwz5f1534Wblagsh03
-	sOy+BOu8r1NgEZ0fUqszpODLUhFDPdHCf7zcTXZMvadV+xTz3iyK8yjn37QIVl2VNFoOgroiGZ1
-	iAdPnjkhhAYL8I7WS0xUyPLOXknzXKKUL2Big=
-X-Google-Smtp-Source: AGHT+IH/IofeAd6vy3/ZeDlDO6zFMGpzZNjxG9N9X1Ud4Y/RDhC/XNh3fz4lMxUc1E0QO+Br5Hebqoh+UwZCRwoxLks=
-X-Received: by 2002:a05:6902:1707:b0:e7b:3cf1:5741 with SMTP id
- 3f1490d57ef6-e7b6a52f211mr3347352276.39.1747377133782; Thu, 15 May 2025
- 23:32:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747377173; x=1747981973;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUJKtPVwdVcpqXmFstCnFFaHnVm1C/pmwz6nmZZHgzI=;
+        b=GhW/7g5D0luU25JvO3IJSYXEHmXo8nRpEqRaboYWRS9oAFm+Ekd5WIM7H8O0xoeASS
+         Pi/LO0GgsqwNAUPFOmQ04Cux91VRp3vaaQj4PqZygmHsNO+ayB0w7mM18Ie8bhK+Yj0G
+         GjAwGFfuydD3ecw85wA/kaF0BTCD8JCNtmKHgc9naAvAa8jOj/aRKhxhri9qWfr+NeDM
+         rNzFh8mWTPJQcmc+2o6FlMujjAMdzjVGsnmoTVVK/SaC3VXdQy4huGF/bJfsjzyozEb0
+         hD+P46fY3nGG+uET87aitFVrJ39WgMZHdNxfWiy6dlPfm9N0OXB1ltqOqWSS6y67UKJP
+         88EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEG3ZuHSN4vEFmbr6AOKVVrEkv0XdT0wrPk2Eh1dt+GLYYb/SwmzZiI2U66ifhgDwMb0C621knmG2sllkQ5af7@vger.kernel.org, AJvYcCVjJz2/375EyI+jINf9FuBcmcVmwXwdiX3D3/FI7caCgQRjxdx5GbCYf8++hWCt4vsXO1g=@vger.kernel.org, AJvYcCWG7KygT2JqvUX6VMMDAoFgrCCGImT+SKiYNXb62Ic1tfg4MuwGwbOuaI39K/W7lc+//0QAwkW0wZP3naEL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvIZZ4kD2ngrBWmyvCs2fQMmt/Xm2rIE+GgynfDJntzfTtTXW4
+	GEVtJIXaf4QANJEdN9PDeqkX/9jEvayrqZbAKs8HPSm5Va214mNQ8lsF
+X-Gm-Gg: ASbGncusXpTSnj2hvnR1Ao5DPckkYofLYXTIakgmOnNFc/ViesgZdr/5Dm2NnreAjem
+	YL8c//xsx8taDZw+8LP9Lgde2BokGld1igwzFENB3CY2qzcFUVSh2H4CGXnLAMWIJt5PfERCKc5
+	8m9se6XkGT714OLfE4ow053zjqVEiho8cscIPXTXnnwe+mlLpsq5+jaUPyPJVpyTTP9NUiLmJSO
+	Xeaic5y5s5hZdIYK9hiMo+e0UIZUaUWf/nNQ2L/6Pf35Y1g/p3iS/LMowkl+E6cjIBdhtUA7nkj
+	OuzyYuwyCgtZkCaT3A==
+X-Google-Smtp-Source: AGHT+IFRP/vXmfI6lHLwDlzDmnD+1TtQ98Hefzc+j7BWdek+k9pG/xT4EAPbSUkky9UNn9GYhdpyww==
+X-Received: by 2002:a05:6512:6501:b0:550:e147:8165 with SMTP id 2adb3069b0e04-550e71d0bf3mr569220e87.24.1747377172352;
+        Thu, 15 May 2025 23:32:52 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703c2f3sm275344e87.214.2025.05.15.23.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 23:32:51 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Fri, 16 May 2025 08:32:49 +0200
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Erhard Furtner <erhard_f@mailbox.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm: vmalloc: Actually use the in-place vrealloc
+ region
+Message-ID: <aCbcEWR9RbjFjXV9@pc636>
+References: <20250515214020.work.519-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJNGr6t6cpo3zjANpYObZaWOSeGKdGW4B4+k1Bh2ZWQZBbJrBg@mail.gmail.com>
- <20250515141643.GB325737@mit.edu>
-In-Reply-To: <20250515141643.GB325737@mit.edu>
-From: Guoyu Yin <y04609127@gmail.com>
-Date: Fri, 16 May 2025 14:32:03 +0800
-X-Gm-Features: AX0GCFuv2R6km5Dmoa9S8zI1wx3oPrIDtvbzPG6i3XXVPiNQMEYLn9l-CnqZ45A
-Message-ID: <CAJNGr6uopyD6dYr2sFT-5k_3=Po-Cc43BKTnwDtaQuk8=Yh+BQ@mail.gmail.com>
-Subject: Re: [BUG] kernel BUG in ext4_mb_release_inode_pa
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515214020.work.519-kees@kernel.org>
 
-Hi,
+On Thu, May 15, 2025 at 02:42:14PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> This fixes a performance regression[1] with vrealloc(). This needs to
+> get into v6.15, which is where the regression originates, and then it'll
+> get backport to the -stable releases as well.
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg/
+> 
+> Kees Cook (2):
+>   mm: vmalloc: Actually use the in-place vrealloc region
+>   mm: vmalloc: Only zero-init on vrealloc shrink
+> 
+>  mm/vmalloc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+Looks good to me both.
 
-Thank you for your response and suggestions.I have implemented the
-reproduction program based on your suggestions. With these changes, I
-have successfully reproduced the kernel BUG in
-ext4_mb_release_inode_pa, but the crash triggers after 5-8 runs on
-average, please try a few more times.
+Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-The new C reproducer: https://pastebin.com/raw/jWYWQHPP
-
-Best regards,
-Guoyu
-
-Theodore Ts'o <tytso@mit.edu> =E4=BA=8E2025=E5=B9=B45=E6=9C=8815=E6=97=A5=
-=E5=91=A8=E5=9B=9B 22:16=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Thu, May 15, 2025 at 05:58:40PM +0800, Guoyu Yin wrote:
-> >
-> > I discovered a kernel crash described as "kernel BUG in
-> > ext4_mb_release_inode_pa." This issue occurs in the EXT4 filesystem's
-> > ext4_mb_release_inode_pa function (fs/ext4/mballoc.c:5339), where a
-> > BUG() assertion fails due to a mismatch between the calculated free
-> > block count free and the expected value pa->pa_free during
-> > preallocated block release.
->
-> I can't reproduce the BUG using qemu,with the kernel config, kernel
-> commit, and C reproducer that you have provided.  This is why I
-> strongly suggest that if people really feel the need to set up their
-> own syzkaller instances, perhaps because they are maing changes to
-> syzkaller, that they replicate the full syzkaler setup, including the
-> web dashboard and e-mail responder so that people can request that the
-> reproducer be run on your setup so we can figure out how easily
-> reproducible the report might be, and whether it has been fixed in a
-> more recent kernel version, or via a proposed bug fix.
->
-> You are most likely correct that it is caused by a corrupted file
-> system, and this is why I strongly recommend that users run fsck -y on
-> any file system image of uncertain provenance before trying to mount
-> said file system.  In addition, note that if the file system had been
-> mounted with errors=3Dremount-ro, the problem wouldn't have resulted in
-> a BUG.  For this reason, especially when the C reprducer doesn't
-> reproduce the reported issue, this sorts of issues are a very low
-> priority to investigate.
->
-> Best regards,
->
->                                         - Ted
+--
+Uladzislau Rezki
