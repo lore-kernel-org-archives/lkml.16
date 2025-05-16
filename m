@@ -1,173 +1,91 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CE31632DF
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C218FC92
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747405074; cv=none; b=FUmsMrKo6yeVFyMB9XEeOF7R6VMbYbW39vzTEhEPlgJ5rVCitvSPRqDZS8qmBCNuIJ79oN7bH/2JZ/RvNPIT5U7moCOsH6dq4kKxDPEAYgtwrf+LidTo26SGU6Lb8hQZI/WFCt6f7CFGv7mfKXQOTgZFJduOIiNS2uU8c+CSWy4=
+	t=1747405094; cv=none; b=E963W4h+QA4BA8NTb//+c6jb0Epn6hEzlmOVgI/N9bTKJ/V2LkEN/G6lqDdwRpBA5tPQWHH1VqcrfXlPrV2hTvq4fe7+HGf52XTkzSi8aKezaF5CY0I8lTVZm6iEn6k7MlVKx3j1w0uMOUunKDj8GmpMRiOMNuTsobIzczF51y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747405074; c=relaxed/simple;
-	bh=di7VcqmsOR/ksmcCT55gbdF3amMK+ETAgYq2FlW2QA8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJw0W+Qn03M1Hj5tFAcyF8x8xh2tcj4va464YfJpNvYcarIXGOuoH8iaP/eQETSnD+aoFGOTyrkd9CMcfaZinVBTUSs39gI4uKfBF7PB6QXbjr61eP/E6PwEDeLjsMhx9qqPsdBcW0C88iyt7H1ZEVBK3Vag/h96ajkvJ2tifmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XtXRnzWg; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747405094; c=relaxed/simple;
+	bh=eMAldY621LGBuYWnS0DttmFZTqueAPJOlZY/rBYz5WY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dNL6GlZkFB3qDMgwNlL0va6qIAv/vF+iDCtV75DykDJpOhqTpjM0Xm0cmtGC84zlUi5sH7Kz5Cmzus+vv5Irs4O+NIaQ69OmljKF/y3UApjYy7GzWEhPTCCtHMqmxGalB2TDu72gxE2kH+LntosvJOH+LwRfHCWklCVV4Uh7G5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=NeZPS+LI; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XtXRnzWg"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747405060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2WuqP8hVhA8NoR8vkcRmgIaGt57MUyF4WZKw8XNlY3A=;
-	b=XtXRnzWg1XOU15tFoqBgtCFbrOgBRiT7vGUxMP8epA3uZ4lF0it8pMe1uNaV+HyNBzFFrn
-	sGv4+MERAu4wsBhIr4sEv6MvLdRkj7lshSJoDgWgxbrajRIK8lbexfkw6+wwTag7erT9E1
-	qFouPCUZPmw/ouaJeyusQBLxSkzKA0A=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Michal Luczaj <mhal@rbox.co>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after free when sending
-Date: Fri, 16 May 2025 22:17:12 +0800
-Message-ID: <20250516141713.291150-1-jiayuan.chen@linux.dev>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="NeZPS+LI"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5b2472969so217902185a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1747405089; x=1748009889; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=owY4nRaaHwvI0FEJzLInMFg5XKLo1UFESw5ag0F5X+w=;
+        b=NeZPS+LIdYd8rZsx68P/1Fr/6QxTqVyMCcRY5T7d3L4VUWLKuA10Dha32ET9/bYE2V
+         JFyM0eG8ApelM+O1795yEvvIjMDLG+pobTO9QU7eZhXvSMB5IfmRs84EhNpmX+XYbYLv
+         KoGphNopelw223F5CluNFoAhI3SS6yrKIQaSM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747405089; x=1748009889;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=owY4nRaaHwvI0FEJzLInMFg5XKLo1UFESw5ag0F5X+w=;
+        b=ocz/Y1/1PE+Icrgh0k3KsW1xnCsDG54iU8hVxa/GltUwd3fYRZNvV5tdUNOmSRBL8r
+         b3QDtuK7oEVhAGP8kDnnwxH22u7rARNwdILZL/6MaR/m1ch7YJwZcYS9LGO71aIHEsWs
+         pwfS0yEcVeOa2b/RhWUbmREin/+hhxBwBcBsiLmC0AghX2NgpMJaDDP5ecHUZA9J9Jf+
+         t2/6mEyeeGLhS/JS5IJwzlhvc5c+gziEDqRrROjFLN58b/8po7wQADA431HDCRiQyoeM
+         Cge1VtepqdLKpVWniuCaMmEvJY0scn9k9LMTWwVYikBpN0lz2qN4Qtag8yBHdVWSmLgp
+         T2Kg==
+X-Gm-Message-State: AOJu0Yx4gMJ5tY5SZuMZlaJL1DGi1bcFdq17vB0J92iMBWzxn+QwxYYU
+	03wv+6MbZjAdPahB95zdSdchbDyTlH6lGeNowv0JVKrNlH3yYxFHvxf2frEdycS9sDmdxaWHEm3
+	XMhQevA==
+X-Gm-Gg: ASbGncuvlfY0nnil8iuAvb9bXn1EHw633sXNzIObhnBb2Rx/v2NfkI6U5HECuW3Y2li
+	1Zai+8AyLnF4dyyk48lbduj7OzSernRu+swwLSVHnzFlTn5Z4R7+C6D0+bFZrcvXGID67n+ov0V
+	knFqTj3k0yWZvXoJt2cPv1Ahw370F0Evzr5x0osXEs5lgG8gkjBiSEPOW/Nq71uZubABhN/lZIT
+	CNv3o14MgoX+uvfQQMOfRHKCFv9Nw2tpN4Ypv4V8GDim6a0rRpp+lKqmT0VvaFLqtbiyqZQzaVz
+	WiaCm60WWhsMroFFmT6nhj3sBdPQCv+QwEG320A3jEmRPrVr6MA/NODAHjBr7eC8wrP9fLs=
+X-Google-Smtp-Source: AGHT+IHX54JGF3VTnio+m8DU2sCiIbyBg5xhIiMGOX8DYyY/nAQMnnooQoTr9NQ1eTWo+ItnU0AtUg==
+X-Received: by 2002:a05:620a:444d:b0:7c5:5f19:c64f with SMTP id af79cd13be357-7cd46708138mr549132785a.4.1747405089444;
+        Fri, 16 May 2025 07:18:09 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467db690sm123338585a.48.2025.05.16.07.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 07:18:08 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Fri, 16 May 2025 10:18:07 -0400 (EDT)
+To: linux-kernel@vger.kernel.org
+cc: linux-tip-commits@vger.kernel.org, Sandipan Das <sandipan.das@amd.com>, 
+    Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+    linux-perf-users@vger.kernel.org, x86@kernel.org
+Subject: Re: [tip: perf/urgent] perf/x86/amd/core: Fix Family 17h+ instruction
+ cache events
+In-Reply-To: <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
+Message-ID: <c409c331-da7d-7424-e0db-a4c61ea423ca@maine.edu>
+References: =?utf-8?q?=3C2f475a1ba4b240111e69644fc2d5bf93b2e39c99=2E174661?= =?utf-8?q?8724=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?= <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
 
-The sk->sk_socket is not locked or referenced in backlog thread, and
-during the call to skb_send_sock(), there is a race condition with
-the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
-will be affected.
+On Fri, 16 May 2025, tip-bot2 for Sandipan Das wrote:
 
-Race conditions:
-'''
-CPU0                               CPU1
+> The following commit has been merged into the perf/urgent branch of tip:
+> 
 
-backlog::skb_send_sock
-  sendmsg_unlocked
-    sock_sendmsg
-      sock_sendmsg_nosec
-                                   close(fd):
-                                     ...
-                                     ops->release() -> sock_map_close()
-                                     sk_socket->ops = NULL
-                                     free(socket)
-      sock->ops->sendmsg
-            ^
-            panic here
-'''
+> perf/x86/amd/core: Fix Family 17h+ instruction cache events
+> 
+> PMCx080 and PMCx081 report incorrect IC accesses and misses respectively
+> for all Family 17h and later processors. PMCx060 unit mask 0x10 replaces
+> PMCx081 for counting IC misses but there is no suitable replacement for
+> counting IC accesses.
 
-The ref of psock become 0 after sock_map_close() executed.
-'''
-void sock_map_close()
-{
-    ...
-    if (likely(psock)) {
-    ...
-    // !! here we remove psock and the ref of psock become 0
-    sock_map_remove_links(sk, psock)
-    psock = sk_psock_get(sk);
-    if (unlikely(!psock))
-        goto no_psock; <=== Control jumps here via goto
-        ...
-        cancel_delayed_work_sync(&psock->work); <=== not executed
-        sk_psock_put(sk, psock);
-        ...
-}
-'''
+can you link to the errata document that describes this problem as well as 
+maybe give a rundown of how and why this breaks?
 
-Based on the fact that we already wait for the workqueue to finish in
-sock_map_close() if psock is held, we simply increase the psock
-reference count to avoid race conditions.
-
-With this patch, if the backlog thread is running, sock_map_close() will
-wait for the backlog thread to complete and cancel all pending work.
-
-If no backlog running, any pending work that hasn't started by then will
-fail when invoked by sk_psock_get(), as the psock reference count have
-been zeroed, and sk_psock_drop() will cancel all jobs via
-cancel_delayed_work_sync().
-
-In summary, we require synchronization to coordinate the backlog thread
-and close() thread.
-
-The panic I catched:
-'''
-Workqueue: events sk_psock_backlog
-RIP: 0010:sock_sendmsg+0x21d/0x440
-RAX: 0000000000000000 RBX: ffffc9000521fad8 RCX: 0000000000000001
-...
-Call Trace:
- <TASK>
- ? die_addr+0x40/0xa0
- ? exc_general_protection+0x14c/0x230
- ? asm_exc_general_protection+0x26/0x30
- ? sock_sendmsg+0x21d/0x440
- ? sock_sendmsg+0x3e0/0x440
- ? __pfx_sock_sendmsg+0x10/0x10
- __skb_send_sock+0x543/0xb70
- sk_psock_backlog+0x247/0xb80
-...
-'''
-
-Reported-by: Michal Luczaj <mhal@rbox.co>
-Fixes: 4b4647add7d3 ("sock_map: avoid race between sock_map_close and sk_psock_put")
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-
----
-V5 -> V6: Use correct "Fixes" tag.
-V4 -> V5:
-This patch is extracted from my previous v4 patchset that contained
-multiple fixes, and it remains unchanged. Since this fix is relatively
-simple and easy to review, we want to separate it from other fixes to
-avoid any potential interference.
----
- net/core/skmsg.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 276934673066..34c51eb1a14f 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *work)
- 	bool ingress;
- 	int ret;
- 
-+	/* Increment the psock refcnt to synchronize with close(fd) path in
-+	 * sock_map_close(), ensuring we wait for backlog thread completion
-+	 * before sk_socket freed. If refcnt increment fails, it indicates
-+	 * sock_map_close() completed with sk_socket potentially already freed.
-+	 */
-+	if (!sk_psock_get(psock->sk))
-+		return;
- 	mutex_lock(&psock->work_mutex);
- 	while ((skb = skb_peek(&psock->ingress_skb))) {
- 		len = skb->len;
-@@ -708,6 +715,7 @@ static void sk_psock_backlog(struct work_struct *work)
- 	}
- end:
- 	mutex_unlock(&psock->work_mutex);
-+	sk_psock_put(psock->sk, psock);
- }
- 
- struct sk_psock *sk_psock_init(struct sock *sk, int node)
--- 
-2.47.1
-
+Vince Weaver
+vincent.weaver@maine.edu
