@@ -1,38 +1,38 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1982CCC1
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F9D1D5161
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414125; cv=none; b=XRubk4J9xw2Tczt20Rly06xLod55tufhy0yLaeM13VUB3T8b5/upV+lWqYCTG5StLt8R4sjrce8nZrrjLNGEX/SdXc6ygaNu3aUnjMoH75Sdg4dyBeIvu0ZChVL5TzEjQfVqihq/DLpHpM/w0mfUuAsvadd8z86yULhOtaM77XQ=
+	t=1747414128; cv=none; b=HVE6q0bkp1UmwbwlNZtPTvw/nh/cGlWS4NqJxeeU83RC788g/n+3OdNoCkWPLQMBNlg2/LKw5ecuWHznn5zIKTbotHkmUuY7hOLwo7XM3SsoB1GXJ7WXgg4ucWjdZOt79yIOtNFTFeZFFeBj4iwsm0bSqZQh3Xt4OHp/Q8Ol45w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414125; c=relaxed/simple;
-	bh=1zqbrZGpx4267oH+VbULHqmi+QRRaZj0YbEMM5o2fIo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eT3Zpoka4h6DCVwMVoTWgnTfmI5oeJhnqP8E9IxGGUKPjg2O5nwDlpF6o4r8vJXsS20E7yX0kpbrba0wm6044ZVIPDPC8G5R8rCIv6sCk1F4XosAQ/cQjxos3ejKmtMsdzRkbenW+haBt8pcpaG8HWc+sx8PGvcvLrXqJRg5JNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p6mv6D9G; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1747414128; c=relaxed/simple;
+	bh=Vgbc1maod9xp+UWdtLkde/gZcHCqeJHDFjxnmU/bznM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Jlj9CwVTwYaRAryVEhItc4LJFi1EuI/vUfK25iLBfnijPo6o2H1AxKqQ758Gd5nuFZlsdaEvfk4FOmYQ8qAkuHydlFQESjZEcVNPrB3q5EV6CS2UrhurSii7s5BV9u3LB0URFi+MaUMM9ZkMVzhrABIyxSRdECYiknforMxQr0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RNSQfC13; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p6mv6D9G"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 427F6439B2;
-	Fri, 16 May 2025 16:48:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RNSQfC13"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 47127439BF;
+	Fri, 16 May 2025 16:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747414120;
+	t=1747414123;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=u67y+PxjqNGnhDEAS0aXR4UPt8Hc/le9hjcGHqYdEHU=;
-	b=p6mv6D9GJeRLeZED5h3yANz4ZPQLeix8vhRp1vxligLK4ImCq07Ci8X3eap0IMVpypq6Td
-	ZiR84hhLwi83tKGUaMKTqbdCVboLErpoliz4difn2vqIHdACf3kIGlAzm42YkQlHpZ7SNU
-	m4qp6q+b2hDVdQrwx8fMIYuPDzxKKas//d9DEOytowPTvJeDJRaPDLLgm+h5Aq7n9AMq5y
-	Dcp1a/jQaRfKt/t5cSKFy1kruQjl4pe9OfBEBsL0H15KvH0jHPryWsy9kgdXheJnuK3dpe
-	qbsczp1/UHJgzXKV9oFnywZwDSETs1qHD9guOotjZnIKeFayAq73rbWzPf6y4A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bnnSP8emWWczjXdhIVZKO3SpECVp47VYoxSTdeFsaMA=;
+	b=RNSQfC13EHpHlLF5OTLrcVNSVg+iXrF/o1ABqCBCU2/viuS1dmupvKSYEcIeYxO0UuURDR
+	bIDnAhXcDYhXFAC6cMG6xuGaKVu+Mke6U1esq4L5ivJW/2f7yVxI8CPNnXybg/GJyOpkJJ
+	PyO+NdnRHzEEbuvROQigihlLVsMN9mskD3lujE2lX0XBSvtu5IOgT2pgax+aQoYihwuOXQ
+	CXaGC+vwmJZmWzI/BsHjX/AjMoYD8gYqAxQlJu/tvyMQMJOixkvsrqgLGntMq6Ga+IhT6k
+	N4UahVuxd23NQxEYYX6QMv2drB24VlPGib/J82mr5CRXq32yCk8FA1DXNwQ9nQ==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: [PATCH v8 0/3] drm/bridge: add kunit tests for
- devm_drm_bridge_alloc()
-Date: Fri, 16 May 2025 18:48:36 +0200
-Message-Id: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
+Date: Fri, 16 May 2025 18:48:38 +0200
+Subject: [PATCH v8 2/3] dmr/bridge: add a .destroy func
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,12 +40,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAGRsJ2gC/32NQQ6CMBBFr0Jm7ZgGwRZX3sOwKO1UJgFK2qbRE
- O5uJXHrYhbv//w3G0QKTBFu1QaBMkf2SwF1qsCMenkSsi0Mtahb0QiFNsw4BLal0dPkDdpyiWL
- C+iqtE5acUgLKfg3k+HW4H33hkWPy4X28yvKb/qzdH2uWKFBfjG6GTraddPfB+zTxcjZ+hn7f9
- w/8ZL2BxAAAAA==
-X-Change-ID: 20250408-drm-bridge-alloc-doc-test-267df0def880
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250516-drm-bridge-alloc-doc-test-v8-2-7e356fd58ba5@bootlin.com>
+References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
+In-Reply-To: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
@@ -63,64 +61,65 @@ Cc: Anusha Srivatsa <asrivats@redhat.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejjefhgfffleevhefhfeduhedtfedttedtkefgkeeuieehtdeifeduveejffevgeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhis
- hhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehprghulhhksehshihsqdgsrghsvgdrihhopdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhm
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehjefgudegvddukeegvedtgfduudehtdfgteefvefgheekjeehvdeihfdtfffhkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhop
+ hdrohhrghdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehprghulhhksehshihsqdgsrghsvgdrihhopdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhm
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This small series adds a few kunit tests for the new DRM bridge allocation
-flow, based on the recently introduced devm_drm_bridge_alloc() [0].
+Some users of DRM bridges may need to execute specific code just before
+deallocation.
 
-It is part of the work towards removal of bridges from a still existing DRM
-pipeline without use-after-free.
+As of now the only known user would be KUnit tests.
 
-The steps in the grand plan [1] are:
-
- 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
- 2. handle gracefully atomic updates during bridge removal
- 3. avoid DSI host drivers to have dangling pointers to DSI devices
- 4. finish the hotplug bridge work, removing the "always-disconnected"
-    connector, moving code to the core and potentially removing the
-    hotplug-bridge itself (this needs to be clarified as points 1-3 are
-    developed)
-
-This series is part of step 1 of the grand plan.
-
-Current tasks in step 1 of the grand plan:
-
- A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
- B. … convert all bridge drivers to new API (in progress)
- C. ➜ kunit tests (this series)
- D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
- E. after (B), convert accessors; this is a large work and can be done
-    in chunks
- F. debugfs improvements
-
-[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
-[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
-
+Suggested-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
-Changes in v8:
-- Remove documentation patch
-- Add patch to convert existing kunit tests to use devm_drm_bridge_alloc()
-- Add tests for bridge deallocation (based on adding a .destroy callback)
-- Link to v7: https://lore.kernel.org/r/20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com
 
 ---
-Luca Ceresoli (3):
-      drm/tests: bridge: convert to devm_drm_bridge_alloc() API
-      dmr/bridge: add a .destroy func
-      drm/tests: bridge: add KUnit tests for devm_drm_bridge_alloc()
 
- drivers/gpu/drm/drm_bridge.c            |   2 +
- drivers/gpu/drm/tests/drm_bridge_test.c | 179 +++++++++++++++++++++++++-------
- include/drm/drm_bridge.h                |  10 ++
- 3 files changed, 151 insertions(+), 40 deletions(-)
+This patch is new in v8. The .destroy callback had appeared in v5 as well
+[5], but as part of a larger patch and for different reason that do not
+apply anymore.
+
+[5] https://lore.kernel.org/all/20241231-hotplug-drm-bridge-v5-3-173065a1ece1@bootlin.com/#t
 ---
-base-commit: aec8a40228acb385d60feec59b54573d307e60f3
-change-id: 20250408-drm-bridge-alloc-doc-test-267df0def880
+ drivers/gpu/drm/drm_bridge.c |  2 ++
+ include/drm/drm_bridge.h     | 10 ++++++++++
+ 2 files changed, 12 insertions(+)
 
-Best regards,
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index b4c89ec01998b849018ce031c7cd84614e65e710..6185cb29fe3162264f0912c09c205fb467975dee 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -203,6 +203,8 @@ static void __drm_bridge_free(struct kref *kref)
+ {
+ 	struct drm_bridge *bridge = container_of(kref, struct drm_bridge, refcount);
+ 
++	if (bridge->funcs->destroy)
++		bridge->funcs->destroy(bridge);
+ 	kfree(bridge->container);
+ }
+ 
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 4e418a29a9ff9d014d6ac0910a5d9bcf7118195e..3ccd493faa580845c2ed1166f398eca27b464261 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -86,6 +86,16 @@ struct drm_bridge_funcs {
+ 	 */
+ 	void (*detach)(struct drm_bridge *bridge);
+ 
++	/**
++	 * @destroy:
++	 *
++	 * This callback is invoked when the bridge is about to be
++	 * deallocated.
++	 *
++	 * The @destroy callback is optional.
++	 */
++	void (*destroy)(struct drm_bridge *bridge);
++
+ 	/**
+ 	 * @mode_valid:
+ 	 *
+
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+2.49.0
 
