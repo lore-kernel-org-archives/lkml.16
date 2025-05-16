@@ -1,132 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CF217B425
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9639417B425;
+	Fri, 16 May 2025 09:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387739; cv=none; b=RP1FAf3grYsyuRg523/fiBy6T12yORvG5C1ly80y778TIMUNKyoOkyXHSFgIw3xmGdMj4ZFnmcAkDBKG35CHlLHoHTz+ngIFgU1MjZofuLe6xXHuAtsTGBLGlDYu8uX4Iakg5g0WwDMvmSgqJqK2AcvztL94K1d6aF6iN+soYBE=
+	t=1747387753; cv=none; b=VSt7b/0KQqHulrFzg3SIuJWhPOBdh/Alt0iJiJEzOGfAFw7OnduJ0+4UOh4BJvNHqAACVnuEWfRqK/oFqPW9OIxd6FeQA7zfR/RsqFzVKzGUxmoVpkN4bkrwBk/o4qbRjHhCc23Cs/2/Sl7Fd7rar9zekkkjAhiBNOPebRLWJ6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387739; c=relaxed/simple;
-	bh=C1cSy2xki2wOWUPUW6I0rnyp/Sf3WYwzapviu29pDzI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PzCf2dc20r3riIDP2j4i+VTdfcRVv/PK7SN7hYFfQ+UOqjKxLI9umYQDrddZ5bAa2TwwFD1VpH1G2Wxnhr/CiGSjNiO0dWrML87O92vGihYA7+HrB04O3E2UAvjgB/nm7uftP4lVo6odZ3E7dtkbDmEKnZ8ELN+VxbHFSUn3nnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMoRjdwE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMoRjdwE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6567C4CEE4;
-	Fri, 16 May 2025 09:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747387738;
-	bh=C1cSy2xki2wOWUPUW6I0rnyp/Sf3WYwzapviu29pDzI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pMoRjdwEZOifjh9RLx4oKclSMQBYE2awSKuA283WPcrDrh7dfsFNwEDomiLpDWYce
-	 2cTzVGmNcC+u5MCSy6w+ECCpum5y3zt+8Ve1O8JuJX043PuyQwk00Fi6/srzUaCm+c
-	 cP+qp+SyfuDVpVZT9UXKivzba1NVbHOQttOodqGvTDQ82ohlsgp5rbD/WAGs1J56EN
-	 6XXAbgte/IpCmA0Yz831Dxc9C5RRvgWe51Qyn7PMKed9VFHmcFgTLP/d76amFMraoi
-	 a2P1JtfJm2Xttdn4i1PXaLhFWtgkPzFGXcOkdbLHKLLpqyPw8w+IoMRape0mlLg82f
-	 0jj3A1HmU6UNQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFrNA-00FVXj-EC;
-	Fri, 16 May 2025 10:28:56 +0100
-Date: Fri, 16 May 2025 10:28:56 +0100
-Message-ID: <86frh4gazr.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner
-	<tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	junhosj.choi@samsung.com,
-	hajun.sung@samsung.com,
-	joonki.min@samsung.com,
-	d7271.choe@samsung.com,
-	jkkkkk.choi@samsung.com,
-	jt1217.kim@samsung.com,
-	qperret@google.com,
-	willdeacon@google.com,
-	dhyun.cha@samsung.com,
-	kn_hong.choi@samsung.com,
-	mankyum.kim@samsung.com
-Subject: Re: [QUESTION] arch_counter_register() restricts CNTPT access when booted in EL1, even if EL2 is supported
-In-Reply-To: <aCbhBttvi8mvsyGE@perf>
-References: <CGME20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770@epcas2p2.samsung.com>
-	<aCbhBttvi8mvsyGE@perf>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1747387753; c=relaxed/simple;
+	bh=lgfOvw9PRaqqITI17nzxDUTefwJZlD2RgByKAPpT1ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlQtoZ1DPKzYlVLGqsmtzQUaIUEj0inJves6FE/34uuwxP61BP6N4dyzRdSwCq/rsE8acFIko3L9PDFyRLpyHtQYzB7dwdYPpWGr60p5otG1q4moAC8ntiEZMsXh1bLMIY6M6DO60aMTHiY/NoWMfC11OZCDiPLfFk2P6vyeyBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 3YMIodAjS4CWJ19p23DZPA==
+X-CSE-MsgGUID: OM2rux11Sdad360Aas7vYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49280051"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49280051"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:29:10 -0700
+X-CSE-ConnectionGUID: Gd+nHPp3TqWMD3UeMg6bgg==
+X-CSE-MsgGUID: b4W4da++RHGZZFDlb50H4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143870626"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:29:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uFrNH-0000000267I-0bOR;
+	Fri, 16 May 2025 12:29:03 +0300
+Date: Fri, 16 May 2025 12:29:02 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH v8 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <aCcFXolH0FVBSP11@smile.fi.intel.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+ <59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: youngmin.nam@samsung.com, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, junhosj.choi@samsung.com, hajun.sung@samsung.com, joonki.min@samsung.com, d7271.choe@samsung.com, jkkkkk.choi@samsung.com, jt1217.kim@samsung.com, qperret@google.com, willdeacon@google.com, dhyun.cha@samsung.com, kn_hong.choi@samsung.com, mankyum.kim@samsung.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 16 May 2025 07:53:58 +0100,
-Youngmin Nam <youngmin.nam@samsung.com> wrote:
->=20
-> [1  <text/plain; utf-8 (8bit)>]
-> Hi arm arch timer experts,
->=20
-> While reviewing the arm_arch_timer code in Linux 6.12,
-> I noticed that the function arch_counter_register() restricts the
-> use of the physical counter (cntpct_el0) on systems where the kernel
-> is running in EL1, even if EL2 is supported and cntpct_el0 is
-> accessible.
->=20
-> In our case:
-> - We are not using pKVM.
-> - The kernel is booted in EL1.
-> - We disabled VIRT_PPI and explicitly selected PHYS_NONSECURE_PPI for the=
- timer refering to below code.
+On Thu, May 15, 2025 at 06:13:56PM -0300, Jonathan Santos wrote:
+> The synchronization method using GPIO requires the generated pulse to be
+> truly synchronous with the base MCLK signal. When it is not possible to
+> do that in hardware, the datasheet recommends using synchronization over
+> SPI, where the generated pulse is already synchronous with MCLK. This
+> requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+> 
+> Use trigger-sources property to enable device synchronization over SPI
+> and multi-device synchronization while replacing sync-in-gpios property.
 
-That's not legal. The architecture guarantees that there is a virtual
-timer and a physical timer. No ifs, no buts.
+...
 
-[...]
+> +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> +					   struct ad7768_state *st)
+> +{
+> +	struct fwnode_reference_args args;
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> +	int ret;
+> +
+> +	/*
+> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> +	 * to synchronize one or more devices:
+> +	 * 1. Using an external GPIO.
+> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> +	 *    synchronization pulse that drives the SYNC_IN pin.
+> +	 */
+> +	if (!fwnode_property_present(fwnode, "trigger-sources")) {
 
-> As I understand it, `is_hyp_mode_available()` checks whether the
-> kernel booted into EL2 =E2=80=94 not whether EL2 is *supported* by the
-> hardware.
->=20
-> Therefore, even on systems where EL2 exists and `cntpct_el0` is
-> accessible from EL1, the kernel still forces the use of `cntvct_el0`
-> if the boot EL is EL1.
+I'm wondering if you can split the below to a separate function and do something like
 
-Yes, because it isn't architecturally valid to not have a virtual
-timer. This isn't about EL2 being present of not. The switch to the
-physical timer is purely an optimisation for KVM so that it doesn't
-have to switch the virtual timer back and forth when running a guest,
-as the virtual timer is the most likely used timer.
+	if (fwnode_property_present(...))
+		return setup_trigger_source(...);
 
-> Is this restriction to `cntvct_el0` in EL1 an architectural
-> requirement, or simply a conservative default to avoid possible
-> traps on some systems?
+	...
+	en_spi_sync = true;
+	return 0;
 
-Both. Crucially, it isn't possible to trap the virtual timer on some
-older implementations.
+> +		/*
+> +		 * In the absence of trigger-sources property, enable self
+> +		 * synchronization over SPI (SYNC_OUT).
+> +		 */
+> +		st->en_spi_sync = true;
+> +		return 0;
+> +	}
+> +
+> +	ret = fwnode_property_get_reference_args(fwnode,
+> +						 "trigger-sources",
+> +						 "#trigger-source-cells",
+> +						 0,
+> +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> +						 &args);
 
-> If the hardware clearly supports EL2 and allows CNTPT access from
-> EL1, could this restriction be relaxed?
 
-Absolutely not. Having the virtual timer is a hard requirement from
-both the architecture *and* Linux. Feel free to emulate it from EL2 if
-you want (and can trap it).
+__free(fwnode_handle) ?
 
-Thanks,
+> +	if (ret)
+> +		return ret;
+> +
+> +	fwnode = args.fwnode;
+> +	/* First, try getting the GPIO trigger source */
+> +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> +							       NULL,
+> +							       0,
+> +							       GPIOD_OUT_LOW,
+> +							       "sync-in");
+> +		ret = PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> +		goto out_put_node;
+> +	}
+> +
+> +	/*
+> +	 * TODO: Support the other cases when we have a trigger subsystem to
+> +	 * reliably handle other types of devices as trigger sources.
+> +	 *
+> +	 * For now, return an error message. For self triggering, omit the
+> +	 * trigger-sources property.
+> +	 */
+> +	ret = dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> +
+> +out_put_node:
 
-	M.
+The above will allow to get rid of this label.
 
---=20
-Without deviation from the norm, progress is not possible.
+> +	fwnode_handle_put(args.fwnode);
+> +	return ret;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
