@@ -1,104 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B1E1D6188;
-	Fri, 16 May 2025 15:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75A5E55B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409083; cv=none; b=C9yCEZ1sMZ4BNIu32VH0bFeDobkRyxzgFcb6qqQc7SmNsA7gmdFvzuKyUsXHRREd0wbfadWCN2D68eCaxzApWgsJAYm6G2708Govumu0yKP/ZjUGbzdYK849ZWuse8Ofph/0dLHcmWyCt8A/bW5sOB9NnTkfwimZty+ZbQJtACI=
+	t=1747409149; cv=none; b=MoIh2ZNyZGG6j+nak9aEV06AiKjUnImdvWLR/TD4JlnbfuZBJc1jVTnCLdR61snpm7cuSyKnOmU3wuLES3gXQxX7m2r/0PiDNRMQsbOYKAaraaCL24zp0dXIZWLSnbofTNRxq1AWVejPct4LnKRpDSIamENHy4uuftZ1Orr/qec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409083; c=relaxed/simple;
-	bh=34twSl6TeXp2IsOgg+g+j37cRqBdIcgf6MZT2aX7nKo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f/e5SplDJU2f38U1uZ+xonD3flSpq0L3mnrOBI+HIdIAlmtrYfMjmGV2pQ+VGlIfnLZFv/kqyr/XDXR711FK137YvDiRNk1ktTzQyidTrDCbpultwBSpJFKgvS9ONqN+AJLDARz+J5w8y9BYrIx74GQmdFKdcZ/zas4aYuq38ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwVsOsqh; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747409149; c=relaxed/simple;
+	bh=T4BIEAhDTqZRM5mH//Q104xKr6Ry1/Eg1Nn09EvX+g0=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QbXXrLhIsc9Ur+N+5ySjj+aK4LnPZZrzabiMKQ4HYa/AAEdcyBFv1oHHLMitWy+3XShtqk83iJvhRN/oJvU0itPFd12Cpsha7Ug3JjMa+c4J0TK+WfwNGTG+0WmyCJPeFSzXGCgxNP4xhsdLzHfqqKIOfHVqLtXgKlLfCQL5bus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVRX/Cgm; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwVsOsqh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747409082; x=1778945082;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=34twSl6TeXp2IsOgg+g+j37cRqBdIcgf6MZT2aX7nKo=;
-  b=jwVsOsqhjCkCVddTWnaTv6XVItOA6tH4pfy7VHP0p35qQlRXHAci54Je
-   oxGM5lE7SEg7Z/l6zD3A9wy7Rwv79wwOeERlW/3xw+lz1xo0NadAWmY3P
-   C3Ejgv7XhArMS3hkdybpIA2ulbFXC4P7+B+Oki0UFuLIYjUcgmcDqIg9t
-   ZFHoEzqZwjXgN+/dm3bAKT11IZF/GeN33c5Rdma+4CNz4V8IOSq5/+SIE
-   Gbc5vvXI4b1dUCCu9zsYbHY0oUVuTpsz1VgHBiME1iYHkreh7PGzARmtt
-   j1/srdVNY9EYRBwChYFzu6o0lHHgrAFgG4Kfs32gZMnoPuJYYTBoHIgdu
-   w==;
-X-CSE-ConnectionGUID: cmy7r0qnSWKWBLYxMthMag==
-X-CSE-MsgGUID: YuGwin+/QfyvXyaRVtj+AQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="60775080"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="60775080"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:24:42 -0700
-X-CSE-ConnectionGUID: P0wdUR4ER9KhHMhaeXQarQ==
-X-CSE-MsgGUID: 9TYou/inQ2G7yQiwKnnwxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="139124042"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.60]) ([10.125.109.60])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:24:41 -0700
-Message-ID: <580d2aa6-0384-4c06-9d1b-f2f7d25fc9f7@intel.com>
-Date: Fri, 16 May 2025 08:24:39 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVRX/Cgm"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso369802166b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747409146; x=1748013946; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l5LnrWpUjzC81baVRdodmHMAvpPilsMBmZXNYI9sj7k=;
+        b=TVRX/Cgmc+yYsfcqdJEohwJrVuyzLpUUBYHuTIDmvMrV2phfGJQyh4AjslzaEomtge
+         5HkIV77SfxUOpr+Gi5JwprZ1RkmowCoTb4LVVpO++nJtpoh0qU9rSkwQdm4oH3QlUNC6
+         sUa7wKJmO9fPd4jFc6jQdwx4RlJzRZUbOCIhVta8eYzPxjA1ZeqSB7uMu0uHvQgRu6TG
+         dEPHFHM5Do45SbmCFGCvqB8oExrjaDGoOkqIuqRaVHhHdnfgLnKgv+sfcFmLsrLGrPaN
+         hoShbyUvNIWdJ/SU6gUEJ5Fb5eOB7UUXvtuLBxP+xyzkTn5rjmiUccDm3dTNQ1ezOaDO
+         cVUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747409146; x=1748013946;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5LnrWpUjzC81baVRdodmHMAvpPilsMBmZXNYI9sj7k=;
+        b=dWzgLuoRP98SQAhMcU8skV5DDEnBRlHkfI8rEpTQwp0ayWooRUaGz+R5DzR09JvMjX
+         +xPTkmS1nELpq9R9qqsqMIRMT1A1ma2bCJu+l4mpn4UW231IJPstGQswoP9KoeFr8Tyj
+         +vaj7BYaNwCAMs4/kI0m9z31m0OsukmkBueSyWSpbxhTJhIn4EgdDUbmv1XVnHLQ+t4Q
+         DsGLrXgNK2quYMNnbu81Dw9ksBv2AJlrs6FUCykdSVPiQSL9CachUqzsFVbRyMt+8Orf
+         bdMqkbEq0krMZjBBvSzy0sMwiCyjYLgogRYND1+XfQ1poz9l8uC4Wn8dJQRPh6HwdZ2Z
+         uTPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBxYL5wg7Ssdf4OwTiHZuH15NAdQ5xA8ctIGF9BzV4cHFNKhNCnhfpypd6ssuhuxXk4z5Y56O13P1bcpE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqSFZgsRzhRtsGaBeod6xHyohtZboyFjSV4EcwVOAZm8rGU6KQ
+	W1vaiO5lZKNHMDTm0c9UT3s+LojLPTGJEZVRhOWCw9XayzfSyY+n1WAO27Fw4VU+
+X-Gm-Gg: ASbGnctJapcnwpEh0B2ZbEWsr1BhVXoTxlqtOyG8jaF9hv1NlRUZ9X3k5cQ13ISIKK9
+	vHf4sHVN/VVyiyZ6pd5koV6JfUh582M5eUHknY8VRgnkB0830M2fxFZnKF1ABXd5EbqkHYRyj9Y
+	lKv3nAWlsIZTeRnjggAoT8QjOYoEvwOSJPxnfIhKkkMZopDEK4871wJ9NZVEuSdm8R84uLaqGBy
+	mVarkIk8fdaOhQggUrSXwRDzm8h26gnIsh9zbgyY3Vmg7uiSNYpoCGbhVoTcA9KOOM3fZ4dbXXl
+	FpFfy7Wz0Vg/7bdwuwUK1/gnK+AAtEZBLXUt3UKJDh7AFSdSCIznbIbem4DjROgJBiRHOUhx8yw
+	pbGdrXM44LtTNz9UmJ9SqdcfP7lbu2Zj0aCC/
+X-Google-Smtp-Source: AGHT+IGCd4kvqEQL28zuvNOdejv/esSCapeHgE1kimyPHzr1Kjusxal7Vrwxo7ZEzhkXe4YSHMvxTw==
+X-Received: by 2002:a17:906:f5a4:b0:ad2:450b:f8da with SMTP id a640c23a62f3a-ad52d4ca492mr373367866b.19.1747409145958;
+        Fri, 16 May 2025 08:25:45 -0700 (PDT)
+Received: from andreas-VirtualBox (089144209151.atnat0018.highway.a1.net. [89.144.209.151])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b096sm173795066b.33.2025.05.16.08.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 08:25:45 -0700 (PDT)
+Date: Fri, 16 May 2025 17:25:44 +0200
+From: Andreas Kleinbichler <andi.kleinbichler@gmail.com>
+To: Dave Penkler <dpenkler@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: gpib: switch to kmalloc(sizeof(*status))
+Message-ID: <aCdY-OgvoTUjcIeF@andreas-VirtualBox>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/feature: Remove redundant code of get supported
- features
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250516143220.35302-1-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250516143220.35302-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Fix checkpatch warning:
 
+Prefer kmalloc(sizeof(*status)...) over
+kmalloc(sizeof(struct gpib_status_byte)...)
 
-On 5/16/25 7:32 AM, Li Ming wrote:
-> In cxlctl_get_supported_features(), there is a code block that handles
-> the case where the requested is equal to 0. But the code following the
-> code block can also handle this situation. So the code block is not
-> needed.
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+Signed-off-by: Andreas Kleinbichler <andi.kleinbichler@gmail.com>
+---
+ drivers/staging/gpib/common/gpib_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3 v6.15-rc6
-> ---
->  drivers/cxl/core/features.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 1498e2369c37..2d3a6d36a761 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -416,14 +416,6 @@ static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
->  
->  	rpc_out->size = struct_size(feat_out, ents, requested);
->  	feat_out = &rpc_out->get_sup_feats_out;
-> -	if (requested == 0) {
-> -		feat_out->num_entries = cpu_to_le16(requested);
-> -		feat_out->supported_feats =
-> -			cpu_to_le16(cxlfs->entries->num_features);
-> -		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-> -		*out_len = out_size;
-> -		return no_free_ptr(rpc_out);
-> -	}
->  
->  	for (i = start, pos = &feat_out->ents[0];
->  	     i < cxlfs->entries->num_features; i++, pos++) {
+diff --git a/drivers/staging/gpib/common/gpib_os.c b/drivers/staging/gpib/common/gpib_os.c
+index d87025aadccc..0678829ad14f 100644
+--- a/drivers/staging/gpib/common/gpib_os.c
++++ b/drivers/staging/gpib/common/gpib_os.c
+@@ -198,7 +198,7 @@ int push_status_byte(struct gpib_board *board, struct gpib_status_queue *device,
+ 			return retval;
+ 	}
+ 
+-	status = kmalloc(sizeof(struct gpib_status_byte), GFP_KERNEL);
++	status = kmalloc(sizeof(*status), GFP_KERNEL);
+ 	if (!status)
+ 		return -ENOMEM;
+ 
+-- 
+2.43.0
 
