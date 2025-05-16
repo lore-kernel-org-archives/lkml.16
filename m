@@ -1,94 +1,146 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615AA22F74D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B67481C4;
+	Fri, 16 May 2025 10:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747392160; cv=none; b=U7yK6SKXeJsRmW/9JjfcGvJOwdUx2FB0OsjYVfXM0mjlzrc2FMlsX+9RxtOeOi2UtQ4MVENHinPH2tivftt4d/+yt23ZyNV4R7IjjD+r/VJUf0JKNrukDpuFDDBTnea/XDp6bklh43L0y2z73hP7Dx4916QpCtt9gp9zAQHcm1s=
+	t=1747392206; cv=none; b=rcYpINvM2H4fyAsn9GavzscwLE/fooBs8ND+oMdkzoVbGNpmMr94468P3sD013i8aIqlAjEs9yJxySVC9kMRT0s2L7CpKUCyxQskzNw0VJ/8j62tWqb/QAtn/CzXqbPMLdgtFzziep94ibf+OUGEsMR8DxxK2iTAKmgtQoGqaL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747392160; c=relaxed/simple;
-	bh=5S5LCJKk0So/T0veEYnMbllxlYVebk+O5gwQW07D7hc=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mQhbJwH3T8DuEgkjPfdjlgkQEiXOltsJJLyK4pgRknOGcf8q8XYC2Lt149PKgU3QPl1P/HWxpk5h25DXXwBZFkfygZo/gkKEF+HZ4bb9PYzzfwRkzMpMu6mgTtajNpXFLr+vW9I7X1dWut6uGWi3e4i0SXBGuZYIteOAnvAjaSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=sjZmGPmQ; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1747392206; c=relaxed/simple;
+	bh=4XMPDkOHfHxTGAnkDGyqe2QhlNh+p4nDUDWQd8TKv4Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SER0CMspHcFbWQBb5OsoK+pZo4pF4uNDcS7pxveYrZBWKbNzibdUr1+BPUVBtrA3IWlKi+oWLg0+zAMZujrP1at9jNEary/S5u3aMjz3iNml673xWYmrUTYSZtHOlf6nFkfLVCpClE2bVhjv0XV79dpnkqOI4ObD06L4BLTXV8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OihX4uLk; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="sjZmGPmQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1747392150; x=1747651350;
-	bh=5S5LCJKk0So/T0veEYnMbllxlYVebk+O5gwQW07D7hc=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=sjZmGPmQO2BeCpJF94hzv0d67SMY1MYH/IZ0yOjwTy09QXaNbth7Lfw1+P0JOfIYJ
-	 RPc57CIk+uuWMs1ZaMAFjOmYI74MGd49m+5ErywHCtzgLrKHnx9EulkUaANqGJUYBd
-	 vyrfk2wMtNE9A+NflZ6hKKIE22uAabcAb7ztTBLaU/gAIn8TXSPpvDmHx8fZRcYe1v
-	 u824yQRfjmnOSYXVrM/YJRdPLTGu/jbeeV8mXk42qQieg59PWueVEUECA+Zpc9xlIN
-	 L2RWTNe5hq6fnOIO+Vj7EuWk2OplsKgGYK2x00wuO5D9wAug6G+J03AZT/1eFmFSw4
-	 SMf63wKPw6U1A==
-Date: Fri, 16 May 2025 10:42:25 +0000
-To: intel-xe@lists.freedesktop.org
-From: Harry Austen <hpausten@protonmail.com>
-Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry Austen <hpausten@protonmail.com>, Lucas De Marchi <lucas.demarchi@intel.com>, =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Jani Nikula <jani.nikula@linux.intel.com>, Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH v4] drm/xe: Allow building as kernel built-in
-Message-ID: <20250516104210.17969-1-hpausten@protonmail.com>
-Feedback-ID: 53116287:user:proton
-X-Pm-Message-ID: 09e2a1a12e00f3a2b0e22c797cd769bce3479781
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OihX4uLk"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b811be6dbso115087276.2;
+        Fri, 16 May 2025 03:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747392203; x=1747997003; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ucwOIC2+Dn1yWptuhTEy+YE9t5m2Ly1InIqSD1HT56s=;
+        b=OihX4uLkpN7Yrjrb0DgkpRS7unoaXjAMar/hnCx/DqpyHRbpMRiRzsFpSYcupHZ28W
+         Ft1tU8jFF2+yybamysmeCk6y+ePw3gOQvxYdiucUPGjWVQYx1+W/nI8PtXpbAC+RuesV
+         KfuIgV3o8RSc75Z/qUezS5l54NMjivsKM89ecfYwfDtPgnBI1tuZVE0kuZIKCBxrSh8Q
+         ywrgBxX/OSfYl1v7buwbEe/09sBF5gOSh9VAPmfd08Kd0nNmEvgMY+qZQI2oMNg+eYQI
+         O3DEn5fh+R0aNxdPTCU01f2A+3bPnMaDIx4Sb/O9tjj+YcEVD5vj0LUzFwom2cCbesF9
+         b0nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747392203; x=1747997003;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ucwOIC2+Dn1yWptuhTEy+YE9t5m2Ly1InIqSD1HT56s=;
+        b=j07ar+ZrKmmL+8h8myQN7E2NZMrcKYbppsvvZKt6zvdw/2ZwOWOYmpmtQYyjfv2Y/G
+         w8KNzF0VL/dckRW9tDYFQYJkgxvc7miwBFgm5C3Y3KAhGwb2QLADuW+TlHdnWjwKA4j2
+         G5OlXZRqtxK1pGUQiaR3mlKfCY3Ppgi6HiMVFjatq0T6cQrdI0sGRJhqQwy7VnQZojhg
+         lXDJuvi2DseUshuA8u4EF5ANSzUubMmCkNCy48B/Cvi9Gmtv+XRxgHCWbh+iaTT8TXxJ
+         kpEpld2fOD4LUV3FOYV285GgKfTC5Lpp+Wvg8u1aTlWbf0WtW7c/9pcyXHRHjdQ1S8Fg
+         MMww==
+X-Forwarded-Encrypted: i=1; AJvYcCXC+XOYa6sMZuskj8CTIoayH++YGHoqs5i0nPy/bNd2mgsg35qdBch0xRS0zNlvZHdX4+3/DdZKKxd8lcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7N+6qFKywx8k1SETAMuTnmoZ2JBUE6hHZn60+fIlaOY+UXIGX
+	NQHYivR2A22sJmms0nh5kSEPk6ex+PamniVghwKBreCZ3sphjpir+NxDWemFNbB0N31rn6tiIDz
+	TG03Uf2eHjFJ6tFJX46MpOxlRENEFbYM=
+X-Gm-Gg: ASbGncseMlRoinu2zt0MEYYpf9xr8NBVsmQSARCnVi9+NodQ+s05aDmIKpcm9QVC+LK
+	YIZhlf7D9GkdD3Y/P9fnGy+UaqFNXX/+Skj+o7hDPg433EBbM20axFrSdIhNTwlW78o+SyrWOj+
+	Zbzn4k+fC0L6Mou5w3Nu6ajSEmKW16LJkM
+X-Google-Smtp-Source: AGHT+IF4a8SiBD6kRuHCyWfESvtavJV+3e8AyekJQZqmMU3uD5RHGHVx54hBPo/KqOMX3HMnQ9BtYpKsBmyJLcds4rc=
+X-Received: by 2002:a05:6902:490f:b0:e78:f2e4:bcc3 with SMTP id
+ 3f1490d57ef6-e7b69d5bc06mr4155104276.9.1747392203174; Fri, 16 May 2025
+ 03:43:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250515184836.97605-1-stefano.radaelli21@gmail.com> <63727423-9d19-40d1-b8d3-7c292529b16f@lunn.ch>
+In-Reply-To: <63727423-9d19-40d1-b8d3-7c292529b16f@lunn.ch>
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Date: Fri, 16 May 2025 12:43:12 +0200
+X-Gm-Features: AX0GCFsG5DxzmYdMgf7cIX9WucEUsQXkZQekTE02IsEY6bDS2Kw7vir3bWlv3Hw
+Message-ID: <CAK+owojG1yfUy8rYzP1Q3q1ogq8dwwAK8ekk2AS+ABjH50e7ZQ@mail.gmail.com>
+Subject: Re: [PATCH] net: phy: add driver for MaxLinear MxL86110 PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Xu Liang <lxu@maxlinear.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Fix Kconfig symbol dependency on KUNIT, which isn't actually required
-for XE to be built-in. However, if KUNIT is enabled, it must be built-in
-too.
+Hi Andrew,
 
-Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
-isn't, since that results in duplicate symbol errors.
+Thanks for the review and for pointing this out.
 
-Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Signed-off-by: Harry Austen <hpausten@protonmail.com>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
----
-v4: Add Jani Nikula's Acked-by tag
-v3: Simplify KUNIT dependency, as suggested by Jani Nikula
-v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+> Why are these two special and use the locked variant, when all the
+> others don't?
+> Please think about locking, when can unlocked versions be used? When
+> should they not be used?
+> Are you testing this with CONFIG_PROVE_LOCKING enabled?
 
- drivers/gpu/drm/xe/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+You're right, the use of the _locked variants was confusing and inconsistent.
+After enabling CONFIG_PROVE_LOCKING and testing, I identified where
+locking is necessary.
+Functions like get_wol, set_wol, config_init, and LED controls can be called
+concurrently from userspace or asynchronous contexts, so they require locking
+the MDIO bus. Without proper locking, I got warnings like:
+WARNING: ... at drivers/net/phy/mdio_bus.c:920 __mdiobus_write
+WARNING: ... at drivers/net/phy/mdio_bus.c:891 __mdiobus_read
 
-diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-index 9bce047901b22..214f40264fa12 100644
---- a/drivers/gpu/drm/xe/Kconfig
-+++ b/drivers/gpu/drm/xe/Kconfig
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_XE
- =09tristate "Intel Xe Graphics"
--=09depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
-+=09depends on DRM && PCI && MMU
-+=09depends on KUNIT || KUNIT=3Dn
- =09select INTERVAL_TREE
- =09# we need shmfs for the swappable backing store, and in particular
- =09# the shmem_readpage() which depends upon tmpfs
-@@ -51,7 +52,7 @@ config DRM_XE
-=20
- config DRM_XE_DISPLAY
- =09bool "Enable display support"
--=09depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
-+=09depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
- =09select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
- =09select I2C
- =09select I2C_ALGOBIT
---=20
-2.49.0
+To clean up, I removed the locked helpers and instead wrapped extended
+register accesses with phy_lock_mdio_bus() where needed.
+Now, no warnings appear with CONFIG_PROVE_LOCKING enabled
+after testing every implemented functionality.
 
+> Please also take a read of:
+> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+> https://docs.kernel.org/process/submitting-patches.html
 
+Thanks, I have reread those documents, updated the code accordingly,
+and plan to send my patch today with the [PATCH net-next] tag.
+
+Best Regards,
+
+Stefano
+
+Il giorno gio 15 mag 2025 alle ore 21:03 Andrew Lunn <andrew@lunn.ch>
+ha scritto:
+>
+>         > +static void mxl86110_get_wol(struct phy_device *phydev, struct ethtool_wolinfo *wol)
+> > +{
+> > +     int value;
+> > +
+> > +     wol->supported = WAKE_MAGIC;
+> > +     wol->wolopts = 0;
+> > +     value = mxl86110_locked_read_extended_reg(phydev, MXL86110_EXT_WOL_CFG_REG);
+>
+>
+> > +static int mxl86110_led_hw_control_set(struct phy_device *phydev, u8 index,
+> > +                                    unsigned long rules)
+> ..
+>
+> > +     ret = mxl86110_locked_write_extended_reg(phydev, MXL86110_LED0_CFG_REG + index, val);
+>
+> Why are these two special and use the _locked_ variant, when all the
+> others don't?
+>
+> Please think about locking, when can unlocked versions be used? When
+> should they not be used?
+>
+> Are you testing this with CONFIG_PROVE_LOCKING enabled?
+>
+> Please also take a read of:
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+> https://docs.kernel.org/process/submitting-patches.html
+>
+>     Andrew
+>
+> ---
+> pw-bot: cr
+>
+>
