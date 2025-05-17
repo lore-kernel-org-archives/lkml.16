@@ -1,159 +1,406 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA94B1E77;
-	Sat, 17 May 2025 19:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ED417E4;
+	Sat, 17 May 2025 19:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747511333; cv=none; b=oTV2G+aAbAF6KTa4S1qriCTfkGHICQVt1gYt0/cu2hINJSFNPgAmH91RF27WbpBFTQWqyo3pZ9zvzG3IUwQzehtVJVQkdsqzyf1/xM4ln29jtyev2d44L4Ty6rb3jcAs0Zf6WdK7cMhzTjBGOK+oeMUlshEvhWKTg6fA7hcBZjQ=
+	t=1747511388; cv=none; b=mzAGg9vMC7b+7u8C8L8roACXr01y/Q9CEzw+BnuR+M8CWTeyiMHmTEKBa8eoyMj2xjMWTu4zIzLi1MXA3Fn9ggmzF7tewrXc6Z+9opUF4ni66IYex+X1CjZHXKJVkr/xb/ErwZPL2Dh8pjhvmEToUD0D8Ox2fyR+UkUFg3vhr6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747511333; c=relaxed/simple;
-	bh=Z6YzL1H0GBfu9PDaQyBtiwbNQT74oezkvmWLO1FNaPI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=IHIlPmydioKkEaRnYMEW3ylAx/36MSMYG29B7WUANVwshyJCc/HUGY2XNQSMMr+if4Os7DI97DmfPzeGU7yupNH59oraNu+tnBGAYUPCwj/GorbvsBxXmM33DytP0B4n13cctIRXdjJUdgPZg8WK3PktSn0Fj65AG0tIoRb9IZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.2.107] (p57bd9f10.dip0.t-ipconnect.de [87.189.159.16])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5E3C7601D7139;
-	Sat, 17 May 2025 21:48:40 +0200 (CEST)
-Message-ID: <536c7c6e-a802-48f7-8b31-002b1aa14ac4@molgen.mpg.de>
-Date: Sat, 17 May 2025 21:48:39 +0200
+	s=arc-20240116; t=1747511388; c=relaxed/simple;
+	bh=XQO6wQTeUm9Nlytzmcb0X/cJhPkMXeNSo25rIsazWEE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YcmjM287vbb/mj+P6W00zaYo7IH4EQt29brANYCWjudgfkDaz38rG48KsC/5FLid/hDS8lES60MsZ202M61Uw+8Xfc8kl38QG/DOFcP3R4evFwlhTswqLPsFFL++Sblu9ME9bj6iPRnIHmcA7pyszfItfHaYSc++R4sla0dIleI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=FF8gom7o; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="FF8gom7o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747511365; x=1748116165; i=spasswolf@web.de;
+	bh=Lb18E4a+wHns7EolImEwuBScFMtE4Yi7mU7s8xVLWww=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=FF8gom7o1qh7VAmXnj5AFqhQGd5dmTz6liwMmKyzcGhJZO5XZQw4xbai0mCox98Y
+	 bxNlCgLFo0okC1XINO3FG4HHcbELNdHV2EtaVPLvfJazfoUgBRZmITu38VHTQ4IBQ
+	 K0sZybPYr2qgMOwYNoGgYvi1PNmbSZTJG5tqJmn82+9c6Dt1yHXF7xPTYZyG6lS6E
+	 XtyBMrPiUBeh0KxX1GbZ0XlvLcJTVVRiM8kjfUzfDHXz3y7s+ui9ptQZYjSRqYtVa
+	 Bmz1WCdPID4gAyXVRekypaOc5kscX9Ey6jpgEYZB7Av7zlFpuPx9fA5QjECN1Pife
+	 c+50qol7ktuFd5n0cQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MqqPN-1ulIaC2mKf-00fNVk; Sat, 17
+ May 2025 21:49:25 +0200
+Message-ID: <15f3633cbd08b30475d5b76c5cc9180fbf17a12f.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Johannes Berg <johannes@sipsolutions.net>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>
+Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, 
+ "llvm@lists.linux.dev"
+	 <llvm@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-wireless@vger.kernel.org, Jason Xing <kerneljasonxing@gmail.com>, 
+	spasswolf@web.de
+Date: Sat, 17 May 2025 21:49:24 +0200
+In-Reply-To: <388bbc4c805ce029bbd08010fd30405494f998a9.camel@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+												 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+											 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+										 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+									 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+								 <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
+					 <f8552d41fb7eae286803b78302390614179b33b0.camel@web.de>
+				 <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
+			 <ba97a2559cda1b14e0c9754523ff1152bdad90ef.camel@web.de>
+		 <63cc1dbf07bde2c9d14e1f86ce2c2ce26a2a9936.camel@web.de>
+	 <388bbc4c805ce029bbd08010fd30405494f998a9.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: ppp0: recursion detected
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bt1lOAv4WI5hqOQFiWb3ZC+bVp8gF2UaYVCHfz2fzBXt7i/Ohea
+ vYObJ/ByVi7U9KEBFF+fzCJb5ce4bw6B1MZi0t5l1hLSNyqoMcQxwpD7InALo1fg1zA07+T
+ LbToAZ664Xs2gMZx7au8pyDxA03TVIBvpKdjgWUOWKoBjNdqkozGhQReBdhtVUBoykkU222
+ kx9eUINYIXz6kk/f7C0dw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SwbBK1cvTd0=;v0aqcMWx0B8dsC9qBH78chfqcEA
+ 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
 
-Dear Linux folks,
+Am Samstag, dem 17.05.2025 um 13:34 +0200 schrieb Bert Karwatzki:
+> Am Freitag, dem 16.05.2025 um 20:19 +0200 schrieb Bert Karwatzki:
+> > I've added a debugging statement:
+> >=20
+> > diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+> > index 3bd5ee0995fe..853493eca4f5 100644
+> > --- a/net/mac80211/tx.c
+> > +++ b/net/mac80211/tx.c
+> > @@ -4586,7 +4586,11 @@ static noinline void ieee80211_8023_xmit_clang_=
+debug_helper(struct sk_buff *skb,
+> >                                                             struct iee=
+e80211_local *local,
+> >                                                             struct iee=
+e80211_tx_info *info)
+> >  {
+> > -       if (unlikely(skb->sk && sock_flag(skb->sk, SOCK_WIFI_STATUS)))=
+ {
+> > +       if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_WI=
+FI_STATUS) ||
+> > +                               sock_flag(skb->sk, SOCK_WIFI_STATUS)))=
+) {
+> > +               if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ =
+sock_flag(skb->sk, SOCK_WIFI_STATUS))
+> > +                       printk(KERN_INFO "%s: skb_shinfo(skb)->tx_flag=
+s & SKBTX_WIFI_STATUS =3D %u sock_flag(skb->sk,
+> > SOCK_WIFI_STATUS) =3D %u\n",
+> > +                                       __func__, (skb_shinfo(skb)->tx=
+_flags & SKBTX_WIFI_STATUS), sock_flag(skb->sk,
+> > SOCK_WIFI_STATUS));
+> >                 info->status_data =3D ieee80211_store_ack_skb(local, s=
+kb,
+> >                                                             &info->fla=
+gs, NULL);
+> >                 if (info->status_data)
+> >=20
+> > This gives the following logoutput (and a lockup), indicating that soc=
+k_flag(skb->sk, SOCK_WIFI_STATUS) and
+> > (skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) are actually NOT equiv=
+alent (when compiled with clang and
+> > PREEMPT_RT=3Dy)
+>=20
+> I've added more debugging output:
+>=20
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index e223102337c7..e13560b5b7a8 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -2735,8 +2735,10 @@ static inline void _sock_tx_timestamp(struct sock=
+ *sk,
+>  				*tskey =3D atomic_inc_return(&sk->sk_tskey) - 1;
+>  		}
+>  	}
+> -	if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS)))
+> +	if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS))) {
+> +		printk(KERN_INFO "%s: setting SKBTX_WIFI_STATUS for sk =3D %px\n", __=
+func__, sk);
+>  		*tx_flags |=3D SKBTX_WIFI_STATUS;
+> +	}
+>  }
+> =20
+>  static inline void sock_tx_timestamp(struct sock *sk,
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index e02a78538e3e..f6589ad5ba36 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -1548,6 +1548,7 @@ int sk_setsockopt(struct sock *sk, int level, int =
+optname,
+>  		break;
+> =20
+>  	case SO_WIFI_STATUS:
+> +		printk(KERN_INFO "%s: setting SOCK_WIFI_STATUS to %u for sk =3D %px\n=
+", __func__, valbool, sk);
+>  		sock_valbool_flag(sk, SOCK_WIFI_STATUS, valbool);
+>  		break;
+> =20
+> diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+> index 853493eca4f5..eee2f80949c6 100644
+> --- a/net/mac80211/tx.c
+> +++ b/net/mac80211/tx.c
+> @@ -4588,9 +4588,12 @@ static noinline void ieee80211_8023_xmit_clang_de=
+bug_helper(struct sk_buff *skb,
+>  {
+>  	if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATU=
+S) ||
+>  				sock_flag(skb->sk, SOCK_WIFI_STATUS)))) {
+> -		if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ sock_flag(skb->=
+sk, SOCK_WIFI_STATUS))
+> +		if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ sock_flag(skb->=
+sk, SOCK_WIFI_STATUS)) {
+>  			printk(KERN_INFO "%s: skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =
+=3D %u sock_flag(skb->sk, SOCK_WIFI_STATUS) =3D %u\n",
+>  					__func__, (skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS), sock_fl=
+ag(skb->sk, SOCK_WIFI_STATUS));
+> +			printk(KERN_INFO "%s: skb->sk =3D %px skb->sk->sk_flags =3D 0x%lx\n"=
+, __func__, skb->sk, skb->sk->sk_flags);
+> +			return; // This should make this case non-fatal.
+> +		}
+>  		info->status_data =3D ieee80211_store_ack_skb(local, skb,
+>  							    &info->flags, NULL);
+>  		if (info->status_data)
+>=20
+>=20
+>=20
+> This gives after ~15min uptime
+>=20
+> [  189.337797] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  189.337803] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1b798c4e00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  191.325256] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  191.325259] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1b798c5a00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  257.591831] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  257.591844] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1baf3bca00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  301.786963] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  301.786967] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1c1bc40100 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  302.780881] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  302.780884] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1a44cf6000 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  482.792298] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  482.792304] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1da0f4de00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  482.806144] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  482.806148] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1da0f4c500 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  482.817280] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  482.817284] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1da0f4df00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  552.327291] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  552.327295] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1da0f4de00 skb->sk->sk_flags =3D 0xffffffffb4efe640
+> [  916.971599] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_sh=
+info(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
+_STATUS) =3D 1
+> [  916.971607] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->s=
+k =3D ffff8c1a62834000 skb->sk->sk_flags =3D 0xffffffffb4efe640
+>=20
+> The printk()s in sk_set_sockopt() and _sock_tx_timestamp() are not calle=
+d at all so the flag=C2=A0
+> SOCK_WIFI_STATUS is actually nevers set! What is printed when printing s=
+kb->sk->sk_flags looks
+> suspiciously like a pointer, and as sk_flags is actually a member of a u=
+nion in struct sock_common
+> it seems clang is using sk_flags for one of the other union members here
+>=20
+> struct sock_common {
+> [...]
+> 	union {
+> 		unsigned long	skc_flags;
+> 		struct sock	*skc_listener; /* request_sock */
+> 		struct inet_timewait_death_row *skc_tw_dr; /* inet_timewait_sock */
+> 	};
+> [...]
+> }
+>=20
+> Bert Karwatzki
+
+I added even more debugging output and found out why commit 76a853f86c97 (=
+" wifi: free=C2=A0
+SKBTX_WIFI_STATUS skb tx_flags flag") does not work.
+
+diff --git a/include/net/sock.h b/include/net/sock.h
+index e13560b5b7a8..6e1291d2e5a1 100644
+=2D-- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2738,6 +2738,8 @@ static inline void _sock_tx_timestamp(struct sock *s=
+k,
+ 	if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS))) {
+ 		printk(KERN_INFO "%s: setting SKBTX_WIFI_STATUS for sk =3D %px\n", __fu=
+nc__, sk);
+ 		*tx_flags |=3D SKBTX_WIFI_STATUS;
++	} else {
++		printk(KERN_INFO "%s: NOT setting SKBTX_WIFI_STATUS for sk =3D %px\n", =
+__func__, sk);
+ 	}
+ }
+=20
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_so=
+ck.c
+index 20915895bdaa..4913b09c0617 100644
+=2D-- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -912,6 +912,7 @@ reqsk_alloc_noprof(const struct request_sock_ops *ops,=
+ struct sock *sk_listener,
+ 			return NULL;
+ 		}
+ 		req->rsk_listener =3D sk_listener;
++		printk(KERN_INFO "%s: sk_listener =3D %px\n", __func__, sk_listener);
+ 	}
+ 	req->rsk_ops =3D ops;
+ 	req_to_sk(req)->sk_prot =3D sk_listener->sk_prot;
+@@ -986,6 +987,7 @@ static struct request_sock *inet_reqsk_clone(struct re=
+quest_sock *req,
+ 	nreq_sk->sk_incoming_cpu =3D req_sk->sk_incoming_cpu;
+=20
+ 	nreq->rsk_listener =3D sk;
++	printk(KERN_INFO "%s: rsk_listener =3D%px\n", __func__, sk);
+=20
+ 	/* We need not acquire fastopenq->lock
+ 	 * because the child socket is locked in inet_csk_listen_stop().
+diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+index 67efe9501581..1a3108ec7503 100644
+=2D-- a/net/ipv4/inet_timewait_sock.c
++++ b/net/ipv4/inet_timewait_sock.c
+@@ -190,6 +190,7 @@ struct inet_timewait_sock *inet_twsk_alloc(const struc=
+t sock *sk,
+ 		const struct inet_sock *inet =3D inet_sk(sk);
+=20
+ 		tw->tw_dr	    =3D dr;
++		printk(KERN_INFO "%s: sk =3D %px tw_dr =3D %px\n", __func__, sk, dr);
+ 		/* Give us an identity. */
+ 		tw->tw_daddr	    =3D inet->inet_daddr;
+ 		tw->tw_rcv_saddr    =3D inet->inet_rcv_saddr;
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index eee2f80949c6..227b86427e06 100644
+=2D-- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -4586,6 +4586,8 @@ static noinline void ieee80211_8023_xmit_clang_debug=
+_helper(struct sk_buff *skb,
+ 							    struct ieee80211_local *local,
+ 							    struct ieee80211_tx_info *info)
+ {
++	if (skb->sk)
++		printk(KERN_INFO "%s: skb->sk =3D %px skb->sk->sk_flags =3D 0x%lx\n", _=
+_func__, skb->sk, skb->sk->sk_flags);
+ 	if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS)=
+ ||
+ 				sock_flag(skb->sk, SOCK_WIFI_STATUS)))) {
+ 		if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ sock_flag(skb->sk=
+, SOCK_WIFI_STATUS)) {
 
 
-In my logs September 23rd, 2024 up to now, I detected that with 
-6.15-rc1, Linux logs the error:
+This monitor the value of skb->sk->sk_flags not only in the error case but=
+ in all cases, and also monitors
+the places where the other members of the sk_flags union are set. The erro=
+r occurs when at the start
+of ieee80211_8023_xmit_clang_debug_helper() sk_flags is not actually the s=
+kc_flags member of the union
+but insted is skc_tw_dr which is only interpreted is flags.
+ So why does it work with gcc but fail with clang? sock_flag(skb->sk, SOCK=
+_WIFI_STATUS) test bit 19 of=C2=A0
+skb->sk->sk_flags=C2=A0
 
-     ppp0: recursion detected
+Here are the important snippets of debug output:
 
-and pppd logs:
+clang:
+[  T575] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff8f1bebba4=
+300 skb->sk->sk_flags =3D 0xffffffffa16fe640
 
-     Couldn't set PPP MRU: Transport endpoint is not connected
+Here test_bit(0xffffffffa16fe640, SOCK_WIFI_STATUS) is 1.
 
-Unfortunately, I do not know how to reproduce it. Starting the VPN and 
-stopping it, didn’t tricker it.
+gcc:
+[  T600] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff8d3506bec=
+700 skb->sk->sk_flags =3D 0xffffffff93d40100
+Here test_bit(0xffffffff93d40100, SOCK_WIFI_STATUS) is 0.
+
+So that this works with gcc just seems like luck. I've not yet test why it=
+ works with clang when PREEMPT_RT is not
+enabled but my guess is that in that case we have a tw_dr pointer which fa=
+ils the test_bit().
+
+Bert Karwatzki
 
 
-Kind regards,
-
-Paul
 
 
-$ journalctl -o short-precise
-[…]
-Apr 13 13:08:06.524838 abreu kernel: Linux version 
-6.15.0-rc1-00325-g7cdabafc0012 (build@bohemianrhapsody.molgen.mpg.de) 
-(gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) 
-#24 SMP PREEMPT_DYNAMIC Sun Apr 13 07:33:10 CEST 2025
-Apr 13 13:08:06.524877 abreu kernel: Command line: 
-BOOT_IMAGE=/vmlinuz-6.15.0-rc1-00325-g7cdabafc0012 
-root=UUID=32e29882-d94d-4a92-9ee4-4d03002bfa29 ro quiet pci=noaer 
-mem_sleep_default=deep log_buf_len=16M cryptomgr.notests
-[…]
-Apr 14 16:11:08.585722 abreu systemd[1]: Started 
-NetworkManager-dispatcher.service - Network Manager Script Dispatcher 
-Service.
-Apr 14 16:11:08.587011 abreu NetworkManager[750]: <info> 
-[1744639868.5869] policy: set 'Kabelgebundene Verbindung 1' 
-(enx00e04cf4ead4) as default for IPv4 routing and DNS
-Apr 14 16:11:08.599155 abreu NetworkManager[493654]: xl2tpd[493654]: 
-death_handler: Fatal signal 15 received
-Apr 14 16:11:08.599155 abreu NetworkManager[493654]: xl2tpd[493654]: 
-Terminating pppd: sending TERM signal to pid 493659
-Apr 14 16:11:08.599155 abreu NetworkManager[493654]: xl2tpd[493654]: 
-Connection 1 closed to 141.14.220.175, port 1701 (Server closing)
-Apr 14 16:11:08.599616 abreu pppd[493659]: Terminating on signal 15
-Apr 14 16:11:08.600343 abreu pppd[493659]: Connect time 6.7 minutes.
-Apr 14 16:11:08.600370 abreu pppd[493659]: Sent 1735197 bytes, received 
-56173839 bytes.
-Apr 14 16:11:08.601538 abreu charon[493547]: 15[KNL] 141.14.14.90 
-disappeared from ppp0
-Apr 14 16:11:08.601673 abreu charon[493547]: 16[KNL] interface ppp0 
-deactivated
-Apr 14 16:11:08.605867 abreu kernel: ppp0: recursion detected
-Apr 14 16:11:08.606180 abreu NetworkManager[494070]: Stopping strongSwan 
-IPsec...
-Apr 14 16:11:08.603094 abreu pppd[493659]: Overriding mtu 1500 to 1400
-Apr 14 16:11:08.602792 abreu NetworkManager[750]: <info> 
-[1744639868.6027] device (ppp0): state change: disconnected -> unmanaged 
-(reason 'unmanaged-external-down', managed-type: 'external')
-Apr 14 16:11:08.603111 abreu pppd[493659]: Overriding mru 1500 to mtu 
-value 1400
-Apr 14 16:11:08.603121 abreu pppd[493659]: Couldn't set PPP MRU: 
-Transport endpoint is not connected
-Apr 14 16:11:08.606938 abreu charon[493547]: 00[DMN] SIGINT received, 
-shutting down
-[…]
-Mai 16 08:30:51.562764 abreu kernel: Linux version 
-6.15.0-rc6-00085-gc94d59a126cb (build@bohemianrhapsody.molgen.mpg.de) 
-(gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) 
-#47 SMP PREEMPT_DYNAMIC Thu May 15 00:09:00 CEST 2025
-Mai 16 08:30:51.562904 abreu kernel: Command line: 
-BOOT_IMAGE=/vmlinuz-6.15.0-rc6-00085-gc94d59a126cb 
-root=UUID=32e29882-d94d-4a92-9ee4-4d03002bfa29 ro quiet pci=noaer 
-mem_sleep_default=deep log_buf_len=16M cryptomgr.notests
-[…]
-Mai 16 08:53:51.280468 abreu charon[10205]: 11[NET] sending packet: from 
-192.168.0.192[4500] to 141.14.220.175[4500] (108 bytes)
-Mai 16 08:53:53.108772 abreu systemd[1537]: Started 
-ptyxis-spawn-be64c1b8-8110-413d-acfe-e88f0f09ec17.scope - [systemd-run] 
-/usr/bin/bash.
-Mai 16 08:53:56.871412 abreu NetworkManager[826]: <info> 
-[1747378436.8713] audit: op="connection-deactivate" 
-uuid="837a96df-4fbc-4487-a2f5-152ff4e1ebd7" name="Molgen L2TP" pid=10744 
-uid=5272 result="success"
-Mai 16 08:53:56.872817 abreu dbus-daemon[789]: [system] Activating via 
-systemd: service name='org.freedesktop.nm_dispatcher' 
-unit='dbus-org.freedesktop.nm-dispatcher.service' requested by ':1.8' 
-(uid=0 pid=826 comm="/usr/sbin/NetworkManager --no-daemon")
-Mai 16 08:53:56.878345 abreu systemd[1]: Starting 
-NetworkManager-dispatcher.service - Network Manager Script Dispatcher 
-Service...
-Mai 16 08:53:56.914278 abreu dbus-daemon[789]: [system] Successfully 
-activated service 'org.freedesktop.nm_dispatcher'
-Mai 16 08:53:56.914544 abreu systemd[1]: Started 
-NetworkManager-dispatcher.service - Network Manager Script Dispatcher 
-Service.
-Mai 16 08:53:56.916548 abreu NetworkManager[826]: <info> 
-[1747378436.9165] policy: set 'Kabelgebundene Verbindung 1' 
-(enx00e04ceb9e75) as default for IPv4 routing and DNS
-Mai 16 08:53:56.936629 abreu kernel: ppp0: recursion detected
-Mai 16 08:53:56.936891 abreu NetworkManager[10309]: xl2tpd[10309]: 
-death_handler: Fatal signal 15 received
-Mai 16 08:53:56.936891 abreu NetworkManager[10309]: xl2tpd[10309]: 
-Terminating pppd: sending TERM signal to pid 10313
-Mai 16 08:53:56.936891 abreu NetworkManager[10309]: xl2tpd[10309]: 
-Connection 1 closed to 141.14.220.175, port 1701 (Server closing)
-Mai 16 08:53:56.937310 abreu pppd[10313]: Terminating on signal 15
-Mai 16 08:53:56.937853 abreu pppd[10313]: Connect time 5.1 minutes.
-Mai 16 08:53:56.937869 abreu pppd[10313]: Sent 1054040 bytes, received 
-15208988 bytes.
-Mai 16 08:53:56.938258 abreu charon[10205]: 06[KNL] interface ppp0 
-deactivated
-Mai 16 08:53:56.943844 abreu pppd[10313]: Overriding mtu 1500 to 1400
-Mai 16 08:53:56.943881 abreu pppd[10313]: Overriding mru 1500 to mtu 
-value 1400
-Mai 16 08:53:56.943902 abreu pppd[10313]: Couldn't set PPP MRU: 
-Transport endpoint is not connected
-Mai 16 08:53:56.943993 abreu charon[10205]: 13[KNL] 141.14.14.125 
-disappeared from ppp0
-[…]
+
+
+
