@@ -1,119 +1,104 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C362B1DF269
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0591E8348
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747477236; cv=none; b=b9HgayBLrLufzKziQCfPOH4peJ8r/+zFxiF2i8MbsRMnBkkE/j+qst22jTboEZJ0krXHiCAKpEXMRlqaCNit3bsogn+PVlMw0MlaSdHramBkoVTxTe0OLeUTEPhbUupWNcLjbAT9b0h/J0YxhRu1jTHvIJUsELaT11jYZTV0uRo=
+	t=1747477821; cv=none; b=hNFny4Sy3wOvDxAMqRbNpPgJP2F5ScsGj/N+MfQ3u5aVlel36GbELRiFDkehgR1MmNumo0fU2k7FHCq1ifgkV0LOV5lqhF02x8G/tgYjW9EKfLjlhIV3sbj6qoMEP2PnEFQf7H1KWVElTpcPx3Jom+j7Cc77J6FriK72reRKBE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747477236; c=relaxed/simple;
-	bh=JWODGwLtdv+77yvZZJdsXJ8qFeJKioaZG583PVldo9w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Y6AE+7cpLBq7bdf6ft2irgY+ay10281tHWBKkX9C3gnyaKbSGE6ZEVdfi1JpxnaX/xDOXlMA9rX3huxglv4gA5lavGCdarV9SjnrYuTRXMbzWegu0U0QK+cgEdu8CFp+AK7miVxm74u9Xhnr6VupuNw9zRUf1S4RwYRtPEYYzgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Zzzk40Ph1z9sSD;
-	Sat, 17 May 2025 11:51:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8jyheiksRlMl; Sat, 17 May 2025 11:51:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Zzzk36cXFz9sFT;
-	Sat, 17 May 2025 11:51:39 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D9BF88B767;
-	Sat, 17 May 2025 11:51:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 0xRvE50RE-Xh; Sat, 17 May 2025 11:51:39 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9EA4C8B763;
-	Sat, 17 May 2025 11:51:39 +0200 (CEST)
-Message-ID: <9e5b3e8e-3280-4ff9-915b-9a8b934bac22@csgroup.eu>
-Date: Sat, 17 May 2025 11:51:39 +0200
+	s=arc-20240116; t=1747477821; c=relaxed/simple;
+	bh=NBLuObZypd7FUQ4RdXCGShJPwkbjl+7jqVZyIFp1z0E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q1CrGY06aneXOtDGsaOmru4HaT0fdlBUPgESZguAenySV+nZ1L7Zuk64fmnGgeZ9Z8dutKSDX3CttZ9tI8ywT4gpuifHURN50bhKu2fMObfW0xwoQ57CoB9gjCQEmvySieChtkerGdP3UGP86L1x3NVIcEVCpv/pxtJrIvXru1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkRCu/h7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkRCu/h7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E04C4CEE3;
+	Sat, 17 May 2025 10:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747477821;
+	bh=NBLuObZypd7FUQ4RdXCGShJPwkbjl+7jqVZyIFp1z0E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DkRCu/h7I2WHU4dS2WlSghrYRvnB8JHkuQX9J8+7/4WFH/BhP3xPEBUAgGWe6Uj/5
+	 rvnmEBORJY/Uriw0QRh3c9YErEer/VlibqrQoBQHMzyvNGXYbcJe1MfuFMcXmxDtWh
+	 ecqi48zUxZXkDm/ROMIvoKbGhU4mEjE4TqlpqYo1eDwx0Gw7kVfPAHdc4CVu72gNEb
+	 YuQhM6E+2yBuFpPhvybz3fOrlGY3psq3MIhTO/yyyHMHvkC+JaFKQTRzvsTkt5zgUb
+	 pl0eCI64BsBYAmXhU6mSvzZvv/Uczwlxdgri/FWfSEsdZzEym+BPjobnKw7iH+VV3x
+	 QnfQJHyYYwZkg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uGEo6-00Fmrq-MV;
+	Sat, 17 May 2025 11:30:19 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] irqchip/msi-lib: Honor the MSI_FLAG_PCI_MSI_MASK_PARENT flag
+Date: Sat, 17 May 2025 11:30:11 +0100
+Message-Id: <20250517103011.2573288-1-maz@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [GIT PULL] SOC FSL for 6.16
-To: soc@kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Language: fr-FR
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Arnd,
+For systems that implement interrupt masking at the interrupt
+controller level, the MSI library offers MSI_FLAG_PCI_MSI_MASK_PARENT.
+It indicates that it isn't enough to only unmask the interrupt at the PCI
+device level, but that the interrupt controller must also be involved.
 
-Please pull the following Freescale Soc Drivers changes for 6.16
+However, the way this is currently done is less than optimal, as the
+masking/unmasking is done on both side, always. It would be far cheaper
+to unmask both at the start of times, and then only deal with the
+interrupt controller mask, which is likely to be cheaper than a round-trip
+to the endpoint.
 
-Thanks
-Christophe
+Implement this by patching up the irq_chip structure associated with
+the MSIs to perform the full unmask on .irq_enable(), and the full mask
+on .irq_shutdown(). This asymmetry allows the preservation of the
+"lazy disable" feature, which relies on the top-level irq_chip not
+implementing the .irq_disable() callback. Yes, this is a terrible hack.
 
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-msi-lib.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-   Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index 246c30205af40..8c62034ab8d92 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -112,6 +112,21 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 	 */
+ 	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
+ 		chip->irq_set_affinity = msi_domain_set_affinity;
++
++	/*
++	 * If the parent domain insists on being in charge of masking, obey
++	 * blindly. The default mask/unmask become the shutdown/enable
++	 * callbacks, ensuring that we correctly start/stop the interrupt.
++ 	 * We make a point in not using the irq_disable() in order to
++	 * preserve the "lazy disable" behaviour.
++	 */
++	if (info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT) {
++		chip->irq_shutdown	= chip->irq_mask;
++		chip->irq_enable	= chip->irq_unmask;
++		chip->irq_mask		= irq_chip_mask_parent;
++		chip->irq_unmask	= irq_chip_unmask_parent;
++	}
++
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+-- 
+2.39.2
 
-are available in the Git repository at:
-
-   https://github.com/chleroy/linux.git tags/soc_fsl-6.16-1
-
-for you to fetch changes up to 695d702f42bf4bd335e30f542ca710af081ee2a3:
-
-   soc: fsl: qe: Consolidate chained IRQ handler install/remove 
-(2025-05-17 11:01:55 +0200)
-
-----------------------------------------------------------------
-FSL SOC Changes for 6.16:
-   - Various fixes and cleanups from Ioana on fsl-mc bus driver
-   - Other misc fixes on fsl-mc bus driver
-   - A build fix on DPAA2 driver
-   - Some preparation work from Kees on qbman driver
-   - Some cleanup on FSL qe interrupt driver init
-
-----------------------------------------------------------------
-Chen Ni (1):
-       soc: fsl: qe: Consolidate chained IRQ handler install/remove
-
-Ioana Ciornei (3):
-       bus: fsl-mc: fix double-free on mc_dev
-       bus: fsl-mc: do not add a device-link for the UAPI used DPMCP device
-       bus: fsl-mc: add the dprc_get_mem() command to the whitelist
-
-Kees Cook (1):
-       soc: fsl: qbman: Remove const from portal->cgrs allocation type
-
-Krzysztof Kozlowski (1):
-       soc: fsl: Do not enable DPAA2_CONSOLE by default during compile 
-testing
-
-Laurentiu Tudor (2):
-       bus: fsl-mc: drop useless cleanup
-       bus: fsl-mc: increase MC_CMD_COMPLETION_TIMEOUT_MS value
-
-Robin Murphy (1):
-       bus: fsl_mc: Fix driver_managed_dma check
-
-Thorsten Blum (1):
-       bus: fsl-mc: Use strscpy() instead of strscpy_pad()
-
-Wan Junjie (1):
-       bus: fsl-mc: fix GET/SET_TAILDROP command ids
-
-  drivers/bus/fsl-mc/dprc-driver.c      |  2 --
-  drivers/bus/fsl-mc/dprc.c             |  4 ++--
-  drivers/bus/fsl-mc/fsl-mc-allocator.c | 21 ---------------------
-  drivers/bus/fsl-mc/fsl-mc-bus.c       | 12 +++++++-----
-  drivers/bus/fsl-mc/fsl-mc-private.h   |  2 --
-  drivers/bus/fsl-mc/fsl-mc-uapi.c      | 11 +++++++++--
-  drivers/bus/fsl-mc/mc-io.c            | 19 +++++++++++++------
-  drivers/bus/fsl-mc/mc-sys.c           |  2 +-
-  drivers/soc/fsl/Kconfig               |  2 +-
-  drivers/soc/fsl/qbman/qman.c          |  2 +-
-  drivers/soc/fsl/qe/qe_ic.c            | 10 ++++------
-  11 files changed, 38 insertions(+), 49 deletions(-)
