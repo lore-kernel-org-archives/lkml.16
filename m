@@ -1,498 +1,357 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C99522A
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747444610; cv=none; b=owwfmlKL9cENH8YH8bJhWO/yaKyLkycaV9Z2zIdcSMcdjkwTY3f8no7pu10oCEsu5Radj1W/nz5KuuMFeGub05mTRHnxKnnp9Uqphnh4cyrQYkYTryLjXb/UEybX3KrU0Ty8O8PAROUAJVhnbTn1RDmd2FeGxmQfCB9wpHU+pyM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747444610; c=relaxed/simple;
-	bh=4KnHempHAvmBMakNUZdNKwSECzYIJ8An8oadwVvsskQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HS478K/OgrI+TQaWOYn0+Wqbqpx6xcMw6HID4zjyT7A8GMiTS8NxCWu5ya5FzdOF7ngrcsuSfQakjmcQVqL/wnY4vQ+u36AP++lTX6MX+TShV99+eDbvyUyfQNh8koyZMRaqKLLb3oQ2hRjKZZg/2Ct1Up6NsayCS+8uq4sL/P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Fii21dry; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA515680;
+	Sat, 17 May 2025 01:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747444630; cv=fail; b=AbrmdPLZKTlmIZPQ3wFKZ1fHzgq9ONiBAr9ROfSy2rKhwTzLEw4XYx9diwF4W3zEZR1Th/+9r/ux4BHJK5zGeln7ddDA/5Q0KPecJJkVmupMbrudWmk39TCemXm0YH2wZi9ioOLidB7i8qeD0KepMr7VnALTTxgdGjhAFSC/x9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747444630; c=relaxed/simple;
+	bh=3be2n7pd/0FxRwVNB1W+vc4AvFMQ6I1uPCHDyQFJgG4=;
+	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
+	 Content-Type:MIME-Version; b=ob/temAAykMgD9jid+gLzP2WdmpnbvS7Pucp4Y/QpswS7b8IavfztlxbFXR9tzK0J9TAIPGFD8/TiXr31e4uHM8nbtp/eBGX7QZG2EQ5z/CmdbxZ9RJuzBdGTFnFOb00DNxh45pY4ekhPSgmKJKBT9OdmJpuZ5Yjtm2mW5gjoAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RV6wrBuv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=HOfifccC; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fii21dry"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30c5a5839e3so585967a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RV6wrBuv";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="HOfifccC"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GLfuVm009626;
+	Sat, 17 May 2025 01:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=9jby0OT4ssS5OWVOOG
+	aoBjc/DOg1fStN66C5OBSFYc8=; b=RV6wrBuvQayn5DGhGH/nKDMpCQlzFS/U0e
+	j5d+czIpSR7fa+qzODs2ynoTK0hSl6E4ELAyVPvlP/zumL2FypuN9HSiSCwUjX4m
+	UNnk6NQdm4i/mm5Da8VEHcxH67sGPzOVy1M1SZPKpdqe2J7xFi5SaDlUY5u9ZwJI
+	7J/g65Zo9gAR8T/PFHRSe/jfoH8bAAyb/yay7MaKHlNvueeWktjig1Q2sq/fOvjo
+	U7IqAux+P8tOFd/cH9JgDU7V5KHuP+2wiW7V472osrmL7NC6g/AyNRykmvEQZ9Ze
+	GR1WWigMQPqMXA3s6xq85ECcvHqxGduhvm8B0DaYberNd4ksGwRw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46nre02erh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 May 2025 01:16:37 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54GN0ClX004339;
+	Sat, 17 May 2025 01:16:31 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2048.outbound.protection.outlook.com [104.47.55.48])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mrmfy6w3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 May 2025 01:16:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GT07sbhrZXn+ewbUgiWXPFvLQyBzcpXnbmxc2AqSfdQMoh99dsuUDWnUfJYQilORwrVsbC3Iwy0edjb+L1AFOTta4tV8RCCBBOpy9WIRkjXNJ9lT829Iux2AXF57OaqT6zoNBMvWKqAZXV06DEaOBckvTOWhmoQLrpYNpSwT6B7to1BZLrVXi81Bf836b8HZAEX+UaKuNvBCbpkOnf8br5et1LFM5Jrxf6b8W6kvFli0UJOGUgmu2VyGH2VXbq/ZS/9QTQtYWiDMIt6w0/fS2uuRl2CwgmToAjHhJoyEtTJnkuyB8yx3bG/nz4AyZINAgaeIodiPeOAPii3Uo9u7Yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9jby0OT4ssS5OWVOOGaoBjc/DOg1fStN66C5OBSFYc8=;
+ b=BcSlFVbZpE8JpCEnab8L5W4XHCfPi7KOFOt8ty9nAoFhmmusurhu3v5wg2WgTB4pD8eHq8I396G142dgWfM9CyezlOFEMYqQzgETkQixM9o7YbEC+c4DwitD+tMu4nJoU3N7VOpeJfxhntywwgJW/bDBL83jv3nfBwNtcIXg+rZBBw9Md00kQK2C96376eiPlrYxhZEJ9D5/rnnXhINV2RGzZfigweYwyHmzHokTYWUW3UJ4UKnsiw/jHK6a1JcuPiY35Nri0rGufy22odBbopWgJop0hX+XgD4qDdYNmOosyXr/Z96jcKg6SGLG+YAwPhjmErluELCcypjFpvrFQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1747444607; x=1748049407; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R0yD4HXduz6mhgA30m6aCqB09eQJ2ZfA1vlzCMNgoA4=;
-        b=Fii21dryFNMGM5tQmrZfVc8jjlJrjI4gF3sWO/k2FN8JN0keDcguQ7bRvg6lkMcp7j
-         TnKcmh7aPDNbCRp9Pfmu7NiD0v3JBWmuZIrafjRYTbhucTnJHfYpTQcCHzvHD7N00uC5
-         B3rw5MyvkUBj4vq7FRAdmAKwkyTSeXNUic3jo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747444607; x=1748049407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R0yD4HXduz6mhgA30m6aCqB09eQJ2ZfA1vlzCMNgoA4=;
-        b=ExfSZXB/cbr7dia6Qn9qtkcuTh+Ns1F0aIT+6+FbplN1K1UAKIcYK8bEFAzgB+4BHH
-         AUolVuXD3sQuR24BoDtuN54gCzwtj5Kvh+XhiIyU8MeV+WfGliiPcZv6wTrmAG95jBAL
-         kGuRSIPy2NDyLPUbN1SOuVP37VqY+fHFS6m8+Sitwjqd2333a4ceBN7OoPYMsjkyT3P8
-         1QYjRg1RINE7++qi5klJUAz2HPtE7uD/Ug7MABLTTzYbejjVgZ40e5fuGa0EDUG6+k1B
-         a3nt4k19dA063Eh/HamlChygs7t/WErpB975WckiFJ00jjrLLxxyvK6enE0gYd8NmkQG
-         9c3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHS2hRME64ptUNAaC9ZE3Hd/T0o6HRIo4mXMjEzeWzWpPUphvt/b5iBE8KXUMs/jU0WBzvwv4NYavohY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzltRVipVs67cMXgQKd4r2tG9DYZ3xGnlaht4S3KbJMBkFppdlJ
-	ilRo4gPtITxmybvD4CKZt+PDATaljvTCqh2pxNUctfRqed1t5EHAoyURLeSN/SecPE6om0Ro56h
-	P1f2p9WhbpuCUFvDkxW8GZ1X4eGZJeJPvn79FXfj2
-X-Gm-Gg: ASbGnctx6e3zW6uosIhgWHq1yqNlhaRPQ07Ibsx4fyTf9IxyBciSMiMgY6BDX4FY2PC
-	kRdMCE651NKzYw3eMyVCCSajjoDjBpV4NMqJ04kK1iW7FVXRiq4E7hHUZ/xbTE00n26SIu4v4Ts
-	ZCANNzYfNLJ5qitFrcTCsL2Kdx+JNODnw2oMZpMob8zdFh
-X-Google-Smtp-Source: AGHT+IE1RLHEuRo1MFgA6kRv+LTJae/cIc8OJUZ7iEYB8jffeUXLoKqkaBkUPa8cSkZ1cymFoON3T6MXUUpnfL9GKqo=
-X-Received: by 2002:a17:902:f648:b0:231:d162:eeb7 with SMTP id
- d9443c01a7336-231d45265d5mr28615145ad.11.1747444607361; Fri, 16 May 2025
- 18:16:47 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9jby0OT4ssS5OWVOOGaoBjc/DOg1fStN66C5OBSFYc8=;
+ b=HOfifccCr9pMPjZb3FO4yNCS6TT45tjXA7JJOhrLfX+YzISfb2AyRo4j6LkrZisrIRUb8/n1eJWqlofvf/ATlDr0B8o5OG7EeL8t7ABccDJiFDPsruWjb1vGoq9epf7Muwx5XMfJTD4MXUYSHct5uYuZi5e6V1MaiMdVWwhwuFA=
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
+ by SJ0PR10MB5645.namprd10.prod.outlook.com (2603:10b6:a03:3e2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Sat, 17 May
+ 2025 01:16:27 +0000
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::25a9:32c2:a7b0:de9e%6]) with mapi id 15.20.8678.028; Sat, 17 May 2025
+ 01:16:27 +0000
+References: <20250502085223.1316925-1-ankur.a.arora@oracle.com>
+ <f2f5d09e79539754ced085ed89865787fa668695.camel@amazon.com>
+User-agent: mu4e 1.4.10; emacs 27.2
+From: Ankur Arora <ankur.a.arora@oracle.com>
+To: "Okanovic, Haris" <harisokn@amazon.com>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org"
+ <linux-arch@vger.kernel.org>,
+        "ankur.a.arora@oracle.com"
+ <ankur.a.arora@oracle.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "cl@gentwo.org" <cl@gentwo.org>,
+        "joao.m.martins@oracle.com"
+ <joao.m.martins@oracle.com>,
+        "akpm@linux-foundation.org"
+ <akpm@linux-foundation.org>,
+        "peterz@infradead.org"
+ <peterz@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "memxor@gmail.com" <memxor@gmail.com>,
+        "catalin.marinas@arm.com"
+ <catalin.marinas@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "will@kernel.org" <will@kernel.org>,
+        "zhenglifeng1@huawei.com"
+ <zhenglifeng1@huawei.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "xueshuai@linux.alibaba.com" <xueshuai@linux.alibaba.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>
+Subject: Re: [PATCH v2 0/7] barrier: introduce smp_cond_load_*_timewait()
+In-reply-to: <f2f5d09e79539754ced085ed89865787fa668695.camel@amazon.com>
+Date: Fri, 16 May 2025 18:16:26 -0700
+Message-ID: <87tt5khw9h.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MW4P222CA0025.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::30) To CO6PR10MB5409.namprd10.prod.outlook.com
+ (2603:10b6:5:357::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514062341.774919-1-noltari@gmail.com> <b11623aeea01338715215084fc34107d@mail.gmail.com>
- <CAKR-sGcg5yCiQFV5yriD+Lv1MiV1wXVQo1_q_Eh-=UNAP-idxA@mail.gmail.com>
- <1cc01fd7-79fd-462d-923e-5ff0bf61b489@broadcom.com> <CAA_RMS5vPa5euktwnPHcz0Td+eVfAj_Q9d9xzyk==jcGOGxYhQ@mail.gmail.com>
-In-Reply-To: <CAA_RMS5vPa5euktwnPHcz0Td+eVfAj_Q9d9xzyk==jcGOGxYhQ@mail.gmail.com>
-From: David Regan <dregan@broadcom.com>
-Date: Fri, 16 May 2025 18:16:37 -0700
-X-Gm-Features: AX0GCFv1ZUr-6_iLVsPZKA2Fmg5JpYWaW2U8onEwD2KkSErAQjLIFK9ekyauwvI
-Message-ID: <CAA_RMS5XirF0gUju_BcoB+uS+wAD-vprCjQGTfuNjjwpnRF-Mw@mail.gmail.com>
-Subject: Re: [PATCH v3] mtd: rawnand: brcmnand: legacy exec_op implementation
-To: David Regan <dregan@broadcom.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, 
-	=?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	William Zhang <william.zhang@broadcom.com>, linux-mtd@lists.infradead.org, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, bcm-kernel-feedback-list@broadcom.com, 
-	rafal@milecki.pl, computersforpeace@gmail.com, 
-	Kamal Dasu <kamal.dasu@broadcom.com>, Dan Beygelman <dan.beygelman@broadcom.com>, 
-	frieder.schrempf@kontron.de, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Richard Weinberger <richard@nod.at>, Boris Brezillon <bbrezillon@kernel.org>, kdasu.kdev@gmail.com, 
-	JaimeLiao <jaimeliao.tw@gmail.com>, Adam Borowski <kilobyte@angband.pl>, jonas.gorski@gmail.com, 
-	dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|SJ0PR10MB5645:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac7c4d8a-3753-4140-bd7f-08dd94e07297
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?koXEAamlZpmVvYUECJtmo6sbRestFl0ogictScVZZDTmXgEgIUjwPk42C7+l?=
+ =?us-ascii?Q?V7i81NH4gz8/0q/fW+EcORah4Y9VyDaqAt+F8yIRoMM4n6b2Cf364y3SZ9PL?=
+ =?us-ascii?Q?PbuRhQ4K9+tZTo66PXdJpLGSfd5FSir2RQTBWQan9m8/5zcIr/usI0xx1XZf?=
+ =?us-ascii?Q?YGTDK9O6o5B3WIUkIjVwYzkd9GDmW3lTUvHkidBzz0rEhFjBhf5w+b0Y/syo?=
+ =?us-ascii?Q?rO2J4KPCFxJl9+Nlc95rtiDc4Yl8PGtc1IS2h0Cwrbbs5KZ4oSl8bNFBG66w?=
+ =?us-ascii?Q?D8bmYTj4HhTKacSNntGWXOoEEZlpVpNz2fTmagaBTZXopQH7YeQkrmwT3KiT?=
+ =?us-ascii?Q?+RGqABJNrI4ZhazF+h4NVszUjXuLpHB/IKHDmn7oUNWcm1I8vEML3EyerhvY?=
+ =?us-ascii?Q?L8vSsLithszYTIoJDBtUFEI0tQsOdHDXNEgvcegkxcN2HthofNbNOM75ec/T?=
+ =?us-ascii?Q?iYG2jCZE83a8PVDD1T9a4sryjB5h5BsZ5VA+vkuI2HRZZ6V0f1EsqhQiJKgL?=
+ =?us-ascii?Q?ymnGuytFqQTd5EOyeyD5jdolM4Z/lYnLNLRx4CPQyRQ2Oam81w83Q25RVq+d?=
+ =?us-ascii?Q?PfgmRciQ68DMVqrRW88bTi2fu65AVq4HUb0415ZDfXURHG976OP1DT/v691d?=
+ =?us-ascii?Q?dS+OZbZvDQjeMXnZ2HZfMc225JUqf01oa0AH0IElktqXDwOBnR2mqfba0DeX?=
+ =?us-ascii?Q?/4D15h6S5uYmZZUIPb5YYxGec37pKOPWsTf4UDHxCjIkYF4nn4mKWpzBDrkI?=
+ =?us-ascii?Q?Z+JmWdksPX5LBA4fxFaU1Qo+F9J8hcCDaXsvsUB56/EGux2XneYN8f1oDOeX?=
+ =?us-ascii?Q?+flyhHsjUzkpFjxvDUh9+NUqmIrxIUghAeGpfKZ4Cb+Z7ygE+rJwOEY7s+/p?=
+ =?us-ascii?Q?XSV0ZM6Uro32copFl8G+SLDRz9cE4Dy6dJROogETzNZ1vtkW3WkYacj+1MNr?=
+ =?us-ascii?Q?Ufq9jl0ohZX3dOEaCd/roSa7cooeKwf9ULIsyYnaHHFKBYutYOlxeFkHleGb?=
+ =?us-ascii?Q?l8HbXbnHKOmZqd/ycOGwfAi2cq0odZfc9E3qWXdVcoGfL4MiSjtjCgwa1ml1?=
+ =?us-ascii?Q?DzugPHsLZVQ7MtSecpGMSj2lN+TtrxYbtbubg+ozGvn6HKNKXF5mm3P6ZETg?=
+ =?us-ascii?Q?yx4NVrv7BnNfmWWhY39ZUYTjHi3frcYf2QZINV6yogOpOCIhFiYsrvMxNd4X?=
+ =?us-ascii?Q?I53v6xXS5na03v8fBnXeluaF9PInreV3jor5r3n7bIrI1LfD0p+cRwv+PQK8?=
+ =?us-ascii?Q?gSDFg+eqi6PEo9jkxrbE3jwEAH/GyKah8dyrLCCeUSsmgH2M60dl8+eFZrrz?=
+ =?us-ascii?Q?gHZ0sbesUKYAxYGudZVXF3hWAJrg/ZPtypGLlDizfVDVIWJVF5S3wsGitLPh?=
+ =?us-ascii?Q?gmEt+/A3MzTWGCWli1i5J5JM9CXD?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?m05ilOqz+pNJSflCiK6kuCFRs5df1yAMkhrxtSAZGpr0TVj7qpxBs4MbQPh7?=
+ =?us-ascii?Q?FJzqRJQXR4XLVfRakFlWiuafjJiAuvasDD0mu82KUT6bKMJDL1YS6OXHxGLC?=
+ =?us-ascii?Q?LJibd4oWdJ6mCjvmx8qIMmCl1UeWhtUrG8Pyym/oaIniEyu3AE2iq5PphKYW?=
+ =?us-ascii?Q?r6YarV9g0nQwNO2iEzZxE7sJk9rwbYUa2BILOXTIRKS6D//OQYkE8NCvV8Wo?=
+ =?us-ascii?Q?svNXgDaWAINyaj5FYWB1LzFFEoT8LOtkNQpEBrrY5elgKA1x5LQHJcRnH6LS?=
+ =?us-ascii?Q?c3ggxGB1QENxaNOVehPn2PTwVVIbM5/55xocj0Niy+KYiedB328Xulw+Jnku?=
+ =?us-ascii?Q?bYflwAJ32Ch0qrBR0SA4KJCF1kaA2Xf7/OEwLY/AM1CFKGqwK75Oiyu0A5i3?=
+ =?us-ascii?Q?koRjyX2PkawK2RICSbJXt+WV56jM5GIZhlRTdNf09gaxpfmdE1jIsrWYlVUq?=
+ =?us-ascii?Q?kEXKVoV7WHY3AVKQh/fKn04Zpm19+DRguC4vp0IlyL+rr6PhIRUmcncENvm/?=
+ =?us-ascii?Q?uspXMNgtd1YOIYiGAra6xxN2rEHJ9BM67IB0fD/29eslcBkyIBIYk8Hy28is?=
+ =?us-ascii?Q?2INgurWA79lHp02f4yooaVbYMP3ZXUUBc8nuvTTebd8gLiXNyT968pD6J3Rs?=
+ =?us-ascii?Q?V9OBqqKThQkT8GVPzezoMZrKtUU327mMOcgQDoYh0jo7hX7SxELbFsf5e2Os?=
+ =?us-ascii?Q?C1ywVSoXCHxP4dZtKHDX4NUUwjSRMUtaHe2W8omnD5HfIOCSSvCIQziKcXDN?=
+ =?us-ascii?Q?W6DTmheVdZGnA5oPfO8XhDvZLQDxPaelaednhflUugBLlwG9Je4tYgR7DICy?=
+ =?us-ascii?Q?s/uHSPN/2q30OjTAHeUOXba66KPWvAr9x6etzCZ1r2/fzkMXE9J0tRryQ26e?=
+ =?us-ascii?Q?pgL8Z/kTiEF+XYk7iJMjItSS7Hri4HkDtgBIn3eeHS2HNFgtpI0NDzCXbHKI?=
+ =?us-ascii?Q?a3/9z6TTV/93ePzvwZrK07FkoZu4HZwciCBChMd9ToSv4REv1gxTLqCKRSKN?=
+ =?us-ascii?Q?Hi11QXQ6xzQI08o9sZ7fcxzoULtbGAMawaYt6OyPNYnB6tg6vbofuqNB88d1?=
+ =?us-ascii?Q?iKgwqPU85cQeiWDQgYKR8KeZyM7gMHQ508BXCjz+NDCxMDYXyOH1cbN8Lai0?=
+ =?us-ascii?Q?GB+QuNCFjdJcSAnWFbvmLcodti8pfNXcu2znIZnDL9Km0hp6V0CwRBaDhaAR?=
+ =?us-ascii?Q?N2Sm2k7jjcPrGfbql7xTvHnlSddnX4p2qroaFZrx3v+bS/tzDuCKfDvS3QaI?=
+ =?us-ascii?Q?2uDBm2hOwMWVwDgUHKxXwhrpAGwGY5yQzMmxyUVk9MWQ/WWg05iwb7sJz2D2?=
+ =?us-ascii?Q?ZNcxWOQvKA21QzEjOam1P8HAZvNqk2j4AkpFffPJV7qtWiBLJfbCXaQALCho?=
+ =?us-ascii?Q?OpiB+NXihUqRTNSUVyf+dKjiuCil+FkitUJlr3mAiypF9p/HFwOghFnyNGEA?=
+ =?us-ascii?Q?CyOGsNgxZwSi6LQS6xc2G0LwWT4ujprhaGeilGu7f4t+Bm/Bh/rljL+1XtBt?=
+ =?us-ascii?Q?O41REYTL5vPBVk2p6l1nvM8gPfBmHYEMhM/28knBncvl9BkKEU6E5dkmsQRW?=
+ =?us-ascii?Q?6uHkOSgmuYMOmqZ5N9HjZNqQ/SBlJH6oEeMiKy0glM4YDQnaHT19X0gxAUjI?=
+ =?us-ascii?Q?/A=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	B726qHlhFxfYqPNdO6ScdfDuQMhIm4TEPOt8KlZ9fIbAGDlWu+MCkOzuDvayhd+iCI3fheABc0+NiEn9ivv7fXVa9dD8Jqpjkd8n4DVT+A/Wko2VhSZM2q51P0FdD7id6VPuooKc2/LYDK3hvySAisI+52pSSWUP4ddVR7t1he1TpNxv6FBlWM1wqW0QFFtjYo0AoFIruRocDUVEx8z6sO6VtSAQUFY9NFPj3vod13xfQFZ7pPX8S+22RVDkCNxEKnYYaHGpBpHl7sHW1y+M9NCxua7na60IyeyDC75evi73xb6TAS71/XsS85tqHlD+6vTKA+u0KboJxiCggAPOjiJHqGBb8hMJz+pcaxWh8Lokt9pJIy1VvijWSE7O8FuWX9DI+ANvnokoxf+FrtvYEEyLp0ucWfVs11rFJi+gc9vDOs3zvodUqNMjMZTY2KgxNi72ekHHo07Kkel56GNPcA54DZs4+/2JIUGdxeMD/hBI9bqjLBFdZDuzBsk+yYAVOAgpUhvffHgfGQmSlNpzWb8NnXmyeshnUeMFEbasVEIJ0FEyY7Vy4eUfEPBTek+6n0fVETn5v7lIw2FsSzA3m9W9SVPGifhTw/ubgid4J7Y=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac7c4d8a-3753-4140-bd7f-08dd94e07297
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 01:16:27.6159
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MjpngyFTA69LMSRGRt9B88orZ2yjatQokpEniz6MrHyG9ljt5pz2aA3Z6Tsa2zk4F9FLj8/vfS1oHtYHG96eG55TkK/p5rxbjMbN3upsQl0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5645
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-17_01,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505170009
+X-Proofpoint-GUID: s2ajQHZlBSb1rj-D8HyR4wjc4azuGIO6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDAxMCBTYWx0ZWRfX8SzrpjOJkZXa 64ZJcqtu7IpOzb7mGj1B/3BP0LG41ODa9pGwTa+ARSxAYIB9Mien31gb5t5vXBjIBTEnF9DIC0H ZAxRR9ctWtLOE/4pdrsk8qEcVzmz7UIN/CHkoY4pRBvei+L6k5Tpeo9zwaS9v/pwEo3P2kGAbuM
+ ABR+lO6svsaKxz/yPJkkyU4IEDrz7/k3i4OTxhOJaTEzfmXVRsoRBkDnBHjwg+W77XFCNaLNoJX 5Kfx4IXpOXhXWddxG3xB66D1ZKTPynkZ45pk/J0z2AGm2KBoCPq/DQkkn1HUqY9dBU2S4CbCO12 MBOraf08hJ4KDIRuHa1uCLskEoWJlzSgJ3wiHeOFBB2gapIsCD7r3GRxJR5mQNTibFye1wgt9pb
+ rtMrHomwJmh0LMFEvCCFqaUPdUY65cRHxoej3EWfgvPU5ItYpnLw2ojcauN5HSld/NtrPCXd
+X-Proofpoint-ORIG-GUID: s2ajQHZlBSb1rj-D8HyR4wjc4azuGIO6
+X-Authority-Analysis: v=2.4 cv=O9s5vA9W c=1 sm=1 tr=0 ts=6827e375 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=7CQSdrXTAAAA:8 a=vggBfdFIAAAA:8 a=JfrnYn6hAAAA:8 a=pGLkceISAAAA:8 a=tmjikwb4cnOYSeYaDCgA:9 a=a-qgeE7W1pNrGK8U0ZQC:22 a=1CNFftbPRP8L7MoqJWF3:22
 
-Hi =C3=81lvaro,
 
-On Thu, May 15, 2025 at 4:59=E2=80=AFPM David Regan <dregan@broadcom.com> w=
-rote:
->
-> Hi =C3=81lvaro,
->
-> On Thu, May 15, 2025 at 12:52=E2=80=AFAM Florian Fainelli
-> <florian.fainelli@broadcom.com> wrote:
-> >
-> >
-> >
-> > On 5/15/2025 7:06 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> > > Hi William
-> > >
-> > > El jue, 15 may 2025 a las 3:42, William Zhang
-> > > (<william.zhang@broadcom.com>) escribi=C3=B3:
-> > >>
-> > >> Hi Alvaro,
-> > >>
-> > >>> -----Original Message-----
-> > >>> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > >>> Sent: Tuesday, May 13, 2025 11:24 PM
-> > >>> To: linux-mtd@lists.infradead.org; dregan@broadcom.com;
-> > >>> miquel.raynal@bootlin.com; bcm-kernel-feedback-list@broadcom.com;
-> > >>> florian.fainelli@broadcom.com; rafal@milecki.pl;
-> > >>> computersforpeace@gmail.com; kamal.dasu@broadcom.com;
-> > >>> dan.beygelman@broadcom.com; william.zhang@broadcom.com;
-> > >>> frieder.schrempf@kontron.de; linux-kernel@vger.kernel.org;
-> > >>> vigneshr@ti.com;
-> > >>> richard@nod.at; bbrezillon@kernel.org; kdasu.kdev@gmail.com;
-> > >>> jaimeliao.tw@gmail.com; kilobyte@angband.pl; jonas.gorski@gmail.com=
-;
-> > >>> dgcbueu@gmail.com
-> > >>> Cc: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > >>> Subject: [PATCH v3] mtd: rawnand: brcmnand: legacy exec_op implemen=
-tation
-> > >>>
-> > >>> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementatio=
-n")
-> > >>> removed legacy interface functions, breaking < v5.0 controllers sup=
-port.
-> > >>> In order to fix older controllers we need to add an alternative exe=
-c_op
-> > >>> implementation which doesn't rely on low level registers.
-> > >>>
-> > >>> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementatio=
-n")
-> > >>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > >>> ---
-> > >>>   drivers/mtd/nand/raw/brcmnand/brcmnand.c | 178
-> > >>> ++++++++++++++++++++++-
-> > >>>   1 file changed, 172 insertions(+), 6 deletions(-)
-> > >>>
-> > >>>   v3: add changes requested by Florian and other improvements:
-> > >>>    - Add associative array for native command conversion.
-> > >>>    - Add function pointer to brcmnand_controller for exec_instr
-> > >>>      functionality.
-> > >>>    - Fix CMD_BLOCK_ERASE address.
-> > >>>    - Drop NAND_CMD_READOOB support.
-> > >>>
-> > >>>   v2: multiple improvements:
-> > >>>    - Use proper native commands for checks.
-> > >>>    - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
-> > >>>    - Remove host->last_addr usage.
-> > >>>    - Remove sector_size_1k since it only applies to v5.0+ controlle=
-rs.
-> > >>>    - Remove brcmnand_wp since it doesn't exist for < v5.0 controlle=
-rs.
-> > >>>    - Use j instead of i for flash_cache loop.
-> > >>>
-> > >>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > >>> b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > >>> index 17f6d9723df9..f4fabe7ffd9d 100644
-> > >>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > >>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > >>> @@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
-> > >>>   #define CMD_PARAMETER_READ           0x0e
-> > >>>   #define CMD_PARAMETER_CHANGE_COL     0x0f
-> > >>>   #define CMD_LOW_LEVEL_OP             0x10
-> > >>> +#define CMD_NOT_SUPPORTED            0xff
-> > >>>
-> > >>>   struct brcm_nand_dma_desc {
-> > >>>        u32 next_desc;
-> > >>> @@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] =3D {
-> > >>>        [FLASH_DMA_CURRENT_DESC_EXT]    =3D 0x34,
-> > >>>   };
-> > >>>
-> > >>> +/* Native command conversion */
-> > >>> +static const u8 native_cmd_conv[] =3D {
-> > >>> +     [NAND_CMD_READ0]        =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READ1]        =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_RNDOUT]       =3D CMD_PARAMETER_CHANGE_COL,
-> > >>> +     [NAND_CMD_PAGEPROG]     =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READOOB]      =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_ERASE1]       =3D CMD_BLOCK_ERASE,
-> > >>> +     [NAND_CMD_STATUS]       =3D CMD_NOT_SUPPORTED,
-> > >> Do we not need to support nand_status_op()?
-> > >
-> > > We do, but NAND_CMD_STATUS and NAND_CMD_RESET are handled in brcmnand=
-_exec_op():
-> > > https://github.com/torvalds/linux/blob/546bce579204685a0b204beebab98c=
-3aa496e651/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L2506-L2523
-> > >
-> > >
-> > >
-> > >>
-> > >>> +     [NAND_CMD_SEQIN]        =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_RNDIN]        =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READID]       =3D CMD_DEVICE_ID_READ,
-> > >>> +     [NAND_CMD_ERASE2]       =3D CMD_NULL,
-> > >>> +     [NAND_CMD_PARAM]        =3D CMD_PARAMETER_READ,
-> > >>> +     [NAND_CMD_GET_FEATURES] =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_SET_FEATURES] =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_RESET]        =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READSTART]    =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READCACHESEQ] =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_READCACHEEND] =3D CMD_NOT_SUPPORTED,
-> > >>> +     [NAND_CMD_RNDOUTSTART]  =3D CMD_NULL,
-> > >>> +     [NAND_CMD_CACHEDPROG]   =3D CMD_NOT_SUPPORTED,
-> > >>> +};
-> > >>> +
-> > >>>   /* Controller feature flags */
-> > >>>   enum {
-> > >>>        BRCMNAND_HAS_1K_SECTORS                 =3D BIT(0),
-> > >>> @@ -237,6 +262,10 @@ struct brcmnand_controller {
-> > >>>        /* List of NAND hosts (one for each chip-select) */
-> > >>>        struct list_head host_list;
-> > >>>
-> > >>> +     /* Function to be called from exec_op */
-> > >>> +     int (*exec_instr)(struct nand_chip *chip,
-> > >>> +                       const struct nand_operation *op);
-> > >>> +
-> > >>>        /* EDU info, per-transaction */
-> > >>>        const u16               *edu_offsets;
-> > >>>        void __iomem            *edu_base;
-> > >>> @@ -2490,14 +2519,149 @@ static int brcmnand_op_is_reset(const stru=
-ct
-> > >>> nand_operation *op)
-> > >>>        return 0;
-> > >>>   }
-> > >>>
-> > >>> +static int brcmnand_exec_instructions(struct nand_chip *chip,
-> > >>> +                                   const struct nand_operation *op=
-)
-> > >>> +{
-> > >>> +     struct brcmnand_host *host =3D nand_get_controller_data(chip)=
-;
-> > >>> +     unsigned int i;
-> > >>> +     int ret =3D 0;
-> > >>> +
-> > >>> +     for (i =3D 0; i < op->ninstrs; i++) {
-> > >>> +             ret =3D brcmnand_exec_instr(host, i, op);
-> > >>> +             if (ret)
-> > >>> +                     break;
-> > >>> +     }
-> > >>> +
-> > >>> +     return ret;
-> > >>> +}
-> > >>> +
-> > >>> +static int brcmnand_exec_instructions_legacy(struct nand_chip *chi=
-p,
-> > >>> +                                          const struct nand_operat=
-ion *op)
-> > >>> +{
-> > >>> +     struct mtd_info *mtd =3D nand_to_mtd(chip);
-> > >>> +     struct brcmnand_host *host =3D nand_get_controller_data(chip)=
-;
-> > >>> +     struct brcmnand_controller *ctrl =3D host->ctrl;
-> > >>> +     const struct nand_op_instr *instr;
-> > >>> +     unsigned int i, j;
-> > >>> +     u8 cmd =3D CMD_NULL, last_cmd =3D CMD_NULL;
-> > >>> +     int ret =3D 0;
-> > >>> +     u64 last_addr;
-> > >>> +
-> > >>> +     for (i =3D 0; i < op->ninstrs; i++) {
-> > >>> +             instr =3D &op->instrs[i];
-> > >>> +
-> > >>> +             if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
-> > >>> +                     cmd =3D native_cmd_conv[instr->ctx.cmd.opcode=
-];
-> > >>> +                     if (cmd =3D=3D CMD_NOT_SUPPORTED) {
-> > >>> +                             dev_err(ctrl->dev, "unsupported cmd=
-=3D%d\n",
-> > >>> +                                     instr->ctx.cmd.opcode);
-> > >>> +                             ret =3D -EOPNOTSUPP;
-> > >>> +                             break;
-> > >>> +                     }
-> > >>> +             } else if (instr->type =3D=3D NAND_OP_ADDR_INSTR) {
-> > >>> +                     u64 addr =3D 0;
-> > >>> +
-> > >>> +                     if (cmd =3D=3D CMD_NULL)
-> > >>> +                             continue;
-> > >>> +
-> > >>> +                     if (instr->ctx.addr.naddrs > 8) {
-> > >>> +                             dev_err(ctrl->dev, "unsupported naddr=
-s=3D%u\n",
-> > >>> +                                     instr->ctx.addr.naddrs);
-> > >>> +                             ret =3D -EOPNOTSUPP;
-> > >>> +                             break;
-> > >>> +                     }
-> > >>> +
-> > >>> +                     for (j =3D 0; j < instr->ctx.addr.naddrs; j++=
-)
-> > >>> +                             addr |=3D (instr->ctx.addr.addrs[j]) =
-<< (j << 3);
-> > >>> +
-> > >>> +                     if (cmd =3D=3D CMD_BLOCK_ERASE)
-> > >>> +                             addr <<=3D chip->page_shift;
-> > >>> +                     else if (cmd =3D=3D CMD_PARAMETER_CHANGE_COL)
-> > >>> +                             addr &=3D ~((u64)(FC_BYTES - 1));
-> > >>> +
-> > >>> +                     brcmnand_set_cmd_addr(mtd, addr);
-> > >>> +                     brcmnand_send_cmd(host, cmd);
-> > >>> +                     last_addr =3D addr;
-> > >>> +                     last_cmd =3D cmd;
-> > >>> +                     cmd =3D CMD_NULL;
-> > >>> +                     brcmnand_waitfunc(chip);
-> > >>> +
-> > >>> +                     if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> > >>> +                         last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL)=
- {
-> > >>> +                             /* Copy flash cache word-wise */
-> > >>> +                             u32 *flash_cache =3D (u32 *)ctrl->fla=
-sh_cache;
-> > >>> +
-> > >>> +                             brcmnand_soc_data_bus_prepare(ctrl->s=
-oc, true);
-> > >>> +
-> > >>> +                             /*
-> > >>> +                              * Must cache the FLASH_CACHE now, si=
-nce
-> > >>> changes in
-> > >>> +                              * SECTOR_SIZE_1K may invalidate it
-> > >>> +                              */
-> > >>> +                             for (j =3D 0; j < FC_WORDS; j++)
-> > >>> +                                     /*
-> > >>> +                                      * Flash cache is big endian =
-for parameter
-> > >>> pages, at
-> > >>> +                                      * least on STB SoCs
-> > >>> +                                      */
-> > >>> +                                     flash_cache[j] =3D
-> > >>> be32_to_cpu(brcmnand_read_fc(ctrl, j));
-> > >>> +
-> > >>> +                             brcmnand_soc_data_bus_unprepare(ctrl-=
->soc,
-> > >>> true);
-> > >>> +                     }
-> > >>> +             } else if (instr->type =3D=3D NAND_OP_DATA_IN_INSTR) =
-{
-> > >>> +                     u8 *in =3D instr->ctx.data.buf.in;
-> > >>> +
-> > >>> +                     if (last_cmd =3D=3D CMD_DEVICE_ID_READ) {
-> > >>> +                             u32 val;
-> > >>> +
-> > >>> +                             if (instr->ctx.data.len > 8) {
-> > >>> +                                     dev_err(ctrl->dev, "unsupport=
-ed
-> > >>> len=3D%u\n",
-> > >>> +                                             instr->ctx.data.len);
-> > >>> +                                     ret =3D -EOPNOTSUPP;
-> > >>> +                                     break;
-> > >>> +                             }
-> > >>> +
-> > >>> +                             for (j =3D 0; j < instr->ctx.data.len=
-; j++) {
-> > >>> +                                     if (j =3D=3D 0)
-> > >>> +                                             val =3D brcmnand_read=
-_reg(ctrl,
-> > >>> BRCMNAND_ID);
-> > >>> +                                     else if (j =3D=3D 4)
-> > >>> +                                             val =3D brcmnand_read=
-_reg(ctrl,
-> > >>> BRCMNAND_ID_EXT);
-> > >>> +
-> > >>> +                                     in[j] =3D (val >> (24 - ((j %=
- 4) << 3))) & 0xff;
-> > >>> +                             }
-> > >>> +                     } else if (last_cmd =3D=3D CMD_PARAMETER_READ=
- ||
-> > >>> +                                last_cmd =3D=3D CMD_PARAMETER_CHAN=
-GE_COL) {
-> > >>> +                             u64 addr;
-> > >>> +                             u32 offs;
-> > >>> +
-> > >>> +                             for (j =3D 0; j < instr->ctx.data.len=
-; j++) {
-> > >>> +                                     addr =3D last_addr + j;
-> > >>> +                                     offs =3D addr & (FC_BYTES - 1=
-);
-> > >>> +
-> > >>> +                                     if (j > 0 && offs =3D=3D 0)
-> > >>> +
-> > >>>        nand_change_read_column_op(chip, addr, NULL, 0,
-> > >>> +                                                                  =
-      false);
-> > >>> +
-> > >>> +                                     in[j] =3D ctrl->flash_cache[o=
-ffs];
-> > >>> +                             }
-> > >>> +                     }
-> > >>> +             } else if (instr->type =3D=3D NAND_OP_WAITRDY_INSTR) =
-{
-> > >>> +                     ret =3D bcmnand_ctrl_poll_status(host, NAND_C=
-TRL_RDY,
-> > >>> NAND_CTRL_RDY, 0);
-> > >>> +             } else {
-> > >>> +                     dev_err(ctrl->dev, "unsupported instruction t=
-ype: %d\n",
-> > >>> instr->type);
-> > >>> +                     ret =3D -EINVAL;
-> > >>> +             }
-> > >>> +     }
-> > >>> +
-> > >>> +     return ret;
-> > >>> +}
-> > >>> +
-> > >>>   static int brcmnand_exec_op(struct nand_chip *chip,
-> > >>>                            const struct nand_operation *op,
-> > >>>                            bool check_only)
-> > >>>   {
-> > >>>        struct brcmnand_host *host =3D nand_get_controller_data(chip=
-);
-> > >>> +     struct brcmnand_controller *ctrl =3D host->ctrl;
-> > >>>        struct mtd_info *mtd =3D nand_to_mtd(chip);
-> > >>>        u8 *status;
-> > >>> -     unsigned int i;
-> > >>>        int ret =3D 0;
-> > >>>
-> > >>>        if (check_only)
-> > >>> @@ -2525,11 +2689,7 @@ static int brcmnand_exec_op(struct nand_chip=
- *chip,
-> > >>>        if (op->deassert_wp)
-> > >>>                brcmnand_wp(mtd, 0);
-> > >>>
-> > >>> -     for (i =3D 0; i < op->ninstrs; i++) {
-> > >>> -             ret =3D brcmnand_exec_instr(host, i, op);
-> > >>> -             if (ret)
-> > >>> -                     break;
-> > >>> -     }
-> > >>> +     ctrl->exec_instr(chip, op);
-> > >>>
-> > >>>        if (op->deassert_wp)
-> > >>>                brcmnand_wp(mtd, 1);
-> > >>> @@ -3142,6 +3302,12 @@ int brcmnand_probe(struct platform_device *p=
-dev,
-> > >>> struct brcmnand_soc *soc)
-> > >>>        if (ret)
-> > >>>                goto err;
-> > >>>
-> > >>> +     /* Only v5.0+ controllers have low level ops support */
-> > >>> +     if (ctrl->nand_version >=3D 0x0500)
->
-> We can probably change this to >=3D 0x0400 since as Florian mentioned
-> LLOP was added
-> with version 4.
+Okanovic, Haris <harisokn@amazon.com> writes:
 
-Sorry we should probably leave this cutoff as it is, version 5, see below..
+> On Fri, 2025-05-02 at 01:52 -0700, Ankur Arora wrote:
+>> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+>>
+>>
+>>
+>> Hi,
+>>
+>> This series adds waited variants of the smp_cond_load() primitives:
+>> smp_cond_load_relaxed_timewait(), and smp_cond_load_acquire_timewait().
+>>
+>> There are two known users for these interfaces:
+>>
+>>  - poll_idle() [1]
+>>  - resilient queued spinlocks [2]
+>>
+>> For both of these cases we want to wait on a condition but also want
+>> to terminate the wait based on a timeout.
+>>
+>> Before describing how v2 implements these interfaces, let me recap the
+>> problems in v1 (Catalin outlined most of these in [3]):
+>>
+>> smp_cond_load_relaxed_spinwait(ptr, cond_expr, time_expr_ns, time_limit_ns)
+>> took four arguments, with ptr and cond_expr doing the usual smp_cond_load()
+>> things and time_expr_ns and time_limit_ns being used to decide the
+>> terminating condition.
+>>
+>> There were some problems in the timekeeping:
+>>
+>> 1. How often do we do the (relatively expensive) time-check?
+>>
+>>    The choice made was once very 200 spin-wait iterations, with each
+>>    iteration trying to idle the pipeline by executing cpu_relax().
+>>
+>>    The choice of 200 was, of course, arbitrary and somewhat meaningless
+>>    across architectures. On recent x86, cpu_relax()/PAUSE takes ~20-30
+>>    cycles, but on (non-SMT) arm64 cpu_relax()/YIELD is effectively
+>>    just a NOP.
+>>
+>>    Even if each architecture had its own limit, this will also vary
+>>    across microarchitectures.
+>>
+>> 2. On arm64, which can do better than just cpu_relax(), for instance,
+>>    by waiting for a store on an address (WFE), the implementation
+>>    exclusively used WFE, with the spin-wait only used as a fallback
+>>    for when the event-stream was disabled.
+>>
+>>    One problem with this was that the worst case timeout overshoot
+>>    with WFE is ARCH_TIMER_EVT_STREAM_PERIOD_US (100us) and so there's
+>>    a vast gulf between that and a potentially much smaller granularity
+>>    with the spin-wait versions. In addition the interface provided
+>>    no way for the caller to specify or limit the oveshoot.
+>>
+>> Non-timekeeping issues:
+>>
+>> 3. The interface was useful for poll_idle() like users but was not
+>>    usable if the caller needed to do any work. For instance,
+>>    rqspinlock uses it thus:
+>>
+>>      smp_cond_load_acquire_timewait(v, c, 0, 1)
+>>
+>>    Here the time-check always evaluates to false and all of the logic
+>>    (ex. deadlock checking) is folded into the conditional.
+>>
+>>
+>> With that foundation, the new interface is:
+>>
+>>    smp_cond_load_relaxed_timewait(ptr, cond_expr, wait_policy,
+>>                                          time_expr, time_end)
+>>
+>> The added parameter, wait_policy provides a mechanism for the caller
+>> to apportion time spent spinning or, where supported, in a wait.
+>> This is somewhat inspired from the queue_poll() mechanism used
+>> with smp_cond_load() in arm-smmu-v3 [4].
+>>
+>> It addresses (1) by deciding the time-check granularity based on a
+>> time interval instead of spinning for a fixed number of iterations.
+>>
+>> (2) is addressed by the wait_policy allowing for different slack
+>> values. The implemented versions of wait_policy allow for a coarse
+>> or a fine grained slack. A user defined wait_policy could choose
+>> its own wait parameter. This would also address (3).
+>>
+>>
+>> With that, patches 1-5, add the generic and arm64 logic:
+>>
+>>   "asm-generic: barrier: add smp_cond_load_relaxed_timewait()",
+>>   "asm-generic: barrier: add wait_policy handlers"
+>>
+>>   "arm64: barrier: enable waiting in smp_cond_load_relaxed_timewait()"
+>>   "arm64: barrier: add coarse wait for smp_cond_load_relaxed_timewait()"
+>>   "arm64: barrier: add fine wait for smp_cond_load_relaxed_timewait()".
+>>
+>> And, patch 6, adds the acquire variant:
+>>
+>>   "asm-generic: barrier: add smp_cond_load_acquire_timewait()"
+>>
+>> And, finally patch 7 lays out how this could be used for rqspinlock:
+>>
+>>   "bpf: rqspinlock: add rqspinlock policy handler for arm64".
+>>
+>> Any comments appreciated!
+>>
+>> Ankur
+>>
+>>
+>> [1] https://lore.kernel.org/lkml/20241107190818.522639-3-ankur.a.arora@oracle.com/
+>> [2] Uses the smp_cond_load_acquire_timewait() from v1
+>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/include/asm/rqspinlock.h
+>> [3] https://lore.kernel.org/lkml/Z8dRalfxYcJIcLGj@arm.com/
+>> [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c#n223
+>>
+>>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+>> Cc: Alexei Starovoitov <ast@kernel.org>
+>> Cc: linux-arch@vger.kernel.org
+>>
+>>
+>> Ankur Arora (7):
+>>   asm-generic: barrier: add smp_cond_load_relaxed_timewait()
+>>   asm-generic: barrier: add wait_policy handlers
+>>   arm64: barrier: enable waiting in smp_cond_load_relaxed_timewait()
+>>   arm64: barrier: add coarse wait for smp_cond_load_relaxed_timewait()
+>>   arm64: barrier: add fine wait for smp_cond_load_relaxed_timewait()
+>>   asm-generic: barrier: add smp_cond_load_acquire_timewait()
+>>   bpf: rqspinlock: add rqspinlock policy handler for arm64
+>>
+>>  arch/arm64/include/asm/barrier.h    |  82 +++++++++++++++
+>>  arch/arm64/include/asm/rqspinlock.h |  96 ++++--------------
+>>  include/asm-generic/barrier.h       | 150 ++++++++++++++++++++++++++++
+>>  3 files changed, 251 insertions(+), 77 deletions(-)
+>>
+>> --
+>> 2.43.5
+>>
+>
+> Tested on AWS Graviton (ARM64 Neoverse V1) with your V10 haltpoll
+> changes, atop master 83a896549f.
+>
+> Reviewed-by: Haris Okanovic <harisokn@amazon.com>
+> Tested-by: Haris Okanovic <harisokn@amazon.com>
 
->
-> > >>> +             ctrl->exec_instr =3D brcmnand_exec_instructions;
-> > >>> +     else
-> > >>> +             ctrl->exec_instr =3D brcmnand_exec_instructions_legac=
-y;
-> > >>> +
-> > >>>        /*
-> > >>>         * Most chips have this cache at a fixed offset within 'nand=
-' block.
-> > >>>         * Some must specify this region separately.
-> > >>> --
-> > >>> 2.39.5
-> > >
-> > > BTW, can anyone from Broadcom confirm any of the following?
-> > > 1. There are no low level registers on v2.1 and v2.2 controllers.
-> >
-> > Correct.
-> >
-> > > 2. Do low level registers exist on v4.0 controllers? They are defined
-> > > on 63268_map_part.h but the NAND drivers I could find never use them.
-> >
-> > They exist. The changelog for the NAND controller indicates that
-> > starting from v4.0 onwards, the NAND LL operation is supported.
-> >
-> > > 3. Are the low level registers bugged on v4.0 controllers?
-> > > 4. Should the low level registers be handled differently on v4.0 cont=
-rollers?
-> > > The issue is that trying to use them on v4.0 controllers for
-> > > GET_FEATURES would leave the NAND controller in a weird state that
-> > > results in hangs or timeouts while trying to read the NAND.
-> > > This happens on the Sercomm H500-s, which is a BCM63268 with a
-> > > Macronix NAND that tries to unlock through ONFI.
->
+Thanks for the review (and the testing)!
 
-I have confirmed that low level operation registers do not work for
-version 4 NAND controller in 63268.
-
-> I don't yet know the answer to this and not sure exactly which NAND
-> part you are using
-> but if you have just a regular standard NAND that doesn't do anything
-> unusual does that
-> work with a 63268 through the non-legacy brcmnand_exec_op
-> brcmnand_exec_instructions
-> path (>=3D 5) that you split out?
->
-> Does the data that comes back from LLOP operations look legitimate?
->
-> >
-> > That I do not know however, William and David hopefully do know.
-> > --
-> > Florian
-> >
->
-> -Dave
-
--Dave
+--
+ankur
