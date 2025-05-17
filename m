@@ -1,70 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B83F2940F;
-	Sat, 17 May 2025 08:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE3B18FDAB
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747470179; cv=none; b=s/JEKOKaF+CyT4pfIRs+79+yFd6P8Rb0GzKcmAdTIRYIzvy/tlNPZPZ9VgwCFTUsopVT1OjjQgg+vNFbUYWNUTwTIakNO72iDVkQlILBNn6lRCCeD8uQRYcczfOY7XuDo4IpBNs5qf8PAgXEq9vI/8ftEzNT2/SW99om1BcNa0g=
+	t=1747470249; cv=none; b=lb5B22Xs9Em2j2QFt3SVmoe5QRu/U35hJ3umFh3nxDx49qHidrSTpP01PRzEqTVXAI4GR1ZQLoHS0a8LrFdwsiPyUqXPJ8yfeDCqxhzIGrPDihYYSeqxEnjeazipr/QA/nEI2yO45cLMCHuoHdZZKJBUaaN0SdBoLaTeKsoRxh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747470179; c=relaxed/simple;
-	bh=rzXTvu62Z3aOeZFeAXo1t87ggAk+IPXBvmBKwn5LfFY=;
+	s=arc-20240116; t=1747470249; c=relaxed/simple;
+	bh=s1nTQGBD31+KHbF5SOweT37umasqo4MTw7szvhBcfy8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVcX4uCEt8IvFN3kd3AWCiP6GNiX7R3u0dvWXm+Fa/zjoY0RFRIC3mnbJNYID30qd5ST2YGAUZUh1lZQBpwSq+GKhtiDV0SOWCPOx07WO/E0YGcGO0w34P9ox8+6YMv/dPmXz7pTuzotZDaYuNOGEXWEefeR1r3XFUy96KsqcIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhw9qIRm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NxqscFyld4YijeFeEHd1Qof7ay4H5uALLJtJZWCl7EHVPCBnt6xTQtpLfuN3tsjbCb5raT5d7aruLzrNfxzppCbMT9JC3hkcyeHvRNZK6fhizS7BEFHaIiE7FZLmUpDEqxWrSjpzo1kKVljS8kzbbyCSPOta9uO2VvO0ePw1UTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=l9H2P+vJ; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhw9qIRm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D68C4CEE3;
-	Sat, 17 May 2025 08:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747470179;
-	bh=rzXTvu62Z3aOeZFeAXo1t87ggAk+IPXBvmBKwn5LfFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hhw9qIRmQWPN/aB3/mCv3ib3a3gFtNMkSWG4hCh9GxsL+xtYnLFvCMGQaR6dIzfma
-	 QeXG3+hALhzksqd/ghHUFH3p6Yje4DrnUFROEzLc3EKvOxYT8aK0J6y/GFJMAVxrwC
-	 WT4qJ6jmxRjKvR0PNwmPgYIfYWp9C2KscYW2Qe0HAitF8SVxp5EBvgZ5TJbFeYkduU
-	 aZ/6reAFy0YOOpiBqPsIFpDk8uNwdPi3I+ecf+IonWCT2/Mz2OWCMkqVB4+2NVSypb
-	 rZRABhW93cO0DVOLhxm6WKECcYLVJlLDdwr1GzTDV5bFA6wTpykYJIB/eUWpRuhC7G
-	 j3TbSBh4u7i9Q==
-Date: Sat, 17 May 2025 10:22:53 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	leo.yan@arm.com
-Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
-Message-ID: <aChHXShBhoDBgPX7@gmail.com>
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
- <20250516182853.2610284-3-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="l9H2P+vJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=+1XD
+	rmDz5vIlLyH8vVVp1fHDNWZ4Hdbcl0x7tpFLbVk=; b=l9H2P+vJWCmpdDdrDl99
+	Pkxoj3oviBiWX+9/4UymGTvRT0bQeca3GBf3RxqXRr10kO5Ye4KbnS/PO9Ip9ccH
+	JHBJCXtTuIYY+1djez4f8W3xjsqt1F/HN9k1avMw194vz5xkAz6pV5LiJiqQ8/N4
+	dqfli1qi+D5m4VO6BhLYqc6U0bJRCSVtLt/EgZSz4off0EEdp83tMkiNv9K2qlvG
+	XP4obv/TeOurDUCwgbE5IOD9hMmCFRObkalni9JgsXeAsMRlo7CMX0njUeseNM6H
+	A5PJ7MX83D0qaJ6Gq6yUTbuXu0DhgLG6Pu6D9ubdQhMNkhca1KuTaGQ4Z1sSeJcj
+	GQ==
+Received: (qmail 1685043 invoked from network); 17 May 2025 10:23:55 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2025 10:23:55 +0200
+X-UD-Smtp-Session: l3s3148p1@koWVnlA1/LVbRaAl
+Date: Sat, 17 May 2025 10:23:54 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc7
+Message-ID: <aChHmtqCuYKF1yox@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+References: <v2tjgz5opkfbnlwsl4ptiauqq3bcahgxjfwx6edk6c6lhyhzm2@nlcpfl6lse6b>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="72Lqpmoi9spjJbkk"
+Content-Disposition: inline
+In-Reply-To: <v2tjgz5opkfbnlwsl4ptiauqq3bcahgxjfwx6edk6c6lhyhzm2@nlcpfl6lse6b>
+
+
+--72Lqpmoi9spjJbkk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516182853.2610284-3-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 16, 2025 at 10:59:14AM +0200, Andi Shyti wrote:
+> Hi Wolfram,
+>=20
+> I could have delivered this pull request personally, printed on a
+> roll of paper and handed over with a big bow :-)
+>=20
+> From sunny Nice, here's this week's pull request. Now, time for a
+> dip in the water.
+>=20
+> Andi
+>=20
+> The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fe=
+c3:
+>=20
+>   Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags=
+/i2c-host-fixes-6.15-rc7
+>=20
+> for you to fetch changes up to 1cfe51ef07ca3286581d612debfb0430eeccbb65:
+>=20
+>   i2c: designware: Fix an error handling path in i2c_dw_pci_probe() (2025=
+-05-14 17:28:24 +0200)
+
+Thanks, pulled!
 
 
-* kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
+--72Lqpmoi9spjJbkk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> The throttle only happens when an event is overflowed. Stop the entire
-> group when any event in the group triggers the throttle.
-> The MAX_INTERRUPTS is set to all throttle events.
+-----BEGIN PGP SIGNATURE-----
 
-Since this is a relatively long series with a healthy dose of 
-breakage-risk, I'm wondering about bisectability:
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgoR5YACgkQFA3kzBSg
+KbbBjg/9EBJjSwBYHhgj+p+IpfIOo0+j7w0v9/Wmn3NqePBcR4xf/M9NT7BVXVvl
+UFE6WX3uCvGYOYCKpolVYyobNGZAGceSUUPG42bTmq8idk5/caVATYCTwrB9eTPE
+Bez1zGXjw2z6xR2hsZWzNcp0n3J93Tz1d5sKIxjMyrA3kD3szoWLdogQ85C8LchH
+kwLmfk6uN4wDF99n4VbTJfeV0Zh9OwMK/eYgdQtJ2XA2aqrhjc/p7tl57ikL6eSD
+kpyZRmCFHZWmEXZPVINeSUlgN5xzXW/4zyWr2xooY1y524IzVZBDAezdCD8FkqK1
+lihJBr2Ac6ajp1En4FpXS5+76m/wktmaV7oTorVu4IFOGIIokElf5QuZbS5NWhKD
+fOApx5MItmBSVhbYDEVX+7/zci6LaQ6h50Mhv5BGTCRUgjM14S6yrRU1MHDmFhGG
+1aPmMzaMuRJTj862rYDDPoHzFfL7IElFq1GxZOrifBZV83kjawps6DAYuQrotecm
+o+m5M1jQcWYg3kpbtPkHIQGVxqnNmCFXKQCJe8yAJJTdLHJk9mibMxF6KTnTm/bm
+ez/S67mttp5fTeKAwMdLjado4sTyjgwxKM6SrFHTXcak9aG8jUczScmVace2zYtn
+Jzf0LVGqosutbBZv8eyZwJvyZ6CPv0Fkwt1wI+5kgw1/aG18LEM=
+=YrZN
+-----END PGP SIGNATURE-----
 
- - patch #2 auto-throttles groups, ie. stops the PMU
-
- - patches #3-#16 removes explicit PMU-stop calls.
-
-In the interim commits, will the double PMU-stop in drivers not updated 
-yet do anything noticeable, such as generate warnings, etc?
-
-Thanks,
-
-	Ingo
+--72Lqpmoi9spjJbkk--
