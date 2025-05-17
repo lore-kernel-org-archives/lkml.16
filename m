@@ -1,151 +1,127 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1480E145355
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 20:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51005145355;
+	Sat, 17 May 2025 20:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747513310; cv=none; b=FVWDyW4CA6f6vXwgp2vOG0+gITz0DnL6xU9b745Dq2SgV6xPwcsnrqmxXe342TaYTYc1eTSnQ8LKYkyI4gPJAC6O+LWLVCU1BWV+kG0cdFiOOg9PttVuy5whUpBKgyxwGwCzuirnORNMj81cMo7Arbqn6YZIOKlSmxLwlzqksqo=
+	t=1747513379; cv=none; b=Lm38vcQyNQ/jF551POx05rMayeoBZ5X7WHOh4K0JGf2pFP735okU10XS+J2G69WiXYBvKSdyJ+RvR4m6wRLoqS51TLUXoJDRx7SNXzYSDRH9V8iWypNP85zMoS2INDyzJiSvjM8Whn1HeXZTYdiAoFeGTYXNhHI2ARQ7LjA60aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747513310; c=relaxed/simple;
-	bh=lnqeZhITVDFkCqJ1pg3Z8qhnpqxvcMsO00LuJu/sU2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kGRVWKdTjVNAIPSqKA8evH4ILHJWBwB7hDbzXAB63cJHJOF2BFbyo01q8y0oFaJnjl1U0wanPLAOVfO2WOsH/KsaGNljavodPQ0sec0zXA0ptrzT7kh2KugNybqsD4arg75uqOe7BF9iuU0+UqD3BY7cX7DIf4LTl+V6JmGYt5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wlQCTkRX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZLTwommR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jBlXuGoH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Uu32mP+B; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747513379; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=s2xjg8CzgbOvHlbmOtY5yJiimjYZTfE3mDtbjq6nX6u16IeLDMavnibwaDqElw5GRGwwniGOqpc6lIdjlJ4gfJ1XZFZ4ZmgeS7yJimfB+TXXxqQf4ilsHXHGEk8j2pr7AfbUiefa1zJyrc6N60u7O6M7LLqv6YjazB0cX6seTio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qqm9uzjH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wlQCTkRX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZLTwommR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jBlXuGoH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Uu32mP+B"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DB23C1FF3D;
-	Sat, 17 May 2025 20:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747513307; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw0CpV37ybvRZaO1RGP6IG8fm4GRJXF9rmX9jolZzNk=;
-	b=wlQCTkRX33y2vx0CHYnFZHQRcySLnal89IWQHfIU3ku1Qle+Znx+ZpjPMHHRYO0s5l42xU
-	6u2Sbxi6XGw2FBhm3vbjD5QR4AAiRmDY4u5gd+oIZA30pMQR7/i9HnhDRhlJ+SMK06ygo4
-	S+C3DKKyTiIq90sR1U/IbC9gMBq+WAM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747513307;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw0CpV37ybvRZaO1RGP6IG8fm4GRJXF9rmX9jolZzNk=;
-	b=ZLTwommRciZy5NlAh/fujmRGi80SAS69548Bc5aRN/yZUSPDiuhqb8too0h53mj8lUJMxF
-	Bp0cZkAkvtdgwdDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747513306; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw0CpV37ybvRZaO1RGP6IG8fm4GRJXF9rmX9jolZzNk=;
-	b=jBlXuGoHv+4wP9c2d7xmQ5xBSS0Ra1W5EMXqp0YRxdNPVYoaFbZSVQhYr46z17Z0WsTeml
-	fMMLJXAVmFNclfyzqS0WaKD8a0FbwFQXHjAF/qDynOjs5c1E+f/CAnfDHLTA0YB2un7dI7
-	U95y+JcZVipAnLs4u3rslm26feootlI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747513306;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw0CpV37ybvRZaO1RGP6IG8fm4GRJXF9rmX9jolZzNk=;
-	b=Uu32mP+BrXIkMX5Jmb4ZL/r3mlMW/l4e0G3FSSalKN7JjkWcnZ6Sk1/N450SZFR1JxvAoA
-	W1cGbhihuOuZ4ADA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B75631325F;
-	Sat, 17 May 2025 20:21:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NOrSK9rvKGgrfQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Sat, 17 May 2025 20:21:46 +0000
-Message-ID: <72e15406-ffd2-4344-8cc6-1d54005138ce@suse.cz>
-Date: Sat, 17 May 2025 22:21:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qqm9uzjH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E558C4CEE3;
+	Sat, 17 May 2025 20:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747513377;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Qqm9uzjHX3E3Tkba0SIwo+dHYvchdHyrS9w0HmsSqMTrFW33pa6KOeJ4Iea68h2eU
+	 D6TbH7GEuMGIgSLA6VZ5O4+UVvE/wnR/mLIszDIMlLqE+yqVgyVfhz1KkrJCkl7cML
+	 YcMyTYJhBbZN7BWxuUOyEwfgBsymCbRM4La4MemLak7ZDAOEDFvryhDMZEq0a85j5B
+	 IZ+3S5vmFLAuo7GCDc8X2KnIc+y3dLq4ZbpVCs7Y4Bptl1LNeByDLCweulplxso4R1
+	 PZOTvIez9c5CzOWftnhE4zP4xw3Ougnu0YlWSe2ocoXUXkdfc9mmK+3f8z3hLGbJx4
+	 FQtmHkJy2Rk9g==
+Date: Sat, 17 May 2025 15:22:55 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] mm/page_isolation: remove migratetype parameter
- from more functions.
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>,
- Oscar Salvador <osalvador@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang
- <richardycc@google.com>, linux-kernel@vger.kernel.org
-References: <20250509200111.3372279-1-ziy@nvidia.com>
- <20250509200111.3372279-5-ziy@nvidia.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250509200111.3372279-5-ziy@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,nvidia.com:email,suse.cz:mid]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250517202255.sVeMpQEN6eXgQF42B9DyhWECFJsm_q51Ytkhc-nMJSs@z>
 
-On 5/9/25 22:01, Zi Yan wrote:
-> migratetype is no longer overwritten during pageblock isolation,
-> start_isolate_page_range(), has_unmovable_pages(), and
-> set_migratetype_isolate() no longer need which migratetype to restore
-> during isolation failure.
-> 
-> For has_unmoable_pages(), it needs to know if the isolation is for CMA
-> allocation, so adding CMA_ALLOCATION to isolation flags to provide the
-> information.
-> 
-> alloc_contig_range() no longer needs migratetype. Replace it with
-> a newly defined acr_flags_t to tell if an allocation is for CMA. So does
-> __alloc_contig_migrate_range().
-> 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
 
-AFAICS has_unmovable_pages() adds the flags parameter but doesn't use it.
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
 
-But also, I think having both mode and flags is just unnecessary complexity
-in this case? CMA_ALLOCATION could be just a new flag? Even if some flag
-combinations wouldn't logicaly make sense, this has only so few users so we
-don't have to care to make them exclusive with the mode thing.
-Also I think REPORT_FAILURE is only used with MEMORY_OFFLINE so it could be
-squashed?
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
