@@ -1,209 +1,160 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96B6B676;
-	Sat, 17 May 2025 08:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A01F1DE883;
+	Sat, 17 May 2025 08:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747471922; cv=none; b=TIBc/bDPvrln36pURPmVup9yeNUcLGNeUOlupuKCmAb9S3/re1YaHf3XGKu9S8pKBok/U08rjEt95Dhj202AbDOOb0m/9Qi50w4j4TIuYkR/48zPnn2uPAfUz1qbZLvcsJHWDeRqD1gzvcfVklg8+N5iKBNDeqRPnthpMfjkhHc=
+	t=1747471926; cv=none; b=ipud7pxFW4740wp1zP2e0gw6Uth3O7PO3Vzky6xOvTuDqtCQk626W4X6Y2SiCf2DXzimkE/JH1XcHel5uGszdQIfgFRpnESexjDifVAaaDqHjC1DQ4KDvxJhCNeAqKbMcNU8Bmh25CPbRo6ckabxBkFbPy3BqrIg+YmpacE2Jso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747471922; c=relaxed/simple;
-	bh=uisxt740Y61JWYGBXeFHyzPfobIwQCvSX/bROKXZBVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nJT3U88ALZ8fF3xymiS7HcHBTiEbkpsXzk6n1tn/+crioqa6xlElpCZqkuRIVb5lzw1ClLy3G2y0p/5RLfdOV1NEY87yrfZUBHqyEfbAuK6ejRRex6y/j0qXXqmuQpfoKoQnKOR7uB0hdUdaE92QBVw9OiBqrpchwBkr4hJnAvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lKKYZokp; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1747471926; c=relaxed/simple;
+	bh=lF9/DFxJbpnFVTv/6jEIAz7zEF9sW7iPq3Bf8TJ1yxg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DL/HhGf41TOC0wl05gjTsYjwcCtLUd8qC2q3y4O0o6f1mAz07LwxIOyMjmRkoLWfuh9nQ2gRIoHYEKVcH6S+wNcw2dEZ8kmq2eNBJZBc6+VPufZN6q1HDAa6ZGI3ZsW4qwlCMNiiX2nVPdLGIZwNfO1WN33T+NfHn+ER/WUM1iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTcbo8JD; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lKKYZokp"
-Received: from [172.20.3.254] (unknown [213.157.19.135])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id CFE513FA89;
-	Sat, 17 May 2025 08:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1747471916;
-	bh=LwsxKnzgLwgB3MddlDAZtddVxaV1Ne+qf0U+6mAN19g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=lKKYZokp6+3Q8dUnfS7Zalqu8zH/t2g4HBGMeD1Diu0VI7koArKeM6+P5Uf0nYn6E
-	 +K5mUMu2UQUiLfbDT7UwgrHqPJObjynhYzCwfcguo7bUWTjzCG3Of+S88hqFBlraI9
-	 Gfdpati3ax/8GFbhF/FO73PdvxqPrs9OraHAxlFkKXMBrF9CrMxzgYm8dsSi1zXOdH
-	 eyabtIojsEp+kpAKh5/sE+krTquiH5JDES6xvtlNa4/A1dn4L5iAGO5YgB+SAZdbbv
-	 OafoJbHQeSKkqRxzIg4/oTlwD8PxwyKFrg4MLEAFrvXTl+cQ8INul2hAGsJFuKMuxk
-	 +eXiJgtTrExJw==
-Message-ID: <b105b0bb-9dcc-4611-ace5-5bf58375c7af@canonical.com>
-Date: Sat, 17 May 2025 01:51:54 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTcbo8JD"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-527b70bd90dso1119809e0c.3;
+        Sat, 17 May 2025 01:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747471924; x=1748076724; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pyxELqAYWJh5y3cAyXG15Si240JlncX4Vur5tcQgMPk=;
+        b=MTcbo8JDKnMJVp+NWJOdj1SuPQCRgYvcSO1WLzJL2LIApzKx/rRTLtWPzPMDnK4g2u
+         HzSCc/UciQsSXeYQumPGEHPVJqWHg+tnP1+d4iHTbtsPZODOnKVs3j+1mrIo2KM50p+j
+         4IQn5YeIer3H4eW335RK7ot3F0XeS6nxjDBKultv0JktVvPJo1j1xn7x6W3YfkPaDrId
+         PAiyJ5f7tFyNTp+sPENbg5Vjw3e/6QLALxOEYm4Hsgf3d89PpJ5w1KWbtMNMYlm5ZMzh
+         oltMqrNmdFb3zfJ/gsvM0RIwVjuZvhRZOfNrXaN7GFPOgDtANeFlgPAFnJOWzIxTLux3
+         7TBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747471924; x=1748076724;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pyxELqAYWJh5y3cAyXG15Si240JlncX4Vur5tcQgMPk=;
+        b=Oova5ibYPHAGmWhKq3PH/TaN/cgBAepcqOfaDuZhzciv7Th5YKMKrGja7vkVk+Ml1A
+         YD66ao12PU05V1FTo8kjmqP+EZP07Wfp35tonIwcnjIX4cseIgNaayZvL3kmAZboFKnf
+         E/2aHOxyJQ4lbcP38P2TXyX+Dng1ZD4sBUmslA5EK05TnXf/lBxAbbqTzYi7PjQuaJ8d
+         x6Z0CUB7IpQawZjSKT8IW4Chpa3eYPiOGbNWjfHkVTXRxIh8o0IOAxu7HUhjHzFG71be
+         N4x3AFZMl6ukSDbV5jrQpmJa8IzCkrYsTwrLPM7ahYFj/XO0pjKcBmmCF0kRSWqPDHl7
+         KTgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEWDXyCNSfJ8jnpYGBzGMLmS1gzPAtLgRyWXSsVGM0sv7zNLOifJtlVSMIu1zsScz1cjheoriWY6Z0FZgeb3w14+sxxw==@vger.kernel.org, AJvYcCVLL+SuO5XP9jfil0yUTIO8B1wF5TR5ivuHJEtURWQPMjaSgzMhG1Eo51TAblmtkBC79OCMBjukpYCpP1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPN27nggi4a7R3idncw/GETZf5G7DiSP87ox9ebnX7TA+h0U7K
+	K60Ld0zMs7sokXowI6yh3vtPRDO7kMEcC35+us5k84o/IrOi2szX7aDQ
+X-Gm-Gg: ASbGncujNRVjMgJztU6PrAjx6wsDKdbwavcIQ/BB5rN6AY32eRgHeYoc26//igpEWeQ
+	cngfbqq0QUhl0FQFxlutdqft94nLnGSmDz3b3EwGxUKBdSo64ZP9vTtOi0agfA/IVlE/vEge9tv
+	oJlTNs+jsL3iQpfPqfcoIPLkzp7WWXW1eH5jgrrjwOuvyktaXdeLHJI0b/sCgFK2hxXAUL1N9az
+	OFe1a0f5Wx+cxV7G6z5H0dyZLH9bSb6kHdBoJhslAoECNzht1cP7lt8Jok3qIfJsA7JHQwkj7VL
+	aWcLdml7wFWpbSU6qwLjSrq551xXW2mZEJsq2tNDamjxgfIwNlgqXFPmP0ge
+X-Google-Smtp-Source: AGHT+IE2zj+cCjYg9Z7WVAI06jrGyEqAoqfSPLHRzpeK7vCrfIb4WieZ10iz5x8cDVmSHCp7lbvuiw==
+X-Received: by 2002:a05:6122:65a0:b0:518:7ab7:afbb with SMTP id 71dfb90a1353d-52dba94a50amr6505648e0c.8.1747471924059;
+        Sat, 17 May 2025 01:52:04 -0700 (PDT)
+Received: from [192.168.1.26] ([181.85.227.70])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba9405adsm3455812e0c.11.2025.05.17.01.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 May 2025 01:52:03 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v2 0/5] platform/x86: firmware_attributes_class: Add a high
+ level API
+Date: Sat, 17 May 2025 05:51:35 -0300
+Message-Id: <20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] apparmor: fix some kernel-doc issues in header files
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Ryan Lee <ryan.lee@canonical.com>, John Johansen <john@apparmor.net>,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>
-References: <20250503044919.2251962-1-rdunlap@infradead.org>
-Content-Language: en-US
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20250503044919.2251962-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABdOKGgC/1XMyw6CMBCF4Vchs3ZMGVO8rHgPw2KAKUwil7QEN
+ aTvbsWVy/8k59sgiFcJcMs28LJq0GlMQYcMmp7HTlDb1ECGrDlRge6JvCw+IM+KRoTPjSGydQH
+ pMntx+tq5e5W617BM/r3ra/5df5A1139ozdEg2Qs7aQtbOy67gfVxbKYBqhjjB1Wt8FCoAAAA
+X-Change-ID: 20250326-fw-attrs-api-0eea7c0225b6
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joshua Grisham <josh@joshuagrisham.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2232; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=lF9/DFxJbpnFVTv/6jEIAz7zEF9sW7iPq3Bf8TJ1yxg=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBkafnpcTEJzjbanGpft2/s3r3RVm9v3uc7X1d5ZxtR7p
+ sdMWCjYUcrCIMbFICumyNKesOjbo6i8t34HQu/DzGFlAhnCwMUpABNxjWRkeHqK741DZXrka5fc
+ 9I0zZx498FHLa4e208uyKWcqP95V/srwz9bS+4pmqfgX2Q1z38e0J5cmOZf+4Gaa9Sv5yF6mB6X
+ OfAA=
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-On 5/2/25 21:49, Randy Dunlap wrote:
-> Fix kernel-doc warnings in apparmor header files as reported by
-> scripts/kernel-doc:
-> 
-> cred.h:128: warning: expecting prototype for end_label_crit_section(). Prototype was for end_current_label_crit_section() instead
-> file.h:108: warning: expecting prototype for aa_map_file_perms(). Prototype was for aa_map_file_to_perms() instead
-> 
-> lib.h:159: warning: Function parameter or struct member 'hname' not described in 'basename'
-> lib.h:159: warning: Excess function parameter 'name' description in 'basename'
-> 
-> match.h:21: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   * The format used for transition tables is based on the GNU flex table
-> 
-> perms.h:109: warning: Function parameter or struct member 'accum' not described in 'aa_perms_accum_raw'
-> perms.h:109: warning: Function parameter or struct member 'addend' not described in 'aa_perms_accum_raw'
-> perms.h:136: warning: Function parameter or struct member 'accum' not described in 'aa_perms_accum'
-> perms.h:136: warning: Function parameter or struct member 'addend' not described in 'aa_perms_accum'
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reviewed-by: Ryan Lee <ryan.lee@canonical.com>
-> Cc: John Johansen <john.johansen@canonical.com>
-> Cc: John Johansen <john@apparmor.net>
-> Cc: apparmor@lists.ubuntu.com
-> Cc: linux-security-module@vger.kernel.org
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> ---
-> v2: add better commit message (Ryan)
+Hi all,
 
-Acked-by: John Johansen <john.johansen@canonical.com>
+These series adds the _long awaited_ API for the Firmware Attributes
+class.
 
-> 
->   security/apparmor/include/cred.h  |    2 +-
->   security/apparmor/include/file.h  |    2 +-
->   security/apparmor/include/lib.h   |    2 +-
->   security/apparmor/include/match.h |    2 +-
->   security/apparmor/include/perms.h |    8 ++++----
->   5 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> --- linux-next-20250501.orig/security/apparmor/include/cred.h
-> +++ linux-next-20250501/security/apparmor/include/cred.h
-> @@ -117,7 +117,7 @@ static inline struct aa_label *aa_get_cu
->   #define __end_current_label_crit_section(X) end_current_label_crit_section(X)
->   
->   /**
-> - * end_label_crit_section - put a reference found with begin_current_label..
-> + * end_current_label_crit_section - put a reference found with begin_current_label..
->    * @label: label reference to put
->    *
->    * Should only be used with a reference obtained with
-> --- linux-next-20250501.orig/security/apparmor/include/file.h
-> +++ linux-next-20250501/security/apparmor/include/file.h
-> @@ -104,7 +104,7 @@ void aa_inherit_files(const struct cred
->   
->   
->   /**
-> - * aa_map_file_perms - map file flags to AppArmor permissions
-> + * aa_map_file_to_perms - map file flags to AppArmor permissions
->    * @file: open file to map flags to AppArmor permissions
->    *
->    * Returns: apparmor permission set for the file
-> --- linux-next-20250501.orig/security/apparmor/include/lib.h
-> +++ linux-next-20250501/security/apparmor/include/lib.h
-> @@ -170,7 +170,7 @@ struct aa_policy {
->   
->   /**
->    * basename - find the last component of an hname
-> - * @name: hname to find the base profile name component of  (NOT NULL)
-> + * @hname: hname to find the base profile name component of  (NOT NULL)
->    *
->    * Returns: the tail (base profile name) name component of an hname
->    */
-> --- linux-next-20250501.orig/security/apparmor/include/match.h
-> +++ linux-next-20250501/security/apparmor/include/match.h
-> @@ -17,7 +17,7 @@
->   #define DFA_START			1
->   
->   
-> -/**
-> +/*
->    * The format used for transition tables is based on the GNU flex table
->    * file format (--tables-file option; see Table File Format in the flex
->    * info pages and the flex sources for documentation). The magic number
-> --- linux-next-20250501.orig/security/apparmor/include/perms.h
-> +++ linux-next-20250501/security/apparmor/include/perms.h
-> @@ -101,8 +101,8 @@ extern struct aa_perms allperms;
->   
->   /**
->    * aa_perms_accum_raw - accumulate perms with out masking off overlapping perms
-> - * @accum - perms struct to accumulate into
-> - * @addend - perms struct to add to @accum
-> + * @accum: perms struct to accumulate into
-> + * @addend: perms struct to add to @accum
->    */
->   static inline void aa_perms_accum_raw(struct aa_perms *accum,
->   				      struct aa_perms *addend)
-> @@ -128,8 +128,8 @@ static inline void aa_perms_accum_raw(st
->   
->   /**
->    * aa_perms_accum - accumulate perms, masking off overlapping perms
-> - * @accum - perms struct to accumulate into
-> - * @addend - perms struct to add to @accum
-> + * @accum: perms struct to accumulate into
-> + * @addend: perms struct to add to @accum
->    */
->   static inline void aa_perms_accum(struct aa_perms *accum,
->   				  struct aa_perms *addend)
+You'll find all the details in the commit messages and kernel-doc.
+
+I think it's easier to understand by example, so I used the
+samsung-galaxybook driver for this purpose (last patch). IMO code
+readibility, simplicity, maintainability, etc. is greatly improved, but
+there is still room for improvement of the API itself. For this reason I
+submitted this as an RFC.
+
+As always, your feedback is very appreciated :)
+
+Overview
+========
+
+Patch 1-2: New API with docs included.
+  Patch 3: New firwmare attributes type
+  Patch 4: Misc Maintainers patch
+  Patch 5: samsung-galaxybook example
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Changes in v2:
+
+[Patch 1]
+ - Include kdev_t.h header
+
+[Patch 2]
+ - Use one line comments in fwat_create_attrs()
+ - Check propagate errors in fwat_create_attrs()
+ - Add `mode` to fwat_attr_config and related macros to let users
+   configure the `current_value` attribute mode
+ - Use defined structs in fwat_attr_ops instead of anonymous ones
+ - Move fwat_attr_type from config to ops
+
+[Patch 5]
+ - Just transition to new API without chaing ABI
+
+- Link to v1: https://lore.kernel.org/r/20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com
+
+---
+Kurt Borja (4):
+      platform/x86: firmware_attributes_class: Add a high level API
+      platform/x86: firmware_attributes_class: Add a boolean type
+      MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+      platform/x86: samsung-galaxybook: Transition to new firmware_attributes API
+
+Thomas Weißschuh (1):
+      platform/x86: firmware_attributes_class: Add device initialization methods
+
+ .../ABI/testing/sysfs-class-firmware-attributes    |   1 +
+ MAINTAINERS                                        |   7 +
+ drivers/platform/x86/firmware_attributes_class.c   | 454 +++++++++++++++++++++
+ drivers/platform/x86/firmware_attributes_class.h   | 276 +++++++++++++
+ drivers/platform/x86/samsung-galaxybook.c          | 308 ++++++--------
+ 5 files changed, 861 insertions(+), 185 deletions(-)
+---
+base-commit: 9f080c9f2099b5a81c85b3b7f95fd11fad428cc8
+change-id: 20250326-fw-attrs-api-0eea7c0225b6
+-- 
+ ~ Kurt
 
