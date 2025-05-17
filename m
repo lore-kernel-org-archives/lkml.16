@@ -1,40 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBBC1917D6;
-	Sat, 17 May 2025 02:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E34D2940F;
+	Sat, 17 May 2025 02:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747448719; cv=none; b=Mhsdr1f2i0ICmeM1Cj1S7nKeUSrgDxVpMI0w8FyBR7LAyWIImsXI+JnHi0AHUSu4beicLNCQdzIVzn8MS4hTFGRHtXRUeSm+SI7MN9yh07nw7F7SepuN5rYPVlB9D8PNd9raQVscdqo6uizmxsqOfwfH8eubj14GLiVDhqrEEBg=
+	t=1747449262; cv=none; b=VWogRGvJpKWmiQnHOoIJjDpUJSDE8jY78bTs3fwUydlPAnQiSR8l+UKu3RQqp8qYWUl7eYiXIpqCMO+yR7Xoo3mg/yOy45c9zKpDIepBtlR3ajmk5dhmVlrPzRP9PbdfRx+7GHpyWEuT05/p3ZuklsG+rHHTeMRdN6iPHd1DY0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747448719; c=relaxed/simple;
-	bh=XXmV0q88v0oxfMFM0WBoheMAne6q7Vmr/cC9Ycy/h/I=;
+	s=arc-20240116; t=1747449262; c=relaxed/simple;
+	bh=iETPR42QaEtytfuv0q61ElwepwCEwWASA1OTwHBh/eM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aBRSknrUSM9IRCCNTqvkRfvc8f/sV7CXwOpGkKx/IW+RS/e1lQzUpfLGDHF32K3+hF05ocJ4Q+R0hD+P5Pmx+UU0nJqgYBYLRlB2FzTlh3BKe37HiqcFr64uhop1A1/nWCsQpNm2yUnzBqAoXW6cehyOg9/aBib8iPaYhTDM+k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbsDb+Ey; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eRnDksFhs2Z0c9YOyWSRFRHg7LAh83drR6h1zNn/Eg33pX5BLjo9XRWFBTG77pLPKJR7lChOvhKA6E2s3B5FDa9/fPn9TrRfryY4iP8qDt5/5QwdqmFxsPPc3K9rRz5BBBufXs5xQdfHI2sluXo7sD8t3nZ4K/xrTEBsAi1+ZKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ScGk6mwT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XlQFNK5i; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbsDb+Ey"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2366DC4CEF7;
-	Sat, 17 May 2025 02:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747448718;
-	bh=XXmV0q88v0oxfMFM0WBoheMAne6q7Vmr/cC9Ycy/h/I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NbsDb+EyeGdD5IFUZxcSfeMjmMFLVf9z4vgyaYEOeoRZ0CwE/Kdn759lTNGuYS+MO
-	 x7GPcQE+IRTj55Q8xPdTruecGzcITYbdcBgwEcNiGiRGwHiYce0zFawqqTNADwPeDl
-	 KF12WMTAMLj4dwQWXAbJnEdoTIVBCpOcglrAiTxSzUUA0am3m850hCY0SVJgU5S6cS
-	 HnnXkkR3j+pxyyQK7KQvnPbuSprX9WVPQTvDQ25srEBFY7M2wEIDRnAdW0+KwiP6fT
-	 hUvfxt/S1ukmCwWQxsGEYa/I1w24KcnYGpcYk0x5O5OV/jNpjwgjq1NIPnZyIcvjOp
-	 3g4cBAJkdaV4Q==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] Revert "crypto: arm/sha256 - Add simd block function"
-Date: Fri, 16 May 2025 19:24:26 -0700
-Message-ID: <20250517022428.401622-7-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250517022428.401622-1-ebiggers@kernel.org>
-References: <20250517022428.401622-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ScGk6mwT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XlQFNK5i"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 179CA13800E4;
+	Fri, 16 May 2025 22:34:17 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 16 May 2025 22:34:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1747449257; x=
+	1747535657; bh=W6kB3UyFZitt+7gd9LRi3/C0t0XNRVsvLqHtoc5yCoM=; b=S
+	cGk6mwTIcsqbL8dFljbDkHU8mcumpG5FRNvv+yfXyTC4E0OpTD4JuC99ibcF70Gm
+	U0wzu7qTdTeTMaYIVTdUrYlFxDWiO8rFsVk2KRwk9rB+5idaa0zNGA2muEVN5ofa
+	vooWMbp7PfNvf5V1paiUtWGX8ZPQzxzvLLDZALfowdkFrz0EPK5q79nck8duFFHi
+	LUpDhO94XGVVi/KQhAZN9sKvPrkzAmRLVQ4LBHr2LdiBuALjOoDWiOc6jRcrg6KE
+	CkyKH6d4EyAJ6waAuCsKcEA2bFWO6ou8AzTf60PP2VkJxb8AVYyoqvrY/YtemEXG
+	ooPk8Od8AptlEuGVs0xHg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1747449257; x=1747535657; bh=W
+	6kB3UyFZitt+7gd9LRi3/C0t0XNRVsvLqHtoc5yCoM=; b=XlQFNK5iYKfc4oCRd
+	NkomZ0ebJO0MmSO/dFd3q41Zb6s46Ra2EnadbzkBTi6tBVuOPS9jdV/lumVcnsby
+	dgf3z7Y4+a/EejKlNALAvcdyuigsSgCoGL6lmEI8xIArpGouoykpC5662m9oadpQ
+	SZwxasnxFtkYTv5Q2ccQVWzYWMTefyR4Z5KayIkxDuEZ7Y99g35lceVnDj1kGvGO
+	0FvvvHakOC1S1Skg2s+Z2geluqMFPBZjUP7OjAZIEI5AzATuGGJYTciI0JR+qmb7
+	FvVmz+N2qehnnDnYI7cLfifhcCj4eCckD2jyUB3RgTEb51RTnJfObnic0UEcsDQl
+	ARSag==
+X-ME-Sender: <xms:qPUnaO4RZLue4vdpzjBnhkL2NADQLKQquoOlmsyf7v2-tohNLFYn9A>
+    <xme:qPUnaH6SFeV6w91BZRLSnjrtk6Evc9uc2qCh59r_hnGDqbpzQcbQ_11Zi3yb4aat4
+    H0Cyi7XI9-nyhAZqgA>
+X-ME-Received: <xmr:qPUnaNfrVDNcBE2RKww7U7G2s1dU-i595nbrXpDhcjNPD7qKHlQi6Gus5OSJjgIG-ncc_k6WQyFTVbkrgxuo78ZWjnsSTRn9hgqfvVBg5nkWom7knw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudeggeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegoteeftdduqddtudculdduhedmnecujfgurhephffvvefu
+    fffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhsohhnuc
+    eomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthht
+    vghrnhepvedtlefggefgjeettddvgfekhfeugfeutdekfeefudeuuddvieeutdeljedvhf
+    dvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqh
+    huvggssgdrtggrpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpth
+    htohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdr
+    jhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmh
+    dqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhr
+    tghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopeguvggsrghrsghoshesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:qPUnaLIAI0iwgH1HYjrlZhfkap3-yzt9t8_yPgURZ6eLsy7HznzYBg>
+    <xmx:qPUnaCL84mXNEsZXdqfOEhBrSc37zBEi5BAMAl9df7LAngrb0d1B-g>
+    <xmx:qPUnaMyCaryYdMh7T-vVNumLPdJMa9iC5PKOEZGH0pRAwRAjQGMXKA>
+    <xmx:qPUnaGKKitmMJx2AD_Vtf-3Ubv3a32ET6W1rLUKCpKzIcdsTMMMt7A>
+    <xmx:qfUnaM2qtyft4pB8ma2ZIA_1h33EGXrjy97PehYwwhPXKJjSN0Gg4TdZ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 16 May 2025 22:34:16 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Derek Barbosa <debarbos@redhat.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
+Date: Fri, 16 May 2025 22:33:37 -0400
+Message-ID: <20250517023348.2962591-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,151 +97,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+If user modifies the battery charge threshold an ACPI event is generated.
+Confirmed with Lenovo FW team this is only generated on user event. As no
+action is needed, ignore the event and prevent spurious kernel logs.
 
-This reverts commit 2e43fc6d79cb24e0fe34aa4c2229ab6c414d852a which got
-pushed out despite being nacked.
-
-That commit added a special low-level interface to allow the
-crypto_shash API to bypass the safety check for using kernel-mode NEON.
-It could give a marginal performance benefit for crypto_shash, but just
-is not worth the complexity and footgun.  Moreover, the distinction
-between "arch" and "simd" is confusing and is not something that really
-should exist in generic code, given that different architectures can
-mean different things by "simd".
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: Derek Barbosa <debarbos@redhat.com>
+Closes: https://lore.kernel.org/platform-driver-x86/7e9a1c47-5d9c-4978-af20-3949d53fb5dc@app.fastmail.com/T/#m5f5b9ae31d3fbf30d7d9a9d76c15fb3502dfd903
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 ---
- arch/arm/lib/crypto/Kconfig         |  1 -
- arch/arm/lib/crypto/sha256-armv4.pl | 20 ++++++++++----------
- arch/arm/lib/crypto/sha256.c        | 14 +++++++-------
- 3 files changed, 17 insertions(+), 18 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/lib/crypto/Kconfig b/arch/arm/lib/crypto/Kconfig
-index d1ad664f0c674..9f3ff30f40328 100644
---- a/arch/arm/lib/crypto/Kconfig
-+++ b/arch/arm/lib/crypto/Kconfig
-@@ -26,6 +26,5 @@ config CRYPTO_POLY1305_ARM
- config CRYPTO_SHA256_ARM
- 	tristate
- 	depends on !CPU_V7M
- 	default CRYPTO_LIB_SHA256
- 	select CRYPTO_ARCH_HAVE_LIB_SHA256
--	select CRYPTO_ARCH_HAVE_LIB_SHA256_SIMD
-diff --git a/arch/arm/lib/crypto/sha256-armv4.pl b/arch/arm/lib/crypto/sha256-armv4.pl
-index 8122db7fd5990..f3a2b54efd4ee 100644
---- a/arch/arm/lib/crypto/sha256-armv4.pl
-+++ b/arch/arm/lib/crypto/sha256-armv4.pl
-@@ -202,22 +202,22 @@ K256:
- .word	0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
- .size	K256,.-K256
- .word	0				@ terminator
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- .LOPENSSL_armcap:
--.word	OPENSSL_armcap_P-sha256_blocks_arch
-+.word	OPENSSL_armcap_P-sha256_block_data_order
- #endif
- .align	5
- 
--.global	sha256_blocks_arch
--.type	sha256_blocks_arch,%function
--sha256_blocks_arch:
--.Lsha256_blocks_arch:
-+.global	sha256_block_data_order
-+.type	sha256_block_data_order,%function
-+sha256_block_data_order:
-+.Lsha256_block_data_order:
- #if __ARM_ARCH__<7
--	sub	r3,pc,#8		@ sha256_blocks_arch
-+	sub	r3,pc,#8		@ sha256_block_data_order
- #else
--	adr	r3,.Lsha256_blocks_arch
-+	adr	r3,.Lsha256_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
- 	ldr	r12,[r3,r12]		@ OPENSSL_armcap_P
- 	tst	r12,#ARMV8_SHA256
-@@ -280,11 +280,11 @@ $code.=<<___;
- 	ldmia	sp!,{r4-r11,lr}
- 	tst	lr,#1
- 	moveq	pc,lr			@ be binary compatible with V4, yet
- 	bx	lr			@ interoperable with Thumb ISA:-)
- #endif
--.size	sha256_blocks_arch,.-sha256_blocks_arch
-+.size	sha256_block_data_order,.-sha256_block_data_order
- ___
- ######################################################################
- # NEON stuff
- #
- {{{
-@@ -468,12 +468,12 @@ $code.=<<___;
- sha256_block_data_order_neon:
- .LNEON:
- 	stmdb	sp!,{r4-r12,lr}
- 
- 	sub	$H,sp,#16*4+16
--	adr	$Ktbl,.Lsha256_blocks_arch
--	sub	$Ktbl,$Ktbl,#.Lsha256_blocks_arch-K256
-+	adr	$Ktbl,.Lsha256_block_data_order
-+	sub	$Ktbl,$Ktbl,#.Lsha256_block_data_order-K256
- 	bic	$H,$H,#15		@ align for 128-bit stores
- 	mov	$t2,sp
- 	mov	sp,$H			@ alloca
- 	add	$len,$inp,$len,lsl#6	@ len to point at the end of inp
- 
-diff --git a/arch/arm/lib/crypto/sha256.c b/arch/arm/lib/crypto/sha256.c
-index 109192e54b0f0..2c9cfdaaa0691 100644
---- a/arch/arm/lib/crypto/sha256.c
-+++ b/arch/arm/lib/crypto/sha256.c
-@@ -4,40 +4,40 @@
-  *
-  * Copyright 2025 Google LLC
-  */
- #include <asm/neon.h>
- #include <crypto/internal/sha2.h>
-+#include <crypto/internal/simd.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- 
--asmlinkage void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
--				   const u8 *data, size_t nblocks);
--EXPORT_SYMBOL_GPL(sha256_blocks_arch);
-+asmlinkage void sha256_block_data_order(u32 state[SHA256_STATE_WORDS],
-+					const u8 *data, size_t nblocks);
- asmlinkage void sha256_block_data_order_neon(u32 state[SHA256_STATE_WORDS],
- 					     const u8 *data, size_t nblocks);
- asmlinkage void sha256_ce_transform(u32 state[SHA256_STATE_WORDS],
- 				    const u8 *data, size_t nblocks);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_ce);
- 
--void sha256_blocks_simd(u32 state[SHA256_STATE_WORDS],
-+void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
- 			const u8 *data, size_t nblocks)
- {
- 	if (IS_ENABLED(CONFIG_KERNEL_MODE_NEON) &&
--	    static_branch_likely(&have_neon)) {
-+	    static_branch_likely(&have_neon) && crypto_simd_usable()) {
- 		kernel_neon_begin();
- 		if (static_branch_likely(&have_ce))
- 			sha256_ce_transform(state, data, nblocks);
- 		else
- 			sha256_block_data_order_neon(state, data, nblocks);
- 		kernel_neon_end();
- 	} else {
--		sha256_blocks_arch(state, data, nblocks);
-+		sha256_block_data_order(state, data, nblocks);
- 	}
- }
--EXPORT_SYMBOL_GPL(sha256_blocks_simd);
-+EXPORT_SYMBOL_GPL(sha256_blocks_arch);
- 
- bool sha256_is_arch_optimized(void)
- {
- 	/* We always can use at least the ARM scalar implementation. */
- 	return true;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 92b21e49faf6..657625dd60a0 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -231,6 +231,7 @@ enum tpacpi_hkey_event_t {
+ 	/* Thermal events */
+ 	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
+ 	TP_HKEY_EV_ALARM_BAT_XHOT	= 0x6012, /* battery critically hot */
++	TP_HKEY_EV_ALARM_BAT_LIM_CHANGE	= 0x6013, /* battery charge limit changed*/
+ 	TP_HKEY_EV_ALARM_SENSOR_HOT	= 0x6021, /* sensor too hot */
+ 	TP_HKEY_EV_ALARM_SENSOR_XHOT	= 0x6022, /* sensor critically hot */
+ 	TP_HKEY_EV_THM_TABLE_CHANGED	= 0x6030, /* windows; thermal table changed */
+@@ -3777,6 +3778,10 @@ static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
+ 		pr_alert("THERMAL EMERGENCY: battery is extremely hot!\n");
+ 		/* recommended action: immediate sleep/hibernate */
+ 		break;
++	case TP_HKEY_EV_ALARM_BAT_LIM_CHANGE:
++		pr_debug("Battery Info: battery charge threshold changed\n");
++		/* User changed charging threshold. No action needed */
++		return true;
+ 	case TP_HKEY_EV_ALARM_SENSOR_HOT:
+ 		pr_crit("THERMAL ALARM: a sensor reports something is too hot!\n");
+ 		/* recommended action: warn user through gui, that */
 -- 
-2.49.0
+2.43.0
 
