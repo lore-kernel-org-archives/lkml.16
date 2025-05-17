@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29E91E521E
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DE1E7648
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747473420; cv=none; b=imwdfBlD0DJuVwLnggLhzYyemfZwWB+Br6iIeM1PGnPuZmnMIBv57OQCKwvftmbdgnxH8s59sTJLCmV9wX4viyDi0u7uqkuvAVK2Mf1PH31imPiAOLWVn6NGVuzqKhh6ikEilEWe+ccLDjj8oNVIjY56Aa/drLtIDSjRinV0j+w=
+	t=1747473422; cv=none; b=YA36xeJ4bzGWm1R7pQT1ugBauhv3sNnnxOPCdISch+knwEswR97KL0m7s1q1EqfIk0H9kpC6HERB2kkMcHT/gHzXFCNaRV2v4ONfBWpMGlbdlxA1xDgnkPtlSgHTUXwLWGv3kO0z5M+Kkk3ObrV2Vj94j/EngsgkkOO6Hrulvd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747473420; c=relaxed/simple;
-	bh=LrYCuiDJiGB848WGTFaxS545ElR8sRVOtr/mTgwPJn4=;
+	s=arc-20240116; t=1747473422; c=relaxed/simple;
+	bh=3EwEj/6lMOnvgATJ6r0vVrXxYmo66nwJZa3pw0bSmpc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HyKq1oXYFrjDJt4lys2b7XNrN4vQDCFNbvCM2lSCWMGw5yMbJMIeBnnwagJkbrTWuQg3bw7EhZw89dTsYyQ08gpTflR2I/qHAYG++r6BjTdX6Hr5lCy2ke9QOIjqDsHQv3XDtyPIquLtL2os2BysfEOutAKc7y4IrJtAQLHrZbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zJOzmc1i; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=KhRa+ggYnAGVJqilbTuekf3U0B+rA5HG12uaH/Sua1KROlCqQBJU5GHJ1Eg1LG7hg54nNU6HMfwOVaiL71oJfFtvQytryI/PB9GmFpMDeqzIfE7+rN3ifKQF8E5rT2c9VFOkXjwkxuqTh+kWxWyeQSkuVGiDxWQDNOF+8yep4Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YAxTjO6t; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zJOzmc1i"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-441c96c1977so18505235e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:16:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YAxTjO6t"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so22261745e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747473417; x=1748078217; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747473419; x=1748078219; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvPK23kMajR02E8bh8W17jGFJeTrq3SL6S8Nz/0H/6g=;
-        b=zJOzmc1ip/PAoOShiv0hPgsQ5pgjBo4lpe0+EvVNk6eQQeiW0nuDAH8KfhrS39vQik
-         V9uRdzFy6y/iJcOnuMIjMAXvVrwPTZqI8miRdGu3uPyypGz5kaJ7VWqWhMxrxNd9nbc5
-         TxNxDHiE1s0BGlYouteKwDwIOfm/CdpOEsNsURl0+vRqLK7ASy32t17zCxYBwBRyy6F/
-         IsUfD49vvan7i9tmzMFgtIsRn51ig8T4MWzEiX+RYUHakgOxRt6IuYUUJkuf8MJSv1rC
-         z1fyUS5SE0Tiy4rHA5U9EKMSakZ9CmT3B+QVQUwF+ful2TojdGWkN+RjlknSB1//g/eF
-         IZJw==
+        bh=x08rrTDWY9cAUMy0PmmEcseVvr8AaWm8xVAdcnsEt+s=;
+        b=YAxTjO6t26LDMFzM+qEJNew+m1syZ0eJ+S/1MKOUu1qvu1DtvucOs2uw+6sgSA0P0m
+         bzcQxplyARrNtq9AIzywucisDlLZAarBJkIlGs+ShcmG3C5Cv0+3SdIy1aOfcUBygADE
+         2F2aBMRXyp784x+0ip1KHaQ/0l+F11SxInBcvMXntqsURZFcvTMdsMSuJJ5YH/BWcBA+
+         pHb40K0QI3yjylgV+Z2lFphy/WJRukDr5+ATfTXvXaqc/iJEAOvI5gsFdUmkrNWvlqns
+         iH8rncFdlEdNzCGHXjmeVyASCjgU702w2j6/8Z3m0Ll6GhAvY46gwu/HCAJvQBlGEd/L
+         FNuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747473417; x=1748078217;
+        d=1e100.net; s=20230601; t=1747473419; x=1748078219;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvPK23kMajR02E8bh8W17jGFJeTrq3SL6S8Nz/0H/6g=;
-        b=hkZosJvW9hM4uNPNWF8BNvsgErR1Gwpm9OnfJiXyIMpeT9Dr+4D0BraWKuDFVHqX0U
-         OsvZshJRCHIjprvs+qxVV8uUKXEGivXQyuD/l6Ce6EFjS1Iqtz3r0sCtoJxkEQbSDbss
-         ek3dLp2kFkON51tcQXxxTKV2M8CxFcgzZFjmH1QNvNEMmK0aZprw8vobTnhizL35+htv
-         vr9YPThlMuLDlGe8vIC0G7tjWmLUCuCfAQG65zsChFqNrIsFXeAhr5x0p1eLOMjOyUCd
-         6zNOwZJSRHpi847DtP3xAPfPRVSgXA1gxkLI5KeC76r2dFMPJYoLz/f69N7SX5EVmvjI
-         +XNA==
-X-Gm-Message-State: AOJu0Yy04hby65swiBZB1o6/G2Gjs31/XQrkEc/KC31HXpI8WM7U4IKP
-	yIZ93H3dRJ1s09bMKb0TohvTc0bXRsaLJUGnEpA1O4nBG3WJdly4vWVVnuPG+sEcg414UIjMziv
-	/fc9MhoStILAEO+yAssIp/3dg8tJSBtBT2S9YiAX+8anq7+BeSbsDzndQD/a1Eigq+pJRAK4cEP
-	kIOJzgvbgbevaGUsga0N/9I+ai6I/TzsGJZw==
-X-Google-Smtp-Source: AGHT+IHgcrTX567r8tsWZ4BIFPA+SZMwnFNqHDNGcBlQeKcxYYes6HeXNfVSIa4ZFft89GzjSotTfp5e
-X-Received: from wmrn39.prod.google.com ([2002:a05:600c:5027:b0:440:5e01:286b])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1881:b0:39a:cb5b:78fe
- with SMTP id ffacd0b85a97d-3a35fe952cdmr4466053f8f.34.1747473417221; Sat, 17
- May 2025 02:16:57 -0700 (PDT)
-Date: Sat, 17 May 2025 11:16:44 +0200
+        bh=x08rrTDWY9cAUMy0PmmEcseVvr8AaWm8xVAdcnsEt+s=;
+        b=lk9uJqrlKNtdWY51TmiW43jusAQtxwDMuo7Mq3vtSjlD2CkKZvhuFHfQFyidYLxSr7
+         U4GKEK+a/KxLX5ean4Ovt5JT96SqqZ0dhab8Jy6BiTdwFKqQMAGnMp80b6e7L/UW8BxE
+         X6w+h+iBjgbNc/xnRap60wddAptWds4gW/V1B/7Lvi1zuxq/hg39KzDb8+2tyt/3ZCK6
+         5+hZ/URrotP99fnB+MqO3NDQYWTZPD7b9xGU8YhZzieftWeuIUW4ete5RaHyrHftqlNX
+         40nUdhqUBN/Q/CyhC9fB9NI7NQXyHHQnGHqMx3X47kL0qc0oKqnx+TWK6keZDHpjskZa
+         0NBg==
+X-Gm-Message-State: AOJu0YzXZA3m2Md4nMIFtdgzz2ZHiwOLkHfTf2E2qOO9hXTyf/lk40bw
+	jhBv4qBIlsAfd43CuGgMDh0wLSj69wjVejJ3S5ovb+gf3xzWONWP05VyKmoK9meySjY9XyzNtcE
+	lfhVHKbniYOAOTwDELCh2BSdJPUu4Vz0ydcgzqUXdZJUv8zS1ll38M3WmxhytfVIukeXKqCvHC7
+	ts3K8GUWToWxmnFQhdogfSexI/0B9Kxq2vwQ==
+X-Google-Smtp-Source: AGHT+IHKZJlY9Uv9u+cGzDV11hKu8wrzHdh212AZ6dF6ZNutFJXQwheB6bdOCI8Fb16m2tP/nCBgQxNr
+X-Received: from wmsd12.prod.google.com ([2002:a05:600c:3acc:b0:442:cab2:15c3])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1d81:b0:43c:fc04:6d35
+ with SMTP id 5b1f17b1804b1-442fd606b8emr59059445e9.4.1747473419209; Sat, 17
+ May 2025 02:16:59 -0700 (PDT)
+Date: Sat, 17 May 2025 11:16:45 +0200
 In-Reply-To: <20250517091639.3807875-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250517091639.3807875-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2896; i=ardb@kernel.org;
- h=from:subject; bh=9ddViHhv7qt25KUQb0TRCKOa0MYESX6EDtdopTEwpsc=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMj+PfHN9d2Z0r82uh9/4Hn83vLjI0dTKfpPeGI05u/5
- WCtpmNuRykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZiIvwjD/9roxvnih5Lm7L29
- xLOBn+vagzClLzxTd3wOTv4r4BkVuI/hN/tTPQXD36L3Q5tucjQ8Olb+cZ/dm0lJzPN3fsjqeP/ tHDcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5985; i=ardb@kernel.org;
+ h=from:subject; bh=QLFdRUPvLnW8mE/Zv58BLsDVSP21dwXqh8N0Ru2s09I=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMj+M/2KVzeL2vUeX7wzZHwLzt+9rW/YOmklPzfqe94K
+ 2/fD2bsKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABOZ+IWR4e6aafKHlrCyJd+c
+ 69vMc3/Lp8qjaa2TzzB4n+OTW/Lc/RzDP5N9G71XX5mzxuAiW3HUNXfu8vs/Z8cevJE63Vzu/T7 BxbwA
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250517091639.3807875-12-ardb+git@google.com>
-Subject: [PATCH v4 4/6] x86/boot: Set 5-level paging CPU cap before entering C code
+Message-ID: <20250517091639.3807875-13-ardb+git@google.com>
+Subject: [PATCH v4 5/6] x86/boot: Drop the early variant of pgtable_l5_enabled()
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
@@ -76,92 +76,179 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-In order for pgtable_l5_enabled() to be reliable wherever it is used and
-however early, set the associated CPU capability from asm code before
-entering the startup C code.
+Now that cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) is guaranteed to
+produce the correct value even during early boot, there is no longer a
+need for an early variant and so it can be dropped.
+
+For the decompressor, fall back to testing the CR4.LA57 control register
+bit directly.
+
+Note that this removes the need to disable KASAN temporarily while
+applying alternatives, given that any constant or VA space dimension
+derived from pgtable_l5_enabled() will now always consistently produce
+the correct value.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/include/asm/cpufeature.h | 12 +++++++++---
- arch/x86/kernel/cpu/common.c      |  3 ---
- arch/x86/kernel/head_64.S         | 13 +++++++++++++
- 3 files changed, 22 insertions(+), 6 deletions(-)
+ arch/x86/boot/compressed/misc.h         |  5 ++---
+ arch/x86/boot/startup/sme.c             |  9 --------
+ arch/x86/include/asm/pgtable_64_types.h | 22 ++++----------------
+ arch/x86/kernel/alternative.c           | 12 -----------
+ arch/x86/kernel/cpu/common.c            |  2 --
+ arch/x86/kernel/head64.c                |  3 ---
+ arch/x86/mm/kasan_init_64.c             |  3 ---
+ 7 files changed, 6 insertions(+), 50 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 893cbca37fe9..1b5de40e7bf7 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -2,10 +2,10 @@
- #ifndef _ASM_X86_CPUFEATURE_H
- #define _ASM_X86_CPUFEATURE_H
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index db1048621ea2..65e7ff5d7ded 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -16,9 +16,6 @@
  
-+#ifdef __KERNEL__
-+#ifndef __ASSEMBLER__
- #include <asm/processor.h>
+ #define __NO_FORTIFY
  
--#if defined(__KERNEL__) && !defined(__ASSEMBLER__)
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
 -
- #include <asm/asm.h>
- #include <linux/bitops.h>
- #include <asm/alternative.h>
-@@ -137,5 +137,11 @@ static __always_inline bool _static_cpu_has(u16 bit)
- #define CPU_FEATURE_TYPEVAL		boot_cpu_data.x86_vendor, boot_cpu_data.x86, \
- 					boot_cpu_data.x86_model
+ /*
+  * Boot stub deals with identity mappings, physical and virtual addresses are
+  * the same, so override these defines.
+@@ -28,6 +25,8 @@
+ #define __pa(x)  ((unsigned long)(x))
+ #define __va(x)  ((void *)((unsigned long)(x)))
  
--#endif /* defined(__KERNEL__) && !defined(__ASSEMBLER__) */
-+#else /* !defined(__ASSEMBLER__) */
-+	.macro	setup_force_cpu_cap, cap:req
-+	btsl	$\cap % 32, boot_cpu_data+CPUINFO_x86_capability+4*(\cap / 32)(%rip)
-+	btsl	$\cap % 32, cpu_caps_set+4*(\cap / 32)(%rip)
-+	.endm
-+#endif /* !defined(__ASSEMBLER__) */
-+#endif /* defined(__KERNEL__) */
- #endif /* _ASM_X86_CPUFEATURE_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7392a75d85c3..6846a83fa1b6 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1752,9 +1752,6 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
- 	setup_clear_cpu_cap(X86_FEATURE_PCID);
- #endif
++#define pgtable_l5_enabled() (native_read_cr4() & X86_CR4_LA57)
++
+ #include <linux/linkage.h>
+ #include <linux/screen_info.h>
+ #include <linux/elf.h>
+diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+index 70ea1748c0a7..a6c25d005991 100644
+--- a/arch/x86/boot/startup/sme.c
++++ b/arch/x86/boot/startup/sme.c
+@@ -25,15 +25,6 @@
+ #undef CONFIG_PARAVIRT_XXL
+ #undef CONFIG_PARAVIRT_SPINLOCKS
  
--	if (native_read_cr4() & X86_CR4_LA57)
--		setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
+-/*
+- * This code runs before CPU feature bits are set. By default, the
+- * pgtable_l5_enabled() function uses bit X86_FEATURE_LA57 to determine if
+- * 5-level paging is active, so that won't work here. USE_EARLY_PGTABLE_L5
+- * is provided to handle this situation and, instead, use a variable that
+- * has been set by the early boot code.
+- */
+-#define USE_EARLY_PGTABLE_L5
 -
- 	detect_nopl();
- }
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/mem_encrypt.h>
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index bf4c33ae24d7..a3f7ec94012b 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -23,29 +23,15 @@ typedef struct { pmdval_t pmd; } pmd_t;
  
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 069420853304..21a713fac86c 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -27,6 +27,7 @@
- #include <asm/fixmap.h>
- #include <asm/smp.h>
- #include <asm/thread_info.h>
-+#include <asm/cpufeature.h>
+ extern unsigned int __pgtable_l5_enabled;
+ 
+-#ifdef CONFIG_X86_5LEVEL
+-#ifdef USE_EARLY_PGTABLE_L5
+-/*
+- * cpu_feature_enabled() is not available in early boot code.
+- * Use variable instead.
+- */
+-static inline bool pgtable_l5_enabled(void)
+-{
+-	return __pgtable_l5_enabled;
+-}
+-#else
+-#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING)
+-#endif /* USE_EARLY_PGTABLE_L5 */
+-
+-#else
+-#define pgtable_l5_enabled() 0
+-#endif /* CONFIG_X86_5LEVEL */
+-
+ extern unsigned int pgdir_shift;
+ extern unsigned int ptrs_per_p4d;
+ 
+ #endif	/* !__ASSEMBLER__ */
+ 
++#ifndef pgtable_l5_enabled
++#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING)
++#endif
++
+ #ifdef CONFIG_X86_5LEVEL
  
  /*
-  * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
-@@ -58,6 +59,18 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	 */
- 	mov	%rsi, %r15
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 2385528792b2..e39823d8d1ae 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -589,16 +589,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
  
-+	/*
-+	 * Set the X86_FEATURE_5LEVEL_PAGING capability before calling into the
-+	 * C code, to give it a consistent view of any global pseudo-constants
-+	 * that are derived from pgtable_l5_enabled().
-+	 */
-+	mov	%cr4, %rax
-+	btl	$X86_CR4_LA57_BIT, %eax
-+	jnc	0f
-+
-+	setup_force_cpu_cap X86_FEATURE_5LEVEL_PAGING
-+0:
-+
- 	/* Set up the stack for verify_cpu() */
- 	leaq	__top_init_kernel_stack(%rip), %rsp
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
  
+-	/*
+-	 * In the case CONFIG_X86_5LEVEL=y, KASAN_SHADOW_START is defined using
+-	 * cpu_feature_enabled(X86_FEATURE_LA57) and is therefore patched here.
+-	 * During the process, KASAN becomes confused seeing partial LA57
+-	 * conversion and triggers a false-positive out-of-bound report.
+-	 *
+-	 * Disable KASAN until the patching is complete.
+-	 */
+-	kasan_disable_current();
+-
+ 	/*
+ 	 * The scan order should be from start to end. A later scanned
+ 	 * alternative code can overwrite previously scanned alternative code.
+@@ -666,8 +656,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 
+ 		text_poke_early(instr, insn_buff, insn_buff_sz);
+ 	}
+-
+-	kasan_enable_current();
+ }
+ 
+ static inline bool is_jcc32(struct insn *insn)
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 6846a83fa1b6..65ee1de785ac 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+ 
+ #include <linux/memblock.h>
+ #include <linux/linkage.h>
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 9f617be64fa9..455f12850778 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -5,9 +5,6 @@
+  *  Copyright (C) 2000 Andrea Arcangeli <andrea@suse.de> SuSE
+  */
+ 
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+-
+ #include <linux/init.h>
+ #include <linux/linkage.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index 0539efd0d216..7c4fafbd52cc 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -1,9 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #define pr_fmt(fmt) "kasan: " fmt
+ 
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+-
+ #include <linux/memblock.h>
+ #include <linux/kasan.h>
+ #include <linux/kdebug.h>
 -- 
 2.49.0.1101.gccaa498523-goog
 
