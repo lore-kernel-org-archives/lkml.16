@@ -1,138 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5A885C5E;
-	Sat, 17 May 2025 08:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA67DB676;
+	Sat, 17 May 2025 08:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747471496; cv=none; b=Z6+2HfbjLpN6A6SabpYKmU089skYSw2p9cdoRqjXdpTO1j6Xsfc2MB9b8Ew8h1iVQsYhqjRB+Z2gjK1Gghq2jbpX9dOAJRq8W7zfcB/KctXeGF6P0Aox6niX5hjPpJkT3FMpyNp2xWKiQTp5TQvzRmtzwoE0LDjwg4fczsbQKjM=
+	t=1747471863; cv=none; b=em5ipowB4H4OYr/6za06BolxEkF9IgbeyPwxA40dIC/WEvgtzq3GdINZGAN8nohxp9WLD1Doqi7oJMe8IK+RjqRQdi/oysQHAwpBGn21pLxJPgKLfrHTZsmhqugG9f494ufGklc4GPJHktnVLoC4pHf6Zs93bkm9x2ccyK5PBc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747471496; c=relaxed/simple;
-	bh=j0LTn1lN+WcSRX3JpuiuLhB0VN18irvMtE1JbmGibaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nxBdFeqfTzrKzmsEEI1I6MAbC+tCVERQtVUMWxJZs1mejuvgKpoAsYNl3RnPU5pSx3gXJF29DpwZVBBGxyKXLVFwzX6ZjoXJmihJANzmNlem0BlPRip8QOD74WylYQkp68N/22xwtEvAx9CBnn0gWWPfhE0vkD4HJqI3EnXs6VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCqIQM+a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747471863; c=relaxed/simple;
+	bh=dDQtD4ccdQG3UJa8qk1S/jtk3uLsTxKgzWBbQ6o6fdI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kV1Vyow7phCbeSSo5/ml/VbPYmWtu3ySkx2rKxp9L/IF7gTJimncppSbZN5UEgF9h3Dk6k60sWxC5ma8+loCf0aiEvhgDw1RyHiuJmqS9ZgdHcJmZvKU2OiNSc2lLzpfAS0kkkjuP17PkiQaAmc0YKeSDgm4vxnzAU7PS1zEqEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVyTSYLw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCqIQM+a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFACC4CEE3;
-	Sat, 17 May 2025 08:44:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVyTSYLw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D7FC4CEE3;
+	Sat, 17 May 2025 08:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747471495;
-	bh=j0LTn1lN+WcSRX3JpuiuLhB0VN18irvMtE1JbmGibaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qCqIQM+awYF3higFIfsJGgfizWdYEJdayAkA+d2TShUU0oMsxxZRgrHH0g1eDbHBQ
-	 ERsS+e2UX6tqWy0p3lR6z23HSpgvepSSEKxs+BAyuSZ0AtHjIhwmh+YyKuMIjdvc/d
-	 uX7+aXjk9b/uVYfMIAUZgZp1brr+mVwTZemVp7+1xt0kPHvSa6jyL0XAvdwaC16E7+
-	 OM+LlO8k3cSSmJM9gytA2HC0+1/wxYMnpc60pVzN2h6HgEtqzHhXSyPvEJX1ivhkF9
-	 N7MlamtfHWzPiuXGImzRIMv8pDm6eNmclio7fP+lf/FcV9oXm+N4dFv7lpGHSdDXnd
-	 edUPPspMWxvPg==
-Date: Sat, 17 May 2025 10:44:47 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Juergen Gross <jgross@suse.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv2 3/3] x86/64/mm: Make 5-level paging support
- unconditional
-Message-ID: <aChMf-wxUeE0oI1Y@gmail.com>
-References: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
- <20250516091534.3414310-4-kirill.shutemov@linux.intel.com>
- <20250516153009.GEaCdaAdhCVpjaViSx@fat_crate.local>
- <aCdd60hwRbx207bU@gmail.com>
- <20250516155649.GFaCdgQa7sX75vOLSm@fat_crate.local>
+	s=k20201202; t=1747471863;
+	bh=dDQtD4ccdQG3UJa8qk1S/jtk3uLsTxKgzWBbQ6o6fdI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cVyTSYLwsGN96CR4uED4vSOD9avoVXlg309uHrcqPr1euk0/Zm0lnHavfYrikseMY
+	 ft+N/Mim4XEOxbycMS91qF2LYiHWeGbwFnzXkiMeRXYF1S1l7lcOHyWfdlYpOVAiA+
+	 cS19ZxHEqtHRmlGCdFEJRSG50tri7jfQg7IHuL+EHB3Pp78hrIgBa1IMdXdoa8GKBC
+	 Iqaugk9tI/h4rLE657RdnwG/kkdmVcVE0+yRqng5sqNOnQ5px7ELEfImjW3uTsMjSV
+	 QhxF8l359kle+Mnhy4lfnNY2tI3pBhM5udaOKYhEyBR5CSeBHXwhE2MwiHvUFLmypJ
+	 kzWCkzECP5pqA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uGDG0-00Flz2-OG;
+	Sat, 17 May 2025 09:51:00 +0100
+Date: Sat, 17 May 2025 09:51:39 +0100
+Message-ID: <878qmvr55w.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 01/10] KVM: arm64: Handle huge mappings for np-guest CMOs
+In-Reply-To: <aCd7l455qd4NmOeb@google.com>
+References: <20250509131706.2336138-1-vdonnefort@google.com>
+	<20250509131706.2336138-2-vdonnefort@google.com>
+	<86bjrsg3az.wl-maz@kernel.org>
+	<aCd7l455qd4NmOeb@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250516155649.GFaCdgQa7sX75vOLSm@fat_crate.local>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-* Borislav Petkov <bp@alien8.de> wrote:
-
-> On Fri, May 16, 2025 at 05:46:51PM +0200, Ingo Molnar wrote:
+On Fri, 16 May 2025 18:53:27 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> Hi,
+> 
+> Thanks for having a look at the series.
+> 
+> On Fri, May 16, 2025 at 01:15:00PM +0100, Marc Zyngier wrote:
+> > On Fri, 09 May 2025 14:16:57 +0100,
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > 
+> > > clean_dcache_guest_page() and invalidate_icache_guest_page() accept a
+> > > size as an argument. But they also rely on fixmap, which can only map a
+> > > single PAGE_SIZE page.
+> > > 
+> > > With the upcoming stage-2 huge mappings for pKVM np-guests, those
+> > > callbacks will get size > PAGE_SIZE. Loop the CMOs on a PAGE_SIZE basis
+> > > until the whole range is done.
+> > > 
+> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > > 
+> > > diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > index 31173c694695..23544928a637 100644
+> > > --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > @@ -219,14 +219,28 @@ static void guest_s2_put_page(void *addr)
+> > >  
+> > >  static void clean_dcache_guest_page(void *va, size_t size)
+> > >  {
+> > > -	__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)), size);
+> > > -	hyp_fixmap_unmap();
+> > > +	WARN_ON(!PAGE_ALIGNED(size));
 > > 
-> > * Borislav Petkov <bp@alien8.de> wrote:
-> > 
-> > > On Fri, May 16, 2025 at 12:15:33PM +0300, Kirill A. Shutemov wrote:
-> > > > @@ -173,10 +173,10 @@ For example, when an old kernel is running on new hardware.
-> > > >  The kernel disabled support for it at compile-time
-> > > >  --------------------------------------------------
-> > > >  
-> > > > -For example, if 5-level-paging is not enabled when building (i.e.,
-> > > > -CONFIG_X86_5LEVEL is not selected) the flag "la57" will not show up [#f1]_.
-> > > > +For example, if Linear Address Masking (LAM) is not enabled when building (i.e.,
-> > > > +CONFIG_ADDRESS_MASKING is not selected) the flag "lam" will not show up.
-> > > >  Even though the feature will still be detected via CPUID, the kernel disables
-> > > > -it by clearing via setup_clear_cpu_cap(X86_FEATURE_LA57).
-> > > > +it by clearing via setup_clear_cpu_cap(X86_FEATURE_LAM).
-> > > 
-> > > LOL, good one.
-> > > 
-> > > The rest looks nice and good to me. And FWIW, it boots fine on my Zen5 with
-> > > 5lvl enabled.
-> > > 
-> > > Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+> > What if "va" isn't aligned?
 > 
-> Bah, and I thought I'm replying to v3. :-\
+> So the only callers are either for PAGE_SIZE or PMD_SIZE with the right
+> alignment addr alignment.
 > 
-> Anyway...
-> 
-> > What's your preference on timing? v6.17 or v6.16?
-> 
-> Right, here's what I'm thinking:
-> 
-> * Kirill's patches would simplify Ard's cleanup a bit
+> But happy to make this more future-proof, after all an ALIGN() is quite cheap.
 
-Yeah.
-
-> * The 4th one: Kirill A. Shutemov ( :  85|) ├─>[PATCHv3 4/4] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
-> 
-> looks ok too.
-
-Yeah, and now has an Ack from Jürgen too.
-
-> So, I don't see anything speaking against queueing them *now* for the 
-> upcoming merge window, I am testing the tip lineup on a daily basis 
-> this and next week and if it all looks good, we could probably send 
-> them.
-
-Cool!
-
-> If not, we delay.
-> 
-> And if there's other issues which get detected later, during the 
-> 6.16-rc phase, we revert.
-> 
-> So we have an exit route from each scenario.
-> 
-> So I guess let's...
-> 
-> Unless I'm missing an aspect.
-
-I think that's a good plan. I've queued up Kirill's latest in 
-tip:x86/core, with tags updated, and it boots fine on my
-testsystems as well. Knock on wood. :)
+Exactly. I'd rather have too many of those instead of something that
+may not terminate. If anything, it makes it easy to reason about it.
 
 Thanks,
 
-	Ingo
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
