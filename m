@@ -1,29 +1,29 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E8C1D5CED;
-	Sat, 17 May 2025 08:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945DD15E8B;
+	Sat, 17 May 2025 08:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747471017; cv=none; b=bkMxxIkKv2JXfvJEEkJKCiIoG3FfncLOBscBJ5IsejDCVcklPNGzWn1jXyxIrrcH/grVEYkXLm1qGj7ZenOSBUhW4U7wToKCpIfZc19OnlAnZ/DyG7g4RjxuV0UNDgP2NJSv5A8jIPjkkV9G/ijDdzZQaO/PdauQIn+GafT7u34=
+	t=1747471142; cv=none; b=nOR2eh4yO50TYfMGBK3OkGBcFVYrFCZz1eyLgPp4SoIcdvE6FHdE1atSZUM9m8uB5O2DAbZUfQffny80xqNwa+rgvRHh76ocPHN5cAX4/7QE8P9dIWj/zPZBH3RaTJaoyROc1K7dM9k8bsnrbDT+g5KHZ8dsadolERbMhRmlcKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747471017; c=relaxed/simple;
+	s=arc-20240116; t=1747471142; c=relaxed/simple;
 	bh=vLs4lfZ1RYhKkMrkUZsTV9xrJHeP9pjbbhQzv2P+yNU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XTMKwREAnqfzwhAaic2tLAFEPoJILSmfQHM1TewM/cCkynWCi1+6eCqcTl8s7c9k3XIboW4n1Oinh65qPmuFviGmXW9Q+3G91gpGbrJNj9MyXG5y/Nw/7WwNEWzERmgl3h5w66NFXgHJ1oW5ivT1r3czglV9F1k6ccSyDRvRU/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LUyDPm0M; arc=none smtp.client-ip=220.197.31.4
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qInoWpxsNpLbavM8y4LYpciCbSYCw19Pl5Zv2jvBrL0Cv4im3oa1LOqdcvhKDihCSOBty5Uo1BZ6VW7raKhGS9DF7E8ycLleAc4Ao8Gopz6sy4i3X44aZD6UdeRObd3cJqd9ui3y6FwD0Bx1vcr8styx6kg7FXh8qE4YlGPjcG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=K9GmWED9; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LUyDPm0M"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K9GmWED9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=gP
-	kutBVLb1FxgqM0uGljWj9qW8F+OJFnhi6A4WUBkpg=; b=LUyDPm0MU0WmTwjlYr
-	0qO8ny1XotodisZg45v531uJABds6qppkD3GQoyCkQgmDmeFgpVhPsq4fu8K/3wi
-	tLGp/MowSZgbxme4WDkZ1B1uWifQ07aGo5gx50bwOOR2Alp3+Y6Nz4g6rvR0Hyqt
-	W9x4jDw6xpGtE23UKn0hcF3ow=
+	kutBVLb1FxgqM0uGljWj9qW8F+OJFnhi6A4WUBkpg=; b=K9GmWED9jx6rLzkxhh
+	6kK9eNz7Z+kn4juiDCh8yXILQ2OczGtQ3q1aUSuq5MbsBXZJ+jf6DiwfDQfktTRG
+	xJ/rq8TLu4IdeN6UVO/rPDK2atKl8BqwEIUcs7C8vDSAWTwAdVsHloKk4RTNtszM
+	gRzVXXV6ycYLCSfgHYgEJOkFI=
 Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgB39VttSihowOTtAw--.21114S4;
-	Sat, 17 May 2025 16:36:06 +0800 (CST)
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDHj+XgSihogwvuAw--.23581S4;
+	Sat, 17 May 2025 16:37:58 +0800 (CST)
 From: David Wang <00107082@163.com>
-To: =gregkh@linuxfoundation.org,
+To: gregkh@linuxfoundation.org,
 	mathias.nyman@intel.com
 Cc: oneukum@suse.com,
 	stern@rowland.harvard.edu,
@@ -31,8 +31,8 @@ Cc: oneukum@suse.com,
 	linux-kernel@vger.kernel.org,
 	David Wang <00107082@163.com>
 Subject: [PATCH v3 2/2] USB: xhci: use urb hcpriv mempool for private data
-Date: Sat, 17 May 2025 16:35:56 +0800
-Message-Id: <20250517083556.5954-1-00107082@163.com>
+Date: Sat, 17 May 2025 16:37:50 +0800
+Message-Id: <20250517083750.6097-1-00107082@163.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,12 +41,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgB39VttSihowOTtAw--.21114S4
+X-CM-TRANSID:QCgvCgDHj+XgSihogwvuAw--.23581S4
 X-Coremail-Antispam: 1Uf129KBjvJXoWxCryUCFWDGw45Jr13CrWrGrg_yoW5CFykpF
 	4rXa40kr1rtr47XFZ8Jr1DA3WfJw4vgF92gFWxC345ursFy3srG342yFWF9rnIqrykCrnI
 	vF1vqrWrGw1UGFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p__-BDUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAhQqmgoQ9CyAAAAs7
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE89N7UUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBdQqmgoSSslywABsw
 
 ---
 Changes since v2:
