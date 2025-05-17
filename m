@@ -1,124 +1,135 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FE84B1E76;
-	Sat, 17 May 2025 04:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B7DB667;
+	Sat, 17 May 2025 04:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747454735; cv=none; b=nn/5y9Uo4YRCmaWkWZc5GRLBppiJrJrRVv1Vk86QVKflnWyG4HuCXoiaWoD/avcS7d2MnhvhAA9TzpqCqq9f5BNKll1qZvTdYFi/oF3Y/g5V/O2AFI3APxuUgV0ro5cLuuYtrwIHvE3kabmlwm6kgFhwXPKf4wvUavQCbb+zCsI=
+	t=1747454872; cv=none; b=ryhPiL+LMk6h3K7EpeWHL4BzGU7QeDc2hgrAOeWwi4Te3Hl79Q6dDEb3XQRGAOVUAfwbpKh//fh7HcR5ukDqEgeJD38Cy9PJDuOMWNwxwfuYSofIxZnm1UPv8HRgHEre9GuF26vMm8kiwVLEHdBAwMwVq52/p93gIDw1C/kQUwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747454735; c=relaxed/simple;
-	bh=D0dAEmOh4K90pcQdQIKL3X0Y3AGxs7M2ifxMjIEFatQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QI08OsIyQ3kUfHaIqU36g/YsvoWLmHfuFr9hhp+w/1X39dmSaT0kpD+5Wkt5i6InlicEfZ4/X2WiVqB+U8fuu3IoN5fO8iRoO2UAE55B6hRBaC70qwhIpUtLwB1na08EJtN87vWbFsPKj4PaDfAIxZoG7Vz8zmW4/0hGnD7Q9I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=CF8iz/f4; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747454872; c=relaxed/simple;
+	bh=W77C6inCM1GhXjW9NEVyDcxLiPphMZW3DuLr/4gjI4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZT57ayEDm3FE0jkFd4NjrKACH/ezK10r+2DdG4sQ/IFKnKVUFDK8aapflEueBoBt9r/e0kXXE/bSEviNTL0f4IqXYFN60UZEtm63RPBsJexveKSjqlsasugOS3OFwESTJffpaSQOBuCXD8RrP+s5Yxf6U7JEABK/E0NMbIXu54M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V27hXb6G; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="CF8iz/f4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EiM07UXD1IjK/D2tylsryfmTCnQxwnXrQzFbpup7egU=; b=CF8iz/f4eUM/SGw2HYS7R0o6u3
-	R/yG8H9cWQMA3dY8aupwf2KqDv7BQFUPHznqCX4G2hLt6N8CPemfiVUJRXnCT5jfzoMEZ+qXE1kSg
-	bgyq/nvC/rcW7cGr1maD4p+SlXvHDsyJODBtXEiWOtGxuaNgHcNVFjfvzw4IwYrGj5ZNQnPeEYkyu
-	MtHKFAcQkMjlSESZel/1l4alrL0YNEsHzRe5cSgVh6QZDz/t8o/i2WtiiA4MrWVbt5Y3TPdJulaZX
-	GoQ1h/sRqpQbSTSeeH4gAUg1I6ZLI2fpXfoRtMSTB5jTTF/zW4ypEvRdQKXwDoY+HlijZh65ax9cb
-	v2YzRckA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG8ni-00000005ON0-3RKz;
-	Sat, 17 May 2025 04:05:30 +0000
-Date: Sat, 17 May 2025 05:05:30 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	willemb@google.com, sagi@grimberg.me, asml.silence@gmail.com,
-	almasrymina@google.com, kaiyuanz@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
- sendmsg
-Message-ID: <20250517040530.GZ2023217@ZenIV>
-References: <20250517000431.558180-1-stfomichev@gmail.com>
- <20250517000907.GW2023217@ZenIV>
- <aCflM0LZ23d2j2FF@mini-arch>
- <20250517020653.GX2023217@ZenIV>
- <aCfxs5CiHYMJPOsy@mini-arch>
- <20250517033951.GY2023217@ZenIV>
- <aCgIJSgv-yQzaHLl@mini-arch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V27hXb6G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747454870; x=1778990870;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W77C6inCM1GhXjW9NEVyDcxLiPphMZW3DuLr/4gjI4o=;
+  b=V27hXb6GyC4MsumfAE+FiX4bapyuT/aHAiZvVYZIRfWcheiD21YRvizT
+   SrZCGTlUoComXeCMmTZhCl5420yg6+1rak6hZZ03RgpdQ5xogAOSzecXi
+   5qQCdd4SQ4bn0/iYx6GfydM7frfQAR9ZoWa5Cd4kvzedITh3+T4o4D8Es
+   aWIDuCUGuDLiT2vi9MEX1jqQIWp0a4D7HYpkocuQ789xFWiJo89dTQ6hQ
+   3SeMd5xkkuGlp2Sl9GyRUhB5iCmZBx/Ykum7kQNGWTPwQ2jfI9r/8bP0g
+   8sa9jfO2X5ggqNPcCLYFwC4yPFLMJwUg38G3L7A+gAk/W7+fkYJPLppqA
+   Q==;
+X-CSE-ConnectionGUID: xB5D9xYzSeSSjaFhQXmaOg==
+X-CSE-MsgGUID: DJT/q2nTQ9K8fnIcVPWEQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="66983839"
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="66983839"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 21:07:50 -0700
+X-CSE-ConnectionGUID: xspjS1dxSqyEjIEnsuE9wQ==
+X-CSE-MsgGUID: nTXEVbBdRa+4hJZ3fPYxYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="142857282"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.220.144]) ([10.124.220.144])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 21:07:49 -0700
+Message-ID: <6d946767-aa61-441d-965b-115e415bfd4f@linux.intel.com>
+Date: Fri, 16 May 2025 21:07:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCgIJSgv-yQzaHLl@mini-arch>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] PCI/AER: Expose AER panic state via
+ pci_aer_panic_enabled()
+To: Hans Zhang <18255117159@163.com>, bhelgaas@google.com,
+ tglx@linutronix.de, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ Hans Zhang <hans.zhang@cixtech.com>
+References: <20250516165518.125495-1-18255117159@163.com>
+ <20250516165518.125495-4-18255117159@163.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250516165518.125495-4-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 16, 2025 at 08:53:09PM -0700, Stanislav Fomichev wrote:
-> On 05/17, Al Viro wrote:
-> > On Fri, May 16, 2025 at 07:17:23PM -0700, Stanislav Fomichev wrote:
-> > > > Wait, in the same commit there's
-> > > > +       if (iov_iter_type(from) != ITER_IOVEC)
-> > > > +               return -EFAULT;
-> > > > 
-> > > > shortly prior to the loop iter_iov_{addr,len}() are used.  What am I missing now?
-> > > 
-> > > Yeah, I want to remove that part as well:
-> > > 
-> > > https://lore.kernel.org/netdev/20250516225441.527020-1-stfomichev@gmail.com/T/#u
-> > > 
-> > > Otherwise, sendmsg() with a single IOV is not accepted, which makes not
-> > > sense.
-> > 
-> > Wait a minute.  What's there to prevent a call with two ranges far from each other?
-> 
-> It is perfectly possible to have a call with two disjoint ranges,
-> net_devmem_get_niov_at should correctly resolve it to the IOVA in the
-> dmabuf. Not sure I understand why it's an issue, can you pls clarify?
 
-Er...  OK, the following is given an from with two iovecs.
+On 5/16/25 9:55 AM, Hans Zhang wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
+>
+> Add pci_aer_panic_enabled() to check if aer_panic is enabled system-wide.
+> Export the function for use in error recovery logic.
+>
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> ---
+>   drivers/pci/pci.h      |  2 ++
+>   drivers/pci/pcie/aer.c | 12 ++++++++++++
+>   2 files changed, 14 insertions(+)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 8ddfc1677eeb..f92928dadc6a 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -959,6 +959,7 @@ static inline void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge
+>   #ifdef CONFIG_PCIEAER
+>   void pci_no_aer(void);
+>   void pci_aer_panic(void);
+> +bool pci_aer_panic_enabled(void);
+>   void pci_aer_init(struct pci_dev *dev);
+>   void pci_aer_exit(struct pci_dev *dev);
+>   extern const struct attribute_group aer_stats_attr_group;
+> @@ -970,6 +971,7 @@ void pci_restore_aer_state(struct pci_dev *dev);
+>   #else
+>   static inline void pci_no_aer(void) { }
+>   static inline void pci_aer_panic(void) { }
+> +static inline bool pci_aer_panic_enabled(void) { return false; }
+>   static inline void pci_aer_init(struct pci_dev *d) { }
+>   static inline void pci_aer_exit(struct pci_dev *d) { }
+>   static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index fa51fb8a5fe7..4fd7db90b77c 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -125,6 +125,18 @@ void pci_aer_panic(void)
+>   	pcie_aer_panic = true;
+>   }
+>   
+> +/**
+> + * pci_aer_panic_enabled() - Are AER panic enabled system-wide?
+> + *
+> + * Return: true if AER panic has not been globally disabled through ACPI FADT,
+> + * PCI bridge quirks, or the "pci=aer_panic" kernel command-line option.
 
-	while (length && iov_iter_count(from)) {
-		if (i == MAX_SKB_FRAGS)
-			return -EMSGSIZE;
+I don't think we have code to disable it via ACPI FADT or PCI bridge quirks
+currently, right? If yes, just list what is currently supported.
 
-		virt_addr = (size_t)iter_iov_addr(from);
+> + */
+> +bool pci_aer_panic_enabled(void)
+> +{
+> +	return pcie_aer_panic;
+> +}
+> +EXPORT_SYMBOL(pci_aer_panic_enabled);
+> +
+>   bool pci_aer_available(void)
+>   {
+>   	return !pcie_aer_disable && pci_msi_enabled();
 
-OK, that's iov_base of the first one.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-		niov = net_devmem_get_niov_at(binding, virt_addr, &off, &size);
-		if (!niov)
-			return -EFAULT;
-Whatever it does, it does *NOT* see iov_len of the first iovec.  Looks like
-it tries to set something up, storing the length of what it had set up
-into size
-
-		size = min_t(size_t, size, length);
-... no more than length, OK.  Suppose length is considerably more than iov_len
-of the first iovec.
-
-		size = min_t(size_t, size, iter_iov_len(from));
-... now trim it down to iov_len of that sucker.  That's what you want to remove,
-right?  What happens if iov_len is shorter than what we have in size?
-
-		get_netmem(net_iov_to_netmem(niov));
-		skb_add_rx_frag_netmem(skb, i, net_iov_to_netmem(niov), off,
-				      size, PAGE_SIZE);
-Still not looking at that iov_len...
-
-		iov_iter_advance(from, size);
-... and now that you've removed the second min_t, size happens to be greater
-than that iovec[0].iov_len.  So we advance into the second iovec, skipping
-size - iovec[0].iov_len bytes after iovev[1].iov_base.
-		length -= size;
-		i++;
-	}
-... and proceed into the second iteration.
-
-Would you agree that behaviour ought to depend upon the iovec[0].iov_len?
-If nothing else, it affects which data do you want to be sent, and I don't
-see where would anything even look at that value with your change...
