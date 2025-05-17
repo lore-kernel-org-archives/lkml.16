@@ -1,104 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2284218C937;
-	Sat, 17 May 2025 09:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17501AA1D5
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474255; cv=none; b=GF5WkSwOyVkDQp2Pv+s1/QclXsaQ63OnK6kV7SSJFTPF3V7dTrP68DWuldK+un0FR0Gxp+u+bvbrswUFAIQtKfvKBIEFGTSStb+FQrq4etO2Mznj2V4d7uGKLVaR7qmk9GQ7QR0qtCyPMbxjLHO8CUq83tn6cex4CAJ0N3qZMaU=
+	t=1747474275; cv=none; b=cqXS2qwOmUF8Ljd1g9P+c/y6Cws6D2h/iOgs8lJC1VFRJaz02rYTWuZgKBPl2qarzcy+9omt0z3eGAg+lnffNCren/d3jTkXY3OUo2MvALdEsfl9pIN3uPcl4TXDQ1EVhTe7oDzKoerRvsyrDPidiVzDcJ7HEhRoTt/VMIGR15Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474255; c=relaxed/simple;
-	bh=IAvZfmPr219OO3tilwUICqLsop+dgy1+GN0pkM/mw+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UiQWvaCmpm937IY+1YAi40/CuqM1gZr2HwpTqs0TAGOxar603osEbLKyYj+EmXDx2KcRFIZYBnUEaoOQh5+nct9QfRuupecBTOhPXahx79/7vJkIYdNYwk52NCmyEVE2HK3UYRWJS/vDeUz4nvOA34h1hyXed7ZONc1ZSAKaetM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDZLaZ51; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747474275; c=relaxed/simple;
+	bh=PqPzUPxwI+GbVPiCBnMB+dwqnfzwl29HxDYi8okWcxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SouTUyTHRiPceIRe+tqtSVp9KTRFWhpN4BGvTUoS8ztA8z1riPXLnQMZmBQwh0zSz8v4x6/DHFaOHsWXxgQl/oPRRVUYlcra0j5wgZTH7LLE677q/hfUHzGchc8USEEpFFKU+s1gYFRqp1UBIJgLG9Njf3yuUP5nJ2LyfRZZA0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMujCbM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDZLaZ51"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3AAC4CEE3;
-	Sat, 17 May 2025 09:30:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMujCbM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFDBC4CEE9
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747474253;
-	bh=IAvZfmPr219OO3tilwUICqLsop+dgy1+GN0pkM/mw+Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cDZLaZ51sMYxM2Ko3rtu3sAOpZDlwHHYFYHuKLVOjHnIQ9OM9LgKmtI+0MBZXQB4I
-	 2h8grkxJ5IIyfd69VqVvotKg/IaUWRlG5gZ90nG5JGJj3BMxdOhLITfrcjgjMm/M9j
-	 Ms7jDUfeQsew1387vtyT0lTLc07fFV5HdeomJr4iIgs/iUJQ716LVTTejZe7XE8dUx
-	 jVYuwwHwK6zFs6Slq8dgcNaVIGO7jdcIe/YxwI3buSs8B7pwkXISFxd7INJSyxrWb9
-	 TQ2E4VeAGNsFtB0SYN8okFPcXYAItH+wOPf0CnS7t07eqlHv9gxCZBffWEko7tOBt1
-	 jwfLpUZrJBMSA==
-From: Mike Rapoport <rppt@kernel.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Mike Rapoport <rppt@gmail.com>,
-	Rich Felker <dalias@libc.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-kernel@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] sh: kprobes: remove unused variables in kprobe_exceptions_notify()
-Date: Sat, 17 May 2025 12:30:48 +0300
-Message-ID: <20250517093048.1149919-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=k20201202; t=1747474275;
+	bh=PqPzUPxwI+GbVPiCBnMB+dwqnfzwl29HxDYi8okWcxU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UMujCbM6ZwbR5Lh7Ijkkb0jRqL2DgAfXMX1mC5KPhNzLNCE6liyBIuGRHBWYDpa/v
+	 AbCQ5bkpjyCBn8Ci6M1erFSnrPSqeEsvYWNDiCTpDQKGoRtmYN4G4q9Bxo6ootPyLY
+	 RwKKg+OVaNXvyEyhIJABwDlo305h9yAWSp69ZIfXn5s5hceGsAYAavrdEYhFN3ghYQ
+	 PEsCjsl2+2e5xBfJJtRJ0/WHMjThm6fbxdbOMmmfj0OnFTZGTYNr3V4w4Z+RcZmFPR
+	 bAPav5JR/pIjYE2oy9lTiDtNH5fUPW0LgE1zi/N396Xns+VNN8Xn9YSYqBq1JaAWrA
+	 ATaXdDLEDA2YQ==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601ab204085so221829a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:31:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKQCWo7+I/dO3C5EcloFLljMIrKSO3HA7g2BXuczUO+41H4B0z2dKBHlXlgtNXtddj2EafKdhoh+WDjpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiEmPJuPi6saRgW0l2WzDdAqf62nYJMA+er0LmNUMXU90yauk8
+	trHfG1LJb5iAP9Mnvpeu0QBExJ9QX9S9nxdCtCOf6w1a3ljFJPdPCWP4wtn661kBBY0n9YR4seL
+	agsDCEp6c3ZH4qmRXnnP2emmYqCYUavI=
+X-Google-Smtp-Source: AGHT+IEGb4htsnxyOShucSxpDQnZHkAUamSivEZZ3KaU4lABqzfYN8kCeRsqwaGRiP1KLn9pk0l+wiBMqtbBQEAT9Vg=
+X-Received: by 2002:a17:907:c28:b0:ad2:2c83:fb43 with SMTP id
+ a640c23a62f3a-ad50f7bdff0mr790432866b.23.1747474273996; Sat, 17 May 2025
+ 02:31:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250424024034.78436-1-youling.tang@linux.dev>
+In-Reply-To: <20250424024034.78436-1-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 17 May 2025 17:31:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H69Eu9z2eG8Bn+gMo2UtJCccxSxsbO+afd0xd_QxOw5HA@mail.gmail.com>
+X-Gm-Features: AX0GCFszC6D9Zwg31JGTqkbqDMwWN9_YqCjFm9jlQ-c_vFuGXGSSsHthS25A4Xg
+Message-ID: <CAAhV-H69Eu9z2eG8Bn+gMo2UtJCccxSxsbO+afd0xd_QxOw5HA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] LoongArch: Adjust the 'make install' operation
+To: Youling Tang <youling.tang@linux.dev>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Applied, thanks.
 
-kbuild reports the following warning:
+Huacai
 
-   arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
->> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
-     412 |         struct kprobe *p = NULL;
-         |                        ^
-
-The variable 'p' is indeed unused since the commit fa5a24b16f94
-("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
-
-Remove that variable along with 'kprobe_opcode_t *addr' which also
-becomes unused after 'p' is removed.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
-Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
-
-I don't know why the warning poped up only now, the code there didn't
-change for some time :/
-
- arch/sh/kernel/kprobes.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/sh/kernel/kprobes.c b/arch/sh/kernel/kprobes.c
-index 49c4ffd782d6..a250fb1b9420 100644
---- a/arch/sh/kernel/kprobes.c
-+++ b/arch/sh/kernel/kprobes.c
-@@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
- int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
- 				       unsigned long val, void *data)
- {
--	struct kprobe *p = NULL;
- 	struct die_args *args = (struct die_args *)data;
- 	int ret = NOTIFY_DONE;
--	kprobe_opcode_t *addr = NULL;
- 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
- 
--	addr = (kprobe_opcode_t *) (args->regs->pc);
- 	if (val == DIE_TRAP &&
- 	    args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
- 		if (!kprobe_running()) {
-@@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
- 				ret = NOTIFY_DONE;
- 			}
- 		} else {
--			p = get_kprobe(addr);
- 			if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
- 			    (kcb->kprobe_status == KPROBE_REENTER)) {
- 				if (post_kprobe_handler(args->regs))
--- 
-2.47.2
-
+On Thu, Apr 24, 2025 at 10:41=E2=80=AFAM Youling Tang <youling.tang@linux.d=
+ev> wrote:
+>
+> Changelog:
+>   v3:
+>   * Add a copy of the kernel config file.
+>   * Some minor adjustments.
+>
+>   v2:
+>   * Adjust the patch sequence.
+>   * Adjust the title information.
+>   * Distinguish between vmlinux.efi and vmlinux.elf in install.sh
+>   * Correct minor mistakes.
+>
+> Youling Tang (3):
+>   LoongArch: Add a default install.sh
+>   LoongArch: Using generic scripts/install.sh in `make install`
+>   LoongArch: Add some annotations in archhelp
+>
+>  arch/loongarch/Makefile        | 11 ++++---
+>  arch/loongarch/boot/install.sh | 56 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+), 4 deletions(-)
+>  create mode 100755 arch/loongarch/boot/install.sh
+>
+> --
+> 2.38.1
+>
