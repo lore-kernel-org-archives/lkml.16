@@ -1,98 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA6A20102B;
-	Sat, 17 May 2025 16:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002AF137923
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 16:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747500264; cv=none; b=ADFEJRvX7rFpceU4XsKbCVByLzfXvY69J4fse2JtAYpmcoOL8aWvjPe3EwrAhXT6ng9NkNEp3uQbpQYPOT0bFKwqNaDj9EevLaHX6MzZnJGktRa/cW7DHMAcvV3HbL6t+xcckEtPkibWT3glG7ELtu8bfwd9+6iAboBGMDpzoxQ=
+	t=1747500354; cv=none; b=kvBKKhEhF/4RDAFEFKf+kAlMpijPWMe5wXJBUOqXj6j+haBnuX7sxfNVu35P0oKDzN82ENzUmV9Vf+MobEkQch+GgqwMZmc9WC+RVXjyWyriGE2qLzW/WjE3oVPJFJQPwdlMhvFLD9W1vLTsqEZz0SLVkDRnhmsP8HQCAhZyW7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747500264; c=relaxed/simple;
-	bh=7EF4jHC6B1kxgvo7M67HdzGn2r4DzAv/dsR5x3sRPoQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=DkrEsw26iv59dm53GdDvsE5L6pGRvcv0oZ/Y6NBSUWEb+VP2fsy44jD54HI+JWzVQq1xB/8JvGKP8w67Z5ifdhrwMWR8t7r9+3ejk2qJDmBH4jcyoSGg1mlQLX1gzpDzs9+SayjCFY077uk3o3B5ZAuDyJbwMwncAlToWhMU9l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=07sIRf7I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747500354; c=relaxed/simple;
+	bh=O3BL0umFxn7eWMgY1o+713K/D/yjdZ4QXL/2PnsTbFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MZwtlZXnjeMPcrE58m27K2BeojEX36MqMYDebLnmW6qgv9jkQC6HW39OuypdZiTRcS9Wk7Gx9Nfvgdb6DI7YVb28IdwwKNlqSKCVEfNLb+N/JYKg7VupX4JKyteh4mPID37SkzmiSEgCveF0GyjThLpWUyC8PmJT7ii24CUnCk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVBuL/WJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="07sIRf7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A36C4CEE3;
-	Sat, 17 May 2025 16:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747500263;
-	bh=7EF4jHC6B1kxgvo7M67HdzGn2r4DzAv/dsR5x3sRPoQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVBuL/WJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4ACC4CEE3;
+	Sat, 17 May 2025 16:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747500353;
+	bh=O3BL0umFxn7eWMgY1o+713K/D/yjdZ4QXL/2PnsTbFs=;
 	h=Date:From:To:Cc:Subject:From;
-	b=07sIRf7I4eFCuFXVMpTukvfQ3ohH/5BUC8GDTg/3sbjLhHnbcL6B0wm1pX+SLmTa8
-	 QLI9QzfQYMC0+mN6thEuHi4dxnQ6ULjq/otI2j6PrPjRNKgDvKOoeTBvHvY08Gcia2
-	 DWdU5024uCYlEovNC/FUN89GS1R4DwbAAAjDQLnI=
-Date: Sat, 17 May 2025 09:44:22 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+	b=mVBuL/WJwalaCMwLs40Sv+sb9ct9pAjX2bNO/V3m98J8kHwXnKaZiNQpuREu+lErz
+	 sylOcNtoXoIc5VB+dQhfSxqYf8RIVdeNv1cTbbqTSOV9xKh10kSio064BVkGT3oFLI
+	 oJ5COzpPFRbZO3lUJHiVkTNI3I1S5SjphPuODeBsIOtYTh7pjzUFD6PVsWGlVD+yJU
+	 +TZrGTplGYUFBpxMh5W3xHDNDPFRoTWffZ72qX+g6kH3VEPxq7Da9EMcWyuNxAjKrH
+	 dZF94ZElTR+q+6HXw4cAWpQcdtrQPJOl98l6OG5EtZnFWIPIv7YnuWONY1Qsn2nOz3
+	 csMjqlo/pkkfA==
+Date: Sat, 17 May 2025 17:45:50 +0100
+From: Vinod Koul <vkoul@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hotfixes for 6.15-rc7
-Message-Id: <20250517094422.f299a4e333261dfea7beb43c@linux-foundation.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: soundwire fixes for 6.15
+Message-ID: <aCi9PijlCQGpWjXF@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZVSjJ1Yx/uU5dfZN"
+Content-Disposition: inline
 
 
-Linus, please merge this batch of hotfixes, thanks.
+--ZVSjJ1Yx/uU5dfZN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Linus,
+
+Please pull to receive single soundwire subsystem fix. Sorry this is
+coming a bit later than I would have liked, but vacation, linaro connect
+travel made this to be delayed!
 
 
-The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+This fixes race on irq domain creation in soundwire bus
 
-  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-05-17-09-41
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
+undwire-6.15-fixes
 
-for you to fetch changes up to 75cb1cca2c880179a11c7dd9380b6f14e41a06a4:
+for you to fetch changes up to fd15594ba7d559d9da741504c322b9f57c4981e5:
 
-  mm: userfaultfd: correct dirty flags set for both present and swap pte (2025-05-11 17:29:55 -0700)
+  soundwire: bus: Fix race on the creation of the IRQ domain (2025-04-10 11=
+:58:43 +0530)
 
 ----------------------------------------------------------------
-Nine singleton hotfixes, all MM.  Four are cc:stable.
+soundwire fix for 6.15
+
+ - Fix for irq domain creation race in the core
 
 ----------------------------------------------------------------
-Barry Song (1):
-      mm: userfaultfd: correct dirty flags set for both present and swap pte
+Charles Keepax (1):
+      soundwire: bus: Fix race on the creation of the IRQ domain
 
-David Hildenbrand (1):
-      kernel/fork: only call untrack_pfn_clear() on VMAs duplicated for fork()
+ drivers/soundwire/bus.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-David Wang (1):
-      mm/codetag: move tag retrieval back upfront in __free_pages()
+--=20
+~Vinod
 
-Kairui Song (1):
-      mm/memory: fix mapcount / refcount sanity check for mTHP reuse
+--ZVSjJ1Yx/uU5dfZN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kirill A. Shutemov (2):
-      mm/page_alloc: ensure try_alloc_pages() plays well with unaccepted memory
-      mm/page_alloc: fix race condition in unaccepted memory handling
+-----BEGIN PGP SIGNATURE-----
 
-Lorenzo Stoakes (1):
-      MAINTAINERS: add mm GUP section
+iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmgovT4ACgkQfBQHDyUj
+g0f96xAAsnOaaG0nvXy6jrxKGInrT86r13+cEXM1Y7kfpzqsfwkXhHm1VSNSWOG8
+Ie+I6Tv81XgN0I1Y1A8qj5DGvQAU2aZu4LZ3R/GKRlNox0PKWa9qXRLy5xE9adv1
+Y+CsUZlD/p1OkEUFYPmYRi8hPnBDPtjcWFKd+wzWlKZZTJCCv/SFDI+MB5pXvs0W
+NNhtJxCFAD0nv0i2aYsFrdR6tRxz3CEoVc0CkZ+sE0NLtaDblBxv4o/tsnPjGMus
+00WG41YeCkWcuEBTCZ27eFtPMdzFr9ePqlqoRlDSY32GNMrl/osRFBp0JsLo0E98
+gX9jZo7iVDgvq/TfD7CjTwFIs4dZQhmUvj6l3IsZRScOuO/YdUwpDAdKiB6KK2f3
+bR0gjwGz9xIPyn+eRMOdQJhEmppjnlAEbFbzreDynlPRCIavW7GRTNJ7kURDAIXo
+HNppAzb2SarHZEQLPUjhaMRudhC4GGu7ZkZks6FIRPnZVNOiYWBSpStmKWF7cc1l
+sU9zgLRWk+6CXObW+An+ozKtf/zlBEIhipFaQShJS7faeG/P/C6C8vr7EoH5yX4w
+zEoyT9zPKidF6IzVqts5Sqav0M0wcmxDLoWui018dgCN3Iag5KaH/6osUmd/jYPa
+ASLgLmA6BU3E11MnyJSRfnMWloM6Y8WCZDpjf5huEU5pbeZmJNE=
+=X1gK
+-----END PGP SIGNATURE-----
 
-Sergey Senozhatsky (1):
-      zsmalloc: don't underflow size calculation in zs_obj_write()
-
-Wupeng Ma (1):
-      mm: hugetlb: fix incorrect fallback for subpool
-
- MAINTAINERS                 | 12 +++++++
- include/linux/pgalloc_tag.h |  8 +++++
- kernel/fork.c               |  9 ++---
- mm/hugetlb.c                | 28 +++++++++++----
- mm/internal.h               |  1 -
- mm/memory.c                 |  2 +-
- mm/mm_init.c                |  1 -
- mm/page_alloc.c             | 88 +++++++++++----------------------------------
- mm/userfaultfd.c            | 12 +++++--
- mm/zsmalloc.c               |  8 ++---
- 10 files changed, 82 insertions(+), 87 deletions(-)
-
+--ZVSjJ1Yx/uU5dfZN--
