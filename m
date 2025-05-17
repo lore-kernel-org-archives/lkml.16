@@ -1,249 +1,103 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6C5214A60;
-	Sat, 17 May 2025 19:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC1170826;
+	Sat, 17 May 2025 19:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747509615; cv=none; b=gpCzE5sM7C1r17KONZdr9TkvuuyoyFbmuDMAqMU+lKhO8O7ckvr+EKQX+PW+kWahNoctC/1yy7X5sEvMJs+rG/DIaPBBKLIYdzyH/LtET7zDisKn8Bsq1ozDhy818HkLzwAoREwGepmKOtdsuGHI2XUM14cujBz2S+ZQyUv451c=
+	t=1747509870; cv=none; b=pR2CtSWZudgxCNl7HIBvxtJ/XslGM4rTmnlMaFW/lNxQFJPCUNN1Xdo6FsrQLI/SHl4qtNjh0kQToeBo6setpACbCRZ7cOX/V7kcS69gWh/d4UQO+BRmqiAN8e32qLXqiORbC4AP3qV5bf8Iq+xUCcNPY44V4QyKnCMBjlCEx6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747509615; c=relaxed/simple;
-	bh=rWNX7rAr+b4bFLsH47gMGJjvT7Qs2wLYMbEt8PcTbTo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tW8OS1jX+7nOKV63dTqERC/4a6SmawHsGiYsswOJO8pzDORnD42y31q6oMCTd/K4BJVI4QLgDnyHilm9juIwxrFXT5IhUYSUm27f9xbEbeXYIweHBxMD7pPM+5XMkJB4CyH+w9alEhOKJpCIrQ+v53Ulxw/gCIrcVN9M72uH3YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.32])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 15658ef45;
-	Sun, 18 May 2025 03:20:04 +0800 (GMT+08:00)
-From: Ze Huang <huangze@whut.edu.cn>
-Date: Sun, 18 May 2025 03:19:21 +0800
-Subject: [PATCH v3 3/3] riscv: dts: spacemit: add usb3.0 support for K1
+	s=arc-20240116; t=1747509870; c=relaxed/simple;
+	bh=ppe0iizIww3veT1AyxmEFcfYQ5htktshyLO8xyPT5sY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fzk8lK4GwcMxyNjhlxP7YQI1RKpusxIwgIKZcCgWnKEJFDvFVULsvLEfJcMOmqmwGZ6m3B1w6JHhN79vRx/HhY4bquzdvtHKRcdkExkRcS5l7xMY0VOINMAzXbd14t91+Xk0aw0H1NNYEAUjh9GJ13BfiaeUK/Upzwt2824abOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IVpub/yr; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IVpub/yr"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H1i0HJ009182;
+	Sat, 17 May 2025 19:24:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=CqDeGvkugP/Widj2LVbUK3kpkBICk
+	P9RdZUz0rTOzkA=; b=IVpub/yr80VbLQowMJmf0Mvl2AK9qCXGnFDyh4sZ6EnTW
+	Ox13jbdS7cZQTkT9SW0Qr/xLWJnYB79+QDcPsPAyfl07oGJGj+mFeMlhk+qvcmm7
+	ujv0ZHkwoF9Vd/nhAUSfXvzRH0XQQYHwpxYJjN/kibrRe+cQPHsDLZbYG5da3PMG
+	m72nzhzOEiH8IhPx0RJtc0m5GQOMVMSFI9hinjp06KJ1UBUcQuCAqGR76LMMrgAh
+	zxlPeH9ysyQE03X1orZxUwZZIjjCk5QXSDQcnAEhAMYxtEB1zdjUaDIu0B8faLDD
+	lmtXLNGSl1kZQwCWeA6WhNtSoERSN7IhNGV/Wh+jQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46ph238jta-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 May 2025 19:24:26 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54HJ7V6N029063;
+	Sat, 17 May 2025 19:24:25 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw55she-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 May 2025 19:24:25 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54HJOPAh023681;
+	Sat, 17 May 2025 19:24:25 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46pgw55sh9-1;
+	Sat, 17 May 2025 19:24:25 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] scsi: mvsas: fix typos in SAS/SATA VSP register comments
+Date: Sat, 17 May 2025 12:24:10 -0700
+Message-ID: <20250517192422.310489-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250518-b4-k1-dwc3-v3-v3-3-7609c8baa2a6@whut.edu.cn>
-References: <20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn>
-In-Reply-To: <20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747509584; l=5447;
- i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
- bh=rWNX7rAr+b4bFLsH47gMGJjvT7Qs2wLYMbEt8PcTbTo=;
- b=DJ4eAFSBzR4kzUPkhDX8kzn0s2FVaGIWavk5ZiCZNKFGfSjQBMkR63a4KPWBp6lsEGZ8Sv/eU
- /itUro/uzlbCaLNXw21230vJ4CEjvZV0ePIeoORQ3D/ioC2FHPbu7jo
-X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
- pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTRlNVkpDSx0ZTR5ISkpOTFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVISVlXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSkJLS1
-	kG
-X-HM-Tid: 0a96dfb0712e03a1kunm15658ef45
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PxA6Ahw4CzEzTSo3Hho8LBUB
-	CSkwCS1VSlVKTE9MTktCTUpLTkNNVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VCQlVISVlXWQgBWUFNQk1MNwY+
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-17_09,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxscore=0 spamscore=0 mlxlogscore=996 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505170192
+X-Authority-Analysis: v=2.4 cv=GN4IEvNK c=1 sm=1 tr=0 ts=6828e26a cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=PKyxXqJ4jqzQODs3vaIA:9
+X-Proofpoint-ORIG-GUID: 659OlvL-UoIvZPbVd_i3U566ZLZjiMeS
+X-Proofpoint-GUID: 659OlvL-UoIvZPbVd_i3U566ZLZjiMeS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDE5MiBTYWx0ZWRfX5L9wsgB55Ae2 8qmWpqlRoUWCNYV6cKlTq7e/mi89ZdHjWjMwYswGpgu+A2Px4c+ecwXg+wO8/WsRgekYesYY96G z7mxY7AvHV1HLitw1tZLYD/9a0b+ABna3BFrpREwNV932LQ44IVJC+a+dtya92JMzVzdSehzrgm
+ J9B4KXbNRyzWjPFIAe3jR8I62R6GyI7i0F944aFZ27XB+jex+YEU9B26DKKNgx81gO1RVkMlbUe 2aglCJ1Cw918KsrzqlxfxmbkPPehEQy0FDLVp76slE6eSf1qTmhevZQd1PrbM0RgiZmviwh323b 4kzx9ab/NoII5qyVjJuLCFiZUIXy32UnK07Ebo3w5qk8yL9gh9DsiBzOLlhLpBfMb5x95pYcVXx
+ igW4CIlYrB5/U+UlHaIG4OEEc9ASOZdB6Z74hIrmGLcTRj6o1rRaEpnwCyMwjfOgGiwGSxP0
 
-Add USB 3.0 support for the SpacemiT K1 SoC, including the
-following components:
+Correct spelling mistakes of the SAS/SATA Vendor Specific Port Registers.
+Fixed "Vednor" to "Vendor" in VSR_PHY_VS0 and VSR_PHY_VS1 comments.
+This is a non-functional change aimed at improving code clarity.
 
-- USB 2.0 PHY nodes
-- USB 3.0 combo PHY node
-- USB 3.0 host controller
-- USB 3.0 hub and vbus regulator (usb3_vhub, usb3_vbus)
-- DRAM interconnect node for USB DMA ("dma-mem")
-
-The `usb3_vbus` and `usb3_vhub` regulator node provides a fixed 5V
-supply to power the onboard USB 3.0 hub and usb vbus.
-
-On K1, some DMA transfers from devices to memory use separate buses with
-different DMA address translation rules from the parent node. We express
-this relationship through the interconnects node "dma-mem", similar to [1].
-
-Link: https://lore.kernel.org/all/09e5e29a4c54ec7337e4e62e5d6001b69d92b103.1554108995.git-series.maxime.ripard@bootlin.com [1]
-
-Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 50 ++++++++++++++++++
- arch/riscv/boot/dts/spacemit/k1.dtsi            | 69 +++++++++++++++++++++++++
- 2 files changed, 119 insertions(+)
+ drivers/scsi/mvsas/mv_64xx.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 816ef1bc358ec490aff184d5915d680dbd9f00cb..c5832b399f96b6bbede02fbb019c7b616cedff77 100644
---- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-+++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -28,6 +28,25 @@ led1 {
- 			default-state = "on";
- 		};
- 	};
-+
-+	usb3_vhub: regulator-vhub-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB30_VHUB";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio K1_GPIO(123) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	usb3_vbus: regulator-vbus-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB30_VBUS";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		gpio = <&gpio K1_GPIO(97) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
+diff --git a/drivers/scsi/mvsas/mv_64xx.h b/drivers/scsi/mvsas/mv_64xx.h
+index c25a5dfe7889..749f616b21af 100644
+--- a/drivers/scsi/mvsas/mv_64xx.h
++++ b/drivers/scsi/mvsas/mv_64xx.h
+@@ -101,8 +101,8 @@ enum sas_sata_vsp_regs {
+ 	VSR_PHY_MODE9		= 0x09, /* Test */
+ 	VSR_PHY_MODE10		= 0x0A, /* Power */
+ 	VSR_PHY_MODE11		= 0x0B, /* Phy Mode */
+-	VSR_PHY_VS0		= 0x0C, /* Vednor Specific 0 */
+-	VSR_PHY_VS1		= 0x0D, /* Vednor Specific 1 */
++	VSR_PHY_VS0		= 0x0C, /* Vendor Specific 0 */
++	VSR_PHY_VS1		= 0x0D, /* Vendor Specific 1 */
  };
  
- &uart0 {
-@@ -35,3 +54,34 @@ &uart0 {
- 	pinctrl-0 = <&uart0_2_cfg>;
- 	status = "okay";
- };
-+
-+&usbphy2 {
-+	status = "okay";
-+};
-+
-+&combphy {
-+	status = "okay";
-+};
-+
-+&usb_dwc3 {
-+	vbus-supply = <&usb3_vbus>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	hub_2_0: hub@1 {
-+		compatible = "usb2109,2817";
-+		reg = <0x1>;
-+		vdd-supply = <&usb3_vhub>;
-+		peer-hub = <&hub_3_0>;
-+		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hub_3_0: hub@2 {
-+		compatible = "usb2109,817";
-+		reg = <0x1>;
-+		vdd-supply = <&usb3_vhub>;
-+		peer-hub = <&hub_2_0>;
-+		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
-+	};
-+};
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 61f5ca250ded0da7b91cd4bbd55a5574a89c6ab0..164244fdb49f5d50a8abadb7b7e478cccc828087 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -4,6 +4,8 @@
-  */
- 
- #include <dt-bindings/clock/spacemit,k1-syscon.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/phy/phy.h>
- 
- /dts-v1/;
- / {
-@@ -346,6 +348,15 @@ soc {
- 		dma-noncoherent;
- 		ranges;
- 
-+		mbus0: dram-controller@0 {
-+			reg = <0x0 0x00000000 0x0 0x80000000>;
-+			reg-names = "dram";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+			#interconnect-cells = <0>;
-+		};
-+
- 		syscon_rcpu: system-controller@c0880000 {
- 			compatible = "spacemit,k1-syscon-rcpu";
- 			reg = <0x0 0xc0880000 0x0 0x2048>;
-@@ -358,6 +369,64 @@ syscon_rcpu2: system-controller@c0888000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		usb_dwc3: usb@c0a00000 {
-+			compatible = "spacemit,k1-dwc3";
-+			reg = <0x0 0xc0a00000 0x0 0x10000>;
-+			clocks = <&syscon_apmu CLK_USB30>;
-+			clock-names = "usbdrd30";
-+			resets = <&syscon_apmu RESET_USB3_0>;
-+			interrupt-parent = <&plic>;
-+			interrupts = <125>;
-+			interconnects = <&mbus0>;
-+			interconnect-names = "dma-mem";
-+			phys = <&usbphy2>, <&combphy PHY_TYPE_USB3>;
-+			phy-names = "usb2-phy", "usb3-phy";
-+			dr_mode = "host";
-+			phy_type = "utmi";
-+			snps,hsphy_interface = "utmi";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis_u3_susphy_quirk;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
-+		usbphy0: phy@c0940000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc0940000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB_AXI>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		usbphy1: phy@c09c0000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc09c0000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB_P1>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		usbphy2: phy@c0a30000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc0a30000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB30>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		combphy: phy@c0b10000 {
-+			compatible = "spacemit,k1-combphy";
-+			reg = <0x0 0xc0b10000 0x0 0x800>,
-+			      <0x0 0xd4282910 0x0 0x400>;
-+			reg-names = "ctrl", "sel";
-+			resets = <&syscon_apmu RESET_PCIE0>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		syscon_apbc: system-control@d4015000 {
- 			compatible = "spacemit,k1-syscon-apbc";
- 			reg = <0x0 0xd4015000 0x0 0x1000>;
-
+ enum chip_register_bits {
 -- 
-2.49.0
+2.47.1
 
