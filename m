@@ -1,80 +1,51 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005BA1D6DA9
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 20:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C971957FF;
+	Sat, 17 May 2025 20:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747513612; cv=none; b=M4NsjmEqZE1/AYI+CWGHuNha7aV5fHtik+ZFpSrxc0YbOm3yDTaGLii2AlrS18S6ALMv9//7aSp6MiqOQi/5EnlncMG4vrv5fDEoCivfww2uHdviS+r+rxHaPXd1VqpgZe3YUwGQV9USyNwMSvIfchz+DbpHpfVay5pVYHoVR/0=
+	t=1747513810; cv=none; b=coATRkaZAYM9+VX+cwLomPe/OQPqUpUN7YaD0wH+t713e2+hzNKtQFxYVKTjhLj5r3kG0z18cWCejumCf079HH+e6+T3oEbHiOD1JaecRXFQENp12nN0xvB64xTB5194Z2H1s9R1T7mS/uoh9ZBI4QlM4eF+eXRcAJkENBVk/DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747513612; c=relaxed/simple;
-	bh=p0X6LwKoW3e69iY8pBBEnpCzq5hggRDqdBo+ptTVGsE=;
+	s=arc-20240116; t=1747513810; c=relaxed/simple;
+	bh=o8dPAkAOuRO1ZrsKaQ+UVHRAKhmxaT6ZPG4kBz5MReQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4xGnO2tQ84OLV7vgfQksqGTIS37DLe8xpcoa+FHeFt8PuY/XgNS1uNlElrNIEvFCdkGzBbled9HndICfwM2UfiVogtNorVmdEgBvQdHE/lAfhMmqfnfnYt7eQnd8S/LKm9PTCnwCIwJ0BH4CzlqkcTjCSw0ENBXLpkYrQzW288=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SaSpluhw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7ON11TMB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SaSpluhw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7ON11TMB; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SaSpluhw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7ON11TMB";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SaSpluhw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7ON11TMB"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1DD7C1FF3D;
-	Sat, 17 May 2025 20:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747513609; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7smq4DhYL3PFX7EvLtdmf7zKOzcFFiKxJHbWLr3yvs=;
-	b=SaSpluhwACduZP7Mhq3dzPnMa63Fm3FHJ9BmO84LrTd6pB98vjtrHnYE9n+fQt/uJHBrDp
-	rJtNylSj0qpfruDumOGsI352MdxiMw5xykzlBt5UZN1il5Li9sOVrWf76AmvrpZgLfKijC
-	9o4HWz/MGX2HFPqnUuiTlCEpEt9uFVI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747513609;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7smq4DhYL3PFX7EvLtdmf7zKOzcFFiKxJHbWLr3yvs=;
-	b=7ON11TMBvjTPhsO0NPVvHZaxQtIT84O/MR2wW9OPLXHj5OEj2x/r6lA1ulYlkS0VpoWTo2
-	deWlxq9xg3IX/tDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747513609; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7smq4DhYL3PFX7EvLtdmf7zKOzcFFiKxJHbWLr3yvs=;
-	b=SaSpluhwACduZP7Mhq3dzPnMa63Fm3FHJ9BmO84LrTd6pB98vjtrHnYE9n+fQt/uJHBrDp
-	rJtNylSj0qpfruDumOGsI352MdxiMw5xykzlBt5UZN1il5Li9sOVrWf76AmvrpZgLfKijC
-	9o4HWz/MGX2HFPqnUuiTlCEpEt9uFVI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747513609;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7smq4DhYL3PFX7EvLtdmf7zKOzcFFiKxJHbWLr3yvs=;
-	b=7ON11TMBvjTPhsO0NPVvHZaxQtIT84O/MR2wW9OPLXHj5OEj2x/r6lA1ulYlkS0VpoWTo2
-	deWlxq9xg3IX/tDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0F9D13991;
-	Sat, 17 May 2025 20:26:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MWMVOgjxKGjsfQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Sat, 17 May 2025 20:26:48 +0000
-Message-ID: <fed40607-edcd-4338-85ae-7656a374728b@suse.cz>
-Date: Sat, 17 May 2025 22:26:48 +0200
+	 In-Reply-To:Content-Type; b=q9mL0/Xbnv46thMvwDOPQQhdKb248iwsHrjkziT5Gop1yA3Kmbzg5p4SeCQCuUGjJMh482BkGPOVLjMmtQhveeTXr7POXmYvAwfIPTa2sAd77vJ8Yg8odZ7dUmQwjEd+32DrcVjU6R3Tqpomcued7KVWJ1kRqgNewtV4YUSDLNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a0ac853894so2630444f8f.3;
+        Sat, 17 May 2025 13:30:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747513807; x=1748118607;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZ6Cdn9EsHHItXTMwN7zCQevwD72gZm5vOAf0aeJXRQ=;
+        b=clEq3ZsQbJG9vYH22wb5ym8F7MfsRrVyEKjWeh5uHfKx93rB56yDhwNI6EzGhTArKs
+         pVn2N3te0sKcFEW9mkfS4i63roJlmUSVWBxNhiIR6lsDMkY82SC1a0llWs4S4PNgoFrp
+         34RlLkFgMsuBkE6NMU0eIAnQTjbS/HE4RlH3OPz/VdCqZOtFTEuQymF2fkFqVZvSeC9i
+         APpwduXPMt3Tn++4taajSPyvk7PG7oqj7VN4Dq1pPmgi2lFgJ8E9cgpKbNb1/NjWVEZu
+         BpPXuBhrxDQN5OQEyLmvCGfj/YNXTobn3Y75DO4yVjk1yQzGArHhAWdVm78TPeWIUgcK
+         5fVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV38w5qhaSlb2eo88Koo9RgM7ZqsENvTFv8x1ckBiJTKUOnFrr39Du18Ly6LyDGES5H8Q2co3Yt8IXTIjU=@vger.kernel.org, AJvYcCVpA4XQFpuHWf3+3qHTjuJWy+F0XVx94Je+6XSOvdtalmi3NxUkT0LUcdBJRu46QdSd7TXOp/JI0JxvSQ==@vger.kernel.org, AJvYcCWWNvHNpEVc/4s79BWszTEmIJPWzqKYE2nLCGX9vW/RKDeSYlVzW5tetNdMVKzeNrfou8hlJ2RLvEhvug==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAo6YJjXqjXYQd+9/jcl4cc3sOisPbDFEraAt5MCl84D2BnPpk
+	rvbZLfpHRVVjhO+Uu5gBkKeXp7GY1rpXPrV+xhrwHSr/bA27TUl9WjH+
+X-Gm-Gg: ASbGncswEVxnlpvecK819MWv5ohJAoGGYpkq8yIIBGC9mIff+7PImtT2bI+Y11sLSct
+	V05jCwjjD886K/Ana0Og9ho1ftcKApVFXa/IMpe+phL+2dIjt9GNklXzE8OkIcyJ+t/6r5KHh4V
+	EaAlcqfw0y6vrvBfa1EuL0sfjdukKDO8HUXs782cS1B6hNX9NvjsXEWBop4mH00f8DVT0zQP7Ii
+	6dBIxKtAAcVJOzuQCciSsRXmC1hUHlR1lsCjX2TyoTWJh3mwcCg/BpVVznxFLXhyBn8Xc9dFUSu
+	hF6FwysUE75laA2fakQilwSMboz9/s5rJPsIxej2hg6VuEPd/HZfRhu0d5a2JFO5nHY78obkwgo
+	FdoQMYt1t
+X-Google-Smtp-Source: AGHT+IFJqmkPD/xMbGwBXZGrXyFwki275AFmJligoT0yK4fE+E9Upt7H8FQdLTM+3nYtdYFvxxk6Bw==
+X-Received: by 2002:a05:6000:40ce:b0:3a3:68c7:e486 with SMTP id ffacd0b85a97d-3a368c7e67bmr2248890f8f.51.1747513806737;
+        Sat, 17 May 2025 13:30:06 -0700 (PDT)
+Received: from [10.100.102.74] (89-138-68-29.bb.netvision.net.il. [89.138.68.29])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8cb2dsm7162321f8f.84.2025.05.17.13.30.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 May 2025 13:30:06 -0700 (PDT)
+Message-ID: <b208773f-aefc-4708-a2df-17c9f64be270@grimberg.me>
+Date: Sat, 17 May 2025 23:30:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,76 +53,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] Make MIGRATE_ISOLATE a standalone bit
+Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
+ skb_copy_and_crc32c_datagram_iter()
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Ard Biesheuvel <ardb@kernel.org>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+ <20250511004110.145171-10-ebiggers@kernel.org>
+ <8b4db290-00c0-4627-a03e-d39a22c56fcf@grimberg.me>
+ <20250517172954.GA1239@sol>
 Content-Language: en-US
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>,
- Oscar Salvador <osalvador@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang
- <richardycc@google.com>, linux-kernel@vger.kernel.org
-References: <20250509200111.3372279-1-ziy@nvidia.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250509200111.3372279-1-ziy@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250517172954.GA1239@sol>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
 
-On 5/9/25 22:01, Zi Yan wrote:
-> Hi David and Oscar,
-> 
-> Can you take a look at Patch 2, which changes how online_pages() set
-> online pageblock migratetypes? It used to first set all pageblocks to
-> MIGRATE_ISOLATE, then let undo_isolate_page_range() move the pageblocks
-> to MIGRATE_MOVABLE. After MIGRATE_ISOLATE becomes a standalone bit, all
-> online pageblocks need to have a migratetype other than MIGRATE_ISOLATE.
-> Let me know if there is any issue with my changes.
-> 
-> Hi Johannes,
-> 
-> Patch 2 now have set_pageblock_migratetype() not accepting
-> MIGRATE_ISOLATE. I think it makes code better. Thank you for the great
-> feedback.
-> 
-> Hi all,
-> 
-> This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
-> being overwritten during pageblock isolation process. Currently,
-> MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone.h),
-> thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original
-> migratetype. This causes pageblock migratetype loss during
-> alloc_contig_range() and memory offline, especially when the process
-> fails due to a failed pageblock isolation and the code tries to undo the
-> finished pageblock isolations.
 
-Seems mostly fine to me, just sent suggestion for 4/4.
-I was kinda hoping that MIGRATE_ISOLATE could stop being a migratetype. But
-I also see that it's useful for it to be because then it means it has the
-freelists in the buddy allocator, can work via __move_freepages_block() etc.
-Oh well. So it's still a migratetype, but the pageblock handling is now
-different.
+>> Let's call it rcv_dgst (recv digest) and snd_dgst (send digest).
+>> Other than that, looks good to me.
+>>
+>> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> rcv_dgst would be awfully close to recv_ddgst which holds the on-wire digest
+> that is received.  I think I slightly prefer *_crc, since that helps
+> differentiate the in-progress values from the finalized values.
 
+yea, sounds good.
