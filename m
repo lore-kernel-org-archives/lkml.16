@@ -1,144 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE5519CC27;
-	Sat, 17 May 2025 19:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1411EA90;
+	Sat, 17 May 2025 19:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747509086; cv=none; b=L981M3Mwbnp2JZoKFmh5W/T8Qt0ogeX7WPdP2ipSKFuDgz+q4zuput4riVjsc/MYx5T0E9PyZZnNT9gjR8MsZgiz8BnM2dMeMMhPPhxL0LtOuLOe/C6C77mDKJNAbXlEUqb7pW7c6og2tWl4ZsL2Bv+yDh0EApfZKW7NP3UdiTo=
+	t=1747509597; cv=none; b=N3QGYz2Dt41iDY8k6Yy//+MKPbik9UayiOxDmUShk24pBF0gMef1kAFgQhSHb22T/U4pZQZGScATVgfgIEymVe+prmreO4vZbCG3I3mjkzz4oWS5K6yaV6CNf4ORFhZTBcF+ifHgeF3QTOE8PXQ+lKKjt6yhiSGrtP5d7QIziQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747509086; c=relaxed/simple;
-	bh=SNOwVK1Y2LypwvVxIgQyb4CvbacAABjnIU/eHeRg25g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=lxXbGbAR13W87aIs+nWjWLg0tDds6LBb9xONstew2GarsiiToC+zGEUl6H8W8YPm8v421+Mf00OhRn6uI93KXqP40+iALsJJFlmtkHF+pLKzx6Wt8Uyrr/TU4sSFgWXcDQIdUs6OO+MGxX/4gFOzQAbIvlAa5ScH3zqUQ6kKXTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRCfJxI4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRCfJxI4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49096C4CEE3;
-	Sat, 17 May 2025 19:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747509085;
-	bh=SNOwVK1Y2LypwvVxIgQyb4CvbacAABjnIU/eHeRg25g=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iRCfJxI4KSPufPFqOJDn7Y1XbUdLmJLOuZEtfFtBB9+sD7FqaZxsA/5hWlIQVrRqj
-	 jr6k51V0/8N+ElibXBUKP3xKMuCfceXaK2wqYA8vIl1HB3QWnsUkBSlWvsAoVRARDX
-	 W5TvFVGFJBZUt0dJoazJbHXrzcGF4rCprpihj5ZkGm2XPugQDXBezQ8AhWXIBeKrwb
-	 EqqTtO2iOFLZ/B4llC2Jn8NxeixHndU6GKoXEOVNhAHWv4O7NzC96t2yyZu1qU/U3f
-	 LkuxJFd3pr32CNIzTeuScusmr81e6y5J9OlZssg6fpjUKS/NhvdDrnFDQoFejcyA60
-	 SUE57/Eq8b4fg==
+	s=arc-20240116; t=1747509597; c=relaxed/simple;
+	bh=m0rhmjL8pDzWwTV99e480ZMyCgYeWWuByDM1d3BgpJg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CgnLbPeMVCFz76A5w8M0WDtjPdG8S0AvYSEp5nLwHfFPLi5u/NlPcbj7OIF4RlDe4eel6j2NJXfi7USsaMVQ+YwVCyAQ703z85g4eL1iAtROpY20yFYQ3LCdP5x2Ki2QrnBHNvyM9ZTOPUcbzFlwqq3nNQPl+XvKshSKiPLZEtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.32])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 15658ef3f;
+	Sun, 18 May 2025 03:19:44 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Subject: [PATCH v3 0/3] Add SpacemiT K1 USB3.0 host controller support
+Date: Sun, 18 May 2025 03:19:18 +0800
+Message-Id: <20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 17 May 2025 21:11:20 +0200
-Message-Id: <D9YO9OZ5X83E.2DOL82V16Z8QK@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <llvm@lists.linux.dev>
-Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Sky" <sky@sky9.dev>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, =?utf-8?q?Gerald_Wisb=C3=B6ck?=
- <gerald.wisboeck@feather.ink>, "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>, "Bill Wendling"
- <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com>
- <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com>
- <D9VBVURZLSNT.4BTQQ8UCTGPJ@kernel.org>
- <19fc74f7-b292-404d-a48f-4dc3bcb5af3b@gmail.com>
-In-Reply-To: <19fc74f7-b292-404d-a48f-4dc3bcb5af3b@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADbhKGgC/yXMyw6DIBCF4Vcxsy4JIDDoqzQuuIwtadQWrG1if
+ PeSuvxOcv4dCuVEBfpmh0xbKmmZK9pLA+Hu5huxFKtBcqm5Fsi8Yg/B4ie0bGuZltw6ziVK66B
+ +npnG9P33rsPpTK93za7nCN4VYmGZprT2jfMmhs6ZgFIESRStwSA0KoVolCNjx7HzSDAcxw83d
+ CnCqwAAAA==
+X-Change-ID: 20250517-b4-k1-dwc3-v3-5208a002728a
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747509584; l=2565;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=m0rhmjL8pDzWwTV99e480ZMyCgYeWWuByDM1d3BgpJg=;
+ b=RQik/nkIEBOID3dW/RIXcwUzBpll9dRE5Er0E9l14Zewu8TxWxL1+VA6nzaYwaF8oDxeDGbbm
+ 6t19cUhiwfQCxQsAyhm6gaORVvB8KC4/5Vvdi4XXfcPrcAA5TR5pX2M
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSk0eVktPTxlCTBlJShpJT1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVISVlXWRYaDxIVHRRZQVlPS0hVSktJT09PS1VKS0tVS1kG
+X-HM-Tid: 0a96dfb024c803a1kunm15658ef3f
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PyI6OSo6EDE9CCo9Qxo3LA4B
+	EwoKFExVSlVKTE9MTktCTkJKSktMVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVISVlXWQgBWUFPSUhCNwY+
 
-On Sat May 17, 2025 at 1:36 PM CEST, Christian Schrefl wrote:
-> Hi Benno,
->
-> On 13.05.25 10:51 PM, Benno Lossin wrote:
->> On Sun May 11, 2025 at 8:21 PM CEST, Christian Schrefl wrote:
->>> `UnsafePinned<T>` is useful for cases where a value might be shared wit=
-h
->>> C code but not directly used by it. In particular this is added for
->>> storing additional data in the `MiscDeviceRegistration` which will be
->>> shared between `fops->open` and the containing struct.
->>>
->>> Similar to `Opaque` but guarantees that the value is always initialized
->>> and that the inner value is dropped when `UnsafePinned` is dropped.
->>>
->>> This was originally proposed for the IRQ abstractions [0] and is also
->>> useful for other where the inner data may be aliased, but is always
->>> valid and automatic `Drop` is desired.
->>>
->>> Since then the `UnsafePinned` type was added to upstream Rust [1] by Sk=
-y
->>> as a unstable feature, therefore this patch implements the subset of th=
-e
->>> upstream API for the `UnsafePinned` type required for additional data i=
-n
->>> `MiscDeviceRegistration` and in the implementation of the `Opaque` type=
-.
->>>
->>> Some differences to the upstream type definition are required in the
->>> kernel implementation, because upstream type uses some compiler changes
->>> to opt out of certain optimizations, this is documented in the
->>> documentation and a comment on the `UnsafePinned` type.
->>>
->>> The documentation on is based on the upstream rust documentation with
->>> minor modifications for the kernel implementation.
->>>
->>> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH=
-07DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
->>> Link: https://github.com/rust-lang/rust/pull/137043 [1]
->>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->>> Reviewed-by: Gerald Wisb=C3=B6ck <gerald.wisboeck@feather.ink>
->>> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->>> Co-developed-by: Sky <sky@sky9.dev>
->>> Signed-off-by: Sky <sky@sky9.dev>
->>> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
->>=20
->> One nit below, with that fixed:
->>=20
->> Reviewed-by: Benno Lossin <lossin@kernel.org>
->>=20
->>> ---
->>>  rust/kernel/types.rs               |   6 ++
->>>  rust/kernel/types/unsafe_pinned.rs | 111 +++++++++++++++++++++++++++++=
-++++++++
->>>  2 files changed, 117 insertions(+)
->>>
->>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>> index 9d0471afc9648f2973235488b441eb109069adb1..705f420fdfbc4a576de1c45=
-46578f2f04cdf615e 100644
->>> --- a/rust/kernel/types.rs
->>> +++ b/rust/kernel/types.rs
->>> @@ -578,3 +581,6 @@ pub enum Either<L, R> {
->>>  /// [`NotThreadSafe`]: type@NotThreadSafe
->>>  #[allow(non_upper_case_globals)]
->>>  pub const NotThreadSafe: NotThreadSafe =3D PhantomData;
->>> +
->>> +mod unsafe_pinned;
->>> +pub use unsafe_pinned::UnsafePinned;
->>=20
->> I would put `mod` to the top of the=20
->
-> Your sentence was cut off, I assume you mean:
->
->> I would put `mod` to the top of the file.
+The USB 3.0 controller found in the SpacemiT K1 SoC[1] supports both USB3.0
+Host and USB2.0 Dual-Role Device (DRD). The PHY interfaces required for the
+K1 USB subsystem — PIPE3 (for USB 3.0) and UTMI+ (for USB 2.0) — have
+already been supported in a separate patchset [2].
 
-Oh yeah sorry about that.
+This controller is compatible with DesignWare Core USB 3 (DWC3) driver.
+However, constraints in the snps,dwc3 binding limit the ability to extend
+properties to describe hardware variations. The existing generic DWC3 driver,
+dwc3-of-simple, still functions as a glue layer.
 
-> I can do that, let me know if I should send a
-> new version or if this will be fixed when applying.
+To address this and promote trasition to flattened dwc node, this patch
+introduces dwc3-common, building upon prior work that exposed the DWC3 core
+driver [3].
 
-I think Miguel can do this when picking the patch :)
+This patchset is based on usb-next (6.15-rc6) and has been tested on BananaPi and Jupiter development boards.
+
+Link: https://developer.spacemit.com/documentation?token=AjHDwrW78igAAEkiHracBI9HnTb [1]
+Link: https://lore.kernel.org/linux-riscv/20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn [2]
+Link: https://lore.kernel.org/all/20250414-dwc3-refactor-v7-3-f015b358722d@oss.qualcomm.com [3]
+
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+Changes in v3:
+- introduce dwc3-common for generic dwc3 hardware
+- fix warnings in usb host dt-bindings
+- fix errors in dts
+- Link to v2: https://lore.kernel.org/r/20250428-b4-k1-dwc3-v2-v1-0-7cb061abd619@whut.edu.cn
+
+Changes in v2:
+- dt-bindings:
+  - add missing 'maxItems'
+  - remove 'status' property in exmaple
+  - fold dwc3 node into parent
+- drop dwc3 glue driver and use snps,dwc3 driver directly
+- rename dts nodes and reorder properties to fit coding style
+- Link to v1: https://lore.kernel.org/all/20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn
 
 ---
-Cheers,
-Benno
+Ze Huang (3):
+      dt-bindings: usb: dwc3: add support for SpacemiT K1
+      usb: dwc3: add common driver to support flattened DT
+      riscv: dts: spacemit: add usb3.0 support for K1
+
+ .../devicetree/bindings/usb/spacemit,k1-dwc3.yaml  |  84 +++++++++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  50 ++++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  69 ++++++++
+ drivers/usb/dwc3/Kconfig                           |   9 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/dwc3-common.c                     | 191 +++++++++++++++++++++
+ 6 files changed, 404 insertions(+)
+---
+base-commit: ab6dc9a6c721c2eed867c157447764ae68ff9b7e
+change-id: 20250517-b4-k1-dwc3-v3-5208a002728a
+
+Best regards,
+-- 
+Ze Huang <huangze@whut.edu.cn>
+
