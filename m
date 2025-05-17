@@ -1,111 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1EA23CB;
-	Sat, 17 May 2025 07:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2400A23CB
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 07:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747465316; cv=none; b=DzaaFlE5OFgMcAH/dayUpTV70lKz1bg5q+DONCBD5idCBJrq3ItumWP31mmLhEWmMMCdq9L4XmYqBBPXnyqLhhwVPTgemlPkhQR5abe3MR6mHYLrIsMClMlIurKvNxXsK/aopnmfoBWI73p/hk47hTT2fqhiEgu/p3Qu82d6wKg=
+	t=1747465384; cv=none; b=a0eXbykBzEBanSNdI2Z01sLquJtkzr4DRP7ahD+hjj4RTDRM3bRZpSV8cC7JyIcueDe0ToigTAO9iSKwrzKuqgGfz/JzgcmjNa3/7mcyfQNyIt2q5cy+pNEQyP5arodgwhT18iXHgEvvESGmCaSF8j1IZ2vAiIRlIyIXQvOiRu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747465316; c=relaxed/simple;
-	bh=0TGH3Z2yqnXd+NhMwwLuh0QscC/jqHB7HMFZA3nImdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrPLefkoCyDctU6AYF+VYB3/HAlOUkp7StyvfE+a2FcIKxzZ51Spup+XYZ6FRV15dY6san1Jlj8ac3mkXO72CdLkph1nVMpKyyDVr7HS8wRiJ5W8NCpIL5tLozjIlm1uOTnzgJXIv5Lx9ZhX8QqH6rU2SQNrj/cNICDpxOLE1Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3gCiwps; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747465384; c=relaxed/simple;
+	bh=SJzI7izH1z6lxEz2/NygxiMGITY1rRqZKHEjYM+VnlU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=iZeYLYUm0syhn5OBYDOQXFXIKK0lLYofIjf7HWVKxapYAHFpK+79LigwSUxeDD3xLW6LSuxNjyT23g9c+Dv/ZgPp8Ev52aLglt1FHXxe7K0kkkbEs4eC52otTeVSINj5AmtN2e/rVUTkznRBYoapeN8JqfVa6qWhZV/PCcl8Fck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=EPxHPM2C reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3gCiwps"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47667C4CEE3;
-	Sat, 17 May 2025 07:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747465316;
-	bh=0TGH3Z2yqnXd+NhMwwLuh0QscC/jqHB7HMFZA3nImdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T3gCiwps+bvCo+e2c9WBsfA/DZdpcVi0pSLY4U1iOcbEjzWma91+nmTJfCQUuMiSI
-	 cDmEpnVUfXy+AFICgsKGty6tXCR2VfIMEjJQYfa9MuYlf+qEJlnOXPc31Q5RPzDkRT
-	 qco3VLd+egOpUy7gqCIR4iZgTdDtRjEPlUmNSHcfENC6t2n0QaxzudjXqcDhy/BnJ6
-	 dVufvXuNto/E+fDHK/yiguqhQgiULiKstVBsDTVd9EPeCWd9vpNuyu/HDV1ddF0BVE
-	 xDTwD7ZZsIQv0D0b6WK1kkqmdskguE4Z50oiawIrjOL6IlzhvX9ViktANk6RuXt8QK
-	 7UAR9rHg9I7tQ==
-Date: Sat, 17 May 2025 09:01:49 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, Zheyun Shen <szy0127@sjtu.edu.cn>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Kai Huang <kai.huang@intel.com>, Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCH v2 7/8] x86, lib: Add wbinvd and wbnoinvd helpers to
- target multiple CPUs
-Message-ID: <aCg0Xc9fEB2Qn5Th@gmail.com>
-References: <20250516212833.2544737-1-seanjc@google.com>
- <20250516212833.2544737-8-seanjc@google.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EPxHPM2C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=I8U/mffRcZWtlYGRlufStJZoOfp1xEdW1IkgAqtddSE=; b=E
+	PxHPM2CqHynNi21CueopTeZ65mqs74N1kcZL/zKe/tHCSQh5JjmYMgckOa+QAsbN
+	IXNAecKnKaGx8oIM5FfTNOR+W2oSMdBfa+8Vxrg4lGejT7u+xwpfxH2Ki02bF6Gn
+	SzjeE1LqyPjwhME9CMa7M1uGxYg89/Xe9s62ZnORbw=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-132 (Coremail) ; Sat, 17 May 2025 15:02:39 +0800
+ (CST)
+Date: Sat, 17 May 2025 15:02:39 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: kent.overstreet@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: BUG: unable to handle page fault for address
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
+References: <20250516131246.6244-1-00107082@163.com>
+ <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
+ <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBfiduksu7ySeYOkXn0oTju85XMCzuv8j3YJeN500myXOyCcrZ25pOXjQ0fmCBT2moQmRaBdNxdxXW7lgcrm+nNvNNUjXpkBMyMuKL0uA
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516212833.2544737-8-seanjc@google.com>
+Message-ID: <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:hCgvCgD3P2OQNChoecwGAA--.62100W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBpQqmgoMT0ItgAFs-
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
-* Sean Christopherson <seanjc@google.com> wrote:
-
-> From: Zheyun Shen <szy0127@sjtu.edu.cn>
-> 
-> Extract KVM's open-coded calls to do writeback caches on multiple CPUs to
-> common library helpers for both WBINVD and WBNOINVD (KVM will use both).
-> Put the onus on the caller to check for a non-empty mask to simplify the
-> SMP=n implementation, e.g. so that it doesn't need to check that the one
-> and only CPU in the system is present in the mask.
-> 
-> Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Link: https://lore.kernel.org/r/20250128015345.7929-2-szy0127@sjtu.edu.cn
-> [sean: move to lib, add SMP=n helpers, clarify usage]
-> Acked-by: Kai Huang <kai.huang@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/include/asm/smp.h | 12 ++++++++++++
->  arch/x86/kvm/x86.c         |  8 +-------
->  arch/x86/lib/cache-smp.c   | 12 ++++++++++++
->  3 files changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> index e08f1ae25401..fe98e021f7f8 100644
-> --- a/arch/x86/include/asm/smp.h
-> +++ b/arch/x86/include/asm/smp.h
-> @@ -113,7 +113,9 @@ void native_play_dead(void);
->  void play_dead_common(void);
->  void wbinvd_on_cpu(int cpu);
->  void wbinvd_on_all_cpus(void);
-> +void wbinvd_on_many_cpus(struct cpumask *cpus);
->  void wbnoinvd_on_all_cpus(void);
-> +void wbnoinvd_on_many_cpus(struct cpumask *cpus);
-
-Let's go with the _on_cpumask() suffix:
-
-    void wbinvd_on_cpu(int cpu);
-   +void wbinvd_on_cpumask(struct cpumask *cpus);
-    void wbinvd_on_all_cpus(void);
-
-And the wb*invd_all_cpus() methods should probably be inlined wrappers 
-with -1 as the cpumask, or so - not two separate functions?
-
-In fact it would be nice to have the DRM preparatory patch and all the 
-x86 patches at the beginning of the next version of the series, so 
-those 4 patches can be applied to the x86 tree. Can make it a separate 
-permanent branch based on v6.15-rc6/rc7.
-
-Thanks,
-
-	Ingo
+CkF0IDIwMjUtMDUtMTcgMDg6MTE6MjQsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj5PbiBGcmksIE1heSAxNiwgMjAyNSBhdCAxMDowM+KAr0FNIFN1cmVu
+IEJhZ2hkYXNhcnlhbiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3RlOgo+Pgo+PiBIaSBEYXZpZCwK
+Pj4KPj4gT24gRnJpLCBNYXkgMTYsIDIwMjUgYXQgNjoxM+KAr0FNIERhdmlkIFdhbmcgPDAwMTA3
+MDgyQDE2My5jb20+IHdyb3RlOgo+PiA+Cj4+ID4gSGksCj4+ID4KPj4gPiBJIGNhdWdodCBhIHBh
+Z2UgZmF1bHQgd2hlbiBJIHdhcyBjaGFuZ2luZyBteSBudmlkaWEgZHJpdmVyOgo+PiA+IChUaGlz
+IGhhcHBlbnMgcmFuZG9tbHksIEkgY2FuIHJlcHJvZHVjZSBpdCB3aXRoIGFib3V0IDEvMyBwcm9i
+YWJpbGl0eSkKPj4gPgo+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIEJVRzogdW5hYmxl
+IHRvIGhhbmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOiBmZmZmOWQyODk4NGMzMDAwCj4+ID4g
+W0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNzIGlu
+IGtlcm5lbCBtb2RlCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gI1BGOiBlcnJvcl9j
+b2RlKDB4MDAwMCkgLSBub3QtcHJlc2VudCBwYWdlCj4+ID4gLi4uCj4+ID4gW0ZyaSBNYXkgMTYg
+MTI6MDU6NDEgMjAyNV0gUklQOiAwMDEwOnJlbGVhc2VfbW9kdWxlX3RhZ3MrMHgxMDMvMHgxYjAK
+Pj4gPiAuLi4KPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBDYWxsIFRyYWNlOgo+PiA+
+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdICA8VEFTSz4KPj4gPiBbRnJpIE1heSAxNiAxMjow
+NTo0MSAyMDI1XSAgY29kZXRhZ191bmxvYWRfbW9kdWxlKzB4MTM1LzB4MTYwCj4+ID4gW0ZyaSBN
+YXkgMTYgMTI6MDU6NDEgMjAyNV0gIGZyZWVfbW9kdWxlKzB4MTkvMHgxYTAKPj4gPiAuLi4KPj4g
+PiAoZnVsbCBrZXJuZWwgbG9ncyBhcmUgcGFzdGVkIGF0IHRoZSBlbmQuKQo+PiA+Cj4+ID4gVXNp
+bmcgYSBpbWFnZSB3aXRoIERFQlVHX0lORk8sIHRoZSBjYWxsdHJhY2sgcGFyc2VzIGFzOgo+PiA+
+Cj4+ID4gUklQOiAwMDEwOnJlbGVhc2VfbW9kdWxlX3RhZ3MgKC4vaW5jbHVkZS9saW51eC9hbGxv
+Y190YWcuaDoxMzQgbGliL2FsbG9jX3RhZy5jOjM1MiBsaWIvYWxsb2NfdGFnLmM6NTczKQo+PiA+
+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIGNvZGV0YWdfdW5sb2FkX21vZHVsZSAobGliL2Nv
+ZGV0YWcuYzozNTUpCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gZnJlZV9tb2R1bGUg
+KGtlcm5lbC9tb2R1bGUvbWFpbi5jOjEzMDUpCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAy
+NV0gX19kb19zeXNfZGVsZXRlX21vZHVsZSAoa2VybmVsL21vZHVsZS9tYWluLmM6Nzk1KQo+PiA+
+Cj4+ID4gVGhlIG9mZmVuZGluZyBsaW5lcyBpbiBteSBjb2RlYmFzZToKPj4gPiAgICAgICAgIDEy
+NiBzdGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWdfY291bnRlcnMgYWxsb2NfdGFnX3JlYWQo
+c3RydWN0IGFsbG9jX3RhZyAqdGFnKQo+PiA+ICAgICAgICAgMTI3IHsKPj4gPiAgICAgICAgIC4u
+Lgo+PiA+ICAgICAgICAgMTMxCj4+ID4gICAgICAgICAxMzIgICAgICAgICBmb3JfZWFjaF9wb3Nz
+aWJsZV9jcHUoY3B1KSB7Cj4+ID4gICAgICAgICAxMzMgICAgICAgICAgICAgICAgIGNvdW50ZXIg
+PSBwZXJfY3B1X3B0cih0YWctPmNvdW50ZXJzLCBjcHUpOwo+PiA+ID4+Pj4gICAgMTM0ICAgICAg
+ICAgICAgICAgICB2LmJ5dGVzICs9IGNvdW50ZXItPmJ5dGVzOyAgIDwtLS0tLS0tLS0tLS0tLWhl
+cmUKPj4gPiAgICAgICAgIDEzNSAgICAgICAgICAgICAgICAgdi5jYWxscyArPSBjb3VudGVyLT5j
+YWxsczsKPj4gPgo+PiA+Cj4+ID4gTnZpZGlhIGRyaXZlcnMgYXJlIG91dC10cmVlLi4uIHRoZXJl
+IGNvdWxkIGJlIHNvbWUgc3RyYW5nZSBiZWhhdmlvciBpbiBpdCBjYXVzZXMgdGhpcy4uIGJ1dCwK
+Pj4gPiB3aGVuIEkgY2hlY2sgdGhlIGNvZGUsIEkgZ290IGNvbmNlcm5lZCBhYm91dCBsaWZlY3lj
+bGUgb2YgdGFnLT5jb3VudGVycy4KPj4gPiBCYXNlZCBvbiBmb2xsb3dpbmcgZGVmaW5hdGlvbjoK
+Pj4gPiAgICAgICAgIDEwOCAjZGVmaW5lIERFRklORV9BTExPQ19UQUcoX2FsbG9jX3RhZykgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gPiAgICAgICAgIDEw
+OSAgICAgICAgIHN0YXRpYyBERUZJTkVfUEVSX0NQVShzdHJ1Y3QgYWxsb2NfdGFnX2NvdW50ZXJz
+LCBfYWxsb2NfdGFnX2NudHIpOyAgICAgIFwKPj4gPiAgICAgICAgIDExMCAgICAgICAgIHN0YXRp
+YyBzdHJ1Y3QgYWxsb2NfdGFnIF9hbGxvY190YWcgX191c2VkIF9fYWxpZ25lZCg4KSAgICAgICAg
+ICAgICAgICAgIFwKPj4gPiAgICAgICAgIDExMSAgICAgICAgIF9fc2VjdGlvbihBTExPQ19UQUdf
+U0VDVElPTl9OQU1FKSA9IHsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4g
+PiAgICAgICAgIDExMiAgICAgICAgICAgICAgICAgLmN0ID0gQ09ERV9UQUdfSU5JVCwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gPiAgICAgICAgIDExMyAg
+ICAgICAgICAgICAgICAgLmNvdW50ZXJzID0gJl9hbGxvY190YWdfY250ciB9Owo+PiA+ICAgICAg
+ICAgMTE0Cj4+ID4gX2FsbG9jX3RhZ19jbnRyIGlzIHRoZSBkYXRhIHJlZmVyZW5jZWQgYnkgdGFn
+LT5jb3VudGVycywgYnV0IHRoZXkgYXJlIGluIGRpZmZlcmVudCBzZWN0aW9uLAo+PiA+IGFuZCBh
+bGxvY190YWcgb25seSBwcmVwYXJlIHN0b3JhZ2UgZm9yIHNlY3Rpb24gQUxMT0NfVEFHX1NFQ1RJ
+T05fTkFNRS4KPj4gPiByaWdodD8KPj4gPiBUaGVuIHdoYXQgaGFwcGVucyB0byB0aG9zZSAiLmRh
+dGEuLnBlcmNwdSIgc2VjdGlvbiB3aGVuIG1vZHVsZSBpcyB1bmxvYWRlZD8KPj4gPiBJcyBpdCBz
+YWZlIHRvIGtlZXAgdXNpbmcgdGhvc2UgIi5kYXRhLi5wZXJjcHUiIHNlY3Rpb24gYWZ0ZXIgbW9k
+dWxlIHVubG9hZGVkLAo+PiA+IG9yIGV2ZW4gZHVyaW5nIG1vZHVsZSBpcyB1bmxvYWRpbmc/Cj4+
+Cj4+IFllcywgSSB0aGluayB5b3UgYXJlIHJpZ2h0LCBmcmVlX21vZHVsZSgpIGNhbGxzIHBlcmNw
+dV9tb2RmcmVlKCkgd2hpY2gKPj4gd291bGQgZnJlZSB0aGUgcGVyLWNwdSBtZW1vcnkgYWxsb2Nh
+dGVkIGZvciB0aGUgbW9kdWxlLiBCZWZvcmUKPj4gMGRiNmY4ZDc4MjBhICgiYWxsb2NfdGFnOiBs
+b2FkIG1vZHVsZSB0YWdzIGludG8gc2VwYXJhdGUgY29udGlndW91cwo+PiBtZW1vcnkiKSB3ZSB3
+b3VsZCBub3QgdW5sb2FkIHRoZSBtb2R1bGUgaWYgdGhlcmUgd2VyZSB0YWdzIHdoaWNoIHdlcmUK
+Pj4gc3RpbGwgaW4gdXNlLiBBZnRlciB0aGF0IGNoYW5nZSB3ZSBsb2FkIG1vZHVsZSB0YWdzIGlu
+dG8gc2VwYXJhdGUKPj4gbWVtb3J5LCBzbyBJIGV4cGVjdGVkIHRoaXMgdG8gd29yayBidXQgZHVl
+IHRvIHRoaXMgZXh0ZXJuYWwgcmVmZXJlbmNlCj4+IGl0IGluZGVlZCBzaG91bGQgbGVhZCB0byBV
+QUYuCj4+IEkgdGhpbmsgdGhlIHNpbXBsZXN0IHdheSB0byBmaXggdGhpcyB3b3VsZCBiZSB0byBi
+eXBhc3MKPj4gcGVyY3B1X21vZGZyZWUoKSBpbnNpZGUgZnJlZV9tb2R1bGUoKSB3aGVuIHRoZXJl
+IGFyZSBtb2R1bGUgdGFncyBzdGlsbAo+PiByZWZlcmVuY2VkLCBzdG9yZSBtb2QtPnBlcmNwdSBp
+bnNpZGUgYWxsb2NfdGFnX21vZHVsZV9zZWN0aW9uIGFuZCBmcmVlCj4+IGl0IGluc2lkZSBjbGVh
+bl91bnVzZWRfbW9kdWxlX2FyZWFzX2xvY2tlZCgpIG9uY2Ugd2Uga25vdyB0aGUgY291bnRlcnMK
+Pj4gYXJlIG5vdCB1c2VkIGFueW1vcmUuIEknbGwgdGFrZSBhIHN0YWIgYXQgaXQgYW5kIHdpbGwg
+c2VuZCBhIHBhdGNoIGZvcgo+PiB0ZXN0aW5nIHRvZGF5Lgo+Cj5PaywgSSB3ZW50IHdpdGggYW5v
+dGhlciBpbXBsZW1lbnRhdGlvbiwgaW5zdGVhZCBkeW5hbWljYWxseSBhbGxvY2F0aW5nCj5wZXJj
+cHUgbWVtb3J5IGZvciBtb2R1bGVzIGF0IHRoZSBtb2R1bGUgbG9hZCB0aW1lLiBUaGlzIGhhcyBh
+bm90aGVyCj5hZHZhbnRhZ2Ugb2Ygbm90IG5lZWRpbmcgZXh0cmEgUEVSQ1BVX01PRFVMRV9SRVNF
+UlZFIGN1cnJlbnRseQo+cmVxdWlyZWQgZm9yIG1lbW9yeSBhbGxvY2F0aW9uIHRhZ2dpbmcgdG8g
+d29yay4KPkRhdmlkLCB0aGUgcGF0Y2ggaXMgcG9zdGVkIGF0IFsxXS4gUGxlYXNlIGdpdmUgaXQg
+YSB0cnkgYW5kIGxldCBtZQo+a25vdyBpZiB0aGUgZml4IHdvcmtzIGZvciB5b3UuCj5UaGFua3Ms
+Cj5TdXJlbi4KPgo+WzFdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDUxNzAwMDcz
+OS41OTMwLTEtc3VyZW5iQGdvb2dsZS5jb20vCj4KPgo+PiBUaGFua3MsCj4+IFN1cmVuLgo+PgoK
+SGksIHRoZSBwYXRjaCBkb2VzIGZpeCBteSBpc3N1ZS4KSSBub3cgaGF2ZSBhbm90aGVyIHNpbWls
+YXIgY29uY2VybiBhYm91dCBtb2R1bGVzIFJPIGRhdGEsIApUaGUgY29kZXRhZyBkZWZpbmVkIGFz
+CiAyNCBzdHJ1Y3QgY29kZXRhZyB7CiAyNSAgICAgICAgIHVuc2lnbmVkIGludCBmbGFnczsgLyog
+dXNlZCBpbiBsYXRlciBwYXRjaGVzICovCiAyNiAgICAgICAgIHVuc2lnbmVkIGludCBsaW5lbm87
+CiAyNyAgICAgICAgIGNvbnN0IGNoYXIgKm1vZG5hbWU7CiAyOCAgICAgICAgIGNvbnN0IGNoYXIg
+KmZ1bmN0aW9uOwogMjkgICAgICAgICBjb25zdCBjaGFyICpmaWxlbmFtZTsKIDMwIH0gX19hbGln
+bmVkKDgpOwoKVGhvc2UgbW9kbmFtZS9mdW5jdGlvbi9maWxlbmFtZSB3b3VsZCByZWZlciB0byBS
+TyBkYXRhIHNlY3Rpb24sIHJpZ2h0PwpXaGVuIG1vZHVsZSB1bmxvYWRlZCwgaXRzIFJPIGRhdGEg
+c2VjdGlvbiB3b3VsZCBiZSByZWxlYXNlZCBhdCBzb21lIHBvaW50LgpNeSBxdWVzdGlvbiBpcyBp
+cyBpdCBzYWZlIHRvIHVzZSBSTyBkYXRhIGR1cmluZyBtb2R1bGUgdW5sb2FkPyBiZWNhdXNlIHRo
+ZXNlCmxpbmVzIHNlZW1zIHRvIGFjY2VzcyB0aG9zZSBkYXRhOgoKKwkJCXByX2luZm8oIiVzOiV1
+IG1vZHVsZSAlcyBmdW5jOiVzIGhhcyAlbGx1IGFsbG9jYXRlZCBhdCBtb2R1bGUgdW5sb2FkXG4i
+LAorCQkJCXRhZy0+Y3QuZmlsZW5hbWUsIHRhZy0+Y3QubGluZW5vLCB0YWctPmN0Lm1vZG5hbWUs
+CisJCQkJdGFnLT5jdC5mdW5jdGlvbiwgY291bnRlci5ieXRlcyk7CgoKClRoYW5rcwpEYXZpZAoK
+Cg==
