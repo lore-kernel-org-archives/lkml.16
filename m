@@ -1,68 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6C202C31;
-	Sat, 17 May 2025 10:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF167205AC1;
+	Sat, 17 May 2025 10:03:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476185; cv=none; b=StLfbWMsnDW6Ebrciceuit8MG8SfHjzLjP6Bb8CnKMwZjA0oUIlsApczb/Y8QpAgcUywuw4RrbpqY3AE8KMnx1l43H/uufGqvcVFz04si0/iUUMK3bYV2NzS0bcYQCTJ4+dtvDWmeD5WTQ8GEmdpklxDbgqzuuJieSzmSlaLqoo=
+	t=1747476186; cv=none; b=UzpI5eocf82N4caEjjbjorUUBQmDlxLEsnRrMobzARWjOCa4tuM5dM4FbYaYeY2oi4nHlvmlwfy7L5ZlQOq+CtfouLxcACLO4EVjDFGuHQa/mm0Hjrlf00jyUyGwKQoVRXqZ5KrtwJMQZ5lsKZIVo9TwWk7MQSYjXGhU/C4ss0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476185; c=relaxed/simple;
-	bh=Lkmb2u6vw0XWrY3oBnpeKrQpH8xGagzMHar7N5TkcQA=;
+	s=arc-20240116; t=1747476186; c=relaxed/simple;
+	bh=QQf1o9ifPefvEdQYHmV3eUANvfeMQPAFnbjn1kC20qI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QLAnTZQ4Vijrc44WWOtTjqxKPO0ouR3DZn+t6U9CvWVkCUqQVb7Ov/6sCVYny2Fok4ZRIAV+PUUYMqKAUM5sSn22khF2q6PiNJXK3qy+yFNCbuKRbKuXOCFjbbxDLt5j3DmARHDYD0lRoQOV55GVd0lxozdMXGepo/8RMfm2BVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=waw/ygah; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CElXWe7k; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Z3K3UGEu7a5RNbo8olQxsv8nc2RDKvl5O5kPCOyYDV3TUr0jbbPb1OY7QqnbnC/xBvnc8yEOLUdCuGVsjW3AmQjUWlL+hsk+lJiXNew6vtpBsgM5bkYQDP39y5SOW4LtUnNLPM7JDTuJwtsBV7cS7DQ5gVsQHj94zkUxANwsfzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RJekmwA0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wYPU5NU1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="waw/ygah";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CElXWe7k"
-Date: Sat, 17 May 2025 10:03:00 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RJekmwA0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wYPU5NU1"
+Date: Sat, 17 May 2025 10:03:02 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747476181;
+	s=2020; t=1747476183;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=50GsA6nPGrDOQOd643MzkdNR1XbUXqMtWskp6opvxpk=;
-	b=waw/ygahdQIfzR8tVNTmpuJF4Hfv8z1NBwSJRNue0Z1LGzq1TARlT6+N3SmflcxaQSvnG1
-	awf6j50OovgkJ+3bgOCqTtNd1ThOb4Km4qEG5G5Bjd+OoMJ65ZdRMOjbQRP4NnO9JXxJAZ
-	Zb9OdJs8rYhnjS1M2mJW7t4sArdYhyE234G0ddK6NOjBuP2rrowXppCfVQJ6CL5pzwkEmY
-	v6MXqRZzDGDt9CWn6ImgBttYUv0jbYiW/kJECzHN1cqajM0Y89mtCbBHCEhIlyPKNul29Y
-	sfUW3X3GqIzg+Ez7/Dw9J64se785ZMmnTi917KoTThZNs72yGj+JP5SKcSAoMA==
+	bh=pGuIzAJWeDZWSrlVnpD9xq9d1+D9VuqNGm4KIKObcio=;
+	b=RJekmwA0zYSQMhaU4efe+PEHZJFtt0QMaxP469cXM8/LG+w8J8n85JiXk+WtDDchHvvVag
+	tr9LLZfODD3pGB9zpYvvyUq4WgvGcxxsJo+f0vKaQCo+j7us4htMaNYJ4Kn7LINIE7VxUX
+	o3g66NHjK/bynVot+TDvn0ZwIBwtWb0IoMQRwrWJvrQZEwiBHMJI30v/km3RpGY/afSWog
+	/DzGcqjp8EonOEDOGM8YzjDBlb4urtFxpvfQUoEAWd0VYrL2T7b/t2MqoJ8C4G3oJu3Ria
+	t0nSd3bv8tgyy86B2w816KP2fb1TsmgdzDSYiUXbr5hSA/gp742Cj11GS3HN+g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747476181;
+	s=2020e; t=1747476183;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=50GsA6nPGrDOQOd643MzkdNR1XbUXqMtWskp6opvxpk=;
-	b=CElXWe7ktFk0Sg7Im3vzCyeq31uA8VTGke4kgXGAqhtmXEebFKdWTNeGC8X0ID3xOBPxbv
-	DhCkuHBaH6TlOEAg==
+	bh=pGuIzAJWeDZWSrlVnpD9xq9d1+D9VuqNGm4KIKObcio=;
+	b=wYPU5NU1UkJd1zWm8zNp+qIAbt2/FjBdZCd3uh2qlCBQxtWBa9rmyNC9Y+D39+zrOV5HeD
+	74Jj7v9msFiWnxCw==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Move is_mba_sc() out of core.c
-Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+Subject:
+ [tip: x86/cache] x86/resctrl: Check all domains are offline in resctrl_exit()
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Fenghua Yu <fenghuay@nvidia.com>, Babu Moger <babu.moger@amd.com>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
- Carl Worth <carl@os.amperecomputing.com>,
- Peter Newman <peternewman@google.com>,
- Amit Singh Tomar <amitsinght@marvell.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Babu Moger <babu.moger@amd.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250515165855.31452-11-james.morse@arm.com>
-References: <20250515165855.31452-11-james.morse@arm.com>
+In-Reply-To: <20250515165855.31452-8-james.morse@arm.com>
+References: <20250515165855.31452-8-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174747618015.406.2567266570638564017.tip-bot2@tip-bot2>
+Message-ID: <174747618259.406.16878539358798396377.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -72,90 +70,84 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     6c72fb8d8bd7bfaafdeda3a91c535ecf52283ec9
-Gitweb:        https://git.kernel.org/tip/6c72fb8d8bd7bfaafdeda3a91c535ecf52283ec9
+Commit-ID:     8eb7ad66badc71e0d8547cf6195a2a6190090152
+Gitweb:        https://git.kernel.org/tip/8eb7ad66badc71e0d8547cf6195a2a6190090152
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Thu, 15 May 2025 16:58:40 
+AuthorDate:    Thu, 15 May 2025 16:58:37 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 16 May 2025 10:06:45 +02:00
+CommitterDate: Thu, 15 May 2025 21:02:21 +02:00
 
-x86/resctrl: Move is_mba_sc() out of core.c
+x86/resctrl: Check all domains are offline in resctrl_exit()
 
-is_mba_sc() is defined in core.c, but has no callers there. It does not access
-any architecture private structures.
+resctrl_exit() removes things like the resctrl mount point directory
+and unregisters the filesystem prior to freeing data structures that
+were allocated during resctrl_init().
 
-Move this to rdtgroup.c where the majority of callers are. This makes the move
-of the filesystem code to /fs/ cleaner.
+This assumes that there are no online domains when resctrl_exit() is
+called. If any domain were online, the limbo or overflow handler could
+be scheduled to run.
 
+Add a check for any online control or monitor domains, and document that
+the architecture code is required to offline all monitor and control
+domains before calling resctrl_exit().
+
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Tested-by: Fenghua Yu <fenghuay@nvidia.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/20250515165855.31452-11-james.morse@arm.com
+Link: https://lore.kernel.org/20250515165855.31452-8-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/core.c     | 15 ---------------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 15 +++++++++++++++
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 33 +++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 31538c6..58d7c6a 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -164,21 +164,6 @@ static inline void cache_alloc_hsw_probe(void)
- 	rdt_alloc_capable = true;
- }
- 
--bool is_mba_sc(struct rdt_resource *r)
--{
--	if (!r)
--		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
--
--	/*
--	 * The software controller support is only applicable to MBA resource.
--	 * Make sure to check for resource type.
--	 */
--	if (r->rid != RDT_RESOURCE_MBA)
--		return false;
--
--	return r->membw.mba_sc;
--}
--
- /*
-  * rdt_get_mb_table() - get a mapping of bandwidth(b/w) percentage values
-  * exposed to user interface and the h/w understandable delay values.
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index cfd846c..e2999f6 100644
+index 88197af..29f76ad 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1535,6 +1535,21 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r,
- 	return size;
+@@ -4420,8 +4420,41 @@ cleanup_mountpoint:
+ 	return ret;
  }
  
-+bool is_mba_sc(struct rdt_resource *r)
++static bool __exit resctrl_online_domains_exist(void)
 +{
-+	if (!r)
-+		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
++	struct rdt_resource *r;
 +
 +	/*
-+	 * The software controller support is only applicable to MBA resource.
-+	 * Make sure to check for resource type.
++	 * Only walk capable resources to allow resctrl_arch_get_resource()
++	 * to return dummy 'not capable' resources.
 +	 */
-+	if (r->rid != RDT_RESOURCE_MBA)
-+		return false;
++	for_each_alloc_capable_rdt_resource(r) {
++		if (!list_empty(&r->ctrl_domains))
++			return true;
++	}
 +
-+	return r->membw.mba_sc;
++	for_each_mon_capable_rdt_resource(r) {
++		if (!list_empty(&r->mon_domains))
++			return true;
++	}
++
++	return false;
 +}
 +
- /*
-  * rdtgroup_size_show - Display size in bytes of allocated regions
-  *
++/*
++ * resctrl_exit() - Remove the resctrl filesystem and free resources.
++ *
++ * When called by the architecture code, all CPUs and resctrl domains must be
++ * offline. This ensures the limbo and overflow handlers are not scheduled to
++ * run, meaning the data structures they access can be freed by
++ * resctrl_mon_resource_exit().
++ */
+ void __exit resctrl_exit(void)
+ {
++	cpus_read_lock();
++	WARN_ON_ONCE(resctrl_online_domains_exist());
++	cpus_read_unlock();
++
+ 	debugfs_remove_recursive(debugfs_resctrl);
+ 	unregister_filesystem(&rdt_fs_type);
+ 	sysfs_remove_mount_point(fs_kobj, "resctrl");
