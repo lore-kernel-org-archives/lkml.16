@@ -1,66 +1,66 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697EF1DED57;
-	Sat, 17 May 2025 11:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2DC1F37D3;
+	Sat, 17 May 2025 11:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747481644; cv=none; b=o5gCHELODLh3ep9IRQ3HBIbiZW//DfG1cL0SVHOYXgebiqiReXFvcHTVjeKBEtQCCKuMzsbpjUZJlzmgk/vrdyJUFFfK5ZqnBJauXeDmWDn26MDqaMnOYl17nl8BOtgNFyjKLd7P2Ts4a9yf4gwo3AvHxg23bldtm3svKDmQNR8=
+	t=1747481645; cv=none; b=hc6Aw3E3cdoK4mVzo7KA6N+/l8KiXnMfgSRhJAtjyBDhQ/jjQ8L9NHF9quzhiBdF0RGLDKOPCpOf7kKyMCF347Kr4Wlc0g4XHbDhLFD32qeVaNYxuZC8B5t+tm7Vsy3XM2/cWGuW/b4qWw5AbzfwKIUS36WF7PI9LB1JV52CDPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747481644; c=relaxed/simple;
-	bh=7UnfGbbqNBT0k66kKZEEWip4gtnjO4DXdvTjt2YVumM=;
+	s=arc-20240116; t=1747481645; c=relaxed/simple;
+	bh=Tl9KVLjAYo8nLG7kxM/4N+/E474ZkjS1L1eq4887tp0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YxzPqJhA4p+Gs3yqGJ4IAZUj5iLH/B0Yd4XKlZblboPMFRfreUm5v/m+csJ1sDRlLhBZ9ZfLTLAUdi8WEqprXTcNL5RPiBu6ZDlKI1BdpJFpPmtS4PZTLUMGG1mHg83EdFDcNS+KIv8otjOxGju3RjIJACBB99Qx2G5JgRuJC1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmBAmLQw; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:To:Cc; b=kwFsbSh+6HOkOYbFH59WN1ynzGcxii74mXXzwb/Obpm0JYoMlbnpLEaYxtrii2T+ubYz3lzDUDpZTIqSmYslxW4GX+gDi8iwMoDWam66IpDHWdqNVO+fjHjG75e5hF11l7FNZRTaSiKyNcHqzpNtxeRg2pVvvMzqUBXI19BBCdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPavOoPn; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmBAmLQw"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so21886285e9.1;
-        Sat, 17 May 2025 04:34:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPavOoPn"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so29598105e9.1;
+        Sat, 17 May 2025 04:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1747481641; x=1748086441; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=84Sl4OeuETAgiwkhvubv8fwPDmyhMaW2fHPygio76aE=;
-        b=XmBAmLQwN6FihT/kBA1UoRqukRxXed8cOxp7nwDO4NLzWp/6fNzM1PfjLm6kIIeh9r
-         0wvg06K8zbLWFLzTgXuef3fDBXQyEntTIpsfwpU1BqxXA2Uqrxt/v/pzquANxZ+lC/Jc
-         iDkciZqfSU3We90Jr8oMBPFZN7+52Oole23Y16jrzO5cHntkolO3lUNgqveLdgEXdAXG
-         8JB84zGKWc355F19tNUTNL/7Ti6GcSDMhDMovKxwd+sJFm5FGUOniG3DbrN59G39bApR
-         sbHSoqgKPZPtolPJSatRufpDsHrTEpAGZm0ddgwxPeh7z/xkE+pR2oy2dEx0MyIRe4d2
-         RVLQ==
+        bh=r3qDm3mLZcRdoxx+80MjSPgoFL99DEoKU4L7ojs6jpw=;
+        b=gPavOoPnYM1dhmbuhh5OD98eIETP5rKKyaEecf7f2YJOL/+rbMB/agtHj05oFZBE52
+         htOcD8NMGIUhPpj3+CUhNZgXk/OcMoFhP8QE/ZPnuUF6tJXYJ9lcqOCBu7CprPEI3phO
+         u6nU03TCJy2DA96lLZu4KtYPg6nHrrlIG78URbi/f/83duVfNYEB7MUwYDQ/SfJUHN1y
+         F9jswcgojW7l2jw6PwBmtM/RyO378LwTpBqAOyn4l/bHzcrpb0u8y56P4h8yc5umEWXi
+         SsmV7sIoVKXEYLvS40RA9+9mMg4GPAoc1umiGUYmYRqlO5wENEE+Bw15HC4Sgm0uebtD
+         jPFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747481641; x=1748086441;
+        d=1e100.net; s=20230601; t=1747481642; x=1748086442;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=84Sl4OeuETAgiwkhvubv8fwPDmyhMaW2fHPygio76aE=;
-        b=ijWJEXsioxcHwFUUZ9SqTOnoQyTUqyiCWvCmhDo42FowRA0zfCwhxobWik1JU+V9NR
-         vXfCoKEC7u8wQYot4Qke6zQ44hqTiL3F74I5YByRSz7/nG0So1uzcVUTotj44zQAfuE7
-         1VEL3/bDCfgUtcG4CWX7Ygv1KglfiNVGZ66ZKfBYvoYFc+XEbQC8t3YwBMuR8/yT+QG4
-         +F5fAINdmVba3Ptr4T3cXl967ibsxIc9xnpX9IUVupLsgNEy8Xuh0O4fqu0OM0OHuMQo
-         Z7RP/pC5RgjVrMlgXlFOpdAuyEseVL1f7lvfNw8S6BdyPrte18M0RdQW2XGOm0ANLBlY
-         5BOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE76Ybv3/K0QXNdWrOIvz/roYnzyUkgD5eXnPGUM7KyGCEQ2D3tj6HEKJDEQsVBfN69SL7+H2oyq26t7c=@vger.kernel.org, AJvYcCXFDFRwYrKMOWT2ZFKabJIv5r9dR85CDB/qqody82iSQGakeo2uzggMIevfEA3Qd5Ee7lOTYxVJkQEOLSGE4+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH4AGv3UOV/vCPrabY6OFDarKP1JHXMp1pmoYBc1vdAEaFxku2
-	omRuRIrC50SzokrPvWN9lHxisd1Wx77LNNYF1lgW/v8UP46VJs4y8hn4clZCUw==
-X-Gm-Gg: ASbGncvB0uNdbnDHJy8yCPWVyeJQvx17mqtlXmZjQIqbVG6nXv/JW9ieGohDBzFgoIc
-	lUTPdD+KZlEzHlEMMszKAC6Kz4hgnhkugszFxdek1hXA69jGD/yL7h/OrGNVA7PPlIVeFuZOK3V
-	sGxRPgd7wIonTaQrBxvCHfDDRQMwlrjaZML5D3X8yiTaPmE91qkuVkvPnB1MSAEsdZyVcpbkzHW
-	kw7wRS9gSRAX8gHBlahuoWtajN93yQ0SeIUrquFV5U3M3XNbf4dGdwiPzW5NlB0fELBkqfnzZ+k
-	Q1bhN1qVqBb7dtqiejkKYL3LoYfq9mfC+DxWISk=
-X-Google-Smtp-Source: AGHT+IGglf9WqFb1kQQTgP2hMdlNjj3IGRSlE3BEkEUrQGwKZlWbKtPzZCYH9hgdUFYxKji0DxlvuQ==
-X-Received: by 2002:a05:600c:8709:b0:43b:ca8c:fca3 with SMTP id 5b1f17b1804b1-442fd97a524mr68792935e9.11.1747481640373;
-        Sat, 17 May 2025 04:34:00 -0700 (PDT)
+        bh=r3qDm3mLZcRdoxx+80MjSPgoFL99DEoKU4L7ojs6jpw=;
+        b=e8POohPllRON3hn34h5TlI9nHW+ow7jou5FcxcFuW/bSOZHmz2YWAFZGWGvkAyF3qo
+         0A5oYKalL1CanLEQUmcjYxWsL6LWHOpoWvRCJ6XmXsrPSf/La2N/X4kXbh21jSPl+bHs
+         g+FLWrsamr2W3mYTj+ZaPLhcx5ZVwicvfjpnaoswsITdij2GIfvEFd3fkSuifntsmEjH
+         SLTLYvbMoqvDtg7Fk4t6Z1kcBb66Pslr/54a3b8W9BK0g6ZqdsYlo18i3pwHiIqWag7c
+         h55lNpfIvDO0GddEmWNi1LK7wh0jQt75+Y8/VKPvK4fl/AYQMxPePnjMG0BPVF3baCBp
+         Eiyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFol19II6daOODrt9RM7t9+5trE3WJHIgYuD/gdJDEEFV7LkB96ysEV+pmwfnPQk6R4QU4vepdLF5Kx7oWCuc=@vger.kernel.org, AJvYcCWrB8aAuN17MnrOqRod+HschfDQO/0Fk2rBNir0gXqaEmP31ZHh09piJi2CpyJ0S1h2JkzMvddOgE8fAE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdrMZD9BYMl8TF6wLlthSglNKmJmKLfkezURTCKyYW8xJzZDfV
+	1n6gUMVM5a8qT7dKXNeMKplI4H3OyR/H4xEjZ3bVFIXXVC+lhFUJMiAY
+X-Gm-Gg: ASbGnctFwIpbhQfsP879wesEC7zKJfKmd2jz2FToCPfdUGItrdQckTqYqD6hX8XsQj2
+	t53MeZOLOgz5S9I3xDPZ56vayNo3x9oAz7jjbyqDokhPn1igij7+9Qqu4d/C/h12xDCzHBUgv2K
+	8Fnf9QmlCeCfeJ/iSL1EfehhWlHdTlgLDtrebjeuw+asw+aWWAgghlXwdmeUCy93C0LFTLyHr6k
+	VhsuKwrEpiJSiJsxcV+95UJKf13FihUWDsZLex7CywcEq73liCu55yofkYD5ecNYm7D0Fn7BJnn
+	ZEmyAPR6/7yF4GC4VdHrxO5pDd6lV1U03mL4FWk=
+X-Google-Smtp-Source: AGHT+IGD0h8HjM8OzKJ2pAwIorau0bH8v1dbeI7wsgmWCPt/kAtURZz67iwBFsxVvN4pEOo+pTPyKw==
+X-Received: by 2002:a05:600c:45cf:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-442fd610128mr71005575e9.12.1747481641376;
+        Sat, 17 May 2025 04:34:01 -0700 (PDT)
 Received: from [10.0.1.56] ([2001:871:22a:99c5::171c])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f3951854sm137017265e9.24.2025.05.17.04.33.59
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f3951854sm137017265e9.24.2025.05.17.04.34.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 04:34:00 -0700 (PDT)
+        Sat, 17 May 2025 04:34:01 -0700 (PDT)
 From: Christian Schrefl <chrisi.schrefl@gmail.com>
-Date: Sat, 17 May 2025 13:33:49 +0200
-Subject: [PATCH v3 1/2] rust: miscdevice: add additional data to
- MiscDeviceRegistration
+Date: Sat, 17 May 2025 13:33:50 +0200
+Subject: [PATCH v3 2/2] rust: miscdevice: adjust the rust_misc_device
+ sample to use RegistrationData.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
+Message-Id: <20250517-b4-rust_miscdevice_registrationdata-v3-2-cdb33e228d37@gmail.com>
 References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
 In-Reply-To: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -85,239 +85,247 @@ Cc: =?utf-8?q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Christian Schrefl <chrisi.schrefl@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747481638; l=10532;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747481638; l=8048;
  i=chrisi.schrefl@gmail.com; s=20250119; h=from:subject:message-id;
- bh=7UnfGbbqNBT0k66kKZEEWip4gtnjO4DXdvTjt2YVumM=;
- b=XfhwtD9ej/MWi3UA/PO1gbQ6lq9Ue3HJedd1TrYxFatKVT5epEQFmi8imco63LimUu3PSfyEZ
- 0q2nAP2xiE0BXxAvKYT5VcsQk8hNcFg6P3ME5zK8MsyDdlxc2SXLETW
+ bh=Tl9KVLjAYo8nLG7kxM/4N+/E474ZkjS1L1eq4887tp0=;
+ b=chrPU9kal/NSsIqCWhw2Op0FF1TLi+f/XexNhsz3yd9j1w84iDY0+8wYv6VwCV/gYPQzUljGa
+ /2EO02x9k+gAtvvMLhBH1WTGbmU7f0ie+fBdn0JgTauBAPucEeO2XsY
 X-Developer-Key: i=chrisi.schrefl@gmail.com; a=ed25519;
  pk=EIyitYCrzxWlybrqoGqiL2jyvO7Vp9X40n0dQ6HE4oU=
 
-When using the Rust miscdevice bindings, you generally embed the
-`MiscDeviceRegistration` within another struct:
+Add a second mutex to the RustMiscDevice, which is shared between all
+instances of the device using an Arc and the RegistrationData of
+MiscDeviceRegistration.
 
-struct MyDriverData {
-    data: SomeOtherData,
-    misc: MiscDeviceRegistration<MyMiscFile>
-}
+This is mostly to demonstrate the capability to share data in this way.
 
-In the `fops->open` callback of the miscdevice, you are given a
-reference to the registration, which allows you to access its fields.
-For example, as of commit 284ae0be4dca ("rust: miscdevice: Provide
-accessor to pull out miscdevice::this_device") you can access the
-internal `struct device`. However, there is still no way to access the
-`data` field in the above example, because you only have a reference to
-the registration.
-
-Using `container_of` is also not possible to do safely. For example, if
-the destructor of `MyDriverData` runs, then the destructor of `data`
-would run before the miscdevice is deregistered, so using `container_of`
-to access `data` from `fops->open` could result in a UAF. A similar
-problem can happen on initialization if `misc` is not the last field to
-be initialized.
-
-To provide a safe way to access user-defined data stored next to the
-`struct miscdevice`, make `MiscDeviceRegistration` into a container that
-can store a user-provided piece of data. This way, `fops->open` can
-access that data via the registration, since the data is stored inside
-the registration.
-
-The container enforces that the additional user data is initialized
-before the miscdevice is registered, and that the miscdevice is
-deregistered before the user data is destroyed. This ensures that access
-to the userdata is safe.
-
-For the same reasons as in commit 88441d5c6d17 ("rust: miscdevice:
-access the `struct miscdevice` from fops->open()"), you cannot access
-the user data in any other fops callback than open. This is because a
-miscdevice can be deregistered while there are still open files.
-
-A situation where this user data might be required is when a platform
-driver acquires a resource in `probe` and wants to use this resource in
-the `fops` implementation of a `MiscDevice`.
-
-This solution is similar to the approach used by the initial downstream
-Rust-for-Linux/Rust branch [0].
-
-Link: https://github.com/Rust-for-Linux/linux/blob/rust/rust/kernel/miscdev.rs#L108 [0]
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 ---
- rust/kernel/miscdevice.rs        | 78 +++++++++++++++++++++++++++++-----------
- samples/rust/rust_misc_device.rs |  4 ++-
- 2 files changed, 60 insertions(+), 22 deletions(-)
+ samples/rust/rust_misc_device.rs | 120 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 110 insertions(+), 10 deletions(-)
 
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index fa9ecc42602a477328a25b5d357db90b59dc72ae..43cb8b1ce4a2f112a7cab73a3d126845887833ad 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -9,7 +9,7 @@
- //! Reference: <https://www.kernel.org/doc/html/latest/driver-api/misc_devices.html>
- 
- use crate::{
--    bindings,
-+    bindings, container_of,
-     device::Device,
-     error::{to_result, Error, Result, VTABLE_DEFAULT_ERROR},
-     ffi::{c_int, c_long, c_uint, c_ulong},
-@@ -17,9 +17,10 @@
-     prelude::*,
-     seq_file::SeqFile,
-     str::CStr,
--    types::{ForeignOwnable, Opaque},
-+    types::{ForeignOwnable, Opaque, UnsafePinned},
- };
- use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin};
-+use pin_init::Wrapper;
- 
- /// Options for creating a misc device.
- #[derive(Copy, Clone)]
-@@ -45,32 +46,46 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
- /// # Invariants
- ///
- /// `inner` is a registered misc device.
--#[repr(transparent)]
-+#[repr(C)]
- #[pin_data(PinnedDrop)]
--pub struct MiscDeviceRegistration<T> {
-+pub struct MiscDeviceRegistration<T: MiscDevice> {
-     #[pin]
-     inner: Opaque<bindings::miscdevice>,
-+    #[pin]
-+    data: UnsafePinned<T::RegistrationData>,
-     _t: PhantomData<T>,
- }
- 
--// SAFETY: It is allowed to call `misc_deregister` on a different thread from where you called
--// `misc_register`.
--unsafe impl<T> Send for MiscDeviceRegistration<T> {}
--// SAFETY: All `&self` methods on this type are written to ensure that it is safe to call them in
--// parallel.
--unsafe impl<T> Sync for MiscDeviceRegistration<T> {}
-+// SAFETY:
-+// - It is allowed to call `misc_deregister` on a different thread from where you called
-+//   `misc_register`.
-+// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
-+unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
-+
-+// SAFETY:
-+// - All `&self` methods on this type are written to ensure that it is safe to call them in
-+//   parallel.
-+// - `MiscDevice::RegistrationData` is always `Sync`.
-+unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
- 
- impl<T: MiscDevice> MiscDeviceRegistration<T> {
-     /// Register a misc device.
--    pub fn register(opts: MiscDeviceOptions) -> impl PinInit<Self, Error> {
-+    pub fn register(
-+        opts: MiscDeviceOptions,
-+        data: impl PinInit<T::RegistrationData, Error>,
-+    ) -> impl PinInit<Self, Error> {
-         try_pin_init!(Self {
-+            data <- UnsafePinned::pin_init(data),
-             inner <- Opaque::try_ffi_init(move |slot: *mut bindings::miscdevice| {
-                 // SAFETY: The initializer can write to the provided `slot`.
-                 unsafe { slot.write(opts.into_raw::<T>()) };
- 
--                // SAFETY: We just wrote the misc device options to the slot. The miscdevice will
--                // get unregistered before `slot` is deallocated because the memory is pinned and
--                // the destructor of this type deallocates the memory.
-+                // SAFETY:
-+                // * We just wrote the misc device options to the slot. The miscdevice will
-+                //   get unregistered before `slot` is deallocated because the memory is pinned and
-+                //   the destructor of this type deallocates the memory.
-+                // * `data` is Initialized before `misc_register` so no race with `fops->open()`
-+                //   is possible.
-                 // INVARIANT: If this returns `Ok(())`, then the `slot` will contain a registered
-                 // misc device.
-                 to_result(unsafe { bindings::misc_register(slot) })
-@@ -93,10 +108,18 @@ pub fn device(&self) -> &Device {
-         // before the underlying `struct miscdevice` is destroyed.
-         unsafe { Device::as_ref((*self.as_raw()).this_device) }
-     }
-+
-+    /// Access the additional data stored in this registration.
-+    pub fn data(&self) -> &T::RegistrationData {
-+        // SAFETY:
-+        // * No mutable reference to the value contained by `self.data` can ever be created.
-+        // * The value contained by `self.data` is valid for the entire lifetime of `&self`.
-+        unsafe { &*self.data.get() }
-+    }
- }
- 
- #[pinned_drop]
--impl<T> PinnedDrop for MiscDeviceRegistration<T> {
-+impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
-     fn drop(self: Pin<&mut Self>) {
-         // SAFETY: We know that the device is registered by the type invariants.
-         unsafe { bindings::misc_deregister(self.inner.get()) };
-@@ -109,6 +132,13 @@ pub trait MiscDevice: Sized {
-     /// What kind of pointer should `Self` be wrapped in.
-     type Ptr: ForeignOwnable + Send + Sync;
- 
-+    /// The additional data carried by the [`MiscDeviceRegistration`] for this [`MiscDevice`].
-+    /// If no additional data is required than the unit type `()` should be used.
-+    ///
-+    /// This data can be accessed in [`MiscDevice::open()`] using
-+    /// [`MiscDeviceRegistration::data()`].
-+    type RegistrationData: Sync;
-+
-     /// Called when the misc device is opened.
-     ///
-     /// The returned pointer will be stored as the private data for the file.
-@@ -178,18 +208,24 @@ impl<T: MiscDevice> MiscdeviceVTable<T> {
-         // SAFETY: The open call of a file can access the private data.
-         let misc_ptr = unsafe { (*raw_file).private_data };
- 
--        // SAFETY: This is a miscdevice, so `misc_open()` set the private data to a pointer to the
--        // associated `struct miscdevice` before calling into this method. Furthermore,
--        // `misc_open()` ensures that the miscdevice can't be unregistered and freed during this
--        // call to `fops_open`.
--        let misc = unsafe { &*misc_ptr.cast::<MiscDeviceRegistration<T>>() };
-+        // This is a miscdevice, so `misc_open()` sets the private data to a pointer to the
-+        // associated `struct miscdevice` before calling into this method.
-+        let misc_ptr = misc_ptr.cast::<bindings::miscdevice>();
-+
-+        // SAFETY:
-+        // * `misc_open()` ensures that the `struct miscdevice` can't be unregistered and freed
-+        //   during this call to `fops_open`.
-+        // * The `misc_ptr` always points to the `inner` field of a `MiscDeviceRegistration<T>`.
-+        // * The `MiscDeviceRegistration<T>` is valid until the `struct miscdevice` was
-+        //   unregistered.
-+        let registration = unsafe { &*container_of!(misc_ptr, MiscDeviceRegistration<T>, inner) };
- 
-         // SAFETY:
-         // * This underlying file is valid for (much longer than) the duration of `T::open`.
-         // * There is no active fdget_pos region on the file on this thread.
-         let file = unsafe { File::from_raw_file(raw_file) };
- 
--        let ptr = match T::open(file, misc) {
-+        let ptr = match T::open(file, registration) {
-             Ok(ptr) => ptr,
-             Err(err) => return err.to_errno(),
-         };
 diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
-index c881fd6dbd08cf4308fe1bd37d11d28374c1f034..67a6172fbbf72dd42a1b655f5f5a782101432707 100644
+index 67a6172fbbf72dd42a1b655f5f5a782101432707..3c96cf8fe747427106f2e436c3dba33008c7fd53 100644
 --- a/samples/rust/rust_misc_device.rs
 +++ b/samples/rust/rust_misc_device.rs
-@@ -137,7 +137,7 @@ fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+@@ -18,6 +18,8 @@
+ //! #define RUST_MISC_DEV_HELLO _IO('|', 0x80)
+ //! #define RUST_MISC_DEV_GET_VALUE _IOR('|', 0x81, int)
+ //! #define RUST_MISC_DEV_SET_VALUE _IOW('|', 0x82, int)
++//! #define RUST_MISC_DEV_GET_SHARED_VALUE _IOR('|', 0x83, int)
++//! #define RUST_MISC_DEV_SET_SHARED_VALUE _IOW('|', 0x84, int)
+ //!
+ //! int main() {
+ //!   int value, new_value;
+@@ -86,6 +88,62 @@
+ //!     return -1;
+ //!   }
+ //!
++//!   value++;
++//!
++//!   // Set shared value to something different
++//!   printf("Submitting new shared value (%d)\n", value);
++//!   ret = ioctl(fd, RUST_MISC_DEV_SET_SHARED_VALUE, &value);
++//!   if (ret < 0) {
++//!     perror("ioctl: Failed to submit new value");
++//!     close(fd);
++//!     return errno;
++//!   }
++//!
++//!   // Close the device file
++//!   printf("Closing /dev/rust-misc-device\n");
++//!   close(fd);
++//!
++//!   // Open the device file again
++//!   printf("Opening /dev/rust-misc-device again for reading\n");
++//!   fd = open("/dev/rust-misc-device", O_RDWR);
++//!   if (fd < 0) {
++//!     perror("open");
++//!     return errno;
++//!   }
++//!
++//!   // Ensure new value was applied
++//!   printf("Fetching new value\n");
++//!   ret = ioctl(fd, RUST_MISC_DEV_GET_SHARED_VALUE, &new_value);
++//!   if (ret < 0) {
++//!     perror("ioctl: Failed to fetch the new value");
++//!     close(fd);
++//!     return errno;
++//!   }
++//!
++//!   if (value != new_value) {
++//!     printf("Failed: Committed and retrieved values are different (%d - %d)\n",
++//!            value, new_value);
++//!     close(fd);
++//!     return -1;
++//!   }
++//!
++//!   value = 0;
++//!   // Ensure non-shared value is still 0
++//!   printf("Fetching new value\n");
++//!   ret = ioctl(fd, RUST_MISC_DEV_GET_VALUE, &new_value);
++//!   if (ret < 0) {
++//!     perror("ioctl: Failed to fetch the new value");
++//!     close(fd);
++//!     return errno;
++//!   }
++//!
++//!   if (value != new_value) {
++//!     printf("Failed: Committed and retrieved values are different (%d - %d)\n",
++//!            value, new_value);
++//!     close(fd);
++//!     return -1;
++//!   }
++//!
+ //!   // Close the device file
+ //!   printf("Closing /dev/rust-misc-device\n");
+ //!   close(fd);
+@@ -94,7 +152,6 @@
+ //!   return 0;
+ //! }
+ //! ```
+-
+ use core::pin::Pin;
+ 
+ use kernel::{
+@@ -105,7 +162,7 @@
+     miscdevice::{MiscDevice, MiscDeviceOptions, MiscDeviceRegistration},
+     new_mutex,
+     prelude::*,
+-    sync::Mutex,
++    sync::{Arc, Mutex},
+     types::ARef,
+     uaccess::{UserSlice, UserSliceReader, UserSliceWriter},
+ };
+@@ -113,6 +170,8 @@
+ const RUST_MISC_DEV_HELLO: u32 = _IO('|' as u32, 0x80);
+ const RUST_MISC_DEV_GET_VALUE: u32 = _IOR::<i32>('|' as u32, 0x81);
+ const RUST_MISC_DEV_SET_VALUE: u32 = _IOW::<i32>('|' as u32, 0x82);
++const RUST_MISC_DEV_GET_SHARED_VALUE: u32 = _IOR::<i32>('|' as u32, 0x83);
++const RUST_MISC_DEV_SET_SHARED_VALUE: u32 = _IOW::<i32>('|' as u32, 0x84);
+ 
+ module! {
+     type: RustMiscDeviceModule,
+@@ -130,14 +189,17 @@ struct RustMiscDeviceModule {
+ 
+ impl kernel::InPlaceModule for RustMiscDeviceModule {
+     fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+-        pr_info!("Initialising Rust Misc Device Sample\n");
++        pr_info!("Initializing Rust Misc Device Sample\n");
+ 
+         let options = MiscDeviceOptions {
+             name: c_str!("rust-misc-device"),
          };
  
          try_pin_init!(Self {
--            _miscdev <- MiscDeviceRegistration::register(options),
-+            _miscdev <- MiscDeviceRegistration::register(options, ()),
+-            _miscdev <- MiscDeviceRegistration::register(options, ()),
++            _miscdev <- MiscDeviceRegistration::register(
++                options,
++                Arc::pin_init(new_mutex!(Inner { value: 0_i32 }), GFP_KERNEL)?
++            ),
          })
      }
  }
-@@ -157,6 +157,8 @@ struct RustMiscDevice {
+@@ -148,8 +210,9 @@ struct Inner {
+ 
+ #[pin_data(PinnedDrop)]
+ struct RustMiscDevice {
++    shared: Arc<Mutex<Inner>>,
+     #[pin]
+-    inner: Mutex<Inner>,
++    unique: Mutex<Inner>,
+     dev: ARef<Device>,
+ }
+ 
+@@ -157,7 +220,7 @@ struct RustMiscDevice {
  impl MiscDevice for RustMiscDevice {
      type Ptr = Pin<KBox<Self>>;
  
-+    type RegistrationData = ();
-+
+-    type RegistrationData = ();
++    type RegistrationData = Arc<Mutex<Inner>>;
+ 
      fn open(_file: &File, misc: &MiscDeviceRegistration<Self>) -> Result<Pin<KBox<Self>>> {
          let dev = ARef::from(misc.device());
+@@ -167,7 +230,8 @@ fn open(_file: &File, misc: &MiscDeviceRegistration<Self>) -> Result<Pin<KBox<Se
+         KBox::try_pin_init(
+             try_pin_init! {
+                 RustMiscDevice {
+-                    inner <- new_mutex!( Inner{ value: 0_i32 } ),
++                    shared: misc.data().clone(),
++                    unique <- new_mutex!(Inner { value: 0_i32 }),
+                     dev: dev,
+                 }
+             },
+@@ -183,6 +247,12 @@ fn ioctl(me: Pin<&RustMiscDevice>, _file: &File, cmd: u32, arg: usize) -> Result
+         match cmd {
+             RUST_MISC_DEV_GET_VALUE => me.get_value(UserSlice::new(arg, size).writer())?,
+             RUST_MISC_DEV_SET_VALUE => me.set_value(UserSlice::new(arg, size).reader())?,
++            RUST_MISC_DEV_GET_SHARED_VALUE => {
++                me.get_shared_value(UserSlice::new(arg, size).writer())?
++            }
++            RUST_MISC_DEV_SET_SHARED_VALUE => {
++                me.set_shared_value(UserSlice::new(arg, size).reader())?
++            }
+             RUST_MISC_DEV_HELLO => me.hello()?,
+             _ => {
+                 dev_err!(me.dev, "-> IOCTL not recognised: {}\n", cmd);
+@@ -193,7 +263,6 @@ fn ioctl(me: Pin<&RustMiscDevice>, _file: &File, cmd: u32, arg: usize) -> Result
+         Ok(0)
+     }
+ }
+-
+ #[pinned_drop]
+ impl PinnedDrop for RustMiscDevice {
+     fn drop(self: Pin<&mut Self>) {
+@@ -204,7 +273,7 @@ fn drop(self: Pin<&mut Self>) {
+ impl RustMiscDevice {
+     fn set_value(&self, mut reader: UserSliceReader) -> Result<isize> {
+         let new_value = reader.read::<i32>()?;
+-        let mut guard = self.inner.lock();
++        let mut guard = self.unique.lock();
  
+         dev_info!(
+             self.dev,
+@@ -217,7 +286,38 @@ fn set_value(&self, mut reader: UserSliceReader) -> Result<isize> {
+     }
+ 
+     fn get_value(&self, mut writer: UserSliceWriter) -> Result<isize> {
+-        let guard = self.inner.lock();
++        let guard = self.unique.lock();
++        let value = guard.value;
++
++        // Free-up the lock and use our locally cached instance from here
++        drop(guard);
++
++        dev_info!(
++            self.dev,
++            "-> Copying data to userspace (value: {})\n",
++            &value
++        );
++
++        writer.write::<i32>(&value)?;
++        Ok(0)
++    }
++
++    fn set_shared_value(&self, mut reader: UserSliceReader) -> Result<isize> {
++        let new_value = reader.read::<i32>()?;
++        let mut guard = self.shared.lock();
++
++        dev_info!(
++            self.dev,
++            "-> Copying data from userspace (value: {})\n",
++            new_value
++        );
++
++        guard.value = new_value;
++        Ok(0)
++    }
++
++    fn get_shared_value(&self, mut writer: UserSliceWriter) -> Result<isize> {
++        let guard = self.shared.lock();
+         let value = guard.value;
+ 
+         // Free-up the lock and use our locally cached instance from here
 
 -- 
 2.49.0
