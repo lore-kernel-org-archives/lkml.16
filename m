@@ -1,326 +1,254 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2054.outbound.protection.outlook.com [40.107.92.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A668510E0
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 00:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747440467; cv=none; b=CXnMIhGaPBcTsLSNlmqC4SwRpz+bP1y9XE7D4FrJMRPDxH7N0IIFBDfPiXC41T20lu8xQ0nTWJtgdRJr8LkJ0/vuyk5f+U9JRBtw3xOnVnpJorNsmiIPSXVoThjnsoUaA0BsWHL1WdinZFBkMQYT602yoLFI6CRrlvSpeT/GOz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747440467; c=relaxed/simple;
-	bh=3yPE3c5dUT5+Hn52LTfDQCFtdocCY/Dn7NOkbDjgRbE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lWTqThQrXR9oKtWwoASvQReYhJ7uMVyqKcy2mXNYVA/q7Rv+A4qXoFKMCzAuqHOJ2Sg+bp74fsY7SK1CY+mfYvAsiu33QIDLiBedzAK8EpQbLG+2RqtDYXAgFH408at3XDZJ2E1eJec1HMaOV/BbgRFLi4IRwyvKxl+o9AMyfSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qnjUiM2C; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B79410E0;
+	Sat, 17 May 2025 00:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747440540; cv=fail; b=FEwLDntked2yxbBtpBvmjpOz+/Ln5cWJUIgZU3eEM2317foxq1RYQipljC4Btqs2dAevVZcefuXHWlk/G5stGnRZc+yyMPLSJnIlEfg8cGG1mLTnadQqMSVl7bJWRjwALFzM97WMcCSvkKsw2tNQZ0nu8+8w0TkhHX1RAP2vF7w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747440540; c=relaxed/simple;
+	bh=8nRZ6Fu9E12kXBfyaaGlH/TMn4TfIyQ/W8VAPt+S2Qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uB0Uk36jjYH2RqaUYieDsaRed7QHj0DRCEf4rnmDNPC/VG5obSR/0j0NK/eVccKsCtLMTPGXc/OubwECJ5Cg+jstk8RBvwJaDsACw2PXaeFLFHEtbj60d19RM9gXfWr2VQO3ZB/XXINpTpDycWal7pGrJtnHN65c64fC9F/IV2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TnAvt9Yd; arc=fail smtp.client-ip=40.107.92.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qnjUiM2C"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231dfb7315eso6503535ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747440465; x=1748045265; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fdTg2aIq+yKN3X+ZqL5WTi+FS98hIL9CGjxbsmV+g0Q=;
-        b=qnjUiM2CI1rItUJ7I8IAWUJnZ+/6okj34dB/myjnDEATvGCgsJatOMv6icHprqDLCh
-         FNEk56At4ZQ8+W2zM02zbxcAHgr9Z5tzFpxISECUUe+QyA/V/Abzm94/pp1IMKYKynFz
-         /QHcBQSoJ0ebEhX7mTDkRd2YeaGRZdwAREGZiHxrdVW3R3/mVwUYkEG2ErlOXgVr1OKD
-         QoCDWLt32qINZuwx1i0NYVjfZ5QyOXD1yQ46KXDh6/4wHouamDmTdPJEvQaLvQEosYIn
-         Xe2vDR/K3foT2xxg4nyHrK1SbAQbnAgg0KQNfQuhrMsiI1sW15cLH/siYMm55mMNQ0c4
-         hy2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747440465; x=1748045265;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fdTg2aIq+yKN3X+ZqL5WTi+FS98hIL9CGjxbsmV+g0Q=;
-        b=HEgKr+6ZuVelRkbNFRF0PiqHTPEbNjIlbwoA6ykLntsOvxRz+I2bMGTdJOohOvar8f
-         bZfBor5LATLKD9TR+kqx9Rt+zwmTfYWFWREn48OqC+svSmV0XFbTZslYqOlIRYFydQH8
-         jzIEPNrJprRviTj5nEwS4tLD/qOBynR4YwN6Nk0uZjgpqKCW47XEDL6+Db7KSxMSnW+Y
-         GDHTwNQHUX2FLbe6UZAzjn193kY7weD7P/WX+ZIpffWqmzJszjlD/TaD9H4z4mLKGmJQ
-         B4rw3Rt2ElCh2prDknPH0Rw7kkOWrihze5lES3PcDSsQfeDYFRbVdDAzt2xbVdQT2CX0
-         9Q7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVddxovCbzR9Xaxx0aE5c5K2DRAdMxw+jKjb8UQiMNgkA5awZ4sTr/H3f6uQ75jhsX7c0Vcr7HzjlzBZ98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMs74jjrLzWXPXrbNUTgIKQZyBDLNj8SYJE1KcfbMYtEgflWsp
-	WCN+OHQYbszk69+XXZ1uIo8WhiA/EmF/05uhUK5D5CImF1p3LCOYcMAz4jyRcqMImmqo46Fhd2G
-	64hRSmg==
-X-Google-Smtp-Source: AGHT+IF4OSk8BpiEzrk7dV2VBPTsTg/7CEypyxMwwI1iF2ySUnXZwnrvr4pqvulJrcNA+KCIz4y5EUcqX9c=
-X-Received: from ploh6.prod.google.com ([2002:a17:902:f706:b0:22e:3312:15a5])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a68:b0:227:ac2a:1dd6
- with SMTP id d9443c01a7336-231d45273c6mr86050615ad.24.1747440464816; Fri, 16
- May 2025 17:07:44 -0700 (PDT)
-Date: Fri, 16 May 2025 17:07:39 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TnAvt9Yd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cEzB0A6ZII4lMdW/f2ll6PT0KpVXn6aCk4qBlamarp2HusQf6KLPw+Cp3WWXoT3UF8Ypsas/eJt+jnh8OJSgi3nEl5xXqe0dyLSPLznJClzEul0EvXF5H2VLjusFW0CzwgjHCCidr5jMJIsKIz7Paw8WKvwsOwepuD6mNnLeLEs7Q8T7xJfgqKyhK6ws607F1S5/x5Fl5i3pT6EWibUxI0g3UReeNY/jFxwTE7kkPBC6+s9qvDfHC7U519ilfXP7ZHy3EG7nedCweWEwD7QOyLOFzb27+PIV2SLQ6kS1JwCx4aXYAZyjecN14z/OCjuGv0rQkLiEV5AUuJ/wI5570g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X6oVxWtMMQg54NZ+huvySA3grEfsBBuGJV3RAMw3Zf0=;
+ b=qUBOsydDW6lNW3gvoKOZF/8iV7mEjaehRS3k6euCvH6VqFLfFSoYpok+VUYTHA9OsVKFDf0AIsFM0iHA1x8RsOD0L3huPderaC9mQ14fCcPlYFCIJQhU1tMnqAz3n6tlOyYJqKI3iv08eoFkWRvltrQ67o0m8e0YSeDGILyAj0dRpcvzEk9WfPGQsESYJQ9vfEIZpqGZ2dPYFSiDZF0HPJRmAu+kKEfgACFWkOTS8eGyoL6KbasGoWZFiQcNVvSmLtlsW+Nztu0XXD9DdYfq3O9vCSJ6IKdjT88odOF0CCUWxizrW147GbpQOTz5IbSJy+TEWqb7aeWvb3F0EjULRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X6oVxWtMMQg54NZ+huvySA3grEfsBBuGJV3RAMw3Zf0=;
+ b=TnAvt9YdgZGfNYZtwOtrMccA6yZS2JZCMq4ZicKQ0WApYkIDOWdwYAXc990bSVwdreE7LAgLYPDbXpOtku03yI2GQdN5h5HtMYxs7uRcJu3hBZgbNbZU1c9IwMAOSYBV1jmrlid4A3kCst8UtfySx0j7Qkfdn8w+grGIgPMGyN4ehBUQsJjjPN0w1jjDQkAmEn6Vrb3kyxQXDeclR2qaq5Dn9g/z8A06rW11wrzskFv2dRl0ABmKIeO0FAn2BvLkNzHwXXn6oxtmHB1jLvOdCtUyqA+1f+/Oojd8CePFGzUQc4GTfip7u2wBHdt8YDpbBWXaQAfi+295uZkjpPyvdA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BN5PR12MB9464.namprd12.prod.outlook.com (2603:10b6:408:2ab::10)
+ by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.31; Sat, 17 May
+ 2025 00:08:54 +0000
+Received: from BN5PR12MB9464.namprd12.prod.outlook.com
+ ([fe80::e83f:10b6:1259:d000]) by BN5PR12MB9464.namprd12.prod.outlook.com
+ ([fe80::e83f:10b6:1259:d000%4]) with mapi id 15.20.8722.027; Sat, 17 May 2025
+ 00:08:54 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Sebastian Mitterle <smitterl@redhat.com>
+Subject: Re: [PATCH v1 2/3] s390/uv: always return 0 from
+ s390_wiggle_split_folio() if successful
+Date: Fri, 16 May 2025 20:08:53 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <E1DF5F15-1211-4E4A-AD1B-BCD2396DEFB6@nvidia.com>
+In-Reply-To: <20250516123946.1648026-3-david@redhat.com>
+References: <20250516123946.1648026-1-david@redhat.com>
+ <20250516123946.1648026-3-david@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN0PR02CA0046.namprd02.prod.outlook.com
+ (2603:10b6:408:e5::21) To BN5PR12MB9464.namprd12.prod.outlook.com
+ (2603:10b6:408:2ab::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250517000739.5930-1-surenb@google.com>
-Subject: [PATCH 1/1] alloc_tag: allocate percpu counters for module tags dynamically
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, 00107082@163.com, dennis@kernel.org, 
-	tj@kernel.org, cl@gentwo.org, pasha.tatashin@soleen.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, surenb@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN5PR12MB9464:EE_|DM3PR12MB9287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99f395e2-4869-43c6-acbb-08dd94d7030a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?9o8EKEXOkzOPZrFvlj3sD6lfXP9TqJYuJEIX2ru6qH5q82q536G8/OeCW3oU?=
+ =?us-ascii?Q?sTrmy/XDVj4lPA4r3lLkEF6T/4H3CJZmhDjg8JXCwYz7AihVd2VJKh0aXQPy?=
+ =?us-ascii?Q?Xc15LsF6ZvW39WiV4tS1NUHCfF6X2b+D2uxs6rCZvemCI4UrMN9hgLHueZwG?=
+ =?us-ascii?Q?dkSqaBJ84M3JCM/7FxZtyj+MKFmYdskW7Dx6MczmL3Sz2IzvKTr3orI1ARbl?=
+ =?us-ascii?Q?e0TtelKMPlOSo99Aw0vwMnganHjDrJZwTmnQPkVaf1pLS91LL5OZZbTLKZFS?=
+ =?us-ascii?Q?uezXBCbR3h7bImSDc32s42HGIBDAE3RYgxxNEj9doPulJmBWvpGWwMtsh7En?=
+ =?us-ascii?Q?zoRIf1zcNa2A6wf7+Eb9JNG6YxKmu7oc+wXtD0OlaKIsWItn/Cxfz74oHIgo?=
+ =?us-ascii?Q?7XlP4dpGWjjxDKsWz0vcPRHptBD1lhJm2BPBIoaa3B9gG1VaVKU+SfsdQAQL?=
+ =?us-ascii?Q?NT+uYtcDapMTeOPy78K+WdtH0RFks3v1CmvvL2ITabj1+S/WiGViFubwa5d0?=
+ =?us-ascii?Q?zxqDwbTXXL7Sg30u0jt7kFxVIv+7oGqZsGnfBmsXF36TWl5QiSi3Q9MJ+G4d?=
+ =?us-ascii?Q?yj7c1CqZe7frXRHBDCptKOS2M6gSnoSq0zhiC1M7HgYNKlSJExyJpd0zNABF?=
+ =?us-ascii?Q?ORx+P0LCW3ckmYVa1nlZ0mrrGiN1j0r5VYCtDnbfGG53O7t1jh8Pjil7mS/u?=
+ =?us-ascii?Q?WO5bH4Pxxy8oft81FcFV8jpnqY3jcGbSiS85aqzqvxFTh43IM0MnurkUtUny?=
+ =?us-ascii?Q?DUJaKOnlxTA2mJjakBuPZUIkjPwMQp+D0Becsko9EkOCb/HYnr6lJf6ISWrr?=
+ =?us-ascii?Q?Xq6pIY7Q7pdiBOAGSTsgwNjnyCtz1UFRhZqLoYZoKw3x/uuvnua/w/m7awlr?=
+ =?us-ascii?Q?9YgoWAUgBsOqLslLaSfYHrs4sytKrFyJv4iQRbVGG2L8NnHHiT6jzm8RAT2t?=
+ =?us-ascii?Q?MAMvD+v8Wqkdo2W1baoxdhZCKPP3ZE/ba/SMWIBbEykG2hz5Z5mLa9NeoGaT?=
+ =?us-ascii?Q?57Ne4wYryYeVirdYlhJAA/9gSjMMvkbKRS0kXNlC9FIjk2TP8x/t7y7AtWB4?=
+ =?us-ascii?Q?STHZi9xAdgOz7MBTE+w8oemJBTNjE5h6Wmhaws5RI6bSIOR6uCJEmUfXAn85?=
+ =?us-ascii?Q?rdH2gRL5GZxD7O9xHZCG6MKm97tnWhU8kUKuudpX37Y+7fUdIkmt3FhdC6nZ?=
+ =?us-ascii?Q?VNq8NnyQ4ZARinYr2uI3IErH1HS1YSzcosGz0v/MLFBv5SsD0BleIgg4lPHw?=
+ =?us-ascii?Q?9F19qXkcUxMvE2nL3GKFRZzsBHO1vjo3Zv3O/zLy0Iw+v8R0n2cngbPP+InM?=
+ =?us-ascii?Q?9YSV8C5QnQT+ptCJoXwVJPluOtgJf5FXoudPPM7lrkCVBvbsIqhpAetXmoht?=
+ =?us-ascii?Q?pHRyGjnl0+vTczwJ43eWckGX9SVyzkTzSwmdAdAaik3oI/ZWu7P9CAFSTiEN?=
+ =?us-ascii?Q?NeAl3X6gkpQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN5PR12MB9464.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?cVSY6aUK4rsndB/R/FBT8we2WqDmUGjhmFB7TPxvm7JUb/EDJjauHSKvgfLt?=
+ =?us-ascii?Q?WYyGlOdJ6GOYwnCplLGVBqRlMVIdQK2XDcc7g7svHl25yeQgKPDpNL7haGu+?=
+ =?us-ascii?Q?ZC43Dls8WIoKGXzc9wbZGO/KTQdgsJW9WOblddtV+DOKbyJpIxiXZTV8q24m?=
+ =?us-ascii?Q?Ml2Z+Y6+L1lL298Ib9ktdjWpUtaUUfpXaUbRvDZzRtdNN0BTG0H/RqUJId/S?=
+ =?us-ascii?Q?Om08u0QvgpEXUd4S/3SETS0zt+otjftJZTQqYJa8XMGKzBU+C0E1JMnK6j/r?=
+ =?us-ascii?Q?6JW02WR8N47VOFkHvGgjltl7hpazVtlOgASjnjBIFMCDL7ZEBsmlYwa5wmof?=
+ =?us-ascii?Q?HECGlSRVZM20rZlvaXtTXsun5WNR0KAEnyinF+o76JfxHEx+zkha8wOHDnDQ?=
+ =?us-ascii?Q?oj2uWGQCjXKZbMva7rWkdtViV/5MHfAYFPKSBUVKSLzCAOd6pdseenpIyIeD?=
+ =?us-ascii?Q?72khoLEsz0ENpbUSdd+FyUg0VyBYXK4lLqdQ+7LfXY2Y4XNA7rUllERioBWt?=
+ =?us-ascii?Q?9WsPGDnzsWmZelpXdnyQllQHTnbu9nHZ+7DYxy8TqqTUzk+BHIYhYtVfhjcW?=
+ =?us-ascii?Q?hyM6jlEwaq9dQUmLkxGI+U85PfnaCQuYLk7RzJcA89YB0K32w0Z2cqazndL3?=
+ =?us-ascii?Q?Ncc7aFTI5SyZ8spzr1ihy03ykbkUTkPd52WfqxjxDfn9F8sho8e28/nkTmxX?=
+ =?us-ascii?Q?QOsDce2D6MhqcOXDcrkjjr3yT/2FItiU8T10rTvLyO9YjNbjMkTptAPpbbuB?=
+ =?us-ascii?Q?xiOLryQE4uz+FDxRmJ9Wg0KBJ2SQ44MxHQjhvKCz+OGNLWKf+0psN12ekFR9?=
+ =?us-ascii?Q?lvWkEvjKCjpkgqc0qzFrdoiFUk8hEUusY4Jql+K63etstfZqBKVKJy2za7WS?=
+ =?us-ascii?Q?52va+PR+89Y3Ivz4IxDn4aGumrHxr5x2SC6n0uYohUOCsx+q7ZtlzP2VtssP?=
+ =?us-ascii?Q?6kJl9m00/BHAggCa2GXffGwVIiAxPRDwGcs1K+xPfbyNJ3sDI/E5cmhRutyG?=
+ =?us-ascii?Q?0uRKQrjPruPfgU+slVbv3F+EEKUVG+wXZzmjdQGkxrlPi5IvHE7RiduIrOGY?=
+ =?us-ascii?Q?OhZpDW1GcIWwXpl1Xng7eLhelp2ARA3EbUOxAfXsYyhp1YyZFwD9PP7m45Ip?=
+ =?us-ascii?Q?k0Ztex1Q92L1ZsvmXjCGYn7M4p6u0ahbgExxzz8IFNZPLV/I6etsSv5/Olyk?=
+ =?us-ascii?Q?jCZQlsJjo2ZYY1iL/2Lxwp/QGEEnS4E6jnKiHfLjx/zQQMKRnil2aHkpbYfR?=
+ =?us-ascii?Q?0O8t+t5eYTPlHSzWDHS3pLfKTGOrtH4Z9272pQroxNmzD7MKCnpLcSkgnqin?=
+ =?us-ascii?Q?hfhbdO2FqIJu4Y3648hjSb1NURFekPHTLf3jALyRwOn6JrlnlmXk9hgYsrnC?=
+ =?us-ascii?Q?trWU8ycSiOkE6e3Cd1/rws5clgsWud/ib5PJA+cBAUodFpmqD712nroCkJx4?=
+ =?us-ascii?Q?e1sb6AjNuCcoLMVTndPtyDS+AYHu37LlFkSE+RLtzsr5+VAiUYVQEdiInRKl?=
+ =?us-ascii?Q?S7aJ0m0z7PlgAbQZUbTRrqrJTbYdJONHPAHbvm+uYEuybbA0vBJua5PLpm2D?=
+ =?us-ascii?Q?PztqqNnK9yauS73hPLokCyE3jmURnE5vCvBSjYx6?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99f395e2-4869-43c6-acbb-08dd94d7030a
+X-MS-Exchange-CrossTenant-AuthSource: BN5PR12MB9464.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 00:08:54.7964
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uS+1hFEZjbv1wF7DTyDSlZyf/wEecp25cmelwVZT/ck1XtORk5fW0UkwAaNXruo2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
 
-When a module gets unloaded it checks whether any of its tags are still
-in use and if so, we keep the memory containing module's allocation tags
-alive until all tags are unused. However percpu counters referenced by
-the tags are freed by free_module(). This will lead to UAF if the memory
-allocated by a module is accessed after module was unloaded. To fix this
-we allocate percpu counters for module allocation tags dynamically and
-we keep it alive for tags which are still in use after module unloading.
-This also removes the requirement of a larger PERCPU_MODULE_RESERVE when
-memory allocation profiling is enabled because percpu memory for counters
-does not need to be reserved anymore.
+On 16 May 2025, at 8:39, David Hildenbrand wrote:
 
-Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate contiguous memory")
-Reported-by: David Wang <00107082@163.com>
-Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.com/
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- include/linux/alloc_tag.h | 12 ++++++
- include/linux/codetag.h   |  8 ++--
- include/linux/percpu.h    |  4 --
- lib/alloc_tag.c           | 87 +++++++++++++++++++++++++++++++--------
- lib/codetag.c             |  5 ++-
- 5 files changed, 88 insertions(+), 28 deletions(-)
+> Let's consistently return 0 if the operation was successful, and just
+> detect ourselves whether splitting is required -- folio_test_large() is=
 
-diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-index a946e0203e6d..8f7931eb7d16 100644
---- a/include/linux/alloc_tag.h
-+++ b/include/linux/alloc_tag.h
-@@ -104,6 +104,16 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
- 
- #else /* ARCH_NEEDS_WEAK_PER_CPU */
- 
-+#ifdef MODULE
-+
-+#define DEFINE_ALLOC_TAG(_alloc_tag)						\
-+	static struct alloc_tag _alloc_tag __used __aligned(8)			\
-+	__section(ALLOC_TAG_SECTION_NAME) = {					\
-+		.ct = CODE_TAG_INIT,						\
-+		.counters = NULL };
-+
-+#else  /* MODULE */
-+
- #define DEFINE_ALLOC_TAG(_alloc_tag)						\
- 	static DEFINE_PER_CPU(struct alloc_tag_counters, _alloc_tag_cntr);	\
- 	static struct alloc_tag _alloc_tag __used __aligned(8)			\
-@@ -111,6 +121,8 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
- 		.ct = CODE_TAG_INIT,						\
- 		.counters = &_alloc_tag_cntr };
- 
-+#endif /* MODULE */
-+
- #endif /* ARCH_NEEDS_WEAK_PER_CPU */
- 
- DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
-diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-index d14dbd26b370..0ee4c21c6dbc 100644
---- a/include/linux/codetag.h
-+++ b/include/linux/codetag.h
-@@ -36,10 +36,10 @@ union codetag_ref {
- struct codetag_type_desc {
- 	const char *section;
- 	size_t tag_size;
--	void (*module_load)(struct codetag_type *cttype,
--			    struct codetag_module *cmod);
--	void (*module_unload)(struct codetag_type *cttype,
--			      struct codetag_module *cmod);
-+	void (*module_load)(struct module *mod,
-+			    struct codetag *start, struct codetag *end);
-+	void (*module_unload)(struct module *mod,
-+			      struct codetag *start, struct codetag *end);
- #ifdef CONFIG_MODULES
- 	void (*module_replaced)(struct module *mod, struct module *new_mod);
- 	bool (*needs_section_mem)(struct module *mod, unsigned long size);
-diff --git a/include/linux/percpu.h b/include/linux/percpu.h
-index 52b5ea663b9f..85bf8dd9f087 100644
---- a/include/linux/percpu.h
-+++ b/include/linux/percpu.h
-@@ -15,11 +15,7 @@
- 
- /* enough to cover all DEFINE_PER_CPUs in modules */
- #ifdef CONFIG_MODULES
--#ifdef CONFIG_MEM_ALLOC_PROFILING
--#define PERCPU_MODULE_RESERVE		(8 << 13)
--#else
- #define PERCPU_MODULE_RESERVE		(8 << 10)
--#endif
- #else
- #define PERCPU_MODULE_RESERVE		0
- #endif
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index 25ecc1334b67..c7f602fa7b23 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -350,18 +350,28 @@ static bool needs_section_mem(struct module *mod, unsigned long size)
- 	return size >= sizeof(struct alloc_tag);
- }
- 
--static struct alloc_tag *find_used_tag(struct alloc_tag *from, struct alloc_tag *to)
-+static bool clean_unused_counters(struct alloc_tag *start_tag,
-+				  struct alloc_tag *end_tag)
- {
--	while (from <= to) {
-+	struct alloc_tag *tag;
-+	bool ret = true;
-+
-+	for (tag = start_tag; tag <= end_tag; tag++) {
- 		struct alloc_tag_counters counter;
- 
--		counter = alloc_tag_read(from);
--		if (counter.bytes)
--			return from;
--		from++;
-+		if (!tag->counters)
-+			continue;
-+
-+		counter = alloc_tag_read(tag);
-+		if (!counter.bytes) {
-+			free_percpu(tag->counters);
-+			tag->counters = NULL;
-+		} else {
-+			ret = false;
-+		}
- 	}
- 
--	return NULL;
-+	return ret;
- }
- 
- /* Called with mod_area_mt locked */
-@@ -371,12 +381,16 @@ static void clean_unused_module_areas_locked(void)
- 	struct module *val;
- 
- 	mas_for_each(&mas, val, module_tags.size) {
-+		struct alloc_tag *start_tag;
-+		struct alloc_tag *end_tag;
-+
- 		if (val != &unloaded_mod)
- 			continue;
- 
- 		/* Release area if all tags are unused */
--		if (!find_used_tag((struct alloc_tag *)(module_tags.start_addr + mas.index),
--				   (struct alloc_tag *)(module_tags.start_addr + mas.last)))
-+		start_tag = (struct alloc_tag *)(module_tags.start_addr + mas.index);
-+		end_tag = (struct alloc_tag *)(module_tags.start_addr + mas.last);
-+		if (clean_unused_counters(start_tag, end_tag))
- 			mas_erase(&mas);
- 	}
- }
-@@ -561,7 +575,8 @@ static void *reserve_module_tags(struct module *mod, unsigned long size,
- static void release_module_tags(struct module *mod, bool used)
- {
- 	MA_STATE(mas, &mod_area_mt, module_tags.size, module_tags.size);
--	struct alloc_tag *tag;
-+	struct alloc_tag *start_tag;
-+	struct alloc_tag *end_tag;
- 	struct module *val;
- 
- 	mas_lock(&mas);
-@@ -575,15 +590,22 @@ static void release_module_tags(struct module *mod, bool used)
- 	if (!used)
- 		goto release_area;
- 
--	/* Find out if the area is used */
--	tag = find_used_tag((struct alloc_tag *)(module_tags.start_addr + mas.index),
--			    (struct alloc_tag *)(module_tags.start_addr + mas.last));
--	if (tag) {
--		struct alloc_tag_counters counter = alloc_tag_read(tag);
-+	start_tag = (struct alloc_tag *)(module_tags.start_addr + mas.index);
-+	end_tag = (struct alloc_tag *)(module_tags.start_addr + mas.last);
-+	if (!clean_unused_counters(start_tag, end_tag)) {
-+		struct alloc_tag *tag;
-+
-+		for (tag = start_tag; tag <= end_tag; tag++) {
-+			struct alloc_tag_counters counter;
-+
-+			if (!tag->counters)
-+				continue;
- 
--		pr_info("%s:%u module %s func:%s has %llu allocated at module unload\n",
--			tag->ct.filename, tag->ct.lineno, tag->ct.modname,
--			tag->ct.function, counter.bytes);
-+			counter = alloc_tag_read(tag);
-+			pr_info("%s:%u module %s func:%s has %llu allocated at module unload\n",
-+				tag->ct.filename, tag->ct.lineno, tag->ct.modname,
-+				tag->ct.function, counter.bytes);
-+		}
- 	} else {
- 		used = false;
- 	}
-@@ -596,6 +618,34 @@ static void release_module_tags(struct module *mod, bool used)
- 	mas_unlock(&mas);
- }
- 
-+static void load_module(struct module *mod, struct codetag *start, struct codetag *stop)
-+{
-+	/* Allocate module alloc_tag percpu counters */
-+	struct alloc_tag *start_tag;
-+	struct alloc_tag *stop_tag;
-+	struct alloc_tag *tag;
-+
-+	if (!mod)
-+		return;
-+
-+	start_tag = ct_to_alloc_tag(start);
-+	stop_tag = ct_to_alloc_tag(stop);
-+	for (tag = start_tag; tag < stop_tag; tag++) {
-+		WARN_ON(tag->counters);
-+		tag->counters = alloc_percpu(struct alloc_tag_counters);
-+		if (!tag->counters) {
-+			while (--tag >= start_tag) {
-+				free_percpu(tag->counters);
-+				tag->counters = NULL;
-+			}
-+			shutdown_mem_profiling(true);
-+			pr_err("Failed to allocate memory for allocation tag percpu counters in the module %s. Memory allocation profiling is disabled!\n",
-+			       mod->name);
-+			break;
-+		}
-+	}
-+}
-+
- static void replace_module(struct module *mod, struct module *new_mod)
- {
- 	MA_STATE(mas, &mod_area_mt, 0, module_tags.size);
-@@ -757,6 +807,7 @@ static int __init alloc_tag_init(void)
- 		.needs_section_mem	= needs_section_mem,
- 		.alloc_section_mem	= reserve_module_tags,
- 		.free_section_mem	= release_module_tags,
-+		.module_load		= load_module,
- 		.module_replaced	= replace_module,
- #endif
- 	};
-diff --git a/lib/codetag.c b/lib/codetag.c
-index 42aadd6c1454..de332e98d6f5 100644
---- a/lib/codetag.c
-+++ b/lib/codetag.c
-@@ -194,7 +194,7 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
- 	if (err >= 0) {
- 		cttype->count += range_size(cttype, &range);
- 		if (cttype->desc.module_load)
--			cttype->desc.module_load(cttype, cmod);
-+			cttype->desc.module_load(mod, range.start, range.stop);
- 	}
- 	up_write(&cttype->mod_lock);
- 
-@@ -333,7 +333,8 @@ void codetag_unload_module(struct module *mod)
- 		}
- 		if (found) {
- 			if (cttype->desc.module_unload)
--				cttype->desc.module_unload(cttype, cmod);
-+				cttype->desc.module_unload(cmod->mod,
-+					cmod->range.start, cmod->range.stop);
- 
- 			cttype->count -= range_size(cttype, &cmod->range);
- 			idr_remove(&cttype->mod_idr, mod_id);
+> a cheap operation.
+>
+> Update the documentation.
+>
+> Should we simply always return -EAGAIN instead of 0, so we don't have
+> to handle it in the caller? Not sure, staring at the documentation, thi=
+s
+> way looks a bit cleaner.
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/s390/kernel/uv.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> index 2cc3b599c7fe3..f6ddb2b54032e 100644
+> --- a/arch/s390/kernel/uv.c
+> +++ b/arch/s390/kernel/uv.c
+> @@ -324,34 +324,36 @@ static int make_folio_secure(struct mm_struct *mm=
+, struct folio *folio, struct u
+>  }
+>
+>  /**
+> - * s390_wiggle_split_folio() - try to drain extra references to a foli=
+o and optionally split.
+> + * s390_wiggle_split_folio() - try to drain extra references to a foli=
+o and
+> + *			       split the folio if it is large.
+>   * @mm:    the mm containing the folio to work on
+>   * @folio: the folio
+> - * @split: whether to split a large folio
+>   *
+>   * Context: Must be called while holding an extra reference to the fol=
+io;
+>   *          the mm lock should not be held.
+> - * Return: 0 if the folio was split successfully;
+> - *         -EAGAIN if the folio was not split successfully but another=
+ attempt
+> - *                 can be made, or if @split was set to false;
+> - *         -EINVAL in case of other errors. See split_folio().
+> + * Return: 0 if the operation was successful;
+> + *	   -EAGAIN if splitting the large folio was not successful,
+> + *		   but another attempt can be made;
+> + *	   -EINVAL in case of other folio splitting errors. See split_folio=
+().
+>   */
+> -static int s390_wiggle_split_folio(struct mm_struct *mm, struct folio =
+*folio, bool split)
+> +static int s390_wiggle_split_folio(struct mm_struct *mm, struct folio =
+*folio)
+>  {
+>  	int rc;
+>
+>  	lockdep_assert_not_held(&mm->mmap_lock);
+>  	folio_wait_writeback(folio);
+>  	lru_add_drain_all();
+> -	if (split) {
+> +
+> +	if (folio_test_large(folio)) {
+>  		folio_lock(folio);
+>  		rc =3D split_folio(folio);
+>  		folio_unlock(folio);
+>
+>  		if (rc !=3D -EBUSY)
+>  			return rc;
+> +		return -EAGAIN;
+>  	}
+> -	return -EAGAIN;
+> +	return 0;
+>  }
 
-base-commit: 6e68a205c07b3c311f19a4c9c5de95d191d5a459
--- 
-2.49.0.1101.gccaa498523-goog
+I can see how this function is written to service as two purposes,
+trying to get rid of pcp ref of a folio and split a folio (to avoid
+the extra pcp ref from failing split, lru_add_drain_all() is
+called before split). Hope it will be refactored later.
 
+>
+>  int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv=
+_cb_header *uvcb)
+> @@ -394,7 +396,7 @@ int make_hva_secure(struct mm_struct *mm, unsigned =
+long hva, struct uv_cb_header
+>  	mmap_read_unlock(mm);
+>
+>  	if (rc =3D=3D -E2BIG || rc =3D=3D -EBUSY) {
+> -		rc =3D s390_wiggle_split_folio(mm, folio, rc =3D=3D -E2BIG);
+> +		rc =3D s390_wiggle_split_folio(mm, folio);
+>  		if (!rc)
+>  			rc =3D -EAGAIN;
+>  	}
+> -- =
+
+> 2.49.0
+
+The changes look good to me. Acked-by: Zi Yan <ziy@nvidia.com>
+
+--
+Best Regards,
+Yan, Zi
