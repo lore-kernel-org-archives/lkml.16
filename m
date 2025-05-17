@@ -1,149 +1,171 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9800B38DDB
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7630433D9
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 15:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747493641; cv=none; b=BGDG+2mAHGgczo8M/5toeyPtMi6LbQ0PErbDiIXMVgxcd5yz8pSpJuIRY0PwCQxEUQyL5KP6GYcUm5ddEsEqMpcc3gIaP3wetu6/X8AgLYNZ+TIJHPh0JhQVFBPxoA/JezigdZ3H0o1pTOa/Yx9KVCexv59vFrdHLZequsejN2E=
+	t=1747494187; cv=none; b=nceZWpi9OY3BfVxh6kLWp5rMkHzlOLJbwK0JSeiBZNuwpra2qskDjOX74BSf4vq7+h9uO2KcWk0WwyFQA9hkqzSO4bLVOossqIkAMVQyAK3+zK1gy5qpFe/gfUMoK3hkEBKQoafnBB18dd8NbnBiRjUvrGdwoNt04C0zE8tf/tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747493641; c=relaxed/simple;
-	bh=cXMPqTXmSg3A8q4/lexSQeKGv7Eq/skAQeXYIDOSZKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H48OQqyw2xTpK0kF45KenIG21cSVnRJp5drWy2CSdHJXQyyoNtO50Qot4G8Il87V4xMf2VVJQYmF9tHS1/2WiGjmA2TuKkzeXUZyn78M0l+DsIktWBCsJVP3aSg/A0oPreVLrpqcb4zQgS/uchHwQh1c8tKHVc2PRMj4fHf0ufU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=o/S121zr; arc=none smtp.client-ip=212.77.101.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1747494187; c=relaxed/simple;
+	bh=0I1eiVOJEdVLLXIohuqFusEWQMPeVi5Dp73/GaN/bZ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C6CBLF9Il68Cnfs782kckM7bMnEvFYE6hCjzbT9ks91psSwQ/8PKLvmaZ3P6XMlJ+hEt3HDTAcDQrmLKRgBzfauBfE/TZrwwJ68eQtwjprVfW5qc1PHxDUBUA9pnky1a2sZ4kkwegQHot9ICFzBPhEhOXO444yAU24A71SveyFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=K4490URf; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="o/S121zr"
-Received: (wp-smtpd smtp.wp.pl 35466 invoked from network); 17 May 2025 16:53:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1747493634; bh=h56n9EjT24/ca+cjGGEx6B8lTas1EKvnunog3UGR0TE=;
-          h=From:To:Cc:Subject;
-          b=o/S121zrHyMZmR5wlV6RIf/tnaIlsf2C8/kf0ajc8VaiUkd5M+CcDGLqabNoINkzt
-           GLU5AaUnvqDoI8FtuAoRRHmMbVPjICsUXALnxwANtmNblZcCh8t0LrCcYYSNGofH3j
-           RmMYFZXIt3MCMcnBIGww9Et4RXFqRNGs2jg+sRYHe/3NLGewKBPyNolzHMmgtwwwvX
-           Rj3q9lKv+hU1NpR7uLG8DELcXFI7TBJWTaGMqYwp9PgndnYtgRYtZN1oX9vW/6JIxS
-           zBwernAIAk3BxjBYxsC4Mgl0WPnD7XM/IPvVztwE+E39NO7plEZExQjlWlSTlPzMXm
-           F3R4detOERQng==
-Received: from 89-64-9-114.dynamic.play.pl (HELO localhost) (stf_xl@wp.pl@[89.64.9.114])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <pchelkin@ispras.ru>; 17 May 2025 16:53:54 +0200
-Date: Sat, 17 May 2025 16:53:53 +0200
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
-	Alexei Safin <a.safin@rosa.ru>, lvc-project@linuxtesting.org,
-	netdev@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] wifi: iwlegacy: Check rate_idx range after addition
-Message-ID: <20250517145353.GA138457@wp.pl>
-References: <20250424185244.3562-1-a.safin@rosa.ru>
- <20250427063900.GA48509@wp.pl>
- <d57qkj2tj4bgfobgzbhcb4bceh327o35mgamy2yyfuvolg4ymo@7p7hbpyg5bxi>
- <20250517074040.GA96365@wp.pl>
- <hrpy3omokg5zvrqnchx4jvp26bvfgdrashkmrjonsyz5b64aaz@6d5kn7z7x73q>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="K4490URf"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70ca772985fso13734117b3.1
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1747494185; x=1748098985; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6NTpCRL9xhCjiiet8qAMOfllcsVau1k8+ucYSc+O5KM=;
+        b=K4490URfks6tr9jn8LqvKaTG0G3arWwIyUz/hYiwUHy5vP69Uk/3qdDOSbzm8zCVmW
+         oElnbeUeKqdv8DBESWoFm8cCLrcRnoe71LeOpOlF6NxaQybDTBf2HL2pm7DorY6SWMc8
+         M7RGF5bGgDbi42iyjYbaYMUZ+/UtD2iB2CDIMVbgEKOrhVw0QDlgC1hqZvwpvSA+B/n/
+         f+4xVtzk6vqX1PHA0/g2gzNPxksXtM1EutFARSBniMpMYifo9mqnF+U8OLaDIcBdyXra
+         cUjiLfghFY5Bf1WPqRxBYcL/Ng/MPVBKbIp+UG/30/Ce9YXnvHMCYvD4RFN/44fJXcY3
+         8rcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747494185; x=1748098985;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6NTpCRL9xhCjiiet8qAMOfllcsVau1k8+ucYSc+O5KM=;
+        b=hCRCNy+wkuRMt2Gle1Hwni2SsFEW+3S4GnCaWeasSzu99jOf4MtEjL1NWFmyoil7f5
+         Ka24/tM896ik1TvEhVss3+Buu3zalq71lMz0PQX4YNLQzGjQ6rjC3LhJAwJFT4PDjMKg
+         JNOpFe9BBsSoC/6T+u+Y0KcfCXjcELis6Wu7JgCeOTDYWZv2sBuEOiyegdPzd37WXKqn
+         W2cZ7CZbLpz8TbuklACl37jT2z6L4Xzw25kj7wUOCow0MboF5erkcvxUUu4fNpCIf69M
+         41+JHmvLvWVWzZ3LEHDP6ngF37uwvUEpdq5MP0HooMbP763NEzV8htl69HKLalmyBSPh
+         P8eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWhr+lHRTW0zi3aTpZvsjMcP2WXGIdSISgPJRFwlPpntFZYPgtnYyurNx8ReTo4+AD0XKDhR7yU8lUSE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH+Ry8Yhra7l1VNVqRjuP9CqFSkj3zogyYQAAx8dBGUp4dSUlM
+	WMwzReLW6d8TiZLGz9TLwl8twei7OT7Kpj6LZsVGnd82wOqGREVz5GhRNyAq2p704llOkRlTi5o
+	ZehmWgU6Yf2vzpCydlUga08/VzL3wkKTMOEWrp4xD
+X-Gm-Gg: ASbGncsOS8ny9tizhN4FTfWUUYD6y1wPEDK/tCEf80l8+4mn9nnYhZ2HLTRwd26Yf6k
+	m9oLQWwObPQvsdsPIdPFUmVlHZn+MU3AUO6J1YCn43/umKpXqhooMWATQGA7Qp9uRR/T2WsoBKa
+	cjCHd/Cl6exiELqrlkospAm89O68rh/uFh
+X-Google-Smtp-Source: AGHT+IH4cvXZ2A6B3NQOnryIolvKUjfmtGf2pZQLNvPvX7nedF6oJ2mP2HSmm3dkkvdcM65QuaIOMlI3AMimnH5TpLo=
+X-Received: by 2002:a05:690c:3749:b0:70c:b882:2f3 with SMTP id
+ 00721157ae682-70cb882052emr47413877b3.4.1747494184512; Sat, 17 May 2025
+ 08:03:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hrpy3omokg5zvrqnchx4jvp26bvfgdrashkmrjonsyz5b64aaz@6d5kn7z7x73q>
-X-WP-MailID: 97996bdff59639d864b2fefc20139b51
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [8UNh]                               
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+ <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+ <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
+ <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
+ <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com> <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
+In-Reply-To: <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sat, 17 May 2025 11:02:53 -0400
+X-Gm-Features: AX0GCFuTvPgKKVsi_C1ZZBN1jNV8jcEHmfkcEtykXlcuzLm0gL1ZiUersRDfwfQ
+Message-ID: <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
+	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
+	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
+	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
+	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Fedor, thanks for review,
+On Fri, May 16, 2025 at 7:49=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Fri, May 16, 2025 at 12:49=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> >
+> > I think we need some clarification on a few of these details, it would
+> > be good if you could answer the questions below about the
+> > authorization aspects of your design?
+> >
+> > * Is the signature validation code in the BPF verifier *always* going
+> > to be enforced when a signature is passed in from userspace?  In other
+> > words, in your design is there going to be either a kernel build time
+> > or runtime configuration knob that could selectively enable (or
+> > disable) signature verification in the BPF verifier?
+>
+> If there is a signature in union bpf_attr and it's incorrect
+> the prog_load command will be rejected.
+> No point in adding a knob to control that.
 
-On Sat, May 17, 2025 at 03:21:03PM +0300, Fedor Pchelkin wrote:
-> On Sat, 17. May 09:40, Stanislaw Gruszka wrote:
-> > Move rate_idx range check after we add IL_FIRST_OFDM_RATE for it
-> > for 5GHz band.
-> > 
-> > Additionally use ">= RATE_COUNT" check instead of "> RATE_COUNT_LEGACY"
-> > to avoid possible reviewers and static code analyzers confusion about
-> > size of il_rate array.
-> > 
-> > Reported-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> > Reported-by: Alexei Safin <a.safin@rosa.ru>
-> > Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
-> > ---
-> 
-> Thank you for the patch, Stanislaw!
-> 
-> Please see some comments below.
-> 
-> >  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 15 +++++++++------
-> >  1 file changed, 9 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> > index dc8c408902e6..2294ea43b4c7 100644
-> > --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> > +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> > @@ -1567,16 +1567,19 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
-> >  	/**
-> >  	 * If the current TX rate stored in mac80211 has the MCS bit set, it's
-> >  	 * not really a TX rate.  Thus, we use the lowest supported rate for
-> > -	 * this band.  Also use the lowest supported rate if the stored rate
-> > -	 * idx is invalid.
-> > +	 * this band.
-> >  	 */
-> >  	rate_idx = info->control.rates[0].idx;
-> > -	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
-> > -	    || rate_idx > RATE_COUNT_LEGACY)
-> > +	if (info->control.rates[0].flags & IEEE80211_TX_RC_MCS)
-> >  		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
-> > -	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
-> > -	if (info->band == NL80211_BAND_5GHZ)
-> > +	else if (info->band == NL80211_BAND_5GHZ)
-> 
-> 5GHZ shouldn't be in 'else if' clause, I think. Is it mutually exclusive
-> with IEEE80211_TX_RC_MCS ?
+I agree that when a signature is provided and that signature check
+fails, the BPF load should be rejected.  I'm simply trying to
+understand how you envision your design handling all of the cases, not
+just this one, as well as what build and runtime options you expect
+for controlling various aspects of this behavior.
 
-Right, this is wrong. I thought we can use index returned by
-rate_lowest_index() but we still should add IL_FIRST_OFDM_RATE.
-At least this is how is done now.
+> > * In the case where the signature validation code in the BPF verifier
+> > is active, what happens when a signature is *not* passed in from
+> > userspace?  Will the BPF verifier allow the program load to take
+> > place?  Will the load operation be blocked?  Will the load operation
+> > be subject to a more granular policy, and if so, how do you plan to
+> > incorporate that policy decision into the BPF program load path?
+>
+> If there is no signature the existing loading semantics will remain intac=
+t.
+> We can discuss whether to add a sysctl or cgroup knob to disallow
+> loading when signature is not present ...
 
-> 
-> > +		/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
-> >  		rate_idx += IL_FIRST_OFDM_RATE;
-> > +
-> > +	/* Use the lowest supported rate if the stored rate idx is invalid. */
-> > +	if (rate_idx < 0 || rate_idx >= RATE_COUNT)
-> 
-> There is a check inside il4965_rs_get_rate():
-> 
-> 	/* Check for invalid rates */
-> 	if (rate_idx < 0 || rate_idx >= RATE_COUNT_LEGACY ||
-> 	    (sband->band == NL80211_BAND_5GHZ &&
-> 	     rate_idx < IL_FIRST_OFDM_RATE))
-> 		rate_idx = rate_lowest_index(sband, sta);
-> 
-> so RATE_COUNT_LEGACY (60M) is considered invalid there but is accepted
-> here in il4965_tx_cmd_build_rate(). It looks strange, at least for the
-> fresh reader as me..
+As mentioned earlier this week, if the BPF verifier is performing the
+signature verification as KP described, we will need a LSM hook after
+the verifier to serve as an access control point.  Of course that
+doesn't preclude the addition of some type of sysctl/cgroup/whatever
+based access control, but the LSM hook would be needed regardless.
 
-Indeed this is strange. I'm not sure why those checks differ.
+> but it probably should be a job of trivial LSM ...
 
-Anyway for the rate_idx in il4965_tx_cmd_build_rate()
-for 5GHs I'll just add additional check like below:
+Exactly.  If the LSM is simply verifying the signature validation
+state of the BPF program being loaded it seems like an addition to IPE
+would be the best option from an upstream, in-tree perspective.
+However, with the post verifier LSM hook in place, one could also
+supply a BPF LSM to do something similar.
 
-	if (info->band == NL80211_BAND_5GHZ) {
-		rate_idx += IL_FIRST_OFDM_RATE;
-		if (rate_idx > IL_LAST_OFDM_RATE);
-			rate_idx = IL_LAST_OFDM_RATE;
-	}
+It sounds like we are in agreement on the desirability and need for a
+post verifier LSM hook; we'll keep moving forward with this idea
+despite KP's earlier objections to the hook.
 
-This patch should be dropped.
+> Note that the prog verification itself is independent of the signature.
+> If prog fails to pass safety checks it will still be rejected
+> even if signature is ok.
 
-Regards
-Stanislaw
+There is plenty of precedence for a kernel subsystem rejecting a
+security relevant operation before a LSM access control hook is
+called; the reasons range from discretionary access control issues to
+simple matters of resource exhaustion.  The possibility of the BPF
+verifier rejecting the program load due to verifier constraints is
+reasonable and expected.
 
+> We're not going to do a verifier bypass.
 
+Agreed.  I don't recall anyone ever suggesting that as part of this
+recent BPF signature verification effort.
+
+--=20
+paul-moore.com
