@@ -1,127 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51005145355;
-	Sat, 17 May 2025 20:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1176C2C6;
+	Sat, 17 May 2025 20:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747513379; cv=none; b=Lm38vcQyNQ/jF551POx05rMayeoBZ5X7WHOh4K0JGf2pFP735okU10XS+J2G69WiXYBvKSdyJ+RvR4m6wRLoqS51TLUXoJDRx7SNXzYSDRH9V8iWypNP85zMoS2INDyzJiSvjM8Whn1HeXZTYdiAoFeGTYXNhHI2ARQ7LjA60aA=
+	t=1747513529; cv=none; b=naswXoyl8cV7WPh6cgoyc0giBNgWDP/8B3sxu4anUdevkN8cgppV60+zM/C2XBaOyQzlfVy4iCF4YKbUyC570oKMyywY6P3cyLyuLqTHhGxk0cQLbJGr9UPN9hL96k9+UTWDF31gGhzWbE5XLClYuStszQ6iU8l7gFPfU+nMFxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747513379; c=relaxed/simple;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=s2xjg8CzgbOvHlbmOtY5yJiimjYZTfE3mDtbjq6nX6u16IeLDMavnibwaDqElw5GRGwwniGOqpc6lIdjlJ4gfJ1XZFZ4ZmgeS7yJimfB+TXXxqQf4ilsHXHGEk8j2pr7AfbUiefa1zJyrc6N60u7O6M7LLqv6YjazB0cX6seTio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qqm9uzjH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747513529; c=relaxed/simple;
+	bh=q/+LJzWV//jJOpKwrMia7KlW4iMjaB4bjxmcmW7qiw0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kqQ3BLq7FZoC/cKN5JDxPi9Z/BDCZuBvaixavXXEtRUPvAf0nOPhpYiDbt2OYXJHnU6HmQp0CXkP0f+mkJOje0F4IiMywMQX6jZERp0PaS0Uo9Y2dVv730nJqYl2qekgAMMF/I6nLf4swpDY0PV1L3Y7SxrBthF1qLI9UN0DUeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHN5K+e3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qqm9uzjH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E558C4CEE3;
-	Sat, 17 May 2025 20:22:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHN5K+e3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E201EC4CEE3;
+	Sat, 17 May 2025 20:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747513377;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Qqm9uzjHX3E3Tkba0SIwo+dHYvchdHyrS9w0HmsSqMTrFW33pa6KOeJ4Iea68h2eU
-	 D6TbH7GEuMGIgSLA6VZ5O4+UVvE/wnR/mLIszDIMlLqE+yqVgyVfhz1KkrJCkl7cML
-	 YcMyTYJhBbZN7BWxuUOyEwfgBsymCbRM4La4MemLak7ZDAOEDFvryhDMZEq0a85j5B
-	 IZ+3S5vmFLAuo7GCDc8X2KnIc+y3dLq4ZbpVCs7Y4Bptl1LNeByDLCweulplxso4R1
-	 PZOTvIez9c5CzOWftnhE4zP4xw3Ougnu0YlWSe2ocoXUXkdfc9mmK+3f8z3hLGbJx4
-	 FQtmHkJy2Rk9g==
-Date: Sat, 17 May 2025 15:22:55 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1747513529;
+	bh=q/+LJzWV//jJOpKwrMia7KlW4iMjaB4bjxmcmW7qiw0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FHN5K+e3zuEN/BDoe9RC8m3AEMhJKFPcFc2TF8QUouNHFZ4jPXTmHB6dJM0nw7zN+
+	 HdS9ZZGfCiaFPrf1rbHbkiIxPuDkhWD1UQ8xUNt4djb2gZiPhge0uT/cwP8wCz0sfE
+	 K1oTJGXqfprP2UU229Nl6tSNYxvlPfCkiApc1AxuPJvi1eBp47dAKzKiP7E5rjiefW
+	 lqe4sXol5lzO+WnM7FJW+KkVUy+rNrBzpZTZ1Gjcp1nD2MiNK+eWam0Z+rZYyMoZdn
+	 fjnhkwL7azFvIlqNg2Ckke0W10sOi8dIJGlPB9Gi5uqCQUI21nSuA6r8waTyjyoeeG
+	 VOYL0e5stpqMw==
+From: SeongJae Park <sj@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Usama Arif <usamaarif642@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	shakeel.butt@linux.dev,
+	riel@surriel.com,
+	ziy@nvidia.com,
+	laoar.shao@gmail.com,
+	baolin.wang@linux.alibaba.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: Is number of process_madvise()-able ranges limited to 8? (was Re: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the process)
+Date: Sat, 17 May 2025 13:25:26 -0700
+Message-Id: <20250517202526.39730-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <005161f7-d849-41a9-8350-f56e52c49e7e@lucifer.local>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Oded Gabbay <ogabbay@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
- linux-doc@vger.kernel.org
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
- <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
-Message-ID: <20250517202255.sVeMpQEN6eXgQF42B9DyhWECFJsm_q51Ytkhc-nMJSs@z>
+Content-Transfer-Encoding: 8bit
 
+On Sat, 17 May 2025 19:50:34 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
+[...]
+> Let's keep this simple - I'm just wrong here :) apologies, entirely my
+> fault.
+
+No worry, appreciate your kind and detailed answer.
+
+[...]
+> Anyway, let's dig into the code to get things right:
+[...]
+> So - this confirms it - we're fine, it just tries to use the stack-based
+> array if it can - otherwise it kmalloc()'s.
 > 
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->   IOMMU)
-> - Several misc. fixes from Sebastian Reichel
+> Of course, UIO_MAXIOV remains the _actual_ hard limit (hardcoded to 1,024
+> in include/uapi/linux/uio.h).
+
+Thanks for kind clarifications.  All your explanations perfectly matches with
+my understanding.  I'm happy to be on the same page with you!
+
 > 
-> v3:
-> - Split register block in its constituent subblocks, and only require
->   the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
+> The other points I made about the proposed interface remain, but I won't go
+> into more detail as we are obviously lacking that context here.
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
->  1 file changed, 162 insertions(+)
+> Thanks for bringing this up and correcting my misinterpretation, as well as
+> providing the below repro code, and let's revisit your old series... but on
+> Monday :)
+
+Sure, and no worry, take your time :)
+
 > 
+> I should really not be looking at work mail on a Saturday (mea culpa, once
+> again... :)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I hope your remaining weekend be calm and uninterruptable.  Keeping you not
+burned out is important for the community :)
 
-yamllint warnings/errors:
+> 
+> One small nit in the repro code below (hey I'm a kernel dev, can't help
+> myself... ;)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
-	False schema does not allow 3
-	1 was expected
-	3 is greater than the maximum of 2
-	hint: "minItems" is only needed if less than the "items" list length
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
-	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
-	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+To me, being a kernel programmer rather than a user-space c code programmer is
+a good excuse for asking to be generous to my user-space bugs ;)  Thank you for
+your kind comment below, anyway :)
 
-doc reference errors (make refcheckdocs):
+> 
+> Cheers, Lorenzo
+> 
+> >
+> > Attaching my test code below.  You could simply run it as below.
+> >
+> >     gcc test.c && ./a.out
+> >
+> > ==== Attachment 0 (test.c) ====
+[...]
+> > 	ret = syscall(SYS_process_madvise, pidfd, vec, NR_PAGES,
+> > 			MADV_DONTNEED, 0);
+> > 	if (ret != MMAP_SZ) {
+> > 		printf("process_madvise fail\n");
+> > 		return -1;
+> > 	}
+> 
+> To be pedantic, you are really only checking to see if an error was
+> returned, in theory no error might have been returned but the operation
+> might have not proceeded, so a more proper check here would be to populated
+> the anon memory with non-zero data, then check afterwards that it's zeroed.
+> 
+> Given this outcome would probably imply iovec issues, it's not likely, but
+> to really assert the point you'd probably want to do that!
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+Good points!  I once considered making this test better and posting to be
+included in mm selftests, but found no time to do that so far.  Above input
+must be very helpful in a case that I (or someone else) find a time to write
+such process_madvise() selftest.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Thanks,
+SJ
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+[...]
