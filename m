@@ -1,84 +1,160 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EFF257D;
-	Sat, 17 May 2025 20:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A521A1A8F84;
+	Sat, 17 May 2025 20:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747513963; cv=none; b=ZnCfv5WuW7rBVqg7tysOlMrASLnB71JIySCGN4ygydQUWZYpg7H3N0ZdC3hoQV2ENb54MVZnocSPwFCq+fDQ66gpDVmDErU8qVhGbXNV8LUFnFDOtdRi8t3Yd88FihKUl2Yr8Eo/WMQKdwwThZVIqd+dtjXXYDISUmdck95veqE=
+	t=1747514122; cv=none; b=V94lmHi2SEy7Xaz1NbbK+UNiHOtHZzM/KzQnwpTyYTMtQl8GJDDeyxfZiQAPoKqRIQWV9hDTvpf5o6/O3B3RexxJTARpzXoJa9qSYxN8LWpl52ibzvkPXw+uvYF8Gviia5dpDAc0D1p9t8YchLh0bYEP8sIVuC0sTdvJTZNyWf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747513963; c=relaxed/simple;
-	bh=qIIxQ9sVCU43yU/3zZ4J8T6U0kzGxVTjqQXqVz/70p0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ddy+ceuHyWjgwNnl+xWtQJOcz9kpUGT2OKtQ1bhdJQn/Ia/ITgUGkGJkZusN7YznXR/LEgCvCbKAOxXTZVrahSwa4Aw0AqR6wKokUsSg0UPnn7Cwj3OOa5hnFOi6d9QEYNj4SQOSpq7olby6G97WknWUtM0iu+oxuge2AiHZ0QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a35b7e60cbso1834044f8f.1;
-        Sat, 17 May 2025 13:32:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747513959; x=1748118759;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gkpn3xaIBbZi1bxxpLiN+y0w6dCFyLFgmm6rxbmcas=;
-        b=dw13LKxKwBRv7l374NgdW0tBwU7hd9a1LFeQFivwFsRlMTMvZyJeZ6clSqyTFu20dQ
-         UYEygKNvC00+sOenaNVCPh5Wu5OLKuRE5p/niKSF2B3lVIsjCv9vuqllSQFPU39J99+y
-         J0yNL7eWbrjQ2u+/zb2SVZYWilKwqn892KDpVfJA77PznzzzNdVrLd14Md/l5Q8TJh6+
-         X8xuTajmCYdHDf2H3L+9g3Iac0abL8/pehjh3vFlk6dLEJDlulh6r4CNUmanAZrow2QG
-         Qjk1G3cEubAy5Kj/S4RMHMoKRXeNtM5aJPwFzNo3w4zeH+fJTKYT+HAeKY+Ercj4VhV5
-         rcjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIMf4d3YwcTpHo6ibU63lzVtVSV9FMp4sqhoQZLLtQx5nHfi5/Sdi/HYUQXZcoSlXRa8pl93ZsqNJJtw==@vger.kernel.org, AJvYcCVKjkiETB+Z1qEeuNUhxn2ogOBbwBgA4H5OnE8+sZsd2lqkjaXjwQTq4YuTsJqRz01XvBOvBOJVRC2eXYo=@vger.kernel.org, AJvYcCXpGlObklkNCnlRDgjc/ID6mABV/Bc8nZniqCtsZmG2I2iz+Gl2qWOibj0kpB9PIOGm/4E0xMEh6Szj8Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSeRrCiWpdluMsEMt3o8z/dTe7vjE4JuVWHtxV8ecoEOSxyC4y
-	PJmRqHt3Ae9GIiKhm7cPoqCtcB3k0IAnEw7ke4sEQErFJUSmRTMDo43kAgBuqQ==
-X-Gm-Gg: ASbGncu0FfFxGUDVusEoZYmxHUdSfpEvYFoagWK/Eo6Dg7vL3RK89Mh335M1En3qHns
-	3ZDP4mpct3Rf5jzaGxXaDHSUufxZRqdQypKxG5XWE3/mU71JdLkCv9WqR1ve8MvjSZPnX6gR8ST
-	Qt4py/OuZ+RsK4KMJwV85zmTzKo43qRVRjIOw6ouH+uoVLQyiCobxA9xCqhsvuyD1WTcaOIQ8a9
-	yb7SCapSdMqknxhGt6qF/EWXPYR3YmfUUwh6KkGyW6snuM/33LcpD9FCNW1RcXMwPj3XKzl3co6
-	IRE1HDCSxmlYTfUm9i61bt3F6DXbWYK75kksPclefugyciV3ltKLjNAWBv4JDUDRrtNcoUMzit4
-	snQ7/oufY
-X-Google-Smtp-Source: AGHT+IF4nmgt7DDatNcx/D0XJAtOOMwNnYCOY/5VUcm/4MWcQgU0UcD5GNCZqqVa1d3GOfAzhn0v3w==
-X-Received: by 2002:a05:6000:4010:b0:3a3:6b07:bdcc with SMTP id ffacd0b85a97d-3a36b07beebmr351310f8f.15.1747513958838;
-        Sat, 17 May 2025 13:32:38 -0700 (PDT)
-Received: from [10.100.102.74] (89-138-68-29.bb.netvision.net.il. [89.138.68.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd515bb5sm79959715e9.23.2025.05.17.13.32.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 May 2025 13:32:38 -0700 (PDT)
-Message-ID: <ca77a49b-e531-4ebe-abfd-c2f962910943@grimberg.me>
-Date: Sat, 17 May 2025 23:32:37 +0300
+	s=arc-20240116; t=1747514122; c=relaxed/simple;
+	bh=A1adUe+cYOvArGNE/hSK4EzFP4GP4YO5FYj9H98ZZGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0RsxcR6owJAf0IrqH1PbPa/dkeUHG87SzqBr0O2sdS1p0YicnyyEx9VMJ7Y3yJOBap8FVBivVkDFI0jyRcjufWib/tCDQFGhNLbk30qlX/ionRSrOypRw5p0SuUZSkdZEzqAN1IgIM7ZqBYVNrH9coHdY0KURtxcauCpyLLPjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l+kQUxFO; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l+kQUxFO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747514120; x=1779050120;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=A1adUe+cYOvArGNE/hSK4EzFP4GP4YO5FYj9H98ZZGQ=;
+  b=l+kQUxFOF7H1XamjgfipG/v+EmIA4uqrrPtcyeH9+RZMPRjfPHTth5K+
+   nrsisM4lBfzAA+FkDju4d4NwEObmus/5NtnGCsJYqqRgyQCrxBBY7SJf2
+   7nc5EwTa7O+NDANIlHG+IxgRc7nj49NDmaJx94Jw32n6z9iXqdBFNdrY4
+   pRzO7LV87br1MPfEzRSNBi8LnqjqMUjCCrwHOpImrEny1NTB2dSxj2EEe
+   lRBfuJ1ZbJzMrXhYDaM1amKP+jwD1JJ3SMeSn7SdCMeh4q+aNBFtz2gJi
+   q0wIB+9c8MU6RECWvITcoo06XZubGJhHkU5Dxl92piBlRjLgVdMNYsMQd
+   A==;
+X-CSE-ConnectionGUID: /RjZoGvsQGaiKHiwOzJUYw==
+X-CSE-MsgGUID: gqbxTUJbSYmIBUGFuSGtYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="71961248"
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="71961248"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 13:35:19 -0700
+X-CSE-ConnectionGUID: KuzKdv50RgmVX84J2pgSQg==
+X-CSE-MsgGUID: SE9CoXYGRI+xOotZOC8XOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="139402611"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 17 May 2025 13:35:17 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGOFW-000KQF-0H;
+	Sat, 17 May 2025 20:35:14 +0000
+Date: Sun, 18 May 2025 04:35:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, ajay.kathat@microchip.com,
+	claudiu.beznea@tuxon.dev, kvalo@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+Message-ID: <202505180440.dyQDHWJJ-lkp@intel.com>
+References: <20250516083842.903-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
- skb_copy_and_crc32c_datagram_iter()
-To: Eric Biggers <ebiggers@kernel.org>, Christoph Hellwig <hch@infradead.org>
-Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Ard Biesheuvel <ardb@kernel.org>
-References: <20250511004110.145171-1-ebiggers@kernel.org>
- <20250511004110.145171-10-ebiggers@kernel.org>
- <aCbAsCkTPMNE6Ogb@infradead.org> <20250516053100.GA10488@sol>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250516053100.GA10488@sol>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516083842.903-1-vulab@iscas.ac.cn>
+
+Hi Wentao,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on wireless-next/main]
+[also build test ERROR on wireless/main linus/master v6.15-rc6 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/wifi-wilc1000-Add-error-handling-for-wilc_sdio_cmd52/20250516-163959
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
+patch link:    https://lore.kernel.org/r/20250516083842.903-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250518/202505180440.dyQDHWJJ-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505180440.dyQDHWJJ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505180440.dyQDHWJJ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/mmc/sdio_func.h:11,
+                    from drivers/net/wireless/microchip/wilc1000/sdio.c:8:
+   drivers/net/wireless/microchip/wilc1000/sdio.c: In function 'wilc_sdio_read_size':
+>> drivers/net/wireless/microchip/wilc1000/sdio.c:792:32: error: 'struct sdio_func' has no member named 'devm'; did you mean 'dev'?
+     792 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+         |                                ^~~~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/net/wireless/microchip/wilc1000/sdio.c:792:17: note: in expansion of macro 'dev_err'
+     792 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+         |                 ^~~~~~~
+   drivers/net/wireless/microchip/wilc1000/sdio.c:801:32: error: 'struct sdio_func' has no member named 'devm'; did you mean 'dev'?
+     801 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+         |                                ^~~~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/net/wireless/microchip/wilc1000/sdio.c:801:17: note: in expansion of macro 'dev_err'
+     801 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+         |                 ^~~~~~~
 
 
->   	if (queue->hdr_digest && !req->offset)
-> -		nvme_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
-> +		*(__le32 *)(pdu + 1) = nvme_tcp_hdgst(pdu, sizeof(*pdu));
+vim +792 drivers/net/wireless/microchip/wilc1000/sdio.c
 
-I'd move this assignment to a helper nvme_tcp_set_hdgst(), especially as it
-has two call-sites.
+   774	
+   775	static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+   776	{
+   777		u32 tmp;
+   778		struct sdio_cmd52 cmd;
+   779		struct sdio_func *func = dev_to_sdio_func(wilc->dev);
+   780		int ret;
+   781	
+   782		/**
+   783		 *      Read DMA count in words
+   784		 **/
+   785		cmd.read_write = 0;
+   786		cmd.function = 0;
+   787		cmd.raw = 0;
+   788		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
+   789		cmd.data = 0;
+   790		ret = wilc_sdio_cmd52(wilc, &cmd);
+   791		if (ret) {
+ > 792			dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+   793			return ret;
+   794		}
+   795		tmp = cmd.data;
+   796	
+   797		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
+   798		cmd.data = 0;
+   799		ret = wilc_sdio_cmd52(wilc, &cmd);
+   800		if (ret) {
+   801			dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+   802			return ret;
+   803		}
+   804		tmp |= (cmd.data << 8);
+   805	
+   806		*size = tmp;
+   807		return 0;
+   808	}
+   809	
 
-Other than that,
-
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
