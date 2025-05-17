@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9B41E4A9;
-	Sat, 17 May 2025 11:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFBD1E89C;
+	Sat, 17 May 2025 11:21:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747480819; cv=none; b=rPsMPlPUDPoHddPj40p9OfY9dWvskqvN9J49rfh48Svuj3IO0N3IAq213sQbKLqfRerVyIWGr7SU5LQuP9iPhL/pVGovBbJlkIM3bqc5Az3BvMDt1XPg21AKS6rsp17EzkOi0eJrX2XNh8PFe2UwIMhy2klkGQ5X+839bGx8ej0=
+	t=1747480891; cv=none; b=rvuD7NIqGKZELxB/i19B4d71hvbQ+v2G4eOdxFhA/3mwU58gCatjMO09KpuXLBZBHCp1j+CW9c2G7su/5Mv4EAUaJDbUCw9pDA4snO58Wlj9YKisoN2NpjIQcbcgpiPxdPzPAiSBp4qzvMddwtwiT/5AHYpmGQRhDbRxsy0yKRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747480819; c=relaxed/simple;
-	bh=H3f0gcRlbgfMYVmgHqa0rkRax47A6L3pBATHb78Mqpw=;
+	s=arc-20240116; t=1747480891; c=relaxed/simple;
+	bh=kOyw1yGCZKXqS0enEjrFroJl9l63Whe1t9gzJ2KGrgE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UMPANI7pzMDzerVHt6w9ZQmcX7Tq6XbTVkse281P/60lSRNl9+pSx1MPKccQJnr0J79W5i76+ZfNcnxrU4QU/qmwDXgQvUer3/9kdCBUBeUyxEyMDmZfJM/RWOdwR0Tzhv4KEFHlNlOhsyxeeVSBsabMzECTWIWGJyA/TY6Pd68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIMu3lUz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GSp2rRU7N0PAO24fbO5cq4Aa7AaEDp4LIZJjLASRbqWdgOK6LCPgdnmvJhMdySsYhkDd7yCHXUPeH/0CaNtBMCQ5Cf99tyIjaYICOVReOn2pGPr9ZrJ1Vl3aBY70nJteRr7AO47mmxaMbInOtErqFUN0KGKlEfblGOTrzZJXyOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUiuTXNf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIMu3lUz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8769C4CEE3;
-	Sat, 17 May 2025 11:20:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUiuTXNf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D37C4CEE3;
+	Sat, 17 May 2025 11:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747480819;
-	bh=H3f0gcRlbgfMYVmgHqa0rkRax47A6L3pBATHb78Mqpw=;
+	s=k20201202; t=1747480890;
+	bh=kOyw1yGCZKXqS0enEjrFroJl9l63Whe1t9gzJ2KGrgE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BIMu3lUzI9IXDR1HHiWgO2o8Tjsb+eQuTR9O3HWtaUrlBbM+tnAI0JMVLv18Ik20u
-	 I7ugAYGNN2Jc0UC41obrutYUhz1/6thxaMu6okGDlA04kIEUL3Ew9aQ5UKN9ergFmA
-	 CLI296vYWyrogjuGGgN8aim2I1b//y2auTQhd9N4BqAo4sFyIveDM2+DMb/HwH/ACN
-	 FkTUNkm4W+7mx8L3Q78fyRyQ802VGo4EhCbbfSo846H/67Fjs+Z4I8to4i6zvwiMLM
-	 KDDmVfyjv4QycjqjzDd1txqRunYkViT9ZBMUtSJ5C+Nq1nRWGDBhAJ78DHZPCvwdql
-	 Nxbvm25YisElA==
-Message-ID: <f164a44b-331d-4f9b-825a-5ebc8ee47f24@kernel.org>
-Date: Sat, 17 May 2025 13:20:14 +0200
+	b=AUiuTXNfR26P3ywB1GnpZAIfJ8eS7yplnu/YdtRARC51uFGbjhDHYYuHavb/o5ZX/
+	 /Gy6UAkyJ22xtXWU++dmcdA1ouk/cxp1T8woXiu9LWoXSZ0Svq0YZ2FWlJ6BorAuVC
+	 LRlQAw/bNE7KV84wiTwN+JtNcIkOj5j6zVWnw5jKF0PuE2LBiyOhHHjOHr6A2cq4li
+	 MbFSiJ8Srk0LK6Vu8jx0LbzHmZ2ES8goxOvXqIvO3wqId1mYtXPytOxHLjGKSCgCdH
+	 IGo3StovtWdiz396lPiEcNqsXRpclwX6h1OnxkJLXwj0osHrpwK/OkI8dCJRkHcDRT
+	 niCyD+Th6Gnlw==
+Message-ID: <62bd6757-c4d0-42c1-a76d-abea18a8a55e@kernel.org>
+Date: Sat, 17 May 2025 13:21:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/9] power: supply: pf1550: add battery charger support
-To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>,
- Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>,
- Robin Gong <yibin.gong@nxp.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-imx@nxp.com, linux-input@vger.kernel.org,
- Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
- Robin Gong <b38343@freescale.com>, Enric Balletbo Serra <eballetbo@gmail.com>
-References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
- <4f51191483189a69072fe08c5609048fa14b39b1.1747409892.git.samuel.kayode@savoirfairelinux.com>
+Subject: Re: [PATCH 1/1] Fixing a minor typo in YAML document
+To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>, heiko@sntech.de,
+ briannorris@chromium.org
+Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
+ linux-kernel@vger.kernel.org
+References: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,56 +87,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <4f51191483189a69072fe08c5609048fa14b39b1.1747409892.git.samuel.kayode@savoirfairelinux.com>
+In-Reply-To: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/05/2025 20:58, Samuel Kayode wrote:
-> +
-> +	chg->psy_desc.name = PF1550_CHARGER_NAME;
-> +	chg->psy_desc.type = POWER_SUPPLY_TYPE_BATTERY;
-> +	chg->psy_desc.get_property = pf1550_charger_get_property;
-> +	chg->psy_desc.properties = pf1550_charger_props;
-> +	chg->psy_desc.num_properties = ARRAY_SIZE(pf1550_charger_props);
-> +
-> +	chg->charger = devm_power_supply_register(&pdev->dev, &chg->psy_desc,
-> +						  &psy_cfg);
-> +	if (IS_ERR(chg->charger)) {
-> +		dev_err(&pdev->dev, "failed: power supply register\n");
-> +		ret = PTR_ERR(chg->charger);
+On 17/05/2025 04:05, Jihed Chaibi wrote:
+> A small typo in the rockchip,rk3399 YAML document ;
+> "less then" should become: "less than"
+> 
+> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+> ---
+>  .../bindings/memory-controllers/rockchip,rk3399-dmc.yaml    | 6 +++---
 
-Same comments as on patches before.
+You not only skipped me as DT maintainer for this file but also skipped
+me as the actual subsystem maintainer.
 
-> +		return ret;
-> +	}
-> +
-> +	ret = pf1550_reg_init(chg);
-> +
-> +	return ret;
-> +}
-> +
-> +static void pf1550_charger_remove(struct platform_device *pdev)
-> +{
-> +	struct pf1550_charger *chg = platform_get_drvdata(pdev);
-> +
-> +	cancel_delayed_work_sync(&chg->irq_work);
-> +}
-> +
-> +static const struct platform_device_id pf1550_charger_id[] = {
-> +	{ "pf1550-charger", 0 },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, pf1550_charger_id);
-> +
-> +static struct platform_driver pf1550_charger_driver = {
-> +	.driver = {
-> +		.name	= "pf1550-charger",
-> +	},
-> +	.probe		= pf1550_charger_probe,
-> +	.remove		= pf1550_charger_remove,
-> +	.id_table	= pf1550_charger_id,
-And this proves that your compatible in the binding is also useless. Not
-used in the driver itself
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument, so you will
+not CC people just because they made one commit years ago). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+</form letter>
 
 Best regards,
 Krzysztof
