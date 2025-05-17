@@ -1,64 +1,105 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9012419BBA;
-	Sat, 17 May 2025 00:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C74208D0;
+	Sat, 17 May 2025 00:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747440553; cv=none; b=u56cxYKKlFFgtLmwKwQEUuciG4pcPfXMxgscww8WOZ0I/TJfpJ6UhKxLhjjopIibyBirtvq+mUXGqdKPEfcoTb1TzQ1OPafbE6NE/mGk8CRxeHRRnvhiNuWETeRnguNHXZhNQRXWaBe2vtXdcUXXm9kkZOJrbcS7xMIfyC5szOY=
+	t=1747440564; cv=none; b=AQIkjCJ2irQQqyY94sxAoFBtbRIm353vpfYOIR95PXwffRC7zPMZf4Z2VSUlni3d8Nakk8QKG05Z0BGUEcYA8iQ4rVktZ0SjrFfwSADYI/AAvMF5erzTKeFVExZBqf7WQ4y3pQ3uw6HzGYkCNuPAl4/FwvVJh0+U82KpYNLXiOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747440553; c=relaxed/simple;
-	bh=al5kiGvjKhkzIde6hJPHiGk8cI2gkxhgeE18KHgqX+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p02JYfv9FomN4lQPA0hYcC81NYOmiDwG4C6QnTYKm8g+PZH/y4ozL/xZ0GKTP9QAnRHfXwbD0eXlPhFEt+sC45xPmk3l2kCSR+POy8gcnpM+zEIBA2D5anm5tPKXo4dG147fKt1kOt21deOFuNdyZhvYDq8UU0CZ5nwavLxmzGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Ghcw6vOl; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Ghcw6vOl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ogaHJ+ryqmx1qUDpq4/M6JZujlzudYoVKKEgGRINpbE=; b=Ghcw6vOl8KGp3wgQ3pl+8w4ekQ
-	K6jJn//Heov3vpbtZj0k8rdTHxAnqHi0Th9x/pp8e99LeR4V+BdCT7fT0Me1kDmoalbPd1LGtjtvG
-	1qqj4rRkHstF+Y37J1EXhiqwvij8pbOJeu5bsi1GAWklN+I2vvPuBk7FuqFZUnQ/3YrFNjFd2OeVq
-	CxJu7/tyeTi8DwiLzpO7sSUkgRTHHN83MxYyzTnwruxAM7has+Ugn4o6HmT+uGjGRVSN7/NW6PlFe
-	2o9qp6cYjWhHSN4wjMP/+lLX0HmgV9F4Q16X7M08gRcXAm4h0iWQyo7/Vo/efBuJbzJAbWyeY9+CE
-	GvLe89EQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG56x-000000040Ua-1JZ2;
-	Sat, 17 May 2025 00:09:07 +0000
-Date: Sat, 17 May 2025 01:09:07 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	willemb@google.com, sagi@grimberg.me, asml.silence@gmail.com,
-	almasrymina@google.com, kaiyuanz@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
- sendmsg
-Message-ID: <20250517000907.GW2023217@ZenIV>
-References: <20250517000431.558180-1-stfomichev@gmail.com>
+	s=arc-20240116; t=1747440564; c=relaxed/simple;
+	bh=NMkGPhvMdLtnOgTXfdv7adUetVbKscL6KMSwnb6oMC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PBpBj5TRSS1rgm3843WoIkpSON7jv/eG7eladaHFh4tt4jgBZgrvZiRdNXrNEp2Em1TRwNn5tNbc7a/BwuRs6mR15u7kBc2B4W5VNwAmGcsPXcOnZbSCjVH1wU+ILcWuS3CynhQftzm/vdm3LliAwL/XRjElq8gZfPZWE1EEc8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zzknj5Lf4z4f3jq5;
+	Sat, 17 May 2025 08:08:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 69AC41A0359;
+	Sat, 17 May 2025 08:09:17 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1+r0ydogwmIMg--.12035S3;
+	Sat, 17 May 2025 08:09:17 +0800 (CST)
+Message-ID: <d08e698b-f217-4065-9e7c-47f647ffeea3@huaweicloud.com>
+Date: Sat, 17 May 2025 08:09:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250517000431.558180-1-stfomichev@gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: Rename the parameter of mnt_get_write_access()
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>, brauner@kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com
+References: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+ <vtfnncganindq4q7t4icfaujkgejlbd7repvurpjx6nwf6i7zp@hr44m22ij4qf>
+ <b3d6db6f-61d8-498a-b90c-0716a64f7528@huaweicloud.com>
+ <20250516235739.GV2023217@ZenIV>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <20250516235739.GV2023217@ZenIV>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu1+r0ydogwmIMg--.12035S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4fZF1kXry5tr15tFyfXrb_yoW8Wr4UpF
+	W5uFy8Kwn7J34fCFy2ya1xAryYkr4fWr1aqw15Kr1j9r909ryfKa1FqFsa9F18JrZrAF12
+	93W3tr9xWr4Yy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1veHDUUUUU==
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-On Fri, May 16, 2025 at 05:04:31PM -0700, Stanislav Fomichev wrote:
-> iter_iov_len looks broken for UBUF. When iov_iter_advance is called
-> for UBUF, it increments iov_offset and also decrements the count.
-> This makes the iterator only go over half of the range (unless I'm
-> missing something).
 
-What do you mean by "broken"?  iov_iter_len(from) == "how much data is
-left in that iterator".  That goes for all flavours, UBUF included...
 
-Confused...
+在 2025/5/17 7:57, Al Viro 写道:
+> On Sat, May 17, 2025 at 07:54:55AM +0800, Zizhi Wo wrote:
+>>
+>>
+>> 在 2025/5/16 18:31, Jan Kara 写道:
+>>> On Fri 16-05-25 11:21:47, Zizhi Wo wrote:
+>>>> From: Zizhi Wo <wozizhi@huawei.com>
+>>>>
+>>>> Rename the parameter in mnt_get_write_access() from "m" to "mnt" for
+>>>> consistency between declaration and implementation.
+>>>>
+>>>> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+>>>
+>>> I'm sorry but this is just a pointless churn. I agree the declaration and
+>>> implementation should better be consistent (although in this particular
+>>> case it isn't too worrying) but it's much easier (and with much lower
+>>> chance to cause conflicts) to just fixup the declaration.
+>>>
+>>> 								Honza
+>>
+>> Yes, I had considered simply fixing the declaration earlier. However, in
+>> the include/linux/mount.h file, similar functions like
+>> "mnt_put_write_access" use "mnt" as the parameter name rather than "m",
+>> just like "mnt_get_write_access". So I chose to modify the function
+>> implementation directly, although this resulted in a larger amount of
+>> changes. So as you can see, for simplicity, I will directly update the
+>> parameter name in the function declaration in the second version.
+> 
+> FWIW, "mnt for vfsmount, m for mount" is an informal convention in that
+> area, so I'd say go for it if there had been any change in the function
+> in question.  Same as with coding style, really...
+
+Thanks for the additional information. Based on informal conventions, it
+seems that this is the only way to modify it... ?
+
+Thanks,
+Zizhi Wo
+
