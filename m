@@ -1,107 +1,131 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EDA4B1E5F
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 17:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF3920B7EC
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 17:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747502187; cv=none; b=YKAsbsId25aRIK0PnSgHK2Fh5vGA/Jkl9JswPXH1ACds56r9rd80dHrPbdipIrrAR4vvFIGBWpt8MRv1mmuZgJIBxSE3te+b59ROS/FdLc673fBnzbz3xnoXgK4AjlYW8Cbf+qrOvzPIlhOzu4CRHCbGMO8CxM8dQE4gZQLZTkA=
+	t=1747502469; cv=none; b=WJ2Sm+NakQYBC7NwFQJij+a+75diId0E6gtAJV7dPpEZbcOV8UktRHazVPCq6U7yPUdTlVGrEU3qUnMnTzbXvR0rdoyAMeOIm2KpLE9Y3/Op8DNyLcXE478DqTO7uQ4TM9d+yiVyn8a8KKmmOtX42mydKHu0WdIV2BT+BjBFVTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747502187; c=relaxed/simple;
-	bh=9Yzm10CwF95SdEp6HZeRuq2YqwK9KCVypv6FFXSxmII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qMd+3Snu0Ov01i0eY0F/dRBYBJIwJZ5+LI3IK/1XlJNCNIjUMf5Xz/8il7wcX6YYiHz7mhkJFueif5UlrfQ7wx/xxfZdcwLxtTEikhccfViMl9iByVaPD/T9yeOubte6O1HOS40iAOlDgzQZvBlJVF32X9+uJMSvc28aiT2gx6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lI4R0Ttv; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747502469; c=relaxed/simple;
+	bh=kM6b80Bkv1XCI9nr1OXIWLdlXNLC1th4jgNd+WyRqLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qiQNNfMF0FauJVoYR8LcKI7HTZ4LbSuRGfayKPt7BY08JKCX+6mjNuyazRsm+oPSPmZlSG+cWwIA0DghpJ7f8Ly0YFbQouowW6M7PYCb5PL22STz6AHRZIPed4c1pUvBcIuFJPKOSsFs92VQwvTj/bxYrL+2z3W7WMy5wi1Aw9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JyTlT0+V; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lI4R0Ttv"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231f6c0b692so121765ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747502185; x=1748106985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oECJK4EhKG9tEX+cHzZsFBNImVK6Jq7EaOv6UW/zHFM=;
-        b=lI4R0TtvIGD75fsqrSgXmIFSAkO2up5GxvxL9t+0JHgWxumaU5T68/Cf80aY7M8UzL
-         m8upeud/P81Ztc2dIf7DuKB09gOFmNX7wMt+t9yWbRS3NtVYweL8BXkdNlf+8tatgki0
-         TYPO+79RU+1/cP6U/9xNRJB8Hrl3xchUT8vqdIz2mjxlOFVzidYR0uj8JJCwy3TSfCdy
-         8316CATac8ZdUXBDMvZFDLjQVV/LuAS5HxVVUs9W1WAERh9/rT8TIrxxLyM2G2X1s85r
-         YQuFOlYfFM1CC22z03wIgCFQpC4vtHdvx6sENkZkyfQhdFrC3RVbRxaWodQ10HDLun+v
-         Gw5w==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JyTlT0+V"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54HDrjeU028906
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 17:21:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LD3N/dB9dxL0NuGVYuOpUsqBzwJF+cAwfrUr6EDS96w=; b=JyTlT0+V41ZCgI4Y
+	Zo4c/pHRZVE2qs3/EIcW3tJni/qVANZfA3kghmEQfuo9pJDeqWFy+Zkpu5jjB3DP
+	2psrc/Uut6+0YnIcfOIyBMLV6p3EVgcZXOfXRinfs/88EpiyrUBnUtEXpTRtfsPe
+	3CGQ2Nu3dn4nXK6BOaavaGviyPPMXAMhl8zbwepeN07HjuPElXny+myzvzVBZAJa
+	apopSYbFQIe0N5m2Oh52bIRLTS+yH8BIxpRlFjKq5tUi/chS2y6vmfE2HlIgL2S8
+	9HAgvcjaS0uyEPvK0BTJYCl4MUrd+ogUG+XdEdMPStlHsAwVoBn7R811GTrM8Yt5
+	NX9A0g==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4rx27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 17:21:06 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8911b0fb0so4212626d6.3
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:21:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747502185; x=1748106985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oECJK4EhKG9tEX+cHzZsFBNImVK6Jq7EaOv6UW/zHFM=;
-        b=Ra0dGiGXSBVytmC919dSVFLfrbli/G/TNPeVbwjD9s//b/qSc8XnWCAG869H09HE35
-         ZTaFRw17CAQihAkBe7SURsZMyefPbfnFm1U6BThPb815oN3oXQTzaV0IVYhBTv4zbg8b
-         2/AjJySNZGLMNEO22HUUfifmynfFnH6BFjGSfi64seNzdQMcT2U9oQfTLIX9+k+KiM8i
-         v3oAkVQvA+tWPV1LBR2zC0YfhRbvUPNSkvZ6P6Lr2PmfFkpmbIs4ZSKjTLAQjeKjTsvg
-         gGbCoGzj+2Mw8TCG4z9l4/SkMV/DCt3QbXaMmyXFKinBqyjLDvgb3JdUC6WPbCcdP/IF
-         RquQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1YVmV1RUlw/0UAU2nL4uhoAKvLnH69zojEa1Ul7YojtB0brV/pUeNzrHw2o+rmj37Do1bJsdm7UAeJnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIr59ZklmWFHvxVbWbsqIDmhM5UH/3pAr+A6NVooRBhXFujSSH
-	Ll9gefexJZ9jz1JXJqHLMNbjxE67ZtSp4gFGmQvXNC+vbl3oZbgwFDcTCQxzo+xkpQ==
-X-Gm-Gg: ASbGncvEBsYo3gEtvZL64SV+ttNqEgR0OnqORTTR2K3Ep0Whf9btEAfQEK2sXjFTMxw
-	Id+C2SMJIbRfNniPANY2LONCjsfaF9+QsasUwdDbaRxTsinVyFihGjjp4ZPifJPEvL/D+s5uQ9l
-	XGFcz4/5kmZagksFliinmv2iuX3JENH1jCuuUKNzAi8wD+KvKjs+0nyKzIrHowBIyBicjEtLf6y
-	iquHqwHH5xJH8wkfir9Zmcfnv67g5/ju8QRNUHle+OJZoMvkYibbiZBABce56cDO3w+hhaHID7w
-	TeQwS6J3hITx4HYXAMBqosCqHwlIijKeZl26sqI9zeTluBWgnEGwoovcfrFEXqxtFKrwXlUquxQ
-	YGCZyAYrL
-X-Google-Smtp-Source: AGHT+IHCzf2+CRo3mSqfC+qoKsF+v8pV5dFUA1q/UEvjV0QSvMCIsf9UZncP3X3FcZbBm9pBKEF2yg==
-X-Received: by 2002:a17:903:2ace:b0:231:e069:6188 with SMTP id d9443c01a7336-231ffc4c0efmr2243365ad.0.1747502185056;
-        Sat, 17 May 2025 10:16:25 -0700 (PDT)
-Received: from google.com (3.32.125.34.bc.googleusercontent.com. [34.125.32.3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97de4sm32692085ad.144.2025.05.17.10.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 10:16:24 -0700 (PDT)
-Date: Sat, 17 May 2025 17:16:19 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: syzbot <syzbot+c3763f82ee2ceaf93340@syzkaller.appspotmail.com>
-Cc: arve@android.com, brauner@kernel.org, gregkh@linuxfoundation.org,
-	joelagnelf@nvidia.com, linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org, maco@android.com, sfr@canb.auug.org.au,
-	surenb@google.com, syzkaller-bugs@googlegroups.com,
-	tkjos@android.com
-Subject: Re: [syzbot] [kernel?] linux-next test error: KASAN:
- slab-use-after-free Write in binderfs_evict_inode
-Message-ID: <aCjEY1X85xUne3Ix@google.com>
-References: <6827b414.a70a0220.38f255.0008.GAE@google.com>
+        d=1e100.net; s=20230601; t=1747502465; x=1748107265;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LD3N/dB9dxL0NuGVYuOpUsqBzwJF+cAwfrUr6EDS96w=;
+        b=DVqzFCt06YUyH+3RYdH9cX0eyY7ul47QkNXLXiWYazjBoh3eyUT33ORqXStNEO4vcD
+         5+8yI37J6ZFXWJnJzmmnmfhKcV9NrRpU6/NoMRLnOkMSYz7+AFcWrYNG1d54Oo5VAzuE
+         7uXAp2h9WoggJlCFP40+RaRnlg28BetwRLW+anFjzBxHzWY2CzQbyoXYi/7y/unipJv9
+         Dgq4VehptFh+S2inAO1C28ekp70TlYC2TFfj5oL4YT84Z9Q4up/a02l92TV5rMMIVOOc
+         UgSMQ3M1nWPDZE2qVWR+UF9Bexq6QmPgix27CslpHFy+MF08+P4j48jHOnINLPJsHe6s
+         LFJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5AgaKeFZ/a+5eACEXgYqnd5R2KDxAIPzxgl8Urr0MSr38QwHWcAd58m/iWakEajJ9pPuPM8w0+ilDOPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ8MCVQWSB5n+kAj05Rj3GEHy2d6r+tPxkvxsbRBa8hW2+0Zaw
+	Rh1hHfXhKHp5oAO1+KRtWvH+5Mow8wY+EhwjSoWhKRql4UC+BFiE3JROpwM7C14MUZhzkUZqoUk
+	kiOW6xIs/Yl8E65dHPxs2/XpKivbasWKBSxdb+hcXuEw5BsXzyqnxz+ZGvdKEtizZcEI=
+X-Gm-Gg: ASbGncvjht+iEg7sMzRF+MZbsXfuKfKUo4R/l50S35HXWVjDLwr1qQN4gWQAOPzProJ
+	klP3+GIJeFzPCr238vSb3u0CLQjWYOYBmGPaY98oY9fRhDPCiGvVcMsXvsVrMEXM0oHCkk4sjAp
+	ZuLcnA9GV3Ei6WVdFGqbNphAdsX1XT4vI5jw/eZclX40OaXtmg6D1tYG7GB1oQByzQcWPR3Z1Pw
+	2Dr0hXXBlIjAnrIcH1WxkCMAimP5aYOknYZd4QxE3DKwrSQHMUDBaCwVTdgp42OO9/dsJRNYRBR
+	S9GcFiN2obeui0tktEHAVV8SQuwhotg6bGQr7HSAbCGzLrMZJFAXE+85YW8LyqX19A==
+X-Received: by 2002:a05:6214:48d:b0:6f5:3617:556c with SMTP id 6a1803df08f44-6f8b0834f7cmr47221256d6.1.1747502465599;
+        Sat, 17 May 2025 10:21:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEL/rKen6YM5r/g0Pxafk+XQRuIYGMxqfn1DIef0c2Cb5fAVGwQZBFB3zwu/wHgNmNKd2SnVg==
+X-Received: by 2002:a05:6214:48d:b0:6f5:3617:556c with SMTP id 6a1803df08f44-6f8b0834f7cmr47221086d6.1.1747502465285;
+        Sat, 17 May 2025 10:21:05 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4967c9sm318992566b.129.2025.05.17.10.21.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 May 2025 10:21:04 -0700 (PDT)
+Message-ID: <a2ada2f8-bf0b-4730-a28a-2604a405e491@oss.qualcomm.com>
+Date: Sat, 17 May 2025 19:21:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6827b414.a70a0220.38f255.0008.GAE@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] clk: qcom: ipq5018: keep XO clock always on
+To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250516-ipq5018-cmn-pll-v4-0-389a6b30e504@outlook.com>
+ <20250516-ipq5018-cmn-pll-v4-1-389a6b30e504@outlook.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250516-ipq5018-cmn-pll-v4-1-389a6b30e504@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=6828c582 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=EUspDBNiAAAA:8
+ a=DjvbsIfDJYjzuW62fVwA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-ORIG-GUID: tJFsyDCTB5UWDf9nytrvfzXdOog2dDR1
+X-Proofpoint-GUID: tJFsyDCTB5UWDf9nytrvfzXdOog2dDR1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDE3MCBTYWx0ZWRfX7pJHMmx3zbr5
+ tQm5RUj5KNtIrnUdS5WOZ5USRQJIeHrU//QPIdeYiaYjZyBL/D1+2zYVVucCv3V0HLG/PfvguU3
+ agGnMNsatFA4wLnBGn2lVl7Nvpj0a0cxnD7jA3f2ZAzzpRLvYps5oyJUelOIi/NTa4shsY2uSzb
+ /a3b2Rr+N4M7UJOr78L89EF+jVoRbrmJ1zxfhDvZ80AjVb1f6Ti3kOAv4nkz8kJ75NE7e29mVwW
+ Jkho4IZ382pApi2BueK/cbZVSLefBsmz2JUVKqwaM1mP0biDMCa0jORLkbSEVmajl2qwxU+HvU7
+ TZbyeRbT6mwaMXt9nIY5anUszNVci9WQwCLBi4ozYRxC2U9ky325QdyPK6P6LJYYasoO/xXfWku
+ cDAB71PL1OUdogU4aNJT/lXrgGvupIedTBjyjdXOLGAOiuL2d6vqhplYmO1W6IpcOf+TntXB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-17_08,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=544 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505170170
 
-On Fri, May 16, 2025 at 02:54:28PM -0700, syzbot wrote:
-> Hello,
+On 5/16/25 2:36 PM, George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
 > 
-> syzbot found the following issue on:
+> The XO clock must not be disabled to avoid the kernel trying to disable
+> the it. As such, keep the XO clock always on by flagging it as critical.
 > 
-> HEAD commit:    8566fc3b9653 Add linux-next specific files for 20250516
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10b776f4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=aa3444b6d01e5afb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c3763f82ee2ceaf93340
-> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/ac394ca3c315/disk-8566fc3b.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/170dd88bde87/vmlinux-8566fc3b.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/c097fa83c7d7/bzImage-8566fc3b.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+c3763f82ee2ceaf93340@syzkaller.appspotmail.com
-> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
 
-#syz dup: upstream test error: KASAN: slab-use-after-free Write in binderfs_evict_inode
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-This is a dup for which Dmitry had sent out a fix for. However, Greg was
-never cc'ed so the patch was left in limbo. v2 sent here:
-https://lore.kernel.org/all/20250517170957.1317876-1-cmllamas@google.com/
+Konrad
