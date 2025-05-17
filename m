@@ -1,33 +1,42 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142103EA63;
-	Sat, 17 May 2025 15:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC91188006;
+	Sat, 17 May 2025 15:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747496810; cv=none; b=MO00wExzs+Arr4Vl7mG0LBdTmsPPF7L6hxfFlA/hJNYH+VRZ0egX7qVm0DqhtJDfbOPJlgYxKIByEtCDplV092v12t9myBzZ5mplfd26yYok9TRlhZbhEgK5bhAswqvvT0XO5iALFp6IPuCSzFr68QtPqtLa4HMRLI0a2dYNauo=
+	t=1747497026; cv=none; b=qmO1YRF/P53JL/IDGFPd6bI0WqT3H+mpZFsUpzC5rTd3msrU2A1RurwNmo5Xp+2nrH0/skjSMF9PzXOEPqX5wpnXA5F1bUi0wWqigt2QSPugLWacoxqEKbJpNFHa7LY55lmX8UAWBfg58epgTmkG/FWS8rBaY9Jhj2SFf+G/cs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747496810; c=relaxed/simple;
-	bh=B17RbtciEnVVEu7Dlw7ST4KzADZ1kSpxHtr6ZOzjFME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SPKqCMiuvuDD1ZQtgBa/ZDZ9y+orH+toOvTe8YtiD2ItWZQJA0GQbWhk9yNzAt9959gBGeqbjx2XqixRPsSQZeLFN5vGcglKI4ikVOyAmouiWR6FMCih7K6ij4CmK2HRg+swKqoIBv1X83bzwQbtoFE9yQa2qAplT+IqemL54vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [111.201.46.250])
-	by APP-05 (Coremail) with SMTP id zQCowAB3tihZryhogGKtAA--.34380S2;
-	Sat, 17 May 2025 23:46:34 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
+	s=arc-20240116; t=1747497026; c=relaxed/simple;
+	bh=Xws1kjhDiU04G4wBV58t3/FYwJxcP3RBAIHx4fpVgwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H51+qGUOgjZy1QRieA4z5pczU6K/fQ2iRVkHkzzmqSwuOp33JLNa5ux/XfvdAOD3GGl4PnZDwlqPJ7FEKF2pH9jw84sM4QI3V0Wq+xEMvYWlbmBYdL1Jn3eAAu4pdDoFn+THP6EiYESTdcx38YCziQchCWc9heifq2wT9CUFeJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YK+rJJsQ; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YK+rJJsQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ey
+	Kx6/uXroylg9WsUk9eGlYvyXmYNrjKr5GppJiMOOo=; b=YK+rJJsQGucguGL2eD
+	NAMgJqs7us87eCD1efpOoPMD9IyR0ZvQvsIhPBFn7dnlPQCdAqkWQ4mSMLGRJO8U
+	hYuhflXQOp9v29Y3nmFsaCqaP4y97NGOUbNLWd6Kow80dFEb5tj6eWF7wWKbprQq
+	/4PwFPRjhwCOlEPDhyiPkHkds=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBHc5kVsChoBHRqCA--.24311S2;
+	Sat, 17 May 2025 23:49:42 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	manivannan.sadhasivam@linaro.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	jhp@endlessos.org,
+	daniel.stodden@gmail.com,
+	ajayagarwal@google.com,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] wifi: wilc1000: Handle wilc_sdio_cmd52() failure in wilc_sdio_read_init()
-Date: Sat, 17 May 2025 23:46:11 +0800
-Message-ID: <20250517154611.910-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] PCI/ASPM: Use boolean type for aspm_disabled and aspm_force
+Date: Sat, 17 May 2025 23:49:39 +0800
+Message-Id: <20250517154939.139237-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,66 +44,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3tihZryhogGKtAA--.34380S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXw4UZFW5ZFb_yoW8XF1kpF
-	WxurWYqw10kFWru3W7tFs5Aa4rJa4UtrW7WFWxuw1fur4kZr1Skr4fXa45Xr1qg3WUC3Wx
-	Xw40vr4jgF1IvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVb
-	kUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYFA2gopvIMOQAAst
+X-CM-TRANSID:_____wBHc5kVsChoBHRqCA--.24311S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uw18JryxXr48WFW8trW5Wrg_yoW8GFWfpF
+	ZrCFn2kF18Za1IvF4DJa4DuF15G39xt342y3s09w13ZanxAr1DXFn7XF1FqF18XrW8X3W7
+	KF1fJFyUJF4fCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEdb1wUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgFQo2gorSM6vgAAsC
 
-The wilc_sdio_read_init() calls wilc_sdio_cmd52() but does not check the
-return value. This could lead to execution with potentially invalid data
-if wilc_sdio_cmd52() fails. A proper implementation can be found in
-wilc_sdio_read_reg().
+The aspm_disabled and aspm_force variables are used as boolean flags.
+Change their type from int to bool and update assignments to use
+true/false instead of 1/0. This improves code clarity.
 
-Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
-log an error message via dev_err().
-
-Fixes: eda308be643f ("staging: wilc1000: refactor interrupt handling for sdio")
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/net/wireless/microchip/wilc1000/sdio.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aspm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index e7a2bc9f9902..d0e8b812b622 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -809,6 +809,7 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
- 	u32 tmp;
- 	u8 irq_flags;
- 	struct sdio_cmd52 cmd;
-+	int ret;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 29fcb0689a91..98b3022802b2 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -245,7 +245,7 @@ struct pcie_link_state {
+ 	u32 clkpm_disable:1;		/* Clock PM disabled */
+ };
  
- 	wilc_sdio_read_size(wilc, &tmp);
+-static int aspm_disabled, aspm_force;
++static bool aspm_disabled, aspm_force;
+ static bool aspm_support_enabled = true;
+ static DEFINE_MUTEX(aspm_lock);
+ static LIST_HEAD(link_list);
+@@ -1712,11 +1712,11 @@ static int __init pcie_aspm_disable(char *str)
+ {
+ 	if (!strcmp(str, "off")) {
+ 		aspm_policy = POLICY_DEFAULT;
+-		aspm_disabled = 1;
++		aspm_disabled = true;
+ 		aspm_support_enabled = false;
+ 		pr_info("PCIe ASPM is disabled\n");
+ 	} else if (!strcmp(str, "force")) {
+-		aspm_force = 1;
++		aspm_force = true;
+ 		pr_info("PCIe ASPM is forcibly enabled\n");
+ 	}
+ 	return 1;
+@@ -1734,7 +1734,7 @@ void pcie_no_aspm(void)
+ 	 */
+ 	if (!aspm_force) {
+ 		aspm_policy = POLICY_DEFAULT;
+-		aspm_disabled = 1;
++		aspm_disabled = true;
+ 	}
+ }
  
-@@ -827,7 +828,12 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
- 	cmd.raw = 0;
- 	cmd.read_write = 0;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret) {
-+		dev_err(&func->devm, "Fail cmd 52, get IRQ register...\n");
-+		return ret;
-+	}
-+
- 	irq_flags = cmd.data;
- 
- 	if (sdio_priv->irq_gpio)
+
+base-commit: fee3e843b309444f48157e2188efa6818bae85cf
 -- 
-2.42.0.windows.2
+2.25.1
 
