@@ -1,109 +1,125 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70E41E5B7F
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 21:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E55169AE6
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 21:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747516251; cv=none; b=ff5jo9hbFreVUrcMGh08OJQAMdRvz+YamLL1btTl+Be11nTi8FkHYyys2H27dmqY0/2t4ZEliFuusSX6e8RqJ+aWraJLg7DTa5M2/kDY2AtiDAC2P9AYxMi4Doj8KLO570flUrdo12jTQOMU+r2BhYJVEs5SM4iQJzq2Fi5lR1Y=
+	t=1747517431; cv=none; b=CBskjZQQXR3WOg78aAO2Og1IkJCegssCOq8rZ5jZpj5uOAHEkKrHrtL3SQIVljTxNURLkKigQb28Em2Orqp31WFrA/IGWWGbl1Dt7OObpS3GrK1VZ32TJtVGe69lAQYzHmADLgdgwxVJpz3ELCnXOk2KRuIU9elEm0yWCRNX3Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747516251; c=relaxed/simple;
-	bh=o/Nya/tGk006xRA5N500QpaY5OOYSf0gkMPQt5ZX/IE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aJOlGI7Dsj5VKUebzsYKAX8wV37nXkl9gF7lnkR1GZqO2RD1vLXP5I1Tt9Swm0SYNuylHWhEqB5Y6dFzEpLNl02+ed207sw8yuBxao5POhhOuwwVWbYzzFTMCgEKeim7UgAja4EmfHvxXHPiV0MDL5WIiUjqqUZn1gXDOdylBBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=GHL2o8lq reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="GHL2o8lq"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da7d0d7d58so24202675ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1747516249; x=1748121049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsAWXt+W0ngarXnftcnhixQhh8eXvZ1EEvRj0zEMsI4=;
-        b=GHL2o8lqkSudd1Uk7QW6I/krnKcP1hv0oaz7UrRhzq5v+hosno1Ww8QLyFHHusTMmV
-         WmWLXiHS9azgnOeUrfyq+1ZSXeG8z3fpEW/aWntFtMzMG2+APGCh4wYRQQ2IJmZ7zTTv
-         CDsW+24S/ZNUIsYvulzEG1h2BRFtq2123S6ahbbvFWSWrmNzL3zKdKIpDbDIUG+Oe6Lg
-         uycSWRKorKXGC/MWIAMI0Jswy/iZKj7wy0brCN44tvm9AdiIJ/uDPEsZ6CpuahdbdYTc
-         oR1cCw+mxSz7wZ1llfnAXtHpiQGCCRxvheq1BzLAJ1sh4a8t6tJyxpndje989X6tf4kN
-         vvMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747516249; x=1748121049;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qsAWXt+W0ngarXnftcnhixQhh8eXvZ1EEvRj0zEMsI4=;
-        b=l4pwYsPMDqkXsUaVOdprGfuBIO6kK3NXJVnwa8XIYND9YL89LXPD5JtcG3YLx5h3p2
-         Y6ORUHe2L7CaBwItRfxF3pKdJRozOu6qcfEP35uVqIDsJksHN8Nloa6F4VX01nGNXoBt
-         DS3Zho2fGrkSFNSlsRACA/Issk0NbvFrO48kBkXlwUQIuvBVeAHwcdAy2HQm/T1xTlQl
-         6ZH9FpNKYutUUGJp8gpWUXw/vRdPcrofy1K0aibsS8v9dPnupDsc2qvPePVzUYwz8d58
-         0IoE2I6IJIINM4xNSP5PGV5ew0oNy7850ALIkdgdzcwiCPuw5K035u1mFomsODkwJpTQ
-         hB7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrvRM8tI/i4cfW2xRUtqKjpdrib4Y9vil7sI5O/2xdto8ca/UQcl2I7IA6B9Cw35nWNwVSyYi52gfKz+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYDXdgehQXqq3468DISqBgw+C7dOdZO/b44eYK9f+iQn443vfZ
-	acP05dKfhRyQv+o3zbmb6dpS5VaXABIsspDVD5sqduHesngo4SxdGPU7OVxrnSo0XhE=
-X-Gm-Gg: ASbGncsBTFtb2ACs3k8+AzdahUVlE+Q2JsK7AcefriB9D5RGm3xm/NAoFXfae9KWE9a
-	mqt6DEOqnp3lud3M/XVRbtSvC/nB/b37Dbp/v0a6Gzi08fyrQNDO4KWZ7iGA9Q3ieNTeYap0Q9A
-	DxnpXTZ1yn1e43qMO3bhuE0YtCVTRpXnS485UsJxWf/8iJNAvPdW+gAEf9FEBY0aHgwo0m4SPi5
-	2Rz2N51O9ZZgVdy/XM3GNz3V8Alin0/qfTaG/hqNHnb/KRiTcHpuxl0qjXQ4JOH7rLHdjJx3chM
-	abxpPyyZxXOioK5n6WgTk5shcPZ5dgitzhXHWui6CJSYP/w05nF8Gw+dhRU+cU9CEMgm4kFr1q3
-	PrsmOMgo=
-X-Google-Smtp-Source: AGHT+IHO8vmPZ9wtEiIB3JiDHbb2n/QkwioIBKsC0rUUGe/Wln0nL1EQukSNTPuRfRNcvEViMy2SvA==
-X-Received: by 2002:a05:6e02:1c02:b0:3d9:66ba:1ad2 with SMTP id e9e14a558f8ab-3db8569e88bmr68385155ab.0.1747516248818;
-        Sat, 17 May 2025 14:10:48 -0700 (PDT)
-Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db843e07b8sm11777445ab.20.2025.05.17.14.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 14:10:47 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: shuah@kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Brigham Campbell <me@brighamcampbell.com>
-Subject: [PATCH] docs: powerpc: Add htm.rst to table of contents
-Date: Sat, 17 May 2025 15:07:59 -0600
-Message-ID: <20250517210757.1076554-3-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747517431; c=relaxed/simple;
+	bh=Y02q1bjUctrONNfHkzfH6DO2cAdSNJ81Hhw5HKi2XEg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cIoqz3a2QOxWz9RIOQoJVCzYqLQv7d/i7xHnWsgEXnvMLUu4pFC18RCzl6Qm1R1SxWfL+3mYrYUmmGlD6DsYiUHXum6hHZABgarartXVb3+tzt/UW6VJy9ILaU/V5LL6axi0MPTvi21MuY4xARfYsmvb73aX4VTveI/S9rfozJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uGP5e-000000000m0-1sNu;
+	Sat, 17 May 2025 17:29:06 -0400
+Message-ID: <0cd34b6c8d8009fd6f626f3287ce36e55374b140.camel@surriel.com>
+Subject: Re: [PATCH] x86/mm: resize user_pcid_flush_mask for PTI / broadcast
+ TLB flush combination
+From: Rik van Riel <riel@surriel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 	x86@kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+Date: Sat, 17 May 2025 17:29:06 -0400
+In-Reply-To: <aChB9ORFxaL8VfyD@gmail.com>
+References: <20250516123317.70506358@fangorn> <aChB9ORFxaL8VfyD@gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-These changes fix the following error, which was introduced by commit
-ab1456c5 when Documentation/arch/powerpc/htm.rst was added to the
-repository without any reference to the document.
+On Sat, 2025-05-17 at 09:59 +0200, Ingo Molnar wrote:
+>=20
+> CONFIG_X86_TLB_BROADCAST_TLB_FLUSH doesn't actually exist, the name
+> is=20
+> CONFIG_BROADCAST_TLB_FLUSH.
+>=20
+Argh, cut'n'pasted from the wrong tree :(
 
-Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
+>=20
+> we could make this a more obvious:
+>=20
 
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
----
- Documentation/arch/powerpc/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+> And we can drop the ugly & fragile type cast in
+> invalidate_user_asid():
+>=20
+> -	__set_bit(kern_pcid(asid),
+> -		=C2=A0 (unsigned long
+> *)this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask));
+>=20
+> +	__set_bit(kern_pcid(asid),
+> this_cpu_ptr(cpu_tlbstate.user_pcid_flush_mask));
+>=20
+That is a really nice improvement, and it almost
+works, too ;)
 
-diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
-index 0560cbae5fa1..53fc9f89f3e4 100644
---- a/Documentation/arch/powerpc/index.rst
-+++ b/Documentation/arch/powerpc/index.rst
-@@ -19,6 +19,7 @@ powerpc
-     elf_hwcaps
-     elfnote
-     firmware-assisted-dump
-+    htm
-     hvcs
-     imc
-     isa-versions
--- 
-2.49.0
+In file included from ./arch/x86/include/asm/bitops.h:430,
+                 from ./include/linux/bitops.h:68:
+./include/asm-generic/bitops/instrumented-non-atomic.h:26:54: note:
+expected =E2=80=98volatile long unsigned int *=E2=80=99 but argument is of =
+type =E2=80=98long
+unsigned int (*)[32]=E2=80=99
+   26 | ___set_bit(unsigned long nr, volatile unsigned long *addr)
+      |                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
 
+
+I ended up settling for this:
+
+      __set_bit(kern_pcid(asid),
+this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask[0]));
+
+> 3)
+>=20
+> If we are going to grow user_pcid_flush_mask from 2 bytes to 256
+> bytes=20
+> then please reorder 'struct tlb_state' for cache efficiency: at
+> minimum=20
+> the ::cr4 shadow should move to before ::user_pcid_flush_mask. But I=20
+> think we should probably move user_pcid_flush_mask to the end of the=20
+> structure, where it does the least damage to cache layout.
+
+Done. V2 to follow in another email.
+
+Thank you!
+
+--=20
+All Rights Reversed.
