@@ -1,145 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE9076026;
-	Sat, 17 May 2025 08:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53A376026
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747469401; cv=none; b=bSD8KJgZend/UkyQl2Bpdf07vw3CyuJU7JnDb3eoDSYoGxSCszv5SKHZQpKYdIZ4rOkekEJSSJwU0x4AeP7QL+gkh/TonQHKPzbwkf3Dtljp60WVsvlPiR9BawcP2SAOWxpxSsFKmZ7IxTlb4zyTAqIi5IL5bJdIaPLtHUeudQM=
+	t=1747470096; cv=none; b=i9vyyWs7XMddNHO3C5hPRyR4ZnF/yvvjSyjXiSbKOgArHdqtX/xdSwoQmdbhcjfDHoYV1Svnl4Pm/2qqU+f+PaL4NSTocTrBCLyleBV6prVbKxXNPi0xcFGDNXf5E26+wmyz1c+hQJPKIb9Da0huBgqK3sZPYXUlJbyiYUTc60E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747469401; c=relaxed/simple;
-	bh=lI5GXMPHMKJCva/XfenAwMLqoCDzoC16fyY0XcNLI1I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=a/utPcm0j6huubRsBzq9XHzzcyyzcmsIfSMhwxeHSt1Gl/eW/bZuznakhSvVtWyld6KiYOVvk4Lz5ekKNhORMNTLbKf/HkHtoTdtXV+N/62ZH8XhGtrO7snVWLT2dawtsS6cYdq3Uthh23RvcDm/zfyiTsRmX26nsI0hkh2nqMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3QCJ9gi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3QCJ9gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9A3C4CEE3;
-	Sat, 17 May 2025 08:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747469401;
-	bh=lI5GXMPHMKJCva/XfenAwMLqoCDzoC16fyY0XcNLI1I=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=i3QCJ9giswxYKl0Wb3eh0fywapf6vpoC0xTDdrqTVbzbfaXlD90MjDZD0WoFBnHUb
-	 W5g2tEfyuRwDiNh0K1z3rJpM26CX/YF3AJWiWTWtFdiUOPEirIleSPmHZtCKjWDq2k
-	 xmEiAQ8UWXblnjysLoyBdUgRYIY43igUH6B/3XnoUqw5OIOUK9RANug5+y1OJqDVQr
-	 3y5CMJ96nrY2vTkBIE80B+gXmbKZA+zOIco9hdu9mHTDZYC/pOrojefXzdqSP1djhQ
-	 1kaX6KqGoiIb7IqsRtNNluk/QI2Cd8DrN3Y/1BAuQ4Cmfi0ZfOE4Yv+5G+C0fwlmXW
-	 /1yXT7CchCo3Q==
+	s=arc-20240116; t=1747470096; c=relaxed/simple;
+	bh=+eJOMi2986xu8JmQvhdKwd9obQMnPObUbqcTOmSXGOQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=c+WvhXed731UDHq53c5hdDHMsak9dT7WMGyPrFdjKoUyP2iEIBBQJRe3czk+QdZfbSXkmxVmAzvpSD+2Lmgk99DoSC2SvFAsEtHMZx68YY5/aDs+43iJMkPVOOTTOaRfvc9Lwc3Uty3S3U98WgM4Yz4St33piKTLJxHaAEULdjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-862dda418a6so440257639f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:21:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747470094; x=1748074894;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BuE/K/3Gf56V3Ou0pS8Dc3oVSR2NNvXK2VubFy8qppk=;
+        b=JrA9ST+jhTNg8Jzdd6vtrunGK/cdQmZDNIsEp46ZNh4FbscMXSuR1WrTONQ8gLjFlx
+         QQEbiVtrI52CyTp4NHNxllWuugNpyqTrghDfPUKSR+4xqQt5EBL6SxEegcnABU8csdB1
+         09TTdaf0NKW531J9RXprAaz7cOijGTwvrYFr2xln4g+SLmdBU0ZFxXGlroAfifC0dgRf
+         V0lBmAW8SspEWrBVWv4vd0x81DjUpD4P3z3P0z/1RjwrTd0ftSu081VscBS6ZAGzB6bd
+         ebeErMud78GsyftJd5cWErXnzrzHAJoknZdtNVnmJJXILodwSWtmuU13sWriH5ENNFAy
+         bVQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFuP0OquU774jlnGZwRj6wrmhqs3GKlskgQ939xN7ZlY15iHBfjyO5k9dDklowsyjsd9lEIl9VkSNp9mI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweZdgo1Ebq6ikVXCZUnsLfSt9n3Yu5IEliHRaTOzPlNtC4PTQO
+	YJA7dulVHP+Fx96gGwaE6OUHlAXuMNKn6NBIndF92yLgN3MtrWF5D0oe5ONbp8B6jvt5A+5miaD
+	SQvSO2c/Nnyey6nneHX19RUlfgMwgYJjOEJTHvl72kwGpkTAIawxV21TAPKc=
+X-Google-Smtp-Source: AGHT+IF43ydOpiImfAR9TBnTncl0cn+Wr9Smbdc8GCN2U7/WC+KZNR7d5xoNg19tLeOZm3LLQBKa5ILRNjbf9jZBgzXLlAfiwdtJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 17 May 2025 10:09:53 +0200
-Message-Id: <D9YA78RFVQMH.QPUFXMHSVU7V@kernel.org>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: Re: [net-next PATCH v11 1/6] net: phy: pass PHY driver to
- .match_phy_device OP
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Marangi" <ansuelsmth@gmail.com>, "Andrew Lunn"
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "Florian Fainelli"
- <florian.fainelli@broadcom.com>, "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>, =?utf-8?q?Marek_Beh=C3=BAn?=
- <kabel@kernel.org>, "Andrei Botila" <andrei.botila@oss.nxp.com>, "FUJITA
- Tomonori" <fujita.tomonori@gmail.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich" <dakr@kernel.org>,
- "Sabrina Dubroca" <sd@queasysnail.net>, "Michael Klein"
- <michael@fossekall.de>, "Daniel Golle" <daniel@makrotopia.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250516212354.32313-1-ansuelsmth@gmail.com>
- <20250516212354.32313-2-ansuelsmth@gmail.com>
-In-Reply-To: <20250516212354.32313-2-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:3683:b0:86a:1faf:84c with SMTP id
+ ca18e2360f4ac-86a24bb412bmr829334239f.2.1747470093891; Sat, 17 May 2025
+ 01:21:33 -0700 (PDT)
+Date: Sat, 17 May 2025 01:21:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6828470d.a70a0220.38f255.000c.GAE@google.com>
+Subject: [syzbot] [mm?] WARNING in folio_large_mapcount
+From: syzbot <syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
+	baolin.wang@linux.alibaba.com, david@redhat.com, dev.jain@arm.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	npache@redhat.com, ryan.roberts@arm.com, syzkaller-bugs@googlegroups.com, 
+	ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri May 16, 2025 at 11:23 PM CEST, Christian Marangi wrote:
-> diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-> index a59469c785e3..079a0f884887 100644
-> --- a/rust/kernel/net/phy.rs
-> +++ b/rust/kernel/net/phy.rs
-> @@ -418,15 +418,18 @@ impl<T: Driver> Adapter<T> {
-> =20
->      /// # Safety
->      ///
-> -    /// `phydev` must be passed by the corresponding callback in `phy_dr=
-iver`.
-> +    /// `phydev` and `phydrv` must be passed by the corresponding callba=
-ck in
-> +    //  `phy_driver`.
->      unsafe extern "C" fn match_phy_device_callback(
->          phydev: *mut bindings::phy_device,
-> +        phydrv: *const bindings::phy_driver,
->      ) -> crate::ffi::c_int {
->          // SAFETY: This callback is called only in contexts
->          // where we hold `phy_device->lock`, so the accessors on
->          // `Device` are okay to call.
->          let dev =3D unsafe { Device::from_raw(phydev) };
-> -        T::match_phy_device(dev) as i32
-> +        let drv =3D unsafe { T::from_raw(phydrv) };
-> +        T::match_phy_device(dev, drv) as i32
->      }
-> =20
->      /// # Safety
-> @@ -574,6 +577,19 @@ pub const fn create_phy_driver<T: Driver>() -> Drive=
-rVTable {
->  /// This trait is used to create a [`DriverVTable`].
->  #[vtable]
->  pub trait Driver {
-> +    /// # Safety
-> +    ///
-> +    /// For the duration of `'a`, the pointer must point at a valid
-> +    /// `phy_driver`, and the caller must be in a context where all
-> +    /// methods defined on this struct are safe to call.
-> +    unsafe fn from_raw<'a>(ptr: *const bindings::phy_driver) -> &'a Driv=
-erVTable {
-> +        // CAST: `DriverVTable` is a `repr(transparent)` wrapper around =
-`bindings::phy_driver`.
-> +        let ptr =3D ptr.cast::<DriverVTable>();
-> +        // SAFETY: by the function requirements the pointer is const and=
- is
-> +        // always valid to access for the duration of `'a`.
-> +        unsafe { &*ptr }
-> +    }
+Hello,
 
-If we go the way of supplying a `&DriverVTable` in the
-`match_phy_device` function, then this should be a function in the impl
-block of `DriverVTable` and not in `Driver`.
+syzbot found the following issue on:
 
-See my reply to Fujita on the previous version, I don't think that we
-need to add the `DriverVTable` to the `match_phy_device` function if we
-don't provide accessor methods. Currently that isn't needed, so you only
-need the hunks above this one. (I'd wait for Fujita's reply though).
+HEAD commit:    627277ba7c23 Merge tag 'arm64_cbpf_mitigation_2025_05_08' ..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1150f670580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5929ac65be9baf3c
+dashboard link: https://syzkaller.appspot.com/bug?extid=2b99589e33edbe9475ca
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0a42ae72fe0e/disk-627277ba.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0be88297bb66/vmlinux-627277ba.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/31808a4b1210/bzImage-627277ba.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 38 at ./include/linux/mm.h:1335 folio_large_mapcount+0xd0/0x110 include/linux/mm.h:1335
+Modules linked in:
+CPU: 1 UID: 0 PID: 38 Comm: khugepaged Not tainted 6.15.0-rc6-syzkaller-00025-g627277ba7c23 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:folio_large_mapcount+0xd0/0x110 include/linux/mm.h:1335
+Code: 04 38 84 c0 75 29 8b 03 ff c0 5b 41 5e 41 5f e9 96 d2 2b 09 cc e8 d0 cb 99 ff 48 89 df 48 c7 c6 20 de 77 8b e8 a1 dc de ff 90 <0f> 0b 90 eb b6 89 d9 80 e1 07 80 c1 03 38 c1 7c cb 48 89 df e8 87
+RSP: 0018:ffffc90000af77e0 EFLAGS: 00010246
+RAX: e1fcb38c0ff8ce00 RBX: ffffea00014c8000 RCX: e1fcb38c0ff8ce00
+RDX: 0000000000000001 RSI: ffffffff8d9226df RDI: ffff88801e2fbc00
+RBP: ffffc90000af7b50 R08: ffff8880b8923e93 R09: 1ffff110171247d2
+R10: dffffc0000000000 R11: ffffed10171247d3 R12: 1ffffd4000299000
+R13: dffffc0000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8881261fb000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffe58f12dc0 CR3: 0000000030e04000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ folio_mapcount include/linux/mm.h:1369 [inline]
+ is_refcount_suitable+0x350/0x430 mm/khugepaged.c:553
+ hpage_collapse_scan_file+0x6d4/0x4200 mm/khugepaged.c:2323
+ khugepaged_scan_mm_slot mm/khugepaged.c:2447 [inline]
+ khugepaged_do_scan mm/khugepaged.c:2548 [inline]
+ khugepaged+0xa2a/0x1690 mm/khugepaged.c:2604
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
 
 ---
-Cheers,
-Benno
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> +
->      /// Defines certain other features this PHY supports.
->      /// It is a combination of the flags in the [`flags`] module.
->      const FLAGS: u32 =3D 0;
-> @@ -602,7 +618,7 @@ fn get_features(_dev: &mut Device) -> Result {
-> =20
->      /// Returns true if this is a suitable driver for the given phydev.
->      /// If not implemented, matching is based on [`Driver::PHY_DEVICE_ID=
-`].
-> -    fn match_phy_device(_dev: &Device) -> bool {
-> +    fn match_phy_device(_dev: &mut Device, _drv: &DriverVTable) -> bool =
-{
->          false
->      }
-> =20
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
