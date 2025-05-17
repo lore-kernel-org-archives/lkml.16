@@ -1,216 +1,165 @@
-Received: from smtp.smtpout.orange.fr (smtp-79.smtpout.orange.fr [80.12.242.79])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C062A2080C0;
-	Sat, 17 May 2025 16:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7451EA90
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 16:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747500480; cv=none; b=h9E3xTT+vjF0eX3s8dcI7PZEt9v6EwtD8zQ48otqrouiNjSvxWubxmUB7HKOwn+ZaCjjBmbbWB+BkXRWOYTVDFIpmAmr2BF6ljenht2zEc7KktXs6xbbn9zfFQH4JvAhLT7eHJ/sj5UU/LWZez1+Q7qGCTwxWEfvDSb6XtKbQ/8=
+	t=1747500554; cv=none; b=SH+DXHopBMzfmxaKkcDEmlzxAb4gdGlH6bLMGdsto1p91kP71hLZjSnA5rx0xDeicsGi4ZrtCQiAfkQ+dWIOal7ykXvdgCwTGLyZWg35H6zA4xPxQ48z7n5WJ8nLemHjUHBwzrTnGK8kJWsUo5YSxgvu25fJdxaEr6Q9y2Dospc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747500480; c=relaxed/simple;
-	bh=TUfEitpwGQtIb9FitiVNjjcJ8mpMpdDJHCUQZry/pg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YtrvY4G9DipVJA+vwuUWCgY0ipwx54EtrVEpL6SNs5ftvTdyin2X4yQZ5jkt2k7o3ql0JdJWuW1OJ1KbmaHUEXPrQAdVVdZF37mQBI2hLlACTJ2NSsib/YOTdQWrOPfKhbJIQf/CMgGPI4JSiVenyG8mGJ65hXd8tx1naSMV6HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=JzQt8HLE; arc=none smtp.client-ip=80.12.242.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1747500554; c=relaxed/simple;
+	bh=ObCO1wuvl/p0oqIvyXUQUhX+WLA8c9baP0tYpJ7fE50=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LVZCBfZ/omqr3i646klrgcCQo/6NhcnQ5fi7SiXt3vNWZR1FWX1WHVOqzYIUa2hEsEA/oHrasjNva4FTnYlpZ3+SaWGsFVo+O1QNVH51ApVy01dHEoB+6Cq+MMVaE8IDi3pOJxpN7PNWHaJe5xHqYkKUE9qVDbOvXbvWGtcjhUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5eZ8abm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="JzQt8HLE"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id GKgEuHQFVtQ77GKgFuyFUx; Sat, 17 May 2025 18:46:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1747500397;
-	bh=PBLzTSNdamBB3F6UDQpiKWrnuo7rHKSDvlmWCD3+ld8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JzQt8HLEm6e9TjxJFJ/qOjbM9KtvJuPxh45YOQSo40ho4N8NhAsl9nI+c9S5ogVpM
-	 /n1gQb3q8mcgJLlEKi+M6sAHWxqghh1WRwkC43e69OL6PUqatqOW4E1BfL7oBx+eYU
-	 +Qus3Hae2PXFYm1GRXxJvq5dPaRDDAUonIH3aZSv1Bknei2EBCLNb8StO6+lieb/Eq
-	 YosVptEfMBgT4vq1/QlqLNe/NVq+j2sxN9ZT7oMCHLsCwhJSldlu66931abVWrq/PJ
-	 g8goM+I1eLI7L56kRogItlnZT/timhYWKoSWV60tzYomtsqKaDmou60Ynok8NEPIEU
-	 Hzqcvl5kzM6mQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 17 May 2025 18:46:37 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH] wifi: rtlwifi: Constify struct rtl_hal_ops and rtl_hal_cfg
-Date: Sat, 17 May 2025 18:46:14 +0200
-Message-ID: <2c3f3d8d8b2f7dcb8cc64cebe89e55720d1d733d.1747500351.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5eZ8abm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8C1C4CEE3;
+	Sat, 17 May 2025 16:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747500554;
+	bh=ObCO1wuvl/p0oqIvyXUQUhX+WLA8c9baP0tYpJ7fE50=;
+	h=Date:From:To:Cc:Subject:From;
+	b=G5eZ8abmoGdd3b/KPnBXThmIsHjort9ZbcODDeeHTR7/OFWKL5VVTcgSK9p04CHU9
+	 i/baoAbiQHXbh5kaylfUyZhq70SnQHe5XKWTWsuLTcC4/2IvoOL+cwrTzU12CS1g+/
+	 BxFNaHQieUgAyQx5dOm3QSh2swcjVINQnKNaGXMzoRX/Q2xS8njq1LV3WCJlZ+tZvp
+	 bwjrS9ZnQ+o148CJdIlddxTYCwG7KN2iCOWLDMW59fbvn7BX65X5HGxSlw7pSaOHCm
+	 5HxBSEvaEVmnWXnO4EO4mmP3Cl2MavkP8eYnnCXDO74Gfqd5ZzOi7tTIUxBjSCg7kX
+	 xs+RcxASilw7w==
+Date: Sat, 17 May 2025 17:49:10 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for 6.15
+Message-ID: <aCi+BteelekIQK07@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SKw8+HHxUjrEuEhv"
+Content-Disposition: inline
 
-'struct rtl_hal_ops' and 'struct rtl_hal_cfg' are not modified in these
-drivers.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security, especially when the structure holds some
-function pointers.
+--SKw8+HHxUjrEuEhv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Constification of rtl_hal_cfg is only needed in rtl8192cu/sw.c
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  10167	   5512	    128	  15807	   3dbf	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.o
+Hello Linus,
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  10743	   4936	    128	  15807	   3dbf	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.o
+Last pull request before I catch the plane from Lisbon. This has a bunch
+of idxd driver fixes, dmatest revert and bunch of smaller driver fixes.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c | 4 ++--
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c | 2 +-
- 9 files changed, 10 insertions(+), 10 deletions(-)
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-index 2ad4523d1bef..79c6e0901e57 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-@@ -190,7 +190,7 @@ static bool rtl88e_get_btc_status(void)
- 	return false;
- }
- 
--static struct rtl_hal_ops rtl8188ee_hal_ops = {
-+static const struct rtl_hal_ops rtl8188ee_hal_ops = {
- 	.init_sw_vars = rtl88e_init_sw_vars,
- 	.deinit_sw_vars = rtl88e_deinit_sw_vars,
- 	.read_eeprom_info = rtl88ee_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-index ce7c28d9c874..f06b159f975d 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-@@ -167,7 +167,7 @@ static void rtl92c_deinit_sw_vars(struct ieee80211_hw *hw)
- 	}
- }
- 
--static struct rtl_hal_ops rtl8192ce_hal_ops = {
-+static const struct rtl_hal_ops rtl8192ce_hal_ops = {
- 	.init_sw_vars = rtl92c_init_sw_vars,
- 	.deinit_sw_vars = rtl92c_deinit_sw_vars,
- 	.read_eeprom_info = rtl92ce_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
-index c9b9e2bc90cc..00a6778df704 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
-@@ -81,7 +81,7 @@ static bool rtl92cu_get_btc_status(void)
- 	return false;
- }
- 
--static struct rtl_hal_ops rtl8192cu_hal_ops = {
-+static const struct rtl_hal_ops rtl8192cu_hal_ops = {
- 	.init_sw_vars = rtl92cu_init_sw_vars,
- 	.deinit_sw_vars = rtl92cu_deinit_sw_vars,
- 	.read_chip_version = rtl92c_read_chip_version,
-@@ -156,7 +156,7 @@ static struct rtl_hal_usbint_cfg rtl92cu_interface_cfg = {
- 	.usb_mq_to_hwq = rtl8192cu_mq_to_hwq,
- };
- 
--static struct rtl_hal_cfg rtl92cu_hal_cfg = {
-+static const struct rtl_hal_cfg rtl92cu_hal_cfg = {
- 	.name = "rtl92c_usb",
- 	.alt_fw_name = "rtlwifi/rtl8192cufw.bin",
- 	.ops = &rtl8192cu_hal_ops,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-index e36e4aeb9a95..7612c22a9842 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-@@ -184,7 +184,7 @@ static void rtl92d_deinit_sw_vars(struct ieee80211_hw *hw)
- 		skb_queue_purge(&rtlpriv->mac80211.skb_waitq[tid]);
- }
- 
--static struct rtl_hal_ops rtl8192de_hal_ops = {
-+static const struct rtl_hal_ops rtl8192de_hal_ops = {
- 	.init_sw_vars = rtl92d_init_sw_vars,
- 	.deinit_sw_vars = rtl92d_deinit_sw_vars,
- 	.read_eeprom_info = rtl92d_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-index 162e734d5b08..181dd7823b26 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-@@ -176,7 +176,7 @@ static bool rtl92ee_get_btc_status(void)
- 	return true;
- }
- 
--static struct rtl_hal_ops rtl8192ee_hal_ops = {
-+static const struct rtl_hal_ops rtl8192ee_hal_ops = {
- 	.init_sw_vars = rtl92ee_init_sw_vars,
- 	.deinit_sw_vars = rtl92ee_deinit_sw_vars,
- 	.read_eeprom_info = rtl92ee_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-index e63c67b1861b..1cf801feb45e 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-@@ -221,7 +221,7 @@ static bool rtl92se_is_tx_desc_closed(struct ieee80211_hw *hw, u8 hw_queue,
- 	return true;
- }
- 
--static struct rtl_hal_ops rtl8192se_hal_ops = {
-+static const struct rtl_hal_ops rtl8192se_hal_ops = {
- 	.init_sw_vars = rtl92s_init_sw_vars,
- 	.deinit_sw_vars = rtl92s_deinit_sw_vars,
- 	.read_eeprom_info = rtl92se_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-index 048744166a92..dcd7cdb96aa4 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-@@ -183,7 +183,7 @@ static bool is_fw_header(struct rtlwifi_firmware_header *hdr)
- 	return (le16_to_cpu(hdr->signature) & 0xfff0) == 0x2300;
- }
- 
--static struct rtl_hal_ops rtl8723e_hal_ops = {
-+static const struct rtl_hal_ops rtl8723e_hal_ops = {
- 	.init_sw_vars = rtl8723e_init_sw_vars,
- 	.deinit_sw_vars = rtl8723e_deinit_sw_vars,
- 	.read_eeprom_info = rtl8723e_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-index 0a92d0325098..5967df08e34e 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-@@ -187,7 +187,7 @@ static bool is_fw_header(struct rtlwifi_firmware_header *hdr)
- 	return (le16_to_cpu(hdr->signature) & 0xfff0) == 0x5300;
- }
- 
--static struct rtl_hal_ops rtl8723be_hal_ops = {
-+static const struct rtl_hal_ops rtl8723be_hal_ops = {
- 	.init_sw_vars = rtl8723be_init_sw_vars,
- 	.deinit_sw_vars = rtl8723be_deinit_sw_vars,
- 	.read_eeprom_info = rtl8723be_read_eeprom_info,
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-index b5266e560416..1557d32efdd2 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-@@ -229,7 +229,7 @@ static bool rtl8821ae_get_btc_status(void)
- 	return true;
- }
- 
--static struct rtl_hal_ops rtl8821ae_hal_ops = {
-+static const struct rtl_hal_ops rtl8821ae_hal_ops = {
- 	.init_sw_vars = rtl8821ae_init_sw_vars,
- 	.deinit_sw_vars = rtl8821ae_deinit_sw_vars,
- 	.read_eeprom_info = rtl8821ae_read_eeprom_info,
--- 
-2.49.0
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-fix-6.15
+
+for you to fetch changes up to 811d6a923b40fc130f91abf49151f57cf9ac2a6f:
+
+  dmaengine: mediatek: drop unused variable (2025-05-15 11:42:13 +0100)
+
+----------------------------------------------------------------
+dmaengine fixes for v6.15
+
+Driver fixes for:
+ - bunch of idxd potential mem leak fixes
+ - dmatest revert for waiting for interrupt fix as that causes issue
+ - couple of ti k3 udma fixes for locking and cap_mask
+ - mediatek deadlock fix and unused variable cleanup fix
+
+----------------------------------------------------------------
+Basavaraj Natikar (1):
+      dmaengine: ptdma: Move variable condition check to the first place an=
+d remove redundancy
+
+Dave Jiang (1):
+      dmaengine: idxd: Fix ->poll() return value
+
+Nathan Lynch (1):
+      dmaengine: Revert "dmaengine: dmatest: Fix dmatest waiting less when =
+interrupted"
+
+Purva Yeshi (1):
+      dmaengine: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
+
+Qiu-ji Chen (1):
+      dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_st=
+atus()
+
+Ronald Wahl (1):
+      dmaengine: ti: k3-udma: Add missing locking
+
+Shuai Xue (9):
+      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
+_wqs
+      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
+_engines
+      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
+_groups
+      dmaengine: idxd: Add missing cleanup for early error out in idxd_setu=
+p_internals
+      dmaengine: idxd: Add missing cleanups in cleanup internals
+      dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
+      dmaengine: idxd: fix memory leak in error handling path of idxd_pci_p=
+robe
+      dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remov=
+e call
+      dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
+
+Stefan Wahren (1):
+      dmaengine: fsl-edma: Fix return code for unhandled interrupts
+
+Vinicius Costa Gomes (1):
+      dmaengine: idxd: Fix allowing write() from different address spaces
+
+Vinod Koul (1):
+      dmaengine: mediatek: drop unused variable
+
+Yemike Abhilash Chandra (1):
+      dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structu=
+re instead of a local copy
+
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c |  19 ++--
+ drivers/dma/dmatest.c                   |   6 +-
+ drivers/dma/fsl-edma-main.c             |   2 +-
+ drivers/dma/idxd/cdev.c                 |  13 ++-
+ drivers/dma/idxd/init.c                 | 159 +++++++++++++++++++++++-----=
+----
+ drivers/dma/mediatek/mtk-cqdma.c        |   6 +-
+ drivers/dma/ti/k3-udma.c                |  10 +-
+ 7 files changed, 148 insertions(+), 67 deletions(-)
+
+
+--=20
+~Vinod
+
+--SKw8+HHxUjrEuEhv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmgovgYACgkQfBQHDyUj
+g0effxAAgNYPwmEqgN5WUqvvjjLjLuRw8UQTrIxDi/HX2FlJROrjpv0yEuXG+Uim
+gjiIIzCvHh0+OxnapdjUv343E4FPX/tFvLeN29cZkgP51x0UtLXW2zc2tAatwo+f
+Tnfsn1s7LF9YofItZ/bbZy9+OkZxWkdrQ7Znhp3pLx+TwE0JAGCRAKUu0D453TvB
+J+4JRz3LZcT6O9yZoC8CSNQIfLsj/dMPwsh6oM/BaIb/SuBlU69t9RDFMBcXjeLo
+NQUtacEddGs5rqYFOH8RJvcb638nLsof3EOP80zoR74uDDdFjVd8PrauOqH25URl
+9Eqc/6Uzga8sx3yn5Vyg1g6gyqji04QHvAAxjbruQl2lR3vdXGz3f6DWJM7ljgjK
+PIwBICLVBU5Tej8zQ+sKCR5NHkIDJMsAasYGMxV+oAnEZ0Rh3nfU+qExRsaQG1Ef
+apJ7VmkzHdkNyCHy+2kSsHuxtMFoXH4LPHrNtHvzs4VSGolXRnt2phon4bCPg7rM
+rzCLvK5ASoi7xOzQTxMHxP4h6EcqxqhWkC6rDHH+7CyCSNjuPg7nldVymHKMGGOm
+YSE9Vl69l2M3pWYzsgCxwhwroccPIOmsrB949YdjuCtasQKmmyGavE4vxPlj+TRN
+mDaM8RCH8bvNLbrIhr0anBtF/uKDj8ftOM9UQZ2zmHiio0K8aj4=
+=czZ7
+-----END PGP SIGNATURE-----
+
+--SKw8+HHxUjrEuEhv--
