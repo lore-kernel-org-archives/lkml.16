@@ -1,131 +1,107 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338401B6CE4;
-	Sat, 17 May 2025 17:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EDA4B1E5F
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 17:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747502121; cv=none; b=V226EeClDehvPsyyZAjKc9jToSQh5fKJX+Q23OsccaZFlmPBCH2QBaegpi24sSntCkOiYlrItIRGF7tYyMXn0ooEGFAc+QnqTltBxteuHQuoUOp9uQa7TTaluGyJg2lhpg0zC6RjL3cEw7W1Gb5U25U+XgepqLQPrqaIc0hBuwQ=
+	t=1747502187; cv=none; b=YKAsbsId25aRIK0PnSgHK2Fh5vGA/Jkl9JswPXH1ACds56r9rd80dHrPbdipIrrAR4vvFIGBWpt8MRv1mmuZgJIBxSE3te+b59ROS/FdLc673fBnzbz3xnoXgK4AjlYW8Cbf+qrOvzPIlhOzu4CRHCbGMO8CxM8dQE4gZQLZTkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747502121; c=relaxed/simple;
-	bh=9DjCofLXmx9Q5OCi6Po1q3UA8AxzT6dRjaBiwIUNyH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZqaRSpwtOc3WyBTriIVaOl1RMrK8eyjXHpX2ChNmTWWINE2GJdX4cvgVzdUAD1NU7qVBoiw01/DNJ4le5RqkpEs9dvH5h2x1CXckN4QMc4TRDl5gPB7zJs0f+Yp5aJHpwxFmqpBpY5pItKfetr/eVVjTMNRp5ByO1wbJAIvHgvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdIb7YGK; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747502187; c=relaxed/simple;
+	bh=9Yzm10CwF95SdEp6HZeRuq2YqwK9KCVypv6FFXSxmII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMd+3Snu0Ov01i0eY0F/dRBYBJIwJZ5+LI3IK/1XlJNCNIjUMf5Xz/8il7wcX6YYiHz7mhkJFueif5UlrfQ7wx/xxfZdcwLxtTEikhccfViMl9iByVaPD/T9yeOubte6O1HOS40iAOlDgzQZvBlJVF32X9+uJMSvc28aiT2gx6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lI4R0Ttv; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdIb7YGK"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30e8feb1886so1368840a91.0;
-        Sat, 17 May 2025 10:15:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lI4R0Ttv"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231f6c0b692so121765ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747502118; x=1748106918; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DjCofLXmx9Q5OCi6Po1q3UA8AxzT6dRjaBiwIUNyH8=;
-        b=BdIb7YGKX93IoBUvusoGbbP5Tnh8Hsxy+BQLJx0OeVimVY6crefis3xtpvkMm+Mr7y
-         KkaaQPwOy6qba3mvdllPB4Zzm1rYK5VK8gccXGGBJYk/jKqKv8bq93QtmoA73xXVxDWS
-         nuB3RKAE8MAEmTnyAL2WMe6GJaelvJpjjBlyeI7sPYsLYHRCdu+lhmIl+fYAbpMEFZoU
-         rl88hrrP365/12Tj2JMDURKjvkp7fhzUU63C05iqjSUpoOqg4cmvJ2fI0kLuV4vunTXO
-         rSdeg2Oy08JhLK4XmuY/5gX9buA8fFrls1lLp4vywbTv0msYcUv4P9kFa4qu2Jzq4ACF
-         BTRw==
+        d=google.com; s=20230601; t=1747502185; x=1748106985; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oECJK4EhKG9tEX+cHzZsFBNImVK6Jq7EaOv6UW/zHFM=;
+        b=lI4R0TtvIGD75fsqrSgXmIFSAkO2up5GxvxL9t+0JHgWxumaU5T68/Cf80aY7M8UzL
+         m8upeud/P81Ztc2dIf7DuKB09gOFmNX7wMt+t9yWbRS3NtVYweL8BXkdNlf+8tatgki0
+         TYPO+79RU+1/cP6U/9xNRJB8Hrl3xchUT8vqdIz2mjxlOFVzidYR0uj8JJCwy3TSfCdy
+         8316CATac8ZdUXBDMvZFDLjQVV/LuAS5HxVVUs9W1WAERh9/rT8TIrxxLyM2G2X1s85r
+         YQuFOlYfFM1CC22z03wIgCFQpC4vtHdvx6sENkZkyfQhdFrC3RVbRxaWodQ10HDLun+v
+         Gw5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747502118; x=1748106918;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9DjCofLXmx9Q5OCi6Po1q3UA8AxzT6dRjaBiwIUNyH8=;
-        b=APkuiTYZZhgXtogIp6+DZbbTmaTxb7U15MZWcbUT8YOwKQSfqCh4KWs6nxZboWFe98
-         ZlziOVRO3hdXRsOFKRbuPh7YbFYXM1PG157VX9h+Qhsxqx+bNXTyfLFKo5k2JitsRK+N
-         IBO6Gcz2qQcDZowaHBdMeHe62IBpn+y9bbTDdv+y8kfzKx3WbhCDI6AUT4zODzPCVCGQ
-         4QUh8lZCwVy+80uD3HP2ZcNI2mJaFmH+omzTGzgZAV6n5sGGFpiChc1x5sEUhykiCdf5
-         g6ArBkAQYAheENaWLFEROKeBnCkFIYT4SQJeq5363hc433v2J7iCWfoGzO+A6bBO0gVV
-         r6Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsUUJZ7K2oPTdaa4puCQ2Mt8zaO3vrlh/0UQPjqVF9HMvz4Rshr/ZE18PwFhIP8dTZj9sQ@vger.kernel.org, AJvYcCW8fYbXCyVkkOpcBiYlfKSH0wvF0hFLfqZFEpQXWN2UqqcTa/4JO0zWC70IOKOgJbz9kQRp2c+qOuzI2cur@vger.kernel.org, AJvYcCXDvIsqkPLcauGFaAJDc9PlVinuIaEf+DEGxmLhq45YDohNzncuclVie9NCb9MuGMo9LqK3Bw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXUl5S10vvsISEAwq1lnB0cI3tOw9baq3Wxx4a18rm7t45mZyx
-	m4xyDDwVeXbBTOx6AnaA4QwEZzZg7YYMZh9Lmipl2b93wXOEBInJReKQ
-X-Gm-Gg: ASbGncvsK4E2G5Bu01A/kQcB70oiOdSN3ZWWgRUMFHAYTYnVJiMo+v5NCwrqMAMHNgr
-	9QjkVNlwBqo+Q5XYtZPK9XF99UDHRnj04WE5WmYa88J/jJx1CtFiaAoa5fSM4MZUrp62+45rdlg
-	t2U+zOAab5EeRj3O59RUpB9sz5RuLcGyedFLDZnlnrD/n8Uih846AoJSh6AyJtTV+M1xj17hhZy
-	xx+6W6dS34aKj6sSsUoIggVDUemGmiSIjv9kn66WdspUZA8e1usE/7BVbnoZWyeUXpJ8PbG8lTK
-	8Di73u49dOCziJSWOwZSB2vU848pTOwjSlz67ezlTsw+OZ0bZyoiZUKDTGqK7tyHN8owwFYw46F
-	OfM1DJ3w11O9i6baeTc/ZsN1v5cm9
-X-Google-Smtp-Source: AGHT+IGhXsveF4OEbJ1dDyp9Nw46gkHE+V0NR+HQKEHO5MjpfY02u0lplDjD8I9+4s1a7IPjvStHlA==
-X-Received: by 2002:a17:90b:4b0f:b0:2f6:be57:49d2 with SMTP id 98e67ed59e1d1-30e7d545920mr12896336a91.17.1747502118288;
-        Sat, 17 May 2025 10:15:18 -0700 (PDT)
-Received: from master.chath-257608.iommu-security-pg0.clemson.cloudlab.us ([130.127.134.87])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e3340187dsm7160722a91.5.2025.05.17.10.15.15
+        d=1e100.net; s=20230601; t=1747502185; x=1748106985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oECJK4EhKG9tEX+cHzZsFBNImVK6Jq7EaOv6UW/zHFM=;
+        b=Ra0dGiGXSBVytmC919dSVFLfrbli/G/TNPeVbwjD9s//b/qSc8XnWCAG869H09HE35
+         ZTaFRw17CAQihAkBe7SURsZMyefPbfnFm1U6BThPb815oN3oXQTzaV0IVYhBTv4zbg8b
+         2/AjJySNZGLMNEO22HUUfifmynfFnH6BFjGSfi64seNzdQMcT2U9oQfTLIX9+k+KiM8i
+         v3oAkVQvA+tWPV1LBR2zC0YfhRbvUPNSkvZ6P6Lr2PmfFkpmbIs4ZSKjTLAQjeKjTsvg
+         gGbCoGzj+2Mw8TCG4z9l4/SkMV/DCt3QbXaMmyXFKinBqyjLDvgb3JdUC6WPbCcdP/IF
+         RquQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1YVmV1RUlw/0UAU2nL4uhoAKvLnH69zojEa1Ul7YojtB0brV/pUeNzrHw2o+rmj37Do1bJsdm7UAeJnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIr59ZklmWFHvxVbWbsqIDmhM5UH/3pAr+A6NVooRBhXFujSSH
+	Ll9gefexJZ9jz1JXJqHLMNbjxE67ZtSp4gFGmQvXNC+vbl3oZbgwFDcTCQxzo+xkpQ==
+X-Gm-Gg: ASbGncvEBsYo3gEtvZL64SV+ttNqEgR0OnqORTTR2K3Ep0Whf9btEAfQEK2sXjFTMxw
+	Id+C2SMJIbRfNniPANY2LONCjsfaF9+QsasUwdDbaRxTsinVyFihGjjp4ZPifJPEvL/D+s5uQ9l
+	XGFcz4/5kmZagksFliinmv2iuX3JENH1jCuuUKNzAi8wD+KvKjs+0nyKzIrHowBIyBicjEtLf6y
+	iquHqwHH5xJH8wkfir9Zmcfnv67g5/ju8QRNUHle+OJZoMvkYibbiZBABce56cDO3w+hhaHID7w
+	TeQwS6J3hITx4HYXAMBqosCqHwlIijKeZl26sqI9zeTluBWgnEGwoovcfrFEXqxtFKrwXlUquxQ
+	YGCZyAYrL
+X-Google-Smtp-Source: AGHT+IHCzf2+CRo3mSqfC+qoKsF+v8pV5dFUA1q/UEvjV0QSvMCIsf9UZncP3X3FcZbBm9pBKEF2yg==
+X-Received: by 2002:a17:903:2ace:b0:231:e069:6188 with SMTP id d9443c01a7336-231ffc4c0efmr2243365ad.0.1747502185056;
+        Sat, 17 May 2025 10:16:25 -0700 (PDT)
+Received: from google.com (3.32.125.34.bc.googleusercontent.com. [34.125.32.3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97de4sm32692085ad.144.2025.05.17.10.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 10:15:17 -0700 (PDT)
-From: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
-X-Google-Original-From: Chathura Rajapaksha <chath@bu.edu>
-To: jgg@ziepe.ca
-Cc: Yunxiang.Li@amd.com,
-	alex.williamson@redhat.com,
-	audit@vger.kernel.org,
-	avihaih@nvidia.com,
-	bhelgaas@google.com,
-	chath@bu.edu,
-	chathura.abeyrathne.lk@gmail.com,
-	eparis@redhat.com,
-	giovanni.cabiddu@intel.com,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	paul@paul-moore.com,
-	schnelle@linux.ibm.com,
-	xin.zeng@intel.com,
-	yahui.cao@intel.com,
-	zhangdongdong@eswincomputing.com
-Subject: Re: [RFC PATCH 0/2] vfio/pci: Block and audit accesses to unassigned config regions
-Date: Sat, 17 May 2025 17:14:59 +0000
-Message-Id: <20250517171459.15231-1-chath@bu.edu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250516183516.GA643473@ziepe.ca>
-References: <20250516183516.GA643473@ziepe.ca>
+        Sat, 17 May 2025 10:16:24 -0700 (PDT)
+Date: Sat, 17 May 2025 17:16:19 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: syzbot <syzbot+c3763f82ee2ceaf93340@syzkaller.appspotmail.com>
+Cc: arve@android.com, brauner@kernel.org, gregkh@linuxfoundation.org,
+	joelagnelf@nvidia.com, linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org, maco@android.com, sfr@canb.auug.org.au,
+	surenb@google.com, syzkaller-bugs@googlegroups.com,
+	tkjos@android.com
+Subject: Re: [syzbot] [kernel?] linux-next test error: KASAN:
+ slab-use-after-free Write in binderfs_evict_inode
+Message-ID: <aCjEY1X85xUne3Ix@google.com>
+References: <6827b414.a70a0220.38f255.0008.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6827b414.a70a0220.38f255.0008.GAE@google.com>
 
-On Fri, May 16, 2025 at 2:35 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > By PCI bus error, I was referring to AER-reported uncorrectable errors.
-> > For example:
-> > pcieport 0000:c0:01.1: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Requester ID)
-> > pcieport 0000:c0:01.1:   device [1022:1483] error status/mask=00004000/07a10000
-> > pcieport 0000:c0:01.1:    [14] CmpltTO                (First)
->
-> That's sure looks like a device bug. You should not ever get time out
-> for a config space read.
+On Fri, May 16, 2025 at 02:54:28PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    8566fc3b9653 Add linux-next specific files for 20250516
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10b776f4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=aa3444b6d01e5afb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c3763f82ee2ceaf93340
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ac394ca3c315/disk-8566fc3b.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/170dd88bde87/vmlinux-8566fc3b.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/c097fa83c7d7/bzImage-8566fc3b.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c3763f82ee2ceaf93340@syzkaller.appspotmail.com
+> 
 
-Just to clarify, the above error was triggered by a write to the
-configuration space. In fact, all the errors we have observed so far
-were triggered by writes to unassigned PCI config space regions.
+#syz dup: upstream test error: KASAN: slab-use-after-free Write in binderfs_evict_inode
 
-> Dynamically updateable might be overkill, I think you have one
-> defective device. Have you talked to the supplier to see if it can be
-> corrected?
-
-So far, we have seen this issue on five PCIe devices across GPU and
-storage classes from two different vendors. Therefore, we suspect the
-problem is not limited to a single device, vendor, or class of devices.
-We reported the issue to both vendors over two months ago. But we
-have not gained any insights into the root cause of the issue from
-either vendor so far.
-
-> Alternatively you could handle this in qemu by sanitizing the config
-> space..
-
-While it's possible to address this issue for QEMU-KVM guests by
-modifying QEMU, PCIe devices can also be assigned directly to
-user-space applications such as DPDK via VFIO. We thought addressing
-this at the VFIO driver level would help mitigate the issue in a
-broader context beyond virtualized environments.
-
-Thanks,
-Chathura
+This is a dup for which Dmitry had sent out a fix for. However, Greg was
+never cc'ed so the patch was left in limbo. v2 sent here:
+https://lore.kernel.org/all/20250517170957.1317876-1-cmllamas@google.com/
