@@ -1,110 +1,91 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE3B18FDAB
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382DB4B1E5E;
+	Sat, 17 May 2025 08:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747470249; cv=none; b=lb5B22Xs9Em2j2QFt3SVmoe5QRu/U35hJ3umFh3nxDx49qHidrSTpP01PRzEqTVXAI4GR1ZQLoHS0a8LrFdwsiPyUqXPJ8yfeDCqxhzIGrPDihYYSeqxEnjeazipr/QA/nEI2yO45cLMCHuoHdZZKJBUaaN0SdBoLaTeKsoRxh8=
+	t=1747470391; cv=none; b=LOGf5uapQlrHnhtz0kzNHfbGsCcgfHlvfVuepudxCmDPD/7wt4ColH/AQe51eUu/vdNdY2no9aJxA4o7gvDP2Jxijr++KaNfp7hENwDS3Wt5nmhZDIxCmj4yHQVCaCllUg94yvhPdKNpwod/Oa7xX/Ujn1mSB7/yBAoAbsn3AkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747470249; c=relaxed/simple;
-	bh=s1nTQGBD31+KHbF5SOweT37umasqo4MTw7szvhBcfy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxqscFyld4YijeFeEHd1Qof7ay4H5uALLJtJZWCl7EHVPCBnt6xTQtpLfuN3tsjbCb5raT5d7aruLzrNfxzppCbMT9JC3hkcyeHvRNZK6fhizS7BEFHaIiE7FZLmUpDEqxWrSjpzo1kKVljS8kzbbyCSPOta9uO2VvO0ePw1UTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=l9H2P+vJ; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1747470391; c=relaxed/simple;
+	bh=PQOLWqrKSyrqpWmnE9BonZOml3AtvPoByeRJERePNws=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jhvNywdBzh2qnK5AQG24Q9myztzRZe5AEX7Vyo4NOnFi9uYuUUgcy121bGQduJIbWdQ6LIgx+bvhPyQLO1/3Wm4v7X5othsaYhjmjOtAFQ5YRWeT9U3vGeCH+X0Br/QMe0O8HkhfwZclezRytoi6dTOWH5Z9MQDXSZVnP5kT/N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hm1Zle8y; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="l9H2P+vJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=+1XD
-	rmDz5vIlLyH8vVVp1fHDNWZ4Hdbcl0x7tpFLbVk=; b=l9H2P+vJWCmpdDdrDl99
-	Pkxoj3oviBiWX+9/4UymGTvRT0bQeca3GBf3RxqXRr10kO5Ye4KbnS/PO9Ip9ccH
-	JHBJCXtTuIYY+1djez4f8W3xjsqt1F/HN9k1avMw194vz5xkAz6pV5LiJiqQ8/N4
-	dqfli1qi+D5m4VO6BhLYqc6U0bJRCSVtLt/EgZSz4off0EEdp83tMkiNv9K2qlvG
-	XP4obv/TeOurDUCwgbE5IOD9hMmCFRObkalni9JgsXeAsMRlo7CMX0njUeseNM6H
-	A5PJ7MX83D0qaJ6Gq6yUTbuXu0DhgLG6Pu6D9ubdQhMNkhca1KuTaGQ4Z1sSeJcj
-	GQ==
-Received: (qmail 1685043 invoked from network); 17 May 2025 10:23:55 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2025 10:23:55 +0200
-X-UD-Smtp-Session: l3s3148p1@koWVnlA1/LVbRaAl
-Date: Sat, 17 May 2025 10:23:54 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc7
-Message-ID: <aChHmtqCuYKF1yox@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-References: <v2tjgz5opkfbnlwsl4ptiauqq3bcahgxjfwx6edk6c6lhyhzm2@nlcpfl6lse6b>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hm1Zle8y"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747470383; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=l+Er2Ula6bNRtJ61wL0riauQQAVXrck13+EaUfPTQ1I=;
+	b=hm1Zle8yyUEULoniyEkVsWT9wIEjXtRJnmjqqt5z0Qk1K4eyNLT8AgNo+N+OiHWz7aSm2RMuoEdMr68Qr4uwPiVly3sXERS0SOS8Nly1rQMwAOL++6wBtR2U7qtknPP+VJGXtgMnsaCtMgGmqxPjoBKml2cWgsd6B9qs6T8oWNg=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WazQ0TG_1747470380 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 17 May 2025 16:26:21 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Honggyu Kim <honggyu.kim@sk.com>,  kernel_team@skhynix.com,  Andrew
+ Morton <akpm@linux-foundation.org>,  gourry@gourry.net,
+  yunjeong.mun@sk.com,  gregkh@linuxfoundation.org,  rafael@kernel.org,
+  lenb@kernel.org,  dan.j.williams@intel.com,  Jonathan.Cameron@huawei.com,
+  dave.jiang@intel.com,  horen.chuang@linux.dev,  hannes@cmpxchg.org,
+  osalvador@suse.de,  linux-kernel@vger.kernel.org,
+  linux-acpi@vger.kernel.org,  linux-mm@kvack.org,  kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+In-Reply-To: <20250516144346.8545-1-joshua.hahnjy@gmail.com> (Joshua Hahn's
+	message of "Fri, 16 May 2025 07:43:45 -0700")
+References: <20250516144346.8545-1-joshua.hahnjy@gmail.com>
+Date: Sat, 17 May 2025 16:26:09 +0800
+Message-ID: <874ixjod7i.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="72Lqpmoi9spjJbkk"
-Content-Disposition: inline
-In-Reply-To: <v2tjgz5opkfbnlwsl4ptiauqq3bcahgxjfwx6edk6c6lhyhzm2@nlcpfl6lse6b>
+Content-Type: text/plain; charset=ascii
 
+Joshua Hahn <joshua.hahnjy@gmail.com> writes:
 
---72Lqpmoi9spjJbkk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, 16 May 2025 13:37:39 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+>
+> Hi Andrew,
+>
+> Would it be too late at this point to add Honggyu's Reviewed-by and
+> Tested-by tags? He has helped test and review this series from the start,
+> but I must have missed adding his tags after rebasing from v7.
+>
+> Sorry again for the noise, and thank you for your understanding! I'm not
+> sure what the procedure looks like for commit messages... but here is
+> a fixlet if that makes sense with you:
+>
+>  Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+>  Suggested-by: Oscar Salvador <osalvador@suse.de>
+>  Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
+>  Suggested-by: Harry Yoo <harry.yoo@oracle.com>
+> +Tested-by: Honggyu Kim <honggyu.kim@sk.com>
+> +Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
+>  Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+>  Co-developed-by: Gregory Price <gourry@gourry.net>
+>  Signed-off-by: Gregory Price <gourry@gourry.net>
+>  Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>
+> And I will sign this off so that you do not have to forge my signature : -)
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>
+> Thank you again for your help, I hope you have a great day!
 
-On Fri, May 16, 2025 at 10:59:14AM +0200, Andi Shyti wrote:
-> Hi Wolfram,
->=20
-> I could have delivered this pull request personally, printed on a
-> roll of paper and handed over with a big bow :-)
->=20
-> From sunny Nice, here's this week's pull request. Now, time for a
-> dip in the water.
->=20
-> Andi
->=20
-> The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fe=
-c3:
->=20
->   Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags=
-/i2c-host-fixes-6.15-rc7
->=20
-> for you to fetch changes up to 1cfe51ef07ca3286581d612debfb0430eeccbb65:
->=20
->   i2c: designware: Fix an error handling path in i2c_dw_pci_probe() (2025=
--05-14 17:28:24 +0200)
+Feel free to add my
 
-Thanks, pulled!
+Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
 
+too :-)
 
---72Lqpmoi9spjJbkk
-Content-Type: application/pgp-signature; name="signature.asc"
+[snip]
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgoR5YACgkQFA3kzBSg
-KbbBjg/9EBJjSwBYHhgj+p+IpfIOo0+j7w0v9/Wmn3NqePBcR4xf/M9NT7BVXVvl
-UFE6WX3uCvGYOYCKpolVYyobNGZAGceSUUPG42bTmq8idk5/caVATYCTwrB9eTPE
-Bez1zGXjw2z6xR2hsZWzNcp0n3J93Tz1d5sKIxjMyrA3kD3szoWLdogQ85C8LchH
-kwLmfk6uN4wDF99n4VbTJfeV0Zh9OwMK/eYgdQtJ2XA2aqrhjc/p7tl57ikL6eSD
-kpyZRmCFHZWmEXZPVINeSUlgN5xzXW/4zyWr2xooY1y524IzVZBDAezdCD8FkqK1
-lihJBr2Ac6ajp1En4FpXS5+76m/wktmaV7oTorVu4IFOGIIokElf5QuZbS5NWhKD
-fOApx5MItmBSVhbYDEVX+7/zci6LaQ6h50Mhv5BGTCRUgjM14S6yrRU1MHDmFhGG
-1aPmMzaMuRJTj862rYDDPoHzFfL7IElFq1GxZOrifBZV83kjawps6DAYuQrotecm
-o+m5M1jQcWYg3kpbtPkHIQGVxqnNmCFXKQCJe8yAJJTdLHJk9mibMxF6KTnTm/bm
-ez/S67mttp5fTeKAwMdLjado4sTyjgwxKM6SrFHTXcak9aG8jUczScmVace2zYtn
-Jzf0LVGqosutbBZv8eyZwJvyZ6CPv0Fkwt1wI+5kgw1/aG18LEM=
-=YrZN
------END PGP SIGNATURE-----
-
---72Lqpmoi9spjJbkk--
+---
+Best Regards,
+Huang, Ying
