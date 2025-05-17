@@ -1,65 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA9DB665;
-	Sat, 17 May 2025 13:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B971E6DC5;
+	Sat, 17 May 2025 13:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747486840; cv=none; b=Dy9fTeBag51QC72rwFVYLy+rSZKcpXavKgEANQM8ZEV+HHRkhydMlDNcKxro8ANmQG5568t7iJ/5GYK16qbgd+kpsr1Xj6UWvcERHGQFORYfFiAjGvNsmsArXGBUylor1mDGqMgaS0ZnbHzpY1u9bhy+XDh4oJ8l1XGurmyya/M=
+	t=1747486842; cv=none; b=prHjFz7EI7aw00PlvgJLk6/NP+r/WIfUjn0n9b5ZiLuKxOfmakoXbdLEWBz6UuD8uidLCCGLwKYdNbqZSl8fbHJ9k2I6CLDrKAWtTOvNdTltz6gqk/jRlv4vk4yh3SZlHsadgemyA8KNjCHZkurgq7T8rsfwC+qePTIniEYYVTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747486840; c=relaxed/simple;
-	bh=uQiRZdi6cf2J8qwGiQGb06TAB/2XktpcMmS8ReKwtwg=;
+	s=arc-20240116; t=1747486842; c=relaxed/simple;
+	bh=DScK2WjVK4VqVUJ5qnpyaMErf/H3lQrj0XjnQ9g2W0o=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jV8yqSt+yHZG1KycWMJC8Tfzk+ExTy8QxUnySLCi+l5d/rx4/KV8i69S6EyoBwTZJMtZMT5hmvBqDuozFS/vRMAo4U5tquml0Cyexq/+6idPGfaREXGXsbJ4P/WySfdAFfBnlBl//7DGog0nrLKQAquv4+i2qVDEvqzWyQAJLYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pmHcMwkS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Izv8vrzH; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=W0DLDAZfqU9s682RHyZKizTAcZ1pdLZ3mSnR9S7BbWbZGrlkFoCgCBnHSrkk84RCfS+xLAeUcs5SVOLvbFrO1JosFrOekGecgRPbq/SUBqqrlzNp3vnkPR0CPFFJygs9I/GJ+usNWdcFqbAlup2bw/CebVTyaHw/sMEoyabFWMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YZd8fF8Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z9Bx4AKZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pmHcMwkS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Izv8vrzH"
-Date: Sat, 17 May 2025 13:00:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YZd8fF8Y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z9Bx4AKZ"
+Date: Sat, 17 May 2025 13:00:38 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747486837;
+	s=2020; t=1747486839;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zdv98f6FPlwcsJjTQL2fJjwZKTmtVuPaKfXVItWDHvk=;
-	b=pmHcMwkShhCufCvRhZnPReq5A43pha9eaJCW23Trc3R/loAH5eERwZyJIbd3dUff8r37ZN
-	SmveWSlGouOqVFex+0mtL4w9ThBejNXzk6lATvx6OY/A6OhSaX+cu+gN26VM7RbY64Lv0I
-	fIz0I0sAoH3xjUVMef70ewdOC8EkrY6lyjZ00MEpHVRX13RjIwWHeRFgudEOrRqFMxGLsy
-	AWwzjj28FRvSNGLweoO9WtMTE4qJXFvggtcB9rJqi8hDRUw86QCaHzOHSV7o14LljXZV9w
-	Z08vSXJ8t1e2uFSegrjJG2aK4Gfh1Y7V/06M/lYw64QP9wXsKRlXaWTEd665fg==
+	bh=lQ14EVZbqljMAiOXDcwgZkw1pGg2Uscp2uKKIMNteI0=;
+	b=YZd8fF8YU4gT5FgFXlZaR25tKoFm6f5XOQauXMX3ulkYh55HAX4jr6hshpEUgYZ+zF9AhZ
+	8HSQLoEHIcAPDGY06koo1WGlNnUZZQ1QT/oxgkO9TLK7pY9zxQOtlXSBbCIrwbS+RXCvD4
+	K/Qfr22e9baSdA8KwWQJtVc3rCItPu7CGnPD1w2+Vn10z+Hxqh++K99hPGPcodWgklJ8Xm
+	I4RHiQYPawyu8RHIp252nFqgHkISnrfdqN8eIrwnBZAZNiETlTp9vMYSTamQP3qVNvq5Pd
+	vE1s2uC+wE2g2Um2plLA7Gd5kBpcrdZblCiDYBPbo5eW8jabXnMhI2x116Wfpw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747486837;
+	s=2020e; t=1747486839;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zdv98f6FPlwcsJjTQL2fJjwZKTmtVuPaKfXVItWDHvk=;
-	b=Izv8vrzHaJ5Nq9rLLhlSW93hNVL1Uy8/ilvzQ1uOgJ1EP49NODi9xQ1gQQlAUQT4M/7H7B
-	xw+m7XlHUaEjteAA==
+	bh=lQ14EVZbqljMAiOXDcwgZkw1pGg2Uscp2uKKIMNteI0=;
+	b=z9Bx4AKZvhi4UFe/wKgMUpTUHRZ1DRhGrhbYoXZyQUmuNLKua6J5VZyhsNyCP+lLSvn3l9
+	0GXQNm0LtlucOuCA==
 From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/merge] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+Subject:
+ [tip: x86/merge] x86/mm/64: Make SPARSEMEM_VMEMMAP the only memory model
 Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
+ Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
-References: <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
+References: <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174748683623.406.17252580515305855537.tip-bot2@tip-bot2>
+Message-ID: <174748683804.406.11521945321481191771.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,100 +71,102 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/merge branch of tip:
 
-Commit-ID:     09230b7554824c9db1712324efcf3595c67fd326
-Gitweb:        https://git.kernel.org/tip/09230b7554824c9db1712324efcf3595c67fd326
+Commit-ID:     cba5d9b3e99d6268d7909a65c2bd78f4d195aead
+Gitweb:        https://git.kernel.org/tip/cba5d9b3e99d6268d7909a65c2bd78f4d195aead
 Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 16 May 2025 15:33:06 +03:00
+AuthorDate:    Fri, 16 May 2025 15:33:04 +03:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 17 May 2025 10:38:29 +02:00
+CommitterDate: Sat, 17 May 2025 10:34:11 +02:00
 
-x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+x86/mm/64: Make SPARSEMEM_VMEMMAP the only memory model
 
-PARAVIRT_XXL is exclusively utilized by XEN_PV, which is only compatible
-with 64-bit machines.
+5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
+being phased out, making 5-level paging support mandatory.
 
-Clearly designate PARAVIRT_XXL as 64-bit only and remove ifdefs to
-support CONFIG_PGTABLE_LEVELS < 5.
+Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
+any associated conditional statements.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250516123306.3812286-5-kirill.shutemov@linux.intel.com
+Link: https://lore.kernel.org/r/20250516123306.3812286-3-kirill.shutemov@linux.intel.com
 ---
- arch/x86/Kconfig                      | 1 +
- arch/x86/include/asm/paravirt.h       | 4 ----
- arch/x86/include/asm/paravirt_types.h | 2 --
- arch/x86/kernel/paravirt.c            | 2 --
- 4 files changed, 1 insertion(+), 8 deletions(-)
+ arch/x86/Kconfig      |  2 +-
+ arch/x86/mm/init_64.c |  9 +--------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index bae3e97..121f9f0 100644
+index 22c60be..27f5d87 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -799,6 +799,7 @@ config PARAVIRT
+@@ -1467,7 +1467,6 @@ config X86_PAE
+ config X86_5LEVEL
+ 	bool "Enable 5-level page tables support"
+ 	default y
+-	select SPARSEMEM_VMEMMAP
+ 	depends on X86_64
+ 	help
+ 	  5-level paging enables access to larger address space:
+@@ -1579,6 +1578,7 @@ config ARCH_SPARSEMEM_ENABLE
+ 	def_bool y
+ 	select SPARSEMEM_STATIC if X86_32
+ 	select SPARSEMEM_VMEMMAP_ENABLE if X86_64
++	select SPARSEMEM_VMEMMAP if X86_64
  
- config PARAVIRT_XXL
- 	bool
-+	depends on X86_64
- 
- config PARAVIRT_DEBUG
- 	bool "paravirt-ops debugging"
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 03f680d..b5e59a7 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -463,8 +463,6 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
- 	PVOP_VCALL2(mmu.set_p4d, p4dp, val);
+ config ARCH_SPARSEMEM_DEFAULT
+ 	def_bool X86_64 || (NUMA && X86_32)
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index bf45c7a..66330fe 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -833,7 +833,6 @@ void __init paging_init(void)
+ 	zone_sizes_init();
  }
  
--#if CONFIG_PGTABLE_LEVELS >= 5
--
- static inline p4d_t __p4d(p4dval_t val)
- {
- 	p4dval_t ret = PVOP_ALT_CALLEE1(p4dval_t, mmu.make_p4d, val,
-@@ -496,8 +494,6 @@ static inline void __set_pgd(pgd_t *pgdp, pgd_t pgd)
- 		set_pgd(pgdp, native_make_pgd(0));			\
- } while (0)
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+ #define PAGE_UNUSED 0xFD
  
--#endif  /* CONFIG_PGTABLE_LEVELS == 5 */
--
- static inline void p4d_clear(p4d_t *p4dp)
- {
- 	set_p4d(p4dp, native_make_p4d(0));
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index b08b9d3..37a8627 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -189,12 +189,10 @@ struct pv_mmu_ops {
+ /*
+@@ -932,7 +931,6 @@ static void __meminit vmemmap_use_new_sub_pmd(unsigned long start, unsigned long
+ 	if (!IS_ALIGNED(end, PMD_SIZE))
+ 		unused_pmd_start = end;
+ }
+-#endif
  
- 	void (*set_p4d)(p4d_t *p4dp, p4d_t p4dval);
+ /*
+  * Memory hotplug specific functions
+@@ -1152,16 +1150,13 @@ remove_pmd_table(pmd_t *pmd_start, unsigned long addr, unsigned long end,
+ 				pmd_clear(pmd);
+ 				spin_unlock(&init_mm.page_table_lock);
+ 				pages++;
+-			}
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+-			else if (vmemmap_pmd_is_unused(addr, next)) {
++			} else if (vmemmap_pmd_is_unused(addr, next)) {
+ 					free_hugepage_table(pmd_page(*pmd),
+ 							    altmap);
+ 					spin_lock(&init_mm.page_table_lock);
+ 					pmd_clear(pmd);
+ 					spin_unlock(&init_mm.page_table_lock);
+ 			}
+-#endif
+ 			continue;
+ 		}
  
--#if CONFIG_PGTABLE_LEVELS >= 5
- 	struct paravirt_callee_save p4d_val;
- 	struct paravirt_callee_save make_p4d;
+@@ -1500,7 +1495,6 @@ unsigned long memory_block_size_bytes(void)
+ 	return memory_block_size_probed;
+ }
  
- 	void (*set_pgd)(pgd_t *pgdp, pgd_t pgdval);
--#endif	/* CONFIG_PGTABLE_LEVELS >= 5 */
- 
- 	struct pv_lazy_ops lazy_mode;
- 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 015bf29..ab3e172 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -211,12 +211,10 @@ struct paravirt_patch_template pv_ops = {
- 
- 	.mmu.set_p4d		= native_set_p4d,
- 
--#if CONFIG_PGTABLE_LEVELS >= 5
- 	.mmu.p4d_val		= PTE_IDENT,
- 	.mmu.make_p4d		= PTE_IDENT,
- 
- 	.mmu.set_pgd		= native_set_pgd,
--#endif /* CONFIG_PGTABLE_LEVELS >= 5 */
- 
- 	.mmu.pte_val		= PTE_IDENT,
- 	.mmu.pgd_val		= PTE_IDENT,
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+ /*
+  * Initialise the sparsemem vmemmap using huge-pages at the PMD level.
+  */
+@@ -1647,4 +1641,3 @@ void __meminit vmemmap_populate_print_last(void)
+ 		node_start = 0;
+ 	}
+ }
+-#endif
