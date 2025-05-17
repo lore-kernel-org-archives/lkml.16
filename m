@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DEB17BA6;
-	Sat, 17 May 2025 13:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9F6201033;
+	Sat, 17 May 2025 13:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747487907; cv=none; b=W1QLRmuug/WBvRWkinwmha7D5DxlDrD/n4XnV9kdfnWXBjSRioTmhzQxEkv2JrXlSKkldAk4Yx61CoMuOaUtZCNX0ebCYNMuL95CMS9v4QYO+Lg0C68+4U1TQI/kaJ0IFzvCJ3maR7Csh9NKoMFoXeyaAnY+kx+KLm0lBYeBV/I=
+	t=1747487911; cv=none; b=rW5mbKmjFol6RP2N8EPeC78n8dbCdMikdVXT6KhvrjT8r/qAEoWE36XJTaExxm8kmrdAorRN7aXZRnlHRQn5okpMAudXU7ptMjeAcF28gKUhbJ0A30pUkGbM/B1KZDnvLkMRzOUwqKnAbwiUGOD2m09WwFVk8wiyN5KjWdfQ6IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747487907; c=relaxed/simple;
-	bh=cR6ux1cRzEhA5LhXUkm5DYutXCMT68lq6F2Uh63Yabk=;
+	s=arc-20240116; t=1747487911; c=relaxed/simple;
+	bh=NbZtW3nJkC0Cc1S1g/4r3o+UYSK2RiqZsQ/Gi9W9yfA=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Pk6z5uT8HAgtxyFJsMvfeoJcIPgrZD0/YrDvWrLoTUrzXkGghFIpFBois5WxA+C/YeetU9zEqEF0yrV4iq8Blr4M/OKLZKAO7SpiHLhRf/saZG7xmf4mM1hK/LE4TUSofnYgBeacX53l4LRV4da9tz97DgTiGcEqHpq4L+jLc7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b14pDGxB; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=OaYWrtJJb86UXKN5ALeg6IGsnrKSnkOVLf4eyiXPtUqAFrKayP8Qfv8qCGMMiJnlnParoJ22pe4zY8JwfItTjw4WsF5inW8ez3DUoJ+46V24cm0WnOoUNv7lZKP3r7s4UzB5d2LnvUMpromBuXZiZbHnSRelIhwCX93uAeqoGGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYrzaIag; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b14pDGxB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B33D6C4CEE3;
-	Sat, 17 May 2025 13:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYrzaIag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 555EDC4CEF7;
+	Sat, 17 May 2025 13:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747487906;
-	bh=cR6ux1cRzEhA5LhXUkm5DYutXCMT68lq6F2Uh63Yabk=;
+	s=k20201202; t=1747487910;
+	bh=NbZtW3nJkC0Cc1S1g/4r3o+UYSK2RiqZsQ/Gi9W9yfA=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=b14pDGxBDD2eyfJWePBsv+ZfurVz+xE3Du6uzuBxPP0voFHaXx6cFDvkm1iF6tFG7
-	 RJk3EOT7KxurgzIbJgbKs89K+U56YylqkUsZTOBCxsG7t81t0PTBKm0cZln/MQn9+j
-	 v2yIX5i5kbeMR/Qddzd2U7rJJEw9JUjNHsF79LS4+0pKiYGwXIBNNMlOE2Oly4cVI3
-	 oacSlpCTtp0czQM2Bf/vYlaAKriJNSH63EkIS+e/emlmX34juR+5Z4OQWdBvkXTMsD
-	 y6aGoFQkS+xlBGiVTf7of+DHv4stOkD6X0xsVskCo25qppV0AguNLj/lbTvKZpzkKC
-	 okV0o0JyhAf1A==
-Date: Sat, 17 May 2025 08:18:25 -0500
+	b=qYrzaIagwi12Nya6M52n1XYjxyVUpmlzyHQJR+o+UCSIP5bNibR5/uEDktwIa886a
+	 NWn5qc8cUNXK3BCl/agNqEgiYOIkqXfJy6G3kj1pxatIpsx7HePWPY2gckyEOr58Rm
+	 cfXHBZOqylQ5HcJkY17LgokCP3Z6tARlWEzPKhs51GMrLwLZcomYt2pGQofSebL1xa
+	 JZq+urAsdwXgCgvrzfcmnmiNdErg++NVCFYqZYRLFL0RsfgIx36W3qaGtPoni0gFc4
+	 ZrLOABwy1CEOZHYWvKaBWnof3j1EmIEXgX6FbWfxRgEkls3Yxtj9Sri52IittKcq5Z
+	 KI8NwH/J+IWPQ==
+Date: Sat, 17 May 2025 08:18:29 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,51 +36,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: sfr@canb.auug.org.au, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, 
- linux-arm-kernel@lists.infradead.org, heiko@sntech.de
-To: Hsun Lai <i@chainsx.cn>
-In-Reply-To: <20250516012402.580468-1-i@chainsx.cn>
-References: <20250516012402.580468-1-i@chainsx.cn>
-Message-Id: <174748776864.930436.6066844378633879191.robh@kernel.org>
-Subject: Re: [PATCH v3 0/2] Add support for Firefly
- Station-M3/ROC-RK3588S-PC
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-kernel@vger.kernel.org, linus.walleij@linaro.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, 
+ Stefan Agner <stefan@agner.ch>
+To: Haibo Chen <haibo.chen@nxp.com>
+In-Reply-To: <20250516-gpio-dts-v1-1-a9c3505f54c5@nxp.com>
+References: <20250516-gpio-dts-v1-1-a9c3505f54c5@nxp.com>
+Message-Id: <174748777048.930520.16549852892199093776.robh@kernel.org>
+Subject: Re: [PATCH] ARM: dts: add ngpios for vf610 compatible gpio
+ controllers
 
 
-On Fri, 16 May 2025 09:24:00 +0800, Hsun Lai wrote:
-> This series add support for Firefly Station-M3/ROC-RK3588S-PC.
+On Fri, 16 May 2025 18:58:49 +0800, Haibo Chen wrote:
+> After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"), vf610
+> gpio driver no more use the static number 32 for gc->ngpio, user has a
+> chance to config it through device tree for each port.
 > 
-> Info of device can be found at:
-> https://wiki.t-firefly.com/en/Station-M3/index.html
+> And some gpio controllers did have less pads. So add 'ngpios' here,
+> this can save some memory when request bitmap, and also show user
+> more accurate information when use gpio tools.
 > 
-> Changes in v3:
-> - Update the name of leds
-> - Add more cpu nodes
-> - Update mdio compatible
-> - Fix the order in the node
-> - Add the default serial port(uart2)
+> Besides, some gpio controllers have hole in the gpio ranges, so use
+> 'gpio-reserved-ranges' to cover that, then the gpioinfo tool show the
+> correct result.
 > 
-> Changes in v2:
-> - Fix rgmii delays
-> 
-> Changes in v1:
-> - Add support for Firefly ROC-RK3588S-PC
-> 
-> Hsun Lai (2):
->   dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
->   arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 926 ++++++++++++++++++
->  3 files changed, 932 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-> 
-> --
-> 2.34.1
-> 
-> 
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> ---
+>  arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi     | 4 ++++
+>  arch/arm/boot/dts/nxp/vf/vfxxx.dtsi        | 5 +++++
+>  arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 3 +++
+>  arch/arm64/boot/dts/freescale/imx93.dtsi   | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx94.dtsi   | 7 +++++++
+>  arch/arm64/boot/dts/freescale/imx95.dtsi   | 5 +++++
+>  6 files changed, 28 insertions(+)
 > 
 
 
@@ -99,15 +91,169 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: remotes/arm-soc/rockchip/dt64-31-ge463625af7f9 (exact match)
+ Base: using specified base-commit 484803582c77061b470ac64a634f25f89715be3f
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250516012402.580468-1-i@chainsx.cn:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/nxp/' for 20250516-gpio-dts-v1-1-a9c3505f54c5@nxp.com:
 
-arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: /edp@fdec0000: failed to match any schema with compatible: ['rockchip,rk3588-edp']
+arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-cosmic.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-cosmic.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-cosmic.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-cosmic.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-cosmic.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf500-colibri-eval-v3.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf500-colibri-eval-v3.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf500-colibri-eval-v3.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf500-colibri-eval-v3.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf500-colibri-eval-v3.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-b.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-b.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-b.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-b.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-b.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dtb: gpio@40049000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dtb: gpio@4004a000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dtb: gpio@4004b000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dtb: gpio@4004c000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dtb: gpio@4004d000 (fsl,vf610-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-evk.dtb: gpio@40ae0000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-evk.dtb: gpio@40af0000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-evk.dtb: gpio@40b00000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-evk.dtb: gpio@40b10000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-com.dtb: gpio@40ae0000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-com.dtb: gpio@40af0000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-com.dtb: gpio@40b00000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+arch/arm/boot/dts/nxp/imx/imx7ulp-com.dtb: gpio@40b10000 (fsl,imx7ulp-gpio): 'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
 
 
 
