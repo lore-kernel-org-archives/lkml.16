@@ -1,95 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BED17E4;
-	Sat, 17 May 2025 07:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866511C84B8;
+	Sat, 17 May 2025 07:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747465973; cv=none; b=nAbW/OsCqLTsyTZ8RuTi6nJYJ/82FsjXVF54ivjC8cRa69Job0WMPfYJjY/lFExM1JbJr4Ji+jvQaWJ0TEPhrMm04/8Xcx4C3n+GE8NjxpXWkvuONd6GJiYENFM3rqYYQzEgoYuWhXgRx53SMzbh4XppaCPXnYflFc5ojOqoqds=
+	t=1747466103; cv=none; b=rn0Uy8FccRS6XIim0vOr4A01R6mlKI71MBIbHhJvqu/S0kGoQ25ORWBt0IOTOguYgesPQZXgNDy/E3HpemakUzkrLFIRIjQFEvjdz3J2gLtk0fosz+qzIaVsDMFkfxdY8Cff4oFRRbU5bL1uZYVCZ1FllwV/MmTK0hqlpjVbtVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747465973; c=relaxed/simple;
-	bh=Kfh7EworHewU7d8WTF/gnxLsAf6Ep1ThneG8fXa6LWs=;
+	s=arc-20240116; t=1747466103; c=relaxed/simple;
+	bh=JNy+peeFwalxMPP/8hXWA78JMDjaOY6Zxki+6gHUlqU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fsb4rupYqbH65Vao3zHr/QE+YkJw+0yUzOE8r6qLNdLpijeiJs/ZapU5ZKV6YXbvmr03WInry7Ye+YvfaEuRLtUjHbdQH3kNAYC8gBTxZgxLX0Ucvvm1K+uNe+BkLQ3TOR1UYExWRTvqOti9+JnHHZjQcjo1X40tqdywY7XVSRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIST7hY2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UF9h8RSoj+0AToHNb7GjsLcB0bw1PAWJZ6AGii7dRstFUiWGUPo/IaXT3R3XKJIHCxTjP1R/cIIp/ET8xeuQNU+yFlBlzOdhVcJ7ixkGUi1jV85CbF13AwV97sgbmLzxf+upZPVc9j4Ot1oNqhTORZZvEKQvzob0tni6dw/C33c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hftEwuY2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIST7hY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20BEC4CEE3;
-	Sat, 17 May 2025 07:12:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hftEwuY2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1303C4CEE3;
+	Sat, 17 May 2025 07:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747465972;
-	bh=Kfh7EworHewU7d8WTF/gnxLsAf6Ep1ThneG8fXa6LWs=;
+	s=k20201202; t=1747466103;
+	bh=JNy+peeFwalxMPP/8hXWA78JMDjaOY6Zxki+6gHUlqU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIST7hY2mns6caxm2l+fYdD6IU7MQuJBJkZEwNhVsa5Nn71ygw3JR2TRGxkVcSTSt
-	 j2HV07l10mW9NJHYPka+W8SchEy/SmWalEIWVdkC6j4qIYR8mbtT1ewXIuKN5IV7Fz
-	 XMyxO3b+fkcytYiPpTfD5PxJnLdtoYGMlZjS1nAtOVBODvtEPqwwiqn53yj5ndxFaL
-	 aFOpFWQ77LCrXZIp5MtL8dAwasyMKvR0goYWhQ7JevULSEUm7m9RbPq+pUxzv8GQg0
-	 73Qm4cNKm82Zz+AvqFoeGNm5CbCQrkQl1iLgEgnwr2P0JQmRXGqgWIrfX8OJBjt6/J
-	 7KrceZdHuPsAg==
-Date: Sat, 17 May 2025 09:12:47 +0200
+	b=hftEwuY20qCoJXH2HLhnHmDi9F9mLDdgT5I7uN++Sf5gmQ/R/IBxMPdFH63oNEcD/
+	 cuGd8ho8RkuD96jUwt145WikGLcikANU641IKnoLpgCe59h55YnoOcshnDNHmfT2aV
+	 wTAw8EZG7CGHGco0zkGAxe2bDGWKTY22QOVLL9saX7lEM7RRIOoBlfr+1lqTIlJ5dk
+	 AlTbrqjBeKY3f3uuAh100fJpovrHeB6RIU7xgfNrIwNXNdhvU6MmkdBM8mdSbIdCvg
+	 xa/OIXhUqehMaNNV8KTWr6W6+9G0L4wresZypIoe+I5+aU3CLrkb8czQHNa5dLNg2Z
+	 zr3bISDu7+quA==
+Date: Sat, 17 May 2025 09:14:58 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-	rafael@kernel.org, lenb@kernel.org
-Subject: Re: [PATCH v1 3/3] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-Message-ID: <aCg27zLhBM5d0dAI@gmail.com>
-References: <20250512084552.1586883-1-xin@zytor.com>
- <20250512084552.1586883-4-xin@zytor.com>
- <aCYH0UQzO_Ek27js@gmail.com>
- <68dba45c-a677-4f6d-b7ec-e896aef3d27b@zytor.com>
- <b8f741d6-47a1-4cc8-a5b2-45ee86fcb773@zytor.com>
+To: Sukrut Heroorkar <hsukrut3@gmail.com>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	shuah@kernel.org, hpa@zytor.com, x86@kernel.org,
+	dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com,
+	tglx@linutronix.de
+Subject: Re: [PATCH] kselftests/x86: Correct grammer in VMX pairing message
+Message-ID: <aCg3ctv0ODAp9G0F@gmail.com>
+References: <20250516192057.7518-1-hsukrut3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b8f741d6-47a1-4cc8-a5b2-45ee86fcb773@zytor.com>
+In-Reply-To: <20250516192057.7518-1-hsukrut3@gmail.com>
 
 
-* Xin Li <xin@zytor.com> wrote:
+* Sukrut Heroorkar <hsukrut3@gmail.com> wrote:
 
-> On 5/15/2025 10:54 AM, Xin Li wrote:
-> > On 5/15/2025 8:27 AM, Ingo Molnar wrote:
-> > > 
-> > > * Xin Li (Intel) <xin@zytor.com> wrote:
-> > > 
-> > > > Convert a native_wrmsr() use to native_wrmsrq() to zap meaningless type
-> > > > conversions when a u64 MSR value is splitted into two u32.
-> > > > 
-> > > 
-> > > BTW., at this point we should probably just replace
-> > > sev_es_wr_ghcb_msr() calls with direct calls to:
-> > > 
-> > >     native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, ...);
-> > > 
-> > > as sev_es_wr_ghcb_msr() is now basically an open-coded native_wrmsrq().
-> > > 
-> > 
-> > I thought about it, however it looks to me that current code prefers not
-> > to spread MSR_AMD64_SEV_ES_GHCB in 17 callsites.  And anyway it's a
-> > __always_inline function.
-> > 
-> > But as you have asked, I will make the change unless someone objects.
+> Fixes a small grammatical error in the print message.
+
+No it doesn't.
+
+> signed-off-by: Sukrut Heroorkar <hsukrut3@gmail.com>
+> ---
+>  tools/testing/selftests/x86/ioperm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Hi Ingo,
-> 
-> I took a further look and found that we can't simply replace
-> sev_es_wr_ghcb_msr() with native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, ...).
-> 
-> There are two sev_es_wr_ghcb_msr() definitions.  One is defined in
-> arch/x86/boot/compressed/sev.h and it references boot_wrmsr() defined in
-> arch/x86/boot/msr.h to do MSR write.
+> diff --git a/tools/testing/selftests/x86/ioperm.c b/tools/testing/selftests/x86/ioperm.c
+> index 69d5fb7050c2..a5099e526912 100644
+> --- a/tools/testing/selftests/x86/ioperm.c
+> +++ b/tools/testing/selftests/x86/ioperm.c
+> @@ -107,7 +107,7 @@ int main(void)
+>  		err(1, "fork");
+>  
+>  	if (child == 0) {
+> -		printf("[RUN]\tchild: check that we inherited permissions\n");
+> +		printf("[RUN]\tchild: check that if we inherited permissions\n");
 
-Ah, indeed, it's also a startup code wrapper, which wrmsrq() doesn't 
-have at the moment. Fair enough.
+Wot?
 
 Thanks,
 
