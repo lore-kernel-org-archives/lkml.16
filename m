@@ -1,96 +1,108 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9452B9B4;
-	Sat, 17 May 2025 07:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B382E628;
+	Sat, 17 May 2025 07:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747466842; cv=none; b=sbfKcwVcNCjVp5Kqd8RIFvv5JU8pGKVKF+EdWYcbFON1nm6tWvBZQ0SHQG+nGyTOyTQP91V6tvJfFmws9tFMBsfvMsZ1WIPL2pqSklbi4wHbVVrlFuf7HmP0m4P19cFQylnkR8j454YUCkkqhF74t/Q/k/Y+f1xMqMMZn30xYPA=
+	t=1747467431; cv=none; b=NF1Hd5LLjtU8v2AanhAFdlnJAvYfzQ8YpiQOKSqSHX7ji89w1acIXKw4kyK6qUlu2eZc9/ZjVG/YeAJnIa+WojA/WxWyy2W0ySvDPxVEF8DyAdMWdLXWh9djhWMRsaenUfUxG9RQ5F5LTQtkbeZE3VLd4yI10HzD/DRCiYHJgIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747466842; c=relaxed/simple;
-	bh=20NmFlWcellGqNfz3xrsNWTznkSLmvSOR6YstuK9F+c=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=pitTqJFGLFm0sZ0zlBpdf4F8rhkaaS1SJX6XQtjsrnDS+TXVfQRKINbOSE68K6bxgymMKBXQzsxm0SD7UKRj1p6J4BRtw/9si/H4OeFBg7XA8ntfJp/zDpxM85WZeQhnL7E+phdn/urhnM8/1QZ3LAkwEuaMuVcAwBhunlcjkdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JfigqQZ5; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747467431; c=relaxed/simple;
+	bh=WuAHkOW9ql5yv/SUiIu0f7YuUFvaxuASyvebZHs6ZLc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YaQTVSo/byhMi5i8iwXPIrxRN/rt8Apc+sboxFP3jmCPMuOkzM2uYzoeTH2w6JuBa/5zGtHeZNUK2OBI77oARQ5puXwBxFZ7X6AtUgVs9CT/Cqfd9zNnfx3rU79cFT8KAR70FuVU28pfAROwesjRYjIN9/W7nkWebRVLH5Wyops=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6Mzp+M6; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JfigqQZ5"
-Received: from smtpclient.apple ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54H7QhLm591490
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 17 May 2025 00:26:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54H7QhLm591490
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747466805;
-	bh=CZtkP3WrpMIGbhySH/khDRYEg3tCdemTLMORia2zrho=;
-	h=From:Subject:Date:References:Cc:In-Reply-To:To:From;
-	b=JfigqQZ5Lh/TeQEqqyQKd8QM/ozskiXWWzhEwAaEP/NSDAXzGTuveYCYLruvOh24f
-	 Rx6isU+2S9BV3OGP1yK3L2fuZj8zKu0SI6I+SJrNAW4ow77BAKijsLpIBQfeaq7Tgo
-	 JebNnI7RC7C0XefauAe3O64YSAbfJmCq8Zvw+ZekHJDAsaFoFJhNnKX89u+GKXJ5xy
-	 HTDU4z0X5rSsRI/k1lX6GojOxbeWx3oFn/1nwGYgKkIh5EPikQePMIsnv0vT75sMwn
-	 RbykR0FK5XFvenmDV6tfJnOVKc5dzk3SrKNq3P4mImuX8O75ABonq4k35ChRoQGXTJ
-	 x5kuQ40RpC+rA==
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From: Xin Li <xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6Mzp+M6"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so1765237f8f.1;
+        Sat, 17 May 2025 00:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747467428; x=1748072228; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rHYIKB/0zV8yrGOwmdmiFz7Fi2QYRZJNTisvQQQ6Btw=;
+        b=i6Mzp+M681hGI7VDqZLHU5HFRCt+FSJgpCA0V4JUGM7c0avUqWkfaRlw3ZCaCFdsY1
+         fNFxGkc4NYNsEVQFHF5NsSkfJtRM4teV+R14DHBM2JfjNeCP27fK1E/v8O4cVpjJB+TN
+         +rreLCAjnIHmdcQ5rBHrr6zpEshLeQLIa3O5kA+80Wpz5A9FslnAcjpQhb2gF46ebyyS
+         ymbCKmI1xvpZGrfe5mx8dDDLbvYfGqHBNQMx8gWsij6oKYFTD1yLjHqIKg7g5oPUNl+C
+         xOqPu7b+eNvAISlUmIiilIqQjZQua0yDfBU8MFU8oOr16tdX4sg45WmeVAB3tjx3jOGL
+         uFAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747467428; x=1748072228;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rHYIKB/0zV8yrGOwmdmiFz7Fi2QYRZJNTisvQQQ6Btw=;
+        b=rwmGvolLcQkAgnJgdnFaDwkNwtFl8S5S1uuvWwzRKfD0jcftixdYdUCx12C9wgqjJn
+         tPuKF+Zf82L3+CQSgz5qcfXjPMyKRHe7VWPB4Hydp3uMjqJbTm+yCiPNG5npj+SeNaAT
+         Uy3WU7K/yS1U+1ll4pSFCKFNEvzp6aC8CbuOm45rVl5z3E+x+kDeS9V/rZUDaOlWDvuA
+         JQ/Q976rGWP3VQ4Cp77KYgCHOFG+JZZxds3aBS/wZ7P1rRjvgZWBueKr0sbv9U/qRErN
+         6McinE+Gp+DqFwu816GOAXlubc7ML3RxiQVZUBBjbPRnjyBcPGsjWxU7mqwKRnPy8FcH
+         eofw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNg2ezPdWr/hUdF8CRIVEry2pxDCJa3x/hDbpG0e7s3kVQEJ96xe244EXMDV0fOFa9tBLZr05OpiKy@vger.kernel.org, AJvYcCUoPMwPeUXAC+2tEoAp9B5CGLnA31gCmnm28JUD+T48y0ktw7NMIcqDsHgmcKdnmVbMGBOIzRiCC2U6AOIaww==@vger.kernel.org, AJvYcCVkYfRQmKbs7YlA5pkWTwPBgADJBobNaLCS+ruHpId6t1mYPTOa0qK2TM3Rxg2taZBJhQstMbcYPpz9rzNR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5zoe7U0HCZ62Pk/J/y8+J7CSGcSl2OdK2I+ty7c2Ob209mNh0
+	/wzERsB/dLsJZu6uA6gk22lQ9Xp+M0UagGj/jcvpbDrb23rsg1pycvQgk6qaUlLjxfgDvtFzais
+	lLfrnkSX7HrGMd3gsShCak0V+KRJz78WGqX0=
+X-Gm-Gg: ASbGnct4ZJj6Km9WOj2/cPIDqwKKec2R7JEAMLcy/y4lDB7fgRHc8sS9zwcmpyfxsKy
+	MEUWh5t0nQB0IIWgVu+jB7oUNT54ICMmTzmVTHmpG+LkqhkYhZTSFMy2AgN01I/tYzQvf+U1xhQ
+	+DaMRto2ViFjCYzpd4ZGtw6fcOraDX9YQeD65r+Z68Vro=
+X-Google-Smtp-Source: AGHT+IEKyb/pKJIOSy3lBKTBF6kz37Mbh9p/L7AFJleoZoBWXPA8bDN4nJW/RnK4Iutw6/dlRJRxPz122PID8RwPTag=
+X-Received: by 2002:adf:fd8c:0:b0:3a3:62c0:fde with SMTP id
+ ffacd0b85a97d-3a362c01034mr3209289f8f.35.1747467427343; Sat, 17 May 2025
+ 00:37:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1 3/3] x86/msr: Convert a native_wrmsr() use to native_wrmsrq()
-Date: Sat, 17 May 2025 00:26:32 -0700
-Message-Id: <EAEB5A61-F19B-481C-B6F0-49B3D509B70A@zytor.com>
-References: <aCg27zLhBM5d0dAI@gmail.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-        rafael@kernel.org, lenb@kernel.org
-In-Reply-To: <aCg27zLhBM5d0dAI@gmail.com>
-To: Molnar Ingo <mingo@kernel.org>
-X-Mailer: iPhone Mail (22F76)
+MIME-Version: 1.0
+References: <20250331204610.526672-1-alex.vinarskis@gmail.com>
+In-Reply-To: <20250331204610.526672-1-alex.vinarskis@gmail.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Sat, 17 May 2025 09:36:56 +0200
+X-Gm-Features: AX0GCFvAiofb_Uy-3eUIz1YQ-MA8_4UUZRMU5FPRF2iVPAIqvMukDd3P0i25i7M
+Message-ID: <CAMcHhXqWzrqc4wFJy=ZAj1vygR9d26s-yspHT3VVXmnbSye=CA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
+ WiFi/BT pwrseq
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	laurentiu.tudor1@dell.com, dmitry.baryshkov@oss.qualcomm.com, 
+	johan@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 31 Mar 2025 at 22:46, Aleksandrs Vinarskis
+<alex.vinarskis@gmail.com> wrote:
+>
+> Add bluetooth to mentioned device.
+>
+> Changes to V2:
+> * Fixed commit message misunderstanding
+> * Picked Bryan's R-by
+> * Picked Laurentiu's T-by
+> * Link to v2: https://lore.kernel.org/all/20250331073423.3184322-1-alex.vinarskis@gmail.com/
+>
+> Changes to V1:
+> * Fixed commit message
+> * Picked Dmitry's R-by
+> * Link to v1: https://lore.kernel.org/all/20250330212729.3062485-1-alex.vinarskis@gmail.com/
+>
+> Aleksandrs Vinarskis (1):
+>   arm64: dts: qcom: x1e80100-dell-xps-9345: Add WiFi/BT pwrseq
 
->>> On 5/15/2025 10:54 AM, Xin Li wrote:
->>> On 5/15/2025 8:27 AM, Ingo Molnar wrote:
->>>> 
->>>> * Xin Li (Intel) <xin@zytor.com> wrote:
->>>> 
->>>>> Convert a native_wrmsr() use to native_wrmsrq() to zap meaningless type
->>>>> conversions when a u64 MSR value is splitted into two u32.
->>>>> 
->>>> 
->>>> BTW., at this point we should probably just replace
->>>> sev_es_wr_ghcb_msr() calls with direct calls to:
->>>> 
->>>>     native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, ...);
->>>> 
->>>> as sev_es_wr_ghcb_msr() is now basically an open-coded native_wrmsrq().
->>>> 
->>> 
->>> I thought about it, however it looks to me that current code prefers not
->>> to spread MSR_AMD64_SEV_ES_GHCB in 17 callsites.  And anyway it's a
->>> __always_inline function.
->>> 
->>> But as you have asked, I will make the change unless someone objects.
->> 
->> Hi Ingo,
->> 
->> I took a further look and found that we can't simply replace
->> sev_es_wr_ghcb_msr() with native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, ...).
->> 
->> There are two sev_es_wr_ghcb_msr() definitions.  One is defined in
->> arch/x86/boot/compressed/sev.h and it references boot_wrmsr() defined in
->> arch/x86/boot/msr.h to do MSR write.
-> 
-> Ah, indeed, it's also a startup code wrapper, which wrmsrq() doesn't
-> have at the moment. Fair enough.
+Seems this one got forgotten. Shall I respin, or it can be picked as
+is? Still applies cleanly.
 
-So you want me to drop this patch then?
+Thanks,
+Alex
 
-Thanks!
-    Xin
+>
+>  .../dts/qcom/x1e80100-dell-xps13-9345.dts     | 144 ++++++++++++++++++
+>  1 file changed, 144 insertions(+)
+>
+> --
+> 2.45.2
+>
