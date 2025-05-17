@@ -1,69 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075ED209F43;
-	Sat, 17 May 2025 10:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E74820C497;
+	Sat, 17 May 2025 10:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476188; cv=none; b=e07+Pg/CS5MC42jwOxqRMnPi2I/VSLqo0BUcGU8VFpmH+xUV8sn+HPXvgLDPX2v/dknHyW59ju2YLsvahO0a/W3is1bycB3VDOLG5VyjrVwBkn4gDB6Nfk+zGWeiB1iYWqYAsNAMZxtGeYHu6aCTbgR4OKU7mmsyEig0ZGdJ1gg=
+	t=1747476189; cv=none; b=SSpX7DjoR5f29nMuzQur1TQkoQxFmDoN8YNlUbZjywfovAvbSlXmqWi+YYeVutIfbMDSriLPMkZxna2GvQjdcFpQrSav5g0sc6Z1YebuXchb/QgP7YttONhmogTpSy1BkiMFWY5hkwWk4Sls3GZJ5PS55TXBgYqwV+MaBo2Dlbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476188; c=relaxed/simple;
-	bh=sBAnObnVeOTzZTeNFrnMvR5T5UMFdc7THxM7Wi2ZbuI=;
+	s=arc-20240116; t=1747476189; c=relaxed/simple;
+	bh=cA1kLAPU1vVKxEQ4d9LEOobFFnPaUrobXxBCSKdDjNk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qkh615OrVEF9zsON5Jq242Axwr22V7hlQnXSlgiTPAuqhqBra5MvJmd9odbN8/tHlPk7G8jytCUHfprxERVQ8x8hTcWWPnK3SpztNGagvsnG3V1M13SDhREKx88ybLaudtjsGBc/t9lvCJBeeFPsGAwAdlv0cE7yYgN8qINdpD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=axJl48nG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Qw7Qm2Q; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=k53nEKP5pOw+ZDoGJnpV7dFwd2GSFS4VFn4mTX8VIKGW+HioqWvYSVUF8scKC/RlpjcxlBW5cBrKRhxEJUOn/0oPsI7ZtvJdSl6fkLw6m2ov5WlL7XFqoWdncVxMuyYhTISiSkEUvTGBOtxUDCfY6xOIKEXCUTRc63O+rMEduns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PbmlEDhF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TgcgZDcB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="axJl48nG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Qw7Qm2Q"
-Date: Sat, 17 May 2025 10:03:03 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PbmlEDhF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TgcgZDcB"
+Date: Sat, 17 May 2025 10:03:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747476184;
+	s=2020; t=1747476185;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h/ewV0hr/Fcko//Q6R1uPgZZMx5cHC+dY+tPAzXSXRc=;
-	b=axJl48nG3uciIZlpFpqX4b+iOdDVJj+EM6oT4lsdktTG7V8ZAEer+eZG/eVFYLrM/L9/u+
-	jixJZ7PA67luf+kjVgLZDhHCVBF2+R4L4wsbzM01eINbKPOMU+WDwUUHfNmKCx5itO24B0
-	mtDTDl6yKwkKY+PGpCpN6MOg1P/oVycqH7yqb535IbcUjWwZq+UC+mb73HXzsWXqyohw3k
-	/rjsc6wULTmHjovmiLtIrV4emV3Wqw1QuXcF8pAzA1I3nq57OJibPO54wFkmOzAKOqS/R2
-	BpHTchwdp3rtzKhFPgqYO/XVhdRa1jRz3HDVIFjwsNplQEYAaUivemOxSRCK5w==
+	bh=pjsYwrwlN3CwHRanBaSt5hcGCPaPYClb6VSfsAvBctM=;
+	b=PbmlEDhFOxUiFmUtlLw0twSbxRp+p71Bc2SxZvlgtczZ2brWVCgd23mtHZ7k6bwWT9MC6S
+	H4zMKE/A8KLXsiCNKklnucqvSzrRH2yAhqY9ftPWEjJIAuxjygNAXNL+0qKTvZGKjvxIXu
+	FgmXgNZXtAprnq68P7/qkWfCKdRre6THiMlCXxbsp5q4oiplszAVk+v7LgVKYF3AikuHOA
+	bl9dXZ6Mi9SDe67LthwnVtkvjEx0B5dygUOGoXkTygC2+MDHbRHi7GMMGGMbPHDbUgi3lf
+	0q6u0DmNzukuG26+tfkZ3aB0auda/M/7kMT54OSR9Z9LWdT269zqn/3k11H2IQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747476184;
+	s=2020e; t=1747476185;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h/ewV0hr/Fcko//Q6R1uPgZZMx5cHC+dY+tPAzXSXRc=;
-	b=2Qw7Qm2Q1cRbO6PqUCK4OHAqy72wwkXkOmJJheb7gS1PG7NpUcsX/zFx00i6mpwvoJR+qs
-	QNItyYuD5LOM2ICA==
-From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+	bh=pjsYwrwlN3CwHRanBaSt5hcGCPaPYClb6VSfsAvBctM=;
+	b=TgcgZDcBV7xtQ1Vg0GIpdjigdd68C94RLothj2CwjaOmDzzyAHOpPffR8zhkPNzSyAbzpL
+	FBpIH35aLIURM4BA==
+From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Rename resctrl_sched_in() to begin with
- "resctrl_arch_"
-Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
- Carl Worth <carl@os.amperecomputing.com>,
- Peter Newman <peternewman@google.com>,
- Amit Singh Tomar <amitsinght@marvell.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Babu Moger <babu.moger@amd.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250515165855.31452-7-james.morse@arm.com>
-References: <20250515165855.31452-7-james.morse@arm.com>
+Subject: [tip: x86/cache] x86/resctrl: Optimize cpumask_any_housekeeping()
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+ James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Tony Luck <tony.luck@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250515165855.31452-5-james.morse@arm.com>
+References: <20250515165855.31452-5-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174747618337.406.7348845016914993919.tip-bot2@tip-bot2>
+Message-ID: <174747618489.406.16388124501789539670.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,143 +69,78 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     7704fb81bc87254e8772f387b62153b135bb1932
-Gitweb:        https://git.kernel.org/tip/7704fb81bc87254e8772f387b62153b135bb1932
-Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Thu, 15 May 2025 16:58:36 
+Commit-ID:     94f7531430285b4ec600693f7222c2ca29bd7472
+Gitweb:        https://git.kernel.org/tip/94f7531430285b4ec600693f7222c2ca29bd7472
+Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
+AuthorDate:    Thu, 15 May 2025 16:58:34 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 15 May 2025 21:01:00 +02:00
+CommitterDate: Thu, 15 May 2025 20:53:26 +02:00
 
-x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+x86/resctrl: Optimize cpumask_any_housekeeping()
 
-resctrl_sched_in() loads the architecture specific CPU MSRs with the
-CLOSID and RMID values. This function was named before resctrl was
-split to have architecture specific code, and generic filesystem code.
+With the lack of cpumask_any_andnot_but(), cpumask_any_housekeeping()
+has to abuse cpumask_nth() functions.
 
-This function is obviously architecture specific, but does not begin
-with 'resctrl_arch_', making it the odd one out in the functions an
-architecture needs to support to enable resctrl.
+Update cpumask_any_housekeeping() to use the new cpumask_any_but()
+and cpumask_any_andnot_but(). These two functions understand
+RESCTRL_PICK_ANY_CPU, which simplifies cpumask_any_housekeeping()
+significantly.
 
-Rename it for consistency. This is purely cosmetic.
-
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Tested-by: Fenghua Yu <fenghuay@nvidia.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: James Morse <james.morse@arm.com>
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-Tested-by: Babu Moger <babu.moger@amd.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/20250515165855.31452-7-james.morse@arm.com
+Link: https://lore.kernel.org/20250515165855.31452-5-james.morse@arm.com
 ---
- arch/x86/include/asm/resctrl.h         |  4 ++--
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++------
- arch/x86/kernel/process_32.c           |  2 +-
- arch/x86/kernel/process_64.c           |  2 +-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h | 28 ++++++-------------------
+ 1 file changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
-index 011bf67..7a39728 100644
---- a/arch/x86/include/asm/resctrl.h
-+++ b/arch/x86/include/asm/resctrl.h
-@@ -175,7 +175,7 @@ static inline bool resctrl_arch_match_rmid(struct task_struct *tsk, u32 ignored,
- 	return READ_ONCE(tsk->rmid) == rmid;
- }
- 
--static inline void resctrl_sched_in(struct task_struct *tsk)
-+static inline void resctrl_arch_sched_in(struct task_struct *tsk)
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index eaae996..25b61e4 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -47,30 +47,16 @@
+ static inline unsigned int
+ cpumask_any_housekeeping(const struct cpumask *mask, int exclude_cpu)
  {
- 	if (static_branch_likely(&rdt_enable_key))
- 		__resctrl_sched_in(tsk);
-@@ -212,7 +212,7 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c);
+-	unsigned int cpu, hk_cpu;
+-
+-	if (exclude_cpu == RESCTRL_PICK_ANY_CPU)
+-		cpu = cpumask_any(mask);
+-	else
+-		cpu = cpumask_any_but(mask, exclude_cpu);
+-
+-	/* Only continue if tick_nohz_full_mask has been initialized. */
+-	if (!tick_nohz_full_enabled())
+-		return cpu;
+-
+-	/* If the CPU picked isn't marked nohz_full nothing more needs doing. */
+-	if (cpu < nr_cpu_ids && !tick_nohz_full_cpu(cpu))
+-		return cpu;
++	unsigned int cpu;
  
- #else
+ 	/* Try to find a CPU that isn't nohz_full to use in preference */
+-	hk_cpu = cpumask_nth_andnot(0, mask, tick_nohz_full_mask);
+-	if (hk_cpu == exclude_cpu)
+-		hk_cpu = cpumask_nth_andnot(1, mask, tick_nohz_full_mask);
+-
+-	if (hk_cpu < nr_cpu_ids)
+-		cpu = hk_cpu;
++	if (tick_nohz_full_enabled()) {
++		cpu = cpumask_any_andnot_but(mask, tick_nohz_full_mask, exclude_cpu);
++		if (cpu < nr_cpu_ids)
++			return cpu;
++	}
  
--static inline void resctrl_sched_in(struct task_struct *tsk) {}
-+static inline void resctrl_arch_sched_in(struct task_struct *tsk) {}
- static inline void resctrl_cpu_detect(struct cpuinfo_x86 *c) {}
- 
- #endif /* CONFIG_X86_CPU_RESCTRL */
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 53213ca..88197af 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -376,7 +376,7 @@ static int rdtgroup_cpus_show(struct kernfs_open_file *of,
+-	return cpu;
++	return cpumask_any_but(mask, exclude_cpu);
  }
  
- /*
-- * This is safe against resctrl_sched_in() called from __switch_to()
-+ * This is safe against resctrl_arch_sched_in() called from __switch_to()
-  * because __switch_to() is executed with interrupts disabled. A local call
-  * from update_closid_rmid() is protected against __switch_to() because
-  * preemption is disabled.
-@@ -395,7 +395,7 @@ void resctrl_arch_sync_cpu_closid_rmid(void *info)
- 	 * executing task might have its own closid selected. Just reuse
- 	 * the context switch code.
- 	 */
--	resctrl_sched_in(current);
-+	resctrl_arch_sched_in(current);
- }
- 
- /*
-@@ -620,7 +620,7 @@ static void _update_task_closid_rmid(void *task)
- 	 * Otherwise, the MSR is updated when the task is scheduled in.
- 	 */
- 	if (task == current)
--		resctrl_sched_in(task);
-+		resctrl_arch_sched_in(task);
- }
- 
- static void update_task_closid_rmid(struct task_struct *t)
-@@ -678,7 +678,7 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
- 	 * Ensure the task's closid and rmid are written before determining if
- 	 * the task is current that will decide if it will be interrupted.
- 	 * This pairs with the full barrier between the rq->curr update and
--	 * resctrl_sched_in() during context switch.
-+	 * resctrl_arch_sched_in() during context switch.
- 	 */
- 	smp_mb();
- 
-@@ -2994,8 +2994,8 @@ static void rdt_move_group_tasks(struct rdtgroup *from, struct rdtgroup *to,
- 			/*
- 			 * Order the closid/rmid stores above before the loads
- 			 * in task_curr(). This pairs with the full barrier
--			 * between the rq->curr update and resctrl_sched_in()
--			 * during context switch.
-+			 * between the rq->curr update and
-+			 * resctrl_arch_sched_in() during context switch.
- 			 */
- 			smp_mb();
- 
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index 4636ef3..f1429fd 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -211,7 +211,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	switch_fpu_finish(next_p);
- 
- 	/* Load the Intel cache allocation PQR MSR. */
--	resctrl_sched_in(next_p);
-+	resctrl_arch_sched_in(next_p);
- 
- 	return prev_p;
- }
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 7196ca7..642fc32 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -707,7 +707,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	}
- 
- 	/* Load the Intel cache allocation PQR MSR. */
--	resctrl_sched_in(next_p);
-+	resctrl_arch_sched_in(next_p);
- 
- 	return prev_p;
- }
+ struct rdt_fs_context {
