@@ -1,165 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7451EA90
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 16:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC271F4C94
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 16:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747500554; cv=none; b=SH+DXHopBMzfmxaKkcDEmlzxAb4gdGlH6bLMGdsto1p91kP71hLZjSnA5rx0xDeicsGi4ZrtCQiAfkQ+dWIOal7ykXvdgCwTGLyZWg35H6zA4xPxQ48z7n5WJ8nLemHjUHBwzrTnGK8kJWsUo5YSxgvu25fJdxaEr6Q9y2Dospc=
+	t=1747500729; cv=none; b=G6hzyTgW87j1kdOz5GoVpmqQ25jWVLvE//0/paqlrbtUgOPkT5eYsERDARVME/P7ROK6Eu1toI8/Uq7uw5phpt2eGWf2726NGwficJ2uHPWJzj+3TGmOIHJjSl5fBmSe7Xvb3pKbe/O+aMGNEUSe4bfSZqJP9ta+4RSwvSiKtVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747500554; c=relaxed/simple;
-	bh=ObCO1wuvl/p0oqIvyXUQUhX+WLA8c9baP0tYpJ7fE50=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LVZCBfZ/omqr3i646klrgcCQo/6NhcnQ5fi7SiXt3vNWZR1FWX1WHVOqzYIUa2hEsEA/oHrasjNva4FTnYlpZ3+SaWGsFVo+O1QNVH51ApVy01dHEoB+6Cq+MMVaE8IDi3pOJxpN7PNWHaJe5xHqYkKUE9qVDbOvXbvWGtcjhUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5eZ8abm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747500729; c=relaxed/simple;
+	bh=TCnHPzLAJoq7+r1SP80wKWuXMtxp764nlUrrLaRFfgM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=rd7+FuUAuQL/ewAk3D0wh8KthnqL/ZjSImc9obgUiCfkfSCtYaP1UDAj4lWdhgCavDyP9H9WKz4aGryegTBNqfUNlR6m5iNiYk1aGA7UoW5H+A/bGdIhKLBNyMA9DE/AHpiYsShiAKJ8NdqYcwdHESI6SOQZoL78m51W1GmTjNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=FwFLaC+M reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5eZ8abm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8C1C4CEE3;
-	Sat, 17 May 2025 16:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747500554;
-	bh=ObCO1wuvl/p0oqIvyXUQUhX+WLA8c9baP0tYpJ7fE50=;
-	h=Date:From:To:Cc:Subject:From;
-	b=G5eZ8abmoGdd3b/KPnBXThmIsHjort9ZbcODDeeHTR7/OFWKL5VVTcgSK9p04CHU9
-	 i/baoAbiQHXbh5kaylfUyZhq70SnQHe5XKWTWsuLTcC4/2IvoOL+cwrTzU12CS1g+/
-	 BxFNaHQieUgAyQx5dOm3QSh2swcjVINQnKNaGXMzoRX/Q2xS8njq1LV3WCJlZ+tZvp
-	 bwjrS9ZnQ+o148CJdIlddxTYCwG7KN2iCOWLDMW59fbvn7BX65X5HGxSlw7pSaOHCm
-	 5HxBSEvaEVmnWXnO4EO4mmP3Cl2MavkP8eYnnCXDO74Gfqd5ZzOi7tTIUxBjSCg7kX
-	 xs+RcxASilw7w==
-Date: Sat, 17 May 2025 17:49:10 +0100
-From: Vinod Koul <vkoul@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine fixes for 6.15
-Message-ID: <aCi+BteelekIQK07@vaman>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="FwFLaC+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=lZEsvvYlxt8qCLlu8JvMc03Z8s2k97MJ0BCj37fEVxA=; b=F
+	wFLaC+MqTlX/Q7lygFGKMCnvKX4mjcf5+yWxPjO6kzsD3CR9onxiburxgY18pFIJ
+	WJ4PwfwX23/pWMt+0DODk7JHbnv0C4r4FfJ42jk7EhIxnbwNV0FQQo9CR7UXRzcq
+	KeluE7uy7qhBSL5vduTxURDJcjduL+HLpsUahDAzCY=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-128 (Coremail) ; Sun, 18 May 2025 00:51:35 +0800
+ (CST)
+Date: Sun, 18 May 2025 00:51:35 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: kent.overstreet@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: BUG: unable to handle page fault for address
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
+References: <20250516131246.6244-1-00107082@163.com>
+ <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
+ <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
+ <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com>
+ <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBfmbv04i4yicYOkXn0oTju85XMCzuv8j3YJeN500liTP6wcAeHJZP2Tb/sWrGx6gvRW5TCJ/9vl3VLFqcrIZXHaIwod1JKN8y9MDPXHu
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SKw8+HHxUjrEuEhv"
-Content-Disposition: inline
+Message-ID: <233aab47.38f2.196df28812a.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gCgvCgD3v_KYvihoQugGAA--.45485W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqA5QqmgoQ9C8gAAMs-
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
---SKw8+HHxUjrEuEhv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-Hello Linus,
-
-Last pull request before I catch the plane from Lisbon. This has a bunch
-of idxd driver fixes, dmatest revert and bunch of smaller driver fixes.
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-fix-6.15
-
-for you to fetch changes up to 811d6a923b40fc130f91abf49151f57cf9ac2a6f:
-
-  dmaengine: mediatek: drop unused variable (2025-05-15 11:42:13 +0100)
-
-----------------------------------------------------------------
-dmaengine fixes for v6.15
-
-Driver fixes for:
- - bunch of idxd potential mem leak fixes
- - dmatest revert for waiting for interrupt fix as that causes issue
- - couple of ti k3 udma fixes for locking and cap_mask
- - mediatek deadlock fix and unused variable cleanup fix
-
-----------------------------------------------------------------
-Basavaraj Natikar (1):
-      dmaengine: ptdma: Move variable condition check to the first place an=
-d remove redundancy
-
-Dave Jiang (1):
-      dmaengine: idxd: Fix ->poll() return value
-
-Nathan Lynch (1):
-      dmaengine: Revert "dmaengine: dmatest: Fix dmatest waiting less when =
-interrupted"
-
-Purva Yeshi (1):
-      dmaengine: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
-
-Qiu-ji Chen (1):
-      dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_st=
-atus()
-
-Ronald Wahl (1):
-      dmaengine: ti: k3-udma: Add missing locking
-
-Shuai Xue (9):
-      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
-_wqs
-      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
-_engines
-      dmaengine: idxd: fix memory leak in error handling path of idxd_setup=
-_groups
-      dmaengine: idxd: Add missing cleanup for early error out in idxd_setu=
-p_internals
-      dmaengine: idxd: Add missing cleanups in cleanup internals
-      dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
-      dmaengine: idxd: fix memory leak in error handling path of idxd_pci_p=
-robe
-      dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remov=
-e call
-      dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
-
-Stefan Wahren (1):
-      dmaengine: fsl-edma: Fix return code for unhandled interrupts
-
-Vinicius Costa Gomes (1):
-      dmaengine: idxd: Fix allowing write() from different address spaces
-
-Vinod Koul (1):
-      dmaengine: mediatek: drop unused variable
-
-Yemike Abhilash Chandra (1):
-      dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structu=
-re instead of a local copy
-
- drivers/dma/amd/ptdma/ptdma-dmaengine.c |  19 ++--
- drivers/dma/dmatest.c                   |   6 +-
- drivers/dma/fsl-edma-main.c             |   2 +-
- drivers/dma/idxd/cdev.c                 |  13 ++-
- drivers/dma/idxd/init.c                 | 159 +++++++++++++++++++++++-----=
-----
- drivers/dma/mediatek/mtk-cqdma.c        |   6 +-
- drivers/dma/ti/k3-udma.c                |  10 +-
- 7 files changed, 148 insertions(+), 67 deletions(-)
-
-
---=20
-~Vinod
-
---SKw8+HHxUjrEuEhv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmgovgYACgkQfBQHDyUj
-g0effxAAgNYPwmEqgN5WUqvvjjLjLuRw8UQTrIxDi/HX2FlJROrjpv0yEuXG+Uim
-gjiIIzCvHh0+OxnapdjUv343E4FPX/tFvLeN29cZkgP51x0UtLXW2zc2tAatwo+f
-Tnfsn1s7LF9YofItZ/bbZy9+OkZxWkdrQ7Znhp3pLx+TwE0JAGCRAKUu0D453TvB
-J+4JRz3LZcT6O9yZoC8CSNQIfLsj/dMPwsh6oM/BaIb/SuBlU69t9RDFMBcXjeLo
-NQUtacEddGs5rqYFOH8RJvcb638nLsof3EOP80zoR74uDDdFjVd8PrauOqH25URl
-9Eqc/6Uzga8sx3yn5Vyg1g6gyqji04QHvAAxjbruQl2lR3vdXGz3f6DWJM7ljgjK
-PIwBICLVBU5Tej8zQ+sKCR5NHkIDJMsAasYGMxV+oAnEZ0Rh3nfU+qExRsaQG1Ef
-apJ7VmkzHdkNyCHy+2kSsHuxtMFoXH4LPHrNtHvzs4VSGolXRnt2phon4bCPg7rM
-rzCLvK5ASoi7xOzQTxMHxP4h6EcqxqhWkC6rDHH+7CyCSNjuPg7nldVymHKMGGOm
-YSE9Vl69l2M3pWYzsgCxwhwroccPIOmsrB949YdjuCtasQKmmyGavE4vxPlj+TRN
-mDaM8RCH8bvNLbrIhr0anBtF/uKDj8ftOM9UQZ2zmHiio0K8aj4=
-=czZ7
------END PGP SIGNATURE-----
-
---SKw8+HHxUjrEuEhv--
+CkF0IDIwMjUtMDUtMTggMDA6Mzk6MzAsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj5PbiBTYXQsIE1heSAxNywgMjAyNSBhdCAxMjowMuKAr0FNIERhdmlk
+IFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pgo+Pgo+PiBBdCAyMDI1LTA1LTE3IDA4
+OjExOjI0LCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3RlOgo+
+PiA+T24gRnJpLCBNYXkgMTYsIDIwMjUgYXQgMTA6MDPigK9BTSBTdXJlbiBCYWdoZGFzYXJ5YW4g
+PHN1cmVuYkBnb29nbGUuY29tPiB3cm90ZToKPj4gPj4KPj4gPj4gSGkgRGF2aWQsCj4+ID4+Cj4+
+ID4+IE9uIEZyaSwgTWF5IDE2LCAyMDI1IGF0IDY6MTPigK9BTSBEYXZpZCBXYW5nIDwwMDEwNzA4
+MkAxNjMuY29tPiB3cm90ZToKPj4gPj4gPgo+PiA+PiA+IEhpLAo+PiA+PiA+Cj4+ID4+ID4gSSBj
+YXVnaHQgYSBwYWdlIGZhdWx0IHdoZW4gSSB3YXMgY2hhbmdpbmcgbXkgbnZpZGlhIGRyaXZlcjoK
+Pj4gPj4gPiAoVGhpcyBoYXBwZW5zIHJhbmRvbWx5LCBJIGNhbiByZXByb2R1Y2UgaXQgd2l0aCBh
+Ym91dCAxLzMgcHJvYmFiaWxpdHkpCj4+ID4+ID4KPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0
+MSAyMDI1XSBCVUc6IHVuYWJsZSB0byBoYW5kbGUgcGFnZSBmYXVsdCBmb3IgYWRkcmVzczogZmZm
+ZjlkMjg5ODRjMzAwMAo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdICNQRjogc3Vw
+ZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQo+PiA+PiA+IFtGcmkgTWF5IDE2IDEy
+OjA1OjQxIDIwMjVdICNQRjogZXJyb3JfY29kZSgweDAwMDApIC0gbm90LXByZXNlbnQgcGFnZQo+
+PiA+PiA+IC4uLgo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIFJJUDogMDAxMDpy
+ZWxlYXNlX21vZHVsZV90YWdzKzB4MTAzLzB4MWIwCj4+ID4+ID4gLi4uCj4+ID4+ID4gW0ZyaSBN
+YXkgMTYgMTI6MDU6NDEgMjAyNV0gQ2FsbCBUcmFjZToKPj4gPj4gPiBbRnJpIE1heSAxNiAxMjow
+NTo0MSAyMDI1XSAgPFRBU0s+Cj4+ID4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gIGNv
+ZGV0YWdfdW5sb2FkX21vZHVsZSsweDEzNS8weDE2MAo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1
+OjQxIDIwMjVdICBmcmVlX21vZHVsZSsweDE5LzB4MWEwCj4+ID4+ID4gLi4uCj4+ID4+ID4gKGZ1
+bGwga2VybmVsIGxvZ3MgYXJlIHBhc3RlZCBhdCB0aGUgZW5kLikKPj4gPj4gPgo+PiA+PiA+IFVz
+aW5nIGEgaW1hZ2Ugd2l0aCBERUJVR19JTkZPLCB0aGUgY2FsbHRyYWNrIHBhcnNlcyBhczoKPj4g
+Pj4gPgo+PiA+PiA+IFJJUDogMDAxMDpyZWxlYXNlX21vZHVsZV90YWdzICguL2luY2x1ZGUvbGlu
+dXgvYWxsb2NfdGFnLmg6MTM0IGxpYi9hbGxvY190YWcuYzozNTIgbGliL2FsbG9jX3RhZy5jOjU3
+MykKPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBjb2RldGFnX3VubG9hZF9tb2R1
+bGUgKGxpYi9jb2RldGFnLmM6MzU1KQo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVd
+IGZyZWVfbW9kdWxlIChrZXJuZWwvbW9kdWxlL21haW4uYzoxMzA1KQo+PiA+PiA+IFtGcmkgTWF5
+IDE2IDEyOjA1OjQxIDIwMjVdIF9fZG9fc3lzX2RlbGV0ZV9tb2R1bGUgKGtlcm5lbC9tb2R1bGUv
+bWFpbi5jOjc5NSkKPj4gPj4gPgo+PiA+PiA+IFRoZSBvZmZlbmRpbmcgbGluZXMgaW4gbXkgY29k
+ZWJhc2U6Cj4+ID4+ID4gICAgICAgICAxMjYgc3RhdGljIGlubGluZSBzdHJ1Y3QgYWxsb2NfdGFn
+X2NvdW50ZXJzIGFsbG9jX3RhZ19yZWFkKHN0cnVjdCBhbGxvY190YWcgKnRhZykKPj4gPj4gPiAg
+ICAgICAgIDEyNyB7Cj4+ID4+ID4gICAgICAgICAuLi4KPj4gPj4gPiAgICAgICAgIDEzMQo+PiA+
+PiA+ICAgICAgICAgMTMyICAgICAgICAgZm9yX2VhY2hfcG9zc2libGVfY3B1KGNwdSkgewo+PiA+
+PiA+ICAgICAgICAgMTMzICAgICAgICAgICAgICAgICBjb3VudGVyID0gcGVyX2NwdV9wdHIodGFn
+LT5jb3VudGVycywgY3B1KTsKPj4gPj4gPiA+Pj4+ICAgIDEzNCAgICAgICAgICAgICAgICAgdi5i
+eXRlcyArPSBjb3VudGVyLT5ieXRlczsgICA8LS0tLS0tLS0tLS0tLS1oZXJlCj4+ID4+ID4gICAg
+ICAgICAxMzUgICAgICAgICAgICAgICAgIHYuY2FsbHMgKz0gY291bnRlci0+Y2FsbHM7Cj4+ID4+
+ID4KPj4gPj4gPgo+PiA+PiA+IE52aWRpYSBkcml2ZXJzIGFyZSBvdXQtdHJlZS4uLiB0aGVyZSBj
+b3VsZCBiZSBzb21lIHN0cmFuZ2UgYmVoYXZpb3IgaW4gaXQgY2F1c2VzIHRoaXMuLiBidXQsCj4+
+ID4+ID4gd2hlbiBJIGNoZWNrIHRoZSBjb2RlLCBJIGdvdCBjb25jZXJuZWQgYWJvdXQgbGlmZWN5
+Y2xlIG9mIHRhZy0+Y291bnRlcnMuCj4+ID4+ID4gQmFzZWQgb24gZm9sbG93aW5nIGRlZmluYXRp
+b246Cj4+ID4+ID4gICAgICAgICAxMDggI2RlZmluZSBERUZJTkVfQUxMT0NfVEFHKF9hbGxvY190
+YWcpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4+ID4+ID4g
+ICAgICAgICAxMDkgICAgICAgICBzdGF0aWMgREVGSU5FX1BFUl9DUFUoc3RydWN0IGFsbG9jX3Rh
+Z19jb3VudGVycywgX2FsbG9jX3RhZ19jbnRyKTsgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTAg
+ICAgICAgICBzdGF0aWMgc3RydWN0IGFsbG9jX3RhZyBfYWxsb2NfdGFnIF9fdXNlZCBfX2FsaWdu
+ZWQoOCkgICAgICAgICAgICAgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTEgICAgICAgICBfX3Nl
+Y3Rpb24oQUxMT0NfVEFHX1NFQ1RJT05fTkFNRSkgPSB7ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTIgICAgICAgICAgICAgICAgIC5jdCA9IENP
+REVfVEFHX0lOSVQsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBc
+Cj4+ID4+ID4gICAgICAgICAxMTMgICAgICAgICAgICAgICAgIC5jb3VudGVycyA9ICZfYWxsb2Nf
+dGFnX2NudHIgfTsKPj4gPj4gPiAgICAgICAgIDExNAo+PiA+PiA+IF9hbGxvY190YWdfY250ciBp
+cyB0aGUgZGF0YSByZWZlcmVuY2VkIGJ5IHRhZy0+Y291bnRlcnMsIGJ1dCB0aGV5IGFyZSBpbiBk
+aWZmZXJlbnQgc2VjdGlvbiwKPj4gPj4gPiBhbmQgYWxsb2NfdGFnIG9ubHkgcHJlcGFyZSBzdG9y
+YWdlIGZvciBzZWN0aW9uIEFMTE9DX1RBR19TRUNUSU9OX05BTUUuCj4+ID4+ID4gcmlnaHQ/Cj4+
+ID4+ID4gVGhlbiB3aGF0IGhhcHBlbnMgdG8gdGhvc2UgIi5kYXRhLi5wZXJjcHUiIHNlY3Rpb24g
+d2hlbiBtb2R1bGUgaXMgdW5sb2FkZWQ/Cj4+ID4+ID4gSXMgaXQgc2FmZSB0byBrZWVwIHVzaW5n
+IHRob3NlICIuZGF0YS4ucGVyY3B1IiBzZWN0aW9uIGFmdGVyIG1vZHVsZSB1bmxvYWRlZCwKPj4g
+Pj4gPiBvciBldmVuIGR1cmluZyBtb2R1bGUgaXMgdW5sb2FkaW5nPwo+PiA+Pgo+PiA+PiBZZXMs
+IEkgdGhpbmsgeW91IGFyZSByaWdodCwgZnJlZV9tb2R1bGUoKSBjYWxscyBwZXJjcHVfbW9kZnJl
+ZSgpIHdoaWNoCj4+ID4+IHdvdWxkIGZyZWUgdGhlIHBlci1jcHUgbWVtb3J5IGFsbG9jYXRlZCBm
+b3IgdGhlIG1vZHVsZS4gQmVmb3JlCj4+ID4+IDBkYjZmOGQ3ODIwYSAoImFsbG9jX3RhZzogbG9h
+ZCBtb2R1bGUgdGFncyBpbnRvIHNlcGFyYXRlIGNvbnRpZ3VvdXMKPj4gPj4gbWVtb3J5Iikgd2Ug
+d291bGQgbm90IHVubG9hZCB0aGUgbW9kdWxlIGlmIHRoZXJlIHdlcmUgdGFncyB3aGljaCB3ZXJl
+Cj4+ID4+IHN0aWxsIGluIHVzZS4gQWZ0ZXIgdGhhdCBjaGFuZ2Ugd2UgbG9hZCBtb2R1bGUgdGFn
+cyBpbnRvIHNlcGFyYXRlCj4+ID4+IG1lbW9yeSwgc28gSSBleHBlY3RlZCB0aGlzIHRvIHdvcmsg
+YnV0IGR1ZSB0byB0aGlzIGV4dGVybmFsIHJlZmVyZW5jZQo+PiA+PiBpdCBpbmRlZWQgc2hvdWxk
+IGxlYWQgdG8gVUFGLgo+PiA+PiBJIHRoaW5rIHRoZSBzaW1wbGVzdCB3YXkgdG8gZml4IHRoaXMg
+d291bGQgYmUgdG8gYnlwYXNzCj4+ID4+IHBlcmNwdV9tb2RmcmVlKCkgaW5zaWRlIGZyZWVfbW9k
+dWxlKCkgd2hlbiB0aGVyZSBhcmUgbW9kdWxlIHRhZ3Mgc3RpbGwKPj4gPj4gcmVmZXJlbmNlZCwg
+c3RvcmUgbW9kLT5wZXJjcHUgaW5zaWRlIGFsbG9jX3RhZ19tb2R1bGVfc2VjdGlvbiBhbmQgZnJl
+ZQo+PiA+PiBpdCBpbnNpZGUgY2xlYW5fdW51c2VkX21vZHVsZV9hcmVhc19sb2NrZWQoKSBvbmNl
+IHdlIGtub3cgdGhlIGNvdW50ZXJzCj4+ID4+IGFyZSBub3QgdXNlZCBhbnltb3JlLiBJJ2xsIHRh
+a2UgYSBzdGFiIGF0IGl0IGFuZCB3aWxsIHNlbmQgYSBwYXRjaCBmb3IKPj4gPj4gdGVzdGluZyB0
+b2RheS4KPj4gPgo+PiA+T2ssIEkgd2VudCB3aXRoIGFub3RoZXIgaW1wbGVtZW50YXRpb24sIGlu
+c3RlYWQgZHluYW1pY2FsbHkgYWxsb2NhdGluZwo+PiA+cGVyY3B1IG1lbW9yeSBmb3IgbW9kdWxl
+cyBhdCB0aGUgbW9kdWxlIGxvYWQgdGltZS4gVGhpcyBoYXMgYW5vdGhlcgo+PiA+YWR2YW50YWdl
+IG9mIG5vdCBuZWVkaW5nIGV4dHJhIFBFUkNQVV9NT0RVTEVfUkVTRVJWRSBjdXJyZW50bHkKPj4g
+PnJlcXVpcmVkIGZvciBtZW1vcnkgYWxsb2NhdGlvbiB0YWdnaW5nIHRvIHdvcmsuCj4+ID5EYXZp
+ZCwgdGhlIHBhdGNoIGlzIHBvc3RlZCBhdCBbMV0uIFBsZWFzZSBnaXZlIGl0IGEgdHJ5IGFuZCBs
+ZXQgbWUKPj4gPmtub3cgaWYgdGhlIGZpeCB3b3JrcyBmb3IgeW91Lgo+PiA+VGhhbmtzLAo+PiA+
+U3VyZW4uCj4+ID4KPj4gPlsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNTA1MTcw
+MDA3MzkuNTkzMC0xLXN1cmVuYkBnb29nbGUuY29tLwo+PiA+Cj4+ID4KPj4gPj4gVGhhbmtzLAo+
+PiA+PiBTdXJlbi4KPj4gPj4KPj4KPj4gSGksIHRoZSBwYXRjaCBkb2VzIGZpeCBteSBpc3N1ZS4K
+Pj4gSSBub3cgaGF2ZSBhbm90aGVyIHNpbWlsYXIgY29uY2VybiBhYm91dCBtb2R1bGVzIFJPIGRh
+dGEsCj4+IFRoZSBjb2RldGFnIGRlZmluZWQgYXMKPj4gIDI0IHN0cnVjdCBjb2RldGFnIHsKPj4g
+IDI1ICAgICAgICAgdW5zaWduZWQgaW50IGZsYWdzOyAvKiB1c2VkIGluIGxhdGVyIHBhdGNoZXMg
+Ki8KPj4gIDI2ICAgICAgICAgdW5zaWduZWQgaW50IGxpbmVubzsKPj4gIDI3ICAgICAgICAgY29u
+c3QgY2hhciAqbW9kbmFtZTsKPj4gIDI4ICAgICAgICAgY29uc3QgY2hhciAqZnVuY3Rpb247Cj4+
+ICAyOSAgICAgICAgIGNvbnN0IGNoYXIgKmZpbGVuYW1lOwo+PiAgMzAgfSBfX2FsaWduZWQoOCk7
+Cj4+Cj4+IFRob3NlIG1vZG5hbWUvZnVuY3Rpb24vZmlsZW5hbWUgd291bGQgcmVmZXIgdG8gUk8g
+ZGF0YSBzZWN0aW9uLCByaWdodD8KPj4gV2hlbiBtb2R1bGUgdW5sb2FkZWQsIGl0cyBSTyBkYXRh
+IHNlY3Rpb24gd291bGQgYmUgcmVsZWFzZWQgYXQgc29tZSBwb2ludC4KPj4gTXkgcXVlc3Rpb24g
+aXMgaXMgaXQgc2FmZSB0byB1c2UgUk8gZGF0YSBkdXJpbmcgbW9kdWxlIHVubG9hZD8gYmVjYXVz
+ZSB0aGVzZQo+PiBsaW5lcyBzZWVtcyB0byBhY2Nlc3MgdGhvc2UgZGF0YToKPj4KPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgcHJfaW5mbygiJXM6JXUgbW9kdWxlICVzIGZ1bmM6JXMgaGFzICVs
+bHUgYWxsb2NhdGVkIGF0IG1vZHVsZSB1bmxvYWRcbiIsCj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgdGFnLT5jdC5maWxlbmFtZSwgdGFnLT5jdC5saW5lbm8sIHRhZy0+Y3QubW9k
+bmFtZSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWctPmN0LmZ1bmN0aW9u
+LCBjb3VudGVyLmJ5dGVzKTsKPgo+VGhlc2UgbGluZXMgYXJlIGNhbGxlZCBmcm9tIHJlbGVhc2Vf
+bW9kdWxlX3RhZ3MoKSB1c2luZyB0aGlzIGNhbGwgY2hhaW46Cj4KPmRlbGV0ZV9tb2R1bGUoKQo+
+ICBmcmVlX21vZHVsZSgpCj4gICAgY29kZXRhZ191bmxvYWRfbW9kdWxlKCkKPiAgICAgIHJlbGVh
+c2VfbW9kdWxlX3RhZ3MoKQo+Cj5hbmQgY29kZXRhZ191bmxvYWRfbW9kdWxlKCkgaXMgY2FsbGVk
+IGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBvZgo+ZnJlZV9tb2R1bGUoKSwgd2hlbiBubyBvdGhlciBt
+b2R1bGUgbWVtb3J5IGhhcyBiZWVuIGZyZWVkIHlldC4gU28sCj5mcm9tIHdoYXQgSSB1bmRlcnN0
+YW5kLCB0aGlzIHNob3VsZCBiZSBzYWZlLgo+QWZ0ZXIgd2UgdW5sb2FkIHRoZSBtb2R1bGUgdGhl
+c2UgcG9pbnRlcnMgaW5zaWRlIHRoZSB0YWdzIHdpbGwgYmUKPmRhbmRsaW5nIGJ1dCB3ZSBzaG91
+bGQgbm90IGJlIHVzaW5nIHRoZW0gYW55bW9yZSBzaW5jZSB3ZSBkbyBub3QKPnJlcG9ydCB1bmxv
+YWRlZCBtb2R1bGVzLiBEbyB5b3Ugc2VlIHNvbWUgdXNhZ2UgdGhhdCBJIG1pc3NlZD8KCldoeSBk
+YXRhLi5wZXJjcHUuIGlzIGRpZmZlcmVudC4gVGhlIHBhZ2UgZmF1bHQgZXJyb3IgY2F1Z2h0IHdo
+ZW4gSSByZWluc3RhbGwgbnZpZGlhIGRyaXZlcnMgaXMgYWxzbwpyYWlzZWQgZnJvbSByZWxlYXNl
+X21vZHVsZV90YWdzKCkuCgpJcyBkYXRhLi5wZXJjcHUuIHNlY3Rpb24gcmVsZWFzZWQgZWFybGll
+cj8gCgpUaGFua3MKRGF2aWQKCgo=
