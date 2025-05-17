@@ -1,539 +1,209 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e240-8.smtp-out.eu-north-1.amazonses.com (e240-8.smtp-out.eu-north-1.amazonses.com [23.251.240.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D791986349
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7292E136A
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747448453; cv=none; b=ZzFHO/C/GbUlTnz1JX6yXPUrWS1gCi+qHFyQbBkZNvKy//X/5FskzhfyiGxcMTVe4YEJGMfnJkqEakns7P8TU839+/Hp8H26fNDmTUdnnDINEoZaT586tx/jZdot57P2VEmyiypejAjFQHzvGO3KBUNz4BXpj1j94OJxOO8N+W8=
+	t=1747448529; cv=none; b=gCyDQv7D1K4zSYVbDZW2nO5/YctjqmOVnso4C5AeF3SYRWlcaRQXH/ycdj2UWgrDp1wJamoa9pjys64QNAW958jGWP47uszvxFgxIOsdnvPDtEj3L6tKP8jwg2SASa5asES3zv5f30FXIa1bcHWPSeiZ5mCVYv72h24IuNjbjMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747448453; c=relaxed/simple;
-	bh=IW95dRVDzLxWDiP4V5IJuFJCvFkVuSSiAPkNdJbaBK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVhHGlANjoZt+MOzbNrsqDhGmbb5wgg+5EjeUkG/F698kLfz+TE0dPBGPWrlQsvTT4rw8xbtZktkhqtD/vHmw9IooEF9syLFgS9cvGm3iKKA2kuOlHka1oacXT+VDWCrnD7lANPPPMIDTQQVV/PZ6lkiSAGZgzr90vKAKwDTvto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WqNjSPGY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747448529; c=relaxed/simple;
+	bh=L7fuPDo+UJBntD0Z2zkf0zIPuZ0aUDR+7T66a+hsGE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MItHUEq/NbI18HofE5r/RCOa1P1a6DWiX9FUS8tyCr5XwNPS0rsBR9VuDIOEjU5iJF3RwQiDgWsBXgjRHsGDENp0CSa73i19r/ThfLlLl6pLEPk5KTyGaNMCzmdKMhZlFrddiJH3vJLdRNYYkjQfHGLtOkE+WnDU9tNOWM8qEfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=Crb92FWi; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=yEiXcKv8; arc=none smtp.client-ip=23.251.240.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WqNjSPGY"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H1X0Mk020526
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:20:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BybEuDZH4NGRzyNjwmGtbUuQ3E9hmqYyOXM4Ex3cnbU=; b=WqNjSPGYKjbHBimW
-	PyXKify/MPZGsDKXi0mcCU5rroX7MjOUNqe+e5+QAVS857mPF71MXYj0bJlt/s/2
-	0lTsGqoMf36G/NHMWRbzT8fHLWoGJNJeJTFlnGcAPx0awQCjzw+f7bHW6E1H90wr
-	gMOWx/SDf1xTgwYIvwq+NYiafzczZ51otCp5R1Y5tle4SJ4W1KXKjvBZElmZOifc
-	fwZRRTi+k8/vrjadlyf/a9Urn7nnKnD7vQnRGUJKu46Y59k7urzagAXAS4SPc4hg
-	HpLmfYSGsHE96hDHiyGqPILjXK9IXfORH1XE5uGjOR37M83XAhj8NmRqZAglSM25
-	26t0ZQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46p4gq9wk9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:20:50 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-231e6e1d988so13425555ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747448450; x=1748053250;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BybEuDZH4NGRzyNjwmGtbUuQ3E9hmqYyOXM4Ex3cnbU=;
-        b=gvaIn1geHZDANHcpYual7kQPZnbMs0rG1dMxNOo7WnCDvHUiJd3xrjyZ+3j5QbtF9I
-         8fSGdQa4hrugpb5wUqfV2DD1AmsfY7qMeDjIBduqcxc1QsljTG1XEm9MW6IVlJg3Xu3w
-         6Z/sv9GusTe+c6hFcHCFKXABmaZnnnoL1EpeQqvcFj/pS6Z1WLB8vzUv9HzhIYmu9rVy
-         PqiBY8/Jor1Vwi+0pX9LSmkP4J3eVM2jBduqvM2F9I6ngYVMz5LuKqWnrgjTVRYxVKJF
-         Fczf8EUXI1HwptjSJfYx3t8JzMfnalZRwaIgq1rrneSkcO6XctANCDu3c8peTNLBrOmK
-         wYaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaxxYvTh3i1DqBAnXb0O5bzGIS/aznX7kaQn9HV7Iw/llDtVjG0gRokwXG194kjDphfT2FzBDoC4G8ma4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH3CLkbMgeGcmndMjgsymsvF3R/W0uZ9TZFgILrGyeVZNacg5t
-	4aNhASjk0PYsQ7zKupssBM/wkfEGjAOmxVw1nM+f4PP9a32gnowdREdl8/mx1YHDAmxT2hhG4Ot
-	UXSPosmSSmnn+FMeI3N/I4KEoI4GzmT3bnlvVqz2uy3BAbmUZKYZvfX+rKaONVNIMyjc=
-X-Gm-Gg: ASbGnctW2EmO0LlzGGDXndS7KTDRzIew0HQXaE2NdAjwuioS4Cg0Iwj29uot2Feewn8
-	QZqh1tFzXPmd6cZujNakm6yhM/EY2jjmL2/gHwm6s2ocbDJUhtCbtn5PrjPc9NzdPRD/Fs7sgL6
-	TWWZb16m/Q2k6fQn0mrvx+qCk/c3LReLBwtgdVd5p3xhCjVYxJPc7kCBRba9kzDCIQPc+SIzHPt
-	50SILCddHos/LxxUDKwVsRJ+x0ZNHHyvMwvI9zadc+gza5X1qruu2vDfXm24HyiEBFUaCSTtOzl
-	4zK9gQP3Z6w15WE86QjoCSUCUl5f4Hh+0yNDRazv9Co=
-X-Received: by 2002:a17:903:2284:b0:22e:663f:c4b with SMTP id d9443c01a7336-231de36bb60mr62454995ad.26.1747448449835;
-        Fri, 16 May 2025 19:20:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkbEmesceMI5K5xKUt2aNYagIV4L8LmW/ecFTbpPRKFblTfrRwsWe6NNkQC+kxccVxuM6idA==
-X-Received: by 2002:a17:903:2284:b0:22e:663f:c4b with SMTP id d9443c01a7336-231de36bb60mr62454725ad.26.1747448449331;
-        Fri, 16 May 2025 19:20:49 -0700 (PDT)
-Received: from [192.168.29.92] ([49.43.230.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed23a8sm21089715ad.220.2025.05.16.19.20.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 19:20:48 -0700 (PDT)
-Message-ID: <d5868e98-a037-eb2f-7310-80bfe6ec974e@oss.qualcomm.com>
-Date: Sat, 17 May 2025 07:50:42 +0530
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="Crb92FWi";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="yEiXcKv8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747448525;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=L7fuPDo+UJBntD0Z2zkf0zIPuZ0aUDR+7T66a+hsGE8=;
+	b=Crb92FWi4WNw5mYtqUFY/DxHH0yxx6tr//Hq/9M3wq6XelEArxYCt6vcGABy+Hgu
+	ukbgxFjSNn44VbFMd+BTzye7BWbgJDMrlptXiy91a5OdbRMH5AQnCDy/6HQgQLBYy0n
+	kYD6SV3q2+NKMT+Bgks9T0f8fcgJ4fR1+UeJvPgI7KBxB4VcS3XDQiT2rhLpByRQly0
+	OUGxQUud2W6WuTe5vsmBfHk5wTz+bDBcRcaZwY7Gsi2baER2PNRrqeG7PUDO+lSskG0
+	xb+bE3CgKj7C1jsKzbNgkwBpB1cxwwr/kUY/fd7sJgcLGlERvFwvJ7yi46NHiVkc6ew
+	tGviBYRQ3g==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747448525;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=L7fuPDo+UJBntD0Z2zkf0zIPuZ0aUDR+7T66a+hsGE8=;
+	b=yEiXcKv8sfU5gFEknzeZXsohyvFdF626V5f+HTRpMq7DOmXYb4uxhsNUnb3EAG/8
+	CdzqDS9/L5DuIOD8DbZHV7E7JtJ5cDCQUBl25UaAE7o+NeZivz0vDC8n83Ery8OIswK
+	6AEQsKCW1ycpBIUCB/JEtJpCo+XqVNS7yePNUm78=
+X-Forwarded-Encrypted: i=1; AJvYcCVlV3FwtTps0BPjRbe6oDZ1Wz5rLHKSAkejxbhGpwgWAjI0qvZz87LvdRwcruX5NE6b0KJLZxYUe6pNgKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWRfvC8azDC5QBeE710GHT227qELPYi3hUHJyTP+swhiTDOJA5
+	pqj3LwuS3/ItzadINjwqNDqHhdG927JWQ9rZgRa2C5y0yX9+w0gXROGuI0KEQrH2DctNsu3OqfZ
+	WnylLlMh8cD2iDig6RLGdtYhblBD6mWg=
+X-Google-Smtp-Source: AGHT+IH/hdHMEnp4yJIIKBDaNwmmHY2VjMeeVN3vxwbw9a7pP3YW8Kt3l03nfD527lRrL0SqSmpNQZAOu/0vZc9EnPQ=
+X-Received: by 2002:a17:903:32cf:b0:231:d108:70e with SMTP id
+ d9443c01a7336-231d4519cbdmr82305405ad.21.1747448523002; Fri, 16 May 2025
+ 19:22:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 07/10] bus: mhi: host: Add support for Bandwidth scale
-Content-Language: en-US
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
- <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
- <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com,
-        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
-        quic_mrana@quicinc.com, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
- <20250313-mhi_bw_up-v2-7-869ca32170bf@oss.qualcomm.com>
- <fzin4uttqtf33moiew6bazgxea7w72at5quumjg646s43wnq2g@3eupbyomplgw>
- <45deb1b9-748f-2342-1cf7-16b54ef6b95b@quicinc.com>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <45deb1b9-748f-2342-1cf7-16b54ef6b95b@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: BLnBd0i2CH-WUjfnd-qKcameOEmYOpy7
-X-Authority-Analysis: v=2.4 cv=KulN2XWN c=1 sm=1 tr=0 ts=6827f282 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=m9Fid+qPLYWXQ4ltJ96dlQ==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=y7MCS0CkwjfyNYDPbrEA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDAyMCBTYWx0ZWRfX4bfksh6Eqjr1
- vdEk4lSEi9UW/8gFeOhAWRTMNJ+0TQCeG9lMC5X6TUylgRLbsq4FptfE0MaxDKCY5GLSK8GaYF2
- ciFGSMf/PJkPbBXdOsxExfeD31oMQsgKsp7+nXbgz/m/gkk1aHXyQy3X3X08WJ2WLOzpPU7E2BM
- Gshh68qNkcyc44fMC1Z8fygm4NGU2o6dntRZHLoGXHiUb8Zhu60exd00MA790JgH4hs028OIdOC
- JMMF4S/NsZKoxmFYfv2whYK44J1ci2V0gCpjp6VJz2pe7CPW4dDtuvRhsdH4fG4+N/J1Ir8fT5H
- EFBWVxkY+lcG26nZtkxVYwivdLW510CADoh/b0PoqlUd7xJmtQhMZkc8gWFeiNg2cTmr93bkUi5
- jNXUFEtzo6MB0r0h5PruweeDqisePvCw3ITC6RU5BPBXE/RUfd0wUmteMv9YjYQxu4c6H4dH
-X-Proofpoint-GUID: BLnBd0i2CH-WUjfnd-qKcameOEmYOpy7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-17_01,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 bulkscore=0 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505170020
+References: <01100196db61ea58-123409dc-7381-487b-91b6-166193f3f349-000000@eu-north-1.amazonses.com>
+ <20250516235509.GU2023217@ZenIV>
+In-Reply-To: <20250516235509.GU2023217@ZenIV>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Sat, 17 May 2025 02:22:05 +0000
+X-Gmail-Original-Message-ID: <CADvZ6Ep5K4YwNtF15Ovbv87jyNwpaoebPMTz8sRhHoxyPdD7kw@mail.gmail.com>
+X-Gm-Features: AX0GCFvqExYMam732wRVl5Nb4KysoU2PtN5DYRTVllMfEcSSguqi17sieIvIGog
+Message-ID: <01100196dc0c725e-d82023e0-45a5-4914-ab2e-82c5e9f900e2-000000@eu-north-1.amazonses.com>
+Subject: Re: [PATCH] kernel: fix acct.c first test openai codex
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Jeff Layton <jlayton@kernel.org>, Song Liu <song@kernel.org>, 
+	Joel Granados <joel.granados@kernel.org>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.17-23.251.240.8
 
+Al Viro <viro@zeniv.linux.org.uk>, 17 May 2025 Cmt, 02:55 tarihinde =C5=9Fu=
+nu yazd=C4=B1:
+>
+> On Fri, May 16, 2025 at 11:15:49PM +0000, Ozgur Kara wrote:
+> > From: Ozgur Karatas <ozgur@goosey.org>
+> >
+> > Hello,
+> >
+> > i want to try out the openai codex and it seemed like a logical
+> > process so with rcu_read_lock() a protection is started but we dont
+> > call rcu_read_unlock(); it has to be called to end rcu read lock.
+> >
+> > I guess, this means rcu stays open forever and data structures are not
+> > cleaned which causes performance degradation.
+> >
+> > Regards
+> >
+> > Ozgur
+> >
+> > Reported-by: Ozgur Karatas <ozgur@goosey.org>
+>
+> ... showing that one needs *something* that would be able to reason somew=
+here
+> in the loop.
+>
+> Your "I guess, this means" is an excellent example - you've got something
+> (openai codex, visual examination, whatever) pointing you to unusual patt=
+ern -
+> rcu_read_lock() + call of function with no rcu_read_unlock() in sight.
+>
 
+Hello Al,
 
-On 5/6/2025 9:59 AM, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 4/25/2025 10:13 PM, Manivannan Sadhasivam wrote:
->> On Thu, Mar 13, 2025 at 05:10:14PM +0530, Krishna Chaitanya Chundru 
->> wrote:
->>> As per MHI spec sec 14, MHI supports bandwidth scaling to reduce power
->>
->> Same here, add spec version.
->>
->>> consumption. MHI bandwidth scaling is advertised in devices that contain
->>
->> 'advertised in devices or by devices'? Difference is subtle, but it 
->> changes the
->> context.
->>
-> its by device, I will correct it next patch.
->>> the bandwidth scaling capability registers. If enabled, the device
->>> aggregates bandwidth requirements and sends them to the host in the form
->>> of an event. After the host performs the bandwidth switch, it sends an
->>> acknowledgment by ringing a doorbell.
->>>
->>> if the host supports bandwidth scaling events, then it must set
->>
->> So this means both host and device has to support bandwidth scaling 
->> events? What
-> Yes both host and device has to support this.
->> does 'events' mean here?
-> Device sends bw scale info through dedicated MHI event ring events.
->>
->>> BW_CFG.ENABLED bit, set BW_CFG.DB_CHAN_ID to the channel ID to the
->>> doorbell that will be used by the host to communicate the bandwidth
->>> scaling status and BW_CFG.ER_INDEX to the index for the event ring
->>> to which the device should send bandwidth scaling request in the
->>> bandwidth scaling capability register.
->>>
->>> As part of mmio init check if the bw scale capability is present or not,
->>> if present advertise host supports bw scale by setting all the required
->>> fields.
->>>
->>
->> Sounds like the host is depending on the device for bandwidth scaling.
->>
-> yes
->>> MHI layer will only forward the bw scaling request to the controller
->>> driver, it is responsibility of the controller driver to do actual bw
->>> scaling and then pass status to the MHI. MHI will response back to the
->>> device based up on the status of the bw scale received.
->>>
->>
->> Why the controller driver needs to be involved for a spec defined 
->> feature?
->> This is not answered here.
->>
-> The controller driver here is mhi controller driver, the MHI layer
-> doesn't have any info about PCI related stuff, only controller driver
-> knows about it. I will update the commit text accordingly.
->>> Add a new get_misc_doorbell() to get doorbell for misc capabilities to
->>> use the doorbell with mhi events like MHI BW scale etc.
->>>
->>
->> So this is a spare doorbell? Why can't you call it as 
->> 'get_bw_scaling_db()'?
->>
-> Similar to MHI BW scale there are some other features which depends on
-> getting spare doorbell like posted time synchronization MHI V1.2, 5.1.2
-> To scale for future features I added like this.
->>> Use workqueue & mutex for the bw scale events as the 
->>> pci_set_target_speed()
->>> which will called by the mhi controller driver can sleep.
->>>
->>> Signed-off-by: Krishna Chaitanya Chundru 
->>> <krishna.chundru@oss.qualcomm.com>
->>> ---
->>>   drivers/bus/mhi/common.h        |  16 +++++++
->>>   drivers/bus/mhi/host/init.c     |  64 ++++++++++++++++++++++++-
->>>   drivers/bus/mhi/host/internal.h |   7 ++-
->>>   drivers/bus/mhi/host/main.c     | 101 
->>> +++++++++++++++++++++++++++++++++++++++-
->>>   drivers/bus/mhi/host/pm.c       |  10 +++-
->>>   include/linux/mhi.h             |  13 ++++++
->>>   6 files changed, 205 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
->>> index eedac801b800..0a02acee709a 100644
->>> --- a/drivers/bus/mhi/common.h
->>> +++ b/drivers/bus/mhi/common.h
->>> @@ -208,6 +208,22 @@
->>>   #define MHI_RSCTRE_DATA_DWORD1        
->>> cpu_to_le32(FIELD_PREP(GENMASK(23, 16), \
->>>                                      MHI_PKT_TYPE_COALESCING))
->>> +/* MHI Bandwidth scaling offsets */
->>> +#define MHI_BW_SCALE_CFG_OFFSET        0x4
->>> +#define MHI_BW_SCALE_CAP_ID        (3)
->>> +
->>> +#define MHI_BW_SCALE_ENABLE(bw_scale_db, er_index)    
->>> cpu_to_le32(FIELD_PREP(GENMASK(31, 25), \
->>> +                            bw_scale_db) |                \
->>> +                            FIELD_PREP(GENMASK(23, 19), er_index) 
->>> |    \
->>> +                            BIT(24))
->>> +
->>> +#define MHI_TRE_GET_EV_BW_REQ_SEQ(tre)    FIELD_GET(GENMASK(15, 8), 
->>> (MHI_TRE_GET_DWORD(tre, 0)))
->>> +#define MHI_BW_SCALE_DB_ID(er_index)    FIELD_PREP(GENMASK(31, 25), 
->>> er_index)
->>> +
->>> +#define MHI_BW_SCALE_RESULT(status, seq)    
->>> cpu_to_le32(FIELD_PREP(GENMASK(11, 8), status) | \
->>> +                        FIELD_PREP(GENMASK(7, 0), seq))
->>> +#define MHI_BW_SCALE_NACK            0xF
->>> +
->>>   enum mhi_pkt_type {
->>>       MHI_PKT_TYPE_INVALID = 0x0,
->>>       MHI_PKT_TYPE_NOOP_CMD = 0x1,
->>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
->>> index 0b14b665ed15..71abe02f5726 100644
->>> --- a/drivers/bus/mhi/host/init.c
->>> +++ b/drivers/bus/mhi/host/init.c
->>> @@ -496,10 +496,56 @@ static int mhi_get_capability_offset(struct 
->>> mhi_controller *mhi_cntrl, u32 capab
->>>       return -ENXIO;
->>>   }
->>> +/* to be used only if a single event ring with the type is present */
->>
->> Then open code in the caller itself. I see no benefit in adding it as 
->> a separate
->> function.
->>
-> This added as seperate function for upcoming features which uses
-> same logic.
->>> +static int mhi_get_er_index(struct mhi_controller *mhi_cntrl,
->>> +                enum mhi_er_data_type type)
->>> +{
->>> +    struct mhi_event *mhi_event = mhi_cntrl->mhi_event;
->>> +    int i;
->>> +
->>> +    /* find event ring for requested type */
->>> +    for (i = 0; i < mhi_cntrl->total_ev_rings; i++, mhi_event++) {
->>> +        if (mhi_event->data_type == type)
->>> +            return mhi_event->er_index;
->>> +    }
->>> +
->>> +    return -ENOENT;
->>> +}
->>> +
->>> +static int mhi_init_bw_scale(struct mhi_controller *mhi_cntrl,
->>> +                 int bw_scale_db)
->>> +{
->>> +    struct device *dev = &mhi_cntrl->mhi_dev->dev;
->>> +    u32 bw_cfg_offset, val = 0;
->>> +    int ret, er_index;
->>> +
->>> +    ret = mhi_get_capability_offset(mhi_cntrl, MHI_BW_SCALE_CAP_ID,
->>> +                    &bw_cfg_offset);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    /* No ER configured to support BW scale */
->>
->> What does it mean?
->>
-> I will remove the comment this is not making any sense.
->>> +    er_index = mhi_get_er_index(mhi_cntrl, MHI_ER_BW_SCALE);
->>> +    if (er_index < 0)
->>> +        return er_index;
->>> +
->>> +    bw_cfg_offset += MHI_BW_SCALE_CFG_OFFSET;
->>> +
->>> +    /* advertise host support */
->>> +    val = MHI_BW_SCALE_ENABLE(bw_scale_db, er_index);
->>> +
->>> +    mhi_write_reg(mhi_cntrl, mhi_cntrl->regs, bw_cfg_offset, val);
->>> +
->>> +    dev_dbg(dev, "Bandwidth scaling setup complete. Event ring:%d\n",
->>> +        er_index);
->>> +
->>
->> "Bandwidth scaling setup complete with event ring: %d\n"
->>
-> ack
->>> +    return 0;
->>> +}
->>> +
->>>   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->>>   {
->>>       u32 val;
->>> -    int i, ret;
->>> +    int i, ret, doorbell = 0;
->>>       struct mhi_chan *mhi_chan;
->>>       struct mhi_event *mhi_event;
->>>       void __iomem *base = mhi_cntrl->regs;
->>> @@ -633,6 +679,16 @@ int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->>>           return ret;
->>>       }
->>> +    if (mhi_cntrl->get_misc_doorbell)
->>> +        doorbell = mhi_cntrl->get_misc_doorbell(mhi_cntrl, 
->>> MHI_ER_BW_SCALE);
->>> +
->>> +    if (doorbell > 0) {
->>> +        ret = mhi_init_bw_scale(mhi_cntrl, doorbell);
->>> +        if (!ret)
->>> +            mhi_cntrl->bw_scale_db = base + val + (8 * doorbell);
->>> +        else
->>> +            dev_warn(dev, "BW scale setup failure\n");
->>
->> "Failed to setup bandwidth scaling: %d"
->>
->>> +    }
->>>       return 0;
->>>   }
->>> @@ -778,6 +834,9 @@ static int parse_ev_cfg(struct mhi_controller 
->>> *mhi_cntrl,
->>>           case MHI_ER_CTRL:
->>>               mhi_event->process_event = mhi_process_ctrl_ev_ring;
->>>               break;
->>> +        case MHI_ER_BW_SCALE:
->>> +            mhi_event->process_event = mhi_process_bw_scale_ev_ring;
->>> +            break;
->>>           default:
->>>               dev_err(dev, "Event Ring type not supported\n");
->>>               goto error_ev_cfg;
->>> @@ -1012,9 +1071,12 @@ int mhi_register_controller(struct 
->>> mhi_controller *mhi_cntrl,
->>>           mhi_event->mhi_cntrl = mhi_cntrl;
->>>           spin_lock_init(&mhi_event->lock);
->>> +        mutex_init(&mhi_event->mutex);
->>>           if (mhi_event->data_type == MHI_ER_CTRL)
->>>               tasklet_init(&mhi_event->task, mhi_ctrl_ev_task,
->>>                        (ulong)mhi_event);
->>> +        else if (mhi_event->data_type == MHI_ER_BW_SCALE)
->>> +            INIT_WORK(&mhi_event->work, mhi_process_ev_work);
->>>           else
->>>               tasklet_init(&mhi_event->task, mhi_ev_task,
->>>                        (ulong)mhi_event);
->>> diff --git a/drivers/bus/mhi/host/internal.h 
->>> b/drivers/bus/mhi/host/internal.h
->>> index 3134f111be35..bf7c6a7c9383 100644
->>> --- a/drivers/bus/mhi/host/internal.h
->>> +++ b/drivers/bus/mhi/host/internal.h
->>> @@ -241,6 +241,8 @@ struct mhi_event {
->>>       struct mhi_ring ring;
->>>       struct db_cfg db_cfg;
->>>       struct tasklet_struct task;
->>> +    struct work_struct work;
->>
->> bw_scaling_work or bw_scale_work?
->>
-> ack
-As this is in mhi_event and this work structure
-can be used in future for features like
-TIME sync. So going with same name.
+first thanks a lot for your guidance and insightful perspective and
+your advice was incredibly valuable, very valuable.
+And not just for this specific patch but also in helping us understand
+how to approach bugs and testing in kernel world.
 
-- Krishna Chaitanya.
->>> +    struct mutex mutex;
->>
->> Add a comment on the purpose of the mutex.
->>
->>>       spinlock_t lock;
->>>       int (*process_event)(struct mhi_controller *mhi_cntrl,
->>>                    struct mhi_event *mhi_event,
->>> @@ -403,7 +405,8 @@ int mhi_process_data_event_ring(struct 
->>> mhi_controller *mhi_cntrl,
->>>                   struct mhi_event *mhi_event, u32 event_quota);
->>>   int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->>>                    struct mhi_event *mhi_event, u32 event_quota);
->>> -
->>> +int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
->>> +                 struct mhi_event *mhi_event, u32 event_quota);
->>>   /* ISR handlers */
->>>   irqreturn_t mhi_irq_handler(int irq_number, void *dev);
->>>   irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev);
->>> @@ -419,5 +422,5 @@ void mhi_unmap_single_no_bb(struct mhi_controller 
->>> *mhi_cntrl,
->>>                   struct mhi_buf_info *buf_info);
->>>   void mhi_unmap_single_use_bb(struct mhi_controller *mhi_cntrl,
->>>                    struct mhi_buf_info *buf_info);
->>> -
->>> +void mhi_process_ev_work(struct work_struct *work);
->>>   #endif /* _MHI_INT_H */
->>> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
->>> index 4de75674f193..967563d86aec 100644
->>> --- a/drivers/bus/mhi/host/main.c
->>> +++ b/drivers/bus/mhi/host/main.c
->>> @@ -472,7 +472,10 @@ irqreturn_t mhi_irq_handler(int irq_number, void 
->>> *dev)
->>>           if (mhi_dev)
->>>               mhi_notify(mhi_dev, MHI_CB_PENDING_DATA);
->>>       } else {
->>> -        tasklet_schedule(&mhi_event->task);
->>> +        if (mhi_event->data_type == MHI_ER_BW_SCALE)
->>> +            queue_work(mhi_cntrl->hiprio_wq, &mhi_event->work);
->>
->> To avoid the hassle, I think it is worth changing the mutex in bwctrl to
->> spinlock. I don't think there would be issues in spinning inside
->> pcie_set_target_speed().
->>
-> I am not sure if it is good to change it to mutex or not in
-> pcie_set_target_speed() because it is being called from
-> pcie_failed_link_retrain() and this is being called when new pci
-> device is added and many other places.
->>> +        else
->>> +            tasklet_schedule(&mhi_event->task);
->>>       }
->>>       return IRQ_HANDLED;
->>> @@ -1049,6 +1052,102 @@ int mhi_process_data_event_ring(struct 
->>> mhi_controller *mhi_cntrl,
->>>       return count;
->>>   }
->>> +/* dedicated bw scale event ring processing */
->>> +int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
->>> +                 struct mhi_event *mhi_event, u32 event_quota)
->>> +{
->>> +    struct mhi_event_ctxt *er_ctxt = 
->>> &mhi_cntrl->mhi_ctxt->er_ctxt[mhi_event->er_index];
->>> +    struct device *dev = &mhi_cntrl->mhi_dev->dev;
->>> +    struct mhi_ring *ev_ring = &mhi_event->ring;
->>> +    dma_addr_t ptr = le64_to_cpu(er_ctxt->rp);
->>> +    u32 response = MHI_BW_SCALE_NACK;
->>> +    struct mhi_ring_element *dev_rp;
->>> +    struct mhi_link_info link_info;
->>> +    int ret = -EINVAL;
->>> +
->>> +    if (unlikely(MHI_EVENT_ACCESS_INVALID(mhi_cntrl->pm_state))) {
->>> +        ret =  -EIO;
->>> +        goto exit_bw_scale_process;
->>
->> exit_bw_scale?
->>
-> ack
->>> +    }
->>> +
->>> +    if (!MHI_IN_MISSION_MODE(mhi_cntrl->ee))
->>> +        goto exit_bw_scale_process;
->>> +
->>> +    if (!is_valid_ring_ptr(ev_ring, ptr)) {
->>> +        dev_err(dev,
->>> +            "Event ring rp points outside of the event ring\n");
->>> +        ret =  -EIO;
->>> +        goto exit_bw_scale_process;
->>> +    }
->>> +
->>> +    dev_rp = mhi_to_virtual(ev_ring, ptr);
->>> +
->>> +    /* if rp points to base, we need to wrap it around */
->>
->> Nit: Use caps for starting letter and also for acronyms.
->>
->>> +    if (dev_rp == ev_ring->base)
->>> +        dev_rp = ev_ring->base + ev_ring->len;
->>> +    dev_rp--;
->>> +
->>> +    /* fast forward to currently processed element and recycle er */
->>> +    ev_ring->rp = dev_rp;
->>> +    ev_ring->wp = dev_rp - 1;
->>> +    if (ev_ring->wp < ev_ring->base)
->>> +        ev_ring->wp = ev_ring->base + ev_ring->len - ev_ring->el_size;
->>> +    mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
->>> +
->>> +    if (WARN_ON(MHI_TRE_GET_EV_TYPE(dev_rp) != 
->>> MHI_PKT_TYPE_BW_REQ_EVENT)) {
->>> +        dev_err(dev, "!BW SCALE REQ event\n");
->>> +        goto exit_bw_scale_process;
->>> +    }
->>> +
->>> +    link_info.target_link_speed = MHI_TRE_GET_EV_LINKSPEED(dev_rp);
->>> +    link_info.target_link_width = MHI_TRE_GET_EV_LINKWIDTH(dev_rp);
->>> +    link_info.sequence_num = MHI_TRE_GET_EV_BW_REQ_SEQ(dev_rp);
->>> +
->>> +    dev_info(dev, "Received BW_REQ with seq:%d link speed:0x%x 
->>> width:0x%x\n",
->>> +         link_info.sequence_num,
->>> +         link_info.target_link_speed,
->>> +         link_info.target_link_width);
->>
->> dev_dbg()
->>
->>> +
->>> +    /* bring host and device out of suspended states */
->>> +    ret = mhi_device_get_sync(mhi_cntrl->mhi_dev);
->>> +    if (ret)
->>> +        goto exit_bw_scale_process;
->>> +
->>> +    mhi_cntrl->runtime_get(mhi_cntrl);
->>> +
->>> +    ret = mhi_cntrl->bw_scale(mhi_cntrl, &link_info);
->>> +    if (!ret)
->>> +        response = 0;
->>> +
->>> +    response = MHI_BW_SCALE_RESULT(response, link_info.sequence_num);
->>> +
->>> +    write_lock_bh(&mhi_cntrl->pm_lock);
->>> +    mhi_write_reg(mhi_cntrl, mhi_cntrl->bw_scale_db, 0, response);
->>> +    write_unlock_bh(&mhi_cntrl->pm_lock);
->>> +
->>> +    mhi_cntrl->runtime_put(mhi_cntrl);
->>> +    mhi_device_put(mhi_cntrl->mhi_dev);
->>> +
->>> +exit_bw_scale_process:
->>> +    dev_dbg(dev, "exit er_index:%u ret:%d\n", mhi_event->er_index, 
->>> ret);
->>
->> Can these entry exit debug sequences be avoided?
->>
-> ack.
-> - Krishna Chaitanya.
-> 
->> - Mani
->>
+it really clarified how things that look like straightforward fixes
+can actually be symptoms of deeper design decisions and why blindly
+patching based on heuristics can lead us astray.
+So your mentorship reminded us that understanding the why behind
+kernel code is way more important than just code and that thoughtful
+investigation is key in kernel development.
+
+When examining every new technology (ai, openai codex) i think we need
+an engineering perspective but you should know that i didnt send it
+with a very short research, sorry.
+and i didnt think about whether rcu should leave this open while doing
+read copy and what would happen if it did but you said it very well,
+so this was enough of a guide for me and i will definitely look into
+it and try to understand it better by going to for example git blame
+and grep.
+I actually thought i understood this code and fix but that was it and
+i just believed the patch was correct without any need for static
+analysis or heuristic warnings.
+
+Still we live with these, i mean ai or many other tools come into our
+lives and this is also a learning phase for me, i need to learn more.
+and i actually asked ai tool this again and this time it got a better answe=
+r:
+
+"rcu locks are complex, it is not enough to just appear to be missing.
+why does it appear to be missing? look at the entire code, how is the
+lock/unlock balance provided?
+look at past commits, why does it appear that there is no unlock there?
+look at similar codes, is it intentional to act like this in that place?
+experiments, tests, asking questions are a must.
+in other words, do not ask =E2=80=9Cthe tool warned, let=E2=80=99s patch it
+immediately=E2=80=9D but =E2=80=9Cwhy is there such a warning, is it really=
+ a
+problem?=E2=80=9D
+"
+
+this is a pattern i dont normally see elsewhere in kernel and i was
+convinced that the switch was left open.
+i learned that rcu_read_lock shouldnt be missing and it actually
+improved my approach to kernel.
+
+so thank you again.
+
+Regards
+
+Ozgur
+
+> Next step: hypothesis that unlock might be missing.
+>
+> Next step: blindly send a patch adding an unlock on the strength of that
+> hypothesis?
+>
+> Sorry, no.  It's not just that hypothesis is wrong - it is, but that's no=
+t
+> the real issue.  It's that instead of
+>         * asking how the hell could that work
+>         * trying to trigger that and checking whether the hypothesis is
+> corrent
+>         * looking around for similar places to see whether it looks inten=
+tional
+> (in which case it still might be a bug, but if it's inconsistent, the odd=
+s of
+> a bug are going up)
+>         * looking through the history (e.g. with git blame) to see if the=
+re
+> might be any explanations in commit message
+>         * looking through the function in question (git grep would immedi=
+ately
+> point to fs/fs_pin.c, and the first glance would show rcu_read_unlock() o=
+n
+> all paths through it, with the total balance of lock/unlock being -1 on
+> each)
+> you've chosen to post a patch "fixing" the problem as a way to see whethe=
+r
+> it's actually there.
+>
+> Folks, programming tools can be very useful in directing to places that m=
+ight
+> be worth checking.  The codebase is huge, so any heuristics useful in tri=
+age
+> are Good Things(tm); if instead of "bug found because somebody looked at
+> random line picked out of millions such and it turned out to be broken" y=
+ou
+> have "bug found because such-and-such heuristic had picked that line as
+> odd-looking and it turned out to be broken", you win even if it lists
+> 20 places and only one of them turns out to be actually broken.
+>
+> But you really can't treat that as anything beyond a hint to bump that
+> particular place in the list of things to look through.  It might tell yo=
+u
+> what looks unusual, but that's it.  Same as with any warning from any
+> source.
+>
+> Asking around is fine; so's experimenting, so's reasoning, etc.
+> But you can't go from "tool gives a warning, I guess it translates into p=
+lain
+> language this way" to "modify that place so that the tool doesn't point t=
+o
+> that place anymore".  You really need to understand what's going on first=
+.
+>
+>
