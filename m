@@ -1,254 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBA227453;
-	Sat, 17 May 2025 02:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18654D599;
+	Sat, 17 May 2025 02:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747447325; cv=none; b=H4RM8oM8DsxSc5o2PgH4FSVqHWRnfByZJtTDaRBQls2E4+pTvgDfCNq9FGm3B4OjVjrHZ5v9rhRDLZubKLNzbVo0Ix56gHlQdgfTeVmWrOYkK/onNA0W/pF3a1YHssTKC57s046nJr7mbhHVq1DdlduEIljlDtixjQYA/6i1G+Q=
+	t=1747447583; cv=none; b=kr0Bqr8p3LYWRnVYB1dj+rRzSHjErriUeREIOwTbWNzVQO6BJyxsTSZNjd0VmxZ2vNDC5Cf14zeOBizd8UeTWL2ghbtrbiYBEMNVwBLTm4GPVQVxumSLnndTeC0v9pkftxMNp1cpZiVIfMwWUgG4qdKvCWPipUwIc5+kFjOvznA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747447325; c=relaxed/simple;
-	bh=WWhZDNBDfelgXZRN6PpcDN567olv/AKOtgrJMC70tmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ufk/r/p83+zmcrFDYHWwkAELaKlTySRNQgrchvXgUrUs0ZBlk1uxI77zYGgAFN+hzjIAGvhCwDaK/7weCIH6rDl6J0kuwQazKUDo0+xm+XfT9ZAN3e8QvAYYIGkTnYt9900Fea8tDinY/vEn4R2+81OBISGiOwj8g9E3WRJsZv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9npX4HO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747447583; c=relaxed/simple;
+	bh=2qHvh4pIm6qldHk5sjMMLAC004kNNTi8X3pMpMlPwKo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cAwt7/FpR23IYbA0Emj8z22lsypYBboOIUv0BFM4SUoLe+gb7WU2MRHx6q7eGni8Gt1QnjIFkmC/6JV+EmwAkA2TahVpTLGj8LTKaV1z8GA98Gd6X4CoQBWtzdR4pFqMBWKjXxiy0ucfdlFz5cdHhcsUBnZs9co+gbSDp/YJ3CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TrO/5xN4; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9npX4HO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F6AC4CEE4;
-	Sat, 17 May 2025 02:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747447324;
-	bh=WWhZDNBDfelgXZRN6PpcDN567olv/AKOtgrJMC70tmg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=u9npX4HOc3ELlhcw10BnOLhYhZbHEycxwlO/8fdMJDYM67/vuKdVMqRC51AJ/hPoF
-	 YKkAz08dl+wjmzvY/ke6XSfleXudNNdN7lju42fy6m5beCdqJcB2inu67VV+7TREO9
-	 bgSO4pjF8dBn9ojUFLWzb/0mTgWBxtEjTKyjr5WCdw2C2uCoDXFtER2em/M0gF1wt7
-	 681aGJTLrqWxqkMQTRU9u2RCk0L5ue6h/hVcW9r8vaSDy0HAv7++YJYjRwXzGp5Gq8
-	 qiYV75Ka1DOadgwtdEdDfcnNJhwXd+S5f/gCdckDvqvfwnsv94rh7Wl5J867ttCtCV
-	 xnjbPUkZLvxNg==
-Date: Fri, 16 May 2025 23:02:01 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: IBS perf test failures on 9950x3d
-Message-ID: <aCfuGXUnNIbnYo_r@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrO/5xN4"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f8c53aeedbso5841856d6.2;
+        Fri, 16 May 2025 19:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747447580; x=1748052380; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKXLeL3ukBspnW2IUVVrIXJnVabhkRXsrkb89rHps2U=;
+        b=TrO/5xN4XTWK3TKYV6kd3WrTWJ0dVgh/fGg2idQNJfNx9wGVnNqPFAAwVt0Kjbc27h
+         YgqEiLRz5DoY8BC5RewU0JHrCLeV3lQV6aH77i9K4Rd4sNmYukMnLoDaPZeLf1iaYw3x
+         xpIIsMog3gMdB09dbue7uBT+bpD1ilGIgQvolffohcFoC9/wHveBrn5hq1MDLovE2XOB
+         twaZsPtwMcShLkz7wQbTceds2INrm8YULWayTzlKM6RK8qUSaKKKL979OPJRpjQ1szCY
+         B6jk9P6v0admwkfzCxhvI22xnwVKrcchD6KZu7WMadDwIGAjpMJwynNy86GxoYdv0/1y
+         7iTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747447580; x=1748052380;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BKXLeL3ukBspnW2IUVVrIXJnVabhkRXsrkb89rHps2U=;
+        b=coWZrbI8DRj3+w7nLGUyY06iVvU2wHNFQpiSb8lbhKmPT2SU5HDHuBtEM3QkdnIdm9
+         MUWcL1mu23RkH2LNSVDHno7mAM5P6a5AfwOpUGAygvWn+dWrCrp8bs2pdYAGB2kaNrN9
+         U5tZ5HTqpZRJxzSOlJEctdoneTl41E3W+MPaZ+HjkQowzfzfHjEmMDSdYaWeUtf6WpSA
+         +5I06sDYF7HG8xoOAiJ5zLHC/Pq4iCZbOdcPClXuN31RmEkdkbyfc++ifzlzfeYnqnaW
+         TzBoe/H9RPLf7CzdgOyHAWmI89qzacaXwj+UaUdCh8HG3KEPS6JrBG7eS1RJNz8fD17w
+         jwFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlzUonmz2DodIWF/tvL+nLyPnW2AH0g5y9MxLwDZ1RcqtNxo6Ok6LexlMXOgFZYldsuaFPULNMSy8Vcrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiwWbqO37MzTeHCNWSCKQBBZA9zuL9sRDAIjFqRWEtr3UMJKTo
+	FQ2SZgk+NMHAmwn9VyGYZ8pNMz4sAzuEsP86HlO+h5KsjzSq11UMaq95M5GM
+X-Gm-Gg: ASbGnctDACG9VYnSKr6M5KzReobe9YLZL4JBXn3CsTQPE7c/OxrYtTkrMFN3rZtVMNE
+	J0m0R0PQMB4x3T8Xi3Gy7+02AOCjiwit7fCTCOYl035mWvEv9UWo2Z8bTCLiob6g8dTXH7h6xhn
+	Mil4TifY9bfj5LeaJANs5BQUg0CJrccKoOrXNwDWRMyktWE/57rSs9nTaf95+XT0H/PCpiFSJe2
+	KJVHFzQ3Y6p5TnBlb8hRr4sAIF9u8CoLuXE+B7kPZnhjCdgzkiSVi/5kXKLaaeoB4vs8f0fFT2y
+	jABY8T4Oe1Ecsm2dg3RjECW0ibQyigwjYeT8SDDGeu8k3k+KBwSB53iEtWBL+0ztUom41155vdq
+	D
+X-Google-Smtp-Source: AGHT+IGpr4M6tPFJTIRklSzJoum9VgP6uUrsrUv4SQX78ySuBkpTAW8J4v1g4DGVFtzUXC4O5TsENg==
+X-Received: by 2002:a05:6214:2681:b0:6e8:9021:9090 with SMTP id 6a1803df08f44-6f8b2c9d22fmr78053266d6.26.1747447579646;
+        Fri, 16 May 2025 19:06:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a0d:e487:224f:4011:50ae:ea20:4b60:8f04])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0979851sm19250876d6.97.2025.05.16.19.06.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 19:06:19 -0700 (PDT)
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+To: heiko@sntech.de,
+	briannorris@chromium.org
+Cc: devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	jihed.chaibi.dev@gmail.com
+Subject: [PATCH 1/1] Fixing a minor typo in YAML document
+Date: Sat, 17 May 2025 04:05:52 +0200
+Message-Id: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Ravi,
+A small typo in the rockchip,rk3399 YAML document ;
+"less then" should become: "less than"
 
-	Does this look familiar?
+Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+---
+ .../bindings/memory-controllers/rockchip,rk3399-dmc.yaml    | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline -10
-8cdf00b843ea3ca0 (HEAD -> perf-tools-next) perf record: Fix a asan runtime error in util/maps.c
-208c0e16834472bb perf record: Add 8-byte aligned event type PERF_RECORD_COMPRESSED2
-bcfab08db7fb38bf perf intel-tpebs: Filter non-workload samples
-1c5721ca89a1c8ae (x1/perf-tools-next, x1/HEAD, five/perf-tools-next, five/HEAD) perf test: Allow tolerance for leader sampling test
-cb422594d62066a5 perf test: Add stat uniquifying test
-137359b7895f61cd perf parse-events: Use wildcard processing to set an event to merge into
-7d45f402d3117e0b perf evlist: Make uniquifying counter names consistent
-ef60b8f5724da364 perf trace: Support --summary-mode=cgroup
-39922dc53c268429 perf report: Add 'tgid' sort key
-b922881712743035 perf test: Update sysfs path for core PMU caps
-⬢ [acme@toolbx perf-tools-next]$
-
-I'll push my local branch soon, but I think this predates it.
-
-If it needs a specific kernel, then the test needs to cope with that,
-etc.
-
-- Arnaldo
-
-
-root@number:~# perf test -vvvvv 115
-115: AMD IBS sample period:
---- start ---
-test child forked, pid 1949350
-Using CPUID AuthenticAMD-26-44-0
-
-IBS config tests:
------------------
-Fetch PMU tests:
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xffff            : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1000            : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xff              : Ok   (nr samples: 5)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1               : Ok   (nr samples: 101)
-0x0               : Ok  
-0x10000           : Ok  
-Op PMU tests:
-0x0               : Ok  
-0x1               : Fail
-0x8               : Fail
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x9               : Ok   (nr samples: 101)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf               : Ok   (nr samples: 101)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1000            : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xffff            : Fail (nr samples: 0)
-0x10000           : Ok  
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x100000          : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf00000          : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf0ffff          : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1f0ffff         : Fail (nr samples: 0)
-mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x7f0ffff         : Fail (nr samples: 0)
-0x8f0ffff         : Ok  
-0x17f0ffff        : Ok  
-
-IBS sample period constraint tests:
------------------------------------
-Fetch PMU test:
-freq 0, sample_freq         0: Ok  
-freq 0, sample_freq         1: Fail
-freq 0, sample_freq        15: Fail
-mprotect() failed. Permission deniedfreq 0, sample_freq        16: Ok   (nr samples: 202)
-mprotect() failed. Permission deniedfreq 0, sample_freq        17: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq       143: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq       144: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq       145: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq      1234: Ok   (nr samples: 4)
-mprotect() failed. Permission deniedfreq 0, sample_freq      4103: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65520: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65535: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65552: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq   8388607: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq 268435455: Fail (nr samples: 0)
-freq 1, sample_freq         0: Ok  
-mprotect() failed. Permission deniedfreq 1, sample_freq         1: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        15: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        16: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        17: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq       143: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq       144: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq       145: Ok   (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq      1234: Ok   (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq      4103: Ok   (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65520: Ok   (nr samples: 8)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65535: Ok   (nr samples: 8)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65552: Ok   (nr samples: 8)
-freq 1, sample_freq   8388607: Ok  
-Op PMU test:
-freq 0, sample_freq         0: Ok  
-freq 0, sample_freq         1: Fail
-freq 0, sample_freq        15: Fail
-freq 0, sample_freq        16: Fail
-freq 0, sample_freq        17: Fail
-freq 0, sample_freq       143: Fail
-mprotect() failed. Permission deniedfreq 0, sample_freq       144: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq       145: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq      1234: Ok   (nr samples: 101)
-mprotect() failed. Permission deniedfreq 0, sample_freq      4103: Ok   (nr samples: 6)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65520: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65535: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq     65552: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq   8388607: Fail (nr samples: 0)
-mprotect() failed. Permission deniedfreq 0, sample_freq 268435455: Fail (nr samples: 0)
-freq 1, sample_freq         0: Ok  
-mprotect() failed. Permission deniedfreq 1, sample_freq         1: Fail (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        15: Fail (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        16: Fail (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq        17: Fail (nr samples: 3)
-mprotect() failed. Permission deniedfreq 1, sample_freq       143: Fail (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq       144: Fail (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq       145: Fail (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq      1234: Fail (nr samples: 4)
-mprotect() failed. Permission deniedfreq 1, sample_freq      4103: Fail (nr samples: 5)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65520: Fail (nr samples: 9)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65535: Fail (nr samples: 9)
-mprotect() failed. Permission deniedfreq 1, sample_freq     65552: Fail (nr samples: 9)
-freq 1, sample_freq   8388607: Ok  
-
-IBS ioctl() tests:
-------------------
-Fetch PMU tests
-ioctl(period = 0x0      ): Ok
-ioctl(period = 0x1      ): Fail
-ioctl(period = 0xf      ): Fail
-ioctl(period = 0x10     ): Ok
-ioctl(period = 0x11     ): Fail
-ioctl(period = 0x1f     ): Fail
-ioctl(period = 0x20     ): Ok
-ioctl(period = 0x80     ): Ok
-ioctl(period = 0x8f     ): Fail
-ioctl(period = 0x90     ): Ok
-ioctl(period = 0x91     ): Fail
-ioctl(period = 0x100    ): Ok
-ioctl(period = 0xfff0   ): Ok
-ioctl(period = 0xffff   ): Fail
-ioctl(period = 0x10000  ): Ok
-ioctl(period = 0x1fff0  ): Ok
-ioctl(period = 0x1fff5  ): Fail
-ioctl(freq   = 0x0      ): Ok
-ioctl(freq   = 0x1      ): Ok
-ioctl(freq   = 0xf      ): Ok
-ioctl(freq   = 0x10     ): Ok
-ioctl(freq   = 0x11     ): Ok
-ioctl(freq   = 0x1f     ): Ok
-ioctl(freq   = 0x20     ): Ok
-ioctl(freq   = 0x80     ): Ok
-ioctl(freq   = 0x8f     ): Ok
-ioctl(freq   = 0x90     ): Ok
-ioctl(freq   = 0x91     ): Ok
-ioctl(freq   = 0x100    ): Ok
-Op PMU tests
-ioctl(period = 0x0      ): Ok
-ioctl(period = 0x1      ): Fail
-ioctl(period = 0xf      ): Fail
-ioctl(period = 0x10     ): Fail
-ioctl(period = 0x11     ): Fail
-ioctl(period = 0x1f     ): Fail
-ioctl(period = 0x20     ): Fail
-ioctl(period = 0x80     ): Fail
-ioctl(period = 0x8f     ): Fail
-ioctl(period = 0x90     ): Ok
-ioctl(period = 0x91     ): Fail
-ioctl(period = 0x100    ): Ok
-ioctl(period = 0xfff0   ): Ok
-ioctl(period = 0xffff   ): Fail
-ioctl(period = 0x10000  ): Ok
-ioctl(period = 0x1fff0  ): Ok
-ioctl(period = 0x1fff5  ): Fail
-ioctl(freq   = 0x0      ): Ok
-ioctl(freq   = 0x1      ): Ok
-ioctl(freq   = 0xf      ): Ok
-ioctl(freq   = 0x10     ): Ok
-ioctl(freq   = 0x11     ): Ok
-ioctl(freq   = 0x1f     ): Ok
-ioctl(freq   = 0x20     ): Ok
-ioctl(freq   = 0x80     ): Ok
-ioctl(freq   = 0x8f     ): Ok
-ioctl(freq   = 0x90     ): Ok
-ioctl(freq   = 0x91     ): Ok
-ioctl(freq   = 0x100    ): Ok
-
-IBS freq (negative) tests:
---------------------------
-freq 1, sample_freq 200000: Fail
-
-IBS L3MissOnly test: (takes a while)
---------------------
-Fetch L3MissOnly: Fail (nr_samples: 299)
-Op L3MissOnly:    Ok   (nr_samples: 444)
----- end(-1) ----
-115: AMD IBS sample period                                           : FAILED!
-root@number:~# 
-root@number:~# 
-root@number:~# 
-root@number:~# uname -r
-6.14.5-300.fc42.x86_64
-root@number:~# grep -m1 "model name" /proc/cpuinfo 
-model name	: AMD Ryzen 9 9950X3D 16-Core Processor
-root@number:~# 
-
-
+diff --git a/Documentation/devicetree/bindings/memory-controllers/rockchip,rk3399-dmc.yaml b/Documentation/devicetree/bindings/memory-controllers/rockchip,rk3399-dmc.yaml
+index 1f58ee99b..1a96c743e 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/rockchip,rk3399-dmc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/rockchip,rk3399-dmc.yaml
+@@ -128,7 +128,7 @@ properties:
+     minimum: 1000000  # In case anyone thought this was MHz.
+     description:
+       When the DRAM type is DDR3, this parameter defines the ODT disable
+-      frequency in Hz. When the DDR frequency is less then ddr3_odt_dis_freq,
++      frequency in Hz. When the DDR frequency is less than ddr3_odt_dis_freq,
+       the ODT on the DRAM side and controller side are both disabled.
+ 
+   rockchip,ddr3_drv:
+@@ -176,7 +176,7 @@ properties:
+     minimum: 1000000  # In case anyone thought this was MHz.
+     description:
+       When the DRAM type is LPDDR3, this parameter defines then ODT disable
+-      frequency in Hz. When DDR frequency is less then ddr3_odt_dis_freq, the
++      frequency in Hz. When DDR frequency is less than ddr3_odt_dis_freq, the
+       ODT on the DRAM side and controller side are both disabled.
+ 
+   rockchip,lpddr3_drv:
+@@ -223,7 +223,7 @@ properties:
+     minimum: 1000000  # In case anyone thought this was MHz.
+     description:
+       When the DRAM type is LPDDR4, this parameter defines the ODT disable
+-      frequency in Hz. When the DDR frequency is less then ddr3_odt_dis_freq,
++      frequency in Hz. When the DDR frequency is less than ddr3_odt_dis_freq,
+       the ODT on the DRAM side and controller side are both disabled.
+ 
+   rockchip,lpddr4_drv:
+-- 
+2.39.5
 
