@@ -1,99 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E66F20D516
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 15:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142103EA63;
+	Sat, 17 May 2025 15:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747494907; cv=none; b=LjzlqGYPBRBd0OnzyiHTo7yrS4h1Ya+G+bHwUz6u1maWXmKr4GfEGoLlO/ndHt5KNmxHbNdaQD/v7jIRVd+JG17LIYwAJ5OqqCyO0Jik5gt15oyw35p28iRCo5OYld+ldlN6eHOdQGLAqshREhMNcBvx60qBiKvV3FpchN/p+lA=
+	t=1747496810; cv=none; b=MO00wExzs+Arr4Vl7mG0LBdTmsPPF7L6hxfFlA/hJNYH+VRZ0egX7qVm0DqhtJDfbOPJlgYxKIByEtCDplV092v12t9myBzZ5mplfd26yYok9TRlhZbhEgK5bhAswqvvT0XO5iALFp6IPuCSzFr68QtPqtLa4HMRLI0a2dYNauo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747494907; c=relaxed/simple;
-	bh=QwL5UTZb5VDMfNGxGWHnJ5EDf+WSNqcCfowPSq1/Ndw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uAMeU0aJh9oCDQ546OOUsBAJHasjQdehKVRa778vYZo8OxWmnMmNKd/+Zf29DEvyeiuF9gnjahTP0FkH/a7azPS/2FCoFP9Cpe2X5DTQ/dvFfncc1jqNb9nRtPGvCPElP64L16pvErc34Z9zGcaUeZYl05bmcU3t225T2aVwXpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sdw6GdR5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z2/dRCOA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sdw6GdR5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z2/dRCOA"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747494901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZaDBuiR2gKznTjuWYmUloD3ZUVLsi1k8LQTJYuhNwNg=;
-	b=Sdw6GdR5DjW1HMPHdstwd5pNEwgyESSi0QRvjB4K9OftlpmxN1uxj4tj+l1/9aq4hCgXsf
-	Gjg5R3LHWsTpIMQanpTfh0BoPafduG2R+kvAg2T2R9HsMh7gz9z0jXwb9MRXNT0AAJEh87
-	l7TAyQDsiG1RmYFxQgnwL4dbj/r5rRk7d8qf1Bc+C6c0+VF+uIAtV0KjRTntk+hGa/bEg2
-	cFPHImaL0DKF0R7rcvauxEiUmSvV25aw0amTbbtQ9pPSF+S27u1BmpZS2f6Hr87Etx71OL
-	d4TJW+u6eG2MCR0xRDv47b1tpq3z/yU6lG4VSAKtQgSy28hHIIAHZwm0dQkrzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747494901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZaDBuiR2gKznTjuWYmUloD3ZUVLsi1k8LQTJYuhNwNg=;
-	b=Z2/dRCOAyr/t6S+hiuO3zjPqP8cT8wpw2gMGs03K9GrscMrEPPHVoqa0XXCp5BBg7gHDcT
-	mfStfliSCreLMfDA==
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 5/5] futex: Correct the kernedoc return value for futex_wait_setup().
-Date: Sat, 17 May 2025 17:14:55 +0200
-Message-ID: <20250517151455.1065363-6-bigeasy@linutronix.de>
-In-Reply-To: <20250517151455.1065363-1-bigeasy@linutronix.de>
-References: <20250517151455.1065363-1-bigeasy@linutronix.de>
+	s=arc-20240116; t=1747496810; c=relaxed/simple;
+	bh=B17RbtciEnVVEu7Dlw7ST4KzADZ1kSpxHtr6ZOzjFME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SPKqCMiuvuDD1ZQtgBa/ZDZ9y+orH+toOvTe8YtiD2ItWZQJA0GQbWhk9yNzAt9959gBGeqbjx2XqixRPsSQZeLFN5vGcglKI4ikVOyAmouiWR6FMCih7K6ij4CmK2HRg+swKqoIBv1X83bzwQbtoFE9yQa2qAplT+IqemL54vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.201.46.250])
+	by APP-05 (Coremail) with SMTP id zQCowAB3tihZryhogGKtAA--.34380S2;
+	Sat, 17 May 2025 23:46:34 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: ajay.kathat@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] wifi: wilc1000: Handle wilc_sdio_cmd52() failure in wilc_sdio_read_init()
+Date: Sat, 17 May 2025 23:46:11 +0800
+Message-ID: <20250517154611.910-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAB3tihZryhogGKtAA--.34380S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXw4UZFW5ZFb_yoW8XF1kpF
+	WxurWYqw10kFWru3W7tFs5Aa4rJa4UtrW7WFWxuw1fur4kZr1Skr4fXa45Xr1qg3WUC3Wx
+	Xw40vr4jgF1IvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVb
+	kUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYFA2gopvIMOQAAst
 
-The kerneldoc for futex_wait_setup() states it can return "0" or "<1".
-This isn't true because the error case is "<0" not less than 1.
+The wilc_sdio_read_init() calls wilc_sdio_cmd52() but does not check the
+return value. This could lead to execution with potentially invalid data
+if wilc_sdio_cmd52() fails. A proper implementation can be found in
+wilc_sdio_read_reg().
 
-Document that <0 is returned on error. Drop the possible return values
-and state possible reasons.
+Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+log an error message via dev_err().
 
-Reviewed-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Fixes: eda308be643f ("staging: wilc1000: refactor interrupt handling for sdio")
+Cc: stable@vger.kernel.org # v5.7
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
- kernel/futex/waitwake.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index b3738fbe83c62..e2bbe5509ec27 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -585,7 +585,8 @@ int futex_wait_multiple(struct futex_vector *vs, unsign=
-ed int count,
-  *
-  * Return:
-  *  -  0 - uaddr contains val and hb has been locked;
-- *  - <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is =
-unlocked
-+ *  - <0 - On error and the hb is unlocked. A possible reason: the uaddr c=
-an not
-+ *	   be read, does not contain the expected value or is not properly alig=
-ned.
-  */
- int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
- 		     struct futex_q *q, union futex_key *key2,
---=20
-2.49.0
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index e7a2bc9f9902..d0e8b812b622 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -809,6 +809,7 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
+ 	u32 tmp;
+ 	u8 irq_flags;
+ 	struct sdio_cmd52 cmd;
++	int ret;
+ 
+ 	wilc_sdio_read_size(wilc, &tmp);
+ 
+@@ -827,7 +828,12 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
+ 	cmd.raw = 0;
+ 	cmd.read_write = 0;
+ 	cmd.data = 0;
+-	wilc_sdio_cmd52(wilc, &cmd);
++	ret = wilc_sdio_cmd52(wilc, &cmd);
++	if (ret) {
++		dev_err(&func->devm, "Fail cmd 52, get IRQ register...\n");
++		return ret;
++	}
++
+ 	irq_flags = cmd.data;
+ 
+ 	if (sdio_priv->irq_gpio)
+-- 
+2.42.0.windows.2
 
