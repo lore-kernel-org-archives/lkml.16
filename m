@@ -1,216 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4619047F
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2284218C937;
+	Sat, 17 May 2025 09:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474106; cv=none; b=ULdrjxlLmftJoobpa92mWZefkZVUNv+GVlJV3Iay2MAUHmVAx+MwuyWJJ6/fodTEEFFHVNiaolwKffFCdPU/Da/tlsg7Nc1ndbkIW9I6ES9p8kIb5PhJxN9ll7xIjnCNnqJmm0APN5tBNfRDoNmdnRmJCUvtjkuFOOh6g2NHpXc=
+	t=1747474255; cv=none; b=GF5WkSwOyVkDQp2Pv+s1/QclXsaQ63OnK6kV7SSJFTPF3V7dTrP68DWuldK+un0FR0Gxp+u+bvbrswUFAIQtKfvKBIEFGTSStb+FQrq4etO2Mznj2V4d7uGKLVaR7qmk9GQ7QR0qtCyPMbxjLHO8CUq83tn6cex4CAJ0N3qZMaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474106; c=relaxed/simple;
-	bh=KuVTgXODd0rLVl2IwnQnM/tgWQS6kBw/5bPo/5PsTXk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=WneZU0TgOScPqopTZ/5GN8XyRUTPhbpRh/GbMXGGwEJedO8uRJOaJ1WBxNUl1w2HeBak6+WBEE1P4M/L/qCWL5fNjiLICUExhpIASIftjF/7RWF9kLY7bg/ufXqx++rw/o6Vc6S5euau0WxH9HjfO7ocASQEgtJcxIj/yAu8f84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dSQcfb69; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747474255; c=relaxed/simple;
+	bh=IAvZfmPr219OO3tilwUICqLsop+dgy1+GN0pkM/mw+Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UiQWvaCmpm937IY+1YAi40/CuqM1gZr2HwpTqs0TAGOxar603osEbLKyYj+EmXDx2KcRFIZYBnUEaoOQh5+nct9QfRuupecBTOhPXahx79/7vJkIYdNYwk52NCmyEVE2HK3UYRWJS/vDeUz4nvOA34h1hyXed7ZONc1ZSAKaetM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDZLaZ51; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dSQcfb69"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747474104; x=1779010104;
-  h=date:from:to:cc:subject:message-id;
-  bh=KuVTgXODd0rLVl2IwnQnM/tgWQS6kBw/5bPo/5PsTXk=;
-  b=dSQcfb695o+k4ZuM+2ASxoFuOHLui3mzBihs09WkdhUqkbgbOR9La2A5
-   B8sf2lvwPVGRs9ItzhMDVGpZEgFojijMMd/WXWU8/GDrsKeWMBbXmjj9r
-   V6EUZ8Gz9gnIw/O20LVZWAlChSA3RijeXT4LQaigpuz9ACKW3yYGVfxoa
-   3PzX2eUhU1tEkDyNw/0wEtEdi0esu+QPsX6JZo8wgqTE2gVscSzqn89f8
-   MMcI1x1522MuEzys1OWpaWJTArZfJzeCBUZYLecq4JQghY9aXonHqaGmq
-   BPbFCYhr7EDUSh6D3D2NkQ5eazJeBZzvUmYV0vVPldK4Lw+dS3H4kXpls
-   A==;
-X-CSE-ConnectionGUID: emZaTHQNQKeQ9IJ+ZLl69w==
-X-CSE-MsgGUID: 4BRKP8AhS46ZRhYmjmHkIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53113525"
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="53113525"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 02:28:23 -0700
-X-CSE-ConnectionGUID: GEqHkjgrRPOIN0dOYwyGKQ==
-X-CSE-MsgGUID: vGHHj3YBQUK0WFqf8Cimqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="144158752"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 17 May 2025 02:28:22 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGDq8-000K35-1B;
-	Sat, 17 May 2025 09:28:20 +0000
-Date: Sat, 17 May 2025 17:28:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/debug] BUILD SUCCESS
- 06aa9378df017ea7482b1bfdcd750104c8b3c407
-Message-ID: <202505171709.uY5hkwCI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDZLaZ51"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3AAC4CEE3;
+	Sat, 17 May 2025 09:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747474253;
+	bh=IAvZfmPr219OO3tilwUICqLsop+dgy1+GN0pkM/mw+Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cDZLaZ51sMYxM2Ko3rtu3sAOpZDlwHHYFYHuKLVOjHnIQ9OM9LgKmtI+0MBZXQB4I
+	 2h8grkxJ5IIyfd69VqVvotKg/IaUWRlG5gZ90nG5JGJj3BMxdOhLITfrcjgjMm/M9j
+	 Ms7jDUfeQsew1387vtyT0lTLc07fFV5HdeomJr4iIgs/iUJQ716LVTTejZe7XE8dUx
+	 jVYuwwHwK6zFs6Slq8dgcNaVIGO7jdcIe/YxwI3buSs8B7pwkXISFxd7INJSyxrWb9
+	 TQ2E4VeAGNsFtB0SYN8okFPcXYAItH+wOPf0CnS7t07eqlHv9gxCZBffWEko7tOBt1
+	 jwfLpUZrJBMSA==
+From: Mike Rapoport <rppt@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Mike Rapoport <rppt@gmail.com>,
+	Rich Felker <dalias@libc.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-kernel@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] sh: kprobes: remove unused variables in kprobe_exceptions_notify()
+Date: Sat, 17 May 2025 12:30:48 +0300
+Message-ID: <20250517093048.1149919-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/debug
-branch HEAD: 06aa9378df017ea7482b1bfdcd750104c8b3c407  x86/tracing, x86/mm: Move page fault tracepoints to generic
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-elapsed time: 1355m
+kbuild reports the following warning:
 
-configs tested: 139
-configs skipped: 6
+   arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
+>> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
+     412 |         struct kprobe *p = NULL;
+         |                        ^
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The variable 'p' is indeed unused since the commit fa5a24b16f94
+("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250516    gcc-13.3.0
-arc                   randconfig-002-20250516    gcc-13.3.0
-arc                        vdk_hs38_defconfig    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250516    gcc-7.5.0
-arm                   randconfig-002-20250516    clang-21
-arm                   randconfig-003-20250516    clang-21
-arm                   randconfig-004-20250516    clang-21
-arm                             rpc_defconfig    clang-18
-arm                           sama5_defconfig    gcc-14.2.0
-arm                        shmobile_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250516    gcc-9.5.0
-arm64                 randconfig-002-20250516    gcc-9.5.0
-arm64                 randconfig-003-20250516    gcc-5.5.0
-arm64                 randconfig-004-20250516    gcc-9.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250516    gcc-14.2.0
-csky                  randconfig-002-20250516    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250516    clang-19
-hexagon               randconfig-002-20250516    clang-21
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250516    clang-20
-i386        buildonly-randconfig-002-20250516    gcc-12
-i386        buildonly-randconfig-003-20250516    clang-20
-i386        buildonly-randconfig-004-20250516    clang-20
-i386        buildonly-randconfig-005-20250516    clang-20
-i386        buildonly-randconfig-006-20250516    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250516    gcc-14.2.0
-loongarch             randconfig-002-20250516    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          eyeq5_defconfig    gcc-14.2.0
-mips                        maltaup_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250516    gcc-13.3.0
-nios2                 randconfig-002-20250516    gcc-13.3.0
-openrisc                         alldefconfig    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                 simple_smp_defconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250516    gcc-10.5.0
-parisc                randconfig-002-20250516    gcc-12.4.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                   currituck_defconfig    clang-21
-powerpc                       holly_defconfig    clang-21
-powerpc                     ppa8548_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250516    gcc-5.5.0
-powerpc               randconfig-002-20250516    gcc-5.5.0
-powerpc               randconfig-003-20250516    clang-17
-powerpc64             randconfig-001-20250516    clang-21
-powerpc64             randconfig-002-20250516    clang-21
-powerpc64             randconfig-003-20250516    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250516    gcc-7.5.0
-riscv                 randconfig-002-20250516    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250516    gcc-7.5.0
-s390                  randconfig-002-20250516    gcc-7.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                        apsh4ad0a_defconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250516    gcc-7.5.0
-sh                    randconfig-002-20250516    gcc-9.3.0
-sh                          urquell_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250516    gcc-8.5.0
-sparc                 randconfig-002-20250516    gcc-8.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250516    gcc-12.4.0
-sparc64               randconfig-002-20250516    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250516    clang-21
-um                    randconfig-002-20250516    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250516    clang-20
-x86_64      buildonly-randconfig-002-20250516    gcc-12
-x86_64      buildonly-randconfig-003-20250516    clang-20
-x86_64      buildonly-randconfig-004-20250516    clang-20
-x86_64      buildonly-randconfig-005-20250516    gcc-12
-x86_64      buildonly-randconfig-006-20250516    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250516    gcc-10.5.0
-xtensa                randconfig-002-20250516    gcc-10.5.0
-xtensa                         virt_defconfig    gcc-14.2.0
+Remove that variable along with 'kprobe_opcode_t *addr' which also
+becomes unused after 'p' is removed.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
+Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+
+I don't know why the warning poped up only now, the code there didn't
+change for some time :/
+
+ arch/sh/kernel/kprobes.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/sh/kernel/kprobes.c b/arch/sh/kernel/kprobes.c
+index 49c4ffd782d6..a250fb1b9420 100644
+--- a/arch/sh/kernel/kprobes.c
++++ b/arch/sh/kernel/kprobes.c
+@@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+ 				       unsigned long val, void *data)
+ {
+-	struct kprobe *p = NULL;
+ 	struct die_args *args = (struct die_args *)data;
+ 	int ret = NOTIFY_DONE;
+-	kprobe_opcode_t *addr = NULL;
+ 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+ 
+-	addr = (kprobe_opcode_t *) (args->regs->pc);
+ 	if (val == DIE_TRAP &&
+ 	    args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
+ 		if (!kprobe_running()) {
+@@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+ 				ret = NOTIFY_DONE;
+ 			}
+ 		} else {
+-			p = get_kprobe(addr);
+ 			if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
+ 			    (kcb->kprobe_status == KPROBE_REENTER)) {
+ 				if (post_kprobe_handler(args->regs))
+-- 
+2.47.2
+
