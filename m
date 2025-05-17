@@ -1,250 +1,113 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E60910E0;
-	Sat, 17 May 2025 00:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747440255; cv=fail; b=sAB6D+BW5ODjxvOnrWaIc9pyvVW6frQGne+ByDYhAPMiraVhZUYyHfjL23BaCKrDRB5oI2Ks2r2rNogqg69ABexKvgqYTppTmf41X0P7lP6ZRXRs+uAnelgeQH1STX6RBKyd8LWKZdj94HkNSnyhzb+z6iPXPIFNgmGou9QlIiU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747440255; c=relaxed/simple;
-	bh=sPQvuPLo6pskgYU809kUZXUPulKuuwrVQyGmO7C6yuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gakjzTl73N62oJ+gJoDa2xUqxpgzA4VMnm99KpQAkMEBd+vROzTr30DAbS6PLuyO2olJpq2APVHTtXDcKdbbJwx8ziDjwQqWqpE6HXfV4XYeB5XkqxMAaPgM2gnaZE+UCV2kU//3WHfnOdpVVf3VY6ZrvIDVxWrMBagviNf3EYQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LOkEsCTQ; arc=fail smtp.client-ip=40.107.94.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0143510E0;
+	Sat, 17 May 2025 00:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747440275; cv=none; b=pl0D05MeuPaqxDWksip5A2muja1jTqaxltZVnMz3BKQ9Vcza7o4D8koXVHyF/xbfiEdKewbOJoPQ1duK/w21938WqPZNdZ6nQXVGDy1CmvrzviyUcsbgMelIgzGEOcSQMZrsGB1tvHADY4AJL1BcAk6kzo5labWjQTXDPwhlQtI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747440275; c=relaxed/simple;
+	bh=j4smKnIucW5h8+JRIWzZTEG3Ww8QnHKjs/97NGL+Jmw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RgKfPepZJvBDTCBmV2vRrmQJy1gATeRGGrn53nE3/2SiydXdmRuNq0EwZtM0OsKJiDY7QqE5UVybgPxm43FlRZReeqUB1INdPQDOF2uNPedWldhYFxsqfIFHKsNRuBnW+eQE3IygSX5EpIBQRlwRYFyYRs2rviOAdDpOoAoyUYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRfdNwRV; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LOkEsCTQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bXBbbiL6dS2Krkgttg0E/boPA/egQ+NlCXYtwxkxEiwn53eYLEVtveY3qfk+3kP6uv/7IMMn+FWP07ui+yi5E4OwB22qtnpWp+5orIEavCt2G+AHQY+rr7XkukP8iuktLShUsXvvR85SnB2IYyTQrIrnRuNVkFprDh2Rmyep57qpGAzy4TOZSFAmYQxCyEuKuBCvC0iFdPLKLI/cEabOmXakPkZiTaAnwzzmhTPyzc3/74DIBRYrFXskeQDHPkOJpr5xyuosLPLSkuj5X2Z6hrVb5ZgcsHtnrmLmOpXHgBozUWx17iFDukQCb1K8KXuA4rqsjEVeH9fjioXMwWUTxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WJ2i0mHY1ti9CPnp+P9KZk5uZcidOzWjM1GRVyl/AsI=;
- b=PPr+UnsN4KKh2a9TlrqSrYzaZrkoz6CSPHdIQJ/lUcPg07DC3xEtNqrx6IuGdAWZ/uXCMKeg3Hwp5gjpcQvSld44ZKzDhCrwglQY2w5JzwbNNQHF5TlSsu1nQZepjqAi6+GFjbYorrsX4yAxrU38MvAcwnwFhUCaMgGhrAywhuRW5DRcPSZdjcNEurxcUyFvb/hLdFC3ALvhVvrLQ69TT640kwfLwe/fcQZZBf9wgoZOtZMJmrvkwLo9H8RmXPEpuEBWevKqDSIn+yQgLYvsZmDMzwDok5up1RUukOYeJZlA7e+ebW5MTO1EV1WIQa+uo+jz9Vgoa05J7ZSqr/g3Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WJ2i0mHY1ti9CPnp+P9KZk5uZcidOzWjM1GRVyl/AsI=;
- b=LOkEsCTQIGYdF+VOEt5UajRtASiWqvQRxnJr+jhvMvqyMP5w2sibM5W5/vICCk0DHOArsDUd0qUDAObU366aavNaJffooxQJrg3zg11JZUjjqWaXw29oe28cd6RUQnS8QJ/vxr+oxg/8Wykuct/bCao5uA8xL79sxfiuKo3VzYii7orc68s87qJNZhR9XSMPEMt05dKqxwfcm/9rUEjMx748lu6In7RduIvF16IKXrVCfxoPjrdVVqe56aITx3bn1yPxtkJjCgFGrT+BJGSlUNqpFL57kiZeJR2ugkW7XvRojlEh97wnkjMsdmM6i4QRfw9SmNYQYtWRaqxXwymj7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN5PR12MB9464.namprd12.prod.outlook.com (2603:10b6:408:2ab::10)
- by DM6PR12MB4434.namprd12.prod.outlook.com (2603:10b6:5:2ad::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Sat, 17 May
- 2025 00:04:09 +0000
-Received: from BN5PR12MB9464.namprd12.prod.outlook.com
- ([fe80::e83f:10b6:1259:d000]) by BN5PR12MB9464.namprd12.prod.outlook.com
- ([fe80::e83f:10b6:1259:d000%4]) with mapi id 15.20.8722.027; Sat, 17 May 2025
- 00:04:09 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- kvm@vger.kernel.org, linux-mm@kvack.org,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
- Matthew Wilcox <willy@infradead.org>,
- Sebastian Mitterle <smitterl@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] s390/uv: don't return 0 from make_hva_secure() if
- the operation was not successful
-Date: Fri, 16 May 2025 20:02:46 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <818174C5-0FA3-4FA2-880D-FF5C1102B2B1@nvidia.com>
-In-Reply-To: <0454761b-ec54-4cc8-9d01-b783e2e58f9e@redhat.com>
-References: <20250516123946.1648026-1-david@redhat.com>
- <20250516123946.1648026-2-david@redhat.com>
- <60DDE99E-E09D-4BD4-AC58-569186E45660@nvidia.com>
- <0454761b-ec54-4cc8-9d01-b783e2e58f9e@redhat.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MN2PR20CA0017.namprd20.prod.outlook.com
- (2603:10b6:208:e8::30) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRfdNwRV"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231e21d3b63so15355305ad.3;
+        Fri, 16 May 2025 17:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747440273; x=1748045073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mIJnfKGtkXlF2Encrce81RM8lOxuzqBOgBxi1H8e+9E=;
+        b=KRfdNwRVB9pULA1EMdGD7Ht6WfFHVpCA1Ix8mYw8mLtiH1YshMNT4KNd9EppIXoNPn
+         R/bpliST7FzBVHtHBzNyozjB/mOktwLT047BaWcRxLnGPD8Masvs8N9khWWGRKTsLXjn
+         zDI7MsP4Nr4TROnn9deSwixErFR+Cj4fFij/nV37jiio3MrDx1CpTFsv0PLWtrZK81yD
+         RcLi79yhSY7OxaqF0wCf9migFd4VhKlgoTl3v9Ag5NA2dKHUWRJkMMSOOXeXlL3fa3Xn
+         fgeN1NPvr6aQi2tFqJFp8jwW97oqz6iw2EBOJxRj5B9lP6mQnmCowcJzM4yQX1ly5G9O
+         sdmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747440273; x=1748045073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mIJnfKGtkXlF2Encrce81RM8lOxuzqBOgBxi1H8e+9E=;
+        b=b/vlTGurSdka8aOifk8EyYPZLccVD6tuT/JXUUjHQeg4s1oy2sv+vZI/KehSvnzG05
+         IgSHJagn6ILIWH1gXImttNoV79UAxuTP/wwpghgSPza4qw7yHJNviFVnray1eDTsLVUl
+         zNnro26HRmhoDf9VtpqxVCEyJ+vcI6Im4hxgU9yxP54xWRR3MpZjxOiYVnYLn+nN8/iQ
+         koOYmzwe9KDnHQJ/jilufmvWsgWXmSjZZqH6H2Pq6BWEfHseGQvfEXWyT97OLYZIoI0G
+         LCPXdp9hbdK2vRfHY8FqhZ/Xe7uMvxOkX+ZJjoC2P1jrDTNuYsNuyFzSB2vqK2rqjOTF
+         sfQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAzoNiKCSBRxN185pPx6+n7jqCJztN7qof6lSvX7SDUC6jOnQV51STTRwz8umcdzWuheKxEb2kGddoxUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz934zNwl0Jfoj/ZpPxjA+iT6tjsJrWsfNw1GEAeJsZlh/BIljm
+	GLmAS3JpUDx6DqwYMVSNoJSoajKvy4UcoulnbmLySb8U0a/gdNNxJTCLDKPsXKU=
+X-Gm-Gg: ASbGnctmCFnsIt0v56urq7G7rFjraV8cqxEnIvoZv3Z3o2bSTHc5Qu3hRD7gQITR10w
+	khSiPWg8moeUgtrXjmx5FgeEEgp0GUHChbtGrQIqCElApMplnCbe3fE+35w/nZzql6t2kR6+fSj
+	+ehqVh1M3yTsfjPkUNyAgfcfYd38ahuhnrt5VhVfAjbB44YuUWYdZTilHBj0dqgLq7OW/WzU6YZ
+	97h2s80nWYRhXI0NL5Qi7xb4/Q0j2AYDkeIT8x0byySR5aig7B24kuDOOSkhwGvWvuAlodvUSeT
+	/IWSWKqxW556ft0JgdrbkNVanlNStashgJ1K6mns0GGJF/QoQn8fdKvZ0By96VVWKhlBh/+pbBf
+	i/UHmEy31Q/OZ
+X-Google-Smtp-Source: AGHT+IHp5NQdTmn+sV13Wl1weanLiWprdfWQJUqWDn7lpqWZHcoy3u0k7JNp8noj20eh6Kz4NPCsmA==
+X-Received: by 2002:a17:902:d543:b0:231:b7e1:c977 with SMTP id d9443c01a7336-231de3763abmr66649725ad.29.1747440272773;
+        Fri, 16 May 2025 17:04:32 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e97f9bsm19761285ad.156.2025.05.16.17.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 17:04:32 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	willemb@google.com,
+	sagi@grimberg.me,
+	stfomichev@gmail.com,
+	asml.silence@gmail.com,
+	almasrymina@google.com,
+	kaiyuanz@google.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in sendmsg
+Date: Fri, 16 May 2025 17:04:31 -0700
+Message-ID: <20250517000431.558180-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN5PR12MB9464:EE_|DM6PR12MB4434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67b26675-3b93-48f6-9e95-08dd94d628ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8AEJeHS+FfEMdjudEYfARwiMOm8K7v4ZS5diVfInI15Sym0vY8cYYQ686i1F?=
- =?us-ascii?Q?6UMwuihbli+Rj8vcPXG59KZQ0wIcUV+djwHt58kEI4gGyI2BDDvzKgDFRboE?=
- =?us-ascii?Q?6Agkr5EvsN+tth0vBRZv1RRqJY3Qc3CVRhdv8gGyPBL13AfVvaEIbUKps+T1?=
- =?us-ascii?Q?iYCekWCOqiPk2ZRH7+AFRQTFlz6jRrOE3YGtcjlAGgclcSzRE0NV0LFfDlrz?=
- =?us-ascii?Q?ap4k5by57fEcHJ4e1UFvctAhDmbMfXI964BHrAUsdPwPLYXKGlzBXFGdUcAH?=
- =?us-ascii?Q?jlTsxW1qbrh26tGQlPIBEEP7r1htM1jkZbSdskZeR1ha19n4Vsaso0OFS/A4?=
- =?us-ascii?Q?nQplCH9r2GvS/4/q9TfwG3tBc7aEuqbixMfqLemZHmUcMMqOv3LN4hfYsCI3?=
- =?us-ascii?Q?HFskCfWhk7kYoDacIGoKX1fEn4MTTIMkvYAfE78bHJsk2xOS8Srtk3xPm6BA?=
- =?us-ascii?Q?tSEUb42FzAjLudBc1bTH9e61SgaP3U0HRiLaNoYVpBl8b7woJsVWc7DbIgJ3?=
- =?us-ascii?Q?Fk5eSGecadEN3Tg3pDy2yLphgeLdh5DkRIF/cVIz6OmxTm5lA8UxARvU14iI?=
- =?us-ascii?Q?v7rfV9nblqY8XG85pJDuj45lgRtR2gGlJWBrIsNNgmLNUm3RckO6rnvFgixD?=
- =?us-ascii?Q?pu0WkRaUBsAhm5V+DspEjHh5o+gFe/ee47g3AVbRIYB/aA8+VoXqhKuBGlNA?=
- =?us-ascii?Q?0R7dtYnijva/YHK96aox6lbGjC/WcJkS0jsVthR2fvbuAc5yZhpT2Rze02o0?=
- =?us-ascii?Q?z0tV8tQ+vSaJQqxlk0JbkBwaQTR3BBBTNQV6GE52NgdBtr9PmVvAL8M3bWft?=
- =?us-ascii?Q?muj9nZdFUgbV46OmOK/rmboBSvef6kT/WIQz0gGN5A26uv1D+/NMPFB7QsX8?=
- =?us-ascii?Q?YaMprsik5UuPxazXsLWUnoMc81z1Mc40QLWms0cCOzve72BnhKU8wTg8/OCu?=
- =?us-ascii?Q?spNIrfvGHqYFUSQFy3qeX8bJEwWSYL5dAMFiVX8hAnZYNwuDTH9xz4tlANHS?=
- =?us-ascii?Q?PyvXYMcNoNRAKWGlpMbgBkpWP111c2BnaGRdBizO7sg7Jw6EW6mJlXtMAyoJ?=
- =?us-ascii?Q?lVkQNGiXbyxqx+uXukhg/qQsmk70knWEua1p3M5L+8DmMF8F1nwNH4FxrcRZ?=
- =?us-ascii?Q?P1CP0iJ/js/saJqfI2x8ZK2MxMKjyWzu2HgTq//4Vw6K8lGQfDkd15p6jzoA?=
- =?us-ascii?Q?oYiezBsu7fA6ew40rIg/xBwG0CLDbVZrJaL2L49qtkqdj/6GFLTpNkRAvIZ3?=
- =?us-ascii?Q?WbZWHvpEhUblytpJg/u0nVZvL+wEo8y5J79xd6PBJTXp9ATC8LyMAfD2zDTp?=
- =?us-ascii?Q?Q1eANoa167YE8vltsx1nIOFf88fmHcsCcq5oDAnEzQIFTkGviVCBR207JrMp?=
- =?us-ascii?Q?8O7lWkNEMo3mqEO3wBFfMxrVclcKmF9WzbB80X1ZAQkyjLsPQE6WB/u0xjmJ?=
- =?us-ascii?Q?zlRMTtlilvo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN5PR12MB9464.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CA8K+3D/Ex7ZePCJKgEVGgnDH9VjpZZK3sqVt5FZqLXvaK3DHxqmf5L2hErZ?=
- =?us-ascii?Q?pHoqtyTuDsHsvmTYB7d8LzVCR+7DDcRb2boT0Bh1q+mpay8fUdKrdcxy37Tx?=
- =?us-ascii?Q?zyAi710H9MYmCSczaxa/maLyVCt+JZgwlf+71HQucNi0ZyjiytSGUeCdNnJn?=
- =?us-ascii?Q?rgI147xH3TxgXQVdpwb6K8uYBMiNUoY0q9KTptev15bZkK7SKfG/UvE+Esb1?=
- =?us-ascii?Q?RcQHJBS4Rs8BAQmerOruYqs2DD26R4OxaFjGlNOXbuLmpDvkYGSx65JSTlOv?=
- =?us-ascii?Q?UCZJUcmnNgIo31ppAcUz43JuuGBc9lBymgLrcTFwqbrQywvrG39HHzy9aoDZ?=
- =?us-ascii?Q?wDyNk1Yu6UkgHS7Y3qKZxeR6Ki+hvUyJBWqFiFv1Rju3ZseSLoeVBDFyFutj?=
- =?us-ascii?Q?qq9ZHPo7K644s05CrflLavFAQUgySCVMUwIZnnJ2XlYuUwSBbTzYekrRydVH?=
- =?us-ascii?Q?3iBV1TvPR6wupZb09jslbKDuiv/1RqB9wVh0hM9I7IqH1a9d14N2hhjOybW1?=
- =?us-ascii?Q?8vFiryrcduMe9x6B6gCUyyCLRzLE6OHIodBiSHMgne3uLZgwKKeXz2vIkxky?=
- =?us-ascii?Q?ED7Q4vRBWZsD7SBD2591JOkdXmdjnRoqDOKKodoa/m9QCjvvKm8e5dVjtgdl?=
- =?us-ascii?Q?G62Y2IwYycQByfcxim3EinRADbPWShVa1xiqzgktjLVDacnunyKdVYo1ebMi?=
- =?us-ascii?Q?/lEFFKpZIk7AbTG18iHCgbayoe0JB/OMBVWZ+Wm0HWh+b99mBTurJtFp+brp?=
- =?us-ascii?Q?l/om6tkqHTVBU1ak4gYyk7iD02nEA5OCe3DCiR91ZaofARBPRGeucuZC0hV6?=
- =?us-ascii?Q?U0uQFvX1WmILMKpmzg41WqZDaCyuLhypz6KZI0obnOREUgE7IzHQiXoTSjrt?=
- =?us-ascii?Q?P9hVb6r+dozMyeyfRQMAfIXjaoCPgt/kZLNOFIdnuutNetHJcg8wP4c3JG3G?=
- =?us-ascii?Q?pY9S/kHqfOg+hWc0FURx/2o4helGDrHJTXWQAZDyUg0SLHIGafdyYp7n3KUr?=
- =?us-ascii?Q?nY1kwUC3XEwcfua0XLnMm8hA69mIumIoJRCN1qk3LnyeVRObLJZc8Lmqwj7/?=
- =?us-ascii?Q?OnZF/EZFOEjwsHSgiBDje5PK3qs4gPYShcH1XhjOoAO78d7CI6FBbsDHRzlg?=
- =?us-ascii?Q?WkUNFRMbO90YDLue1NVWjFUBsBfJ1HE3p9Q/epgSQo2svXAIxoxmcrf2Qido?=
- =?us-ascii?Q?KGuvTGRO3KDAQs1eZrUiDDCK8LtX6B7eZVzyprq/GvyJ1yCLWpt49fSK4CSy?=
- =?us-ascii?Q?gWe+8rXVd7F83ZBqsdQ2M06gOeR5Z+LdWJn1zZWiURDOUWQ8VE7Hdoj54rQC?=
- =?us-ascii?Q?FnzwQQ1OKV/2H7jsLSMxXgmNBZJ0+q8u6lfCRJMkziJPQT84Yde8tfEE/NBJ?=
- =?us-ascii?Q?pe1pfaBkxEnLl3cQpfIKYTn2Pw0oXp7h8HYnDb/h+4iX18Ov06ucm3UZSO3G?=
- =?us-ascii?Q?hWNAtCeKmED7Ajp3wr3hnO/Pmhurg4dNKNdkn2tekrqqX0XXcxrBQd8WT6Iq?=
- =?us-ascii?Q?rNUa2dHW/zC7zn2ScrA6i+G2f9V8Gn0dvHJ7DZgYV6c57VlUZFZ0vk5f9MDe?=
- =?us-ascii?Q?HmCA70Cnfg3dALGsgmGNoubn+vPtjg2ScCmEaU7N?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67b26675-3b93-48f6-9e95-08dd94d628ba
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 00:02:48.5395
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +0oCx87W+UOzUDvWDLMpcWybDJbsqS6qcn1dz71Bl3wIUMiWoKwA3va8zLwQqukU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4434
+Content-Transfer-Encoding: 8bit
 
-On 16 May 2025, at 17:20, David Hildenbrand wrote:
+iter_iov_len looks broken for UBUF. When iov_iter_advance is called
+for UBUF, it increments iov_offset and also decrements the count.
+This makes the iterator only go over half of the range (unless I'm
+missing something). Remove iter_iov_len clamping. net_devmem_get_niov_at
+already does PAGE_SIZE alignment and min_t(length) makes sure that
+the last chunk (potentially smaller than PAGE_SIZE) is accounted
+correctly.
 
-> On 16.05.25 23:08, Zi Yan wrote:
->> On 16 May 2025, at 8:39, David Hildenbrand wrote:
->>
->>> If s390_wiggle_split_folio() returns 0 because splitting a large foli=
-o
->>> succeeded, we will return 0 from make_hva_secure() even though a retr=
-y
->>> is required. Return -EAGAIN in that case.
->>>
->>> Otherwise, we'll return 0 from gmap_make_secure(), and consequently f=
-rom
->>> unpack_one(). In kvm_s390_pv_unpack(), we assume that unpacking
->>> succeeded and skip unpacking this page. Later on, we run into issues
->>> and fail booting the VM.
->>>
->>> So far, this issue was only observed with follow-up patches where we
->>> split large pagecache XFS folios. Maybe it can also be triggered with=
+Fixes: bd61848900bf ("net: devmem: Implement TX path")
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+ net/core/datagram.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->>> shmem?
->>>
->>> We'll cleanup s390_wiggle_split_folio() a bit next, to also return 0
->>> if no split was required.
->>>
->>> Fixes: d8dfda5af0be ("KVM: s390: pv: fix race when making a page secu=
-re")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>   arch/s390/kernel/uv.c | 5 ++++-
->>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
->>> index 9a5d5be8acf41..2cc3b599c7fe3 100644
->>> --- a/arch/s390/kernel/uv.c
->>> +++ b/arch/s390/kernel/uv.c
->>> @@ -393,8 +393,11 @@ int make_hva_secure(struct mm_struct *mm, unsign=
-ed long hva, struct uv_cb_header
->>>   	folio_walk_end(&fw, vma);
->>>   	mmap_read_unlock(mm);
->>>
->>> -	if (rc =3D=3D -E2BIG || rc =3D=3D -EBUSY)
->>> +	if (rc =3D=3D -E2BIG || rc =3D=3D -EBUSY) {
->>>   		rc =3D s390_wiggle_split_folio(mm, folio, rc =3D=3D -E2BIG);
->>> +		if (!rc)
->>> +			rc =3D -EAGAIN;
->>
->> Why not just folio_put() then jump back to the beginning of the
->> function to do the retry? This could avoid going all the way back
->> to kvm_s390_unpack().
->
-> Hi, thanks for the review.
->
-> We had a pretty optimized version with such tricks before Claudio refac=
-tored it in:
->
-> commit 5cbe24350b7d8ef6d466a37d56b07ae643c622ca
-> Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Date:   Thu Jan 23 15:46:17 2025 +0100
->
->     KVM: s390: move pv gmap functions into kvm
->
->
->
-> In particular, one relevant hunk was:
->
-> -       switch (rc) {
-> -       case -E2BIG:
-> -               folio_lock(folio);
-> -               rc =3D split_folio(folio);
-> -               folio_unlock(folio);
-> -               folio_put(folio);
-> -
-> -               switch (rc) {
-> -               case 0:
-> -                       /* Splitting succeeded, try again immediately. =
-*/
-> -                       goto again;
-> -               case -EAGAIN:
-> -                       /* Additional folio references. */
-> -                       if (drain_lru(&drain_lru_called))
-> -                               goto again;
-> -                       return -EAGAIN;
->
->
->
-> Claudio probably had a good reason to rewrite the code -- and I hope we=
-'ll be able to rip all of that out soon, so ...
->
-> ... minimal changes until then :)
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index e04908276a32..48fcfc1dcf47 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -712,7 +712,6 @@ zerocopy_fill_skb_from_devmem(struct sk_buff *skb, struct iov_iter *from,
+ 			return -EFAULT;
+ 
+ 		size = min_t(size_t, size, length);
+-		size = min_t(size_t, size, iter_iov_len(from));
+ 
+ 		get_netmem(net_iov_to_netmem(niov));
+ 		skb_add_rx_frag_netmem(skb, i, net_iov_to_netmem(niov), off,
+-- 
+2.49.0
 
-Got it. Acked-by: Zi Yan <ziy@nvidia.com>
-
---
-Best Regards,
-Yan, Zi
