@@ -1,104 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0591E8348
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3DD1E0B62
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747477821; cv=none; b=hNFny4Sy3wOvDxAMqRbNpPgJP2F5ScsGj/N+MfQ3u5aVlel36GbELRiFDkehgR1MmNumo0fU2k7FHCq1ifgkV0LOV5lqhF02x8G/tgYjW9EKfLjlhIV3sbj6qoMEP2PnEFQf7H1KWVElTpcPx3Jom+j7Cc77J6FriK72reRKBE0=
+	t=1747478480; cv=none; b=gXJBIvwzdipN/zKCEZJkZvdHNXnuikPuXS4iyUSmM1zjGu0hEmLt7x/qspw/7nD3ER5heObANJEDV74yC77IFElGoFD66cjAA+l7n4bA12Ou2lYzWEjgs5hblw2m0CzGTceFMqM6JEG7HEi7VarS5YerRA0jZD2Wlevf+fjtKvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747477821; c=relaxed/simple;
-	bh=NBLuObZypd7FUQ4RdXCGShJPwkbjl+7jqVZyIFp1z0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q1CrGY06aneXOtDGsaOmru4HaT0fdlBUPgESZguAenySV+nZ1L7Zuk64fmnGgeZ9Z8dutKSDX3CttZ9tI8ywT4gpuifHURN50bhKu2fMObfW0xwoQ57CoB9gjCQEmvySieChtkerGdP3UGP86L1x3NVIcEVCpv/pxtJrIvXru1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkRCu/h7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747478480; c=relaxed/simple;
+	bh=W/itcnvQpaaFxhLc5WAxPpHv+ElKddmKVPem0jY14NQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kwj/hwSMaXY/9bwDW7o5LgN0e4+w5/3vI+dvZALD+4o6O9n2bzWTmb/a0BC5ZKwWyCx5es0L8LF8k9Wp0K8n/rkAGs82w/1/8ojPdjpMMo27Ty/ABB2N24lfqf4E5C6CMGp4ZE+nDoTYdQisvbENc8pdYAKdZ6pVthW5MmRlbZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LHaW42R2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkRCu/h7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E04C4CEE3;
-	Sat, 17 May 2025 10:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747477821;
-	bh=NBLuObZypd7FUQ4RdXCGShJPwkbjl+7jqVZyIFp1z0E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DkRCu/h7I2WHU4dS2WlSghrYRvnB8JHkuQX9J8+7/4WFH/BhP3xPEBUAgGWe6Uj/5
-	 rvnmEBORJY/Uriw0QRh3c9YErEer/VlibqrQoBQHMzyvNGXYbcJe1MfuFMcXmxDtWh
-	 ecqi48zUxZXkDm/ROMIvoKbGhU4mEjE4TqlpqYo1eDwx0Gw7kVfPAHdc4CVu72gNEb
-	 YuQhM6E+2yBuFpPhvybz3fOrlGY3psq3MIhTO/yyyHMHvkC+JaFKQTRzvsTkt5zgUb
-	 pl0eCI64BsBYAmXhU6mSvzZvv/Uczwlxdgri/FWfSEsdZzEym+BPjobnKw7iH+VV3x
-	 QnfQJHyYYwZkg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uGEo6-00Fmrq-MV;
-	Sat, 17 May 2025 11:30:19 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] irqchip/msi-lib: Honor the MSI_FLAG_PCI_MSI_MASK_PARENT flag
-Date: Sat, 17 May 2025 11:30:11 +0100
-Message-Id: <20250517103011.2573288-1-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LHaW42R2"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H9ubCu021668
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:41:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sUFFqXgv+iFx1ppzwIqGbfC/jJrMz8MlTBLmcydgW8E=; b=LHaW42R2EhPMP3L5
+	mOPAQPr7kcCyltWqjvrk7oYkoLHcXTNogSV6llUwH8aL9vlxYP8dW2qFhaRBeDQC
+	iv3j+PRyQZoh2rpiK3SRqTfFSuW5DpiS9Hy2M/cHf79aS8adV1hYxW5WBhShOWim
+	9xtfgfLShfwan3lMnS79Ui+TD+nStdsOTxQhxTIx+VSkdruPHtsESoEhjQVIMm9A
+	B1wpKqj8AzH/bneiUPkbPiUavC/FVItgFTi2qLQOOjP3X/0EyxZnGL2HTN+5714g
+	V47EUiBVNGv0XmQvN4FRkktkzmCRTJ5CFL7pKqEGTwPsn7IfGqF6GezF91phyw1g
+	8nXpXQ==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju78fb1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 10:41:17 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e50d4f49bso42608705ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 03:41:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747478476; x=1748083276;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sUFFqXgv+iFx1ppzwIqGbfC/jJrMz8MlTBLmcydgW8E=;
+        b=RGhj340PhPY+xu3ewIWWApenmlHzrY+JaJKFVYo10lquMiWDEKYJskmG3yZNwrIIxk
+         puvcUxM/fnpj1UoiB/5SjLmtwhc/GSxdHGpW+hoc18YZEseP9MqOR1LIs0nka5xNJI5i
+         6Yako2EU0cfdttpY1NWrAlfA16NyCBvlEQ0NL9UpNu6KtYNc81B98gTgbYJwdJ7y+NZg
+         B8feQmNgKOnI+PKv+ls5v0UCiwT7OnmL51e3JPh7X3tnW9ACCIj8FsrNyRU49U5QV7+F
+         rvwAPxeCKUGyInLOB5UcwFq2YCGMe1q/HLsg3OdW7wohTXgRvCCheUcNIY0+evmgGi5G
+         t+ww==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ8ZvkcbPcSIwGAI0NDBSyAfZVwIItSIAUsW5qT+W7xufa7YnxF8iehJcBKr+QShQ7eBUYEqKlF6wnSIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7kkwRqEzXEe6vUjPqjPPmTYlhrSYkUOBIj/Z4TEAGu3uV8xnW
+	DBY8IHjy4OJZYJAwEz7oakuoS3Dex9nIwTzLOfB5BxIZBWRNTRszY0PUkjo6UyjddhSmewM99aT
+	nOwGGklhRIrhOJuhZk8YjpeibbuB+KDnkkVGylYc/Rc7IPx91/BcxJpkQx/EUJU2SIFA=
+X-Gm-Gg: ASbGncu74HnRSOWEQGFIuDecbMxtzOahJPaX38HXB3ESA7iLJzjEEbgJJ4qGcGvlNsN
+	04pFhEdSJO84BjY5VHeyCcOJnkxPnQk8YcXZqD9zIZ+tBZRMcoYNAm54mxRpEyn92dJz5+EZCQz
+	yLRHM415MtDlZbsKJi8fgRrXi7PBVlNSOcYoXu3afQ7uUUkMQY5HumfEm1imRsLcmB5dIi0PSWT
+	ki6Not+qr6uQlbLB4oFujyLJShxFJDS+m+fzuqlVqq0M0OSbifYkxnWB6QpLdJJDaU2mDKf0GDJ
+	JMcpjcbMk864+SZUSW3AMcvoYY8piaXYJ+XL9o2Leq1Hdg0kqu8k
+X-Received: by 2002:a17:902:cecd:b0:210:f706:dc4b with SMTP id d9443c01a7336-231d44e7c4emr88477275ad.13.1747478476347;
+        Sat, 17 May 2025 03:41:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF03apz0TtzAK24dth+AnzgjgONUQeTXNUK8K3witaHAREvS0v0ocsPc21LJow2qL9dXx7t4A==
+X-Received: by 2002:a17:902:cecd:b0:210:f706:dc4b with SMTP id d9443c01a7336-231d44e7c4emr88477085ad.13.1747478475908;
+        Sat, 17 May 2025 03:41:15 -0700 (PDT)
+Received: from [10.151.24.139] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e26d83c6sm24759895ad.47.2025.05.17.03.41.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 May 2025 03:41:15 -0700 (PDT)
+Message-ID: <4b931949-0254-42d0-8aed-987e6e0a0a79@oss.qualcomm.com>
+Date: Sat, 17 May 2025 16:11:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
+ reason from IMEM
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>, bod.linux@nxsw.ie,
+        Srinivas Kandagatla <srini@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
+ <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
+ <2036ef2f-c7ef-4f42-858d-8d95c430c21a@oss.qualcomm.com>
+ <68d280db-f7df-48c8-821d-f7d408c302ad@oss.qualcomm.com>
+ <8a763c70-adcf-4a14-bb68-72ddc61fa045@oss.qualcomm.com>
+ <8c2a53c2-c11b-4d49-bfb5-b948767ba6c7@oss.qualcomm.com>
+ <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
+ <6274641a-7366-41cd-a0a7-a9e9cc41b8e6@oss.qualcomm.com>
+ <0a73989f-b018-473c-872a-5cbc2e7d1783@oss.qualcomm.com>
+ <21bd89b9-9f6e-42d0-bcd3-b6476cf91705@oss.qualcomm.com>
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <21bd89b9-9f6e-42d0-bcd3-b6476cf91705@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682867cd cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VNoyoka1EbeTPVikYY0A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-ORIG-GUID: QDVZJzG-JiEmlBy1f1u7kCoTxMgu_C0h
+X-Proofpoint-GUID: QDVZJzG-JiEmlBy1f1u7kCoTxMgu_C0h
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDEwMyBTYWx0ZWRfX6BZ7GWkyiQJL
+ +I6TyayTeYO3kbbRmvRwm+4ioMwgQp+k65qCtPKA3nyYyfwkv391e6386r6DtmU/jI8veDqDRd3
+ GE4Ww/zCe4dBujL8SkIhGmwTuVbVLPKtPLmZyrI9LUthe/S+yNZq7CKi2T890HPdIEXef6A8UG+
+ gXQgD6ameYtHpEsKAFVAB+L09vO2hvoeRPB3KN/sMjb0su+Z9y6n/qydruZsMv9+faFWmJxyaFs
+ foafLf7izmvT93v+8CCrpJhUWyMTYwOloxxLGuF5z0nQ8F/O60jQbIP3W1pzKub2XKUO+cyRqxY
+ BPI7hevDspr2GPO8BIw2ac9S7cpwawhfiLCmZHw26zxESZRqh3UV3L6BhVKHS9BWnYk6TCkDeul
+ 5nxaULT0rr8EB54AmSvIwIjhWbMfuWBOR0kmtwNHVDftyZAYgwg3d2yyMK/Ry/+XoC97jD+g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-17_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505170103
 
-For systems that implement interrupt masking at the interrupt
-controller level, the MSI library offers MSI_FLAG_PCI_MSI_MASK_PARENT.
-It indicates that it isn't enough to only unmask the interrupt at the PCI
-device level, but that the interrupt controller must also be involved.
 
-However, the way this is currently done is less than optimal, as the
-masking/unmasking is done on both side, always. It would be far cheaper
-to unmask both at the start of times, and then only deal with the
-interrupt controller mask, which is likely to be cheaper than a round-trip
-to the endpoint.
+On 5/16/2025 10:05 PM, Konrad Dybcio wrote:
+> On 5/16/25 2:52 PM, Kathiravan Thirumoorthy wrote:
+>> On 5/16/2025 4:48 PM, Konrad Dybcio wrote:
+>>> On 5/14/25 3:15 PM, Kathiravan Thirumoorthy wrote:
+>>>> On 5/6/2025 4:31 PM, Kathiravan Thirumoorthy wrote:
+>>>>> On 5/3/2025 3:53 AM, Konrad Dybcio wrote:
+>>>>>> On 5/2/25 6:28 PM, Kathiravan Thirumoorthy wrote:
+>>>>>>> On 5/2/2025 7:33 PM, Konrad Dybcio wrote:
+>>>>>>>>> +static int qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
+>>>>>>>>> +                    const struct qcom_wdt_match_data *data)
+>>>>>>>>> +{
+>>>>>>>>> +    struct regmap *imem;
+>>>>>>>>> +    unsigned int val;
+>>>>>>>>> +    int ret;
+>>>>>>>>> +
+>>>>>>>>> +    imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
+>>>>>>>> Try syscon_regmap_lookup_by_phandle_args() and pass a phandle, see e.g.
+>>>>>>>> drivers/phy/qualcomm/phy-qcom-qmp-pcie.c & phy@1bfc000 in x1e80100.dtsi
+>>>>>>>>
+>>>>>>>> That way all platform specifics will live in the DT, requiring no
+>>>>>>>> hardcode-y driver changes on similar platforms
+>>>>>>> Thanks. I thought about this API but it didn't strike that I can use the args to fetch and match the value.
+>>>>>>>
+>>>>>>> I need a suggestion here. There is a plan to extend this feature to other IPQ targets and also support WDIOF_POWERUNDER and WDIOF_OVERHEAT cause as well. For IPQ5424, all 3 cause will support and for other IPQ platforms, we are exploring how to integrate WDIOF_OVERHEAT. In any case, can I define the DT entry like below
+>>>>>>>
+>>>>>>>            imem,phandle = <&imem 0x7b0 <Non secure WDT value> <Power Under value> <Overheat value>>;
+>>>>>>>
+>>>>>>> and store these in values args[1], args[2] and args[3] respectively and use it for manipulation? If any of the platform doesn't support all 3, I can update the bindings and define the number of args as required.
+>>>>>> Let's call the property qcom,restart-reason and only pass the register value
+>>>>>>
+>>>>>> Because we may have any number of crazy combinations of various restart
+>>>>>> reasons, we can go two paths:
+>>>>>>
+>>>>>> 1. promise really really really hard we won't be too crazy with the number
+>>>>>>       of possible values and put them in the driver
+>>>>>> 2. go all out on DT properties (such as `bootstatus-overheat`,
+>>>>>> `bootstatus-fanfault` etc.
+>>>>> Thanks Konrad for the suggestions and the offline discussions.
+>>>>>
+>>>>> @Guenter, I need a suggestion here. Currently as part of this series, we are planning to expose WDIOF_CARDRESET, WDIOF_POWERUNDER, WDIOF_OVERHEAT reasons.
+>>>>>
+>>>>> Once this is done, we do have the custom reason codes like Kernel Panic, Secure Watchdog Bite, Bus error timeout, Bus error access and few many. Is it okay to expose these values also via the bootstatus sysFS by extending the current list of reasons? Since these are outside the scope of watchdog, need your thoughts on this.
+>>>> Konrad / Guenter,
+>>>>
+>>>> We had a further discussion on this internally. Outcome is, it wouldn't be ideal to hook the custom restart reason codes in watchdog framework, since there is no involvement of watchdog in such cases. Also I don't find any references to hook the custom values in watchdog's bootstatus.
+>>>>
+>>>> If this is fine, I'm planning to resend the series to handle only the non secure watchdog timeout case. In that case, as suggested by Konrad, everything will be handled in DT like below to avoid the device data.
+>>>>
+>>>> imem,phandle = <&phandle <imem_offset> <value>>;
+>>> the part before the comma is a vendor prefix, so that must be qcom,xyz
+>>
+>> Sure, will name it as qcom,imem-phandle. Hope this name is fine.
+> just qcom,imem is fine, phandle is a datatype described in dt-bindings
 
-Implement this by patching up the irq_chip structure associated with
-the MSIs to perform the full unmask on .irq_enable(), and the full mask
-on .irq_shutdown(). This asymmetry allows the preservation of the
-"lazy disable" feature, which relies on the top-level irq_chip not
-implementing the .irq_disable() callback. Yes, this is a terrible hack.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-msi-lib.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Sure thanks.
 
-diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
-index 246c30205af40..8c62034ab8d92 100644
---- a/drivers/irqchip/irq-msi-lib.c
-+++ b/drivers/irqchip/irq-msi-lib.c
-@@ -112,6 +112,21 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 	 */
- 	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
- 		chip->irq_set_affinity = msi_domain_set_affinity;
-+
-+	/*
-+	 * If the parent domain insists on being in charge of masking, obey
-+	 * blindly. The default mask/unmask become the shutdown/enable
-+	 * callbacks, ensuring that we correctly start/stop the interrupt.
-+ 	 * We make a point in not using the irq_disable() in order to
-+	 * preserve the "lazy disable" behaviour.
-+	 */
-+	if (info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT) {
-+		chip->irq_shutdown	= chip->irq_mask;
-+		chip->irq_enable	= chip->irq_unmask;
-+		chip->irq_mask		= irq_chip_mask_parent;
-+		chip->irq_unmask	= irq_chip_unmask_parent;
-+	}
-+
- 	return true;
- }
- EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
--- 
-2.39.2
 
+>
+>>> what are your plans for the other reboot reasons? are we scrapping them?
+>>
+>> No, we are not scrapping it. We are exploring further on where to put this. May be we can put those logic in some simple driver named as ipq-restart-reason.c under drivers/soc/qcom/?
+> I see drivers/power/reset/at91-reset.c does something like this
+
+
+Thanks for the reference.  I will submit the patches in a couple of weeks.
+
+
+>
+> Konrad
