@@ -1,122 +1,120 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617E11E4BE;
-	Sat, 17 May 2025 12:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A001B4B1E7F;
+	Sat, 17 May 2025 12:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747484476; cv=none; b=tukVNjlWahTSFJpzptRnWt3+j8zsbErVdyPo53hQlA8QoTcRpc9L9f2ZUDdA4dsaXxCtqBUgatdMN30s22+1exomp8Yd51kONGHq97N/D+DfUoFbDUjJY3kk+sCS6i8lQ8VTJ60tJ4v7A44V95HCdCk/pAqA0y9Xdrt0oeTP7Do=
+	t=1747484889; cv=none; b=ni3igsCLj1dYqvlVKq7uEvYYTwZPpjwDgyqMN4ntnjbt7UtXx4p6bhqCD4ZqXT+fCqr2yruV2mSSH+vaYO+Bkwsc8hK0GQiqa6c7jep4mSSBT0fobWdargBmXbcV/PktWL4kGnHFBbHkRV3hijt5DV2WCda5AMTNHVzsWAKsyGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747484476; c=relaxed/simple;
-	bh=l/GKdNs2n3c+2P7UHIu1YttCo+lljn7T91JrelRRofQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihLU9/E7p1hGJs1t/1aHuXnG7WUV8kUFFi36hHcmKle4Vdqz3rFYJCcFn53yxFbq3Taxh/SNxMkdhwojPuz03PB6GlYcwpkQRpSCJAtuoDOqllohg51YhbwJRU7ZBWFOX0ddPUG1C/HNt+6YVMa0jFVT7zArItkLQnx7DUAKbBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=b2SsUhlm; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1747484889; c=relaxed/simple;
+	bh=RoB5ejzT39dJyqDA/LHnS6c5cSx+S+1vl0bptQDv+Sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TGyI1uUW9Z1xC5iPg1pEgJlb8Y8bThWV7uTfuTPeM5oClmkm95NPhnExY44Q2uKhhEgU/HIhgF0qMOa++wtvHTzJzkYD3zw/o2F3hBtTDhxkIjzThXdUwZGxjtdVFcUOS6hWIGw+18Hhn1W11p9XC5wT3GW6Bu0uc/2KJLlgtNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ab8dRkii; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="b2SsUhlm"
-Received: from localhost (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 9A791552F55C;
-	Sat, 17 May 2025 12:21:03 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 9A791552F55C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1747484463;
-	bh=sd+U3YFqzk1RpnzvJolI6XDMfp42yhZlNKOwpVmal5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2SsUhlmTX4gkIlerxaK4I8cvRmhMh0dt/rr90e1mfgH8nCE/TVkBnEcMfwHaVDa0
-	 Tyn5l9+ZNG9UKU0QbjIk0PaWKnGsAJv8yjBdOhNiULFt9jI0KJqqp8yOcLIOHeXFiP
-	 PUxbWdYXUxwL5PXe0bYcIyAlpYDJp7IgehlVo5tw=
-Date: Sat, 17 May 2025 15:21:03 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: Johannes Berg <johannes@sipsolutions.net>, 
-	Alexei Safin <a.safin@rosa.ru>, lvc-project@linuxtesting.org, netdev@vger.kernel.org, 
-	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] wifi: iwlegacy: Check rate_idx range after addition
-Message-ID: <hrpy3omokg5zvrqnchx4jvp26bvfgdrashkmrjonsyz5b64aaz@6d5kn7z7x73q>
-References: <20250424185244.3562-1-a.safin@rosa.ru>
- <20250427063900.GA48509@wp.pl>
- <d57qkj2tj4bgfobgzbhcb4bceh327o35mgamy2yyfuvolg4ymo@7p7hbpyg5bxi>
- <20250517074040.GA96365@wp.pl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ab8dRkii"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22fa47d6578so26660025ad.2;
+        Sat, 17 May 2025 05:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747484887; x=1748089687; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6akfme5Vv/pIFUI0IHvo07yJJuYolE7NanFLpkcN5cU=;
+        b=Ab8dRkii34ajpe13/kvSn8yRdqYwxJzlzmVFLKilCElNzYZx4idrNqAiU1GM2p6lB9
+         MoRIp8VIXpBaggstMvG0LdJaKcQuYgSM7cT8YxN6P41CKu5MmdATrcmJtSPHWs9us8OK
+         iJZwBhQ4WCa2C+/6EJMUuA4Vj8PAKTuZ5OeTr9bhgv/KI2Asj1HuSgDs8Va5sYWrSDKc
+         KtTdH/2+T5KOyoxa812DfOZZ2SE3I0n6ib+FSFAgEITDtf/20RQEUDLmned+yMSv+IOF
+         7kiVR/CNZ1gwjlHV7xORWSIHalyClCopzfy/8qEKLVr8CPHIgSid9fhtFpVC93cb8952
+         ViuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747484887; x=1748089687;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6akfme5Vv/pIFUI0IHvo07yJJuYolE7NanFLpkcN5cU=;
+        b=P0C8MYvdcr0jUj5D5VpEnihtDVm7TNfmF3L9a7nNmpyGCG2rZwWZRUNvJbAlS2kkVy
+         FITILGFKCzBRQ6n54dsHmucROQ/kOfC3trbgemvpVAQU73AjqduLd+nvb7aSCe3DKb8x
+         R2HsbZqn8J9iCYrOQxrKEgNzsnLP9d1MF1rhmYvAcmQhbDfQTOetrygTCYKETgq+RKs6
+         HpMM3liOq7O/1lXBvEGgn/WZQr8TXKvcR50oPP4p+B5d4mDawKTbBmLXXu/lESARRa7v
+         F7A0TepMOpzxv+JXK1MDi+AE0obIMUwH7smDBIEFDk3PSb2tpPfq1eBcZwlhyRKsuAje
+         NGoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu4vXsmBDFJ0yWQMRjsbp0j3XUhkcd8Ta1RE/OYFGJMBdKRkjrGBumuQ/Qb7J4RQSPxgW2yibr2vw2F6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHXwYNIIe/0rGM61ONgvfW7oKT7m7BHQ8c0g9OYVrOHpkaSpNb
+	kScYrBdeFuPbsGXv1ibpxy5vrKAsY1mH1z2iX4Uv9vZsDTpi5KBHSm0=
+X-Gm-Gg: ASbGncsJYdrziROfpP8SaxUG9c5OLPRwRnvfCsuXT1Qk8YXXRiTPvkU6AdUaE3nhjfE
+	ixRFD+rGvf6DNNs8+KrskC4w/aNeM6GLmm5miLDIsE46kkzgCtmI8zO15Npfj9SQ46Ty18FolNP
+	4gEInPGBY/DuP/w6yl2nE4lunYDtpsXlMD5N/lRCZR26lINcpcBtc8a3Lt3tvmvL95ghMnYnTGq
+	LJf4WN9eyHx7p0IxvCOejHAewDeKo9ZMhkqQt5tvxu0n6CGjKw5Fk5KcxAYKZkOdu3N5D02F9b8
+	7DunaES7OLgSoHg9faPR4ObYLtTH69ST9QPCqbaGiWkQpx8nPvWvtT7XabFOBjENBSFKQRLkvU1
+	cLvZemiKenXE=
+X-Google-Smtp-Source: AGHT+IHLOGoDESwOuLswcndnDgr70wl1Ia0pGTRKmV8q3PttojQ3xY1z5pJKY4Azg59AkBlEtEoYUQ==
+X-Received: by 2002:a17:903:1b6d:b0:231:cec7:34fe with SMTP id d9443c01a7336-231d454ebb5mr98126925ad.46.1747484886750;
+        Sat, 17 May 2025 05:28:06 -0700 (PDT)
+Received: from samee-VMware-Virtual-Platform.. ([103.211.112.186])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97ec3sm29609165ad.107.2025.05.17.05.28.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 May 2025 05:28:06 -0700 (PDT)
+From: Sameeksha Sankpal <sameekshasankpal@gmail.com>
+To: skhan@linuxfoundation.org,
+	kees@kernel.org,
+	luto@amacapital.net,
+	wad@chromium.org,
+	shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sameeksha Sankpal <sameekshasankpal@gmail.com>
+Subject: [PATCH] selftests/seccomp: report errno and add hints on failure
+Date: Sat, 17 May 2025 17:57:40 +0530
+Message-ID: <20250517122740.35043-1-sameekshasankpal@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250517074040.GA96365@wp.pl>
+Content-Transfer-Encoding: 8bit
 
-On Sat, 17. May 09:40, Stanislaw Gruszka wrote:
-> Move rate_idx range check after we add IL_FIRST_OFDM_RATE for it
-> for 5GHz band.
-> 
-> Additionally use ">= RATE_COUNT" check instead of "> RATE_COUNT_LEGACY"
-> to avoid possible reviewers and static code analyzers confusion about
-> size of il_rate array.
-> 
-> Reported-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> Reported-by: Alexei Safin <a.safin@rosa.ru>
-> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
-> ---
+Signed-off-by: Sameeksha Sankpal <sameekshasankpal@gmail.com>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Thank you for the patch, Stanislaw!
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 14ba51b52095..d6a85d7b26da 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -4508,7 +4508,11 @@ static char get_proc_stat(struct __test_metadata *_metadata, pid_t pid)
+ 
+ 	snprintf(proc_path, sizeof(proc_path), "/proc/%d/stat", pid);
+ 	ASSERT_EQ(get_nth(_metadata, proc_path, 3, &line), 1);
+-
++	int rc = get_nth(_metadata, proc_path, 3, &line);
++    	if (rc != 1) {
++        	printf("[ERROR] user_notification_fifo: failed to read stat for PID %d (rc=%d)\n", pid, rc);
++    	}
++    	ASSERT_EQ(rc, 1);
+ 	status = *line;
+ 	free(line);
+ 
+@@ -4518,6 +4522,7 @@ static char get_proc_stat(struct __test_metadata *_metadata, pid_t pid)
+ TEST(user_notification_fifo)
+ {
+ 	struct seccomp_notif_resp resp = {};
++	ksft_print_msg("[INFO] Starting FIFO notification test\n");
+ 	struct seccomp_notif req = {};
+ 	int i, status, listener;
+ 	pid_t pid, pids[3];
+@@ -4535,6 +4540,7 @@ TEST(user_notification_fifo)
+ 	listener = user_notif_syscall(__NR_getppid,
+ 				      SECCOMP_FILTER_FLAG_NEW_LISTENER);
+ 	ASSERT_GE(listener, 0);
++	ksft_print_msg("[INFO] user_notification_fifo: listener PID is %d\n", listener);
+ 
+ 	pid = fork();
+ 	ASSERT_GE(pid, 0);
+-- 
+2.43.0
 
-Please see some comments below.
-
->  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> index dc8c408902e6..2294ea43b4c7 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> @@ -1567,16 +1567,19 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
->  	/**
->  	 * If the current TX rate stored in mac80211 has the MCS bit set, it's
->  	 * not really a TX rate.  Thus, we use the lowest supported rate for
-> -	 * this band.  Also use the lowest supported rate if the stored rate
-> -	 * idx is invalid.
-> +	 * this band.
->  	 */
->  	rate_idx = info->control.rates[0].idx;
-> -	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
-> -	    || rate_idx > RATE_COUNT_LEGACY)
-> +	if (info->control.rates[0].flags & IEEE80211_TX_RC_MCS)
->  		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
-> -	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
-> -	if (info->band == NL80211_BAND_5GHZ)
-> +	else if (info->band == NL80211_BAND_5GHZ)
-
-5GHZ shouldn't be in 'else if' clause, I think. Is it mutually exclusive
-with IEEE80211_TX_RC_MCS ?
-
-> +		/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
->  		rate_idx += IL_FIRST_OFDM_RATE;
-> +
-> +	/* Use the lowest supported rate if the stored rate idx is invalid. */
-> +	if (rate_idx < 0 || rate_idx >= RATE_COUNT)
-
-There is a check inside il4965_rs_get_rate():
-
-	/* Check for invalid rates */
-	if (rate_idx < 0 || rate_idx >= RATE_COUNT_LEGACY ||
-	    (sband->band == NL80211_BAND_5GHZ &&
-	     rate_idx < IL_FIRST_OFDM_RATE))
-		rate_idx = rate_lowest_index(sband, sta);
-
-so RATE_COUNT_LEGACY (60M) is considered invalid there but is accepted
-here in il4965_tx_cmd_build_rate(). It looks strange, at least for the
-fresh reader as me..
-
-> +		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
-> +
->  	/* Get PLCP rate for tx_cmd->rate_n_flags */
->  	rate_plcp = il_rates[rate_idx].plcp;
->  	/* Zero out flags for this packet */
-> -- 
-> 2.25.4
