@@ -1,123 +1,116 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391FB1DF271;
-	Sat, 17 May 2025 08:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57991DE8A0;
+	Sat, 17 May 2025 08:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747471954; cv=none; b=RsaB+3zR6q1HuIidHQHKJADeB25WL0UYKh3uLM+PRob0px1NxCbp5qhgE75U+NlJkZ1hP7Mdi5GohtwMfpdukXuD2vujJZommZhBRBGRH5zT98NjjCdu0ddVnl535qol5Z8U67SoxvoeKODBQ4eS+x5UOdwt/x93lpdtDtjgQps=
+	t=1747471969; cv=none; b=Co8J/5E2x1kRYSQ5U8a1nTBVLtScMSowIWC+gfsZ+vDVcoRvlMy6NowDE+3m0pnysvEOVrAn/2p8H/OeM27CFkv2RJkplthkyZBV174FgFLwI6K90mWkvhTMqh2ZCHIXQSwdZBpfHZQ3doryvFBGFDskK4xs5WfKrzWUyYKBRYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747471954; c=relaxed/simple;
-	bh=qbGX0vY8ua1yjyX4gKrkjXd8FS4pqHM2ZzBMCrO0vV8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nCxwJMA/SFZvtI117NlL6moEDyRIN5rW8RLIuj5qRUCG/1dFZfVXff2nMAJZubqnzyUynt/qtjQaSZMTk8I3FH24Yv0UlzeoLfz6aNsmlo5eGuqFwixORred6kNS4xveSWkVc5ci2+DRDW8eehJzc9cLXM3Wt3ToFlKJFqKYh3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CwNSwy3k; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747471969; c=relaxed/simple;
+	bh=qcZhH/eXIxJWC3CJPIuxmlJlmaJ5e1iSxpa3ehv9pgY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hLr2pO83F28tEelnjOLjzbcP2TVWS/ziLY0Sov6wj+BLRz0+K0xyLp6lOS0BlrAGye3HV4ThnRnwUAEpzXurLlhbnM+GNZOqdYgQSeoMYMbwZ5edc+MHkCBHSG87UNOCzfc1duhOJ+DsECV7SgmF5LdsqQMS/x6BcHX0/Pcy6So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9VvIyw2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwNSwy3k"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-52410fb2afeso1773049e0c.3;
-        Sat, 17 May 2025 01:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747471952; x=1748076752; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iNsWbQeM3Ef5H0Pf+40JMXz6QJMor+ntR9ZNUEK2L3U=;
-        b=CwNSwy3k19CuI5vv1GriPUs+ReW0xJkzNNrPH9YeJz28Rc+rRI+B1PHt1Pn2h6uO4Z
-         iBkPqbHmmrLIuP9tLbOjlycpGV2wnRJjv1lzSQcnoJbnPyCeD4myUungx8ChL99/rYa0
-         YHNMfZUc08Mj0Hdsdu6qbZgzxFKfW8W8o/YmxuyQe4b047wFqxrJeByIquO8K5nIwJ0U
-         JPzN0kNYB122pn47wYjgHkFcOLlTNGQE7S0SKIEaQUJDco7y6/iYoKJnxWq4tn6nNxJg
-         0akos/Mu2NhiLzEJc6nI40lNcQBWyWh+hArO0BHz7ze/WH0uOlsT0uxcd6aQ7Gi7qOjQ
-         MIPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747471952; x=1748076752;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iNsWbQeM3Ef5H0Pf+40JMXz6QJMor+ntR9ZNUEK2L3U=;
-        b=jJ369RNtLGL0Hd3bGnRnRgFAzWz3Tz/zYLnL2MHMHQI32WHHgLOI9jeUkIid/pPvCR
-         LxBkGUzzlXRyR6oklxmCfMNiTEA7V4dMsogVLVNzTDfwzEAiWeb3IJNR5y6NTva/0kmN
-         guzZsbvRa2KvtkvNRh7uy8CQ8UNXFQNefaDswQEBNcDN+YxbpMNb6jPbXsZfg1E1BEnD
-         BCLrsoX99Ez7z7hHYINcwGAa0Op3giGqlbTcZgwq8lP/MsoGquGv41qlwBNHhDUM1pm5
-         et2ffZ+G7xXsUvWwq2Zrdn0z+DFxinOqv9YDxD0jKK4QBYeSEllEZlsVHVpdKp/0jjw2
-         UBzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6mC6SQbmIJ+olhYvFPWaw0WTLj+QGZTxiSFsO8vfj5Y9nPJBs0XRjAMt+zz/LIm4egFvN9/2RnZ7NUHI=@vger.kernel.org, AJvYcCWeZ06dOxFXJQHXUpJFe6wS3otlu32m0gnuvxFDg7bKyuLGPCtjr4CPDVcONe+7EvaqRqYrB607F397cnkE2+qKue1efg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU10DFJRgaPpWIUucucJz0SqT/8y3Ny6m3RpwXpWIHVQR9Bosq
-	jlTMkA5/hXKihVnXWMaHpzz1ht15b0kbRCMY6MZPRytPSYgHR1DXXlnO4YbhLA==
-X-Gm-Gg: ASbGnctE4JebL0wOx/wgR8nbp/AXO5P0Wy/hZmFjz3SX0ex10i7pTAs5Z5Z9E4ZLz6d
-	FIrVQBluqCRXQTQnOhkgcfFAPhxuh/JbUfx2Bq4bfDqAoiIicpqfq+xNTsdN6ShWAIXPE/7RNZz
-	ChzweieSG6lbn2g9C6E5zdFAPQ3a5WhC2L2IFiVud+dj+d8mI2aXwtnhA0Vyfyoopf4c1W22+P7
-	1s4jhy5gFBgMkWlzROaFIHe4evO2IfAjTDoHlsJNv6mQH2uPs9P+Qh2ePkoTer1v++2xUSNfGkX
-	nRrytFyeFWzwJIptQijl8x9oxMZBqwt4maANEOKnlAnibIHYhg==
-X-Google-Smtp-Source: AGHT+IGP8LQww2xigb+BfZQUHdyFE9Gg6EhJtQK/HkUNyGB1GnpKuO2Nk5syCihGsKnFwLYIJg3K9A==
-X-Received: by 2002:a05:6122:46a7:b0:52a:863f:78dd with SMTP id 71dfb90a1353d-52dba91e5a2mr7834990e0c.6.1747471941735;
-        Sat, 17 May 2025 01:52:21 -0700 (PDT)
-Received: from [192.168.1.26] ([181.85.227.70])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba9405adsm3455812e0c.11.2025.05.17.01.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 01:52:21 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 17 May 2025 05:51:39 -0300
-Subject: [PATCH v2 4/5] MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9VvIyw2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2938EC4CEE3;
+	Sat, 17 May 2025 08:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747471969;
+	bh=qcZhH/eXIxJWC3CJPIuxmlJlmaJ5e1iSxpa3ehv9pgY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O9VvIyw2Z8yRTfvujjSYRKh2ZNhXdFvtVk5KowlsjCkC3MjVjDeLQ4oVyjy13Iog2
+	 4hb8ofmIXLAUZ3CHuDlH2WwaHEcitEdQ1ru29xiZIefJ+t18P5yul3jBCP6O4jM6gL
+	 ueUYvR/BlTTB+VYhOX0hOAmwQT5srl2JFZmTEdq2FVgvVE0j7LCTztBHidLbWBDmBW
+	 m0XyxfIh6Xh4gB9SPG3YGuZ/sZHOnaOdHPTYCBP4EhMItaC3WOExtTYHSYpZ/0pQzW
+	 4+OqBG0/yz6xck+XdYETwZB6VW8ShZWVL7+tOutamvCM7iPjVmwJQ0SbhSFtX35N+3
+	 /ZSRlV9Obon7g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uGDHi-00Fm0h-F3;
+	Sat, 17 May 2025 09:52:46 +0100
+Date: Sat, 17 May 2025 09:53:24 +0100
+Message-ID: <877c2fr52z.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+In-Reply-To: <aCd94sBdThAj6jT9@google.com>
+References: <20250509131706.2336138-1-vdonnefort@google.com>
+	<20250509131706.2336138-11-vdonnefort@google.com>
+	<864ixkfynk.wl-maz@kernel.org>
+	<aCd94sBdThAj6jT9@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250517-fw-attrs-api-v2-4-fa1ab045a01c@gmail.com>
-References: <20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com>
-In-Reply-To: <20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Joshua Grisham <josh@joshuagrisham.com>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=827; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=qbGX0vY8ua1yjyX4gKrkjXd8FS4pqHM2ZzBMCrO0vV8=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBkafvqOa+p1zpWc+sAv8/Ewe8ryiB/Pfst3+8zdphK1g
- +9o8u61HaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCR28cZ/nvNcuiamKQSFHvO
- bXH9w4OhtlmtTBn9WvccGdceeKN/8QHD/9IaK2XWq+Ycabt3KE5WqzEMKbA496fvM8dFQV0vI49
- 9fAA=
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Add entry for the FIRMWARE ATTRIBUTES CLASS.
+On Fri, 16 May 2025 19:03:14 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > > +}
+> > > +
+> > >  static void clean_dcache_guest_page(void *va, size_t size)
+> > >  {
+> > >  	WARN_ON(!PAGE_ALIGNED(size));
+> > >  
+> > >  	while (size) {
+> > > -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> > > -					  PAGE_SIZE);
+> > > -		hyp_fixmap_unmap();
+> > > -		va += PAGE_SIZE;
+> > > -		size -= PAGE_SIZE;
+> > > +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
+> > > +		void *addr = __fixmap_guest_page(va, &fixmap_size);
+> > > +
+> > > +		__clean_dcache_guest_page(addr, fixmap_size);
+> > > +		__fixunmap_guest_page(fixmap_size);
+> > > +
+> > > +		size -= fixmap_size;
+> > > +		va += fixmap_size;
+> > 
+> > Can this ever be called with a *multiple* of PMD_SIZE? In this case
+> > you'd still end-up doing PAGE_SIZEd-bite CMOs until there is only
+> > PMD_SIZE left, ruining the optimisation.
+> > 
+> > I think this needs fixing.
+> 
+> So this can be only called with size either equal to PAGE_SIZE or PMD_SIZE. I
+> wasn't sure if it was worth to make it more generic than it needs.
+> 
+> But like for the first patch, I can make it more future-proof by handling size >
+> PMD_SIZE.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Yup. These things are hard enough to debug that we should try and make
+it fool-proof, even if that's not immediately used (and fixing that is
+pretty easy).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cfb3b51cec83d96e969c5b3be791948cb9d60bb9..48509d4da8b132f61ff2d5f90e121bf94ee30e24 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9190,6 +9190,13 @@ F:	include/linux/firewire.h
- F:	include/uapi/linux/firewire*.h
- F:	tools/firewire/
- 
-+FIRMWARE ATTRIBUTES CLASS
-+M:	Kurt Borja <kuurtb@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/firmware_attributes_class.*
-+K:	(devm_)?fwat_device_(un)?register
-+
- FIRMWARE FRAMEWORK FOR ARMV8-A
- M:	Sudeep Holla <sudeep.holla@arm.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+Thanks,
+
+	M.
 
 -- 
-2.49.0
-
+Without deviation from the norm, progress is not possible.
