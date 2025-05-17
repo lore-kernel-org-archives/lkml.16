@@ -1,27 +1,27 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918632581;
-	Sat, 17 May 2025 08:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E8C1D5CED;
+	Sat, 17 May 2025 08:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747470995; cv=none; b=Kv2WNzPn514oi9XWeCvD03PrWY6nJ6hZrY66VP4HfVtmvFWuzvfD2NEt3TF0yE437Ex1L2DyL3PQ0X0o0gUjsTHZRy3OK82mu+f55KAche3w8tFZsp1XUEV/bom7Uo//LjLtKcpvHWgPrD7cm6MzjNRUoboePSlfacS4rBXVPIw=
+	t=1747471017; cv=none; b=bkMxxIkKv2JXfvJEEkJKCiIoG3FfncLOBscBJ5IsejDCVcklPNGzWn1jXyxIrrcH/grVEYkXLm1qGj7ZenOSBUhW4U7wToKCpIfZc19OnlAnZ/DyG7g4RjxuV0UNDgP2NJSv5A8jIPjkkV9G/ijDdzZQaO/PdauQIn+GafT7u34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747470995; c=relaxed/simple;
-	bh=FuYd1quEjWlTUddvHV5PWIiQz01t2FOLxj0MwYm1KMg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g8/ecz1FTNPkKyLwhix9SprpoDvG1mLUfLABw6FId2gMHj2WxNJl7vYZxilMcUz+eekc5VGa00U5W9gS0O1NnUg58Q9+IaG+aXnTFaKYONNd9gBTxjg0PtPkw/OZBCTwKoA6PjaJ65oxhuPaLt9YTkLCjbwvyC4OpQCXrUh6Or8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TtxTEE1q; arc=none smtp.client-ip=117.135.210.3
+	s=arc-20240116; t=1747471017; c=relaxed/simple;
+	bh=vLs4lfZ1RYhKkMrkUZsTV9xrJHeP9pjbbhQzv2P+yNU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XTMKwREAnqfzwhAaic2tLAFEPoJILSmfQHM1TewM/cCkynWCi1+6eCqcTl8s7c9k3XIboW4n1Oinh65qPmuFviGmXW9Q+3G91gpGbrJNj9MyXG5y/Nw/7WwNEWzERmgl3h5w66NFXgHJ1oW5ivT1r3czglV9F1k6ccSyDRvRU/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LUyDPm0M; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TtxTEE1q"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LUyDPm0M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=5t
-	6mYNPUiC+VwT0d7hvui4Car5obr9bgjGKLCKCD4Ik=; b=TtxTEE1quubbGMb0x+
-	njPG3iwDGelKwC2wG8LpEsuodSJpMJcVyOyXDLnUgTRqViMMGuhA2qFgwOSkgl2Q
-	ivb6q3BnDAhdzXuvjeqEZ16BaYlLxwDdrhcstUEbk7inpu2md3VqJeLXVNttATD6
-	aa5qKBuLGI+PxEzwgmyokEleY=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=gP
+	kutBVLb1FxgqM0uGljWj9qW8F+OJFnhi6A4WUBkpg=; b=LUyDPm0MU0WmTwjlYr
+	0qO8ny1XotodisZg45v531uJABds6qppkD3GQoyCkQgmDmeFgpVhPsq4fu8K/3wi
+	tLGp/MowSZgbxme4WDkZ1B1uWifQ07aGo5gx50bwOOR2Alp3+Y6Nz4g6rvR0Hyqt
+	W9x4jDw6xpGtE23UKn0hcF3ow=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wCn8yRMSihoUAlGCA--.21541S4;
-	Sat, 17 May 2025 16:35:38 +0800 (CST)
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgB39VttSihowOTtAw--.21114S4;
+	Sat, 17 May 2025 16:36:06 +0800 (CST)
 From: David Wang <00107082@163.com>
 To: =gregkh@linuxfoundation.org,
 	mathias.nyman@intel.com
@@ -30,9 +30,9 @@ Cc: oneukum@suse.com,
 	linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	David Wang <00107082@163.com>
-Subject: [PATCH v3 1/2] USB: core: add a memory pool to urb caching host-controller private data
-Date: Sat, 17 May 2025 16:35:22 +0800
-Message-Id: <20250517083523.5917-1-00107082@163.com>
+Subject: [PATCH v3 2/2] USB: xhci: use urb hcpriv mempool for private data
+Date: Sat, 17 May 2025 16:35:56 +0800
+Message-Id: <20250517083556.5954-1-00107082@163.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,139 +41,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCn8yRMSihoUAlGCA--.21541S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF17Aw4DZry5WrW7ArWDArb_yoWrtFWkpF
-	4fGwn3tF1rXrW3JrZ3Jan7CayrJ3Wv9FyjkFyfu345ZwnFyw18A3Z2kFyrGr9xtr4ftwsI
-	qF4qqFn8Ww1UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE8nYUUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBFQqmgoQ9CvLgAAsR
+X-CM-TRANSID:QCgvCgB39VttSihowOTtAw--.21114S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCryUCFWDGw45Jr13CrWrGrg_yoW5CFykpF
+	4rXa40kr1rtr47XFZ8Jr1DA3WfJw4vgF92gFWxC345ursFy3srG342yFWF9rnIqrykCrnI
+	vF1vqrWrGw1UGFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p__-BDUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAhQqmgoQ9CyAAAAs7
 
 ---
 Changes since v2:
-1. activat the pool only when the urb object is created via
-usb_alloc_urb()
-Thanks to Oliver Neukum <oneukum@suse.com>'s review.
+1. WARN when xhci_urb_free_priv is called somehow.
 ---
-URB objects have long lifecycle, an urb can be reused between
-submit loops; The private data needed by some host controller
-has very short lifecycle, the memory is alloced when enqueue, and
-released when dequeue. For example, on a system with xhci, in
-xhci_urb_enqueue:
-Using a USB webcam would have ~250/s memory allocation;
-Using a USB mic would have ~1K/s memory allocation;
+xhci keeps alloc/free private data for each enqueue/dequeue cycles,
+when using a USB webcam, allocation rate is ~250/s;
+when using a USB mic, allocation rate reaches ~1k/s;
+The more usb device in use, the higher allocation rate.
 
-High frequent allocations for host-controller private data can be
-avoided if urb take over the ownership of memory, the memory then shares
-the longer lifecycle with urb objects.
-
-Add a mempool to urb for hcpriv usage, the mempool only holds one block
-of memory and grows when larger size is requested.
-
-The mempool is activated only when the URB object is created via
-usb_alloc_urb() in case some drivers create a URB object by other
-means and manage it lifecycle without corresponding usb_free_urb.
-
-The performance difference with this change is insignificant when
-system is under no memory pressure or under heavy memory pressure.
-There could be a point inbetween where extra 1k/s memory alloction
-would dominate the preformance, but very hard to pinpoint it.
+URB objects have longer lifecycle than private data, hand over ownership
+of private data to urb can save lots of memory allocations over time.
 
 Signed-off-by: David Wang <00107082@163.com>
 ---
- drivers/usb/core/urb.c | 45 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb.h    |  5 +++++
- 2 files changed, 50 insertions(+)
+ drivers/usb/host/xhci-mem.c  | 1 +
+ drivers/usb/host/xhci-ring.c | 3 +--
+ drivers/usb/host/xhci.c      | 8 +++-----
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
-index 5e52a35486af..53117743150f 100644
---- a/drivers/usb/core/urb.c
-+++ b/drivers/usb/core/urb.c
-@@ -23,6 +23,8 @@ static void urb_destroy(struct kref *kref)
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index d698095fc88d..b19e41cf1c4c 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1745,6 +1745,7 @@ struct xhci_command *xhci_alloc_command_with_ctx(struct xhci_hcd *xhci,
  
- 	if (urb->transfer_flags & URB_FREE_BUFFER)
- 		kfree(urb->transfer_buffer);
-+	if (urb->hcpriv_mempool_activated)
-+		kfree(urb->hcpriv_mempool);
- 
- 	kfree(urb);
+ void xhci_urb_free_priv(struct urb_priv *urb_priv)
+ {
++	WARN_ONCE(1, "xhci private data should be managed by urb");
+ 	kfree(urb_priv);
  }
-@@ -77,6 +79,8 @@ struct urb *usb_alloc_urb(int iso_packets, gfp_t mem_flags)
- 	if (!urb)
- 		return NULL;
- 	usb_init_urb(urb);
-+	/* activate hcpriv mempool when urb is created via usb_alloc_urb */
-+	urb->hcpriv_mempool_activated = true;
- 	return urb;
- }
- EXPORT_SYMBOL_GPL(usb_alloc_urb);
-@@ -1037,3 +1041,44 @@ int usb_anchor_empty(struct usb_anchor *anchor)
  
- EXPORT_SYMBOL_GPL(usb_anchor_empty);
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 423bf3649570..8fa3f71fdb29 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -821,7 +821,6 @@ static void xhci_giveback_urb_in_irq(struct xhci_hcd *xhci,
+ 				     struct xhci_td *cur_td, int status)
+ {
+ 	struct urb	*urb		= cur_td->urb;
+-	struct urb_priv	*urb_priv	= urb->hcpriv;
+ 	struct usb_hcd	*hcd		= bus_to_hcd(urb->dev->bus);
  
-+/**
-+ * urb_hcpriv_mempool_zalloc - alloc memory from mempool for hcpriv
-+ * @urb: pointer to URB being used
-+ * @size: memory size requested by current host controller
-+ * @mem_flags: the type of memory to allocate
-+ *
-+ * Return: NULL if out of memory, otherwise memory are zeroed
-+ */
-+void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags)
-+{
-+	if (!urb->hcpriv_mempool_activated)
-+		return kzalloc(size, mem_flags);
-+
-+	if (urb->hcpriv_mempool_size < size) {
-+		kfree(urb->hcpriv_mempool);
-+		urb->hcpriv_mempool_size = size;
-+		urb->hcpriv_mempool = kmalloc(size, mem_flags);
-+	}
-+	if (urb->hcpriv_mempool)
-+		memset(urb->hcpriv_mempool, 0, size);
-+	else
-+		urb->hcpriv_mempool_size = 0;
-+	return urb->hcpriv_mempool;
-+}
-+EXPORT_SYMBOL_GPL(urb_hcpriv_mempool_zalloc);
-+
-+/**
-+ * urb_free_hcpriv - free hcpriv data if necessary
-+ * @urb: pointer to URB being used
-+ *
-+ * If mempool is activated, private data's lifecycle
-+ * is managed by urb object.
-+ */
-+void urb_free_hcpriv(struct urb *urb)
-+{
-+	if (!urb->hcpriv_mempool_activated) {
-+		kfree(urb->hcpriv);
-+		urb->hcpriv = NULL;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(urb_free_hcpriv);
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index b46738701f8d..27bc394b8141 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -1602,6 +1602,9 @@ struct urb {
- 	struct kref kref;		/* reference count of the URB */
- 	int unlinked;			/* unlink error code */
- 	void *hcpriv;			/* private data for host controller */
-+	void *hcpriv_mempool;           /* a single slot of cache for HCD's private data */
-+	size_t hcpriv_mempool_size;     /* current size of the memory pool */
-+	bool hcpriv_mempool_activated;  /* flag the mempool usage */
- 	atomic_t use_count;		/* concurrent submissions counter */
- 	atomic_t reject;		/* submissions will fail */
+ 	if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {
+@@ -831,7 +830,7 @@ static void xhci_giveback_urb_in_irq(struct xhci_hcd *xhci,
+ 				usb_amd_quirk_pll_enable();
+ 		}
+ 	}
+-	xhci_urb_free_priv(urb_priv);
++	urb_free_hcpriv(urb);
+ 	usb_hcd_unlink_urb_from_ep(hcd, urb);
+ 	trace_xhci_urb_giveback(urb);
+ 	usb_hcd_giveback_urb(hcd, urb, status);
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 90eb491267b5..071a7680b36e 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1552,7 +1552,7 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 	else
+ 		num_tds = 1;
  
-@@ -1790,6 +1793,8 @@ extern int usb_wait_anchor_empty_timeout(struct usb_anchor *anchor,
- extern struct urb *usb_get_from_anchor(struct usb_anchor *anchor);
- extern void usb_scuttle_anchored_urbs(struct usb_anchor *anchor);
- extern int usb_anchor_empty(struct usb_anchor *anchor);
-+extern void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags);
-+extern void urb_free_hcpriv(struct urb *urb);
+-	urb_priv = kzalloc(struct_size(urb_priv, td, num_tds), mem_flags);
++	urb_priv = urb_hcpriv_mempool_zalloc(urb, struct_size(urb_priv, td, num_tds), mem_flags);
+ 	if (!urb_priv)
+ 		return -ENOMEM;
  
- #define usb_unblock_urb	usb_unpoison_urb
+@@ -1626,8 +1626,7 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
  
+ 	if (ret) {
+ free_priv:
+-		xhci_urb_free_priv(urb_priv);
+-		urb->hcpriv = NULL;
++		urb_free_hcpriv(urb);
+ 	}
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
+ 	return ret;
+@@ -1789,8 +1788,7 @@ static int xhci_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
+ 	return ret;
+ 
+ err_giveback:
+-	if (urb_priv)
+-		xhci_urb_free_priv(urb_priv);
++	urb_free_hcpriv(urb);
+ 	usb_hcd_unlink_urb_from_ep(hcd, urb);
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
+ 	usb_hcd_giveback_urb(hcd, urb, -ESHUTDOWN);
 -- 
 2.39.2
 
