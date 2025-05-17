@@ -1,55 +1,55 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9442B1DF271
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACD11E1A3B
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747473416; cv=none; b=dtscmdmWMIkNFe3FMccnwxRr7xj/xng1ccHJ8nrNe6ViTkONyW27Qb3kYziO4oJY4rZADLGvD+Nl8HN9/rCUM73h29Iuz06TX4KW1wDI/8BLVBqcEb9uF8nl2j8rMmqcjTMIQMfwjWwfIxtgIoh/9m0rSTGqWGQYLUpFFFFotrM=
+	t=1747473418; cv=none; b=kJ5V86jeOsG3KAl65/6i369Yv/FgGUM9GAxRSxQc4W+prFHkkmCuj3DwBDDlHRjusFaFXPe1aoFvZKcX+nDXEvj8XkpmbQDqEAmqS9YX1z/Vfd1mbfWUNi/dlu5JyIVDW7uXHqfdxXojzhMPtSX0JEE7RN1gr33PPhN8igQX324=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747473416; c=relaxed/simple;
-	bh=YTRMDon1bbH1VEcrlHc63BkhAwnfRloZ/j1aJBIxrwI=;
+	s=arc-20240116; t=1747473418; c=relaxed/simple;
+	bh=ZWEpqE9ktHgh077E7w6k+BuB8NwD4CPevNMgyEcZOpU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j6SnxcoopwSN9ndTLRJqnsLl46d4KidktGVpjEJeqLZLskNjH/89nSA4SgTNy0R13bWIUNr1G3me/zyxevgfB5k4haZ3lt8jiAatLLAAI8CfIW6d++FXg7FGVduVPOGEZf8EHCptn+OMsXT0c0FN8eOmpfTXYWbWuWf4Zorr1P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A47o9X4f; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=MM1/pRnH6oyKv/nINxhT6c8ikAfDo6P3eaDHnOIHexrcHF2cqtUy0DOdrOn2nUTVbZAbi/5zwkvvzjjeaaw87V6eT0LTbqj3jX/hd9MQXcW24B1y+3vDrCirMNT7qa0FEXC/HqNgLIffulM0EIuAplz478lTbkoM03tP/Cvel0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FV4ilwoK; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A47o9X4f"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso14957515e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:16:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FV4ilwoK"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-445135eb689so104285e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747473413; x=1748078213; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747473415; x=1748078215; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDoNlRqiItndadEJ074/sC5RRxG1d1oYzgqZU9Rxc24=;
-        b=A47o9X4f4GesbzXb3cE23y3GfzoTipEJ40keQiMplKvF8R7cpfUDHMFYgyLNXv+iZt
-         DDR9xdLLoGffQxXCOPzrs7MjlMUOy0JGoHWcivYTuG7mIJORd3864FiJ29E9Dvv810yM
-         0hAOVlMtjmae4Y94BcnzGzYxqf+9XSn/HF9SxqW6sT9pIaR74Q5ayAC6w5nS76leL1DC
-         +XZX4Z9Zb7McJpFDuYS4+VVMaugI1jZ0WZNO4BKPG55jywlcTvHOHzHaVqg6mY7X3QFE
-         fyTOV7UorJEwovSm5+151qhsr5Tv1ddrOge+cQ6lMFENyRKRGYkjuxAS+PEPxshrOWIX
-         Pstw==
+        bh=9M+b2tkrDVZQ50Sd4UaKGxHHMqCit92UPEaKkgiQe7Q=;
+        b=FV4ilwoKgbk3ArTbtQ/gZ3jrj2PQu6AnGHWfR8SjFWKiSs+K8tvplKR2UHbRqALWtk
+         Hfu/ZLvBv/xbqj4/Hv0Bmu/zNbRCYSOih1KkkRm/8jUNoFe3b5+aW+0tKj0ArNouVJz5
+         HYGEZzm5l8vbjmxfcQzK34JYxFliPDxRhKjFD2kT3TCPlU7xx5IgSjJaUfHsl790jJmH
+         jcKKRHwm27O5Nape2uo+4vqjhEti1h1dXfltIlf7zL8fA2aqoSUDCoTU+bNdcut6EWJf
+         JaQfFTq3a2lGdTlacyBW+NoHG5Cu2MBxn1dyEYkdQUiapMmfjI42nrhs+YbklWyFyAsJ
+         K0Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747473413; x=1748078213;
+        d=1e100.net; s=20230601; t=1747473415; x=1748078215;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDoNlRqiItndadEJ074/sC5RRxG1d1oYzgqZU9Rxc24=;
-        b=EVSE7BvRMTIYKV5Iphc7eMu2+Z+yNdBLYu60u1FzumFnw3n6QQm8syUVFm6XOcBv9i
-         05Bvds7H8FjB2u0lt9mwZqK3rxKeCJwNJBY2MRe8XxxAG60xG7L4tvx3Qlo4PqaFELJq
-         LwaUcG6Pg9YAn9rAVNiz26nULXKKGvex0qRaHNjWyqC8DSQByegeqcaphR8BNKM1uNwr
-         pcffWLmNSKIG1qnj2DYoQFUTjvdqJjD3Hm5xOzT2zN6slBS5WlCvW5fcW942ChOyPU6H
-         1abTQC6XOJEXdcvT0jKM6XRstYbIvC7ljPWtieqvP7T/M4pu/gG1fDSr8Smv06aKzP9X
-         8B6g==
-X-Gm-Message-State: AOJu0YxhzJo2cCL5rHvQjFNYYkNqKuzdqM0iS2FfGx9YQQd51KS/+QwS
-	MGrVmXAFl8MslPD+dQVAR0x6aLW3mSXHQV1tsqjCGL9oZGiJZ2iHD9rw3afsVPBYYbpaVDlvWqT
-	t5cvjN9zgekaKjicReRRzmByIjz6Gqr19QAB72Tv21PZksyG1ibZslwrB9wFXXOdREx4gbPYZec
-	zG4+qVXp7g5Cs9sIvqiuNajossKYTElliv4w==
-X-Google-Smtp-Source: AGHT+IFwO+w4TLTta2LbHnxhnJljQlZZ+ZqN82hjZFvLHt6QcRo8zELLQbatUM8N6m0AxQuQvDJYte3F
-X-Received: from wmbea10.prod.google.com ([2002:a05:600c:674a:b0:43c:eba5:f9b3])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3d07:b0:442:f904:1305
- with SMTP id 5b1f17b1804b1-442fd93d54emr62847335e9.6.1747473413005; Sat, 17
- May 2025 02:16:53 -0700 (PDT)
-Date: Sat, 17 May 2025 11:16:42 +0200
+        bh=9M+b2tkrDVZQ50Sd4UaKGxHHMqCit92UPEaKkgiQe7Q=;
+        b=jvjT9WTWRxRbn0rzLUKwNozQ296VR1X4YgyEBKL7Hd+nQHMJocLMtQ3DkAukg1LNe/
+         NF6x/GpP6dbQmrXr9zwzTvwZjuTg/Vj0g3kW/eERHgalup9aVsfWotenLCXM5B2uoCZR
+         mPOFd3PqCB1um4zV3pCTa6cszdAj9M3N5QBM00M4CD9zHJo0asrfUCDntoBFXLbeG3LT
+         6ZhYV8cLAZpxhBBAv7FxmRqHJ3GzhaeHvhZ+O6zel1l+VLht1s+Gtd1x51+W319YY3DT
+         dvjnAxC9lI6YnepHWqG51oW0x6Wws8Ow0t2lFSb6AmPZo1MqUrBAhjI7uOI/HtIkQndg
+         K8Kw==
+X-Gm-Message-State: AOJu0YyQafXhm75WZ55rNu/FL2xvGNBYiH03ZS1GFWTs+1qM998Z4S6V
+	jO7oMNmTBJvQCBxC4EreI3gai2h1BnQpVb0XFLRdajm7yZupc9a4kEoF4pqV9b0C+5p9ky6frn7
+	TJK/SOgm93LOEO/83VEhqxZum3x6P9WLI+FGMepq0RVkKtyj32A5SV+GDXugNaxMiyliIV11b6t
+	0ITEpkcj4+1cSD5oKVAJe/LIOMNBXpI/HOmA==
+X-Google-Smtp-Source: AGHT+IHHOrp2s3H+1dqsxzAqJxAtSzcdGgUM7/yqWj7wrZnUVpJcPOX6JJnGfYcgfgqUM93D+pbzljVp
+X-Received: from wmbay14.prod.google.com ([2002:a05:600c:1e0e:b0:442:ddce:d53c])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3e0a:b0:43c:e478:889
+ with SMTP id 5b1f17b1804b1-442fd5a2c09mr79651695e9.0.1747473415200; Sat, 17
+ May 2025 02:16:55 -0700 (PDT)
+Date: Sat, 17 May 2025 11:16:43 +0200
 In-Reply-To: <20250517091639.3807875-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250517091639.3807875-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1352; i=ardb@kernel.org;
- h=from:subject; bh=C31qclDK+T9suY/4QZ4rdvfNkVOVPbLM73aWDom88co=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMj+GeywYdb4cfS2Ob2HfG00HuvfPeZ1gGh+qNMW3O2r
- XabesCro5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEyk+wkjw8vT18rTbwgfPJl3
- 9Z6PkmbQppDC8ut9tovbA7btVH3T/52R4UZQ7dWkhQs7fL0PpfksdbBuXMGqfLP18mSGj3xLlt9 p5gAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2436; i=ardb@kernel.org;
+ h=from:subject; bh=Es9VKr7BFTHF7N5t1z+PF2rgAMg95nxzCelW5j1DcSU=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMj+BeH/onzaybzTN/2SdJ1s+etDXm5bl9Mb9/L8t6Qd
+ it2X86XjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRC8cYGRbXbIjjW+WzWe7T
+ q51vxa3dqy9vb1ieyPX/qYJXRkuDmyIjw7nSP9Esv7fsvfa8xio5RG1+ivI1xp0OMo93X5hVdeX kWjYA
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250517091639.3807875-10-ardb+git@google.com>
-Subject: [PATCH v4 2/6] x86/cpu: Move CPU capability override arrays from BSS
- to __ro_after_init
+Message-ID: <20250517091639.3807875-11-ardb+git@google.com>
+Subject: [PATCH v4 3/6] x86/cpu: Allow caps to be set arbitrarily early
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
@@ -77,34 +76,64 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-In order to allow CPU capability overrides to be set arbitrarily early
-during the boot, the underlying data objects should not be wiped along
-with the rest of BSS, and so they will need to be moved out.
+cpu_feature_enabled() uses a ternary alternative, where the late variant
+is based on code patching and the early variant accesses the capability
+field in boot_cpu_data directly.
 
-Given that CPU capabilities are set at init time, and shouldn't be
-modified after that, move them into __ro_after_init, which is part of
-the statically initialized kernel image.
+This allows cpu_feature_enabled() to be called quite early, but it still
+requires that the CPU feature detection code runs before being able to
+rely on the return value of cpu_feature_enabled().
+
+This is a problem for the implementation of pgtable_l5_enabled(), which
+is based on cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING), and may be
+called extremely early. Currently, there is a hacky workaround where
+some source files that may execute before (but also after) CPU feature
+detection have a different version of pgtable_l5_enabled(), based on the
+USE_EARLY_PGTABLE_L5 preprocessor macro.
+
+Instead, let's make it possible to set CPU feature arbitrarily early, so
+that the X86_FEATURE_5LEVEL_PAGING capability can be set before even
+entering C code, by making sure that boot_cpu_data.x86_capability[] is
+not [redundantly] wiped again when detecting CPU features.
+
+Note that forcing a capability requires setting it in cpu_caps_set[]
+too, which has been moved out of BSS in a preceding patch.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/cpu/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/common.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 67cdbd916830..579d5b84e183 100644
+index 579d5b84e183..7392a75d85c3 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
- }
+@@ -1708,9 +1708,6 @@ static void __init cpu_parse_early_param(void)
+  */
+ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ {
+-	memset(&c->x86_capability, 0, sizeof(c->x86_capability));
+-	c->extended_cpuid_level = 0;
+-
+ 	if (!cpuid_feature())
+ 		identify_cpu_without_cpuid(c);
  
- /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
--__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
--__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-+__u32 __ro_after_init cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-+__u32 __ro_after_init cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+@@ -1922,7 +1919,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	c->x86_virt_bits = 32;
+ #endif
+ 	c->x86_cache_alignment = c->x86_clflush_size;
+-	memset(&c->x86_capability, 0, sizeof(c->x86_capability));
+ #ifdef CONFIG_X86_VMX_FEATURE_NAMES
+ 	memset(&c->vmx_capability, 0, sizeof(c->vmx_capability));
+ #endif
+@@ -2084,6 +2080,7 @@ void identify_secondary_cpu(unsigned int cpu)
+ 		*c = boot_cpu_data;
+ 	c->cpu_index = cpu;
  
++	memset(&c->x86_capability, 0, sizeof(c->x86_capability));
+ 	identify_cpu(c);
  #ifdef CONFIG_X86_32
- /* The 32-bit entry code needs to find cpu_entry_area. */
+ 	enable_sep_cpu();
 -- 
 2.49.0.1101.gccaa498523-goog
 
