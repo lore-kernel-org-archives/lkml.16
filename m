@@ -1,364 +1,314 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2076.outbound.protection.outlook.com [40.107.93.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C1521481D
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 18:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747507909; cv=fail; b=CmfRy+aoDwShzBRhUFuuREZtBhat7j/M6MWOqCliLmvO0F96W6B4Ect5Ov6p81d4WFQHnsXv5PIH5bApgBtNN8T+bOlyd1bD/xa8Cuujdo+azq13WkSjWr1rIQ8e5fNHBU0mtCfeLd/I3xlTx/bLp8LLDNPrj0sNT+1xgzFaM68=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747507909; c=relaxed/simple;
-	bh=st/6EvTwFsElHd4A4/+flWF6jUrLr/bGvlof0KMzT3c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A/RRXyxObF2/xHuXLqsclZeSiCa7Er/OcHetHffTO7hY5sc9uNorkBv1SN/hD3Fin+ou1WtlVmzHyajvO7fX/tyiCiiqqzy6m0CZjN4++bXh86u71W7+bKDrn7euemE7W6/ekyfHO/KyRSLupyj9yx4or8Hl5RgrAT88P9323RM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NyS4mrpS; arc=fail smtp.client-ip=40.107.93.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7E51F956
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 19:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747508572; cv=none; b=egg0xc97VthtPtlNJSavx3rHXD4Mvxty5ljMqkGNXDwqbRvhUCGOgPBumTWdkaaxXvaBGaUc+4u6wqLmj4bP4QVyDpiio52UWI9hHUs51ohFoygV3Mt7ktBj2b/f8IlafSGuR4q+92tgFYyk1mNzO3r9NBTUoupqhqj242OOL30=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747508572; c=relaxed/simple;
+	bh=mlALCt8BbFWKFQ30M0BZf3exwtUHxFoIP4EngrJJecs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQrjHoQAne3LGVB/cciYbqe9yS/GvHIJBdIS2ln8id9IyEechQF/kF+sxd0hohBS4PkjZ4/2SW2C0ifcanMvO2h7w0Cfwgn95RUptPjbyef7AA1OPFtsZktuGQLokoM/q2ZQ+DcVSrrbkPnS53oLqmydEKCCOtc2Hs6UmPqTW/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ptkiQ/te; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NyS4mrpS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fd3LkKlgoR8Nbr8VvAmv1m48YkV+41YnNMkdlY0KqD6cxspllaoYBgcndJ4CbpA6R7zrcUL6zcw2XUOBeNPrJjywO/34btr47pzf9mprtdRRseec0gMBWXrYO4FMJ4ihn4ptM5MUCtQOdUo8b081u2ctsAZcA/ZxNeZqZC3HWmVMfviTJDFcal9/avmTrO4NtRjWezdr3FvVkD9GCH24lT3h9rGftwhvXjKu2CW6Flu79o5BOh227ot8yB0qZUDRuhSL70HezU81niWv9ipmtaUUQBOAMAgUqm4M9U1YG3YJYwfJDMgX6PDvC+qhREz9T8MSn5jYALSPhVe+H13l3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AF+sX931u23cGMu75MOf+qT/rbwV5x4nifDoqw6A2o4=;
- b=bEaTjcUedMzOu0f81NvmIUb5yOdMJKA3SeO8ETgJHjX42ZK5i1irbijkGzKoFNkOkQ2hDl2nDAugWgBqHUj36/0XRKabjw/wZx+fC1CJUcQwErZFlj167rhJwJaWrrSNq0jWQ31DV9a4o7kjT8WJ0wvRqJPdDrHRmO0vmlYoe7Ln8xlt6mWriJ67ER1bUkTxrNGOJAMF+PbbTgAsSmZGFWldX4pWQ2OUNEXFOj+SS3FLsSax+N3NYRALJ0Bbz1vxA+0eAA1J7xIOkt3iPVZW43ecz2THyxdnDUQLU28xdYTkEAYKNirR+HwgEYTFMYc6MUDREM5EaDeVOsAYKZWEMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AF+sX931u23cGMu75MOf+qT/rbwV5x4nifDoqw6A2o4=;
- b=NyS4mrpScGZ/4MHScv1iikH0auaXip5i18NKwQ0/b9EqOQ+6t139CYWvDXWLURtVC4U8VdTlZbby2XAhhOLFpf+IfNrvZRbXX+ZeWX/MdDCpFLKtrhP8YuI3QDxge9EvJcp/cdnaQTPIcwI10t5lxEf/XPW0jTPyojlLukX344PPDAxCKA0KtRlIXqFWMskgtSBfB7bS6jNHDi121DwUk1UUJrtNHbHaiKLrFcoEYRkiCZ2XvFKbJvD4pL8sjV3ZAK/xOBwYyoruEISDtD5zbDjLnEGlSrRSvtxa/Vokkzfi7tcOYEcMLyfsMGhlsyifxi4ZfZ4QmLguiCmaGjlZzQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH7PR12MB8013.namprd12.prod.outlook.com (2603:10b6:510:27c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Sat, 17 May
- 2025 18:51:38 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.031; Sat, 17 May 2025
- 18:51:38 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Juan Yescas <jyescas@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, tjmercier@google.com,
- isaacmanjarres@google.com, surenb@google.com, kaleshsingh@google.com,
- Vlastimil Babka <vbabka@suse.cz>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
- Minchan Kim <minchan@kernel.org>
-Subject: Re: [PATCH v4] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-Date: Sat, 17 May 2025 14:51:36 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <8E999CBA-6F55-4DCA-8BE3-569B1C537802@nvidia.com>
-In-Reply-To: <20250510010338.3978696-1-jyescas@google.com>
-References: <20250510010338.3978696-1-jyescas@google.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0787.namprd03.prod.outlook.com
- (2603:10b6:408:13f::12) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ptkiQ/te"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo218501cf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 12:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747508569; x=1748113369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yF0K2FdBjnXOHIclO/dFA/TrIig1DjU+JS8Dy78PlzA=;
+        b=ptkiQ/tearzWfLVs0O0F85w8+H/9t9ZfV0X2aPssMRzZtuNELv2AM2UrZ6732zByXl
+         t77JbldgeRsjtZ44GpXE8yL357bHSGQMQndkNWyZ0ASxooQ5BI4zvZH+aRUF9EfU12Sf
+         xSUKP/ZrHx4EaqE3cp1aTSo6jjRpUEi6+dITNg3J6VuX/+4sHkmkGB+9ZZzmcVDg8PcQ
+         GfghDzKyWTc1HoNvJmt27t+atuXVJbFAm2k1rZUHekBbhffiRYJoms+xscupYaKixY54
+         EVhFsarRCyDrQ7VqYTHEkrLf1HjoWDeNEPPAC3218UKxqpB6dbpVsVIWHYe4l0DQ/geq
+         22tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747508569; x=1748113369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yF0K2FdBjnXOHIclO/dFA/TrIig1DjU+JS8Dy78PlzA=;
+        b=NyqS0vVLzwtyV4A27Ev5GGPMlEUF3B8oXbVGFOwMPTMA/fWc5oQikpNSn2N4H53naT
+         /Jt2FVeK/QmJOvD/t6ue3HEVn3YUWjU0s4E8+AFFA+Nht5xebA+KEwLB2GguRCDXXzQY
+         IUAsKOYeN34ZwWdw1FytEjkDw7P0MPh52znBhjGP0XUMgjb3QAt23VFrPjhkpZ0T8a4Z
+         +h0V+/pE3uxZgdjLm2Gj93qj6lfPXWHcAru3rWyqtLD9d86mtEp4Wd6iHVk8/Q8NdTHC
+         39RwyMbqRtfzAEEyiWWa+BpdET4gzFllcpQe9zr7Z3ZVEwod5jSVN6NzPggEh+7lIDB+
+         lUWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcChjkfX0Ij9Z7CdzOXN7KL0f4M/h4jqx56P+ovw0WsWaxFqsfcTLQtnZLdQigAyzhaNWwirjenLQIxbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeV7fS7wz2bMna417ye9Xtj651zdyjgKzXjf4ln0ofoF9zEWEx
+	n1mUJ1rVmRtJozj7vmo0iIpujDIXzDtOq2Z9GLvuJ8ggTecFiKr49MhFr4hqGzF2ycZqQApogY7
+	/UGNzYgufPnY/5RKn6K075wioPVipXnltSwc1CaQH
+X-Gm-Gg: ASbGncsvSp2NEG//fLOxTNpUeXWn/Bu+QlCcSDn6ZP/VtRZ1CaiMS8G6qe3hVa4q6N9
+	QOHIS62gTWvuo3oUCynKzscQkzlgThqMfFCSnR+8FaFJ0WSxHAnoyg0RkQA08nJUumFHp6RVmr4
+	JHYAzr2SHPiu+80U2Y72ER/oGsNkVGfsc=
+X-Google-Smtp-Source: AGHT+IFsSho1e2aTh7vSg0v45aJBk8Uf+jg26yARFi6n1yE9KeiCYnhSQ8K8q8+5FBnvY+y/nPl7xMHfuwxFolWB6v8=
+X-Received: by 2002:a05:622a:848d:b0:497:75b6:e542 with SMTP id
+ d75a77b69052e-49775b6ef5emr712401cf.10.1747508568892; Sat, 17 May 2025
+ 12:02:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH7PR12MB8013:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6d7696a-ac04-4da8-fb1e-08dd9573dae0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WsMk9buWHtoXlbneSKPa3MjPZjqbK8MkSYFnXayD9uFJsabcXuXN7DoqhqL5?=
- =?us-ascii?Q?2O0aKP9BEFyT7mLUaIK5EoIe+fN44HaDepoilE8764Ill9J2g7HQ15L56lRw?=
- =?us-ascii?Q?aWy5dNF76Je5Al2kobJvLrh8Hy5I4JDB0d1H9LoCJ+1KBLBEfdSwzaaqOiuU?=
- =?us-ascii?Q?HJhBAkBv+wdNFlhdwHeU8W2m9KMxsJCeROph8RCzYCphoXrNoqj+gJIzRzR8?=
- =?us-ascii?Q?QE58+MnDtRqCCXJFvQCKca/opVEexQjVHQ6hC3iWzAgiCGJNnshYMTcIZKxN?=
- =?us-ascii?Q?N8gea+ioItDCi0up9RgG16wxJq0Luep32YD1ZroggiDEVk05j/HeEIHJs3Qd?=
- =?us-ascii?Q?LOeklr3gdzvDOInoFveYc0wxK589hy+jlbf8eMhff8LC8Jm3Z6zMjkTQtLne?=
- =?us-ascii?Q?c8URFrsnLi6PIwcmW4HL1u4D/QfxyzLTVBrZAUVhkAY6C8Ng/WWzFT5tqY9g?=
- =?us-ascii?Q?jTB6MvFvRSHmk0nc055fIazS2aDL9yKSJ+0DFAvDNKgqKbgQeAr3Az55gfFo?=
- =?us-ascii?Q?v8pfy10Vh3qZ3e87O4xmH1/dFVgdnoF0LmMlgR2YPzOWELiV7EIFC/fs+C75?=
- =?us-ascii?Q?bGh3hu6FvNlhWWm4NeK42o7nRj4niUrN50SyJWkuQaXWSbbv/sPTAaN7t7ul?=
- =?us-ascii?Q?cav4Mzkm9w7eCM2++9AsLcEMDd2tXhVuPGVtlqPqSPLPbBVp5TutQznpKDip?=
- =?us-ascii?Q?QC7gN4mndvGxsdWWtjFnYyQTil+GBBB/4dg8q3s2KEeodCEkjHML6bWfwE3I?=
- =?us-ascii?Q?0BD7DWrDLl2jTINSJKYy3WN7pdetH6mT5NMpk1P2P0ozSyYnyvCshkKucTvW?=
- =?us-ascii?Q?aGDyjgzOXIKzHQPTHd2/TFn0rmYBIljYm5DtKL+aIZMWG00xsj8il7cDUCwu?=
- =?us-ascii?Q?AuH0QH19nF10y4+ZqlI32Mnwwtp1w2kjNzyPvp/KBJ0TvWoV0ky6GRMHAnmf?=
- =?us-ascii?Q?bjQ7b4fVQeYIGX1G+WQdUOPgsp7YwjvGEA3GEXAVU4AGVVx2wna1N61FBD3x?=
- =?us-ascii?Q?SwWBE5818I/x9OcYoG/TPrHt+0sFbYB3VU7Ti2RLU2kdkwfMwGLYhnWFfQNZ?=
- =?us-ascii?Q?9K3F9hxYFepPXFHIivxD9qwNkGaezZoqMZXrbNFwICGZUiMuoYY9cHjJ2ahb?=
- =?us-ascii?Q?T2o1MzT4KGI52Xqev4jNqAAIdKXnKVL+3BJa96Z59bYicNoeGdz33Vv3jBRm?=
- =?us-ascii?Q?X9p/Dy4W4RLzuFeloBiTOsuaaDdEmCIdaPDf1Xv9XNViGa5dU+ZiWUzp+wof?=
- =?us-ascii?Q?iRk81b6rzqXwNarG8dH7Z/JakHLIzN04CR79oNyL7Nn19Mwg7e05Yb4jf6oE?=
- =?us-ascii?Q?qhWviHWEFZOS9v101TBevWrABi2/he48Uqotdqh6EmrlQ2pwzOzZqRmPuetB?=
- =?us-ascii?Q?GlZDMrxr4w/6Kh7skszYnUQKnnT7TDl5/8x2/OxQ2bokWc+jj8GhSZ6MCysN?=
- =?us-ascii?Q?xWj1dAHxwHs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/bNBvcoUE4NWcX67KGrMVNDatQCcXQY8DkxSl7amZ8R+Rx/g/zis2Kw+sRJ3?=
- =?us-ascii?Q?CgvH5tBnxQz6RTtm6iUCzoYy5wmBzcybTuUCaDyZ/wrwkA5Qz/ZCl0dSZZZ2?=
- =?us-ascii?Q?J+MK8ZfQgCSrADeSju4fgWcbXWvydDWMOK/VIyhopgDRAfKvD0FF3b3VplgY?=
- =?us-ascii?Q?Pyy717FPfo4nMA+X+nGZL1anjy2Ae+ENC2LwEaq6kbCr2A6qMYH4zmgj0he3?=
- =?us-ascii?Q?gf1n7pc/BRieLILjvb1rOqr19tyUhm8NBj+h9lPL8UA+rC3g1Ke2VnKWiaKS?=
- =?us-ascii?Q?rJWD9371+hdLBiVVLuKJVjl0irRJIW0EMUqek6wQg/VkZyQtexbi3l40M4tH?=
- =?us-ascii?Q?niH6nw3sdymwZBDdAT0b/3dGEY4u7MHTZw/VgjORU/3DAMnQU3uV1vePx1sZ?=
- =?us-ascii?Q?Md7LEsynwZPD9BadHuq9gzDvN0Roy1BaPfzNH4Aq7pYH2WvAzLGHdlARvYPE?=
- =?us-ascii?Q?GBTiiEw2DAq7Wo6hry8Ssm7a1CM8uivzbMNh/CdVBThVmN9RiPx+ef+5rEvI?=
- =?us-ascii?Q?VfEAEOHepcuBEyQGZ6PBtdZmPZ4NX/z/mbASkKnhkMUEpYyywL1ePkGHGkeq?=
- =?us-ascii?Q?FCHuqOx0Te8BDHlIPtgeSovvYgxpTn+EIyMr3wDwAXdn/Y1k4GugcInOdLm0?=
- =?us-ascii?Q?LFaQx9x6fv47Q/9ey0padpXGMfyqdcqv8z/kd36KmnnTIzk9btF7y9dz4Btr?=
- =?us-ascii?Q?gOrUDT9mzRGxpqdKUOpqlz/oBlZcrmcFT0t2xu+fdeJIbQHSGfdPVPLXE71s?=
- =?us-ascii?Q?Wl0SZXNWM1kcGs6MzQ5RR1GAfttWr3y1X9t1Y/QJS2OjOBIADHsylvH3++kq?=
- =?us-ascii?Q?yfaj7g6xqfNXw4Ps+dSDtu7yA3LQd3IFfy/+sos2AFH5o8NOh9FM1uWgVihx?=
- =?us-ascii?Q?35KU6Ku0+C4nxzfqTIgm6Lg2heEK+j8lInFFcyTufvo2If7IUlz48r1KHIxo?=
- =?us-ascii?Q?5pbGqYkE7KXq3qMCx6O7K1LVPXXuBCyuO7fxZ7aEq8YGpnre8QZRqw0on2RN?=
- =?us-ascii?Q?5YNcnxTz6byAlfkxteW/zALmEE++oj0SDiax8yBdmETSnAN+KJwvGXcX5Km2?=
- =?us-ascii?Q?eTXvy4hG1Pb9uurxu3dZO64oEu1MlkL0SgpC/s0opcgNQgz2yJoeneM6MXlJ?=
- =?us-ascii?Q?dGmgU+oOrY1y71Sca5ymRdQNtVgBQAyFuOEq89aaiHBMxHX/KuyF5DilzUYi?=
- =?us-ascii?Q?NRcfFJqH/P06wEd9EOEJAk0JuQBrX5bI4gBA55NfHaQ3Aoib3upuJ3Z1bZGn?=
- =?us-ascii?Q?V2Mg5UFRndpfCJWhrJYQnA/rYLpr+eLvfA0M6CzYrgwxwIiqZlqaUv4kvnBk?=
- =?us-ascii?Q?2cZ5eieU6QL5aHjt4gssZ8g+hDMdCJ0bcD9/W8+L15SN4iU48vTzyFkxS64Y?=
- =?us-ascii?Q?q03Bp+mvwRn+a2kW2a8wvp+m+KC/VImdtLFGlLkKIXZ4EU9q/6ajoxfydn64?=
- =?us-ascii?Q?oYYyz8JhVuwAbDix8zt7rtOJz0RHfwBQjRWf1SmxKpkhGhhDKwRCBLEB2IIK?=
- =?us-ascii?Q?9Si0/sDevhpbmF3Hlsfr0lwm/OUlJnJ3IWqUiNP7OyGE0e8PFZ5mfp2BRABk?=
- =?us-ascii?Q?ZKzRUVt3Uu0CLuCYa2vOUclRx5YPPldYY3gNyqu1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6d7696a-ac04-4da8-fb1e-08dd9573dae0
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 18:51:38.3527
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 82GOoxmh1xLqsXm5tawE0LNS0WgPPSZoZbpUJr879OnxoXctUvr82B1fFOMdz9AH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8013
+References: <20250516131246.6244-1-00107082@163.com> <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
+ <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
+ <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com> <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
+ <233aab47.38f2.196df28812a.Coremail.00107082@163.com> <CAJuCfpEPupOzygXhoYBCzTao4YHzW9ZWG+Y4KDUohhfq=hjwQw@mail.gmail.com>
+ <5a1f5612.363e.196df64bd1f.Coremail.00107082@163.com>
+In-Reply-To: <5a1f5612.363e.196df64bd1f.Coremail.00107082@163.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sat, 17 May 2025 12:02:37 -0700
+X-Gm-Features: AX0GCFvxHzGd4WuCqJiwHzAQGCJzPQbN4swlD7m4Nhp4XSuypmqv0NcDVELeiMk
+Message-ID: <CAJuCfpEWsN3pxN2EveACvucx7Aip6u_YjJ5u3NxdmU3A3WYOYw@mail.gmail.com>
+Subject: Re: BUG: unable to handle page fault for address
+To: David Wang <00107082@163.com>
+Cc: kent.overstreet@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9 May 2025, at 21:02, Juan Yescas wrote:
+On Sat, May 17, 2025 at 10:57=E2=80=AFAM David Wang <00107082@163.com> wrot=
+e:
+>
+>
+>
+> At 2025-05-18 01:29:35, "Suren Baghdasaryan" <surenb@google.com> wrote:
+> >On Sat, May 17, 2025 at 9:51=E2=80=AFAM David Wang <00107082@163.com> wr=
+ote:
+> >>
+> >>
+> >> At 2025-05-18 00:39:30, "Suren Baghdasaryan" <surenb@google.com> wrote=
+:
+> >> >On Sat, May 17, 2025 at 12:02=E2=80=AFAM David Wang <00107082@163.com=
+> wrote:
+> >> >>
+> >> >>
+> >> >> At 2025-05-17 08:11:24, "Suren Baghdasaryan" <surenb@google.com> wr=
+ote:
+> >> >> >On Fri, May 16, 2025 at 10:03=E2=80=AFAM Suren Baghdasaryan <suren=
+b@google.com> wrote:
+> >> >> >>
+> >> >> >> Hi David,
+> >> >> >>
+> >> >> >> On Fri, May 16, 2025 at 6:13=E2=80=AFAM David Wang <00107082@163=
+.com> wrote:
+> >> >> >> >
+> >> >> >> > Hi,
+> >> >> >> >
+> >> >> >> > I caught a page fault when I was changing my nvidia driver:
+> >> >> >> > (This happens randomly, I can reproduce it with about 1/3 prob=
+ability)
+> >> >> >> >
+> >> >> >> > [Fri May 16 12:05:41 2025] BUG: unable to handle page fault fo=
+r address: ffff9d28984c3000
+> >> >> >> > [Fri May 16 12:05:41 2025] #PF: supervisor read access in kern=
+el mode
+> >> >> >> > [Fri May 16 12:05:41 2025] #PF: error_code(0x0000) - not-prese=
+nt page
+> >> >> >> > ...
+> >> >> >> > [Fri May 16 12:05:41 2025] RIP: 0010:release_module_tags+0x103=
+/0x1b0
+> >> >> >> > ...
+> >> >> >> > [Fri May 16 12:05:41 2025] Call Trace:
+> >> >> >> > [Fri May 16 12:05:41 2025]  <TASK>
+> >> >> >> > [Fri May 16 12:05:41 2025]  codetag_unload_module+0x135/0x160
+> >> >> >> > [Fri May 16 12:05:41 2025]  free_module+0x19/0x1a0
+> >> >> >> > ...
+> >> >> >> > (full kernel logs are pasted at the end.)
+> >> >> >> >
+> >> >> >> > Using a image with DEBUG_INFO, the calltrack parses as:
+> >> >> >> >
+> >> >> >> > RIP: 0010:release_module_tags (./include/linux/alloc_tag.h:134=
+ lib/alloc_tag.c:352 lib/alloc_tag.c:573)
+> >> >> >> > [Fri May 16 12:05:41 2025] codetag_unload_module (lib/codetag.=
+c:355)
+> >> >> >> > [Fri May 16 12:05:41 2025] free_module (kernel/module/main.c:1=
+305)
+> >> >> >> > [Fri May 16 12:05:41 2025] __do_sys_delete_module (kernel/modu=
+le/main.c:795)
+> >> >> >> >
+> >> >> >> > The offending lines in my codebase:
+> >> >> >> >         126 static inline struct alloc_tag_counters alloc_tag_=
+read(struct alloc_tag *tag)
+> >> >> >> >         127 {
+> >> >> >> >         ...
+> >> >> >> >         131
+> >> >> >> >         132         for_each_possible_cpu(cpu) {
+> >> >> >> >         133                 counter =3D per_cpu_ptr(tag->count=
+ers, cpu);
+> >> >> >> > >>>>    134                 v.bytes +=3D counter->bytes;   <--=
+------------here
+> >> >> >> >         135                 v.calls +=3D counter->calls;
+> >> >> >> >
+> >> >> >> >
+> >> >> >> > Nvidia drivers are out-tree... there could be some strange beh=
+avior in it causes this.. but,
+> >> >> >> > when I check the code, I got concerned about lifecycle of tag-=
+>counters.
+> >> >> >> > Based on following defination:
+> >> >> >> >         108 #define DEFINE_ALLOC_TAG(_alloc_tag)              =
+                              \
+> >> >> >> >         109         static DEFINE_PER_CPU(struct alloc_tag_cou=
+nters, _alloc_tag_cntr);      \
+> >> >> >> >         110         static struct alloc_tag _alloc_tag __used =
+__aligned(8)                  \
+> >> >> >> >         111         __section(ALLOC_TAG_SECTION_NAME) =3D {   =
+                                \
+> >> >> >> >         112                 .ct =3D CODE_TAG_INIT,            =
+                                \
+> >> >> >> >         113                 .counters =3D &_alloc_tag_cntr };
+> >> >> >> >         114
+> >> >> >> > _alloc_tag_cntr is the data referenced by tag->counters, but t=
+hey are in different section,
+> >> >> >> > and alloc_tag only prepare storage for section ALLOC_TAG_SECTI=
+ON_NAME.
+> >> >> >> > right?
+> >> >> >> > Then what happens to those ".data..percpu" section when module=
+ is unloaded?
+> >> >> >> > Is it safe to keep using those ".data..percpu" section after m=
+odule unloaded,
+> >> >> >> > or even during module is unloading?
+> >> >> >>
+> >> >> >> Yes, I think you are right, free_module() calls percpu_modfree()=
+ which
+> >> >> >> would free the per-cpu memory allocated for the module. Before
+> >> >> >> 0db6f8d7820a ("alloc_tag: load module tags into separate contigu=
+ous
+> >> >> >> memory") we would not unload the module if there were tags which=
+ were
+> >> >> >> still in use. After that change we load module tags into separat=
+e
+> >> >> >> memory, so I expected this to work but due to this external refe=
+rence
+> >> >> >> it indeed should lead to UAF.
+> >> >> >> I think the simplest way to fix this would be to bypass
+> >> >> >> percpu_modfree() inside free_module() when there are module tags=
+ still
+> >> >> >> referenced, store mod->percpu inside alloc_tag_module_section an=
+d free
+> >> >> >> it inside clean_unused_module_areas_locked() once we know the co=
+unters
+> >> >> >> are not used anymore. I'll take a stab at it and will send a pat=
+ch for
+> >> >> >> testing today.
+> >> >> >
+> >> >> >Ok, I went with another implementation, instead dynamically alloca=
+ting
+> >> >> >percpu memory for modules at the module load time. This has anothe=
+r
+> >> >> >advantage of not needing extra PERCPU_MODULE_RESERVE currently
+> >> >> >required for memory allocation tagging to work.
+> >> >> >David, the patch is posted at [1]. Please give it a try and let me
+> >> >> >know if the fix works for you.
+> >> >> >Thanks,
+> >> >> >Suren.
+> >> >> >
+> >> >> >[1] https://lore.kernel.org/all/20250517000739.5930-1-surenb@googl=
+e.com/
+> >> >> >
+> >> >> >
+> >> >> >> Thanks,
+> >> >> >> Suren.
+> >> >> >>
+> >> >>
+> >> >> Hi, the patch does fix my issue.
+> >> >> I now have another similar concern about modules RO data,
+> >> >> The codetag defined as
+> >> >>  24 struct codetag {
+> >> >>  25         unsigned int flags; /* used in later patches */
+> >> >>  26         unsigned int lineno;
+> >> >>  27         const char *modname;
+> >> >>  28         const char *function;
+> >> >>  29         const char *filename;
+> >> >>  30 } __aligned(8);
+> >> >>
+> >> >> Those modname/function/filename would refer to RO data section, rig=
+ht?
+> >> >> When module unloaded, its RO data section would be released at some=
+ point.
+> >> >> My question is is it safe to use RO data during module unload? beca=
+use these
+> >> >> lines seems to access those data:
+> >> >>
+> >> >> +                       pr_info("%s:%u module %s func:%s has %llu a=
+llocated at module unload\n",
+> >> >> +                               tag->ct.filename, tag->ct.lineno, t=
+ag->ct.modname,
+> >> >> +                               tag->ct.function, counter.bytes);
+> >> >
+> >> >These lines are called from release_module_tags() using this call cha=
+in:
+> >> >
+> >> >delete_module()
+> >> >  free_module()
+> >> >    codetag_unload_module()
+> >> >      release_module_tags()
+> >> >
+> >> >and codetag_unload_module() is called at the very beginning of
+> >> >free_module(), when no other module memory has been freed yet. So,
+> >> >from what I understand, this should be safe.
+> >> >After we unload the module these pointers inside the tags will be
+> >> >dandling but we should not be using them anymore since we do not
+> >> >report unloaded modules. Do you see some usage that I missed?
+> >>
+> >> Why data..percpu. is different. The page fault error caught when I rei=
+nstall nvidia drivers is also
+> >> raised from release_module_tags().
+> >>
+> >> Is data..percpu. section released earlier?
+> >
+> >No but counters are different because the allocations that still
+> >reference these tags from unloaded modules will be decrementing them
+> >when they are freed. That's where UAF is coming from. So, the counters
+> >might be accessed after the module is unloaded, other fields should
+> >not.
+> >
+>
+> I do notice there are places where counters are referenced "after" free_m=
+odule, but the logs I attached
+> happened "during" free_module():
+>
+>  [Fri May 16 12:05:41 2025] BUG: unable to handle page fault for address:=
+ ffff9d28984c3000
+>  [Fri May 16 12:05:41 2025] #PF: supervisor read access in kernel mode
+> [Fri May 16 12:05:41 2025] #PF: error_code(0x0000) - not-present page
+> ...
+>  [Fri May 16 12:05:41 2025] RIP: 0010:release_module_tags+0x103/0x1b0
+> ...
+>  [Fri May 16 12:05:41 2025] Call Trace:
+>  [Fri May 16 12:05:41 2025]  <TASK>
+>  [Fri May 16 12:05:41 2025]  codetag_unload_module+0x135/0x160
+> [Fri May 16 12:05:41 2025]  free_module+0x19/0x1a0
+>
+> The call chain is the same as you mentioned above.
 
-> Problem: On large page size configurations (16KiB, 64KiB), the CMA
-> alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
-> and this causes the CMA reservations to be larger than necessary.
-> This means that system will have less available MIGRATE_UNMOVABLE and
-> MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
->
-> The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
-> MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
-> ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
->
-> For example, in ARM, the CMA alignment requirement when:
->
-> - CONFIG_ARCH_FORCE_MAX_ORDER default value is used
-> - CONFIG_TRANSPARENT_HUGEPAGE is set:
->
-> PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
-> -----------------------------------------------------------------------
->    4KiB   |      10        |      10         |  4KiB * (2 ^ 10)  =  4MiB
->   16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =  32MiB
->   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
->
-> There are some extreme cases for the CMA alignment requirement when:
->
-> - CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
-> - CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
-> - CONFIG_HUGETLB_PAGE is NOT set
->
-> PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
-> ------------------------------------------------------------------------
->    4KiB   |      15        |      15         |  4KiB * (2 ^ 15) = 128MiB
->   16Kib   |      13        |      13         | 16KiB * (2 ^ 13) = 128MiB
->   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
->
-> This affects the CMA reservations for the drivers. If a driver in a
-> 4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
-> reservation has to be 32MiB due to the alignment requirements:
->
-> reserved-memory {
->     ...
->     cma_test_reserve: cma_test_reserve {
->         compatible = "shared-dma-pool";
->         size = <0x0 0x400000>; /* 4 MiB */
->         ...
->     };
-> };
->
-> reserved-memory {
->     ...
->     cma_test_reserve: cma_test_reserve {
->         compatible = "shared-dma-pool";
->         size = <0x0 0x2000000>; /* 32 MiB */
->         ...
->     };
-> };
->
-> Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
-> allows to set the page block order in all the architectures.
-> The maximum page block order will be given by
-> ARCH_FORCE_MAX_ORDER.
->
-> By default, CONFIG_PAGE_BLOCK_ORDER will have the same
-> value that ARCH_FORCE_MAX_ORDER. This will make sure that
-> current kernel configurations won't be affected by this
-> change. It is a opt-in change.
->
-> This patch will allow to have the same CMA alignment
-> requirements for large page sizes (16KiB, 64KiB) as that
-> in 4kb kernels by setting a lower pageblock_order.
->
-> Tests:
->
-> - Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
-> on 4k and 16k kernels.
->
-> - Verified that Transparent Huge Pages work when pageblock_order
-> is 1, 7, 10 on 4k and 16k kernels.
->
-> - Verified that dma-buf heaps allocations work when pageblock_order
-> is 1, 7, 10 on 4k and 16k kernels.
->
-> Benchmarks:
->
-> The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
-> reason for the pageblock_order 7 is because this value makes the min
-> CMA alignment requirement the same as that in 4kb kernels (2MB).
->
-> - Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
-> SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
-> (https://developer.android.com/ndk/guides/simpleperf) to measure
-> the # of instructions and page-faults on 16k kernels.
-> The benchmark was executed 10 times. The averages are below:
->
->            # instructions         |     #page-faults
->     order 10     |  order 7       | order 10 | order 7
-> --------------------------------------------------------
->  13,891,765,770	 | 11,425,777,314 |    220   |   217
->  14,456,293,487	 | 12,660,819,302 |    224   |   219
->  13,924,261,018	 | 13,243,970,736 |    217   |   221
->  13,910,886,504	 | 13,845,519,630 |    217   |   221
->  14,388,071,190	 | 13,498,583,098 |    223   |   224
->  13,656,442,167	 | 12,915,831,681 |    216   |   218
->  13,300,268,343	 | 12,930,484,776 |    222   |   218
->  13,625,470,223	 | 14,234,092,777 |    219   |   218
->  13,508,964,965	 | 13,432,689,094 |    225   |   219
->  13,368,950,667	 | 13,683,587,37  |    219   |   225
-> -------------------------------------------------------------------
->  13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
->
-> There were 4.85% #instructions when order was 7, in comparison
-> with order 10.
->
->      13,803,137,433 - 13,131,974,268 = -671,163,166 (-4.86%)
->
-> The number of page faults in order 7 and 10 were the same.
->
-> These results didn't show any significant regression when the
-> pageblock_order is set to 7 on 16kb kernels.
->
-> - Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 times
->  on the 16k kernels with pageblock_order 7 and 10.
->
-> order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
-> -------------------------------------------------------------------
->   15.8	 |  16.4    |         0.6        |     3.80%
->   16.4	 |  16.2    |        -0.2        |    -1.22%
->   16.6	 |  16.3    |        -0.3        |    -1.81%
->   16.8	 |  16.3    |        -0.5        |    -2.98%
->   16.6	 |  16.8    |         0.2        |     1.20%
-> -------------------------------------------------------------------
->   16.44     16.4            -0.04	          -0.24%   Averages
->
-> The results didn't show any significant regression when the
-> pageblock_order is set to 7 on 16kb kernels.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> CC: Mike Rapoport <rppt@kernel.org>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Signed-off-by: Juan Yescas <jyescas@google.com>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> ---
-> Changes in v4:
->   - Set PAGE_BLOCK_ORDER in incluxe/linux/mmzone.h to
->     validate that MAX_PAGE_ORDER >= PAGE_BLOCK_ORDER at
->     compile time.
->   - This change fixes the warning in:
->    https://lore.kernel.org/oe-kbuild-all/202505091548.FuKO4b4v-lkp@intel.com/
->
-> Changes in v3:
->   - Rename ARCH_FORCE_PAGE_BLOCK_ORDER to PAGE_BLOCK_ORDER
->     as per Matthew's suggestion.
->   - Update comments in pageblock-flags.h for pageblock_order
->     value when THP or HugeTLB are not used.
->
-> Changes in v2:
->   - Add Zi's Acked-by tag.
->   - Move ARCH_FORCE_PAGE_BLOCK_ORDER config to mm/Kconfig as
->     per Zi and Matthew suggestion so it is available to
->     all the architectures.
->   - Set ARCH_FORCE_PAGE_BLOCK_ORDER to 10 by default when
->     ARCH_FORCE_MAX_ORDER is not available.
->
->
->  include/linux/mmzone.h          | 16 ++++++++++++++++
->  include/linux/pageblock-flags.h |  8 ++++----
->  mm/Kconfig                      | 31 +++++++++++++++++++++++++++++++
->  3 files changed, 51 insertions(+), 4 deletions(-)
+Is this failure happening before or after my fix? With my fix, percpu
+data should not be freed at all if tags are still used. Please
+clarify.
 
-Hi Juan,
-
-The patch below on top of your v4 fixed powerpc build issue, as I tested
-it locally.
-
-From 5c2ae4dfca135e99da45302e4f5d96a315a99603 Mon Sep 17 00:00:00 2001
-From: Zi Yan <ziy@nvidia.com>
-Date: Sat, 17 May 2025 14:49:39 -0400
-Subject: [PATCH] fix CONFIG_PAGE_BLOCK_ORDER
-
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- mm/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 79237842f7e2..af0dd42e3506 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1016,10 +1016,10 @@ config ARCH_FORCE_MAX_ORDER
- # as per include/linux/mmzone.h.
- config PAGE_BLOCK_ORDER
- 	int "Page Block Order"
--	range 1 10 if !ARCH_FORCE_MAX_ORDER
--	default 10 if !ARCH_FORCE_MAX_ORDER
--	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
--	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
-+	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
-+	default 10 if ARCH_FORCE_MAX_ORDER = 0
-+	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
-+	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
-
- 	help
- 	  The page block order refers to the power of two number of pages that
--- 
-2.47.2
-
-
-
-
---
-Best Regards,
-Yan, Zi
+> This part confusing me a lot. The log indicates during free_module,  ..da=
+ta..percpu access failed,
+> I doubted those section would be released that quick.
+>
+> The only guess left  I feel reasonable is the ..data_percpu was not paged=
+ in at all,  probably  because no access to it,
+> and when the section is accessed during free_module, somehow the access i=
+s refused. Just guessing.....
+>
+> Or,  do I missing something here?
+>
+>
+> >>
+> >> Thanks
+> >> David
+> >>
+> >>
