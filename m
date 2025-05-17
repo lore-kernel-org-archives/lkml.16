@@ -1,98 +1,135 @@
-Received: from sonic310-19.consmr.mail.sg3.yahoo.com (sonic310-19.consmr.mail.sg3.yahoo.com [106.10.244.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B4A1DE8BE
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.244.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC1813D8A3
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747472210; cv=none; b=LO4uL//70RS4ROR0I40X40r3YyFNXSEFRSNm0M682ViogxXs3izA+/apdXoipJrl6ZdNTlVaVPH6gEmX7YUQj830tvFMZf4iAadklcVHBuNcfw/K2OcdMw3zUxohrjQ9XKqU4km9DxOo9P/3sOyT3u7wBvU4H6/Ju7zVjG2TFJI=
+	t=1747472246; cv=none; b=YhuSDX0JJL3VXAV/TOOp2aXVQyRRnuuEx14lG5Ky/CpmPCZzdHnnzMkaUD6fdA6INo2csTd2ZklVtUgiogDjsFSqsCc3cKv+ItM3iMCxpXY4It4RU33jsDP5dPJhR8Qhr8G8oQLafBf4VXgEnn7qojMSN1vaQfwJS3zo67G4lPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747472210; c=relaxed/simple;
-	bh=T6CpA99EceTxGXCLNGvZRdeEWeOLwjsAfdaThogeYfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=JbxBIlWKgEJeda2sJxeguBn0MdHhuUzrt3Tl4opPyAmJoC6rP7ojWmO12Wb7tSXT4gf38Vu/0k8XYfTWJPBkLrc9P9ns420VoUWNbX2xy/E57JgKibeDkHEUrbANxiLVcyp3MSeRbN2pFQYjRigmhFzm+1gLqHy/WhGFD+QksV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=oKWoLrX2; arc=none smtp.client-ip=106.10.244.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747472246; c=relaxed/simple;
+	bh=wa0AvHkjwezpx8OoGdRvdZZ/3qzIMnEuZXauHsK4oX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ecpht11v0pjwZbA7hIL88mcifDr9pBynCxwTwv6ZqXaCuS8hm2KRytoIzY3s/fDlcbX1ZY2qNTnUCPD0ynGWH+WYo3SiqSh6ZtPvu617aZ1eEYvm9MN36NwMw4lgRpNvIeYSIBjXVm521kRezaGm5keCUYSlKT5IBj5/2TXJ6f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nn7xlfo4; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="oKWoLrX2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747472206; bh=sgN03rBnm/XPR1ads9Vu8J316F1lCpLgW/CCcjcMT/c=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=oKWoLrX2ocXlFSayrx0OdtZnvKQ7n/ZwyoTIvUjXq6iidh4hzwANDOBIqCDMXkElb43SuVYNw20h5coqTWUY6FCLp2nVRcV2GFj/RE3cyK6TBoRYujp2QP2pUEC6PgE2ky6xJ0vB81KjQ4y0iinJBjjNCRIiPOnrdQMfI0qulxbtmiWUM1dPsgsDu8c7wHSI1I30vljlF5Nzt8wc6XetMFh1iLXei8lFA2qFeV3kV5WC1+rRqxPIKVuPQ3sznzNaZ41ZzU38dpq5a3snPyHqIvpAfe/jLnbH1kIRG8mnwiGJHEFlxOejwdNn/dwwGqv1umVKJs72GveK4SXa0Yy3rg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747472206; bh=HE/hVltzmwKVBw6XQ/7tQP3ilwSVUMslv4zwu6xMzmA=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=C5nUerQkcb+lkChAA0XLJmSEMZ4GWRtbi1WJ/XVVxmlSPN+WeSGdYEDdbUzKPP+5PuDYYc+XDBPbqTPqLW0V3Xwmp9l5j585nYgDLhg6r9IUy8RkHKoNhicQeGcSZHopjn0CXje9Ga3rapb9TE2vY4lIfN/rr8gfNxbCUHXMdBDxYNKiiRuR6tn6CHAl+aCS46OGkmTiIqBAx/Y5WknXt/HI9W7/eSd0/mhxspMj1RrmGjcuH6ixWvJWaemp9iuM9COE5VOmClMdyS6BoyDw9W2Wep47VQVwI2PxkEqpR48RT2zGDcIdQt/fOuDmIfZcP39qjvjOlntpHoF+1glMIA==
-X-YMail-OSG: XtFXwUcVM1k3U2bTwnUVTJkrW_3PdsNpB6lE3hOfeR0SnP2VOqu6G_PoYgU0UXZ
- jm4jbg4WXZpmUpHMnrBOSglm4RjGFp6GUqBZiEcWTUExeQlRaK6.TxGsx1DuN4tJ5W4n_Bn8u3ah
- ZaTvD1v3F_UUZs9SatYZj4nMAkxqhR8Zg5xYdI50eMCNUvMQnOfXVxGNpg6ZkNDhmHG5nrBi6oTl
- .if.V3pU28RUGbCJl.OAoeyVwWA9zspoiMBJ8hDSYahIhiaCgKf0XWjFHIQmovsAyz3rpe80YPVc
- tFL1UWg9Ab92SLX63IgLqF5YxgnbeUbPhpXEmAC0MZRSlj9Kz1gLRBql2SzdrrsaYRjvR0b3h77A
- 8Y1PKT2e.HyYOaGvLdI_YwzFpmvWU4BtGj93CXEirGi4mLf.v0dBhUUWIROMWIC7VMe2Bf8vZiKr
- .DcuaciHpbLwWc5vBw3CVuhwEuaVRoBeYEJ2sDk1cg_xn7ihjA3qXOXCmZfOnDAwJIir6PAvrABA
- ZwecgS5plzwaZkwXfXR8gpbj33u1kH8F_iThpet_JMDZ.GH3rn4cbhN2ryUN8pqXETIKeG2anOPO
- SEj9fa3ikl9IL8BDSOG53LAV981s2m7f91zIm3jlwcQCCpa97UjQ5w6HctWPzm3B8ui8ReYdMek0
- 9Vjf27IxH7EiLSvDoP_n9ADQ1.oVSTCz5pVFmvBSHEG5LU1Htf7l7dyDW.EbsY5WIlS_Am4CqP1W
- GS5AkwUh7M1Ag5NeS.CV2V34G1pjMuiIomRJOSIiCvvjtjlrhru.U5iV8G2mZYY35WranwdXFDSV
- x1_APHcJAArdpbyoOCPao4_OJytEKwvhtOEGgCzVhBaWKdFQvG7hiyiL2qJbCm9iF9y8obCSKMOq
- ErYpRyCUcCyn5SVlaePYBbBAmT1k.nZlJQ2r2rDBvj8HB5ZzdjDEMARfwjaLN_rvnfK1myJva45R
- nt6h2LdPksYfS8Z3uxeGuY7QwbxOdHYqfKMT4t6udiEm0lirssutPYuHm0fzxOBpVZ0Ds0e6n0oM
- YFnXdkeAZA0Kqf.XpBrWwvf9Ad89bMeySQ2PBHvwhvhtzqFit7TIuj5CtISHlwTApG1e.bniR7R3
- 1Jh9ueDP10mYYURlQxkUiNhoFXMyt5IiVpdkVNrUNG2qAT8Od9iYmUBKrhQZMN92R2GSsQQ1EPND
- ykVqQt5Xd8lSNONQd_J64kvo3sBWf5DQmZ8LtJ1ogNe8jej1R3JVfSr3AfC2L1kWPRG93iZz_os7
- 4wtUCKdvmB5xSr4Ofk1_BXCVumVrX71BumfGWEY0AOQZnl2gQ2lzLbJozORUbqAKVeMnIXFSbtwd
- awtbsLaE4GTGKoqpay.JPKQbdIE5tzUMTBTjtotg0WItrQk_2ca7jFWi1pPEjq.TDCp5csD1xSN2
- paQ4vnfVv2tD2qYLJDdTY384QRtEg4IL5k0UG7xey41mSi62HY8nmMMgb1ON_srGXzNWzPfi0oPi
- pMMOwsK5B97NxyRqrPYbZcPK46XeP7bi3hMxct3cazXwNSLBRq.ivrmHTCvudJFFNv00GgbIRz6f
- PV8lsFRr5tGmcKgTDQT.j9UPomwLxEzNURiMDmqK7IjVgMjgydsDYYv0fM2xBeOP3Ox2PnNsjiBN
- Z08Ieg9yb2lqnRC3quGPA_xPdcI26TBDT1_l7GHZ5Uv1JfzPl5qw8g4oedCuAL9kVJuZE06SLPly
- w852JgeedzDaHx0in_WWrLM8.txWp3mGcj9dBF97OfWGG_MRYsNTjIeFsbsVqHMxm_TZKNr95UFG
- zU1cTBcaYtT.c.zLGpaet5cp9quJPSql5bWNGGJ_swMVza2CWaliD5bU5ZVd1U8raEJK0Psr5Ke8
- CHK7zKTFgo9MD.hcqL_6BjmO3fLplVZK7u9LOLFe7v_cDec7Qz.3Cu3lqmjdL27QO.hvTZC2VF_Y
- Rh9GPDJBUCerkNF9gApWDeuntEgog..pZ6.aH7nVQC0CW6yTbJXnixKVZZ_c9.UydjDTQ21ApQ8P
- _qn3NXgmABoh65GpqXmnWn32inM3s5zXozlzpaqDnUhyOSrSKKXlygPy5vEcRJn0a5JaLUNGZs3V
- .bSyiTcm4HYW79.O7.NME1P9eyWF7ccw42Slv4g9Q7dZy_01.kQ0bB.uDzP9u5iBYZ4NjoSCrCaf
- CATtGg_nKcffNYHSa_sg7VMyoWT5lIquEaFsEnBfKh6QBkU0rmDLUPbSah2aKYL8W1D7EUyjUI2D
- 5JTFbVLg-
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: cea3403a-0bc8-4ce3-9e17-7af250094bb7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.sg3.yahoo.com with HTTP; Sat, 17 May 2025 08:56:46 +0000
-Received: by hermes--production-gq1-74d64bb7d7-k2g2q (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a7db3f94345a434ae8c2469c6376a7ff;
-          Sat, 17 May 2025 08:26:20 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: skhan@linuxfoundation.org,
-	jdelvare@suse.com,
-	wsa+renesas@sang-engineering.com
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: i2c: Fix "resitors" to "resistors"
-Date: Sat, 17 May 2025 01:25:27 -0700
-Message-ID: <20250517082555.1249609-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nn7xlfo4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747472244; x=1779008244;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wa0AvHkjwezpx8OoGdRvdZZ/3qzIMnEuZXauHsK4oX0=;
+  b=Nn7xlfo4ZL30Ea86IyBt0QecfKxdYugRjz6AAfB/Rht0vqU5KhS/VMWj
+   pime1g+OQwTwhms7PhW+opbWeqjDKCO2PQEk6pBoAnyQBdz1I01uqbFH8
+   wX5jELjgHT9ehAnKQH65Xf+Sop691njlZit8CNCPyYrj9rwluSR1DcIWw
+   BRcagdl4+i7W5RhMqxuyAZDZ2mrUyM54PDijaa2kUjnWnyaogQpJpwCTK
+   dE81bf0CL1RA8YTwcmGmeQRTV1whxnBeL4Uld5HayrcB6iZYQJdijaPxZ
+   a+O8eBZ7CDm813w7QS6UcggHt36+cgku9L41vWIS/2NLx4dbJ51wUxPeS
+   Q==;
+X-CSE-ConnectionGUID: bvRsMmL5Q4euNexl1CJTfg==
+X-CSE-MsgGUID: tATxBdf0ReuQLKqa/FkXkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49140360"
+X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
+   d="scan'208";a="49140360"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 01:57:24 -0700
+X-CSE-ConnectionGUID: DF6Ut8pDRF2sGI12i8T6mg==
+X-CSE-MsgGUID: rEEAtEDYSWeWOVKmwVFEyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
+   d="scan'208";a="142896842"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 17 May 2025 01:57:20 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGDM6-000K2J-0n;
+	Sat, 17 May 2025 08:57:18 +0000
+Date: Sat, 17 May 2025 16:56:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lukas Zapolskas <lukas.zapolskas@arm.com>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	=?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>,
+	Lukas Zapolskas <lukas.zapolskas@arm.com>
+Subject: Re: [PATCH v4 5/7] drm/panthor: Implement the counter sampler and
+ sample handling
+Message-ID: <202505171601.i0qhMG1O-lkp@intel.com>
+References: <7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250517082555.1249609-1-sumanth.gavini.ref@yahoo.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas@arm.com>
 
-Fix misspelling reported by codespell
+Hi Lukas,
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- Documentation/i2c/busses/i2c-parport.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/Documentation/i2c/busses/i2c-parport.rst b/Documentation/i2c/busses/i2c-parport.rst
-index a9b4e8133700..4cbf45952d52 100644
---- a/Documentation/i2c/busses/i2c-parport.rst
-+++ b/Documentation/i2c/busses/i2c-parport.rst
-@@ -84,7 +84,7 @@ Remarks:
-                    \|
- 
-    must be 74HC05, they must be open collector output.
-- - All resitors are 10k.
-+ - All resistors are 10k.
-  - Pins 18-25 of the parallel port connected to GND.
-  - Pins 4-9 (D2-D7) could be used as VDD is the driver drives them high.
-    The ADM1032 evaluation board uses D4-D7. Beware that the amount of
+[auto build test ERROR on 96c85e428ebaeacd2c640eba075479ab92072ccd]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Lukas-Zapolskas/drm-panthor-Add-performance-counter-uAPI/20250517-000257
+base:   96c85e428ebaeacd2c640eba075479ab92072ccd
+patch link:    https://lore.kernel.org/r/7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas%40arm.com
+patch subject: [PATCH v4 5/7] drm/panthor: Implement the counter sampler and sample handling
+config: i386-buildonly-randconfig-002-20250517 (https://download.01.org/0day-ci/archive/20250517/202505171601.i0qhMG1O-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250517/202505171601.i0qhMG1O-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505171601.i0qhMG1O-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpu/drm/panthor/panthor_perf.c:381:8: error: redefinition of 'panthor_perf_counter_block'
+     381 | struct panthor_perf_counter_block {
+         |        ^
+   drivers/gpu/drm/panthor/panthor_perf.c:126:8: note: previous definition is here
+     126 | struct panthor_perf_counter_block {
+         |        ^
+>> drivers/gpu/drm/panthor/panthor_perf.c:651:15: error: redefinition of 'session_get_user_sample_size'
+     651 | static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
+         |               ^
+   drivers/gpu/drm/panthor/panthor_perf.c:391:15: note: previous definition is here
+     391 | static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
+         |               ^
+>> drivers/gpu/drm/panthor/panthor_perf.c:1038:19: error: incompatible pointer types passing '__u64 (*)[2]' (aka 'unsigned long long (*)[2]') to parameter of type 'u64 *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+    1038 |                 bitmap_to_arr64(&blk->header.enable_mask, blk_em, PANTHOR_PERF_EM_BITS);
+         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitmap.h:313:27: note: passing argument to parameter 'buf' here
+     313 | void bitmap_to_arr64(u64 *buf, const unsigned long *bitmap, unsigned int nbits);
+         |                           ^
+   3 errors generated.
+
+
+vim +/session_get_user_sample_size +651 drivers/gpu/drm/panthor/panthor_perf.c
+
+   650	
+ > 651	static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
+   652	{
+   653		const size_t block_size = get_annotated_block_size(info->counters_per_block);
+   654		const size_t block_nr = info->cshw_blocks + info->fw_blocks +
+   655			info->tiler_blocks + info->memsys_blocks + info->shader_blocks;
+   656	
+   657		return sizeof(struct drm_panthor_perf_sample_header) + (block_size * block_nr);
+   658	}
+   659	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
