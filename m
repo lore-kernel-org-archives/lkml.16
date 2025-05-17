@@ -1,101 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22924199931
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 04:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C3378F2B
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 04:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747457106; cv=none; b=nmiw50ocpKy+jVpp66LLxqjlDN6fUf60IWYW7vqW6ZVQeZQrogOA2xO2n9t/hbYNNPF2PkVbyEOOAI2w7ojXVO+9vMJ4OwkNX9c1hPqaIjNeYYnfxBU4vxZnqYXaiFi1oFYOYlgAQGVdPL60VD/1wK4SwVkNJPgPgRV87KsUAJs=
+	t=1747457124; cv=none; b=DpqluBi55V65e4AfCFAmHX90+SiSVfUVONr0JB8k25JxG+oeA/mBh/4YM+sHF1C7FTbgPl+jBJUBC7nPk7r4ua/kzxRyve/oRBQo3+ZhAWYqqbjoyDh1hERSq0wS3yJA4pVrtByMy21vdSD8tXl7F/M4SXMtbzpE2W3IttAOU6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747457106; c=relaxed/simple;
-	bh=AADRiBeV8B1tsvKaeQz7lDiCK5eB0B24qYkhqNMn9YM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lkvL97jQvTAA6pRXzfIgEG+wTzIJfJ/7uBBlVvEvkiLQqZkKK2+Htfrnid0jsauYuQvQOCwybibDT8mb4k8l0bdxxQdFJ/R5zHNLe2T3kQJl+jf/VtSxz3F6UM3Ld5Y1/rzNhxR8AFj+01dcJHv/4YpyYMCF9kX8bZsCmxcHkx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2kWttQA; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747457124; c=relaxed/simple;
+	bh=h3ZYJmqY7lKWKGqXThCZRIoL+dx9Q1Lr8144Hu2uPO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tOXejPXH2G7zgWfORas4wwhEq4wsDuWm1caopwT3lgqDmSx3InPxqnogHogPiYujDUti/SoAcJ1AyHrs39sqNWZSPP1ro+QrAd9fMlrzaKm3+eg/Z6558BYJtyhiFrLsoTMnUr9JbZIMy9BPJA7Dmsk4zKXanwlJEtGXVcMjOWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I0m8xkr8; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2kWttQA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747457105; x=1778993105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AADRiBeV8B1tsvKaeQz7lDiCK5eB0B24qYkhqNMn9YM=;
-  b=C2kWttQAKRDAwFldacfyfZTsG7KmLVZH+wQUuAozLdT/uQ5Nkyg1eBc2
-   cTRQ6xMG5Nn8wtGKP7eATTIrBDar6Qg5RSj00+ziNhvOzj3OOBb4EsV8v
-   t6AQzNV/f6IzCoJiA8IlNYQ9VeEIFvfwLthPk+uV/iE0o3NmxPyx2QIyE
-   7LAK6L1By/G8oBzKMvxZuYxQ0g/kBWC6vh+7EAdIgAdS6/EWF4ZrKnDEC
-   uqW7Tkp5xKgVPP4inIayqu7/VrGE/P4b6KX0deCSAoieg7D3E3kEj+qpL
-   cC5JkN8ZM/A/SSkiTtDBnTZM4VqgvZLgXTUiMQtz8Z4bcCDqr0Q0HTR5l
-   Q==;
-X-CSE-ConnectionGUID: DTRBrLYPTO60ou4c0no9pQ==
-X-CSE-MsgGUID: bEDtJWcsStmC8BTaD/iIMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53252054"
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="53252054"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 21:45:05 -0700
-X-CSE-ConnectionGUID: HoseE2wkTZqhXxcZoPndWg==
-X-CSE-MsgGUID: eK+ddwPNR1uBIK4XHHLe5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="139401647"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 16 May 2025 21:45:03 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uG9Pw-000Jw3-1V;
-	Sat, 17 May 2025 04:45:00 +0000
-Date: Sat, 17 May 2025 12:44:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wenjie Xu <xuwenjie04@baidu.com>, muchun.song@linux.dev,
-	osalvador@suse.de, akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Wenjie Xu <xuwenjie04@baidu.com>,
-	Li RongQing <lirongqing@baidu.com>
-Subject: Re: [PATCH] hugetlb: two-phase hugepage allocation when reservation
- is high
-Message-ID: <202505171227.2rpT5Nx7-lkp@intel.com>
-References: <20250516113552.17648-1-xuwenjie04@baidu.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I0m8xkr8"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231f6c0b692so77995ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747457122; x=1748061922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h3ZYJmqY7lKWKGqXThCZRIoL+dx9Q1Lr8144Hu2uPO8=;
+        b=I0m8xkr8BaGUtWjcJ/gEKmim/6kEPktM1/4FBoQzHIEctVrFUWxMIQ3pBSC8RFo1UL
+         klPYYu6m2QzhPiQ0uFtXYK/GXayDoTsnAtxxnMSNEXRqYQuf1xlTZ8xW84BT1+VLw4Sp
+         1lRnVgSq1VSYKWXDFNPftO84fkwRigUf1bM7I7W/s2sWL9VGH/hOXx57KTkeWgIqwMyg
+         hxbB+B3YKrKfqh05/MG694BgcVpxZ+7SOkroumc69O2zoFoaJuAjYK41XVRDBrJs63wz
+         ocOQOXycRiVRYIWXrWTVBnHZLgOC72QpItzwQtIQlEFNC/lSdakJZX82zo2+w+0eLg+L
+         wJXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747457122; x=1748061922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h3ZYJmqY7lKWKGqXThCZRIoL+dx9Q1Lr8144Hu2uPO8=;
+        b=VYSYEA+hzLhrd5SPYxeNx7Yrz8oIQ272DXUPhMN2Z/4URUR3iyQ7VKzMaryn01R5YM
+         VYOvju3slb7vO4KZUW0zQKTa5yRW5R6aFAHjlKKwOMTdcLcLs5n0QB6vehPaWE4tBbvD
+         Os+Vh946tsIJ3klbqoVe5UqUQBL39STAdGIwbZN9Oq2cV3dUDRdqY7y5SvfrV69z+CCe
+         8pYRdWrCisMAYeO+yZv3uEkzy2sa8R6Ylbbb0j3qG3ditNvEC4TtO5i2j5RfhicX03lm
+         E5p879mBEsLRpWHJTGMt5eKPa0Vql/mM82pSc3uP8ehXKt9y84/KOBZfGzuiqf7sJqXl
+         zfwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2W2CX7GZGMR1zu0AsyVlHC1l53/wGRSs4g42ghwFve5CLIWNt+2SfnV15dL51MjRM6U6vvBoEKkocEuc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLfds2ApuPz1kx09Zyk8EVbYBp+vV37jGzqIQOBLjIkk8rP7OB
+	2HkrND5IdSmZWNfao48Au+B1y2/9f/SVwRyr3AXaq4qQEctgiQgi5IdgYCEfv6idpO/d4hzNsMc
+	+je35JSU49KhCy/gzNNJPkZFRyeIjGLeWnOgFNf7d
+X-Gm-Gg: ASbGncs+BPC+jpJ868wiu9XmKgf5eFzf0cxuHSaN3daz4jA26V7GR9dnFJUBAx5YdqU
+	UidGeyeDHh77bb5oBCF2Dit4HvfacDnnc+I17wbUYMDzJnlnq1vNbmNBk+SIqKGY6yMydgB0D0/
+	gNA4RqKCnDlMWnU+VlOH3sn3t39rzXnCliRA==
+X-Google-Smtp-Source: AGHT+IG47ua4RGzCDfg+w8Ijsg7WnHcjk7tEFoY1lo4vF9JcyfIeu5XX3tD1NT4GKXYgDzl0jsiNot54rheb+4oDP38=
+X-Received: by 2002:a17:902:ce92:b0:216:6ecd:8950 with SMTP id
+ d9443c01a7336-23204154576mr756045ad.19.1747457121758; Fri, 16 May 2025
+ 21:45:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516113552.17648-1-xuwenjie04@baidu.com>
+References: <20250516225441.527020-1-stfomichev@gmail.com>
+In-Reply-To: <20250516225441.527020-1-stfomichev@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 16 May 2025 21:45:08 -0700
+X-Gm-Features: AX0GCFvpwNq82-Ipf2wTz6WnI0rg_QpT_IhTLHQNdP619TT0EiLrBt8Ze8gGkDk
+Message-ID: <CAHS8izNJQFGFjVr42VVh2zHJ+PxfUYCupEdHka2dd0no_b=GHA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: devmem: drop iterator type check
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, sagi@grimberg.me, 
+	willemb@google.com, asml.silence@gmail.com, kaiyuanz@google.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Wenjie,
+On Fri, May 16, 2025 at 3:54=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
+l.com> wrote:
+>
+> sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
+> iovs becomes ITER_IOVEC. Instead of adjusting the check to include
+> ITER_UBUF, drop the check completely. The callers are guaranteed
+> to happen from system call side and we don't need to pay runtime
+> cost to verify it.
+>
+> Fixes: bd61848900bf ("net: devmem: Implement TX path")
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.15-rc6 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Wenjie-Xu/hugetlb-two-phase-hugepage-allocation-when-reservation-is-high/20250516-193732
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250516113552.17648-1-xuwenjie04%40baidu.com
-patch subject: [PATCH] hugetlb: two-phase hugepage allocation when reservation is high
-config: i386-buildonly-randconfig-006-20250517 (https://download.01.org/0day-ci/archive/20250517/202505171227.2rpT5Nx7-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250517/202505171227.2rpT5Nx7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505171227.2rpT5Nx7-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: mm/hugetlb.o: in function `hugetlb_hstate_alloc_pages.constprop.0':
->> hugetlb.c:(.init.text+0xac2): undefined reference to `__udivdi3'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Looks good to me, but can we please bundle this with the fix for
+ITER_UBUF, and if possible get some test coverage in ncdevmem?
