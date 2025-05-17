@@ -1,169 +1,104 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC271F4C94
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 16:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6001D514F;
+	Sat, 17 May 2025 16:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747500729; cv=none; b=G6hzyTgW87j1kdOz5GoVpmqQ25jWVLvE//0/paqlrbtUgOPkT5eYsERDARVME/P7ROK6Eu1toI8/Uq7uw5phpt2eGWf2726NGwficJ2uHPWJzj+3TGmOIHJjSl5fBmSe7Xvb3pKbe/O+aMGNEUSe4bfSZqJP9ta+4RSwvSiKtVQ=
+	t=1747501070; cv=none; b=u6ny8G8xKR2WHWBj/OMEVA0yKaQjjmWgBc5Atdh3yZFLW8Zjyot+ePM4EcqhN2kvPLMs6OPcIBVcfWZS0WvD55R0SvRd0tFVXfDBQS8537fktqIt2KLoJ95Ily4L3VLti2zgZrzOJ1fS9kPr2XS8st14duawMEHy0miWnwljNWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747500729; c=relaxed/simple;
-	bh=TCnHPzLAJoq7+r1SP80wKWuXMtxp764nlUrrLaRFfgM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=rd7+FuUAuQL/ewAk3D0wh8KthnqL/ZjSImc9obgUiCfkfSCtYaP1UDAj4lWdhgCavDyP9H9WKz4aGryegTBNqfUNlR6m5iNiYk1aGA7UoW5H+A/bGdIhKLBNyMA9DE/AHpiYsShiAKJ8NdqYcwdHESI6SOQZoL78m51W1GmTjNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=FwFLaC+M reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747501070; c=relaxed/simple;
+	bh=ygzNzs7UaCvsP0sFN3SdSeG6G3cRl9r+gxrWvNu9d0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=deWKE2H6L97QhXvS5hlBxDpiUbo7h4RfbyggJdaLK15e3ZmNpFMrTY8KO98N/nPJTmMfzCCf9lCPsEGQGwAloVlnYmR7i4ROkH4aeodWU1/aP1Zxwyo7gs3Qg1v5qRJa4WYnQrbo8kb+iMqmNe6RUz28l/VuEg+nrhIWDXScoLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OYWedsLY; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="FwFLaC+M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=lZEsvvYlxt8qCLlu8JvMc03Z8s2k97MJ0BCj37fEVxA=; b=F
-	wFLaC+MqTlX/Q7lygFGKMCnvKX4mjcf5+yWxPjO6kzsD3CR9onxiburxgY18pFIJ
-	WJ4PwfwX23/pWMt+0DODk7JHbnv0C4r4FfJ42jk7EhIxnbwNV0FQQo9CR7UXRzcq
-	KeluE7uy7qhBSL5vduTxURDJcjduL+HLpsUahDAzCY=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-128 (Coremail) ; Sun, 18 May 2025 00:51:35 +0800
- (CST)
-Date: Sun, 18 May 2025 00:51:35 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: kent.overstreet@linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: BUG: unable to handle page fault for address
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
-References: <20250516131246.6244-1-00107082@163.com>
- <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
- <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
- <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com>
- <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
-X-NTES-SC: AL_Qu2fBfmbv04i4yicYOkXn0oTju85XMCzuv8j3YJeN500liTP6wcAeHJZP2Tb/sWrGx6gvRW5TCJ/9vl3VLFqcrIZXHaIwod1JKN8y9MDPXHu
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OYWedsLY"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54HGvDhh935399
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Sat, 17 May 2025 09:57:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54HGvDhh935399
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747501039;
+	bh=mKRkOm6YCP44COro/tUSTMPHIOXwpBJTdxPBtiGGv34=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OYWedsLYqMQmUpWqc2lx996Ra0psIm3b5PKqU86NwNH25aNWyIThMqo2+aNRuDOug
+	 B1CY58kCLHBpWGBl0T1HxmhtWReeJMNs8rsPm9o1GG8t67JuTKpzymKrmieoahJOdS
+	 TOqO3IMnQj/CrXNe879Sjb1ZilZ2/j9XWTakmjs3koC7vrgSeL/nPPgUkb6zuBW+E2
+	 bSVwKohXIIesXQ58FjFp9XJnUD25RKDb3oAyZD2kHGEN27x07cSde3P9HrdTNVUlKv
+	 gLCdquuKYcnBd0aCK3drY1Cst2OvRwLvdn/z9ZSeVsC564kEFulFyZbIaENPQ9nP+A
+	 k0KUjSx4wKMfA==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
+        dan.carpenter@linaro.org, rafael@kernel.org, lenb@kernel.org
+Subject: [PATCH v1A 2/3] x86/xen/msr: Fix uninitialized symbol 'err'
+Date: Sat, 17 May 2025 09:57:12 -0700
+Message-ID: <20250517165713.935384-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <ae1d05f6-cd65-4ca4-87c5-af0ae34e21ce@suse.com>
+References: <ae1d05f6-cd65-4ca4-87c5-af0ae34e21ce@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <233aab47.38f2.196df28812a.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:gCgvCgD3v_KYvihoQugGAA--.45485W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqA5QqmgoQ9C8gAAMs-
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-CkF0IDIwMjUtMDUtMTggMDA6Mzk6MzAsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
-Z2xlLmNvbT4gd3JvdGU6Cj5PbiBTYXQsIE1heSAxNywgMjAyNSBhdCAxMjowMuKAr0FNIERhdmlk
-IFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pgo+Pgo+PiBBdCAyMDI1LTA1LTE3IDA4
-OjExOjI0LCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3RlOgo+
-PiA+T24gRnJpLCBNYXkgMTYsIDIwMjUgYXQgMTA6MDPigK9BTSBTdXJlbiBCYWdoZGFzYXJ5YW4g
-PHN1cmVuYkBnb29nbGUuY29tPiB3cm90ZToKPj4gPj4KPj4gPj4gSGkgRGF2aWQsCj4+ID4+Cj4+
-ID4+IE9uIEZyaSwgTWF5IDE2LCAyMDI1IGF0IDY6MTPigK9BTSBEYXZpZCBXYW5nIDwwMDEwNzA4
-MkAxNjMuY29tPiB3cm90ZToKPj4gPj4gPgo+PiA+PiA+IEhpLAo+PiA+PiA+Cj4+ID4+ID4gSSBj
-YXVnaHQgYSBwYWdlIGZhdWx0IHdoZW4gSSB3YXMgY2hhbmdpbmcgbXkgbnZpZGlhIGRyaXZlcjoK
-Pj4gPj4gPiAoVGhpcyBoYXBwZW5zIHJhbmRvbWx5LCBJIGNhbiByZXByb2R1Y2UgaXQgd2l0aCBh
-Ym91dCAxLzMgcHJvYmFiaWxpdHkpCj4+ID4+ID4KPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0
-MSAyMDI1XSBCVUc6IHVuYWJsZSB0byBoYW5kbGUgcGFnZSBmYXVsdCBmb3IgYWRkcmVzczogZmZm
-ZjlkMjg5ODRjMzAwMAo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdICNQRjogc3Vw
-ZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQo+PiA+PiA+IFtGcmkgTWF5IDE2IDEy
-OjA1OjQxIDIwMjVdICNQRjogZXJyb3JfY29kZSgweDAwMDApIC0gbm90LXByZXNlbnQgcGFnZQo+
-PiA+PiA+IC4uLgo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIFJJUDogMDAxMDpy
-ZWxlYXNlX21vZHVsZV90YWdzKzB4MTAzLzB4MWIwCj4+ID4+ID4gLi4uCj4+ID4+ID4gW0ZyaSBN
-YXkgMTYgMTI6MDU6NDEgMjAyNV0gQ2FsbCBUcmFjZToKPj4gPj4gPiBbRnJpIE1heSAxNiAxMjow
-NTo0MSAyMDI1XSAgPFRBU0s+Cj4+ID4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gIGNv
-ZGV0YWdfdW5sb2FkX21vZHVsZSsweDEzNS8weDE2MAo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1
-OjQxIDIwMjVdICBmcmVlX21vZHVsZSsweDE5LzB4MWEwCj4+ID4+ID4gLi4uCj4+ID4+ID4gKGZ1
-bGwga2VybmVsIGxvZ3MgYXJlIHBhc3RlZCBhdCB0aGUgZW5kLikKPj4gPj4gPgo+PiA+PiA+IFVz
-aW5nIGEgaW1hZ2Ugd2l0aCBERUJVR19JTkZPLCB0aGUgY2FsbHRyYWNrIHBhcnNlcyBhczoKPj4g
-Pj4gPgo+PiA+PiA+IFJJUDogMDAxMDpyZWxlYXNlX21vZHVsZV90YWdzICguL2luY2x1ZGUvbGlu
-dXgvYWxsb2NfdGFnLmg6MTM0IGxpYi9hbGxvY190YWcuYzozNTIgbGliL2FsbG9jX3RhZy5jOjU3
-MykKPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBjb2RldGFnX3VubG9hZF9tb2R1
-bGUgKGxpYi9jb2RldGFnLmM6MzU1KQo+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVd
-IGZyZWVfbW9kdWxlIChrZXJuZWwvbW9kdWxlL21haW4uYzoxMzA1KQo+PiA+PiA+IFtGcmkgTWF5
-IDE2IDEyOjA1OjQxIDIwMjVdIF9fZG9fc3lzX2RlbGV0ZV9tb2R1bGUgKGtlcm5lbC9tb2R1bGUv
-bWFpbi5jOjc5NSkKPj4gPj4gPgo+PiA+PiA+IFRoZSBvZmZlbmRpbmcgbGluZXMgaW4gbXkgY29k
-ZWJhc2U6Cj4+ID4+ID4gICAgICAgICAxMjYgc3RhdGljIGlubGluZSBzdHJ1Y3QgYWxsb2NfdGFn
-X2NvdW50ZXJzIGFsbG9jX3RhZ19yZWFkKHN0cnVjdCBhbGxvY190YWcgKnRhZykKPj4gPj4gPiAg
-ICAgICAgIDEyNyB7Cj4+ID4+ID4gICAgICAgICAuLi4KPj4gPj4gPiAgICAgICAgIDEzMQo+PiA+
-PiA+ICAgICAgICAgMTMyICAgICAgICAgZm9yX2VhY2hfcG9zc2libGVfY3B1KGNwdSkgewo+PiA+
-PiA+ICAgICAgICAgMTMzICAgICAgICAgICAgICAgICBjb3VudGVyID0gcGVyX2NwdV9wdHIodGFn
-LT5jb3VudGVycywgY3B1KTsKPj4gPj4gPiA+Pj4+ICAgIDEzNCAgICAgICAgICAgICAgICAgdi5i
-eXRlcyArPSBjb3VudGVyLT5ieXRlczsgICA8LS0tLS0tLS0tLS0tLS1oZXJlCj4+ID4+ID4gICAg
-ICAgICAxMzUgICAgICAgICAgICAgICAgIHYuY2FsbHMgKz0gY291bnRlci0+Y2FsbHM7Cj4+ID4+
-ID4KPj4gPj4gPgo+PiA+PiA+IE52aWRpYSBkcml2ZXJzIGFyZSBvdXQtdHJlZS4uLiB0aGVyZSBj
-b3VsZCBiZSBzb21lIHN0cmFuZ2UgYmVoYXZpb3IgaW4gaXQgY2F1c2VzIHRoaXMuLiBidXQsCj4+
-ID4+ID4gd2hlbiBJIGNoZWNrIHRoZSBjb2RlLCBJIGdvdCBjb25jZXJuZWQgYWJvdXQgbGlmZWN5
-Y2xlIG9mIHRhZy0+Y291bnRlcnMuCj4+ID4+ID4gQmFzZWQgb24gZm9sbG93aW5nIGRlZmluYXRp
-b246Cj4+ID4+ID4gICAgICAgICAxMDggI2RlZmluZSBERUZJTkVfQUxMT0NfVEFHKF9hbGxvY190
-YWcpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4+ID4+ID4g
-ICAgICAgICAxMDkgICAgICAgICBzdGF0aWMgREVGSU5FX1BFUl9DUFUoc3RydWN0IGFsbG9jX3Rh
-Z19jb3VudGVycywgX2FsbG9jX3RhZ19jbnRyKTsgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTAg
-ICAgICAgICBzdGF0aWMgc3RydWN0IGFsbG9jX3RhZyBfYWxsb2NfdGFnIF9fdXNlZCBfX2FsaWdu
-ZWQoOCkgICAgICAgICAgICAgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTEgICAgICAgICBfX3Nl
-Y3Rpb24oQUxMT0NfVEFHX1NFQ1RJT05fTkFNRSkgPSB7ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBcCj4+ID4+ID4gICAgICAgICAxMTIgICAgICAgICAgICAgICAgIC5jdCA9IENP
-REVfVEFHX0lOSVQsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBc
-Cj4+ID4+ID4gICAgICAgICAxMTMgICAgICAgICAgICAgICAgIC5jb3VudGVycyA9ICZfYWxsb2Nf
-dGFnX2NudHIgfTsKPj4gPj4gPiAgICAgICAgIDExNAo+PiA+PiA+IF9hbGxvY190YWdfY250ciBp
-cyB0aGUgZGF0YSByZWZlcmVuY2VkIGJ5IHRhZy0+Y291bnRlcnMsIGJ1dCB0aGV5IGFyZSBpbiBk
-aWZmZXJlbnQgc2VjdGlvbiwKPj4gPj4gPiBhbmQgYWxsb2NfdGFnIG9ubHkgcHJlcGFyZSBzdG9y
-YWdlIGZvciBzZWN0aW9uIEFMTE9DX1RBR19TRUNUSU9OX05BTUUuCj4+ID4+ID4gcmlnaHQ/Cj4+
-ID4+ID4gVGhlbiB3aGF0IGhhcHBlbnMgdG8gdGhvc2UgIi5kYXRhLi5wZXJjcHUiIHNlY3Rpb24g
-d2hlbiBtb2R1bGUgaXMgdW5sb2FkZWQ/Cj4+ID4+ID4gSXMgaXQgc2FmZSB0byBrZWVwIHVzaW5n
-IHRob3NlICIuZGF0YS4ucGVyY3B1IiBzZWN0aW9uIGFmdGVyIG1vZHVsZSB1bmxvYWRlZCwKPj4g
-Pj4gPiBvciBldmVuIGR1cmluZyBtb2R1bGUgaXMgdW5sb2FkaW5nPwo+PiA+Pgo+PiA+PiBZZXMs
-IEkgdGhpbmsgeW91IGFyZSByaWdodCwgZnJlZV9tb2R1bGUoKSBjYWxscyBwZXJjcHVfbW9kZnJl
-ZSgpIHdoaWNoCj4+ID4+IHdvdWxkIGZyZWUgdGhlIHBlci1jcHUgbWVtb3J5IGFsbG9jYXRlZCBm
-b3IgdGhlIG1vZHVsZS4gQmVmb3JlCj4+ID4+IDBkYjZmOGQ3ODIwYSAoImFsbG9jX3RhZzogbG9h
-ZCBtb2R1bGUgdGFncyBpbnRvIHNlcGFyYXRlIGNvbnRpZ3VvdXMKPj4gPj4gbWVtb3J5Iikgd2Ug
-d291bGQgbm90IHVubG9hZCB0aGUgbW9kdWxlIGlmIHRoZXJlIHdlcmUgdGFncyB3aGljaCB3ZXJl
-Cj4+ID4+IHN0aWxsIGluIHVzZS4gQWZ0ZXIgdGhhdCBjaGFuZ2Ugd2UgbG9hZCBtb2R1bGUgdGFn
-cyBpbnRvIHNlcGFyYXRlCj4+ID4+IG1lbW9yeSwgc28gSSBleHBlY3RlZCB0aGlzIHRvIHdvcmsg
-YnV0IGR1ZSB0byB0aGlzIGV4dGVybmFsIHJlZmVyZW5jZQo+PiA+PiBpdCBpbmRlZWQgc2hvdWxk
-IGxlYWQgdG8gVUFGLgo+PiA+PiBJIHRoaW5rIHRoZSBzaW1wbGVzdCB3YXkgdG8gZml4IHRoaXMg
-d291bGQgYmUgdG8gYnlwYXNzCj4+ID4+IHBlcmNwdV9tb2RmcmVlKCkgaW5zaWRlIGZyZWVfbW9k
-dWxlKCkgd2hlbiB0aGVyZSBhcmUgbW9kdWxlIHRhZ3Mgc3RpbGwKPj4gPj4gcmVmZXJlbmNlZCwg
-c3RvcmUgbW9kLT5wZXJjcHUgaW5zaWRlIGFsbG9jX3RhZ19tb2R1bGVfc2VjdGlvbiBhbmQgZnJl
-ZQo+PiA+PiBpdCBpbnNpZGUgY2xlYW5fdW51c2VkX21vZHVsZV9hcmVhc19sb2NrZWQoKSBvbmNl
-IHdlIGtub3cgdGhlIGNvdW50ZXJzCj4+ID4+IGFyZSBub3QgdXNlZCBhbnltb3JlLiBJJ2xsIHRh
-a2UgYSBzdGFiIGF0IGl0IGFuZCB3aWxsIHNlbmQgYSBwYXRjaCBmb3IKPj4gPj4gdGVzdGluZyB0
-b2RheS4KPj4gPgo+PiA+T2ssIEkgd2VudCB3aXRoIGFub3RoZXIgaW1wbGVtZW50YXRpb24sIGlu
-c3RlYWQgZHluYW1pY2FsbHkgYWxsb2NhdGluZwo+PiA+cGVyY3B1IG1lbW9yeSBmb3IgbW9kdWxl
-cyBhdCB0aGUgbW9kdWxlIGxvYWQgdGltZS4gVGhpcyBoYXMgYW5vdGhlcgo+PiA+YWR2YW50YWdl
-IG9mIG5vdCBuZWVkaW5nIGV4dHJhIFBFUkNQVV9NT0RVTEVfUkVTRVJWRSBjdXJyZW50bHkKPj4g
-PnJlcXVpcmVkIGZvciBtZW1vcnkgYWxsb2NhdGlvbiB0YWdnaW5nIHRvIHdvcmsuCj4+ID5EYXZp
-ZCwgdGhlIHBhdGNoIGlzIHBvc3RlZCBhdCBbMV0uIFBsZWFzZSBnaXZlIGl0IGEgdHJ5IGFuZCBs
-ZXQgbWUKPj4gPmtub3cgaWYgdGhlIGZpeCB3b3JrcyBmb3IgeW91Lgo+PiA+VGhhbmtzLAo+PiA+
-U3VyZW4uCj4+ID4KPj4gPlsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNTA1MTcw
-MDA3MzkuNTkzMC0xLXN1cmVuYkBnb29nbGUuY29tLwo+PiA+Cj4+ID4KPj4gPj4gVGhhbmtzLAo+
-PiA+PiBTdXJlbi4KPj4gPj4KPj4KPj4gSGksIHRoZSBwYXRjaCBkb2VzIGZpeCBteSBpc3N1ZS4K
-Pj4gSSBub3cgaGF2ZSBhbm90aGVyIHNpbWlsYXIgY29uY2VybiBhYm91dCBtb2R1bGVzIFJPIGRh
-dGEsCj4+IFRoZSBjb2RldGFnIGRlZmluZWQgYXMKPj4gIDI0IHN0cnVjdCBjb2RldGFnIHsKPj4g
-IDI1ICAgICAgICAgdW5zaWduZWQgaW50IGZsYWdzOyAvKiB1c2VkIGluIGxhdGVyIHBhdGNoZXMg
-Ki8KPj4gIDI2ICAgICAgICAgdW5zaWduZWQgaW50IGxpbmVubzsKPj4gIDI3ICAgICAgICAgY29u
-c3QgY2hhciAqbW9kbmFtZTsKPj4gIDI4ICAgICAgICAgY29uc3QgY2hhciAqZnVuY3Rpb247Cj4+
-ICAyOSAgICAgICAgIGNvbnN0IGNoYXIgKmZpbGVuYW1lOwo+PiAgMzAgfSBfX2FsaWduZWQoOCk7
-Cj4+Cj4+IFRob3NlIG1vZG5hbWUvZnVuY3Rpb24vZmlsZW5hbWUgd291bGQgcmVmZXIgdG8gUk8g
-ZGF0YSBzZWN0aW9uLCByaWdodD8KPj4gV2hlbiBtb2R1bGUgdW5sb2FkZWQsIGl0cyBSTyBkYXRh
-IHNlY3Rpb24gd291bGQgYmUgcmVsZWFzZWQgYXQgc29tZSBwb2ludC4KPj4gTXkgcXVlc3Rpb24g
-aXMgaXMgaXQgc2FmZSB0byB1c2UgUk8gZGF0YSBkdXJpbmcgbW9kdWxlIHVubG9hZD8gYmVjYXVz
-ZSB0aGVzZQo+PiBsaW5lcyBzZWVtcyB0byBhY2Nlc3MgdGhvc2UgZGF0YToKPj4KPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcHJfaW5mbygiJXM6JXUgbW9kdWxlICVzIGZ1bmM6JXMgaGFzICVs
-bHUgYWxsb2NhdGVkIGF0IG1vZHVsZSB1bmxvYWRcbiIsCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgdGFnLT5jdC5maWxlbmFtZSwgdGFnLT5jdC5saW5lbm8sIHRhZy0+Y3QubW9k
-bmFtZSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWctPmN0LmZ1bmN0aW9u
-LCBjb3VudGVyLmJ5dGVzKTsKPgo+VGhlc2UgbGluZXMgYXJlIGNhbGxlZCBmcm9tIHJlbGVhc2Vf
-bW9kdWxlX3RhZ3MoKSB1c2luZyB0aGlzIGNhbGwgY2hhaW46Cj4KPmRlbGV0ZV9tb2R1bGUoKQo+
-ICBmcmVlX21vZHVsZSgpCj4gICAgY29kZXRhZ191bmxvYWRfbW9kdWxlKCkKPiAgICAgIHJlbGVh
-c2VfbW9kdWxlX3RhZ3MoKQo+Cj5hbmQgY29kZXRhZ191bmxvYWRfbW9kdWxlKCkgaXMgY2FsbGVk
-IGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBvZgo+ZnJlZV9tb2R1bGUoKSwgd2hlbiBubyBvdGhlciBt
-b2R1bGUgbWVtb3J5IGhhcyBiZWVuIGZyZWVkIHlldC4gU28sCj5mcm9tIHdoYXQgSSB1bmRlcnN0
-YW5kLCB0aGlzIHNob3VsZCBiZSBzYWZlLgo+QWZ0ZXIgd2UgdW5sb2FkIHRoZSBtb2R1bGUgdGhl
-c2UgcG9pbnRlcnMgaW5zaWRlIHRoZSB0YWdzIHdpbGwgYmUKPmRhbmRsaW5nIGJ1dCB3ZSBzaG91
-bGQgbm90IGJlIHVzaW5nIHRoZW0gYW55bW9yZSBzaW5jZSB3ZSBkbyBub3QKPnJlcG9ydCB1bmxv
-YWRlZCBtb2R1bGVzLiBEbyB5b3Ugc2VlIHNvbWUgdXNhZ2UgdGhhdCBJIG1pc3NlZD8KCldoeSBk
-YXRhLi5wZXJjcHUuIGlzIGRpZmZlcmVudC4gVGhlIHBhZ2UgZmF1bHQgZXJyb3IgY2F1Z2h0IHdo
-ZW4gSSByZWluc3RhbGwgbnZpZGlhIGRyaXZlcnMgaXMgYWxzbwpyYWlzZWQgZnJvbSByZWxlYXNl
-X21vZHVsZV90YWdzKCkuCgpJcyBkYXRhLi5wZXJjcHUuIHNlY3Rpb24gcmVsZWFzZWQgZWFybGll
-cj8gCgpUaGFua3MKRGF2aWQKCgo=
+xen_read_msr_safe() currently passes an uninitialized argument err to
+xen_do_read_msr().  But as xen_do_read_msr() may not set the argument,
+xen_read_msr_safe() could return err with an unpredictable value.
+
+To ensure correctness, initialize err to 0 (representing success)
+in xen_read_msr_safe().
+
+Do the same in xen_read_msr(), even err is not used after being passed
+to xen_do_read_msr().
+
+Fixes: d815da84fdd0 ("x86/msr: Change the function type of native_read_msr_safe()"
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/xen-devel/aBxNI_Q0-MhtBSZG@stanley.mountain/
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+
+Change in v1A:
+*) Drop setting err to 0 in xen_do_read_msr() initially and set err to
+   0 in all callers (Jürgen Groß).
+---
+ arch/x86/xen/enlighten_pv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 7f9ded1bc707..26bbaf4b7330 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1162,7 +1162,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
+ 
+ static int xen_read_msr_safe(u32 msr, u64 *val)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	*val = xen_do_read_msr(msr, &err);
+ 	return err;
+@@ -1179,7 +1179,7 @@ static int xen_write_msr_safe(u32 msr, u64 val)
+ 
+ static u64 xen_read_msr(u32 msr)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	return xen_do_read_msr(msr, xen_msr_safe ? &err : NULL);
+ }
+-- 
+2.49.0
+
