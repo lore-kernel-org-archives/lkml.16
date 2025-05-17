@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAA72046B3;
-	Sat, 17 May 2025 10:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D21E1EBFE0;
+	Sat, 17 May 2025 10:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476186; cv=none; b=HcDAzTLHrCxvxfqef/oiEJPd7xSl92nRZnUHMsd5SxHLct7mW+jAI7ntSORnqEce8HxbNvmYRmI5dkUaqenFGjjradLOSOKvQZJAlnR/yZ/ib/VSTE12GFRq5r3UjxQH/TgCCwJJI+0MGnWUjjlPWzWSk+tHghASRRta0GM+7eE=
+	t=1747476185; cv=none; b=KmgrNQnj5gougfEJpqMCKpdRNbOA+yvDWU2YWfcOhLlhu53SLmQG/9Vhh81gCCZGlGcDJPnjKvRXbTcyFzmav8Ulf4qtBMPiuY3HB1s6d/n5B5ddNx8ehXQkGmbkhm2JBYyGJ7cksBFICL23nVaxG2KHo2AZ0VV6qchmb0ItJJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476186; c=relaxed/simple;
-	bh=rGhqyCzEzZax5EfSeEIBuaMGsLguTzGW8pF2+mepZQw=;
+	s=arc-20240116; t=1747476185; c=relaxed/simple;
+	bh=1LmAh78B5dLScJILXSD97EUTEtmoDzhOjs6z/46Vgy8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mKGLr0txWNUF7KAsEiBdKY5M8ft3Wy7ntb3U4z731NBqMKAlWh9jxoFhMEh1Ar0zOjNYYC9bUKpkxinpsurPNOQd45OYEO2PzcerWIHcmFALZqI4bYHnMIIdla43UZ0pOUnQYRsLzVzSN1sJiycVJFBXgeWyWT/Bq7Ayrhhl4sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gRqpAOyr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HYotn/QS; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=E0NfCDi5bnPEVqTbe8bJM59xLPQgmrG97mKhGhCd9oL2BzCPZUegcQufJRLhmh4HTT0qqj29PgamjZv0dbJHPVhnvC4NtZNqo4JNL7AjGR0/An3tZ/3vfIlul0eRXM3MBCLYgDMH7KGKNjfuznxO2LXj5MLET2zU0AarQfa1xrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Eixgz7+F; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uqcOjxal; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gRqpAOyr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HYotn/QS"
-Date: Sat, 17 May 2025 10:03:01 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Eixgz7+F";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uqcOjxal"
+Date: Sat, 17 May 2025 10:03:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1747476182;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hDk9rgXrdvRMiJsYj2iDRB29Y4A+pbOWmYLjA5nSTLQ=;
-	b=gRqpAOyrz0zn5EOnTvPnF9OBB9mi9iJIDHgZ8k0QSOqD8Xk3i+0K8ICeHf4oJW+K7TvrXa
-	AT5e7Qs333OFWcJD0xN+BP6G43+MAYCAFOvw9r9GfCBmjjbCdX+ZmWk7TTHLP8XfjIPPsa
-	UbGchbEqD1wfZcQmeKgZ4TXxiWHy4P6vBSQReIdSKXMwFMdQEhw5cS5eyDNEK40nqApLXF
-	41UFZPLOKoq2XDenlDrRUmpA53HAdJowTn1kOv3OZhrPl2mHLoih4UfEnHSsMpTH4kcmXJ
-	+m79+A0RYO5w1Az4sAez0hlLUO/ILpi7ziJoZM9zat/dH5BDU5kprcNZTmQ8XA==
+	bh=TMvU3pWGtA7jFKzkvUfmgiiwhZrXtbiJVaxO386WDi8=;
+	b=Eixgz7+FU/Qyys85u+GAJp0W8Su7bJyoAgjUyD3ILCpG+4cu7MuYfYkk14zhKDftzQnqCe
+	lLdDh9TRtdsB51RcCXTAqaOSp0ixI5Gp5gkvwcX0S5+pChBIZfF6WyTmsHov3X1yfxqx0h
+	vhVWSEVkGEWfghbHwzMVMGzlCNMLCiARedBoFhgl1q9Ohuc3+eOUWh0Q/US6xcpqoMvR3t
+	7PqsD7C5aZ6OqwYb1B+agG4OfUiJJz4sLhGzQEcezXspYTracJ1d3r6JpNOZRgnJfTwOjz
+	2lPtHOuIkyqPCWMOhPsjzT2lVG5OQzYIiNXEOVSpw/0RDMx/QPbQt54U4TjvqQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1747476182;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,15 +38,14 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hDk9rgXrdvRMiJsYj2iDRB29Y4A+pbOWmYLjA5nSTLQ=;
-	b=HYotn/QSbI4VkXx/XfuDqCT3rQP7PNuO38B+jctLRKJwM0KQ2NhejTUuuJWDFL1oJIJVWI
-	6ND+p7VBzWKAlOCw==
+	bh=TMvU3pWGtA7jFKzkvUfmgiiwhZrXtbiJVaxO386WDi8=;
+	b=uqcOjxalLY9JlqM75KmQeXk9JEcPj450oS7PCotiIWAAkI0/wDyIJIbQurIIluPInu+BZB
+	jeVXaTHbGS9l5DAQ==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Resctrl_exit() teardown resctrl but
- leave the mount point
+Subject: [tip: x86/cache] x86/resctrl: Drop __init/__exit on assorted symbols
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
  Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
@@ -55,15 +54,15 @@ Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Amit Singh Tomar <amitsinght@marvell.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>, Babu Moger <babu.moger@amd.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250515165855.31452-9-james.morse@arm.com>
-References: <20250515165855.31452-9-james.morse@arm.com>
+In-Reply-To: <20250515165855.31452-10-james.morse@arm.com>
+References: <20250515165855.31452-10-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174747618179.406.8045132395317904616.tip-bot2@tip-bot2>
+Message-ID: <174747618096.406.10252267034014472358.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,36 +72,31 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     8c992e24a0627a6ba508184c07766862c8bb3e54
-Gitweb:        https://git.kernel.org/tip/8c992e24a0627a6ba508184c07766862c8bb3e54
+Commit-ID:     bc740420d7ae7878696d5ad9f3dbcb11e2599b2e
+Gitweb:        https://git.kernel.org/tip/bc740420d7ae7878696d5ad9f3dbcb11e2599b2e
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Thu, 15 May 2025 16:58:38 
+AuthorDate:    Thu, 15 May 2025 16:58:39 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 15 May 2025 21:04:49 +02:00
+CommitterDate: Thu, 15 May 2025 21:06:02 +02:00
 
-x86/resctrl: Resctrl_exit() teardown resctrl but leave the mount point
+x86/resctrl: Drop __init/__exit on assorted symbols
 
-resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
-resctrl can't be built as a module, and the kernfs helpers are not exported so
-this is unlikely to change. MPAM has an error interrupt which indicates the
-MPAM driver has gone haywire. Should this occur tasks could run with the wrong
-control values, leading to bad performance for important tasks.  In this
-scenario the MPAM driver will reset the hardware, but it needs a way to tell
-resctrl that no further configuration should be attempted.
+Because ARM's MPAM controls are probed using MMIO, resctrl can't be
+initialised until enough CPUs are online to have determined the system-wide
+supported num_closid. Arm64 also supports 'late onlined secondaries', where
+only a subset of CPUs are online during boot.
 
-In particular, moving tasks between control or monitor groups does not
-interact with the architecture code, so there is no opportunity for the arch
-code to indicate that the hardware is no-longer functioning.
+These two combine to mean the MPAM driver may not be able to initialise
+resctrl until user-space has brought 'enough' CPUs online.
 
-Using resctrl_exit() for this leaves the system in a funny state as resctrl is
-still mounted, but cannot be un-mounted because the sysfs directory that is
-typically used has been removed. Dave Martin suggests this may cause systemd
-trouble in the future as not all filesystems can be unmounted.
+To allow MPAM to initialise resctrl after __init text has been free'd, remove
+all the __init markings from resctrl.
 
-Add calls to remove all the files and directories in resctrl, and remove the
-sysfs_remove_mount_point() call that leaves the system in a funny state. When
-triggered, this causes all the resctrl files to disappear. resctrl can be
-unmounted, but not mounted again.
+The existing __exit markings cause these functions to be removed by the linker
+as it has never been possible to build resctrl as a module. MPAM has an error
+interrupt which causes the driver to reset and disable itself. Remove the
+__exit markings to allow the MPAM driver to tear down resctrl when an error
+occurs.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
@@ -118,103 +112,139 @@ Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/20250515165855.31452-9-james.morse@arm.com
+Link: https://lore.kernel.org/20250515165855.31452-10-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 48 ++++++++++++++++++++-----
- 1 file changed, 40 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     | 6 +++---
+ arch/x86/kernel/cpu/resctrl/internal.h | 4 ++--
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 2 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 8 ++++----
+ include/linux/resctrl.h                | 6 +++---
+ 5 files changed, 13 insertions(+), 13 deletions(-)
 
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index cf29681..31538c6 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -737,7 +737,7 @@ struct rdt_options {
+ 	bool	force_off, force_on;
+ };
+ 
+-static struct rdt_options rdt_options[]  __initdata = {
++static struct rdt_options rdt_options[]  __ro_after_init = {
+ 	RDT_OPT(RDT_FLAG_CMT,	    "cmt",	X86_FEATURE_CQM_OCCUP_LLC),
+ 	RDT_OPT(RDT_FLAG_MBM_TOTAL, "mbmtotal", X86_FEATURE_CQM_MBM_TOTAL),
+ 	RDT_OPT(RDT_FLAG_MBM_LOCAL, "mbmlocal", X86_FEATURE_CQM_MBM_LOCAL),
+@@ -777,7 +777,7 @@ static int __init set_rdt_options(char *str)
+ }
+ __setup("rdt", set_rdt_options);
+ 
+-bool __init rdt_cpu_has(int flag)
++bool rdt_cpu_has(int flag)
+ {
+ 	bool ret = boot_cpu_has(flag);
+ 	struct rdt_options *o;
+@@ -797,7 +797,7 @@ bool __init rdt_cpu_has(int flag)
+ 	return ret;
+ }
+ 
+-__init bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt)
++bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt)
+ {
+ 	if (!rdt_cpu_has(X86_FEATURE_BMEC))
+ 		return false;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 25b61e4..576383a 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -472,13 +472,13 @@ int alloc_rmid(u32 closid);
+ void free_rmid(u32 closid, u32 rmid);
+ int rdt_get_mon_l3_config(struct rdt_resource *r);
+ void resctrl_mon_resource_exit(void);
+-bool __init rdt_cpu_has(int flag);
++bool rdt_cpu_has(int flag);
+ void mon_event_count(void *info);
+ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
+ 		    struct rdt_mon_domain *d, struct rdtgroup *rdtgrp,
+ 		    cpumask_t *cpumask, int evtid, int first);
+-int __init resctrl_mon_resource_init(void);
++int resctrl_mon_resource_init(void);
+ void mbm_setup_overflow_handler(struct rdt_mon_domain *dom,
+ 				unsigned long delay_ms,
+ 				int exclude_cpu);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index a93ed7d..73e3fe4 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -1204,7 +1204,7 @@ static __init int snc_get_config(void)
+  *
+  * Returns 0 for success, or -ENOMEM.
+  */
+-int __init resctrl_mon_resource_init(void)
++int resctrl_mon_resource_init(void)
+ {
+ 	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 	int ret;
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 29f76ad..1e48c61 100644
+index 1e48c61..cfd846c 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3078,6 +3078,22 @@ static void rmdir_all_sub(void)
- 	kernfs_remove(kn_mondata);
- }
- 
-+static void resctrl_fs_teardown(void)
-+{
-+	lockdep_assert_held(&rdtgroup_mutex);
-+
-+	/* Cleared by rdtgroup_destroy_root() */
-+	if (!rdtgroup_default.kn)
-+		return;
-+
-+	rmdir_all_sub();
-+	rdt_pseudo_lock_release();
-+	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
-+	closid_exit();
-+	schemata_list_destroy();
-+	rdtgroup_destroy_root();
-+}
-+
- static void rdt_kill_sb(struct super_block *sb)
- {
- 	struct rdt_resource *r;
-@@ -3091,12 +3107,7 @@ static void rdt_kill_sb(struct super_block *sb)
- 	for_each_alloc_capable_rdt_resource(r)
- 		resctrl_arch_reset_all_ctrls(r);
- 
--	rmdir_all_sub();
--	rdt_pseudo_lock_release();
--	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
--	closid_exit();
--	schemata_list_destroy();
--	rdtgroup_destroy_root();
-+	resctrl_fs_teardown();
- 	if (resctrl_arch_alloc_capable())
- 		resctrl_arch_disable_alloc();
- 	if (resctrl_arch_mon_capable())
-@@ -4127,6 +4138,8 @@ static int rdtgroup_setup_root(struct rdt_fs_context *ctx)
- 
- static void rdtgroup_destroy_root(void)
- {
-+	lockdep_assert_held(&rdtgroup_mutex);
-+
- 	kernfs_destroy_root(rdt_root);
+@@ -4144,7 +4144,7 @@ static void rdtgroup_destroy_root(void)
  	rdtgroup_default.kn = NULL;
  }
-@@ -4441,23 +4454,42 @@ static bool __exit resctrl_online_domains_exist(void)
- 	return false;
+ 
+-static void __init rdtgroup_setup_default(void)
++static void rdtgroup_setup_default(void)
+ {
+ 	mutex_lock(&rdtgroup_mutex);
+ 
+@@ -4376,7 +4376,7 @@ out_unlock:
+  *
+  * Return: 0 on success or -errno
+  */
+-int __init resctrl_init(void)
++int resctrl_init(void)
+ {
+ 	int ret = 0;
+ 
+@@ -4433,7 +4433,7 @@ cleanup_mountpoint:
+ 	return ret;
  }
  
--/*
-+/**
-  * resctrl_exit() - Remove the resctrl filesystem and free resources.
-  *
-+ * Called by the architecture code in response to a fatal error.
-+ * Removes resctrl files and structures from kernfs to prevent further
-+ * configuration.
-+ *
-  * When called by the architecture code, all CPUs and resctrl domains must be
-  * offline. This ensures the limbo and overflow handlers are not scheduled to
-  * run, meaning the data structures they access can be freed by
-  * resctrl_mon_resource_exit().
-+ *
-+ * After resctrl_exit() returns, the architecture code should return an
-+ * error from all resctrl_arch_ functions that can do this.
-+ * resctrl_arch_get_resource() must continue to return struct rdt_resources
-+ * with the correct rid field to ensure the filesystem can be unmounted.
+-static bool __exit resctrl_online_domains_exist(void)
++static bool resctrl_online_domains_exist(void)
+ {
+ 	struct rdt_resource *r;
+ 
+@@ -4471,7 +4471,7 @@ static bool __exit resctrl_online_domains_exist(void)
+  * resctrl_arch_get_resource() must continue to return struct rdt_resources
+  * with the correct rid field to ensure the filesystem can be unmounted.
   */
- void __exit resctrl_exit(void)
+-void __exit resctrl_exit(void)
++void resctrl_exit(void)
  {
  	cpus_read_lock();
  	WARN_ON_ONCE(resctrl_online_domains_exist());
-+
-+	mutex_lock(&rdtgroup_mutex);
-+	resctrl_fs_teardown();
-+	mutex_unlock(&rdtgroup_mutex);
-+
- 	cpus_read_unlock();
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 880351c..b8f8240 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -358,7 +358,7 @@ u32 resctrl_arch_get_num_closid(struct rdt_resource *r);
+ u32 resctrl_arch_system_num_rmid_idx(void);
+ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
  
- 	debugfs_remove_recursive(debugfs_resctrl);
-+	debugfs_resctrl = NULL;
- 	unregister_filesystem(&rdt_fs_type);
--	sysfs_remove_mount_point(fs_kobj, "resctrl");
-+
-+	/*
-+	 * Do not remove the sysfs mount point added by resctrl_init() so that
-+	 * it can be used to umount resctrl.
-+	 */
+-__init bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
++bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
  
- 	resctrl_mon_resource_exit();
- }
+ /**
+  * resctrl_arch_mon_event_config_write() - Write the config for an event.
+@@ -514,7 +514,7 @@ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
+ extern unsigned int resctrl_rmid_realloc_threshold;
+ extern unsigned int resctrl_rmid_realloc_limit;
+ 
+-int __init resctrl_init(void);
+-void __exit resctrl_exit(void);
++int resctrl_init(void);
++void resctrl_exit(void);
+ 
+ #endif /* _RESCTRL_H */
