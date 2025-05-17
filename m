@@ -1,145 +1,94 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2400A23CB
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 07:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA1415689A;
+	Sat, 17 May 2025 07:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747465384; cv=none; b=a0eXbykBzEBanSNdI2Z01sLquJtkzr4DRP7ahD+hjj4RTDRM3bRZpSV8cC7JyIcueDe0ToigTAO9iSKwrzKuqgGfz/JzgcmjNa3/7mcyfQNyIt2q5cy+pNEQyP5arodgwhT18iXHgEvvESGmCaSF8j1IZ2vAiIRlIyIXQvOiRu4=
+	t=1747465747; cv=none; b=hbVe62ATUtLrWne5zjE+TOJGq2jlt2OFGum+SRXqPKuF/haW1xod4SS+b3j+wJjfhtPwICM6EbLIAld0cg+gL0vAJpLjs8cgaYNg8LNNrKXod/DD74EXRSv+G1VhNsQf7JzJbtLuyDY74eJkciQGhx9FsJJYi0wL1s56f70REBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747465384; c=relaxed/simple;
-	bh=SJzI7izH1z6lxEz2/NygxiMGITY1rRqZKHEjYM+VnlU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=iZeYLYUm0syhn5OBYDOQXFXIKK0lLYofIjf7HWVKxapYAHFpK+79LigwSUxeDD3xLW6LSuxNjyT23g9c+Dv/ZgPp8Ev52aLglt1FHXxe7K0kkkbEs4eC52otTeVSINj5AmtN2e/rVUTkznRBYoapeN8JqfVa6qWhZV/PCcl8Fck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=EPxHPM2C reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747465747; c=relaxed/simple;
+	bh=cixUaHmJPeAy0w9OJHTf4T/FfmSyq6GN6NLOKZFyEYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NupMC+HUk9H+JCfKv8054106BcYoJIBeeR8N4xnoQuD0n1Mw3C+RTvwrTvKmmpoCWToNshwQsGRq3krCfKPwvk8lT7HrOVQypyiAA1fW6vaXnyZ+qFZ5KcyYWzXMch7jfBpnl2GNG1gL54f9Wcjg1dAGTWDaXzFlKQXsEg2tjn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCpjNeHj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EPxHPM2C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=I8U/mffRcZWtlYGRlufStJZoOfp1xEdW1IkgAqtddSE=; b=E
-	PxHPM2CqHynNi21CueopTeZ65mqs74N1kcZL/zKe/tHCSQh5JjmYMgckOa+QAsbN
-	IXNAecKnKaGx8oIM5FfTNOR+W2oSMdBfa+8Vxrg4lGejT7u+xwpfxH2Ki02bF6Gn
-	SzjeE1LqyPjwhME9CMa7M1uGxYg89/Xe9s62ZnORbw=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-132 (Coremail) ; Sat, 17 May 2025 15:02:39 +0800
- (CST)
-Date: Sat, 17 May 2025 15:02:39 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: kent.overstreet@linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: BUG: unable to handle page fault for address
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
-References: <20250516131246.6244-1-00107082@163.com>
- <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
- <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
-X-NTES-SC: AL_Qu2fBfiduksu7ySeYOkXn0oTju85XMCzuv8j3YJeN500myXOyCcrZ25pOXjQ0fmCBT2moQmRaBdNxdxXW7lgcrm+nNvNNUjXpkBMyMuKL0uA
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCpjNeHj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31039C4CEE3;
+	Sat, 17 May 2025 07:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747465746;
+	bh=cixUaHmJPeAy0w9OJHTf4T/FfmSyq6GN6NLOKZFyEYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RCpjNeHjO2aKbvNdlwWIy+3GB269SRrIM91wDAVVoWbIzU5fNUKIXrJEFLqgi+YQv
+	 PmYrcITCBsy2mdA5klrKoRPKglBsNb6442h098hTn68JWYzlJ1dq2TTXJDI1nJmr08
+	 1SDY2Y9brnIco5DVNmZMYrrhv/byUSNTbgeoEHQUzgpHO83KHHiZW67Zyg9OLusK4I
+	 qfmqVVc9cdnETNBWx5YWVZXKAo3/onw4w8oJAUzO8mp7wHUa01W1zu8xz6LK2El4FL
+	 HgalOj094PLloazT1UwSY52MfpXvx3KtXrEy2Bxpy34Qiaaw8JaZ6sKQtob0on+QKF
+	 BbcjxXsW4Ae2w==
+Date: Sat, 17 May 2025 09:09:01 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when
+ irqs_disabled()
+Message-ID: <aCg2DSYp0nakwX3l@gmail.com>
+References: <20250516231858.27899-1-ebiggers@kernel.org>
+ <20250516231858.27899-4-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hCgvCgD3P2OQNChoecwGAA--.62100W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBpQqmgoMT0ItgAFs-
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516231858.27899-4-ebiggers@kernel.org>
 
-CkF0IDIwMjUtMDUtMTcgMDg6MTE6MjQsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
-Z2xlLmNvbT4gd3JvdGU6Cj5PbiBGcmksIE1heSAxNiwgMjAyNSBhdCAxMDowM+KAr0FNIFN1cmVu
-IEJhZ2hkYXNhcnlhbiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3RlOgo+Pgo+PiBIaSBEYXZpZCwK
-Pj4KPj4gT24gRnJpLCBNYXkgMTYsIDIwMjUgYXQgNjoxM+KAr0FNIERhdmlkIFdhbmcgPDAwMTA3
-MDgyQDE2My5jb20+IHdyb3RlOgo+PiA+Cj4+ID4gSGksCj4+ID4KPj4gPiBJIGNhdWdodCBhIHBh
-Z2UgZmF1bHQgd2hlbiBJIHdhcyBjaGFuZ2luZyBteSBudmlkaWEgZHJpdmVyOgo+PiA+IChUaGlz
-IGhhcHBlbnMgcmFuZG9tbHksIEkgY2FuIHJlcHJvZHVjZSBpdCB3aXRoIGFib3V0IDEvMyBwcm9i
-YWJpbGl0eSkKPj4gPgo+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIEJVRzogdW5hYmxl
-IHRvIGhhbmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOiBmZmZmOWQyODk4NGMzMDAwCj4+ID4g
-W0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNzIGlu
-IGtlcm5lbCBtb2RlCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gI1BGOiBlcnJvcl9j
-b2RlKDB4MDAwMCkgLSBub3QtcHJlc2VudCBwYWdlCj4+ID4gLi4uCj4+ID4gW0ZyaSBNYXkgMTYg
-MTI6MDU6NDEgMjAyNV0gUklQOiAwMDEwOnJlbGVhc2VfbW9kdWxlX3RhZ3MrMHgxMDMvMHgxYjAK
-Pj4gPiAuLi4KPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBDYWxsIFRyYWNlOgo+PiA+
-IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdICA8VEFTSz4KPj4gPiBbRnJpIE1heSAxNiAxMjow
-NTo0MSAyMDI1XSAgY29kZXRhZ191bmxvYWRfbW9kdWxlKzB4MTM1LzB4MTYwCj4+ID4gW0ZyaSBN
-YXkgMTYgMTI6MDU6NDEgMjAyNV0gIGZyZWVfbW9kdWxlKzB4MTkvMHgxYTAKPj4gPiAuLi4KPj4g
-PiAoZnVsbCBrZXJuZWwgbG9ncyBhcmUgcGFzdGVkIGF0IHRoZSBlbmQuKQo+PiA+Cj4+ID4gVXNp
-bmcgYSBpbWFnZSB3aXRoIERFQlVHX0lORk8sIHRoZSBjYWxsdHJhY2sgcGFyc2VzIGFzOgo+PiA+
-Cj4+ID4gUklQOiAwMDEwOnJlbGVhc2VfbW9kdWxlX3RhZ3MgKC4vaW5jbHVkZS9saW51eC9hbGxv
-Y190YWcuaDoxMzQgbGliL2FsbG9jX3RhZy5jOjM1MiBsaWIvYWxsb2NfdGFnLmM6NTczKQo+PiA+
-IFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVdIGNvZGV0YWdfdW5sb2FkX21vZHVsZSAobGliL2Nv
-ZGV0YWcuYzozNTUpCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gZnJlZV9tb2R1bGUg
-KGtlcm5lbC9tb2R1bGUvbWFpbi5jOjEzMDUpCj4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAy
-NV0gX19kb19zeXNfZGVsZXRlX21vZHVsZSAoa2VybmVsL21vZHVsZS9tYWluLmM6Nzk1KQo+PiA+
-Cj4+ID4gVGhlIG9mZmVuZGluZyBsaW5lcyBpbiBteSBjb2RlYmFzZToKPj4gPiAgICAgICAgIDEy
-NiBzdGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWdfY291bnRlcnMgYWxsb2NfdGFnX3JlYWQo
-c3RydWN0IGFsbG9jX3RhZyAqdGFnKQo+PiA+ICAgICAgICAgMTI3IHsKPj4gPiAgICAgICAgIC4u
-Lgo+PiA+ICAgICAgICAgMTMxCj4+ID4gICAgICAgICAxMzIgICAgICAgICBmb3JfZWFjaF9wb3Nz
-aWJsZV9jcHUoY3B1KSB7Cj4+ID4gICAgICAgICAxMzMgICAgICAgICAgICAgICAgIGNvdW50ZXIg
-PSBwZXJfY3B1X3B0cih0YWctPmNvdW50ZXJzLCBjcHUpOwo+PiA+ID4+Pj4gICAgMTM0ICAgICAg
-ICAgICAgICAgICB2LmJ5dGVzICs9IGNvdW50ZXItPmJ5dGVzOyAgIDwtLS0tLS0tLS0tLS0tLWhl
-cmUKPj4gPiAgICAgICAgIDEzNSAgICAgICAgICAgICAgICAgdi5jYWxscyArPSBjb3VudGVyLT5j
-YWxsczsKPj4gPgo+PiA+Cj4+ID4gTnZpZGlhIGRyaXZlcnMgYXJlIG91dC10cmVlLi4uIHRoZXJl
-IGNvdWxkIGJlIHNvbWUgc3RyYW5nZSBiZWhhdmlvciBpbiBpdCBjYXVzZXMgdGhpcy4uIGJ1dCwK
-Pj4gPiB3aGVuIEkgY2hlY2sgdGhlIGNvZGUsIEkgZ290IGNvbmNlcm5lZCBhYm91dCBsaWZlY3lj
-bGUgb2YgdGFnLT5jb3VudGVycy4KPj4gPiBCYXNlZCBvbiBmb2xsb3dpbmcgZGVmaW5hdGlvbjoK
-Pj4gPiAgICAgICAgIDEwOCAjZGVmaW5lIERFRklORV9BTExPQ19UQUcoX2FsbG9jX3RhZykgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gPiAgICAgICAgIDEw
-OSAgICAgICAgIHN0YXRpYyBERUZJTkVfUEVSX0NQVShzdHJ1Y3QgYWxsb2NfdGFnX2NvdW50ZXJz
-LCBfYWxsb2NfdGFnX2NudHIpOyAgICAgIFwKPj4gPiAgICAgICAgIDExMCAgICAgICAgIHN0YXRp
-YyBzdHJ1Y3QgYWxsb2NfdGFnIF9hbGxvY190YWcgX191c2VkIF9fYWxpZ25lZCg4KSAgICAgICAg
-ICAgICAgICAgIFwKPj4gPiAgICAgICAgIDExMSAgICAgICAgIF9fc2VjdGlvbihBTExPQ19UQUdf
-U0VDVElPTl9OQU1FKSA9IHsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4g
-PiAgICAgICAgIDExMiAgICAgICAgICAgICAgICAgLmN0ID0gQ09ERV9UQUdfSU5JVCwgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gPiAgICAgICAgIDExMyAg
-ICAgICAgICAgICAgICAgLmNvdW50ZXJzID0gJl9hbGxvY190YWdfY250ciB9Owo+PiA+ICAgICAg
-ICAgMTE0Cj4+ID4gX2FsbG9jX3RhZ19jbnRyIGlzIHRoZSBkYXRhIHJlZmVyZW5jZWQgYnkgdGFn
-LT5jb3VudGVycywgYnV0IHRoZXkgYXJlIGluIGRpZmZlcmVudCBzZWN0aW9uLAo+PiA+IGFuZCBh
-bGxvY190YWcgb25seSBwcmVwYXJlIHN0b3JhZ2UgZm9yIHNlY3Rpb24gQUxMT0NfVEFHX1NFQ1RJ
-T05fTkFNRS4KPj4gPiByaWdodD8KPj4gPiBUaGVuIHdoYXQgaGFwcGVucyB0byB0aG9zZSAiLmRh
-dGEuLnBlcmNwdSIgc2VjdGlvbiB3aGVuIG1vZHVsZSBpcyB1bmxvYWRlZD8KPj4gPiBJcyBpdCBz
-YWZlIHRvIGtlZXAgdXNpbmcgdGhvc2UgIi5kYXRhLi5wZXJjcHUiIHNlY3Rpb24gYWZ0ZXIgbW9k
-dWxlIHVubG9hZGVkLAo+PiA+IG9yIGV2ZW4gZHVyaW5nIG1vZHVsZSBpcyB1bmxvYWRpbmc/Cj4+
-Cj4+IFllcywgSSB0aGluayB5b3UgYXJlIHJpZ2h0LCBmcmVlX21vZHVsZSgpIGNhbGxzIHBlcmNw
-dV9tb2RmcmVlKCkgd2hpY2gKPj4gd291bGQgZnJlZSB0aGUgcGVyLWNwdSBtZW1vcnkgYWxsb2Nh
-dGVkIGZvciB0aGUgbW9kdWxlLiBCZWZvcmUKPj4gMGRiNmY4ZDc4MjBhICgiYWxsb2NfdGFnOiBs
-b2FkIG1vZHVsZSB0YWdzIGludG8gc2VwYXJhdGUgY29udGlndW91cwo+PiBtZW1vcnkiKSB3ZSB3
-b3VsZCBub3QgdW5sb2FkIHRoZSBtb2R1bGUgaWYgdGhlcmUgd2VyZSB0YWdzIHdoaWNoIHdlcmUK
-Pj4gc3RpbGwgaW4gdXNlLiBBZnRlciB0aGF0IGNoYW5nZSB3ZSBsb2FkIG1vZHVsZSB0YWdzIGlu
-dG8gc2VwYXJhdGUKPj4gbWVtb3J5LCBzbyBJIGV4cGVjdGVkIHRoaXMgdG8gd29yayBidXQgZHVl
-IHRvIHRoaXMgZXh0ZXJuYWwgcmVmZXJlbmNlCj4+IGl0IGluZGVlZCBzaG91bGQgbGVhZCB0byBV
-QUYuCj4+IEkgdGhpbmsgdGhlIHNpbXBsZXN0IHdheSB0byBmaXggdGhpcyB3b3VsZCBiZSB0byBi
-eXBhc3MKPj4gcGVyY3B1X21vZGZyZWUoKSBpbnNpZGUgZnJlZV9tb2R1bGUoKSB3aGVuIHRoZXJl
-IGFyZSBtb2R1bGUgdGFncyBzdGlsbAo+PiByZWZlcmVuY2VkLCBzdG9yZSBtb2QtPnBlcmNwdSBp
-bnNpZGUgYWxsb2NfdGFnX21vZHVsZV9zZWN0aW9uIGFuZCBmcmVlCj4+IGl0IGluc2lkZSBjbGVh
-bl91bnVzZWRfbW9kdWxlX2FyZWFzX2xvY2tlZCgpIG9uY2Ugd2Uga25vdyB0aGUgY291bnRlcnMK
-Pj4gYXJlIG5vdCB1c2VkIGFueW1vcmUuIEknbGwgdGFrZSBhIHN0YWIgYXQgaXQgYW5kIHdpbGwg
-c2VuZCBhIHBhdGNoIGZvcgo+PiB0ZXN0aW5nIHRvZGF5Lgo+Cj5PaywgSSB3ZW50IHdpdGggYW5v
-dGhlciBpbXBsZW1lbnRhdGlvbiwgaW5zdGVhZCBkeW5hbWljYWxseSBhbGxvY2F0aW5nCj5wZXJj
-cHUgbWVtb3J5IGZvciBtb2R1bGVzIGF0IHRoZSBtb2R1bGUgbG9hZCB0aW1lLiBUaGlzIGhhcyBh
-bm90aGVyCj5hZHZhbnRhZ2Ugb2Ygbm90IG5lZWRpbmcgZXh0cmEgUEVSQ1BVX01PRFVMRV9SRVNF
-UlZFIGN1cnJlbnRseQo+cmVxdWlyZWQgZm9yIG1lbW9yeSBhbGxvY2F0aW9uIHRhZ2dpbmcgdG8g
-d29yay4KPkRhdmlkLCB0aGUgcGF0Y2ggaXMgcG9zdGVkIGF0IFsxXS4gUGxlYXNlIGdpdmUgaXQg
-YSB0cnkgYW5kIGxldCBtZQo+a25vdyBpZiB0aGUgZml4IHdvcmtzIGZvciB5b3UuCj5UaGFua3Ms
-Cj5TdXJlbi4KPgo+WzFdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDUxNzAwMDcz
-OS41OTMwLTEtc3VyZW5iQGdvb2dsZS5jb20vCj4KPgo+PiBUaGFua3MsCj4+IFN1cmVuLgo+PgoK
-SGksIHRoZSBwYXRjaCBkb2VzIGZpeCBteSBpc3N1ZS4KSSBub3cgaGF2ZSBhbm90aGVyIHNpbWls
-YXIgY29uY2VybiBhYm91dCBtb2R1bGVzIFJPIGRhdGEsIApUaGUgY29kZXRhZyBkZWZpbmVkIGFz
-CiAyNCBzdHJ1Y3QgY29kZXRhZyB7CiAyNSAgICAgICAgIHVuc2lnbmVkIGludCBmbGFnczsgLyog
-dXNlZCBpbiBsYXRlciBwYXRjaGVzICovCiAyNiAgICAgICAgIHVuc2lnbmVkIGludCBsaW5lbm87
-CiAyNyAgICAgICAgIGNvbnN0IGNoYXIgKm1vZG5hbWU7CiAyOCAgICAgICAgIGNvbnN0IGNoYXIg
-KmZ1bmN0aW9uOwogMjkgICAgICAgICBjb25zdCBjaGFyICpmaWxlbmFtZTsKIDMwIH0gX19hbGln
-bmVkKDgpOwoKVGhvc2UgbW9kbmFtZS9mdW5jdGlvbi9maWxlbmFtZSB3b3VsZCByZWZlciB0byBS
-TyBkYXRhIHNlY3Rpb24sIHJpZ2h0PwpXaGVuIG1vZHVsZSB1bmxvYWRlZCwgaXRzIFJPIGRhdGEg
-c2VjdGlvbiB3b3VsZCBiZSByZWxlYXNlZCBhdCBzb21lIHBvaW50LgpNeSBxdWVzdGlvbiBpcyBp
-cyBpdCBzYWZlIHRvIHVzZSBSTyBkYXRhIGR1cmluZyBtb2R1bGUgdW5sb2FkPyBiZWNhdXNlIHRo
-ZXNlCmxpbmVzIHNlZW1zIHRvIGFjY2VzcyB0aG9zZSBkYXRhOgoKKwkJCXByX2luZm8oIiVzOiV1
-IG1vZHVsZSAlcyBmdW5jOiVzIGhhcyAlbGx1IGFsbG9jYXRlZCBhdCBtb2R1bGUgdW5sb2FkXG4i
-LAorCQkJCXRhZy0+Y3QuZmlsZW5hbWUsIHRhZy0+Y3QubGluZW5vLCB0YWctPmN0Lm1vZG5hbWUs
-CisJCQkJdGFnLT5jdC5mdW5jdGlvbiwgY291bnRlci5ieXRlcyk7CgoKClRoYW5rcwpEYXZpZAoK
-Cg==
+
+* Eric Biggers <ebiggers@kernel.org> wrote:
+
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Make irq_fpu_usable() return false when irqs_disabled().  That makes the
+> irqs_disabled() checks in kernel_fpu_begin_mask() and kernel_fpu_end()
+> unnecessary, so also remove those.
+> 
+> Rationale:
+> 
+> - There's no known use case for kernel-mode FPU when irqs_disabled().
+
+Except EFI?
+
+>   arm64 and riscv already disallow kernel-mode FPU when irqs_disabled().
+>   __save_processor_state() previously did expect kernel_fpu_begin() and
+>   kernel_fpu_end() to work when irqs_disabled(), but this was a
+>   different use case and not actual kernel-mode FPU use.
+> 
+> - This is more efficient, since one call to irqs_disabled() replaces two
+>   irqs_disabled() and one in_hardirq().
+
+This is noise compared to the overhead of saving/restoring vector CPU 
+context ...
+
+> - This fixes irq_fpu_usable() to correctly return false during CPU
+>   initialization.  Incorrectly returning true caused the SHA-256 library
+>   code, which is called when loading AMD microcode, to take a
+>   SIMD-optimized code path too early, causing a crash.  By correctly
+>   returning false from irq_fpu_usable(), the generic SHA-256 code
+>   correctly gets used instead.  (Note: SIMD-optimized SHA-256 doesn't
+>   get enabled until subsys_initcall, but CPU hotplug can happen later.)
+
+Alternatively we could set in_kernel_fpu during CPU bootstrap, and 
+clear it once we know the FPU is usable? This is only a relatively 
+short early boot period, with no scheduling, right?
+
+Thanks,
+
+	Ingo
