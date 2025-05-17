@@ -1,98 +1,254 @@
-Received: from sonic310-21.consmr.mail.sg3.yahoo.com (sonic310-21.consmr.mail.sg3.yahoo.com [106.10.244.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E4D146D6A
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.244.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBA227453;
+	Sat, 17 May 2025 02:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747447269; cv=none; b=GsAo6EsdNVBA15D3JIb9qqfJlsfJOHE/d259+p8pRdFuGSqM46UUQwYMdu8de2CKKP84uf9/97rBNeh09jNrtAgTyIqYbeV9eNtxwmbLsy7v3Vz8bpA81LfbMheTiPNL0ZXMEYJG6GoRYSmruIj4XBF6mj1BuOLi6tvZrte+P54=
+	t=1747447325; cv=none; b=H4RM8oM8DsxSc5o2PgH4FSVqHWRnfByZJtTDaRBQls2E4+pTvgDfCNq9FGm3B4OjVjrHZ5v9rhRDLZubKLNzbVo0Ix56gHlQdgfTeVmWrOYkK/onNA0W/pF3a1YHssTKC57s046nJr7mbhHVq1DdlduEIljlDtixjQYA/6i1G+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747447269; c=relaxed/simple;
-	bh=BCc/rW32Wnzn+wJPRrS/IrXs4Sf04HskW80DQ3/jWJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=FtvIbXVQo38UKXEEFoMfVoN0mTAQ1lDu4S0FGynculr+Kgmb3PhNsGSiCgZUcQs0uFEWJMq8McM8U2GhDOqm3IrleYHJr8cNiN+jxsE5jE90z7HlV7PEIvUICqRNr/u47Vr7/LfpVtd5EsA0rcgPxcH7HjTbU0KnAFWRnIzj3k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=PhSQsqo2; arc=none smtp.client-ip=106.10.244.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747447325; c=relaxed/simple;
+	bh=WWhZDNBDfelgXZRN6PpcDN567olv/AKOtgrJMC70tmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ufk/r/p83+zmcrFDYHWwkAELaKlTySRNQgrchvXgUrUs0ZBlk1uxI77zYGgAFN+hzjIAGvhCwDaK/7weCIH6rDl6J0kuwQazKUDo0+xm+XfT9ZAN3e8QvAYYIGkTnYt9900Fea8tDinY/vEn4R2+81OBISGiOwj8g9E3WRJsZv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9npX4HO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="PhSQsqo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747447265; bh=qo5n+gwuGJKsyCjzzOb8RdhLxii5DRJbYX6ajPgcKzc=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=PhSQsqo22VfS3C0opSGGaw9LWIH/CAQc+zUjLJulzK6l9dDs7XC/whXUor3dvAiUX97zLkFFqi1X1Z+BuokdyJZJNQyb6FqnftwvGK/P3N0OYzusNbd0qkovPvuISRJpjHrZJBugkJeuCiAHQOBrTzdDnOPhEYtfCsbQVpygDFBMQ6A+kIfr02wnq4pgp10JrWDykr91GrxNCVxMeEchyUmifXQOKtunF5fWFGYmSBAXOrCHpot6NhW0m0bK7zm8QXxoMTohVqLTWkJIn9ghUwQh0h538as+bS1J/ck+bAkhmSUbmPrsVeEkiaGNVRkX6+7ZIq1yfdQo5i6d5xsn4Q==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747447265; bh=ny8UPW8Jxw6n9CBOrH2hWxK5wclWd5xmDoaEIBzYJvj=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=lBYqBAswIneIHdY3vVLsf9ap1sFG88nOk1Tjd1FNVVQQW1Dhd2GJyMxsnosOikn1RlDgTd0iowP/ydyV0OvEzB/LG2JwPYiK8TBXE7+F+mugjfn4KD6n4bvLe6eZ2cnMjpQ6wVeZEPAOd6DGA1NDFQOnYLrSJZozDnNqm3ZLh5KZYLideBGCxOpj3fw7iBHj9B7ydWsJM2LZCxsukM/IHHsINexPvdjvDLpMQSniFRfB2t9IT7hdtSNQ4owNU1Ihhl1c7PiTIYNFD6rVZ9NDHEEkaeX6257GP4Hmi8S3mZtFOV7mC7jxubXJEGJmHFO3Xrzp0FI1vt7CmlkFFIXByg==
-X-YMail-OSG: GppRZk4VM1lcKNeSUXCBUGMgyTrnA62D.PL7wG7XQeIO16UpV2VkETDwCBcPm9v
- OWYV6pCLhGqwYh9y5HUHRWFbE_pRO3yXH84LVG0p1ZJXu4cd1M38pyJNOQ3pR0q8NGMkJIJLF_hr
- 64IxzKHYhKTq5wHUJsGMHZc.zOMHzuttjL30nYNNdStfNdtt7JySaMzB3uJBbNKNO_PMA_ZCGYPO
- lEg4IPhtRLwx4MGRp6yck._MuusQLe8wPv0fAUCvwEGipLKOXXrjWLOCqfQwpD0pj52kCPw898xb
- N4h6_lUCGfIci_4V3dCQAOE6kKduscRk3BfiKs.5XvvyCjxkFBsTfMJYOY417gztsDW2bKEXXVjI
- y3b01VtULIaBweMBZE.QJVldX1JYv8bnyLjR.Z0QvljfIfIerFgTwvgQO9NhgfYHbM9_GiE_Ltz4
- ZDF4pRxNvhTFQv5ClA3rdp71L2ZFZgJHEFCaWYe1uagZL995uyS8XsBMz2a6YWlIPuz3UlifxDE0
- Ix0GsfHh0lwSNLSoXF2IoqMApoCxIZa32VIa8k9c6Jwwfhl8kBtamFgtp0PxUyFCHTN30ZgwDTkg
- 2JEQpuFbhocGinCEpMXf9IUhoORBbw7eDu5yO32fStWPINjENUf2tjV2Cr.22Md88p35QkfTPWlB
- gsCEEnG960f1TeIgbP3tQXA.8zPqANzlkSP.wtz3HE4lcSNemQ3KRQtbX2ORZxo5zhRjvFqOMQH0
- Fy2vuEYOxwaCSQjhebxeOB2ii_m5Ws_TiSsuyNorRn4xxyQxiHXeAcwByAATAet6SN3Em8L_ezl4
- NxX7dKYzTQ870wUZZsMWI_RSuVgPb.9AUS3DxyLRzBTs0hpk75GR0HYpXj_eCnR7fW1uITk3d_wc
- gg12tWv8ngNZbfDQo4Hjx7rPdvljOxuEcwsSCHme2wXy77o_rU4gXXfZpyEnNatg7BinpWtwKsDt
- xD5wpG1WPUN9CJFD81St3SEnhnXwX.I5hfQavLbOvvWH6ZPb4kIoiNqXfQyoWIli5Q.f3QGqcAzg
- 0LibGOZgIpA.SI7Y7jF6O_0SHwXNkEsAC8tg4jz8k1GRF6CFhwWZdBiA.3d.fTQAfyOA2uwfPlpA
- AE4wE58cYdlAKDsTenfpzEJ5gF.i6UD3ZBS1tRC26nL3C0rc.5nu_C16aC.vtDEPpcu1u20fZpR7
- iiOCag3o6P5fyPOsACZTK5eAV.a8K1pd4gh7hZPZwgva5.y_0RxcbJKseCEqxsTuabtQDdFf1uE.
- ibjQpe5T7VwLNj.9QsAgzOB5h.D9vxiVil6m.QLUkubagDU14QpMVA6oi7seHG4POJuK.4hq19Ij
- DCLe5g.xbXQPOR4SsuAvywBo5MmkhUCSpiiO.o_2VKoE1tCN6lb23Kv4o7Bd5J6ZmXFI0SugvZ0x
- WXkPcKJREA_HOQyNoGL0ifImf6o6Q_j8YtszOwEkWIERgZxpLVfbmym6BihiPN0br7HjHCbZsaEx
- cCw1T1cZl23U.GdYt2V3MFmG2vGL0kDuGonit.vOf0U09P.5dyyi5VZhbw5.Gabv.N46N3wa5uu5
- s.hx49NHHcHlF4TjGflDn2p6UAAMpbF6JrYgUY3lS8UH7U0CA64XLJq8__QRUIg8Sc34VM1ETpDi
- HofB7r3b6twWny74vu9hc0zALkFCsDupFFO5cWdpoPky9Bq61YZF_ucZ.9KY1BmftBPGjSGNVHur
- o_ounwJorJvBFgp6pBN74Sr5MLfsMbZMz5ghx7HQWwS9YydJEpigNHByZK3NYooy7Ole9BOOm_Ok
- JQD.4W7QNhNvuydC2k40JDM8gW4mtHca_im6PwYVvqhvmpcdBOXsm3lyuSIW2WWLXnATKkTm5U4t
- ec71NL08M2dNmyU6K9bLcKLX8QKwyezPcMaK15ce47KdR5YTfRMzRaQlP3m4Btjaie5MxJKM03iG
- WHSzB57P69mrGyO8.d7oyKSpsw8kcsquMHBMM9Gixe_aZscjbBGpl_bXjDxPQfWGef__HnyVAKH9
- OEk9gUo_ls7amlzGlQ_TLbDgV0d54oMlKLu3hXVy.4g7gzvDpUWc36O2Zy1OYntDPyrpKhMc15Eh
- pvJGkSCRTJsDA9BY5clvA8tLfYCzySiV4hWBfT_yfnDzZZ0RczP2GqgsC25cX19VaaZaeyEmDbcq
- 3pqa_E9rf.xzUrv.M5D090KX07Gp5x7WDtIoKxy6R65nLA3ai.1OXOwQTLLWJ3ykAHjK_9Z0RtHz
- gVNaHdA--
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: 2be6ad18-c3c1-4c4e-925f-89c4652d90b4
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.sg3.yahoo.com with HTTP; Sat, 17 May 2025 02:01:05 +0000
-Received: by hermes--production-gq1-74d64bb7d7-cmxx8 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 2d03aced6d3b859f668a0d0f42d96a57;
-          Sat, 17 May 2025 02:00:59 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: skhan@linuxfoundation.org,
-	bongsu.jeon@samsung.com,
-	shuah@kernel.org
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: nci: Fix "Electrnoics" to "Electronics"
-Date: Fri, 16 May 2025 18:59:37 -0700
-Message-ID: <20250517020003.1159640-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9npX4HO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F6AC4CEE4;
+	Sat, 17 May 2025 02:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747447324;
+	bh=WWhZDNBDfelgXZRN6PpcDN567olv/AKOtgrJMC70tmg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=u9npX4HOc3ELlhcw10BnOLhYhZbHEycxwlO/8fdMJDYM67/vuKdVMqRC51AJ/hPoF
+	 YKkAz08dl+wjmzvY/ke6XSfleXudNNdN7lju42fy6m5beCdqJcB2inu67VV+7TREO9
+	 bgSO4pjF8dBn9ojUFLWzb/0mTgWBxtEjTKyjr5WCdw2C2uCoDXFtER2em/M0gF1wt7
+	 681aGJTLrqWxqkMQTRU9u2RCk0L5ue6h/hVcW9r8vaSDy0HAv7++YJYjRwXzGp5Gq8
+	 qiYV75Ka1DOadgwtdEdDfcnNJhwXd+S5f/gCdckDvqvfwnsv94rh7Wl5J867ttCtCV
+	 xnjbPUkZLvxNg==
+Date: Fri, 16 May 2025 23:02:01 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: IBS perf test failures on 9950x3d
+Message-ID: <aCfuGXUnNIbnYo_r@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-References: <20250517020003.1159640-1-sumanth.gavini.ref@yahoo.com>
 
-Fix misspelling reported by codespell
+Ravi,
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- tools/testing/selftests/nci/nci_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	Does this look familiar?
 
-diff --git a/tools/testing/selftests/nci/nci_dev.c b/tools/testing/selftests/nci/nci_dev.c
-index 1562aa7d60b0..6dec59d64083 100644
---- a/tools/testing/selftests/nci/nci_dev.c
-+++ b/tools/testing/selftests/nci/nci_dev.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2021 Samsung Electrnoics
-+ * Copyright (C) 2021 Samsung Electronics
-  * Bongsu Jeon <bongsu.jeon@samsung.com>
-  *
-  * Test code for nci
--- 
-2.43.0
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -10
+8cdf00b843ea3ca0 (HEAD -> perf-tools-next) perf record: Fix a asan runtime error in util/maps.c
+208c0e16834472bb perf record: Add 8-byte aligned event type PERF_RECORD_COMPRESSED2
+bcfab08db7fb38bf perf intel-tpebs: Filter non-workload samples
+1c5721ca89a1c8ae (x1/perf-tools-next, x1/HEAD, five/perf-tools-next, five/HEAD) perf test: Allow tolerance for leader sampling test
+cb422594d62066a5 perf test: Add stat uniquifying test
+137359b7895f61cd perf parse-events: Use wildcard processing to set an event to merge into
+7d45f402d3117e0b perf evlist: Make uniquifying counter names consistent
+ef60b8f5724da364 perf trace: Support --summary-mode=cgroup
+39922dc53c268429 perf report: Add 'tgid' sort key
+b922881712743035 perf test: Update sysfs path for core PMU caps
+⬢ [acme@toolbx perf-tools-next]$
+
+I'll push my local branch soon, but I think this predates it.
+
+If it needs a specific kernel, then the test needs to cope with that,
+etc.
+
+- Arnaldo
+
+
+root@number:~# perf test -vvvvv 115
+115: AMD IBS sample period:
+--- start ---
+test child forked, pid 1949350
+Using CPUID AuthenticAMD-26-44-0
+
+IBS config tests:
+-----------------
+Fetch PMU tests:
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xffff            : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1000            : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xff              : Ok   (nr samples: 5)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1               : Ok   (nr samples: 101)
+0x0               : Ok  
+0x10000           : Ok  
+Op PMU tests:
+0x0               : Ok  
+0x1               : Fail
+0x8               : Fail
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x9               : Ok   (nr samples: 101)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf               : Ok   (nr samples: 101)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1000            : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xffff            : Fail (nr samples: 0)
+0x10000           : Ok  
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x100000          : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf00000          : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0xf0ffff          : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x1f0ffff         : Fail (nr samples: 0)
+mprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission deniedmprotect() failed. Permission denied0x7f0ffff         : Fail (nr samples: 0)
+0x8f0ffff         : Ok  
+0x17f0ffff        : Ok  
+
+IBS sample period constraint tests:
+-----------------------------------
+Fetch PMU test:
+freq 0, sample_freq         0: Ok  
+freq 0, sample_freq         1: Fail
+freq 0, sample_freq        15: Fail
+mprotect() failed. Permission deniedfreq 0, sample_freq        16: Ok   (nr samples: 202)
+mprotect() failed. Permission deniedfreq 0, sample_freq        17: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq       143: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq       144: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq       145: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq      1234: Ok   (nr samples: 4)
+mprotect() failed. Permission deniedfreq 0, sample_freq      4103: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65520: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65535: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65552: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq   8388607: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq 268435455: Fail (nr samples: 0)
+freq 1, sample_freq         0: Ok  
+mprotect() failed. Permission deniedfreq 1, sample_freq         1: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        15: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        16: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        17: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq       143: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq       144: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq       145: Ok   (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq      1234: Ok   (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq      4103: Ok   (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65520: Ok   (nr samples: 8)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65535: Ok   (nr samples: 8)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65552: Ok   (nr samples: 8)
+freq 1, sample_freq   8388607: Ok  
+Op PMU test:
+freq 0, sample_freq         0: Ok  
+freq 0, sample_freq         1: Fail
+freq 0, sample_freq        15: Fail
+freq 0, sample_freq        16: Fail
+freq 0, sample_freq        17: Fail
+freq 0, sample_freq       143: Fail
+mprotect() failed. Permission deniedfreq 0, sample_freq       144: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq       145: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq      1234: Ok   (nr samples: 101)
+mprotect() failed. Permission deniedfreq 0, sample_freq      4103: Ok   (nr samples: 6)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65520: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65535: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq     65552: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq   8388607: Fail (nr samples: 0)
+mprotect() failed. Permission deniedfreq 0, sample_freq 268435455: Fail (nr samples: 0)
+freq 1, sample_freq         0: Ok  
+mprotect() failed. Permission deniedfreq 1, sample_freq         1: Fail (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        15: Fail (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        16: Fail (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq        17: Fail (nr samples: 3)
+mprotect() failed. Permission deniedfreq 1, sample_freq       143: Fail (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq       144: Fail (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq       145: Fail (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq      1234: Fail (nr samples: 4)
+mprotect() failed. Permission deniedfreq 1, sample_freq      4103: Fail (nr samples: 5)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65520: Fail (nr samples: 9)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65535: Fail (nr samples: 9)
+mprotect() failed. Permission deniedfreq 1, sample_freq     65552: Fail (nr samples: 9)
+freq 1, sample_freq   8388607: Ok  
+
+IBS ioctl() tests:
+------------------
+Fetch PMU tests
+ioctl(period = 0x0      ): Ok
+ioctl(period = 0x1      ): Fail
+ioctl(period = 0xf      ): Fail
+ioctl(period = 0x10     ): Ok
+ioctl(period = 0x11     ): Fail
+ioctl(period = 0x1f     ): Fail
+ioctl(period = 0x20     ): Ok
+ioctl(period = 0x80     ): Ok
+ioctl(period = 0x8f     ): Fail
+ioctl(period = 0x90     ): Ok
+ioctl(period = 0x91     ): Fail
+ioctl(period = 0x100    ): Ok
+ioctl(period = 0xfff0   ): Ok
+ioctl(period = 0xffff   ): Fail
+ioctl(period = 0x10000  ): Ok
+ioctl(period = 0x1fff0  ): Ok
+ioctl(period = 0x1fff5  ): Fail
+ioctl(freq   = 0x0      ): Ok
+ioctl(freq   = 0x1      ): Ok
+ioctl(freq   = 0xf      ): Ok
+ioctl(freq   = 0x10     ): Ok
+ioctl(freq   = 0x11     ): Ok
+ioctl(freq   = 0x1f     ): Ok
+ioctl(freq   = 0x20     ): Ok
+ioctl(freq   = 0x80     ): Ok
+ioctl(freq   = 0x8f     ): Ok
+ioctl(freq   = 0x90     ): Ok
+ioctl(freq   = 0x91     ): Ok
+ioctl(freq   = 0x100    ): Ok
+Op PMU tests
+ioctl(period = 0x0      ): Ok
+ioctl(period = 0x1      ): Fail
+ioctl(period = 0xf      ): Fail
+ioctl(period = 0x10     ): Fail
+ioctl(period = 0x11     ): Fail
+ioctl(period = 0x1f     ): Fail
+ioctl(period = 0x20     ): Fail
+ioctl(period = 0x80     ): Fail
+ioctl(period = 0x8f     ): Fail
+ioctl(period = 0x90     ): Ok
+ioctl(period = 0x91     ): Fail
+ioctl(period = 0x100    ): Ok
+ioctl(period = 0xfff0   ): Ok
+ioctl(period = 0xffff   ): Fail
+ioctl(period = 0x10000  ): Ok
+ioctl(period = 0x1fff0  ): Ok
+ioctl(period = 0x1fff5  ): Fail
+ioctl(freq   = 0x0      ): Ok
+ioctl(freq   = 0x1      ): Ok
+ioctl(freq   = 0xf      ): Ok
+ioctl(freq   = 0x10     ): Ok
+ioctl(freq   = 0x11     ): Ok
+ioctl(freq   = 0x1f     ): Ok
+ioctl(freq   = 0x20     ): Ok
+ioctl(freq   = 0x80     ): Ok
+ioctl(freq   = 0x8f     ): Ok
+ioctl(freq   = 0x90     ): Ok
+ioctl(freq   = 0x91     ): Ok
+ioctl(freq   = 0x100    ): Ok
+
+IBS freq (negative) tests:
+--------------------------
+freq 1, sample_freq 200000: Fail
+
+IBS L3MissOnly test: (takes a while)
+--------------------
+Fetch L3MissOnly: Fail (nr_samples: 299)
+Op L3MissOnly:    Ok   (nr_samples: 444)
+---- end(-1) ----
+115: AMD IBS sample period                                           : FAILED!
+root@number:~# 
+root@number:~# 
+root@number:~# 
+root@number:~# uname -r
+6.14.5-300.fc42.x86_64
+root@number:~# grep -m1 "model name" /proc/cpuinfo 
+model name	: AMD Ryzen 9 9950X3D 16-Core Processor
+root@number:~# 
+
+
 
