@@ -1,135 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC1813D8A3
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 08:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF74220330;
+	Sat, 17 May 2025 09:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747472246; cv=none; b=YhuSDX0JJL3VXAV/TOOp2aXVQyRRnuuEx14lG5Ky/CpmPCZzdHnnzMkaUD6fdA6INo2csTd2ZklVtUgiogDjsFSqsCc3cKv+ItM3iMCxpXY4It4RU33jsDP5dPJhR8Qhr8G8oQLafBf4VXgEnn7qojMSN1vaQfwJS3zo67G4lPQ=
+	t=1747472570; cv=none; b=NtT/+2mDPWl5KXSWXUn7QuKv08F40DL2s+hb4UGMONVO/HEKwnXU/gkFGR1D9D+Up7nXjnXPsS07Dtyo57j801LVM2hbUO1oNJF8RX5MDWZ4B49ZHjAeAZP2TD/XFhjnVIOmBLFpHA1KMPvnxKiHmqRyAEt1ot2MdaGI+IfnSSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747472246; c=relaxed/simple;
-	bh=wa0AvHkjwezpx8OoGdRvdZZ/3qzIMnEuZXauHsK4oX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ecpht11v0pjwZbA7hIL88mcifDr9pBynCxwTwv6ZqXaCuS8hm2KRytoIzY3s/fDlcbX1ZY2qNTnUCPD0ynGWH+WYo3SiqSh6ZtPvu617aZ1eEYvm9MN36NwMw4lgRpNvIeYSIBjXVm521kRezaGm5keCUYSlKT5IBj5/2TXJ6f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nn7xlfo4; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747472570; c=relaxed/simple;
+	bh=oFRZs3vh1KIpraHwVfAmLwSR8tJ4ihC+6TTHYLWB6A0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DTB32ktFUsT3usLL21vOYa5L7FQDhkf3Ul8gN3wdHjMXqf1vt5LXFpyWluKnUHlerD3KlVWcw9R0i4mQcl8dOQCYDJ3G2ZIONR81+zwQwCYvG6Tv0Y2ZiQRAUimvxfstiidmro7B6X7SFtP1azoTZbv/f+hhQaFK3ZVwA9WAbRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7JqNIua; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nn7xlfo4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747472244; x=1779008244;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wa0AvHkjwezpx8OoGdRvdZZ/3qzIMnEuZXauHsK4oX0=;
-  b=Nn7xlfo4ZL30Ea86IyBt0QecfKxdYugRjz6AAfB/Rht0vqU5KhS/VMWj
-   pime1g+OQwTwhms7PhW+opbWeqjDKCO2PQEk6pBoAnyQBdz1I01uqbFH8
-   wX5jELjgHT9ehAnKQH65Xf+Sop691njlZit8CNCPyYrj9rwluSR1DcIWw
-   BRcagdl4+i7W5RhMqxuyAZDZ2mrUyM54PDijaa2kUjnWnyaogQpJpwCTK
-   dE81bf0CL1RA8YTwcmGmeQRTV1whxnBeL4Uld5HayrcB6iZYQJdijaPxZ
-   a+O8eBZ7CDm813w7QS6UcggHt36+cgku9L41vWIS/2NLx4dbJ51wUxPeS
-   Q==;
-X-CSE-ConnectionGUID: bvRsMmL5Q4euNexl1CJTfg==
-X-CSE-MsgGUID: tATxBdf0ReuQLKqa/FkXkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49140360"
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="49140360"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 01:57:24 -0700
-X-CSE-ConnectionGUID: DF6Ut8pDRF2sGI12i8T6mg==
-X-CSE-MsgGUID: rEEAtEDYSWeWOVKmwVFEyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="142896842"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 17 May 2025 01:57:20 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGDM6-000K2J-0n;
-	Sat, 17 May 2025 08:57:18 +0000
-Date: Sat, 17 May 2025 16:56:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lukas Zapolskas <lukas.zapolskas@arm.com>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	=?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>,
-	Lukas Zapolskas <lukas.zapolskas@arm.com>
-Subject: Re: [PATCH v4 5/7] drm/panthor: Implement the counter sampler and
- sample handling
-Message-ID: <202505171601.i0qhMG1O-lkp@intel.com>
-References: <7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7JqNIua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C65C4CEE3;
+	Sat, 17 May 2025 09:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747472570;
+	bh=oFRZs3vh1KIpraHwVfAmLwSR8tJ4ihC+6TTHYLWB6A0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=B7JqNIuayfXnGNUTtM20u2uRBZpSx2SgXAVICc9NfwaDBOGaniO7KBAOEhRu6+Tf2
+	 quwyYcRrsOhAeZ7fVL8en8fWPs/GmkmS5NZXSpX1c0ETj77ccaqpypy4vIrRdbrbDk
+	 IZlc5jzkhVrVZQ/UylbCoPHi0NoDbIy+njhp+gWhO3ETENqjfq1C95AJcnZPFsC5lN
+	 hgX6m2Iye5rUkRJbKnAaJcjAFRKOA9LGKWmO7B1AMS80GDplXx1H/rvckmYdNWEnVy
+	 HHesy3rVjAzNsFumbPOQBBtNjDiOVGUwYjfJMK6ZqqVnqMd/05TRkJTpjupj2qz2sb
+	 +Ozy2ax9Ztmpw==
+Date: Sat, 17 May 2025 11:02:46 +0200
+From: Wolfram Sang <wsa@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [PULL REQUEST] i2c-for-6.15-rc7
+Message-ID: <aChQtvRgPB1q4gKg@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kJXrdRYYD1+/CqeD"
+Content-Disposition: inline
+
+
+--kJXrdRYYD1+/CqeD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas@arm.com>
 
-Hi Lukas,
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-kernel test robot noticed the following build errors:
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-[auto build test ERROR on 96c85e428ebaeacd2c640eba075479ab92072ccd]
+are available in the Git repository at:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lukas-Zapolskas/drm-panthor-Add-performance-counter-uAPI/20250517-000257
-base:   96c85e428ebaeacd2c640eba075479ab92072ccd
-patch link:    https://lore.kernel.org/r/7005fb2eba3abbb2ee95282d117f70c8a7c8555f.1747148172.git.lukas.zapolskas%40arm.com
-patch subject: [PATCH v4 5/7] drm/panthor: Implement the counter sampler and sample handling
-config: i386-buildonly-randconfig-002-20250517 (https://download.01.org/0day-ci/archive/20250517/202505171601.i0qhMG1O-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250517/202505171601.i0qhMG1O-lkp@intel.com/reproduce)
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc7
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505171601.i0qhMG1O-lkp@intel.com/
+for you to fetch changes up to 6c72fc56ab2bb7e0c327a6d42d02164c0dee9696:
 
-All errors (new ones prefixed by >>):
+  Merge tag 'i2c-host-fixes-6.15-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current (2025-05-17 10:22:34 +0200)
 
-   drivers/gpu/drm/panthor/panthor_perf.c:381:8: error: redefinition of 'panthor_perf_counter_block'
-     381 | struct panthor_perf_counter_block {
-         |        ^
-   drivers/gpu/drm/panthor/panthor_perf.c:126:8: note: previous definition is here
-     126 | struct panthor_perf_counter_block {
-         |        ^
->> drivers/gpu/drm/panthor/panthor_perf.c:651:15: error: redefinition of 'session_get_user_sample_size'
-     651 | static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
-         |               ^
-   drivers/gpu/drm/panthor/panthor_perf.c:391:15: note: previous definition is here
-     391 | static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
-         |               ^
->> drivers/gpu/drm/panthor/panthor_perf.c:1038:19: error: incompatible pointer types passing '__u64 (*)[2]' (aka 'unsigned long long (*)[2]') to parameter of type 'u64 *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-    1038 |                 bitmap_to_arr64(&blk->header.enable_mask, blk_em, PANTHOR_PERF_EM_BITS);
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitmap.h:313:27: note: passing argument to parameter 'buf' here
-     313 | void bitmap_to_arr64(u64 *buf, const unsigned long *bitmap, unsigned int nbits);
-         |                           ^
-   3 errors generated.
+----------------------------------------------------------------
+i2c-for-6.15-rc7
 
+- designware: cleanup properly on probe failure
 
-vim +/session_get_user_sample_size +651 drivers/gpu/drm/panthor/panthor_perf.c
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      i2c: designware: Fix an error handling path in i2c_dw_pci_probe()
 
-   650	
- > 651	static size_t session_get_user_sample_size(const struct drm_panthor_perf_info *const info)
-   652	{
-   653		const size_t block_size = get_annotated_block_size(info->counters_per_block);
-   654		const size_t block_nr = info->cshw_blocks + info->fw_blocks +
-   655			info->tiler_blocks + info->memsys_blocks + info->shader_blocks;
-   656	
-   657		return sizeof(struct drm_panthor_perf_sample_header) + (block_size * block_nr);
-   658	}
-   659	
+Wolfram Sang (1):
+      Merge tag 'i2c-host-fixes-6.15-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ drivers/i2c/busses/i2c-designware-pcidrv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--kJXrdRYYD1+/CqeD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgoULYACgkQFA3kzBSg
+KbZpaw//Rw4lFmJUF8W+KTU24tAqasRonUknkZ3A/7Si+q9Ly3BIhzNNI5CaDgzf
+SbSe3U8AXsY01IR+n8L7cB+ucWOrjImuELNb5WAut9upSSX/wTKw1TZr4jNBGOiQ
+CVvBM0k3mpFnJ4rk0r8b9es2ijMygp9f155g5qXIq8RT0uCCTurJus/J4h95NdL4
+LjsVPICSXooQmEmYZ8o+7ri7xx7Kg6OYWn1vj1qmBYLgTye4WPXwPzGXq1cArZBn
+/FxYkyBQ9nfoMeeGSSQXF55PQpaKjJ8gadk0eOhGNYPC+5LTYOAwZyzdJ5H6Mmm+
+6fyUHmIMmRHFi9s1IX7pQ8jwlV89lTuHMCkEMu/okv8Kb0+Y9G5aE1OppVc1OI7w
+EkVkKUTyk9l0JQGLuCNqiB5yISKIJWTluu1tb04lZwc9c52lTDhGideTf79V8NgC
+4Fez1pxHImFk7RZTN3JUYTpcOTJU25kbjmj0Ogj4XVl/7CX9eVXZ5HTAG9wsj16y
+gilv5jOyoBvP6kg7kqzXiuLQ/aK/pzMvAcWLTppISGjrUu92AYwLLsSXu9q5dXLI
+EyR+N2FXfrNephKMN7LGUjzYBLZqw+XOZBAckvphGkC/dAJnAE2CZDGRsfpCUJLN
+B2rxBpez6aGbOwr/TT/IEV1Pyz44VYEL45KtM9mQqvMEnxcFpfw=
+=Y+ZL
+-----END PGP SIGNATURE-----
+
+--kJXrdRYYD1+/CqeD--
