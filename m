@@ -1,271 +1,221 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED328146A60
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F11DF97F;
+	Sat, 17 May 2025 09:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474380; cv=none; b=TqtWnI0DJsClZr/pDBIwnSO2mBrFBY7KBKQHbDsBAFo6w96Xr0WuCytyF2t+p+LtNLmn+u8nXdcbWxFcJNA7mZAUPxjnosnTMVIocAnp2zQXmqA8IiNYj5gphfZoa65QKU8XxE/sTLoTX8G9QSoQalS0WFvqkknGO+gTimvf9vg=
+	t=1747474409; cv=none; b=Av/0XQUKPdLF9qVaX358EI8fird8j0F7vLaKWs9ZGn3A7g9VdesAJA9f82NEtBJ6mKQ/Gc8cnfy7R6LQNaQT1pMbUVsPyGr8o0zd77n1KIlBPodIepGewcdmM57NyRz5o2CznlnHNpoCOb/31CbVCu/sdAORR1bLkm/IItR6vIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474380; c=relaxed/simple;
-	bh=TMgkSu/4GD17xljw9ns2k/mIKMzkXGM0fQrTK14hVOk=;
+	s=arc-20240116; t=1747474409; c=relaxed/simple;
+	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQjmJ6OkWGaj+8wzJePTSx4k3AGi+Q9STOA4LxghyzazQljxLHJteAVWJy5+RO3ELN+SdIz0xs9ZyZfxc+ePQJxtCdVWlPYLoqgRBAzlpgSqhcosSyVhkL6TsnAeNQG0e7wuzm+UBjmgg5wD8QLpHDzEpl1KvCukYzHjPaenv6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MWsr+gwN; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=deJ4eGr8solnlqkzuMbf3nV0ZTJEpn5gNbDJZgTxe0QruIgDkRLcGNmDQ8y1epooncmq3CUvhOewcvulG2hx1ndL+0WabQV9U1jXjpolN7SLcmc3v8pCbp/brOWNXR6kbWIl7sJRtgmzVm1nB7s7COgSDi3wXiOP4DEmpM3Nksw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tacmf2ug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MWsr+gwN"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f89980f659so32905226d6.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747474377; x=1748079177; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9blnoz4nlraZrwqPO87UaGw2vSHIjCsGx/Eg5tDuAw=;
-        b=MWsr+gwNxCO2hxgR2RgO4oVs+65vUq9MeVTfk5ChXuNPbObB+jLNJhnC5YTg6eUTg8
-         YOehdqm/gWOLHxV0MOf3aq0wJW3fE2lllFqq36S5Z1T4aEuBah2B1n3YGgcGeA8P/REw
-         DdQQLOb19y2rKQAv3SgYpp5R/PF6U7leBZCH/RrCR0bm3fMMIixcThaHK6NujaWzFOKE
-         q9CX8OJ2o4JqlIAYNWLyZniV7UFOwnhrk38rcuYeP0AcGdvdvAf3uqkpOvfsiY+x2AgF
-         rqztf74/FQqERF1ZMhklgPopUGIBAyAF4zLzb9RUqiHOeg0afbz8SlvFy0Cy1Y0p0VrM
-         uLEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747474377; x=1748079177;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B9blnoz4nlraZrwqPO87UaGw2vSHIjCsGx/Eg5tDuAw=;
-        b=w+EaAAzUWhvKquPt7/ZVtMLpEunk4MSx/6YfWbQVUup+BwutwPIatBmuFWsfXcohH4
-         gWf/mSfDj5LYgulbzXH821YsP5cRC16wC6WW4wbTlaM0HRrtcJ/cCY+isFBhHLZPKwaj
-         Zm/WwldhZFMRQw947Bk4UNjCoXhwQzGtTl5eyMTP0AtaZmmN7MxGSxlAHK0cRbX1KiPs
-         79fXpk3Qhy9anERtWCsaYXxs1bZKQ1q2lLScwfBt5ASgOqsgNzaJZdFRpotw3d91WAiu
-         29/9FHbETJZK44RUQ+UvNAW6M9r/AzZZqmtNIChAzR3qBiQqY8TiF+V+yr3ONJhnIMuU
-         yUwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGfSpPj36SF69g2KO93a+r9m+c4/kqUTQstII73mgjAxdpQrtrdTxMj9qlXvcLvnWFoXLcmF1TARll0QI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWwJB6oUH/8BHVegj6byewB9Gybxz6vvWiWGRYG/D7h2g5CxrT
-	+J3/UwK1BjfuosFAU4rP8gSKbE0eGIt7v/afthYm4skKnvlw2VJhRnYlbX8RAyNIMhIPWZ2MOeI
-	HN1zhaRTmCfXZMAPyRV9AIzQT+GaUTi4XnkM0jl8V
-X-Gm-Gg: ASbGncvB88EFXLsit9KjWOwB22fJj+2ITeD5627sz1F4n6Hch1kDx7E7eD6/DltuzWl
-	AnKWpDphDge7/MdRgsdD4i8aIwY7Ku/hXm97Q/Oo9qZGXkmE21dVlzrIMxHiQWT3I8b0tG4cJ7L
-	29Qf9wy1ahJq5H4qGbR9vxuVSnbuSh/7ccNA==
-X-Google-Smtp-Source: AGHT+IGKEH0qbP0pqItWHnoLxpFRdre+rzDAc2hGtprvrPc2rCt/sYGW1bRV9AA8f/OJxj63588tUIw+BujWHL/MACU=
-X-Received: by 2002:ad4:5941:0:b0:6e6:646e:a0f0 with SMTP id
- 6a1803df08f44-6f8b07f3177mr92768776d6.12.1747474376584; Sat, 17 May 2025
- 02:32:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tacmf2ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B491DC4CEE3;
+	Sat, 17 May 2025 09:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747474408;
+	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tacmf2ug/JaH8+gG9EwjSrn+w7RtvPQePPreK0Elh/zFjyMgpDrWg7SYaj+hMjufV
+	 rtJr6nbcsUhZD7yXltAuUwPVMDkMQVAManPPJ5cfQ8EaDsCQeLnfFPjCwTEGFgntyM
+	 149v5M0+7Pr7caf+U69/rjVNJGM6climyNoQFN3LkAcYS9Te7lxxx9+iDSbRSj4dhd
+	 UusNvuXelmM9HYyuW8yJNFP6vj1J87VfReFt7OX9GFpBgA6rd983UxNGrCkVEZi1KJ
+	 GacblGOgl7G8DZFM+zbMTmZJNpKeI3rPSGsmTvPZepZuocQny0EiHu+Eahk7Qm6nnX
+	 4CiZp6Fpc8Pdw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so430374966b.1;
+        Sat, 17 May 2025 02:33:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURBzwBzY0W/KnJy/9eMcNM0uIeatdNY2Y/NzjWKl3L6D9mQCuIYdzDiTQAYIKa1JHVh0oC6JrAt4O3SJr4@vger.kernel.org, AJvYcCXicGO5ysVpnQz8q3/M8s24LaDTt+9L7vU+HjofaT47wzpm9LVAiFWF4TSucy7PxLPzNsh9AyHiZDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMc+9GA2vokTPHRsBGDdpGbSGLmfBdcGMOnSeE/kZt6IAJB8vJ
+	M0FVvjcJycncI5VlnY8lDRUqsIftNmRsXcMltuV8q+pSb/O7T7G0pp3Y/UcsmKcF+sZYPWY1VgG
+	tzunm+l5VR+OJIr5Fi9AveFbGd79+4tk=
+X-Google-Smtp-Source: AGHT+IHTvFI6zZRv0wNKYaTlHEu0ikHrWHUB6ZLVryypaxujB2+O1jj1f3607aJS94Nj/nQDMF5ZYt5OXJP/gQE3ZgM=
+X-Received: by 2002:a17:907:7205:b0:ad5:10d9:9061 with SMTP id
+ a640c23a62f3a-ad536ffbae7mr610013866b.54.1747474407333; Sat, 17 May 2025
+ 02:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516190631.1214081-1-rmoar@google.com>
-In-Reply-To: <20250516190631.1214081-1-rmoar@google.com>
-From: David Gow <davidgow@google.com>
-Date: Sat, 17 May 2025 17:32:42 +0800
-X-Gm-Features: AX0GCFvcQPxSpA-Log_OfA3_WtgU6RmyiSaFNEhUIKbtXuY16QbAyvTiCFcB3XU
-Message-ID: <CABVgOSnFhWaFmWF19pX4nWng-P3+urYu1OZwnng5z8sdX1rHQw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: improve example on testing static functions
-To: Rae Moar <rmoar@google.com>
-Cc: brendan.higgins@linux.dev, skhan@linuxfoundation.org, dlatypov@google.com, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000008090700635519531"
-
---0000000000008090700635519531
+References: <20250424073251.81693-1-youling.tang@linux.dev>
+In-Reply-To: <20250424073251.81693-1-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 17 May 2025 17:33:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsuNX5NxxXsf4WDPqP416sllgHwynrLliakmWphUwCko2KPCdLWioNW23M
+Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Enable HAVE_ARCH_STACKLEAK
+To: Youling Tang <youling.tang@linux.dev>
+Cc: Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Youling Tang <tangyouling@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 17 May 2025 at 03:06, Rae Moar <rmoar@google.com> wrote:
+Applied, thanks.
+
+Huacai
+
+On Thu, Apr 24, 2025 at 3:33=E2=80=AFPM Youling Tang <youling.tang@linux.de=
+v> wrote:
 >
-> The documentation on testing static functions using the KUnit macros
-> VISIBLE_IF_KUNIT and EXPORT_SYMBOL_IF_KUNIT is lacking clarity and
-> missing key steps in the example. This has caused bugs and confusion
-> among developers.
+> From: Youling Tang <tangyouling@kylinos.cn>
 >
-> Improve wording of description and add missing steps to the example.
-> This entails adding the "#include <kunit/visibility.h>" line and the
-> "MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);" line. Both of which were
-> missing from the original example and key to exposing static functions.
+> Add support for the stackleak feature. It initialize the stack with the
+> poison value before returning from system calls which improves the kernel
+> security.
 >
-> Signed-off-by: Rae Moar <rmoar@google.com>
+> At the same time, disables the plugin in EFI stub code because EFI stub
+> is out of scope for the protection.
+>
+> Tested on 3A5000 (enable CONFIG_GCC_PLUGIN_STACKLEAK and CONFIG_LKDTM):
+>  # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
+>  # dmesg
+>    lkdtm: Performing direct entry STACKLEAK_ERASING
+>    lkdtm: stackleak stack usage:
+>       high offset: 320 bytes
+>       current:     448 bytes
+>       lowest:      1264 bytes
+>       tracked:     1264 bytes
+>       untracked:   208 bytes
+>       poisoned:    14528 bytes
+>       low offset:  64 bytes
+>    lkdtm: OK: the rest of the thread stack is properly erased
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 > ---
-
-It's always great to have better documentation!
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Thanks,
--- David
-
->  Documentation/dev-tools/kunit/usage.rst | 38 +++++++++++++++++++------
->  1 file changed, 30 insertions(+), 8 deletions(-)
+> v2:
+>  * Make on_thread_stack() __always_inline.
+>  * Move the STACKLEAK_ERASE macro to the stackframe.h file.
 >
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index 22955d56b379..038f480074fd 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -670,28 +670,50 @@ with ``kunit_remove_action``.
->  Testing Static Functions
->  ------------------------
+>  arch/loongarch/Kconfig                    | 1 +
+>  arch/loongarch/include/asm/entry-common.h | 8 +-------
+>  arch/loongarch/include/asm/stackframe.h   | 6 ++++++
+>  arch/loongarch/include/asm/stacktrace.h   | 5 +++++
+>  arch/loongarch/kernel/entry.S             | 3 +++
+>  drivers/firmware/efi/libstub/Makefile     | 2 +-
+>  6 files changed, 17 insertions(+), 8 deletions(-)
 >
-> -If we do not want to expose functions or variables for testing, one option is to
-> -conditionally export the used symbol. For example:
-> +If you want to test static functions without exposing those functions outside of
-> +testing, one option is conditionally export the symbol. When KUnit is enabled,
-> +the symbol is exposed but remains static otherwise. To use this method, follow
-> +the template below.
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 067c0b994648..3a6bfcab2dde 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -122,6 +122,7 @@ config LOONGARCH
+>         select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>         select HAVE_ARCH_SECCOMP
+>         select HAVE_ARCH_SECCOMP_FILTER
+> +       select HAVE_ARCH_STACKLEAK
+>         select HAVE_ARCH_TRACEHOOK
+>         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>         select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
+> diff --git a/arch/loongarch/include/asm/entry-common.h b/arch/loongarch/i=
+nclude/asm/entry-common.h
+> index 0fe2a098ded9..a7a6af490f86 100644
+> --- a/arch/loongarch/include/asm/entry-common.h
+> +++ b/arch/loongarch/include/asm/entry-common.h
+> @@ -2,12 +2,6 @@
+>  #ifndef ARCH_LOONGARCH_ENTRY_COMMON_H
+>  #define ARCH_LOONGARCH_ENTRY_COMMON_H
 >
->  .. code-block:: c
+> -#include <linux/sched.h>
+> -#include <linux/processor.h>
+> -
+> -static inline bool on_thread_stack(void)
+> -{
+> -       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
+) & ~(THREAD_SIZE - 1));
+> -}
+> +#include <asm/stacktrace.h>
 >
-> -       /* In my_file.c */
-> +       /* In the file containing functions to test "my_file.c" */
+>  #endif
+> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/inc=
+lude/asm/stackframe.h
+> index 66736837085b..c37455bca29b 100644
+> --- a/arch/loongarch/include/asm/stackframe.h
+> +++ b/arch/loongarch/include/asm/stackframe.h
+> @@ -243,4 +243,10 @@
+>         RESTORE_SP_AND_RET \docfi
+>         .endm
 >
-> -       VISIBLE_IF_KUNIT int do_interesting_thing();
-> +       #include <kunit/visibility.h>
-> +       #include <my_file.h>
-> +       ...
-> +       VISIBLE_IF_KUNIT int do_interesting_thing()
-> +       {
-> +       ...
-> +       }
->         EXPORT_SYMBOL_IF_KUNIT(do_interesting_thing);
->
-> -       /* In my_file.h */
-> +       /* In the header file "my_file.h" */
->
->         #if IS_ENABLED(CONFIG_KUNIT)
->                 int do_interesting_thing(void);
->         #endif
->
-> -Alternatively, you could conditionally ``#include`` the test file at the end of
-> -your .c file. For example:
-> +       /* In the KUnit test file "my_file_test.c" */
+> +       .macro STACKLEAK_ERASE
+> +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
+> +       bl              stackleak_erase_on_task_stack
+> +#endif
+> +       .endm
 > +
-> +       #include <kunit/visibility.h>
-> +       #include <my_file.h>
-> +       ...
-> +       MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);
-> +       ...
-> +       // Use do_interesting_thing() in tests
+>  #endif /* _ASM_STACKFRAME_H */
+> diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/inc=
+lude/asm/stacktrace.h
+> index fc8b64773794..5c8be156567c 100644
+> --- a/arch/loongarch/include/asm/stacktrace.h
+> +++ b/arch/loongarch/include/asm/stacktrace.h
+> @@ -31,6 +31,11 @@ bool in_irq_stack(unsigned long stack, struct stack_in=
+fo *info);
+>  bool in_task_stack(unsigned long stack, struct task_struct *task, struct=
+ stack_info *info);
+>  int get_stack_info(unsigned long stack, struct task_struct *task, struct=
+ stack_info *info);
+>
+> +static __always_inline bool on_thread_stack(void)
+> +{
+> +       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
+) & ~(THREAD_SIZE - 1));
+> +}
 > +
-> +For a full example, see this `patch <https://lore.kernel.org/all/20221207014024.340230-3-rmoar@google.com/>`_
-> +where a test is modified to conditionally expose static functions for testing
-> +using the macros above.
-> +
-> +As an **alternative** to the method above, you could conditionally ``#include``
-> +the test file at the end of your .c file. This is not recommended but works
-> +if needed. For example:
+>  #define STR_LONG_L    __stringify(LONG_L)
+>  #define STR_LONG_S    __stringify(LONG_S)
+>  #define STR_LONGSIZE  __stringify(LONGSIZE)
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
+S
+> index 48e7e34e355e..77f6fb9146a2 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -73,6 +73,7 @@ SYM_CODE_START(handle_syscall)
+>         move            a0, sp
+>         bl              do_syscall
 >
->  .. code-block:: c
+> +       STACKLEAK_ERASE
+>         RESTORE_ALL_AND_RET
+>  SYM_CODE_END(handle_syscall)
+>  _ASM_NOKPROBE(handle_syscall)
+> @@ -82,6 +83,7 @@ SYM_CODE_START(ret_from_fork)
+>         bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+>         move            a0, sp
+>         bl              syscall_exit_to_user_mode
+> +       STACKLEAK_ERASE
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> @@ -94,6 +96,7 @@ SYM_CODE_START(ret_from_kernel_thread)
+>         jirl            ra, s0, 0
+>         move            a0, sp
+>         bl              syscall_exit_to_user_mode
+> +       STACKLEAK_ERASE
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi=
+/libstub/Makefile
+> index d23a1b9fed75..b97981d63d2f 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -31,7 +31,7 @@ cflags-$(CONFIG_ARM)          +=3D -DEFI_HAVE_STRLEN -D=
+EFI_HAVE_STRNLEN \
+>                                    $(DISABLE_STACKLEAK_PLUGIN)
+>  cflags-$(CONFIG_RISCV)         +=3D -fpic -DNO_ALTERNATIVE -mno-relax \
+>                                    $(DISABLE_STACKLEAK_PLUGIN)
+> -cflags-$(CONFIG_LOONGARCH)     +=3D -fpie
+> +cflags-$(CONFIG_LOONGARCH)     +=3D -fpie $(DISABLE_STACKLEAK_PLUGIN)
 >
-> -       /* In my_file.c */
-> +       /* In "my_file.c" */
+>  cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   +=3D -I$(srctree)/scripts/dtc/lib=
+fdt
 >
->         static int do_interesting_thing();
->
->
-> base-commit: c2493384e8110d5a4792fff4b9d46e47b78ea10a
 > --
-> 2.49.0.1101.gccaa498523-goog
+> 2.38.1
 >
-
---0000000000008090700635519531
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgqpW4CBuOqcu4+H1EHHNAut5gEOdw
-3xcfgV0+MAZjaoQwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NTE3MDkzMjU3WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEATNei9ImqELP+s9pWtj7EJwPR4Ds46W44b5v200hssGTLMKMc8dYjT+cgT6d0nakd
-7T9pHvevmkY8z15qr6eql2LfQsTDuvW0bs4K3qFyfFR8wt7vPQ/fBU381Q5O2JfSSkpQsmOMoPkI
-mAVhJXwJN5RgXYbiMsRTmyZBa5CQEO7aRetzSJVRiyU4BGH/FodNRuC5Wamji2TcStUFRRrvHPUg
-LWYkkS6/fUW6vQ+Nwx03sGA1UURvQWAhc2Y3eIPjuPqfe5VwTlhNbR4skR/ljVcYxsqKhZyHTRcP
-Uk2KBD46kYb7ibgFNH8N3rVvb0Cv2yaygSvi5WXdc3OJCyVweg==
---0000000000008090700635519531--
