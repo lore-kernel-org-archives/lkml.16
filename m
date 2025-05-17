@@ -1,67 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6A81FE468;
-	Sat, 17 May 2025 10:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345BD202C30;
+	Sat, 17 May 2025 10:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476182; cv=none; b=ZCAnyRgqf3MyKHbJV+ddFgtgGsahqQkfWTbyvhyvJMYXSXJLBFOH1Qdts4cFs/wrd1Rg2ztDkiMdmF9zPj07hWLlE09wJ97+bmoBYid04wXtxV6DkSlVb+0KdOkoY0R8vBAWZgKk5ZfroPOgdGVitPyaq/mTMSS/TAZfDWtBLHg=
+	t=1747476184; cv=none; b=XM8/GymZPvQrINhjcpBwPo3yKqqx7Pv+zhdU90q6pCdjW2ZomjcNBl9HCZ1TRGjrxPX0dDWkIapfB/jdtrqa7KA7wkW/iFMETOHQSsPWLfzAZ6ay8FbBQfOWbbI2XeaEuCW4cdepc6CHx5LKb22FJpmpGpg+dt6QupH0uvyzIyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476182; c=relaxed/simple;
-	bh=/Ar8jPMGanTetMpVW+DpjxrrrEXCgqFHVRIlpRZAZ4Q=;
+	s=arc-20240116; t=1747476184; c=relaxed/simple;
+	bh=qENGUqqvUGhvDJX+6xLnKM7JVZMAmn0irRtpRAEikgE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IW8cIp02rodsygfes4DaYXeTvzyotghh+zpsmBNFHSSnBv4XgJwGibJcSxNAvE9X8GxW99yT4dqL8eSYLr7FrbBn1+I1lM+buCrE4pB4dgFlRaDFp06yR1SQ2Rc63+5iw033x8vWKInqZJnlhV45MeExboVSFshaBeWUUqCRoPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qpfMknk7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=820QJKE5; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=CyWAj2gXJVMN/vx6r4p95smi/v5M/Ao88xIWmbOFzZj8B6T/he3Wa+t9UkiT3YCdaeOXVvWVnK3BnybmLBGur9Mjuzx3TZkq+CGvLMx5wrahAD0yGz9Jq84JNWPJkIL/PtoeKhftHPGruxMSoxocE9hGGXCf7TLTxdgdRuEeVbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vex6brEk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GZ34mUK0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qpfMknk7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="820QJKE5"
-Date: Sat, 17 May 2025 10:02:57 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vex6brEk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GZ34mUK0"
+Date: Sat, 17 May 2025 10:02:59 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747476178;
+	s=2020; t=1747476180;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pfei7LtZSonQsiYGia/uAbHFJsNC2lgNJWgD1A2TNp4=;
-	b=qpfMknk7Ob6o+dy7eFonL5EoCnKbTomY1nx5wymkJJ+IzXMS7/RPn60ZcGhUdHq7/QMxUe
-	GTNIBDW6KbLT+XYKuGnM5gJOS6VUhpqTLXOwLD0BvoKHXBWsvrrF0/T7UFO4nTVayVENkk
-	0WT+1wugE8pk42WoLZdWFNRVDr7nv3RbxauHI2aYJsCwOss/v45PIMhvjnLKTVakQmuQ2D
-	A+9E6o9cRmR53ZHlECUipBEtrULhFFcZ8X/09/5XGYjVHz9jSzLdUpZIvIQry2/OsEHr+8
-	eRMo7waBEnjSwpaNhNbAMofuHGX1We1ZUy0dSEd23HPm2tHDoJMT378erXCSBA==
+	bh=2xi7Vm71B7Kb4/BF0jr8M5dpzrQgSoj8qLC9vYBiVGo=;
+	b=Vex6brEkE//7YgEUhiSX+jBq4vyQoqUQ89/NCvfW91dMtUyn/Emid90xlZfRuyNo/ww09e
+	acvQfSFExHkqHboxZPbEWN9XfPkXIC79V6xvBemlqfl3cI6ZgMzFhtHT5LN6Ipcw7KSwX2
+	xzw3tykv0u4Arlx9s+ouvYqZIcmcs/hJdYyu+HgWFLE8AItuuSKBOpZn5SPiXVCl6aYS6V
+	ExHNSoXcZRrcmnJTmuIJHpXuFXus9htvKBPGP0aEELQf4Ahg2DQGFjDZwbKyiEZ1GXgRzJ
+	dPOj7hpr5toHS5oU2rsXDaAoMIYurGYqz7y7DQaI4X+q0BSUNNw41ctQYjpNZw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747476178;
+	s=2020e; t=1747476180;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pfei7LtZSonQsiYGia/uAbHFJsNC2lgNJWgD1A2TNp4=;
-	b=820QJKE5pDWGRSaYoB/RSZ1zeS4h3+dgq274BZbV3MK2K3JoLUPnQGuWXSInsQ9dAGFwIw
-	cY6F1yupYmtGSQBw==
+	bh=2xi7Vm71B7Kb4/BF0jr8M5dpzrQgSoj8qLC9vYBiVGo=;
+	b=GZ34mUK0kxUdJrGAc1z7KLC3nLaO74pCkNz9vPZMMHb0osXrPNFRN3oLJzo3DY3EfX7ZBO
+	q9gq7DsqSEHYTVAQ==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Split trace.h
+Subject:
+ [tip: x86/cache] x86/resctrl: Add end-marker to the resctrl_event_id enum
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
- Fenghua Yu <fenghuay@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>,
- Peter Newman <peternewman@google.com>,
- Amit Singh Tomar <amitsinght@marvell.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Babu Moger <babu.moger@amd.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250515165855.31452-14-james.morse@arm.com>
-References: <20250515165855.31452-14-james.morse@arm.com>
+ Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Babu Moger <babu.moger@amd.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+ Tony Luck <tony.luck@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250515165855.31452-12-james.morse@arm.com>
+References: <20250515165855.31452-12-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174747617768.406.11228833029392314714.tip-bot2@tip-bot2>
+Message-ID: <174747617933.406.14850506587240007791.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,236 +69,71 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     270f00bcc9525c8ba667349ba3e8c4dbcbbf70fb
-Gitweb:        https://git.kernel.org/tip/270f00bcc9525c8ba667349ba3e8c4dbcbbf70fb
+Commit-ID:     d4fb6b8e4640adeff9673ae398525be7382d3197
+Gitweb:        https://git.kernel.org/tip/d4fb6b8e4640adeff9673ae398525be7382d3197
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Thu, 15 May 2025 16:58:43 
+AuthorDate:    Thu, 15 May 2025 16:58:41 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 16 May 2025 10:47:49 +02:00
+CommitterDate: Fri, 16 May 2025 10:44:36 +02:00
 
-x86/resctrl: Split trace.h
+x86/resctrl: Add end-marker to the resctrl_event_id enum
 
-trace.h contains all the tracepoints. After the move to /fs/resctrl, some
-of these will be left behind. All the pseudo_lock tracepoints remain part
-of the architecture. The lone tracepoint in monitor.c moves to /fs/resctrl.
+The resctrl_event_id enum gives names to the counter event numbers on x86.
+These are used directly by resctrl.
 
-Split trace.h so that each C file includes a different trace header file.
-This means the trace header files are not modified when they are moved.
+To allow the MPAM driver to keep an array of these the size of the enum
+needs to be known.
+
+Add a 'num_events' enum entry which can be used to size an array.  This is
+added to the enum to reduce conflicts with another series, which in turn
+requires get_arch_mbm_state() to have a default case.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Tested-by: Fenghua Yu <fenghuay@nvidia.com>
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/20250515165855.31452-14-james.morse@arm.com
+Link: https://lore.kernel.org/20250515165855.31452-12-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/Makefile            |  3 +-
- arch/x86/kernel/cpu/resctrl/monitor.c           |  4 +-
- arch/x86/kernel/cpu/resctrl/monitor_trace.h     | 31 ++++++++-
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c       |  2 +-
- arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h | 43 ++++++++++++-
- arch/x86/kernel/cpu/resctrl/trace.h             | 59 +----------------
- 6 files changed, 81 insertions(+), 61 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/resctrl/monitor_trace.h
- create mode 100644 arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
- delete mode 100644 arch/x86/kernel/cpu/resctrl/trace.h
+ arch/x86/kernel/cpu/resctrl/monitor.c |  9 ++++-----
+ include/linux/resctrl_types.h         |  3 +++
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index 0c13b0b..909be78 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -2,4 +2,7 @@
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
- obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
-+
-+# To allow define_trace.h's recursive include:
- CFLAGS_pseudo_lock.o = -I$(src)
-+CFLAGS_monitor.o = -I$(src)
 diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 4962ae4..ac1cec6 100644
+index 73e3fe4..4962ae4 100644
 --- a/arch/x86/kernel/cpu/resctrl/monitor.c
 +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -26,7 +26,9 @@
- #include <asm/resctrl.h>
+@@ -260,12 +260,11 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
+ 		return &hw_dom->arch_mbm_total[rmid];
+ 	case QOS_L3_MBM_LOCAL_EVENT_ID:
+ 		return &hw_dom->arch_mbm_local[rmid];
++	default:
++		/* Never expect to get here */
++		WARN_ON_ONCE(1);
++		return NULL;
+ 	}
+-
+-	/* Never expect to get here */
+-	WARN_ON_ONCE(1);
+-
+-	return NULL;
+ }
  
- #include "internal.h"
--#include "trace.h"
+ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index f26450b..69bf740 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -49,6 +49,9 @@ enum resctrl_event_id {
+ 	QOS_L3_OCCUP_EVENT_ID		= 0x01,
+ 	QOS_L3_MBM_TOTAL_EVENT_ID	= 0x02,
+ 	QOS_L3_MBM_LOCAL_EVENT_ID	= 0x03,
 +
-+#define CREATE_TRACE_POINTS
-+#include "monitor_trace.h"
++	/* Must be the last */
++	QOS_NUM_EVENTS,
+ };
  
- /**
-  * struct rmid_entry - dirty tracking for all RMID.
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor_trace.h b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
-new file mode 100644
-index 0000000..ade67da
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM resctrl
-+
-+#if !defined(_FS_RESCTRL_MONITOR_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _FS_RESCTRL_MONITOR_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(mon_llc_occupancy_limbo,
-+	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
-+	    TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
-+	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
-+			     __field(u32, mon_hw_id)
-+			     __field(int, domain_id)
-+			     __field(u64, llc_occupancy_bytes)),
-+	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
-+			   __entry->mon_hw_id = mon_hw_id;
-+			   __entry->domain_id = domain_id;
-+			   __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
-+	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
-+		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
-+		      __entry->llc_occupancy_bytes)
-+	   );
-+
-+#endif /* _FS_RESCTRL_MONITOR_TRACE_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE monitor_trace
-+#include <trace/define_trace.h>
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 92ea147..f7bb586 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -30,7 +30,7 @@
- #include "internal.h"
- 
- #define CREATE_TRACE_POINTS
--#include "trace.h"
-+#include "pseudo_lock_trace.h"
- 
- /*
-  * The bits needed to disable hardware prefetching varies based on the
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h b/arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
-new file mode 100644
-index 0000000..5a0fae6
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM resctrl
-+
-+#if !defined(_X86_RESCTRL_PSEUDO_LOCK_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _X86_RESCTRL_PSEUDO_LOCK_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(pseudo_lock_mem_latency,
-+	    TP_PROTO(u32 latency),
-+	    TP_ARGS(latency),
-+	    TP_STRUCT__entry(__field(u32, latency)),
-+	    TP_fast_assign(__entry->latency = latency),
-+	    TP_printk("latency=%u", __entry->latency)
-+	   );
-+
-+TRACE_EVENT(pseudo_lock_l2,
-+	    TP_PROTO(u64 l2_hits, u64 l2_miss),
-+	    TP_ARGS(l2_hits, l2_miss),
-+	    TP_STRUCT__entry(__field(u64, l2_hits)
-+			     __field(u64, l2_miss)),
-+	    TP_fast_assign(__entry->l2_hits = l2_hits;
-+			   __entry->l2_miss = l2_miss;),
-+	    TP_printk("hits=%llu miss=%llu",
-+		      __entry->l2_hits, __entry->l2_miss));
-+
-+TRACE_EVENT(pseudo_lock_l3,
-+	    TP_PROTO(u64 l3_hits, u64 l3_miss),
-+	    TP_ARGS(l3_hits, l3_miss),
-+	    TP_STRUCT__entry(__field(u64, l3_hits)
-+			     __field(u64, l3_miss)),
-+	    TP_fast_assign(__entry->l3_hits = l3_hits;
-+			   __entry->l3_miss = l3_miss;),
-+	    TP_printk("hits=%llu miss=%llu",
-+		      __entry->l3_hits, __entry->l3_miss));
-+
-+#endif /* _X86_RESCTRL_PSEUDO_LOCK_TRACE_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE pseudo_lock_trace
-+#include <trace/define_trace.h>
-diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/trace.h
-deleted file mode 100644
-index 2a50631..0000000
---- a/arch/x86/kernel/cpu/resctrl/trace.h
-+++ /dev/null
-@@ -1,59 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#undef TRACE_SYSTEM
--#define TRACE_SYSTEM resctrl
--
--#if !defined(_TRACE_RESCTRL_H) || defined(TRACE_HEADER_MULTI_READ)
--#define _TRACE_RESCTRL_H
--
--#include <linux/tracepoint.h>
--
--TRACE_EVENT(pseudo_lock_mem_latency,
--	    TP_PROTO(u32 latency),
--	    TP_ARGS(latency),
--	    TP_STRUCT__entry(__field(u32, latency)),
--	    TP_fast_assign(__entry->latency = latency),
--	    TP_printk("latency=%u", __entry->latency)
--	   );
--
--TRACE_EVENT(pseudo_lock_l2,
--	    TP_PROTO(u64 l2_hits, u64 l2_miss),
--	    TP_ARGS(l2_hits, l2_miss),
--	    TP_STRUCT__entry(__field(u64, l2_hits)
--			     __field(u64, l2_miss)),
--	    TP_fast_assign(__entry->l2_hits = l2_hits;
--			   __entry->l2_miss = l2_miss;),
--	    TP_printk("hits=%llu miss=%llu",
--		      __entry->l2_hits, __entry->l2_miss));
--
--TRACE_EVENT(pseudo_lock_l3,
--	    TP_PROTO(u64 l3_hits, u64 l3_miss),
--	    TP_ARGS(l3_hits, l3_miss),
--	    TP_STRUCT__entry(__field(u64, l3_hits)
--			     __field(u64, l3_miss)),
--	    TP_fast_assign(__entry->l3_hits = l3_hits;
--			   __entry->l3_miss = l3_miss;),
--	    TP_printk("hits=%llu miss=%llu",
--		      __entry->l3_hits, __entry->l3_miss));
--
--TRACE_EVENT(mon_llc_occupancy_limbo,
--	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
--	    TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
--	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
--			     __field(u32, mon_hw_id)
--			     __field(int, domain_id)
--			     __field(u64, llc_occupancy_bytes)),
--	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
--			   __entry->mon_hw_id = mon_hw_id;
--			   __entry->domain_id = domain_id;
--			   __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
--	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
--		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
--		      __entry->llc_occupancy_bytes)
--	   );
--
--#endif /* _TRACE_RESCTRL_H */
--
--#undef TRACE_INCLUDE_PATH
--#define TRACE_INCLUDE_PATH .
--#define TRACE_INCLUDE_FILE trace
--#include <trace/define_trace.h>
+ #endif /* __LINUX_RESCTRL_TYPES_H */
