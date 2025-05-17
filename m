@@ -1,163 +1,98 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8554519047F;
-	Sat, 17 May 2025 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70352AE7C
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747473475; cv=none; b=s8mt3+07Ti2VzyEoVwGpxHEfSZuS/HtzhoOA7rqnNIOlqF2uNkmBWy9PJ7OV3RJFfJYvKgtgK71vLC30M5Q2ZC75/FjDW/qstadl2I3+aQGork7z913V852BG+ejHX/W5XASQGAB4KhqYKnNQS5RZllilO8C+iKJ4IaVMeWDdOE=
+	t=1747473523; cv=none; b=QaMzCaOCD0yiK/YpOOzrTp7Ncx2NSFRy0j/0LwBE/cMvHorz6yEfzBbb4+ILzi75K+Ln1Y5YlAwZZab6745cF3WrLMmnEVxbqLha0Dl1Wu6FM3zroPNlQlefTZmK+5SmnkJiOEoaFo4f2f2OumieWcD5Z9oFjeiiRTHGKb1I20A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747473475; c=relaxed/simple;
-	bh=mlGw4baBHcuGzKKcXIjXAlBHQn5xgue6L+L5AIrLztg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PQQKUxsuWYjNnAOABFod80zU+iP6YRTINOtmo5f5TODA7CwT/4aDZqCK+L0RnMAPLz7qsJq5eg5TLfC+9fkkuzICFoRRrHGJ3DZF1LdJMqxUCWaU6etriKkaScafON2hdYu2ycedRtR8y6g1YtppkGNoTlPupoWr7hmISAwADMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iVgoUFBt; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVgoUFBt"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a1f9791a4dso1843012f8f.0;
-        Sat, 17 May 2025 02:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747473471; x=1748078271; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rCNZGeVTvUfkhsqTTITz24YrCObP488DGNwghcBg3qw=;
-        b=iVgoUFBtX1tEmwPE28oGyY0OrdAv5nBKPBVPIlJ48W08tJmWoaOpNQkUZDcRFIEgGM
-         C8+iYZqHq7uTMy/lwhs7jfLCW7m4tAz9wSZSIAG+0vhumCy3H1XKoubkk0IGEqKN7/1a
-         7/nJ1hvwGAB12CBPAA/B1AuO8MbhGQQ8rDzSVb6IXJYOcjxJA1adtbI5JiiDRz+iHgTl
-         XvbXZ5wVXhGiq5nTZX6FDSdrBWsAJuaQMT2AFtzLERi9Z9XmkmXxXTEcypsEhVvNywd7
-         Oyh6r5rG62GMPOh4+J5QXiymEY+eSJ8u3nypW8XYmYoUU+1aPPIRTSRcxgBbteXknufc
-         KJ7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747473471; x=1748078271;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rCNZGeVTvUfkhsqTTITz24YrCObP488DGNwghcBg3qw=;
-        b=UXyEJox2sZNMMt62drplGAwVPZkO5d/OxUq3rEkNuzCdetnPH2MeR8dmfSNKP85HW9
-         iDDBIHlx1848Bg7KUl8ZabdxJLZDQXTy3x3rlnK5ty8CnHpnxHjevsC2CeIn5DPM/dOF
-         oJbBCLPx7tjDQixssgemxyf7F4+CpxE8zIS2aQfcMKq5X0xkf9+miRBJ2qipsP6xWOWT
-         MTx4ednmXKDQwoz86/e/gS+UiOW/1BjEdD2bfPv22UinFVKgRD6da3+YYr0+Qmkp9tZd
-         w6Kk7X4/8ZCiVMLHCSRn7T6VvsLMw7C7UpGTtZxccR0qn95piPCf+dBfYUjU2LtYkw8k
-         +dRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIZ6p8ZplNoIPBmHDz9YYG/HddU7Cy8U7g5ODhs0O7NW/3hyvsZ7m3hBx2SSgWElZkVvCj+02i5d1nslQ1@vger.kernel.org, AJvYcCXguSYQik2tKZ925p7x2rktW+Q/B0E01GaGL5oPYtI0emsPR3rD86U36nh1Nu3ssFLYgLAIvirdFk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQVT3GfIbuyadzXn7dKxtrGY2AmZ8DFBJQU8L212da6SZmFe6B
-	PADKwnWifbZYXHnJHoXol4bpbEkjNPQ2WOnHBHWNtYl04hO73l4dZL0m
-X-Gm-Gg: ASbGncsob3TXP1RJ+JrQZ8cvy6ASqRlDN8LzOjvXVqkxSGT2gAMX8w2IdPMzVIw9XJn
-	vgz5Uu4OHh3BmVYlqiPbuP0k3d7uGJa2NJALGJtjtvl7PILa8nqx8RRajQoNU5MCDYULHt+kucl
-	Rq2AWziJHoo/YQvlwnUMkgocivqMHNMNR554kjJLdYs/gVS7P4th5b/tXXIBv/fJZ/OeAzIgDoj
-	x4KJRHr6L6I/CZvKIb6+hR7B0NTYiChClbEw8BEyQP6Bh/ofNfnAAISWigmBCxiCEisSdI+2dJ8
-	MZGikLyaL9K84r2Wm/DXLStEM2PM8bwXg6DMzbLcHELpRCgc0wdUYIJt6MEdJRUAgeLQ9IEXQ0s
-	EIaFukIr1NHvweA==
-X-Google-Smtp-Source: AGHT+IHhh+pdhB1FhvxRipbZUThiSYVgULom/LCBN5hMnR/bf+Apv1l5+vUWeTIWH5jBiODpHWvCmw==
-X-Received: by 2002:a05:6000:1a8f:b0:3a0:9fe1:c298 with SMTP id ffacd0b85a97d-3a35c821be8mr5839376f8f.18.1747473470570;
-        Sat, 17 May 2025 02:17:50 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d1dfsm5743204f8f.18.2025.05.17.02.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 02:17:50 -0700 (PDT)
-Date: Sat, 17 May 2025 10:17:42 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Peter Zijlstra
- <peterz@infradead.org>, dan.j.williams@intel.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, David Lechner
- <dlechner@baylibre.com>, Ingo Molnar <mingo@kernel.org>, "Fabio M. De
- Francesco" <fabio.maria.de.francesco@linux.intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave
- Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
- conditional locking
-Message-ID: <20250517101742.4c38830b@pumpkin>
-In-Reply-To: <CAHk-=wjxtRUPLhMXvj7Y_RpMVyVEMSiLd8ZeoroQ+_A8M=BQqg@mail.gmail.com>
-References: <20250509104028.GL4439@noisy.programming.kicks-ass.net>
-	<681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
-	<20250512105026.GP4439@noisy.programming.kicks-ass.net>
-	<20250512182559.GB25891@noisy.programming.kicks-ass.net>
-	<20250512185817.GA1808@noisy.programming.kicks-ass.net>
-	<CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
-	<20250513070918.GB25763@noisy.programming.kicks-ass.net>
-	<20250513085001.GC25891@noisy.programming.kicks-ass.net>
-	<CAHk-=wjBiAqaWnXG_44ajMCqU3nNQOC1RQ6SUmKYC03Y1G=r1g@mail.gmail.com>
-	<20250513200619.GJ2023217@ZenIV>
-	<20250513203114.GK2023217@ZenIV>
-	<CAHk-=wjxtRUPLhMXvj7Y_RpMVyVEMSiLd8ZeoroQ+_A8M=BQqg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1747473523; c=relaxed/simple;
+	bh=Wx3vkHoGM2SIgtXNrgr14kmQXUf9CbbQw1ZTh/t+Fs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JY3+YD78uVyl/FkvA6De2GDOWQvc7BWF6/Z0ZzoeBeQUVNALfLwt7Muha9Drf0Fi72RwYZLoyhD6QfHlquJwm6cQ8b/cyzU+onFHp24mlD4kR4M5vqyv0iNacbsdxoN1g9tPa7i0iDUEpRIVD9ue9pRly5aYDvkIKU0h+RMGgTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8DxOGpnVChoZqnuAA--.61368S3;
+	Sat, 17 May 2025 17:18:31 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMDxOcRiVChosg_cAA--.55457S2;
+	Sat, 17 May 2025 17:18:29 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.15-rc7
+Date: Sat, 17 May 2025 17:18:17 +0800
+Message-ID: <20250517091817.3490818-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxOcRiVChosg_cAA--.55457S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArWrZw17AFW7CF1fAw15ZFc_yoW8Xw13pr
+	9xCrnxGF4UGr13Jr13t34DWrn8tryxGw43Xa13t34xGr1UAr1UXr18KrykXFy5t3yrKr10
+	qF18Jw1YgF1UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8hiSPUUUUU==
 
-On Tue, 13 May 2025 14:28:37 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-> On Tue, 13 May 2025 at 13:31, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > Nevermind - should've read back through the thread for context.  
-> 
-> Well, your comment did make me test what I can make gcc generate..
-> 
-> I still can't get gcc to do
-> 
->        cmpq $-4095,%rdi
->         jns     .L189
-> 
-> for IS_ERR_OR_NULL() however hard I try.
-> 
-> The best I *can* get both gcc and clang to at least do
-> 
->         movq    %rdi, %rcx
->         addq    $4095, %rcx
->         jns     .L189
-> 
-> which I suspect it much better than the "lea+cmpq", because a pure
-> register move is handled by the renaming and has no cost aside from
-> the front end (ie decoding).
-> 
-> So
-> 
->   #define IS_ERR_OR_NULL(ptr) (MAX_ERRNO + (long)(ptr) >= 0)
-> 
-> does seem to be potentially something we could use, and maybe we could
-> push the compiler people to realize that their current code generation
-> is bad.
-> 
-> Of course, it doesn't actually *really* work for IS_ERR_OR_NULL(),
-> because it gets the wrong results for user pointers, and while the
-> *common* case for the kernel is to test various kernel pointers, the
-> user pointer case does happen (ie mmap() and friends).
-> 
-> IOW, it's not actually correct in that form, I just wanted to see what
-> we could do for some limited form of this common pattern.
-> 
-> Anyway, I am surprised that neither gcc nor clang seem to have
-> realized that you can turn an "add" that just checks the condition
-> codes for sign or equality into a "cmp" of the negative value.
-> 
-> It seems such a trivial and obvious thing to do. But maybe I'm
-> confused and am missing something.
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-Doing the signed compare (long)(ptr) >= -MAX_ERRNO generates cmp + jl
-(sign != overflow) which is a better test.
+are available in the Git repository at:
 
-To let user pointers through it might be possible to generate:
-	leaq	-1(%reg), %reg
-	cmpq	$-4097, %reg
-	leaq	1(%reg), %reg
-	ja	label
-which trades a register for an instruction.
-It wouldn't be too bad if the second 'leaq' is moved to the branch
-target - especially for any cpu that don't have inc/dec that doesn't
-affect the flags.
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-2
 
-	David
+for you to fetch changes up to 12614f794274f63fbdfe76771b2b332077d63848:
 
+  LoongArch: uprobes: Remove redundant code about resume_era (2025-05-14 22:18:10 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.15-rc7
+
+Fix some bugs about kernel-fpu, cpu idle function, hibernation and
+uprobes.
+----------------------------------------------------------------
+Huacai Chen (3):
+      LoongArch: Fix MAX_REG_OFFSET calculation
+      LoongArch: Move __arch_cpu_idle() to .cpuidle.text section
+      LoongArch: Save and restore CSR.CNTC for hibernation
+
+Tianyang Zhang (1):
+      LoongArch: Prevent cond_resched() occurring within kernel-fpu
+
+Tiezhu Yang (2):
+      LoongArch: uprobes: Remove user_{en,dis}able_single_step()
+      LoongArch: uprobes: Remove redundant code about resume_era
+
+ arch/loongarch/include/asm/ptrace.h  |  2 +-
+ arch/loongarch/include/asm/uprobes.h |  1 -
+ arch/loongarch/kernel/genex.S        |  7 +++++--
+ arch/loongarch/kernel/kfpu.c         | 22 ++++++++++++++++++++--
+ arch/loongarch/kernel/time.c         |  2 +-
+ arch/loongarch/kernel/uprobes.c      | 11 +----------
+ arch/loongarch/power/hibernate.c     |  3 +++
+ 7 files changed, 31 insertions(+), 17 deletions(-)
 
