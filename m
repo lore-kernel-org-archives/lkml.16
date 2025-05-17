@@ -1,91 +1,97 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F7C4C92;
-	Sat, 17 May 2025 00:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B19B67A
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 00:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747442795; cv=none; b=KZAnqmOzqIUHjH3/tvP9HZgEcqnhdQwtqhP78OellvL7brO41v6tf0MY6HLId0TtSUulJ3Zl1nb1MeGh9abRFQux+gaRvjS3+FNgjJ4N/XBLXHr6Wlivi5vMmoL8jXeDRwBtRARMVv0uSsPGIDhmv3V58d34h9ayD+YZZXGzAP8=
+	t=1747443048; cv=none; b=GOz90MUs00TO7NiLrUfrpseM0/qMIlqL50k62M/lvGjNp29Dti6a7KRArodQ2rbLdx6hNON2fbPuvYrIyES7S56PYO3T7Zh6iZbiwg3cdheTfr1gYhCkiWYuWQrGlvVxz7N4c4tdSbGwjfzgRnkpcTvdCsb3nBimWc5mA6rnlFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747442795; c=relaxed/simple;
-	bh=46aGTMbwZQ5iNg5aPtu2TgpP9K1VUPCWEZQeFqbZdyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkNcyUftX1YcgVm3Nw36wO9eOPZY2Ri5GNvBuKq1CD6qMvxHTacHKalBTsRtEUs7esN7euhbfN7Wu+GqedEyP3EG5vkIL6s+3SRLYSSwXYNUoTikHrOA5PlZ6JupfWJBL1TvpyT7//pyv4m4ZzRgygf8wX/x0YFlAABoQALABR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JoL/vL5R; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747443048; c=relaxed/simple;
+	bh=odnr47MXtSwQd+ZGd3pnhxHTnO5aWal5RWy5Bf5qs+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=JxL8IfKB9FOV+KEu6U+AVAJqLAr87SGDPwPMeKfpl17bcRb5OOlfBNdYnHIcLfgURyCgC/IGrwPwNLgRhYakLW2K7XRR3YLknZnFzbmVIYk+z4cJGUbX8YtE1tHMxgRTQUfLIpRJjh4u3oE/gAGVnszJLThwDgEe55+T26B3yuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9NBsAC/; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JoL/vL5R"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=eAq1Jx0B5XZ2PSqnPCuf5t72QghPB10tZtJQZtu4EYU=; b=JoL/vL5RSA3VQgc7UYQTBpL0YU
-	eNTrmw2DV68hq62u/q9auxIDR2GDfgE6DNjrKvJWi9U8YhpXt2gwx37q6eg0+V/raCiC9m2OPIktp
-	tniKdUJ+WlAJe2qW3HwWV/d6jp2zhl63W6wIkSXhNvRek/agsmzAkf5C7fai9F8vIKBhCqLrG4KH+
-	paY/0BY3EL8enr5AhRdtybTvtezc9W3HriUWuAF9EVF36ocuNs//wgozd2wjDl3IhYmG/qTATLR5/
-	VEt9BV8nKig3SVDm8veWEAdIF6Ba/sQEVh5xpDO8YdoRLXjhjE6MICuBD0LVlWk5qOVjSfR/i4jC4
-	LVifh/ew==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uG5gk-006jLa-24;
-	Sat, 17 May 2025 08:46:07 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 17 May 2025 08:46:06 +0800
-Date: Sat, 17 May 2025 08:46:06 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"yosry.ahmed@linux.dev" <yosry.ahmed@linux.dev>,
-	"nphamcs@gmail.com" <nphamcs@gmail.com>,
-	"chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
-	"usamaarif642@gmail.com" <usamaarif642@gmail.com>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"21cnbao@gmail.com" <21cnbao@gmail.com>,
-	"ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"clabbe@baylibre.com" <clabbe@baylibre.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"ebiggers@google.com" <ebiggers@google.com>,
-	"surenb@google.com" <surenb@google.com>,
-	"Accardi, Kristen C" <kristen.c.accardi@intel.com>,
-	"Gomes, Vinicius" <vinicius.gomes@intel.com>,
-	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>,
-	"Gopal, Vinodh" <vinodh.gopal@intel.com>
-Subject: Re: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
- batching support in acomp & drivers.
-Message-ID: <aCfcTpLgFp4lPaZK@gondor.apana.org.au>
-References: <20250508194134.28392-1-kanchana.p.sridhar@intel.com>
- <20250508194134.28392-11-kanchana.p.sridhar@intel.com>
- <aCL86_v0jaqW8jxS@gondor.apana.org.au>
- <PH7PR11MB81215CF69F51F2801F4767CDC993A@PH7PR11MB8121.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9NBsAC/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747443046; x=1778979046;
+  h=date:from:to:cc:subject:message-id;
+  bh=odnr47MXtSwQd+ZGd3pnhxHTnO5aWal5RWy5Bf5qs+Q=;
+  b=j9NBsAC/af2BpnO5yOud7LQ60V1fv9nuVIePTC21bcXvOjNZ4bF+aMWx
+   GKdVXeoRQcZDFmxQkPBrSCg7jrrhjOYYOAKRdNIhCTsFEewUnEYQzqJzW
+   wBc+AS2boN/jKBwk5kkjzcv8PPOMqijd8MVN4NrlpPg+oDUZQ0hmqZiXp
+   RvYCsAEOvgVkGC4Uccooc7KZRDijXDJZ+mOpBt9CLJokjZaCqAQOWuCGH
+   1iPIG1OHrqV3RGs9M5N6XINh+wCFAIt7Ox6vD0XPhAYOS1GgCVe+v7kmH
+   B3Ef0L9FxzRqSaZ9fffGd00++F6mbSlHAhuKJtdXbBHUNg7fjmh5yI29o
+   Q==;
+X-CSE-ConnectionGUID: V/rSr6vfQBC1ztnK/rza5Q==
+X-CSE-MsgGUID: k+0MMa17QXW5QNJLn3No3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="66977640"
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="66977640"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 17:50:46 -0700
+X-CSE-ConnectionGUID: RlszXTlKQWiXxDL11HUQLQ==
+X-CSE-MsgGUID: bYLqPjBrS1iGeJhVQU2+iw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="138585650"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 16 May 2025 17:50:45 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uG5lC-000JpL-2K;
+	Sat, 17 May 2025 00:50:42 +0000
+Date: Sat, 17 May 2025 08:49:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 03680913744de17fa49e62b1d8f71bab42b0b721
+Message-ID: <202505170838.J8FPVkz5-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR11MB81215CF69F51F2801F4767CDC993A@PH7PR11MB8121.namprd11.prod.outlook.com>
 
-On Fri, May 16, 2025 at 07:17:36PM +0000, Sridhar, Kanchana P wrote:
->
-> It appears acomp_do_req_chain() and acomp_reqchain_finish() compress the
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 03680913744de17fa49e62b1d8f71bab42b0b721  x86/mm: Remove duplicated word in warning message
 
-That's the fallback path.
+elapsed time: 836m
 
-A hardware driver capable of batching is supposed to declare the
-bit in cra_flags that bypasses the fallback.
+configs tested: 20
+configs skipped: 127
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250516    clang-20
+i386    buildonly-randconfig-002-20250516    gcc-12
+i386    buildonly-randconfig-003-20250516    clang-20
+i386    buildonly-randconfig-004-20250516    clang-20
+i386    buildonly-randconfig-005-20250516    clang-20
+i386    buildonly-randconfig-006-20250516    gcc-12
+i386                            defconfig    clang-20
+x86_64                        allnoconfig    clang-20
+x86_64                       allyesconfig    clang-20
+x86_64  buildonly-randconfig-001-20250516    clang-20
+x86_64  buildonly-randconfig-002-20250516    gcc-12
+x86_64  buildonly-randconfig-003-20250516    clang-20
+x86_64  buildonly-randconfig-004-20250516    clang-20
+x86_64  buildonly-randconfig-005-20250516    gcc-12
+x86_64  buildonly-randconfig-006-20250516    gcc-12
+x86_64                          defconfig    gcc-11
+x86_64                      rhel-9.4-rust    clang-18
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
