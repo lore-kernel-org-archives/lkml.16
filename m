@@ -1,141 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1176C2C6;
-	Sat, 17 May 2025 20:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42C6C2C6
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 20:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747513529; cv=none; b=naswXoyl8cV7WPh6cgoyc0giBNgWDP/8B3sxu4anUdevkN8cgppV60+zM/C2XBaOyQzlfVy4iCF4YKbUyC570oKMyywY6P3cyLyuLqTHhGxk0cQLbJGr9UPN9hL96k9+UTWDF31gGhzWbE5XLClYuStszQ6iU8l7gFPfU+nMFxI=
+	t=1747513578; cv=none; b=qgKmjRE/U2GW5v/2y/g7yeOOiGDw4KjVxUs7pyRYoD9dCOj0eBVXslUNmZcrRBJ1ZA9zBF5Iip1N4xYA4eBGK1u7pAkDAS10ZF0h83Ez7XBZwIFvJsWKHoHlsHApseQKICZJvcA/JrpuuAVPvZ8lzJuET4MM1YFkDOmUYcK7v54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747513529; c=relaxed/simple;
-	bh=q/+LJzWV//jJOpKwrMia7KlW4iMjaB4bjxmcmW7qiw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kqQ3BLq7FZoC/cKN5JDxPi9Z/BDCZuBvaixavXXEtRUPvAf0nOPhpYiDbt2OYXJHnU6HmQp0CXkP0f+mkJOje0F4IiMywMQX6jZERp0PaS0Uo9Y2dVv730nJqYl2qekgAMMF/I6nLf4swpDY0PV1L3Y7SxrBthF1qLI9UN0DUeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHN5K+e3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747513578; c=relaxed/simple;
+	bh=0sEhA6TB1/m6rNdOE82J31WVpMuIunvT8lMOm1dFjbY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hHlkbKu2XS4/Q9R9I8CUzL5AqIS3+RTr4GSE4Ue/Zho429KC+KhxSGoxxI61C8RGQnk0Sy9eAinP3HOlv+Wpi0bcXNbOp+iS0DFkiDitdZnj3zWb7u1LIrs247kD5IA1sl5FXzI0hZd4CvHGysYdu/uCJc/+PhkD2E5BP4LTCu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFEJTpiM; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHN5K+e3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E201EC4CEE3;
-	Sat, 17 May 2025 20:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747513529;
-	bh=q/+LJzWV//jJOpKwrMia7KlW4iMjaB4bjxmcmW7qiw0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FHN5K+e3zuEN/BDoe9RC8m3AEMhJKFPcFc2TF8QUouNHFZ4jPXTmHB6dJM0nw7zN+
-	 HdS9ZZGfCiaFPrf1rbHbkiIxPuDkhWD1UQ8xUNt4djb2gZiPhge0uT/cwP8wCz0sfE
-	 K1oTJGXqfprP2UU229Nl6tSNYxvlPfCkiApc1AxuPJvi1eBp47dAKzKiP7E5rjiefW
-	 lqe4sXol5lzO+WnM7FJW+KkVUy+rNrBzpZTZ1Gjcp1nD2MiNK+eWam0Z+rZYyMoZdn
-	 fjnhkwL7azFvIlqNg2Ckke0W10sOi8dIJGlPB9Gi5uqCQUI21nSuA6r8waTyjyoeeG
-	 VOYL0e5stpqMw==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Usama Arif <usamaarif642@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	hannes@cmpxchg.org,
-	shakeel.butt@linux.dev,
-	riel@surriel.com,
-	ziy@nvidia.com,
-	laoar.shao@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: Is number of process_madvise()-able ranges limited to 8? (was Re: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the process)
-Date: Sat, 17 May 2025 13:25:26 -0700
-Message-Id: <20250517202526.39730-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <005161f7-d849-41a9-8350-f56e52c49e7e@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFEJTpiM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747513577; x=1779049577;
+  h=date:from:to:cc:subject:message-id;
+  bh=0sEhA6TB1/m6rNdOE82J31WVpMuIunvT8lMOm1dFjbY=;
+  b=gFEJTpiMgdHtTPKQLth8ZGEI8ItXELSIp+WTZ2216JfDOYYRxN+r/jxx
+   6kSfoybQWpoVgrpYNYaGx6Ld9XuRM9sLYo44WxBDmIOvBVftrazi/xZtI
+   FYULv+TRzaM5YQw0dmH56kipGZfLLQh3gVpwXHMDaRR19hMUcEfiTX83/
+   7U/xoJwOJ4v5VTOywJyEBKBnTVkMJGDemn/0A0dpFWaqNlL7JSWJIsOMN
+   rC7lr8noWv2EQwB14yZQKsniWyrCHaE0ZzQsxF7uP2IEGI9Wka+VFwGcN
+   O0X+UGjqYhwSIJqv1zxMIKSPVT+ClPrHRyYTCFGI+nllGmc3XsxE6Qx6K
+   A==;
+X-CSE-ConnectionGUID: AUdvl0bHSJ+lczg3weIKbA==
+X-CSE-MsgGUID: CHADiCd0TAeSbcM3JNQCFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="71961047"
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="71961047"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 13:26:16 -0700
+X-CSE-ConnectionGUID: fJydtALcT5aKKNExZfrrjA==
+X-CSE-MsgGUID: sMcG93WRR4GE3Jy0BpOh3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="139400402"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 17 May 2025 13:26:15 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGO6n-000KPp-0g;
+	Sat, 17 May 2025 20:26:13 +0000
+Date: Sun, 18 May 2025 04:25:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/cleanups] BUILD SUCCESS
+ 38c1e73fdeb37962324a3265ef95618dfa4552ab
+Message-ID: <202505180429.4g87veWr-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Sat, 17 May 2025 19:50:34 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/cleanups
+branch HEAD: 38c1e73fdeb37962324a3265ef95618dfa4552ab  irqdomain: Consolidate coding style
 
-[...]
-> Let's keep this simple - I'm just wrong here :) apologies, entirely my
-> fault.
+elapsed time: 1450m
 
-No worry, appreciate your kind and detailed answer.
+configs tested: 118
+configs skipped: 6
 
-[...]
-> Anyway, let's dig into the code to get things right:
-[...]
-> So - this confirms it - we're fine, it just tries to use the stack-based
-> array if it can - otherwise it kmalloc()'s.
-> 
-> Of course, UIO_MAXIOV remains the _actual_ hard limit (hardcoded to 1,024
-> in include/uapi/linux/uio.h).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks for kind clarifications.  All your explanations perfectly matches with
-my understanding.  I'm happy to be on the same page with you!
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250517    gcc-10.5.0
+arc                   randconfig-002-20250517    gcc-14.2.0
+arc                    vdk_hs38_smp_defconfig    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                         bcm2835_defconfig    clang-21
+arm                       imx_v6_v7_defconfig    clang-16
+arm                   milbeaut_m10v_defconfig    clang-19
+arm                            mmp2_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250517    clang-21
+arm                   randconfig-002-20250517    gcc-8.5.0
+arm                   randconfig-003-20250517    gcc-8.5.0
+arm                   randconfig-004-20250517    clang-21
+arm                         socfpga_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250517    clang-17
+arm64                 randconfig-002-20250517    clang-16
+arm64                 randconfig-003-20250517    gcc-6.5.0
+arm64                 randconfig-004-20250517    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250517    gcc-10.5.0
+csky                  randconfig-002-20250517    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250517    clang-21
+hexagon               randconfig-002-20250517    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250517    clang-20
+i386        buildonly-randconfig-002-20250517    clang-20
+i386        buildonly-randconfig-003-20250517    clang-20
+i386        buildonly-randconfig-004-20250517    gcc-12
+i386        buildonly-randconfig-005-20250517    clang-20
+i386        buildonly-randconfig-006-20250517    gcc-12
+i386                                defconfig    clang-20
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250517    gcc-14.2.0
+loongarch             randconfig-002-20250517    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+m68k                       bvme6000_defconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                      bmips_stb_defconfig    clang-21
+mips                           mtx1_defconfig    clang-21
+mips                         rt305x_defconfig    clang-21
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250517    gcc-14.2.0
+nios2                 randconfig-002-20250517    gcc-10.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250517    gcc-5.5.0
+parisc                randconfig-002-20250517    gcc-11.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250517    gcc-6.5.0
+powerpc               randconfig-002-20250517    gcc-6.5.0
+powerpc               randconfig-003-20250517    clang-16
+powerpc                    socrates_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250517    clang-21
+powerpc64             randconfig-002-20250517    gcc-6.5.0
+powerpc64             randconfig-003-20250517    gcc-6.5.0
+riscv                            alldefconfig    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250517    clang-21
+riscv                 randconfig-002-20250517    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250517    gcc-7.5.0
+s390                  randconfig-002-20250517    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250517    gcc-12.4.0
+sh                    randconfig-002-20250517    gcc-10.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250517    gcc-11.5.0
+sparc                 randconfig-002-20250517    gcc-7.5.0
+sparc64               randconfig-001-20250517    gcc-7.5.0
+sparc64               randconfig-002-20250517    gcc-5.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250517    gcc-12
+um                    randconfig-002-20250517    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250517    gcc-12
+x86_64      buildonly-randconfig-002-20250517    gcc-12
+x86_64      buildonly-randconfig-003-20250517    clang-20
+x86_64      buildonly-randconfig-004-20250517    clang-20
+x86_64      buildonly-randconfig-005-20250517    clang-20
+x86_64      buildonly-randconfig-006-20250517    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250517    gcc-9.3.0
+xtensa                randconfig-002-20250517    gcc-13.3.0
 
-> 
-> The other points I made about the proposed interface remain, but I won't go
-> into more detail as we are obviously lacking that context here.
-> 
-> Thanks for bringing this up and correcting my misinterpretation, as well as
-> providing the below repro code, and let's revisit your old series... but on
-> Monday :)
-
-Sure, and no worry, take your time :)
-
-> 
-> I should really not be looking at work mail on a Saturday (mea culpa, once
-> again... :)
-
-I hope your remaining weekend be calm and uninterruptable.  Keeping you not
-burned out is important for the community :)
-
-> 
-> One small nit in the repro code below (hey I'm a kernel dev, can't help
-> myself... ;)
-
-To me, being a kernel programmer rather than a user-space c code programmer is
-a good excuse for asking to be generous to my user-space bugs ;)  Thank you for
-your kind comment below, anyway :)
-
-> 
-> Cheers, Lorenzo
-> 
-> >
-> > Attaching my test code below.  You could simply run it as below.
-> >
-> >     gcc test.c && ./a.out
-> >
-> > ==== Attachment 0 (test.c) ====
-[...]
-> > 	ret = syscall(SYS_process_madvise, pidfd, vec, NR_PAGES,
-> > 			MADV_DONTNEED, 0);
-> > 	if (ret != MMAP_SZ) {
-> > 		printf("process_madvise fail\n");
-> > 		return -1;
-> > 	}
-> 
-> To be pedantic, you are really only checking to see if an error was
-> returned, in theory no error might have been returned but the operation
-> might have not proceeded, so a more proper check here would be to populated
-> the anon memory with non-zero data, then check afterwards that it's zeroed.
-> 
-> Given this outcome would probably imply iovec issues, it's not likely, but
-> to really assert the point you'd probably want to do that!
-
-Good points!  I once considered making this test better and posting to be
-included in mm selftests, but found no time to do that so far.  Above input
-must be very helpful in a case that I (or someone else) find a time to write
-such process_madvise() selftest.
-
-
-Thanks,
-SJ
-
-[...]
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
