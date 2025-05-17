@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A252D052
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 12:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97D41F1905
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 12:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747485378; cv=none; b=fZJvcct73U9Y8OA2OhIt1RZB0Kz7EDpsI0xyMG0CzlxIo4+j1pRg/FHTElQASqUQeopO5y4rSb1kRNWzXcLX63YL1vEBvrKTdBO6HwdqX/sKEfhZHBDmIiJ9Wn5Tbw3zqF8WsuRmfGl1vUMKFm3rZr2Ji0LkyCuC/Tg5w7iGhgU=
+	t=1747485821; cv=none; b=hZXlGqd3lOqI7Bes1Xj01UHwx3bKY7EziuwjbYPZ9jJIgigCFdehVYGyYyuFe7G07pKjPnP2rDLdTFMS51KdBHE3QUVN0/4KZHH446ImGYj/tVduSfOoBdRKQdIYyhTvQcuqrCSF1HddsEalz5JmKTcEoz6WlPyErIzW2k4FKTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747485378; c=relaxed/simple;
-	bh=etuUqgZDekTPWc1mywUqKCAieD6k+Xk2ltdLNLatqW8=;
+	s=arc-20240116; t=1747485821; c=relaxed/simple;
+	bh=blwOvS2w6YzWihvg3dqqgvzv4+0UY579zeAvYaIRPdU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NCIjABhFxM+EgeZzJFLnB1FT1hVU6DwdUXUxqPdkQ91nbdxdbxfj8WaPPjReNhYJpUAEHZPGVwIbeFMVOqxulVj3+Gb/jQX4VnbFInRtHel+GF76iBr7fQHiEPA79WMqwWXGzQRPGeNU8MEYjgxjh0XzaLakrkRHLCPccZSKrUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fro74X60; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=htwOHEclsl7IJm/e9j99CG7TRHxu5XnhzmtMM5yPTJkr/nAyW9fC648IlhFG3OOELbv0N3EAYMBaMtwtLUhgWJa4Gq9YSxjR5Q3ucCShft5zdeTfLyL1Ysi1QOyFTAcbRLfvNqp5j/HD11vvC9wZfkD3mI/ANctzxdAbyV6U/lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G8BFA1Dq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fro74X60"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8BFA1Dq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747485373;
+	s=mimecast20190719; t=1747485818;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3hCuTfjsNu5ACQNXXwWH9knQPQhUx7u9apSg60b7GQc=;
-	b=fro74X60wsb/qRGjq4ggu6oQXj8R5KfaSOV23m3a5CCrR5hXHASAy1NwBWxx5oSMWnL0Wf
-	lb3JD1p0LA5jUOjLEPf/cYUbOLdBYBo94RkpEj1KXlE580Gwubom6nFJdMiJiYUO5/RlWp
-	oY1i4ve2qEBLLcDv/GDINcSoGp//4as=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=cTnV1z0rjTvUAak1W98nsAi7ubw9WZ/kdmhmvEXkfzU=;
+	b=G8BFA1DquJ16VrdC9D6NwS5/uzlWfuglSlWStaOzm2JgDF7Fni3YRCKHSukymdb6Vmt3RF
+	Mg5rEvfJTsUUGaoUf6ZH8FfnO/CvQxbngOS1nY4rG6QnbDo8cu9rriGM3/1Oiz6H4wbrN6
+	bCIEvgd+1ZqS76qvp8mpnofHuA6pTbs=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-1uf7ZrvgNeCMoo9czz2Hwg-1; Sat, 17 May 2025 08:36:12 -0400
-X-MC-Unique: 1uf7ZrvgNeCMoo9czz2Hwg-1
-X-Mimecast-MFC-AGG-ID: 1uf7ZrvgNeCMoo9czz2Hwg_1747485372
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-48cc1907229so70188131cf.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 05:36:12 -0700 (PDT)
+ us-mta-155-SvCH7reHPgOHXbDlAfwtQA-1; Sat, 17 May 2025 08:43:35 -0400
+X-MC-Unique: SvCH7reHPgOHXbDlAfwtQA-1
+X-Mimecast-MFC-AGG-ID: SvCH7reHPgOHXbDlAfwtQA_1747485814
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5f876bfe0so574229485a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 05:43:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747485371; x=1748090171;
+        d=1e100.net; s=20230601; t=1747485813; x=1748090613;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3hCuTfjsNu5ACQNXXwWH9knQPQhUx7u9apSg60b7GQc=;
-        b=HJff02i06kYTfIAShZG2H9w9d3JT/xcVx4vv4DqnTa3zP18o6wXdRE6D+4Opwh1Xft
-         ie2mL/Par2yiaBlOohkbp/nmKXy0OpE7hN1PcBrUa6i8t3l2rXv32vUnay4ytA/rBD3j
-         GicZ9TVDDsaAmNB0ZN2QB6SPCkrv+zvpFiRzeK+coF+OM+xrsvyuZP24k7RwFZztvLhs
-         y8+iSb7t7aoAAeAmfmkQs+z7Ml179J7h5kxYtt4mIVpQWqLkaBvkI4YrDNTyGjmNMS5H
-         49l0cXml6ntZm4ltmGddK++HPe/qCv9/ls8GXxkyjFqp8ogfADcU9T8aHOLmvgVp3eej
-         tuOA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7qWcdAY+haMAkNj8WM2o9QN3E/g0G5E/nRDnA6HcUGF6SO9P+z3oPRy4Yfvy+w4lxa5icwOz8sIJLQ3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1UXMtZk6X1gX7uig+Hv/KcrNXcUWoTGVeaNi55E/RupPuHPen
-	nEfeEojmJC0ic/TxjEGZHsJAieeB4XwQ4HTuHAFRkh0XV/NngtDjmPu2ozVWKYP+08Xb5KeRw80
-	xBA3PnNHWEPQHEu0UdlIrlcHeVVUCXhZst/Bpr0/S1euR26Jwze2J1PCY9ULu6xJR192bKD8r8g
+        bh=cTnV1z0rjTvUAak1W98nsAi7ubw9WZ/kdmhmvEXkfzU=;
+        b=TP0jaidynZepvebo79S8nN5PJVzB5G5ccaSFPJ8V9SGMJr5mtHPe109bHfhXWajmqm
+         dUZDqUN9WrxwBfnTGmrzEjSpLQBAXrwMJOTT6B7w5yIn1oiHnJ9a3x+OWdrnTXlvKJ+K
+         Z2Kckb4TFsRJugocLoXR7dNU1lsCONAaSyqps1PBN2ZCPYfcrwnoCTJ/76zR3SGOiAtb
+         9bag6o6WYSlcW8qVyq1YbDRprRJbJkzH/Q0Mc/eyfBqi1v/cy0yl9mDUyYeqpi9KGymZ
+         HgzZAfe8Lj3zDlbl3Hg7hD6AwI51OqCSaT6NskzYuaONpvDcnNYOFvVN+nOaeMk1KZL5
+         CFwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs16QG1L67S4sYuhHoHdnFE8mbDKgJkjKekvxzoAPhryiIG0vD2g8V1WUiJM0YZMxdZ9/0TmTyY1IC5S0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9NQgXxDvLCuAnN4WKGQ+HsXu89LP2tbfnyXm+fuxSCmMpZwPk
+	q3/sX7nuPuwdACRFWKf/Iqog92wB6j7k+hKuPajHhBAKIbICWh/h3sfwLvI14zS2C0OfUXnELQa
+	5noup7nA1do/AxbkW1CPgwt3ncjXDGfRqXnsAoEOW9T1uHxDZDQG5xKcav5IRvagtu5DUwl3FEA
 	==
-X-Gm-Gg: ASbGncti0zd1rJNgg2hNoHaMJ9W1yo7Z64+BODcVfMAAhuq57e6Q06rqpfi2qXTYETf
-	LMHb90YGbQnImSOOvTT+11A8PTNVxAKVfNIKPzjzCZ/Dg3hZwRrgAjOaI4+A0B1/II5Plxto0S5
-	iMrAPyib11rA/Uw7kJQQ8xq0nZinEeiCjPK8mN3yQpgepiEibur6B3pMxoa5/vQIQvedRxd35Dk
-	G/l0njOp56f0OJAt2Nau2dDUmV/AnumN4Hcsr73ABEkdECeI9CwDkGXNqVFyPkBkgAA5UY8eF/h
-	/iYuvI7XSQlqdy1PgQ==
-X-Received: by 2002:a05:622a:22a9:b0:476:923a:f1cb with SMTP id d75a77b69052e-494ae4600damr115386491cf.41.1747485371719;
-        Sat, 17 May 2025 05:36:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHM609SyUfzUqo4OLsFLuxdNV4/x0HRlr8FVHAUN/Func1h8j8Ce5B7Setm7CTwZNs7enaEbQ==
-X-Received: by 2002:a05:6214:f23:b0:6f8:aa6f:438b with SMTP id 6a1803df08f44-6f8b08352f5mr117405936d6.3.1747485361377;
-        Sat, 17 May 2025 05:36:01 -0700 (PDT)
+X-Gm-Gg: ASbGncuy0h73xk3zbj81nnjw5owNKqVojLw8v0L+vmGlI0HBJOPiAvNc+GaW0prajwH
+	c7D3Gam7MX8Tg0S3sNi8+kJCOAOlK/NzmsiQUh7qFHwoFssHV7vLm2ppAuB2Ux2TkTEUG/l0+0d
+	e2MsT/YYMHqTiaMuOrrV5goUpRYpeeeDbwTdx9ZlowTWO1T0ezbEPSyfGaxz/Oz9GllpVUPfkqt
+	fKxgLes2pLYRnx+n0WTEHke7C7OxebiFuG/k8BD0qNKgDGkKdJIpRvRstliIcQnP08hYw3EClJH
+	WZWYnSGvs0yGOnzhJQ==
+X-Received: by 2002:a05:620a:17a2:b0:7c5:49d6:733a with SMTP id af79cd13be357-7cd46724717mr1000277585a.21.1747485813115;
+        Sat, 17 May 2025 05:43:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQKOl/NHbzJvrLVa4YJt0v+b+jH91WXus2AJ87GhwZJg1NQMX5sFrwvNWH0ueHHWVOecAHSg==
+X-Received: by 2002:a05:620a:17a2:b0:7c5:49d6:733a with SMTP id af79cd13be357-7cd46724717mr1000259885a.21.1747485809714;
+        Sat, 17 May 2025 05:43:29 -0700 (PDT)
 Received: from [192.168.21.214] ([69.164.134.123])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6f8b08afb37sm25011526d6.49.2025.05.17.05.36.00
+        by smtp.googlemail.com with ESMTPSA id af79cd13be357-7cd468b6d30sm253925285a.76.2025.05.17.05.43.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 May 2025 05:36:00 -0700 (PDT)
-Message-ID: <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com>
-Date: Sat, 17 May 2025 14:35:59 +0200
+        Sat, 17 May 2025 05:43:29 -0700 (PDT)
+Message-ID: <fb0580d9-103f-4aa1-94ae-c67938460d71@redhat.com>
+Date: Sat, 17 May 2025 14:43:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,12 +75,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
+Subject: Re: [PATCH v3 3/3] KVM: x86/mmu: Defer allocation of shadow MMU's
+ hashed page list
 To: Sean Christopherson <seanjc@google.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  Vipin Sharma <vipinsh@google.com>
 References: <20250516215422.2550669-1-seanjc@google.com>
- <20250516215422.2550669-3-seanjc@google.com>
+ <20250516215422.2550669-4-seanjc@google.com>
 From: Paolo Bonzini <pbonzini@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=pbonzini@redhat.com; keydata=
@@ -118,91 +119,124 @@ Autocrypt: addr=pbonzini@redhat.com; keydata=
  JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
  dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
  b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
-In-Reply-To: <20250516215422.2550669-3-seanjc@google.com>
+In-Reply-To: <20250516215422.2550669-4-seanjc@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/16/25 23:54, Sean Christopherson wrote:
-> Allocate VM structs via kvzalloc(), i.e. try to use a contiguous physical
-> allocation before falling back to __vmalloc(), to avoid the overhead of
-> establishing the virtual mappings.  For non-debug builds, The SVM and VMX
-> (and TDX) structures are now just below 7000 bytes in the worst case
-> scenario (see below), i.e. are order-1 allocations, and will likely remain
-> that way for quite some time.
+> When the TDP MMU is enabled, i.e. when the shadow MMU isn't used until a
+> nested TDP VM is run, defer allocation of the array of hashed lists used
+> to track shadow MMU pages until the first shadow root is allocated.
 > 
-> Add compile-time assertions in vendor code to ensure the size of the
-> structures, sans the memslos hash tables, are order-0 allocations, i.e.
-> are less than 4KiB.  There's nothing fundamentally wrong with a larger
-> kvm_{svm,vmx,tdx} size, but given that the size of the structure (without
-> the memslots hash tables) is below 2KiB after 18+ years of existence,
-> more than doubling the size would be quite notable.
+> Setting the list outside of mmu_lock is safe, as concurrent readers must
+> hold mmu_lock in some capacity, shadow pages can only be added (or removed)
+> from the list when mmu_lock is held for write, and tasks that are creating
+> a shadow root are serialized by slots_arch_lock.  I.e. it's impossible for
+> the list to become non-empty until all readers go away, and so readers are
+> guaranteed to see an empty list even if they make multiple calls to
+> kvm_get_mmu_page_hash() in a single mmu_lock critical section.
 > 
-> Add sanity checks on the memslot hash table sizes, partly to ensure they
-> aren't resized without accounting for the impact on VM structure size, and
-> partly to document that the majority of the size of VM structures comes
-> from the memslots.
+> Use {WRITE/READ}_ONCE to set/get the list when mmu_lock isn't held for
+> write, out of an abundance of paranoia; no sane compiler should tear the
+> store or load, but it's technically possible.
 > 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->   arch/x86/include/asm/kvm_host.h |  2 +-
->   arch/x86/kvm/svm/svm.c          |  2 ++
->   arch/x86/kvm/vmx/main.c         |  2 ++
->   arch/x86/kvm/vmx/vmx.c          |  2 ++
->   arch/x86/kvm/x86.h              | 22 ++++++++++++++++++++++
->   5 files changed, 29 insertions(+), 1 deletion(-)
+>   arch/x86/kvm/mmu/mmu.c | 60 +++++++++++++++++++++++++++++++++++-------
+>   1 file changed, 50 insertions(+), 10 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 9667d6b929ee..3a985825a945 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1961,7 +1961,7 @@ void kvm_x86_vendor_exit(void);
->   #define __KVM_HAVE_ARCH_VM_ALLOC
->   static inline struct kvm *kvm_arch_alloc_vm(void)
->   {
-> -	return __vmalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +	return kvzalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT);
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 41da2cb1e3f1..edb4ecff9917 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -1983,14 +1983,33 @@ static bool sp_has_gptes(struct kvm_mmu_page *sp)
+>   	return true;
 >   }
 >   
->   #define __KVM_HAVE_ARCH_VM_FREE
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 0ad1a6d4fb6d..d13e475c3407 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -5675,6 +5675,8 @@ static int __init svm_init(void)
->   {
->   	int r;
->   
-> +	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_svm);
+> +static __ro_after_init HLIST_HEAD(empty_page_hash);
 > +
->   	__unused_size_checks();
->   
->   	if (!kvm_is_svm_supported())
-> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-> index d1e02e567b57..e18dfada2e90 100644
-> --- a/arch/x86/kvm/vmx/main.c
-> +++ b/arch/x86/kvm/vmx/main.c
-> @@ -64,6 +64,8 @@ static __init int vt_hardware_setup(void)
->   		vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
->   	}
->   
-> +	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_tdx);
+> +static struct hlist_head *kvm_get_mmu_page_hash(struct kvm *kvm, gfn_t gfn)
+> +{
+> +	/*
+> +	 * Load mmu_page_hash from memory exactly once, as it's set at runtime
+> +	 * outside of mmu_lock when the TDP MMU is enabled, i.e. when the hash
+> +	 * table of shadow pages isn't needed unless KVM needs to shadow L1's
+> +	 * TDP for an L2 guest.
 
-I would put either both or no checks in main.c.
+Avoid double negations, for example "i.e. when shadow paging and the 
+mmu_page_hash is only needed for a L1 hypervisor's TDP".
 
-Or if you use static_assert, you can also place the macro invocation 
-close to the struct definition.
+> +	 */
+> +	struct hlist_head *page_hash = READ_ONCE(kvm->arch.mmu_page_hash);
+
+This READ_ONCE is more for the (now implicit) smp_read_barrier_depends() 
+than for "loading exactly once".  Might as well use smp_load_acquire() 
+since it's free on x86.
+
+> +	lockdep_assert_held(&kvm->mmu_lock);
+
+Move this comment here from kvm_mmu_alloc_page_hash():
+
+	/* mmu_lock must be held for write to add (or remove) shadow
+	 * pages, and so readers are guaranteed to see an empty list for
+	 * their current mmu_lock critical section.
+	 */
+> +	if (!page_hash)
+> +		return &empty_page_hash;
+> +
+> +	return &page_hash[kvm_page_table_hashfn(gfn)];
+> +}
+> +
+>   #define for_each_valid_sp(_kvm, _sp, _list)				\
+>   	hlist_for_each_entry(_sp, _list, hash_link)			\
+>   		if (is_obsolete_sp((_kvm), (_sp))) {			\
+>   		} else
+>   
+>   #define for_each_gfn_valid_sp_with_gptes(_kvm, _sp, _gfn)		\
+> -	for_each_valid_sp(_kvm, _sp,					\
+> -	  &(_kvm)->arch.mmu_page_hash[kvm_page_table_hashfn(_gfn)])	\
+> +	for_each_valid_sp(_kvm, _sp, kvm_get_mmu_page_hash(_kvm, _gfn))	\
+>   		if ((_sp)->gfn != (_gfn) || !sp_has_gptes(_sp)) {} else
+>   
+>   static bool kvm_sync_page_check(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
+> @@ -2358,6 +2377,12 @@ static struct kvm_mmu_page *__kvm_mmu_get_shadow_page(struct kvm *kvm,
+>   	struct kvm_mmu_page *sp;
+>   	bool created = false;
+>   
+> +	/*
+> +	 * No need for READ_ONCE(), unlike in kvm_get_mmu_page_hash(), because
+> +	 * mmu_page_hash must be set prior to creating the first shadow root,
+> +	 * i.e. reaching this point is fully serialized by slots_arch_lock.
+> +	 */
+> +	BUG_ON(!kvm->arch.mmu_page_hash);
+>   	sp_list = &kvm->arch.mmu_page_hash[kvm_page_table_hashfn(gfn)];
+>   
+>   	sp = kvm_mmu_find_shadow_page(kvm, vcpu, gfn, sp_list, role);
+> @@ -3886,11 +3911,21 @@ static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
+>   {
+>   	typeof(kvm->arch.mmu_page_hash) h;
+>   
+> +	if (kvm->arch.mmu_page_hash)
+> +		return 0;
+> +
+>   	h = kvcalloc(KVM_NUM_MMU_PAGES, sizeof(*h), GFP_KERNEL_ACCOUNT);
+>   	if (!h)
+>   		return -ENOMEM;
+>   
+> -	kvm->arch.mmu_page_hash = h;
+> +	/*
+> +	 * Write mmu_page_hash exactly once as there may be concurrent readers,
+> +	 * e.g. to check for shadowed PTEs in mmu_try_to_unsync_pages().  Note,
+> +	 * mmu_lock must be held for write to add (or remove) shadow pages, and
+> +	 * so readers are guaranteed to see an empty list for their current
+> +	 * mmu_lock critical section.
+> +	 */
+> +	WRITE_ONCE(kvm->arch.mmu_page_hash, h);
+
+Use smp_store_release here (unlike READ_ONCE(), it's technically 
+incorrect to use WRITE_ONCE() here!), with a remark that it pairs with 
+kvm_get_mmu_page_hash().  That's both more accurate and leads to a 
+better comment than "write exactly once".
 
 Paolo
-
-> + */
-> +#define KVM_SANITY_CHECK_VM_STRUCT_SIZE(x)						\
-> +do {											\
-> +	BUILD_BUG_ON(get_order(sizeof(struct x) - SIZE_OF_MEMSLOTS_HASHTABLE) &&	\
-> +		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
-> +	BUILD_BUG_ON(get_order(sizeof(struct x)) < 2 &&					\
-> +		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
-> +} while (0)
->   #define KVM_NESTED_VMENTER_CONSISTENCY_CHECK(consistency_check)		\
->   ({									\
->   	bool failed = (consistency_check);				\
 
