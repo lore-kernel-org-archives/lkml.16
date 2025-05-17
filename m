@@ -1,127 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B14A8F6F;
-	Sat, 17 May 2025 03:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D912F43;
+	Sat, 17 May 2025 03:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747452819; cv=none; b=NRHfNaEwOFRM2U7K5tmklKRIzHl13HS7nPL/3Ek/+j1P0HhmxeykZE3yTGfgiV9VkVdiCu6KGRdchGJp57Yu2b0X6BdpxU8/Cs6SwH1EKVvoQOsR9bBGmgHZP7aG7hpQRn3W1tvyvfPtJKEma0iyj1vZ3RLbIAM3wp6xpXRP6dQ=
+	t=1747453198; cv=none; b=WTIdeSEL6Dj5ZBX1YYPxrFh6Nx1QATwu/vW/9gQdCcXXOcg4Na62gFrfHdyPtZIJQo6Kp14fKA40BTKKR/1GDpide5mtksiyzon33mqKW1fchDwO4oGpXFw0jIIBitwlVX9HXzymK2nvHUHRRsIqU2+OCjT2soAi8spjFWmeWzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747452819; c=relaxed/simple;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=TLJ5Iqo1Wa0Mlb4yLSUhra4839rkZlri5eUHItgMQAoitAfSj23Z01qfjSW0u5qEaMDxFhU5FapvQT/8aaeRGoQTDGTC4FncDZbjJmuyXHyvzhcxw2ASbL2QBtMo//5PWUFYKyDh7PTzATUmlICS3puUyTsLnX6YwR7s57xFV4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmJ8yckV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747453198; c=relaxed/simple;
+	bh=PGa4EiRrgRhiP5aBVe2PFW/nA9HCYtpw8LXxEJrTH4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YtIo7O9hPeztrC+O72FB0p+aRf6KEgjmwt9QtHktBvL2iQkWvdm+UabKVuRzYVfmjF7lK6ziWe4JF14CFhkRCX+yY32P0+/RyHCgrLuwq6K1QuvU44+qUtFb7ls1lRBDgt8933ZCuhH27t5OfEeZRvJPXCwzybivXzX38mmlDYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=sfNTXyIj; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmJ8yckV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71CC6C4CEE4;
-	Sat, 17 May 2025 03:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747452818;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=HmJ8yckV02na2BlMCmeVWnJjkGQj3zmQIiH34ixgqwRY4AhiFG48HX9ludo2KuTnq
-	 okvf4QqPNMVvOAQ9ptKll0delkhvBYl/9h+8W+fs+8U4b7PwXeZFtWBghG8+nzEvK5
-	 NQXEfG6uQ4XPkiLSNCq98xCbYGj6WugNRJ2yTFi32x2lBJuKrfo5W22QRz111O46M/
-	 qo9z9IYxdwV7t8fFTP7ichoBu1WP5EXFpAT0MbbJkPEvt7fuI9Fn4vrv+JbfTbeuXI
-	 MqxyVRTeIaQQvoG3oS07JNGfE8c/49/ehsjzjhcKCkfE3ecb6c/ljTDkFDwUl3YJf/
-	 HzjrAh0sYgUDQ==
-Date: Fri, 16 May 2025 22:33:37 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="sfNTXyIj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WZnd2lnN+gk3KobiIvYp7I9K2ei+u81FcKEhBrgtfJ0=; b=sfNTXyIjHQfjSiPPMX4mE6xNEc
+	DJqC5Zu3hr9p6GNatC8UWXbN6dwMOVvlQL/ugJpBqC//5dTyyddy6jPlIuYFmi5b1qIXonXFWLwNc
+	Y8ylIpyyv4khFlNas4LS7WEr2NUdpQ1QenWPXB1zxxbsOa63bQ46bORZH3+S2OGSmSRiq2Cesk4KQ
+	szdFk3hNjC/whgEo5atKCqGlOZ5c7/OsPL2ALic7ymvrfHuuR68at4Uny8xX4eGdHk2RgNWGwDVBX
+	LxcTDnZmZgQgT3FcaScVAl5Y6xNsjRlfGYH7sEARwFjAZ6gsoxjpeAUbnIauN9V03cB066fVxneMi
+	T7SbTaqg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uG8Ot-00000005EMu-3XwA;
+	Sat, 17 May 2025 03:39:51 +0000
+Date: Sat, 17 May 2025 04:39:51 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	willemb@google.com, sagi@grimberg.me, asml.silence@gmail.com,
+	almasrymina@google.com, kaiyuanz@google.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
+ sendmsg
+Message-ID: <20250517033951.GY2023217@ZenIV>
+References: <20250517000431.558180-1-stfomichev@gmail.com>
+ <20250517000907.GW2023217@ZenIV>
+ <aCflM0LZ23d2j2FF@mini-arch>
+ <20250517020653.GX2023217@ZenIV>
+ <aCfxs5CiHYMJPOsy@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Oded Gabbay <ogabbay@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
- linux-doc@vger.kernel.org
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
- <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
-Message-ID: <20250517033337.2fzuaxL-xrDSTTR4C_0TWNbsFJ1U45hbkH4c1fLW99o@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCfxs5CiHYMJPOsy@mini-arch>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-
-On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
+On Fri, May 16, 2025 at 07:17:23PM -0700, Stanislav Fomichev wrote:
+> > Wait, in the same commit there's
+> > +       if (iov_iter_type(from) != ITER_IOVEC)
+> > +               return -EFAULT;
+> > 
+> > shortly prior to the loop iter_iov_{addr,len}() are used.  What am I missing now?
 > 
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->   IOMMU)
-> - Several misc. fixes from Sebastian Reichel
+> Yeah, I want to remove that part as well:
 > 
-> v3:
-> - Split register block in its constituent subblocks, and only require
->   the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
+> https://lore.kernel.org/netdev/20250516225441.527020-1-stfomichev@gmail.com/T/#u
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
->  1 file changed, 162 insertions(+)
-> 
+> Otherwise, sendmsg() with a single IOV is not accepted, which makes not
+> sense.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
-	False schema does not allow 3
-	1 was expected
-	3 is greater than the maximum of 2
-	hint: "minItems" is only needed if less than the "items" list length
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
-	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
-	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Wait a minute.  What's there to prevent a call with two ranges far from each other?
