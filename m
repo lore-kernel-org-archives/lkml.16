@@ -1,121 +1,166 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30944B1E45;
-	Sat, 17 May 2025 18:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CCD1367;
+	Sat, 17 May 2025 18:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747504917; cv=none; b=YFmnmrE/laCqnDflZ8ViYoe6Xt+ANbH2FQnkXccm7t8Xigg4pEzsNCm1rrAKhhR1VBZfe0mT1OEJ4AhTl31H/9qrVYU1MdTVeRj21jGBd8G1lQ8Td0cJotlElI+r54L0OvipOlz3pMrtBz2s4lwdV9IOP28NsimAykz/raTR1r8=
+	t=1747505177; cv=none; b=JDhsBmCrpgfY8Z0vjgeENRaxpTT0crSnangq0RJIO81qV/aDY0AQ/IBlGTXKrOnoE0cqCJdTHQD8Mq4JUkQHA1wVubk16xkZC35KRnx6HRm7dRDkvj1sr0hESj+FN27WllHR9aSJE3lB/NLbH774y7Eu3sr6vWHJDMGpXMdjUto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747504917; c=relaxed/simple;
-	bh=5aBOsGbdCnxAk09k8KrUvZofVNhHW+rS11IkuXATWpA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=JElhIoInjF/fqyuC8fIblvdSseYgOt5xFOHtYTQZnvtquwZBMI0pNT0GnXNXm8a+OF+dVMIwVmjT53WYo3j0PTwDqzesRJfD57KqKMma9oyYgQWWnQXMh63mwro+hzlrMoirDGWedt+bW5N3uUY4m9GOrYTQu7mbWdxfYrFumic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=OX7MW6+Q; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1747505177; c=relaxed/simple;
+	bh=9+h1ovfHuN/3wPA02D/nmMQE3r1DllHMRk/oSCTS1Ts=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ovU1MqCqWpp4mgVsAuWofEnRvls29WdENYyL8kjUSHyw+/uKzFy979Y7Kv6CxgzPUiR62eY7aikd2bwWxYei4gbGCVu/H64SN4jVs/yNx6giENQEl3n41dUHAhzMiXkt1aOhW5ZUOS8GzOiXm5NobC9VYfnla4x2wMNf5DMwc/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvP9tHw2; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="OX7MW6+Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1747504890; x=1748109690; i=markus.elfring@web.de;
-	bh=SpGz0mgfSy0dGsokb7EQbHYPttCEHqkOkWjC/fsUf04=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=OX7MW6+QBZZW2lVeru+HJmDMrmgU2tET/B5GXkWmXHhnZIHzPGrDVv0Gjqwy0Jd5
-	 q8qnw20PRgHDwKaUY9zVr8neySHZmvAzGcOpSTz3l7xM1OpaPMQh7EuBDa57lY92s
-	 48MB3WOOqNa+Io3qwaV/CE4RjcTbUooXlIOFtAns2RUIgBJ1KtLXnkmbb3gTlR4VA
-	 feeOp2va9Wo3iabmuW03ui5Dqr+Et1NQv2M8x6VuEkfgmU7FectftiaZ37UZUe4sU
-	 bltFzTEdinxxQepgZSlH1f/DpKibEAi1btaLCeHOMJzqgckU/BVdzeqjr+U8wBAYt
-	 lSOqZZWNuTRwjlwO5g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.250]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnFyI-1uhk2Y0I9k-00k7yM; Sat, 17
- May 2025 20:01:30 +0200
-Message-ID: <8debcddc-b788-4ee0-99d4-b9ac28d62df9@web.de>
-Date: Sat, 17 May 2025 20:01:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvP9tHw2"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87bee00b392so1119492241.3;
+        Sat, 17 May 2025 11:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747505174; x=1748109974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p1schRBN0woVB0x+Am0mrrm4rSAKoNb5LVQXWFxsgYM=;
+        b=TvP9tHw2RlIDpigivcA4PIDZw1YxU+m0YB7aI02/QghOcL1MLisp5V06ZTD4NLSXyL
+         z6aYxhsowIA9RoO8ztjfP6M/UPPYJhvDUCGhhbw6lT8owep89mxPDROO5+GIeK/OHQGj
+         leDULPc3IOEukbrlAdL4hMbEDHZg8Wbl3Rh9k7rIlvMfTr/DWEl1kDSMbpYBXyjfTwmd
+         8mXDEubrE53SKfSRF+pUmfyN89AYRlNe+N1kfEhnOsag+LuZrm34964kugqXCd/QPxVs
+         9uQrmrJq/wm66c3r8JWVWX0vbU2lo0RTKpJNaDp4/XNwhPgnUvzibiBHBHUPFWYGWd22
+         BwdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747505174; x=1748109974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p1schRBN0woVB0x+Am0mrrm4rSAKoNb5LVQXWFxsgYM=;
+        b=ZsdygAQhPfoD4GPYc4h+JbwjqMGN6wecgKbjRlcl6/9CNkj/SngAPdCjFfhk+ZSxHg
+         80jzTTsLXA0jUE/NFDY6LoPvosjtaGS9aWZdNO+dmo8WcjoHulLwC0d9gXDH1inbhnXv
+         ln2EhxVtco26QkSa586DB69WZEODxmith62jjK/4zVhNMCvT5GjH3tyqxXjUUmkijdHP
+         rJOvescnTl6o2SmEJmRbW1LY2BhA/IP63PB1ArpoeHp2Ss36v4ZkE44S4F7dtHFyQ1Jg
+         HFWt+/qIBX0Oy/ouMcuGZzOiJd4IjZVLw2583I1jY/TANzF6tNbjaZnU3T9mIZ0xc4F6
+         QUSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcz04l9HL8AnJnIjAobRZLAoeTo3MfYMaTyZdf/SMlb9t31d1DjzftSu1iMDdvQQ24bd7tIgJYTj28w7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgc8xLk3JCc+B91PvHZMdH4WFI67DZTh3HbKzUQVccOVzdcaEW
+	P5qd8jfdSl6ND4W5QoswvQdT/oitIDULH1nQ1kiveQZBS6+qOMyE+jJSmR/D7iEiQQVUgY/QKp+
+	Dkx51PIkueDZNItka2DzOJrY6bkcjkDs=
+X-Gm-Gg: ASbGncsIQfcB1OLJYwXAHatBr1CxBCx3VXF+9m/Uz6zq3RSKxKGbr3wqxsGglExai2Z
+	LUhxg3r6cLUMZMuG7T0yOUOp+57nYWR1o5iPZhg9poheLhslsJsbM/P8qS4Qpd3oUU8W1miMVVt
+	tx/4CKiMtoI/b/AP6XRHCpPAksb4FOPqx1yYh8ta/zvxCM
+X-Google-Smtp-Source: AGHT+IH66PFdaZi5J8HDbVArPmOY4TBk+24AltynhiohhEtefKF4b5APmjMEeCNcvpc2ZeWTrAZPNwbAZPkXZvyAPfQ=
+X-Received: by 2002:a05:6102:3e95:b0:4df:8f03:13dd with SMTP id
+ ada2fe7eead31-4dfa6ae735fmr7820730137.5.1747505173766; Sat, 17 May 2025
+ 11:06:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: vulab@iscas.ac.cn, linux-wireless@vger.kernel.org,
- Ajay Singh <ajay.kathat@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20250517154611.910-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] wifi: wilc1000: Handle wilc_sdio_cmd52() failure in
- wilc_sdio_read_init()
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250517154611.910-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <cover.1747231254.git.rabenda.cn@gmail.com> <4f5eaf5285dbeb0de1c8aa4700ca0910273e7674.1747231254.git.rabenda.cn@gmail.com>
+ <MA0P287MB2262AB8F3A790B876AA2E989FE92A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <MA0P287MB2262AB8F3A790B876AA2E989FE92A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Sun, 18 May 2025 02:06:02 +0800
+X-Gm-Features: AX0GCFtHMGcnarhky-ATNItjF_XCNfJdq0UotRwJwXxNaOVTLJwz1YvpazgWyKs
+Message-ID: <CAAT7Ki9X0KOuuZnVjT2=uexD67rfyL4Gq18ZDgr15CeaoNOmpA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] riscv: dts: sophgo: add Sophgo SG2042_EVB_V1.X
+ board device tree
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, sophgo@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aDje+Y5p/VRQQNoqQwcR8EeolwyzVYwEevv8AI2mofIQL67z2Dg
- UVFdnfpVkVzM1LoM7nHHDxMNNSKuhZKhPYs5LYowD3xlLrChFuYjBgYGPIPAR7FldgrnHOm
- FRd2FA8Ozf1QWiaSobqPcY5g194LCeb6O1AQUFS+AJ+w63f3G/DopUpzqJeoGRHrn5goeOd
- oBAk57C9SQvUvU/CV7FmQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j08uRNsWw4w=;INUoJGRpounDjCuc8mXXkLl4t4C
- yH2vjzo12Et15PbAAYRsHGa4aFEEczneUvAOvvqYnvkq0Dxk6F1l4UBxYioPeu4k2GdOJr+CP
- YSlKoAHFu2BpRjnwv6bkK9aJTO274AmEReXxVc2c3liAqWKQksxmLqkwQSWa7xVTJhSTTJgsK
- 6BYyNRxcrkTkL634ak8RFqflm5YJTv7ujhZVBJCEK+VzlI9F0kvViUZWJVd/dI6djOcpZRBLZ
- k48ZlZDM6frXa3Lh26P3XSGApmNC7gBlusygZC+smXLJjeJwqRFuUQN5pc1pdy2TWzQKR17sA
- eGG0bKUZDzmb0xFOPDniLK/eXPhrehXah7QCQNqqaUskPqN7qTmCG6Qol0EobyFY3eyfWoKAD
- x/9ADAZNbkEHb+1w9hjjci07ss52lgC1IHhzkDDUjXOzIRPuE9bBIl4e0a/C7vrg7/qxQhjCj
- MKY9uyoFPQYSI4RkeeAbGfw5IMPcK9NSygW7URZKWsl2mVcJWQzB2T6Zn8ctlbdbike65hg+q
- /tb3fF4I2JUjIMHYcfnQz3ijgrXn9pI16m6u7TP2+1ciPTZAcpCtC72Zhb65LpEXB5z11lfd3
- zbxh0W21+2J7DzrbAhfRAthn/KhDI8xZtaXSZQITplEOYzesWgjeDlvtTnapZeUc1mVqC9mID
- VIGb76KB/W6/Ba16A9z2MpRfDsfyjduD/Z3VDXmlmNZlk31wx11gNx+/i9mgOQQtV4IBrjpgs
- ZRzJ1qeWRGtKzjVW+1o8UeezyqT3HxJ6fpTOMoFK0ul7KpnNBAuH8AlfKnJh91E4lbzAb7uxQ
- /By1El8D/hrxIErKPETJPcisroO63DA6/LNnhVqX9c3bT5It0/4U0Fd3CCkkGu/mg2ksEgOvk
- aXbD0eDmtIw2tfN6zcl/GIIepe/KH68u6rXEOFQPjAxlx3Jf1ASuhA3XrQ+uGKtMs7yKWlcXz
- UEBNX6rcYWaajqgN+EerJEts/D2wgNIUv1Qlm2MacmEwnZyysEeP9x1MzonyDFR6adN0HnMuV
- 6a4UW9O6/G/K+uCZ6wE09udF4/tjyoLdrxNFnSv10oY00UFsTUmGu3O2qHdQYVLqXAkUCatDd
- gxf11MQLcqqeBnFyjUY3t65cZuBrwg/NWygRdgdIXNrKuQRztzF9OzV4RQiKMQIUYuBalxU/N
- VmVBM0Pfg6y+myEw7Gn9rgjUKIneJ4f+8YAuuKZJZWI0ShF6j9spmO2RkHgku41sY59uqT8LM
- JANgjfmcwkMxs0h9i/8xRg+Vq1Syg9UY2d2oxsnTGfqDJ2fa658KylcUf+6hap7T1PnBVn3Qd
- C+0mWB5/jkd5xLQAHd6HF25qTy91fksemSzC2DsBOqQ/A1e1bOzSZrWnKFL3jpXDrQfY6v2a1
- lddCRwo/lLEHHSvpFasORfhhLBcE9FN3uYuwus8vE56B0ogUXdLouq2r4nMUTuqtCGKDiKewe
- QL7m4WkE0cQP49l+SNz5uvz2Aek4SoqMt12ftCP0NG8KbqsDPU8j1jiHmLB6Pszjh8hdV8Kfk
- liQ+tw/C4bIfUDhmmAPvPDQ+5T+FUazYE67SC1VtNRN6SCBk59LirqOsZxxAhzMkrejjXEQcL
- NmaK3NY/XYFj5raqlxeGcn1d8Mu1xldx0gKxwlS/jAQJnGBqYpATF2KHd0+9Q19dZ1A5BekJ9
- 3uA46afkgExvIjUdIm4A9WUptX3dBhStQ7cq8CUr/vzdcWai/RlWujwzEq0R45PqKb7lE28+j
- o+DbQPcHYYUpirayUQN4Y1mQ7AH3+2pxkiAxd5jjkTDtcolElJFfVK9MshjG3ASNA0MCjIDmd
- 7HR85rY2jFdwXkXcAXa7FcBn54qcQAWaOw3QsDjjeW/icmd5UIuC7oaejuFFIxXR+CdI4KA61
- wTNSdTF2UbOkuV9ZRKXxVnpzebsMk90fnP3s8xm3YxeaHaeHwSSayz3E91sCmEkHqxWeBOSt9
- j8atsoHCa58712y9r4UtqGSNrRTvq7tUk39LxpAqTaLHmxsDlbTL3ypmE0TzrslOlRVydQ/cS
- ZFLSD1mTFhAVMnHjrwA+T9mdODB/S5R0f2lGEryY4u2Iy2XTLiD05DtTyf32YbHv/ORIRlZQt
- vxHyhO62PZr6H+uIOBd1DFM4xOkLHZ5KhMdvwosms0i7c3TM42pCjLpdK8gpAYNITgrgZ6kwU
- Ka7gXDmS6YrjRj1p+mM6cCCfAHVaYa4IfPifC5dkE+S0SI+VSKUSkrfBAr/AJdmFHsOsKSJ+R
- uw+fr5dVAeoKOrlA8QiUt/tUGpsXsYgykjSpaWM6/PoHs8BS95qAonkgvHkSUTXrZDtne9jMA
- AMCDupMJGoBEhbRWIN5uDavlc4Pa7oOREeU6yCC+m7/V3H35R+b1wmF7K/TXtweLIm6iw7VwT
- syE0smzLTVzujU/GXRG2m0oJMDygJaQfS0rTWHxa8t+8voM1jR0MjKDNCwEqwf7zdTom0bngA
- wG1Z88vm3YDK1l4MvpBT+GHVQyLMb0KPvBhW1EuSmncYwPgiNhJWcCusMLOUlpUzqsoWJm3mN
- Weu6S67081Rc7wqncpI8JFMm6+eKv3rIxk3SCkwx9+Q+5b5/yUyACxsZ3TxJoUGlWOBf1mOlP
- BZJbEeYYplKG6whHQPpo4PxznxqB0n4EmFSV3g2H9yanpnQI3Eo7qPFIYLBFRj38OIMeg+kWJ
- RLWGmqZcBjNhHLNApvv47vCFymj0ywIhuFNjGEuWOGDj/CsgPGjfpuHQ7o2mTCuZYbIa9L4IT
- VnVbCIKJSb2MFNFYBmZ6YnRPE5/vD1Z8c4vmyWpCH22/jpz12OiGb0NuyAddP/U87Ssqn/D09
- 0d7g38zbZm50GWxernPw7bNQNcCWd7Y4SKiHppXkoW5UwtIdo3WdXqyrXxfCVryAwcFh8sO5t
- 54qmffs6o5JnYG/sOFTlDwEUh44ud9cyB7QJmmB332t1WvlHZ7Xj/X2/zRXIwuk67CnXRamr5
- hryXSzUl5lOUNroln+v9SzLYa3kBX7gemMc6w5+GpqmB7oFadOgSnQu09HRAgl5o35Wz9VTgA
- iXicawMxGVtlENyhcW/WhV9vG17TCL0u3Jc/0UxzUf7
 
-=E2=80=A6
-> Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
-> log an error message via dev_err().
-=E2=80=A6
-> ---
->  drivers/net/wireless/microchip/wilc1000/sdio.c | 8 +++++++-
-=E2=80=A6
+Added ethernet support based on [4].
 
-How do you think about to integrate adjustments for two function implement=
-ations
-by a single patch for better error handling in the affected software modul=
-e?
+[4]: https://lore.kernel.org/all/20250506093256.1107770-5-inochiama@gmail.c=
+om/
 
-Regards,
-Markus
+On Sat, May 17, 2025 at 11:22=E2=80=AFAM Chen Wang <unicorn_wang@outlook.co=
+m> wrote:
+>
+> Hi, Han,
+>
+> On 2025/5/14 22:09, Han Gao wrote:
+> > Sophgo SG2042_EVB_V1.X [1] is a prototype development board based on SG=
+2042
+> >
+> > Currently supports serial port, sdcard/emmc, pwm, fan speed control.
+> >
+> > Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG20=
+42-x8-EVB [1]
+> >
+> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > ---
+> >   arch/riscv/boot/dts/sophgo/Makefile          |   1 +
+> >   arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts | 247 ++++++++++++++++++=
++
+> >   2 files changed, 248 insertions(+)
+> >   create mode 100644 arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts
+> >
+> > diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/=
+sophgo/Makefile
+> > index 47d4243a8f35..2470e30ae901 100644
+> > --- a/arch/riscv/boot/dts/sophgo/Makefile
+> > +++ b/arch/riscv/boot/dts/sophgo/Makefile
+> > @@ -3,3 +3,4 @@ dtb-$(CONFIG_ARCH_SOPHGO) +=3D cv1800b-milkv-duo.dtb
+> >   dtb-$(CONFIG_ARCH_SOPHGO) +=3D cv1812h-huashan-pi.dtb
+> >   dtb-$(CONFIG_ARCH_SOPHGO) +=3D sg2002-licheerv-nano-b.dtb
+> >   dtb-$(CONFIG_ARCH_SOPHGO) +=3D sg2042-milkv-pioneer.dtb
+> > +dtb-$(CONFIG_ARCH_SOPHGO) +=3D sg2042-evb-v1.dtb
+> > diff --git a/arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts b/arch/riscv/=
+boot/dts/sophgo/sg2042-evb-v1.dts
+> > new file mode 100644
+> > index 000000000000..4f39a2575b8e
+> > --- /dev/null
+> > +++ b/arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts
+>
+> Please run "make CHECK_DTBS=3Dy W=3D1 your_dtb_file" before submitting
+> patch. I have a quick check and get following warnings/errors:
+>
+> Error: ....../arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts:67.1-7 Label
+> or path gmac0 not found
+> Error: ....../arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts:86.14-15
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+>
+> And the similar issues existing for sg2042-evb-v2.dts.
+>
+> [......]
+>
+> > +&gmac0 {
+> > +     phy-handle =3D <&phy0>;
+> > +     phy-mode =3D "rgmii-id";
+> > +     status =3D "okay";
+> > +
+> > +     mdio {
+> > +             phy0: phy@0 {
+> > +                     compatible =3D "ethernet-phy-ieee802.3-c22";
+> > +                     reg =3D <0>;
+> > +                     reset-gpios =3D <&port0a 27 GPIO_ACTIVE_LOW>;
+> > +                     reset-assert-us =3D <100000>;
+> > +                     reset-deassert-us =3D <100000>;
+> > +             };
+> > +     };
+> > +};
+>
+> This should be dropped, we can add this after ethernet support is
+> upstreamed.
+>
+> The same for evb_v2.
+>
+> [......]
+>
+> Thanks.
+>
+> Chen
+>
+>
