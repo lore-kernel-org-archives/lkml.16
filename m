@@ -1,68 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F3420B806;
-	Sat, 17 May 2025 10:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E1B20CCFB;
+	Sat, 17 May 2025 10:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476189; cv=none; b=f656MobvqW15LWae2cCDJ+dncoMgzkr4/OIAATil64pY+sPMys4G4+3d7PPvIBOZrWtQcn8BYgugAQIQu6gCFG6woUScoT6v0Rgk7UoJYZMgVt0manWKIcVHeyVKAeMUAx7KaLm97DEvJu8ougJmU3k6UHmrJzhQUYkfYzfnDig=
+	t=1747476190; cv=none; b=ClOyUuvJ6k52rZVd45aUqMJw70tQKtrb/8SfCrxogkFFlwxeuYCjhsNGEs7kcev/qsUYXVINw2buaYFiVpg9ChKrT3i41JPEPL74RxzaKgIM6MJpROFUG6jn9UYOzDqUJD9NiTfTVqsSZKn9n5fBUUPDXDccYy258gnROfDPvLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476189; c=relaxed/simple;
-	bh=Aadu4Amz7jABiXDeyV/b/1//CboMCLvFZZgcCx/u/Q0=;
+	s=arc-20240116; t=1747476190; c=relaxed/simple;
+	bh=+ByLNUY9BARlG8/OI9oLC6lUZ7+Qvhl2nHWrjSen7B8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IxcoWah+kuwdwCI7j5IKmznEPB1/PSv12RdFS87loEbDnA9Zgq/+aq9cBYoEgtqKQKU59WZwIqQmY/TSle1gGptx8t+bhExAf5JEihmjeujNtJNmQVU9a+ws5JNrapoto0mkNuc88oz6kta2Manrx/Kp4SOEn0pWr2f2yfd0/Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ww3lC2lL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W7kuNS2y; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=SgUuw4MHEJ0W05k2aT9StPOPtlseV/DoCSPBvc+ARmJYA+ERJurnS7pdUA8BA/AaRHjBtBHWEvoAlvBQiexcq7MjPYrduwGPoCrJyOMnQykZg1br1JTiE93/wlNCUb56sNSAjNr2Q+8pt5xpac869UitFSggP7xTVWKpyT8NeH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i6Sn81hd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBHnh6+R; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ww3lC2lL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W7kuNS2y"
-Date: Sat, 17 May 2025 10:03:04 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i6Sn81hd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBHnh6+R"
+Date: Sat, 17 May 2025 10:03:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747476185;
+	s=2020; t=1747476186;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3oY7K1eKZeDytEF7Q1hoEGwRzbrMVpyd3G/6SzEmpFw=;
-	b=Ww3lC2lLJ9ECn3uh50syU27c2TdHrEBZdcOuvmWFUae8noSYLGjheDk1uQk3/BTya4gh2g
-	D027FU0udUh4mllE4FnvvRMlVVuVzQRKhbahtcZNYBAm3krV8qwWwsltMiXaP5FUaDjWbJ
-	7ubNQBstuYGf/sCz/LrrFwsHw5tccK0g+3BsQxAGoMBWckZ2VxzJRAPXfKoaUAot9p7iyf
-	4JAR39yYKRmNQPshZVJTYPJM9iukNRrWV/Ma4Hqj7sRkCbcJiim6rUZTz737lkAlrggB0J
-	52vPzaAYtTxksxoS4sOKBIjkNAi6+5JwaeauAB/+gQKzddddyhFHmy/3il43gg==
+	bh=qy294dlJYKQysDPIelSeBL8/StbXRNQiEwJ6lE8SHr4=;
+	b=i6Sn81hdhqt6/b08bACeHcrJD89dk6PDV4XF1xN0mCUAzozHYt6R77bRZGKMLSawVOhiWY
+	WI/Dm1KrEEhBsXAAdvD8Ae4/dzIdPO2Wcnj/DnRHchOr7ewbttnEcjC1eB1BayH1arMFes
+	h8Sk+J8T0qOnwFogB1Stz7P6TaEuDHQQKlzfSB8uEhTsbLZ5Eovrvdfg1vZINfXgiwv4c6
+	/pvIplDTrLrusT9yB15XZpML70AxkXOYokin9aAtdaRz0yRRVQi3Wt75sss9uoXjJvrYbG
+	DMmfJhmxG0T+krnlgzBYnr7MWdzleAlzH50wvadqFbpy/IOuGCGNdXF0hF4+Jw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747476185;
+	s=2020e; t=1747476186;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3oY7K1eKZeDytEF7Q1hoEGwRzbrMVpyd3G/6SzEmpFw=;
-	b=W7kuNS2yiBMFW4BxMIQUqqO0O1gMqGTaCQkB+ThqS5cly3bYWMRaO691INiOYyUx37nUd/
-	EcbzPEwc7mtYMBCw==
-From: "tip-bot2 for Amit Singh Tomar" <tip-bot2@linutronix.de>
+	bh=qy294dlJYKQysDPIelSeBL8/StbXRNQiEwJ6lE8SHr4=;
+	b=DBHnh6+Rsmedi//UXUm+PWdma34cW7Yl87ImSzPUCIxgE86OAZb+xfV28Y4pFFS7CyevHo
+	oEE0L8rjRPfMR4DA==
+From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cache] x86/resctrl: Remove the limit on the number of CLOSID
-Cc: Amit Singh Tomar <amitsinght@marvell.com>,
+Subject: [tip: x86/cache] cpumask: Add cpumask_{first,next}_andnot() API
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
  James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Fenghua Yu <fenghuay@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>,
- Peter Newman <peternewman@google.com>,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Babu Moger <babu.moger@amd.com>,
+ Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
  Tony Luck <tony.luck@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250515165855.31452-6-james.morse@arm.com>
-References: <20250515165855.31452-6-james.morse@arm.com>
+In-Reply-To: <20250515165855.31452-4-james.morse@arm.com>
+References: <20250515165855.31452-4-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174747618413.406.12367096845853509284.tip-bot2@tip-bot2>
+Message-ID: <174747618564.406.16412301340914355967.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -72,188 +68,113 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     dcb1d3d3b77bdb30d2ec97f540d58ee35f1b1c82
-Gitweb:        https://git.kernel.org/tip/dcb1d3d3b77bdb30d2ec97f540d58ee35f1b1c82
-Author:        Amit Singh Tomar <amitsinght@marvell.com>
-AuthorDate:    Thu, 15 May 2025 16:58:35 
+Commit-ID:     5da703ef4e4a82b2f9a00f2b3a1eae5657e68a92
+Gitweb:        https://git.kernel.org/tip/5da703ef4e4a82b2f9a00f2b3a1eae5657e68a92
+Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
+AuthorDate:    Thu, 15 May 2025 16:58:33 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 15 May 2025 20:55:40 +02:00
+CommitterDate: Thu, 15 May 2025 20:28:12 +02:00
 
-x86/resctrl: Remove the limit on the number of CLOSID
+cpumask: Add cpumask_{first,next}_andnot() API
 
-Resctrl allocates and finds free CLOSID values using the bits of a u32.
-This restricts the number of control groups that can be created by
-user-space.
+With the lack of the functions, client code has to abuse less efficient
+cpumask_nth().
 
-MPAM has an architectural limit of 2^16 CLOSID values, Intel x86 could
-be extended beyond 32 values. There is at least one MPAM platform which
-supports more than 32 CLOSID values.
-
-Replace the fixed size bitmap with calls to the bitmap API to allocate
-an array of a sufficient size.
-
-ffs() returns '1' for bit 0, hence the existing code subtracts 1 from
-the index to get the CLOSID value. find_first_bit() returns the bit
-number which does not need adjusting.
-
-  [ morse: fixed the off-by-one in the allocator and the wrong not-found
-    value. Removed the limit. Rephrase the commit message. ]
-
-Signed-off-by: Amit Singh Tomar <amitsinght@marvell.com>
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Tested-by: Fenghua Yu <fenghuay@nvidia.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: James Morse <james.morse@arm.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/20250515165855.31452-6-james.morse@arm.com
+Link: https://lore.kernel.org/20250515165855.31452-4-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 51 +++++++++++++++++--------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ include/linux/cpumask.h | 59 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index cc4a541..53213ca 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -130,8 +130,8 @@ static bool resctrl_is_mbm_event(int e)
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index a3ee875..6a569c7 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -179,6 +179,19 @@ unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask
  }
  
- /*
-- * Trivial allocator for CLOSIDs. Since h/w only supports a small number,
-- * we can keep a bitmap of free CLOSIDs in a single integer.
-+ * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
-+ * of free CLOSIDs.
-  *
-  * Using a global CLOSID across all resources has some advantages and
-  * some drawbacks:
-@@ -144,7 +144,7 @@ static bool resctrl_is_mbm_event(int e)
-  * - Our choices on how to configure each resource become progressively more
-  *   limited as the number of resources grows.
-  */
--static unsigned long closid_free_map;
-+static unsigned long *closid_free_map;
- static int closid_free_map_len;
- 
- int closids_supported(void)
-@@ -152,20 +152,35 @@ int closids_supported(void)
- 	return closid_free_map_len;
- }
- 
--static void closid_init(void)
-+static int closid_init(void)
- {
- 	struct resctrl_schema *s;
--	u32 rdt_min_closid = 32;
-+	u32 rdt_min_closid = ~0;
-+
-+	/* Monitor only platforms still call closid_init() */
-+	if (list_empty(&resctrl_schema_all))
-+		return 0;
- 
- 	/* Compute rdt_min_closid across all resources */
- 	list_for_each_entry(s, &resctrl_schema_all, list)
- 		rdt_min_closid = min(rdt_min_closid, s->num_closid);
- 
--	closid_free_map = BIT_MASK(rdt_min_closid) - 1;
-+	closid_free_map = bitmap_alloc(rdt_min_closid, GFP_KERNEL);
-+	if (!closid_free_map)
-+		return -ENOMEM;
-+	bitmap_fill(closid_free_map, rdt_min_closid);
- 
- 	/* RESCTRL_RESERVED_CLOSID is always reserved for the default group */
--	__clear_bit(RESCTRL_RESERVED_CLOSID, &closid_free_map);
-+	__clear_bit(RESCTRL_RESERVED_CLOSID, closid_free_map);
- 	closid_free_map_len = rdt_min_closid;
-+
-+	return 0;
+ /**
++ * cpumask_first_andnot - return the first cpu from *srcp1 & ~*srcp2
++ * @srcp1: the first input
++ * @srcp2: the second input
++ *
++ * Return: >= nr_cpu_ids if no such cpu found.
++ */
++static __always_inline
++unsigned int cpumask_first_andnot(const struct cpumask *srcp1, const struct cpumask *srcp2)
++{
++	return find_first_andnot_bit(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
 +}
 +
-+static void closid_exit(void)
++/**
+  * cpumask_first_and_and - return the first cpu from *srcp1 & *srcp2 & *srcp3
+  * @srcp1: the first input
+  * @srcp2: the second input
+@@ -285,6 +298,25 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+ }
+ 
+ /**
++ * cpumask_next_andnot - get the next cpu in *src1p & ~*src2p
++ * @n: the cpu prior to the place to search (i.e. return will be > @n)
++ * @src1p: the first cpumask pointer
++ * @src2p: the second cpumask pointer
++ *
++ * Return: >= nr_cpu_ids if no further cpus set in both.
++ */
++static __always_inline
++unsigned int cpumask_next_andnot(int n, const struct cpumask *src1p,
++				 const struct cpumask *src2p)
 +{
-+	bitmap_free(closid_free_map);
-+	closid_free_map = NULL;
- }
- 
- static int closid_alloc(void)
-@@ -182,12 +197,11 @@ static int closid_alloc(void)
- 			return cleanest_closid;
- 		closid = cleanest_closid;
- 	} else {
--		closid = ffs(closid_free_map);
--		if (closid == 0)
-+		closid = find_first_bit(closid_free_map, closid_free_map_len);
-+		if (closid == closid_free_map_len)
- 			return -ENOSPC;
--		closid--;
- 	}
--	__clear_bit(closid, &closid_free_map);
-+	__clear_bit(closid, closid_free_map);
- 
- 	return closid;
- }
-@@ -196,7 +210,7 @@ void closid_free(int closid)
- {
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	__set_bit(closid, &closid_free_map);
-+	__set_bit(closid, closid_free_map);
++	/* -1 is a legal arg here. */
++	if (n != -1)
++		cpumask_check(n);
++	return find_next_andnot_bit(cpumask_bits(src1p), cpumask_bits(src2p),
++		small_cpumask_bits, n + 1);
++}
++
++/**
+  * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
+  *			   @n+1. If nothing found, wrap around and start from
+  *			   the beginning
+@@ -459,6 +491,33 @@ unsigned int cpumask_any_and_but(const struct cpumask *mask1,
  }
  
  /**
-@@ -210,7 +224,7 @@ bool closid_allocated(unsigned int closid)
- {
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	return !test_bit(closid, &closid_free_map);
-+	return !test_bit(closid, closid_free_map);
- }
- 
- /**
-@@ -2765,20 +2779,22 @@ static int rdt_get_tree(struct fs_context *fc)
- 		goto out_ctx;
- 	}
- 
--	closid_init();
-+	ret = closid_init();
-+	if (ret)
-+		goto out_schemata_free;
- 
- 	if (resctrl_arch_mon_capable())
- 		flags |= RFTYPE_MON;
- 
- 	ret = rdtgroup_add_files(rdtgroup_default.kn, flags);
- 	if (ret)
--		goto out_schemata_free;
-+		goto out_closid_exit;
- 
- 	kernfs_activate(rdtgroup_default.kn);
- 
- 	ret = rdtgroup_create_info_dir(rdtgroup_default.kn);
- 	if (ret < 0)
--		goto out_schemata_free;
-+		goto out_closid_exit;
- 
- 	if (resctrl_arch_mon_capable()) {
- 		ret = mongroup_create_dir(rdtgroup_default.kn,
-@@ -2829,6 +2845,8 @@ out_mongrp:
- 		kernfs_remove(kn_mongrp);
- out_info:
- 	kernfs_remove(kn_info);
-+out_closid_exit:
-+	closid_exit();
- out_schemata_free:
- 	schemata_list_destroy();
- out_ctx:
-@@ -3076,6 +3094,7 @@ static void rdt_kill_sb(struct super_block *sb)
- 	rmdir_all_sub();
- 	rdt_pseudo_lock_release();
- 	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
-+	closid_exit();
- 	schemata_list_destroy();
- 	rdtgroup_destroy_root();
- 	if (resctrl_arch_alloc_capable())
++ * cpumask_any_andnot_but - pick an arbitrary cpu from *mask1 & ~*mask2, but not this one.
++ * @mask1: the first input cpumask
++ * @mask2: the second input cpumask
++ * @cpu: the cpu to ignore
++ *
++ * If @cpu == -1, the function returns the first matching cpu.
++ * Returns >= nr_cpu_ids if no cpus set.
++ */
++static __always_inline
++unsigned int cpumask_any_andnot_but(const struct cpumask *mask1,
++				    const struct cpumask *mask2,
++				    int cpu)
++{
++	unsigned int i;
++
++	/* -1 is a legal arg here. */
++	if (cpu != -1)
++		cpumask_check(cpu);
++
++	i = cpumask_first_andnot(mask1, mask2);
++	if (i != cpu)
++		return i;
++
++	return cpumask_next_andnot(cpu, mask1, mask2);
++}
++
++/**
+  * cpumask_nth - get the Nth cpu in a cpumask
+  * @srcp: the cpumask pointer
+  * @cpu: the Nth cpu to find, starting from 0
