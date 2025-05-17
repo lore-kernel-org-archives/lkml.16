@@ -1,125 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0A17A13A;
-	Sat, 17 May 2025 05:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB574C97;
+	Sat, 17 May 2025 05:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747459752; cv=none; b=cjWXN7oGLlBc7VOeW/lpDd46A6GMzga478B6LRndgg4tUG2zN8Nzz63jKGY3l8gw55sZGspdoPAPaYU5v62oDypmKRTMOzOO6bjMgrRPJ7N1xbjGjz8uY3Yvi6A82Olo+5YZ3gYDFTmXUMC2S0ynpNM02RKDEbODL7LTLnO2swc=
+	t=1747461440; cv=none; b=hGVMtbcskIDLoiBWx5RD0JwTYWG0t+yP8By2Xtte/3Xp/CBZh44cdf5JDamk5kTZRZDn4nmT0egMKupkUUxQ4QjOhz28cIBhY0D+2u6cnSgJMWO8ut6haB6ha1IcyfmYoU9RFxWU2kt1Wty4OnGbYj4obAnp7N36FaU5tEF4nHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747459752; c=relaxed/simple;
-	bh=QHtTyWCABC/4jueRIsDSnE4V++TqQGVuI532zaEvZmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GWFfxSM+W5td2+pbY4jCGnyezyI5+KdafrsMla61QwCixI6+2WpB20YGlM6Pi6YNQ2TjsylFab7j67rcOfce+pqrCA+0RWuEJGX6gi3fbn/FtRD+qU/JLtkEohwtG3mS+tPJ3Idx2HjAin5yWnoL/vQ5oLvfdWzymg8FUuowjBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oIHWcGrC; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747461440; c=relaxed/simple;
+	bh=0dxFOYigYkWsCXOb8FWDLm7oUp1TyQVnV0QtPsmuE7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qkUyY2DBkplNuidBtVq3k0ThRE+KddEg9A3dsZ0X1K5Jx8CbxWRDmikg8mFArl/jpy9vRdCMmi0AWyrluiEQitcEDCWPRfbiDFGA+wW9ErOaz3ugA6cSw0BWPRJUfgVmZ981fQSUnBAT4lpIqWzgnfrfrkDzJhLhajTuCmEYkZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DL6QLoFQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oIHWcGrC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747459750; x=1778995750;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QHtTyWCABC/4jueRIsDSnE4V++TqQGVuI532zaEvZmk=;
-  b=oIHWcGrC47r2PNuTWI39aG/42Nb9faZ0hM5hSVKSgeG6xEnEEUETXZxg
-   PcGKXmjjM5vOteoQffea+6eEvzO025rxb2yBlmHqKb9iMiaGgXTiwdTxv
-   O5lp/3XlJvXiI6YtCiAd+LJqT1GMed9vJb0baAiYcLFIRCU4PUUVdSFZs
-   wh2IoMFRJpeA+rSbs3Dzd/sRpu5OqkzAoCAQksFId7Ru+6k0OHVlSjeUu
-   XecS2yGkpdLl2fXtrx80K22oAmGOVBL9AGhvpBrev+QgokusDkJEigq2+
-   67Ao5fUFD/l+ebQmgPSyfCZLHl+kNfDOk8tMg9K96zB8Tg6s59upF2Mly
-   A==;
-X-CSE-ConnectionGUID: TQoOVygfQjudHwjxDUcO5g==
-X-CSE-MsgGUID: CFzHxUCHThqjBouczhOeVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="60092153"
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="60092153"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 22:29:09 -0700
-X-CSE-ConnectionGUID: ZHnUcQmRQ56m+ohm6iOk/w==
-X-CSE-MsgGUID: TyCXuBZvQSyTPLBA1ZStDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,296,1739865600"; 
-   d="scan'208";a="143864931"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 16 May 2025 22:29:06 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGA6Z-000Jx5-2E;
-	Sat, 17 May 2025 05:29:03 +0000
-Date: Sat, 17 May 2025 13:28:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: "ping.gao" <ping.gao@samsung.com>, alim.akhtar@samsung.com,
-	avri.altman@wdc.com, bvanassche@acm.org,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	peter.wang@mediatek.com, minwoo.im@samsung.com,
-	manivannan.sadhasivam@linaro.org, chenyuan0y@gmail.com,
-	cw9316.lee@samsung.com, linux-scsi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DL6QLoFQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10563C4CEE3;
+	Sat, 17 May 2025 05:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747461440;
+	bh=0dxFOYigYkWsCXOb8FWDLm7oUp1TyQVnV0QtPsmuE7o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DL6QLoFQUxPEZMw7EOUKoC/3e9Bl1z0v6y/tdCn+HdsXWcCLerdFSpl+Rzmxi0zZR
+	 ZE69OLR+pPlDv+8dnR5ud/EZDQOMCnWR73polvOxmO8IRjB4Jht+Osy6xivJb1Iwmg
+	 0PMqr38U1IUZEkUTS7D9E9DVO4eb0HjM1iihT8lSNmvhig0iMMnHKhIw0NLeQ4TEIj
+	 qTUWw2FtqvWHhXy0RF5EMlyvHf2jXjY3YHyRW9jQWuTZA8mKOV3d9OvD2TsxPiAV1M
+	 //ozQpX7T2IHD93HyJsTTQ03o+FnZricyEu4a5x78lVGWqd3W1Od44VIr4eM/cdlp4
+	 XMR/HAm+16+/w==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dennis Gilmore <dgilmore@redhat.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH] scsi: ufs: mcq: delete ufshcd_release_scsi_cmd in
- ufshcd_mcq_abort
-Message-ID: <202505171237.VZSTTv75-lkp@intel.com>
-References: <20250516083812.3894396-1-ping.gao@samsung.com>
+Subject: Re: [PATCH] arm64: dts: qcom: x1e78100-t14s: enable SDX62 modem
+Date: Sat, 17 May 2025 06:57:12 +0100
+Message-ID: <174746143134.152010.4166315048765927187.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250327081427.19693-1-johan+linaro@kernel.org>
+References: <20250327081427.19693-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516083812.3894396-1-ping.gao@samsung.com>
-
-Hi ping.gao,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on jejb-scsi/for-next]
-[also build test WARNING on mkp-scsi/for-next linus/master v6.15-rc6 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/ping-gao/scsi-ufs-mcq-delete-ufshcd_release_scsi_cmd-in-ufshcd_mcq_abort/20250516-163807
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20250516083812.3894396-1-ping.gao%40samsung.com
-patch subject: [PATCH] scsi: ufs: mcq: delete ufshcd_release_scsi_cmd in ufshcd_mcq_abort
-config: arm-randconfig-004-20250517 (https://download.01.org/0day-ci/archive/20250517/202505171237.VZSTTv75-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250517/202505171237.VZSTTv75-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505171237.VZSTTv75-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/ufs/core/ufs-mcq.c:677:16: warning: unused variable 'flags' [-Wunused-variable]
-     677 |         unsigned long flags;
-         |                       ^~~~~
-   1 warning generated.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
-vim +/flags +677 drivers/ufs/core/ufs-mcq.c
+On Thu, 27 Mar 2025 09:14:27 +0100, Johan Hovold wrote:
+> Enable PCIe5 and the SDX62 modem present on some T14s.
+> 
+> 
 
-f1304d4420777f Bao D. Nguyen   2023-05-29  663  
-f1304d4420777f Bao D. Nguyen   2023-05-29  664  /**
-f1304d4420777f Bao D. Nguyen   2023-05-29  665   * ufshcd_mcq_abort - Abort the command in MCQ.
-317a38045ab763 Yang Li         2023-07-12  666   * @cmd: The command to be aborted.
-f1304d4420777f Bao D. Nguyen   2023-05-29  667   *
-3a17fefe0f1960 Bart Van Assche 2023-07-27  668   * Return: SUCCESS or FAILED error codes
-f1304d4420777f Bao D. Nguyen   2023-05-29  669   */
-f1304d4420777f Bao D. Nguyen   2023-05-29  670  int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
-f1304d4420777f Bao D. Nguyen   2023-05-29  671  {
-f1304d4420777f Bao D. Nguyen   2023-05-29  672  	struct Scsi_Host *host = cmd->device->host;
-f1304d4420777f Bao D. Nguyen   2023-05-29  673  	struct ufs_hba *hba = shost_priv(host);
-f1304d4420777f Bao D. Nguyen   2023-05-29  674  	int tag = scsi_cmd_to_rq(cmd)->tag;
-f1304d4420777f Bao D. Nguyen   2023-05-29  675  	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
-f1304d4420777f Bao D. Nguyen   2023-05-29  676  	struct ufs_hw_queue *hwq;
-27900d7119c464 Peter Wang      2023-11-06 @677  	unsigned long flags;
+Applied, thanks!
 
+[1/1] arm64: dts: qcom: x1e78100-t14s: enable SDX62 modem
+      commit: 03026046589d9baca0d24348faa76c72899de48f
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bjorn Andersson <andersson@kernel.org>
