@@ -1,76 +1,76 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CC5170826
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B881957FF
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747447193; cv=none; b=Cl5Gds5Fk6OJYL3XyXuLtsMTqh4YTkX9oD96qSt8kACJQG1k40flDFPxYylIk4CmR18wpFpP8euSAKAuuoZoTfPWcOziqfsFAXYYPnQoUxgY5jXOVAyQW0viW9khMYG/PUr2aEBZTZJtyrBo+/1sknIEoglAjytxJ8TFRFb9KBw=
+	t=1747447197; cv=none; b=WMwMWDW5JUuPy4IBZD+u637yCd+73nniUhJSAYhCQ/qt82jMO9BJaeDmRiQ4eiGcB3aRVX/XGj/lf8RaFY/lOB499jg0AqA5qkhVUno0OlbyFzy30FZLuGp2bY+fdfWSwpD7i6+vsPDm/byQIfeGDsqJ0rGiEjgssf5y9lpdUK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747447193; c=relaxed/simple;
-	bh=xsPFZuAoy5Xx+HAHSFTO3CpJ9ZWa79t8iv7KrGNnsVQ=;
+	s=arc-20240116; t=1747447197; c=relaxed/simple;
+	bh=rpC4/Fp1Jm1yKyuARzvQoHZlvtt/ApP11arkSl2v3Xg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MxzNVZnIdb9/7uaUGhLLmtd/lY5Hhxd1n+EmJy5F8a4cI7ceu8z6azud0pkHR+oNf5Q9F0vZASPWnTtUYpEknTFKVFt275e6tV4cYho7qKhsa9U9whyl8Q31bJprTy8bIdxArVA8kTlN/ZWhg4MHjwxgJ0jrpKWdIO5b5N1HTiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FzlF3ON8; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=smJ8qObMXy0gE6IQqU9P7Nh2fEk+8bM7XQ/LmsZ5v1l4KkHMQgiWYNkd6SzC+EW+ZW32eNds0k0lPXEQQf8cg4ZSKGIMtFh3LvQgnfQWGmLfbi6qtAhxXVYJJ8QMSsB8+NnGQ+93lqWidRdYDza24y0cJXFSPS5XsND5tH4AGGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bxfy041P; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FzlF3ON8"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H0imH1027487
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:50 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bxfy041P"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H1UirN007940
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	KyyWakxU/Z7DnyDzppFomci4qtOg/Wp/7gLP5SesAjI=; b=FzlF3ON8IURSYoRR
-	5gPeKKOsUxVtsVNEHeaWuYJib4avDnhR2l3fQChF9Cpu0iF4jcVdDKtO0cM/LdTg
-	BON8iVlwydjWFP+ULHEO/vY57t2NLRi0vgKBcGsGtPYV0ShvjWXFrt+oYmQ/+/55
-	3ZCyJ4OWA891aECmw29d+fUT3ZOt5UgNFzTJUFotUdcW3cfMko0PSM1rDFwl6BlL
-	9Q3jiHkt7eTAXGsVOKQ22IJs9wNbPH8WWUjjQeMmq7z/i20aGtfIRGHD2RChwDTt
-	kpM+sL/aVCYBvVfvEEVQM0PM6dsy6tbKtiF+VJV6ntZq98yxKbGXQSdzc7214kY9
-	IEvyjQ==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pg5hr30r-1
+	SD5Xx7vOEUM/GyGeh/4SwnrwP+CNzq7Qjzti6nJGdWg=; b=bxfy041P5CpxGH9X
+	Bv4LastnoPZGJTjFgJ+g3LyEp0mZApbuWOqfkIHrfsEYcxL9wtWbM8za5NxoNZg4
+	tLYfxjz3MURGrHBcfKnpkrTLZF9ZobLD0oVyCN4mAr6xjabkVgH0FkdmwpjvNazl
+	W6OlsVTtmmOJCeEh1e2BNce4g0Wd/NF2yNb57ISWj6XlZI3Ls94NIHeNMYRnY4gv
+	vQl5UmNdfrrbzsmJSVcIzKTge16CfzGzImxPFAIhxOD6IVTdvWHtxY6KcJ/aQB5M
+	eNdyDtGnbSwTqXPfPAw6QQGRldPa9HQJAOpiQLmfinVYQfog8QAXGegIkPa8i5ll
+	vMjh5w==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcq3j8t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:50 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f6ef385d1bso30983566d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:59:50 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 01:59:54 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5bb68b386so779574185a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:59:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747447188; x=1748051988;
+        d=1e100.net; s=20230601; t=1747447193; x=1748051993;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KyyWakxU/Z7DnyDzppFomci4qtOg/Wp/7gLP5SesAjI=;
-        b=LGqLAwtPuUWRcTswx08nNWIjG8py1C6hqeI5pKm1Aj2nmMhQoCkmoGPIF8NctO6+s7
-         2Zj6yCVIpPBqepLKCeTpGdYGZr742jFGEMSEPpMzrHb/QLdF1KSX/+0R0v3Z3FRacmVU
-         W0F0OZ4GyJSSLWLGkoyFkJ9rIdLys6EIplNR3FF8ontaFx6BIsTLViAaMHwSnoZkdkc/
-         scn6FR6/wMkVPuvTRVx3TkfUG+ieWl+7hDYPD5nXW8JKriZPg+F7Lyhvi/Y33YbpUbqO
-         O+3ZCS3pPZ3uRFon/dltEHAKh2ZdEANelAW9wBtawemnWqS4y88CF7wUpC7iY3rE7R6k
-         EWBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU70zq0qA/wOl+2tb9qDK1jrtdWyaymp6YvYMtl4rwVKMgJ1TsFAz4T5Ta+XyiqZCNm4XxNM5gyg8+zlJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzztfv20d5P6wbPVdMh9Owl+JO7MXxIU5sh2/L/LVpwCDURI6qW
-	/qIEQ1tkspBzlUjg0xS5c2Xm2c9e/DzoqnY59NcaMNB394rRn+yfJERUT6nuSoteStObSUFTEXd
-	f2CBdNL+ZSsAKmF8XC9ODgn1rxsD07yXsWW6Vy6Fpi4pNrWRSP+oPjvydlYbHnRKpjjUWA1m7TS
-	o=
-X-Gm-Gg: ASbGncvusZRHGDYeKCVW0yJDwgaHQKNWRrPTFzQ7PbjQd5jgnI7C597l++QqLG7xFaT
-	mfyDh620GDLKW2sKVnI+MhUXXaTfaUd7ZG5/gE348WImVJHeqBSowqjDCFVC9jzIqzqQqQKCoDR
-	ZQ/cm9Xhfszn7mp1BiIWV4Ogyk5Sgausq29krFDwLx09KNgHl8s0O1wd3bwnQSBqZ/Xct+E3K9i
-	IN5+xdQwRgHc3Yoq7zzJrTx8+oeu1jf11rUlvgl2rkm3QFS/Oo5R8IYuIUoFz1We0K67km+OOcv
-	gm9SbCasXk5fMQttLXRhzOIsaQ+F9tG0kMRc9uptIFj5jVzg7yG/d0CxOpNrmZkguRR1rWTj1Rg
-	cFu+rjK8/eNd6GF3cycqAw5lg
-X-Received: by 2002:a05:6214:493:b0:6e8:eabf:fd44 with SMTP id 6a1803df08f44-6f8b08ce997mr93637676d6.27.1747447188356;
-        Fri, 16 May 2025 18:59:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGti7Q9QQCKk/7l7rAp+Eam0O6WFZak94cTVGNCFbJLA0IfRgtRHLyKBrW0oWYy40vY4RQRZw==
-X-Received: by 2002:a05:6214:493:b0:6e8:eabf:fd44 with SMTP id 6a1803df08f44-6f8b08ce997mr93637566d6.27.1747447188002;
-        Fri, 16 May 2025 18:59:48 -0700 (PDT)
+        bh=SD5Xx7vOEUM/GyGeh/4SwnrwP+CNzq7Qjzti6nJGdWg=;
+        b=mKU3l1KEFE6YM1zFOiIZ1bbE5EahlQZtYy/6PKU1nQUEyLUgNx9ls3HjIN2CZbNpkA
+         qwLxp9DEGPB7oqzReBBDcE585GO0U+Lz9NzS6ZL65awJbsgrkLcVvypINandflXoEwYs
+         HPwawmUyceVFlagS4YuN2+QQfL0sL8S15x8umB2jTLFGi8mSpRbJmXklQQNLvS8Ps4fa
+         wLDhkcmwLX+B/02b+f0yIg6gR2qR6mGk8E/flPMEP9PpVExaXoSkQNVn29JVTxQQQGxt
+         J6NMeKwoZsdzrNdakvOTjzKTN15Wropdd/eoUDj1FNdiCZFWK/WcIL3nhYaeRszbQ/Jf
+         wQUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe2XK/gXQ6IRfdTlZobWzGgvr+cA840qV0mBbJaMi6pXsQ59sMdPmYP9lAyi1310YOY/Bj1BwMT/EUYNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztrVXo+Q+/GPXAc77v1p8dvofACG3iBS6WuyKMfo5kgelynKZB
+	m2r06CNzIvBIvaCojyofKf/2VhhdsJGLJipsbL1ADzdcDeM3TRxDt1f0G5CrqQMxncGOv6kYNEx
+	lVWS78E6NU+y5jOxZTCsb+kYg7X1y7TXQxfa92qczGJokjXcnee0QVdK439/BcS1KiLVcqcxy+r
+	0=
+X-Gm-Gg: ASbGnctmrQ47FOP5BJS0nh6WCrb1vNEUb4l4ao7pu1pVeT68mT0rDgZ1Qy4i98vDM/N
+	YhnZq7m0GQ+YpLYUwntvrcvBVOvUAuwHwwt3jIUgpW7tyYY6Zw6hKodiyDnYZ39tGSc47DKlcfj
+	wtvymCce8ADiCtYvpKU/ttimxIJvrCrEbgR5u7hcq+MJ4U+sEkHJc+aaGA7SiXoPxM7luRwJQZR
+	Yj9F1Yf6uuZpfE5ym35FNXvCGX1SWBN12xoGWv00JjqLUMkR1EvuAteqb/MK55VJkLg4mI6Duys
+	mLjR1MyH+sZiXHlPbhhN75v277cLLdq5utj/pKUwvUuRNa8rX/vpTElv25RTnuoy/gVMjhProPf
+	4Usha6hub2dTPpaQ03djhtGm4
+X-Received: by 2002:a05:620a:2989:b0:7c5:ad99:9e38 with SMTP id af79cd13be357-7cd47fb1ef8mr613004985a.43.1747447193275;
+        Fri, 16 May 2025 18:59:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVRxbvmsaezHoPorAioz8tk37MPhQLozBhorB8+3KjD71P7UkiRrOmavX9pc6TUp2GZjXSrQ==
+X-Received: by 2002:a05:620a:2989:b0:7c5:ad99:9e38 with SMTP id af79cd13be357-7cd47fb1ef8mr613001985a.43.1747447192929;
+        Fri, 16 May 2025 18:59:52 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e70180f7sm672167e87.128.2025.05.16.18.59.46
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e70180f7sm672167e87.128.2025.05.16.18.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 18:59:46 -0700 (PDT)
+        Fri, 16 May 2025 18:59:50 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 17 May 2025 04:59:40 +0300
-Subject: [PATCH v6 04/10] drm/display: move CEC_CORE selection to
- DRM_DISPLAY_HELPER
+Date: Sat, 17 May 2025 04:59:42 +0300
+Subject: [PATCH v6 06/10] drm/display: hdmi-state-helper: handle CEC
+ physical address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,7 +79,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250517-drm-hdmi-connector-cec-v6-4-35651db6f19b@oss.qualcomm.com>
+Message-Id: <20250517-drm-hdmi-connector-cec-v6-6-35651db6f19b@oss.qualcomm.com>
 References: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
 In-Reply-To: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -98,77 +98,87 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1524;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1880;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=xsPFZuAoy5Xx+HAHSFTO3CpJ9ZWa79t8iv7KrGNnsVQ=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoJ+2LzlRiBFzeGKtLvzI9YxXgxpllhINoupjHY
- G0qcJIH93CJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCftiwAKCRCLPIo+Aiko
- 1ZsdCACJtMwWiDYiD732KactqUyG3QUjLbp5nnLNbYMMCsbW3offpf3dDM0La1046N+G7iVXcka
- Bx8JBhEy3wMP+Q9QyQn1cNHEzH/Z+ErD2Xe6pKShIsKcu+49zsFGdKObUUGgRcO2HnxgtVUFEIe
- Qg4VMtxkhcO6QhnNb1xtGHa00UQonJjuHS3GegPFbQ4WR18eB0cUxAvY6NDW/vCj5XsvZhYL8Ac
- RjvPVUCAuGK3JjuQLAOnQ1J+w/yfq763HC+hElG2bG+2tdHciWjBLHjR/a1fVfEHujgtGIFmm5P
- 3Eq2L6c6GzFTYjgQce4FTZ0AGpzD676EQkExyIsJfjds4Spt
+ bh=rpC4/Fp1Jm1yKyuARzvQoHZlvtt/ApP11arkSl2v3Xg=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoJ+2LcN5UYS0GlUCtFMbbK+13kvgJBdUYbxpPt
+ moiU+EvNBSJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCftiwAKCRCLPIo+Aiko
+ 1eP9B/9yrrAqJmrcCxNQRqpNPsrz7qJpKM0CLmPCcvrDhUdEMgf1owKQ23/2bM2xOdQlTKWgCu0
+ DGotpO5h9SLvA2Jvbcx5PxKZrEYR2owiXVu/DxmUbJdCFqF7fXpYpd8btVv0EEihZ8wJfn5vX/+
+ OQFBEf/Sz5/u80ap/fS0XG4Zzr5CWqwd20zrVVlJaIvXqTZlmmn1gwZctElF2NsGZvA7Ht9zWF0
+ G862X9APgAaCZO70M+uMK5lqF5BwvHQbLQkeWCSMWW7qU1l23H+bGBS5+sINWslB6FRBC7tYYM4
+ Lgdm3e0tI3bBR4wis4j20M5LIv+oxtYggmhRCklX/Nwk8tag
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: AqgqdlG5nLpebRJep6vAIPan28XETzCL
-X-Proofpoint-ORIG-GUID: AqgqdlG5nLpebRJep6vAIPan28XETzCL
-X-Authority-Analysis: v=2.4 cv=fbaty1QF c=1 sm=1 tr=0 ts=6827ed96 cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=7OZCfA99JoLngDASymAA:9 a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-GUID: e-zy8aA0pfNMUeIpRDVPDnCoHXE83Rzg
+X-Proofpoint-ORIG-GUID: e-zy8aA0pfNMUeIpRDVPDnCoHXE83Rzg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDAxNyBTYWx0ZWRfX42qByemhBc2s
+ 55pELNKYonY5ZXZmTaUs+D5b3oGQnAdBtHQEykujEkWdYLJ1NCpkbLV++8pXR6RDqKNpaT0bm8K
+ cCDlBTd8l9mZMJnUK0BTTrfwJ7eNu20z4Vzv8YIZU/DAPVqCPwSgVXo+jt/RTQea6Z6kY/Ie/4a
+ nHVsBXMdU0vbPVLf63ahlOx20ZxutuCJY4YFDRmMu8MGzw1IJZD0OTFFGI4uvQCjKurD/NZJwC5
+ q4k3jVLCzgO+if1ONoZvtJS/UGV+pq0pMX+U/AK7ke5gbukyRjc/iNSH1fn0sYgH0pWPQvoiAwZ
+ fIM3DMOXuE10GwcX8sQSty/pLqAANV2DOPExV9Vw+FHXK6JLqY90HIRRPHmoOfubyIxmecjPUz9
+ MUpsinppqkd53xBsjfNhe+aEivCyD/9d5CuQ4TPBTgrdy0cy0HWh5UrVT/tH61wsQ+SqJupi
+X-Authority-Analysis: v=2.4 cv=KcvSsRYD c=1 sm=1 tr=0 ts=6827ed9a cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=xYQKfNBhK_rbaXl_Bc8A:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
  a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDAxNyBTYWx0ZWRfX0zYrRZwaUw7P
- AX1wWQYMwYoBFm/6KSdIvsHc1pBQGKx97nc/BtFbFgmqKKsi4qKbRFpAJuxWIZMI1sJaWdvit90
- 7ZG66Sm/Z6OdU164sWjZ5kzBc1Nb6FJO5quxgx+VqyHOuXR2oub5CNLKMahnMKDCWnUBGcDo/VZ
- kNBL7xcqOmYFTBc8Ks2ExLRLIYq2C3z4WFRpKAx8ECcV3sajJKjSMLmP3/D+U6LeAqFQimOWYO6
- 8viQ+NEvRHTAoZ7Syg2hSQP7ssxoGYmgMa0i/w5wmP08LyfvGk2WvuYygxEYZ3q3qPxwZAO+mJO
- UMqIBBuEeRqyaWTHqRPeVhYSCbOVzIM5j661bUTeSvPdAAHX4gyH/uDzJ8xTkCEegKNW0ABAwU6
- OvI4Ef9Bs4rTXlPklSE9VhFqCeMzxTifKsW/NDUuWjLagUOvR2vJI0Xh/FK7ms48LBx2Dyh2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-17_01,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0 suspectscore=0
- phishscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 clxscore=1015
- mlxlogscore=999 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505170017
+ priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505170017
 
-THe Kconfig symbol DRM_DISPLAY_DP_AUX_CEC is a boolean which simply
-toggles whether DP_AUX_CEC support should be built into the
-drm_display_helper (which can be eithera module or built-in into the
-kernel). If DRM_DISPLAY_DP_AUX_CEC is selected, then CEC_CORE is
-selected to be built-in into the kernel even if DRM_DISPLAY_HELPER is
-selected to be built as a module. Move CEC_CORE selection to the latter
-symbol in order to allow it to be built as a module.
+Call HDMI CEC helpers in order to update physical address of the
+adapter.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/display/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/display/drm_hdmi_state_helper.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
-index 8d22b7627d41f7bc015decf24ae02a05bc00f055..3666e791d6d6eba58f095d7fb691de1fd0b95ed3 100644
---- a/drivers/gpu/drm/display/Kconfig
-+++ b/drivers/gpu/drm/display/Kconfig
-@@ -8,6 +8,7 @@ config DRM_DISPLAY_DP_AUX_BUS
- config DRM_DISPLAY_HELPER
- 	tristate
- 	depends on DRM
-+	select CEC_CORE if DRM_DISPLAY_DP_AUX_CEC
- 	help
- 	  DRM helpers for display adapters.
+diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+index d9d9948b29e9d5ef9bc9cc9108b3ace4aca2e3ae..bae7aa624f7db61cc7d5ff7a86a413938963543f 100644
+--- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
++++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+@@ -6,6 +6,7 @@
+ #include <drm/drm_print.h>
  
-@@ -23,7 +24,6 @@ config DRM_BRIDGE_CONNECTOR
- config DRM_DISPLAY_DP_AUX_CEC
- 	bool "Enable DisplayPort CEC-Tunneling-over-AUX HDMI support"
- 	select DRM_DISPLAY_DP_HELPER
--	select CEC_CORE
- 	help
- 	  Choose this option if you want to enable HDMI CEC support for
- 	  DisplayPort/USB-C to HDMI adapters.
+ #include <drm/display/drm_hdmi_audio_helper.h>
++#include <drm/display/drm_hdmi_cec_helper.h>
+ #include <drm/display/drm_hdmi_helper.h>
+ #include <drm/display/drm_hdmi_state_helper.h>
+ 
+@@ -1081,9 +1082,10 @@ drm_atomic_helper_connector_hdmi_update(struct drm_connector *connector,
+ 	const struct drm_edid *drm_edid;
+ 
+ 	if (status == connector_status_disconnected) {
+-		// TODO: also handle CEC and scramber, HDMI sink disconnected.
++		// TODO: also handle scramber, HDMI sink disconnected.
+ 		drm_connector_hdmi_audio_plugged_notify(connector, false);
+ 		drm_edid_connector_update(connector, NULL);
++		drm_connector_cec_phys_addr_invalidate(connector);
+ 		return;
+ 	}
+ 
+@@ -1097,8 +1099,9 @@ drm_atomic_helper_connector_hdmi_update(struct drm_connector *connector,
+ 	drm_edid_free(drm_edid);
+ 
+ 	if (status == connector_status_connected) {
+-		// TODO: also handle CEC and scramber, HDMI sink is now connected.
++		// TODO: also handle scramber, HDMI sink is now connected.
+ 		drm_connector_hdmi_audio_plugged_notify(connector, true);
++		drm_connector_cec_phys_addr_set(connector);
+ 	}
+ }
+ 
 
 -- 
 2.39.5
