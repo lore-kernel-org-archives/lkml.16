@@ -1,117 +1,109 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689C9190057;
-	Sat, 17 May 2025 10:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7417435979;
+	Sat, 17 May 2025 10:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747476027; cv=none; b=HNTmSRe2W1ZGjjqLkfpWGvvio1fIRoIJbKHhvHE6M2dDPzQrmBl7Os6v1tZBYDPO6/7veeZPfr9IpFsBDcnjof8rqui+Hn3/sC6p28CbSUMtFFX7k2B+j5BV3jEYR3xxx8kldlHhofBbEsaehizAjJGpOotf8W0FZgF1PcrdATw=
+	t=1747476172; cv=none; b=a1PvfjE7TvqWVudFkTyh/nBT5Yj5M1SqzH0psc/PoI+1ggy/21oHkVw0dEXBuQg/iiRev2V1IgMmAFIGK95d9agAG0yEo2yggB61C9ygGa3jyKtPdEZ8I0ZtgplhQownpxr6ZdOMh2P8PvWNvxwp7JdTrC+QQ/n1HgBal5JuBlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747476027; c=relaxed/simple;
-	bh=n/tyub/UDIshEqdErapRAxo680ky/xE8NVL862OiNNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuE9VoOUqmqg9PKRTzqhOdOm6G4Jh7QL5XEyt1mfjFFBtw1gT4VsI0XsjAl4ZWv8F1LAIR0oZ8IE3UHyI2TeUruW0boRxWGu0RePna/0qh85ThAu2FSa4//xkxtJbfM8zK6JjmemuXAmx11lW5lSu71aIgQ38Sk5XlUQwXLdD68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=W4X7LqTj; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747476172; c=relaxed/simple;
+	bh=foTs9X4bwwWm2KlE4A34bhobKiOFNcySlPKZWxdrKWQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Zrnr6Ds0txchlsjPJTcBbJYMYvHYHeIC2sVHUyYe80pdePZMC7ZpHUBhLsVcr9kAjCzsiZ1KzaolyaZGFsEmrFG+RtOtXfDEJGWJ8/MGXyku7EcfBurj2LQv7z/taF90L7EcwsslNfNxTUpXgYHEbNRIT3OMvaHITVQinXKJkuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f5UOd6VM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nLfFpXOw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="W4X7LqTj"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B432540E01ED;
-	Sat, 17 May 2025 10:00:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id OMOk4xaLhbMZ; Sat, 17 May 2025 10:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747476016; bh=vivSp+4H0/wgVkVpUciSmmSzamaN4dBOFfW2lgDH11Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W4X7LqTjMnIOmlc+JRxxeDE7oLt+HBnUSv11CfEljwtqEc6Tdg5oRq/NkpAAJDHr+
-	 2kyQdKjzJnWJiTVs1t4+t7K9MygaXFM7g7yiY/G0KNAso9mwq3/WAphBfg9QQJ3b7f
-	 P7ygH2YTcH9GpTYmvpqvXrHnTbdEBeTxfynjdH881CZRhNeTSHBpG0nT/y90cRZQi0
-	 CmGtXYAKyM7asX+4C8gfL+AUnOQcVHxqv5CTlsRljXxqLuWByv17FIgqDreBzVj1Jd
-	 5c8VUIstlDrMHmaGtnPGSnd8MPDk5AtwLpqhLaRVa+RW3eG0KjfAz7Ep5KropZYiS4
-	 /56bGX/lP/FSslXxbIXnk6vN6txHItp6/hKyhsKAyXLKNdXL5538DpXRALkbGoEcvO
-	 pZNPfZS+2EMacmrX1/rrHzzUnnTTCMNpsl4Mrmb1Rwsm2Mt5DGg5qGv//Z3v6NPA3+
-	 9B0aLK6yia1wFQwlkwW7mKbt3VgNkj9IQCUNFxiQ3pBVVJfpolCBr3SZetpRBfBgeW
-	 BDW7OBhqaf65uRwNOyYR1L4qPs4pdFcCCzFHl6dF1YY0eCSCrFg8raNeg0v9kTCXKF
-	 GpZRWljm6oQhxkF/DRnsm6e5YW9EJknYNYj90WxA9YRNv5g5CXaeCy479MrAdP2E37
-	 q5cc4c3pW8lwgPYcxsBrgbwM=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1629940E016A;
-	Sat, 17 May 2025 09:59:54 +0000 (UTC)
-Date: Sat, 17 May 2025 11:59:47 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Juergen Gross <jgross@suse.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv3 0/4] x86: Make 5-level paging support unconditional for
- x86-64
-Message-ID: <20250517095947.GAaCheE9tUvgSWMhpa@fat_crate.local>
-References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f5UOd6VM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nLfFpXOw"
+Date: Sat, 17 May 2025 10:02:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747476168;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lJNlQZv8L8yYszKkyFzjXyoJCXnwRT6ptWjM3wsb2Tk=;
+	b=f5UOd6VM+X4LI4DX558r+ZYrOQrpND5G+29gmBZ+Zk0OTb3OjwH4wRgeonMR25A1B8ZJZl
+	xGHFudZOJIf7euKEJFYdKO5iCkCYuqLkWpywLd0K53BctDIO/S/II4KSAXC6K2oCJj0CWB
+	5Hn4VwkII6DR6D2Mm/vBg/9kHz6qHEVB/lHAfdRN8zV4xsG9vv60RtD6/LoVv4MX/8fHOr
+	9ZO0LIe18kOqtKl4ydUEAFfVClW68OAhXJ/b0NT+GWTVSWIacEhxvr5TfThiNFcTLPeoo3
+	ofxJvX90HqSlrK/+cc1pTrfz1t9NP5CCs8iyQbVJo/feJ/Kyx4jcUVACbR0c5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747476168;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lJNlQZv8L8yYszKkyFzjXyoJCXnwRT6ptWjM3wsb2Tk=;
+	b=nLfFpXOw3MnPslW4QyH5AdLUE1hmK2poY9AqFsqWeKBJQbt4tl/knIhecz+HELtxNMxlP6
+	g258jDAXPq1ujZBQ==
+From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cache] MAINTAINERS: Add reviewers for fs/resctrl
+Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Dave Martin <Dave.Martin@arm.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Tony Luck <tony.luck@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250515165855.31452-26-james.morse@arm.com>
+References: <20250515165855.31452-26-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+Message-ID: <174747616679.406.12427682987196751572.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 16, 2025 at 03:33:02PM +0300, Kirill A. Shutemov wrote:
-> Both Intel and AMD CPUs support 5-level paging, which is expected to
-> become more widely adopted in the future.
-> 
-> Remove CONFIG_X86_5LEVEL.
-> 
-> In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
-> SPARSEMEM_VMEMMAP the only memory model.
-> 
-> v3:
->  - Drop few "#if CONFIG_PGTABLE_LEVELS >= 5";
->  - Make PARAVIRT_XXL 64-bit explicitly and drop ifdefs
->    to support PGTABLE_LEVELS < 5;
->  - Add Reviewed-by tags from Ard;
-> v2:
->  - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
->    #if CONFIG_PGTABLE_LEVELS > 4;
->  - Rebased onto current tip/master;
-> 
-> Kirill A. Shutemov (4):
->   x86/64/mm: Always use dynamic memory layout
->   x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
->   x86/64/mm: Make 5-level paging support unconditional
->   x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+The following commit has been merged into the x86/cache branch of tip:
 
-The whole set passed randbuilds testing here too, and am running boot tests on
-my pile of stinky hw.
+Commit-ID:     54d14f25664bbb75c2928dd0d64a095c0f488176
+Gitweb:        https://git.kernel.org/tip/54d14f25664bbb75c2928dd0d64a095c0f488176
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Thu, 15 May 2025 16:58:55 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 16 May 2025 14:36:42 +02:00
 
-If it passes, we could queue it all.
+MAINTAINERS: Add reviewers for fs/resctrl
 
-Thx.
+resctrl has existed for quite a while as a filesystem interface private to
+arch/x86. To allow other architectures to support the same user interface
+for similar hardware features, it has been moved to /fs/.
 
--- 
-Regards/Gruss,
-    Boris.
+Add those with a vested interest in the common code as reviewers.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+Acked-by: Dave Martin <Dave.Martin@arm.com>
+Tested-by: Fenghua Yu <fenghuay@nvidia.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/20250515165855.31452-26-james.morse@arm.com
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c56ab7d..d788eda 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20422,6 +20422,8 @@ F:	tools/testing/selftests/net/rds/
+ RDT - RESOURCE ALLOCATION
+ M:	Tony Luck <tony.luck@intel.com>
+ M:	Reinette Chatre <reinette.chatre@intel.com>
++R:	Dave Martin <Dave.Martin@arm.com>
++R:	James Morse <james.morse@arm.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+ F:	Documentation/filesystems/resctrl.rst
