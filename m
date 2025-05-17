@@ -1,95 +1,88 @@
-Received: from sonic305-19.consmr.mail.sg3.yahoo.com (sonic305-19.consmr.mail.sg3.yahoo.com [106.10.241.82])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5AB1D61BC
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06EC1C1F2F;
+	Sat, 17 May 2025 09:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747475328; cv=none; b=fWviExbDbPzpRKeyF5lQJ7iHo5dHWGhdsl3v9RD1x8x2fXwhcSiNJ4DHPORGHFqf04eLzdbGQcREVd922sPafpNm8vt41FxXvnmYPqh/x0ujg60/zpeP/f4AaP25HiOgIsiIcMfQ03wIkFPl4AAxD5qfQcL+psewr8kmHbxgRvo=
+	t=1747475920; cv=none; b=bflNdD3gC6VqiuTWlgQyeUHL/TRgQmyEX995JejNc5WNnrQBLu4Xp7EdLdTN6mRpIhsUIOZObC+DrzmWmUKf89ye0/rVlkQLfTWGAmmbap9OTCvhQ+aBQHkldf9YmmiapD3GHSeUaiT+6g7GDn2AHV0mPcqTOb7pjyOkJo2ScBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747475328; c=relaxed/simple;
-	bh=Yb5Rql7cM+SMAkVBhFFCKxJq3PsJPcbf8EEVtS9Lv6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=miByzAPU+mFHCD0T0JOzdYH14nDMnesrT8acn/dgkmmUhOfJADgg8VTv396nAER71numBxik390TfjaTMwfScENkB9E9V0Cynpk5f4Ow/P2Zi4ROxa7zjQ+DqpLvokMKzHDblIkNlPzXoNcfiZI061hcJmzb6tf8CyHsWrybLng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=LGjZcyrB; arc=none smtp.client-ip=106.10.241.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="LGjZcyrB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747475324; bh=QQhY0Sb/OCIv/LJ1TZqQpbqN7VPKZZoSds6JmDCrdfo=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=LGjZcyrBWfLQ5kNWV9aoRNJRRr8Cx4d4OW1jZWby2knYUXkrjwjh0gNmqH9sqo1fEIKG7myJJJQekrPp4v5/qN5lsa2xBXJqZQU5mEmzCoHXB9E7BkCpack8eQx1zC6YMdCHbOR3CxstH85/QqOTW7/ckziB414Un5t5k+f/G8ceJrPdW9VSEyBYThTAiQfweuGd/qgMTtCpbJ6Kk+OGGJ3+6COG9n64P4X1tWEQb7OooUpI/dOHAgvCYW0AFEGF7HL/WtI3k929+OSWkRwZm5beN3IE9/g0LTW6RCSCvCnfQD+xRdOF7nN+PNwsqla75emR14X1A1vy1He1/q2oyA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747475324; bh=j65iqfWO2i37mDIkYNc53Nc9fh6ygdZrFU8BmaZZVQI=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=XeciN6kJ86Lg/3rMVHCq8XJgJocCd/i8V6czkEBdBPLXySdTW8oKGgKhex498IofTxwP/39vWWxSZEGj0hoIjYBjSu5b5A/0lmppAhAdEwGpcDbJPsfpvH6zL7qgDRxUSLTEUNQq3fNnoKDMzrnzdNExE/wC5u08p9UMyprUSs75Cpc7lbCHzfr0NvGWfxAvUvpqm1Q4lp+ROL7+NapSHmkJmiKsihoCM8zJ7VEkoFJgd+QxYkpCFstswFS2crwMsjwRzModbHQLYYZHE5ZDhqMR1mA4ldi/W17pQ2wB9SeUcqeyerpukvTQQdV1vrG/U04fi60oAOBUN3End+Xahw==
-X-YMail-OSG: OKp8BpsVM1l0pzz3UjYk8.Ffwyk10z2kB7AA2__rAW.lcxNO0qm5ovPklnoW_Au
- gsd5qiihbQxV9NyAuQ_9NWXbUVHDY3Em9UVDe5XGtBY5YMoGmLKTNipNk5twC4zSWmrYlOBHr4Ih
- o7riF9IK1tq1em0pJ0FUvH5VwwjZgrz.9ofyB31mL2AuARJsyvpej.JvYbAUJV9zVdpC18njxYqy
- MfGQ6A8aTOk9_fuzLST7H3d3E_0TFfpK_mWeUeFl.H_RGk39yBoc2f4fLw8OESuWy3wdW3LIBc3U
- WRbhcw3uwIeSMZxA_MdOCMI7gXT2ROQJFg11XHo8dbGj44X8Ajj17nQt8KJUeFf49Wu49nHlanl1
- jrWAXjzW2gl3fVjamhKt2aDnrf9GI54dlMbiUnPddTGkBFKjgMRrCUzbxZ4elynCn0nDr1J78Y_p
- Zr8rUN5IGTI3IimYyJEV8x8qe__ecjdKl4mtGdij9y4p3DQSbVhbd40UfULTfmksd8Ck9LDscJr5
- XjtQYj_7prKIMzVzK2tqVR5yA5DFKDNlYro4h7pwEfgCpcDgrerm7lZh86mYFfN1a9tCDE0XkqQX
- x55CeRaekHKrVXijVmsLfZU.V17CxfWLsKY8yqdUxmLnOfY8.GxMIvs8nqQPgz97nIc_up_096vW
- 4u.q2uXVUO5wryl8rSeGp1o1qOQrjnwAEcFY2t55WUt7Y8r_53pJzzb_acnTdYshYfRMGD2Z.pxY
- VFrCh5p67a26QoDreAL62esXHnxMUQX8VMavA6rBEyw17LVdCNR2e3fztkeoHBq_m51dI1Fo71Dm
- Kyikfd6ZSPfBFlgJQVT7i_8y9bESxEnUq5O2cUwtltHWDSJtN79QY4xlk9uPqt7NjYBVzdyUKQ.C
- mZbtJHgQuNpI1McA_NeQ9GjpDBt96lhNyrT3fphM9MuYktQzfpJlrlQL0ld2eXqXgJx_PF5dNVOZ
- a15S8mExzGSjlIYdW.afN_2V2.emWItAC4lFxfFzGeLcs1naSh0ZRI1DxOkpF50sV81rfVNpUXEC
- UAntd1aqJnzfcAhsDVSsIzUlYcN02_POlFRQPz6_dcQq4jvz5L8HyOSOtZn1.57SQoXUJYKLFyj7
- M2GH4ZeZCqlc9f4JEA1j8HiQp8ID69lNgbq3yFyF5Oktx_2com2VMe7L41ubKOWSvNVUuckIAIQ9
- R90xkp3lN3jtRmL0sw4loxF__w_aBp76rrgacnZxPwM36Tek8trgZX5YX6bT46H6euFlw2jX5yRu
- QwD_m1jJ5Fz7nZt_C4FRE5T6yNQ63V9zgfvCTOJQqzWkBcPLd1vhuX4MyC14SWrZLvtV8ZGG0bmH
- eddKDyti5vN9asEvz04zW0wwU_GdjbwrCqemTG.N6WByQ7ExqP5urNSrEnQ6P06ZPNPM2BGWXtDW
- OmYUjz9OCr3_hwzEP0b2BNzyricG.hkbC4bH8qZxagAfk_8qCAT447ucQKTgR.dopmTf0KxMQkn5
- q0BiXelMgblfmSJtPRpSVRlQVCb_0iYyaLbsjgxOkq2HvInQVyWPmgnWpLqVwfuvQU4NAJRjkNOK
- UMoEeRGXn.4gNvGEI2Kovmw5mvYSke7t3i3z7CVXCoMg.vBsGMPYRx3w7e45YADuILu_fFzLm7K_
- jGKWNYjtzQyy4Cm8z9fmEm0TseFk5xg.sb_x6JBmdG50mKc93oiOVpnQFbawihzO2LHxcR33_nej
- vprScUv541rJfxgT7W32NVjEhjgUvwIj061AKieIJ2zdrj8fgCXRIiJ9bSCA2nwPvueqqAOm7y_1
- gvEyBIe_bMm5SM_tesrh.vFdqta0k_YZLJGSroccL874.URIah.V0cOUZu__CHHATTUt2qdkQdtQ
- is6QAjX38Qjzyy8Y5hSFEa.94IABFBCTzHfsxNCMtFg1HWJGei1_dhkLCYShrmhN48ynf9kOC4Ca
- eGhuh2QonYiTDyqceG8OJGEw1Zdao07l0s3G.mTJ.8D7gFcCilpcoDA_ndYyY8tmb4NMoYUkE1tu
- i53IhTUVjSY8TTfCRt6YJuTGgRJ6KEjAfD7mntG0e2J5PmmXhOTrOX5lLXLvranUObAsAghfqH.C
- FyHQaJlFeLoBIzKE7PLo_dP8gTPSrQCwzN2dMcVCjlEf.i2QCMCKdICsoDT5XLiZGJ2HFsXr_utA
- z88mvNSZMg2m2aymng09LBwyvw3TZr_Ofhx4u7dzXjkycfc_mFM6NbqMBJcBFMZ29BwdX0vWHRFk
- vBicw
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: c31025da-d115-409e-8b76-906fc1b1965c
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.sg3.yahoo.com with HTTP; Sat, 17 May 2025 09:48:44 +0000
-Received: by hermes--production-gq1-74d64bb7d7-nrjbm (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 3bfd33b1abe7a8799d233b982da9b471;
-          Sat, 17 May 2025 09:18:17 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: skhan@linuxfoundation.org,
-	sumanth.gavini@yahoo.com
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: ABI: Fix "diasble" to "disable"
-Date: Sat, 17 May 2025 02:18:10 -0700
-Message-ID: <20250517091814.1263768-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747475920; c=relaxed/simple;
+	bh=VIs2OF54lqPLhmf74bUbL4CZ0VFfWopF/SaPWVXUFPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PxfC+KOCK3SFYHK1iu40eyZ/onTJO3X4cEaZkubDonTltxfHCs6yB0kVD0FrBszov4gOnhCjNC3FFbktQfBhH/gamLHTamf9yvQWvpWU8p8TEiiTHouKXkRai2gcrbvhLBK8r8HpVBiFUeLmBWZlYXdLSMIgG/18OPafuiCiVG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so30323025e9.3;
+        Sat, 17 May 2025 02:58:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747475917; x=1748080717;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L1xybqkdxpFEj1EI8QA+pvcqPiyMXAo9agsU9POzFbs=;
+        b=utSwGTDT3p5U+3zmB1XtEg9AzOUVqnA+t0+xCn9UjgkgaFLxEKFn0fQ2moF8Wc4zLw
+         IJ1vcudo9Mi6xLqlEdSCKLKkyhJYhittfiTgInSXdbGMX7d72xamojtnT0AtocOkL2Aw
+         oRMD4fUsahhdDdivRo2Uw8cSrgGnorFg4KBxoPEruliFe/9KzgXp+tMPvV9Le8UN+Ckw
+         DrlJc7OK8JW39cfaKVrzs5BBBn43kkphoPG5h8NwFSYRpuqzizDTY9ASdE7f29xp7mQg
+         wZrIMEBQoPfTieT3q041BOaVnZBGUhcxTvZC+9gK7apDQ06cuk6wb/Bu3TtU21tBnV1F
+         r3oA==
+X-Forwarded-Encrypted: i=1; AJvYcCV32CF7iWUa4FsNZ9kyhVFNkJljX3qA5AFxi+/8r5I8qoZrOuFh7d6UTyvTzbRMoUveY5L7UafgIdohHQ==@vger.kernel.org, AJvYcCWW9m3x3L4Fu7kR4rs0HyCPx/Yi7OXK2caq4sBT7FDMa0iqKlv8MdAxsBbIm4HzcrrB+UOhg2yQ@vger.kernel.org, AJvYcCX8YgDy2XUpOCqZMymsJdZdi5/X3k6lBX1C3U4A5R59App/D3qo2xS/vCXliZKlXy7roUISDbsXrJ5EzA==@vger.kernel.org, AJvYcCXyV+9btsAvhGGZTwpfwe3cqzIZ4KBNYYVPdoP0S2p+tmMjzJ10As8S/wp3pVJLaLbQ+19RTRxfr4ajFrs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw6fFjZ+KodxM8nSdQGLMv4UlbMLvqT0L7KOflks4Eo7PMH/xV
+	IvsrdkTtIv9QEwUfO+Lj2k8UGLu8mPgHfR6ekUQwVfliZI+776msT4qh
+X-Gm-Gg: ASbGncvtoyBCYQBBYrPorHliixxTww5IYcwyM8zJwhrFuchyG3FkA2ECm7P2GlQTCa9
+	kVtGlLxvdIug/zu2yBithYrO0MvLK0JRPMhGoeKt5A7MLLuMYmQzMFQPZNY99baBUWRcrwmrkSp
+	C75fDvriSu89/bknpuSP6BbcAXGdL+0rKgFPCqeEk/qrf058a6LUiOH7zwaOVCPRtvDtVsstyc2
+	vInw7sJ3BmBHjNIa0ePIX4+KKOBsft7GmgI+mud5iIaH5NozqMChBsd5Gj2iCgqha+mh1Th4W4l
+	KgijiYYA0ysCukELqpMbb+47nTDe2THGZQ1HBPK/ekhWd1A3PJScz2eQlpMrt/JyWmamUT9RPlz
+	QByXodzvU
+X-Google-Smtp-Source: AGHT+IEL1yy1dVgbHcGpQ/e6QxEBlTdRtwZtph6z/27chlWDRnOkl9UnAko5e06/JsZwHle1RrNcjQ==
+X-Received: by 2002:a05:600c:1d82:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-442ff03bd03mr53445255e9.29.1747475916740;
+        Sat, 17 May 2025 02:58:36 -0700 (PDT)
+Received: from [10.100.102.74] (89-138-68-29.bb.netvision.net.il. [89.138.68.29])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd50b983sm63604445e9.11.2025.05.17.02.58.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 May 2025 02:58:36 -0700 (PDT)
+Message-ID: <8b4db290-00c0-4627-a03e-d39a22c56fcf@grimberg.me>
+Date: Sat, 17 May 2025 12:58:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250517091814.1263768-1-sumanth.gavini.ref@yahoo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
+ skb_copy_and_crc32c_datagram_iter()
+To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
+Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Ard Biesheuvel <ardb@kernel.org>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+ <20250511004110.145171-10-ebiggers@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250511004110.145171-10-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
- Fix misspelling reported by codespell
+>   #include "nvme.h"
+>   #include "fabrics.h"
+> @@ -166,12 +166,12 @@ struct nvme_tcp_queue {
+>   	bool			rd_enabled;
+>   
+>   	bool			hdr_digest;
+>   	bool			data_digest;
+>   	bool			tls_enabled;
+> -	struct ahash_request	*rcv_hash;
+> -	struct ahash_request	*snd_hash;
+> +	u32			rcv_crc;
+> +	u32			snd_crc;
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- Documentation/ABI/testing/sysfs-devices-power | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Let's call it rcv_dgst (recv digest) and snd_dgst (send digest).
+Other than that, looks good to me.
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
-index 54195530e97a..d3da88b26a53 100644
---- a/Documentation/ABI/testing/sysfs-devices-power
-+++ b/Documentation/ABI/testing/sysfs-devices-power
-@@ -56,7 +56,7 @@ Date:		January 2009
- Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
- Description:
- 		The /sys/devices/.../async attribute allows the user space to
--		enable or diasble the device's suspend and resume callbacks to
-+		enable or disable the device's suspend and resume callbacks to
- 		be executed asynchronously (ie. in separate threads, in parallel
- 		with the main suspend/resume thread) during system-wide power
- 		transitions (eg. suspend to RAM, hibernation).
--- 
-2.43.0
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
