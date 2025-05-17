@@ -1,109 +1,91 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5A41CAA65;
-	Sat, 17 May 2025 14:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA0423DE
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747492854; cv=none; b=nCv6FUcgKfOGB7Zl0Yb26Za+QNxDU7jwIML14XOjsfViK/ngvioVW3hDDJLexhQZmJ9fawJ2FmhDmq5/HGgJ2M+WWqz1KnrOshJoRqKuZfn59aBX4j5qmposBn9blPCwg7B0YDu2GtQl4AkjQP1pzeAC/C3J/dKjEn4o7nRHSNw=
+	t=1747493355; cv=none; b=SjPLg9rRwtdTPEPt371B2e5ArqTzZp7BMNfYlYmVpmAM2JW1s9JHyiXz4wdhPAMDpJL3Z52T0zezld3yPm5BqCdfe0Bngu9hgtzgTINoD/1QKmLfhq0aiPpnljuVolOaOEYqpLAaDZxAdC1k/m22hvJ7h0zmXa4QahBod5oGbLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747492854; c=relaxed/simple;
-	bh=mDG2jkft7nfElJfJfJkL9KftMp6xqxfSRzxkOF28vbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JIvTzm3hhOPw+TU/fIDCZgKMnzfYFWex+ujRbNxGWZcvi88O+6hURdyXoPxldimNHddzX3+igia84eXEqjKPGNpTSE1QEtlnJZ7eeoFZkLdUxSmv9qA5q00nWkC7i6GFZmzXpaoxQKu5Hnw/xB2Kuw0CA2CNVgfjN0amSe/ArWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moJ1AW0Z; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747493355; c=relaxed/simple;
+	bh=1AiHWZPsL8qJWLFIcxFA8L7R+mrTxY9Bh3Bwwx3jNNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZOQZPSPRSbSSIH37AfSfkSB2sXItZWxJ43VmXyYCCT9PC9JmpG6s0DO8CknMQex8dsMovn3Av8EL7ysEACSjRmHVnWAmsTMUYsMZJwEQbcNvCzo5Dke0qIFZD4kIpG24DMJyLbqUYdbV9dCIg+E1j9/1pNmCJF4OcPEOBL2gZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GcCaLM/N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MbE9sZPi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moJ1AW0Z"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a36463b9cbso675317f8f.2;
-        Sat, 17 May 2025 07:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747492850; x=1748097650; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4dU2jCfddxJKrwesjyJtttGNJV62kuuDvXgjaV72qj4=;
-        b=moJ1AW0ZQXfhRP3JP/r9CX97lbb4CFBW+OqEoLeH7TG76OUF4KRml+9Pf1ba3Y8Heu
-         x7aj3dPLB/Ei+ERfd81fOEXBPoEq3LSWTSmI16RP9awBQv+E13SmyQlPzVFJbB6bCGb1
-         aYrMOaD38ovsjh4qWLdQdLZz+iXz1XqEXWMa1yx5ygyKaSTq1gFNLWsitKkDagpVfOjs
-         lgkNM6935d2IQY0HRzQ4650jUZ8Zu3UjhBexUpt0BS2SRiBCLElzIXC8p/uYVs0SrpyH
-         oTLcDF6SNoJW83CUYiob7+BgqnkBxe3I6WBYgVIhHctrqd/TcKeQejV+t80LTe4O0eJC
-         HIhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747492850; x=1748097650;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4dU2jCfddxJKrwesjyJtttGNJV62kuuDvXgjaV72qj4=;
-        b=b0NuPyLn4RyZZNx8xjbnueRBTTbum9f+zeo5Gl95NdFTsGw+SYRRE008fxijfRY3Jn
-         /N98ckYxBCjW1mC+6wuVeosMXC144FQPyVfAkQC07leckGyZHnuA2pvyka3VpLNqfxr6
-         yQlWALJjvinkp9UsrnrAqzRYssS8hhbZvAZeN9Zk0U04GL/8OwQAnSxqMZqACrbcUH9g
-         47oYNk96WDtXeZ4TjDvQRe4btAgKk2Hhe5Ysqpe5Uugm5M/AoM0VHomJ4wvfEPSwFTcc
-         WntIjQb1S668q2K+rhdGIzGEDiGUbLN1HckrCsgztp+WC7yOdduGpyyy2FUSvhrpVwM0
-         W3Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIJtrGqdbqEGhVj7ju3jGHP/IPK1gu4ydYtQ0uBl1xXw+VMLXjeg52P3PhwCXby4xNK7zaBe+fN9du@vger.kernel.org, AJvYcCX1IILCZYjwP4e7RBvsrWXk6/w6IljyK8+QIDO8KxZCmX0yDxD8nP/k0RahpTyd6GuOqS/RhS0l0QCnJLfE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQCU8M8nGoWBOB0LClo3OTmwTC5PtqWOxUj5joqerLqC5NgVyG
-	Dp/CN90v8/FnXI5YpBS0wH6IuhQkHS7Jg5BLsxy+/ai00nTS+LUsaLJb
-X-Gm-Gg: ASbGncuvfhckBEnEYTon0pTit3AcnLk8GvqUdlZ7pVSWvF98x09grkeZZzUJZjwv4Do
-	qv4Lm8NFr11o4mQFO249+1a4CMEc0MsRgaCvQW5zGifM/ihQhYNmGL1AiMtxHnjhd5ugb8WiK2u
-	kHexwbynNHdTOQ9k52an2kEzHx3N+1N5OWJfl281GxJ1O9RReCdc3dHRLlUcqLsobLQZMLAWZad
-	rjcRAER/8wWoEAqyO8PL3m09TcI7FZaY6wrgzYi0pGoPI73SN+TbGNCgetcgG07Y9STq+VGLDSE
-	k1mLhRjPcU4TX5xCKIXE2TxBk6jtHW/KvuvdD6xDNcdpVuv7WTsCPBQ=
-X-Google-Smtp-Source: AGHT+IEh0inAze1CXOgkzjApvqu93aSNTJaIdfgjwgI+fKB4Bn+HGQWoLGhmcCo++ZVEJkCd/9aDDw==
-X-Received: by 2002:a5d:64ee:0:b0:3a0:b23c:15b9 with SMTP id ffacd0b85a97d-3a35c808c9fmr6616313f8f.4.1747492850304;
-        Sat, 17 May 2025 07:40:50 -0700 (PDT)
-Received: from hsukr3.. ([141.70.82.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca889d9sm6412083f8f.77.2025.05.17.07.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 07:40:49 -0700 (PDT)
-From: Sukrut Heroorkar <hsukrut3@gmail.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	Sukrut Heroorkar <hsukrut3@gmail.com>
-Subject: [PATCH] Documentation/devicetree: Fixing a typo in usuage-model.rst
-Date: Sat, 17 May 2025 16:40:20 +0200
-Message-ID: <20250517144020.870706-1-hsukrut3@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GcCaLM/N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MbE9sZPi"
+Date: Sat, 17 May 2025 16:49:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747493345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1AiHWZPsL8qJWLFIcxFA8L7R+mrTxY9Bh3Bwwx3jNNU=;
+	b=GcCaLM/NPief4Ie/drn0t3oOG/bCo24uERxw6Sf09o3Q1Ed0qSGihIeHegRhc2JpltgDJ2
+	pu2/StjTsSiepFktWvv5QKyUIyNYlMG7nm8ee0+yA0Mg0tHI81HrmEc1KLsggp6KB9lHYP
+	jTYhIv82TTXrEasBhITW1Atazppv3dOeTOz9v46KtsJ4BvugKUSIu99hO4z6WLixKU0lkS
+	l8Dyg4PFmPQFvpgMB0jSDOJYCCA4z44otbW5g70ekuIujABT5d9tMeiBim9Ctruk0mZ4So
+	r/QKbG55izTnztPotF6ggBBFBpUS2uls3v6GGI58Ap6kjcKImdVUuJhWZs7xbg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747493345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1AiHWZPsL8qJWLFIcxFA8L7R+mrTxY9Bh3Bwwx3jNNU=;
+	b=MbE9sZPiHEfPqXScGzOWVSK+zEOq93AMlCMItB1z4l5NrtdR9KuzhmARguaFsfZjOJNE8V
+	dkqDLe92YxiRcwBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 4/5] tools headers: Synchronize prctl.h ABI header
+Message-ID: <20250517144904.3iCywPrZ@linutronix.de>
+References: <20250516160339.1022507-1-bigeasy@linutronix.de>
+ <20250516160339.1022507-5-bigeasy@linutronix.de>
+ <95608024-1be3-4502-8e41-aba3258010b1@igalia.com>
+ <a015ea5b-ed1f-46a3-b4db-c448f0279fc2@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a015ea5b-ed1f-46a3-b4db-c448f0279fc2@igalia.com>
 
-Fixes a minor spelling issue by correcting "busses" to the correct plural form "buses".
+On 2025-05-16 17:06:48 [-0300], Andr=C3=A9 Almeida wrote:
+> > > @@ -254,18 +254,18 @@ int main(int argc, char *argv[])
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D futex_=
+hash_slots_set(0, 0);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ksft_test_resu=
+lt(ret =3D=3D 0, "Global hash request\n");
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D futex_hash_slots_=
+set(4, 1);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D futex_hash_slots_=
+set(4, FH_FLAG_IMMUTABLE);
+> >=20
+> > This breaks the compilation for me.
+> >=20
+> > So `#include <linux/prctl.h>` is not working for me, it's not using the
+> > local copy at tools/include/uapi/linux/prctl.h
+>=20
+> Oh, nevermind, I found the issue:
 
-Signed-off-by: Sukurt Heroorkar <hsukrut3@gmail.com>
----
- Documentation/devicetree/usage-model.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah, I am not sure what I did. I made here a copy, the copied header is
+only used for perf. Anyway, I added the define as I did for the other
+members and did the rename.
 
-diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
-index 0717426856b2..6f9a2c0a380a 100644
---- a/Documentation/devicetree/usage-model.rst
-+++ b/Documentation/devicetree/usage-model.rst
-@@ -27,7 +27,7 @@ links from one node to another outside of the natural tree structure.
- 
- Conceptually, a common set of usage conventions, called 'bindings',
- is defined for how data should appear in the tree to describe typical
--hardware characteristics including data busses, interrupt lines, GPIO
-+hardware characteristics including data buses, interrupt lines, GPIO
- connections, and peripheral devices.
- 
- As much as possible, hardware is described using existing bindings to
-@@ -36,7 +36,7 @@ names are simply text strings, it is easy to extend existing bindings
- or create new ones by defining new nodes and properties.  Be wary,
- however, of creating a new binding without first doing some homework
- about what already exists.  There are currently two different,
--incompatible, bindings for i2c busses that came about because the new
-+incompatible, bindings for i2c buses that came about because the new
- binding was created without first investigating how i2c devices were
- already being enumerated in existing systems.
- 
--- 
-2.43.0
-
+Sebastian
