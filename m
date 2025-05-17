@@ -1,121 +1,200 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51EE21DDA31;
-	Sat, 17 May 2025 16:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F1A8248C;
+	Sat, 17 May 2025 16:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747498454; cv=none; b=fqdzQdaTJ2OpIPeKVn105WLfz4e0/PoZdjDa00hX9XfsIjkcERmUkUvX9pcIopNocX53n73bqNErUYQB1Bk1wyEij1pp+42lAfHSqxkAtWWwR7W7QRM0KiWDvkIqHx1nmIX8HC5OmWaC9TAhH7ZBKoTuErSMFGMWgeesnXqpXg8=
+	t=1747498638; cv=none; b=rfrQEVzvW7yCr+EJ/PBiZJqGp88xxvCiAcF5M2SaHk+RFA9FMmWDCCv9HZSzobmq7g2qspK0SXzuuz5L305co26nAPwVB8UCv3TdiT9y+izwyrmOsctBr5sWiPIUSJchwcdEbtZgD9XBwKwAOtGVT7TeJS1KhMY6WbqXURvUMKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747498454; c=relaxed/simple;
-	bh=ZP5sgS649DCp8pKyp5+gDU2SaHxlpdxEWgLLSkxMhw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+oyUC53gC6PnAUjvTOueIAylfy96qXj074VNGrNeu4PJBLSc+5UTdfw+B7nA5qfxMu+jr2Au1Q47p2MMxgYSGCfNpiibX4FbPzu+8RJ1Q9v3TvXEBuvy5CNmwrSQH3++BTzrQ2StfQ5Y/LxQbyCW4Kk4/cdb4sBpJqKQ4s5lfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N3L2Ud0+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747498638; c=relaxed/simple;
+	bh=jqC0oNsvaMfQBpuzLLjNALuC7em7l6f7WRTKE/2ZKMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bjo7hJc5la+Eh+5C8wHqL8t6J2BgS2Pvgzas7qJNrM9bCoH5YkhBaJyzBduosofiiu3isCwy48yXHQFbUo9DpStfyIRd6ghaZZDKdjWJPs0FAy8SIp+2TtKCEtNVMjHuQ/lsJc5YwtO3ScZwB8sn2yJAwoOgz8QC0xv33Vl6Bnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FnJblw4l; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N3L2Ud0+"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id C257E20277EE; Sat, 17 May 2025 09:14:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C257E20277EE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747498447;
-	bh=U+y3WnyyEX1tltnb09bQ7ul6gLocRvrHBtDNvGAY82M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N3L2Ud0+1DD4PspUqSqSlYmfdpItWZYeEW+jxVjne03Ma0FcuDGa+Y0AnBbsHPXDj
-	 GnhKmQEsBad3jflZYHA7eINIhbRN2yfYBXuUl8NF919R6kqCnV3l/+CUDW2mSALlMS
-	 jIuDn0Q3pR7xDqTuThOgpYvoF4H5BnfRooloQhJU=
-Date: Sat, 17 May 2025 09:14:07 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
-	"javierm@redhat.com" <javierm@redhat.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
- for Hyper-V guests
-Message-ID: <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250516235820.15356-1-mhklinux@outlook.com>
- <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FnJblw4l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747498623; x=1748103423; i=w_armin@gmx.de;
+	bh=7eMgYhWoMENx/gHrNpuojOvrrjgIHdixsXjVMlaf7CQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=FnJblw4lsIwSDJ9FaaUS3TFnzZ77lievGVPkHLQsk8Mw3y5tadEGcMjRekp+g7RQ
+	 XiWVUSMUd3amKytJWBRff4mp3bOjg8MVTdSBgwret15vaYZde/KuJFofM3TUXqhew
+	 mVh0veQIcjN5dM+0IAhUb5v3hLSLc9/DNLJhnJcwf79oeH1HQiYs453IvaCNrMICZ
+	 xpfjCTNDhAiPcVW6B4CkQJG8QHLnsjevHTmkO4HGJS41KMnjRRl6O9/z8FheO7pOB
+	 PocZjgTUFGQIk0Gs/hTU8WZDvjVTFux1NynTcGPmeIMFrnX9Lz583prAfN5UN4aYO
+	 f+bVkvNmI1RpzxiEwg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N5G9t-1uzahf3uCr-00uOZA; Sat, 17
+ May 2025 18:17:03 +0200
+Message-ID: <637c0f0e-3858-43bd-b122-ff52a5580077@gmx.de>
+Date: Sat, 17 May 2025 18:16:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/6] platform/x86: Add Lenovo WMI Gaming Series
+ Drivers
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250515182224.8277-1-derekjohn.clark@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250515182224.8277-1-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:CoWOPoTcK/MQENKk6TrKTjAJVAccIyWOWn+DcvPzBV7hqXrGnKf
+ GNcnUpryF8/QaUBve6K9vBjATVYKJ7/m2msz+dOjR2NAUX0gpucSwAGdHbeAH2uTASqEc9Z
+ sjr6kpB74KjTWwTiB4eoIQJf54Dd99gZUrSnqUJVExcNz3pfTfbWV8nsgYhEtwxGuJk3R7+
+ KyaKyrCwWo05o4r1HSe1w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0://xcj8/Zq/c=;5y4sra9Hf3OEg7GxZkrdJR+511C
+ 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
 
-On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
-> From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
-> > 
-> > > From: Michael Kelley <mhklinux@outlook.com>
-> > >
-> > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
-> > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
-> > > space, and allocates portions to drivers upon request. As part of managing
-> > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
-> > > portion of the MMIO space that Hyper-V has designated for the synthetic
-> > > frame buffer, and not allocate this space to VMBus drivers other than graphics
-> > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
-> > > the screen_info data structure that is passed to the Linux kernel at boot time,
-> > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
-> > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
-> > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
-> > >
-> > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
-> > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
-> > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
-> > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
-> > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
-> > > anything. But it's valid to have none of these enabled, in which case
-> > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
-> > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
-> > > framebuffer MMIO space may be assigned to some other VMBus driver, with
-> > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
-> > > controller to host the OS disk, the PCI NVMe controller is probed before any
-> > > graphic devices, and the NVMe controller is assigned a portion of the
-> > > framebuffer MMIO space.
-> > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
-> > > get setup. Then Linux fails to boot in the VM.
-> > >
-> > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
-> > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
-> > > framebuffer driver, and prevent the undefined behavior.
-> > 
-> > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
-> > which is expected to use it. With this patch this option will be enabled irrespective
-> > if there is any user for it or not, wondering if we can better optimize it for such systems.
-> > 
-> 
-> That approach doesn't work. For a cloud-based server, it might make
-> sense to build a kernel image without either of the Hyper-V graphics
-> framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
-> Linux console is the serial console. But the problem could still occur
-> where a PCI pass-thru NVMe controller tries to use the MMIO space
-> that Hyper-V intends for the framebuffer. That problem is directly tied
-> to CONFIG_SYSFB because it's the VMBus driver that must treat the
-> framebuffer MMIO space as special. The absence or presence of a
-> framebuffer driver isn't the key factor, though we've been (incorrectly)
-> relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
-> 
+Am 15.05.25 um 20:22 schrieb Derek J. Clark:
 
-Thank you for the clarification. I was concerned because SYSFB is not currently
-enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
-as minimal as possible. I haven’t yet looked into the details to determine
-whether this might have any impact on the kernel binary size or runtime memory
-usage. I trust this won't affect negatively.
+> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+> WMI interfaces that control various power settings. There are multiple WMI
+> interfaces that work in concert to provide getting and setting values as
+> well as validation of input. Currently only the "Gamezone", "Other
+> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+> I attempted to structure the driver so that adding the "Custom Mode",
+> "Lighting", and other data block interfaces would be trivial in later
+> patches.
+>
+> This driver attempts to standardize the exposed sysfs by mirroring the
+> asus-armoury driver currently under review. As such, a lot of
+> inspiration has been drawn from that driver.
+> https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
+>
+> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+> S.
 
-OpenHCL Config Ref:
-https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
+Nice work, i think the whole series is now ready for the mainline kernel.
 
-- Saurabh
+Thanks,
+Armin Wolf
+
+> Suggested-by: Mario Limonciello <superm1@kernel.org>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v10:
+>    - Fix build error.
+> v9:
+> https://lore.kernel.org/platform-driver-x86/20250508235217.12256-1-derekjohn.clark@gmail.com/
+> v8:
+> https://lore.kernel.org/platform-driver-x86/20250505010659.1450984-1-derekjohn.clark@gmail.com/
+> v7:
+> https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
+> v6:
+> https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
+> v5:
+> https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
+> v4:
+> https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
+> v3:
+> https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+> v2:
+> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+> v1:
+> https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
+>
+> Derek J. Clark (6):
+>    platform/x86: Add lenovo-wmi-* driver Documentation
+>    platform/x86: Add lenovo-wmi-helpers
+>    platform/x86: Add Lenovo WMI Events Driver
+>    platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>    platform/x86: Add Lenovo Gamezone WMI Driver
+>    platform/x86: Add Lenovo Other Mode WMI Driver
+>
+>   .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+>   .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
+>   MAINTAINERS                                   |  12 +
+>   drivers/platform/x86/Kconfig                  |  41 ++
+>   drivers/platform/x86/Makefile                 |   5 +
+>   drivers/platform/x86/lenovo-wmi-capdata01.c   | 303 ++++++++
+>   drivers/platform/x86/lenovo-wmi-capdata01.h   |  25 +
+>   drivers/platform/x86/lenovo-wmi-events.c      | 196 +++++
+>   drivers/platform/x86/lenovo-wmi-events.h      |  20 +
+>   drivers/platform/x86/lenovo-wmi-gamezone.c    | 408 +++++++++++
+>   drivers/platform/x86/lenovo-wmi-gamezone.h    |  20 +
+>   drivers/platform/x86/lenovo-wmi-helpers.c     |  75 ++
+>   drivers/platform/x86/lenovo-wmi-helpers.h     |  20 +
+>   drivers/platform/x86/lenovo-wmi-other.c       | 667 ++++++++++++++++++
+>   drivers/platform/x86/lenovo-wmi-other.h       |  16 +
+>   15 files changed, 2119 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+>
