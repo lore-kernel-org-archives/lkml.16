@@ -1,171 +1,118 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCC3B661
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5965680;
+	Sat, 17 May 2025 14:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747490782; cv=none; b=F2WcJPsU5z1u7QOz528VaqqI3RmB75fykstVGeGPmwb017Ua4QQ4+Wze5k1TgWz1nkhC0F/Do+pagZXaLfhcNmZc9xffC0SlIweBVQXqkRzlYk3HT7gbyv5V6DHrgJpqLFJTuUH/jd6QbjCRthstFPPl7AOextqVCMfkupgbVLg=
+	t=1747490858; cv=none; b=qgUWwAmZ9StDWyrGbGJeV61SeHdCSUa0KuzPyv1JvA8UxyOJozqswg0PCKec848VyPyLwD9LclqDjhihPzuuO5Baqfu4M/pOeC0LeqEMi4x8KMAphTggglB2NMCKSSivDCs0J6bDtUCqPBwDYj3u0wNkHs7XygCq7XQ9O4+tnoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747490782; c=relaxed/simple;
-	bh=V06g8hrNK3Ss5baC8W9lAcyYGrXvMeywgXb8MDbYNUs=;
+	s=arc-20240116; t=1747490858; c=relaxed/simple;
+	bh=PeIoRJcyHR4S55FKA1UWzyjZnGdb8RK10FAMdjCcHwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgQ59aJDxuWpYv5HEgO4CqMBKgBoVdcWL0Xty91MxRmiL14dIYRGnLxy5qT6hMKNPj68wgxcrwckExICZN8asqQ2atSrZE2hnrC6fqOzxtomAivncvZxeofRFS7qjKbNsUHm0O8GFRfAPN5IRQrtGI97ebtyvIcXEvgjF6y79i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=nRCQ87GH; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y9YwLHbhA03ZvRVe2cxtnHaDjsEpkY/6XbgYr0ThbUFX6mxQ5Q0LQg9R1l4f32jynsx2rHq9TVQtYj2D5PMET0P6ZkQ9IEmaoIkFAkajRFeVJEW+pzrJGRVCDKixlNUeMogZm4+1L1MZ+NBH5ViFfqeOBkecOWzDUADboJqF6bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ew5pYssa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="nRCQ87GH"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c597760323so336028485a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 07:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747490778; x=1748095578; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NhvXy1V/6+eGgB5qAljkspgVToq5uQ0qNnLt1dtTF8E=;
-        b=nRCQ87GHOKm//mZw3TDNdzJAdz2DpVO9AGACZqar0x2M9+Fgyhd5G5PF2Kj8c6jlO3
-         z5xLWE/9s9fjq7jBbvnnri04A3gz3yjExq+0PW+zrqZtLUR095Ko96yp6PR1itF/kXMe
-         ThW2Q1ctu/9YVoq6HP30Qw1L7v5cSEoi/VGS+lv4HQD1gmd0RMRMoWqy6gZ+FpmK9mB9
-         5mXmgm3iZsORGkAfHfg0E0pnVUyvwFzbms3y3QqkMpdoxSCddCJT3G3OVtLREDZf+q0U
-         J7e42VqnElTiwNKhnNkqBSCIgkuYEYxQqqG2E0i5mKUU4kDTzlreW6CTUFyclbhyAYBP
-         pWQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747490778; x=1748095578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NhvXy1V/6+eGgB5qAljkspgVToq5uQ0qNnLt1dtTF8E=;
-        b=uq2o3s2h1ch5m9uz/2TKMbiuK8rJdZkGj/vUOob79yF6ToMXcGBHDHfvy6UWbfxJYm
-         L5YWpqPX5jdaL+fZJXxG5ZsFfCatCmCU5zKvN+fA/8XF669wYlI0H1/sPENOgHNAmVR2
-         2J3R1/QSvgyyacA/TfhV7PeDWtMqJhDByvxcc63VfnVuHhrUq9qWKMkU6PRwO6yzIZWa
-         uxv3rHvRkZnOxopDMKid0ghlyzkm3PVhra191+C/LjoXpqo9UO4NnQim+5nNl7SQKPZr
-         +q6TvFqkhtQgsuWsDI72BLtNFVifNfdl1kiO2XmuOXpuekW2APmRPpq6CLZ/bjecqaVD
-         oYiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIlwxpEGSmbsDAdlhWEBhEb9AV5W34ZE0+cjADIdcOVAv496INC1CisCVo4zRCM/SdB74wTDoh6bidvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9S8HO7VxZeo6fSE7qEU0Wm10JxzSx7zZdWk9ZIY6gvawwsqg1
-	2GIkV1xXlA4lIUK2Xx5+/x687rztaDIaDZ74MFU6FYIJdN3W7JX1tU2mNjjY2FcIJoU=
-X-Gm-Gg: ASbGncsmDYHUDoEcA0RlT2Quzg1BHJzkGgXUwU9ZGwISZ6Ojy1lmKtfycaL785CIzv5
-	LTKuk4OoNikpimedaiYoC2ZSqfmkcNa45K/WTC+aO5qd1CapBN0tp/uqCIF6gA8wLr/pmzP/XDB
-	b2+LzeiHdxhyLgobi5zUO++utCCknfS12KJjaZ6ZIrj9CfM4yJpzUz2hnE7GD0itexxGR2mcRyI
-	kZJMWgNGdvrLK9QNQjT0H/sE0pQ1SOzidsaxabwfs8GWZPA2rtURgWQZgMko2eWFf+hhlzdv36g
-	5TSHkwWKoTQQXq0r/L5a3IlZjew+AkNiXmugFabB1vPZYryRVQ==
-X-Google-Smtp-Source: AGHT+IGK6eD7aI2Err8GHK9YsHuDYpVSIxGRVIvR72HXl/w/7xQC5Grfki+phpp5KFktfiO8EpqdXQ==
-X-Received: by 2002:a05:620a:430d:b0:7c5:5d4b:e62f with SMTP id af79cd13be357-7cd46779caamr1017827985a.43.1747490778049;
-        Sat, 17 May 2025 07:06:18 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:cbb0:8ad0:a429:60f5])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd468e5a77sm257916385a.116.2025.05.17.07.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 07:06:17 -0700 (PDT)
-Date: Sat, 17 May 2025 10:06:13 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tejun Heo <tj@kernel.org>, bpf@vger.kernel.org, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v3 1/5] memcg: disable kmem charging in nmi for
- unsupported arch
-Message-ID: <20250517140613.GB104729@cmpxchg.org>
-References: <20250516183231.1615590-1-shakeel.butt@linux.dev>
- <20250516183231.1615590-2-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ew5pYssa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F81BC4CEE3;
+	Sat, 17 May 2025 14:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747490858;
+	bh=PeIoRJcyHR4S55FKA1UWzyjZnGdb8RK10FAMdjCcHwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ew5pYssabtoP6JFJWQiM3hIMrCoHzKcPSiZtxfJKLMvc31pLIzMeGbmxv51S2MUEU
+	 ZuEH0lwwmawqgWClCCuVTT3qbDD9u0PW5qPF/aCSMGkbDk/x67n1FfbhXfBB3kpO/t
+	 q11jgitBNBIzjrWsI+3/az4WC6RfWQlIVZ2mfLmh1UAvZwjlqVirO2Crk5LSgL7c2K
+	 Mrvd1m8Wr8qM5uZqndpePdEnIkGgJIK4zXxj7YW2CMnx7z50Hm7dpDuywMl6/7VK5S
+	 th9weo7XZVBzbv4C2jTohVLzeBdAdQFc6c3fNH3JrENmcaW65Gp9W6O8Ija7nq+Ar/
+	 v32yrkf1PxFDQ==
+Date: Sat, 17 May 2025 16:07:35 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] net: airoha: Fix an error handling path in
+ airoha_probe()
+Message-ID: <aCiYJ98sE0FCcKql@lore-desk>
+References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <47910951a3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dSuy9aXH7PkbQe/T"
+Content-Disposition: inline
+In-Reply-To: <47910951a3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
+
+
+--dSuy9aXH7PkbQe/T
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516183231.1615590-2-shakeel.butt@linux.dev>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16, 2025 at 11:32:27AM -0700, Shakeel Butt wrote:
-> The memcg accounting and stats uses this_cpu* and atomic* ops. There are
-> archs which define CONFIG_HAVE_NMI but does not define
-> CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG, so
-> memcg accounting for such archs in nmi context is not possible to
-> support. Let's just disable memcg accounting in nmi context for such
-> archs.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> If an error occurs after a successful airoha_hw_init() call,
+> airoha_ppe_deinit() needs to be called as already done in the remove
+> function.
+>=20
+> Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+
 > ---
-> Changes since v2:
-> - reorder the in_nmi() check as suggested by Vlastimil
-> 
->  include/linux/memcontrol.h |  5 +++++
->  mm/memcontrol.c            | 15 +++++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index f7848f73f41c..53920528821f 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -62,6 +62,11 @@ struct mem_cgroup_reclaim_cookie {
->  
->  #ifdef CONFIG_MEMCG
->  
-> +#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || \
-> +	!defined(CONFIG_HAVE_NMI) || defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
+> Changes in v3:
+>   - call airoha_ppe_deinit() and not airoha_ppe_init()   [Lorenzo Biancon=
+i]
+>=20
+> Changes in v2:
+>   - Call airoha_ppe_init() at the right place in the error handling path
+>     of the probe   [Lorenzo Bianconi]
+> v2: https://lore.kernel.org/all/3791c95da3fa3c3bd2a942210e821d9301362128.=
+1746715755.git.christophe.jaillet@wanadoo.fr/
+>=20
+> v1: https://lore.kernel.org/all/f4a420f3a8b4a6fe72798f9774ec9aff2291522d.=
+1744977434.git.christophe.jaillet@wanadoo.fr/
+>=20
+> Compile tested only.
+> ---
+>  drivers/net/ethernet/airoha/airoha_eth.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ether=
+net/airoha/airoha_eth.c
+> index af8c4015938c..d435179875df 100644
+> --- a/drivers/net/ethernet/airoha/airoha_eth.c
+> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
+> @@ -2967,6 +2967,7 @@ static int airoha_probe(struct platform_device *pde=
+v)
+>  error_napi_stop:
+>  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
+>  		airoha_qdma_stop_napi(&eth->qdma[i]);
+> +	airoha_ppe_deinit(eth);
+>  error_hw_cleanup:
+>  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
+>  		airoha_hw_cleanup(&eth->qdma[i]);
+> --=20
+> 2.49.0
+>=20
 
-                                             CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG?
+--dSuy9aXH7PkbQe/T
+Content-Type: application/pgp-signature; name=signature.asc
 
-> +#define MEMCG_SUPPORTS_NMI_CHARGING
-> +#endif
+-----BEGIN PGP SIGNATURE-----
 
-Since it's derived from config symbols, it's better to make this an
-internal symbol as well. Something like:
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaCiYJgAKCRA6cBh0uS2t
+rLZLAP9yQ+AJh1B7emNBad3Bow3uvaKtJ69qO/Dqb1e2GqapMgEAzNPhgqXKXtU+
+3KEBK8c3JI8g9p/oCZRY9lninB+MjA8=
+=Ji36
+-----END PGP SIGNATURE-----
 
-	config MEMCG_NMI_UNSAFE
-		bool
-		depends on HAVE_NMI
-		depends on !ARCH_HAS_NMI_SAFE_THIS_CPU_OPS && !ARCH_HAVE_NMI_SAFE_CMPXCHG
-
->  #define MEM_CGROUP_ID_SHIFT	16
->  
->  struct mem_cgroup_id {
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e17b698f6243..0f182e4a9da0 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2647,11 +2647,26 @@ static struct obj_cgroup *current_objcg_update(void)
->  	return objcg;
->  }
->  
-> +#ifdef MEMCG_SUPPORTS_NMI_CHARGING
-> +static inline bool nmi_charging_allowed(void)
-> +{
-> +	return true;
-> +}
-> +#else
-> +static inline bool nmi_charging_allowed(void)
-> +{
-> +	return false;
-> +}
-> +#endif
-
-...drop these...
-
-> +
->  __always_inline struct obj_cgroup *current_obj_cgroup(void)
->  {
->  	struct mem_cgroup *memcg;
->  	struct obj_cgroup *objcg;
->  
-> +	if (!nmi_charging_allowed() && in_nmi())
-> +		return NULL;
-
-..and finally do
-
-	if (IS_ENABLED(CONFIG_MEMCG_NMI_UNSAFE && in_nmi())
-		return NULL;
-
-here.
+--dSuy9aXH7PkbQe/T--
