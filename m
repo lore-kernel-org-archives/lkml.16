@@ -1,141 +1,384 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2046.outbound.protection.outlook.com [40.107.100.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AB4201033;
-	Sat, 17 May 2025 13:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747489355; cv=none; b=uxnEVRJ+ZMRnv9u+Bhur04z52LQN8WqGFF92cr1tjolgLUVBrjm9fahxit8Xny5He4fAD571CSNg/cloM6CXSKNyoqXjN2qiRr9m8VmeIuorj3wOWmSWLqdZR3AAXU0WQu+/8RJnLq+kfl4vfU9djSJvcrWXas+8l1vifPf/miw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747489355; c=relaxed/simple;
-	bh=j1Kb9hcseywwUx0ewjkQBkbUnvUmTcu2zfHSS9Y8Tzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUeQL1U3DDTUtmft2EnGpqIlQY0qeb8A3/GmcahQDwtgjqDGpRvi1Pdn4w9vRvPJg8sLCtfV9s6NIuBGvoeG4Bp0cBgGIfCXHS0wRaxu2JSEiNK5ipwBwgjjJ1cLJk1x4RS8uvB3KH8ARzs7Cn8vKnOOc7l4F43RYShOYzkZ4FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGIyOagA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0758B1FCFFB;
+	Sat, 17 May 2025 13:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747489353; cv=fail; b=rA+LXypaYdw9GA9tNqb4WE4R+nDFFMLv5dE7mYzv/tL6yi41e6x3apLA9tf/mPEaPXIEtnjynSPRkmkrNOdfBLOi93RNbd+q+j5VDjfO3POXSQjbr4135GiTlivkWKum1iEnGF3Q5NpspWnl9LaNKrVpjPuBhcDsSY/8zLl0LIc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747489353; c=relaxed/simple;
+	bh=tlxeww/lurbFnYD33E1lI6Ab1OgBznON5LCmKHRrZjI=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
+	 In-Reply-To:MIME-Version; b=EzI3mwi5OSSB5hJPBTgfBFmZL/WzYMYVgFHaOCp4FbHSrP7L/twWBrfnybZzXbpUQqqPncn4tWFlSj80tKOQTVqEwd3XUZFy08dJUQ977Gi8vWKn3jDmjTi7Zv3ous2MbYp6MiSSrnqEz6T215lXo9Qm5Pbdqm6o3Y5K8IXfXEw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O8lJZ5xO; arc=fail smtp.client-ip=40.107.100.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGIyOagA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D60C4CEE9;
-	Sat, 17 May 2025 13:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747489355;
-	bh=j1Kb9hcseywwUx0ewjkQBkbUnvUmTcu2zfHSS9Y8Tzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RGIyOagASOnLC9s3DKpddxDF5gNRwWJZDRRoGyXYHpAhHyA7Amr/fpwlA4TBuFlhB
-	 K924TpNGK4uEuCbxw88azPpAAipxHY1sDf/hZBt8J6Fdhr5A8HI+8+GFh641f/1S6z
-	 mEfDKRWrrfx0/K75qBerSBGafOMd0ybpfzGclrh8KB+jsrhpTwGtKvoZ16zvRX67ug
-	 WLtOcbwQ45WLNgNFM6wwoG1af2QYb2mhK1wBPjJMOCdH40VdKcJAtbqezxNkbgnT6c
-	 VI8/8RZVllr+CsybnNTyZaJTIaW18DPQFzkdXIs1S9xwBDkBnYYhF3V+XC5RjsrmJ0
-	 tQMLuCFt9qFNA==
-Date: Sat, 17 May 2025 15:42:29 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Gerald =?iso-8859-1?Q?Wisb=F6ck?= <gerald.wisboeck@feather.ink>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: miscdevice: add additional data to
- MiscDeviceRegistration
-Message-ID: <aCiSRZjOETsD8MhX@pollux>
-References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
- <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O8lJZ5xO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y5QUXi3AfbnD2kDxhcckmRLF/saPEEeMOBmCe3oPhZIW92viafDeSGkGlgq3C6gsyeyY+0nKzMo7UP5GP2Ww36jNK7c9u1SVHFb+7bupPFZ3zB8CivlYdpBDwa8c4zoRB7zqz9a0mYECALxB+bbvpH+kZ9RgDqTdVtmB3BPLL5x6iW2zL9I8PlKHKD58nqa9H5EsShgHmyWPRgQjl2sHVdQMQwsinBQsauD98kE1/zky72MnRf/nY5LuPqJTj6yo/XbC8tZPw/IbclqzdaN3mumfNhDJ3laWN7H5EzW/iQLRA8y0uPsjnfzTv6kS4w3cP1P1cxx9+YxPtuXTDku3DQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=etfLUkUvE3dYB6VJwrOYWDlSfFQIqGxsE8vufjFznf0=;
+ b=Wu+HT4OsVpfwGLlLQYInFHBRfZ+DUCdd/m+t1YZmhZ2XjhoLNbu0cLKVOjGP8hROnppIJt5X+80yUJ4MLcdZurSO0x4en2ohk2LYHT900NaPJEh2YnE/hzSTNc2xjAODduSGnA9auLIT2RHj9lpeE7SE1bweCKc87wGwEWQlOOyQIkYgTkf4cHujCqrZh45fxGODMm75BlR0Cjd9GRsjh4EH6t87cDLcrV13MkodNOniVPP1o6fWoH7WpfgbmihtEtwQPPGng9VIBSSo0L5mSDEs/Qg41Yws9vHxZufTgBZirJPyg3imweygJH9Vpxh8jc+ynMt9quPOw96QFZ+C3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=etfLUkUvE3dYB6VJwrOYWDlSfFQIqGxsE8vufjFznf0=;
+ b=O8lJZ5xOZrG4PV2+kvTAl5SZhNyN3ZLfCLn/aAON+vHp4hAjl0oz1Ucyr28xkDvJk/7Y2BXD4XiQP2xX1MggIluIG1rcUsFVjutu/noNVgXEx6EquvX3DZeclsXWk7EZJrrRj+DuHDWPFFseJBLckFsK7+j9qWMleelUMTv4474A09wAd+RkptA8urTlJXxNfTbyez1KvwLKQpcpnQXWAYG6fUr96p9fLDIKDv8AAnV+h12qBMWESq9txSMTAlMS0+b9RIGLfrqfh2SBN+h0iQ1xnJz1cWlPV9TNOKrblGOy+f/efBctGDX8bSNni4FE22QQAhsZhBKqRrEfSyfelg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DS7PR12MB6118.namprd12.prod.outlook.com (2603:10b6:8:9a::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.28; Sat, 17 May 2025 13:42:28 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8722.031; Sat, 17 May 2025
+ 13:42:28 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 17 May 2025 22:42:24 +0900
+Message-Id: <D9YH9UG67QJT.1D3LFMT4FAK4V@nvidia.com>
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
+ <corbet@lwn.net>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
+ <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v3 17/19] gpu: nova-core: compute layout of the FRTS
+ region
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-17-fcb02749754d@nvidia.com>
+ <aCN2VIIKYGcVtctN@pollux>
+In-Reply-To: <aCN2VIIKYGcVtctN@pollux>
+X-ClientProxiedBy: TYCP286CA0191.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:382::16) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DS7PR12MB6118:EE_
+X-MS-Office365-Filtering-Correlation-Id: b175491c-c689-40ac-0b72-08dd9548a9f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OTYyUE04dEpGcXptMW5YQU9kNk9Ec3ZTaWZYTENhSTYvcE1oODFVMm1pRDVB?=
+ =?utf-8?B?MlJsZ2hrc0hWaEhnbHBHMW9HeXVSdytoODI1Ti9GelFHZGFaSXh5R1lpNDZH?=
+ =?utf-8?B?SFJySUtDUjAyakhDajVldy9zTzF6S1RSS2cxYXV6a3l1b1lLeGI3a3V0MUZz?=
+ =?utf-8?B?WlQ4dUgxTzNQUy9XUndzbWxQTWlMTzBBeWNYb1FUWW5ua3h1Yk4xdFc3YXF3?=
+ =?utf-8?B?V1VrYi8wcmR3Y2VPK2IvWGRDOXZMUyt0TVRQY2tZdDNFd0t2aC9veG5XSVc4?=
+ =?utf-8?B?alVURE1aMWdSUUhXanFqekQ2OHRFRmdmcEE1STNBeG95ZjgyS3liNm53bWlN?=
+ =?utf-8?B?UVRoQzZVTlkzUWJJVGlhT3hreWNMZ2lJYlF2V21BeC85QzZ1d3lmblhpMGo0?=
+ =?utf-8?B?Q1hXY3lRVDlvZ09XOGpFQjBWd2t6dThYZVk0OWlqWWlMTngwbi92OEFEK0d4?=
+ =?utf-8?B?M0RoVXdUbHU3czdqSDFCSnRxSjcwZU0zM3Z5ZjIrdWdZSmtOZ2VSZXVLOUVO?=
+ =?utf-8?B?WUVESlpnbExycU1waEd3aC9MeEk1VWM1TEw5V2lGcm55a1RJNW9FTlZCMDU4?=
+ =?utf-8?B?blVXOGZramsxb0xRdzJRZnFoeVhkN01Bb0I1UURabUNYK2o0bGNZbWZSdnBl?=
+ =?utf-8?B?Q0d0MitobW1oOUl3Z1JCdlBSREtOZ0ZKbG12ZUpPcVlOT2xjUEJaNzh3S2Zl?=
+ =?utf-8?B?ZU9oMkE4RGxVNGkyTFplV2Z0YlhGNVVFR0psWkhsTmFPcUNLRlhBZFRPOSs4?=
+ =?utf-8?B?dnJrQWlvOVhPZEx2bllJcWpQNUlOWWtqakRvVGRKOUI3Nnl2R2ZpN0drczRJ?=
+ =?utf-8?B?KzZHRFdKYUtOSmJBb0NOY2FMbzlBalBoeHhrSVh4YXVSV2lXeVorVlVIRlpF?=
+ =?utf-8?B?c1V4NUc4QlVPOS9tRmdsVU43NlA5bWhmb1dTWVg3dktpUmpqdTZtcHYwbitJ?=
+ =?utf-8?B?SWpLMiswUzM2dG5YdDFKOFZOdEJwUGJNbGE4emloSFNRSVl3ZUtwaDFqM1ZC?=
+ =?utf-8?B?cHJhbnFqQm8yWVpUSWRlWjc0dlloRXJJbHB4SU01bnlvMnJkZ2xZNk9QUmlG?=
+ =?utf-8?B?UDJKS1loMldQMkJEdlhvM1ZsSUhQS1V2b2xWVTFueDU1ZUhzZ2xNVzF4SUZQ?=
+ =?utf-8?B?OTE5ZW1LcjM3Vkczd1lLYThRK2FHNENNanVqSkIwbkdPVGZvZnpVVytqY1pD?=
+ =?utf-8?B?RnJyS21GQTZScGtkU3AzcXh5Qm05UWNIUW1yNUN0b2JHNS9QdUZjS0FLbm43?=
+ =?utf-8?B?Qk5pbUVkekluSGhObkhyempZQXl1aGVFVDVGYnA3SndoZndMNmlTd05BTVkw?=
+ =?utf-8?B?bUVkYTRlWDU3aWU2cHRmYWV1bHZkRkR5QS9FaU10NTExelJHSXp2ZldiNXFx?=
+ =?utf-8?B?aER2d2NDS052RzNGeTlBSkI4blVwN3MxbklYUUVCZ2dvNXNvOXNuS1loNUFm?=
+ =?utf-8?B?czFKMk0rMVlQdVhhbEovaGtHNTh0WHZpU2ZOYXd1YytIR2Rhdm1NVkw2RVRH?=
+ =?utf-8?B?bCt6alpKM0U0cUZjUGduUzZYczdIYUEyVzlYYmdmODJobU8yU3dweklqaG9J?=
+ =?utf-8?B?YjlkY1FDVWYxVCtCckNUMStjRDFEemszU0Q0Mnk2RE8rUzlKanMwMHJwMEda?=
+ =?utf-8?B?WkNMa05RMlVNZnB4d1BheGVJRFVSYTFabHk3OGtsWDhjRnJycWhBZTY3cUxp?=
+ =?utf-8?B?ckFXTmNPZTBRbFRXOXd0MXlwVzJTWGdJZlRRNzU2OGpsTzFUV0wyMUdxQUpF?=
+ =?utf-8?B?UzZhdU9kOXBpYWNydGRrUk13RWw0R0RZMWY5Withb3FvdUgxc1Urczk3Wm9O?=
+ =?utf-8?B?V2xqQ21zWGJEWEY4eVY0M3c2MUpGQzRSK0J0enlHL2o0Q2FYdzJ6Q3J4dnFH?=
+ =?utf-8?B?bFdEMGZUS0pYUUtWRktEUVhtTmNFSXNYb0NCR1F6d3VDRldHWXFkS0tkYXU5?=
+ =?utf-8?Q?gMGh3GTDet0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Y2xXQnlzbDYybGplc2ZSOEgyYWdLbmRMQmxjc09kOG50dU5TNDdwYWMvY1pj?=
+ =?utf-8?B?RTAvQTZ6RFpYM29ncDZRR1RLMlJzS1FSMGk4QmRsZE9pV2ZiWjhDUkVVSDBQ?=
+ =?utf-8?B?Vnd4VTdVWTUvbHZTVERLdlQ5Sk1Tem1wQ2Q4MElHU2tMcnBzeEJ4SXdta2Zj?=
+ =?utf-8?B?bXN1WWI2THJHaXhBb09lWnZKTVFRUjI1b2wxQyt1UkRHUGcxRng2cjM0b2gr?=
+ =?utf-8?B?bjBXNEdmMGRDOVlQdmV4clRSU05RU3JwMGlveWF3aEJRckt2NC9PSkJmNmJv?=
+ =?utf-8?B?RjBZdk9VR05USlhNWVhSNW5IS0JhRkF4NXVqU1pFNmZyNU5Hb0dSV2Z1NDB3?=
+ =?utf-8?B?MFkrTlJMYS9xM2NlVDVqOEhPTjA3dmNib1VKOUptMHUvaGRXR3JtMzZZSzhH?=
+ =?utf-8?B?SzhaVVBZTC9JMHF4S3R2QVlscEQ3Y1oyQTRoc2lUR0ZoM1h3SHRQb09EL09h?=
+ =?utf-8?B?QzRXbkFPVEE5SWlSZytrbm5IcGtseHpHVTZuMjUvT0dOcFppeDYrRHlWQlFD?=
+ =?utf-8?B?OERtL3FmY0dLcFRjYTAvd3NYa3RLQm5aUEV1Z21yNTJoOXNTTmxyYWlRdkJT?=
+ =?utf-8?B?TEpEK09wcnkyRzFXYUZzeGJJdzJnekkxTjVkVy9EQlhtR2ZLQ2E2M3ZPaTI5?=
+ =?utf-8?B?TGVJdGxoWkNPUWtTSzVNaEREOGpDM0F6am9PTy9GTDNDaEsrNmppYUhSNytq?=
+ =?utf-8?B?blQ5Rm1STVNkS3BZMWtVSmRGczI3UmZYQXF2UkpMVWRGTFNGMUhqUEFuaHo3?=
+ =?utf-8?B?OCtpLzFoOVBlWXl1enZ2L3NDRzBTRW10aG1vM2wrVUQ2NGR3U3JIR001MXh4?=
+ =?utf-8?B?aHdVd3RGanNDSjEzdkcxYTlGRnNFdEY2ZURNY0tNWE5yY1lYRWZJWTUvVUI5?=
+ =?utf-8?B?K2N0Z0k5aU93am50NHhzaXlZRzQwclE2eWptTDByc3lRMUpKeGx6bEFBZi9n?=
+ =?utf-8?B?bDJ6S1VmREVjZkpNcko2ci9CZFJtM3o2NTdjUGE2eE1DYVh6UHdEWTVoVGFC?=
+ =?utf-8?B?RjZsWHhtRkRsVVNVSDU1ZC80Zko2R3JXR2cvOUh1ZityRHhoZ0ltekFobVBu?=
+ =?utf-8?B?UjNRY0R4VzgvcStzN0dBWjBUaUswNXVYalhiUnJ3Q2dVNkhGTGZUUEVmVVl0?=
+ =?utf-8?B?bGxqc2poaytpMWdCdUQrWlRLQ2xvSUVuSm1oaC9QYzIzdWtPNDluSGo4WWo5?=
+ =?utf-8?B?MG9Zdm9iZ0tXL2hxQk1oK2dZTks0TGw0VDNpL09XSUJvV0RYMW9lWVJOdWVU?=
+ =?utf-8?B?OExKellmQndXWlJLWURQbDE2VDZzL015RldwQmZUVnhPS3pNcmZwMzA1R082?=
+ =?utf-8?B?SVRqTGtXZXQ3QjRGVGZRQlBFWlM4VUNvSnZ5MlFPRXNaWHFJckVSbUdhY3Ny?=
+ =?utf-8?B?UE5wMHYraEJnZUVuR1ltekhGclpBNSs5dm5OUWFjUTBHdUJKMk9MM1p2R1Q4?=
+ =?utf-8?B?S1NtZmxqMWloUlB6NkZUQXo0a2xEMlRWMEhORHdRNWVEK3Q1L2tzMjZnRXVG?=
+ =?utf-8?B?YUxhbnh0d2hjQW1kbHJqdmdYcVNYRHI5SlQwNWk3eXA3MVNsNjBlNi9GQnJi?=
+ =?utf-8?B?ZGhZQzFLbUJoUm9FT1FJMUVVZXduaXlCY1JUU1NHOEsyVkdPZ2RKendQanNF?=
+ =?utf-8?B?Ynl6SmNyU0FmMXhreEU5Y3ZXYnBXakVmaEU1ZkhXbmlQVElGZTFtamIyWGNo?=
+ =?utf-8?B?U3VNSW55Z3loVVVGUEYvSS9lOGVISzRzRHk1OS8ySnNwRUtEclUrZy9SQTM5?=
+ =?utf-8?B?Rlhla0pYV0VNWFZSNlIvOWp6aGtpZ2EvZ0tSQnRQSG9zemgwK2ZNZWVtblpi?=
+ =?utf-8?B?RnVuMEk3OXplMTU0bG5IVXJYNGJZWVNrdFVFcytzVGlLanF1WlFwZzlMaDlr?=
+ =?utf-8?B?SXhSVC8wQnpvSE56cEZUOE41RUtzTGlUNm1GM3lnc1Nzc2tDbFpWbnBsZndj?=
+ =?utf-8?B?eGIxbDM1VmtCdWlkL3VlYnV2OU8vbzhzNk5YVHFFWnBVaG5haUVPRHBxQzkz?=
+ =?utf-8?B?MzhxcnZnczYvVm9yVjJhU0E2SWlSK1A4WHJkWjlSVUR0UEUrRHlRa1ZBOFVm?=
+ =?utf-8?B?Snl5VGE5dEdDeGxyN0NMMEdmNVBFMGViKy8yOGFjKzJMRWh3clk4WGw5SUFa?=
+ =?utf-8?B?aW1VVkxWT2N0UzhiZWp3UlhqVENvYUZBM0lEYVU0TlpsQmhBZEN0YXJwbkVL?=
+ =?utf-8?Q?MIYjh7hUJmCfEHQQQaPsg65Fn1TxSFfqIZku9HvUSVAZ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b175491c-c689-40ac-0b72-08dd9548a9f0
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 13:42:28.0442
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ULUCCaRlE0udlPP7Oc3zZgD+4ImTAIbs6q5DSNR/cmw/t/G37lcvHrTTwosRMm+roAbKiLH5xThKT9dzg/5hkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6118
 
-On Sat, May 17, 2025 at 01:33:49PM +0200, Christian Schrefl wrote:
-> +pub struct MiscDeviceRegistration<T: MiscDevice> {
->      #[pin]
->      inner: Opaque<bindings::miscdevice>,
-> +    #[pin]
-> +    data: UnsafePinned<T::RegistrationData>,
->      _t: PhantomData<T>,
->  }
+On Wed May 14, 2025 at 1:41 AM JST, Danilo Krummrich wrote:
+<snip>
+>> diff --git a/drivers/gpu/nova-core/gsp/fb.rs b/drivers/gpu/nova-core/gsp=
+/fb.rs
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..f28ded59469d52daf39e5d19=
+c09efd7bf08fee92
+>> --- /dev/null
+>> +++ b/drivers/gpu/nova-core/gsp/fb.rs
+>> @@ -0,0 +1,108 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +use core::ops::Range;
+>> +
+>> +use kernel::prelude::*;
+>> +
+>> +use crate::driver::Bar0;
+>> +use crate::gpu::Chipset;
+>> +use crate::regs;
+>> +
+>> +fn align_down(value: u64, align: u64) -> u64 {
+>> +    value & !(align - 1)
+>> +}
+>
+> Can this go in the previous patch, i.e. "rust: num: Add an upward alignme=
+nt
+> helper for usize"?
 
-I recommend not to store data within a Registration type itself.
+Yes, let me try to consolidate things around the `num` module. Not sure
+why it didn't occur to me to add that one there.
 
-I know that this is designed with the focus on using misc device directly from
-the module scope; and in this context it works great.
+>
+>> +
+>> +/// Layout of the GPU framebuffer memory.
+>> +///
+>> +/// Contains ranges of GPU memory reserved for a given purpose during t=
+he GSP bootup process.
+>> +#[derive(Debug)]
+>> +#[expect(dead_code)]
+>> +pub(crate) struct FbLayout {
+>> +    pub fb: Range<u64>,
+>> +
+>> +    pub vga_workspace: Range<u64>,
+>> +    pub bios: Range<u64>,
+>> +
+>> +    pub frts: Range<u64>,
+>
+> Please remove the empty lines.
+>
+>> +}
+>> +
+>> +impl FbLayout {
+>> +    pub(crate) fn new(chipset: Chipset, bar: &Bar0) -> Result<Self> {
+>> +        let fb =3D {
+>> +            let fb_size =3D vidmem_size(bar, chipset);
+>> +
+>> +            0..fb_size
+>> +        };
+>> +        let fb_len =3D fb.end - fb.start;
+>
+> Isn't this the same as fb_size? Why not just write it as
+>
+> 	let fb_size =3D vidmem_size(bar, chipset);
+> 	let fb =3D 0..fb_size;
 
-However, it becomes quite suboptimal when used from a driver scope. For
-instance, if the misc device is registered within a platform driver's probe()
-function.
+It is the same indeed, and fb_size and fb_len are semantically the same
+thing so no need to have both.
 
-I know this probably isn't supported yet. At least, I assume it isn't supported
-"officially", given that the abstraction does not provide an option to set a
-parent device. Yet I think we should consider it.
+>
+>> +
+>> +        let vga_workspace =3D {
+>> +            let vga_base =3D vga_workspace_addr(bar, fb_len, chipset);
+>> +
+>> +            vga_base..fb.end
+>> +        };
+>> +
+>> +        let bios =3D vga_workspace.clone();
+>
+> Why? And why store the same thing twice in FbLayout? If it's really neede=
+d,
+> clone it in the constructor below and add a comment why it's the same.
 
-The reason this is suboptimal is that, from the callbacks of a misc device we
-may want to access device resources from the platform device.
+The bios field does not seem to be used at the moment anyway, so let me
+remove it.
 
-Since device resources have to be protected with Devres, we'd need to access
-them with Revocable::try_access_with() for instance.
+>
+>> +
+>> +        let frts =3D {
+>> +            const FRTS_DOWN_ALIGN: u64 =3D 0x20000;
+>> +            const FRTS_SIZE: u64 =3D 0x100000;
+>> +            let frts_base =3D align_down(vga_workspace.start, FRTS_DOWN=
+_ALIGN) - FRTS_SIZE;
+>> +
+>> +            frts_base..frts_base + FRTS_SIZE
+>> +        };
+>> +
+>> +        Ok(Self {
+>> +            fb,
+>> +            vga_workspace,
+>> +            bios,
+>> +            frts,
+>> +        })
+>> +    }
+>> +}
+>
+> I'd probably wrap those helpers below in
+>
+> 	mod hal { ... }
+>
+> or even a new file fb/hal.rs to make their purpose obvious.
 
-However, it would be much better if we had proof that the parent device of the
-misc device (i.e. the platform device) is bound (i.e. provide a &Device<Bound>)
-and hence are able to access device resources directly.
+Do we want a module here? I'm fine with it, but these methods are
+already private anyway and putting them under a module would require
+them to have `pub(super)` visibility.
 
-The only way to prove this, is to prove that the misc device registration is
-guaranteed to be removed when the parent device (i.e. the platform driver) is
-unbound.
+... or maybe we should have an actual HAL here with dynamic dispatch,
+similar to what we have in the falcon module. That's what OpenRM does
+actually. Let me look into that.
 
-And this we can only prove if we wrap MiscDeviceRegistration itself in a
-Devres; we don't want MiscDeviceRegistration to out-live the driver it was
-registered by anyways, so that's a free optimization.
+>
+>> +/// Returns `true` if the display is disabled.
+>> +fn display_disabled(bar: &Bar0, chipset: Chipset) -> bool {
+>> +    if chipset >=3D Chipset::GA100 {
+>> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_MAXWELL::read(bar).display_dis=
+abled()
+>> +    } else {
+>> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_AMPERE::read(bar).display_disa=
+bled()
+>> +    }
+>> +}
+>> +
+>> +/// Returns the video memory size in bytes.
+>> +fn vidmem_size(bar: &Bar0, chipset: Chipset) -> u64 {
+>> +    if chipset >=3D Chipset::GA102 {
+>
+> Is GA102 intentional or should this also be GA100?
 
-If the data above is stored directly in the MiscDeviceRegistration however it
-means that we can only access it through a Devres<MiscDeviceRegistration>, which
-would be annoying.
+After double-checking with OpenRM GA102 is indeed correct.
 
-To be fair, storing data in MiscDeviceRegistration is not the main issue of why
-this is suboptimal in driver, but it adds to the problem.
+>
+>> +        (regs::NV_PGC6_AON_SECURE_SCRATCH_GROUP_42::read(bar).value() a=
+s u64) << 20
+>
+> Why isn't this shift part of the register abstraction?
 
-In general, the design of MiscDeviceRegistration is a bit suboptimal to be used
-within drivers. For drivers it works much better when the Registration type
-really *only* represents the state of a thing being registered, such that we can
-guard it with Devres *without* any downsides or additional complexity. One
-example for that would be the drm::driver::Registration [1].
+This value came from a scratch register, which interpretation depends on
+context so I did not abstract the values. But OpenRM does, so let me add
+a way to create alias registers so we can get adequate definitions here
+as well.
 
-If we want misc device to work optimally with drivers as well, we need to split
-things in two types: `misc::Device`:
+>
+>> +    } else {
+>> +        let local_mem_range =3D regs::NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE=
+::read(bar);
+>> +        let size =3D
+>> +            (local_mem_range.lower_mag() as u64) << ((local_mem_range.l=
+ower_scale() as u64) + 20);
+>
+> Same here. Please make this part of the register abstraction as it is don=
+e in
+> previous patches.
 
-	struct Device<T: MiscDevice> {
-	   #[pin]
-	   misc: Opaque<bindings::miscdevice>,
-	   #[pin]
-	   data: UnsafePinned<T::RegistrationData>,
-	   _t: PhantomData<T>,
-	}
+Ack.
 
-and `misc::Registration`:
+>
+>> +
+>> +        if local_mem_range.ecc_mode_enabled() {
+>> +            size / 16 * 15
+>> +        } else {
+>> +            size
+>> +        }
+>> +    }
+>> +}
+>> +
+>> +/// Returns the vga workspace address.
+>> +fn vga_workspace_addr(bar: &Bar0, fb_size: u64, chipset: Chipset) -> u6=
+4 {
+>> +    let base =3D fb_size - 0x100000;
+>
+> What's this offset? How do you guarantee that this never underflows?
 
-	struct Registration(ARef<misc::Device>);
+Looked it up in OpenRM, it is the size of PRAMIN. I'll add a constant.
 
+>
+>> +    let vga_workspace_base =3D if display_disabled(bar, chipset) {
+>> +        regs::NV_PDISP_VGA_WORKSPACE_BASE::read(bar)
+>> +    } else {
+>> +        return base;
+>> +    };
+>> +
+>> +    if !vga_workspace_base.status_valid() {
+>> +        return base;
+>> +    }
+>> +
+>> +    let addr =3D (vga_workspace_base.addr() as u64) << 16;
+>
+> Where does this shift come from? Shouldn't this be part of the register
+> abstraction?
 
-and make the `misc::Device` own the data, not the `misc::Registration`.
+Yes. Also added documentation in the field to explain that the field's
+lowest 16 bits are truncated.
 
-This way we can wrap misc::Registration into a Devres, with all guarantees it
-gives us and an no downsides.
+>
+>> +    if addr < base {
+>> +        fb_size - 0x20000
+>
+> What's this offset? Can this ever underflow?
 
-I'm not saying that I want to block this patch, especially given that using the
-misc device abstraction doesn't seem to be supported to be used from drivers,
-but please understand that the design of the misc device abstraction, while it
-works fine for the module scope, really is sub-optimal for the use within
-drivers and hence should be re-worked.
+This one is also defined as a constant in OpenRM. Let me replicate it
+here.
 
-Can we please either do the re-work right away or add a proper TODO?
-
-[1] https://gitlab.freedesktop.org/drm/nova/-/blob/nova-next/rust/kernel/drm/driver.rs?ref_type=heads#L121
