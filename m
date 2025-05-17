@@ -1,1134 +1,239 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay18.mail.ox.ac.uk (relay18.mail.ox.ac.uk [163.1.2.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010011E4A9
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747447209; cv=none; b=t6fIDeNuEYF4cVqT+AdZ7eqdfAWbeJTnNFmeAG1NigdH9qK7EW7QZeMLJPZEgJe4yUgE6RhbdqpFgArjSVpzD2MbzHHJY7X5p5Gq6tNGMxKg4zYSNO54Nmf4rT6K/2tyQv7FkvVUqwyZO2zIcicxMEY1nT60WbA8I7j/2OA4dzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747447209; c=relaxed/simple;
-	bh=BOyopBTpr+POzl7WvSYVI3Xm07zdAHUWrgMFn01FWoA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KQSajcog7n4qPvNCpsBUncxEKQs/7/iF88KeCD4dh6OVWMWIQLadyAXQACOr6ESc2xZuSw7vBBnhm3ZVxSmA6cpBnwXxLl2Gro869yb1FmCLBZVAJ0HkILzmRGFLCsaqqlIO2WQHnbJuiPeQSBoVpFLXR99sWk3Z+2ePaJMoQrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GNZLuUmk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF72415A86B;
+	Sat, 17 May 2025 02:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=163.1.2.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747447228; cv=fail; b=Y8yy3/i4HRKA8IotsTxfGyxwh+onWq2vsGMA5kMs/M6oaMpgbUhQbOvKEUMiz1Fg+CsnxNyrC7yLOZlcRmRJqASfBXzh3ZwdbMJRKix6mw08f+mXHm7pYmlEy1Eg9wNNBJLOgiwlf8MXERW4kyWoBwZYm07HdGS7LZjUQYmZmqY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747447228; c=relaxed/simple;
+	bh=UYY4BsaRBHtAH3fsbs532dt1S8R6DX0yZgOha9eXU1M=;
+	h=From:To:CC:Subject:Date:Message-Id:Content-Type:MIME-Version; b=u0i8j2Q8AGbB2MK84BHud68vwmYguR+oP9j6MLg42WwFyRKgTBxlwfeew3WunhW7RAYFwybKv31IQOcz8kU8Ypm34eeSqq0bmLoOtXto1ALmeppAwQESqhxgrmkWM5LQcZsVBzZzp+8juNGgMQOEsU3qcqUeVYQ8ppco3EbWeE8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=magd.ox.ac.uk; spf=pass smtp.mailfrom=magd.ox.ac.uk; dkim=pass (2048-bit key) header.d=ox.ac.uk header.i=@ox.ac.uk header.b=csUSsKvA; dkim=pass (2048-bit key) header.d=UniOxfordNexus.onmicrosoft.com header.i=@UniOxfordNexus.onmicrosoft.com header.b=QF1V+cXH; arc=fail smtp.client-ip=163.1.2.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=magd.ox.ac.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=magd.ox.ac.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GNZLuUmk"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54H0K6Gc025698
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:00:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dy9LklN2fsMlgqudPGe5ryra0g5Z/dZpdk/cm/ehyI8=; b=GNZLuUmkeiUF3yuu
-	WNmg+glfZHs4josfk0gYi5KAaXYo3GjsAyPOayuv4hz3xdpd8hr6uNbGck3ScCIf
-	dSXXRozd/KWvbnB4mUfqKjN224uaio0zis4Vn8uefsAIuBc5hBBaiqvnnIcCgnh2
-	j37lMgBmDezjov2LoM5/YA1lWP42DQokYEUQiZTfP9Qzpk8XWH2tU/liTLDMBaf5
-	jsfS1eb3kNuOKTwpj6NVpGbJrmKnuYLcqdngEZAzgVKUOLriiXdQOs/0CxlhMIpc
-	c5fgVesSBFotmfrxM2FCOJ/ru8iJ1nkw+n3IR97m50lkW6chEXCJF9BPgahv8PIQ
-	vOxW3Q==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pftq0412-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:00:04 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8af2b8e5fso36395246d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:00:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747447201; x=1748052001;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dy9LklN2fsMlgqudPGe5ryra0g5Z/dZpdk/cm/ehyI8=;
-        b=qtb5TWCTJ4y33u3EGoILxYblgcjDDFXllJK6gsdlWpDk/FuZtTKtCjjDEOXBgRHud6
-         ZBVhHfle6smB19vZTFBGbqEqI1Kb8OAZy/4OFnVSeeV4yHyY+UoUMpyymZt+Ror2C2hI
-         HF8yeFfBsPPq6+CdVl5fHMoSj6AC4HYS2/uI2jNMdo2AXgNWmdZejvLKuDmn/yQIK32F
-         /LYfmV3GGc2e3ThJWE7asb9qnUNwaWG0R2f97SsImU5WpG0i6hNB2IFTrD85em//EStm
-         gHFyrRfgiDLLagOUELlU9D3Vy7OMUB8WokqzoWlTG9H0iD/60PNufMRQULz0d+QZwURI
-         zW9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXF0jhZlfKmR4ItS56Ad1Lm+HCl3mBk6gmGZ11YkVRcTJf0r+SSQAJ9alA4AfaG4jXo/HgCS7Urop7Fnso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtF9Fc/xfWptM2qiErwcskJo1EwW/ECZyiCNq6JsDFXwtKDfwz
-	PYSbxTehBby2m3uxy1v1LYiPcQo4WUDDdTbsrApuwxm8S0/xIwP3ysxRMaXopqkzkmGJvB8eICr
-	HBMuSsN37RReBLIfZUUaJce4sSkIm4C6peYWnytleySYlkJgWv6vj4pYBPbHKYLpMhTrIBBOvWC
-	k=
-X-Gm-Gg: ASbGncu0WBOXhRGpHM4i9mgBL7Df4aj/I05bpCu1MasrVceeugi9KGFWkw7ull9ca0R
-	bgfr0VuOp1EmhYkDIplsr8euVisD3HqhBMT9LPniApNDun/fP2rIQ1cOPyQthJQrhgLeKELDyeP
-	Bt083LNSCjFwZ24RPu9lq1WZmVspRIGwGTRQUECSgxITMNZ4uto7cxjLNEsEvmqLq8Wr8K8uSSI
-	Ax6shjGpQkbDQztzqen8IAqy7AuumCzVTsNfuIoVWRjiYbjZSHNwEWascqgGUzYRyiVoeiUtBhN
-	+dNYy5dailYSKdPH6da+V9xH+n//3Nud9JjWglfMcD88Ut1JKH3+TsEZfdVMWtXD/f6rva6E3n9
-	jM8Cgvtp7Ag3MKX9uhStstWf2
-X-Received: by 2002:ad4:5f8e:0:b0:6d8:e5f4:b977 with SMTP id 6a1803df08f44-6f8b084b11amr92755726d6.5.1747447200767;
-        Fri, 16 May 2025 19:00:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJGBignWfm9id7iBq6ttXxZrffttYAN/zfS+h7Joc/k0311WHYs1T7oRnD4E6128xUndOf6g==
-X-Received: by 2002:ad4:5f8e:0:b0:6d8:e5f4:b977 with SMTP id 6a1803df08f44-6f8b084b11amr92755206d6.5.1747447200124;
-        Fri, 16 May 2025 19:00:00 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e70180f7sm672167e87.128.2025.05.16.18.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 18:59:58 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 17 May 2025 04:59:46 +0300
-Subject: [PATCH v6 10/10] drm/bridge: adv7511: switch to the HDMI connector
- helpers
+	dkim=pass (2048-bit key) header.d=ox.ac.uk header.i=@ox.ac.uk header.b="csUSsKvA";
+	dkim=pass (2048-bit key) header.d=UniOxfordNexus.onmicrosoft.com header.i=@UniOxfordNexus.onmicrosoft.com header.b="QF1V+cXH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ox.ac.uk;
+	 s=flood; h=MIME-Version:Content-Type:Message-Id:Date:Subject:CC:To:From:
+	reply-to; bh=MDoj/XCROTt2dZBKeVF+QoqeprIcpfe8Yl5Sd7TdN9Q=; t=1747447224;
+	x=1748311224; b=csUSsKvAOOMJia0dVRR8g4UOzZ3iBflGour352c70n+oTp/8qJ9jRc/PbEueQ
+	4OLuIx6aE9D2Fnpyon8Lr2WxfhIJOjzysAkXtHmqTjQajKZFAMH+xXw3+Py3y7sZXejfIaZuQ6PGG
+	y6vak2e+YJvrV51xw7m1HkiLIY6LPGeifNXD4t8LaBXksujGHIkVxj5QLDL7iSYDAocMJJ5eeyzNe
+	t4o4LihkJjx/5BgzHgovT+yc8BGN/4t8nVZBcuFBGEDGU6PFuZY24Axb9MhSLnPF6VJg2Oj4RJDnP
+	FZzWvnIGLbE7zzHXG5ukwzfEx3Wl7CyofLOY4fMuERO1h53xXg==;
+Received: from ex02.nexus.ox.ac.uk ([163.1.154.242] helo=EX02.ad.oak.ox.ac.uk)
+	by relay18.mail.ox.ac.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.92)
+	(envelope-from <praveen.balakrishnan@magd.ox.ac.uk>)
+	id 1uG6qX-0008ZI-8F; Sat, 17 May 2025 03:00:17 +0100
+Received: from EX02.ad.oak.ox.ac.uk (163.1.154.242) by EX02.ad.oak.ox.ac.uk
+ (163.1.154.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Sat, 17 May
+ 2025 03:00:17 +0100
+Received: from LO3P265CU004.outbound.protection.outlook.com (40.93.67.2) by
+ EX02.ad.oak.ox.ac.uk (163.1.154.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.37 via Frontend Transport; Sat, 17 May 2025 03:00:17 +0100
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HC0SOyn1+TdtIFvbU+4SoCPXZQPduw5grLVPtZq5/1dIEJ0z5DpXQFv8XNzxHEFLUg87ZmFIbL6TwplTYlCpt5Sbv+S3af6l5ouGJeWLd16q7ABw59UObYoNV3ftoJx8F9IWCcCdIz67DOypTZygN3Xs7vzLGsaCXUGx/OVpaBaT5yG3i1Uj9sEw7zai1bIkYDpnuUYKaVE9GUwuT+MiqNinP3OVYxG0NDSWR1mie39S7x4zQjB5o4eW9HW2YE+oSqsGiI8YrDb1cZeX7SPqwMqFZAj3Ywff2HSB7xyUC88BnwrMfGSDbmB/0b7Lna9ny5Vep3DX9lXNlX7drRT2wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MDoj/XCROTt2dZBKeVF+QoqeprIcpfe8Yl5Sd7TdN9Q=;
+ b=Kzzcgug04bjGtNEWoXlylq8JhRR2rU3G9/JVGBQgF9eR97+ELF1RURaTNtksHxtpSbKYT9WoTCBSRGU3A0HD6MTqef5D8V0MaFBbUROgTFXA4satUHVInGkGbdDxiMkidOUQSwQv3jchITTi9wSwuBfTx304HXQ1klzfCIHGuJgvcouQarN9rT/XehDdP95lOA69WoqDMtYJaB5uFujDrA2YbsFt+2LJ8Sm1kbzaqM7y2kyiNU6Y3F4vdj9yYGXfs7lbjdip1sb+xAMUnEa2zmyY4KjK8CTdeQrHfCmKMxQWW55gqGWOD/B4KTk2lgS0vKRzRlq2V+pPLvnameRCtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=magd.ox.ac.uk; dmarc=pass action=none
+ header.from=magd.ox.ac.uk; dkim=pass header.d=magd.ox.ac.uk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=UniOxfordNexus.onmicrosoft.com; s=selector2-UniOxfordNexus-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MDoj/XCROTt2dZBKeVF+QoqeprIcpfe8Yl5Sd7TdN9Q=;
+ b=QF1V+cXH3I42DcZ3+ogFTqVIj86cCIrHrC+ySmZxnffqVQVURdD8AfSUoCJlmVte7G3PaUwsQuNGhJdU7/FNBgY0EwgLRJkvW56o8o/xYYkZG2EkgQG7MEynstpMpjMqLYtXpyZX3xqbpHCY6YIhRZZ5crq7uslGSxYGzfxYjT1lyZAO7KZE8eUV83o8KvJPN2GgIlQzAaxBobTRadbv8QwKwTJo8yDC9gu0keo/B6FFecig21ouF2Q1sn7OkpZmAAyUKf5DxXREZfWaGx4eLFCiBdDkLhQqdLDthk4i4UE7Dah6AvBFyr5lBzCNrq1Ue2trLdXSOtzh7jO2XOXBsw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=magd.ox.ac.uk;
+Received: from LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:323::12)
+ by LO0P265MB2874.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:175::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Sat, 17 May
+ 2025 02:00:16 +0000
+Received: from LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::639f:86e3:3b7c:f6dd]) by LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::639f:86e3:3b7c:f6dd%5]) with mapi id 15.20.8722.031; Sat, 17 May 2025
+ 02:00:16 +0000
+From: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
+To: <shuah@kernel.org>
+CC: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>,
+	<linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<skhan@linuxfoundation.org>, <linux-kernel-mentees@lists.linux.dev>
+Subject: [PATCH] selftests: net: fix spelling and grammar mistakes
+Date: Sat, 17 May 2025 02:59:12 +0100
+Message-Id: <20250517015912.131187-1-praveen.balakrishnan@magd.ox.ac.uk>
+X-Mailer: git-send-email 2.39.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO2P265CA0063.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:60::27) To LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:323::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250517-drm-hdmi-connector-cec-v6-10-35651db6f19b@oss.qualcomm.com>
-References: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
-In-Reply-To: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
-        Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=34464;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=BOyopBTpr+POzl7WvSYVI3Xm07zdAHUWrgMFn01FWoA=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoJ+2Mk1kTK6vuHU9ArEEGtr2NrKH2yv/qkwH++
- Sd9plmwgr6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCftjAAKCRCLPIo+Aiko
- 1TlvB/9HAa6KGThwD6/nGd6sl+yiK4AT8XdkJovK9c1bWuY0FAhxVx1FGjOmHBxD0thMODQ9IM8
- FqL9d99Yflf9MCBcnLny0XztpnaLlmFVWcJSVUwj8paEn/ntfvNhB62GJRAdfg/kgkUkZF9FuBs
- eg0j3RlRfU9RB1t77JopbEfTZ2Qm/ila20QetPMyWyx7VIHogA0OF/9L/Js6jsDMl67Z57+nBgP
- VGQ2iIBgX3HZgp4XCwc/F0iI6N93vQtAD9BAo01HzYwQOHbt755PWtuhEmWvgs06q+SK1UwNiIH
- lo7o4lB0gbbG4t4iMToIvApeobvajaq8jWHCwGeyyIXv2hFd
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE3MDAxNyBTYWx0ZWRfXz3mLJvD3kfWd
- ABvLs9pnwpFpDmJGmUavH76UhrSkeUCX4wtuIAj8uvPwV7Hh4Fu32TGih1A9Dm0gA14T6TwEzJO
- 1AKvZ7gRLSL5FgouJ6jEG7QqP/RWcWJXgOCxC9QYF4n5A5u2VZqLPH1LYa5Q6LrRsdYabBnm19b
- JPlyOvULJV71IjlQCIBj54vfLIL6bOh7GrYDV8NQRUyQ3ggHApOhT2C1OykFnM4OWJsshHvx/sx
- 9PUeRa0nVGQms2lCmPf/A0f++XCQ+u3jvcJYmEZnQh0gWLNOf/TBLLzrfqtQkPJB/EOJbed688V
- dqyQ9ntr9VmVU1tCZe69y/zBKy0GnvVs9ELJiUaZDJKTBV3dhdUr0TD5gzdOyKCO5iPFRGbD9Kw
- WAwG2uWcgIOlLHoxzmrKxOJuBIKPL0PiKr9VtHN3xWNJUeK7Cvck8uFeCcT6+to422tauxSF
-X-Proofpoint-GUID: R9qMijKDbrtirFwxYzNpQjxv8m6jAkhw
-X-Proofpoint-ORIG-GUID: R9qMijKDbrtirFwxYzNpQjxv8m6jAkhw
-X-Authority-Analysis: v=2.4 cv=Ft4F/3rq c=1 sm=1 tr=0 ts=6827eda4 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=Cr31Tnr6-c0FpRDxqzMA:9
- a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-17_01,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 clxscore=1015 suspectscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- spamscore=0 phishscore=0 malwarescore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505170017
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO6P265MB6985:EE_|LO0P265MB2874:EE_
+X-MS-Office365-Filtering-Correlation-Id: 130df9f6-2517-4bd2-ca32-08dd94e6914e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|41320700013|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?rjBFNodhf+fSEVyF7agvGYwd1CoJmiRr4vHCo95A617vAdvkzNHqqXQkLAp5?=
+ =?us-ascii?Q?1nbeu9WdqYVprFeeJzdFeIOhbugoA35cRoUvJ2KVG50UA5Tg8nWXKH5qu92L?=
+ =?us-ascii?Q?W0VhpdieeOkQaONNAyilj9QYLQXYYejcoETPGbTyy/1h0qxjhS86NUl4/KmI?=
+ =?us-ascii?Q?ko6KrC9uBWJcbYCvlEW4fQRoVIemqxfONSXLX+8a3xGgpE/aoUhKlMziszEn?=
+ =?us-ascii?Q?goThHXiE/wl22+p0P+U5bkyWBYjd9AkdhBcU/Y22ee6mRacSS71a0+J7CBur?=
+ =?us-ascii?Q?ROWpWwgw3gs1Ew553Lau8wn6OtybRDRW3TvMCXWIT1mLcwuzo4RHD4NBqxH8?=
+ =?us-ascii?Q?GXiIGr/85QpiEt9McN01YGRtht3j4LNlWE2SFmH/6v3Ybx9lwVS6WOAUf/Zz?=
+ =?us-ascii?Q?goEaHLjjyehY/KX9CUZcrVxOysAoxq0m8Y/z87i+Vz73WNIsOyOjvjh5f1PQ?=
+ =?us-ascii?Q?9aI2a2/74N5HRwW5JhrawF0XbNpl8xhuY5vKAgNNGboXv07nXPnk4MvQNqDK?=
+ =?us-ascii?Q?m1BB8sZgNJOZjGYZgUrZT9Y8Gdcr4QQupXFdfCZVGc2whtcyhrAbCYxg7a9h?=
+ =?us-ascii?Q?JcRayDIVI8XFoPDw7eZ/bcyUh1jzje0uirKF+NXsv2wCHqMgX25+7vadWE9X?=
+ =?us-ascii?Q?LL0TJqAWqN/VtfYEBCZdBQvqWyrHksZfYgW3zCQZzB/RUky9U+JXScBBSC/D?=
+ =?us-ascii?Q?LyJUzBHCW+dkGw30IRCDlWOY1pQBu9RVNsVj8KOHJA1bXVFZD6x2d1enjG7A?=
+ =?us-ascii?Q?SXOkLolPXiSXe85bJdwlGkZwYz7ocHSoiajVyQWBlFWZ7MEoAdRI5I4PVOLz?=
+ =?us-ascii?Q?YJ5PV/PgvrRdDJb0Y3tU6kc5wrRYUrBsc1cwniAFu2dXJhDWhdumpZDfYG3h?=
+ =?us-ascii?Q?ggQSeBHvrI8oY5ril9e31D0mswllrk/Y1nVUwKYPIVNgocaDX9wELLCJabab?=
+ =?us-ascii?Q?YGMBFHJ4qezRttTsjsVH0BwOdDtULzdTIvs60J0xwxVAGEL+q1/LcbwSKWeK?=
+ =?us-ascii?Q?wlEoDfH5UoeCPb1onb+6S3iqpqLdUFNXKhnehlAT2qEa87k8ayDzLpaskE/8?=
+ =?us-ascii?Q?TZa/XdaqaZ8nFIWA5URdr/fhtruMocxr5Gky/2Tx4P7L3zmm803fugff3i0S?=
+ =?us-ascii?Q?y/wNhtOgP8/jVtWAYg5frC9lD/XjI+bhbnyefMLImPb73Z+mK+ttgX3nuafl?=
+ =?us-ascii?Q?x5SJY53KF4ivqGYQYANS4ZWAmtujVBx8ToDxKMXuvj+TuX54XrKiwD2+6/Eb?=
+ =?us-ascii?Q?EdC9R2SE6ZHQP75g2Ie2sMUebbUOS+5GQuoXtajzvX3KVmrufrIMgtDQEZ6J?=
+ =?us-ascii?Q?Il3WQI5gf8wyr7AUY+Qhv0eCuu0kGDO/gsbW8fEjM/0UWjzKXV9Qpy5fAXEv?=
+ =?us-ascii?Q?+VTbdBe41mQ/PSUzSH6/28qxWYq+tOJYGnd9HQNRKBfs/w7NSOebdfYS5Vww?=
+ =?us-ascii?Q?Z6X+SsaxlNI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mClkrCJEiJRNfjhs3gevsgfZ+t4yDqnCmT5R3/KN06LSHOGAFhB24ZUj+2Ib?=
+ =?us-ascii?Q?w2QGnxAG9FaCu1yWacvQmSdkH3BUAn9ACSX0syOC+YwQWKTIxi55ckG22S72?=
+ =?us-ascii?Q?tZvBEiilqZMtA9ucri13mdBzisPtpeUd8QdQeXqzEo6MrOIos3gyfUnls8sJ?=
+ =?us-ascii?Q?5JZqCW9Py0gfwTIfwPirLHR3Qg+6J8ixNntTnyYoKo9KLDjRakdxHNFITjwL?=
+ =?us-ascii?Q?WJGc1rl7Q1faYK0dBKwveZmYGhn54yI2nEZCjT9RHe8/BpUtVU313/YDYZJI?=
+ =?us-ascii?Q?J2zZXEY4qpg+/B/lIk0Ux7I8gSnaMClw56J95FDNRL/SMfw75UE2UPiKwB0h?=
+ =?us-ascii?Q?TW3IUAY2+GRUtrYadLYp4muLiRc9plLOVn3svnxyNCGMbB0KjRG1Gbjw7ZF3?=
+ =?us-ascii?Q?l85pQt2lhcwK9nitE3CYVTyfHt0c2b8Ht4DdwxPWnbPkqnFOpUFjHcdcTwG1?=
+ =?us-ascii?Q?tCAFQ3QvivffdN5DS7m3QyGuCYvm9SxsWJPri7kKB8x6Z700yHd3VKcVOdXZ?=
+ =?us-ascii?Q?1T4Z2VrJ/lErBsfM/ezjuzvl46eGdYo8Db1Bc+uKQ0My7a9U9gEy08l+sYLp?=
+ =?us-ascii?Q?GKEZNqXI4X9T0q+sNIfinJsFin9XMMOF7eZpWBqtz/3He8vJ57sl7xCXVKlL?=
+ =?us-ascii?Q?6lysopgOSHFE24Hc1XK0jfcSxO5mZ3MPo5xSJ9esrcmIdk697EecC6pRwA0F?=
+ =?us-ascii?Q?KL6WbgwnpQrWaFV5vqRimNFVrPbWC7FNAutPjLbV8K9FlZ7VKQmPewZG6cie?=
+ =?us-ascii?Q?tQVqdLXYUWJk5MQYtyTtd7ZPfPDV1PmtqGLo+KoRI9zb+CkchhGI8FWvsbQJ?=
+ =?us-ascii?Q?c8EHzs8y6fukDvR/nu9BK7yzN1I+zP1bKmW8j4GDlZjYdzyGuBn/eh2FtRbD?=
+ =?us-ascii?Q?bgOYKeXafkSutnCVc7J/b5i2v18fVnn3HjEkW71tbPyAMg6KpiDdIhLJ1DkG?=
+ =?us-ascii?Q?7ueO4DmAvt5D5R5H1NbBd5bKAW+nFD2hMbbd7wuHq8B+KTmKHxi1z1OXDRhS?=
+ =?us-ascii?Q?S6C74/4Sju4MtxUEPJ8UAGvODgIj40TNc29kmQkqluPHShmKxUKymVt4fVl4?=
+ =?us-ascii?Q?RPtN0fbpxJWodRGoasnuuP8/gBPZ7EuvaWpA10wm/CU7Zc4ulZ2EhNH7AkAH?=
+ =?us-ascii?Q?khhTKQHxuI8Ld1AUiwEfLtX4SmvUybfxyxmBThaStK+dQZDDVA7ifgtc3hKg?=
+ =?us-ascii?Q?Caoui8irDVWgxiHSpv4Kn73FcQUZbp9Mcw+SNh0f4IXcukCPTvBu9YeyB4HT?=
+ =?us-ascii?Q?nOuaOPv4ukat/ewZcQvm5EaE6tJBnhz3aA2iOEFLCb1FdpwlbRW93jxvbzLW?=
+ =?us-ascii?Q?+Hf9i3MIgQ9uBIjcoWySmWBItGM2w09M0fOzf8loj/atk5hisbGqM3m4dwlN?=
+ =?us-ascii?Q?pnEljpfwTdOO0F3OvGu5yrfw/u8qltgfS0ZQNtM/9OrR9SdqDVvaZtqjC4V1?=
+ =?us-ascii?Q?5vdE6axpJ80rGok2GIoMK2+Mk/wq1X/4gyB7g13tcpZyTox6c3lv+hQ2ahE4?=
+ =?us-ascii?Q?HKKWYFkbM2pM4IQJi0Ya7VfgGa9tLBb+H45TTx0C82PfGb8siYRkjfjz1fwi?=
+ =?us-ascii?Q?Vkb3wBXi5XB05Z4o8tRdfR+ZaIiEotihIGigRAhD?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 130df9f6-2517-4bd2-ca32-08dd94e6914e
+X-MS-Exchange-CrossTenant-AuthSource: LO6P265MB6985.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2025 02:00:15.9389
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: cc95de1b-97f5-4f93-b4ba-fe68b852cf91
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qN1mC0j0dDMKcAZEh1u60OVhu6dxJwbzUaz2/qF4X58Q2XvjhEWPFlz0Z0FwsdqVUqeJpzbv81kKCp+eTaa9Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB2874
+X-OriginatorOrg: magd.ox.ac.uk
+X-NTG-DKIM-verify: pass 
 
-Rewrite the ADV7511 driver to use implementation provided by the DRM
-HDMI connector framework, including the Audio and CEC bits. Drop the
-in-bridge connector support and use drm_bridge_connector if the host
-requires the connector to be provided by the bridge.
+Fix several spelling and grammatical mistakes in output messages from
+the net selftests to improve readability.
 
-Note: currently only AVI InfoFrames are supported. Existing driver
-doesn't support programming any other InfoFrames directly and Audio
-InfoFrame seems to be programmed using individual bits and pieces rather
-than programming it directly.
+Only the message strings for the test output have been modified. No
+changes to the functional logic of the tests have been made.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
 ---
- drivers/gpu/drm/bridge/adv7511/Kconfig         |   5 +-
- drivers/gpu/drm/bridge/adv7511/adv7511.h       |  52 ++--
- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c |  77 +-----
- drivers/gpu/drm/bridge/adv7511/adv7511_cec.c   |  57 ++--
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c   | 345 +++++++++++--------------
- drivers/gpu/drm/bridge/adv7511/adv7533.c       |   4 -
- 6 files changed, 212 insertions(+), 328 deletions(-)
+ .../testing/selftests/net/netfilter/conntrack_vrf.sh |  4 ++--
+ tools/testing/selftests/net/openvswitch/ovs-dpctl.py |  2 +-
+ tools/testing/selftests/net/rps_default_mask.sh      | 12 ++++++------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
-index f46a5e26b5dd640670afa21802f9019d5c7439fb..59a5256ce8a6e16dfbf1848a7c85ac7d709a68ed 100644
---- a/drivers/gpu/drm/bridge/adv7511/Kconfig
-+++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
-@@ -5,6 +5,9 @@ config DRM_I2C_ADV7511
- 	select DRM_KMS_HELPER
- 	select REGMAP_I2C
- 	select DRM_MIPI_DSI
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
-+	select DRM_DISPLAY_HDMI_STATE_HELPER
- 	help
- 	  Support for the Analog Devices ADV7511(W)/13/33/35 HDMI encoders.
+diff --git a/tools/testing/selftests/net/netfilter/conntrack_vrf.sh b/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
+index e95ecb37c2b1..806d2bfbd6e7 100755
+--- a/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
++++ b/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
+@@ -236,9 +236,9 @@ EOF
+ 	ip netns exec "$ns1" ping -q -w 1 -c 1 "$DUMMYNET".2 > /dev/null
  
-@@ -19,7 +22,7 @@ config DRM_I2C_ADV7511_AUDIO
- config DRM_I2C_ADV7511_CEC
- 	bool "ADV7511/33/35 HDMI CEC driver"
- 	depends on DRM_I2C_ADV7511
--	select CEC_CORE
-+	select DRM_DISPLAY_HDMI_CEC_HELPER
- 	default y
- 	help
- 	  When selected the HDMI transmitter will support the CEC feature.
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
-index ec0b7f3d889c4eedeb1d80369fd2a160cd0e2968..90c9a3da2406d16c8988548a87053c122a332f31 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
-@@ -313,16 +313,11 @@ enum adv7511_csc_scaling {
-  * @csc_enable:			Whether to enable color space conversion
-  * @csc_scaling_factor:		Color space conversion scaling factor
-  * @csc_coefficents:		Color space conversion coefficents
-- * @hdmi_mode:			Whether to use HDMI or DVI output mode
-- * @avi_infoframe:		HDMI infoframe
-  */
- struct adv7511_video_config {
- 	bool csc_enable;
- 	enum adv7511_csc_scaling csc_scaling_factor;
- 	const uint16_t *csc_coefficents;
--
--	bool hdmi_mode;
--	struct hdmi_avi_infoframe avi_infoframe;
- };
- 
- enum adv7511_type {
-@@ -337,6 +332,7 @@ struct adv7511_chip_info {
- 	enum adv7511_type type;
- 	unsigned int max_mode_clock_khz;
- 	unsigned int max_lane_freq_khz;
-+	const char *name;
- 	const char * const *supply_names;
- 	unsigned int num_supplies;
- 	unsigned int reg_cec_offset;
-@@ -371,7 +367,7 @@ struct adv7511 {
- 	struct work_struct hpd_work;
- 
- 	struct drm_bridge bridge;
--	struct drm_connector connector;
-+	struct drm_connector *cec_connector;
- 
- 	bool embedded_sync;
- 	enum adv7511_sync_polarity vsync_polarity;
-@@ -389,9 +385,7 @@ struct adv7511 {
- 	bool use_timing_gen;
- 
- 	const struct adv7511_chip_info *info;
--	struct platform_device *audio_pdev;
- 
--	struct cec_adapter *cec_adap;
- 	u8   cec_addr[ADV7511_MAX_ADDRS];
- 	u8   cec_valid_addrs;
- 	bool cec_enabled_adap;
-@@ -399,16 +393,24 @@ struct adv7511 {
- 	u32 cec_clk_freq;
- };
- 
-+static inline struct adv7511 *bridge_to_adv7511(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct adv7511, bridge);
-+}
-+
- #ifdef CONFIG_DRM_I2C_ADV7511_CEC
--int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511);
-+int adv7511_cec_init(struct drm_connector *connector,
-+		     struct drm_bridge *bridge);
-+int adv7511_cec_enable(struct drm_bridge *bridge, bool enable);
-+int adv7511_cec_log_addr(struct drm_bridge *bridge, u8 addr);
-+int adv7511_cec_transmit(struct drm_bridge *bridge, u8 attempts,
-+			      u32 signal_free_time, struct cec_msg *msg);
- int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1);
- #else
--static inline int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
--{
--	regmap_write(adv7511->regmap, ADV7511_REG_CEC_CTRL,
--		     ADV7511_CEC_CTRL_POWER_DOWN);
--	return 0;
--}
-+#define adv7511_cec_init NULL
-+#define adv7511_cec_enable NULL
-+#define adv7511_cec_log_addr NULL
-+#define adv7511_cec_transmit NULL
- #endif
- 
- void adv7533_dsi_power_on(struct adv7511 *adv);
-@@ -421,16 +423,18 @@ int adv7533_attach_dsi(struct adv7511 *adv);
- int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv);
- 
- #ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
--int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511);
--void adv7511_audio_exit(struct adv7511 *adv7511);
-+int adv7511_hdmi_audio_startup(struct drm_connector *connector,
-+			       struct drm_bridge *bridge);
-+void adv7511_hdmi_audio_shutdown(struct drm_connector *connector,
-+				 struct drm_bridge *bridge);
-+int adv7511_hdmi_audio_prepare(struct drm_connector *connector,
-+			       struct drm_bridge *bridge,
-+			       struct hdmi_codec_daifmt *fmt,
-+			       struct hdmi_codec_params *hparms);
- #else /*CONFIG_DRM_I2C_ADV7511_AUDIO */
--static inline int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511)
--{
--	return 0;
--}
--static inline void adv7511_audio_exit(struct adv7511 *adv7511)
--{
--}
-+#define adv7511_hdmi_audio_startup NULL
-+#define adv7511_hdmi_audio_shutdown NULL
-+#define adv7511_hdmi_audio_prepare NULL
- #endif /* CONFIG_DRM_I2C_ADV7511_AUDIO */
- 
- #endif /* __DRM_I2C_ADV7511_H__ */
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-index 1ff8c815ec798445ec771f549eca8a06a99ff64d..915c3b96721626c6af5d454c0bf7f53e37ff25af 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-@@ -55,11 +55,12 @@ static int adv7511_update_cts_n(struct adv7511 *adv7511)
- 	return 0;
- }
- 
--static int adv7511_hdmi_hw_params(struct device *dev, void *data,
--				  struct hdmi_codec_daifmt *fmt,
--				  struct hdmi_codec_params *hparms)
-+int adv7511_hdmi_audio_prepare(struct drm_connector *connector,
-+			       struct drm_bridge *bridge,
-+			       struct hdmi_codec_daifmt *fmt,
-+			       struct hdmi_codec_params *hparms)
- {
--	struct adv7511 *adv7511 = dev_get_drvdata(dev);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 	unsigned int audio_source, i2s_format = 0;
- 	unsigned int invert_clock;
- 	unsigned int rate;
-@@ -167,9 +168,10 @@ static int adv7511_hdmi_hw_params(struct device *dev, void *data,
- 	return 0;
- }
- 
--static int audio_startup(struct device *dev, void *data)
-+int adv7511_hdmi_audio_startup(struct drm_connector *connector,
-+			       struct drm_bridge *bridge)
- {
--	struct adv7511 *adv7511 = dev_get_drvdata(dev);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 
- 	regmap_update_bits(adv7511->regmap, ADV7511_REG_AUDIO_CONFIG,
- 				BIT(7), 0);
-@@ -204,69 +206,12 @@ static int audio_startup(struct device *dev, void *data)
- 	return 0;
- }
- 
--static void audio_shutdown(struct device *dev, void *data)
-+void adv7511_hdmi_audio_shutdown(struct drm_connector *connector,
-+				 struct drm_bridge *bridge)
- {
--	struct adv7511 *adv7511 = dev_get_drvdata(dev);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 
- 	if (adv7511->audio_source == ADV7511_AUDIO_SOURCE_SPDIF)
- 		regmap_update_bits(adv7511->regmap, ADV7511_REG_AUDIO_CONFIG,
- 				   BIT(7), 0);
- }
--
--static int adv7511_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
--					struct device_node *endpoint,
--					void *data)
--{
--	struct of_endpoint of_ep;
--	int ret;
--
--	ret = of_graph_parse_endpoint(endpoint, &of_ep);
--	if (ret < 0)
--		return ret;
--
--	/*
--	 * HDMI sound should be located as reg = <2>
--	 * Then, it is sound port 0
--	 */
--	if (of_ep.port == 2)
--		return 0;
--
--	return -EINVAL;
--}
--
--static const struct hdmi_codec_ops adv7511_codec_ops = {
--	.hw_params	= adv7511_hdmi_hw_params,
--	.audio_shutdown = audio_shutdown,
--	.audio_startup	= audio_startup,
--	.get_dai_id	= adv7511_hdmi_i2s_get_dai_id,
--};
--
--static const struct hdmi_codec_pdata codec_data = {
--	.ops = &adv7511_codec_ops,
--	.i2s_formats = (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |
--			SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S24_LE |
--			SNDRV_PCM_FMTBIT_IEC958_SUBFRAME_LE),
--	.max_i2s_channels = 2,
--	.i2s = 1,
--	.no_i2s_capture = 1,
--	.spdif = 1,
--	.no_spdif_capture = 1,
--};
--
--int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511)
--{
--	adv7511->audio_pdev = platform_device_register_data(dev,
--					HDMI_CODEC_DRV_NAME,
--					PLATFORM_DEVID_AUTO,
--					&codec_data,
--					sizeof(codec_data));
--	return PTR_ERR_OR_ZERO(adv7511->audio_pdev);
--}
--
--void adv7511_audio_exit(struct adv7511 *adv7511)
--{
--	if (adv7511->audio_pdev) {
--		platform_device_unregister(adv7511->audio_pdev);
--		adv7511->audio_pdev = NULL;
--	}
--}
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c b/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-index 2e9c88a2b5ed44ef0cd417c553ea7873d00e4a14..822265426f58a6887941522e86cddac9d0151371 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-@@ -12,6 +12,8 @@
- 
- #include <media/cec.h>
- 
-+#include <drm/display/drm_hdmi_cec_helper.h>
-+
- #include "adv7511.h"
- 
- static const u8 ADV7511_REG_CEC_RX_FRAME_HDR[] = {
-@@ -44,8 +46,8 @@ static void adv_cec_tx_raw_status(struct adv7511 *adv7511, u8 tx_raw_status)
- 		return;
- 
- 	if (tx_raw_status & ADV7511_INT1_CEC_TX_ARBIT_LOST) {
--		cec_transmit_attempt_done(adv7511->cec_adap,
--					  CEC_TX_STATUS_ARB_LOST);
-+		drm_connector_hdmi_cec_transmit_attempt_done(adv7511->cec_connector,
-+							     CEC_TX_STATUS_ARB_LOST);
- 		return;
- 	}
- 	if (tx_raw_status & ADV7511_INT1_CEC_TX_RETRY_TIMEOUT) {
-@@ -72,12 +74,14 @@ static void adv_cec_tx_raw_status(struct adv7511 *adv7511, u8 tx_raw_status)
- 			if (low_drive_cnt)
- 				status |= CEC_TX_STATUS_LOW_DRIVE;
- 		}
--		cec_transmit_done(adv7511->cec_adap, status,
--				  0, nack_cnt, low_drive_cnt, err_cnt);
-+		drm_connector_hdmi_cec_transmit_done(adv7511->cec_connector, status,
-+						     0, nack_cnt, low_drive_cnt,
-+						     err_cnt);
- 		return;
- 	}
- 	if (tx_raw_status & ADV7511_INT1_CEC_TX_READY) {
--		cec_transmit_attempt_done(adv7511->cec_adap, CEC_TX_STATUS_OK);
-+		drm_connector_hdmi_cec_transmit_attempt_done(adv7511->cec_connector,
-+							     CEC_TX_STATUS_OK);
- 		return;
- 	}
- }
-@@ -116,7 +120,7 @@ static void adv7511_cec_rx(struct adv7511 *adv7511, int rx_buf)
- 	regmap_update_bits(adv7511->regmap_cec,
- 			   ADV7511_REG_CEC_RX_BUFFERS + offset, BIT(rx_buf), 0);
- 
--	cec_received_msg(adv7511->cec_adap, &msg);
-+	drm_connector_hdmi_cec_received_msg(adv7511->cec_connector, &msg);
- }
- 
- int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1)
-@@ -179,9 +183,9 @@ int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1)
- 	return IRQ_HANDLED;
- }
- 
--static int adv7511_cec_adap_enable(struct cec_adapter *adap, bool enable)
-+int adv7511_cec_enable(struct drm_bridge *bridge, bool enable)
- {
--	struct adv7511 *adv7511 = cec_get_drvdata(adap);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 	unsigned int offset = adv7511->info->reg_cec_offset;
- 
- 	if (adv7511->i2c_cec == NULL)
-@@ -225,9 +229,9 @@ static int adv7511_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 	return 0;
- }
- 
--static int adv7511_cec_adap_log_addr(struct cec_adapter *adap, u8 addr)
-+int adv7511_cec_log_addr(struct drm_bridge *bridge, u8 addr)
- {
--	struct adv7511 *adv7511 = cec_get_drvdata(adap);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 	unsigned int offset = adv7511->info->reg_cec_offset;
- 	unsigned int i, free_idx = ADV7511_MAX_ADDRS;
- 
-@@ -293,10 +297,10 @@ static int adv7511_cec_adap_log_addr(struct cec_adapter *adap, u8 addr)
- 	return 0;
- }
- 
--static int adv7511_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
--				     u32 signal_free_time, struct cec_msg *msg)
-+int adv7511_cec_transmit(struct drm_bridge *bridge, u8 attempts,
-+			 u32 signal_free_time, struct cec_msg *msg)
- {
--	struct adv7511 *adv7511 = cec_get_drvdata(adap);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
- 	unsigned int offset = adv7511->info->reg_cec_offset;
- 	u8 len = msg->len;
- 	unsigned int i;
-@@ -328,12 +332,6 @@ static int adv7511_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
- 	return 0;
- }
- 
--static const struct cec_adap_ops adv7511_cec_adap_ops = {
--	.adap_enable = adv7511_cec_adap_enable,
--	.adap_log_addr = adv7511_cec_adap_log_addr,
--	.adap_transmit = adv7511_cec_adap_transmit,
--};
--
- static int adv7511_cec_parse_dt(struct device *dev, struct adv7511 *adv7511)
- {
- 	adv7511->cec_clk = devm_clk_get(dev, "cec");
-@@ -348,20 +346,18 @@ static int adv7511_cec_parse_dt(struct device *dev, struct adv7511 *adv7511)
- 	return 0;
- }
- 
--int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
-+int adv7511_cec_init(struct drm_connector *connector,
-+		     struct drm_bridge *bridge)
- {
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
-+	struct device *dev = &adv7511->i2c_main->dev;
- 	unsigned int offset = adv7511->info->reg_cec_offset;
- 	int ret = adv7511_cec_parse_dt(dev, adv7511);
- 
- 	if (ret)
- 		goto err_cec_parse_dt;
- 
--	adv7511->cec_adap = cec_allocate_adapter(&adv7511_cec_adap_ops,
--		adv7511, dev_name(dev), CEC_CAP_DEFAULTS, ADV7511_MAX_ADDRS);
--	if (IS_ERR(adv7511->cec_adap)) {
--		ret = PTR_ERR(adv7511->cec_adap);
--		goto err_cec_alloc;
--	}
-+	adv7511->cec_connector = connector;
- 
- 	regmap_write(adv7511->regmap, ADV7511_REG_CEC_CTRL, 0);
- 	/* cec soft reset */
-@@ -378,17 +374,8 @@ int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
- 		     ADV7511_REG_CEC_CLK_DIV + offset,
- 		     ((adv7511->cec_clk_freq / 750000) - 1) << 2);
- 
--	ret = cec_register_adapter(adv7511->cec_adap, dev);
--	if (ret)
--		goto err_cec_register;
- 	return 0;
- 
--err_cec_register:
--	cec_delete_adapter(adv7511->cec_adap);
--	adv7511->cec_adap = NULL;
--err_cec_alloc:
--	dev_info(dev, "Initializing CEC failed with error %d, disabling CEC\n",
--		 ret);
- err_cec_parse_dt:
- 	regmap_write(adv7511->regmap, ADV7511_REG_CEC_CTRL,
- 		     ADV7511_CEC_CTRL_POWER_DOWN);
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 1257009e850c1b20184cfaea5b6a4440e75e10d7..8b7548448615f84db796467ffd70fe11554bb681 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -12,14 +12,17 @@
- #include <linux/of.h>
- #include <linux/slab.h>
- 
--#include <media/cec.h>
-+#include <sound/pcm.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge_connector.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_of.h>
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/display/drm_hdmi_helper.h>
-+#include <drm/display/drm_hdmi_state_helper.h>
- 
- #include "adv7511.h"
- 
-@@ -203,62 +206,37 @@ static const uint16_t adv7511_csc_ycbcr_to_rgb[] = {
- 
- static void adv7511_set_config_csc(struct adv7511 *adv7511,
- 				   struct drm_connector *connector,
--				   bool rgb, bool hdmi_mode)
-+				   bool rgb)
- {
- 	struct adv7511_video_config config;
- 	bool output_format_422, output_format_ycbcr;
- 	unsigned int mode;
--	uint8_t infoframe[17];
--
--	config.hdmi_mode = hdmi_mode;
--
--	hdmi_avi_infoframe_init(&config.avi_infoframe);
--
--	config.avi_infoframe.scan_mode = HDMI_SCAN_MODE_UNDERSCAN;
- 
- 	if (rgb) {
- 		config.csc_enable = false;
--		config.avi_infoframe.colorspace = HDMI_COLORSPACE_RGB;
-+		output_format_422 = false;
-+		output_format_ycbcr = false;
- 	} else {
- 		config.csc_scaling_factor = ADV7511_CSC_SCALING_4;
- 		config.csc_coefficents = adv7511_csc_ycbcr_to_rgb;
- 
- 		if ((connector->display_info.color_formats &
- 		     DRM_COLOR_FORMAT_YCBCR422) &&
--		    config.hdmi_mode) {
-+		    connector->display_info.is_hdmi) {
- 			config.csc_enable = false;
--			config.avi_infoframe.colorspace =
--				HDMI_COLORSPACE_YUV422;
--		} else {
--			config.csc_enable = true;
--			config.avi_infoframe.colorspace = HDMI_COLORSPACE_RGB;
--		}
--	}
--
--	if (config.hdmi_mode) {
--		mode = ADV7511_HDMI_CFG_MODE_HDMI;
--
--		switch (config.avi_infoframe.colorspace) {
--		case HDMI_COLORSPACE_YUV444:
--			output_format_422 = false;
--			output_format_ycbcr = true;
--			break;
--		case HDMI_COLORSPACE_YUV422:
- 			output_format_422 = true;
- 			output_format_ycbcr = true;
--			break;
--		default:
-+		} else {
-+			config.csc_enable = true;
- 			output_format_422 = false;
- 			output_format_ycbcr = false;
--			break;
- 		}
--	} else {
--		mode = ADV7511_HDMI_CFG_MODE_DVI;
--		output_format_422 = false;
--		output_format_ycbcr = false;
- 	}
- 
--	adv7511_packet_disable(adv7511, ADV7511_PACKET_ENABLE_AVI_INFOFRAME);
-+	if (connector->display_info.is_hdmi)
-+		mode = ADV7511_HDMI_CFG_MODE_HDMI;
-+	else
-+		mode = ADV7511_HDMI_CFG_MODE_DVI;
- 
- 	adv7511_set_colormap(adv7511, config.csc_enable,
- 			     config.csc_coefficents,
-@@ -269,15 +247,6 @@ static void adv7511_set_config_csc(struct adv7511 *adv7511,
- 
- 	regmap_update_bits(adv7511->regmap, ADV7511_REG_HDCP_HDMI_CFG,
- 			   ADV7511_HDMI_CFG_MODE_MASK, mode);
--
--	hdmi_avi_infoframe_pack(&config.avi_infoframe, infoframe,
--				sizeof(infoframe));
--
--	/* The AVI infoframe id is not configurable */
--	regmap_bulk_write(adv7511->regmap, ADV7511_REG_AVI_INFOFRAME_VERSION,
--			  infoframe + 1, sizeof(infoframe) - 1);
--
--	adv7511_packet_enable(adv7511, ADV7511_PACKET_ENABLE_AVI_INFOFRAME);
- }
- 
- static void adv7511_set_link_config(struct adv7511 *adv7511,
-@@ -446,22 +415,16 @@ static void adv7511_hpd_work(struct work_struct *work)
- 	 * restore its state.
- 	 */
- 	if (status == connector_status_connected &&
--	    adv7511->connector.status == connector_status_disconnected &&
-+	    adv7511->status == connector_status_disconnected &&
- 	    adv7511->powered) {
- 		regcache_mark_dirty(adv7511->regmap);
- 		adv7511_power_on(adv7511);
- 	}
- 
--	if (adv7511->connector.status != status) {
--		adv7511->connector.status = status;
-+	if (adv7511->status != status) {
-+		adv7511->status = status;
- 
--		if (adv7511->connector.dev) {
--			if (status == connector_status_disconnected)
--				cec_phys_addr_invalidate(adv7511->cec_adap);
--			drm_kms_helper_hotplug_event(adv7511->connector.dev);
--		} else {
--			drm_bridge_hpd_notify(&adv7511->bridge, status);
--		}
-+		drm_bridge_hpd_notify(&adv7511->bridge, status);
- 	}
- }
- 
-@@ -636,45 +599,11 @@ static const struct drm_edid *adv7511_edid_read(struct adv7511 *adv7511,
- 	if (!adv7511->powered)
- 		__adv7511_power_off(adv7511);
- 
--	if (drm_edid) {
--		/*
--		 * FIXME: The CEC physical address should be set using
--		 * cec_s_phys_addr(adap,
--		 * connector->display_info.source_physical_address, false) from
--		 * a path that has read the EDID and called
--		 * drm_edid_connector_update().
--		 */
--		const struct edid *edid = drm_edid_raw(drm_edid);
--
--		adv7511_set_config_csc(adv7511, connector, adv7511->rgb,
--				       drm_detect_hdmi_monitor(edid));
--
--		cec_s_phys_addr_from_edid(adv7511->cec_adap, edid);
--	} else {
--		cec_s_phys_addr_from_edid(adv7511->cec_adap, NULL);
--	}
--
- 	return drm_edid;
- }
- 
--static int adv7511_get_modes(struct adv7511 *adv7511,
--			     struct drm_connector *connector)
--{
--	const struct drm_edid *drm_edid;
--	unsigned int count;
--
--	drm_edid = adv7511_edid_read(adv7511, connector);
--
--	drm_edid_connector_update(connector, drm_edid);
--	count = drm_edid_connector_add_modes(connector);
--
--	drm_edid_free(drm_edid);
--
--	return count;
--}
--
- static enum drm_connector_status
--adv7511_detect(struct adv7511 *adv7511, struct drm_connector *connector)
-+adv7511_detect(struct adv7511 *adv7511)
- {
- 	enum drm_connector_status status;
- 	unsigned int val;
-@@ -699,8 +628,6 @@ adv7511_detect(struct adv7511 *adv7511, struct drm_connector *connector)
- 	if (status == connector_status_connected && hpd && adv7511->powered) {
- 		regcache_mark_dirty(adv7511->regmap);
- 		adv7511_power_on(adv7511);
--		if (connector)
--			adv7511_get_modes(adv7511, connector);
- 		if (adv7511->status == connector_status_connected)
- 			status = connector_status_disconnected;
- 	} else {
-@@ -719,17 +646,7 @@ adv7511_detect(struct adv7511 *adv7511, struct drm_connector *connector)
- 	return status;
- }
- 
--static enum drm_mode_status adv7511_mode_valid(struct adv7511 *adv7511,
--			      const struct drm_display_mode *mode)
--{
--	if (mode->clock > 165000)
--		return MODE_CLOCK_HIGH;
--
--	return MODE_OK;
--}
--
- static void adv7511_mode_set(struct adv7511 *adv7511,
--			     const struct drm_display_mode *mode,
- 			     const struct drm_display_mode *adj_mode)
- {
- 	unsigned int low_refresh_rate;
-@@ -800,11 +717,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 			vsync_polarity = 1;
- 	}
- 
--	if (drm_mode_vrefresh(mode) <= 24)
-+	if (drm_mode_vrefresh(adj_mode) <= 24)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
--	else if (drm_mode_vrefresh(mode) <= 25)
-+	else if (drm_mode_vrefresh(adj_mode) <= 25)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
--	else if (drm_mode_vrefresh(mode) <= 30)
-+	else if (drm_mode_vrefresh(adj_mode) <= 30)
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+ 	if ip netns exec "$ns0" nft list counter t fibcount | grep -q "packets 1"; then
+-		echo "PASS: fib lookup returned exepected output interface"
++		echo "PASS: fib lookup returned expected output interface"
  	else
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
-@@ -826,77 +743,21 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 	 * supposed to give better results.
- 	 */
+-		echo "FAIL: fib lookup did not return exepected output interface"
++		echo "FAIL: fib lookup did not return expected output interface"
+ 		ret=1
+ 		return
+ 	fi
+diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+index 8a0396bfaf99..b521e0dea506 100644
+--- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
++++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+@@ -1877,7 +1877,7 @@ class OvsPacket(GenericNetlinkSocket):
+                     elif msg["cmd"] == OvsPacket.OVS_PACKET_CMD_EXECUTE:
+                         up.execute(msg)
+                     else:
+-                        print("Unkonwn cmd: %d" % msg["cmd"])
++                        print("Unknown cmd: %d" % msg["cmd"])
+             except NetlinkError as ne:
+                 raise ne
  
--	adv7511->f_tmds = mode->clock;
--}
--
--/* -----------------------------------------------------------------------------
-- * DRM Connector Operations
-- */
--
--static struct adv7511 *connector_to_adv7511(struct drm_connector *connector)
--{
--	return container_of(connector, struct adv7511, connector);
-+	adv7511->f_tmds = adj_mode->clock;
- }
+diff --git a/tools/testing/selftests/net/rps_default_mask.sh b/tools/testing/selftests/net/rps_default_mask.sh
+index 4287a8529890..b200019b3c80 100755
+--- a/tools/testing/selftests/net/rps_default_mask.sh
++++ b/tools/testing/selftests/net/rps_default_mask.sh
+@@ -54,16 +54,16 @@ cleanup
  
--static int adv7511_connector_get_modes(struct drm_connector *connector)
--{
--	struct adv7511 *adv = connector_to_adv7511(connector);
--
--	return adv7511_get_modes(adv, connector);
--}
--
--static enum drm_mode_status
--adv7511_connector_mode_valid(struct drm_connector *connector,
--			     const struct drm_display_mode *mode)
--{
--	struct adv7511 *adv = connector_to_adv7511(connector);
--
--	return adv7511_mode_valid(adv, mode);
--}
--
--static struct drm_connector_helper_funcs adv7511_connector_helper_funcs = {
--	.get_modes = adv7511_connector_get_modes,
--	.mode_valid = adv7511_connector_mode_valid,
--};
--
--static enum drm_connector_status
--adv7511_connector_detect(struct drm_connector *connector, bool force)
--{
--	struct adv7511 *adv = connector_to_adv7511(connector);
--
--	return adv7511_detect(adv, connector);
--}
--
--static const struct drm_connector_funcs adv7511_connector_funcs = {
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.detect = adv7511_connector_detect,
--	.destroy = drm_connector_cleanup,
--	.reset = drm_atomic_helper_connector_reset,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--};
--
- static int adv7511_connector_init(struct adv7511 *adv)
- {
- 	struct drm_bridge *bridge = &adv->bridge;
--	int ret;
--
--	if (adv->i2c_main->irq)
--		adv->connector.polled = DRM_CONNECTOR_POLL_HPD;
--	else
--		adv->connector.polled = DRM_CONNECTOR_POLL_CONNECT |
--				DRM_CONNECTOR_POLL_DISCONNECT;
-+	struct drm_connector *connector;
+ echo 1 > /proc/sys/net/core/rps_default_mask
+ setup
+-chk_rps "changing rps_default_mask dont affect existing devices" "" lo $INITIAL_RPS_DEFAULT_MASK
++chk_rps "changing rps_default_mask doesn't affect existing devices" "" lo $INITIAL_RPS_DEFAULT_MASK
  
--	ret = drm_connector_init(bridge->dev, &adv->connector,
--				 &adv7511_connector_funcs,
--				 DRM_MODE_CONNECTOR_HDMIA);
--	if (ret < 0) {
-+	connector = drm_bridge_connector_init(bridge->dev, bridge->encoder);
-+	if (IS_ERR(connector)) {
- 		DRM_ERROR("Failed to initialize connector with drm\n");
--		return ret;
-+		return PTR_ERR(connector);
- 	}
--	drm_connector_helper_add(&adv->connector,
--				 &adv7511_connector_helper_funcs);
--	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
-+
-+	drm_connector_attach_encoder(connector, bridge->encoder);
+ echo 3 > /proc/sys/net/core/rps_default_mask
+-chk_rps "changing rps_default_mask dont affect existing netns" $NETNS lo 0
++chk_rps "changing rps_default_mask doesn't affect existing netns" $NETNS lo 0
  
- 	return 0;
- }
-@@ -905,7 +766,7 @@ static int adv7511_connector_init(struct adv7511 *adv)
-  * DRM Bridge Operations
-  */
+ ip link add name $VETH type veth peer netns $NETNS name $VETH
+ ip link set dev $VETH up
+ ip -n $NETNS link set dev $VETH up
+-chk_rps "changing rps_default_mask affect newly created devices" "" $VETH 3
+-chk_rps "changing rps_default_mask don't affect newly child netns[II]" $NETNS $VETH 0
++chk_rps "changing rps_default_mask affects newly created devices" "" $VETH 3
++chk_rps "changing rps_default_mask doesn't affect newly child netns[II]" $NETNS $VETH 0
+ ip link del dev $VETH
+ ip netns del $NETNS
  
--static struct adv7511 *bridge_to_adv7511(struct drm_bridge *bridge)
-+static const struct adv7511 *bridge_to_adv7511_const(const struct drm_bridge *bridge)
- {
- 	return container_of(bridge, struct adv7511, bridge);
- }
-@@ -914,8 +775,29 @@ static void adv7511_bridge_atomic_enable(struct drm_bridge *bridge,
- 					 struct drm_atomic_state *state)
- {
- 	struct adv7511 *adv = bridge_to_adv7511(bridge);
-+	struct drm_connector *connector;
-+	struct drm_connector_state *conn_state;
-+	struct drm_crtc_state *crtc_state;
+@@ -72,8 +72,8 @@ chk_rps "rps_default_mask is 0 by default in child netns" "$NETNS" lo 0
  
- 	adv7511_power_on(adv);
-+
-+	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
-+	if (WARN_ON(!connector))
-+		return;
-+
-+	conn_state = drm_atomic_get_new_connector_state(state, connector);
-+	if (WARN_ON(!conn_state))
-+		return;
-+
-+	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
-+	if (WARN_ON(!crtc_state))
-+		return;
-+
-+	adv7511_set_config_csc(adv, connector, adv->rgb);
-+
-+	adv7511_mode_set(adv, &crtc_state->adjusted_mode);
-+
-+	drm_atomic_helper_connector_hdmi_update_infoframes(connector, state);
- }
+ ip netns exec $NETNS sysctl -qw net.core.rps_default_mask=1
+ ip link add name $VETH type veth peer netns $NETNS name $VETH
+-chk_rps "changing rps_default_mask in child ns don't affect the main one" "" lo $INITIAL_RPS_DEFAULT_MASK
++chk_rps "changing rps_default_mask in child ns doesn't affect the main one" "" lo $INITIAL_RPS_DEFAULT_MASK
+ chk_rps "changing rps_default_mask in child ns affects new childns devices" $NETNS $VETH 1
+-chk_rps "changing rps_default_mask in child ns don't affect existing devices" $NETNS lo 0
++chk_rps "changing rps_default_mask in child ns doesn't affect existing devices" $NETNS lo 0
  
- static void adv7511_bridge_atomic_disable(struct drm_bridge *bridge,
-@@ -926,13 +808,17 @@ static void adv7511_bridge_atomic_disable(struct drm_bridge *bridge,
- 	adv7511_power_off(adv);
- }
- 
--static void adv7511_bridge_mode_set(struct drm_bridge *bridge,
--				    const struct drm_display_mode *mode,
--				    const struct drm_display_mode *adj_mode)
-+static enum drm_mode_status
-+adv7511_bridge_hdmi_tmds_char_rate_valid(const struct drm_bridge *bridge,
-+					 const struct drm_display_mode *mode,
-+					 unsigned long long tmds_rate)
- {
--	struct adv7511 *adv = bridge_to_adv7511(bridge);
-+	const struct adv7511 *adv = bridge_to_adv7511_const(bridge);
- 
--	adv7511_mode_set(adv, mode, adj_mode);
-+	if (tmds_rate > 1000ULL * adv->info->max_mode_clock_khz)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
- }
- 
- static enum drm_mode_status adv7511_bridge_mode_valid(struct drm_bridge *bridge,
-@@ -941,10 +827,10 @@ static enum drm_mode_status adv7511_bridge_mode_valid(struct drm_bridge *bridge,
- {
- 	struct adv7511 *adv = bridge_to_adv7511(bridge);
- 
--	if (adv->info->has_dsi)
--		return adv7533_mode_valid(adv, mode);
--	else
--		return adv7511_mode_valid(adv, mode);
-+	if (!adv->info->has_dsi)
-+		return MODE_OK;
-+
-+	return adv7533_mode_valid(adv, mode);
- }
- 
- static int adv7511_bridge_attach(struct drm_bridge *bridge,
-@@ -978,7 +864,7 @@ static enum drm_connector_status adv7511_bridge_detect(struct drm_bridge *bridge
- {
- 	struct adv7511 *adv = bridge_to_adv7511(bridge);
- 
--	return adv7511_detect(adv, NULL);
-+	return adv7511_detect(adv);
- }
- 
- static const struct drm_edid *adv7511_bridge_edid_read(struct drm_bridge *bridge,
-@@ -989,28 +875,71 @@ static const struct drm_edid *adv7511_bridge_edid_read(struct drm_bridge *bridge
- 	return adv7511_edid_read(adv, connector);
- }
- 
--static void adv7511_bridge_hpd_notify(struct drm_bridge *bridge,
--				      enum drm_connector_status status)
-+static int adv7511_bridge_hdmi_clear_infoframe(struct drm_bridge *bridge,
-+					       enum hdmi_infoframe_type type)
- {
--	struct adv7511 *adv = bridge_to_adv7511(bridge);
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
-+
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		adv7511_packet_disable(adv7511, ADV7511_PACKET_ENABLE_AVI_INFOFRAME);
-+		break;
-+	default:
-+		drm_dbg_driver(adv7511->bridge.dev, "Unsupported HDMI InfoFrame %x\n", type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adv7511_bridge_hdmi_write_infoframe(struct drm_bridge *bridge,
-+					       enum hdmi_infoframe_type type,
-+					       const u8 *buffer, size_t len)
-+{
-+	struct adv7511 *adv7511 = bridge_to_adv7511(bridge);
-+
-+	adv7511_bridge_hdmi_clear_infoframe(bridge, type);
-+
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		/* The AVI infoframe id is not configurable */
-+		regmap_bulk_write(adv7511->regmap, ADV7511_REG_AVI_INFOFRAME_VERSION,
-+				  buffer + 1, len - 1);
- 
--	if (status == connector_status_disconnected)
--		cec_phys_addr_invalidate(adv->cec_adap);
-+		adv7511_packet_enable(adv7511, ADV7511_PACKET_ENABLE_AVI_INFOFRAME);
-+		break;
-+	default:
-+		drm_dbg_driver(adv7511->bridge.dev, "Unsupported HDMI InfoFrame %x\n", type);
-+		break;
-+	}
-+
-+	return 0;
- }
- 
- static const struct drm_bridge_funcs adv7511_bridge_funcs = {
--	.mode_set = adv7511_bridge_mode_set,
- 	.mode_valid = adv7511_bridge_mode_valid,
- 	.attach = adv7511_bridge_attach,
- 	.detect = adv7511_bridge_detect,
- 	.edid_read = adv7511_bridge_edid_read,
--	.hpd_notify = adv7511_bridge_hpd_notify,
- 
- 	.atomic_enable = adv7511_bridge_atomic_enable,
- 	.atomic_disable = adv7511_bridge_atomic_disable,
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
- 	.atomic_reset = drm_atomic_helper_bridge_reset,
-+
-+	.hdmi_tmds_char_rate_valid = adv7511_bridge_hdmi_tmds_char_rate_valid,
-+	.hdmi_clear_infoframe = adv7511_bridge_hdmi_clear_infoframe,
-+	.hdmi_write_infoframe = adv7511_bridge_hdmi_write_infoframe,
-+
-+	.hdmi_audio_startup = adv7511_hdmi_audio_startup,
-+	.hdmi_audio_prepare = adv7511_hdmi_audio_prepare,
-+	.hdmi_audio_shutdown = adv7511_hdmi_audio_shutdown,
-+
-+	.hdmi_cec_init = adv7511_cec_init,
-+	.hdmi_cec_enable = adv7511_cec_enable,
-+	.hdmi_cec_log_addr = adv7511_cec_log_addr,
-+	.hdmi_cec_transmit = adv7511_cec_transmit,
- };
- 
- /* -----------------------------------------------------------------------------
-@@ -1323,22 +1252,44 @@ static int adv7511_probe(struct i2c_client *i2c)
- 	if (adv7511->info->link_config)
- 		adv7511_set_link_config(adv7511, &link_config);
- 
--	ret = adv7511_cec_init(dev, adv7511);
--	if (ret)
--		goto err_unregister_cec;
-+	regmap_write(adv7511->regmap, ADV7511_REG_CEC_CTRL,
-+		     ADV7511_CEC_CTRL_POWER_DOWN);
- 
- 	adv7511->bridge.funcs = &adv7511_bridge_funcs;
--	adv7511->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID;
-+	adv7511->bridge.ops = DRM_BRIDGE_OP_DETECT |
-+		DRM_BRIDGE_OP_EDID |
-+		DRM_BRIDGE_OP_HDMI |
-+		DRM_BRIDGE_OP_HDMI_AUDIO |
-+		DRM_BRIDGE_OP_HDMI_CEC_ADAPTER;
- 	if (adv7511->i2c_main->irq)
- 		adv7511->bridge.ops |= DRM_BRIDGE_OP_HPD;
- 
-+	adv7511->bridge.vendor = "Analog";
-+	adv7511->bridge.product = adv7511->info->name;
-+
-+#ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
-+	adv7511->bridge.hdmi_audio_dev = dev;
-+	adv7511->bridge.hdmi_audio_max_i2s_playback_channels = 2;
-+	adv7511->bridge.hdmi_audio_i2s_formats = (SNDRV_PCM_FMTBIT_S16_LE |
-+						  SNDRV_PCM_FMTBIT_S20_3LE |
-+						  SNDRV_PCM_FMTBIT_S24_3LE |
-+						  SNDRV_PCM_FMTBIT_S24_LE |
-+						  SNDRV_PCM_FMTBIT_IEC958_SUBFRAME_LE),
-+	adv7511->bridge.hdmi_audio_spdif_playback = 1;
-+	adv7511->bridge.hdmi_audio_dai_port = 2;
-+#endif
-+
-+#ifdef CONFIG_DRM_I2C_ADV7511_CEC
-+	adv7511->bridge.hdmi_cec_dev = dev;
-+	adv7511->bridge.hdmi_cec_adapter_name = dev_name(dev);
-+	adv7511->bridge.hdmi_cec_available_las = ADV7511_MAX_ADDRS;
-+#endif
-+
- 	adv7511->bridge.of_node = dev->of_node;
- 	adv7511->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
- 
- 	drm_bridge_add(&adv7511->bridge);
- 
--	adv7511_audio_init(dev, adv7511);
--
- 	if (i2c->irq) {
- 		init_waitqueue_head(&adv7511->wq);
- 
-@@ -1360,10 +1311,7 @@ static int adv7511_probe(struct i2c_client *i2c)
- 	return 0;
- 
- err_unregister_audio:
--	adv7511_audio_exit(adv7511);
- 	drm_bridge_remove(&adv7511->bridge);
--err_unregister_cec:
--	cec_unregister_adapter(adv7511->cec_adap);
- 	i2c_unregister_device(adv7511->i2c_cec);
- 	clk_disable_unprepare(adv7511->cec_clk);
- err_i2c_unregister_packet:
-@@ -1388,9 +1336,6 @@ static void adv7511_remove(struct i2c_client *i2c)
- 
- 	drm_bridge_remove(&adv7511->bridge);
- 
--	adv7511_audio_exit(adv7511);
--
--	cec_unregister_adapter(adv7511->cec_adap);
- 	i2c_unregister_device(adv7511->i2c_cec);
- 	clk_disable_unprepare(adv7511->cec_clk);
- 
-@@ -1400,6 +1345,8 @@ static void adv7511_remove(struct i2c_client *i2c)
- 
- static const struct adv7511_chip_info adv7511_chip_info = {
- 	.type = ADV7511,
-+	.name = "ADV7511",
-+	.max_mode_clock_khz = 165000,
- 	.supply_names = adv7511_supply_names,
- 	.num_supplies = ARRAY_SIZE(adv7511_supply_names),
- 	.link_config = true,
-@@ -1407,6 +1354,7 @@ static const struct adv7511_chip_info adv7511_chip_info = {
- 
- static const struct adv7511_chip_info adv7533_chip_info = {
- 	.type = ADV7533,
-+	.name = "ADV7533",
- 	.max_mode_clock_khz = 80000,
- 	.max_lane_freq_khz = 800000,
- 	.supply_names = adv7533_supply_names,
-@@ -1417,6 +1365,7 @@ static const struct adv7511_chip_info adv7533_chip_info = {
- 
- static const struct adv7511_chip_info adv7535_chip_info = {
- 	.type = ADV7535,
-+	.name = "ADV7535",
- 	.max_mode_clock_khz = 148500,
- 	.max_lane_freq_khz = 891000,
- 	.supply_names = adv7533_supply_names,
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7533.c b/drivers/gpu/drm/bridge/adv7511/adv7533.c
-index 122ad91e8a3293de1839cad061cd858d8046b675..b12d422343fc139e8d9b59a2ded60ce08ce43dc8 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7533.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7533.c
-@@ -106,10 +106,6 @@ enum drm_mode_status adv7533_mode_valid(struct adv7511 *adv,
- 	struct mipi_dsi_device *dsi = adv->dsi;
- 	u8 bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
- 
--	/* Check max clock for either 7533 or 7535 */
--	if (mode->clock > adv->info->max_mode_clock_khz)
--		return MODE_CLOCK_HIGH;
--
- 	/* Check max clock for each lane */
- 	if (mode->clock * bpp > adv->info->max_lane_freq_khz * adv->num_dsi_lanes)
- 		return MODE_CLOCK_HIGH;
-
+ exit $ret
 -- 
 2.39.5
 
