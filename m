@@ -1,100 +1,118 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03FB170826;
-	Sat, 17 May 2025 18:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E2619E96A;
+	Sat, 17 May 2025 18:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747507170; cv=none; b=NmEUI6gDdgiAMg9GyQS8TsA6IMcxhMB1VgqOC0Wq2QzSll8U/+E2El9bzQB0Qmc43+u+93avbVLcYNsnwV0oEKY8MXg4PooJZ2ALn6YO932n8bIP/HigOP5F06VCu46Gh7DDSPxM5wlQNFngDZlHziPE03au9npx950XyD9EHNI=
+	t=1747507171; cv=none; b=jHaSfpCXtMlKAykRBnCrGU3F91MzG15867CJyfCBOM2/McAVr7cLP63QoCWdrJAEagifUXtoqNULGrHZX8A9QdPlM9vEuLEMonkCnjo1QRtDhmIvx9oqTtIYLxbPtzLO8Oh3yHDuSRcT8EHx6zHHQcpWiUWGGhnhz+o+sgle8iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747507170; c=relaxed/simple;
-	bh=6n6vtPPpy1jIatp/0sOElN1VzMiWlrrits4IaDsbbLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hi43i8snltCdSS01LyMo6z6Z87eKDl5oZ6YrhGjP8u1gIXbB2lNof0gfzx4fqkPsNq+/N+j02X16xmAKPqh3WPHPLtHILO6/aXGUUK8t0kBFm8v6/3GV+83K6p2X585BUYc+MQV04mm3fNCoEHMgBAq7JcQnC6SSZkUbpERVC8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hHtkvoLe; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747507171; c=relaxed/simple;
+	bh=tPXhhzR/j7fCwmXIxHh6aPeFNgazjQ0Ggl/HRl/Fdpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rX/EQRuGWk/Yoq1G5GJQIUHn0pMpA2bWJtl939XGnh+hJSbaaWt3bLkumif7+FZNoTcrWCEw88LZBjXcWPNSBEWmP/HZABDWxGvqJSM+bJ9rfYtB8WDTtDNHoI90cD5sweLh5T8B4QbH7O87QLvhBlT2mqLpCgbOgO3jr8y8S8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWswzSPb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHtkvoLe"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442fda876a6so16053175e9.0;
-        Sat, 17 May 2025 11:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747507167; x=1748111967; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8rLp3fAoKmMhFEj543FiT4J/bez6Qh2zBbDpq1aPZoc=;
-        b=hHtkvoLeAMIq2BI7zrNuQ1usSup0FR6KHZNfCMCfWB3Ik2YTJbsrwvZPYq11M5Oqo7
-         va1JiK0kVgooe/gXJla/6wUgO7M84v8I9xufkwFAnyaJhNl8syhDmnWEhtyobIkVN+7i
-         c2DtMmF2wvK2IPMjI7IIuDkJDAy/bqWYeBZoPHDiCcRFwKOjhO5EIw3a8Nb5ap86bMdD
-         niJIRIkg7m8paGA4qnCrTzayOfJLM4UbcWuovA4Pe6g0CJ7jWSq4uSL+5ZEpurTjR3rU
-         2qkaYStKHhGonxqsiqP8vzkuvH0sfmvjrne/88l0z3DY6UsZVgulqLLjMIGaANqM1f0V
-         ktqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747507167; x=1748111967;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8rLp3fAoKmMhFEj543FiT4J/bez6Qh2zBbDpq1aPZoc=;
-        b=xT7yVrDWc2xdbYFrgtMcDdUgBMlCJ0LD0oKdIUqEW3Rsz18FAkkjpULro5WZxl3a4J
-         DAwuNYT22kOfxqkKwTvurULc5bfRRWIL5nTeTRT0RyMiCVp54jAV+h/AmrFMAUpBwOFI
-         dI5vRIkEhirv3h13evf8/QdrGn+Xhbv2QExlqCEx0OJCuAZApUn5VRjx4dDkmganfwff
-         m2h78Sh6IUVH3jF2cmsNbuvtuq/mIjz4P7HHdZf5KQwNMeasdEO/7rAtrBZBu+L4dIvM
-         sU+ZLhVZHRgUKyU68H4jvgyR2jpklqQzuT5XmInK6D1t7lOikdDGcwfSiJUnJb+mfUpN
-         epEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Pv4dRLMMpVuiX2IH5ZsqPhkJLRlIh+k83ePEQrBnGoan/CyjTHUTm+a4N49TuVHnQbj9lAcZ9gYW1qE2bdri@vger.kernel.org, AJvYcCUvVW2FevP2k6x6J7ybcrHSxgdKMnRbxt6Lft3UVlIpuJTMXu8uc23WkZLfEqhzHRitZ0eY4rfHrn7N+1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQzFSdDoB4nOyH+uztm5SsrQbNWx/XJBeg1Gps25WDdmb6Bhgh
-	661qVTSApYhFQeu2jO4pPNUMe/6VkxJlB7SqleL5Ky4bx6CVTMRUd9js
-X-Gm-Gg: ASbGnctUbG1Pn6Af2Bl8niE03TZieS3w0N3fEZUkcw1DbXeXgPsYJXEjeIPGS1XY1dN
-	/l0yEC+7oqlXNwH+ac4t75lxt0H9PIsTjl5M1Bat6GPw+jVy15o38JB5LjgXI45mye6xbLQnslL
-	pr09+mMaHkexvhRs10L0reBNQZmZxR66oYdWlV7kTXbS8UgtU6msrt2vNLR6wYgimINs0tjbRmv
-	lgBBIla+yq/60hIiQ5DzwhFnRV5HabhnucEe54P/OjLkwhRSVm511g1eblfmF6AzSdGa8gNr46o
-	CB8AXRo1q/6uoDmzreDvVDgM7nitWafyWfj175SZmk9W
-X-Google-Smtp-Source: AGHT+IHRlAl4uzkKtXrPtksBU7hfyP7MmBY3rnU4nmSgOwh1hGxpcP8yZXd+fx3IAqyEOwuUhNIGzg==
-X-Received: by 2002:a05:600c:3d11:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-442fd618f88mr74762825e9.11.1747507166849;
-        Sat, 17 May 2025 11:39:26 -0700 (PDT)
-Received: from hsukr3.. ([141.70.82.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8caaasm6908922f8f.83.2025.05.17.11.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 11:39:26 -0700 (PDT)
-From: Sukrut Heroorkar <hsukrut3@gmail.com>
-To: chenxiang66@hisilicon.com,
-	zhujun2@cmss.chinamobile.com,
-	iommu@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org
-Cc: Sukrut Heroorkar <hsukrut3@gmail.com>
-Subject: [PATCH] kselftest: dma - fix typo "mininum" -> "minimum" in comment
-Date: Sat, 17 May 2025 20:39:01 +0200
-Message-ID: <20250517183901.165631-1-hsukrut3@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWswzSPb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0154C4CEE3;
+	Sat, 17 May 2025 18:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747507170;
+	bh=tPXhhzR/j7fCwmXIxHh6aPeFNgazjQ0Ggl/HRl/Fdpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YWswzSPbNIcH4Nt8K6sHwM1CQ4VT2vN7MDEKXMRHnNNpRNIwz0Lb07yUT0LFOmYgc
+	 Ogex2J6pYkZqVvtnbcwbMNLMxsf1jCv9DgaIzBDAkV5Tnu1LnsGHUp2eYoPh+2n3Z4
+	 s8cJtFgb+GxwEZ6hiOWa0FSKJDxv+5DgMI8h+FbFZXzNPDuYsmW5QTAgyLZ58/V7ww
+	 G6RycMcQ4pOUx8p76FXjQ0xOJFcBXQv3QIIQ/DBsCqLAKY+tZoA7zqjSpYy0kDlgyE
+	 K7Ym0YOWN0xGeQ1Oqz3xao3r+D+5r005zWU6lX7+RYAKqWjUjcLb8ok/4bhxUO/VTG
+	 gUjlkahfKfX2w==
+Date: Sat, 17 May 2025 11:39:19 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when
+ irqs_disabled()
+Message-ID: <20250517183919.GC1239@sol>
+References: <20250516231858.27899-1-ebiggers@kernel.org>
+ <20250516231858.27899-4-ebiggers@kernel.org>
+ <aCg2DSYp0nakwX3l@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCg2DSYp0nakwX3l@gmail.com>
 
-Fixes a small typo in a comment; helping to improve clarity in code comment. 
+On Sat, May 17, 2025 at 09:09:01AM +0200, Ingo Molnar wrote:
+> 
+> * Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Make irq_fpu_usable() return false when irqs_disabled().  That makes the
+> > irqs_disabled() checks in kernel_fpu_begin_mask() and kernel_fpu_end()
+> > unnecessary, so also remove those.
+> > 
+> > Rationale:
+> > 
+> > - There's no known use case for kernel-mode FPU when irqs_disabled().
+> 
+> Except EFI?
 
-Signed-off-by: Sukrut Heroorkar <hsukrut3@gmail.com>
----
- tools/testing/selftests/dma/dma_map_benchmark.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, I remembered that just after sending this...  And EFI does want the ldmxcsr
+and fninit, which makes it like actual kernel-mode FPU.  That implies we at
+least need to disable BH (and preemption) if it wasn't already disabled.  But if
+hardirqs may or may not be disabled already, that means we either need to
+conditionally use local_bh_disable()/enable (or preempt_enable()/disable on
+PREEMPT_RT) as the current code does, or use local_irq_save()/restore.
 
-diff --git a/tools/testing/selftests/dma/dma_map_benchmark.c b/tools/testing/selftests/dma/dma_map_benchmark.c
-index b12f1f9babf8..ed5522061dd6 100644
---- a/tools/testing/selftests/dma/dma_map_benchmark.c
-+++ b/tools/testing/selftests/dma/dma_map_benchmark.c
-@@ -80,7 +80,7 @@ int main(int argc, char **argv)
- 		exit(1);
- 	}
- 
--	/* suppose the mininum DMA zone is 1MB in the world */
-+	/* suppose the minimum DMA zone is 1MB in the world */
- 	if (bits < 20 || bits > 64) {
- 		fprintf(stderr, "invalid dma mask bit, must be in 20-64\n");
- 		exit(1);
--- 
-2.43.0
+If we did the latter, then all EFI calls would run with hardirqs disabled.  It
+looks like hardirqs are currently intentionally disabled before some of the EFI
+calls, but not all of them.  I'm not sure what the logic is there, and whether
+it would be okay to just always disable them.
+
+> 
+> >   arm64 and riscv already disallow kernel-mode FPU when irqs_disabled().
+> >   __save_processor_state() previously did expect kernel_fpu_begin() and
+> >   kernel_fpu_end() to work when irqs_disabled(), but this was a
+> >   different use case and not actual kernel-mode FPU use.
+> > 
+> > - This is more efficient, since one call to irqs_disabled() replaces two
+> >   irqs_disabled() and one in_hardirq().
+> 
+> This is noise compared to the overhead of saving/restoring vector CPU 
+> context ...
+
+In practice most calls to kernel_fpu_begin() don't actually do the
+save_fpregs_to_fpstate(), since either TIF_NEED_FPU_LOAD is already set or it's
+a kthread.  So, the overhead from the other parts like the EFLAGS checks and
+ldmxcsr are measurable, especially when processing small amounts of data.
+
+> > - This fixes irq_fpu_usable() to correctly return false during CPU
+> >   initialization.  Incorrectly returning true caused the SHA-256 library
+> >   code, which is called when loading AMD microcode, to take a
+> >   SIMD-optimized code path too early, causing a crash.  By correctly
+> >   returning false from irq_fpu_usable(), the generic SHA-256 code
+> >   correctly gets used instead.  (Note: SIMD-optimized SHA-256 doesn't
+> >   get enabled until subsys_initcall, but CPU hotplug can happen later.)
+> 
+> Alternatively we could set in_kernel_fpu during CPU bootstrap, and 
+> clear it once we know the FPU is usable? This is only a relatively 
+> short early boot period, with no scheduling, right?
+
+Yes, if there isn't agreement on this approach we can do that instead.  Say:
+
+- Replace in_kernel_fpu with kernel_fpu_supported, with the opposite meaning
+  (so that the initial value of false means "unsupported")
+- fpu__init_cpu() sets it to true
+- cpu_disable_common() sets it to false
 
