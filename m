@@ -1,119 +1,128 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e240-9.smtp-out.eu-north-1.amazonses.com (e240-9.smtp-out.eu-north-1.amazonses.com [23.251.240.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1688715B135;
-	Sat, 17 May 2025 03:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D6113DBA0
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 03:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747453993; cv=none; b=BmM52UWQ2uolSPbQv5IP3Oig/+apy5R8MJw+E5ojoFqttyg5JTpWMy9z5wF4uoZ8xzLB4OiTjLGkpJk+VctP/cvXjjtl6dqwZMCpZHDSnyOKCEf1++ZAecoz2sfADT2z7fYewobrJ5wx+FQsrS9vJz6irlsj55agetRD+PhyZtI=
+	t=1747454036; cv=none; b=BJHPfSTG3hRV1fm4XVcADphjn23wpizr6ittAaWOnp8Q3UL+5/a10XlpnFAWJj1th+7OXSSGsM1JXEZwnDCmr994AQKQxxQZpaBt1YWKal5/z79uFKTX7RP/AxFUgGkZCNMJyvpiiM+fCVgQYPYD/hgE7rDvSfO6eBxnXVLthR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747453993; c=relaxed/simple;
-	bh=Z2OgE+o7iRIOrIJibHhLgMVGarTa7YNSYIcKhznb4ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UTurql3XgKtlsoZhGHiIEzFXOTBpFXoNthS006CCwBa9OFAAEuVSlOAGxeprWBiVKr9GwYoqaCTMpH5q+9jpkT/qIfBbqi4xgzxZRqtCThaP6wYSMKwRI5hZLwFhPLV7G4f1kRJdxwvpYS1lMhw1CEhC+MCxRbJ5N2LIroP6gLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eNukth2v; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747454036; c=relaxed/simple;
+	bh=Uev6fEYlz5XwC9qWMx8Sr5cx34YcV4H6PxahUjMrGlU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TYo97GnjNv2oAGLoqkV+sz56odYkAxKDaW1XBT9rE0TcEpjWVJ96D2eniODSp8CLboBGqEpaPd5a8JjgHHd2H5gLYh2/e40IOWf/x6DoxwuVgJanFE5lND7RhC6pXoByb4mkak+P8O11XXJVGwBEbEJHMoEPOtQJyIY0KdhWH/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=g8+2CCsh; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=OnXiyvPI; arc=none smtp.client-ip=23.251.240.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNukth2v"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e09f57ed4so41712225ad.0;
-        Fri, 16 May 2025 20:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747453991; x=1748058791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AU9AX5nZe+HwGHVNz/LjdEhTqsaZvsNtu0vy6tKooRs=;
-        b=eNukth2vF1I96ijg1A1RcE3LNrgsRhkebdrlZqvzmJitkZsUUffkc9CKddIAJmaKnT
-         cGprNnx1wwE9H5wjVMQY8fY2KKLWeAjuV1SvJBR7n91TFetw5CxMPTftcqkiZLst9tmf
-         Oblbl+lg7ssTfm/nArKTulLNOOMcynw6MMxC18mA04pWL0hjet3dBzPltAoTybUXIyUH
-         xWRswY82oSyVlKr1jG4ReRG7apb3pSbz9zJNUYkGG6axGhoUR1sJzhZAICPyOww+fqND
-         oGsp1sNemgeXfYKYLn8IgTVnTphZVrXZY935i6U0bNRKyBnKvcRbhbkyJrzO8VcXRXwv
-         MpXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747453991; x=1748058791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AU9AX5nZe+HwGHVNz/LjdEhTqsaZvsNtu0vy6tKooRs=;
-        b=WY6jNAaYm12GwE0JdeBr9c9PwtbcuGJqWlTro5AqBO004xeTaiCGe/TULYFEGvNOVP
-         HiacJLyhqDKuNnVchu15MfwdZ4MbPQBDI4cgFDiE21I+VI5nkRfgG/ZlFUZCeXmF6THF
-         nMKA5D5U3Xi24/uStuhtVJtgJtpLlv5xIZjqGws0rrFKg9IEyJzwDOwhcbKDe5YR/hXt
-         xdrAPY+HTD5oCsZWKxBB4i4QinoIrUwPnpJPFKPIEZLRcwLweeYi3/knPBRqU1SmPyEF
-         ZIpBWn+XmhMnhNHAVALerPxXqiGyuWBtAD/CZaJU8M+ecM+zfNsM9or/q4aM69+8xkvS
-         +Wqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEvzRG1pqTYVugE61hxEUBvFpnbBj49xmh7W91pAVF335qui+oTOPGmbhqN+FCckC42ZrY6hIOaB1wykI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsjVVJwf5sc5PHsxcoYcv8+vhrvIR33iGuoqx9JhSxtVCnGde4
-	wPsf8iJX0SfB4I7UtF/4/U6TA5Kxv+32r3p2vxqDR30UfF+JIwkzivs=
-X-Gm-Gg: ASbGncttfviTNtIuUQU38EEaFL4uHZT+mtfBnyE6UCPEHgMOsPiO1zhwN+7OLLCdG3j
-	OMGT7hF22n17nkZ3pdKfQ+JHRMre7DSGj++ipE0LewcqP6zbmTkcjD3Xbm+hiua8QwP/eMq2Svc
-	vfaXbYd5osoQS8cUjVofhikF3yH+Pn9WbsGix4qrkdQGxSJruvWbA1dH4Q+5tGpd5PXJel1tNXY
-	QmdTFJ6u9HxwGTQdfwA+1fL8QnPicTFYvwmi/UkGv3rzkDoa+FTQTKa4RMGrvSZ4nG1A+dqmxlJ
-	PlFy2BkJLxvkPJSyQOqlHy2oSf+tQmgesThUX2d9E32CHUwFaFpRusZWUEIqDJcI6gVkgJTHoL5
-	nepE/kPkT0FYgdEEsatEmirU=
-X-Google-Smtp-Source: AGHT+IEfgXSVlqXnInoPZPi6O3bY7TgPrDPC0fb2vY2tNK8vHLbIzpALlw5ZheZpjK3s5zT8ZYx//g==
-X-Received: by 2002:a17:902:d2c1:b0:21f:6f33:f96 with SMTP id d9443c01a7336-231b3959f60mr129650825ad.6.1747453991184;
-        Fri, 16 May 2025 20:53:11 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4ebb168sm21624745ad.204.2025.05.16.20.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 20:53:10 -0700 (PDT)
-Date: Fri, 16 May 2025 20:53:09 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	willemb@google.com, sagi@grimberg.me, asml.silence@gmail.com,
-	almasrymina@google.com, kaiyuanz@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
- sendmsg
-Message-ID: <aCgIJSgv-yQzaHLl@mini-arch>
-References: <20250517000431.558180-1-stfomichev@gmail.com>
- <20250517000907.GW2023217@ZenIV>
- <aCflM0LZ23d2j2FF@mini-arch>
- <20250517020653.GX2023217@ZenIV>
- <aCfxs5CiHYMJPOsy@mini-arch>
- <20250517033951.GY2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="g8+2CCsh";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OnXiyvPI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747454032;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=Uev6fEYlz5XwC9qWMx8Sr5cx34YcV4H6PxahUjMrGlU=;
+	b=g8+2CCshfNeqXm4oxhJHH+fKWnCQHLZJOzDDGE2sO8x9VoIyQ+9YJnzdgJ0dCar+
+	l4sRkvl/eR55eA++eq/RNx7uuy79SqNcwvUHU7Tqv+sLsvE7gWuuVVa3VWey7pYxLml
+	cDlXhhqH6kZmKBrKnvqT17paFHPowjIX4tnMwA7r1B5ziDpKDNpqFA2+gy+ZTDWHQVk
+	58A3bXJaus/xvTHYPZdkBGqPaPplCjVTmJPHPmFw9eGFHHORShNG6DGQ22T4drdR/zF
+	vmTDO4c2knHngC5KqFUU/fVj9cqDero9UDLG4CaDrhgqmXltr/9gjHU7OfgG/sXFCMC
+	4HZAiL1IyA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747454032;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=Uev6fEYlz5XwC9qWMx8Sr5cx34YcV4H6PxahUjMrGlU=;
+	b=OnXiyvPI356Z60rtLU2Vm7E0WOxd6qwOjh9WbsFbfgJYPM2wc5sFl80rXI+wQg20
+	KPhzU8HRz/PaKgQm/snupotEUmyKshEa7Cvi8tfQ6GtH+BCu9bGuOhtPBYUkYHpc/Ck
+	rPwgXHuSvhljceZzP/qBRT7Qqcy/NRzw1RG1CLtg=
+X-Forwarded-Encrypted: i=1; AJvYcCVzx3vn77dBIHHnG4N4ZpF3pP1mM+ggQ0TSSiEkBdLmysOGczEb17wjrH53+yxH86PVDhDGp/7dgR95MA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuUMn5l7DlW5u4cJ5qQa4AOYttYUl5aMmi0GlM6yKYJIaWVMVd
+	74z+RdGPQ0lPzxh/7C4DqUUPv9OybrtrjfdwynduhIr5G2rWHvFhne3G7VUs2z67lsPtJfSKdw8
+	HYDw96qYWbzaGbvuok0vIgez55eLhIh8=
+X-Google-Smtp-Source: AGHT+IHf19z2sbUg7xrM4qsuKOPs/2f9qWqFkx5Ys30i8cc/aKp+R4ErTYpyM5kQDtvy+RMgphYTqVKTkUuG9PdPAhM=
+X-Received: by 2002:a17:902:d484:b0:231:e413:986c with SMTP id
+ d9443c01a7336-231e4139adamr56049165ad.11.1747454030242; Fri, 16 May 2025
+ 20:53:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250517033951.GY2023217@ZenIV>
+References: <20250517030935.823041-1-jihed.chaibi.dev@gmail.com>
+In-Reply-To: <20250517030935.823041-1-jihed.chaibi.dev@gmail.com>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Sat, 17 May 2025 03:53:52 +0000
+X-Gmail-Original-Message-ID: <CADvZ6Er=6M4Q9WKyQXSxfQ=KDgZ7rabKER=MUVoirxavukwQjQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtcuNqyH6AItJPisixd0IN5CrGy5hhjrQS6OJ-E5B0yBtGKj1UY3yegyfw
+Message-ID: <01100196dc607ab9-d9d71ce8-d818-46b9-a84b-e2231c85eed6-000000@eu-north-1.amazonses.com>
+Subject: Re: [PATCH 2/2] fixing typo in function name
+To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
+	simona@ffwll.ch, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.17-23.251.240.9
 
-On 05/17, Al Viro wrote:
-> On Fri, May 16, 2025 at 07:17:23PM -0700, Stanislav Fomichev wrote:
-> > > Wait, in the same commit there's
-> > > +       if (iov_iter_type(from) != ITER_IOVEC)
-> > > +               return -EFAULT;
-> > > 
-> > > shortly prior to the loop iter_iov_{addr,len}() are used.  What am I missing now?
-> > 
-> > Yeah, I want to remove that part as well:
-> > 
-> > https://lore.kernel.org/netdev/20250516225441.527020-1-stfomichev@gmail.com/T/#u
-> > 
-> > Otherwise, sendmsg() with a single IOV is not accepted, which makes not
-> > sense.
-> 
-> Wait a minute.  What's there to prevent a call with two ranges far from each other?
+Jihed Chaibi <jihed.chaibi.dev@gmail.com>, 17 May 2025 Cmt, 06:09
+tarihinde =C5=9Funu yazd=C4=B1:
+>
+> "ENABLE" is currently misspelled in SYS_INFO_GPUCAPS__ENABEL_DFS_BYPASS
+>
 
-It is perfectly possible to have a call with two disjoint ranges,
-net_devmem_get_niov_at should correctly resolve it to the IOVA in the
-dmabuf. Not sure I understand why it's an issue, can you pls clarify?
+i didnt see this and yes *grph_object_ctrl_defs.h* is exactly what i'm
+talking about, please ignore my previous email.
 
-What we want to have here is:
+Regards
 
-1. sendmsg(msg.msg_iov = [{ .iov_base = .., .iov_len = x }])
-2. sendmsg(msg.msg_iov = [{ .iov_base = .., .iov_len = x },
-                          { .iov_base = .., .iov_len = y])
+Ozgur
 
-Both should be accepted. Currently only (2) works because of that ITER_IOVEC
-check. Once I remove it, I hit the issue where iter_iov_len starts to
-return too early.
-
-(Documentation/networking/devmem.rst has a bit more info on the sendmsg UAPI
-with dmabufs if that's still confusing)
+> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+> ---
+>  drivers/gpu/drm/radeon/atombios.h | 2 +-
+>  drivers/gpu/drm/radeon/kv_dpm.c   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/atombios.h b/drivers/gpu/drm/radeon/a=
+tombios.h
+> index 2db407892..b961096a4 100644
+> --- a/drivers/gpu/drm/radeon/atombios.h
+> +++ b/drivers/gpu/drm/radeon/atombios.h
+> @@ -5072,7 +5072,7 @@ typedef struct _ATOM_INTEGRATED_SYSTEM_INFO_V1_7
+>  #define SYS_INFO_GPUCAPS__TMDSHDMI_COHERENT_SINGLEPLL_MODE              =
+  0x01
+>  #define SYS_INFO_GPUCAPS__DP_SINGLEPLL_MODE                             =
+  0x02
+>  #define SYS_INFO_GPUCAPS__DISABLE_AUX_MODE_DETECT                       =
+  0x08
+> -#define SYS_INFO_GPUCAPS__ENABEL_DFS_BYPASS                             =
+  0x10
+> +#define SYS_INFO_GPUCAPS__ENABLE_DFS_BYPASS                             =
+  0x10
+>
+>  /***********************************************************************=
+***********************************************
+>    ATOM_INTEGRATED_SYSTEM_INFO_V1_7 Description
+> diff --git a/drivers/gpu/drm/radeon/kv_dpm.c b/drivers/gpu/drm/radeon/kv_=
+dpm.c
+> index 55dbf450b..4aa050385 100644
+> --- a/drivers/gpu/drm/radeon/kv_dpm.c
+> +++ b/drivers/gpu/drm/radeon/kv_dpm.c
+> @@ -2329,7 +2329,7 @@ static int kv_parse_sys_info_table(struct radeon_de=
+vice *rdev)
+>                                 le32_to_cpu(igp_info->info_8.ulNbpStateNC=
+lkFreq[i]);
+>                 }
+>                 if (le32_to_cpu(igp_info->info_8.ulGPUCapInfo) &
+> -                   SYS_INFO_GPUCAPS__ENABEL_DFS_BYPASS)
+> +                   SYS_INFO_GPUCAPS__ENABLE_DFS_BYPASS)
+>                         pi->caps_enable_dfs_bypass =3D true;
+>
+>                 sumo_construct_sclk_voltage_mapping_table(rdev,
+> --
+> 2.39.5
+>
+>
+>
