@@ -1,221 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F11DF97F;
-	Sat, 17 May 2025 09:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD9D1DEFDA
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 09:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474409; cv=none; b=Av/0XQUKPdLF9qVaX358EI8fird8j0F7vLaKWs9ZGn3A7g9VdesAJA9f82NEtBJ6mKQ/Gc8cnfy7R6LQNaQT1pMbUVsPyGr8o0zd77n1KIlBPodIepGewcdmM57NyRz5o2CznlnHNpoCOb/31CbVCu/sdAORR1bLkm/IItR6vIk=
+	t=1747474719; cv=none; b=LnWcyJSXrutQpOVfnSvPhPF6948KsQuIFGUMoniJeoj5KjYzJp32LvYiEnNaGCmXqp3hdqxOZ8d1eIvQ/6PCjCvCqyeHt6yHgrvHm1WhaLwjfv3KiJbLlWjXBHXVDqKZQveOfbH8rRdISOFbKR8YZGMblqvFr9BzRRtEgJxRIm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474409; c=relaxed/simple;
-	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=deJ4eGr8solnlqkzuMbf3nV0ZTJEpn5gNbDJZgTxe0QruIgDkRLcGNmDQ8y1epooncmq3CUvhOewcvulG2hx1ndL+0WabQV9U1jXjpolN7SLcmc3v8pCbp/brOWNXR6kbWIl7sJRtgmzVm1nB7s7COgSDi3wXiOP4DEmpM3Nksw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tacmf2ug; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tacmf2ug"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B491DC4CEE3;
-	Sat, 17 May 2025 09:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747474408;
-	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tacmf2ug/JaH8+gG9EwjSrn+w7RtvPQePPreK0Elh/zFjyMgpDrWg7SYaj+hMjufV
-	 rtJr6nbcsUhZD7yXltAuUwPVMDkMQVAManPPJ5cfQ8EaDsCQeLnfFPjCwTEGFgntyM
-	 149v5M0+7Pr7caf+U69/rjVNJGM6climyNoQFN3LkAcYS9Te7lxxx9+iDSbRSj4dhd
-	 UusNvuXelmM9HYyuW8yJNFP6vj1J87VfReFt7OX9GFpBgA6rd983UxNGrCkVEZi1KJ
-	 GacblGOgl7G8DZFM+zbMTmZJNpKeI3rPSGsmTvPZepZuocQny0EiHu+Eahk7Qm6nnX
-	 4CiZp6Fpc8Pdw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so430374966b.1;
-        Sat, 17 May 2025 02:33:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURBzwBzY0W/KnJy/9eMcNM0uIeatdNY2Y/NzjWKl3L6D9mQCuIYdzDiTQAYIKa1JHVh0oC6JrAt4O3SJr4@vger.kernel.org, AJvYcCXicGO5ysVpnQz8q3/M8s24LaDTt+9L7vU+HjofaT47wzpm9LVAiFWF4TSucy7PxLPzNsh9AyHiZDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMc+9GA2vokTPHRsBGDdpGbSGLmfBdcGMOnSeE/kZt6IAJB8vJ
-	M0FVvjcJycncI5VlnY8lDRUqsIftNmRsXcMltuV8q+pSb/O7T7G0pp3Y/UcsmKcF+sZYPWY1VgG
-	tzunm+l5VR+OJIr5Fi9AveFbGd79+4tk=
-X-Google-Smtp-Source: AGHT+IHTvFI6zZRv0wNKYaTlHEu0ikHrWHUB6ZLVryypaxujB2+O1jj1f3607aJS94Nj/nQDMF5ZYt5OXJP/gQE3ZgM=
-X-Received: by 2002:a17:907:7205:b0:ad5:10d9:9061 with SMTP id
- a640c23a62f3a-ad536ffbae7mr610013866b.54.1747474407333; Sat, 17 May 2025
- 02:33:27 -0700 (PDT)
+	s=arc-20240116; t=1747474719; c=relaxed/simple;
+	bh=jxUvZx5EGYlh6he4NGXlph3gNoPH7F+QwosL8sQcDYM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=INs6mr4V64N6dHkKJqLwb+P97gp1ycI2UWTkktXosRiW/smi386cFDdBBYiM3kiDRBRjkyR0KJcHZFzrQGRA4YllUy8Y6KFZZmAgfoS/j5cNGFcOdMLSjocqGB8LcmIAwPAMiNPda9fb5q6ZtX2LBECUqi8U4lnnXLI9S8fsGMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86463467dddso259058339f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 02:38:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747474716; x=1748079516;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JBhObzTThOmM6+0reVHQkiRQ8/CGfx6i58EUAAuXwZc=;
+        b=dNG+S6jiBm/T1OIxbIr0KFM3A6Kjv5GQhXPoTUlFHkWFfdMg8XJl3R4da1e7povIew
+         AtXJTyoE+6l6m05IKW4Ac5mr9KZTsOqX9umyU2PtPY9Rl3jSUwARGcV8Vlak1Kl8L7qK
+         ylXi3mR2wxn2qDlk0rG0sGoql2aP39KFXsK40LPMXiAYJyWVgs0fZau+62R1EL0ufkSH
+         s+ekHjH1UM1Yknhu+2Ky4IXhC7Pw0jdWZVwuc2wyrsJblBoHqcBsfzChAeHWQhO+mwoN
+         FGQNnzfWnbiOVj50vOAeHsD8V7uvJTsCDmiOX1G6embRc/Fw5x1mifYi5ZCFusQAqIYb
+         qV/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUiC/gySRPP6p4JddW7TjltJ/TuPBCTh3vNpwmMwsIv/hk9qHdAHdoMEtmnzAP59T3mAaTMKwwS3iKQBus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFop9T9EzzQPgCTaLprzm+JhMBSCMVKlaK7ibC2gfr0hhBBywM
+	LYTC4PbNbDf8T+ffzYrdSpKVxYVmBn1NMoMZr/lHg4HdXQg4aQgQHr7GXtSifVB7lEP6Ni77tEL
+	9Yff3Rl1OXXKNnJ6Sc28DDMOy58inJVzF7F2+b4zMrLpWoTuXTEbj40q9dcg=
+X-Google-Smtp-Source: AGHT+IGCFW5TV/yCXWGJ7tZe5DaLkBZ4xU4rJSs4O2WyhBhgzKJORA5EU31rk1ljl3WSPXWIeUxLrf4XZHTZOjOsVVuN2mPsjmcG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424073251.81693-1-youling.tang@linux.dev>
-In-Reply-To: <20250424073251.81693-1-youling.tang@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 17 May 2025 17:33:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
-X-Gm-Features: AX0GCFsuNX5NxxXsf4WDPqP416sllgHwynrLliakmWphUwCko2KPCdLWioNW23M
-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Enable HAVE_ARCH_STACKLEAK
-To: Youling Tang <youling.tang@linux.dev>
-Cc: Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
+X-Received: by 2002:a05:6602:3607:b0:867:237f:381e with SMTP id
+ ca18e2360f4ac-86a2317b1f5mr870688239f.2.1747474716696; Sat, 17 May 2025
+ 02:38:36 -0700 (PDT)
+Date: Sat, 17 May 2025 02:38:36 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6828591c.a00a0220.398d88.0248.GAE@google.com>
+Subject: [syzbot] [overlayfs?] WARNING in ovl_listxattr
+From: syzbot <syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, miklos@szeredi.hu, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hello,
 
-Huacai
+syzbot found the following issue on:
 
-On Thu, Apr 24, 2025 at 3:33=E2=80=AFPM Youling Tang <youling.tang@linux.de=
-v> wrote:
->
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> Add support for the stackleak feature. It initialize the stack with the
-> poison value before returning from system calls which improves the kernel
-> security.
->
-> At the same time, disables the plugin in EFI stub code because EFI stub
-> is out of scope for the protection.
->
-> Tested on 3A5000 (enable CONFIG_GCC_PLUGIN_STACKLEAK and CONFIG_LKDTM):
->  # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
->  # dmesg
->    lkdtm: Performing direct entry STACKLEAK_ERASING
->    lkdtm: stackleak stack usage:
->       high offset: 320 bytes
->       current:     448 bytes
->       lowest:      1264 bytes
->       tracked:     1264 bytes
->       untracked:   208 bytes
->       poisoned:    14528 bytes
->       low offset:  64 bytes
->    lkdtm: OK: the rest of the thread stack is properly erased
->
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
-> v2:
->  * Make on_thread_stack() __always_inline.
->  * Move the STACKLEAK_ERASE macro to the stackframe.h file.
->
->  arch/loongarch/Kconfig                    | 1 +
->  arch/loongarch/include/asm/entry-common.h | 8 +-------
->  arch/loongarch/include/asm/stackframe.h   | 6 ++++++
->  arch/loongarch/include/asm/stacktrace.h   | 5 +++++
->  arch/loongarch/kernel/entry.S             | 3 +++
->  drivers/firmware/efi/libstub/Makefile     | 2 +-
->  6 files changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 067c0b994648..3a6bfcab2dde 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -122,6 +122,7 @@ config LOONGARCH
->         select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->         select HAVE_ARCH_SECCOMP
->         select HAVE_ARCH_SECCOMP_FILTER
-> +       select HAVE_ARCH_STACKLEAK
->         select HAVE_ARCH_TRACEHOOK
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
-> diff --git a/arch/loongarch/include/asm/entry-common.h b/arch/loongarch/i=
-nclude/asm/entry-common.h
-> index 0fe2a098ded9..a7a6af490f86 100644
-> --- a/arch/loongarch/include/asm/entry-common.h
-> +++ b/arch/loongarch/include/asm/entry-common.h
-> @@ -2,12 +2,6 @@
->  #ifndef ARCH_LOONGARCH_ENTRY_COMMON_H
->  #define ARCH_LOONGARCH_ENTRY_COMMON_H
->
-> -#include <linux/sched.h>
-> -#include <linux/processor.h>
-> -
-> -static inline bool on_thread_stack(void)
-> -{
-> -       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
-) & ~(THREAD_SIZE - 1));
-> -}
-> +#include <asm/stacktrace.h>
->
->  #endif
-> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/inc=
-lude/asm/stackframe.h
-> index 66736837085b..c37455bca29b 100644
-> --- a/arch/loongarch/include/asm/stackframe.h
-> +++ b/arch/loongarch/include/asm/stackframe.h
-> @@ -243,4 +243,10 @@
->         RESTORE_SP_AND_RET \docfi
->         .endm
->
-> +       .macro STACKLEAK_ERASE
-> +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
-> +       bl              stackleak_erase_on_task_stack
-> +#endif
-> +       .endm
-> +
->  #endif /* _ASM_STACKFRAME_H */
-> diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/inc=
-lude/asm/stacktrace.h
-> index fc8b64773794..5c8be156567c 100644
-> --- a/arch/loongarch/include/asm/stacktrace.h
-> +++ b/arch/loongarch/include/asm/stacktrace.h
-> @@ -31,6 +31,11 @@ bool in_irq_stack(unsigned long stack, struct stack_in=
-fo *info);
->  bool in_task_stack(unsigned long stack, struct task_struct *task, struct=
- stack_info *info);
->  int get_stack_info(unsigned long stack, struct task_struct *task, struct=
- stack_info *info);
->
-> +static __always_inline bool on_thread_stack(void)
-> +{
-> +       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
-) & ~(THREAD_SIZE - 1));
-> +}
-> +
->  #define STR_LONG_L    __stringify(LONG_L)
->  #define STR_LONG_S    __stringify(LONG_S)
->  #define STR_LONGSIZE  __stringify(LONGSIZE)
-> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
-S
-> index 48e7e34e355e..77f6fb9146a2 100644
-> --- a/arch/loongarch/kernel/entry.S
-> +++ b/arch/loongarch/kernel/entry.S
-> @@ -73,6 +73,7 @@ SYM_CODE_START(handle_syscall)
->         move            a0, sp
->         bl              do_syscall
->
-> +       STACKLEAK_ERASE
->         RESTORE_ALL_AND_RET
->  SYM_CODE_END(handle_syscall)
->  _ASM_NOKPROBE(handle_syscall)
-> @@ -82,6 +83,7 @@ SYM_CODE_START(ret_from_fork)
->         bl              schedule_tail           # a0 =3D struct task_stru=
-ct *prev
->         move            a0, sp
->         bl              syscall_exit_to_user_mode
-> +       STACKLEAK_ERASE
->         RESTORE_STATIC
->         RESTORE_SOME
->         RESTORE_SP_AND_RET
-> @@ -94,6 +96,7 @@ SYM_CODE_START(ret_from_kernel_thread)
->         jirl            ra, s0, 0
->         move            a0, sp
->         bl              syscall_exit_to_user_mode
-> +       STACKLEAK_ERASE
->         RESTORE_STATIC
->         RESTORE_SOME
->         RESTORE_SP_AND_RET
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi=
-/libstub/Makefile
-> index d23a1b9fed75..b97981d63d2f 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -31,7 +31,7 @@ cflags-$(CONFIG_ARM)          +=3D -DEFI_HAVE_STRLEN -D=
-EFI_HAVE_STRNLEN \
->                                    $(DISABLE_STACKLEAK_PLUGIN)
->  cflags-$(CONFIG_RISCV)         +=3D -fpic -DNO_ALTERNATIVE -mno-relax \
->                                    $(DISABLE_STACKLEAK_PLUGIN)
-> -cflags-$(CONFIG_LOONGARCH)     +=3D -fpie
-> +cflags-$(CONFIG_LOONGARCH)     +=3D -fpie $(DISABLE_STACKLEAK_PLUGIN)
->
->  cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   +=3D -I$(srctree)/scripts/dtc/lib=
-fdt
->
-> --
-> 2.38.1
->
+HEAD commit:    e9565e23cd89 Merge tag 'sched_ext-for-6.15-rc6-fixes' of g..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15ee8f68580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5929ac65be9baf3c
+dashboard link: https://syzkaller.appspot.com/bug?extid=4125590f2a9f5b3cdf43
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cb6af4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1301f670580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/88b9a7ce7297/disk-e9565e23.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6ef1e04f11ea/vmlinux-e9565e23.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dfb61d29ee21/bzImage-e9565e23.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
+
+WARNING: The mand mount option has been deprecated and
+         and is ignored by this kernel. Remove the mand
+         option from the mount to silence this warning.
+=======================================================
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5827 at fs/overlayfs/xattrs.c:136 ovl_listxattr+0x3a3/0x400 fs/overlayfs/xattrs.c:136
+Modules linked in:
+CPU: 0 UID: 0 PID: 5827 Comm: syz-executor209 Not tainted 6.15.0-rc6-syzkaller-00047-ge9565e23cd89 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ovl_listxattr+0x3a3/0x400 fs/overlayfs/xattrs.c:136
+Code: d5 f3 fe e9 47 ff ff ff e8 da 06 94 fe 4c 89 f8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 be 06 94 fe 90 <0f> 0b 90 49 c7 c7 fb ff ff ff eb d7 e8 ac 06 94 fe 90 0f 0b 90 e9
+RSP: 0018:ffffc9000440fdb8 EFLAGS: 00010293
+RAX: ffffffff832bea42 RBX: ffff888020aec700 RCX: ffff88802faf5a00
+RDX: 0000000000000000 RSI: 0000000000000011 RDI: 0000000000000012
+RBP: ffff88823bf5cf01 R08: ffff8880335691d3 R09: 1ffff110066ad23a
+R10: dffffc0000000000 R11: ffffed10066ad23b R12: ffffffffffffffff
+R13: 0000000000000012 R14: ffff8880687d7820 R15: 0000000000000011
+FS:  000055558015f380(0000) GS:ffff8881260fb000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000001000 CR3: 000000007f130000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ vfs_listxattr fs/xattr.c:493 [inline]
+ listxattr+0x10d/0x2a0 fs/xattr.c:924
+ filename_listxattr fs/xattr.c:958 [inline]
+ path_listxattrat+0x179/0x390 fs/xattr.c:988
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fcb6cb2da39
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdbfef0558 EFLAGS: 00000246 ORIG_RAX: 00000000000000c3
+RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007fcb6cb2da39
+RDX: 00000000000000b6 RSI: 0000200000000200 RDI: 00002000000001c0
+RBP: 0000200000000180 R08: 0000000000000006 R09: 0000000000000006
+R10: 0000200000000300 R11: 0000000000000246 R12: 00007fcb6cb7c17c
+R13: 00007fcb6cb77082 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
