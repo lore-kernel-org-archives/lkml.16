@@ -1,87 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6661AAA1C
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA061E519;
+	Sat, 17 May 2025 14:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747492146; cv=none; b=AtZHyewAyeMvxfdrMsfZwfAzMjq0N7HHoGelJ0rvxEGMFeMvFJIU46kys8h8l1CPvhfhJfB/fE4PW3YzY5BEvre8K1P7EV6nN7G0xbO/mDi9VkWKgaZu0KgVYyhMmqFOBdq0UqcUTqDyEaZqqpKfRLDfR89kIJPm+7Q91/T4h5s=
+	t=1747492564; cv=none; b=fP8KQSpIu9xo/AesJ2OW7J91C1wo8JsZxKiTcjV+EU1AaOwO1ufW0BeE3F7tK0NgHapD7gdcvH7aR5w+ZAowQtHS369ztape4hmO2B33IB0wyaMgmZiolViT+gNF/BbnpINB0PdYa2L0RNGKEppUFHGsxAmtHG7y4w9WlJLzXaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747492146; c=relaxed/simple;
-	bh=3UPe9BFtbMWr2VwlK6+wK8bTOouMrY3lAsaiitolYK0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qZwqLwK03XYsfLRk/+I2ucRg09AdjOYXmW+7LS3fGKZTg/ieukdM+dVhe8lCBhPqWGyIhi8cKJDUkhLrEnRT9LQxe7ZQTRlUi9vH135WXrz6faPqMYzSGrUPU5lVwbEe22nDnseFj4Yli8q3InNkcsnJhptlMOrIsideyrZ2PT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6WcWv7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747492564; c=relaxed/simple;
+	bh=XOsoPsNgyfKufNpivyOqQwfxwucR+v1GRX7ZO/Q4iOM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=hLSDpePEMOIzO10a172dbWnqj89axXMUmmqJRoHFGNWHE+zSQR5kUGjw6dSDrfbqADNf9XZwIaknsVb1v48VPsSxoQ3SC+IyCSroTdYHqfWS2UxwCxafCfR2bJCjgrERrfes8YG+zkymmWpNBUnnC/hqXf6w7sYbJ6NMcmgzIZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb800Q2D; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6WcWv7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD60C4AF0B
-	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:29:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747492145;
-	bh=3UPe9BFtbMWr2VwlK6+wK8bTOouMrY3lAsaiitolYK0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y6WcWv7/7Ttbe6/o0fueZslcTaRSvM04Agqx0PZfizyiqvtDL6cZnkNpOesjciU3u
-	 zNlufPqh/JzmNb/wjo5jfzGpP7gow8qSHCMKwfrtVNCjzlAD7xs4IV+bxj1LGM39hS
-	 k6y0zFJ6CGGnZGMqkMxrGS3ZEdmVLwqbMuQDlZnUV5mGkGqZPj8BT6PHttOAcKsODB
-	 rNPqY5o3H/CduMFaROIuPJJtWg7Yxk82TzJpCmKFZExVLsDCdyMe7EmtAQjBPDkkaw
-	 aYCJ/iWtEZuOYwtLPvfJtMjFh/qSZh2IqSLAWcyXK//BM3B49iISErr6MTsuCzc4n1
-	 bPbgYEkUh/3Gg==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso3479153e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 07:29:05 -0700 (PDT)
-X-Gm-Message-State: AOJu0Ywn/2LohmKEXFdlMPI/UlEqvsFpMphZQspMzdWxxtzPTslrBOOM
-	83KQDmNhJ+nZ3shof2wRF/95CagJz0tjvrLitggCeDqFowtVeak0HOXmEVjBBtgG+mXWxWIIhqb
-	qLyn4xUjCA8i9Sr4ozL/2jA0TAMBG/kI=
-X-Google-Smtp-Source: AGHT+IExZ+k2TbtYYe0ouWFsNN88fcbgCfeOLityNvH5otUE2BH+splL/v9V5qAVwOhr+mYcy/5sJIntx9MTnqa+1ak=
-X-Received: by 2002:a05:6512:4508:b0:54f:b8a8:d65d with SMTP id
- 2adb3069b0e04-550e722afb3mr2166290e87.40.1747492143771; Sat, 17 May 2025
- 07:29:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb800Q2D"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30e93977f7cso1246878a91.3;
+        Sat, 17 May 2025 07:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747492561; x=1748097361; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qV/jfxSoj61KWz/2Bb//Agtf7zox03qaPOCEAGdJVD8=;
+        b=kb800Q2D1vnivaYw33WKzwjA8j4FXwafyWEiZDpAu3MOVOFFtdTQEUexhbZjM4ZiWe
+         ifWcR6WsTuFDQx71DgTobsRZ2iYaNrxq/9erhT6wA1kEWU9jQ6oNxblpLh0lpvn63glR
+         fv8CxVSOEjR+68pfAQUsOVvaS83Y/Hi82RIofuv4hx7UDIsQKwI9/z02YT7v/7p2CWFH
+         ySHUGBdG9DkVpBQa6ckyjo45n//efW65RWbsUcn33UO0G3oLtW+TjLhNi/J3WHwhCYgv
+         lV1jcggXy6OKYgdxB8piieIe1FQkVaBkvNzD8gZ+eSxzqMcGdelGM09oubM/8TIWkOVK
+         E2/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747492561; x=1748097361;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qV/jfxSoj61KWz/2Bb//Agtf7zox03qaPOCEAGdJVD8=;
+        b=u1/4f60aj+QjAG+c+tXJP1vHE9zytjHCWgNECp4ccCYmuLI964SJFK2cIbad5/9fak
+         ZSN67wPlmO6iarjAjvNDtAp2I0aVTiVNaaJUaIObmz3tLPov9KimgrjcudbSjpx/H/lo
+         Kh59IgccKkBppWoANMVOwLZuszKuj6VW8MbmYsMtplzTm535Ra4KI1UhOaPqUsJ6fC0V
+         WXFTH077x6rufoJiM6dv6vXngdmc2uIhMPSTV25c0uQcyFGVN47yRSUQ5X7GsFVCA6PO
+         Ku/mtTihj+hgs7Dqxcx9EaSRB/iFhc2JgKCsPlVbEYBMlKFEEtT986DfcBkLhMpPB0Dy
+         UJfg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1/au0L4f0C1uJovt9pRL9Irxy0fYWy87lMxJwF1Am5IgUxTw5fdHr3EtWBB/TpGuKUybfTK+3q4koe7n8@vger.kernel.org, AJvYcCVvlmmtpNjzMXC1fbUcNrouSYSDv73q70eUV7WjiIPPsjpaXi/hF75cSmOr6xfGgpzT2r0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaYyhf5u28HpmvgJu1kPwtGDTtCiYXBodlEvrNWaY/XWGAqLLQ
+	uv4X35hbAzh3N1vgLmUZkTh/CbhMmvBrdL+Bts95k0sm9h+PDgThi1WEAr668w==
+X-Gm-Gg: ASbGnct5eroDp77KFVliaL23X8cNIXF9wkzhKvKA/K+xcRLiKD/MUvhhH5y5aNbjP9A
+	c0kXfROBaCf4LA/JvM8KnLyE+LsnnMcVlUUnkqgEvImzGX4XBGw2c0Eiu3RSL2HtLv0vZtUSQbx
+	DTrcVtwCVoHwe9BGIZni2WprdFWRBfm4nMpeXGhr1botA0LfEtpRaEDlHinphimXnMwRkiCBouo
+	CXtLU2w4Cj1viuQ6H/p3Nxv5LYWA0vU6YpePn12LZhzXGQY7DJ1exqjW/EgJpUma7t0pcab1vbI
+	OY7eZQqfD4Pk66kboeWB8GujbncYqQZfAyxNiMHNMrk=
+X-Google-Smtp-Source: AGHT+IFCb3hB4IltQOOTVX3h/Zp2WTvE+WkzHlCHvIBE65lixQQsd15bRFp9QEaVX6UHRy84bFqrNw==
+X-Received: by 2002:a17:90b:4b0f:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30e7d51ee10mr10484441a91.8.1747492561597;
+        Sat, 17 May 2025 07:36:01 -0700 (PDT)
+Received: from dw-tp ([171.76.82.96])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d4aa8a5sm3403372a91.26.2025.05.17.07.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 May 2025 07:36:00 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Gautam Menghani <gautam@linux.ibm.com>, maddy@linux.ibm.com, npiggin@gmail.com, mpe@ellerman.id.au, christophe.leroy@csgroup.eu
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: Add H_VIRT mapping for tracing exits
+In-Reply-To: <20250516121225.276466-1-gautam@linux.ibm.com>
+Date: Sat, 17 May 2025 19:33:42 +0530
+Message-ID: <87a57bwczl.fsf@gmail.com>
+References: <20250516121225.276466-1-gautam@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-9-ardb+git@google.com>
-In-Reply-To: <20250517091639.3807875-9-ardb+git@google.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 17 May 2025 16:28:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE=-408evLMwPkH5SqK-=QPpONGSXCi4_YeZAgLt06Aqg@mail.gmail.com>
-X-Gm-Features: AX0GCFsZVlFb0ZGpIHSOwvnR0zuKBefXs1LNOc4UN1jn8ZHlFAjFz2yu0gy9Q3A
-Message-ID: <CAMj1kXE=-408evLMwPkH5SqK-=QPpONGSXCi4_YeZAgLt06Aqg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Brian Gerst <brgerst@gmail.com>, "Kirill A. Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 17 May 2025 at 11:16, Ard Biesheuvel <ardb+git@google.com> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Currently, the LA57 CPU feature flag is taken to mean two different
-> things at once:
-> - whether the CPU implements the LA57 extension, and is therefore
->   capable of supporting 5 level paging;
-> - whether 5 level paging is currently in use.
->
-> This means the LA57 capability of the hardware is hidden when a LA57
-> capable CPU is forced to run with 4 levels of paging. It also means the
-> the ordinary CPU capability detection code will happily set the LA57
-> capability and it needs to be cleared explicitly afterwards to avoid
-> inconsistencies.
->
-> Separate the two so that the CPU hardware capability can be identified
-> unambigously in all cases.
->
-> To avoid breaking existing users that might assume that 5 level paging
-> is being used when the "la57" string is visible in /proc/cpuinfo,
-> repurpose that string to mean that 5-level paging is in use.
+Gautam Menghani <gautam@linux.ibm.com> writes:
 
-
->, and add a
-> new string la57_capable to indicate that the CPU feature is implemented
-> by the hardware.
+> The macro kvm_trace_symbol_exit is used for providing the mappings
+> for the trap vectors and their names. Add mapping for H_VIRT so that
+> trap reason is displayed as string instead of a vector number when using
+> the kvm_guest_exit tracepoint.
 >
 
-^^^ forgot to drop this
+trace_kvm_guest_exit(vcpu) gets called on kvm exit and vcpu->arch.trap
+carries the trap value whose values are defined in
+arch/powerpc/include/asm/kvm_asm.h
+
+i.e.
+#define BOOK3S_INTERRUPT_H_VIRT		0xea0
+
+kvm_trace_symbol_exit provides these mappings for book3s HV & PR.
+The change looks good to me. Please feel free to add:
+
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+>  arch/powerpc/kvm/trace_book3s.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/powerpc/kvm/trace_book3s.h b/arch/powerpc/kvm/trace_book3s.h
+> index 372a82fa2de3..9260ddbd557f 100644
+> --- a/arch/powerpc/kvm/trace_book3s.h
+> +++ b/arch/powerpc/kvm/trace_book3s.h
+> @@ -25,6 +25,7 @@
+>  	{0xe00, "H_DATA_STORAGE"}, \
+>  	{0xe20, "H_INST_STORAGE"}, \
+>  	{0xe40, "H_EMUL_ASSIST"}, \
+> +	{0xea0, "H_VIRT"}, \
+>  	{0xf00, "PERFMON"}, \
+>  	{0xf20, "ALTIVEC"}, \
+>  	{0xf40, "VSX"}
+> --
+> 2.49.0
