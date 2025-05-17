@@ -1,60 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4C936124;
-	Sat, 17 May 2025 14:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E436202F8E;
+	Sat, 17 May 2025 14:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747491513; cv=none; b=kzy4k5/S2W0wcn1a34NJWHWwhuLxqDNdgnOxaxk54vsAwYDOB82JnmBid7BIb+br3qj1IDxXvtZhIdGx+9/UtLmmMCKp4WbUydj9re5M4IAjFOCgJcLfdYJoh7QT7ygYHsuPvNYRi24KTjy93ZQXXHPbxQJpHldeJ8Ee1hAyXBE=
+	t=1747491956; cv=none; b=GVn0mwHuCXJdpz7O7EDrn6rHaRb80lGCytI5TLb7QrW8M86ssN3AwRsknoae49FvOJpiqNAXKASM0DQH4y8Dfh5SkQ54/PrbhzuDLOKFuiMiwqvgUIu7E7kIE3rppaphaP8bmeJTBtKotp86QRIcKccPDW2joRndpyZYZ0Po42E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747491513; c=relaxed/simple;
-	bh=LxEYc2pAjQx8x8cwygYNqZYnBKrdf5NUsjqGkCTuDp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RxsNrzSYWbbgDyCPa9GgMYEe55WF62GQiDIWfpxqAMtPnXSmNjLYMHnpFaXBoLlbH+VGl+d3ZkDBGTfDtCqQ1FpwwucqZ3tGKQSmVcyIrq1YOu6tTUwUNAmhIbPUs3sFTRUA1mLKNEGZOKJ5zb178IdKgFgb81HqGqkwqPT5OH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNdysJ6q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNdysJ6q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DEB4C4CEE3;
-	Sat, 17 May 2025 14:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747491513;
-	bh=LxEYc2pAjQx8x8cwygYNqZYnBKrdf5NUsjqGkCTuDp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GNdysJ6qQ0FTwkov1iCMUY92ST9UXn64g1zrLpTmf2yFYduDURdDGbfBnMUuzxTX+
-	 eYtdmg5ggiSlSbmKQoockgqmoJ33g5BmdQJy1jYQ3b6MUztC48/4CgfZaofxyDL45w
-	 H5T5I7dxd5nDu6ncznXhEnMnFxJzhDnhkvDcKHV5mtO83lkYrkYX/k7k8qc6x5ewgv
-	 XsDQKFfXZu1X1u4TfMOAoFja5cJl5Crp3U+FyTWTFtkd2hGAIT+6NlI0Hx0LO/SoCw
-	 ikBVNXyass9H3K8ag7xpl2LhEJ2lOmIqipcWxj/MOFVlExqG1PtccQKmUW1xggAmdb
-	 SQYLuzsOGCiKw==
-Date: Sat, 17 May 2025 15:18:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH net-next] net: enetc: fix the error handling in
- enetc4_pf_netdev_create()
-Message-ID: <20250517141828.GN3339421@horms.kernel.org>
-References: <20250516052734.3624191-1-wei.fang@nxp.com>
+	s=arc-20240116; t=1747491956; c=relaxed/simple;
+	bh=IubprGpIxJRWZXgDRtM5PVAMtWsmq3JvxjKW5m6l1Ww=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RPgCmwOnOwpW5bWL3MAgGw0GpCzbaMw74Ry96vOYQaK6+8xlbHY/++CyY9HKnTg9hEMrOAI4rPBy8//IC49QfPnvusgXWTJwB7QdlAmla+cSW/F6Yb+qAFZueSEqa8hmVUKsFNY3BvgRtYhJaNrOC+PVvL3oWhp5tBfGrv1kGwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.32])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1562e81e0;
+	Sat, 17 May 2025 22:25:45 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Date: Sat, 17 May 2025 22:25:14 +0800
+Subject: [PATCH v3 1/4] dt-bindings: phy: spacemit: add K1 USB2 PHY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516052734.3624191-1-wei.fang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250517-b4-k1-usb3-phy-v2-v3-1-e0655613a163@whut.edu.cn>
+References: <20250517-b4-k1-usb3-phy-v2-v3-0-e0655613a163@whut.edu.cn>
+In-Reply-To: <20250517-b4-k1-usb3-phy-v2-v3-0-e0655613a163@whut.edu.cn>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747491939; l=1414;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=IubprGpIxJRWZXgDRtM5PVAMtWsmq3JvxjKW5m6l1Ww=;
+ b=YJkSSe0aK2B/Pl19/IJ0cvyyBVRgvHhzhORjC3UNvQCPUAzXBvA0HFrbQ2jp0JogIPmmWeGbc
+ Jc4vWHWDrBhB0ZpeqDX/ZOAAQngVifhajKfBQDds1wPBStDdcY5QzS7
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDS0odVkNITUwZHh9KHksYS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVISVlXWRYaDxIVHRRZQVlPS0hVSktJSEJLQ1VKS0tVSkJZBg
+	++
+X-HM-Tid: 0a96dea2fd3a03a1kunm1562e81e0
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTY6DTo6PTE*GCpDGiwMET86
+	SxFPCj1VSlVKTE9MT0JKQk5LT0lCVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVISVlXWQgBWUFJTExPNwY+
 
-On Fri, May 16, 2025 at 01:27:34PM +0800, Wei Fang wrote:
-> Fix the handling of err_wq_init and err_reg_netdev paths in
-> enetc4_pf_netdev_create() function.
-> 
-> Fixes: 6c5bafba347b ("net: enetc: add MAC filtering for i.MX95 ENETC PF")
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+Add support for USB2 PHY found on SpacemiT K1 SoC.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+ .../devicetree/bindings/phy/spacemit,usb2-phy.yaml | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-I note that this is a fox for a commit is present in net-next but not net.
-Thus a Fixes tag + target of net-next is appropriate.
+diff --git a/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea999cff9c250b144dd049e5ac3c084b22bd56ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/spacemit,usb2-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SpacemiT K1 SoC USB 2.0 PHY
++
++maintainers:
++  - Ze Huang <huangze@whut.edu.cn>
++
++properties:
++  compatible:
++    const: spacemit,k1-usb2-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#phy-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    usb-phy@c09c0000 {
++        compatible = "spacemit,k1-usb2-phy";
++        reg = <0xc09c0000 0x200>;
++        clocks = <&syscon_apmu 15>;
++        #phy-cells = <0>;
++    };
+
+-- 
+2.49.0
+
