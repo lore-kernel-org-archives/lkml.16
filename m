@@ -1,103 +1,173 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC91188006;
-	Sat, 17 May 2025 15:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51FF1F463A;
+	Sat, 17 May 2025 15:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747497026; cv=none; b=qmO1YRF/P53JL/IDGFPd6bI0WqT3H+mpZFsUpzC5rTd3msrU2A1RurwNmo5Xp+2nrH0/skjSMF9PzXOEPqX5wpnXA5F1bUi0wWqigt2QSPugLWacoxqEKbJpNFHa7LY55lmX8UAWBfg58epgTmkG/FWS8rBaY9Jhj2SFf+G/cs4=
+	t=1747497038; cv=none; b=I5kx/Um+c1UXKd1icF0BWhWundpmAiZenox8wwlLImr9pCQl9nmU5oBknLdev5kszRwg8A4nDaW3wrIcj7GFEHisuZugwUv6Obrr7bIcFUtslxhWtUybLb1ji7cnFUa4+CXdbtaH4sLd4XWN9GGSidouai4+GY1u0RoZXxkNDi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747497026; c=relaxed/simple;
-	bh=Xws1kjhDiU04G4wBV58t3/FYwJxcP3RBAIHx4fpVgwY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H51+qGUOgjZy1QRieA4z5pczU6K/fQ2iRVkHkzzmqSwuOp33JLNa5ux/XfvdAOD3GGl4PnZDwlqPJ7FEKF2pH9jw84sM4QI3V0Wq+xEMvYWlbmBYdL1Jn3eAAu4pdDoFn+THP6EiYESTdcx38YCziQchCWc9heifq2wT9CUFeJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YK+rJJsQ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747497038; c=relaxed/simple;
+	bh=XZpIZNH9Ye1SFU2YgzNdnEpG9S1a+JCHTpEyymIpvbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EKbGqGN6u2tmJKV6iQEwC1lwRbTmO0sioWmActi1LSWt9fb5+NrTJYUh+pVmtaILADVp0Lo5E8okbpkbDlfPGtljvnA+VTNkyr+csoSXKAhU6PWXx9u+Frd3crOn9w/TA5QUfkYd3TKNmzP2NpVKztB69uP2DjFmtoHVkLhjnaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ATGkaD1y; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YK+rJJsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ey
-	Kx6/uXroylg9WsUk9eGlYvyXmYNrjKr5GppJiMOOo=; b=YK+rJJsQGucguGL2eD
-	NAMgJqs7us87eCD1efpOoPMD9IyR0ZvQvsIhPBFn7dnlPQCdAqkWQ4mSMLGRJO8U
-	hYuhflXQOp9v29Y3nmFsaCqaP4y97NGOUbNLWd6Kow80dFEb5tj6eWF7wWKbprQq
-	/4PwFPRjhwCOlEPDhyiPkHkds=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBHc5kVsChoBHRqCA--.24311S2;
-	Sat, 17 May 2025 23:49:42 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	manivannan.sadhasivam@linaro.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	jhp@endlessos.org,
-	daniel.stodden@gmail.com,
-	ajayagarwal@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI/ASPM: Use boolean type for aspm_disabled and aspm_force
-Date: Sat, 17 May 2025 23:49:39 +0800
-Message-Id: <20250517154939.139237-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATGkaD1y"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-875b8e006f8so774998241.0;
+        Sat, 17 May 2025 08:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747497035; x=1748101835; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/H1yH4AbSfMvCF5lDaIZcSmucQx4bL/RGtGJ0jzRozc=;
+        b=ATGkaD1yPny9pb77ziOatENzog5YQvZDTegELUHJIhdXTWAgLqRilHDmH8BiyMde64
+         2Gyce1peGSjQACd5V3dTFaWg/85+TKqHzcxsK1LEFL2DEDQOBaoxqn0+QlKDlp+5NHzg
+         9xmq0CJ71tNxvfJJBzo8erWQ+cM35t2R1cRWBtt4Pj+p0ZEQZBDz+YXia33sj3iJQ1ER
+         2dYMAGCt1MkZtPo8bbAvmOAX2jKbpuJFu1cZoF8QT9uk/NSVZRUgNjskBgcXs1P9DZKC
+         /kqGgssg2SHeAoTRY7Y16bmUeG7EFQ0/5PVNuJqNzxQvYc5XDW6S9DzR4VP9q6RuCFcw
+         D6HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747497035; x=1748101835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/H1yH4AbSfMvCF5lDaIZcSmucQx4bL/RGtGJ0jzRozc=;
+        b=oTwFNOyhsVCC9axP0XBov1W7psZe+dm9+GIhi6/kT5Bf0G3cJWtKeBLfUoidcR5Fv7
+         +X+e6MPhcD54UhQAmKfpjlAW5pP+MC3LjSoB4XEjHOMeqIUY7RR1YGDwxMJtmwN/NWI2
+         Z6lrHZioRJbRyxQtfFFw9/LZzzcL6+6fAfERWCC/b81mLktWIc7RGzt25snxS3Q78Koh
+         6FpGhmBj42I0gd29no2VyINXdsD5lGeBE0gRqkQxd3UMpaDICJeX4FgjdBeN7x+SQ1GX
+         qLxRCcBs36cR5wjIXQSXk88Fa2SVU5r7FkOcCEUvnW9spYb1DK+L0B5WjjQ2aT5Le9C5
+         lcQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSzu/vzTJnauGQvTTQNDomDr2LtxnVKR5bkK8TA8UoSflMJ1RghS/PGtUZL9NmfYhUnAlrLnhkWg==@vger.kernel.org, AJvYcCXcoQGUsHvSmsQQdE3VfI8RKIZF8gSruuci8S4aCqzz7C8T4hNWWNxanoxu+1JPJfX1Uyk=@vger.kernel.org, AJvYcCXhX7ovnFdGuDYWJI5aEquBCCeTsKgi+sHgBO8zG5HP53/pleL6QW07FPNA3PCNFNtXH/8c33AMwHB8j6gj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOkKyg8JJeqoovD/S7sV/5EPrGJ/+wb4vc0Q1RjwxJtUBzTgyw
+	7qzGz9Dbf8f+FrGmku26moBVZLAv5uIXXskqrfoQ/M+y887KzfcpcpHq08Dz4ipX+j/amBcjVGi
+	GT51xyrmS/tAZDVHqK6J3HoqRU7C4lX4=
+X-Gm-Gg: ASbGncs6+6njo9uhOZ48IUP9TdrPhub5jcNQPvokbNU0fjbMV3rI3UrR+Us/+p7t1TP
+	gYe43TZ0wONcDEnA9dcjussDH3VTbJ84VPIr4RPlxxHBtH/XAoV4V9SdgF+jKt8Hqv8rpbCow4f
+	q4tnVn7fRIWgVu2rGxeiM8OaUoR7/g9CgjA7Uw/x01ug==
+X-Google-Smtp-Source: AGHT+IGPfaRkmLN5E2QpUx4OuFhuWdS+rY7He9e0e+Te3ATYw6mGidu5QaKvX13cASqWwLke8CCV21NpNOXW2AGxJ30=
+X-Received: by 2002:a05:6102:570d:b0:4c1:9695:c7c with SMTP id
+ ada2fe7eead31-4dfa6c56bffmr8650858137.24.1747497035264; Sat, 17 May 2025
+ 08:50:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBHc5kVsChoBHRqCA--.24311S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uw18JryxXr48WFW8trW5Wrg_yoW8GFWfpF
-	ZrCFn2kF18Za1IvF4DJa4DuF15G39xt342y3s09w13ZanxAr1DXFn7XF1FqF18XrW8X3W7
-	KF1fJFyUJF4fCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEdb1wUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgFQo2gorSM6vgAAsC
+References: <20250516183231.1615590-1-shakeel.butt@linux.dev>
+ <20250516183231.1615590-2-shakeel.butt@linux.dev> <20250517140613.GB104729@cmpxchg.org>
+In-Reply-To: <20250517140613.GB104729@cmpxchg.org>
+From: Shakeel Butt <shakeel.butt@gmail.com>
+Date: Sat, 17 May 2025 08:50:24 -0700
+X-Gm-Features: AX0GCFvybgsf65nJPdKxogM_gbxXN8TtbmaSBctrp2g5_gqMUzrZuFpFqdCIIqE
+Message-ID: <CAGj-7pXtRMKmx0Qm6DX2W3=s5iuRTCFs311YtGOi4wreuviiBg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] memcg: disable kmem charging in nmi for
+ unsupported arch
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Harry Yoo <harry.yoo@oracle.com>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tejun Heo <tj@kernel.org>, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The aspm_disabled and aspm_force variables are used as boolean flags.
-Change their type from int to bool and update assignments to use
-true/false instead of 1/0. This improves code clarity.
+On Sat, May 17, 2025 at 7:06=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Fri, May 16, 2025 at 11:32:27AM -0700, Shakeel Butt wrote:
+> > The memcg accounting and stats uses this_cpu* and atomic* ops. There ar=
+e
+> > archs which define CONFIG_HAVE_NMI but does not define
+> > CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG, s=
+o
+> > memcg accounting for such archs in nmi context is not possible to
+> > support. Let's just disable memcg accounting in nmi context for such
+> > archs.
+> >
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > ---
+> > Changes since v2:
+> > - reorder the in_nmi() check as suggested by Vlastimil
+> >
+> >  include/linux/memcontrol.h |  5 +++++
+> >  mm/memcontrol.c            | 15 +++++++++++++++
+> >  2 files changed, 20 insertions(+)
+> >
+> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> > index f7848f73f41c..53920528821f 100644
+> > --- a/include/linux/memcontrol.h
+> > +++ b/include/linux/memcontrol.h
+> > @@ -62,6 +62,11 @@ struct mem_cgroup_reclaim_cookie {
+> >
+> >  #ifdef CONFIG_MEMCG
+> >
+> > +#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || \
+> > +     !defined(CONFIG_HAVE_NMI) || defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
+>
+>                                              CONFIG_ARCH_HAVE_NMI_SAFE_CM=
+PXCHG?
+>
+> > +#define MEMCG_SUPPORTS_NMI_CHARGING
+> > +#endif
+>
+> Since it's derived from config symbols, it's better to make this an
+> internal symbol as well. Something like:
+>
+>         config MEMCG_NMI_UNSAFE
+>                 bool
+>                 depends on HAVE_NMI
+>                 depends on !ARCH_HAS_NMI_SAFE_THIS_CPU_OPS && !ARCH_HAVE_=
+NMI_SAFE_CMPXCHG
+>
+> >  #define MEM_CGROUP_ID_SHIFT  16
+> >
+> >  struct mem_cgroup_id {
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index e17b698f6243..0f182e4a9da0 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -2647,11 +2647,26 @@ static struct obj_cgroup *current_objcg_update(=
+void)
+> >       return objcg;
+> >  }
+> >
+> > +#ifdef MEMCG_SUPPORTS_NMI_CHARGING
+> > +static inline bool nmi_charging_allowed(void)
+> > +{
+> > +     return true;
+> > +}
+> > +#else
+> > +static inline bool nmi_charging_allowed(void)
+> > +{
+> > +     return false;
+> > +}
+> > +#endif
+>
+> ...drop these...
+>
+> > +
+> >  __always_inline struct obj_cgroup *current_obj_cgroup(void)
+> >  {
+> >       struct mem_cgroup *memcg;
+> >       struct obj_cgroup *objcg;
+> >
+> > +     if (!nmi_charging_allowed() && in_nmi())
+> > +             return NULL;
+>
+> ..and finally do
+>
+>         if (IS_ENABLED(CONFIG_MEMCG_NMI_UNSAFE && in_nmi())
+>                 return NULL;
+>
+> here.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/pcie/aspm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 29fcb0689a91..98b3022802b2 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -245,7 +245,7 @@ struct pcie_link_state {
- 	u32 clkpm_disable:1;		/* Clock PM disabled */
- };
- 
--static int aspm_disabled, aspm_force;
-+static bool aspm_disabled, aspm_force;
- static bool aspm_support_enabled = true;
- static DEFINE_MUTEX(aspm_lock);
- static LIST_HEAD(link_list);
-@@ -1712,11 +1712,11 @@ static int __init pcie_aspm_disable(char *str)
- {
- 	if (!strcmp(str, "off")) {
- 		aspm_policy = POLICY_DEFAULT;
--		aspm_disabled = 1;
-+		aspm_disabled = true;
- 		aspm_support_enabled = false;
- 		pr_info("PCIe ASPM is disabled\n");
- 	} else if (!strcmp(str, "force")) {
--		aspm_force = 1;
-+		aspm_force = true;
- 		pr_info("PCIe ASPM is forcibly enabled\n");
- 	}
- 	return 1;
-@@ -1734,7 +1734,7 @@ void pcie_no_aspm(void)
- 	 */
- 	if (!aspm_force) {
- 		aspm_policy = POLICY_DEFAULT;
--		aspm_disabled = 1;
-+		aspm_disabled = true;
- 	}
- }
- 
-
-base-commit: fee3e843b309444f48157e2188efa6818bae85cf
--- 
-2.25.1
-
+Thanks Johannes, will do in the next version.
