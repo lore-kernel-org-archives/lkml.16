@@ -1,160 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A521A1A8F84;
-	Sat, 17 May 2025 20:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70E41E5B7F
+	for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 21:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747514122; cv=none; b=V94lmHi2SEy7Xaz1NbbK+UNiHOtHZzM/KzQnwpTyYTMtQl8GJDDeyxfZiQAPoKqRIQWV9hDTvpf5o6/O3B3RexxJTARpzXoJa9qSYxN8LWpl52ibzvkPXw+uvYF8Gviia5dpDAc0D1p9t8YchLh0bYEP8sIVuC0sTdvJTZNyWf0=
+	t=1747516251; cv=none; b=ff5jo9hbFreVUrcMGh08OJQAMdRvz+YamLL1btTl+Be11nTi8FkHYyys2H27dmqY0/2t4ZEliFuusSX6e8RqJ+aWraJLg7DTa5M2/kDY2AtiDAC2P9AYxMi4Doj8KLO570flUrdo12jTQOMU+r2BhYJVEs5SM4iQJzq2Fi5lR1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747514122; c=relaxed/simple;
-	bh=A1adUe+cYOvArGNE/hSK4EzFP4GP4YO5FYj9H98ZZGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0RsxcR6owJAf0IrqH1PbPa/dkeUHG87SzqBr0O2sdS1p0YicnyyEx9VMJ7Y3yJOBap8FVBivVkDFI0jyRcjufWib/tCDQFGhNLbk30qlX/ionRSrOypRw5p0SuUZSkdZEzqAN1IgIM7ZqBYVNrH9coHdY0KURtxcauCpyLLPjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l+kQUxFO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747516251; c=relaxed/simple;
+	bh=o/Nya/tGk006xRA5N500QpaY5OOYSf0gkMPQt5ZX/IE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aJOlGI7Dsj5VKUebzsYKAX8wV37nXkl9gF7lnkR1GZqO2RD1vLXP5I1Tt9Swm0SYNuylHWhEqB5Y6dFzEpLNl02+ed207sw8yuBxao5POhhOuwwVWbYzzFTMCgEKeim7UgAja4EmfHvxXHPiV0MDL5WIiUjqqUZn1gXDOdylBBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=GHL2o8lq reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l+kQUxFO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747514120; x=1779050120;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A1adUe+cYOvArGNE/hSK4EzFP4GP4YO5FYj9H98ZZGQ=;
-  b=l+kQUxFOF7H1XamjgfipG/v+EmIA4uqrrPtcyeH9+RZMPRjfPHTth5K+
-   nrsisM4lBfzAA+FkDju4d4NwEObmus/5NtnGCsJYqqRgyQCrxBBY7SJf2
-   7nc5EwTa7O+NDANIlHG+IxgRc7nj49NDmaJx94Jw32n6z9iXqdBFNdrY4
-   pRzO7LV87br1MPfEzRSNBi8LnqjqMUjCCrwHOpImrEny1NTB2dSxj2EEe
-   lRBfuJ1ZbJzMrXhYDaM1amKP+jwD1JJ3SMeSn7SdCMeh4q+aNBFtz2gJi
-   q0wIB+9c8MU6RECWvITcoo06XZubGJhHkU5Dxl92piBlRjLgVdMNYsMQd
-   A==;
-X-CSE-ConnectionGUID: /RjZoGvsQGaiKHiwOzJUYw==
-X-CSE-MsgGUID: gqbxTUJbSYmIBUGFuSGtYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="71961248"
-X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="71961248"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 13:35:19 -0700
-X-CSE-ConnectionGUID: KuzKdv50RgmVX84J2pgSQg==
-X-CSE-MsgGUID: SE9CoXYGRI+xOotZOC8XOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="139402611"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 17 May 2025 13:35:17 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGOFW-000KQF-0H;
-	Sat, 17 May 2025 20:35:14 +0000
-Date: Sun, 18 May 2025 04:35:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev, kvalo@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
-Message-ID: <202505180440.dyQDHWJJ-lkp@intel.com>
-References: <20250516083842.903-1-vulab@iscas.ac.cn>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="GHL2o8lq"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da7d0d7d58so24202675ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 14:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brighamcampbell.com; s=google; t=1747516249; x=1748121049; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsAWXt+W0ngarXnftcnhixQhh8eXvZ1EEvRj0zEMsI4=;
+        b=GHL2o8lqkSudd1Uk7QW6I/krnKcP1hv0oaz7UrRhzq5v+hosno1Ww8QLyFHHusTMmV
+         WmWLXiHS9azgnOeUrfyq+1ZSXeG8z3fpEW/aWntFtMzMG2+APGCh4wYRQQ2IJmZ7zTTv
+         CDsW+24S/ZNUIsYvulzEG1h2BRFtq2123S6ahbbvFWSWrmNzL3zKdKIpDbDIUG+Oe6Lg
+         uycSWRKorKXGC/MWIAMI0Jswy/iZKj7wy0brCN44tvm9AdiIJ/uDPEsZ6CpuahdbdYTc
+         oR1cCw+mxSz7wZ1llfnAXtHpiQGCCRxvheq1BzLAJ1sh4a8t6tJyxpndje989X6tf4kN
+         vvMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747516249; x=1748121049;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qsAWXt+W0ngarXnftcnhixQhh8eXvZ1EEvRj0zEMsI4=;
+        b=l4pwYsPMDqkXsUaVOdprGfuBIO6kK3NXJVnwa8XIYND9YL89LXPD5JtcG3YLx5h3p2
+         Y6ORUHe2L7CaBwItRfxF3pKdJRozOu6qcfEP35uVqIDsJksHN8Nloa6F4VX01nGNXoBt
+         DS3Zho2fGrkSFNSlsRACA/Issk0NbvFrO48kBkXlwUQIuvBVeAHwcdAy2HQm/T1xTlQl
+         6ZH9FpNKYutUUGJp8gpWUXw/vRdPcrofy1K0aibsS8v9dPnupDsc2qvPePVzUYwz8d58
+         0IoE2I6IJIINM4xNSP5PGV5ew0oNy7850ALIkdgdzcwiCPuw5K035u1mFomsODkwJpTQ
+         hB7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUrvRM8tI/i4cfW2xRUtqKjpdrib4Y9vil7sI5O/2xdto8ca/UQcl2I7IA6B9Cw35nWNwVSyYi52gfKz+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYDXdgehQXqq3468DISqBgw+C7dOdZO/b44eYK9f+iQn443vfZ
+	acP05dKfhRyQv+o3zbmb6dpS5VaXABIsspDVD5sqduHesngo4SxdGPU7OVxrnSo0XhE=
+X-Gm-Gg: ASbGncsBTFtb2ACs3k8+AzdahUVlE+Q2JsK7AcefriB9D5RGm3xm/NAoFXfae9KWE9a
+	mqt6DEOqnp3lud3M/XVRbtSvC/nB/b37Dbp/v0a6Gzi08fyrQNDO4KWZ7iGA9Q3ieNTeYap0Q9A
+	DxnpXTZ1yn1e43qMO3bhuE0YtCVTRpXnS485UsJxWf/8iJNAvPdW+gAEf9FEBY0aHgwo0m4SPi5
+	2Rz2N51O9ZZgVdy/XM3GNz3V8Alin0/qfTaG/hqNHnb/KRiTcHpuxl0qjXQ4JOH7rLHdjJx3chM
+	abxpPyyZxXOioK5n6WgTk5shcPZ5dgitzhXHWui6CJSYP/w05nF8Gw+dhRU+cU9CEMgm4kFr1q3
+	PrsmOMgo=
+X-Google-Smtp-Source: AGHT+IHO8vmPZ9wtEiIB3JiDHbb2n/QkwioIBKsC0rUUGe/Wln0nL1EQukSNTPuRfRNcvEViMy2SvA==
+X-Received: by 2002:a05:6e02:1c02:b0:3d9:66ba:1ad2 with SMTP id e9e14a558f8ab-3db8569e88bmr68385155ab.0.1747516248818;
+        Sat, 17 May 2025 14:10:48 -0700 (PDT)
+Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db843e07b8sm11777445ab.20.2025.05.17.14.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 May 2025 14:10:47 -0700 (PDT)
+From: Brigham Campbell <me@brighamcampbell.com>
+To: shuah@kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Brigham Campbell <me@brighamcampbell.com>
+Subject: [PATCH] docs: powerpc: Add htm.rst to table of contents
+Date: Sat, 17 May 2025 15:07:59 -0600
+Message-ID: <20250517210757.1076554-3-me@brighamcampbell.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516083842.903-1-vulab@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Wentao,
+These changes fix the following error, which was introduced by commit
+ab1456c5 when Documentation/arch/powerpc/htm.rst was added to the
+repository without any reference to the document.
 
-kernel test robot noticed the following build errors:
+Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
 
-[auto build test ERROR on wireless-next/main]
-[also build test ERROR on wireless/main linus/master v6.15-rc6 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+---
+ Documentation/arch/powerpc/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/wifi-wilc1000-Add-error-handling-for-wilc_sdio_cmd52/20250516-163959
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
-patch link:    https://lore.kernel.org/r/20250516083842.903-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250518/202505180440.dyQDHWJJ-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505180440.dyQDHWJJ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505180440.dyQDHWJJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/device.h:15,
-                    from include/linux/mmc/sdio_func.h:11,
-                    from drivers/net/wireless/microchip/wilc1000/sdio.c:8:
-   drivers/net/wireless/microchip/wilc1000/sdio.c: In function 'wilc_sdio_read_size':
->> drivers/net/wireless/microchip/wilc1000/sdio.c:792:32: error: 'struct sdio_func' has no member named 'devm'; did you mean 'dev'?
-     792 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-         |                                ^~~~
-   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                         ^~~
-   drivers/net/wireless/microchip/wilc1000/sdio.c:792:17: note: in expansion of macro 'dev_err'
-     792 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-         |                 ^~~~~~~
-   drivers/net/wireless/microchip/wilc1000/sdio.c:801:32: error: 'struct sdio_func' has no member named 'devm'; did you mean 'dev'?
-     801 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-         |                                ^~~~
-   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                         ^~~
-   drivers/net/wireless/microchip/wilc1000/sdio.c:801:17: note: in expansion of macro 'dev_err'
-     801 |                 dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-         |                 ^~~~~~~
-
-
-vim +792 drivers/net/wireless/microchip/wilc1000/sdio.c
-
-   774	
-   775	static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
-   776	{
-   777		u32 tmp;
-   778		struct sdio_cmd52 cmd;
-   779		struct sdio_func *func = dev_to_sdio_func(wilc->dev);
-   780		int ret;
-   781	
-   782		/**
-   783		 *      Read DMA count in words
-   784		 **/
-   785		cmd.read_write = 0;
-   786		cmd.function = 0;
-   787		cmd.raw = 0;
-   788		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
-   789		cmd.data = 0;
-   790		ret = wilc_sdio_cmd52(wilc, &cmd);
-   791		if (ret) {
- > 792			dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-   793			return ret;
-   794		}
-   795		tmp = cmd.data;
-   796	
-   797		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
-   798		cmd.data = 0;
-   799		ret = wilc_sdio_cmd52(wilc, &cmd);
-   800		if (ret) {
-   801			dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
-   802			return ret;
-   803		}
-   804		tmp |= (cmd.data << 8);
-   805	
-   806		*size = tmp;
-   807		return 0;
-   808	}
-   809	
-
+diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
+index 0560cbae5fa1..53fc9f89f3e4 100644
+--- a/Documentation/arch/powerpc/index.rst
++++ b/Documentation/arch/powerpc/index.rst
+@@ -19,6 +19,7 @@ powerpc
+     elf_hwcaps
+     elfnote
+     firmware-assisted-dump
++    htm
+     hvcs
+     imc
+     isa-versions
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
