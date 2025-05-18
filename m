@@ -1,33 +1,33 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D7B20C02E
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD7F205E16
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747606060; cv=none; b=pZ8yWB/trAoC6H6Kx4Ipl9++vX34MQJNma2kL52uBzZLLfHjC7dbgSPnZDUbiaTJb9UpGTkaKmWQEXvzwZ54nFUOgQ9wzsVkYqC4/ephQDiGvuj/NHcmLK7d4/L/bZLvncFkCHyLgvTCddJn5GCQeSeD+iLSIjQ9lj3G/BQNNDI=
+	t=1747606067; cv=none; b=CJd7qpqxFbxetbZEIbTd8x5LRDA83T9WpKdmVU7VJkChlhzRRKcwbqeCv5xR6Fva1HUbTPEK88xMqzDP/NxwF2GkicNmh9q/SJbTMp45GKZJiEcbNZz1PfGELsHFuSiJYbxq9r3SsH6+SPWF/HyVYqCZm3dJNuIFBySiRVmzyLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747606060; c=relaxed/simple;
-	bh=BM/558NIb/OQWzTPVj4yzIGBsEsv0oJQTjiJ9z3MSy4=;
+	s=arc-20240116; t=1747606067; c=relaxed/simple;
+	bh=IaouxIHOdXcJtAHSznf8PEqezOyP8PmUvFtKqQi5Vbg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PfasoliUsHHcbxecrYmRTbmEddvLCunJmuZOTNhWo0efbQP1T2V/CzfVVts20UQCSXGCGyqCG0ZD160Gh+tj1o8kEwZLY2YCT9jNTy1yMgvPDPoZpGOWMT4bPq9bvF8vezSI0AFHg6QcSu6FpBD+UhHdJ4UJuPPq8TKdsc9Nb10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=V9+p/E1n; arc=none smtp.client-ip=121.127.44.73
+	 MIME-Version; b=o2HmE7V03GTTuzZE2V9AlukOp0YiFUl+l46obU2SoXqSMYeybFhsPRzueIgMe9DjvsxIGnAw/g90En4UMEl6cxlGYblUAm5Uu2yrEHOfI2N5FP2eau21jUNBvZzPt0H0JuDXauX9ifCxbiUz3ufypeflLwMlrbo8p4nTfuXaX1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=S7F9qNzU; arc=none smtp.client-ip=149.28.215.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="V9+p/E1n"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="S7F9qNzU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1747606058; bh=JuYEKWBVukLDcGbYOqkONpNdiBoEcCXdcXXV5j7NdiE=;
- b=V9+p/E1nz3ZLcm8k3oBT0VX+3dLbM5NrxWV+TyVYCY3UP+/RWqhkDAcz64VlgFtlDhu0WfMt3
- 4MPn/T1ARuwUBBuebuHJleS7wTnQnFCp3XpmI8zrHwZHewYLri0FH7lIKe0ggT66NIGGWcyPN8N
- X78F0mqpfadB1bsY9XfDVkNUn1lIe6RMWyHdFPPG+ukfv+Sdd1dEnvyESjMWSGbPfhLPphkBhM0
- P1E7dkIz1iv06nXUHb4L2LsWaCussuZEWfOB/dMVKw4rgE209O6iurPt73N1i5Zl+NeK+uhNFi1
- 0h8HK3jOj1kZ2qSZ9yJNWngpOp0zG0IumLDA7LZXcvMg==
-X-Forward-Email-ID: 682a5a2678cae75fbd8d46da
+ t=1747606065; bh=JlFCAc4M4tsY005AhENFwugyMYaX2j/qB+dCiJDYFXQ=;
+ b=S7F9qNzU4YdYULblVzzvOlx+rNEAkwx9oQWJXuhCUkq/YGCoqxxMjh5fawGjapp3ZLshluBaB
+ 2tqNJtt1Js2Li/PjeOhrQAamv/A4koDXoxVtTDq2EEAzWwtdC+8F5HuVw4IJK9AnGVOVg5gVjOk
+ mPFCrxeMJ8W/zXzsjnldVBHa80FhanVuM8P7m4MyEj1qb+p1AwX8N1J7GABX/icGYlhJlWY/Aoh
+ JOKIjyGJANilSIXiClGE5i8bKbOeWiB7iqt6PWFKuNmqgLWEZ+JU/I72ZWMK82/UAfkliMVDqOW
+ VlIXvKle6IGYdx0TSK/jrbRkgjsbsHnPZy14WzHl2Edw==
+X-Forward-Email-ID: 682a5a2a78cae75fbd8d46ef
 X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
+ 149.28.215.223
 X-Forward-Email-Version: 1.0.3
 X-Forward-Email-Website: https://forwardemail.net
 X-Complaints-To: abuse@forwardemail.net
@@ -36,10 +36,11 @@ X-Report-Abuse-To: abuse@forwardemail.net
 From: Jonas Karlman <jonas@kwiboo.se>
 To: Heiko Stuebner <heiko@sntech.de>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>
+	Conor Dooley <conor+dt@kernel.org>
 Cc: Yao Zi <ziyao@disroot.org>,
 	Chukun Pan <amadeus@jmu.edu.cn>,
 	linux-rockchip@lists.infradead.org,
@@ -47,11 +48,11 @@ Cc: Yao Zi <ziyao@disroot.org>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	Jonas Karlman <jonas@kwiboo.se>,
-	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] dt-bindings: mmc: sdhci-of-dwcmhsc: Allow use of a power-domain
-Date: Sun, 18 May 2025 22:06:52 +0000
-Message-ID: <20250518220707.669515-6-jonas@kwiboo.se>
+Subject: [PATCH 6/9] dt-bindings: gpio: rockchip: Allow use of a power-domain
+Date: Sun, 18 May 2025 22:06:53 +0000
+Message-ID: <20250518220707.669515-7-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250518220707.669515-1-jonas@kwiboo.se>
 References: <20250518220707.669515-1-jonas@kwiboo.se>
@@ -63,32 +64,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The commit 7e856617a1f3 ("dt-bindings: mmc: Add support for rk3576
-eMMC") limited use of power-domains to Rockchip RK3576.
+The GPIO controllers in most Rockchip SoCs are part or power domains
+that are always powered on, i.e. PD_BUS or PD_PMU.
 
-Remove the power-domains: false to allow use of power-domains with more
-controllers, e.g. with SDHCI on Rockchip RK3528.
+On RK3528 the GPIO controllers are spread out among the PD_RKVENC, PD_VO
+and PD_VPU power domains.
+
+Add support to describe power-domains for the GPIO controllers.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 4 ----
- 1 file changed, 4 deletions(-)
+ Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-index 5fb347167004..f882219a0a26 100644
---- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-@@ -120,10 +120,6 @@ allOf:
-       required:
-         - power-domains
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+index d76987ce8e50..bdd83f42615c 100644
+--- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
++++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+@@ -41,6 +41,9 @@ properties:
+   "#interrupt-cells":
+     const: 2
  
--    else:
--      properties:
--        power-domains: false
--
- unevaluatedProperties: false
- 
- examples:
++  power-domains:
++    maxItems: 1
++
+ patternProperties:
+   "^.+-hog(-[0-9]+)?$":
+     type: object
 -- 
 2.49.0
 
