@@ -1,103 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF7B2CA6;
-	Sun, 18 May 2025 14:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9159117E0;
+	Sun, 18 May 2025 14:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747577302; cv=none; b=bXHRrk4oy3YVVkZRoGNzC9ad5runuZSXp7WPgF8mZ26+LXtOv0rfVDPcI4yRYIhUdeH54+H6NrbDRkmO3wCP4sqd3S+EC35FePDPunKmammISUxA3xnT2IAvbXA6XbXov9uP0lKFV3Q6kzSo6jItlP+wu/YtY4YFqoC/JyAAVxs=
+	t=1747577727; cv=none; b=c5TXuuEBA+QeD/031PQTlV9QOqOeEr5ilaL0UnURXdNMI2zzKHRxGrme7ZcBfsZQL11RcLhSM0A0UaNzOpIAZcqTbY/ILMZr7Zl0XPdFAFoLgqxDof8lW9j3dBgP4+mV0aZCHUkLI/PW5TPGiNgX04HMmkQ6FdXHXixGDsopiiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747577302; c=relaxed/simple;
-	bh=AgKo8TgX/Hl6XS9+GhfdbOr+7v2ldSOpPxbPPyQ1tWk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=j2rS1mKh6d9t7HFsnxotm2jyNfS+w9pHXJbeHZ01Kgy5uKPdNbcifqQuiZ0BRLYGEgoFhMqz9mhmg7+rxpVackSaahXfkvgKAP3hmbJl7xyYRIrY5ND2k25ZfhU50ACyaKTDnE6FbqvwApIlZOBWnmpFNqymiM9ExISI8tFv/0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWTRwjWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747577727; c=relaxed/simple;
+	bh=LflfMs4kZfyIaOpvYpEL7j7y/XFZTDR6tLznMnAA9TY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JXBO5wlYtYCkWka3fbOBv2HsTUflYF9yZqroLZ1hDMOjEZxDWCwHyvioImF2LSmb7QZkLJuBO2bPieT7ymiz1A4+BT+D9AczSKzyVAa45bem8ANox7KbhWGPe1Ri1yIq4O/GNNRdp+zIV2D2kJ+nvC7eLMGrvwTLpyN0alkIvZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=LbvN3XxN; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWTRwjWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF6AC4CEE7;
-	Sun, 18 May 2025 14:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747577302;
-	bh=AgKo8TgX/Hl6XS9+GhfdbOr+7v2ldSOpPxbPPyQ1tWk=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=BWTRwjWKsiuVR+Z2kNiFXbZaJiotzFB9hYOPjwmm8UFsnc77yWPju19aMoniHkxa6
-	 KxiQB4vQwwSwoY9wyUyBQmotfUi4b6TSRWq2z3H6ol4i44M8FXeND771erz9au6Hbv
-	 /8yN3Yg4sfspz6wzb4CMRo3cB4wRKjKA7wuu0r6itQ9XncDe6k8MYyVojSZoldfEI9
-	 38aky5DxLYwcdeNu5Bg4cuxETwYpPWosCaII47ZdsVGfiwkh5KVF7rYMEhPvLtkXhO
-	 QlypuxIaS56RSqf7BEhWr3rlwSYESvytnnD4NwrnyjRvCT4IDB4edW6n3jPUZ0TVw8
-	 l1UjPu4kVEIBA==
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="LbvN3XxN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747577716; x=1748182516; i=spasswolf@web.de;
+	bh=4P970Ww1wQlpjtEwgPCOhxGQejBo5QPYjplL6xeKDUE=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LbvN3XxNWuFomoENwWHR91okJ+mdJqqQYT4LATaTiWGsdrEpSWQKLV8yvFrSODH8
+	 T9pCRw5ZRVYRiCCGvhOTW9KMvatghBahay+Vdzu1IS05xlj981tOtM7gSNc+Ee3sC
+	 9xlJdvcTZjP8ERyxTwgF6t0VGBuyYysRf/0Lpy4h01RKYgbqtb1T+pj6a9m4g9ael
+	 iLLLuzMU8cmFoJyrxL894vadepkTCCKeBNm1elF9ibgjN9S1avWDgEPnemUQa10Ow
+	 ghuAF0aHzz6oG5DaCLtmiZxrpfUGIrlcd5FiaHJpLgan1FYFla2EHe8BnfVrTVu4X
+	 ZHxbQiAEEzfWcQOR5A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MG994-1uB8TX489E-00HQKR; Sun, 18
+ May 2025 16:15:16 +0200
+Message-ID: <c343c12be42195aaeeb572ddc76ed41369904d79.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "linux-next@vger.kernel.org"	 <linux-next@vger.kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>,  Thomas Gleixner
+ <tglx@linutronix.de>, linux-wireless@vger.kernel.org, spasswolf@web.de
+Date: Sun, 18 May 2025 16:15:15 +0200
+In-Reply-To: <8274d78a82cded2fc4459fad8c2db6a1b51d7891.camel@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+						 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+						 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+						 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+						 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+						 <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
+						 <f8552d41fb7eae286803b78302390614179b33b0.camel@web.de>
+						 <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
+						 <ba97a2559cda1b14e0c9754523ff1152bdad90ef.camel@web.de>
+						 <63cc1dbf07bde2c9d14e1f86ce2c2ce26a2a9936.camel@web.de>
+						 <388bbc4c805ce029bbd08010fd30405494f998a9.camel@web.de>
+						 <15f3633cbd08b30475d5b76c5cc9180fbf17a12f.camel@web.de>
+						 <CAL+tcoA3d-EdoGjei7aeyuA3zmj955uYkXf1wCAUy8iP3BxUjg@mail.gmail.com>
+		 <4a893f88b6892502a5f7a61bcfc806a271a730a9.camel@web.de>
+	 <8274d78a82cded2fc4459fad8c2db6a1b51d7891.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 16:07:20 +0200
-Message-Id: <D9ZCFH8F2MBK.1J0BC54P9EWN9@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-X-Mailer: aerc 0.20.1
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com> <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com> <D9ZBIGJWS9I6.17MVKGQWNNOX8@nvidia.com>
-In-Reply-To: <D9ZBIGJWS9I6.17MVKGQWNNOX8@nvidia.com>
+X-Provags-ID: V03:K1:6/W3o9/69jiBstG5IgTUm2bU/gHbBGkvmzm16uRePmKtn+e1ZKb
+ kddw4SGPSx6JF4GkHC6mSSxXPFIq+Mk5EwsO3IqugNAekCr0JlpTfRvPMyOck+kl4pDpz8K
+ BQb4VufsMDAIQCJ7afjMtwUwTqgi+H2g99KIVgK4LvSkCOPnKEz3xFMp0z0te55jcblgJH6
+ b0zPzLsrEwaqY7hxsMycg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:R74Ki1q73ak=;52YpObM764MIRXYye+oOYC0ocax
+ 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
 
-On Sun May 18, 2025 at 3:24 PM CEST, Alexandre Courbot wrote:
-> Hi Daniel,
->
-> On Thu May 15, 2025 at 4:20 AM JST, Daniel Almeida wrote:
-> <snip>
->> +/// Callbacks for an IRQ handler.
->> +pub trait Handler: Sync {
->> +    /// The actual handler function. As usual, sleeps are not allowed i=
-n IRQ
->> +    /// context.
->> +    fn handle_irq(&self) -> IrqReturn;
->> +}
->> +
->> +impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
->> +    fn handle_irq(&self) -> IrqReturn {
->> +        T::handle_irq(self)
->> +    }
->> +}
->> +
->> +impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
->> +    fn handle_irq(&self) -> IrqReturn {
->> +        T::handle_irq(self)
->> +    }
->> +}
->
-> I see that every smart pointer would have to implement Handler in order
-> to be used with this module, but...
->
->> +#[pin_data(PinnedDrop)]
->> +pub struct Registration<T: Handler> {
->> +    irq: u32,
->> +    #[pin]
->> +    handler: T,
->
-> ... what if you store another type `U: Borrow<T>` here, and take it as
-> the argument of `register`? This way you should be able to use anything
-> that implements Borrow<T>, which includes T itself, Arc<T>, Box<T>, and
-> more, and can remove the two impl blocks above.
+Am Sonntag, dem 18.05.2025 um 14:43 +0200 schrieb Bert Karwatzki:
+> Am Sonntag, dem 18.05.2025 um 14:12 +0200 schrieb Bert Karwatzki:
+> > > > >=20
+> >=20
+> > I even tried this version of your patch, to keep the offset of skc_ref=
+cnt at 128,
+> > but it doesn't  work, either.
+> >=20
+> > commit fca84c5cde713be480544a64ed6680afc3319670
+> > Author: Bert Karwatzki <spasswolf@web.de>
+> > Date:   Sun May 18 13:32:36 2025 +0200
+> >=20
+> >     include: net: sock: move skc_flags out of the union
+> >    =20
+> >     Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+> >=20
+> > diff --git a/include/net/sock.h b/include/net/sock.h
+> > index 3e15d7105ad2..e73929a4da6e 100644
+> > --- a/include/net/sock.h
+> > +++ b/include/net/sock.h
+> > @@ -195,7 +195,6 @@ struct sock_common {
+> >  	 * for different kind of 'sockets'
+> >  	 */
+> >  	union {
+> > -		unsigned long	skc_flags;
+> >  		struct sock	*skc_listener; /* request_sock */
+> >  		struct inet_timewait_death_row *skc_tw_dr; /* inet_timewait_sock */
+> >  	};
+> > @@ -221,6 +220,9 @@ struct sock_common {
+> >  	};
+> > =20
+> >  	refcount_t		skc_refcnt;
+> > +
+> > +	/* place skc_flags here to keep offset(struct sock, sk_refcnt) =3D=
+=3D 128 */
+> > +	unsigned long	skc_flags;
+> >  	/* private: */
+> >  	int                     skc_dontcopy_end[0];
+> >  	union {
+> >=20
+>=20
+> In the patch above I accidently put skc_flags in the part of struct sock=
+_common
+> which does not get copied, but putting it below skc_dontcopy_end[0] does=
+ not work,
+> either:
+>=20
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 3e15d7105ad2..6d69753a205a 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -195,7 +195,6 @@ struct sock_common {
+>          * for different kind of 'sockets'
+>          */
+>         union {
+> -               unsigned long   skc_flags;
+>                 struct sock     *skc_listener; /* request_sock */
+>                 struct inet_timewait_death_row *skc_tw_dr; /* inet_timew=
+ait_sock */
+>         };
+> @@ -221,8 +220,12 @@ struct sock_common {
+>         };
+> =20
+>         refcount_t              skc_refcnt;
+> +
+>         /* private: */
+>         int                     skc_dontcopy_end[0];
+> +       /* place skc_flags here to keep offset(struct sock, sk_refcnt) =
+=3D=3D 128=20
+> +        * Also place it below skc_dontcopy_end[0] */
+> +       unsigned long   skc_flags;
+>         union {
+>                 u32             skc_rxhash;
+>                 u32             skc_window_clamp;
+>=20
+> This locks up as usual.
+>=20
+> Bert Karwatzki
 
-I don't think that this is easily possible, since then the
-`Registration` struct will have two generics, which I think is worse.
+So I did some more monitoring and found that even though skc_flags is remo=
+ved from the union
+it can take strange values, e.g.:
 
-The impls above are pretty common for these kinds of traits, so I don't
-think it's too bad.
+Here the value is not even a pointer (perhaps unitialized memory?):
+[  T572] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff88fc2abf4=
+cc0 skb->sk->sk_flags =3D 0xa00f7fe57b16f7e1
+These could be pointers, but as pointers would only be aligned to a 2-byte=
+ boundary ...
+[  T572] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff88fbd0bd3=
+210 skb->sk->sk_flags =3D 0xffffc0f1c62dcc4e
+[  T572] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff88fbd0bd3=
+210 skb->sk->sk_flags =3D 0xffffc0f1c62dcc4e
 
----
-Cheers,
-Benno
+Bert Karwatzki
+
