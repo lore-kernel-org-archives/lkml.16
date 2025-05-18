@@ -1,196 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC4FBE65
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 15:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7912AC17;
+	Sun, 18 May 2025 15:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747583473; cv=none; b=CAcHyT358ubERz1oABPhC8bj7hDbwI4Pl+55OHp4mrazbDg1JefTGeCqKk5z2g3l3D3VH8BOnFC7Q7Lgf4df462RpnfqEavohmgVJpdkjkGv0TlDib73Mn5Mbl/Og7rlSaO0E2oD1oi8qOXxPoe6JY4m0YWIL0FgasRMuzvmr7E=
+	t=1747583539; cv=none; b=Ppqkp9ymgm+4f0fjF89cwaIfX6TqMJk/bBUXG33j69xUNoBINcneWA5Q6olEEKR2JH7VwaiqgstPT7K8uFWksOUkowGIFYkKtMQy3w4WV7RmCT8X53yCA5uS7LAXh5BydewxeHJ2izB732ruBOY7+Xn7jnEcaZ9E44P+rFZFJYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747583473; c=relaxed/simple;
-	bh=f46ZYATqSlZQYJjPraHCnJoSA69zLQj8qTugXkfCsGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRZT1o3mKf96WVBYjhOtZrTfnRfexuf1lgo4kf0TWQQMbgV6xexBWbUuIjFI2QQfuz3tAmmVmD7P+kKtZPezVM8eval06WLdFTvIDiWEBxeJXbBPIX3AihNcjUSNjQ89VTdMGWvy+Hm5bmWrgO5gyhz9LppZxZMyzzOrmwALnyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ims6q9M4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747583539; c=relaxed/simple;
+	bh=+3sfbNrs775Nuch7lp3CXdZrxEkkKx2XOLmSr98QaCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bJR8M9bsM1ulZZfPyevaLemMfSkJqBHmWCxP6TAln+KDREqcH9GGVA9uqxC0PUIzGqpvS5NLhcocg2S/FiZc95qDzSOhEY3VsT2DOX4YjbMOTzpGyFP5iebDtRunUE23J2D5rjmt1Arj4bt6437ALOGyfxRH75xFT7aLEr4K9P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cAkoIeKe; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ims6q9M4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6993C4CEE7;
-	Sun, 18 May 2025 15:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747583472;
-	bh=f46ZYATqSlZQYJjPraHCnJoSA69zLQj8qTugXkfCsGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ims6q9M46Czd/XpLtif0k76dTRzbU76gkPqoaANZ1rGHB1B6yZhlQkR6laQnZJGxN
-	 3yOFck4NqY3fpd36L8vxKDmHqbGKC0H+VBZMv5+xZBEnn30xNdjeCKGNDmnzRpge5y
-	 X8IHYWj/a0UCymu9OjyhCpRSfu3ibDiDIsLNo1Dk6XPcbgyFwVwDiHZot0/orsql1O
-	 sex6JIHSgIuNO6uEvr92py72e+obAPGrCTvJXrds4QQF5pVn2UK/1z7Gqfgk+Op80x
-	 LyRBes2wRBOrLbp0LRFX7EZ3CZ900vXp2UgCvOGzAh14n4xXkGCHL45OVVQfv/9qMa
-	 hio0UMUW6kvBw==
-Date: Sun, 18 May 2025 18:51:04 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Changyuan Lyu <changyuanl@google.com>
-Cc: akpm@linux-foundation.org, graf@amazon.com, bhe@redhat.com,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, chrisl@kernel.org, pasha.tatashin@soleen.com,
-	jasonmiu@google.com
-Subject: Re: [PATCH 2/2] KHO: init new_physxa->phys_bits to fix lockdep
-Message-ID: <aCoB6KkQr4xFBlEu@kernel.org>
-References: <20250518142315.241670-1-changyuanl@google.com>
- <20250518142315.241670-3-changyuanl@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAkoIeKe"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a1f9791a4dso2341159f8f.0;
+        Sun, 18 May 2025 08:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747583535; x=1748188335; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c3as2gF+IatO8dg1hmkBSNBs2pFXaXsGSX1ZIQFwJQ4=;
+        b=cAkoIeKeBkAgaZf0+4psRdyr4cApTCvy7rXpKQN9mB3Nq88tIoO8H6GGZu+AwJ1VOP
+         +cA22pAgYrMTAxCSnHR5PmhUZF6NFg2UcHHcCqfbbPijYq7aXC8V+4Xklh2oaxOrA9DH
+         mjwwx6l5odZ3W1CiRthhY5/xqqoynth9VMljC0H6qNfJTeaULle3Y8J5QDsFH6kCEwG2
+         rhFBYDgihM7clcDR98obPAcmUT2FqZjuAuPU1mj6dLN74U95up3ORvoa/fsEvYYG2hTx
+         8kNwqlmkiVkzI53hxDxv/M6cQiJgYSgepM9JQU2novlnSRSmNSfLW3ODjl86u4J5PFHd
+         4P7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747583535; x=1748188335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c3as2gF+IatO8dg1hmkBSNBs2pFXaXsGSX1ZIQFwJQ4=;
+        b=LwOOvdN84iV9uvyy6diaSAzim/3vXZNHpmI62uEPZ+S1XK2Uo4zM8SXSgW3Okgh6rJ
+         jC6087knAy5AjL0Ivi0beMJXWtXmb7gFaRiunaKXZX5LukRp9cR2mW8BWV6NG6UjvuvV
+         lEDzN35ske42VZsHaVBYJBlC31YWnV+6P4+wx1qL7zWoh6p7q/GDurEX00LnV8m0H8TQ
+         vt7y/M9WHUO24622dTkGGvViLhlhD05W9N4dhISFzaFqS0U+N2qec391yZHiUrTMsa6d
+         ZW2beoex2WfRT3I+aMcrR8sqd/QUsTshjbe0zSFwD16BMnBooqTl5eqsMa5vIA6+aq8I
+         i4lA==
+X-Forwarded-Encrypted: i=1; AJvYcCUF+4T59LTzyGa2XoE1k6EL11QdqLyAy4vvLqJiwo3NRTq0c1drBSD+gQkFAXXBAUiYww7kWAwqnFm4J5YX@vger.kernel.org, AJvYcCUJOqnyR1DP6TnRUZB4Vp3TF2z8waPRIuXWhMmdf/NyN98v0NcejJqPLyaNYO5wVHTSfuruiQL5AU8X@vger.kernel.org, AJvYcCUw++A5pdmRhhD1tRgRioZ4yKN84CH3096HZCLeUoxsBDd+biKDmE3I/91rMSWcC/rnPjuqwvm12xDHT6Rd@vger.kernel.org, AJvYcCVaQunn7hsm08ITjOIuzXSZq10bmKoddP/P3AXgZOGyk1Zj0nXrDv4V9OCbGnuGkK+shNfHsW8v3xU=@vger.kernel.org, AJvYcCWUMvqzKPo18qzbtAOOTEEZblAKhwNnekV7GPLOZE3Xlh+4g397dOfo5dHiT4bFTYtg1QJMlXM5VrxtOPD5a0AGxN62RWwD@vger.kernel.org, AJvYcCXMpZ6V7r/XhV2WUVmy3WHS1AZnJsjywLwU5ENFAMGMk9QGlAv9+z8BTpPuP/v6OVarsaU=@vger.kernel.org, AJvYcCXZsWmWOI+9XqJxhhuBxaY4PX+VwowccTEv5r9v2MiAcPoTRk6pQpC+RTgxx/0yaoMRUwhuxC9MZsDAbwHS4VwB@vger.kernel.org, AJvYcCXzYZdGI2ljZGQj2ccBIQ4wpJMD3+P4tTQqWen+8B+x2I28t5EUH6AWQuyKbTVOjQXgvr+orOOzjBIFLlja@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRTn7pohfqVD/vLV1S0FZ0FOWfaUs6megSqWcP4Ss+/3s6MIH1
+	n1ei/yo6S6ZZnaDa6J3YIW0Y7KHMrJQYhc935KEPTMcd8zp42ZWv/pGQyqJrEVtvG77a2vV6qap
+	bQpBCL/BZX6J+gYth63RZ2rRtFhurB8I=
+X-Gm-Gg: ASbGncuY24LoAXvs1m70+NwUk3Ny5ylM/hpd8Ygwzj4beFxgquI/DQK/9vwVM6tQdv9
+	Cs4ZERDpv8i5z/6lpi5f4KzPTnQFboMUvMwC6VKZxSPFNjKnk/IjB+wheip8EO+owYkt276IHum
+	Mepw8N47lEC9+amrHWivBYN3AfZOfrn8Buj9YOYiAd/UxFqwkjlQ1VnIveyYhLxw==
+X-Google-Smtp-Source: AGHT+IEiZa7/kL1vl+lHgpPDDtfRZ6UOCk/sObQ0RqGRPFYYBykx/zOKPS3oTQuTUrCCrc8E+OeC4fTdKLrwex1Vzss=
+X-Received: by 2002:a05:6000:188e:b0:39a:c9c1:5453 with SMTP id
+ ffacd0b85a97d-3a35c8457cbmr8695268f8f.49.1747583534541; Sun, 18 May 2025
+ 08:52:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250518142315.241670-3-changyuanl@google.com>
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+ <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+ <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
+ <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
+ <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
+ <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
+ <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
+ <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com> <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+In-Reply-To: <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 18 May 2025 08:52:03 -0700
+X-Gm-Features: AX0GCFt9M3_dCkyMrm7XCxwJyjC1dFUOiX7_cT3eZ9_H0MvAbu0YgA5uhMOcM8E
+Message-ID: <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Paul Moore <paul@paul-moore.com>
+Cc: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
+	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
+	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
+	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
+	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 18, 2025 at 07:23:15AM -0700, Changyuan Lyu wrote:
-> From: Pasha Tatashin <pasha.tatashin@soleen.com>
-> 
-> Lockdep shows the following warning:
-> 
-> INFO: trying to register non-static key.
-> The code is fine but needs lockdep annotation, or maybe
-> you didn't initialize this object before use?
-> turning off the locking correctness validator.
-> 
-> [<ffffffff810133a6>] dump_stack_lvl+0x66/0xa0
-> [<ffffffff8136012c>] assign_lock_key+0x10c/0x120
-> [<ffffffff81358bb4>] register_lock_class+0xf4/0x2f0
-> [<ffffffff813597ff>] __lock_acquire+0x7f/0x2c40
-> [<ffffffff81360cb0>] ? __pfx_hlock_conflict+0x10/0x10
-> [<ffffffff811707be>] ? native_flush_tlb_global+0x8e/0xa0
-> [<ffffffff8117096e>] ? __flush_tlb_all+0x4e/0xa0
-> [<ffffffff81172fc2>] ? __kernel_map_pages+0x112/0x140
-> [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> [<ffffffff81359556>] lock_acquire+0xe6/0x280
-> [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> [<ffffffff8100b9e0>] _raw_spin_lock+0x30/0x40
-> [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> [<ffffffff813ec327>] xa_load_or_alloc+0x67/0xe0
-> [<ffffffff813eb4c0>] kho_preserve_folio+0x90/0x100
-> [<ffffffff813ebb7f>] __kho_finalize+0xcf/0x400
-> [<ffffffff813ebef4>] kho_finalize+0x34/0x70
-> 
-> This is becase xa has its own lock, that is not initialized in
-> xa_load_or_alloc.
-> 
-> Modifiy __kho_preserve_order(), to properly call
-> xa_init(&new_physxa->phys_bits);
-> 
-> Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-> ---
->  kernel/kexec_handover.c | 29 +++++++++++++++++++++++++----
->  1 file changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index 69b953551677..f0ac6a9170f8 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -144,14 +144,35 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
->  				unsigned int order)
->  {
->  	struct kho_mem_phys_bits *bits;
-> -	struct kho_mem_phys *physxa;
-> +	struct kho_mem_phys *physxa, *new_physxa;
->  	const unsigned long pfn_high = pfn >> order;
-> 
->  	might_sleep();
-> 
-> -	physxa = xa_load_or_alloc(&track->orders, order, sizeof(*physxa));
-> -	if (IS_ERR(physxa))
-> -		return PTR_ERR(physxa);
-> +	physxa = xa_load(&track->orders, order);
-> +	if (!physxa) {
-> +		new_physxa = kzalloc(sizeof(*physxa), GFP_KERNEL);
-> +		if (!new_physxa)
-> +			return -ENOMEM;
-> +
-> +		xa_init(&new_physxa->phys_bits);
-> +		physxa = xa_cmpxchg(&track->orders, order, NULL, new_physxa,
-> +				    GFP_KERNEL);
-> +		if (xa_is_err(physxa)) {
-> +			int err_ret = xa_err(physxa);
-> +
-> +			xa_destroy(&new_physxa->phys_bits);
-> +			kfree(new_physxa);
-> +
-> +			return err_ret;
-> +		}
-> +		if (physxa) {
-> +			xa_destroy(&new_physxa->phys_bits);
-> +			kfree(new_physxa);
-> +		} else {
-> +			physxa = new_physxa;
-> +		}
-> +	}
+On Sat, May 17, 2025 at 10:49=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+rote:
+>
+> On May 17, 2025 12:13:50 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> > On Sat, May 17, 2025 at 8:03=E2=80=AFAM Paul Moore <paul@paul-moore.com=
+> wrote:
+> >> On Fri, May 16, 2025 at 7:49=E2=80=AFPM Alexei Starovoitov
+> >> <alexei.starovoitov@gmail.com> wrote:
+> >>> On Fri, May 16, 2025 at 12:49=E2=80=AFPM Paul Moore <paul@paul-moore.=
+com> wrote:
+> >>>>
+> >>>> I think we need some clarification on a few of these details, it wou=
+ld
+> >>>> be good if you could answer the questions below about the
+> >>>> authorization aspects of your design?
+> >>>>
+> >>>> * Is the signature validation code in the BPF verifier *always* goin=
+g
+> >>>> to be enforced when a signature is passed in from userspace?  In oth=
+er
+> >>>> words, in your design is there going to be either a kernel build tim=
+e
+> >>>> or runtime configuration knob that could selectively enable (or
+> >>>> disable) signature verification in the BPF verifier?
+> >>>
+> >>> If there is a signature in union bpf_attr and it's incorrect
+> >>> the prog_load command will be rejected.
+> >>> No point in adding a knob to control that.
+> >>
+> >> I agree that when a signature is provided and that signature check
+> >> fails, the BPF load should be rejected.  I'm simply trying to
+> >> understand how you envision your design handling all of the cases, not
+> >> just this one, as well as what build and runtime options you expect
+> >> for controlling various aspects of this behavior.
+> >>
+> >>>> * In the case where the signature validation code in the BPF verifie=
+r
+> >>>> is active, what happens when a signature is *not* passed in from
+> >>>> userspace?  Will the BPF verifier allow the program load to take
+> >>>> place?  Will the load operation be blocked?  Will the load operation
+> >>>> be subject to a more granular policy, and if so, how do you plan to
+> >>>> incorporate that policy decision into the BPF program load path?
+> >>>
+> >>> If there is no signature the existing loading semantics will remain i=
+ntact.
+> >>> We can discuss whether to add a sysctl or cgroup knob to disallow
+> >>> loading when signature is not present ...
+> >>
+> >> As mentioned earlier this week, if the BPF verifier is performing the
+> >> signature verification as KP described, we will need a LSM hook after
+> >> the verifier to serve as an access control point.  Of course that
+> >> doesn't preclude the addition of some type of sysctl/cgroup/whatever
+> >> based access control, but the LSM hook would be needed regardless.
+> >
+> > No. New hook is not needed.
+>
+> It would be good for you to explain how the existing LSM hook is sufficie=
+nt
+> to authorize the loading of a BPF program using the signature validation
+> state determined in the BPF verifier.
 
-You are nearly duplicating xa_load_or_alloc() here. 
-Is xa_destroy() is really needed here? In the end we destroying an empty
-xarray.
+I already explained:
+.. a job of trivial LSM:
+if (prog_attr doesn't have signature &&
+   (task =3D=3D .. || task is under certain cgroup || whatever))
+  disallow.
 
-Unless xa_destroy() is a must something like this would be simpler IMHO:
-
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index ef21db6c59d5..4c8303fbf97a 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -91,10 +91,12 @@ struct kho_serialization {
- 	struct khoser_mem_chunk *preserved_mem_map;
- };
- 
--static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, size_t sz)
-+static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, size_t sz,
-+			      bool *new)
- {
- 	void *elm, *res;
- 
-+	*new = false;
- 	elm = xa_load(xa, index);
- 	if (elm)
- 		return elm;
-@@ -112,6 +114,7 @@ static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, size_t sz)
- 		return res;
- 	}
- 
-+	*new = true;
- 	return elm;
- }
- 
-@@ -146,15 +149,18 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
- 	struct kho_mem_phys_bits *bits;
- 	struct kho_mem_phys *physxa;
- 	const unsigned long pfn_high = pfn >> order;
-+	bool new;
- 
- 	might_sleep();
- 
--	physxa = xa_load_or_alloc(&track->orders, order, sizeof(*physxa));
-+	physxa = xa_load_or_alloc(&track->orders, order, sizeof(*physxa), &new);
- 	if (IS_ERR(physxa))
- 		return PTR_ERR(physxa);
-+	if (new)
-+		xa_init(&physxa->phys_bits);
- 
- 	bits = xa_load_or_alloc(&physxa->phys_bits, pfn_high / PRESERVE_BITS,
--				sizeof(*bits));
-+				sizeof(*bits), &new);
- 	if (IS_ERR(bits))
- 		return PTR_ERR(bits);
- 
-And if xa_destroy() is actually required, the allocation of new xarray
-should be a helper function.
-
->  	bits = xa_load_or_alloc(&physxa->phys_bits, pfn_high / PRESERVE_BITS,
->  				sizeof(*bits));
-> --
-> 2.49.0.1101.gccaa498523-goog
-
--- 
-Sincerely yours,
-Mike.
+If that's not obvious you have to wait for patches.
