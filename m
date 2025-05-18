@@ -1,152 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F291733EA;
-	Sun, 18 May 2025 17:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6955821D5B5;
+	Sun, 18 May 2025 17:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747589938; cv=none; b=t5opGTjdA700jlYYkBDbQRRFkmZctT2KDfD4vJltUCBJ7nbM8BP2pcpjuwF1cL5fXu1bxqofCFtrGc5GQa9JuAbs4icXatmhtrbDQMOR72wOiE1Z+jyial8ys6ImsSoOsFVWQoCZHKMSesA7Lq1mTtnOGu97P4bSaiyZJTjCx6U=
+	t=1747589939; cv=none; b=aR4WSsBm6k3b7sZx4H6zoM3V89eOgbRCNfHEkO3B14pFrNodXRfAZLR4Ygz1tjuUWSdksbw95Efih2sedeUW+75/f7PTEyvo5WPvwKuMM2iR5K5viwOm/JfmqjD7MpvRg1ldnemNdgdwYGBd6BjXpnb54UY5b8RC0hcCvSuvXAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747589938; c=relaxed/simple;
-	bh=1rcFx6S0KdiGhIZJMwa0fKOgFgcI8zc8sWDeyHYjAas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WsXeE2xBJ5lAjfnejlDnTv4WFw21o/kgu/svQ8dl4rqOM66JNaR/r/qW9JXHtYDVXFoFi747wUTVcFDWt2I018YZliW3Z0ygrK7u8RHOn2vMQYe0tQRxZGJpATDog8Ith0zylRcOMCyoCfSnKlfDy5nz0YQ3h3wx0TJcMWEMG3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0sqxmNU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747589939; c=relaxed/simple;
+	bh=Sr1/9jGKxhwCls0Utn+t/gxiBhVYbEI9OCJ2SmH2ZmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VP9URqHja+iv9G/h/aOYBMGRTL/XGDFg4s1fcJreGnk9vXlxyqc7FJdGd/O9CZew22T55rFH0fyaIP0soVtRrz+42suGWaexWInV7qmyzEAdrUkbVciux489m57D85jnTRrxsOaA6UyoV34qgtPkvR6llfTxawl1qwC6GkiLmaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7kGfYtk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0sqxmNU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0782C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7kGfYtk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A8BC4CEED;
 	Sun, 18 May 2025 17:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747589937;
-	bh=1rcFx6S0KdiGhIZJMwa0fKOgFgcI8zc8sWDeyHYjAas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r0sqxmNUKelsGsObyfIz2r7Jg1+To6iW1iChzD9J0xtLMDPaD7PXl66oIe1UKhJwe
-	 j8STJewCSlQxmLyPtuZvKToOREdTJcVeiIJHcx+DDI0aes20G54TCSuaM5JSjd5MUG
-	 PhXgDstk3ntk8jzaXsm2ar6TI3O390h5mwA0TWh7DvfdNwcLd1uX0WXHkVt1j/N8Q2
-	 hhtYyBPlamaeuaiIqs7K8GekkbUHkDFKOlSrlElIYHmDZEJ+vBpI5Kl7VEm5dWnZHQ
-	 IpBEdhVbd2R+vf+bLP4bCdCAV9kLRNKPMIiC92vetJiSViZC7h/1I2i3MDYxE+r6Jk
-	 2yjzVaJf91YdA==
-Date: Sun, 18 May 2025 10:38:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 4/5] perf test trace: Remove set -e for BTF general
- tests
-Message-ID: <aCobLyqonDU4qnzv@google.com>
-References: <20250517163230.1237469-1-howardchu95@gmail.com>
- <20250517163230.1237469-5-howardchu95@gmail.com>
+	s=k20201202; t=1747589938;
+	bh=Sr1/9jGKxhwCls0Utn+t/gxiBhVYbEI9OCJ2SmH2ZmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e7kGfYtkjqFiaY0POUZDHxZfO9owln21gOPvwhSJMrkciSogSxSINoXly51yFiEkR
+	 klw2oGiO397IW4HlWNM5NYZE7veRknk3QVHsiwx/kUwXBNTUzepJuN9uK02OWlbuJ+
+	 oDNcd9xhRTpwSPygCmi3UIzRRCgx6ZLXa/JoinCOKU/mViqYX4JD6ObKeeIhouM7s4
+	 Zs+CRAvCc+bjDDq82vBEBW3FlRQ0ALQT+ebbJkPMn/dX7nR9AuGCRwMjCw5qwydVCX
+	 AKeG+hMnkwSYdVZcKUG/h5oTi9AGKNg/EuO6/cdkltjYN+6vG1EWXQurjCzfu7Xvtr
+	 y2uJG8ZD6qqqw==
+Date: Sun, 18 May 2025 18:38:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Waqar Hameed <waqar.hameed@axis.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, <kernel@axis.com>,
+ <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
+Message-ID: <20250518183852.7e9afdac@jic23-huawei>
+In-Reply-To: <pndldqwiihi.fsf@axis.com>
+References: <cover.1746802541.git.waqar.hameed@axis.com>
+	<c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
+	<20250511131432.1c6e381c@jic23-huawei>
+	<pndldqwiihi.fsf@axis.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250517163230.1237469-5-howardchu95@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 17, 2025 at 09:32:29AM -0700, Howard Chu wrote:
-> Remove set -e and print error messages in BTF general tests.
+
+> >> +#define D3323AA_DRV_NAME "d3323aa"  
+> >
+> > Put that inline where used.  A define like this both implies that various values
+> > must be the same when they need not be and means that we have to go find the
+> > define to fine out what they are set to.  Just setting the strings directly
+> > tends to end up more readable.  
 > 
-> Before:
->     $ sudo /tmp/perf test btf -vv
->     108: perf trace BTF general tests:
->     108: perf trace BTF general tests                                    : Running
->     --- start ---
->     test child forked, pid 889299
->     Checking if vmlinux BTF exists
->     Testing perf trace's string augmentation
->     String augmentation test failed
->     ---- end(-1) ----
->     108: perf trace BTF general tests                                    : FAILED!
+> Sure, we can do that. (There are a bunch of IIO-drivers doing this, so I
+> just thought that was the "convention".)
+
+I'm sometimes in less fussy mood.  One day I might just clean those up
+so there is nothing to copy into new drivers!
+
+>
+> >> +	/* Input clock or output detection signal (Vout). */  
+> >
+> > I'd rename. Vout kind of suggests a variable voltage. This seems to just
+> > be a level signal.  
 > 
-> After:
->     $ sudo /tmp/perf test btf -vv
->     108: perf trace BTF general tests:
->     108: perf trace BTF general tests                                    : Running
->     --- start ---
->     test child forked, pid 886551
->     Checking if vmlinux BTF exists
->     Testing perf trace's string augmentation
->     String augmentation test failed, output:
->     :886566/886566 renameat2(CWD, "/tmp/file1_RcMa", CWD, "/tmp/file2_RcMa", NOREPLACE) = 0---- end(-1) ----
->     108: perf trace BTF general tests                                    : FAILED!
+> >> +	struct gpio_desc *gpiod_clk_vout;  
 > 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/tests/shell/trace_btf_general.sh | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+> Yeah, it's a weird pin with multiple use-cases... I just named it
+> according to what the datasheet calls it. What about
+> `gpiod_clk_detection`?
+
+That sounds like it's detecting a clock.  Hmm.  
+gpiod_clkin_detectout maybe?
+
+> >> +static int d3323aa_write_settings(struct iio_dev *indio_dev,
+> >> +				  const unsigned long *regmap)  
+> >
+> > Rename regmap. regmap means some specific stuff in the kernel register_bm or something
+> > like that avoids that potential confusion.
+> >
+> > However, it would be much easier to read this driver if only this
+> > function and the read one knew about the bitmap stuff.  Inside the reset
+> > of the driver just store and pass around a structure with the various fields.
+> > Then in here use that to build up the bitmap locally and write to the device.
+> > The opposite in read which decodes the bitmap into those fields.
+> >
+> > That will make for a more standard and easier to review driver.  
 > 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index a25d8744695e..e78e653fc8f1 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -3,7 +3,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  err=0
-> -set -e
->  
->  # shellcheck source=lib/probe.sh
->  . "$(dirname $0)"/lib/probe.sh
-> @@ -28,10 +27,10 @@ check_vmlinux() {
->  
->  trace_test_string() {
->    echo "Testing perf trace's string augmentation"
-> -  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
-> -    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-> +  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-> +  if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
->    then
-> -    echo "String augmentation test failed"
-> +    printf "String augmentation test failed, output:\n$output"
-
-Looks like you need "\n" after the output as well.
-
->      err=1
->    fi
->  }
-> @@ -39,20 +38,20 @@ trace_test_string() {
->  trace_test_buffer() {
->    echo "Testing perf trace's buffer augmentation"
->    # echo will insert a newline (\10) at the end of the buffer
-> -  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
-> -    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-> +  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-> +  if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
->    then
-> -    echo "Buffer augmentation test failed"
-> +    printf "Buffer augmentation test failed, output:\n$output"
-
-Ditto.  And probably for the previous patch too.
-
->      err=1
->    fi
->  }
->  
->  trace_test_struct_btf() {
->    echo "Testing perf trace's struct augmentation"
-> -  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
-> -    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-> +  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-> +  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
->    then
-> -    echo "BTF struct augmentation test failed"
-> +	printf "BTF struct augmentation test failed, output:\n$output"
-
-And here as well.
-
-Thanks,
-Namhyung
-
-
->      err=1
->    fi
->  }
-> -- 
-> 2.45.2
+> Hm, maybe it would be easier to understand it if we remove the bitmap
+> from `struct d3323aa_data` and instead only store the relevant state
+> variables. We still would need to have the `regmap_lock` but to instead
+> protect all of the variables.
 > 
+> Let's go for that then! I actually don't have any strong arguments (or
+> opinions) against it.
+
+Just don't use the term regmap and that all sounds fine as it won't
+cause confusion against the stuff in drivers/base/regmap/
+
+
+> >> +static irqreturn_t d3323aa_irq_detection(int irq, void *dev_id)
+> >> +{
+> >> +	struct iio_dev *indio_dev = dev_id;
+> >> +	struct d3323aa_data *data = iio_priv(indio_dev);
+> >> +	enum iio_event_direction dir;
+> >> +	int val;
+> >> +
+> >> +	val = gpiod_get_value(data->gpiod_clk_vout);  
+> >
+> > Ideally I'd like a setup where we can wire the interrupt side of this
+> > to one pin and the gpio needed for writing to another.  In practice
+> > they may well be the same pin but that does introduced a bunch of races
+> > and dependency on what the interrupt controller does when an irq
+> > is disabled.
+> >
+> > Using one pin as an irq and as a data line is prone to some nasty
+> > corner cases though it works on some SoCs.  
+> 
+> Hm, that's an interesting idea. However, as you say there might then be
+> other issues to take care of.
+> 
+> On the other hand, the scope of the clock bit bang is quite small (only in
+> `*read/write_settings()`). So I guess we just leave it then?
+
+I'd give a very high chance that if the driver sees much use you will get
+bug reports as we've seen for ADCs that do similar multiple uses of the
+same line (one of which is as an interrupt).
+
+Here we will probably just see spurious interrupts which will be mostly
+harmless.  So fine as it stands.
+
+
+
