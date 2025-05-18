@@ -1,79 +1,70 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E6D1C700D;
-	Mon, 19 May 2025 09:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E703E267387
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747646781; cv=none; b=qH5PZEZTqhBvpzPHJBvgMA14Y6TngQzFwJLAk+sFepPF9f5lbguVwp4eMhG7ipK0gXAv9ghgfKc7qbvIv5CTUDnHLXNEjGWgbHgdTSkXLJMfXktj/6V+jDuyJ0+Gm4coSP2y7T2Xq11Ndl5R75/Hf2qM2yMOGCriNFY0rpmb7SU=
+	t=1747646953; cv=none; b=Qy3fStpuMVF+1/6qe44ok9U1Ab7oA3S0kVKepHGf3Dj7HepiCgDMCz6SBI7AXfGAObMA0HR1q9B9Qdtd8qGjEhX2oJtXDnam1kBIwmuxKhFJkl0qIQiqWCvP1I1D23uwLNDsKB1Fsq4xnwTpVMkg3Nioe7mYdG/hMun4LnyhvGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747646781; c=relaxed/simple;
-	bh=qC08lU7xZHju3fiXKtcFgwzB0nAIU8FpltPGEFX7uXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BbsEnlvjHH4WORa+7O4L7MOFw6tE4dsmpxnHnRFo6BreHxNgGwtBgmE3agsxz4SmjjRPhMzM1BL2MHR08i27AXnagDZCotaOtkYZrCQVhiWzeMKZpq+WdLjoingPQZmo3McnlPkWYzQqQ1JRHY54nOK0aiFGY4U7mWo8htzBkO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrSSE7Fw; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747646953; c=relaxed/simple;
+	bh=7ABxo1o+iuz7KS3oeJ+a4ETKImt3JwKUnmUjJWWurCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=isTH72RRRHf33a4qd2M9A5UfDkfpjxpY5utfs/Q904hlPNO2N+Wemxh3PnM35K3kmsxi62OrUWz8iJnKi01RG4LZx4hDMgqM4HHcxmGlAJU51aeM9RxbyPYrYRNHUwuclMu1xRUTzptV7UlTxLmfQBdrXD4QBBSkfXrAxUu3vz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Tt9sQGyN; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrSSE7Fw"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af5085f7861so2672910a12.3;
-        Mon, 19 May 2025 02:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747646778; x=1748251578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Asy1WUWIQLYQEaitmMDflq2qUpTALFO8TCo/y+sY1lo=;
-        b=VrSSE7Fw0PzWtgnMi83PJ0tekLq15MlpxSIWrpoLBCekMppRftADjWXl6XjidlI+IR
-         ay8AbY9RvJhdny4dGVUQa2k77/lUWMuGPjjjnOWjLntKL/gCxhmiyeq+6xrUb4t+EwNz
-         amlGmulBBJ4QZxIUo+LQNADdomASecz7r1l+i8R4sBMuvovny1YBYRGUjug6taNq9R6W
-         oZ7+DVPTJmDpPCAdPyKV/PI1JwQfxPeuY6CbexSB79BxxQLH7l4jCMuOwryL/oxmdn6c
-         u6yYZgaV7bKl52f1NfY89qVd3W0ot8c+x6X5+9Jr2R1YP9/RpkrfaRh5B0Khj62MR4Jy
-         Mfng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747646778; x=1748251578;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Asy1WUWIQLYQEaitmMDflq2qUpTALFO8TCo/y+sY1lo=;
-        b=DwvP0ubF5ckLevCwxi8iBAV0r34iu5OpAcRPK/wb+r+KNtId5WyzkklU1T2i3lRhhx
-         PZQRi3aVYWzny8Be9/zXy/98HXtWdn5oN3QtgwhY+3nhdbzaGxp2NEkhu/LR6SdUBnXZ
-         ijOLHWlUgUxUrHd+08Ai0RZ+4wWoBffZweD91V06foIVIYXODd6TExxLcx4SFG3M9Qri
-         M61vehDCwyigSsr/B3fXoXGend47ZrGZHJus5knm3g5QT6k6UHE3jHwQ/gy6u6nZ3zvk
-         9bEMeFoYpDqbv4U0vZGkSt3bh9HMlZ2wPcCRlmAc46KMKhEdlVT1Wve+eo1vhE0OjU7A
-         0FcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSqAV1sjFDzNQwV+92mBEYHNIK50d4pwUMmTpPUvLj1cOOJVUBt94kGBMt4wpLtT80cSbChbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2JSDvAoP6gq84yOfZTpN0Cj4KYKPv7jsvdd0MuXRhYCCXcrsU
-	qvDKzkZggZmxfcyh9vcFVJkrv6KXR5sG1RvWW3cbbobPP0fFQpKsoN2h
-X-Gm-Gg: ASbGncsX9vTd65hsSlE1Gn/3SroxjFS/UV18ILvc+onhAhjwpcuD+OjFy1VbCxvMtzx
-	N7VF8I3/Gdxt4BbQI63y8VoTTGoZt/UfRNZsLF1o+ziH6TbGjp5W8I9NsUDuP3VvSleJPqF4QZT
-	TVmwN1q7x1rNP+wyXvYKBj7HmB0qYo3DRj/H4E/qnfEZmj52QwaOSoE1OnrLzWDp1VMvtDWufgR
-	PRrGq1LCkCa9aHNknacFf3nn4nkXhjJZNBjTx0mtQcEoVIjB7gBt48XOSeF/JZRBFdCqnTIU8lc
-	RIo7+/wp9YtJOOakCA5fkrcBeuhUhu63gHL27toF3F8plyrHHJTM2nh11IT5G8qmAcJX6o4ScZp
-	xN/o=
-X-Google-Smtp-Source: AGHT+IGIDhMQe6eQf6jjqtfEsQKpB13xxHIOF3DYrNUhHik/vum5ZWdTsFTghx7xgKgAl6fYYemdtw==
-X-Received: by 2002:a17:902:ecd2:b0:224:2384:5b40 with SMTP id d9443c01a7336-231de31b3dbmr187668735ad.24.1747646777725;
-        Mon, 19 May 2025 02:26:17 -0700 (PDT)
-Received: from pc-lmm.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97dcesm55540675ad.121.2025.05.19.02.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 02:26:17 -0700 (PDT)
-From: limingming3 <limingming890315@gmail.com>
-X-Google-Original-From: limingming3 <limingming3@lixiang.com>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	limingming3@lixiang.com
-Subject: [PATCH] sched/eevdf: avoid pick_eevdf() returns NULL
-Date: Mon, 19 May 2025 17:25:39 +0800
-Message-ID: <20250519092540.3932826-1-limingming3@lixiang.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Tt9sQGyN"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250519092907epoutp0370210f655bc428d3b603f5be498a6068~A46O9FyCd2921329213epoutp03Z
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:29:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250519092907epoutp0370210f655bc428d3b603f5be498a6068~A46O9FyCd2921329213epoutp03Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747646947;
+	bh=U4vYel9SC3RXLTELAk4xNUjVAeemDzAM0ckAtX/d39U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Tt9sQGyNAWanO5Ka6ujmUULn+ixy7PN+WB0jSOl+MSc0idGBZZqs/dpAJ3y1IYGjR
+	 +hNIwKnFiISBtRw91ifeuBAYOrELfVBuD9L0vJgYweBL+Hav0yqB68bRv5NoP3IUSU
+	 D5NNO18fvPtxEo9zYpUkoTH4qVdkoIMkayYFc2cE=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250519092906epcas5p2b51cee8b512ed58c44cb88bb885bb095~A46NvruTe0614106141epcas5p22;
+	Mon, 19 May 2025 09:29:06 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4b1C752B2vz2SSKp; Mon, 19 May
+	2025 09:29:05 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250518193221epcas5p3c648c773d901f18639dd32fa452fd688~AtfoxwtPt1682016820epcas5p33;
+	Sun, 18 May 2025 19:32:21 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250518193221epsmtrp249aa1fd57cdeba1334d43b2f0dd71757~Atfow8VJD0348003480epsmtrp2a;
+	Sun, 18 May 2025 19:32:21 +0000 (GMT)
+X-AuditID: b6c32a52-41dfa70000004c16-56-682a35c5e846
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7C.39.19478.5C53A286; Mon, 19 May 2025 04:32:21 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250518193218epsmtip14b990810bf80067490cc48b266f28a35~AtfmC8r6v0974409744epsmtip1e;
+	Sun, 18 May 2025 19:32:18 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
+	m.szyprowski@samsung.com, jh80.chung@samsung.com, Shradha Todi
+	<shradha.t@samsung.com>
+Subject: [PATCH 01/10] PCI: exynos: Change macro names to exynos specific
+Date: Mon, 19 May 2025 01:01:43 +0530
+Message-ID: <20250518193152.63476-2-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250518193152.63476-1-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,116 +72,228 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSnO5RU60Mg3nT5S0ezNvGZvF30jF2
+	iyVNGRZr9p5jsph/5ByrxY1fbawWK77MZLc42vqf2eLlrHtsFg09v1ktNj2+xmpxedccNouz
+	846zWUxY9Y3F4uz3BUwWLX9aWCzWHrnLbnG3pZPV4v+eHewWvYdrLXbeOcHsIOrx+9ckRo+d
+	s+6yeyzYVOqxaVUnm8eda3vYPJ5cmc7ksXlJvUffllWMHke+Tmfx+LxJLoArissmJTUnsyy1
+	SN8ugSvj44tZTAVrbCt2HF3N1MA427SLkZNDQsBEYsvVFYxdjFwcQgLbGSWubnvFDpGQlPh8
+	cR0ThC0ssfLfc3aIok+MEp9WrmMESbAJaEk0fu1iBrFFBE4wSvTdsgQpYhZ4zyQxc8EvsG5h
+	AU+Jx03vwIpYBFQlFu+8BWbzClhJbNoxla2LkQNog7xEf4cESJhTwFpi2/qpYK1CQCULn+xk
+	hCgXlDg58wkLiM0MVN68dTbzBEaBWUhSs5CkFjAyrWIUTS0ozk3PTS4w1CtOzC0uzUvXS87P
+	3cQIjkKtoB2My9b/1TvEyMTBeIhRgoNZSYR31WaNDCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8
+	yjmdKUIC6YklqdmpqQWpRTBZJg5OqQamGO4Lr65c2XL3yc0Vm4PcGVI4fDf+7LqfseLv5VXi
+	lU9UO6V/LHnAur/67lp3kejFuU/F9WsXsP9ayP+qVPLAJwc1AfV3Z5lfLRTYdrnR6YauzO2j
+	NX9N16eWOppn/5lxr5JRYdJc47xP9zz95VX7NvOK7H6h+tnz4ukHSUF7sr4Kxiam258+tdT7
+	8bKNxw7OKdbgzw+78aN3ybya+UE3qgXu2dwNmX37h3GQ62pN65tTpd8ZdL7XEPobvnly24vM
+	2i/53OGWUubNSj9uh3EfepD2op470eGLR9aNg/53bnKwJTl3/Au8rTDPPaGdy+mK4fTCqz1M
+	2V/UrNdON9ln1evzRDT97FJ+PY2vgtO2K7EUZyQaajEXFScCAL7XumkxAwAA
+X-CMS-MailID: 20250518193221epcas5p3c648c773d901f18639dd32fa452fd688
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250518193221epcas5p3c648c773d901f18639dd32fa452fd688
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+	<CGME20250518193221epcas5p3c648c773d901f18639dd32fa452fd688@epcas5p3.samsung.com>
 
-pick_eevdf() may return NULL, which would triggers NULL pointer
-dereference and crash when best and curr are both NULL.
+Prefix macro names in exynos file with the term "EXYNOS" as the current
+macro names seem to be generic to PCIe.
 
-There are two cases when curr would be NULL:
-	1) curr is NULL when enter pick_eevdf
-	2) we set it to NUll when curr is not on_rq or eligible.
-
-And when we went to the best = curr flow, the se should never be NULL,
-So when best and curr are both NULL, we'd better set best = se to avoid
-return NULL.
-
-Below crash is what I encounter very low probability on our server and
-I have not reproduce it, and I also found other people feedback some
-similar crash on lore. So believe the issue is really exit.
-
-<1>[    8.607396] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000a0
-<1>[    8.607399] Mem abort info:
-<1>[    8.607400]   ESR = 0x0000000096000004
-<1>[    8.607401]   EC = 0x25: DABT (current EL), IL = 32 bits
-<1>[    8.607402]   SET = 0, FnV = 0
-<1>[    8.607403]   EA = 0, S1PTW = 0
-<1>[    8.607403]   FSC = 0x04: level 0 translation fault
-<1>[    8.607404] Data abort info:
-<1>[    8.607404]   ISV = 0, ISS = 0x00000004
-<1>[    8.607404]   CM = 0, WnR = 0
-<1>[    8.607405] user pgtable: 4k pages, 48-bit VAs, pgdp=000000011efef000
-<1>[    8.607406] [00000000000000a0] pgd=0000000000000000, p4d=0000000000000000
-<0>[    8.607409] Internal error: Oops: 0000000096000004 [#1] PREEMPT_RT SMP
-<4>[    8.607412] Modules linked in: tegradisp(O) sch_ingress xt_tcpudp iptable_filter 8021q garp mrp um_heap(O) nvhost_isp5(O) spidev nvhost_vi5(O) bridge nvhost_nvcsi_t194(O) tegra_capture_isp(O) tegra210_adma stp llc nvhost_capture(O) tegra_aconnect watchdog_tegra_t18x(O) spi_tegra114 tegra_camera(O) v4l2_dv_timings v4l2_fwnode v4l2_async videobuf2_dma_contig tegra_drm(O) cpuidle_tegra_auto(O) nvhost_nvcsi(O) nvhost_nvdla(O) tegra_camera_platform(O) drm_dp_aux_bus camchar(O) capture_ivc(O) cec videobuf2_v4l2 camera_diagnostics(O) snd_soc_tegra_virt_t210ref_pcm(O) drm_display_helper videobuf2_memops rtcpu_debug(O) snd_soc_tegra210_virt_alt_adsp(O) videobuf2_common drm_kms_helper videodev nvadsp(O) cdi_mgr(O) nvhost_pva(O) cdi_pwm(O) isc_mgr(O) sha3_ce isc_pwm(O) sha3_generic cdi_dev(O) sha512_ce lm90 snd_soc_tegra210_virt_alt_admaif(O) tegra_bpmp_thermal sha512_arm64 tegra_hv_vcpu_yield(O) tegra_hv_pm_ctl(O) cam_fsync(O) cdi_gpio(O) ukl(O) isc_dev(O) mc tegra_camera_rtcpu(O)
-<4>[    8.607458]  board_id_driver(O) tegra_fsicom(O) isc_gpio(O) ivc_bus(O) hsp_mailbox_client(O) nvhwpm(O) host1x_nvhost(O) nvgpu(O) mc_utils(O) nvmap(O) hvc_sysfs(O) tegra_nvvse_cryptodev(O) tegra_hv_vse_safety(O) host1x_fence(O) host1x(O) nvsciipc(O) userspace_ivc_mempool(O) ivc_cdev(O) logger(O) drm fuse ip_tables x_tables nvme nvme_core hashed_ecid(O) oak_pci(O) nvethernet(O) nvpps(O) tegra_bpmp(O) tegra_vblk(O) li_osdump(O) tegra_hv_vblk_oops(O)
-<4>[    8.607479] CPU: 9 PID: 1300 Comm: R000000007400 Tainted: G        W  O       6.1.119-rt45-prod-rt-tegra #1
-<4>[    8.607481] Hardware name: p3960-0010 (DT)
-<4>[    8.607482] pstate: 224000c5 (nzCv daIF +PAN -UAO +TCO -DIT -SSBS BTYPE=--)
-<4>[    8.607483] pc : pick_next_task_fair+0x98/0x490
-<4>[    8.607490] lr : pick_next_task_fair+0x98/0x490
-<4>[    8.607490] sp : ffff800021bdb1b0
-<4>[    8.607491] x29: ffff800021bdb1b0 x28: ffff0000836205c0 x27: 0000000000001000
-<4>[    8.607492] x26: d8e0d16df7b8e848 x25: ffff000e881b6dc0 x24: ffff000e881b6dc0
-<4>[    8.607494] x23: ffff800021bdb268 x22: ffff000e881b6d40 x21: ffff000083620000
-<4>[    8.607495] x20: ffff000e881b6dc0 x19: ffff000e881b6d40 x18: 00000000000005c8
-<4>[    8.607496] x17: 0000000000000000 x16: ffffd16df7896b40 x15: 0000000000000000
-<4>[    8.607497] x14: 0000000000000014 x13: ffff800021bdba90 x12: ffff0000b052f300
-<4>[    8.607498] x11: 00000000c425686b x10: 00000002010a4ab3 x9 : ffffd16df6ca7778
-<4>[    8.607499] x8 : ffff800021bdb390 x7 : 0000000000000000 x6 : 0000000000000002
-<4>[    8.607500] x5 : 0000000000000003 x4 : 0000000000000003 x3 : 0ab3e2bc8934c987
-<4>[    8.607501] x2 : ffff000085241ec0 x1 : 0abe8499696457cc x0 : 0000000000000000
-<4>[    8.607503] Call trace:
-<4>[    8.607503]  pick_next_task_fair+0x98/0x490
-<4>[    8.607505]  __schedule+0x16c/0x870
-<4>[    8.607511]  schedule_rtlock+0x28/0x60
-<4>[    8.607513]  rtlock_slowlock_locked+0x3a0/0xcf0
-<4>[    8.607515]  rt_spin_lock+0xb0/0xe0
-<4>[    8.607516]  __wake_up_common_lock+0x68/0xe0
-<4>[    8.607519]  __wake_up_sync_key+0x28/0x50
-<4>[    8.607520]  sock_def_readable+0x48/0xa0
-<4>[    8.607523]  __udp_enqueue_schedule_skb+0x158/0x2e0
-<4>[    8.607527]  udp_queue_rcv_one_skb+0x1f8/0x6f0
-<4>[    8.607529]  udp_queue_rcv_skb+0x64/0x290
-<4>[    8.607531]  __udp4_lib_rcv+0x654/0x980
-<4>[    8.607532]  udp_rcv+0x28/0x40
-<4>[    8.607533]  ip_protocol_deliver_rcu+0x40/0x1d0
-<4>[    8.607538]  ip_local_deliver_finish+0x84/0xe0
-<4>[    8.607540]  ip_local_deliver+0x84/0x130
-<4>[    8.607542]  ip_rcv+0x78/0x150
-<4>[    8.607544]  __netif_receive_skb_one_core+0x60/0xb0
-<4>[    8.607548]  __netif_receive_skb+0x20/0x80
-<4>[    8.607549]  process_backlog+0xcc/0x1a0
-<4>[    8.607551]  __napi_poll.constprop.0+0x40/0x230
-<4>[    8.607552]  net_rx_action+0x13c/0x310
-<4>[    8.607553]  handle_softirqs.isra.0+0x118/0x3a0
-<4>[    8.607556]  __local_bh_enable_ip+0x8c/0x110
-<4>[    8.607556]  netif_rx+0xf4/0x1d0
-<4>[    8.607558]  dev_loopback_xmit+0x88/0x170
-<4>[    8.607559]  ip_mc_finish_output+0x7c/0x180
-<4>[    8.607561]  ip_mc_output+0x338/0x350
-<4>[    8.607562]  ip_send_skb+0x58/0x130
-<4>[    8.607563]  udp_send_skb+0x11c/0x3d0
-<4>[    8.607564]  udp_sendmsg+0x794/0x9d0
-<4>[    8.607566]  inet_sendmsg+0x4c/0xa0
-<4>[    8.607568]  __sock_sendmsg+0x64/0x80
-<4>[    8.607572]  __sys_sendto+0x114/0x170
-<4>[    8.607573]  __arm64_sys_sendto+0x30/0x50
-<4>[    8.607575]  invoke_syscall+0x50/0x140
-<4>[    8.607579]  el0_svc_common.constprop.0+0x4c/0x110
-<4>[    8.607581]  do_el0_svc+0x2c/0x90
-<4>[    8.607583]  el0_svc+0x2c/0xa0
-<4>[    8.607585]  el0t_64_sync_handler+0x124/0x130
-<4>[    8.607586]  el0t_64_sync+0x190/0x194
-<0>[    8.607589] Code: 97fff1ee 37000200 aa1403e0 97ffddc7 (f9405014)
-<4>[    8.607596] ---[ end trace 0000000000000000 ]---
-
-Signed-off-by: limingming3 <limingming3@lixiang.com>
+Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 116 ++++++++++++------------
+ 1 file changed, 58 insertions(+), 58 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0fb9bf995a47..7fd867d6b62d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -978,7 +978,7 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
- 	}
- found:
- 	if (!best || (curr && entity_before(curr, best)))
--		best = curr;
-+		best = curr ? curr : se;
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index ace736b025b1..1c70b036376d 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -26,30 +26,30 @@
+ #define to_exynos_pcie(x)	dev_get_drvdata((x)->dev)
  
- 	return best;
+ /* PCIe ELBI registers */
+-#define PCIE_IRQ_PULSE			0x000
+-#define IRQ_INTA_ASSERT			BIT(0)
+-#define IRQ_INTB_ASSERT			BIT(2)
+-#define IRQ_INTC_ASSERT			BIT(4)
+-#define IRQ_INTD_ASSERT			BIT(6)
+-#define PCIE_IRQ_LEVEL			0x004
+-#define PCIE_IRQ_SPECIAL		0x008
+-#define PCIE_IRQ_EN_PULSE		0x00c
+-#define PCIE_IRQ_EN_LEVEL		0x010
+-#define PCIE_IRQ_EN_SPECIAL		0x014
+-#define PCIE_SW_WAKE			0x018
+-#define PCIE_BUS_EN			BIT(1)
+-#define PCIE_CORE_RESET			0x01c
+-#define PCIE_CORE_RESET_ENABLE		BIT(0)
+-#define PCIE_STICKY_RESET		0x020
+-#define PCIE_NONSTICKY_RESET		0x024
+-#define PCIE_APP_INIT_RESET		0x028
+-#define PCIE_APP_LTSSM_ENABLE		0x02c
+-#define PCIE_ELBI_RDLH_LINKUP		0x074
+-#define PCIE_ELBI_XMLH_LINKUP		BIT(4)
+-#define PCIE_ELBI_LTSSM_ENABLE		0x1
+-#define PCIE_ELBI_SLV_AWMISC		0x11c
+-#define PCIE_ELBI_SLV_ARMISC		0x120
+-#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
++#define EXYNOS_PCIE_IRQ_PULSE			0x000
++#define EXYNOS_IRQ_INTA_ASSERT			BIT(0)
++#define EXYNOS_IRQ_INTB_ASSERT			BIT(2)
++#define EXYNOS_IRQ_INTC_ASSERT			BIT(4)
++#define EXYNOS_IRQ_INTD_ASSERT			BIT(6)
++#define EXYNOS_PCIE_IRQ_LEVEL			0x004
++#define EXYNOS_PCIE_IRQ_SPECIAL		0x008
++#define EXYNOS_PCIE_IRQ_EN_PULSE		0x00c
++#define EXYNOS_PCIE_IRQ_EN_LEVEL		0x010
++#define EXYNOS_PCIE_IRQ_EN_SPECIAL		0x014
++#define EXYNOS_PCIE_SW_WAKE			0x018
++#define EXYNOS_PCIE_BUS_EN			BIT(1)
++#define EXYNOS_PCIE_CORE_RESET			0x01c
++#define EXYNOS_PCIE_CORE_RESET_ENABLE		BIT(0)
++#define EXYNOS_PCIE_STICKY_RESET		0x020
++#define EXYNOS_PCIE_NONSTICKY_RESET		0x024
++#define EXYNOS_PCIE_APP_INIT_RESET		0x028
++#define EXYNOS_PCIE_APP_LTSSM_ENABLE		0x02c
++#define EXYNOS_PCIE_ELBI_RDLH_LINKUP		0x074
++#define EXYNOS_PCIE_ELBI_XMLH_LINKUP		BIT(4)
++#define EXYNOS_PCIE_ELBI_LTSSM_ENABLE		0x1
++#define EXYNOS_PCIE_ELBI_SLV_AWMISC		0x11c
++#define EXYNOS_PCIE_ELBI_SLV_ARMISC		0x120
++#define EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
+ 
+ struct exynos_pcie {
+ 	struct dw_pcie			pci;
+@@ -73,49 +73,49 @@ static void exynos_pcie_sideband_dbi_w_mode(struct exynos_pcie *ep, bool on)
+ {
+ 	u32 val;
+ 
+-	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_AWMISC);
++	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_SLV_AWMISC);
+ 	if (on)
+-		val |= PCIE_ELBI_SLV_DBI_ENABLE;
++		val |= EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
+ 	else
+-		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_AWMISC);
++		val &= ~EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_ELBI_SLV_AWMISC);
  }
+ 
+ static void exynos_pcie_sideband_dbi_r_mode(struct exynos_pcie *ep, bool on)
+ {
+ 	u32 val;
+ 
+-	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_ARMISC);
++	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_SLV_ARMISC);
+ 	if (on)
+-		val |= PCIE_ELBI_SLV_DBI_ENABLE;
++		val |= EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
+ 	else
+-		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_ARMISC);
++		val &= ~EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_ELBI_SLV_ARMISC);
+ }
+ 
+ static void exynos_pcie_assert_core_reset(struct exynos_pcie *ep)
+ {
+ 	u32 val;
+ 
+-	val = exynos_pcie_readl(ep->elbi_base, PCIE_CORE_RESET);
+-	val &= ~PCIE_CORE_RESET_ENABLE;
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_CORE_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 0, PCIE_STICKY_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 0, PCIE_NONSTICKY_RESET);
++	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_CORE_RESET);
++	val &= ~EXYNOS_PCIE_CORE_RESET_ENABLE;
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_CORE_RESET);
++	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_STICKY_RESET);
++	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_NONSTICKY_RESET);
+ }
+ 
+ static void exynos_pcie_deassert_core_reset(struct exynos_pcie *ep)
+ {
+ 	u32 val;
+ 
+-	val = exynos_pcie_readl(ep->elbi_base, PCIE_CORE_RESET);
+-	val |= PCIE_CORE_RESET_ENABLE;
++	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_CORE_RESET);
++	val |= EXYNOS_PCIE_CORE_RESET_ENABLE;
+ 
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_CORE_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 1, PCIE_STICKY_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 1, PCIE_NONSTICKY_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 1, PCIE_APP_INIT_RESET);
+-	exynos_pcie_writel(ep->elbi_base, 0, PCIE_APP_INIT_RESET);
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_CORE_RESET);
++	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_STICKY_RESET);
++	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_NONSTICKY_RESET);
++	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_APP_INIT_RESET);
++	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_APP_INIT_RESET);
+ }
+ 
+ static int exynos_pcie_start_link(struct dw_pcie *pci)
+@@ -123,21 +123,21 @@ static int exynos_pcie_start_link(struct dw_pcie *pci)
+ 	struct exynos_pcie *ep = to_exynos_pcie(pci);
+ 	u32 val;
+ 
+-	val = exynos_pcie_readl(ep->elbi_base, PCIE_SW_WAKE);
+-	val &= ~PCIE_BUS_EN;
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_SW_WAKE);
++	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_SW_WAKE);
++	val &= ~EXYNOS_PCIE_BUS_EN;
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_SW_WAKE);
+ 
+ 	/* assert LTSSM enable */
+-	exynos_pcie_writel(ep->elbi_base, PCIE_ELBI_LTSSM_ENABLE,
+-			  PCIE_APP_LTSSM_ENABLE);
++	exynos_pcie_writel(ep->elbi_base, EXYNOS_PCIE_ELBI_LTSSM_ENABLE,
++			  EXYNOS_PCIE_APP_LTSSM_ENABLE);
+ 	return 0;
+ }
+ 
+ static void exynos_pcie_clear_irq_pulse(struct exynos_pcie *ep)
+ {
+-	u32 val = exynos_pcie_readl(ep->elbi_base, PCIE_IRQ_PULSE);
++	u32 val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_IRQ_PULSE);
+ 
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_PULSE);
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_IRQ_PULSE);
+ }
+ 
+ static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
+@@ -150,12 +150,12 @@ static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
+ 
+ static void exynos_pcie_enable_irq_pulse(struct exynos_pcie *ep)
+ {
+-	u32 val = IRQ_INTA_ASSERT | IRQ_INTB_ASSERT |
+-		  IRQ_INTC_ASSERT | IRQ_INTD_ASSERT;
++	u32 val = EXYNOS_IRQ_INTA_ASSERT | EXYNOS_IRQ_INTB_ASSERT |
++		  EXYNOS_IRQ_INTC_ASSERT | EXYNOS_IRQ_INTD_ASSERT;
+ 
+-	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_EN_PULSE);
+-	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_LEVEL);
+-	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_SPECIAL);
++	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_IRQ_EN_PULSE);
++	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_IRQ_EN_LEVEL);
++	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_IRQ_EN_SPECIAL);
+ }
+ 
+ static u32 exynos_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+@@ -212,9 +212,9 @@ static struct pci_ops exynos_pci_ops = {
+ static int exynos_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	struct exynos_pcie *ep = to_exynos_pcie(pci);
+-	u32 val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_RDLH_LINKUP);
++	u32 val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_RDLH_LINKUP);
+ 
+-	return (val & PCIE_ELBI_XMLH_LINKUP);
++	return (val & EXYNOS_PCIE_ELBI_XMLH_LINKUP);
+ }
+ 
+ static int exynos_pcie_host_init(struct dw_pcie_rp *pp)
 -- 
-2.48.1
+2.49.0
 
