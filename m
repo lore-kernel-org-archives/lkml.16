@@ -1,140 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583B2F50F;
-	Sun, 18 May 2025 07:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D041635;
+	Sun, 18 May 2025 07:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747552777; cv=none; b=SW/PE+OSf3l3nqQW6ieNjmVFIVmqA9vPiDES6Rcm4U7UouOH8N9jfD5u/OIlmvcaZlEjEw0+ySIfhIZFSt9QLu2QlSA8xKHiS6xlbqpwlKjj+t88dxBMQVl41NXtffOqmrknmOACV9PYhv86ZnLdJ+pnHff5V6+xFMmdIcSAo18=
+	t=1747553154; cv=none; b=LxwMFFlPDgm0jGZ/N6Lv6twKzHrm0nT6Z+gfHhmecswTvROjscfk9h2CNNBFiYRxzIQ3B5vIZBBiHnmGiEnMZnMD5WkSeBJsBsjjgMqWkQl2IefSnnprUlZrB4dSkkXLeN4RPkf5ECJsyWp3VGrviFCCDxxn1Elxa1vYUxamXEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747552777; c=relaxed/simple;
-	bh=eZTv81uAYSuj3s2veI21xz+VC0/ANUgRdzq9TDNSayA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=r2l9MtSi60cHVoZq+RgJ7CzHwLI0pYsAykUH37KI7CoaPwArNpEneY/U1PRnYMpxzjpUTL5vDAU8gwU7yEQHJTdOlWEetrtkrqi4jiUTsPVQjrkyfO+El/paTQP+z50nfORmWxK2k91fhxZXcdBD67S2fdqqhZXWSplzCnriIUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr5lXed9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747553154; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=oKtEc+FJ2p2uMHDOp/nmPzKsj9IWlKnjAagnX9fh48DoEq1KRpbzzmI2tsk0ngFDVCPt/ftwuz1hW2CDmt9j2UTlQAmqyFtZO3Z3ATC2iXQc8arNbfg9jRE1yXmcX9ONWxJy9+zeRhqo3mNnnEEGyt92a2ceuTLaQJvjqo7wDtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kufke6ES; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr5lXed9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81ACC4CEE7;
-	Sun, 18 May 2025 07:19:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kufke6ES"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9831BC4CEE7;
+	Sun, 18 May 2025 07:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747552776;
-	bh=eZTv81uAYSuj3s2veI21xz+VC0/ANUgRdzq9TDNSayA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=gr5lXed98/psCI6YG1EDjEqbMWClv30in0JVqiv3S0IaaTiKvXuaKsudtuFglt6Jd
-	 P259ZRfAb+sa/DZo4VZkVFeMyC37jwswtPFGm8ItrEmfywVJetfNSSoUIi8Ngh2scN
-	 gfVKeW6tBulVNNy/aD2s7B5cQUQfOJagSVXoAM4M8yrGpU8M3LQhJd80KW2i05YKga
-	 rD5u0y0doe7RvLoniFdEU+susu/2op+g5faDqd+xZ+41c5ESdovMwwQVRl32o5waZm
-	 ZdFXZnvaspMU83Z0In7Tine1KsLeBnU+ri/XEhFDTp3vx56mqkrZoTdIdSLUyJyx9Q
-	 CrOl5K55eisEg==
+	s=k20201202; t=1747553153;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=kufke6ESM6tyRA28p3vAhIDHUrDl05myEbDuPao+H1K8lXInFo29/LfAFDFpjbTXM
+	 9vxrqjlfrXgYq0NsclGRBqx0WqVUI9AUfTVdMU2Jjve1KXQia/V2qJ1KbmwYlRvz1w
+	 BYUiy0CfbAFfCyQugZIC/pEFYruOs6oSiz1TLzlpExcAFvUSE9pDgOOfYMIfOGLIJD
+	 TQtEHZjteF1OplCYJY5ie49vZ1VPcK6qDeiHan3dUyXmGXo5jKh9Bsz+hYOQBY2aPs
+	 pHOtKynCxFfDeY6nqP5N7reSSZba9JhxWLqSvwU/jQMoP8mXApmhjNhkH5fZV87lf5
+	 1O6qjBq4OcC4Q==
+Date: Sun, 18 May 2025 02:25:52 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 09:19:23 +0200
-Message-Id: <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Mark Brown" <broonie@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
-In-Reply-To: <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250518072552.gLahObCphQL6Ym6k4rkJgcIl2CEyWmkaXTxRdS6thQ0@z>
 
-On Sun May 18, 2025 at 4:28 AM CEST, Alexandre Courbot wrote:
-> On Wed May 14, 2025 at 12:44 AM JST, Daniel Almeida wrote:
->> +//! Regulator abstractions, providing a standard kernel interface to co=
-ntrol
->> +//! voltage and current regulators.
->> +//!
->> +//! The intention is to allow systems to dynamically control regulator =
-power
->> +//! output in order to save power and prolong battery life. This applie=
-s to both
->> +//! voltage regulators (where voltage output is controllable) and curre=
-nt sinks
->> +//! (where current limit is controllable).
->> +//!
->> +//! C header: [`include/linux/regulator/consumer.h`](srctree/include/li=
-nux/regulator/consumer.h)
->> +//!
->> +//! Regulators are modeled in Rust with two types: [`Regulator`] and
->> +//! [`EnabledRegulator`].
->> +//!
->> +//! The transition between these types is done by calling
->> +//! [`Regulator::enable()`] and [`EnabledRegulator::disable()`] respect=
-ively.
->> +//!
->> +//! Use an enum or [`kernel::types::Either`] to gracefully transition b=
-etween
->> +//! the two states at runtime if needed. Store [`EnabledRegulator`] dir=
-ectly
->> +//! otherwise.
->
-> Having the enabled or disabled state baked into the type is indeed
-> valuable for drivers that just need to acquire and enable a regulator at
-> probe time. However, there are also more dynamic use cases and I don't
-> think the burden of managing this aspect - by either performing a manual
-> match to call any method (even the shared ones), or implementing custom
-> dispatch types (which will lead to many similar ad-hoc implementations)
-> - should fall on the user. Thus I strongly suggest that this module
-> provides a solution for this as well.
->
-> It has been proposed earlier to use a typestate, and this would indeed
-> provide several benefits, the first one being the ability to have shared
-> impl blocks (and shared documentation) between the enabled and disabled
-> states for methods like set/get_voltage().
->
-> But the key benefit I see is that it could also address the
-> aforementioned dynamic management problem through the introduction of a
-> third state.
->
-> Alongside the `Enabled` and `Disabled` states, there would be a third
-> state (`Dynamic`?) in which the regulator could either be enabled or
-> disabled. This `Dynamic` state is the only one providing `enable` and
-> `disable` methods (as well as `is_enabled`) to change its operational
-> state without affecting its type.
->
-> All three states then implement `set_voltage` and `get_voltage` through
-> a common impl block, that could be extended with other methods from the
-> C API that are independent of the state, as needed.
->
-> To handle typestate transitions:
->
-> - The `Disabled` and `Dynamic` states provide a `try_into_enabled()`
->   method to transition the regulator to the `Enabled` state.
-> - The `Enabled` and `Dynamic` states provide `try_into_disabled()`.
-> - `Enabled` and `Disabled` also provide `into_dynamic()` (which cannot
->   fail).
->
-> Essentially, the `Enabled` and `Disabled` states simply enforce an
-> additional operational state invariant on the underlying regulator, and
-> do not provide methods to change it.
->
-> The `Dynamic` state would be the default for `Regulator`, so by just
-> using `Regulator`, the user gets an interface that works very similarly
-> to the C API it abstracts, making it intuitive to those familiar with
-> it.
 
-How will the `Dynamic` typestate track the enable refcount? AFAIK one
-has to drop all enable refcounts before removing the regulator. Also
-what happens when I call `disable` without any enable calls before?
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
 
----
-Cheers,
-Benno
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
