@@ -1,63 +1,38 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D79720B808
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E519205E16;
+	Sun, 18 May 2025 22:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747606077; cv=none; b=Ce4whauQ2IR2H2mvycrEhtGu/Ty1w7t6edOyGzprPIxYEGBW7C0oP0Rn3slsHaKJFJ55Yay0mWNbmIGbudvtqZxy0naL9aUfpxLoodGmfDvGDhx7EZ2MV1u9YV8Kr0CgTGIUSCXbcgr3m33aLhZ+1v/zvJFzOwjiYOGG7c43CVA=
+	t=1747606114; cv=none; b=tVwja7zpDnc9jpcUKs3i5iYbxHwdj88U2aUHY3j6uehnDORED3j03I0amT948hFeBz4wy+qESxSumLTWlupOARrfOddRv8OjWSxFBjn0e4B0YRdFYxGHCVm1QbzgDaOSGs3k349W5mTmT1CeGsVHO2AzFsmcTjI/8WR+K+Fm4dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747606077; c=relaxed/simple;
-	bh=NI8ZpKqVeT2O0wYKWvr00l6EYFZUEguyKS4NdA4QyWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CswJNrCF/9r3SO5ZanIwRt7VUUJ7cvq127R6Hwer/acJuV6nsp/RCVE0m7Gf9VPD/pl6PUGCyTqDNbs5Ca5CV2nL25XL+MB3Vx5JeszcM/SB3LDJOhgPX+uYKqsXaEdp0WoDVXGCZdldWxJZd2urcjFADpqLzCQ1yKcbPXwidok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=dOnfdqsX; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dOnfdqsX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1747606075; bh=EMpzWrkVyV6vMCT5CK0scK0XhgFMcmSqXuqMq+/6SaA=;
- b=dOnfdqsX3jXr5KU0cs8mHy9uuTmKrZe1Y2sXerTNRl8VF+LsFuP5sLskdmyvtLTuI5redVO7V
- L9OrgFrJQZPVivMz8aFQuT+jE9/zQrd4AGyuBmmqW2vbBiKhaIp8Q+JDr8QM3vYNN3k5qK3EpdB
- 8nXMbS7F0GmkjTGuZXU0okcXhYLgVKfdLXhCt8Md9odGp1D1mG6lLHPLEPg1VTRr6b47RolwXtF
- wQ7jzX1+hTm72sOlByI7L/QoQGkQwcUDemce54+tN1yVsJdtZfL25YgL5NUprjhqeLcDaOD71EO
- Ti3LFsKjG+AU2amPEbh/tvz90TN4Dbcnj3rHPEHV+Zrw==
-X-Forward-Email-ID: 682a5a3378cae75fbd8d4719
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.3
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Yao Zi <ziyao@disroot.org>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	linux-rockchip@lists.infradead.org,
-	linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1747606114; c=relaxed/simple;
+	bh=yzBlRd1OlDFlk125y6ektn+xRypy74jKbtR29XA3BkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R38VGZ0H/DLu0ipxQXR0Wg5xV+/CGruuECJzNjS6K/R44Vz/F050foKbdzFoSRv7D/WuDDzksXsv/KJGinf2+/6A3hH9thpI491x2UL83djY2rvYboraJWiRs+3Xez8uqbFFL3PBBPlXcl2RrfX5sKQu91T4iOjg2qwiImQRd0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: 9xbhkz/DRDGOpoUUqVURnQ==
+X-CSE-MsgGUID: yL/NLA/wTHKJWWJapptS3Q==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 19 May 2025 07:08:25 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.57])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E17ED40B55CF;
+	Mon, 19 May 2025 07:08:21 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: biju.das.jz@bp.renesas.com,
+	linux-renesas-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Jonas Karlman <jonas@kwiboo.se>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 8/9] dt-bindings: iio: adc: rockchip-saradc: Allow use of a power-domain
-Date: Sun, 18 May 2025 22:06:55 +0000
-Message-ID: <20250518220707.669515-9-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250518220707.669515-1-jonas@kwiboo.se>
-References: <20250518220707.669515-1-jonas@kwiboo.se>
+	linux-kernel@vger.kernel.org,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: r9a09g047e57-smarc: Reduce I2C2 clock frequency
+Date: Mon, 19 May 2025 00:08:12 +0200
+Message-ID: <20250518220812.1480696-1-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,32 +41,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SARADC controller in most Rockchip SoCs are part or power domains
-that are always powered on, i.e. PD_BUS or PD_PERI.
+Lower the I2C2 bus clock frequency on the RZ/G3E SMARC SoM from 1MHz to 400KHz
+to improve compatibility with a wider range of I2C peripherals. The previous
+1MHz setting was too aggressive for some devices on the bus, which experienced
+timing issues at such a frequency.
 
-On RK3528 the SARADC controller is part of the PD_VPU power domain.
-
-Add support to describe power-domains for the SARADC controllers.
-
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Fixes: f7a98e256ee3 ("arm64: dts: renesas: rzg3e-smarc-som: Add I2C2 device pincontrol")
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-index 41e0c56ef8e3..f776041fd08f 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-@@ -47,6 +47,9 @@ properties:
-       - const: saradc
-       - const: apb_pclk
+diff --git a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+index 43d79158d81a..ecea29a76b14 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+@@ -85,7 +85,7 @@ &gpu {
+ &i2c2 {
+ 	pinctrl-0 = <&i2c2_pins>;
+ 	pinctrl-names = "default";
+-	clock-frequency = <1000000>;
++	clock-frequency = <400000>;
+ 	status = "okay";
  
-+  power-domains:
-+    maxItems: 1
-+
-   resets:
-     maxItems: 1
- 
+ 	raa215300: pmic@12 {
 -- 
-2.49.0
+2.43.0
 
