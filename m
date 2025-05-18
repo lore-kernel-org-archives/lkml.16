@@ -1,140 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EA23B2A0
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A092AE6F
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747603569; cv=none; b=TNDpMzvE84rR2dJdoyrtCUmjbPAHlYfNmpDs9YWvmct3vvXw0HqjhE1yeHXHtZYYaoCDhaqlcy774wLOfi6guBhNix8SsigGz9mKBoLt2TjUS4n+gAPrE38PG+Ei7u0b4OfstSBbQOg8XloZBC/jROkZf5P3AbGw224YTxUzeFc=
+	t=1747604059; cv=none; b=WY3YoYBEwHVAB5NpBtoIIbrd1uNsqGufEKQNeChZnlew11LIpPa/W0pgOdT7pWrKeSttXBO7L3HEb0JTd8IszgBZEIyhPOxSbT6SXqyydI+7DENkazqSpgI9JGbzu/BeDz17KZn8P+oLxxsunQxJ5FQMOm9Wby1TXRZDSUG4frk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747603569; c=relaxed/simple;
-	bh=eshD621sTSOzcT215XItxQpbF2o7T4ts7L9YisTnoWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwEzrL7gdCdLUoWsKRF7sBNnWAKz2e0a79UyRXz/AoJ2GqA44tbjVa6tYkJKZmG8IGodmT93LurCjeRt6x/LuiFrTxOvheRG+A1MadL4qoQfUp7iq3iCdLFrExBsiIq8vgGPiavSEnt3VmpwRgjXoDWr7lXgJpSdCGTLMP3HZMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NzjmN4qz; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747604059; c=relaxed/simple;
+	bh=MVyWvTH9jezrYGixpYmB8VcITaczqnk77BRhuiSVPIc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGj9zUubSYoGjK2hgjP+EQSgANw//HRZMx4oagc/YOXd9OrBSsllbPFpc7f1mZuBskvbdhi5SOvcRLiiTkNcKJmL0U+SvY+EHLvNufZ6gSOF6LA9m6tlYa5lT89jNzDGOjaBak4+v7GEDTAgBVQ01hGVelLA2eRaNpbeVw/I6Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=aX5vUadI; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NzjmN4qz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747603567; x=1779139567;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eshD621sTSOzcT215XItxQpbF2o7T4ts7L9YisTnoWk=;
-  b=NzjmN4qzRti1tYZBHIPm0WE+Ke6petgE0pwx08iDkRUBw7quvfb6vupf
-   0K1jAo2gikFvuBixpN3TYJByIYHIPC/fTO9A6lLOnm0AlEcaWnfC+zBx8
-   74IjvjqpAxEihrxV4rL3R/8LgBRdapUivrlssPKb1oPCSJEfCdHHz26Vo
-   xNDsP2g8lKebedVmGueyxagd4boxJWXnlPgO/g4OY59Iumx7luWagG427
-   hWbD7eKclltsZgGU//TJGJHBqD7gEYoCief28jUJdOXnxAE5josh0FEbH
-   YoJbkk0H3CQdr8bR8OVfIMUpV8lRUV+JdzmtkIdqO36vJeClL0yFFOvb6
-   Q==;
-X-CSE-ConnectionGUID: wQLdV5A8TBeuZDrW9HdEKQ==
-X-CSE-MsgGUID: draZRIQ5SY+ui6Xw4XPUHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53317162"
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="53317162"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 14:26:06 -0700
-X-CSE-ConnectionGUID: qq9Bu7WjQdCuB3SDefeRaw==
-X-CSE-MsgGUID: S40TOqY7Rvik/sdiklA93Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="139711497"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 14:26:02 -0700
-Date: Mon, 19 May 2025 00:26:00 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v3 1/3] drm: Create an app info option for wedge events
-Message-ID: <aCpQaPzY0Vl5cl8T@black.fi.intel.com>
-References: <20250512203437.989894-1-andrealmeid@igalia.com>
- <20250512203437.989894-2-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="aX5vUadI"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b4ba530feso3148792276.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 14:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1747604056; x=1748208856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LQP7kiEFeXieUYHTQOWlMajO9SS2h9UcfNmGDRaBXeQ=;
+        b=aX5vUadIzIV8ASEorrYerOBh7+o83iuc5x/ndhc0fQmonqniSuI9umaiKZxSIryMcj
+         pCZN2rcwbp58rU7iUbuKcLsLE70NyHEBJXI62t9OTeuKcJqyA/6Zi8v+8ost8toBFBX+
+         nvLqwnDHcJCjlKa6AN5EPV+hf2r7AykRaEfH9nFdMubumAaFS8RpPgPtp8FUdQQlI7cu
+         Kz89u9LK/j4BwPFHWn6Mhdq9YGo9bxcTQa59HwgZyj+zVFh3ZhCgChFySWBSwgk6U0FV
+         SvKV91Y/kecm+kxvZDX+9CtxV1YQaHOJRsWQwOWsOvm4gBtQt7KspTl5g4b3T5r30Oel
+         ygyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747604056; x=1748208856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LQP7kiEFeXieUYHTQOWlMajO9SS2h9UcfNmGDRaBXeQ=;
+        b=IYCoGz8jBeV9ZIzqH5pcGTP1m+OvauxEaafPYzo/AGhEUnjj6l8zpRy/+Tztgtcmyh
+         IfzVf7GAkNv1lD8VFgJc5iGbgtQ8lpXKqzBLeswX4763MSFeinmoCc/w8yyJBjJ5DR/y
+         LqrgzNtc6T7AIHkFu7FBAkdBkQWXHMi7rgCXKgqH+WmPnt2hf9ZYkHLC6zEbaU335ZgZ
+         x/3DKFgJOrPCxhkdIk7CZ3YxfJvAclWFrT0i98c7tzzIbziCN1U2L8MHrHlMZ/bpcHLa
+         poBYd0YS/4BKb6GaslZd/nsNz9hG21xf8rk3Tg652IQ1O8hcivF3PjJAx7prLYe8SrLj
+         d7Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXU/SLMtO1Kt9N0J56ElShzAAhXwhIwi5xolwbsJRSyiho4sSeipFlLOB0udxYHfAquh3jj1orcn1DYYj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVbzjTrtV0S8HvtlI3NJsqTkVSjwoep2xLH1ojSqQqdNr1//QP
+	NidnM74p60sznruFikfsBhIsUoM40Om0NQJJ+Oj7z3z2Dzy97a0qyGbvKqJOoTO8Y91+h6lDktU
+	7UC6T/zIKRT//4/0yJX84EjZZJ1hgrCAQugcNPTXc
+X-Gm-Gg: ASbGnctFjKcbGQLqsQlAl20cX1U6D/LY42qw6iFnzdSTTJULAPH6nZ8ugnKYgssKVnt
+	NqY4HrVJQ34d7wtb8751Qn0x1z7MwK5xzmFqb/hl+a48gjrIREmj0PQExD3Ukc5oYf+zjV+Vcko
+	64o02Y8zwI+jkn1RRDaZRegk+p/MPW3AKikQgyjyXqWRI=
+X-Google-Smtp-Source: AGHT+IE4xhc4enZwnp333lRGkDvOTlvAzIVwQODufuLGxxB3SU2BQ2IFplj8HM2L9kwEdXZjW5DSrE/jizotZyc82E8=
+X-Received: by 2002:a05:6902:1201:b0:e78:f901:6074 with SMTP id
+ 3f1490d57ef6-e7b6d39c8e6mr13141403276.5.1747604055898; Sun, 18 May 2025
+ 14:34:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250512203437.989894-2-andrealmeid@igalia.com>
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+ <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+ <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
+ <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
+ <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
+ <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
+ <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
+ <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
+ <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com> <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
+In-Reply-To: <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sun, 18 May 2025 17:34:04 -0400
+X-Gm-Features: AX0GCFtLeZnisw8iWe1mhoQFds0HugDTz8gkrQRoSC4fm6wSRan9ZFZmtDGOv3w
+Message-ID: <CAHC9VhRKZdEia0XUMs2+hRVC7oDzkBfkk5FPMD+Fq5V7mAk=Vg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
+	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
+	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
+	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
+	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 05:34:35PM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which app was the cause can be useful for some
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what app caused the problem.
-> This is an optional argument, when the app info is not available, the
-> PID and APP string won't appear in the event string.
-> 
-> Sometimes just the PID isn't enough giving that the app might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the app's name in the user
-> event.
+On Sun, May 18, 2025 at 11:52=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Sat, May 17, 2025 at 10:49=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> > On May 17, 2025 12:13:50 PM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > > On Sat, May 17, 2025 at 8:03=E2=80=AFAM Paul Moore <paul@paul-moore.c=
+om> wrote:
+> > >> On Fri, May 16, 2025 at 7:49=E2=80=AFPM Alexei Starovoitov
+> > >> <alexei.starovoitov@gmail.com> wrote:
+> > >>> On Fri, May 16, 2025 at 12:49=E2=80=AFPM Paul Moore <paul@paul-moor=
+e.com> wrote:
+> > >>>>
+> > >>>> I think we need some clarification on a few of these details, it w=
+ould
+> > >>>> be good if you could answer the questions below about the
+> > >>>> authorization aspects of your design?
+> > >>>>
+> > >>>> * Is the signature validation code in the BPF verifier *always* go=
+ing
+> > >>>> to be enforced when a signature is passed in from userspace?  In o=
+ther
+> > >>>> words, in your design is there going to be either a kernel build t=
+ime
+> > >>>> or runtime configuration knob that could selectively enable (or
+> > >>>> disable) signature verification in the BPF verifier?
+> > >>>
+> > >>> If there is a signature in union bpf_attr and it's incorrect
+> > >>> the prog_load command will be rejected.
+> > >>> No point in adding a knob to control that.
+> > >>
+> > >> I agree that when a signature is provided and that signature check
+> > >> fails, the BPF load should be rejected.  I'm simply trying to
+> > >> understand how you envision your design handling all of the cases, n=
+ot
+> > >> just this one, as well as what build and runtime options you expect
+> > >> for controlling various aspects of this behavior.
+> > >>
+> > >>>> * In the case where the signature validation code in the BPF verif=
+ier
+> > >>>> is active, what happens when a signature is *not* passed in from
+> > >>>> userspace?  Will the BPF verifier allow the program load to take
+> > >>>> place?  Will the load operation be blocked?  Will the load operati=
+on
+> > >>>> be subject to a more granular policy, and if so, how do you plan t=
+o
+> > >>>> incorporate that policy decision into the BPF program load path?
+> > >>>
+> > >>> If there is no signature the existing loading semantics will remain=
+ intact.
+> > >>> We can discuss whether to add a sysctl or cgroup knob to disallow
+> > >>> loading when signature is not present ...
+> > >>
+> > >> As mentioned earlier this week, if the BPF verifier is performing th=
+e
+> > >> signature verification as KP described, we will need a LSM hook afte=
+r
+> > >> the verifier to serve as an access control point.  Of course that
+> > >> doesn't preclude the addition of some type of sysctl/cgroup/whatever
+> > >> based access control, but the LSM hook would be needed regardless.
+> > >
+> > > No. New hook is not needed.
+> >
+> > It would be good for you to explain how the existing LSM hook is suffic=
+ient
+> > to authorize the loading of a BPF program using the signature validatio=
+n
+> > state determined in the BPF verifier.
+>
+> I already explained:
+> .. a job of trivial LSM:
+> if (prog_attr doesn't have signature &&
+>    (task =3D=3D .. || task is under certain cgroup || whatever))
+>   disallow.
 
-...
+I read that earlier reply as an example that covers a sample use case,
+I didn't realize you were asserting that was the only approach you
+were considering.  Perhaps that was the source of confusion earlier,
+we may disagree, but I don't intentionally "twist" words; not only is
+that rude, it's just stupid in public, archived discussions.
 
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 3dc7acd56b1d..e30efa4ac330 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -542,6 +542,7 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   * drm_dev_wedged_event - generate a device wedged uevent
->   * @dev: DRM device
->   * @method: method(s) to be used for recovery
-> + * @info: optional information about the guilty app
->   *
->   * This generates a device wedged uevent for the DRM device specified by @dev.
->   * Recovery @method\(s) of choice will be sent in the uevent environment as
-> @@ -554,13 +555,14 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   *
->   * Returns: 0 on success, negative error code otherwise.
->   */
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_app_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
->  	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[32], pid_string[15] = "", comm_string[TASK_COMM_LEN] = "";
+As I mentioned previously, we really need to see an explicit yes/no
+flag from the BPF verifier to indicate that the signature on the BPF
+program has been validated.  It really should be as simple as adding a
+bool to bpf_prog_aux which the BPF verifier sets to true upon
+successful signature validation, and then an LSM can use this flag as
+input to an access control decision in a hook placed after the
+verifier.  Are you objecting to the addition of a flag in the
+bpf_prog_aux struct (or some other struct tightly coupled to the BPF
+program), the LSM hook after the verifier, or both?  It would also be
+helpful if you can elaborate on the technical reasons behind these
+objections.
 
-Let's make these into proper defines for consistency,
-
-#define WEDGE_STR_LEN
-#define PID_LEN
-
-and drop redundant comment.
-
-> +	char *envp[] = { event_string, NULL, NULL, NULL };
->  
->  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
->  
-> @@ -582,6 +584,13 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->  		 "but recovered through reset" : "needs recovery");
->  
-> +	if (info) {
-> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
-
-Since this is a core helper, we'd want to make sure these fields are valid
-and not being abused.
-
-Also s/APP/TASK IMHO, but upto you.
-
-Raag
+--=20
+paul-moore.com
