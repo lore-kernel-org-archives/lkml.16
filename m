@@ -1,66 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6454B1E5E;
-	Sun, 18 May 2025 16:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86AE78F34
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 16:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747584227; cv=none; b=lPW4TRNqfFiYS9QdLZJa7oFLRSb5vcMeqdwnKagIFYtc/ilB8Y01+jwioS/wde3olQcNcgdwcQna0Ip03EuJN/dFuqeXcrEtxGSiEmKW27d3ZdDn6vqfA+O7hmnfDTgt3RWcROwvNTWEuBblfvnVJU+L7wQ7mzumTKQEX6gFiUE=
+	t=1747584429; cv=none; b=ejUY/kHz+TOxgd1jGz4rGK67z77fDsHVfEewvK8Jv8MNUhcUu4ImcwdgKPuvBowNy8ovs569BClLbP5EA/kW3/m9YFqHpBQlwJYxlUBOaho0GvGKIPfXIN/7fCSd0QOI2u45Eh9e+zFBm9iPAU6JlJTV3mQWlZm0uXyaeURiL84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747584227; c=relaxed/simple;
-	bh=NEn4CVT3vMiLLPE655kPeSKolXUSHA2Tv96ka1G5+B4=;
+	s=arc-20240116; t=1747584429; c=relaxed/simple;
+	bh=8K7Z8/yRBpx8ywMbBxpZ+kSz2JhWxBrGfTWkotiCl4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h0/1MybWDJabmpnk51TZwukh/iCz45Bmo1PIiyuAy40AwJhwzK2Rk2VHeaJUupHbxCFP/37HrbW8jGREnJsWKpd58JTA0C5iZsraP+J+tAOr0XdOW+iVcGq8ZwPP8G3vwTXVY0lol9pQFfeZLuY+8aUBv1rNcehcjwfNQV3W/2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CGRC2IXP; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZ4NEpp8/aGeD5aWuDDJRPnAzaQ1HnyNWd/oWPeLMITHf3GdxptKLHcn7ws/fqH8lUhEF8ONxRVqJEUO21BDBWLuYxb05PVawQmk8lK7o44xOdxarLaSLk9dsSPGeO7j1V4rFhSbu84HYOg9xK5pwMaGHMIAo03NasmN7Jy7IbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCZIBrwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CGRC2IXP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747584225; x=1779120225;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NEn4CVT3vMiLLPE655kPeSKolXUSHA2Tv96ka1G5+B4=;
-  b=CGRC2IXP2BFqbEZi8EgapsTI7Nye5AoND1jqNKBHiZeDtLKP+eTaHZHW
-   g95vj1jwE6K6Pee4X0FhNUuip44v3YUOwSguQaOCt1HzZQQF1d1C+fO0W
-   modGC+f1WSF/dmNHwokYcTFkJHLmRIz2rzSrf6zVtvR38h4Gj1MdJEzEr
-   umoSvNWjNdNfPUdq5i1GK4EPPb1Od98pMPHI6HvRL2jHG4ua8qMKaGx3p
-   PT+Aw8slWsECJtzDfutmS6uig0v8k4aJ8M/dn4zXOXvShm7dteeXXI/7I
-   KetjPxtiu4N/m4NbNeqT/sG8u09VGknNMfPMCFbyxP4RMi/pX1QK+ApIy
-   w==;
-X-CSE-ConnectionGUID: yvJYNEeIQhO+QEzVLb/KOg==
-X-CSE-MsgGUID: 2cFyyHjVQH6ixMuDpqGacA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="74887795"
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="74887795"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 09:03:45 -0700
-X-CSE-ConnectionGUID: yM6flAhGTmq8jKPvsW8hfw==
-X-CSE-MsgGUID: Vj6WNdPERD2wU5GMCOlTXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="139558967"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 18 May 2025 09:03:42 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGgUF-000Krj-2t;
-	Sun, 18 May 2025 16:03:39 +0000
-Date: Mon, 19 May 2025 00:03:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>,
-	Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-imx@nxp.com,
-	linux-input@vger.kernel.org, Abel Vesa <abelvesa@linux.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v2 7/9] input: pf1550: add onkey support
-Message-ID: <202505182355.Of8g2bwa-lkp@intel.com>
-References: <7d80afedf1ad9e98c9739163751bcb2785009e74.1747409892.git.samuel.kayode@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCZIBrwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 045DEC4CEE7;
+	Sun, 18 May 2025 16:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747584429;
+	bh=8K7Z8/yRBpx8ywMbBxpZ+kSz2JhWxBrGfTWkotiCl4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UCZIBrwPt5e5KyIa4ikoH6lFHF77tZrJq9Ug0TgWq+aO62WbpoLkvCpHvmOhy4M1G
+	 SOsp4jKKSyFycj7PbdTkqbJUGUOa0iXyIR4yjge3NSYgTYVn+ywkgtxNd8uOOrkg0K
+	 IBSCzHooJ5z3oiM6kynKKda4SqlvEOhzopKMC7uGx5pBZ2zxwxblXmTUvofjtVemX7
+	 7Ag9+8E7rlCw+vr7Yw5Ti0YQAZoyp1hQ0pXw/0BY7Rz3aU4HFZahCSolAZicY4STM2
+	 GeJLDY7JutM3ZcHaWE0xV34BkoEpqRvISb+xkSp42IQBh58PSliNaetcah7rglsZgV
+	 gaK7WCA2z5HRA==
+Date: Sun, 18 May 2025 19:07:02 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: akpm@linux-foundation.org, graf@amazon.com, bhe@redhat.com,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, chrisl@kernel.org, pasha.tatashin@soleen.com,
+	jasonmiu@google.com
+Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
+ scratch fails
+Message-ID: <aCoFphqeZAMkhq51@kernel.org>
+References: <20250518142315.241670-1-changyuanl@google.com>
+ <20250518142315.241670-2-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,57 +46,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d80afedf1ad9e98c9739163751bcb2785009e74.1747409892.git.samuel.kayode@savoirfairelinux.com>
+In-Reply-To: <20250518142315.241670-2-changyuanl@google.com>
 
-Hi Samuel,
+On Sun, May 18, 2025 at 07:23:14AM -0700, Changyuan Lyu wrote:
+> When we kexec into a new kernel from an old kernel with KHO
+> enabled, the new kernel allocates vmemmap in the scratch area.
+> If the KHO scratch size is too small, vmemmap allocation would
+> fail and cause kernel panic, like the following,
+> 
+> [    0.027133] Faking a node at [mem 0x0000000000000000-0x00000004ffffffff]
+> [    0.027877] NODE_DATA(0) allocated [mem 0x4e4bd5a00-0x4e4bfffff]
+> [    0.029696] sparse_init_nid: node[0] memory map backing failed. Some memory will not be available.
+> [    0.029698] Zone ranges:
+> [    0.030974]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> [    0.031627]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+> [    0.032281]   Normal   [mem 0x0000000100000000-0x00000004ffffffff]
+> [    0.032930]   Device   empty
+> [    0.033251] Movable zone start for each node
+> [    0.033710] Early memory node ranges
+> [    0.034108]   node   0: [mem 0x0000000000001000-0x000000000007ffff]
+> [    0.034801]   node   0: [mem 0x0000000000100000-0x00000000773fffff]
+> [    0.035461]   node   0: [mem 0x0000000077400000-0x00000000775fffff]
+> [    0.036116]   node   0: [mem 0x0000000077600000-0x000000007fffffff]
+> [    0.036768]   node   0: [mem 0x0000000100000000-0x00000004ccbfffff]
+> [    0.037423]   node   0: [mem 0x00000004ccc00000-0x00000004e4bfffff]
+> [    0.038111] BUG: kernel NULL pointer dereference, address: 0000000000000010
+> [    0.038880] #PF: supervisor write access in kernel mode
+> [    0.039474] #PF: error_code(0x0002) - not-present page
+> [    0.040056] PGD 0 P4D 0
+> [    0.040335] Oops: Oops: 0002 [#1] SMP
+> [    0.040745] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc4+ #275 NONE
+> [    0.041541] RIP: 0010:__bitmap_set+0x2b/0x80
+> [    0.041992] Code: 0f 1e fa 55 48 89 e5 89 f1 89 f0 c1 e8 06 48 8d 04 c7 48 c7 c7 ff ff ff ff 48 d3 e7 41 89 f0 41 83 c8 c0 44 89 c6 01 d6 78 43 <48> 09 38 48 83 c0 08 83 fe 40 72 1a 41 8d 3c 10 83 c7 40 48 c7 00
+> [    0.043986] RSP: 0000:ffffffff96203df0 EFLAGS: 00010047
+> [    0.044546] RAX: 0000000000000010 RBX: 000000000000cc00 RCX: 0000000000000000
+> [    0.045311] RDX: 0000000000000040 RSI: 0000000000000000 RDI: ffffffffffffffff
+> [    0.046075] RBP: ffffffff96203df0 R08: 00000000ffffffc0 R09: ffffffff9626c950
+> [    0.046830] R10: 000000000002fffd R11: 0000000000000004 R12: 0000000000008000
+> [    0.047574] R13: 0000000000000000 R14: 000000000000003f R15: 000000000000009b
+> [    0.048313] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.049151] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.049751] CR2: 0000000000000010 CR3: 00000004d123e000 CR4: 00000000000200b0
+> [    0.050494] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    0.051238] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    0.051978] Call Trace:
+> [    0.052235]  <TASK>
+> [    0.052455]  subsection_map_init+0xe4/0x130
+> [    0.052891]  free_area_init+0x217/0x3d0
+> [    0.053290]  zone_sizes_init+0x5e/0x80
+> [    0.053682]  paging_init+0x27/0x30
+> [    0.054046]  setup_arch+0x307/0x3e0
+> [    0.054422]  start_kernel+0x59/0x390
+> [    0.054820]  x86_64_start_reservations+0x28/0x30
+> [    0.055307]  x86_64_start_kernel+0x70/0x80
+> [    0.055736]  common_startup_64+0x13b/0x140
+> [    0.056165]  </TASK>
+> [    0.056392] CR2: 0000000000000010
+> [    0.056737] ---[ end trace 0000000000000000 ]---
+> [    0.057218] RIP: 0010:__bitmap_set+0x2b/0x80
+> [    0.057667] Code: 0f 1e fa 55 48 89 e5 89 f1 89 f0 c1 e8 06 48 8d 04 c7 48 c7 c7 ff ff ff ff 48 d3 e7 41 89 f0 41 83 c8 c0 44 89 c6 01 d6 78 43 <48> 09 38 48 83 c0 08 83 fe 40 72 1a 41 8d 3c 10 83 c7 40 48 c7 00
+> [    0.059650] RSP: 0000:ffffffff96203df0 EFLAGS: 00010047
+> [    0.060218] RAX: 0000000000000010 RBX: 000000000000cc00 RCX: 0000000000000000
+> [    0.060985] RDX: 0000000000000040 RSI: 0000000000000000 RDI: ffffffffffffffff
+> [    0.061728] RBP: ffffffff96203df0 R08: 00000000ffffffc0 R09: ffffffff9626c950
+> [    0.062486] R10: 000000000002fffd R11: 0000000000000004 R12: 0000000000008000
+> [    0.063228] R13: 0000000000000000 R14: 000000000000003f R15: 000000000000009b
+> [    0.063968] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.064812] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.065423] CR2: 0000000000000010 CR3: 00000004d123e000 CR4: 00000000000200b0
+> [    0.066175] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    0.066926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    0.067678] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.068403] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+> 
+> The panic above can be easily reproduced by the following steps,
+> 
+> 1.  boot a VM with 20GiB physical memory (or larger) and kernel command
+>     line "kho=on kho_scratch=2m,256m,128m"
+> 2.  echo 1 > /sys/kernel/debug/kho/out/finalize
+> 3.  kexec to a new kernel
 
-kernel test robot noticed the following build warnings:
+This can be reproduced without KHO, just squeeze the RAM size, boot with a huge
+kernel and initrd and you'll get the same panic.
 
-[auto build test WARNING on b1d8766052eb0534b27edda8af1865d53621bd6a]
+The issue is that sparse_init_nid() does not treat allocation failures as
+fatal and just continues with some sections being unpopulated and then
+subsection_map_init() presumes all the sections are valid.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Samuel-Kayode/dt-bindings-power-supply-add-pf1550/20250517-030259
-base:   b1d8766052eb0534b27edda8af1865d53621bd6a
-patch link:    https://lore.kernel.org/r/7d80afedf1ad9e98c9739163751bcb2785009e74.1747409892.git.samuel.kayode%40savoirfairelinux.com
-patch subject: [PATCH v2 7/9] input: pf1550: add onkey support
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250518/202505182355.Of8g2bwa-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505182355.Of8g2bwa-lkp@intel.com/reproduce)
+This should be fixed in mm/sparse.c regardless of KHO, maybe as simple as 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505182355.Of8g2bwa-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/input/keyboard/pf1550_onkey.c: In function 'pf1550_onkey_resume':
->> drivers/input/keyboard/pf1550_onkey.c:171:30: warning: conversion from 'long unsigned int' to 'unsigned int' changes value from '18446744073709551552' to '4294967232' [-Woverflow]
-     171 |                              ~(ONKEY_IRQ_PUSHI | ONKEY_IRQ_1SI | ONKEY_IRQ_2SI |
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     172 |                              ONKEY_IRQ_3SI | ONKEY_IRQ_4SI | ONKEY_IRQ_8SI));
-         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +171 drivers/input/keyboard/pf1550_onkey.c
-
-   162	
-   163	static int pf1550_onkey_resume(struct device *dev)
-   164	{
-   165		struct platform_device *pdev = to_platform_device(dev);
-   166		struct onkey_drv_data *onkey = platform_get_drvdata(pdev);
-   167	
-   168		if (!device_may_wakeup(&pdev->dev))
-   169			regmap_write(onkey->pf1550->regmap,
-   170				     PF1550_PMIC_REG_ONKEY_INT_MASK0,
- > 171				     ~(ONKEY_IRQ_PUSHI | ONKEY_IRQ_1SI | ONKEY_IRQ_2SI |
-   172				     ONKEY_IRQ_3SI | ONKEY_IRQ_4SI | ONKEY_IRQ_8SI));
-   173		else
-   174			disable_irq_wake(onkey->pf1550->irq);
-   175	
-   176		return 0;
-   177	}
-   178	
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 3c012cf83cc2..64d071f9f037 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -197,6 +197,10 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+ 		pfns = min(nr_pages, PAGES_PER_SECTION
+ 				- (pfn & ~PAGE_SECTION_MASK));
+ 		ms = __nr_to_section(nr);
++
++		if (!ms->section_mem_map)
++			continue;
++
+ 		subsection_mask_set(ms->usage->subsection_map, pfn, pfns);
+ 
+ 		pr_debug("%s: sec: %lu pfns: %lu set(%d, %d)\n", __func__, nr,
+ 
+> The current panic log above is confusing and it's hard to find the
+> root cause.
+> 
+> Add an error log to make it easier to debug such kind of panics.
+> 
+> Fixes: d59f43b57480 ("memblock: add support for scratch memory")
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> ---
+>  mm/memblock.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 154f1d73b61f..ed886bfd3de7 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1573,6 +1573,9 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>  		goto again;
+>  	}
+> 
+> +	if (flags & MEMBLOCK_KHO_SCRATCH)
+> +		pr_err_once("Could not allocate %pap bytes in KHO scratch\n", &size);
+> +
+>  	return 0;
+> 
+>  done:
+> --
+> 2.49.0.1101.gccaa498523-goog
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sincerely yours,
+Mike.
