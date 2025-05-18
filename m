@@ -1,160 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33F43232
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 10:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D112135B7;
+	Sun, 18 May 2025 10:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747564368; cv=none; b=fHE6oenwXoSrBk3kvHLcGmBWtaKPy7ZOK1Oezl/BvnAv+DtMp3w72czseE3OghmfXkF29mViqdOrRAfsqtQrHc/cbDWCu79i22+vkw/Ns5HkgOBZsUTgJTL/IFyB8hgn0WBrHdTzxBEs8iEdM/iIKJoSScxvBaOcO6Gl3gECTcY=
+	t=1747564371; cv=none; b=Y2564whPNaygMvRsqUYFFpfi+pjhOVKZeSgcv+JqmGVsBrXhyq8l7zGBR0JHoAjESQ8JFKq0FmOUSAAW5kYcUbfaXosjLVZ+oIMEGG85cTwkUDvypBDiGPSa31+7C+SxmUkgq1tPHPF4iAj7MMhLoYGUuo16L/lsXxiN/qiZwRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747564368; c=relaxed/simple;
-	bh=rSNr1F8OgyIGJLC0wtphqTviRCaYM5uKzSUj+k5gOJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=naUBG6A20fPWDJWFK1tUUDQcqlVQS3vHXiCWNQfJDno+SuGdi3a/fipFNq3n8HSgaSssOTcP7BYgBUcuW4CUHEQrXbMYX0oBD/qBAgr/D2NzyaW8bH3o73E1GUaC3rpYAeq+QKtTC3/bVKoyHpddc45YkiVyKRXSg+KuAQ1QrB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Cagupj3D; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747564371; c=relaxed/simple;
+	bh=AWQvOkqfCymWRv4I1KXFLFgKcfHbEtOXv0IBc7w/mGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYXB70EGXL37dUmpgfpiYdMzU9K9pah66OCtc5jgDumHDCU/1UcSbw/WOgTRloZgo18VArMg6RbGMyvJQsgSJCgmBwTBq/RxhNra8gtRZ+pLGN9KNgRQmESlmxcOOoD4b/ygt7fIQ4Dim4y+t3f2FpfW464mUNvjsYkecN9xUAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/C8uPvF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Cagupj3D"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54IADCis005543
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 10:32:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2KMB4Lkwm4bquu4Frj3qRe08ajtmQ9XJffkypZKuOtk=; b=Cagupj3DupOaDdl6
-	hZIHTICpCYogEUpG17UOi7aniNW9zbtJ8S0B/WFJKxGBujRSALz40kNN67ic6Imb
-	dafeHScYr+SEcsBPMejJ+zgPXIXnlKRnwP1STx1djW7IIlJl7IUw+5oPB5J/bzb6
-	ZsvFkYLDfF11iRCuGNAwkf2wf6NBJ9lxxqTSdZhOOJdY8l8CvkgLLANKhK6W2dGo
-	CBdBJXZXsW2N91bQjdZKPJVyXiVNPkeEoU6tt7mW6t+0fd+o6DWDupPeWvuEGfJk
-	d2hsn9F1ZpxgTeHBorfPP9RWlPbm8oZMuh9vlFsKtdPsjwjKMXu+mfITrA2PHg8Y
-	xYoukQ==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9ssun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 10:32:44 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f50edda19eso54329566d6.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 03:32:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747564363; x=1748169163;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KMB4Lkwm4bquu4Frj3qRe08ajtmQ9XJffkypZKuOtk=;
-        b=qBEaORJbd3SDzaaxuwdJEqjh6v6crmYXniOSYKhveRmiGgg3mGNkbmdyvwyrZIx4Qy
-         P9RblGEqmnSgnL53rQXwV9ltQlDm0u53HRYWjqTUV572TtMbnU0c7YJcIJ0fYF5eMuWt
-         tZdr01NEmI10H66yESBMe9RqvN3Zf6nWilJbIKTAFPXRO2uPR2X4xdcPhOJ/makPv520
-         52SO2rblZEk03DLpdHGOEGjQmXzZpCfun+MnytaWx2pviX4uzW2SIz0IP6oXZ/tHyzdi
-         0JNjhi6YMVKWQ4BSaFn62MmNx+aFSERqBjiuldsWOdClebJxwmvWAyuBFsCxwblbdqMZ
-         T82w==
-X-Forwarded-Encrypted: i=1; AJvYcCVA0VIaF+1MBHIBcGuXiajlX3F0qFzDPo/8tG61+hu3EK5zngbBT/fDrv7zjTmbeAiZeYvy8dErCdanBHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUyjxvyikbPzvtrE2bmYkPr/56GoFrCKiWUqgmUuuUyXgbgCDS
-	nmtOCYMOiaC+G2Djl4PfdjlzDEy+AYxL9iEebTzQ2xN6s2k2BBPspP+OhRbdxGfyJoqXgI5T6Hn
-	MmOKKE3m6WlwJqY6gEuZt7U8nFf1opi1uxXcI+pnA9b1tSMhhZmlAbLCwE1oBT4uydtc=
-X-Gm-Gg: ASbGncsqPnw8s/mpzFHZqaBOcDVlj8aJCnUaGNa8yE5wzUTsZTywxoDbMchIxVCe8Mo
-	Eyx9xxe2w71WrD/sDrfdOQL3GutrNCV0tcUWtmtWPt2hjQaA3GEQIpiXQ79uybOSEkTdqn8ksvQ
-	gKl0zNRmdR/RgfJakFwvKoHA2X/zsDA0mw0t3QMbZzmFPEb+EbEJWwAXyOlTgXG6xXZjbK2tZoq
-	bfKsHJozIZvu7WSif9yCjWaMBuInFQDxELVt7cVBGu0uBQPd3j0U3ngvrrw/wklSawbgvAdflVP
-	dp/I6QqYHO/+jsb0ov5eJ3FpcZ4fNdgBpvwWFWgzGHEQlQ53pGJ9lbnuqKt9vuft7K1+ggTdlZI
-	=
-X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr69977846d6.11.1747564363363;
-        Sun, 18 May 2025 03:32:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPoFsBUaDrnwOXnuPwNlAF6cFAuLO04cfaVzqOcUVBeyq/FhbV/KeXlfPcZ1p20TjPJxmqKw==
-X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr69977686d6.11.1747564363030;
-        Sun, 18 May 2025 03:32:43 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f161bcsm1392553e87.7.2025.05.18.03.32.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 03:32:42 -0700 (PDT)
-Date: Sun, 18 May 2025 13:32:40 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/11] drm/msm: make it possible to disable GPU support
-Message-ID: <b7zkrdxmigz3bmgphedzoosgesxs3y24wgi4l52zf6r6djo7vo@aupsak7d6ma2>
-References: <20250503-msm-gpu-split-v2-0-1292cba0f5ad@oss.qualcomm.com>
- <20250503-msm-gpu-split-v2-11-1292cba0f5ad@oss.qualcomm.com>
- <CAF6AEGt8uB-KWLDora9SN3K_VntSYZ4HNay4XLd+KqQzcQNfcg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/C8uPvF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0692CC4CEEB;
+	Sun, 18 May 2025 10:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747564371;
+	bh=AWQvOkqfCymWRv4I1KXFLFgKcfHbEtOXv0IBc7w/mGE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D/C8uPvFi2k02o3ae9tFPpQNl/ftDhf5iISphzSzQIrMK9y+HTNHRH8OLFdf7f7nD
+	 cWNsvMCBWdjorxAoI46JG/XIYH0BT+A2auKb92kpa3rbp2Vm//bGKlLsTTcHybzBiw
+	 M7rYxDpOVxX5QXng5gEPbZ4VD25O/9wAm9IcUw+XA/j4hwMb2Crytasp7M49rmPgXm
+	 34DDsQrrf0g7GTTL1Wk4N/Cr9yLSH5pnP/uG/eCLCV2KS7xEQN6j8aCDNF5VJ1NoLX
+	 3Az/QZnPgkhV4i3GejDd9o58UPOHaJj2fSZyNGbmnvqmQ1dYrkNt/E9fAnJjTSAs8F
+	 e+jkmPj2yX7gw==
+Message-ID: <e414c1ca-6e56-4088-b974-3a45eab682c1@kernel.org>
+Date: Sun, 18 May 2025 12:32:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGt8uB-KWLDora9SN3K_VntSYZ4HNay4XLd+KqQzcQNfcg@mail.gmail.com>
-X-Proofpoint-GUID: HwgXKxJOcHk-QDizWFPWMSrUwwP6gaJA
-X-Proofpoint-ORIG-GUID: HwgXKxJOcHk-QDizWFPWMSrUwwP6gaJA
-X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=6829b74c cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=hVAVfT_TPH0Tf30rILYA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDA5OSBTYWx0ZWRfX4vRla9bYlglq
- eqyk8KeOVu7rW7+bxmeeN7IH87IeYppaKvDHAIv3VhohBMdsEWzJ/QoVI7R36AQeviSy3BdVB8+
- 73RAkajWjAPW6JUWHIKfVcxU1PO+ZpSHVwffsllhuox8zp51zj90UDDdNvoV+AguyHE5xtQjJAw
- ctLiyRljFLkkIebZ+qQT+LxZ+IECl6X1OVN+2blSGg6RwTDDWX5fqHvoGS5dIjCFg1pwbfanTg1
- DTVbMPsiZsVaVILTGeHMZ+qqW3mf+ApkTymSThlgrjmVubJ74/PdqhFbnyiFaMDjRmUIvpqjSYv
- UwwOGVshiH1QBktm4Bpfw5ycEJlIpztpfYTYQCGPdhS7pKA6t3tp/AwhRKdjQufmIG48zUO3Zwf
- c0XB4vpLEWbKiHxSYRRctWQlLi9cPFKdM1rJvsa58RKFCP25rsK2kRvkR1DC/+bLqLXKJV6B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_05,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505180099
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] nfc: s3fwrn5: Correct Samsung "Electronics" spelling
+ in copyright headers
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250518085734.88890-1-sumanth.gavini@yahoo.com>
+ <20250518085734.88890-2-sumanth.gavini@yahoo.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250518085734.88890-2-sumanth.gavini@yahoo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 09:45:26AM -0700, Rob Clark wrote:
-> On Sat, May 3, 2025 at 12:17 AM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
-> >
-> > Some of the platforms don't have onboard GPU or don't provide support
-> > for the GPU in the drm/msm driver. Make it possible to disable the GPU
-> > part of the driver and build the KMS-only part.
-> >
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> > ---
-> >  drivers/gpu/drm/msm/Kconfig           |  20 +++--
-> >  drivers/gpu/drm/msm/Makefile          |  14 ++--
-> >  drivers/gpu/drm/msm/msm_debugfs.c     | 135 ++++++++++++++++++----------------
-> >  drivers/gpu/drm/msm/msm_drv.c         |  37 ++++++++--
-> >  drivers/gpu/drm/msm/msm_drv.h         |   3 +
-> >  drivers/gpu/drm/msm/msm_gpu.h         |  71 +++++++++++++++---
-> >  drivers/gpu/drm/msm/msm_submitqueue.c |  12 +--
-> >  7 files changed, 191 insertions(+), 101 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-> > index f6360931ae55a2923264f0e6cc33c6af0d50c706..5605d2bc93a8ad9cb33afcb8ca9da44c68250620 100644
-> > --- a/drivers/gpu/drm/msm/Kconfig
-> > +++ b/drivers/gpu/drm/msm/Kconfig
-> > @@ -15,29 +15,37 @@ config DRM_MSM
-> >         select IOMMU_IO_PGTABLE
-> >         select QCOM_MDT_LOADER if ARCH_QCOM
-> >         select REGULATOR
-> > -       select DRM_EXEC
-> > -       select DRM_SCHED
-> >         select SHMEM
-> >         select TMPFS
-> >         select QCOM_SCM
-> >         select WANT_DEV_COREDUMP
-> >         select SND_SOC_HDMI_CODEC if SND_SOC
-> > -       select SYNC_FILE
+On 18/05/2025 10:57, Sumanth Gavini wrote:
+> Fix the misspelling in NFC-related drivers.
 > 
-> fwiw, atomic depends on SYNC_FILE... otoh it is selected at the
-> toplevel by CONFIG_DRM
+> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> ---
+>  drivers/nfc/s3fwrn5/core.c       | 2 +-
+>  drivers/nfc/s3fwrn5/firmware.c   | 2 +-
+>  drivers/nfc/s3fwrn5/firmware.h   | 2 +-
+>  drivers/nfc/s3fwrn5/i2c.c        | 2 +-
+>  drivers/nfc/s3fwrn5/nci.c        | 2 +-
+>  drivers/nfc/s3fwrn5/nci.h        | 2 +-
+>  drivers/nfc/s3fwrn5/phy_common.c | 4 ++--
+>  drivers/nfc/s3fwrn5/phy_common.h | 4 ++--
+>  drivers/nfc/s3fwrn5/s3fwrn5.h    | 2 +-
+>  9 files changed, 11 insertions(+), 11 deletions(-)
 
-Within drm/msm it is only used by GEM_SUBMIT code, so I still think this
-is correct.
+Just squash both NFC patches together.
 
--- 
-With best wishes
-Dmitry
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
