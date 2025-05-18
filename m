@@ -1,165 +1,73 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6951CEEBE
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 05:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B31A55;
+	Sun, 18 May 2025 05:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747547345; cv=none; b=GxiWbginEampMH0KzDoJ0SH/fNjrEi1xudGrvWFzFlWyQ2kNOl4atkBC8YQINE6SD6epW9On6/qf9uv4AAQy+7YJepuE5K0+LIhgY1Fgzt42VSnLAd//JtlzGE0KTHEllswI/Diz9Q0W7I7ms9YYanWGaYKoWApQlCVGfT0SO9M=
+	t=1747547414; cv=none; b=Bno92A36Ue6RDAl4YhE5Thf6AcbuXy+3+uGg9QBlEBhBAMauGgifftPHFS6II95F9mhNLerDlFBwejToYksVeHIDHYiF3qt14j4rlsb9IL6S6vDOvMqLjAG7fpYGLNjwyIdz/4lYAyr+orp/EMXrb1wrV9h6XiwYaAteeoTIIEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747547345; c=relaxed/simple;
-	bh=eZBpP6KfUKXCXO83nQ/GJ5KM078e67pg7DbDDBqWLsc=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=LhS5xyXj8NEufuVNyb3IxhMQYKPTD1wLaRkMYWiBJXuLv9Yd9XyOki7bFRR4d1dHvS8qcMlA32Q7W+ZdquJvR0rtsXAayUrrRB2Tw5/ksKVf/DfxJ8Qhz9yIVE0Gr6wkBwBVggEohIV4TskN8zGDHS1b1DqdRpUNtJNiPcnC2lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YUMI9ALZ; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747547414; c=relaxed/simple;
+	bh=Ojdw8Yl768e2LgUcEH9jKmLyyuUuIBWtVR+uod5hSQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxYmCKXUW6cBH5NvPt5VGMH+cgbwqXyPlN5DasoMLxyHPzZZbBBIWjRuU5aDzOUg79ZDA1hgGIGK8lDli/b3ToqMY6g1u4DT/LoA3C+tMU7nSm2bkz4U9sFw5DEyTKz0eXLxM2MmkbUjAjX4qT8kUYL38uF2MvqIHWVwmGme5+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hhQTEfVd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YUMI9ALZ"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4766631a6a4so37045661cf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 22:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747547341; x=1748152141; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G9qeFJ7lNo+yYpuKZq/TR4G2C9hCrYbOgamht3tIasA=;
-        b=YUMI9ALZ3F59PQe6HDiEQTb/qxV1VE4OfL9j2tyimMWzoXQ3RQudHnmcg1S2lfJqNj
-         yH0MQoiQ8FCkQn3/WR9Cve3698ogucsVNoUHGjVECMPsUCpaGy01roAw7fz0lQzlsrJK
-         oKQPvXlIyc78VOcTyc3WgC1JeR+XKsM6S5hGrvgfNQME7lrJ2M7UnHzKT9lYdw6QqorS
-         +bxkp+exwio/ay+2al+6dNaeypjd1qLAN/w9gVLh/920iOV4aOUYC2Seodi7NYWnIu6Q
-         Kxfoe7yX3g0lZ68WNdRy6Z0SClgeZACMM1gWdyWLi2GMZqiT+IgYLXcx02oA2MblLctv
-         v27g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747547341; x=1748152141;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G9qeFJ7lNo+yYpuKZq/TR4G2C9hCrYbOgamht3tIasA=;
-        b=G5e7LQ207d+kurl5+dJJ9qOlGm7Bipg6qlywWqi1s3YEn8pTpHpTugEmtGlGtnAGPh
-         26CtffWm++v3AmrqOJyif6HVMYYQpEmh2UfFVdgVU6uwR5LiPVX8+UFRDLt4yJvcS8Su
-         LmbceCHca69p8ERANvOOkOyEX7fMdR+HkO0zRhz6GepHf1It0vt0HNf5v5uAvEWah59l
-         l+AZ1iYADe+c1sI62PEtSq0KmPDY1V0CCEDdvNWoTU0B8ijxvjHL3YEH8XfBrCBBVC41
-         4YrZZ1UI1kjj0fT/aZdVx+6FU/LPfG/iNh1v5gdsi1tznxoL2tmKk3p1PUv3k4xXM39K
-         Zfwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhkry8O3hrjOJyJLI57ggA4dTiHlvghNTrVOGN0Exez+P0aOZaDuOZ9EG0YsbmzXdEHHOwzgIOpQsqE6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLMYbW+rjlIyN1CbanG/+W/1jGDrFSlfkWSWShAKf1gc0wgEd+
-	ww6l6gzVOHe8vhMSC/puOfvyW7rkme6IZiQPa4xCX672MY1dBQH+22gY8NnZKiJdMA==
-X-Gm-Gg: ASbGnctXRNHFzcJL/THSZx4qZmD7uYBUsSMGnzSsydizQNy0FzdD/SB34uuRVhBWOcr
-	vIKCSUF0YplMWIxf6WLKj/RPJwiWRgpHfh91wr9fhiz+wD3YdbhTYz9zMAzj8Fva99OzN6EI638
-	XygqHW4nL1gm2U+TGuFfTkUb1o0kZ+krqI1FnJWKLwCsabl0lcLqut9iuWhNj72P9YzeFV74ocD
-	wRV2ph5QLuLNxLgezwEqQjcVEXXvYoBBAZJ9DSrn0R1v8+/XFOdyx155Cw5NLMBy7FqPnoZRiHQ
-	8D6bDbyz+fBfrRIFm0G3RWN6ML5o7O8hGrlAbm8yLi1513GL606M+VvocuSaEkI+hD+vLkZF3OL
-	U9x0lvcSesxwvHfVKy/pr+NexiQ==
-X-Google-Smtp-Source: AGHT+IGfrmclUyrn2kL47uhxEFRGU+qhsbvKEWHTIktNb5yLBqfzULKgvSCB1fjnKNy9EuB8fUsqdQ==
-X-Received: by 2002:ac8:6f10:0:b0:477:6eca:b40c with SMTP id d75a77b69052e-494ae326c18mr161157901cf.1.1747547341540;
-        Sat, 17 May 2025 22:49:01 -0700 (PDT)
-Received: from [192.168.7.16] (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3f922csm35228371cf.26.2025.05.17.22.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 May 2025 22:49:00 -0700 (PDT)
-From: Paul Moore <paul@paul-moore.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-CC: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
-	<code@tyhicks.com>, Jonathan Corbet <corbet@lwn.net>, 
-	"David S. Miller" <davem@davemloft.net>, David Howells <dhowells@redhat.com>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, <keyrings@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, 
-	<nkapron@google.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	"Serge E . Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, <kysrinivasan@gmail.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 18 May 2025 01:48:57 -0400
-Message-ID: <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
-In-Reply-To: <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org>
- <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
- <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
- <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
- <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
- <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
- <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
-User-Agent: AquaMail/1.55.1 (build: 105501552)
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hhQTEfVd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9821CC4CEE7;
+	Sun, 18 May 2025 05:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747547413;
+	bh=Ojdw8Yl768e2LgUcEH9jKmLyyuUuIBWtVR+uod5hSQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hhQTEfVd9iDC0t8Kg6f56OCoDfcI+DY5rjM0LQGh46vavTpbH/ikUAn3x3zUUMri2
+	 H6k+xVIksOy0QAfGnRPHMZlSBYM+Pi9cUAWKSbiEn6ua4swbhTHRmiCzTnFPyk7/O7
+	 B9cl65j3PxljzVRxwIq5y+cV7bjTe3r35K9n3d0c=
+Date: Sun, 18 May 2025 07:48:25 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jonathan Velez <jonvelez12345@gmail.com>
+Cc: Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: usb: dwc3: add documentation of 'sg' field in
+ dwc3_request struct
+Message-ID: <2025051804-cherisher-rage-d7ad@gregkh>
+References: <20250516235447.17466-1-jonvelez12345@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516235447.17466-1-jonvelez12345@gmail.com>
 
-On May 17, 2025 12:13:50 PM Alexei Starovoitov 
-<alexei.starovoitov@gmail.com> wrote:
-> On Sat, May 17, 2025 at 8:03 AM Paul Moore <paul@paul-moore.com> wrote:
->> On Fri, May 16, 2025 at 7:49 PM Alexei Starovoitov
->> <alexei.starovoitov@gmail.com> wrote:
->>> On Fri, May 16, 2025 at 12:49 PM Paul Moore <paul@paul-moore.com> wrote:
->>>>
->>>> I think we need some clarification on a few of these details, it would
->>>> be good if you could answer the questions below about the
->>>> authorization aspects of your design?
->>>>
->>>> * Is the signature validation code in the BPF verifier *always* going
->>>> to be enforced when a signature is passed in from userspace?  In other
->>>> words, in your design is there going to be either a kernel build time
->>>> or runtime configuration knob that could selectively enable (or
->>>> disable) signature verification in the BPF verifier?
->>>
->>> If there is a signature in union bpf_attr and it's incorrect
->>> the prog_load command will be rejected.
->>> No point in adding a knob to control that.
->>
->> I agree that when a signature is provided and that signature check
->> fails, the BPF load should be rejected.  I'm simply trying to
->> understand how you envision your design handling all of the cases, not
->> just this one, as well as what build and runtime options you expect
->> for controlling various aspects of this behavior.
->>
->>>> * In the case where the signature validation code in the BPF verifier
->>>> is active, what happens when a signature is *not* passed in from
->>>> userspace?  Will the BPF verifier allow the program load to take
->>>> place?  Will the load operation be blocked?  Will the load operation
->>>> be subject to a more granular policy, and if so, how do you plan to
->>>> incorporate that policy decision into the BPF program load path?
->>>
->>> If there is no signature the existing loading semantics will remain intact.
->>> We can discuss whether to add a sysctl or cgroup knob to disallow
->>> loading when signature is not present ...
->>
->> As mentioned earlier this week, if the BPF verifier is performing the
->> signature verification as KP described, we will need a LSM hook after
->> the verifier to serve as an access control point.  Of course that
->> doesn't preclude the addition of some type of sysctl/cgroup/whatever
->> based access control, but the LSM hook would be needed regardless.
->
-> No. New hook is not needed.
+On Fri, May 16, 2025 at 11:54:47PM +0000, Jonathan Velez wrote:
+> Signed-off-by: Jonathan Velez <jonvelez12345@gmail.com>
+> ---
+>  drivers/usb/dwc3/core.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index f11570c8ffd0..bb140dde07d6 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -942,6 +942,7 @@ struct dwc3_hwparams {
+>   * @request: struct usb_request to be transferred
+>   * @list: a list_head used for request queueing
+>   * @dep: struct dwc3_ep owning this request
+> + * @sg: pointer to the scatter-gather list for transfers
+>   * @start_sg: pointer to the sg which should be queued next
+>   * @num_pending_sgs: counter to pending sgs
+>   * @remaining: amount of data remaining
+> -- 
+> 2.43.0
+> 
+> 
 
-It would be good for you to explain how the existing LSM hook is sufficient 
-to authorize the loading of a BPF program using the signature validation 
-state determined in the BPF verifier.
+For obvious reasons, we can't take patches without any changelog text at
+all (and you wouldn't want us to.)
 
---
-paul-moore.com
+sorry,
 
->
-
-
-
+greg k-h
