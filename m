@@ -1,73 +1,75 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F16136A
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB969218EBE
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747567302; cv=none; b=FmQ8DBAUaymz9mJkd117X2x419HsmV2WursKyyYRRXEqV4B8RkBQjThWOW37IyVFJLsBkTMeIdkwL38t7aLQD3CrB7WptO4Ebj+/xvw2bQys2LN4QJdNyUhMGpNR7Yg9+R4j3GlYk6auIzGyR9QSy/X1xU6n2gmsqInRovRwEw8=
+	t=1747567304; cv=none; b=e5elIUVFcMgPB8n7p9Pi7jOPos0N1Dtun7z9RHpCXrSZqDbdYWx3W1LV3CYhz+lcmUeCK4ZXiGW3DGlGNqCqj4tyFGNvC8poDaeEftagnZW8XPrJwfP8AA3fi+Lcq65DwyoF/Z/6kmNpB6ptzvfxk0atUigHo9N9V3t/Qjlc+Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747567302; c=relaxed/simple;
-	bh=9J4rqW2pXqEVwcZ4RKNBv+n/cNEsrz1nBVyzy6c5Bhg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NmMQ0Dp8BuJAD2lCB5Hv2EROQHJo6mnYAt1R57Afvn7KifgTm839xW30NJm4zIBA1B0SRwxrqOq/93d7XzPR4QFsPg8hohZXNcg7rtXyWWsYJlTc6+czUQ5jOVVHTRD6RK2EOofU/vRfS/OvW3iyOBVmVPed56QZbqwBKEu9HWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iCrG3qaC; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1747567304; c=relaxed/simple;
+	bh=GNmUJnG+of8duBXFkOYg1CVxjIQNViBm6k2iZit09lw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pJWALcGW3+Wyd/XGRgg+nqTtvL7PpwhV7tE3HMfdLG6GK177dAZO+4yE51U5An0DgzmF5cP9zh3lJbaxJZcUWrLmV7rdnDHrULYo9Eius7UahtCij2IJOV+XVK5kCOk0OqnBaQDvwmbD9Kj+12jftv+OAozA95LOMovojXAEAkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aEU3Vfoj; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iCrG3qaC"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I5mqme030629
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:39 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aEU3Vfoj"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I8noOE009984
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=DtMbpHsYyq8IxkCCqitMrf
-	IcdqaVbs7kiHyoXi5G2h0=; b=iCrG3qaCWp5lTftu1QYwcQuzyKhSWdPWLS9Glr
-	Zy2XGM8kjCHxuog23ACDH7WItUs2N4cRNZcn+t/Nl0dL+KReYXce22iBJ5JdBtxh
-	uEtbGzO2PpRKbyVwQO7RuudhaItxk6oHtt8D977A6m7R96xUgdGSPHEjE2fYmcI/
-	0tJJ60CY61jfBhlj+PbjRoNKFRyd3KZCOjhjed1Np2GM/vJX8rNk+2263PGK0Gjo
-	TA/7bbOsp4BSs9jFDh194HME8PMjWw912AU0KhzL7dWtLAx9jnFVIE5+B9DQdjjF
-	w4SUUTk1TwQH7K27zuiyZhYNe/pOqK8K2Db/MDPUNqm0cVuQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjkcswsg-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2uKch//NQ7rpnZebTlILrt38+d7k2jrMtvdBKAoEcuA=; b=aEU3VfojgWNKJ0wg
+	/NtI6gDQydL3+P6HrASlxlxqWT9fg5ThGHk4GsDhD1/8Ns4gjYfgMOwmUSn3DFQT
+	LCRld4LZtI6nRPhyUdM6Nw4i9QyV1uvJuRjl6mAB/+l381sURuxSk6IzCYUFS+Yu
+	ZbP/EG3UgsKVgFCnOv/0LxIErva1FyW8fF5W4Yo+BO0W6OIGavKIduLb8Lk3XSen
+	p9RcMZOKILixacyd9BFHAyE34kgsFd6GG9hd5RscAC9iDatTyuRYjk0YPOLdk+3p
+	Lz0ZvcGJ2ggyG6RBIKNKr1R46tzX1L3RwoiLo3RMKYUaaSkFQ1AAlaMy0za2XV5z
+	LQP3/w==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4swc8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:39 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so1170608785a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 04:21:39 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:21:41 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8c461eea3so20753836d6.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 04:21:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747567298; x=1748172098;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DtMbpHsYyq8IxkCCqitMrfIcdqaVbs7kiHyoXi5G2h0=;
-        b=ESrQLP9MvweP5BiCRlvj9L7/vk41GRC6U5l5x6Q9hSjSXTImKRiaQBMUVNRFFTLYSc
-         RMaVqPSqDd0WIV/79qe9ZWZvdDa9DOg0gT4tTX9s6yhU0IfW+MftirHvR2FMGjuhJ1gm
-         iytDehcZax3eXKGaf2rtEbO6kq05Y9ZlRIFf0iU77MJ7tr+Fa8p6E2xW6VRwHPRfTBrj
-         US2a3xmwc1AoajLb1HOm2iiso4eUh8pjmpApBOV7OScHjKoiaHJIckIrayIqrfzieUU1
-         A92lBod3eQlWwNRp8UWRqqzya0ixfpSuY+3GTIs9akiqE+HEaIcVqZE0JU1SntZoDWAO
-         5vnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGvbcfD0+1Zm88WUx+4VVgTAcTwzbSbfFUN7HsUHGlH/xAGLu4jaTeOq7ioOnZyGp0Snu1iOKL/PsnDzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2yPL7Nx879YKfLDzjwWTxFh2JzGitQQHzACGfW241gcFWKqaw
-	lh3LaXFxpdjiKzMd6eWLFAhm8VbiJbE3A57maiNn95zNQVA4Y057x31mYgdzy6asNdDXeLsUfic
-	D5D3AYmx/A9fRqfPcjfIdUqKVgtdG9ok4T0jQUK1XsmYqD8O4+6X6NBrqn2Yaw23Y0ak=
-X-Gm-Gg: ASbGncsKdgfQJTNkxLzw4s7IOv9FYPkDVNHtQSKb+tUWo1WgVL2XGHZL/TIC6XogXgB
-	P9wTEe9ua4fBUPIeijkBolSP+9OLAerZe0XeH+60mj9y8XXoEoZKoWnPfnkoguMFpM0W2Ygjkvb
-	wzcwPkriucfX3nktzfM3XoQqnzBPmTO7PeUNQMjFYV66SslCa0rjjx5v66/sFNPHPXTWr/S0rWt
-	o5FmImS8gmp01eWlNCMxhXEWJ+Mfd1tZRNWfd0fK8V3156ntAOwxKxIF8jSoXRSQ7rydxJkdIY7
-	pNWK7d1IadCmy/y7COsX0ggLjRBvuC/3U1yvFT043W6mI9K6c8Ykq4XMIgKirmRzkPY1FqP1TL6
-	yX4T53Zrxe/Zi43vU3N7PuhIj
-X-Received: by 2002:a05:6214:5096:b0:6f4:f123:a97a with SMTP id 6a1803df08f44-6f8b2c65bd5mr150316166d6.15.1747567298527;
-        Sun, 18 May 2025 04:21:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEqLiWIyECuX8rlBPulhzi6aemt00MCcnN0evfEEcuiCXQFgv8XdaQqt/ZFHIXho5+QSjC9UQ==
-X-Received: by 2002:a05:6214:5096:b0:6f4:f123:a97a with SMTP id 6a1803df08f44-6f8b2c65bd5mr150315886d6.15.1747567298220;
-        Sun, 18 May 2025 04:21:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747567300; x=1748172100;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2uKch//NQ7rpnZebTlILrt38+d7k2jrMtvdBKAoEcuA=;
+        b=kbj728RYbuvYXquuPdQkopjVX1jdtgzEqdyKtoTZC4WK0GXrIU+gmYVFAakhiS6xhW
+         +WIo4L4iY9p0ExPexvviKJnBCuMGJCPEvbk+0mnhS9153B/ujM7cieVlP46kZoDdrtOm
+         HSm0lvZ1Q4VY1rD8JCU/JI/KLiYg46aPN6wQ+TO0jeXtGmlMXusiHPhxqmipPRF6R4pp
+         1pmX5h9bQA8cWXm4C7PQB+Gb8ylOyjzzXSTYgVSdFxwr1lDJnlDtwFbxOhiSEgOg7+9Q
+         pf3AeCtlpnrTFoFKAUpesL0k/q+EKRkLO5e6WHq9vMpjX1ekS+iIHajGNcSDWz5lo46G
+         23IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmMHI5S/h1wn0VeoTkzchLh5sb+B1hGHEvFX8GJCatCWv7TgN9rfNhIZpS7MNbijLdA4lDlAFAXgPuIcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGKueC0/BL2S7Yq4wDhR5BikUCrsMGu4IBbHQajxQ9cULYr6Er
+	oaHGZzxoeut+oBLFQ/QzWMBRb0E/jwq2sxktFh4AtS+tB9ArD3GdJRJxCsvGjmn50GJY9kCcs6M
+	NWXh1I18u7BfLJdiOyfPVyTxHLwE5uqxqnah58dfmi1/b7KKS7khiIAFg7+BBF7evl0c=
+X-Gm-Gg: ASbGncvquVc0akzBf7tYItHdjbTnwwzW8NfLBIvSyRj/80461hWrf4On+rcaQNkMuaP
+	LrX1F7p6skCYL6pvIzzk5dqIfqQNVjPA8D4XETnJD0Nw8qqNJTPUp7pZUnGV/4Wt6adPLsqWyS5
+	bToYsGeaPuKql4d8RvAwGmmPcuAWZ4+id8XfxosYWn05OV3lXloehNWapmt8reHueILGFZk16dK
+	XkRk/xKAuHjUEIZQdsGa8oETay6ydHs5yP+BvW+C1B0VyKmnA9iA55/SdcQJovd1quP+A7rJip6
+	kyRYhhzpbHd5Bdzhtngyi7YryIb7+PF5z1az5LUkHAoVS1GoMPOp0CM0t6XjeyKfQQtYD3sCoNS
+	6TfwZtn4tbbVmr1XDC5UUeSlc
+X-Received: by 2002:a05:6214:1c8e:b0:6f5:3cae:9205 with SMTP id 6a1803df08f44-6f8b08eb1c6mr152828756d6.39.1747567300376;
+        Sun, 18 May 2025 04:21:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhSxWj8g056O+jlekH/YLxzN/NBJMw6auhuYPgIm+qZxaImdHyk5LkSqG55Ex6F6xfM5gwSg==
+X-Received: by 2002:a05:6214:1c8e:b0:6f5:3cae:9205 with SMTP id 6a1803df08f44-6f8b08eb1c6mr152828436d6.39.1747567300007;
+        Sun, 18 May 2025 04:21:40 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084ca34csm14186881fa.30.2025.05.18.04.21.37
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084ca34csm14186881fa.30.2025.05.18.04.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 04:21:37 -0700 (PDT)
+        Sun, 18 May 2025 04:21:38 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v6 00/11] drm/msm/dp: perform misc cleanups
-Date: Sun, 18 May 2025 14:21:33 +0300
-Message-Id: <20250518-fd-dp-audio-fixup-v6-0-2f0ec3ec000d@oss.qualcomm.com>
+Date: Sun, 18 May 2025 14:21:34 +0300
+Subject: [PATCH v6 01/11] drm/msm/dp: split MMSS_DP_DSC_DTO register write
+ to a separate function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,12 +78,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL3CKWgC/23Oy27DIBAF0F+JWJdqhpchq/5H1QXmkSBVJsKN1
- Sryv3fiTV2ZDeLOiMN9sDm1kmZ2Pj1YS0uZS50omJcTC1c/XRIvkTITIBQY1DxHHm/c32OpPJf
- vO92dsFYm75ICRu9uLdFiM98/KF/L/FXbz/bFgs/ppiGC7WgLcuAKgk1pNBCyfvssk2/1tbYLe
- 3KL+CPo6BGCiOjQDlTKRB8PhNwR2CUkETBiMDoNcfTyQKg9YXqEIiLbiM5gyELkA6F3hOi20ET
- IATI45UTI5h+xrusvACBS3b8BAAA=
-X-Change-ID: 20240615-fd-dp-audio-fixup-a92883ea9e40
+Message-Id: <20250518-fd-dp-audio-fixup-v6-1-2f0ec3ec000d@oss.qualcomm.com>
+References: <20250518-fd-dp-audio-fixup-v6-0-2f0ec3ec000d@oss.qualcomm.com>
+In-Reply-To: <20250518-fd-dp-audio-fixup-v6-0-2f0ec3ec000d@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
         Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
@@ -93,112 +92,110 @@ Cc: Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3213;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3146;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=9J4rqW2pXqEVwcZ4RKNBv+n/cNEsrz1nBVyzy6c5Bhg=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoKcK/oSgN7yXgFO4+3bkCl2DkBasInwY4hcrZO
- CnT1iV4MDmJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCnCvwAKCRCLPIo+Aiko
- 1SB3B/wKXaCQqwfxs9wTPNniKTi3kHMBEEVeEZgZ38YEdK/Zx9TOyfHago/j5ok1ahPZG6zNFX9
- d44wHDAUXXquUgNagCXa9mqrIZkgOMss4XMHI/b2QpKIHtVZJ7/omvpk9DTkZrCjBQtx4MjEeoc
- 9F19SfDKKcnySqvY2hi1PNnFrdMmnR07QexY7YCwCs96kIGdu2vET/4bgolwb4I8f3gE3DiTOac
- s0+P4yU4OFqEdi8Du9PvY5XzdwP/lDP6OeJSJeUryV/zXjCbUzP9UFMkgjqZkuqYwbkChkJVUhl
- ii5ynWcFLdWaIw3H+zBGNWY3Y914LbQhMc1uWtkKxvXUJAvX
+ bh=/GMTajfgX5DJx2us6iS4i6AlKgNdptMEPO7PC3DA05s=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoKcK/DjiL8Y03I/FRxMKvknvQjg2GH898wVxON
+ gb+VHMeBeaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCnCvwAKCRCLPIo+Aiko
+ 1Tr+B/41Vm0d/UkXnBsuj88/YsnYqBtPAKHVqUq3MtR5mgOWjdUnk7xRAwa8FowVCRn1PaKePum
+ YIZ5S8u05sRpyoWM1lyW04bRa3S+5lyYiUctfEKv3/dY7fq1/ekPj/NGlwGLQ7Ku9LRnTl8X5hO
+ DwM/b5e2mQYZKeMG6cdi97l7/B7SBnIOVKQ/E3J2TnwtOAMRfUHZH1W3+UZ1xiDo01PtIx1zl+S
+ fUcdoULfPfKhLtyPt7TTUdH8g11GguNzNeOxtjgkk1Zb+JUjpGtEE8UEX987jMBIiAILZLyTqL3
+ VDnfTpRp6ANMaiN7E6QAI428jBB1zH27USM5xJzQxN7wgLEA
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: GQDGVSa5zB5x7NpMvXhcQkb42XSMZJ_y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDEwOCBTYWx0ZWRfX0SE2UmCUtry4
- 4b/Wnh/VvvxdpQTciV5tYUCN9FsLWinkp6OWMczOpcTVc6Ue9PHAwpPlEhqKjk7ck37phKiXIWU
- 7PhLRkA51LHeYW0vCESLCMeaZeOc7c2AUCPLYl1XWGlw5aASl1vRGJB+yAJC1f+tBcycnpuKoxG
- onwV943w9JC/Q1y67mW0NL+WW7/UTU6/LANK4sMW2Qs+n8I1HJjOssWT/WI1uhmdRI0j+oZ3N61
- lAVkcALcupS9qtL7lcxZJPDgroaoHHWOtzjJFpvPT42sai0clLesEjNWBzqbergdKbOFAN5oU4+
- HDnUj0XMAxOtIINvimIdoH3E33BXQpG21NKolU5M9mg9a167KmTEZCHQmAE4Kru/KhyXsBD1Qxf
- Gy98VWFjiqi3AkrpHQXB6wUg60lWu9z0mbfZrgngf5rOGA1wEfhwvuZLeYrrWazZFYLOCgYn
-X-Authority-Analysis: v=2.4 cv=aJXwqa9m c=1 sm=1 tr=0 ts=6829c2c3 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=625LCR9qH_oaHj1pw7oA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: GQDGVSa5zB5x7NpMvXhcQkb42XSMZJ_y
+X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=6829c2c5 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=cm27Pg_UAAAA:8 a=zRKm0RuqD35KdulPN9UA:9
+ a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: MsoRc1tPPXYtsMo3y0i2Hu4BhyVuE2Rs
+X-Proofpoint-GUID: MsoRc1tPPXYtsMo3y0i2Hu4BhyVuE2Rs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDEwOCBTYWx0ZWRfX5yBG2aeoiJ7l
+ Zb/NBjP3jftGI912HNTxfuUe6fWHBJYRkJBW4eZX9GkODDPTYK7nl46R02NvMUOywvWw5lsDLG9
+ VaCpvtZxC1/pDhmUMAiL9gKWG4Kle+adAT2AO2GE6GpbUTGlhnWPiR9MXAPvtdkltMeeM9s6WpA
+ nYZcKkPTqwr4tP44G9jOtEbkmO39lWVDNw+tcId2CaKFu/+X0/qCs9cTylZo/b8mC/KL9cn9xNT
+ /41rk1ERE8dnaI4AVnhAnZicwijzVTIkgxTTBjQDgnBnnfea/pNNXVwINolUZCbWh2WioPNO6KO
+ ibrlIGSxoxWNllqcyJkhjxB/PzTb4sTWtzz6b16No8glqGnzOAniyscH1g80ohiSKiwcMYctpho
+ NjenSladZAQknDeHyCx+gsnmb46iLb+74J26RRK6KdRW6jY4AZ693OVcM6hH5vDqFT+lpKP0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-18_06,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 phishscore=0 adultscore=0 clxscore=1015
- mlxlogscore=680 spamscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505180108
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=966 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505180108
 
-Rework most of the register programming functions to be local to the
-calling module rather than accessing everything through huge dp_catalog
-monster.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+It's the dp_panel's duty to clear the MMSS_DP_DSC_DTO register. Once DP
+driver gets DSC support, it will handle that register in other places
+too. Split a call to write 0x0 to that register to a separate function.
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org> # sc7180-trogdor
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes in v6:
-- Rebased on top of the linux-next
-- Link to v5: https://lore.kernel.org/r/20241222-fd-dp-audio-fixup-v5-0-370f09492cf6@linaro.org
+ drivers/gpu/drm/msm/dp/dp_catalog.c | 9 ++++++++-
+ drivers/gpu/drm/msm/dp/dp_catalog.h | 2 ++
+ drivers/gpu/drm/msm/dp/dp_ctrl.c    | 2 ++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-Changes in v5:
-- Dropped applied patches.
-- Removed MMSS_DP_DSC_DTO programming from msm_dp_catalog_ctrl_config_msa() (Abhinav)
-- Pulled the hw_revision patch closer to the top of the series (Abhinav)
-- Link to v4: https://lore.kernel.org/r/20241216-fd-dp-audio-fixup-v4-0-f8d1961cf22f@linaro.org
+diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
+index 7b7eadb2f83b169d8df27ee93589abe05b38f3ae..4f80eceb6ae19f542110d7379007f57c2ac16a8a 100644
+--- a/drivers/gpu/drm/msm/dp/dp_catalog.c
++++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
+@@ -486,7 +486,6 @@ void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
+ 	drm_dbg_dp(catalog->drm_dev, "mvid=0x%x, nvid=0x%x\n", mvid, nvid);
+ 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_MVID, mvid);
+ 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_NVID, nvid);
+-	msm_dp_write_p0(catalog, MMSS_DP_DSC_DTO, 0x0);
+ }
+ 
+ int msm_dp_catalog_ctrl_set_pattern_state_bit(struct msm_dp_catalog *msm_dp_catalog,
+@@ -1039,6 +1038,14 @@ void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog)
+ 	msm_dp_write_p0(catalog, MMSS_DP_TIMING_ENGINE_EN, 0x0);
+ }
+ 
++void msm_dp_catalog_panel_clear_dsc_dto(struct msm_dp_catalog *msm_dp_catalog)
++{
++	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
++				struct msm_dp_catalog_private, msm_dp_catalog);
++
++	msm_dp_write_p0(catalog, MMSS_DP_DSC_DTO, 0x0);
++}
++
+ static void __iomem *msm_dp_ioremap(struct platform_device *pdev, int idx, size_t *len)
+ {
+ 	struct resource *res;
+diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.h b/drivers/gpu/drm/msm/dp/dp_catalog.h
+index 6678b0ac9a67881244884d59487fa288d33d1be7..08bb42e91b779633875dbeb4130bc55a6571cfb1 100644
+--- a/drivers/gpu/drm/msm/dp/dp_catalog.h
++++ b/drivers/gpu/drm/msm/dp/dp_catalog.h
+@@ -92,6 +92,8 @@ void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
+ 				struct drm_display_mode *drm_mode);
+ void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog);
+ 
++void msm_dp_catalog_panel_clear_dsc_dto(struct msm_dp_catalog *msm_dp_catalog);
++
+ struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev);
+ 
+ /* DP Audio APIs */
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+index a50bfafbb4ea85c114c958ea0ed24362a1f23136..4c0a19e14492dde92e5707ffe520681aba1ca5c0 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+@@ -2050,6 +2050,8 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, bool force_link_train
+ 		pixel_rate_orig,
+ 		ctrl->panel->msm_dp_mode.out_fmt_is_yuv_420);
+ 
++	msm_dp_catalog_panel_clear_dsc_dto(ctrl->catalog);
++
+ 	msm_dp_ctrl_setup_tr_unit(ctrl);
+ 
+ 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
 
-Changes in v4:
-- Rebased on top of linux-next + msm-fixes, dropping picked up patches
-  (Abhinav)
-- Reordered patches to move dp_audio patches earlier (Abhinav).
-- Added several more patches, dropping dp_catalog.c completely.
-- Link to v3: https://lore.kernel.org/r/20241212-fd-dp-audio-fixup-v3-0-0b1c65e7dba3@linaro.org
-
-Changes in v3:
-- Fixed falce -> false typo (Abhinav)
-- Dropped wrong c&p comment from msm_dp_read_p0() (Stephen)
-- Changed msm_dp_aux_clear_hw_interrupts() to return void (Stephen)
-- Fixed most of line length warnings
-- Link to v2: https://lore.kernel.org/r/20241202-fd-dp-audio-fixup-v2-0-d9187ea96dad@linaro.org
-
-Changes in v2:
-- Set safe_to_exit_level before printing it (LKP)
-- Keep TPG-related functions (Abhinav)
-- Link to v1: https://lore.kernel.org/r/20241108-fd-dp-audio-fixup-v1-0-40c8eeb60cf5@linaro.org
-
----
-Dmitry Baryshkov (11):
-      drm/msm/dp: split MMSS_DP_DSC_DTO register write to a separate function
-      drm/msm/dp: read hw revision only once
-      drm/msm/dp: pull I/O data out of msm_dp_catalog_private()
-      drm/msm/dp: move I/O functions to global header
-      drm/msm/dp: move/inline AUX register functions
-      drm/msm/dp: move/inline panel related functions
-      drm/msm/dp: move/inline audio related functions
-      drm/msm/dp: move/inline ctrl register functions
-      drm/msm/dp: move more AUX functions to dp_aux.c
-      drm/msm/dp: move interrupt handling to dp_ctrl
-      drm/msm/dp: drop the msm_dp_catalog module
-
- drivers/gpu/drm/msm/Makefile        |    1 -
- drivers/gpu/drm/msm/dp/dp_audio.c   |  130 +++-
- drivers/gpu/drm/msm/dp/dp_audio.h   |    7 +-
- drivers/gpu/drm/msm/dp/dp_aux.c     |  216 +++++-
- drivers/gpu/drm/msm/dp/dp_aux.h     |   15 +-
- drivers/gpu/drm/msm/dp/dp_catalog.c | 1298 -----------------------------------
- drivers/gpu/drm/msm/dp/dp_catalog.h |  113 ---
- drivers/gpu/drm/msm/dp/dp_ctrl.c    |  607 ++++++++++++++--
- drivers/gpu/drm/msm/dp/dp_ctrl.h    |   19 +-
- drivers/gpu/drm/msm/dp/dp_debug.c   |    1 -
- drivers/gpu/drm/msm/dp/dp_display.c |  150 +++-
- drivers/gpu/drm/msm/dp/dp_link.c    |    1 +
- drivers/gpu/drm/msm/dp/dp_panel.c   |  256 ++++++-
- drivers/gpu/drm/msm/dp/dp_panel.h   |   13 +-
- drivers/gpu/drm/msm/dp/dp_reg.h     |   19 +
- 15 files changed, 1244 insertions(+), 1602 deletions(-)
----
-base-commit: 087b2daf4fffc7cf4eb754e1f0b07464ee376851
-change-id: 20240615-fd-dp-audio-fixup-a92883ea9e40
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+2.39.5
 
