@@ -1,116 +1,118 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A419A1482F5;
-	Sun, 18 May 2025 15:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDF6213E66
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 15:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747582367; cv=none; b=NATYNl8NAmmkPJQt7fwOTvQ441nN2t6q4CQZpmyxEwTTO2KzIS6sLJk1L9twLfOpJY9aRwP7hnmjpnPs+L0cBPHVg6W+q0ffF2wGArKe7ttC2a4A7W8mbeHqOmJO0DbfRoD297BISwH4lZ2KX7NDSAYXQ9vBU0pOzxIt23+1jWg=
+	t=1747583028; cv=none; b=clueDgwlRvwMAXZ0fKfIhhpVyOBUNrvCJh56TmHALGlQATEdJ4/iIKbn87HVpVYdbHK3TpqniFd5Vyxcd+A2p++uUs87eo63/SyIwavL0EcvsC/BSjUHTMwUB2t8dCzUwmuR11YvIGJxfAi7YvxBuLr2IwKNGZrUbpN6V9YyA7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747582367; c=relaxed/simple;
-	bh=nGed94xdf/ERcU1ykh8eP0PcnvtCmAhkx8zZQfFmbTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V8kBoms70uVXll0WjO1Efmg0Mal6yvmiep0rgCgmbtAGSRcFdy/6fFkj7cbDXRK0lXQDFbdPNcK+xF7wpa4PLudpF3UhqSC8LvLac0YXQL+R0riFsgsHju9SWKg5HdYaMsIQqtMnZH8ZtYADCOHa+msHsO0cHaYMAxhyFpEwWTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMrPcdNQ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747583028; c=relaxed/simple;
+	bh=Rk03/9wHJIqP0wHoJDoxL0a8mbsDz8A09+IGXBT7rZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IsToDGaqgHG48Kd8JF0hnUb4iHrN8SJhfh8B4eBSM2GtLuHyQ0ZsJM0bZ3u9gwnMwsWKlFo67EJAoWkkuZOo8iXUInUymFteXjwG+O/iyVTFftokMwRCKyHS8WnYEoSGdlnQRcDSEHcV896WtQn1pwQvyYuV2QqsfFCqtfSgv7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fk2jkh3h; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMrPcdNQ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad5740dd20eso5609266b.0;
-        Sun, 18 May 2025 08:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747582364; x=1748187164; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1f92eXOWYP4V+zpTK83sed7LLMBz3R74Jjg/SFUX4Vs=;
-        b=FMrPcdNQScnoRRDAhrjEggvXyh+3ui5ZgcESeN7AHddXnnRgMjJXXRhE2DBXecCAQT
-         /JbmgtLaYigFnlqofsHjTFB9pVGXcCjpCRr0S+zXs4xSU6zfY3ZkfgASqxa2cI2ER1/I
-         1gdPcp3WD9ruoqxxwQrjkajAfhaywAY4+DAWB394lf+auRx7WFH8ijW3Yhh3q8CNEzf1
-         oJ7+j4x08nKWdAnQyrWebwZI65bf5dh3WvcXfpHIKoBGF3ShLF2jvarlNLvPw9pRtuDW
-         UNjxxa/Q6nOGwxoCDjesU6A6Fy++lGDfm8GRjNqXG1uuOidw4RalLUWcw8aJ8J4JPoFB
-         rjfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747582364; x=1748187164;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1f92eXOWYP4V+zpTK83sed7LLMBz3R74Jjg/SFUX4Vs=;
-        b=NK/loGs/kJI2PG10HAVyzKCY1ptlU1u2GArt5qbwVjVta2U4d64DcJdXHFI74Z0tEz
-         h/NDKt/Z5wgS1Hk9A752RQCDc1PCCMnCxiFtioy4DQu4e+rzUhIOPTz+jtHHjykctJYI
-         Q/hfmAxtjbNK16qtnFLW1jKJ8FttCK/zK2QkT/FQ2bvJOpszrhPZyqMlFshCXd4cn/My
-         3Mb0n97McPAuYd1hAQgeujcKJMezEneHP3s0IUo+YVPGp5KxVbbueWKr6a6f76nzziRS
-         0O3qrXHZSqTOe+FYAZvu7V42MYce7X7y+BUsV5JaqKUhcG5resL9NOMuwv9yqu3tt1H8
-         tCTw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3UCFT0nRYEAnqP6g0krYhCx26VpT0zLQ0tYbhl+LoYVVoiWu6yXe4No+L4Q/9AGPdniasAXdfR/VAJQ==@vger.kernel.org, AJvYcCU5fEm0FKpHxaWo0K174Yrw+8qsxAN5HKg8AgafscJsHvwjcuL90KSwrF1nsApx76WKBu2+4RxlNhQo6Hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS3azyCu/FvO+mOxVjEI143+RXi5+rBtZdCjXpnm0HrWSS8Dyu
-	N1DExyZcPln+pr434mPUpt/Gi9L4Xs1t+Zut91E74hVnt55d7pDZBnO9
-X-Gm-Gg: ASbGncucZWPvn0UVeYEpbzj04wHRxavkGiDhHEpmV6XFcn7T1IMgm6dtzpUZTG/N2BU
-	Qk1AxYpoHbWO1ZaVLQn4IN1bJwgriDXpLMph4rkbEnLI2Y0/YJdQEv6jJ93fdWwQhfjGygvBfTt
-	u8ILyn1XbXlVoOo5BUONHmSqpFT455xE0h6MLJoyxUlMdQzXw33bXPJ0eeLB0T3l1ekzfZSkmdD
-	bxipxpTMaUY7fmDdZIuM3UjwGuPzIs3OZ15FgQRAopUb46d8FknD0cwTGJn3LwlNIShw8rAUZgd
-	XqhXFIQXFrNoxj2UqRJmUE/1ivgtaicIJILBDHisCEPVZqZHAkhLoqYtymTW5gsh
-X-Google-Smtp-Source: AGHT+IEUlJL8VBVYjOKV2aKMCQbEDwldB4nX6x9aADGO/DDur57+yPm6021vkCypNuuIG8bZ6IS8Pw==
-X-Received: by 2002:a17:907:d26:b0:ad5:715b:d1d4 with SMTP id a640c23a62f3a-ad5715bd3b3mr78933966b.32.1747582363769;
-        Sun, 18 May 2025 08:32:43 -0700 (PDT)
-Received: from [192.168.0.131] ([194.183.54.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4909e1sm453591866b.125.2025.05.18.08.32.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 May 2025 08:32:43 -0700 (PDT)
-Message-ID: <7c5a8768-2d19-40b9-a965-966a8900e703@gmail.com>
-Date: Sun, 18 May 2025 17:32:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fk2jkh3h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747583024; x=1779119024;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Rk03/9wHJIqP0wHoJDoxL0a8mbsDz8A09+IGXBT7rZQ=;
+  b=Fk2jkh3hivLx2H9PDu41dSz4HI8/xgitsC9rBkaQsA2GBgyS9T4fWt1w
+   0pvkiJZ5eYS3BtlwI4+MXdlP+eYxoUFESt5lW3rBD4KQOPGm/Hv1kTT0t
+   nsIjceRPXVZqQr2C+QFd8UzmeInMPkmvg3ndHAA+mZKakJVyzzdPW8txr
+   G3Fjue5/kunn9N/x4etBvfCI3M2THM01eMVA6+ig8OHH5CA7qeRRMBkro
+   2SNclm1xE2xrFZBjElmExKYD+VEqfQ+PrwlxlROn7QWYMVh/ppRsS3Rvb
+   gq8Jlxt+h0Dn+AxcgF/SJPloat50JzoUGTHcG0LskNlQy7lXdzk/wHZ88
+   g==;
+X-CSE-ConnectionGUID: ey1sW7qfQnWIP47Uenk7wA==
+X-CSE-MsgGUID: TjrUHE0qTPGBHp9dgATFfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="48599033"
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="48599033"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 08:43:43 -0700
+X-CSE-ConnectionGUID: 97z6snPhRNCnsC0t5fWWlA==
+X-CSE-MsgGUID: tdYPHyrlTyq1RBePtWnYUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="143933214"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 18 May 2025 08:43:41 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGgAs-000Kr5-1F;
+	Sun, 18 May 2025 15:43:38 +0000
+Date: Sun, 18 May 2025 23:42:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Laight <david.laight.linux@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	u.kleine-koenig@baylibre.com, Nicolas Pitre <npitre@baylibre.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2 next 2/4] lib: mul_u64_u64_div_u64() Use BUG_ON() for
+ divide by zero
+Message-ID: <202505182351.bPFZE1vO-lkp@intel.com>
+References: <20250518133848.5811-3-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] leds: KUnit registration tests pertaining to
- init_data
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: bettyzhou@google.com, ynaffit@google.com, tkjos@google.com
-References: <20250515082830.800798-1-lee@kernel.org>
-Content-Language: en-US
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-In-Reply-To: <20250515082830.800798-1-lee@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518133848.5811-3-david.laight.linux@gmail.com>
 
-Hi Lee,
+Hi David,
 
-On 5/15/25 10:27, Lee Jones wrote:
-> Lots of drivers still register with the LED Class using init_data. Let's
+kernel test robot noticed the following build errors:
 
-What do you mean by "still"? Actually init_data is the new approach,
-that turns the LED core DT parser on, and is predestined for use with
-{devm_}led_classdev_register_ext() API.
+[auto build test ERROR on next-20250516]
 
-> provide some additional Kunit infrastructure to exercise the various
-> possibilities.
-> 
-> Change log:
-> 
-> v1 => v2:
->   - Use devm_* to ensure resources are cleaned-up on exit
-> 
-> Lee Jones (5):
->    leds: led-test: Move common LED class registration code into helper
->      function
->    leds: led-test: Provide test for registration with missing
->      default_label
->    leds: led-test: Provide test for registration with missing devicename
->    leds: led-test: Provide test for registration with a name that is too
->      long
->    leds: led-test: Provide test for successful registration using
->      init_data
-> 
->   drivers/leds/led-test.c | 86 ++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 80 insertions(+), 6 deletions(-)
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Laight/lib-mul_u64_u64_div_u64-rename-parameter-c-to-d/20250518-214037
+base:   next-20250516
+patch link:    https://lore.kernel.org/r/20250518133848.5811-3-david.laight.linux%40gmail.com
+patch subject: [PATCH v2 next 2/4] lib: mul_u64_u64_div_u64() Use BUG_ON() for divide by zero
+config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20250518/202505182351.bPFZE1vO-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505182351.bPFZE1vO-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505182351.bPFZE1vO-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   lib/math/div64.c: In function 'mul_u64_u64_div_u64':
+>> lib/math/div64.c:190:9: error: implicit declaration of function 'BUG_ON' [-Wimplicit-function-declaration]
+     190 |         BUG_ON(!d);
+         |         ^~~~~~
+
+
+vim +/BUG_ON +190 lib/math/div64.c
+
+   185	
+   186	#ifndef mul_u64_u64_div_u64
+   187	u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+   188	{
+   189		/* Trigger exception if divisor is zero */
+ > 190		BUG_ON(!d);
+   191	
+   192		if (ilog2(a) + ilog2(b) <= 62)
+   193			return div64_u64(a * b, d);
+   194	
 
 -- 
-Best regards,
-Jacek Anaszewski
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
