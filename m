@@ -1,126 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B51581F0;
-	Sun, 18 May 2025 03:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFB5EEDE;
+	Sun, 18 May 2025 04:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747540594; cv=none; b=ukrt8ajCzEJ2yoQ3+NgFKMKhAWDFek1+Z+7lceA3SM74K+wjJhflFtQ7XFoW7hwlVt4PvFF9koclSQRe1FH5R64iVp/SLVHmJwNr8eGDY/2YTyASGlCwTxSM1cnCPlLAqcIdMbeV1WnvM7VRN0OwOSzOaSfKcTrLEoSeKSRmy/c=
+	t=1747541470; cv=none; b=CczDinXzWUInsUHNO6HLudFWaUzj9cNI8di8j9OtOwpC6Jgw2b/WQCjKUN3+4tEq4+ynE5CvQRP20WwCqQvwy8Um72pfmUMH1FuEKWOAuZ4df8D8PnYOpS1M2zVeomZZAVZd3n8+lXxvYdV1EARm7i7vrLRe4Y9uVO5EwfGsHC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747540594; c=relaxed/simple;
-	bh=JDoH10AAqImfoopqF0vvPHRY8M8EOjDJ2zuOpycXiII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SG+03R1zgJpHaWJ1iamu0lc1k1YaH48jFXyfOZuMnKmNwDJ2Sp4Saz6/YCZUEHEUjtFs1mQWP5Axx42IqVZcp6n4prgotOdulIf0aM9Ia8+/R0gWa/1dqMcSoQU0caZT58tv/FCEc2Fv5OFg3YUTyyb2T06yZBySy0zAOA6uToc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fasRE915; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747541470; c=relaxed/simple;
+	bh=AdwzIP8/uuMxgy2PzsepCvdsrmVIW2mO3UxQvOEbPO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lvjx5zgs3cGle1ULIWXhl/dOHOISM6kmoxlpZB5QvSPB06AH4FP930ShNKbJIRBH0Ly2ApNhksoyXDDwbtfR7bluj7szm6H+Xk+7WPs5RGOsYyfevoL751bIZJpDb6hUAB5CKm/zxCq9PZHC2Qt3Mrc8UPXk7jR4NDMay8wEZKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jXmwgWw5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fasRE915"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I2Sm4m007718;
-	Sun, 18 May 2025 03:56:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VWBtb0+tQAUtbJ0/eESo5d6JUUJp+MptflPYz82Vd1g=; b=fasRE915mDUUcncH
-	P7zSaZflUA+pD108BW5Zm6HlMIUJrBJ60CGPJUotAGz6JGJIuFYGTVZ4IsTJTlVI
-	x2LBq7iropOnDimoIypag2URZ8GC4mPd1IO7YWlVUL6SUYSqJ1Rh1Wu6AqkvAByB
-	7tdKk6PzcSf5Rfriy+oK9+pIU5MWwf9ObQfV1gehpi0GOjREXlVd+JyNJwuyV9UO
-	xZh0+0wMON3WSAf6Tq7UcFlpKNFKVYOAElM3j13P2u/RBXeMaTGMWL2EtupcWEAf
-	0kxAzbF+0Lup7B64HEedUunMfFV7u42Tp+wOABYO66JF2D2f+u+P4S+r5MM3y6aO
-	YoGetA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjnyhfrx-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jXmwgWw5"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I20P2i013585;
+	Sun, 18 May 2025 04:10:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=lZr01G
+	mqW9FsJmFstYGZZlQSl2u2zNrJtPHT928qRvk=; b=jXmwgWw5rSQFfbF5VGlFTQ
+	BZED1ifx4KQht17bODgPH73zORx1RiKckhRjJmUAkM3B+mOfVAKEPOwd2p6ot+sS
+	l6ru9FZJEHCtg1Fe1tJE549z1G7XASDqrE+f8SO8hE/LB5Wtycv5TeoTA6oJe+X8
+	hPWjnFa7p84tDFBquTQz/Kcw+80b/69gqEhyJp5JCVNHH1N45Bef4PDfPBcKhgLH
+	9/YrFP0J3/8WJnuyk1mAJSuMdmHeuYkYZnHQ/RFL7NkFrXODhItO5ly0HKQXy1wf
+	7wJUdSXCqZ49+i84HAfTIkrm+C5STrw/uaIPfcvSE1a0C7U0OFCsa3pBjuj4p7LA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46pn2sb9rh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 03:56:26 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54I3uPpD031306
+	Sun, 18 May 2025 04:10:34 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54I4AXsT024560;
+	Sun, 18 May 2025 04:10:33 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46pn2sb9rf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 03:56:25 GMT
-Received: from [10.50.16.181] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 17 May
- 2025 20:56:22 -0700
-Message-ID: <a7bbf0cd-f1b6-c1bc-016d-dcefeb4666fb@quicinc.com>
-Date: Sun, 18 May 2025 09:26:18 +0530
+	Sun, 18 May 2025 04:10:33 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54I3FMlI016070;
+	Sun, 18 May 2025 04:10:32 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g20563-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 18 May 2025 04:10:32 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54I4AVda45220270
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 18 May 2025 04:10:31 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A34EE200BA;
+	Sun, 18 May 2025 03:45:09 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 855FB200B3;
+	Sun, 18 May 2025 03:45:04 +0000 (GMT)
+Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.51.82])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 18 May 2025 03:45:04 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+        Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Replace strcpy() with strscpy() in proc_ppc64_init()
+Date: Sun, 18 May 2025 09:15:02 +0530
+Message-ID: <174753967075.24504.4269062328317378824.b4-ty@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250421183110.436265-1-thorsten.blum@linux.dev>
+References: <20250421183110.436265-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 2/2] media: venus: Fix OOB read due to missing payload
- bound check
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Hans Verkuil
-	<hans.verkuil@cisco.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vedang Nagar <quic_vnagar@quicinc.com>
-References: <20250514-venus-fixes-v3-0-32298566011f@quicinc.com>
- <20250514-venus-fixes-v3-2-32298566011f@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250514-venus-fixes-v3-2-32298566011f@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDAzMiBTYWx0ZWRfX607qZaEI8N3E
- o9KK1P4DRvCMrOe0YLwsM265O0yBwBehzjX5z2t/+1YS+6+ikBvbOJP7mnPk1/AWvpX+VmMZSHe
- X6r4A9RFrahv+Kc/hacmhEm1lTbcCIlNKT8VYNqP1q5joAOTJQmqotL/Y9b/HUb8JLfc95wFCtE
- eVEwj5HsSTmzkJDsyfEUuJDLABwV9vUHjDsfcVNSQtIs14A4bmbOJAKmLWlvxRVBdNEDWHFzGPL
- GBTj/chOn9aCkkZ/9+Bec2dvpbMxflAQx73bAa6/42gbwdXD4cHbymWMrV/h+E9ZFdT7KvKMdLG
- AhiKsScY0CbLI89IW0rDyMddCT4qOmecR1TO+bbluNVwJwtiXOgVvBa5+xB1alBRgwMma4x/Vax
- Gf94eCM5M7Hb9kR9HB1Q4JfFh5uuWNw0r1+ZS5o2M798lym3Ef6000kHQOHGGcr/72bb5QuQ
-X-Authority-Analysis: v=2.4 cv=Z9XsHGRA c=1 sm=1 tr=0 ts=68295a6a cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=8aEOFhq6cl1fJjfOtgIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: wYoyZywxuQ5yTzXG5Yxn0lSm6y6rzyY3
-X-Proofpoint-ORIG-GUID: wYoyZywxuQ5yTzXG5Yxn0lSm6y6rzyY3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDAzNCBTYWx0ZWRfXx/zOcLDG91Ed IEEgr3xxtD+i4n+eek2esBuXvLfm86CSuCKfZEImltjgSe9bd5Z99kDAVGDjYs+Zi8qGblAwp9t H6ved9YS3zSKqWTz/lL+5DyF7XM9zRzAdzWKi83Sd3tgS622eGrtv2OgwyW6zj/D5hefIo2JM/m
+ TOBTYUlNKbV1LpG/yxAblIMFZ93TDhzwQCIFPjINJsbMo+0L/cQHwxf8e94AH/F74QLf+RcdQ8L RxToVbSnos6XVBzX5VjzjniPGqEYK+JTgp0aNQPnJV1EJ7QuV4bznOozX37P9fp6Vfh06a+QUpy iqJTUtnBFnfcVid69lIjkhgUCoWzSmgP5yBRcH/NWRY+Hoaywz0GDPKZa0JFt33loNaftxcfs5t
+ NSNDymeGH6gcWKOkbCjR5XS9Q9E7uES/FkBouKUHjRrvW7WX+OWK6CrpP8S0wAfzGehYsoGn
+X-Proofpoint-ORIG-GUID: dBHuUcMunzL_RAR4C-1ueT5IMf6FvjuC
+X-Proofpoint-GUID: jv_TqUPimTSwFXqO-AStKCjPLWwjZrVC
+X-Authority-Analysis: v=2.4 cv=GYQXnRXL c=1 sm=1 tr=0 ts=68295dba cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=Uu9fRxi0hxKbv0zXlPQA:9 a=QEXdDO2ut3YA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-18_02,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=931 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1015
- malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=691 bulkscore=0 suspectscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505180032
+ definitions=main-2505180034
 
+On Mon, 21 Apr 2025 20:31:08 +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> Don't cast the destination buffer from 'u8[]' to 'char *' to satisfy the
+> __must_be_array() requirement of strscpy().
+> 
+> No functional changes intended.
+> 
+> [...]
 
-On 5/14/2025 7:08 PM, Dikshita Agarwal wrote:
-> From: Vedang Nagar <quic_vnagar@quicinc.com>
-> 
-> Currently, The event_seq_changed() handler processes a variable number
-> of properties sent by the firmware. The number of properties is indicated
-> by the firmware and used to iterate over the payload. However, the
-> payload size is not being validated against the actual message length.
-> 
-> This can lead to out-of-bounds memory access if the firmware provides a
-> property count that exceeds the data available in the payload. Such a
-> condition can result in kernel crashes or potential information leaks if
-> memory beyond the buffer is accessed.
-> 
-> Fix this by properly validating the remaining size of the payload before
-> each property access and updating bounds accordingly as properties are
-> parsed.
-> 
-> This ensures that property parsing is safely bounded within the received
-> message buffer and protects against malformed or malicious firmware
-> behavior.
-> 
-> Fixes: 09c2845e8fe4 ("[media] media: venus: hfi: add Host Firmware Interface (HFI)")
-> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
-> Co-developed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Applied to powerpc/next.
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+[1/1] powerpc: Replace strcpy() with strscpy() in proc_ppc64_init()
+      https://git.kernel.org/powerpc/c/7e99a4a60d8fc9b24a3f9632011bf7e197f1aff9
+
+Thanks
