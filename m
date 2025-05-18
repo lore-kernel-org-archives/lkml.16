@@ -1,89 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8902CA6;
-	Sun, 18 May 2025 14:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194E2CA6;
+	Sun, 18 May 2025 14:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747577175; cv=none; b=CVjqcv0D6ODIUs2LRM2076HxcT7+g4pw7iQjibnM5/+bPG9rqXXFiGSrDe2dqYYGDpzCFX4c4N2TryT1XAN+obUbvt+W/0olXIFMYezcULBTJ4aTJdDfzST8ZZQIiEPqMELWhp/zFu1sqvymtS+IzX4vq7ZZ63wAxipcsYCnsrA=
+	t=1747577232; cv=none; b=HoBZepH39U6uGxnQsKBfmNLQselw1T9qpSYtT7JDSqoygOieLmhjhwvyWjsfN+pQp+gFTlrXibwETSBWGdCLc+Mj7r3NlqfKd/bpMQ0Tuox/039UrI7ucKnCnVN8HePFhbdOLJPxgE7iTVUOZjl2j774wCN599EmKn79sSAonmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747577175; c=relaxed/simple;
-	bh=Y6RcSOJ3TT05BAGmCI4tHEBMtVlV33BvNPwwrPQrwdw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=A9GlBZNiLhnyW2U2SRAD4FzqVxTvFuns7/PDLe/UxtPbXe6XVQaPU51KOHxcosHCs4dM1/UGk3d75mw0+RCxZqk7kZPRE3RuiKBfouCjc2glj8mLfK2ulDFKW/5k7A2D1F/AsfdBWGDi6P/9ltqguH/p3DDPWTP5ChbmfotmC/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9YUaH1a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747577232; c=relaxed/simple;
+	bh=7ZUOy4zfzwtQfFECls1H0K0rWiwTK00K7JoofSWCwAk=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JEsvSEs6qY3FoKyRV1Qi2Aavl/lXDlQNrceFc+YsHoJFD89+xZh88a9i83oCe+sNgIiQLL2ez6xJPkKGKaDH0spZ7c9+JPbZCZxtRScitsdsfo88v/jX93Z5ODrS1ILsHsuk+o/JBJjYHL0pxD0/yMbBFNjTXnPiBTwrpp5H9Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Tkf+PaOP; arc=none smtp.client-ip=162.62.57.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9YUaH1a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E860CC4CEE7;
-	Sun, 18 May 2025 14:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747577173;
-	bh=Y6RcSOJ3TT05BAGmCI4tHEBMtVlV33BvNPwwrPQrwdw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=l9YUaH1aBItBRjrd3dy8XIY25AGKBS/3Bl3FM3z0SWsjUxEombiJX9hvN541fLUu0
-	 20h7r58cjtkxSGLdtwHVrokxkuTBmb9/sgbY77YkV0ZWSmQo/b1Fr+XfreKR8x0JSu
-	 Ef2HDrvljCi+jFAxmkX6aiXgblZhmSHVeeeXa7MCnq7cpbtnY6fhfuRP+4xaVAgTwJ
-	 OaOUZ68UR5eVEyHFmfZVOqA2aIV4Viqz7W7U+al+vAUCBtRCvYFPtiMEGSWBdqSyE1
-	 sxJtdI+Y8Y+XsDLRexYI9m9hgXIaSHpv9Xbfk1VCYfyy8uHr1Gtk8guDBgctjxU8to
-	 veciyOVhRQI+Q==
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Tkf+PaOP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1747576921; bh=ySspec3YNrQpxYsv4pE3dYx/3DWUTev93a0NvHqCYAc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Tkf+PaOP4+TjvyoUmtHWN4GO+oR5cw7jYpGd/9g+y8NWcLiy4o3h2w7+nGA65GoYQ
+	 qVbYuar0HaUtMxQI7PMXkdzwZiH12EXLC8QQARXHCHIWFeUCWKey9lcCTP2yoceREM
+	 cjUNP3sQrYge3JMV8tVk67hQQCWX6kP6py9uRPfM=
+Received: from ctt.. ([219.143.130.140])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 798228B; Sun, 18 May 2025 22:01:57 +0800
+X-QQ-mid: xmsmtpt1747576917tkneko3hr
+Message-ID: <tencent_7A72A617DCA9854675A3B22B9C0B5F5E4E09@qq.com>
+X-QQ-XMAILINFO: MapnONytPuzijWxJBHCc5PS93VZJwvuokpXoI5q/M+ZsDlZKJp5CVfAhqVZz1b
+	 J4nce0pjPp6rvu1jW9ucyd0Ilc9eHXHfF1X6k8HRQV7PzhaWTnqammcFHeqrUzAyOJh//Ef6HrR3
+	 GeYvjvinwpiiF3aCTUEhnfOgZmO3igKVLIZQuSHLL8+AlJ+yozztRpjG2aAVfHBn0AfNRtGaXoBB
+	 BuAkEP/LMzqSMzWumhq/sOfy25wDzDVHRDqohC+/vBcE6CYwsm/QbPTgs9YBgmk/rvq/ZMEd1Tcp
+	 fxJfHa+gOv6rqX3SNrZ39QPoTRNKkFZNZpMfWKQhxtu498djZJ7pcy/gAv2yBDUC6nAwaoh4a4mg
+	 DZnqtfQYbWFflLFHs6INBVdeV5gwh8P+kQJ6k5YqkjX3BtkrmoCXsjaC7JhPgKeC942IX8u+ScUF
+	 zX88Xkn2m+z0Uxb0/0bijildv3DNbJpBTJvOPd7yWzfwI8KJeCFzRP2eKkrf0/0H3dhuxMbAgm2e
+	 PQS4YB8aL10fUGYRMfJH0GpDb95K19DrN6fjyZ7zbLaEOVpipNMrvBcIHC/WNk67d8ngYmDQjiDb
+	 RUU/Z6vxaZnY5Ye7x0ybbS+jhtf2y8dwZvc86LBPQAMbYkpECcOWaR4a6A3o99PET4CGfJZJASoJ
+	 dkF1sGSp5mP+9Zl3S+ahpoEUzbP7IaAtPTSNEtMfPzNnlQ7E4jUcLhVVJQdU7SVRgtcKgVBGIMTj
+	 llvQ74gB4VtRXDwfJCkhpr+jopP3gsnFi6obNb81/pdRqZ/Xy76qO8Pn07mPvZHWRh1V/S8Shh43
+	 Qjc17FhAt4RabMxkkmTwNhoFkLx9ZiphYu/08NsVducxF4+3iPqeIl/Q5+YxNKW0cOSvtHb1JY8Z
+	 ihcw8+ADlLhUZi23vFSlMsZOXTZi1Gbrud6oCBn7ac6eR8+MHQZ6Oodwwt2/ccbEiuqhsAtCavDY
+	 /QajZEBPWGbWKj7UMGogvJL+EImqr48Jx0A3ZjSPefRFeE1UIt4iij6duxQ7GW4maNWNzH4K3Gti
+	 iowD5bqIqGWCC75+C7S0Fxt+tt5U3xU/NSZuueawLJ6b6j9/xXiVlj79vPCk1ZaFSIzr/voVUuwT
+	 V2lMuN
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Taotao Chen <chentao325@qq.com>
+To: hch@infradead.org,
+	tytso@mit.edu,
+	willy@infradead.org
+Cc: adilger.kernel@dilger.ca,
+	akpm@linux-foundation.org,
+	chentaotao@didiglobal.com,
+	linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm/filemap: initialize fsdata with iocb->ki_flags
+Date: Sun, 18 May 2025 14:01:57 +0000
+X-OQ-MSGID: <20250518140157.20878-1-chentao325@qq.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aCSxc7TnJzP-n2Lk@infradead.org>
+References: <aCSxc7TnJzP-n2Lk@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 16:05:42 +0200
-Message-Id: <D9ZCE83VYX50.3415QQDCN4R0G@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Mark Brown" <broonie@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
- <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
- <D9Z4XGQ2QHXA.2H5X1NZ5IZECC@nvidia.com>
- <D9Z59JWL4BTC.3DTN0LWCJX5AZ@nvidia.com>
- <D9Z73XZUSYWO.R0P38ASITWR7@kernel.org>
- <D9Z8PLIZGSJ6.254ICGG44E4PB@nvidia.com>
-In-Reply-To: <D9Z8PLIZGSJ6.254ICGG44E4PB@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun May 18, 2025 at 1:12 PM CEST, Alexandre Courbot wrote:
-> On Sun May 18, 2025 at 6:57 PM JST, Benno Lossin wrote:
->> So just let users ensure that they always match each `enable` call with
->> a `disable` call in the `Dynamic` typestate?
->>
->> That is ok, if no memory issues can arise from forgetting to do so,
->> otherwise those functions need to be `unsafe`.
->
-> There shouldn't be any, the only side effect would be that the regulator
-> stays enabled when it shouldn't.
->
-> It's also easy to implement more behaviors using more states. For
-> instance, `Dynamic` just proxies the C API. But if we also think it its
-> useful to have a regulator which use count is clamped to 0 and 1, you
-> could have another state that includes a boolean (instead of being empty
-> lke the others) to track whether the regulator is enabled or not, and an
-> `enable` method that only calls the C `regulator_enable` if that boolean
-> is not already true. That way you remove the need to mirror the calls to
-> enable and disable, while only paying the memory overhead for doing so
-> when you explicitly state you want this behavior.
+Hi Christoph, Matthew, Ted
 
-Aren't we then duplicating the refcount from the C side?
+Thanks for the suggestions.
 
----
-Cheers,
-Benno
+Replacing file with iocb in write_begin(), updating call sites,
+and adjusting i915/gem usage makes a lot of sense. I’ll send a
+v2 to reflect this change.
+
+Thanks,  
+Taotao
+
