@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D1941C72
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691E11D9346
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 12:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747569547; cv=none; b=FGgBldG4gmA6xCj8WrJK1st0WF0XxV8M50huxF/DBrFuV4O4u4mkNtyKXioGpgOry8H+lCbtjyfkIZ7iuNf3mnkTg8p7cSb8Sy8Y75jhwyQRP+5ChXd8NRDfz2ZpCMajuurvClfU88t+59HW1JN6UF+od2ycV7ZhMKEVgleSgeM=
+	t=1747569611; cv=none; b=mcsAKXQNwkWuIid8p5dhjCe++qsWdYNrgUHJrZxSsr19NA4yqfpIa5DSDE+c2ER7/N6RlSLAdI00lFlqAQxCziJrh2Yut4BmKbIabS4YpckLH6zEFXhL6f8aCHstgbAKFO3l7tyaFvsi8/ljozWcxjJM9eLgTSfr9/6CozQBowY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747569547; c=relaxed/simple;
-	bh=uBcKiv6Sl4n4n4ehs6uqn5V8UYbdTDpcBzLwCE6KGa4=;
+	s=arc-20240116; t=1747569611; c=relaxed/simple;
+	bh=R3M38b7Up/xvPYwowadxMSa4vj8sVnFelawVkoAx1i4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rg3cjTOgAupySgKsaAVUgNaKlnTu4CPcdwiIO4L/mZ0WVUEddbOpZ92oNap6RuxC/xElIiXZxadQfaG+9eVhp2WiR9NjR9ffjQ/8CkxsFnYHAU9Gd/pMHv9DlH4Yv5vvv49JPa7kNVkb02/2fuexHhETpAVE9rpA2IWMG2BJanQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lj9KLmhG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKaUGrKLMdPWW7HGJ/4NzUoEqIDZv+bIiUd4P2n3Qmgn/Iz4+eOi0HZrUVzVXo2ysCX/AuUOIoNXgDvI1dwPhHrMbTJUApJVPq+iT1TEf3vZ/g02Duxx/9l2CHKOZ3ESEGtRs8DG1kTS/1jNFqGsAQX3TdRldiGKTkHUrv1ZIcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UnhD+w7Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lj9KLmhG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 138C3C4CEE7;
-	Sun, 18 May 2025 11:59:05 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UnhD+w7Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88E55C4CEE7;
+	Sun, 18 May 2025 12:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747569546;
-	bh=uBcKiv6Sl4n4n4ehs6uqn5V8UYbdTDpcBzLwCE6KGa4=;
+	s=korg; t=1747569610;
+	bh=R3M38b7Up/xvPYwowadxMSa4vj8sVnFelawVkoAx1i4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lj9KLmhG1bi583IziWyHylXdX3ugmmJllq/b5Zj6FNfjruVZeB8mUASzQO/Prj1i8
-	 wNfQznKmCxPtLZGesY2gnYzbUrlbM76oHIgYJar61MRhgBT3V6vV5A44PPJxuI+7yb
-	 M7AkQy30E/y7qzQEJYQ7iwiUEp9wIQtoWp0vsJbE=
-Date: Sun, 18 May 2025 13:57:17 +0200
+	b=UnhD+w7ZBtP0yl5biR1/fj2qo7TSsJ/WDX8ic8zPyZBDVOinjq3p1kcGpTfzQ/4g2
+	 P2dbRbiSH7ZV0ASLobDw5YbLWADAi1851Dav2h+2ZzIl0d2k97JB32FhM7St40WtLI
+	 yTz9T8TxnNf8Mj/e+1jtiaKoDdNcQ92HESj5CaLg=
+Date: Sun, 18 May 2025 13:58:21 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Jonathan Velez <jonvelez12345@gmail.com>
 Cc: Thinh.Nguyen@synopsys.com, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] docs: usb: dwc3: add documentation of 'sg' field in
  dwc3_request struct
-Message-ID: <2025051804-postage-tremble-d9d1@gregkh>
+Message-ID: <2025051820-unspoiled-rift-31f8@gregkh>
 References: <20250518113330.8976-1-jonvelez12345@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,34 +61,12 @@ On Sun, May 18, 2025 at 11:33:30AM +0000, Jonathan Velez wrote:
 >   * @start_sg: pointer to the sg which should be queued next
 >   * @num_pending_sgs: counter to pending sgs
 >   * @remaining: amount of data remaining
-> -- 
-> 2.43.0
-> 
 
-Hi,
+What commit id does this fix?
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+And are you sure you made this against the right tree?  I do not see
+"sg" as a member of this stucture at all anymore.
 
 thanks,
 
-greg k-h's patch email bot
+greg k-h
