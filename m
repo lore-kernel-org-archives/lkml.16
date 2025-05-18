@@ -1,110 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB4B1D5166;
-	Sun, 18 May 2025 10:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6C11DF973;
+	Sun, 18 May 2025 10:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747564481; cv=none; b=XKhv4LE5V5lWr4oeg+eI7/3sU3L63JMVZHohdmdDMgC/oxBHfX2VJu1yMunN9uStNmNscKnaAxvhkpCwZnLQQvuiWNnAQR42WD0kusUZXLA9yOC+PQJ86Jff/TmxQgZl6izc1xbe05ssr2t8vGgdvbEiimR9RszA4cV1j2c+iW0=
+	t=1747564630; cv=none; b=NCCN1bN4uN5Hgs+5oo70DrA2aUULMV8oMse6onXLJNGN+3a4M+ccFqLg/QH7UWl2CT8SicFSvr5EevTYhBGxH6Xoj3hiqNfrXqYOrbEPcw0+AyGnAc6atTeWQPHOLo001Q5W7mFIr79ftDg7PXfE8rACVyXMvWf1wC7RVWzq6fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747564481; c=relaxed/simple;
-	bh=WR4e6YLzZV5pOT3xn63eb0yK3YFmdXj7k7d6kgQZvFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HANCNrsQWJMRT6ei+KQnHro9qdLkXMmebe5acNoSiIlCKNajirOcPOP9V6fnSwq4rCpmOMb0btvWZ+50GSkZESsioqQ3ICclmMPnNxZICofYvBr3rphxOcvyACJpdoiZ4n2H7VeRUKk1GqQpEf30BFir/yJywdohXZRVpuUvmsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YktI0z1e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747564630; c=relaxed/simple;
+	bh=Rdr4/LLt19WMj0Jnc4oDWc8eUb/VMHycvcZIIqxGGFE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YA3tuiLRQ3Rr1q0b6ZrBlhuKlVUS5YsdcXeN21nVvqwbkIUbcNCgk2TUh71MEnDCRky+wyT2o+yJZQTCgb2OqERV3tp+9+5FGIH+0z0F65/YhdrivL//Tm/hKbGIC/EVXaaThJ6GVrbdwBD9UgXa4ANmC5Rw+iwg2PlwB1IyLB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OPgAgb5Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vD47HsKk; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YktI0z1e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF70C4CEE7;
-	Sun, 18 May 2025 10:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747564479;
-	bh=WR4e6YLzZV5pOT3xn63eb0yK3YFmdXj7k7d6kgQZvFc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YktI0z1erAGrxT2/gsTJ4KplDHDGF9sV2sA0kBvHPo5GHwXc1o8zaf40G/xIvUCZW
-	 DYM13ZkR5/75ar1fMXKdbjnDv7A1qvfV/TqpcTAAY6s5VqPbeHa0dzvbXfs603lkyW
-	 z34B/JE6i8IIyw6IE5PnfL1BrNahzJAoTPpmpVMfQZzNfvMWfGLA3QO/Wd51BaoKfY
-	 YizdjrPBcT+riomouob3mVX7E8hTSL2CA8DT6Yk3/abJfx2gZUAKw989VqL49tI6gv
-	 w3xOEOs9n/vPNMeGLOcZTO0IA69xGMe3Xayt7xW3ARk6+QcNANOMKuMc8Nv5s0W2wQ
-	 MtnGyHti9Y1ZQ==
-Message-ID: <5f7f8cbc-6501-459f-906a-250be5443d0e@kernel.org>
-Date: Sun, 18 May 2025 12:34:35 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OPgAgb5Q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vD47HsKk"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 274CE1380156;
+	Sun, 18 May 2025 06:37:06 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Sun, 18 May 2025 06:37:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747564626;
+	 x=1747651026; bh=asZJIugkMSLeXuWUY+4CGpyc9cFNSY12yXMfKnbFWeA=; b=
+	OPgAgb5QcmR8rj7MfCQ3Ct4CjhXcxRpp73Ac3j9Ly8G0frtLC0kuoSoVSg4yuvSN
+	JdigRxPyxQyCqUAuMVTgrgyhZmk8tZiijeszrq72VSWHW95BrE2tK7g/WyGX/Syc
+	0TYJBqpr/JZITbplPNagiVnOAR5amJxlhfZHeDSyotpBTWjyLVEQktwiEtIIqgS7
+	xWH8/s4BeNcy4fZb4iqqBdOV+FkJX9zK8ezks6LJL3+0Pe44fdFNkKamJuUJskGj
+	Zn2FRM/vTKMiSTqccnD7M5XqY6wqAFZjmLmFgUNVh4EEYu6h11TfKfIB+UAWM850
+	tqhdvA8uhU56x27HRNXQKg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747564626; x=
+	1747651026; bh=asZJIugkMSLeXuWUY+4CGpyc9cFNSY12yXMfKnbFWeA=; b=v
+	D47HsKktiwjoaLyXIWlBhNNSCTAlJRGOhk4P1/RxKnb/JdbA0wytfUtw7QsUdPHI
+	R+IFwNMtNWZJ5Bs5vY4nNsCpBGMtQL+4ckqk1mDn3gsbFMDdOPjInlysEH5Oemc7
+	LvN6MLkIYq5Kld79CQY7yoSHAQpP3aTr8kOJzqI6gMJhtujzt1aryuqJ6jR2dW0n
+	C4CdVhgg67GQpbluslqUvOEGN3LO+az6hLiAAEAoscBefNzHxRdpSa04q2X5eBiI
+	DqaKmYSTY3ULDdmGKOCnee3DaQIG13VtU0mRfiqiwnkcomTAd1zA0rdfrhOWtvev
+	G4GxNnu9r/VM8ybJ75w4A==
+X-ME-Sender: <xms:UbgpaOsv9KCNjTo-a-j4Ffguj_IR7RwnvluaHCQD_NB2pAd5qlGVUg>
+    <xme:UbgpaDelnykCGylM2Y6p_bu2rVKqJh1kX9J5xsrBvtb8bunJsBPUunBTeErAuNyNh
+    QGYmVqVwzNhu9GpMnE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudekvdelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhesjhgrnhhnrghurdhnvghtpd
+    hrtghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhi
+    khhosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvnhgssehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:UbgpaJwafR8SXzG5BIm5oIK3X2vPh7jMrAqpbO7b9Tfw44KGtRgRFQ>
+    <xmx:UbgpaJPo3-LqdRbJxJ2x6lfjiNdISu8ssEwVgFUyE-6KOFa8keRrWA>
+    <xmx:UbgpaO_cEeJBbR8U1b9AvA5iMN80gs9soxYZCkkxH17SOpx6RrOl9A>
+    <xmx:UbgpaBVoVL1J5pCi7wSOOml6YcfLRD0ZYwicLvGBZVyI0cz9b4laow>
+    <xmx:UrgpaJr9X-wZb8lP8TUVcnniqLjSnGiOKH9LCG4niWoym3_WS590I0jI>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id AA6001060060; Sun, 18 May 2025 06:37:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] Fixing a minor typo in YAML document
-To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-Cc: heiko@sntech.de, briannorris@chromium.org, devicetree@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, linux-kernel@vger.kernel.org
-References: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
- <62bd6757-c4d0-42c1-a76d-abea18a8a55e@kernel.org>
- <CANBuOYpRQNx+n6BjpAF0LufpUqRA3wU-GzSNygeWurohXYNF6A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CANBuOYpRQNx+n6BjpAF0LufpUqRA3wU-GzSNygeWurohXYNF6A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: T5605245bb69d7150
+Date: Sun, 18 May 2025 12:36:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Janne Grunau" <j@jannau.net>, "Jiri Kosina" <jikos@kernel.org>,
+ "Benjamin Tissoires" <bentiss@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+Message-Id: <d57ff24a-bf6f-454d-9b00-8abf8071658e@app.fastmail.com>
+In-Reply-To: 
+ <20250518-hid_lenovo_acpi_dependency-v1-2-afdb93b5d1a6@jannau.net>
+References: 
+ <20250518-hid_lenovo_acpi_dependency-v1-0-afdb93b5d1a6@jannau.net>
+ <20250518-hid_lenovo_acpi_dependency-v1-2-afdb93b5d1a6@jannau.net>
+Subject: Re: [PATCH 2/2] HID: lenovo: Remove CONFIG_ACPI dependency
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 17/05/2025 14:05, Jihed Chaibi wrote:
-> Thanks for the feedback, this fix being kind of "trivial" I didn't
-> initially want to include everyone and thought it would end up to the
-> main maintainer after being reviewed by the reviewers/authors of the
-> file, sorry for that, I will make sure every maintainer is included in
-> future patches.
+On Sun, May 18, 2025, at 12:18, Janne Grunau via B4 Relay wrote:
 > 
-> On the other hand, I can confirm that I'm using the last kernel version.
+>  config HID_LENOVO
+>  	tristate "Lenovo / Thinkpad devices"
+> -	depends on ACPI
+> -	select ACPI_PLATFORM_PROFILE
+> +	depends on ACPI || !ACPI
 
+Since ACPI is a 'bool' symbol, the 'ACPI || !ACPI' dependency
+has no actual effect. I don't see any way that ACPI will ever
+become a loadable module.
 
-Please don't top post. If you do not Cc maintainers, how is it supposed
-to be picked up by these maintainers?
-
-
-Best regards,
-Krzysztof
+      Arnd
