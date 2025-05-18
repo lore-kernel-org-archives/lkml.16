@@ -1,96 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259F81D79BE;
-	Sun, 18 May 2025 12:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C520E8F6F;
+	Sun, 18 May 2025 12:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747570671; cv=none; b=cc1azdUxMzf6hLUI2wrIi+1WB5Pvf+6SgpDcI1GbriuXaz/0hYuVl55D0vTpKYlXA3x/fafdFNlCTCMTB8Gimm2FaDYw9oncHKEsgApNizKk7clT9CadJrzoxtoWXO32LjqWaOx+WR7pbXIL79RF2+h7FWBVgZHlyJwhoMKd5eM=
+	t=1747570675; cv=none; b=KeIXNxdrouGvheUuOsQz0TIi6wpqwZB2Pstq0ZaS/MXrBDal3aSAOsWRgFZrSznudTwHk3LhjnlyRteIW+OgkWwpbuUWVrm74R5OUFh3uy8VzKu9pL+pggIgbv42G7Rfz3Bmeih0rRdpcJYcBPHd29KeE9cdsCKvxCGqEGsx5MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747570671; c=relaxed/simple;
-	bh=qRqEMjCS/5nwHP3iOK2qM2VlypMZTUXXI4Qr8RsEkQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljJe4NC3a/w1roxJXQGo29IK9R7kxc/dXE6B9PXR8Xv1fF+5IviNU+pndVbkdT3HPxkrFUZEoBDFZk5WoiBJjcAYjha3ckOaYo0R8MzvJ/Gl1fo1S5S5OWIsroOhQVSRY10+JQAdrpM3LUs6p9E7m9Xu/j+Wj+BAc3eOfQQYzKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aq2Ze2bP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747570675; c=relaxed/simple;
+	bh=0v/G4KcYtPxRvt1h3Inzd4Yw8+tP49EnSXrRK1XGvCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U2gWSr+9KFpF88rqMu9/RdZpZ25iEq6RfyK6+BDhD6rASLPAOWZHM/DS+siOVnaJk8+k+Ex+sxqx3XD8tJdXZfaVs2/JW4xrQOem0830IDF7F0ZTpF6lf8OdhRyEodTobIsdjPedVfNwBdi0HpdJw9+7n+VGTplQrJ+cBBByp5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=MDoRHQhw; arc=none smtp.client-ip=80.12.242.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aq2Ze2bP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049C6C4CEE7;
-	Sun, 18 May 2025 12:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747570670;
-	bh=qRqEMjCS/5nwHP3iOK2qM2VlypMZTUXXI4Qr8RsEkQI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aq2Ze2bPRkgNX7YCXRuG29Zt0lbTfgdmEyoMcs9YgNE0gOzLNF9Fx9hL1lDTxuxpJ
-	 g7N9ePbcsH9YC+Kv4Evrw6aG5vXvZCpCCk5Evj8E36WIwKX+2ufa3u5zZKVkcwSW+k
-	 Bap6LJL1OY0tqL9arusHpeD7HkbreGC1HImH/mZHYi5WGS5bkycnA5oFXFhSeZ3U85
-	 wxowY1U12wBcgXPbZ4jbVwKeowZrHSolv+ZUOBDE1+R2GmxgeYD3OWz+U047/BW4JF
-	 Le/E7CzLLG8WH3VGWjbRvty6p6Ne03arzINzljL3pNrMVmazouGMMVOGTtzhws6ggT
-	 7SgVXrgyyRInQ==
-Date: Sun, 18 May 2025 13:17:45 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <aCnP6QNDzCUUjplk@finisterre.sirena.org.uk>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="MDoRHQhw"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id GcwQuJOtAXqD9GcwQuDNR9; Sun, 18 May 2025 14:16:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747570590;
+	bh=oK1c9fHfkRUZnB9Q4IFRGsFSdnhn8KItWVH7jNnZ+1o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=MDoRHQhwQ/guYGLQEVlIIvLoC+fZLYp+b95jI4Qc+g6ZO94jUkHT8rq7DxOq/Kdsk
+	 TDc4hmW1BnxJLT1RiIXB6bNCJ29ibWR6N0yG4+jPj/tgf1nTTHMUitn2QKlkWr5hFM
+	 ZVwHV+MXHXgocbx2KT2d8bk2//zVe0N5gaBASKWn70pArsgZR/kRHS1Zz/a9k9dzMq
+	 RVXAwpLgKRosVwdhqDInRVs0LZSXJf581aFGx29O0ANqDJf414FJ4BUPEPR012faoT
+	 LdAKtHusGGrZrYvuvtl0Dn7K/ALXU1OW7z8FPhX2gVaBvls1EF9epkV0G21HTJ46ss
+	 sKmMm/AyC5G9Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 18 May 2025 14:16:30 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH] regulator: qcom_spmi: Constify struct spmi_voltage_range
+Date: Sun, 18 May 2025 14:16:21 +0200
+Message-ID: <ef2a4b6df61e19470ddf6cbd1f3ca1ce88a3c1a0.1747570556.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yy5eHZ9GGsovGg5S"
-Content-Disposition: inline
-In-Reply-To: <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
 
+'struct spmi_voltage_range' are only modified at runtime to compile a
+field, n_voltages, that could be computed at compile time.
 
---yy5eHZ9GGsovGg5S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So, simplify spmi_calculate_num_voltages() and compute n_voltages at
+compile time within the SPMI_VOLTAGE_RANGE macro.
 
-On Sun, May 18, 2025 at 11:28:01AM +0900, Alexandre Courbot wrote:
+Constifying these structures moves some data to a read-only section, so
+increase overall security.
 
-> Alongside the `Enabled` and `Disabled` states, there would be a third
-> state (`Dynamic`?) in which the regulator could either be enabled or
-> disabled. This `Dynamic` state is the only one providing `enable` and
-> `disable` methods (as well as `is_enabled`) to change its operational
-> state without affecting its type.
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  85437	  26776	    512	 112725	  1b855	drivers/regulator/qcom_spmi-regulator.o
 
-Note that checking is_enabled() is a red flag, it's only there for
-bootstrapping purposes as drivers are probing where there's some
-different sequence might be needed - the use cases are quite limited,
-most drivers shold just enable the regulator and initialise the
-device.
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  86857	  24760	    512	 112129	  1b601	drivers/regulator/qcom_spmi-regulator.o
 
---yy5eHZ9GGsovGg5S
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only.
 
------BEGIN PGP SIGNATURE-----
+I've also checked in the .s file that n_voltages was set initialized with
+the correct value.
+---
+ drivers/regulator/qcom_spmi-regulator.c | 69 ++++++++++++-------------
+ 1 file changed, 32 insertions(+), 37 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgpz+kACgkQJNaLcl1U
-h9DF+gf/TVClygl+BDj4B4tT1e8KwZkYd2ocZklLT273lJeHqA7LFayXjQggEfD3
-5/rIHZAtyfD87yPKMTToMaSrdGBnBfjCZsO6txpTWWzgSuCAzimH90IuDOROOFhq
-WX0Y1LeWaBLhZzbnMgOuy+tbNZ2ljm/8dGhhIQh3kbOwwWr+0S0nLQneK+0Vq9+I
-cb+zJ+kxP+Aq2vGaoqvXV3kvQ0jNSRyXBY1b07yosiPDHg1osJIvycv3rJOeGZP8
-ykymzFQetABgBBBLJI1cl3VUapglDrrmMPhjgnnr6wBSgyRBqspe52lGdZOcS+bX
-siiuaXJSZEC+qMw9PhoEotIb6jfJfQ==
-=vGWf
------END PGP SIGNATURE-----
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index d66a0f61637e..c1a41ce70b36 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -400,7 +400,7 @@ struct spmi_voltage_range {
+  * so that range[i].set_point_max_uV < range[i+1].set_point_min_uV.
+  */
+ struct spmi_voltage_set_points {
+-	struct spmi_voltage_range		*range;
++	const struct spmi_voltage_range		*range;
+ 	int					count;
+ 	unsigned				n_voltages;
+ };
+@@ -474,6 +474,9 @@ struct spmi_regulator_data {
+ 		.set_point_max_uV	= _set_point_max_uV, \
+ 		.step_uV		= _step_uV, \
+ 		.range_sel		= _range_sel, \
++		.n_voltages		= (_set_point_max_uV != 0) ? \
++						((_set_point_max_uV - _set_point_min_uV) / _step_uV) + 1 : \
++						0, \
+ 	}
+ 
+ #define DEFINE_SPMI_SET_POINTS(name) \
+@@ -489,110 +492,110 @@ struct spmi_voltage_set_points name##_set_points = { \
+  * increasing and unique.  The set_voltage callback functions expect these
+  * properties to hold.
+  */
+-static struct spmi_voltage_range pldo_ranges[] = {
++static const struct spmi_voltage_range pldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(2,  750000,  750000, 1537500, 1537500, 12500),
+ 	SPMI_VOLTAGE_RANGE(3, 1500000, 1550000, 3075000, 3075000, 25000),
+ 	SPMI_VOLTAGE_RANGE(4, 1750000, 3100000, 4900000, 4900000, 50000),
+ };
+ 
+-static struct spmi_voltage_range nldo1_ranges[] = {
++static const struct spmi_voltage_range nldo1_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(2,  750000,  750000, 1537500, 1537500, 12500),
+ };
+ 
+-static struct spmi_voltage_range nldo2_ranges[] = {
++static const struct spmi_voltage_range nldo2_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  375000,       0,       0, 1537500, 12500),
+ 	SPMI_VOLTAGE_RANGE(1,  375000,  375000,  768750,  768750,  6250),
+ 	SPMI_VOLTAGE_RANGE(2,  750000,  775000, 1537500, 1537500, 12500),
+ };
+ 
+-static struct spmi_voltage_range nldo3_ranges[] = {
++static const struct spmi_voltage_range nldo3_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  375000,  375000, 1537500, 1537500, 12500),
+ 	SPMI_VOLTAGE_RANGE(1,  375000,       0,       0, 1537500, 12500),
+ 	SPMI_VOLTAGE_RANGE(2,  750000,       0,       0, 1537500, 12500),
+ };
+ 
+-static struct spmi_voltage_range ln_ldo_ranges[] = {
++static const struct spmi_voltage_range ln_ldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(1,  690000,  690000, 1110000, 1110000, 60000),
+ 	SPMI_VOLTAGE_RANGE(0, 1380000, 1380000, 2220000, 2220000, 120000),
+ };
+ 
+-static struct spmi_voltage_range smps_ranges[] = {
++static const struct spmi_voltage_range smps_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  375000,  375000, 1562500, 1562500, 12500),
+ 	SPMI_VOLTAGE_RANGE(1, 1550000, 1575000, 3125000, 3125000, 25000),
+ };
+ 
+-static struct spmi_voltage_range ftsmps_ranges[] = {
++static const struct spmi_voltage_range ftsmps_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,       0,  350000, 1275000, 1275000,  5000),
+ 	SPMI_VOLTAGE_RANGE(1,       0, 1280000, 2040000, 2040000, 10000),
+ };
+ 
+-static struct spmi_voltage_range ftsmps2p5_ranges[] = {
++static const struct spmi_voltage_range ftsmps2p5_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,   80000,  350000, 1355000, 1355000,  5000),
+ 	SPMI_VOLTAGE_RANGE(1,  160000, 1360000, 2200000, 2200000, 10000),
+ };
+ 
+-static struct spmi_voltage_range ftsmps426_ranges[] = {
++static const struct spmi_voltage_range ftsmps426_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,       0,  320000, 1352000, 1352000,  4000),
+ };
+ 
+-static struct spmi_voltage_range boost_ranges[] = {
++static const struct spmi_voltage_range boost_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 4000000, 4000000, 5550000, 5550000, 50000),
+ };
+ 
+-static struct spmi_voltage_range boost_byp_ranges[] = {
++static const struct spmi_voltage_range boost_byp_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 2500000, 2500000, 5200000, 5650000, 50000),
+ };
+ 
+-static struct spmi_voltage_range ult_lo_smps_ranges[] = {
++static const struct spmi_voltage_range ult_lo_smps_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  375000,  375000, 1562500, 1562500, 12500),
+ 	SPMI_VOLTAGE_RANGE(1,  750000,       0,       0, 1525000, 25000),
+ };
+ 
+-static struct spmi_voltage_range ult_ho_smps_ranges[] = {
++static const struct spmi_voltage_range ult_ho_smps_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1550000, 1550000, 2325000, 2325000, 25000),
+ };
+ 
+-static struct spmi_voltage_range ult_nldo_ranges[] = {
++static const struct spmi_voltage_range ult_nldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  375000,  375000, 1537500, 1537500, 12500),
+ };
+ 
+-static struct spmi_voltage_range ult_pldo_ranges[] = {
++static const struct spmi_voltage_range ult_pldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
+ };
+ 
+-static struct spmi_voltage_range pldo660_ranges[] = {
++static const struct spmi_voltage_range pldo660_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1504000, 1504000, 3544000, 3544000, 8000),
+ };
+ 
+-static struct spmi_voltage_range nldo660_ranges[] = {
++static const struct spmi_voltage_range nldo660_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  320000,  320000, 1304000, 1304000, 8000),
+ };
+ 
+-static struct spmi_voltage_range ht_lvpldo_ranges[] = {
++static const struct spmi_voltage_range ht_lvpldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1504000, 1504000, 2000000, 2000000, 8000),
+ };
+ 
+-static struct spmi_voltage_range ht_nldo_ranges[] = {
++static const struct spmi_voltage_range ht_nldo_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0,  312000,  312000, 1304000, 1304000, 8000),
+ };
+ 
+-static struct spmi_voltage_range hfs430_ranges[] = {
++static const struct spmi_voltage_range hfs430_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
+ };
+ 
+-static struct spmi_voltage_range ht_p150_ranges[] = {
++static const struct spmi_voltage_range ht_p150_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1616000, 1616000, 3304000, 3304000, 8000),
+ };
+ 
+-static struct spmi_voltage_range ht_p600_ranges[] = {
++static const struct spmi_voltage_range ht_p600_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 1704000, 1704000, 1896000, 1896000, 8000),
+ };
+ 
+-static struct spmi_voltage_range nldo_510_ranges[] = {
++static const struct spmi_voltage_range nldo_510_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 320000, 320000, 1304000, 1304000, 8000),
+ };
+ 
+-static struct spmi_voltage_range ftsmps510_ranges[] = {
++static const struct spmi_voltage_range ftsmps510_ranges[] = {
+ 	SPMI_VOLTAGE_RANGE(0, 300000, 300000, 1372000, 1372000, 4000),
+ };
+ 
+@@ -1676,18 +1679,10 @@ static const struct spmi_regulator_mapping supported_regulators[] = {
+ 
+ static void spmi_calculate_num_voltages(struct spmi_voltage_set_points *points)
+ {
+-	unsigned int n;
+-	struct spmi_voltage_range *range = points->range;
+-
+-	for (; range < points->range + points->count; range++) {
+-		n = 0;
+-		if (range->set_point_max_uV) {
+-			n = range->set_point_max_uV - range->set_point_min_uV;
+-			n = (n / range->step_uV) + 1;
+-		}
+-		range->n_voltages = n;
+-		points->n_voltages += n;
+-	}
++	const struct spmi_voltage_range *range = points->range;
++
++	for (; range < points->range + points->count; range++)
++		points->n_voltages += range->n_voltages;
+ }
+ 
+ static int spmi_regulator_match(struct spmi_regulator *vreg, u16 force_type)
+-- 
+2.49.0
 
---yy5eHZ9GGsovGg5S--
