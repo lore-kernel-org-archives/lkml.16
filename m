@@ -1,127 +1,97 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F681854;
-	Sun, 18 May 2025 14:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E93B1E4AB;
+	Sun, 18 May 2025 14:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747579556; cv=none; b=RwDEj+oLkZBtEfM3n0rixU5vzwkjHuDAnle7vlP/lphdnD39H+u8fNNcz+3Jp+3JBSeg8KpGi5TFIQ9QLaK2j+fsb8e/B+IQ67nZplCSECsQmrGl1ZWAQqqh7Z9SrjdZgm9z0hAsW+q+AaFa0+Ck21WZ8a6QWK7+s/m8G74txBE=
+	t=1747579861; cv=none; b=X4uecAqoehU1OErn7jsDDORTNpQR6gXMvOTwxwTSVbO+i3skdSvgBoDPibg3c8Ub3rKDPYy/XCK4bBeRa7EvasIIouLthS6/O0JtQ94HSQ4I2GCGqrmY/P41csbTlP5UmGL2hqpLOYEMozA0h03Cw+ClSublp9fZo5Koz/Df6Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747579556; c=relaxed/simple;
-	bh=BQETk6Ggkdsgb2g4ES16VK86IgSB5STx7Ub7+zQmQUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tiia/dAQixIMedE4xH06wYSjVAh88YaRn/opOphHWnUeOfJCNF4KmFHNLIbZJq7plm72zR8yWQYMvVCP3Xqr02PMKqTUhG+kvgju08t/51WGMFknyWFRIx51OiYAYYC6HGLSbjErF0aMZF19+bMtTL4eVCQZ+IcHAqijAX/K4Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=W+FVNV4m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Tml9LWxA; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="W+FVNV4m";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tml9LWxA"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id DF14525400EF;
-	Sun, 18 May 2025 10:45:51 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Sun, 18 May 2025 10:45:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1747579551; x=1747665951; bh=Py4G3MDxeu
-	igMengKWoY19c5Uvu7Jo6Z75bc0ItCy8k=; b=W+FVNV4mBj5mWKJAWfnutg3T8b
-	YTRCKiRWZxdt7tx46lBC5+H4WLPcJaBkFWsnRWvKrDte1sJfKBCV8JA7/rNTsPG/
-	C+WuaK8Z1lvN9qu788Jjf1B28H7M1G0xYl4XlpkK0dI5v81pU5styi4c+TZ1DLHr
-	8yMA5Z+/8uc0rCKLarO8fqO2A3Qf+q2v3+B/sdiSMAbm++S82IKBMWaQbYVd9n5l
-	kfJ/vBxD+JnWkQTSTXIIhfVUbislJq6pm/BAx18Af88ZN+nNaRh8V/PXpXP4V2aW
-	wWKfZxIUBd0NklrG9RdS8PCTbd3/iyiK366HcUePMHmGN0X0AOTwWgFaPkSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1747579551; x=1747665951; bh=Py4G3MDxeuigMengKWoY19c5Uvu7Jo6Z75b
-	c0ItCy8k=; b=Tml9LWxAymB9N+SPBcrPXWDr+ofhGNpeH/sOkvpfXlhJuMtjcvZ
-	AFnh9Jjww9QScLGsp+ZPv/co04NPoUfvX+CzDCuOFmBcaHM063ghNLjjW3cuP7eP
-	Y57I98v0zubVS9NoPx1NM2XJMGtqHGOMBRXzNbIWpsFuSHlZ0M20JWDvmXvrjPDP
-	fTKmlQgDmEIajS/4Rpr5WwneJiSTpD8jlv8xY5S29w6sabUabXvQy9rS7pAhhX0e
-	aNXeZFK3lxlss82MpuruXiIdnN2e1OK1HDggxt1OabDgQXOcjfjHTqlEpl+QH2By
-	59LP10uIjuFVFHKmsZ925ksIA/OGhGOBQAw==
-X-ME-Sender: <xms:n_IpaM8o3eJuDXoauJDc-9EVatbbI2sA8XQxxJrCMm4Cgem9QCr2GA>
-    <xme:n_IpaEt2nrPWJBHZ373TpqkYLOjpn3qN2ieu_FVQXtjU_-Qoo9WF74uz0P3mn9JaV
-    HhT5X0TZwMA7zzhVEQ>
-X-ME-Received: <xmr:n_IpaCAYROeYtE6XyuE4hLfkKrOAKuRklaqwPbGkvCEEiCEXx5JNH1n4jvVo4ZrCPlVluUwHGuMS2AeyK0KMqrgg1Typ7JHNwxs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudekjeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
-    enucggtffrrghtthgvrhhnpefgvdffveelgedujeeffeehheekheelheefgfejffeftedu
-    geethfeuudefheefteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtth
-    hopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsvghnthhishhssehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
-    igqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:n_IpaMdxDui99Fg3uwvgRjM5iEB2YV4-sN_iV9eHoarzJ_GiXq8bSA>
-    <xmx:n_IpaBMAF3rvsPtqPX0QoCCMAvHvoWz8Rix7cAYZ9XzQhtJhg0BLJA>
-    <xmx:n_IpaGm2RrIu7t6LUckfV1g5GYEoq7FJthXw694ym_y5LT6gNtccqA>
-    <xmx:n_IpaDuSZxkPM65kVfz-rBJWfbj0Y1xHZhJeAuFNsSWb8kskbs4X_Q>
-    <xmx:n_IpaEcLgTLz9zA9TerOaxy1YObYRaSoleOzGMWdn3HkIPj4IXBsL-Hs>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 18 May 2025 10:45:51 -0400 (EDT)
-Date: Sun, 18 May 2025 16:45:48 +0200
-From: Janne Grunau <j@jannau.net>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
-Message-ID: <20250518144548.GA2575813@robin.jannau.net>
-References: <20250518-hid_lenovo_acpi_dependency-v1-0-afdb93b5d1a6@jannau.net>
- <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
- <b939dc57-74cd-42e8-b1f3-54ea32829212@app.fastmail.com>
+	s=arc-20240116; t=1747579861; c=relaxed/simple;
+	bh=JQVglm6Di0GfvSzpslqlCi8HxodRM4bFoO3iBNHZRFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i+Z8r/MH2PgTeMGqveVHtCs2jeJX0Q6m9Hg2c9k+IzojYYyJ2rpmtn0ZwuhVQVyMpIrqTPszYhi87yo0dUV1xOyNKt2II+UjyZ1qow5Wg0s+Uy7FFZa8+dFD0oYNnSxo5xatWjpWyyuFZOwye2Lupu70U3LcSUqeFgmNiXMkD5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.199.70.239])
+	by APP-03 (Coremail) with SMTP id rQCowAA3SvXD8yloUbkVAQ--.548S2;
+	Sun, 18 May 2025 22:50:48 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: mustafa.ismail@intel.com,
+	tatyana.e.nikolova@intel.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] RDMA/irdma: puda: Clear entries after allocation to ensure clean state
+Date: Sun, 18 May 2025 22:49:42 +0800
+Message-ID: <20250518144942.714-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b939dc57-74cd-42e8-b1f3-54ea32829212@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAA3SvXD8yloUbkVAQ--.548S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFyfWF43ur4xZF4DGFyrXrb_yoW8GF15pa
+	y5Jr4qkrZ0qa1j93WUG393CFW5XanrKr9FvrZF93s3ZF4UJrW0qFs5Kr1Y9F4kGr1I9a1x
+	Zrnrtr1rC3Wrur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7
+	UUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0GA2gp1Gc4vQAAs5
 
-On Sun, May 18, 2025 at 12:42:36PM +0200, Arnd Bergmann wrote:
-> On Sun, May 18, 2025, at 12:18, Janne Grunau via B4 Relay wrote:
-> *ops);
-> > +#ifdef CONFIG_ACPI_PLATFORM_PROFILE
-> >  int platform_profile_cycle(void);
-> > +#else
-> 
-> CONFIG_ACPI_PLATFORM_PROFILE is a 'tristate' symbol, so the #ifdef
-> check is wrong here when both the caller and the platform profile
-> are in a loadable module.
-> 
-> I think what you want here is
-> 
-> #if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
+The irdma_puda_send() calls the irdma_puda_get_next_send_wqe() to get
+entries, but does not clear the entries after the function call. A proper
+implementation can be found in irdma_uk_send().
 
-ack, kernel test robot already complained
+Add the irdma_clr_wqes() after irdma_puda_get_next_send_wqe(). Add the
+headfile of the irdma_clr_wqes().
 
-> Alternatively, you could move that check into the caller
-> and do
-> 
->       if (IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE))
->               ret = platform_profile_cycle();
-> 
-> which makes it a little easier to catch build failures in
-> drivers that are missing the 'select ACPI_PLATFORM_PROFILE'.
+Fixes: a3a06db504d3 ("RDMA/irdma: Add privileged UDA queue implementation")
+Cc: stable@vger.kernel.org # v5.14
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v2: Fix code error and remove improper description.
 
-I think I'll go with this for v2 and remove the "ACPI || !ACPI" from
-Patch 2.
+ drivers/infiniband/hw/irdma/puda.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-thanks,
+diff --git a/drivers/infiniband/hw/irdma/puda.c b/drivers/infiniband/hw/irdma/puda.c
+index 7e3f9bca2c23..f7a826a5bedf 100644
+--- a/drivers/infiniband/hw/irdma/puda.c
++++ b/drivers/infiniband/hw/irdma/puda.c
+@@ -7,6 +7,7 @@
+ #include "protos.h"
+ #include "puda.h"
+ #include "ws.h"
++#include "user.h"
+ 
+ static void irdma_ieq_receive(struct irdma_sc_vsi *vsi,
+ 			      struct irdma_puda_buf *buf);
+@@ -444,6 +445,8 @@ int irdma_puda_send(struct irdma_sc_qp *qp, struct irdma_puda_send_info *info)
+ 	if (!wqe)
+ 		return -ENOMEM;
+ 
++	irdma_clr_wqes(&qp->qp_uk, wqe_idx);
++
+ 	qp->qp_uk.sq_wrtrk_array[wqe_idx].wrid = (uintptr_t)info->scratch;
+ 	/* Third line of WQE descriptor */
+ 	/* maclen is in words */
+-- 
+2.42.0.windows.2
 
-Janne
