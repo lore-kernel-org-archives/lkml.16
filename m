@@ -1,115 +1,73 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3274EEDE;
-	Sun, 18 May 2025 22:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27109EEDE;
+	Sun, 18 May 2025 22:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747607223; cv=none; b=kBuFxEln1qBMJ7wniYRXwU/2gMcq5SS3nfn92j9XXlB6Ufjj7eeG9h33Btk9z069l/x/IAz86jAk/S+1yIDOSfVMkzIiKNUMyXOWmBQJzhSdmp5yyGiHR3OsQSqrglJDttQ/2+XFdMlkAeK4Fiol0rriJMBhUw+e9G5ngAeKFgk=
+	t=1747607379; cv=none; b=vDV08Q0fGhXPGAJw7+JN8JTLd8yNqz5z2Ul+FKr4N7zjUcNNxastVnp4jSCViW9HjhG373qc6ZgBsw8tcP+N8Txezp2skBE1FJgPU5nnfH6BzZCboDOHAKZTQUeFiNwc/IQCfHDsgiqeLK1DYRIJS/E7Eagj93dI1EYIlTR59qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747607223; c=relaxed/simple;
-	bh=xL6Z4PGkknXVho+JeZ5LzycfHmADIxu4S+kPxKl50PI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=op8CKAnp6Rpl2bLvcZH7LzZJk8JlI1oXNGGc1oEGqb5L9nhZSVpS9K2eSeWhrol7ICPPzJF1id0p714we+BoyGbjVj32hroLRO1JlYmxgnSbH1nRfzZ1MWuf5g8672bLRfvj6ggL9VXeinj8Rc0bWnHRgnYmEOrEQbtG6D+B4GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZmrViFH; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747607379; c=relaxed/simple;
+	bh=2In0kHnAfg+5SVb75arQZ7lTg/Kk+fg+MxcShokzEDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IFLSY/BjJYjIYwn5K2TnA5TXqGXbz5+05eKPxzGOiQWtnGuUD6L+/PDI4/Fc2y5EVQqxCnzR8WCDGDljCU9iFjm6F91yjtspu0MJw4PV6/YJHf+DwExKyAH9anujcbodp5lSNDnDwzxRpNghGAPZ1lkZ0MU6K9I1kS32f0LOFdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lI76qVLB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZmrViFH"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7080dd5fe92so30151847b3.3;
-        Sun, 18 May 2025 15:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747607221; x=1748212021; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Ssv6bZwRhvX91G+SFVNUep76r7LL0MP2SbXYm9UXRk=;
-        b=AZmrViFHfrX8JNzPsrDRz+jaNTu+wP9pgNC/IHY6ZaSiDvv8lQamL3G5VJI63etshY
-         Mi9C74hogVolirY+VWk3BvJ7o1bu+Q61NP7Al4SJQAWCAoAa+9U4J93CG3YkXoRuz+18
-         vWudUOKQzzKvOSv3bcISgDx8cYOdb7ccG44j2AN1dKuCRh3Xore/nbn4t3dEyYtZjhoJ
-         Ww1YwJTPZJ86iR5cMqw6d7kvyi3QS2fXctP+ts4BPw+iNK8cu2PHkbCyFskIgii4DbMs
-         +tViFRB9y/fU88vEx/1aRKWrW4/pZ0FRZhvq957hiNZ4gS27OU0QPqLiWNj2pk6lzYJP
-         dozQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747607221; x=1748212021;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Ssv6bZwRhvX91G+SFVNUep76r7LL0MP2SbXYm9UXRk=;
-        b=s3SgDyGDSWtXCenMSrAC/77CNPV5z2Dst+ifRLjAih2ftBVERlAt9y5YqFpE6iYa/8
-         IIMK1basq1xZDa9hWfWDbKDpc/gWn1ve/kjl24QjrJrOZBWFPxak/zzojnzqQLQSmbK3
-         tAxp+Z0reUZKorgj4Vbvuxpfc3k8fMqNTrHz4LiGRHKpcM9om+C1coLKAVyroVZb+HCk
-         LVI+xeOBLaplziAE8EnQxCI8v5UpI4uYBI3vBDBi9spgWoi0YEX2Avw2pXKZLVJ5jR36
-         oarQ7wREA85MFNTtWHgrFRU6cux8mvO5moA+6rU9hRTA/U+aKHV9gPux7zXXEVuapKTa
-         +f1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUMr6wnWOlxrhPktN0WI4MNVlqApnoDmMQoMrkPUebisGnFoEum4UvHAKb3XO6N6UxnXA2Nrm1lkdDgoig=@vger.kernel.org, AJvYcCVu6K1n8vnQvueFrD7Pff/EaQcL3egFPr2lhfOxzD14Mwrc8psJ7R+rh/zZNELeWVIAvosRrc+f/BW/bKXk+pLrUw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyl9knuJbZUn8RFVMJ65pkWh7ZAc6FSsCf7UybrbRb4oqEfaKe
-	JL8AKCrwvIXDpoJ8j0nY2QD4OfPqsfA+pGbplTdrCrbM+Yxcxinmeu9MpuvUuk/q4GhTswE6g2t
-	NoEOCNMMmiRnF/7tNOA5PLFs0ZZFTZLk=
-X-Gm-Gg: ASbGncs+E4BILpB9BpGSmLVF41zx4EXCoQXR8jbSOU4UBnmBokBnkFAuxLcZ46jAeZV
-	6kEsviDbdg4vledKMBdMZXq8vcANLk+5f/FHA/BmNc/sTqnmHsBFpCeo1G+v/sR+/NDQzsdXRHz
-	WOzqoMV9lOnPKMsqikbqA+14yZl41maIj3zV+44ARflQ==
-X-Google-Smtp-Source: AGHT+IEN90OAVd+S+3xBAQbuQInzkBvmRTX/ff4EN8fUsnwfAgRbHFaUdl1fTbho8Q4Sn0mcAwLwW+Y5NheVt6u60ok=
-X-Received: by 2002:a05:690c:6385:b0:709:164a:fec with SMTP id
- 00721157ae682-70ca79fa08fmr146692907b3.17.1747607220735; Sun, 18 May 2025
- 15:27:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lI76qVLB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=blXc+PjhMWMuKNRHhUtWKzj+Q8nTMGDMyNfdw8YIkLM=; b=lI76qVLBt+qbaDXhSkIv8PnYgh
+	5/wZ3XME2zoDGCP0Y/+Ln54XIRFvlkj2qj0u/U2VFcDwtpJeQyO8+nGtDvu4jVyW6g+kc5YAqYO8l
+	CVW5C2AzUWFZ6Dko9+e6sCRSg+odYFMn5YYaVfxhRWfQMGwYZ1QszBoyTDZF745HgaF0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uGmVS-00CwlM-HJ; Mon, 19 May 2025 00:29:18 +0200
+Date: Mon, 19 May 2025 00:29:18 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v4 2/2] net: phy: mediatek: add driver for
+ built-in 2.5G ethernet PHY on MT7988
+Message-ID: <e915e555-acb5-41c5-951a-935f21f357c7@lunn.ch>
+References: <20250516102327.2014531-1-SkyLake.Huang@mediatek.com>
+ <20250516102327.2014531-3-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Sun, 18 May 2025 15:26:50 -0700
-X-Gm-Features: AX0GCFvppkCaeGr5ugqVPhD_rjdxUuu89kKUjXUCRoupmZnxFj0eBjjrxlgsiiY
-Message-ID: <CAH0uvoju7bFsJPeqaDBzSFzM3GZkaTWgfcgEtcBr9dpn=T-e2g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516102327.2014531-3-SkyLake.Huang@mediatek.com>
 
-Hello Ian,
+On Fri, May 16, 2025 at 06:23:27PM +0800, Sky Huang wrote:
+> From: Sky Huang <skylake.huang@mediatek.com>
+> 
+> Add support for internal 2.5Gphy on MT7988. This driver will load
+> necessary firmware and add appropriate time delay to make sure
+> that firmware works stably. The firmware loading procedure takes
+> about 11ms in this driver.
+> 
+> Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
 
-On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
-m> wrote:
-> >
-> > Currently, BTF tests fail constantly, this series fixes two major reaso=
-ns
-> > why they fail, and makes the error messages acquired when using '-vv'
-> > more verbose, so when they fail, one can easily diagnose the problem.
-> >
-> > Before:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-<SNIP>
-
-> > Changes in v2:
-> > - Add an extra newline after error messages
-> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > - Take the debug diff for explanation out of patch 5 to make it apply
-> >   normally
-> > - Add base-commit in this cover letter
->
-> Thanks Howard! I did some testing but see failures that may be
-> pre-existing issues:
-
-I don't know the command you used but if this is the result of 'perf
-test trace', it is the parallelism issue. I will fix it once I'm back
-from Costco :).
-
-Thanks,
-Howard
+    Andrew
