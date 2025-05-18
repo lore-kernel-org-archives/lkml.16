@@ -1,81 +1,71 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E688A41C72
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9784B7E1
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747566212; cv=none; b=tlSLz1+xs3Kt9FtHfTuE4HR1EX+JcNJJsbAA5kn4oM8d6/Nyp0um5ByVTV1FvbOe3zHOCzaBFYoWd7zcHKh+t2TLJ/1vZ0SZ+Y1c3DpXktHkn2Ugm0xXy1wI0NzdUh8zjlXw2IfXKab0rAj44l/NpSf1sCAQpPDAE1IvIogYmAs=
+	t=1747566388; cv=none; b=c9NOkkwK2G+1rqJkJTgobDdZy1LlPBgkcbXq0yvts+ZnCrhZik1KP+4HSSI+TIlbkDB8lHIVdmwOMeKlvgw3JcTeZ33vVxoeXLgiUudoU5hgl1HFYMUDcwbSGBqSkJpnxdi1QZraAbYMBd60akFDAE4PMEi4XEspE6kLXY6gEXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747566212; c=relaxed/simple;
-	bh=jKhYoXTiCVLVCQ8YtO1O7KlJsBewVo9GkOrWAqttTQI=;
+	s=arc-20240116; t=1747566388; c=relaxed/simple;
+	bh=QWfnSdl856Z85mwypJieipjFXF993YS5KqHAE1cyjNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsoKygbx5AJ+VvLNr7DUjIWO6KC36FiCuBBu1CIhkb1vlpQbtBvHfdIFPlSa2Ke6LNDLtO9C45RWZWuayVbyN4sffr1UL+xkzpp5+s5hWMCeMFnCC7EiZmq6xQT/ccrK/c9miqLoFBzgn+TnCnIgHqO0k3n2jMRdYwWEVooJtLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hCX+a5hj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNxQiBRg+xX4Ys3ktZCTGkpdqwS7aJ20wSX/DAfGXzUm1wsQhP0d0wPFCi2uGHowQLNbbcFcIYQ32sArWsR8qesVhTFXQBostAbFLatSztHrQiYZ1KZKe7Uu/7f3Kxp10XzchH9YLAEph02d1D6UZHKrGl+XQ1fvo7kzrApna8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTRaJzqQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hCX+a5hj"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I7qwYa018064
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:03:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=s7Zodl8u7V43jJfdZC59QA0w
-	/oqjwY/2qontwKvBiL4=; b=hCX+a5hjc+O/br/Rtar7NXcE6lzauX3Tanqi7Ej8
-	xfqDh3f97ksLoAjK9hhsgyNrqQmzrAWMHBHtAnIedBNbZE29CaruKf36zioACSSO
-	IwPd9G4dYK2MlEhXrOQCpW1uhabTI9cy/X+x528AU9KVQoBisCnt0Fla4xK+Zc0u
-	WgqWaab0HQSerutBpXX7CNXb3KyAevkjuPtj9/t08w7wov+7odVK1z1Rhkc2byWJ
-	kDYp34VrUe6D97ztcPgeQ/MCufjwF0bkTFUdy0s0HnsSHPlJJTZ/VsV7+qPqB+P5
-	hSEeiSoJtFWmdvVtzIIZJsDt10VgQD+/6cLW5HLb0BsXTw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjmesvgg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:03:29 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8d0c8e917so3880646d6.3
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 04:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747566209; x=1748171009;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s7Zodl8u7V43jJfdZC59QA0w/oqjwY/2qontwKvBiL4=;
-        b=R9wR1YqYmjoOzxV+MYx8r3C7tbiLf9vJ9GPzDmXLMw6okcTeFhy2DpVFXCzvmSLAg5
-         nccUWasmZX2G+evrGrbhAWoaymDCSmyza0Wa1Jh9f6xfRT0EBH5D8f+IgsFu6nhGP2Wv
-         owhOjrKvhPhJXHeeb1pwGfEjfDrIJeVsf5dnyXd+jEgDfSKvkiDaxev3JfFVgIhdZdRb
-         sTSC76UEtftjrcKOAxlSm4ez+Mh1HLC8NI2/HrUgIcFhgmo8jRL/s/imNBAOSEgMj/Aw
-         VwcJh+HjF/hXzo76a3+nYCTQ2AgYwOR8bm4t/Hi8ALEtZQtTMhIiTaWvBxM2CglIUpwi
-         9C5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVOWT3FsJybMXcd1QDITyxS7+fATVq/QR30mWnYyAUNKL87aPWfHbjaB+ze7O6SWjJZBxgHc5TXe129fjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyOKQREcc9y3Ah9dhlL+RUPqNRncwYn9Is7gu56PIANmFZcSvQ
-	kMMYpJlgKluh+7q+zIICigrcJRDA70CyE6MHDxx5BCVXiqhCMmM1uTAPLtTSACqKvPrr8mZp7f4
-	VT7bfi+jYGUkXH2u2f1txQxL11EP+IG8xgIpUIA5BRzLbJwixe8Vz2j90bIEfn2YQRjw=
-X-Gm-Gg: ASbGncs1BaIHe3r9p6vPoAlhr2XbyZOtyi71teB/PotfIXE809ymojuxkyRDl9MhscQ
-	bT1uEf7eWrB4HNo2Ek3z7A0qz8jShc2tP0w9pbmC/FVejy9DL+ADhCO6+nSl3OSeZr6EG7VXT7Y
-	z2NydAjoHSoAqApWCLWQWWO+2osKYNZZrbtPnBGN2FemaHQOU07OOY4bn1C33cuVP9twUnOYST3
-	YATnVIKr39tvYQiIcCtZoQL7jF9KzHdp0e+CJD5ZmJFSmvK9tB8Mg98T+uwMd1mS8fxQmbsPi1o
-	FhnAohTDwBGgta+7gDPjsHBm8w8qOZysavqebspj8590SZXt4NnEAZmejk/51umM1ZN6K4pOrX4
-	=
-X-Received: by 2002:a05:6214:d6f:b0:6e8:ff46:b33e with SMTP id 6a1803df08f44-6f8b094a1b0mr164965756d6.37.1747566208736;
-        Sun, 18 May 2025 04:03:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFX9KX+BFsa3NUoYxEGR8XyvRdKkf0qln6ioT3s6rTaHSqkLSqf3cbumVbWxdH5ju6b5bIE3A==
-X-Received: by 2002:a05:6214:d6f:b0:6e8:ff46:b33e with SMTP id 6a1803df08f44-6f8b094a1b0mr164965406d6.37.1747566208311;
-        Sun, 18 May 2025 04:03:28 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084b46d8sm14286041fa.17.2025.05.18.04.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 04:03:27 -0700 (PDT)
-Date: Sun, 18 May 2025 14:03:25 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Cc: srinivas.kandagatla@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
-        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
-        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
-        dri-devel@lists.freedesktop.org, arnd@arndb.de, stable@kernel.org
-Subject: Re: [PATCH v1] misc: fastrpc: Fix channel resource access in
- device_open
-Message-ID: <cq3ib5nunqiuysyfezkrr5qkcqutwjxjmabpeihpsizbx5tmm4@rhhjhzaq5km4>
-References: <20250517072432.1331803-1-ekansh.gupta@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTRaJzqQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747566386; x=1779102386;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QWfnSdl856Z85mwypJieipjFXF993YS5KqHAE1cyjNY=;
+  b=OTRaJzqQvrFtVf02zct49oy44ApjHt6dQb5nhW4+vQFysnwyeBjwTKuW
+   Cy6yprgtE2yDtUYPYBoIQjiAp2D2JY/hKtD0iPVNxc7e8ieDPhOnaL07U
+   LravCvbzPDgXkWzSM0dmmruGyW+9pOpNJVghkkctox2//FAbiVD3FPpD2
+   2DT227KyWC17lsQ/rJeS6d3NUnHaYVKEj8CKC4pJ57mT0UyA0/ATEe0ZU
+   RMVBbrN1R23fqUSZ2EEUOt/MBcQe6qZi3tgiITmXj5qqGVOnOT0XZnkv1
+   E6tiNOthzsYfOF7VE0Jhbai9cs3tjuEQWody3K52ZqKuhnNMgyMR/TnaD
+   w==;
+X-CSE-ConnectionGUID: JuZ/glaRSeWvT1VDHlV3yg==
+X-CSE-MsgGUID: yOmwPjDsQjuyY8zDkmLOgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="66889556"
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="66889556"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 04:06:26 -0700
+X-CSE-ConnectionGUID: 5hAveNSLTxGHSRCzB/L7Jw==
+X-CSE-MsgGUID: c7CUmisQQLu/ruOrK1t6HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="138854444"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 18 May 2025 04:06:22 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGbqV-000KlT-2U;
+	Sun, 18 May 2025 11:06:19 +0000
+Date: Sun, 18 May 2025 19:05:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Juan Yescas <jyescas@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	tjmercier@google.com, isaacmanjarres@google.com,
+	kaleshsingh@google.com, Minchan Kim <minchan@kernel.org>
+Subject: Re: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
+ order
+Message-ID: <202505181825.FdKgAQ16-lkp@intel.com>
+References: <20250516232341.659513-1-jyescas@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,86 +74,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250517072432.1331803-1-ekansh.gupta@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=RoDFLDmK c=1 sm=1 tr=0 ts=6829be81 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=OHL9Fh2E-Su--KGKRvQA:9
- a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-ORIG-GUID: x1mI_QsmTDM4wLTv0woWSRcAebeg3PKg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDEwNCBTYWx0ZWRfXxBIeUd5W+LsP
- Ak8cQLjuKXsdg6TjvuFOxnIyLCsxT094Ml1NEf6VdidTVyLc9eYrV6otQOGXP37qvvsgoMesNXK
- fX8rQK9dKF5xeL6cOQFWKDt/AAMx0nLD+LLKAbEHhpCr+TS/0OlDON4FRSYTcMit7V1NDzhdGkB
- jhVfCMqJKcK7XFgGVLVbxmqYDSOnmgKx9cBY+aXjWl4ftUAr4gp0jPtRXNH/8VE1PTulM7RGs+V
- tb4B3rnoWQ3SAjr/GlGYbyvRwubrcBweyskQ+CaMG+JHxDqf+t9ipI74mCPqZt0L33CJFA2Umyl
- OFcGrcQCbUTSvVhu9SBm4ClkAyn5uZQGnK7ibFKUwyj0Wk2Peed8kYDNf6kpZ7fIKN46B4PxyPZ
- pYunGu3aeqzyPp1BdIeouC1whGqRRLa26cSrRcoAFLEQHBjTBpM23xERmXQ8H+JIVYuxB06N
-X-Proofpoint-GUID: x1mI_QsmTDM4wLTv0woWSRcAebeg3PKg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_05,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505180104
+In-Reply-To: <20250516232341.659513-1-jyescas@google.com>
 
-On Sat, May 17, 2025 at 12:54:32PM +0530, Ekansh Gupta wrote:
-> During rpmsg_probe, fastrpc device nodes are created first, then
-> channel specific resources are initialized, followed by
-> of_platform_populate, which triggers context bank probing. This
-> sequence can cause issues as applications might open the device
-> node before channel resources are initialized or the session is
-> available, leading to problems. For example, spin_lock is initialized
-> after the device node creation, but it is used in device_open,
-> potentially before initialization. Add a check in device_open for
-> rpdev and update rpdev at the end of rpmsg_probe to resources are
-> available before applications allocate sessions.
+Hi Juan,
 
-Can we fix this by registering the device node after initializing
-channel resources?
+kernel test robot noticed the following build warnings:
 
-> 
-> Fixes: f6f9279f2bf0e ("misc: fastrpc: Add Qualcomm fastrpc basic driver model")
-> Cc: stable@kernel.org
-> Signed-off-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-> ---
->  drivers/misc/fastrpc.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> index 7b7a22c91fe4..40c7fa048ba7 100644
-> --- a/drivers/misc/fastrpc.c
-> +++ b/drivers/misc/fastrpc.c
-> @@ -1568,6 +1568,9 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
->  	fdevice = miscdev_to_fdevice(filp->private_data);
->  	cctx = fdevice->cctx;
->  
-> +	if (!cctx->rpdev)
-> +		return -ENODEV;
-> +
->  	fl = kzalloc(sizeof(*fl), GFP_KERNEL);
->  	if (!fl)
->  		return -ENOMEM;
-> @@ -2363,12 +2366,13 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->  	spin_lock_init(&data->lock);
->  	idr_init(&data->ctx_idr);
->  	data->domain_id = domain_id;
-> -	data->rpdev = rpdev;
->  
->  	err = of_platform_populate(rdev->of_node, NULL, NULL, rdev);
->  	if (err)
->  		goto populate_error;
->  
-> +	data->rpdev = rpdev;
-> +
->  	return 0;
->  
->  populate_error:
-> -- 
-> 2.34.1
-> 
+[auto build test WARNING on akpm-mm/mm-everything]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Juan-Yescas/mm-Add-CONFIG_PAGE_BLOCK_ORDER-to-select-page-block-order/20250517-072434
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250516232341.659513-1-jyescas%40google.com
+patch subject: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
+config: i386-randconfig-r072-20250518 (https://download.01.org/0day-ci/archive/20250518/202505181825.FdKgAQ16-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505181825.FdKgAQ16-lkp@intel.com/
+
+smatch warnings:
+mm/compaction.c:302 pageblock_skip_persistent() warn: always true condition '(compound_order(page) >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
+mm/page_alloc.c:618 compaction_capture() warn: unsigned 'order' is never less than zero.
+
+vim +302 mm/compaction.c
+
+9721fd82351d47a Baolin Wang     2023-06-14  289  
+21dc7e023611fbc David Rientjes  2017-11-17  290  /*
+2271b016bf368d1 Hui Su          2020-12-14  291   * Compound pages of >= pageblock_order should consistently be skipped until
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  292   * released. It is always pointless to compact pages of such order (if they are
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  293   * migratable), and the pageblocks they occupy cannot contain any free pages.
+21dc7e023611fbc David Rientjes  2017-11-17  294   */
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  295  static bool pageblock_skip_persistent(struct page *page)
+21dc7e023611fbc David Rientjes  2017-11-17  296  {
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  297  	if (!PageCompound(page))
+21dc7e023611fbc David Rientjes  2017-11-17  298  		return false;
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  299  
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  300  	page = compound_head(page);
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  301  
+b527cfe5bc23208 Vlastimil Babka 2017-11-17 @302  	if (compound_order(page) >= pageblock_order)
+21dc7e023611fbc David Rientjes  2017-11-17  303  		return true;
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  304  
+b527cfe5bc23208 Vlastimil Babka 2017-11-17  305  	return false;
+21dc7e023611fbc David Rientjes  2017-11-17  306  }
+21dc7e023611fbc David Rientjes  2017-11-17  307  
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
