@@ -1,124 +1,142 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D4120C00E
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D66E1F17E8
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747606219; cv=none; b=AnPin4BqbigTj1l8bQN0bqFy1F9IFpEq4NPL4XuFikOwc0APA/c6AeXj1bWOWXhLACXBigRazSYsI+LstmbSm8PvRVvKgz2dpj8HDbJPhPv3G/TpQSgn7PVNgNCocUGSymIu9qWB91gEWuWZ4QLNVxQV/ylFfYmzt3zrkYnGyo8=
+	t=1747606697; cv=none; b=Q2NkubovIr9kAmYBqTiNMRtnwyY0axdv6JFHnyNv0u5weSRowTIAAcr8hFUbDvP254PJczcAqPGv37Yvq0DpkSseqH0MWCIii3Q39486xv/3oCKWxf2mdsGjk9Hk9WNOyEs+8pNqVUB0UWacrvGk6ai8V8bBgA4zosyJeVai4jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747606219; c=relaxed/simple;
-	bh=SWvGIfkhRbWfeovnI48bl+Lss7+3GtniH+IW64+H+po=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eo/wYyZyYdBghFeYers3d4rD82SKKK/Gs9hyhQEMH0h64i3IrddergmYS8jG0faT+L4HR+xzPuWiNqWQPFTd83iVofCqjkhj6GjGA/H852gDh7ceBWZwBhAaZLIMFqgAxzm5gcRLJXP91Pd5CG0oNzZAr3EqV8K4NiHURbr6RnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ericflorin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ry5FHfhN; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ericflorin.bounces.google.com
+	s=arc-20240116; t=1747606697; c=relaxed/simple;
+	bh=5x3UGZaZlxXjWW89yIp7LGaERQKkHUjp8KDII8XBuQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DbNGE09F+xoYwEfwUxtHIBvPcTfb2q/Us6yRnckjJjHPOE1rvxhJcLhclP9wz5+exQ+ihVphMAhRo0w/8OK+YV+JioAdd32gRmwR39SIRMJYGvRlFuU17IPAxxH450s7mMBdUoT1HfayRM5irijaF6Mdn36hJlElAwAoQmpf07U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=owaqLK3H; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ry5FHfhN"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e3cfc144so18541825ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 15:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747606216; x=1748211016; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MgIN8qU07WLqB2jI+fLrkDZZnm1G0XlzsKXj9QMd8M=;
-        b=Ry5FHfhNoxTE0oGCsVR64tN0mhBh0v6GPVb9TpfKWV24HCE96I5a9zznoVgKZ2I1Es
-         218h+mZxGI1Kdpt0mbmzOgt6XtBIgEFL1FBucXBNMQgCJSd3MYTEa3EMEA/ehhlySnqH
-         xT7bGcyJLcKzRtjG4JnV7JVuhkl9wCNzvdGc2Qw2o+G6Zq8UqD17YAwe+gyO0ZTG4jrp
-         8lstC9kwl2uuhCvEzJDjrRJicRwe7xFXq3F/C8tsOZ3VUsqXM2Kzdr8FL39pQ9MTpl+2
-         twT0fn/j4kC7eTPk7wpaAEaxpr2YEiIVBw8TPiJWqzYbt5Jcyomry4m6p1LiSY09znNQ
-         vl8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747606216; x=1748211016;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MgIN8qU07WLqB2jI+fLrkDZZnm1G0XlzsKXj9QMd8M=;
-        b=OzTeKV9p5FxSXuQkVFIsm7TwuMrGfj0pDB2cwCLs+PDDBtZfggyeG27Mxc7vV3NiTq
-         QOa4Db+WgPRx000Tz6TzAq2C12yotvxgELubj9sf5JKwWA3Jrk+rZI32CVOndXU/mAHK
-         o0m3iL2QQeBiLaDYrvwpVxtbfZSh+qza4eVJFkcdOj1l/moqZpTH2JXBL9VpUS7Dw93t
-         lvU2xE/tZCi7L0gZbDxSX7wUbJAzLxTCFIPrI8hItKb5HRjNUtnJ0AVoh2iTgyBn7VqP
-         xfRtJQHT5STc7bws1/HM/yzPYFC3tIJ6q1eJ8X+DOSqA2rPFGn21PTXLqgWbGcxVBfZA
-         Ooog==
-X-Forwarded-Encrypted: i=1; AJvYcCUKcP/jvr0d1CjKGMs36AQ0pB12OZxP/MfilFGYN0K5UPlM3drfrzvDGIzUjDOrJwWE2sHxQdKGw//giuA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy63hLqyWTdpSDxa8VbcNhw5EyEnqkJf83lOcGbJOh9UZC55YV
-	impnJW5ivC0RYaYv7b//DlJm+xiC39dVsZSiiaROyJkmTfBRaoDGAqPtjqmZv4g25d0p9MV+PCu
-	Q5Owc2udtHquK/xNEcrBSdw==
-X-Google-Smtp-Source: AGHT+IGfnAPZYs1RjIQmyMNTBGtrRdET0rahQn+Z7K88kjkMkyG4PvQjlMM8Jb/K6YInMKuOlOjUwZPfuWnIm9Fv
-X-Received: from plbmu14.prod.google.com ([2002:a17:903:b4e:b0:231:e2ee:34c9])
- (user=ericflorin job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:d4c9:b0:232:202e:ab18 with SMTP id d9443c01a7336-232202eac80mr53400845ad.26.1747606215822;
- Sun, 18 May 2025 15:10:15 -0700 (PDT)
-Date: Sun, 18 May 2025 15:09:47 -0700
-In-Reply-To: <cover.1747605658.git.ericflorin@google.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="owaqLK3H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1747606694; bh=XdJ8idrCkjaMANhXmNVJs+MC4XORO5o90qIWLcWpGNw=;
+ b=owaqLK3HDGa2NPwwv4+REoyhknt8M36o0Vu9zeRTOeR+NC9DEtV8ikBrMlTcyUX71TRVzxJIM
+ DCkDD+Kjbo49ejOoAJ3Nz9jiDlHnu+Jtjojg2K2hAAxaHgoYJ4hKgx/9d/qyTB3dX7L8LcUl+Y1
+ neUsBHPC/tFp94vNZ0UCtx83THzX5rGqMwIuasGP3qESXcZEiF9zC7C4qyAag8MvkaI5Ht4V3nE
+ Z8WjIQBmx4L3GPmgjHVa9QQD86i80xQLFwYMY8EVjptvLhvXd8s3/2IMQc7Ay6aenU7oUV6uZOn
+ plQLLkafoCIdO8Jw7RwtTmuiRwYZlOLBTwM5/e11+SBw==
+X-Forward-Email-ID: 682a5a1a78cae75fbd8d4697
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Yao Zi <ziyao@disroot.org>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	linux-rockchip@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/9] pmdomain: rockchip: Add support for RK3528
+Date: Sun, 18 May 2025 22:06:49 +0000
+Message-ID: <20250518220707.669515-3-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250518220707.669515-1-jonas@kwiboo.se>
+References: <20250518220707.669515-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747605658.git.ericflorin@google.com>
-X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <97fcc39f3e63f465c49e8725d10f7c43fd35cd85.1747605658.git.ericflorin@google.com>
-Subject: [PATCH 2/2] staging: sm750fb: rename dpPortBase in lynx_accel
-From: Eric Florin <ericflorin@google.com>
-To: teddy.wang@siliconmotion.com
-Cc: sudipm.mukherjee@gmail.com, gregkh@linuxfoundation.org, 
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Eric Florin <ericflorin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Rename `dpPortBase` to `dp_port_base` to conform with kernel style
-guidelines as reported by checkpatch.pl
+Add configuration and power domains for RK3528 SoC.
 
-CHECK: Avoid CamelCase: <dpPortBase>
+Only PD_GPU can fully be powered down. PD_RKVDEC, PD_RKVENC, PD_VO and
+PD_VPU are used by miscellaneous devices in RK3528.
 
-Signed-off-by: Eric Florin <ericflorin@google.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/staging/sm750fb/sm750.h       | 2 +-
- drivers/staging/sm750fb/sm750_accel.c | 2 +-
- drivers/staging/sm750fb/sm750_hw.c    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pmdomain/rockchip/pm-domains.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/staging/sm750fb/sm750.h b/drivers/staging/sm750fb/sm750.h
-index a2342c69a65a..0ed1e18611ba 100644
---- a/drivers/staging/sm750fb/sm750.h
-+++ b/drivers/staging/sm750fb/sm750.h
-@@ -52,7 +52,7 @@ struct lynx_accel {
- 	/* base virtual address of DPR registers */
- 	volatile unsigned char __iomem *dpr_base;
- 	/* base virtual address of de data port */
--	volatile unsigned char __iomem *dpPortBase;
-+	volatile unsigned char __iomem *dp_port_base;
+diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+index 4cce407bb1eb..242570c505fb 100644
+--- a/drivers/pmdomain/rockchip/pm-domains.c
++++ b/drivers/pmdomain/rockchip/pm-domains.c
+@@ -35,6 +35,7 @@
+ #include <dt-bindings/power/rk3366-power.h>
+ #include <dt-bindings/power/rk3368-power.h>
+ #include <dt-bindings/power/rk3399-power.h>
++#include <dt-bindings/power/rockchip,rk3528-power.h>
+ #include <dt-bindings/power/rockchip,rk3562-power.h>
+ #include <dt-bindings/power/rk3568-power.h>
+ #include <dt-bindings/power/rockchip,rk3576-power.h>
+@@ -216,6 +217,9 @@ struct rockchip_pmu {
+ #define DOMAIN_RK3399(name, pwr, status, req, wakeup)		\
+ 	DOMAIN(name, pwr, status, req, req, req, wakeup)
  
- 	/* function pointers */
- 	void (*de_init)(struct lynx_accel *accel);
-diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
-index 97791f1b0123..7ac2e7b6ea0f 100644
---- a/drivers/staging/sm750fb/sm750_accel.c
-+++ b/drivers/staging/sm750fb/sm750_accel.c
-@@ -29,7 +29,7 @@ static inline u32 read_dpr(struct lynx_accel *accel, int offset)
++#define DOMAIN_RK3528(name, pwr, req)		\
++	DOMAIN_M(name, pwr, pwr, req, req, req, false)
++
+ #define DOMAIN_RK3562(name, pwr, req, g_mask, mem, wakeup)		\
+ 	DOMAIN_M_G_SD(name, pwr, pwr, req, req, req, g_mask, mem, wakeup, false)
  
- static inline void write_dpPort(struct lynx_accel *accel, u32 data)
- {
--	writel(data, accel->dpPortBase);
-+	writel(data, accel->dp_port_base);
- }
+@@ -1215,6 +1219,14 @@ static const struct rockchip_domain_info rk3399_pm_domains[] = {
+ 	[RK3399_PD_SDIOAUDIO]	= DOMAIN_RK3399("sdioaudio", BIT(31), BIT(31), BIT(29), true),
+ };
  
- void sm750_hw_de_init(struct lynx_accel *accel)
-diff --git a/drivers/staging/sm750fb/sm750_hw.c b/drivers/staging/sm750fb/sm750_hw.c
-index 159a5ad621f2..75ceb594fcb1 100644
---- a/drivers/staging/sm750fb/sm750_hw.c
-+++ b/drivers/staging/sm750fb/sm750_hw.c
-@@ -59,7 +59,7 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
- 	pr_info("mmio virtual addr = %p\n", sm750_dev->pvReg);
++static const struct rockchip_domain_info rk3528_pm_domains[] = {
++	[RK3528_PD_GPU]		= DOMAIN_RK3528("gpu",  BIT(0), BIT(4)),
++	[RK3528_PD_RKVDEC]	= DOMAIN_RK3528("vdec",      0, BIT(5)),
++	[RK3528_PD_RKVENC]	= DOMAIN_RK3528("venc",      0, BIT(6)),
++	[RK3528_PD_VO]		= DOMAIN_RK3528("vo",        0, BIT(7)),
++	[RK3528_PD_VPU]		= DOMAIN_RK3528("vpu",       0, BIT(8)),
++};
++
+ static const struct rockchip_domain_info rk3562_pm_domains[] = {
+ 					     /* name           pwr     req     g_mask  mem wakeup */
+ 	[RK3562_PD_GPU]		= DOMAIN_RK3562("gpu",         BIT(0), BIT(1), BIT(1), 0, false),
+@@ -1428,6 +1440,17 @@ static const struct rockchip_pmu_info rk3399_pmu = {
+ 	.domain_info = rk3399_pm_domains,
+ };
  
- 	sm750_dev->accel.dpr_base = sm750_dev->pvReg + DE_BASE_ADDR_TYPE1;
--	sm750_dev->accel.dpPortBase = sm750_dev->pvReg + DE_PORT_ADDR_TYPE1;
-+	sm750_dev->accel.dp_port_base = sm750_dev->pvReg + DE_PORT_ADDR_TYPE1;
- 
- 	mmio750 = sm750_dev->pvReg;
- 	sm750_set_chip_type(sm750_dev->devid, sm750_dev->revid);
++static const struct rockchip_pmu_info rk3528_pmu = {
++	.pwr_offset = 0x1210,
++	.status_offset = 0x1230,
++	.req_offset = 0x1110,
++	.idle_offset = 0x1128,
++	.ack_offset = 0x1120,
++
++	.num_domains = ARRAY_SIZE(rk3528_pm_domains),
++	.domain_info = rk3528_pm_domains,
++};
++
+ static const struct rockchip_pmu_info rk3562_pmu = {
+ 	.pwr_offset = 0x210,
+ 	.status_offset = 0x230,
+@@ -1538,6 +1561,10 @@ static const struct of_device_id rockchip_pm_domain_dt_match[] = {
+ 		.compatible = "rockchip,rk3399-power-controller",
+ 		.data = (void *)&rk3399_pmu,
+ 	},
++	{
++		.compatible = "rockchip,rk3528-power-controller",
++		.data = (void *)&rk3528_pmu,
++	},
+ 	{
+ 		.compatible = "rockchip,rk3562-power-controller",
+ 		.data = (void *)&rk3562_pmu,
 -- 
-2.49.0.1112.g889b7c5bd8-goog
+2.49.0
 
