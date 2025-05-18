@@ -1,125 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9246E21D583;
-	Sun, 18 May 2025 18:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1B39FD9;
+	Sun, 18 May 2025 18:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747591622; cv=none; b=bznDTprcoYLOIjWthaFOAMBRE7MGoUNEaLRr99uu0j5ddM4qQuFbsV0gRXkY46SfIThqHd1bz+eeFAprxPNB25IFrNnYL48ctEaaagbF/U16hFJiTUtV8oc/1aAj2RLYzFzDw+WNsbpdjRB3Q6DDHFyY6BIJlcmjSbkifVXakRo=
+	t=1747591929; cv=none; b=clvz5PK1QEB4QEz27VBpRifUJ9GBd/TQHZWCJOXRzZHcL8c1Rz/ZXi+8C2+px23au2YrpfaymQJ3WYTyXoPRk1JFMZYXKKUomN/3ch7U0/FFQx77bKoxxmhjNs05h/v9t/fxUHifJ0yb8gHTGuqbVrFbTkgDYDL2kWobC2V5gpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747591622; c=relaxed/simple;
-	bh=pskOUvGEBKAl0vNeYYdPWPN8DH4UBURr9gH4uXhAoYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pc6SW3p8u/p/aTfZ7ol4aVjmH0Cy1zHHhcQpAhwgmrKKimmd3wRpGCuWB5STuy9c0tgUmy2X99PnWjyNjr0W2tHw3Qy/fW4BdURlYnBOyGBNQhR/PKhW6R+V550MLWCHKY0nZ/Q1aYPGqWPhwgkXthAD5ptiISl9avkqpi7dS1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MBSQVE7X; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747591929; c=relaxed/simple;
+	bh=xLrfGRIolCn+y1r+mkvbyYvCu2T4QGg3/8reVJO2b2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZhcUkbu8dWMjo3sY/WCPNuYZu/EgaN5R0jRxPr2YJAJax/De6nWrtuTCsbqpGdeM3VJg8W3bF9fk1cM4tsm1Cm2POElZ2F6cRoitiKhDi9kmjdGitDDX8NjcCMVT33t1iZHzboe1f3hklSuqp7Zy7f0nHqw3OuRfYGR/+kIskSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uysvgk5v; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MBSQVE7X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747591620; x=1779127620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pskOUvGEBKAl0vNeYYdPWPN8DH4UBURr9gH4uXhAoYQ=;
-  b=MBSQVE7XEbY3dosgWk7RLmpzlmu0us6B8FAfg6mDHlMKAP2oF6wrpsgq
-   5FaY3/koUgZ46Sm5efXC2D45QwFvV1fT7qh4ajJg51rUkoADbKyo/r5uw
-   9sKES/FefPivJrZv7u7hLaZ7xz/GyGIpK9DvkDPIclTj8xP4CZw3Iv9zQ
-   ZuUuOufrNE6SixehDJdCCr4DD8ZREGxeI4JLiumSazgin63+glD/nqZeV
-   k3nL+0RXz2y3Y1zQJS/wyp+Ym/koMZ2EhkR6WmZrBWvv5HgVUeKjurovH
-   mgeOta2vFBRi1rG9uvhNuPwNV2mOyOhDlpwgS7TEq1n+lfJoDdHIEW/Kz
-   w==;
-X-CSE-ConnectionGUID: X73GSG06SFKRfK7gJesJyw==
-X-CSE-MsgGUID: 7qcqoqFGS/mA+4Fkv5vDkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53296878"
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="53296878"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 11:06:59 -0700
-X-CSE-ConnectionGUID: n6mz+/FWR1CZPevGq+cRjg==
-X-CSE-MsgGUID: KxbogY7STF6fUxxxWpNfvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="138910479"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 18 May 2025 11:06:55 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGiPT-000Ky3-2r;
-	Sun, 18 May 2025 18:06:51 +0000
-Date: Mon, 19 May 2025 02:06:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gur Stavi <gur.stavi@huawei.com>, Fan Gong <gongfan1@huawei.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, linux-doc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Helgaas <helgaas@kernel.org>, luosifu <luosifu@huawei.com>,
-	Xin Guo <guoxin09@huawei.com>,
-	Shen Chenyang <shenchenyang1@hisilicon.com>,
-	Zhou Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>,
-	Shi Jing <shijing34@huawei.com>,
-	Meny Yossefi <meny.yossefi@huawei.com>, Lee Trager <lee@trager.us>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Suman Ghosh <sumang@marvell.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH net-next v15 1/1] hinic3: module initialization and tx/rx
- logic
-Message-ID: <202505190148.x7llMRfr-lkp@intel.com>
-References: <b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uysvgk5v"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70cca430085so5220487b3.3;
+        Sun, 18 May 2025 11:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747591926; x=1748196726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XHn+msd7NQ+wMbD7YZtQnX8pW0NnLTWIdaNDr3YivAU=;
+        b=Uysvgk5vBIb7HOtOPYxoD6IiahnB3tUFzoY4aOnOwQH1+g37VOaDxv+kuEoJPP0CaL
+         KQ2n6OVIbUqPXqmxEMJ/av3cPHcpJ7SKK48AOGCV7sqMBJzULJtKttbUshKtz7FR14xK
+         N91Ap+kz8AZd7FFG8jtc8vt6vsreZ8MPyT6Z54smgyaGIpx2h+xqm/R/2/PVdhNuHEEz
+         WS3PUnLQeK8xHTNJQEAIhl7+2kkOPAidMDqcnq4BCLNMTkBAr9lg4XaPJzEYBFxiKl2u
+         febhJha9eETavuR5wqzTbX8qCl6wiHY6mLW5ChJOdA5hkqE92pHbQeyeeb2A8vdZyZoE
+         r7JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747591926; x=1748196726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XHn+msd7NQ+wMbD7YZtQnX8pW0NnLTWIdaNDr3YivAU=;
+        b=F9KW4ryvW+O/12mcKUQLIzXrDVPytQUQ1F18AEEbNP8KsycFD6lkSaGm/x4Jz4cUV/
+         rrce+hRZYyQbcKoEwTRQ6KIYpkpDv2jPSPQ2RMdlxrmDX1OvHU4cPmwPTTvEtgH42M7m
+         pqrTs+IqQUEdoMbYWiKmxI/qD8V6AJrTijDSf5gm6sfArJ0j2cxGyED/D3+e7ui/RSAm
+         W9wOg1iQDaJhCqXvUPtGbd7NvAsSv2REZ+/bOnkVqRpg8GN45hRF1cHIbUG+1H6nLoAo
+         DB5iWPLU/PzaOC04BJcSUmQKORFK75nP/y2IZN1C9siMmee8kFKkJkMSuZjfOyvIBI2J
+         QOCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEGmRhr9pNTPWqOlbhdPRrEt05KYGBLSNOVC6ZzYcShx0/j+TO9/uzsrRGMPpnbiuSeeNrZvD5EvwHIA8=@vger.kernel.org, AJvYcCXRGqKii6QI/0mb6uiU3Jq2OscVFcikAhQSz/JooQHWSePu6te21g51bg7sHpqX9N3I2aar2lYZajIHHCHC9w74/w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkaedUh8WMmY++xZz2VFeLusNrJFFiVIWBjMLL5N2bKFDQo1Ng
+	JV27L5N/kHW+0hwoHz1rq2z2GdA2OEDbGxJY6NlcsPYNMxOImjLL9ciN/4WsQT25yAVyO3o2Eg3
+	NppqV5CVRpg93zIs62OZSsV1MN6sPRP4=
+X-Gm-Gg: ASbGncue+w1Udb9u1mVIOci/yhfWROBBdwZAMwQ/tefe0B+6TDGUv3KUmXzHltfranp
+	v4n1tGu0LX2NFZ0VmJA5oAOAjQphWW0nNmGfTuOaJhlIYzc0r/enlquNSJhtLNbFGqm6QmTFsdv
+	es3WPtig05aBZus903xkUPw4p/Ji7H4HycS3RO9HtOeg==
+X-Google-Smtp-Source: AGHT+IGE50CS8gt2jpoH952jZjCUyVs+crWub7hI76UX6jM9UkUopcnMA7SCZADbxyox5nTnz0xe6c7N4D+G+fKkzQc=
+X-Received: by 2002:a05:690c:ed4:b0:708:21e9:a20d with SMTP id
+ 00721157ae682-70caafa9779mr142654417b3.16.1747591926464; Sun, 18 May 2025
+ 11:12:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi@huawei.com>
+References: <20250517163230.1237469-1-howardchu95@gmail.com>
+ <20250517163230.1237469-6-howardchu95@gmail.com> <aCoeM4qTk5YnGIsT@google.com>
+In-Reply-To: <aCoeM4qTk5YnGIsT@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Sun, 18 May 2025 11:11:55 -0700
+X-Gm-Features: AX0GCFtkO8mLJpOXKojWTdB5XqQg2vXOzejauZOW4x2PvyFGkHt4qxLwP-vlOME
+Message-ID: <CAH0uvohjmuahjP1Xrz3h9FmK7R1zE_jP-czxt2s_5pPx_nMu2w@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] perf test trace BTF: Use --sort-events in BTF
+ general tests
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Gur,
+Hello Namhyung,
 
-kernel test robot noticed the following build warnings:
+On Sun, May 18, 2025 at 10:51=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Sat, May 17, 2025 at 09:32:30AM -0700, Howard Chu wrote:
+> > Without the '--sort-events' flag, perf trace doesn't receive and proces=
+s
+> > events based on their arrival time, thus PERF_RECORD_COMM event that
+> > assigns the correct comm to a PID, may be delivered and processed after
+> > regular samples, causing trace outputs not having a 'comm', e.g.
+> > 'mv', instead, having the default PID placeholder, e.g. ':14514'.
+> >
+> > Hopefully this answers Namhyung's question in [1].
+>
+> Thanks, it makes sense.  Maybe it migrated to another CPU after exec.
+>
+> >
+> > You can simply justify the statement with this diff:
+> >
+> > ---8<---
+>
+> Please do not use this in the format patch emails.  This makes git treat
+> the following contents as commit body so it'll be added to the commit as
+> if it's a valid change.  Maybe adding some spaces at the beginning of
+> each line help.  But I think it's better if you publish it somewhere else
+> and add a link instead.
 
-[auto build test WARNING on 67fa756408a5359941bea2c021740da5e9ed490d]
+Sorry. I will delete this scissor in v2.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gur-Stavi/hinic3-module-initialization-and-tx-rx-logic/20250518-160845
-base:   67fa756408a5359941bea2c021740da5e9ed490d
-patch link:    https://lore.kernel.org/r/b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi%40huawei.com
-patch subject: [PATCH net-next v15 1/1] hinic3: module initialization and tx/rx logic
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250519/202505190148.x7llMRfr-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505190148.x7llMRfr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505190148.x7llMRfr-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/huawei/hinic3/hinic3_tx.c: In function 'hinic3_tx_poll':
->> drivers/net/ethernet/huawei/hinic3/hinic3_tx.c:633:32: warning: variable 'nic_dev' set but not used [-Wunused-but-set-variable]
-     633 |         struct hinic3_nic_dev *nic_dev;
-         |                                ^~~~~~~
-
-
-vim +/nic_dev +633 drivers/net/ethernet/huawei/hinic3/hinic3_tx.c
-
-   625	
-   626	#define HINIC3_BDS_PER_SQ_WQEBB \
-   627		(HINIC3_SQ_WQEBB_SIZE / sizeof(struct hinic3_sq_bufdesc))
-   628	
-   629	bool hinic3_tx_poll(struct hinic3_txq *txq, int budget)
-   630	{
-   631		struct net_device *netdev = txq->netdev;
-   632		u16 hw_ci, sw_ci, q_id = txq->sq->q_id;
- > 633		struct hinic3_nic_dev *nic_dev;
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Howard
