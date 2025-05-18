@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30211FFC49;
-	Sun, 18 May 2025 06:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996211FFC49;
+	Sun, 18 May 2025 06:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747550629; cv=none; b=SnRBF2dj7k+OAsFx+rKeZ1KHClNwz/rFLGJDMVgxGlnF9o5zeQaUjsVT2ujihEYDYqHGbO1HaiTQhXX4SqSamYttGF8l5qWSU+Qcch2zDyIcAH9JQUuw5v1VUpU5tS3SRAE8LbIQI1FhG/w5kE9SX6+dcSM4+EQi782ad3HTjNE=
+	t=1747550639; cv=none; b=rI3ftKfeyTKT1ZdKfJ7G7ndiDUZdLwlVtmVzd38Dcn3020z5KFzLxQQzqpHvhwGgjKETYweOqPT1WkO0XyQC9/l1A3XbFbT3DzSGxRI0dDzpJ6hs5SrlZDoIVp+ka9XBGtSb2OTSm+6QvzuGU2PsVqcviyXNfjn/Qw2tzZwo6YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747550629; c=relaxed/simple;
-	bh=OcTdc7vqK3SsMA7jAySHK+eka3IcIeG7D+JLXlmsY0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aPcrQEtrE6YBa2md6iuQ7xUsXQ7szeZkLKPpP48jXRozeGaaNxwp7dqtRmed2qnlxAq+14z/mKC9jp4QqOIGQRicoT9p4w/UMObs46cartOTZolTWEJCyecAkLUSsE3Opfmrfly5Z44uwzb7Dz0ugK3prEjd+diXoOT/aOyrZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tIiM5l74; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747550639; c=relaxed/simple;
+	bh=PllWq5Ed5QV8HZGIKqqlvyGzyFUGHzIyCD3KsIAksNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QJ3Diu8Hq8HIAWvhYI6DwTFogKJ+/M7APfrIO5GE7uFx6QSN2oGesgPRg1CbdRSpfiHKRzvlqux/PGoWXwvONmHs+BA/UnEe+43l0UlBoDKnsqixAKWh5yoNRQnqudaMKf/uQxfL83W9RZQ/ZF7HS2wuYjVtV+GIK+TWaIqlgSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KKG/4FMA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tIiM5l74"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C23C4CEE7;
-	Sun, 18 May 2025 06:43:48 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KKG/4FMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D96C4CEE9;
+	Sun, 18 May 2025 06:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747550629;
-	bh=OcTdc7vqK3SsMA7jAySHK+eka3IcIeG7D+JLXlmsY0A=;
+	s=korg; t=1747550639;
+	bh=PllWq5Ed5QV8HZGIKqqlvyGzyFUGHzIyCD3KsIAksNk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=tIiM5l748dEL6WiPdl9f6X843Uwv84lkm8p/OV44tTOJCQ1mIj20E1R31Qjb4PUyw
-	 F+wDYcOffp9t8ivULNPn7nGqqws3KcVLcbtN2fUPqd8z/FyYEP63odDapiB5WFKYIH
-	 LGv8TbbptqC5SILP0ogKS3loDEv0d7ruMNIoGuzc=
+	b=KKG/4FMAImiTU96g68Wo6Kyt9s6WRIyXr1BWNfvbTKcZuj32uDzJNN6QXwpTQUexe
+	 ysmfgwmCjqig3uYVkj14ReTSe/FLCAMXIuIvlzuNFBY4ZRi5ic7XoJEmNrBHkRJi2x
+	 B6FtE7kblCIKNLubo8rn0kAPoCAwZ9/kw379qP2Q=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.12.29
-Date: Sun, 18 May 2025 08:41:53 +0200
-Message-ID: <2025051854-unrevised-dreamless-0ec7@gregkh>
+Subject: Linux 6.14.7
+Date: Sun, 18 May 2025 08:41:59 +0200
+Message-ID: <2025051800-extended-bullfrog-ae21@gregkh>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,12 +43,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 6.12.29 kernel.
+I'm announcing the release of the 6.14.7 kernel.
 
-All users of the 6.12 kernel series must upgrade.
+All users of the 6.14 kernel series must upgrade.
 
-The updated 6.12.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.12.y
+The updated 6.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.14.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -70,22 +70,22 @@ greg k-h
  arch/arm64/include/asm/spectre.h                                |    3 
  arch/arm64/kernel/cpufeature.c                                  |    9 
  arch/arm64/kernel/proton-pack.c                                 |   13 
+ arch/arm64/kvm/mmu.c                                            |   13 
  arch/arm64/lib/insn.c                                           |   60 +-
  arch/arm64/net/bpf_jit_comp.c                                   |   57 ++
  arch/mips/include/asm/ptrace.h                                  |    3 
+ arch/riscv/kernel/process.c                                     |    6 
  arch/riscv/kernel/traps.c                                       |   64 +--
  arch/riscv/kernel/traps_misaligned.c                            |   17 
  arch/s390/kernel/entry.S                                        |    3 
  arch/s390/pci/pci_clp.c                                         |    2 
- arch/um/include/linux/time-internal.h                           |    2 
- arch/um/kernel/skas/syscall.c                                   |   11 
  arch/x86/Kconfig                                                |   12 
  arch/x86/entry/entry_64.S                                       |   20 
  arch/x86/include/asm/alternative.h                              |   32 +
  arch/x86/include/asm/cpufeatures.h                              |    3 
  arch/x86/include/asm/microcode.h                                |    2 
  arch/x86/include/asm/msr-index.h                                |    8 
- arch/x86/include/asm/nospec-branch.h                            |   38 +
+ arch/x86/include/asm/nospec-branch.h                            |   10 
  arch/x86/kernel/alternative.c                                   |  208 +++++++++-
  arch/x86/kernel/cpu/bugs.c                                      |  176 ++++++++
  arch/x86/kernel/cpu/common.c                                    |   72 ++-
@@ -98,6 +98,7 @@ greg k-h
  arch/x86/kernel/module.c                                        |    6 
  arch/x86/kernel/static_call.c                                   |    4 
  arch/x86/kernel/vmlinux.lds.S                                   |   10 
+ arch/x86/kvm/mmu/mmu.c                                          |   69 ++-
  arch/x86/kvm/smm.c                                              |    1 
  arch/x86/kvm/svm/svm.c                                          |    4 
  arch/x86/kvm/x86.c                                              |    4 
@@ -105,11 +106,16 @@ greg k-h
  arch/x86/mm/tlb.c                                               |   23 +
  arch/x86/net/bpf_jit_comp.c                                     |   58 ++
  drivers/accel/ivpu/ivpu_hw.c                                    |    2 
+ drivers/accel/ivpu/ivpu_job.c                                   |   90 +++-
  drivers/base/cpu.c                                              |    3 
- drivers/block/loop.c                                            |  104 +++--
- drivers/bluetooth/btmtk.c                                       |   12 
+ drivers/block/loop.c                                            |   43 +-
+ drivers/bluetooth/btmtk.c                                       |   10 
  drivers/clocksource/i8253.c                                     |    4 
  drivers/firmware/arm_scmi/driver.c                              |   13 
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h                             |    2 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c                        |   18 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c                      |   29 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                         |   10 
  drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.h                         |    1 
  drivers/gpu/drm/amd/amdgpu/hdp_v4_0.c                           |    7 
  drivers/gpu/drm/amd/amdgpu/hdp_v5_0.c                           |    7 
@@ -128,16 +134,28 @@ greg k-h
  drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c   |   14 
  drivers/gpu/drm/panel/panel-simple.c                            |   25 -
  drivers/gpu/drm/v3d/v3d_sched.c                                 |   28 +
- drivers/gpu/drm/xe/tests/xe_mocs.c                              |   21 -
+ drivers/gpu/drm/xe/tests/xe_mocs.c                              |    7 
+ drivers/gpu/drm/xe/xe_gt_debugfs.c                              |    9 
  drivers/gpu/drm/xe/xe_gt_pagefault.c                            |   11 
+ drivers/hv/hyperv_vmbus.h                                       |    6 
+ drivers/hv/vmbus_drv.c                                          |  100 ++++
  drivers/iio/accel/adis16201.c                                   |    4 
  drivers/iio/accel/adxl355_core.c                                |    2 
  drivers/iio/accel/adxl367.c                                     |   10 
+ drivers/iio/adc/ad7266.c                                        |    2 
  drivers/iio/adc/ad7606_spi.c                                    |    2 
+ drivers/iio/adc/ad7768-1.c                                      |    2 
  drivers/iio/adc/dln2-adc.c                                      |    2 
  drivers/iio/adc/rockchip_saradc.c                               |   17 
+ drivers/iio/chemical/pms7003.c                                  |    5 
+ drivers/iio/chemical/sps30.c                                    |    2 
+ drivers/iio/common/hid-sensors/hid-sensor-attributes.c          |    4 
+ drivers/iio/imu/bmi270/bmi270_core.c                            |    6 
  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c                      |    2 
  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c                  |    6 
+ drivers/iio/light/hid-sensor-prox.c                             |   22 -
+ drivers/iio/light/opt3001.c                                     |    5 
+ drivers/iio/pressure/mprls0025pa.h                              |   17 
  drivers/iio/temperature/maxim_thermocouple.c                    |    2 
  drivers/input/joystick/xpad.c                                   |   40 +
  drivers/input/keyboard/mtk-pmic-keys.c                          |    4 
@@ -150,18 +168,19 @@ greg k-h
  drivers/net/dsa/b53/b53_common.c                                |  207 +++++++--
  drivers/net/dsa/b53/b53_priv.h                                  |    3 
  drivers/net/dsa/bcm_sf2.c                                       |    1 
- drivers/net/ethernet/intel/ice/ice_adapter.c                    |   39 -
+ drivers/net/ethernet/intel/ice/ice_adapter.c                    |   47 --
  drivers/net/ethernet/intel/ice/ice_adapter.h                    |    6 
  drivers/net/ethernet/mediatek/mtk_eth_soc.c                     |   19 
  drivers/net/ethernet/meta/fbnic/fbnic_csr.h                     |    2 
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c                      |  180 ++++----
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c                      |  197 +++++----
  drivers/net/ethernet/meta/fbnic/fbnic_mac.c                     |    6 
- drivers/net/virtio_net.c                                        |   61 ++
+ drivers/net/virtio_net.c                                        |   23 -
  drivers/nvme/host/core.c                                        |    3 
  drivers/pci/hotplug/s390_pci_hpc.c                              |    1 
  drivers/staging/axis-fifo/axis-fifo.c                           |   14 
  drivers/staging/iio/adc/ad7816.c                                |    2 
  drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c   |    1 
+ drivers/uio/uio_hv_generic.c                                    |   39 -
  drivers/usb/cdns3/cdnsp-gadget.c                                |   31 +
  drivers/usb/cdns3/cdnsp-gadget.h                                |    6 
  drivers/usb/cdns3/cdnsp-pci.c                                   |   12 
@@ -174,10 +193,14 @@ greg k-h
  drivers/usb/gadget/function/f_ecm.c                             |    7 
  drivers/usb/gadget/udc/tegra-xudc.c                             |    4 
  drivers/usb/host/uhci-platform.c                                |    2 
+ drivers/usb/host/xhci-dbgcap.c                                  |   19 
+ drivers/usb/host/xhci-dbgcap.h                                  |    3 
  drivers/usb/host/xhci-tegra.c                                   |    3 
  drivers/usb/misc/onboard_usb_dev.c                              |   10 
  drivers/usb/typec/tcpm/tcpm.c                                   |    2 
- drivers/usb/typec/ucsi/displayport.c                            |    2 
+ drivers/usb/typec/ucsi/displayport.c                            |   21 -
+ drivers/usb/typec/ucsi/ucsi.c                                   |   34 +
+ drivers/usb/typec/ucsi/ucsi.h                                   |    2 
  drivers/vfio/pci/vfio_pci_core.c                                |   12 
  drivers/xen/swiotlb-xen.c                                       |    1 
  drivers/xen/xenbus/xenbus.h                                     |    2 
@@ -188,6 +211,7 @@ greg k-h
  fs/erofs/fileio.c                                               |    4 
  fs/erofs/zdata.c                                                |   31 -
  fs/namespace.c                                                  |    3 
+ fs/ocfs2/alloc.c                                                |    1 
  fs/ocfs2/journal.c                                              |   80 ++-
  fs/ocfs2/journal.h                                              |    1 
  fs/ocfs2/ocfs2.h                                                |   17 
@@ -203,21 +227,22 @@ greg k-h
  fs/userfaultfd.c                                                |   28 +
  include/linux/cpu.h                                             |    2 
  include/linux/execmem.h                                         |    3 
+ include/linux/hyperv.h                                          |    6 
  include/linux/ieee80211.h                                       |    2 
  include/linux/module.h                                          |    5 
- include/linux/types.h                                           |    3 
+ include/linux/timekeeper_internal.h                             |    8 
  include/linux/vmalloc.h                                         |    1 
  include/net/netdev_queues.h                                     |    6 
- include/uapi/linux/types.h                                      |    1 
  init/Kconfig                                                    |    3 
  io_uring/io_uring.c                                             |   58 +-
  io_uring/sqpoll.c                                               |    2 
  kernel/params.c                                                 |    4 
- kernel/sched/fair.c                                             |    4 
+ kernel/time/timekeeping.c                                       |   50 ++
+ kernel/time/vsyscall.c                                          |    4 
  mm/huge_memory.c                                                |   11 
  mm/internal.h                                                   |   27 -
  mm/memblock.c                                                   |    9 
- mm/page_alloc.c                                                 |  159 ++++---
+ mm/page_alloc.c                                                 |  161 ++++---
  mm/vmalloc.c                                                    |   31 +
  net/can/gw.c                                                    |  149 ++++---
  net/core/filter.c                                               |    1 
@@ -234,19 +259,21 @@ greg k-h
  rust/kernel/list.rs                                             |    3 
  rust/kernel/str.rs                                              |   46 +-
  rust/macros/module.rs                                           |   19 
+ rust/macros/paste.rs                                            |    2 
  rust/macros/pinned_drop.rs                                      |    3 
  rust/uapi/lib.rs                                                |    1 
  tools/objtool/check.c                                           |    1 
  tools/testing/selftests/Makefile                                |    1 
  tools/testing/selftests/mm/compaction_test.c                    |   19 
- tools/testing/selftests/mm/pkey-powerpc.h                       |   12 
+ tools/testing/selftests/mm/pkey-powerpc.h                       |   14 
+ tools/testing/selftests/mm/pkey_util.c                          |    1 
  tools/testing/selftests/x86/bugs/Makefile                       |    3 
  tools/testing/selftests/x86/bugs/common.py                      |  164 +++++++
  tools/testing/selftests/x86/bugs/its_indirect_alignment.py      |  150 +++++++
  tools/testing/selftests/x86/bugs/its_permutations.py            |  109 +++++
  tools/testing/selftests/x86/bugs/its_ret_alignment.py           |  139 ++++++
  tools/testing/selftests/x86/bugs/its_sysfs.py                   |   65 +++
- 188 files changed, 3220 insertions(+), 1086 deletions(-)
+ 215 files changed, 3564 insertions(+), 1212 deletions(-)
 
 Aditya Garg (3):
       Input: synaptics - enable InterTouch on Dynabook Portege X30L-G
@@ -256,7 +283,9 @@ Aditya Garg (3):
 Al Viro (1):
       do_umount(): add missing barrier before refcount checks in sync case
 
-Alex Deucher (5):
+Alex Deucher (7):
+      Revert "drm/amd: Stop evicting resources on APUs in suspend"
+      drm/amdgpu: fix pm notifier handling
       drm/amdgpu/hdp4: use memcfg register to post the write for HDP flush
       drm/amdgpu/hdp5.2: use memcfg register to post the write for HDP flush
       drm/amdgpu/hdp5: use memcfg register to post the write for HDP flush
@@ -266,10 +295,11 @@ Alex Deucher (5):
 Alex Williamson (1):
       vfio/pci: Align huge faults to order
 
-Alexander Duyck (6):
+Alexander Duyck (7):
       fbnic: Fix initialization of mailbox descriptor rings
       fbnic: Gate AXI read/write enabling on FW mailbox
       fbnic: Actually flush_tx instead of stalling out
+      fbnic: Cleanup handling of completions
       fbnic: Improve responsiveness of fbnic_mbx_poll_tx_ready
       fbnic: Pull fbnic_fw_xmit_cap_msg use out of interrupt context
       fbnic: Do not allow mailbox to toggle to ready outside fbnic_mbx_poll_tx_ready
@@ -277,11 +307,9 @@ Alexander Duyck (6):
 Alexey Charkov (1):
       usb: uhci-platform: Make the clock really optional
 
-Andrei Kuchynski (1):
+Andrei Kuchynski (2):
+      usb: typec: ucsi: displayport: Fix deadlock
       usb: typec: ucsi: displayport: Fix NULL pointer access
-
-Andy Shevchenko (1):
-      types: Complement the aligned types with signed 64-bit one
 
 Angelo Dureghello (1):
       iio: adc: ad7606: fix serial register access
@@ -295,11 +323,7 @@ Aurabindo Pillai (1):
 Borislav Petkov (AMD) (1):
       x86/microcode: Consolidate the loader enablement checking
 
-Christian Lamparter (1):
-      Revert "um: work around sched_yield not yielding in time-travel mode"
-
-Christoph Hellwig (2):
-      loop: refactor queue limits updates
+Christoph Hellwig (1):
       loop: factor out a loop_assign_backing_file helper
 
 Clément Léger (2):
@@ -336,8 +360,11 @@ Dave Penkler (3):
 Dave Stevenson (1):
       staging: bcm2835-camera: Initialise dev in v4l2_dev
 
-David Lechner (1):
+David Lechner (4):
+      iio: chemical: sps30: use aligned_s64 for timestamp
+      iio: chemical: pms7003: use aligned_s64 for timestamp
       iio: imu: inv_mpu6050: align buffer for timestamp
+      iio: pressure: mprls0025pa: use aligned_s64 for timestamp
 
 Dmitry Antipov (1):
       module: ensure that kobject_put() is safe for module type kobjects
@@ -376,13 +403,15 @@ Gavin Guo (1):
       mm/huge_memory: fix dereferencing invalid pmd migration entry
 
 Greg Kroah-Hartman (1):
-      Linux 6.12.29
+      Linux 6.14.7
 
 Guillaume Nault (1):
       gre: Fix again IPv6 link-local address generation.
 
-Hao Qin (2):
-      Bluetooth: btmtk: Remove resetting mt7921 before downloading the fw
+Gustavo Silva (1):
+      iio: imu: bmi270: fix initial sampling frequency configuration
+
+Hao Qin (1):
       Bluetooth: btmtk: Remove the resetting step before downloading the fw
 
 Heiko Carstens (1):
@@ -391,16 +420,14 @@ Heiko Carstens (1):
 Heming Zhao (1):
       ocfs2: fix the issue with discontiguous allocation in the global_bitmap
 
-Himal Prasad Ghimiray (1):
-      drm/xe/tests/mocs: Update xe_force_wake_get() return handling
-
 Hugo Villeneuve (1):
       Input: cyttsp5 - ensure minimum reset pulse width
 
 Jacek Lawrynowicz (1):
       accel/ivpu: Increase state dump msg timeout
 
-Jakub Kicinski (3):
+Jakub Kicinski (4):
+      virtio-net: don't re-enable refill work too early when NAPI is disabled
       virtio-net: free xsk_buffs on error in virtnet_xsk_pool_enable()
       net: export a helper for adding up queue stats
       virtio-net: fix total qstat values
@@ -435,10 +462,6 @@ Johannes Weiner (2):
 John Ernberg (1):
       xen: swiotlb: Use swiotlb bouncing if kmalloc allocation demands it
 
-John Garry (2):
-      loop: Use bdev limit helpers for configuring discard
-      loop: Simplify discard granularity calc
-
 Jonas Gorski (11):
       net: dsa: b53: allow leaky reserved multicast
       net: dsa: b53: keep CPU port always tagged again
@@ -452,7 +475,9 @@ Jonas Gorski (11):
       net: dsa: b53: fix learning on VLAN unaware bridges
       net: dsa: b53: do not set learning and unicast/multicast on up
 
-Jonathan Cameron (3):
+Jonathan Cameron (5):
+      iio: adc: ad7768-1: Fix insufficient alignment of timestamp.
+      iio: adc: ad7266: Fix potential timestamp alignment issue.
       iio: temp: maxim-thermocouple: Fix potential lack of DMA safe buffer.
       iio: accel: adxl355: Make timestamp 64-bit aligned using aligned_s64
       iio: adc: dln2: Use aligned_s64 for timestamp
@@ -462,6 +487,10 @@ Jozsef Kadlecsik (1):
 
 Julian Anastasov (1):
       ipvs: fix uninit-value for saddr in do_output_route4
+
+Karol Wachowski (2):
+      accel/ivpu: Separate DB ID and CMDQ ID allocations from CMDQ allocation
+      accel/ivpu: Correct mutex unlock order in job submission
 
 Kees Cook (1):
       mm: vmalloc: support more granular vrealloc() sizing
@@ -481,8 +510,14 @@ Lode Willems (1):
 Lothar Rubusch (1):
       iio: accel: adxl367: fix setting odr for activity time update
 
+Luca Ceresoli (1):
+      iio: light: opt3001: fix deadlock due to concurrent flag access
+
 Lukasz Czechowski (1):
       usb: misc: onboard_usb_dev: fix support for Cypress HX3 hubs
+
+Madhavan Srinivasan (1):
+      selftests/mm: fix build break when compiling pkey_util.c
 
 Manuel Fombuena (1):
       Input: synaptics - enable InterTouch on Dynabook Portege X30-D
@@ -491,6 +526,12 @@ Marc Kleine-Budde (3):
       can: mcan: m_can_class_unregister(): fix order of unregistration calls
       can: mcp251xfd: mcp251xfd_remove(): fix order of unregistration calls
       can: rockchip_canfd: rkcanfd_remove(): fix order of unregistration calls
+
+Mark Tinguely (1):
+      ocfs2: fix panic in failed foilio allocation
+
+Mathias Nyman (1):
+      xhci: dbc: Avoid event polling busyloop if pending rx transfers are inactive.
 
 Matthew Brost (1):
       drm/xe: Add page queue multiplier
@@ -517,6 +558,12 @@ Mikael Gonella-Bolduc (1):
 Mikhail Lobanov (1):
       KVM: SVM: Forcibly leave SMM mode on SHUTDOWN interception
 
+Nam Cao (1):
+      riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL
+
+Naman Jain (1):
+      uio_hv_generic: Fix sysfs creation path for ring buffer
+
 Namjae Jeon (1):
       ksmbd: prevent rename with empty string
 
@@ -533,17 +580,11 @@ Nylon Chen (1):
 Nysal Jan K.A. (1):
       selftests/mm: fix a build failure on powerpc
 
-OGAWA Hirofumi (1):
-      loop: Fix ABBA locking race
-
 Oliver Hartkopp (1):
       can: gw: fix RCU/BH usage in cgw_create_job()
 
 Oliver Neukum (1):
       USB: usbtmc: use interruptible sleep in usbtmc_read
-
-Omar Sandoval (1):
-      sched/eevdf: Fix se->slice being set to U64_MAX and resulting crash
 
 Paul Aurich (1):
       smb: client: Avoid race in open_cached_dir with lease breaks
@@ -551,11 +592,8 @@ Paul Aurich (1):
 Paul Chaignon (1):
       bpf: Scrub packet on bpf_redirect_peer
 
-Pawan Gupta (14):
+Pawan Gupta (11):
       x86/bhi: Do not set BHI_DIS_S in 32-bit mode
-      x86/speculation: Simplify and make CALL_NOSPEC consistent
-      x86/speculation: Add a conditional CS prefix to CALL_NOSPEC
-      x86/speculation: Remove the extra #ifdef around CALL_NOSPEC
       Documentation: x86/bugs/its: Add ITS documentation
       x86/its: Enumerate Indirect Target Selection (ITS) bug
       x86/its: Add support for ITS-safe indirect thunk
@@ -601,14 +639,23 @@ Roman Li (1):
 Ruijing Dong (1):
       drm/amdgpu/vcn: using separate VCN1_AON_SOC offset
 
+Samuel Holland (1):
+      riscv: Disallow PR_GET_TAGGED_ADDR_CTRL without Supm
+
+Sean Christopherson (1):
+      KVM: x86/mmu: Prevent installing hugepages when mem attributes are changing
+
 Sean Heelan (1):
       ksmbd: Fix UAF in __close_file_table_ids
 
 Sebastian Andrzej Siewior (1):
       clocksource/i8253: Use raw_spinlock_irqsave() in clockevent_i8253_disable()
 
-Sergey Temerkhanov (1):
-      ice: Initial support for E825C hardware in ice_adapter
+Sebastian Ott (1):
+      KVM: arm64: Fix uninitialized memcache pointer in user_mem_abort()
+
+Shuicheng Lin (1):
+      drm/xe: Release force wake first then runtime power
 
 Silvano Seva (2):
       iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_fifo
@@ -619,6 +666,9 @@ Simon Xue (1):
 
 Tejas Upadhyay (1):
       drm/xe/tests/mocs: Hold XE_FORCEWAKE_ALL for LNCF regs
+
+Thomas Gleixner (1):
+      timekeeping: Prevent coarse clocks going backwards
 
 Thorsten Blum (1):
       MIPS: Fix MAX_REG_OFFSET
@@ -649,9 +699,11 @@ Wayne Lin (5):
 Wojciech Dubowik (1):
       arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to usdhc2
 
-Xuan Zhuo (1):
-      virtio_net: xsk: bind/unbind xsk for tx
-
 Yeoreum Yun (1):
       arm64: cpufeature: Move arm64_use_ng_mappings to the .data section to prevent wrong idmap generation
+
+Zhang Lixu (3):
+      iio: hid-sensor-prox: Restore lost scale assignments
+      iio: hid-sensor-prox: support multi-channel SCALE calculation
+      iio: hid-sensor-prox: Fix incorrect OFFSET calculation
 
