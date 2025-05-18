@@ -1,143 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F291F3B2A0
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDB0EEDE;
+	Sun, 18 May 2025 21:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747605249; cv=none; b=NvuJvUjiX4lCf/XOZ+ErwjmIQ92fsdzD8hnaJU2pH6puqSCxvg8NYqOBkYH2SErSiVUwzqftqrHEz06TOMEmRoOEi5a8l3c/7nYOVhWh6rbG+pcMhyPoFYfIwud/+jq27HQB1rjNFLNghhkhrva31x0D+kS3K0qSxrSWgmI21Vc=
+	t=1747605488; cv=none; b=NVa0woOmdIqY+z6ZanZXdn9nGhZpH63UUGVpKd0QDipzSOODcmVOmXidAYqa5PmtjlLv9SXF6qlxc4RJeFI2Aa8lGDoqkylp1dEGpZ3tS0c459/o1zT578Ja35RtiNNAzH1Sta8cxCO4NHaSgTlxb/SQIBc7J0BPgAsNm7RMXfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747605249; c=relaxed/simple;
-	bh=20PnTSuJpTRB3a9rlj7kzIgZoWPhz/piVscbTKW0rhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C9IWqvYlf3JjZxZHJMe+uDo/KubwHMZ1MHdg3nIhUWP7vR1AnHTu0BtI7oeDtMHWSjiNJfsiYBjtpHtAiBtS6oQKpZPkVfhGFzUTVoDuRMmcLwk3idp8NU6C8fcnDg74Et8+/EPrIyxszYhrRYTOt/20BUAGzZOweD7ao2DuepU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VTnnvjtw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747605488; c=relaxed/simple;
+	bh=JSbrJ9wGpbanvFoNCJ5/IWVBUzZlZ6E6rupdyUm9PIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QYuth7ZES1ZEibwuyvL93J9ndOBe7Os8oh+ST23bzL560fKW2+UpXki0D7oaFSMgq8tzRJCsRdOdc2zpr2lYNV141gIrU13WSCQYgZwhBmaakwSXQ2n0OWcgwLIG/LZguQl/u6olvoT/8njAwpWTqCk+MZhijCY8/Aoh6/csbPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=urMOlBhY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VTnnvjtw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747605246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uIaIOnVIIar3oPXWrnvC7B8zNsFcZdASTSy76IqR298=;
-	b=VTnnvjtwe2u2xdP0F7+DZ6n8k95lYaxxXZZLiJm2L+lpWzFGnIjRVwBUKe/HhDq0x5LWyH
-	QNk3rkEvEP1GlML1MzLM/0vz2t7F2ekV0Ios06sxQkESmVw6n2lWyXo2Xphrsjaj/iplva
-	3MNAWwq/3ds3SGKnlA4WMn16jOUX99U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-327-BVKwt8l6MWecIqTZfuiHDw-1; Sun, 18 May 2025 17:54:05 -0400
-X-MC-Unique: BVKwt8l6MWecIqTZfuiHDw-1
-X-Mimecast-MFC-AGG-ID: BVKwt8l6MWecIqTZfuiHDw_1747605244
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so21922815e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 14:54:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747605244; x=1748210044;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uIaIOnVIIar3oPXWrnvC7B8zNsFcZdASTSy76IqR298=;
-        b=sJbjaEeHhQ24a+WCJopAPSS2u+hWjKIVCqLaAKt6H1CAb//076X5p20Pjom9/bW4gi
-         r3VianPKr36i8ZkBJeoJgJvBmVVwhbPPGtC0ElcBgEifaj7I8626UqDNz98Sg5LJH/D0
-         6b1CFB6I9PCVI8EUic4nVznuQzyVC1Sn8h1IudAx6gDsAqdUd2uxs5e12Uq/SVxM5uqA
-         DH1rOLjYKPlRUPZHpaGpzhW4KKC3g7eVgjSOa1/rxb8Dwiwkzeeiv6c3ImF3LZJrQ59p
-         r8pXyl1OGvVXj4ceG1p9r2i3SKegAPGDaD3XlP8XI9kkAO1Vo8u7NvPCWdSKWuwigaAq
-         eqrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdszu1LyCyTQFc72FUiXSticJ9qJtdL26xg6f+zZaWUIWe9ZGS97g18txfZou1XDDPZqFhYIfo9Ci2o8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlI8i/Mb4OWPIPmsAehA2MvRXz0BbpSlWQvpDcv6EMR50gMzK2
-	dKTFZ5Y6XbzIQA7FbLmPeN3jAk090x2A5i7aoFLOI9WVYKRVdyEMGw9UD4S3vZaE3cBJdM2kE5u
-	H6w2ONIqKe0wGBorMzDFnquV3INIEsC0hR1xHWXvWD4AwXiuaAapubd6yUDA9oW72Lg==
-X-Gm-Gg: ASbGncuWVUwHU0ehtSOzXIrbVo81rh+Fysr7VFsPO7ZH8dtbZhTMbYpUsJwk+NLhH0w
-	pIAwFuHBw0y+MhjDXT8Zyz0CmW4cEZPaT605pMNNarC1zcCE9XI6CohOm01ffs6vwjdtYvOX45Q
-	znNZc93eH5DAdcWq/yZyh7Gnt4cw6wSiz6kRFomar2PNTBT/l9GO4ZA2Zc0tsJ8lSqV9xDVmAGJ
-	xF4ewo6C4IND7/XXzaal/eeIyF76CSGgEoLbzKVhI+WM2DNI6IPTDgbwjkPW4FRnd9I7QBYfnYH
-	ioBiUw==
-X-Received: by 2002:a05:600c:3ca0:b0:441:d438:4ea5 with SMTP id 5b1f17b1804b1-442ff0328b8mr73538025e9.20.1747605244355;
-        Sun, 18 May 2025 14:54:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvqrHVss6NuJi0HAtzkEcNBJlsY/d82el2/IApsycphIjM1sMh75zLHZaVQnejymivmh22FQ==
-X-Received: by 2002:a05:600c:3ca0:b0:441:d438:4ea5 with SMTP id 5b1f17b1804b1-442ff0328b8mr73537855e9.20.1747605244018;
-        Sun, 18 May 2025 14:54:04 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35e49262fsm10020425f8f.44.2025.05.18.14.54.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 14:54:02 -0700 (PDT)
-Date: Sun, 18 May 2025 17:53:59 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
-	Eric Auger <eric.auger@redhat.com>,
-	David Airlie <airlied@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>,
-	"open list:VIRTIO GPU DRIVER" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
-Message-ID: <20250518175332-mutt-send-email-mst@kernel.org>
-References: <20250507082821.2710706-1-kraxel@redhat.com>
- <urpxto3fgvwoe4hob2aukggeop4bcsyb7m5wflgru4c3otd6rq@aktopqufgxom>
- <iptz2uxajkl3l62piqu6tq5pembbmqho667otbaj7nneh5vk3r@sxdvm7e57nae>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urMOlBhY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63047C4CEE7;
+	Sun, 18 May 2025 21:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747605487;
+	bh=JSbrJ9wGpbanvFoNCJ5/IWVBUzZlZ6E6rupdyUm9PIA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=urMOlBhY1pnR/pIQXb/88LCMfrdSq5HKPSRyUFycRg7yDxaiqCkEBmE+Gfr0kwfI3
+	 YBYtAisU4GiLz58laz9us+WbQV0031kBxyg9X/R6xvaHW0lzILswZ3t2+y/oKb9saB
+	 V8mZrWx6a+hi2WcoN7du4eSK99gdvq5ic1kBPKOgh9fb6PvLZ7+fq1z5sJ2Lz0/vKr
+	 aUsY255NImn78wNYvYGA9/FJL/5tYPnjCYnDe/o38v3/BP2icMw8H6i/t/GHcG1Yup
+	 pUYjwjvfKZw43ghfFJVejS+9c6j3/r73yENM7yYiGLLaDhgf03UgNhEpJ8tp7+LMs9
+	 0z26xd6JfWMbg==
+Message-ID: <c3fa9e90-a94b-47f7-b911-ed7c97fd1d6f@kernel.org>
+Date: Sun, 18 May 2025 14:58:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <iptz2uxajkl3l62piqu6tq5pembbmqho667otbaj7nneh5vk3r@sxdvm7e57nae>
-
-On Tue, May 13, 2025 at 12:18:44PM +0200, Gerd Hoffmann wrote:
-> > > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > > index e32e680c7197..71c6ccad4b99 100644
-> > > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > > @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
-> > >  
-> > >  static void virtio_gpu_shutdown(struct virtio_device *vdev)
-> > >  {
-> > > -	/*
-> > > -	 * drm does its own synchronization on shutdown.
-> > > -	 * Do nothing here, opt out of device reset.
-> > > -	 */
-> > > +	struct drm_device *dev = vdev->priv;
-> > > +
-> > > +	/* stop talking to the device */
-> > > +	drm_dev_unplug(dev);
-> > 
-> > I'm not necessarily opposed to using drm_dev_unplug() here, but it's
-> > still pretty surprising to me. It's typically used in remove, not
-> > shutdown. The typical helper to use at shutdown is
-> > drm_atomic_helper_shutdown.
-> > 
-> > So if the latter isn't enough or wrong, we should at least document why.
-> 
-> The intention of this is to make sure the driver stops talking to the
-> device (as the comment already says).
-> 
-> There are checks in place in the virt queue functions which will make
-> sure the driver will not try place new requests in the queues after
-> drm_dev_unplug() has been called.  Which why I decided to implement it
-> that way.
-> 
-> drm_atomic_helper_shutdown() tears down all outputs according to the
-> documentation.  Which is something different.  I don't think calling
-> drm_atomic_helper_shutdown() will do what I need here.  Calling it in
-> addition to drm_dev_unplug() might make sense, not sure.
-> 
-> Suggestions are welcome.
-> 
-> take care,
->   Gerd
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 11/16] arc/perf: Remove driver-specific throttle
+ support
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+ namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
+ leo.yan@arm.com, linux-snps-arc@lists.infradead.org
+References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+ <20250516182853.2610284-12-kan.liang@linux.intel.com>
+From: Vineet Gupta <vgupta@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250516182853.2610284-12-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-I suggest adding comments in code explaining why it's approriate here.
-Want to try?
 
--- 
-MST
+On 5/16/25 11:28, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The throttle support has been added in the generic code. Remove
+> the driver-specific throttle support.
+>
+> Besides the throttle, perf_event_overflow may return true because of
+> event_limit. It already does an inatomic event disable. The pmu->stop
+> is not required either.
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Vineet Gupta <vgupta@ikernel.org>
+> Cc: linux-snps-arc@lists.infradead.org
+Acked-by: Vineet Gupta <vgupta@kernel.org>
+
+Please let me know if you wane to take it via ARC tree.
+
+Thx,
+-Vineet
+
+> ---
+>  arch/arc/kernel/perf_event.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
+> index 6e5a651cd75c..ed6d4f0cd621 100644
+> --- a/arch/arc/kernel/perf_event.c
+> +++ b/arch/arc/kernel/perf_event.c
+> @@ -599,10 +599,8 @@ static irqreturn_t arc_pmu_intr(int irq, void *dev)
+>  
+>  		arc_perf_event_update(event, &event->hw, event->hw.idx);
+>  		perf_sample_data_init(&data, 0, hwc->last_period);
+> -		if (arc_pmu_event_set_period(event)) {
+> -			if (perf_event_overflow(event, &data, regs))
+> -				arc_pmu_stop(event, 0);
+> -		}
+> +		if (arc_pmu_event_set_period(event))
+> +			perf_event_overflow(event, &data, regs);
+>  
+>  		active_ints &= ~BIT(idx);
+>  	} while (active_ints);
 
