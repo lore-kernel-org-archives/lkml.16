@@ -1,113 +1,127 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA0321CC70;
-	Sun, 18 May 2025 14:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F681854;
+	Sun, 18 May 2025 14:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747579358; cv=none; b=YNkmUv2vfep/IE43ZVDQNCElQW/Nv5No4BvdSQq3psdxCWb9PuISBZb0zIH63EDcfYLiYOU5IHsJuSN45NnvTAi3AoxmPJUCZq2ceuaB8PKQkvIc3hCBFTF9Bqcevj0bcuSVhjKD6mHD8JOturnXylHgcQPd5/e/15eNrdAiogg=
+	t=1747579556; cv=none; b=RwDEj+oLkZBtEfM3n0rixU5vzwkjHuDAnle7vlP/lphdnD39H+u8fNNcz+3Jp+3JBSeg8KpGi5TFIQ9QLaK2j+fsb8e/B+IQ67nZplCSECsQmrGl1ZWAQqqh7Z9SrjdZgm9z0hAsW+q+AaFa0+Ck21WZ8a6QWK7+s/m8G74txBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747579358; c=relaxed/simple;
-	bh=rAUybgx3w08Pk16V3V7ElWMaPW68BeTRsRpRxxQzxeE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S1PO2xylGll94R/nHkgM/fczSfgeBTBNCUPWXd+AIM14ale7NIk1t3FbzhOR1IIuzM8dLLnZMamAhvP7JUocLFXGIPlls+RUyTAAMERX6iyUlcN9E8zgDzkjackaLw8PImIFER/bM7X4RuREbty72vgdZiNPxLtMUry3Nq68AXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1bdDZCh; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747579556; c=relaxed/simple;
+	bh=BQETk6Ggkdsgb2g4ES16VK86IgSB5STx7Ub7+zQmQUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tiia/dAQixIMedE4xH06wYSjVAh88YaRn/opOphHWnUeOfJCNF4KmFHNLIbZJq7plm72zR8yWQYMvVCP3Xqr02PMKqTUhG+kvgju08t/51WGMFknyWFRIx51OiYAYYC6HGLSbjErF0aMZF19+bMtTL4eVCQZ+IcHAqijAX/K4Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=W+FVNV4m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Tml9LWxA; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1bdDZCh"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-600210e4219so4856566a12.0;
-        Sun, 18 May 2025 07:42:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747579355; x=1748184155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rAUybgx3w08Pk16V3V7ElWMaPW68BeTRsRpRxxQzxeE=;
-        b=G1bdDZChhUwF2sG9iVs+z/F/5uX1r5kqzCa7/RAF39YNgFr5Ju19V4F5od73pYxw9b
-         BY02mHbrtNRrItX4s7d5HHt21X5GO7w0dGd0oFV4JsXRWqoKnfOXFT2n4+OIZ3/5gbCG
-         9Iiw4s5LFnnzd/grzoN3S1fVp1g22VkE6PYr8iQMx1cYb1ILwS+4Rq1cSUQfD8OLWmak
-         4Ofuow556uEVs6Q4e1+N73AXzIGpy0XL/vmEYJXHIh2bj/e5IhIrooh/eK8c4UgkTXvp
-         3tny1iEy17VP7QnRNC02oyWoTXvpGWgImMKilKUr1dUJ2wWw5uPNpOcPFw940WBbdEkM
-         9osg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747579355; x=1748184155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rAUybgx3w08Pk16V3V7ElWMaPW68BeTRsRpRxxQzxeE=;
-        b=nin/U/PbR07oLePzhN5mU1XPjJzfQirSLbesBbenRDJW8Yuytunp/9qv+ZISA+m2Ew
-         ouL2eibE6WEZYRdczmsGk27KCbT4dj5Ssk6l23ATji+jZsWnaPXZMu1JUHSUhzhx1BJk
-         x3B6Jkesw9KjG1JLXDYzWoJD/A70EUzNAPEFmauQhNy94o1KBwUH/rE3+VLGqzv19oXP
-         wduSum7t1M0Drn6UKaPqTPksCi5VhUyUi69tI3uClmcVevmxhcrC9HcPqyzqInZIdU6f
-         tgouh7XnL/WtKFY8+G4oOEgfaRXkRr1aSVow+ZsZuj7PRGzXZ2jGmNe5OO3pO1ArqzXe
-         zlbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUh2XN1qysNgyScsPKSIauxItG+OjnwyUF6MxxkJJQArbtl5liifIBrhB1Z8SZI3rqcoBEMXyGisciMemYOWRYD@vger.kernel.org, AJvYcCUvxjxEtd8Ee7FW3gBVRIomRPyyRb1PPLIWD0YsHO3zUCace1c7VmBD7ttWP/+dG9I5Uv9L048kpDYs@vger.kernel.org, AJvYcCWlKabIPOI1wx0FzIypnjsbACZh61xYgoJ0dIaH8BOfRE7d3srJYYnZdAk75FEO45eiYyy4GzUo0DdK4RQ=@vger.kernel.org, AJvYcCWvb5nL4+qmLv/R1MX0s1Iu780VInluxfwoFhRCB73KDmZ2uT7M8b39soNgYgzVFe71atoX8Dd7t7MD@vger.kernel.org, AJvYcCXo6NiD6uHdxET/tatyKdf2JNLfyv4FGvG2YDNByGQeI7pJeC5Fzt4DjOfmziZWndt9t1Yt/THi/owtdYEZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyloTETXRsazmoivtTNjujBtDMpUd8mAcgNnnqaglx7Je3E9OAv
-	9NkWBPOj/k7uPJZ+ZFxpK2ubJ9csWwgE5JkZmjbToO86vyO9d93Po2vd+KwVEInsnNuUANZhNLL
-	xB6ToQTn8bXJF8h+wR+UCm/ZK8sucRCE=
-X-Gm-Gg: ASbGncsERKVSxQ7BRt1dL5UuEoye3hAsbwQCqzfuJK37N2XywRz6nAyJ3yXt+x3fopY
-	uCS9Jwda/RA+hMqNTBFfRRW8MZOlvpk7AUctjf+fTsltsN1E5y1mYAh86zvYi3fbPd5I1BlwmLY
-	WwjXhLa2+++fVdn02RiPR27gmAWMphhQ==
-X-Google-Smtp-Source: AGHT+IHB++m0GR0lO5TfW8cZq+R6bSxHcLUjm6jGofGJAl2FV1P4JdhTYEzSIBs2qV2FvWjm0WoY9STztiddXe/xN+k=
-X-Received: by 2002:a17:907:7d8d:b0:ad5:4998:9f1a with SMTP id
- a640c23a62f3a-ad549a7e5e8mr600457266b.5.1747579354599; Sun, 18 May 2025
- 07:42:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="W+FVNV4m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tml9LWxA"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id DF14525400EF;
+	Sun, 18 May 2025 10:45:51 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Sun, 18 May 2025 10:45:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1747579551; x=1747665951; bh=Py4G3MDxeu
+	igMengKWoY19c5Uvu7Jo6Z75bc0ItCy8k=; b=W+FVNV4mBj5mWKJAWfnutg3T8b
+	YTRCKiRWZxdt7tx46lBC5+H4WLPcJaBkFWsnRWvKrDte1sJfKBCV8JA7/rNTsPG/
+	C+WuaK8Z1lvN9qu788Jjf1B28H7M1G0xYl4XlpkK0dI5v81pU5styi4c+TZ1DLHr
+	8yMA5Z+/8uc0rCKLarO8fqO2A3Qf+q2v3+B/sdiSMAbm++S82IKBMWaQbYVd9n5l
+	kfJ/vBxD+JnWkQTSTXIIhfVUbislJq6pm/BAx18Af88ZN+nNaRh8V/PXpXP4V2aW
+	wWKfZxIUBd0NklrG9RdS8PCTbd3/iyiK366HcUePMHmGN0X0AOTwWgFaPkSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747579551; x=1747665951; bh=Py4G3MDxeuigMengKWoY19c5Uvu7Jo6Z75b
+	c0ItCy8k=; b=Tml9LWxAymB9N+SPBcrPXWDr+ofhGNpeH/sOkvpfXlhJuMtjcvZ
+	AFnh9Jjww9QScLGsp+ZPv/co04NPoUfvX+CzDCuOFmBcaHM063ghNLjjW3cuP7eP
+	Y57I98v0zubVS9NoPx1NM2XJMGtqHGOMBRXzNbIWpsFuSHlZ0M20JWDvmXvrjPDP
+	fTKmlQgDmEIajS/4Rpr5WwneJiSTpD8jlv8xY5S29w6sabUabXvQy9rS7pAhhX0e
+	aNXeZFK3lxlss82MpuruXiIdnN2e1OK1HDggxt1OabDgQXOcjfjHTqlEpl+QH2By
+	59LP10uIjuFVFHKmsZ925ksIA/OGhGOBQAw==
+X-ME-Sender: <xms:n_IpaM8o3eJuDXoauJDc-9EVatbbI2sA8XQxxJrCMm4Cgem9QCr2GA>
+    <xme:n_IpaEt2nrPWJBHZ373TpqkYLOjpn3qN2ieu_FVQXtjU_-Qoo9WF74uz0P3mn9JaV
+    HhT5X0TZwMA7zzhVEQ>
+X-ME-Received: <xmr:n_IpaCAYROeYtE6XyuE4hLfkKrOAKuRklaqwPbGkvCEEiCEXx5JNH1n4jvVo4ZrCPlVluUwHGuMS2AeyK0KMqrgg1Typ7JHNwxs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudekjeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
+    enucggtffrrghtthgvrhhnpefgvdffveelgedujeeffeehheekheelheefgfejffeftedu
+    geethfeuudefheefteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtth
+    hopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsvghnthhishhssehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
+    igqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
+    gidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:n_IpaMdxDui99Fg3uwvgRjM5iEB2YV4-sN_iV9eHoarzJ_GiXq8bSA>
+    <xmx:n_IpaBMAF3rvsPtqPX0QoCCMAvHvoWz8Rix7cAYZ9XzQhtJhg0BLJA>
+    <xmx:n_IpaGm2RrIu7t6LUckfV1g5GYEoq7FJthXw694ym_y5LT6gNtccqA>
+    <xmx:n_IpaDuSZxkPM65kVfz-rBJWfbj0Y1xHZhJeAuFNsSWb8kskbs4X_Q>
+    <xmx:n_IpaEcLgTLz9zA9TerOaxy1YObYRaSoleOzGMWdn3HkIPj4IXBsL-Hs>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 18 May 2025 10:45:51 -0400 (EDT)
+Date: Sun, 18 May 2025 16:45:48 +0200
+From: Janne Grunau <j@jannau.net>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
+Message-ID: <20250518144548.GA2575813@robin.jannau.net>
+References: <20250518-hid_lenovo_acpi_dependency-v1-0-afdb93b5d1a6@jannau.net>
+ <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
+ <b939dc57-74cd-42e8-b1f3-54ea32829212@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
- <9b18e8e3-f3e2-48d4-839a-56e1d8f62657@intel.com> <03d0db6b-628e-4a5e-8e71-852233b83f60@apertussolutions.com>
- <fbb23ee0-c0b4-4b0e-8861-940f8ceaf161@intel.com>
-In-Reply-To: <fbb23ee0-c0b4-4b0e-8861-940f8ceaf161@intel.com>
-From: Mike <mikewallacesmith90@gmail.com>
-Date: Sun, 18 May 2025 09:42:23 -0500
-X-Gm-Features: AX0GCFuU42_TMoi_HKtSGmNW7XrkC1FL6iyDZjOSvOw7NwM1rf6CdCYLar4WcGI
-Message-ID: <CAAyYeYjp0v2PYt1owTdOpQD8_NjakquyXbUr5M1a_OWLEKHQ0A@mail.gmail.com>
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Daniel P. Smith" <dpsmith@apertussolutions.com>, Rich Persaud <persaur@gmail.com>, 
-	Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, 
-	ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, 
-	peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, 
-	nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org, 
-	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com, 
-	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com, 
-	Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com, 
-	"Mowka, Mateusz" <mateusz.mowka@intel.com>, Ning Sun <ning.sun@intel.com>, 
-	tboot-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b939dc57-74cd-42e8-b1f3-54ea32829212@app.fastmail.com>
 
-On Mon, Apr 28, 2025 at 7:57=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 4/28/25 17:04, Daniel P. Smith wrote:
-> >> OK, but why do this in Linux as opposed to tboot? Right now, much of t=
-he
-> >> TXT magic is done outside of the kernel. Why do it *IN* the kernel?
-> >
-> > There was a patch set submitted to tboot to add AMD support. It was
-> > rejected as tboot is solely focused on Intel TXT implementation.
-> >
-> > This meant I either had to go the route of yet another standalone loade=
-r
-> > kernel or do it in the kernel. Doing it as an external loader would hav=
-e
-> > required a new set of touchpoints, like the one you are highlighting. A=
-t
-> > which point, I am sure I would have gotten the question of why I didn't
-> > do it in the kernel.
+On Sun, May 18, 2025 at 12:42:36PM +0200, Arnd Bergmann wrote:
+> On Sun, May 18, 2025, at 12:18, Janne Grunau via B4 Relay wrote:
+> *ops);
+> > +#ifdef CONFIG_ACPI_PLATFORM_PROFILE
+> >  int platform_profile_cycle(void);
+> > +#else
+> 
+> CONFIG_ACPI_PLATFORM_PROFILE is a 'tristate' symbol, so the #ifdef
+> check is wrong here when both the caller and the platform profile
+> are in a loadable module.
+> 
+> I think what you want here is
+> 
+> #if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
 
-Will this cause any patent infringement issues in Linux [1]?
+ack, kernel test robot already complained
 
-1. https://patents.google.com/patent/US9075995B2
+> Alternatively, you could move that check into the caller
+> and do
+> 
+>       if (IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE))
+>               ret = platform_profile_cycle();
+> 
+> which makes it a little easier to catch build failures in
+> drivers that are missing the 'select ACPI_PLATFORM_PROFILE'.
+
+I think I'll go with this for v2 and remove the "ACPI || !ACPI" from
+Patch 2.
+
+thanks,
+
+Janne
