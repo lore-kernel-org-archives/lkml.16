@@ -1,465 +1,233 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210A4A33;
-	Sun, 18 May 2025 01:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB07AA31
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 01:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747532143; cv=none; b=WeOSwemTz68V8gVNvp/ym+v82h2CSGBGYzqR3IwIEKnUfejjRBZ8YrqlBhwbyMVPu3EMtwTLyrdiIZf+wDwyqjgThRctIRvE4rE1NCkW6hSeW2NNccdv58BWV9+YIp45iGJ1qsx0qbelLboliTwHsSQUTmkvjK1JmVp80LhlOS4=
+	t=1747532747; cv=none; b=JtV5S9K1kNqB/yibApe3XYYg/q9z+MfOycFq6/rNOmM/n5LSrBk7u9PbAQjvv6rvDmiACmo5Wr19MEetG38mUNzqF9iwgilWJaBNyQ9nA12zh2xX1wCH4UelGowe+lLrL8UzFAmRtmSUttuWlA+v8gb5oCDyynUNyNFbPSzwg3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747532143; c=relaxed/simple;
-	bh=dY2bdDU2UDC8F5QqwzVljSy2e2MSA5CMm9j/pwKHWdg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LIj3aeL/lqnFkwo9dhEIv5KKGjjGgI2Mhhzr+xIdjzixWjEXRPvZltz3QP4f2B5IVDCB7kem/qJ/UjGfA8DrEDstltZSR5D7rcHfTU29K98qKCv7ho8ce/VeYYc8y36icDC6UGl1lLA/S1VJ8izKGI4NL2si2uiQqwcyVMPFNcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PBQmDDj2; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1747532747; c=relaxed/simple;
+	bh=kZbuta7HT1mnyv5dyoDZISTED0p/k99Qxav5fprAkWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=d3ODCCkarv4J7qRETw1L4e6tPTH5TAVAbDb1L84ZxqcRCODp9V2eJRBxCw8WQsuyrwdA5T/AeZIY84BHW/CI90RoXept9nMfn7naR5K0S7gio+Fnvmo1QtASYm6Y560179tDT5R+sQaCD71f0g437stB8ZL9WaPOKEBan2hqG0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=d7KYpxzz reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PBQmDDj2"
-Received: from [10.20.129.112] (unknown [204.239.251.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 508B13F788;
-	Sun, 18 May 2025 01:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1747532137;
-	bh=brWXz+SrArjZvKTk/liqQ4oX/q3YR5Jg3vwRRoGbgp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=PBQmDDj2JmE4oszu5nRL2p+ClsdK9Np88xpov+iEMYiaxFXPplMlkFyfbjF3agWT7
-	 TAga0H+SJ0gDLrdcG+fc0REHk1qLDImJzYaDqBGzYz0ib96S9TA5RvGsD8nrSMOinA
-	 iNoPT2RQGfRVzNqSMoYbq3asHrEvKEE5PZuf1jQEJVaW524mZwf+/dV7+i4eJT9jlU
-	 czz2Hq1nnXkJALyIbaI9VNWgSYsf/VlcxahiRObvT6w5WFocmekM4osK9MmW0lCOU9
-	 aLW7+D9kgtz3swTc68aD8xDaZatmcXr5R0VborUFf3SwJ5o5QZN4t4p8aM9bxT0lQQ
-	 UzAUT9jVec2vg==
-Message-ID: <a9588785-e03a-4a25-9172-045d3857d046@canonical.com>
-Date: Sat, 17 May 2025 18:35:32 -0700
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="d7KYpxzz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=05Zze5mnGhacQ+mk+5oOBcGiVRxM5uNRj2o9SwBNP+k=; b=d
+	7KYpxzzaln6JzHnTlaaHsuZUeClJITykDPWut3nVkopLsLD6dGanaVRMQB/M6XF6
+	6MYl0QT+88cxCmlaRkO4f6O3AkvjeOECQ3iKqgnMHFYXF5rWQPMceqYNcEOJbjEr
+	R1aTA9pOt/ZxhugBIbTeV4WSVX8uNhawtYrhEcY0RI=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-126 (Coremail) ; Sun, 18 May 2025 09:45:12 +0800
+ (CST)
+Date: Sun, 18 May 2025 09:45:12 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: kent.overstreet@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: BUG: unable to handle page fault for address
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpEWsN3pxN2EveACvucx7Aip6u_YjJ5u3NxdmU3A3WYOYw@mail.gmail.com>
+References: <20250516131246.6244-1-00107082@163.com>
+ <CAJuCfpHZfRhsjmHVMUREOTVafRodMH85hzLdFFunneK=4ir0-w@mail.gmail.com>
+ <CAJuCfpEfSr7a911zNiigVVP6Z20gjks7Yyy27UDwL4s=0P4hKw@mail.gmail.com>
+ <6646d582.18f8.196dd0d5071.Coremail.00107082@163.com>
+ <CAJuCfpF=FpMvGGzVr5E+9R629SfXB8oWm2NbowHg=mksUQ113A@mail.gmail.com>
+ <233aab47.38f2.196df28812a.Coremail.00107082@163.com>
+ <CAJuCfpEPupOzygXhoYBCzTao4YHzW9ZWG+Y4KDUohhfq=hjwQw@mail.gmail.com>
+ <5a1f5612.363e.196df64bd1f.Coremail.00107082@163.com>
+ <CAJuCfpEWsN3pxN2EveACvucx7Aip6u_YjJ5u3NxdmU3A3WYOYw@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBfmYvU8q5CCRYOkZnEYQheY4XMKyuPkg1YJXOp80lSTq+CwrZ25GNHbH9PmvGRCmoQm1dQdl1ONjfKpgQLpoQsaQ3PVi999Sc/3lEWqm
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] apparmor: make __begin_current_label_crit_section()
- indicate whether put is needed
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: paul@paul-moore.com, linux-kernel@vger.kernel.org,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org
-References: <20250318220641.1811093-1-mjguzik@gmail.com>
-Content-Language: en-US
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20250318220641.1811093-1-mjguzik@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <551cd408.515.196e11108a5.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:figvCgD3X+SpOyloQNAGAA--.19600W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0g1QqmgpF19pLQAGsu
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 3/18/25 15:06, Mateusz Guzik wrote:
-> Same as aa_get_newest_cred_label_condref().
-> 
-> This avoids a bunch of work overall and allows the compiler to note when no
-> clean up is necessary, allowing for tail calls.
-> 
-> This in particular happens in apparmor_file_permission(), which manages to
-> tail call aa_file_perm() 105 bytes in (vs a regular call 112 bytes in
-> followed by branches to figure out if clean up is needed).
-> 
-do we have any numbers on the difference? And why not also the none underscore
-versions. ie. begin_current_XXX and end_current_XXX. Admittedly they can sleep
-an almost never degrade into needs put situation.
-
-
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> ---
->   security/apparmor/include/cred.h | 21 ++++++---
->   security/apparmor/lsm.c          | 75 ++++++++++++++++++++------------
->   security/apparmor/policy.c       | 12 ++---
->   3 files changed, 67 insertions(+), 41 deletions(-)
-> 
-> diff --git a/security/apparmor/include/cred.h b/security/apparmor/include/cred.h
-> index 7265d2f81dd5..fc5791937694 100644
-> --- a/security/apparmor/include/cred.h
-> +++ b/security/apparmor/include/cred.h
-> @@ -114,7 +114,12 @@ static inline struct aa_label *aa_get_current_label(void)
->   	return aa_get_label(l);
->   }
->   
-> -#define __end_current_label_crit_section(X) end_current_label_crit_section(X)
-> +static inline void __end_current_label_crit_section(struct aa_label *label,
-> +						    bool needput)
-> +{
-> +	if (unlikely(needput))
-> +		aa_put_label(label);
-> +}
->   
->   /**
->    * end_label_crit_section - put a reference found with begin_current_label..
-> @@ -142,13 +147,16 @@ static inline void end_current_label_crit_section(struct aa_label *label)
->    * critical section between __begin_current_label_crit_section() ..
->    * __end_current_label_crit_section()
->    */
-> -static inline struct aa_label *__begin_current_label_crit_section(void)
-> +static inline struct aa_label *__begin_current_label_crit_section(bool *needput)
->   {
->   	struct aa_label *label = aa_current_raw_label();
->   
-> -	if (label_is_stale(label))
-> -		label = aa_get_newest_label(label);
-> +	if (label_is_stale(label)) {
-> +		*needput = true;
-> +		return aa_get_newest_label(label);
-> +	}
->   
-> +	*needput = false;
->   	return label;
->   }
->   
-> @@ -184,10 +192,11 @@ static inline struct aa_ns *aa_get_current_ns(void)
->   {
->   	struct aa_label *label;
->   	struct aa_ns *ns;
-> +	bool needput;
->   
-> -	label  = __begin_current_label_crit_section();
-> +	label  = __begin_current_label_crit_section(&needput);
->   	ns = aa_get_ns(labels_ns(label));
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return ns;
->   }
-> diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-> index 7952e8cab353..c2be3c6f9d3e 100644
-> --- a/security/apparmor/lsm.c
-> +++ b/security/apparmor/lsm.c
-> @@ -127,14 +127,15 @@ static int apparmor_ptrace_access_check(struct task_struct *child,
->   	struct aa_label *tracer, *tracee;
->   	const struct cred *cred;
->   	int error;
-> +	bool needput;
->   
->   	cred = get_task_cred(child);
->   	tracee = cred_label(cred);	/* ref count on cred */
-> -	tracer = __begin_current_label_crit_section();
-> +	tracer = __begin_current_label_crit_section(&needput);
->   	error = aa_may_ptrace(current_cred(), tracer, cred, tracee,
->   			(mode & PTRACE_MODE_READ) ? AA_PTRACE_READ
->   						  : AA_PTRACE_TRACE);
-> -	__end_current_label_crit_section(tracer);
-> +	__end_current_label_crit_section(tracer, needput);
->   	put_cred(cred);
->   
->   	return error;
-> @@ -145,14 +146,15 @@ static int apparmor_ptrace_traceme(struct task_struct *parent)
->   	struct aa_label *tracer, *tracee;
->   	const struct cred *cred;
->   	int error;
-> +	bool needput;
->   
-> -	tracee = __begin_current_label_crit_section();
-> +	tracee = __begin_current_label_crit_section(&needput);
->   	cred = get_task_cred(parent);
->   	tracer = cred_label(cred);	/* ref count on cred */
->   	error = aa_may_ptrace(cred, tracer, current_cred(), tracee,
->   			      AA_PTRACE_TRACE);
->   	put_cred(cred);
-> -	__end_current_label_crit_section(tracee);
-> +	__end_current_label_crit_section(tracee, needput);
->   
->   	return error;
->   }
-> @@ -221,12 +223,13 @@ static int common_perm(const char *op, const struct path *path, u32 mask,
->   {
->   	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	if (!unconfined(label))
->   		error = aa_path_perm(op, current_cred(), label, path, 0, mask,
->   				     cond);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -524,14 +527,15 @@ static int common_file_perm(const char *op, struct file *file, u32 mask,
->   {
->   	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
->   
->   	/* don't reaudit files closed during inheritance */
-> -	if (file->f_path.dentry == aa_null.dentry)
-> +	if (unlikely(file->f_path.dentry == aa_null.dentry))
->   		return -EACCES;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	error = aa_file_perm(op, current_cred(), label, file, mask, in_atomic);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -664,15 +668,16 @@ static int apparmor_uring_override_creds(const struct cred *new)
->   	struct aa_profile *profile;
->   	struct aa_label *label;
->   	int error;
-> +	bool needput;
->   	DEFINE_AUDIT_DATA(ad, LSM_AUDIT_DATA_NONE, AA_CLASS_IO_URING,
->   			  OP_URING_OVERRIDE);
->   
->   	ad.uring.target = cred_label(new);
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	error = fn_for_each(label, profile,
->   			profile_uring(profile, AA_MAY_OVERRIDE_CRED,
->   				      cred_label(new), CAP_SYS_ADMIN, &ad));
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -688,14 +693,15 @@ static int apparmor_uring_sqpoll(void)
->   	struct aa_profile *profile;
->   	struct aa_label *label;
->   	int error;
-> +	bool needput;
->   	DEFINE_AUDIT_DATA(ad, LSM_AUDIT_DATA_NONE, AA_CLASS_IO_URING,
->   			  OP_URING_SQPOLL);
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	error = fn_for_each(label, profile,
->   			profile_uring(profile, AA_MAY_CREATE_SQPOLL,
->   				      NULL, CAP_SYS_ADMIN, &ad));
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -706,6 +712,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
->   {
->   	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
->   
->   	/* Discard magic */
->   	if ((flags & MS_MGC_MSK) == MS_MGC_VAL)
-> @@ -713,7 +720,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
->   
->   	flags &= ~AA_MS_IGNORE_MASK;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	if (!unconfined(label)) {
->   		if (flags & MS_REMOUNT)
->   			error = aa_remount(current_cred(), label, path, flags,
-> @@ -732,7 +739,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
->   			error = aa_new_mount(current_cred(), label, dev_name,
->   					     path, type, flags, data);
->   	}
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -742,12 +749,13 @@ static int apparmor_move_mount(const struct path *from_path,
->   {
->   	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	if (!unconfined(label))
->   		error = aa_move_mount(current_cred(), label, from_path,
->   				      to_path);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -756,11 +764,12 @@ static int apparmor_sb_umount(struct vfsmount *mnt, int flags)
->   {
->   	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	if (!unconfined(label))
->   		error = aa_umount(current_cred(), label, mnt, flags);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -984,10 +993,12 @@ static void apparmor_bprm_committed_creds(const struct linux_binprm *bprm)
->   
->   static void apparmor_current_getlsmprop_subj(struct lsm_prop *prop)
->   {
-> -	struct aa_label *label = __begin_current_label_crit_section();
-> +	struct aa_label *label;
-> +	bool needput;
->   
-> +	label = __begin_current_label_crit_section(&needput);
->   	prop->apparmor.label = label;
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   }
->   
->   static void apparmor_task_getlsmprop_obj(struct task_struct *p,
-> @@ -1002,13 +1013,16 @@ static void apparmor_task_getlsmprop_obj(struct task_struct *p,
->   static int apparmor_task_setrlimit(struct task_struct *task,
->   		unsigned int resource, struct rlimit *new_rlim)
->   {
-> -	struct aa_label *label = __begin_current_label_crit_section();
-> +	struct aa_label *label;
->   	int error = 0;
-> +	bool needput;
-> +
-> +	label = __begin_current_label_crit_section(&needput);
->   
->   	if (!unconfined(label))
->   		error = aa_task_setrlimit(current_cred(), label, task,
->   					  resource, new_rlim);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> @@ -1019,6 +1033,7 @@ static int apparmor_task_kill(struct task_struct *target, struct kernel_siginfo
->   	const struct cred *tc;
->   	struct aa_label *cl, *tl;
->   	int error;
-> +	bool needput;
->   
->   	tc = get_task_cred(target);
->   	tl = aa_get_newest_cred_label(tc);
-> @@ -1030,9 +1045,9 @@ static int apparmor_task_kill(struct task_struct *target, struct kernel_siginfo
->   		error = aa_may_signal(cred, cl, tc, tl, sig);
->   		aa_put_label(cl);
->   	} else {
-> -		cl = __begin_current_label_crit_section();
-> +		cl = __begin_current_label_crit_section(&needput);
->   		error = aa_may_signal(current_cred(), cl, tc, tl, sig);
-> -		__end_current_label_crit_section(cl);
-> +		__end_current_label_crit_section(cl, needput);
->   	}
->   	aa_put_label(tl);
->   	put_cred(tc);
-> @@ -1133,10 +1148,11 @@ static int apparmor_unix_stream_connect(struct sock *sk, struct sock *peer_sk,
->   	struct aa_sk_ctx *new_ctx = aa_sock(newsk);
->   	struct aa_label *label;
->   	int error;
-> +	bool needput;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	error = unix_connect_perm(current_cred(), label, sk, peer_sk);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	if (error)
->   		return error;
-> @@ -1163,8 +1179,9 @@ static int apparmor_unix_may_send(struct socket *sock, struct socket *peer)
->   	struct aa_sk_ctx *peer_ctx = aa_sock(peer->sk);
->   	struct aa_label *label;
->   	int error;
-> +	bool needput;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	error = xcheck(aa_unix_peer_perm(current_cred(),
->   					 label, OP_SENDMSG, AA_MAY_SEND,
->   					 sock->sk, peer->sk, NULL),
-> @@ -1172,7 +1189,7 @@ static int apparmor_unix_may_send(struct socket *sock, struct socket *peer)
->   					 peer_ctx->label, OP_SENDMSG,
->   					 AA_MAY_RECEIVE,
->   					 peer->sk, sock->sk, label));
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return error;
->   }
-> diff --git a/security/apparmor/policy.c b/security/apparmor/policy.c
-> index 1f532fe48a1c..a60bb7d9b583 100644
-> --- a/security/apparmor/policy.c
-> +++ b/security/apparmor/policy.c
-> @@ -870,11 +870,11 @@ bool aa_policy_admin_capable(const struct cred *subj_cred,
->   bool aa_current_policy_view_capable(struct aa_ns *ns)
->   {
->   	struct aa_label *label;
-> -	bool res;
-> +	bool needput, res;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	res = aa_policy_view_capable(current_cred(), label, ns);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return res;
->   }
-> @@ -882,11 +882,11 @@ bool aa_current_policy_view_capable(struct aa_ns *ns)
->   bool aa_current_policy_admin_capable(struct aa_ns *ns)
->   {
->   	struct aa_label *label;
-> -	bool res;
-> +	bool needput, res;
->   
-> -	label = __begin_current_label_crit_section();
-> +	label = __begin_current_label_crit_section(&needput);
->   	res = aa_policy_admin_capable(current_cred(), label, ns);
-> -	__end_current_label_crit_section(label);
-> +	__end_current_label_crit_section(label, needput);
->   
->   	return res;
->   }
-
+CkF0IDIwMjUtMDUtMTggMDM6MDI6MzcsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj5PbiBTYXQsIE1heSAxNywgMjAyNSBhdCAxMDo1N+KAr0FNIERhdmlk
+IFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pgo+Pgo+Pgo+PiBBdCAyMDI1LTA1LTE4
+IDAxOjI5OjM1LCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3Rl
+Ogo+PiA+T24gU2F0LCBNYXkgMTcsIDIwMjUgYXQgOTo1MeKAr0FNIERhdmlkIFdhbmcgPDAwMTA3
+MDgyQDE2My5jb20+IHdyb3RlOgo+PiA+Pgo+PiA+Pgo+PiA+PiBBdCAyMDI1LTA1LTE4IDAwOjM5
+OjMwLCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdvb2dsZS5jb20+IHdyb3RlOgo+PiA+
+PiA+T24gU2F0LCBNYXkgMTcsIDIwMjUgYXQgMTI6MDLigK9BTSBEYXZpZCBXYW5nIDwwMDEwNzA4
+MkAxNjMuY29tPiB3cm90ZToKPj4gPj4gPj4KPj4gPj4gPj4KPj4gPj4gPj4gQXQgMjAyNS0wNS0x
+NyAwODoxMToyNCwgIlN1cmVuIEJhZ2hkYXNhcnlhbiIgPHN1cmVuYkBnb29nbGUuY29tPiB3cm90
+ZToKPj4gPj4gPj4gPk9uIEZyaSwgTWF5IDE2LCAyMDI1IGF0IDEwOjAz4oCvQU0gU3VyZW4gQmFn
+aGRhc2FyeWFuIDxzdXJlbmJAZ29vZ2xlLmNvbT4gd3JvdGU6Cj4+ID4+ID4+ID4+Cj4+ID4+ID4+
+ID4+IEhpIERhdmlkLAo+PiA+PiA+PiA+Pgo+PiA+PiA+PiA+PiBPbiBGcmksIE1heSAxNiwgMjAy
+NSBhdCA2OjEz4oCvQU0gRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj4+ID4+
+ID4+ID4+ID4KPj4gPj4gPj4gPj4gPiBIaSwKPj4gPj4gPj4gPj4gPgo+PiA+PiA+PiA+PiA+IEkg
+Y2F1Z2h0IGEgcGFnZSBmYXVsdCB3aGVuIEkgd2FzIGNoYW5naW5nIG15IG52aWRpYSBkcml2ZXI6
+Cj4+ID4+ID4+ID4+ID4gKFRoaXMgaGFwcGVucyByYW5kb21seSwgSSBjYW4gcmVwcm9kdWNlIGl0
+IHdpdGggYWJvdXQgMS8zIHByb2JhYmlsaXR5KQo+PiA+PiA+PiA+PiA+Cj4+ID4+ID4+ID4+ID4g
+W0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gQlVHOiB1bmFibGUgdG8gaGFuZGxlIHBhZ2UgZmF1
+bHQgZm9yIGFkZHJlc3M6IGZmZmY5ZDI4OTg0YzMwMDAKPj4gPj4gPj4gPj4gPiBbRnJpIE1heSAx
+NiAxMjowNTo0MSAyMDI1XSAjUEY6IHN1cGVydmlzb3IgcmVhZCBhY2Nlc3MgaW4ga2VybmVsIG1v
+ZGUKPj4gPj4gPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSAjUEY6IGVycm9yX2Nv
+ZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UKPj4gPj4gPj4gPj4gPiAuLi4KPj4gPj4gPj4g
+Pj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBSSVA6IDAwMTA6cmVsZWFzZV9tb2R1bGVf
+dGFncysweDEwMy8weDFiMAo+PiA+PiA+PiA+PiA+IC4uLgo+PiA+PiA+PiA+PiA+IFtGcmkgTWF5
+IDE2IDEyOjA1OjQxIDIwMjVdIENhbGwgVHJhY2U6Cj4+ID4+ID4+ID4+ID4gW0ZyaSBNYXkgMTYg
+MTI6MDU6NDEgMjAyNV0gIDxUQVNLPgo+PiA+PiA+PiA+PiA+IFtGcmkgTWF5IDE2IDEyOjA1OjQx
+IDIwMjVdICBjb2RldGFnX3VubG9hZF9tb2R1bGUrMHgxMzUvMHgxNjAKPj4gPj4gPj4gPj4gPiBb
+RnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSAgZnJlZV9tb2R1bGUrMHgxOS8weDFhMAo+PiA+PiA+
+PiA+PiA+IC4uLgo+PiA+PiA+PiA+PiA+IChmdWxsIGtlcm5lbCBsb2dzIGFyZSBwYXN0ZWQgYXQg
+dGhlIGVuZC4pCj4+ID4+ID4+ID4+ID4KPj4gPj4gPj4gPj4gPiBVc2luZyBhIGltYWdlIHdpdGgg
+REVCVUdfSU5GTywgdGhlIGNhbGx0cmFjayBwYXJzZXMgYXM6Cj4+ID4+ID4+ID4+ID4KPj4gPj4g
+Pj4gPj4gPiBSSVA6IDAwMTA6cmVsZWFzZV9tb2R1bGVfdGFncyAoLi9pbmNsdWRlL2xpbnV4L2Fs
+bG9jX3RhZy5oOjEzNCBsaWIvYWxsb2NfdGFnLmM6MzUyIGxpYi9hbGxvY190YWcuYzo1NzMpCj4+
+ID4+ID4+ID4+ID4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gY29kZXRhZ191bmxvYWRfbW9k
+dWxlIChsaWIvY29kZXRhZy5jOjM1NSkKPj4gPj4gPj4gPj4gPiBbRnJpIE1heSAxNiAxMjowNTo0
+MSAyMDI1XSBmcmVlX21vZHVsZSAoa2VybmVsL21vZHVsZS9tYWluLmM6MTMwNSkKPj4gPj4gPj4g
+Pj4gPiBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBfX2RvX3N5c19kZWxldGVfbW9kdWxlIChr
+ZXJuZWwvbW9kdWxlL21haW4uYzo3OTUpCj4+ID4+ID4+ID4+ID4KPj4gPj4gPj4gPj4gPiBUaGUg
+b2ZmZW5kaW5nIGxpbmVzIGluIG15IGNvZGViYXNlOgo+PiA+PiA+PiA+PiA+ICAgICAgICAgMTI2
+IHN0YXRpYyBpbmxpbmUgc3RydWN0IGFsbG9jX3RhZ19jb3VudGVycyBhbGxvY190YWdfcmVhZChz
+dHJ1Y3QgYWxsb2NfdGFnICp0YWcpCj4+ID4+ID4+ID4+ID4gICAgICAgICAxMjcgewo+PiA+PiA+
+PiA+PiA+ICAgICAgICAgLi4uCj4+ID4+ID4+ID4+ID4gICAgICAgICAxMzEKPj4gPj4gPj4gPj4g
+PiAgICAgICAgIDEzMiAgICAgICAgIGZvcl9lYWNoX3Bvc3NpYmxlX2NwdShjcHUpIHsKPj4gPj4g
+Pj4gPj4gPiAgICAgICAgIDEzMyAgICAgICAgICAgICAgICAgY291bnRlciA9IHBlcl9jcHVfcHRy
+KHRhZy0+Y291bnRlcnMsIGNwdSk7Cj4+ID4+ID4+ID4+ID4gPj4+PiAgICAxMzQgICAgICAgICAg
+ICAgICAgIHYuYnl0ZXMgKz0gY291bnRlci0+Ynl0ZXM7ICAgPC0tLS0tLS0tLS0tLS0taGVyZQo+
+PiA+PiA+PiA+PiA+ICAgICAgICAgMTM1ICAgICAgICAgICAgICAgICB2LmNhbGxzICs9IGNvdW50
+ZXItPmNhbGxzOwo+PiA+PiA+PiA+PiA+Cj4+ID4+ID4+ID4+ID4KPj4gPj4gPj4gPj4gPiBOdmlk
+aWEgZHJpdmVycyBhcmUgb3V0LXRyZWUuLi4gdGhlcmUgY291bGQgYmUgc29tZSBzdHJhbmdlIGJl
+aGF2aW9yIGluIGl0IGNhdXNlcyB0aGlzLi4gYnV0LAo+PiA+PiA+PiA+PiA+IHdoZW4gSSBjaGVj
+ayB0aGUgY29kZSwgSSBnb3QgY29uY2VybmVkIGFib3V0IGxpZmVjeWNsZSBvZiB0YWctPmNvdW50
+ZXJzLgo+PiA+PiA+PiA+PiA+IEJhc2VkIG9uIGZvbGxvd2luZyBkZWZpbmF0aW9uOgo+PiA+PiA+
+PiA+PiA+ICAgICAgICAgMTA4ICNkZWZpbmUgREVGSU5FX0FMTE9DX1RBRyhfYWxsb2NfdGFnKSAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+PiA+PiA+PiA+PiA+
+ICAgICAgICAgMTA5ICAgICAgICAgc3RhdGljIERFRklORV9QRVJfQ1BVKHN0cnVjdCBhbGxvY190
+YWdfY291bnRlcnMsIF9hbGxvY190YWdfY250cik7ICAgICAgXAo+PiA+PiA+PiA+PiA+ICAgICAg
+ICAgMTEwICAgICAgICAgc3RhdGljIHN0cnVjdCBhbGxvY190YWcgX2FsbG9jX3RhZyBfX3VzZWQg
+X19hbGlnbmVkKDgpICAgICAgICAgICAgICAgICAgXAo+PiA+PiA+PiA+PiA+ICAgICAgICAgMTEx
+ICAgICAgICAgX19zZWN0aW9uKEFMTE9DX1RBR19TRUNUSU9OX05BTUUpID0geyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXAo+PiA+PiA+PiA+PiA+ICAgICAgICAgMTEyICAgICAg
+ICAgICAgICAgICAuY3QgPSBDT0RFX1RBR19JTklULCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAo+PiA+PiA+PiA+PiA+ICAgICAgICAgMTEzICAgICAgICAgICAg
+ICAgICAuY291bnRlcnMgPSAmX2FsbG9jX3RhZ19jbnRyIH07Cj4+ID4+ID4+ID4+ID4gICAgICAg
+ICAxMTQKPj4gPj4gPj4gPj4gPiBfYWxsb2NfdGFnX2NudHIgaXMgdGhlIGRhdGEgcmVmZXJlbmNl
+ZCBieSB0YWctPmNvdW50ZXJzLCBidXQgdGhleSBhcmUgaW4gZGlmZmVyZW50IHNlY3Rpb24sCj4+
+ID4+ID4+ID4+ID4gYW5kIGFsbG9jX3RhZyBvbmx5IHByZXBhcmUgc3RvcmFnZSBmb3Igc2VjdGlv
+biBBTExPQ19UQUdfU0VDVElPTl9OQU1FLgo+PiA+PiA+PiA+PiA+IHJpZ2h0Pwo+PiA+PiA+PiA+
+PiA+IFRoZW4gd2hhdCBoYXBwZW5zIHRvIHRob3NlICIuZGF0YS4ucGVyY3B1IiBzZWN0aW9uIHdo
+ZW4gbW9kdWxlIGlzIHVubG9hZGVkPwo+PiA+PiA+PiA+PiA+IElzIGl0IHNhZmUgdG8ga2VlcCB1
+c2luZyB0aG9zZSAiLmRhdGEuLnBlcmNwdSIgc2VjdGlvbiBhZnRlciBtb2R1bGUgdW5sb2FkZWQs
+Cj4+ID4+ID4+ID4+ID4gb3IgZXZlbiBkdXJpbmcgbW9kdWxlIGlzIHVubG9hZGluZz8KPj4gPj4g
+Pj4gPj4KPj4gPj4gPj4gPj4gWWVzLCBJIHRoaW5rIHlvdSBhcmUgcmlnaHQsIGZyZWVfbW9kdWxl
+KCkgY2FsbHMgcGVyY3B1X21vZGZyZWUoKSB3aGljaAo+PiA+PiA+PiA+PiB3b3VsZCBmcmVlIHRo
+ZSBwZXItY3B1IG1lbW9yeSBhbGxvY2F0ZWQgZm9yIHRoZSBtb2R1bGUuIEJlZm9yZQo+PiA+PiA+
+PiA+PiAwZGI2ZjhkNzgyMGEgKCJhbGxvY190YWc6IGxvYWQgbW9kdWxlIHRhZ3MgaW50byBzZXBh
+cmF0ZSBjb250aWd1b3VzCj4+ID4+ID4+ID4+IG1lbW9yeSIpIHdlIHdvdWxkIG5vdCB1bmxvYWQg
+dGhlIG1vZHVsZSBpZiB0aGVyZSB3ZXJlIHRhZ3Mgd2hpY2ggd2VyZQo+PiA+PiA+PiA+PiBzdGls
+bCBpbiB1c2UuIEFmdGVyIHRoYXQgY2hhbmdlIHdlIGxvYWQgbW9kdWxlIHRhZ3MgaW50byBzZXBh
+cmF0ZQo+PiA+PiA+PiA+PiBtZW1vcnksIHNvIEkgZXhwZWN0ZWQgdGhpcyB0byB3b3JrIGJ1dCBk
+dWUgdG8gdGhpcyBleHRlcm5hbCByZWZlcmVuY2UKPj4gPj4gPj4gPj4gaXQgaW5kZWVkIHNob3Vs
+ZCBsZWFkIHRvIFVBRi4KPj4gPj4gPj4gPj4gSSB0aGluayB0aGUgc2ltcGxlc3Qgd2F5IHRvIGZp
+eCB0aGlzIHdvdWxkIGJlIHRvIGJ5cGFzcwo+PiA+PiA+PiA+PiBwZXJjcHVfbW9kZnJlZSgpIGlu
+c2lkZSBmcmVlX21vZHVsZSgpIHdoZW4gdGhlcmUgYXJlIG1vZHVsZSB0YWdzIHN0aWxsCj4+ID4+
+ID4+ID4+IHJlZmVyZW5jZWQsIHN0b3JlIG1vZC0+cGVyY3B1IGluc2lkZSBhbGxvY190YWdfbW9k
+dWxlX3NlY3Rpb24gYW5kIGZyZWUKPj4gPj4gPj4gPj4gaXQgaW5zaWRlIGNsZWFuX3VudXNlZF9t
+b2R1bGVfYXJlYXNfbG9ja2VkKCkgb25jZSB3ZSBrbm93IHRoZSBjb3VudGVycwo+PiA+PiA+PiA+
+PiBhcmUgbm90IHVzZWQgYW55bW9yZS4gSSdsbCB0YWtlIGEgc3RhYiBhdCBpdCBhbmQgd2lsbCBz
+ZW5kIGEgcGF0Y2ggZm9yCj4+ID4+ID4+ID4+IHRlc3RpbmcgdG9kYXkuCj4+ID4+ID4+ID4KPj4g
+Pj4gPj4gPk9rLCBJIHdlbnQgd2l0aCBhbm90aGVyIGltcGxlbWVudGF0aW9uLCBpbnN0ZWFkIGR5
+bmFtaWNhbGx5IGFsbG9jYXRpbmcKPj4gPj4gPj4gPnBlcmNwdSBtZW1vcnkgZm9yIG1vZHVsZXMg
+YXQgdGhlIG1vZHVsZSBsb2FkIHRpbWUuIFRoaXMgaGFzIGFub3RoZXIKPj4gPj4gPj4gPmFkdmFu
+dGFnZSBvZiBub3QgbmVlZGluZyBleHRyYSBQRVJDUFVfTU9EVUxFX1JFU0VSVkUgY3VycmVudGx5
+Cj4+ID4+ID4+ID5yZXF1aXJlZCBmb3IgbWVtb3J5IGFsbG9jYXRpb24gdGFnZ2luZyB0byB3b3Jr
+Lgo+PiA+PiA+PiA+RGF2aWQsIHRoZSBwYXRjaCBpcyBwb3N0ZWQgYXQgWzFdLiBQbGVhc2UgZ2l2
+ZSBpdCBhIHRyeSBhbmQgbGV0IG1lCj4+ID4+ID4+ID5rbm93IGlmIHRoZSBmaXggd29ya3MgZm9y
+IHlvdS4KPj4gPj4gPj4gPlRoYW5rcywKPj4gPj4gPj4gPlN1cmVuLgo+PiA+PiA+PiA+Cj4+ID4+
+ID4+ID5bMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjUwNTE3MDAwNzM5LjU5MzAt
+MS1zdXJlbmJAZ29vZ2xlLmNvbS8KPj4gPj4gPj4gPgo+PiA+PiA+PiA+Cj4+ID4+ID4+ID4+IFRo
+YW5rcywKPj4gPj4gPj4gPj4gU3VyZW4uCj4+ID4+ID4+ID4+Cj4+ID4+ID4+Cj4+ID4+ID4+IEhp
+LCB0aGUgcGF0Y2ggZG9lcyBmaXggbXkgaXNzdWUuCj4+ID4+ID4+IEkgbm93IGhhdmUgYW5vdGhl
+ciBzaW1pbGFyIGNvbmNlcm4gYWJvdXQgbW9kdWxlcyBSTyBkYXRhLAo+PiA+PiA+PiBUaGUgY29k
+ZXRhZyBkZWZpbmVkIGFzCj4+ID4+ID4+ICAyNCBzdHJ1Y3QgY29kZXRhZyB7Cj4+ID4+ID4+ICAy
+NSAgICAgICAgIHVuc2lnbmVkIGludCBmbGFnczsgLyogdXNlZCBpbiBsYXRlciBwYXRjaGVzICov
+Cj4+ID4+ID4+ICAyNiAgICAgICAgIHVuc2lnbmVkIGludCBsaW5lbm87Cj4+ID4+ID4+ICAyNyAg
+ICAgICAgIGNvbnN0IGNoYXIgKm1vZG5hbWU7Cj4+ID4+ID4+ICAyOCAgICAgICAgIGNvbnN0IGNo
+YXIgKmZ1bmN0aW9uOwo+PiA+PiA+PiAgMjkgICAgICAgICBjb25zdCBjaGFyICpmaWxlbmFtZTsK
+Pj4gPj4gPj4gIDMwIH0gX19hbGlnbmVkKDgpOwo+PiA+PiA+Pgo+PiA+PiA+PiBUaG9zZSBtb2Ru
+YW1lL2Z1bmN0aW9uL2ZpbGVuYW1lIHdvdWxkIHJlZmVyIHRvIFJPIGRhdGEgc2VjdGlvbiwgcmln
+aHQ/Cj4+ID4+ID4+IFdoZW4gbW9kdWxlIHVubG9hZGVkLCBpdHMgUk8gZGF0YSBzZWN0aW9uIHdv
+dWxkIGJlIHJlbGVhc2VkIGF0IHNvbWUgcG9pbnQuCj4+ID4+ID4+IE15IHF1ZXN0aW9uIGlzIGlz
+IGl0IHNhZmUgdG8gdXNlIFJPIGRhdGEgZHVyaW5nIG1vZHVsZSB1bmxvYWQ/IGJlY2F1c2UgdGhl
+c2UKPj4gPj4gPj4gbGluZXMgc2VlbXMgdG8gYWNjZXNzIHRob3NlIGRhdGE6Cj4+ID4+ID4+Cj4+
+ID4+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX2luZm8oIiVzOiV1IG1vZHVsZSAlcyBm
+dW5jOiVzIGhhcyAlbGx1IGFsbG9jYXRlZCBhdCBtb2R1bGUgdW5sb2FkXG4iLAo+PiA+PiA+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRhZy0+Y3QuZmlsZW5hbWUsIHRhZy0+Y3Qu
+bGluZW5vLCB0YWctPmN0Lm1vZG5hbWUsCj4+ID4+ID4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgdGFnLT5jdC5mdW5jdGlvbiwgY291bnRlci5ieXRlcyk7Cj4+ID4+ID4KPj4gPj4g
+PlRoZXNlIGxpbmVzIGFyZSBjYWxsZWQgZnJvbSByZWxlYXNlX21vZHVsZV90YWdzKCkgdXNpbmcg
+dGhpcyBjYWxsIGNoYWluOgo+PiA+PiA+Cj4+ID4+ID5kZWxldGVfbW9kdWxlKCkKPj4gPj4gPiAg
+ZnJlZV9tb2R1bGUoKQo+PiA+PiA+ICAgIGNvZGV0YWdfdW5sb2FkX21vZHVsZSgpCj4+ID4+ID4g
+ICAgICByZWxlYXNlX21vZHVsZV90YWdzKCkKPj4gPj4gPgo+PiA+PiA+YW5kIGNvZGV0YWdfdW5s
+b2FkX21vZHVsZSgpIGlzIGNhbGxlZCBhdCB0aGUgdmVyeSBiZWdpbm5pbmcgb2YKPj4gPj4gPmZy
+ZWVfbW9kdWxlKCksIHdoZW4gbm8gb3RoZXIgbW9kdWxlIG1lbW9yeSBoYXMgYmVlbiBmcmVlZCB5
+ZXQuIFNvLAo+PiA+PiA+ZnJvbSB3aGF0IEkgdW5kZXJzdGFuZCwgdGhpcyBzaG91bGQgYmUgc2Fm
+ZS4KPj4gPj4gPkFmdGVyIHdlIHVubG9hZCB0aGUgbW9kdWxlIHRoZXNlIHBvaW50ZXJzIGluc2lk
+ZSB0aGUgdGFncyB3aWxsIGJlCj4+ID4+ID5kYW5kbGluZyBidXQgd2Ugc2hvdWxkIG5vdCBiZSB1
+c2luZyB0aGVtIGFueW1vcmUgc2luY2Ugd2UgZG8gbm90Cj4+ID4+ID5yZXBvcnQgdW5sb2FkZWQg
+bW9kdWxlcy4gRG8geW91IHNlZSBzb21lIHVzYWdlIHRoYXQgSSBtaXNzZWQ/Cj4+ID4+Cj4+ID4+
+IFdoeSBkYXRhLi5wZXJjcHUuIGlzIGRpZmZlcmVudC4gVGhlIHBhZ2UgZmF1bHQgZXJyb3IgY2F1
+Z2h0IHdoZW4gSSByZWluc3RhbGwgbnZpZGlhIGRyaXZlcnMgaXMgYWxzbwo+PiA+PiByYWlzZWQg
+ZnJvbSByZWxlYXNlX21vZHVsZV90YWdzKCkuCj4+ID4+Cj4+ID4+IElzIGRhdGEuLnBlcmNwdS4g
+c2VjdGlvbiByZWxlYXNlZCBlYXJsaWVyPwo+PiA+Cj4+ID5ObyBidXQgY291bnRlcnMgYXJlIGRp
+ZmZlcmVudCBiZWNhdXNlIHRoZSBhbGxvY2F0aW9ucyB0aGF0IHN0aWxsCj4+ID5yZWZlcmVuY2Ug
+dGhlc2UgdGFncyBmcm9tIHVubG9hZGVkIG1vZHVsZXMgd2lsbCBiZSBkZWNyZW1lbnRpbmcgdGhl
+bQo+PiA+d2hlbiB0aGV5IGFyZSBmcmVlZC4gVGhhdCdzIHdoZXJlIFVBRiBpcyBjb21pbmcgZnJv
+bS4gU28sIHRoZSBjb3VudGVycwo+PiA+bWlnaHQgYmUgYWNjZXNzZWQgYWZ0ZXIgdGhlIG1vZHVs
+ZSBpcyB1bmxvYWRlZCwgb3RoZXIgZmllbGRzIHNob3VsZAo+PiA+bm90Lgo+PiA+Cj4+Cj4+IEkg
+ZG8gbm90aWNlIHRoZXJlIGFyZSBwbGFjZXMgd2hlcmUgY291bnRlcnMgYXJlIHJlZmVyZW5jZWQg
+ImFmdGVyIiBmcmVlX21vZHVsZSwgYnV0IHRoZSBsb2dzIEkgYXR0YWNoZWQKPj4gaGFwcGVuZWQg
+ImR1cmluZyIgZnJlZV9tb2R1bGUoKToKPj4KPj4gIFtGcmkgTWF5IDE2IDEyOjA1OjQxIDIwMjVd
+IEJVRzogdW5hYmxlIHRvIGhhbmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOiBmZmZmOWQyODk4
+NGMzMDAwCj4+ICBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSAjUEY6IHN1cGVydmlzb3IgcmVh
+ZCBhY2Nlc3MgaW4ga2VybmVsIG1vZGUKPj4gW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gI1BG
+OiBlcnJvcl9jb2RlKDB4MDAwMCkgLSBub3QtcHJlc2VudCBwYWdlCj4+IC4uLgo+PiAgW0ZyaSBN
+YXkgMTYgMTI6MDU6NDEgMjAyNV0gUklQOiAwMDEwOnJlbGVhc2VfbW9kdWxlX3RhZ3MrMHgxMDMv
+MHgxYjAKPj4gLi4uCj4+ICBbRnJpIE1heSAxNiAxMjowNTo0MSAyMDI1XSBDYWxsIFRyYWNlOgo+
+PiAgW0ZyaSBNYXkgMTYgMTI6MDU6NDEgMjAyNV0gIDxUQVNLPgo+PiAgW0ZyaSBNYXkgMTYgMTI6
+MDU6NDEgMjAyNV0gIGNvZGV0YWdfdW5sb2FkX21vZHVsZSsweDEzNS8weDE2MAo+PiBbRnJpIE1h
+eSAxNiAxMjowNTo0MSAyMDI1XSAgZnJlZV9tb2R1bGUrMHgxOS8weDFhMAo+Pgo+PiBUaGUgY2Fs
+bCBjaGFpbiBpcyB0aGUgc2FtZSBhcyB5b3UgbWVudGlvbmVkIGFib3ZlLiAKPgo+SXMgdGhpcyBm
+YWlsdXJlIGhhcHBlbmluZyBiZWZvcmUgb3IgYWZ0ZXIgbXkgZml4PyBXaXRoIG15IGZpeCwgcGVy
+Y3B1Cj5kYXRhIHNob3VsZCBub3QgYmUgZnJlZWQgYXQgYWxsIGlmIHRhZ3MgYXJlIHN0aWxsIHVz
+ZWQuIFBsZWFzZQo+Y2xhcmlmeS4KCkl0IGlzIGJlZm9yZSB5b3VyIGZpeC4gIFlvdXIgcGF0Y2gg
+ZG9lcyBmaXggdGhlIGlzc3VlLgogIApJbiBteSByZXByb2R1Y2UgcHJvY2VkdXJlOgoxLiBlbnRl
+ciByZWNvdmVyeSBtb2RlCjIuIGluc3RhbGwgbnZpZGlhIGRyaXZlciA1NzAuMTQ0LCBmYWlsZWQg
+d2l0aCBVbmtub3duIHN5bWJvbCBkcm1fY2xpZW50X3NldHVwCjMuIG1vZHByb2JlIGRybV9jbGll
+bnRfbGliCjQuIGluc3RhbGwgbnZpZGlhIGRyaXZlciA1NzAuMTQ0CjUuIGluc3RhbGwgbnZpZGlh
+IGRyaXZlciA1NTAuMTQ0LjAzCjYuIHJlYm9vdCBhbmQgcmVwZWF0IGZyb20gc3RlcCAxCgpUaGUg
+ZXJyb3IgaGFwcGVuZWQgaW4gc3RlcCA0LCAgYW5kIHRoZSBmYWlsdXJlIGluIHN0ZXAyIGlzIGNy
+dWNpYWwsICBpZiAnbW9kcHJvYmUgZHJtX2NsaWVudF9saWInIGF0IHRoZSBiZWdpbm5pbmcsIG5v
+IGVycm9yIGNvdWxkIGJlIG9ic2VydmVkLgoKVGhlcmUgbWF5IGJlIHNvbWV0aGluZyBvZmYgYWJv
+dXQgaG93IGtlcm5lbCBoYW5kbGVzIGRhdGEucGVyY3B1IHNlY3Rpb24uCkdvb2QgdGhpbmcgaXMg
+dGhhdCBJdCBjYW4gYmUgcmVwcm9kdWNlZCwgIEkgY2FuIGFkZCBkZWJ1ZyBtZXNzYWdlcyB0byBj
+bGVhciBvciBjb25maXJtICBzdXNwaWNpb25zLCAKQW55IHN1Z2dlc3Rpb24/CgoKVGhhbmtzCkRh
+dmlkCgoKPgo+PiBUaGlzIHBhcnQgY29uZnVzaW5nIG1lIGEgbG90LiBUaGUgbG9nIGluZGljYXRl
+cyBkdXJpbmcgZnJlZV9tb2R1bGUsICAuLmRhdGEuLnBlcmNwdSBhY2Nlc3MgZmFpbGVkLAo+PiBJ
+IGRvdWJ0ZWQgdGhvc2Ugc2VjdGlvbiB3b3VsZCBiZSByZWxlYXNlZCB0aGF0IHF1aWNrLgo+Pgo+
+PiBUaGUgb25seSBndWVzcyBsZWZ0ICBJIGZlZWwgcmVhc29uYWJsZSBpcyB0aGUgLi5kYXRhX3Bl
+cmNwdSB3YXMgbm90IHBhZ2VkIGluIGF0IGFsbCwgIHByb2JhYmx5ICBiZWNhdXNlIG5vIGFjY2Vz
+cyB0byBpdCwKPj4gYW5kIHdoZW4gdGhlIHNlY3Rpb24gaXMgYWNjZXNzZWQgZHVyaW5nIGZyZWVf
+bW9kdWxlLCBzb21laG93IHRoZSBhY2Nlc3MgaXMgcmVmdXNlZC4gSnVzdCBndWVzc2luZy4uLi4u
+Cj4+Cj4+IE9yLCAgZG8gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlPwo+Pgo+Pgo+PiA+Pgo+PiA+
+PiBUaGFua3MKPj4gPj4gRGF2aWQKPj4gPj4KPj4gPj4K
