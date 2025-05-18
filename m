@@ -1,250 +1,132 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D5C210F5B;
-	Sun, 18 May 2025 08:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F920F07D
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 08:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747555696; cv=none; b=HI5jtbXp6Zep/fY5drH8UrWhfr+gyxYhJ/odeZS7xPOIOepzbHHk3221sY/P8h1ILJ6zmbgVpxutMg0RCI1Ji/+uwNUaUwgt2ZP8Vqf1O9sR1MHYgXZBPhwQStK9O5K0lFZ4eSoMXynetUh7h86hPn6mv6/qM60kbj0dBVB6ULM=
+	t=1747555703; cv=none; b=IEnVmq4kFnS7RjWajdVffd9vt6lXVhN95EPqoT93Z6/TUcbcCERzXGXbh0oYM+jgPWq0GmfnnEfRK6dmE5QWptXIt6ZpOEJJlRn1pyTFYVpaln9jUNZIuqBHLpUMQ0TskBs3c8X4aNy9IkgZYQ2Oy9E4rAQqw52z5FL18b2JjL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747555696; c=relaxed/simple;
-	bh=K0mD+exufhKozeZsdWFJfbcoRT8wJYBxrZTXm3HI6iw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nPBSJxSfvGXKB7BTch3DuLTZ185fdu6RSWsFleJDGPHiKfz3n0GLEb7Sk+TS+cE4TnLCvB3pBuArDJcnrQ7IQUb3N5DdzMH222Oh9AEX4jafmcYPXS1IhAf9pY7kzngzD0kzBXPH0LFywqkUUnyFjFFK86uxkgI0b4WdF+Zs5K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=neNrmWTS; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1747555703; c=relaxed/simple;
+	bh=n6QxhVFvD78Eb5h5bdklatPHcyTUyt2qmyxhnZWoMBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E8dor2XBD1Ro8x16mQfin3/JmqVDMu3Vd/88ux5Z6XmmFqnKuWWI8alwQlsilgcX1Qp+TSKNqbEVRzzjVZDstnEVdfdAxKQ5bGtYA+6Yge/8cLTSKyCAQHdLK0qexK0lvgXuCvnYsjRUhiZi6F34Nv0w6bxk//Yk+PyelSwFaV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C6HQGQUh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="neNrmWTS"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 89F6241086
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1747555688; bh=vmujWYBKx4CX1NBzrB8MtJnhhIUjsMYZ7XHQeYwWuSY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=neNrmWTSmRNYDG3cu/UFSD1rpH+UyTaqyQ/XkVfh3sZVe/xYk3saKMXGsCLG2FsWX
-	 dthvOc/uNamX/hfwiYszJymf1LeRAYAVHjIGYmt/uxTze99dx5PFge919G8ZxZovr8
-	 mfkv7Os89omQ0SpbxH0C3rb6mYOFjwbV4UbKa7yBjmXruqbv8L0wP2tZo4Dt/ucPeL
-	 DQ29m7TdBEmYprrAehSy8+zSHLTCS2fgLNpJWldSMcRXRJPK7NQVYmTnQZsvPtjmaq
-	 TlIH8ZJXm617fcHQhkpSkjaN4QaAI/bF41vbBtBSy9GoKW9En5yKIg0ll38JzTXXTs
-	 RJC2bRbhFYD2w==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 89F6241086;
-	Sun, 18 May 2025 08:08:07 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
- mchehab@kernel.org,
- ribalda@chromium.org, hverkuil@xs4all.nl, hljunggr@cisco.com,
- dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
- Jonathan.Cameron@huawei.com, ilpo.jarvinen@linux.intel.com,
- mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev, Hanne-Lotta =?utf-8?B?TcOkZW5ww6Q=?=
- =?utf-8?B?w6Q=?=
- <hannelotta@gmail.com>
-Subject: Re: [PATCH 2/4] docs: Improve grammar, formatting in Video4Linux
-In-Reply-To: <20250517132711.117618-2-hannelotta@gmail.com>
-References: <20250517132711.117618-1-hannelotta@gmail.com>
- <20250517132711.117618-2-hannelotta@gmail.com>
-Date: Sun, 18 May 2025 02:08:04 -0600
-Message-ID: <871psml4t7.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C6HQGQUh"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I5LVWE023906
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 08:08:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=wmWqtYSiIFN8TosqyDerhHbb
+	O2ZOhkYbAGNp4xpMYiY=; b=C6HQGQUhpXc8KLqtA1l9WP/2uGyK7EJk7lv1rd0N
+	EQkn6vk5w0uCA78Pq7uzx474JdTOB8p4OlWmSldjVnOOU3OZCYASyaTxihBxArtv
+	N050OZJX9XvpjH2Dhtn1PyIClIkwFwWokPqnmLjsJfWPuhzRrE0eAfdT6BS2MKOL
+	n270SXmG3K19GEGIJNtZfPPPCzjzucDYtMNo2HN/XqS7Bc3PCkwB1WVCnoeTG+7g
+	OMYotGt9Vch9NOyoDE2egQHJQazTKdAsqW8srx1HZK7aCsR68YCH8SOfyyoowWuK
+	4ibcx/vRKNYnEQcxLCFQ0APf/fE+Gy4o6xIfplLjNl2VwA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkmm9mmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 08:08:21 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c53e316734so670218885a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 01:08:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747555700; x=1748160500;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wmWqtYSiIFN8TosqyDerhHbbO2ZOhkYbAGNp4xpMYiY=;
+        b=wCPuJ3RNKzN4UbelqynjH5f0N03Db/osMyfRITdUeavMPA9Zv3Ap/Udr0YQ6SkHwWG
+         oY2EzCC/v2qPHZ+jsUdTn00SHWObmWmmJlVQc0pj1LFGDa068MKCox39IFtH9qA3MBY6
+         NPJX5u7Yn5WEORX9T22ZulnNvH3XGcRtvkG18p/RsQb/LvxTqj3o08Imv5+xC5BQVUwb
+         rwDrh+gTPoNm8bPxeNUIRQ7yZ/oc0xg+Gm0BaBv+Lw+eBUDFlXushywRW+gX8v9AHOBO
+         No+dgPBE1ltxdrh4TG/zvEFasGmWF3JnGK7CZ3AWr9giKks9Dr/yCfmL0y9iurbXIFzC
+         j96A==
+X-Forwarded-Encrypted: i=1; AJvYcCXpzVY4qPqpA0/3E8G6B0ZHISS00fcg4yAu+W7tbz6EkrXdmFstj8dRIyGp+bz2am6tYDswyhUPTsY9BS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbs6O9+K0RlApYOWdsCxNyUZGi618PetY5K4idytSDGh/B/DGH
+	na5sD9oPdUncUvUgIXsceUyggOwlIJao/8KlPVvNurk8Mlwut16L1lRwiIJLQ+N6+JujJbKjq4E
+	0LWGnidCjqZS4ANdWHfAXPZKFfipbHyExMtZNLm9M6o8U+15MixkeRIOpebNQCIsKviA=
+X-Gm-Gg: ASbGncv7qw77/gwF928olFlQRW1zGkDsYTRL5HYKqPJVkn1uOX+x0UFqYo5PRiCzDQ2
+	8yVLyWG3FTt0rVQ4DGKcn62swat7aqlWzH8jsLQB2DezOPhjAg9M/hbuhu6RkK22ggUT23+s2Zq
+	8hThHow9gUoslD/t++bnv7lUApECz7MM+zq6rhlAKjE1083LX8ThmLx6AtAiZ+eZkqbOBDgn5ha
+	ps2+cVWGC5Tt+EqiFKFMcPulH/9KZxZa2K9coOHMKr3gmy61K2Y6PN7W3JY9D0xoYwSHf7ZKVqt
+	ryPbUFzbWG3r9qkY70CN515Lo++8eNew49Ovtk53mq5hbEmOFOvo2LPghoaDuoVyZH/v7XZiUbY
+	=
+X-Received: by 2002:a05:620a:4015:b0:7c7:c772:7442 with SMTP id af79cd13be357-7cd4672dbd2mr1169449985a.20.1747555699846;
+        Sun, 18 May 2025 01:08:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpEy+h/hpndRg9Hlf+YjYTRJuStQXJvvaWu5c4pVbmVGiqNrKl8iWNu/IBEEtYb6kfTo7iZg==
+X-Received: by 2002:a05:620a:4015:b0:7c7:c772:7442 with SMTP id af79cd13be357-7cd4672dbd2mr1169448185a.20.1747555699497;
+        Sun, 18 May 2025 01:08:19 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f15fc6sm1334178e87.29.2025.05.18.01.08.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 01:08:18 -0700 (PDT)
+Date: Sun, 18 May 2025 11:08:17 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH RFT v3 02/14] drm/msm: Offset MDSS HBB value by 13
+Message-ID: <5ixkozv3krh7z7ebebunx5afbvuv3qr62p33ycbtt7zsoahshc@6go6plbcwaa4>
+References: <20250517-topic-ubwc_central-v3-0-3c8465565f86@oss.qualcomm.com>
+ <20250517-topic-ubwc_central-v3-2-3c8465565f86@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250517-topic-ubwc_central-v3-2-3c8465565f86@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDA3NSBTYWx0ZWRfX0BLEN3fWwKq1
+ FaLulITBrzB/05Q7N8zKqWEmO0HbhXa2Sx1CnHc6cRvX+myFhq1e/638tFbZA44g35lORngthlH
+ phUZ6B59xqj3ZE8aNz6/4TWF8+R+qIgND+1JrjMsRlMG4uCLhvmxcfC4aSwDzX5ygs54KQLIcG9
+ cHXGcNSf27p+HVPYeBWoX/PNv4ItG0GO5aXpiksTG/+rCjNGIKPACf4KQCm655XISs0A4t4bIM7
+ +/I+6IS1qvJWCiL9eQniI+j1b/8AyDItWy1rlvaae9zuJWjeNPT1kvqoqVSYEUGu9hemsx0H6lV
+ V1u1GsTk8vQC+CfMWk6BYn3UZ+ZjuKcuSEhdOHbb6GB2FEVJhx7WjnmPScImGQvD8qAs05Ktx40
+ Ldr1s+78DHGecfgalfJGMltJ5mQ9qcT1xseCy4Tl53N80xfxSGO0xODfahpPo8sllqT4Wqj9
+X-Proofpoint-ORIG-GUID: fLwlEEOlDHc3C7TTvN5gT6DId2Ms6Wzb
+X-Authority-Analysis: v=2.4 cv=PpyTbxM3 c=1 sm=1 tr=0 ts=68299575 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=JTEDtJd_13X3dLxXeFUA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-GUID: fLwlEEOlDHc3C7TTvN5gT6DId2Ms6Wzb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-18_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=767 priorityscore=1501 phishscore=0
+ bulkscore=0 impostorscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505180075
 
-Thanks for working to improve our documentation!
-
-Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com> writes:
-
-> Fix typos, punctuation and improve grammar and formatting
-> in documentation for Video4Linux (V4L).
->
-> Signed-off-by: Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com>
+On Sat, May 17, 2025 at 07:32:36PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> The Adreno part of the driver exposes this value to userspace, and the
+> SMEM data source also presents a x+13 value. Keep things coherent and
+> make the value uniform across them.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > ---
->  .../userspace-api/media/v4l/biblio.rst        |  8 ++---
->  .../media/v4l/dev-sliced-vbi.rst              |  4 +--
->  .../media/v4l/ext-ctrls-fm-rx.rst             | 15 ++++------
->  .../media/v4l/ext-ctrls-fm-tx.rst             | 29 +++++++------------
->  .../media/v4l/pixfmt-srggb12p.rst             |  4 +--
->  .../media/v4l/pixfmt-srggb14p.rst             |  2 +-
->  6 files changed, 25 insertions(+), 37 deletions(-)
->
-> diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documenta=
-tion/userspace-api/media/v4l/biblio.rst
-> index 35674eeae20d..c3f7c466e287 100644
-> --- a/Documentation/userspace-api/media/v4l/biblio.rst
-> +++ b/Documentation/userspace-api/media/v4l/biblio.rst
-> @@ -53,7 +53,7 @@ ISO 13818-1
->=20=20
->  :title:     ITU-T Rec. H.222.0 | ISO/IEC 13818-1 "Information technology=
- --- Generic coding of moving pictures and associated audio information: Sy=
-stems"
->=20=20
-> -:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organisation for Standardisation (http://www.iso.ch)
-> +:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organization for Standardization (http://www.iso.ch)
+>  drivers/gpu/drm/msm/msm_mdss.c | 50 +++++++++++++++++++++---------------------
+>  1 file changed, 25 insertions(+), 25 deletions(-)
+> 
 
-Please do not "fix" the use of either British or American spellings;
-both are explicitly just fine for kernel docs.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
->  .. _mpeg2part2:
->=20=20
-> @@ -63,7 +63,7 @@ ISO 13818-2
->=20=20
->  :title:     ITU-T Rec. H.262 | ISO/IEC 13818-2 "Information technology -=
--- Generic coding of moving pictures and associated audio information: Vide=
-o"
->=20=20
-> -:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organisation for Standardisation (http://www.iso.ch)
-> +:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organization for Standardization (http://www.iso.ch)
->=20=20
->  .. _itu470:
->=20=20
-> @@ -131,7 +131,7 @@ ITU H.265/HEVC
->=20=20
->  :title:     ITU-T Rec. H.265 | ISO/IEC 23008-2 "High Efficiency Video Co=
-ding"
->=20=20
-> -:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organisation for Standardisation (http://www.iso.ch)
-> +:author:    International Telecommunication Union (http://www.itu.ch), I=
-nternational Organization for Standardization (http://www.iso.ch)
->=20=20
->  .. _jfif:
->=20=20
-> @@ -150,7 +150,7 @@ ITU-T.81
->  =3D=3D=3D=3D=3D=3D=3D=3D
->=20=20
->=20=20
-> -:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
-l Compression and Coding of Continous-Tone Still Images --- Requirements an=
-d Guidelines"
-> +:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
-l Compression and Coding of Continuous-Tone Still Images --- Requirements a=
-nd Guidelines"
->=20=20
->  :author:    International Telecommunication Union (http://www.itu.int)
->=20=20
-> diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/D=
-ocumentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> index 42cdb0a9f786..96e0e85a822c 100644
-> --- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> +++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> @@ -48,7 +48,7 @@ capabilities, and they may support :ref:`control` ioctl=
-s.
->  The :ref:`video standard <standard>` ioctls provide information vital
->  to program a sliced VBI device, therefore must be supported.
->=20=20
-> -.. _sliced-vbi-format-negotitation:
-> +.. _sliced-vbi-format-negotiation:
->=20=20
->  Sliced VBI Format Negotiation
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> @@ -377,7 +377,7 @@ Sliced VBI Data in MPEG Streams
->=20=20
->  If a device can produce an MPEG output stream, it may be capable of
->  providing
-> -:ref:`negotiated sliced VBI services <sliced-vbi-format-negotitation>`
-> +:ref:`negotiated sliced VBI services <sliced-vbi-format-negotiation>`
->  as data embedded in the MPEG stream. Users or applications control this
->  sliced VBI data insertion with the
->  :ref:`V4L2_CID_MPEG_STREAM_VBI_FMT <v4l2-mpeg-stream-vbi-fmt>`
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> index b6cfc0e823d2..565157709911 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> @@ -35,7 +35,7 @@ FM_RX Control IDs
->      description of the correct character encoding for Programme Service
->      name strings. Also from RDS specification, PS is usually a single
->      eight character text. However, it is also possible to find receivers
-> -    which can scroll strings sized as 8 x N characters. So, this control
-> +    which can scroll strings sized as 8 x N characters. Therefore this c=
-ontrol
-
-This kind of change just seems like churn that isn't really improving
-the content?
-
->      must be configured with steps of 8 characters. The result is it must
->      always contain a string with size multiple of 8.
->=20=20
-> @@ -49,7 +49,7 @@ FM_RX Control IDs
->      Radio Text strings depends on which RDS Block is being used to
->      transmit it, either 32 (2A block) or 64 (2B block). However, it is
->      also possible to find receivers which can scroll strings sized as 32
-> -    x N or 64 x N characters. So, this control must be configured with
-> +    x N or 64 x N characters. Therefore this control must be configured =
-with
->      steps of 32 or 64 characters. The result is it must always contain a
->      string with size multiple of 32 or 64.
->=20=20
-> @@ -64,17 +64,12 @@ FM_RX Control IDs
->      broadcasts speech. If the transmitter doesn't make this distinction,
->      then it will be set.
->=20=20
-> -``V4L2_CID_TUNE_DEEMPHASIS``
-> -    (enum)
-> -
-> -enum v4l2_deemphasis -
-> +``V4L2_CID_TUNE_DEEMPHASIS (enum)``
->      Configures the de-emphasis value for reception. A de-emphasis filter
->      is applied to the broadcast to accentuate the high audio
->      frequencies. Depending on the region, a time constant of either 50
-> -    or 75 useconds is used. The enum v4l2_deemphasis defines possible
-> -    values for de-emphasis. Here they are:
-> -
-> -
-> +    or 75 microseconds is used. The enum v4l2_deemphasis defines possible
-> +    values for de-emphasis. They are:
->=20=20
->  .. flat-table::
->      :header-rows:  0
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> index 04c997c9a4c3..aa509039bd27 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> @@ -41,7 +41,7 @@ FM_TX Control IDs
->      description of the correct character encoding for Programme Service
->      name strings. Also from RDS specification, PS is usually a single
->      eight character text. However, it is also possible to find receivers
-> -    which can scroll strings sized as 8 x N characters. So, this control
-> +    which can scroll strings sized as 8 x N characters. Therefore this c=
-ontrol
->      must be configured with steps of 8 characters. The result is it must
->      always contain a string with size multiple of 8.
->=20=20
-> @@ -55,7 +55,7 @@ FM_TX Control IDs
->      E of :ref:`iec62106`. The length of Radio Text strings depends on
->      which RDS Block is being used to transmit it, either 32 (2A block)
->      or 64 (2B block). However, it is also possible to find receivers
-> -    which can scroll strings sized as 32 x N or 64 x N characters. So,
-> +    which can scroll strings sized as 32 x N or 64 x N characters. There=
-fore
->      this control must be configured with steps of 32 or 64 characters.
->      The result is it must always contain a string with size multiple of
->      32 or 64.
-> @@ -94,8 +94,8 @@ FM_TX Control IDs
->=20=20
->  ``V4L2_CID_RDS_TX_ALT_FREQS (__u32 array)``
->      The alternate frequencies in kHz units. The RDS standard allows for
-> -    up to 25 frequencies to be defined. Drivers may support fewer
-> -    frequencies so check the array size.
-> +    up to 25 frequencies to be defined. Because drivers may support fewer
-> +    frequencies, check the array size.
-
-Here too, I'm not sure I see the value in this kind of change.
-
-Thanks,
-
-jon
+-- 
+With best wishes
+Dmitry
