@@ -1,197 +1,156 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A092AE6F
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702262AE6F
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747604059; cv=none; b=WY3YoYBEwHVAB5NpBtoIIbrd1uNsqGufEKQNeChZnlew11LIpPa/W0pgOdT7pWrKeSttXBO7L3HEb0JTd8IszgBZEIyhPOxSbT6SXqyydI+7DENkazqSpgI9JGbzu/BeDz17KZn8P+oLxxsunQxJ5FQMOm9Wby1TXRZDSUG4frk=
+	t=1747604104; cv=none; b=aVVrJt2C52lFESW9YqxbyWIrshLh+A3Y+jH+XbHTAAxt4+XLrCmw7FGHooBn8cNHD3ZAzmeIeztk0u77Ha9YMfD92+uuK8AeATyjaXfoZVKKmz4hbvl6VetReAd4b2Iv8NMBQX1rlrsHVq6slOyZE/umkB6Gd4dLkPuI8XSoND4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747604059; c=relaxed/simple;
-	bh=MVyWvTH9jezrYGixpYmB8VcITaczqnk77BRhuiSVPIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NGj9zUubSYoGjK2hgjP+EQSgANw//HRZMx4oagc/YOXd9OrBSsllbPFpc7f1mZuBskvbdhi5SOvcRLiiTkNcKJmL0U+SvY+EHLvNufZ6gSOF6LA9m6tlYa5lT89jNzDGOjaBak4+v7GEDTAgBVQ01hGVelLA2eRaNpbeVw/I6Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=aX5vUadI; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747604104; c=relaxed/simple;
+	bh=i0UDS7ryfYcPCMwpdiJCN/3dodGTDQwtvPmmnU5MzBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sl9XYS94hywgek2mq8VdRBZm5pS8eeUZPj9qPeH6qN5X9kO/unoqZKfapsXMTE+Ut4OwxlxY0baSWDhRuGtHb8MN1ocCkw/CkhJySRLtzw5Op46YrXtFhvsy3EWGzsQxqc3msDOEedrum+nUVvaEn8yYau0/HK2EgKTNFIDt2l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NST0I6VL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="aX5vUadI"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b4ba530feso3148792276.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 14:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747604056; x=1748208856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LQP7kiEFeXieUYHTQOWlMajO9SS2h9UcfNmGDRaBXeQ=;
-        b=aX5vUadIzIV8ASEorrYerOBh7+o83iuc5x/ndhc0fQmonqniSuI9umaiKZxSIryMcj
-         pCZN2rcwbp58rU7iUbuKcLsLE70NyHEBJXI62t9OTeuKcJqyA/6Zi8v+8ost8toBFBX+
-         nvLqwnDHcJCjlKa6AN5EPV+hf2r7AykRaEfH9nFdMubumAaFS8RpPgPtp8FUdQQlI7cu
-         Kz89u9LK/j4BwPFHWn6Mhdq9YGo9bxcTQa59HwgZyj+zVFh3ZhCgChFySWBSwgk6U0FV
-         SvKV91Y/kecm+kxvZDX+9CtxV1YQaHOJRsWQwOWsOvm4gBtQt7KspTl5g4b3T5r30Oel
-         ygyw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NST0I6VL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747604101;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HAhV+nhTtB3oWTNdnOV38bF76ng9ASrCOJfLirGrigw=;
+	b=NST0I6VLRt9/PLIVQieLr93Ca4j9e72GHuxmC/zn40nqPrgDYIguOWW5qNds+1mO9gghdv
+	4eUn1XajAjnfiDSwR55NofNkm9zPWH9QbQ6x9v4NXZgYacuta0RtncieSUWQmB+eelkWh7
+	xwYReL4CiTqmO4fo/YH0PZWn3gw1Jqo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-142-lPJyAOSeMruZ-vabEcsOnQ-1; Sun, 18 May 2025 17:34:59 -0400
+X-MC-Unique: lPJyAOSeMruZ-vabEcsOnQ-1
+X-Mimecast-MFC-AGG-ID: lPJyAOSeMruZ-vabEcsOnQ_1747604099
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-441c96c1977so27162825e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 14:34:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747604056; x=1748208856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LQP7kiEFeXieUYHTQOWlMajO9SS2h9UcfNmGDRaBXeQ=;
-        b=IYCoGz8jBeV9ZIzqH5pcGTP1m+OvauxEaafPYzo/AGhEUnjj6l8zpRy/+Tztgtcmyh
-         IfzVf7GAkNv1lD8VFgJc5iGbgtQ8lpXKqzBLeswX4763MSFeinmoCc/w8yyJBjJ5DR/y
-         LqrgzNtc6T7AIHkFu7FBAkdBkQWXHMi7rgCXKgqH+WmPnt2hf9ZYkHLC6zEbaU335ZgZ
-         x/3DKFgJOrPCxhkdIk7CZ3YxfJvAclWFrT0i98c7tzzIbziCN1U2L8MHrHlMZ/bpcHLa
-         poBYd0YS/4BKb6GaslZd/nsNz9hG21xf8rk3Tg652IQ1O8hcivF3PjJAx7prLYe8SrLj
-         d7Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCXU/SLMtO1Kt9N0J56ElShzAAhXwhIwi5xolwbsJRSyiho4sSeipFlLOB0udxYHfAquh3jj1orcn1DYYj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVbzjTrtV0S8HvtlI3NJsqTkVSjwoep2xLH1ojSqQqdNr1//QP
-	NidnM74p60sznruFikfsBhIsUoM40Om0NQJJ+Oj7z3z2Dzy97a0qyGbvKqJOoTO8Y91+h6lDktU
-	7UC6T/zIKRT//4/0yJX84EjZZJ1hgrCAQugcNPTXc
-X-Gm-Gg: ASbGnctFjKcbGQLqsQlAl20cX1U6D/LY42qw6iFnzdSTTJULAPH6nZ8ugnKYgssKVnt
-	NqY4HrVJQ34d7wtb8751Qn0x1z7MwK5xzmFqb/hl+a48gjrIREmj0PQExD3Ukc5oYf+zjV+Vcko
-	64o02Y8zwI+jkn1RRDaZRegk+p/MPW3AKikQgyjyXqWRI=
-X-Google-Smtp-Source: AGHT+IE4xhc4enZwnp333lRGkDvOTlvAzIVwQODufuLGxxB3SU2BQ2IFplj8HM2L9kwEdXZjW5DSrE/jizotZyc82E8=
-X-Received: by 2002:a05:6902:1201:b0:e78:f901:6074 with SMTP id
- 3f1490d57ef6-e7b6d39c8e6mr13141403276.5.1747604055898; Sun, 18 May 2025
- 14:34:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747604098; x=1748208898;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HAhV+nhTtB3oWTNdnOV38bF76ng9ASrCOJfLirGrigw=;
+        b=UrttAuE3S1ugGJt3e+Sl4kVc99MFHotCcWNHr2Y29a6iuzMF/CZ045x4YJuI9akjy6
+         0ILJLaUzkTtKBjboqR+l4/h1eMO75h0McvAFTgnf634kDEvpZH4VmOaXGKfVFFZYxCBB
+         Igl+tDsH6h0PZ9lIOVYITvfEYYXp3t3dwq7ppmlWAgZAff6mJ78UgGoCI2Kny41mwGiD
+         gUheiFNq5T7gh2+xiI7X0W7a+KFY8WVot/n6TCG+cnP/oWdLf20pw3F5quXejUNpxZyG
+         MtaGUHWejs9WFqKP4/7wfY8PsdR2/RLW9WkhMd0fkpyTlGHyrE9RWVSKo+KxcnUAMcyV
+         CNQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzqaqBEhPIbjw2F1cBeZiisLBL9O9xlaTcZcjS/q3iBIEwPPYmE86HKc8nQALhgRuwWs5oTGFIQoUDdVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnG82+LSdR9SK+pXsjoifBshhmpk1W85bLBXdwS7mN1MZqWpTp
+	2jcb6+B2rm3SUjjF/C+O4cvSR0FsX0Q7OV9cP7nbTyox/hIZXGnzqcyi7xVap+d/+Zj6fuIi3gv
+	3yKnwdaOVisnQ4tVt8VjYM1BwhUU6wUNVTS58SRrGqB2HaxnZqClYCOsc9xCVUXcLKA==
+X-Gm-Gg: ASbGncuYIF0SWIPaJiRQIlpSfqFPnH8NUlj3J59OI1/e8UV+OdaKjkyIOm7eR4wvE3t
+	8i3E30iw3tKlaUg754ItTPSiXETFqaOxozfv189ZXzWz6oXFtiLw/dTLV2WwfOKZzKPv/G1/lFa
+	XhKiqwLjZU3lri1NkYR08BbMn5uc6On666MSR4QhkNIRBHyGD79M/ZRxW6A11VOURQ/fr1KyRi3
+	QmF48nnUFzzKnArIdKxmbej44rQZXPpPBc7vn31MeB1E4AyI6+DLhOnOzyHfZVULwjoCw2LEFgY
+	HaamSA==
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr59316765e9.28.1747604098620;
+        Sun, 18 May 2025 14:34:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1oH302delN9nxpqrLIprfMWk3Ho5eH4z0R+50eE4GeFmN2TZ6xrwqN7ULXYhrVRrz8ClBGw==
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr59316695e9.28.1747604098314;
+        Sun, 18 May 2025 14:34:58 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f9053b4dsm144106535e9.4.2025.05.18.14.34.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 14:34:57 -0700 (PDT)
+Date: Sun, 18 May 2025 17:34:53 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Eugenio Perez Martin <eperezma@redhat.com>
+Cc: Lei Yang <leiyang@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	xuanzhuo@linux.alibaba.com, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19] virtio_ring in order support
+Message-ID: <20250518173443-mutt-send-email-mst@kernel.org>
+References: <20250324054333.1954-1-jasowang@redhat.com>
+ <CAPpAL=x4BWNh__YpzkzpErkseh04FT7WNLmg=xMXtfZ0S9BabQ@mail.gmail.com>
+ <CAJaqyWdtKEYiY2tBB0F477LqxVs8fzaix96551WSMa=KdT3C5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
- <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
- <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
- <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
- <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
- <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
- <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com> <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
-In-Reply-To: <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Sun, 18 May 2025 17:34:04 -0400
-X-Gm-Features: AX0GCFtLeZnisw8iWe1mhoQFds0HugDTz8gkrQRoSC4fm6wSRan9ZFZmtDGOv3w
-Message-ID: <CAHC9VhRKZdEia0XUMs2+hRVC7oDzkBfkk5FPMD+Fq5V7mAk=Vg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
-	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
-	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJaqyWdtKEYiY2tBB0F477LqxVs8fzaix96551WSMa=KdT3C5Q@mail.gmail.com>
 
-On Sun, May 18, 2025 at 11:52=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> On Sat, May 17, 2025 at 10:49=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
- wrote:
-> > On May 17, 2025 12:13:50 PM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > > On Sat, May 17, 2025 at 8:03=E2=80=AFAM Paul Moore <paul@paul-moore.c=
-om> wrote:
-> > >> On Fri, May 16, 2025 at 7:49=E2=80=AFPM Alexei Starovoitov
-> > >> <alexei.starovoitov@gmail.com> wrote:
-> > >>> On Fri, May 16, 2025 at 12:49=E2=80=AFPM Paul Moore <paul@paul-moor=
-e.com> wrote:
-> > >>>>
-> > >>>> I think we need some clarification on a few of these details, it w=
-ould
-> > >>>> be good if you could answer the questions below about the
-> > >>>> authorization aspects of your design?
-> > >>>>
-> > >>>> * Is the signature validation code in the BPF verifier *always* go=
-ing
-> > >>>> to be enforced when a signature is passed in from userspace?  In o=
-ther
-> > >>>> words, in your design is there going to be either a kernel build t=
-ime
-> > >>>> or runtime configuration knob that could selectively enable (or
-> > >>>> disable) signature verification in the BPF verifier?
-> > >>>
-> > >>> If there is a signature in union bpf_attr and it's incorrect
-> > >>> the prog_load command will be rejected.
-> > >>> No point in adding a knob to control that.
-> > >>
-> > >> I agree that when a signature is provided and that signature check
-> > >> fails, the BPF load should be rejected.  I'm simply trying to
-> > >> understand how you envision your design handling all of the cases, n=
-ot
-> > >> just this one, as well as what build and runtime options you expect
-> > >> for controlling various aspects of this behavior.
-> > >>
-> > >>>> * In the case where the signature validation code in the BPF verif=
-ier
-> > >>>> is active, what happens when a signature is *not* passed in from
-> > >>>> userspace?  Will the BPF verifier allow the program load to take
-> > >>>> place?  Will the load operation be blocked?  Will the load operati=
-on
-> > >>>> be subject to a more granular policy, and if so, how do you plan t=
-o
-> > >>>> incorporate that policy decision into the BPF program load path?
-> > >>>
-> > >>> If there is no signature the existing loading semantics will remain=
- intact.
-> > >>> We can discuss whether to add a sysctl or cgroup knob to disallow
-> > >>> loading when signature is not present ...
-> > >>
-> > >> As mentioned earlier this week, if the BPF verifier is performing th=
-e
-> > >> signature verification as KP described, we will need a LSM hook afte=
-r
-> > >> the verifier to serve as an access control point.  Of course that
-> > >> doesn't preclude the addition of some type of sysctl/cgroup/whatever
-> > >> based access control, but the LSM hook would be needed regardless.
-> > >
-> > > No. New hook is not needed.
+On Wed, Mar 26, 2025 at 07:39:47AM +0100, Eugenio Perez Martin wrote:
+> On Mon, Mar 24, 2025 at 3:44 PM Lei Yang <leiyang@redhat.com> wrote:
 > >
-> > It would be good for you to explain how the existing LSM hook is suffic=
-ient
-> > to authorize the loading of a BPF program using the signature validatio=
-n
-> > state determined in the BPF verifier.
->
-> I already explained:
-> .. a job of trivial LSM:
-> if (prog_attr doesn't have signature &&
->    (task =3D=3D .. || task is under certain cgroup || whatever))
->   disallow.
+> > QE tested this series of patches with virtio-net regression tests,
+> > everything works fine.
+> >
+> 
+> Hi Lei,
+> 
+> Is it possible to test this series also with virtio-net-pci,...,in_order=on?
+> 
+> Thanks!
 
-I read that earlier reply as an example that covers a sample use case,
-I didn't realize you were asserting that was the only approach you
-were considering.  Perhaps that was the source of confusion earlier,
-we may disagree, but I don't intentionally "twist" words; not only is
-that rude, it's just stupid in public, archived discussions.
 
-As I mentioned previously, we really need to see an explicit yes/no
-flag from the BPF verifier to indicate that the signature on the BPF
-program has been validated.  It really should be as simple as adding a
-bool to bpf_prog_aux which the BPF verifier sets to true upon
-successful signature validation, and then an LSM can use this flag as
-input to an access control decision in a hook placed after the
-verifier.  Are you objecting to the addition of a flag in the
-bpf_prog_aux struct (or some other struct tightly coupled to the BPF
-program), the LSM hook after the verifier, or both?  It would also be
-helpful if you can elaborate on the technical reasons behind these
-objections.
+Lei, what do you think?
 
---=20
-paul-moore.com
+> > Tested-by: Lei Yang <leiyang@redhat.com>
+> >
+> > On Mon, Mar 24, 2025 at 1:45 PM Jason Wang <jasowang@redhat.com> wrote:
+> > >
+> > > Hello all:
+> > >
+> > > This sereis tries to implement the VIRTIO_F_IN_ORDER to
+> > > virtio_ring. This is done by introducing virtqueue ops so we can
+> > > implement separate helpers for different virtqueue layout/features
+> > > then the in-order were implmeented on top.
+> > >
+> > > Tests shows 5% imporvemnt in RX PPS with KVM guest + testpmd on the
+> > > host.
+> > >
+> > > Please review.
+> > >
+> > > Thanks
+> > >
+> > > Jason Wang (19):
+> > >   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
+> > >   virtio_ring: switch to use vring_virtqueue in virtqueue_poll variants
+> > >   virtio_ring: unify logic of virtqueue_poll() and more_used()
+> > >   virtio_ring: switch to use vring_virtqueue for virtqueue resize
+> > >     variants
+> > >   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_prepare
+> > >     variants
+> > >   virtio_ring: switch to use vring_virtqueue for virtqueue_add variants
+> > >   virtio: switch to use vring_virtqueue for virtqueue_add variants
+> > >   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
+> > >     variants
+> > >   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
+> > >   virtio_ring: switch to use vring_virtqueue for disable_cb variants
+> > >   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
+> > >     variants
+> > >   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
+> > >   virtio_ring: introduce virtqueue ops
+> > >   virtio_ring: determine descriptor flags at one time
+> > >   virtio_ring: factor out core logic of buffer detaching
+> > >   virtio_ring: factor out core logic for updating last_used_idx
+> > >   virtio_ring: move next_avail_idx to vring_virtqueue
+> > >   virtio_ring: factor out split indirect detaching logic
+> > >   virtio_ring: add in order support
+> > >
+> > >  drivers/virtio/virtio_ring.c | 856 ++++++++++++++++++++++++++---------
+> > >  1 file changed, 653 insertions(+), 203 deletions(-)
+> > >
+> > > --
+> > > 2.42.0
+> > >
+> > >
+> >
+
