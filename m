@@ -1,111 +1,167 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A977B21CC55;
-	Sun, 18 May 2025 16:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B564B1E73;
+	Sun, 18 May 2025 16:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747586947; cv=none; b=VSlT3Isq/onTBRh7eW3tVoPtHUsSkQnklab59gEp/FMQ1zfYrZYqmX4Ds6irntevkFA/ogh40Hc+q//vH6FzGw+yZvSGVcj98R0qnmvY/XP1qDdXxVv950OHGtfZKpVKHsbe+pKsFjc/oiubN8/kA2gmXTfvmYZvNs3twX3MlZc=
+	t=1747587522; cv=none; b=eSoA6oTz4Y5InC4aQ1Z5LRCTH40gL7XLDljFnUI9sqkGZaNQ6sOq9EOZok+nmeHF6HTdeX0oEzAdHm4DZXf7PqT0ACGWTq14fZz0zoJ1OQOiU0lljiO+I//Dno0RH/CQGwokxhui7tDsJ/alghkAKRoqusu4U7FMqWsZxtuvVaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747586947; c=relaxed/simple;
-	bh=nURDTX3oA98c5WUnqRp3AZaFPfTyYRIqNcyheLeZwxA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q/usRjNv47ZxU9ifk/vZcixmnmJeYUh3YprQm37uQ0ECtwlsw8/iNYsVGppwfGhdZv7pAh09hpI8xHNEBXqwbKXpytmQq4tLJk0FHHrNWTRsR9dmNGsuAJ3eBeyZZp/o5OyE9fbTQLHG4gk61UHUjcTeXbIVbvwOj1ydyX6VP60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Vk7FKQQQ; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1747587522; c=relaxed/simple;
+	bh=upA6vDnzO3ItMnQAeDPHrxxy+Iz/5wT+uJn7RE9Tnc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OZst2vgV/x7EvVelOHsXTOZ5PRJm73fYPCiPukE30kre1f2eSWnHpVU9UkEx4TFwtR9aNm4u4ohjPvKqps5nliCM5jOXPDJyiYuzTnBQdg7l32oSOzigLZ2jtLtlgTwsNCFtYYCqmx8WFXanKn0lIYEd4z74NxbRtp10XCosOoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMYN4khO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Vk7FKQQQ"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b0mx30FQmz9sqg;
-	Sun, 18 May 2025 18:48:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1747586935;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BxmCFkZ1O7ZrSEj+Oaqix6KX/+I1cvs+0DgBW5fJd/s=;
-	b=Vk7FKQQQUFXwhl984H2BQO7pMrnxjtp4l3luxEV1p4zQArh0CAlXnixe/30rcyRIEfkoUn
-	rmuAmfT7LShJ3v7OgDfHBbL9X8RiCRb/+KSNrNAh5LQN/ekIt3dWp/xdvNQO0FGILHkBY7
-	jHejUTA4bKKbcRtoJBeuOC9QVHEYfJ1o4j5LQwR2JBnqTvMW8Ov6qloGiA9FACsD+sPIyv
-	q3yOS1jp2/gBbgBc1WU9bpahmiYUw11gtyeR2s6r5jWFW6igIHwazuNU8bw2HsBR4Iym7W
-	7lcFrq8CqkhgjgnVYd1rAcSQ+9Tb1XWSOiB5KTkx4+mD+jW8ypo/KHWy6pu/dg==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 18 May 2025 12:48:50 -0400
-Subject: [PATCH] ext4: replace strcpy() with strscpy() in
- ext4_init_dot_dotdot()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMYN4khO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCC1C4CEE7;
+	Sun, 18 May 2025 16:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747587522;
+	bh=upA6vDnzO3ItMnQAeDPHrxxy+Iz/5wT+uJn7RE9Tnc8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hMYN4khOeOvNBT3mwu8Ga0UV8JIV2nD31vsuWUBr1Hel/aqLUUM09redONZe5DEWW
+	 4DHbwQNbFevuXCKNuXIXOgFdDEke3j4puaBN+dsSL5D+czv54QzDi7yyG6nCUdRfZE
+	 /VItMYDmabCrrFFNkOOgXY8VFBbaCwluP6TA8N3CyxPa9NtN2BEuqeto7+Gt0bC2HP
+	 doW3irzBreJLYM9+uzvLtHST5cdRbyfvmG6N29ztOzNtCRhyG5Ick55lerp11j0vnP
+	 GFmF0ICsCcouLGSDZPtF1g5BOpPsnLUZ4GZFUPd778yo1yV40NNRKJelEz3Lttkc9f
+	 y/D2DX4oVssoA==
+Date: Sun, 18 May 2025 17:58:32 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH v8 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <20250518175832.77b8d670@jic23-huawei>
+In-Reply-To: <aCcFXolH0FVBSP11@smile.fi.intel.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+	<59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
+	<aCcFXolH0FVBSP11@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAHEPKmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0ML3dSKEhPd4pKi5IJKXUNTE9NkszRzyyRTQyWgjoKi1LTMCrBp0bG
- 1tQC9rjcTXQAAAA==
-X-Change-ID: 20250518-ext4-strcpy-1545c6f79b51
-To: Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1378;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=nURDTX3oA98c5WUnqRp3AZaFPfTyYRIqNcyheLeZwxA=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeFpHanhGd1YvQ04vMWMwWDUwVGplcTZ4Skhvd3NvamZGCnJJNDd2SXJlMWFYVnQwSzRN
- cnlqbElWQmpJdEJWa3lSNVgrT2N0cER6UmtLTy8rNk5NSE1ZV1VDR2NMQXhTa0EKRTNHTlptUTR
- 5OVFiZmJwbGNrV3hkT2pMSlAzUVRWZi81TWQ4NlJBMFdkbDFmTEo0d2hzRmh2OStqdXlwNzRXeQ
- pOOXlhTFRRbk43bHkrYW1HSU9jM0tpLzNpMCtlMUZsMnJwZ2RBS2ZGU1ZnPQo9clN6MAotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4b0mx30FQmz9sqg
 
-strcpy() is deprecated; use strscpy() instead.
+On Fri, 16 May 2025 12:29:02 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
 
-No functional changes intended.
+> On Thu, May 15, 2025 at 06:13:56PM -0300, Jonathan Santos wrote:
+> > The synchronization method using GPIO requires the generated pulse to be
+> > truly synchronous with the base MCLK signal. When it is not possible to
+> > do that in hardware, the datasheet recommends using synchronization over
+> > SPI, where the generated pulse is already synchronous with MCLK. This
+> > requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+> > 
+> > Use trigger-sources property to enable device synchronization over SPI
+> > and multi-device synchronization while replacing sync-in-gpios property.  
+Given some discussion in here I'll not (yet) pick up this series.
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- fs/ext4/namei.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It's almost certainly just missed the coming merge window anyway so
+we have time.
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index e9712e64ec8f04586f5ebcd332431e6af92e4f36..85df7fbf8ebd2c5b2aa3a20813f5f8a1aec7f5b7 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2926,7 +2926,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 	de->name_len = 1;
- 	de->rec_len = ext4_rec_len_to_disk(ext4_dir_rec_len(de->name_len, NULL),
- 					   blocksize);
--	strcpy(de->name, ".");
-+	strscpy(de->name, ".");
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	de = ext4_next_entry(de, blocksize);
-@@ -2940,7 +2940,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 		de->rec_len = ext4_rec_len_to_disk(
- 					ext4_dir_rec_len(de->name_len, NULL),
- 					blocksize);
--	strcpy(de->name, "..");
-+	strscpy(de->name, "..");
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	return ext4_next_entry(de, blocksize);
+> 
+> ...
+> 
+> > +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> > +					   struct ad7768_state *st)
+> > +{
+> > +	struct fwnode_reference_args args;
+> > +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> > +	 * to synchronize one or more devices:
+> > +	 * 1. Using an external GPIO.
+> > +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> > +	 *    synchronization pulse that drives the SYNC_IN pin.
+> > +	 */
+> > +	if (!fwnode_property_present(fwnode, "trigger-sources")) {  
+> 
+> I'm wondering if you can split the below to a separate function and do something like
+> 
+> 	if (fwnode_property_present(...))
+> 		return setup_trigger_source(...);
+> 
+> 	...
+> 	en_spi_sync = true;
+> 	return 0;
+> 
+> > +		/*
+> > +		 * In the absence of trigger-sources property, enable self
+> > +		 * synchronization over SPI (SYNC_OUT).
+> > +		 */
+> > +		st->en_spi_sync = true;
+> > +		return 0;
+> > +	}
+> > +
+> > +	ret = fwnode_property_get_reference_args(fwnode,
+> > +						 "trigger-sources",
+> > +						 "#trigger-source-cells",
+> > +						 0,
+> > +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> > +						 &args);  
+> 
+> 
+> __free(fwnode_handle) ?
 
----
-base-commit: 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-change-id: 20250518-ext4-strcpy-1545c6f79b51
+For args.fwnode?
 
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+That's fiddly to do and needs a different local variable to...
+
+
+
+> 
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	fwnode = args.fwnode;
+
+this one.
+
+You could wrap it up in a function to make that works cleanly.
+So something similar to fwnode_find_reference() but with the
+rest of the arguments.  Is there appetite for such a wrapper
+in the generic property code?
+
+
+> > +	/* First, try getting the GPIO trigger source */
+> > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > +							       NULL,
+> > +							       0,
+> > +							       GPIOD_OUT_LOW,
+> > +							       "sync-in");
+> > +		ret = PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > +		goto out_put_node;
+> > +	}
+> > +
+> > +	/*
+> > +	 * TODO: Support the other cases when we have a trigger subsystem to
+> > +	 * reliably handle other types of devices as trigger sources.
+> > +	 *
+> > +	 * For now, return an error message. For self triggering, omit the
+> > +	 * trigger-sources property.
+> > +	 */
+> > +	ret = dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > +
+> > +out_put_node:  
+> 
+> The above will allow to get rid of this label.
+> 
+> > +	fwnode_handle_put(args.fwnode);
+> > +	return ret;
+> > +}  
+> 
 
