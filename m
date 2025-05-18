@@ -1,156 +1,159 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68DB4B1E76
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 12:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF56315E8B;
+	Sun, 18 May 2025 12:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747571130; cv=none; b=jf3W3iuLGtFLZNl4gfW8+NfYvxDDZbsSagj4M9vD7KwBuPx/4j+zCWYGDrIDSiufBzT4xidX4DKxRGwve/szLZY5R1anBIhs+OEhv60jzb6wEukrejscz7Xi4UzZqQRpfvo7nWQprwwFruQKHDgtNa9N9CiCl7l+B41zE1KCkLM=
+	t=1747571914; cv=none; b=usKqVJPN55M59L2T4/97sca3S5td42e7tTrps6psWQMeKCluC+cwd95tQadhgZGzKLnndAM3JV9AE45gZaNJiZmfLys9UIMOmOnT6Ai1CEhvnwe3uPqvoQgDwZmWRZ7v1b56cBu2PS02sXZuh7XNpn6CJiwRG6UQQsLbOZ5oa6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747571130; c=relaxed/simple;
-	bh=TAWgpRmwYMw/qkZeOsP3R9YHhY28Gsr6D6NbTTP2l2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GZQ+WxFuvDqqWP6d47NVN3vRbrzIJTEKeB/NfYsSGC06ROxTlGaeIOQEvGOMjBPlUyW3aliBP6ZgCW4tMAOsiBZvv/0DaAscp/Rak1o5AgCBcSAE+QKuvPy+kuY7rgn0s5/TMR9v0OY5tJBjUA1VbaFrY90oHPv50qUKHCMhKQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KT3+Aam8; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747571914; c=relaxed/simple;
+	bh=PoyuPg5e2LU/+nVt9+qZ5GK2kKH6IQI8uCwbW3k0Avg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e32w3xSl3D+JlOEGIqsknbDnMUCChYBoAz5EiEXVUjsa0jGpzi7BzaE+R17oXy2vvEhID+HU9BcsUjVpTJ2i1Hp5CBldbkjV4OsjAXND50L/PBv1vK3XqnvRyAS5+JAhs/KC5KNnfW5xAlH1NxESfhRSp3HAmWlDs30tkOCpALU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bd4ajHOR; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KT3+Aam8"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6006cf5000aso410575a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 05:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747571127; x=1748175927; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=b0C+N1MGk3L3UYNtmMUl4q0v98TtNimJbMTrpDgkZPs=;
-        b=KT3+Aam8j8UNar4q2GxNkG4hwGmmHcnfZ0WqACmreR7oiPEL0CHX628VnfYTlEDqVD
-         wmfm2kvnEyM3FiN/m68rRXR7PFYstHiGGt0x0N4PqlZIoAvC00CvxmUh/7e5W1tEMpGU
-         zEJ4f+80HnatwSmRORlmqGlX1ROC7qOAigyBv28oPyYIIyf8CE5ukRMeoyEPeFgK2fiq
-         mEz5dJPl7WFKi/+eWG3xDpK9mAwKDABPe4MRpFC3fbZQk01PdJexrIO1mQRLfikMxr4Z
-         x1vRoI0Ac7AU6M1Twa/vSmOEkNJo5JZb2JxG6nqjbdgAZDUbUYd4PGv5kMM3erBh8vaE
-         XKfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747571127; x=1748175927;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b0C+N1MGk3L3UYNtmMUl4q0v98TtNimJbMTrpDgkZPs=;
-        b=pO9ETL25NxHhHF/wH/OYo3hxkurMk5dLthq53DCmLTGVldvOt+c80nUqIm8Kyy+51+
-         xq0YBbkdpMZUkFuHGp0Xsfip2qewb5QrmI2C7CcfbWAXiUgcJbJnxS5Cqut4frLo8k+m
-         NEPZJFjfFAlwzraE88p4qKLbDUwXrCgkd4EfrnsMRVT9cazcjltLDUTt3nEcE+EVZU5T
-         VNkxf6uMmRsIzGGVta9SslmHGUA17Qb6MVN0agDFcvjTiUmbjmg/VBqh05ntLAKTOZOC
-         5Ir/4gxXY8oWZMjwarmK5VtFTa9k3n4n4PWc8AqNPeu8m33lJelLrtnJ7PTVncZikMEC
-         U5fQ==
-X-Gm-Message-State: AOJu0YxAYgf5ObMLwoP/VOcRDXwBQxJ93wbkVwLsNXhe0adQoJ3Nicb5
-	JIJRlcej5Wva9B3RkpXXHAgBRBoJjHB2spW4uoNC7m0sMJxK0ZKcJm8Trg3do9MT8qw=
-X-Gm-Gg: ASbGncsypJxplrHgR1WJbQbnqLFqpybh97gjLGPAsSFgFcYrNFQi9vlYmVYBLdAP3cY
-	Iuul0zthQYYZDlkmnCtZhseItDmF7LDYxVFE/+5wWSvFtczJVUiIsieJBdgGl20co1qqWLXHiOp
-	LKZvQjLR0I77VkUlxYHz15WzAWLk8SwAeo9m6ErS59TV/DsJI8HJQ3vQB0BKSMoRXGe65lSSLRZ
-	M8wvwmFZirxTcEkaGAs5zopi7zsPqAF3mjuKVyf1l34NTmO8ah7k+2Hz9SUvehZRDg1oLgu6kGz
-	EJQNmYjPUzq1+rg6dx3iXgEKjoAelr08dNhepy04nak5Z7pip50aCnNlp+eBFNvCsf0F2UU=
-X-Google-Smtp-Source: AGHT+IGiMoAlJq3JQIUg0FDNpIVthn3EFkCMEOauwiFI6xXaIT4C+9Tq12dc24jCSe4K6UfBfRsL0Q==
-X-Received: by 2002:a17:907:2ce7:b0:ad5:28f5:fe2b with SMTP id a640c23a62f3a-ad52d4ce281mr275412466b.8.1747571126620;
-        Sun, 18 May 2025 05:25:26 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.222.234])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278274sm438362666b.86.2025.05.18.05.25.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 May 2025 05:25:25 -0700 (PDT)
-Message-ID: <efdfa6fe-2d9f-4c68-93db-08df05af6922@linaro.org>
-Date: Sun, 18 May 2025 14:25:24 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bd4ajHOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747571911; x=1779107911;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PoyuPg5e2LU/+nVt9+qZ5GK2kKH6IQI8uCwbW3k0Avg=;
+  b=Bd4ajHORb5zh7ouk3qk6kHfPtoF+FI20U2aRM1asA/6yB4HAOqZVWtVT
+   /hmjIUkIj8rfZjs/GQ5gcrQTqZBmSBKA/FPcLLvMzrghz6PgVhN4bWqpx
+   gJvy/ceDlazjkPFBHjfxzZoXL488r9jsGUTzXAK7vWgl9S1ODoqqzYL8Z
+   CNdxVaXQN9D8ydL8l7CBhcudKjGOLTjXHD67uPRUc3R/gFTlMshVyX1Ln
+   Uk37sLLyLFu6obVqHVeCQakz7MRYA9L37vgV5doX1m871tfr7kc4TL5+r
+   ZTTT2cik2g4NlKHCphjUMLW9XhroRzPhKObk9lWCAYqezBbdyoQGzFS4b
+   g==;
+X-CSE-ConnectionGUID: GRlTzs++Qp6Ei01ZL207Gw==
+X-CSE-MsgGUID: OYsPGuwzQ3Krbo0dYyCoBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="49180167"
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="49180167"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 05:38:31 -0700
+X-CSE-ConnectionGUID: M+m2/Jz9Tlu/ErvWTLKXtw==
+X-CSE-MsgGUID: 7cNYVkumQkmgrQGQChpJ8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="139029180"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 18 May 2025 05:38:28 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGdHe-000KnX-09;
+	Sun, 18 May 2025 12:38:26 +0000
+Date: Sun, 18 May 2025 20:38:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Janne Grunau <j@jannau.net>
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
+Message-ID: <202505182014.8Vkd2piH-lkp@intel.com>
+References: <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] regmap: Move selecting for REGMAP_MDIO and REGMAP_IRQ
-To: Andrew Davis <afd@ti.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250516141722.13772-1-afd@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250516141722.13772-1-afd@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
 
-On 16/05/2025 16:17, Andrew Davis wrote:
-> If either REGMAP_IRQ or REGMAP_MDIO are set then REGMAP is also set.
-> This then enables the selecting of IRQ_DOMAIN or MDIO_BUS from REGMAP
-> based on the above two symbols respectively. This makes it very easy
-> to end up with "circular dependencies".
-> 
-> Instead select the IRQ_DOMAIN or MDIO_BUS from the symbols that make
-> use of them. This is almost equivalent to before but makes it less
-> likely to end up with false circular dependency detections.
-> 
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> ---
-> 
-> Sending as RFC as I haven't tested all the possible permutations
-> on config options right now to make sure this causes no changes,
-> but wanted to suggest this as a possible solution to the circular
-> dependency described here[0].
+Hi Janne,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Janne-Grunau-via-B4-Relay/ACPI-platform_profile-Stub-platform_profile_cycle/20250518-182021
+base:   0af2f6be1b4281385b618cb86ad946eded089ac8
+patch link:    https://lore.kernel.org/r/20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6%40jannau.net
+patch subject: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
+config: x86_64-buildonly-randconfig-005-20250518 (https://download.01.org/0day-ci/archive/20250518/202505182014.8Vkd2piH-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505182014.8Vkd2piH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505182014.8Vkd2piH-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/acpi/platform_profile.c:493:5: error: redefinition of 'platform_profile_cycle'
+     493 | int platform_profile_cycle(void)
+         |     ^~~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/acpi/platform_profile.c:12:
+   include/linux/platform_profile.h:64:19: note: previous definition of 'platform_profile_cycle' with type 'int(void)'
+      64 | static inline int platform_profile_cycle(void)
+         |                   ^~~~~~~~~~~~~~~~~~~~~~
 
 
-Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Closes: https://lore.kernel.org/r/bfe991fa-f54c-4d58-b2e0-34c4e4eb48f4@linaro.org/
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+vim +/platform_profile_cycle +493 drivers/acpi/platform_profile.c
 
-Looks ok and seems to solve issues I saw.
+a2ff95e018f1d2 Mark Pearson      2020-12-29  487  
+ee7f3e2b4942e3 Kurt Borja        2025-01-15  488  /**
+ee7f3e2b4942e3 Kurt Borja        2025-01-15  489   * platform_profile_cycle - Cycles profiles available on all registered class devices
+ee7f3e2b4942e3 Kurt Borja        2025-01-15  490   *
+ee7f3e2b4942e3 Kurt Borja        2025-01-15  491   * Return: 0 on success, -errno on failure
+ee7f3e2b4942e3 Kurt Borja        2025-01-15  492   */
+ba95eb44676d68 Gergo Koteles     2024-04-08 @493  int platform_profile_cycle(void)
+ba95eb44676d68 Gergo Koteles     2024-04-08  494  {
+778b94d7ac17b5 Mario Limonciello 2025-02-28  495  	struct aggregate_choices_data data = {
+778b94d7ac17b5 Mario Limonciello 2025-02-28  496  		.aggregate = { [0 ... BITS_TO_LONGS(PLATFORM_PROFILE_LAST) - 1] = ~0UL },
+778b94d7ac17b5 Mario Limonciello 2025-02-28  497  		.count = 0,
+778b94d7ac17b5 Mario Limonciello 2025-02-28  498  	};
+70246f89c55fb1 Mario Limonciello 2024-12-05  499  	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
+70246f89c55fb1 Mario Limonciello 2024-12-05  500  	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
+ba95eb44676d68 Gergo Koteles     2024-04-08  501  	int err;
+ba95eb44676d68 Gergo Koteles     2024-04-08  502  
+1f3ac55c2e65af Mario Limonciello 2024-12-05  503  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+70246f89c55fb1 Mario Limonciello 2024-12-05  504  		err = class_for_each_device(&platform_profile_class, NULL,
+70246f89c55fb1 Mario Limonciello 2024-12-05  505  					    &profile, _aggregate_profiles);
+70246f89c55fb1 Mario Limonciello 2024-12-05  506  		if (err)
+70246f89c55fb1 Mario Limonciello 2024-12-05  507  			return err;
+ba95eb44676d68 Gergo Koteles     2024-04-08  508  
+70246f89c55fb1 Mario Limonciello 2024-12-05  509  		if (profile == PLATFORM_PROFILE_CUSTOM ||
+70246f89c55fb1 Mario Limonciello 2024-12-05  510  		    profile == PLATFORM_PROFILE_LAST)
+70246f89c55fb1 Mario Limonciello 2024-12-05  511  			return -EINVAL;
+70246f89c55fb1 Mario Limonciello 2024-12-05  512  
+70246f89c55fb1 Mario Limonciello 2024-12-05  513  		err = class_for_each_device(&platform_profile_class, NULL,
+778b94d7ac17b5 Mario Limonciello 2025-02-28  514  					    &data, _aggregate_choices);
+1f3ac55c2e65af Mario Limonciello 2024-12-05  515  		if (err)
+ba95eb44676d68 Gergo Koteles     2024-04-08  516  			return err;
+ba95eb44676d68 Gergo Koteles     2024-04-08  517  
+70246f89c55fb1 Mario Limonciello 2024-12-05  518  		/* never iterate into a custom if all drivers supported it */
+778b94d7ac17b5 Mario Limonciello 2025-02-28  519  		clear_bit(PLATFORM_PROFILE_CUSTOM, data.aggregate);
+70246f89c55fb1 Mario Limonciello 2024-12-05  520  
+778b94d7ac17b5 Mario Limonciello 2025-02-28  521  		next = find_next_bit_wrap(data.aggregate,
+70246f89c55fb1 Mario Limonciello 2024-12-05  522  					  PLATFORM_PROFILE_LAST,
+ba95eb44676d68 Gergo Koteles     2024-04-08  523  					  profile + 1);
+ba95eb44676d68 Gergo Koteles     2024-04-08  524  
+70246f89c55fb1 Mario Limonciello 2024-12-05  525  		err = class_for_each_device(&platform_profile_class, NULL, &next,
+70246f89c55fb1 Mario Limonciello 2024-12-05  526  					    _store_and_notify);
+ba95eb44676d68 Gergo Koteles     2024-04-08  527  
+1f3ac55c2e65af Mario Limonciello 2024-12-05  528  		if (err)
+1f3ac55c2e65af Mario Limonciello 2024-12-05  529  			return err;
+1f3ac55c2e65af Mario Limonciello 2024-12-05  530  	}
+ba95eb44676d68 Gergo Koteles     2024-04-08  531  
+ba95eb44676d68 Gergo Koteles     2024-04-08  532  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+ba95eb44676d68 Gergo Koteles     2024-04-08  533  
+1f3ac55c2e65af Mario Limonciello 2024-12-05  534  	return 0;
+ba95eb44676d68 Gergo Koteles     2024-04-08  535  }
+ba95eb44676d68 Gergo Koteles     2024-04-08  536  EXPORT_SYMBOL_GPL(platform_profile_cycle);
+ba95eb44676d68 Gergo Koteles     2024-04-08  537  
 
-This is a potential dependency for a mux patch I want to send to Greg
-for upcoming merge window, so it would be great if this was marked as fixes
-and got to current RC. Or optionally I could take it with mentioned
-mux patch:
-https://lore.kernel.org/all/20250515140555.325601-2-krzysztof.kozlowski@linaro.org/
-
-
-Best regards,
-Krzysztof
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
