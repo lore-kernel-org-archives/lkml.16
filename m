@@ -1,157 +1,116 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFF9610B;
-	Sun, 18 May 2025 15:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A419A1482F5;
+	Sun, 18 May 2025 15:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747581844; cv=none; b=L9RWoVz8y/T1nYGyHb+w+3rBUOdcoDiLzhO4CI1cH0Ecew36xtrUX3Q8inn2qGKWDhClD4ZGyXxKWdUVl7naLGvh7fKSvRt1CBvbh+D3Qo6uNssmvAXy4BdGvU4RQWL/+KRCw9N58FBC3epO+DPFHfNxDWZPKgd+uRytn24ignQ=
+	t=1747582367; cv=none; b=NATYNl8NAmmkPJQt7fwOTvQ441nN2t6q4CQZpmyxEwTTO2KzIS6sLJk1L9twLfOpJY9aRwP7hnmjpnPs+L0cBPHVg6W+q0ffF2wGArKe7ttC2a4A7W8mbeHqOmJO0DbfRoD297BISwH4lZ2KX7NDSAYXQ9vBU0pOzxIt23+1jWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747581844; c=relaxed/simple;
-	bh=mA5qQuJQLAcro2vZxBNo6TniIdRazAHJd+dKe7jRx/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NldNjDKr0KM8YSEhqqsfURFtB4nzQgSMvZuKjfmeRp/+PuPCP0MbwhjDYMKuW3p6T/OzBpjNqqgfclpaxYFadIc2hmC2hmddy2vVShdv9uLAbRUcca9pLs461TS9EakmEb1saMOhZN7CnYpfmceosgNnGSQk4iNcGcaamsnmgRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=AOCYjY/E; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747582367; c=relaxed/simple;
+	bh=nGed94xdf/ERcU1ykh8eP0PcnvtCmAhkx8zZQfFmbTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V8kBoms70uVXll0WjO1Efmg0Mal6yvmiep0rgCgmbtAGSRcFdy/6fFkj7cbDXRK0lXQDFbdPNcK+xF7wpa4PLudpF3UhqSC8LvLac0YXQL+R0riFsgsHju9SWKg5HdYaMsIQqtMnZH8ZtYADCOHa+msHsO0cHaYMAxhyFpEwWTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMrPcdNQ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AOCYjY/E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=RqGz4jmLw49/KAEoCTsNsCNBUVqB9Q8hkq+7cfJELDc=; b=AOCYjY/EKXnr6o6xc1hx49/EJr
-	4A1itY69D3PnaUZmXJsrGSlhwOsjIRGF97zJErsBG/nYi9FU5ecPz8xYQzxcTG78GA3VIQIjgWYcS
-	ZXE3TIgPXMIWWU9WLq6Xz75fKUq7r3/+btZKuJZ/5WZLW2oQ4d9OqwS4mFtrBdq/n9Eo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uGfra-00Cvey-By; Sun, 18 May 2025 17:23:42 +0200
-Date: Sun, 18 May 2025 17:23:42 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Silicon Labs Kernel Team <linux-devel@silabs.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org
-Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
-Message-ID: <cbfc9422-9ba8-475b-9c8d-e6ab0e53856e@lunn.ch>
-References: <20250512012748.79749-1-damien.riegel@silabs.com>
- <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
- <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
- <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
- <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
- <2025051551-rinsing-accurate-1852@gregkh>
- <D9WTONSVOPJS.1DNQ703ATXIN1@silabs.com>
- <2025051612-stained-wasting-26d3@gregkh>
- <D9XQ42C56TUG.2VXDA4CVURNAM@silabs.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMrPcdNQ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad5740dd20eso5609266b.0;
+        Sun, 18 May 2025 08:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747582364; x=1748187164; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1f92eXOWYP4V+zpTK83sed7LLMBz3R74Jjg/SFUX4Vs=;
+        b=FMrPcdNQScnoRRDAhrjEggvXyh+3ui5ZgcESeN7AHddXnnRgMjJXXRhE2DBXecCAQT
+         /JbmgtLaYigFnlqofsHjTFB9pVGXcCjpCRr0S+zXs4xSU6zfY3ZkfgASqxa2cI2ER1/I
+         1gdPcp3WD9ruoqxxwQrjkajAfhaywAY4+DAWB394lf+auRx7WFH8ijW3Yhh3q8CNEzf1
+         oJ7+j4x08nKWdAnQyrWebwZI65bf5dh3WvcXfpHIKoBGF3ShLF2jvarlNLvPw9pRtuDW
+         UNjxxa/Q6nOGwxoCDjesU6A6Fy++lGDfm8GRjNqXG1uuOidw4RalLUWcw8aJ8J4JPoFB
+         rjfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747582364; x=1748187164;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1f92eXOWYP4V+zpTK83sed7LLMBz3R74Jjg/SFUX4Vs=;
+        b=NK/loGs/kJI2PG10HAVyzKCY1ptlU1u2GArt5qbwVjVta2U4d64DcJdXHFI74Z0tEz
+         h/NDKt/Z5wgS1Hk9A752RQCDc1PCCMnCxiFtioy4DQu4e+rzUhIOPTz+jtHHjykctJYI
+         Q/hfmAxtjbNK16qtnFLW1jKJ8FttCK/zK2QkT/FQ2bvJOpszrhPZyqMlFshCXd4cn/My
+         3Mb0n97McPAuYd1hAQgeujcKJMezEneHP3s0IUo+YVPGp5KxVbbueWKr6a6f76nzziRS
+         0O3qrXHZSqTOe+FYAZvu7V42MYce7X7y+BUsV5JaqKUhcG5resL9NOMuwv9yqu3tt1H8
+         tCTw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3UCFT0nRYEAnqP6g0krYhCx26VpT0zLQ0tYbhl+LoYVVoiWu6yXe4No+L4Q/9AGPdniasAXdfR/VAJQ==@vger.kernel.org, AJvYcCU5fEm0FKpHxaWo0K174Yrw+8qsxAN5HKg8AgafscJsHvwjcuL90KSwrF1nsApx76WKBu2+4RxlNhQo6Hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS3azyCu/FvO+mOxVjEI143+RXi5+rBtZdCjXpnm0HrWSS8Dyu
+	N1DExyZcPln+pr434mPUpt/Gi9L4Xs1t+Zut91E74hVnt55d7pDZBnO9
+X-Gm-Gg: ASbGncucZWPvn0UVeYEpbzj04wHRxavkGiDhHEpmV6XFcn7T1IMgm6dtzpUZTG/N2BU
+	Qk1AxYpoHbWO1ZaVLQn4IN1bJwgriDXpLMph4rkbEnLI2Y0/YJdQEv6jJ93fdWwQhfjGygvBfTt
+	u8ILyn1XbXlVoOo5BUONHmSqpFT455xE0h6MLJoyxUlMdQzXw33bXPJ0eeLB0T3l1ekzfZSkmdD
+	bxipxpTMaUY7fmDdZIuM3UjwGuPzIs3OZ15FgQRAopUb46d8FknD0cwTGJn3LwlNIShw8rAUZgd
+	XqhXFIQXFrNoxj2UqRJmUE/1ivgtaicIJILBDHisCEPVZqZHAkhLoqYtymTW5gsh
+X-Google-Smtp-Source: AGHT+IEUlJL8VBVYjOKV2aKMCQbEDwldB4nX6x9aADGO/DDur57+yPm6021vkCypNuuIG8bZ6IS8Pw==
+X-Received: by 2002:a17:907:d26:b0:ad5:715b:d1d4 with SMTP id a640c23a62f3a-ad5715bd3b3mr78933966b.32.1747582363769;
+        Sun, 18 May 2025 08:32:43 -0700 (PDT)
+Received: from [192.168.0.131] ([194.183.54.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4909e1sm453591866b.125.2025.05.18.08.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 May 2025 08:32:43 -0700 (PDT)
+Message-ID: <7c5a8768-2d19-40b9-a965-966a8900e703@gmail.com>
+Date: Sun, 18 May 2025 17:32:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9XQ42C56TUG.2VXDA4CVURNAM@silabs.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] leds: KUnit registration tests pertaining to
+ init_data
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: bettyzhou@google.com, ynaffit@google.com, tkjos@google.com
+References: <20250515082830.800798-1-lee@kernel.org>
+Content-Language: en-US
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <20250515082830.800798-1-lee@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> I think Andrew pulled Greybus in the discussion because there is some
-> overlap between Greybus and CPC:
->   - Greybus has bundles and CPorts, CPC only has "endpoints", which
->     would be the equivalent of a bundle with a single cport
->   - discoverability of Greybus bundles/CPC endpoints by the host
->   - multiple bundles/endpoints might coexist in the same
->     module/CPC-enabled device
->   - bundles/endpoints are independent from each other and each has its
->     own dedicated driver
+Hi Lee,
+
+On 5/15/25 10:27, Lee Jones wrote:
+> Lots of drivers still register with the LED Class using init_data. Let's
+
+What do you mean by "still"? Actually init_data is the new approach,
+that turns the LED core DT parser on, and is predestined for use with
+{devm_}led_classdev_register_ext() API.
+
+> provide some additional Kunit infrastructure to exercise the various
+> possibilities.
 > 
-> Greybus goes a step further and specs some protocols like GPIO or UART.
-> CPC doesn't spec what goes over endpoints because it's geared towards
-> radio applications and as you said, it's very device/stack specific.
+> Change log:
+> 
+> v1 => v2:
+>   - Use devm_* to ensure resources are cleaned-up on exit
+> 
+> Lee Jones (5):
+>    leds: led-test: Move common LED class registration code into helper
+>      function
+>    leds: led-test: Provide test for registration with missing
+>      default_label
+>    leds: led-test: Provide test for registration with missing devicename
+>    leds: led-test: Provide test for registration with a name that is too
+>      long
+>    leds: led-test: Provide test for successful registration using
+>      init_data
+> 
+>   drivers/leds/led-test.c | 86 ++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 80 insertions(+), 6 deletions(-)
+> 
 
-Is it device specific? Look at your Bluetooth implementation. I don't
-see anything device specific in it. That should work for any of the
-vendors of similar chips to yours.
+-- 
+Best regards,
+Jacek Anaszewski
 
-For 802.15.4, Linux defines:
-
-struct ieee802154_ops {
-        struct module   *owner;
-        int             (*start)(struct ieee802154_hw *hw);
-        void            (*stop)(struct ieee802154_hw *hw);
-        int             (*xmit_sync)(struct ieee802154_hw *hw,
-                                     struct sk_buff *skb);
-        int             (*xmit_async)(struct ieee802154_hw *hw,
-                                      struct sk_buff *skb);
-        int             (*ed)(struct ieee802154_hw *hw, u8 *level);
-        int             (*set_channel)(struct ieee802154_hw *hw, u8 page,
-                                       u8 channel);
-        int             (*set_hw_addr_filt)(struct ieee802154_hw *hw,
-                                            struct ieee802154_hw_addr_filt *filt,
-                                            unsigned long changed);
-        int             (*set_txpower)(struct ieee802154_hw *hw, s32 mbm);
-        int             (*set_lbt)(struct ieee802154_hw *hw, bool on);
-        int             (*set_cca_mode)(struct ieee802154_hw *hw,
-                                        const struct wpan_phy_cca *cca);
-        int             (*set_cca_ed_level)(struct ieee802154_hw *hw, s32 mbm);
-        int             (*set_csma_params)(struct ieee802154_hw *hw,
-                                           u8 min_be, u8 max_be, u8 retries);
-        int             (*set_frame_retries)(struct ieee802154_hw *hw,
-                                             s8 retries);
-        int             (*set_promiscuous_mode)(struct ieee802154_hw *hw,
-                                                const bool on);
-};
-
-Many of these are optional, but this gives an abstract representation
-of a device, which is should be possible to turn into a protocol
-talked over a transport bus like SPI or SDIO.
-
-This also comes back to my point of there being at least four vendors
-of devices like yours. Linux does not want four or more
-implementations of this, each 90% the same, just a different way of
-converting this structure of operations into messages over a transport
-bus.
-
-You have to define the protocol. Mainline needs that so when the next
-vendor comes along, we can point at your protocol and say that is how
-it has to be implemented in Mainline. Make your firmware on the SoC
-understand it.  You have the advantage that you are here first, you
-get to define that protocol, but you do need to clearly define it.
-
-You have listed how your implementation is similar to Greybus. You say
-what is not so great is streaming, i.e. the bulk data transfer needed
-to implement xmit_sync() and xmit_async() above. Greybus is too much
-RPC based. RPCs are actually what you want for most of the operations
-listed above, but i agree for data, in order to keep the transport
-fully loaded, you want double buffering. However, that appears to be
-possible with the current Greybus code.
-
-gb_operation_unidirectional_timeout() says:
-
- * Note that successful send of a unidirectional operation does not imply that
- * the request as actually reached the remote end of the connection.
- */
-
-So long as you are doing your memory management correctly, i don't see
-why you cannot implement double buffering in the transport driver.
-
-I also don't see why you cannot extend the Greybus upper API and add a
-true gb_operation_unidirectional_async() call.
-
-You also said that lots of small transfers are inefficient, and you
-wanted to combine small high level messages into one big transport
-layer message. This is something you frequently see with USB Ethernet
-dongles. The Ethernet driver puts a number of small Ethernet packets
-into one USB URB. The USB layer itself has no idea this is going on. I
-don't see why the same cannot be done here, greybus itself does not
-need to be aware of the packet consolidation.
-
-	Andrew
