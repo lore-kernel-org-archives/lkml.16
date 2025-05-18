@@ -1,110 +1,140 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC944B1E6B
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 03:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1102710A1E;
+	Sun, 18 May 2025 03:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747539951; cv=none; b=l79CiN9fzQLYgwI1S8dNy5c/Sm9ZHcol6DwPQWVUTM0Am9YMoA5bwP1Bz9GrLue7xG3HrZ3yExlUR3huYxGWPrbDR98rQ+eVQAEZhuU5Yx8QwlATtvabox8D6Bg5CIdtgI+dDYW/9tVSoc2tGjHyEyAPSAvQcHcyY8ifLU/NvyU=
+	t=1747540077; cv=none; b=KJaigDb9lh4RLZmmFG4zW90EXncFNBXezKWgbAA7Y7HasaayIu+FH2zfqeCmm7IYAAwWtFN0URByVabh39HO5vawcfHeYVDPxQqgZ8BLC+zCTgRHYPx3D7qv7kDarJZnSy6C86Y+G4QEe/ODPsFdND1aAEW1kS4C0ISX9OOA4Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747539951; c=relaxed/simple;
-	bh=1CWALF1wrQkBJY3t+c0DqpsNcrnh45DNAO2hfucJ3HQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cn+wGT1ct6tFSxPifpIJdb9pg/9K8OjdBxj/6KuSjmQvbgZmMIKOYb1sVYSLYYHwvP5lDiL6wH106cQ5QfOuBdPFFxj87d+oZKwbIGDUMrrs2Lp8BFbUG4TpRcShIMSPv/D6e3KL3JPuSguKzjD7CWhEdF9I+oEHv5mQkSruVec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tgKQtHYV; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747540077; c=relaxed/simple;
+	bh=aXvJKxmzfESpaedYEM0k3r230KTw/3k6G8+3Tse+Lhs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=O1ssZn2gaWI3R4aF6UGbCjxyUZd8+vr41E2j+Bh5yG5IsXWpU4xnKmYmdGgYL1y42ZMVHzDkDMR7Dd+MKVYDGtNXRSMitOyPpQHal1MtoX0mqWA5Mo+W8NjpzzMGS8AQOzENHSNjf2AuWeYzu5w+MMi76GNm5jiS7vEtei4F4Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iOPiA8P8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tgKQtHYV"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54HNGHcF030018;
-	Sun, 18 May 2025 03:45:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pHOFSE
-	VOMTefVuiZWo23oTxLvoEYVyE9c1h/ECt/UIw=; b=tgKQtHYVRzFRgDZMTeKbL8
-	tgnVDIi04Z6+rzhdwvCpow1WL0qWBFmOkjB9O1n1XZs8zwqL6NUZllIt5ZRHlMZJ
-	AdZofgwkLk1lECLE8VQBhN7+0n/aB/6mRRHXkrhOT7e9Esfz3a45XH6YupkAEwO6
-	fh9Ug91jPOBXqVcb5HoT6PsZwjgjNH0PNZGJGY9HVjpauUR2c1hkDbat1uf4D4V8
-	KlZ7uvXli1OFdg8FCqoFoNuXZlJ7FcwV4MCT7ka1LI1VFyDtWooP7rIKLEGBthj2
-	Plg7iS5YhuGd18KijHE2DcjHTKG9Iv/2ChoVplsn/6f+cgO68VJHH93eORD5nDrA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46q05696vv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 03:45:18 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54I3jIQk029319;
-	Sun, 18 May 2025 03:45:18 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46q05696vt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 03:45:18 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54I0bM75028874;
-	Sun, 18 May 2025 03:45:17 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46q55yghwa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 03:45:17 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54I3jGZM58327422
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 18 May 2025 03:45:16 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1E9DD20133;
-	Sun, 18 May 2025 03:45:16 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 378CD20134;
-	Sun, 18 May 2025 03:45:12 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.51.82])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 18 May 2025 03:45:11 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Transliterate author name and remove FIXME
-Date: Sun, 18 May 2025 09:15:10 +0530
-Message-ID: <174753967074.24504.676189265868937968.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20241110162139.5179-2-thorsten.blum@linux.dev>
-References: <20241110162139.5179-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iOPiA8P8"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 84C0D20277FA; Sat, 17 May 2025 20:47:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 84C0D20277FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747540075;
+	bh=lPGYH1glaOFQwG0Qf4sdwd5qCLAWVCDmPlEySsWR4Kg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iOPiA8P85ZLuht2RkG9gqBfxGdBHeS1PaINFVYLt/5Q9Mms2x7auacqvvfbloAlVp
+	 zDQEMZO8q6QXyfhuot5555zl1gP+ihmFJCM0iiHyFDC66yEW/8j+JZY2txvxVQoSSa
+	 0o9OciEJMKsgntdUYDpMj+4fkOKPTlCMIFaCAE0c=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	sdf@fomichev.me,
+	kuniyu@amazon.com,
+	ahmed.zaki@intel.com,
+	aleksander.lobakin@intel.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: ssengar@microsoft.com,
+	stable@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: [PATCH net] hv_netvsc: fix potential deadlock in netvsc_vf_setxdp()
+Date: Sat, 17 May 2025 20:47:50 -0700
+Message-Id: <1747540070-11086-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDAzMSBTYWx0ZWRfXzFa/PwvIBGgt OsFexqdn6huGOZL0WTvnbpG3irC0tNSTq8Nt5Sbe2767zan4zRoXLtw7+sktvrHxF0Go8pmL39K 35idnPCuA2tGRT5W2BPNdVCH5fJvTlsVjRs6tESOXNo3e4GfD9Kb7QyjX//yrwLlx8fw3zyz+rw
- tS26qij6yQvWXf4khnQJ4c+3icZiwvA+KgP+ZY+5YTwiZW5vc8n75BxmVREIl6bVLKIGQ4Jv10R Kh57eGwWmv+NXLIyUnTG5fHOhgkqUs8nWx6A9TPS7dLyNUxoO5UzRwIhHZj2lAaF+Uh9wH/v2u3 ruSy/xnsyDibjStibsQm5lc9qvDbTz+aCSutvLEIaXrqgoqtA8Wjb/LjKuSPABkt/6xOdodeMIf
- yhj70vv7dZU8TIHNwqRevUxmSIIvD2k8J8UBI9qs+1R5/sCExSemHbfUpYXsKpoyxSun09mq
-X-Authority-Analysis: v=2.4 cv=H5vbw/Yi c=1 sm=1 tr=0 ts=682957ce cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=1RRbINDQn9zaYogeI4kA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: izCNLpHsxeDokV39_6TPDXYIb8uV8Dvb
-X-Proofpoint-ORIG-GUID: 40rC4nPjoPK_GaxmW8rIN7fOpfmxpymR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_02,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=748 phishscore=0
- mlxscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505180031
 
-On Sun, 10 Nov 2024 17:21:37 +0100, Thorsten Blum wrote:
-> The name is Mimi Phuong-Thao Vo.
-> 
-> 
+The MANA driver's probe registers netdevice via the following call chain:
 
-Applied to powerpc/next.
+mana_probe()
+  register_netdev()
+    register_netdevice()
 
-[1/1] powerpc: Transliterate author name and remove FIXME
-      https://git.kernel.org/powerpc/c/8bc3252436d371e7ac505f9f2685611090680a48
+register_netdevice() calls notifier callback for netvsc driver,
+holding the netdev mutex via netdev_lock_ops().
 
-Thanks
+Further this netvsc notifier callback end up attempting to acquire the
+same lock again in dev_xdp_propagate() leading to deadlock.
+
+netvsc_netdev_event()
+  netvsc_vf_setxdp()
+    dev_xdp_propagate()
+
+This deadlock was not observed so far because net_shaper_ops was never
+set and this lock in noop in this case. Fix this by using
+netif_xdp_propagate instead of dev_xdp_propagate to avoid recursive
+locking in this path.
+
+This issue has not observed so far because net_shaper_ops was unset,
+making the lock path effectively a no-op. To prevent recursive locking
+and avoid this deadlock, replace dev_xdp_propagate() with
+netif_xdp_propagate(), which does not acquire the lock again.
+
+Also, clean up the unregistration path by removing unnecessary call to
+netvsc_vf_setxdp(), since unregister_netdevice_many_notify() already
+performs this cleanup via dev_xdp_uninstall.
+
+Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
+Cc: stable@vger.kernel.org
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ drivers/net/hyperv/netvsc_bpf.c | 2 +-
+ drivers/net/hyperv/netvsc_drv.c | 2 --
+ net/core/dev.c                  | 1 +
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
+index e01c5997a551..1dd3755d9e6d 100644
+--- a/drivers/net/hyperv/netvsc_bpf.c
++++ b/drivers/net/hyperv/netvsc_bpf.c
+@@ -183,7 +183,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ 	xdp.command = XDP_SETUP_PROG;
+ 	xdp.prog = prog;
+ 
+-	ret = dev_xdp_propagate(vf_netdev, &xdp);
++	ret = netif_xdp_propagate(vf_netdev, &xdp);
+ 
+ 	if (ret && prog)
+ 		bpf_prog_put(prog);
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d8b169ac0343..ee3aaf9c10e6 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2462,8 +2462,6 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+ 
+ 	netdev_info(ndev, "VF unregistering: %s\n", vf_netdev->name);
+ 
+-	netvsc_vf_setxdp(vf_netdev, NULL);
+-
+ 	reinit_completion(&net_device_ctx->vf_add);
+ 	netdev_rx_handler_unregister(vf_netdev);
+ 	netdev_upper_dev_unlink(vf_netdev, ndev);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index fccf2167b235..8c6c9d7fba26 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -9953,6 +9953,7 @@ int netif_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf)
+ 
+ 	return dev->netdev_ops->ndo_bpf(dev, bpf);
+ }
++EXPORT_SYMBOL_GPL(netif_xdp_propagate);
+ 
+ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
+ {
+-- 
+2.43.0
+
