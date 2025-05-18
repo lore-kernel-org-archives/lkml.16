@@ -1,126 +1,205 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161A07FD
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 16:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B47FD;
+	Sun, 18 May 2025 16:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747585962; cv=none; b=aBpMBLfAIWcQnJoXs0Ln648HWJ7kdgrdOTiGU3Irmyt65G7oRaUgNQ8n+XsC6L26j54uVYa22YSFQOZUwDvSe59mxDsWhV8nNSD68zm68eTsxE+qNKiFnM23/dAC3wak3oqTFP+4hlIJO1wbT9xVfv3WuMC0Q9cctE5yzYaJzEw=
+	t=1747586037; cv=none; b=Bw4lgF9eILlnxx+/mKoZyhKlvEJWAiKDsDPzAgkSxv4D5W9frVhv+wnpkK0YbodvrY7iYz/TK6MrIUVlwL4ddtAjBDjNbwm5NF4j3hMWgG0H5E2Ohwm/bLQ1AZF/qeCn/440Z52FaD0RSOkavo23FRXMgAfBucNgXuHLHUoO4w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747585962; c=relaxed/simple;
-	bh=JHdv/Z72TWXViYJ0Rsa16LgQtAccvKnHT0kF89rw9UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2oUdBjqkiNzl7uSBOFf1vV6Jv2H0882mcVqQveibC7ZjeQP7roUqDS5hXSVfcBkv+Ih221Mu2P4tKSsFOCjB/J5zFiUMn7JCjR0pmlCRiP7unwTNd2SnSAv8jcnRSBwE9VTic4F4uP1y47+fJOl5R2Y1pTrd1mOkYkWRrmcD0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=tl/lonSS; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1747586037; c=relaxed/simple;
+	bh=AIdifPYCgNitnQmkjwa6oXqFv5d8J/QYu38GR+hWbh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YSGLRvTM5cPv9/OZ08xUSXaL9lCQVW+cr4gXGhr+NQ54I7cej+ZHwDiXxXq5No3VAKTDJTeAPNKf5bISO4fQyVsczziCPj3tSggul8oIRuWC+PnXncZZNrvndOcxzmB59n8cLTCDuPAWPR6N4Lv3kvwzFgONEeap2ICBEsjd98w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z92W3h2u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="tl/lonSS"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c58974ed57so394291285a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747585958; x=1748190758; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Z/qOAr1C4XEBB+DPsUOfABCO22V0vXaogzTyqJK2yU=;
-        b=tl/lonSStAjkFbjv2P+EJL2+WnVo/or1/N1FV3jHRqmB0Lb9Dqu0nqfOzMMq5gvqEY
-         8zq8VjIgRbIxDIXltKqjCuG1hghlXfv9EOSIwpNAEtR0uhKDdKvximP3X7LU5rg2pWjW
-         upywfz/sRXbTPv4VptcJiQtt3IJCevrRTO5Qf8ezonRtPD1vVd0K89rY608rhBAZiJLp
-         HSGqqVD3AldI4lZkwfV0and8xRNoHDszvmcUngMi2RYlHntOVylOGqfEoKmOknm1d0nq
-         jrRWf5pszOjf+YdCe7UYSYT4mi9HfeQDMv48WMEfkmrYz/5POfcl8Bwz5EIqjs77Gm6v
-         L/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747585958; x=1748190758;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Z/qOAr1C4XEBB+DPsUOfABCO22V0vXaogzTyqJK2yU=;
-        b=GZjwvwoQvBJh8QaAuIkBSX46klFaqIu2U14Q+rQ38RzJjy+78HxtSlqLg22bZcUEDu
-         yMf7www2HuEetGjinY4aybukUPIsUUNqzwmGi0s3A/PsYy6uFt+9hyH2bNXUBOPxpBeo
-         4jctofqEeGDfbkL9AFM2Jy1QwpOLpCQhDBCOYGJ7CJzNmGkLamp3xSu+CyDTAbAS8i66
-         +JtJhFQymaj4+I7I1eHDVXue5irsarIl2BETjKcA/dHHw268FblQyjGxwcY1wQO/eiqr
-         avrTk/ZOMgOSlWmTI5m6MFFQxrT6z3FgbSMaUcUQgbYzaRUAl3KWATLlrn0Kl8MK8jSf
-         Pr/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTJfWbohDaJsZMoNTNVj08G/tNOmcxMnVU11/7Ywf6+ZvOMxUmmZfnajFy5ux8koi2bvjQTRbdQvJxhl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxZK+ReGXjlvy7vV1d/vnQr5K9l1gnvMGlM2lb4dxuZdfl9GpI
-	MNjPfFZWkCLHlei95eAvg5hEtqG5QKGgPeAhF3m6mrkahfTV7JRIc+6VXGzn+4dbljU=
-X-Gm-Gg: ASbGncuou6FIKh/vex2YH7B6ChMmoixm/g2Eh9N9eijNnlfIRDvX+z7kuwe86hU9k4F
-	Yxm0fiZVCdN3imHV8XPPNWx8PL7+cTfDPD+FZH6mQXJ8zgD5KK8R2LXXCEneDarWXIPTNBt6alb
-	iX/QhGlWfU0TIu6BCD1IUc2GZPoZunD+p2T03n3gVA04j87CIANTT7wPbBs4BhA+ny3gsoBt5o0
-	dyRMYMWjdh9D2UWUJ0DT9Wd3L2Uya2j/7DkORNsI+PsnX/MultOByJYNIXZyWoZfTS1WRJlBXdB
-	w+bu7pfOCKSVI8ryjZG01L6Icm/2aMB6ogCP6X81Ag/UdXGa+w==
-X-Google-Smtp-Source: AGHT+IGsf25U50Gdmw0C4S0ZXZGTzX5YSOu16UhXHbvjfBEYkvTS0VTuoT8A0k/GYuJl2dRBlTYYhQ==
-X-Received: by 2002:a05:620a:4483:b0:7c5:4b18:c4c3 with SMTP id af79cd13be357-7cd4673128amr1457156685a.30.1747585957753;
-        Sun, 18 May 2025 09:32:37 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd468e5a77sm424567285a.116.2025.05.18.09.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 09:32:36 -0700 (PDT)
-Date: Sun, 18 May 2025 12:32:35 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] mm/page_isolation: remove migratetype parameter
- from more functions.
-Message-ID: <20250518163235.GA731066@cmpxchg.org>
-References: <20250509200111.3372279-1-ziy@nvidia.com>
- <20250509200111.3372279-5-ziy@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z92W3h2u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE21C4CEE7;
+	Sun, 18 May 2025 16:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747586036;
+	bh=AIdifPYCgNitnQmkjwa6oXqFv5d8J/QYu38GR+hWbh8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z92W3h2ueIH28d89Q769h0doFHIvdADv67w2UBtHkjaCHIOdGajyzA1ApsV5t8a0c
+	 GCq1NjNOWXp2HMLPEzedJ78absoI8bafRC4Mbut1ePea0wmUCZVvgS7ukM58MB4QlT
+	 fyblXpRnRAApNk0wSD5I66EUverNNpDVCmcNGpklDGZHllE8RAaMh8ijytjOlYcWVB
+	 l7ma0/tAsVhOGHWoXBKQWp3nQgmk6jJ9b2LHPUnBkTVOCqwvqdJVG22SVHtqgKeiQZ
+	 T7NweNdqstECbpUWdD/sOeBCv5rnwd5vE/YDVN26clWeUCCg3RnVJnasopOb3tNoFx
+	 sCZBmURQESTRA==
+Date: Sun, 18 May 2025 17:33:45 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
+ <sergiu.cuciurean@analog.com>, "Dragos Bogdan" <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Javier Carrasco
+ <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
+ <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>, Alisa-Dariana Roman
+ <alisadariana@gmail.com>, Esteban Blanc <eblanc@baylibre.com>,
+ <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] iio: adc: ad7405: add ad7405 driver
+Message-ID: <20250518173345.338050e4@jic23-huawei>
+In-Reply-To: <20250516105810.3028541-5-pop.ioan-daniel@analog.com>
+References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
+	<20250516105810.3028541-5-pop.ioan-daniel@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509200111.3372279-5-ziy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 04:01:11PM -0400, Zi Yan wrote:
-> @@ -22,8 +22,25 @@ static inline bool is_migrate_isolate(int migratetype)
->  }
->  #endif
->  
-> -#define MEMORY_OFFLINE	0x1
-> -#define REPORT_FAILURE	0x2
+On Fri, 16 May 2025 13:58:04 +0300
+Pop Ioan Daniel <pop.ioan-daniel@analog.com> wrote:
+
+> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
+> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
+ts an
+> analog input signal into a high speed, single-bit data stream.
+>=20
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+More or less just one question to add to David's review.
+
+It's around whether the clock is a separate thing or part of the backend
+(which here kind of incorporates the bus controller).
+
+We wouldn't bother specifying a clock line explicitly for SPI or PCIe so
+why do we need one for this?
+
+> ---
+> changes in v3:
+>  - edit ad7405_chip_info struct instances
+>  - remove lock
+>  - add implementation for IIO_CHAN_INFO_SCALE
+>  - use IIO_CHAN_INFO_OVERSAMPLING_RATIO for controlling the decimation ra=
+te
+>  - use IIO_CHAN_INFO_SAMP_FREQ for read-only
+>  - remove dem_clk_get_enabled() function
+>  - remove chip_info variable from probe function
+>  - fix indentation
+>  - remove max_rate
+>  - rename ad7405_set_sampling_rate in ad7405_det_dec_rate
+> add adum7702 and adum7703 chip_info
+>  drivers/iio/adc/Kconfig  |  10 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad7405.c | 276 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 287 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7405.c
+
+> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
+> new file mode 100644
+> index 000000000000..1a96a283ab01
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7405.c
+> @@ -0,0 +1,276 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Isolation modes:
-> + * ISOLATE_MODE_NONE - isolate for other purposes than those below
-> + * MEMORY_OFFLINE    - isolate to offline (!allocate) memory e.g., skip over
-> + *		       PageHWPoison() pages and PageOffline() pages.
-> + * CMA_ALLOCATION    - isolate for CMA allocations
+> + * Analog Devices AD7405 driver
+> + *
+> + * Copyright 2025 Analog Devices Inc.
 > + */
-> +enum isolate_mode_t {
-> +	ISOLATE_MODE_NONE,
-> +	MEMORY_OFFLINE,
-> +	CMA_ALLOCATION,
+> +
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/util_macros.h>
+> +
+> +#include <linux/iio/backend.h>
+> +#include <linux/iio/iio.h>
+> +
+> +static const unsigned int ad7405_scale_table[][2] =3D {
+> +	{640, 0},
 > +};
 > +
-> +/*
-> + * Isolation flags:
-> + * REPORT_FAILURE - report details about the failure to isolate the range
-> + */
-> +typedef unsigned int __bitwise isolate_flags_t;
-> +#define REPORT_FAILURE		((__force isolate_flags_t)BIT(0))
->  
->  void set_pageblock_migratetype(struct page *page, int migratetype);
->  void set_pageblock_isolate(struct page *page);
-> @@ -32,10 +49,10 @@ bool pageblock_isolate_and_move_free_pages(struct zone *zone, struct page *page)
->  bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct page *page);
->  
->  int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
-> -			     int migratetype, int flags);
-> +			     isolate_mode_t mode, isolate_flags_t flags);
+> +static const unsigned int adum7702_scale_table[][2] =3D {
+> +	{128, 0},
 
-This should be 'enum isolate_mode_t', right?
+	{ 128, 0 },
 
-(isolate_mode_t also exists, but it's something else)
+Assuming you keep these (see David's feedback)
+
+> +};
+
+> +static int ad7405_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad7405_state *st;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st =3D iio_priv(indio_dev);
+> +
+> +	st->info =3D device_get_match_data(dev);
+> +	if (!st->info)
+> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
+> +
+> +	ret =3D devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_sup=
+plies),
+> +					     ad7405_power_supplies);
+> +
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to get and enable supplies");
+> +
+> +	clk =3D devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	st->ref_frequency =3D clk_get_rate(clk);
+
+Perhaps an odd question but for a clocked lvds bus like this
+is the clock actually something we should represent as part of
+the bus (so iio_backend interfaces) or separately like this?
+
+
+> +	if (!st->ref_frequency)
+> +		return -EINVAL;
+> +
+> +	ad7405_fill_samp_freq_table(st);
+> +
+> +	indio_dev->dev.parent =3D dev;
+> +	indio_dev->name =3D st->info->name;
+> +	indio_dev->channels =3D &st->info->channel;
+> +	indio_dev->num_channels =3D 1;
+> +	indio_dev->info =3D &ad7405_iio_info;
+> +
+> +	st->back =3D devm_iio_backend_get(dev, NULL);
+> +	if (IS_ERR(st->back))
+> +		return dev_err_probe(dev, PTR_ERR(st->back),
+> +				     "failed to get IIO backend");
+> +
+> +	ret =3D iio_backend_chan_enable(st->back, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D devm_iio_backend_request_buffer(dev, st->back, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D devm_iio_backend_enable(dev, st->back);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D ad7405_set_dec_rate(indio_dev, &indio_dev->channels[0], 256);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+
