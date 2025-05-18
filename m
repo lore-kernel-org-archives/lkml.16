@@ -1,161 +1,170 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF20236D
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 16:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731F221D3D1;
+	Sun, 18 May 2025 16:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747586486; cv=none; b=e7tRR9hstxF75ch6DmF/+ujXnWDsS1tk6TFeKzhEFRfFcjlLmj08vYMsDbG08BQepEgN7TSUlIJt8wTVJ0MIzFeClfptS0tKy2zguMT60giA/mzx/85B0eVRI8x35iclRVOSIxvDyjpfZ8sZDcnAXxkgnj0RosLeq7YPO17S4D8=
+	t=1747586703; cv=none; b=PS4odNkknvsf5oD+NgFhUj9UHdbH5cSCWpaviQxeXRS2rVs0XlaDuXMrf2yP9tJGQbPEkMUGO/gICGSgZCd+ad43AnMRPfZeLcqizVmdkdB6+EDQ3aNH5PbcGWGbNvzxqdGzJJkh2ZKBnRX/oaleJ/UwzStVv9RSb4e5OHAOzlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747586486; c=relaxed/simple;
-	bh=flyQrErcaDeYGqXGq+B+sPOzFqMI8XoPFcb3KSLgGpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jgpAKZQZ4NoTfctEfkhZ02JAfKu2H6ZGl/BgoJTVGKrIHQKZ74Ronz/9ubmyl9qA25Abkj8yaweimmWbZoegzgUn/AodGFSbJGtD69OG+/iqG78ksSS0A0dJyRlTOHih4MkTOsB6RwC1V0gSz92HmP+EzFm8vN+4+YfT+IHyAhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbGbrZpy; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747586703; c=relaxed/simple;
+	bh=hqYYae6HdTbOX7JwE+TunGPlD72L5BsUZLZ3ArZO5z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sX2Pbys1H8i2liLFVk74XOvENKz0+u3PAviqQAAIbmF3C+ETpKwb0AcE5APXiCCtLFxmpKWkLKhdJwd1+vyCDLljnVbTPUz3cMo/emkskV1JpkiZH6bPj6Eu9Z9CeypWhnMM4VeNAVLEFFBNkY/8+3SViqI226JDwdk51Bsbyx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rc8HLvac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbGbrZpy"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742caef5896so246496b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747586484; x=1748191284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=NGJ5rqBC7WbitGDnZ0mNGgmapTnH34KgA6S43fvjY00=;
-        b=lbGbrZpyEtk3/i2Jb4//8NvXhr3JsIQs3Ynr4hxMyEuS298A2rUFL7JpUK+g1O53Zd
-         vBN1nbiNkf/q41iiCWYgwtHVioQY4gxqnlsSMw1n9YEcbhl22R/nx3bGvL64eT9/B4zD
-         SUY9lg5Um0iV20zLLKQ3rgMBYQkUL6T+MYB2aZMXtUe5+3sxquH6VmJG63cuo/QSZZOg
-         me94hpfnpZxqy08Xhcrno/x1Z2giX2VsJImy1LCgeK+gTa5l/JOYlv1GLG7jXZ7lcLQU
-         QJb0OXizHYxmZdJoNwoXhrr8/Oak8ydfSzSX0KKUai9RR0T2407abaYBikvq3JSValeG
-         nIMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747586484; x=1748191284;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NGJ5rqBC7WbitGDnZ0mNGgmapTnH34KgA6S43fvjY00=;
-        b=AdQS8Y1LLX3/K4jCJPORh3xU3dvUBCsWkgLPchLtmkm48jbMRCFuQqyJqj2AwnikFr
-         CVhiZ2DOVzeVyqIFk8XiVJTzNEdRaIa3ZmDVjNq0PSm1HfmaS6cylfASj5ySUSw6L/fS
-         ONXs9JuX4qKvUl/CS1/71cKGIeuujVlXwBthge7r4wc9e2QDs8EE+uIexR6nh688KFwX
-         I4Oh1Ti2XZUhQK2XtOB5BE9bGa7NlCOLpp/Y6Ow8rUeo+CUG9kWOQ1FNy/xev/3ryknX
-         XFwHrO+1ROjzFBHx90nh9Kwv4xPis2/OcRS/lP2+PONwUYOGWaRBGqMbB2Slqhr2jwRV
-         2PyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlik/lfMtX4wB88HS/0NvI+ZJefhc+ArmSEPDP7H/YdcuTTBUHGQ6tILBVGmz6mhDivsmpqvG3Je+GeYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrG/LR1sl/VRjBerLJK8LcpWrSxUhcoq3CBQH1H+b3/fyXnk1T
-	BbD/K6MgRwkqNqNz+ZHtasRBXv2yJt6zSn6TnHfSt3f3R5Jy9XaxU41J
-X-Gm-Gg: ASbGnctSByZ2+OCMivak9inpIdJXU8FwCnvLQTNG5LraS1z4nCxCYg3SAIjEe5TGtDc
-	j80sbkZalROQKYbder73ySnW5SWH6qdzjxmDv1MKzKnQwiGwFtE8P9VTmH9+4VbGVsZahNzR7dC
-	eJmn+O5/KusPelYlAElU1z919FCixzNFgeaiQzCKFnil+IsGjnbQK9EzkJrNKp4DWp42+0OvaaJ
-	oqP6DgU9af3erhIpzmRNhOpui+8QaBE9i8NQSEWCUkG5zINuRADubN5vXeG394jYL9FVocs+jAB
-	IjG52btelz94U78zg+1QfDsBq3LcIVzpGrnnE1wlou4KO8nDXQdFwKMuTlQRhAW1
-X-Google-Smtp-Source: AGHT+IGpcmzbvOjTwEWfKyz0NR5r88tR69+PRwvb3xEu4Qb74Qw2Id1qqyBUkxPFhlZZvE6xhqzJgQ==
-X-Received: by 2002:a17:903:2582:b0:232:1daf:6f06 with SMTP id d9443c01a7336-2321daf701fmr31313455ad.47.1747586483869;
-        Sun, 18 May 2025 09:41:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e2118b07sm42255275ad.43.2025.05.18.09.41.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 09:41:23 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] ARM: integrator: Fix early initialization
-Date: Sun, 18 May 2025 09:41:18 -0700
-Message-ID: <20250518164118.3859567-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rc8HLvac"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAC9C4CEE7;
+	Sun, 18 May 2025 16:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747586702;
+	bh=hqYYae6HdTbOX7JwE+TunGPlD72L5BsUZLZ3ArZO5z8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rc8HLvacxAyWZcWo+E/Juqc1tAlTZDikiyaQB1KVAkSCM3Bo4L9uRxDoJdFYUc/8g
+	 Dou73bK2tAu4SERilMWpN8R4bKwZeTI7lKJodFx/RVreZZPfV13p8F6dkZgQoB7Dml
+	 wgRO95C8KwiEs5cc5zDGesxfUhey75Di/muooDvmZY9vKHq0HRx+izs6rolDRAk6vb
+	 vUwlc5hvDnT7qEZnwYDOmRIDJjXNUOA9ISESiwLZwvqjyYd7ufnIgxYH4Jpl60UQ4D
+	 RToICoLZK7xGbrwvLRKrClk35vB/Yy0BoxfCzjlfufYpm8Hp4tHnpcSvBCi7gwrJ4J
+	 MaEkcoRJDCorQ==
+Date: Sun, 18 May 2025 17:44:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
+ <sergiu.cuciurean@analog.com>, Dragos Bogdan <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Javier Carrasco
+ <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
+ <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/4] dt-bindings: iio: adc: add ad7405
+Message-ID: <20250518174450.044d2464@jic23-huawei>
+In-Reply-To: <20250516105810.3028541-4-pop.ioan-daniel@analog.com>
+References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
+	<20250516105810.3028541-4-pop.ioan-daniel@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Starting with commit bdb249fce9ad4 ("ARM: integrator: read counter using
-syscon/regmap"), intcp_init_early calls syscon_regmap_lookup_by_compatible
-which in turn calls of_syscon_register. This function allocates memory.
-Since the memory management code has not been initialized at that time,
-the call always fails. It either returns -ENOMEM or crashes as follows.
+On Fri, 16 May 2025 13:58:03 +0300
+Pop Ioan Daniel <pop.ioan-daniel@analog.com> wrote:
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
-[0000000c] *pgd=00000000
-Internal error: Oops: 5 [#1] ARM
-Modules linked in:
-CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc5-00026-g5fcc9bf84ee5 #1 PREEMPT
-Hardware name: ARM Integrator/CP (Device Tree)
-PC is at __kmalloc_cache_noprof+0xec/0x39c
-LR is at __kmalloc_cache_noprof+0x34/0x39c
-...
-Call trace:
- __kmalloc_cache_noprof from of_syscon_register+0x7c/0x310
- of_syscon_register from device_node_get_regmap+0xa4/0xb0
- device_node_get_regmap from intcp_init_early+0xc/0x40
- intcp_init_early from start_kernel+0x60/0x688
- start_kernel from 0x0
+> Add devicetree bindings for ad7405/adum770x family.
+>=20
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
+> changes in v2:
+>  - fix properties: clocks issue
+>  .../bindings/iio/adc/adi,ad7405.yaml          | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7405.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+> new file mode 100644
+> index 000000000000..939de3bd6f26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2025 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7405.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7405 family
+> +
+> +maintainers:
+> +  - Dragos Bogdan <dragos.bogdan@analog.com>
+> +  - Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD7405 is a high performance isolated ADC, 1-channel,
+> +  16-bit with a second-order =CE=A3-=CE=94 modulator that converts an an=
+alog input signal
+> +  into a high speed, single-bit data stream.
+> +
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+7405.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+um7701.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+um7702.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
+uM7703.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7405
+> +      - adi,adum7701
+> +      - adi,adum7702
+> +      - adi,adum7703
+> +
+> +  clocks:
+> +    maxItems: 1
 
-The crash is seen due to a dereferenced pointer which is not supposed to be
-NULL but is NULL if the memory management subsystem has not been
-initialized. The crash is not seen with all versions of gcc. Some versions
-such as gcc 9.x apparently do not dereference the pointer, presumably if
-tracing is disabled. The problem has been reproduced with gcc 10.x, 11.x,
-and 13.x. Either case, if the crash is not seen, the call to
-syscon_regmap_lookup_by_compatible returns -ENOMEM, and
-sched_clock_register is never called.
+The closest part we have to this (LVDS bus etc) that I could find was
+the ad7625.  That does use an explicit clock but there is more going
+on as it also has a pwm connected to gate that clock so maybe isn't
+an idea example to follow.
 
-Fix the problem by moving the early initialization code into the standard
-machine initialization code.
+As you will see in the driver review I just sent I'm wondering if an
+explicit clock is a separate thing or considered part of the lvds bus.
 
-Fixes: bdb249fce9ad4 ("ARM: integrator: read counter using syscon/regmap")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/arm/mach-versatile/integrator_cp.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+It's definitely wired to the ADC as a clock but it's also (I think) either
+wired up to the IP we map to the backend (from software point of view)
+or generated by that.
 
-diff --git a/arch/arm/mach-versatile/integrator_cp.c b/arch/arm/mach-versatile/integrator_cp.c
-index 2ed4ded56b3f..03dfb5f720b7 100644
---- a/arch/arm/mach-versatile/integrator_cp.c
-+++ b/arch/arm/mach-versatile/integrator_cp.c
-@@ -86,14 +86,6 @@ static u64 notrace intcp_read_sched_clock(void)
- 	return val;
- }
- 
--static void __init intcp_init_early(void)
--{
--	cm_map = syscon_regmap_lookup_by_compatible("arm,core-module-integrator");
--	if (IS_ERR(cm_map))
--		return;
--	sched_clock_register(intcp_read_sched_clock, 32, 24000000);
--}
--
- static void __init intcp_init_irq_of(void)
- {
- 	cm_init();
-@@ -119,6 +111,10 @@ static void __init intcp_init_of(void)
- {
- 	struct device_node *cpcon;
- 
-+	cm_map = syscon_regmap_lookup_by_compatible("arm,core-module-integrator");
-+	if (!IS_ERR(cm_map))
-+		sched_clock_register(intcp_read_sched_clock, 32, 24000000);
-+
- 	cpcon = of_find_matching_node(NULL, intcp_syscon_match);
- 	if (!cpcon)
- 		return;
-@@ -138,7 +134,6 @@ static const char * intcp_dt_board_compat[] = {
- DT_MACHINE_START(INTEGRATOR_CP_DT, "ARM Integrator/CP (Device Tree)")
- 	.reserve	= integrator_reserve,
- 	.map_io		= intcp_map_io,
--	.init_early	= intcp_init_early,
- 	.init_irq	= intcp_init_irq_of,
- 	.init_machine	= intcp_init_of,
- 	.dt_compat      = intcp_dt_board_compat,
--- 
-2.45.2
+I don't think this device is using an LVDS encoding to allow the clock
+to be established from the data lines alone? 8b/10b or similar (if it were =
+then the
+clock to the ADC only description would be correct choice).
+
+Perhaps this device is one that needs docs in the kernel to talk us
+through how the signalling is working.
+
+Jonathan
+
+> +
+> +  vdd1-supply: true
+> +
+> +  vdd2-supply: true
+> +
+> +  io-backends:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - vdd1-supply
+> +  - vdd2-supply
+> +  - io-backends
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    adc {
+> +        compatible =3D "adi,ad7405";
+> +        clocks =3D <&axi_clk_gen 0>;
+> +        vdd1-supply =3D <&vdd1>;
+> +        vdd2-supply =3D <&vdd2>;
+> +        io-backends =3D <&iio_backend>;
+> +    };
+> +...
 
