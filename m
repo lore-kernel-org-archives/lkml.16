@@ -1,141 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78183188715
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 05:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B1D2D023;
+	Sun, 18 May 2025 05:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747545844; cv=none; b=iOn1zTuCpsmCyewAQ3kZzndN/6GrapGNWxRmQX87eSKNaPySDZDP7r+AyMxa+eGPQyazMiAap5FZWN2jm8BCxud5MgADQS216GIPle6rz53jNJuj3rLElXQaZGrG34lbjaUNacuc6cxOT1YEXUsDh1xtPg3FG+8cJq+WZHapQQo=
+	t=1747545920; cv=none; b=VfoOeigjkwHaQvfPGnO76UiXbC2DU45qG2CCU44EBnk0J31w/PWCm3Fg9eGGmjgnhjH2W0uBg80iEaKNvW9g9UH3Bg/Ay+4ODAJi7iiOTKlxO/A8pHONOtjpT+ijkwfpTaSwbrv8sdP/RXYx8y3DPIfJq0QuTDuhuqlpK00mDcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747545844; c=relaxed/simple;
-	bh=QEn3NUGeStN9ihHdR7pciRyEMTXinS7QnBWZVdLbeZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZ1ZVkdr3VUsK56VWGql7dVCNTZYmGt/6T1UeM9waUmkv1H/nZirtj7mjmbloY5mEhSedVNkwEPu/qMlExIrEX/FyKdpvllBXwEoVZlDmsgGDgsu/5kHj5YPN0o9G2yVYt5MBhUZpBhBnz01d8fcx8yE/yvf76XZuD42CxwKpHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QfnJu0q6; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747545920; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=imq49x2uwTUtMKWsEfHRPrBTUnf5XbZAXaz+zgVJIlQeYtOgk9zkRhwm2Ac95O8dYE1arzde8GL1/om8+9hC2bG9UOcGuRDAZ7SUD8O0Y3Bir9vExA8m+8lwzofOF/ny81HoJUbKxa8Jyugsy+7HGPMdsyUwEbhyKg5azZWTJ84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uddf+1di; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QfnJu0q6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747545843; x=1779081843;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QEn3NUGeStN9ihHdR7pciRyEMTXinS7QnBWZVdLbeZM=;
-  b=QfnJu0q6RxRlyfQQfJMYO29/ayaivT+F9XVYd3564aWm+kQ8xiB2kLvF
-   E3zKJho2YJxNnmjCQq+oHT/WIoEhscfz7wo4mrkJ0mkEnZAnoIyOJsmNK
-   rmDLCNQIGDxIhNtDhPOKTqK6+vCg+E9SyqNd/B0/yKlfCJMzrgVnzGYn0
-   OC4Rku69dmdc0m9pHNuf3XJ84UC0JMKXjnlJ4daD0w27zsdtJEJr9go6l
-   32UxYdjyfQhvyiOKWshEQjA6MgztNcunjTndkqjLl7So8Os14mHAg8dEn
-   raylmmtrBFWtLQtPDojWOEVsLcFtnbUezbEMTulNeuPtgIew82FZhWCWT
-   w==;
-X-CSE-ConnectionGUID: q/glBqmORYi8tfcpdvRozA==
-X-CSE-MsgGUID: aH2MKxJdQQek57Rw6h8kHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="59700910"
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="59700910"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 22:24:02 -0700
-X-CSE-ConnectionGUID: yRIS3bhXTo+Tw/8YAmBZFQ==
-X-CSE-MsgGUID: XkduK6kTTnCv6/JOIKS8Gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="138971031"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 17 May 2025 22:23:58 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGWV9-000Ke7-0x;
-	Sun, 18 May 2025 05:23:55 +0000
-Date: Sun, 18 May 2025 13:23:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Juan Yescas <jyescas@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	tjmercier@google.com, isaacmanjarres@google.com,
-	kaleshsingh@google.com, Minchan Kim <minchan@kernel.org>
-Subject: Re: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-Message-ID: <202505181321.IBrAyg7D-lkp@intel.com>
-References: <20250516232341.659513-1-jyescas@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uddf+1di"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5340BC4CEE7;
+	Sun, 18 May 2025 05:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747545918;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Uddf+1dieisNoH5HrzBDXIHf+XM/7yA77U2KRhS2q6tR81GDcVB9v/mYh2h62VqaD
+	 WTib9Ay53Y38HQv8TLgBawwLp7oz+us2AswrD2zSr8m5xFh0y7/oihlt4vWTbJ10tH
+	 0CbPcK0vEmciqRnw1GgZ9yTKetxtG5j/7qnutrwu9q6tWgEDaA8c3HBOYLsm3jtnbn
+	 g7y18sq64MRK10QUcXvN4ufwWBBFUN9R3Su6qXvNNeebYXuGCm8NY04ZlLW6FWJ+9S
+	 0huaTBXXSON7Szj16/+FuQDS90G59z8qRvp2eokPZt8XQYzpavBIy23PGf+6nR7Nqd
+	 YVLFdoAHoDDZw==
+Date: Sun, 18 May 2025 00:25:16 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516232341.659513-1-jyescas@google.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250518052516.ZnijHrNJj2EzWQ5gU1d2PhgrfG8skrpsp_Bxe7deDlo@z>
 
-Hi Juan,
 
-kernel test robot noticed the following build warnings:
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
 
-[auto build test WARNING on akpm-mm/mm-everything]
+My bot found errors running 'make dt_binding_check' on your patch:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Juan-Yescas/mm-Add-CONFIG_PAGE_BLOCK_ORDER-to-select-page-block-order/20250517-072434
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250516232341.659513-1-jyescas%40google.com
-patch subject: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
-config: i386-randconfig-r073-20250518 (https://download.01.org/0day-ci/archive/20250518/202505181321.IBrAyg7D-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+yamllint warnings/errors:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505181321.IBrAyg7D-lkp@intel.com/
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
 
-smatch warnings:
-mm/compaction.c:849 skip_isolation_on_order() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (s32min-s32max >= 0)'
-mm/page_alloc.c:730 __del_page_from_free_list() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
-mm/page_alloc.c:679 __add_to_free_list() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
-mm/page_alloc.c:704 move_to_free_list() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
-mm/page_alloc.c:2036 should_try_claim_block() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
-mm/page_alloc.c:2043 should_try_claim_block() warn: always true condition '(order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0))) / 2) => (0-u32max >= 0)'
-mm/page_alloc.c:2112 try_to_claim_block() warn: always true condition '(current_order >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (s32min-s32max >= 0)'
-mm/page_alloc.c:2192 __rmqueue_claim() warn: unsigned 'order' is never less than zero.
-mm/page_alloc.c:3200 reserve_highatomic_pageblock() warn: unsigned 'order' is never less than zero.
-mm/page_alloc.c:3273 unreserve_highatomic_pageblock() warn: unsigned 'order' is never less than zero.
+doc reference errors (make refcheckdocs):
 
-vim +849 mm/compaction.c
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
 
-748446bb6b5a93 Mel Gorman 2010-05-24  825  
-ee6f62fd34f0bb Zi Yan     2024-02-20  826  /**
-ee6f62fd34f0bb Zi Yan     2024-02-20  827   * skip_isolation_on_order() - determine when to skip folio isolation based on
-ee6f62fd34f0bb Zi Yan     2024-02-20  828   *			       folio order and compaction target order
-ee6f62fd34f0bb Zi Yan     2024-02-20  829   * @order:		to-be-isolated folio order
-ee6f62fd34f0bb Zi Yan     2024-02-20  830   * @target_order:	compaction target order
-ee6f62fd34f0bb Zi Yan     2024-02-20  831   *
-ee6f62fd34f0bb Zi Yan     2024-02-20  832   * This avoids unnecessary folio isolations during compaction.
-ee6f62fd34f0bb Zi Yan     2024-02-20  833   */
-ee6f62fd34f0bb Zi Yan     2024-02-20  834  static bool skip_isolation_on_order(int order, int target_order)
-ee6f62fd34f0bb Zi Yan     2024-02-20  835  {
-ee6f62fd34f0bb Zi Yan     2024-02-20  836  	/*
-ee6f62fd34f0bb Zi Yan     2024-02-20  837  	 * Unless we are performing global compaction (i.e.,
-ee6f62fd34f0bb Zi Yan     2024-02-20  838  	 * is_via_compact_memory), skip any folios that are larger than the
-ee6f62fd34f0bb Zi Yan     2024-02-20  839  	 * target order: we wouldn't be here if we'd have a free folio with
-ee6f62fd34f0bb Zi Yan     2024-02-20  840  	 * the desired target_order, so migrating this folio would likely fail
-ee6f62fd34f0bb Zi Yan     2024-02-20  841  	 * later.
-ee6f62fd34f0bb Zi Yan     2024-02-20  842  	 */
-ee6f62fd34f0bb Zi Yan     2024-02-20  843  	if (!is_via_compact_memory(target_order) && order >= target_order)
-ee6f62fd34f0bb Zi Yan     2024-02-20  844  		return true;
-ee6f62fd34f0bb Zi Yan     2024-02-20  845  	/*
-ee6f62fd34f0bb Zi Yan     2024-02-20  846  	 * We limit memory compaction to pageblocks and won't try
-ee6f62fd34f0bb Zi Yan     2024-02-20  847  	 * creating free blocks of memory that are larger than that.
-ee6f62fd34f0bb Zi Yan     2024-02-20  848  	 */
-ee6f62fd34f0bb Zi Yan     2024-02-20 @849  	return order >= pageblock_order;
-ee6f62fd34f0bb Zi Yan     2024-02-20  850  }
-ee6f62fd34f0bb Zi Yan     2024-02-20  851  
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
