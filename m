@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900981DB356;
-	Sun, 18 May 2025 14:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8902CA6;
+	Sun, 18 May 2025 14:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747577098; cv=none; b=cTk7VeJW7SCzcyWkCtyUCujH0F0K7C+qPPqsC0kfSDigHxpYYbd6p2fnvD1p09q31xQ0NUkSd5IPHR2EIZiI4PZSSJ1KjlYLDmWWSCLm5ysxbJTGDqgL3z2X9DrWVROpDsPLhNMqrWjAkn/EVX96itOMD4SCGRwvB93+mn2Ed3c=
+	t=1747577175; cv=none; b=CVjqcv0D6ODIUs2LRM2076HxcT7+g4pw7iQjibnM5/+bPG9rqXXFiGSrDe2dqYYGDpzCFX4c4N2TryT1XAN+obUbvt+W/0olXIFMYezcULBTJ4aTJdDfzST8ZZQIiEPqMELWhp/zFu1sqvymtS+IzX4vq7ZZ63wAxipcsYCnsrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747577098; c=relaxed/simple;
-	bh=OIZFzZ1NkkLAZVEoI5VXNZQkf2dWSp87t8Hf0ugTnEs=;
+	s=arc-20240116; t=1747577175; c=relaxed/simple;
+	bh=Y6RcSOJ3TT05BAGmCI4tHEBMtVlV33BvNPwwrPQrwdw=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Kiovh33Z3T2h/FEQZ8NHfRCTRyajFZeC01RMdSHvat5gvP+qIj6o/y/y+5txd13PObJgcJuz50LNDERk9d4bwWJPLKNnfavpTvuxibEQVNQIHAgmTwHDuKt6F5B2rlIqramRZdZjVbFfAp765+T42je+Z361i8sEC1cSoUT9Z7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+aZNYP1; arc=none smtp.client-ip=10.30.226.201
+	 References:In-Reply-To; b=A9GlBZNiLhnyW2U2SRAD4FzqVxTvFuns7/PDLe/UxtPbXe6XVQaPU51KOHxcosHCs4dM1/UGk3d75mw0+RCxZqk7kZPRE3RuiKBfouCjc2glj8mLfK2ulDFKW/5k7A2D1F/AsfdBWGDi6P/9ltqguH/p3DDPWTP5ChbmfotmC/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9YUaH1a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+aZNYP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66410C4CEE7;
-	Sun, 18 May 2025 14:04:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9YUaH1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E860CC4CEE7;
+	Sun, 18 May 2025 14:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747577098;
-	bh=OIZFzZ1NkkLAZVEoI5VXNZQkf2dWSp87t8Hf0ugTnEs=;
+	s=k20201202; t=1747577173;
+	bh=Y6RcSOJ3TT05BAGmCI4tHEBMtVlV33BvNPwwrPQrwdw=;
 	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=X+aZNYP1YsiWwhQ64ZkrMBCVEH5LVQlpSda2Km7gTfVRvrG1Xk8FKDdmMCjr7ghhI
-	 PnMDHWI7LLQEZJRYZvyuDMNKoDGoGzBzPAkt67M5bCSD3pPq+uuaIohAsujsJul2ru
-	 yWr6h0BpUhM/QUud+PU9ajvA0C+fYhPqF0zGYZmKgmkJj5IUw1UvaaPNr46GP/BgAj
-	 CKQXdqn+ri8yx+j5Xxci5UKw273dZknWtiojdbXv0JjJUUV10g+R9JFO5CEnaFYSq6
-	 2e+Qyhv4fxuwOys15AevsOw/7Urm/SC1cVwZJR9bU2fp1NqREFhgr70+B0ilgCyA3B
-	 5RfY0ct4VxA6A==
+	b=l9YUaH1aBItBRjrd3dy8XIY25AGKBS/3Bl3FM3z0SWsjUxEombiJX9hvN541fLUu0
+	 20h7r58cjtkxSGLdtwHVrokxkuTBmb9/sgbY77YkV0ZWSmQo/b1Fr+XfreKR8x0JSu
+	 Ef2HDrvljCi+jFAxmkX6aiXgblZhmSHVeeeXa7MCnq7cpbtnY6fhfuRP+4xaVAgTwJ
+	 OaOUZ68UR5eVEyHFmfZVOqA2aIV4Viqz7W7U+al+vAUCBtRCvYFPtiMEGSWBdqSyE1
+	 sxJtdI+Y8Y+XsDLRexYI9m9hgXIaSHpv9Xbfk1VCYfyy8uHr1Gtk8guDBgctjxU8to
+	 veciyOVhRQI+Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,62 +34,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 16:04:24 +0200
-Message-Id: <D9ZCD8D6J5QW.14H6VM9LQ5R2Z@kernel.org>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Date: Sun, 18 May 2025 16:05:42 +0200
+Message-Id: <D9ZCE83VYX50.3415QQDCN4R0G@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
 Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
  abstraction
 From: "Benno Lossin" <lossin@kernel.org>
-To: "Mark Brown" <broonie@kernel.org>, "Alexandre Courbot"
- <acourbot@nvidia.com>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Boris Brezillon"
+ <boris.brezillon@collabora.com>, "Sebastian Reichel"
+ <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Mark Brown" <broonie@kernel.org>
 X-Mailer: aerc 0.20.1
 References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
  <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
  <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
  <D9Z4XGQ2QHXA.2H5X1NZ5IZECC@nvidia.com>
- <aCnQo15SbhXZ9Fln@finisterre.sirena.org.uk>
-In-Reply-To: <aCnQo15SbhXZ9Fln@finisterre.sirena.org.uk>
+ <D9Z59JWL4BTC.3DTN0LWCJX5AZ@nvidia.com>
+ <D9Z73XZUSYWO.R0P38ASITWR7@kernel.org>
+ <D9Z8PLIZGSJ6.254ICGG44E4PB@nvidia.com>
+In-Reply-To: <D9Z8PLIZGSJ6.254ICGG44E4PB@nvidia.com>
 
-On Sun May 18, 2025 at 2:20 PM CEST, Mark Brown wrote:
-> On Sun, May 18, 2025 at 05:14:41PM +0900, Alexandre Courbot wrote:
+On Sun May 18, 2025 at 1:12 PM CEST, Alexandre Courbot wrote:
+> On Sun May 18, 2025 at 6:57 PM JST, Benno Lossin wrote:
+>> So just let users ensure that they always match each `enable` call with
+>> a `disable` call in the `Dynamic` typestate?
+>>
+>> That is ok, if no memory issues can arise from forgetting to do so,
+>> otherwise those functions need to be `unsafe`.
 >
->> The initial proposal does such clamping by design, but I also suspect
->> the C API behave like it does for good reasons (which I am not familiar
->> enough to be aware of unfortunately).
+> There shouldn't be any, the only side effect would be that the regulator
+> stays enabled when it shouldn't.
 >
-> It's so that if you have multiple logical users within the device (eg,
-> an interrupt handler and code for normal operation) they can work
-> independently of each other.  You could also request the regulator
-> multiple times but that's often not idiomatic.
->
-> Originally we didn't actually refcount within the individual consumers
-> at all and only refcounted on the underlying regulator, the per consumer
-> reference count is mainly there for debugging purposes.
+> It's also easy to implement more behaviors using more states. For
+> instance, `Dynamic` just proxies the C API. But if we also think it its
+> useful to have a regulator which use count is clamped to 0 and 1, you
+> could have another state that includes a boolean (instead of being empty
+> lke the others) to track whether the regulator is enabled or not, and an
+> `enable` method that only calls the C `regulator_enable` if that boolean
+> is not already true. That way you remove the need to mirror the calls to
+> enable and disable, while only paying the memory overhead for doing so
+> when you explicitly state you want this behavior.
 
-I'm not sure if I understand correctly, so I'll just try to echo it and
-see if it's correct :)
-
-The `enable`/`disable` functions change a refcount on the underlying
-regulator that tracks if the regulator actually is enabled/disabled.
-Asking the hardware to enable or disable a regulator can fail, but if we
-already know that it is enabled, only the refcount is incremented.
-    It's okay to leak this enabled-refcount, since when the regulators
-actual refcount (so the one adjusted by `_get` & `_put`) hits zero, we
-can also disable the regulator. So the enabled-refcount is essentially a
-weak refcount that only does something while the regulator exists.
-
-In that case, we can use any API for enabling/disabling, since all of
-them will be safe. Just a question of which gives the required
-expressiveness and makes misusing it hard.
+Aren't we then duplicating the refcount from the C side?
 
 ---
 Cheers,
