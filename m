@@ -1,132 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6E1A55;
-	Sun, 18 May 2025 16:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84644B1E5E
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 16:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747584825; cv=none; b=TNZkGtBu5F67q4PkHhF5hBlP3c50bm1EF5G5gxgN/pjPozKwHwjOU1vh7MNtB6+p9K5Rt1GQfzH34G0TNIXf1a4KUKurBbW1f94aEfCnLlxseVwDNyn+kqFc6UqY32FIkeFKmYCkvyKnPXwJCttpdt7f91boSh4tyLw/zVTQClE=
+	t=1747585389; cv=none; b=XaPgUMvCIf0UJ05Z3n6PzvVPjX+yknjSFcdxtaEFDosBmE0SBf5w2Qh7RA3OEO09fq0IBW2KH3FdI0uH1z8qOeeiVEJps7tXZuKl/i2hhiTTeRgr+FFUEzK8u/PjHrEL/qnQSR85+91X9m4q/9KHp489RabqjsLuVbpAvY/565g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747584825; c=relaxed/simple;
-	bh=1svjkY+/k9jmjd+tXvYFCXgAUpAsK7A2JK8DYcztVwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jFIU80FHLQkoO9aPKBKp/oDGW9GRZVWlCNJbg2vqwpFPMGpgScEq9VO17VCD+Q8pMJT+JkCKvAD5OL1iQNI0rtkRnyKw6uf3DROEZ9/uc0Y/jmu7c/qH+ozozUT2GG7lNJ6Lyi0kJ2ORgIIyfdzY+ZVWTrBdyc446PhcJBZhbQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoCi8d8w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoCi8d8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA3FC4CEE7;
-	Sun, 18 May 2025 16:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747584825;
-	bh=1svjkY+/k9jmjd+tXvYFCXgAUpAsK7A2JK8DYcztVwA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VoCi8d8wtEat28qdfe5li+uyOhQ4R3Ws2DbirxJnb4clNERgbG6PXCJ8NGTRDIW+G
-	 EpgP6WukJ0Gv44LAunCqrfhDiu7vqvYH+qyI9lYmBGSp+88I14EUfcThWWjPM9oLVC
-	 KEonYiTMS/+zr+vvrk2BQvA3n3Gtvt5+HQ2C1aKgv03grwPp8RnI3a20aWOnIoHdXB
-	 IGmERMFgqqhtRJJAk2polHyHlgN3VTxww5UgYrQdxrfzNqf7QQa2y6JSZ4jbCDXVNZ
-	 4/fd6/nG6efNw1UABG3FAOv76tUWgDu7lRdIkGpvrB25fviandl1DDQPuj/U9DJk0G
-	 uY+4smI4BWVOg==
-Date: Sun, 18 May 2025 17:13:34 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Pop Ioan Daniel <pop.ioan-daniel@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
- <sergiu.cuciurean@analog.com>, Dragos Bogdan <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
- <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>, Alisa-Dariana Roman
- <alisadariana@gmail.com>, =?UTF-8?B?Sm/Do28=?= Paulo =?UTF-8?B?R29uw6dh?=
- =?UTF-8?B?bHZlcw==?= <joao.goncalves@toradex.com>, Herve Codina
- <herve.codina@bootlin.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] iio: backend: update
- iio_backend_oversampling_ratio_set
-Message-ID: <20250518171334.6deb684b@jic23-huawei>
-In-Reply-To: <8e5a9176-1652-41a5-bb8c-cea0d44e4d2d@baylibre.com>
-References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
-	<20250516105810.3028541-2-pop.ioan-daniel@analog.com>
-	<8e5a9176-1652-41a5-bb8c-cea0d44e4d2d@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747585389; c=relaxed/simple;
+	bh=Lgh7QKbW0U70KgEyAcaE/Rqy4KtjNyyD9PpdfCdGTHs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=r5oPMmdZ2w6cUIwOXTW8yF+oJb6/l3V30FLPYE3KQ6IOhhGZvPumrZVBq6uwDhxayJA1N3Ws/3gAbYLGKtuueJ3l3Oz2K8rA3ebM5yrxr29s+n8VGpF0ScnJOcLBgaKbjdogLLXYMx2Q4cb+nr4HdaJnJXIhhE0JjB3tzKu8tAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uGgmH-000000002BO-2dyI;
+	Sun, 18 May 2025 12:22:17 -0400
+Message-ID: <5c756dce3d009470a0db0fe5a48aa0bd40be220e.camel@surriel.com>
+Subject: Re: [PATCH v2] x86/mm: resize user_pcid_flush_mask for PTI /
+ broadcast TLB flush combination
+From: Rik van Riel <riel@surriel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 	x86@kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+Date: Sun, 18 May 2025 12:22:17 -0400
+In-Reply-To: <aCl9TUnOuWivv6Ze@gmail.com>
+References: <20250516123317.70506358@fangorn> <aChB9ORFxaL8VfyD@gmail.com>
+	 <20250517201255.1bc4e61b@fangorn> <aCl9TUnOuWivv6Ze@gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Sender: riel@surriel.com
 
-On Fri, 16 May 2025 10:06:18 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Sun, 2025-05-18 at 08:25 +0200, Ingo Molnar wrote:
+>=20
+> * Rik van Riel <riel@surriel.com> wrote:
+>=20
+> > But it is perfectly happy with getting the address of the first
+> > long=20
+> > in that array, which works for both array size 1 and array size 32.
+>=20
+> Yeah. Testing is still a question: does this boot on a system with
+> PCID=20
+> && INVLPGB features, with PTI force-enabled ("pti=3Don" boot option)?
 
-> On 5/16/25 5:58 AM, Pop Ioan Daniel wrote:
-> > In the function iio_backend_oversampling_ratio_set the chan parameter
-> > was added. The function can be used in contexts where the channel
-is added
+This version runs, and no signs of corruption with
+last_global_asid up over a few hundred due to various
+programs running and exiting.=20
 
-(tense is wrong given this patch is doing it).  However it should be
-in imperative.
-
-"Add chan parameter to iio_backed_oversampling_ration_set() to allow
-for contexts where the channel must be specified. Modify all
-existing users."
-
-
-> > must be specified. All affected files have been modified.
-> > 
-> > Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> > ---
-> > changes in v3:
-> >  - fix ad4851_set_oversampling_ratio function channel error
-> >  drivers/iio/adc/ad4851.c           | 6 +++---
-> >  drivers/iio/adc/adi-axi-adc.c      | 3 ++-
-> >  drivers/iio/industrialio-backend.c | 3 ++-
-> >  include/linux/iio/backend.h        | 3 ++-
-> >  4 files changed, 9 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-> > index 98ebc853db79..fccfca256670 100644
-> > --- a/drivers/iio/adc/ad4851.c
-> > +++ b/drivers/iio/adc/ad4851.c
-> > @@ -294,7 +294,7 @@ static int ad4851_scale_fill(struct iio_dev *indio_dev)
-> >  }
-> >  
-> >  static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
-> > -					 const struct iio_chan_spec *chan,
-> > +					 unsigned int chan,  
-> 
-> I think passing the channel here is misleading since this is setting the
-> oversampling ratio for all channels, not just the one specified.
-> 
-> I would suggest to make a separate patch that removes the unused
-> const struct iio_chan_spec *chan parameter first.
-> 
-> >  					 unsigned int osr)
-> >  {
-> >  	struct ad4851_state *st = iio_priv(indio_dev);
-> > @@ -321,7 +321,7 @@ static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
-> >  			return ret;
-> >  	}
-> >  
-> > -	ret = iio_backend_oversampling_ratio_set(st->back, osr);
-> > +	ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);  
-> 
-> 
-> Then in this patch, just pass 0 here instead of chan with a comment that
-> the channel is ignored by the backend being used here.
-
-Is it implausible that such a backend could be written for this device?  If
-so then I agree.
-
-J
-> 
-> >  	if (ret)
-> >  		return ret;
-> >    
-> 
-
+--=20
+All Rights Reversed.
