@@ -1,159 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF56315E8B;
-	Sun, 18 May 2025 12:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D2A35280;
+	Sun, 18 May 2025 12:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747571914; cv=none; b=usKqVJPN55M59L2T4/97sca3S5td42e7tTrps6psWQMeKCluC+cwd95tQadhgZGzKLnndAM3JV9AE45gZaNJiZmfLys9UIMOmOnT6Ai1CEhvnwe3uPqvoQgDwZmWRZ7v1b56cBu2PS02sXZuh7XNpn6CJiwRG6UQQsLbOZ5oa6M=
+	t=1747572216; cv=none; b=rfzGKn6aRvkVUVEa/QG9ysZyjmtVrPmhN/+zXmsc0YBZ+GEiomDyjCiriCIfjNkU2MO/IiJo+R4q84Qm2YLNj+eT3ZaPDT1wBLGrBRIs/C5q8jwF8gjwL5hP+xGWhBT/vsWwQ/QC+VX6zUb+GysGObgt47tjGJFAP1paPvw9auY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747571914; c=relaxed/simple;
-	bh=PoyuPg5e2LU/+nVt9+qZ5GK2kKH6IQI8uCwbW3k0Avg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e32w3xSl3D+JlOEGIqsknbDnMUCChYBoAz5EiEXVUjsa0jGpzi7BzaE+R17oXy2vvEhID+HU9BcsUjVpTJ2i1Hp5CBldbkjV4OsjAXND50L/PBv1vK3XqnvRyAS5+JAhs/KC5KNnfW5xAlH1NxESfhRSp3HAmWlDs30tkOCpALU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bd4ajHOR; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747572216; c=relaxed/simple;
+	bh=7JUQ2UcIy6SQhXOyB8UQbTkc11cIPQDpMVMq+5ZYRf0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u/KwmfQ3dq18KnB8vsQvinwbn8LAg586fUqMaH+tkKL2luxY04S4/9bV6+Qu3+iwUCCAgNiqEz7Kc5hTd1rSNZ+o2hr1T+fNYBioIAmwkzVp0tw3KmHjw5eAboYqWW+xuzsa5yaBXZRLXVvVJVYyWTmZddjf98793pHskfL6m4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=f+lhaUz+; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bd4ajHOR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747571911; x=1779107911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PoyuPg5e2LU/+nVt9+qZ5GK2kKH6IQI8uCwbW3k0Avg=;
-  b=Bd4ajHORb5zh7ouk3qk6kHfPtoF+FI20U2aRM1asA/6yB4HAOqZVWtVT
-   /hmjIUkIj8rfZjs/GQ5gcrQTqZBmSBKA/FPcLLvMzrghz6PgVhN4bWqpx
-   gJvy/ceDlazjkPFBHjfxzZoXL488r9jsGUTzXAK7vWgl9S1ODoqqzYL8Z
-   CNdxVaXQN9D8ydL8l7CBhcudKjGOLTjXHD67uPRUc3R/gFTlMshVyX1Ln
-   Uk37sLLyLFu6obVqHVeCQakz7MRYA9L37vgV5doX1m871tfr7kc4TL5+r
-   ZTTT2cik2g4NlKHCphjUMLW9XhroRzPhKObk9lWCAYqezBbdyoQGzFS4b
-   g==;
-X-CSE-ConnectionGUID: GRlTzs++Qp6Ei01ZL207Gw==
-X-CSE-MsgGUID: OYsPGuwzQ3Krbo0dYyCoBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="49180167"
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="49180167"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 05:38:31 -0700
-X-CSE-ConnectionGUID: M+m2/Jz9Tlu/ErvWTLKXtw==
-X-CSE-MsgGUID: 7cNYVkumQkmgrQGQChpJ8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="139029180"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 18 May 2025 05:38:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGdHe-000KnX-09;
-	Sun, 18 May 2025 12:38:26 +0000
-Date: Sun, 18 May 2025 20:38:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
-Message-ID: <202505182014.8Vkd2piH-lkp@intel.com>
-References: <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="f+lhaUz+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747572211; x=1748177011; i=spasswolf@web.de;
+	bh=x2KnT8H6GISVhLU1V3XQF8JEkcuzVF2Lg4CkY+V2wG8=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=f+lhaUz+PoEiSUXRU7f5S5L13fpCyeyPaVCZEKCqY88mUPpu6kIDGi+pLVwNX1y5
+	 3WUdhFTxFOptEPF2faF4ZDR5L8GFzUPzVSNJPMagpmv0+TeN6gR839juE9tythSbJ
+	 HfL0IbliP5S44Rlm5OO8UznKjEBmJ/GoqwKSSdoQ9DxR76wAqQy8RcdyPa6UBCPGQ
+	 C//imn3iabEFfpCyFffdIfqCQFQCNA0vdBJi48Ox1mt16L9JqaoT3sDxVhSkbrJDv
+	 4tAiQuc303DV7Gj5BoqITmjGN/Enwgmsp82ds5IRSOFtAgIWS0tzop4oOq1ujs2DO
+	 +NoEcnbhHm+Vxcbhng==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjxeO-1uejla4Blw-00neN3; Sun, 18
+ May 2025 14:43:31 +0200
+Message-ID: <8274d78a82cded2fc4459fad8c2db6a1b51d7891.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "linux-next@vger.kernel.org"	 <linux-next@vger.kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>,  Thomas Gleixner
+ <tglx@linutronix.de>, linux-wireless@vger.kernel.org, spasswolf@web.de
+Date: Sun, 18 May 2025 14:43:30 +0200
+In-Reply-To: <4a893f88b6892502a5f7a61bcfc806a271a730a9.camel@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+					 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+					 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+					 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+					 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+					 <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
+					 <f8552d41fb7eae286803b78302390614179b33b0.camel@web.de>
+					 <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
+					 <ba97a2559cda1b14e0c9754523ff1152bdad90ef.camel@web.de>
+					 <63cc1dbf07bde2c9d14e1f86ce2c2ce26a2a9936.camel@web.de>
+					 <388bbc4c805ce029bbd08010fd30405494f998a9.camel@web.de>
+					 <15f3633cbd08b30475d5b76c5cc9180fbf17a12f.camel@web.de>
+					 <CAL+tcoA3d-EdoGjei7aeyuA3zmj955uYkXf1wCAUy8iP3BxUjg@mail.gmail.com>
+	 <4a893f88b6892502a5f7a61bcfc806a271a730a9.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6@jannau.net>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9HPoeT2yuKY2hHr9baIP5ubn6Hc3C1jfquoP1UHMGsCyAU5v24o
+ UHsnJMSaB9JNMORJq6ymaYyfMDkZJZp1rk3lN8J3IPNuYFJY7QZS7ynZj7lI4eaP6LfY3sy
+ xrWg+UdWt61PCqaycXYhOdwCOe8Na+qy+ZYKkpbOe9lufDAUU/BsB0LTjVm7We2OzryzwEo
+ omv2zHoMvtqXobRfQtIxg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2W4pB8mRyCs=;8RJWhMmk/RLYWtS4KyeMvxbzZfi
+ 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
 
-Hi Janne,
+Am Sonntag, dem 18.05.2025 um 14:12 +0200 schrieb Bert Karwatzki:
+> > > >=20
+>=20
+> I even tried this version of your patch, to keep the offset of skc_refcn=
+t at 128,
+> but it doesn't  work, either.
+>=20
+> commit fca84c5cde713be480544a64ed6680afc3319670
+> Author: Bert Karwatzki <spasswolf@web.de>
+> Date:   Sun May 18 13:32:36 2025 +0200
+>=20
+>     include: net: sock: move skc_flags out of the union
+>    =20
+>     Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+>=20
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 3e15d7105ad2..e73929a4da6e 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -195,7 +195,6 @@ struct sock_common {
+>  	 * for different kind of 'sockets'
+>  	 */
+>  	union {
+> -		unsigned long	skc_flags;
+>  		struct sock	*skc_listener; /* request_sock */
+>  		struct inet_timewait_death_row *skc_tw_dr; /* inet_timewait_sock */
+>  	};
+> @@ -221,6 +220,9 @@ struct sock_common {
+>  	};
+> =20
+>  	refcount_t		skc_refcnt;
+> +
+> +	/* place skc_flags here to keep offset(struct sock, sk_refcnt) =3D=3D =
+128 */
+> +	unsigned long	skc_flags;
+>  	/* private: */
+>  	int                     skc_dontcopy_end[0];
+>  	union {
+>=20
 
-kernel test robot noticed the following build errors:
+In the patch above I accidently put skc_flags in the part of struct sock_c=
+ommon
+which does not get copied, but putting it below skc_dontcopy_end[0] does n=
+ot work,
+either:
 
-[auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 3e15d7105ad2..6d69753a205a 100644
+=2D-- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -195,7 +195,6 @@ struct sock_common {
+         * for different kind of 'sockets'
+         */
+        union {
+-               unsigned long   skc_flags;
+                struct sock     *skc_listener; /* request_sock */
+                struct inet_timewait_death_row *skc_tw_dr; /* inet_timewai=
+t_sock */
+        };
+@@ -221,8 +220,12 @@ struct sock_common {
+        };
+=20
+        refcount_t              skc_refcnt;
++
+        /* private: */
+        int                     skc_dontcopy_end[0];
++       /* place skc_flags here to keep offset(struct sock, sk_refcnt) =3D=
+=3D 128=20
++        * Also place it below skc_dontcopy_end[0] */
++       unsigned long   skc_flags;
+        union {
+                u32             skc_rxhash;
+                u32             skc_window_clamp;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Janne-Grunau-via-B4-Relay/ACPI-platform_profile-Stub-platform_profile_cycle/20250518-182021
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250518-hid_lenovo_acpi_dependency-v1-1-afdb93b5d1a6%40jannau.net
-patch subject: [PATCH 1/2] ACPI: platform_profile: Stub platform_profile_cycle
-config: x86_64-buildonly-randconfig-005-20250518 (https://download.01.org/0day-ci/archive/20250518/202505182014.8Vkd2piH-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505182014.8Vkd2piH-lkp@intel.com/reproduce)
+This locks up as usual.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505182014.8Vkd2piH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/acpi/platform_profile.c:493:5: error: redefinition of 'platform_profile_cycle'
-     493 | int platform_profile_cycle(void)
-         |     ^~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/acpi/platform_profile.c:12:
-   include/linux/platform_profile.h:64:19: note: previous definition of 'platform_profile_cycle' with type 'int(void)'
-      64 | static inline int platform_profile_cycle(void)
-         |                   ^~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/platform_profile_cycle +493 drivers/acpi/platform_profile.c
-
-a2ff95e018f1d2 Mark Pearson      2020-12-29  487  
-ee7f3e2b4942e3 Kurt Borja        2025-01-15  488  /**
-ee7f3e2b4942e3 Kurt Borja        2025-01-15  489   * platform_profile_cycle - Cycles profiles available on all registered class devices
-ee7f3e2b4942e3 Kurt Borja        2025-01-15  490   *
-ee7f3e2b4942e3 Kurt Borja        2025-01-15  491   * Return: 0 on success, -errno on failure
-ee7f3e2b4942e3 Kurt Borja        2025-01-15  492   */
-ba95eb44676d68 Gergo Koteles     2024-04-08 @493  int platform_profile_cycle(void)
-ba95eb44676d68 Gergo Koteles     2024-04-08  494  {
-778b94d7ac17b5 Mario Limonciello 2025-02-28  495  	struct aggregate_choices_data data = {
-778b94d7ac17b5 Mario Limonciello 2025-02-28  496  		.aggregate = { [0 ... BITS_TO_LONGS(PLATFORM_PROFILE_LAST) - 1] = ~0UL },
-778b94d7ac17b5 Mario Limonciello 2025-02-28  497  		.count = 0,
-778b94d7ac17b5 Mario Limonciello 2025-02-28  498  	};
-70246f89c55fb1 Mario Limonciello 2024-12-05  499  	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
-70246f89c55fb1 Mario Limonciello 2024-12-05  500  	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
-ba95eb44676d68 Gergo Koteles     2024-04-08  501  	int err;
-ba95eb44676d68 Gergo Koteles     2024-04-08  502  
-1f3ac55c2e65af Mario Limonciello 2024-12-05  503  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-70246f89c55fb1 Mario Limonciello 2024-12-05  504  		err = class_for_each_device(&platform_profile_class, NULL,
-70246f89c55fb1 Mario Limonciello 2024-12-05  505  					    &profile, _aggregate_profiles);
-70246f89c55fb1 Mario Limonciello 2024-12-05  506  		if (err)
-70246f89c55fb1 Mario Limonciello 2024-12-05  507  			return err;
-ba95eb44676d68 Gergo Koteles     2024-04-08  508  
-70246f89c55fb1 Mario Limonciello 2024-12-05  509  		if (profile == PLATFORM_PROFILE_CUSTOM ||
-70246f89c55fb1 Mario Limonciello 2024-12-05  510  		    profile == PLATFORM_PROFILE_LAST)
-70246f89c55fb1 Mario Limonciello 2024-12-05  511  			return -EINVAL;
-70246f89c55fb1 Mario Limonciello 2024-12-05  512  
-70246f89c55fb1 Mario Limonciello 2024-12-05  513  		err = class_for_each_device(&platform_profile_class, NULL,
-778b94d7ac17b5 Mario Limonciello 2025-02-28  514  					    &data, _aggregate_choices);
-1f3ac55c2e65af Mario Limonciello 2024-12-05  515  		if (err)
-ba95eb44676d68 Gergo Koteles     2024-04-08  516  			return err;
-ba95eb44676d68 Gergo Koteles     2024-04-08  517  
-70246f89c55fb1 Mario Limonciello 2024-12-05  518  		/* never iterate into a custom if all drivers supported it */
-778b94d7ac17b5 Mario Limonciello 2025-02-28  519  		clear_bit(PLATFORM_PROFILE_CUSTOM, data.aggregate);
-70246f89c55fb1 Mario Limonciello 2024-12-05  520  
-778b94d7ac17b5 Mario Limonciello 2025-02-28  521  		next = find_next_bit_wrap(data.aggregate,
-70246f89c55fb1 Mario Limonciello 2024-12-05  522  					  PLATFORM_PROFILE_LAST,
-ba95eb44676d68 Gergo Koteles     2024-04-08  523  					  profile + 1);
-ba95eb44676d68 Gergo Koteles     2024-04-08  524  
-70246f89c55fb1 Mario Limonciello 2024-12-05  525  		err = class_for_each_device(&platform_profile_class, NULL, &next,
-70246f89c55fb1 Mario Limonciello 2024-12-05  526  					    _store_and_notify);
-ba95eb44676d68 Gergo Koteles     2024-04-08  527  
-1f3ac55c2e65af Mario Limonciello 2024-12-05  528  		if (err)
-1f3ac55c2e65af Mario Limonciello 2024-12-05  529  			return err;
-1f3ac55c2e65af Mario Limonciello 2024-12-05  530  	}
-ba95eb44676d68 Gergo Koteles     2024-04-08  531  
-ba95eb44676d68 Gergo Koteles     2024-04-08  532  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
-ba95eb44676d68 Gergo Koteles     2024-04-08  533  
-1f3ac55c2e65af Mario Limonciello 2024-12-05  534  	return 0;
-ba95eb44676d68 Gergo Koteles     2024-04-08  535  }
-ba95eb44676d68 Gergo Koteles     2024-04-08  536  EXPORT_SYMBOL_GPL(platform_profile_cycle);
-ba95eb44676d68 Gergo Koteles     2024-04-08  537  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bert Karwatzki
