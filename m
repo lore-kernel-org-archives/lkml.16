@@ -1,205 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B47FD;
-	Sun, 18 May 2025 16:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF20236D
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 16:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747586037; cv=none; b=Bw4lgF9eILlnxx+/mKoZyhKlvEJWAiKDsDPzAgkSxv4D5W9frVhv+wnpkK0YbodvrY7iYz/TK6MrIUVlwL4ddtAjBDjNbwm5NF4j3hMWgG0H5E2Ohwm/bLQ1AZF/qeCn/440Z52FaD0RSOkavo23FRXMgAfBucNgXuHLHUoO4w4=
+	t=1747586486; cv=none; b=e7tRR9hstxF75ch6DmF/+ujXnWDsS1tk6TFeKzhEFRfFcjlLmj08vYMsDbG08BQepEgN7TSUlIJt8wTVJ0MIzFeClfptS0tKy2zguMT60giA/mzx/85B0eVRI8x35iclRVOSIxvDyjpfZ8sZDcnAXxkgnj0RosLeq7YPO17S4D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747586037; c=relaxed/simple;
-	bh=AIdifPYCgNitnQmkjwa6oXqFv5d8J/QYu38GR+hWbh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YSGLRvTM5cPv9/OZ08xUSXaL9lCQVW+cr4gXGhr+NQ54I7cej+ZHwDiXxXq5No3VAKTDJTeAPNKf5bISO4fQyVsczziCPj3tSggul8oIRuWC+PnXncZZNrvndOcxzmB59n8cLTCDuPAWPR6N4Lv3kvwzFgONEeap2ICBEsjd98w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z92W3h2u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747586486; c=relaxed/simple;
+	bh=flyQrErcaDeYGqXGq+B+sPOzFqMI8XoPFcb3KSLgGpM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jgpAKZQZ4NoTfctEfkhZ02JAfKu2H6ZGl/BgoJTVGKrIHQKZ74Ronz/9ubmyl9qA25Abkj8yaweimmWbZoegzgUn/AodGFSbJGtD69OG+/iqG78ksSS0A0dJyRlTOHih4MkTOsB6RwC1V0gSz92HmP+EzFm8vN+4+YfT+IHyAhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbGbrZpy; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z92W3h2u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE21C4CEE7;
-	Sun, 18 May 2025 16:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747586036;
-	bh=AIdifPYCgNitnQmkjwa6oXqFv5d8J/QYu38GR+hWbh8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Z92W3h2ueIH28d89Q769h0doFHIvdADv67w2UBtHkjaCHIOdGajyzA1ApsV5t8a0c
-	 GCq1NjNOWXp2HMLPEzedJ78absoI8bafRC4Mbut1ePea0wmUCZVvgS7ukM58MB4QlT
-	 fyblXpRnRAApNk0wSD5I66EUverNNpDVCmcNGpklDGZHllE8RAaMh8ijytjOlYcWVB
-	 l7ma0/tAsVhOGHWoXBKQWp3nQgmk6jJ9b2LHPUnBkTVOCqwvqdJVG22SVHtqgKeiQZ
-	 T7NweNdqstECbpUWdD/sOeBCv5rnwd5vE/YDVN26clWeUCCg3RnVJnasopOb3tNoFx
-	 sCZBmURQESTRA==
-Date: Sun, 18 May 2025 17:33:45 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
- <sergiu.cuciurean@analog.com>, "Dragos Bogdan" <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
- <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>, Alisa-Dariana Roman
- <alisadariana@gmail.com>, Esteban Blanc <eblanc@baylibre.com>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] iio: adc: ad7405: add ad7405 driver
-Message-ID: <20250518173345.338050e4@jic23-huawei>
-In-Reply-To: <20250516105810.3028541-5-pop.ioan-daniel@analog.com>
-References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
-	<20250516105810.3028541-5-pop.ioan-daniel@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbGbrZpy"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742caef5896so246496b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747586484; x=1748191284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=NGJ5rqBC7WbitGDnZ0mNGgmapTnH34KgA6S43fvjY00=;
+        b=lbGbrZpyEtk3/i2Jb4//8NvXhr3JsIQs3Ynr4hxMyEuS298A2rUFL7JpUK+g1O53Zd
+         vBN1nbiNkf/q41iiCWYgwtHVioQY4gxqnlsSMw1n9YEcbhl22R/nx3bGvL64eT9/B4zD
+         SUY9lg5Um0iV20zLLKQ3rgMBYQkUL6T+MYB2aZMXtUe5+3sxquH6VmJG63cuo/QSZZOg
+         me94hpfnpZxqy08Xhcrno/x1Z2giX2VsJImy1LCgeK+gTa5l/JOYlv1GLG7jXZ7lcLQU
+         QJb0OXizHYxmZdJoNwoXhrr8/Oak8ydfSzSX0KKUai9RR0T2407abaYBikvq3JSValeG
+         nIMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747586484; x=1748191284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NGJ5rqBC7WbitGDnZ0mNGgmapTnH34KgA6S43fvjY00=;
+        b=AdQS8Y1LLX3/K4jCJPORh3xU3dvUBCsWkgLPchLtmkm48jbMRCFuQqyJqj2AwnikFr
+         CVhiZ2DOVzeVyqIFk8XiVJTzNEdRaIa3ZmDVjNq0PSm1HfmaS6cylfASj5ySUSw6L/fS
+         ONXs9JuX4qKvUl/CS1/71cKGIeuujVlXwBthge7r4wc9e2QDs8EE+uIexR6nh688KFwX
+         I4Oh1Ti2XZUhQK2XtOB5BE9bGa7NlCOLpp/Y6Ow8rUeo+CUG9kWOQ1FNy/xev/3ryknX
+         XFwHrO+1ROjzFBHx90nh9Kwv4xPis2/OcRS/lP2+PONwUYOGWaRBGqMbB2Slqhr2jwRV
+         2PyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlik/lfMtX4wB88HS/0NvI+ZJefhc+ArmSEPDP7H/YdcuTTBUHGQ6tILBVGmz6mhDivsmpqvG3Je+GeYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrG/LR1sl/VRjBerLJK8LcpWrSxUhcoq3CBQH1H+b3/fyXnk1T
+	BbD/K6MgRwkqNqNz+ZHtasRBXv2yJt6zSn6TnHfSt3f3R5Jy9XaxU41J
+X-Gm-Gg: ASbGnctSByZ2+OCMivak9inpIdJXU8FwCnvLQTNG5LraS1z4nCxCYg3SAIjEe5TGtDc
+	j80sbkZalROQKYbder73ySnW5SWH6qdzjxmDv1MKzKnQwiGwFtE8P9VTmH9+4VbGVsZahNzR7dC
+	eJmn+O5/KusPelYlAElU1z919FCixzNFgeaiQzCKFnil+IsGjnbQK9EzkJrNKp4DWp42+0OvaaJ
+	oqP6DgU9af3erhIpzmRNhOpui+8QaBE9i8NQSEWCUkG5zINuRADubN5vXeG394jYL9FVocs+jAB
+	IjG52btelz94U78zg+1QfDsBq3LcIVzpGrnnE1wlou4KO8nDXQdFwKMuTlQRhAW1
+X-Google-Smtp-Source: AGHT+IGpcmzbvOjTwEWfKyz0NR5r88tR69+PRwvb3xEu4Qb74Qw2Id1qqyBUkxPFhlZZvE6xhqzJgQ==
+X-Received: by 2002:a17:903:2582:b0:232:1daf:6f06 with SMTP id d9443c01a7336-2321daf701fmr31313455ad.47.1747586483869;
+        Sun, 18 May 2025 09:41:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e2118b07sm42255275ad.43.2025.05.18.09.41.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 09:41:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] ARM: integrator: Fix early initialization
+Date: Sun, 18 May 2025 09:41:18 -0700
+Message-ID: <20250518164118.3859567-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 16 May 2025 13:58:04 +0300
-Pop Ioan Daniel <pop.ioan-daniel@analog.com> wrote:
+Starting with commit bdb249fce9ad4 ("ARM: integrator: read counter using
+syscon/regmap"), intcp_init_early calls syscon_regmap_lookup_by_compatible
+which in turn calls of_syscon_register. This function allocates memory.
+Since the memory management code has not been initialized at that time,
+the call always fails. It either returns -ENOMEM or crashes as follows.
 
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
-ts an
-> analog input signal into a high speed, single-bit data stream.
->=20
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-More or less just one question to add to David's review.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
+[0000000c] *pgd=00000000
+Internal error: Oops: 5 [#1] ARM
+Modules linked in:
+CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc5-00026-g5fcc9bf84ee5 #1 PREEMPT
+Hardware name: ARM Integrator/CP (Device Tree)
+PC is at __kmalloc_cache_noprof+0xec/0x39c
+LR is at __kmalloc_cache_noprof+0x34/0x39c
+...
+Call trace:
+ __kmalloc_cache_noprof from of_syscon_register+0x7c/0x310
+ of_syscon_register from device_node_get_regmap+0xa4/0xb0
+ device_node_get_regmap from intcp_init_early+0xc/0x40
+ intcp_init_early from start_kernel+0x60/0x688
+ start_kernel from 0x0
 
-It's around whether the clock is a separate thing or part of the backend
-(which here kind of incorporates the bus controller).
+The crash is seen due to a dereferenced pointer which is not supposed to be
+NULL but is NULL if the memory management subsystem has not been
+initialized. The crash is not seen with all versions of gcc. Some versions
+such as gcc 9.x apparently do not dereference the pointer, presumably if
+tracing is disabled. The problem has been reproduced with gcc 10.x, 11.x,
+and 13.x. Either case, if the crash is not seen, the call to
+syscon_regmap_lookup_by_compatible returns -ENOMEM, and
+sched_clock_register is never called.
 
-We wouldn't bother specifying a clock line explicitly for SPI or PCIe so
-why do we need one for this?
+Fix the problem by moving the early initialization code into the standard
+machine initialization code.
 
-> ---
-> changes in v3:
->  - edit ad7405_chip_info struct instances
->  - remove lock
->  - add implementation for IIO_CHAN_INFO_SCALE
->  - use IIO_CHAN_INFO_OVERSAMPLING_RATIO for controlling the decimation ra=
-te
->  - use IIO_CHAN_INFO_SAMP_FREQ for read-only
->  - remove dem_clk_get_enabled() function
->  - remove chip_info variable from probe function
->  - fix indentation
->  - remove max_rate
->  - rename ad7405_set_sampling_rate in ad7405_det_dec_rate
-> add adum7702 and adum7703 chip_info
->  drivers/iio/adc/Kconfig  |  10 ++
->  drivers/iio/adc/Makefile |   1 +
->  drivers/iio/adc/ad7405.c | 276 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 287 insertions(+)
->  create mode 100644 drivers/iio/adc/ad7405.c
+Fixes: bdb249fce9ad4 ("ARM: integrator: read counter using syscon/regmap")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ arch/arm/mach-versatile/integrator_cp.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
-> new file mode 100644
-> index 000000000000..1a96a283ab01
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7405.c
-> @@ -0,0 +1,276 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices AD7405 driver
-> + *
-> + * Copyright 2025 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/util_macros.h>
-> +
-> +#include <linux/iio/backend.h>
-> +#include <linux/iio/iio.h>
-> +
-> +static const unsigned int ad7405_scale_table[][2] =3D {
-> +	{640, 0},
-> +};
-> +
-> +static const unsigned int adum7702_scale_table[][2] =3D {
-> +	{128, 0},
-
-	{ 128, 0 },
-
-Assuming you keep these (see David's feedback)
-
-> +};
-
-> +static int ad7405_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad7405_state *st;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st =3D iio_priv(indio_dev);
-> +
-> +	st->info =3D device_get_match_data(dev);
-> +	if (!st->info)
-> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
-> +
-> +	ret =3D devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_sup=
-plies),
-> +					     ad7405_power_supplies);
-> +
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to get and enable supplies");
-> +
-> +	clk =3D devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	st->ref_frequency =3D clk_get_rate(clk);
-
-Perhaps an odd question but for a clocked lvds bus like this
-is the clock actually something we should represent as part of
-the bus (so iio_backend interfaces) or separately like this?
-
-
-> +	if (!st->ref_frequency)
-> +		return -EINVAL;
-> +
-> +	ad7405_fill_samp_freq_table(st);
-> +
-> +	indio_dev->dev.parent =3D dev;
-> +	indio_dev->name =3D st->info->name;
-> +	indio_dev->channels =3D &st->info->channel;
-> +	indio_dev->num_channels =3D 1;
-> +	indio_dev->info =3D &ad7405_iio_info;
-> +
-> +	st->back =3D devm_iio_backend_get(dev, NULL);
-> +	if (IS_ERR(st->back))
-> +		return dev_err_probe(dev, PTR_ERR(st->back),
-> +				     "failed to get IIO backend");
-> +
-> +	ret =3D iio_backend_chan_enable(st->back, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_iio_backend_enable(dev, st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D ad7405_set_dec_rate(indio_dev, &indio_dev->channels[0], 256);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
+diff --git a/arch/arm/mach-versatile/integrator_cp.c b/arch/arm/mach-versatile/integrator_cp.c
+index 2ed4ded56b3f..03dfb5f720b7 100644
+--- a/arch/arm/mach-versatile/integrator_cp.c
++++ b/arch/arm/mach-versatile/integrator_cp.c
+@@ -86,14 +86,6 @@ static u64 notrace intcp_read_sched_clock(void)
+ 	return val;
+ }
+ 
+-static void __init intcp_init_early(void)
+-{
+-	cm_map = syscon_regmap_lookup_by_compatible("arm,core-module-integrator");
+-	if (IS_ERR(cm_map))
+-		return;
+-	sched_clock_register(intcp_read_sched_clock, 32, 24000000);
+-}
+-
+ static void __init intcp_init_irq_of(void)
+ {
+ 	cm_init();
+@@ -119,6 +111,10 @@ static void __init intcp_init_of(void)
+ {
+ 	struct device_node *cpcon;
+ 
++	cm_map = syscon_regmap_lookup_by_compatible("arm,core-module-integrator");
++	if (!IS_ERR(cm_map))
++		sched_clock_register(intcp_read_sched_clock, 32, 24000000);
++
+ 	cpcon = of_find_matching_node(NULL, intcp_syscon_match);
+ 	if (!cpcon)
+ 		return;
+@@ -138,7 +134,6 @@ static const char * intcp_dt_board_compat[] = {
+ DT_MACHINE_START(INTEGRATOR_CP_DT, "ARM Integrator/CP (Device Tree)")
+ 	.reserve	= integrator_reserve,
+ 	.map_io		= intcp_map_io,
+-	.init_early	= intcp_init_early,
+ 	.init_irq	= intcp_init_irq_of,
+ 	.init_machine	= intcp_init_of,
+ 	.dt_compat      = intcp_dt_board_compat,
+-- 
+2.45.2
 
