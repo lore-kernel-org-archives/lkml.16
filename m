@@ -1,245 +1,342 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17941A933
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 17:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C540712CDBE;
+	Sun, 18 May 2025 17:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747590366; cv=none; b=lljjtVOWazt1vtx84ItkWW2nhK/MrYwBYd9cmXmiKGtOiERAlReO7Yme8OfKtTYV3/xyXdZQ/6d6nEbMXpmD6LrVr2W11hvezxOKjvQGK6PGDADcLbNSjqoTAql5UbjtP6wStaDSnxjjOdNTYmn9V7iwh9DyeZCDSVdEyfGsK/M=
+	t=1747590388; cv=none; b=awfaBus0A7cbtali/t4CGY12P+uOVyGRzxs2Lko6puZlUQBsl+tB9K001y0F553gXOwOyRpNm5uGtk3hFKzyiR5OrWqoXrDRzxFZYKMO0XIYN0NqVC2VnLQTznHpU4x1AXzrNwO6H7Nt9Uysh6KsMAt3J6tZ0N7DXy+18rSekgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747590366; c=relaxed/simple;
-	bh=CqQXhcuaV3YPlO3/nXymOWII1imAvM2bGDiijCgGmG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dD1/7WL8OfBMOWF7at3essO6xf6Os8M/pJJcWmODp5OkpgVTDAJJpx441wg1OHkQSGSSBVfAh6LHyXVAb3UmZGUSpUYhG9vpOeVUn0rWqv49jmyQ+3+EpYITncnCDgEceZKfGr73yEBNZSOmo/bgJ3rwCeBdHIHxRhc6fiSnrSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e0eW7I5i; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747590388; c=relaxed/simple;
+	bh=MKxU4FFxfUMYFM9K/j7LO/V4H/bEqGP/GAlCJy9CA3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MX+Q1AO5OD6Nd2zn//OR1riE4196V0Nrtiee/8OHGT9RJ5m+6EVt8jOZoGa603l7noytaU8pXogO89jgP13kkKLkYNG3aNgBKfKBtjIVZmzYZrne0C4tO0HMTWyjp3LTZFvQ8AMq/co7qPXMPRljwkh0fQV7Q2MghcBK6CzzKFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=r2c/F5jb; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e0eW7I5i"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so339495ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 10:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747590364; x=1748195164; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tq6BJICevICy+8NLXEWZ5sLSE5pdxMQLnEAjqPMDfl8=;
-        b=e0eW7I5ijV5nemcHJy+aH41VvDYqpbc7btT7KQ0eyqJ70JPVqBOvhUhVd4NDjojr2k
-         KSbnkObdAGRyX6PJmRo/Ze2+5sFzGtSQ05m1pbqlLoIcj9c+xx64sqBJ52g3ouya3OEC
-         /1f/B16nnQhYEc4bK6Yqd3Iaz9BMNvPQXxpVVuN6Tr9hBt8sbjJ63BJj4sYLHFaZgqIq
-         ydxdZgACltp3ii3j7fQugX35hsKJLnd5kScp+HCWYI8rHYruCAxV3LHmR6Y7zDP3fWEx
-         foAoMjNM+SWOqNBYtz27gLbHnBt3IjndGVVAr3r38xdzHvnm7D2zk43km3ztSFYWzgBC
-         Os7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747590364; x=1748195164;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tq6BJICevICy+8NLXEWZ5sLSE5pdxMQLnEAjqPMDfl8=;
-        b=hZ2uz+OHj5VWFosa/CzBuF10LlJsDGxMT13dZXiirj0oI6hKFcRUfzJOS2mvFBPZeM
-         29HJpolmzYei9bsZ9YkNAiVkTgeRzqc/ZFYjVsQlQycljCZhzLm11lReEj8gme9NBdBD
-         eo7msQWSqp+fblomtzjSY8sYxgv5yeYwWiJ9ns0zw0gtQJ3nQqr1jq4VmzQ+koRYmzLX
-         reGt7AfFmOJh9Yehgl6xgnk9zGJyYlsLcaX5ObkqGs1QV80F55mLbrQLOOLnMNex6Fir
-         xbwVaPZnzPlZEwvLznvFW6Zd4M90OhmO0ml+Aaw23F4ooBuhO1z7kzAreSsh2dNE3VVr
-         YhUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ+60pUBVZzFEuHK1temXQ6cU0sBArgb2SZIU4sp6cCrwz4FFZfnkQ/xwLGIzCuIkX1skYooCGhf+xszs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4DQbNu9Hc224ugcwy7N8W0wBU7bBYqWI1D1Gq9ZMtI8OzlhgX
-	9Y/0FibGAY/f2/umXx5dOF8eBBIUOghfovyEfcz8oDcDPgWkEpEDW2iwyQL0Ys3V8/mdJ7woN8J
-	oeDhyHytsdonnOwOhxjZ7FEAF/4OI9bO6opt5FuYl
-X-Gm-Gg: ASbGncscXpNt8Afe4awTVNFBN4phXxosfeJ2BBb/GX4/K6Hd2adMUvIjgnUa87sQbXD
-	7eji4fn8b4VXgJqDaeW4kX78V3wh8OYno53CxiJ/HGdA+EueYVokn79Zn8keVwV5vZZRaYkqyMf
-	NLf5AOx3bp5ruGnnfDAHOxQtEKGGfrPWDkOA==
-X-Google-Smtp-Source: AGHT+IGvvhnQ9pjRVSnXeb2vGemb9gcHDqJ6g1rDqhBp7CDQFxYf8B3e9Lao4IFAEVvWVtZGDolYIzy1n58NQyME0Ig=
-X-Received: by 2002:a05:6e02:174f:b0:3da:7c3f:22d6 with SMTP id
- e9e14a558f8ab-3dc5d6162c7mr3928195ab.22.1747590363941; Sun, 18 May 2025
- 10:46:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="r2c/F5jb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747590374; x=1748195174; i=w_armin@gmx.de;
+	bh=I7IK5ECjWd9nplphgrQo+Hveys8NTa0a5CWuKNr3WNY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=r2c/F5jbsYelKCYLI+11HjROL6xigNkAqxI6sWuZKVId6tUW5P7xdsgyKgCzEwk3
+	 QBUToLHUtLCe7xynUUUIYPT+lNwh9oRMsQ4JB19tCZ5u5vJAKD8b0zsYg02S0hkmZ
+	 76YKKagFYOtKzq5qPMz8AQGShkH7woqs7DG5IkoW7JhZxR54zKmYQTFIq0uavmhF6
+	 Cf1Q7IzVY461qI0w34fgiZfd2WEea9324HBunTD4vj1UoP1Sw/gfBIA+MeINrWKix
+	 8pLL/Q4UCE/lDrDeO91WzFCJWmxzr9JvvLMw0JsE8HupaAmbvmbXT0B5l07UByM5h
+	 /wC1yuVM+NFe1GRWCA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M6DWs-1uIst41q1I-007Bi0; Sun, 18
+ May 2025 19:46:14 +0200
+Message-ID: <79124489-0a2f-42ca-85ae-6f442e42e2d3@gmx.de>
+Date: Sun, 18 May 2025 19:46:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515181417.491401-1-irogers@google.com> <96c8fae8-b8f9-4094-b03a-9dba3ca234c2@linux.intel.com>
- <CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com> <aCoUMOVRjCr_t0ae@google.com>
-In-Reply-To: <aCoUMOVRjCr_t0ae@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 18 May 2025 10:45:52 -0700
-X-Gm-Features: AX0GCFuhwLE8uKAEI-NPKhg3vYsEZFq_Vsn2Bb03waqk9pF--XleBBzmGZNbfRE
-Message-ID: <CAP-5=fXnvRLiGmV7rr2H8A2Hj7HDE9m+B6Qn0areRXBhz-tK+Q@mail.gmail.com>
-Subject: Re: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: lenovo: Unbreak USB/BT keyboards on non-ACPI
+ platforms
+To: Janne Grunau <j@jannau.net>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Vishnu Sankar <vishnuocv@gmail.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net>
+ <b77edae0-50bd-4039-9487-15bb69389c6c@gmx.de>
+ <20250515230537.GA1556976@robin.jannau.net>
+ <b3536162-44aa-40af-861e-07371497ef30@gmx.de>
+ <20250518094353.GB1556976@robin.jannau.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250518094353.GB1556976@robin.jannau.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5gw4QP79TBBrrzA6OPK9UqK46HbwUInur45ziCIq3oCeYHBTVv3
+ tF3qeF3JkUwTt1FygSddpG6YzGcdHqADqtimR9EwsAvGCGnix7T0uw+alu7poM8NkGDtDZ6
+ evzSNoxO5AESiFLY+nIVbNUGBUUqCj4195CGl665ok3ARFcW62O+lUwXExALbjgl4+d6zik
+ Wh2RfLGAwlur4pCUPjTPA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9iNik3bY4/0=;QHPEmVvfdQ8zjZVRXjSa5p+YhHs
+ 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
 
-On Sun, May 18, 2025 at 10:09=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hello,
->
-> On Thu, May 15, 2025 at 03:35:41PM -0700, Ian Rogers wrote:
-> > On Thu, May 15, 2025 at 2:01=E2=80=AFPM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> > >
-> > > On 2025-05-15 2:14 p.m., Ian Rogers wrote:
-> > > > On graniterapids the cache home agent (CHA) and memory controller
-> > > > (IMC) PMUs all have their cpumask set to per-socket information. In
-> > > > order for per NUMA node aggregation to work correctly the PMUs cpum=
-ask
-> > > > needs to be set to CPUs for the relevant sub-NUMA grouping.
-> > > >
-> > > > For example, on a 2 socket graniterapids machine with sub NUMA
-> > > > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
-> > > > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
-> > > > ```
-> > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a =
-sleep 1
-> > > >
-> > > >  Performance counter stats for 'system wide':
-> > > >
-> > > > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
-> > > > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
-> > > > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
-> > > > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
-> > > >
-> > > >        1.002113847 seconds time elapsed
-> > > > ```
-> > > >
-> > > > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" the=
-n
-> > > > the correctly 6 NUMA node aggregations are achieved:
-> > > > ```
-> > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a =
-sleep 1
-> > > >
-> > > >  Performance counter stats for 'system wide':
-> > > >
-> > > > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
-> > > > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
-> > > > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
-> > > > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
-> > > > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
-> > > > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
-> > > > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
-> > > > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
-> > > > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
-> > > > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
-> > > > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
-> > > > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
-> > >
-> > > Is the second coloum  the number of units?
-> > > If so, it's wrong.
-> > >
-> > > On my GNR with SNC-2, I observed the similar issue.
-> > >
-> > > $ sudo ./perf stat -e 'UNC_M_CLOCKTICKS' --per-node -a sleep 1
-> > >  Performance counter stats for 'system wide':
-> > >
-> > > N0        0      6,405,811,284      UNC_M_CLOCKTICKS
-> > > N1        1      6,405,895,988      UNC_M_CLOCKTICKS
-> > > N2        0      6,152,906,692      UNC_M_CLOCKTICKS
-> > > N3        1      6,063,415,630      UNC_M_CLOCKTICKS
-> > >
-> > > It's supposed to be 4?
-> >
-> > Agreed it is weird, but it is what has historically been displayed.
-> > The number is the aggregation number:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n307
-> > which comes from:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n135
-> > which comes from:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n435
-> > However, I think it is missing updates from:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n526
-> > but there is a comment there saying "don't increase aggr.nr for
-> > aliases" and all the uncore events are aliases. I don't understand
-> > what the aggregation number is supposed to be, it is commented as
-> > "number of entries (CPUs) aggregated":
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/stat.h?h=3Dperf-tools-next#n26
-> > it would seem to make sense in the CHA case with SNC3 and 42 evsels
-> > per NUMA node that the value should be 42. Maybe Namhyung (who did the
-> > evsel__merge_aggr_counters clean up) knows why it is this way but in
-> > my eyes it just seems like something that has been broken for a long
-> > time.
->
-> I think it's the number of aggregated entries (FDs?).
->
-> For core events, it's the number of CPUs for the given aggregation as it
-> collects from all CPUs.  But it'd be confusing with uncore events which
-> have cpumask to collect data from a few CPUs.
->
-> On my laptop, --per-socket gives different numbers depending on the
-> events/PMUs.
->
-> For core events, it's 4.
->
->   $ sudo ./perf stat -a --per-socket -e cycles sleep 1
->
->    Performance counter stats for 'system wide':
->
->   S0        4        225,297,257      cycles
->
->          1.002581995 seconds time elapsed
->
-> While uncore events give 1.
->
->   $ sudo ./perf stat -a --per-socket -e unc_mc0_rdcas_count_freerun sleep=
- 1
->
->    Performance counter stats for 'system wide':
->
->   S0        1         23,665,510      unc_mc0_rdcas_count_freerun
->
->          1.002148012 seconds time elapsed
+Am 18.05.25 um 11:43 schrieb Janne Grunau:
 
-I think we're agreeing. I wonder that the intent of the aggregation
-number is to make it so that you can work out an average from the
-aggregated count. So for core PMUs you divide the count by the
-aggregation number and get the average count per core (CPU?). If we're
-getting an aggregated count of say uncore memory controller events
-then it would make sense to me that we show the aggregated total and
-the aggregation count is the number of memory controller PMUs, so we
-can have an average per memory controller. This should line up with
-using the number of file descriptors.
+> Hej,
+>
+> On Sat, May 17, 2025 at 05:58:24PM +0200, Armin Wolf wrote:
+>> Am 16.05.25 um 01:05 schrieb Janne Grunau:
+>>
+>>> On Fri, May 16, 2025 at 12:05:11AM +0200, Armin Wolf wrote:
+>>>> Am 12.05.25 um 23:55 schrieb Janne Grunau via B4 Relay:
+>>>>
+>>>>> From: Janne Grunau <j@jannau.net>
+>>>>>
+>>>>> Commit 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 =
+Kbd
+>>>>> Fn keys") added a dependency on ACPI_PLATFORM_PROFILE to cycle throu=
+gh
+>>>>> power profiles. This breaks USB and Bluetooth keyboards on non-ACPI
+>>>>> platforms since platform_profile_init() fails. See the warning below=
+ for
+>>>>> the visible symptom but cause is the dependency on the platform_prof=
+ile
+>>>>> module.
+> [...]
+>
+>>>> i think we can fix that. We just have to skip the compat stuff if acp=
+i_kobj is NULL (means that ACPI is not used).
+>>>> The modern platform profile interface is generic enough to also work =
+on non-ACPI systems.
+>>>>
+>>>> Can you test a patch?
+>>> I can easily test patches
+>> Nice, i attached the necessary patch. Please keep in mind that this pat=
+ch is compile-tested only.
+>>
+>> From: Armin Wolf <W_Armin@gmx.de>
+>> Date: Sat, 17 May 2025 17:45:09 +0200
+>> Subject: [PATCH] ACPI: platform_profile: Add support for non-ACPI platf=
+orms
+>>
+>> Currently the platform profile subsystem assumes that all supported
+>> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+>> However some ARM64 notebooks do not support ACPI and are instead
+>> using devicetree for booting.
+>>
+>> Do not register the legacy sysfs interface on such devices as it
+>> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
+>> are encouraged to use the new platform-profile class interface
+>> instead.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/acpi/platform_profile.c | 68 ++++++++++++++++++++++++++------=
+-
+>>   1 file changed, 55 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
+ofile.c
+>> index ffbfd32f4cf1..c5a5da7d03f1 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -190,6 +190,20 @@ static ssize_t profile_show(struct device *dev,
+>>   	return sysfs_emit(buf, "%s\n", profile_names[profile]);
+>>   }
+>>  =20
+>> +/**
+>> + * profile_notify_legacy - Notify the legacy sysfs interface
+>> + *
+>> + * This wrapper takes care of only notifying the legacy sysfs interfac=
+e
+>> + * if it was registered during module initialization.
+>> + */
+>> +static void profile_notify_legacy(void)
+>> +{
+>> +	if (!acpi_kobj)
+>> +		return;
+>> +
+>> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +}
+>> +
+>>   /**
+>>    * profile_store - Set the profile for a class device
+>>    * @dev: The device
+>> @@ -215,7 +229,7 @@ static ssize_t profile_store(struct device *dev,
+>>   			return ret;
+>>   	}
+>>  =20
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +	profile_notify_legacy();
+>>  =20
+>>   	return count;
+>>   }
+>> @@ -435,7 +449,7 @@ static ssize_t platform_profile_store(struct kobjec=
+t *kobj,
+>>   			return ret;
+>>   	}
+>>  =20
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +	profile_notify_legacy();
+>>  =20
+>>   	return count;
+>>   }
+>> @@ -472,6 +486,22 @@ static const struct attribute_group platform_profi=
+le_group =3D {
+>>   	.is_visible =3D profile_class_is_visible,
+>>   };
+>>  =20
+>> +/**
+>> + * profile_update_legacy - Update the legacy sysfs interface
+>> + *
+>> + * This wrapper takes care of only updating the legacy sysfs interface
+>> + * if it was registered during module initialization.
+>> + *
+>> + * Return: 0 on success or error code on failure.
+>> + */
+>> +static int profile_update_legacy(void)
+>> +{
+>> +	if (!acpi_kobj)
+>> +		return 0;
+>> +
+>> +	return sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +}
+>> +
+>>   /**
+>>    * platform_profile_notify - Notify class device and legacy sysfs int=
+erface
+>>    * @dev: The class device
+>> @@ -481,7 +511,7 @@ void platform_profile_notify(struct device *dev)
+>>   	scoped_cond_guard(mutex_intr, return, &profile_lock) {
+>>   		_notify_class_profile(dev, NULL);
+>>   	}
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +	profile_notify_legacy();
+>>   }
+>>   EXPORT_SYMBOL_GPL(platform_profile_notify);
+>>  =20
+>> @@ -529,7 +559,7 @@ int platform_profile_cycle(void)
+>>   			return err;
+>>   	}
+>>  =20
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +	profile_notify_legacy();
+>>  =20
+>>   	return 0;
+>>   }
+>> @@ -603,9 +633,9 @@ struct device *platform_profile_register(struct dev=
+ice *dev, const char *name,
+>>   		goto cleanup_ida;
+>>   	}
+>>  =20
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +	profile_notify_legacy();
+>>  =20
+>> -	err =3D sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +	err =3D profile_update_legacy();
+>>   	if (err)
+>>   		goto cleanup_cur;
+>>  =20
+>> @@ -639,8 +669,8 @@ void platform_profile_remove(struct device *dev)
+>>   	ida_free(&platform_profile_ida, pprof->minor);
+>>   	device_unregister(&pprof->dev);
+>>  =20
+>> -	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> -	sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +	profile_notify_legacy();
+>> +	profile_update_legacy();
+>>   }
+>>   EXPORT_SYMBOL_GPL(platform_profile_remove);
+>>  =20
+>> @@ -692,16 +722,28 @@ static int __init platform_profile_init(void)
+>>   	if (err)
+>>   		return err;
+>>  =20
+>> -	err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
+>> -	if (err)
+>> -		class_unregister(&platform_profile_class);
+>> +	/*
+>> +	 * The ACPI kobject can be missing if ACPI was disabled during bootin=
+g.
+>> +	 * We thus skip the initialization of the legacy sysfs interface in s=
+uch
+>> +	 * cases to allow the platform profile class to work on ARM64 noteboo=
+ks
+>> +	 * without ACPI support.
+> I wouldn't say work as I'd expect that there are 0 registered
+> platform_profile class devices.
 
-I think this isn't the current behavior, on perf v6.12:
-```
-$ sudo perf stat --per-socket -e data_read -a sleep 1
+Just as expected, currently all drivers registering with the platform prof=
+ile subsystem are
+depending on ACPI. In the future this might change.
 
- Performance counter stats for 'system wide':
-
-S0        1           2,484.96 MiB  data_read
-
-       1.001365319 seconds time elapsed
-
-$ sudo perf stat -A -e data_read -a sleep 1
-
- Performance counter stats for 'system wide':
-
-CPU0             1,336.48 MiB  data_read [uncore_imc_free_running_0]
-CPU0             1,337.06 MiB  data_read [uncore_imc_free_running_1]
-
-       1.001049096 seconds time elapsed
-```
-so the aggregation number shows 1 but 2 events were aggregated together.
-
-I think computing the aggregation number in the stat code is probably
-wrong. The value should be constant for an evsel and aggr_cpu_id, it's
-just computing it for an aggr_cpu_id is a pain due to needing topology
-and/or PMU information. The code is ripe for refactoring. I'd prefer
-not to do it as part of this change though which is altering a
-particular Intel Granite Rapids issue.
+>> +	 */
+>> +	if (acpi_kobj) {
+>> +		err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
+>> +		if (err < 0) {
+>> +			class_unregister(&platform_profile_class);
+>> +			return err;
+>> +		}
+>> +	}
+>>  =20
+>> -	return err;
+>> +	return 0;
+>>   }
+>>  =20
+>>   static void __exit platform_profile_exit(void)
+>>   {
+>> -	sysfs_remove_group(acpi_kobj, &platform_profile_group);
+>> +	if (acpi_kobj)
+>> +		sysfs_remove_group(acpi_kobj, &platform_profile_group);
+>> +
+>>   	class_unregister(&platform_profile_class);
+>>   }
+>>   module_init(platform_profile_init);
+> thanks, patch works on the affected system and the HID device for the
+> Lenovo keyboard probes successfully. We still need to stub
+> platform_profile_cycle() to get rid of the ACPI Kconfig dependency. I'll
+> send that out separately.
+>
+> Reviewed-by: Janne Grunau <j@jannau.net>
+> Tested-by: Janne Grunau <j@jannau.net>
+>
+Alright, i will send this patch to the ACPI mailing list ASAP. Please keep=
+ in mind
+that merely stubbing out the affected functions is not enough, as the plat=
+form profile code
+needs to be moved out of drivers/acpi/ as well.
 
 Thanks,
-Ian
+Armin Wolf
+
