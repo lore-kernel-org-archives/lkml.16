@@ -1,112 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BC6EEAA;
-	Sun, 18 May 2025 13:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F6F2D023
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 13:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747575092; cv=none; b=hBFxTYDjK+mDryVURnXSSCh1uyi85j+8X2lxZyQEJ+bfd5PJc02mtD1OYBaEVXhzyhtC6YCKXXKh/edoTpQIj0TOcTmXrlnVlvDVKySkSLx8PpHkMWer5qcfORDGy72dEEbJOfXOZvkMY/KDpZSS31AbkmaKxXutIOyDlQ6g6YQ=
+	t=1747575542; cv=none; b=VnjyVjzJ47hwr5vY+6Kwb0NYtNwIC3fKHcFWuW6PxndoD/ux1+Ph0zI6yZmEAyiIUxTVpg9v6AoWTh83RP9iWmDqpA3Ja6mwBz4DYOO0cDLwKoGF1Jhz/eaddojoopHNoMlc1vpGgqz3H5eLo5fZwe6WSDC+n8y/m+tRd5a3+qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747575092; c=relaxed/simple;
-	bh=dV15awbD247lj6+VR3yfY/UUy8Kzmk0rr5ZokrGdYmw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Nu7fwKvyCtvcfQUfFGpg8EEWmIGbKtp9KKH0BEJ1YXgzbcJMKwypo0T8Dvjo7AFpSJrR88an1xY/USrTZFsV5SpNiQpw3iR7TDU30rH+ZaDuk4aBFcdavN/nqXG/zJbaM9QxAOo+VNoG5UYrXfs70T5n2Oclg3lRwknb50EzJ9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2lFSyVF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747575542; c=relaxed/simple;
+	bh=eH2EpwdFtqTfg4oyY9dj7hDqpl8SFrgx2wY+aGi69z4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tnH/tFfUQQJ+Mt/qmGdMlKHt1K2S4asnp+k8v6M841RSwEw/o1b2SK9HBfJujshOWqNfd3jaN2WQ7lYftLLVPSQOmFDDdSMtc5b1apMzoYEIY73lzRLJoyTYNChBmdueHVoS9uC9LfRFKKmvB2+q7pEsx846Pl912XJiq21NDwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gc5gCuXq; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2lFSyVF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DAFC4CEE7;
-	Sun, 18 May 2025 13:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747575091;
-	bh=dV15awbD247lj6+VR3yfY/UUy8Kzmk0rr5ZokrGdYmw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=b2lFSyVFm403R0QirlXfajgv0Yq+HhXqzpmEF6GdZJp9ASL5IujhZ8VevggSQ18FM
-	 uU67FccfDFcP+x5JrKcqy11TktdGYYrY6cAjICNUed0P6CHuZdLADBXTtgT04MhWLW
-	 b3hxdQYWzvQTryICqfzrAfR9nuAEyORmcwSc5NpyEqjKLYoQ+CzuPBfLWm4F7go+Wm
-	 1FDKmucHxK0PKkOFa03WQebvw54C9Wze2p1Qg7ZIe9xFLAgRIUBbgX6h/8xsRfPMaR
-	 KMLWzUcveHW3Dy07olT3nU5TZUQV0fXwHjEIHqWnAQcDeBOCO4XKODQ6xeSNWI1/qT
-	 5Z+RMrj5Iqt5Q==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc5gCuXq"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a1d8c0966fso2463324f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 06:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747575539; x=1748180339; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JwDs+xHDiTWAcE74HA+pSPAdKOHYibMMx1ABnC+HMCg=;
+        b=Gc5gCuXqiMokhC0XH+yJ5hSy2Jyz4x7iORJP2AI63Aqb5NPqwrEI3A+bipRhzXu2qK
+         G0X9wj4r9Ba2fr22Ze4/kY5jYQSu1xOC36ewz/1YYeSKfDREAt2EpB81fQuL1/w1DUMR
+         aTStlMnXL1FKqSxA40QCw90EJF4CFG/AbbUd4x8QnVXatQjruMFXjtauXCYrSciwDzoT
+         EO9MUklgPv7yojL6xhl+P9M1SKBSv6shTT2Xw7tQ+VXethLl6Nw3X21aGJo4iIlKe01z
+         wgDgqiwNmGT9OKj+xRCOtsNp+jpPGFPGcYV6N4r494AGn5fkfGpNCpF6j3wEHU5tAn1W
+         ViNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747575539; x=1748180339;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JwDs+xHDiTWAcE74HA+pSPAdKOHYibMMx1ABnC+HMCg=;
+        b=g49RzkYRc6NrqVKZGhghm8QbRw/uqTNXfuztnunufhLwwR3Mf24LEbbQf97u4o6pIt
+         SwDib+OW9mKNTfJB9aoHLWoU3RMUiLQIyThF2c0uSRhg35wp4NsAiifvxxZGSey/M8SG
+         tjmwX7owIS8+5peTZss0wdaqECPhZNi/Kqnyynu+f2dffh10BpNzGbxfPBFIO3BC9QPB
+         BGC+trrBJYPZIUv4oHD9PO3B+6a05lC6O0G8DlEAnthxcWcOEMPEZsIYQmlfmeeBPFvP
+         YVqAw7T/18gFSpH64Bcgh9Ozx2WK9Ji2dNknb2i5sPl+9vVYTCGD5RFxEbKkw3lEbyXu
+         5ndg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiOM43AIl80zq9vEla7+Bz1n2dbASeDcgvOOOGo9hyiQ9qWSjwVw1jEkoGEGgBwV0gG9UoC3IKCtp3KDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzVCYajWHI1oJ6Bl0YNsiR2fwQsStJb1toM2yq2Suu79VToVf+
+	CyK9xisqLxL1h2kywRWrbC6Z5Nn9B+ECGNFMfabWe4hLiqF/LtH4gvqO
+X-Gm-Gg: ASbGncvuyPxSMJM8sDBasukDj8bpHr5wzqj31vqYimIqu4ahwDwGisY3pM8ts8BpVz+
+	xhKxOMU+ts6X2Rv2tcDPfAHTk9FmSH3iVAtfu/wiVIQUHMOVD4pZ2oGhTL9KIAFrpFdjO/JYYSf
+	1nMYHmlD4U0gfOIIPbcE/oOHdX1PuND+U35yHoxMmWF3GHaoH+H2GTxNqB6tNwF5kqsWhhpjr3N
+	Vk56C4FplZJOWGlgQjYmBmXMTS+lVg1GHq4FFUZeOV2exAmNFagm3J2+5G3EGc510nuST1St/Vv
+	rHWl0rj0lstFdicRbMpV88GKn0I2pg9JgJOIgYn9FkUYZcGBAE44VSus2vNoBNzNrgf73pTsFLx
+	Iny27GruCMLNdlwoJ6HMnnMXStt1Zh9/jtH5irM623zc=
+X-Google-Smtp-Source: AGHT+IFqWlT8cLv8iCttgul4w0D70n+1cFF04Uz9uxfu7+EhpHDpFzsVvdtHxsPN4XSB3ZY8hjcw5A==
+X-Received: by 2002:adf:f1c2:0:b0:3a3:621a:d3c8 with SMTP id ffacd0b85a97d-3a3621ad491mr5529667f8f.19.1747575538454;
+        Sun, 18 May 2025 06:38:58 -0700 (PDT)
+Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a7d6sm9429508f8f.30.2025.05.18.06.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 06:38:58 -0700 (PDT)
+From: David Laight <david.laight.linux@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Cc: David Laight <david.laight.linux@gmail.com>,
+	u.kleine-koenig@baylibre.com,
+	Nicolas Pitre <npitre@baylibre.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Biju Das <biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 next 0/4] Implement mul_u64_u64_div_u64_roundup()
+Date: Sun, 18 May 2025 14:38:44 +0100
+Message-Id: <20250518133848.5811-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 15:30:50 +0200
-Message-Id: <D9ZBNJ6VL5XL.2TIH5QSOI8ABL@kernel.org>
-Subject: Re: [net-next PATCH v12 1/6] net: phy: pass PHY driver to
- .match_phy_device OP
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Marangi" <ansuelsmth@gmail.com>, "Andrew Lunn"
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "Florian Fainelli"
- <florian.fainelli@broadcom.com>, "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>, =?utf-8?q?Marek_Beh=C3=BAn?=
- <kabel@kernel.org>, "Andrei Botila" <andrei.botila@oss.nxp.com>, "FUJITA
- Tomonori" <fujita.tomonori@gmail.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich" <dakr@kernel.org>,
- "Sabrina Dubroca" <sd@queasysnail.net>, "Michael Klein"
- <michael@fossekall.de>, "Daniel Golle" <daniel@makrotopia.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-X-Mailer: aerc 0.20.1
-References: <20250517201353.5137-1-ansuelsmth@gmail.com>
- <20250517201353.5137-2-ansuelsmth@gmail.com>
-In-Reply-To: <20250517201353.5137-2-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat May 17, 2025 at 10:13 PM CEST, Christian Marangi wrote:
-> Pass PHY driver pointer to .match_phy_device OP in addition to phydev.
-> Having access to the PHY driver struct might be useful to check the
-> PHY ID of the driver is being matched for in case the PHY ID scanned in
-> the phydev is not consistent.
->
-> A scenario for this is a PHY that change PHY ID after a firmware is
-> loaded, in such case, the PHY ID stored in PHY device struct is not
-> valid anymore and PHY will manually scan the ID in the match_phy_device
-> function.
->
-> Having the PHY driver info is also useful for those PHY driver that
-> implement multiple simple .match_phy_device OP to match specific MMD PHY
-> ID. With this extra info if the parsing logic is the same, the matching
-> function can be generalized by using the phy_id in the PHY driver
-> instead of hardcoding.
->
-> Rust wrapper callback is updated to align to the new match_phy_device
-> arguments.
->
-> Suggested-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  drivers/net/phy/bcm87xx.c              |  6 ++++--
->  drivers/net/phy/icplus.c               |  6 ++++--
->  drivers/net/phy/marvell10g.c           | 12 ++++++++----
->  drivers/net/phy/micrel.c               |  6 ++++--
->  drivers/net/phy/nxp-c45-tja11xx.c      | 12 ++++++++----
->  drivers/net/phy/nxp-tja11xx.c          |  6 ++++--
->  drivers/net/phy/phy_device.c           |  2 +-
->  drivers/net/phy/realtek/realtek_main.c | 27 +++++++++++++++++---------
->  drivers/net/phy/teranetics.c           |  3 ++-
->  include/linux/phy.h                    |  3 ++-
->  rust/kernel/net/phy.rs                 |  1 +
->  11 files changed, 56 insertions(+), 28 deletions(-)
+The pwm-stm32.c code wants a 'rounding up' version of mul_u64_u64_div_u64().
+This can be done simply by adding 'divisor - 1' to the 128bit product.
+Implement mul_u64_add_u64_div_u64(a, b, c, d) = (a * b + c)/d based on the
+existing code.
+Define mul_u64_u64_div_u64(a, b, d) as mul_u64_add_u64_div_u64(a, b, 0, d) and
+mul_u64_u64_div_u64_roundup(a, b, d) as mul_u64_add_u64_div_u64(a, b, d-1, d).
 
-I haven't really looked at the C code, just the part that interfaces
-with Rust, so:
+Only x86-64 has an optimsed (asm) version of the function.
+That is optimised to avoid the 'add c' when c is known to be zero.
+In all other cases the extra code will be noise compared to the software
+divide code.
 
-Reviewed-by: Benno Lossin <lossin@kernel.org> # for Rust
+I've updated the test module to test mul_u64_u64_div_u64_roundup() and
+also enhanced it to verify the C division code on x86-64.
 
----
-Cheers,
-Benno
+Changes for v2:
+- Rename the 'divisor' parameter from 'c' to 'd'.
+- Add an extra patch to use BUG_ON() to trap zero divisors.
+- Remove the last patch that ran the C code on x86-64
+  (I've a plan to do that differently).
+
+Note that this code is slow, in userspace on a zen-5 220-250 clocks
+in 64bit mode and 450-900 clocks in 32bit mode.
+(Ignoring the fast path cases.)
+Not helped by gcc making a 'pigs breakfast' of mixed 32/64 bit maths
+(clang is a lot better).
+But helped by the x86 sh[rl]d and cmov (enabled for my 32bit builds).
+
+And I'm not at all sure the call in kernel/sched/cputime.c isn't in a
+relatively common path (rather than just hardware initialisation).
+
+I've a followup patch that reduces the clock counts to about 80 in
+64bit mode and 130 in 32bit mode (pretty much data independant).
+
+David Laight (4):
+  lib: mul_u64_u64_div_u64() rename parameter 'c' to 'd'
+  lib: mul_u64_u64_div_u64() Use BUG_ON() for divide by zero
+  lib: Add mul_u64_add_u64_div_u64() and mul_u64_u64_div_u64_roundup()
+  lib: Add tests for mul_u64_u64_div_u64_roundup()
+
+ arch/x86/include/asm/div64.h        |  19 +++--
+ include/linux/math64.h              |  45 ++++++++++-
+ lib/math/div64.c                    |  43 ++++++-----
+ lib/math/test_mul_u64_u64_div_u64.c | 116 +++++++++++++++++-----------
+ 4 files changed, 149 insertions(+), 74 deletions(-)
+
+-- 
+2.39.5
+
