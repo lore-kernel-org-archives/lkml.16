@@ -1,272 +1,171 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3C5D2FB;
-	Sun, 18 May 2025 07:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A689D2FB;
+	Sun, 18 May 2025 07:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747554015; cv=none; b=PKxgpCwvH+iCRQZ9muShM7ws81/IfqUFdg4Rvgaz6fSZjgzGUoPGKs9g5ISc9hwiPAs+bQXnFda/igzYB+guozieejkyUdzj8qeLjSNEI+byiRVFZa9XDrJTiCLb18FbYo3NI+jVCkhJVHRaglLQHFG0ET/oz8JU8bAeKRrzDOk=
+	t=1747554100; cv=none; b=MJAQ5O6aglqxHHPUd3RsV+/HLDy/dLyAltQL3fD4LQFH+OCfdlcfcYCMzAivHmM6jWWLjA2KOhtkUVBbM1LQ+5Q3c1MAEpBFfq40GQaCKMVjrgsZSgS87TvsCxKZXzaIHEiUDMnYP4TQ3usQXqkwxlxVPdUv6sKr9LfErwZGIMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747554015; c=relaxed/simple;
-	bh=259/vvOiHFW9j83D4pgOWUBhX2qdMM+IkobAc02T0m8=;
+	s=arc-20240116; t=1747554100; c=relaxed/simple;
+	bh=AHAwzXBAnTp88J/0aYWfanpi1Ub+Fzwmq0oMxgOjE18=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DS5CuVH9wy6ourzAuMd4R98GOWC8pp+2zkCwkUgD75bctvS5K2OQQkIpB/cC8WLdk7v/kQ9RH88nMavIZ76dmilc4eCPFhurmWnKw43/PXqITSOwl9I51BDxe3mPZecY9xntsBw/6pS1vjEuGw917n01S6zNHiw8RTeZUjWO+30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faHnKcMo; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLZYnhiqpaY//+rty4+LXMis0KtaGqtaGHIt94NqPGEwpxG0BaEqvZMTrRWcuumanJztIECgAYr/Kc2lvP2ja5JkYePfpxviAXi7RcRbaLAdOC4tI7r3Ob7HVxjKpk3vQDDE4ntunMKnJMyqjs0+e61OplXtpGvPRwwgqVCzFRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhcg1tpw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faHnKcMo"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so26927815e9.0;
-        Sun, 18 May 2025 00:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747554012; x=1748158812; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AYXAaAw4CbkA8JroVCgYmv4BfUphEKyu10sZc0Jhu4Q=;
-        b=faHnKcMox18fkxFo/0WmGfMLzYmSEk4RBjFDxtttluZ5mLwstgN6MNAZDPTNJ/mAyG
-         haHY20t0HZ3xzHSFXN6xbd0ZqWdFjKolH3kdvbXMTkpptUyLJ/nxyemD9k5vU4AThZZr
-         Xh0zZ593d5CbkjehZeyGAs1GLku4snBhc9sTO7oJN2/xjUMPMAq7Y3Rb3rPcPYAF61F8
-         TzVjOSgJqQLr1Yumngn7MnJ7EOywC31jgcLix9pSyMtCbQbUHRiG1+nJlPJOXdifxJHJ
-         I4i3vRWeA5ceZpEVeQrUuSI8wPpx0QIPP1uglcC+6kOkFBCoCTlRmz9ttq1dkEWq1Mav
-         BF8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747554012; x=1748158812;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AYXAaAw4CbkA8JroVCgYmv4BfUphEKyu10sZc0Jhu4Q=;
-        b=JUgAqnC9IzK4nYN82pbSuxNQp9QIV30JX5Mo9YKhfl/q9gjZkNe5XIjDlaYnIL46XD
-         FrYlG1Vl65S6SGwyvIEMqjddrxEfre/EwSe3lLaHIqHq0WF2g5/zlaMRxVxlS4hgA4Qi
-         nPF1GZ2XPg+CvQOGfmgER7RJYjGkEMim7GoJnpaxuJ8wXKEbQTaFbRWwufsyfhllM5nb
-         VgHBcdSyT5HjbWujil2xkCSwdrbpuPBpFp04Ry/6/QIqJ8n3/aaZUw6QugSlt2eWy1rd
-         f+9keOYGtxg0KJrhsueyLzNlEBQSBiJS3fUegOwz/AsuVj0RzlufSYrKYgFy/vIdtHT3
-         xCAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSAqTincaC/x7OqOcmgM/lO2ac92taVe8kXM8jKPFrQUwV4NCpIL+9SB5mdjYJonPSokctGmRSYzY304K52t1y/aShkP/r@vger.kernel.org, AJvYcCWiJ/mD6LsNR7VPCdryi2pI5FDD/zTlrN2XhvINXZPdm6X5YP/KxpvmkXvm/0UE3MNZz3LsPHvSM7sHwVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxddRA/sQ6xXccmbPTitoisCbQIgh3F1o32/9ej2wKPsK9aPZGi
-	gFH5KMUehX2eyQML9qt+pBwpBo9RqxPVHbX736ziigFdQ86JfUOwm1y1
-X-Gm-Gg: ASbGncsXrgR66gluWcg3aNGhDNnVXWU3jAW1FcLq+qWJQ6u1yDNq2sss5kYt5Xdd7DU
-	ZWMUTTwkzqcJliUt0u3EhCjLRck17pZ8CMp/qA5/wXlljCwcPfQKGooOQYDLccD/+hPd/W8zFgl
-	jMGnpMB0EgFFuQ2z6RCCWoHU/Tlm03Byet0MEsRSj5yEllWtItaaJz/z8+Wu9Q3CfMC1RkN6yFC
-	gbJRKOJHcwtaO4fmVPoxG+/M86VJGym/ti8QKUOYBbHS4f1Cs9/nmGePO+xHcSoOj7qrhuwl2y9
-	m7e+TuLHYGqD7v9vepoz964WKP8PC8bqTvvmlZiPKHh/UjMBRVzODDaAMGnIbHAHnd+OVdPuWBZ
-	wYA==
-X-Google-Smtp-Source: AGHT+IEhqjylGQD0TUVbGsvBE3gcdJSP3/LO/DXHIXpUNSC8Z/W/wx6jlEfUNOLgfMtT8cZkkuuoLw==
-X-Received: by 2002:a05:600c:6748:b0:43c:f050:fee8 with SMTP id 5b1f17b1804b1-442fd6724b0mr72287375e9.20.1747554011259;
-        Sun, 18 May 2025 00:40:11 -0700 (PDT)
-Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442f39ef87asm164913475e9.36.2025.05.18.00.40.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 00:40:10 -0700 (PDT)
-Date: Sun, 18 May 2025 09:40:05 +0200
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: Paul Moore <paul@paul-moore.com>, sergeh@kernel.org,
-	David Howells <dhowells@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	linux-security-module@vger.kernel.org,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	Peter Newman <peternewman@google.com>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for
- landlock_restrict_self()
-Message-ID: <20250518.be040c48937c@gnoack.org>
-References: <20250221184417.27954-2-gnoack3000@gmail.com>
- <20250221184417.27954-3-gnoack3000@gmail.com>
- <20250227.Aequah6Avieg@digikod.net>
- <20250228.b3794e33d5c0@gnoack.org>
- <20250304.aroh3Aifiiz9@digikod.net>
- <20250310.990b29c809af@gnoack.org>
- <20250311.aefai7vo6huW@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhcg1tpw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74234C4CEE7;
+	Sun, 18 May 2025 07:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747554099;
+	bh=AHAwzXBAnTp88J/0aYWfanpi1Ub+Fzwmq0oMxgOjE18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uhcg1tpwj28HVLQcJ0DPOi/La9tamrh21D3DiZmOBN872Lec2tPGsNDK4EEQsODE+
+	 DNyK2ZPmM9lCGXzpRS+NmSOBdi3uT6Oclzg4GwoGglOpxwRD4J3DxIqUBInkdz+fSp
+	 qWNBrdwc/8WcA464+En/fqJ9aD4KyzrcfB7h2unt1hPyT5cFTKTFKKYHvPa6Yrlv2P
+	 w22z4TpxnqQZyMIYdm7NH1ez3ZqWuiW+jGNEM/Hoon67SM9y3VVA3JZ5nWEsQEtdip
+	 NJdagNLvNgukzO9jaRFMzixZNP7Y8rCr9bbwel5x7j0zEfmOnZ0eiut/eei4Cy1NgA
+	 /iG+ncIAMuLxw==
+Date: Sun, 18 May 2025 16:41:34 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] counter: microchip-tcb-capture: Add watch validation
+ support
+Message-ID: <aCmPLn16Ykabvhjv@ishi>
+References: <CV37uwi-rAqU3els0ckl4KLz5ortFAdc7XXy7ex6-MMhxvptyeMh8vTBXQuZliairKQ1Dy4yM3MyE8o7EZ6VfA==@protonmail.internalid>
+ <20250515-counter-tcb-v1-1-e547061ed80f@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TSzCOtGHpFOIyFHN"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250311.aefai7vo6huW@digikod.net>
-
-Hello!
-
-On Tue, Mar 11, 2025 at 03:32:53PM +0100, Mickaël Salaün wrote:
-> On Mon, Mar 10, 2025 at 02:04:23PM +0100, Günther Noack wrote:
-> > On Tue, Mar 04, 2025 at 09:25:51PM +0100, Mickaël Salaün wrote:
-> > > On Fri, Feb 28, 2025 at 06:33:55PM +0100, Günther Noack wrote:
-> > > > Hello!
-> > > > 
-> > > > Thanks for the review!
-> > > > 
-> > > > I'm adding David Howells to this thread as well.  David, maybe you can
-> > > > help us and suggest a appropriate way to update the struct cred across
-> > > > multiple threads?
-> > 
-> > Paul and Serge, since you are volunteering to take ownership of
-> > credentials, maybe you can advise on what is the best approach here?
-> > 
-> > To summarize the approaches that I have been discussing with Mickaël:
-> > 
-> > Approach 1: Use the creds API thread-by-thread (implemented here)
-> > 
-> >   * Each task calls prepare_creds() and commit_creds() on its own, in
-> >     line with the way the API is designed to be used (from a single
-> >     task).
-> >   * Task work gets scheduled with a pseudo-signal and the task that
-> >     invoked the syscall is waiting for all of them to return.
-> >   * Task work can fail at the beginning due to prepare_creds(), in
-> >     which case all tasks have to abort_creds(). Additional
-> >     synchronization is needed for that.
-> > 
-> >   Drawback: We need to grab the system-global task lock to prevent new
-> >   thread creation and also grab the per-process signal lock to prevent
-> >   races with other creds accesses, for the entire time as we wait for
-> >   each task to do the task work.
-> 
-> In other words, this approach blocks all threads from the same process.
-
-It does, but that is still an improvement over the current
-libpsx-based implementation in userspace.  That existing
-implementation does not block, but it is running the risk that
-prepare_creds() might fail on one of the threads (e.g. allocation
-failure), which would leave the processes' threads in an inconsistent
-state.
-
-Another upside that the in-kernel implementation has is that the
-implementation of that is hidden behind an API, so if we can
-eventually find a better approach, we can migrate to it.  It gives us
-flexibility.
-
-I guess a possible variant (approach 1B) would be to do the equivalent
-to what userspace does today, and not make all threads wait for the
-possible error of prepare_creds() on the other threads.
+In-Reply-To: <20250515-counter-tcb-v1-1-e547061ed80f@microchip.com>
 
 
-> > Approach 2: Attempt to do the prepare_creds() step in the calling task.
-> > 
-> >   * Would use an API similar to what keyctl uses for the
-> >     parent-process update.
-> >   * This side-steps the credentials update API as it is documented in
-> >     Documentation, using the cred_alloc_blank() helper and replicating
-> >     some prepare_creds() logic.
-> > 
-> >   Drawback: This would introduce another use of the cred_alloc_blank()
-> >   API (and the cred_transfer LSM hook), which would otherwise be
-> >   reasonable to delete if we can remove the keyctl use case.
-> >   (https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a2aa1d45e6b8@google.com/)
-> 
-> cred_alloc_blank() was designed to avoid dealing with -ENOMEM, which is
-> a required property for this Landlock TSYNC feature (i.e. atomic and
-> consistent synchronization).
+--TSzCOtGHpFOIyFHN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remark on the side, I suspect that the error handling in nptl(7)
-probably also does not guarantee that, also for setuid(2) and friends.
+On Thu, May 15, 2025 at 10:28:25AM +0530, Dharma Balasubiramani wrote:
+> Introduce a watch validation callback to restrict supported event and
+> channel combinations. This allows userspace to receive notifications only
+> for valid event types and sources. Specifically, enable the following
+> supported events on channels RA, RB, and RC:
+>=20
+>   - COUNTER_EVENT_CAPTURE
+>   - COUNTER_EVENT_CHANGE_OF_STATE
+>   - COUNTER_EVENT_OVERFLOW
+>   - COUNTER_EVENT_THRESHOLD
+>=20
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+>  drivers/counter/microchip-tcb-capture.c | 28 +++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
+crochip-tcb-capture.c
+> index 1de3c50b9804..179ff5595143 100644
+> --- a/drivers/counter/microchip-tcb-capture.c
+> +++ b/drivers/counter/microchip-tcb-capture.c
+> @@ -337,6 +337,27 @@ static struct counter_comp mchp_tc_count_ext[] =3D {
+>  	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_=
+write),
+>  };
+>=20
+> +static int mchp_tc_watch_validate(struct counter_device *counter,
+> +				  const struct counter_watch *watch)
+> +{
+> +	switch (watch->channel) {
+> +	case COUNTER_MCHP_EVCHN_RA:
+> +	case COUNTER_MCHP_EVCHN_RB:
+> +	case COUNTER_MCHP_EVCHN_RC:
 
+Hello Dharma,
 
-> I think it would make sense to replace most of the
-> key_change_session_keyring() code with a new cred_transfer() helper that
-> will memcpy the old cred to the new, increment the appropriate ref
-> counters, and call security_transfer_creds().  We could then use this
-> helper in Landlock too.
-> 
-> To properly handle race conditions with a thread changing its own
-> credentials, we would need a new LSM hook called by commit_creds().
-> For the Landlock implementation, this hook would check if the process is
-> being Landlocked+TSYNC and return -ERESTARTNOINTR if it is the case.
-> The newly created task_work would then be free to update each thread's
-> credentials while only blocking the calling thread (which is also a
-> required feature).
-> 
-> Alternatively, instead of a new LSM hook, commit_creds() could check
-> itself a new group leader's flag set if all the credentials from the
-> calling process are being updated, and return -ERESTARTNOINTR in this
-> case.
+Include COUNTER_MCHP_EVCHN_CV as well for the sake of completeness. I
+know COUNTER_MCHP_EVCHN_CV and COUNTER_MCHP_EVCHN_RA have the same
+underlying channel id, but we're abstracting this fact so it's good to
+maintain the consistency of the abstraction across all callbacks.
 
-commit_creds() is explicitly documented to never return errors.
-It returns a 0 integer so that it lends itself for tail calls,
-and some of those usages might also rely on it always working.
-There are ~15 existing calls where the return value is discarded.
+> +		switch (watch->event) {
+> +		case COUNTER_EVENT_CAPTURE:
+> +		case COUNTER_EVENT_CHANGE_OF_STATE:
+> +		case COUNTER_EVENT_OVERFLOW:
+> +		case COUNTER_EVENT_THRESHOLD:
+> +			return 0;
 
-If commit_creds() returns -ERESTARTNOINTR, I assume that your idea is
-that the task_work would retry the prepare-and-commit when
-encountering that?
+The watch_validate callback is used to ensure that the requested watch
+configuration is valid: i.e. the watch event is appropriate for the
+watch channel.=20
 
-We would have to store the fact that the process is being
-Landlock+TSYNC'd in a central place (e.g. group leader flag set).
-When that is done, don't we need more synchronization mechanisms to
-access that (which RCU was meant to avoid)?
+Looking at include/uapi/linux/counter/microchip-tcb-capture.h:
 
-I am having a hard time wrapping my head around these synchronization
-schemes, I feel this is getting too complicated for what it is trying
-to do and might become difficult to maintain if we implemented it.
+     * Channel 0:
+     * - CV register changed
+     * - CV overflowed
+     * - RA captured
+     * Channel 1:
+     * - RB captured
+     * Channel 2:
+     * - RC compare triggered
 
-> > Approach 3: Store Landlock domains outside of credentials altogether
-> > 
-> >   * We could also store a task's Landlock domain as a pointer in the
-> >     per-task security blob, and refcount these.  We would need to make
-> >     sure that they get newly referenced and updated in the same
-> >     scenarios as they do within struct cred today.
-> >   * We could then guard accesses to a task's Landlock domain with a
-> >     more classic locking mechanism.  This would make it possible to
-> >     update the Landlock domain of all tasks in a process without
-> >     having to go through pseudo-signals.
-> > 
-> >   Drawbacks:
-> >   * Would have to make sure that the Landlock domain the task's LSM
-> >     blob behaves exactly the same as before in the struct cred.
-> >   * Potentially slower to access Landlock domains that are guarded by
-> >     a mutex.
-> 
-> This would not work because the kernel (including LSM hooks) uses
-> credentials to check access.
+If I'm understanding correctly, channel 0 supports only the
+CHANGE_OF_STATE, OVERFLOW, and CAPTURE events; channel 1 supports only
+CAPTURE events; and channel 2 supports only THRESHOLD events.
 
-It's unclear to me what you mean by that.
+Adjust the code to ensure those limitations.
 
-Do you mean that it is hard to replicate for Landlock the cases where
-the pointer would have to be copied, because the LSM hooks are not
-suited for it?
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static struct counter_count mchp_tc_counts[] =3D {
+>  	{
+>  		.id =3D 0,
+> @@ -351,12 +372,13 @@ static struct counter_count mchp_tc_counts[] =3D {
+>  };
+>=20
+>  static const struct counter_ops mchp_tc_ops =3D {
+> -	.signal_read    =3D mchp_tc_count_signal_read,
+> +	.action_read    =3D mchp_tc_count_action_read,
+> +	.action_write   =3D mchp_tc_count_action_write,
+>  	.count_read     =3D mchp_tc_count_read,
+>  	.function_read  =3D mchp_tc_count_function_read,
+>  	.function_write =3D mchp_tc_count_function_write,
+> -	.action_read    =3D mchp_tc_count_action_read,
+> -	.action_write   =3D mchp_tc_count_action_write
+> +	.signal_read    =3D mchp_tc_count_signal_read,
 
+It's nice to alphabetize the counter_ops callbacks, but it's also
+unrelated to the watch_validate implementation. Move the alphabetization
+cleanup to a separate patch so that this patch remains dedicated to
+just watch_validate changes.
 
-Here is another possible approach which a colleague suggested in a
-discussion:
+Thanks,
 
-Approach 4: Freeze-and re-enforce the Landlock ruleset
+William Breathitt Gray
 
-Another option would be to have a different user space API for this,
-with a flag LANDLOCK_RESTRICT_SELF_ENTER (name TBD) to enter a given
-domain.
+--TSzCOtGHpFOIyFHN
+Content-Type: application/pgp-signature; name=signature.asc
 
-On first usage of landlock_restrict_self() with the flag, the enforced
-ruleset would be frozen and linked to the Landlock domain which was
-enforced at the end.
+-----BEGIN PGP SIGNATURE-----
 
-Subsequent attempts to add rules to the ruleset would fail when the
-ruleset is frozen.  The ruleset FD is now representing the created
-domain including all its nesting.
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaCmPLgAKCRC1SFbKvhIj
+K/U6AP9sLI94pWH9oxJ5ojO2ldb52ppFei+ym7sypqbu+AOh9QD/Xqg8FFHAJS9e
+RltMKxTbESVr1UyIV3cfgwTc/eZ3sAw=
+=0BaO
+-----END PGP SIGNATURE-----
 
-Subsequent usages of landlock_restrict_self() on a frozen ruleset would:
-
-(a) check that the ruleset's domain is a narrower (nested) domain of
-    the current thread's domain (so that we retain the property of
-    only locking in a task further than it was before).
-
-(b) set the task's domain to the domain attached to the ruleset
-
-This way, we would keep a per-thread userspace API, avoiding the
-issues discussed before.  It would become possible to use ruleset file
-descriptors as handles for entering Landlock domains and pass them
-around between processes.
-
-The only drawback I can see is that it has the same issues as libpsx
-and nptl(7) in that the syscall can fail on individual threads due to
-ENOMEM.
-
-If we can not find a solution for "TSYNC", it seems that this might be
-a viable alternative.  For multithreaded applications enforcing a
-Landlock policy, it would become an application of libpsx with the
-LANDLOCK_RESTRICT_SELF_ENTER flag.
-
-Let me know what you think.
-
-–Günther
+--TSzCOtGHpFOIyFHN--
