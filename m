@@ -1,72 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691E11D9346
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27531E3DE8;
+	Sun, 18 May 2025 12:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747569611; cv=none; b=mcsAKXQNwkWuIid8p5dhjCe++qsWdYNrgUHJrZxSsr19NA4yqfpIa5DSDE+c2ER7/N6RlSLAdI00lFlqAQxCziJrh2Yut4BmKbIabS4YpckLH6zEFXhL6f8aCHstgbAKFO3l7tyaFvsi8/ljozWcxjJM9eLgTSfr9/6CozQBowY=
+	t=1747570001; cv=none; b=hT4hONFsL0JVACfkjtcs/+Rcm1W/A0te/bVJ3Zd63cevnGPQNeliVQgAD0HqUQCFnakczXYMGLfZR9V1tjX9Dbej7gI0HbyuxQqb8QU2qM6FQVee/aNrmAPBQb7JRWDxzPDIjzJ5SvH6bfPezQ4xD5bJXTG12Ywov4KrmK+4sgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747569611; c=relaxed/simple;
-	bh=R3M38b7Up/xvPYwowadxMSa4vj8sVnFelawVkoAx1i4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKaUGrKLMdPWW7HGJ/4NzUoEqIDZv+bIiUd4P2n3Qmgn/Iz4+eOi0HZrUVzVXo2ysCX/AuUOIoNXgDvI1dwPhHrMbTJUApJVPq+iT1TEf3vZ/g02Duxx/9l2CHKOZ3ESEGtRs8DG1kTS/1jNFqGsAQX3TdRldiGKTkHUrv1ZIcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UnhD+w7Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747570001; c=relaxed/simple;
+	bh=Z9sPuqChQojAWKg0fz4wkdvAY/+fmKjMSJBj97hXBxs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VAlxO+mY2ebMFVWcnG+H0Kc6uRTyAbk4iqBBwNcSin4ACuGdltNRFeE3DFA0xEKn/OivFukbMqG8lUpCHAl/Bg7kQwn7NP1qPIaC9OGhOvkzq4FjoIuwL1JlnKexkKcsc3MKilxUwdLpEWOKvt7XWnIILFNlm4n282Nv9nhyMRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLQSjWPV; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UnhD+w7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88E55C4CEE7;
-	Sun, 18 May 2025 12:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747569610;
-	bh=R3M38b7Up/xvPYwowadxMSa4vj8sVnFelawVkoAx1i4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnhD+w7ZBtP0yl5biR1/fj2qo7TSsJ/WDX8ic8zPyZBDVOinjq3p1kcGpTfzQ/4g2
-	 P2dbRbiSH7ZV0ASLobDw5YbLWADAi1851Dav2h+2ZzIl0d2k97JB32FhM7St40WtLI
-	 yTz9T8TxnNf8Mj/e+1jtiaKoDdNcQ92HESj5CaLg=
-Date: Sun, 18 May 2025 13:58:21 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jonathan Velez <jonvelez12345@gmail.com>
-Cc: Thinh.Nguyen@synopsys.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: usb: dwc3: add documentation of 'sg' field in
- dwc3_request struct
-Message-ID: <2025051820-unspoiled-rift-31f8@gregkh>
-References: <20250518113330.8976-1-jonvelez12345@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLQSjWPV"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-ae727e87c26so2192076a12.0;
+        Sun, 18 May 2025 05:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747569999; x=1748174799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z9sPuqChQojAWKg0fz4wkdvAY/+fmKjMSJBj97hXBxs=;
+        b=RLQSjWPVUAioNip2uBsb++ryC3etl7XP1qQiA7Z/ENij4DijO4LhhZlk9jFRV67rg+
+         PmB1MtdOyJWuJOQUyccSc+OOCkVQwvAa2Uv5WpMQWv0w7BkIZMWprNH1APcTZiB02Sn2
+         zDQho+cKXCa1GuK4DyWn5ZooZKOBoXzC/aTJxS0az1x+29EBvvQQfLTvUWaFoxTtmHwp
+         BZPGzlsa61PQZ3NdjXjBdPMxMo1w+Qye25pit0JW1RHGLpNttRU2I6jiM8SVksSQoEiX
+         VQg9vR9vtDwCrKl9J/hm2M13JBHyK/QERSJS14YHwSUJ3/LA9si/GcjWoAfv6Oi4drS0
+         HGxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747569999; x=1748174799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z9sPuqChQojAWKg0fz4wkdvAY/+fmKjMSJBj97hXBxs=;
+        b=Q4wtt57/ij5fhN7UK1fCoVdrV5Pufzh//JqnTpv5S+AfUiyuUa3rXaIHXVv2bvm5PV
+         5VUz5f5wKZddgTEVPpYuU+P1QmK8sGLGIdZrJlI4L9GIk/uEAaAM4kI346OhUhwibOf8
+         QLVhnKpoTLstd2ENbRxKaqAvABKhwBtNXiQf25x3yIzsHrn+g6jipMIUKABqYC6ADGVg
+         ey8mXBrycdsvK1yPozUYg3hdTytGy/zZfAVRrqyiEeXyWIepsVjYeclNl+PI2boXPM9g
+         GADZiLhwTsekl2h69Nsk6bTc0/MfR/BWg3PDaqFOlfSI7CBn4nRzCZqxcdfqHN3+JG+Y
+         de6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVsBrQzezlkrHRqXIy/OOXboXnRvUURjEVyOm5tzBFMnzYdCFWYX8Ma58k137TISaEXUvAm2QLVTYq@vger.kernel.org, AJvYcCV6sWVkhVcwRaZRHzuyR9P3no6ktaj9T1bcNOV44MgX6QYKvzhSolhOrl64Awp2LygLypxozoBJfmxgP3LF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc7MY1MI62N7KabKOh4IEkoz4JZ0SShZc6tHUVaeYyMnkQnIeN
+	ydWMvN7WBnGFLKjAnCITZ5c5/3RX7VEFHxJfEIk7/mdQn8wIBHLfLZdC/yCqdYwIzqrUdvsJJxx
+	GncWUmfDVqxe/4VxmgUi4NlfC8PiN1l2T
+X-Gm-Gg: ASbGncvnSTzvBjlp1AQkGCaJlfdlE6kmXICq7wySdwwxmPmIfHFWElCP3+VidQv8AyS
+	sEGh/k9kxsE/flfqpJ32wRsrKxPgcCMtBQnfrkOoYF2qAa49TmmdKCfjGeorL0/ScsAfCx91SnT
+	UdMRGpvnoBmCM2AuvwaF8z3p+58nKxQZ+qGyQskHNRvS7ICJDSN7e3Y9pCkbw/v0o=
+X-Google-Smtp-Source: AGHT+IE8Jj3CM/JmTKb2ASWpYNZZ62w/yVrXgUBmwdTYC8IuyZ/ZSj3++gk2EU+iZobraqih76E8olzgbMxd5+52uZs=
+X-Received: by 2002:a17:90b:4b0f:b0:2fe:8a84:e033 with SMTP id
+ 98e67ed59e1d1-30e7d4ebdbcmr14696049a91.2.1747569998909; Sun, 18 May 2025
+ 05:06:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250518113330.8976-1-jonvelez12345@gmail.com>
+References: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
+ <62bd6757-c4d0-42c1-a76d-abea18a8a55e@kernel.org> <CANBuOYpRQNx+n6BjpAF0LufpUqRA3wU-GzSNygeWurohXYNF6A@mail.gmail.com>
+ <5f7f8cbc-6501-459f-906a-250be5443d0e@kernel.org>
+In-Reply-To: <5f7f8cbc-6501-459f-906a-250be5443d0e@kernel.org>
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Date: Sun, 18 May 2025 14:06:27 +0200
+X-Gm-Features: AX0GCFuB2F8YdWG4M6QquX7RSLJifIP2KUvWmNy9H9sSlJ0n7sh9CbHxp2tuYXU
+Message-ID: <CANBuOYohE0JofP6vnN_sLZrPkURDxRgOBCM2-NqtCPw1fZ24+A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Fixing a minor typo in YAML document
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: heiko@sntech.de, briannorris@chromium.org, devicetree@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel-mentees@lists.linux.dev, 
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 18, 2025 at 11:33:30AM +0000, Jonathan Velez wrote:
-> core: Add documentation of "sg" field in the dwc3_request struct.
-> 
-> Signed-off-by: Jonathan Velez <jonvelez12345@gmail.com>
-> ---
->  drivers/usb/dwc3/core.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index f11570c8ffd0..bb140dde07d6 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -942,6 +942,7 @@ struct dwc3_hwparams {
->   * @request: struct usb_request to be transferred
->   * @list: a list_head used for request queueing
->   * @dep: struct dwc3_ep owning this request
-> + * @sg: pointer to the scatter-gather list for transfers
->   * @start_sg: pointer to the sg which should be queued next
->   * @num_pending_sgs: counter to pending sgs
->   * @remaining: amount of data remaining
+On Sun, May 18, 2025 at 12:34=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+>
+> On 17/05/2025 14:05, Jihed Chaibi wrote:
+> > Thanks for the feedback, this fix being kind of "trivial" I didn't
+> > initially want to include everyone and thought it would end up to the
+> > main maintainer after being reviewed by the reviewers/authors of the
+> > file, sorry for that, I will make sure every maintainer is included in
+> > future patches.
+> >
+> > On the other hand, I can confirm that I'm using the last kernel version=
+.
+>
+>
+> Please don't top post. If you do not Cc maintainers, how is it supposed
+> to be picked up by these maintainers?
+>
+>
+> Best regards,
+> Krzysztof
 
-What commit id does this fix?
+My apologies again for not CC'ing the correct maintainers and for top
+posting in my previous reply. I understand the importance of both for
+the workflow and proper communication.
 
-And are you sure you made this against the right tree?  I do not see
-"sg" as a member of this stucture at all anymore.
+I've taken note of your feedback and will ensure I follow the
+recommended procedures for future submissions.
 
-thanks,
-
-greg k-h
+As I'm still learning the contribution process, I appreciate the guidance.
+Best regards,
