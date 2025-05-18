@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B0B2CA6;
-	Sun, 18 May 2025 07:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583B2F50F;
+	Sun, 18 May 2025 07:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747552461; cv=none; b=Sh/Vhoqzmb0o8jMRK3KXXhgkhHhT53ZwtWa+JcmcCW71YonJPo7DRJwX0tIySeVWJC0ov+2kOvt/gP6Xiq/2uyCAp4AcXamRCivgWG/BrRJh4tfjK6SleKiejVCdkJXvRsHStNf0sz9YcwI+PojDoF4tl2PZyxM7njwDxjTbV0I=
+	t=1747552777; cv=none; b=SW/PE+OSf3l3nqQW6ieNjmVFIVmqA9vPiDES6Rcm4U7UouOH8N9jfD5u/OIlmvcaZlEjEw0+ySIfhIZFSt9QLu2QlSA8xKHiS6xlbqpwlKjj+t88dxBMQVl41NXtffOqmrknmOACV9PYhv86ZnLdJ+pnHff5V6+xFMmdIcSAo18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747552461; c=relaxed/simple;
-	bh=th82xeU04pP4E1vW7aHTdnYx+NniyE/zFWrDt873AaI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sk31MWS08nRMoPDOMnavnUIbr5cendKvV7dxooAaZFMQ3vjWt1DoIrnifUNmy9TT/TRBfh8JnYcX3BDc/HjGkJmO2vgkgbScb2T6n0VSssQ6qevgat59zZvMRSNlqeXnBmjOiQb8L290DXziFBhrp+VWgm4LgFFxEbfHi1rImSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BE7jrBFM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747552777; c=relaxed/simple;
+	bh=eZTv81uAYSuj3s2veI21xz+VC0/ANUgRdzq9TDNSayA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=r2l9MtSi60cHVoZq+RgJ7CzHwLI0pYsAykUH37KI7CoaPwArNpEneY/U1PRnYMpxzjpUTL5vDAU8gwU7yEQHJTdOlWEetrtkrqi4jiUTsPVQjrkyfO+El/paTQP+z50nfORmWxK2k91fhxZXcdBD67S2fdqqhZXWSplzCnriIUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr5lXed9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BE7jrBFM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47621C4CEE7;
-	Sun, 18 May 2025 07:14:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr5lXed9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81ACC4CEE7;
+	Sun, 18 May 2025 07:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747552460;
-	bh=th82xeU04pP4E1vW7aHTdnYx+NniyE/zFWrDt873AaI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=BE7jrBFM3p5MX2og2sFN4O/IlZJu7LoBVB0qpxz+9LrlsL52HQd1vE9wgv+IucRh2
-	 9eerZq9583igSVHqU33QcInpaExU4+3hheYk9D5DTZa5SDLA98ybD4FMGk/EJib2bQ
-	 7eL3BRNXEXdyCXJ6f1UKi7S8Dlnjor8iN6hnwvXCqrTho+7Glk44dFUeWLbdPcl79i
-	 2PyD2sqaZQS1Sdosb3Rub2BqehCfZSVZdKEZfv/tGdosl3K7InYE22sAK6YzSYrQ46
-	 QxuD6pWrU1hbrwrOZ+0etWP+tStHeLeahM/fKauByGEONWCkx6g6zPyHcB+IXfTN9n
-	 6K/V/ywM37hXQ==
+	s=k20201202; t=1747552776;
+	bh=eZTv81uAYSuj3s2veI21xz+VC0/ANUgRdzq9TDNSayA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=gr5lXed98/psCI6YG1EDjEqbMWClv30in0JVqiv3S0IaaTiKvXuaKsudtuFglt6Jd
+	 P259ZRfAb+sa/DZo4VZkVFeMyC37jwswtPFGm8ItrEmfywVJetfNSSoUIi8Ngh2scN
+	 gfVKeW6tBulVNNy/aD2s7B5cQUQfOJagSVXoAM4M8yrGpU8M3LQhJd80KW2i05YKga
+	 rD5u0y0doe7RvLoniFdEU+susu/2op+g5faDqd+xZ+41c5ESdovMwwQVRl32o5waZm
+	 ZdFXZnvaspMU83Z0In7Tine1KsLeBnU+ri/XEhFDTp3vx56mqkrZoTdIdSLUyJyx9Q
+	 CrOl5K55eisEg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,152 +34,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 18 May 2025 09:13:52 +0200
-Message-Id: <D9Z3MWPWLMNF.2JS9XJ9U8C4H1@kernel.org>
-Cc: "FUJITA Tomonori" <fujita.tomonori@gmail.com>, <andrew+netdev@lunn.ch>,
- <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
- <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
- <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
- <kabel@kernel.org>, <andrei.botila@oss.nxp.com>, <tmgross@umich.edu>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <dakr@kernel.org>,
- <sd@queasysnail.net>, <michael@fossekall.de>, <daniel@makrotopia.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
- match_phy_device C changes
+Date: Sun, 18 May 2025 09:19:23 +0200
+Message-Id: <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
 From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Marangi" <ansuelsmth@gmail.com>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Boris Brezillon"
+ <boris.brezillon@collabora.com>, "Sebastian Reichel"
+ <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Mark Brown" <broonie@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
 X-Mailer: aerc 0.20.1
-References: <D9XV0Y22JHU5.3T51FVQONVERC@kernel.org>
- <20250517.152735.1375764560545086525.fujita.tomonori@gmail.com>
- <D9YA4FS5EX4S.217A1IK0WW4WR@kernel.org>
- <20250517.221313.1252217275580085717.fujita.tomonori@gmail.com>
- <D9YO3781UI2X.1CI7FG1EATN8G@kernel.org>
- <6828ece4.050a0220.49f8b.ca57@mx.google.com>
-In-Reply-To: <6828ece4.050a0220.49f8b.ca57@mx.google.com>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+In-Reply-To: <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
 
-On Sat May 17, 2025 at 10:09 PM CEST, Christian Marangi wrote:
-> On Sat, May 17, 2025 at 09:02:51PM +0200, Benno Lossin wrote:
->> On Sat May 17, 2025 at 3:13 PM CEST, FUJITA Tomonori wrote:
->> > On Sat, 17 May 2025 10:06:13 +0200
->> > "Benno Lossin" <lossin@kernel.org> wrote:
->> >>>> I looked at the `phy.rs` file again and now I'm pretty sure the abo=
-ve
->> >>>> code is wrong. `Self` can be implemented on any type (even types li=
-ke
->> >>>> `Infallible` that do not have any valid bit patterns, since it's an
->> >>>> empty enum). The abstraction for `bindings::phy_driver` is
->> >>>> `DriverVTable` not an object of type `Self`, so you should cast to =
-that
->> >>>> pointer instead.
->> >>>
->> >>> Yeah.
->> >>>
->> >>> I don't want to delay this patchset due to Rust side changes so
->> >>> casting a pointer to bindings::phy_driver to DriverVTable is ok but
->> >>> the following signature doesn't look useful for Rust phy drivers:
->> >>>
->> >>> fn match_phy_device(_dev: &mut Device, _drv: &DriverVTable) -> bool
->> >>>
->> >>> struct DriverVTable is only used to create an array of
->> >>> bindings::phy_driver for C side, and it doesn't provide any
->> >>> information to the Rust driver.
->> >>=20
->> >> Yeah, but we could add accessor functions that provide that informati=
-on.
->> >
->> > Yes. I thought that implementation was one of the options as well but
->> > realized it makes sense because inside match_phy_device() callback, a
->> > driver might call a helper function that takes a pointer to
->> > bindings::phy_driver (please see below for details).
->> >
->> >
->> >> Although that doesn't really make sense at the moment, see below.
->> >>
->> >>> In match_phy_device(), for example, a device driver accesses to
->> >>> PHY_DEVICE_ID, which the Driver trait provides. I think we need to
->> >>> create an instance of the device driver's own type that implements t=
-he
->> >>> Driver trait and make it accessible.
->> >>=20
->> >> I think that's wrong, nothing stops me from implementing `Driver` for=
- an
->> >> empty enum and that can't be instantiated. The reason that one wants =
-to
->> >> have this in C is because the same `match` function is used for
->> >> different drivers (or maybe devices? I'm not too familiar with the
->> >> terminology). In Rust, you must implement the match function for a
->> >> single PHY_DEVICE_ID only, so maybe we don't need to change the
->> >> signature at all?
->> >
->> > I'm not sure I understand the last sentence. The Rust PHY abstraction
->> > allows one module to support multiple drivers. So we can could the
->> > similar trick that the second patch in this patchset does.
->> >
->> > fn match_device_id(dev: &mut phy::Device, drv: &phy::DriverVTable) -> =
-bool {
->> >     // do comparison workking for three drivers
->> > }
->>=20
->> I wouldn't do it like this in Rust, instead this would be a "rustier"
->> function signature:
->>=20
->>     fn match_device_id<T: Driver>(dev: &mut phy::Device) -> bool {
->>         // do the comparison with T::PHY_DEVICE_ID
->>         dev.id() =3D=3D T::PHY_DEVICE_ID
->>     }
->>=20
->> And then in the impls for Phy{A,B,C,D} do this:
->>=20
->>     impl Driver for PhyA {
->>         fn match_phy_device(dev: &mut phy::Device) -> bool {
->>             match_device_id::<Self>(dev)
->>         }
->>     }
->>=20
+On Sun May 18, 2025 at 4:28 AM CEST, Alexandre Courbot wrote:
+> On Wed May 14, 2025 at 12:44 AM JST, Daniel Almeida wrote:
+>> +//! Regulator abstractions, providing a standard kernel interface to co=
+ntrol
+>> +//! voltage and current regulators.
+>> +//!
+>> +//! The intention is to allow systems to dynamically control regulator =
+power
+>> +//! output in order to save power and prolong battery life. This applie=
+s to both
+>> +//! voltage regulators (where voltage output is controllable) and curre=
+nt sinks
+>> +//! (where current limit is controllable).
+>> +//!
+>> +//! C header: [`include/linux/regulator/consumer.h`](srctree/include/li=
+nux/regulator/consumer.h)
+>> +//!
+>> +//! Regulators are modeled in Rust with two types: [`Regulator`] and
+>> +//! [`EnabledRegulator`].
+>> +//!
+>> +//! The transition between these types is done by calling
+>> +//! [`Regulator::enable()`] and [`EnabledRegulator::disable()`] respect=
+ively.
+>> +//!
+>> +//! Use an enum or [`kernel::types::Either`] to gracefully transition b=
+etween
+>> +//! the two states at runtime if needed. Store [`EnabledRegulator`] dir=
+ectly
+>> +//! otherwise.
 >
-> My 2 cent about the discussion and I'm totally detached from how it
-> works on Rust kernel code but shouldn't we try to keep parallel API and
-> args between C and Rust?
+> Having the enabled or disabled state baked into the type is indeed
+> valuable for drivers that just need to acquire and enable a regulator at
+> probe time. However, there are also more dynamic use cases and I don't
+> think the burden of managing this aspect - by either performing a manual
+> match to call any method (even the shared ones), or implementing custom
+> dispatch types (which will lead to many similar ad-hoc implementations)
+> - should fall on the user. Thus I strongly suggest that this module
+> provides a solution for this as well.
+>
+> It has been proposed earlier to use a typestate, and this would indeed
+> provide several benefits, the first one being the ability to have shared
+> impl blocks (and shared documentation) between the enabled and disabled
+> states for methods like set/get_voltage().
+>
+> But the key benefit I see is that it could also address the
+> aforementioned dynamic management problem through the introduction of a
+> third state.
+>
+> Alongside the `Enabled` and `Disabled` states, there would be a third
+> state (`Dynamic`?) in which the regulator could either be enabled or
+> disabled. This `Dynamic` state is the only one providing `enable` and
+> `disable` methods (as well as `is_enabled`) to change its operational
+> state without affecting its type.
+>
+> All three states then implement `set_voltage` and `get_voltage` through
+> a common impl block, that could be extended with other methods from the
+> C API that are independent of the state, as needed.
+>
+> To handle typestate transitions:
+>
+> - The `Disabled` and `Dynamic` states provide a `try_into_enabled()`
+>   method to transition the regulator to the `Enabled` state.
+> - The `Enabled` and `Dynamic` states provide `try_into_disabled()`.
+> - `Enabled` and `Disabled` also provide `into_dynamic()` (which cannot
+>   fail).
+>
+> Essentially, the `Enabled` and `Disabled` states simply enforce an
+> additional operational state invariant on the underlying regulator, and
+> do not provide methods to change it.
+>
+> The `Dynamic` state would be the default for `Regulator`, so by just
+> using `Regulator`, the user gets an interface that works very similarly
+> to the C API it abstracts, making it intuitive to those familiar with
+> it.
 
-It depends :) There are several things to consider in this from safety
-to ease of use. Sometimes we diverge from the C implementation, because
-it makes it safe. For example, from the very beginning, mutexes in Rust
-have used guards, but those have only been recently-ish introduced in
-C. Mutexes in Rust also store the value inside of them, making it
-impossible to access the inner value without taking the lock. This makes
-the API safer, but diverges from C.
-
-Now in this case, we're talking about making an API more rusty and thus
-diverging from the C side. One can argue for either side and we have to
-strike a balance, but in the end it'll probably be up to each subsystem
-how they will handle it. It's not as big of an argument as safety (which
-we strive very hard for).
-
-In this concrete case, a `DriverVTable` is just an adapter type that we
-use to make a trait in Rust be compatible with a C vtable. From Rusts
-perspective, the single origin of truth is the trait and the vtable is
-derived from that. So from a Rust perspective it's much more natural to
-use the trait than the vtable. (This might also end up being more
-performant, since we statically know which ID the driver supports and
-the C side needs to dynamically look it up.)
-
-> I know maybe some thing doesn't make sense from C to Rust but doesn't
-> deviates from C code introduce more confusion when something need to be
-> ported from C to Rust?
-
-Ideally we have people that work on both sides and can bridge that gap.
-If not, then having a Rust expert and a C expert work together has
-worked out great in the past. I don't see this becoming a big problem
-unless one of the sides is poorly maintained, which could also happen in
-C.
-
-> Again no idea if this apply so I'm just curious about this.
-
-No worries, glad to hear your perspective.
+How will the `Dynamic` typestate track the enable refcount? AFAIK one
+has to drop all enable refcounts before removing the regulator. Also
+what happens when I call `disable` without any enable calls before?
 
 ---
 Cheers,
