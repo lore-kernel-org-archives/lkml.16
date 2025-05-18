@@ -1,79 +1,105 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44DE17BA9;
-	Sun, 18 May 2025 22:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0723D4C8F;
+	Sun, 18 May 2025 22:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747607905; cv=none; b=TX3KqUS+jCnB1oekTuDoUHzA+Qebx9MOEZqi41a32cJj1CzKpLBI95bEC1CF0FV313YFQ44o+6AgOGeBRjtV7Ylw0NgdY1wEso/jYh0EOPLP378YRJfAjIuSiu2rD1JFPDgZuXRSHn6nYnaGxaThXI6rWLYVRH1fgVn47uP12yE=
+	t=1747608074; cv=none; b=ZsTCG047K+wkbgeQyapyT2ea30lZjRZXGgKKiN3Wpg++rCSq2lrQU++fC9ARnl9lGdx7vCgBvuxChUdF5BUuVU86oBFtue08TDIxfQgc9hfgYmvqRtUhdtkpfqKQXS173E0B0opJG3n3+kRZ0uwt447YNtjhtb1F38qLvZQ2RQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747607905; c=relaxed/simple;
-	bh=SrpRgtxQuJWqIgmTwM2Lg0ofoeubBOdmYiObl3GXdRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Seadkad/ER+swBt3UyNhFX4AbA2pDnMZBZSsKM8No26andlXrcOcBYlsUEUWXFMWIngBc1jto33ZDFM3AsVfTOdg02ntTKDy1TLr2+i8gRrTQiCxm8Qj9HpWXQhkuQ/vihwy4+b8+OKzkJ7tNf7bRZFx8iCTMKBS0+W3nRWxJEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=u9It1wTn; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747608074; c=relaxed/simple;
+	bh=rtk4u5Uitm1PcEYqKDexRiQXl1JMyKMBkOdmk8Ckz3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9rkHZxDTadrODLEIuPw2XyQBtVKrWbKcCs0VuBEvQMRieBO3d/KyFLmTdax4aM76ahbY2R1cW+yGw1PgQ9vPRBCPVB5lkl6dZaqBpACsH9nV4vfDMoOxnRznbEbBMDuQ2GsHPZNkzP2A5lbnM2XdrovN34AOityKzptybevLTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7dEFwPt; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="u9It1wTn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=9PAtzibwPGzPsb2gvUMPS4izyL4nfJ85lKJcGMeMkIY=; b=u9It1wTng+n27k/Da9wot3ipbE
-	nkgw93z5yood/RlJjxLZBNSayr0VihjFpH/DTgZN7LxwMLqSt+tX+zWsdW+hrzeOFHIPK7L/wJwSf
-	JuxxLpQFWBMFnRxHoYOZgzGvYxQ/L6ebDJ39lmuxrWpq+EXU5WltIGdq21ljuvLHxrxk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uGme5-00Cwv3-Rh; Mon, 19 May 2025 00:38:13 +0200
-Date: Mon, 19 May 2025 00:38:13 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: weishangjuan@eswincomputing.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
-	yong.liang.choong@linux.intel.com, rmk+kernel@armlinux.org.uk,
-	jszhang@kernel.org, inochiama@gmail.com, jan.petrous@oss.nxp.com,
-	dfustini@tenstorrent.com, 0x1207@gmail.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, lizhi2@eswincomputing.com
-Subject: Re: [PATCH v1 1/2] ethernet: eswin: Document for eic7700 SoC
-Message-ID: <c9f0cb9e-26e9-43cb-bf67-3fd27033f55c@lunn.ch>
-References: <20250516010849.784-1-weishangjuan@eswincomputing.com>
- <20250516011040.801-1-weishangjuan@eswincomputing.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7dEFwPt"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c96af71dso837287b3a.0;
+        Sun, 18 May 2025 15:41:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747608072; x=1748212872; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjBHH1i6XFYI5AWDEmAoW7kKAL7JYXfI8FoWaMkZhLo=;
+        b=b7dEFwPtKez6sqa2sOlKEff8wzfz1yAywxEVFYOgfSkKukMprhUuX7tdgf+igf/xxv
+         TMCIh2zVAsEZ2v+t8E5Exkb9FKT2YqS4260MURpcpvtNgDrEGT4M68pAz/HnEj7Qed46
+         3mzdWGYVVyathr8cg6HOGqgK4PLCKjljet1YSVSwrAuPYbkEo0czeoMtLt+lJLlzSLLo
+         7sAoF99DDl2NeT5Tsc6lmpDy4H8cJpH2+KN4PNIchi6x96cgN0+r6EIDmBzqOh++uMvB
+         yIYS1lNzNyWGFyjHGwdHqcuurOxEE+5PenpRvRT3TLDKDFhIJJQj0Vl1zo1lcqigTNLB
+         Ecxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747608072; x=1748212872;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KjBHH1i6XFYI5AWDEmAoW7kKAL7JYXfI8FoWaMkZhLo=;
+        b=YW+HtmJVqEkOBABNa7kzZRlAg0zXYS1/0S9fmUruhQ2+YZE+ouZH2uXfTliqdGLYxX
+         +20VaHDrvX6t8g03VrHchvgKb3tvzJ+urMzNMN3LB6giUiznmsH7HJUEKgNVkS8MtovU
+         6Llcx/pcfzRgxPQSnELoRMTiZpnPM/hsJIhJJM6CDnAXzpY+X6vDwrMadmLPIDuKmmRX
+         SeItyLLRPAoF1XKz0xEmeGBhJ14FGGIrRhpQm+TA76uIf6zYbMDYUh1i4SKbPLl/HHZB
+         dZLyoyVDgUZLuhGHscKwZZr0GKPGG245qjWAEcVkIlm7Q4V3bzNKKCUrqM4SpLLvQm5l
+         D9Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXGQ4iwNLo94mKbsWn7FzMKLRm2LIAcXCqVrOJCqAb+IDYERs9QBQvTJL4bqfbTLLi0/sZau5HOQmgB/Wo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOE2lM6Le1kpvdM1YJlE1i0XCOA11LOvCr9B+OEqkRTXzfxwJ+
+	3gorm9O8YFzTgsNtLTAd+0P9blcvUOn9+fG+uHn4I0lDtVarFwb+DJ5I
+X-Gm-Gg: ASbGncsHV+tem3m1wc5Pw2TStUc7oj61MkX+xQcYf9sncGorIxiyx580liV/x17zdxo
+	yiNML7Ha78hzz1Y9G2jVogPP6e1xMqUgIjLze+GUtbsCctBIWqOMxCcwMMkpy6GEUcRaub/lWLA
+	lGyoyJ2tpWL9w5odZg1o/ys+Vp9SEDL90x1cXB6J4nXppKgbWeVS/zgwpdGksFR5Pw2VbQZgMTr
+	TSkX1xSNYiAWF3JdsbbleNWgdsTBqZLIOBOAYMFQi/BByAKHE94VraR9DJotIdw7Y8QammGejNB
+	J7ao1pfFQiNQqQQvhlVhpRsAxzfDZ1Pmm7P/xQG/DbhxMKi+DZrPQtf0gTYzzafr8MWsj0iHOsW
+	88DT+6GtbXla8nu9BVJieb3eLoPTD
+X-Google-Smtp-Source: AGHT+IHMN/e+I3KzNiOjgsoqZMhZNb0ZVV2fp/nzuyWQgPN2tmpX8v0t44jt5GyNaV67rouoHk5koQ==
+X-Received: by 2002:a05:6a21:33a5:b0:216:20de:52d9 with SMTP id adf61e73a8af0-2162189f109mr16467728637.14.1747608072095;
+        Sun, 18 May 2025 15:41:12 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:c2c3:6f03:ebce:70d5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96dfa19sm4948436b3a.22.2025.05.18.15.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 15:41:11 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ivan Pravdin <ipravdin.official@gmail.com>
+Subject: [PATCH] crypto: algif_hash - fix double free in hash_accept
+Date: Sun, 18 May 2025 18:41:02 -0400
+Message-ID: <20250518224102.478904-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516011040.801-1-weishangjuan@eswincomputing.com>
+Content-Transfer-Encoding: 8bit
 
-> +  phy-mode:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    enum: [mii, gmii, rgmii, rmii, sgmii]
+If accept(2) is called on socket type algif_hash with
+MSG_MORE flag set and crypto_ahash_import fails,
+sk2 is freed. However, it is also freed in af_alg_release,
+leading to slab-use-after-free error.
 
-In theory, all four rgmii modes should be listed. In practice, only
-rgmii-id is likely to be used.
+Fixes: fe869cdb89c9 ("crypto: algif_hash - User-space interface for hash operations")
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+---
+ crypto/algif_hash.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> +examples:
-> +  - |
-> +    gmac0: ethernet@50400000 {
-> +        compatible = "eswin,eic7700-qos-eth";
-> +        reg = <0x0 0x50400000 0x0 0x10000>;
-> +        interrupt-parent = <&plic>;
-> +        interrupt-names = "macirq";
-> +        interrupts = <61>;
-> +        phy-mode = "rgmii";
+diff --git a/crypto/algif_hash.c b/crypto/algif_hash.c
+index 5498a87249d3..e3f1a4852737 100644
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -265,10 +265,6 @@ static int hash_accept(struct socket *sock, struct socket *newsock,
+ 		goto out_free_state;
+ 
+ 	err = crypto_ahash_import(&ctx2->req, state);
+-	if (err) {
+-		sock_orphan(sk2);
+-		sock_put(sk2);
+-	}
+ 
+ out_free_state:
+ 	kfree_sensitive(state);
+-- 
+2.45.2
 
-Please don't use rgmii in an example. It is probably wrong, unless you
-have an unusual PCB design.
-
-	Andrew
