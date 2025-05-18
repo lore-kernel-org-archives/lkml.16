@@ -1,184 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBB5524F
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 19:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7044717E0;
+	Sun, 18 May 2025 19:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747595487; cv=none; b=jvGlPPV00oRjwV45TgOfMlDGiN27O0Z/NXkiJINPz7SGdCYrLoM7SRSjTF5RbLuHLpTmTmuxGaRjMJr0SKsvgjGOgUu++vopy4Dsq6U4J5fFZmjxHrHh/revpaRyehPHc7WiBOuGWWIQZOp0IQwnzXXIr4emZPctwuZoJ8SfLpQ=
+	t=1747595936; cv=none; b=bSKhVDpH8KRQjrVpPRUGuJcXr2xWXxzL25QzNN+uJZBr+DmBdAXG2Rh26P5lCYNKoOSdHys4m26WjTSYa1u0Qje2/7zbCY4HVR9Ekvn8ZSy8zLA04BIg6/60FebWYlGWBvXWVLfsvTbvJIq3RneUxENLGKn4IeRXRfANl3CMciA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747595487; c=relaxed/simple;
-	bh=cPSw+hpj+02yY2OAV+doqumle8jnszeQMrRt6RK9tTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RTgUV0TJ5/NW6sOC9HhA3EBQ0w4u1loTb5ngVqACwxsOVpo8S2al5ngAXN7m+lPiWBB2x4T8gko4OYbcbNCYlfjrvnnv+jQkw+hS7XRQ66tS69f0fhJZuSpk392G+l7MjFxSeDXGPpDSJvSsQaSwYyZOu5hlkCPzH+8IV+51olM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LxQKwy/+; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747595936; c=relaxed/simple;
+	bh=fRF3CpaQ3ZagL4PfcD5Ss7lAjLAo3ddXRCFd78Uxo0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHRG16ZDDTbZKGSBBl90Sh+owyDeXrzUZiaTXyXPBzqcmye3eRiXByTHvR3MJouGLLtr18Osw6hiRGRe72vaK6xox2I01W+Eu6GmfHJOgU1oXoHX5/6bX8blD3tUl9+KduqIxn54fBU+qtAgUpsLpfIDfbeOjByV8WLoimgt/lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDJ45YVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LxQKwy/+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747595485; x=1779131485;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cPSw+hpj+02yY2OAV+doqumle8jnszeQMrRt6RK9tTg=;
-  b=LxQKwy/+OmYz5U0XGdqj/yQZGNA9DDOrQVyzJRx8idjl7h+kOM5fc1ze
-   KpV3WGnYiQbTbX9YozyckwnbDn810+7bhhUiV9+xnUeDA+nmYJ6ZRTS3g
-   Xe8kXZsFU1VgCdoPp0RU8Sttht1Dcc/f+dUGKIkLwKBQzU73SP9mxsHiL
-   tnuJObJMsFwBmvVyec1VGyw6Bs2rB8Ckmk+RJPNdcsiTGxv6ZBo4JOmHw
-   9BF9JLqEOh2M36eQETnyUxJxhGYMQlK8Pijbnstp3Nt4G5SOLcULg5X8w
-   DCWocVxrxNdzjxQjQoTqq5e/UDzIeISlhgjpcd5ohpSse1aEFuHmv+hZ0
-   w==;
-X-CSE-ConnectionGUID: nxrpoxcKRAq8IGjGGKHKuw==
-X-CSE-MsgGUID: iIak1NY4QwOZnmoxgpwQIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49476307"
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="49476307"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 12:11:24 -0700
-X-CSE-ConnectionGUID: A5VFKcGJQha45EzM0TlNlQ==
-X-CSE-MsgGUID: M3Mv8g0oQqairiC6BV9rIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="139021086"
-Received: from igk-lkp-server01.igk.intel.com (HELO a1decbf9c5f9) ([10.211.3.150])
-  by orviesa010.jf.intel.com with ESMTP; 18 May 2025 12:11:23 -0700
-Received: from kbuild by a1decbf9c5f9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGjPs-0000kN-2D;
-	Sun, 18 May 2025 19:11:20 +0000
-Date: Mon, 19 May 2025 03:10:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: WARNING: modpost: "saved_config" [vmlinux] is COMMON symbol
-Message-ID: <202505190355.gY9aSTpX-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDJ45YVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781FBC4CEE7;
+	Sun, 18 May 2025 19:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747595935;
+	bh=fRF3CpaQ3ZagL4PfcD5Ss7lAjLAo3ddXRCFd78Uxo0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDJ45YVLzKQzlxEPHXoajXjbdqu88ca7c2Jt8gOVyv6CuBu8QoTOnxsRpdyRy1Wkp
+	 CarUbjO5t2mcPFWPNlOiq7KAlu8wqZoGbxQLj4pmx5Bz92VTpeXUuIOfOjytVqmbWP
+	 QmIgjRHeIkysxWkOajm2K0u4tTcQ4aOFPUXTsc3JOJBLk72CpTY4/YXrHIwUK1GjFD
+	 tIU19PPppnTCA8vG96STx4Z8rq1E6dLfbFWbMQobqLg67u7zOancTPVrVgXiu9I4b6
+	 aN1SR+8TNKCYPqYqhW71KYVFn6VrswbHb0FFkqJ/t7IfjhCGY8nW2YMLg9W3cP56CZ
+	 E8IfBt7QIyBcw==
+Date: Sun, 18 May 2025 12:18:54 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, irogers@google.com,
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, eranian@google.com,
+	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
+Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
+Message-ID: <aCoynoKRbpnOZ7QE@google.com>
+References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+ <20250516182853.2610284-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250516182853.2610284-3-kan.liang@linux.intel.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-commit: 430ad3f0ddd7bb0f6ed8c4c45bbce67e2c7ed396 alpha: remove LCA and APECS based machines
-date:   1 year ago
-config: alpha-randconfig-2002-20250519 (https://download.01.org/0day-ci/archive/20250519/202505190355.gY9aSTpX-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505190355.gY9aSTpX-lkp@intel.com/reproduce)
+Hi Kan,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505190355.gY9aSTpX-lkp@intel.com/
+On Fri, May 16, 2025 at 11:28:39AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+> 
+> $ perf record -e "{cycles,cycles}:S" ...
+> 
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+> 
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> 
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+> 
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. For all ARCHs, the implementation is similar. Only the event is
+> disabled, rather than the group.
+> 
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+> 
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle.
+> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+> 
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+Thanks for working on this!
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
->> WARNING: modpost: "saved_config" [vmlinux] is COMMON symbol
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/time/time_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/resource_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/sysctl-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in mm/dmapool_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp437.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp850.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp932.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_euc-jp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp950.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-7.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp1255.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-9.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-r.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-u.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-ru.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-croatian.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-gaelic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-greek.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-romanian.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-roman.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/unicode/utf8data.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/binfmt_misc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in security/keys/trusted-keys/trusted.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/cast_common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/curve25519-generic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/string_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/string_helpers_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/find_bit_benchmark.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test-kstrtox.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bitmap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_uuid.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_maple_tree.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/bitfield_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/checksum_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/list-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_linear_ranges.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/slub_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/memcpy_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/is_signed_type_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/overflow_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/fortify_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/strcat_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/strscpy_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-ts4800.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/phy/broadcom/phy-bcm-ns-usb2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/bcm/pinctrl-bcm4908.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08_i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-gw-pld.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-mediatek.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-samsung.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-visconti.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-apple.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/backlight/platform_lcd.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/kyro/kyrofb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-ipe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-vdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-bdp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-jpgdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-mm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-hif.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-aud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-aud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-mfgcfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-mm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu0.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu_adl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu_conn.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-mfgcfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-mm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-imp_iic_wrap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-mm.o
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  kernel/events/core.c | 60 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 44 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index af78ec118e8f..52490c2ce45b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2739,6 +2739,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>  
+> +static void perf_event_unthrottle(struct perf_event *event, bool start)
+> +{
+> +	event->hw.interrupts = 0;
+> +	if (start)
+> +		event->pmu->start(event, 0);
+> +	perf_log_throttle(event, 1);
+> +}
+> +
+> +static void perf_event_throttle(struct perf_event *event)
+> +{
+> +	event->pmu->stop(event, 0);
+> +	event->hw.interrupts = MAX_INTERRUPTS;
+> +	perf_log_throttle(event, 0);
+> +}
+> +
+> +static void perf_event_unthrottle_group(struct perf_event *event, bool skip_start_event)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This will add more PERF_RECORD_THROTTLE records for sibling events.
+Maybe we can generate it for the actual target event only?
+
+Also the condition for skip_start_event is if it's a freq event.
+I think we can skip pmu->start() if the sibling is also a freq event.
+I remember KVM folks concern about the number of PMU accesses as it
+can cause VM exits.
+
+Thanks,
+Namhyung
+
+> +}
+> +
+> +static void perf_event_throttle_group(struct perf_event *event)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_throttle(leader);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_throttle(sibling);
+> +}
+> +
+>  static int
+>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
+>  {
+> @@ -4393,12 +4426,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
+>  
+>  		hwc = &event->hw;
+>  
+> -		if (hwc->interrupts == MAX_INTERRUPTS) {
+> -			hwc->interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -			if (!is_event_in_freq_mode(event))
+> -				event->pmu->start(event, 0);
+> -		}
+> +		if (hwc->interrupts == MAX_INTERRUPTS)
+> +			perf_event_unthrottle_group(event, is_event_in_freq_mode(event));
+>  
+>  		if (!is_event_in_freq_mode(event))
+>  			continue;
+> @@ -6426,14 +6455,6 @@ static void __perf_event_period(struct perf_event *event,
+>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
+>  	if (active) {
+>  		perf_pmu_disable(event->pmu);
+> -		/*
+> -		 * We could be throttled; unthrottle now to avoid the tick
+> -		 * trying to unthrottle while we already re-started the event.
+> -		 */
+> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
+> -			event->hw.interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -		}
+>  		event->pmu->stop(event, PERF_EF_UPDATE);
+>  	}
+>  
+> @@ -6441,6 +6462,14 @@ static void __perf_event_period(struct perf_event *event,
+>  
+>  	if (active) {
+>  		event->pmu->start(event, PERF_EF_RELOAD);
+> +		/*
+> +		 * Once the period is force-reset, the event starts immediately.
+> +		 * But the event/group could be throttled. Unthrottle the
+> +		 * event/group now to avoid the next tick trying to unthrottle
+> +		 * while we already re-started the event/group.
+> +		 */
+> +		if (event->hw.interrupts == MAX_INTERRUPTS)
+> +			perf_event_unthrottle_group(event, true);
+>  		perf_pmu_enable(event->pmu);
+>  	}
+>  }
+> @@ -10331,8 +10360,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
+>  		__this_cpu_inc(perf_throttled_count);
+>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+> -		hwc->interrupts = MAX_INTERRUPTS;
+> -		perf_log_throttle(event, 0);
+> +		perf_event_throttle_group(event);
+>  		ret = 1;
+>  	}
+>  
+> -- 
+> 2.38.1
+> 
