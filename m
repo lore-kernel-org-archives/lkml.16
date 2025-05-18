@@ -1,119 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD68610B;
-	Sun, 18 May 2025 09:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E552520F07B
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747562259; cv=none; b=bxIXM7iuZ03gyiylhGyuw5jSWDW5+wVjXrCAaAYGfrvYII4vGSu0QZ1ryQDizyXhPUNKshQ/3R6Tw/xY7BrTJVi6UHnVKVVSP6Uid3wnef7ZNcj1MKkMeyovwW87Shw242Rf3QGXp8BAkIxkkbfxEveQVezUOcWBWGch6Hnbq5M=
+	t=1747562287; cv=none; b=VQxI5Gv9difehKGL7Yrar+rEln2HIYQdsH4df8vg+hZOLIgqWhZFi/XFUtflp8bz0ZeNP+jajYdVk2owKW25V2PYSBPd9L4YBp0wGH0+ECn/p+WLQ2ByIvhBvdkDEOtLz7RXQXKvhuEV7zkYC3K9luMUpFmriXpggF7MRImJVto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747562259; c=relaxed/simple;
-	bh=2guWlEnLnYfsa0rYUzzORZ1RYR7+Gd6K7S86SE5kPD0=;
+	s=arc-20240116; t=1747562287; c=relaxed/simple;
+	bh=cmH0hPAfrYKbYSEMqjFczo5+jIGE8EJktyto1sXpkC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bXVrSZ4Ekjmsnxk9PLHW1bQv3TR/H/emys8+jMDofTCRNITfs6n8u6xtFxzfTACctlrWetNKT5fDLKDMMaOtIXxhIZev7sgZVoNRXwTO4xO0WFtWxUiBxeC3SWYaMAKyb9bdRaCTNrQWKiuS3T7fkmRmAAjY2AVjih1F9DydmjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5gEip4Y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkhR/XdPkoFux/ihI/DwFr0uY46wwL7ngQ6Wm1nmvU2cKe3YAAzBM5eR2BBXL45WO2DKD36g6CH41LyscxWuWcpwb4UZVQbweMOND6G0GE3u2liryAGKEH3JNJf5E/qvCPqvnPrRw93/taRRGFUGHZFBHh7DhFhrIgLyAXZofec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i2tPW4JL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5gEip4Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF9FC4CEE7;
-	Sun, 18 May 2025 09:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747562258;
-	bh=2guWlEnLnYfsa0rYUzzORZ1RYR7+Gd6K7S86SE5kPD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h5gEip4YURXxog4NPbjwAAvEP2x61+SOC4BREK8aa1NQe7RMnNK4nT82eP1MpC7TW
-	 EY03+r6T64AxoDBmjhbBBPPH4bUdzvq5wJBTyrlxNbLwJlnSLDtc/5GuSL3jPKmU3p
-	 5Zn7oSOWEBf79cct6/YikCrQtjpyIRbH/4ryT7Cp7gLO93Gtfmcsfp4MiG3oMghtO9
-	 y2MN0QZUhZoaS22caNuJS2dPaq8Vhvkna6Qsh8XntwPiEHCHbn68Rcg8bm0gUninmI
-	 Ahmn5S1/8Kz9J1ht8KeFb4C+yhOyyh81tWrY0pzYusED2prXnIEqn/+cms0hQV4Hun
-	 B4iAHJrwjOYKA==
-Received: by pali.im (Postfix)
-	id 5BC0DE90; Sun, 18 May 2025 11:57:35 +0200 (CEST)
-Date: Sun, 18 May 2025 11:57:35 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] nfs: Fix mounting NFS3 AUTH_NULL exports
-Message-ID: <20250518095735.2wgtvjvzedliqeyv@pali>
-References: <20240912130220.17032-1-pali@kernel.org>
- <20241222164018.id3ul7ucaxsrdkyq@pali>
- <20250418180313.h4jxi2rfxsmroumf@pali>
- <20250504084840.4n47y4zhqjqsk6bu@pali>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i2tPW4JL"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I7HnAx001756
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:58:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=gT+4GMAdIcHZx7zz1ZKYcaAm
+	iPe1Cu+OKG7s22TPW8w=; b=i2tPW4JLvJ5hIuvroOV6KoP+4P1hb/Kz/hcuDHwc
+	qYMXkEDUeGjeQ4sM4hmp9/jn816r/Cm+ysNRlafQi36HUE7uD5x8KBV9yaQvYlbG
+	3paaIYVP4qwfJPwluXrgXu90X32j4gzQM5uOM9ilyt1QHHNpx69oBDScF0V5NiUg
+	Q2d4DeX4i9OR01Sh+v7UCZUKAOVwu+qSwfaItOh1KUX+Xe00QjEJjaXlwMKlUjEC
+	nBjgNkkCE+Hv90nNYOVHCrFtB9bqbRtqLeTBNeEZaeurY9O02/RZCg2ALxf3KlJq
+	uKywxubi/IAqNGD2l637Dd0+v7kNiGDCY8nKrp4lKV8tFA==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjp31te9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:58:04 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8c0a83f9cso33634336d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 02:58:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747562283; x=1748167083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gT+4GMAdIcHZx7zz1ZKYcaAmiPe1Cu+OKG7s22TPW8w=;
+        b=piqu7ERQnwyKtarbZtSqlyn5yBf6CYfsCM/vldRh3TyBV1dt140074xW0TjmqzFojV
+         Q+6diXUtYNQA3MFZ6+AENp4w0J7FGAyKkHEO0gnvopX2SKbQv+0en+YxXODOgXpYLhS8
+         qA1YkCXqFIcSykvkWnUIX8lk9Y17w67qkHQWR9x6XQkqCD6jdvVb0sA7bQygXnHJQ37f
+         P/7Fw76gaZqVUJaP4zGXtI4XBTVcwsxRZjTE49UbJwUFzd6jxUmPAmnhiP43OjkTfowp
+         FrpHAobQ9oJAjxJ9FIpV4Hp/eashCyTCOjqbOdTgaJe4BbUaGxOI+rx2utLLXs4pY0OY
+         fmLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIhapmGG6+8pQ8gnwC0hcHIuXlX7NJjxCyv7xCQ9ve5bb9B5W75UB1ovlSVEEBpuaiZIztaq5ngLTcpzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFu3CvFSznw9bg/smSY+8UDE/3DhHqteyyXU7zvHlRHfXy+Ogs
+	9gZVSi0CDC6VwQqrNICa8JzZORd4sxF26JM2bNoxo+XOYdcOVi1hNOJrAZVeWnIZonQKAaQpYxB
+	aYW1vCCACJi6mub+6le10mcao7ZGrXKkJoIWSQLqM0GCPfzipdHndVdPNiyMeMfx7Z7o=
+X-Gm-Gg: ASbGnctajSM1E2qfWiTQaVWwwLydS+kLHGeAzukBQiGjcQy4LiXeHgXyLOWkKhZCai4
+	AXjVaOIC+xaXXabn4JTYPgY+iFtwn+2g5g/hMzkswNW2EBlZ30J7ER8O77pz/yvEQ4igK7zhLCA
+	tKwMQyaeDlk4RHqCtyGkfQRqbjei9SOEsw7Ougr5fBkMeGu00Z8GuMkF0Vtd0bAoAWII9mlCLJM
+	AqATuimmKQ1IY9jplmli/fSgNGlZsdTN2tshNuPHWhVIXwKPYJsv9W6fUfrF3/qzJLt4nx4uP7w
+	2X9C477isaab1rxewf1b7F55C33OW4cmnFKqZ9IVyTgg57eNduxAT798iIFPVdKGxLLGF/LAsb8
+	=
+X-Received: by 2002:a05:6214:1244:b0:6e8:fde9:5d07 with SMTP id 6a1803df08f44-6f8b2d43931mr131431396d6.26.1747562283625;
+        Sun, 18 May 2025 02:58:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXOR6vgmS6GPiW625UI3++wlwyBg0bFxpLkN+zyktFFittJClz/BbivAaprb8YwW0sMhFTKw==
+X-Received: by 2002:a05:6214:1244:b0:6e8:fde9:5d07 with SMTP id 6a1803df08f44-6f8b2d43931mr131431096d6.26.1747562283284;
+        Sun, 18 May 2025 02:58:03 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328085cf976sm14124621fa.103.2025.05.18.02.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 02:58:02 -0700 (PDT)
+Date: Sun, 18 May 2025 12:58:00 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH RFT v3 11/14] soc: qcom: ubwc: Fix SM6125's ubwc_swizzle
+ value
+Message-ID: <lkzvk5vqxy3oe4f67tg5hirmqarfcq6xibljhtspvufuebxbna@k36dw3km25qa>
+References: <20250517-topic-ubwc_central-v3-0-3c8465565f86@oss.qualcomm.com>
+ <20250517-topic-ubwc_central-v3-11-3c8465565f86@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250504084840.4n47y4zhqjqsk6bu@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20250517-topic-ubwc_central-v3-11-3c8465565f86@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=B8u50PtM c=1 sm=1 tr=0 ts=6829af2c cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=lyADY8evpk1XTh_PsdgA:9 a=CjuIK1q_8ugA:10
+ a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-ORIG-GUID: ZUOOYqYoWAnNJvC-gSqgMSaUGNpaW3ry
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDA5MyBTYWx0ZWRfX0GhtgWLzdHX0
+ 0sfZ1ndbGjNS49sogg8Zx0FOrwNgAZksnGPbpFm9A8holpUn+vNPE6rXddKd9I9HQ/VwtFhpUsr
+ cAcfBUWOFFiIAE2tHMKCY9VjpjET14ek0OB0hr5q+SDmNk/UZetHzbZW9EYOu7PMMdqrxoTL/Vv
+ AOwAH+87nMb1Ju/zcmn0eNxqhRz6VajNi8xnF7uEc23ED72AJEbD+gBuAyk9h4oM86yuFktCJjT
+ mkVrIaMWYcxgpvalTfD9U+nIleAM23J1Cb99nnH4wzscbC9Beya9uAeagimjjvn62VxBGqrfUuH
+ zKMPI+9eYKa1Un/4qo15rkTB8V76UeasZl3dNfsleI5G1Ui5Zpw1ilCGIoEggw0RqQE+ijbHQYv
+ Mxh58ImJTXmMZyI+qpLh93WEfJ4ejSCoki3KWiX56Q/7rIEHs+5SUMLZILgmswbK1hCrkmnQ
+X-Proofpoint-GUID: ZUOOYqYoWAnNJvC-gSqgMSaUGNpaW3ry
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-18_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 malwarescore=0 mlxlogscore=901 lowpriorityscore=0
+ mlxscore=0 suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ spamscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505180093
 
-PING?
-
-On Sunday 04 May 2025 10:48:40 Pali Rohár wrote:
-> PING?
+On Sat, May 17, 2025 at 07:32:45PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
-> On Friday 18 April 2025 20:03:13 Pali Rohár wrote:
-> > PING?
-> > 
-> > On Sunday 22 December 2024 17:40:18 Pali Rohár wrote:
-> > > PING? If there is no objection, could you include series into -next?
-> > > 
-> > > On Thursday 12 September 2024 15:02:15 Pali Rohár wrote:
-> > > > Linux NFS3 kernel client currently has broken support for NFS3
-> > > > AUTH_NULL-only exports and also broken mount option -o sec=none
-> > > > (which explicitly specifies that mount should use AUTH_NULL).
-> > > > 
-> > > > For AUTH_NULL-only server exports, Linux NFS3 kernel client mounts such
-> > > > export with AUTH_UNIX authentication which results in unusable mount
-> > > > point (any operation on it fails with error because server rejects
-> > > > AUTH_UNIX authentication).
-> > > > 
-> > > > Half of the problem is with MNTv3 servers, as some of them (e.g. Linux
-> > > > one) never announce AUTH_NULL authentication for any export. Linux MNTv3
-> > > > server does not announce it even when the export has the only AUTH_NULL
-> > > > auth method allowed, instead it announce AUTH_UNIX (even when AUTH_UNIX
-> > > > is disabled for that export in Linux NFS3 knfsd server). So MNTv3 server
-> > > > for AUTH_NONE-only exports instruct Linux NFS3 kernel client to use
-> > > > AUTH_UNIX and then NFS3 server refuse access to files with AUTH_UNIX.
-> > > > 
-> > > > Main problem on the client side is that mount option -o sec=none for
-> > > > NFS3 client is not processed and Linux NFS kernel client always skips
-> > > > AUTH_NULL (even when server announce it, and also even when user
-> > > > specifies -o sec=none on mount command line).
-> > > > 
-> > > > This patch series address these issues in NFS3 client code.
-> > > > 
-> > > > Add a workaround for buggy MNTv3 servers which do not announce AUTH_NULL,
-> > > > by trying AUTH_NULL authentication as an absolutely last chance when
-> > > > everything else fails. And honors user choice of AUTH_NULL if user
-> > > > explicitly specified -o sec=none as mount option.
-> > > > 
-> > > > AUTH_NULL authentication is useful for read-only exports, including
-> > > > public exports. As authentication for these types of exports do not have
-> > > > to be required.
-> > > > 
-> > > > Patch series was tested with AUTH_NULL-only, AUTH_UNIX-only and combined
-> > > > AUTH_NULL+AUTH_UNIX exports from Linux knfsd NFS3 server + default Linux
-> > > > MNTv3 userspace server. And also tested with exports from modified MNTv3
-> > > > server to properly return AUTH_NULL support in response list.
-> > > > 
-> > > > Patch series is based on the latest upstream tag v6.11-rc7.
-> > > > 
-> > > > Pali Rohár (5):
-> > > >   nfs: Fix support for NFS3 mount with -o sec=none from Linux MNTv3
-> > > >     server
-> > > >   nfs: Propagate AUTH_NULL/AUTH_UNIX PATHCONF NFS3ERR_ACCESS failures
-> > > >   nfs: Try to use AUTH_NULL for NFS3 mount when no -o sec was given
-> > > >   nfs: Fix -o sec=none output in /proc/mounts
-> > > >   nfs: Remove duplicate debug message 'using auth flavor'
-> > > > 
-> > > >  fs/nfs/client.c | 14 ++++++++++-
-> > > >  fs/nfs/super.c  | 64 +++++++++++++++++++++++++++++++++++++++----------
-> > > >  2 files changed, 65 insertions(+), 13 deletions(-)
-> > > > 
-> > > > -- 
-> > > > 2.20.1
-> > > > 
+> The value of 7 (a.k.a. GENMASK(2, 0), a.k.a. disabling levels 1-3 of
+> swizzling) is what we want on this platform (and others with a UBWC
+> 1.0 encoder).
+> 
+> Fix it to make mesa happy (the hardware doesn't care about the 2 higher
+> bits, as they weren't consumed on this platform).
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/soc/qcom/ubwc_config.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
+
+-- 
+With best wishes
+Dmitry
