@@ -1,427 +1,465 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2D04A33;
-	Sun, 18 May 2025 01:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210A4A33;
+	Sun, 18 May 2025 01:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747531848; cv=none; b=BGjVw6Ns6dBboOn76gkT3X/UEdhx0rDhNjxJtdc09TbV+EtMoNBuG5ap48H3Xiy8XxwBLNh0+mD95asbIouAVR9TRA8XNvvNN9TEgCs4jQ+14zrzksa5rnn3uT7APnqKnlJqdjwv5PuqT2cNrlHlE14H59eV27ZD+pti4X5aOl0=
+	t=1747532143; cv=none; b=WeOSwemTz68V8gVNvp/ym+v82h2CSGBGYzqR3IwIEKnUfejjRBZ8YrqlBhwbyMVPu3EMtwTLyrdiIZf+wDwyqjgThRctIRvE4rE1NCkW6hSeW2NNccdv58BWV9+YIp45iGJ1qsx0qbelLboliTwHsSQUTmkvjK1JmVp80LhlOS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747531848; c=relaxed/simple;
-	bh=MmON3q5i6J4IArmTHUtVwfD2eTxirSwy3bB/aHW08Gk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pOIa94mYRkRp9tPpRmbkVOptFTcs3gzMIxIK+pbg9TvuBfkrkC3tzwVTdmFGqpHZozIgCF/nGNVVB4h4YxTTxcALXuCj54eW/TfjlR73lX+0+/W2zJNjUhzvy0GopzecxvkL8UeVqCDxbRqwMX0qt7RUQyP39OmivS3MS0JX7r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VAtAA7kX; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747532143; c=relaxed/simple;
+	bh=dY2bdDU2UDC8F5QqwzVljSy2e2MSA5CMm9j/pwKHWdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LIj3aeL/lqnFkwo9dhEIv5KKGjjGgI2Mhhzr+xIdjzixWjEXRPvZltz3QP4f2B5IVDCB7kem/qJ/UjGfA8DrEDstltZSR5D7rcHfTU29K98qKCv7ho8ce/VeYYc8y36icDC6UGl1lLA/S1VJ8izKGI4NL2si2uiQqwcyVMPFNcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PBQmDDj2; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAtAA7kX"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3db8356ee37so9068215ab.3;
-        Sat, 17 May 2025 18:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747531845; x=1748136645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sWe4uhrqQ6kYTV+uYSNoRxMT3RAe8ziimxoaSj21SIg=;
-        b=VAtAA7kXwnBvb0KIoqnkyfeJIF0a8CuHcSMq5OtCW0AC8Kzarfam16ydKWgpbb4/GZ
-         bVNJFgJYHvrsjm9HtbzgL++nhy0EYW6OomwUwkMvW6/BxZmnSYTZmi0wypi3FrQmwEw+
-         vMhVQ/+iUJqmdAfDpgElSy8vK3CY5lBp1qlwvgDaG+9nLRpVoYe/8QkL2CxvgZTkv1jO
-         tCSL2Y+gTOJ8EocYHCvQtoCnmE3DreBmPm1LW6jcn4OBYQrE2THRFFcwOKI+FaIHY2p+
-         dOIxzKMDFZWNE2KM+eKRv725aibKo/1LP0MP1G3Z0Llcf0OPyL2LL5KzNkS5v2jC7ZnB
-         VY3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747531845; x=1748136645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sWe4uhrqQ6kYTV+uYSNoRxMT3RAe8ziimxoaSj21SIg=;
-        b=G0+MUuLYNELRWUYouEKfhs9cUElMgBR1iwbqaHV9TBrCa3fDqo3vjFImBCFPIcwpbs
-         KcM04ChixNEzPBf2LKtMPFD56uFWNisOqD2qusCdkISM3pnDMl9sZsJbl3qR098PPkBO
-         Fqf7BzTyG2Z2wC80n2qGpVdxkC3cZbgZsskRcZT88of7nc0x21kzyIegeob7eVGmQa/C
-         ylggbVENq05TWau0ghabj5RrUvGRZ131QdwjUMsc9ZmkHYAB9aJtoHnOyK8sUhEgJULI
-         UfvtUEqV3ZUq+WaPQO8VjPNYR3nWnv47a4V/J20Paq3ukut5HaMgy8qa1CZnx+6XPG/g
-         x/wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFGdbrbADuKluvbxOjcZ+F6fWwUuprWPgNy3BS+AkOXDcWBMPUVjh7n2NLg5VO8t2wxVwISiwogg1xdKUJyE0=@vger.kernel.org, AJvYcCWu2/4CzVH7/OZDHuVUNE6u1SMwgNBnIBQXonAnNuuWPMikbxdl5sWdF+0XTUTgj7jPu7vKhQuJmUt7KQ==@vger.kernel.org, AJvYcCXHDe+e2FsUTQqmHTNv2B0jOIi3cjM/oJPK59vzqIVR8DJ48F/RVwWCzjbedkn2ai9yJjoE+uk3VqhHCEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA88AmCq0TSn+G6ZUdbUqrV2LE6sc+5UWHC03teC9GKyayUe4c
-	x7rx2rCkAn1gDK5wYAVnTPTbbosp9h772sN9NMPhRl6F6Ipghv1oScXWCJJqLvD6wbxBq1eexMt
-	VsnAss7ty3lDQwBlMhCpzKeuzdJEMrQM=
-X-Gm-Gg: ASbGncuplqIDmUCHUE4un5QrGd2Z4iJpSrrOmzptrHSkTyz3JdskjPtSLFl536YfLbh
-	+GrxA9pNTU0PHzdmAw2yhEnQGs1jM4pjzEjQgvb8emn5cL9sGIG9fUvyFh+i5iiUQ6+qBY5sRD6
-	0QM5gkNSXpSUsTk6z0PSfhi0O5eZF4omXI
-X-Google-Smtp-Source: AGHT+IF0AX8mqYNeSwGFaoY/T1VTx7e1a9qCdM4HH+LTc4XsEuTMgi9t54I95IeQ+E1OZjiYIg/TgWjB6VvVC6P0WFI=
-X-Received: by 2002:a05:6602:3f0c:b0:86a:93c:a721 with SMTP id
- ca18e2360f4ac-86a24bbb754mr1018463339f.2.1747531844798; Sat, 17 May 2025
- 18:30:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PBQmDDj2"
+Received: from [10.20.129.112] (unknown [204.239.251.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 508B13F788;
+	Sun, 18 May 2025 01:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1747532137;
+	bh=brWXz+SrArjZvKTk/liqQ4oX/q3YR5Jg3vwRRoGbgp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=PBQmDDj2JmE4oszu5nRL2p+ClsdK9Np88xpov+iEMYiaxFXPplMlkFyfbjF3agWT7
+	 TAga0H+SJ0gDLrdcG+fc0REHk1qLDImJzYaDqBGzYz0ib96S9TA5RvGsD8nrSMOinA
+	 iNoPT2RQGfRVzNqSMoYbq3asHrEvKEE5PZuf1jQEJVaW524mZwf+/dV7+i4eJT9jlU
+	 czz2Hq1nnXkJALyIbaI9VNWgSYsf/VlcxahiRObvT6w5WFocmekM4osK9MmW0lCOU9
+	 aLW7+D9kgtz3swTc68aD8xDaZatmcXr5R0VborUFf3SwJ5o5QZN4t4p8aM9bxT0lQQ
+	 UzAUT9jVec2vg==
+Message-ID: <a9588785-e03a-4a25-9172-045d3857d046@canonical.com>
+Date: Sat, 17 May 2025 18:35:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
- <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de> <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
- <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
- <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de> <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
- <f8552d41fb7eae286803b78302390614179b33b0.camel@web.de> <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
- <ba97a2559cda1b14e0c9754523ff1152bdad90ef.camel@web.de> <63cc1dbf07bde2c9d14e1f86ce2c2ce26a2a9936.camel@web.de>
- <388bbc4c805ce029bbd08010fd30405494f998a9.camel@web.de> <15f3633cbd08b30475d5b76c5cc9180fbf17a12f.camel@web.de>
-In-Reply-To: <15f3633cbd08b30475d5b76c5cc9180fbf17a12f.camel@web.de>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Sun, 18 May 2025 09:30:08 +0800
-X-Gm-Features: AX0GCFv06TkGJgkKvaRslc77U1xmPTSHqh40F7JbBNWrPHJVJHUeMNiX2GPPk-Y
-Message-ID: <CAL+tcoA3d-EdoGjei7aeyuA3zmj955uYkXf1wCAUy8iP3BxUjg@mail.gmail.com>
-Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when compiled
- with clang
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: Johannes Berg <johannes@sipsolutions.net>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, "llvm@lists.linux.dev" <llvm@lists.linux.dev>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-wireless@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] apparmor: make __begin_current_label_crit_section()
+ indicate whether put is needed
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: paul@paul-moore.com, linux-kernel@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org
+References: <20250318220641.1811093-1-mjguzik@gmail.com>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20250318220641.1811093-1-mjguzik@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Bert,
+On 3/18/25 15:06, Mateusz Guzik wrote:
+> Same as aa_get_newest_cred_label_condref().
+> 
+> This avoids a bunch of work overall and allows the compiler to note when no
+> clean up is necessary, allowing for tail calls.
+> 
+> This in particular happens in apparmor_file_permission(), which manages to
+> tail call aa_file_perm() 105 bytes in (vs a regular call 112 bytes in
+> followed by branches to figure out if clean up is needed).
+> 
+do we have any numbers on the difference? And why not also the none underscore
+versions. ie. begin_current_XXX and end_current_XXX. Admittedly they can sleep
+an almost never degrade into needs put situation.
 
-Thanks for your report and analysis!
 
-On Sun, May 18, 2025 at 3:49=E2=80=AFAM Bert Karwatzki <spasswolf@web.de> w=
-rote:
->
-> Am Samstag, dem 17.05.2025 um 13:34 +0200 schrieb Bert Karwatzki:
-> > Am Freitag, dem 16.05.2025 um 20:19 +0200 schrieb Bert Karwatzki:
-> > > I've added a debugging statement:
-> > >
-> > > diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-> > > index 3bd5ee0995fe..853493eca4f5 100644
-> > > --- a/net/mac80211/tx.c
-> > > +++ b/net/mac80211/tx.c
-> > > @@ -4586,7 +4586,11 @@ static noinline void ieee80211_8023_xmit_clang=
-_debug_helper(struct sk_buff *skb,
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> ---
+>   security/apparmor/include/cred.h | 21 ++++++---
+>   security/apparmor/lsm.c          | 75 ++++++++++++++++++++------------
+>   security/apparmor/policy.c       | 12 ++---
+>   3 files changed, 67 insertions(+), 41 deletions(-)
+> 
+> diff --git a/security/apparmor/include/cred.h b/security/apparmor/include/cred.h
+> index 7265d2f81dd5..fc5791937694 100644
+> --- a/security/apparmor/include/cred.h
+> +++ b/security/apparmor/include/cred.h
+> @@ -114,7 +114,12 @@ static inline struct aa_label *aa_get_current_label(void)
+>   	return aa_get_label(l);
+>   }
+>   
+> -#define __end_current_label_crit_section(X) end_current_label_crit_section(X)
+> +static inline void __end_current_label_crit_section(struct aa_label *label,
+> +						    bool needput)
+> +{
+> +	if (unlikely(needput))
+> +		aa_put_label(label);
+> +}
+>   
+>   /**
+>    * end_label_crit_section - put a reference found with begin_current_label..
+> @@ -142,13 +147,16 @@ static inline void end_current_label_crit_section(struct aa_label *label)
+>    * critical section between __begin_current_label_crit_section() ..
+>    * __end_current_label_crit_section()
+>    */
+> -static inline struct aa_label *__begin_current_label_crit_section(void)
+> +static inline struct aa_label *__begin_current_label_crit_section(bool *needput)
+>   {
+>   	struct aa_label *label = aa_current_raw_label();
+>   
+> -	if (label_is_stale(label))
+> -		label = aa_get_newest_label(label);
+> +	if (label_is_stale(label)) {
+> +		*needput = true;
+> +		return aa_get_newest_label(label);
+> +	}
+>   
+> +	*needput = false;
+>   	return label;
+>   }
+>   
+> @@ -184,10 +192,11 @@ static inline struct aa_ns *aa_get_current_ns(void)
+>   {
+>   	struct aa_label *label;
+>   	struct aa_ns *ns;
+> +	bool needput;
+>   
+> -	label  = __begin_current_label_crit_section();
+> +	label  = __begin_current_label_crit_section(&needput);
+>   	ns = aa_get_ns(labels_ns(label));
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return ns;
+>   }
+> diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+> index 7952e8cab353..c2be3c6f9d3e 100644
+> --- a/security/apparmor/lsm.c
+> +++ b/security/apparmor/lsm.c
+> @@ -127,14 +127,15 @@ static int apparmor_ptrace_access_check(struct task_struct *child,
+>   	struct aa_label *tracer, *tracee;
+>   	const struct cred *cred;
+>   	int error;
+> +	bool needput;
+>   
+>   	cred = get_task_cred(child);
+>   	tracee = cred_label(cred);	/* ref count on cred */
+> -	tracer = __begin_current_label_crit_section();
+> +	tracer = __begin_current_label_crit_section(&needput);
+>   	error = aa_may_ptrace(current_cred(), tracer, cred, tracee,
+>   			(mode & PTRACE_MODE_READ) ? AA_PTRACE_READ
+>   						  : AA_PTRACE_TRACE);
+> -	__end_current_label_crit_section(tracer);
+> +	__end_current_label_crit_section(tracer, needput);
+>   	put_cred(cred);
+>   
+>   	return error;
+> @@ -145,14 +146,15 @@ static int apparmor_ptrace_traceme(struct task_struct *parent)
+>   	struct aa_label *tracer, *tracee;
+>   	const struct cred *cred;
+>   	int error;
+> +	bool needput;
+>   
+> -	tracee = __begin_current_label_crit_section();
+> +	tracee = __begin_current_label_crit_section(&needput);
+>   	cred = get_task_cred(parent);
+>   	tracer = cred_label(cred);	/* ref count on cred */
+>   	error = aa_may_ptrace(cred, tracer, current_cred(), tracee,
+>   			      AA_PTRACE_TRACE);
+>   	put_cred(cred);
+> -	__end_current_label_crit_section(tracee);
+> +	__end_current_label_crit_section(tracee, needput);
+>   
+>   	return error;
+>   }
+> @@ -221,12 +223,13 @@ static int common_perm(const char *op, const struct path *path, u32 mask,
+>   {
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	if (!unconfined(label))
+>   		error = aa_path_perm(op, current_cred(), label, path, 0, mask,
+>   				     cond);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -524,14 +527,15 @@ static int common_file_perm(const char *op, struct file *file, u32 mask,
+>   {
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+>   	/* don't reaudit files closed during inheritance */
+> -	if (file->f_path.dentry == aa_null.dentry)
+> +	if (unlikely(file->f_path.dentry == aa_null.dentry))
+>   		return -EACCES;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	error = aa_file_perm(op, current_cred(), label, file, mask, in_atomic);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -664,15 +668,16 @@ static int apparmor_uring_override_creds(const struct cred *new)
+>   	struct aa_profile *profile;
+>   	struct aa_label *label;
+>   	int error;
+> +	bool needput;
+>   	DEFINE_AUDIT_DATA(ad, LSM_AUDIT_DATA_NONE, AA_CLASS_IO_URING,
+>   			  OP_URING_OVERRIDE);
+>   
+>   	ad.uring.target = cred_label(new);
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	error = fn_for_each(label, profile,
+>   			profile_uring(profile, AA_MAY_OVERRIDE_CRED,
+>   				      cred_label(new), CAP_SYS_ADMIN, &ad));
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -688,14 +693,15 @@ static int apparmor_uring_sqpoll(void)
+>   	struct aa_profile *profile;
+>   	struct aa_label *label;
+>   	int error;
+> +	bool needput;
+>   	DEFINE_AUDIT_DATA(ad, LSM_AUDIT_DATA_NONE, AA_CLASS_IO_URING,
+>   			  OP_URING_SQPOLL);
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	error = fn_for_each(label, profile,
+>   			profile_uring(profile, AA_MAY_CREATE_SQPOLL,
+>   				      NULL, CAP_SYS_ADMIN, &ad));
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -706,6 +712,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
+>   {
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+>   	/* Discard magic */
+>   	if ((flags & MS_MGC_MSK) == MS_MGC_VAL)
+> @@ -713,7 +720,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
+>   
+>   	flags &= ~AA_MS_IGNORE_MASK;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	if (!unconfined(label)) {
+>   		if (flags & MS_REMOUNT)
+>   			error = aa_remount(current_cred(), label, path, flags,
+> @@ -732,7 +739,7 @@ static int apparmor_sb_mount(const char *dev_name, const struct path *path,
+>   			error = aa_new_mount(current_cred(), label, dev_name,
+>   					     path, type, flags, data);
+>   	}
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -742,12 +749,13 @@ static int apparmor_move_mount(const struct path *from_path,
+>   {
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	if (!unconfined(label))
+>   		error = aa_move_mount(current_cred(), label, from_path,
+>   				      to_path);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -756,11 +764,12 @@ static int apparmor_sb_umount(struct vfsmount *mnt, int flags)
+>   {
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	if (!unconfined(label))
+>   		error = aa_umount(current_cred(), label, mnt, flags);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -984,10 +993,12 @@ static void apparmor_bprm_committed_creds(const struct linux_binprm *bprm)
+>   
+>   static void apparmor_current_getlsmprop_subj(struct lsm_prop *prop)
+>   {
+> -	struct aa_label *label = __begin_current_label_crit_section();
+> +	struct aa_label *label;
+> +	bool needput;
+>   
+> +	label = __begin_current_label_crit_section(&needput);
+>   	prop->apparmor.label = label;
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   }
+>   
+>   static void apparmor_task_getlsmprop_obj(struct task_struct *p,
+> @@ -1002,13 +1013,16 @@ static void apparmor_task_getlsmprop_obj(struct task_struct *p,
+>   static int apparmor_task_setrlimit(struct task_struct *task,
+>   		unsigned int resource, struct rlimit *new_rlim)
+>   {
+> -	struct aa_label *label = __begin_current_label_crit_section();
+> +	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+> +
+> +	label = __begin_current_label_crit_section(&needput);
+>   
+>   	if (!unconfined(label))
+>   		error = aa_task_setrlimit(current_cred(), label, task,
+>   					  resource, new_rlim);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> @@ -1019,6 +1033,7 @@ static int apparmor_task_kill(struct task_struct *target, struct kernel_siginfo
+>   	const struct cred *tc;
+>   	struct aa_label *cl, *tl;
+>   	int error;
+> +	bool needput;
+>   
+>   	tc = get_task_cred(target);
+>   	tl = aa_get_newest_cred_label(tc);
+> @@ -1030,9 +1045,9 @@ static int apparmor_task_kill(struct task_struct *target, struct kernel_siginfo
+>   		error = aa_may_signal(cred, cl, tc, tl, sig);
+>   		aa_put_label(cl);
+>   	} else {
+> -		cl = __begin_current_label_crit_section();
+> +		cl = __begin_current_label_crit_section(&needput);
+>   		error = aa_may_signal(current_cred(), cl, tc, tl, sig);
+> -		__end_current_label_crit_section(cl);
+> +		__end_current_label_crit_section(cl, needput);
+>   	}
+>   	aa_put_label(tl);
+>   	put_cred(tc);
+> @@ -1133,10 +1148,11 @@ static int apparmor_unix_stream_connect(struct sock *sk, struct sock *peer_sk,
+>   	struct aa_sk_ctx *new_ctx = aa_sock(newsk);
+>   	struct aa_label *label;
+>   	int error;
+> +	bool needput;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	error = unix_connect_perm(current_cred(), label, sk, peer_sk);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	if (error)
+>   		return error;
+> @@ -1163,8 +1179,9 @@ static int apparmor_unix_may_send(struct socket *sock, struct socket *peer)
+>   	struct aa_sk_ctx *peer_ctx = aa_sock(peer->sk);
+>   	struct aa_label *label;
+>   	int error;
+> +	bool needput;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	error = xcheck(aa_unix_peer_perm(current_cred(),
+>   					 label, OP_SENDMSG, AA_MAY_SEND,
+>   					 sock->sk, peer->sk, NULL),
+> @@ -1172,7 +1189,7 @@ static int apparmor_unix_may_send(struct socket *sock, struct socket *peer)
+>   					 peer_ctx->label, OP_SENDMSG,
+>   					 AA_MAY_RECEIVE,
+>   					 peer->sk, sock->sk, label));
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return error;
+>   }
+> diff --git a/security/apparmor/policy.c b/security/apparmor/policy.c
+> index 1f532fe48a1c..a60bb7d9b583 100644
+> --- a/security/apparmor/policy.c
+> +++ b/security/apparmor/policy.c
+> @@ -870,11 +870,11 @@ bool aa_policy_admin_capable(const struct cred *subj_cred,
+>   bool aa_current_policy_view_capable(struct aa_ns *ns)
+>   {
+>   	struct aa_label *label;
+> -	bool res;
+> +	bool needput, res;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	res = aa_policy_view_capable(current_cred(), label, ns);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return res;
+>   }
+> @@ -882,11 +882,11 @@ bool aa_current_policy_view_capable(struct aa_ns *ns)
+>   bool aa_current_policy_admin_capable(struct aa_ns *ns)
+>   {
+>   	struct aa_label *label;
+> -	bool res;
+> +	bool needput, res;
+>   
+> -	label = __begin_current_label_crit_section();
+> +	label = __begin_current_label_crit_section(&needput);
+>   	res = aa_policy_admin_capable(current_cred(), label, ns);
+> -	__end_current_label_crit_section(label);
+> +	__end_current_label_crit_section(label, needput);
+>   
+>   	return res;
+>   }
 
-What is the caller of it? It's the function that you customized?
-
-> > >                                                             struct ie=
-ee80211_local *local,
-> > >                                                             struct ie=
-ee80211_tx_info *info)
-> > >  {
-> > > -       if (unlikely(skb->sk && sock_flag(skb->sk, SOCK_WIFI_STATUS))=
-) {
-> > > +       if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_W=
-IFI_STATUS) ||
-> > > +                               sock_flag(skb->sk, SOCK_WIFI_STATUS))=
-)) {
-> > > +               if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^=
- sock_flag(skb->sk, SOCK_WIFI_STATUS))
-> > > +                       printk(KERN_INFO "%s: skb_shinfo(skb)->tx_fla=
-gs & SKBTX_WIFI_STATUS =3D %u sock_flag(skb->sk,
-> > > SOCK_WIFI_STATUS) =3D %u\n",
-> > > +                                       __func__, (skb_shinfo(skb)->t=
-x_flags & SKBTX_WIFI_STATUS), sock_flag(skb->sk,
-> > > SOCK_WIFI_STATUS));
-> > >                 info->status_data =3D ieee80211_store_ack_skb(local, =
-skb,
-> > >                                                             &info->fl=
-ags, NULL);
-> > >                 if (info->status_data)
-> > >
-> > > This gives the following logoutput (and a lockup), indicating that so=
-ck_flag(skb->sk, SOCK_WIFI_STATUS) and
-> > > (skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) are actually NOT equi=
-valent (when compiled with clang and
-> > > PREEMPT_RT=3Dy)
-
-Moving skc_flags out of the union can solve the issue, right? Simple
-modification looks like this:
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 3e15d7105ad2..5810c7b80507 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -189,13 +189,13 @@ struct sock_common {
-
-        atomic64_t              skc_cookie;
-
-+       unsigned long   skc_flags;
-        /* following fields are padding to force
-         * offset(struct sock, sk_refcnt) =3D=3D 128 on 64bit arches
-         * assuming IPV6 is enabled. We use this padding differently
-         * for different kind of 'sockets'
-         */
-        union {
--               unsigned long   skc_flags;
-                struct sock     *skc_listener; /* request_sock */
-                struct inet_timewait_death_row *skc_tw_dr; /*
-inet_timewait_sock */
-        };
-
-Can you give it a try?
-
-> >
-> > I've added more debugging output:
-> >
-> > diff --git a/include/net/sock.h b/include/net/sock.h
-> > index e223102337c7..e13560b5b7a8 100644
-> > --- a/include/net/sock.h
-> > +++ b/include/net/sock.h
-> > @@ -2735,8 +2735,10 @@ static inline void _sock_tx_timestamp(struct soc=
-k *sk,
-> >                               *tskey =3D atomic_inc_return(&sk->sk_tske=
-y) - 1;
-> >               }
-> >       }
-> > -     if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS)))
-> > +     if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS))) {
-> > +             printk(KERN_INFO "%s: setting SKBTX_WIFI_STATUS for sk =
-=3D %px\n", __func__, sk);
-> >               *tx_flags |=3D SKBTX_WIFI_STATUS;
-> > +     }
-> >  }
-> >
-> >  static inline void sock_tx_timestamp(struct sock *sk,
-> > diff --git a/net/core/sock.c b/net/core/sock.c
-> > index e02a78538e3e..f6589ad5ba36 100644
-> > --- a/net/core/sock.c
-> > +++ b/net/core/sock.c
-> > @@ -1548,6 +1548,7 @@ int sk_setsockopt(struct sock *sk, int level, int=
- optname,
-> >               break;
-> >
-> >       case SO_WIFI_STATUS:
-> > +             printk(KERN_INFO "%s: setting SOCK_WIFI_STATUS to %u for =
-sk =3D %px\n", __func__, valbool, sk);
-> >               sock_valbool_flag(sk, SOCK_WIFI_STATUS, valbool);
-> >               break;
-> >
-> > diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-> > index 853493eca4f5..eee2f80949c6 100644
-> > --- a/net/mac80211/tx.c
-> > +++ b/net/mac80211/tx.c
-> > @@ -4588,9 +4588,12 @@ static noinline void ieee80211_8023_xmit_clang_d=
-ebug_helper(struct sk_buff *skb,
-> >  {
-> >       if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_=
-STATUS) ||
-> >                               sock_flag(skb->sk, SOCK_WIFI_STATUS)))) {
-> > -             if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ soc=
-k_flag(skb->sk, SOCK_WIFI_STATUS))
-> > +             if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ soc=
-k_flag(skb->sk, SOCK_WIFI_STATUS)) {
-> >                       printk(KERN_INFO "%s: skb_shinfo(skb)->tx_flags &=
- SKBTX_WIFI_STATUS =3D %u sock_flag(skb->sk, SOCK_WIFI_STATUS) =3D %u\n",
-> >                                       __func__, (skb_shinfo(skb)->tx_fl=
-ags & SKBTX_WIFI_STATUS), sock_flag(skb->sk, SOCK_WIFI_STATUS));
-> > +                     printk(KERN_INFO "%s: skb->sk =3D %px skb->sk->sk=
-_flags =3D 0x%lx\n", __func__, skb->sk, skb->sk->sk_flags);
-> > +                     return; // This should make this case non-fatal.
-> > +             }
-> >               info->status_data =3D ieee80211_store_ack_skb(local, skb,
-> >                                                           &info->flags,=
- NULL);
-> >               if (info->status_data)
-> >
-> >
-> >
-> > This gives after ~15min uptime
-> >
-> > [  189.337797] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  189.337803] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1b798c4e00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  191.325256] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  191.325259] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1b798c5a00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  257.591831] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  257.591844] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1baf3bca00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  301.786963] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  301.786967] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1c1bc40100 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  302.780881] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  302.780884] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1a44cf6000 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  482.792298] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  482.792304] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1da0f4de00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  482.806144] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  482.806148] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1da0f4c500 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  482.817280] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  482.817284] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1da0f4df00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  552.327291] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  552.327295] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1da0f4de00 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> > [  916.971599] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb_s=
-hinfo(skb)->tx_flags & SKBTX_WIFI_STATUS =3D 0 sock_flag(skb->sk, SOCK_WIFI=
-_STATUS) =3D 1
-> > [  916.971607] [    T576] ieee80211_8023_xmit_clang_debug_helper: skb->=
-sk =3D ffff8c1a62834000 skb->sk->sk_flags =3D 0xffffffffb4efe640
-> >
-> > The printk()s in sk_set_sockopt() and _sock_tx_timestamp() are not call=
-ed at all so the flag
-> > SOCK_WIFI_STATUS is actually nevers set! What is printed when printing =
-skb->sk->sk_flags looks
-> > suspiciously like a pointer, and as sk_flags is actually a member of a =
-union in struct sock_common
-> > it seems clang is using sk_flags for one of the other union members her=
-e
-> >
-> > struct sock_common {
-> > [...]
-> >       union {
-> >               unsigned long   skc_flags;
-> >               struct sock     *skc_listener; /* request_sock */
-> >               struct inet_timewait_death_row *skc_tw_dr; /* inet_timewa=
-it_sock */
-> >       };
-> > [...]
-> > }
-> >
-> > Bert Karwatzki
->
-> I added even more debugging output and found out why commit 76a853f86c97 =
-(" wifi: free
-> SKBTX_WIFI_STATUS skb tx_flags flag") does not work.
->
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index e13560b5b7a8..6e1291d2e5a1 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -2738,6 +2738,8 @@ static inline void _sock_tx_timestamp(struct sock *=
-sk,
->         if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS))) {
->                 printk(KERN_INFO "%s: setting SKBTX_WIFI_STATUS for sk =
-=3D %px\n", __func__, sk);
->                 *tx_flags |=3D SKBTX_WIFI_STATUS;
-> +       } else {
-> +               printk(KERN_INFO "%s: NOT setting SKBTX_WIFI_STATUS for s=
-k =3D %px\n", __func__, sk);
->         }
->  }
->
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_s=
-ock.c
-> index 20915895bdaa..4913b09c0617 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -912,6 +912,7 @@ reqsk_alloc_noprof(const struct request_sock_ops *ops=
-, struct sock *sk_listener,
->                         return NULL;
->                 }
->                 req->rsk_listener =3D sk_listener;
-> +               printk(KERN_INFO "%s: sk_listener =3D %px\n", __func__, s=
-k_listener);
->         }
->         req->rsk_ops =3D ops;
->         req_to_sk(req)->sk_prot =3D sk_listener->sk_prot;
-> @@ -986,6 +987,7 @@ static struct request_sock *inet_reqsk_clone(struct r=
-equest_sock *req,
->         nreq_sk->sk_incoming_cpu =3D req_sk->sk_incoming_cpu;
->
->         nreq->rsk_listener =3D sk;
-> +       printk(KERN_INFO "%s: rsk_listener =3D%px\n", __func__, sk);
->
->         /* We need not acquire fastopenq->lock
->          * because the child socket is locked in inet_csk_listen_stop().
-> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.=
-c
-> index 67efe9501581..1a3108ec7503 100644
-> --- a/net/ipv4/inet_timewait_sock.c
-> +++ b/net/ipv4/inet_timewait_sock.c
-> @@ -190,6 +190,7 @@ struct inet_timewait_sock *inet_twsk_alloc(const stru=
-ct sock *sk,
->                 const struct inet_sock *inet =3D inet_sk(sk);
->
->                 tw->tw_dr           =3D dr;
-> +               printk(KERN_INFO "%s: sk =3D %px tw_dr =3D %px\n", __func=
-__, sk, dr);
->                 /* Give us an identity. */
->                 tw->tw_daddr        =3D inet->inet_daddr;
->                 tw->tw_rcv_saddr    =3D inet->inet_rcv_saddr;
-> diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-> index eee2f80949c6..227b86427e06 100644
-> --- a/net/mac80211/tx.c
-> +++ b/net/mac80211/tx.c
-> @@ -4586,6 +4586,8 @@ static noinline void ieee80211_8023_xmit_clang_debu=
-g_helper(struct sk_buff *skb,
->                                                             struct ieee80=
-211_local *local,
->                                                             struct ieee80=
-211_tx_info *info)
->  {
-> +       if (skb->sk)
-> +               printk(KERN_INFO "%s: skb->sk =3D %px skb->sk->sk_flags =
-=3D 0x%lx\n", __func__, skb->sk, skb->sk->sk_flags);
->         if (unlikely(skb->sk && ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_=
-STATUS) ||
->                                 sock_flag(skb->sk, SOCK_WIFI_STATUS)))) {
->                 if ((skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS) ^ soc=
-k_flag(skb->sk, SOCK_WIFI_STATUS)) {
->
->
-> This monitor the value of skb->sk->sk_flags not only in the error case bu=
-t in all cases, and also monitors
-> the places where the other members of the sk_flags union are set. The err=
-or occurs when at the start
-> of ieee80211_8023_xmit_clang_debug_helper() sk_flags is not actually the =
-skc_flags member of the union
-> but insted is skc_tw_dr which is only interpreted is flags.
->  So why does it work with gcc but fail with clang? sock_flag(skb->sk, SOC=
-K_WIFI_STATUS) test bit 19 of
-> skb->sk->sk_flags
-
-Could you say more about this? I don't follow it. Why does the gcc
-test just miss the crash issue? Is there anything (like call trace)
-different between them?
-
-My worry is that all the callers calling sock_flag might have such
-potential risk...
-
-Thanks,
-Jason
-
->
-> Here are the important snippets of debug output:
->
-> clang:
-> [  T575] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff8f1bebba=
-4300 skb->sk->sk_flags =3D 0xffffffffa16fe640
->
-> Here test_bit(0xffffffffa16fe640, SOCK_WIFI_STATUS) is 1.
->
-> gcc:
-> [  T600] ieee80211_8023_xmit_clang_debug_helper: skb->sk =3D ffff8d3506be=
-c700 skb->sk->sk_flags =3D 0xffffffff93d40100
-> Here test_bit(0xffffffff93d40100, SOCK_WIFI_STATUS) is 0.
->
-> So that this works with gcc just seems like luck. I've not yet test why i=
-t works with clang when PREEMPT_RT is not
-> enabled but my guess is that in that case we have a tw_dr pointer which f=
-ails the test_bit().
->
-> Bert Karwatzki
->
->
->
->
->
->
->
