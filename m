@@ -1,125 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9784B7E1
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 11:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0853A20ADCF;
+	Sun, 18 May 2025 11:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747566388; cv=none; b=c9NOkkwK2G+1rqJkJTgobDdZy1LlPBgkcbXq0yvts+ZnCrhZik1KP+4HSSI+TIlbkDB8lHIVdmwOMeKlvgw3JcTeZ33vVxoeXLgiUudoU5hgl1HFYMUDcwbSGBqSkJpnxdi1QZraAbYMBd60akFDAE4PMEi4XEspE6kLXY6gEXM=
+	t=1747566706; cv=none; b=nzOLKPUJ9mVwBemUxuJG3/vPS9LUJcWPwK+7m+upbyHewhGq+LIQyO4+/NvTGTm07evTaIvttnMDuqZ7Gc62szKjObAR7fSk6TpLh/3x6q5Zrt3GwuL/747y+w/VLToiVgcGXHRcC4fNzwAGMriVbfb1gR0YURq1lffVGmlDevA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747566388; c=relaxed/simple;
-	bh=QWfnSdl856Z85mwypJieipjFXF993YS5KqHAE1cyjNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aNxQiBRg+xX4Ys3ktZCTGkpdqwS7aJ20wSX/DAfGXzUm1wsQhP0d0wPFCi2uGHowQLNbbcFcIYQ32sArWsR8qesVhTFXQBostAbFLatSztHrQiYZ1KZKe7Uu/7f3Kxp10XzchH9YLAEph02d1D6UZHKrGl+XQ1fvo7kzrApna8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTRaJzqQ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747566706; c=relaxed/simple;
+	bh=jQORaEJCmWX+qNVDyrACWJZ8PX1NcoCkySUGJidoX4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q8Gcs/EWQco4jHzFX79MfVStj+Vqg9LKYT8DYYIWNZTwYfee5H4CX9LDfkFCJYgZqG62UDUm2+BUhLdit4LgqgjocpLyZPCSAyHX2bXP0dAHQn+z/Uq4qEMKV5bJZ/7cOJ+0NA1KenhdbJA00ALVuL2+FCA5tOnhLd/7oK5IQh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TytcpQk7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTRaJzqQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747566386; x=1779102386;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QWfnSdl856Z85mwypJieipjFXF993YS5KqHAE1cyjNY=;
-  b=OTRaJzqQvrFtVf02zct49oy44ApjHt6dQb5nhW4+vQFysnwyeBjwTKuW
-   Cy6yprgtE2yDtUYPYBoIQjiAp2D2JY/hKtD0iPVNxc7e8ieDPhOnaL07U
-   LravCvbzPDgXkWzSM0dmmruGyW+9pOpNJVghkkctox2//FAbiVD3FPpD2
-   2DT227KyWC17lsQ/rJeS6d3NUnHaYVKEj8CKC4pJ57mT0UyA0/ATEe0ZU
-   RMVBbrN1R23fqUSZ2EEUOt/MBcQe6qZi3tgiITmXj5qqGVOnOT0XZnkv1
-   E6tiNOthzsYfOF7VE0Jhbai9cs3tjuEQWody3K52ZqKuhnNMgyMR/TnaD
-   w==;
-X-CSE-ConnectionGUID: JuZ/glaRSeWvT1VDHlV3yg==
-X-CSE-MsgGUID: yOmwPjDsQjuyY8zDkmLOgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="66889556"
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="66889556"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 04:06:26 -0700
-X-CSE-ConnectionGUID: 5hAveNSLTxGHSRCzB/L7Jw==
-X-CSE-MsgGUID: c7CUmisQQLu/ruOrK1t6HA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
-   d="scan'208";a="138854444"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 18 May 2025 04:06:22 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGbqV-000KlT-2U;
-	Sun, 18 May 2025 11:06:19 +0000
-Date: Sun, 18 May 2025 19:05:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Juan Yescas <jyescas@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	tjmercier@google.com, isaacmanjarres@google.com,
-	kaleshsingh@google.com, Minchan Kim <minchan@kernel.org>
-Subject: Re: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-Message-ID: <202505181825.FdKgAQ16-lkp@intel.com>
-References: <20250516232341.659513-1-jyescas@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TytcpQk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377ADC4CEE7;
+	Sun, 18 May 2025 11:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747566705;
+	bh=jQORaEJCmWX+qNVDyrACWJZ8PX1NcoCkySUGJidoX4Q=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=TytcpQk7g6trtxGmQQYzM+elCPnKMUIxMdTeOIg2UcYm1sh06YUd2lhBldBXYQGF6
+	 DAJnm+sE1r0E/RSkTqfqf2mUkhpWb+vRbANqF5ijO5dU9GrgOkptDwwh1Hjgn5LijW
+	 WWQiJxHgyiEnMfSIzBGbsbaUdtZVV4fp+/VoxWZxOawERewKi5/Z0NfzfpKASsk8fV
+	 F/hOBgOf3qbo4BOMmMNKJ11ESvKC04ujtUMiotGNsTCnmgIvCvRUs3T/7OHNn7lO29
+	 +h0qO0Tl+JEoNU+xXWiAtmAx/5dE1teCfRoIkbNCHdPS/zaNlAiclf+yZK+L5EGARi
+	 nqMfUO56F5+eg==
+Message-ID: <7b36d248-7026-4017-be37-e95a0957e57d@kernel.org>
+Date: Sun, 18 May 2025 13:11:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516232341.659513-1-jyescas@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pmem: Convert binding to YAML
+To: Drew Fustini <drew@pdp7.com>, Oliver O'Halloran <oohall@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250518035539.7961-1-drew@pdp7.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250518035539.7961-1-drew@pdp7.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Juan,
+On 18/05/2025 05:55, Drew Fustini wrote:
+> Convert the PMEM device tree binding from text to YAML. This will allow
+> device trees with pmem-region nodes to pass dtbs_check.
+> 
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
+> ---
+>  .../devicetree/bindings/pmem/pmem-region.yaml | 49 +++++++++++++++++++
 
-kernel test robot noticed the following build warnings:
+I don't see the actual conversion here.
 
-[auto build test WARNING on akpm-mm/mm-everything]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Juan-Yescas/mm-Add-CONFIG_PAGE_BLOCK_ORDER-to-select-page-block-order/20250517-072434
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250516232341.659513-1-jyescas%40google.com
-patch subject: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
-config: i386-randconfig-r072-20250518 (https://download.01.org/0day-ci/archive/20250518/202505181825.FdKgAQ16-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505181825.FdKgAQ16-lkp@intel.com/
-
-smatch warnings:
-mm/compaction.c:302 pageblock_skip_persistent() warn: always true condition '(compound_order(page) >= (((((22 - 12))) < ((0))) ?(((22 - 12))):((0)))) => (0-u32max >= 0)'
-mm/page_alloc.c:618 compaction_capture() warn: unsigned 'order' is never less than zero.
-
-vim +302 mm/compaction.c
-
-9721fd82351d47a Baolin Wang     2023-06-14  289  
-21dc7e023611fbc David Rientjes  2017-11-17  290  /*
-2271b016bf368d1 Hui Su          2020-12-14  291   * Compound pages of >= pageblock_order should consistently be skipped until
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  292   * released. It is always pointless to compact pages of such order (if they are
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  293   * migratable), and the pageblocks they occupy cannot contain any free pages.
-21dc7e023611fbc David Rientjes  2017-11-17  294   */
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  295  static bool pageblock_skip_persistent(struct page *page)
-21dc7e023611fbc David Rientjes  2017-11-17  296  {
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  297  	if (!PageCompound(page))
-21dc7e023611fbc David Rientjes  2017-11-17  298  		return false;
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  299  
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  300  	page = compound_head(page);
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  301  
-b527cfe5bc23208 Vlastimil Babka 2017-11-17 @302  	if (compound_order(page) >= pageblock_order)
-21dc7e023611fbc David Rientjes  2017-11-17  303  		return true;
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  304  
-b527cfe5bc23208 Vlastimil Babka 2017-11-17  305  	return false;
-21dc7e023611fbc David Rientjes  2017-11-17  306  }
-21dc7e023611fbc David Rientjes  2017-11-17  307  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
