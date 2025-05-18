@@ -1,134 +1,79 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A8E188715;
-	Sun, 18 May 2025 22:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577BA17E0;
+	Sun, 18 May 2025 22:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747605791; cv=none; b=UklshocIXmttEqM3+ziXuyIHumO4Wjzs0j0RLJKUewNOVOasKCzymumizVOgXkSO1c85nvCdsrijhm7eArt0P2dQKudQXHJ9lSVVFbi5Rt8ieBKtOLY84m5pjSfjOKLT5OvBlxVdF2yq2qANAOoEhtu5SptufxHPp4586GUFYH4=
+	t=1747605921; cv=none; b=KGNkwbxQdbS2E50+Yw1IEjlJRt+DFaHtZ0mTF52JVC7W6wDOwdrpg+Du6LH8HfI0Le1ncWtoXntN6WMkovdSVXzAE2W/NtFeq32ZD0Zc4r+7kl5bLfUbB6fE7P9wORiibC5Q1fp5Fq6LXaO3itPxbb60aHzuZ8iS92o5k5SUD2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747605791; c=relaxed/simple;
-	bh=UBCf64IpuYd9aU8GijeqvZEEJzOIENjWdqsdBgx5RuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nbqxEH75lsU11ii1FeO3EicKhsMCAWklrxKDMWQPOioU52ZtDh8CJ4ggZ3dZIja2Q30+VL1qdyEAx0hJ2JWBj8DSmP2TjCL7QZfzLyqnrXP0TsgWFVjozEaMfrDjTMpmZaWSIpNbtW1Hy+OK9/zh7NtaKceRZVdWNg0b9D3fYxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=yIZ+wuJr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gNtipnHv; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1747605921; c=relaxed/simple;
+	bh=GxQwZk7LGV/p9yqalxZZep4/0rY8eeu4nT0SYp8nucM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r2Yj4wSGDnXEXcU+Daz2/mi7OpAE1Y8KHvL0qbvJZVwltZ/OXXycz8Q/lGCDt4ly0RMvfOoUf+fDCNLPvrfJLOdA+Fv2vfZA0OiK59jxsxu9OBvFlSm7nvcp4fmrxR6h6arb+A/q05clZlVDXTtKVZLcceVi5DpaY3SdrSGqrtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=TnndYMgA; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="yIZ+wuJr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gNtipnHv"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id AE6D31380224;
-	Sun, 18 May 2025 18:03:07 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Sun, 18 May 2025 18:03:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1747605787; x=1747692187; bh=GmMWzloHA0
-	zc/lE1krpWtzRstHZoWgSml9UBorZTh8c=; b=yIZ+wuJr6gEkLp/NWc2QJkd2vu
-	WCqInJnPcESPCLR7mX2T4VEdLIhKiAPwFD2RQDVm+PmjBaynCbAHLNf0WvpFSKAz
-	pBT8k3FPpISVDktXvumD0KoxV9WwM1zbHIwkZufY6QhdNeuldTZ8/Jt7CVZqRzOT
-	Xo3f/2o4eCP7v1F/PVI9PUe2SKLsEL1Bfnf+GnPkJ+biZ/f+rwR0eg4XIz1QEuav
-	jkhvZw5r9Di7W+F4RKPVAgdWV6/46VaeXxM7TO94irz/QnYMj3hXowCnszpL7ZNk
-	g0O916tcYOXDE4I7g/AGugcyXnbahMKeektAuyX4ZWodAEyGEVXHzWrD2QKQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1747605787; x=1747692187; bh=GmMWzloHA0zc/lE1krpWtzRstHZoWgSml9U
-	BorZTh8c=; b=gNtipnHvbAIUUdRVPaJUKPUqnmeN7J4c+JPcgfs1UMNKuILT/YR
-	3p3BSnpKxuzu3r51k8P9shS+fuKY3I/PJ0q6HOZeyEfv0UUMAwMf1SmspUsorEwK
-	8DYKmQrfqYopHcmAJUQwh0F8PXcNMuQbUh90tY+2xRjC+VSyXQ2YARMJqoFjDryD
-	zZ3t8WS16Si4FFrp8RGcTm3mbymvpIllNb3tvZm49UngWCqVYUNbEGZMX1Odb5bl
-	WzyQAC/KqQjbqMrLnlKKmaYDJQrqvuxsFEbiYjWEAw0xaydnWAKOnpjasjaM0kvb
-	+fd3jbHJZe974i/OcqT2h2mFVYn6J1Tn+YA==
-X-ME-Sender: <xms:G1kqaO4wn8jt6HF936II-4wYvh3bP3stfoa6uHY-9WROoT9lAHr7jA>
-    <xme:G1kqaH7FGzls-7wAHBIfjF9Hl6p6U6uqokiBhI5ZupDmG_33ceapY3X60-GZ2_WFt
-    TEDttAYkufp5npehPU>
-X-ME-Received: <xmr:G1kqaNeiyo_qV8rI66cUqyhfEVm1kdX7VUhn2oyey8BHNHstqu-dmB-TK4RHqY15ezqr3SvDv7jVzXQBnZtS5X-pecHa_M9-MCo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudelieehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
-    enucggtffrrghtthgvrhhnpefgvdffveelgedujeeffeehheekheelheefgfejffeftedu
-    geethfeuudefheefteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepuddtpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtph
-    htthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsvghnthhishhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhshhhnuhhotghvsehgmhgrihhlrd
-    gtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehlvghnsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhise
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihhnphhuthes
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:G1kqaLLrqxyPL2EkRNpEuW-esuH63iFEn7-ualufTBuENn-merWQmQ>
-    <xmx:G1kqaCILUYsALkXa7UYrAmn7KCj-3olbDWUFC38rtJ3CMRMzGC7gtw>
-    <xmx:G1kqaMzlwGFtd4CKHfBcyNDToZBg6yl1Wo0WFUUBkmrZ1RijNVPuNg>
-    <xmx:G1kqaGKxRCBadk0cG6QbcYVBRDW1ujQ4jaQw8zmSk_KWuipPpND8Ew>
-    <xmx:G1kqaI6tfuIH9I-eQFLIDgBr061EbypE81sa5D8ZL-PhLqxn_UKm6mqM>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 18 May 2025 18:03:06 -0400 (EDT)
-Date: Mon, 19 May 2025 00:03:05 +0200
-From: Janne Grunau <j@jannau.net>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Vishnu Sankar <vishnuocv@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] HID: lenovo: Unbreak USB/BT keyboards on non-ACPI
- platforms
-Message-ID: <20250518220305.GB2575813@robin.jannau.net>
-References: <20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net>
- <b77edae0-50bd-4039-9487-15bb69389c6c@gmx.de>
- <20250515230537.GA1556976@robin.jannau.net>
- <b3536162-44aa-40af-861e-07371497ef30@gmx.de>
- <20250518094353.GB1556976@robin.jannau.net>
- <79124489-0a2f-42ca-85ae-6f442e42e2d3@gmx.de>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="TnndYMgA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=liUtdoJ/xU4IQHWaOQbDn7BoXn7VV03bnVxdZQSMveU=; b=TnndYMgA1PAjUk5axz5JKVv35U
+	oAEWcAXeK+nXJkXwOWcKidM8zUiqM4d0XJ+PrEljuhUFdOmNvuhldp8T8LqCZXQfA89YPnAzZlYpx
+	9lLEmlwcbQETJHgb9cSiGnxNkU4Vri+M3owvIBcX7vXfcDekheJedxUFCGR44SOg7QAsZvdAJ1jHk
+	6gZNpWXWdk2LpG+M8Qd9KtHEY241RKjhclmWQZwTCDNUmWW1cNZKDw4npN/aCpzPBhfebJWR/VBy7
+	1ain0NMXsdtPI7j77wn66pGIfgFNx428otChJ/QflmOTAYBmLpy1j38tBDMMhz4zoKxfravSRxY5m
+	JKkuw/vw==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uGm7y-0004gv-Bx; Mon, 19 May 2025 00:05:02 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ziyao@disroot.org,
+	kever.yang@rock-chips.com,
+	nicolas.frattaroli@collabora.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Fix some warnings about PCIe and pinctrl on RK3528/RK3562/RK3576
+Date: Mon, 19 May 2025 00:04:42 +0200
+Message-ID: <20250518220449.2722673-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <79124489-0a2f-42ca-85ae-6f442e42e2d3@gmx.de>
+Content-Transfer-Encoding: 8bit
 
-Hej,
+Inspired by the issue reported by the kernel-test-robot in
+  http://lore.kernel.org/r/202505150745.PQT9TLYX-lkp@intel.com
 
-On Sun, May 18, 2025 at 07:46:12PM +0200, Armin Wolf wrote:
-> Am 18.05.25 um 11:43 schrieb Janne Grunau:
-> 
-> >>   
-> >>   static void __exit platform_profile_exit(void)
-> >>   {
-> >> -	sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> >> +	if (acpi_kobj)
-> >> +		sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> >> +
-> >>   	class_unregister(&platform_profile_class);
-> >>   }
-> >>   module_init(platform_profile_init);
-> > thanks, patch works on the affected system and the HID device for the
-> > Lenovo keyboard probes successfully. We still need to stub
-> > platform_profile_cycle() to get rid of the ACPI Kconfig dependency. I'll
-> > send that out separately.
-> >
-> > Reviewed-by: Janne Grunau <j@jannau.net>
-> > Tested-by: Janne Grunau <j@jannau.net>
-> >
-> Alright, i will send this patch to the ACPI mailing list ASAP. Please keep in mind
-> that merely stubbing out the affected functions is not enough, as the platform profile code
-> needs to be moved out of drivers/acpi/ as well.
+fix it and similar issues in all of rk3528, rk3562 and rk3576.
 
-Thanks. I will go with patch which #ifdefs the platform_profile_cycle()
-call out. It is only used for a special detachable tablet keyboard which
-is ACPI enabled device anyway. So it will be hid-lenovo local change.
 
-Janne
+Heiko Stuebner (6):
+  arm64: dts: rockchip: fix rk3576 pcie unit addresses
+  arm64: dts: rockchip: move rk3576 pinctrl node outside the soc node
+  arm64: dts: rockchip: remove a double-empty line from rk3576 core dtsi
+  arm64: dts: rockchip: move rk3528 pinctrl node outside the soc node
+  arm64: dts: rockchip: fix rk3562 pcie unit addresses
+  arm64: dts: rockchip: move rk3562 pinctrl node outside the soc node
+
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 136 ++++-----
+ arch/arm64/boot/dts/rockchip/rk3562.dtsi | 242 ++++++++--------
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 353 +++++++++++------------
+ 3 files changed, 365 insertions(+), 366 deletions(-)
+
+-- 
+2.47.2
+
