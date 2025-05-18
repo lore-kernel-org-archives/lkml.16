@@ -1,132 +1,127 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F44515B135
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AED33C9;
+	Sun, 18 May 2025 09:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747560297; cv=none; b=YhCEcvW45N+QNNF1tIahs059xnAwjSia7C0+bQuN237IZMOBm3M9LqjnZRyQ4NLmR/a7lmQjiS0QzsSECw1j5RxgrhRoSXnCheyk9GfzBTmdoMknn/ROo3hTjzwhpUnRJXHVTaeKFNCd9iW8+dapx23PpcSDd+txQwgWF33cthM=
+	t=1747560397; cv=none; b=hBJvJAPAOE3IMxI2BbBr+7GaYdpNLjX9hPHlkkaWYQ3kanjqcMbb9UcW3GN3Ru+S84EakBHF1HmEcKEC4od2DvYUTkurSd6V8McMwEzFX92JdfXj7xVZOIySpabJavcAF2N0lWEqz022CjPRLn6P1/cAuF5mlK7Ixe4AhkqjKTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747560297; c=relaxed/simple;
-	bh=uXh0YNHgLrXZa9T6To7mbdQeu6U5Grn3n5SG7bUQwNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aLlVDXF5M6hs681fXYCanwB2h259lcETyLTW69J7DlFnQNnjEDLWXS/c2zTTmH5Xzdrpx+5j4/li29ysynsY+Ds9E4LHeVXauWeCttOP9YNK7n86dMaB25Yyn2pCXbTH+41vvh3TJqCQqJlJ4KLfi6I/4cJIE1sDL1KyTUtwYZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aWys5Eu5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747560397; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Yh/374buvIAv6DUaLTK/FN/+8vGtrgRQbRWnft602VS5i/2GJXpHHTAekOMi5HkiKCI6CuorzzxxneNP9KbC0ZA9VDfkMzHQvmmc+NnUtZ4mU2quIC1+XPvikcfU4WQJT75kdH1BwTd0ip+tn+lx3yEN85W6EXCk61sTxqE6tjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6AANobj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aWys5Eu5"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I8mmg8028089
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:24:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=hNr/pl/r9ZOYN8rShfMawc0k
-	SnbkC2SMTXuLQZV6004=; b=aWys5Eu5LT+nYM7eRo+y2omkFE0d3tlWSCZ29Qbm
-	Nijh+w7OKH158G7LqzSkKiOYszi1vj9q2L2sWnqwbtvSrOYW/tgxesky4aYSSSOj
-	PxV4tjtWY+HXZhXq9CmnTAdPfbLd28henkQoeAV9O2Q8bxmuezID0n6ZKzy9orMs
-	cQ5TIIitDYHB/qMjpD06fdKMis69NbPShjjMbELInU5NfRXO46B0Y6FHclU8ynGl
-	iY9AZJ/bG4F+kYSvZ3UqZZb6Gas1/iZ3GxEux/GA9p1b8VnsGLyhrQzZSU2uv6gz
-	W00AltwOwD+VI9snqFRk1DTqGybC6tY3d6+sTs/LOPuucQ==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsss8e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 09:24:54 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8d3f48f35so4116116d6.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 02:24:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747560294; x=1748165094;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hNr/pl/r9ZOYN8rShfMawc0kSnbkC2SMTXuLQZV6004=;
-        b=u9+ZrN72vw0TDwvj8jp5ztk5vb+IK4zY7GUElO9jk03o0M7mtQpcWOnt+nlIXzZxtO
-         UrxWz0mpnHrTb0r3lsjeHwqDvs5HC3f+GAKLAXp3L36j+4XKxeN5pQKVbmUHhbwkaL5s
-         mFnUqkqqxtk17SFh6Et/EDIjOtzy1dcC1XM3kzxhYTAMUkJCa2lFpZntnoE6auV8vu5g
-         RbRdMAquQ3CK0O8SDqeuA199MPG7pdn2ltbJRjuNi0HPJMGzsLMJObYpOx5OoIeOKuIH
-         D44LR2g3LVex90+rMSfFhHjBaIXU5VNVr7VVUvJilz9INoQc7Sw/jfE3XXmnLs3ZybWr
-         IhIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvtOwDahIYxerLRZ6oOZw1lpoYzRLsaiu9C9AuPCiw7v3NGUClDsxgddkPFN9Dyy4B/kCJjAI98z9c8Cw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6uXvhl6aB2sQ0t+CV1dpt3prPmU7mJiR9O28I3nz/H3RXaBrO
-	3opFTo6bFvhZZsLLJn153DKw4JTIcPc8UftFdBW6+buqvtuBdBdEM/aOtnVhRjt/4BRe4Jd2mEY
-	wJrGuEn1e2xytk21zlUSugk53ExtNhpQkOZ2yxwClD+WSO5Bko3WYcGXGocgDQXqG1+Q=
-X-Gm-Gg: ASbGnctiNpsQMIo6loJyNQJrCgNiNQdRmvUFNmUx4oG/aEe46KVD3u5RYexVLqEN/U5
-	s+WZTXMZwQGgPagLfyKh6M5ZjLDpw2ML0q76tnwE7SaxcIcDZPmFfMPwXivPekGmcr1a2H71bZd
-	jI7LcPs/XnEsVG6XAPC+3gTpyx/I5YZk9eXneTFxx0nAiyppwsadikzwE35BY3faPG7xt3ylVnD
-	Mo8CNy1O1cUxaoRZCca7eVna/T+4rZwwntu4tEkRmNo0yiyhuwLb1ZeUmYJs/65OtbQof7/LPQX
-	rmd+inxi5dYizeIRmqg7jieOcH3+aRz25mO9Vn8Gvaikr9eFKqOWikXchB1BSWsFu1+FirGuw9o
-	=
-X-Received: by 2002:ad4:5cca:0:b0:6eb:28e4:8518 with SMTP id 6a1803df08f44-6f8b08fcfc3mr175740196d6.34.1747560294201;
-        Sun, 18 May 2025 02:24:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGBE8AEDRXC7fGaZuy3S3AMRf4t761oNWgvl9lJpRdtkIjuyHJ4BLR1QQmRYmnMD9O4Vus+kw==
-X-Received: by 2002:ad4:5cca:0:b0:6eb:28e4:8518 with SMTP id 6a1803df08f44-6f8b08fcfc3mr175740056d6.34.1747560293854;
-        Sun, 18 May 2025 02:24:53 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328085f097bsm13953151fa.110.2025.05.18.02.24.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 02:24:53 -0700 (PDT)
-Date: Sun, 18 May 2025 12:24:51 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH RFT v3 06/14] drm/msm/a6xx: Simplify uavflagprd_inv
- detection
-Message-ID: <gtmbpj26nsidusqg23a6zghahotwws47ghsq2vneikpvd4b2qh@uihmkxl7nfkg>
-References: <20250517-topic-ubwc_central-v3-0-3c8465565f86@oss.qualcomm.com>
- <20250517-topic-ubwc_central-v3-6-3c8465565f86@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6AANobj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01A3C4CEE7;
+	Sun, 18 May 2025 09:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747560396;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=J6AANobjKgcNhsMt0KnvgBjf2rp5qbUANPEGp3iZd5xWq5RxVU/ONdZJ48PYRTQJf
+	 LxAjejZOsy0+jxMGCKzfBT50+jWoAlbpymugkliadWnOjwOkXH/1+shEFiGi//if9L
+	 eDSybT1snCvrkZkOPdXoQYxLbAX40zRH/+dxExBHCPV6b9LV7sR8oFmimtsI0/glbk
+	 iwT3OgKeIb6D6tjAVqvbHDv/q0W8FvZX0R6HXAT/o7a2ohmAntvxLLeJQWZxY0pb8m
+	 Dx4mz/g//1HfL5mp4e8B4LcbTKi32vCm9+jNveunrd5gGTm/YarHtmTzEA4zCAA2Qy
+	 SWZxGa0WfL42Q==
+Date: Sun, 18 May 2025 04:26:35 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250517-topic-ubwc_central-v3-6-3c8465565f86@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: hWz4VMcWDgFaFCUM05fO3z618WSyW-my
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDA4OCBTYWx0ZWRfX+rr9nh22sJK8
- /WruIxCYm9vYqBlhBIyPtbLizNMoeXIYE3QXZInd8H5/SQrt2jsLqt+4cIZHI2UjJfAJiS+SSVv
- xcKMkXC0EQrVfT2pj8z+OuSmoEPjb0FHE8fJWOy26lCrCyhWb+YG4Jo84gnaGzPZZSlgGKveMZI
- P67Gxl+ib2+7Z3wuQ57+iDIcJQ9362pJTCEwtgT9/0ybdJQvc1jtp1oNKRXWuv1AFgs6bD7bHkn
- Ryn8UpisaKuoIvqfP2NY1AYhBMhGdl212qJDnF+X18fr8WQ+0NDFHWlyVgcl89HT0vw+AOAyn8x
- OcXY3r+SwXh/YyvAkxg+TbMVYffQukdcCjLNj2nvVNeJmkO4m7l2xAUsn9O/5Z7vNn4FuTx2dIl
- UH1S/qXa7dXH6ZC0GDF6NPG6bA2mWZgZAAYbEqB2FWuZy77x6JVL3BqwDOcMlpreCjvXrOZg
-X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=6829a767 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=nx35QXo8bFDwqsARtNcA:9 a=CjuIK1q_8ugA:10
- a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-GUID: hWz4VMcWDgFaFCUM05fO3z618WSyW-my
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_05,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 spamscore=0 mlxlogscore=863 suspectscore=0 phishscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505180088
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250518092635.Kp57E0z2oJLpQgik9ltHIZtdycZeEWV87brhMW6ygBw@z>
 
-On Sat, May 17, 2025 at 07:32:40PM +0200, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
 > 
-> Instead of setting it on a gpu-per-gpu basis, converge it to the
-> intended "is A650 family or A7xx".
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-With best wishes
-Dmitry
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
