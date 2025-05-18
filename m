@@ -1,83 +1,103 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194E2CA6;
-	Sun, 18 May 2025 14:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF7B2CA6;
+	Sun, 18 May 2025 14:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747577232; cv=none; b=HoBZepH39U6uGxnQsKBfmNLQselw1T9qpSYtT7JDSqoygOieLmhjhwvyWjsfN+pQp+gFTlrXibwETSBWGdCLc+Mj7r3NlqfKd/bpMQ0Tuox/039UrI7ucKnCnVN8HePFhbdOLJPxgE7iTVUOZjl2j774wCN599EmKn79sSAonmc=
+	t=1747577302; cv=none; b=bXHRrk4oy3YVVkZRoGNzC9ad5runuZSXp7WPgF8mZ26+LXtOv0rfVDPcI4yRYIhUdeH54+H6NrbDRkmO3wCP4sqd3S+EC35FePDPunKmammISUxA3xnT2IAvbXA6XbXov9uP0lKFV3Q6kzSo6jItlP+wu/YtY4YFqoC/JyAAVxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747577232; c=relaxed/simple;
-	bh=7ZUOy4zfzwtQfFECls1H0K0rWiwTK00K7JoofSWCwAk=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JEsvSEs6qY3FoKyRV1Qi2Aavl/lXDlQNrceFc+YsHoJFD89+xZh88a9i83oCe+sNgIiQLL2ez6xJPkKGKaDH0spZ7c9+JPbZCZxtRScitsdsfo88v/jX93Z5ODrS1ILsHsuk+o/JBJjYHL0pxD0/yMbBFNjTXnPiBTwrpp5H9Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Tkf+PaOP; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1747577302; c=relaxed/simple;
+	bh=AgKo8TgX/Hl6XS9+GhfdbOr+7v2ldSOpPxbPPyQ1tWk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=j2rS1mKh6d9t7HFsnxotm2jyNfS+w9pHXJbeHZ01Kgy5uKPdNbcifqQuiZ0BRLYGEgoFhMqz9mhmg7+rxpVackSaahXfkvgKAP3hmbJl7xyYRIrY5ND2k25ZfhU50ACyaKTDnE6FbqvwApIlZOBWnmpFNqymiM9ExISI8tFv/0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWTRwjWK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Tkf+PaOP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1747576921; bh=ySspec3YNrQpxYsv4pE3dYx/3DWUTev93a0NvHqCYAc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Tkf+PaOP4+TjvyoUmtHWN4GO+oR5cw7jYpGd/9g+y8NWcLiy4o3h2w7+nGA65GoYQ
-	 qVbYuar0HaUtMxQI7PMXkdzwZiH12EXLC8QQARXHCHIWFeUCWKey9lcCTP2yoceREM
-	 cjUNP3sQrYge3JMV8tVk67hQQCWX6kP6py9uRPfM=
-Received: from ctt.. ([219.143.130.140])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 798228B; Sun, 18 May 2025 22:01:57 +0800
-X-QQ-mid: xmsmtpt1747576917tkneko3hr
-Message-ID: <tencent_7A72A617DCA9854675A3B22B9C0B5F5E4E09@qq.com>
-X-QQ-XMAILINFO: MapnONytPuzijWxJBHCc5PS93VZJwvuokpXoI5q/M+ZsDlZKJp5CVfAhqVZz1b
-	 J4nce0pjPp6rvu1jW9ucyd0Ilc9eHXHfF1X6k8HRQV7PzhaWTnqammcFHeqrUzAyOJh//Ef6HrR3
-	 GeYvjvinwpiiF3aCTUEhnfOgZmO3igKVLIZQuSHLL8+AlJ+yozztRpjG2aAVfHBn0AfNRtGaXoBB
-	 BuAkEP/LMzqSMzWumhq/sOfy25wDzDVHRDqohC+/vBcE6CYwsm/QbPTgs9YBgmk/rvq/ZMEd1Tcp
-	 fxJfHa+gOv6rqX3SNrZ39QPoTRNKkFZNZpMfWKQhxtu498djZJ7pcy/gAv2yBDUC6nAwaoh4a4mg
-	 DZnqtfQYbWFflLFHs6INBVdeV5gwh8P+kQJ6k5YqkjX3BtkrmoCXsjaC7JhPgKeC942IX8u+ScUF
-	 zX88Xkn2m+z0Uxb0/0bijildv3DNbJpBTJvOPd7yWzfwI8KJeCFzRP2eKkrf0/0H3dhuxMbAgm2e
-	 PQS4YB8aL10fUGYRMfJH0GpDb95K19DrN6fjyZ7zbLaEOVpipNMrvBcIHC/WNk67d8ngYmDQjiDb
-	 RUU/Z6vxaZnY5Ye7x0ybbS+jhtf2y8dwZvc86LBPQAMbYkpECcOWaR4a6A3o99PET4CGfJZJASoJ
-	 dkF1sGSp5mP+9Zl3S+ahpoEUzbP7IaAtPTSNEtMfPzNnlQ7E4jUcLhVVJQdU7SVRgtcKgVBGIMTj
-	 llvQ74gB4VtRXDwfJCkhpr+jopP3gsnFi6obNb81/pdRqZ/Xy76qO8Pn07mPvZHWRh1V/S8Shh43
-	 Qjc17FhAt4RabMxkkmTwNhoFkLx9ZiphYu/08NsVducxF4+3iPqeIl/Q5+YxNKW0cOSvtHb1JY8Z
-	 ihcw8+ADlLhUZi23vFSlMsZOXTZi1Gbrud6oCBn7ac6eR8+MHQZ6Oodwwt2/ccbEiuqhsAtCavDY
-	 /QajZEBPWGbWKj7UMGogvJL+EImqr48Jx0A3ZjSPefRFeE1UIt4iij6duxQ7GW4maNWNzH4K3Gti
-	 iowD5bqIqGWCC75+C7S0Fxt+tt5U3xU/NSZuueawLJ6b6j9/xXiVlj79vPCk1ZaFSIzr/voVUuwT
-	 V2lMuN
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Taotao Chen <chentao325@qq.com>
-To: hch@infradead.org,
-	tytso@mit.edu,
-	willy@infradead.org
-Cc: adilger.kernel@dilger.ca,
-	akpm@linux-foundation.org,
-	chentaotao@didiglobal.com,
-	linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/filemap: initialize fsdata with iocb->ki_flags
-Date: Sun, 18 May 2025 14:01:57 +0000
-X-OQ-MSGID: <20250518140157.20878-1-chentao325@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <aCSxc7TnJzP-n2Lk@infradead.org>
-References: <aCSxc7TnJzP-n2Lk@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWTRwjWK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF6AC4CEE7;
+	Sun, 18 May 2025 14:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747577302;
+	bh=AgKo8TgX/Hl6XS9+GhfdbOr+7v2ldSOpPxbPPyQ1tWk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=BWTRwjWKsiuVR+Z2kNiFXbZaJiotzFB9hYOPjwmm8UFsnc77yWPju19aMoniHkxa6
+	 KxiQB4vQwwSwoY9wyUyBQmotfUi4b6TSRWq2z3H6ol4i44M8FXeND771erz9au6Hbv
+	 /8yN3Yg4sfspz6wzb4CMRo3cB4wRKjKA7wuu0r6itQ9XncDe6k8MYyVojSZoldfEI9
+	 38aky5DxLYwcdeNu5Bg4cuxETwYpPWosCaII47ZdsVGfiwkh5KVF7rYMEhPvLtkXhO
+	 QlypuxIaS56RSqf7BEhWr3rlwSYESvytnnD4NwrnyjRvCT4IDB4edW6n3jPUZ0TVw8
+	 l1UjPu4kVEIBA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Sun, 18 May 2025 16:07:20 +0200
+Message-Id: <D9ZCFH8F2MBK.1J0BC54P9EWN9@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>
+X-Mailer: aerc 0.20.1
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com> <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com> <D9ZBIGJWS9I6.17MVKGQWNNOX8@nvidia.com>
+In-Reply-To: <D9ZBIGJWS9I6.17MVKGQWNNOX8@nvidia.com>
 
-Hi Christoph, Matthew, Ted
+On Sun May 18, 2025 at 3:24 PM CEST, Alexandre Courbot wrote:
+> Hi Daniel,
+>
+> On Thu May 15, 2025 at 4:20 AM JST, Daniel Almeida wrote:
+> <snip>
+>> +/// Callbacks for an IRQ handler.
+>> +pub trait Handler: Sync {
+>> +    /// The actual handler function. As usual, sleeps are not allowed i=
+n IRQ
+>> +    /// context.
+>> +    fn handle_irq(&self) -> IrqReturn;
+>> +}
+>> +
+>> +impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
+>> +    fn handle_irq(&self) -> IrqReturn {
+>> +        T::handle_irq(self)
+>> +    }
+>> +}
+>> +
+>> +impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
+>> +    fn handle_irq(&self) -> IrqReturn {
+>> +        T::handle_irq(self)
+>> +    }
+>> +}
+>
+> I see that every smart pointer would have to implement Handler in order
+> to be used with this module, but...
+>
+>> +#[pin_data(PinnedDrop)]
+>> +pub struct Registration<T: Handler> {
+>> +    irq: u32,
+>> +    #[pin]
+>> +    handler: T,
+>
+> ... what if you store another type `U: Borrow<T>` here, and take it as
+> the argument of `register`? This way you should be able to use anything
+> that implements Borrow<T>, which includes T itself, Arc<T>, Box<T>, and
+> more, and can remove the two impl blocks above.
 
-Thanks for the suggestions.
+I don't think that this is easily possible, since then the
+`Registration` struct will have two generics, which I think is worse.
 
-Replacing file with iocb in write_begin(), updating call sites,
-and adjusting i915/gem usage makes a lot of sense. I’ll send a
-v2 to reflect this change.
+The impls above are pretty common for these kinds of traits, so I don't
+think it's too bad.
 
-Thanks,  
-Taotao
-
+---
+Cheers,
+Benno
