@@ -1,117 +1,105 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFB5EEDE;
-	Sun, 18 May 2025 04:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B10800;
+	Sun, 18 May 2025 04:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747541470; cv=none; b=CczDinXzWUInsUHNO6HLudFWaUzj9cNI8di8j9OtOwpC6Jgw2b/WQCjKUN3+4tEq4+ynE5CvQRP20WwCqQvwy8Um72pfmUMH1FuEKWOAuZ4df8D8PnYOpS1M2zVeomZZAVZd3n8+lXxvYdV1EARm7i7vrLRe4Y9uVO5EwfGsHC8=
+	t=1747543982; cv=none; b=SovFbthaRo3H8ovtaLlhia+CMCialP3SSitU6Td7E2rQnMadEmg7CCSNA3WuDWIzCDOVl891t+OchaOtiC2fAphIY7NgWbp38tvjFF5cIX41awN1vCB/0LhsTgEd57LHIg44bPoC9hlneEJ9Ip9+wH/ciasGG68z+53DnzprNVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747541470; c=relaxed/simple;
-	bh=AdwzIP8/uuMxgy2PzsepCvdsrmVIW2mO3UxQvOEbPO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lvjx5zgs3cGle1ULIWXhl/dOHOISM6kmoxlpZB5QvSPB06AH4FP930ShNKbJIRBH0Ly2ApNhksoyXDDwbtfR7bluj7szm6H+Xk+7WPs5RGOsYyfevoL751bIZJpDb6hUAB5CKm/zxCq9PZHC2Qt3Mrc8UPXk7jR4NDMay8wEZKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jXmwgWw5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747543982; c=relaxed/simple;
+	bh=Tl+/bI4JwREUGkxjpSb0RGZADW8LJu4lETQehDCuUv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aR66CQ+IHH0kILDmCeCfCj1+Kz4zpaTkpp8lelVzOpoYrOLd8K7Ft7YRoigFPJK1rqO4DLV90eCdQj3M85uTVa0Hs/pvd1RySX2nO9fDoYxGzcCt4lvkN5ycZLVDUJOsGnTFqtSlFzd7VhoepRVWEZAapFC5Ksk0rKuWXth4lN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HN86NyaT; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jXmwgWw5"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54I20P2i013585;
-	Sun, 18 May 2025 04:10:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=lZr01G
-	mqW9FsJmFstYGZZlQSl2u2zNrJtPHT928qRvk=; b=jXmwgWw5rSQFfbF5VGlFTQ
-	BZED1ifx4KQht17bODgPH73zORx1RiKckhRjJmUAkM3B+mOfVAKEPOwd2p6ot+sS
-	l6ru9FZJEHCtg1Fe1tJE549z1G7XASDqrE+f8SO8hE/LB5Wtycv5TeoTA6oJe+X8
-	hPWjnFa7p84tDFBquTQz/Kcw+80b/69gqEhyJp5JCVNHH1N45Bef4PDfPBcKhgLH
-	9/YrFP0J3/8WJnuyk1mAJSuMdmHeuYkYZnHQ/RFL7NkFrXODhItO5ly0HKQXy1wf
-	7wJUdSXCqZ49+i84HAfTIkrm+C5STrw/uaIPfcvSE1a0C7U0OFCsa3pBjuj4p7LA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46pn2sb9rh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 04:10:34 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54I4AXsT024560;
-	Sun, 18 May 2025 04:10:33 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46pn2sb9rf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 04:10:33 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54I3FMlI016070;
-	Sun, 18 May 2025 04:10:32 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g20563-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 May 2025 04:10:32 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54I4AVda45220270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 18 May 2025 04:10:31 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A34EE200BA;
-	Sun, 18 May 2025 03:45:09 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 855FB200B3;
-	Sun, 18 May 2025 03:45:04 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.51.82])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 18 May 2025 03:45:04 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Replace strcpy() with strscpy() in proc_ppc64_init()
-Date: Sun, 18 May 2025 09:15:02 +0530
-Message-ID: <174753967075.24504.4269062328317378824.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250421183110.436265-1-thorsten.blum@linux.dev>
-References: <20250421183110.436265-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HN86NyaT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747543980; x=1779079980;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Tl+/bI4JwREUGkxjpSb0RGZADW8LJu4lETQehDCuUv4=;
+  b=HN86NyaTTvf0TAIpXqpnvzlZPKbVnf6SrzDrXvAi6SBvnhu4XciHkZaK
+   ZK0sPxgTTc9TsOh503I5IP9njSAQeAlgdZe5juG/dTK1TOLlA4GgUlFFx
+   iTicC0knv5u7IjfZDl+LzBDitAbIHPeH7nPfCxnFZtYDdDaCsIDNviAq7
+   efuDericKuTcTKZpHcpCCuLJMKnj3L425FJno+OMH8X5QkKwwuH5n+BGt
+   ksEgqEaMTfOwDtjCvFAPpIAdcAjrzXnn8w0leN+rw0B+MXWxx9fIlBDtL
+   1yzIJ5g1s1pW7uuJcQqgjZvqAajMOhUsPXr2/JErAlepHRUvhr+/388bS
+   g==;
+X-CSE-ConnectionGUID: SuRCt1YqRxq51dgiMbaoQQ==
+X-CSE-MsgGUID: OEH++MmuRNajgfD7J799ig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="71970904"
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="71970904"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 21:52:59 -0700
+X-CSE-ConnectionGUID: Ji3GgWruQTawsTWaFD8C7g==
+X-CSE-MsgGUID: sWiKOAwCRIq8RtY64V/4nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,298,1739865600"; 
+   d="scan'208";a="140072658"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 17 May 2025 21:52:55 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGW16-000Kcp-22;
+	Sun, 18 May 2025 04:52:52 +0000
+Date: Sun, 18 May 2025 12:52:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Akhil P Oommen <quic_akhilpo@quicinc.com>,
+	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: Re: [PATCH RFT v3 04/14] drm/msm/a6xx: Get a handle to the common
+ UBWC config
+Message-ID: <202505181204.fkaJyv3U-lkp@intel.com>
+References: <20250517-topic-ubwc_central-v3-4-3c8465565f86@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE4MDAzNCBTYWx0ZWRfXx/zOcLDG91Ed IEEgr3xxtD+i4n+eek2esBuXvLfm86CSuCKfZEImltjgSe9bd5Z99kDAVGDjYs+Zi8qGblAwp9t H6ved9YS3zSKqWTz/lL+5DyF7XM9zRzAdzWKi83Sd3tgS622eGrtv2OgwyW6zj/D5hefIo2JM/m
- TOBTYUlNKbV1LpG/yxAblIMFZ93TDhzwQCIFPjINJsbMo+0L/cQHwxf8e94AH/F74QLf+RcdQ8L RxToVbSnos6XVBzX5VjzjniPGqEYK+JTgp0aNQPnJV1EJ7QuV4bznOozX37P9fp6Vfh06a+QUpy iqJTUtnBFnfcVid69lIjkhgUCoWzSmgP5yBRcH/NWRY+Hoaywz0GDPKZa0JFt33loNaftxcfs5t
- NSNDymeGH6gcWKOkbCjR5XS9Q9E7uES/FkBouKUHjRrvW7WX+OWK6CrpP8S0wAfzGehYsoGn
-X-Proofpoint-ORIG-GUID: dBHuUcMunzL_RAR4C-1ueT5IMf6FvjuC
-X-Proofpoint-GUID: jv_TqUPimTSwFXqO-AStKCjPLWwjZrVC
-X-Authority-Analysis: v=2.4 cv=GYQXnRXL c=1 sm=1 tr=0 ts=68295dba cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=Uu9fRxi0hxKbv0zXlPQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_02,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- mlxlogscore=691 bulkscore=0 suspectscore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505180034
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250517-topic-ubwc_central-v3-4-3c8465565f86@oss.qualcomm.com>
 
-On Mon, 21 Apr 2025 20:31:08 +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Don't cast the destination buffer from 'u8[]' to 'char *' to satisfy the
-> __must_be_array() requirement of strscpy().
-> 
-> No functional changes intended.
-> 
-> [...]
+Hi Konrad,
 
-Applied to powerpc/next.
+kernel test robot noticed the following build errors:
 
-[1/1] powerpc: Replace strcpy() with strscpy() in proc_ppc64_init()
-      https://git.kernel.org/powerpc/c/7e99a4a60d8fc9b24a3f9632011bf7e197f1aff9
+[auto build test ERROR on edef457004774e598fc4c1b7d1d4f0bcd9d0bb30]
 
-Thanks
+url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/soc-qcom-Add-UBWC-config-provider/20250518-013605
+base:   edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+patch link:    https://lore.kernel.org/r/20250517-topic-ubwc_central-v3-4-3c8465565f86%40oss.qualcomm.com
+patch subject: [PATCH RFT v3 04/14] drm/msm/a6xx: Get a handle to the common UBWC config
+config: arm64-randconfig-004-20250518 (https://download.01.org/0day-ci/archive/20250518/202505181204.fkaJyv3U-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505181204.fkaJyv3U-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505181204.fkaJyv3U-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: qcom_ubwc_config_get_data
+   >>> referenced by a6xx_gpu.c
+   >>>               drivers/gpu/drm/msm/adreno/a6xx_gpu.o:(a6xx_gpu_init) in archive vmlinux.a
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
