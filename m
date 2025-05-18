@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D112135B7;
-	Sun, 18 May 2025 10:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB4B1D5166;
+	Sun, 18 May 2025 10:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747564371; cv=none; b=Y2564whPNaygMvRsqUYFFpfi+pjhOVKZeSgcv+JqmGVsBrXhyq8l7zGBR0JHoAjESQ8JFKq0FmOUSAAW5kYcUbfaXosjLVZ+oIMEGG85cTwkUDvypBDiGPSa31+7C+SxmUkgq1tPHPF4iAj7MMhLoYGUuo16L/lsXxiN/qiZwRg=
+	t=1747564481; cv=none; b=XKhv4LE5V5lWr4oeg+eI7/3sU3L63JMVZHohdmdDMgC/oxBHfX2VJu1yMunN9uStNmNscKnaAxvhkpCwZnLQQvuiWNnAQR42WD0kusUZXLA9yOC+PQJ86Jff/TmxQgZl6izc1xbe05ssr2t8vGgdvbEiimR9RszA4cV1j2c+iW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747564371; c=relaxed/simple;
-	bh=AWQvOkqfCymWRv4I1KXFLFgKcfHbEtOXv0IBc7w/mGE=;
+	s=arc-20240116; t=1747564481; c=relaxed/simple;
+	bh=WR4e6YLzZV5pOT3xn63eb0yK3YFmdXj7k7d6kgQZvFc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYXB70EGXL37dUmpgfpiYdMzU9K9pah66OCtc5jgDumHDCU/1UcSbw/WOgTRloZgo18VArMg6RbGMyvJQsgSJCgmBwTBq/RxhNra8gtRZ+pLGN9KNgRQmESlmxcOOoD4b/ygt7fIQ4Dim4y+t3f2FpfW464mUNvjsYkecN9xUAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/C8uPvF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HANCNrsQWJMRT6ei+KQnHro9qdLkXMmebe5acNoSiIlCKNajirOcPOP9V6fnSwq4rCpmOMb0btvWZ+50GSkZESsioqQ3ICclmMPnNxZICofYvBr3rphxOcvyACJpdoiZ4n2H7VeRUKk1GqQpEf30BFir/yJywdohXZRVpuUvmsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YktI0z1e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/C8uPvF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0692CC4CEEB;
-	Sun, 18 May 2025 10:32:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YktI0z1e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF70C4CEE7;
+	Sun, 18 May 2025 10:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747564371;
-	bh=AWQvOkqfCymWRv4I1KXFLFgKcfHbEtOXv0IBc7w/mGE=;
+	s=k20201202; t=1747564479;
+	bh=WR4e6YLzZV5pOT3xn63eb0yK3YFmdXj7k7d6kgQZvFc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D/C8uPvFi2k02o3ae9tFPpQNl/ftDhf5iISphzSzQIrMK9y+HTNHRH8OLFdf7f7nD
-	 cWNsvMCBWdjorxAoI46JG/XIYH0BT+A2auKb92kpa3rbp2Vm//bGKlLsTTcHybzBiw
-	 M7rYxDpOVxX5QXng5gEPbZ4VD25O/9wAm9IcUw+XA/j4hwMb2Crytasp7M49rmPgXm
-	 34DDsQrrf0g7GTTL1Wk4N/Cr9yLSH5pnP/uG/eCLCV2KS7xEQN6j8aCDNF5VJ1NoLX
-	 3Az/QZnPgkhV4i3GejDd9o58UPOHaJj2fSZyNGbmnvqmQ1dYrkNt/E9fAnJjTSAs8F
-	 e+jkmPj2yX7gw==
-Message-ID: <e414c1ca-6e56-4088-b974-3a45eab682c1@kernel.org>
-Date: Sun, 18 May 2025 12:32:48 +0200
+	b=YktI0z1erAGrxT2/gsTJ4KplDHDGF9sV2sA0kBvHPo5GHwXc1o8zaf40G/xIvUCZW
+	 DYM13ZkR5/75ar1fMXKdbjnDv7A1qvfV/TqpcTAAY6s5VqPbeHa0dzvbXfs603lkyW
+	 z34B/JE6i8IIyw6IE5PnfL1BrNahzJAoTPpmpVMfQZzNfvMWfGLA3QO/Wd51BaoKfY
+	 YizdjrPBcT+riomouob3mVX7E8hTSL2CA8DT6Yk3/abJfx2gZUAKw989VqL49tI6gv
+	 w3xOEOs9n/vPNMeGLOcZTO0IA69xGMe3Xayt7xW3ARk6+QcNANOMKuMc8Nv5s0W2wQ
+	 MtnGyHti9Y1ZQ==
+Message-ID: <5f7f8cbc-6501-459f-906a-250be5443d0e@kernel.org>
+Date: Sun, 18 May 2025 12:34:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] nfc: s3fwrn5: Correct Samsung "Electronics" spelling
- in copyright headers
-To: Sumanth Gavini <sumanth.gavini@yahoo.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250518085734.88890-1-sumanth.gavini@yahoo.com>
- <20250518085734.88890-2-sumanth.gavini@yahoo.com>
+Subject: Re: [PATCH 1/1] Fixing a minor typo in YAML document
+To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Cc: heiko@sntech.de, briannorris@chromium.org, devicetree@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org, linux-kernel@vger.kernel.org
+References: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
+ <62bd6757-c4d0-42c1-a76d-abea18a8a55e@kernel.org>
+ <CANBuOYpRQNx+n6BjpAF0LufpUqRA3wU-GzSNygeWurohXYNF6A@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -86,30 +88,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250518085734.88890-2-sumanth.gavini@yahoo.com>
+In-Reply-To: <CANBuOYpRQNx+n6BjpAF0LufpUqRA3wU-GzSNygeWurohXYNF6A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/05/2025 10:57, Sumanth Gavini wrote:
-> Fix the misspelling in NFC-related drivers.
+On 17/05/2025 14:05, Jihed Chaibi wrote:
+> Thanks for the feedback, this fix being kind of "trivial" I didn't
+> initially want to include everyone and thought it would end up to the
+> main maintainer after being reviewed by the reviewers/authors of the
+> file, sorry for that, I will make sure every maintainer is included in
+> future patches.
 > 
-> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
-> ---
->  drivers/nfc/s3fwrn5/core.c       | 2 +-
->  drivers/nfc/s3fwrn5/firmware.c   | 2 +-
->  drivers/nfc/s3fwrn5/firmware.h   | 2 +-
->  drivers/nfc/s3fwrn5/i2c.c        | 2 +-
->  drivers/nfc/s3fwrn5/nci.c        | 2 +-
->  drivers/nfc/s3fwrn5/nci.h        | 2 +-
->  drivers/nfc/s3fwrn5/phy_common.c | 4 ++--
->  drivers/nfc/s3fwrn5/phy_common.h | 4 ++--
->  drivers/nfc/s3fwrn5/s3fwrn5.h    | 2 +-
->  9 files changed, 11 insertions(+), 11 deletions(-)
-
-Just squash both NFC patches together.
+> On the other hand, I can confirm that I'm using the last kernel version.
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please don't top post. If you do not Cc maintainers, how is it supposed
+to be picked up by these maintainers?
+
 
 Best regards,
 Krzysztof
