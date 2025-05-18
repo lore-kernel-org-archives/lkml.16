@@ -1,171 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A689D2FB;
-	Sun, 18 May 2025 07:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F929136A
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 07:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747554100; cv=none; b=MJAQ5O6aglqxHHPUd3RsV+/HLDy/dLyAltQL3fD4LQFH+OCfdlcfcYCMzAivHmM6jWWLjA2KOhtkUVBbM1LQ+5Q3c1MAEpBFfq40GQaCKMVjrgsZSgS87TvsCxKZXzaIHEiUDMnYP4TQ3usQXqkwxlxVPdUv6sKr9LfErwZGIMI=
+	t=1747554486; cv=none; b=VZI38LKux8peBbPD1/CcQeWGV3rgrX5rly2CZ/LAihiS+Th/gKkp+6Z9btJvDsUbVQzqY8jFd82x1DXuhogvi67WFlY1SepPpQTnGMvx/JQdD7Fe90xsFCDKm+7znCLSoXHgNcup1ZbXMnv83D3o0uebqyczFfNTEpyCH+PLRbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747554100; c=relaxed/simple;
-	bh=AHAwzXBAnTp88J/0aYWfanpi1Ub+Fzwmq0oMxgOjE18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pLZYnhiqpaY//+rty4+LXMis0KtaGqtaGHIt94NqPGEwpxG0BaEqvZMTrRWcuumanJztIECgAYr/Kc2lvP2ja5JkYePfpxviAXi7RcRbaLAdOC4tI7r3Ob7HVxjKpk3vQDDE4ntunMKnJMyqjs0+e61OplXtpGvPRwwgqVCzFRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhcg1tpw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhcg1tpw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74234C4CEE7;
-	Sun, 18 May 2025 07:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747554099;
-	bh=AHAwzXBAnTp88J/0aYWfanpi1Ub+Fzwmq0oMxgOjE18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uhcg1tpwj28HVLQcJ0DPOi/La9tamrh21D3DiZmOBN872Lec2tPGsNDK4EEQsODE+
-	 DNyK2ZPmM9lCGXzpRS+NmSOBdi3uT6Oclzg4GwoGglOpxwRD4J3DxIqUBInkdz+fSp
-	 qWNBrdwc/8WcA464+En/fqJ9aD4KyzrcfB7h2unt1hPyT5cFTKTFKKYHvPa6Yrlv2P
-	 w22z4TpxnqQZyMIYdm7NH1ez3ZqWuiW+jGNEM/Hoon67SM9y3VVA3JZ5nWEsQEtdip
-	 NJdagNLvNgukzO9jaRFMzixZNP7Y8rCr9bbwel5x7j0zEfmOnZ0eiut/eei4Cy1NgA
-	 /iG+ncIAMuLxw==
-Date: Sun, 18 May 2025 16:41:34 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: microchip-tcb-capture: Add watch validation
- support
-Message-ID: <aCmPLn16Ykabvhjv@ishi>
-References: <CV37uwi-rAqU3els0ckl4KLz5ortFAdc7XXy7ex6-MMhxvptyeMh8vTBXQuZliairKQ1Dy4yM3MyE8o7EZ6VfA==@protonmail.internalid>
- <20250515-counter-tcb-v1-1-e547061ed80f@microchip.com>
+	s=arc-20240116; t=1747554486; c=relaxed/simple;
+	bh=vdjS0HvUeLc1zGI75P3YJrF1t9vSdVZxVQ48f1HnVow=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WtKsLgqLuDKK+Pypqd97Vh7cIvfx1xA30eGLWFVOYAyMiV9T+5KFJFjEmb0pG9MzD6W4SKHfw1NIAzR6lZKWTSPdbrvV5oIzOZ59nHJiqKDDHToxTMO/amQm/3Umft4KSVaCadoDKVxsWUNJSPdEFojc+zFaESsg2LVYicdVewQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86184fa3d00so270318339f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 00:48:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747554483; x=1748159283;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r1U+RlsGzSlXYEgqezDytwYQ+oE2HCiq7pByYjbBZcM=;
+        b=ZUcfrngxkZsJQPgiNy2+NzW9qRE10Fj42tWwDLd26qz4XG5Wd7pMM+WSluEcZ9Pxpe
+         riXpvxl3NMbeumPLLPhXl+az0MrMG941CbTdfbzLGLYcNGg/6xw/xn5XZKyiHJzNfbxa
+         GqVbTzeNjsGA8KYzixpG/xLg6DDmTWSwUu/MQI/MYeAGa5K1luRIYqiebbBY5kWwwk22
+         oqQPl18vYviIFQz7naGWxMAYDsUSAJUy2Yr4or+Ge7s8mBQ9BDmpPlDEQI8yAuAuHGFy
+         aG6A2Ragr61feGdcZLaddUQe8FIpnYabEe0xpF+N3R1ph5nfdlgspJZz50v1idtyewWC
+         jBBA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9qGuGExybC5g2NHMktgrnyx8CqSFq/sAQG35HpgMts83dr9+s+RX9ot4y0deCfEocJE9ApX2lA7eHjqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7MzfuuDEsJBYUCZfDYMdr3j1WprJnn5BRjQNrLzRqpP3XXKvP
+	FS51Jimb1PVUghgDcPOtytp6RzXh9LBCxlP+z5kStd8z0vgvdMVhMEfnSfk3ZjVrBzUIjnieAFR
+	7JLmdEFfapPiO3qEZTLPBORxBkUBQqytSpAAPVChGJwEbXPS4+ctX85UZDNg=
+X-Google-Smtp-Source: AGHT+IExlLFjsG/HirgIOlutAcB5rCByQv+D90Y4SpBQQVuN1R5n+2DDHDlkkMz3hpukYyJHEdJc/2g97hQ65Iyoe94ULTFiWm7m
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TSzCOtGHpFOIyFHN"
-Content-Disposition: inline
-In-Reply-To: <20250515-counter-tcb-v1-1-e547061ed80f@microchip.com>
+X-Received: by 2002:a05:6602:368b:b0:85b:619e:4083 with SMTP id
+ ca18e2360f4ac-86a23227323mr1062351539f.10.1747554483706; Sun, 18 May 2025
+ 00:48:03 -0700 (PDT)
+Date: Sun, 18 May 2025 00:48:03 -0700
+In-Reply-To: <20250518072632.2179-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682990b3.a00a0220.398d88.02fa.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
+ mgmt_remove_adv_monitor_complete (3)
+From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---TSzCOtGHpFOIyFHN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Thu, May 15, 2025 at 10:28:25AM +0530, Dharma Balasubiramani wrote:
-> Introduce a watch validation callback to restrict supported event and
-> channel combinations. This allows userspace to receive notifications only
-> for valid event types and sources. Specifically, enable the following
-> supported events on channels RA, RB, and RC:
->=20
->   - COUNTER_EVENT_CAPTURE
->   - COUNTER_EVENT_CHANGE_OF_STATE
->   - COUNTER_EVENT_OVERFLOW
->   - COUNTER_EVENT_THRESHOLD
->=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
->  drivers/counter/microchip-tcb-capture.c | 28 +++++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
-crochip-tcb-capture.c
-> index 1de3c50b9804..179ff5595143 100644
-> --- a/drivers/counter/microchip-tcb-capture.c
-> +++ b/drivers/counter/microchip-tcb-capture.c
-> @@ -337,6 +337,27 @@ static struct counter_comp mchp_tc_count_ext[] =3D {
->  	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_=
-write),
->  };
->=20
-> +static int mchp_tc_watch_validate(struct counter_device *counter,
-> +				  const struct counter_watch *watch)
-> +{
-> +	switch (watch->channel) {
-> +	case COUNTER_MCHP_EVCHN_RA:
-> +	case COUNTER_MCHP_EVCHN_RB:
-> +	case COUNTER_MCHP_EVCHN_RC:
+Reported-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+Tested-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
 
-Hello Dharma,
+Tested on:
 
-Include COUNTER_MCHP_EVCHN_CV as well for the sake of completeness. I
-know COUNTER_MCHP_EVCHN_CV and COUNTER_MCHP_EVCHN_RA have the same
-underlying channel id, but we're abstracting this fact so it's good to
-maintain the consistency of the abstraction across all callbacks.
+commit:         5723cc34 Merge tag 'dmaengine-fix-6.15' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1437ee70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c3f0e807ec5d1268
+dashboard link: https://syzkaller.appspot.com/bug?extid=feb0dc579bbe30a13190
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=102a5f68580000
 
-> +		switch (watch->event) {
-> +		case COUNTER_EVENT_CAPTURE:
-> +		case COUNTER_EVENT_CHANGE_OF_STATE:
-> +		case COUNTER_EVENT_OVERFLOW:
-> +		case COUNTER_EVENT_THRESHOLD:
-> +			return 0;
-
-The watch_validate callback is used to ensure that the requested watch
-configuration is valid: i.e. the watch event is appropriate for the
-watch channel.=20
-
-Looking at include/uapi/linux/counter/microchip-tcb-capture.h:
-
-     * Channel 0:
-     * - CV register changed
-     * - CV overflowed
-     * - RA captured
-     * Channel 1:
-     * - RB captured
-     * Channel 2:
-     * - RC compare triggered
-
-If I'm understanding correctly, channel 0 supports only the
-CHANGE_OF_STATE, OVERFLOW, and CAPTURE events; channel 1 supports only
-CAPTURE events; and channel 2 supports only THRESHOLD events.
-
-Adjust the code to ensure those limitations.
-
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static struct counter_count mchp_tc_counts[] =3D {
->  	{
->  		.id =3D 0,
-> @@ -351,12 +372,13 @@ static struct counter_count mchp_tc_counts[] =3D {
->  };
->=20
->  static const struct counter_ops mchp_tc_ops =3D {
-> -	.signal_read    =3D mchp_tc_count_signal_read,
-> +	.action_read    =3D mchp_tc_count_action_read,
-> +	.action_write   =3D mchp_tc_count_action_write,
->  	.count_read     =3D mchp_tc_count_read,
->  	.function_read  =3D mchp_tc_count_function_read,
->  	.function_write =3D mchp_tc_count_function_write,
-> -	.action_read    =3D mchp_tc_count_action_read,
-> -	.action_write   =3D mchp_tc_count_action_write
-> +	.signal_read    =3D mchp_tc_count_signal_read,
-
-It's nice to alphabetize the counter_ops callbacks, but it's also
-unrelated to the watch_validate implementation. Move the alphabetization
-cleanup to a separate patch so that this patch remains dedicated to
-just watch_validate changes.
-
-Thanks,
-
-William Breathitt Gray
-
---TSzCOtGHpFOIyFHN
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaCmPLgAKCRC1SFbKvhIj
-K/U6AP9sLI94pWH9oxJ5ojO2ldb52ppFei+ym7sypqbu+AOh9QD/Xqg8FFHAJS9e
-RltMKxTbESVr1UyIV3cfgwTc/eZ3sAw=
-=0BaO
------END PGP SIGNATURE-----
-
---TSzCOtGHpFOIyFHN--
+Note: testing is done by a robot and is best-effort only.
