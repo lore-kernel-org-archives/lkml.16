@@ -1,195 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9591D15B102;
-	Sun, 18 May 2025 17:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9246E21D583;
+	Sun, 18 May 2025 18:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747590709; cv=none; b=JATkO+VfwJPM4xtWlYqwvC6hwgzbRNcmUwq3Owj0mCk45GcnX0fMijSEx/ortET4xSAWh/z8a0NMSqzcPeZHuxpXLZ9yULZ40bFNrUOkAk9XhgxE3G7fP20sCfkdQjtUFnX/RQ6ncHioDT64SqKGdZHHjVM2t27sCmWbU3SG76c=
+	t=1747591622; cv=none; b=bznDTprcoYLOIjWthaFOAMBRE7MGoUNEaLRr99uu0j5ddM4qQuFbsV0gRXkY46SfIThqHd1bz+eeFAprxPNB25IFrNnYL48ctEaaagbF/U16hFJiTUtV8oc/1aAj2RLYzFzDw+WNsbpdjRB3Q6DDHFyY6BIJlcmjSbkifVXakRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747590709; c=relaxed/simple;
-	bh=SMiqwSNrbD6/e8s/PbJRcyKXJ/c2KljONFhW7rWYVfY=;
+	s=arc-20240116; t=1747591622; c=relaxed/simple;
+	bh=pskOUvGEBKAl0vNeYYdPWPN8DH4UBURr9gH4uXhAoYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W9kSHjaU9+Pp5kr205D/0+19znv+ClAmCHA8hpyGUR2BglAb/NiVhNO1orSX5paP6eOaNPBkxkjkRzsTGG8ymeuB0GEyqyoWj7+mYebMZ+W/Rqq44bBFcvLBvVNe58zIiSJEQ0/+izyn2Om8s2446kxlc6GvemgxqILdZEXg97g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+fNoLU2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pc6SW3p8u/p/aTfZ7ol4aVjmH0Cy1zHHhcQpAhwgmrKKimmd3wRpGCuWB5STuy9c0tgUmy2X99PnWjyNjr0W2tHw3Qy/fW4BdURlYnBOyGBNQhR/PKhW6R+V550MLWCHKY0nZ/Q1aYPGqWPhwgkXthAD5ptiISl9avkqpi7dS1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MBSQVE7X; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+fNoLU2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82791C4CEE7;
-	Sun, 18 May 2025 17:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747590709;
-	bh=SMiqwSNrbD6/e8s/PbJRcyKXJ/c2KljONFhW7rWYVfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O+fNoLU2V1/pzxDZavz7TjxQCEdvnahSqNOqjZ86ToAduPYig1hMToJnClvM6txe8
-	 xSGpnmjyjjCWylLXGR1J0/q3zsLYxR+as0Y1PNbay03CkrZ48ZpEn6Lm+6EWpdNJNZ
-	 FlniMLAQpJ5OT+98sj/dQexEwiRoiOeByXQsR4lpozzsD1lrhYDrYtOi34nRvX3uTi
-	 9P0B+f2Vwvq6CF5wD5TabBbwUUbBCKY2sJy+O2PmEpmbC+y/kY07VxclVcN6JlmM4s
-	 fPoVrgHUAXLq6n0CjzuIhzxi/RbaUd5PSysxjVYo4+CCYcWcM+9caXNoTNSivDCJkA
-	 I456LbsoDAoXQ==
-Date: Sun, 18 May 2025 10:51:47 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] perf test trace BTF: Use --sort-events in BTF
- general tests
-Message-ID: <aCoeM4qTk5YnGIsT@google.com>
-References: <20250517163230.1237469-1-howardchu95@gmail.com>
- <20250517163230.1237469-6-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MBSQVE7X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747591620; x=1779127620;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pskOUvGEBKAl0vNeYYdPWPN8DH4UBURr9gH4uXhAoYQ=;
+  b=MBSQVE7XEbY3dosgWk7RLmpzlmu0us6B8FAfg6mDHlMKAP2oF6wrpsgq
+   5FaY3/koUgZ46Sm5efXC2D45QwFvV1fT7qh4ajJg51rUkoADbKyo/r5uw
+   9sKES/FefPivJrZv7u7hLaZ7xz/GyGIpK9DvkDPIclTj8xP4CZw3Iv9zQ
+   ZuUuOufrNE6SixehDJdCCr4DD8ZREGxeI4JLiumSazgin63+glD/nqZeV
+   k3nL+0RXz2y3Y1zQJS/wyp+Ym/koMZ2EhkR6WmZrBWvv5HgVUeKjurovH
+   mgeOta2vFBRi1rG9uvhNuPwNV2mOyOhDlpwgS7TEq1n+lfJoDdHIEW/Kz
+   w==;
+X-CSE-ConnectionGUID: X73GSG06SFKRfK7gJesJyw==
+X-CSE-MsgGUID: 7qcqoqFGS/mA+4Fkv5vDkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53296878"
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="53296878"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 11:06:59 -0700
+X-CSE-ConnectionGUID: n6mz+/FWR1CZPevGq+cRjg==
+X-CSE-MsgGUID: KxbogY7STF6fUxxxWpNfvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="138910479"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 18 May 2025 11:06:55 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGiPT-000Ky3-2r;
+	Sun, 18 May 2025 18:06:51 +0000
+Date: Mon, 19 May 2025 02:06:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gur Stavi <gur.stavi@huawei.com>, Fan Gong <gongfan1@huawei.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, linux-doc@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <helgaas@kernel.org>, luosifu <luosifu@huawei.com>,
+	Xin Guo <guoxin09@huawei.com>,
+	Shen Chenyang <shenchenyang1@hisilicon.com>,
+	Zhou Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>,
+	Shi Jing <shijing34@huawei.com>,
+	Meny Yossefi <meny.yossefi@huawei.com>, Lee Trager <lee@trager.us>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Suman Ghosh <sumang@marvell.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Joe Damato <jdamato@fastly.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH net-next v15 1/1] hinic3: module initialization and tx/rx
+ logic
+Message-ID: <202505190148.x7llMRfr-lkp@intel.com>
+References: <b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250517163230.1237469-6-howardchu95@gmail.com>
+In-Reply-To: <b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi@huawei.com>
 
-On Sat, May 17, 2025 at 09:32:30AM -0700, Howard Chu wrote:
-> Without the '--sort-events' flag, perf trace doesn't receive and process
-> events based on their arrival time, thus PERF_RECORD_COMM event that
-> assigns the correct comm to a PID, may be delivered and processed after
-> regular samples, causing trace outputs not having a 'comm', e.g.
-> 'mv', instead, having the default PID placeholder, e.g. ':14514'.
-> 
-> Hopefully this answers Namhyung's question in [1].
+Hi Gur,
 
-Thanks, it makes sense.  Maybe it migrated to another CPU after exec.
+kernel test robot noticed the following build warnings:
 
-> 
-> You can simply justify the statement with this diff:
-> 
-> ---8<---
+[auto build test WARNING on 67fa756408a5359941bea2c021740da5e9ed490d]
 
-Please do not use this in the format patch emails.  This makes git treat
-the following contents as commit body so it'll be added to the commit as
-if it's a valid change.  Maybe adding some spaces at the beginning of
-each line help.  But I think it's better if you publish it somewhere else
-and add a link instead.
+url:    https://github.com/intel-lab-lkp/linux/commits/Gur-Stavi/hinic3-module-initialization-and-tx-rx-logic/20250518-160845
+base:   67fa756408a5359941bea2c021740da5e9ed490d
+patch link:    https://lore.kernel.org/r/b5e005d0f8255df11f052b17a8deb856f8a7bdc2.1747556339.git.gur.stavi%40huawei.com
+patch subject: [PATCH net-next v15 1/1] hinic3: module initialization and tx/rx logic
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250519/202505190148.x7llMRfr-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505190148.x7llMRfr-lkp@intel.com/reproduce)
 
-Thanks,
-Namhyung
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505190148.x7llMRfr-lkp@intel.com/
 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index edab0ff60b3c..f042afed5b74 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4204,6 +4204,7 @@ static int trace__deliver_event(struct trace *trace, union perf_event *event)
->  {
->  	int err;
-> 
-> +	printf("[debug] deliver\n");
->  	if (!trace->sort_events)
->  		return __trace__deliver_event(trace, event);
-> 
-> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-> index 8aa456d7c2cd..76df9886429e 100644
-> --- a/tools/perf/util/comm.c
-> +++ b/tools/perf/util/comm.c
-> @@ -213,6 +213,7 @@ int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
->  	new = comm_strs__findnew(str);
->  	if (!new)
->  		return -ENOMEM;
-> +	printf("[OVERRIDE] old %s new %s str %s\n", old->str, new->str, str);
-> 
->  	comm_str__put(old);
->  	comm->comm_str = new;
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2531b373f2cf..5a501fe304d2 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -578,6 +578,7 @@ int machine__process_comm_event(struct machine *machine, union perf_event *event
->  	if (dump_trace)
->  		perf_event__fprintf_comm(event, stdout);
-> 
-> +	printf("[debug] machine__process_comm_event\n");
->  	if (thread == NULL ||
->  	    __thread__set_comm(thread, event->comm.comm, sample->time, exec)) {
->  		dump_printf("problem processing PERF_RECORD_COMM, skipping event.\n");
-> 
-> Now, simply run this command multiple times:
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
-> And you should see two types of results:
-> 
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
->     [debug] deliver
->     [debug] machine__process_comm_event
->     [OVERRIDE] old :1221169 new mv str mv
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 	 0.000 ( 0.013 ms): mv/1221169 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
->     [debug] deliver
-> 
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 	 0.000 ( 0.014 ms): :1221398/1221398 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
->     [debug] deliver
->     [debug] deliver
->     [debug] machine__process_comm_event
->     [OVERRIDE] old :1221398 new mv str mv
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 
-> Anyway, use --sort-events in BTF general tests to avoid :PID, a comm is
-> preferred.
-> 
-> [1]: https://lore.kernel.org/linux-perf-users/Z_AeswETE5xLcPT8@google.com/
-> 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/tests/shell/trace_btf_general.sh | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index e78e653fc8f1..a15cdb5fa309 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -27,7 +27,7 @@ check_vmlinux() {
->  
->  trace_test_string() {
->    echo "Testing perf trace's string augmentation"
-> -  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-> +  output="$(perf trace --sort-events -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
->    if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
->    then
->      printf "String augmentation test failed, output:\n$output"
-> @@ -38,7 +38,7 @@ trace_test_string() {
->  trace_test_buffer() {
->    echo "Testing perf trace's buffer augmentation"
->    # echo will insert a newline (\10) at the end of the buffer
-> -  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-> +  output="$(perf trace --sort-events -e write --max-events=1 -- echo "${buffer}" 2>&1)"
->    if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
->    then
->      printf "Buffer augmentation test failed, output:\n$output"
-> @@ -48,7 +48,7 @@ trace_test_buffer() {
->  
->  trace_test_struct_btf() {
->    echo "Testing perf trace's struct augmentation"
-> -  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-> +  output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
->    if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
->    then
->  	printf "BTF struct augmentation test failed, output:\n$output"
-> -- 
-> 2.45.2
-> 
+All warnings (new ones prefixed by >>):
+
+   drivers/net/ethernet/huawei/hinic3/hinic3_tx.c: In function 'hinic3_tx_poll':
+>> drivers/net/ethernet/huawei/hinic3/hinic3_tx.c:633:32: warning: variable 'nic_dev' set but not used [-Wunused-but-set-variable]
+     633 |         struct hinic3_nic_dev *nic_dev;
+         |                                ^~~~~~~
+
+
+vim +/nic_dev +633 drivers/net/ethernet/huawei/hinic3/hinic3_tx.c
+
+   625	
+   626	#define HINIC3_BDS_PER_SQ_WQEBB \
+   627		(HINIC3_SQ_WQEBB_SIZE / sizeof(struct hinic3_sq_bufdesc))
+   628	
+   629	bool hinic3_tx_poll(struct hinic3_txq *txq, int budget)
+   630	{
+   631		struct net_device *netdev = txq->netdev;
+   632		u16 hw_ci, sw_ci, q_id = txq->sq->q_id;
+ > 633		struct hinic3_nic_dev *nic_dev;
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
