@@ -1,116 +1,88 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AA8EEDE
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 20:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3478484A3E;
+	Sun, 18 May 2025 20:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747601025; cv=none; b=FmPbvaRXuBMf9Mtl7g5EqUBdfOHpmYnl331VF81sVU8hu+6JXkRCyR20g9HJEiK7hRBLQaTPBSH57tE1percWDTd6gaPEMQdSKoNUxMeamhjmTYV7XJmKNcm90rdGFwmreQVoWcIryPurzPFfY6u79Tptcs31HMlIm1eDleaKJM=
+	t=1747601344; cv=none; b=bWGqLxR76IBVjNHENffmQkaKokFTZx02mLtFJw1+j35ycl+Vpv11PJad9mOUQIGhls+jfzCj3lKacLKO1tfgouAuyGGXF2SsioO0TDHaXFuyB26Lx1DHkVtWXPviPs9bdablA4cX8P/1qjVsEPiF7zJ9y2pPAu3TOGPULo//RwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747601025; c=relaxed/simple;
-	bh=UTTljIQsb/KpGsJJRGfTkSAUt9OYUfQN6NFER4p2aMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KxkfehT3OfKSnioK0379MWQ3bmbCbl+M/WxarMBeSAEoHsUrLLVKJSOvqcOcnRxtECXdhmIoHewT7+mCM/9a7qhGqE3z5c4ggNVLxHfSj2OBfqiQ351VnjdtFYwRDdW+Hnb0LF5IimMrBPhpS4wNyzgXRqfoAO1f13rX+uDuXp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Xm/2m3X; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747601344; c=relaxed/simple;
+	bh=0yBC7bRe4qVVxZ12xJwqGcexHbwNiWma0CRK5WVbhSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aadiayy8zxcSX+d1jBAYDWPEZXXPSSyo0bpqhz7aJok1suEKOu5K17Lpzy1rfozu5prgWTE2psF2QKr3ZGwqy6Lbi/jrTg/SxEeooBouY0SJwn78H3WsT+oPaD0gGp4T+eZ2JIZy558IMKrCbQ4vh2q8VYK8t1JpfirfPy+jZVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9yu2JRQ; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Xm/2m3X"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-231ba6da557so207615ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 13:43:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9yu2JRQ"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30c1fe19b07so1027826a91.2;
+        Sun, 18 May 2025 13:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747601022; x=1748205822; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bh74PobViRerifxVNc+5npj74h3zxCkB9eoqU1AHUXo=;
-        b=0Xm/2m3XSbpAbUnoGhGyAbIcRoWZt0B5V4yakPy9PZDMHhK2kCa0wgm/j0S6Adchx5
-         oYQHJ7PsOoSA4UU4zDViP9pcg6ZuCr2irUwxNBrxHQS1tsuBdHUilfOZZdQ7UOsJpvOj
-         LgOEaP7D+4BEc/aYzQkidmLj8sq5xEmRUwff0V+ad+n+RCgQ525zuUmJfeKievXA6wyc
-         Smv2xRuozsXuQtWDtdBUqao+y/M+gyiplSA2QbeerDXYEwUuqzbtgVwIZzQHr+8Lbxea
-         KfFMYY1q6hD+TEUNvgdB0AzXdftdB+tXz1PJAjRmwt451Cv4++Q3ZsVQJIgh+LLWR5nh
-         fRRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747601022; x=1748205822;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1747601342; x=1748206142; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bh74PobViRerifxVNc+5npj74h3zxCkB9eoqU1AHUXo=;
-        b=wifPSjtSzMa5Pdf9ghRMmzO+CacW8YUSJ4IRpAHjmPvQ3tC7N7OSNn/0XkCirBOSdW
-         6Wbhr/KoojovLKSC801cKU+UHV6HlRc+0N5OCrMIYSnmLrL/7YTkfXEanArI0xpCiGDz
-         nyZOI5Ft/CRkani++/LsgAhCm8gBWpKxk3ZSRwmwvoscnnyS2FNhdtPqgtBkczC4OH52
-         FzrqDGNAvEqJyrBeLLWe/PjyIvnlKpDL7+CMUz8H+lti8IOOjZyMaiImwIiuFKCD5Dvl
-         jItD+fKq0OmqrljYwDLmhttyllFl/bNv5sFTcTHYAl0pGaUO2OpUSRobM8U/wj16ERvA
-         liaQ==
-X-Gm-Message-State: AOJu0Yyo8WKd/Hd2X8ZJA54A/S9AF7UvJW8JTRchsOgZ7nTLeyp5DG3R
-	0rFcncsThD2OD4Yp6m+GsamPQwnve4qrxR0pXLihU+s4IUq531pwRguGkSZfUdJ33g==
-X-Gm-Gg: ASbGncu51+4Dw4+OoR1jwV0NV/M/EUNda33EiTJOs/afwchlck9PZh/Ev3L23tqtXzq
-	YWmkGsJegPShOmsc7KVaMAXSJUQjZfOm+iaZohQnVD8zpIjoBRjLidr95aOWL8qKGAjZGJCjZtI
-	K1R+uVzdpJe3zkOjLyk2QU9IeDFtnpG787tJtZNMe2KNLMZfpqq/cxg/1NhDzObZhAmck6JiH9v
-	6rHpjcjR8hqXG0Mr/3WSyRmdLPPP4Hv5DoaoMnAL7284lxmaazIquFuHc7ILN2AR0fRjrQGh++4
-	XJG3GT7DDfJj0HZaNhTCqGHQK2/nQHIUEW/e+OMUp/riczPZgglo8tWqssYhM1eUcR+VEikZDpP
-	DajUiDx5AO6Gf93M/yH0=
-X-Google-Smtp-Source: AGHT+IG1ny58ekp00G+b5KDe/adeI3qwRhbfB3pLjESyAcGVOXMF8Xm1/8BFekrlUNyxD+rLis7E6A==
-X-Received: by 2002:a17:903:350d:b0:21b:b3c4:7e0a with SMTP id d9443c01a7336-232041436acmr2120875ad.13.1747601021894;
-        Sun, 18 May 2025 13:43:41 -0700 (PDT)
-Received: from google.com (3.32.125.34.bc.googleusercontent.com. [34.125.32.3])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084936sm4830392a12.56.2025.05.18.13.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 13:43:41 -0700 (PDT)
-Date: Sun, 18 May 2025 20:43:36 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Anish Moorthy <amoorthy@google.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Rename get_unused_fd_flags to get_unused_fd
-Message-ID: <aCpGePN3w0efNtpr@google.com>
-References: <20250515170945.278255-1-amoorthy@google.com>
+        bh=9Zd0GLeEPK487Dvj3alfl6jCAenMesDfjFoHpu+f9Xw=;
+        b=M9yu2JRQHhHkwBzLwIxEgSWswMnwM3uKAhnc8KeCiqQ7z3qoJYUaBLZZYe3nhjIaF7
+         EW55sRbFXmP4UCDeEu8Xp9e0XhxR+pq2++BOtnskF/udUmYYZcvAipKtV+CvTjPBwxkY
+         rrpQCwPEYopvvcyNme71qVqZy3pc+to5scf9WMebeuMdRcpze+cSnzzU4of4nl+0lqF0
+         KLoOJy7RkOwQQ+buFdg7von2bvLmOEZp7B+/oDRmh4pcLxKSMW6e0DfHL6MoRdN8rrIS
+         rD3g+slVlxZcO9+Ej67l7MAtu6xwCqX2kisiZ4KABwMi8iv2IUj2T14uTxt96rflxE/0
+         htNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747601342; x=1748206142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Zd0GLeEPK487Dvj3alfl6jCAenMesDfjFoHpu+f9Xw=;
+        b=N//v1XnOw7J85P6tEpsz1tp0uMpJp9Rz2tLR0+WDiA4P96qZQ41II8abVBeaYMJkJe
+         Jx6ahlb33ZCZHUL2On7BCifEf/GF6abKo//YpnAJxwllEMGC/Bytc7NheuR/eku13y40
+         Xl30oMKiEu6XpfjoyCbFWAJtbMz9360UMorsC/HYa6vnxYpEQpBzV+hKy2Ve98DJrZdq
+         vexqlY02x4GcPUDk8pn5iHRRU83q+20b8biORpaFI3zdMFWQUPpJDmZVee9FkbxW2MnG
+         6xPoxv4UW0NwdBDMVAE3LDIk2HORM8a+MffS9G0lvn6Vah/dLhXvUgUXeplhf7mAyolt
+         lByg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2bwJ2aOXTpaYM7gaIcimPb1FKp70jBexsRIWpc5c5/VSKceG78WX3kbAUWRgxxJ2XJ24BcRqvFBBUu08=@vger.kernel.org, AJvYcCWS8rr1eOHsIehdONYDAtsgCZ4dVQhQ/bmzuu1TFJLuHVP6uEbj5zA8uCM96leL4T5Fzu4lXwp5SEIvTIRRLI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY8vF6iaptIqN/T2pQuQsEgIfAdxzHHEFHM5PTv84IzTCMWUkc
+	mrgc1fItK//NSW8gO3WXtnrrsvnZ3KIV42L0skTkKjKi3pPWeB5v8tV9HONwmg689W8fLaoBl9f
+	kSY3tSx2kQrU4J95vitdF2e/xChEbTzQ=
+X-Gm-Gg: ASbGnctve2u/Sl3PUAoUL0GO7zJZZ3Q3w/rj+XFpDgVWxHvArl8OBGKc9GldPY1wcqo
+	5VmqwXt+Lyg8cQ4LBRR3MV7Q0z01OSOqTciA22hbVGaSb3qUlz72VmVUCZxCeaa5J1pMQsXwnNE
+	+CQGsWnAa2S3IqmbTKyMxUO0bkDg9RQZwE
+X-Google-Smtp-Source: AGHT+IF5E3L5ELq18Fv9jm2zjm7CFgeu4UdXbQZ16Y+RcrXplfnguHAg4W7ZPeDJOGSyJx/vWZSqdExs4Z+K9AqdRWA=
+X-Received: by 2002:a17:903:230b:b0:21b:b115:1dd9 with SMTP id
+ d9443c01a7336-231d43ad454mr62808115ad.5.1747601342427; Sun, 18 May 2025
+ 13:49:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515170945.278255-1-amoorthy@google.com>
+References: <87jz6uq9sm.fsf@kernel.org>
+In-Reply-To: <87jz6uq9sm.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 18 May 2025 22:48:49 +0200
+X-Gm-Features: AX0GCFu2utd7Rh-5rfaTX3OfvhBd3GMG4NCgKkEMoW3Xq8ufUiCZ1Yl-1B_M7zg
+Message-ID: <CANiq72k-4LWzb_27RAzDHL9FekMhUNNid3TvyQ9U9y4VEFz-Xw@mail.gmail.com>
+Subject: Re: [GIT PULL] Rust xarray for v6.16
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Tamir Duberstein <tamird@gmail.com>, 
+	Matthew Wilcox <willy@infradead.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 05:09:45PM +0000, Anish Moorthy wrote:
-> The current name can be misread as having something to do with unused
-> *flags*. And without a get_unused_fd() function already floating around,
-> it's easy to resolve this by dropping the suffix.
+On Tue, May 6, 2025 at 1:05=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+>   https://github.com/rust-for-linux/linux.git tags/rust-xarray-for-v6.16
 
-I don't understand the "unused flags" argument. Did you interpret the
-current naming as "get the flags not used by a certain fd"?
-
-Note there _used_ to be a get_unused_fd() that would take no arguments
-and thus the naming behind this _flags() version (just FYI).
-
-> I'm not sure if there's any appetite for refactors like this: they're tedious
-> for sure. I couldn't find any discouragement in the docs though, so I figured
-> I'd just post the patch and let it find me.
-
-If it helps, this kind of patches are usually tagged as "treewide:" and
-are often implemented using coccinelle scripts.
-
-Also, for this patch in particular I would:
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index 76052006bd87..e162d92e8c1d 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -4618,7 +4618,7 @@ static int binder_apply_fd_fixups(struct binder_proc *proc,
->  	int ret = 0;
->  
->  	list_for_each_entry(fixup, &t->fd_fixups, fixup_entry) {
-> -		int fd = get_unused_fd_flags(O_CLOEXEC);
-> +		int fd = get_unused_fd(O_CLOEXEC);
->  
->  		if (fd < 0) {
->  			binder_debug(BINDER_DEBUG_TRANSACTION,
-
-This is the only reason I found this patch (binder), and fwiw the
-renaming looks OK to me.
+Merged into `rust-next` -- thank you!
 
 Cheers,
-Carlos Llamas
+Miguel
