@@ -1,92 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58CA219319
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 12:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259F81D79BE;
+	Sun, 18 May 2025 12:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747570377; cv=none; b=IZ4x7QKQy4Vn7XnNifAAq/kbAPAGAFotPYLlTTwLZvv+hqgECtE3a15DSF7Vw1dGLrXmwHzvMs3lCk6d9aBjg12eQIbefmGHpfk+jduJJzVpoGzBEhFZOjvFWlKtqa6WPRApKMla6+TuPa+L70w/ssoSktfWfLWlGxPC2tJ/CW8=
+	t=1747570671; cv=none; b=cc1azdUxMzf6hLUI2wrIi+1WB5Pvf+6SgpDcI1GbriuXaz/0hYuVl55D0vTpKYlXA3x/fafdFNlCTCMTB8Gimm2FaDYw9oncHKEsgApNizKk7clT9CadJrzoxtoWXO32LjqWaOx+WR7pbXIL79RF2+h7FWBVgZHlyJwhoMKd5eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747570377; c=relaxed/simple;
-	bh=iTm8ah+P96IcLYj85YBN4c6VJTTCMNu75R3khsPbxgA=;
+	s=arc-20240116; t=1747570671; c=relaxed/simple;
+	bh=qRqEMjCS/5nwHP3iOK2qM2VlypMZTUXXI4Qr8RsEkQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DJhk+sf7FpYQ7lyy1zHN3vSeAVUaCRwfdGyPNeSia0UZARF5y9s180/Zo88gbNngZXB01H05cFAUv+AqTmf3fIlfENz5JVOKf48Qd9ZC0jnKbskfvwHqw/iy11FGC4bao6BepiEyPESNQisV+I5BA7o2i9oJlsT7CpMypcjPDI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OGy+Zr+J; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljJe4NC3a/w1roxJXQGo29IK9R7kxc/dXE6B9PXR8Xv1fF+5IviNU+pndVbkdT3HPxkrFUZEoBDFZk5WoiBJjcAYjha3ckOaYo0R8MzvJ/Gl1fo1S5S5OWIsroOhQVSRY10+JQAdrpM3LUs6p9E7m9Xu/j+Wj+BAc3eOfQQYzKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aq2Ze2bP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OGy+Zr+J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48F1C4CEE7;
-	Sun, 18 May 2025 12:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747570377;
-	bh=iTm8ah+P96IcLYj85YBN4c6VJTTCMNu75R3khsPbxgA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aq2Ze2bP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049C6C4CEE7;
+	Sun, 18 May 2025 12:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747570670;
+	bh=qRqEMjCS/5nwHP3iOK2qM2VlypMZTUXXI4Qr8RsEkQI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGy+Zr+JosWhneJp/mYL/IGewgqxErjpMwdiqhLJKEnIAqn0edLUx53v3lYT+kh5i
-	 FDxD9m4xIPu/cNyxKILMLOu0GBIN+gPmJYeeceQFDev+/hdfVBOkSZ1iPgaR7Z7oqQ
-	 ts8NJQKQKISWZluE1CaQ+Al48kizv7sl8FRUSKZw=
-Date: Sun, 18 May 2025 14:11:08 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jonathan Velez <jonvelez12345@gmail.com>
-Cc: Thinh.Nguyen@synopsys.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: usb: dwc3: add documentation of 'sg' field in
- dwc3_request struct
-Message-ID: <2025051805-astound-unaligned-db5c@gregkh>
-References: <20250518113330.8976-1-jonvelez12345@gmail.com>
- <2025051820-unspoiled-rift-31f8@gregkh>
- <C49E4FFB-81F5-40DF-8DD6-5BB4A3B782B7@gmail.com>
+	b=aq2Ze2bPRkgNX7YCXRuG29Zt0lbTfgdmEyoMcs9YgNE0gOzLNF9Fx9hL1lDTxuxpJ
+	 g7N9ePbcsH9YC+Kv4Evrw6aG5vXvZCpCCk5Evj8E36WIwKX+2ufa3u5zZKVkcwSW+k
+	 Bap6LJL1OY0tqL9arusHpeD7HkbreGC1HImH/mZHYi5WGS5bkycnA5oFXFhSeZ3U85
+	 wxowY1U12wBcgXPbZ4jbVwKeowZrHSolv+ZUOBDE1+R2GmxgeYD3OWz+U047/BW4JF
+	 Le/E7CzLLG8WH3VGWjbRvty6p6Ne03arzINzljL3pNrMVmazouGMMVOGTtzhws6ggT
+	 7SgVXrgyyRInQ==
+Date: Sun, 18 May 2025 13:17:45 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+Message-ID: <aCnP6QNDzCUUjplk@finisterre.sirena.org.uk>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yy5eHZ9GGsovGg5S"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C49E4FFB-81F5-40DF-8DD6-5BB4A3B782B7@gmail.com>
+In-Reply-To: <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+X-Cookie: Well begun is half done.
 
-On Sun, May 18, 2025 at 08:08:46AM -0400, Jonathan Velez wrote:
-> 
-> 
-> > On May 18, 2025, at 7:58 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > 
-> > On Sun, May 18, 2025 at 11:33:30AM +0000, Jonathan Velez wrote:
-> >> core: Add documentation of "sg" field in the dwc3_request struct.
-> >> 
-> >> Signed-off-by: Jonathan Velez <jonvelez12345@gmail.com>
-> >> ---
-> >> drivers/usb/dwc3/core.h | 1 +
-> >> 1 file changed, 1 insertion(+)
-> >> 
-> >> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> >> index f11570c8ffd0..bb140dde07d6 100644
-> >> --- a/drivers/usb/dwc3/core.h
-> >> +++ b/drivers/usb/dwc3/core.h
-> >> @@ -942,6 +942,7 @@ struct dwc3_hwparams {
-> >>  * @request: struct usb_request to be transferred
-> >>  * @list: a list_head used for request queueing
-> >>  * @dep: struct dwc3_ep owning this request
-> >> + * @sg: pointer to the scatter-gather list for transfers
-> >>  * @start_sg: pointer to the sg which should be queued next
-> >>  * @num_pending_sgs: counter to pending sgs
-> >>  * @remaining: amount of data remaining
-> > 
-> > What commit id does this fix?
->    I pulled the mainline and worked on the “for-next” branch. Is that the correct process? Should I be using the “master” branch instead?
-> > 
-> > And are you sure you made this against the right tree?  I do not see
-> > "sg" as a member of this stucture at all anymore.
->    This was the last commit on the “for-next” branch:
-> 
->    commit ffd294d346d185b70e28b1a28abe367bbfe53c04 
 
-That is the 6.13 release from way back on January 19.  I think a few
-other things have happened since then :)
+--yy5eHZ9GGsovGg5S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please work against either the development branch of the subsystem you
-are submitting changes for, OR against the linux-next tree which merges
-all subsystems together, so that you do not accidentally use an old
-tree.
+On Sun, May 18, 2025 at 11:28:01AM +0900, Alexandre Courbot wrote:
 
-thanks,
+> Alongside the `Enabled` and `Disabled` states, there would be a third
+> state (`Dynamic`?) in which the regulator could either be enabled or
+> disabled. This `Dynamic` state is the only one providing `enable` and
+> `disable` methods (as well as `is_enabled`) to change its operational
+> state without affecting its type.
 
-greg k-h
+Note that checking is_enabled() is a red flag, it's only there for
+bootstrapping purposes as drivers are probing where there's some
+different sequence might be needed - the use cases are quite limited,
+most drivers shold just enable the regulator and initialise the
+device.
+
+--yy5eHZ9GGsovGg5S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgpz+kACgkQJNaLcl1U
+h9DF+gf/TVClygl+BDj4B4tT1e8KwZkYd2ocZklLT273lJeHqA7LFayXjQggEfD3
+5/rIHZAtyfD87yPKMTToMaSrdGBnBfjCZsO6txpTWWzgSuCAzimH90IuDOROOFhq
+WX0Y1LeWaBLhZzbnMgOuy+tbNZ2ljm/8dGhhIQh3kbOwwWr+0S0nLQneK+0Vq9+I
+cb+zJ+kxP+Aq2vGaoqvXV3kvQ0jNSRyXBY1b07yosiPDHg1osJIvycv3rJOeGZP8
+ykymzFQetABgBBBLJI1cl3VUapglDrrmMPhjgnnr6wBSgyRBqspe52lGdZOcS+bX
+siiuaXJSZEC+qMw9PhoEotIb6jfJfQ==
+=vGWf
+-----END PGP SIGNATURE-----
+
+--yy5eHZ9GGsovGg5S--
