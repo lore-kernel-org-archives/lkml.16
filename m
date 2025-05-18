@@ -1,405 +1,260 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092D310942
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 20:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747600493; cv=none; b=ZRSogG9v7smLvRZm2u1cohHDF+63y1awHcQ8e44LInl9vblM3z544g+9sN2SKwb29zW+MYPrHEiwqzHwAHCbZqNfFX5wjVZTRob+5+sEpRMFDUKYfi2N/ZRH6UnY7kz0Eqw+FxwMcsJuwwVM/FsqE5HRI46y+2Hf2fYDZPmATuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747600493; c=relaxed/simple;
-	bh=WSsNm01pxkeftF3NCITGa6J1OdqzEuuSG7CXdoDV7gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F2yWd6J713O125v/lWvVZKTAkcC3ttdNvpdpiywJXGktLvHp4Dg1oNl+stZv0A9J+AwMfUXa03PqrstZmXFAZ8T85oDhL/uYFucV8kjk36vsAK9EqLq7dainPkpqEJi+f4c6/nqQtVnuSf7hBDOVG7IX8T5DmVRHCD4PKUK5ank=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JG7XNDgD; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB857126BFA;
+	Sun, 18 May 2025 20:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747600889; cv=fail; b=JkKERzZANoDR4r9v/oODYya953US8MBZjz8x6Zr0rTFJrqQ0ohaCGNhkCTh6fk3UH2scaq2lqcpj3lNzPNnZWTmOhf46GFJwzVs9wG4hN3/VmrLHvMEe31Aql9t4jzYY5v3OK5WYa+3ucvtvY6lZqKXhA7jUY+O9dRhOsVcM1rA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747600889; c=relaxed/simple;
+	bh=RXnQ7IVLW6e6BJw2dhGX9rBG5Q3NBxzADekOi02+qx8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SLzVtgc1Wj+ScCtwieCmp8mw1Wa+1lZyfel8g13bom+AiddVfjMBXn8oMRf2t9FC/HcDQR8oV4MvZ7PgOABgrpkm5RIGTT4/clUoUDPocXKmeFgoLRWiW1PEAoAO0yAKDTFb1yNcpPiV9NsxJQKUUfE/Q4romqL5sfQoxH8Wgqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ixcv5gQF; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JG7XNDgD"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30f0d8628c8so50485a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 13:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747600491; x=1748205291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EWhNfCK4LdUuP3r7G4UlkaN5kQmi7d0prUgJmFJpIeA=;
-        b=JG7XNDgDIqcn7EhUQ/dPePK3gAFzP6/QC4gYTpIjkSITaxIhu0Yb5CHaybz6p3qKRI
-         7dazSaBX1K0jW+OiLX7fizJye3FJIp9gTFBgvg1X6ucdfQffIVy976Vhufd9b1UaNvh1
-         V0IM6SHHQVQDngH+YTa4BZQeaiXHGVx/2CWZKhJRs06uwEV3DewKzjHV2dHPSMilv/Dy
-         J26JT2BxyAc9IlHaNlg6LdhRJcbVXJO1IhTqElm1xIgG9/eYIsh7vLDyrfDX6Ob3fA71
-         ce+RoyMmJmZOv6b+pYgILt5LMhTqYm9jv97uKZqltI0p6m28mMbPh+C+3KDNyD56Jj+U
-         ANKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747600491; x=1748205291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EWhNfCK4LdUuP3r7G4UlkaN5kQmi7d0prUgJmFJpIeA=;
-        b=avZdp0dzOY26qNc/KtXuHDuuwBPX/YaN3Iq+MpmUpYYldRLb1jYUqgbbU1mH4UW5e/
-         pVLujnP4ynuIar2B54sgPjrWAv1OL7felIaJ6Q9bpaKQZrm2FUXNjWsRqjF1VpWpZx+K
-         ocf1JXmpO6M0BTGd+f0iK5Cx/5ypoOTY/tcEnaXGTQ/ra1LI0QrQvi12wshrVxlFQ1tj
-         0t1DuWH07dKoPUCw0FFEI/iEfLqbB9yHPOQ1T82DnBsTx+lOv72aCzxcUzllokRyHRbp
-         sfoJd8VJF7qtzlaCn475sVTO0Vi++HCdUMUPH/mpSeZW1adOarKSa5ppAA+KaJzLf0u3
-         xZ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXHH6PG8mc5yuv0/SbFuzsnUq0CtVF23Jt5Eg0MyQzbMiO9mfAINmAJz20Vbtf9MntPAQr6UlqI8OBZp18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+ENVjzkCxvMtHlyPEYCDoDyzn7h5llKFDVvThv6D5CqmFuQNO
-	oNOlp3kNNYbH4UmqXkptXQEXd1ZaUHBfery21Vya0PhKHX7G93MKNJeGPE6fwB85wnnmmzMuIWQ
-	uwYKTYYK3gXKrT0O00udZzkSTVDl2ZAY=
-X-Gm-Gg: ASbGncsqSoeg/75zVryc5+W6QeBNBz4VQ9sM0Osid5E+f5wOulh6BHnHOU5suSuoqpu
-	MQVgW16KwBG1iVEhGzwABjdT37Zby5rsDs4s6mFMki48JZ/urtXlLWXWAeGV/9tUvXBupWEY0mc
-	adaZ2dcrJcK75u4h5sQanfgP8t7nwHPOMvIZXANcTvBEbAJXROzBvBzlgq2CH4Ztm4vUArJzpWk
-	5Op
-X-Google-Smtp-Source: AGHT+IHEp5gFBOTlrC1gFe3XsvR8vSroE5NqTQqNjLnr0QWv5krnL8KC2quosC5pX4/eNyFWy+5I0xYkXAQrBFPR4dA=
-X-Received: by 2002:a17:90a:d443:b0:30a:3e8e:ea30 with SMTP id
- 98e67ed59e1d1-30e4dbb703cmr20309842a91.11.1747600491006; Sun, 18 May 2025
- 13:34:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ixcv5gQF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747600888; x=1779136888;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=RXnQ7IVLW6e6BJw2dhGX9rBG5Q3NBxzADekOi02+qx8=;
+  b=ixcv5gQFEVCmXH5njghwn4y6WEejxLSGIPS2k762x/qyes35UJfjYhti
+   bUe6oSSjikOtMKaIs7RuiLxTed4AZI5NjRyI2KUWvn9CTr53JVhBYYcvM
+   aiIcwC4kLzJJ1r92vlqBEwkis18J2Z+NJcuXKX3JviXZLKDyUeOmsCxiY
+   kjLdyJkoBSlOiaozl2ffI2H9Ca4IhZMVnwk8h4WpAL5MKHp+iXAOKc22W
+   d4VFXdQUhB/8mTNZwinTASZxD6+KqDP6TN5ODSYhzyfVLkimIaM5is9RE
+   947jeGNhah0YY6FrQV7iOkiTIEmQWVEi8HNFq1lt1NWvYe5ZmrEB8dB/J
+   Q==;
+X-CSE-ConnectionGUID: dxmIuLt1RXCJZLwvQZ35HA==
+X-CSE-MsgGUID: kx++MrNGQaiIPztSCihZcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49563646"
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="49563646"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 13:41:27 -0700
+X-CSE-ConnectionGUID: QsjiSuF6TGqb6Q6Elno+mQ==
+X-CSE-MsgGUID: Ucu1cgXESIqBP/BXaEkjbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
+   d="scan'208";a="139030129"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 13:41:27 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 18 May 2025 13:41:26 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sun, 18 May 2025 13:41:26 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.48) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sun, 18 May 2025 13:41:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SJAwzJwFX4+Gr34GNyP6ArIZW33oIP2XLC1jI4zzZEdwUkIugy45MMb58aU+H8eExMcw1UrMaGg8zFWuvrDWr1FTlSUZcf/HGn6Gv5x1Xke/H58d8dpE6Xz+/TIPz36LHK0392H9RIuJlDctYogyOaPXNBeE1fxDoscYNr1wd/Ie4Hv5IIACX3astyfcRtXbuZz3ynn+FXeu25X3z3WX1NKaDVnKpvX35JEZEaRARo2i47IkCEh54d6mVbd6h5gWdDelBqTlFT6AG+rZMemJIdFtnIacaSIlStPJFFTgEkVyitZ5RT6ffcYa603GBtXc9w8cPeTnYd5DXvYvhaA5aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X1h7BebZZNJ6H6Wly6wiRvkn6kHGzib/lhQ7CCEPVF8=;
+ b=ZACt92gD7nmr6GrZAg/yUbPANLHPnJ+XwJzDvigQbcr2LjezgIrXDo/ABc02B4D899wtA6rvx2PkkMqc+TX4km7LDrLVOho/K+l4Q8fQ7983Ll4yVLU8C1wqz0ZCCVKfpdG2jW8uDBYs0zmEUI4XY2KpEA9g0X93fPyX4+h5jj009F/rrGWOvsleDSRLPG0rGpFCQeBJkTIP/NSFNog35Bl6N3TYP4US37JuMZmC7IJ7eDDllRjzkS7JDrDej8MwpNe63K2h/kvZwZ0pPe905TxipX9ZnSJgd2kQv3SwMfCu4w/b3wxXPKpJvuYzxAwaN2vujf+QIj4GXkMMtjTF9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH7PR11MB8121.namprd11.prod.outlook.com (2603:10b6:510:234::14)
+ by BL1PR11MB6050.namprd11.prod.outlook.com (2603:10b6:208:392::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Sun, 18 May
+ 2025 20:41:10 +0000
+Received: from PH7PR11MB8121.namprd11.prod.outlook.com
+ ([fe80::ec4e:64cf:cf1f:daab]) by PH7PR11MB8121.namprd11.prod.outlook.com
+ ([fe80::ec4e:64cf:cf1f:daab%6]) with mapi id 15.20.8722.031; Sun, 18 May 2025
+ 20:41:10 +0000
+From: "Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "hannes@cmpxchg.org"
+	<hannes@cmpxchg.org>, "yosry.ahmed@linux.dev" <yosry.ahmed@linux.dev>,
+	"nphamcs@gmail.com" <nphamcs@gmail.com>, "chengming.zhou@linux.dev"
+	<chengming.zhou@linux.dev>, "usamaarif642@gmail.com"
+	<usamaarif642@gmail.com>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>, "ying.huang@linux.alibaba.com"
+	<ying.huang@linux.alibaba.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "senozhatsky@chromium.org"
+	<senozhatsky@chromium.org>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "ebiggers@google.com" <ebiggers@google.com>,
+	"surenb@google.com" <surenb@google.com>, "Accardi, Kristen C"
+	<kristen.c.accardi@intel.com>, "Gomes, Vinicius" <vinicius.gomes@intel.com>,
+	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>, "Gopal, Vinodh"
+	<vinodh.gopal@intel.com>, "Sridhar, Kanchana P"
+	<kanchana.p.sridhar@intel.com>
+Subject: RE: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
+ batching support in acomp & drivers.
+Thread-Topic: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
+ batching support in acomp & drivers.
+Thread-Index: AQHbwFE+HzcrM8vfg0+DcWZ2l00PSLPQOoKAgAVp/tCAAGUCAIAC3Yvg
+Date: Sun, 18 May 2025 20:41:10 +0000
+Message-ID: <PH7PR11MB8121A80EE57CD2FA015A66B4C99DA@PH7PR11MB8121.namprd11.prod.outlook.com>
+References: <20250508194134.28392-1-kanchana.p.sridhar@intel.com>
+ <20250508194134.28392-11-kanchana.p.sridhar@intel.com>
+ <aCL86_v0jaqW8jxS@gondor.apana.org.au>
+ <PH7PR11MB81215CF69F51F2801F4767CDC993A@PH7PR11MB8121.namprd11.prod.outlook.com>
+ <aCfcTpLgFp4lPaZK@gondor.apana.org.au>
+In-Reply-To: <aCfcTpLgFp4lPaZK@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB8121:EE_|BL1PR11MB6050:EE_
+x-ms-office365-filtering-correlation-id: 72772d86-0f30-497f-054f-08dd964c5299
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?imvpz+o8qR6Kja8ao7RAEXWMZYHnSn1RBGvpeEbMnhTrHqeOstuDy8WUA79X?=
+ =?us-ascii?Q?fci25xv9liDQAUEDAoyXeaWE6tf10+TrpFQ4BnfbYVMn9O/MbYzvgH1ccfFP?=
+ =?us-ascii?Q?qwRlkxYWqPY4clrb8Vhh9J1il1vLFdy/0fi/A3iv9TNj31wWFM3K/fHGIDHE?=
+ =?us-ascii?Q?dfiZM0jOQB2LR4fG2BNmWoarYZCLXwgoQymx+sXSoJYZM9WUrFm9uD+7Ubtm?=
+ =?us-ascii?Q?TGi6tgXRsoNIL1ynI0WEJiXbTpvR3iziB7/3QizMz+oz2NBGHnkQNQvx6VUS?=
+ =?us-ascii?Q?j1aT/wOK/mAMX10NRpdwmZwWJStOQp9y2oPS3+8779DX+yBmccrKbpz8UasK?=
+ =?us-ascii?Q?hiPuQRBoMnVYc3FFvgn7xDVygDReTOCxZrj68vc8OuNNgZUGXnR+eU+Hi61c?=
+ =?us-ascii?Q?KXdwTPHVg5Ie/g4T93iAXt4Emk2/KZ3Mk95M9adqX7IsgzmQ6rJb86G9gHup?=
+ =?us-ascii?Q?cqkEthGAA7kQFOMa1XSCbrrKDPf79/xw/khHBU9gu2bxtSAfVLC0MBYOCCxw?=
+ =?us-ascii?Q?voifyTVislKyzZBMU1zqauo2VlI3VXJUGt05EDROftawWPr58KxuvIATjKgg?=
+ =?us-ascii?Q?UdIBMTB6eidNf61BNLb3K0/WUCb6etPjbMhNhTVgWycpqiXNjuEA5dy3p9l9?=
+ =?us-ascii?Q?6JOl0JUsEcGfwNO3VdRO71kSjvkH08mvX41W+HNtBw74HQQREjyNDiR2tLil?=
+ =?us-ascii?Q?R0ELAAEc9KJaxByySAepRNfgYDaDPhgm/GO0hDOwP7Av265CqDvkbARDq4RQ?=
+ =?us-ascii?Q?2QxBSJN261p+NTPkyge+mm+ZWJVgaDgmECkj82RC6tZazs1UVTWT1nEBHBB0?=
+ =?us-ascii?Q?0ObYaPiVnZH1JVpuQCEZUcHMa/nsapukrvumUM5doAKEHbSrmTaIU/eOIQhs?=
+ =?us-ascii?Q?8YF9xICz8mh++z+SEyeUQUBi6Wb5MWB0aBBLNhJV2hw+XMnz+5EFj9wKHkyq?=
+ =?us-ascii?Q?g85T8aQUEu8AP7xPDJwUYPAG0fyEDyw/AXEX7tpsjgOt65WVR0cWL3gGWKxe?=
+ =?us-ascii?Q?AGwkdtk6IdplDbEH1200lF0hxU6vWa20ehEyIfut4OUsotMKUJia42hTQFIL?=
+ =?us-ascii?Q?M6l+7BvIvpSv0rVtbbli22vru7igN83UYFtrNgZ8ZTlR9tQjltNpMPg5cD6m?=
+ =?us-ascii?Q?AbIqnexcylrocbs/KmiGUupZJr91yrobbqejBQredNgwxOCLXxQvrRJI5uJm?=
+ =?us-ascii?Q?OgXtyT1/kGOwWj0mvom95OFDMuR+c54xZqEe4yFeqtE/SySNsAWabFdp9/m2?=
+ =?us-ascii?Q?liNH+7ZxawcdHiwcXBNMztt1W0dfFcXsZ55/1z81p4uBqh2ZMBbm23tQhc83?=
+ =?us-ascii?Q?UvufaVBSlVCw3haGISHhxZy19DZXyXEDvV8RG9S3vFLVSESLr4EX7I0I7ipI?=
+ =?us-ascii?Q?MhSH15Sgd83+j5x1es07AXdasCnCIyGizKlgvDXHloUKiPpvb7FaS+FNl8pN?=
+ =?us-ascii?Q?nGMdJ1PyvUO5SFmtxhrAdiBdzLVM75QDt//hyfLb3YpcD5ebU2PMDAk74rqy?=
+ =?us-ascii?Q?EUA2INSnAkotYyY=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8121.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UXyFVxC6U2pskCjBzgN7HXKa7S+zPv1eoHJjQNM3bktS1TvpEH1KnJitf2Gx?=
+ =?us-ascii?Q?bkiDdhfhfpp7gLaavQxZ9OHLxGK1f5z+GsGt2LCc1cZU1MkPtAMnh2OqxZZT?=
+ =?us-ascii?Q?qAWJhqdG5GRL71zybDoP3MJRK68rgAe/gmXCEzxXRL8ACBkv+u9p48Dcp4/P?=
+ =?us-ascii?Q?ApjEJNeHG9GEwKlzvVTCO+6UbBpwgWR6/j67tKrWolK0qMgDeLz5jgQuZUV2?=
+ =?us-ascii?Q?JlR9kNbysBufhpO2B4rA8QlVOmOxVXHlIFPUSJqs7Rmbw5uzBO5DXAy2JCOK?=
+ =?us-ascii?Q?2mlIqKMES67pYoMqvn6Taf/OMwZkS651HbB19PuuUNAKt6aVEulAq+XDFMve?=
+ =?us-ascii?Q?JLd6wQWZ1ofnUBsA/KEoOay31+b3IRJfBy+q1/vNcXRF9TiUjiwmPbFD1Z+g?=
+ =?us-ascii?Q?BR1yvMk9DNSZQ7l95eM5FzEEpNr40Bu3GGipAgoW3+wDDZJjsF8V8PiZj6NF?=
+ =?us-ascii?Q?oh+CWKuKKsHHYaT6iexqttneUTdaYZnOlHqHWr8yPmFplnSu3vKssNXSbpVq?=
+ =?us-ascii?Q?SagjcqGmQ90XMOsgLCsv2cphPogWKB2YGV2+uzRtkUy5QAFBUDdZgoEPf5+X?=
+ =?us-ascii?Q?n46xdln3Aks8xnTtuuEUGGobwqJVSULlcz6Ki+xn3ZyILxUxhq0wLATn7+bM?=
+ =?us-ascii?Q?vjGqpelFCy9Wl3946FnOTXNZ5FadfftF9AiOlu7Rm9suiiJNMZyYMbd6wYfJ?=
+ =?us-ascii?Q?7KR481pPvI0cIz9UAtP5ko2ohC1gjZF0sfGty5aWzv2mVjvYdBSud9IDhzSw?=
+ =?us-ascii?Q?+mt4ND+54EuAZ46qgChNWOUbOVardE49xtvtT/eNW4EgNeYymTHRVbybNh2e?=
+ =?us-ascii?Q?t6vcaAxA6fZm+6YQExhVjhlaQhnqqSUwaLVQKGKENlO4q+Yp/s01ZpkptDf8?=
+ =?us-ascii?Q?ZG/MdACb+E1Bgh2pY6tWmDLXMKD+Py/oN+r4ooCHdfYQ58QyHI4Ds73wAlZ7?=
+ =?us-ascii?Q?YeiATf2bef4nSETAPB0567jHhxl0jvBkrdWCfxenv7G3A2b33I4guX/Pdja6?=
+ =?us-ascii?Q?rf46/sBAbqFjLs+M/XbzAg0IwIxm+ViwF1TorHQo+PH7y7TCp81wyEXZAzgP?=
+ =?us-ascii?Q?78W/bybRXmtu7o+ax3qlQxMAMo10e+PdcbjW8xzk13ezRuEOijTzhC4ki1V3?=
+ =?us-ascii?Q?NBoB2ub3yWGGeU8YHRQEO5cSnkihsSl1fBlTrg8P6VWETN6iFbxi/NkThwtt?=
+ =?us-ascii?Q?182Gc7lkIL4JinG3M//ME3lAPxDo4rNezJ98b6l+lAkn722QE/zcVU/PsvsT?=
+ =?us-ascii?Q?1t9SZy3KQ9iD5hzCbFk/Wok3qSvDDdVkFmHaZjUGQGVvZsBBwQKhkEUmQj5b?=
+ =?us-ascii?Q?Vet43dCh7Q/ZRQPnxlY8nAkg3voqOQTcv7ZhpRfywopMtUI6iAZ3z0nTxz8B?=
+ =?us-ascii?Q?G3Gz6MDGvsml7KT9sTsJMSw2MOQsvDf6fPXH3DP5+g3gnngnsf2zRGTEa4GP?=
+ =?us-ascii?Q?BHfA8bwwOG+JJffcQ3hILZrj2qDjMrSHFbWDTABhq/hmHgRVcf/hHXI8PKQg?=
+ =?us-ascii?Q?IE6PicIhuz1cfD1qaCjMdw4PFq4M8KJn1V7FbvOUIJXg2520qVkqlq2jIS0C?=
+ =?us-ascii?Q?+zvQUfnanmlXiGbsTfX7+PfJWytsdgFzams772kAZEOa9gm+2TkgM1hTnLQ0?=
+ =?us-ascii?Q?Fg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515050759.1016697-1-noltari@gmail.com> <87o6vsd3tb.fsf@bootlin.com>
-In-Reply-To: <87o6vsd3tb.fsf@bootlin.com>
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Sun, 18 May 2025 22:34:18 +0200
-X-Gm-Features: AX0GCFueMbRuv_RmP-te6KhcSEUkExFNQiwMHNEtyly-HvLbWYtEfOPF5gZn4DY
-Message-ID: <CAKR-sGfyHRzN5s8K10=g=kT_j2KLvfMSYyoPsLN_Q2n7pOhp+A@mail.gmail.com>
-Subject: Re: [PATCH v4] mtd: rawnand: brcmnand: legacy exec_op implementation
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: linux-mtd@lists.infradead.org, dregan@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, florian.fainelli@broadcom.com, 
-	rafal@milecki.pl, computersforpeace@gmail.com, kamal.dasu@broadcom.com, 
-	dan.beygelman@broadcom.com, william.zhang@broadcom.com, 
-	frieder.schrempf@kontron.de, linux-kernel@vger.kernel.org, vigneshr@ti.com, 
-	richard@nod.at, bbrezillon@kernel.org, kdasu.kdev@gmail.com, 
-	jaimeliao.tw@gmail.com, kilobyte@angband.pl, jonas.gorski@gmail.com, 
-	dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8121.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72772d86-0f30-497f-054f-08dd964c5299
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2025 20:41:10.3647
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WGxxGxlPq9R5Xuj76x/qYnE4/i1Yo2BEIeceRGjU8ur4R1/tWVlk2YHqkymo7miQ2/jcArOaJpqVeMVPXrbOcjSxE6L4dXaU6Kv8tXJT+Ow=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB6050
+X-OriginatorOrg: intel.com
 
-Hi Miquel,
 
-El vie, 16 may 2025 a las 16:32, Miquel Raynal
-(<miquel.raynal@bootlin.com>) escribi=C3=B3:
->
-> Hello Alvaro,
->
-> On 15/05/2025 at 07:07:59 +02, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@=
-gmail.com> wrote:
->
-> > Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> > removed legacy interface functions, breaking < v5.0 controllers support=
-.
-> > In order to fix older controllers we need to add an alternative exec_op
-> > implementation which doesn't rely on low level registers.
-> >
-> > Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->
-> Since you have a precise list of what is supported and what's not, I'd
-> have expected the rest of the behavior to be identical. Are these
-> controllers so different in how to program them? Can't we use the
-> existing exec_op() implementation without some of the opcodes?
-
-As David confirmed, the low level operation registers aren't working
-on v4.0 controllers and they don't even exist on v2.1/2.2 controllers.
-BTW, I don't have a precise list of what's supported, I'm just playing
-trial and error here in order to get older controllers working again.
-
->
->
-> > +/* Native command conversion */
->
-> Should mention "legacy" somewhere I guess, and even what legacy means in
-> this context, which is version(controller) < XXX.
-
-Ok, I will add it on v5.
-
->
-> > +static const u8 native_cmd_conv[] =3D {
-> > +     [NAND_CMD_READ0]        =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READ1]        =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_RNDOUT]       =3D CMD_PARAMETER_CHANGE_COL,
-> > +     [NAND_CMD_PAGEPROG]     =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READOOB]      =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_ERASE1]       =3D CMD_BLOCK_ERASE,
-> > +     [NAND_CMD_STATUS]       =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_SEQIN]        =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_RNDIN]        =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READID]       =3D CMD_DEVICE_ID_READ,
-> > +     [NAND_CMD_ERASE2]       =3D CMD_NULL,
-> > +     [NAND_CMD_PARAM]        =3D CMD_PARAMETER_READ,
-> > +     [NAND_CMD_GET_FEATURES] =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_SET_FEATURES] =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_RESET]        =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READSTART]    =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READCACHESEQ] =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_READCACHEEND] =3D CMD_NOT_SUPPORTED,
-> > +     [NAND_CMD_RNDOUTSTART]  =3D CMD_NULL,
-> > +     [NAND_CMD_CACHEDPROG]   =3D CMD_NOT_SUPPORTED,
-> > +};
-> > +
-> >  /* Controller feature flags */
-> >  enum {
-> >       BRCMNAND_HAS_1K_SECTORS                 =3D BIT(0),
-> > @@ -237,6 +262,10 @@ struct brcmnand_controller {
-> >       /* List of NAND hosts (one for each chip-select) */
-> >       struct list_head host_list;
-> >
-> > +     /* Function to be called from exec_op */
-> > +     int (*exec_instr)(struct nand_chip *chip,
-> > +                       const struct nand_operation *op);
-> > +
-> >       /* EDU info, per-transaction */
-> >       const u16               *edu_offsets;
-> >       void __iomem            *edu_base;
-> > @@ -2490,14 +2519,152 @@ static int brcmnand_op_is_reset(const struct n=
-and_operation *op)
-> >       return 0;
-> >  }
-> >
-> > +static int brcmnand_exec_instructions(struct nand_chip *chip,
-> > +                                   const struct nand_operation *op)
-> > +{
-> > +     struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> > +     unsigned int i;
-> > +     int ret =3D 0;
-> > +
-> > +     for (i =3D 0; i < op->ninstrs; i++) {
-> > +             ret =3D brcmnand_exec_instr(host, i, op);
-> > +             if (ret)
-> > +                     break;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
-> > +                                          const struct nand_operation =
-*op)
-> > +{
-> > +     struct mtd_info *mtd =3D nand_to_mtd(chip);
-> > +     struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> > +     struct brcmnand_controller *ctrl =3D host->ctrl;
-> > +     const struct nand_op_instr *instr;
-> > +     unsigned int i, j;
-> > +     u8 cmd =3D CMD_NULL, last_cmd =3D CMD_NULL;
-> > +     int ret =3D 0;
-> > +     u64 last_addr;
-> > +
-> > +     for (i =3D 0; i < op->ninstrs; i++) {
-> > +             instr =3D &op->instrs[i];
-> > +
-> > +             if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
->
-> Could we use a switch case here? Seems more appropriate.
-
-I would rather keep this as an if/else in order to prevent more
-indentation or having to define the variables on top.
-
->
-> > +                     cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
-> > +                     if (cmd =3D=3D CMD_NOT_SUPPORTED) {
-> > +                             dev_err(ctrl->dev, "unsupported cmd=3D%d\=
-n",
-> > +                                     instr->ctx.cmd.opcode);
-> > +                             ret =3D -EOPNOTSUPP;
-> > +                             break;
-> > +                     }
-> > +             } else if (instr->type =3D=3D NAND_OP_ADDR_INSTR) {
-> > +                     u64 addr =3D 0;
-> > +
-> > +                     if (cmd =3D=3D CMD_NULL)
-> > +                             continue;
-> > +
-> > +                     if (instr->ctx.addr.naddrs > 8) {
-> > +                             dev_err(ctrl->dev, "unsupported naddrs=3D=
-%u\n",
-> > +                                     instr->ctx.addr.naddrs);
-> > +                             ret =3D -EOPNOTSUPP;
-> > +                             break;
-> > +                     }
-> > +
-> > +                     for (j =3D 0; j < instr->ctx.addr.naddrs; j++)
-> > +                             addr |=3D (instr->ctx.addr.addrs[j]) << (=
-j << 3);
-> > +
-> > +                     if (cmd =3D=3D CMD_BLOCK_ERASE)
-> > +                             addr <<=3D chip->page_shift;
-> > +                     else if (cmd =3D=3D CMD_PARAMETER_CHANGE_COL)
-> > +                             addr &=3D ~((u64)(FC_BYTES - 1));
-> > +
-> > +                     brcmnand_set_cmd_addr(mtd, addr);
-> > +                     brcmnand_send_cmd(host, cmd);
-> > +                     last_addr =3D addr;
-> > +                     last_cmd =3D cmd;
-> > +                     cmd =3D CMD_NULL;
-> > +                     brcmnand_waitfunc(chip);
->
-> Waitfunc is a legacy interface, are you sure this is the correct
-> function call here?
-
-I guess this is correct because brcmnand_waitfunc is still used after
-each brcmnand_send_cmd call that we still have on the current code...
-
->
-> > +
-> > +                     if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> > +                         last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
-> > +                             /* Copy flash cache word-wise */
-> > +                             u32 *flash_cache =3D (u32 *)ctrl->flash_c=
-ache;
-> > +
-> > +                             brcmnand_soc_data_bus_prepare(ctrl->soc, =
-true);
-> > +
-> > +                             /*
-> > +                              * Must cache the FLASH_CACHE now, since =
-changes in
-> > +                              * SECTOR_SIZE_1K may invalidate it
-> > +                              */
-> > +                             for (j =3D 0; j < FC_WORDS; j++)
-> > +                                     /*
-> > +                                      * Flash cache is big endian for =
-parameter pages, at
-> > +                                      * least on STB SoCs
-> > +                                      */
-> > +                                     flash_cache[j] =3D be32_to_cpu(br=
-cmnand_read_fc(ctrl, j));
-> > +
-> > +                             brcmnand_soc_data_bus_unprepare(ctrl->soc=
-, true);
-> > +                     }
-> > +             } else if (instr->type =3D=3D NAND_OP_DATA_IN_INSTR) {
-> > +                     u8 *in =3D instr->ctx.data.buf.in;
-> > +
-> > +                     if (last_cmd =3D=3D CMD_DEVICE_ID_READ) {
-> > +                             u32 val;
-> > +
-> > +                             if (instr->ctx.data.len > 8) {
-> > +                                     dev_err(ctrl->dev, "unsupported l=
-en=3D%u\n",
-> > +                                             instr->ctx.data.len);
-> > +                                     ret =3D -EOPNOTSUPP;
-> > +                                     break;
-> > +                             }
-> > +
-> > +                             for (j =3D 0; j < instr->ctx.data.len; j+=
-+) {
-> > +                                     if (j =3D=3D 0)
-> > +                                             val =3D brcmnand_read_reg=
-(ctrl, BRCMNAND_ID);
-> > +                                     else if (j =3D=3D 4)
-> > +                                             val =3D brcmnand_read_reg=
-(ctrl, BRCMNAND_ID_EXT);
-> > +
-> > +                                     in[j] =3D (val >> (24 - ((j % 4) =
-<< 3))) & 0xff;
-> > +                             }
-> > +                     } else if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> > +                                last_cmd =3D=3D CMD_PARAMETER_CHANGE_C=
-OL) {
-> > +                             u64 addr;
-> > +                             u32 offs;
-> > +
-> > +                             for (j =3D 0; j < instr->ctx.data.len; j+=
-+) {
-> > +                                     addr =3D last_addr + j;
-> > +                                     offs =3D addr & (FC_BYTES - 1);
-> > +
-> > +                                     if (j > 0 && offs =3D=3D 0)
-> > +                                             nand_change_read_column_o=
-p(chip, addr, NULL, 0,
-> > +                                                                      =
-  false);
-> > +
-> > +                                     in[j] =3D ctrl->flash_cache[offs]=
+> -----Original Message-----
+> From: Herbert Xu <herbert@gondor.apana.org.au>
+> Sent: Friday, May 16, 2025 5:46 PM
+> To: Sridhar, Kanchana P <kanchana.p.sridhar@intel.com>
+> Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org;
+> hannes@cmpxchg.org; yosry.ahmed@linux.dev; nphamcs@gmail.com;
+> chengming.zhou@linux.dev; usamaarif642@gmail.com;
+> ryan.roberts@arm.com; 21cnbao@gmail.com;
+> ying.huang@linux.alibaba.com; akpm@linux-foundation.org;
+> senozhatsky@chromium.org; linux-crypto@vger.kernel.org;
+> davem@davemloft.net; clabbe@baylibre.com; ardb@kernel.org;
+> ebiggers@google.com; surenb@google.com; Accardi, Kristen C
+> <kristen.c.accardi@intel.com>; Gomes, Vinicius <vinicius.gomes@intel.com>=
 ;
-> > +                             }
-> > +                     }
-> > +             } else if (instr->type =3D=3D NAND_OP_WAITRDY_INSTR) {
-> > +                     ret =3D bcmnand_ctrl_poll_status(host, NAND_CTRL_=
-RDY, NAND_CTRL_RDY, 0);
-> > +                     if (ret)
-> > +                             break;
-> > +             } else {
-> > +                     dev_err(ctrl->dev, "unsupported instruction type:=
- %d\n", instr->type);
-> > +                     ret =3D -EINVAL;
->
-> EOPNOTSUPP I guess?
-
-Ok, I will change that on v5.
-
->
-> > +                     break;
-> > +             }
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static int brcmnand_exec_op(struct nand_chip *chip,
-> >                           const struct nand_operation *op,
-> >                           bool check_only)
-> >  {
-> >       struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> > +     struct brcmnand_controller *ctrl =3D host->ctrl;
-> >       struct mtd_info *mtd =3D nand_to_mtd(chip);
-> >       u8 *status;
-> > -     unsigned int i;
-> >       int ret =3D 0;
+> Feghali, Wajdi K <wajdi.k.feghali@intel.com>; Gopal, Vinodh
+> <vinodh.gopal@intel.com>
+> Subject: Re: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitat=
+e
+> batching support in acomp & drivers.
+>=20
+> On Fri, May 16, 2025 at 07:17:36PM +0000, Sridhar, Kanchana P wrote:
 > >
-> >       if (check_only)
-> [adding one more context line]
->                  return 0;
->
-> There is a lot that is unsupported, and this is okay, but you need to
-> control all these earlier and implement a function that does all the
-> checks when exec_op() is called with the check_only parameter set (just
-> above). The support for the old SoCs *must* not return 0 by default and
-> instead check the validity of the op when requested.
+> > It appears acomp_do_req_chain() and acomp_reqchain_finish() compress
+> the
+>=20
+> That's the fallback path.
+>=20
+> A hardware driver capable of batching is supposed to declare the
+> bit in cra_flags that bypasses the fallback.
 
-Ok, I will add that in v5.
+IIUC, are you referring to the "CRYPTO_ALG_REQ_SEG" cra_flags bit?
 
->
-> > @@ -2525,11 +2692,7 @@ static int brcmnand_exec_op(struct nand_chip *ch=
-ip,
-> >       if (op->deassert_wp)
-> >               brcmnand_wp(mtd, 0);
-> >
-> > -     for (i =3D 0; i < op->ninstrs; i++) {
-> > -             ret =3D brcmnand_exec_instr(host, i, op);
-> > -             if (ret)
-> > -                     break;
-> > -     }
-> > +     ret =3D ctrl->exec_instr(chip, op);
-> >
-> >       if (op->deassert_wp)
-> >               brcmnand_wp(mtd, 1);
-> > @@ -3142,6 +3305,12 @@ int brcmnand_probe(struct platform_device *pdev,=
- struct brcmnand_soc *soc)
-> >       if (ret)
-> >               goto err;
-> >
-> > +     /* Only v5.0+ controllers have low level ops support */
-> > +     if (ctrl->nand_version >=3D 0x0500)
->
-> Did I just read that 4 or 4.1 was the correct boundary instead of 5?
+If a hardware driver sets this bit, then crypto_acomp_req_seg() will
+return "true" in crypto_acomp_compress() and the folio will be compressed
+as one unit by the call to " crypto_acomp_reqtfm(req)->compress(req)":
 
-David has confirmed that this is correct.
+int crypto_acomp_compress(struct acomp_req *req)
+{
+	struct crypto_acomp *tfm =3D crypto_acomp_reqtfm(req);
 
->
-> > +             ctrl->exec_instr =3D brcmnand_exec_instructions;
-> > +     else
-> > +             ctrl->exec_instr =3D brcmnand_exec_instructions_legacy;
-> > +
-> >       /*
-> >        * Most chips have this cache at a fixed offset within 'nand' blo=
-ck.
-> >        * Some must specify this region separately.
->
-> Thanks,
-> Miqu=C3=A8l
+	if (acomp_req_on_stack(req) && acomp_is_async(tfm))
+		return -EAGAIN;
+	if ((crypto_acomp_req_virt(tfm) || acomp_request_issg(req)) &&
+	    (crypto_acomp_req_seg(tfm) || !acomp_request_isunit(req)))
+		return crypto_acomp_reqtfm(req)->compress(req);
+	return acomp_do_req_chain(req, true);
+}
+EXPORT_SYMBOL_GPL(crypto_acomp_compress);
+
+If so, then we still have not addressed the issue highlighted in [1], pleas=
+e
+correct me if I am wrong:
+
+[1]: https://lore.kernel.org/all/CAKEwX=3DPRzZEYOuTECjjqYbUDXUjMzOc-R5s14-i=
+X8qevDxGBpA@mail.gmail.com/
+
+Can you please advise?
+
+Thanks,
+Kanchana
+
+
