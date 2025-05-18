@@ -1,248 +1,165 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928481F3BA9
-	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 05:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747547304; cv=fail; b=i4VxoGUlCo8Km/O8GfngSoTssFxf0qPQB/zBRT9ylndBeqaPIRBK7k/EgK/WzwLMVdtWLIkfPP/UR6ZaZwTdouJ1aaIK2ehayNGHwV4IrCWLxUNyrDORjTYkSwlsMUmm8DLhDw3k2BDqnFLIPZm2FhZ+2oBDEJmYEP4bgNWCq10=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747547304; c=relaxed/simple;
-	bh=khaLw+yiCVM9D31l0Qe33WNBhSqy7NhfLR8v3nwBWfs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FmL89OOkh9Texh1r3xxqR1xZ1lS874KQwjsot1HZ5KW7tfmtusewo05r8aurZHZ8TTCtj791XEkKQfbH10yzrXZfjrUoE/UFAuMOU3wr59ft6pSqTUoSe2l8t17V36aeG4wBXyZsD2cMchwMEEjxebiWNdgI3lZjoNV6m/kG2hw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DikQ1xfC; arc=fail smtp.client-ip=40.107.237.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6951CEEBE
+	for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 05:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747547345; cv=none; b=GxiWbginEampMH0KzDoJ0SH/fNjrEi1xudGrvWFzFlWyQ2kNOl4atkBC8YQINE6SD6epW9On6/qf9uv4AAQy+7YJepuE5K0+LIhgY1Fgzt42VSnLAd//JtlzGE0KTHEllswI/Diz9Q0W7I7ms9YYanWGaYKoWApQlCVGfT0SO9M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747547345; c=relaxed/simple;
+	bh=eZBpP6KfUKXCXO83nQ/GJ5KM078e67pg7DbDDBqWLsc=;
+	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=LhS5xyXj8NEufuVNyb3IxhMQYKPTD1wLaRkMYWiBJXuLv9Yd9XyOki7bFRR4d1dHvS8qcMlA32Q7W+ZdquJvR0rtsXAayUrrRB2Tw5/ksKVf/DfxJ8Qhz9yIVE0Gr6wkBwBVggEohIV4TskN8zGDHS1b1DqdRpUNtJNiPcnC2lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YUMI9ALZ; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DikQ1xfC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wKqZ0KqCirE3XU8jLWxr3SPvESAdWk19fA7KSt+TnjhUVSv17e+aYCA6BUjERbUh8aettZkmBphhcP7H1Dqi1A+oZAqJTskETeJu9Dc4TyAQ5osiv0aYQHdWevSfBXlg+AoIRUzCJIvduiMaENreYdQLUOnwO82yKnbIl4ZyES+rJcM5aVv67gqIGXcAUVMIBcS4EUaJ2HXWDhkQ1jiXiojBMQfzj6lxPeXlNwDHsTyZJ45SQv6II7lfQeZzto8c/qZ31E5Ukt4oOQHMdyxfb/rD9SMA2wTHgxpTX58MokKQ4xPKoK42RDcZVB5tN3KHjSrQ9gQ+enAlCy48Qr5nTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XWbuZWcNiPWD3ZDdaUj0w55UKlT0T3//WOrIqoGV+0w=;
- b=qBlwRlWQMd33GaStr4XxEuOxF5rUv8U91iMWZE5OeSY83R66KEUHktkHSIP/dbbiYoFJddiSxvLoX2rnWBMGSyzYrTibfeIlUc1Jibg6pt0+1MPhoJd2VZylX+kx2oUu5ifOezLMf1Gi/KCEMOH4BB/eoW+Q93O9ICHONF0Jifvsax+/lJYA2qq6aTVvqJA6i2GK6xa5FCZ0PQUT2haSIeaQJ4x+PlZVnBqDrbV5jCnJSAmvRlBcFYlYg6h37qGBueKZUkgAUziRDysqNvYY5MYx7UJcTemIdlgdQ1ioMqZQubxTP2unl4cqoneTyHy3eKsHPB/DZIvvSl34fmzJFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWbuZWcNiPWD3ZDdaUj0w55UKlT0T3//WOrIqoGV+0w=;
- b=DikQ1xfCSc1grr2opcBEEb3mJ+SQ4lAnQKJ4OP9WmkGcH2lsc4ecHxP1IY1Zv85NM/5LZ7oPL+8Lx/VNRyF3oIydu+BItL/QbHPAkVK+0s5ED8P8SYnE7RgYPUGrdc4WQfD3nPvGZYgBiHgmpbHeAJnBLdWqTZgAlhateocqg+bzhSqXkTD6S/vVsN+YSJ6bCBwm4vLNkDJ0t1HXhmeORJgYg9xlCQW7xGv1mOF6rdIZXNmaY23I7hD1vpwfxzj+wcEN7aq4tK+xIfp2qj8PcYKUXCw16aDbRskR0UagCXKoEcR0B0+K2RDgO9t9rj32YFVwGA1XfyZkTn/WGgoUZw==
-Received: from DS7PR07CA0014.namprd07.prod.outlook.com (2603:10b6:5:3af::17)
- by CYXPR12MB9388.namprd12.prod.outlook.com (2603:10b6:930:e8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Sun, 18 May
- 2025 05:48:14 +0000
-Received: from DS3PEPF0000C37C.namprd04.prod.outlook.com
- (2603:10b6:5:3af:cafe::7a) by DS7PR07CA0014.outlook.office365.com
- (2603:10b6:5:3af::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.27 via Frontend Transport; Sun,
- 18 May 2025 05:48:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS3PEPF0000C37C.mail.protection.outlook.com (10.167.23.6) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.27 via Frontend Transport; Sun, 18 May 2025 05:48:13 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sat, 17 May
- 2025 22:48:04 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sat, 17 May
- 2025 22:48:04 -0700
-Received: from localhost.nvidia.com (10.127.8.12) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Sat, 17 May 2025 22:48:03 -0700
-From: <ankita@nvidia.com>
-To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <joey.gouly@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<ryan.roberts@arm.com>, <shahuang@redhat.com>, <lpieralisi@kernel.org>,
-	<david@redhat.com>
-CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
-	<kjaju@nvidia.com>, <targupta@nvidia.com>, <vsethi@nvidia.com>,
-	<acurrid@nvidia.com>, <apopple@nvidia.com>, <jhubbard@nvidia.com>,
-	<danw@nvidia.com>, <zhiw@nvidia.com>, <mochs@nvidia.com>,
-	<udhoke@nvidia.com>, <dnigam@nvidia.com>, <alex.williamson@redhat.com>,
-	<sebastianene@google.com>, <coltonlewis@google.com>, <kevin.tian@intel.com>,
-	<yi.l.liu@intel.com>, <ardb@kernel.org>, <akpm@linux-foundation.org>,
-	<gshan@redhat.com>, <linux-mm@kvack.org>, <ddutile@redhat.com>,
-	<tabba@google.com>, <qperret@google.com>, <seanjc@google.com>,
-	<kvmarm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <maobibo@loongson.cn>
-Subject: [PATCH v4 5/5] KVM: arm64: Expose new KVM cap for cacheable PFNMAP
-Date: Sun, 18 May 2025 05:47:54 +0000
-Message-ID: <20250518054754.5345-6-ankita@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250518054754.5345-1-ankita@nvidia.com>
-References: <20250518054754.5345-1-ankita@nvidia.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YUMI9ALZ"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4766631a6a4so37045661cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 May 2025 22:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1747547341; x=1748152141; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G9qeFJ7lNo+yYpuKZq/TR4G2C9hCrYbOgamht3tIasA=;
+        b=YUMI9ALZ3F59PQe6HDiEQTb/qxV1VE4OfL9j2tyimMWzoXQ3RQudHnmcg1S2lfJqNj
+         yH0MQoiQ8FCkQn3/WR9Cve3698ogucsVNoUHGjVECMPsUCpaGy01roAw7fz0lQzlsrJK
+         oKQPvXlIyc78VOcTyc3WgC1JeR+XKsM6S5hGrvgfNQME7lrJ2M7UnHzKT9lYdw6QqorS
+         +bxkp+exwio/ay+2al+6dNaeypjd1qLAN/w9gVLh/920iOV4aOUYC2Seodi7NYWnIu6Q
+         Kxfoe7yX3g0lZ68WNdRy6Z0SClgeZACMM1gWdyWLi2GMZqiT+IgYLXcx02oA2MblLctv
+         v27g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747547341; x=1748152141;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G9qeFJ7lNo+yYpuKZq/TR4G2C9hCrYbOgamht3tIasA=;
+        b=G5e7LQ207d+kurl5+dJJ9qOlGm7Bipg6qlywWqi1s3YEn8pTpHpTugEmtGlGtnAGPh
+         26CtffWm++v3AmrqOJyif6HVMYYQpEmh2UfFVdgVU6uwR5LiPVX8+UFRDLt4yJvcS8Su
+         LmbceCHca69p8ERANvOOkOyEX7fMdR+HkO0zRhz6GepHf1It0vt0HNf5v5uAvEWah59l
+         l+AZ1iYADe+c1sI62PEtSq0KmPDY1V0CCEDdvNWoTU0B8ijxvjHL3YEH8XfBrCBBVC41
+         4YrZZ1UI1kjj0fT/aZdVx+6FU/LPfG/iNh1v5gdsi1tznxoL2tmKk3p1PUv3k4xXM39K
+         Zfwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhkry8O3hrjOJyJLI57ggA4dTiHlvghNTrVOGN0Exez+P0aOZaDuOZ9EG0YsbmzXdEHHOwzgIOpQsqE6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLMYbW+rjlIyN1CbanG/+W/1jGDrFSlfkWSWShAKf1gc0wgEd+
+	ww6l6gzVOHe8vhMSC/puOfvyW7rkme6IZiQPa4xCX672MY1dBQH+22gY8NnZKiJdMA==
+X-Gm-Gg: ASbGnctXRNHFzcJL/THSZx4qZmD7uYBUsSMGnzSsydizQNy0FzdD/SB34uuRVhBWOcr
+	vIKCSUF0YplMWIxf6WLKj/RPJwiWRgpHfh91wr9fhiz+wD3YdbhTYz9zMAzj8Fva99OzN6EI638
+	XygqHW4nL1gm2U+TGuFfTkUb1o0kZ+krqI1FnJWKLwCsabl0lcLqut9iuWhNj72P9YzeFV74ocD
+	wRV2ph5QLuLNxLgezwEqQjcVEXXvYoBBAZJ9DSrn0R1v8+/XFOdyx155Cw5NLMBy7FqPnoZRiHQ
+	8D6bDbyz+fBfrRIFm0G3RWN6ML5o7O8hGrlAbm8yLi1513GL606M+VvocuSaEkI+hD+vLkZF3OL
+	U9x0lvcSesxwvHfVKy/pr+NexiQ==
+X-Google-Smtp-Source: AGHT+IGfrmclUyrn2kL47uhxEFRGU+qhsbvKEWHTIktNb5yLBqfzULKgvSCB1fjnKNy9EuB8fUsqdQ==
+X-Received: by 2002:ac8:6f10:0:b0:477:6eca:b40c with SMTP id d75a77b69052e-494ae326c18mr161157901cf.1.1747547341540;
+        Sat, 17 May 2025 22:49:01 -0700 (PDT)
+Received: from [192.168.7.16] (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3f922csm35228371cf.26.2025.05.17.22.48.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 May 2025 22:49:00 -0700 (PDT)
+From: Paul Moore <paul@paul-moore.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC: KP Singh <kpsingh@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
+	<code@tyhicks.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"David S. Miller" <davem@davemloft.net>, David Howells <dhowells@redhat.com>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
+	Justin Stitt <justinstitt@google.com>, <keyrings@vger.kernel.org>, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, 
+	<nkapron@google.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	"Serge E . Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, <kysrinivasan@gmail.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 18 May 2025 01:48:57 -0400
+Message-ID: <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+In-Reply-To: <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org>
+ <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+ <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+ <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
+ <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
+ <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
+ <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
+ <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
+ <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
+User-Agent: AquaMail/1.55.1 (build: 105501552)
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37C:EE_|CYXPR12MB9388:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f184e58-7a3b-493f-6324-08dd95cf949c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?x3EhGHspUKnTbbeTYz1CsccSv37P0Sxfc0E6KVr6eRI+82+UE4aBkDfy9FJB?=
- =?us-ascii?Q?dnzNrMqzfm5MIovr1YOYdarssrd+9UOf1FmwfAn8w/nSHCK8i1eosMBIVtXx?=
- =?us-ascii?Q?GUK57xOklGqhGFS7vIzoO1G4gg2ReY+mGzsggKvQUdNmWPiHX9BJNsC3zbFZ?=
- =?us-ascii?Q?XZh+/KqegLqwtXdO1d6ty9tWunq1VFGg2UqbP3jWt6D+xt/KsaG9z0uKCqOr?=
- =?us-ascii?Q?v1zFriss3j1KweO1BhmJxPdiPfIObrGFqgSCwsnjh3AF+R2LRY6scjcpamFQ?=
- =?us-ascii?Q?cpu2BLvDDll52cKzN3Cq4Tflq/aVnvZHg/ZLp5aDe2AxOKBHJIoBdVL2aaHl?=
- =?us-ascii?Q?oPlgbu0ec+nvXS59+ahY7XRo2iCi0OWPOZz4fwSg7nJycX/e3+bn4PHhZcTE?=
- =?us-ascii?Q?t5QzuhhNtsPdqXnxz/vNNM6c6sZ75ATOR5FlHspsBKPEXH7H4HPRG3P4xYUp?=
- =?us-ascii?Q?0EWLTXQQDYz3P4WO6AQJWzdGz0XubUZNJkFynLQsliGK4QM0WsaiHhzzxNqp?=
- =?us-ascii?Q?BGSTb/cEDCnAkphlHb6JaDldmTljWeebBNwy/WW7+w5wE79ZN3x6kcY/ZYjA?=
- =?us-ascii?Q?oTAYjc8bP7l55CurueN0oJn8Xvd5UA3XqW57ymm3ww/2cWIR2IfN0WmJLFha?=
- =?us-ascii?Q?JOTeVFHS+me5bB/vFIiXiTEGj0iJEpBwUFwT5Am7uvGvytPEYQ3zdkEd4zIT?=
- =?us-ascii?Q?Op7R3j3QhDHfq3GD9D53/iVKgpBecFz72LOyZ/53mr8WdaDBF55qdClXcp++?=
- =?us-ascii?Q?xvjD3JWVw6TqCI+WhZ5gswP5o66lRYMRY+W2+ryTVzASYiXnPFHziMp2iO0L?=
- =?us-ascii?Q?G5ozQ38Ntu08SAs/5e+W+LguNl6dlsAv8ppr6oJaMOVGfkz497eZ7wNHXuq8?=
- =?us-ascii?Q?Rgj7chXnB25zu9RkQQvYqWSGgiTcRDKPEUuFDNZIzDQajD7tmTyKMGNQ2r0x?=
- =?us-ascii?Q?iLR6xysNn4aqv37ZsDuFShOHuP4E6ZmI4C6okwpDrUn54/CqgAonMs/a07BN?=
- =?us-ascii?Q?1uLfhGFIYwAPrz4kV60lkTPwKOyuwkSM6QtYcAyCuI0mijpH5BaEvFyph7Sp?=
- =?us-ascii?Q?Hbzwv7L/pJPA8jlALwdUjZEzfjSMcLJ7g0uqdu72SeD4xq6N1sTCxw88xcVL?=
- =?us-ascii?Q?FFUGNWtU8j7pdWIkmXlyJngHy9kfgIXt1rG2iCNBZQiYLbD662O/TpuB9yb/?=
- =?us-ascii?Q?6ZhcYmcRSmMzZcEHwDsfKnN6xmwsRfjL+Q5jaIa4Z0+AOEyDEFmqqgdMAmnF?=
- =?us-ascii?Q?spIqBRcttsArLWkQTATt4qPhnuusizo/npd1DiWhNsNHV6rVYjRhwZQPSFMA?=
- =?us-ascii?Q?gIfEx+XYxXV5YhSXZN23bldqZS3P+kF9cOfNDd326MOAgiVrW4aUQiQA5z2X?=
- =?us-ascii?Q?cVSGYSNudV6fVOHcWsAfcqXSHM89Yzj3VHfsiD+omVLO4DXPfWIMlXDrI/Q2?=
- =?us-ascii?Q?zvzqLZKOfY81mMYsLMjCY+wAOWMrw6u3XFeAReGkPzCcgvqXwVcpbedzJePX?=
- =?us-ascii?Q?8pcpYoDJK8IqC6HGvCYPN5dk/m1xrsDfwUfT1DevjCgQFiEAFEG5Ghzirw?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2025 05:48:13.9505
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f184e58-7a3b-493f-6324-08dd95cf949c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF0000C37C.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9388
 
-From: Ankit Agrawal <ankita@nvidia.com>
+On May 17, 2025 12:13:50 PM Alexei Starovoitov 
+<alexei.starovoitov@gmail.com> wrote:
+> On Sat, May 17, 2025 at 8:03 AM Paul Moore <paul@paul-moore.com> wrote:
+>> On Fri, May 16, 2025 at 7:49 PM Alexei Starovoitov
+>> <alexei.starovoitov@gmail.com> wrote:
+>>> On Fri, May 16, 2025 at 12:49 PM Paul Moore <paul@paul-moore.com> wrote:
+>>>>
+>>>> I think we need some clarification on a few of these details, it would
+>>>> be good if you could answer the questions below about the
+>>>> authorization aspects of your design?
+>>>>
+>>>> * Is the signature validation code in the BPF verifier *always* going
+>>>> to be enforced when a signature is passed in from userspace?  In other
+>>>> words, in your design is there going to be either a kernel build time
+>>>> or runtime configuration knob that could selectively enable (or
+>>>> disable) signature verification in the BPF verifier?
+>>>
+>>> If there is a signature in union bpf_attr and it's incorrect
+>>> the prog_load command will be rejected.
+>>> No point in adding a knob to control that.
+>>
+>> I agree that when a signature is provided and that signature check
+>> fails, the BPF load should be rejected.  I'm simply trying to
+>> understand how you envision your design handling all of the cases, not
+>> just this one, as well as what build and runtime options you expect
+>> for controlling various aspects of this behavior.
+>>
+>>>> * In the case where the signature validation code in the BPF verifier
+>>>> is active, what happens when a signature is *not* passed in from
+>>>> userspace?  Will the BPF verifier allow the program load to take
+>>>> place?  Will the load operation be blocked?  Will the load operation
+>>>> be subject to a more granular policy, and if so, how do you plan to
+>>>> incorporate that policy decision into the BPF program load path?
+>>>
+>>> If there is no signature the existing loading semantics will remain intact.
+>>> We can discuss whether to add a sysctl or cgroup knob to disallow
+>>> loading when signature is not present ...
+>>
+>> As mentioned earlier this week, if the BPF verifier is performing the
+>> signature verification as KP described, we will need a LSM hook after
+>> the verifier to serve as an access control point.  Of course that
+>> doesn't preclude the addition of some type of sysctl/cgroup/whatever
+>> based access control, but the LSM hook would be needed regardless.
+>
+> No. New hook is not needed.
 
-Introduce a new KVM capability to expose to the userspace whether
-cacheable mapping of PFNMAP is supported.
+It would be good for you to explain how the existing LSM hook is sufficient 
+to authorize the loading of a BPF program using the signature validation 
+state determined in the BPF verifier.
 
-The ability to safely do the cacheable mapping of PFNMAP is contingent
-on S2FWB and ARM64_HAS_CACHE_DIC. S2FWB allows KVM to avoid flushing
-the D cache, ARM64_HAS_CACHE_DIC allows KVM to avoid flushing the icache
-and turns icache_inval_pou() into a NOP. The cap would be false if
-those requirements are missing.
+--
+paul-moore.com
 
-This capability would allow userspace to discover the support.
-This would be used in conjunction with the
-KVM_MEM_ENABLE_CACHEABLE_PFNMAP memslot flag. Userspace is
-required to query this capability before it can set the memslot
-flag.
+>
 
-This cap could also be used by userspace to prevent live-migration
-across FWB and non-FWB hosts.
 
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Jason Gunthorpe <jgg@nvidia.com>
-CC: Oliver Upton <oliver.upton@linux.dev>
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
----
- Documentation/virt/kvm/api.rst | 17 ++++++++++++++++-
- arch/arm64/kvm/arm.c           |  8 ++++++++
- include/uapi/linux/kvm.h       |  1 +
- 3 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 47c7c3f92314..ad4c5e131977 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -8478,7 +8478,7 @@ ENOSYS for the others.
- When enabled, KVM will exit to userspace with KVM_EXIT_SYSTEM_EVENT of
- type KVM_SYSTEM_EVENT_SUSPEND to process the guest suspend request.
- 
--7.37 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
-+7.42 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
- -------------------------------------
- 
- :Architectures: arm64
-@@ -8496,6 +8496,21 @@ aforementioned registers before the first KVM_RUN. These registers are VM
- scoped, meaning that the same set of values are presented on all vCPUs in a
- given VM.
- 
-+7.43 KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED
-+-------------------------------------------
-+
-+:Architectures: arm64
-+:Target: VM
-+:Parameters: None
-+
-+This capability indicate to the userspace whether a PFNMAP memory region
-+can be safely mapped as cacheable. This relies on the presence of
-+force write back (FWB) feature support on the hardware.
-+
-+The usermode could query this capability and subsequently set the
-+KVM_MEM_ENABLE_CACHEABLE_PFNMAP memslot flag forming a handshake to
-+activate the code.
-+
- 8. Other capabilities.
- ======================
- 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 68fec8c95fee..7855f579fb82 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -402,6 +402,14 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES:
- 		r = BIT(0);
- 		break;
-+	case KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED:
-+		if (!kvm)
-+			r = -EINVAL;
-+		else
-+			r = stage2_has_fwb(kvm->arch.mmu.pgt) &&
-+			    cpus_have_final_cap(ARM64_HAS_CACHE_DIC);
-+		break;
-+
- 	default:
- 		r = 0;
- 	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 9defefe7bdf0..fb868586d73d 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -931,6 +931,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 240
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
--- 
-2.34.1
 
