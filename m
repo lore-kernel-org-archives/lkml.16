@@ -1,207 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5038A289356;
-	Mon, 19 May 2025 16:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671452; cv=fail; b=kgPtYMIckd2GvKhznthHSQqwfKVjyrMqKvAYlFJSVPmONSUyVlKjsEtFuPQsS3ybzzaTqUMSByJXE1aAUJKarPzX2Jnk1FsJpFeSOP1i3+VfFOJ0Cfu86qoIStB2gwKEz+eFKwcgBY6rW2tUCgCzG+NabNDCDUcG9peGGFOhIwo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671452; c=relaxed/simple;
-	bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qCLu/cnTzGNYUf8Yfa00+kuSe72o4t9dvHDv946WWWHI4q97VHRHov+Jml/lIpz3dOFDTQksNddKAoS9i3PttQySoq6MT0GKTIKkxGXTqeeUTRdEUyWpTeucsBv2iw7P3xb0EPd7Y4yz0mpxrQFut2LEe7rhvk0Lmg2Qxcjthhk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rz36PN7w; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B708528935C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747671453; cv=none; b=FaGMVQ4E6nnh2XOVErwKjopdXe89zTXMxpcZDy2ChB5HavAx3yhNhYFkQOrzzWJzT4OxzF1O6WOb4IcjIOvuWn7ZB1Rzxwg6OXwYn/ygHnDMC4d7FoM99/8V8IdE/dYDmIc5XFvzgY5HVk7TJHVxcyFP32pKzZlxZXRIYRfLrk8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747671453; c=relaxed/simple;
+	bh=w4805dO/Ig3x8k08b19zw0IolP9xDo4xh/Wo3cFOHaY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=R3BlcMHLBHXcZyYUN5K5hOa4AvgVOU80/JX28iz5O1zOvKKhkLaxYmHkzALfHVxEQiI6jJNWm3/1DT1KaJtT1EXWa/63ij0PIhO5CW5rBoVB8ypSPT9XcaAg7rvVO9GE2H8MSmTII7N54gq0+p3S12JkNQCTW3XmZ9ZpeHyEbs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iRQBqeGv; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rz36PN7w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747671452; x=1779207452;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
-  b=Rz36PN7wi1Mrb+QARvkqnQTJ6d6PxISocYz6/mgWHGmK8sNuae+IKXWu
-   8yDSD7nAbO39WzbCM1ZcT4o7c9gMnvDJY2HC3iDs7VzUWlrnrXHxo6vaR
-   I9WMoJ3fR7Q0uM9x1ZP8gOTbYleL2fnOQXGhtONwBOugaFdpO6qysGf7L
-   QbCccU2SOAa1ooAWqnkbsCa69GzyA2Ww0Dl4OlWp2ET/zhlFWPc6R8Dkp
-   E2UyG+2PJ59+IIY1XoWMU61Z0wD19hYwZSO7yr5mSuNEe4y0MjIBinpkp
-   LRwPcUuc2y502sDg2LQaK4Qv1T3J7GLZeVRDbQ5gk05djmtsc81EwSCIH
-   g==;
-X-CSE-ConnectionGUID: QWPEAOHZSoiC+eL8y2bEcg==
-X-CSE-MsgGUID: 2cc3hDCnRTq+3KW7jrTi9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49453901"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="49453901"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:17:31 -0700
-X-CSE-ConnectionGUID: 2xFI47EqTRefXVX0hR/lyQ==
-X-CSE-MsgGUID: lDjJdEcsTSOo92ZXPxTlUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="139924863"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:17:31 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 19 May 2025 09:17:30 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 19 May 2025 09:17:30 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 19 May 2025 09:17:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GoFfsq8VZkeohT0P99INRcozIBS86RI302KiD7HJWJSa7PvOqow38KI5LNWxJrMZURfk2lPua9os50btcDUpQbRrve41a+mLfmB2TfB8aSNF1+xfoJWF3sJcK4EbCIaoh/mfbS5uNwk09Zc8rzWIfC4O0jH7Z0A6fwLARyO2ivi2Qc0u1kw+wvm8UvJ33rGVBp2D+pci9oHlvcqZqbjRsVUguGBW5McfKKX3gxGQsGe5KHUR+p3iZn3tEefqRRyOTnEnSPkY8ooeHP4vKg2lghOSq3AEZtAWuC4X1zIe7YZPwIfB8DiLZd7UqCYgDYWxkixvbv9ui0FR+41cAwcxLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
- b=XEJsHFzakUTW8n3zGABYT9tD2zlJV5G26iOAtdlBoUQM8r5H+Wk5Q/mW4xhzM3CTJnBdMqz8vIR2a13CUips3PZdHLBOOInPJbEgOk89qFY+UCxokYDyUKNAfWiK4hqulNUWwghE4qusgcTbSqTYD0LNco0j/Jt8Yjt2G6UhSSbSSI7uXJuy6j+NSDSKFHWVWvMd3E5MHQhHhs4el6FiRqXWSCUJ/74BBHqKBBg/OB75Pc2xI40QQ0F/76CtbFJyq9PYEpHqfVQ/tl+XC0ur/j3ev8BB1TP/3nTBcEkVndaMgK5Ea7/XiF9cTiv9rIa0i3Ja12XuSNm0hpD1tgq47g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by DM4PR11MB5971.namprd11.prod.outlook.com (2603:10b6:8:5e::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.30; Mon, 19 May 2025 16:17:26 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%6]) with mapi id 15.20.8722.031; Mon, 19 May 2025
- 16:17:25 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "seanjc@google.com" <seanjc@google.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Chatre, Reinette"
-	<reinette.chatre@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>
-Subject: Re: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for fault
- retry on invalid slot
-Thread-Topic: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for
- fault retry on invalid slot
-Thread-Index: AQHbyGdiXv6lSo2xSkiHY9GZD31B8bPZ9FUAgAAZ3wCAAASjgIAACKuAgAAGsQA=
-Date: Mon, 19 May 2025 16:17:25 +0000
-Message-ID: <ef5e4e27f482f573546c386321f07e150951ff83.camel@intel.com>
-References: <20250519023613.30329-1-yan.y.zhao@intel.com>
-	 <20250519023737.30360-1-yan.y.zhao@intel.com> <aCsy-m_esVjy8Pey@google.com>
-	 <8f9df54a-ada6-4887-9537-de2a51eff841@intel.com>
-	 <34609df5b649ca9f53dfe6f5a134445f1c17279a.camel@intel.com>
-	 <aCtT9zsGmPiH2S6L@google.com>
-In-Reply-To: <aCtT9zsGmPiH2S6L@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|DM4PR11MB5971:EE_
-x-ms-office365-filtering-correlation-id: 9b684f6b-ad49-42e3-792c-08dd96f0a4ce
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?SUw2SFdkTG40OFpPNnVycHJPZVpIRjMvWEVQYkx0ejBkdVFUTUphVWczUHVI?=
- =?utf-8?B?aWZyVW0rN0dMTnI5TWdadFBEY0VDajNoSEpaQjViMW5peHhpVkdyWEduWFJs?=
- =?utf-8?B?QkY5VFBRaGlKTWlubXAyZmtuTjBUcFBpbE9wVDRNNUdob0xOazdQL200dFNj?=
- =?utf-8?B?VTF2Z2xCRmxoSmhxeWE3SldlWmh1ODVOZ05EUW4xTThVdVllRUcvTlBVMis1?=
- =?utf-8?B?UjV6cVJYaXlZZUVYd2s1T0xRbWRMdTRHMklTdSs1cUdzZjRJczMwdWsrdTJD?=
- =?utf-8?B?QmZDTkhBUkhmQ2pnbk50TGMwSTdld1lRWS9TcUtEZDhHWlhxb1JXbFNxdm1y?=
- =?utf-8?B?Q1p1SXpSMUIrWWN2QTdJZkswYjRHV0JheU5UcmtwNzVXcG11NmtzVmhRVXJZ?=
- =?utf-8?B?ejNrWmdmM2phT2oyZHA4SWVtdS94WFA0TndBL2diVzk2WllOM3NFVlRLc3pV?=
- =?utf-8?B?OE5RNUxESWg4bHQwcUhZd0J5SWJGeFVqOGNMa1NuZzBKK2kxU3l2Rk5rTXJL?=
- =?utf-8?B?QTRBaHZ0d1RLRjArVW9adUdHOERQY3hxNUo0NjJUMlBmT1dYaWVJSE0yUFFQ?=
- =?utf-8?B?U2J2emVKd0hrNkd5Z1k1VTM1K1Q4N1RuTloyU2l1VTR1eVV0cUNPQkcwQmlk?=
- =?utf-8?B?RmZSa2YreGtXYkZoZmplS0hPSXp3UVp5RnorR1M0ck1QeExDYkY1aklSQ0Rm?=
- =?utf-8?B?dk1oOUFXYktLUzREM2NmdmU4MHZkN3NoMlpNNzhQdW9XcllpeUJuQ203WW12?=
- =?utf-8?B?QjlFazgyWmxiYi93VXRlbTZFTUkxS2gvclBUWmpKdmordmExR2hUU283SlEv?=
- =?utf-8?B?dFNIZFVWNFFvOVhpUGJ5Ni9TbnRTckxiYjlwSDN3RGR3c1lKUWVpNEhjRmtL?=
- =?utf-8?B?UlhMQUk5MXlGVnkxcmMvVXpKMXN2NFZQY2E2ZmljZjdsRklWUGk0aDN6TDdR?=
- =?utf-8?B?QkNSVUlQcVNxaHA4SExZZ2owZlRTWWVndWxEVGV1S2N3Z1BZTVRUV2ZVZDBP?=
- =?utf-8?B?S1RuK0VWRXJ3Ky9XYXVQNlhwNkdxY2hwQXRuRmFXRTBpYWt5dk45WEw5THNS?=
- =?utf-8?B?UmhRN3dNUXc1a1ljcmVyMGFrU1BwN2xoTTBLRGRwd1NjZ3lyYXVXMGdKMGNa?=
- =?utf-8?B?THNncUVtdXZZaUROWXFtVzk2ZW95VUZNVTQ2N2R0TnhmdmgxSUIxSjdQajUv?=
- =?utf-8?B?TXhyWmFjSnAySGNRTGFEK2N4aTViK0pvbUtibS9mcE0xVFQ1WFl4RE5Ta1BO?=
- =?utf-8?B?aDJjZWNaZ1BQeU5sdUp0VUJFY21OVkVWMHJzeE15U0p2c0c5V3J2alhMbG9J?=
- =?utf-8?B?cFcyclI2MUhMcGRnbjZhVG45a0E5Nk5HWm83dUtPWXp3cDZ5NnV0U3kwaEdr?=
- =?utf-8?B?Zy8vd2cyUWJ4Um5hYittcU9OQmZYVHhBRlZIb0xoN3pIeWF6cFF0cUtxWFI3?=
- =?utf-8?B?RFhVSHlub1o4MllFUExDNTdndGh5aXMveDZINmNyYVozZ0JvNys5Y0lDMUtT?=
- =?utf-8?B?NTVkaXlVN0ttdXZHcW5wVHRLOHVVYy9iajF5UnNUc2JMQVRnMUNnbWxDRG1t?=
- =?utf-8?B?WUp1a2w3M0V0MUtrOUw4RysrUWRnT3JMQjZXaklhNGduWDl5ZTNLc0NuNkNw?=
- =?utf-8?B?bGpvRmt4VVhuVFdFeDdjYlFEME9YY2VMaWNwajNwUlNTYXFHc3dhbjNIVXZG?=
- =?utf-8?B?cUY5YjN4VXhZMGhDbWhYSzNxdk16bVBEbSthT1Q2L1hNWVBEVWxKbDdsVGVF?=
- =?utf-8?B?TnY3VXpKb0RPeGpmMUxPdUd0QjBqVXRCb1BVV2h3ZUVabXQzZlBsZk01NE9z?=
- =?utf-8?B?Tm1QSDZsakFBQ3p4RVNoNUNLRUIrZysvcy9VQVhCZC8ySnYxd253UVIvVXJk?=
- =?utf-8?B?K0xRelZpaWVGWmlPRVFWeFZrNTEvVlZ5WVpCZlUwZERsM0c1clpUUkVTZzR2?=
- =?utf-8?B?VzczSS8zUWFPWERsOThOUDljbFo2N01BNGVHOUE5REF4dHR1Nk5YNHUxbkxX?=
- =?utf-8?Q?oxqxtTiY5HG5LuggaKkIOogQXkI8WQ=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cVpLTTFCQU9qZjcwbEFIUW5tWmk4UmdYUVdoNWJyNzFNcFpFUmNMMlRhc1dY?=
- =?utf-8?B?a2Q4R2loeWNSK1Mxd3pMK2tZL1UwbVJtY0FmZTU5ekU4QU5GZWFpbnFxSkMw?=
- =?utf-8?B?TWpQUjl4ZzBQQ0pDQ3pUYzBvcy8xZGxTd3lVRUtPQXFmMXlvVTFyaUNjU3Z1?=
- =?utf-8?B?Z1UrbjhxRWRYRTlFRWZrM05lSlZFb3FsbzN4eTRwUkwvWUR0dEVPNDBjZFVE?=
- =?utf-8?B?Q3hWSnptaEYxUUtxYkRxaE5uU1JjSzhkbUR3Nm1uUU1YYnBjYmtQc2lDOVFF?=
- =?utf-8?B?UUFnUHZTaEhUcnhWSDVSeEl3ekhZdmZ3d2JqcXN0VlVmYXlXQUNGd1Jlb0hU?=
- =?utf-8?B?dFhCWFIwNmpPUUh1bEl6eEhGRzF5OUxhRDVOTXlLMVpZdXFYWnlhMVBnVHhN?=
- =?utf-8?B?UytVKzVQZWhncW5ScmcxQTM5TUZCeWo4QTFhKzVvdVA5cExNK3ZXY3lkUE1m?=
- =?utf-8?B?YS9KblZiMlJoTXNuSEhJUUNOcEQ5TFVvVHBsZkVJeFpSTUFhR3VKSGNHUzVq?=
- =?utf-8?B?aTNIR29laE41T25yUmNUWXNVRjVpWWFsbUdYQzdkbFV4am1EMzRrbGZlTWdk?=
- =?utf-8?B?NS9zZHE4MUtjWHhQMHNhWlcwTzhRWEpyamJFV3Y0MGdlTlBiV3J2dGxIM1Vo?=
- =?utf-8?B?UkE2N05IT2xweHB1MUwzUTEzR3ZFN3VrWEFLdGwzNm1FYVZKT21Jd0RKbjVo?=
- =?utf-8?B?WXYxNy9ZbFJ1MFpTY0UvUmttN2FrR0JmV3F4WGJIN2E5TWlqWDZYVGtBU0Z1?=
- =?utf-8?B?ckFsTnA0SXBpWXhvT2k5K1ovQ1BIWTVMVjlDVjN3RnZKTVJVcXhaUWt4UjFB?=
- =?utf-8?B?UmRraVo2RkxBaXdEMEUrRWI3U2xFT1BPYzJueWIxTzhheWttazZNT2x3MXdB?=
- =?utf-8?B?RUhrVjkxN0djUWdQekprdXRSblNDSWFiR3FjTHJ2VHBBS0kxTU4wblRQanpq?=
- =?utf-8?B?OHg1TlNFSGdBUy9rOEpoR1gxMjRGWTdNMHVwcnhOajRISGJmTnNaRGoyY001?=
- =?utf-8?B?OHFKblpOWlhpOTdDQ1R3eno4c3JhcTkyYlFCRy92SHNZalJ6VTFKQnRqRFRp?=
- =?utf-8?B?ZlFBYUEyVXZSZi9ZaTRYQlliR0NzaDNiOXJWNmdBSUZrQlpwRkZGUUx6SStF?=
- =?utf-8?B?L0dnMFhiSFFSYTBVNWY2WUYwVStLVHpGSmYvTUZtM05zUHprUFpvMFVSazUv?=
- =?utf-8?B?dXo4WUtuYXczTnVBbnBkdHo2MVhnNFhPN2N4QUVHWjY2US9GMkw2c1llazlG?=
- =?utf-8?B?a0lWVnZpVy9wM1ZKVUlXWVBlbjBMMHo3aS9tUllXZUtMRk1oQWZHcFpSOG1y?=
- =?utf-8?B?a2dDUG5SWjFXN3RZNmFvN1c5KzZXeW04Wk8zVEp3dERKT2R0Y004RVlUZ1dU?=
- =?utf-8?B?clVQR2YvS3BiMFBCSFpzWXZBL1pES2dSL1YyUXlwZjh0djhNY2ZkN050SWZC?=
- =?utf-8?B?S2FNaVk0Zm5LeUtjM3g3ays5QUt0RDNvYTFpSE1DdDYyRXIrYVZ3UEV4L0hx?=
- =?utf-8?B?cEhoSysxNDJmanRqV2xJa2J3Y1FuR1FOYzRJei9QSitYMW1yNWIvQmVXMWcz?=
- =?utf-8?B?bnZtN1R1SWN6ZEx0cmgvb255UllVQzRweW90UVlkZWl5VTRrZHRhQTJtZi9Q?=
- =?utf-8?B?R2RWcDFRa2xGSUlsQXhLK0krZGl2RTUyaWlYVWFHcWlsbW5ITHUwTnRkZEFX?=
- =?utf-8?B?eHdCNDlPRGV5eHR1c3R6TTd1bFhxTmxOM1phZWFwNzY2akpmWGQ4ME5sYlZp?=
- =?utf-8?B?NHg3UENUZ1QxbmdDeVdBVVpocFU2QWtYSU1UOWRZdk81WmJ3ZXg4cm5BbzN2?=
- =?utf-8?B?Y3g4NmcySHplOXo5VkJCY1JRT3lVN0RCdm9Hd0ZFR2YyMU9PcWpYaEhmSW5B?=
- =?utf-8?B?cHdBK1VjSXl5TnZ6ckpwd1BFcXJMc1dqejRPMExlb293LzM2QWZkK0dMRWNp?=
- =?utf-8?B?ajBHME5qQXlQV0tHYkpUcXhyb0Z2cFZGRVNwcUJMcVJVSzU4NS9Ub0pHcXlO?=
- =?utf-8?B?bGZvZkM1bE9LRS9wZHRyODY3OElrbmtPdHZESW1UY3BZcFZCbzZtc2hIS2RS?=
- =?utf-8?B?VE1Sak5lSDQ0Q0ZCNE1yTnoyekp4bUVLRnZUYkp4VW1DSjhZV1lFNkgvMVhJ?=
- =?utf-8?B?VUJOR005aGIzV0w4bkszTEJvcWJaNlZUU3JKeTQxbU1nVjlyY0VlV0x6bHRs?=
- =?utf-8?B?UGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F57AC08D8208DA438D697E262277A16C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iRQBqeGv"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so27052325e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747671450; x=1748276250; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bmVOMUI1WvRgcBItQU4h3P9G6X6eBSLhh3A0eVCy3IM=;
+        b=iRQBqeGvXeg+9pQNvUDzm67icnw2gGoP4TKPFgvTZtIXodJFio468rhkCQwmHSNrhF
+         A4r/6yUn3SwmYOkWLkKkZFKkA7lUQkqdbLBXKzAghzDtFV0cNcJtUPdaAx8BdXg4A6Up
+         vkJLKHPZXLWetuuNJkiMZNUIOiESoHRlgGPf2ff0VaQe9msrs8BN6mYWSl9M3qYelTkO
+         CZKvhEhn26L4uXVjp+MTKC+c0lWaADRA6e8cc5PARgHNW2t2z5z0ymSuCnW/UI0fEsJU
+         xbSIEXiIsZxHwH08ASRMgsYJ0yXJWN26Ed7xLkWt4iRJY0vTuFiqyMTliiSo59h4Avtm
+         +GBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747671450; x=1748276250;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bmVOMUI1WvRgcBItQU4h3P9G6X6eBSLhh3A0eVCy3IM=;
+        b=wBNISv14cYKKhmUO6QV5xglFJPoNjlaViVaJnDAr3I5h6lOCdiIPQQ6ls4zMxflshT
+         gmmD4zrGibzpwSXCTWSlqj3nYv6UgvXXK8bvnOBIDVlDfIwC3o33T6dQ5SAyEyfjQHmb
+         RTaKVC7Vfv89NqKgI5mmkpyQefE4S4dNEQ/Rdu8BgvbT5mYQPHAA5n4A4CU/KrnIbHm0
+         X6oxD30QIRgOvpJfNTDuFlMv2ONghKNOsv9x9gKyRMGYxJHHe0r5EmXsPMs59vhx2MHK
+         6CG5bbC/WsaxT7846O4TW4QJUw6+FKHbCI90iPIrqPwVVOPM6LMn792f77Nqq0H30yLt
+         4RUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnFyjTltLkEuvASyav2L0PLkmTQ+qFAJBHTYhtLb2LEKBeXi0/VnpKcxhCY87mOpfHoiQgljfJ293oC3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcKODNVFf+zgVdm0zAz26oA1j42XBpvjDmwbYOoKD9ynSGV/2q
+	fgpW/mxd3RlCcxnmXm7VdLR47Y1OaU54pJ1xS9qU+4QERHB+1/lcehy3CoTnnmXoNg4Bmg==
+X-Google-Smtp-Source: AGHT+IFROh9k9MaFF3iOzIZxe2AJZZMZ1n+PtPhwpVT2M5DZgzoJ38wpUziZRxscydtaggZ7lYDT1Dc=
+X-Received: from wmsp4.prod.google.com ([2002:a05:600c:1d84:b0:43c:f8ae:4d6c])
+ (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3e0a:b0:43c:e478:889
+ with SMTP id 5b1f17b1804b1-442fd5a2c09mr156959735e9.0.1747671450127; Mon, 19
+ May 2025 09:17:30 -0700 (PDT)
+Date: Mon, 19 May 2025 16:17:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b684f6b-ad49-42e3-792c-08dd96f0a4ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2025 16:17:25.7442
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FvrUPm4bG9a0zGuKldgaRWHx0QCr8xU3m6g+P7TQ3/hsEhW4fsXTfspNz6XCqq0Cx119/Ov0/xVnCHfR5WMv7f+jcAUnPnEBhPvIIDbBYBI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5971
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250519161712.2609395-1-bqe@google.com>
+Subject: [PATCH v8 0/5] rust: adds Bitmap API, ID pool and bindings
+From: Burak Emir <bqe@google.com>
+To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
+Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gTW9uLCAyMDI1LTA1LTE5IGF0IDA4OjUzIC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiBZZWFoLCBhbmQgSSdkIHByZWZlciBub3QgdG8gYmxlZWQgdGhlc2UgZGV0YWlscyBp
-bnRvIHVzZXJzcGFjZSAob3IgaW50byBLVk0gaW4NCj4gZ2VuZXJhbCkNCj4gDQoNCk1ha2VzIHNl
-bnNlLiANCg0KPiAsIGhlbmNlIG15IHF1ZXN0aW9uIGFib3V0IHdoZXRoZXIgb3Igbm90IGEgInJl
-YWwiIFZNTSBoaXQgdGhpcy4NCg0KTm9uZSB0aGF0IEkga25vdyBvZi4NCg==
+This series adds a Rust bitmap API for porting the approach from
+commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
+to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+
+The Rust bitmap API provides a safe abstraction to underlying bitmap
+and bitops operations. For now, only includes method necessary for
+dbitmap.h, more can be added later. We perform bounds checks for
+hardening, violations are programmer errors that result in panics.
+
+We include set_bit_atomic and clear_bit_atomic operations. One has
+to avoid races with non-atomic operations, which is ensure by the
+Rust type system: either callers have shared references &bitmap in
+which case the mutations are atomic operations. Or there is a
+exclusive reference &mut bitmap, in which case there is no concurrent
+access.
+
+This version includes an optimization to represent the bitmap inline,
+as suggested by Yury.
+
+A benchmark using a production configuration shows performance on par
+with C:
+
+```
+              Start testing find_bit() with random-filled bitmap
+[    6.974435] find_next_bit:                  944136 ns, 163996 iterations
+[    6.982039] find_next_zero_bit:             981618 ns, 163685 iterations
+[    6.989460] find_last_bit:                  800630 ns, 163996 iterations
+[    7.004710] find_nth_bit:                  8627435 ns,  16281 iterations
+[    7.013791] find_first_bit:                2459789 ns,  16282 iterations
+[    7.054645] find_first_and_bit:           34227540 ns,  32733 iterations
+[    7.061743] find_next_and_bit:              474530 ns,  73676 iterations
+[    7.068365] 
+               Start testing find_bit() with sparse bitmap
+[    7.075035] find_next_bit:                   11394 ns,    656 iterations
+[    7.083579] find_next_zero_bit:            1920337 ns, 327025 iterations
+[    7.090213] find_last_bit:                   12061 ns,    656 iterations
+[    7.100121] find_nth_bit:                  3279811 ns,    655 iterations
+[    7.107930] find_first_bit:                1188115 ns,    656 iterations
+[    7.114558] find_first_and_bit:               3730 ns,      1 iterations
+[    7.121184] find_next_and_bit:                4679 ns,      1 iterations
+[    7.127805] find_bit_benchmark_rust_module: Start testing find_bit() Rust with random-filled bitmap
+[    7.138550] find_bit_benchmark_rust_module: next_bit:                       999542 ns, 163592 iterations
+[    7.148974] find_bit_benchmark_rust_module: next_zero_bit:                 1053432 ns, 164088 iterations
+[    7.158342] find_bit_benchmark_rust_module: Start testing find_bit() Rust with sparse bitmap
+[    7.166718] find_bit_benchmark_rust_module: next_bit:                        11474 ns,    655 iterations
+[    7.178143] find_bit_benchmark_rust_module: next_zero_bit:                 2056913 ns, 327025 iterations
+```
+
+We introduce a Rust API that would replace (dbitmap.h) in file 
+id_pool.rs. This data structure is tightly coupled to the bitmap API. 
+Includes an example of usage that requires releasing a spinlock, as expected
+in Binder driver.
+
+This is v8 of a patch introducing Rust bitmap API [v7]. Thanks
+for all the helpful comments, this series has improved significantly
+as a result of your work.
+
+Changes v7 --> v8:
+- added Acked-by for bindings patches
+- add RUST_BITMAP_HARDENED config, making the extra bound-checks configurable.
+  This is added to security/Kconfig.hardening 
+- changed checks of `index` return value to >=
+- removed change to FIND_BIT_BENCHMARK
+
+Changes v6 --> v7:
+- Added separate unit tests in bitmap.rs and benchmark module,
+  following the example in find_bit_benchmark.c
+- Added discussion about using vendored bitset to commit message.
+- Refined warning about naming convention
+
+Changes v5 --> v6:
+- Added SAFETY comment for atomic operations.
+- Added missing volatile to bitops set_bit and clear_bit bindings.
+- Fixed condition on `nbits` to be <= i32::MAX, update SAFETY comments.
+- Readability improvements.
+- Updated doc comments wording and indentation.
+
+Changes v4 --> v5: (suggested by Yury and Alice)
+- rebased on next-20250318
+- split MAINTAINERS changes
+- no dependencies on [1] and [2] anymore - Viresh,
+  please do add a separate section if you want to maintain cpumask.rs
+  separately.
+- imports atomic and non-atomic variants, introduces a naming convention
+  set_bit and set_bit_atomic on the Rust side.
+- changed naming and comments. Keeping `new`.
+- change dynamic_id_pool to id_pool
+- represent bitmap inline when possible
+- add some more tests
+- add myself to M: line for the Rust abstractions
+
+Changes v3 --> v4:
+- Rebased on Viresh's v3 [2].
+- split into multiple patches, separate Rust and bindings. (Yury)
+- adds dynamic_id_pool.rs to show the Binder use case. (Yury)
+- include example usage that requires release of spinlock (Alice)
+- changed bounds checks to `assert!`, shorter (Yury)
+- fix param names in binding helpers. (Miguel)
+- proper rustdoc formatting, and use examples as kunit tests. (Miguel)
+- reduce number of Bitmap methods, and simplify API through
+  use Option<usize> to handle the "not found" case.
+- make Bitmap pointer accessors private, so Rust Bitmap API
+  provides an actual abstraction boundary (Tamir)
+- we still return `AllocError` in `Bitmap::new` in case client code
+  asks for a size that is too large. Intentionally
+  different from other bounds checks because it is not about
+  access but allocation, and we expect that client code need
+  never handle AllocError and nbits > u32::MAX situations
+  differently.
+
+Changes v2 --> v3:
+- change `bitmap_copy` to `copy_from_bitmap_and_extend` which
+  zeroes out extra bits. This enables dbitmap shrink and grow use
+  cases while offering a consistent and understandable Rust API for
+  other uses (Alice)
+
+Changes v1 --> v2:
+- Rebased on Yury's v2 [1] and Viresh's v3 [2] changes related to
+  bitmap.
+- Removed import of `bindings::*`, keeping only prefix (Miguel)
+- Renamed panic methods to make more explicit (Miguel)
+- use markdown in doc comments and added example/kunit test (Miguel)
+- Added maintainer section for BITOPS API BINDINGS [RUST] (Yury)
+- Added M: entry for bitmap.rs which goes to Alice (Viresh, Alice)
+- Changed calls from find_* to _find_*, removed helpers (Yury)
+- Use non-atomic __set_bit and __clear_bit from Bitmap Rust API (Yury)
+
+Link [1] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gmail.com/
+Link [2] https://lore.kernel.org/rust-for-linux/cover.1742296835.git.viresh.kumar@linaro.org/
+Link [v7] https://lore.kernel.org/rust-for-linux/20250423134344.3888205-2-bqe@google.com/
+
+
+
+Burak Emir (5):
+  rust: add bindings for bitmap.h
+  rust: add bindings for bitops.h
+  rust: add bitmap API.
+  rust: add find_bit_benchmark_rust module.
+  rust: add dynamic ID pool abstraction for bitmap
+
+ MAINTAINERS                     |  15 ++
+ lib/Kconfig.debug               |  13 +
+ lib/Makefile                    |   1 +
+ lib/find_bit_benchmark_rust.rs  |  94 +++++++
+ rust/bindings/bindings_helper.h |   2 +
+ rust/helpers/bitmap.c           |   9 +
+ rust/helpers/bitops.c           |  23 ++
+ rust/helpers/helpers.c          |   2 +
+ rust/kernel/bitmap.rs           | 429 ++++++++++++++++++++++++++++++++
+ rust/kernel/id_pool.rs          | 201 +++++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ security/Kconfig.hardening      |   9 +
+ 12 files changed, 800 insertions(+)
+ create mode 100644 lib/find_bit_benchmark_rust.rs
+ create mode 100644 rust/helpers/bitmap.c
+ create mode 100644 rust/helpers/bitops.c
+ create mode 100644 rust/kernel/bitmap.rs
+ create mode 100644 rust/kernel/id_pool.rs
+
+-- 
+2.49.0.1101.gccaa498523-goog
+
