@@ -1,188 +1,130 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F1B19DFA2
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B49C4C8F
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747618767; cv=none; b=Qln58WCuKfV59tAzZ/SEMm6+PvVK+Tosggz1jYJ5OcfzGq58ENaF5qj6vxsHnkCSkxRXSPio3th3qr8jhn8g7ILTw0zgcfdZ6gy5DIfFvk7zMlNeoRVUFO9l2/8vY0VCelvlpa9HNWO7maWnH9LMIWjnnX8kSWgYJp3m1ESlir0=
+	t=1747618931; cv=none; b=hruzQ3JiwTJ9WnBBKlyP53rA4d/yYhYsLOd/nzdUsvWhwUwgstDDkMx7PP2uhc8DtZcTHdL+0i6Uc7+4uUAOV4Qkl0EEBAmjtbwbyl+0ZywpWr9X0Nm3tMTpuQDPy0j3lcib3yt1bU6pmLyqlz2EPhEqzOGRHrP/ZQVmUd4VX30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747618767; c=relaxed/simple;
-	bh=FqFnmQCiDMIe9susAfgCBgtwo2XNBCGc6p0CqxnwaNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=dupneZd/60op3MJzonLvfVZ29TB0NRcdzEZduViGO7bNxu1FzfE6i6oPXW7IGwaLZ1dfl2OvgbTbuNVfs9+gaUwhA/kW8Uw4Tyx2axPEEOkQiVWpySTXfywIlwQo+fME08hesreCPs/Bac+OfvxPQBXoDDdQcfiZ+KCmVMbfjwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=f+oexBJ5; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747618931; c=relaxed/simple;
+	bh=gsoTiGSN6feFOfrLPgyZ4uJNIi8+OPTLwLnIDN9EBb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=il0dJfY0dcJ7NvpvR0DRPi67w1hE0B0aYNIk51EUnQPzXfRum4uHmL1ay6Cm3Nuw+L0NVDWckph6TPsOLmgXkfNUKuScFWBKT4UmUmrnD3hf3JiECZQyKS0imPWYyjlXKTyn3PL/Ky5PDJz6CEwiSXgZO1Fj2uI91MWVYkm0tAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYu//Tqo; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f+oexBJ5"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250519013916epoutp01a6c3ac6ebaac3aa4b0289f6edd1e3d38~AygALa-Wd0269902699epoutp01q
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:39:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250519013916epoutp01a6c3ac6ebaac3aa4b0289f6edd1e3d38~AygALa-Wd0269902699epoutp01q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747618756;
-	bh=koWRqPWdZXwVHGb5yKu339ufnZ++npqeF+rm45O/smw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f+oexBJ5fDg+Gy6K0uAqvYcY7jMJZ3gbF08KcXp1XMao2Q9Wo5l0iwEsVjir9C5gc
-	 2Mx6HA0y15YESLIcGXQdJgplQYSOI5kCszvu1J5aqLx5IMdcfzsyo71cjiPUMGGQNH
-	 CEEBdXij5hhUPlY1giZicdMLtzl9V+t9Fp+brrMk=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250519013916epcas2p4d4821f3d2c10a852bf75350169dab786~Ayf-aGS5s1073510735epcas2p40;
-	Mon, 19 May 2025 01:39:16 +0000 (GMT)
-Received: from epcas2p3.samsung.com (unknown [182.195.36.101]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4b10hz1BQJz2SSKf; Mon, 19 May
-	2025 01:39:15 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250519013914epcas2p1b139e745f575c040a233f925e6de8a60~Ayf9ub2WA1477414774epcas2p1C;
-	Mon, 19 May 2025 01:39:14 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250519013914epsmtrp2915b7f510757015efd50dc753794ae06~Ayf9tiJxG2446524465epsmtrp24;
-	Mon, 19 May 2025 01:39:14 +0000 (GMT)
-X-AuditID: b6c32a52-41dfa70000004c16-be-682a8bc2f774
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1E.E9.19478.2CB8A286; Mon, 19 May 2025 10:39:14 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250519013914epsmtip25b92b45f76f47a4d5f2573c281c462ac~Ayf9dTLZP2276422764epsmtip2e;
-	Mon, 19 May 2025 01:39:14 +0000 (GMT)
-Date: Mon, 19 May 2025 10:43:49 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner
-	<tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, junhosj.choi@samsung.com,
-	hajun.sung@samsung.com, joonki.min@samsung.com, d7271.choe@samsung.com,
-	jkkkkk.choi@samsung.com, jt1217.kim@samsung.com, qperret@google.com,
-	willdeacon@google.com, dhyun.cha@samsung.com, kn_hong.choi@samsung.com,
-	mankyum.kim@samsung.com, Youngmin Nam <youngmin.nam@samsung.com>
-Subject: Re: [QUESTION] arch_counter_register() restricts CNTPT access when
- booted in EL1, even if EL2 is supported
-Message-ID: <aCqM1Z2ApdvGYfb9@perf>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYu//Tqo"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f2b04a6169so46759666d6.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 18:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747618928; x=1748223728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WuYrsA5VycSdsang99hZsZXYsoGMpgxGYVc6khDgfmE=;
+        b=NYu//TqoLv/GcGIGkzWezOAnDL3I9KanuPXzfzXJADrJJc+Vl7PZXRaHFlnUqXu3fN
+         xxH2Vj8J+832KAivc5TvGvLCioQSdF/vcQlm2+V9jEl8RzZdSGgqeNyx0knzp17Se/7F
+         sN40XF9fX33wEH2ffi0KkYpuk8os8xMpdY7KGEJkUO/U093rvnBjowVAyWluSAap0b1Z
+         qx1/wTklfh5UcXyy3nANxjytJqWndtURTpU/KJ2FTyzODOIWWJ8I53d4h2R/DXtm5dUm
+         Pw0a6yRd7UVOooJZMAMEzF3a/uTC/zD+i1SNvpQH/XAs378JygaCrD16LeZSbIN1yRc5
+         kZJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747618928; x=1748223728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WuYrsA5VycSdsang99hZsZXYsoGMpgxGYVc6khDgfmE=;
+        b=dadjOybGiizyysYVwktbuYZJ+lKQCJ1ycPuQ63s+rXFuZ7bE9C+W56npjA4bJ7PGGv
+         MkNQ/8YqYbLKmz0haabJHE7xf2jiX3hgD5Ya2uTcxmMj1z9K45732HCBElepGZRU0EIh
+         00gg3oiNewVCTEZ8A0bySQyGKKRjswC9K/VNmNdysAEiXXf9Whz2PwVSdus4TKYwSReR
+         64XEVPihLmlFFmi+t2ZEhXhdvzwzeZR+xYJe4RUbIDLTfQysysL36OEgjgR8fm71mJr+
+         zrvEh/hLsjF/pHspjdOxPLQuEg3gRR4/fyU0NzKzEwqp95QJKcfwc+P8tBZIIEJNBF3i
+         31cA==
+X-Gm-Message-State: AOJu0YyiOpfcjA/cerHAB2JK9FMWKybD+CL8IrEeQOy+pBIuKAu0YeJD
+	jrrJx24nVnNoQZxXRu0R4tUI7Mwe80ZQpZvYH6gu1523TtLV0eSCX6YaWeUs//0mlqs=
+X-Gm-Gg: ASbGncvo63eEGPLhC9YTj+PQJEqVER86XLNOfGBudRAtiAZG6xd1Y/2kKhLHjvZlw+X
+	rU8HSAvf6SrUiZKljg4wcZ2Xr9HDBhW0VLDRy/yIccZULmX1skWGxqlElFFKP0MtAAdgD+TkTvl
+	fXxrc5c6S5ip8FsS25B/5FI6082irW4K1PaOk3iHY53xtKMSKXLCGKTeFBuYkcgG7ENPGLXLoUO
+	06vck4FJx76SjIyMDuBPCDEFVcSh9sFV370fw8YlgyGHXX0j4nF7qw0q3cCIVJzUhZhN1l5hAAY
+	SMIbip8dGaH93g8aKB0lzDN4n37e2KeLciU+IsNwe7NudTL5XjEWhpRor54xg/o=
+X-Google-Smtp-Source: AGHT+IG05/xdIGHWltI/wOBJf0eMzpvX7s1TOBojQ6jFoSkSB5haV+38SL9/gkxntEyRZ2GQCKtH3w==
+X-Received: by 2002:a05:6214:ca2:b0:6f2:b7d4:afb9 with SMTP id 6a1803df08f44-6f8b2c379d0mr181327036d6.2.1747618928361;
+        Sun, 18 May 2025 18:42:08 -0700 (PDT)
+Received: from CNCMK0001D007E.ht.home ([2607:fa49:8c41:2600::f21d])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b097b9aasm49007716d6.107.2025.05.18.18.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 18:42:08 -0700 (PDT)
+From: chalianis1@gmail.com
+To: linux-kernel@vger.kernel.org
+Cc: Anis Chali <chalianis1@gmail.com>
+Subject: [PATCH] scripts: regdb2hex: add a script to convert regulatory.db.p7s to hex for net wireless certs.
+Date: Sun, 18 May 2025 21:42:04 -0400
+Message-ID: <20250519014204.304611-1-chalianis1@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <86frh4gazr.wl-maz@kernel.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsWy7bCSvO6hbq0Mg/5D3BbX9k5kt5j3Wdbi
-	9YXfTBZN+y8xW5w/OJ3d4urud8wWEybvYbf43dTMajHh/WZGi02Pr7FaXN41h83i2rWn7BY7
-	55xktTizaRuLxeZNU5kt2n++ZrFYfOATu4Ogx4JNpR6bVnWyedy5tofN4925c+wem5fUe/Rt
-	WcXo8XmTXAB7FJdNSmpOZllqkb5dAlfG2WOvmQuuiVVs3LODuYHxtWAXIyeHhICJxIGvx1m7
-	GLk4hAS2M0rMmv2PESIhI3F75WVWCFtY4n7LEaii+4wSV47PBStiEVCVePb/GwuIzSagK7Ht
-	BESziICixKcLJxlBGpgFbjJLHO87xgySEBYolTiy7QoTiM0roCzxZ/9rqKkzGCUeX17BApEQ
-	lDg58wmYzSygLvFn3iWgZg4gW1pi+T8OiLC8RPPW2WAzOQW0Jd68OMg0gVFwFpLuWUi6ZyF0
-	z0LSvYCRZRWjaGpBcW56bnKBoV5xYm5xaV66XnJ+7iZGcCRqBe1gXLb+r94hRiYOxkOMEhzM
-	SiK8qzZrZAjxpiRWVqUW5ccXleakFh9ilOZgURLnVc7pTBESSE8sSc1OTS1ILYLJMnFwSjUw
-	MaQb3QuVZt06U8LEY23k/J1NGQ85Ug42fFozs/bQhllf/i7M9p28JbixfCmL7YVvTkKqH7Ry
-	ry+4aeN+1G36QY3PUgG/0recTLQ52qbfmR7Ju8XQ6HDE3oI1MX9enJRn/tRzOETdo9mt9/rP
-	qG3eHHfEipq2dO/Xe5jeXvZkyd8L1dcVN1yI2ld8usg05W+j6OSqP5WZYa1yhutcTit9EnSS
-	eL2Ff8f/s0eCpFqETizNkbx1hCfyYlPTfhO2ws8CZs+Dsxj2FDoIX+N/Xbe129b02m7jYA5T
-	563fqgMfOPVuVbG7FCf4uTpbv8U2jjWuKu4J577HDy9WeSW0+byb8OTJn4S3dlM/uAtIi6co
-	sRRnJBpqMRcVJwIAS6BOmzMDAAA=
-X-CMS-MailID: 20250519013914epcas2p1b139e745f575c040a233f925e6de8a60
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----hAAegp6m8E3i.QLmwFPLLqEeSfDULVp1uZgKmo5w.8P._xnu=_6bc4c_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770
-References: <CGME20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770@epcas2p2.samsung.com>
-	<aCbhBttvi8mvsyGE@perf> <86frh4gazr.wl-maz@kernel.org>
-
-------hAAegp6m8E3i.QLmwFPLLqEeSfDULVp1uZgKmo5w.8P._xnu=_6bc4c_
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
 
-On Fri, May 16, 2025 at 10:28:56AM +0100, Marc Zyngier wrote:
-> On Fri, 16 May 2025 07:53:58 +0100,
-> Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > 
-> > [1  <text/plain; utf-8 (8bit)>]
-> > Hi arm arch timer experts,
-> > 
-> > While reviewing the arm_arch_timer code in Linux 6.12,
-> > I noticed that the function arch_counter_register() restricts the
-> > use of the physical counter (cntpct_el0) on systems where the kernel
-> > is running in EL1, even if EL2 is supported and cntpct_el0 is
-> > accessible.
-> > 
-> > In our case:
-> > - We are not using pKVM.
-> > - The kernel is booted in EL1.
-> > - We disabled VIRT_PPI and explicitly selected PHYS_NONSECURE_PPI for the timer refering to below code.
-> 
-> That's not legal. The architecture guarantees that there is a virtual
-> timer and a physical timer. No ifs, no buts.
-> 
-> [...]
-> 
-> > As I understand it, `is_hyp_mode_available()` checks whether the
-> > kernel booted into EL2 — not whether EL2 is *supported* by the
-> > hardware.
-> > 
-> > Therefore, even on systems where EL2 exists and `cntpct_el0` is
-> > accessible from EL1, the kernel still forces the use of `cntvct_el0`
-> > if the boot EL is EL1.
-> 
-> Yes, because it isn't architecturally valid to not have a virtual
-> timer. This isn't about EL2 being present of not. The switch to the
-> physical timer is purely an optimisation for KVM so that it doesn't
-> have to switch the virtual timer back and forth when running a guest,
-> as the virtual timer is the most likely used timer.
-> 
+From: Anis Chali <chalianis1@gmail.com>
 
-Thanks for the clarification.
+extracts the certificate from regulatory.db.p7s and generate a hex file usable
+by the kernel source code, after that take the result and put it with a patch to the kernel
+source tree under net/wireless/certs
 
-As a follow-up question:
+Signed-off-by: Anis Chali <chalianis1@gmail.com>
+---
+ scripts/regdb2hex.sh | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 scripts/regdb2hex.sh
 
-We are working on a system that uses a vendor-specific hypervisor instead of KVM.
-In this setup, we also want to optimize timer virtualization overhead and are considering using
-the physical timer (CNTPT) in the host context for performance reasons, just like KVM does.
+diff --git a/scripts/regdb2hex.sh b/scripts/regdb2hex.sh
+new file mode 100644
+index 000000000000..b28912a79094
+--- /dev/null
++++ b/scripts/regdb2hex.sh
+@@ -0,0 +1,37 @@
++#! /usr/bin/env bash
++
++# This script extracts the certificate from regulatory.db.p7s and generate a hex file usable
++# by the kernel source code, after that take the result and put it with a patch to the kernel
++# source tree under net/wireless/certs
++# this will be added to shiped_certs
++# to verify that your certificate has been added successfully 
++# 1. check inside 
++# /proc/keys and you will see a line with asymetric issuer and a sha
++# 2. dmesg | grep -i x.509
++# cfg80211: Loaded X.509 cert '{issuer}: {sha}'
++
++if [ $# -lt 2 ]; then
++    echo "${0} <regulatory.db.p7s> <output-filename>"
++    exit 0
++fi
++
++trap '[ -e ${2}.x509 ] && rm ${2}.x509' SIGINT SIGTERM SIGQUIT 0
++
++openssl pkcs7 -in ${1} -inform DER -print_certs | openssl x509 -inform PEM -outform DER -out ${2}.x509
++
++hex_crt=$(od -An -v -tx1 < ${2}.x509 | sed -e 's/ /\n/g' | sed -e 's/^[0-9a-f]\+$/\0/;t;d' | sed -e 's/^/0x/;s/$/,/')
++
++echo "/* ${2}'s regdb certificate */" >> ${2}.hex
++
++cnt=0
++for h in ${hex_crt}; do
++    
++    cnt=$(( cnt + 1 ))
++    nl=$(( cnt % 8 ))
++    if [ "$nl" = "0" ]; then
++        echo " $h" >> ${2}.hex
++    else
++        echo -n " $h" >> ${2}.hex
++    fi
++
++done
+\ No newline at end of file
+-- 
+2.49.0
 
-Would it be acceptable (from the upstream kernel's perspective) to make a similar switch
-to the physical timer in this case ?
-
-Or is this kind of optimization strictly tied to KVM's internal behavior
-and not something the kernel is expected to support generically?
-
-Any guidance or recommendation would be appreciated.
-
-Best regards,
-Youngmin
-
-> > Is this restriction to `cntvct_el0` in EL1 an architectural
-> > requirement, or simply a conservative default to avoid possible
-> > traps on some systems?
-> 
-> Both. Crucially, it isn't possible to trap the virtual timer on some
-> older implementations.
-> 
-> > If the hardware clearly supports EL2 and allows CNTPT access from
-> > EL1, could this restriction be relaxed?
-> 
-> Absolutely not. Having the virtual timer is a hard requirement from
-> both the architecture *and* Linux. Feel free to emulate it from EL2 if
-> you want (and can trap it).
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
-> 
-
-------hAAegp6m8E3i.QLmwFPLLqEeSfDULVp1uZgKmo5w.8P._xnu=_6bc4c_
-Content-Type: text/plain; charset="utf-8"
-
-
-------hAAegp6m8E3i.QLmwFPLLqEeSfDULVp1uZgKmo5w.8P._xnu=_6bc4c_--
