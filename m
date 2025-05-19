@@ -1,101 +1,183 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8EC21FF20;
-	Mon, 19 May 2025 21:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2F62206B7;
+	Mon, 19 May 2025 21:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690597; cv=none; b=nikO88A/JPqnbqJn01i30l7zIsqt4kB3+x46RmdywQn71JAljCS4ZYRt8I0ZjgVqP3pvBi3047fEgKMhxRmCM5iaCtQ9mHu5FhzV1QbBY7FzX7I8cHy//pJdckFrRDPeja7G3I8pz5+K5K7/VXapTcoO930jElLstZaibtdhKc8=
+	t=1747690611; cv=none; b=F0xQ/wbRT/gQ5O+RGlifciBqylVXUQEcFT/dObcPIqTHJlvr0Qch8px8UdXGlrGMWsuTVaN+FwK3XCisp7AVhyFssrYgDCHJ/5nXkj3ZCrQzJwvzvNhTE8tqrO7PuSzyhNLog+iQAqiNF9iMdwm5+KlcvUKBU/hV+qwurBWw7gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690597; c=relaxed/simple;
-	bh=51w6uQtEdksHPPx6kuXh/IBNEl4ishQkaOPYYW7KX9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtuTDQf5+xiimwUcOuzPd2Ordsx1X/eoPq/tRQxc7M4uKilshl75xMNlZZr0DqkTD68ubHYdWWpWXbll0PqhzOOuxmBy9/W7S93dZVptWaASOQi88ztJHu2+X23dzS3WZfPAOG6r0zj8MoB1pOhrvbHAfzJYiCzT8iXuRhKbjQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVTMzP7P; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747690611; c=relaxed/simple;
+	bh=lBvl18LaQT+t/CXp3Ntta7x6/KSCyUwxhyyopGai6uQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xm3UVLrpURyZFveuaP2R+hermxjizEl5kILzLQGMPgnaTgAay0B+VP3d3gYQtaBX9NZNkzms0FdPq8EVTaMrYnWnt1gVeBJMnvUX0I+XaHzKW/ykChmj3aJIfhbecOfK4dEtwDGVklrYaZx6k0aMNpUFIQhw0qa7YBCeazU4ihU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dD/alx/9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVTMzP7P"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30e9397802eso2450942a91.1;
-        Mon, 19 May 2025 14:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747690595; x=1748295395; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+xWbtZvz9WxQzQ8bs2cp2wokdterkmW+4mn44kz7j4=;
-        b=RVTMzP7PDbJOaMSVMfHEvnqUU6pTK/CHa43r3dFLv8B4bofKmwJZQh59MnS08C4O9C
-         WbeEAh/07KBPk5hUkbFn2nbsSnup28ANsRkuRjZ6kd8Ti2BYSrk9SO+zWxjPfAawfobU
-         KeCQiSEd3Zmuqx6Gro4dfR/wNH5BfS45ZRf7WjR0UvhTQxc8Z4YkHGjOByZwydzubZTS
-         Y/LERVQPP7pChDhoQPoNl4gLP1n1WZLHtFGcIOQcfTrjicRWbW51XFr6KNZKiEd4KMyw
-         jwyFitt+NsUuap0DMvaKCYl6pf+qahAiSOlXcLSc98UkAeJc6FKIOP+67Cn4czU9vzyD
-         dAow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747690595; x=1748295395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+xWbtZvz9WxQzQ8bs2cp2wokdterkmW+4mn44kz7j4=;
-        b=RrWbS/YEw2Y0SAJuSrDWHdP97zDIspKSoM0Bq+qAqsYFw0m+Uv7cHm22y5vfsXH5qE
-         c9JKog0yAa+D5zUVNtH/iMfpZZFVsIh8+NV3fdapFiujOCYttmw4WWhex7Y4ttUuUMOO
-         4+tYR3D5GVKBdm3cqJzEjBnKH9iPbHxcunHGDPmX8tvPkjKIMuhNH3ZyZy/5RMmnhPLR
-         QSxcKPulpuU2DSZ12fh8nxKTXA4lnUNOJU+HxqZAsbbgOIcKUzr2AINcEhSc9s9nhAll
-         Yzf5GHYwSYykWBxBORuvo3Sbfre97+D2BFUCcv/93U7RZ5g5H8NeVYpIHaWJPqbSqmv+
-         g6sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoX9aWZi+R6d9Ab2efO5LNhT3CZFceJRaipZctQBmFfWnmcBZd+tuz0ZqZ+G1M7NEh9N3mPVrn/xRI2b8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDY7Mwexl9paGEC9qjQT/kIiuuXRat8GfM3tF3phTiEEdG3Mb2
-	NBrcJUL1Sh8h7F2hK9fU/5kz7x4AauHGHIaU2DZ+PEsebtshjBtmAbClVAvI6A==
-X-Gm-Gg: ASbGncu502yzQvHVj/txYxA/bONfkPgLYmYWMWWVKoCnzDE5omuHACdcudNdv3A+TH8
-	nykPgJIiUZJ58g207j53e3L+mn02Nboqupe5uir8VjkZ//kTxTuYEwUt+gcrkJ5bMQnpZ1wAq9F
-	mFoIQCy6CBq3+PCdelEG1GoIz8YqoWFKHakoHGtfcTgs4hjBngcCsSAHq0/TC9DNwEImQeQXpPj
-	M4lCV+LPDUjSXYYlT9HtWeuOAHBq/ps3sTcEWzCaLaH62Z01xkU3A9BOeazS+Mp4tn9bq+ngSDW
-	EeN/OqFa4pH0EsXD3LPjp0/ez9Ajd/BRScsZQDlSLIcMiTClc+6/Ciz6Anxs
-X-Google-Smtp-Source: AGHT+IHS5RQfA8eY3gSqw2MvaP8i0i/bYYFTHJwqx04OzmmmINg8FWgId8gJuN6AaA9kofqJfg3TsA==
-X-Received: by 2002:a17:90b:570d:b0:309:fe2b:306f with SMTP id 98e67ed59e1d1-30e7d5a8b14mr18477153a91.26.1747690595169;
-        Mon, 19 May 2025 14:36:35 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:e134:a6aa:27:6156])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b2d8fsm150326a91.7.2025.05.19.14.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 14:36:34 -0700 (PDT)
-Date: Mon, 19 May 2025 14:36:32 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Apoorv Parle <apparle@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] Input: xpad - add disable_xboxone module parameter
-Message-ID: <ogmv67n3rdia67ttj6whj4wnr2humhl2fjpo56phghqf67bpjx@bbdmdsmbp4kk>
-References: <20250517105045.70998-1-apparle@gmail.com>
- <naxnt42hmvorqkif3pu4x36tpo44ugo2oiblrbtlrauucm5di2@tr2yobgoywmm>
- <CAB7A79ysZ2-kxKPyiM1+5keSrsbVwNZti4FzXGUbjx4OONzrDw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dD/alx/9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17725C4CEE9;
+	Mon, 19 May 2025 21:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747690610;
+	bh=lBvl18LaQT+t/CXp3Ntta7x6/KSCyUwxhyyopGai6uQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dD/alx/9EyoI+LMRQbvbxI4Sy1XdxACArzosYw1zQvMczIvgYvmog5PH2i0Jcczh0
+	 UoRzP7Q+sEAMiG5VPG6IrFd1ver77ke/Rae2FQrAH2VtYZlrn2LL4phpvOCbquhNvD
+	 VcTDYu+JHgKjOrjHY3Bc4goGN3Na6xqarBfneBwMsOcnLHFQNraqmIDeJ6DF1HAObQ
+	 BWYEhOyr7TeUwPRdm8JVEaO4vskMbW20ivYTqNFeGbjlN3X+a9TUuVFvYdkAgrhoQ3
+	 SopSTEV0eIL8CrzU3vqFCtpZVoUhkz7TN2eyGGfUKJzTzUeC8bxE+CvCzYCv2G1ymD
+	 jzqSkM/vVWRtw==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v6 00/16] Rate limit AER logs
+Date: Mon, 19 May 2025 16:35:42 -0500
+Message-ID: <20250519213603.1257897-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB7A79ysZ2-kxKPyiM1+5keSrsbVwNZti4FzXGUbjx4OONzrDw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 01:30:13PM -0700, Apoorv Parle wrote:
-> The goal is to not blacklist the xpad driver completely, because I still
-> need that driver for other controllers (older Xbox 360 controller or 3rd
-> party controllers) when using multiple controllers (couch multiplayer) on
-> the same machine.
-> 
-> Today I'm forced to blacklist xpad altogether to get xone up because they
-> conflict on the device IDs, and then I can only use 1 controller, not both.
-> Or I have to create a copy of xpad with Xbox-One device IDs stripped out
-> (i.e. xpad-noone) to keep both drivers active side-by-side, so my new
-> XboxOne can use xone and my old Xbox 360 can use the xpad driver.
-> This patch is trying to make that seamless. And it'll have the added
-> benefit of making distro packaging easier as xpad can just stay upstream
-> with no separate builds needed, and xone driver can be a non-free opt-in
-> installation with this module param enabled.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-I understand. However you can unbind and bind individual devices to
-individual drivers via sysfs by writing into
-/sys/bus/usb/drivers/{xpad|xone}/{un}bind.
+This work is mostly due to Jon Pan-Doh and Karolina Stolarek.  I rebased
+this to v6.15-rc1, factored out some of the trace and statistics updates,
+and added some minor cleanups.
 
-Thanks.
+Proposal
+========
+
+When using native AER, spammy devices can flood kernel logs with AER errors
+and slow/stall execution. Add per-device per-error-severity ratelimits for
+more robust error logging. Allow userspace to configure ratelimits via
+sysfs knobs.
+
+Motivation
+==========
+
+Inconsistent PCIe error handling, exacerbated at datacenter scale (myriad
+of devices), affects repairabilitiy flows for fleet operators.
+
+Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
+rasdaemon) to collect/pass on to repairability services will allow for more
+predictable repair flows and decrease machine downtime.
+
+Background
+==========
+
+AER error spam has been observed many times, both publicly (e.g. [1], [2],
+[3]) and privately. While it usually occurs with correctable errors, it can
+happen with uncorrectable errors (e.g. during new HW bringup).
+
+There have been previous attempts to add ratelimits to AER logs ([4], [5]).
+The most recent attempt[5] has many similarities with the proposed
+approach.
+
+
+v6:
+- Rebase to v6.15-rc1
+- Initialize struct aer_err_info completely before using it
+- Log DPC Error Source ID only when it's valid
+- Consolidate AER Error Source ID logging to one place
+- Tidy Error Source ID bus/dev/fn decoding using macros
+- Rename aer_print_port_info() to aer_print_source()
+- Consolidate trace events and statistic updates to one non-ratelimited place
+- Save log level in struct aer_err_info instead of passing as parameter
+v5: https://lore.kernel.org/r/20250321015806.954866-1-pandoh@google.com
+- Handle multi-error AER by evaluating ratelimits once and storing result
+- Reword/rename commit messages/functions/variable
+v4: https://lore.kernel.org/r/20250320082057.622983-1-pandoh@google.com
+- Fix bug where trace not emitted with malformed aer_err_info
+- Extend ratelimit to malformed aer_err_info
+- Update commit messages with patch motivation
+- Squash AER sysfs filename change (Patch 8)
+v3: https://lore.kernel.org/r/20250319084050.366718-1-pandoh@google.com
+- Ratelimit aer_print_port_info() (drop Patch 1)
+- Add ratelimit enable toggle
+- Move trace outside of ratelimit
+- Split log level (Patch 2) into two
+- More descriptive documentation/sysfs naming
+v2: https://lore.kernel.org/r/20250214023543.992372-1-pandoh@google.com
+- Rebased on top of pci/aer (6.14.rc-1)
+- Split series into log and IRQ ratelimits (defer patch 5)
+- Dropped patch 8 (Move AER sysfs)
+- Added log level cleanup patch[7] from Karolina's series
+- Fixed bug where dpc errors didn't increment counters
+- "X callbacks suppressed" message on ratelimit release -> immediately
+- Separate documentation into own patch
+v1: https://lore.kernel.org/r/20250115074301.3514927-1-pandoh@google.com
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=215027
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=201517
+[3] https://bugzilla.kernel.org/show_bug.cgi?id=196183
+[4] https://lore.kernel.org/linux-pci/20230606035442.2886343-2-grundler@chromium.org/
+[5] https://lore.kernel.org/linux-pci/cover.1736341506.git.karolina.stolarek@oracle.com/
+[6]
+https://lore.kernel.org/linux-pci/8bcb8c9a7b38ce3bdaca5a64fe76f08b0b337511.1742202797.git.k
+arolina.stolarek@oracle.com/
+[7]
+https://lore.kernel.org/linux-pci/edd77011aafad4c0654358a26b4e538d0c5a321d.1736341506.git.k
+arolina.stolarek@oracle.com/
+
+
+Bjorn Helgaas (9):
+  PCI/DPC: Initialize aer_err_info before using it
+  PCI/DPC: Log Error Source ID only when valid
+  PCI/AER: Consolidate Error Source ID logging in aer_print_port_info()
+  PCI/AER: Extract bus/dev/fn in aer_print_port_info() with
+    PCI_BUS_NUM(), etc
+  PCI/AER: Move aer_print_source() earlier in file
+  PCI/AER: Initialize aer_err_info before using it
+  PCI/AER: Simplify pci_print_aer()
+  PCI/AER: Update statistics early in logging
+  PCI/AER: Combine trace_aer_event() with statistics updates
+
+Jon Pan-Doh (4):
+  PCI/AER: Rename aer_print_port_info() to aer_print_source()
+  PCI/AER: Introduce ratelimit for error logs
+  PCI/AER: Add ratelimits to PCI AER Documentation
+  PCI/AER: Add sysfs attributes for log ratelimits
+
+Karolina Stolarek (3):
+  PCI/AER: Check log level once and remember it
+  PCI/AER: Make all pci_print_aer() log levels depend on error type
+  PCI/AER: Rename struct aer_stats to aer_report
+
+ ...es-aer_stats => sysfs-bus-pci-devices-aer} |  34 ++
+ Documentation/PCI/pcieaer-howto.rst           |  16 +-
+ drivers/pci/pci-sysfs.c                       |   1 +
+ drivers/pci/pci.h                             |   5 +-
+ drivers/pci/pcie/aer.c                        | 346 ++++++++++++------
+ drivers/pci/pcie/dpc.c                        |  49 ++-
+ include/linux/pci.h                           |   2 +-
+ 7 files changed, 329 insertions(+), 124 deletions(-)
+ rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
 
 -- 
-Dmitry
+2.43.0
+
