@@ -1,94 +1,87 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D2A1A0B08
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA45B1A0B08;
+	Mon, 19 May 2025 06:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636599; cv=none; b=dHF+PbA/2b9EDag/Fn/FVBsBXmPL1Jl9DJZKesS3Od9RRpk4dw6gSZ8E+9lsGuMtT05VX/k6nv6CPPMJfdjkkHNEIicMPDpZYNZJX65WLql1R6tJrg3AXDc6/J9BUVq+98IbIM6bjnydV7Nxd/Z+lxoLOaHbBca7oawauV3UOlA=
+	t=1747636687; cv=none; b=R78SsbXa+dpZs1Jq5QiUm+P4o/ZmLT75qO+OAcumFBzvj6Ms6874uqh0owJjhmcIqYhiQFtnLRcQf43xjVLfdBh2A0uHbpKr7caWqNLeJsjp1Szx2vbpPahRE+ZwFGtCUO3J1y1W538k78YYfBNcIjJvHdlJhM3azEhJEmmUm18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636599; c=relaxed/simple;
-	bh=lwqWQzzD1KaZNdyW32w2LLw5wm1gpthvv/BW6duSbJs=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=dIx2narqyYM9y51bSaxDWVDqoV7irpoDBr1iiEhr44ZXm3xWq3zLc3Pab+v+HG4tVkMgWdVFk7sKF2iZMhAm413oOMFUkzByoM4OgfzsfOkfVGfK3y1UKLV7bg+DUobTsx7xgoXgPLZiZ8iL7gDAv6C7hnQkh6B1QTmHSm5Pp8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b17Hx0dSBz51SZC;
-	Mon, 19 May 2025 14:36:29 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 54J6aGEc052329;
-	Mon, 19 May 2025 14:36:16 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 19 May 2025 14:36:18 +0800 (CST)
-Date: Mon, 19 May 2025 14:36:18 +0800 (CST)
-X-Zmail-TransId: 2afc682ad162ffffffff839-45cc2
-X-Mailer: Zmail v1.0
-Message-ID: <202505191436188855ReOYCghNWSoD1i2A4r9h@zte.com.cn>
-In-Reply-To: <20250519141446635ihK4D1-JvptKANb816_Kz@zte.com.cn>
-References: 20250519141446635ihK4D1-JvptKANb816_Kz@zte.com.cn
+	s=arc-20240116; t=1747636687; c=relaxed/simple;
+	bh=/ZOxywsZ4v3YNF6ORc9uoDOFdtXzuxUv/2ZKjedS+Q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEYKQ4ry6jk2RgR9YJbBqIEm+5JR2XL1ThWeEtEZwcczsyUC3thTH6iAwE+j4iOSjU5fGkwhCrFadQc3mRiF5YtqtI3vAkXL8FvLiDjfjAo1Gs72oM5oyzNw7+YyEutylAinbqVk8AZcTwtQs8SoLhQarQre4UvwyVWjEsw9qoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfArLU7z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfArLU7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5B5C4CEE4;
+	Mon, 19 May 2025 06:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747636686;
+	bh=/ZOxywsZ4v3YNF6ORc9uoDOFdtXzuxUv/2ZKjedS+Q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WfArLU7zxx1J3isWA/Gktwk32k8He3ZrW20TsuoNsmL4KBcGRJUo0X2qWqnRikFTh
+	 LiffrLuF3T96ypmtcVa1sB56OlPVlHUX5AiF+p7viT3mlD2aMyFZCM/Y2Rh45msu6g
+	 GXU1bmOv0/K7+c8hRzUiNhazQVhIFELeeSM/BqunvRstAdmel6eTle2kKtQlQeIZqO
+	 NtfTpr7Xc/vNEwDuz0z1i7GT6TS0ou3bgSPPWXz4X+p5fej5LboFUd2CemOc9G2RVW
+	 PiycXInOO03bXG1qUijYYVbQG/05Vz12yB7eBnZJIVN8V1UWYEm1O2cxb9ez1OR3qW
+	 8cJuKwl3cHVsw==
+Date: Mon, 19 May 2025 08:38:03 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Chiang Brian <chiang.brian@inventec.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: trivial: Add tps53685 support
+Message-ID: <20250519-orthodox-ermine-of-support-bc945d@kuoka>
+References: <20250515081449.1433772-1-chiang.brian@inventec.com>
+ <20250515081449.1433772-2-chiang.brian@inventec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <jiang.kun2@zte.com.cn>, <wang.yaxin@zte.com.cn>
-Cc: <yang.yang29@zte.com.cn>, <bbonev@devuan.org>,
-        <linux-kernel@vger.kernel.org>, <bsingharora@gmail.com>,
-        <jiang.kun2@zte.com.cn>, <akpm@linux-foundation.org>,
-        <wang.yaxin@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsaW51eCBuZXh0XSB0YXNrc3RhdDogYWRkIGV4cGxhaW4gYWJvdXQgeHh4X2RlbGF5X21pbi9tYXggYW5kIGFkanVzdAogaW5kZW50YXRpb24=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 54J6aGEc052329
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 682AD16D.000/4b17Hx0dSBz51SZC
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250515081449.1433772-2-chiang.brian@inventec.com>
 
-> add explain about xxx_delay_min/max and adjust indentation.
+On Thu, May 15, 2025 at 04:14:38PM GMT, Chiang Brian wrote:
+> Add device type support for tps53685
 > 
-> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+> Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
 > ---
->  include/uapi/linux/taskstats.h | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
-> index d71aa022b2ef..62e2d7f65298 100644
-> --- a/include/uapi/linux/taskstats.h
-> +++ b/include/uapi/linux/taskstats.h
-> @@ -207,6 +207,12 @@ struct taskstats {
->  	/* v15: add Delay max and Delay min */
-> 
->  	/* v16: move Delay max and Delay min to the end of taskstat */
-> +	/*
-> +	 *
-> +	 * xxx_delay_max is the max number of delay values recorded
-> +	 * xxx_delay_min is the min number of delay values recorded
-> +	 *
-> +	 */
+> v2 -> v3:
+> 	1. Fix the order of patches
+> 	- Link to v2: https://lore.kernel.org/all/20250424132538.2004510-3-chiang.brian@inventec.corp-partner.google.com/
 
-The naming of these variables is sufficiently clear and self-explanatory, so no need to add these comments.
+And the rest of my comment?
 
-> @@ -225,11 +231,11 @@ struct taskstats {
->  	__u64	compact_delay_max;
->  	__u64	compact_delay_min;
-> 
-> -	__u64    wpcopy_delay_max;
-> -	__u64    wpcopy_delay_min;
-> +	__u64	wpcopy_delay_max;
-> +	__u64	wpcopy_delay_min;
-> 
-> -	__u64    irq_delay_max;
-> -	__u64    irq_delay_min;
-> +	__u64	irq_delay_max;
-> +	__u64	irq_delay_min;
->  };
+<form letter>
+This is a friendly reminder during the review process.
 
-this change is ok.
+It looks like you received a tag and forgot to add it.
+
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions of patchset, under or above your Signed-off-by tag, unless
+patch changed significantly (e.g. new properties added to the DT
+bindings). Tag is "received", when provided in a message replied to you
+on the mailing list. Tools like b4 can help here. However, there's no
+need to repost patches *only* to add the tags. The upstream maintainer
+will do that for tags received on the version they apply.
+
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
+
+It's the last try from me:
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
