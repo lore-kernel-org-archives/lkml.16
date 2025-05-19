@@ -1,40 +1,65 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFABB67A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D17F272E51
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652115; cv=none; b=HIONtv6xWiRkS7HCi/ZNxAWY+YL9RZxo8oqUPcRkaNnipoiO/APBvyB6MRnxWKXWrLOr1SQKoz/QKPlYUhW21ME2Oi2qQRZEW1XGIvwyXys1TIys8+98mIKJBy0gQBIzM3L3sGCSk7z732MswItIbKnPwXPtTWQ3vH4RSEaTxyM=
+	t=1747652119; cv=none; b=vAqYCSMy7zsw+/oY1nnamXGAaBXb3OW18UmheaNDDa+go21BNpnvQ15rWec4PjAF00/knVuLUYSZ+E+bF7+fcMlUESirBf0CJnbr5IMIU9dGzk5QiVqC4QOck+ynfR0DNawHAWdjCzG2TxrPRYupqkMdo5022QZIJVL+gkPs/7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747652115; c=relaxed/simple;
-	bh=QYtP5LmynK+du7Qm68XYDkrn/AYsAtkImr/n6dXxi7E=;
+	s=arc-20240116; t=1747652119; c=relaxed/simple;
+	bh=PzfkeF67xi2GoMUYcGvqwEOhE8nFTMY+yeJf+y2fnOY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r4C9hlsmVbXLQu3tjwlUUw/CUfcIRO3DYwq5r0vdOiWqpGgSHgCDAXvVVouyz3ZmbRXO132rHC0Ge4zthF2TxKFbytBn3sWnQwzTCDEnoqwO3u5wUBJT0y6hAdOcM/0PzsTHDdQQdAmChS/7oPZDyCSbVk6wSR+lF7fV23i1lkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZXT6/yKl; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=O4VsFq4DuRhqOKKUjk1mrHxue5I+LgFZY0WB/c8/I0SlDZgd8vNtjp3WKOZc2KOsQe5rTXKRKkfwDAF5tNSy9YfJ9XECBEr4RLrSFMaj0WoTTidpJhNtjDTCttCWpUPQHfwmEy7eGliv5HYP+ehjeb1Q9vURGGjago6lpwuLd3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=If2rhX/n; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZXT6/yKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747652111;
-	bh=QYtP5LmynK+du7Qm68XYDkrn/AYsAtkImr/n6dXxi7E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZXT6/yKlnR68NbxOPBY9ket/ifVrl0sM3+kTkSDydE+TANkeBnlxsXE6jGMjqxPj5
-	 w2FzEyjwiTA0qCq0lYCZNtD+IEeTeWxmu9B2SWX9ARJTGOi0AMQqzOlsf+5GPE1TZa
-	 P7R5qHzgF/TxqxFKXuzaBUHJQdZhIf0602nFhR84KUMCsgSGY6ER4WMGv7twDej27Y
-	 JZ6BPMRj0kaLcVa177EQ26HwmED7sr6J+5ivnF7HTsOybkVB4B7nlKl297DOegPeLC
-	 qMTX3NQWcUmZutgo2aFmOKrESw7Em9fxFKwJDQ3OwdlG93pytRfyvu8ReyhhXon/Sl
-	 sukKRC4dWs2vQ==
-Received: from [192.168.1.90] (unknown [82.76.59.134])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E7F417E07E5;
-	Mon, 19 May 2025 12:55:11 +0200 (CEST)
-Message-ID: <a37b4045-0d94-4148-bb1e-fc08104e6173@collabora.com>
-Date: Mon, 19 May 2025 13:55:10 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="If2rhX/n"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d0618746bso33233695e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747652115; x=1748256915; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ueJhJRaSbKSvp1WqYqL5yk7HRHK1xuho6oDidakstGA=;
+        b=If2rhX/nr5v8PDP7bji+SCVMK+XXyBD72tweavL7Ip9meDI4Iv3NTfLO1VMrcSl+xs
+         OQMLLOTaRpGMvUToyCypuVLr39FYyPkp4x2U6c2yyD44EwJTFoXtoKHnNTnHKL8FF6fm
+         n+s+YEXQYtBgHiJw/ev97UNQJo9DOSc/feCVs0gdybUS7vUhRjB6oXQ8mW6i0hCfq259
+         Plall4NOjo9LzAayS6jc4MrzOiNs3GST5yO1h71KUdeZhcJiaHwtqZeSYUfYFeqUK4+z
+         KP5jKBSWu1qkRfc1zFTk2htUxQjnQ/8doolY7TfW8j4+AyZYBvmIyAXkuV7yRKbKTLdn
+         CHpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747652115; x=1748256915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ueJhJRaSbKSvp1WqYqL5yk7HRHK1xuho6oDidakstGA=;
+        b=qxkUCEeX4a0TrEFNoRJRYvQgglfIOVsGv00IxWFYbm2f1XfFpbS0v3JLcwn7gbZD6o
+         MeO0oKeU0HjVXv8we+DEk22yfQLKu95XjcIbVs4/6OykXrjxXrEZQzhuQZWTKZn/WaQA
+         oKYhGHHCzCiiDevT4ecBLh57W815NZgh4f3kXn0IQL9YUlOB5KAsQNUx/JaCWE4KPfOp
+         s+sqUsZ+MaMztiu8nuJscTO4EYDsKA5hCFlxg5MIk2GvbJVGR8DnnyBTjhQIfhMNm5x2
+         w9fX3Dc0Wj6CICvo5cUtKvCTHnDfPApwdk2QN+eS37j2hMv1yIA9tR2R66bTkK+/E6wU
+         t2jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5WWgPf5VbvYWgfDmeUBAgS4cpdJL8O7ROxI5N3d/8TvJ1sCG5/atq4vdZGju+V4GvOLxysmhBKbXb2To=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWo8l+XOLHynF9rdfQuxSaezLz3Z2ry5NKQw1qxvc8ImCMIspy
+	ZFsYGl23oaax+UWTJOJj1WCGU0uOmV4m5buXEZq53EGwIJoJ+WbJ/r1mZiQvEZ5CGw0=
+X-Gm-Gg: ASbGnctls3BQiNmhj5X/2VZLmRpUpEYpigQ4DxotS2itjZDec6CwSm7eVLm82D4FRFT
+	FTkiFr07/IeJAv1OlHXKB+ucbAMonNCrarVT6mV9I/kmDBWXYObPS4BaADQ/lWwc76BVkFHmiK9
+	hdCU9H2yfKOsgOGjSoUN87/fe3yCcoG9qzZ3sZDnRg1a3QPd0zqBj6v82Mkc1fME/QoVhXgf59y
+	iIRomogXtKw47ZCWvYjHyFLiGZDzLHnqICsqqY2oPMOXALgWP6HXnDuVix3T9+N7/hN+PxYqdHd
+	rxwAb1uwS/Bjq00KhXkAvQB9cZc6LhyEawrgM2GCN+GP/lSIEOMAQwzp0vKlX+s4vG9Py7fguDr
+	R6u5QUpJ+f6U3EDEP
+X-Google-Smtp-Source: AGHT+IECzMkl/j8ndcEIBGJahHduWyX4b0BqqSZwZhjdHPF7JoURouc9w8pWFfoFilDuHYffnnZaZw==
+X-Received: by 2002:a05:600c:c05:b0:43c:f689:dd with SMTP id 5b1f17b1804b1-442feffb593mr113388045e9.19.1747652115507;
+        Mon, 19 May 2025 03:55:15 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f8ab839esm166199545e9.17.2025.05.19.03.55.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 03:55:15 -0700 (PDT)
+Message-ID: <88f6fea5-89f2-4128-a00b-dff760bc42b8@linaro.org>
+Date: Mon, 19 May 2025 11:55:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,95 +67,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
- RGB/YUV420 mode
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
- <20250519-classy-millipede-of-competence-4bb6ad@houat>
+Subject: Re: [PATCH v4 1/2] media: venus: Add a check for packet size after
+ reading from shared memory
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Vedang Nagar <quic_vnagar@quicinc.com>
+References: <20250519-venus-fixes-v4-0-3ae91d81443d@quicinc.com>
+ <20250519-venus-fixes-v4-1-3ae91d81443d@quicinc.com>
 Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250519-classy-millipede-of-competence-4bb6ad@houat>
-Content-Type: text/plain; charset=UTF-8
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250519-venus-fixes-v4-1-3ae91d81443d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 5/19/25 11:42 AM, Maxime Ripard wrote:
-> Hi,
+On 19/05/2025 08:12, Dikshita Agarwal wrote:
+> From: Vedang Nagar <quic_vnagar@quicinc.com>
 > 
-> On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
->> Provide a test to verify that if both driver and screen support RGB and
->> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
->> when trying to set a mode unsupported by the display.
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 ++++++++++++++++++++++
->>  1 file changed, 66 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f446c4995e7ee63dbc084 100644
->> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_fallback_yuv420(struct kunit *test
->>  	drm_modeset_acquire_fini(&ctx);
->>  }
->>  
->> +/*
->> + * Test that if a driver and screen supports RGB and YUV420 formats, but the
->> + * chosen mode cannot be supported by the screen, we end up with unsuccessful
->> + * fallback attempts.
->> + */
->> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(struct kunit *test)
->> +{
->> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
->> +	struct drm_modeset_acquire_ctx ctx;
->> +	struct drm_crtc_state *crtc_state;
->> +	struct drm_atomic_state *state;
->> +	struct drm_display_info *info;
->> +	struct drm_display_mode *preferred, *unsupported_mode;
->> +	struct drm_connector *conn;
->> +	struct drm_device *drm;
->> +	struct drm_crtc *crtc;
->> +	int ret;
->> +
->> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
->> +				BIT(HDMI_COLORSPACE_RGB) |
->> +				BIT(HDMI_COLORSPACE_YUV420),
->> +				10,
->> +				&dummy_connector_hdmi_funcs,
->> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
->> +	KUNIT_ASSERT_NOT_NULL(test, priv);
->> +
->> +	drm = &priv->drm;
->> +	crtc = priv->crtc;
->> +	conn = &priv->connector;
->> +	info = &conn->display_info;
->> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
->> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
->> +
->> +	preferred = find_preferred_mode(conn);
->> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
->> +
->> +	unsupported_mode = drm_kunit_display_mode_from_cea_vic(test, drm, 96);
->> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
+> Add a check to ensure that the packet size does not exceed the number of
+> available words after reading the packet header from shared memory. This
+> ensures that the size provided by the firmware is safe to process and
+> prevent potential out-of-bounds memory access.
 > 
-> I'm not sure what this one is supposed to test. If the mode is
-> unsupported by the screen, it will be for both YUV and RGB, right? So
-> what are we testing here?
+> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
+> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
+> Co-developed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/venus/hfi_venus.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index b5f2ea8799507f9b83f1529e70061ea89a9cc5c8..c982f4527bb0b9f9ef9715c6c1dc26729f0fc079 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -239,6 +239,7 @@ static int venus_write_queue(struct venus_hfi_device *hdev,
+>   static int venus_read_queue(struct venus_hfi_device *hdev,
+>   			    struct iface_queue *queue, void *pkt, u32 *tx_req)
+>   {
+> +	struct hfi_pkt_hdr *pkt_hdr = NULL;
+>   	struct hfi_queue_header *qhdr;
+>   	u32 dwords, new_rd_idx;
+>   	u32 rd_idx, wr_idx, type, qsize;
+> @@ -304,6 +305,9 @@ static int venus_read_queue(struct venus_hfi_device *hdev,
+>   			memcpy(pkt, rd_ptr, len);
+>   			memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+>   		}
+> +		pkt_hdr = (struct hfi_pkt_hdr *)(pkt);
+> +		if ((pkt_hdr->size >> 2) != dwords)
+> +			return -EINVAL;
+>   	} else {
+>   		/* bad packet received, dropping */
+>   		new_rd_idx = qhdr->write_idx;
+> 
 
-That would be the case suggested at [1]:
+Yes, validating the pkt header against the expected/used dwords is a 
+valid check.
 
-"We still need to do the same with a driver that supports both, but the
-monitor doesn't."
+One thing I'm finding difficult to do with this code is get straight in 
+my head why we are continuously shifting >> 2 and then in the other 
+direction << 2
 
-Should we drop it?
+Surely a candidate fragment for some rationalisation down to
 
-[1] https://lore.kernel.org/all/20250410-singing-scarlet-carp-d136f9@houat/
+dwords = *rd_ptr >> 2;
+if (!dwords >> 2)
+     return -EBAD;
 
+I count six shifts in twenty LOC or at least four shifts more than we 
+should be doing if we just worked this over a bit.
+
+Anyway.
+
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
