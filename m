@@ -1,124 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE671DBB13;
-	Mon, 19 May 2025 05:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6712A2D;
+	Mon, 19 May 2025 05:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747633921; cv=none; b=FppSX3fsmvagSbIReteoBbZX5UZfkY4uLQq+oQYLbhgarggQP2sUN0pXZTjpUdfoSeJkTTI9SeJZ7OTBYeoDGe8FX6SYq+JD1UVZvCxQwo8FIzgn/bOMjR14nK/XEWIuYuobZgPRvvqsBSUUFzL3ol10Y8MyLH+OXdDRkMshuOQ=
+	t=1747634240; cv=none; b=hVvHytOWbmuAMGhhpUCTJ1XnGcChPymebndbAq9xQMXm3uCM3EyFG/rbqpJiqH+/O0YPAAl5zPT0mTtHvuxdj1dyIlAmLIJZaraLsU8xyC18xXzZ6OmnjmduWZeoTIVWoXdFIPH0RjJJf64AUKvsJwyIaqP8b6IL3cvPtdkj+/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747633921; c=relaxed/simple;
-	bh=fGqHTP2q8/OCZvTcrwKxWknaonfy5fx1oKUM6w0aEYA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HuL9Mc4iiRdN3TjTfC+h3tGMUeXg153uCGSxnlotk817TWCaI1pFZjoil4pgkUXs2g4vyLVl55aCzIB48S3feyqJJCHq9NQ2OqbucwEqzsdPgZaRm+s+XurwKfbRs3DFpnCYj29DuwDYzOftckGse2ivShWCnWdxCcBtlt6mv+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSJcadqo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747634240; c=relaxed/simple;
+	bh=mZBKw0wJmnWieD8RvOZ90E/QZ8DajgvOAWCuVqPbx2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEE4s+Dqdu+bilABmXhFzG56V2aHonrwuezqnCXR52sWqihAWn5p1ygC7NGLWzQGW4SAxVCUIXgXvCV+wL7Mdvm1TbNMN3VEqqSlybYf+ZuOotHHMLNorJlwwdwWORz4waZklkCbSlcQT/FbKke4wYU8gIzr4CJma4vNt+90qJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=msxgBqP+; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSJcadqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FADFC4CEED;
-	Mon, 19 May 2025 05:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747633921;
-	bh=fGqHTP2q8/OCZvTcrwKxWknaonfy5fx1oKUM6w0aEYA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dSJcadqo9KBIZLHJYzHDmPluue3j/A2Fp6mrhaYrzuezHPTiRkZ1knlxU34U0FZKn
-	 4E92DoTdOy0ThIfcFgXckG5wMdm1rqTNp+kV+NqsBkBmXyVTufje6x1x5a6swTCy1/
-	 PZBUN+fjMN1QYtyvjhPHR2tRgehds1WXyot13nFTrkMfG+myWkPuBkAWhebBLFm/vP
-	 Oq7VGTWylTxDkioKRSyez7Fg+NTN74zOK7pHDMTHDGjbuyT5wDNvsLRzwad64Z4SeG
-	 yPUUP9lMFY28340He2rWTpRm160EJhIUwOogFX8efWCTe4xkMD8eSv6JBDJkVzbUnw
-	 9MI8Q3GuY/3Dw==
-Message-ID: <12523bd9-0c04-4d63-9f0e-014f14d359c2@kernel.org>
-Date: Mon, 19 May 2025 07:51:57 +0200
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="msxgBqP+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=0zbSZULwMpBsF35qyqNlWF7Y18GG1Lj98fZQ/4Oi5ek=; b=msxgBqP+mlc27kvWTMpX+7lLkG
+	FhOl3sHQMXsS7oZlHmgJ1OFuwBBVVYPNVHNX3TMIdMqzzYc5HgVu8vdbDF6VvRGRCsPSJker9IyGo
+	95uClxLl2t+tWdQN2harV7L0oG/Xoo+J5Wzd2eo/Q420D9qHClavW0aHcz7ztbZVtbQCRcC4sZZ+N
+	2l2yG8qzY4AqBdFYYYRyry2O1XaCSBP7lG9WGmZFRPCnR+vb7b1mvl1lXTN8yf+akDd3LYO+Rvs0N
+	xZogCW0da3J43CBa5OhsK/ZXwiGe0fKLDNiiuT240Rd9u7PYZYSWieBcatDcYajVrsQh8JDmB/HRW
+	1+4VKTeg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uGtUl-00781A-0x;
+	Mon, 19 May 2025 13:57:04 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 19 May 2025 13:57:03 +0800
+Date: Mon, 19 May 2025 13:57:03 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
+	jarkko@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v9 2/5] crypto: loongson - add Loongson RNG driver support
+Message-ID: <aCrIL_ZXL-UtaLdJ@gondor.apana.org.au>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-3-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] charger: max14577: Handle NULL pdata when CONFIG_OF is
- not set
-To: Charles Han <hanchunchao@inspur.com>, sre@kernel.org,
- akpm@linux-foundation.org, lee@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250516095346.24169-1-hanchunchao@inspur.com>
- <20250519014804.2244-1-hanchunchao@inspur.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250519014804.2244-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506031947.11130-3-zhaoqunqin@loongson.cn>
 
-On 19/05/2025 03:48, Charles Han wrote:
-> When the kernel is not configured  CONFIG_OF, the max14577_charger_dt_init
-> function returns NULL. Fix the max14577_charger_probe functionby returning
->  -ENODATA instead of potentially passing a NULL pointer to PTR_ERR.
-> 
-> Fix below smatch warning.
-> smatch warnings:
-> drivers/power/supply/max14577_charger.c:576 max14577_charger_probe() warn: passing zero to 'PTR_ERR'
-> 
-> Fixes: e30110e9c96f ("charger: max14577: Configure battery-dependent settings from DTS and sysfs")
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  drivers/power/supply/max14577_charger.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supply/max14577_charger.c
-> index 1cef2f860b5f..af1694cac5ea 100644
-> --- a/drivers/power/supply/max14577_charger.c
-> +++ b/drivers/power/supply/max14577_charger.c
-> @@ -501,7 +501,7 @@ static struct max14577_charger_platform_data *max14577_charger_dt_init(
->  static struct max14577_charger_platform_data *max14577_charger_dt_init(
->  		struct platform_device *pdev)
->  {
-> -	return NULL;
-> +	return -ENODATA;
+On Tue, May 06, 2025 at 11:19:44AM +0800, Qunqin Zhao wrote:
+>
+> +static int loongson_rng_init(struct crypto_tfm *tfm)
+> +{
+> +	struct loongson_rng_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct loongson_rng *rng;
+> +	int ret = -EBUSY;
+> +
+> +	mutex_lock(&rng_devices.lock);
+> +	list_for_each_entry(rng, &rng_devices.list, list) {
+> +		if (!rng->is_used) {
+> +			rng->is_used = true;
+> +			ctx->rng = rng;
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&rng_devices.lock);
+> +
+> +	return ret;
+> +}
 
-No, you did not test it and it is obviously buggy code. Please learn
-first about pointers.
+This isn't right.  The number of TFMs in the system is unlimited.
+You should not pair each tfm with an individual hardwre device.
 
-Best regards,
-Krzysztof
+If you want to do load-balancing you could certainly pick a device
+per tfm, but each device must be able to support an unlimited number
+of tfms.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
