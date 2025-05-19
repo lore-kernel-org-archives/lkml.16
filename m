@@ -1,95 +1,93 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0628722D79A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC5723BCFD;
+	Mon, 19 May 2025 06:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747635317; cv=none; b=EU2wqH48AQTo4boHaU5HmH/83bsYEp4UTl9j+9titnlLZj0LxSexyJmkLanJ7tUBVnrZdtSSS59oNLFscSRoXproFR2zpntB3Sa68iACi8mDTvOZnUe+LiiyrEBRZV0+WigX2dvEYO6BvzmX3Hc6JxLBepFO+fJzQc7VyWcHYU0=
+	t=1747635384; cv=none; b=ZgenlXMgcf4UiAlRn1e3pKNL8qXQgSw8KtTRopmh06GKstPJGo7IHuM6BH58ZzuoHq9XjphgW5Qd07CRyzOIKOD1YxfVCRe0uQ3bVtA5vHwtIllub47sYwdeEcEFwJoKupyk5TdqpnKrl6KLaNABOxCI0qCgIyyf8uMcjnRkFUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747635317; c=relaxed/simple;
-	bh=e4mwkhaSG13KH4Tu5SY1Pl6xBlf9FXkb/l5SV71/QL0=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=qqTUHJRnUbI6fM/eQLb32DmJtc8t+ZK2+167svao8WMG8Rqtb8KWUB1wIF02Zs3m8hjwc/4f0/uTIKkElebpEi4GMcOELVspkVzw3818maC1e/f+2d3QD3qn5o9UfbSo6Qnc3i21c3V8m8J55KFGtbleJWUCq91py3o1kbWPDLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b16qB4jgzz51SZC;
-	Mon, 19 May 2025 14:15:02 +0800 (CST)
-Received: from njy2app08.zte.com.cn ([10.40.13.206])
-	by mse-fl2.zte.com.cn with SMTP id 54J6EiEQ088657;
-	Mon, 19 May 2025 14:14:44 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njy2app08[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Mon, 19 May 2025 14:14:46 +0800 (CST)
-Date: Mon, 19 May 2025 14:14:46 +0800 (CST)
-X-Zmail-TransId: 2b00682acc56065-088af
-X-Mailer: Zmail v1.0
-Message-ID: <20250519141446635ihK4D1-JvptKANb816_Kz@zte.com.cn>
+	s=arc-20240116; t=1747635384; c=relaxed/simple;
+	bh=m5Tn8CjHHnOtYLSdE0w0aEoNDr6lwIYi+NqMXXuUMCY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S5VJXyl935sE6ZscaY86DmazNx8qg7dWYNWy/5/qJS+B47ypQxhA2PNEW3880GXmm1Z6a338P0nWR1KUrmrOGQIFHh2QR6UfjdlIixzaIAvmct5vMH+rWmUAWxPo84X5P2KxB4TVZjRJTZa5vRCuPnaUnNy6d/oBE8nonXMpem0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from Jtjnmail201614.home.langchao.com
+        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505191416040218;
+        Mon, 19 May 2025 14:16:04 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ Jtjnmail201614.home.langchao.com (10.100.2.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 14:16:04 +0800
+Received: from locahost.localdomain.com (10.94.15.43) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 14:16:04 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <krzk@kernel.org>, <sre@kernel.org>, <akpm@linux-foundation.org>,
+	<lee@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Charles Han
+	<hanchunchao@inspur.com>
+Subject: [PATCH V3] charger: max14577: Handle NULL pdata when CONFIG_OF is not set
+Date: Mon, 19 May 2025 14:16:01 +0800
+Message-ID: <20250519061601.8755-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250516095346.24169-1-hanchunchao@inspur.com>
+References: <20250516095346.24169-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <yang.yang29@zte.com.cn>
-Cc: <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
-        <bsingharora@gmail.com>, <jiang.kun2@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <akpm@linux-foundation.org>,
-        <wang.yaxin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHRdIHRhc2tzdGF0OiBhZGQgZXhwbGFpbiBhYm91dCB4eHhfZGVsYXlfbWluL21heCBhbmQgYWRqdXN0CiBpbmRlbnRhdGlvbg==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 54J6EiEQ088657
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 682ACC66.001/4b16qB4jgzz51SZC
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201613.home.langchao.com (10.100.2.13) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 2025519141604e672c54106362896fc7847b26d28777b
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
+When the kernel is not configured  CONFIG_OF, the max14577_charger_dt_init
+function returns NULL. Fix the max14577_charger_probe functionby returning
+ -ENODATA instead of potentially passing a NULL pointer to PTR_ERR.
 
-add explain about xxx_delay_min/max and adjust indentation.
+Fix below smatch warning.
+smatch warnings:
+drivers/power/supply/max14577_charger.c:576 max14577_charger_probe() warn: passing zero to 'PTR_ERR'
 
-Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+Fixes: e30110e9c96f ("charger: max14577: Configure battery-dependent settings from DTS and sysfs")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
- include/uapi/linux/taskstats.h | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/power/supply/max14577_charger.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
-index d71aa022b2ef..62e2d7f65298 100644
---- a/include/uapi/linux/taskstats.h
-+++ b/include/uapi/linux/taskstats.h
-@@ -207,6 +207,12 @@ struct taskstats {
- 	/* v15: add Delay max and Delay min */
-
- 	/* v16: move Delay max and Delay min to the end of taskstat */
-+	/*
-+	 *
-+	 * xxx_delay_max is the max number of delay values recorded
-+	 * xxx_delay_min is the min number of delay values recorded
-+	 *
-+	 */
- 	__u64	cpu_delay_max;
- 	__u64	cpu_delay_min;
-
-@@ -225,11 +231,11 @@ struct taskstats {
- 	__u64	compact_delay_max;
- 	__u64	compact_delay_min;
-
--	__u64    wpcopy_delay_max;
--	__u64    wpcopy_delay_min;
-+	__u64	wpcopy_delay_max;
-+	__u64	wpcopy_delay_min;
-
--	__u64    irq_delay_max;
--	__u64    irq_delay_min;
-+	__u64	irq_delay_max;
-+	__u64	irq_delay_min;
- };
-
-
+diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supply/max14577_charger.c
+index 1cef2f860b5f..63077d38ea30 100644
+--- a/drivers/power/supply/max14577_charger.c
++++ b/drivers/power/supply/max14577_charger.c
+@@ -501,7 +501,7 @@ static struct max14577_charger_platform_data *max14577_charger_dt_init(
+ static struct max14577_charger_platform_data *max14577_charger_dt_init(
+ 		struct platform_device *pdev)
+ {
+-	return NULL;
++	return ERR_PTR(-ENODATA);
+ }
+ #endif /* CONFIG_OF */
+ 
+@@ -572,7 +572,7 @@ static int max14577_charger_probe(struct platform_device *pdev)
+ 	chg->max14577 = max14577;
+ 
+ 	chg->pdata = max14577_charger_dt_init(pdev);
+-	if (IS_ERR_OR_NULL(chg->pdata))
++	if (IS_ERR(chg->pdata))
+ 		return PTR_ERR(chg->pdata);
+ 
+ 	ret = max14577_charger_reg_init(chg);
 -- 
-2.25.1
+2.43.0
+
