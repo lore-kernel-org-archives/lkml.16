@@ -1,76 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127C372639;
-	Mon, 19 May 2025 15:33:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BF5285412
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:34:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747668822; cv=none; b=IRzkvsCnCHULjKr0ZtWMuvw8FCIOExWgu2ZH1PTHZIOmRZrLYLuSWyn3jOT7JPnhJQAAnytEcJmY3Z3pJD+RlBatfKBXI3TGgPhF3ls1iCyqwKeNFRIqQlPDljU2AgVBvj/KLEKi1GEwTJYQMisGpBvvP/zicLkbn8EESzdQyZQ=
+	t=1747668851; cv=none; b=gN17SK53mJiQ9ObOHl3hcQOEGNTvYnaL10Th+CRdWbaozmVKTRzE3NwyMv9Mlg2nGqSt4ZtqXfnvW0gpIs6tLTD/TBCPkikSojfqYAqCPaZuRgt8UxjC6P14JCjLyHJHyqvM3iSesZ5XEiYbmgSKdb3Ar/WNnOQl4ZrYTeApQRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747668822; c=relaxed/simple;
-	bh=lrLr7Kc5pMqOCD87GeQi49MHcJwGpnQAiHPxBcWrvpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YH1rbicVUaAbLFnyQhoxs92TMCuIlCzo7VcZzBX0z/JUGAHv0746NoCRmYjVI/xt325h7hoGf2dSd5vdWHhDmoYGoqyAwRJjfW06wRQP9oyK77N2hhA4m97qdTMPvja4xeNuQxS7q0OsMb04H7H9qQUDsdWQO2yloBqvjfv6Quc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E39C4CEE4;
-	Mon, 19 May 2025 15:33:40 +0000 (UTC)
-Date: Mon, 19 May 2025 11:33:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250519113339.027c2a68@batman.local.home>
-In-Reply-To: <aCfMzJ-zN0JKKTjO@google.com>
-References: <20250513223435.636200356@goodmis.org>
-	<20250514132720.6b16880c@gandalf.local.home>
-	<aCfMzJ-zN0JKKTjO@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747668851; c=relaxed/simple;
+	bh=DCOXc0NI85IirLGyEljEzY9WQiSNKDiEnqVOnUu/m3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kkKWT1kApSHlx06EnKsoOVvXYFxOORSDyO1cLLPrReu+Ke4e76ud+DpMA2OUDqt2vhu7Mu5jDq4PwtDIdxM8iMrkH81583jaWQ0tR1zP8bLWz6f1aSZveNPKGHo5PpxnAgm3x8k1QcAhr2OOeYJq+j4nJApxfDJxnAYZsNIoWfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3RV5Eel; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3RV5Eel"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39CBC4CEE9;
+	Mon, 19 May 2025 15:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747668850;
+	bh=DCOXc0NI85IirLGyEljEzY9WQiSNKDiEnqVOnUu/m3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b3RV5Eel0fRFAkNCz4y4TnLwMba2dLb2Z9V3fdlQQ01oIS0ksDvAylw8NW9GKVl2a
+	 O2/79xLZk9kPlrqpXdMvAQu91DNczO9c6ec2UIldFeR/xZSGngnGR229ZJhegd3qy2
+	 55INKOWUdP2EJAhpMWpfot6Vw06zEI773hwPviEC6K62wAlcpho/DeZRdW3YVcuB72
+	 S5KlrSck15l398iSRn1fFOR6lgjYo9tbSABI2YeXzC2JS1PWSeZIk8RF44OxXMiIlQ
+	 0fMxCx62syEtDCT065nvjIYn3U/yz82gCbcSfKzSJhwUuR945JSnkkHHv7vVXVzcK7
+	 sAROn48AzFrtQ==
+Date: Mon, 19 May 2025 17:34:05 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: Matthew Brost <matthew.brost@intel.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 03/10] drm/sched: add device name to the
+ drm_sched_process_job event
+Message-ID: <aCtPbUaah-bmcEMk@pollux>
+References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
+ <20250424083834.15518-4-pierre-eric.pelloux-prayer@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424083834.15518-4-pierre-eric.pelloux-prayer@amd.com>
 
-On Fri, 16 May 2025 16:39:56 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Apr 24, 2025 at 10:38:15AM +0200, Pierre-Eric Pelloux-Prayer wrote:
+> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> index f56e77e7f6d0..713df3516a17 100644
+> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> @@ -42,6 +42,7 @@ DECLARE_EVENT_CLASS(drm_sched_job,
+>  			     __field(uint64_t, id)
+>  			     __field(u32, job_count)
+>  			     __field(int, hw_job_count)
+> +			     __string(dev, dev_name(sched_job->sched->dev))
 
-> Hi Steve,
-> 
-> On Wed, May 14, 2025 at 01:27:20PM -0400, Steven Rostedt wrote:
-> > On Tue, 13 May 2025 18:34:35 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > This has modifications in x86 and I would like it to go through the x86
-> > > tree. Preferably it can go into this merge window so we can focus on getting
-> > > perf and ftrace to work on top of this.  
-> > 
-> > I think it may be best for me to remove the two x86 specific patches, and
-> > rebuild the ftrace work on top of it. For testing, I'll just keep those two
-> > patches in my tree locally, but then I can get this moving for this merge
-> > window.  
-> 
-> Maybe I asked this before but I don't remember if I got the answer. :)
-> How does it handle task exits as it won't go to userspace?  I guess it'll
-> lose user callstacks for exit syscalls and other termination paths.
-> 
-> Similarly, it will miss user callstacks in the samples at the end of
-> profiling if the target tasks remain in the kernel (or they sleep).
-> It looks like a fundamental limitation of the deferred callchains.
-> 
+Using the sched_job->sched pointer here and in other trace events implies that
+the trace event must not be called before the sched_job->sched has been set,
+i.e. in drm_sched_job_arm().
 
-Ah, I think I forgot about that. I believe the exit path can also be a
-faultable path. All it needs is a hook to do the exit. Is there any
-"task work" clean up on exit? I need to take a look.
-
--- Steve
+Please document this for the corresponding trace events.
