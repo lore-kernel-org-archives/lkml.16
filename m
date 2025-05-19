@@ -1,179 +1,102 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E6713AA20;
-	Mon, 19 May 2025 02:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826614C8F;
+	Mon, 19 May 2025 02:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747622919; cv=none; b=HH/37S21QcY0KjI9ylDI5wj7nic1vyBXh7BrqJbYSduV5uzGHaS8Ax+NCMPSB5OW3zTxZydDHL/ScKuB34D4yCqshSkjigL605XYIq57Uq1jaOXVL/wKSIu67HNQUNR1y4b9qGiNoNS8F1JuYqG9B//BLu8McMfvKsc25vjXmvA=
+	t=1747622978; cv=none; b=FIHFQXf943Y8MAxSdQ3z9w83GY9wCKmHSvA9rhwnqvWnJxYiYpl8nKPaCdmQjQXN/uandTY56lzGj4cYYU/TksXlIEO/kg6N7IZ45fVqjQuotsuAFHcyQ3sR2jtdAFfIIlMBZGYmXxw1XEzW72VgU2nfV/9dctt1a0GYpGjsZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747622919; c=relaxed/simple;
-	bh=mUL/ZZ3rsvI1Ffg4jQr5dzjyOi46UH6tDEvpyrnBYUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KK7PYQdvkg2c6jgJPp7ARyDKLlV3kd2RN/usn8D0yCBhAJNK3YFfFz2B6FgB0w60PvlGVV2cgDRe4vcGtgTpNm+EFgVS/qDBscwOLLv8uzwF7np77TyOJmmja1VdMUE4LUIeELaRZ5Ss+caKOzi+KewtGCpQLUuTrn/M9HCvj+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b12Dw6Dk1zYQtsn;
-	Mon, 19 May 2025 10:48:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 183121A1C19;
-	Mon, 19 May 2025 10:48:32 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul78mypoXqlaMw--.27476S3;
-	Mon, 19 May 2025 10:48:30 +0800 (CST)
-Message-ID: <2e127ed8-20a2-4610-8fd8-e2095bde0577@huaweicloud.com>
-Date: Mon, 19 May 2025 10:48:28 +0800
+	s=arc-20240116; t=1747622978; c=relaxed/simple;
+	bh=pBaUi5ieK0ANEQLNMp3wfR7WbzIPsvzhnxLZxVu5pZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=sInzIN0Q2J1LVIz5nxje5lqisiE7XclSrrVj9OYLxvst1tg+CDX3kLIK8Fcv5saa2fD5h1ttwK18VYOmJDOcOSwxmNF9t+UTBtbF/W56eb97o2zQOXfDRtL+Yw67+5a6hSFp6k3vGNTAed3ssu5DTfK7DV+Rsv0Bk1FceQb8sek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=Q5aFVVYg; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="Q5aFVVYg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
+	s=altu2504; t=1747622930;
+	bh=q/sSSvsejltScJuXpP48TQCHlwrbZHa7HU/nV26CHgY=;
+	h=From:To:Subject:Date:Message-Id;
+	b=Q5aFVVYgfDaFCGvcTIc30xJX5VGjeBX0TRbqp16Vdw/dsf58Fml1UyCl8YUpydGZb
+	 DKXV5s2HLVqmvhDAg8fb7NdFV/sCUYLbGsNLb3vjLwxsyL2pD7oGC/79UbXmZTBbE9
+	 k7RGD8fyBOqyV7D8ffy5QvleGJQVdZ8b86edq1HU=
+X-QQ-mid: zesmtpgz6t1747622928t1cc315c3
+X-QQ-Originating-IP: T3MnAOsWUPLbC2flLp01PBfX5yrywZTMate7vWnKhJw=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 19 May 2025 10:48:46 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3107093563551695927
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Zhang Yubing <yubing.zhang@rock-chips.com>
+Cc: Dragan Simic <dsimic@manjaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Johan Jonker <jbx6244@gmail.com>,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>
+Subject: [PATCH 0/2] Convert RK3399 dp-typec phy binding to yaml
+Date: Mon, 19 May 2025 10:48:18 +0800
+Message-Id: <20250519024820.194-1-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: MKzYG8XJzx27v8Wno56Jlu2s9jcvIOcQB40By9sEkJlhYg7b7t1jD4gb
+	xp0HJ//8Ci+pq/rVBNpvMCjrsKbzVuFrM4F1Yd1wnjXMgUUkIIg0RJdomGT8o7sa05+U3Rh
+	+6qETCkU/1Hr9vO/x1IU0naFV3UwFr/qW3yUOjaxbWorbFnpy1jj9AgU3UtssvqXmwPPEtd
+	7T4VTyiwDS1se+q5uhtJplzvcjU8ypNw4e1O+OBfX+3E3qbZEjuD7KuZuiqW/gpPUz/zLAC
+	VqVhRvOhTfqlKftjKFUl/2RuQsL6r7O1I0d1C8lf5rXDXtgdbXT7Vm/a0ptrnelUbDQcbw0
+	T37t+edoW7GgbX9PrVesQ7o6qoXUCY+592HOA65r9Y75uld0XWvFLvV95knvf4jjPTsE8Uj
+	7QPDVgkKj4SsmAmHWL66DTPkI9KdwqgHPdQMC0oJd0+C5IQ6ecZxk3btsMzOlyKBYu8txi3
+	6sDhL/qhx7+BxZgL4KOVUUT/tMwi6ZmbV06wQJvADDGgmK/C6Ou8Mdkl5o83/6sLh27egen
+	Cnut4INMU0uTLcvNg6Gzks0KqvMqlKJOOh1B/Rt5gnc14oJhMGb6K5jtsKh0+cJevrtLQNF
+	hP4An26UVVKF98oFaIOAtu8QyzLMmD/MjN8AjLf7NjIA53lhf2rC50zjD8rW4dkGTLc0FRZ
+	JD5JkCRjNg8D6s52JOpnmwS/2fKWi/v+i2wAxZVqsV3wSXNpb8zSUFV6KBRAOcTzxwotpIp
+	B6aRJrSCt/lwjMqpvR521Rp9gU/q73cqu8QscfxfbjFo+GF0ffNJgtdCv2g4uBHSlXK7jsN
+	OuC6XegzbrHnX26Rlex7ZuT1d3pzu5hhwHBzEgkBFotwCm9yUc7kbONyZ0cY9en8mNOuMsj
+	HMmdbwydeHEBJLXsiYXEWhADvWxZG+jcBADCMsa8D+SnS+wKsdKMeSsQBL0iE2sgpxnR4nQ
+	pMQKZumy+hpeYkPVCNE/v1PAHIAKH/NJb6W48HcYjXkUvJdT0a+WxPoFR
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] ext4: correct the journal credits calculations of
- allocating blocks
-To: tytso@mit.edu, linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- willy@infradead.org, adilger.kernel@dilger.ca, jack@suse.cz,
- yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com,
- yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBXul78mypoXqlaMw--.27476S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFy7GrWkGw1fWw1xuF1Utrb_yoWrXrW5pF
-	nxCF1rKr18Xw1UuFWIga1UZr18Wa1xGa13ur4rJr45XF98XryxKrn5t3WrCFyYqFZ3Aw4j
-	vF4rK347G3W3A37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi Ted.
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-On 2025/5/12 14:33, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> The journal credits calculation in ext4_ext_index_trans_blocks() is
-> currently inadequate. It only multiplies the depth of the extents tree
-> and doesn't account for the blocks that may be required for adding the
-> leaf extents themselves.
-> 
-> After enabling large folios, we can easily run out of handle credits,
-> triggering a warning in jbd2_journal_dirty_metadata() on filesystems
-> with a 1KB block size. This occurs because we may need more extents when
-> iterating through each large folio in
-> ext4_do_writepages()->mpage_map_and_submit_extent(). Therefore, we
-> should modify ext4_ext_index_trans_blocks() to include a count of the
-> leaf extents in the worst case as well.
-> 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> ---
->  fs/ext4/extents.c |  5 +++--
->  fs/ext4/inode.c   | 10 ++++------
->  2 files changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index c616a16a9f36..e759941bd262 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -2405,9 +2405,10 @@ int ext4_ext_index_trans_blocks(struct inode *inode, int extents)
->  	depth = ext_depth(inode);
->  
->  	if (extents <= 1)
-> -		index = depth * 2;
-> +		index = depth * 2 + extents;
->  	else
-> -		index = depth * 3;
-> +		index = depth * 3 +
-> +			DIV_ROUND_UP(extents, ext4_ext_space_block(inode, 0));
->  
->  	return index;
->  }
+This series convert phy-rockchip-typec.txt to yaml.
 
-This patch conflicts with Jan's patch e18d4f11d240 ("ext4: fix
-calculation of credits for extent tree modification") in
-ext4_ext_index_trans_blocks(), the conflict should be resolved when
-merging this patch. However, I checked the merged commit of this patch
-in your dev branch[1], and the changes in ext4_ext_index_trans_blocks()
-seem to be incorrect, which could result in insufficient credit
-reservations on 1K block size filesystems.
+PATCH1 try to remove unused "orientation-switch" property for
+rk3399-eaidk-610 board.
+PATCH2 try to convert phy-rockchip-typec.txt to yaml.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=d80af138eb8873eb13f5fece1adabb3ca4325134
+Chaoyi Chen (2):
+  arm64: dts: rockchip: Remove unused usb phy prop for rk3399-eaidk-610
+  dt-bindings: phy: Convert phy-rockchip-typec.txt to yaml
 
-I think the correct conflict resolution in ext4_ext_index_trans_blocks()
-should be:
+ .../bindings/phy/phy-rockchip-typec.txt       |  84 -------------
+ .../phy/rockchip,rk3399-typec-phy.yaml        | 111 ++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-eaidk-610.dts    |   1 -
+ 3 files changed, 111 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3399-typec-phy.yaml
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 9053fe68ee4c..431d66181721 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -2409,9 +2409,10 @@ int ext4_ext_index_trans_blocks(struct inode *inode, int extents)
-         * the time we actually modify the tree. Assume the worst case.
-         */
-        if (extents <= 1)
--               index = EXT4_MAX_EXTENT_DEPTH * 2;
-+               index = EXT4_MAX_EXTENT_DEPTH * 2 + extents;
-        else
--               index = EXT4_MAX_EXTENT_DEPTH * 3;
-+               index = EXT4_MAX_EXTENT_DEPTH * 3 +
-+                       DIV_ROUND_UP(extents, ext4_ext_space_block(inode, 0));
-
-        return index;
-
-Best Regards,
-Yi.
-
-
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index ffbf444b56d4..3e962a760d71 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5792,18 +5792,16 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->  	int ret;
->  
->  	/*
-> -	 * How many index blocks need to touch to map @lblocks logical blocks
-> -	 * to @pextents physical extents?
-> +	 * How many index and lead blocks need to touch to map @lblocks
-> +	 * logical blocks to @pextents physical extents?
->  	 */
->  	idxblocks = ext4_index_trans_blocks(inode, lblocks, pextents);
->  
-> -	ret = idxblocks;
-> -
->  	/*
->  	 * Now let's see how many group bitmaps and group descriptors need
->  	 * to account
->  	 */
-> -	groups = idxblocks + pextents;
-> +	groups = idxblocks;
->  	gdpblocks = groups;
->  	if (groups > ngroups)
->  		groups = ngroups;
-> @@ -5811,7 +5809,7 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->  		gdpblocks = EXT4_SB(inode->i_sb)->s_gdb_count;
->  
->  	/* bitmaps and block group descriptor blocks */
-> -	ret += groups + gdpblocks;
-> +	ret = idxblocks + groups + gdpblocks;
->  
->  	/* Blocks for super block, inode, quota and xattr blocks */
->  	ret += EXT4_META_TRANS_BLOCKS(inode->i_sb);
+--
+2.49.0
 
