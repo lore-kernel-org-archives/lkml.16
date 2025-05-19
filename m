@@ -1,86 +1,134 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF7427B4E2
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B23288C86
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676863; cv=none; b=mcHIGoNDHre07WKdo5zjEr2ermTrC8rzt+pZcody/IzbqSZVV56AVyOf+yAqwcgSygS2UFHwJQkQYRivcTKdCJs3UT8h/K9BCNh5wF6gwkwj2zB8YQO6mg1JpS5aURiyakO2bJXskX59pdP06MoRizRv0jKqvch5W5jJ+nSW0YA=
+	t=1747676893; cv=none; b=bg2wGeLIHtv8cZOPvSb1CHkItvCL5brCTwYTb0orRYijwi7KGgpcTCLHQDWkd1Y6GdRZWqBGJOpTB4Tv7l9K+I4sFEPoUWvuH1BXijBWSmHFNpn+4BAcmBb7THPEZMLUjyqAR0/+I34GU9gJgeS7KlrKf0R38lpHVrCtF67tmB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676863; c=relaxed/simple;
-	bh=F5sKVVPf805vPG1h8MP+c+v6PId2H9z7S1X1vHxDNek=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EAbmop18tri8oBdSIOygQZfYthkAVsGnEwvvaDRoAoOHksR/hzcBBfFBSaod3igXCfUVFNhh2zPErlPXdq8sI2IDPnFMXZLvVA+QNx+FWMOKAi0+zaiSKbLlGldWQEyDu9kFWjmRTWxUi6F+JhJAroOf3WQxpRJpo99B4yENpcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T3sVqKGG; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747676893; c=relaxed/simple;
+	bh=m0hkJuL36ikol2X6TVKitP5XRuHeBdEHsBtcWqONzzU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HY2SlMyGhg8l8LRGs8UWzDjPjSPJUQuAIMDh0bdhZq7LaFrwjAWabBqLo7k/SOzKE+gCmWyv1Tq3zreiv9ME2hY38NOMoTuewIKBwalNOfQPkAVfNtmbWK6ACzaF5LoJ1FVG2+jM1w97mQgx3Kh7QFotx6QAu9Z5miXsIBmi1hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KtHHa4CR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3sVqKGG"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43efa869b19so38971795e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747676860; x=1748281660; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsdeYCtxu4QlNt9hw6uRt+jrBcOwzhlnzzNIjRdX8dk=;
-        b=T3sVqKGGlo615Ehv6E29t8k6wnJDv3JBdAWpnmLD2szQBimjyRIJEicgcbNrZORC4u
-         CPFeG6Jgd44DnTyJovfJotg4+k/1cKHUopSN1QL67P5eZRuzFUgWKeTfJm5Xq8y1tVMZ
-         fgHrd9RYDjMZEhfmjArmgVnEMk5DBxumiTfbmChv7F/R6ZlxHxIBUz0YeRAzI3+MTOvD
-         3s/LMaLVs62vUWnc7QA8SSzWeg0o0PH0nwH3xGHddWoKeAvzq+IuRAKTPSy7Lz5vaa+d
-         4YvRisOBWFlYffvzDRHUqvN5ekyQZSEG5wDd5lp7vQjdM/oeQbwlauk0mmzEFlX7KYZw
-         pgxA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KtHHa4CR"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J8dNA6002033
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:48:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lu9IvRz0vgh0VPf2mVMC3ARfT8ah5nL2M6eYMOzKR9U=; b=KtHHa4CRzSgltpAb
+	dIOh1BPsaoJ6GB6U4kgkVjdrQFCDSLSxXPAPayXQ9sR+ykW8Gp41NEee7UW+zXYL
+	YsnRwPjWa68ur3xQN7fWabYJQ5ahCqcqSQJ4TtRPJeO8R+1HgT47T2pWodjpv1Uv
+	DysDaG4dmlGyZ5iAYQ3/2302p0x7jgraIuZAD5EaiEu9YHKUMmobAz9Zznj9eNmQ
+	EplUqnVSHS2ibnwJ3i4WgfvD2W/045MqL+DEs34GBwWtP5gndRevHxxJO5q7DQk/
+	/8RPjkiacYt93XUu6jYtLj9E/YUfjCmzIfnZid6sIEkn1FCuecmU/jdelyEyLQMk
+	aPhQAQ==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r1athgqn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:48:10 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-231d7f590ffso24132825ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:48:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747676860; x=1748281660;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsdeYCtxu4QlNt9hw6uRt+jrBcOwzhlnzzNIjRdX8dk=;
-        b=J3B9Bbsnwoa8jhzGtNObuNbrpKPjsWO4GXvGd/D7biVxLrcHj/6cL/1bZmzeiv52ay
-         J3jhANBiqb4WOyL+F1t6gBGS1J6qIwaLo0prYOh62wrY11DrrE1lEa8V+UZrl/+7ZuVW
-         HJTGZ+ly276J6wxlPAR2R9g2UlV4/yUjVqxIQNMDI8cGWuiftls6b80B1zSpVreFyPC9
-         SmMZP4VlylmiGDnQfL1YSLGafCXCMXNtThdxhgwzlGsKP7tTW+YLvGI3P7nlA/ZaUFji
-         DEBCDTdGN4X7A2vkSyekMARmyZMI8YvMY6tFNJrVfzb5G1pn6aD3QRjhPLj4HEmUSJ8L
-         /RxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/DFRVtUygvsO9F/wAB367X82kLsisr6Qer7GMprCrzTmrS6mJ35w0eHaW4ewWCcjTVtCVT289hWGszmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk1QYB8XJAobC6EriY02kIkeJvtRQR/20aUk9qPj2irfRbP/M2
-	Fn3rVvkH3v0c0YHsswgpswcPQ1+w7vLXdTI7VYn9G6qaatBnc6ISASstPc9Ltnr7thDzuX5K6im
-	+A3JoNVPkIBgA53enlA==
-X-Google-Smtp-Source: AGHT+IHcvOL30EQuS12/edxXekue4tBWyq5H5qZHWBA9INPaTzQwddva/SGP2qv4KXQO3B2y9XGDSxiTy6oJyQc=
-X-Received: from wmbep11.prod.google.com ([2002:a05:600c:840b:b0:43c:ef7b:ffac])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1d8c:b0:442:e109:3032 with SMTP id 5b1f17b1804b1-445917d2a0amr48733045e9.24.1747676860523;
- Mon, 19 May 2025 10:47:40 -0700 (PDT)
-Date: Mon, 19 May 2025 17:47:38 +0000
-In-Reply-To: <20250510013435.1520671-5-ynaffit@google.com>
+        d=1e100.net; s=20230601; t=1747676889; x=1748281689;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lu9IvRz0vgh0VPf2mVMC3ARfT8ah5nL2M6eYMOzKR9U=;
+        b=ucpU1pTwKa616szgIyXUjGA12HAL2X9VglAe50GF7/ANntEjSInBMf2udaiS4j18VR
+         O1x3c0NHsQPgD20gq81GQBNuSBiiAY0TSqfHomnjYDtkR4gmgnkJxinejRU/RtHMuUXj
+         OeKmj9v6uLBtJT+Abtnt/c5LAenVCcrbEQzXXbXF9rWgDQfXfFDwIBnvL7Mdcb43VNZ8
+         mc9WCUIrYuy3z5CRhVm+o6rhwbHxnGqXZYeJ556BtsjU9ZvPWEjLTLF07ICUg9VQiGfR
+         QQipJBDqn6/4DI3cdtxX5iI9Rjy9ZRQ4QJyLRYRjgZM7XUGvk7LtVxQTmg5+gnie1/9P
+         1IPw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3szN5e7VfdtQr0eUAEC3KctD+XFLHn39U8xQuBCX+hyzaK6VdJDwC1q/Nc3SK1PGQzslCN6apZQkGvmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Zgu18AkrC3faF/XHhId2YZkbsqwZcUTGdTp9bI0dgdesWHq0
+	WTWtxWGPK5WJjiilyZQlcBeQib2fvXp//j7x9tgRrvfQpe7TmrQi2cREPOK2LlVYtUjtz62A3yk
+	nJiJztC7HG+pqoA+cwJXbE2mhIOD958eh16t0w5Ofi29GDRhoKNMHiJ9sPOTlHq40ewwsQeK7um
+	A=
+X-Gm-Gg: ASbGncs+shhTVJ4SRMzKQB2cxvjp5pno/naDLHJGOn6gxkDBn5gMCxEKEf1Y2I6X/JW
+	FwpgoKGYjx78Nx2H9djO6bUYf+2AQGNjKTFWkaRaA7SEinOmZmqauWR1P5TXXsBTj0dJFszqD3X
+	VxYUtDvxM2r3emLYMiUHuLzghWCyo4ZbP1qShI5dgOsS5eHcI/5RLke2WaReuB1k0LpVxBLZiIv
+	VwXeJIwPb8rs46OdfqEnidPNasZiJJCjbU0JO4jAwsMgQIb+sCD+dPcNLbZG49V3mHlzXwXfmVe
+	m9kJuUeDVOrzw8hnaPJy5B1JL3U4i17vM3u5EIbV2SZLdqwd
+X-Received: by 2002:a17:902:f648:b0:224:f12:3735 with SMTP id d9443c01a7336-231de34468fmr203642955ad.31.1747676888737;
+        Mon, 19 May 2025 10:48:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWucOxXROLeNBzWIWs0QhMZ/i9p54oWNrg+8F7yqrejxyn/eAwE0eL0qCwSOlf9U/ucIR5/Q==
+X-Received: by 2002:a17:902:f648:b0:224:f12:3735 with SMTP id d9443c01a7336-231de34468fmr203642695ad.31.1747676888342;
+        Mon, 19 May 2025 10:48:08 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4afe8b0sm62651425ad.89.2025.05.19.10.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 10:48:07 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: jjohnson@kernel.org, johannes@sipsolutions.net, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org,
+        Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20250424005703.2479907-1-quic_miaoqing@quicinc.com>
+References: <20250424005703.2479907-1-quic_miaoqing@quicinc.com>
+Subject: Re: [RESEND ath-next 0/2] wifi: ath12k: support usercase-specific
+ firmware overrides
+Message-Id: <174767688738.2567051.17814529820458546404.b4-ty@oss.qualcomm.com>
+Date: Mon, 19 May 2025 10:48:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250510013435.1520671-5-ynaffit@google.com>
-Message-ID: <aCtuuscwSM4vlH01@google.com>
-Subject: Re: [PATCH v4 1/2] binder: Refactor binder_node print synchronization
-From: Alice Ryhl <aliceryhl@google.com>
-To: "Tiffany Y. Yang" <ynaffit@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, linux-kernel@vger.kernel.org, 
-	kernel-team@android.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Authority-Analysis: v=2.4 cv=OfqYDgTY c=1 sm=1 tr=0 ts=682b6eda cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=ZHLDmf7C8hvfDcYlofMA:9
+ a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-ORIG-GUID: qkBkhLbeU0Kgy9DdJjtd9tW_QWzP5Axp
+X-Proofpoint-GUID: qkBkhLbeU0Kgy9DdJjtd9tW_QWzP5Axp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE2NSBTYWx0ZWRfX+cH7uSed6WZ1
+ P1ZMKCOrw5ji5lo0weJu7v/GxfRYy19DcMx8SecaHHom5/XgzfLAEsrX/FbHOSXeobjNRGlmMCx
+ FP9wquw9v+b1DNFM6D64S+mQaiLFuS1A2YqRJn0CugPCEe0vRyTMYbgTnFSkPQ7hOSPhflEocj6
+ zJJcatIkOsALgUR8dheR7oABA/8CMHXVADBgcvD+IeEubNt2wderrlzsUKOkN9OsPt3fQPV4KV3
+ 1YfGmoFHAexdtpb4TG0gmkwbUvci4do5trvKA5m9PQXI3uQxZJCEE0oOxkXk44N7g9nbW3NGBlE
+ sB5AyDeU8LrgMLEH89xSLnvfbC30SC3sItwhl/Z+jAaqQ5sdhm6WVWfIJFWpX9Ug7J3KpSYCeWB
+ nSWA2j5ZhxUypv1m0pALnXu1J1aJyzffL5iSd5/SS3p8lN4zn7T3Yx1C+lXx2MHnDu08LLtW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=922
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190165
 
-On Sat, May 10, 2025 at 01:34:38AM +0000, Tiffany Y. Yang wrote:
-> The binder driver outputs information about each dead binder node by
-> iterating over the dead nodes list, and it prints the state of each live
-> node in the system by traversing each binder_proc's proc->nodes tree.
-> Both cases require similar logic to maintain the global lock ordering
-> while accessing each node.
-> 
-> Create a helper function to synchronize around printing binder nodes in
-> a list. Opportunistically make minor cosmetic changes to binder print
-> functions.
-> 
-> Acked-by: Carlos Llamas <cmllamas@google.com>
-> Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+On Thu, 24 Apr 2025 08:57:01 +0800, Miaoqing Pan wrote:
+> Introduce 'firmware-name' property to allow end-users and/or integrators to
+> decide which usecase-specific firmware to run on the WCN7850 platform.
+> 
+> Miaoqing Pan (2):
+>   dt-bindings: net: wireless: ath12k: describe firmware-name property
+>   wifi: ath12k: support usercase-specific firmware overrides
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] dt-bindings: net: wireless: ath12k: describe firmware-name property
+      commit: 607d6e49dae5336bd9f7356b0e227d8571450bd1
+[2/2] wifi: ath12k: support usercase-specific firmware overrides
+      commit: a9610bc482ef9c77ee0f3b7c077e0b49732769b8
+
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+
