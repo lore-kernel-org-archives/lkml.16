@@ -1,125 +1,195 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610C128469E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875312746A;
+	Mon, 19 May 2025 15:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667799; cv=none; b=dIKOvKzGbWdazj3ktBcS1k6R3X3XF0VMN/F2Ru3YiCp6vaCCS8TqH7YjvFkbaQRzRFUnwO8shTldXbRvvkTrBwaCBY+Gy9JXmnJ9rCGXEfK5kvBglVz4Qu0vsmFbMK2FJjSyHZjMkh6NANaBy5bv7CWdKYinnhhI0sne6y6X95s=
+	t=1747667801; cv=none; b=sZk32WzQV91Xs6gRDqbj6qKzR8POhq9M0GCT1hBXmQOajEtejsiCGlfobSecp1lv8goR9TAIPejIerESm59DGSDzC1Lv7tX20V/WSdxe7krpN+06AbshGjF+0BoqLHojvC+O8OImUGdoCQ8Gf4en7pNdIHpiW0OG9iHjHIeYKwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667799; c=relaxed/simple;
-	bh=5q3uIgP+yjKH81MVjcSqSMJF1250QvkUhRgQZrFOmts=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=tgVIC28Xn2z6UHti2PbPLrOzOlQ++5Gupo1aiXHvx3guGbRfJiou3Hm0HVl14L67rus3ivawOS7xy56bL/ElMxAXfW6j+S0feusaN+vgSsC2C5lqzicbRelGDvyGSFKFT838ieYVF70Q9Ke+ezvX7VVGQf5DD5mG9szU+7u6LdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cAGdWTsm; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747667801; c=relaxed/simple;
+	bh=dIjfsbvuKpv6FNDMYT0qk3KQ3CM+SITjSH1AsPbbXss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WKu3q09LHfUSewT49WZo+oYaM65yocnEy8IgI07F5WtZlOKUCAzcfcPe0lLiKf7+77NPsV0i07IiuxZuJRhUuX/2Ok3Z2eUNSvgtdRENtqFp8QKQItk311cK+3qf2I74luzRIfDOqbihVY9E0u8g5jXrE/ITULtU83psruU5yA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=frnhOcHk; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cAGdWTsm"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250519151635epoutp017b794112a93923984f752d0cd30bdef5~A9pmpOKxw0536305363epoutp01Y
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250519151635epoutp017b794112a93923984f752d0cd30bdef5~A9pmpOKxw0536305363epoutp01Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747667795;
-	bh=NjSkcG8Ba/+tj528MW2v7RcxXouxjFYRzu2bxrG2VTY=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=cAGdWTsmBTvkJZG4Rh2DK0TdJyhfL2xVFApt7LQTUtNpuQer0CMUAv1iOtsz2W6Lz
-	 sfYawBTRqBcCjbkaQZ2a55kidC+tjQebeLBy0bw+7IOE5Z5QVZRuIROxpKdA6mRKcd
-	 hCY53q/ZdmecxSfJi4PXa5NdEgY/Mto4lZHPD4m4=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250519151634epcas5p3a0e08112510553d5309c072da7dd2c71~A9pmKlQ4x1584715847epcas5p3D;
-	Mon, 19 May 2025 15:16:34 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4b1Lr06k48z3hhT7; Mon, 19 May
-	2025 15:16:32 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250516101757epcas5p368f98b909ff50c91700358f65228e066~-_pAvExL71920919209epcas5p3O;
-	Fri, 16 May 2025 10:17:57 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250516101757epsmtrp22c1f07f88793cc19be819e06f3b2827b~-_pAt9LXe1867418674epsmtrp21;
-	Fri, 16 May 2025 10:17:57 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-37-682710d51bb8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	33.2F.08766.5D017286; Fri, 16 May 2025 19:17:57 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250516101754epsmtip21f528a17cdd4b1f7f3d12e2cedac85fa~-_o91PBMW2836328363epsmtip2c;
-	Fri, 16 May 2025 10:17:54 +0000 (GMT)
-From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org,
-	m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
-	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
-	selvarasu.g@samsung.com, pritam.sutar@samsung.com
-Subject: [PATCH v2 0/2] initial usbdrd phy support for Exynosautov920 soc
-Date: Fri, 16 May 2025 15:56:48 +0530
-Message-Id: <20250516102650.2144487-1-pritam.sutar@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="frnhOcHk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 06A8443A2F;
+	Mon, 19 May 2025 15:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747667791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2wQIT894SQnF9B43BAXvpVRW81bs6p0fZUPIOxbNKi4=;
+	b=frnhOcHkyXiwP6GvtKz99dhW7VYYrYNx7PpnkUB0nIG7MfN5HyqajRVS9TdcLY14i8gKWs
+	8wAWcqLiVTDzZUC0WpPOWLOzvTYuC34UTtjUStslX4fTDku+OQXynL+sb25vu/3HryI8CY
+	Lpskap2J9FdH5evionIK+RwIF6l+mLZ4BDUvG4jYYG5IbfK1iBNyeC/UrrjVkYg3ts4z0T
+	wvGJoqX9gUSu5RtRDqijsiLH4mqvqUBjVuOeqOb9VLsIXnX/nojv+0OplD3rRoNrKLxjTw
+	8o9dZHy7e6W4BY1ClOUHTyUOEOFyiW7ckAibvmXDHg0cjozHJS48TeT8kKddsg==
+Date: Mon, 19 May 2025 17:16:26 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan
+ <saravanak@google.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>, Jingoo
+ Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, Paul Kocialkowski
+ <contact@paulk.fr>, =?UTF-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v4 6/8] backlight: led-backlight: add devlink to
+ supplier LEDs
+Message-ID: <20250519171626.2885902f@booty>
+In-Reply-To: <20240920144113.427606a7@booty>
+References: <20240917-hotplug-drm-bridge-v4-0-bc4dfee61be6@bootlin.com>
+	<20240917-hotplug-drm-bridge-v4-6-bc4dfee61be6@bootlin.com>
+	<20240919124323.GB28725@aspen.lan>
+	<20240920144113.427606a7@booty>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSvO5VAfUMg9evpSwezNvGZrHl1WYW
-	izV7zzFZ3NuxjN1i/pFzrBbXbixkt/jz7zybxdHW/8wWL2fdY7PY9Pgaq8XlXXPYLCas+sZi
-	MeP8PiaLtUfuslucf9HFarFhxj8Wi2f3VrBZ/N+zg93iy88HzBaH37SzWhxZ/pHJYuedE8wO
-	Yh4n121m8ti0qpPN4861PWwem5fUe/RtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfG2id2BUfZ
-	K6YsvcnawDiJrYuRk0NCwERi0rMPTF2MXBxCArsZJWa3zGWBSMhIPJq2kRXCFpZY+e85O0TR
-	W0aJ72/PAiU4ONgETCUm7kkAiYsI9DBJPL36gw3EYRY4zSSx4eMMdpBuYQFPiZ0X5jCC2CwC
-	qhI3+1qYQGxeAXuJN6fmQW2Ql9h/8CwzRFxQ4uTMJ2BXMAPFm7fOZp7AyDcLSWoWktQCRqZV
-	jJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBUaSluYNx+6oPeocYmTgYDzFKcDArifBe
-	z1LOEOJNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbLxMEp1cC0o9rK
-	/UOg2+ZsnbwXdjsNGmpDBd6lHt0+scnmW96aT0u2xl1hWi1kutD9R/W1vVMYeA8uudmyepWI
-	pVXqtTkbZUOuzf9jKrTadXqS+LsA0+zJdv332ZYsSf+v9szrxw/5ixcsp/nwF98uWX5C1ci9
-	8+LU98+OM4eIaxVd0Pj3SoC/dlqvclVAZUD2nmOLVNzPTjgvu8W38sCO5cEdvUJ3X95eOevY
-	wq2/ZH8827zm7/5LT3OjzDlyeRfHh04JkmI0q05n9jR7LpeVJMUXGN2af1S7W8qrYV3lmWUB
-	T/3++OsqVEgmLGVgXLJt+fyJiazHeJNUWmVuCnPMdHSYOlPx4XW5O8t7j61okV3QYLRFiaU4
-	I9FQi7moOBEAVMSI6hEDAAA=
-X-CMS-MailID: 20250516101757epcas5p368f98b909ff50c91700358f65228e066
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250516101757epcas5p368f98b909ff50c91700358f65228e066
-References: <CGME20250516101757epcas5p368f98b909ff50c91700358f65228e066@epcas5p3.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddujeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteekieeihfevhfffieehiefgfeeutdduueeggeffieejgeefhfdthfeugeefvdegnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefgedprhgtphhtthhopegurghnihgvlhdrthhhohhmphhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodguthesk
+ hgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This SoC has a single USB 3.1 DRD combo phy and three USB2.0
-DRD phy controllers that only support the UTMI+ interface. 
-This SoC is very similar to the existing Exynos850 support
-in this driver. We have supported only UTMI+ in this patchset.
+Hello Daniel,
 
-The difference is that combo phy supports both UTMI+(HS) and 
-PIPE3(SS) and is out of scope in this patchset.
+I wonder whether you remember about this conversation...
 
-changelog
-----------
-Changes in v2:
-- Used standard GENMASK() and FIELD_GET() to get the major version 
-  from controller version register.
-  link for v1: https://lore.kernel.org/linux-phy/20250514134813.380807-1-pritam.sutar@samsung.com/
+On Fri, 20 Sep 2024 14:41:13 +0200
+Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
-Pritam Manohar Sutar (2):
-  dt-bindings: phy: samsung,usb3-drd-phy: add dt-schema for
-    ExynosAutov920
-  phy: exyons5-usbdrd: support HS phy for ExynosAutov920
+> Hello Daniel,
+>=20
+> On Thu, 19 Sep 2024 14:43:23 +0200
+> Daniel Thompson <daniel.thompson@linaro.org> wrote:
+>=20
+> > On Tue, Sep 17, 2024 at 10:53:10AM +0200, Luca Ceresoli wrote: =20
+> > > led-backlight is a consumer of one or multiple LED class devices, but=
+ no
+> > > devlink is created for such supplier-producer relationship. One conse=
+quence
+> > > is that removal ordered is not correctly enforced.
+> > >
+> > > Issues happen for example with the following sections in a device tree
+> > > overlay:
+> > >
+> > >     // An LED driver chip
+> > >     pca9632@62 {
+> > >         compatible =3D "nxp,pca9632";
+> > >         reg =3D <0x62>;
+> > >
+> > > 	// ...
+> > >
+> > >         addon_led_pwm: led-pwm@3 {
+> > >             reg =3D <3>;
+> > >             label =3D "addon:led:pwm";
+> > >         };
+> > >     };
+> > >
+> > >     backlight-addon {
+> > >         compatible =3D "led-backlight";
+> > >         leds =3D <&addon_led_pwm>;
+> > >         brightness-levels =3D <255>;
+> > >         default-brightness-level =3D <255>;
+> > >     };
+> > >
+> > > On removal of the above overlay, the LED driver can be removed before=
+ the
+> > > backlight device, resulting in:
+> > >
+> > >     Unable to handle kernel NULL pointer dereference at virtual addre=
+ss 0000000000000010
+> > >     ...
+> > >     Call trace:
+> > >      led_put+0xe0/0x140
+> > >      devm_led_release+0x6c/0x98   =20
+> >=20
+> > This looks like the object became invalid whilst we were holding a refe=
+rence
+> > to it. Is that reasonable? Put another way, is using devlink here fixin=
+g a
+> > bug or merely hiding one? =20
+>=20
+> Thanks for your comment.
+>=20
+> Herv=C3=A9 and I just had a look at the code and there actually might be a
+> bug here, which we will be investigating (probably next week).
+>=20
+> Still I think the devlink needs to be added to describe the
+> relationship between the supplier (LED) and consumer (backlight).
 
- .../bindings/phy/samsung,usb3-drd-phy.yaml    | 27 ++++++
- drivers/phy/samsung/phy-exynos5-usbdrd.c      | 85 +++++++++++++++++++
- 2 files changed, 112 insertions(+)
+It took "slightly more" than "next week", but we are here finally. In
+reality this topics went pretty much forgotten until Alexander
+Sverdlin's feedback [0].
 
--- 
-2.34.1
+About your concern, I'm not totally sure devlink is the tool expected
+to solve this issue, but if it isn't I don't know any other tool that
+should.
 
+In other words, because devlink is exactly meant to represent
+supplier-consumer relationships and enforce them to be respected, it
+seems the appropriate tool. Moreover devlink already handles such
+relationships quite well in many cases, and takes care of removing
+consumers before their suppliers, when suppliers get removed.
+
+One missing piece in devlink is it doesn't (yet) handle class devices
+correctly. When the supplier is a class device (such as the LED device
+in this case), then devlink creates a link to the parent of the
+supplier, and not the supplier itself.
+
+This problem is well known and it is under Saravana's radar. Adding
+such devlinks at the device core level would be of course be the best
+and most generic solution, but it seems to be much more tricky that it
+may look. So other drivers and subsystems are "manually" creating
+devlinks, to have the right links in place until devlink can figure
+them out automatically. Some examples ('git grep device_link_add' for
+more):
+
+  https://elixir.bootlin.com/linux/v6.14.7/source/drivers/pwm/core.c#L1660
+  https://elixir.bootlin.com/linux/v6.14.7/source/drivers/iio/industrialio-=
+backend.c#L710
+  https://elixir.bootlin.com/linux/v6.14.7/source/drivers/pmdomain/imx/gpc.=
+c#L204
+
+I hope this clarifies the need for this patch.
+
+I am going to send this patch alone in a moment, detached from the
+entire series because it is orthogonal.
+
+[0]
+https://lore.kernel.org/all/fa87471d31a62017067d4c3ba559cf79d6c3afec.camel@=
+siemens.com/
+
+Best regards,
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
