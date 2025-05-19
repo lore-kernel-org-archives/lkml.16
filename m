@@ -1,115 +1,171 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532992D023
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D9D1A3142
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747685748; cv=none; b=TKvpYoY2R7Ij/M2GdZ/eGOql99vL3uz4lcC2fRs5/+ScO1EgaSV+YhKxNYQ3WA51gD/dChdr1AuHqQcaW9lVMHbi7kF6ltqemHBQHy6YSw1A6ZZhCcUL98wWqcmzRcoDgFLcpUWHDmvv1z29+K9r+xGfS8NgvVLJt9curpXLvsc=
+	t=1747685814; cv=none; b=BKZrDDkh0RppPQuRvT6hh/2adrOnAflxQxIL5f29FSQ06mW/0GwWAS5Vb88PCmcdMweX80kmqgEbeIPEiU/R6W5iyU2SjQ8Un2KT/Q9GjWUBPJFPlgsio91B/6U0+UUJuQU4FJEzOa4NVM/5T7VF+UkKfRc6/xRzWvJGIzIak04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747685748; c=relaxed/simple;
-	bh=8dX8Wr9L4YGOHz+wjN+mZYVu8hwJ3J7H6NpKgGMox/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjQcSiKZyWDNyYduVs3qxfLSLGCUS0OS4c3V5oPfFj1g+8klA4H5Y7esggxZKVJ8NvPJW+uNbbRLrvNxF821eYVe1dgtWUlDuhysFITeHWdKuRiJhvNURlc0L3A8eZRrvIr08b3o26QWkeA3axFVVlZNbDUtzCThSy7dYLpOtQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=McoLpWvC; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747685814; c=relaxed/simple;
+	bh=ZmMZk2TINwxlV2GwsQa+h6FX3HGztklDF0EzsPIVnts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0iPt86adXWpQvgW7+BNKFI8H46Sqpa/jYBvJ6DTOnF2TgyPRz3yOl6ZkgmGYkCtMkuXhzERKvZ2M2UV/04ipu0PyKMbHEap/HmTOC2eNwJrFX9jEHdS0aGLLk3NTOeb6gBOKLAcRWibFKPpjwXAAYK6vLm90s5sRY5v6WZVvWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XqYWIb4z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0eMdyyE1; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XqYWIb4z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0eMdyyE1; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="McoLpWvC"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c173211feso1594698a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747685745; x=1748290545; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IxPqQrqptdt6ZRunnP9xjg4VsQBTXE7UdgcvpQp1vnQ=;
-        b=McoLpWvC/nmgl4hDj9EwLeckCAoo+leQLspXx4bh9ImZrQf47pwCUDWTdKRnnHNogn
-         ZUtD3L5SEDztK5Jh0rTftRqhzdKLWrKPI981NZWUwZ7IYrWawo2a5NDcbPOyLKibIh/D
-         e+N1agNQgVEev7hx8R3jzncgmXsRiCckNodgNn6h5d3+ia+gM+j5F4Q3aOLYKcGyDf2h
-         cFnUYjzoWGTG2js1WeQmkm4oJsL+ZnDtAgVathjQb+/7ioGepDPnL/msmyxHZwiAZPPs
-         H2S4zU8HBbLKpq3cPmdOvzOHybV1P2RGFzs84TAK0242Ew/v2JEq2w5FJA/h7TJ6WUO2
-         KJiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747685745; x=1748290545;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IxPqQrqptdt6ZRunnP9xjg4VsQBTXE7UdgcvpQp1vnQ=;
-        b=AHomED3K6lQTnRCovpifzAtXAbgqKJ2BbtEhVao3cEFwRSVF21tjwo3KeQ/pAdR+HR
-         HoQduUfYVL7CGiJ7gddHiL/kSxqL1r/gQF7kRI34U53p1ulXt2CVQ93M/kb3yhtApOLq
-         20HEf0QIWbxqfL6YP4UVkafbA/ZTKrrXomVDhCAsIwO5TH9LjtHSDXPY10b7GZqqTkYZ
-         4Nz4iMjo/GdE9g/wSz75JEMweqo0nAkVAMMioBBsbLUNMyGgKWd7s/BMfg4Mc2/+M1/D
-         vWEG7fjimvoKMnW8Aw2JvFl8LPltPPYHc1fCLWoerzk6Tv55PYtVL9QK2mB+Xr6Cn7xT
-         SMqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLqHmVGtTZLVOvkYXPeV/M9w0YLKsg4nl/nhIKrH/tSjUTkV8MxmIMytGuLSuGjWcMeVY1t74uvSotCX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8NGCdO96SrI6EDgI7f4N0GJi5SsyMV5F2cyg6y2C0fMACZFeJ
-	NRyHbgB00SZvEU0a3T0xqnadvCGQYdbW6XnKL2dAdi8MIsia7ybugh31P+f5ynS9dws=
-X-Gm-Gg: ASbGncuzwmIbxAFzIe4ORMpii0q/FRHWTpBQqIEaK1yz9+al7Fp2Ej7r2ruC87y1dl5
-	3S6WtwfRHeYjzxh0WS3Fy7ETCVDKM+SaAcUmScKTItrVo5IzSC3jWwIjqN3rFvvF3FOPgOe5X/r
-	8iabj0GFFxOSfDW0ecuDc+qvgQuSnW5m1zeh9atOHJl2ur8AlIqWdU14ACsQrdKDAMt0uq8eeT3
-	EGF8Taa0ZnGGo4X9OL6yzLzpFtRUFlqlsIMnDqbANYmxzZ6S5p0cuSQrqqpeehZg4F2f0umszIQ
-	TJfmpMpUDAhQY17E5e5CFGzvRGM7CA5O7zMEbwIne5VMPmv1MRL6jA1k8J4h46Hh/y01wF3xgxD
-	pY2V9xBxavOKmc+WIJxbWyjrotQrF
-X-Google-Smtp-Source: AGHT+IHnM+ogubTeRYfZUDZjML14fl+Syr5GdQv0cHx7rQtXJUm1hDhfIBt4qdixN9KogS4f8h/scQ==
-X-Received: by 2002:a05:6830:611c:b0:72b:8297:e988 with SMTP id 46e09a7af769-734f998dc0fmr8973347a34.25.1747685745325;
-        Mon, 19 May 2025 13:15:45 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4118:1770:ecaf:ee73? ([2600:8803:e7e4:1d00:4118:1770:ecaf:ee73])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b5f697sm1541527a34.57.2025.05.19.13.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 13:15:44 -0700 (PDT)
-Message-ID: <4843ec52-57e2-418a-b640-8e05ba60959e@baylibre.com>
-Date: Mon, 19 May 2025 15:15:43 -0500
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XqYWIb4z";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0eMdyyE1";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XqYWIb4z";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0eMdyyE1"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 69FC4204CA;
+	Mon, 19 May 2025 20:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747685810; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m7aYnJRcoWwpfTUaDrWnQNrPa8O1N9QGhPSYb+LgsaY=;
+	b=XqYWIb4zCmfErsfwhc5PZhiPBp6ngFBIR7YZoe1hn6NyzUYvZd2gRnRvZMvbEo7dcczs8u
+	EZ80LkltPTmP+u3bZvcwifYArBu0UTxv6sDZBSV17uzV4Bu/OQTeDpCuzgrPnXtT+bSDY3
+	Iz7WWIqCYUfmEpW9550LBkKZhzRdMEU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747685810;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m7aYnJRcoWwpfTUaDrWnQNrPa8O1N9QGhPSYb+LgsaY=;
+	b=0eMdyyE1fECglXh3JP91e6k9KGaExByo77pqSoOIQV0ykDCQ9HtCNh93VJIgcxx2Qd71lv
+	AgJ8ifVI1hssRPDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747685810; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m7aYnJRcoWwpfTUaDrWnQNrPa8O1N9QGhPSYb+LgsaY=;
+	b=XqYWIb4zCmfErsfwhc5PZhiPBp6ngFBIR7YZoe1hn6NyzUYvZd2gRnRvZMvbEo7dcczs8u
+	EZ80LkltPTmP+u3bZvcwifYArBu0UTxv6sDZBSV17uzV4Bu/OQTeDpCuzgrPnXtT+bSDY3
+	Iz7WWIqCYUfmEpW9550LBkKZhzRdMEU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747685810;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m7aYnJRcoWwpfTUaDrWnQNrPa8O1N9QGhPSYb+LgsaY=;
+	b=0eMdyyE1fECglXh3JP91e6k9KGaExByo77pqSoOIQV0ykDCQ9HtCNh93VJIgcxx2Qd71lv
+	AgJ8ifVI1hssRPDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 606151372E;
+	Mon, 19 May 2025 20:16:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SZqFF7KRK2gAFAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 19 May 2025 20:16:50 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2429BA0A31; Mon, 19 May 2025 22:16:50 +0200 (CEST)
+Date: Mon, 19 May 2025 22:16:50 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu, adilger.kernel@dilger.ca, 
+	jack@suse.cz, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH v2 4/8] ext4/jbd2: convert jbd2_journal_blocks_per_page()
+ to support large folio
+Message-ID: <ht54j6bvjmiqt62xmcveqlo7bmrunqs4ji7wikfteftdjijzek@7tz5gpejaoen>
+References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+ <20250512063319.3539411-5-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-To: 1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com,
- Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org,
- nuno.sa@analog.com, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, Pop Paul <paul.pop@analog.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
- <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
- <aCtmt+ozqSRDGQxi@JSANTO12-L01.ad.analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aCtmt+ozqSRDGQxi@JSANTO12-L01.ad.analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512063319.3539411-5-yi.zhang@huaweicloud.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-On 5/19/25 12:13 PM, Jonathan Santos wrote:
-> On 05/15, Jonathan Santos wrote:
-
+On Mon 12-05-25 14:33:15, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> jbd2_journal_blocks_per_page() returns the number of blocks in a single
+> page. Rename it to jbd2_journal_blocks_per_folio() and make it returns
+> the number of blocks in the largest folio, preparing for the calculation
+> of journal credits blocks when allocating blocks within a large folio in
+> the writeback path.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ...
->> +
->> +/* Decimation Rate range for each filter type */
->> +static const int ad7768_dec_rate_range[][3] = {
->> +	[AD7768_FILTER_SINC5] = { 8, 8, 1024 },
->> +	[AD7768_FILTER_SINC3] = { 32, 32, 163840 },
->> +	[AD7768_FILTER_WIDEBAND] = { 32, 32, 1024 },
->> +	[AD7768_FILTER_SINC3_REJ60] = { 32, 32, 163840 },
->> +};
->> +
+> @@ -2657,9 +2657,10 @@ void jbd2_journal_ack_err(journal_t *journal)
+>  	write_unlock(&journal->j_state_lock);
+>  }
+>  
+> -int jbd2_journal_blocks_per_page(struct inode *inode)
+> +int jbd2_journal_blocks_per_folio(struct inode *inode)
+>  {
+> -	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
+> +	return 1 << (PAGE_SHIFT + mapping_max_folio_order(inode->i_mapping) -
+> +		     inode->i_sb->s_blocksize_bits);
+>  }
+
+FWIW this will result in us reserving some 10k transaction credits for 1k
+blocksize with maximum 2M folio size. That is going to create serious
+pressure on the journalling machinery. For now I guess we are fine but
+eventually we should rewrite how credits for writing out folio are computed
+to reduce this massive overestimation. It will be a bit tricky but we could
+always reserve credits for one / couple of extents and try to extend the
+transaction if we need more. The tricky part is to do the partial folio
+writeout in case we cannot extend the transaction...
+
+								Honza
+>  /*
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 023e8abdb99a..ebbcdab474d5 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1723,7 +1723,7 @@ static inline int tid_geq(tid_t x, tid_t y)
+>  	return (difference >= 0);
+>  }
+>  
+> -extern int jbd2_journal_blocks_per_page(struct inode *inode);
+> +extern int jbd2_journal_blocks_per_folio(struct inode *inode);
+>  extern size_t journal_tag_bytes(journal_t *journal);
+>  
+>  static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
+> -- 
+> 2.46.1
 > 
-> Since we're still discussing some points — is the `step` in 
-> `[min step max]` for the IIO range additive or multiplicative? It is not 
-> clear on documentation, maybe on purpose or I have missed something.
-> 
-> Here, decimation/OSR doubles from 8 or 32 for SINC5/WIDEBAND, and is a 
-> multiple of 32 for SINC3. So I'm still unsure how to represent this to be
-> clear to the user.
-
-Sounds to me like sinc5/wideband should be lists instead of ranges.
-It is only 6 values.
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
