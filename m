@@ -1,70 +1,84 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB231714B3;
-	Mon, 19 May 2025 11:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3311FF61E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747655114; cv=none; b=dU292PNBl0/LcrBXbWHHFB6minge/PAeDI1vFUtaTnWE9JODlhuhO7yoy02aPn1bLyhtS9jRk/z/r07qQV5uDjwDBwvDfwUrzYq8PnkiF0Ar6U/0Of5G4q1Z9XLf8EU8cKGZLtkyNhKGD3g3sBQMAgjc2tUp2Zqu4EAumVlpxiY=
+	t=1747655141; cv=none; b=qIVxjtBv5wKyaZ2Sn12R5Uof++Y8zSZ24MNEVl9hapoSylPWEDE/YsII1C7KwTJSrwwpwRydiO1Brc0kzVfokZE8xYWhwtjevVYdUWmq7eoBvHKCCLNXMnBrJy5ZXZwtZfzhbQ1Fwl2tc1VFRCw1QDvxtKoIEsL8PzgQKxhEiuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747655114; c=relaxed/simple;
-	bh=//y/ewFwK3+P6K/VtcuEDULsYjMnHbZpJURZ2u9sFRA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sdpiR5EUfLFpi/ILGOXVV2GsryFWDJuSjp+Gg49HpKWUNI+q8VU/ZSdV74uLI+FFMTK/c0/k16TtFbTvef8qJ+f79egadTfGMhala7/wKFcrSNNKH6Z1NuljeiN+TRAWlcLE40myiwT+2e4RBvMoAlcBuTMcgKUlWQjNwhIp28E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=HgxQcn55; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="HgxQcn55"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3F09E41086
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1747655112; bh=9lINbBbTmIKTG8eNObFCf37E2v9kYcGZFOY+2A4xoRU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HgxQcn551KrLQSFmvbOJ/cZq01qzF99L4I4asmdZ76tKjp/dL7Z988owwved0b/eS
-	 W14BH5S6xZfRIbqCU4pM5mTziAdd66nw1GGoSeiVFTsJCidm0C3gO/CBl8hWJbxfzv
-	 f12gqVPiD5kdVZPgvwwBDCBh6DdULd7KIfov+dcOrGuFNVykprgOS6yY5PPOjIbbXS
-	 QB0IjoeQOXIIrAEpgODiNWIi8Pkn4bTlvEfdMHIids00jXJ47vDkWRzDY97kaZPfHm
-	 weE8BeT8+Y6aq3LAa6G3CMfBQFLyTrR1JtFrllZxDRS1GrQrmCdcR/K0Amljzf0P1t
-	 5BK2EJVgv6HAw==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3F09E41086;
-	Mon, 19 May 2025 11:45:10 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Tom
- Zanussi <tzanussi@gmail.com>
-Subject: Re: [PATCH] Docs: relay: editing cleanups
-In-Reply-To: <20250512023233.107582-1-rdunlap@infradead.org>
-References: <20250512023233.107582-1-rdunlap@infradead.org>
-Date: Mon, 19 May 2025 05:45:07 -0600
-Message-ID: <87bjrokenw.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1747655141; c=relaxed/simple;
+	bh=u8N5N1DA0CTSmsJwACAxyQQSLp0iFoqBsk5Y9KDkeHQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uWsIEOe8JN+Zeov23vrdio0SOGCtoKi03CKCt2h5ZFRnAwEWPamWTGUXguVMJnL5U6NTccCPr8eyTHCyvaZokUURIYJenR3IVgaW6N7bFkj0IqjSE8hAQYVV/hcBWBWoI05HGb+G99lcxtIX1ElRKxGydIN7HBmvBIq4gzmmLYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Mon, 19 May
+ 2025 14:44:22 +0300
+Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 19 May
+ 2025 14:44:22 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: <syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [syzbot] [usb?] KMSAN: uninit-value in usbnet_probe (3)
+Date: Mon, 19 May 2025 14:43:56 +0300
+Message-ID: <20250519114357.2290474-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <681f31c9.050a0220.f2294.0007.GAE@google.com>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Randy Dunlap <rdunlap@infradead.org> writes:
+#syz test
 
-> Cleanup some punctuation, capital letter, and a missing word
-> in relay.rst.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Tom Zanussi <tzanussi@gmail.com>
-> ---
->  Documentation/filesystems/relay.rst |   26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
+---
+ drivers/net/usb/aqc111.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Applied, thanks,
-
-jon
+diff --git a/drivers/net/usb/aqc111.c b/drivers/net/usb/aqc111.c
+index ff5be2cbf17b..f647c4673256 100644
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -30,10 +30,13 @@ static int aqc111_read_cmd_nopm(struct usbnet *dev, u8 cmd, u16 value,
+ 	ret = usbnet_read_cmd_nopm(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
+ 				   USB_RECIP_DEVICE, value, index, data, size);
+ 
+-	if (unlikely(ret < 0))
++	if (unlikely(ret < size)) {
++		ret = ret < 0 ? ret: -ENODATA;
++
+ 		netdev_warn(dev->net,
+ 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
+ 			    cmd, index, ret);
++	}
+ 
+ 	return ret;
+ }
+@@ -46,10 +49,13 @@ static int aqc111_read_cmd(struct usbnet *dev, u8 cmd, u16 value,
+ 	ret = usbnet_read_cmd(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
+ 			      USB_RECIP_DEVICE, value, index, data, size);
+ 
+-	if (unlikely(ret < 0))
++	if (unlikely(ret < size)) {
++		ret = ret < 0 ? ret: -ENODATA;
++
+ 		netdev_warn(dev->net,
+ 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
+ 			    cmd, index, ret);
++	}
+ 
+ 	return ret;
+ }
