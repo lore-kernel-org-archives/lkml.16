@@ -1,33 +1,88 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521DE18C004;
-	Mon, 19 May 2025 01:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8E111185;
+	Mon, 19 May 2025 01:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747619686; cv=none; b=Yf+/EQn9w4DxcsXKnp9MWzIRaHt8hVocBeV/dhkj8Fhy7V3HrZJmUQ85kLUd/uomd/zHrTZzJ/FcUd6Zj/qLohE/DAgr93cQsyQnS9wgoW6WIRXgks4ImyyGvH/uh2CnhbtM9VYuu3Gg3kY0/U0R/zcaNzK07B20yXlJM+6KYyQ=
+	t=1747619772; cv=none; b=o1I+LTdWpCQLnarqDlvGEfprHl5FWktyKGpaknOK40TsW3+GtzLHk1tPlsoJ6N3MbN/7sEfjX9lXgjRqEmaHzANxA3IcJC+kaaiCKaQ7rqbINlr4v66FNGxtbOHU/OwKyVfFDmUzHezZknLjZfLCcxWREJQSiASarkKNJDbKjVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747619686; c=relaxed/simple;
-	bh=QtUHOhPV0ehWeJwt6RG0Hz4M9XSUQwDisOX7ZGfog7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rtVbFx8HM7QkwqsTxB94jZr/EA1GuDjd1mqFswH7SAkJadIo3FWkjOo8SiK+bxXVKafOlTh5Uk9e804gnWROicrhMz26btv8FfA+lWLWGAoZw/OdVknTdVs2TgtP7JpXH8EyKQpkM7c3toWc+J5ckQSH6PZMXk6K/28Du3UwDOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowADn7PZcjypoMT1BAQ--.9661S2;
-	Mon, 19 May 2025 09:54:36 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
+	s=arc-20240116; t=1747619772; c=relaxed/simple;
+	bh=cb+d/DwEk3yRnKOKUSPKMNBhhmU40NcChrRFuyGKSec=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rXL8O472S76e1Yxj7EcXb0DyI9ZXbKeB6/CqH7qQX/tofCnS5vmAVwhjI8LZjcnrskq+9ls0eVL2nim4eDCV79tlo4eEBwIzmSxL0P9eQZqopwGaUkVQ1pUI1SihwXIjF+Ka7Pl5aOloAobSdzUsNXnxgP/1b37uVe9ivfnpXHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BvXgDzPD; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvXgDzPD"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7b97c6159aso547335276.1;
+        Sun, 18 May 2025 18:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747619770; x=1748224570; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0DQgWIwpKftDflC835+KBihfO87t9DUCdy0HWOf1jK8=;
+        b=BvXgDzPDkTKxTSxtw1YVBKKrnioCJg7gbxVRpBLtiY7SHvdvRsKn8H7BydKO3tyhmM
+         WaQqosggKK0IztYkTB2BXck8wx+37zaSXeDNnadUcWe1jK8a3M016jIbArAUxNI4qgT7
+         MBEbPCmPTzB6Lu5+yTu9UyHLr5OCjDe9Dz2qVFS33P0fsQYw//FYh0/2fTb7tpg4cJih
+         1lGqR8m1TrhIjioaP7ybTirfyQjH1zX4EZNW+pymiL5mRKKz2UcU+U3hdyaqWCH7Azwj
+         JjXcQeqMTDrG4W64xukFK6XxyPXL7vd4EanjGb+TlCFkHppOlEOx2pW7LoI8grUGGm21
+         0sUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747619770; x=1748224570;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0DQgWIwpKftDflC835+KBihfO87t9DUCdy0HWOf1jK8=;
+        b=tUc9P8rR5vluWmlWXEkpLWl5Y9kHT/CEFLYfQkUFNYMBhcxvd3aJttiIWHQpOp2l2l
+         AU7IWz7CaxARUaG5FUtWBF6xrOO0s8geDbLU59eIOoymF3FqjBkVASAkDGQU54sItaNj
+         pd8/KHBk7Jkmx7xWgw77dM8a4UJDb6/iCRtyqdJaOYkRmKpYIRblmX3G2zyegLdTmBEv
+         cYb5IE0QviqXm64niJVvnT25W+6XuuiQSgIf+rk9p5n0lFPDCQLM42vJZlokixQeaI08
+         joWR328V7uOFbsAtk0vpMrxtIBFkxiyMIEMWutHccEjSO7+4FhgD+Ge3/WfPtdMiimSf
+         +i0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWe1NUyW6ZRqQmZnqQfuPAEMmHZK7bZ/hlh17hSUHsvfchaRQSgJCbErV8hsMBIYzTE6WsBmPXZliOd@vger.kernel.org, AJvYcCWwldJEnNGySeDcCbvgDXibMGphBPCpuDBiLoXI0ODIHf6VKtzpFJSakmwgMxgzmDxtrxmMLLP7hH16pVwg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCgVOX9WEAICW8lUf5fnMTDUuf8xfAVFXGx7E0znZDmnFN5e9H
+	iv6OdbQerheMUgFJV9y0mQv9IEGKZL1nJCw7LeeLNJ4YxA9otEfjJX6y
+X-Gm-Gg: ASbGncsM+ivVGsoYK5uQRu/O77G0e4xtbtx1qK0j9ME5YoAP49mX/H4jDGATbo3lAxN
+	nWu34JcEGg+QQImST1iP+774p1kCxvo68iM9lWT93oupOyPx1rXCG5IybOyUqU6Z/givN9UXoXt
+	RJqnYUjAMj6MiIkCj/Hb2jvOI0myqFUYGyFE+rpnaZAnK+LuXRQUoe3WsiO6EcFyTwhneEDqwv7
+	5hvBDaIAoXaxr4GWRT46J7d8OV+j7k/QGt3s2num0uMppjFA3eS9wetxVYL/0dUC+6NWxzJLz73
+	Pq7tvvdvXeoGjIjxj6b4YMiODZAmGe491WjPcvTDXIlvLbCmUA==
+X-Google-Smtp-Source: AGHT+IGAszD8bTKPIxGwCxe0ZUbm32eYI5M+akiUC4Ga9sKQDswHwHV2jvKw35mT6laDiCm2+HhJag==
+X-Received: by 2002:a05:6902:20c7:b0:e79:1e9:59f6 with SMTP id 3f1490d57ef6-e7b6b1bace5mr14392212276.17.1747619769610;
+        Sun, 18 May 2025 18:56:09 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:1::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7b6ac68338sm2367815276.12.2025.05.18.18.56.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 18:56:08 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] wifi: wilc1000: Handle wilc_sdio_cmd52() failure in wilc_sdio_read_init()
-Date: Mon, 19 May 2025 09:54:14 +0800
-Message-ID: <20250519015415.966-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Sun, 18 May 2025 18:56:06 -0700
+Message-ID: <20250519015606.378475-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250505182328.4148265-1-joshua.hahnjy@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,68 +90,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADn7PZcjypoMT1BAQ--.9661S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXw4UZFW5ZFb_yoW8XFy7pF
-	WxurWYqw10kFWrZ3W7tFs5A3WrJa48trW7WFWxuw1fZr4kZr1fCr4fXa45Zr1qg3WUC3Wx
-	Xw10vr4jgF1IyFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUJOz3UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsHA2gqdo5g3gAAsM
 
-The wilc_sdio_read_init() calls wilc_sdio_cmd52() but does not check the
-return value. This could lead to execution with potentially invalid data
-if wilc_sdio_cmd52() fails. A proper implementation can be found in
-wilc_sdio_read_reg().
+Hello Andrew,
 
-Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
-log an error message via dev_err().
+Perhaps at this point it is best to just send a v9? : -)
+The v9 will include: 2 code fixlets, as suggested by Ying Huang
+And adding tags from both Honggyu and Ying.
 
-Fixes: eda308be643f ("staging: wilc1000: refactor interrupt handling for sdio")
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v2: Fix code error.
+I just thought it would be difficult to track 4 fixlets, but please let me
+know whatever works best for you! Thank you always for your help. I hope you
+have a great day!
+Joshua
 
- drivers/net/wireless/microchip/wilc1000/sdio.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+On Mon,  5 May 2025 11:23:28 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 8ff49b08bbd2..e85aa5c605ef 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -808,6 +808,7 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
- 	u32 tmp;
- 	u8 irq_flags;
- 	struct sdio_cmd52 cmd;
-+	int ret;
- 
- 	wilc_sdio_read_size(wilc, &tmp);
- 
-@@ -826,7 +827,12 @@ static int wilc_sdio_read_int(struct wilc *wilc, u32 *int_status)
- 	cmd.raw = 0;
- 	cmd.read_write = 0;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret) {
-+		dev_err(&func->dev, "Fail cmd 52, get IRQ register...\n");
-+		return ret;
-+	}
-+
- 	irq_flags = cmd.data;
- 
- 	if (sdio_priv->irq_gpio)
--- 
-2.42.0.windows.2
-
+> On machines with multiple memory nodes, interleaving page allocations
+> across nodes allows for better utilization of each node's bandwidth.
+> Previous work by Gregory Price [1] introduced weighted interleave, which
+> allowed for pages to be allocated across nodes according to user-set ratios.
+> 
+> Ideally, these weights should be proportional to their bandwidth, so
+> that under bandwidth pressure, each node uses its maximal efficient
+> bandwidth and prevents latency from increasing exponentially.
+> 
+> Previously, weighted interleave's default weights were just 1s -- which
+> would be equivalent to the (unweighted) interleave mempolicy, which goes
+> through the nodes in a round-robin fashion, ignoring bandwidth information.
+> 
+> This patch has two main goals:
+> First, it makes weighted interleave easier to use for users who wish to
+> relieve bandwidth pressure when using nodes with varying bandwidth (CXL).
+> By providing a set of "real" default weights that just work out of the
+> box, users who might not have the capability (or wish to) perform
+> experimentation to find the most optimal weights for their system can
+> still take advantage of bandwidth-informed weighted interleave.
+> 
+> Second, it allows for weighted interleave to dynamically adjust to
+> hotplugged memory with new bandwidth information. Instead of manually
+> updating node weights every time new bandwidth information is reported
+> or taken off, weighted interleave adjusts and provides a new set of
+> default weights for weighted interleave to use when there is a change
+> in bandwidth information.
+> 
+> To meet these goals, this patch introduces an auto-configuration mode
+> for the interleave weights that provides a reasonable set of default
+> weights, calculated using bandwidth data reported by the system. In auto
+> mode, weights are dynamically adjusted based on whatever the current
+> bandwidth information reports (and responds to hotplug events).
+> 
+> This patch still supports users manually writing weights into the nodeN
+> sysfs interface by entering into manual mode. When a user enters manual
+> mode, the system stops dynamically updating any of the node weights,
+> even during hotplug events that shift the optimal weight distribution.
+> 
+> A new sysfs interface "auto" is introduced, which allows users to switch
+> between the auto (writing 1 or Y) and manual (writing 0 or N) modes. The
+> system also automatically enters manual mode when a nodeN interface is
+> manually written to.
+> 
+> There is one functional change that this patch makes to the existing
+> weighted_interleave ABI: previously, writing 0 directly to a nodeN
+> interface was said to reset the weight to the system default. Before
+> this patch, the default for all weights were 1, which meant that writing
+> 0 and 1 were functionally equivalent. With this patch, writing 0 is invalid.
+> 
+> [1] https://lore.kernel.org/linux-mm/20240202170238.90004-1-gregory.price@memverge.com/
+> 
+> Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> Suggested-by: Oscar Salvador <osalvador@suse.de>
+> Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
+> Suggested-by: Harry Yoo <harry.yoo@oracle.com>
+> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> Co-developed-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> ---
