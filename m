@@ -1,106 +1,118 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989EC21D595
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C431F12FC
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747696371; cv=none; b=YAD4A6rGV4irG2d9ESCyyvPWl5K/6dI/lxYFbAasIYQfaqyPAITkV2xstfNxsGRj+o26ErFJfem4mjaFymYnxdTXwFGgW7H3ELCMMeVnmiUyCIleBRJ/nRY3RWjoA5Y4+xjajf1uto0mT7btCzVSY9jSlE+7mJFBM5tfa0jzjX0=
+	t=1747696422; cv=none; b=EQuGtlFIHf/JEhkWfkuVxoKCHdV/tYnzgFmVPH0Z8p2v6/jfRuK6eOhHBL8QqQ+HmI8Lkb7qgKucZD8THfiJgAzj6C3TkQ6YRmNYsCL9hluVx0taSZENHABl1PM9fLgYwjtOKIRLXDQYFHmx2lxScHSiSxOKHZqXYu/jbkq7cnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747696371; c=relaxed/simple;
-	bh=87hIp6c78DiL87agGJnXiJJQtjvJP3j41yfq86lXmds=;
+	s=arc-20240116; t=1747696422; c=relaxed/simple;
+	bh=sk98ETwQCNP+ju99Zd4OlMq0oZtYzOhgMGIJ7g3qOls=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NidGiTXwPLguMtHX2HgIkGEHyjI7MtsT80oV8k1Y18xuOjyTSEnR+e7qWWXfD8xNFxKXooh+yaq30FrqkqdhgwIdhkibZKeX0pt/yJ961W0iDjb0CuUdKgsn2MRf8m3Ijii6X2TCp7Mwdp5KrbN483Wlq/5xYytQlWNjsqtfSd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PTFT408Z; arc=none smtp.client-ip=209.85.208.173
+	 To:Cc:Content-Type; b=CCeQthAHEpeFU95m0jv0sKBIzFrd8B54s1gVzRM15uWSuwmifOgydXsZ+1s7RUzHuWjVLHYfjH70rpXRVtkEi4PO/UsidBeg3Q6kvUKfB6xgUwES5tAoQrdGABFCoMQuEnKuNXrrs3QPJm2z/cKqyZh9COgCq7XaO+Mg3TZn3/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1+AbPifz; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTFT408Z"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3280b1a25b1so29323821fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:12:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1+AbPifz"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47e9fea29easo948861cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747696368; x=1748301168; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747696419; x=1748301219; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=87hIp6c78DiL87agGJnXiJJQtjvJP3j41yfq86lXmds=;
-        b=PTFT408ZRSKWpUJ368sG1SDa1gADZNp3TAosbCGQEA9nnyA31kXfZfP+U0URl73oKu
-         L1NMdGr1MRKQ6NisYXLjDVUTa/8bOBlnU7MYReQ5OjrWiPXXkPIDck/o6O/Ac7BfSwMR
-         TLGQsgfCu8ajZh56FP/jPy6j/WERhe3Ar9FPDn5PWrTAbXUvYZVhERMgI0+9U2kLcCwm
-         1RKFS5/gQAeq+ANsYm+2e3Q0UYyVWVZ7Ig38Pnm0sJshRgH0JwMcC7RatMiH7lmYWrsI
-         oNEOyVtKQVXQytSLwrDf6ubg+CEL/uT82t8eO/TIHY1xrnqlSFqZ28c4ejvVeH9eYP4q
-         zMbA==
+        bh=96QhpfT7HLpgu1bm5sM7t0c4BUdOSmJYmksk0t5SGLk=;
+        b=1+AbPifz1tHNM/Ohxn3a3BSNnMQRl9OIIQqv6FRepg5kJ0rx55unn8hSM8Qwuhw5gw
+         jySKmc3vQn+Xqr94/9gWvwGw2wfVsj8EZJw84LBNN4nCaHGr9IqojcnvxpSwlmTztdqD
+         ZHMoKNZhIXYFuqwjhjLE7LxFdHrOgqOPkNtIDj0uxeaIz++DG4KSKuTNeBsWUXRw4DjL
+         YXIhBI8fTlECjO+XV8BYvDqypgdJ20H5nKBQNERntbaaP8lXxgpfAJ271QAEPUdGnAL4
+         J9Dga9Fnwz6oG05Me9AVCtcNzrXhx/ZSE9dC/gqG6F8OO/AY//mvJXOGl/eccBpClerc
+         acTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747696368; x=1748301168;
+        d=1e100.net; s=20230601; t=1747696419; x=1748301219;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=87hIp6c78DiL87agGJnXiJJQtjvJP3j41yfq86lXmds=;
-        b=X7zhoff8ANyl0U7csTmeLmrSMENdrftH9tKGOgTY5Wm+J3dtszIIN9JiBT330MT3zT
-         VoCwk52WwZMGMapAz36f1kf947BSihYrxKyzy27ZjEJNiRdMb1g/S7laDODl2crErlHz
-         Ua3/SlqVduFvbYmpz6TmEgHcYsYRLJOOK4noaXHApW6cKadrZ2kWg2AoTQnpBfSfunF3
-         mLI3+5ZxOmdygczrz+fzvko6D9dxq11riBrjZl7eJAaa0MdWRD485UQxgs7Wq/e8kOzd
-         IL6HsNl57PW/s8dCW/tSx/s77gQaxRE02aPOfz8J+HM+uDd3abQIDen/km0tmvyGH71u
-         V23Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1nY3JVm0APuRx1SdrG9L/7ILdvzgHwT3grAYpTaDRW+OjltFQsK95KAoLJDEMpynmnlVSaeHAz2eCN5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeGoaI2Gb7gCQgHCslhtZs/xGQ0turIHCi+n4NCiEabIT13k4O
-	ajB7ttxgekYPmgAvMPeRCTZ34GK5Znk+3naDx/MIEGF0Dmbb3UyUNwPJnil/VBBQ0LysTU4R5ba
-	CKyDYxmVS9oRHAnSiviGVCfd5T7uy05lNu/p07rFvlDzEFCzZhk0lemc7EsM=
-X-Gm-Gg: ASbGncu19cZ2/KIvxPqWf5KIpAj7ixqjrq4Cz9q1Ityaw5u7oVWBoTMzN9ioO5HUg8z
-	9Rg8ujcSDUZ4uwN7MZqkkpmW+Ac8YGJ9ZMTOHzTpxAIKwT0vZS3lqbPLeRh/HScWQ07+cJWywKE
-	moYP5IRM1e88aU6GNJ/7Z+9f8XOLaeoCldXyusISdw1Llq+psTB+LPBYX5BdVsH+w1QDNQ37z4t
-	A==
-X-Google-Smtp-Source: AGHT+IFxjVvyKOGmjWHJznPp7p3rSwibUJdBaOZqXxE8AhRSbnaIU7l2iziSz1RfAcS4JYwrPiMZ+cyz28rt7IFl+Y0=
-X-Received: by 2002:a05:6000:2311:b0:3a3:6715:afba with SMTP id
- ffacd0b85a97d-3a36715b0dcmr8982767f8f.44.1747696357043; Mon, 19 May 2025
- 16:12:37 -0700 (PDT)
+        bh=96QhpfT7HLpgu1bm5sM7t0c4BUdOSmJYmksk0t5SGLk=;
+        b=luCwjtjxMPWGuOxflxfCjaHQGWch63/1W1m8TymtPqH1sPCla9dpkmIpCly64J3VQK
+         vE2nxUwRqmGAtrn8x/6Foh8ZYQelb95mCytR+R8SUjmteOjc31MOGjaYDKafWLIv4mHU
+         H3MhhAdZKrFR1e+AxiPcPud7tV7OPGYlCZgNI91+YFFZbVEiYcHbTvKfDI8+ZTYby4Su
+         ZlenBMgqjf7XmlXbLuD0+e8Xd12yTsqMsrFUzneYhFgbRxdIie6PfXDjEhyLnTzimMEj
+         ZbnQGq0sAcljw43Jvgu4gGk6hFq8Cp5BuweD/isGDFxe0Hw1UcIZQp7q2ew+ENbDaZDx
+         jn3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVC3SC5TWSL43tCmcV3ZoDcRYnrMQ+KOBUMKCMOXZ3gQ9kP5SXPkozFzlhAxhDnE8c5DaDBh+CrzIgBE9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznteNYWfgo9j5n/+szmqJabUQy9Kwz8Gvk/YkXMwk1Dlc5ij7W
+	spzPV4/I6HddTYicvCoxXn823OCqO8MKz2hUUazahB8f49M75Gf2YTe5syp4yT480nEZOiRbOGq
+	KxF/5sBRUxK7tt4BMh3o6Ksp1qf6j3TYEeV34FSaW
+X-Gm-Gg: ASbGncub7WVStWlX0/rlCM5pls0Q479yNWZBwTb1oThipgakOGeL1sXRwlHJBKDGCdr
+	spmT6EJIshS4tYLXoJWfVXFxCC9UMG0RnrvjEPkxoRmjITpl+beSDyrJdRRm442MplcWcciQDL7
+	Uh4gwBmPkd1fwPSNGjhPQWFMjH3HcDqNKXI0BnlKXuPMuX/NXSFeTC
+X-Google-Smtp-Source: AGHT+IF57nfwe9+Ni9aS4cql01icCikdr/rObzQditniv4g0OFPrlzoeR9R2prMBSzAR9w7nlZ6VQZBdTeONO1Fh0lA=
+X-Received: by 2002:a05:622a:28c:b0:47e:b278:2e07 with SMTP id
+ d75a77b69052e-49595c5da5bmr8030691cf.20.1747696419118; Mon, 19 May 2025
+ 16:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
- <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
-In-Reply-To: <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 19 May 2025 16:12:25 -0700
-X-Gm-Features: AX0GCFtuAkg0Wlc1J3hEEvQ6t_eM5QI8HhiIJsVxpbsn_aW9f8RIs4Pivn9RMpY
-Message-ID: <CAH5fLgiK3T24gf6tjXGGMsjqj17dh0PFbRZboE5oXXp16yOLTg@mail.gmail.com>
-Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
-To: Jann Horn <jannh@google.com>
-Cc: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
+References: <20250517000739.5930-1-surenb@google.com> <20250519155145.8378a397a755c1cc5a3e2d4e@linux-foundation.org>
+In-Reply-To: <20250519155145.8378a397a755c1cc5a3e2d4e@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 19 May 2025 16:13:28 -0700
+X-Gm-Features: AX0GCFtyKbje5C9HGVN9HvLhSgtRMvDYAmrBJ9ZPORcHkDdOH464cLAvkeUee8Y
+Message-ID: <CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] alloc_tag: allocate percpu counters for module tags dynamically
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kent.overstreet@linux.dev, 00107082@163.com, dennis@kernel.org, 
+	tj@kernel.org, cl@gentwo.org, pasha.tatashin@soleen.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 3:51=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+On Mon, May 19, 2025 at 3:51=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
 >
-> On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com> wrote=
-:
-> > This is a port of the Binder data structure introduced in commit
-> > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-> > Rust.
+> On Fri, 16 May 2025 17:07:39 -0700 Suren Baghdasaryan <surenb@google.com>=
+ wrote:
 >
-> Stupid high-level side comment:
+> > When a module gets unloaded it checks whether any of its tags are still
+> > in use and if so, we keep the memory containing module's allocation tag=
+s
+> > alive until all tags are unused. However percpu counters referenced by
+> > the tags are freed by free_module(). This will lead to UAF if the memor=
+y
+> > allocated by a module is accessed after module was unloaded. To fix thi=
+s
+> > we allocate percpu counters for module allocation tags dynamically and
+> > we keep it alive for tags which are still in use after module unloading=
+.
+> > This also removes the requirement of a larger PERCPU_MODULE_RESERVE whe=
+n
+> > memory allocation profiling is enabled because percpu memory for counte=
+rs
+> > does not need to be reserved anymore.
+> >
+> > Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate contigu=
+ous memory")
+> > Reported-by: David Wang <00107082@163.com>
+> > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.=
+com/
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > ---
+> >  include/linux/alloc_tag.h | 12 ++++++
+> >  include/linux/codetag.h   |  8 ++--
+> >  include/linux/percpu.h    |  4 --
+> >  lib/alloc_tag.c           | 87 +++++++++++++++++++++++++++++++--------
+> >  lib/codetag.c             |  5 ++-
+> >  5 files changed, 88 insertions(+), 28 deletions(-)
 >
-> That commit looks like it changed a simple linear rbtree scan (which
-> is O(n) with slow steps) into a bitmap thing. A more elegant option
-> might have been to use an augmented rbtree, reducing the O(n) rbtree
-> scan to an O(log n) rbtree lookup, just like how finding a free area
-> used to work in MM code... That would let you drop that ID pool bitmap
-> entirely. But I guess actually wiring up an augmented rbtree into Rust
-> would be very annoying too.
+> Should we backport this fix into -stable kernels?  I'm thinking yes.
 
-If we're talking approaches to avoid the bitmap entirely, it would
-probably be easier to replace the rb tree with xarray than to use an
-augmented one.
-
-Alice
+Yes, I should have CC'ed stable. The patch this one is fixing was
+first introduced in 6.13. I just tried and it applies cleanly to
+stable linux-6.13.y and linux-6.14.y.
+Should I forward this email to stable or send a separate patch to them?
