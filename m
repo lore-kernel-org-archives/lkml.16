@@ -1,166 +1,110 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C074275115;
-	Mon, 19 May 2025 11:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9024D27585C;
+	Mon, 19 May 2025 11:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654517; cv=none; b=XP4aKBSTg04NK5e47usdIsI9GtVnUjKc0Ovqtqf4jMcYVhk3dH+pOrts7Kapr4DyQNEUdyqTdOTJ705yOMHd7XbbaWoSykqJiCrC+bcXtKAzqm7i4gJ2iZ1FzMTUJ2WIaAsJw5jmoyS3kQch2NljIcBGfJyJ2bg/V/+oU3Qv8H8=
+	t=1747654532; cv=none; b=kjTrMp5jV5cMLnl0atxgo1j0l+YI+Yvw10oXPMWk1/3xzTSZSYCQca97jJPYdw4r6pt/KHa+GpI3Qwzkr/0BnJOJjBPyZqZqGjP3f1POMXtgX7Cn5FYflfuEPVhgGf03JmUL/AD741Xttrwy4y/Zel8/ODyEgX0TivoHQ7tdbsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654517; c=relaxed/simple;
-	bh=TOTn8GFmhX74x/VZ2DHWF88Fswebwu1oTEvmpmvzOAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DaxIsZ8mxfKoyqWiizyBiu+QZqOoO0qHenAV+Kf6yZKoFSOG/jX9Dlie07/fNLZWUvEdfUZW5aAG0G8fvmy3toUsOprw9xFSOlmqoVouW4+q+TP35MIYDSayesAwxYk96Jj7PCNYdfJGvAygR1bUfZbS+0aq0juT+ib9KKF9t40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWxwDhC2; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747654532; c=relaxed/simple;
+	bh=c4Lvu7ujHMSmlSyU6+Vgw3jLSD6EdIq9iAtPYK1lm4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ltgdi6pooAihFju3VSvBL8LaY4eZUptwVzOQ+BGm3siHMFoJR13UXw6PS+JoEcP8nupWDjW7G4mepzB6Wm3e6IhXMKyVLMpNV0q4PakbcN9AOXrD+rw6LkfMei2cbjE6Fl90Lh0nmyVYTyx2BfYNAkELP/MFvstTzaru/tEgzL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=StjPzBot; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWxwDhC2"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476ae781d21so43456921cf.3;
-        Mon, 19 May 2025 04:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747654514; x=1748259314; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cvMGf5g2weozdIFZo63Xax4wmIQw1PPebi0s+41OCrs=;
-        b=lWxwDhC204VijYY/wvQtFkSoQ6NkKMP88L6rUz9cYBugm4qUg/L1+RqquX1FHgNiUE
-         T6dBa1oUFvq7wRNjfStHZJNUvkSuKbEeOhBUc0l1VJ4wmwKRiw9pgUXeYh2SlxEfztKF
-         Pg42p1FRUuLP7VinvmTe8/uIty4p3Wt/270i1uLdeRIMULduK+YObCoj5sxcM5ps1tRn
-         avev0UjvQnpP9NzEIeSV4+si+h/CLz/6y+PqwC5ysSwpeJkIwPLmuaq2HrUmhtsn06hz
-         wTkVcqavOu4+jXl2gEKgwiIXSz+c/JLngwQ994RHA0DaWbHBv8WXHU2HB7DZQFdvmOY/
-         Ar9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747654514; x=1748259314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cvMGf5g2weozdIFZo63Xax4wmIQw1PPebi0s+41OCrs=;
-        b=TrMmqb+oenfY+8yZAAq14ssCtvt5xssRw4AyI/7CnHEHGPRN1znBI4VYp0ZRAsB4cd
-         ldR1UALa4c9PPScXloY+xv2+Nb78RRYQXB42yJSzmDQDARc890D5gbvrVyLE0mndyFHs
-         MlrngkKoEKnaWHMrYQlvEDzAsLtPmLZKJng6LF2yLe5eK9lxjyTNWt5AC4HMiCATn38i
-         nLHo+FM6X7fOMg4t1rtNqOQd3OOshQt7U6QZVFWgbZkzVI3SLRzWS6xtm8SjOnEzTNFn
-         XyCxubE8SoLsbj/0fPcwfvhWIKiQlTwMLyBto8q89/Zv2LX4T1W2qW8hLfgiM/jUkjtL
-         FIsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUICz7bz6NeYGkH/YJiaKtW4EPRuzdAuQKz2pQyyZL+dRcY8r7Jn4wPSg7YUxZVvv61kypW2BF8y6teGe1D@vger.kernel.org, AJvYcCWVNOYEVctcX5uKtU+TDOkSpf5JlD2bcBU/9LUGbBobdNrjXb542AAx6F8IzCuVYG6J+TgLXILpP96r7LXkz54=@vger.kernel.org, AJvYcCXWwVFqEvsoWGC9QLy8eTIfxOy/h05Spqd8j92H6cN13wn4x1QOjaMh+hOXQ74I6lPvryWi2vBUJu5T@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJH3zp2HtZxljyEgDuJfwU5Y6B3eYBfP915eFuaRARa1scWS8y
-	kZ19C16DOf3FTUBwydgChKNnekgV598GGLod4IeF3LVawh+UhnvpleHKLIk94XMsXTB+/ny3+fT
-	hxBbWp6aMUJ5+OwYn7Qz3yabyPm2rCVs9krAT
-X-Gm-Gg: ASbGncswhSzKPxgyeKfxUwMnPYlwKlWqx2RpYvJDzQ+J889avDJjuA7Y/2q+gw1c+St
-	qiSdMcTAaVRQNVyWTtZRKRuZnC1Iei/mgOend+81GL9Hc+bK5X6eFEta6WFMvjgDIMU29yoZKVn
-	cBmFnpP3iE8daKF6xJBB/cNYCZFH5ZklFeLKW9445y/0UeK06tsyo56np8vhyEr30=
-X-Google-Smtp-Source: AGHT+IG8voR8X2h42Gvzm1hYVSaBNVOszaGXju3Wj3QHsFtLKDEveorvqw8YGPS+So3ZB6nWZgvBoo5R7KUB95DaVlk=
-X-Received: by 2002:a05:622a:59c3:b0:476:9474:9b73 with SMTP id
- d75a77b69052e-494b0939a78mr192684461cf.42.1747654503905; Mon, 19 May 2025
- 04:35:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="StjPzBot"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 87DEC43A0B;
+	Mon, 19 May 2025 11:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747654527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81nL3/GhkQ2VjUOe+1pO+ZBtDt54R0erupT3wBOarVI=;
+	b=StjPzBotRjmZ4tnUHmQoqCmpf+mchssIgwwekn96rt1gfXBps2XWX7jLEZAhJe4G9sVKqv
+	t6dbwwTxJQEQBRizkflnOEQ8fY20CF6dugtMThMZyT9BLTOXR906FTXrOhwTeD7o9LHG2W
+	DeyxuJBEDBhEEOK37c8ykjfjoE8X5mI4wOUa+DCUfmlFzBMUIgJKFpRcdUWxi1k356vUSX
+	YsJdZmSF+EWVG/OYIn7c8cLUX/s9oBWV8FbtM1QSTJ/cJvwkRRBRophSkMp0kTrFsEVMoX
+	V0tBDlm/n8mpuJ37edJqKi3vLAbvNmdUE5+t+cba0AlWo3W1HaVw7M0xJYtMog==
+Date: Mon, 19 May 2025 13:35:22 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 04/26] driver core: Avoid warning when removing a
+ device while its supplier is unbinding
+Message-ID: <20250519133522.63acf5e5@bootlin.com>
+In-Reply-To: <aBt5FvZ95S1Y_Mba@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	<20250507071315.394857-5-herve.codina@bootlin.com>
+	<aBt5FvZ95S1Y_Mba@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-vt8500-timer-updates-v3-3-2197a1b062bd@gmail.com> <202505180911.hDevFA1N-lkp@intel.com>
-In-Reply-To: <202505180911.hDevFA1N-lkp@intel.com>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Mon, 19 May 2025 15:34:59 +0400
-X-Gm-Features: AX0GCFuiDlrcWsgaEaNmFJ8EIQjE8OcrTnIsT4xwkYdG39zHB1uMjrH0T6Jryxc
-Message-ID: <CABjd4YwJgZiq9_jKGa70GaxaW8TT=JuwDioU6jH=J_O=t+QT8w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] clocksource/drivers/timer-vt8500: Prepare for
- watchdog functionality
-To: kernel test robot <lkp@intel.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Sun, May 18, 2025 at 5:24=E2=80=AFAM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Alexey,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on 92a09c47464d040866cf2b4cd052bc60555185fb]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Charkov/dt-=
-bindings-timer-via-vt8500-timer-Convert-to-YAML/20250516-025729
-> base:   92a09c47464d040866cf2b4cd052bc60555185fb
-> patch link:    https://lore.kernel.org/r/20250515-vt8500-timer-updates-v3=
--3-2197a1b062bd%40gmail.com
-> patch subject: [PATCH v3 3/4] clocksource/drivers/timer-vt8500: Prepare f=
-or watchdog functionality
-> config: loongarch-randconfig-r123-20250517 (https://download.01.org/0day-=
-ci/archive/20250518/202505180911.hDevFA1N-lkp@intel.com/config)
-> compiler: loongarch64-linux-gcc (GCC) 14.2.0
-> reproduce: (https://download.01.org/0day-ci/archive/20250518/202505180911=
-.hDevFA1N-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505180911.hDevFA1N-lkp=
-@intel.com/
->
-> sparse warnings: (new ones prefixed by >>)
-> >> drivers/clocksource/timer-vt8500.c:201:51: sparse: sparse: incorrect t=
-ype in assignment (different address spaces) @@     expected void *platform=
-_data @@     got void [noderef] __iomem *static [assigned] [toplevel] regba=
-se @@
->    drivers/clocksource/timer-vt8500.c:201:51: sparse:     expected void *=
-platform_data
->    drivers/clocksource/timer-vt8500.c:201:51: sparse:     got void [noder=
-ef] __iomem *static [assigned] [toplevel] regbase
->
-> vim +201 drivers/clocksource/timer-vt8500.c
->
->    175
->    176  /*
->    177   * This probe gets called after the timer is already up and runni=
-ng. This will create
->    178   * the watchdog device as a child since the registers are shared.
->    179   */
->    180  static int vt8500_timer_probe(struct platform_device *pdev)
->    181  {
->    182          struct platform_device *vt8500_watchdog_device;
->    183          struct device *dev =3D &pdev->dev;
->    184          int ret;
->    185
->    186          if (!sys_timer_ch) {
->    187                  dev_info(dev, "Not enabling watchdog: only one ir=
-q was given");
->    188                  return 0;
->    189          }
->    190
->    191          if (!regbase)
->    192                  return dev_err_probe(dev, -ENOMEM,
->    193                          "Timer not initialized, cannot create wat=
-chdog");
->    194
->    195          vt8500_watchdog_device =3D platform_device_alloc("vt8500-=
-wdt", -1);
->    196          if (!vt8500_watchdog_device)
->    197                  return dev_err_probe(dev, -ENOMEM,
->    198                          "Failed to allocate vt8500-wdt");
->    199
->    200          /* Pass the base address as platform data and nothing els=
-e */
->  > 201          vt8500_watchdog_device->dev.platform_data =3D regbase;
+Hi Andy,
 
-Frankly, given that this driver only applies to VT8500 (which is ARM
-based), the warning appears a bit overzealous. After all, on ARM MMIO
-addresses are in the same physical address space as normal memory
-addresses, and furthermore this platform_data is never dereferenced
-directly anyway.
+On Wed, 7 May 2025 18:15:34 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-I could silence the warning either by more aggressive casting or by
-wrapping the pointer into some struct, but both of those sound a bit
-overreaching. Would appreciate guidance from the list on how to best
-approach this.
+...
+
+> 
+> >  		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+> >  			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+> >  		} else {
+> > -			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
+> > +			if (link->supplier->links.status != DL_DEV_UNBINDING)
+> > +				WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));  
+> 
+> Why not
+> 
+> 			WARN_ON(link->supplier->links.status != DL_DEV_UNBINDING &&
+> 			        !(link->flags & DL_FLAG_SYNC_STATE_ONLY));
+
+Indeed, I will update in that way in the next iteration.
+
+> 
+> >  			WRITE_ONCE(link->status, DL_STATE_DORMANT);
+> >  		}  
+> 
 
 Best regards,
-Alexey
+Hervé
