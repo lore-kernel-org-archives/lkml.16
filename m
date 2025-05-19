@@ -1,70 +1,47 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAB4283FFD;
-	Mon, 19 May 2025 14:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F51283C97;
+	Mon, 19 May 2025 14:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665591; cv=none; b=YKjf9zqrbZUkyvX5I9yZsrlLH2H6YEh6oG8nij8ze3PNY3QTbg/0z1YhKgfGGRj0Wazvt7aF2UurJOG9Gu6QfRcIJXeG59CLAGEWIT0dcKU3t3IFE5BKzbP6jeRS6SAzUziWhY8bZDwK7AbZinHXr26MxhKoVc0hJaX8J4Wj6Mo=
+	t=1747665599; cv=none; b=IqZwwhumAwzrBsnRqO5OgzWrNHEoHlKIuDtAtXSp8jDnpkwDL3kqNvY5CKjt2Y8G0VtvLZudMOh/dNAHQrhrfKyg8M+nK7ESAvAH5eO+3j0WZ6wjFigT7AAEEHBPhU9OU+q8rysiEjvprd9lqS78lH0ArpyVPXj1B9sW+njMWxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665591; c=relaxed/simple;
-	bh=msd4Nbv4JsXtgheMB/Yu77g5qkVvbJz4LMQVT6RHC/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uFka7WdWXwnzsGkAtitwkcTo7CkYH4DQUFaphwBQGfAByMnVPqwiBbjn73vpjjDxu4+kAZCTlE6iLV0inZom/wlmrFzWoMXPxjzkDyrZvv0/lspJncUFD+cxlt+jN83AyH/x55OeCdMcDCzSnPWsynolK0F7qOOKPfJw7dJpfQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R7v7B6CD; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747665599; c=relaxed/simple;
+	bh=LlgyKOkIjeOrsH6cU0SxQLBz2yybyFfPXRPS0jolXh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Bp5GjddpMtWicKxo3pKHx5FqKGmOoE4oF+DpfwDt+V5d6LJfQKY+F9jyzG+woG+kWuUsCJ3NnfFDOZmju7ilw70LDe1hd8gYXASHBqpvyP748Z1kT1DlgCK4rSzvXGolIcXV1pyjPAkd34PK2BtWeYfMbWY5OOCPXR1C9tsWggE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mF2JquK8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R7v7B6CD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A340F43150;
-	Mon, 19 May 2025 14:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747665581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s78TSynP1yOAyv5ym7VeOQWFY/KVrRxunsW0R6Vz4B0=;
-	b=R7v7B6CDR6I0+2oPYtmWBWzRnlYJgjGM2QkIe3qdD/oGnjK8GyM+fnt5g3CO81bKOUjxJ+
-	z9pFesZxkLYN6SnX7pQI0/KypX07xDTZpGwRBw2cMkXFpSqam9BsKYON7+6iLDSWVFsJlm
-	t2ueG/KBIL1kYvX6KuExE+eEV/8isoWnJNj8D1Ph8C2F7UUxQrABw8X8SCBO/5RggRK2EU
-	wn+F5KqsdhyBKw5sJU2aeNn6MjEg3bZZI/bbr2leXReaNfQeHKQH94KlP3LoUJ09sKn6qM
-	vb7hCmlrDD4j1zzcvnanZr8bYalKd5bLxL9srDdhcUdysADuHcWWugAsfM9Sgg==
-Date: Mon, 19 May 2025 16:39:35 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 16/26] i2c: mux: Create missing devlink between mux
- and adapter physical device
-Message-ID: <20250519163935.3e47ec04@bootlin.com>
-In-Reply-To: <aB0C05WnKkgslAuT@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-17-herve.codina@bootlin.com>
-	<aB0C05WnKkgslAuT@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mF2JquK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335FEC4CEE4;
+	Mon, 19 May 2025 14:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747665599;
+	bh=LlgyKOkIjeOrsH6cU0SxQLBz2yybyFfPXRPS0jolXh8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mF2JquK8bLw40iGet/6TAAT2zTEOkA1RNNRHolUbfT+IGjx1n0UegRPyl8vZ400X4
+	 MGc/YejGZM1I7KDHkiG1Z/Wae3qd6XkkJl8MRESlBAidG9T+bsI4xmhh5g1j0Mopnl
+	 I/Rxl/+0d/slaML7MuCBlmhuLD6yRXHylWE6kvNi9H7Jc3gyJR9OH9n74DI7t67PHq
+	 alIGlYxp6yfQ+Ypgr7sgryatgqS1nIYWjYoaamBlQ3p6iGcKvodETsfThPhAG5yHul
+	 +2zB6ibGvgMLeyaOvZ0r9GKS7Nj+Hhe20q8M4U/5UGZLZy8DkRG+W+Bx4OuRTe1VRY
+	 KEo6dzuRUgIoQ==
+From: Benno Lossin <lossin@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: mailmap: update Benno Lossin's email address
+Date: Mon, 19 May 2025 16:39:51 +0200
+Message-ID: <20250519143952.11412-1-lossin@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,92 +50,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduieegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Andy,
+Update Benno Lossin's email address to `@kernel.org`.
 
-On Thu, 8 May 2025 22:15:31 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Signed-off-by: Benno Lossin <lossin@kernel.org>
+---
+ .mailmap    | 1 +
+ MAINTAINERS | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-> On Wed, May 07, 2025 at 09:12:58AM +0200, Herve Codina wrote:
-> > When removing an i2c controller device handling an i2c bus where an i2c
-> > mux is connected to, the removal process hangs and is stuck in the
-> > wait_completion() call done in i2c_del_adapter().
-> > 
-> > The i2c_del_adapter() tries to removed the i2c adapter related to the
-> > i2c controller device and the wait_completion() is waiting for the i2c
-> > adapter device release. This release is performed when the device is no
-> > more used (i.e. refcount reaches zero).
-> > 
-> > When an i2c mux is involved in an i2c path, the struct dev topology is
-> > the following:
-> >     +----------------+                +-------------------+
-> >     | i2c controller |                |      i2c mux      |
-> >     |     device     |                |      device       |
-> >     |       ^        |                |                   |
-> >     |       |        |                |                   |
-> >     |  dev's parent  |                |                   |
-> >     |       |        |                |                   |
-> >     |   i2c adapter  |                | i2c adapter chanX |
-> >     |     device  <---- dev's parent ------  device       |
-> >     |   (no driver)  |                |    (no driver)    |
-> >     +----------------+                +-------------------+
-> > 
-> > When an i2c mux device creates an i2c adapter for its downstream
-> > channel, a reference is taken to its adapter dev's parent. This parent
-> > is the i2c mux upstream adapter device.
-> > 
-> > No relationship exists between the i2c mux device itself and the i2c
-> > controller device (physical device) in order to have the i2c mux device
-> > calling i2c_del_adapter() to remove its downtream adapters and so,
-> > release references taken to the upstream adapter.
-> > 
-> > This consumer/supplier relationship is typically a devlink relationship.
-> > 
-> > Also, i2c muxes can be chained and so, the upstream adapter can be
-> > supplied by either an i2c controller device or an other i2c mux device.
-> > 
-> > In order to get the physical device of the adapter a mux is connected
-> > to, rely on the newly introduced i2c_adapter_get_physdev() and create
-> > the missing devlink between the i2c mux device and the physical
-> > device of the adapter the mux is connected to.
-> > 
-> > With that done, the i2c mux device is removed before the device
-> > handling the upstream i2c adapter (i2c controller device or i2c mux
-> > device). All references are released and the i2c_del_adapter() call
-> > performed by driver handling the upstream adapter device is not blocking
-> > anymore.  
-> 
-> ...
-> 
-> > +	/*
-> > +	 * There is no relationship set between the mux device and the physical
-> > +	 * device handling the parent adapter. Create this missing relationship
-> > +	 * in order to remove the i2c mux device (consumer) and so the dowstream
-> > +	 * channel adapters before removing the physical device (supplier) which
-> > +	 * handles the i2c mux upstream adapter.
-> > +	 */
-> > +	parent_physdev = i2c_get_adapter_physdev(parent);
-> > +	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);
-> > +	if (!dl) {
-> > +		dev_err(muxc->dev, "failed to create device link to %s\n",
-> > +			dev_name(parent_physdev));
-> > +		put_device(parent_physdev);
-> > +		ret = -EINVAL;
-> > +		goto err_free_priv;
-> > +	}
-> > +	put_device(parent_physdev);  
-> 
-> Since you are not checking parent_physdev for NULL, the dev_name() can print a
-> "(null)" string. Is this by design?
+diff --git a/.mailmap b/.mailmap
+index 1c70e51c789d..ad38ec96f783 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -134,6 +134,7 @@ Ben Widawsky <bwidawsk@kernel.org> <benjamin.widawsky@intel.com>
+ Benjamin Poirier <benjamin.poirier@gmail.com> <bpoirier@suse.de>
+ Benjamin Tissoires <bentiss@kernel.org> <benjamin.tissoires@gmail.com>
+ Benjamin Tissoires <bentiss@kernel.org> <benjamin.tissoires@redhat.com>
++Benno Lossin <lossin@kernel.org> <benno.lossin@protons.me>
+ Bingwu Zhang <xtex@aosc.io> <xtexchooser@duck.com>
+ Bingwu Zhang <xtex@aosc.io> <xtex@xtexx.eu.org>
+ Bjorn Andersson <andersson@kernel.org> <bjorn@kryo.se>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f21f1dabb5fe..fe5786175d03 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21252,7 +21252,7 @@ M:	Alex Gaynor <alex.gaynor@gmail.com>
+ R:	Boqun Feng <boqun.feng@gmail.com>
+ R:	Gary Guo <gary@garyguo.net>
+ R:	Björn Roy Baron <bjorn3_gh@protonmail.com>
+-R:	Benno Lossin <benno.lossin@proton.me>
++R:	Benno Lossin <lossin@kernel.org>
+ R:	Andreas Hindborg <a.hindborg@kernel.org>
+ R:	Alice Ryhl <aliceryhl@google.com>
+ R:	Trevor Gross <tmgross@umich.edu>
+@@ -21282,7 +21282,7 @@ F:	rust/kernel/alloc.rs
+ F:	rust/kernel/alloc/
+ 
+ RUST [PIN-INIT]
+-M:	Benno Lossin <benno.lossin@proton.me>
++M:	Benno Lossin <lossin@kernel.org>
+ L:	rust-for-linux@vger.kernel.org
+ S:	Maintained
+ W:	https://rust-for-linux.com/pin-init
 
-It is worse than that. If parent_physdev is NULL, dev_name() can crash.
+base-commit: edc5e6e019c99b529b3d1f2801d5cce9924ae79b
+-- 
+2.49.0
 
-I will fix that and check parent_physdev for NULL in the next iteration.
-
-Best regards,
-Hervé
