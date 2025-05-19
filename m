@@ -1,162 +1,126 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFCA1714B7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0531CD21C;
+	Mon, 19 May 2025 14:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747666002; cv=none; b=F4bqWKjxVstIJ0l5MLZaafEl1Kt2NAFQdNmW2N40qfZj3NTOS8xMxHwgmxeMN7cXOaYplmdnhzC5nEXyKaZV25fKAQnX3hxuiJP2LjvbvVEbF78irI5YcurblhBv3NtifeWD5GZPU38RssmxBgreGFQeBXRh0rSUKJiEzP7Wp5U=
+	t=1747666028; cv=none; b=Yi/vKxI0yFP76flpKjKSNqHGuBSywAcfbgme8vz2Ew9uFdfZBKfgjJnEWaYN+gyJfUk85Vpw0c3cK1955SY3LnBiuSWtEjVyBgYMV2kt9MbRJTheZbkquIzT9LD6eVTyH5KIKVO8hvWdOaUdKbC0/3WdICEuw8xTpWtxdY88zuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747666002; c=relaxed/simple;
-	bh=/MB5fkLTvXX655jtNwONyszz/4e2KSscyQ90ZFkTraw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ma4ws2PTxid0B55cXsOpiA2oQW4C0UpldB/HlkO9doDR2lr5IPzhmCBEBZ8xglMEcjk+9lS/8wXdAPKcL8eARmOvmbw6fLdmKLLFIZlRUY4rOznu71ntZ0+QrVYWiPlm8iSGiwU3qrRyV1dboLNk92Gg6EUeBbUiZjZfHeaH+ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fifn7Hub; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1747666028; c=relaxed/simple;
+	bh=3qnV08bZhkf4pfjJZBx8dUF6Qff3QUhvneWIe9at9jA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q+Q/2aW31w3YBwFXEjvRuSgJuxr3LSggMPbWwsadxWFg13LzCHFd0ntzps4PHDSIEsqA2+dzDr4H/V7TtC6/XgYfIxnGFuklh73ulfJFP624qVuTr0SSscCTnLDmbFv7kzJJoscaCbL9mbfcr63K+5lXojbWZQUnl77y/q7M6ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hntFdLCu; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fifn7Hub"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22e1782cbb2so3925555ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:46:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hntFdLCu"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f8b81fda4aso28390826d6.1;
+        Mon, 19 May 2025 07:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747666001; x=1748270801; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kADBuowxof65udqYDbFHGBx7vhRtqalFqgiYXXItF9w=;
-        b=fifn7HubBKuWwm9DTlz0rmcVjZGOhZ8bK6fwcVZetQT6tuEJqPCzy0P5K8tus7zP/0
-         D3xCtoRMCwXVdhILPOUCR8Gl4pVUl3eVbj8bAy35yPO5OhuRKWV2xR0EF710gVsF2Qqu
-         beq0Bnl1beB3qUk2Gr2kqDE//DE0L3OTPZWd/ys20uIv62ImaEjsDFtWVk7Ak8NaFvzC
-         YfOXYr0c7mQVJNZkWTwdfM48+UPEXPmXlwZsHyabrGnOu7cX0tw9yIWWvvU1s5/pG6Px
-         Q9j5iaxg4oJxGtnkEHg49z0GoA086K2C8rSChrm9e2mNd0fPCocAv6xZxydWISSLTD76
-         IIdw==
+        d=gmail.com; s=20230601; t=1747666026; x=1748270826; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E8Jd7Qi9TWpcjCpG46oFCwsLyC3CfnqUMVCo075QTSo=;
+        b=hntFdLCuvNpu0kuBMD8S6ipRLDVfGnsqNbIlmJ0GfDNJVQFOuFw4Rl5j5ry3BRSZwu
+         m/y/Km/wtx9ZRd4U9fMc2q23hW7tEjZnVHZHOvAZ20bzdlipbDwyTnRSWYybk2lO1hu6
+         yuNwK6Tl68oIWWcA8PS4ihemkchjuVG9otaL/TfPeiyjVyFQoMKqOB2SGY5Gd4CS0kQf
+         0LPBry+UkBh03P5nAW1kf+mg/4BIOSIocsIxOahvOGvylckxwKmZ1aGGzN+Oxv9TuynE
+         qN+4ujcXrdoOIxU2Kr2h9ZD2mqF4ry2TNgD2YKa8bbtN0o7+Ui6a+wjIzgECRQRRkRK8
+         0CYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747666001; x=1748270801;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kADBuowxof65udqYDbFHGBx7vhRtqalFqgiYXXItF9w=;
-        b=GGelhoyin/sw8abQtvffeFRDzv/LzqXK3WTxU/V3cHDVcs2sbQUuG4vAFVsEyL1QF9
-         5KGPXmtqmHVPqNJzv4wwZzsLSI7HrYXgagG7UQWofv+pYTduqRT9fM4YgDHRggsDnJ2P
-         KyQts3VH9iXjKdvaajhfjPbdDpN2O07MR7xAub03069n5FJrPm86vi+WxinV62VIanDb
-         QHvL9K0QBSoGwBLMX/Zt9NIFpmzbVfa6iFZmhCBz94S2kahau00s39wL+GxL2sWxfrQU
-         IHvt7jiQNqlqjMLUxWFpIvDBOHwTdS3yMlfU8hxT7NH0XrSkgZxIm7R1eG3lL72W2eJe
-         qk1g==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Vy4WrKEie9lLg8Cx1XVJPKgrhzyGydN7EmifdUFCx4OFflmzAf1+ilbjUS8HdPGOAkEWX6Pk8c4A7K0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhuU/hUEE8BCdAmWc3X7FfsJskXc/zqtXRw81q3N05rRm0PSjP
-	SDH/QdZKtMxD0/i+/y9rsIebX57siQDy/rikkXgXc7PZc6iyyFYtgJv14BGj3HuMTa0Apqh58WU
-	/UupgvleM4Ntl+l8SdCtJkcHaj4SSJog=
-X-Gm-Gg: ASbGncvfzGkbRo7UWwSvdwn8nsF08V+HH9gtv8UhwQZoAlrTGu+sWGldruBZLCd+0mp
-	nEF4kp0VX08/zZd1dK8Sla+Pr8xwhZRqdFgu4/iiOOh/6hozr28A9wjPZiKhCFYXKY+GoMmFNd1
-	auUG9I/wyT/C5WwQKXqyrxshnpFaHSAeveEQ==
-X-Google-Smtp-Source: AGHT+IGxUyLpuIzuYI9yQN7+ja/Sm14SmFPcRyk8rO/gYDn+dKFkO1xwmMC+JwJVaVoj6ptwii1tfKmvJd5SMChDWjw=
-X-Received: by 2002:a17:902:d54c:b0:224:10a2:cad1 with SMTP id
- d9443c01a7336-231d45168bcmr73303035ad.10.1747666000574; Mon, 19 May 2025
- 07:46:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747666026; x=1748270826;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E8Jd7Qi9TWpcjCpG46oFCwsLyC3CfnqUMVCo075QTSo=;
+        b=IRvJ2/ZxhsU79qCABpxI5oRi8RXVdApKq29CkQuw5hqH1dXM/+ukyou5hxZ/5g6zQt
+         4OgIHbhuh827JzHkcryU1a2Enu5lRS/AjVxHeOmeCPEO36+EfQnSKRcX6a3qqrXxETI4
+         9FYZXnzRIE2jVaqhTPEDJ9vebenDrGu5c82UP6J++vDkVD+dEaa6xLPs8znYMu6oFjV9
+         UZ7PG3CLGuJo9OLemUyRB/i/z3rv/ki7FxwoO0V+ve6rEEtaVSWWsyF+zCKcZaZUiLHC
+         8YfGmEoygXpJrE4UK1vg3giyHjdL7Mg0lVRKZF8jGYoSMfQtlkxft2LDzrygMUS2Eg82
+         V98Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWrWyLB1UlsisNJXmeJFik3mqUNPMmz1w/YRRzsACvyP+buh769+OyurHqTGGnE68MHhS8T78K7@vger.kernel.org, AJvYcCXpAC3CsWqbcCEp2tRxUl0bU2CJzU1gzUB/Zcn7X3eXL0fbLbSl5iRqNYrdFV2r+3QGL2EFnSrso/U0Yg8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl1/N/4pXElCZCHnVhcs+l+o0ieMT0YLk9yU/uZOI5MofsUS+v
+	CTFJlpOQiQWJXexy9xF7xlcfAXtSd+LyBf62j4m4IwloHQGkIaUznAmCj88tGDFWfik=
+X-Gm-Gg: ASbGnctkbnaQrK6OdxquCNw4uHyv5fm4/R0kDoh8i7Ca5eZ8yyHraq1+bWZm6O9oF7+
+	O4glFUbfkWaUqVKejRSgC/d6MPlAqIuVV7E34oshPhrUgO5zj+lGjiY3fae0+JpzHe1Rd4oxtDr
+	SVBOFBf5R32S/fUTe40yTndjdlws8dQFwDVzyznBInw+ZM7dJCBXn7cgPfgPi+Sahaivb1x8svU
+	R6PCxkjy607omaip7KEuto5VJSb3YHnwjB2ShnQH/qU6RrYGrdYu5xcNCGrL8kBAAZzCHoWK3f1
+	uP9ciDm0VYaYR2nyFjIJF8xMhtGSdHu/hC73U1rigRZvq/PmbUvD
+X-Google-Smtp-Source: AGHT+IH9gfQ+apMRIS3qcJyKjW6PWaqbuvRhWH7s8idH69K7FwlmtGsTZZNFdqKx6LjWZmqCtVkvgQ==
+X-Received: by 2002:a05:6214:2403:b0:6e8:fcde:58d5 with SMTP id 6a1803df08f44-6f8b08e56ddmr210246136d6.42.1747666026022;
+        Mon, 19 May 2025 07:47:06 -0700 (PDT)
+Received: from CNCMK0001D007E.ht.home ([2607:fa49:8c41:2600::f21d])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b096ddb4sm57405716d6.78.2025.05.19.07.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:47:05 -0700 (PDT)
+From: chalianis1@gmail.com
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux@armlinux.org.uk,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Anis Chali <chalianis1@gmail.com>
+Subject: [PATCH net] phy: dp83869: fix interrupts issue when using with an optical fiber sfp. to correctly clear the interrupts both status registers must be read.
+Date: Mon, 19 May 2025 10:47:01 -0400
+Message-ID: <20250519144701.92264-1-chalianis1@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516233516.29480-1-daniilryabov4@gmail.com>
-In-Reply-To: <20250516233516.29480-1-daniilryabov4@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 19 May 2025 10:46:29 -0400
-X-Gm-Features: AX0GCFsQQ8F-uOPfM0f66pMmiUGhGWImNrxgkYRyjyQpnzmvoHwfqxmPEhSQLO8
-Message-ID: <CADnq5_MObnUtQ+VC+qc1fmdKZ8=XVWRRm5rS88-BmpYTtLZfOg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: fix typo in comments
-To: Daniil Ryabov <daniilryabov4@gmail.com>
-Cc: alexander.deucher@amd.com, christian.koenig@amd.com, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Applied.  Thanks!
+From: Anis Chali <chalianis1@gmail.com>
 
-Alex
+from datasheet of dp83869hm
+7.3.6 Interrupt
+The DP83869HM can be configured to generate an interrupt when changes of internal status occur. The interrupt
+allows a MAC to act upon the status in the PHY without polling the PHY registers. The interrupt source can be
+selected through the interrupt registers, MICR (12h) and FIBER_INT_EN (C18h). The interrupt status can be
+read from ISR (13h) and FIBER_INT_STTS (C19h) registers. Some interrupts are enabled by default and can
+be disabled through register access. Both the interrupt status registers must be read in order to clear pending
+interrupts. Until the pending interrupts are cleared, new interrupts may not be routed to the interrupt pin.
+Fixes: interrupts issue when using with an optical fiber sfp.
 
-On Sat, May 17, 2025 at 8:38=E2=80=AFAM Daniil Ryabov <daniilryabov4@gmail.=
-com> wrote:
->
-> Fix double 'u' in 'frequuency'
->
-> Signed-off-by: Daniil Ryabov <daniilryabov4@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/basics/dce_calcs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/basics/dce_calcs.c b/drivers/=
-gpu/drm/amd/display/dc/basics/dce_calcs.c
-> index 681799468..d897f8a30 100644
-> --- a/drivers/gpu/drm/amd/display/dc/basics/dce_calcs.c
-> +++ b/drivers/gpu/drm/amd/display/dc/basics/dce_calcs.c
-> @@ -1393,7 +1393,7 @@ static void calculate_bandwidth(
->                                                 if ((bw_mtn(data->dram_sp=
-eed_change_margin, bw_int_to_fixed(0)) && bw_ltn(data->dram_speed_change_ma=
-rgin, bw_int_to_fixed(9999)))) {
->                                                         /*determine the m=
-inimum dram clock change margin for each set of clock frequencies*/
->                                                         data->min_dram_sp=
-eed_change_margin[i][j] =3D bw_min2(data->min_dram_speed_change_margin[i][j=
-], data->dram_speed_change_margin);
-> -                                                       /*compute the max=
-imum clock frequuency required for the dram clock change at each set of clo=
-ck frequencies*/
-> +                                                       /*compute the max=
-imum clock frequency required for the dram clock change at each set of cloc=
-k frequencies*/
->                                                         data->dispclk_req=
-uired_for_dram_speed_change_pipe[i][j] =3D bw_max2(bw_div(bw_div(bw_mul(dat=
-a->src_pixels_for_first_output_pixel[k], dceip->display_pipe_throughput_fac=
-tor), dceip->lb_write_pixels_per_dispclk), (bw_sub(bw_sub(bw_sub(data->maxi=
-mum_latency_hiding_with_cursor[k], vbios->nbp_state_change_latency), data->=
-dmif_burst_time[i][j]), data->dram_speed_change_line_source_transfer_time[k=
-][i][j]))), bw_div(bw_div(bw_mul(data->src_pixels_for_last_output_pixel[k],=
- dceip->display_pipe_throughput_factor), dceip->lb_write_pixels_per_dispclk=
-), (bw_add(bw_sub(bw_sub(bw_sub(data->maximum_latency_hiding_with_cursor[k]=
-, vbios->nbp_state_change_latency), data->dmif_burst_time[i][j]), data->dra=
-m_speed_change_line_source_transfer_time[k][i][j]), data->active_time[k])))=
-);
->                                                         if ((bw_ltn(data-=
->dispclk_required_for_dram_speed_change_pipe[i][j], vbios->high_voltage_max=
-_dispclk))) {
->                                                                 data->dis=
-play_pstate_change_enable[k] =3D 1;
-> @@ -1407,7 +1407,7 @@ static void calculate_bandwidth(
->                                                 if ((bw_mtn(data->dram_sp=
-eed_change_margin, bw_int_to_fixed(0)) && bw_ltn(data->dram_speed_change_ma=
-rgin, bw_int_to_fixed(9999)))) {
->                                                         /*determine the m=
-inimum dram clock change margin for each display pipe*/
->                                                         data->min_dram_sp=
-eed_change_margin[i][j] =3D bw_min2(data->min_dram_speed_change_margin[i][j=
-], data->dram_speed_change_margin);
-> -                                                       /*compute the max=
-imum clock frequuency required for the dram clock change at each set of clo=
-ck frequencies*/
-> +                                                       /*compute the max=
-imum clock frequency required for the dram clock change at each set of cloc=
-k frequencies*/
->                                                         data->dispclk_req=
-uired_for_dram_speed_change_pipe[i][j] =3D bw_max2(bw_div(bw_div(bw_mul(dat=
-a->src_pixels_for_first_output_pixel[k], dceip->display_pipe_throughput_fac=
-tor), dceip->lb_write_pixels_per_dispclk), (bw_sub(bw_sub(bw_sub(bw_sub(dat=
-a->maximum_latency_hiding_with_cursor[k], vbios->nbp_state_change_latency),=
- data->dmif_burst_time[i][j]), data->dram_speed_change_line_source_transfer=
-_time[k][i][j]), data->mcifwr_burst_time[i][j]))), bw_div(bw_div(bw_mul(dat=
-a->src_pixels_for_last_output_pixel[k], dceip->display_pipe_throughput_fact=
-or), dceip->lb_write_pixels_per_dispclk), (bw_add(bw_sub(bw_sub(bw_sub(bw_s=
-ub(data->maximum_latency_hiding_with_cursor[k], vbios->nbp_state_change_lat=
-ency), data->dmif_burst_time[i][j]), data->dram_speed_change_line_source_tr=
-ansfer_time[k][i][j]), data->mcifwr_burst_time[i][j]), data->active_time[k]=
-))));
->                                                         if ((bw_ltn(data-=
->dispclk_required_for_dram_speed_change_pipe[i][j], vbios->high_voltage_max=
-_dispclk))) {
->                                                                 data->dis=
-play_pstate_change_enable[k] =3D 1;
-> --
-> 2.43.0
->
+Signed-off-by: Anis Chali <chalianis1@gmail.com>
+---
+ drivers/net/phy/dp83869.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index a62cd838a9ea..1e8c20f387b8 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -41,6 +41,7 @@
+ #define DP83869_IO_MUX_CFG	0x0170
+ #define DP83869_OP_MODE		0x01df
+ #define DP83869_FX_CTRL		0x0c00
++#define DP83869_FX_INT_STS		0x0c19
+ 
+ #define DP83869_SW_RESET	BIT(15)
+ #define DP83869_SW_RESTART	BIT(14)
+@@ -195,6 +196,12 @@ static int dp83869_ack_interrupt(struct phy_device *phydev)
+ 	if (err < 0)
+ 		return err;
+ 
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->supported)) {
++		err = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_FX_INT_STS);
++		if (err < 0)
++			return err;		
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.49.0
+
