@@ -1,104 +1,78 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE252580D5;
-	Mon, 19 May 2025 11:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F9A275841;
+	Mon, 19 May 2025 11:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654879; cv=none; b=sOMrwD0vllN+H9lq9lnECWt8Lv7R3XD5w1gTxrAQ3pk2VtLjRAU6VgzkMY/DojIn5zbZQBS/YkvnTb/Eirc49omnvmaK8UKOktJS8HZelVhkpHpSglCyzCQ1/32SiyXw92OBBgGNThHcDbrSEqfKDtO5lpOooPic0pNO0GUrX6c=
+	t=1747654880; cv=none; b=NqkOjRgyakfV7PsIPwGJelpiv0vyWiYeTKMejSy+td7UyOvSnI2SXdavRGu26LREIkrBzoeu+ekJKZrW3Cnp/0QH3Qp6hPC0mtNdLUgV8bH+BYKeVSYfHvfvGt/IaXGP4kCT305rec/ADqY6vF/q77POBaxfzdsrai+vp5Cunhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654879; c=relaxed/simple;
-	bh=5Vo96rwwbeqGuD7SKuZQDOxh+cFjL5FGVQRjtEcFIV0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ajM907H4stf6kJNHZIBwl4mC62FB0oI/KzD3B/qSXB1PkjneVzx26j42vGp8bdF3bZJaFNDv7ahmjr5nG7wpFCPNji9HYECBAYVcXoC23LKExom6bt6gmop5biYZnsVZnVJ37XGZ+79fp+dU9leS4l6utouQ8iJd32Th/Ik5In0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VAeO5PhE; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747654880; c=relaxed/simple;
+	bh=XKSfFCNj8EnxgCES6aIVmpmQO7wWDa6AFurBdNDUS2E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=oTMezcfTKmjFaK3KeajKgw/AB7QD+NGbE81prNXB2CDg4yafLF5pmdwwR0Ypl9UQIuNI5twMPbfV3E+cLNxNIqC1IU6N2jUGJABwpSRpyorW7gjfbW6c+jwxbSmJeZO0PPIZpBNGiRYrVhC17F57CkCuytGy6NHDaM1zOSGRDd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlCztRWz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VAeO5PhE"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b1G3X3KMnz9t7w;
-	Mon, 19 May 2025 13:41:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747654872; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=02qyQguP64ZZwtrSPx68nkmGaO3o+TTS6Su6EUVfz/g=;
-	b=VAeO5PhEZg2vHq/WRsS8NwbUWscEsSNq/3UkhAlboXIG+WobMwkLWlizLEyzpznQR/rQTF
-	N2/WyCwPeHA7O5gtf8kGx+BYXIWxgjLRAlsu5P8tbYnDx3qsk8Bs4xRHCJ0wYicqeaFTeF
-	V9+xmC9Hwbh86yCkoKOZ+F2vjSMQazbdWOmoxn/reWjkFlE8AK2US4C2JM+maW9Il5JLrh
-	32D8KkLLDyeq0aNetrk3sWrp6lWWyXjKuNGHJ1RqtHbcxyBaxWPMCfMalI44vY30Bdb2WF
-	iJFfgkraTSwS0oKLlNqxkO6zX2GjKdQiCOu1Og4bgBR8q+J12tiWwK/Mwm+fPg==
-Message-ID: <6e46fbe01199d420dc2c9f6c5bd564ea45b0a0e9.camel@mailbox.org>
-Subject: Re: [PATCH v3 0/6]
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Philipp Stanner
-	 <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>, 
- Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yang Yingliang
- <yangyingliang@huawei.com>,  Zijun Hu <quic_zijuhu@quicinc.com>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-Date: Mon, 19 May 2025 13:41:07 +0200
-In-Reply-To: <aCsYMzWrV3bGpMWb@smile.fi.intel.com>
-References: <20250519112959.25487-2-phasta@kernel.org>
-	 <aCsYMzWrV3bGpMWb@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlCztRWz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044B2C4CEE4;
+	Mon, 19 May 2025 11:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747654879;
+	bh=XKSfFCNj8EnxgCES6aIVmpmQO7wWDa6AFurBdNDUS2E=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=YlCztRWzZg6BgJoATb8JE0jjkPjXxhTtmIk1S9phuKDjFaCn2vVlD5tS5MLbxF621
+	 ZeDp2qAOZzdwpBEfpdSwQA5DM/9AqEgr4y4Z10jDS5+ncfwGaSVrhwls8LFTwlXm5q
+	 G7PtEfYI0oOk/cpjSEu7AZQ4xRO/YPEWE+qZ18trp3CUSiw/EOlUap2EgSTY6qAzPJ
+	 470WWKiQTRkTMIwgL3rOG1QaJrR5EaYqlER2FNQFVYN9HaGXXr9ppzkq8kcrBDwQXM
+	 BnQ7qGCU19zKv/2AETQNndm7X99Pczx48EMOKPC9tEZYepvcBYl2LT/gz4kEhL2s0w
+	 qfSGVY17POZug==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MBO-RS-ID: 407da09aacdcef2975c
-X-MBO-RS-META: upjszsqh7sgf4zue37orw8sd49exwkrf
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 May 2025 13:41:12 +0200
+Message-Id: <DA03Y4OQIZ50.157T5EEVHQVMI@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Miguel Ojeda"
+ <miguel.ojeda.sandonis@gmail.com>, "Danilo Krummrich" <dakr@redhat.com>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-pm@vger.kernel.org>, "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Nishanth Menon" <nm@ti.com>,
+ <rust-for-linux@vger.kernel.org>, "Manos Pitsidianakis"
+ <manos.pitsidianakis@linaro.org>, =?utf-8?q?Alex_Benn=C3=A9e?=
+ <alex.bennee@linaro.org>, "Joakim Bech" <joakim.bech@linaro.org>, "Rob
+ Herring" <robh@kernel.org>, "Yury Norov" <yury.norov@gmail.com>, "Burak
+ Emir" <bqe@google.com>, "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
+ "Russell King" <linux@armlinux.org.uk>, <linux-clk@vger.kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>, "Andrew Ballance"
+ <andrewjballance@gmail.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V12 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>
+X-Mailer: aerc 0.20.1
+References: <cover.1747634382.git.viresh.kumar@linaro.org>
+ <68906d67109c3b323b54469fb1ee44e10c1c5b1e.1747634382.git.viresh.kumar@linaro.org> <aCsQylyW7R5rC15m@pollux>
+In-Reply-To: <aCsQylyW7R5rC15m@pollux>
 
-On Mon, 2025-05-19 at 14:38 +0300, Andy Shevchenko wrote:
-> On Mon, May 19, 2025 at 01:29:54PM +0200, Philipp Stanner wrote:
->=20
-> Just for your info: Subject is clean. Forgot?
->=20
+On Mon May 19, 2025 at 1:06 PM CEST, Danilo Krummrich wrote:
+> On Mon, May 19, 2025 at 12:37:18PM +0530, Viresh Kumar wrote:
+>> +///     fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PDat=
+a>) -> Result<()> {
+>
+> This can just be `Result`, here and below.
 
-Yup.
+Since I saw you mention this multiple times and I agree, I created a
+clippy issue: https://github.com/rust-lang/rust-clippy/issues/14848
 
-checkpatch doesn't detect that, though:
-
-scripts/checkpatch.pl outgoing/pcim/hybrid/pci-rest/v3/v3-000*       (base)=
-=20
------------------------------------------------------------
-outgoing/pcim/hybrid/pci-rest/v3/v3-0000-cover-letter.patch
------------------------------------------------------------
-WARNING: 'seperately' may be misspelled - perhaps 'separately'?
-#13:=20
-    resend seperately. (Andy)
-           ^^^^^^^^^^
-
-WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit desc=
-ription?)
-#67:=20
-[1] https://lore.kernel.org/all/174657893832.4155013.12131767110464880040.b=
-4-ty@kernel.org/
-
-total: 0 errors, 2 warnings, 0 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplac=
-e.
-
-outgoing/pcim/hybrid/pci-rest/v3/v3-0000-cover-letter.patch has style probl=
-ems, please review.
-
-
-
-Maybe someone(tm) should fix that :no_mouth_emoji:
-
-P.
+---
+Cheers,
+Benno
