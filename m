@@ -1,140 +1,160 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C22116EE
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353D71E4AB;
+	Mon, 19 May 2025 20:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684730; cv=none; b=GIGuxA+xvUc6yMGsRRL+7qAdpG47T8MRUEaKqnWfA1HpPSNfIQPFOleXbV5LWZqC88hDcUTonECwIKBg2ZinGQt0q4pjgck/vc6INRBxmypnMEU7DQpKgUS9QAVLzuiUgF9at5UWQFdFA4tFmLZxqGFEgIeievFVmW47kIyCf3c=
+	t=1747684821; cv=none; b=JOg4s43z869IXBGsldOnAY2xefXEjQBqTWTCScHTdrkgK26pVuOCt6FTU6cl88rhCYzlFrB7CsvQGN0PoyP1YdRTFAgUn7vcq6MJq5gLYYfYdRWVv9n4vX9dob4uzxUrRy96ONrEpUWg95S5VXabxUI282p82GR8+I+ojP/v4Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684730; c=relaxed/simple;
-	bh=1ItMlTSBt/ShO1E43j0VuSmsnzkNYsBrJyS/xfbv5Ro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JT7amYK5EAOY5hoSM7bHJOONDfGv7+EtU+Mcg3E0u9uVLIVbYYmCyccXj8NuksYFXfk/GDoIIY4JSZCotACz09qtFxDXdmaNpJk5LgB8ofEcPHGqyAmLxxHyWU1+OOHQ3XKRK5gKMwDeVijinJ9OI6+X52fkMOB/NadcRkKleyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JCiTwCZy; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747684821; c=relaxed/simple;
+	bh=gDJDEDtqlLFibqDVY77tsX8YrdWJQP1Y3MY0GrR+7P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gh49WNlgMWCZMRyW9VX2MHOu8lyk6wWvu5GhgsWpXWK8V+Ql0fOcg6DFbmmwCo6eX/PTy3oQxAtIlpFWR7PjOmQECy+pPVg0eCchytmB+Oc6sJFcRM+lpst4z68xEuO2H9gGyZZemlPu764hRKUwCisfsH9gp6kiEvxxqJXqzZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yl4raMbB; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCiTwCZy"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so575945ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:58:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl4raMbB"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2321c38a948so20746345ad.2;
+        Mon, 19 May 2025 13:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747684728; x=1748289528; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
-        b=JCiTwCZykWGLgUMO/MoKN4W2k1Rp9vCcY+E322IvUubspclP1GWyi0qEaBLDBMqqi0
-         4/UMIezgygW5m3kUdHkCsZj3kp705sYHoIrOhdZFR6qulPGsbiUHoHNV9Rmqo+aRtmdK
-         WjvohUpLfTCRdapEdSZXPzGYe8iTCBx+4yvGfoO2NW3whkPJ3GoUTDJc45XkMxGGfDi2
-         i+gsOiRy+C6Si8ZHah1Q7hdcsPnerL4xJahuFeubViNlFf7HNLNyYIGsZyf6RxTs4M5O
-         KBPHHSJbtBZXK9I/oGlx5B6aFKqYfOyMcm2voBMZpnO19keYHo6rXuj7vcge3d0TzyKm
-         oD7g==
+        d=gmail.com; s=20230601; t=1747684817; x=1748289617; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PyrSfMkWxF68QAYkbl+yVox/D2cWlK35xRBgggxH3m0=;
+        b=Yl4raMbBBIeLkd0gsoQT0rPL1ejhUo2cnjmlpbON2xYT0sqbIe39sugQSjG5IKUjrp
+         EsXLNlGVrRagmkfYarf0ReeeFcRp4oLLD9qvcAvWAUiS1apqJZ2Yzyxi9fijiPy0Z8OY
+         ElC7ppDNoMlvaAOAVJMl2ss+xdcRpwUynVYommj52nctp2dZMVVmYrinC9FidbdbakXZ
+         65duf9IQgbxuInZaI8nepVE0CtZujZuczmMOynZTu8Lx/H9ubGkaO+qEK6vCtpPKdLUf
+         0pFLskofEOYs5cJkV6zbIh95UIItoiJG2bpdAfKmflAqzqXqwPZBRzv1OTmNwSrntVyb
+         P3zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684728; x=1748289528;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
-        b=gETGUNRnggXApW6QVelkEIhWES5rxDY602a3ezaoJ6+3mNDYYnQjx84KOU6DDGE53B
-         T2u5JjJ0A8WQeTD29wAxq0ZIvMmDSSF0qjVX3FXpPEso1nW9XwfnHjGyxVnxg1CVKeZR
-         7vRS99wRUtaB+aXDMqgtCX/JQ5Swei7H1AimcGzPolGcIMHaRzSpy/Bq5IwE2+Ycps3E
-         rRRpCs8RfnlYuxe6bCkDaD5Cs/i9JHG+RWG+e0DXSucyBgwWXMHVSg3fQJw8VAVkEoju
-         jRSwdSzAeKCEfG1IHel2vfzfof0VSXydNdVdkdHOD1RLHkYYDNGSzfFlPSaIkCL/vni/
-         qvDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjVBMch01ZyWXQ1OXleGgA0luaNAQCgqhGaajggZHfgCftFz/2piIebBBh3ngHqfNjfBVdpk22XiDJSaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO604XVEqB3oH3RiJDExEmNqXw3AfHvknQ7ak1HZpvrbByrQdj
-	OmARGFimze+Y2YT2nbsYORia3G7VW/Xi4BPKoopEb+QV9lWswhtDCK+cJQ0dsw2yjaC21UtPA8k
-	ntZ8PvW+NaWZtQf14xXisNhgp9XcDRVeCziWvCI4r
-X-Gm-Gg: ASbGnct5SZdtL9TJehGurd2CFGshTXQebTbLtb688/aOv1BMdrJXJJ40iWSQX+IkAap
-	a36ZvRVN4bVLsImyqgrilw72SbS+dySQBa9AxonCZJ9TU6ZWHVpjeBVMNDzZzTwfllHMc3+ZbQF
-	EXeRyumR4qSKVPwhuFMrxfnD6IUddtkFqvbzzP+R5RmpfsItMxtjHbLFnjpHtgXQ90gxZa0hL1
-X-Google-Smtp-Source: AGHT+IF3NG4riWCj70W1ip8g722W/OSv9N5vCb4lgszsMb+3aFb9ORFS8jrS9y+V6o+naREGvwl20DU7tMCXOWpayuQ=
-X-Received: by 2002:a05:6e02:2184:b0:3db:8537:e450 with SMTP id
- e9e14a558f8ab-3dc5d6164acmr7320835ab.20.1747684727399; Mon, 19 May 2025
- 12:58:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747684817; x=1748289617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PyrSfMkWxF68QAYkbl+yVox/D2cWlK35xRBgggxH3m0=;
+        b=czu/8KKZTbkMlGroEm5bBvsj1w9UnPzGe/k5b6I5dC8wTxHEiLAU8L85HxurWWq/dY
+         z3kkDvipGjuRGo8rxFfcQxuEBculQ7Wtl2DOwIOo+1+zH40Ci7DKDr8DScrjk6H1Areu
+         7d9X5xMGBkGjQa3awJUY4MBOSILCFk5CZm9Kjkzvw9T/0AchzrPfpttv4CyXc5X2V9ci
+         TwerxPfKrMxiGOURi/b78j8CIFJzkkVk2m01OCBiBoWFwiQbsHXFTemjhvOTiT4KPNb+
+         lq2xExjy3+fTQl1MhAMP/2FaMttzu3nD1fcQLxNWx8RRrMUP0w/RtjBq47MbmYwNhbFD
+         M+6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUbQ+7BY7+33gRB1g/+WMjM0Z0G3GMg82xV3VySS+JTzomvyHcKSFh/Hx6XM7OqIf7QUGJS6fHRq6Vde3jo@vger.kernel.org, AJvYcCVABzRxK9QHwzfriJ7Nx2JJllIrSWqDonbFnDRYKAGLhw3ijyyUxjsJ+i/+9WQSXKsQNLo=@vger.kernel.org, AJvYcCWFVm0ZlwfFVJirbA9Ma0S51H/G9Knd1pe1aeQkK/3w7N/c/XMMwD4wwMuazu1qq9LMOivfp3JK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJPMlIm860KGZqvBf4uCuxC3GwiInaXmBj7UsYbe9lkzw0wubn
+	cgk3V93AvucFAw01WjbbdaV9c4egCOqEPoBUBvMh+xJQ1pa4eloMKwoQZPSA7w==
+X-Gm-Gg: ASbGncsoHaAHLuR2kGe181huwGjeBa1t52NS7xUA1HjpxzxHPX3io3t/QC82yjlFrwB
+	Y/MDmywz5uuT04ebe31Btcp1JGChkAUiCajzopg9LcBErrT3RVQ5syCeexqm82iUT7yzVONPfIu
+	n4oNM8LN8MfvqQf+XLWlYTipdXzQtJgdUz/V3diS9SnmTix1VkCd+0mizkE3jIyNC97LxJFaXzC
+	Nk7e+F/gFFobgNMDOZarZr2Q9S8vaRDTy2YppdQrjgw9Wf55Dm1ZDwXUeZSZJ2ugBvpZLVq45zq
+	ldU5bgUdz9ZHhD+OBq4gZuAKZvNuGX+fNoH5LASBEO+Xah/zLXk=
+X-Google-Smtp-Source: AGHT+IHt6QfA2F6kwpFWBtZop56Dyx7wuHXPSe127sz2HGe75T+9/4tLv/VECGkyWpD903a+rfF2mg==
+X-Received: by 2002:a17:902:ce8f:b0:224:c46:d166 with SMTP id d9443c01a7336-231de3ae584mr206812435ad.40.1747684817188;
+        Mon, 19 May 2025 13:00:17 -0700 (PDT)
+Received: from gmail.com ([98.97.32.68])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebae24sm63905955ad.197.2025.05.19.13.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 13:00:16 -0700 (PDT)
+Date: Mon, 19 May 2025 13:00:03 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Cong Wang <cong.wang@bytedance.com>,
+	Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix concurrency issues between
+ memory charge and uncharge
+Message-ID: <20250519200003.46elezpkkfx5grl4@gmail.com>
+References: <20250508062423.51978-1-jiayuan.chen@linux.dev>
+ <aCorf4Cq3Fuwiw2h@pop-os.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
- <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
- <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com> <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
-In-Reply-To: <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 19 May 2025 12:58:34 -0700
-X-Gm-Features: AX0GCFuEBhgUMS6lypmTs7xxRmttSCOq9w7q1VtwxoyFkY97QYVR1ycJy_Ib5vY
-Message-ID: <CAP-5=fWX7m-3j31pNAXqkNmtr0i3rxAHPC96h=sQ5q31WyNDLg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCorf4Cq3Fuwiw2h@pop-os.localdomain>
 
-On Mon, May 19, 2025 at 12:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
- wrote:
->
-> Hello Ian,
->
-> On Mon, May 19, 2025 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> >
->
-> <SNIP>
->
-> > ```
-> > --- start ---
-> > test child forked, pid 279547
-> > Checking if vmlinux BTF exists
-> > Testing perf trace's string augmentation
-> > Testing perf trace's buffer augmentation
-> > Testing perf trace's struct augmentation
-> > BTF struct augmentation test failed, output:
-> > sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
->
-> Thank you so much for testing it :)
->
-> My bad, I have just realized this is because of the data in the
-> timespec, nothing to do with libbpf... The tv_nsec has a value of 1. I
-> think the 'sleep' on your machine has a different implementation. On
-> my machine, the second member has a value of 0, see below:
-> ~~~
-> $ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
->      0.000 (1000.196 ms): sleep/54261 clock_nanosleep(rqtp: { .tv_sec:
-> 1, .tv_nsec: 0 }, rmtp: 0x7ffe13529550) =3D 0
->
-> $ strace -e clock_nanosleep -- sleep 1
-> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D0}, 0x7fff85936=
-5a0) =3D 0
-> +++ exited with 0 +++
-> ~~~
->
-> Can you please run any of the commands above and see what
-> happens(please change the perf executable path)? If you get 'rqtp: {
-> .tv_sec: 1, .tv_nsec: 1 }' then I will just make the regex less
-> strict, because it differs between different 'sleep' implementations
-> instead of having anything to do with perf itself.
+On 2025-05-18 11:48:31, Cong Wang wrote:
+> On Thu, May 08, 2025 at 02:24:22PM +0800, Jiayuan Chen wrote:
+> > Triggering WARN_ON_ONCE(sk->sk_forward_alloc) by running the following
+> > command, followed by pressing Ctrl-C after 2 seconds:
+> > ./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress
+> > '''
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 2 PID: 40 at net/ipv4/af_inet.c inet_sock_destruct
+> > 
+> > Call Trace:
+> > <TASK>
+> > __sk_destruct+0x46/0x222
+> > sk_psock_destroy+0x22f/0x242
+> > process_one_work+0x504/0x8a8
+> > ? process_one_work+0x39d/0x8a8
+> > ? __pfx_process_one_work+0x10/0x10
+> > ? worker_thread+0x44/0x2ae
+> > ? __list_add_valid_or_report+0x83/0xea
+> > ? srso_return_thunk+0x5/0x5f
+> > ? __list_add+0x45/0x52
+> > process_scheduled_works+0x73/0x82
+> > worker_thread+0x1ce/0x2ae
+> > '''
+> > 
+> > Reason:
+> > When we are in the backlog process, we allocate sk_msg and then perform
+> > the charge process. Meanwhile, in the user process context, the recvmsg()
+> > operation performs the uncharge process, leading to concurrency issues
+> > between them.
+> > 
+> > The charge process (2 functions):
+> > 1. sk_rmem_schedule(size) -> sk_forward_alloc increases by PAGE_SIZE
+> >                              multiples
+> > 2. sk_mem_charge(size)    -> sk_forward_alloc -= size
+> > 
+> > The uncharge process (sk_mem_uncharge()):
+> > 3. sk_forward_alloc += size
+> > 4. check if sk_forward_alloc > PAGE_SIZE
+> > 5. reclaim    -> sk_forward_alloc decreases, possibly becoming 0
+> > 
+> > Because the sk performing charge and uncharge is not locked
+> > (mainly because the backlog process does not lock the socket), therefore,
+> > steps 1 to 5 will execute concurrently as follows:
+> > 
+> > cpu0                                cpu1
+> > 1
+> >                                     3
+> >                                     4   --> sk_forward_alloc >= PAGE_SIZE
+> >                                     5   --> reclaim sk_forward_alloc
+> > 2 --> sk_forward_alloc may
+> >       become negative
+> > 
+> > Solution:
+> > 1. Add locking to the kfree_sk_msg() process, which is only called in the
+> >    user process context.
+> > 2. Integrate the charge process into sk_psock_create_ingress_msg() in the
+> >    backlog process and add locking.
+> > 3. Reuse the existing psock->ingress_lock.
+> 
+> Reusing the psock->ingress_lock looks weird to me, as it is intended for
+> locking ingress queue, at least at the time it was introduced.
+> 
+> And technically speaking, it is the sock lock which is supposed to serialize
+> socket charging.
+> 
+> So is there any better solution here?
 
-Ack. Here is the output:
-```
-$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
-    0.000 (1000.208 ms): sleep/1710732 clock_nanosleep(rqtp: {
-.tv_sec: 1, .tv_nsec: 1 }, rmtp: 0x7ffc091f4090) =3D 0
-$ strace -e clock_nanosleep -- sleep 1
-clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D1}, 0x7ffe51f3cd0=
-0) =3D 0
-+++ exited with 0 +++
-```
+Agree I would be more apt to add the sock_lock back to the backlog then
+to punish fast path this way.
+
+Holding the ref cnt on the psock stops blocks the sk_psock_destroy() in
+backlog now so is this still an issue?
 
 Thanks,
-Ian
-
->
-> Thanks,
-> Howard
+John
