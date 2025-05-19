@@ -1,133 +1,128 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7AD284693;
-	Mon, 19 May 2025 14:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6601DEFF3
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663465; cv=none; b=UoDB4R5wVcU+YSVFWePeILmOHxRyFm+6P37EPPZPbM+5AXDLeCmeKWz6RiRWFKFIScPk4CS+ATsxtuPpk0cAjSJXoU/PN9cXKhLmKtplCK7E5l4KxsUoIC5IOQwp3z8gcNyHUwThPU97Anu4xhkUwMILk3KJxXLP5354S3IvRtg=
+	t=1747663534; cv=none; b=iZlQCZG9yIpuztxKVl2vvMm2vW4pqxqpVrjyKIFWuj7ECqtu9y1ePWQ+IQs/zuBL8CNetQBjSfwrVrs4yV1sOK6kr4kiJeZ/smbcP5EISeD+21Uw3Z+d7+g5jlHqPy3jy9T1L7c2AVpvRocoKGWmMPdJOVBKK7GvUPMrPHhmnlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663465; c=relaxed/simple;
-	bh=tWfvXwhAdZ5gTeptiPE9Fe1/fwx01QSqHBxpZlGmt+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u8Y0U1Jk6RCi1JGSoyWHWGoS1mt/baZA/yw2IRzW54rNebOohfkdrLh4o2oMY9oySQHE9Ik72f6slL7//XOuGf+pOOOQgTicrv7LmcW2eCa1YQFj1Ja9HU4jfs/etECxGj97ihlUvJEyS7to2A5I44CEZKCXjj6Nqx50mGe3eNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ffyDfyS6; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747663534; c=relaxed/simple;
+	bh=mTV4BK2qfjbUtqotPH31b3r0RSBtimJqNdwrEbp6QFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrynYFnAexWYpRnoFcj3GhgieyGY4L3xNmHqzVHDoViSSpFgpTQhEQvyA5gWFbqE3WP2jbn1ChAptVwW4APR3Zkqm4Bx1iGlkK6m22aCTWeYUNRx85AWVVTA2wpZS2s6EU0av7V0/xZeOD91XnX6vJMTfkB+hp93I9rUhlfa+VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nHTARNcA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ffyDfyS6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=w5WmlRLBiaSyBNP62+3UzxDW04RPKWnE0s58YY3pWoQ=;
-	b=ffyDfyS6/Sye1aNzIMf3Rx+icmkqMACwSvMovxfXiCqUcshMSAj2jMlfuSZsev
-	gAmwPb9UkhuPFKi/JpZYmTQc5Q+8vznlWOfCvc/HkjtUW7/LPi9MypWEq0lB0WLK
-	/oEOp9B38hEVClJZn8sjuuRjKWO0fYiwynfMwHWFHFaYc=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wC3T8srOitoOT5PCg--.21492S2;
-	Mon, 19 May 2025 22:03:24 +0800 (CST)
-Message-ID: <f3033cfb-6a70-4fa3-bf06-ee79517ef740@163.com>
-Date: Mon, 19 May 2025 22:03:25 +0800
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nHTARNcA"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9WqU7014464
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=kkHo6XHPeTMOyNCSzAjow0H/
+	jYOdseS2973aNB14vqU=; b=nHTARNcABLaLMLh43n8IaZmeqPwUGviG+5i9q/Dd
+	rOfwz8GDvdCqJk/4GYTrCIZok92nLO2Vr6lqFDD0+4J5PrZP17L2kv8cuW4BtfnM
+	PHdHxMF/3ERUdKTY8jVTcSj6DT3/mePmz/uazvnHC/AIchzHRxoIr4kmnhEJmKSy
+	jDn+4eUwDXT18HSN1aco0wm2uuhxcvLtdQNFv3Wpqahd1NyNS2d6dKxYvV1SZP7K
+	lx9+sSiuNpZFtbbfiAK0AcoWB9UCReXc9aWayJss7SMR1bW16YCKxF9rX7AhlToJ
+	1HlUV8ukG0VBREgsyKEuEGzzCjzu+llaH8hvDHpb0zkz/g==
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4vm9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:31 +0000 (GMT)
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85db3356bafso881530339f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:05:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747663530; x=1748268330;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kkHo6XHPeTMOyNCSzAjow0H/jYOdseS2973aNB14vqU=;
+        b=qnOEaUcpirkWNENtE7mxAqUCzDqQ2FVeR5P9YRCS/tmiB0hSGfgCd/usrjK96ViWK0
+         cBQU5UHbVAo+SBlr3t5jV3MbSyCLDsNmCB9rPu5zGRhozZVULcuckK59CTGPZPEHe8vW
+         x1FnFVmMtr2AeHwbJ6woYqQ0BvpcSx2ds6Wb7fZM4rpg/yxG6ZRkwpT1tMUVCOlm3lY+
+         QiVptch8Q6Ee6jZJ87d3MYsdgJMq1Yszqd6HNXk3B8jv/8lm0KZ/D8XqHk21h582E+4W
+         RwVQ8XesRar1qfmeDlookXVrX+QuH51NQxHGhOikqMLreJhNIGfDkvS8gPBNt4p+DIQy
+         lsDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUree9O0TW8YWQ6v59ZrXpTJ69JojmPbasl/+i0qhNThtceIa7d4aQV57qopLl4qHuZbAs/sUf7PXjSNfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1b1rZ7YsrX7MdXmOjKMrCAcp2OX0dky02jLs4B09LkJ9YhDAD
+	FQyh9yb7JwYI7MlnXuxP5Fl4Ew27Cf33Yh2dwwPXtV8Mv75z/85l1RDZb5l7cZTIjctzx0O/C+i
+	GFwOg6qOPQC7g2V3EjaZhy5QQL1xVrP2fis12T3Z5B1apvaPNrd+1/wcIMjxbb6p5fmM=
+X-Gm-Gg: ASbGncsOdG+ApMwyO6Bv26rAW8P8L+Y1P94/XnMK+RLtmVfyv+iH4ONOUG3ktzVWINw
+	xlJIoBOfCZ8/LtUP7cUQGdgiN8GbW/9thINdRBa+hkIj22L4Qdoxm4YI5WCFGhiUoDQD4vvPi6n
+	Z9QksfGKEH35LrBZCO3HTuKuuBS8eXLndisJ1CJW45R29MNZaGZjMx5e6pJZ6SwcPEVAj4lmILZ
+	q5dW8jBGAABKeEw7bLsiwIlD42AItakz8CSNnNigsCOjVYi+P+BvdItGNGCKTJtNHfILJ7x+c7+
+	KNDm1gxk0CV/xxwNJQCl1ntrJYNGINe24lSjswJUMP7Y8QbUOQaIZe8gZAr76hXcvmyPhsh064g
+	=
+X-Received: by 2002:a05:6e02:4414:20b0:3dc:6a27:7c14 with SMTP id e9e14a558f8ab-3dc6a277c71mr34500125ab.7.1747663530576;
+        Mon, 19 May 2025 07:05:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElHCzRUlcSmkePX3oMcw+Ft8vd7nE8mHJmMO5fmpzntvorhLTQD2zarO0h4A0QZ8OWYTbnZQ==
+X-Received: by 2002:a05:6e02:4414:20b0:3dc:6a27:7c14 with SMTP id e9e14a558f8ab-3dc6a277c71mr34499715ab.7.1747663530131;
+        Mon, 19 May 2025 07:05:30 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084b4becsm19262941fa.12.2025.05.19.07.05.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:05:29 -0700 (PDT)
+Date: Mon, 19 May 2025 17:05:27 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: socinfo: Add support to retrieve TME build
+ details
+Message-ID: <6dri4ig5iox7wctvc7umltcsstrtghrtjvdwajdlgz4sb5g6nn@zyrys4re4576>
+References: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] PCI/AER: Expose AER panic state via
- pci_aer_panic_enabled()
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
- manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
-Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Hans Zhang <hans.zhang@cixtech.com>
-References: <20250516165518.125495-1-18255117159@163.com>
- <20250516165518.125495-4-18255117159@163.com>
- <6d946767-aa61-441d-965b-115e415bfd4f@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <6d946767-aa61-441d-965b-115e415bfd4f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3T8srOitoOT5PCg--.21492S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGr1kGr4DZw1rXrWrKrWfKrg_yoW5GF1DpF
-	WrJa4UArW8GFy8WFZ7Z3W8ZFyrZ3s7tryrArWxG3y8uFnxA3WrJF93AFyUWFn7Xr4DuF1a
-	yF1jyrnxGF45taDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBrWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwlSo2grOTwcZgAAsL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=682b3aab cx=c_pps
+ a=7F85Ct0dzgNClt63SJIU8Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=hASR2W6MItGKdFUF1uMA:9 a=CjuIK1q_8ugA:10
+ a=LKR0efx6xuerLj5D82wC:22
+X-Proofpoint-ORIG-GUID: OCwio5gmzVIfW08VC32ohFDJRI6O7swx
+X-Proofpoint-GUID: OCwio5gmzVIfW08VC32ohFDJRI6O7swx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEzMCBTYWx0ZWRfX9SlHLMEUdKbY
+ dRUojKByAI6SHO2RSl3bIz7UZ7ZqsG0GMO+8VtlyoQ9v5ZVKwwqvnBSR6V8a+ZGbQDiVtTSWVZK
+ fv0VkZJqzJffjwF2uxuZCTU2Q6vZzW/W03JB5u9q79sHQ5d/LsrY4ehqKtxTZ5W2TMnRt7a9W6a
+ ihIAvlEI/zQUiLqOL0B3RdaxtHTB/H6rfZxCLBdWLCQxNbINBL9M9gv17m+H+aPgJZksfXhEXuw
+ 27+0VQM34FGuoErrgl9F19Q39EH1XuI13g08RjCgQ0ueYjs+53n3zeh7pGAZZedMA5WlHh50JHy
+ Pe+HV809AqayzMjuHza+uYBJMc4PeBHEP1C9OYnnC823MwMmfaZO1SM49ojhD8+FaTZ7suCLQ5X
+ gMsl5gUuk7HDYjEoM4QucKftxXo1W81NU/vqjA1wkATV45l8v7jXR/ANKWroKyoC2GgGx6dA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=659 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190130
 
-
-
-On 2025/5/17 12:07, Sathyanarayanan Kuppuswamy wrote:
+On Mon, May 19, 2025 at 07:14:01PM +0530, Kathiravan Thirumoorthy wrote:
+> Add support to retrieve Trust Management Engine (TME) image details
+> from SMEM, which is present in the IPQ5424 SoC.
 > 
-> On 5/16/25 9:55 AM, Hans Zhang wrote:
->> From: Hans Zhang <hans.zhang@cixtech.com>
->>
->> Add pci_aer_panic_enabled() to check if aer_panic is enabled system-wide.
->> Export the function for use in error recovery logic.
->>
->> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
->> ---
->>   drivers/pci/pci.h      |  2 ++
->>   drivers/pci/pcie/aer.c | 12 ++++++++++++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 8ddfc1677eeb..f92928dadc6a 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -959,6 +959,7 @@ static inline void 
->> of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge
->>   #ifdef CONFIG_PCIEAER
->>   void pci_no_aer(void);
->>   void pci_aer_panic(void);
->> +bool pci_aer_panic_enabled(void);
->>   void pci_aer_init(struct pci_dev *dev);
->>   void pci_aer_exit(struct pci_dev *dev);
->>   extern const struct attribute_group aer_stats_attr_group;
->> @@ -970,6 +971,7 @@ void pci_restore_aer_state(struct pci_dev *dev);
->>   #else
->>   static inline void pci_no_aer(void) { }
->>   static inline void pci_aer_panic(void) { }
->> +static inline bool pci_aer_panic_enabled(void) { return false; }
->>   static inline void pci_aer_init(struct pci_dev *d) { }
->>   static inline void pci_aer_exit(struct pci_dev *d) { }
->>   static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index fa51fb8a5fe7..4fd7db90b77c 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -125,6 +125,18 @@ void pci_aer_panic(void)
->>       pcie_aer_panic = true;
->>   }
->> +/**
->> + * pci_aer_panic_enabled() - Are AER panic enabled system-wide?
->> + *
->> + * Return: true if AER panic has not been globally disabled through 
->> ACPI FADT,
->> + * PCI bridge quirks, or the "pci=aer_panic" kernel command-line option.
-> 
-> I don't think we have code to disable it via ACPI FADT or PCI bridge quirks
-> currently, right? If yes, just list what is currently supported.
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+> Note: On IPQ SoCs, the Trust Management Engine is referred to as TME-L
+> (Lite). Other SoCs from different business units may use variants like
+> TME-M. For consistency, the image name is retained as "TME".
+> ---
+>  drivers/soc/qcom/socinfo.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Dear Sathyanarayanan,
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Thank you very much for your reply. You're right. If this series of 
-patches is supported in the discussion, I will remove the comment "ACPI 
-FADT, PCI bridge quirks" in the next version.
-
-Best regards,
-Hans
-
->> + */
->> +bool pci_aer_panic_enabled(void)
->> +{
->> +    return pcie_aer_panic;
->> +}
->> +EXPORT_SYMBOL(pci_aer_panic_enabled);
->> +
->>   bool pci_aer_available(void)
->>   {
->>       return !pcie_aer_disable && pci_msi_enabled();
-> 
-
+-- 
+With best wishes
+Dmitry
