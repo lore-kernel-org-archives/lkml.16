@@ -1,90 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E934C92;
-	Mon, 19 May 2025 11:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A4526B2A3;
+	Mon, 19 May 2025 11:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654769; cv=none; b=EJZQj2+pKmg/w+jyuMgSWTr5mD/wnnun2Ah/4jCf9vR1pgex3sCtYtpdG4lbGUX4hES038AV+Ilw2ijun3/xCHYUoski1k7H+gc8BRhcXsNPK6ZLRce+z/MkOVA3FYSXtVghs0WECpQ3B88fmrS8vAMX4JJmzkCOQs8ob03lrNw=
+	t=1747654860; cv=none; b=um0KbU7H5c1dAhvpFhmcJCqRjYAmNEMXd55Ih6iEdbE+3HZFsDJLCHfnNzEgsqdr9UvSYsnwVx1Sg/hqeJqnlDpsTtc2H0CQx8XcS52wXzvwA4fjXIFTBISEWympS2N0KCGATT+lzJ4TF19bosfn/hcHTIZqzFE4N5TrHrdQC0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654769; c=relaxed/simple;
-	bh=Nm8ntM84CxS98HCEArpFwYHrOEC9x+FN+Hfat16T864=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oIzFEb4r0vHbMxO2aSj8G2SOSceQ+M8oiw1cr2WfBzNFVWi8+/zpSoN1vcrKZhhTXpwLJlqYLVZjqOrySPopYAzyBLdGYCj2uHW2qD11AalTHdGvpa10Ypadqoa79xTTmLqXel/Gqt3d2E53WIeOsNdSr/gJ+R/GThfuTWukNPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFUpHu8l; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747654860; c=relaxed/simple;
+	bh=LM84ppQ9Hg02rY5UNCGCTjxb3PjzmksqWSwV5wkfBRU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tnyXBMvpkrYB2mnXwWj4nxEAVw75DV2oxPCvsIwt6qdJBCEzHsJQAl7Y8TNHxwlLi9HN0uQ2eJQk/CBAGkSB3Dtt9XlvT4QhTsm2ptHB5bgdkOXTA80tQb92tchrzlgF/pSSxPjnyCspoidFj8lB0xEM6vDd+SmpR3Nv6mooid4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=e4DkHtP1; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFUpHu8l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747654768; x=1779190768;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nm8ntM84CxS98HCEArpFwYHrOEC9x+FN+Hfat16T864=;
-  b=eFUpHu8lOxH6yu8QUVsX6u14GSoOtHEc8xu5iP6Wr8upsRoETW63WBBC
-   4ZL3Ag0hHs1/+4PnoBI2NT6C2Ik1Jt4NPIfqYLCyuGEa2M2jDYL8XIH18
-   DHoXwrwzZQx3MH+qNk/25L2H+4zXdAhsxjErTZOHunGHK7Z1Wegn8kIES
-   NaH7zc3ee3+E9UFSpDh3EHquu6UxpsqkAZ6vhXlvb19DOhA9j3RdhoE9l
-   pLHGPr03VhFNMqYFO7ys81v7cZ56/fISIvBdDAIc0H/Rh5oivhU2XxOqD
-   LIfFos2r2D9+sbeIrhjMrKQ9Vusrtxf47i0NwcnLvgcCejs4xoN3y6mgZ
-   g==;
-X-CSE-ConnectionGUID: VcW36jOLQ5eWJYC+jlTItA==
-X-CSE-MsgGUID: wPDU5AnZScyVgBUr00lf3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53348251"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="53348251"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:39:28 -0700
-X-CSE-ConnectionGUID: 46SeiPiIRFKHjEiBh9gSvg==
-X-CSE-MsgGUID: vmo9kMy6Q5K9zfvcWYpCPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139388788"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:39:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uGyq1-000000031J0-3vAn;
-	Mon, 19 May 2025 14:39:21 +0300
-Date: Mon, 19 May 2025 14:39:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] PCI: Remove request_flags relict from devres
-Message-ID: <aCsYaRE65M1H1jiy@smile.fi.intel.com>
-References: <20250519112959.25487-2-phasta@kernel.org>
- <20250519112959.25487-6-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="e4DkHtP1"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B14FD41086
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1747654858; bh=Z6Bxy9uoNLh7c/QDDh1HyXpjukuWj/JEVnqjK+01yu0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=e4DkHtP1D8bzrSrvP8n9sn/9OlbRnU4vMxGAgGudPzXUsBSG932QRLUdLEht4WMCt
+	 ceo2MjzYkbYbcr6mJO4V14/2Gp6SKeSrCEGxRWq3IfGl+ajoybVdsU0pGucxaGu7bl
+	 ropk27x594qshfC9C37ZmqDAWx4vysSMtuuropuy1Fp5ku9qigoI00Vd6WMlrGfiQ2
+	 SngK3relCRGNWL/dbBPn4DzI0wTug06r0B3dH0GX96sb7weck2vqygbWslVzm1dLBv
+	 K7QYR1S/mOwDl7NCfNFunxgIGpZAWLphhmWdsRiQBL57NOp7iYWX7K/n3sx4L80cFI
+	 Pw3MJKLZsoIkw==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id B14FD41086;
+	Mon, 19 May 2025 11:40:57 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: rujra <braker.noob.kernel@gmail.com>, skhan@linuxfoundation.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation : kernel-hacking : hacking.rst : fixed
+ spelling mistake
+In-Reply-To: <CAG+54DZ4YqBfqkvCWBWSZWE0LGmcs0GdE2_HiSB8JUsau3OvOw@mail.gmail.com>
+References: <CAG+54DZ4YqBfqkvCWBWSZWE0LGmcs0GdE2_HiSB8JUsau3OvOw@mail.gmail.com>
+Date: Mon, 19 May 2025 05:40:54 -0600
+Message-ID: <87jz6ckeux.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519112959.25487-6-phasta@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 
-On Mon, May 19, 2025 at 01:29:58PM +0200, Philipp Stanner wrote:
-> pcim_request_region_exclusive(), the only user in PCI devres that needed
-> exclusive region requests, has been removed.
-> 
-> All features related to exclusive requests can, therefore, be removed,
-> too. Remove them.
+rujra <braker.noob.kernel@gmail.com> writes:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> fixed spelling mistake
+> LOG :
+> ----------------------------------------
+> Documentation/kernel-hacking/hacking.rst
+> ----------------------------------------
+> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+> +.. _kernel_hacking_hack:
+>
+> CHECK: 'compatability' may be misspelled - perhaps 'compatibility'?
+> +     * Sun people can't spell worth damn. "compatability" indeed.
+>                                             ^^^^^^^^^^^^^
+>
+> total: 0 errors, 1 warnings, 1 checks, 830 lines checked
+> -----------------------------------------------------------------
+> as first patch for documentation.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This information is not particularly useful; a changelog should say what
+you have done and why.
 
+> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+> ---
+>  Documentation/kernel-hacking/hacking.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/kernel-hacking/hacking.rst
+> b/Documentation/kernel-hacking/hacking.rst
+> index 0042776a9e17..22b880add846 100644
+> --- a/Documentation/kernel-hacking/hacking.rst
+> +++ b/Documentation/kernel-hacking/hacking.rst
+> @@ -794,7 +794,7 @@ Some favorites from browsing the source. Feel free
+> to add to this list.
+>  ``arch/sparc/kernel/head.S:``::
+>
+>      /*
+> -     * Sun people can't spell worth damn. "compatability" indeed.
+> +     * Sun people can't spell worth damn. "compatibility" indeed.
+>       * At least we *know* we can't spell, and use a spell-checker.
+>       */
 
+The misspelling here is entirely the point of the comment - fixing it is
+exactly the wrong thing to do.  (Whether we need all of this material at
+all is a different question...)
+
+Thanks,
+
+jon
