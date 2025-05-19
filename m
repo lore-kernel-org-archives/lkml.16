@@ -1,291 +1,125 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBF61D5AD4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABBA284B5B;
+	Mon, 19 May 2025 15:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667326; cv=none; b=PRv/6Jr5IrlBq0y+tY5mWx8T6G48K+6TA0pyMax6rbfNbA4TZCxPbEI6+YGtii/8iAnpothA1rjHQ+BsP0e50/yR9ZdLDnJ8jhuCk6JNqGbk2B9wWYu3DX+4QLlKW9v2/TAK4nyD/qRmgvJPuMdA29OdU4biJ5l0P1U+OTUBnkQ=
+	t=1747667335; cv=none; b=kVp8oC/Olmljnpy07f0zRaWnIv2ekpRwLqjJLqxfWTZYRUPRQST15I07Looia3JhC3ZL1Q2LhsF66BirTdKIY4nfFdYOH89de0/nlmOUJTMOaYz3G6tKKsr4UFOxduX/6qZWAsa/q7MUfAU+9TaoN6v1cEJya9n0B367yBIVVwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667326; c=relaxed/simple;
-	bh=OUlaWeW4tfZieewQ0URcqIi0vvlVTer9F5Lm/M6o37U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EihUf2EopBt0MDdS/snQkF8EgQGe18aN7ht+8FUvh7jNJiMqyhMYQz5R5lDeKfN8g/KGgAzE9C8Xrn1zLWR+3z+PKweRfUONk4Gmwv6KH+7NDXg5Sv1BhqHta6O2hksfXywA8mh64/hCXkGxiwpehpiWQ1LXJSMCPONKe/gwQNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d+7EGyzQ; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747667335; c=relaxed/simple;
+	bh=odbA1yE0koqxZpsOmdJo0+7/jyyMyxWVwF9ryDV5+Zc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VgHba/+TV6pAJQAuTj8vNb4XQXU08t12NlVyF76fjGtcnaIrR4rGY01KmVp4WI3HKQQj95ygMETWEmxmHnKGFridBD8rNcee52qAqgvxqPsEZlmyLGb6sq5fKACLiJVmvSOkwaP6GmQp7NIGEPNmfJ+WIxvrLPMShJSpOzC9KI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RV/GkRNU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d+7EGyzQ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747667321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AOBNc5KafxPVNUaymDS4XmpLmArtpsT7LlxIifP0pqQ=;
-	b=d+7EGyzQzECG3QV+WgTOmCa3GDjkPWp8P4mjWugQwN2HVPKXMlXaRx68s+aICdVUSN0KNI
-	2ewEls+Z9yLmSqNRHdtSKG02KomkHrrMHTlQOhXEXGRiJoJan7Gmk9RU6DkAIay4+NNISG
-	KEJVN2Re8w649d3TEPx0M9aWjdrsJls=
-From: Dawei Li <dawei.li@linux.dev>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dawei.li@linux.dev,
-	set_pte_at@outlook.com
-Subject: [PATCH v3 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-Date: Mon, 19 May 2025 23:08:20 +0800
-Message-Id: <20250519150823.62350-1-dawei.li@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RV/GkRNU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FCEC4CEEF;
+	Mon, 19 May 2025 15:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747667335;
+	bh=odbA1yE0koqxZpsOmdJo0+7/jyyMyxWVwF9ryDV5+Zc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RV/GkRNUdHIRjUPbzrpF27OhxaK2xNzjgkFOvBOUixbK0sW/lLC4SpFMlZK+SxNdz
+	 YNlgzf+GsRHI/OL8iLz+u0dI8CAxFUmUj0pQNFMpxA3pzHsaOk65tzjNzBnAD3QZVe
+	 yb3I+xQO+k1bveK28HCfIXo7p+5gL/AIo7FMEoyLzzX9hOtEygC4ZS/J6MHc+XqUBa
+	 GPtXrCMJQXxuQAZ5c1+Gmib2hpFUa+knSO5P+xRkv4nEDIQomq3iWUhtPziSPDRwt+
+	 50iHCSPV8KDCdSXXTaEHhwfRpjhEaOQbMm2gEUOutFbrjiOM+eV/fqCv5Ml5TWaxtU
+	 gT9KCv1phPvDQ==
+Date: Mon, 19 May 2025 08:08:54 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zizhi Wo <wozizhi@huawei.com>
+Cc: cem@kernel.org, dchinner@redhat.com, osandov@fb.com,
+	john.g.garry@oracle.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
+	leo.lilong@huawei.com
+Subject: Re: [PATCH] xfs: Remove unnecessary checks in functions related to
+ xfs_fsmap
+Message-ID: <20250519150854.GB9705@frogsfrogsfrogs>
+References: <20250517074341.3841468-1-wozizhi@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250517074341.3841468-1-wozizhi@huawei.com>
 
-Hi,
+On Sat, May 17, 2025 at 03:43:41PM +0800, Zizhi Wo wrote:
+> From: Zizhi Wo <wozizhi@huaweicloud.com>
+> 
+> In __xfs_getfsmap_datadev(), if "pag_agno(pag) == end_ag", we don't need
+> to check the result of query_fn(), because there won't be another iteration
+> of the loop anyway. Also, both before and after the change, info->group
+> will eventually be set to NULL and the reference count of xfs_group will
+> also be decremented before exiting the iteration.
+> 
+> The same logic applies to other similar functions as well, so related
+> cleanup operations are performed together.
+> 
+> Signed-off-by: Zizhi Wo <wozizhi@huaweicloud.com>
+> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> ---
+>  fs/xfs/xfs_fsmap.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+> index 414b27a86458..792282aa8a29 100644
+> --- a/fs/xfs/xfs_fsmap.c
+> +++ b/fs/xfs/xfs_fsmap.c
+> @@ -579,8 +579,6 @@ __xfs_getfsmap_datadev(
+>  		if (pag_agno(pag) == end_ag) {
+>  			info->last = true;
+>  			error = query_fn(tp, info, &bt_cur, priv);
+> -			if (error)
+> -				break;
 
-This is V3 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
-for rpmsg subsystem.
+Removing these statements make the error path harder to follow.  Before,
+it was explicit that an error breaks out of the loop body.  Now you have
+to look upwards to the while loop conditional and reason about what
+xfs_perag_next_range does when pag-> agno == end_ag to determine that
+the loop terminates.
 
-Current uAPI implementation for rpmsg ctrl & char device manipulation is
-abstracted in procedures below:
-- fd = open("/dev/rpmsg_ctrlX")
-- ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-  generated.
-- fd_ep = open("/dev/rpmsgY", O_RDWR) 
-- operations on fd_ep(write, read, poll ioctl)
-- ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-- close(fd_ep)
-- close(fd)
+This also leaves a tripping point for anyone who wants to add another
+statement into this here if body because now they have to recognize that
+they need to re-add the "if (error) break;" statements that you're now
+taking out.
 
-This /dev/rpmsgY abstraction is less favorable for:
-- Performance issue: It's time consuming for some operations are
-invovled:
-  - Device node creation.
-    Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-    overhead is based on coordination between DEVTMPFS and userspace
-    tools such as udev and mdev.
+You also don't claim any reduction in generated machine code size or
+execution speed, which means all the programmers end up having to
+perform extra reasoning when reading this code for ... what?  Zero gain?
 
-  - Extra kernel-space switch cost.
+Please stop sending overly narrowly focused "optimizations" that make
+life harder for all of us.
 
-  - Other major costs brought by heavy-weight logic like device_add().
+NAK.
 
-- /dev/rpmsgY node can be opened only once. It doesn't make much sense
-    that a dynamically created device node can be opened only once.
+--D
 
-- For some container application such as docker, a client can't access
-  host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-  is generated dynamically and whose existence is unknown for clients in
-  advance, this uAPI based on device node doesn't fit well.
-
-An anonymous inode based approach is introduced to address the issues above.
-Rather than generating device node and opening it, rpmsg code just creates
-an anonymous inode representing eptdev and return the fd to userspace.
-
-# Performance demo (Updated)
-
-An simple C application is tested to verify performance of new uAPI.
-
-$ cat test.c
-
-#include <linux/rpmsg.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <sys/time.h>
-
-#define N (1 << 20)
-
-int main(int argc, char *argv[])
-{
-	int ret, fd, ep_fd, loop;
-	struct rpmsg_endpoint_info info; 
-	struct rpmsg_endpoint_fd_info fd_info; 
-	struct timeval start, end;
-	int i = 0;
-	double t1, t2;
-
-	fd = -1;
-	ep_fd = -1;
-	loop = N;
-
-	if (argc == 1) {
-		loop = N;
-	} else if (argc > 1) {
-		loop = atoi(argv[1]);
-	}
-
-	printf("loop[%d]\n", loop);
-
-	strcpy(info.name, "epx");
-	info.src = -1;
-	info.dst = -1;
-
-	strcpy(fd_info.name, "epx");
-	fd_info.src = -1;
-	fd_info.dst = -1;
-	fd_info.fd = -1;
-
-	while (fd < 0) {
-		fd = open("/dev/rpmsg_ctrl0", O_RDWR);
-		if (fd < 0) {
-			printf("open rpmsg_ctrl0 failed, fd[%d]\n", fd);
-		}
-	}
-
-	gettimeofday(&start, NULL);
-
-	while (loop--) {
-		ret = ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("ioctl[RPMSG_CREATE_EPT_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		ep_fd = -1;
-		i = 0;
-
-		while (ep_fd < 0) {
-			ep_fd = open("/dev/rpmsg0", O_RDWR);
-			if (ep_fd < 0) {
-				i++;
-				printf("open rpmsg0 failed, epfd[%d]\n", ep_fd);
-			}
-		}
-
-		//printf("Number of open failed[%d]\n", i);
-
-		ret = ioctl(ep_fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("old ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d], errno[%d]\n", ret, errno);
-		}
-
-		close(ep_fd);
-	}
-	
-	gettimeofday(&end, NULL);
-
-	printf("time for old way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
-	t1 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-
-	if (argc == 1) {
-		loop = N;
-	} else if (argc > 1) {
-		loop = atoi(argv[1]);
-	}
-
-	printf("loop[%d]\n", loop);
-
-	gettimeofday(&start, NULL);
-
-	while (loop--) {
-		fd_info.fd = -1;
-		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
-		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
-		if (ret < 0 || fd_info.fd < 0) {
-			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		close(fd_info.fd);
-	}
-	
-	gettimeofday(&end, NULL);
-
-	printf("time for new way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
-	t2 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-
-	printf("t1(old) / t2(new) = %f\n", t1 / t2);
-
-	close(fd);
-}
-
-# Performance benchmark (Updated)
-
-- Legacy means benchmark based on old uAPI
-- New means benchmark based on new uAPI(the one this series introduce)
-- Time are in units of us(10^-6 s)
-
-Test	loops	Total time(legacy)	Total time(new)	legacy/new	
-1	1000	218472			2445		89.354601
-2	1000	223435			2419		92.366680
-3	1000	224263			2487		90.174105
-4	1000	218982			2465		88.836511
-5	1000	209640			2574		81.445221
-6	1000	203816			2509		81.233958
-7	1000	203266			2458		82.695688
-8	1000	222842			2835		78.603880
-9	1000	209590			2719		77.083487
-10	1000	194558			2621		74.230446
-
-11	10000	2129021			31239		68.152662
-12	10000	2081722			27997		74.355181
-13	10000	2077086			31724		65.473648
-14	10000	2073547			28290		73.296112
-15	10000	2055153			26957		76.238194
-16	10000	2022767			29809		67.857593
-17	10000	2054562			25884		79.375753
-18	10000	2036320			28511		71.422258
-19	10000	2062547			28725		71.803203
-20	10000	2110498			26740		78.926627
-
-21	100000	20802565		260392		79.889417
-22	100000	20373178		259836		78.407834
-23	100000	20361077		256404		79.410138
-24	100000	20207000		256759		78.700260
-25	100000	20220358		268118		75.415892
-26	100000	20711593		259130		79.927423
-27	100000	20301064		258545		78.520428
-28	100000	20393203		256070		79.639173
-29	100000	20162830		259942		77.566649
-30	100000	20471632		259291		78.952343
-
-# Changelog:
-
-Changes in v3:
-- s/anon/anonymous (Mathieu)
-
-- API naming adjustment (Mathieu)
-  - __rpmsg_chrdev_eptdev_alloc ->  rpmsg_eptdev_alloc
-  - __rpmsg_chrdev_eptdev_add ->  rpmsg_eptdev_add
-
-- Add parameter 'flags' to uAPI so user can specify file flags
-  explicitly on creating anonymous inode.
-- Link to v2: https://lore.kernel.org/all/20250509155927.109258-1-dawei.li@linux.dev/ 
-
-Changes in v2:
-- Fix compilation error for !CONFIG_RPMSG_CHAR config(Test robot).
-- Link to v1: https://lore.kernel.org/all/20250507141712.4276-1-dawei.li@linux.dev/
-
-Dawei Li (3):
-  rpmsg: char: Reuse eptdev logic for anonymous device
-  rpmsg: char: Implement eptdev based on anonymous inode
-  rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-
- drivers/rpmsg/rpmsg_char.c | 129 ++++++++++++++++++++++++++++++-------
- drivers/rpmsg/rpmsg_char.h |  23 +++++++
- drivers/rpmsg/rpmsg_ctrl.c |  38 ++++++++---
- include/uapi/linux/rpmsg.h |  24 +++++++
- 4 files changed, 182 insertions(+), 32 deletions(-)
-
----
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-
-Thanks,
-
-	Dawei
--- 
-2.25.1
-
+>  		}
+>  		info->group = NULL;
+>  	}
+> @@ -813,8 +811,6 @@ xfs_getfsmap_rtdev_rtbitmap(
+>  			info->last = true;
+>  			error = xfs_getfsmap_rtdev_rtbitmap_helper(rtg, tp,
+>  					&ahigh, info);
+> -			if (error)
+> -				break;
+>  		}
+>  
+>  		xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_BITMAP_SHARED);
+> @@ -1018,8 +1014,6 @@ xfs_getfsmap_rtdev_rmapbt(
+>  			info->last = true;
+>  			error = xfs_getfsmap_rtdev_rmapbt_helper(bt_cur,
+>  					&info->high, info);
+> -			if (error)
+> -				break;
+>  		}
+>  		info->group = NULL;
+>  	}
+> -- 
+> 2.39.2
+> 
+> 
