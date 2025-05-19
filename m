@@ -1,158 +1,85 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB8127E7E3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8C327C875;
+	Mon, 19 May 2025 13:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747662313; cv=none; b=AOHE0oo5IYio8XUPoHHfMjaCZIFRNc/h0pkiXMUeeNG7yyVUB0gh2+MqHxDkFGT8acreJtqIp9RxWWIEOED2Gd/7JAKA1P/Q/ozpGYnx9Plj8p+/mgwHxEsVAtBgt9NvhshT1vGcz5YiyjkgPo7XGoaONzqAiTldW/eNt3NgjqU=
+	t=1747662449; cv=none; b=atQQsFXlpk+JHNxoIbLus0DOj3XZ1tKsOJD+NApEg9zqaQhvTqqdEqbpSkG3d39zogEmxb8b+tBwukb9cgAJ2KypHtu8YLPReoIsEsfeIKGA6CrQT2WI+f8+7R+5sBQ+cUF1t5BHY/JIuad+iIvyGpESeuzaUWVOpjvGjYRKBQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747662313; c=relaxed/simple;
-	bh=FN57vLe65C1svcmEj8o0ceeTxyA4BHTqUN3W2enYKdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ptpj0iBH2Ic/3gt0RO4n20qRYjgJGfol/vL/RL8bDxvi0nGSgcgpUW7oRDPM7lmkei8gtOONt0iRyylZfHOiRJWE6HLawaS3hz3vmxw9j8FZ4tfmBGlzfDPag/2PCybtHZ7gsxo1SWnXO1cysLVY0PvxEVrAynt4792qoQpGVVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=prEs2AZG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747662449; c=relaxed/simple;
+	bh=ZiIztDnqsy7lttlHbcN9H2p9Y766zX7cnay4gMCyOBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PweemoNgiav5thxCIwHWzNU+B9DhChNM9H+9/pmX49j5nw/xOloHac/EGDukcELLupuOLko1dOQBiXPRwk5G84h++uwtGxWPdPPLvhA6xHjIkC09qiTtGOBn6FhIJjjdnyGUx3ThAKL7Q9criUJLK5y7xzDQufTssFVUT09uhQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uf3qLYod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="prEs2AZG"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9IUfw028604;
-	Mon, 19 May 2025 13:44:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PdV8uO80/mflHpZW6Zmyg39cv5SMy1ND2QAP2t8eHzY=; b=prEs2AZG6sM1zEGe
-	VlkKyMnGGYxkLQMT3wdOmMthss1lBfNyEtDD15+kpRauYm9ctxxE1rtGyBG7Fv0f
-	7mJCkiJOnbNqwy/6kx5b3EJw/fdr4USRKjSBQQZQ0jHR3qMi+DE0bCsRrQ4toQWM
-	XQpE8v6IZupkHpPDe9Et6SnwT6edFLhvkgEDwG+tYmfYg686FX3HielgtSb5ymMw
-	H/6iWbGkmnrSAkUBtyDQyIUB5N69MUsS4VuPSWbwetCUd2aJT9KZy84qdFiXZdPk
-	mqWtVNNGCrWJyKA02Gb/R93mSzgTlfhvNmEC0JXDbA8nvT4pFil22EVufRp+SY2P
-	LCv/Dw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7cgmc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 13:44:32 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54JDiVn1028686
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 13:44:31 GMT
-Received: from [10.253.10.117] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 19 May
- 2025 06:44:23 -0700
-Message-ID: <1e3ba498-2bfb-4cab-ba13-5ab2c5b03ef9@quicinc.com>
-Date: Mon, 19 May 2025 21:44:20 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uf3qLYod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC852C4CEE4;
+	Mon, 19 May 2025 13:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747662449;
+	bh=ZiIztDnqsy7lttlHbcN9H2p9Y766zX7cnay4gMCyOBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uf3qLYoddfguPY5juRMEYzps76k5iwNa4hcT/OnINzFIuhS6A+70NtOgsyK4PTLaG
+	 9y/xKTKi/e9ZpII4i6+3+1suYiSRzQyA5saxyqVNUNQDsOUe9Nj5uKFKQNH1npmqkL
+	 Dn35rC9i+9AhrBrqvpvq9si1XFoZx4z9xqvr7sjpvTW1XXuvJa7onpzAGk6z6lOAap
+	 YkEaf3ywPoYYBwhcZVIPcACxDvCoucI4UbOJAK3SiMydRVu+8zNfUQtKWdk6RJy8V9
+	 FNWg+Wrb6VnkCa551cNf48e7z9vg92jcYjDNbozrgLx/zAmgGBLDkm5fzOqQlDCpud
+	 gtYHiu77ZdZeQ==
+Date: Mon, 19 May 2025 15:47:26 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <kvckrtgbdxlzezxzn5xe6owmbaxa5rygknsv3hne32awfc7y5s@k2akbs6u7tkr>
+References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+ <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
+ <20250519124028.GA423953@legfed1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [PATCH v3 2/6] coccinelle: misc: Add field_modify script
-To: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        "Catalin
- Marinas" <catalin.marinas@arm.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        "Julia
- Lawall" <Julia.Lawall@inria.fr>, Marc Zyngier <maz@kernel.org>,
-        Nicolas Palix
-	<nicolas.palix@imag.fr>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        "Rasmus
- Villemoes" <linux@rasmusvillemoes.dk>,
-        Suzuki Poulouse
-	<suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, Yury Norov
-	<yury.norov@gmail.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "Kiran
- Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
-        Lei Wei <quic_leiwei@quicinc.com>, Pavithra R <quic_pavir@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        <quic_linchen@quicinc.com>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-2-6f7992aafcb7@quicinc.com>
- <a1be0efc-a4c9-461d-a01a-8fb830b2c68d@web.de>
- <0ee48e2f-58db-49b0-b651-dcc0e517465e@quicinc.com>
- <43712874-6f1d-435c-98b2-30ac44d25309@web.de>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <43712874-6f1d-435c-98b2-30ac44d25309@web.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682b35c0 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8
- a=c3S3xlzBOW1yjAwqZsgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: DDx5Kpyrf6pBeNUIV-O76BAavKioXic-
-X-Proofpoint-GUID: DDx5Kpyrf6pBeNUIV-O76BAavKioXic-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEyNyBTYWx0ZWRfX8LBxompbvgoH
- 3i7uWyfrxx5T3Tfgsvy7ubiVJ6v1qhIGwf4jf/Xj3Xy1N8bv6dH9EU/v4+YK8hk3EOZKpGwsXpO
- zKPXnFqYrqWOXyiJzvXGm6Lg+ocGxkUpkTDXJZ/O5AXvVsS8FpVHPcnvp90SgtTIkcdhMEupjQ2
- uOj/n9xXrmiGEGLnLbuK3/1L9NHPSOpmoaK3yrzHw6a5A4PoIXXRCzpq8QAa9ZmTuW4GdgZaAci
- EHCwTjF+Lk7iDIzSmtS2qgKhzHtqhTC9bWvgCDe3sDRnz3V+dDqppGyupxR8VK2WXx2IejHyv8w
- JFBhRBjRDa880TK7422aleYlIMa6BgheyGcrQ8t5EswA8UqaJ1amugbbjV7lOzAkyz96FklOAvx
- XIva8OfJHDHpw248ZP7AXaRVN54826XqkLx8ayhxETvYMM/RYgIieue2XoBPYKPK+9fivQ+l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
- spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505190127
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rrl3j5uikcwdofo3"
+Content-Disposition: inline
+In-Reply-To: <20250519124028.GA423953@legfed1>
 
 
+--rrl3j5uikcwdofo3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+MIME-Version: 1.0
 
-On 4/24/2025 12:35 AM, Markus Elfring wrote:
-> …
->>> -reg &= ~mask;
->>> -reg |= FIELD_PREP
->>> +       FIELD_MODIFY
->>>                     (mask,
->>> +                  &reg,
->>>                      val
->>>                     );
-> …
->> With this code variant, there is no space prior to &reg, here is the
->> example code changes generated by the SmPL code as below, is this expected?
-> …
->> +++ b/drivers/phy/starfive/phy-jh7110-dphy-tx.c
->> @@ -244,8 +244,7 @@ static int stf_dphy_configure(struct phy
->>          i = stf_dphy_get_config_index(bitrate);
->>
->>          tmp = readl(dphy->topsys + STF_DPHY_APBIFSAIF_SYSCFG(100));
->> -       tmp &= ~STF_DPHY_REFCLK_IN_SEL;
->> -       tmp |= FIELD_PREP(STF_DPHY_REFCLK_IN_SEL, STF_DPHY_REFCLK_12M);
->> +       FIELD_MODIFY(STF_DPHY_REFCLK_IN_SEL,&tmp, STF_DPHY_REFCLK_12M);
->>          writel(tmp, dphy->topsys + STF_DPHY_APBIFSAIF_SYSCFG(100));
-> 
-> The Coccinelle software is still evolving somehow.
-> Thus your test result can trigger further development considerations.
-> I hope that clarifications and corresponding improvements can be achieved
-> also according to such source code layout concerns.
-> 
-> Regards,
-> Markus
+Hello Dimitri,
 
-OK, understand. I will keep the original patch as below for now, as we
-need to ensure the script generates code with the expected style.
-+- reg &= ~mask;
-+- reg |= FIELD_PREP(mask, val);
-++ FIELD_MODIFY(mask, &reg, val);
+On Mon, May 19, 2025 at 02:40:28PM +0200, Dimitri Fedrau wrote:
+> Perfering IS_REACHABLE over IS_ENABLED is fine for me. Is there a reason
+> why you just didn't replace IS_ENABLED with IS_REACHABLE ?
 
-In addition, below case is filed to request this improvement on the
-coccinelle project.
-https://github.com/coccinelle/coccinelle/issues/397
+Because if (IS_REACHABLE(...)) is nicer than #if IS_REACHABLE(...). It
+has better compile coverage and is easier to parse for a human.
 
-Thanks.
+Best regards
+Uwe
+
+--rrl3j5uikcwdofo3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgrNmsACgkQj4D7WH0S
+/k6+Hgf+Mhu+Ky4NV790iyqYQmN2UyFjZjLEVMjwih3w7K4MtQlDzniuUyYBr3Cj
+b8/owEO1PUzmx9pRFvq36M21EAyhJi0U8bR6LsbBLZ2jUfBK3PFT62ht1gGoNt+q
+2la/3Uj44+3I1azq9FY52SkikXlhiTsaMuls+xiGjhvKn8Sr7BZNUjYQSQXFPmSM
+jy4UTfN0LSLcJjivsAzr8570Hmm5XLxs7LW2e0QJx2NIjFrDh1sCH2BOcUxUeTWh
+BqjxeIbTtZ/9EfVrHfDPZjdonJbm8dTBg7Ot8kg69xYnfgJAIIYHnNVogHaY8Och
+QGKd/h6r+mVYw8Xi5ghiJE1Q4W7jKg==
+=XnUH
+-----END PGP SIGNATURE-----
+
+--rrl3j5uikcwdofo3--
