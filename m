@@ -1,50 +1,53 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DACB28313B;
-	Mon, 19 May 2025 16:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C445928313B;
+	Mon, 19 May 2025 16:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673697; cv=none; b=T9a83Y8sEhY3MuHKwgWo1yjScx9Tuz/zRtzf6Gy6T1V4q+4ViPkoa3sc37bd8EXDineXK7vLKyhBzo0JpDdz/LyMNGECsXPvSIUQvkDVae6N5GXLQyt9xx9s9zRrL8bmZKu9tv3fzIfIPEuTcm5tEZ8JFcdUg1OBbwSUsqF1WJ4=
+	t=1747673721; cv=none; b=JqJiX+HK6VnRjjBLkh/P0iL322TvAYcpr8VMqLuFIqLw3Jb2FoMvx3VrrjTJe97FjBgqLixNYR6Xl9NAMJNv7ykGod966gMiUT2uuDTBJjxla8H004i8lzqQ/fG/fMgO/9Kxmu6voNgt4XWjioDqvT9O/fSh05hehz0r+qVJpJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673697; c=relaxed/simple;
-	bh=bW+o8oCViCCYXcAqVtY/0UB3qmmBvGj7Uz+FyS2bPSk=;
+	s=arc-20240116; t=1747673721; c=relaxed/simple;
+	bh=2h0wqLSQAYlElqRvO3VWXqKcEeKB1rJERvwy1eOIfRs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NmoODVSTbSWHTSj1COX/EIpuLoni7dFbaNa0SJKs0m6otLd0XsgSiJIRQ/WlNSZlVRX+PzkrY84jM2cmGsO4CymoyyrmLAHq20LGgZCON/BE3jX96uEo3o0VdNprx3TNGM7938Kr4hHYcdae95JsbFUJbpI7eQ7SevfSWK9fKKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P7L81j2k; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJPj5UU4p+CrqatlBPKAqc1bhU01oz9FgaRBudHnU+y7TtjUKkx0SWQZ5DPnA4aB3OcV6rS0Amo3lwPfEtGGvI7eTJSoBhFZLLo0mQFArO4eudNCjdN25RKRHR/qq7QSoNkpAj1CGnOfqavvWShT3IC/59jlSQXWPJfLPnqiNPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmvIyYmr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P7L81j2k"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 039812067864; Mon, 19 May 2025 09:54:55 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 039812067864
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747673695;
-	bh=wg6hvFqkqMq7BInGeV8wn3GSM9YWzn8YzNDbZ6ZxWFA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmvIyYmr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF4DC4CEE4;
+	Mon, 19 May 2025 16:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747673721;
+	bh=2h0wqLSQAYlElqRvO3VWXqKcEeKB1rJERvwy1eOIfRs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P7L81j2kqiuVsDt0TAWtSv/U5ulAeQg6gOh08uzjdHgtJAOiPqYoDh2Aw2/qhJ3Dn
-	 4sgBCfookyA6OQNNJ/6NSR2l4ujeDjSZgAhgm8MSiVEfDzxk/TJLjFCRnpEumkTZX8
-	 Twb8s27sufQ4Go3mdGcrcax0JfCNhiMKQHBvaW8Q=
-Date: Mon, 19 May 2025 09:54:54 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
-	"javierm@redhat.com" <javierm@redhat.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
- for Hyper-V guests
-Message-ID: <20250519165454.GA11708@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250516235820.15356-1-mhklinux@outlook.com>
- <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	b=DmvIyYmrZw9KxwuV3vy7iaq2az7uLh0I5ZryIaEK/JcaKbHGmEvaZQoD3PP8WSLn3
+	 8Fx2aAAMGhRG6QSvffgCza6onu3XlAqPSmL7Xg4TF50zWzFVTfdeD17+d4EoxBflfk
+	 pWLcnL2PN12Hnt6WKOZV/w5MGMlSP0I9YZZbjkYrtjQsjupYkbC+36Ao+lmQ5en14V
+	 gxtZA+YAQxzV2GoVHZYoXKz5PqeUD+evujZoypecoYalPUzL8qMMCmIH52OCrJXC/3
+	 FzETVaKkd/c5exIXW0LvqKe7AVwmp4sNB3GzGcz7ohM2rz/qQYaSSqqPjWvsZky9OX
+	 pdbkPQ0phMphg==
+Date: Mon, 19 May 2025 18:55:14 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 6/9] rust: device: Add bindings for reading device
+ properties
+Message-ID: <aCtici15vSCBDbzE@pollux>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-7-remo@buenzli.dev>
+ <aCH5WgORn9ZGl9Il@pollux>
+ <DA093HA2415H.29OCPLS0M7H84@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,100 +56,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <DA093HA2415H.29OCPLS0M7H84@buenzli.dev>
 
-On Sat, May 17, 2025 at 06:47:22PM +0000, Michael Kelley wrote:
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, May 17, 2025 9:14 AM
-> > 
-> > On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
-> > > From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
-> > > >
-> > > > > From: Michael Kelley <mhklinux@outlook.com>
-> > > > >
-> > > > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
-> > > > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
-> > > > > space, and allocates portions to drivers upon request. As part of managing
-> > > > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
-> > > > > portion of the MMIO space that Hyper-V has designated for the synthetic
-> > > > > frame buffer, and not allocate this space to VMBus drivers other than graphics
-> > > > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
-> > > > > the screen_info data structure that is passed to the Linux kernel at boot time,
-> > > > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
-> > > > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
-> > > > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
-> > > > >
-> > > > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
-> > > > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
-> > > > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
-> > > > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
-> > > > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
-> > > > > anything. But it's valid to have none of these enabled, in which case
-> > > > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
-> > > > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
-> > > > > framebuffer MMIO space may be assigned to some other VMBus driver, with
-> > > > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
-> > > > > controller to host the OS disk, the PCI NVMe controller is probed before any
-> > > > > graphic devices, and the NVMe controller is assigned a portion of the
-> > > > > framebuffer MMIO space.
-> > > > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
-> > > > > get setup. Then Linux fails to boot in the VM.
-> > > > >
-> > > > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
-> > > > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
-> > > > > framebuffer driver, and prevent the undefined behavior.
-> > > >
-> > > > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
-> > > > which is expected to use it. With this patch this option will be enabled irrespective
-> > > > if there is any user for it or not, wondering if we can better optimize it for such systems.
-> > > >
-> > >
-> > > That approach doesn't work. For a cloud-based server, it might make
-> > > sense to build a kernel image without either of the Hyper-V graphics
-> > > framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
-> > > Linux console is the serial console. But the problem could still occur
-> > > where a PCI pass-thru NVMe controller tries to use the MMIO space
-> > > that Hyper-V intends for the framebuffer. That problem is directly tied
-> > > to CONFIG_SYSFB because it's the VMBus driver that must treat the
-> > > framebuffer MMIO space as special. The absence or presence of a
-> > > framebuffer driver isn't the key factor, though we've been (incorrectly)
-> > > relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
-> > >
-> > 
-> > Thank you for the clarification. I was concerned because SYSFB is not currently
-> > enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
-> > as minimal as possible. I haven't yet looked into the details to determine
-> > whether this might have any impact on the kernel binary size or runtime memory
-> > usage. I trust this won't affect negatively.
-> > 
-> > OpenHCL Config Ref:
-> > https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
-> > 
+On Mon, May 19, 2025 at 05:43:17PM +0200, Remo Senekowitsch wrote:
+> On Mon May 12, 2025 at 3:36 PM CEST, Danilo Krummrich wrote:
+> >> +/// Implemented for all integers that can be read as properties.
+> >> +///
+> >> +/// This helper trait is needed on top of the existing [`Property`]
+> >> +/// trait to associate the integer types of various sizes with their
+> >> +/// corresponding `fwnode_property_read_*_array` functions.
+> >> +pub trait PropertyInt: Copy {
+> >> +    /// # Safety
+> >> +    ///
+> >> +    /// Callers must uphold the same safety invariants as for the various
+> >> +    /// `fwnode_property_read_*_array` functions.
+> >
+> > I think you have additional requirements on the fwnode, propname and val
+> > pointers as well as on nval, please document them as well.
 > 
-> Good point.
-> 
-> The OpenHCL code tree has commit a07b50d80ab6 that restricts the
-> screen_info to being available only when CONFIG_SYSFB is enabled.
-> But since OpenHCL in VTL2 gets its firmware info via OF instead of ACPI,
-> I'm unsure what the Hyper-V host tells it about available MMIO space,
-> and whether that space includes MMIO space for a framebuffer. If it
-> doesn't, then OpenHCL won't have the problem I describe above, and
-> it won't need CONFIG_SYSFB. This patch could be modified to do
-> 
-> select SYSFB if !HYPERV_VTL_MODE
+> What are the additional requirements? The implementation just calls the
+> underlying `fwnode_property_read_*_array` with the exact same arguments,
+> so I don't know what the additional requirements are.
 
-I am worried that this is not very scalable, there could be more such
-Hyper-V systems in future.
+First of all, I don't think you can refer to the safety requirements of the
+`fwnode_property_read_*_array` functions, since they don't have any documented
+safety requirements.
 
-> 
-> Can you find out what MMIO space Hyper-V provides to VTL2 via OF?
-> It would make sense if no framebuffer is provided. And maybe
-> screen_info itself is not set up when VTL2 is loaded, which would
-> also make adding CONFIG_SYSFB pointless for VTL2.
+So, I think you have safety requirements regarding pointer validity of fwnode,
+propname and val.
 
-I can only see below address range passed for MMIO to VMBus driver:
-ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
+Additionally, there's the requirement that val has to be an array of nval
+length.
 
-I don't think we have any use of scrren_info or framebuffer in OpenHCL.
+Also, the PropertyInt trait itself has to be unsafe, given that it contains
+unsafe functions.
 
-- Saurabh
+I also pinged Benno about it, he usually knows best how to cover such things
+properly. :)
+
+> >> +    unsafe fn read_array_from_fwnode_property(
+> >> +        fwnode: *const bindings::fwnode_handle,
+> >> +        propname: *const ffi::c_char,
+> >> +        val: *mut Self,
+> >> +        nval: usize,
+> >> +    ) -> ffi::c_int;
+> >> +}
