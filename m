@@ -1,114 +1,122 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB87A27701C
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BAB20E6EB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657542; cv=none; b=VDago32XmWxFNVBGjNpPMVg0BCvXvhx3UJSVMUfzyXwnaxIhhuvV5MCHWq7OK0RHGPnNpKxZBaSmpazPyToWOMzqM6pmJ/m3CNAg+thdithaQbMS1rwV1gnWkhkBQPfl49I9hJBhczUfy5x1OIGaHKBqoQncuKyPJ6RBExiWq/M=
+	t=1747657582; cv=none; b=S/oLwDGIpol6sHsJu74pYvKrWHlR1wJ6ViwTmPa2hX30ZDG5uptaqkgN609cuxuiLeMFgVM1TfsWpFVlVAZth8JhsxeAfgFnJ+LJ9col5kFPK5q6tqqJX/pk6bdOngKeZCz9k0iR8N9cO7RFdzD81VuLBGHjTO9Jye+9K5MRxYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657542; c=relaxed/simple;
-	bh=UVMu7q/OWhagwnpQvr8VA3KbUOVlB7q/qERrJlFh/e0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Knq4wWMd+XKvtwJFdC6+lWnHi4Xun6qsQbDbTDhyZGueEj2GgY05rLSAFhbraic19g5JHl4OWCLVLyhbG/jqfrdpwEymvT1kN0fMO6V6qExo49C3ocRRuKxcg4y5CfANXCBxW4K9uPE9PH4VcJk9kFO//+Q/ZHI4r7SGiD0mIvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=F+styEMs; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="F+styEMs"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a365bc0af8so280399f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747657539; x=1748262339; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dYOuWvhD2IrISJ7Y8B2LTWIZ7qteHjlohGpX67eP4RQ=;
-        b=F+styEMswkviQeGy3AzZ1xxt6qOdTeskT0vzdjeOYy9OOgZOSKw/CaIzL6kwuEBFo2
-         BoSQENOpA2UNXfROOjLRJmzALbJws6fpzFAh1dLfCcPjNNTngfQj8mWdHnJD4Z4a4L2x
-         cW53d9mabzM+cXpvEWCpvQGQWm5HUTUUtrQXZcnSRiJ/XoYYeTQ88CE6pPKbcvDsfwPm
-         WUTba1GtANQwP1WSAbpz1tvO/idaTyPkHIbKa821amUyd60vxt6hDJ0Hk4Mk/FKKpnRm
-         rpt87prvle/QhbRnNt6b+Vp3RwTiD0IVKoSqBdxaIgpcUs3r9yGTj/XQ1xTbbWo7R6bx
-         S9/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747657539; x=1748262339;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dYOuWvhD2IrISJ7Y8B2LTWIZ7qteHjlohGpX67eP4RQ=;
-        b=w5vNx8XH0eGfLGEsqpqkuwSFbhYu/UITuJy29rcYIVb0Gd3fNIfXxHhD/UZko/wyAv
-         MsztAY311i9MN85ct8BQE7hQOjMkhLnejYRFanC8SmAcnsaP+6AQtQC6qHZV1gtLO32a
-         9LqAYT8uYY965h+ZkhUlNSdbHjNW4PsUVry96u49fAIwNUKvIU/EECCKDiMzIvXfYF1U
-         fasEGfnQAT6VhfG3yv3WuUERXhB5OH2q0oH6n46itDnleoC7I33wzI6TTyUI6wRH0XsA
-         p3kpQy3o9xMxKSpmrF7GhYvRnlzg+sFFSLTFotdxUB4zOyE2gUiHb1eIY/QxSjzm8tc3
-         3Oiw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+DisklkVZHP53b8/E+yco4/ZQ6OyBUO5BJygXtnbSWU2ygueW/jqDMnLusgC1DsyJgZVYIDh3wYXdfH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmEkFBB4gtK7riBzD9xKAhTJjQIrW7/ZYD0/ZVNJx0/NFfA02/
-	0zMERsNZ8/W2LLEHpgr3bYCVls5u4nezisVJNeoVNvzQAtgNtTqxWmmJxirQaU4CIkU=
-X-Gm-Gg: ASbGncuh5bAMGZpS9r6phZMHK2n3zpx4fDqo3v/HyR97hUWTmVI6tS7xd0+hHhBpG1e
-	iBaykwfWR08JRVL2d5tIF5zhBo6wpfJRtOMMA2aHSXp4w8sysRsSuWdYNKes8GkQSAYiHSNQ4U+
-	/2xeJhj32TgKxXl7YMwAahBD0oORZStndyRA5FYLW31ZnMPwt/912VkmHh05U2yeA20wv9bckDn
-	yRdzCELLX5pcODDMT1fU4Bpx4ouRcTDrkvN2z6i1FqBZ2MxnC8lRTq7r4QLsCGJAJAsrWyzI6vw
-	zCCuudTk1H0/GvxsDLc8U77IsEKl6HwUFspU7/MnAs4b5QD09NN5uxBeV0s=
-X-Google-Smtp-Source: AGHT+IGD0SGS0rGbL2ckKskUyJdOJSyzovDYQ2VXjwxG5bR2UNb0kyCq4qlYyH1RbivwrICgl0vwjQ==
-X-Received: by 2002:a5d:5888:0:b0:3a3:7351:6f39 with SMTP id ffacd0b85a97d-3a373517245mr709772f8f.15.1747657539155;
-        Mon, 19 May 2025 05:25:39 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:29b7:4911:a29c:2135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f33804d9sm209160935e9.12.2025.05.19.05.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 05:25:38 -0700 (PDT)
+	s=arc-20240116; t=1747657582; c=relaxed/simple;
+	bh=/eR6f0OxRQOAxe3FahYCD0wNAlMR1rG6wi6YpOL+VB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHv4pcyFRaUAH60pI+iG2VDDo+sNg1R9vMf3oxLNAS9ULGyvJKL6tt1yhvia0IPVUPg/B954QZ+mO/cpqWjVao+AvJ6u45Np3ua4RN729pheLyc+D5DyBMLPWaeM0D0NiGIOR0NIqT4hsSFgHb41as5HJQxQ9CoXWGa9uI7CVuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: /ibWzKEISmuKeOSAk7cU6A==
+X-CSE-MsgGUID: H8oeOC3gQ+6FMLKaFX4QMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="37172309"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="37172309"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:26:20 -0700
+X-CSE-ConnectionGUID: ggfXUXG7QXCOnmP8+3KCvg==
+X-CSE-MsgGUID: NxZ0eqcAR2OVQAfwNnaniA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="144240184"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:26:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uGzZN-0000000322O-2KGN;
+	Mon, 19 May 2025 15:26:13 +0300
+Date: Mon, 19 May 2025 15:26:13 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 07/32] x86/boot/e820: Print out sizes of E820 memory
+ ranges
+Message-ID: <aCsjZW15Wh2lRC1q@smile.fi.intel.com>
+References: <20250515120549.2820541-1-mingo@kernel.org>
+ <20250515120549.2820541-8-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 14:25:36 +0200
-Message-Id: <DA04W4PO99EJ.1XWOAUMZV4BXG@ventanamicro.com>
-Subject: Re: [PATCH v3 1/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
-Cc: <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Atish
- Patra" <atishp@atishpatra.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Andrew Jones" <ajones@ventanamicro.com>
-To: "Anup Patel" <anup@brainfault.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250515143723.2450630-4-rkrcmar@ventanamicro.com>
- <20250515143723.2450630-5-rkrcmar@ventanamicro.com>
- <CAAhSdy1Z43xRC7tGS21-5rcX7uMeuWCHhABSuqNzELbp26aj0Q@mail.gmail.com>
-In-Reply-To: <CAAhSdy1Z43xRC7tGS21-5rcX7uMeuWCHhABSuqNzELbp26aj0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515120549.2820541-8-mingo@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-2025-05-16T17:55:05+05:30, Anup Patel <anup@brainfault.org>:
-> On Thu, May 15, 2025 at 8:22=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrc=
-mar@ventanamicro.com> wrote:
->>
->> Add a toggleable VM capability to reset the VCPU from userspace by
->> setting MP_STATE_INIT_RECEIVED through IOCTL.
->>
->> Reset through a mp_state to avoid adding a new IOCTL.
->> Do not reset on a transition from STOPPED to RUNNABLE, because it's
->> better to avoid side effects that would complicate userspace adoption.
->> The MP_STATE_INIT_RECEIVED is not a permanent mp_state -- IOCTL resets
->> the VCPU while preserving the original mp_state -- because we wouldn't
->> gain much from having a new state it in the rest of KVM, but it's a very
->> non-standard use of the IOCTL.
->>
->> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
->> ---
->> If we want a permanent mp_state, I think that MP_STATE_UNINITIALIZED
->> would be reasonable.  KVM could reset on transition to any other state.
->
-> Yes, MP_STATE_UNINITIALIZED looks better. I also suggest
-> that VCPU should be reset when set_mpstate() is called with
-> MP_STATE_UNINITIALIZED and the current state is
-> MP_STATE_STOPPED.
+On Thu, May 15, 2025 at 02:05:23PM +0200, Ingo Molnar wrote:
+> Before:
+> 
+>         BIOS-provided physical RAM map:
+>         BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+>         BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+>         BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+>         BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
+>         BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
+>         BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+>         BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
+>         BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+>         BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+>         BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+> 
+> After:
+> 
+> 	BIOS-provided physical RAM map:
+> 	BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
+> 	BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB reserved
+> 	BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
+> 	BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB reserved
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
+> 	BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB reserved
+> 	BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
+> 	BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB reserved
+> 	BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
+> 	BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB reserved
+> 	BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
+> 	BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB reserved
+> 	BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
+> 	BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB reserved
+> 	BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
+> 	BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB reserved
+> 
+> Note how a 1-digit precision field is printed out if a range is
+> fractional in its largest-enclosing natural size unit.
+> 
+> So the "256 MB" and "12 GB" fields above denote exactly 256 MB and
+> 12 GB regions, while "1.9 GB" signals the region's fractional nature
+> and it being just below 2GB.
+> 
+> Printing E820 maps with such details visualizes 'weird' ranges
+> at a glance, and gives users a better understanding of how
+> large the various ranges are, without having to perform hexadecimal
+> subtraction in their minds.
 
-That would result in two resets (stopped -> uninitialized -> *), unless
-we changed the logic.
+Returning to the v1 discussion for sring_get_size(). Looking at its code
+it seems to me that you haven't tried to use it. It should give no .0 for
+the exact numbers. If it's not the case, please confirm that we have a
+bug/feature. If it's documented (read: we have a test case), then we would
+need an additional flag to avoid this behaviour for your case. No need
+to reinvent a wheel here.
 
-Would you prefer to reset on transition to the new permanent mp_state?
-MP_STATE_INIT_RECEIVED seems a more fitting name for the state, then.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks.
+
