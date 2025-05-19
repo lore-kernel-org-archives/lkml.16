@@ -1,95 +1,87 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from sonic301-21.consmr.mail.sg3.yahoo.com (sonic301-21.consmr.mail.sg3.yahoo.com [106.10.242.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E922321D587
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1504F21D596
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.242.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747695107; cv=none; b=Y84bEb4Dzj3GX1PvHKAjL10O7KYPCh5W9YDc3wfBS7THkcJiygTgrOm6Dan0kU/rlBnx3pqP3hRj6yRfWEU9upsizj/hnGGduAqNKHeLXkNWCjsqNbJrjYfwKjWWuQNMMpPN2fm74DIgwgz+wEF/krC4ipfhs4YjRDsVwXvjiLg=
+	t=1747695134; cv=none; b=k9GUYaMDQ4nN8BxLHmfDR/KTKRsOaXHJQEGMYoVei9GUBvO9DiWAtPkKceCCwiEsw6PAB56kBmkr5KJZ/7YkCjukR8LkrS+swvmvPF95dllBpHMqykICDRr96mwxTlVJDwItSAguAjjqbSuoxXZsyIqi95lDXG1PTFqztsg+7eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747695107; c=relaxed/simple;
-	bh=TX92L14skqB1kPQJraoHSUPzEKjJBZaB7wkKKc5c4Ec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XoGZuGEfW6quUd0TRHNeYituUw4sCDEwKrFo4LfAHnZhfK92HYozC5TotP2PcoJ0ACSPX1apdNu3QOwSJTeZ3ZzkK17LP/Lr0W4sGYIV5V+jgionaCdnFiGbznnusfGBUNOI9/wE1jc5oVfdTLQLlGRdfOlmwRT0fiW5+YBimR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uHNH5wGK; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747695134; c=relaxed/simple;
+	bh=J5OAmadI3Puem8biWtWtI0iUk3W6kyLgtJaNGstnCGk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VMVoy5lWqCLnVcAnc3rduq0oJFKBES9h0GllHYVShGyCxb8gbBot6gKGjL1OluLxHmz93DquwKSFrB4T31Zb0fHGDR/14FYSyrOmGVDs6uMFSnKrUZRbmD4XgqR7trvDIZhJVmOJ4S52vsL067j1m/F268B+wbTp+QjQTIXhmgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Vv4Utfph; arc=none smtp.client-ip=106.10.242.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHNH5wGK"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231f37e114eso548665ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747695104; x=1748299904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TX92L14skqB1kPQJraoHSUPzEKjJBZaB7wkKKc5c4Ec=;
-        b=uHNH5wGK5LDvf5t44NNlC2otf98lBvzOLJ7iB/l8mCUUoQBeYRV9EBldCZIE4Xa7Gm
-         FmBHUBHK844RPcAFLoj+vQoF2hVQ6h/FjRkmwb6cbR42S9Fvx9AXfw+6ZAwHD8PKn4VD
-         dE/fM1BLfINZSYSWznuldwqrxdltAYVg+4zb6qcXhOVG/atWtN2/HFHHuwnXqekuNW4l
-         b2rsLLE15ycH4h1TdHFpe3zFJi2SUSc1TkYN2itWeVQzSXfA60Fk7j4PsoqI3jbwrwyC
-         sFHL6nhkO8HLJ0sW4ro0QkvIad8lifN2R5NvMK23WHCphug/2PX/jM8yJMnorAAfNRKu
-         3LCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747695104; x=1748299904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TX92L14skqB1kPQJraoHSUPzEKjJBZaB7wkKKc5c4Ec=;
-        b=YrejGKigFiQcYqGnNRopmS7LiYVjl+yoib2jkZ3j8a8xZDrJUtq5BuZetWqECFt8AT
-         bt1DXGpMrC9ywBS12iSFoTjezFe+LjRB4uHAh2HhIGXn3rHijRTPfapima8dGbC6FB8m
-         qS5R0RR5sM+sLwiOaMv2WUt5ENyF/IgUsfPzPI43UbRD+IHFQRNp9bi5iuUxjkKRy8rd
-         m6MOubghP10c42/U3vj1QkF0mxm0gTDRaSPvguTY/9t1PSjEx/+EMSImLX30v+WgQEYZ
-         uR/iIRJTximJtjHarXG74QL1WfXfEUES9MQL7zcyPyX+6am61Kbh9goZnfPVcZbZRDZk
-         Kqvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCUn5BAGt8EeU3ciLX+jUfwb52AwQZAkdcQtTXH5O1VDyeEMDbHSf8Uj7U9deS6RhiLy19K5y0jitGhrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1ObrUMyhfHhfJk8xJiRbrQGXv4CbCWv74FFh/KyrutYK0tX2m
-	LDRnaRv781s38U/BSgVk3rL3rVEo4nTDdBwlqz1Ec+6Tg0GlS62xTzZdqQkl77Dpw+l8rFim5SE
-	LWVTwl2f6EMjHh2QpOrRuC5APnQIu0mEKjx/wzqaryOBNMDJnoEbWluJG
-X-Gm-Gg: ASbGncugViHi3Jz1TXfP1Ie6bWaRNW1U2De71RSYVhR43I+7Mn24DODkQnKtQs/KWfz
-	lwb2uGtriJz92QUjcxZCCf65Qu2X5a4bMJmSznDZQFGFNSEvu/8+nLnCOeboPOcxFp61V233hTC
-	NrTIuWyhX8AVrLP52H0L7qBHQtMpdwjb/7ljUNd1cBxkJIDOvqo8HgY5zsYjc=
-X-Google-Smtp-Source: AGHT+IEJQqFo9kIVzf6kdsXOZ8kfdk+FvN+GfA8OvhOQlKP7NDmk4J/CmMe0zHaknbskqf0z+53i0jZ1cPzsgbS54Vs=
-X-Received: by 2002:a17:903:234b:b0:223:fd7e:84ab with SMTP id
- d9443c01a7336-231ffdd6fdamr6651765ad.24.1747695103905; Mon, 19 May 2025
- 15:51:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Vv4Utfph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747695131; bh=GUM+9m8KJK4142bT4Ko5kH+9yddCEjxAngcqskahTgM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Vv4Utfphp7wlpIJf7RVP1enlSDmkfrVigb4Am1erBxiVDY1j8vSO7RvdCmJFV5xbGvm9DI4mM6n2LJaMO26HCNu62BcI2f0S+uH8NhQiLlHVObV37I9PKH1q92e+f+N+JxMhD37nDiieGUzDNTpE/12o0VjdIlBGMyjo0I7eCX8YfaDFpWTGId4jobHQHxWkj4qfivJIVuX3Vo7Tf5LdKzJDaAUK6dUn/+jPFktWHzBdKUFz8ecRKxB2jHvpI43hbbOEFrIXiRF8IG8qc+j4zPsM/jdK6VpWbFbBxRcCuCTEFLDkm4bBNXPl+kZQnnx40mx+xXSkiyEnMDtdpGWz6g==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747695131; bh=LdSU0kU4+1sWAli7lfyX6gYCxh0WZ3C0pQ+Wpd7mUiv=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=nmplJzCNsThmfI442TL+5Ti550iiUv95GP+ZZ0fwr6iJUxHxPIN564rf8XpfltC8n4avP0IVcy4IS9Q3+cWharQ503LC8XqduTd3ov92u75NMmIdxu4LQOm+EKBN8otR8qRFiBSk/FECr6spKgyJ2G0b0AdbLIro9AdTwt+/p7pdDTn4pe4i4ZECpThF3+lCA+PWVgnvYHnExd3ek2uko72xp980oIGTDS849rrHEsrn8aQXk7nIis1axcbBJ/5RrkbKWUUMFuKykTS+tIz/TdyFdA28R/fk9tNiZdj+tyEveGo37aOrZNSJ/pCqkNzH69CEuVfginyEYwbf4QqCYg==
+X-YMail-OSG: 5_YSdPQVM1ls.U2TJndsfHLidJ8M6L.6O_WB0nPOiihccZbjZUvbEWQasTjil0i
+ X2IiYgazFtZ8_5D.O2vbyeJsYQMjpzlev3bOGjHHi2RKnk2NYMkhfvCx1TTZIhjv.29RGhh51qIG
+ GybwopfzbyBatTth8SbppD4pFAAUW4qrczuTtxQvBOV7fiREUGeRYVA5iZhUiKy3Ajfs5OaM53kc
+ EbvF1dt8vqnHgHSltntZrQUuHRjGG7iElKfsL2dc0.ZkRAhZXl4XAqRJdCaR.hItuuYEx4QTSQiU
+ x5vVoi6idXuWudh8c3PQsUcXBdezGrWEL5u6YUpnrVjhMhNQG_cMLou8vvsei6oDKaQBoxnmIp65
+ cPhonLKDUWrP.cAsGl5ca6jY6x72NlKs5glYFb39VPK9IceQVbjUX7mqTjybBXe1kNYpi1_WHBjz
+ FEUypli.9rjUHiig6.SnCn8v06EIpxU9sTNUByWfdbv8QCkJRtKhe68PZFfutbqNBnvlWRMZP1XQ
+ YpA0cDerS6QXe7NeH5OL1hHwL0r_aEMxrKBU1bJk3v7sHfxFHkAQwDhOar6SvQ3fYytDLzDFU7eF
+ SwtCrgWIDiKKqHNm1aciW9pNc0SPSujfJmO7K0w6GuAxlm3LQBMpl.xHIJWwJ.jueu4AnHQd0zDD
+ UM9DK6X3gbLF6Sl8H5_zYuGPNO8rM.cxLlhjyw3Yf6Y7iOCMcWPgyje.nEocC8KLPnt_LUVYow4q
+ j76mPIu098KVX7j8TfMoE2CV1T62HQHUmQNjwRDBFzHMUAyBR3dCTKEUreHbm3aiNmZuPfi5EfTz
+ EyYAGPIyUqz9IvNk4Lau3GOBcxqscoVU9ObfBU3EUOML0wqFQo3GR0h05T3H.WEWHmtEqF2q_auR
+ vSlitFODBaa3CSBB5HMyIQ_KzUZPR8JMNn0DMICF6kGxbpxajzHBVbN1t67Nk.Y26PV9v4QW.dQb
+ 6Er2absmcA.dHN8IykJMAiit9WverRC5Oz7J5iL2JjHpaZPlVv5YWfZeJS9isGC9jayUK54FkJ69
+ 6vlGrIdKL.K9I0cZJlgimXihAc8D64pdVR.1yyHE8GFf95H8Vpoqnpk33036p_qMAkxs1VvV9DgO
+ rouZTx8rKIrHBQFpypnfyLyqUz0QuJMsSOeYxxbjf8UNfz.pcUIKHm_i2Z7eenQO1ecKtZP0ckCL
+ cAZT4wPqEqcUz1a632ItaEXPafSB.2szyIVOTicAp_qk2yo3FO6bTizNH98DfdXZLw9hG_koMPwd
+ NMasJwmT1G6TFkwZ1wPZlBcfzoSnmnQaKTd1gSvL_0ZrysKJt4i.fA9lCZ6tuYcjrTnZTsLhVcDK
+ jDdyZm8lz2G5tEzzK2SQKGqLyDWm5HOQAI1m3AbgSy28J3LuU7ytMnO6fgyo2SW3K2d_qi4IHJ.1
+ zijvp3idXTGVD2B7NHBfQFGs3xTpUc7OgPluvJoKS8OrJHoMy_UEZXp6oMfVaGCm0JDB.he2hcyk
+ uKytkoj3nZgbQIHotSk4rxxzlfRW1y7ZReqRvc7Yph2FJudwLRa7JkYVwKYiy9vDCubxDYHDndtd
+ zahJ0TLVbuVo3gkQXdgYccepebrcoCzXzCaytanZhsMY41uwIElf8GGdnz8pwu_7I8RyHZhpi3Kk
+ 0QscTHUymoRkVpTuZN_ijCqLy0j2ZtTjTCXVXYqDPY_RiBOQzDTjNSFXLSgUr8zyh8U1SP2P8.ER
+ VmxkYosxlIvewYtQbOkfiSBtYJiskFqKgah9M1Vhji.XIOloilxMNbAkEPGEFNWqMEQQa7OkBabw
+ beBD8LYbWxi3.g9d0CkxIiK.UU5_lxwhAsNmlFLvD48a7VbnNraGI3ieSOeDmeAmRzRK2yEZ3hrI
+ WB7sLMmpzg0tBi_pSTeHgfkrqT8cT_sZR9tFkzIDDUPCeXGCFd14_Ibie3xEysQJ.GlOGqzp.dSH
+ fPvb3IfHkI8PhlH6gd_BJR3AlQFHM58duUiMaPm5cEyheFw2zE7ZiC68ufLF_tG3UqDAzofM75t4
+ SzikPO0gnaBkeqeL4TriCK5TIGI.GO9EkZ499oAkRJuYH87_fShagPI4_cqRiSvKoTrwL9ijmKz.
+ aG.xlyzH_l_xFMqFpGRIm3EGWczZi1KTv4w.tOSJ52G5p_qaqz4nXJTzBE0XmpYd85Yp9zHqz.16
+ XAtZZF4uxfuKUmTO40zytWDd8GoXMHj65RGvIji6oCgGAzXgYphu.IoITTf12hYtBFueuszXMs2e
+ TiQrDgx3eaCXNP48NMt6pgodQTzl_siHJ0rUsnXMAmi._8T.CTTq0p9WrxMhbsPL1v1hokuWoBbl
+ XrNNzkKF9AMN0xURD5xynbcQy03TIUvpgwLhNjSuk
+X-Sonic-MF: <sumanth.gavini@yahoo.com>
+X-Sonic-ID: 03567a3a-d1be-4cd8-a636-a975c256679e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.sg3.yahoo.com with HTTP; Mon, 19 May 2025 22:52:11 +0000
+Received: by hermes--production-gq1-74d64bb7d7-f4j4n (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9fa29900ff27461313074795fc57d895;
+          Mon, 19 May 2025 22:52:06 +0000 (UTC)
+From: Sumanth Gavini <sumanth.gavini@yahoo.com>
+To: broonie@kernel.org
+Cc: bongsu.jeon@samsung.com,
+	cw00.choi@samsung.com,
+	krzk@kernel.org,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	myungjoo.ham@samsung.com,
+	netdev@vger.kernel.org,
+	sumanth.gavini@yahoo.com
+Subject: WITHDRAWN - [PATCH 0/6] fix: Correct Samsung 'Electronics' spelling in copyright headers
+Date: Mon, 19 May 2025 15:52:04 -0700
+Message-ID: <20250519225204.147578-1-sumanth.gavini@yahoo.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <3aa30119-60e5-4dcb-b13a-1753966ca775@sirena.org.uk>
+References: <3aa30119-60e5-4dcb-b13a-1753966ca775@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
-In-Reply-To: <20250519161712.2609395-6-bqe@google.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 20 May 2025 00:51:07 +0200
-X-Gm-Features: AX0GCFtDkuuBEpV0Svd3qg9gt4dLmklnwIzRGtMkX_KWKcpMz7P7ib5qifFtlwk
-Message-ID: <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
-Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
-> This is a port of the Binder data structure introduced in commit
-> 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-> Rust.
+As per the comment from the reviewer, This series will be replaced by individual subsystem patches. 
+Link: https://lore.kernel.org/lkml/3aa30119-60e5-4dcb-b13a-1753966ca775@sirena.org.uk/#t
 
-Stupid high-level side comment:
-
-That commit looks like it changed a simple linear rbtree scan (which
-is O(n) with slow steps) into a bitmap thing. A more elegant option
-might have been to use an augmented rbtree, reducing the O(n) rbtree
-scan to an O(log n) rbtree lookup, just like how finding a free area
-used to work in MM code... That would let you drop that ID pool bitmap
-entirely. But I guess actually wiring up an augmented rbtree into Rust
-would be very annoying too.
+Regards,
+Sumanth
