@@ -1,82 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B381DE4FB;
-	Mon, 19 May 2025 11:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D81272E57
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652985; cv=none; b=SlKaR5f2pcA3HetOvwix4d+cfdo0pCqRfQZ/MZDa6hBFz9yb15lQ9X8PrrbrJcjC2DnUOnkldv1Gl1ii0FtJrCKHJNSBTwbFkeCK095UYOK3H6FLcUvYzfmqv6rJOASZXGbsBPub7b+PPiScACamK4N1PGg8EM4BZIb8JZ3q+38=
+	t=1747653020; cv=none; b=mqWoGS2cVz2K2UfZHo3Zgd0pFV+vgjj2C3UXmV+7F4fw+RS1wtCi6pGIO1OAbehJj30Sb4NG/rpJALpa5243otCWYEJO6wRnTxjRUfOxYLoKJjOrBZ0N7mXjeTFGaTh5Jtxn5cK2LOjPKJlXWZG+5XqFy0GRQOBczwZ0OGCtH6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747652985; c=relaxed/simple;
-	bh=y4ntHkQCP4Q2hIijIfddgLtb16Yzrq9xJ/8RIcvyu/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5IJrmJvka3GOPH+kQXgIXXNxzAS0dQO6rcfdZavTrOzDxeN9VSQHbbaN068rlw1u2XbXiFduhkY+oxrZW4px8C9A0K9rP5eEuX2VtVIUL9hRWOBeXikg05LsCvDwzVAHfPBCeh2tXmEM1pPVDe0eWXW0LC3yf1xi2hKb574+b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CFNHHAqj; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747653020; c=relaxed/simple;
+	bh=DpLxGmv6kAnEnjDPDsi9nUB1a1InmBrd6gWuzi2yYXU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j73ZUOPmGAeQSNJFInGkPAs5n0sRwN3CzJrM/RrYG1JS2ga+dezMf52BA5w5Txqo6RpTey83lA1PLYJMCkIblv4YhFe9pnEBv8ITnL8O0/IBwBwSFPi0c5Nq+atkIzyI9Q60Mls7jVexwFKKC6Cy/9D6tEzfnsvhptWPKFQ3fC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wwa/mmz6; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CFNHHAqj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747652984; x=1779188984;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y4ntHkQCP4Q2hIijIfddgLtb16Yzrq9xJ/8RIcvyu/I=;
-  b=CFNHHAqjdwTz4/ic0jprqMrCq+C6n/b4z7y83VX+XH5s35zNxtwXI/Te
-   BJ47J3L19w38ToG8mVfaQ/9jBr6Hzoe3eglmEC8e61PAZ01IojN61Sw88
-   ChCNLLTkZbqp/CPy4u4lbEbidPs0FCr8Y579b/QWCZAvD6g+rVKtSdbnz
-   IutLdARJwHP7dVIukTKtsGPiXnaeb7JOg2OThNrw7JduH+tkWGllgSm7y
-   UNRfBqtyFu13Onw8rneJTZqQYppxxC2bggK9N3iB+GAPErSdiLQjHd7uu
-   H0KRnZkqMjAwb5ltJsMDs5rzywfp1HUYhKxzzIkrEuHGsopqEvGJTESXZ
-   A==;
-X-CSE-ConnectionGUID: jKm9f5loQJ+w1xAcJv/Cng==
-X-CSE-MsgGUID: fz7ihnU/QGG5CsPrcSwR2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="66961319"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="66961319"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:09:43 -0700
-X-CSE-ConnectionGUID: GMjboc34Tzu4yAH3PHop9Q==
-X-CSE-MsgGUID: DOlxpAMTTZ+wQyelNCEa6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144590228"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 19 May 2025 04:09:41 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 1DCDA26F; Mon, 19 May 2025 14:09:40 +0300 (EEST)
-Date: Mon, 19 May 2025 14:09:40 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust file entry in GPIO ACPI SUPPORT
-Message-ID: <20250519110940.GW88033@black.fi.intel.com>
-References: <20250519065557.659674-1-lukas.bulwahn@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wwa/mmz6"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso45379221fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 04:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747653016; x=1748257816; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d2AvfjeQ3YfmsLFEpdAcg+rkwn/b2OgTHJg9Jk5co+M=;
+        b=Wwa/mmz6iYyQXK9u49/kcVOtZxh86e1RCEpg7+3r8GXo8j5//1usAV7rcmtt52Zxr8
+         1jOqLiUHxUdZGC086MNfG9oBJQlxioRykOOIhojx3tOvylWHf8ZdYGrSSeUR34TmBi3N
+         mYDC58mO5KFl4fE8RDoqKOzdzBbjEF9Wb4t/ruo2NlEy0BsusEkcI7iQy6KX2UROwTVx
+         33HI3kpsmT/Y020JgP1F5+atcVB2jhAC4ukfOWo/WL556ScqgafV3Rjih/MM5LaXNAV4
+         1M08EpCB2cJWoD+4Vb1qWQtNDPyBq+YVXxpd1nHQeVmOrHI4EbT+4WMOuC29XUSFK+Ls
+         h9Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747653016; x=1748257816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d2AvfjeQ3YfmsLFEpdAcg+rkwn/b2OgTHJg9Jk5co+M=;
+        b=BY/WSr1zF+7fMqd6SsrYpsHkNYNnB0jZMiRxNykvVgA35g5UE/Euxg+nx3WYT+q4mH
+         kqhwnOspPzDfDUfeEeYoYL5srvVhi0V2AukAI/tbBDmi0Kmy8OGr7d+yBmENPQP186YM
+         E/T3MeuNOKxVsxMkBmjxDn3xfOyrMAt+caHLLfBV+/AnyeUU34mxk20px3FFY+rPmXLU
+         iv0dvEPMz4Vxowrvpnj+C6q/rqmsDjwqTIbsc1mtjjraHoMz44xSIJda28g+PJKaryUh
+         J30fIBs5wof034MMoL7krGEs0cCM7qvNarQEdfMUpjtuncxuhqU62r3cUJfR79VXNpDv
+         lH9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXpCdfuZ47oD9dlhDBd/lihV3spfH0GegGdD03Ld0yTiaaM849X6HxHyUwkIRb6ACrYO6Rf8OS/+KgR9Ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNsu8/wJq2KQmlosD0oYWlcfJjrTll8dxHE6DkXmJuoU7DmrAx
+	D43H04F4+ot6CTKQTPBahF9rHAeVx13QMt7Gl9tD67wuJ29LEoClhVwn1wJNZMT5XLJNaetc05j
+	irxKRsHIcNfVDAVqQ7+Zd3DHNmOkgTXvtwPTNrXY=
+X-Gm-Gg: ASbGnctrhjH8ICA4rxvBgl1bzePEt9JDaxdQzyVucaGXzby2kQn95rgbBjHV0jrPSS4
+	1Lp4gmt+H55HozcxNz19iZc95TPeT1kxYlZt02nK2Vkp3pXHGQKrG6Nvb0B10iIeRu61BMEUvCa
+	yJKeTnQLYN7GIYRFlSsSXxG/IXJFZv3yeT
+X-Google-Smtp-Source: AGHT+IFc36PK0gwzyRW3jvTzPP8Ia4hzGVk+PX8Wa2IpeeDgsDuGiSrx9fPUqLrrQga13EdImwRtcMJ+Mm6/uMty4ZE=
+X-Received: by 2002:a05:651c:304f:b0:30d:b216:ef0e with SMTP id
+ 38308e7fff4ca-328096d1c98mr28929491fa.17.1747653016018; Mon, 19 May 2025
+ 04:10:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250519065557.659674-1-lukas.bulwahn@redhat.com>
+References: <20250514201729.48420-12-ryncsn@gmail.com> <20250519070801.2588-1-21cnbao@gmail.com>
+In-Reply-To: <20250519070801.2588-1-21cnbao@gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 19 May 2025 19:09:58 +0800
+X-Gm-Features: AX0GCFtxHH5fnd6DYr57VR2wQe4QhvHj2zdkruqQEm3hvGo78Izs-oKQBNQi6x0
+Message-ID: <CAMgjq7CMrRc=BPy=-H9UiHDHTv1drOq7fkruKHq4Tvh1FxM_sA@mail.gmail.com>
+Subject: Re: [PATCH 11/28] mm, swap: clean up and consolidate helper for mTHP
+ swapin check
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, bhe@redhat.com, chrisl@kernel.org, 
+	david@redhat.com, hannes@cmpxchg.org, hughd@google.com, 
+	kaleshsingh@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	nphamcs@gmail.com, ryan.roberts@arm.com, shikemeng@huaweicloud.com, 
+	tim.c.chen@linux.intel.com, willy@infradead.org, ying.huang@linux.alibaba.com, 
+	yosryahmed@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 08:55:57AM +0200, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> 
-> Commit babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
-> splits drivers/gpio/gpiolib-acpi.c into two files, gpiolib-acpi-core.c and
-> gpiolib-acpi-quirks.c, but misses to adjust the file entry in GPIO ACPI
-> SUPPORT.
-> 
-> Adjust the file entry after this splitting into the two files.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Mon, May 19, 2025 at 3:08=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> > From: Kairui Song <kasong@tencent.com>
+>
+>
+> > -static bool can_swapin_thp(struct vm_fault *vmf, pte_t *ptep, int nr_p=
+ages)
+> > +static bool can_swapin_thp(struct vm_fault *vmf, pte_t *ptep,
+> > +                        unsigned long addr, unsigned int nr_pages)
+>
+> > +     if (unlikely(addr < max(addr & PMD_MASK, vmf->vma->vm_start) ||
+> > +                  addr_end > pmd_addr_end(addr, vmf->vma->vm_end)))
+>
+>
+> > @@ -4731,27 +4732,18 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >       page_idx =3D 0;
+> >       address =3D vmf->address;
+> >       ptep =3D vmf->pte;
+> > +
+> >       if (folio_test_large(folio) && folio_test_swapcache(folio)) {
+> > -             int nr =3D folio_nr_pages(folio);
+> > +             unsigned long nr =3D folio_nr_pages(folio);
+> >               unsigned long idx =3D folio_page_idx(folio, page);
+> > -             unsigned long folio_start =3D address - idx * PAGE_SIZE;
+> > -             unsigned long folio_end =3D folio_start + nr * PAGE_SIZE;
+> > -             pte_t *folio_ptep;
+> > -             pte_t folio_pte;
+> > +             unsigned long folio_address =3D address - idx * PAGE_SIZE=
+;
+> > +             pte_t *folio_ptep =3D vmf->pte - idx;
+> >
+> > -             if (unlikely(folio_start < max(address & PMD_MASK, vma->v=
+m_start)))
+> > -                     goto check_folio;
+>
+> We are handling a corner case a large folio is remapped to an unaligned a=
+ddress.
+> For example,
+>
+> A 64KiB mTHP at address:  XGB + 2MB +4KB,
+>
+> Its start address will be XGB + 2MB - 60KB which is another PMD.
+>
+> The previous code will return false; now your can_swapin_thp() will retur=
+n true
+> as you are using XGB + 2MB - 60KB as the argument "addr" in can_swapin_th=
+p().
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Thanks very much for the info and explanation.
+
+You are right, I need to keep using vmf->address in can_swapin_thp:
+
+if (unlikely(addr < max(vmf->address & PMD_MASK, vmf->vma->vm_start) ||
+     addr_end > pmd_addr_end(vmf->address, vmf->vma->vm_end)))
+return false;
+
+But one thing I'm not so sure is how that happens? And there isn't an
+address checking in the direct swapin mTHP check above?
