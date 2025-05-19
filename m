@@ -1,83 +1,93 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B821DE4E5
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75CD1DEFD9
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677723; cv=none; b=VoTcCZG5myBtOEAmAWrPvY7e67tFgAQnJztDxuKsnYO8q8A5MGLE8mvcGgHptvK/Vbihh2PTfQds5mAcBreCwU6D5lUgD9RPhuba8A4a2AkBwEaoV+Rne5h1Nj/+B17z4vfObznLWoEp12A6Q6hfsmKHLcSnXpxoKF83s3wMqI8=
+	t=1747677742; cv=none; b=PzU+l6ccfyeGjaT4CiJhrI2UG2tWzYipTGGf6oCjqQlpoYQmv/+lFyuxuh+QpvODrEQ2LEFZHfnlOOhvjqSNjGr2VCUYKbDR4kuFnnyeygutBYDb/M1PFCvTsmtBQ8RKbtWbNuWuUmhHPAXFIX3phYqZWshiQicPKz6g5HURTkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747677723; c=relaxed/simple;
-	bh=fmV6e2SoApJL9fZft1h0EhXTTUFZizOKyTsHJ/sJGdI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bG+dgGEoZtLjTN4SQGazqzYbCB2KRxqZrQxe/r4VJ73757lAQtKCJo2/px5qaQ5vIqIjWbp4aPIUCyZKwE69Cv9ZdnBoEl/QvHrvQmrmQ1ipYw1RS3U1Zavpy9iZxT8Pt0iL2Gs7hYyFZ2gu78+obdab/nb+2NMDl4Xo1e53ln4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VlK2aIKl; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747677742; c=relaxed/simple;
+	bh=duDd3VqYrRyWly4Es6VaSO4tzycZCGZJgrzN0o8TamE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UYXz5jeE9xBvW9vhqWmzwC1W2yTFvlPO9T5M0hDjvF6Bf5ykLZMmio5rx1aNcUjhSYHuQslfZU4yTw/EI2sIoXzHD9jbj5albq2IZS4L0WDlYUipu0Uw0fylk8h3TzWZJRrIUV0InDvayX+o0m30iDv171hqVoBVI4i1vs4zo8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EytP8GGA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VlK2aIKl"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a364d2d0efso1433979f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747677720; x=1748282520; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VPWSW12tztpw2CQM1Lke535S1u5tfd//R9jqCHi/nQ=;
-        b=VlK2aIKlPEYWf0lue/teHTQKQwZQJF/69Eng2VF4AT/UqSVCy6GnrP+rIumvQ6wlkr
-         3KWjcr00Rz8Eat2yrRd+KXBJmMShoiimMbGgJO1svfHnIpa6ziCvyEjYBfqv76hGdeWc
-         C3RE6/Or+vIB7g+/XvxJQThLbfy8yAdZwnqZu/QL1IKG6KMNKsMvC4X8DfDS/YUbTz10
-         /BJNroaVFwiTaC7zJC+gReLTtrP4vcn932PmJgtnnReAfiW8kL/+B3JfNNREz/QhqrH7
-         C5Z/Ko4ZRdZE9cXsdeQFL33TOD6w7exFy7soNtC855nYhFJNAWWv52GEhP7/2VE0CNPr
-         3Y2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747677720; x=1748282520;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VPWSW12tztpw2CQM1Lke535S1u5tfd//R9jqCHi/nQ=;
-        b=fDOifGEO0T2h2iDUpuG9lOQKDlJrszybY4ocGPvL3EJoMCZCE3PxuaFSpbvZf974Sh
-         60bVb/Z74UOIcZnqVvN5yXjops7rmKq94mtNwVxlz/CH7LxAVCnHHZ8N3Rnyp6fI66E4
-         llSQ5vcE64MtxpXfY+34nid0yCTiXGIXIw3cUnbhRknqSExgF9MRj0j2DZ/CTOZ4zmta
-         oPrnxEFkVRIhCZGjPlshQ1DMUvxg/J3cMhf44oA5a/rezGeViHeXPp/mVOsDzSsicMm0
-         HnZYTGIrkdhCeEd3lMWMvu8jvmKeGWKOH8bB2Aloj91qFs6xpTUP0i5OoGeDXNLGXlX0
-         zn3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXEvQkdeW77KkiHEqsuNe7Y5iNrh1bME0o2Xcyw7IzkVmmrJg2eiK5rMkc1weOVJxBkbrLIGXPUHRbG7TU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKHonv0CFDQUAhB0Q+o7DdV4Q7Ynfq5qigLbGG2g6LWwtNMVMv
-	gGPg2YxjJwumEissKzXc20LVDr/cbrkr7iKJYK0d4e44enBBq8LyvrwlxOD8ybWqExXWpc9vCqQ
-	es94L8ug+z2pwi+Q5yQ==
-X-Google-Smtp-Source: AGHT+IFJS5J+PnbHa1RGDDnQqAtZtergrw5iOIz7IkL3LlRlfJiUovmWWT/ojC2/wXOc/jLurPsAKI6k8uRKjLA=
-X-Received: from wrbfi18.prod.google.com ([2002:a05:6000:4412:b0:3a3:5c04:8b60])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4310:b0:3a3:69ee:f4ad with SMTP id ffacd0b85a97d-3a369eef6femr6547198f8f.22.1747677719934;
- Mon, 19 May 2025 11:01:59 -0700 (PDT)
-Date: Mon, 19 May 2025 18:01:57 +0000
-In-Reply-To: <20250517085600.2857460-1-gary@garyguo.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EytP8GGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06626C4CEE4;
+	Mon, 19 May 2025 18:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747677742;
+	bh=duDd3VqYrRyWly4Es6VaSO4tzycZCGZJgrzN0o8TamE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EytP8GGA0gCc5hbZ/cdokRk/tcHO8R/ZwkFejEt/vWulj0LTprFdBHmE/PoOGH1uF
+	 dJkvPvCgxFjw/wL4TmL4+pSbwMMkWvWd5TGJ5459H4hlIg2lPK5Bn/lXXuDeYprTZV
+	 /0+Akn5SXDOoJy+HVAmJMY/d/m0VfrLwUav+VT0ArBLnbweFbYQHBgiRRZfa0dWQPw
+	 6wcUNgyFjEuQELnjI/mJLeqVPZ3N7mN6Vmgi0JrGMup5J5g7jttOlr9NdNkhs3z6X7
+	 7PvcQlrvj+7tstMO8gPY/WIywoe0DjopvF/q0mzhA7qP2luXqC117gufB240SHlP2e
+	 fPS+Nn+8r04ig==
+Date: Mon, 19 May 2025 08:02:20 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHSET v2 sched_ext/for-6.16] sched_ext: Extend usability of
+ scx_bpf_select_cpu_and()
+Message-ID: <aCtyLLvETdgjxa5e@slm.duckdns.org>
+References: <20250515191716.327518-1-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250517085600.2857460-1-gary@garyguo.net>
-Message-ID: <aCtyFZwt4jGXrL54@google.com>
-Subject: Re: [PATCH] rust: compile libcore with edition 2024 for 1.87+
-From: Alice Ryhl <aliceryhl@google.com>
-To: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515191716.327518-1-arighi@nvidia.com>
 
-On Sat, May 17, 2025 at 09:55:59AM +0100, Gary Guo wrote:
-> Rust 1.87 (released on 2025-05-15) compiles core library with edition
-> 2024 instead of 2021 [1]. Ensure that the edition matches libcore's
-> expectation to avoid potential breakage.
+On Thu, May 15, 2025 at 09:11:41PM +0200, Andrea Righi wrote:
+> Many scx schedulers implement their own idle CPU selection policy, which
+> may be invoked from different contexts, not just from ops.select_cpu().
 > 
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned in older LTSs).
-> Link: https://github.com/rust-lang/rust/pull/138162 [1]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1163
-> Signed-off-by: Gary Guo <gary@garyguo.net>
+> For example, some schedulers may need to trigger a proactive CPU wakeup
+> from ops.enqueue() after enqueuing a task, while others may expose this
+> functionality to user space, relying on a BPF test_run call to pick an idle
+> CPU.
+> 
+> To maintain a consistent selection policy, these schedulers often implement
+> their own idle CPU selection logic, since the built-in one is only usable
+> from ops.select_cpu(), leading to unnecessary code duplication and
+> fragmentation.
+> 
+> To address this, allow scx_bpf_select_cpu_and() to be called not only from
+> ops.select_cpu() and ops.enqueue(), but also from unlocked contexts (e.g.,
+> when triggered from user space via a BPF test_run call).
+> 
+> This allows scx schedulers to consistently leverage the built-in idle CPU
+> selection logic, helping reduce code duplication and fragmentation.
+> 
+> This patchset is also available in the following git branch:
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/arighi/linux.git scx-select-cpu-and
+> 
+> Changes in v2:
+>  - Enable scx_bpf_select_cpu_and() to be called from ops.enqueue()
+>    ops.select_cpu() and unlocked context
+>  - Add locking validation to ensure safe access to p->cpus_ptr and
+>    p->nr_cpus_allowed
+>  - Extend selftest to cover scx_bpf_select_cpu_and() when invoked from user
+>    space
+>  - Link to v1: https://lore.kernel.org/all/20250512151743.42988-1-arighi@nvidia.com/
+> 
+> Andrea Righi (4):
+>       sched_ext: Make scx_kf_allowed_if_unlocked() available outside ext.c
+>       sched_ext: idle: Validate locking correctness in scx_bpf_select_cpu_and()
+>       sched_ext: idle: Allow scx_bpf_select_cpu_and() from unlocked context
+>       selftests/sched_ext: Add test for scx_bpf_select_cpu_and() via test_run
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Applied to sched_ext/for-6.16.
+
+Thanks.
+
+-- 
+tejun
