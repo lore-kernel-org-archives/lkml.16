@@ -1,254 +1,73 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671A71B0F1E;
-	Mon, 19 May 2025 15:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC7C14E2F2
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670079; cv=none; b=rBLlsLhodv5aVC3fnOC3DtAvQndgp1+rnpVZXw3ayFaiGuwzftCkmPYOzjg91wMp/1DI/R5WF437eCecFmcJH0RxlvHFhjjPOgzOYMhzHVfmiPUWcvd3GqRpWoVIIFhw3IAJ343VdmINPmR5QWAth3Zry/5PA8dG43/Z2eG9AIQ=
+	t=1747670179; cv=none; b=kT7DobyM6/nDqmDAglB0/7FjIIGIPHmtIDJU7rVd0DPDO+9AmthCBbhJwMMHeUlySi6cWIKJLEIjt1bPubt1S20z/M+xvTxPZQTtgsg0B1ekvFHgX2vR1BOX1H62DLqvCLGb9zSinBu6WwQV0zbUWqdUGrzNhcNB/eCQRPY8EEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670079; c=relaxed/simple;
-	bh=7gl9V0TLl5TRxN17sl3UTzjQlT+qwCRe+E7UdTNWZ/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uR8V0tTQL4TpINh7JtrDaIbgUo170Uj68pa3Z16FsFiBxVDaZer3N/X5unW4RxoRDdaDDXyT12BbHbTQVsLDFNss4AAtXTiIlPbw1BDPS0wskDj1KLmN11i2ZoxByECfqmOg4YHwjfo9XxI4AO6by3Dk2BdpPBr8ubohpwk5MK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B1DD43A66;
-	Mon, 19 May 2025 15:54:23 +0000 (UTC)
-Message-ID: <dc4e60dc-9b78-473a-9c18-3a2f128a02d2@ghiti.fr>
-Date: Mon, 19 May 2025 17:54:23 +0200
+	s=arc-20240116; t=1747670179; c=relaxed/simple;
+	bh=rjHmolyQPnAoVvHyr3t1ZB0Q9pGT3PkHYFvpDomPeg4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oRkiSRFw580W7dIn/+cBKMRZuh5XLNSV8VmRh/nz4DciyF2Y+cyroNFR0nsZiZF0GE4vI8TknBeW1DTy5ZZKWtRtqMIDRVmB1Y5fSbwl1u1aely9ZWXHrJgKWJChFdWmk8yPL8oM3kKacL6tYAtbuldzJrCzAj0LoYtytkZC86w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Mon, 19 May
+ 2025 18:56:10 +0300
+Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 19 May
+ 2025 18:56:10 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: <syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [syzbot] [usb?] WARNING in gl861_ctrl_msg/usb_submit_urb
+Date: Mon, 19 May 2025 18:56:02 +0300
+Message-ID: <20250519155603.2364004-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <680aaf92.050a0220.317436.0050.GAE@google.com>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-To: Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <ptyadav@amazon.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
- <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- Praveen Kumar <pravkmr@amazon.de>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org> <mafs05xi0o9ri.fsf@amazon.de>
- <aCdveN2w9ThjVhae@kernel.org>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <aCdveN2w9ThjVhae@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddujeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeeiuddprhgtphhtthhopehrphhptheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhthigruggrvhesrghmrgiiohhnrdguvgdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpt
- hhtoheprghgohhruggvvghvsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheprghnughrvggrshesghgrihhslhgvrhdrtghomhdprhgtphhtthhopehluhhtoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggv
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Hi Mike,
+#syz test
 
-On 5/16/25 19:01, Mike Rapoport wrote:
-> Hi Pratyush,
->
-> On Fri, May 16, 2025 at 05:28:17PM +0200, Pratyush Yadav wrote:
->> Hi Mike, Andrew,
->>
->> On Thu, Mar 13 2025, Mike Rapoport wrote:
->>
->>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->>>
->>> high_memory defines upper bound on the directly mapped memory.
->>> This bound is defined by the beginning of ZONE_HIGHMEM when a system has
->>> high memory and by the end of memory otherwise.
->>>
->>> All this is known to generic memory management initialization code that
->>> can set high_memory while initializing core mm structures.
->>>
->>> Add a generic calculation of high_memory to free_area_init() and remove
->>> per-architecture calculation except for the architectures that set and
->>> use high_memory earlier than that.
->>>
->>> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
->>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>> ---
->>>   arch/alpha/mm/init.c         |  1 -
->>>   arch/arc/mm/init.c           |  2 --
->>>   arch/arm64/mm/init.c         |  2 --
->>>   arch/csky/mm/init.c          |  1 -
->>>   arch/hexagon/mm/init.c       |  6 ------
->>>   arch/loongarch/kernel/numa.c |  1 -
->>>   arch/loongarch/mm/init.c     |  2 --
->>>   arch/microblaze/mm/init.c    |  2 --
->>>   arch/mips/mm/init.c          |  2 --
->>>   arch/nios2/mm/init.c         |  6 ------
->>>   arch/openrisc/mm/init.c      |  2 --
->>>   arch/parisc/mm/init.c        |  1 -
->>>   arch/riscv/mm/init.c         |  1 -
->>>   arch/s390/mm/init.c          |  2 --
->>>   arch/sh/mm/init.c            |  7 -------
->>>   arch/sparc/mm/init_32.c      |  1 -
->>>   arch/sparc/mm/init_64.c      |  2 --
->>>   arch/um/kernel/um_arch.c     |  1 -
->>>   arch/x86/kernel/setup.c      |  2 --
->>>   arch/x86/mm/init_32.c        |  3 ---
->>>   arch/x86/mm/numa_32.c        |  3 ---
->>>   arch/xtensa/mm/init.c        |  2 --
->>>   mm/memory.c                  |  8 --------
->>>   mm/mm_init.c                 | 30 ++++++++++++++++++++++++++++++
->>>   mm/nommu.c                   |  2 --
->>>   25 files changed, 30 insertions(+), 62 deletions(-)
->> This patch causes a BUG() when built with CONFIG_DEBUG_VIRTUAL and
->> passing in the cma= commandline parameter:
->>
->>      ------------[ cut here ]------------
->>      kernel BUG at arch/x86/mm/physaddr.c:23!
->>      ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
->>      CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
->>      Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
->>      RIP: 0010:__phys_addr+0x58/0x60
->>      Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
->>      RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
->>      RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
->>      RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
->>      RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
->>      R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
->>      R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
->>      FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
->>      CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>      CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
->>      Call Trace:
->>       <TASK>
->>       ? __cma_declare_contiguous_nid+0x6e/0x340
->>       ? cma_declare_contiguous_nid+0x33/0x70
->>       ? dma_contiguous_reserve_area+0x2f/0x70
->>       ? setup_arch+0x6f1/0x870
->>       ? start_kernel+0x52/0x4b0
->>       ? x86_64_start_reservations+0x29/0x30
->>       ? x86_64_start_kernel+0x7c/0x80
->>       ? common_startup_64+0x13e/0x141
->>
->> The reason is that __cma_declare_contiguous_nid() does:
->>
->>      	highmem_start = __pa(high_memory - 1) + 1;
->>
->> If dma_contiguous_reserve_area() (or any other CMA declaration) is
->> called before free_area_init(), high_memory is uninitialized. Without
->> CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
->> highmem_start.
->>
->> Among the architectures this patch touches, the below call
->> dma_contiguous_reserve_area() _before_ free_area_init():
->>
->> - x86
->> - s390
->> - mips
->> - riscv
->> - xtensa
->> - loongarch
->> - csky
-> For most of those this patch didn't really change anything because they
-> initialized high_memory in mem_init() which is a part of free_area_init().
-> In those cases cma just did
->
-> 	highmem_start = __pa(-1) + 1;
->
-> and everyone was happy :)
->   
->> The below call it _after_ free_area_init():
->> - arm64
->>
->> And the below don't call it at all:
->> - sparc
->> - nios2
->> - openrisc
->> - hexagon
->> - sh
->> - um
->> - alpha
->>
->> One possible fix would be to move the calls to
->> dma_contiguous_reserve_area() after free_area_init(). On x86, it would
->> look like the diff below. The obvious downside is that moving the call
->> later increases the chances of allocation failure. I'm not sure how much
->> that actually matters, but at least on x86, that means crash kernel and
->> hugetlb reservations go before DMA reservation. Also, adding a patch
->> like that at rc7 is a bit risky.
-> I don't think there's a risk of allocation failure, but moving things
-> around in setup_arch() is always risky :)
->   
->> The other option would be to revert this. I tried a revert, but it isn't
->> trivial. It runs into merge conflicts in pretty much all of the arch
->> files. Maybe reverting patches 11, 12, and 13 as well would make it
->> easier but I didn't try that.
-> What I think we can do is to add this to mm/cma.c (not even compile tested)
->
-> diff --git a/mm/cma.c b/mm/cma.c
-> index 15632939f20a..c04be488b099 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -608,7 +608,10 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
->   	 * complain. Find the boundary by adding one to the last valid
->   	 * address.
->   	 */
-> -	highmem_start = __pa(high_memory - 1) + 1;
-> +	if (IS_ENABLED(CONFIG_HIGHMEM))
-> +		highmem_start = __pa(high_memory - 1) + 1;
-> +	else
-> +		highmem_start = memblock_end_of_DRAM();
->   	pr_debug("%s(size %pa, base %pa, limit %pa alignment %pa)\n",
->   		__func__, &size, &base, &limit, &alignment);
+---
+ drivers/media/usb/dvb-usb-v2/dvb_usb_core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-
-I encountered the same error as Pratyush and the above diff fixes it: do 
-you plan on sending this fix for 6.15?
-
-If so, you can add:
-
-Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-If not, let me know how you want to proceed :)
-
-Thanks,
-
-Alex
-
-
->   
-> so that highmem_start in __cma_declare_contiguous_nid() will be always
-> correct for !HIGHMEM configs and then restore setting of highmem_start in
-> mips::paging_init() as mips is the only architecture that actually set
-> high_memory before free_area_init() before this patch.
->
-> (for 32 bit configs of x86 there alrady a fixup d893aca973c3 ("x86/mm: restore
-> early initialization of high_memory for 32-bits"))
->
+diff --git a/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c b/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
+index f1c79f351ec8..5c76116fd565 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
++++ b/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
+@@ -19,6 +19,10 @@ module_param_named(force_pid_filter_usage, dvb_usb_force_pid_filter_usage,
+ MODULE_PARM_DESC(force_pid_filter_usage,
+ 		"force all DVB USB devices to use a PID filter, if any (default: 0)");
+ 
++static const struct i2c_adapter_quirks i2c_usb_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN_READ,
++};
++
+ static int dvb_usbv2_download_firmware(struct dvb_usb_device *d,
+ 		const char *name)
+ {
+@@ -63,6 +67,7 @@ static int dvb_usbv2_i2c_init(struct dvb_usb_device *d)
+ 
+ 	strscpy(d->i2c_adap.name, d->name, sizeof(d->i2c_adap.name));
+ 	d->i2c_adap.algo = d->props->i2c_algo;
++	d->i2c_adap.quirks = &i2c_usb_quirks;
+ 	d->i2c_adap.dev.parent = &d->udev->dev;
+ 	i2c_set_adapdata(&d->i2c_adap, d);
+ 
