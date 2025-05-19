@@ -1,103 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C445928313B;
-	Mon, 19 May 2025 16:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F73028641D;
+	Mon, 19 May 2025 16:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673721; cv=none; b=JqJiX+HK6VnRjjBLkh/P0iL322TvAYcpr8VMqLuFIqLw3Jb2FoMvx3VrrjTJe97FjBgqLixNYR6Xl9NAMJNv7ykGod966gMiUT2uuDTBJjxla8H004i8lzqQ/fG/fMgO/9Kxmu6voNgt4XWjioDqvT9O/fSh05hehz0r+qVJpJk=
+	t=1747673734; cv=none; b=iH89DuSxZxOk45vV+y0X1rWZBYVAcJ1KEGhd7baXndUOsChtbfhM9iNk5OwCNanvjGZ/VxT8/58ZPZRgMLjgc1VT6rt8GlD10ZiOzsry80qp8lnbN9xmExKkEU9Cvte087VOE8QluBCR8hk2EWPKMfEC0Em2iTIfQ4GlqGDSa7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673721; c=relaxed/simple;
-	bh=2h0wqLSQAYlElqRvO3VWXqKcEeKB1rJERvwy1eOIfRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bJPj5UU4p+CrqatlBPKAqc1bhU01oz9FgaRBudHnU+y7TtjUKkx0SWQZ5DPnA4aB3OcV6rS0Amo3lwPfEtGGvI7eTJSoBhFZLLo0mQFArO4eudNCjdN25RKRHR/qq7QSoNkpAj1CGnOfqavvWShT3IC/59jlSQXWPJfLPnqiNPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmvIyYmr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747673734; c=relaxed/simple;
+	bh=8ORuRMMLefx0DeWyYb6pQQam8I7xo6HeEGehiZrxYXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rksO2cwG2TEYKSRILr1Li5GuTZouzBcrOrbjSwPdlAOroXmZ+racRCr9LG9JwhWKivy6M805L0uyC7LTHkuw0blruN8CZU+fsdpdQTqyMdlEL6lAX18+FXGV3tmnWvzp0W9WacOdqmVmO7ugN2KmmwCBdtN03ngRQ7eQroAUxX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1iFAjE0; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmvIyYmr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF4DC4CEE4;
-	Mon, 19 May 2025 16:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747673721;
-	bh=2h0wqLSQAYlElqRvO3VWXqKcEeKB1rJERvwy1eOIfRs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DmvIyYmrZw9KxwuV3vy7iaq2az7uLh0I5ZryIaEK/JcaKbHGmEvaZQoD3PP8WSLn3
-	 8Fx2aAAMGhRG6QSvffgCza6onu3XlAqPSmL7Xg4TF50zWzFVTfdeD17+d4EoxBflfk
-	 pWLcnL2PN12Hnt6WKOZV/w5MGMlSP0I9YZZbjkYrtjQsjupYkbC+36Ao+lmQ5en14V
-	 gxtZA+YAQxzV2GoVHZYoXKz5PqeUD+evujZoypecoYalPUzL8qMMCmIH52OCrJXC/3
-	 FzETVaKkd/c5exIXW0LvqKe7AVwmp4sNB3GzGcz7ohM2rz/qQYaSSqqPjWvsZky9OX
-	 pdbkPQ0phMphg==
-Date: Mon, 19 May 2025 18:55:14 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] rust: device: Add bindings for reading device
- properties
-Message-ID: <aCtici15vSCBDbzE@pollux>
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-7-remo@buenzli.dev>
- <aCH5WgORn9ZGl9Il@pollux>
- <DA093HA2415H.29OCPLS0M7H84@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1iFAjE0"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e19c71070so7740195ad.3;
+        Mon, 19 May 2025 09:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747673732; x=1748278532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8ORuRMMLefx0DeWyYb6pQQam8I7xo6HeEGehiZrxYXM=;
+        b=k1iFAjE0nnTvAKFArCOGDYMNvvzAcyzp9dCWH5iNv5KXYqJVoEd34ZFgvGBoyZjFKJ
+         0IMZDcoxWaAumkDfGk3oUQvVbrhOQs29t/wosxaAPUIkDIpyUBMY2Ft1MExeCfyJpyHu
+         NZH5rbJLFxjTHNmHoELAdRr5NpvPanbSlLJI9Q+Gx3s47egNt5C3lEWZdGb6zJ1rhVMt
+         famM0OBtCEh7Atp4H2h5qnObijg2ge8b7tA6GnhVU0JKHE5maLZUa/6/uKDFRnmSeC/B
+         9MfJfi3ZuprwhQXQquW40imPAENrWI3A/VLngHeOMEVRJ/dYagNKc9CO2Bj6YYz2XtXc
+         2mbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747673732; x=1748278532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8ORuRMMLefx0DeWyYb6pQQam8I7xo6HeEGehiZrxYXM=;
+        b=Y+WerlBbz54fthq5h5utgsLGIt91T8OSSp6OKA0dWU+a0LsdPzc0kNfH9rjtvZ8Gv5
+         xHHh0QjXb7jPpmaakfItnI7fU4IsMEtQc2xPAjNF7oW/VRDzTG5h89s+6qAquH8+tXuB
+         7XfP+Ocw6nDwkkmCvP37WsJm3NrNwLHQl1/tq9dFdwoZkghBTSll1zKxtAF/c5gGZ4fR
+         NPaGMOPMcxg5xjdDUmr3m9Scn/YJxEeZH5+5Jrjykr2E2UIdQ+794+03xx7dehpvqSQe
+         5eEv9b2Jgscc++9FOVzDoU7OCrEoqHLLbc+EouRIvkLFGmakD+H4Zarvi4DyqaAN7nS1
+         HD+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpACzgAEarPhzBiZ2fkftnRchP0de+20tgZ6mCXrsG1DBvgINBi4uIOXqh+aSj4mOahQy6Ei+3K/F3tkId6g8=@vger.kernel.org, AJvYcCWy6AIVwJaD3QNJU91tP4FZmSMXVNatuMOofKym4FnZz5UJ/7yBoopKUMQmc94HOEyMAzVmEfLFz96SIb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywofndAS7/cij96RZVulcBHWUcgRCMKCtXVqYkagQnIfRTBGSI
+	9CpLnpMVcDHcjxzEqs8vP2mxZnSli8Zd4F47GZxlZ3gd4Z6epojDTJf8YMMZn6yWl22mIBu40OT
+	rkeJOlCHVla9rs6VBekZS7bozSDlUCQo=
+X-Gm-Gg: ASbGncthTyGH3ZULedzU9rC1bwjQZp/kVjkCOK+cnpYQPEfkg9OqmmTMcLPDTOt15I8
+	Zot73iERZzuGz85rGe38v2CnE3bZYYNO13jw8wT/Tgr4VHgAGmeVtRyB8SZecV0kIU57f+G8Z7k
+	UQMNHbf3qVaVHVlI0lZKRDd2UkaERpJvs29PXvy3yRhcM=
+X-Google-Smtp-Source: AGHT+IFX3pNLpnRaHB2w225TjROGfDXVvH5u2mPQis+BuuObKtjqtPVe6FonkskrHTtAFgWNaZktqbBf/GqgXRKO4wc=
+X-Received: by 2002:a17:903:2cc:b0:22e:361e:7572 with SMTP id
+ d9443c01a7336-231d43bb4f5mr63378455ad.7.1747673732170; Mon, 19 May 2025
+ 09:55:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DA093HA2415H.29OCPLS0M7H84@buenzli.dev>
+References: <20250519143952.11412-1-lossin@kernel.org>
+In-Reply-To: <20250519143952.11412-1-lossin@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 19 May 2025 18:55:19 +0200
+X-Gm-Features: AX0GCFvcgSq3t28o9_qSuXyJGtw9V7MDk5iIslQLVstFhz7dxARRPFb2v-gaoQQ
+Message-ID: <CANiq72kWV_GGUAnCfZ3-WO+_CqhboDbC4_Q0tE4+UV8kg=uZBw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: mailmap: update Benno Lossin's email address
+To: Benno Lossin <lossin@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 05:43:17PM +0200, Remo Senekowitsch wrote:
-> On Mon May 12, 2025 at 3:36 PM CEST, Danilo Krummrich wrote:
-> >> +/// Implemented for all integers that can be read as properties.
-> >> +///
-> >> +/// This helper trait is needed on top of the existing [`Property`]
-> >> +/// trait to associate the integer types of various sizes with their
-> >> +/// corresponding `fwnode_property_read_*_array` functions.
-> >> +pub trait PropertyInt: Copy {
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// Callers must uphold the same safety invariants as for the various
-> >> +    /// `fwnode_property_read_*_array` functions.
-> >
-> > I think you have additional requirements on the fwnode, propname and val
-> > pointers as well as on nval, please document them as well.
-> 
-> What are the additional requirements? The implementation just calls the
-> underlying `fwnode_property_read_*_array` with the exact same arguments,
-> so I don't know what the additional requirements are.
+On Mon, May 19, 2025 at 4:39=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> +Benno Lossin <lossin@kernel.org> <benno.lossin@protons.me>
 
-First of all, I don't think you can refer to the safety requirements of the
-`fwnode_property_read_*_array` functions, since they don't have any documented
-safety requirements.
+I think there is a typo here on `proton.me` -- Git will not match it.
 
-So, I think you have safety requirements regarding pointer validity of fwnode,
-propname and val.
+I can fix it on my side.
 
-Additionally, there's the requirement that val has to be an array of nval
-length.
-
-Also, the PropertyInt trait itself has to be unsafe, given that it contains
-unsafe functions.
-
-I also pinged Benno about it, he usually knows best how to cover such things
-properly. :)
-
-> >> +    unsafe fn read_array_from_fwnode_property(
-> >> +        fwnode: *const bindings::fwnode_handle,
-> >> +        propname: *const ffi::c_char,
-> >> +        val: *mut Self,
-> >> +        nval: usize,
-> >> +    ) -> ffi::c_int;
-> >> +}
+Cheers,
+Miguel
