@@ -1,144 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7B1280001;
-	Mon, 19 May 2025 15:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB7943147
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747668579; cv=none; b=CfMHZz3VEG3os75RFchmuW6OADmEtzMQK+xRPzpu4D/co+RoooDXukznrRMXr+hqk+2hzxfr0BcukexhJoJipq3VOXfXpyBH6OYeidkXS/QvT7ipoTNwdwCUHz0TL7s/FwAuuNUPbWUDYnnzzVD5TuQKUAqkouJihxT9l5CkWOI=
+	t=1747668580; cv=none; b=ebQHHk616ZLG16fw4XoAFGwHEkfvNXkL0YinSbGfk+F64aVXcRKSTLSpRvtO6+BalKN7moVqkQ5YGkRff/b+YIyWY/30kvHXuLjXguHoS7d+0NkhbUa7j5zCsf4qmtsgL3Z6nMOxhzpRK4fm/vV27HwA3cm8sozCEBho4zZpxFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747668579; c=relaxed/simple;
-	bh=uCCRHVYmLHnVIHIfW2LIcrxaWMtn8F9W0Bsnsn29gCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TKF0+0GYpimng6+QM95dvM+sTAcaatfWjQjWEepO/Zmms9s/pKubhFE28s+uz6FXWUjG9KAozohMerSNQ3EIn/Ejut1AxufIhD6nG61o9oxyXmtA5weMuv60xztnhAfsSotRoFJKXCCDnC3q+2zirDxLbUZggLZM3sS3vtfdY84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9wV45dK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747668580; c=relaxed/simple;
+	bh=dU0t219Hy+0YzyLO0ZatIatua6I558/Q69hN/3VqUe0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1EPKkXUO09L3Ete8L8pjS+b5S3kxreoqB8T9/ST6hI6zxwINTxgc7ofMGSKs0BYtszR1cH85hJs5XkQvguBYDXaKmNcCBiyDNgoPpswOhXjFlw5tU3UqTVwhEgblt4HwUknzpco7qskLTuGJ0Te+/RYuEKzAfWbXfFVr3bbBjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=luuD0GWt; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9wV45dK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00CD7C4CEE4;
-	Mon, 19 May 2025 15:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747668579;
-	bh=uCCRHVYmLHnVIHIfW2LIcrxaWMtn8F9W0Bsnsn29gCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u9wV45dKUYE6L1fQRHxtUR36FqYI06U10ckeN/TAvNwUd8uL55aN/sYGth9BlQ1tz
-	 iCdSue1+RZ3TESlRVsbhkKWJegIKlrslAFKyU/1k+B2HDWwP8Tndvb52/6B85MY5Mp
-	 iI1JXaNewFI51TbuMGDEiKsVg4ZmEhMUm16UUVbTPACYdk+meH+ZnhSl6hK7B4ibow
-	 aTn6P53qMqqX0h5bDY9WpdDlTEcNaNE7uLHhuVNUJkm3EHqWWzupB42/4diyz4BIgz
-	 uVqgReW0I4qRcguFbhstsFBGOhymzWeEhe5nv2Sz6Wx1HbdtHISmI2nRuZ0EGPX70y
-	 n6TluvsQ00wPg==
-Date: Mon, 19 May 2025 10:29:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250519152937.GA2227051-robh@kernel.org>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <20250504-original-leopard-of-vigor-5702ef@kuoka>
- <20250506051610.GC25533@ranerica-svr.sc.intel.com>
- <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
- <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="luuD0GWt"
+Message-ID: <ae1bb763-5461-4be1-983f-0155aab8ca6e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747668576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xumGfFtSe+qcAudX3LPcfaE2MqABEtJR7l9tjfT+N60=;
+	b=luuD0GWtPMk7VwhSXXSWr7/gnEPUxyEXBrnCKRmi5vCq6sZfj4NAeaoc5Qc3iLyLcXKYDF
+	JQGtrwlfmovBTn4V5+gOJhj7sdAeZsxABHKJ4kafj6oaIO4rNwPqouGW9PxR+BHZY0IAXz
+	hzwEEx+YjyiNoGPNl3K+68Cb9TF91Io=
+Date: Mon, 19 May 2025 11:29:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+Subject: Re: [net-next PATCH v4 06/11] net: phy: Export some functions
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, upstream@airoha.com,
+ Kory Maincent <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>,
+ Christian Marangi <ansuelsmth@gmail.com>, linux-kernel@vger.kernel.org,
+ Heiner Kallweit <hkallweit1@gmail.com>
+References: <20250512161013.731955-1-sean.anderson@linux.dev>
+ <20250512161013.731955-7-sean.anderson@linux.dev>
+ <20250514195716.5ec9d927@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250514195716.5ec9d927@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
-> On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > > 
-> > > > > > > > Why do you need compatible in the first place?
-> > > > > > > 
-> > > > > > > Are you suggesting something like this?
-> > > > > > > 
-> > > > > > > reserved-memory {
-> > > > > > > 	# address-cells = <2>;
-> > > > > > > 	# size-cells = <1>;
-> > > > > > > 
-> > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > > 	}
-> > > > > > > 
-> > > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > > phandle?
-> > > > > > 
-> > > > > > Yes just like every other, typical reserved memory block.
-> > > > > 
-> > > > > Thanks! I will take this approach and drop this patch.
-> > > > 
-> > > > If there is nothing else to this other than the reserved region, then 
-> > > > don't do this. Keep it like you had. There's no need for 2 nodes.
-> > > 
-> > > Thank you for your feedback!
-> > > 
-> > > I was planning to use one reserved-memory node and inside of it a child
-> > > node to with a `reg` property to specify the location and size of the
-> > > mailbox. I would reference to that subnode from the kernel code.
-> > > 
-> > > IIUC, the reserved-memory node is only the container and the actual memory
-> > > regions are expressed as child nodes.
-> > > 
-> > > I had it like that before, but with a `compatible` property that I did not
-> > > need.
-> > > 
-> > > Am I missing anything?
-> > 
-> > Without a compatible, how do you identify which reserved region is the 
-> > wakeup mailbox?
+On 5/14/25 22:57, Jakub Kicinski wrote:
+> On Mon, 12 May 2025 12:10:08 -0400 Sean Anderson wrote:
+>> Export a few functions so they can be used outside the phy subsystem:
+>> 
+>> get_phy_c22_id is useful when probing MDIO devices which present a
+>> phy-like interface despite not using the Linux ethernet phy subsystem.
+>> 
+>> mdio_device_bus_match is useful when creating MDIO devices manually
+>> (e.g. on non-devicetree platforms).
+>> 
+>> At the moment the only (future) user of these functions selects PHYLIB,
+>> so we do not need fallbacks for when CONFIG_PHYLIB=n.
 > 
-> I thought using a phandle to the wakeup_mailbox. Then I realized that the
-> device nodes using the mailbox would be CPUs. They would need a `memory-
-> region` property. This does not look right to me.
+> This one does not apply cleanly.
 
-That doesn't really make sense unless it's a memory region per CPU.
+Sorry, I forgot to rebase before sending this series.
 
-
-> > Before you say node name, those are supposed to be 
-> > generic though we failed to enforce anything for /reserved-memory child 
-> > nodes.
-> 
-> I see. Thanks for preventing me from doing this.
-> 
-> Then the `compatible` property seems the way to go after all.
-> 
-> This what motivated this patch in the first place. On further analysis,
-> IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-> is already defined in the ACPI spec. No need to redefine.
-
-You lost me...
-
-You don't need to redefine the layout of the memory region as that's 
-defined already somewhere, but you do need to define where it is for DT. 
-And for that, you need a compatible. Do you know where it is in this 
-case? 
-
-Rob
+--Sean
