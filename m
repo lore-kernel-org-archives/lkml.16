@@ -1,121 +1,112 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F402882C7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7636084A3E;
+	Mon, 19 May 2025 17:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675652; cv=none; b=nEdjddSfN7ockV/vgIP/eCNwtuh1GWaWnD3kfjrR88nKn8tvITpQygX6hCwvcOIzUTfmGDgwNUAm+JPSq+N13dcoBeJQPmAzeG+dN+N2HE1g3mHWPoVbjfUjaYZ1MdPEGBkJ//uLUSGvYEzNpX901I1RCrJfVNEC5Hg+sgF31Ug=
+	t=1747675687; cv=none; b=Zhlu+ltRBLsTiRIZ1Hr9Mn5hx2MfcsA+WbRuG13saw8+ARX5Yavp2n2t5Z9cjIHqXxF98XxzlNV4fjzd7KQv+PVeTh3MEygR6kGnEO89K0Tf9pJlZbRoNqZzYJ8dXF+2wz8tw3OfSHwMOarm9Njhl+inw89p46y1rPe+FnsgBjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675652; c=relaxed/simple;
-	bh=0kAB772pePIEa78fYStfll0cavrQWzChCajzTBxnhsQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=O2bv9OSNxHGxoAr6kAcf9Ijrqj0isbB0m476/j0mexzJ5k03DTX8T/VRVXuIg52EeLuiniqmqPtSMhG3TtB97nTZdQisu45f6xLVInTosjkNhjae+0e4fjJEm3u05ANjSxWom8Vm5wBA+wrjKwXRrBa8aP8kdtEW9K137R9BxVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86176e300fdso399942239f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:27:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747675650; x=1748280450;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6HQddT6eWN3F0IWqabdJeWfb4X02qL99QSl4DYJc82Q=;
-        b=v/lqOkpRnXiNap7i9F5qNkt6NK+SDPntjhJ5edXOAPvoWQfH/R0cYfAY87yhCEEOjs
-         tiL8nwzWFft3wFQpztEjsfPsuwZzqsMHc29ubPOpIJqhlvyH/33cXRybJGN4cbgD+UJF
-         99VTSaX7zJ7GoupN8lekSC22irE/VNVzhE6E1AQH2XtSOVwtTU3FqSy/w3x9nDsqT9Un
-         GeHqlKfxhHhbLQQF1GIilH9z/SYsoYwnfr65q8J2ZsJ2RQMnY2cwc6UAHFvhRmR7o5q0
-         eHjyMUXDxgLXVdf3qv/+1VdWxA00ooeM/XJH/w/REHm7DAf+KYvr6E+y/Onrk9ZKnrHN
-         OBEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYF+VKzpjlGUObD/V/OX9b7CRT+klJvkCaXurFyH3XkEavMehzht4gEA8kM2JLcQ5YQwMwneq1mIecOUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS182P7Orbl4Y8uqMM3XHw1jffnyZOgQePkP1oQKi94S3u6ZLo
-	k3E7X1wHBDDlmxN8RAYPiYr2U0YAujT3iN2sR1C9G6argDGeNSK1/zKMekAlBmaQt5wXloV4sU1
-	+NOC20GXcEiSGxk46dvEn9EnanFcPnkCLTEIH4UbVOrHQDTHiy8Yh/QojXGQ=
-X-Google-Smtp-Source: AGHT+IGc1hnJlRHNmLmirDP3e2VP+yy7wOrWXyz45hSuNyE0nDypeGZmPFZ3T31SkgWTsMJMf60s2nANLUVPWGUPncVETPB0UfKu
+	s=arc-20240116; t=1747675687; c=relaxed/simple;
+	bh=+Ys6aNLqrwrdpJxv4Yrl70V7sWQOXzTZi2wZkGsDagQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sTMiAqevFoH/MllepQRWp4JSKDobY040VKjNJi1WGBabdvtt7n3cr47VGHccr8L6wC93uTfyIy6wTcuQoO7akjfaX69NRkOygJMgNvf0EGf1ag1UiSahNzXFUtX0M1bmile3iF3VYQnwGX5GmStQsHK29+De8eU/PV/8K3fwfbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0tPIOxM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0tPIOxM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9919C4CEE4;
+	Mon, 19 May 2025 17:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747675687;
+	bh=+Ys6aNLqrwrdpJxv4Yrl70V7sWQOXzTZi2wZkGsDagQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t0tPIOxMmux94dwQVZ3+7YwFRrDW/GQiIsJ2ZeQCI+w3eUvvuMT8SxpnnTETZyPwS
+	 yPifBHFtm+tkytOgC3rMNxBqc+W2wo8vyxcUl2EFmBSFy1Wd52SKR+ZPxz4gT7A2lv
+	 dzWJIeNn8iyI9Qb1Log2+lWoJC0OTe+w6r6JfWNfswpFZIB5YK/58KT+9yYefY4Zq+
+	 m6cKDkXDXDulwUt1/5KrN01buTI2rI9aKcyHPBRMehMC52y1wLJV3Q58PqI2OhGX80
+	 WP4Ug57cuWTI8WE5PbcmqdS9pVVMm+X1Qm8FainOsbpCVskSdpV2q6tvH4y2TqJFYh
+	 PpCJXJ3+BK4Ag==
+Date: Mon, 19 May 2025 20:28:03 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Huang, Kai" <kai.huang@intel.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>
+Subject: Re: [PATCH v5 1/5] x86/sgx: Introduce a counter to count the
+ sgx_(vepc_)open()
+Message-ID: <aCtqI_akUp2CYXIj@kernel.org>
+References: <20250519072603.328429-1-elena.reshetova@intel.com>
+ <20250519072603.328429-2-elena.reshetova@intel.com>
+ <c955515c5469dae17faa13ebda28459d7c998bb9.camel@intel.com>
+ <DM8PR11MB5750A29C0878480F6F19E39BE79CA@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3805:b0:867:6680:cfd with SMTP id
- ca18e2360f4ac-86a2316ec56mr1866755439f.1.1747675650006; Mon, 19 May 2025
- 10:27:30 -0700 (PDT)
-Date: Mon, 19 May 2025 10:27:29 -0700
-In-Reply-To: <00000000000052c1d00616feca15@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682b6a01.a00a0220.7a43a.0078.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] WARNING in hci_recv_frame
-From: syzbot <syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com>
-To: hdanton@sina.com, johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5750A29C0878480F6F19E39BE79CA@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-syzbot has found a reproducer for the following issue on:
+On Mon, May 19, 2025 at 11:47:32AM +0000, Reshetova, Elena wrote:
+> > On Mon, 2025-05-19 at 10:24 +0300, Elena Reshetova wrote:
+> > > Currently SGX does not have a global counter to count the
+> > > active users from userspace or hypervisor. Implement such a counter,
+> > > sgx_usage_count. It will be used by the driver when attempting
+> > > to call EUPDATESVN SGX instruction.
+> > >
+> > > Suggested-by: Sean Christopherson <seanjc@google.com>
+> > > Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> > > ---
+> > >  arch/x86/kernel/cpu/sgx/driver.c |  1 +
+> > >  arch/x86/kernel/cpu/sgx/encl.c   |  1 +
+> > >  arch/x86/kernel/cpu/sgx/main.c   | 14 ++++++++++++++
+> > >  arch/x86/kernel/cpu/sgx/sgx.h    |  3 +++
+> > >  arch/x86/kernel/cpu/sgx/virt.c   |  2 ++
+> > >  5 files changed, 21 insertions(+)
+> > >
+> > > diff --git a/arch/x86/kernel/cpu/sgx/driver.c
+> > b/arch/x86/kernel/cpu/sgx/driver.c
+> > > index 7f8d1e11dbee..b5ffe104af4c 100644
+> > > --- a/arch/x86/kernel/cpu/sgx/driver.c
+> > > +++ b/arch/x86/kernel/cpu/sgx/driver.c
+> > > @@ -19,6 +19,7 @@ static int sgx_open(struct inode *inode, struct file *file)
+> > >  	struct sgx_encl *encl;
+> > >  	int ret;
+> > >
+> > > +	sgx_inc_usage_count();
+> > 
+> > This should be done at the end of sgx_open() where the open cannot fail,
+> > since
+> > sgx_release() is not called if sgx_open() failed AFAICT.
+> 
+> 
+> Could you please elaborate a bit more on this? 
+> In case sgx_inc_usage_count fails, we dont allocate resources yet, so what is 
+> wrong? 
 
-HEAD commit:    a5806cd506af Linux 6.15-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14bd52d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6c2cd7998c108ba7
-dashboard link: https://syzkaller.appspot.com/bug?extid=3e07a461b836821ff70e
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12bd52d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170ab1f4580000
+It's fine to do (or even perhaps advicable) to do right at the get go,
+before doing anything else, because it is "keep alive counter". I.e.,
+I think the call is at the right place.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-a5806cd5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/114e439a107e/vmlinux-a5806cd5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/28859a387c14/bzImage-a5806cd5.xz
+And now there is a proper rollback procedure, as my previous review
+comments have been adressed.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-workqueue: cannot queue hci_rx_work on wq hci0
-WARNING: CPU: 0 PID: 7345 at kernel/workqueue.c:2258 __queue_work+0xd62/0xfe0 kernel/workqueue.c:2256
-Modules linked in:
-CPU: 0 UID: 0 PID: 7345 Comm: syz-executor130 Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__queue_work+0xd62/0xfe0 kernel/workqueue.c:2256
-Code: 42 80 3c 20 00 74 08 4c 89 ef e8 89 de 96 00 49 8b 75 00 49 81 c7 78 01 00 00 48 c7 c7 40 cc 69 8b 4c 89 fa e8 9f 40 f9 ff 90 <0f> 0b 90 90 e9 f1 f4 ff ff e8 00 e4 34 00 90 0f 0b 90 e9 dd fc ff
-RSP: 0018:ffffc9000f4d7a88 EFLAGS: 00010046
-RAX: 701780e79c022b00 RBX: 0000000000000000 RCX: ffff88803d9a0000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
-RBP: 1ffff110022be938 R08: ffff88801fe23e93 R09: 1ffff11003fc47d2
-R10: dffffc0000000000 R11: ffffed1003fc47d3 R12: dffffc0000000000
-R13: ffff8880437f0a98 R14: ffff88803d9a0000 R15: ffff8880115f4978
-FS:  00007f9904bca6c0(0000) GS:ffff88808d6c2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000000040 CR3: 000000004012c000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- queue_work_on+0x181/0x270 kernel/workqueue.c:2392
- queue_work include/linux/workqueue.h:662 [inline]
- hci_recv_frame+0x5ad/0x700 net/bluetooth/hci_core.c:2926
- vhci_get_user drivers/bluetooth/hci_vhci.c:512 [inline]
- vhci_write+0x358/0x4a0 drivers/bluetooth/hci_vhci.c:608
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x548/0xa90 fs/read_write.c:684
- ksys_write+0x145/0x250 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9905433a6f
-Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 d9 6b 02 00 48 8b 54 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 2c 6c 02 00 48
-RSP: 002b:00007f9904bca1e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f99054bf3f8 RCX: 00007f9905433a6f
-RDX: 0000000000000007 RSI: 0000200000000040 RDI: 00000000000000ca
-RBP: 0000200000000040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 00007f99054bf3f0
-R13: 00007f99054bf3fc R14: 0000000000000040 R15: 00007ffdd9006d98
- </TASK>
+> 
+> Best Regards,
+> Elena.
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+BR, Jarkko
