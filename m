@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C009D28315F;
-	Mon, 19 May 2025 09:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617E1283FE2;
+	Mon, 19 May 2025 09:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747646348; cv=none; b=r8YpL9YR+bWVxBNHeBqHFloTLDcp/9BPd3Ga6WM+wbS/NxphHbqa3AUy1C729pfzfCl5s/qIBkw36vNwvm+gE2C/0UqumBGAaAdDtvF7OYIxsV5+lK6M4nYSqm1CV2IcrLv0SZpu0+RoEJXNDbW9AUIjZYcVufuJ0Ttpf3XFlY4=
+	t=1747646350; cv=none; b=fAdIGfATeOvniTfOlcnqd45UO25wlXivXoR++aDCdgKyqV8xNc0FnSJVBJTW/eF4nLsqhsxE4jYbnGMCUQtIuodatYZZHg2CqmCqCAYFy1O2f6HP47VhSv02/SpZ8RFGpYqCO7zG2RLxjgPqKCxdQYeuEvgBzsP3fnGDY7NuUoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747646348; c=relaxed/simple;
-	bh=5iNxUiZ0D3cUVfQSKToDeMBtYk+ALyH8lFAmQxiYpMs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=MC6sz3cfGOKeYHG963XWAW4hiu6NZUlDr8YGInvx3U1ev+n+++dYSraTlTjM/G3wRp+ov+J9kbDK+/BN9jAXF0vJcOWKtwmn9sgvoY5OUD9PYckFpKtwdn9/059OW0trwwlA/Pt38NMC0ON3jK4iJk58FzDZ2YOHy/wZlwoOuC8=
+	s=arc-20240116; t=1747646350; c=relaxed/simple;
+	bh=Kn0pCpXycQGzli+Ttb42Y8sONcxizenmqlKSwqT8CyA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=YQVBEYzKp8LqHn0sKp7LWY7gYIFqutW+dsSXhBi3fEjas/6P+rS1C9RAA/t52pfK3d+KeqP7X3NM3aXWTRcAbR/fgVOy0OLs58rVl8rmtGllUo8KBA4YOOiDEyPo7Kp1hS/3097N12wYcEK/NI6LZbEOvO+P1iZhQ4dl95QPJfw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-44-682af771e118
+X-AuditID: a67dfc5b-669ff7000002311f-63-682af77127a4
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -75,44 +75,44 @@ Cc: kernel_team@skhynix.com,
 	netdev@vger.kernel.org,
 	matthew.brost@intel.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v16 40/42] dept: introduce event_site() to disable event tracking if it's recoverable
-Date: Mon, 19 May 2025 18:18:24 +0900
-Message-Id: <20250519091826.19752-41-byungchul@sk.com>
+Subject: [PATCH v16 42/42] dept: call dept_hardirqs_off() in local_irq_*() regardless of irq state
+Date: Mon, 19 May 2025 18:18:26 +0900
+Message-Id: <20250519091826.19752-43-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250519091826.19752-1-byungchul@sk.com>
 References: <20250519091826.19752-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSbUwTdxgA8P3/d727FuuOyvB8yWaaGJVFBaPm+SAGEsVbsg0TkyXqFneR
-	29oIRVtEmJoAIkE6iJpApwi2vNSmLVpbM0EoshIK6OZAWXkZolRlIiAGaRFEXYH45ckvz+uX
-	hyEUrZLljFqTJmo1QrKSkpGysUWm9UemolTRN++vg8BkPgmXrtkp6LhqQ2C/kY1huGUXdAdH
-	Ebz9628CDMUdCEyDDwm44R1A4LbkUPDg6WLoCoxT0F6sp+BU5TUKOkdmMfSXnMdgc34Dj8xD
-	JNw9W4HBMExBqeEUDoXnGKbNVhrMWavBb7lIw+xgDLQP+CTg7vsSLpT3U9DgbifBW+vH8ODW
-	JQoG7B8kcNfbRkKwaAV0nCuUQM3LCgpGgmYCzIFxGu43GTF4jZHgyA0tzHv9XgKthU0Y8qqu
-	Y+jqrUfQmP8Yg9Puo6A5MIrB5SwmYOZKCwJ/0RgNp3+dpqE0uwiB/nQJCbn9W+Dtm9DlsskY
-	yL7sIKHmnQ/FxfL2cjvim0fHCT7XdYyfCfxD8e6gkeTvVHB83cWHNJ/b2EfzRudR3mWJ4isb
-	hjFvmghIeKf1DMU7J87TfMFYF+Zf3rtH7165T7YtSUxWp4vajdt/lKn+PVeFDj/5PCMnrwZn
-	oWquAEkZjt3MDZnq0EfnzDyeN8Wu4Xp6pok5R7CrOFfhkKQAyRiC9YVx3WW9801LWJFz+Kbw
-	nEl2Nfeu/hk1Zzm7lfNXdhILS7/gbI6meUtD+T598/ysgt3CddnKyYUeg5Trm/x+wcu4Pyw9
-	5FkkN6JPrEih1qSnCOrkzRtUmRp1xoaDqSlOFHov88nZ/bVoomOPB7EMUi6SO9zrVAqJkK7L
-	TPEgjiGUEXKra61KIU8SMn8RtakHtEeTRZ0HrWBI5VL5puCxJAX7s5AmHhLFw6L2YxUz0uVZ
-	aFl4+d5Dv8d9NvKG/DQorR6s7pY6diT0xvu8utLiaE/S17u3e76a+lDLGO7Qi18FI4deTIYn
-	7EjbJv3ptuVZzprO1CNl3/5ZcuKHpfq242HxpWZbQoU/MT/juyyb/bdG6wl9XFjsdWtllcEk
-	1Mb/t5FdWRep6bwQmyrs2+mjNzUn5ilJnUqIiSK0OuF/EerFUloDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSf0zMcRjHfT7fX3eXs+9O4yvz68ZUfrbJHmOG2XwxstnY/KOj79xRp+4q
-	YqjrtPSLY2n0w1Wcdnfp3N0fyFkr4kSicymVOkQTbXSpU7gy/zx77f1+nvf7n0dEyMxUmEil
-	ThY0akW8nJaQkp1rM5cl/YxUruzuCgH/UDYJJTVWGlpuWRBYnRkY+h9tgbbhAQS/nr8goKiw
-	BUF5bxcBzsZuBK4qHQ2tH6aBxz9Ig7swl4bMyhoaXn4Zw9B5+SIGi30HvDP1kdB0oQJDUT8N
-	xUWZODg+Yxg1mRkwpS8CX9VVBsZ6o8Dd7aWgodRNgatjCVwp66ThvstNQuMdH4bWeyU0dFv/
-	UNDU+ISE4YLZ0GLIp6D6WwUNX4ZNBJj8gwy8qjNiaDTOAJs+mJr14zcFj/PrMGRdv43B016L
-	4EF2Dwa71UtDg38Ag8NeSEDg5iMEvoKvDJzNG2WgOKMAQe7ZyyToO6Ph10iwuXQoCjKu2Uio
-	HveiDet5a5kV8Q0DgwSvdxzjA/7XNO8aNpL80wqOv3u1i+H1DzoY3mhP4R1VkXzl/X7Ml3/3
-	U7zdfI7m7d8vMnzOVw/mvzU3M7vm7JOsixPiVamCZsX6WInyreE6Snw/97guqxqnoxtcDhKL
-	OHYVpwv0oAmm2cXcmzejxASHsvM5R34flYMkIoL1hnBtpe2TS9NZgbN5f+IJJtlF3HjtR3qC
-	pexqzlf5kvgXOo+z2OomWRzUO3IbJm9lbDTnsZSRF5DEiKaYUahKnZqgUMVHL9ceUaapVceX
-	HzyaYEfBDzKdGjPcQUOtW+oRK0LyqVKbK0IpoxSp2rSEesSJCHmo1OwIV8qkcYq0E4Lm6H5N
-	SrygrUezRaR8pnTbXiFWxh5SJAtHBCFR0Px3sUgclo4SLb3TH37a7FmQadg7smNj8Xnxk/DT
-	csq/oscXeJon3fWs79S6kllD+wf3OJ0rI0JeoXnGZ4bx5L6Tn03O+pEzsWJ3ufSSLqZ57r3A
-	uTVhMYfb1oRv2rTQk1g7NvXK5tzftqW4IE5v+dO227wx+UDe4qRbj29uT8reoF6oyzJund+0
-	VU5qlYqoSEKjVfwFKydO1T0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSW0wTaRTH/b6Zzkwr1bG67iyQaEqIiiuK0fVEXWNi1HnxkgCJSoLWZbJt
+	BNRWUVZNQJBFsIgYqIBgKVorFMWWB29VFgTFC1ZlEQhWwA3YcGmstNqCu9t6eTn55X/O+Z2X
+	wxCyB6JQRpV6QFCnKpLllISUjIZULdr/MUq5xOdfAZ7xXBLOXzNTYL9ai8DckInB2bIRXnlH
+	EEw8fUaArtiOoKr/NQENrQ4ENtNxCl7+Mw06PC4K2orzKciqvkbB8+FJDL0lRRhqLZvgjXGQ
+	hMeFBgw6JwXluiwcKO8w+Iw1NBgzImHAVEbDZH8MtDk6RWDrWQillb0U3LG1kdB6YwDDy1vn
+	KXCY/xPB49aHJHgLwsB+RiuCujEDBcNeIwFGj4uGF416DK362VCfHRDmfPhXBA+0jRhyLl7H
+	0NF9G8Hd3D4MFnMnBc2eEQxWSzEB/sstCAYKRmk4ccpHQ3lmAYL8EyUkZPcuh4lPgcsV4zGQ
+	eaGehLrPnWjtr7y50oz45hEXwWdbD/F+z98Ub/PqSf6RgeNvlr2m+ey7PTSvtxzkraYovvqO
+	E/NVbo+It9ScpHiLu4jm80Y7MD/W3k5vDd8hWZ0kJKvSBPXiNbskyhKTidyXOf3wk3N+IgON
+	Ts1DYoZjl3E2w1vyO/eNnRYFmWLncV1dPiLIs9i5nFU7GMglDMF2TuVeVXSjPMQwM9nd3MjH
+	kOAMyUZyxWeHcZCl7C9cnc6JvzrncLX1jV884kDek9+Mgixjl3MdtZVk0Mmx1WLu+FD7t4Wf
+	uL9MXWQhkurRlBokU6WmpShUycuilempqsPRv+1NsaDAexmPTSbcQG57bBNiGSQPkdbbFihl
+	IkWaJj2lCXEMIZ8lrbHOV8qkSYr0PwT13p3qg8mCpgmFMaT8R+lS76EkGfu74oCwRxD2Cerv
+	XcyIQzMQCk0wZ5g+RazbEL8ozB1R5vJuW53f122vII64Lzkd85aEDzY44iY8fzpaok9eiU6c
+	ErdfdyVn08Ltimloj2HleP9Qaaxjy9HNjUU+bXjDinjXQ5P+3tz1mzXhC3Z5435IvL9FW5gr
+	fxt7Nt5/b+YbSdbQ+xmrLtE/f4bCCHF7ORMpJzVKRUwUodYo/geZXTjvWgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0yTZxSH977flUr1W0f0i8zgmhARohOyuuNlTJMlviPRuEgwMfFS9Iv9
+	YkFplcniBUZ1CMLQpSAorKKplRZlrZtaqSEQwKoTFKyKgEIWlbSURCkO7C6ty/45efL7nTzn
+	n8NTqovMXF7O3SsZcrV6NaugFetWFC/Ke5usW/K07WMITZTQcOayg4WeS3YEjitFGEY71sCj
+	yQCCd793U1Bt7kFwdniQgiudQwg8tu9Z6P1jJvSFxlnwmstYKD53mYX7/jCGgaqTGOzOtfDM
+	+oKGO5UNGKpHWThdXYwj4xWGKWsjB9bCRBix1XIQHk4F75CPgfY6LwOe/hSoqR9gocXjpaHz
+	2giGXvcZFoYc/zBwp/MWDZMV8dBzopyBpmADC/5JKwXW0DgHD1otGDots6HZFLEeffM3A13l
+	rRiOnv8FQ9+TGwhuljzH4HT4WGgPBTC4nGYKpi90IBipGOPgyPEpDk4XVSAoO1JFg2lAA+/+
+	jFyum0iFop+baWj6y4dWpRNHvQOR9sA4RUyub8l06CFLPJMWmtxuEMn12kGOmG72c8Ti3Edc
+	tmRyrmUUk7OvQwxxNh5jifP1SY6UjvVhErx3j1s/b5Ni5Q5JL+dLhk/Ttyl0VTYbvado1v67
+	p6apQjQ2oxTF8KLwmfg8+CMTZVZYID5+PEVFOU6YL7rKX0RyBU8Jvhnio7onqBTx/EdCthh4
+	GxvdoYVE0fyTH0dZKSwVm6pH8X/OBNHe3PreExPJ+8vaUZRVgkbss9fTlUhhQR80ojg5Nz9H
+	K+s1i427dAW58v7F23fnOFHkgawHwyeuoYneNW1I4JE6VtnsWahTMdp8Y0FOGxJ5Sh2nbHQl
+	6VTKHdqC7yTD7q2GfXrJ2IbieVo9R5mxUdqmEnZq90q7JGmPZPi/xXzM3ELkMGd0pSVmvjke
+	JgFfxup4r7nQLidkqot/SNfZ85b7tZVfsocr3N1Z5o5u/EnivJSFL7eslE3fpCjkQ5qu0tjP
+	Sw6Xx141rqvxa1Zl/5ow/Nug3j2z9sHBvGx3zX2rvCAtb8j2dVowM3wg6YvNWV+1XOpyBq3T
+	hxwvD3y4gVnGuNW0UadNTaYMRu2/Yfj0JDwDAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -120,128 +120,63 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-With multi event sites for a single wait, dept allows to skip tracking
-an event that is recoverable by other recover paths.
+For dept to function properly, dept_task()->hardirqs_enabled must be set
+correctly.  If it fails to set this value to false, for example, dept
+may mistakenly think irq is still enabled even when it's not.
 
-Introduce an API, event_site(), to skip tracking the event in the case.
+Do dept_hardirqs_off() regardless of irq state not to miss any
+unexpected cases by any chance e.g. changes of the state by asm code.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/dept.h     | 30 ++++++++++++++++++++++++++++++
- include/linux/sched.h    |  6 ++++++
- kernel/dependency/dept.c | 20 ++++++++++++++++++++
- 3 files changed, 56 insertions(+)
+ include/linux/irqflags.h | 14 ++++++++++++++
+ kernel/dependency/dept.c |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index 25fdd324614a..0ac13129f308 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -487,6 +487,31 @@ extern void dept_task_exit(struct task_struct *t);
- extern void dept_free_range(void *start, unsigned int sz);
- extern void dept_mark_event_site_used(void *start, void *end);
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index d8b9cf093f83..586f5bad4da7 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -214,6 +214,13 @@ extern void warn_bogus_irq_restore(void);
+ 		raw_local_irq_disable();		\
+ 		if (!was_disabled)			\
+ 			trace_hardirqs_off();		\
++		/*					\
++		 * Just in case that C code has missed	\
++		 * trace_hardirqs_off() at the first	\
++		 * place e.g. disabling irq at asm code.\
++		 */					\
++		else					\
++			dept_hardirqs_off();		\
+ 	} while (0)
  
-+extern void disable_event_track(void);
-+extern void enable_event_track(void);
-+
-+#define event_site(es, evt_func, ...)					\
-+do {									\
-+	unsigned long _flags;						\
-+	bool _disable;							\
-+									\
-+	local_irq_save(_flags);						\
-+	dept_event_site_used(es);					\
-+	/*								\
-+	 * If !list_empty(&(es)->dept_head), the event site can be	\
-+	 * recovered by others.  Do not track event dependency if so.	\
-+	 */								\
-+	_disable = !list_empty(&(es)->dep_head);			\
-+	if (_disable)							\
-+		disable_event_track();					\
-+									\
-+	evt_func(__VA_ARGS__);						\
-+									\
-+	if (_disable)							\
-+		enable_event_track();					\
-+	local_irq_restore(_flags);					\
-+} while (0)
-+
- extern void dept_map_init(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
- extern void dept_map_reinit(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
- extern void dept_ext_wgen_init(struct dept_ext_wgen *ewg);
-@@ -550,6 +575,11 @@ struct dept_event_site { };
- #define dept_task_exit(t)				do { } while (0)
- #define dept_free_range(s, sz)				do { } while (0)
- #define dept_mark_event_site_used(s, e)			do { } while (0)
-+#define event_site(es, evt_func, ...)					\
-+do {									\
-+	(void)(es);							\
-+	evt_func(__VA_ARGS__);						\
-+} while (0)
+ #define local_irq_save(flags)				\
+@@ -221,6 +228,13 @@ extern void warn_bogus_irq_restore(void);
+ 		raw_local_irq_save(flags);		\
+ 		if (!raw_irqs_disabled_flags(flags))	\
+ 			trace_hardirqs_off();		\
++		/*					\
++		 * Just in case that C code has missed	\
++		 * trace_hardirqs_off() at the first	\
++		 * place e.g. disabling irq at asm code.\
++		 */					\
++		else					\
++			dept_hardirqs_off();		\
+ 	} while (0)
  
- #define dept_map_init(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
- #define dept_map_reinit(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 43927e61921b..44a77b7116b7 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -873,6 +873,11 @@ struct dept_task {
- 	 */
- 	int				missing_ecxt;
- 
-+	/*
-+	 * not to track events
-+	 */
-+	int				disable_event_track_cnt;
-+
- 	/*
- 	 * for tracking IRQ-enable state
- 	 */
-@@ -910,6 +915,7 @@ struct dept_task {
- 	.stage_wait_stack = NULL,				\
- 	.stage_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED,\
- 	.missing_ecxt = 0,					\
-+	.disable_event_track_cnt = 0,				\
- 	.hardirqs_enabled = false,				\
- 	.softirqs_enabled = false,				\
- 	.task_exit = false,					\
+ #define local_irq_restore(flags)			\
 diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index baa60bd0fb93..c65bb0c6dad2 100644
+index a08d0e16978b..4ca1cc04293c 100644
 --- a/kernel/dependency/dept.c
 +++ b/kernel/dependency/dept.c
-@@ -2573,6 +2573,23 @@ static void __dept_wait(struct dept_map *m, unsigned long w_f,
- 	}
+@@ -2248,6 +2248,7 @@ void noinstr dept_hardirqs_off(void)
+ 	 */
+ 	dept_task()->hardirqs_enabled = false;
  }
++EXPORT_SYMBOL_GPL(dept_hardirqs_off);
  
-+void disable_event_track(void)
-+{
-+	dept_task()->disable_event_track_cnt++;
-+}
-+EXPORT_SYMBOL_GPL(disable_event_track);
-+
-+void enable_event_track(void)
-+{
-+	dept_task()->disable_event_track_cnt--;
-+}
-+EXPORT_SYMBOL_GPL(enable_event_track);
-+
-+static bool event_track_disabled(void)
-+{
-+	return !!dept_task()->disable_event_track_cnt;
-+}
-+
- /*
-  * Called between dept_enter() and dept_exit().
-  */
-@@ -2585,6 +2602,9 @@ static void __dept_event(struct dept_map *m, struct dept_map *real_m,
- 	struct dept_key *k;
- 	int e;
- 
-+	if (event_track_disabled())
-+		return;
-+
- 	e = find_first_bit(&e_f, DEPT_MAX_SUBCLASSES_EVT);
- 
- 	if (DEPT_WARN_ON(e >= DEPT_MAX_SUBCLASSES_EVT))
+ void noinstr dept_update_cxt(void)
+ {
 -- 
 2.17.1
 
