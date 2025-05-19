@@ -1,215 +1,232 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0EB277000;
-	Mon, 19 May 2025 11:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BF026FDA8
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654415; cv=none; b=iHDp5A4eDdep2MAzBbZKxp0MUIV9Y3F0YSEU9ahkfJTkxwuFT2bLi4Dkl3K3pXxWxJ5tScFtUZyaUB3IBy8FilIhNW6a260Q7PA/7UFFsl8O592HI8Lo9sJNmKG3uRNLeFYcGbDFRBBY/OJHKXQ7u+woC4+1ZcWvuUAgd0V2GTA=
+	t=1747654494; cv=none; b=XMAEzxOefsl9/7hp5gHvbSXDtt/S5dJv3TztVuH1lQ54LAl/90Aj585jrTOzrE7bc/Iu5OGigVJX1LDOr54mGaD2HM3YYnLnhjvRwfKz7e4EuTD/UHpy4ny5igvPLIpljN2Ae9ONwWTc5LfBUexCNThP5mTu2esTkFERQl8p1GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654415; c=relaxed/simple;
-	bh=QaC2K6r6+VjPufo4ZCvNA58qjjRoznDvFEAe2Nvad7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DcBaKIBK4w5/zqGACKG0TNzx4C1Hr8CAo/yIRMYuuX0ThLWt718eNsYRc66IPAH/a/NdQgutNdWyu2g3C8Yq5IwefBt9VDV1ETK74OmZDPsPvtstlomYcBBEQkUP58BAJF2EVqwR/2pBUkFK71inmBP6Nc22yIkxlCo3AL1JC6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmSnt/Uo; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747654494; c=relaxed/simple;
+	bh=udfUTmlF3isj8UVHWPBs361Rv5VOxzJppL60XaV+YLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hg/wgwcXk2XxPoDtrzHZzjhZafNGpmeuhoFKdXxlk65Z45JSnxManA/qKd3+aQp851T5wFnV8jvfglhXXDzufHYZUSZjnRmyviD13WQt7pU6KrMmCYjqjK2/ii+14o0buQAr2ugFVZXDMax69CL4RJwbMM44BxsJaLKsibFAeBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BoxoEMKG; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmSnt/Uo"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad216a5a59cso614431166b.3;
-        Mon, 19 May 2025 04:33:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoxoEMKG"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e731a56e111so4078004276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 04:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747654412; x=1748259212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bG4sJdUY2Ms05qHHtz+Y/29eATmk6Z+A46I7k7W9WwQ=;
-        b=TmSnt/UoRsVJ07bWQFe5M+TjX0hxj32UtEUOynU6CzoKNH/AXfk9ukhdwq6TsYwdrU
-         BNOlm1YsnaoT9GETfAJ1ZFY07ItJMi0bKl5uvdJLTJiOpxeWVg1x7xwZOOJkhmgkBqQg
-         i+d0NePfJhoaT0cr007QzLQg+tyPH1fNSMbpXOlx5PbtghU0F3pwzX6J2IUhbyx+YC8f
-         OzLSesvkY1UhgNlKANsleST9yZQvn+kkPUbfeRgxVi38bNchY1DCVE+STZtbfUWWCTgi
-         VfhorgUPhCVhY2TFBS2vx71Ra5RSLRVSzqq+JH9QFvyGktEjJnrx+6WVq2OPBxdrcNQH
-         8WcQ==
+        d=linaro.org; s=google; t=1747654490; x=1748259290; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=T9ifYnJEHZkjugzgP1AAhyx3RM0Rc1N5KhZmwX4DzcA=;
+        b=BoxoEMKG7+MxTLOExTlrOxbuLYn4smnfm90P6HL/T0O4i3wHR2ueoKEK3pSkCFPAYT
+         hsm9wzIzMaqnTJY8Mh6kVDs688j9blWvQQiw2Yx9hlvDfKSVLdDxN8e+TPqVUWisC2sL
+         jJsQx2AbHDU6fw0NzoKe651AAyWDfExoN5nz6TE0BwddoL7CxCuumB9lbocHq4zQXSQU
+         Q/9ssXWFrLg/fmop34XM3lJylojgcfQnX6PasoLX1fBqwoNFiu9D883g0JXkG2lfeGiC
+         g0/OgAqfkkM9qdtoFw+npYF4TLcF7lDI4MnpEWsRMsBbHMVBB3mknhhDHUUZCCrHbCyC
+         x1Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747654412; x=1748259212;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bG4sJdUY2Ms05qHHtz+Y/29eATmk6Z+A46I7k7W9WwQ=;
-        b=cpvVWX3cTzT2PyYq157esWUT7OWypvPm9TqoKwE0sSyCj9EYLjNkQx7Ams5IhVgImw
-         1iG9iSHSrLFSOiHik2UTKUpkQkFDhIuY3AVqKpaeKTgIzCDmMHzMrWSEVT3i1OGPJ9sE
-         P+gs+v5o5r+fnLsD1TcCt4lzbG/0Mb1RlQJfRYgrcpDa1/um+76YKpyTg7CauZ2BEPA1
-         1H3zziW88zqG3WK0JZR2g2MeHQEurI/aK4NiSGq5fGBavPNMq+u0y5FwaZCGakXCjpCf
-         ZjCZZfT5nznVFfc7qogsRNYF8W3/fzKrEq0+s6sSQ3ZSR5h2xYowairPgmEN+dpvCt59
-         FG3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqHduotObE5wXqY9LLhmxV10rMN7vD8a/7dA/r4Imcjk08MEhqJ1Wi65xGRxwwTHc3Px6GfQ7A0tyzK4w=@vger.kernel.org, AJvYcCW//RR8KxY+WE8yHhmCEKEPckJkc388rtf5iUoU0XIM+F3lJ2ynQovDFf2AnDodu/x9Dj9iMLUU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI3ygwJpL9eMkaaAUl8N/7Ksh44NuMdORke3P/UUr7TTyZbu5P
-	ZmMvwsUK116ELgGFp3qaflXsj3dWF6cHV+59a3BhRknKjlNbOq/dNVga
-X-Gm-Gg: ASbGnctcZvvgu9Uwe7+Khd2GYLMIhayoUANZnC53MTlOoXdTB5SGzzfglyJq0pRIhOX
-	2ShvbPgLjBlIv/h2s5sxrOztbqhTVQMPmS/AVtT6PytR7koA+ndWFTViFQZKkJEtU66DUnzVaI2
-	YL+0gjxjaJ4h/aDobM2gOY6GemKMw4O2FdNmGg9URNBV3Sb7G1zU/e8oMDRsExBkXJ88lM4kFdV
-	tTOOCShcImElfCtGdTIYWVGeJPbiExEiBVYvOpo6/6GoVOwDSdXlwZtVd9t4xn/HW2n499jfLf+
-	CbAb285rOzC0DqzLEcvZAbhMrd4CiUWoeFmavtLy5SPmc24UyyIo5/uxIqYAmg==
-X-Google-Smtp-Source: AGHT+IGhMhFO6ayoZ2c9hQF9sp8/S6AgLZn7WjYq2tnwpMIbFIAjphEpdew3Z5Wb7tAM/bklKaLgcQ==
-X-Received: by 2002:a17:907:6e9e:b0:ad5:6cb5:fc0e with SMTP id a640c23a62f3a-ad56cb60bccmr391569466b.25.1747654411438;
-        Mon, 19 May 2025 04:33:31 -0700 (PDT)
-Received: from debian-vm.localnet ([2a01:4b00:d20c:cddd:20c:29ff:fe56:c86])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06bc66sm574279266b.46.2025.05.19.04.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 04:33:31 -0700 (PDT)
-From: Zak Kemble <zakkemble@gmail.com>
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Zak Kemble <zakkemble@gmail.com>
-Subject: [PATCH v3 3/3] net: bcmgenet: expose more stats in ethtool
-Date: Mon, 19 May 2025 12:32:57 +0100
-Message-Id: <20250519113257.1031-4-zakkemble@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519113257.1031-1-zakkemble@gmail.com>
-References: <20250519113257.1031-1-zakkemble@gmail.com>
+        d=1e100.net; s=20230601; t=1747654490; x=1748259290;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T9ifYnJEHZkjugzgP1AAhyx3RM0Rc1N5KhZmwX4DzcA=;
+        b=cj9kBmU3TMDOUa5welT45UraD30D0eUhHn3FpsDg4CGNcqu/RN1u3fpwL0oMf6nkKL
+         4/4Y+QXSED6DYexnMfaa1INjW/iqPGdakzV+8z4auwLJ2LDmfI66d+VT1YnO5K20pUCK
+         QAM3WvfRI5x7AimWtvySPq9dUWes24N+HPuGM2cQRUAxeay0ANolsvHb+CTdqVDYwr4P
+         AOAlmBhqPeEJbLu/jzhc2fn0C2N5nzfGbVUiKuiDEoRk6IPMZ05f2UZT29KygyzmIJQU
+         nvN2ag5dV/WrLBXB3edNkqoC6pRt95THfbsfU3TM0i3bc35FFTCEevC408j2wJJxbzpW
+         E6AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuwjBqELiCPfF8I5E4enYgAr7vDIYtX38fkW2BPESSqQaAwT2/huV40Oqlyx4ynbLWViZRArhzd+sp5l0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNvMwvK2NtzGGGvnDPGdNWccRluW+zgZ48d9wz74PggwYse9R3
+	4/+PbttEtWb9/aCF2TRqQRFHlRKG3FF6fLUMAVpWXBOOJUdmuzUxru9HmOw63/rvZ5poX2Htrcp
+	qVuQOmLcDz7KP6QO1V3mcXlTfWt2ogrLqROMz3Hln1A==
+X-Gm-Gg: ASbGncs4qOJMWOIM22vzKl0YNlCPWGhLqjGoGXuB1jHJMzuPOnkNxnhtc/lbWv4QO41
+	493qHoaSbJ7r4v9N6HAg3/dhA0q1ksWHtl6zdFAto3LGdo37tt2Edx6j9MsWFaE7+EeqwnSnLfw
+	QAL01evixi9owUukJM9Tc05Smp16JZ9/2BrA==
+X-Google-Smtp-Source: AGHT+IEzdVLtO9YBa5+IVyduAY6NRSx7ulnCzcRUIF50EVMFrKD1g2sNV/MU3FaCc/lVmOV0bCCHQy4wQPIgDk2szp8=
+X-Received: by 2002:a05:6902:2181:b0:e75:c2d7:53d6 with SMTP id
+ 3f1490d57ef6-e7b6a0821b5mr17229222276.13.1747654490027; Mon, 19 May 2025
+ 04:34:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250501-20-k1-sdhci-v2-0-3e7005fae29b@gentoo.org> <20250501-20-k1-sdhci-v2-2-3e7005fae29b@gentoo.org>
+In-Reply-To: <20250501-20-k1-sdhci-v2-2-3e7005fae29b@gentoo.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 19 May 2025 13:34:14 +0200
+X-Gm-Features: AX0GCFsNpQorB3Le9i73KErfl_8y60Wp1PR0WslTHu1cwMkDy6FRe6Gb1knvm-o
+Message-ID: <CAPDyKFoDWS6DWdKOaxTDEYeKv3hjVDoR7XGi19nESVssc-RG8g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mmc: sdhci-of-k1: add support for SpacemiT K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alex Elder <elder@riscstar.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Expose more per-queue and overall stats in ethtool
+On Thu, 1 May 2025 at 10:51, Yixun Lan <dlan@gentoo.org> wrote:
+>
+> The SDHCI controller found in SpacemiT K1 SoC features SD,
+> SDIO, eMMC support, such as:
+>
+> - Compatible for 4-bit SDIO 3.0 UHS-I protocol, up to SDR104
+> - Compatible for 4-bit SD 3.0 UHS-I protocol, up to SDR104
+> - Compatible for 8bit eMMC5.1, up to HS400
+>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/mmc/host/Kconfig       |  14 ++
+>  drivers/mmc/host/Makefile      |   1 +
+>  drivers/mmc/host/sdhci-of-k1.c | 306 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 6824131b69b188cae58c8f48076715ca647ca28c..0ce78f22c33cfff916a2d4d680c79e9d19637e0e 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -250,6 +250,20 @@ config MMC_SDHCI_OF_DWCMSHC
+>           If you have a controller with this interface, say Y or M here.
+>           If unsure, say N.
+>
+> +config MMC_SDHCI_OF_K1
+> +       tristate "SDHCI OF support for the SpacemiT K1 SoC"
+> +       depends on ARCH_SPACEMIT || COMPILE_TEST
+> +       depends on MMC_SDHCI_PLTFM
+> +       depends on OF
+> +       depends on COMMON_CLK
+> +       help
+> +         This selects the Secure Digital Host Controller Interface (SDHCI)
+> +         found in the SpacemiT K1 SoC.
+> +
+> +         If you have a controller with this interface, say Y or M here.
+> +
+> +         If unsure, say N.
+> +
+>  config MMC_SDHCI_OF_SPARX5
+>         tristate "SDHCI OF support for the MCHP Sparx5 SoC"
+>         depends on MMC_SDHCI_PLTFM
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 5147467ec825ffaef3a7bd812fad80545e52b180..75bafc7b162b9e1d4c6c050f5d28b9d7cb582447 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -88,6 +88,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_AT91)               += sdhci-of-at91.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)       += sdhci-of-esdhc.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)                += sdhci-of-hlwd.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_DWCMSHC)     += sdhci-of-dwcmshc.o
+> +obj-$(CONFIG_MMC_SDHCI_OF_K1)          += sdhci-of-k1.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_SPARX5)      += sdhci-of-sparx5.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_MA35D1)      += sdhci-of-ma35d1.o
+>  obj-$(CONFIG_MMC_SDHCI_BCM_KONA)       += sdhci-bcm-kona.o
+> diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8988053eeb33a476fa484d145579db6214b2d0b7
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-of-k1.c
+> @@ -0,0 +1,306 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
+> + * Copyright (c) 2025 Yixun Lan <dlan@gentoo.org>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/init.h>
+> +#include <linux/mmc/card.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "sdhci.h"
+> +#include "sdhci-pltfm.h"
+> +
+> +#define SDHC_MMC_CTRL_REG              0x114
+> +#define  MISC_INT_EN                   BIT(1)
+> +#define  MISC_INT                      BIT(2)
 
-Signed-off-by: Zak Kemble <zakkemble@gmail.com>
----
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 35 +++++++++++++++++--
- .../net/ethernet/broadcom/genet/bcmgenet.h    |  2 ++
- 2 files changed, 34 insertions(+), 3 deletions(-)
+These define-names look a bit too generic to me. Please add some
+additional prefixes so it becomes more clear what they are.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 578db6230..fa0077bc6 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1029,6 +1029,10 @@ struct bcmgenet_stats {
- 			tx_rings[num].stats64, packets), \
- 	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_bytes", \
- 			tx_rings[num].stats64, bytes), \
-+	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_errors", \
-+			tx_rings[num].stats64, errors), \
-+	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_dropped", \
-+			tx_rings[num].stats64, dropped), \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_bytes", \
- 			rx_rings[num].stats64, bytes),	 \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_packets", \
-@@ -1036,7 +1040,23 @@ struct bcmgenet_stats {
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_errors", \
- 			rx_rings[num].stats64, errors), \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_dropped", \
--			rx_rings[num].stats64, dropped)
-+			rx_rings[num].stats64, dropped), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_multicast", \
-+			rx_rings[num].stats64, multicast), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_missed", \
-+			rx_rings[num].stats64, missed), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_length_errors", \
-+			rx_rings[num].stats64, length_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_over_errors", \
-+			rx_rings[num].stats64, over_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_crc_errors", \
-+			rx_rings[num].stats64, crc_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_frame_errors", \
-+			rx_rings[num].stats64, frame_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_fragmented_errors", \
-+			rx_rings[num].stats64, fragmented_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_broadcast", \
-+			rx_rings[num].stats64, broadcast)
- 
- /* There is a 0xC gap between the end of RX and beginning of TX stats and then
-  * between the end of TX stats and the beginning of the RX RUNT
-@@ -1057,6 +1077,11 @@ static const struct bcmgenet_stats bcmgenet_gstrings_stats[] = {
- 	STAT_RTNL(rx_dropped),
- 	STAT_RTNL(tx_dropped),
- 	STAT_RTNL(multicast),
-+	STAT_RTNL(rx_missed_errors),
-+	STAT_RTNL(rx_length_errors),
-+	STAT_RTNL(rx_over_errors),
-+	STAT_RTNL(rx_crc_errors),
-+	STAT_RTNL(rx_frame_errors),
- 	/* UniMAC RSV counters */
- 	STAT_GENET_MIB_RX("rx_64_octets", mib.rx.pkt_cnt.cnt_64),
- 	STAT_GENET_MIB_RX("rx_65_127_oct", mib.rx.pkt_cnt.cnt_127),
-@@ -2358,7 +2383,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		if (unlikely(!(dma_flag & DMA_EOP) || !(dma_flag & DMA_SOP))) {
- 			netif_err(priv, rx_status, dev,
- 				  "dropping fragmented packet!\n");
--			BCMGENET_STATS64_INC(stats, errors);
-+			BCMGENET_STATS64_INC(stats, fragmented_errors);
- 			dev_kfree_skb_any(skb);
- 			goto next;
- 		}
-@@ -2412,6 +2437,8 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		u64_stats_add(&stats->bytes, len);
- 		if (dma_flag & DMA_RX_MULT)
- 			u64_stats_inc(&stats->multicast);
-+		else if (dma_flag & DMA_RX_BRDCAST)
-+			u64_stats_inc(&stats->broadcast);
- 		u64_stats_update_end(&stats->syncp);
- 
- 		/* Notify kernel */
-@@ -3569,6 +3596,7 @@ static void bcmgenet_get_stats64(struct net_device *dev,
- 	struct bcmgenet_tx_stats64 *tx_stats;
- 	struct bcmgenet_rx_stats64 *rx_stats;
- 	u64 rx_length_errors, rx_over_errors;
-+	u64 rx_missed, rx_fragmented_errors;
- 	u64 rx_crc_errors, rx_frame_errors;
- 	u64 tx_errors, tx_dropped;
- 	u64 rx_errors, rx_dropped;
-@@ -3577,7 +3605,6 @@ static void bcmgenet_get_stats64(struct net_device *dev,
- 	unsigned int start;
- 	unsigned int q;
- 	u64 multicast;
--	u64 rx_missed;
- 
- 	for (q = 0; q <= priv->hw_params->tx_queues; q++) {
- 		tx_stats = &priv->tx_rings[q].stats64;
-@@ -3608,12 +3635,14 @@ static void bcmgenet_get_stats64(struct net_device *dev,
- 			rx_over_errors = u64_stats_read(&rx_stats->over_errors);
- 			rx_crc_errors = u64_stats_read(&rx_stats->crc_errors);
- 			rx_frame_errors = u64_stats_read(&rx_stats->frame_errors);
-+			rx_fragmented_errors = u64_stats_read(&rx_stats->fragmented_errors);
- 			multicast = u64_stats_read(&rx_stats->multicast);
- 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
- 
- 		rx_errors += rx_length_errors;
- 		rx_errors += rx_crc_errors;
- 		rx_errors += rx_frame_errors;
-+		rx_errors += rx_fragmented_errors;
- 
- 		stats->rx_bytes += rx_bytes;
- 		stats->rx_packets += rx_packets;
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 10bbb3eb8..5ec397977 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -170,11 +170,13 @@ struct bcmgenet_rx_stats64 {
- 	u64_stats_t	errors;
- 	u64_stats_t	dropped;
- 	u64_stats_t	multicast;
-+	u64_stats_t	broadcast;
- 	u64_stats_t	missed;
- 	u64_stats_t	length_errors;
- 	u64_stats_t	over_errors;
- 	u64_stats_t	crc_errors;
- 	u64_stats_t	frame_errors;
-+	u64_stats_t	fragmented_errors;
- };
- 
- #define UMAC_MIB_START			0x400
--- 
-2.39.5
+This applies to all the others below too.
 
+> +#define  ENHANCE_STROBE_EN             BIT(8)
+> +#define  MMC_HS400                     BIT(9)
+> +#define  MMC_HS200                     BIT(10)
+> +#define  MMC_CARD_MODE                 BIT(12)
+> +
+> +#define SDHC_TX_CFG_REG                        0x11C
+> +#define  TX_INT_CLK_SEL                        BIT(30)
+> +#define  TX_MUX_SEL                    BIT(31)
+> +
+> +#define SDHC_PHY_CTRL_REG              0x160
+> +#define  PHY_FUNC_EN                   BIT(0)
+> +#define  PHY_PLL_LOCK                  BIT(1)
+> +#define  HOST_LEGACY_MODE              BIT(31)
+> +
+> +#define SDHC_PHY_FUNC_REG              0x164
+> +#define  PHY_TEST_EN                   BIT(7)
+> +#define  HS200_USE_RFIFO               BIT(15)
+> +
+> +#define SDHC_PHY_DLLCFG                        0x168
+> +#define  DLL_PREDLY_NUM                        GENMASK(3, 2)
+> +#define  DLL_FULLDLY_RANGE             GENMASK(5, 4)
+> +#define  DLL_VREG_CTRL                 GENMASK(7, 6)
+> +#define  DLL_ENABLE                    BIT(31)
+> +
+> +#define SDHC_PHY_DLLCFG1               0x16C
+> +#define  DLL_REG1_CTRL                 GENMASK(7, 0)
+> +#define  DLL_REG2_CTRL                 GENMASK(15, 8)
+> +#define  DLL_REG3_CTRL                 GENMASK(23, 16)
+> +#define  DLL_REG4_CTRL                 GENMASK(31, 24)
+> +
+> +#define SDHC_PHY_DLLSTS                        0x170
+> +#define  DLL_LOCK_STATE                        BIT(0)
+> +
+> +#define SDHC_PHY_PADCFG_REG            0x178
+> +#define  PHY_DRIVE_SEL                 GENMASK(2, 0)
+> +#define  RX_BIAS_CTRL                  BIT(5)
+
+[...]
+
+> +
+> +static int spacemit_sdhci_pre_select_hs400(struct mmc_host *mmc)
+> +{
+> +       struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +       spacemit_sdhci_setbits(host, MMC_HS400, SDHC_MMC_CTRL_REG);
+> +       host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+
+At least this deserves a comment. Isn't MMC_CAP_WAIT_WHILE_BUSY
+working for all cases?
+
+> +
+> +       return 0;
+> +}
+> +
+> +static void spacemit_sdhci_post_select_hs400(struct mmc_host *mmc)
+> +{
+> +       struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +       spacemit_sdhci_phy_dll_init(host);
+> +       host->mmc->caps &= ~MMC_CAP_WAIT_WHILE_BUSY;
+
+Dito.
+
+[...]
+
+Kind regards
+Uffe
