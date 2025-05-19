@@ -1,320 +1,137 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3631E7C23;
-	Mon, 19 May 2025 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9005326C3AB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747648486; cv=none; b=JPeVBnMnd0m3L+XHMXmBK1FILmLNXjIaFjN/3E817AiK9VkWXuvWJdXX2rMmt7UvJVWJyjx+CywPxoklo5tk4R7ECIinIpGgUa6Imnsi8xQKfsrfSkfvgIr0V9SaiX6J/R+mkieEBHo6WQKNM1l5b2NuuO5+VgQh8ImgyDlLyEI=
+	t=1747648493; cv=none; b=ocxFBCXYBW8nU3xUieyxUKfyACLLqVqflxxutMlZBbd1iv+djVImaLHCYvFSrJZ30C3J1BTAFLV9ZXnYygTjzagIMUIP5j4ElsvvMM10G/A76nSG8ljshznqneuxe2si1PxN+6Jpb2LneOYtDH4p1rg/edvRAlnbUlB4zOP49Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747648486; c=relaxed/simple;
-	bh=QtuSnniUfqIpFx7jG8UHI+yTW35b28R08n0ZlEpEQlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ro5zXdE49kB4ZAVAE6NCYLvZmFfFSvr2X+7CVTNvRymI+XZBgGtfr5TAmgi0D2Ao42jo9+FNDnLJzxpHtU0jsEIY/Nw7rQyWoLzsS8V5h4S+soXyv76Kn4WycBnoAJ9gh0WhxLb1uowT7TDlmpQX46XQQloJRCmYyhDG+MI/28k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RUgAbfbT; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747648493; c=relaxed/simple;
+	bh=cNwXdPO6M+T9fK6cxRoAT5mOUe9T/8EvM4VXz9qHBhc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mI6HLstEs4CQirOBXpmUsTz+tMyVZWzLcAnNC4vV1P4RiFnRyroYU+Wh57Awefy359atdjUnYcS+HbXA3wE+wPtnz9VwNxPpeI+aYDgVmyz5RiTcnvT8O4DPR/xdL/6q+RvpjS5OX6s7Cx86ILyx4G0oU47TWuoKZZ9TNlm5Y20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WN7s8hoV; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RUgAbfbT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ADD95439EF;
-	Mon, 19 May 2025 09:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747648481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gwLUAK0HIanJR49tKGatSZUNIVksD3vcYe87IuvaxcU=;
-	b=RUgAbfbT0y5CTEnQaX3/qavcIwUxQSPajtNpzSKTpczUkGWtATsMQNHJ5vVwf/SqpooaHw
-	26mad0v9SUdEHsCyhNtQSDTPagnFzFRPeoHiEN/1508uR8ZuylC+rNLYkWZiRpjtEpDXrc
-	4hV8r92CqMLlMC85fkt3u79gFhH3d3QHxHaIywYJO1UcdvduC6XvBFs5k4q+OknvBQa8Ww
-	vFHzSkRW39RRim+qS/SA15YTNvgS2E7Q9UeA3W1SJ90ZBg1T78aojmz9sePHNbxyFfFXSS
-	33clbXrRiCth48GNHNWvlaoC30kdhsCJGh/Ab2DH//YmFaVvuGwhqqsCHq+OKg==
-Date: Mon, 19 May 2025 11:54:39 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 2/2] net: pse-pd: Add Si3474 PSE controller
- driver
-Message-ID: <20250519115439.35382771@kmaincent-XPS-13-7390>
-In-Reply-To: <584b7975-1544-4833-8f8a-00a8769a80c2@adtran.com>
-References: <f975f23e-84a7-48e6-a2b2-18ceb9148675@adtran.com>
-	<584b7975-1544-4833-8f8a-00a8769a80c2@adtran.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WN7s8hoV"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442cd12d28cso1206715e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747648489; x=1748253289; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lGcoizW6HV7SkLxnU7zVS2X3OYQ4AmWSVHfokciEXsY=;
+        b=WN7s8hoVKJkXgvFI5sgz2VOA6OFxEwn18F/A6vrR7V6EogoLfJpu+ggj6LC86YYMvK
+         raG9PV5Bi7Ct54CJH7TO0temD10/XgZbY371gDbKlNWzVEiIcK/RzzHbhqtd/v/D7wJx
+         48qu5kL/rQYpQqkdyCMoeJFPbZEtaA0jJZu4WzgnZhIhtWAWaWEmAeuC3zOPXQ/ZrNSk
+         frcYiFqWf/vlUi9v8TItZTxqLjNfyaEKqd3cVxhsEKKk6BXGs8OvQR46vHDKxsu9diii
+         4UdfTCAGFZeMWO8stG/OyeiL3EdF5SFN7H/fevLlKazQeKYhKiHPKwHSG4rysQnyc4m8
+         cZrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747648489; x=1748253289;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lGcoizW6HV7SkLxnU7zVS2X3OYQ4AmWSVHfokciEXsY=;
+        b=YEC0jpinj+EhiqEqzrgNqzxj2V0j0sZAEmWO6zh5lT9r0HzNVS9ee5LFxIHjDcboFi
+         gGk437PgYe4fYJZj++pc5PdP14fWuwzBs9Xl+GyeoGdkTIKhGZ1Xbq5d6zhso5KhpKZq
+         xsRUHHF0MI1X7j8as20alXRaqp9KVgPnkyVvoZFWXy8T6DTw7E+oDgkw45fU6FAx1ZFe
+         uRZdphBi+foAO9J7MQZkiGAOqonBZ7Muuwe7gCg0UcKHKkj+RhMy2HOH4XQLTi80Jf7c
+         h0pdGTXulaqTFvkvz0iNFJdiN27xMXV3Mq+kUlIJnPyFdwvc0l8rT30R+gnowGfjAsgX
+         5g4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUoPRVDl3+gbK7xiWLOBXBvAqXDKin1lLj7zRs/JtRk2Sip/8kfhblFkTsX2a2vdvOvPpnj6ji9U+/LdOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Bqe42WhT66h9AxzmmeLxf/u+gKbrUziqmlSRhdLLg+48opf9
+	BkaKUT02TIxAMh2I/V+tkwTuERiswC5ZyGTL2rJFK5qdyGhVOFrSRWoYApB9Re7uIlfPixiQcBR
+	KymkP
+X-Gm-Gg: ASbGncsfQfl0Q6ZWFS7I3p8hKT0HGigDkUiS0qCZM82D93Q3dDt5FQG71rqGx1aQGUo
+	l1bUZpnmmQs5nJfb1sjVKwo6c1TFrg58WpNpGnuJ7kElIAL4yPOdfQTDwCQrPOBs3RzRqmb6UjG
+	Uo9It+1PWLthjDcGt07VdfAZvKDdMW3ffsopJzJ7rPOp6IBMpgWAkTCdc0CdTVRrgfLECEmNiQn
+	xAgc5zaLWQ6JpF1OPrM+rg1ibZM9wfpWXDmaizyEsidoFnTiAIHfkBVyKEbBoo/tzeRukynx0sX
+	caHT5Ccqs20iowvmjDRw32hZlhZY6tRb8wgl6CrlckMhl+gIGtHffnwJZQbfHakYeut2xRU=
+X-Google-Smtp-Source: AGHT+IFFKf2310dpab6/wFIKGBa37qXb6mFN81rojxkr82jCxmAiE9BT86ZM/ifVRAvLoq80ysc5Ow==
+X-Received: by 2002:a05:600c:468f:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-442fd62fd3amr36594205e9.3.1747648489381;
+        Mon, 19 May 2025 02:54:49 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d0fasm12282616f8f.8.2025.05.19.02.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 02:54:48 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/2] arm64: dts: qcom: sm8750: Add sound
+Date: Mon, 19 May 2025 11:54:42 +0200
+Message-Id: <20250519-sm8750-audio-part-2-v2-0-5ac5afdf4ee2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddutdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqheftdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfejveefgeeggefhgfduhfehvdevvdeukeelveejuddvudethfdvudegtdefledunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepphhiohhtrhdrkhhusghikhesrgguthhrrghnrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvt
- hdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOL/KmgC/22NQQ6CMBBFr0K6dkw7bQO68h6GRQMFJlEKUyAaw
+ t0tuHDj8v3kv7eK6Jl8FNdsFewXihT6BHjKRNW5vvVAdWKBEo1SiBCfRW4luLmmAIPjCRAuRmO
+ e14XVEkV6Duwbeh3We/ll9uOc5NNv7ChOgd9HeVH7ukesNGj+RhYFEqxUWjvpK22b24N6x+Ecu
+ BXltm0fGpAAIMwAAAA=
+X-Change-ID: 20241122-sm8750-audio-part-2-943277d85302
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1256;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=cNwXdPO6M+T9fK6cxRoAT5mOUe9T/8EvM4VXz9qHBhc=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoKv/lnTq1YvEME8Xt0bBxgMhHGqTK5rTHhOLgV
+ DEad1VXObKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCr/5QAKCRDBN2bmhouD
+ 19mtD/4vvMTvkNaxDMMdie38gtrl9YNfnZrf0CF93OeU4LYNZfdJV3A2znueu4RHV1bXBKZGVMe
+ w+FzsrtX4TbiWjbIcrVkXpO7v1avTsXvvD+5oe8A6npWo0UjtX/fzaNptN7ogmFxeivytFE2GBR
+ COg1f8T7TgmY5RAg14goOoVQRY8A0tpc2UStsnTy9ECkvNmXNPhQZY9OLep6ucDoUEZE8nrYRcf
+ 9M7P1LQs2pmMEvbnytZ2gEowqMp+Qc5oVAdN/gs63318yuBxL7/o4OaUIumjtJnqjAsw1L5Nhsz
+ m5R8mKd4nCdXSy7wO1IuACRtktmADcg5mi1x8qLurEOMeIr9aNF8cjv65SW57JGcwvZ8dWA6oZz
+ cJc2PYMqSgchp4nB5pWwY2SdOMC+u5cqay8DZBGlHDL4vI+scgS5Au+BuBL/VNDyIopwhFOXAWA
+ mwCJj0zH2/RXWfWkCZgbzCkv7or3QDieDek9pkJRfrhpgynQsqIYw3ai9ZIa7az289C+4Lb/eT7
+ V2CF9xiehto5NzsFCkBsl9WAK5/oASN7LBQmoO8e1wsdXDnlXBM51mwwo4+gOR4N2c+P04cxngX
+ fW7UpvYPEyGxlIzswLNQCCax9SqbBEZjU1GS8u22sW+vQVunrEVJwV35GrEBXDApDQTAfMBNgKW
+ thYhobZAqukwJmA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Fri, 16 May 2025 13:07:18 +0000
-Piotr Kubik <piotr.kubik@adtran.com> wrote:
+Changes in v2:
+- Patch #1:
+  - Use v2.1 compatible with v2.0 fallback (Konrad)
+  - Use hex address in <reg>
+  - Re-order nodes to keep proper sorting by unit address
+- Patch #2:
+  - Re-order codec/cpu nodes (Konrad)
+- Link to v1: https://lore.kernel.org/r/20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org
 
-> From: Piotr Kubik <piotr.kubik@adtran.com>
->=20
-> Add a driver for the Skyworks Si3474 I2C Power Sourcing Equipment
-> controller.
->=20
-> Based on the TPS23881 driver code.
->=20
-> Driver supports basic features of Si3474 IC:
-> - get port status,
-> - get port power,
-> - get port voltage,
-> - enable/disable port power.
->=20
-> Only 4p configurations are supported at this moment.
+Bindings for the new Soundwire compatible:
+https://lore.kernel.org/r/20250519080453.29858-2-krzysztof.kozlowski@linaro.org/T/#u
 
-By curiosity, I suppose your hardware have only PoE4 PIs. Could you support=
- and
-test 2p configuration by only configuring 2 of the 4 pairs on one PI?
+Dependencies were merged, so this brings the necessary sound on SM8750
+MTP.  I have patches work-in-progress for QRD and also USB headset, but
+this have dependencies and need some cleanup. I will be posting these
+separately.
 
-Maybe it could be done on a second stage if you prefer.
+Best regards,
+Krzysztof
 
->=20
-> Signed-off-by: Piotr Kubik <piotr.kubik@adtran.com>
+---
+Krzysztof Kozlowski (2):
+      arm64: dts: qcom: sm8750: Add Soundwire nodes
+      arm64: dts: qcom: sm8750-mtp: Add sound (speakers, headset codec, dmics)
 
-...
+ arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 214 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8750.dtsi    | 122 ++++++++++++++++++
+ 2 files changed, 336 insertions(+)
+---
+base-commit: 0fde2d760e610a74f67eee9e757a3d4a95388f36
+change-id: 20241122-sm8750-audio-part-2-943277d85302
 
-> +	is_enabled =3D ((ret & (0x03 << (2 * (chan0 % 4)))) |
-> +		      (ret & (0x03 << (2 * (chan1 % 4))))) !=3D 0;
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-There are precedence in the operators. I don't think you need that much of
-parenthesis.
-This should do the work:
-is_enabled =3D (ret & 0x03 << chan0 % 4 * 2) |
-             (ret & 0x03 << chan1 % 4 * 2) !=3D 0;
-
-Also I saw that this kind of calculation is made several times. Maybe you c=
-ould
-add a helper with documentation like I did:
-https://elixir.bootlin.com/linux/v6.14.7/source/drivers/net/pse-pd/tps23881=
-.c#L79=20
-
-> +/* Parse pse-pis subnode into chan array of si3474_priv */
-> +static int si3474_get_of_channels(struct si3474_priv *priv)
-> +{
-> +	struct device_node *pse_node;
-> +	struct pse_pi *pi;
-> +	u32 pi_no, chan_id;
-> +	s8 pairset_cnt;
-> +	s32 ret =3D 0;
-> +
-> +	pse_node =3D of_get_child_by_name(priv->np, "pse-pis");
-> +	if (!pse_node) {
-> +		dev_warn(&priv->client[0]->dev,
-> +			 "Unable to parse DT PSE power interface matrix, no
-> pse-pis node\n");
-> +		return -EINVAL;
-> +	}
-
-You should not parse the pse-pis node and subnodes, it is already done befo=
-re
-the setup_pi_matrix ops call in the core framework.
-https://elixir.bootlin.com/linux/v6.14.7/source/drivers/net/pse-pd/pse_core=
-.c#L131
-
-You should rather use directly the pcdev->pi[x] table. You have to match the
-the phandle save in pcdev->pi[x].pairset[0/1].np to your channel device node
-and set up the hardware matrix accordingly.
-
-That's good to have another development on PSE, this shows me that document=
-ation
-are missing or not enough in PSE core like on this ops. I will update it wh=
-en I
-have time.
-
-> +
-> +	for_each_child_of_node_scoped(pse_node, node) {
-> +		if (!of_node_name_eq(node, "pse-pi"))
-> +			continue;
-> +
-> +		ret =3D of_property_read_u32(node, "reg", &pi_no);
-> +		if (ret) {
-> +			dev_err(&priv->client[0]->dev,
-> +				"Failed to read pse-pi reg property\n");
-> +			goto out;
-> +		}
-> +		if (pi_no >=3D SI3474_MAX_CHANS) {
-> +			dev_err(&priv->client[0]->dev,
-> +				"Invalid power interface number %u\n",
-> pi_no);
-> +			ret =3D -EINVAL;
-> +			goto out;
-> +		}
-> +
-
-...
-
-> +static int si3474_pi_enable(struct pse_controller_dev *pcdev, int id)
-> +{
-> +	struct si3474_priv *priv =3D to_si3474_priv(pcdev);
-> +	struct i2c_client *client;
-> +	u8 chan0, chan1;
-> +	u8 val =3D 0;
-> +	s32 ret;
-> +
-> +	if (id >=3D SI3474_MAX_CHANS)
-> +		return -ERANGE;
-> +
-> +	chan0 =3D priv->pi[id].chan[0];
-> +	chan1 =3D priv->pi[id].chan[1];
-> +
-> +	if (chan0 < 4)
-> +		client =3D priv->client[0];
-> +	else
-> +		client =3D priv->client[1];
-> +
-> +	/* Release pi from shutdown */
-> +	ret =3D i2c_smbus_read_byte_data(client, PORT_MODE_REG);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	val =3D (u8)ret;
-> +	val |=3D (0x03 << (2 * (chan0 % 4)));
-> +	val |=3D (0x03 << (2 * (chan1 % 4)));
-
-Same calculation as before, use a helper as said before.
-
-> +
-> +	ret =3D i2c_smbus_write_byte_data(client, PORT_MODE_REG, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Give time for transition to complete */
-> +	ssleep(1);
-
-1s sleep?! It is a lot. Why do you need this? Does it comes from the datash=
-eet?
-
-> +
-> +	/* Trigger pi to power up */
-> +	val =3D (BIT(chan0 % 4) | BIT(chan1 % 4));
-> +	ret =3D i2c_smbus_write_byte_data(client, PB_POWER_ENABLE_REG, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int si3474_pi_disable(struct pse_controller_dev *pcdev, int id)
-> +{
-> +	struct si3474_priv *priv =3D to_si3474_priv(pcdev);
-> +	struct i2c_client *client;
-> +	u8 chan0, chan1;
-> +	u8 val =3D 0;
-> +	s32 ret;
-> +
-> +	if (id >=3D SI3474_MAX_CHANS)
-> +		return -ERANGE;
-> +
-> +	chan0 =3D priv->pi[id].chan[0];
-> +	chan1 =3D priv->pi[id].chan[1];
-> +
-> +	if (chan0 < 4)
-> +		client =3D priv->client[0];
-> +	else
-> +		client =3D priv->client[1];
-> +
-> +	/* Trigger pi to power down */
-> +	val =3D (BIT((chan0 % 4) + 4) | BIT((chan1 % 4) + 4));
-
-This calculation is also used several times. Please use a helper with
-documentation.
-
-> +	ret =3D i2c_smbus_write_byte_data(client, PB_POWER_ENABLE_REG, val);
-> +
-> +	/* Shutdown pi */
-> +	ret =3D i2c_smbus_read_byte_data(client, PORT_MODE_REG);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	val =3D (u8)ret;
-> +	val &=3D ~(0x03 << (2 * (chan0 % 4)));
-> +	val &=3D ~(0x03 << (2 * (chan1 % 4)));
-
-Use a helper.
-
-> +
-> +	ret =3D i2c_smbus_write_byte_data(client, PORT_MODE_REG, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int si3474_pi_get_chan_current(struct si3474_priv *priv, u8 chan)
-> +{
-> +	struct i2c_client *client;
-> +	s32 ret;
-> +	u8 reg;
-> +	u64 tmp_64;
-> +
-> +	if (chan < 4)
-> +		client =3D priv->client[0];
-> +	else
-> +		client =3D priv->client[1];
-> +
-> +	/* Registers 0x30 to 0x3d */
-> +	reg =3D PORT1_CURRENT_LSB_REG + (chan % 4) * 4;
-
-Idem
-
-> +
-> +	ret =3D i2c_smbus_read_word_data(client, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	tmp_64 =3D ret * SI3474_NA_STEP;
-> +
-> +	/* uA =3D nA / 1000 */
-> +	tmp_64 =3D DIV_ROUND_CLOSEST_ULL(tmp_64, 1000);
-> +	return (int)tmp_64;
-> +}
-> +
-> +static int si3474_pi_get_chan_voltage(struct si3474_priv *priv, u8 chan)
-> +{
-> +	struct i2c_client *client;
-> +	s32 ret;
-> +	u8 reg;
-> +	u32 val;
-> +
-> +	if (chan < 4)
-> +		client =3D priv->client[0];
-> +	else
-> +		client =3D priv->client[1];
-> +
-> +	/* Registers 0x32 to 0x3f */
-> +	reg =3D PORT1_VOLTAGE_LSB_REG + (chan % 4) * 4;
-
-Idem
-
-> +
-> +	ret =3D i2c_smbus_read_word_data(client, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	val =3D ret * SI3474_UV_STEP;
-> +
-> +	return (int)val;
-> +}
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
