@@ -1,225 +1,344 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C970286D7A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228AE286434
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673976; cv=none; b=YVOMdXJRkrtGH0+N4Q0jTQz15bKleKylasstnZapjRH6zYObohHs216w4knOZexPoPuJEyI98QZTvz4nQNV/GvpCBYY6JJQEHCjjXjVnvoon8YgRSCl3dUZa7eL6zt7sm++xXiV1HmX+RL5I0JkSHwgsX4lfYMk0an210I0JduM=
+	t=1747674039; cv=none; b=tbkkEBnAmjgrzjeyks0p9L71k6U7npX/S222IrMB3/TkTcjn6ueZUaP5VwwXIDXLF05ycuRAiyKVxep6p8frtzF2smCsjd0qH0Xu6C5ZKeHFLzj6Ztv3995aEYfQeKg3sOp8rKmoUKAdDU3GCtL7+0gC3cO3MLMcR77MJ0RRNDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673976; c=relaxed/simple;
-	bh=zuoMwm3Fi1tu/yOuE4z8nGew8+H+DeVtGJuNkhaiCGE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MQk/k0VZlSQpaWc41BGYpfHRZ11c0z4jvBEAtNb9gpaKvHMQhbhC3BJuFDz+TTUhvcNaPaN6k/3alGlKh5TIvo8Mcq9EIxUuEASUwUvIyTQwal+s0E70apzmYeeVLAB/wday5tHLtmijuFJBQfxp4ZaZswaCNhjq5XviMUpWU0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igL9T8Hx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747674039; c=relaxed/simple;
+	bh=omr3wYR5ZM4vFufKGEQv0vBxziCZIckw9Wtf6hFiQZs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G1ylSMkUv+PZmM0ZHjLcdU+JG1kddanhskQ4YH2xBpVbtVaaesP7vUXr/Gi1VzHufxjvfxg4oS7ljZDXt6WE2G7JVk8ztUee25HXuipXQY5QuX4sbRmh6BJoziGhuCsQidHPFfXBlPTqmuCkZHh8NeWeVPxmrNo1wKcpMEPrMcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bfMlXyLR; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igL9T8Hx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747673973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=de5QczKhzDILlofV3VvBYBfmYguEK4gP2S/GreOWyBg=;
-	b=igL9T8HxmQKDZPOWViUAP7zT2rDGHYGmjDW1rHbYICMaORAGCw9HWcjuKCpCknqCc02gf9
-	ayWc14iytTHq5313OEPF6oa1STtaG7204tCY3m8/Wk3Xe9NLGIlQpN7lXFzJ51BCLMLXDz
-	yyDQJr9oNjX8jF6PQOnrnmN2jSTYE4c=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-241-0njOWL6mM3aBo3HobqfX2A-1; Mon,
- 19 May 2025 12:59:29 -0400
-X-MC-Unique: 0njOWL6mM3aBo3HobqfX2A-1
-X-Mimecast-MFC-AGG-ID: 0njOWL6mM3aBo3HobqfX2A_1747673967
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C14951846EF8;
-	Mon, 19 May 2025 16:59:16 +0000 (UTC)
-Received: from [10.45.224.62] (unknown [10.45.224.62])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5D4951955F35;
-	Mon, 19 May 2025 16:59:11 +0000 (UTC)
-Message-ID: <612b24c5-8100-4bf1-afae-78d6f38c6bbb@redhat.com>
-Date: Mon, 19 May 2025 18:59:09 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfMlXyLR"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3db82534852so519755ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747674037; x=1748278837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G99iNQ0HCfc2DgSrnrzIo8CNcnrGRVjxOQhxJIG7B9Q=;
+        b=bfMlXyLRIWkZxhajtQDxprrIQXJ6guHhLQDWTZxePyJug0EmbzzGYvVJQjZUxaqF6u
+         PB8mRjvYKOu9ggi+OL5PNeyVcWohNRobqGxMhnEsyIz8M0NGZOKV01KwTE4AHYWIEdDO
+         UpsvJSSIsyGeC2w5SYijjb4td4TQmyyEd5LTyzkIyIXlt3xY4PkMhKwFzINB08NjqsX+
+         gz24/brWgjA7Z8bGvr9TamoqshVnZ8GsjhGT27KFommGrxQKLur7Xwz/bwjlrj3IkAAi
+         vakCY88f+J5RWijOPc+lxjl63yTMUi9ujbhYn6TL3N+iic/OB81vyoHluixHDw/5VFzC
+         m3EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747674037; x=1748278837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G99iNQ0HCfc2DgSrnrzIo8CNcnrGRVjxOQhxJIG7B9Q=;
+        b=h1Ywfp9E9IlJmXq3FIJA7PX8BjAWCZym/muATmOuip+/uQYFDq4kxyrYswbYfikN05
+         /cDHFRhylkRJBUPUJN2K15YiPWssU/E7+2N0IOKWl940W5TcCncIiEJJ7yh4139jaASx
+         EZT+QgWKsCs7dAe+GPwKYirYX20xHW6lW7oDcYJOVw4PrElMUWnXdD2xX6a++GzSdb/N
+         mq5nABTvbXZVv26WzX1mT9wfgoUvRv2Ydeidp30pRDDSeiT918Tm6kLS9e2rPfdsXEPA
+         YKtMXKoK8LH51N9mjOBLD0sHGY+N9FFJNiYvJO+8/BtL/lPq4Iejm2KEwii58xYdaOb3
+         zR6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVEmhtT93QjkpAIJu4CfViNoTDPXq1isVj1nnlvf6d9y6gX5MoYiSd8cs76VDsnUiFB0oePl9krGAymcNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdSHCOOLW8GmY7kDbb+GjHK+W6bkkyF4Ib/yxQE4KVtInHrIsL
+	uKDHNSSQ/XrOVIynT2wRvZrWBiucagySmT/hngTcpBP3J316bB9vD56FKm03YX8cqpkErYHzH/S
+	QqaWofOpXGVYGQ3MeqYTwb3IEcxUX9wzNuI3KomvR
+X-Gm-Gg: ASbGncve259VWNUgJfUmeGFXwjj5K995bWQMbQ5PzQlk3/BAt8/JQVLNd3FJDkRow5W
+	LMksn7QK0xjcOeWNeUP3YWCqkVO88HZfGgNnaYJJ1KUd5o40r8JxKoYHbvnxGlYC/JtppI6By9X
+	MefpmdI2np6gAU29u2NenSHwIxlcuQ4QiNQV84dVZTlljnioWptbud98mcvlyhyA==
+X-Google-Smtp-Source: AGHT+IHmjIcIcW/A2mqSe82tbuCso2SQ0qGRvJ5nONQuPEDFkBrx3yBcs/t5ZmN5ehldBwq2FRf20sAck2RWJhtGLnk=
+X-Received: by 2002:a05:6e02:1888:b0:3db:6f8b:3191 with SMTP id
+ e9e14a558f8ab-3dc5e5c7538mr6772805ab.5.1747674036885; Mon, 19 May 2025
+ 10:00:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
- during init
-From: Ivan Vecera <ivecera@redhat.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250507124358.48776-1-ivecera@redhat.com>
- <20250507124358.48776-9-ivecera@redhat.com>
- <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
- <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
- <aBt1N6TcSckYj23A@smile.fi.intel.com> <20250507152609.GK3865826@google.com>
- <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
- <20250513094126.GF2936510@google.com>
- <6f693bb5-da3c-4363-895f-58a267e52a18@redhat.com>
-Content-Language: en-US
-In-Reply-To: <6f693bb5-da3c-4363-895f-58a267e52a18@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+ <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
+In-Reply-To: <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 19 May 2025 10:00:25 -0700
+X-Gm-Features: AX0GCFusDLkWeT5qa-H2pFGyYPY41UrYzTsWOd209LakY8HHelr8zIfxWKy9N_I
+Message-ID: <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 19, 2025 at 8:01=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> Hello Ian,
+>
+> I jumped to a conclusion, there are reasons other than running tests
+> in parallel.
+>
+> On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.=
+com> wrote:
+> > >
+> > > Currently, BTF tests fail constantly, this series fixes two major rea=
+sons
+> > > why they fail, and makes the error messages acquired when using '-vv'
+> > > more verbose, so when they fail, one can easily diagnose the problem.
+> > >
+> > > Before:
+> > >     $ sudo /tmp/perf test enum -vv
+> > >     107: perf trace enum augmentation tests:
+> > >     107: perf trace enum augmentation tests                          =
+    : Running
+> > >     --- start ---
+> > >     test child forked, pid 783533
+> > >     Checking if vmlinux exists
+> > >     Tracing syscall landlock_add_rule
+> > >     Tracing non-syscall tracepoint syscall
+> > >     ---- end(-1) ----
+> > >     107: perf trace enum augmentation tests                          =
+    : FAILED!
+> > >
+> > > After:
+> > >     $ sudo /tmp/perf test enum -vv
+> > >     107: perf trace enum augmentation tests:
+> > >     107: perf trace enum augmentation tests                          =
+    : Running
+> > >     --- start ---
+> > >     test child forked, pid 851658
+> > >     Checking if vmlinux exists
+> > >     Tracing syscall landlock_add_rule
+> > >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_=
+start
+> > >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_set=
+up,timer:hrtimer_start, output:
+> > >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
+> > >                          \___ unknown tracepoint
+> > >
+> > >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not =
+found.
+> > >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable=
+ this feature?.
+> > >
+> > >     Run 'perf list' for a list of valid events
+> > >
+> > >      Usage: perf trace [<options>] [<command>]
+> > >         or: perf trace [<options>] -- <command> [<options>]
+> > >         or: perf trace record [<options>] [<command>]
+> > >         or: perf trace record [<options>] -- <command> [<options>]
+> > >
+> > >         -e, --event <event>   event/syscall selector. use 'perf list'=
+ to list available events---- end(-1) ----
+> > >     107: perf trace enum augmentation tests                          =
+    : FAILED!
+> > >
+> > > Changes in v2:
+> > > - Add an extra newline after error messages
+> > > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
+> > > - Take the debug diff for explanation out of patch 5 to make it apply
+> > >   normally
+> > > - Add base-commit in this cover letter
+> >
+> > Thanks Howard! I did some testing but see failures that may be
+> > pre-existing issues:
+> >
+> > ```
+> > --- start ---
+> > test child forked, pid 264236
+> > Checking if vmlinux exists
+> > Tracing syscall landlock_add_rule
+> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
+> >
+>
+> I think this doesn't have any output, a sign of failure of collection
+> on the BPF side.
+>
+> > ---- end(-1) ----
+> > 107: perf trace enum augmentation tests                              : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 264248
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > String augmentation test failed, output:
+> >
+>
+> Here too.
+>
+> > ---- end(-1) ----
+> > --- start ---
+> > test child forked, pid 278774
+> > Checking if vmlinux exists
+> > Tracing syscall landlock_add_rule
+> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
+> >      0.000 (         ): perf/278843 landlock_add_rule(ruleset_fd: 11,
+> > rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffdcf1dad90,
+> > flags: 45) ...
+>
+> This is strange to me. No return value, no elapsed time. Judging from
+> experience this comes from the lack of the second sys_exit event that
+> sets both of them.
+>
+> > ---- end(-1) ----
+> > 107: perf trace enum augmentation tests                              : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 279196
+> > Checking if vmlinux exists
+> > Tracing syscall landlock_add_rule
+> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
+> >      0.000 (         ): perf/279262 landlock_add_rule(ruleset_fd: 11,
+> > rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff37a70fd0,
+> > flags: 45) ...
+>
+> Ditto.
+>
+> > ---- end(-1) ----
+> > 107: perf trace enum augmentation tests                              : =
+FAILED!
+> > 108: perf trace BTF general tests                                    : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 278187
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > Testing perf trace's buffer augmentation
+> > Testing perf trace's struct augmentation
+> > BTF struct augmentation test failed, output:
+> > sleep/278352 clock_nanosleep(0, 0, {1,1,}, 0x7ffd31550f50) =3D 0
+>
+> This is the difference in libbpf's btf_dump's behavior. I grepped
+> "grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\},
+> 0x[0-9a-f]+\) +=3D +[0-9]+$"", the {1, 1,} didn't match. On my machine
+> it is '{1,}'
+> ~~~
+> sudo /tmp/perf trace --sort-events -e clock_nanosleep --force-btf
+> --max-events=3D1 -- sleep 1
+> sleep/338371 clock_nanosleep(0, 0, {1,}, 0x7ffeb4e9dd10) =3D 0
+> ~~~
+>
+> Which is strange, I thought we used the same libbpf from the kernel
+> tree and statically link it. Why is it different on our machines?
+> FWIW, I do have libbpf installed on my system, from their github
+> repo's main branch.
+> ~~~
+> $ cat /usr/include/bpf/libbpf_version.h
+> /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+> /* Copyright (C) 2021 Facebook */
+> #ifndef __LIBBPF_VERSION_H
+> #define __LIBBPF_VERSION_H
+>
+> #define LIBBPF_MAJOR_VERSION 1
+> #define LIBBPF_MINOR_VERSION 6
+>
+> #endif /* __LIBBPF_VERSION_H */
+> ~~~
+>
+> But I thought we used the same 1.6.x version from the tree...
+> ~~~
+> $ cat tools/lib/bpf/libbpf_version.h
+> /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+> /* Copyright (C) 2021 Facebook */
+> #ifndef __LIBBPF_VERSION_H
+> #define __LIBBPF_VERSION_H
+>
+> #define LIBBPF_MAJOR_VERSION 1
+> #define LIBBPF_MINOR_VERSION 6
+>
+> #endif /* __LIBBPF_VERSION_H */
+> ~~~
+>
+> > ---- end(-1) ----
+> > 108: perf trace BTF general tests                                    : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 278775
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > Testing perf trace's buffer augmentation
+> > Buffer augmentation test failed, output:
+> > buffer content
+>
+> This should have two lines of output, the second line is missing,
+> something to do with the BPF collection I mentioned above.
+> ~~~
+> $ sudo /tmp/perf/perf trace --sort-events -e write --force-btf
+> --max-events=3D1 -- echo "buffer content"
+> buffer content
+> echo/393319 write(1, buffer content\10, 15) =3D 15
+> ~~~
+>
+> > ---- end(-1) ----
+> > 108: perf trace BTF general tests                                    : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 279547
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > Testing perf trace's buffer augmentation
+> > Testing perf trace's struct augmentation
+> > BTF struct augmentation test failed, output:
+> > sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+>
+> Same '{1,1,}' appears.
+>
+> > ---- end(-1) ----
+> > 108: perf trace BTF general tests                                    : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 264252
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.333 MB /tmp/temporary_file.pl459 ]
+> > Failed: cannot find *nanosleep syscall
+>
+> This test was written by Namhyung, again it failed to collect some sample=
+s.
+>
+> > ---- end(-1) ----
+> > 110: perf trace record and replay                                    : =
+FAILED!
+> > --- start ---
+> > test child forked, pid 278193
+> > testing: perf trace -s -- true
+> > Error: cannot find enough pattern ^\s*(open|read|close).*[0-9]+%$ in th=
+e output
+>
+> May also be a loss of samples.
+>
+> There are some problems. From the output you provided, I can see the
+> obvious sample loss in perf trace, and the differing behavior in
+> libbpf's btf_dump. Fixing them.
 
-
-On 13. 05. 25 12:47 odp., Ivan Vecera wrote:
-> On 13. 05. 25 11:41 dop., Lee Jones wrote:
->> On Mon, 12 May 2025, Ivan Vecera wrote:
->>
->>> On 07. 05. 25 5:26 odp., Lee Jones wrote:
->>>> On Wed, 07 May 2025, Andy Shevchenko wrote:
->>>>
->>>>> On Wed, May 07, 2025 at 03:56:37PM +0200, Ivan Vecera wrote:
->>>>>> On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
->>>>>>> On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> 
->>>>>>> wrote:
->>>>>
->>>>> ...
->>>>>
->>>>>>>> +static const struct zl3073x_pdata 
->>>>>>>> zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
->>>>>>>> +       { .channel = 0, },
->>>>>>>> +       { .channel = 1, },
->>>>>>>> +       { .channel = 2, },
->>>>>>>> +       { .channel = 3, },
->>>>>>>> +       { .channel = 4, },
->>>>>>>> +};
->>>>>>>
->>>>>>>> +static const struct mfd_cell zl3073x_devs[] = {
->>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 0),
->>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 1),
->>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 2),
->>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 3),
->>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 4),
->>>>>>>> +};
->>>>>>>
->>>>>>>> +#define ZL3073X_MAX_CHANNELS   5
->>>>>>>
->>>>>>> Btw, wouldn't be better to keep the above lists synchronised like
->>>>>>>
->>>>>>> 1. Make ZL3073X_CELL() to use indexed variant
->>>>>>>
->>>>>>> [idx] = ...
->>>>>>>
->>>>>>> 2. Define the channel numbers
->>>>>>>
->>>>>>> and use them in both data structures.
->>>>>>>
->>>>>>> ...
->>>>>>
->>>>>> WDYM?
->>>>>>
->>>>>>> OTOH, I'm not sure why we even need this. If this is going to be
->>>>>>> sequential, can't we make a core to decide which cell will be given
->>>>>>> which id?
->>>>>>
->>>>>> Just a note that after introduction of PHC sub-driver the array 
->>>>>> will look
->>>>>> like:
->>>>>> static const struct mfd_cell zl3073x_devs[] = {
->>>>>>          ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
->>>>>>          ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
->>>>>>          ZL3073X_CELL("zl3073x-dpll", 1),  // ...
->>>>>>          ZL3073X_CELL("zl3073x-phc", 1),
->>>>>>          ZL3073X_CELL("zl3073x-dpll", 2),
->>>>>>          ZL3073X_CELL("zl3073x-phc", 2),
->>>>>>          ZL3073X_CELL("zl3073x-dpll", 3),
->>>>>>          ZL3073X_CELL("zl3073x-phc", 3),
->>>>>>          ZL3073X_CELL("zl3073x-dpll", 4),
->>>>>>          ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
->>>>>> };
->>>>>
->>>>> Ah, this is very important piece. Then I mean only this kind of change
->>>>>
->>>>> enum {
->>>>>     // this or whatever meaningful names
->>>>>     ..._CH_0    0
->>>>>     ..._CH_1    1
->>>>>     ...
->>>>> };
->>>>>
->>>>> static const struct zl3073x_pdata 
->>>>> zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
->>>>>          { .channel = ..._CH_0, },
->>>>>          ...
->>>>> };
->>>>>
->>>>> static const struct mfd_cell zl3073x_devs[] = {
->>>>>          ZL3073X_CELL("zl3073x-dpll", ..._CH_0),
->>>>>          ZL3073X_CELL("zl3073x-phc", ..._CH_0),
->>>>>          ...
->>>>> };
->>>>
->>>> This is getting hectic.  All for a sequential enumeration.  Seeing as
->>>> there are no other differentiations, why not use IDA in the child
->>>> instead?
->>>
->>> For that, there have to be two IDAs, one for DPLLs and one for PHCs...
->>
->> Sorry, can you explain a bit more.  Why is this a problem?
->>
->> The IDA API is very simple.
->>
->> Much better than building your own bespoke MACROs.
-> 
-> I will try to explain this in more detail... This MFD driver handles
-> chip family ZL3073x where the x == number of DPLL channels and can
-> be from <1, 5>.
-> 
-> The driver creates 'x' DPLL sub-devices during probe and has to pass
-> channel number that should this sub-device use. Here can be used IDA
-> in DPLL sub-driver:
-> e.g. ida_alloc_max(zldev->channels, zldev->max_channels, GFP_KERNEL);
-> 
-> This way the DPLL sub-device get its own unique channel ID to use.
-> 
-> The situation is getting more complicated with PHC sub-devices because
-> the chip can provide UP TO 'x' PHC sub-devices depending on HW
-> configuration. To handle this the MFD driver has to check this HW config
-> for particular channel if it is capable to provide PHC functionality.
-> 
-> E.g. ZL30735 chip has 5 channels, in this case the MFD driver should
-> create 5 DPLL sub-devices. And then lets say channel 0, 2 and 4 are
-> PHC capable. Then the MFD driver should create 3 PHC sub-devices and
-> pass 0, 2 resp. 4 for them.
-> 
-> In that case IDA cannot be simply used as the allocation is not
-> sequential.
-> 
-> So yes, for DPLL sub-devices IDA could be used but for the PHCs another
-> approach (platform data) has to be used.
-> 
-> There could be a hacky way to use IDA for PHCs: MFD would create PHC
-> sub-devices for all channels and PHC sub-driver would check the channel
-> config during probe and if the channel is not capable then returns
-> -ENODEV. But I don't think this is good idea to create MFD cells this
-> way.
-> 
-> Thanks for advices.
-> 
-> Ivan
-
-Lee, any comment? What about my proposal in v8?
+Massively appreciated! I was running the tests with `perf test -v
+"perf trace"` so there was parallelism. Running the tests with your
+changes and with "-S" for sequential I still reliably see:
+```
+--- start ---
+test child forked, pid 279547
+Checking if vmlinux BTF exists
+Testing perf trace's string augmentation
+Testing perf trace's buffer augmentation
+Testing perf trace's struct augmentation
+BTF struct augmentation test failed, output:
+sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+---- end(-1) ----
+108: perf trace BTF general tests                                    : FAIL=
+ED!
+```
+but the other problems appear to go away.
 
 Thanks,
-Ivan
+Ian
 
+> Thanks,
+> Howard
