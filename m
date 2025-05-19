@@ -1,130 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E22B286D48
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDC9188CB1;
+	Mon, 19 May 2025 13:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747662568; cv=none; b=FkkAzSOFLDpUZlZI2cpUy4ISGKwGaK/cws/vZI/C5r8mD6Yv/uBKMFBvT40DzSex3SHp3H3f1UKNUsQs3hDxjab7ZcSts+kM/72nqnGQazIrBgE+9IIMKtmuqtZTSFbI6kFJqwYJqL6wltUd1snKs0ab2JWmDo/JCOL75XOwLhM=
+	t=1747662647; cv=none; b=qZkmA/ZKJ4ZdXDZaQ8Kk7RMweLXAkIQWHBctVel9nB7hhwNfgL81Ro+HMceiCe6aAdKlOKvSdTscNvHGUK6QhDg9lvc8XTVcn8hUDEQk27D3WiaTV06/EBjyhi0IUMG+RgS1mmD/C4TgBHzNZwgosQXDiXe3QsUwQuPG4tTGHU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747662568; c=relaxed/simple;
-	bh=iv8jfhSY2pjUHanj+AjE29zg4dE6ieuCmxfmSPfpSmc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VLkAFH7OpBPXgpHXvuKOsxvUaUDgXZ5mNegSQFzv9hiCVFxOQs1bCznQ0nftcGb6qc9CDPwRHZYIn8ZDIO278mM9o0+GCHGbmpICvrRccf+VKHy6qtsEGw1U/yLsAKzzIO7kWiyKmg5vB6dMIFjZi9/A6Gx/O3uQApm32OxJRvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MeHFRSp7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747662647; c=relaxed/simple;
+	bh=MibSDPHq5D58T6mIIf1fJmA4yGeMXPhpecied78LhqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ciZQtxCJVBaxqVWZS4y30GvU+tAGiQ+JUcs/jF6mK93NFyhWwVuQMHop0EDWfItJdGxLYBxA8/yvw+NEX1YJC/ae+GiWW+JhKPc1VrlNr0MIgBC5yMinuQoYvt7TPGVtOvuL7TvuXIkB5chmvt3UDUVdLMsOXKlHemA9AzXrfi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R67IMWPf; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MeHFRSp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747662566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kg+gPJ9yl1JR7feLLpWZNLDRMWZLNWwVqA9/nsyErrQ=;
-	b=MeHFRSp7QjF/9zBbsc2n+VX72qg8ioY7X51oGXnVUeB1yPu0VZdyV0B9w7DdAbQxcY3iwk
-	vmn2lYYV8Pyo8vyMLmPV5x4TEfH/4NNm4sRTT3l/tH5v5DME64qQ7JIgHcigSa1AJtOaOV
-	Kfa/FqZ9zozdc4RJrjqzsNIXV1M0/yc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-6HSQlFW9Nx2ZvVOhQWKZGQ-1; Mon,
- 19 May 2025 09:49:23 -0400
-X-MC-Unique: 6HSQlFW9Nx2ZvVOhQWKZGQ-1
-X-Mimecast-MFC-AGG-ID: 6HSQlFW9Nx2ZvVOhQWKZGQ_1747662561
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E8F51956046;
-	Mon, 19 May 2025 13:49:21 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.188])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A8C2219560A3;
-	Mon, 19 May 2025 13:49:17 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 11/11] fs/netfs: remove unused flag NETFS_RREQ_BLOCKED
-Date: Mon, 19 May 2025 14:48:07 +0100
-Message-ID: <20250519134813.2975312-12-dhowells@redhat.com>
-In-Reply-To: <20250519134813.2975312-1-dhowells@redhat.com>
-References: <20250519134813.2975312-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R67IMWPf"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231ecd4f2a5so22780015ad.0;
+        Mon, 19 May 2025 06:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747662645; x=1748267445; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+IutGAVL4WWh1zXRehsI47yja7zQgYOoHFSMk8JjWWw=;
+        b=R67IMWPf05DXSIhLOJUH0srTa1qvDCdG9hpRJR1OkF1joRQNZ8IrWBEQmNSGgUjaO3
+         b8hc3LJis/+7bfoRWzV3e7fzjTqrjNtZ62XNXf/cx90NhYDj/hQNAzv096hP6mWb4faZ
+         f4/12Xy9aZL3woicyxcUF8yUSkVBXtNQVZ/GjUBRlg6BU0EQUlMtdaM8gczewr/Zmi/D
+         zdinvQSF7Esqqlj6i/iNuBZVL5K8lpFYTu3gmJaGzEFWdFHCZLLDvW/ykxQtMxPdrxpH
+         LlV1rwHDFHOkdaeRfCNsuGSmoCd1vkfbCUIk7hfAp7nqL9sy7JQshv0VKlgjPI0vavZP
+         gGSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747662645; x=1748267445;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+IutGAVL4WWh1zXRehsI47yja7zQgYOoHFSMk8JjWWw=;
+        b=Z2Lw6hEF0ZtfwCGnu3oQqdXaZD+PYTilrj5rVVZPn/+uTBthPAR72op2ZFSgeRFARW
+         U64Km9u8U7rlbW2g1nwpQutvr0PP5V5WcdoUeBOwG1zFwRnlmSNyk4FYlbdRLf74stxs
+         +yNgh0ZaFPPDzr2sMGlgIVqeG5Vb6EoMuPV0/wCrmFnBtgoB6O+e3sXkprfXMwBqPxdO
+         XhRXp/lyzeiniL0iVWIkUOE5xyCo0uKwyHO23ULUIphkBFZxMGzegYIp3GCcovqhprke
+         N0lMTbExWNTJ4xU4az/6J7MRME3hRNkm2hVeg5W/zmHS+KwNiOKdFhpGMvjdlEDMS2jv
+         tJsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKacpsoQ9TiWMYVD0owRP7dLDu3smssUBOWebxblyJt4JZdodLdw0j8hjnm6kiXc+5eZzZtu4je38EY1Y=@vger.kernel.org, AJvYcCXoyAUneOTDr6+x+1Ygl+OYmrfXygtK9VhU0nryz2i3KV60pHSoO8oFol0mjSCopw1XnqKm+hc/CklkmaYECBtq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5+CjV7CNNgn+RWB61cyGbwJl4nKcJWsNDqmV+uYjLWPi8+euL
+	4xH0Nga88zdv76MCof6tpAFLIskyKDA/jLpcEPHhBW1SMVIN/TAqgpnlm4HkQj6nDuhV+rDjuVU
+	EeFvpkeQJR6Bg9jk0kUvHKDtO12yCqIaI8bCgD+JqI98=
+X-Gm-Gg: ASbGnctwOx/byXKFLd90SK6WtKJsUDzTCyeRs0t+MYs+K8akjL00uCkTV9/DjA9KG6+
+	BsSm3F8bf2FgaU/ylydXlgNLvyH4b/oopPLgdJIve1QdT3nXOM4WZeLvaFoMReJTInMJnFu9r+a
+	Uz/zGq2KqA4vHEishCfwtzocWTMV1XD55ajgkOOs47
+X-Google-Smtp-Source: AGHT+IHOw/C0cymFVsWT9h2zFuzJv8a6dLH/krZaPX7GaHu5SRtUJOAew2rIPQlCdRZi5X5oJ3dtyFj4eSqKfRmk47w=
+X-Received: by 2002:a17:903:46d0:b0:223:f408:c3f8 with SMTP id
+ d9443c01a7336-231de3027c4mr178943295ad.14.1747662645131; Mon, 19 May 2025
+ 06:50:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250510160335.1898-1-ujwal.kundur@gmail.com>
+ <D9V0UTL5BCLM.1WHR6F4UN14QQ@google.com>
+In-Reply-To: <D9V0UTL5BCLM.1WHR6F4UN14QQ@google.com>
+From: Ujwal Kundur <ujwal.kundur@gmail.com>
+Date: Mon, 19 May 2025 19:20:31 +0530
+X-Gm-Features: AX0GCFte3IuNk4JZd3aGgSh0Dprg-2xwuXlgFjve6MpCE3EWera5vSmU1YghjE4
+Message-ID: <CALkFLLLfxT1pQ_ySB1NU4KXOEGLd2wB8pbhpBG2HfK3_mLOYAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] selftests/mm/uffd: Refactor non-composite global
+ vars into struct
+To: Brendan Jackman <jackmanb@google.com>
+Cc: akpm@linux-foundation.org, peterx@redhat.com, shuah@kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Max Kellermann <max.kellermann@ionos.com>
+Thanks for the review and testing!
 
-NETFS_RREQ_BLOCKED was added by commit 016dc8516aec ("netfs: Implement
-unbuffered/DIO read support") but has never been used either.  Without
-NETFS_RREQ_BLOCKED, NETFS_RREQ_NONBLOCK makes no sense, and thus can
-be removed as well.
+>> -static void retry_copy_page(int ufd, struct uffdio_copy *uffdio_copy,
+>> -                         unsigned long offset)
+>> +static void retry_copy_page(uffd_global_test_opts_t *gopts, struct uffdio_copy *uffdio_copy,
+>> +                                                     unsigned long offset)
+>>  {
+>> -     uffd_test_ops->alias_mapping(&uffdio_copy->dst,
+>> -                                  uffdio_copy->len,
+>> -                                  offset);
+>> -     if (ioctl(ufd, UFFDIO_COPY, uffdio_copy)) {
+>> +     uffd_test_ops->alias_mapping(gopts,
+>> +                                                             &uffdio_copy->dst,
+>> +                                                             uffdio_copy->len,
+>> +                                                             offset);
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/direct_read.c | 3 ---
- fs/netfs/objects.c     | 2 --
- include/linux/netfs.h  | 2 --
- 3 files changed, 7 deletions(-)
+> Looks like your editor got a bit excited here :D
+>
+> There are a few other places where this happened too, e.g. the
+> are_count() declaration and there's a pthread_create_call() that's quite
+> messed up.
 
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index 5e3f0aeb51f3..f11a89f2fdd9 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -106,9 +106,6 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
- 			netfs_wait_for_pause(rreq);
- 		if (test_bit(NETFS_RREQ_FAILED, &rreq->flags))
- 			break;
--		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
--		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
--			break;
- 		cond_resched();
- 	} while (size > 0);
- 
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index dc6b41ef18b0..d6f8984f9f5b 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -64,8 +64,6 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
- 	}
- 
- 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
--	if (file && file->f_flags & O_NONBLOCK)
--		__set_bit(NETFS_RREQ_NONBLOCK, &rreq->flags);
- 	if (rreq->netfs_ops->init_request) {
- 		ret = rreq->netfs_ops->init_request(rreq, file);
- 		if (ret < 0) {
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 5f60d8e3a7ef..cf634c28522d 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -270,8 +270,6 @@ struct netfs_io_request {
- #define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes */
- #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache from read */
- #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
--#define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
--#define NETFS_RREQ_BLOCKED		10	/* We blocked */
- #define NETFS_RREQ_PAUSE		11	/* Pause subrequest generation */
- #define NETFS_RREQ_USE_IO_ITER		12	/* Use ->io_iter rather than ->i_pages */
- #define NETFS_RREQ_ALL_QUEUED		13	/* All subreqs are now queued */
+I use vim with `:set list` turned on to display control characters and
+it looked fine to me when I submitted the patch :(
+Here's the output of $ cat -A uffd-common.c | grep -A 15 retry_copy_page:
+(where ^I represents a tab equivalent to 4 spaces)
+static void retry_copy_page(uffd_global_test_opts_t *gopts, struct
+uffdio_copy *uffdio_copy,$
+^I^I^I^I^I^I^Iunsigned long offset)$
+{$
+^Iuffd_test_ops->alias_mapping(gopts,$
+^I^I^I^I^I^I^I^I&uffdio_copy->dst,$
+^I^I^I^I^I^I^I^Iuffdio_copy->len,$
+^I^I^I^I^I^I^I^Ioffset);$
+^Iif (ioctl(gopts->uffd, UFFDIO_COPY, uffdio_copy)) {$
+^I^I/* real retval in ufdio_copy.copy */$
+^I^Iif (uffdio_copy->copy != -EEXIST)$
+^I^I^Ierr("UFFDIO_COPY retry error: %"PRId64,$
+^I^I^I    (int64_t)uffdio_copy->copy);$
+^I} else {$
+^I^Ierr("UFFDIO_COPY retry unexpected: %"PRId64,$
+^I^I    (int64_t)uffdio_copy->copy);$
+^I}$
 
+I checked this against master:
+$ cat -A uffd-common.c | grep -A 15 retry_copy_page
+static void retry_copy_page(int ufd, struct uffdio_copy *uffdio_copy,$
+^I^I^I    unsigned long offset)$
+{$
+^Iuffd_test_ops->alias_mapping(&uffdio_copy->dst,$
+^I^I^I^I     uffdio_copy->len,$
+^I^I^I^I     offset);$
+^Iif (ioctl(ufd, UFFDIO_COPY, uffdio_copy)) {$
+^I^I/* real retval in ufdio_copy.copy */$
+^I^Iif (uffdio_copy->copy != -EEXIST)$
+^I^I^Ierr("UFFDIO_COPY retry error: %"PRId64,$
+^I^I^I    (int64_t)uffdio_copy->copy);$
+^I} else {$
+^I^Ierr("UFFDIO_COPY retry unexpected: %"PRId64,$
+^I^I    (int64_t)uffdio_copy->copy);$
+^I}$
+}$
+
+and there seem to be spaces mixed in earlier causing the formatting
+issues. It looks okay to me after I pulled in the patch to my local
+repo.
+
+> Unfortunately I don't know of any tool that can find/fix these issues
+> automatically without also messing up the whole file. Could you just
+> do a visual skim and fix what you can spot?
+
+Yeah, I ran clang-format and it's playing by its own rules -- do we
+have a standard .clang-format file?
+Please let me know if there's a better way to find/fix whitespace
+formatting issues, I found a few inconsistencies which I will fix.
+
+>  static void sigalrm(int sig)
+>  {
+>       if (sig != SIGALRM)
+>               abort();
+> -     test_uffdio_copy_eexist = true;
+> +     // TODO: Set this without access to global vars
+> +     // gopts->test_uffdio_copy_eexist = true;
+>
+> Did you mean to leave this like that?
+
+Nice catch! I was hoping someone would suggest a better way to handle
+this. As far as I can tell, this was written the way it was as a
+consequence of using global variables.
+I think this sets up retries for copies in a racy way using alarm(2) /
+signal(2), not sure how effective that has proven to be. I believe the
+only way to keep this functionality would be to introduce some async
+action (libev, libuv, etc.), but is that required?
+
+> +                     /* TODO: remove this global var.. it's so ugly */
+>
+> That's done :)
+
+Oh I misunderstood that as "remove nr_parallel" which is not the case, will fix.
+
+> @@ -1734,6 +1737,27 @@ int main(int argc, char *argv[])
+>               }
+>               for (j = 0; j < n_mems; j++) {
+>                       mem_type = &mem_types[j];
+> +
+> +                     // Initialize global test options
+>
+> Wrong comment style here
+
+Will fix
+
+I'm not sure about the protocol here, should I roll a PATCH v4 or a
+new patch entirely?
+Planning on addressing another TODO for dynamically setting the
+BASE_PMD_ADDR, I can roll the fixes as part of that patch if required.
