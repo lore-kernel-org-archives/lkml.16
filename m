@@ -1,60 +1,76 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12EF27CCDA;
-	Mon, 19 May 2025 15:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127C372639;
+	Mon, 19 May 2025 15:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747668808; cv=none; b=jo6IKG6te6NwaCcI7/1OwJaVb9flEFve2CPqWSigElUwCPBoFaUqMFtDFqfoGG6zJMyoP3yJ30MdcaTlSN02ruptX+m41t6Oo6r57Pw9DnRXjrDRwQUBtGkrCmnojqrGTMXJmV5HylLynkQ/d10PFcc7edfJ2R+O3nP76+GMGaM=
+	t=1747668822; cv=none; b=IRzkvsCnCHULjKr0ZtWMuvw8FCIOExWgu2ZH1PTHZIOmRZrLYLuSWyn3jOT7JPnhJQAAnytEcJmY3Z3pJD+RlBatfKBXI3TGgPhF3ls1iCyqwKeNFRIqQlPDljU2AgVBvj/KLEKi1GEwTJYQMisGpBvvP/zicLkbn8EESzdQyZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747668808; c=relaxed/simple;
-	bh=/UuJChUS6f2hqhSeC2+UM0QF0uDsSV1LwOX3xKnLAz8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U27xoJpYQSpnHJYJxVPxf3WSCT6jCbh9XhqvlStURCQ/CaPXPUDlO8vK7+IiYKTZpgCGkptGJub3wjqbvRVmuB5N7tul7SWcTZ75UTNi5q0f5eie0enLvonGaSHsZYgL73HdEouJFU2u2z73r5/uGY4WGYuco2I4MrM7uZXTFcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b1M5s50Hzz6M57D;
-	Mon, 19 May 2025 23:28:33 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 53DE7140392;
-	Mon, 19 May 2025 23:33:22 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 19 May
- 2025 17:33:21 +0200
-Date: Mon, 19 May 2025 16:33:19 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] cxl/feature: Remove redundant code of get supported
- features
-Message-ID: <20250519163319.00002544@huawei.com>
-In-Reply-To: <20250516143220.35302-1-ming.li@zohomail.com>
-References: <20250516143220.35302-1-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747668822; c=relaxed/simple;
+	bh=lrLr7Kc5pMqOCD87GeQi49MHcJwGpnQAiHPxBcWrvpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YH1rbicVUaAbLFnyQhoxs92TMCuIlCzo7VcZzBX0z/JUGAHv0746NoCRmYjVI/xt325h7hoGf2dSd5vdWHhDmoYGoqyAwRJjfW06wRQP9oyK77N2hhA4m97qdTMPvja4xeNuQxS7q0OsMb04H7H9qQUDsdWQO2yloBqvjfv6Quc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E39C4CEE4;
+	Mon, 19 May 2025 15:33:40 +0000 (UTC)
+Date: Mon, 19 May 2025 11:33:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <20250519113339.027c2a68@batman.local.home>
+In-Reply-To: <aCfMzJ-zN0JKKTjO@google.com>
+References: <20250513223435.636200356@goodmis.org>
+	<20250514132720.6b16880c@gandalf.local.home>
+	<aCfMzJ-zN0JKKTjO@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 16 May 2025 22:32:20 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+On Fri, 16 May 2025 16:39:56 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-> In cxlctl_get_supported_features(), there is a code block that handles
-> the case where the requested is equal to 0. But the code following the
-> code block can also handle this situation. So the code block is not
-> needed.
+> Hi Steve,
 > 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> On Wed, May 14, 2025 at 01:27:20PM -0400, Steven Rostedt wrote:
+> > On Tue, 13 May 2025 18:34:35 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > > This has modifications in x86 and I would like it to go through the x86
+> > > tree. Preferably it can go into this merge window so we can focus on getting
+> > > perf and ftrace to work on top of this.  
+> > 
+> > I think it may be best for me to remove the two x86 specific patches, and
+> > rebuild the ftrace work on top of it. For testing, I'll just keep those two
+> > patches in my tree locally, but then I can get this moving for this merge
+> > window.  
+> 
+> Maybe I asked this before but I don't remember if I got the answer. :)
+> How does it handle task exits as it won't go to userspace?  I guess it'll
+> lose user callstacks for exit syscalls and other termination paths.
+> 
+> Similarly, it will miss user callstacks in the samples at the end of
+> profiling if the target tasks remain in the kernel (or they sleep).
+> It looks like a fundamental limitation of the deferred callchains.
+> 
+
+Ah, I think I forgot about that. I believe the exit path can also be a
+faultable path. All it needs is a hook to do the exit. Is there any
+"task work" clean up on exit? I need to take a look.
+
+-- Steve
