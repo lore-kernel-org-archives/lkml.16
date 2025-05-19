@@ -1,317 +1,176 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011062.outbound.protection.outlook.com [40.107.130.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E069E1F4CAF;
-	Mon, 19 May 2025 18:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747680293; cv=fail; b=LClZt4RdoYAMvC9QGdpYz2k0YzjZoaYOVQ6iWp93OHK/BIDtKTgdFIt4hStmGB2f9jehMFNaW3dccxRmTcu6NW5cXnvL6k91ODefFeqqZYksf7jt0Mv6Kqd77JTZGVWepFviuAK7giqtNP3r92hzDoXG6xxNLABEVS7yrfQOC18=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747680293; c=relaxed/simple;
-	bh=BsgW3RZ7iauDPiZl+vs3CJv6DaFlhmvgLmrn+oluu0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NBAGWIkYQOOyEfI7IAKZty0QqGTNH4aOXVWTj7lH7RogIUYwn0kFwngd6Lzr59vahzLtDwHJV+KyWWp1dCIfNKlwOEynyoyvIDa82RNVPuJW+pg3xSxODgeRj7w5skoCUJEHZ7ngVfMv7reWvb95Fyx55LTG+3cXE1uzUb8nap8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CP2XdBiK; arc=fail smtp.client-ip=40.107.130.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508721C8610
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747680335; cv=none; b=okZcVAWoZrXCnjD25QTZLufiKUzMP44J+VtXy1Or0cpS0VAaQc9J1Ezoar3DGS1XOlLHX+WLuWqHtEQeuR7pdJm2tD5ffJwuGtxlyLCRF1KXwB1LxGRxkXfFqu7wWwNWAPpRxg4cMNgR62znwkaYW8ffyUfsyWnIplTeAlYUDx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747680335; c=relaxed/simple;
+	bh=qixL8WtENA/y47zs5WPsanzQIyfZpO1I0UpQSU7JL9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UDD+CWf2biP8trgDmYnznadKFiiAQmrP4eZYh1Fq9GKYhIIl7ByOaSOCT8NeWQHvUvrCgPHq8pVvu52VKnurUklgP7vbZIUnXh4sX6v+2t91bEiY+GB2DE4FMx3CpLGimFwu4JEMUwjAwsr/Vdrjyp9OZEM1AGufJIYsilNyx+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A8dqOgy5; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CP2XdBiK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xM8RnJw65x/rcpW10BQdzXUi2B/2LpxTWt7eejaq6EMslfJ0KBgd2CSbqT1VpZr4dM9uih73PKjjsa3pEmRsRGDHgGpBA6iwRotcBZtZQxuHeDAv1ITbO3coYIt1XEV0G8jcmVFQRbukW/RIV6FgvHSOztl1PGFbFm5/LLCug9irtyjTmcupIgMF7fLM3WBX0I1kM8wHb0zS5oRa1Ep1kIih6KWlw3dgbT4yjhoSZq5omgsVvgiz4J6bu+0ue6WBfr+NHyXYrglCh5RJnlczOCyO4e0YAtenHQPbDu4o108vafWc5gP33yBtt7ffQntHE72xKWdv9L9zQszwh4vDqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nU+e2cPG4lChdzYdzcOsUefdSUsynmwkLFH0enZEJeg=;
- b=XwQSzr1m91YMoGFzwG1/18qsypirYJx7imQaQeIsgAMOJE1V6fVngKYCCWwu40yQwgC22/dBE8P090s5qyeLtPSNTbR4A4FHmyCLDUMraYLq2wnISIWPj8BsMF/VILTcJq03qBxXkr1LjvTsKX2AcPaNylqv2U3tiXMi5Nyd7aqqrQPrmdyz2lLvgBVPVsLWA3Tmu0DhbnkcwLLsG8cxawCiIaybwrkg54/k3Yzbdgw+47LMCzuTHGgNGl74NmpaEAWuJqWoYy0rZhmtx1VQ2r3yjpTsNl/gR0889My00lU31lcZTwx7Vl2U2ghmRY6dAyeDe51d9ObB/OMuFHXwJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nU+e2cPG4lChdzYdzcOsUefdSUsynmwkLFH0enZEJeg=;
- b=CP2XdBiKsEaWNcu/gbF0aWc4tdmhdPa94av627tvTemarPKdzvc+kbwunfEouTPvGGcE/ynEgivtbR7GbeoM0wYZcD1bqmAqUHWMWuCZdZT2HeK8G91RwiE+ed642Q7XJ5E1eQ20std+4qUQs5pQhAB5GM2bHqKZPQUG/kNgZVYcloX05zbema9THoy6r02gRJFSUacxSJXC1q516zHFwhuxcUvJGOzaf9cCPdxSO9aGUog+LqTMJ8BeaDHPcrn14+gP3rBwbZfBuepB/K3SM7/rQr5CvA6DirSabB2nVdhY85PhG1QbbuB+wUCmPXl2sIErgFMhxJPbsXR/oEdFFA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA4PR04MB9440.eurprd04.prod.outlook.com (2603:10a6:102:2ac::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Mon, 19 May
- 2025 18:44:47 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 18:44:47 +0000
-Date: Mon, 19 May 2025 14:44:39 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com, carlos.song@nxp.com
-Subject: Re: [PATCH 2/6] arm64: dts: imx943-evk: add lpi2c support
-Message-ID: <aCt8F+idwMI6OggH@lizhi-Precision-Tower-5810>
-References: <20250515051900.2353627-1-shengjiu.wang@nxp.com>
- <20250515051900.2353627-3-shengjiu.wang@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515051900.2353627-3-shengjiu.wang@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0003.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A8dqOgy5"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d5f10e1aaso118315e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747680331; x=1748285131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+uI0u1meq1DSWC2d3l+uIBBA0xgtWtQ+JRUsL+sxc5w=;
+        b=A8dqOgy5WOwmTLopIY1uJE5JRfMeEXR3OW7IVGSkoaUiu21IVlChnKFcDrAX+letcm
+         l0b+WXOd6ugfq2rSkRool90cgqd9nD5xBZPNuVk+IITdN5jyVYZqNzqJzBEVY2HJSq7E
+         3R4TNbjaVFJt2Il446hqbmB0KZshQZwbiVtVeEFsua0gHhudH40rtPel+z9p59EZNXyt
+         fdlQfnTf1tAMI0Ohxb/+T8zGgyOuO0rTXtwHy042CWR+Jbdb9Gw2jlys+1IcZ9wEtSyE
+         sgg4qSktXf/T+NScgjcC0uuV78idbMcyOvc+vrhzVM3ZdSAzKT3rfzK+VM0U2UraolCw
+         dNcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747680331; x=1748285131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+uI0u1meq1DSWC2d3l+uIBBA0xgtWtQ+JRUsL+sxc5w=;
+        b=jtq/ZiR9lQLkcWi4/9mz6DReBQDjZzbUi2hrteYWb/PW4ooq1iKJnmwa9qMix0fBdO
+         sLJo4t2qSs40QUYkrxT7QJnZ0aXPjHJRIMk3m2b+8VBjT4EuaK7Wgh9U3b1nJTphWU1T
+         AAkmWucFLwANtTsW2zA5ccn7kuCPYvfYa3sE2kcfQxKzuVsn16TdW4i8GE4kvvuU9YTk
+         aUIDl8v+uN5DIc024ClGf2RUZjkF5XEENvhhopzt8r/vowJCVCwSQlRSSI3vcMNcPwpD
+         8VXM8uUwTvZSPhxifFAIX5il3AZt+wWZwtGB7o/OHFrreQiPzjozgmwuiHhc+jkgracE
+         TZjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUa9DVOug+pZpt3noZYkrKdaNDcmZtlZDucyoCrmUkF2SS9d3Vf2+ve0GtDCLjnj7cWUvH+ukX49lWGhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbJZ4oXwC/B611bLuRwZNiKiMlRpJfP37PcqzHVl2QaYe0Foaw
+	yohtDjXnOOckMwoaWynbozybVDUB+pteg2djQHycoR6RJgbiK5ezzj9PFWv8CLE00lm2BeIQWqi
+	hO0M69IMRhusfGfEHoW6ohulPpFTCYjDztaNmUkNE
+X-Gm-Gg: ASbGncuDzNH7sSesdfnzK8QxSJcv1q421UoJH36qV2OWla22VG7eZ+fPAifTLLVDKV8
+	QYL+8LIXc5/FFSIUtm7FEobiBLBK2+q9kMnmuhizpJ2zSU/JNU4oLd0SaFbMAHX/l/L8yWNiiwn
+	vAMoKpIx2arXg6kK0WHebsvZEUz1jpfl9niWtbvMqFCbYTZvi0wwso1J2kiI5xP/Yt1+qXIR5LQ
+	A==
+X-Google-Smtp-Source: AGHT+IEi4No6J063KwsVoQNLxNxjrCv7jm/u9i3e5Q/uH+0pyHVkWYIXIES2WdEQ/sfu/KRTy3tguljTVJckDxdkD2Q=
+X-Received: by 2002:a7b:ce8d:0:b0:43b:c2cc:5075 with SMTP id
+ 5b1f17b1804b1-4440027c1efmr3272695e9.5.1747680331414; Mon, 19 May 2025
+ 11:45:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB9440:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0464ae42-b045-4c2b-22c6-08dd97053a98
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?woTLTa9qXiid/IQroDZuNWRqZ48v43E/6yVQlR3ti3R8P7Jh5b9b84QcRDgx?=
- =?us-ascii?Q?X9dDVssP4EW9pfkk26uAENZOh5u8UuP/5yrXT1VJ0ccaV7eX1Qbo7Bgskhpq?=
- =?us-ascii?Q?tJ0DXEeHpAQonXYwQM5XAEwiw8Vdsyq7GSjGw4olLIv8hbOQeYBCJG1wAU+f?=
- =?us-ascii?Q?EhLuDG2qbK2qEHKtXa+owcDyU0PI8WSBHgApp+lBE8Cf0ewo7f0CX+xVVGV/?=
- =?us-ascii?Q?P9Wqaymn6/Xvam2fBPTdG+QLWvN+SUSdVa3ePBzP4G7S92xwp64Q7ppdYg67?=
- =?us-ascii?Q?sBgyEWcLAUdAwz2rU30H6l63nR9/CTN/5Eup68EgW1tHa35VRP3lKku4XYc6?=
- =?us-ascii?Q?11UG+iypSyD2xxDBkwRgwGKLdItXL/ZHkmPwnQSwMGdBN9CB+Tu3fqyaY38i?=
- =?us-ascii?Q?hxSyQolMFSOWU7RAoPxSdS8fFVvOw2NsG495QO05SssoOiSRLWsRSeTojOpg?=
- =?us-ascii?Q?KgJDW04rK9S0ceYe8aMu0jpnK46DrUVOIywCnBbYIib/kF/OgnFfDMu8oJyI?=
- =?us-ascii?Q?vosYFTsAyTGFhjQW4agU0lDZRzXHsG+a/599g9wOUkjnbOM/bNVul8FDYD9Y?=
- =?us-ascii?Q?uBNUrTfr4F1KiMG4BhR+ihj7/SfcMyKvW2zTY2Hykv2baSIBGaRK6Rj5j2mM?=
- =?us-ascii?Q?vWq+FVe54g7qBlDqv3EjCReCt4U2th5pglT607IdD7aGnkwbmj7c1NIcB16t?=
- =?us-ascii?Q?0foC/AuiUN357h9MAxY2qSCB9HPOtTjiSZHdf0WenDBBiXUJFwHflunmKy3m?=
- =?us-ascii?Q?ydONgArPGSqSEJMTGhuI+Qttl5oSBJmNnx/IF8UO0TuQwZMrwltTOzcbqnAl?=
- =?us-ascii?Q?NCG53dN0h6lV6Q2bbtb7XKC9hyB81L63VlLtBlXbxp4VFfMWPgeSV3G/xUW5?=
- =?us-ascii?Q?8mgdnPazrFBoxo58eEzAi8oYvPgXj+RoVJ1ReE0mN1FnVEa8rU1w2KYiBmRh?=
- =?us-ascii?Q?tBrP5pHJwo/QNr4N9CS/b3g9UuC8xa6xNNzUBNx9DCLzfTfQNwrJSfuQMZVq?=
- =?us-ascii?Q?auVbHoPxbC6WmLqHfmG5CqAe4WXB8IZIg+IZVtLqEZKGigjzWMXCo3RQNLYe?=
- =?us-ascii?Q?xSguDRUehtyy65NxY7kJdlfsF3bQdBN/Oo71VBK7+36FWXfzaWtoerJraEvv?=
- =?us-ascii?Q?EW9R39YKTPVDGGCmA0Y+dwZ6P54e4JD7Ja59aEbUfFCfXgJXnN2+nBNNtCWA?=
- =?us-ascii?Q?Mirm2FSF6a6+fVssdJdV/t1TfjkFSlVcE0ShD2YhzxHkBeK/b9srnqZkmzU+?=
- =?us-ascii?Q?Kl4+ylk90ev5KJSfIjOv9MStNGUUrfckVZ+aLuFrMpYY6YFG/LLlw0HmkolT?=
- =?us-ascii?Q?AmqKU0ai53SdMYhGieL+20RF+T5cWvI8O3kL5nUCQ3xKjNAo07zHf1bzYR5T?=
- =?us-ascii?Q?XnliSMJ5ejb8UrwfXMxqfuTR8V8DtCbRDE+RNldYbU1lfBgBaAWhH08zMifz?=
- =?us-ascii?Q?lzFE45jQu2lHT7sfrrJjBvFgTjFlV3kdW7gMRT9s5Vj+yalrq0m7vA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VBSMMFFmHvFAwOz3xYdok0vMqC+psSRHLP8Do5pvK+r+7wPgFbHKWbj13scj?=
- =?us-ascii?Q?a1rYnZthbmBZoFZrqwKr62qsi11CPg6EVOI/aeEUJ1/kvxTMxFkX/+4VECW7?=
- =?us-ascii?Q?Sdy6W6TxfIFLU4KmcW1HLSiazTAj+KKlSpKXRVU84rpXbe4zzl1+aUB5C0Yl?=
- =?us-ascii?Q?lkMqo3gs0srgVZCHwiX6RNUuMBkY8gZWngMweS2lVawpgD2FX5i5Ng1iH/qo?=
- =?us-ascii?Q?HCRzcRbqQcGXeWkzyrh+9VISrLwATtOrdxGLYu+wpxMHLZRqncehplZbKeTL?=
- =?us-ascii?Q?9Znj1kUpTQr5xG6/M5UiXDS8c6ik5TSfptrq2dw/2a5RoxN1hHE5s8krrocl?=
- =?us-ascii?Q?yLzOSyy4s6JddEtaTFWh3NqL048zIqm40DV1KYjhHb5Jh0QsNK39eYYIC/XF?=
- =?us-ascii?Q?G60yhvsMAFXub7UzkoxlSYX2grL+Y4viJMxboLop6jLlpzVOISLoLRjaNLhk?=
- =?us-ascii?Q?fLdxX0kdqBkIdneolIyUc7TxcYTRXat1dm/nPeoHVkdfP4LZWqSl5bVtL76D?=
- =?us-ascii?Q?9mYTyc1u1B07jbsjbFROUQVq3mnhix9fny3WiRGX3p4ym3J56LgrAkCnSHp2?=
- =?us-ascii?Q?EevWZpZfzf2P5ACxshTF/Bbi/oK6t8lOaqBPYmJ9MqMq0BCLPNwS3QiLE3Jc?=
- =?us-ascii?Q?TeeHU7+VVAUVAZbdqFIHCHg1CNyqhUhMW3szuFKS80iVDsKA2ZK/mWIHyqyG?=
- =?us-ascii?Q?5jjFVblojOJW8J7D7/CAmA/MGgYKnpRoJJ8gOW1GdMQUcyy1FT5kXCLIXBTC?=
- =?us-ascii?Q?mmr3iRNF6gxVwnBgh9oi6JO5FbLhV6EMfgEvKXMQ26vHY4f6ui3JYqdIfdOM?=
- =?us-ascii?Q?Tjyz8JRaqFemfQ4icZ+U8a7HV/8UI0Il/6T5cF+aQdfKQHL1r55CkEC/pWSH?=
- =?us-ascii?Q?fkPNz+fpp5YdH35YuFUmFarrsU6ygpD8RLFStC5uV//7G5FUw35ghWGdQxVK?=
- =?us-ascii?Q?DT9fNiqLwrBDul/Vhsnn1LxuAIuRCv8GW/BZWuYlJHwSa+3Hk47YT5SWwXBU?=
- =?us-ascii?Q?C7wllIlOLp8bpLo76VAosnhPiPGIuLg+QFHCGql6JLxZUd8QImTOEpUrZZ8t?=
- =?us-ascii?Q?bRBRl/7m9gTpclEReWNgBrZVMhuaTPRRymxH2YbmM5+c8cN7DiTvvmnWsPYb?=
- =?us-ascii?Q?GrYfZmEw7pT53hlTxisJ9qTSJTzLZbqLxPjmZlPYUNYlIpDzoGK0NZA9yUgZ?=
- =?us-ascii?Q?QwZhXDv8vJsDLBSljkKx6b4y1ugSOvTO9N+wbs6DpBXSNNL2SSXmw6vCuBqz?=
- =?us-ascii?Q?PGSNDNnj1bPm/5kaHV767ycVmQdHPNvmipquVih3Lc2ZRlSKc5d8Ni3HExEa?=
- =?us-ascii?Q?jB3PIR+u+DiH8VwaEDzeZUzrhSq9YaTxXQv/IkGggTWpFyaaLe4zCNGeG+Po?=
- =?us-ascii?Q?+Thn2W4ktyCk0AT8lOw05RkMm2R5ncnCXVoGJOkYDYjYzCTC/Vz6MpEmGQFG?=
- =?us-ascii?Q?YBt5QyoO1wmDmSOOEStHRAHzwyu1UM28v8P/aOn5ngdUB91qNJE/01Vew/Os?=
- =?us-ascii?Q?dNqRsnL0iR7WxPVQ0+w8QL3G3JLmv4vmT3qQsjY38y7+67zaIU9VFVmlMZSK?=
- =?us-ascii?Q?w7bB0OobjumtTPfNqws=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0464ae42-b045-4c2b-22c6-08dd97053a98
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 18:44:47.1633
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iGyjbKlWAH+fiktPrkNvZ+A6j6YSysMaQiSnhpU2M4hN6xol1ksvDCYHd25en8ABQnEjBNVfw2Q9t+b095sgRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9440
+References: <20250517001110.183077-1-hramamurthy@google.com>
+ <20250517001110.183077-7-hramamurthy@google.com> <50be88c9-2cb3-421d-a2bf-4ed9c7d58c58@linux.dev>
+In-Reply-To: <50be88c9-2cb3-421d-a2bf-4ed9c7d58c58@linux.dev>
+From: Ziwei Xiao <ziweixiao@google.com>
+Date: Mon, 19 May 2025 11:45:19 -0700
+X-Gm-Features: AX0GCFtuTKgp1zKfAPn8KbknOLyEMpCOVc7hNlTvX5suHLNuXThS_kS4KxvyiPs
+Message-ID: <CAG-FcCO7H=1Xj5B830RA-=+W8umUqq=WdOjwNqzeKvJLeMgywA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 6/8] gve: Add rx hardware timestamp expansion
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com, 
+	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
+	yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org, 
+	thostet@google.com, jfraker@google.com, richardcochran@gmail.com, 
+	jdamato@fastly.com, horms@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 01:18:56PM +0800, Shengjiu Wang wrote:
-> From: Carlos Song <carlos.song@nxp.com>
->
-> Add lpi2c and i2c-mux support for imx943 evk board.
->
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
+.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
->  arch/arm64/boot/dts/freescale/imx943-evk.dts | 132 +++++++++++++++++++
->  1 file changed, 132 insertions(+)
+On Sun, May 18, 2025 at 2:45=E2=80=AFPM Vadim Fedorenko
+<vadim.fedorenko@linux.dev> wrote:
 >
-> diff --git a/arch/arm64/boot/dts/freescale/imx943-evk.dts b/arch/arm64/boot/dts/freescale/imx943-evk.dts
-> index cc8f3e6a1789..a566b9d8b813 100644
-> --- a/arch/arm64/boot/dts/freescale/imx943-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx943-evk.dts
-> @@ -12,6 +12,9 @@ / {
->  	model = "NXP i.MX943 EVK board";
+> On 17.05.2025 01:11, Harshitha Ramamurthy wrote:
+> > From: John Fraker <jfraker@google.com>
+> >
+> > Allow the rx path to recover the high 32 bits of the full 64 bit rx
+> > timestamp.
+> >
+> > Use the low 32 bits of the last synced nic time and the 32 bits of the
+> > timestamp provided in the rx descriptor to generate a difference, which
+> > is then applied to the last synced nic time to reconstruct the complete
+> > 64-bit timestamp.
+> >
+> > This scheme remains accurate as long as no more than ~2 seconds have
+> > passed between the last read of the nic clock and the timestamping
+> > application of the received packet.
+> >
+> > Signed-off-by: John Fraker <jfraker@google.com>
+> > Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+> > Reviewed-by: Willem de Bruijn <willemb@google.com>
+> > Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> > ---
+> >   Changes in v2:
+> >   - Add the missing READ_ONCE (Joe Damato)
+> > ---
+> >   drivers/net/ethernet/google/gve/gve_rx_dqo.c | 23 +++++++++++++++++++=
++
+> >   1 file changed, 23 insertions(+)
+> >
+> > diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net=
+/ethernet/google/gve/gve_rx_dqo.c
+> > index dcb0545baa50..c03c3741e0d4 100644
+> > --- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+> > +++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+> > @@ -437,6 +437,29 @@ static void gve_rx_skb_hash(struct sk_buff *skb,
+> >       skb_set_hash(skb, le32_to_cpu(compl_desc->hash), hash_type);
+> >   }
+> >
+> > +/* Expand the hardware timestamp to the full 64 bits of width, and add=
+ it to the
+> > + * skb.
+> > + *
+> > + * This algorithm works by using the passed hardware timestamp to gene=
+rate a
+> > + * diff relative to the last read of the nic clock. This diff can be p=
+ositive or
+> > + * negative, as it is possible that we have read the clock more recent=
+ly than
+> > + * the hardware has received this packet. To detect this, we use the h=
+igh bit of
+> > + * the diff, and assume that the read is more recent if the high bit i=
+s set. In
+> > + * this case we invert the process.
+> > + *
+> > + * Note that this means if the time delta between packet reception and=
+ the last
+> > + * clock read is greater than ~2 seconds, this will provide invalid re=
+sults.
+> > + */
+> > +static void __maybe_unused gve_rx_skb_hwtstamp(struct gve_rx_ring *rx,=
+ u32 hwts)
+> > +{
+> > +     s64 last_read =3D READ_ONCE(rx->gve->last_sync_nic_counter);
 >
->  	aliases {
-> +		i2c2 = &lpi2c3;
-> +		i2c3 = &lpi2c4;
-> +		i2c5 = &lpi2c6;
->  		mmc0 = &usdhc1;
->  		mmc1 = &usdhc2;
->  		serial0 = &lpuart1;
-> @@ -53,6 +56,113 @@ memory@80000000 {
->  	};
->  };
+> I believe last_read should be u64 as last_sync_nic_counter is u64 and
+> ns_to_ktime expects u64.
 >
-> +&lpi2c3 {
-> +	clock-frequency = <400000>;
-> +	pinctrl-0 = <&pinctrl_lpi2c3>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	pca9548_i2c3: i2c-mux@77 {
-> +		compatible = "nxp,pca9548";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@4 {
-> +			reg = <4>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@5 {
-> +			reg = <5>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@6 {
-> +			reg = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@7 {
-> +			reg = <7>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&lpi2c4 {
-> +	clock-frequency = <400000>;
-> +	pinctrl-0 = <&pinctrl_lpi2c4>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&lpi2c6 {
-> +	clock-frequency = <400000>;
-> +	pinctrl-0 = <&pinctrl_lpi2c6>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	pca9544_i2c6: i2c-mux@77 {
-> +		compatible = "nxp,pca9544";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +};
-> +
->  &lpuart1 {
->  	pinctrl-0 = <&pinctrl_uart1>;
->  	pinctrl-names = "default";
-> @@ -60,6 +170,28 @@ &lpuart1 {
->  };
->
->  &scmi_iomuxc {
-> +
-> +	pinctrl_lpi2c3: lpi2c3grp {
-> +		fsl,pins = <
-> +			IMX94_PAD_GPIO_IO16__LPI2C3_SDA		0x40000b9e
-> +			IMX94_PAD_GPIO_IO17__LPI2C3_SCL		0x40000b9e
-> +		>;
-> +	};
-> +
-> +	pinctrl_lpi2c4: lpi2c4grp {
-> +		fsl,pins = <
-> +			IMX94_PAD_GPIO_IO18__LPI2C4_SDA		0x40000b9e
-> +			IMX94_PAD_GPIO_IO19__LPI2C4_SCL		0x40000b9e
-> +		>;
-> +	};
-> +
-> +	pinctrl_lpi2c6: lpi2c6grp {
-> +		fsl,pins = <
-> +			IMX94_PAD_GPIO_IO29__LPI2C6_SDA		0x40000b9e
-> +			IMX94_PAD_GPIO_IO28__LPI2C6_SCL		0x40000b9e
-> +		>;
-> +	};
-> +
->  	pinctrl_uart1: uart1grp {
->  		fsl,pins = <
->  			IMX94_PAD_UART1_TXD__LPUART1_TX		0x31e
-> --
-> 2.34.1
+Thanks for the suggestion. The reason to choose s64 for `last_read`
+here is to use signed addition explicitly with `last_read +
+(s32)diff`. This allows diff (which can be positive or negative,
+depending on whether hwts is ahead of or behind low(last_read)) to
+directly adjust last_read without a conditional branch, which makes
+the intent clear IMO. The s64 nanosecond value is not at risk of
+overflow, and the positive s64 result is then safely converted to u64
+for ns_to_ktime.
+
+I'm happy to change last_read to u64 if that's preferred for type
+consistency, or I can add a comment to clarify the rationale for the
+current s64 approach. Please let me know what you think. Thanks!
+
+> > +     struct sk_buff *skb =3D rx->ctx.skb_head;
+> > +     u32 low =3D (u32)last_read;
+> > +     s32 diff =3D hwts - low;
+> > +
+> > +     skb_hwtstamps(skb)->hwtstamp =3D ns_to_ktime(last_read + diff);
+> > +}
+> > +
+> >   static void gve_rx_free_skb(struct napi_struct *napi, struct gve_rx_r=
+ing *rx)
+> >   {
+> >       if (!rx->ctx.skb_head)
 >
