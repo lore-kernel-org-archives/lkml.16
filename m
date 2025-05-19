@@ -1,65 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E6C26D4DA
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED9126E16A;
+	Mon, 19 May 2025 09:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645658; cv=none; b=HYoRvMvjY+AhDwjKC9b7iMLh36sNS7ErbBc2sUFutknaKXhZyzaklbxRl2GCpyrzINX0gNDQlq3RFtLFnJ0vuAkBuGj+sJxFV1MmvhQiomfvrC1tP6BMs+ZUcGV1dvzJ81qYwP8MjNAxfSI1JWFSoPj32Mg1BDprtELcPEfjnFI=
+	t=1747645662; cv=none; b=Vbx0hbdmnd364nYspQq2/VzTDeuUqi513oAWN01dym5TKQkuLrXEePfFPjaD9igxz2jKQFupsO3tb6ZA68HLSWWUEjDaUW0nE01chr3bJSEorjjIatwNScZBJfXVe2Lr/uoswBgxwlYCvOiRV4OjX56EckloVMDj9EgGl5eic30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645658; c=relaxed/simple;
-	bh=ncEkC3aH0ZNbwQGs78ANJk57LMkt2WLIf6EZt7TSauc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fx6Bk1FXy5UkcHYWnO4exSJDw3trgvMaoyzoT3idKc/KZOax3nvCS8WMUpOqz3cSm2oWqKU+ANOVagDjAktBJtNjHCGromj3isDyB+THkIlkGolSTsbsM+2pHP/nD21Um14YWqhQ/cOUNmOsMZ6w/bD2lXxXR5u8KdHdn/6c2Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A4wisn7a; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4wisn7a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747645654;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VnAApEBOj4PhwBDwW7kuKK7utDLajmYgVrOrBosmfXY=;
-	b=A4wisn7agfuypy003lb/BwYuZNbqgG0CtzWni33Zm3c2Vuhd3LyoTnsoQADBwBjwbGiuYM
-	cGnPYLy2k/PU+4NPv1lZ3ZfwbBSuU0CQG7RvV/UIGWZIlNK2nQFT4YNPth0SSPqiH+eNqo
-	hOQ6NJpljGGEpjNkcf71Pw+E35H3V5M=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-148-eOlAI18_Nxm80Pe90ggXkQ-1; Mon,
- 19 May 2025 05:07:31 -0400
-X-MC-Unique: eOlAI18_Nxm80Pe90ggXkQ-1
-X-Mimecast-MFC-AGG-ID: eOlAI18_Nxm80Pe90ggXkQ_1747645649
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3BBA195608C;
-	Mon, 19 May 2025 09:07:28 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.188])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 77FA419560AB;
-	Mon, 19 May 2025 09:07:25 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nicolas Baranger <nicolas.baranger@3xo.fr>
-Subject: [PATCH 2/4] netfs: Fix setting of transferred bytes with short DIO reads
-Date: Mon, 19 May 2025 10:07:02 +0100
-Message-ID: <20250519090707.2848510-3-dhowells@redhat.com>
-In-Reply-To: <20250519090707.2848510-1-dhowells@redhat.com>
-References: <20250519090707.2848510-1-dhowells@redhat.com>
+	s=arc-20240116; t=1747645662; c=relaxed/simple;
+	bh=11/1wu26fy3F+Wu9zvLz9z6WBxzZn2rsxyOQYMgPKkw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fpILk7QHx+cNDC8wbJPrrSJ8PRghsxypShOfqUAxTUL/So5Nyf5BLQb/HRnsHS5hROD9C0IKaB8hGIPfERzG8y/WqoB+Lu6e5/c4I8bguHFe7DAFjB//MQZbgznLKNHhAlx2Z+RNf1U6SmvBjMzz4LQOta4IKuqVy7d6X4gXV/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7D0B11A0692;
+	Mon, 19 May 2025 10:57:59 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4492C1A069A;
+	Mon, 19 May 2025 10:57:59 +0200 (CEST)
+Received: from lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com (lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com [10.52.9.99])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 43F121800097;
+	Mon, 19 May 2025 16:57:58 +0800 (+08)
+From: Joseph Guo <qijian.guo@nxp.com>
+To: Bastien Nocera <hadess@hadess.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org (open list:GOODIX TOUCHSCREEN),
+	linux-kernel@vger.kernel.org (open list)
+Cc: qijian.guo@nxp.com
+Subject: [PATCH] input: goodix: add poll mode for goodix touchscreen
+Date: Mon, 19 May 2025 17:57:43 +0900
+Message-Id: <20250519085744.3116042-1-qijian.guo@nxp.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,110 +40,171 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-From: Paulo Alcantara <pc@manguebit.com>
+goodix touchscreen only support interrupt mode by default.
+Some panels like waveshare panel which is widely used on raspeberry pi
+don't have interrupt pins and only work on i2c poll mode.
+The waveshare panel 7inch panel use goodix gt911 touchscreen chip.
 
-A netfslib request comprises an ordered stream of subrequests that, when
-doing an unbuffered/DIO read, are contiguous.  The subrequests may be
-performed in parallel, but may not be fully completed.
+Update goodix touchscreen to support both interrupt and poll mode.
 
-For instance, if we try and make a 256KiB DIO read from a 3-byte file with
-a 64KiB rsize and 256KiB bsize, netfslib will attempt to make a read of
-256KiB, broken up into four 64KiB subreads, with the expectation that the
-first will be short and the subsequent three be completely devoid - but we
-do all four on the basis that the file may have been changed by a third
-party.
-
-The read-collection code, however, walks through all the subreqs and
-advances the notion of how much data has been read in the stream to the
-start of each subreq plus its amount transferred (which are 3, 0, 0, 0 for
-the example above) - which gives an amount apparently read of 3*64KiB -
-which is incorrect.
-
-Fix the collection code to cut short the calculation of the transferred
-amount with the first short subrequest in an unbuffered read; everything
-beyond that must be ignored as there's a hole that cannot be filled.  This
-applies both to shortness due to hitting the EOF and shortness due to an
-error.
-
-This is achieved by setting a flag on the request when we collect the first
-short subrequest (collection is done in ascending order).
-
-This can be tested by mounting a cifs volume with rsize=65536,bsize=262144
-and doing a 256k DIO read of a very small file (e.g. 3 bytes).  read()
-should return 3, not >3.
-
-This problem came in when netfs_read_collection() set rreq->transferred to
-stream->transferred, even for DIO.  Prior to that, netfs_rreq_assess_dio()
-just went over the list and added up the subreqs till it met a short one -
-but now the subreqs are discarded earlier.
-
-Fixes: e2d46f2ec332 ("netfs: Change the read result collector to only use one work item")
-Reported-by: Nicolas Baranger <nicolas.baranger@3xo.fr>
-Closes: https://lore.kernel.org/all/10bec2430ed4df68bde10ed95295d093@3xo.fr/
-Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Joseph Guo <qijian.guo@nxp.com>
 ---
- fs/netfs/read_collect.c | 21 +++++----------------
- include/linux/netfs.h   |  1 +
- 2 files changed, 6 insertions(+), 16 deletions(-)
+ drivers/input/touchscreen/goodix.c | 69 +++++++++++++++++++++++++++---
+ drivers/input/touchscreen/goodix.h |  4 ++
+ 2 files changed, 67 insertions(+), 6 deletions(-)
 
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 23c75755ad4e..d3cf27b2697c 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -280,9 +280,13 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
- 			stream->need_retry = true;
- 			notes |= NEED_RETRY | MADE_PROGRESS;
- 			break;
-+		} else if (test_bit(NETFS_RREQ_SHORT_TRANSFER, &rreq->flags)) {
-+			notes |= MADE_PROGRESS;
- 		} else {
- 			if (!stream->failed)
--				stream->transferred = stream->collected_to - rreq->start;
-+				stream->transferred += transferred;
-+			if (front->transferred < front->len)
-+				set_bit(NETFS_RREQ_SHORT_TRANSFER, &rreq->flags);
- 			notes |= MADE_PROGRESS;
- 		}
- 
-@@ -342,23 +346,8 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
-  */
- static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index aaf79ac50004..87991b56494d 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -47,6 +47,7 @@
+ #define RESOLUTION_LOC		1
+ #define MAX_CONTACTS_LOC	5
+ #define TRIGGER_LOC		6
++#define POLL_INTERVAL_MS		17	/* 17ms = 60fps */
+
+ /* Our special handling for GPIO accesses through ACPI is x86 specific */
+ #if defined CONFIG_X86 && defined CONFIG_ACPI
+@@ -497,6 +498,23 @@ static void goodix_process_events(struct goodix_ts_data *ts)
+ 	input_sync(ts->input_dev);
+ }
+
++static void goodix_ts_irq_poll_timer(struct timer_list *t)
++{
++	struct goodix_ts_data *ts = from_timer(ts, t, timer);
++
++	schedule_work(&ts->work_i2c_poll);
++	mod_timer(&ts->timer, jiffies + msecs_to_jiffies(POLL_INTERVAL_MS));
++}
++
++static void goodix_ts_work_i2c_poll(struct work_struct *work)
++{
++	struct goodix_ts_data *ts = container_of(work,
++			struct goodix_ts_data, work_i2c_poll);
++
++	goodix_process_events(ts);
++	goodix_i2c_write_u8(ts->client, GOODIX_READ_COOR_ADDR, 0);
++}
++
+ /**
+  * goodix_ts_irq_handler - The IRQ handler
+  *
+@@ -523,16 +541,50 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+
++static void goodix_enable_irq(struct goodix_ts_data *ts)
++{
++	if (ts->client->irq) {
++		enable_irq(ts->client->irq);
++	} else {
++		ts->timer.expires = jiffies + msecs_to_jiffies(POLL_INTERVAL_MS);
++		add_timer(&ts->timer);
++	}
++}
++
++static void goodix_disable_irq(struct goodix_ts_data *ts)
++{
++	if (ts->client->irq) {
++		disable_irq(ts->client->irq);
++	} else {
++		del_timer(&ts->timer);
++		cancel_work_sync(&ts->work_i2c_poll);
++	}
++}
++
+ static void goodix_free_irq(struct goodix_ts_data *ts)
  {
--	struct netfs_io_subrequest *subreq;
--	struct netfs_io_stream *stream = &rreq->io_streams[0];
- 	unsigned int i;
- 
--	/* Collect unbuffered reads and direct reads, adding up the transfer
--	 * sizes until we find the first short or failed subrequest.
--	 */
--	list_for_each_entry(subreq, &stream->subrequests, rreq_link) {
--		rreq->transferred += subreq->transferred;
--
--		if (subreq->transferred < subreq->len ||
--		    test_bit(NETFS_SREQ_FAILED, &subreq->flags)) {
--			rreq->error = subreq->error;
--			break;
--		}
--	}
--
- 	if (rreq->origin == NETFS_DIO_READ) {
- 		for (i = 0; i < rreq->direct_bv_count; i++) {
- 			flush_dcache_page(rreq->direct_bv[i].bv_page);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index c86a11cfc4a3..497c4f4698f6 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -279,6 +279,7 @@ struct netfs_io_request {
- #define NETFS_RREQ_USE_IO_ITER		12	/* Use ->io_iter rather than ->i_pages */
- #define NETFS_RREQ_ALL_QUEUED		13	/* All subreqs are now queued */
- #define NETFS_RREQ_RETRYING		14	/* Set if we're in the retry path */
-+#define NETFS_RREQ_SHORT_TRANSFER	15	/* Set if we have a short transfer */
- #define NETFS_RREQ_USE_PGPRIV2		31	/* [DEPRECATED] Use PG_private_2 to mark
- 						 * write to cache on read */
- 	const struct netfs_request_ops *netfs_ops;
+-	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
++	if (ts->client->irq) {
++		devm_free_irq(&ts->client->dev, ts->client->irq, ts);
++	} else {
++		del_timer(&ts->timer);
++		cancel_work_sync(&ts->work_i2c_poll);
++	}
+ }
+
+ static int goodix_request_irq(struct goodix_ts_data *ts)
+ {
+-	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
+-					 NULL, goodix_ts_irq_handler,
+-					 ts->irq_flags, ts->client->name, ts);
++	if (ts->client->irq) {
++		return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
++						 NULL, goodix_ts_irq_handler,
++						 ts->irq_flags, ts->client->name, ts);
++	} else {
++		INIT_WORK(&ts->work_i2c_poll,
++			  goodix_ts_work_i2c_poll);
++		timer_setup(&ts->timer, goodix_ts_irq_poll_timer, 0);
++		if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE)
++			goodix_enable_irq(ts);
++		return 0;
++	}
+ }
+
+ static int goodix_check_cfg_8(struct goodix_ts_data *ts, const u8 *cfg, int len)
+@@ -1420,6 +1472,11 @@ static void goodix_ts_remove(struct i2c_client *client)
+ {
+ 	struct goodix_ts_data *ts = i2c_get_clientdata(client);
+
++	if (!client->irq) {
++		del_timer(&ts->timer);
++		cancel_work_sync(&ts->work_i2c_poll);
++	}
++
+ 	if (ts->load_cfg_from_disk)
+ 		wait_for_completion(&ts->firmware_loading_complete);
+ }
+@@ -1435,7 +1492,7 @@ static int goodix_suspend(struct device *dev)
+
+ 	/* We need gpio pins to suspend/resume */
+ 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
+-		disable_irq(client->irq);
++		goodix_disable_irq(ts);
+ 		return 0;
+ 	}
+
+@@ -1479,7 +1536,7 @@ static int goodix_resume(struct device *dev)
+ 	int error;
+
+ 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
+-		enable_irq(client->irq);
++		goodix_enable_irq(ts);
+ 		return 0;
+ 	}
+
+diff --git a/drivers/input/touchscreen/goodix.h b/drivers/input/touchscreen/goodix.h
+index 87797cc88b32..132e49d66324 100644
+--- a/drivers/input/touchscreen/goodix.h
++++ b/drivers/input/touchscreen/goodix.h
+@@ -56,6 +56,7 @@
+ #define GOODIX_ID_MAX_LEN			4
+ #define GOODIX_CONFIG_MAX_LENGTH		240
+ #define GOODIX_MAX_KEYS				7
++#define GOODIX_NAME_MAX_LEN			38
+
+ enum goodix_irq_pin_access_method {
+ 	IRQ_PIN_ACCESS_NONE,
+@@ -91,6 +92,7 @@ struct goodix_ts_data {
+ 	enum gpiod_flags gpiod_rst_flags;
+ 	char id[GOODIX_ID_MAX_LEN + 1];
+ 	char cfg_name[64];
++	char name[GOODIX_NAME_MAX_LEN];
+ 	u16 version;
+ 	bool reset_controller_at_probe;
+ 	bool load_cfg_from_disk;
+@@ -104,6 +106,8 @@ struct goodix_ts_data {
+ 	u8 main_clk[GOODIX_MAIN_CLK_LEN];
+ 	int bak_ref_len;
+ 	u8 *bak_ref;
++	struct timer_list timer;
++	struct work_struct work_i2c_poll;
+ };
+
+ int goodix_i2c_read(struct i2c_client *client, u16 reg, u8 *buf, int len);
+--
+2.34.1
 
