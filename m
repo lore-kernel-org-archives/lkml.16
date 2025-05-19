@@ -1,165 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED56210FB;
-	Mon, 19 May 2025 08:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863E72459C7;
+	Mon, 19 May 2025 08:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644487; cv=none; b=skQtlqKdkRs5nVARFNQvTdJqKGOEDgDFzNpBkM2A0LoLIdTuUTsm+9+4y48Lo82KPPCXyaDhSGeZj3CYw/waquv5VbxLJOgBZGYbDmH2nAeWg30nxHLtgkeFPZaWU4nmCaa2PTixV5xtcGJmzv1y9h/bqvryZbScxjymSebD/SM=
+	t=1747644517; cv=none; b=O25y/Qg3qpRWvygHJLWVQkxgNxWjMPxS7TQIcEjIghXcfHMp6RWT1N1FyWsDRl9j+912iAF7J3IuRRtShSsKzloqpUinxkwlPDKa5U1bO7WTh6RObAkeoIGidAp9oss2hbIluaRZzfCeWADG06ssN5LtYZ6qM1HM1vCh1icMutg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644487; c=relaxed/simple;
-	bh=e2P5kIf12pmhzIP6nIe0ke4cFpoL7ha0XqwOXr3qDxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RRWL+nFfSJkz1Q2FQ6JBJm3rnUKWPleDpXumjI48dbqwnqwJm35Nrvf7D/3qioQSBjJVZ9u4fvkUn0MW+801mVKnoMxwqMAQepK+nDLdL2slvZgUjdskqcaW6Uq7KF/zwYTTX6crVjSuNGeFF3arBaurBB6zKS3vGjzh3m7n8ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJ0jq/7V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJ0jq/7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C08C4CEE4;
-	Mon, 19 May 2025 08:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747644485;
-	bh=e2P5kIf12pmhzIP6nIe0ke4cFpoL7ha0XqwOXr3qDxQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vJ0jq/7VyJqgSVlYbHkY5RMeRQrUJfL5za0MN+a/59F4KhWyWMMQ6dl/a3ckFH8Uc
-	 MNrm9ChLSNlVW4O6+z9boGrKsTkOgr15pBcs+uSILRksNIjMBms7HbKKZTPMmPBX3x
-	 tWj6/UBUq0hQurFJ3nA8cWXrs1Pdxz3sL8rZ2QELa8k8msyHR1U58i518qoWNG68bk
-	 wOdflOyC3mVuyOpm33gLCbhCqiCICYX09t2Z8POZTv+x9iImZd6AhnTtjAeWgi1NSI
-	 sVjzkX0GuisIjD98xnvir5VDUrBCWTUzpjZ2WWODwSZW9xUbd5PvXxtKTU6ozPUOdK
-	 5LOc0kJBgm3hg==
-Message-ID: <f8cf2c4e-0ae2-4799-bda8-654b4f515846@kernel.org>
-Date: Mon, 19 May 2025 10:47:57 +0200
+	s=arc-20240116; t=1747644517; c=relaxed/simple;
+	bh=Ih+8f3zUfjU505gQBNGKBoShCWVN0Yfmu67KdEg42mU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bAHOQKHVAYVqRMy2D2sBFTzXrRgHJLydUYFgVPZo5qAcotPdeOdwmXZOwlsg48FZjJ0c9uzFlZS38Xkv/VnFv88IybGXaoxKzEukGnDS3PNupNCbSsDk6QMq46ZYiRqFRm+zhp8dc+FuxYMaQOXPHor+qEBpm+lDNJljQpkDZuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52eea8111easo131042e0c.2;
+        Mon, 19 May 2025 01:48:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747644512; x=1748249312;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UUoGNODM3B5cNA6VCA3Yq2EkxGAcmEIZXesnTmnumTo=;
+        b=NtiFi+qERQn3YsxiHKRFGIxhVeaYCBSHH2ReGAdp7XYd/pWntF3GtbDf6wYNd3xfgt
+         xOSkBNRgUQkBfDIB7BnFSxFjwrJmuyXhpjWo3xYtAVGAR9LPbOe7fZYectIkbmIaP/oK
+         lm4y2xIMnS8mx4xoMCFtPO2g/8eac62VVK93B5pLWWA3wBykTfKha7FaFZ1dwHF4cdMH
+         TBP9E5C+/77EOlRw7f8EUTQlf408Hr1uGNd1BTICly/aZ5VC0iddy1pv3xjRW7FoZr5h
+         qgTsjUAdjtcBtEWg4kxbxjpKjMk/k73jf7xC8xfsIQyjbk4Xyw1H2eC0a9WPAXqt8zCP
+         aBNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUumJ+9MNgCHlPFPo8uLFvKwh5ToQ6K+XaL1FaD7GQEsXvXswhC+Sf4WxbSb+Kz05wOKzGK/g9r7Ko=@vger.kernel.org, AJvYcCVtznrOKKjXLu9KXkS2VigOCdanuIraI8zffekeQvjuWjHcC5mumv9uB2eWRQkkzLWBNJESm64UMVkLFRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynGAu1j7OYNxAtXqWrVSOryUYErYqZcUau5KQNz548Svt2aNzN
+	RtdigoGaqe9CvJEZadsqCiRtoeRhIoYJeDdgcUPIofr7qa2yfL/pK6hB3+9HjvG3
+X-Gm-Gg: ASbGncscIloULUd89iqM4bhfiv80YKTb2tJWfe0nwu8xsvAlqqTt+BwZB+7DlBXqmj0
+	sJBO7u5/H4sdbcLeqN/rWmRETRhTF4HO5xOaEAuiENQ/xkdp5YqXe0JQUTYFMKFpTKeH0mWtXYu
+	Hwe4pwBIOubhNXUaRdAfNqVqNstiHmtjPYIvCdFSYcXZtD946cq8QDrgQVK+9F6sZo7GYA3rOkT
+	AII0bOHuUwXm+8ABx0sv7most3oACElsQRgf0Yd/+Zx5/wKXiKSJVOq5h26KebVdmFY3sHb+Ln4
+	vIvfbcX3i32xlSV4nUirBa5WFbqbISvO21L82owC3xo6g4/aKEM/ATdtTQa69Uw/lB6G+jHRMrR
+	DqUoZRnzT8LY5Iw==
+X-Google-Smtp-Source: AGHT+IEHyltb1G0iJZhl3YfYVMe2vWgZlb7JXH2b0bwWqcQLNkl99jj0E8Oy5vP0M2oZkGu6dnpDkw==
+X-Received: by 2002:a05:6122:792:b0:525:9ddc:381a with SMTP id 71dfb90a1353d-52dbcda03a8mr9604714e0c.6.1747644512555;
+        Mon, 19 May 2025 01:48:32 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec1220b5sm5437499241.11.2025.05.19.01.48.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 01:48:32 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-877c48657f9so828701241.1;
+        Mon, 19 May 2025 01:48:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUwYJ9MeL6yZVQ3SiI9Ko7Fujsvic+6t1CUsWEEc2qsKg0qwY+sdMWvsNbDsUchbQTiSsvSObut3sNc3f0=@vger.kernel.org, AJvYcCV2WKQ9+WO9X6TlE9TLOz0XX9WLjO5IWXMerkK5zwNik+j2OBmvVAjbzgZPj9wa4gSSzYtDkBrMgyg=@vger.kernel.org
+X-Received: by 2002:a05:6102:330b:b0:4e2:9b58:ed70 with SMTP id
+ ada2fe7eead31-4e29b58ef93mr397855137.9.1747644511992; Mon, 19 May 2025
+ 01:48:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/10] arm64: dts: rockchip: Add nodes for NPU and its
- MMU to rk3588s
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-doc@vger.kernel.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org
-References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
- <20250516-6-10-rocket-v3-2-7051ac9225db@tomeuvizoso.net>
- <4bd79c88-7da5-4bf0-9300-cfdb296c8919@kernel.org>
- <CAAObsKDsO=5uK3BEn6BOgatb+y73jc-Se6mmSbhwG9P_1nVtwg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAAObsKDsO=5uK3BEn6BOgatb+y73jc-Se6mmSbhwG9P_1nVtwg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250517093048.1149919-1-rppt@kernel.org>
+In-Reply-To: <20250517093048.1149919-1-rppt@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 19 May 2025 10:48:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
+X-Gm-Features: AX0GCFtfNAumQMNNQi8KkHvE6Pqueqrc9COgImCZWxMhdTTFYMGbyiZ2UCS92FA
+Message-ID: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
+Subject: Re: [PATCH] sh: kprobes: remove unused variables in kprobe_exceptions_notify()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Mike Rapoport <rppt@gmail.com>, 
+	Rich Felker <dalias@libc.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 19/05/2025 10:27, Tomeu Vizoso wrote:
-> On Mon, May 19, 2025 at 8:08 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 16/05/2025 18:53, Tomeu Vizoso wrote:
->>> See Chapter 36 "RKNN" from the RK3588 TRM (Part 1).
->>>
->>> This is a derivative of NVIDIA's NVDLA, but with its own front-end
->>> processor.
->>>
->>> The IP is divided in three cores, programmed independently. The first
->>> core though is special, requiring to be powered on before any of the
->>> others can be used.
->>>
->>> The IOMMU of the first core is also special in that it has two subunits
->>> (read/write?) that need to be programmed in sync.
->>>
->>> v2:
->>> - Have one device for each NPU core (Sebastian Reichel)
->>> - Have one device for each IOMMU (Sebastian Reichel)
->>> - Correctly sort nodes (Diederik de Haas)
->>> - Add rockchip,iommu compatible to IOMMU nodes (Sebastian Reichel)
->>>
->>> v3:
->>> - Adapt to a split of the register block in the DT bindings (Nicolas
->>>   Frattaroli)
->>>
->>> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
->>> ---
->>>  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 85 +++++++++++++++++++++++++++
->>>  1 file changed, 85 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
->>> index 1e18ad93ba0ebdad31642b88ff0f90ef4e8dc76f..7b961ab838212fad8e4a70390fdc917a828433a9 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
->>> @@ -1136,6 +1136,91 @@ power-domain@RK3588_PD_SDMMC {
->>>               };
->>>       };
->>>
->>> +     rknn_core_top: npu-core@fdab0000 {
->>
->> npu@
->>
->>> +             compatible = "rockchip,rk3588-rknn-core-top", "rockchip,rknn-core-top";
->>
->> You never tested this. Test before sending instead of relying on us or
->> after merging.
-> 
-> Can you please extend on this? I have tested this series before
-> sending and I don't understand what you mean here.
+Hi Mike,
 
-I mean exactly that: it was not tested, because warnings are clearly
-visible/expected. I also found now Rob's report which even shows you the
-warnings, so how come you still claim this was tested?
+On Sat, 17 May 2025 at 11:30, Mike Rapoport <rppt@kernel.org> wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> kbuild reports the following warning:
+>
+>    arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
+> >> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
+>      412 |         struct kprobe *p = NULL;
+>          |                        ^
+>
+> The variable 'p' is indeed unused since the commit fa5a24b16f94
+> ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
+>
+> Remove that variable along with 'kprobe_opcode_t *addr' which also
+> becomes unused after 'p' is removed.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
+> Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Best regards,
-Krzysztof
+Thanks for your patch!
+
+"p" and "addr" are definitely unused (besides side-effects?), so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/sh/kernel/kprobes.c
+> +++ b/arch/sh/kernel/kprobes.c
+> @@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+>  int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+>                                        unsigned long val, void *data)
+>  {
+> -       struct kprobe *p = NULL;
+>         struct die_args *args = (struct die_args *)data;
+>         int ret = NOTIFY_DONE;
+> -       kprobe_opcode_t *addr = NULL;
+>         struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+>
+> -       addr = (kprobe_opcode_t *) (args->regs->pc);
+>         if (val == DIE_TRAP &&
+>             args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
+>                 if (!kprobe_running()) {
+> @@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+>                                 ret = NOTIFY_DONE;
+>                         }
+>                 } else {
+> -                       p = get_kprobe(addr);
+>                         if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
+>                             (kcb->kprobe_status == KPROBE_REENTER)) {
+>                                 if (post_kprobe_handler(args->regs))
+
+I have no idea what this code is supposed to do, and if it actually
+works.  Red flags are that the assigned "p" was never used at all
+since the inception of this function.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
