@@ -1,85 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8C327C875;
-	Mon, 19 May 2025 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA24A280A53
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747662449; cv=none; b=atQQsFXlpk+JHNxoIbLus0DOj3XZ1tKsOJD+NApEg9zqaQhvTqqdEqbpSkG3d39zogEmxb8b+tBwukb9cgAJ2KypHtu8YLPReoIsEsfeIKGA6CrQT2WI+f8+7R+5sBQ+cUF1t5BHY/JIuad+iIvyGpESeuzaUWVOpjvGjYRKBQQ=
+	t=1747662514; cv=none; b=XHYQ18ZkG8c6mKCPmK2+EVMA5JL+IWollL5gcOUDOFEuFSSRshtP1wKsVNh41q3T2jqz0ddnwMMHhf957CdBpoYQG+XBrZLmUNevh4ExbZLyOvWAK9db43nb5/xzCt8HFXXzKbHC1rKViHPy2AB3RxDUFqJm2c5mcXaqO73z8s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747662449; c=relaxed/simple;
-	bh=ZiIztDnqsy7lttlHbcN9H2p9Y766zX7cnay4gMCyOBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PweemoNgiav5thxCIwHWzNU+B9DhChNM9H+9/pmX49j5nw/xOloHac/EGDukcELLupuOLko1dOQBiXPRwk5G84h++uwtGxWPdPPLvhA6xHjIkC09qiTtGOBn6FhIJjjdnyGUx3ThAKL7Q9criUJLK5y7xzDQufTssFVUT09uhQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uf3qLYod; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747662514; c=relaxed/simple;
+	bh=0kFUN0Bb4ZQZ98YAUM8AzAOqvp9BJdqBdqhGWpmyTRo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rlx/IKYOzSglmz9XB0pFfsAlhUlp03g+CgaINnI5Mz4H/C/rEliEQV9PGGw8/gGJHO4jYYJWwGQVLPh7QZcKME0DZqBnHUGxiS/UFFY8AVaOyp+tSJKZXSwVKSObWi75PcKLmAjR/pAZbVsvUCcqFZI+qS2c1JD1nE65/gZHpX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRUr7YKl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uf3qLYod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC852C4CEE4;
-	Mon, 19 May 2025 13:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747662449;
-	bh=ZiIztDnqsy7lttlHbcN9H2p9Y766zX7cnay4gMCyOBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uf3qLYoddfguPY5juRMEYzps76k5iwNa4hcT/OnINzFIuhS6A+70NtOgsyK4PTLaG
-	 9y/xKTKi/e9ZpII4i6+3+1suYiSRzQyA5saxyqVNUNQDsOUe9Nj5uKFKQNH1npmqkL
-	 Dn35rC9i+9AhrBrqvpvq9si1XFoZx4z9xqvr7sjpvTW1XXuvJa7onpzAGk6z6lOAap
-	 YkEaf3ywPoYYBwhcZVIPcACxDvCoucI4UbOJAK3SiMydRVu+8zNfUQtKWdk6RJy8V9
-	 FNWg+Wrb6VnkCa551cNf48e7z9vg92jcYjDNbozrgLx/zAmgGBLDkm5fzOqQlDCpud
-	 gtYHiu77ZdZeQ==
-Date: Mon, 19 May 2025 15:47:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <kvckrtgbdxlzezxzn5xe6owmbaxa5rygknsv3hne32awfc7y5s@k2akbs6u7tkr>
-References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
- <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
- <20250519124028.GA423953@legfed1>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRUr7YKl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747662510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OoTF+qmsx6IE6mLtdNrrcrScQMVpnF3mNudHwgneH7s=;
+	b=PRUr7YKlMquhPw/vCfXUqwJ6oXf79awXuQP44g+YhJLPbg6douW3rXzc9ApCOS0+Yvp+7c
+	tZvLh9rP0vc56Ir+UnUDPJLFuh+Y+G4yZurKmxSaAwH1RNswcKe35gT9O9pJ0cdtESoF2M
+	ckb8wTxLrpMfoIpK3Kmc6akmwT3ybPQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-s83dwMDsNoWSP8UzoDUabg-1; Mon,
+ 19 May 2025 09:48:28 -0400
+X-MC-Unique: s83dwMDsNoWSP8UzoDUabg-1
+X-Mimecast-MFC-AGG-ID: s83dwMDsNoWSP8UzoDUabg_1747662506
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 410F518004A7;
+	Mon, 19 May 2025 13:48:26 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.188])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CA1A18003FC;
+	Mon, 19 May 2025 13:48:22 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] netfs: Miscellaneous cleanups
+Date: Mon, 19 May 2025 14:47:56 +0100
+Message-ID: <20250519134813.2975312-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rrl3j5uikcwdofo3"
-Content-Disposition: inline
-In-Reply-To: <20250519124028.GA423953@legfed1>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+Hi Christian,
 
---rrl3j5uikcwdofo3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-MIME-Version: 1.0
+Here are some miscellaneous very minor cleanups for netfslib for the next
+merge window, primarily from Max Kellermann, if you could pull them.
 
-Hello Dimitri,
+ (0) Update the netfs docs.  This is already in the VFS tree, but it's a
+     dependency for other patches here.
 
-On Mon, May 19, 2025 at 02:40:28PM +0200, Dimitri Fedrau wrote:
-> Perfering IS_REACHABLE over IS_ENABLED is fine for me. Is there a reason
-> why you just didn't replace IS_ENABLED with IS_REACHABLE ?
+ (1) Remove NETFS_SREQ_SEEK_DATA_READ.
 
-Because if (IS_REACHABLE(...)) is nicer than #if IS_REACHABLE(...). It
-has better compile coverage and is easier to parse for a human.
+ (2) Remove NETFS_INVALID_WRITE.
 
-Best regards
-Uwe
+ (3) Remove NETFS_ICTX_WRITETHROUGH.
 
---rrl3j5uikcwdofo3
-Content-Type: application/pgp-signature; name="signature.asc"
+ (4) Remove NETFS_READ_HOLE_CLEAR.
 
------BEGIN PGP SIGNATURE-----
+ (5) Reorder structs to eliminate holes.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgrNmsACgkQj4D7WH0S
-/k6+Hgf+Mhu+Ky4NV790iyqYQmN2UyFjZjLEVMjwih3w7K4MtQlDzniuUyYBr3Cj
-b8/owEO1PUzmx9pRFvq36M21EAyhJi0U8bR6LsbBLZ2jUfBK3PFT62ht1gGoNt+q
-2la/3Uj44+3I1azq9FY52SkikXlhiTsaMuls+xiGjhvKn8Sr7BZNUjYQSQXFPmSM
-jy4UTfN0LSLcJjivsAzr8570Hmm5XLxs7LW2e0QJx2NIjFrDh1sCH2BOcUxUeTWh
-BqjxeIbTtZ/9EfVrHfDPZjdonJbm8dTBg7Ot8kg69xYnfgJAIIYHnNVogHaY8Och
-QGKd/h6r+mVYw8Xi5ghiJE1Q4W7jKg==
-=XnUH
------END PGP SIGNATURE-----
+ (6) Remove netfs_io_request::ractl.
 
---rrl3j5uikcwdofo3--
+ (7) Only provide proc_link field if CONFIG_PROC_FS=y.
+
+ (8) Remove folio_queue::marks3.
+
+ (9) Remove NETFS_RREQ_DONT_UNLOCK_FOLIOS.
+
+(10) Remove NETFS_RREQ_BLOCKED.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-next
+
+Thanks,
+David
+
+David Howells (1):
+  netfs: Update main API document
+
+Max Kellermann (10):
+  fs/netfs: remove unused flag NETFS_SREQ_SEEK_DATA_READ
+  fs/netfs: remove unused source NETFS_INVALID_WRITE
+  fs/netfs: remove unused flag NETFS_ICTX_WRITETHROUGH
+  fs/netfs: remove unused enum choice NETFS_READ_HOLE_CLEAR
+  fs/netfs: reorder struct fields to eliminate holes
+  fs/netfs: remove `netfs_io_request.ractl`
+  fs/netfs: declare field `proc_link` only if CONFIG_PROC_FS=y
+  folio_queue: remove unused field `marks3`
+  fs/netfs: remove unused flag NETFS_RREQ_DONT_UNLOCK_FOLIOS
+  fs/netfs: remove unused flag NETFS_RREQ_BLOCKED
+
+ Documentation/core-api/folio_queue.rst      |    3 -
+ Documentation/filesystems/netfs_library.rst | 1013 ++++++++++++++-----
+ fs/netfs/buffered_read.c                    |   24 +-
+ fs/netfs/buffered_write.c                   |    3 +-
+ fs/netfs/direct_read.c                      |    3 -
+ fs/netfs/objects.c                          |    2 -
+ fs/netfs/read_collect.c                     |   14 +-
+ fs/netfs/write_collect.c                    |    2 -
+ include/linux/folio_queue.h                 |   42 -
+ include/linux/fscache.h                     |    3 -
+ include/linux/netfs.h                       |   30 +-
+ include/trace/events/netfs.h                |    3 +-
+ 12 files changed, 767 insertions(+), 375 deletions(-)
+
