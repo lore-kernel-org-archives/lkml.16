@@ -1,106 +1,118 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCB27817A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E74127817A;
+	Mon, 19 May 2025 13:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660808; cv=none; b=c38DJazvmpKLH4GHRhueD5GHlkItAOKrLxhK472rJnCdJq1uRZC+n4Vi8freuV2iUFT81I5TUkfPCK0QCGpdwInxv0UINbPHHw3Q0IAgryhiLjfeHqw6Ih5Mj8VBR9w2CrsY/xb3piQG0YXQfiay6h1Wpe9Ea+Mt+B4RtISODI8=
+	t=1747660833; cv=none; b=hS6Ao+1pFkzw/E60byDJgL40FsRbLqT1jWv7PsKnlqvhtntkcry6YYGFf/j/QUDg41R19xnBX6KgdVBlPmusktm8rnxbcVvEPvsdwFxYQ92O2Mtgqwz5YcfY2VuJEhiwdgXOu8fZ8AmEzlltSJabhLZ9eLTKoxdi4U8wD2JhqQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747660808; c=relaxed/simple;
-	bh=g3ZozbinENRScyPV2xxw+ZFrBdJFXASo/Co1oK1uMVk=;
+	s=arc-20240116; t=1747660833; c=relaxed/simple;
+	bh=9iouOGh3QjslBE1M2A6Y6TE92/zQWmx9Bc23waFCt4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXQTDZj2yaKqUVQIV+n4vCbVSkm4Fno/V0rlaWxRLQxRA0ennKICN0zZcdU5Aj8yZRnpJ/huajZa59U76CLPMfwuopCe2W9hh5Xwo1pNt4UXB+jTRK67nl1GdtecBAvCTS5U4QKKW83rAhnmLSUSi0KBN8NFqBNnREjss28oC7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=igUglUHe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMXCljz4SZnYWqfT5WBryTOsf1MQe1qQ2ztzQzaltu7sqvckabnUzrJ6zpHqqBYu7dmNhb+/EyhTfgevnsgPBM1BgwsctCpzOlMKqbDr8DETNc1gPxifg6zAQPnjF7pyHrPZALuOGPdeIBn4owjQd/lyn8Efala2v+YuGnIpt00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FffsN5Ae; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="igUglUHe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0A64340E0238;
-	Mon, 19 May 2025 13:20:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id LKmry1jTl_9Q; Mon, 19 May 2025 13:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747660800; bh=eALvwRRqtlo+1eJlwR+ponANKqmb4Vp8XbSE5dbRFJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=igUglUHefLy+8mK0I1rx8k904b9ZgNK7sYAov6f0d8vTM2zhD4w+zcyonub6ipTwa
-	 76NCrliEMxPT83PEN50t4gBiMAc3F0Cvt6f3sIUshyIdi8tMrzJz0ctRNJGPWdsjbH
-	 oBBTcON4ymzHgJ1DGST20qb+ycuO0Yb0Gnh1E0IpHSDlPgIrECbVbXc8CM6Ub+/Ox4
-	 2aXH5fiw8jOk07bhqlC68fumXd/F7BwFC6xTi1krxLd0axKIFQSVxS0KjvKV2tcCp8
-	 pAGdgMGrsk6bYDcOCMvD2rxy67TIp+0+8C26wsa8BDwsB+xQd3VOMVNuYd6aKbojw/
-	 mmb+s3KPzv7MhvnaP3GMwL3m5MszaXObTS543pTMN29xX4x+Kw2YStKDEsdXd5ICwr
-	 0goYvuU1Pl7doCuoB0gCo/xxriHVhffFAPljaivdjudZw2nvMHK3yGs1r9mR249u0C
-	 p393AIzCOLOxIdIVDw3Itdl/66AUBDin10Yb2I3+KGTyrtqY3bwPzKS2qMnKcgJgnZ
-	 +SVTYmcHTHxFbRr0kP8oCSFvj8tOaVeXNconKg9JhgDNRW6sv9PriQpJFKYbIyAYh7
-	 Ws0WqKl6r6PeWOdjB1oOlwy8QktEKxS34QsFpg8VzEWE2qRwegghTqBq3l7ORajd3h
-	 5DbyZ5D7PcNNZw8uPR8376f0=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 48EA740E016A;
-	Mon, 19 May 2025 13:19:50 +0000 (UTC)
-Date: Mon, 19 May 2025 15:19:44 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
- <aCstaIBSfcHXpr8D@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FffsN5Ae"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747660832; x=1779196832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9iouOGh3QjslBE1M2A6Y6TE92/zQWmx9Bc23waFCt4U=;
+  b=FffsN5Aepn8mo8V4gsGX4alLw1wSzMIHntb9h8yNpLaOqFcgAsk0F/tq
+   +1Pw8d74tDtoYxf4yMoUMjzZOFZjFODZTP+iPAkU+GcJqo009zPhrZX4g
+   twAoqiMLQleB5qh2DevRjJl87Pw17Kyv/aoTR7VdFntWa8LWWzKgChLb+
+   8kRYlgOWBx3O9HdIVdXEHepGfp3c7aq9cceOcKOn7EWEpIYKeWrX0dYlv
+   oP6141/lq21tgXOhIJgy/BxNfCUc5oVI2PqbqFVKyB8x94ah6FwGQSW9y
+   oWSJiWI7nbLxwqC3lfxDk7le35IxdHkpsxyzS+2KGMaL6gnIs23TgUpza
+   A==;
+X-CSE-ConnectionGUID: hTCDBz2YQ0mbjDGSGUEs8w==
+X-CSE-MsgGUID: yYAOOEi2S9um35Hymji4TQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="52191871"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="52191871"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:20:31 -0700
+X-CSE-ConnectionGUID: w/erx1NHSqmJhMrNaGbHVQ==
+X-CSE-MsgGUID: DEZHvtGbTIe3bNhcttCyoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139268403"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 19 May 2025 06:20:28 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uH0Pp-000LWa-25;
+	Mon, 19 May 2025 13:20:25 +0000
+Date: Mon, 19 May 2025 21:19:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Hildenbrand <david@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
+Message-ID: <202505192132.NsAm4haK-lkp@intel.com>
+References: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCstaIBSfcHXpr8D@gmail.com>
+In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
 
-On Mon, May 19, 2025 at 03:08:56PM +0200, Ingo Molnar wrote:
-> The second best thing we can do is to have a sane, constant LA57 flag 
-> for the hardware capability, and introduce a synthethic flag that is 
-> set conditionally (X86_FEATURE_5LEVEL_PAGING) - which is how it should 
-> have been done originally, and to maintain compatibility, expose the 
-> synthethic flag in /proc/cpuinfo as 'la57' to maintain the ABI.
+Hi Lorenzo,
 
-- we don't expose every CPUID flag in /proc/cpuinfo for obvious reasons:
+kernel test robot noticed the following build errors:
 
-  Documentation/arch/x86/cpuinfo.rst
+[auto build test ERROR on akpm-mm/mm-everything]
 
-- if you want to mirror CPUID *capability* flags with X86_FEATURE flags *and*
-  use the same alternatives infrastructure to test *enabled* feature flags,
-  then you almost always must define *two* flags - a capability one or an
-  enabled one. I don't think we want that.
+url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Stoakes/mm-ksm-have-KSM-VMA-checks-not-require-a-VMA-pointer/20250519-165315
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes%40oracle.com
+patch subject: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
+config: x86_64-buildonly-randconfig-001-20250519 (https://download.01.org/0day-ci/archive/20250519/202505192132.NsAm4haK-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505192132.NsAm4haK-lkp@intel.com/reproduce)
 
-And since we're dealing with ancient infrastructure which has grown warts over
-the years, we all - x86 maintainers - need to decide here how we should go
-forward. I have raised these questions multiple times but we have never
-discussed it properly.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505192132.NsAm4haK-lkp@intel.com/
 
-Also, Ahmed and tglx are working on a unified CPUID view where you can test
-capability.  Which means, what is enabled can be used solely by the
-X86_FEATURE flags but I haven't looked at his set yet.
+All errors (new ones prefixed by >>):
 
-So it is high time we sit down and hammer out the rules for the feature flags
-as apparently what we have now is a total mess.
+>> mm/vma.c:2589:15: error: call to undeclared function 'ksm_vma_flags'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    2589 |         map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
+         |                      ^
+   mm/vma.c:2761:10: error: call to undeclared function 'ksm_vma_flags'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    2761 |         flags = ksm_vma_flags(mm, NULL, flags);
+         |                 ^
+   2 errors generated.
+
+
+vim +/ksm_vma_flags +2589 mm/vma.c
+
+  2586	
+  2587	static void update_ksm_flags(struct mmap_state *map)
+  2588	{
+> 2589		map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
+  2590	}
+  2591	
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
