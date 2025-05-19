@@ -1,54 +1,50 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0D8267AF1;
-	Mon, 19 May 2025 08:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082B512FF6F;
+	Mon, 19 May 2025 08:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747641919; cv=none; b=hMrUd3LlYSeM1ijUbiiZwqM6VN4LMbtScqu9L1JxnL2yXi5v+yDOMOb3QmQwkJ9XwNF/uQnBaVKMkDyUndtRpw1zlQy+qtX/NCNoSMtIk2mlMbB/CcFTm7ZmCo3bs5iY00POkLxFYmQtHwDubahi+oFWKBm22J/Oy88Z6OvAm/o=
+	t=1747641964; cv=none; b=fk57q7EbBMB2DoASPxFhrkS6fTz9L+DtDrqNKvIzKHSXTo8eOx6IpNA/kWgEv4G5fH97x9RgWHpuRrxYvlrJ9uYgozA7EwXn5/7E6WTEPm0XCHvvlLGutySebr/PXJAJPkoexokoTdnvtEyOgjfu6RSYfsWx06VGK/QEVgqx+4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747641919; c=relaxed/simple;
-	bh=kLG7ciOJXl0SnR3l4RrUmyY/7CFCcQdQNSB0+J3VE0M=;
+	s=arc-20240116; t=1747641964; c=relaxed/simple;
+	bh=vgQ37Wd6NFpayHg0FKFupM/R6G4CWH8d5na8y51Q71w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjpjzDSQt6yZ3hh7JjVyUh9d4AqxghzHDam1Rywzvq7D6DVKRdyMh9k2Zsb/y63GwsKhJ+xZoZOloQ+++leeOxcLuq3HC0CVKAuFnhCLYvfgHo6TGUMB+Gh6u8xB8ZlK6t3p8sg1dn71OQAJEXiH9gu6ySUB2wmhDfQxo2kWXmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lB2vwCS1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XbKwBp8z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPyFEM42ZgwDIJAXZ3idZtuNej3AvXfd7BmxIj74Vtnml4N6qIka7DA/2mmTz7qIsRm7Xk/ePBf437hBq4ll/wbMTbeIxmxgsO2GpydVWTHRUk76vwTTlVNonkQDCad763WIL/u7QLLCq2K9IAWHm5qSVfS9x+qxplZq3zg34no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7ZXRUg2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lB2vwCS1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XbKwBp8z"
-Date: Mon, 19 May 2025 10:05:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747641913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZXIm6sgXmXlj70dvC8HVvgmJTDV3MncbV/nS/iA9vFg=;
-	b=lB2vwCS1qhZDopM9MEZNEI6dl+Eu2xslHLT9bAqz1fv9d2SxXZLL/srJdOj+WrbjPYZIhL
-	sfMQU66De59xNI8JcyktCFefJlSkgSLghN4HICBWjAWQVAYUlczdgS9PBFMrW7eY2YXbur
-	bD+fAtkttX0EdGmAQOlriHpVsBUxYC1QWjzMKbxP+4zRXyMfmIyYMQDzysLFZRJX/KV78U
-	AbAHEce5jSU767SQtWzj6k12sKv0j0QPDHFZ0SQ2eRQGvzoUXZJgF8A4qJqLoxz7cqqBep
-	h++sBrXMERUHdvJtJx3UTJlFZIeVp7uQrfrCv090VDSwfVS1RHxOXcEPBnjXSQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747641913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZXIm6sgXmXlj70dvC8HVvgmJTDV3MncbV/nS/iA9vFg=;
-	b=XbKwBp8zWJlqo6GGb1dfmrqIQea02FnWSw92iobK2cb+4qIpF7JHkkEn8zg4TBk1yy7ubQ
-	oQX4sVIV5J4ejyCw==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 04/12] rv: Remove trailing whitespace from
- tracepoint string
-Message-ID: <20250519080512.nWZNfeOa@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-5-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7ZXRUg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D55DC4CEE4;
+	Mon, 19 May 2025 08:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747641963;
+	bh=vgQ37Wd6NFpayHg0FKFupM/R6G4CWH8d5na8y51Q71w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S7ZXRUg2s42LNUugf/Nb8p03uvNdtBrsT2fIKLWgeYMVZlfiWdq2WLtFSaxiEQhSd
+	 +oMonOSb0wiBCVly8cDlp0/gn81NBV+MeBblQljKZJwRp42L4ecslh9HJn+tPtSGu5
+	 mC2APPKhHqhO2AkDU30e9mNz7MSg+ptHEt9eefsLe5I+7kogjtNwydK4XWKO2GUJBe
+	 NzLkIHcxbcrbVL6X6wzZzySsct1voOxJivxOg831r/FQvKY3r8EieV69TLQGaitfOh
+	 u+rCMN+OBrfGu/dEcpgrGypQr8HVoug51WjN5dWf2oBWHfuq9e76hMvr7QSfyN6+wZ
+	 tphJGP2oTeLOg==
+Date: Mon, 19 May 2025 10:05:58 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when
+ irqs_disabled()
+Message-ID: <aCrmZnSokvmqfel3@gmail.com>
+References: <20250516231858.27899-1-ebiggers@kernel.org>
+ <20250516231858.27899-4-ebiggers@kernel.org>
+ <aCg2DSYp0nakwX3l@gmail.com>
+ <20250517183919.GC1239@sol>
+ <aCl_cSO2XqtSQEZT@gmail.com>
+ <CAMj1kXGVAbD9zxUQSwwGo=ueadqWWSdaQNDe_-7ZezpFLMJRMA@mail.gmail.com>
+ <20250518200114.GA1764@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,19 +53,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-5-gmonaco@redhat.com>
+In-Reply-To: <20250518200114.GA1764@sol>
 
-On Wed, May 14, 2025 at 10:43:06AM +0200, Gabriele Monaco wrote:
-> RV event tracepoints print a line with the format:
->     "event_xyz: S0 x event -> S1 "
->     "event_xyz: S1 x event -> S0 (final)"
-> 
-> While printing an event leading to a non-final state, the line
-> has a trailing white space (visible above before the closing ").
-> 
-> Adapt the format string not to print the trailing whitespace if we are
-> not printing "(final)".
-> 
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+* Eric Biggers <ebiggers@kernel.org> wrote:
+
+> > # echo PANIC > /sys/kernel/debug/provoke-crash/DIRECT
+> > 
+> > Another case that likely executes with IRQs disabled (but I haven't
+> > double checked) is reset_system(), which may return with an error, or
+> > reboot/poweroff the machine and never return.
+> 
+> That makes sense to me.  preempt_disable() and preempt_enable() are already
+> allowed when IRQs are disabled, and I'm not sure why local_bh_disable() and
+> local_bh_enable() are different.
+
+Because local_bh_enable() may run softirq handlers immediately if 
+there's pending softirqs, which shouldn't be done in hardirq context.
+
+This is a key optimization of the Linux networking code, which uses 
+BH-off/BH-on sections instead of IRQS-off/IRQS-on critical sections, 
+for performance reasons.
+
+Thanks,
+
+	Ingo
