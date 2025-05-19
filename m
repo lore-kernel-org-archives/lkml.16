@@ -1,103 +1,80 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78D21F12FB
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96002116FB;
+	Mon, 19 May 2025 19:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747682766; cv=none; b=pGkks2OuX+FqGq8SAxC7HrjiGVedRC4XQ1rZ7NDoxEuR2N8FeKgNfsTLqfxXYtSJAOH3faDUPlSVvIUBHxvMlakqUa+bdOh7S0rS8+A8+ECwYFaEheEz/z6j8Um6ok5lNn2bWeIiYWFhK8m4JNlZeSaV5hr6ROieWSGZ/lqvIXk=
+	t=1747682770; cv=none; b=N3pfPWC0GTendh/e1SeIKgEFKA6ueNl+kv20wEiDLJK3i68aYI6SeZpENlQTD6b7FaY5zraAaNZGAeTpEgfBeH0rJVl4jK4QzDcGDkPktudK8P+xnF4fmVtI7jR0/0nxMKBQTg4cWTSzAS29B6fhLYEmQun8btwP3r802hh2v0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747682766; c=relaxed/simple;
-	bh=9xuGA6fBDxFhENDH1SondD0iCWhT+zg49bTQjeSgZ+s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ak9Pc7iUrRGB4WuJXm5YDC8vN8mcpeAJwoDcybCBooWhU378IbgAjiIQnfTpP4sJN3aydMr1vW3DvUt8tViqpLTJdOSMaXUO24Fp23Y/RZoxL7cnzxxpSL9R8fb++DSAxTEcT7hZj62ITk7nb44kkl2Q2twket13BaSlchJA7BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5Im6j0O; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747682770; c=relaxed/simple;
+	bh=TuZDdferYgryE5eM52otDGLgnYe7LjTCqbt0IkPyBy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhFp1jI0AeG/uhnSSk30/mVszGbJrnhPa4VGLUWNwicPB1fqWimsg5Bx9WrcTCUUZZ85mlHBMMKnoS45SRS8S3ttr8vRKN3Av/YsDQ4sLMoIK08j8rWVnO1ffig+uibYwmd7mhG6lOu9WHYS8XKEXoCdQ/iwa8spfY2VRznjzfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iuWJLgsF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5Im6j0O"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so5698899e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747682763; x=1748287563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+u2mOvp6gwGiK4quOZ9KpEErRK+CQKraF/9fsG4d2Bk=;
-        b=f5Im6j0OxeJsLA7+5Vk7MSrKaSMVT1+c2/oNpNddk5XVAE8uOgHIgSZ/WP1l16wb3y
-         jQzyTe7KcNeIe2KWu9BSPosgnrUtnt9C8GsrV0FwDlckpOBtF0IaSk+0G9SH0Qud/rCD
-         TRWRcu3i3IGGrWN/5wqol2v9xa5tae/8VuDeyJIebCRmiFg49sGkrZN7nkw0fvX6Dhm9
-         DcX4NKmjsI2/0lml1Fb2q+uVLImHelCHALuC9+iO0cmzRWFRKAZEhiSGjICMxaK5uu1f
-         Eq4BojHXju+i9lNrGaoEU+CHeq+exxNFKZ+Y0GLM572t5gnGFFiZZLWcRGoyOpTANHGa
-         /AKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747682763; x=1748287563;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+u2mOvp6gwGiK4quOZ9KpEErRK+CQKraF/9fsG4d2Bk=;
-        b=KzRStf90CoU4v911+rLNjy/BJv9xmuroVFs4KoNyhS8vVt3d2OFDI0ByAhIdCrgbo0
-         u4S7ZFHUmaAHxM66klPIpQE1F5JvrJYrqjXRBqTUOTXFr52eAnLpi/oGTi4PfY22xkMP
-         rNUSTwQi4usKza/iSFvOWz8YpSiudz4mVygniRD/+c7IKMVmuuD5zcw8oWXOTW2T3qBt
-         OGMDq4nrRewxiTykuPJQ9Zm3l93C/Jbk0sHqSx4LonJoq4b5xuMGgSM9SFosKtqFK0Hi
-         hJZRERBdvPo1e63x+Ghbdt3Gb7V66+uyuWx6rhEvWDnf47LV5LdZMtPMx68ifISfRPmE
-         6ieQ==
-X-Gm-Message-State: AOJu0YzaEu532m/ofbZJExLMTcONon5oLDi7RNunyoYt/jjPcgkuxG36
-	eRGd/syljS1Nu7RqRHDBeDhXcBG8R0PlnR+v9At7dsdLvSyhLds8xObhsHIaIl5d
-X-Gm-Gg: ASbGncsBtKvoif6AfKiiVx8p9M1qeufAhXs0eEccmKxEjp+dgeGJTgY1SaKeOf69hIP
-	SqugJ2sk6pFd4i3WD8fE5AuM+fA3+Qn8TRZRYNOjf+IKCu5/mSN9sXGNoazSvNyfZFeZEnXcffw
-	geIkme30McWfaGg/A7LnQcYIrakNpVMr4SyP6lYBFW82F68XUNJnA4EoUmdTCl8RAq34F7KbxNO
-	Vp/kbZMmRvbaEJB03Jcq24iqXdPwSNgNLgckXYN/YzcC2+Cnl+zy7kDPoMoRqDezQafJr/XXq8c
-	Q74cR3oNlY4QQ52lGvrBru9qqj9i9YS1C+0Ng7IhqKG7dp6kPygBqJrmYNmhqsa/LWHbtovdsyX
-	6oNO4MGxV9itnhkzYJltF5bHcf98R
-X-Google-Smtp-Source: AGHT+IF+MDeZP3QIBEJzINtTXk6BXFYjgitD8BkKJznP22b6VtQvUEg9qNjqR89fCuy7utStHaoGKw==
-X-Received: by 2002:a05:6512:2216:b0:549:39b1:65c2 with SMTP id 2adb3069b0e04-550e72443e9mr4107818e87.48.1747682762396;
-        Mon, 19 May 2025 12:26:02 -0700 (PDT)
-Received: from anton-desktop.. (109-252-120-31.nat.spd-mgts.ru. [109.252.120.31])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017ea8sm1998021e87.113.2025.05.19.12.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 12:26:01 -0700 (PDT)
-From: ant.v.moryakov@gmail.com
-To: trix@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	Anton Moryakov <ant.v.moryakov@gmail.com>
-Subject: [PATCH v2] tiny-printf: handle NULL pointer for %s format string
-Date: Mon, 19 May 2025 22:25:57 +0300
-Message-Id: <20250519192557.1505924-1-ant.v.moryakov@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iuWJLgsF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=V/ChxHNdxHGa7PCVkQKYWwIJ8o1DVV/3CQmBnmO0tpA=; b=iuWJLgsFIr7a0Dbf6xa4akBst0
+	BCqtmhb5x1fVYRVfOWGLUAeWIJlJ5YQ3vValSwGCPoQ1XhwMvY8f7GqB/sqUVcJ6uxGryxGRRMEdx
+	PJTcmjCdqSu0hjAlGsGe4/gY0Lwhm70YQaovrG4Yr/aPtr7g4m3Af1HRnjI8Qp+DjlGI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uH67b-00D38I-Gg; Mon, 19 May 2025 21:25:59 +0200
+Date: Mon, 19 May 2025 21:25:59 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH] net: dwmac-sun8i: Use parsed internal PHY address
+ instead of 1
+Message-ID: <d89565fc-e338-4a58-b547-99f5ae87b559@lunn.ch>
+References: <20250519164936.4172658-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519164936.4172658-1-paulk@sys-base.io>
 
-From: Anton Moryakov <ant.v.moryakov@gmail.com>
+On Mon, May 19, 2025 at 06:49:36PM +0200, Paul Kocialkowski wrote:
+> While the MDIO address of the internal PHY on Allwinner sun8i chips is
+> generally 1, of_mdio_parse_addr is used to cleanly parse the address
+> from the device-tree instead of hardcoding it.
+> 
+> A commit reworking the code ditched the parsed value and hardcoded the
+> value 1 instead, which didn't really break anything but is more fragile
+> and not future-proof.
+> 
+> Restore the initial behavior using the parsed address returned from the
+> helper.
+> 
+> Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 
-Avoid NULL pointer dereference in string formatting by printing "(null)"
-when a NULL pointer is passed to a %s format specifier.
+Have you validated all .dts files using this binding? Any using
+anything other than 1? The problem with silly bugs like this is that
+there might be DT blobs with the value 42 which currently work, but
+will break as soon as this patch lands.
 
-This change makes the behavior consistent with standard printf()
-implementations and prevents potential crashes in constrained environments.
+Just stating in the commit message you have checked will help get the
+patch merged.
 
-Signed-off-by: Anton Moryakov <ant.v.moryakov@gmail.com>
-
----
- lib/tiny-printf.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/lib/tiny-printf.c b/lib/tiny-printf.c
-index 2a7a4d286c0..df5f6829db5 100644
---- a/lib/tiny-printf.c
-+++ b/lib/tiny-printf.c
-@@ -307,6 +307,8 @@ static int _vprintf(struct printf_info *info, const char *fmt, va_list va)
- 				break;
- 			case 's':
- 				p = va_arg(va, char*);
-+				if (!p)
-+					p = "(null)";
- 				break;
- 			case '%':
- 				out(info, '%');
--- 
-2.34.1
-
+      Andrew
