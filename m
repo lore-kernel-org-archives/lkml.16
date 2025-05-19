@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E5D274FC0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5655274FE0;
 	Mon, 19 May 2025 10:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650481; cv=none; b=r5HIRrqN+H/qChDl5ozMYseg+GWMKb97r0q+E11c+gq1I/HAmSaJt3Ve5QZXf23jyNV42l543Bv/u8jrjoTw5gCP22Gl1d3R3K/AqwAjkvbT0jgZvyb77O/AGgoAvTr8lrIEG+0Pd+XOXnsuVYQ52vaCdlyDAoM57sqXkWSDYd4=
+	t=1747650481; cv=none; b=kF3lug8J7wqyqFTfatGLuO2QkRcGdrO4BggFnxn+HSM959KzWFH0DhytrFB/T4xNI5d9hVf6kpSw70nWdJZfguFF9k8Pc1XXSZwzPoenyTCIx7WTwWa9MEXfJB4rXEkCyvtBLMP44IvE5E8YwU7cd4+X1hsJ3mNGCbOo7Ph27Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747650481; c=relaxed/simple;
-	bh=2mK6sinmKtyV1wCugMEgB2iIJSIT6o63JPL6+Fwhw2w=;
+	bh=MRg+w2iH0HGF5UyuFu3lFXx9krIj2AUo3GAFy7nbrK8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Telf7puGoXfapSX2e3ksmovF/e70AMb5hmdDT5DvUTZQu+2I/KGWAI5PSGfetYdobxndu1AQU8XNJrYXbq2533iuVgdafXeLd7HUBgVfuOqj+4WGrl43phhceRe7olA/IKG+MGYmBpGfdGrs6o92NSyOxYvWkiH2OfbGI/5yKM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F0Kih0gY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QVQxnvks; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=MGyIYhDEWsF42C+x7RcdGRdmE/zJ1mkLpO+kfq+Y+2BNmdo+7x0qjuR/sIV8hojIaHvuvuW7W2D2+wbp/8KzQKeVfnJo5h5P/jkFQxCjzFAUSZY/ASq7uDecgjWh/UWoJM6ARMT0QGJpQ3dYRtqUIQQyPnUTNqbBdaGUONFI9Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MYkEXF8z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M7hRSDft; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F0Kih0gY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QVQxnvks"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MYkEXF8z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M7hRSDft"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747650476;
+	s=2020; t=1747650477;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+WCyvCXKRf/F4qW3dfDg+7ZIfppz2CYPNGxpMfZcwg0=;
-	b=F0Kih0gYQg345mtnuumoo8Iw6QqbhH4yUZ3pv4vlhYwDXnxrYo53FajcyoRiMvRe4F8T1a
-	hPKe4ZRIXarDXi2VAIVtx8mt/m96S6MaDPiti/6mNPegmcsub5C7cDmexVX6KfnJxe+wQ+
-	tGKhkole2EYVsyfdPAOkNDHJYBwiN9TAexLORs+bRpP0+piiC0J4v0rdAXGYMfnu9w21ab
-	SuDdg6yi6J4wJ4Ly3fSua1c0W5rydL9CajUsygmsfxpsHoVVMxCIpwVPHYcrR24DA7WwON
-	Y32reGx//T7lUnu0jOBJIz+ySoYzZBBElV6K7yfEpS0ktP2pzX3uAIZKHI0x8g==
+	bh=wd36I9Oi5n/Lmp8CkDPUxkaX/ZJRiNSgqZM9aUNzkIY=;
+	b=MYkEXF8zUUyFh+d7KZuJrdrBtmW3v5BimLUMGDNz0q8j3IFbcfRVwrPC2dspzTxogqZmOs
+	rh/lzgrv4yutrTx/3icvsYN+IHJe7ZTAvtx7WaHfiaYyqtcw7Hg69+3KinzQbbInpJWaW+
+	JtiIROE60FvMX0rsNc2VVefVswIuhxzMGMDkEBbHfdJHYbuVWcdueJHQIBbxBozWIycP5x
+	nZcpcN8OeCIeTedK6qSIzk60040QBYrkfBLH1nPC4gy/J1qxD6WPUkBEU8tgJXzf3VZuEo
+	DHQTtXHvOOcNLZAxcYF/200OtRsAdvbbdnZtwDfHkjRw2WYPq4kFVU9Ie8l9Cg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747650476;
+	s=2020e; t=1747650477;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+WCyvCXKRf/F4qW3dfDg+7ZIfppz2CYPNGxpMfZcwg0=;
-	b=QVQxnvksozNNgyZMYxmS6cx0iW0H4JfyaTbl7DBRSH75ycMpDx7O0JanULoLRbkVgKxAxD
-	Re/f2SVm3ainfXCg==
+	bh=wd36I9Oi5n/Lmp8CkDPUxkaX/ZJRiNSgqZM9aUNzkIY=;
+	b=M7hRSDftHN0daHURzUCpmE4V4bBA+HauTfROnM8EQoPe4UgtlYAiik7OgLDy8fNCEHQsix
+	UQZi8giWDiAgdhAg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v9 06/22] verification/dot2k: Remove __buff_to_string()
-Date: Mon, 19 May 2025 12:27:24 +0200
-Message-Id: <7b5a8e6dea70141efed2f15a9aea7b7fd142b472.1747649899.git.namcao@linutronix.de>
+Subject: [PATCH v9 08/22] rv: rename CONFIG_DA_MON_EVENTS to CONFIG_RV_MON_EVENTS
+Date: Mon, 19 May 2025 12:27:26 +0200
+Message-Id: <52dcee4bd4c39389d98f65fc5abd78882feeb10c.1747649899.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747649899.git.namcao@linutronix.de>
 References: <cover.1747649899.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,89 +58,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-str.join() can do what __buff_to_string() does. Therefore replace
-__buff_to_string() to make the scripts more pythonic.
+CONFIG_DA_MON_EVENTS is not specific to deterministic automaton. It could
+be used for other monitor types. Therefore rename it to
+CONFIG_RV_MON_EVENTS.
+
+This prepares for the introduction of linear temporal logic monitor.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/dot2/dot2k.py | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ kernel/trace/rv/Kconfig | 6 +++---
+ kernel/trace/rv/rv.c    | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot=
-2k.py
-index dd4b5528a4f2..0922754454b9 100644
---- a/tools/verification/dot2/dot2k.py
-+++ b/tools/verification/dot2/dot2k.py
-@@ -109,15 +109,6 @@ class dot2k(Dot2c):
-         fd.close()
-         return content
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index b39f36013ef2..6cdffc04b73c 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -1,14 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-config DA_MON_EVENTS
++config RV_MON_EVENTS
+ 	bool
 =20
--    def __buff_to_string(self, buff):
--        string =3D ""
--
--        for line in buff:
--            string =3D string + line + "\n"
--
--        # cut off the last \n
--        return string[:-1]
--
-     def fill_monitor_type(self):
-         return self.monitor_type.upper()
+ config DA_MON_EVENTS_IMPLICIT
+-	select DA_MON_EVENTS
++	select RV_MON_EVENTS
+ 	bool
 =20
-@@ -148,19 +139,19 @@ class dot2k(Dot2c):
-                 buff.append("\tda_%s_%s(%s%s);" % (handle, self.name, even=
-t, self.enum_suffix));
-             buff.append("}")
-             buff.append("")
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
+ config DA_MON_EVENTS_ID
+-	select DA_MON_EVENTS
++	select RV_MON_EVENTS
+ 	bool
 =20
-     def fill_tracepoint_attach_probe(self):
-         buff =3D []
-         for event in self.events:
-             buff.append("\trv_attach_trace_probe(\"%s\", /* XXX: tracepoin=
-t */, handle_%s);" % (self.name, event))
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
+ menuconfig RV
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index e4077500a91d..e25d65fe432a 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -143,7 +143,7 @@
+ #include <linux/init.h>
+ #include <linux/slab.h>
 =20
-     def fill_tracepoint_detach_helper(self):
-         buff =3D []
-         for event in self.events:
-             buff.append("\trv_detach_trace_probe(\"%s\", /* XXX: tracepoin=
-t */, handle_%s);" % (self.name, event))
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
-=20
-     def fill_main_c(self):
-         main_c =3D self.main_c
-@@ -210,7 +201,7 @@ class dot2k(Dot2c):
-         buff =3D self.fill_model_h_header()
-         buff +=3D self.format_model()
-=20
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
-=20
-     def fill_monitor_class_type(self):
-         if self.monitor_type =3D=3D "per_task":
-@@ -242,7 +233,7 @@ class dot2k(Dot2c):
-         tp_args_c =3D ", ".join([b for a,b in tp_args])
-         buff.append("	     TP_PROTO(%s)," % tp_proto_c)
-         buff.append("	     TP_ARGS(%s)" % tp_args_c)
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
-=20
-     def fill_monitor_deps(self):
-         buff =3D []
-@@ -250,7 +241,7 @@ class dot2k(Dot2c):
-         if self.parent:
-             buff.append("	depends on RV_MON_%s" % self.parent.upper())
-             buff.append("	default y")
--        return self.__buff_to_string(buff)
-+        return '\n'.join(buff)
-=20
-     def fill_trace_h(self):
-         trace_h =3D self.trace_h
+-#ifdef CONFIG_DA_MON_EVENTS
++#ifdef CONFIG_RV_MON_EVENTS
+ #define CREATE_TRACE_POINTS
+ #include <rv_trace.h>
+ #endif
 --=20
 2.39.5
 
