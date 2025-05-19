@@ -1,135 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819782868A0;
-	Mon, 19 May 2025 16:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A84286896;
+	Mon, 19 May 2025 16:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670539; cv=none; b=fVJIEih7V1Z6G0eufY1Z3OtM8L6X+isxePKve3vWU9lJDq8spuizsRy1Ds7Q8Qy4gfkH1U+dozQluZT57dpyqH6eLyyHiNmnTOQVbceKTkoAcgksuYnaKvRiNh6OoKqLgYSnce0Dp456qIj17l5jYKwYwLIQHTOO9oGVOtcmXkE=
+	t=1747670561; cv=none; b=ejLfDgAQahsY0Wc2LU8bqyO1a1ganpRsBqe8mKfwhSFByWcmxBLBBfs+MzPvyt9RtBbZi4GyhiFPOmGXNtLKB9ccCwtdAOGiclhwL3pmXgcjW+esRC01Jx8Ly6nrnLUHQPecMphbKF3y1oM+3nwGPE5BZE6f39aIH35+gkT8kn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670539; c=relaxed/simple;
-	bh=+8khJrlf4fCxp1a/AShsnu+TQgUlHpw0DzI+o+u++gg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=X8vmreOQE+hYw5cfhOziZjPw5Mm+ub0XkxYgxcinSJwOGdf7Jy235luDrV6r5Clh1Pi3Vag5xxT1DglS85iP69cEkb4NDRj7n4g4nrwJ8gPLxsMBkddb78/qoMx9juLo3daq40BZ1T4tH/Wugn1u0xLE7bV6IEjA9C/8sFP09qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67ADF153B;
-	Mon, 19 May 2025 09:02:02 -0700 (PDT)
-Received: from [10.57.24.231] (unknown [10.57.24.231])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD20F3F5A1;
-	Mon, 19 May 2025 09:02:12 -0700 (PDT)
-Message-ID: <6a00017f-89dd-47b9-a4db-ceedd63f456f@arm.com>
-Date: Mon, 19 May 2025 17:02:10 +0100
+	s=arc-20240116; t=1747670561; c=relaxed/simple;
+	bh=Li97ibJu1i6lhzJ/tLMhuWTsxC88CFjJlHWA5uOhlos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NIgPHWNYwTIWnSlhe3sZVZtKv1L5fPRmIHVc4oZYXmb6ZS3DVePvg5UCn1QXqzfLddIrxwN8pKt65b1aqGMJ7SprbCB4BO4FmdIQdbIlsFBhQD1MTu7Tn5BJzXN5dfN5TfOIeQMbbjnCYTY+lHI/LuzI3/bfQtc4Kq1OnHODx0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skc/SERR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skc/SERR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630DEC4CEE4;
+	Mon, 19 May 2025 16:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747670561;
+	bh=Li97ibJu1i6lhzJ/tLMhuWTsxC88CFjJlHWA5uOhlos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=skc/SERR9kAJqX6L/iCOjvMP1MGlfVjHBcPY/ImjDmPHn+WYpo06XoKZUqL1z+rtQ
+	 6ckU9iFhLfgGn0fmp+RhvHfdle25xSHh/cFHCQdQH38Swx44HFgkpjxmNMme6vpIHT
+	 3jLsrGz35R/cYSbGrXBhqWFZqQVjh/TbcGGy9wmtwS0lW4J6lLXn9KAT/lQu53kPK+
+	 bh6Hpvr1igwytkTDuSCF3lGfga/h3Y59H1ORsBWQLHxDnpy+YjUOMKL3bvXu/zonUG
+	 N1m/GLWm3v7UOzELiHzxhVcAoZ/Ur+Y6+nhK52nWQQAXQByIBW1hssWBxJCKQ3XLcn
+	 lzVKI36QSGRzw==
+Date: Mon, 19 May 2025 17:02:37 +0100
+From: Simon Horman <horms@kernel.org>
+To: Nishanth Menon <nm@ti.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH] net: ethernet: ti: am65-cpsw: Lower random mac address
+ error print to info
+Message-ID: <20250519160237.GJ365796@horms.kernel.org>
+References: <20250516122655.442808-1-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] drm/panfrost: show device-wide list of DRM GEM
- objects over DebugFS
-To: Daniel Stone <daniel@fooishbar.org>,
- =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Linux Media Mailing List <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250507160713.1363985-1-adrian.larumbe@collabora.com>
- <20250507160713.1363985-4-adrian.larumbe@collabora.com>
- <9c0b95c8-bf2d-4689-ac1f-ccacba826060@arm.com>
- <CAPj87rOiEa1bTOPqyauYhoVoXEtNeDjE+DkLbzeGVJ1tW9fJcQ@mail.gmail.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAPj87rOiEa1bTOPqyauYhoVoXEtNeDjE+DkLbzeGVJ1tW9fJcQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516122655.442808-1-nm@ti.com>
 
-On 15/05/2025 19:04, Daniel Stone wrote:
-> Hi Steven,
+On Fri, May 16, 2025 at 07:26:55AM -0500, Nishanth Menon wrote:
+> Using random mac address is not an error since the driver continues to
+> function, it should be informative that the system has not assigned
+> a MAC address. This is inline with other drivers such as ax88796c,
+> dm9051 etc. Drop the error level to info level.
 > 
-> On Thu, 8 May 2025 at 11:42, Steven Price <steven.price@arm.com> wrote:
->> I'm also seeing a splat when running this, see below. I haven't got my
->> head around how this is happening, but I see it when glmark quits at the
->> end of the test.
->>
->> [  399.505066] Unable to handle kernel NULL pointer dereference at virtual address 00000004 when write
->> [...]
->> [  399.882216] Call trace:
->> [  399.882222]  panfrost_gem_free_object [panfrost] from drm_gem_handle_delete+0x84/0xb0
->> [  399.893813]  drm_gem_handle_delete from drm_ioctl+0x2b8/0x4f4
->> [  399.900237]  drm_ioctl from sys_ioctl+0x428/0xe30
->> [  399.905496]  sys_ioctl from ret_fast_syscall+0x0/0x1c
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
 > 
-> Soooo. Let's assume it has to actually occur in
-> panfrost_gem_debugfs_bo_rm(), since that's all that's changed here.
-> 
-> I don't think pfdev can be NULL here, because we've already
-> dereferenced ptdev and written to a structure member earlier in
-> panfrost_gem_free_object(). I don't think it can be the debugfs mutex,
-> because a) that's initialised with the device, and b) wouldn't be
-> offset 0x4.
-> 
-> I'm looking then at list_del_init(&bo->debugfs.node), which would
-> effectively execute bo->debugfs.node->next->prev =
-> bo->debugfs.node->prev. So if bo->debugfs.node->next was NULL, that
-> would explain a write to 0x4 on 32-bit systems.
+> This is esp irritating on platforms such as J721E-IDK-GW which has a
+> bunch of ethernet interfaces, and not all of them have MAC address
+> assigned from Efuse.
+> Example log (next-20250515):
+> https://gist.github.com/nmenon/8edbc1773c150a5be69f5b700d907ceb#file-j721e-idk-gw-L1588
 
-So I finally got some time to do some debugging on this. And you are
-absolutely correct on where the fault is triggered.
-
-The cause of it is that panfrost_gem_debugfs_bo_add() is called from
-panfrost_gem_create(), but that isn't the only place that Panfrost GEM
-objects are created - it turns out panfrost_perfcnt_enable_locked() also
-calls drm_gem_shmem_create(). And in that case the list next/prev
-pointers are left set to NULL, causing things to blow up when the GEM
-object is freed.
-
-The below patch gets things working, or alternatively just init the list
-in panfrost_gem_create_object() if we don't want to include the perfcnt
-buffer in the list.
-
-Steve
-
----8<--
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c
-b/drivers/gpu/drm/panfrost/panfrost_gem.c
-index fe2cdbe8baf0..51da13cd81f0 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-@@ -297,13 +297,14 @@ struct drm_gem_object
-*panfrost_gem_create_object(struct drm_device *dev, size_t
-        obj->base.map_wc = !pfdev->coherent;
-        mutex_init(&obj->label.lock);
-
-+       panfrost_gem_debugfs_bo_add(pfdev, obj);
-+
-        return &obj->base.base;
- }
-
- struct panfrost_gem_object *
- panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
- {
--       struct panfrost_device *pfdev = dev->dev_private;
-        struct drm_gem_shmem_object *shmem;
-        struct panfrost_gem_object *bo;
-
-@@ -319,8 +320,6 @@ panfrost_gem_create(struct drm_device *dev, size_t
-size, u32 flags)
-        bo->noexec = !!(flags & PANFROST_BO_NOEXEC);
-        bo->is_heap = !!(flags & PANFROST_BO_HEAP);
-
--       panfrost_gem_debugfs_bo_add(pfdev, bo);
--
-        return bo;
- }
-
+Reviewed-by: Simon Horman <horms@kernel.org>
 
