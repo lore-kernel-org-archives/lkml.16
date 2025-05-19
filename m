@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B35772639
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA7272639
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676440; cv=none; b=NpQv8fIQbpkzuWMmbMIYfFz9X8QTi95Xhw+HeHT16RW5uxS52s5bm2iGSaasGvhQVS4Bn0FLbWPuBarKLcEqD2NrNlzu8U6tuPeqfnmn70pEgPocXCIeGyLwn5XS4Yeyqiw36AfM1AMbXnRs3FSfebdALMtY/V0r8F2csw13qd0=
+	t=1747676498; cv=none; b=hEmh826pDodcpgQRyOoOVXQrRXgjG7OhDOr9xVbrc2vEqruD8iUsGl7CXRQEKkvocvhLC93Q75kJP1RH3EWdj9U4Q0Ygjp/sYXsV1N7Fo2FIRAQ5SDYfYoHza5gQ7jElf6RUOPjo/OMWCOspABgCnrHmoX0zCB8fmXxGIir6mtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676440; c=relaxed/simple;
-	bh=SGYRJ/Pa/rCRIAEp2DzT9CKDo2DR1Kor41Jpn068XTE=;
+	s=arc-20240116; t=1747676498; c=relaxed/simple;
+	bh=ptXpc8hmOruMolxiRX92NsOTJN9PQURGvKBFh9IxnpI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQg7cUmiEbAbbHa60iV+qYtWX+4RFgMJZ3ddKRUkokz9ZyefAZN71zqML+q782ia/gub4icWDCY2lMBbpbRmrYwn9YiQUuaeVEFsT3glaiOGHbb9sJCZjduLPUldeK1Gd7D5EjLckArFrVD7lbZmZ01LsovGyEVd8Gs9qJVwZtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RAUqQZSx; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=QwOjUROWWbUeSsZ5U0VrJR+5YKkBT7D8si9rufXj7owc8CFgWziunKEHzJgW6kFy9ARPGufT9vaIixe/RTwwAZ7HZSMnjLeStqHDszh1IRkI55VNzYLOoSUlBKwiyJwv2TrtX94TOY6hjjVi8n3Edpe9KTbS7rQe7BdM8QNMjJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nes24DKy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAUqQZSx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nes24DKy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747676437;
+	s=mimecast20190719; t=1747676495;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=K36xPLX2EO98K8la7E6clUlgO3MhKSVoAV5X8FkiL4Y=;
-	b=RAUqQZSxAbeLklPO/IW4i0RYQ52wJdqZwwoS1hmJT9AanLcJMjyWswzLMnpJByGaU0eeTc
-	b1XtWqMhcl+m7gky+ROREaI+65ITDsbdxsZbYaIX/CAVmCxhOqZ7Yp8iRFYi6IsziKrpdG
-	E7HGK99tc+UjKjxZWiKHX6BB+IgyjR4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wMM+2s7qRrI63vS75vOPvvwet4wpZHCqIEycJ3tkwcQ=;
+	b=Nes24DKyjadkBUumiLO5d6nfMeS3ahcfmtXRzFlhfaVtGG9Ri89K3ITQA5qosnLBOi22ec
+	4Fa1fEYk4QDLngsdDwdijY4HPc3hXKTFz2V+5R7qYtoyIa0QJrKOQFXzuvLLy5qazXUqMn
+	ujXqaDNbe7qkYB7rOa+DmOVo9qyuqZM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-L-xygKyQMCOdGFPQx0IUEQ-1; Mon, 19 May 2025 13:40:35 -0400
-X-MC-Unique: L-xygKyQMCOdGFPQx0IUEQ-1
-X-Mimecast-MFC-AGG-ID: L-xygKyQMCOdGFPQx0IUEQ_1747676434
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cec217977so25069275e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:35 -0700 (PDT)
+ us-mta-428-od7CWH9aNUWLnIuXVwdcnQ-1; Mon, 19 May 2025 13:41:32 -0400
+X-MC-Unique: od7CWH9aNUWLnIuXVwdcnQ-1
+X-Mimecast-MFC-AGG-ID: od7CWH9aNUWLnIuXVwdcnQ_1747676490
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso42154765e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:41:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747676434; x=1748281234;
+        d=1e100.net; s=20230601; t=1747676490; x=1748281290;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=K36xPLX2EO98K8la7E6clUlgO3MhKSVoAV5X8FkiL4Y=;
-        b=uhcidAkZ2YcWwlZ82kuUw84mDNI1oWI8CJRtWnqXX4Nkm5zrkDNPRtsdZtJ2zVcVtc
-         ZIXrXLRQXfdaU94qmWCO7FtdHoB6x0mRSp8KrJEKWmNbLiZTrwaNXa1zD/OjLWQcuUJ9
-         0/I0kKTtzH8SJOQgDSSLr5FaLAtuxkSKWO9iP9p+uXgfYJABAVPrDOdAwAtCgC4wE3q6
-         JTXv5M9Dlcvw8kutZFdIQRM9VfEWkbN1lMx5ExfacMhzk2JMkKe3MVXvzynQ6st76pFf
-         IaY/bOqPsCHRrMqyachhn5XllUE8BXkGF3ZZKHeP0A4fnjMYuDYCNu5ottSZDEZPHFKP
-         wiRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyvZA3jrVuD3B+rdIpWScx1Ad+QVm2r/eve5BjsA1TeIDkVkcx2KTJSyoCTGMkZT2zKqY91ZKl72mrcuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKzzi7bOG4fWU9eru6yMVl+nE2N+uxyGcXGlIzNABEeVnr+Oy7
-	a6BH6Ox1pNAquG/a6F4xJq+LyEJUvqISh2KEVHwgLnPhg2WW56CtrvIQicVLteQoxxtkDzAMGiH
-	ARSIc642AY2CXSwYTW0RiWYTNiI7uyhLpZkcFxBWqkDAGyUg3a6lLdrsXqPu154L/AQ==
-X-Gm-Gg: ASbGnct8T8bDqU2rdiwSTPlOqkuwUTSS6kAMDPCBk/ZbsmWWT4le7GzwLhX/9jZeG/N
-	1PjP6JCEVf8z1HCvrQuX/q1N0sRLn9YQ1nmojNiUwDgftcCmHAL546AVePTEWLL2KjrRKV2s5Z7
-	ty+SiUiOR80KZPV1WqlePLWqk36tN733L4RBwkpQKsvIFw6G8vYbvel/zeqQ4u1DkYxidxvLc0r
-	5xTDqqk1k8eDN62KxDawlu0ovla3iIyhgLV+SUedTy0lxE4EZOoVXSKvCA39XbnYo5SzmMtW24e
-	IrqdSUZ37GT9Cetoa1i0evUwGi46+q4tKCwkB5QzjcIVBGgXwfaD1LDW2jHnaIjSSdtFgso/oUX
-	OUaAEfCd+WNMlSV0xCQ2O/YAqqlHUVcXknAFvllM=
-X-Received: by 2002:a05:600c:a46:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-442feffb5a0mr148453305e9.16.1747676434479;
-        Mon, 19 May 2025 10:40:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUICFVfnitZqeXCiHKTi2mEcLXl0asuTZmmpVM4HpKVDE2zGdtICR9BqQW79GLRMernQBoBA==
-X-Received: by 2002:a05:600c:a46:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-442feffb5a0mr148453035e9.16.1747676434156;
-        Mon, 19 May 2025 10:40:34 -0700 (PDT)
+        bh=wMM+2s7qRrI63vS75vOPvvwet4wpZHCqIEycJ3tkwcQ=;
+        b=t/DAQcYgy9FR7bF5poHalanlmkbH1yNChLcXn+o4m4bSXpmA7S9teqApkkgFXAgEue
+         rV4DqAS6hPugnUHx3hdRqnFVKEObqPhipnpEdwWKp1Ry7klpj2z3W7IXvyov34czfQTr
+         M/AOpfZCEoi3ylLPojGzG3KWCrhGJJ6+gZLGl5k4FMoP8QjOwoyno9J9NMgfjZ4aqmsv
+         7iPMExL2voh8aa6K9dsdKDXyza9qg2efEnoVQzZwX5WHAdV3ZpGIs6dzKD4wuRDGl55G
+         gRCqLChSdkIr6/RO9a9CQ7XemmtINQvXQ90WAKVAv8+z+U7z2DNPdOfNbelmCF1ArT3b
+         +oaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQF9/IEEvIeu/uhtuwivfxQhpbEikj/i85QKzI9FqsiifqfHrBO3JtirPwTFCozNSoiDNdArT1cK6ItaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRIGp5qAC4vSXnktTCz/m5KYk99KRc5eoraZt/BpX2vR4UgKb7
+	xhLwsHd7n4D+hQ+kcBCuZod5Oo/LKhl8MZpPZOU/hSALI+9WIgjFHvyMvU46uNJWnUlaZH+a2hi
+	Z/6wfUPFI/CqlmkgcNGguXwyJcZxqExeYgbAJ2YUqlObiXRW13Kl5kizHko8k3k3zAw==
+X-Gm-Gg: ASbGncts4r/Ax4qCEjAd9F/YeE1jSgJJ2fvnbVix0szFo3jOzlvejyh7oSysetHyz8W
+	YlwoAU7fIzqhvbdjWKXvrMKu8AaDiT/4afPTl7veuddRf9pkxkdiZUqc6sMtjTvd9Xv10irg1s7
+	rLuRTgSZYu3dEXCzTQ7O5TFY7tTaNIvUHkdO87HFDxvNSwd5M3n8WhDtZIGkzdAL9DymXyKs7sh
+	F+Ve0VuRjOfTw66bzW8AjyZvDlgacvCZUmICTqdJqn+DHyDNslRbKh15CIqDxHucXn3K4aY/Zm+
+	cQOkSq6QnCe8fjNUoIZSLPhE13d2VYL238iRJNhuYekZIlcFo4cuUZ4pBdikXO3V7Zv95XxmXdo
+	OBH2vID5Imy7+0xuwEhiTPBFdXcJTxjCD0At+es4=
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr81952195e9.28.1747676490441;
+        Mon, 19 May 2025 10:41:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWnl7TcWfLB3Pa4DO8nxRC3zmwg6w26E4L7l3KlQwq71GfgWS4BKAiZ5l2yF+Mtm8mxarnwQ==
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr81951945e9.28.1747676490062;
+        Mon, 19 May 2025 10:41:30 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583e84sm143807005e9.25.2025.05.19.10.40.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f8ab839esm177926295e9.17.2025.05.19.10.41.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 10:40:33 -0700 (PDT)
-Message-ID: <1296c1ee-cb0a-456d-b5b4-e6153928d32a@redhat.com>
-Date: Mon, 19 May 2025 19:40:32 +0200
+        Mon, 19 May 2025 10:41:29 -0700 (PDT)
+Message-ID: <0306ba4f-e0fe-47df-8ffc-4439c01745b2@redhat.com>
+Date: Mon, 19 May 2025 19:41:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] mm: ksm: have KSM VMA checks not require a VMA
- pointer
+Subject: Re: [PATCH 2/4] mm: ksm: refer to special VMAs via VM_SPECIAL in
+ ksm_compatible()
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -87,7 +87,7 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
  Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
- <daf12021354ce7302ad90b42790d8776173b3a81.1747431920.git.lorenzo.stoakes@oracle.com>
+ <ec973573540c6871683ee763d291b74bd851990f.1747431920.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -135,25 +135,37 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <daf12021354ce7302ad90b42790d8776173b3a81.1747431920.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <ec973573540c6871683ee763d291b74bd851990f.1747431920.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19.05.25 10:51, Lorenzo Stoakes wrote:
-> In subsequent commits we are going to determine KSM eligibility prior to a
-> VMA being constructed, at which point we will of course not yet have access
-> to a VMA pointer.
-> 
-> It is trivial to boil down the check logic to be parameterised on
-> mm_struct, file and VMA flags, so do so.
-> 
-> As a part of this change, additionally expose and use file_is_dax() to
-> determine whether a file is being mapped under a DAX inode.
+> There's no need to spell out all the special cases, also doing it this way
+> makes it absolutely clear that we preclude unmergeable VMAs in general, and
+> puts the other excluded flags in stark and clear contrast.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
+>   mm/ksm.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index 08d486f188ff..d0c763abd499 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -679,9 +679,8 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr, bool lock_v
+>   
+>   static bool ksm_compatible(const struct file *file, vm_flags_t vm_flags)
+>   {
+> -	if (vm_flags & (VM_SHARED   | VM_MAYSHARE   | VM_PFNMAP  |
+> -			VM_IO       | VM_DONTEXPAND | VM_HUGETLB |
+> -			VM_MIXEDMAP | VM_DROPPABLE))
+> +	if (vm_flags & (VM_SHARED  | VM_MAYSHARE | VM_SPECIAL |
+> +			VM_HUGETLB | VM_DROPPABLE))
+>   		return false;		/* just ignore the advice */
 
-Looking all good :)
+Stumbled over that recently myself ... (grepping for VM_SPECIAL does not 
+return many results)
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
