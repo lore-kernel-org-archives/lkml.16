@@ -1,94 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955B1275854;
-	Mon, 19 May 2025 11:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832333FBB3;
+	Mon, 19 May 2025 11:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747653598; cv=none; b=nuGJqjTw7mnA3FY6dxe9NVfmKe5qB8dPrTd/QnJfu0oOedCnJKUTxtr3BR16+Ztu7IYMZphQJ35Y9QtYQIL8cHJug7h4FT1v2kCGCvzrJ+MJcJuY1QdekFxP49fKPkFeKLbYQe5FVV64xlhDKqdzhbziVw8C5qQ2wgPlVpeAofs=
+	t=1747653804; cv=none; b=qIROPMjlV+Oc54ooPWoA9wVPlaygX9RlAdI+s7JafnpiWhg7fmQUVMCj2hfLmO3+zRWmo+iJ1lC+cE5f13YcE2zM0gHkkdFXD0ptUKguGWBhQ/SztLzvNUu/3ekK/b9UwlRuyesoHj4yJsge9rNQ654ylS/40M/2yjdCThtBJv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747653598; c=relaxed/simple;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=u+oUKzICbHo9MVMm9lHSO6PDxbuw9skGQkx5HZMlufxg9ebF7qOklK71TdHTw03Bpqy1ZxJkoRM87rMYvo/yGT9D+GM9uzx1Ttbju4AiW89P6VgI7w2N9SjCyjM/GrWurpLIfdG7PH56Io7r+V4WaqfkvE4NUqBRHfvcvGCLywM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQip/efD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQip/efD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA95C4CEEB;
-	Mon, 19 May 2025 11:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747653598;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qQip/efDXPZRNH9QVl6D1tgLjWzLnQAUXUhRcJsf7qComvIf94m3Zcv6dGo0VOFug
-	 tGlWtcZ/WOmaSd0xcA750HbKV6UL033tNYXNVtumNvNasBSPGXII9yJHh7oG/XRfDc
-	 +/qCsQndBetGhFj5HrgLIGNQy8Txj/3OmHjXAsa4Wmco6LRC7aPsnU2ox81NTF/E9P
-	 jdcXL3teZuXaB45wgkh+Gjmkuixd/WNzwuXp8+yV9pDVdABNmSmAc14d7hh4rFnMB1
-	 zNsMR79Clt1myWmTfImpKlwi5vrC4yPFFv1KWNacdVIEJ55XvVFABRg2wygku0sikl
-	 MkOQFIOJwXYHA==
-Date: Mon, 19 May 2025 06:19:56 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1747653804; c=relaxed/simple;
+	bh=LO4ZzpcLYiKL9qXnnzJToKDxOUeDAfuMKn7i3ncEilo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBA37XFVrup31p5/JakD1rzSQRETxdtmFrBYViWtr/zyM8puJdHQ+i8QOm6fBjpRznggzYm8B30qybPjd+gCnn+TaqD6eDb0bO1EN2iQV3GZX1aIdi97jwE4k3IFzqRgizCJZ+lkS0Jq+Jl7ImCE9jlbYZOnOcyFsIKEpfqUZpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: QU5UROcuTK+8+DcSz2expw==
+X-CSE-MsgGUID: HJnIgzuoQYKKHI+q3i6Oog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="74950302"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="74950302"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:23:22 -0700
+X-CSE-ConnectionGUID: dBynV8rxQzW/LHlpPV4Biw==
+X-CSE-MsgGUID: Ega1bhtpTjOpFxqThKTyHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="176456786"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:23:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uGyaS-0000000314y-00MM;
+	Mon, 19 May 2025 14:23:16 +0300
+Date: Mon, 19 May 2025 14:23:15 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <aCsUo9LOMGbse3KO@smile.fi.intel.com>
+References: <20250519-wip-bl-ad7606-calibration-v5-0-4054fc7c9f3d@baylibre.com>
+ <20250519-wip-bl-ad7606-calibration-v5-5-4054fc7c9f3d@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, Robert Foss <rfoss@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Todor Tomov <todor.too@gmail.com>, linux-kernel@vger.kernel.org, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-References: <20250518-qcs615_camss-v1-0-12723e26ea3e@quicinc.com>
- <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-Message-ID: <174755315042.2793587.17691583538434075316.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Add qcom,qcs615-camss binding
-Message-ID: <20250519111956.eqFrDN88OfJNBYIahH7DVvMjehGNtn1Jy5vcdVUW2vQ@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519-wip-bl-ad7606-calibration-v5-5-4054fc7c9f3d@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Sun, 18 May 2025 14:33:07 +0800, Wenmeng Liu wrote:
-> Add bindings for qcom,qcs615-camss in order to support the camera
-> subsystem for qcs615.
+On Mon, May 19, 2025 at 12:13:42PM +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
 > 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
-> ---
->  .../bindings/media/qcom,qcs615-camss.yaml          | 356 +++++++++++++++++++++
->  1 file changed, 356 insertions(+)
+> Add gain calibration support, using resistor values set on devicetree,
+> values to be set accordingly with ADC external RFilter, as explained in
+> the ad7606c-16 datasheet, rev0, page 37.
 > 
+> Usage example in the fdt yaml documentation.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+...
 
-yamllint warnings/errors:
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		u32 reg, r_gain;
+> +
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			continue;
+> +
+> +		/* Chan reg is a 1-based index. */
+> +		if (reg < 1 || reg > num_channels) {
+> +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> +			continue;
+> +		}
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dts:25:18: fatal error: dt-bindings/clock/qcom,qcs615-camcc.h: No such file or directory
-   25 |         #include <dt-bindings/clock/qcom,qcs615-camcc.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Like I said, we should leave the validation to the schema or do it correctly here.
+Otherwise it's an inconsistency between DT schema validator and this check.
+I.o.w. this check *allows* the b0rken DT to be handled and I think this is simply
+wrong.
 
-doc reference errors (make refcheckdocs):
+> +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> +					       &r_gain);
+> +		if (ret)
+> +			/* Keep the default register value. */
+> +			continue;
+> +
+> +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
+> +			dev_warn(dev, "wrong gain calibration value");
+> +			continue;
+> +		}
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com
+Same here.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+> +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> +		if (ret) {
+> +			dev_warn(dev, "error writing r_gain");
+> +			continue;
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Not sure about this, though.
 
-pip3 install dtschema --upgrade
+> +		}
+> +	}
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
