@@ -1,158 +1,236 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2052.outbound.protection.outlook.com [40.107.212.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402532797B0;
-	Mon, 19 May 2025 14:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665344; cv=none; b=f4xdQjiCcDkSM5FKSa677+hiOvwan5QggwoiAQDQYQY7qiuLQy7dXZ5+HhuH6E8p+ZfA73vmrA7rjn4ki2xScKAT6L5dEzOTQJOY96f7NBx8Oe5mHvQKKjpdAvZAXd9cKOI5NvEXUj76we8FcPNCUtSqFKRLkPQXiGKiliscqeA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665344; c=relaxed/simple;
-	bh=ct9AMmSTKLcr/+8I3/S/8Q0KOc9XTmKTiD5O9YRLp9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MIoW8fJLHJMJM/w6mIHpU17LyaHFaSiGEzCHb16IT4nkCAL9VCOQq7D6TM+1s3TgTDndMw7ePZKZrBNlm3UfD0GyZ8zELA6EKg+pTMB/gcwqqBvUDBaKL0X2rQr30BtZDD5BYwXdt2lUbcLFI2YaPShyYtSzrbIOtQpzYK2FCzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=lAxGAtsQ; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849A91F5433
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747665358; cv=fail; b=P2n6b886FScHPL9bmIHVz/7L1r9zJRzCvwuFgABwDteehRlPEoUCGUpWEQloVSQ1/ZAZBvQvyRO6h/xmr10v7oCOtb4YmObhgiBV3Ya5ApcrUZLs6rR1q1M1YKdoy6z6hz2Eqw7tP/e45aSNvEklqcUrxsq65dXZyb8/i2vOZIE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747665358; c=relaxed/simple;
+	bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hn4VdP+rxM+1ob9+Mzf2jG9YBXQDL/E+7TrSGFrFKncocKIdD/FGPdXl7s3iq69LlgYd73eUY4bcinUxdWfcHqZGFhyB4ZHewuUnL2FyWI4nG0QDMIna5Spx9BBM2FmJ8SjHsG091H/D3GOq9YoO6rngnpLIT4hCYufZwmeP6mI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ckCArHwT; arc=fail smtp.client-ip=40.107.212.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="lAxGAtsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1747665323; x=1748270123; i=wahrenst@gmx.net;
-	bh=8Sjk8UbkFl75U05K1C7gJgwCbYYL1I/3mfV385asJZ4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lAxGAtsQIDapXlb7gb/MF0Vi1fea/7BGVilihBhF+2NwFMJY4eo88AKOqDTFo/Hk
-	 dP39x0QV3NHCOsukrKqr0TjIYBbZ2ObNmu0QL78iq/UbG961ss2foSW3PHWiIjAPv
-	 RBglbA4YHswLEI6PvNo05QZfTbSjeql4s5vuT73RiaQs6I8yOTGQfMsJLanEvTPYo
-	 wCpg0vZjseJB1wiXh2DqkTsSDfqAoLzdk6IBaNdEhsfbHYhjdDT8P2I0r0nYwjns+
-	 4dxsywVz9FLRRv0MLPcvhR+Hy5u44OimKsuMo1Q4tPyMFgeztBr0DyHsL54A0WPGM
-	 IQkomwrch9ruxA9vcQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([91.41.216.208]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MOiHf-1ub3qO1YSN-00JN0Z; Mon, 19
- May 2025 16:35:23 +0200
-Message-ID: <bba21f5c-9644-4563-976a-a4cfdaf2546c@gmx.net>
-Date: Mon, 19 May 2025 16:35:22 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ckCArHwT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ghs6b5Xux8mYlpJdD2nh7qo5415km/Um/O3ChjQC1UR+4iDWTi4MAHqkZNa10RN0++XGAdkHz4r4lV0N2yTJEw8usMRDeWe9MRhwtIgEEL58TvnlknEJon5cTqAKO2tGuvrMPBrwXPXrUxYbTQPjFcV0XWfWEtkKdqXDmiba13FwnSpEEtMeegdVOklvU3o+tkI8SYj78ZW9xYu5O1hfLNVWNq9ZnJGWiSndq8DsRpQ4wmdJLfD2Melu5Q+yE+4YVOxdFAE+taI7Qa3deBDfkuqmkHQB1v9wQVIC9IUbusclCq5USX7wCLW0r5wemLgFa3hM9UGUxInwcfpYK2KRXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
+ b=KqzQOyNkZ528o9W8VSBUhKo1qI3Li7v4bwesfc8gxMIOOqe59ackNmhxmY73t3YwLCVqBMX3QkAkyVT47HONedu1/cE4viTHxMl7SE3DxGTxGTDTdkZF/yK0GuR0dYB7uULaNMm4DpT783Ktp5SuJyw3ndXIiHnEDUZazLxqtWp3IAQsg6VcncG/hOyzWRB3rWE31b2xfwo8Xvek1Il9W1OpqibZo2pdk2yuiuQZvnM04PJMgX3GNr0EgITXkpvswKV2aF8VXN48r6Yo6itY/O7E79yN4okgXkfu3Hn9aw2GWkijhaVfOF+m9PzYEficvB4fOGM0+NBc1MmNF0NzFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
+ b=ckCArHwTU9PAayHOe7cNdVXVfeL1lCpqtWYE+n/X3O2utql/H6sDqHvrNKIUVhd2d7czR/hCsjmafJW/QT60RtsHeVBmy8tqdmyp5zyCspIczvJEJL0U4CppH/XCKiDVzp+6XH9c43c3dD6F3LS/ih8T1nXVrQ+s6ZE4id8DG4oScwZh64GeEyWStzZeufn0UXbShUBb8P1Xg+HEIs0W66PPKoAJ/YaisyiDHuP8gwIZLomoOtEL4DljiC+TyDJ6hDTXTsx6JIkucl0WiQHlXQis757dkhVUTU2tU/JuXGi14sgBCx2HIJcYo7DgCFDcbv6Ea0HaD/LLilfd2Bk23Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DS7PR12MB6312.namprd12.prod.outlook.com (2603:10b6:8:93::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.31; Mon, 19 May 2025 14:35:52 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 14:35:52 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Oscar Salvador <osalvador@suse.de>,
+ Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Make MIGRATE_ISOLATE a standalone bit
+Date: Mon, 19 May 2025 10:35:50 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <0A1FA061-9E8E-4E86-A479-EFA9FF083D4F@nvidia.com>
+In-Reply-To: <794d741f-44ac-4cd8-97e8-091f12387f39@redhat.com>
+References: <20250509200111.3372279-1-ziy@nvidia.com>
+ <fed40607-edcd-4338-85ae-7656a374728b@suse.cz>
+ <FCED1CCE-B9A9-4B8B-9319-B1002848AC3B@nvidia.com>
+ <794d741f-44ac-4cd8-97e8-091f12387f39@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BL1PR13CA0337.namprd13.prod.outlook.com
+ (2603:10b6:208:2c6::12) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: vf610: add ngpios and
- gpio-reserved-ranges
-To: Haibo Chen <haibo.chen@nxp.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
- <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xRopVuOluzaIao9DcNOu5qBU5CR6Od7NJWDYzDSVGYmS9W+1ihV
- YS0QJ7ggQBu1uYJooSHkeRfxIYjwCJ1nQomB4UQp64Hx8GUm+aCyfiA96bt70PcvlFL5Pe9
- RZ4ILKgpY/3vdMTvUtRKoQenjPL7qAiSQend9h0fRevLmsa2Xggk3jRj/PeTpdzY0M/7QGm
- rkRUfKl4eU9HJoqSG+S3w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TMWryvrMpl0=;+WNCdpc8PAmqmI86I9da6zs/dPt
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS7PR12MB6312:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3734b100-1e9b-49a2-8ef8-08dd96e274f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dVgUhixI4YsCu1fpb+QFjKNqdkz17VeJeyQvNMR0TgjJqd1eJCReLlOI3kRV?=
+ =?us-ascii?Q?NdhgIjtNCcikl7tyQvq6AlHx5w17hNV196tM4FUxj+qdLWHWsfsjuUcpb0QE?=
+ =?us-ascii?Q?zFAa8zvU1Nz6XAQj9whSpd71UHCArJS0N5fKvdpAlmJkvVxVTYo6grC9UtDO?=
+ =?us-ascii?Q?IGVf/BPOvY6T0QTMm12stODLYJlX3fPSWnQmfU34LEWZ344vnSLPMmc70vAz?=
+ =?us-ascii?Q?YFdkyQDboa08ypmmzOSKdPxtbeULAe/yy4/Nb9cCiTVEbUbJyg125x+tnxnl?=
+ =?us-ascii?Q?rU2W23r9vNHPF9P64fQX4BK+atJeMNvgMMSXDSPgNcTiKZ5ISEoM00Y4NZY8?=
+ =?us-ascii?Q?XPfpUmohvCi5ZUbhYYVCVhHlwUMzmmj7rQ5v90Ov/I3Iy6kkm2v06hBuvVVP?=
+ =?us-ascii?Q?5eDWflA6MVpJFpM8zsHeX7RCCCPFI6ORXnQVxn+Bi5tTD9hmO7C/JrvOMhdU?=
+ =?us-ascii?Q?TnnFjyZgrjbq5gsmyFER/TQY8bS9Nm0cV0QSUXALXm/BCFQy6BYoDNVzTtKm?=
+ =?us-ascii?Q?ngB4ie5i5CxBTIZccTUCO7s5AV4u9tJqpE4yEHEc5KlOZQtv//OGsG8iiD5B?=
+ =?us-ascii?Q?7GxhrhifezG5vP7uf0AvVf52dVCI/u1UZg+Ptdtd4x+iWhjZMR2Mwdjpk6GP?=
+ =?us-ascii?Q?u/r/QHHDnVYXPJlPAx6eMF+622rHSGfRgBFpWijsdiuySC8J6xM9jaS02jsL?=
+ =?us-ascii?Q?MJ3X8r2yNjz282OPO4hnI8AKQEeBr+42iQfdIdGs7STM5z8barVQn3toCG8T?=
+ =?us-ascii?Q?aGuZngd7EUT9nMOMui/a8eANArFAgO7xZGcOcRzJ55T6tdZ3ubsO95BqO9l+?=
+ =?us-ascii?Q?TAD9hzOOXcZPtd24FiG5eZV2yTtsIMMfHD9dxagWh6QmFPrkLaIxpweO2PzZ?=
+ =?us-ascii?Q?Cl45Xkq6KD7e0Uk34xttqyXnoJW7jHQUeCUxPugv7qPPoNw0aytckxoIfkF/?=
+ =?us-ascii?Q?LYXnEbx8EHvN/WCuoF1HPVqv/2ImLAVK4fV4dgyyuFbzWcqswTDogYzuf2eX?=
+ =?us-ascii?Q?jorZcPDpvSecSSa8NP5woUoPrzdQ3aWLPkgDR4r4v+Db+Fmw093nje0V6bIN?=
+ =?us-ascii?Q?fHtlEHaL0gdPvWGXQp0c0sbk+u2vXSAmRg0JyVBogUsmq8xncIJ2djg0BBgY?=
+ =?us-ascii?Q?ew0b3qMHU22cFWyLq19xkU9wPbu7qlCwzgH75hcYn8cU+xwMesqEfhXm43j3?=
+ =?us-ascii?Q?nEqKNljbyggO0wvEgsvokRgZoG12C/1N8HEhI/rqIQBRXJBmmixdv4tS9+p9?=
+ =?us-ascii?Q?5kxe5nKzOi5ckS4W9wrgd3NDGrfB8OsNgMGcpksh1d+7MMnwnvXh5egM23lb?=
+ =?us-ascii?Q?fTwMOmfV97T9N6hhmHRnT46QIi2g9FWk/E1qpvZqndQHDtdqn+TUjoLyHdmX?=
+ =?us-ascii?Q?GRbyO3xO3GJ/hoBYFbREWFk7IBy9O0I2JAx+GpRSXfjvcdgcmr+KEwHP3DfD?=
+ =?us-ascii?Q?N3nskQjifuE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?6rXxAEsC4quiPw2IAba3wAuGsQOa/ZYsl+MA06aTO3bliMxX9ups3x9ae08G?=
+ =?us-ascii?Q?CX4Dzo02uQaukRA/x8NgqTxRLammbxihqOjgVugzfo9hwFhSkaCMWdOXSJtq?=
+ =?us-ascii?Q?8pJ/60vrfzL3kBv5zpeD5bKvZ3wQJvgEfFndTVDh+mfiBQBDd3L9rlYl4c7p?=
+ =?us-ascii?Q?TRna08D+4vERfYlAFWpZGcmzT1Mk0/+518nAX7xZgRrezle8sYJz1g9dKKY8?=
+ =?us-ascii?Q?/z43mxvIzS5cYBETn19yIGgOVObGAjB4qz8P0nfipr8pZeN2SJv7wnaDfHgO?=
+ =?us-ascii?Q?QDHlI523J8h0SCdmc6tkatZw3/eZIS+n1cTH/eEZmwZjnNxSF49VTqqz9JMb?=
+ =?us-ascii?Q?PB/Kg5hbqjLWYwmOj94n2x9//G+DOjJc8SNf+3SwqFW0YsxYY+Bmm3r8tjyI?=
+ =?us-ascii?Q?nvDvFG2lZjPcKyEjNBZxMKAoIqy5umQRboVdCosANnrnaPAOi278BCl9Lg88?=
+ =?us-ascii?Q?L52J9/1Ko2LOZgrBKOns3H3bTTXmhoBkMsFEj6084WTRN97aJ77GRHCLXhUz?=
+ =?us-ascii?Q?u5/I0STGn9lWTqP2kRK20+EETheKJ+UCBslqzqpjhj0LfV8fJ+owEwpcNf2z?=
+ =?us-ascii?Q?dx508qXxxFvemyhlbPEuKRYZeMLUcX03LtV0cG3LeEQfIwDurJHYDAhAKhC6?=
+ =?us-ascii?Q?08vHkVmrXjU0Z93SroQJ5TsLXs79LJ4bFHopzuPdyhWjnGnldj0rJKVlG3DS?=
+ =?us-ascii?Q?a0zZCxMLQ1TprxYfGtPKY2YgSp1cecatDjakouCQfQd74gzo1QY3HXk4PklR?=
+ =?us-ascii?Q?YJsZIEUj8lUO3cIKkZAzte9lo9a6hKVf2vfqdnu9MGNBdpHOcqKQbr+kCeUI?=
+ =?us-ascii?Q?tLgVMT8QdSnTViAC5Fu8iQ4DLl3BPORcBb8rnAUL6hhcWE7nMC4nfAfFisFG?=
+ =?us-ascii?Q?2kSyT2tTkTQGBstHvTTRQ4yLoIe81IjTuMpzkTRoJ+w5mj90+6lwYilI2Jhj?=
+ =?us-ascii?Q?rlHfgCmCmNcXz0djrv33vYkcAA1FgU9/cz9OrJ8jsJiyz61Rp7sBMGqx5sRW?=
+ =?us-ascii?Q?UBZXNqdz8pcUWpi3MnjaG9BqMXVpVMMcnUbRYS9in/pHpWSnX1v2fEYpsvJK?=
+ =?us-ascii?Q?gGA+KjiwlF3eJbVxNWHW2HhN4aENHB6AYWrCo1+L+/cIlR+o8KcXDFgpgnBN?=
+ =?us-ascii?Q?5wjbfqeKjEWqvB8cEcgy1KmepxUIL9BpyqKmbjTaJsV+SIJAS5gSBkDOVlSP?=
+ =?us-ascii?Q?mFtfyG9CJfumEsUkFZSVHUo0jrI6m7jmGUjaj7lioVdmfBlQwHfJPsdGTvJX?=
+ =?us-ascii?Q?1aWCiqTIDQKxke/nYaoAKcXiRwcRfDHSVsBQ3nI9iHml6A8i1edXr2yCvXrE?=
+ =?us-ascii?Q?V+EGiPWRbbB/ka/tABC/nFbRXgwGLIC3GFpU+wWAl2+LQ+2CKGz5qOBg53Jg?=
+ =?us-ascii?Q?gIP0BqPjupvmPC2sS3s5S6D/H44WpOoeoZ7lL1gurlBKo2CSGg0DG0AMTZxk?=
+ =?us-ascii?Q?cBJQTxGzIq8hPhuI2mqGpwle7+hFBm3/L/Z5+wJLOJpYY2EApi0KL6ynRaPI?=
+ =?us-ascii?Q?hW2S+D/EynL90frdhTXeykdFWGBcN/A7IaW/wtTyY91IC8APwPLSfEIWL0xE?=
+ =?us-ascii?Q?Tp1/LuyiTnf8rv/asNpP13HXR3liHD6hXUBxbfqw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3734b100-1e9b-49a2-8ef8-08dd96e274f9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 14:35:52.7132
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9EJKCiPCPpu5zzucpOYEPafuN5sQjWyonR5T7lpEZsbGGeJdXwzbKWbfpsvMr4zh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6312
 
-Hi Haibo,
+On 19 May 2025, at 10:15, David Hildenbrand wrote:
 
-Am 19.05.25 um 08:03 schrieb Haibo Chen:
-> Add optional ngpios and gpio-reserved-ranges property
+> On 18.05.25 02:20, Zi Yan wrote:
+>> On 17 May 2025, at 16:26, Vlastimil Babka wrote:
+>>
+>>> On 5/9/25 22:01, Zi Yan wrote:
+>>>> Hi David and Oscar,
+>>>>
+>>>> Can you take a look at Patch 2, which changes how online_pages() set=
+
+>>>> online pageblock migratetypes? It used to first set all pageblocks t=
+o
+>>>> MIGRATE_ISOLATE, then let undo_isolate_page_range() move the pageblo=
+cks
+>>>> to MIGRATE_MOVABLE. After MIGRATE_ISOLATE becomes a standalone bit, =
+all
+>>>> online pageblocks need to have a migratetype other than MIGRATE_ISOL=
+ATE.
+>>>> Let me know if there is any issue with my changes.
+>>>>
+>>>> Hi Johannes,
+>>>>
+>>>> Patch 2 now have set_pageblock_migratetype() not accepting
+>>>> MIGRATE_ISOLATE. I think it makes code better. Thank you for the gre=
+at
+>>>> feedback.
+>>>>
+>>>> Hi all,
+>>>>
+>>>> This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
+>>>> being overwritten during pageblock isolation process. Currently,
+>>>> MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone=
+=2Eh),
+>>>> thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original=
+
+>>>> migratetype. This causes pageblock migratetype loss during
+>>>> alloc_contig_range() and memory offline, especially when the process=
+
+>>>> fails due to a failed pageblock isolation and the code tries to undo=
+ the
+>>>> finished pageblock isolations.
+>>>
+>>> Seems mostly fine to me, just sent suggestion for 4/4.
+>>
+>> Thanks.
+>>
+>>> I was kinda hoping that MIGRATE_ISOLATE could stop being a migratetyp=
+e. But
+>>> I also see that it's useful for it to be because then it means it has=
+ the
+>>> freelists in the buddy allocator, can work via __move_freepages_block=
+() etc.
+>>
+>> Yeah, I wanted to remove MIGRATE_ISOLATE from migratetype too, but the=
+re
+>> is a MIGRATE_ISOLATE freelist and /proc/pagetypeinfo also shows isolat=
+ed
+>> free pages.
 >
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-could you please move the binding changes before the DTS changes, to=20
-avoid temporary DT build warnings.
-
-Thanks
-> ---
->   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 6 ++++++
->   1 file changed, 6 insertions(+)
+> The latter, we can likely fake.
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Do=
-cumentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> index 4fb32e9aec0a341a50088f3e4352ed4d36f649d3..5b98228466c6414be681c494=
-17bbdd82f2c45756 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> @@ -70,6 +70,12 @@ properties:
->       minItems: 1
->       maxItems: 4
->  =20
-> +  gpio-reserved-ranges: true
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 32
-> +
->   patternProperties:
->     "^.+-hog(-[0-9]+)?$":
->       type: object
+> Is there a reasonable way to remove MIGRATE_ISOLATE completely?
 >
+> Of course, we could simply duplicate the page lists (one set for isolat=
+ed, one set for !isolated), or keep it as is and simply have a
 
+That could work. It will change vmcore layout and I wonder if that is a c=
+oncern
+or not.
+
+> separate one that we separate out. So, we could have a migratetype+isol=
+ated pair instead.
+
+What do you mean by a migratetype+isolate pair?
+
+>
+> Just a thought, did not look into all the ugly details.
+
+Another thought is that maybe caller should keep the isolated free pages =
+instead
+to make it actually isolated. We might need to keep per-order isolated fr=
+ee page
+stats to fake /proc/pagetypeinfo.
+
+--
+Best Regards,
+Yan, Zi
