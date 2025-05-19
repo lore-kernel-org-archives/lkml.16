@@ -1,354 +1,188 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6180820C490
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7D51373;
+	Mon, 19 May 2025 23:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747696471; cv=none; b=WWVWF8xiXlOndc0eWmoqDThUOc7dccnoYwl+pHMdcXhf5iSENYmST0frDsDjlEIEelNCTwkuVLhQGs+BwA6w7Fo6tUNpCWPnnoyf8GG+mZGRmctDgkRUfjiIDvQKyv3nhsppzO2aPwDsCkQmofr68DI6UZT68H0UqhLQbvxi7lI=
+	t=1747696569; cv=none; b=rLJmEJnjIZdBwXdau+KuF9x1U0cjZO7Iat0txiShthClWHpyMMPiSuHmTzSMQ0vHlCrAkc8+wEUi1c6IjrsFHyW3kurD8WqxCuOekR+30aALf0MVjNUC+wg8hk+k2V11LPNpr/uhK+NZ82eUPtbeDYRZ6O+Qx8DtsMHI8OUkqes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747696471; c=relaxed/simple;
-	bh=EXrmkhGf4+2x2IXBTsx+WVbVDJHmqxaQZqcghYio+Bk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nk4dV+t9LSbyvW658nws/h9VEArRXh3mLPtJiUXL6RCKFZbL98kKUVFVWbSQNpN+WZdGLtL3XeL3p0BqlSaY5/9l2T6ZvtXXVheAbGSa2DBiLxeL32iC1owIiLKpkjWbohkICvnnS1DWRjE3+sv6FesaDe6B5Z5sgmLLE1+sNGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-861d6e340e2so426878539f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:14:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747696468; x=1748301268;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0XIGhr+70ZjBiKQAvfrcT5pp0xw6sX0iOPNQPiN0Vb0=;
-        b=TWrXf+WfRht/SXKt3OpNf/BuUReKcL+C4d4nwEUqfjD20ThI4PcKGdMvrezaGJYJO2
-         RQslQBnr8N5kcBd0F4oyeR/89krhDKATyOZ2lsEmPzaVBFJZ/YPhtY9WL0PY0HFNOt0r
-         sl7Pr4EQOAAyBfOURyFg8LPsoloEDfuUFhKiJWehXIdn7/Ly1VZJHUqLT1XZCD9x9SyC
-         DHtIz1wikpVnpEN4KDihRMc41C5SnXv9mXpIy9P8Xo03krxZgfng9UxTG65OxNY6f7rQ
-         f5WdjeRpUiZ/DVhfO3uG8YpUDscibjZwEGZ3HRDtWtRdcmNDCt5u3OPiKUGt/hJcRuWj
-         tsUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+wOOAi5NZcY6OKXIsHS7RjkqTdamU6A/KqitZTSxVS8wodPEvVWCVWs6V3AUCZTqbFtZtm4pMsvIMH8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUqnmsUwa36rpzYg7sEmSfiVivJLNMcOYrBS0e/eNRyB0hBXcW
-	yZ3L4nyoXZG5KUr82YxlI1kS3paBe5ls4YQh96isE8RP6NoyUD5Pllq7Ph4BQHVaJc939uJC0p/
-	clVc7K/z1oT6JlKh2EvuIiR/gXfdb38447KKLxmbzFLtXkYikh63sDyelk/w=
-X-Google-Smtp-Source: AGHT+IF+x8PQs5YczeEHe0/iHfsUhNVhWl21Aps0XFE3qKQvN4JknBGGqb8VyGaivuRgkrMO90kQN01RMIlDc68g6KNgbfzFQCD6
+	s=arc-20240116; t=1747696569; c=relaxed/simple;
+	bh=dXooAyhFtIbkNwlVi/qdsagXG5Z4H1TWB2hLbacD1/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUpgiWtNJ0hr5rLk3zBbfeKbUzpeFw8E5TbdTsHwA4oLlfYyHdTgbqfaCbc1PN5YCrofK4mxWLc1ZuzBlZ+vx8p2IencIreZU/edUhKWhdZ/yvsNrCMYkq6575QVJnN0mNaO4lkZ/k5pRxV7YQ9qdzIOUGupMEweUfLKkefWXfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e32eysEZ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e32eysEZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747696568; x=1779232568;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dXooAyhFtIbkNwlVi/qdsagXG5Z4H1TWB2hLbacD1/c=;
+  b=e32eysEZHHhZvUCOQEDUdgbolfjS5yCm0ErtEMecdxOq+j2vPR/P977W
+   W7TQAxV96Ik6GDcKAyx8q4QeqEBvuJeyxH/lh5QLhGBJ0NbG3UrStBhab
+   OTLrq9KWJVB7ZuAdHNkncwZXdjbXpwxOC4kbw9k6yq3R3rhtIvhDfT1TE
+   r8YPCsMDLHxIBoB7g8L1naP+L6s5W3Z0wtpO3C0NCCmuGomKf9tfJETlk
+   rHIRtGbZKEGDT459s3m594bvZN6SS0KwJktl06AcRn1nulZO7iLzAU6g9
+   tBYMGklc+nZYVnf+TmAYSoR6awB2tn9lQa4icGjhnOPVBMYDkAv7hra7k
+   A==;
+X-CSE-ConnectionGUID: qYv9Z1jVT6mxSDkSObQT5A==
+X-CSE-MsgGUID: /mL7n3RoQNKhD7YnWH/mHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49677370"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49677370"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:15:58 -0700
+X-CSE-ConnectionGUID: VzHO+0MGRvOaAlG2gyO3pw==
+X-CSE-MsgGUID: lgvVC65aSzObW5WDwhFXEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="140412830"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:15:58 -0700
+Message-ID: <e37c5f7f-3460-4f58-892f-39faf88a8e9c@linux.intel.com>
+Date: Mon, 19 May 2025 16:15:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2983:b0:864:4911:f463 with SMTP id
- ca18e2360f4ac-86a24c976c3mr1601576039f.10.1747696468455; Mon, 19 May 2025
- 16:14:28 -0700 (PDT)
-Date: Mon, 19 May 2025 16:14:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682bbb54.a00a0220.7a43a.007f.GAE@google.com>
-Subject: [syzbot] [dri?] possible deadlock in drm_getunique
-From: syzbot <syzbot+2e9aa2a09550887c9d40@syzkaller.appspotmail.com>
-To: airlied@gmail.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, simona@ffwll.ch, syzkaller-bugs@googlegroups.com, 
-	tzimmermann@suse.de
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    c919f08732cc Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=122dbcd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2727a5e5fea443ee
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e9aa2a09550887c9d40
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fedefc1f300a/disk-c919f087.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a2d33f61744a/vmlinux-c919f087.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2fda6bb2e321/Image-c919f087.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2e9aa2a09550887c9d40@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc6-syzkaller-gc919f08732cc #0 Not tainted
-------------------------------------------------------
-syz.0.923/9180 is trying to acquire lock:
-ffff0000c89056d0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0x9c/0x124 mm/memory.c:7150
-
-but task is already holding lock:
-ffff0000c9d441b0 (&dev->master_mutex){+.+.}-{4:4}, at: drm_getunique+0x48/0x2e0 drivers/gpu/drm/drm_ioctl.c:121
-
-which lock already depends on the new lock.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/16] PCI/DPC: Log Error Source ID only when valid
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-3-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-3-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-the existing dependency chain (in reverse order) is:
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> DPC Error Source ID is only valid when the DPC Trigger Reason indicates
+> that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
+> Message (PCIe r6.0, sec 7.9.14.5).
+>
+> When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE)
+> or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
+> log the Error Source ID (decoded into domain/bus/device/function).  Don't
+> print the source otherwise, since it's not valid.
+>
+> For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
+> logging changes:
+>
+>    - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
+>    - pci 0000:00:01.0: DPC: ERR_FATAL detected
+>    + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL received from 0000:02:00.0
+>
+> and when DPC triggered for other reasons, where DPC Error Source ID is
+> undefined, e.g., unmasked uncorrectable error:
+>
+>    - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
+>    - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
+>    + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked uncorrectable error detected
+>
+> Previously the "containment event" message was at KERN_INFO and the
+> "%s detected" message was at KERN_WARNING.  Now the single message is at
+> KERN_WARNING.
 
--> #5 (&dev->master_mutex){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       drm_master_internal_acquire+0x24/0x78 drivers/gpu/drm/drm_auth.c:452
-       drm_client_modeset_commit+0x40/0x7c drivers/gpu/drm/drm_client_modeset.c:1205
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x94/0x198 drivers/gpu/drm/drm_fb_helper.c:237
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Since we are handling Uncorrectable errors, why not use pci_err?
 
--> #4 (&helper->lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
--> #3 (console_lock){+.+.}-{0:0}:
-       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
-       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-       bucket_ref_update_err+0x1c8/0x21c fs/bcachefs/buckets.c:417
-       bch2_bucket_ref_update+0x3d8/0x888 fs/bcachefs/buckets.c:-1
-       __mark_pointer fs/bcachefs/buckets.c:572 [inline]
-       bch2_trigger_pointer fs/bcachefs/buckets.c:618 [inline]
-       __trigger_extent+0xd90/0x35fc fs/bcachefs/buckets.c:763
-       bch2_trigger_extent+0x3e4/0x78c fs/bcachefs/buckets.c:881
-       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:-1 [inline]
-       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
-       __bch2_trans_commit+0x7e8/0x62d0 fs/bcachefs/btree_trans_commit.c:990
-       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
-       bch2_extent_update+0x2d8/0x7e8 fs/bcachefs/io_write.c:353
-       bch2_fpunch_at+0x4dc/0x98c fs/bcachefs/io_misc.c:187
-       bch2_fpunch+0x104/0x1b8 fs/bcachefs/io_misc.c:206
-       bchfs_fpunch+0x204/0x404 fs/bcachefs/fs-io.c:575
-       bch2_fallocate_dispatch+0x378/0x4e0 fs/bcachefs/fs-io.c:838
-       vfs_fallocate+0x5cc/0x73c fs/open.c:338
-       ioctl_preallocate fs/ioctl.c:290 [inline]
-       file_ioctl fs/ioctl.c:-1 [inline]
-       do_vfs_ioctl+0x1d4c/0x2218 fs/ioctl.c:885
-       __do_sys_ioctl fs/ioctl.c:904 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0xe4/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
--> #2 (bcachefs_btree){+.+.}-{0:0}:
-       trans_set_locked+0x94/0x200 fs/bcachefs/btree_locking.h:198
-       bch2_trans_begin+0x6f8/0xa40 fs/bcachefs/btree_iter.c:3282
-       bch2_read_err_msg_trans+0x64/0x298 fs/bcachefs/io_read.c:346
-       __bch2_read_extent+0x21fc/0x3694 fs/bcachefs/io_read.c:975
-       bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
-       bchfs_read+0x1178/0x17dc fs/bcachefs/fs-io-buffered.c:226
-       bch2_readahead+0xa18/0xd88 fs/bcachefs/fs-io-buffered.c:316
-       read_pages+0x13c/0x4c8 mm/readahead.c:160
-       page_cache_ra_order+0x7b8/0xb34 mm/readahead.c:515
-       do_sync_mmap_readahead+0x2f0/0x660 mm/filemap.c:-1
-       filemap_fault+0x600/0x1278 mm/filemap.c:3403
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2c00/0x4cf0 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1da4/0x30cc mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+>   drivers/pci/pcie/dpc.c | 45 ++++++++++++++++++++++++++----------------
+>   1 file changed, 28 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index fe7719238456..315bf2bfd570 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -261,25 +261,36 @@ void dpc_process_error(struct pci_dev *pdev)
+>   	struct aer_err_info info = { 0 };
+>   
+>   	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> -	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> -
+> -	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+> -		 status, source);
+>   
+>   	reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
+> -	ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> -	pci_warn(pdev, "%s detected\n",
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
+> -		 "unmasked uncorrectable error" :
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
+> -		 "ERR_NONFATAL" :
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> -		 "ERR_FATAL" :
+> -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> -		 "RP PIO error" :
+> -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> -		 "software trigger" :
+> -		 "reserved error");
+> +
+> +	switch (reason) {
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
+> +		pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
+> +			 status);
+> +		break;
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
+> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
+> +				     &source);
+> +		pci_warn(pdev, "containment event, status:%#06x, %s received from %04x:%02x:%02x.%d\n",
+> +			 status,
 
--> #1 (mapping.invalidate_lock#3){.+.+}-{4:4}:
-       down_read+0x58/0x2f8 kernel/locking/rwsem.c:1524
-       filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
-       filemap_fault+0x564/0x1278 mm/filemap.c:3391
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2c00/0x4cf0 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1da4/0x30cc mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+I see the BDF extraction and format code in many places in the PCI drivers. May be a
+common macro will make it more readable.
 
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
-       __might_fault+0xc4/0x124 mm/memory.c:7151
-       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
-       copy_to_user include/linux/uaccess.h:223 [inline]
-       drm_getunique+0x114/0x2e0 drivers/gpu/drm/drm_ioctl.c:124
-       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> +			 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> +				"ERR_FATAL" : "ERR_NONFATAL",
+> +			 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
+> +			 PCI_SLOT(source), PCI_FUNC(source));
+> +		return;
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
+> +		ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> +		pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
+> +			 status,
+> +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> +			 "RP PIO error" :
+> +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> +			 "software trigger" :
+> +			 "reserved error");
+> +		break;
+> +	}
+>   
+>   	/* show RP PIO error detail information */
+>   	if (pdev->dpc_rp_extensions &&
 
-other info that might help us debug this:
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Chain exists of:
-  &mm->mmap_lock --> &helper->lock --> &dev->master_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev->master_mutex);
-                               lock(&helper->lock);
-                               lock(&dev->master_mutex);
-  rlock(&mm->mmap_lock);
-
- *** DEADLOCK ***
-
-1 lock held by syz.0.923/9180:
- #0: ffff0000c9d441b0 (&dev->master_mutex){+.+.}-{4:4}, at: drm_getunique+0x48/0x2e0 drivers/gpu/drm/drm_ioctl.c:121
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 9180 Comm: syz.0.923 Not tainted 6.15.0-rc6-syzkaller-gc919f08732cc #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- __might_fault+0xc4/0x124 mm/memory.c:7151
- _inline_copy_to_user include/linux/uaccess.h:192 [inline]
- copy_to_user include/linux/uaccess.h:223 [inline]
- drm_getunique+0x114/0x2e0 drivers/gpu/drm/drm_ioctl.c:124
- drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
- drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
