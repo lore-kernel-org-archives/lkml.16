@@ -1,63 +1,63 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD83421B1AB
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A10521CC48
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690834; cv=none; b=kju5I3+3gprYQ1JjhcoxpTOT/ZqoU16qFwpmcn9Kd44FKuYlG949rCbsfGbtwkfLgYrMugFRfRmHPsJebXpNo/dm0WJ9GnXSnpvuQKFCebDwj7LrI9U8Uf/dSClt6+4+LqQdeE4A0SyxqwSQgj0DjNnUN4jfsfaZ2XCNBDvrNj0=
+	t=1747690854; cv=none; b=YsLKQRFZcbRaDbJFcNYEUsbj2P//1xn5Cj3Pmtqou2kU63kSY4uu2gOAKiJqwGEeTbGHS5RFXC84w04oG8v7c9w/e+VLRFNKcmbVDHDQUoV0MPlUoyHM5cN0UEslDmOtG/vtbz0cD3nsJmlJvGhZ/LQPq8UqoU1zDJytDHm1wqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690834; c=relaxed/simple;
-	bh=oIfRgDUglH15RDFX6FUWMJCT/I7VXAZOuTRM1yN+y18=;
+	s=arc-20240116; t=1747690854; c=relaxed/simple;
+	bh=/uFHROyI0Kx6jitpThXLN1Ib1Uivr9ksyUKL4WmI29o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZH2lT2mTtfDlK6XyR11fxa9AovQQLLVg6tP++bYcKb60c5IPqU4guuN8Bu9KOCuyZsZWmHtozEBxzXFj2pBtejfvXSnYsOGLZbVsIhjok1AXSe5qcrb/AJjAkkfGJuGderVUrNeqmx4c9G5VhIhVpHlUO/rLOIloxFFhgQljlLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BP5QjnK4; arc=none smtp.client-ip=209.85.210.177
+	 In-Reply-To:Content-Type; b=IE6XZHxr3Z7lj61b9zi0/J2F+2lJjMtmIpkRock82RRVAAAlLS2V72mPuSrPVcfJ0q5/6K/oeSEd0hjwiut16xX4sU91kprGR5qmQ9VJTMFqfpXtaQQtLd+erFerEPKvM7DuVRDuPAh9jwhbdXaCFl1J9DVyFfBRn6gJVpQUnQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FUk12U+4; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BP5QjnK4"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso4470800b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:40:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FUk12U+4"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso5722675b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1747690832; x=1748295632; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1747690852; x=1748295652; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=p1ytQ3ZSF6xMpjwImDstqOwa6hZjNzIRjCw1TOvbWjM=;
-        b=BP5QjnK45npqvtyzfo85V0SNudN7bhKZywmXkTIfZ9jOJgYV5i1y+K+ZuA83eOLdZo
-         QuKa5snmw9pbbBnf8IpwFVOr9qbt7iIWY5Rh1WkoqRYkms46D+E2daaZsvH5jzuwsjpL
-         3HrVVB0x0ziavkIh4RbrThhimjOqkxm58p8b8=
+        bh=yYGjiC5UDvQshFcMR9QcQxV0wJO+Bk3yzbRWhuFNt90=;
+        b=FUk12U+4MHwGpNgTckWCde8Xjcr7g7kL+QKe+MpPJEqbcYisVHTQ8+hD3d/djmtnd8
+         392x9McBRDrMOdrCNK5e24QmcLqBYpPhEw8snQHjSvA8rPVWI+C7YIINEwcljfIw2Mg3
+         5akCyAsVoGKTBlCiDECfOPIqrDIbdioPv+UJI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747690832; x=1748295632;
+        d=1e100.net; s=20230601; t=1747690852; x=1748295652;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p1ytQ3ZSF6xMpjwImDstqOwa6hZjNzIRjCw1TOvbWjM=;
-        b=JW2hAu6BDgSVQppLZMul+XiIPGCjrZXXSEayubKUoUNUnwCxJ74hA/vzv0hor8FiMe
-         PblX/gJthoHwLLLe5NQFdgYUKXcLoAk+atQ4KC/KWkhGK+2mS01QMeOyTUT4QtUxgksf
-         WTa+0TNPg8UTRw9DLt9wnNxlA1cE1SYqM3apk/8+yxoe6aAnCmoU7Cyy3uFsr9J6cI0I
-         0/npJVTPGxwe6qY5rnOBUjTxVRnKIlOxS3pSR1Ai0V61f8FAoDwe79rJRp00Q2Bl80R2
-         zcfnWvPpkfV9Lt3Yb5lzc6vpswxiktQN+yPuKqHUq1lwx+AmCExPzUNRlrIfGyRM0Ma0
-         uEtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHsFyGBNCwty0dt9As/TuRC26CNgIxWWnhxd94ViPzUzQix4mxUdgYnChOhzk1Wh3/W/lfeKc2NGJGL0M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk0iq6EowOLJUA+qD5MnWvlEU0tLmsX6Tj4jKSbd3DrrrA5vVm
-	xI1jRW8tGRdDtf20d/ifeVdcSNekWCiIwTyp9/CpVJk++/NM31jmTsmtRq2OPzf17w==
-X-Gm-Gg: ASbGnctpjwj1CBsI2yGj99PnXFF+cBJdgkZJhQCMlTXmeYHt22BRT5ZDjwL8wnE8b7M
-	e3j/7xezCSp/Pw+U8bZDIq7AJDH+GB4wirmxcy+6Ugtz+8MpMXMQCScSyeJlBYlLwEK8cw0XneY
-	xjUTsMOt/TDZwpcjkquPGLhHNXJxOXTxPKrsysVP7dGBgYnbh5x10t/XnVBQwAtO1fz9n2gOOx0
-	Y5wSxwC3sks9V/xA5S6NcBSZJWBUxkumUgY+PVX4aPPvXYS7GyjZgDcHxqqA9GpyCBkk5gGeHmz
-	nRopLE/4CYu8ZWBUOWDZJ9og6mhWEtQ5zRAlxm2EkdAVGXk9MMtsC/BhfGh4wBfL3Ypkcs9CTOm
-	FwSMILDR1Lv2n+8Q=
-X-Google-Smtp-Source: AGHT+IEDpQ8allIz2NzqoT6TUd9rpVbMNYS2IJErvGixXKVt64Sad0TM7dPPjfUiC8WN5bC8Qmjdfw==
-X-Received: by 2002:a05:6a00:ab87:b0:73d:fefb:325 with SMTP id d2e1a72fcca58-742a9787708mr19862538b3a.5.1747690832107;
-        Mon, 19 May 2025 14:40:32 -0700 (PDT)
+        bh=yYGjiC5UDvQshFcMR9QcQxV0wJO+Bk3yzbRWhuFNt90=;
+        b=G6EzGJYcB77lMo1OyONj1/TtMtKYVE5l2LqgakRgdkNAuO6FUhA36YOzfZe3O0TxzB
+         kHuBS8qAablDqrNXVgpsDxAo/MizywaxuaKBy3hcy3cqSUQknPORgUvvSNkxzXkH5iWM
+         TFK+OgdZWRu2Ui8RDzMJKj5YH4xGYdY3An1auSrXy2TafOX1WseFMYAV+2R1RMt/XmdY
+         z0WGrGbTO/N9CxhA9s4apHIdRHfG9Zr46++xhLcExce9syfnMQzxxkYLyMrDxgx2adDl
+         ivxQlkUmDEUGni+9ZMH+ueaY9qhwERZF2FuHICrB8/QfTirc+E+FqgrukQXtxBr3jRkW
+         tWew==
+X-Forwarded-Encrypted: i=1; AJvYcCWGpU8zMiwe9ES6+1u8iiJSd83idqJQ/bzOiMx1e8jA28mNaYdnhXa8IzVEu3hvSL0lBGeJc7AvZ1s3dOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwKnF5f9Pr41u58qxAl6hL879VhtBQcPCfczWOLfNnBFUTWmtF
+	Yf6gepCuOhy+Dd59v2lk+MRh8tcqldtppYwn0Jfpgbr3cRKTxKzATpiG6ELjxabkJA==
+X-Gm-Gg: ASbGncvN76FWuwrZsiyDcXTeql04Yy6ICoceVzLcroWZwy5vi1+CfsrzEhxA/8HdQgy
+	NL6fUanLSSml53XVFEkvsakmS42OzCWB90YtgeZoUFJTPXPCWZYyxT6SjpiuJUQOi7JMO6PMmLe
+	JXgExqwuN2eklMwIYknqkMMR9fBFv6pyAPwhh4ODnXc4fw83zYHV8TSUJgYK+9JKyluzkm7PyMM
+	DTAImZ7iUSmALWPGJ2Fhk6MzaGJNQ5cLISIRnO4h4RAJKDbZ9cDddj/lYtxYYZWYfLmf5J7NkQz
+	6zeHQGl/DOsXgVvja70RqZtA4iNDweZvKzdrrTbzP6skEc76/cyJl+4DsHiaaHgo3ZC0Aco/I9Y
+	wYNVaXslmS2BjgYaN8bjU4VCJbQ==
+X-Google-Smtp-Source: AGHT+IFFPdD3VsDwmbZYP05GQeqcTUN56P0IxA5walt+qDMfQ9wiMUpStXp4V+29gYmyjZ8WCx/tnQ==
+X-Received: by 2002:a05:6a00:a06:b0:72d:9cbc:730d with SMTP id d2e1a72fcca58-742a97d4650mr18312464b3a.11.1747690852374;
+        Mon, 19 May 2025 14:40:52 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a3167sm6682699b3a.166.2025.05.19.14.40.30
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96dfa9dsm6931394b3a.10.2025.05.19.14.40.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 14:40:31 -0700 (PDT)
-Message-ID: <51159d75-7e13-4aac-89bf-302415e75978@broadcom.com>
-Date: Mon, 19 May 2025 14:40:29 -0700
+        Mon, 19 May 2025 14:40:51 -0700 (PDT)
+Message-ID: <dc9c76cf-64bf-434b-9f7b-af050822bfe5@broadcom.com>
+Date: Mon, 19 May 2025 14:40:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/3] net: dsa: b53: do not enable EEE on bcm63xx
+Subject: Re: [PATCH net 3/3] net: dsa: b53: allow RGMII for bcm63xx RGMII
+ ports
 To: Jonas Gorski <jonas.gorski@gmail.com>,
  Florian Fainelli <florian.fainelli@broadcom.com>,
  Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
@@ -75,7 +76,7 @@ To: Jonas Gorski <jonas.gorski@gmail.com>,
  =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
- <20250519174550.1486064-2-jonas.gorski@gmail.com>
+ <20250519174550.1486064-4-jonas.gorski@gmail.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -110,20 +111,21 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250519174550.1486064-2-jonas.gorski@gmail.com>
+In-Reply-To: <20250519174550.1486064-4-jonas.gorski@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/19/25 10:45, Jonas Gorski wrote:
-> BCM63xx internal switches do not support EEE, but provide multiple RGMII
-> ports where external PHYs may be connected. If one of these PHYs are EEE
-> capable, we may try to enable EEE for the MACs, which then hangs the
-> system on access of the (non-existent) EEE registers.
+> Add RGMII to supported interfaces for BCM63xx RGMII ports so they can be
+> actually used in RGMII mode.
 > 
-> Fix this by checking if the switch actually supports EEE before
-> attempting to configure it.
+> Without this, phylink will fail to configure them:
 > 
-> Fixes: 22256b0afb12 ("net: dsa: b53: Move EEE functions to b53")
+> [    3.580000] b53-switch 10700000.switch GbE3 (uninitialized): validation of rgmii with support 0000000,00000000,00000000,000062ff and advertisement 0000000,00000000,00000000,000062ff failed: -EINVAL
+> [    3.600000] b53-switch 10700000.switch GbE3 (uninitialized): failed to connect to PHY: -EINVAL
+> [    3.610000] b53-switch 10700000.switch GbE3 (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 4
+> 
+> Fixes: ce3bf94871f7 ("net: dsa: b53: add support for BCM63xx RGMIIs")
 > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
