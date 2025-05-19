@@ -1,86 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9262A94F;
-	Mon, 19 May 2025 10:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EAF1E9906;
+	Mon, 19 May 2025 10:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649222; cv=none; b=VCDFnz3bnccxKOD7HOhofnwZHrVIMcxpOZg8uehMr6O7UrCQtpjpPCTNcQrpOaEXOYo9HpOA2SwZi0R615bXOcRnTNCa80bRI5lK6Z7eInCOINM5NEEeqwImYD8deGJnQxKRTgdgqiFgIO5FoRxZNFjUmrFoGrMAFpxr0ajI+NM=
+	t=1747649290; cv=none; b=ppbft2i29rlWCTxSrodwPWPaad+Atpl99d5BcCanPBxPbS17V1tFk1+6ks1WU23uVIh+sbh/XeCt4z7S3lHvyiWBNZPoIkUW7FOsI0G3tkLPCVgo2cxQS9ppCRVms52TEV8yyB7eO9/y5EQFIkYcTXeRSAhkTESEEE9p+WCOEbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649222; c=relaxed/simple;
-	bh=akfpDKLkt7E1tvdRhNNlmeoQGdEkgtVnox9Ttq4P3Ss=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Erb1zafHvNwL8J4/Q00GLTr/v81BcqdfFg1NKuV9IRZRDQw9kzyFW+daP+rnyTukwSYGtihSOBYmnzwN7oZN1qKthuUaXx2EYTe0mxumgu2JviV5xfQxRPPG5KTDZxcBGCeECx9U6WsJBH5xtZfMLJUdHtTI2x1ljPXIXSYOsw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwU+Y8rP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747649290; c=relaxed/simple;
+	bh=wL+5PnBKqpKcg8WZY/24OfXz24Tyva4tqhKg/S7c2A0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQniIw+vBKxrp3kvOZeMwpyuTVI8DZJvMLriwidBaJ/rWS4XAt638sF/zRf1ezexHg8hZ8ol9OUAnt7F45z8nXOTcYaCafIqyBqY7s+LbRIGusb5PRZ4OxuWIGosl/yjnfuZa+FNVdeRh71N5BJ8EZyDWSatoK/rj1LDIdVpYjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyIxmRBU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwU+Y8rP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9D2C4CEE4;
-	Mon, 19 May 2025 10:07:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyIxmRBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F544C4CEE4;
+	Mon, 19 May 2025 10:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747649222;
-	bh=akfpDKLkt7E1tvdRhNNlmeoQGdEkgtVnox9Ttq4P3Ss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uwU+Y8rPlahd06WIF+I8lGsAfVgut4nyzDjCy2CEcgJjqOxu1kVdRGzN/IlxesAyv
-	 YJZ+DlT2pjD963wUzfeWL2+w0lhxYT1fUro716Ioq8E4pKkJ24v3rwdIyXzIcFStMr
-	 r8Zp62jAKPWSQ7dizzCVAgW+Am4Py65W5B/oGOOwW28MDy320lwGXgoRFNzHuUWBbP
-	 OFCS6H7NQV+24hrarzfIkiId7z08jgs9frNuNvN5WJZLCymMVre8WHRWAURkNebrZ4
-	 jAZHfUP0ZqjzxoMwN45Num+L77zENxTQKrlrB+fhKbjYITzTzrfvOSlw907cFNv3zo
-	 xQTR3BRujQljw==
-From: Christian Brauner <brauner@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Christian Brauner <brauner@kernel.org>,
-	jack@suse.cz,
-	viro@zeniv.linux.org.uk,
-	mcgrof@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next 0/4] fs/buffer: misc optimizations
-Date: Mon, 19 May 2025 12:06:56 +0200
-Message-ID: <20250519-jemand-sehnen-ee7f86956d13@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250515173925.147823-1-dave@stgolabs.net>
-References: <20250515173925.147823-1-dave@stgolabs.net>
+	s=k20201202; t=1747649290;
+	bh=wL+5PnBKqpKcg8WZY/24OfXz24Tyva4tqhKg/S7c2A0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fyIxmRBUNTWLWC8pnAJ9DzSmLwOckyInVq5KSXN7KGIGPwqQc4JpQoEsE+gj//PfG
+	 kHU3IQlcwO/cP5YsGqbLgfDAVe2twWHQW04h56uSaa9yOUto86rpJXl+xPZ8Zl8lWp
+	 P2N6pH1W/MB7Omm8UXNGVBaBo7K2pc1QcThFjEyaIAefJ94kb/gEhjJlr9seeGuCcM
+	 E2De76g0pjTqtM9ab/2iySGcjx1txxOT+IS7EKlS1N6R/6/rFPWe/fEoha8yVzKIl8
+	 PGXKVlv+RWTfGgHJU+Q43BgiuaB12DEAasAAMlyzH9XlEuv9EswvF7wQW3HeP1PMya
+	 n74Srx+wlVlCQ==
+Date: Mon, 19 May 2025 11:08:03 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: krzk@kernel.org, bongsu.jeon@samsung.com, cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com, lee@kernel.org, lgirdwood@gmail.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] fix: Correct Samsung 'Electronics' spelling in
+ copyright headers
+Message-ID: <3aa30119-60e5-4dcb-b13a-1753966ca775@sirena.org.uk>
+References: <20250518085734.88890-1-sumanth.gavini.ref@yahoo.com>
+ <20250518085734.88890-1-sumanth.gavini@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1464; i=brauner@kernel.org; h=from:subject:message-id; bh=akfpDKLkt7E1tvdRhNNlmeoQGdEkgtVnox9Ttq4P3Ss=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRoMx28FqG45+l/kyCLxYeL7y3kCPbo1bTjfMm5KIl30 cH31kuWdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkzwJGht2qciZfXismvhJg X81ZW8tzJaJmql5DvU95/ekTBjPkNjH8j7H7GHn4ultyhMhJTnWfT+ZdWx8Em0zee0HQ9EpC+JF obgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1JBMmA2tdEPES3PJ"
+Content-Disposition: inline
+In-Reply-To: <20250518085734.88890-1-sumanth.gavini@yahoo.com>
+X-Cookie: We have ears, earther...FOUR OF THEM!
 
-On Thu, 15 May 2025 10:39:21 -0700, Davidlohr Bueso wrote:
-> Four small patches - the first could be sent to Linus for v6.15 considering
-> it is a missing nonblocking lookup conversion in the getblk slowpath I
-> had missed. The other two patches are small optimizations found while reading
-> the code, and one rocket science cleanup patch.
-> 
-> Thanks!
-> 
-> [...]
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+--1JBMmA2tdEPES3PJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+On Sun, May 18, 2025 at 01:57:26AM -0700, Sumanth Gavini wrote:
+> This series fixes the misspelling of "Electronics" as "Electrnoics"
+> across multiple subsystems (MFD, NFC, EXTCON). Each patch targets
+> a different subsystem for easier review.
+>=20
+> The changes are mechanical and do not affect functionality.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Please don't combine unrelated patches like this into a series that
+crosses subsystems, it just makes it more confusing how things are
+going to get applied and if there's dependencies. Just send things
+separately to each subsystem.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+--1JBMmA2tdEPES3PJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
+-----BEGIN PGP SIGNATURE-----
 
-[1/4] fs/buffer: use sleeping lookup in __getblk_slowpath()
-      https://git.kernel.org/vfs/vfs/c/f13865bcff54
-[2/4] fs/buffer: avoid redundant lookup in getblk slowpath
-      https://git.kernel.org/vfs/vfs/c/545f109630fc
-[3/4] fs/buffer: remove superfluous statements
-      https://git.kernel.org/vfs/vfs/c/fd7bedc81a2e
-[4/4] fs/buffer: optimize discard_buffer()
-      https://git.kernel.org/vfs/vfs/c/a09d25918f3d
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrAwIACgkQJNaLcl1U
+h9DFnwf/XjcxEKF2KSmebB4Y0RFqowuduWRbFUGux971QxPXN02FXJDhen91BqiO
+RjnTHmUbbkQiHs2kealN4P1k3ousMoAPdIcpFUQG2vt59BPfuyJCpsbKXzogUBOF
+OYKz9N5JHxx/zxQ4C7xuS+FnZyEQIQoni+FDFLKQQOUWfqS4g+bYg1RPMs7YOHVs
+Gr3eJQHE7eQk4ISHEmErCGHIIWaZ/XXHrNtGP4ZZvRWHQb76hXTxumwtoE+waIR+
+Of+4V3ODuX7PqXeF5XbY8PRicptJhsuSVhuuuqdmQNgd5Gne4THhnmnddi1tud3f
+L5GC9XUhs0xhl9ilsvANYvNjIR/Xdw==
+=dDHu
+-----END PGP SIGNATURE-----
+
+--1JBMmA2tdEPES3PJ--
