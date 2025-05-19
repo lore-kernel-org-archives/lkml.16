@@ -1,175 +1,106 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F47286418;
-	Mon, 19 May 2025 14:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B926980F;
+	Mon, 19 May 2025 14:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747664794; cv=none; b=kOJ8Uiw526U5zdlzqwoZX2mtvzPfwVKBdyxNe6cROAMHRHyLRN2zEVF5elHLcC4ueWQY4pe1Yv33VZCbbUUfZghqtWEZcbwKkKG0WnaJWRF1ZKBC4nkej6Rl9wGawq7M/kGpMPd21GTpBS9KYrSdmNcR49JyRBp+SrhKch+vBPc=
+	t=1747664862; cv=none; b=dLKBN40QyB7iLDZRtm9+o6vGtTqXtN5SsMmuStZU8gupJtYRhFVKXc42mG4kEYOPrPBMYaML67C7U1CKLZWMc52d+ymhCshqhSRrM/0RnBX7uD+aSsCzZ+XStQnFEWZh0TA8mGLi8BcVN/21GfcF3mvCHuQDgTv+JZb6aZexafc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747664794; c=relaxed/simple;
-	bh=pCvjBnapJdnH08Ke1HT2Sckpf25UsBH+CROSCGXOrZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SC9Sgg2NmGhJ06xwM+E/iEIhAUwbt7VAvcI3Ox86f5no4fPgWPWODd5ZG/64NqqvXqak9zK3cWqHmoI2EbGFJE9LE0tF9I0zqORIqlDfqas0xddqMDSzryRUnp12lRUcMhvGhdgoAddCIUZ7OXvPD2bwP8wnqNLuEF3zspOs3yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jujBh54R; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747664862; c=relaxed/simple;
+	bh=xhKmM+gfHAy6/K2yCwonmggKcnhDD1pEwXUFZhRnD6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iDPBYpZmReyZV+x7VB1eFZrlQRBD7e+7WFqLnFKUW4ujMm3UVXz/xoGDpOqijhSXA/A2s1J2UA9HPlSmMefk0zDaqUpzKtnR3Ya08Jmlyo4gf8c8k68DpiFFAOSmavkwIyeO5jFj3cskbtBVM0nLankAf2EQJFUEwyjXXRnSQP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KPDyy+L4; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jujBh54R"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7398d65476eso3546809b3a.1;
-        Mon, 19 May 2025 07:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747664793; x=1748269593; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=osCr06hsylKTSAoTgivd6MavyP7+iemMoVgSaaYvao4=;
-        b=jujBh54RL4ZcZ2sugVNuwMrALvP7snV15eaCe6xaWPOyTSM4NrgXUSafeMRNb01glm
-         4tgDLm4VxYxdy0qKkUMKDxbINm4nATzzKZWsZ081C/sBXrJmvValrEDX0liHbTRnrLBK
-         PbGx9hOCGxzyCn8sBEiZIplYHjpJbLOrmlTIgiUF1F0kckAdS+jL6sKQ13NCZeP4/zAy
-         9atI690/6VkVgsWokG1VKrUZAEPLJOURnIl/eqJ6UET1FRXQgXmMvDSH5jKaTs+r+RUD
-         KT3iB1FFbVrlEKxcC3ImTyZlzv1JfFli+bdOpSWTNGoyJ+VLQlHiBuyeGFiPuF76NUvL
-         ycJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747664793; x=1748269593;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=osCr06hsylKTSAoTgivd6MavyP7+iemMoVgSaaYvao4=;
-        b=QJOe7WcS8C0TZ9AnXuFro68UwdghZlat+t0dsviHg5PzegrtkcK+L6aQihXfAPadm3
-         3nb44fQn/aGll5uEfpO1r74I5sAkjg0LONXqRUhKkVE8ZXbbOMK4WfdjtWVDydb1S3ks
-         WCxtfEFtt+FJtbob7ofzd9xWdaP/WZi4VmxIcmpoHrTweXBgQGfnbTfzbQhyvXPNPx9y
-         iKkIcmn/HGN3mwaWzdGDvFXlNbaymiX2ksVtfdi1wXsYObE7nJgxM8xqUsnjDxq31sz8
-         xBJp/XucvXUMtoXflmZMAOHO6EiBbdKeVkENAFdAonkyBvQb4fAThBQrecfjnj2QnKW9
-         c7Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHWkcQmqHMOFj9Nw6aF+Dkp7rFOgYfM5LJAHxuc0r6dYx2pGE9wgg44ms6lgf5ykW1zbJGHrkhU1l4OXwu@vger.kernel.org, AJvYcCVWlNtJW0ZmeWX9JUZNXodZYI9zxdnzUIYe8GhxnwIZZHNfXt4X+PvfXQcWJSn3ESdobaW9K+e4FSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbcYFu6OT/lPUM6S3A7yuJxr6tXHoGnlVClk5jMRWyFUefCjB5
-	VDP+cQ8sZWf8O1zQIQAiBRfoleV0jlloGmDMNlcLjB2F5jDwSSUl/ahu
-X-Gm-Gg: ASbGncsjJPVRHykhf+Ou6wFs50FdxI9wrS920gBBEjrwycVJir7jSK9uVlNGZfcXKo0
-	JpIQ2tysV/xndGYD/jFkpAiu4XxuN+67Nu8iak06ejxZHHu1dpZ5TKwabm2+1wfdoLyMqQ5/pOS
-	gVWwWwFndiyFMjREZGksYQwynbgwyoLQDUCjBuFH9ht48xsmfdC3NFBtEfOAVbJdU7TTJkc489A
-	rP7KTOLI9lnKp2s9nFD0khoGjxlunxUFt5LIHVIcjGnMdFFtfAO4cNmtAH0IEwR0Rl4dcHUiGDc
-	3exc9clYJZN6ZPCNT7ABhqHzNUHhBKYIhrUFHRBidZ8i4Zx0zuLCv17+7w==
-X-Google-Smtp-Source: AGHT+IHlXJapKmWK6jXxCG4EqBwdhv/qvDATVlO2zy3Pd0SLOoU/tuza0cAVvKrefiK7lMbInBl8/A==
-X-Received: by 2002:a05:6a00:3d01:b0:740:58d3:71a8 with SMTP id d2e1a72fcca58-742a99fabb8mr16216198b3a.1.1747664792613;
-        Mon, 19 May 2025 07:26:32 -0700 (PDT)
-Received: from gye-ThinkPad-T590.. ([39.120.225.141])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96e211csm6465303b3a.16.2025.05.19.07.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 07:26:32 -0700 (PDT)
-From: Gyeyoung Baek <gye976@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Gyeyoung Baek <gye976@gmail.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 9/9] iio: rpr0521: Use new timestamp-related APIs
-Date: Mon, 19 May 2025 23:26:01 +0900
-Message-ID: <20250519-timestamp-v1-9-fcb4f6c2721c@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KPDyy+L4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F23D14397E;
+	Mon, 19 May 2025 14:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747664858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QMIQ5j4O4hhkkXDBrtnUP9c1BM9Lw9LhW4rCV+JF4qo=;
+	b=KPDyy+L4/pZBa2cLkw0ZUcC/t8rYe1alekyOJHI2L357/ABWIW2l77vPCeqjLt6ZKftunk
+	gc9U3l6270Yon2+sihKOQPrx1ucqucmm0w2hVe3oE+xzPMvnDzakmKrrioYOQIeCHJTrDV
+	w19guANFSsFUeD26WaHkWPZUKztJoPMOj2HylC8EZxi7qDsNCG4zA9/f1fMDYMXfwWvn28
+	1KyRQciYejW0VpyxKN5Hcs5cMXQWddLeUW0vN9Fi3V4gbfTrIcssDSaU5ip7653w8+a7JM
+	bbqYCTx6pZP/NdQ4WhEdcO1tSehTzs6BHuCTO77ylHRy8J+eAwmJQ4WpkO4wDg==
+Date: Mon, 19 May 2025 16:27:33 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 06/26] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <20250519162733.2ef82127@bootlin.com>
+In-Reply-To: <aBt2EHYf6j6Ulthb@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	<20250507071315.394857-7-herve.codina@bootlin.com>
+	<aBt2EHYf6j6Ulthb@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-This patch is an example that helps explain the previous series.
-Now there is no need to handle timestamps differently depending on whether
-the consumer is attached to its own trigger or to another trigger.
-And the own trigger of rpr0521 can simply pass a timestamp to consumer,
-using `iio_trigger_store_time()`
+Hi Andy,
 
-Not tested since I don't have the corresponding device.
+On Wed, 7 May 2025 18:02:40 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
----
- drivers/iio/light/rpr0521.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+> On Wed, May 07, 2025 at 09:12:48AM +0200, Herve Codina wrote:
+> > Setting fwnode->dev is specific to fw_devlink.
+> > 
+> > In order to avoid having a direct 'fwnode->dev = dev;' in several
+> > place in the kernel, introduce fw_devlink_set_device() helper to perform
+> > this operation.  
+> 
+> Makes sense, can you also mark that field as __private? So sparse can catch
+> the abusers up.
+> 
 
-diff --git a/drivers/iio/light/rpr0521.c b/drivers/iio/light/rpr0521.c
-index 92e7552f3e39..32981db18428 100644
---- a/drivers/iio/light/rpr0521.c
-+++ b/drivers/iio/light/rpr0521.c
-@@ -186,7 +186,6 @@ struct rpr0521_data {
- 	bool pxs_dev_en;
- 
- 	struct iio_trigger *drdy_trigger0;
--	s64 irq_timestamp;
- 
- 	/* optimize runtime pm ops - enable/disable device only if needed */
- 	bool als_ps_need_en;
-@@ -416,7 +415,7 @@ static irqreturn_t rpr0521_drdy_irq_handler(int irq, void *private)
- 	struct iio_dev *indio_dev = private;
- 	struct rpr0521_data *data = iio_priv(indio_dev);
- 
--	data->irq_timestamp = iio_get_time_ns(indio_dev);
-+	iio_trigger_store_time(data->drdy_trigger0);
- 	/*
- 	 * We need to wake the thread to read the interrupt reg. It
- 	 * is not possible to do that here because regmap_read takes a
-@@ -446,15 +445,6 @@ static irqreturn_t rpr0521_trigger_consumer_handler(int irq, void *p)
- 	struct rpr0521_data *data = iio_priv(indio_dev);
- 	int err;
- 
--	/* Use irq timestamp when reasonable. */
--	if (iio_trigger_using_own(indio_dev) && data->irq_timestamp) {
--		pf->timestamp = data->irq_timestamp;
--		data->irq_timestamp = 0;
--	}
--	/* Other chained trigger polls get timestamp only here. */
--	if (!pf->timestamp)
--		pf->timestamp = iio_get_time_ns(indio_dev);
--
- 	err = regmap_bulk_read(data->regmap, RPR0521_REG_PXS_DATA,
- 		data->scan.channels,
- 		(3 * 2) + 1);	/* 3 * 16-bit + (discarded) int clear reg. */
-@@ -464,7 +454,6 @@ static irqreturn_t rpr0521_trigger_consumer_handler(int irq, void *p)
- 	else
- 		dev_err(&data->client->dev,
- 			"Trigger consumer can't read from sensor.\n");
--	pf->timestamp = 0;
- 
- 	iio_trigger_notify_done(indio_dev->trig);
- 
-@@ -867,8 +856,6 @@ static int rpr0521_init(struct rpr0521_data *data)
- 		return ret;
- #endif
- 
--	data->irq_timestamp = 0;
--
- 	return 0;
- }
- 
-@@ -984,6 +971,9 @@ static int rpr0521_probe(struct i2c_client *client)
- 			goto err_pm_disable;
- 		}
- 		data->drdy_trigger0->ops = &rpr0521_trigger_ops;
-+		data->drdy_trigger0->early_timestamp = true;
-+		data->drdy_trigger0->trig_type = IIO_TRIG_TYPE_POLL_NESTED;
-+
- 		indio_dev->available_scan_masks = rpr0521_available_scan_masks;
- 		iio_trigger_set_drvdata(data->drdy_trigger0, indio_dev);
- 
-@@ -1011,10 +1001,10 @@ static int rpr0521_probe(struct i2c_client *client)
- 		 */
- 
- 		/* Trigger consumer setup */
--		ret = devm_iio_triggered_buffer_setup(indio_dev->dev.parent,
-+		ret = devm_iio_triggered_buffer_setup_new(indio_dev->dev.parent,
- 			indio_dev,
--			iio_pollfunc_store_time,
- 			rpr0521_trigger_consumer_handler,
-+			true,
- 			&rpr0521_buffer_setup_ops);
- 		if (ret < 0) {
- 			dev_err(&client->dev, "iio triggered buffer setup failed\n");
+I didn't know about __private tag and related ACCESS_PRIVATE().
+Indeed, It makes perfect sense.
 
--- 
-2.43.0
+I will add it in next iteration.
+
+Thanks for pointing out.
+
+Best regards,
+Hervé
