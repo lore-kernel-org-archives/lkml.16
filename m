@@ -1,62 +1,139 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029472857DF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7686D286888
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669728; cv=none; b=tfDPkIrfRLH3JEj4OGEvQKqjwpdesf10wdgqBOLP9FPW8LZWCdMUXlcaZEFFXc1cC0uwighiKW3GCXjG+M3IKXJzTEmKO2Pe+Gw+oPvxj9CxtE/ZhOWj/RibGhgKJkrxncSLNay8JA6RoBk8pNvWIwaQln+NKf85+p9mgdsL0m0=
+	t=1747669830; cv=none; b=M7ZRYzlE3cOS0E72TuvvYTgt3AGnRB/t7Xs0FejVmjgxf4iiThR2g7kiHxyDsmTtImlR1qk5h5ZSe/DgySfbkZ1zlVudbMeKFYjXjmGjBrSLnyb4b5/dwcH6Gm4F47irIl4D6X3HY2SpM1RZfNQ2kCcA04SSOWEtOiZo/OGZHb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747669728; c=relaxed/simple;
-	bh=klVvXbaIjmuGu8aphGrhSlG+ZCqPc08r4LqnxM9k4xI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K81HXJhSuqX39/O++hfLnCVRWZ3TDM5FN89FRuyBesNV9lLt7tZgH9HLsvIvesHrb+L1Sza3o2433NZWJ1ww+s+AmvN50WmTZdv+/A54j7HaW1ndsxEVBHuwZU3hD23PgG8RibPOXbMEIaze1PMWDwKJV5XlLk3q290wZH0pXhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-111-173.bstnma.fios.verizon.net [173.48.111.173])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54JFm0AH016863
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 11:48:00 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 328302E00DD; Mon, 19 May 2025 11:48:00 -0400 (EDT)
-Date: Mon, 19 May 2025 11:48:00 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com,
-        libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 5/8] ext4: correct the journal credits calculations of
- allocating blocks
-Message-ID: <20250519154800.GD38098@mit.edu>
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
- <2e127ed8-20a2-4610-8fd8-e2095bde0577@huaweicloud.com>
+	s=arc-20240116; t=1747669830; c=relaxed/simple;
+	bh=qvgXC6e3QaibqpdMmxndFYWD4/98DamLngZhgZ/Ly00=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SMjgmpnMJzUNxFt7r7QHgwaa5dVvsBfnDk8CoyRnEmalbAKCluJlRmgNrhJ8dq3Yx4HocwmwfyHYqkyeCdhABzpfVnEUJq7pZS1GREtW2tk5RTtvIX6i0fHCVgBak1NOF9tjtb6N67MPTK5Ms1GUQI8Kr5kVa81ZyEvw/r7SQsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HV1+3j/x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CwFGe8OX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HV1+3j/x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CwFGe8OX; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HV1+3j/x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CwFGe8OX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HV1+3j/x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CwFGe8OX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B965022A93;
+	Mon, 19 May 2025 15:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747669820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wgNvWTyrmgYDOPgyjZI8XcylbGkqS6qTNdGeFTYMxrQ=;
+	b=HV1+3j/xL4VTPgStJTY2b/YpGzNXp/PON/GFomqODNiTBKKS53i0ttXwmpupR7fmi/w7EM
+	gdE0jufXp4xHmeugQBM5QEBlOCs31RtqE38vRkoV5R8m1/kLAeAy1cz0SrrQcLinqWOGPP
+	6b/k+M0d17AOTtNJQ2iUQgp5ImL8Ko4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747669820;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wgNvWTyrmgYDOPgyjZI8XcylbGkqS6qTNdGeFTYMxrQ=;
+	b=CwFGe8OX2iEbD1WHSGVwcDApg9fVZ3nIDEdYnuYH49HApaBe+UEHVYbUdJp32NNWtNw3Z8
+	Z61/VbvF7eKYO7Bw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="HV1+3j/x";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CwFGe8OX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747669820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wgNvWTyrmgYDOPgyjZI8XcylbGkqS6qTNdGeFTYMxrQ=;
+	b=HV1+3j/xL4VTPgStJTY2b/YpGzNXp/PON/GFomqODNiTBKKS53i0ttXwmpupR7fmi/w7EM
+	gdE0jufXp4xHmeugQBM5QEBlOCs31RtqE38vRkoV5R8m1/kLAeAy1cz0SrrQcLinqWOGPP
+	6b/k+M0d17AOTtNJQ2iUQgp5ImL8Ko4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747669820;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wgNvWTyrmgYDOPgyjZI8XcylbGkqS6qTNdGeFTYMxrQ=;
+	b=CwFGe8OX2iEbD1WHSGVwcDApg9fVZ3nIDEdYnuYH49HApaBe+UEHVYbUdJp32NNWtNw3Z8
+	Z61/VbvF7eKYO7Bw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C6A71372E;
+	Mon, 19 May 2025 15:50:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4TcxJTxTK2iKTgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 19 May 2025 15:50:20 +0000
+Date: Mon, 19 May 2025 17:50:20 +0200
+Message-ID: <871pskk3b7.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: n64: Replace deprecated strcpy() with strscpy()
+In-Reply-To: <20250519105628.491675-1-thorsten.blum@linux.dev>
+References: <20250519105628.491675-1-thorsten.blum@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e127ed8-20a2-4610-8fd8-e2095bde0577@huaweicloud.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.51
+X-Rspamd-Queue-Id: B965022A93
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Mon, May 19, 2025 at 10:48:28AM +0800, Zhang Yi wrote:
+On Mon, 19 May 2025 12:56:25 +0200,
+Thorsten Blum wrote:
 > 
-> This patch conflicts with Jan's patch e18d4f11d240 ("ext4: fix
-> calculation of credits for extent tree modification") in
-> ext4_ext_index_trans_blocks(), the conflict should be resolved when
-> merging this patch. However, I checked the merged commit of this patch
-> in your dev branch[1], and the changes in ext4_ext_index_trans_blocks()
-> seem to be incorrect, which could result in insufficient credit
-> reservations on 1K block size filesystems.
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Thanks so much for noticing the mis-merge!  I've fixed it in my tree,
-and will be pushing it out shortly.  If you could take a look and make
-sure that it's correct, that would be great.
+Thanks, applied now.
 
-						- Ted
+
+Takashi
