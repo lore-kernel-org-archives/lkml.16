@@ -1,114 +1,136 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41B91EA7C9;
-	Mon, 19 May 2025 19:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFFF1EA7C9;
+	Mon, 19 May 2025 19:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684286; cv=none; b=lVtiXr/qdga7Wg8MeaqR1u78FY6zLliz/YQAKGSLWpIMjf/dU5eDHNQKKe7fY22XiSZqnocUL9R1fKbsyVTIhNvsQdc8rO/CAmUzPN18o16S5g11HJTDuZPvUEk5TdDYS5syPynxLw9GoNyXONOaOMJh75ehC5/Wetgik5S+HVE=
+	t=1747684310; cv=none; b=a28qfRx1P5keDWwDPrcdFeedlJ37CKIRH0SujM9vkkYDVdthtnjqrjENGwSHa4DtTplngaG1sYTxU5XxzTb7R+zZwgageeN0HdSH2StUqSrdZF1o+Ns/x75qJ3vC1cAZQj5Dmq9IueGvw4sMg441W2QMssoJ2LbGyLfe1+IODqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684286; c=relaxed/simple;
-	bh=ooQ+QW2XRX357dWIRghQT1fkvhfvh6mJYB7maK595BY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=VhRs8wrXCa526X8/CdbXY/XWmNbsD2P6gsEd3Fvz82EdQqU+CytGusR/d+vYZzEL+vNBpLJUM3EVjfH0pxzaUIL5Tvg62f3xkbBGQf26k+bWQ01CpGe1BwDRM7lQEIAlIWDQftkySYjlCyjM1UPIPAfrWmBin46Bl8SJejdHf5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4b1Sx338f4z9sq3;
-	Mon, 19 May 2025 21:51:19 +0200 (CEST)
+	s=arc-20240116; t=1747684310; c=relaxed/simple;
+	bh=d5+GpqYlRnvy9j99rtBZRRfevga+7sc0qw0iNVxAEAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqz9iAJBy3GcmgMcfu5odK8zhfj6YUkuaVxh/ahQpC2Bw8P6IOP08WMjze6iail4/5wydO7QWHPE5zgZVITXjhGotY/YnSwoegoPU6jIihtEcwAny1qfx/Vx104cY7/Ue/YXTeUCSh3Vd9uLYpr2CyP6FWheXu+oU8/ElH80fSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 2BB801F00056;
+	Mon, 19 May 2025 19:51:37 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 1D950AC2AF1; Mon, 19 May 2025 19:51:36 +0000 (UTC)
+X-Spam-Level: 
+Received: from collins (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 9BE1CAC2AED;
+	Mon, 19 May 2025 19:51:32 +0000 (UTC)
+Date: Mon, 19 May 2025 21:51:30 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH] net: dwmac-sun8i: Use parsed internal PHY address
+ instead of 1
+Message-ID: <aCuLwuSliICh86SP@collins>
+References: <20250519164936.4172658-1-paulk@sys-base.io>
+ <d89565fc-e338-4a58-b547-99f5ae87b559@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VL1tc0gaoDiGu1D4"
+Content-Disposition: inline
+In-Reply-To: <d89565fc-e338-4a58-b547-99f5ae87b559@lunn.ch>
+
+
+--VL1tc0gaoDiGu1D4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 21:51:15 +0200
-Message-Id: <DA0EDC6W54E5.2CO8VXPTOXXJK@buenzli.dev>
-Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v4 6/9] rust: device: Add bindings for reading device
- properties
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Danilo Krummrich" <dakr@kernel.org>
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-7-remo@buenzli.dev> <aCH5WgORn9ZGl9Il@pollux>
- <DA093HA2415H.29OCPLS0M7H84@buenzli.dev> <aCtici15vSCBDbzE@pollux>
-In-Reply-To: <aCtici15vSCBDbzE@pollux>
 
-On Mon May 19, 2025 at 6:55 PM CEST, Danilo Krummrich wrote:
-> On Mon, May 19, 2025 at 05:43:17PM +0200, Remo Senekowitsch wrote:
->> On Mon May 12, 2025 at 3:36 PM CEST, Danilo Krummrich wrote:
->> >> +/// Implemented for all integers that can be read as properties.
->> >> +///
->> >> +/// This helper trait is needed on top of the existing [`Property`]
->> >> +/// trait to associate the integer types of various sizes with their
->> >> +/// corresponding `fwnode_property_read_*_array` functions.
->> >> +pub trait PropertyInt: Copy {
->> >> +    /// # Safety
->> >> +    ///
->> >> +    /// Callers must uphold the same safety invariants as for the va=
-rious
->> >> +    /// `fwnode_property_read_*_array` functions.
->> >
->> > I think you have additional requirements on the fwnode, propname and v=
-al
->> > pointers as well as on nval, please document them as well.
->>=20
->> What are the additional requirements? The implementation just calls the
->> underlying `fwnode_property_read_*_array` with the exact same arguments,
->> so I don't know what the additional requirements are.
->
-> First of all, I don't think you can refer to the safety requirements of t=
-he
-> `fwnode_property_read_*_array` functions, since they don't have any docum=
-ented
-> safety requirements.
->
-> So, I think you have safety requirements regarding pointer validity of fw=
-node,
-> propname and val.
->
-> Additionally, there's the requirement that val has to be an array of nval
-> length.
->
-> Also, the PropertyInt trait itself has to be unsafe, given that it contai=
-ns
-> unsafe functions.
+Hi Andrew,
 
-I don't think a trait necessarily has to be marked unsafe just because
-it has unsafe methods. Marking a trait as unsafe means that implementors
-of the trait must uphold some invariants. This is not the case here
-IIUC. Here's a good explanation of my understanding: [1]
+Thanks for your reply.
 
-But I should anyway seal the two traits. They're not supposed to be
-implemented outside the kernel crate.
+Le Mon 19 May 25, 21:25, Andrew Lunn a =C3=A9crit :
+> On Mon, May 19, 2025 at 06:49:36PM +0200, Paul Kocialkowski wrote:
+> > While the MDIO address of the internal PHY on Allwinner sun8i chips is
+> > generally 1, of_mdio_parse_addr is used to cleanly parse the address
+> > from the device-tree instead of hardcoding it.
+> >=20
+> > A commit reworking the code ditched the parsed value and hardcoded the
+> > value 1 instead, which didn't really break anything but is more fragile
+> > and not future-proof.
+> >=20
+> > Restore the initial behavior using the parsed address returned from the
+> > helper.
+> >=20
+> > Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/exter=
+nal MDIOs")
+> > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+>=20
+> Have you validated all .dts files using this binding? Any using
+> anything other than 1? The problem with silly bugs like this is that
+> there might be DT blobs with the value 42 which currently work, but
+> will break as soon as this patch lands.
 
-[1] https://users.rust-lang.org/t/safe-trait-with-an-unsafe-method/67993/3
+There's actually only two users of this (this code path for internal PHYs is
+only used by two chips), which are platform dtsi files that have the address
+already set to 1.
 
-> I also pinged Benno about it, he usually knows best how to cover such thi=
-ngs
-> properly. :)
->
->> >> +    unsafe fn read_array_from_fwnode_property(
->> >> +        fwnode: *const bindings::fwnode_handle,
->> >> +        propname: *const ffi::c_char,
->> >> +        val: *mut Self,
->> >> +        nval: usize,
->> >> +    ) -> ffi::c_int;
->> >> +}
+I have actually tested both with hardware and they work fine.
 
+> Just stating in the commit message you have checked will help get the
+> patch merged.
+
+Do you think it's worth resending? I'd be fine with adding this when picking
+up the patch:
+
+The internal PHY is only found on the H3/H5 and V3s/V3/S3 chips which alrea=
+dy
+have the same address properly described in their platform device-tree and
+were verified to work after this patch.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--VL1tc0gaoDiGu1D4
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmgri8IACgkQhP3B6o/u
+lQxmxQ//buEL628Aci5cGp43IOq18Bzcz4AqwqiGwgLeInHX5XL/j7iKqm3Snxvw
+EgF1CVwszdRfg7wt/C6HaIQiz1VX4HtfvwY11oQNR3gom2gTzIzLsEqYiC+ZbLAf
+zx5h38nsM47Yml4gxXLfXp3YcKgdSZzUePvTgkoI4ScCFRUaUxW8fDUOILDEnR6D
+vpjbp+qXjuA3lFWpREr2OztgOr/BxNMu/g2KVvuuSRtRXxPsesjls2mtXkimrmB+
+2kUDz/s83L50iCLbnmVY0Ac6D6V4G3DIpXwI8EcssnzA9nQmnnZ3d6X4tBQU+3Eh
+G1hZfgWzMg7p7F09cHOqpoflvAyuPeU9LAdHVjgP3oAcK5Zredbtha8mVMOz8JFF
+JMF99vrBfcq0W0uUPvOu0bW9IoC/rSlilHURibBPNbzZRq318pk8i6CMozIv9CD6
+a3+fH69JxziH+jYNSKtPl8uNLsZM0o4QLVCQZYiY8ep8ZgodDsjtb5uCGzULedR2
+UMhu7eYKXJPU3777swOzakEcW6k0ZHRVgit2hA2xLLbCBm7fWNeaDhxQAIta0kPh
+fZCFJQ1ChcNM+aJ0/GhkUDZvurax7mBW19qXemer587wPHSqjwKYsZldU+jhChXe
+9tE6Njmq5MqsrBQe3olAmyePoVYKQrqqDLr9aCiXLTS6ewf+jUo=
+=lDrU
+-----END PGP SIGNATURE-----
+
+--VL1tc0gaoDiGu1D4--
