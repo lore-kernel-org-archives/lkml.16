@@ -1,168 +1,188 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2612727A121;
-	Mon, 19 May 2025 13:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968C227A132;
+	Mon, 19 May 2025 13:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747662075; cv=none; b=IslAyi5qgtaar/RzAJ2XK9GNQK1tiy0/eYCTD3GIy714QLH4uaePSOL0nwx3oUtk70RBfzIKNgtVa2igykee9yKk9Yp28GNT5VZ5cZfa7LnyAuqt/kBcBNpsMbHzm5SiFM+2JM3T1RaX6qOLr48RZB2W576yiUMHlBq7b3jguGU=
+	t=1747662086; cv=none; b=MIrr4ljP2OIMxdojMOt7USoZ17rMoPBBk76bdYoQV9rUqlQGR5ERK8cqGJzukdQJaB6dv2iS65RnKncKXVyyyulC86WyHtGPP6KjJ7KzuYuLtmvBMUv8OvEr2DRlPsXiO/mDdnuJurqLk9cM+k1tW5Tv7fBK8xyK3VwDkOyOtbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747662075; c=relaxed/simple;
-	bh=OueGFMEXX6gZvda3QTRBoFs+f9ZjnU1L0TOOtSBxr0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PPS85UIXyWXTsuMZkpY5I3+TgWS0Lz7Ja29glLQP+1WgbmY8CBFeX3IEzeNiN8XUUMPzTuLGal6OJR6nXhKpMqmK5hKCCf06mp40lh2Fw7sBYa/g09SFq3oBGk09oZ7RP/GH64Ahk6mAMCChhW7n5CPDaE5fj+5Ox33lmqFqG/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 486291655;
-	Mon, 19 May 2025 06:40:59 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 939DF3F6A8;
-	Mon, 19 May 2025 06:41:09 -0700 (PDT)
-Date: Mon, 19 May 2025 14:41:06 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Song Liu <song@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org,
-	indu.bhagat@oracle.com, puranjay@kernel.org, wnliu@google.com,
-	irogers@google.com, joe.lawrence@redhat.com, jpoimboe@kernel.org,
-	peterz@infradead.org, roman.gushchin@linux.dev, rostedt@goodmis.org,
-	will@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3 1/2] arm64: Implement arch_stack_walk_reliable
-Message-ID: <aCs08i3u9C9MWy4M@J2N7QTR9R3>
-References: <20250320171559.3423224-1-song@kernel.org>
- <20250320171559.3423224-2-song@kernel.org>
+	s=arc-20240116; t=1747662086; c=relaxed/simple;
+	bh=3IS3Ncoc5c73n48DFKYqt3CL6SCqQYzG/GBDtDeZIrs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=c0jXq2eWHnMuNFEWnsV6JcRPIxBYxy8SHBL0OBLT710a8a6WawYQp9MuaATYQdBmzDd04jOKGRTh3JY8ZnIt89gB2FU6VsVVZShzHO3BHFvMNUu5dn/aUtZAzBjRaU1Q6fH1rCvFR9U6mREFPWtHT3Jcr99AV9FyIVJAzjtuLuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=noZrZf2b; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="noZrZf2b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747662085; x=1779198085;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3IS3Ncoc5c73n48DFKYqt3CL6SCqQYzG/GBDtDeZIrs=;
+  b=noZrZf2bN8FcuC2JuLEwA5gcbs3U22TF0QkXoUyEKon8TB8wt07fCWSd
+   MzSSTyZQdpazuG3B7i1W4MsBhoFN3Ck6XvFglf7tSdeCkIoWUCOfUj0KU
+   LJ9ZTQMmYkuObxHie4v/U33amPmy2eFlT6+svUqSKCnxCb6v+2nNAZ7Rr
+   y6T1yqXX+RJWGJU5TQLrl8Cc8mnykVMWQbvgSimrlhxBuH6dOIWd+EYny
+   f1ezqx4Bmmf5NqpVJOLdFm5yuC8eBTAYXK5RA7fwZ6J8lYVmUzVRVwN7s
+   ZfxeecIkesvZky5BRDXoPq9szPFQW2YcurDMyFRBxHFhoN9x7YZKZQ6Sz
+   A==;
+X-CSE-ConnectionGUID: R83+RC8YSQervXr/7TZzUw==
+X-CSE-MsgGUID: oArhUDdDSVqjX/DeqmiK+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="72068377"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="72068377"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:41:24 -0700
+X-CSE-ConnectionGUID: xiCe6jHWSFiukJ+4d5r18Q==
+X-CSE-MsgGUID: QIi+kBBLR+qVO64ODwwDrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139269228"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:41:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 16:41:14 +0300 (EEST)
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
+    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
+    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: Re: [PATCH v3 02/11] PCI/bwctrl: Add support to scale bandwidth
+ before & after link re-training
+In-Reply-To: <20250519-mhi_bw_up-v3-2-3acd4a17bbb5@oss.qualcomm.com>
+Message-ID: <2a539ddc-95d6-7c37-4cfe-3a54ffce0861@linux.intel.com>
+References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com> <20250519-mhi_bw_up-v3-2-3acd4a17bbb5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320171559.3423224-2-song@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Mar 20, 2025 at 10:15:58AM -0700, Song Liu wrote:
-> With proper exception boundary detection, it is possible to implment
-> arch_stack_walk_reliable without sframe.
+On Mon, 19 May 2025, Krishna Chaitanya Chundru wrote:
+
+> If the driver wants to move to higher data rate/speed than the current data
+> rate then the controller driver may need to change certain votes so that
+> link may come up at requested data rate/speed like QCOM PCIe controllers
+> need to change their RPMh (Resource Power Manager-hardened) state. Once
+> link retraining is done controller drivers needs to adjust their votes
+> based on the final data rate.
 > 
-> Note that, arch_stack_walk_reliable does not guarantee getting reliable
-> stack in all scenarios. Instead, it can reliably detect when the stack
-> trace is not reliable, which is enough to provide reliable livepatching.
+> Some controllers also may need to update their bandwidth voting like
+> ICC bw votings etc.
 > 
-> Signed-off-by: Song Liu <song@kernel.org>
+> So, add pre_scale_bus_bw() & post_scale_bus_bw() op to call before & after
+> the link re-train. There is no explicit locking mechanisms as these are
+> called by a single client endpoint driver.
+> 
+> In case of PCIe switch, if there is a request to change target speed for a
+> downstream port then no need to call these function ops as these are
+> outside the scope of the controller drivers.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  arch/arm64/Kconfig             |  2 +-
->  arch/arm64/kernel/stacktrace.c | 66 +++++++++++++++++++++++++---------
->  2 files changed, 51 insertions(+), 17 deletions(-)
+>  drivers/pci/pcie/bwctrl.c | 15 +++++++++++++++
+>  include/linux/pci.h       | 14 ++++++++++++++
+>  2 files changed, 29 insertions(+)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 701d980ea921..31d5e1ee6089 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -276,6 +276,7 @@ config ARM64
->  	select HAVE_SOFTIRQ_ON_OWN_STACK
->  	select USER_STACKTRACE_SUPPORT
->  	select VDSO_GETRANDOM
-> +	select HAVE_RELIABLE_STACKTRACE
->  	help
->  	  ARM 64-bit (AArch64) Linux support.
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index d8d2aa85a22928b99c5bba1d2bcc5647c0edeeb6..3525bc0cd10f1dd7794abbe84ccb10e2c53a10af 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -161,6 +161,8 @@ static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool
+>  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>  			  bool use_lt)
+>  {
+> +	struct pci_host_bridge *host = pci_find_host_bridge(port->bus);
+> +	bool is_rootbus = pci_is_root_bus(port->bus);
+>  	struct pci_bus *bus = port->subordinate;
+>  	u16 target_speed;
+>  	int ret;
+> @@ -173,6 +175,16 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
 >  
-> @@ -2500,4 +2501,3 @@ endmenu # "CPU Power Management"
->  source "drivers/acpi/Kconfig"
+>  	target_speed = pcie_bwctrl_select_speed(port, speed_req);
 >  
->  source "arch/arm64/kvm/Kconfig"
-> -
-> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-> index 1d9d51d7627f..7e07911d8694 100644
-> --- a/arch/arm64/kernel/stacktrace.c
-> +++ b/arch/arm64/kernel/stacktrace.c
-> @@ -56,6 +56,7 @@ struct kunwind_state {
->  	enum kunwind_source source;
->  	union unwind_flags flags;
->  	struct pt_regs *regs;
-> +	bool end_on_unreliable;
->  };
->  
->  static __always_inline void
-> @@ -230,8 +231,26 @@ kunwind_next_frame_record(struct kunwind_state *state)
->  	new_fp = READ_ONCE(record->fp);
->  	new_pc = READ_ONCE(record->lr);
->  
-> -	if (!new_fp && !new_pc)
-> -		return kunwind_next_frame_record_meta(state);
-> +	if (!new_fp && !new_pc) {
-> +		int ret;
-> +
-> +		ret = kunwind_next_frame_record_meta(state);
-> +		if (ret < 0) {
-> +			/*
-> +			 * This covers two different conditions:
-> +			 *  1. ret == -ENOENT, unwinding is done.
-> +			 *  2. ret == -EINVAL, unwinding hit error.
-> +			 */
+> +	/*
+> +	 * The host bridge driver may need to be scaled for targeted speed
+> +	 * otherwise link might not come up at requested speed.
+> +	 */
+> +	if (is_rootbus && host->pre_scale_bus_bw) {
+> +		ret = host->pre_scale_bus_bw(host, port, target_speed);
+> +		if (ret)
 > +			return ret;
-> +		}
-> +		/*
-> +		 * Searching across exception boundaries. The stack is now
-> +		 * unreliable.
-> +		 */
-> +		if (state->end_on_unreliable)
-> +			return -EINVAL;
-> +		return 0;
 > +	}
+> +
+>  	scoped_guard(rwsem_read, &pcie_bwctrl_setspeed_rwsem) {
+>  		struct pcie_bwctrl_data *data = port->link_bwctrl;
+>  
+> @@ -197,6 +209,9 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>  	    !list_empty(&bus->devices))
+>  		ret = -EAGAIN;
+>  
+> +	if (bus && is_rootbus && host->post_scale_bus_bw)
+> +		host->post_scale_bus_bw(host, port, pci_bus_speed2lnkctl2(bus->cur_bus_speed));
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 51e2bd6405cda5acc33d268bbe1d491b145e083f..7eb0856ba0ed20bd1336683b68add124c7483902 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -601,6 +601,20 @@ struct pci_host_bridge {
+>  	void (*release_fn)(struct pci_host_bridge *);
+>  	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+>  	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+> +	/*
+> +	 * Callback to the host bridge drivers to update ICC bw votes, clock frequencies etc
 
-My original expectation for this this was that we'd propogate the
-errors, and then all the reliability logic would live un a consume_entry
-wrapper like we have for BPF, e.g.
+BW
 
-| static __always_inline bool
-| arch_reliable_kunwind_consume_entry(const struct kunwind_state *state, void *cookie)
-| {
-|         struct kunwind_consume_entry_data *data = cookie;
-| 
-|         /*  
-|          * When unwinding across an exception boundary, the PC will be
-|          * reliable, but we do not know whether the FP is live, and so we
-|          * cannot perform the *next* unwind reliably.
-|          *
-|          * Give up as soon as we hit an exception boundary.
-|          */
-|         if (state->source == KUNWIND_SOURCE_REGS_PC)
-|                 return false;
-| 
-|         return data->consume_entry(data->cookie, state->common.pc);
-| }
-| 
-| noinline noinstr int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
-|                                               void *cookie,
-|                                               struct task_struct *task)
-| {
-|         int ret;
-|         struct kunwind_consume_entry_data data = { 
-|                 .consume_entry = consume_entry,
-|                 .cookie = cookie,
-|         };  
-| 
-|         ret = kunwind_stack_walk(arch_reliable_kunwind_consume_entry, &data,
-|                                  task, NULL);
-|         return ret == -ENOENT ? 0 : ret;
-| }
+> +	 * for the link re-train to come up in targeted speed. These are intended to be
+> +	 * called by devices directly attached to the root port. These are called by a single
 
-... and then in future we can add anything spdecific to reliable
-stacktrace there.
+Root Port
 
-That aside, this generally looks good to me. The only thing that I note
-is that we're lacking a check on the return value of
-kretprobe_find_ret_addr(), and we should return -EINVAL when that is
-NULL, but that should never happen in normal operation.
+> +	 * client endpoint driver, so there is no need for explicit locking mechanisms.
 
-I've pushed a arm64/stacktrace-updates branch [1] with fixups for those
-as two separate commits atop this one. If that looks good to you I
-suggest we post that as a series and ask Will and Catalin to take that
-as-is.
+Endpoint
 
-I'll look at the actual patching bits now.
+> +	 */
+> +	int (*pre_scale_bus_bw)(struct pci_host_bridge *bridge, struct pci_dev *dev, int speed);
+> +	/*
+> +	 * Callback to the host bridge drivers to adjust ICC bw votes, clock frequencies etc
+> +	 * to the updated speed after link re-train. These are intended to be called by
+> +	 * devices directly attached to the root port. These are called by a single client
+> +	 * endpoint driver, so there is no need for explicit locking mechanisms.
+> +	 */
 
-Mark.
+Please fold comments to 80 characters.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/ arm64/stacktrace-updates
+> +	void (*post_scale_bus_bw)(struct pci_host_bridge *bridge, struct pci_dev *dev, int speed);
+
+I still don't like the names. Maybe simply pre/post_link_speed_change 
+would sound more generic.
+
+Not a show-stopper but the current name sounds pretty esoteric.
+
+>  	void		*release_data;
+>  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+> 
+> 
+
+-- 
+ i.
+
