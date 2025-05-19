@@ -1,205 +1,65 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA011DA21;
-	Mon, 19 May 2025 21:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2021D581
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747691214; cv=none; b=eddd8t81Z7lA8eL6BC8Hn41odPx0EpJZLtv9qa81oaM6iGG+7xDzSIOGtNvGGH1hkTPnM/MT3R1GXVd0fLQwNBZD9kdDW/QaB5e4d2EC8qFNHuWY1FPaqk67BZnWcRejLvcp+3m7dxGmiaczPShkA0eMtJJcaHFqZi71Fwluv14=
+	t=1747691219; cv=none; b=UV7QbzgkIYYNBSYtBFfB748I7Ch9aIItyCeOkDn6RWSf7RFB6ravcODOS7vrbDk+nAVnKKTvwljHETvZ2EUAK9HmDRFI8wO7V0SfYC7Q7taxa6NrFZbbakVZTdlzwN7jafLWa8NgJSt+FT3ixVqWBwsVmw/gEzymwoaezLC/IRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747691214; c=relaxed/simple;
-	bh=N1521YN47TVp3G/xpFAXWoEuVbJW7GAojZiKgi5PgLQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ph0lRwseYPdib0mE6SEkuqEYYQmfhacmWeJNeYmKYWhttttV/w3xw0acDnstUUaVWPKNScoOMGLRTdfxRwTrD8AX1N2RylhavbBPuwG8JAjWZBKVMA4POS7A9w512+fxmgQmcV9IgK2tcvT0y4Ftww4ZR37FNPcoFMzEDLG4mrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hljQo3jo; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747691219; c=relaxed/simple;
+	bh=QCKGn0yE2HXxgN9btrXX8tuuTH0V89V0zGAMHGJi0+M=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lQX0U1jQ2z61n6GP84JBV9CX2T7Ntlu8GeWnxmyR6GS8jJ0A8wy2VwR6RTFoGP/v5ROdsOKPdjwkmKhe7H0niJCf6AJC9MoIES6S3/CRohsjwKNB1hexAxmlnl0uyja/otoNpj+lqkedZdCUhE3UUmyp6CCosbAzAIgJQC3RTfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=1JKyz1Aj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hljQo3jo"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7ba37b2b5bso1552349276.0;
-        Mon, 19 May 2025 14:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747691211; x=1748296011; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFqHFurMBZtPAapbA1XA+pcLlQHLYWNfAxkQ+sCmyUk=;
-        b=hljQo3jo/XJznTe6eYjD5riMmMdvs2psQ8fcgL08iNNRjq67fZ3tWx/B5s0rl7EFc0
-         A4DReY1BGF7K0r1J8fymBzfvuLVkGdHr+0GMnJCy2yj1e3xHVwauGmLqQUOYZx5oJPyU
-         54sJbuE9MytfizNLBqMsPjnIxiz3k5WwkiY3XPzA9Ghp6f1PSdOadJDVr37OBJhvk3E5
-         wsTcvcLSY5TF5RyASz+ZlKvYvBaLcrPR+m7oHqxXFbrl8d3Lfguo10qmHQPouOyuzQNw
-         icf2mifwSiOlU8//JZDUTKtWCSARBPvfpIbb/PqPIRIk1PiMGN2jaljgdDgpm/ZRkrt5
-         P5Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747691211; x=1748296011;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qFqHFurMBZtPAapbA1XA+pcLlQHLYWNfAxkQ+sCmyUk=;
-        b=SB92ZPBstFUliZSo8iLfbe/olnqD1rl4k34vDzGE2q0PtPttWQjzjDZXeIzyT45uSZ
-         GRHJV56xk47duBxwSgQfKFsSE5G97Dq3s8pSUoXEI5+eX1DpcOSF0akkW/2jQNn4rJvk
-         esLcdsB9qhjCkjbL69EyS8uhjhC5Euov04jQeeg/uvf14BmRzyy3G+eiueMWUaStQhOc
-         ztVgRPJ9lE6v7v6QWwXhM6zgP4ibw6UBOHaG1ykDWZXa0kvBIMKpifV8K78Tq84grt0D
-         7BVQMacEOwDN/uw3cH4IHliWmXsPN/SJ/kZMMpujySpb/hW2nH7gLac4ZRzuhnDoPphB
-         BgDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlAB86XH/I8dZg2kNcZWS5zUJ1HtuJ81uPugEXnp//FZ3HWNbNfs12OkMzwkztyECWC1qP5WlM/5vUfRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9pRSnoOJdhyVyNlfNpQRuaLeGVkBAGLu2Cz4dM67+xrP86k/R
-	dksjuwIoXziYPM528dEKSDrL/0lwuxCXjMzWnZKA0LTGzcDJwbg1eZk4B/X5PVphKHtvqijtDoi
-	wL1HhhbLFBwxW2cFJ7QS22JsrgmJHtmU=
-X-Gm-Gg: ASbGncvguHbGL2SUqmEDYHYhAhKjbWCEkwZMFYTr6QPnxQTIzC2GpCgp/AKFTg++k+J
-	8ETfXPIXOLu1vOUOqRiM1dg2IVIWTZZTy5cggAb3gOwcXHR5tw8hkePA+g1PB5sMZ1+Y7R40pw3
-	Bs31cav0EhOBiTYGt22VMPkEKUhhJ2h5PWwQ==
-X-Google-Smtp-Source: AGHT+IGHodC3eA+AeXqJGy+cl40swETxEWeQdkJjh8gyft6+9faOheS8KTxGncgcx90cLYanFRvoexWTGw4SJAitFlQ=
-X-Received: by 2002:a05:6902:2086:b0:e79:1566:64fa with SMTP id
- 3f1490d57ef6-e7b6d3fbda1mr16915479276.15.1747691210932; Mon, 19 May 2025
- 14:46:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="1JKyz1Aj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED8DC4CEED;
+	Mon, 19 May 2025 21:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747691218;
+	bh=QCKGn0yE2HXxgN9btrXX8tuuTH0V89V0zGAMHGJi0+M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=1JKyz1AjUAtgA5Ez0Oej1HtvmIOaSnMsnJaSxyxH1ubLNyQZqQB3UAAb/QTYraIWO
+	 YaxpSL4Wm6gRdmkcJWfzFIgozVsNasRNVgWu4xi0U3mVgUL7/j/CgoF6BZg0cJ5qdY
+	 Xm9tXTar9brjNx3EKGPrjkZPmxBh+rTDuqG1p66Y=
+Date: Mon, 19 May 2025 14:46:57 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: <yang.yang29@zte.com.cn>
+Cc: <jiang.kun2@zte.com.cn>, <wang.yaxin@zte.com.cn>, <xu.xin16@zte.com.cn>,
+ <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
+ <bsingharora@gmail.com>
+Subject: Re: [PATCH linux next v2] taskstats: adjust indentation of 
+ xxx_delay_max/min
+Message-Id: <20250519144657.1e626fd36208b0cfff4252e0@linux-foundation.org>
+In-Reply-To: <20250519223244317Gbg_lRkV5N9i15dnPMo63@zte.com.cn>
+References: <202505192131489882NSciXV4EGd8zzjLuwoOK@zte.com.cn>
+	<20250519223244317Gbg_lRkV5N9i15dnPMo63@zte.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250516164126.234883-1-stefano.radaelli21@gmail.com> <20250519164021.GL365796@horms.kernel.org>
-In-Reply-To: <20250519164021.GL365796@horms.kernel.org>
-From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Date: Mon, 19 May 2025 23:46:34 +0200
-X-Gm-Features: AX0GCFuBR54LVZrUjDmsQ3vo2yUBgjCY-fYJr8Xxxmt2BtO0ogT56rYcYNxqfkg
-Message-ID: <CAK+owojiySqLBtHq-=OpotxR3_Z0uoZzukVrF9Ak=fiUHtPm5Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: phy: add driver for MaxLinear MxL86110 PHY
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Xu Liang <lxu@maxlinear.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Simon,
+On Mon, 19 May 2025 22:32:44 +0800 (CST) <yang.yang29@zte.com.cn> wrote:
 
-Thank you for your feedback!
-v4 will be ready soon.
+> > adjust indentation of xxx_delay_max/min in struct taskstats.
+> I think fixing indentation alone isn't worth a separate patch. There
+> are still a lot work to do, for example: reduce redundant assignment
+> and calculation code in delayacct_add_tsk(). So should we fix the
+> indentation as part of the next patch.
 
-Best Regards,
+Ordinarily I'd agree.  But
+taskstats-fix-struct-taskstats-breaks-backward-compatibility-since-version-15.patch
+is presently in mm.git in quilt form, in the "mm-nonmm-unstable"
+branch.  So I can add Jiang's fix and later fold it into the base patch
+before moving it all into the non-rebasing "mm-stable" branch.
 
-Stefano
+This is one of the reasons why I use this hybrid quilt/git scheme - so
+patches and changelogs can easily be updated during their stabilization
+phase.
 
-Il giorno lun 19 mag 2025 alle ore 18:40 Simon Horman
-<horms@kernel.org> ha scritto:
->
-> On Fri, May 16, 2025 at 06:41:23PM +0200, Stefano Radaelli wrote:
-> > Add support for the MaxLinear MxL86110 Gigabit Ethernet PHY, a low-power,
-> > cost-optimized transceiver supporting 10/100/1000 Mbps over twisted-pair
-> > copper, compliant with IEEE 802.3.
-> >
-> > The driver implements basic features such as:
-> > - Device initialization
-> > - RGMII interface timing configuration
-> > - Wake-on-LAN support
-> > - LED initialization and control via /sys/class/leds
-> >
-> > This driver has been tested on multiple Variscite boards, including:
-> > - VAR-SOM-MX93 (i.MX93)
-> > - VAR-SOM-MX8M-PLUS (i.MX8MP)
-> >
-> > Example boot log showing driver probe:
-> > [    7.692101] imx-dwmac 428a0000.ethernet eth0:
-> >         PHY [stmmac-0:00] driver [MXL86110 Gigabit Ethernet] (irq=POLL)
-> >
-> > Changes from v1:
-> > - Add net-next support
-> > - Improved locking management and tests using CONFIG_PROVE_LOCKING
-> > - General cleanup
-> >
-> > Started a new thread
-> >
-> > Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
->
-> Hi Stefano,
->
-> Some minor feedback from my side.
->
-> ...
->
-> > diff --git a/drivers/net/phy/mxl-86110.c b/drivers/net/phy/mxl-86110.c
-> > new file mode 100644
-> > index 000000000000..63f32c49fcc1
-> > --- /dev/null
-> > +++ b/drivers/net/phy/mxl-86110.c
-> > @@ -0,0 +1,570 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * PHY driver for Maxlinear MXL86110
-> > + *
-> > + * Copyright 2023 MaxLinear Inc.
-> > + *
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/etherdevice.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> > +
-> > +/* PHY ID */
-> > +#define PHY_ID_MXL86110              0xc1335580
-> > +
-> > +/* required to access extended registers */
-> > +#define MXL86110_EXTD_REG_ADDR_OFFSET        0x1E
-> > +#define MXL86110_EXTD_REG_ADDR_DATA          0x1F
-> > +#define PHY_IRQ_ENABLE_REG                           0x12
-> > +#define PHY_IRQ_ENABLE_REG_WOL                       BIT(6)
-> > +
-> > +/* SyncE Configuration Register - COM_EXT SYNCE_CFG */
-> > +#define MXL86110_EXT_SYNCE_CFG_REG                                           0xA012
->
-> For Networking code, please restrict lines to no more than 80 columns
-> wide where you can do so without reducing readability (I'd say that is the
-> case here.
->
-> Likewise elsewhere in this patch.
->
-> checkpatch.pl --max-line-length=80 can be helpful here.
->
-> ...
->
-> > +/**
-> > + * mxl86110_write_extended_reg() - write to a PHY's extended register
-> > + * @phydev: pointer to a &struct phy_device
-> > + * @regnum: register number to write
-> > + * @val: value to write to @regnum
-> > + *
-> > + * NOTE: This function assumes the caller already holds the MDIO bus lock
-> > + * or otherwise has exclusive access to the PHY.
-> > + *
-> > + * returns 0 or negative error code
-> > + */
->
-> Tooling expects 'Return:' or 'Returns: ' to document return values.
->
-> Likewise elsewhere in this patch.
->
-> Flagged by ./scripts/kernel-doc -Wall -none
->
-> ...
->
-> > +static int mxl86110_led_hw_control_get(struct phy_device *phydev, u8 index,
-> > +                                    unsigned long *rules)
-> > +{
-> > +     u16 val;
-> > +
-> > +     if (index >= MXL86110_MAX_LEDS)
-> > +             return -EINVAL;
-> > +
-> > +     phy_lock_mdio_bus(phydev);
-> > +     val = mxl86110_read_extended_reg(phydev, MXL86110_LED0_CFG_REG + index);
-> > +     phy_unlock_mdio_bus(phydev);
-> > +     if (val < 0)
-> > +             return val;
->
-> val is unsigned. It cannot be less than zero.
->
-> Likewise in mxl86110_broadcast_cfg() and mxl86110_enable_led_activity_blink().
->
-> Flagged by Smatch.
->
-> ...
