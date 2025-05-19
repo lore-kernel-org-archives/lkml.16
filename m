@@ -1,123 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC351E5B60;
-	Mon, 19 May 2025 17:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1D01E0E14;
+	Mon, 19 May 2025 17:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675069; cv=none; b=RZzQlisyXbpo9cTNgtkxQJMUtXz7mrVWRHw/1F5ZWecvlcVqrxfgqlIJsqMrGvG65tajY3oo+LZHXCeRJT8fsCl3q1MGBpZTLPIWSS+cBJipiYOheDIUrPFu8kAOSoek+uAqBJaK8SRbrCFjap/eBFd5jxFfWlErXZG2jcjOlM0=
+	t=1747675092; cv=none; b=ABUUy75VxLnB6LQnYnmdoY53zx2CUMp6zlu3l/R/ROhJAtmK+7VyKuS6y955NhQk9bqC/34jrV41dlplvb/eNJ74xJOsm2E2gHsH1VkqFyVxQymT7bugbTLdXMVhwejclKPkmSpbWdyFoNOYr7gAYWOQSG/du4kMr6Tf2sXQc4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675069; c=relaxed/simple;
-	bh=p9f3mcT/4+f+uVev7KhI+qcZ9qqE31KiQK2qBoEd7BI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pg1tkLDzfuz3ImyDcWD321jea8dUU7BYVjLK+SsCXNPpK8sL0qMTYGYWz+SN2LeAF610saZ6n6xWyHkXUbErxsodMui4pvXnikNlrl7Ve35L/AmVNvccDSTUC+y4oC6csaXY7hMai9gsIUT/U0cQ/2jJKi21H8qlmGsHBbIJl+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IWTEmsmH; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747675092; c=relaxed/simple;
+	bh=+AKUnVKrN6BeAF4sfIZhOk6FcTofkxdDkE/rzNDDYT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OQJpyb5AxNXToKBmVUNuj8uX9066PVgHM4MpDTXoPh0zQiAfhRrlNfXDQeLEzGq6vI3bgMJU0BTiNv9RgLsvlEQXVfEme2bWMI9eNovUAyscvLM91eyPiQVR/c0gENGngx2iyYNISRL4YZNb1uEZ5kay218d0+z7MEuU0i2CC64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLJfzyvO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IWTEmsmH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747675067; x=1779211067;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=p9f3mcT/4+f+uVev7KhI+qcZ9qqE31KiQK2qBoEd7BI=;
-  b=IWTEmsmHJEFwlAFIObfiOyLhheyF5FbMbacW0vC3/c7fgizNzQNj5KW5
-   2/Kiz/eZ/mFFMIhdofsTV1s0v95AIvIXIQ3yNjxuAOcevbNFbQ+baEp5T
-   LSPdYPnm3yq0+TGqbBQsCRoUpkUUb8DCi1S1hTR1mjpq7Q9FIIB2dOi/E
-   lsuQsr5TsTMxWzYPvW6iXh+iCZbTD2r9ALqSdvogQQox8E5DS8xN5Gsvo
-   4g5tAwVQlNyOz3kCtym03gyrIZz1zqh5LRaxQ9rLfx4z3+MTs5BNzobti
-   uKzfTkRCg7DZlKZwox1Uxrq9T664V9raJKM3Mggp4MoEv3NEgTvEmDkhJ
-   w==;
-X-CSE-ConnectionGUID: vOL/txnfTUexIHNtCYn4jQ==
-X-CSE-MsgGUID: 8X7lzL3zTHa3+qTr1dFdeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="66998434"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="66998434"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:17:47 -0700
-X-CSE-ConnectionGUID: bD9JQKgiRPGommWXpKqc5w==
-X-CSE-MsgGUID: E5YbACCETue/oucIXafenA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="139318231"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:17:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLJfzyvO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3E7C4CEE9;
+	Mon, 19 May 2025 17:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747675091;
+	bh=+AKUnVKrN6BeAF4sfIZhOk6FcTofkxdDkE/rzNDDYT0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cLJfzyvOj9LiXyRKKySMpCuRl4rLhZeRKMh/B4RieFAr3l7IP/SyyE7A3To2M5RoN
+	 pIQmQLZSE2mLRFehJX0hoVFHGH+sJFmX8U88YnWyOJ+zikB15X1EDNeyJbUoTz56vP
+	 AKMg32x88KcZ/STBTQ2Fl2FSrz6WNsnRDE3TEFs1AopcntMaHml0tZcPY+pbV2Inxb
+	 cPkUfVwd+W+xUoFeoimp3e4W6TbQVWkOf9Ru5G0ZpIz6aVUNBWj3aX9tNNjuQy5Y4h
+	 zZhsGBZKtNex2mk1VY2DFnO5NHyF2KY9h6sWKDmFCG7qHLm99sOAMjfmoR1fjASDhD
+	 jw2O9O2mwep6g==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 0/2] PCI: Separate reset and link code to separate files
-Date: Mon, 19 May 2025 20:17:37 +0300
-Message-Id: <20250519171739.3575-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	linux-mm@kvack.org
+Subject: [PATCH] mm/cma: make detection of highmem_start more robust
+Date: Mon, 19 May 2025 20:18:05 +0300
+Message-ID: <20250519171805.1288393-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-pci.c has been catch-all for lots of code which didn't fit elsewhere,
-making its footprint large.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Move reset and link related code into own files as they seem
-independent enough from the other code and result in reasonably sized
-.c files. While some of the code in link.c could have gone into
-reset.c, reset.c would have become clearly larger and pcie_retrain_link()
-wouldn't really have fit under reset.c so I thought independent link.c
-would make sense and keep .c files in more manageable sizes.
+Pratyush Yadav reports the following crash:
 
-The series is based on top of the pci/reset branch. Expected conflicts:
- - reset.c patch with:
-   - PCI: Print the actual delay time in pci_bridge_wait_for_secondary_bus()
-     (in pci/enumeration)
- - link.c patch with:
-   - LBMS reset & update speed changes in the pci/bwctrl branch
+    ------------[ cut here ]------------
+    kernel BUG at arch/x86/mm/physaddr.c:23!
+    ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
+    CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+    RIP: 0010:__phys_addr+0x58/0x60
+    Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+    RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
+    RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
+    RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
+    RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
+    R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
+    R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
+    FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
+    Call Trace:
+     <TASK>
+     ? __cma_declare_contiguous_nid+0x6e/0x340
+     ? cma_declare_contiguous_nid+0x33/0x70
+     ? dma_contiguous_reserve_area+0x2f/0x70
+     ? setup_arch+0x6f1/0x870
+     ? start_kernel+0x52/0x4b0
+     ? x86_64_start_reservations+0x29/0x30
+     ? x86_64_start_kernel+0x7c/0x80
+     ? common_startup_64+0x13e/0x141
 
-There are some conflicts with some pending changes, the most imporant
-being Mani's slot reset series:
+  The reason is that __cma_declare_contiguous_nid() does:
 
-https://lore.kernel.org/r/20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org/
+          highmem_start = __pa(high_memory - 1) + 1;
 
+  If dma_contiguous_reserve_area() (or any other CMA declaration) is
+  called before free_area_init(), high_memory is uninitialized. Without
+  CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
+  highmem_start.
 
-After these moves, the .c file sizes are:
+The issue occurs because commit e120d1bc12da ("arch, mm: set high_memory in
+free_area_init()") moved initialization of high_memory after the call to
+dma_contiguous_reserve() -> __cma_declare_contiguous_nid() on several
+architectures.
 
-  5295 pci.c
-  3332 probe.c
-   578 link.c
-  1253 reset.c
+In the case CONFIG_HIGHMEM is enabled, some architectures that actually
+support HIGHMEM (arm, powerpc and x86) have initialization of high_memory
+before a possible call to __cma_declare_contiguous_nid() and some
+initialized high_memory late anyway (arc, csky, microblase, mips, sparc,
+xtensa) even before the commit e120d1bc12da so they are fine with using
+uninitialized value of high_memory.
 
-I've been sit on top of the reset.c patch since the last Fall as there
-have been just way too many complex conflicts to handle but currently
-the conflict level would be relatively low.
+And in the case CONFIG_HIGHMEM is disabled high_memory essentially becomes
+the first address after memory end, so instead of relying on high_memory to
+calculate highmem_start use memblock_end_of_DRAM() and eliminate the
+dependency of CMA area creation on high_memory in majority of
+configurations.
 
-In addition to these moves, I'm considering moving D0/D3 related logic
-that is plenty in pci.c into own .c file (probably power.c but
-suggestions welcome).
+Reported-by: Pratyush Yadav <ptyadav@amazon.de>
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ mm/cma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Ilpo Järvinen (2):
-  PCI: Move reset and restore related code to reset-restore.c
-  PCI: Move link related code into link.c
-
- drivers/pci/Makefile |    6 +-
- drivers/pci/link.c   |  578 +++++++++++++
- drivers/pci/pci.c    | 1890 ++++--------------------------------------
- drivers/pci/pci.h    |    5 +-
- drivers/pci/probe.c  |  194 -----
- drivers/pci/reset.c  | 1253 ++++++++++++++++++++++++++++
- 6 files changed, 1977 insertions(+), 1949 deletions(-)
- create mode 100644 drivers/pci/link.c
- create mode 100644 drivers/pci/reset.c
-
-
-base-commit: f3efb9569b4a21354ef2caf7ab0608a3e14cc6e4
+diff --git a/mm/cma.c b/mm/cma.c
+index 15632939f20a..c04be488b099 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -608,7 +608,10 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
+ 	 * complain. Find the boundary by adding one to the last valid
+ 	 * address.
+ 	 */
+-	highmem_start = __pa(high_memory - 1) + 1;
++	if (IS_ENABLED(CONFIG_HIGHMEM))
++		highmem_start = __pa(high_memory - 1) + 1;
++	else
++		highmem_start = memblock_end_of_DRAM();
+ 	pr_debug("%s(size %pa, base %pa, limit %pa alignment %pa)\n",
+ 		__func__, &size, &base, &limit, &alignment);
+ 
 -- 
-2.39.5
+2.47.2
 
