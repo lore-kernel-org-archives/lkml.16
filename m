@@ -1,109 +1,134 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BAF289359
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A527C1C3306
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747678001; cv=none; b=eDeyujAFm6Igp0RNivT5MuLawGQTADlVcFZBY54OadgForu8isUf1VYAoXveChjYjFcvGJ6pZDWIrTsBIXO1+6Vb5miyQtznwn03E7xkVv0M39hiHvIxJsnOYGBLMWvjXXLRxQLea6to1xX88rrO1s5lFEZ7GDFh5n0FOZRfzpo=
+	t=1747678072; cv=none; b=aQpGyCcIs55fr8gl6tnDmpUg+rmMjWqYeBsFehWSlEtkYYg8i0uwOYGxoVJiBLo3oGezq7ZrMgYpZfN7/SFEgqNf9ErtDLpRBFmx3ElS68CuO2n3DTuub6o4LuCM5v9iMLMEbKWhBavR52SNyPyeKTnadKCJGkKLRnL8Lxmmi6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747678001; c=relaxed/simple;
-	bh=IY15D9pR4DHYvFOi9/5G0jwNjhD4R7FSbodtnWlPEVI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mARMlOW+cdCWqUd6tk2bQYa5OJibH11jMBco/NazLIq9lA0RZ4+265Zj509MJOwzryoSEEpccDXe+yM4vmNACi2QT13P99eG0tVE0qaY/p61jUttm105Qe+ab4Msu4Iy5jD/GEi14G8rHQpDR0BJXL2UrtS3teqCk+gIskitE9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NBFeNtRe; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747678072; c=relaxed/simple;
+	bh=TVu6Ue0+tThI4wwiN68DTgRJxBwb2V+yzajqnxj7Xc0=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ud31aVDjhhMIkqmv++SgwNzfmjksCCjV/3m8+4UcWiPuGUUcLHMGDE6IPzKjWx6x/XEqTbeu0kQTJWLi2b09/bY/jCfs5/YJEjD/nfdmF9aTnBAAEvINBtAPNoDruUTInyPJVH8JU+9yh5NT0+7ADBdFF9wpdnCNLYCZFW/ioSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hse0VHlA; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBFeNtRe"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-442cdf07ad9so27835445e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747677998; x=1748282798; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eG14pmsh7axpdFDnVfISFsJmcBvEGUku9i7TlfI5WTs=;
-        b=NBFeNtReYmNXObOqxd5OuVTuCkHax3SRbUU2ICN292KukXgd8hn3tuWm9+06UXl56f
-         Vndwu4xp3+hHJ+lbAEq6PJzGy62oB/lQtjCKeOc9a1ra1w9qnxlz5I8XVefJ6I4IQOxc
-         4OTYF2dBJbLlYl93E7QMZzfyDMJP9Y+aBbMv55Kk2eAkD85ZLe032bPBgsPG2f9VOb1d
-         fL6x9J+w2yRN7Kh0DcgKgrCCN21LD3ihtj8ZidsC0AY6s+GX1UUJMbpw55ur8apU2+7Q
-         NJLXyXlvwCDjXvJExWxeVK7Pb6j0k5lIObbfxfmYrfP62uQrbKk3JxI7X/rKBLGMT0ek
-         kI2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747677998; x=1748282798;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eG14pmsh7axpdFDnVfISFsJmcBvEGUku9i7TlfI5WTs=;
-        b=HR+ZkXdrB5FSUfw2DvOrHnWaKSUHfNqHNWDFk7i+wLaOjymB8XOFGa/1SzPkxdPDNV
-         YHedvzuZl4/wt7AV/JFDO+PZDB66xdy2nons+3qjFkHtbYGJCuBjno8vtHj2utIoQZIj
-         8cfZWrtG/el6L7n1jQbuk8qFfrtgGdQszTSPSMqCfVbc/sMoYxUYLbzWgzqaXWT/f4Wp
-         uD5gHk0f5OxL8N/uH7tmGCqldzPn96RG0TgRNmGOwxKwPdmchb9WYNyQKIGwJxtTi55x
-         Tgav7OLgIuHp6f5v88ZfRqhzY7iYAF+yijE4G59J64XyXnyh8d4kSg8VsWoh6AYuCJlo
-         3Cqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHQtf8N6DDZO2otywxWq+4SNjWz5JGSziSR+YEjbgiU5rbnnQNv+YoiG757nfR1s0a0dRm+i/Mmj4Eos4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8QyEgstjqO9CGT3gZie26C65XsWrKvncURh4uKqgEJ9QQlQ6b
-	lyMj0UEnjWHkL1nyiPDkD/TpV53ZxP+SjrFBxmTubFlB5n1LUySxhY6UiO1MnsyFLqXPS++MCpS
-	vaG051oFj+HQVT+RXfw==
-X-Google-Smtp-Source: AGHT+IFKkROM8S2X6hVulNORyOvZuDhzod4S25WBIXPkUp5czDXn3G5vouDaPDJnP39FfaquJRTrfKsYSOa93Dc=
-X-Received: from wmbdq8.prod.google.com ([2002:a05:600c:64c8:b0:43d:847a:8ccc])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1e1c:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-442fef3e822mr143806575e9.0.1747677997829;
- Mon, 19 May 2025 11:06:37 -0700 (PDT)
-Date: Mon, 19 May 2025 18:06:35 +0000
-In-Reply-To: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hse0VHlA"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JFQ9vj031505;
+	Mon, 19 May 2025 18:07:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ynTozM
+	TkisgWm7nLVFPVfSuICeiaDry/u5m5nFTRhCQ=; b=hse0VHlAxrCKal/Re3pBAL
+	fGX8SVKxGOvJJeoYmqzR+U9C7FU4NVHRFV9YhLzvGRAdlf5W+E9ESXRXxPbHMNBg
+	fFSQvF0ghDD6paDP+h3NPIS6FvWzTABC+PwATUidobKKkiCWPHDXwex98k99SgsC
+	m1yDQ0SrwPxT+hjBf4UzIxdDfpDeQjyqvwoKWmbf8ZqpI/LvurFrA4wTjh+vdSU6
+	MB8JdEkaZu/uQ04pD/7KV4nXRGZ+GNozdzGv2NGPbfDyW4061/nMXo3S0BEaTY8k
+	oYYXT7D9UDo2OgP27KAWG+jsuy1dIl2/gRU23bfgU6aUXq3oTH3p205udLl06NJA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qn68na0b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 18:07:18 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54JHxlmK008758;
+	Mon, 19 May 2025 18:07:17 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qn68na09-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 18:07:17 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54JHBDZj030098;
+	Mon, 19 May 2025 18:07:16 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46q55yr334-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 18:07:16 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54JI7F0T20841104
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 18:07:15 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1D25A58055;
+	Mon, 19 May 2025 18:07:15 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45AF558043;
+	Mon, 19 May 2025 18:07:14 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 19 May 2025 18:07:14 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
-Message-ID: <aCtzK-BQS-sVRC20@google.com>
-Subject: Re: [PATCH v3 0/2] rust: miscdevice: add additional data to MiscDeviceRegistration
-From: Alice Ryhl <aliceryhl@google.com>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Danilo Krummrich <dakr@kernel.org>, 
-	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Date: Mon, 19 May 2025 23:37:13 +0530
+From: Misbah Anjum N <misanjum@linux.ibm.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Ritesh Harjani <riteshh@linux.ibm.com>, yosry.ahmed@linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, maddy@linux.ibm.com,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        naveen@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG][powerpc] OOPs: Kernel access of bad area during zram swap
+ write - kswapd0 crash
+In-Reply-To: <6r6hex7p53bsbaje4u7so7tfsz6jemazerzujzraibiah7eq4b@m5vgjaff2cdz>
+References: <89bfdedb74416156423d36d28c5b92e9@linux.ibm.com>
+ <87ldrujhr5.fsf@gmail.com> <3374b7cf6a68364c389a260d7ec9067f@linux.ibm.com>
+ <6r6hex7p53bsbaje4u7so7tfsz6jemazerzujzraibiah7eq4b@m5vgjaff2cdz>
+Message-ID: <29cec5ca090a1b833c6a68d103ef9e15@linux.ibm.com>
+X-Sender: misanjum@linux.ibm.com
+Organization: IBM
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _fj80Oq0bAsyCG92_EMOzTZw27KKKfMK
+X-Proofpoint-GUID: 6tsfe39TkC4xcpBIw-_ajd4QhVuq24I7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE2MyBTYWx0ZWRfX9Cs51r9TPd0d nksTwKvgORZ7YCfcoEDvqeI6EImOm0pshn79iq7bqdeYeb8MbHh23469hQT++X9YK3jB75eVX37 j1x4v03fK1hXutqI+YVVdouU0N2QIHHY5/R1ZVIK7XwPJ7eNrRmwK89A9EGXdK7tbUts254L+X5
+ zJazLoL6vVz6PZ//4dwV9VKy+a34AT5sLIq37mKwvjM3S9rJdlMGR0nAxXoyJ1q4lkJ3M1E+Bl4 rYC11ZaKNnGpP5IJA5xcTBrcbhyMuDVrYSMM13A5hMTX37xernd92PFKBu/2nducXp+3BdxkQdZ x7qnRlOhICzRKibqbMd3G3x8DRu8DwCHV8LyGFKH9jIlk2TcQ/MERV/+YmjDJZoMyigoX/afY0R
+ uaZuxnwhW+G9C79vvp0QaioI3Cc5BbtlMqDhjDOEDJWp2DNUIIbPtqRd2lf9owIP7Br8yZMa
+X-Authority-Analysis: v=2.4 cv=CN4qXQrD c=1 sm=1 tr=0 ts=682b7356 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=JK2cp3ES9FE06y1yGSoA:9
+ a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190163
 
-On Sat, May 17, 2025 at 01:33:48PM +0200, Christian Schrefl wrote:
-> Currently there is no good way to pass arbitrary data from the driver to
-> a `miscdevice` or to share data between individual handles to a 
-> `miscdevice` in rust.
+On 2025-05-07 06:03, Sergey Senozhatsky wrote:
+> Hi,
 > 
-> This series adds additional (generic) data to the MiscDeviceRegistration
-> for this purpose.
+> On (25/05/06 11:09), Misbah Anjum N wrote:
+>> I am facing this issue even with the latest kernel: 
+>> 6.15.0-rc4-g5721cf0b9352
+>> The suspecting commit is: 44f76413496ec343da0d8292ceecdcabe3e6ec16. 
+>> The
+>> commit introduces zs_obj_write() function.
+>> Link: 
+>> https://github.com/torvalds/linux/commit/44f76413496ec343da0d8292ceecdcabe3e6ec16
 > 
-> The first patch implements the changes and fixes the build of the sample
-> without changing any functionality (this is currently the only in tree 
-> user).
-> 
-> The second patch changes the `rust_misc_device` sample to use this to 
-> share the same data between multiple handles to the `miscdevice`.
-> I have tested the sample with qemu and the C userspace example
-> from the doc comments.
-> 
-> This series its based on my `UnsafePinned` series [0] and the 
-> pin-init-next branch.
-> 
-> Some discussion on Zulip about the motivation and approach [1].
-> Thanks a lot to everyone helping me out with this.
-> 
-> Link: https://lore.kernel.org/rust-for-linux/20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com/ [0]
-> Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/Passing.20a.20DevRes.20to.20a.20miscdev/near/494553814 [1]
-> 
-> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> Can you try the following fix
+> https://lore.kernel.org/linux-mm/20250504110650.2783619-1-senozhatsky@chromium.org
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Hi,
 
-Danilo's comment on the design of miscdevice is fair - it does not match
-other types of drivers. But this series is an improvement over what is
-here today.
+Thank you for the patch. I can confirm that it resolves the issue. After 
+applying it, the kernel panic no longer occurs during memory reclaim 
+with in my KVM guest testing environment. The Avocado-VT functional 
+tests now complete successfully.
 
-Alice
+Patch:
+Author: Sergey Senozhatsky <senozhatsky@chromium.org>
+Date:   Sun May 4 20:00:22 2025 +0900
+     zsmalloc: don't underflow size calculation in zs_obj_write()
+
+Thank You,
+Misbah Anjum N
