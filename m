@@ -1,100 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A6A201246;
-	Mon, 19 May 2025 12:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A20313D52F
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656116; cv=none; b=ZiQzqi4QEhX0o7Et5MDZva5HxWQRDQ6rBCjPcQvQAVAb3EYnf4wH1H0QvebFyOnpb/lC2Z0gCuQ/CdESPfPRIbfDsszOy0QsUJZD92RYSntxRO8Zn9gAKmTS0zVK3krGDCpa7N78hwRC0mKnfUrfuwbTkWgM5BHEBo45vCdLOAM=
+	t=1747656130; cv=none; b=k23rrrpjr7LyxIJDMmUP2N1o1iK2K3MxDiCzDKEDXAdroBidwTg79X47aSaVFVoYNC+sQb2qj4aiU7DxbWA/dMEKF3531Z1mP2FNpgZVpIDIkDx04AtjK/kvPWphoFxqg+7nrOYWkiaa2KotrFbglQ4rWUZlj6T7ydJZ/Y6K5kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656116; c=relaxed/simple;
-	bh=Zf9gz2Q4q1qJ6K136JlNwatN69nhNVbGzKy8s8ubJ+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O9HEfqC0/qjUUJXqEYsf8jElaePkETDMpNuzZJOi6xqzGy/mPLxIwO7l2b0Fn9vU0YrAH9UdrSvGyAb7gx7dquFeNfj2OhhC1EetfdvupPWPDjPumS3j84EIhd1KlXI8Rbgk5Kvz1Gzze7mYueV4RLdKC8ne+w+oGbZj7WEbCmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzlAp7kz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747656130; c=relaxed/simple;
+	bh=SZZhNY6WeNtnFkNFGjjzZ/lzU4GTX9jlWJRQyyAA6ZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fRTKUaqqT7lcIlOzfnw1zn/sVcNrcUu4V89Q5WaMZ43qnWyl/2L0fZbFa1jQK4uw6XQemlYPgrYYxzyVAoBvA5kW0t4BLYdJrrsiAxJrGMY23akxTZvpvyysyiq9n/BCG8JUZ2qE9NlK+0szdbcZssgCYNMeGPsWA61k0BmtqaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJI7vMqi; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzlAp7kz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACF1C4CEE9;
-	Mon, 19 May 2025 12:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747656116;
-	bh=Zf9gz2Q4q1qJ6K136JlNwatN69nhNVbGzKy8s8ubJ+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lzlAp7kzkoeCPmb5UunEHlWgmAl6Q6kbrRzx4rW7AoTfmckiFONvJq29T9drSlON3
-	 0WTijnMEjM1LxWh1MJ44JOmw/AXLRzUlRgFCnnbHP6m7yRtJ5uA1ripR22NSvNB32r
-	 kQYSTDTBa/fEC2p2ucqCtrtoAIS3bBAI+ESwcnaGqho5wBp0a7ZAzceHbP86hbsSY4
-	 k81oLtVguNRmvh1Caq0PNj5V++HjyH59/IC98Gx97Tw1mK/MVG/IyXU0/5pJsPLVBV
-	 BDFHQ/+Xh7csYJSI92XW2xtTnditMy/PgO5HTb6vo8NGS+RYH0Yz7XE+64KhtcUlGO
-	 yV+mxK1yLpdaw==
-Date: Mon, 19 May 2025 13:01:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Han Gao <rabenda.cn@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
-	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: riscv: add Sophgo SG2042_EVB_V1.X
- bindings
-Message-ID: <20250519-geek-slept-8cae4fc6d548@spud>
-References: <cover.1747231254.git.rabenda.cn@gmail.com>
- <b538e2b24eab8b740091d80ca76b20ef6014a4e5.1747231254.git.rabenda.cn@gmail.com>
- <20250514-showplace-yahoo-e3c306355288@spud>
- <CAAT7Ki9Fw0+Ntv+oFqr2R=EHnFZrT6KmyTPN2MCDDGvSn-Wi8A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJI7vMqi"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-329119a3a8eso13483001fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747656126; x=1748260926; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y7fsjq6GI3zONUGqZSHTQXw/a1e/HecF6zzPmUL5DD8=;
+        b=TJI7vMqigTRUTxUfXzyGAMz+LffEdA+qRBjBK1IQOoimQhb0XSpYpCjpcMrKvPAo4U
+         ftFcrTrHToGZBPM95UNX7yf7akS+EAlTiko3hqy7LvlBbONjrd5+aX7Ncvc0yWO0GBs0
+         zwAkZU5lMCwpUgQiGIPt/x/ZYE3umzjl1LpmOP34FbKNdqddZa51Bvrt8bhI3RXpGMfz
+         5dQbSmyksWTyTOlqElZz43ymTq3xDdecjxIWUWrbMk4B75zJZMfaRorY+tGB4g/xjqyS
+         iOCm5dt0Q9A7Qk+CnobxOU9X/m2PXdV5WPP6b+pP6A0A1GzQRbo6WIIZQ0XjL56MxkJy
+         yzRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747656126; x=1748260926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y7fsjq6GI3zONUGqZSHTQXw/a1e/HecF6zzPmUL5DD8=;
+        b=V2ZyC0+Ym1dT9D8792g00zeGiHafn7hd1OLMEYxi8teXD6j57r7VI7fpNmZ2hr8ERI
+         w8f1mhcI+3hBJ7z4Q9064UYAcZisGcNIypz8+MMj8LV6Y5kNvebT6tRpiBEyo/+cIkcX
+         pr078hlWSimAnnlDMVdkCgYI77nMyffZIn+S4LUdqQU68Md775lr174Q5xVjtVW9VCwV
+         YVAHNO36j+P6jBljrWhI4p64H5S66z+gY844Nj+EqrV4pgeLkA4ieAokA3hx6SKTmZ1/
+         RWcc4oje3rXBbm7VoNLNbOf33sPVaPU5GhY0yxYhJOYRbcKlfQ8DznswVDzJzhfmm1bb
+         XGrg==
+X-Gm-Message-State: AOJu0YwI2BF3wMawtiqsimOBBT8D2OjKgniEnp/vF/Xg9/S3IYTd9EWw
+	QWFFYToD2ondcoHDsGRoorXUaexvkKc0vLkQn+gyltpaXYs9y+t8TCAGX8IHMR+X8j6kxyXz6vC
+	oGdihXr39zXJu1jNMHDP7tjCayNJ/Eg==
+X-Gm-Gg: ASbGncvXRW9TnOLQq8g60S5Ke8snEOMOMXUp0iQnq5ZLYkzL65GnUUikYlEf8v5IYl1
+	Z5GG5ynNLF7HCdkNV5Yng08Tf9gHe0WVcOuhFFymtmW+UNiln4J1Qno7NufSr4kWthkKantsCSM
+	rYAscL9v2FeIyluiV0mTQJFtT++N+OQMXpyfaNPacsPoMO3XA=
+X-Google-Smtp-Source: AGHT+IHAL8OZQVthjPDnI/thjPmXl7YlEi2cLMgEgO8mQGeL4ADrUYM+n18mwORRtzkyCGWmyTqVuXR/w2K/RdJreSE=
+X-Received: by 2002:a05:651c:110b:b0:326:cf84:63c4 with SMTP id
+ 38308e7fff4ca-328083fe3bdmr35774671fa.1.1747656126083; Mon, 19 May 2025
+ 05:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="p3QpKvf7RfTC567z"
-Content-Disposition: inline
-In-Reply-To: <CAAT7Ki9Fw0+Ntv+oFqr2R=EHnFZrT6KmyTPN2MCDDGvSn-Wi8A@mail.gmail.com>
-
-
---p3QpKvf7RfTC567z
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-10-ardb+git@google.com>
+In-Reply-To: <20250517091639.3807875-10-ardb+git@google.com>
+From: Brian Gerst <brgerst@gmail.com>
+Date: Mon, 19 May 2025 08:01:54 -0400
+X-Gm-Features: AX0GCFvvgjuz1G0kKxhB-PcwBqTtzGyAfjDZMFs8XCrQdR3VI5xoPTJxCpJQtEo
+Message-ID: <CAMzpN2g0LBXiQk+YvrMi8UVqv9rYfqEZrugdDGYdjNiRCEn40Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] x86/cpu: Move CPU capability override arrays from
+ BSS to __ro_after_init
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 17, 2025 at 01:11:46AM +0800, Han Gao wrote:
-> On Thu, May 15, 2025 at 12:22=E2=80=AFAM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Wed, May 14, 2025 at 10:08:59PM +0800, Han Gao wrote:
-> > > Add DT binding documentation for the Sophgo SG2042_EVB_V1.X board [1].
-> >
-> > 1.x? Is the v1.0 something people can get their hands on, or just the
-> > v1.1?
-> > What differences do the boards have that are minimal enough that
-> > specific compatibles would not be required?
-> >
->=20
-> First of all, v1.1 and v1.0 are compatible boards.
-> There is no difference between v1.1 and v1.0 from dts.
->=20
-> Both v1.1 and v1.0 have been discontinued.
-> About 80 pieces of v1.1 are in the hands of community developers.
+On Sat, May 17, 2025 at 5:16=E2=80=AFAM Ard Biesheuvel <ardb+git@google.com=
+> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> In order to allow CPU capability overrides to be set arbitrarily early
+> during the boot, the underlying data objects should not be wiped along
+> with the rest of BSS, and so they will need to be moved out.
+>
+> Given that CPU capabilities are set at init time, and shouldn't be
+> modified after that, move them into __ro_after_init, which is part of
+> the statically initialized kernel image.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/kernel/cpu/common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 67cdbd916830..579d5b84e183 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinfo_=
+x86 *c)
+>  }
+>
+>  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
+> -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned lo=
+ng));
+> -__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long))=
+;
+> +__u32 __ro_after_init cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(si=
+zeof(unsigned long));
+> +__u32 __ro_after_init cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof=
+(unsigned long));
+>
+>  #ifdef CONFIG_X86_32
+>  /* The 32-bit entry code needs to find cpu_entry_area. */
+> --
+> 2.49.0.1101.gccaa498523-goog
+>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Brian Gerst <brgerst@gmail.com>
 
---p3QpKvf7RfTC567z
-Content-Type: application/pgp-signature; name="signature.asc"
+On a slight tangent here, is there any reason that BSS can't be
+cleared immediately on boot like 32-bit?  The only potential issue I
+can see is with __bss_decrypted, which depends on getting cleared
+after encryption is enabled.
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCsdrgAKCRB4tDGHoIJi
-0kd5AQCYs1Sq3GD4kaz3DoAtIrt6+FU4CPdjvAtv8vhTf1N5uwD9FTZzafSC58rf
-8spnL07wKGQMM9LFZN9yxZ8RvCxKagU=
-=ZRoH
------END PGP SIGNATURE-----
-
---p3QpKvf7RfTC567z--
+Brian Gerst
