@@ -1,67 +1,67 @@
 Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFB0210F4B
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9C51EF0BE
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747682803; cv=none; b=hmwspuzI9QsHerfaw6nZ+hQlmQOa8o4GOpOJkeOv3CscPSdveuXZqv5Juq+EyP1+d6iUG/O1IDr1jze4odhI9Ht/mNZ8G7ZP2KwQIEiloiRIW/U5jz2/69xVFymJfecZUBSISyTlgSmkTckklAoqLQGtAUvBAfhMQM4SU4eBh2w=
+	t=1747682823; cv=none; b=jRZ33SBTW3Vc6OQNvQCGOUGnSxZAiJpucysyTg49R8qiOD6jf7l1acA0rWIynMbi6G4mnSDqmZnTuXUFhXdmqNreivNAkOyOH6mbXu+PYmWXrLR1JLlPBrjj8conaYT39pVF37DGDT8/t6DXGJKHzVioFHrJVFBkDMVt5jqMGQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747682803; c=relaxed/simple;
-	bh=8Iw1O9Lzo+YCCNRceQBU1yJJ/T5XGZoAN0e3s+PioYY=;
+	s=arc-20240116; t=1747682823; c=relaxed/simple;
+	bh=dmrrPngU6uobTYXB6y8wdZR5oUPPLBBt9mE8U1oef0c=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rDjmGjrV/YjlrrIi+3dquvsrngTy+rMAjF4r1/PNcLq/yDbNEqHWim8gMJP/Y6CIqJDdZ/vBJ+CfqULT1aP5Q3kNXZixzKoLYKeJY+azoD66zvdIdtdx/cOV4Q1BW0MxErHGPPMPYgMMU+8uAciGR76DKBi/c7WQUK7KXQU3pm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KpPit5rX; arc=none smtp.client-ip=209.85.221.53
+	 In-Reply-To:Content-Type; b=pgHFAvulIMPylq1WAJwooJFSPSgKHEHNV+JaqzsLP1rIcD4RQqd78FzceAIlYeF3iAXc8Ftt25xRxCXvHBfvAvk4/kRdsCzDoY6Lp8Jr9QZ7uM7cw8EgTB9FoBbYw7Xix/GxMWZPCLmOxK/3MqZbHiP9TfJ5HlU1sq4DFfvb8hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cp/AQcqU; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KpPit5rX"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0ac853894so4201005f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:26:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cp/AQcqU"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a36748920cso2289128f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747682798; x=1748287598; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747682819; x=1748287619; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RFXXvcbboaJbTNLJTmEOAzlPujyDrBlvP86g22hiZa0=;
-        b=KpPit5rXLwgSIjPrfEBUN2nbT73yZLCvTglPAfcnytKjH8ToQdjzJ9CKkVvucLo0Bl
-         WvW/tyTp+2N6gp9i4f7KiNP3v4yQkCIU0NASXKoKBK5C20dGN94jVYrPRQRpPwqS8+Dz
-         31ZhVObz0XwEydYWhGmm80Z0Z5Y1R+0nqhxmImv6WyADUbUltKfuWH8Je36f430IR+98
-         V4dTG4FXEBwH1TKEZcRnaHOHB9qCaw2jzGmTWyW6BYsLCMV3AXv1ij+AQPXq316XEvRI
-         yJbJt/+z6v6Xhb70A33kXKcRj4OYXLL5w6etz84hhuf4dEqzB047EaW0PPwAeIqY/T7C
-         Ctig==
+        bh=Gp6W268nOdiEFDLoi1ournCMxYWsL1COXVd/v2CLrPo=;
+        b=Cp/AQcqUTjkk2gNfgUssT13rD1wa5bC2vFnfBk601vyjxObQXeM5yTYGCfgSqrN4zf
+         j1lBKgw3j/Fhsz8IBvOaFUoG6FuG8bfvrt1+qhlVscT5bF4Bms9NDSP56PSa7fRx3lIl
+         N3qhawUP8vcvmNtnnzpTg3HsnCAYNCTWdICOT2FuQwywWouvA5wjpQSob8E10F8l+8Rq
+         HJp1qpARpgIKKdwJAgr+NnWQDOn+gt/A/CjOg31QAlRhll4Fpw8mmMqyyB8Q9NsUhdf5
+         tf91F3SfrMrD7KzDGIiG9zgS7TWDPjgOZC84RSrd+EnShnZSptRaje0nqjTH+hzK1ass
+         crjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747682798; x=1748287598;
+        d=1e100.net; s=20230601; t=1747682819; x=1748287619;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=RFXXvcbboaJbTNLJTmEOAzlPujyDrBlvP86g22hiZa0=;
-        b=AHPIFcyCiLk8TAd2auVBeIBJuosOTUzDo57eqjHmKgUWclqooF/bmxOMk5geIby11m
-         CO7uCQYj51IBPWAIOsP0wn1PviWmy4fmvdoEyuoiipKUcRhLhAUjxV6TvY/0xWaIaEWD
-         oT27YzGVrUnTQ03azDGvUxnUPvtEVGM3tWjyFXyS4XYr4Bnry42eD/JSOui0JTdP6O60
-         6XUWkRWdLazh6lCH8a7OwzVUTHGJnqKLI+Qh6UzHdOyh5nR0FFJS8ZQ1yzwOVS2t1sQS
-         k/JPXZHUefyqIi2V4LTOqD/TqtRtzB/OhIVfyBD8uPMCMAWmaXwohyQyd0aaxxg8mX3n
-         dKOA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2yxa9woN/TW65cl2bSfeFhisobNCSBEnYrTrjgcwG4UdYW3utleOaEIP+SDn2Tvq/8L0G4vg/NPf2j+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ36NiuJ16tNhcJokJKeD/mXNnRqakle2pOEiO5gWI8qiexOGJ
-	jULMV19S5rtXZMUJlp8gQEMFXtsFLnPU9MnQGFx0hi/Rluk1pHIPlf2Dn4KWvCAd89U=
-X-Gm-Gg: ASbGncuB9Wd1pomOY0X0uzgE0mUAcFa8Ss8aPypakeJhhmxR2forSubppErQzNoqWr/
-	TbNWnvCEgrf8LIUJKalSYzXkaOwcHc5wJeWd9PfwbF6OtYGTeY+1VRtvqbydtibIEJOHYj6oREn
-	FJ42cWvynNPyM3zfDrY86TnwioYBZnAClyusX1beyITJRmsILh/ebww5fxxDUs0IfhcxWSiFp9c
-	xkKRVxhm19+S/gRRB54fTi3SG3y6VqHuWc9L8euD+SxGIe4Lij82oaR5YiHTueTSmBH6EH5/KHh
-	X5LLPyU4Ez5pwcaO0AXHnrZtLc5OQCAgTlU5c6Ol7QXGMmIEk0d1Gi6pQdzfK3z6bwXGFFYjCqf
-	nTPbiedM1Ov/rEcUq4EIqSu8dNAYX
-X-Google-Smtp-Source: AGHT+IGjldG+V2h53roi6wkz9WwaXLvsrszRGhagPmCy3Brgl9F4PMRvClIni1Lu01HQTQBEJ+avFw==
-X-Received: by 2002:a05:6000:420c:b0:3a3:7709:3038 with SMTP id ffacd0b85a97d-3a3770931fdmr1873072f8f.38.1747682798298;
-        Mon, 19 May 2025 12:26:38 -0700 (PDT)
+        bh=Gp6W268nOdiEFDLoi1ournCMxYWsL1COXVd/v2CLrPo=;
+        b=tZ5/l0nPxKKjKfgJGfRpFY3lA7m060ex/aBLWQsneGmpTX96NzkAF6heRRNtV7rMR6
+         x6Sr2aDpSqMTu18Yl5Ba7FRlIgeqJtCubOThU0WdSkm7KpyEwKuDbTSeaIxQurLrvGcR
+         Z37xEfsO6hbkqIGNlo3tYUIq6o9Ia+SIR1AL9Kv5679BLlx1HKqcuUcCr5pS+BpYxy5W
+         1nadjwfUU8/FGLg0J9e6RWvfBWblUck7b/c7tGJHVvcimMVP1hawa7RqmUu1SI6hiEg7
+         mTwDNUdmK8dVyG3WsC2roR759BRW7mG0eQYR8r0jwCz/6eTSH3bUEtpmB0kjYqpUbFSt
+         097A==
+X-Forwarded-Encrypted: i=1; AJvYcCVuNreDKzAQ9XblXvVGXrIEJ46YG19WrnhkFUxiooZME/ETX+iV06S79TKNOh/1UsoNlLl/w9RBPxB520o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh9YtUEam6/17Z/gwTKxfui2T8RRkHQCl9iyC1JK4tC5ZJaH9h
+	rCLXvmxhlxi57CdvyGqar6xtQalz8O5kmkpMgiu1TrATUkIYHs61VlT7H+HDAIcYeso=
+X-Gm-Gg: ASbGncuRNxzV0MPSwCM/VNbIusNnp2nqZLsrt/FkqeMCEiyE5F8VJpaG+Wmq01ESPaX
+	eL3ccH2oCFT/atqqC4+R9D4tDcMIiQv8CYVzG+Uhxfz+PAaR6p+D9EIfVhSwDfN4GNkvKnl09k/
+	T4wGf/Wj/wKVqeOxB/7liM+cj+e2KQULlM9eLYTXkuVaqNiEVakL7tijawtYbbPJqi62oXhtR6J
+	STtj04YNrZQUy2W+WFS0edRRdRf6dU9c9rm7we90+rjMUePRPAnBtjvt7HC8pmkbeVGwe9Ooa4A
+	/aT11Vg16FM+lBceRJtQejTOR0nWifbKGj14DtjlUuWOyNBzTlgLmE63nxkxAbSqGG21hv36+98
+	epM509yWXLNNPtOe/A3Op5I89OWtX
+X-Google-Smtp-Source: AGHT+IEz2OxB4TUiePtJ1S3U4He3bFr0A/Fzdl9S869pPSUEokoHeXsRBPUYhgU9CBgbG0huiL0xYg==
+X-Received: by 2002:a05:6000:2903:b0:3a3:6f26:5816 with SMTP id ffacd0b85a97d-3a36f265984mr4117945f8f.36.1747682818790;
+        Mon, 19 May 2025 12:26:58 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:ce80:58bb:54b7:ad18? ([2a01:e0a:3d9:2080:ce80:58bb:54b7:ad18])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a360b0b766sm13490571f8f.56.2025.05.19.12.26.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a04csm13644737f8f.23.2025.05.19.12.26.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 12:26:37 -0700 (PDT)
-Message-ID: <98163164-9639-4b1c-9407-2f0845a4a111@linaro.org>
-Date: Mon, 19 May 2025 21:26:37 +0200
+        Mon, 19 May 2025 12:26:58 -0700 (PDT)
+Message-ID: <6ab77f26-873b-4599-805c-096b7a593785@linaro.org>
+Date: Mon, 19 May 2025 21:26:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,8 +71,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v4 01/30] drm/msm/dpu: stop passing mdss_ver to
- setup_timing_gen()
+Subject: Re: [PATCH v4 03/30] drm/msm/dpu: inline _setup_ctl_ops()
 To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
@@ -82,7 +81,7 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
- <20250519-dpu-drop-features-v4-1-6c5e88e31383@oss.qualcomm.com>
+ <20250519-dpu-drop-features-v4-3-6c5e88e31383@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -109,96 +108,138 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250519-dpu-drop-features-v4-1-6c5e88e31383@oss.qualcomm.com>
+In-Reply-To: <20250519-dpu-drop-features-v4-3-6c5e88e31383@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19/05/2025 18:04, Dmitry Baryshkov wrote:
 > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> As a preparation to further MDSS-revision cleanups stop passing MDSS
-> revision to the setup_timing_gen() callback. Instead store a pointer to
-> it inside struct dpu_hw_intf and use it diretly. It's not that the MDSS
-> revision can chance between dpu_hw_intf_init() and
-> dpu_encoder_phys_vid_setup_timing_engine().
+> Inline the _setup_ctl_ops() function, it makes it easier to handle
+> different conditions involving CTL configuration.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 3 +--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c          | 7 ++++---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h          | 5 +++--
->   3 files changed, 8 insertions(+), 7 deletions(-)
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c | 98 ++++++++++++++----------------
+>   1 file changed, 47 insertions(+), 51 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> index 8a618841e3ea89acfe4a42d48319a6c54a1b3495..d35d15b60260037c5c0c369cb061e7759243b6fd 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> @@ -309,8 +309,7 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> index 573e42b06ad068445b947c59955281ba6e238dad..d58a0f1e8edb524ff3f21ff8c96688dd2ae49541 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> @@ -737,56 +737,6 @@ static void dpu_hw_ctl_set_active_fetch_pipes(struct dpu_hw_ctl *ctx,
+>   	DPU_REG_WRITE(&ctx->hw, CTL_FETCH_PIPE_ACTIVE, val);
+>   }
 >   
->   	spin_lock_irqsave(phys_enc->enc_spinlock, lock_flags);
->   	phys_enc->hw_intf->ops.setup_timing_gen(phys_enc->hw_intf,
-> -			&timing_params, fmt,
-> -			phys_enc->dpu_kms->catalog->mdss_ver);
-> +			&timing_params, fmt);
->   	phys_enc->hw_ctl->ops.setup_intf_cfg(phys_enc->hw_ctl, &intf_cfg);
+> -static void _setup_ctl_ops(struct dpu_hw_ctl_ops *ops,
+> -		unsigned long cap)
+> -{
+> -	if (cap & BIT(DPU_CTL_ACTIVE_CFG)) {
+> -		ops->trigger_flush = dpu_hw_ctl_trigger_flush_v1;
+> -		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
+> -		ops->reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
+> -		ops->update_pending_flush_intf =
+> -			dpu_hw_ctl_update_pending_flush_intf_v1;
+> -
+> -		ops->update_pending_flush_periph =
+> -			dpu_hw_ctl_update_pending_flush_periph_v1;
+> -
+> -		ops->update_pending_flush_merge_3d =
+> -			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
+> -		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
+> -		ops->update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
+> -		ops->update_pending_flush_dsc =
+> -			dpu_hw_ctl_update_pending_flush_dsc_v1;
+> -		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
+> -	} else {
+> -		ops->trigger_flush = dpu_hw_ctl_trigger_flush;
+> -		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
+> -		ops->update_pending_flush_intf =
+> -			dpu_hw_ctl_update_pending_flush_intf;
+> -		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
+> -		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
+> -	}
+> -	ops->clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
+> -	ops->update_pending_flush = dpu_hw_ctl_update_pending_flush;
+> -	ops->get_pending_flush = dpu_hw_ctl_get_pending_flush;
+> -	ops->get_flush_register = dpu_hw_ctl_get_flush_register;
+> -	ops->trigger_start = dpu_hw_ctl_trigger_start;
+> -	ops->is_started = dpu_hw_ctl_is_started;
+> -	ops->trigger_pending = dpu_hw_ctl_trigger_pending;
+> -	ops->reset = dpu_hw_ctl_reset_control;
+> -	ops->wait_reset_status = dpu_hw_ctl_wait_reset_status;
+> -	ops->clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
+> -	ops->setup_blendstage = dpu_hw_ctl_setup_blendstage;
+> -	ops->update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
+> -	ops->update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
+> -	if (cap & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
+> -		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
+> -	else
+> -		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
+> -
+> -	if (cap & BIT(DPU_CTL_FETCH_ACTIVE))
+> -		ops->set_active_fetch_pipes = dpu_hw_ctl_set_active_fetch_pipes;
+> -};
+> -
+>   /**
+>    * dpu_hw_ctl_init() - Initializes the ctl_path hw driver object.
+>    * Should be called before accessing any ctl_path register.
+> @@ -812,7 +762,53 @@ struct dpu_hw_ctl *dpu_hw_ctl_init(struct drm_device *dev,
+>   	c->hw.log_mask = DPU_DBG_MASK_CTL;
 >   
->   	/* setup which pp blk will connect to this intf */
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> index fb1d25baa518057e74fec3406faffd48969d492b..1d56c21ac79095ab515aeb485346e1eb5793c260 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> @@ -98,8 +98,7 @@
->   
->   static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *intf,
->   		const struct dpu_hw_intf_timing_params *p,
-> -		const struct msm_format *fmt,
-> -		const struct dpu_mdss_version *mdss_ver)
-> +		const struct msm_format *fmt)
->   {
->   	struct dpu_hw_blk_reg_map *c = &intf->hw;
->   	u32 hsync_period, vsync_period;
-> @@ -180,7 +179,7 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *intf,
->   
->   	/* TODO: handle DSC+DP case, we only handle DSC+DSI case so far */
->   	if (p->compression_en && !dp_intf &&
-> -	    mdss_ver->core_major_ver >= 7)
-> +	    intf->mdss_ver->core_major_ver >= 7)
->   		intf_cfg2 |= INTF_CFG2_DCE_DATA_COMPRESS;
->   
->   	hsync_data_start_x = hsync_start_x;
-> @@ -580,6 +579,8 @@ struct dpu_hw_intf *dpu_hw_intf_init(struct drm_device *dev,
+>   	c->caps = cfg;
+> -	_setup_ctl_ops(&c->ops, c->caps->features);
+> +
+> +	if (c->caps->features & BIT(DPU_CTL_ACTIVE_CFG)) {
+> +		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush_v1;
+> +		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
+> +		c->ops.reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
+> +		c->ops.update_pending_flush_intf =
+> +			dpu_hw_ctl_update_pending_flush_intf_v1;
+> +
+> +		c->ops.update_pending_flush_periph =
+> +			dpu_hw_ctl_update_pending_flush_periph_v1;
+> +
+> +		c->ops.update_pending_flush_merge_3d =
+> +			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
+> +		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
+> +		c->ops.update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
+> +		c->ops.update_pending_flush_dsc =
+> +			dpu_hw_ctl_update_pending_flush_dsc_v1;
+> +		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
+> +	} else {
+> +		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush;
+> +		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg;
+> +		c->ops.update_pending_flush_intf =
+> +			dpu_hw_ctl_update_pending_flush_intf;
+> +		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
+> +		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
+> +	}
+> +	c->ops.clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
+> +	c->ops.update_pending_flush = dpu_hw_ctl_update_pending_flush;
+> +	c->ops.get_pending_flush = dpu_hw_ctl_get_pending_flush;
+> +	c->ops.get_flush_register = dpu_hw_ctl_get_flush_register;
+> +	c->ops.trigger_start = dpu_hw_ctl_trigger_start;
+> +	c->ops.is_started = dpu_hw_ctl_is_started;
+> +	c->ops.trigger_pending = dpu_hw_ctl_trigger_pending;
+> +	c->ops.reset = dpu_hw_ctl_reset_control;
+> +	c->ops.wait_reset_status = dpu_hw_ctl_wait_reset_status;
+> +	c->ops.clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
+> +	c->ops.setup_blendstage = dpu_hw_ctl_setup_blendstage;
+> +	c->ops.update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
+> +	c->ops.update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
+> +	if (c->caps->features & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
+> +		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
+> +	else
+> +		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
+> +
+> +	if (c->caps->features & BIT(DPU_CTL_FETCH_ACTIVE))
+> +		c->ops.set_active_fetch_pipes = dpu_hw_ctl_set_active_fetch_pipes;
+> +
 >   	c->idx = cfg->id;
->   	c->cap = cfg;
->   
-> +	c->mdss_ver = mdss_rev;
-> +
->   	c->ops.setup_timing_gen = dpu_hw_intf_setup_timing_engine;
->   	c->ops.setup_prg_fetch  = dpu_hw_intf_setup_prg_fetch;
->   	c->ops.get_status = dpu_hw_intf_get_status;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> index 114be272ac0ae67fe0d4dfc0c117baa4106f77c9..f31067a9aaf1d6b96c77157135122e5e8bccb7c4 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> @@ -81,8 +81,7 @@ struct dpu_hw_intf_cmd_mode_cfg {
->   struct dpu_hw_intf_ops {
->   	void (*setup_timing_gen)(struct dpu_hw_intf *intf,
->   			const struct dpu_hw_intf_timing_params *p,
-> -			const struct msm_format *fmt,
-> -			const struct dpu_mdss_version *mdss_ver);
-> +			const struct msm_format *fmt);
->   
->   	void (*setup_prg_fetch)(struct dpu_hw_intf *intf,
->   			const struct dpu_hw_intf_prog_fetch *fetch);
-> @@ -126,6 +125,8 @@ struct dpu_hw_intf {
->   	enum dpu_intf idx;
->   	const struct dpu_intf_cfg *cap;
->   
-> +	const struct dpu_mdss_version *mdss_ver;
-> +
->   	/* ops */
->   	struct dpu_hw_intf_ops ops;
->   };
+>   	c->mixer_count = mixer_count;
+>   	c->mixer_hw_caps = mixer;
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
