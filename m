@@ -1,123 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F562580D2;
-	Mon, 19 May 2025 06:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C153722AE59
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747637618; cv=none; b=q1kAoXcuHBlFDjJHkkQTmcBzS+BAlJ++Ej2Nwxg59h5Q2g7NFGXtINPtgyQjj+RS46JM9kFlHcPPUcoTh0QhnpZKFYvElqFoILjZ/rBXA499CibQxCoCxiPKewpr58ZzNBcI5o/4Bu0MAI2Uw3YtczI4RLziVs53NxFzF2D9XjI=
+	t=1747637769; cv=none; b=IYBwFpQx5MuzfQB/yBuWxvGxWx3lStqFOoqRcdIbtvVk9fP+AsvQ5Ow4tYiwbKbPszvhnbEUD4zJ3me4UGZIB4dbXjjvmwt0RoPU+E8D8qUon2BheaN6YK27Ye2CZ2Ax8DzOST7sri8xmJfOZGCbAk8Gh2Qg9z0HxBOVp0hAzs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747637618; c=relaxed/simple;
-	bh=nBwP1grA6UIlhLhOYF5v2kN93NVunh0xAiFM5b1iJ/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1RHrUrp4S6aLBrUohfPgq1GWgiZFeJ0lB+jbrsyzX4AR1dYYAFBcjwuAQYB+/rqUCr1TqzwNr/jCDoE3b2t2+7hdqHyDyYagcyC0vM7LUZ/1P/lgzFFu8ORXUJ/LTYrPBgCjoKgaGg2vQkZpdjAZvtUioSOLhlQqQQuQIcnh84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b4VTDdJb; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747637769; c=relaxed/simple;
+	bh=8NDJ9XwjY+Hw9ef5xraaEJ2PXeEup+WOftekfr63tZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HqY/crtidye0lPjyPEScj/JLWTmsdd575+nc6AZ/gp4zQJ1NUh+TpJ7Y/rZCC+Q2B8OuXzC5URrqMpdCPffSkNwuL7TxTII4MqmBdMEyVqC0kIMBYQBWaO6D2VoXQFWAGdaWYOe4m3AGrwzCdzdGC/Kl3/oadEBgyy5lx9paQyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XUGKM+Gh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b4VTDdJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747637617; x=1779173617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nBwP1grA6UIlhLhOYF5v2kN93NVunh0xAiFM5b1iJ/k=;
-  b=b4VTDdJbZcTb+smaF9F5g+vcSYdtrOtUJflVnju13DND8vZ9oDaH0Plf
-   hOnkT9lUNwLM1Sn6ckfHiBXVm4615dyqjoYyWOx0byMEdum6iDaZ1l7h4
-   kShofN69a0KYo8qXWxy9BB3zjFZAXGQ65QGLLL/dAvgmS70MI1U9ZZCPz
-   +aHGy5kbFjuUG7UA4saNScSpIaZ5oCyDpYtw389VDluCKadxA1aHGXWek
-   j48OfjOttkpiav49mTbxmiDH5R1h1cOyeLDboNcMoKZddgryvBmndP9iK
-   uLcqkpiJqe1o9r79lZ21OtI84aTh7XjQx+a87x6JYacc/Jc2DJxFP1gz5
-   A==;
-X-CSE-ConnectionGUID: 8Z3fqi1cTpiWkTne+ySwPg==
-X-CSE-MsgGUID: AkmdLKvvThyJs2CAVoITaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53197801"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="53197801"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:53:35 -0700
-X-CSE-ConnectionGUID: 0IBbtwdSSeKHiGoetnGPqw==
-X-CSE-MsgGUID: 6JJo0pwhQ5al/LNF9Dqz/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144051944"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:53:31 -0700
-Date: Mon, 19 May 2025 08:52:57 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] net: mlx5: vport: Add error handling in
- mlx5_query_nic_vport_qkey_viol_cntr()
-Message-ID: <aCrVQOqV68u4AQkR@mev-dev.igk.intel.com>
-References: <20250519034043.1247-1-vulab@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUGKM+Gh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747637764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uoYFGf22vXFHYoBtKGUddYJzSMczRem5Rut6KCdwPLw=;
+	b=XUGKM+GhAtkVQ7Ql5mwGIuUHpQSMJSfrdCOGt2b2/XIWv0kQm5eWzu0p4LPWlIyYANNVSK
+	f6fEpFqlup23f14azLeESHUZMfiNUFQ5HH6oE5AA6pImd0LzBW3YYARYW15pZJtptxA6S4
+	jaRWQs8713h7qsZcFxvsNOuG2BF8+ek=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-317-wIj7I3faPc6GN2ZnCs1y1A-1; Mon, 19 May 2025 02:56:02 -0400
+X-MC-Unique: wIj7I3faPc6GN2ZnCs1y1A-1
+X-Mimecast-MFC-AGG-ID: wIj7I3faPc6GN2ZnCs1y1A_1747637762
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad51ceda1d9so322024466b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 23:56:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747637761; x=1748242561;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uoYFGf22vXFHYoBtKGUddYJzSMczRem5Rut6KCdwPLw=;
+        b=hYHumtgIo5ookf7qhdr02wNfWYqscmYwg5J9n/TUcx7dwB7XXmdgVllfCwkNcE/jw6
+         sPRJEUCoABPSi4Sv/0zzLUxd6wwAU1+4JiokYNurtbNnWtaN4CwnAH+mKzEXa9I380Hb
+         2T8Jru5Z3OsCL3abDeaWZZje8egURuhkl2fZQ+RLEdTru6+su2IP7gbJnY1nMOuayOHb
+         cDnyZkRGNNk6BNJfFqXoPKZCOYDtgujxpL6ev+M7SVZq2t5iKR2h2Yq9zQmJm+hBRoep
+         lyHMtt16bCTBGXzAupXaK+mxpuwPGXjJqUFunCiW8CDkRuToKjph3mJSxEwMxHu1c9C9
+         mzyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIvW8DJysr/eTvgvUQLMGLnTheXYpCen5oLsbefwZZhCmCVNXnEKy6ya6SzJMbVBqXIqlaoOflaqttZoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMC1g3t0PaLoCaPxr0FGDeulv2gsAXMm0xhUQShHaGtXhMQA6L
+	x/OWqLrK/tlbDZLsKycvckEOeSC7Y/+OsCOC7HrmA8uh+J1E5Z13XDjNaNISAoKyB7U740dq7Oz
+	D83colmA8AffNKrRaoAe6MG47cfQQgQMnKNIJW4hodcxFxs+hRVj9NxTw3+ZJw9On0A==
+X-Gm-Gg: ASbGnct9SBNoRrMOlu+y2+dcSxuM6WheWp1LTGKBCLSr+ZyyhMq0pInrcmylaz3WJMH
+	ebTL1OjPs+0pWcx8zwCUXdyQAORCPgviq3KUCpVb4YCoK/fdjKeCXNKyjc7WXdUt3muMcb2zpKV
+	qYOaGDEdWTGBYQFYWVM+FBLSU8SQ4+qzhzwLjhGUx6FVkVvvLEbL3IXdAZGbWzjOmXt+/QtyuuB
+	hFaRPAwuhYOeiifakfwWjsfWiC3iDekFm6wYoH/V5MXU23/z0QftJuHnK+JlJBpki5OoRoNdq6z
+	kqGwyz8G1rBBXmAVihiZbZgIVuC2g3J+xQwRQb8Zfw8I7Ok6RERkXtpy7LI=
+X-Received: by 2002:a17:907:c21:b0:ad5:1b14:15f4 with SMTP id a640c23a62f3a-ad52fbfa34fmr875342766b.25.1747637761588;
+        Sun, 18 May 2025 23:56:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6XDR4x7P+w+zNIdbiwaUD7ggLJDGBPXBLLoGw0L3zesxGdykirkJT0v+7+kEm5cfIYzsfNQ==
+X-Received: by 2002:a17:907:c21:b0:ad5:1b14:15f4 with SMTP id a640c23a62f3a-ad52fbfa34fmr875341366b.25.1747637761232;
+        Sun, 18 May 2025 23:56:01 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:bf5b:f273:a506:f71f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d441fb5sm549446566b.108.2025.05.18.23.56.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 23:56:00 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: adjust file entry in GPIO ACPI SUPPORT
+Date: Mon, 19 May 2025 08:55:57 +0200
+Message-ID: <20250519065557.659674-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519034043.1247-1-vulab@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 11:40:43AM +0800, Wentao Liang wrote:
-> The function mlx5_query_nic_vport_qkey_viol_cntr() calls the functuion
-> mlx5_query_nic_vport_context() but does not check its return value. This
-> could lead to undefined behavior if the query fails. A proper
-> implementation can be found in mlx5_nic_vport_query_local_lb().
-> 
-> Add error handling for mlx5_query_nic_vport_context(). If it fails, free
-> the out buffer via kvfree() and return error code.
-> 
-> Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
-> Cc: stable@vger.kernel.org # v4.5
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/vport.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-> index 0d5f750faa45..276b162ccf18 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-> @@ -518,20 +518,23 @@ int mlx5_query_nic_vport_qkey_viol_cntr(struct mlx5_core_dev *mdev,
->  					u16 *qkey_viol_cntr)
->  {
->  	u32 *out;
-> -	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
-> +	int ret, outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-You can fix RCT here.
+Commit babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
+splits drivers/gpio/gpiolib-acpi.c into two files, gpiolib-acpi-core.c and
+gpiolib-acpi-quirks.c, but misses to adjust the file entry in GPIO ACPI
+SUPPORT.
 
->  
->  	out = kvzalloc(outlen, GFP_KERNEL);
->  	if (!out)
->  		return -ENOMEM;
->  
-> -	mlx5_query_nic_vport_context(mdev, 0, out);
-> +	ret = mlx5_query_nic_vport_context(mdev, 0, out);
-> +	if (ret)
-> +		goto out;
->  
->  	*qkey_viol_cntr = MLX5_GET(query_nic_vport_context_out, out,
->  				   nic_vport_context.qkey_violation_counter);
-> -
-> +	ret = 0;
+Adjust the file entry after this splitting into the two files.
 
-ret is already 0 here, no need to reassign it.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +out:
->  	kvfree(out);
->  
-> -	return 0;
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_qkey_viol_cntr);
->  
-> -- 
-> 2.42.0.windows.2
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 20e07e61a148..c816f8e0572e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10273,7 +10273,7 @@ L:	linux-acpi@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
+ F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+-F:	drivers/gpio/gpiolib-acpi.c
++F:	drivers/gpio/gpiolib-acpi-*.c
+ F:	drivers/gpio/gpiolib-acpi.h
+ 
+ GPIO AGGREGATOR
+-- 
+2.49.0
+
