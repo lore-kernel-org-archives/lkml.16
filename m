@@ -1,344 +1,98 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228AE286434
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3DF1DF963;
+	Mon, 19 May 2025 17:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674039; cv=none; b=tbkkEBnAmjgrzjeyks0p9L71k6U7npX/S222IrMB3/TkTcjn6ueZUaP5VwwXIDXLF05ycuRAiyKVxep6p8frtzF2smCsjd0qH0Xu6C5ZKeHFLzj6Ztv3995aEYfQeKg3sOp8rKmoUKAdDU3GCtL7+0gC3cO3MLMcR77MJ0RRNDE=
+	t=1747674182; cv=none; b=JSH2EiEqC7Ke9kuJuCKXIBSmgv1cHlvFV9F/wytGsmPTnH7J1M8JJwc35LdqwAERVBGe+A/F74sCk/XIhMLH1WS3A/1qLjO/GeiJjFGJDL0qeeaWDJPPL7LLIMTrrwz7FT0LaTrm3Bwqwo7QSrVRWegzK87hW8XOIbDfl2YO+fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674039; c=relaxed/simple;
-	bh=omr3wYR5ZM4vFufKGEQv0vBxziCZIckw9Wtf6hFiQZs=;
+	s=arc-20240116; t=1747674182; c=relaxed/simple;
+	bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1ylSMkUv+PZmM0ZHjLcdU+JG1kddanhskQ4YH2xBpVbtVaaesP7vUXr/Gi1VzHufxjvfxg4oS7ljZDXt6WE2G7JVk8ztUee25HXuipXQY5QuX4sbRmh6BJoziGhuCsQidHPFfXBlPTqmuCkZHh8NeWeVPxmrNo1wKcpMEPrMcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bfMlXyLR; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=go0idILoSExK7xv5B2f+h/9dpEJo5VKWfL0PMqh4obwCe3Am4T0xpBNaQGNAWOs6UFC0yE3fTu1DWRqTNaDl83sI+aefHWZnA6y0hBc/SbL1VcDbzs3pEpnYJTqr42nRgJ+2I5XMakkYuyXvj2HxBy9giz889Q3NGd6EmW8+zYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7vPJq8u; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfMlXyLR"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3db82534852so519755ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:00:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7vPJq8u"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e19c71070so7750245ad.3;
+        Mon, 19 May 2025 10:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747674037; x=1748278837; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747674180; x=1748278980; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G99iNQ0HCfc2DgSrnrzIo8CNcnrGRVjxOQhxJIG7B9Q=;
-        b=bfMlXyLRIWkZxhajtQDxprrIQXJ6guHhLQDWTZxePyJug0EmbzzGYvVJQjZUxaqF6u
-         PB8mRjvYKOu9ggi+OL5PNeyVcWohNRobqGxMhnEsyIz8M0NGZOKV01KwTE4AHYWIEdDO
-         UpsvJSSIsyGeC2w5SYijjb4td4TQmyyEd5LTyzkIyIXlt3xY4PkMhKwFzINB08NjqsX+
-         gz24/brWgjA7Z8bGvr9TamoqshVnZ8GsjhGT27KFommGrxQKLur7Xwz/bwjlrj3IkAAi
-         vakCY88f+J5RWijOPc+lxjl63yTMUi9ujbhYn6TL3N+iic/OB81vyoHluixHDw/5VFzC
-         m3EQ==
+        bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
+        b=D7vPJq8uLTS77eJMBVVjfKXLvbtBDqQXZJFN9jvYyca8ORMjH3Khdskm9McsmEMCvH
+         SJDY0O8EkwPIf19Q4Jgh3q6AuwuifOytn99HzGUkA03wP9ys8g8534PQlTUmXqU/Jkjf
+         j9+NLbhRUW0EumCm9pIGkKcf3wwTy6ZCW60aXKqtDJCqCz51obhGJyUbQQoW5K6ez52M
+         8S7NevuHV1+B8AM1Zo/qDusSEivw3Y47P+Lm2cLexqJawfUZ468C1ihpEJT/Czutiosw
+         efIXoGKVd8SULufoBnA3OayuEvi5EGrWkrXaPnr4zbli/3+2t7+EM+AtSVYceAk4nprS
+         4jaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747674037; x=1748278837;
+        d=1e100.net; s=20230601; t=1747674180; x=1748278980;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G99iNQ0HCfc2DgSrnrzIo8CNcnrGRVjxOQhxJIG7B9Q=;
-        b=h1Ywfp9E9IlJmXq3FIJA7PX8BjAWCZym/muATmOuip+/uQYFDq4kxyrYswbYfikN05
-         /cDHFRhylkRJBUPUJN2K15YiPWssU/E7+2N0IOKWl940W5TcCncIiEJJ7yh4139jaASx
-         EZT+QgWKsCs7dAe+GPwKYirYX20xHW6lW7oDcYJOVw4PrElMUWnXdD2xX6a++GzSdb/N
-         mq5nABTvbXZVv26WzX1mT9wfgoUvRv2Ydeidp30pRDDSeiT918Tm6kLS9e2rPfdsXEPA
-         YKtMXKoK8LH51N9mjOBLD0sHGY+N9FFJNiYvJO+8/BtL/lPq4Iejm2KEwii58xYdaOb3
-         zR6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVEmhtT93QjkpAIJu4CfViNoTDPXq1isVj1nnlvf6d9y6gX5MoYiSd8cs76VDsnUiFB0oePl9krGAymcNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdSHCOOLW8GmY7kDbb+GjHK+W6bkkyF4Ib/yxQE4KVtInHrIsL
-	uKDHNSSQ/XrOVIynT2wRvZrWBiucagySmT/hngTcpBP3J316bB9vD56FKm03YX8cqpkErYHzH/S
-	QqaWofOpXGVYGQ3MeqYTwb3IEcxUX9wzNuI3KomvR
-X-Gm-Gg: ASbGncve259VWNUgJfUmeGFXwjj5K995bWQMbQ5PzQlk3/BAt8/JQVLNd3FJDkRow5W
-	LMksn7QK0xjcOeWNeUP3YWCqkVO88HZfGgNnaYJJ1KUd5o40r8JxKoYHbvnxGlYC/JtppI6By9X
-	MefpmdI2np6gAU29u2NenSHwIxlcuQ4QiNQV84dVZTlljnioWptbud98mcvlyhyA==
-X-Google-Smtp-Source: AGHT+IHmjIcIcW/A2mqSe82tbuCso2SQ0qGRvJ5nONQuPEDFkBrx3yBcs/t5ZmN5ehldBwq2FRf20sAck2RWJhtGLnk=
-X-Received: by 2002:a05:6e02:1888:b0:3db:6f8b:3191 with SMTP id
- e9e14a558f8ab-3dc5e5c7538mr6772805ab.5.1747674036885; Mon, 19 May 2025
- 10:00:36 -0700 (PDT)
+        bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
+        b=sjWU+nF+4DNvnpCCsDwetyp2VDsD9s5nizR4ngSrNzGh3qH1/mZ/IknTNxHnUat56J
+         Fiz6M5kQlAsS+YKSFH92h1VJyhn6PkS+gvV4XzHd2FG5DWN2cjBYMVL+Zvhr3kyjBYiw
+         neJAmA7DsQ1gIlpbOkE0eGaeu8VOq4Ksh+OJcdu8+94aAp/Zg3kkJRPfYQPGoAnNzTgU
+         larGBaFb2jdQpHWokYRHTQr1mvwj6mkj6Qhd0cx2R+W7RWEZtLGV3tpT+qPBvKydrMI4
+         UWW8AMWkM1xKvfuV/SKGE55+9fjcBF0nam9jogIYJfiAF/KS3bODTLrznJMLOGN/ySlf
+         q4RA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNCF4xhwVcBK2wPUdliGp/A/mVeaQ3JEquq3GbraN/aN46Tbzvz6jIop8Jd+0iDymx7LoTD7CN@vger.kernel.org, AJvYcCVACHazgQB0fAbFWtpNEY/8zAnKUcyWXvPThWcK4A8PBLD8eurJJ2P+ZcX0TBGAC0J+KoxmwYqx8LGmVNAaIMU=@vger.kernel.org, AJvYcCXTBOgwKl9zs6HTdmUuant0Lu7qHCrZVGBVMDvxmN9DVlpReO+gVdJjaNdBJB2zhddu5xGyCMSnwMjx+e8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjlyRiPImYMDE0G3OrWofOHB/nkKy3O5nxcEeYiDHKLaMm6kqK
+	+MtKA7sWXLrscNQ6MUT+Hl0obIkGQoRg4UTzFnT6EaIZUuyWtDbp60kTgyvVN6s9Y6//uWYeDaV
+	craID05992Fizd8rM8pRg7mzZsWyq1ns=
+X-Gm-Gg: ASbGncu53POEL6yiYuGMWhmFijJh3V9wkoOcd3kAEPcGg7Ciqx397edDrA43TFISkSg
+	KdjFFhGhdZWeIwq3BC2IaCXTY5ehsiOADL7kZlHmPExEWgOwr0ZcNsXQLFvSew7Bwk8LTSlze3B
+	PA9msvDR0JNy1yn5OITztAyQP2UUcmMkqU
+X-Google-Smtp-Source: AGHT+IFbR/hkcZrextwiHSaNvyH4tAV9pXid5iCOxR5MP99p8ZrfDGeKZfpphVbbGXYZSk5vQ78hf1JU1jwExjH5G/s=
+X-Received: by 2002:a17:903:2cc:b0:22e:361e:7572 with SMTP id
+ d9443c01a7336-231d43bb4f5mr63483115ad.7.1747674180455; Mon, 19 May 2025
+ 10:03:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
- <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
-In-Reply-To: <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 19 May 2025 10:00:25 -0700
-X-Gm-Features: AX0GCFusDLkWeT5qa-H2pFGyYPY41UrYzTsWOd209LakY8HHelr8zIfxWKy9N_I
-Message-ID: <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250517085600.2857460-1-gary@garyguo.net>
+In-Reply-To: <20250517085600.2857460-1-gary@garyguo.net>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 19 May 2025 19:02:47 +0200
+X-Gm-Features: AX0GCFtaysJVcUQOMTcbPDH1T0mGXdawyzH-WpOc8Eu6TBiYqOuUj-gxkOrlqTk
+Message-ID: <CANiq72kdReW=OVdKPo4CJ1b+DU0GbkLxOOmEh+5C7zW9NgFtaA@mail.gmail.com>
+Subject: Re: [PATCH] rust: compile libcore with edition 2024 for 1.87+
+To: Gary Guo <gary@garyguo.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, est31@protonmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 8:01=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
-wrote:
+On Sat, May 17, 2025 at 10:56=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
 >
-> Hello Ian,
+> Rust 1.87 (released on 2025-05-15) compiles core library with edition
+> 2024 instead of 2021 [1]. Ensure that the edition matches libcore's
+> expectation to avoid potential breakage.
 >
-> I jumped to a conclusion, there are reasons other than running tests
-> in parallel.
->
-> On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.=
-com> wrote:
-> > >
-> > > Currently, BTF tests fail constantly, this series fixes two major rea=
-sons
-> > > why they fail, and makes the error messages acquired when using '-vv'
-> > > more verbose, so when they fail, one can easily diagnose the problem.
-> > >
-> > > Before:
-> > >     $ sudo /tmp/perf test enum -vv
-> > >     107: perf trace enum augmentation tests:
-> > >     107: perf trace enum augmentation tests                          =
-    : Running
-> > >     --- start ---
-> > >     test child forked, pid 783533
-> > >     Checking if vmlinux exists
-> > >     Tracing syscall landlock_add_rule
-> > >     Tracing non-syscall tracepoint syscall
-> > >     ---- end(-1) ----
-> > >     107: perf trace enum augmentation tests                          =
-    : FAILED!
-> > >
-> > > After:
-> > >     $ sudo /tmp/perf test enum -vv
-> > >     107: perf trace enum augmentation tests:
-> > >     107: perf trace enum augmentation tests                          =
-    : Running
-> > >     --- start ---
-> > >     test child forked, pid 851658
-> > >     Checking if vmlinux exists
-> > >     Tracing syscall landlock_add_rule
-> > >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_=
-start
-> > >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_set=
-up,timer:hrtimer_start, output:
-> > >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-> > >                          \___ unknown tracepoint
-> > >
-> > >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not =
-found.
-> > >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable=
- this feature?.
-> > >
-> > >     Run 'perf list' for a list of valid events
-> > >
-> > >      Usage: perf trace [<options>] [<command>]
-> > >         or: perf trace [<options>] -- <command> [<options>]
-> > >         or: perf trace record [<options>] [<command>]
-> > >         or: perf trace record [<options>] -- <command> [<options>]
-> > >
-> > >         -e, --event <event>   event/syscall selector. use 'perf list'=
- to list available events---- end(-1) ----
-> > >     107: perf trace enum augmentation tests                          =
-    : FAILED!
-> > >
-> > > Changes in v2:
-> > > - Add an extra newline after error messages
-> > > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > > - Take the debug diff for explanation out of patch 5 to make it apply
-> > >   normally
-> > > - Add base-commit in this cover letter
-> >
-> > Thanks Howard! I did some testing but see failures that may be
-> > pre-existing issues:
-> >
-> > ```
-> > --- start ---
-> > test child forked, pid 264236
-> > Checking if vmlinux exists
-> > Tracing syscall landlock_add_rule
-> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
-> >
->
-> I think this doesn't have any output, a sign of failure of collection
-> on the BPF side.
->
-> > ---- end(-1) ----
-> > 107: perf trace enum augmentation tests                              : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 264248
-> > Checking if vmlinux BTF exists
-> > Testing perf trace's string augmentation
-> > String augmentation test failed, output:
-> >
->
-> Here too.
->
-> > ---- end(-1) ----
-> > --- start ---
-> > test child forked, pid 278774
-> > Checking if vmlinux exists
-> > Tracing syscall landlock_add_rule
-> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
-> >      0.000 (         ): perf/278843 landlock_add_rule(ruleset_fd: 11,
-> > rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffdcf1dad90,
-> > flags: 45) ...
->
-> This is strange to me. No return value, no elapsed time. Judging from
-> experience this comes from the lack of the second sys_exit event that
-> sets both of them.
->
-> > ---- end(-1) ----
-> > 107: perf trace enum augmentation tests                              : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 279196
-> > Checking if vmlinux exists
-> > Tracing syscall landlock_add_rule
-> > [syscall failure] Failed to trace syscall landlock_add_rule, output:
-> >      0.000 (         ): perf/279262 landlock_add_rule(ruleset_fd: 11,
-> > rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff37a70fd0,
-> > flags: 45) ...
->
-> Ditto.
->
-> > ---- end(-1) ----
-> > 107: perf trace enum augmentation tests                              : =
-FAILED!
-> > 108: perf trace BTF general tests                                    : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 278187
-> > Checking if vmlinux BTF exists
-> > Testing perf trace's string augmentation
-> > Testing perf trace's buffer augmentation
-> > Testing perf trace's struct augmentation
-> > BTF struct augmentation test failed, output:
-> > sleep/278352 clock_nanosleep(0, 0, {1,1,}, 0x7ffd31550f50) =3D 0
->
-> This is the difference in libbpf's btf_dump's behavior. I grepped
-> "grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\},
-> 0x[0-9a-f]+\) +=3D +[0-9]+$"", the {1, 1,} didn't match. On my machine
-> it is '{1,}'
-> ~~~
-> sudo /tmp/perf trace --sort-events -e clock_nanosleep --force-btf
-> --max-events=3D1 -- sleep 1
-> sleep/338371 clock_nanosleep(0, 0, {1,}, 0x7ffeb4e9dd10) =3D 0
-> ~~~
->
-> Which is strange, I thought we used the same libbpf from the kernel
-> tree and statically link it. Why is it different on our machines?
-> FWIW, I do have libbpf installed on my system, from their github
-> repo's main branch.
-> ~~~
-> $ cat /usr/include/bpf/libbpf_version.h
-> /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-> /* Copyright (C) 2021 Facebook */
-> #ifndef __LIBBPF_VERSION_H
-> #define __LIBBPF_VERSION_H
->
-> #define LIBBPF_MAJOR_VERSION 1
-> #define LIBBPF_MINOR_VERSION 6
->
-> #endif /* __LIBBPF_VERSION_H */
-> ~~~
->
-> But I thought we used the same 1.6.x version from the tree...
-> ~~~
-> $ cat tools/lib/bpf/libbpf_version.h
-> /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-> /* Copyright (C) 2021 Facebook */
-> #ifndef __LIBBPF_VERSION_H
-> #define __LIBBPF_VERSION_H
->
-> #define LIBBPF_MAJOR_VERSION 1
-> #define LIBBPF_MINOR_VERSION 6
->
-> #endif /* __LIBBPF_VERSION_H */
-> ~~~
->
-> > ---- end(-1) ----
-> > 108: perf trace BTF general tests                                    : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 278775
-> > Checking if vmlinux BTF exists
-> > Testing perf trace's string augmentation
-> > Testing perf trace's buffer augmentation
-> > Buffer augmentation test failed, output:
-> > buffer content
->
-> This should have two lines of output, the second line is missing,
-> something to do with the BPF collection I mentioned above.
-> ~~~
-> $ sudo /tmp/perf/perf trace --sort-events -e write --force-btf
-> --max-events=3D1 -- echo "buffer content"
-> buffer content
-> echo/393319 write(1, buffer content\10, 15) =3D 15
-> ~~~
->
-> > ---- end(-1) ----
-> > 108: perf trace BTF general tests                                    : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 279547
-> > Checking if vmlinux BTF exists
-> > Testing perf trace's string augmentation
-> > Testing perf trace's buffer augmentation
-> > Testing perf trace's struct augmentation
-> > BTF struct augmentation test failed, output:
-> > sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
->
-> Same '{1,1,}' appears.
->
-> > ---- end(-1) ----
-> > 108: perf trace BTF general tests                                    : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 264252
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.333 MB /tmp/temporary_file.pl459 ]
-> > Failed: cannot find *nanosleep syscall
->
-> This test was written by Namhyung, again it failed to collect some sample=
-s.
->
-> > ---- end(-1) ----
-> > 110: perf trace record and replay                                    : =
-FAILED!
-> > --- start ---
-> > test child forked, pid 278193
-> > testing: perf trace -s -- true
-> > Error: cannot find enough pattern ^\s*(open|read|close).*[0-9]+%$ in th=
-e output
->
-> May also be a loss of samples.
->
-> There are some problems. From the output you provided, I can see the
-> obvious sample loss in perf trace, and the differing behavior in
-> libbpf's btf_dump. Fixing them.
+> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned i=
+n older LTSs).
+> Link: https://github.com/rust-lang/rust/pull/138162 [1]
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1163
+> Signed-off-by: Gary Guo <gary@garyguo.net>
 
-Massively appreciated! I was running the tests with `perf test -v
-"perf trace"` so there was parallelism. Running the tests with your
-changes and with "-S" for sequential I still reliably see:
-```
---- start ---
-test child forked, pid 279547
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Testing perf trace's struct augmentation
-BTF struct augmentation test failed, output:
-sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
----- end(-1) ----
-108: perf trace BTF general tests                                    : FAIL=
-ED!
-```
-but the other problems appear to go away.
+Cc'ing est31 -- I will add:
 
-Thanks,
-Ian
+Reported-by: est31 <est31@protonmail.com>
 
-> Thanks,
-> Howard
+Thanks!
+
+Cheers,
+Miguel
