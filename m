@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0005B27874B;
-	Mon, 19 May 2025 09:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F12D26B96B;
+	Mon, 19 May 2025 09:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647332; cv=none; b=AJqWPaFPwBlEPIBUJELIcFtE0aD00dWAGrWjjFoMoryZe1+sxZZPvP2I5KV207+EwrkMjCvt43H6fMizVnD8i0/KjepQSy3nCooIP6MrK6ZQsuPHVllYsCDrto/nXHqps2unShEXhqC7eVI2RWC9jA4SYyRuTXmhBfpN4jk8XM8=
+	t=1747647453; cv=none; b=ljv9+DlwvjwuRMOaD1brxw7m5QFv5e4MI8f/s3c4nObX/WXBkAKhVrDf7+BZw6M3VoNbJnpM0F6N0Orvw3XjZfPPE1oCskaQXwHXZBNMxvfAlRDVF/QmvvBC4Uaet2eM/lNBk8/CZxqEWEZwkdcOupRmCt3J9oqxFQ++MKFr/aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647332; c=relaxed/simple;
-	bh=UVHwCwbhEk9S/BpWQrXka90Hbx/pl/lsbqyIqSeOAsM=;
+	s=arc-20240116; t=1747647453; c=relaxed/simple;
+	bh=KK0Hhs+WBueOymdkeSk3Ewwoz2Qmj7koc8wdTHn/t40=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzO9Y8gB0vzEroGy2tCNRetswfnXwgywRR/S4jdfMePEh9SAFxnQYUZXAwKyqcmtb2JYAXsvSZUnwsSVEbzSGHhb3YAqxzTKGiYoRI4b3on6CpHpf/3fvxBy96SuvbOO9Hfh+Th/aoq3CD4ntxS76e3fC+PaVKpeSXXfNb49kx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=porisN7g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=b9136BWQM/bS174HZPL6B6RqbWAnEMJVUal6NdsyZpf8OOuofRGAfmb9yliBueRUdlDK0gojMbHQ5rI8EAIH2nBbDIxMygkzGpzWIQtDrs29Dk1fOMUPeTOCRCq8GYf1YENZEm3DFlRot2ynDT8f8sy21FxCT6nc1EhoEbrhdF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXSw8Yln; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="porisN7g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06403C4CEE4;
-	Mon, 19 May 2025 09:35:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXSw8Yln"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14024C4CEE4;
+	Mon, 19 May 2025 09:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747647331;
-	bh=UVHwCwbhEk9S/BpWQrXka90Hbx/pl/lsbqyIqSeOAsM=;
+	s=k20201202; t=1747647452;
+	bh=KK0Hhs+WBueOymdkeSk3Ewwoz2Qmj7koc8wdTHn/t40=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=porisN7g4peOMbggbjmKqMpoc1QKljXcxXGvUp5Jzdt73Ta55LC0YeWYnYSNu0mpk
-	 57av2F5rvk/kWI0/STwFWKjfCKFzH63U+KAu082fjeQCVLRDuBoxU15vZdyH7Sx19g
-	 UtaiEs5E5p5u1Q7MRmWnkQnjq4PU8oetECzuPPFwXrm+84qqQhS4Ok7zwnZMT66FG4
-	 8MzSrGret6009OwElZcC+U4PIRCH3tI0jOTNRrF5WpN8WXXtEKf/PHGwU4eqSw29nN
-	 E/Ro1ax3c+j2GW7z7sdKpMWzXnSfYxY2PJWrpXqjjvYxFvLsleNQ3Vf63tOZxl5c0F
-	 MF/HGcWtq1uhA==
-Date: Mon, 19 May 2025 11:35:28 +0200
+	b=uXSw8Ylnp3l4YbRv7jpAv1NfkXlFy7MFhirzfqpAMaqYV7a2DxaMrS7OIwIFMTj1t
+	 yYn97NZ7ffZe4XxtDOPIOt4XgRMNEDUqFxkbL9aeGkOsurI6qWL4GrEACo7tqDe4aE
+	 kQItnB6USHC0bFRe47ArDgyIG/k6fPR00L7t8j91BT62pMUlV9cP+4JAlQX3L8QAIl
+	 BKopGiWdhVrBTQtKRSj3Xw04Qm+pnhmAbBWZ2cXNux4HswAnJHr2h4aypkL+AzPwq2
+	 u0wtigdeyuNNkzDo3rXLCo04vr9Y8HDlGUIASg3AwFq6TQKVjBBkOAZMUaKTTkFJLe
+	 xtTu0mhNDiEwg==
+Date: Mon, 19 May 2025 11:37:30 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Ze Huang <huangze@whut.edu.cn>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -37,11 +37,10 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-usb@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: usb: dwc3: add support for SpacemiT
- K1
-Message-ID: <20250519-busy-expert-buffalo-2c01ea@kuoka>
+Subject: Re: [PATCH v3 3/3] riscv: dts: spacemit: add usb3.0 support for K1
+Message-ID: <20250519-esoteric-pegasus-of-acumen-6ee8f8@kuoka>
 References: <20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn>
- <20250518-b4-k1-dwc3-v3-v3-1-7609c8baa2a6@whut.edu.cn>
+ <20250518-b4-k1-dwc3-v3-v3-3-7609c8baa2a6@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,77 +49,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250518-b4-k1-dwc3-v3-v3-1-7609c8baa2a6@whut.edu.cn>
+In-Reply-To: <20250518-b4-k1-dwc3-v3-v3-3-7609c8baa2a6@whut.edu.cn>
 
-On Sun, May 18, 2025 at 03:19:19AM GMT, Ze Huang wrote:
-> +properties:
-> +  compatible:
-> +    const: spacemit,k1-dwc3
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: usbdrd30
-> +
+On Sun, May 18, 2025 at 03:19:21AM GMT, Ze Huang wrote:
+> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> index 61f5ca250ded0da7b91cd4bbd55a5574a89c6ab0..164244fdb49f5d50a8abadb7b7e478cccc828087 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> @@ -4,6 +4,8 @@
+>   */
+>  
+>  #include <dt-bindings/clock/spacemit,k1-syscon.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/phy/phy.h>
+>  
+>  /dts-v1/;
+>  / {
+> @@ -346,6 +348,15 @@ soc {
+>  		dma-noncoherent;
+>  		ranges;
+>  
+> +		mbus0: dram-controller@0 {
 
-How many phys?
+Missing compatible.
 
-> +  resets:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interconnects:
+> +			reg = <0x0 0x00000000 0x0 0x80000000>;
+> +			reg-names = "dram";
 
-compatible, reg and then order by name: clocks +names, interconnects +
-names, interrupts, resets, vdd-supply.
+Where are the bindings for this?
 
-> +    maxItems: 1
-> +    description:
-> +      On SpacemiT K1, USB performs DMA through bus other than parent DT node.
-> +      The 'interconnects' property explicitly describes this path, ensuring
-> +      correct address translation.
-> +
-> +  interconnect-names:
-> +    const: dma-mem
-> +
-> +  vbus-supply:
-> +    description: A phandle to the regulator supplying the VBUS voltage.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - interrupts
-> +  - interconnects
-> +  - interconnect-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    usb@c0a00000 {
-> +        compatible = "spacemit,k1-dwc3";
-> +        reg = <0xc0a00000 0x10000>;
-> +        clocks = <&syscon_apmu 16>;
-> +        clock-names = "usbdrd30";
-> +        resets = <&syscon_apmu 8>;
-> +        interrupt-parent = <&plic>;
-> +        interrupts = <125>;
-> +        interconnects = <&mbus0>;
-> +        interconnect-names = "dma-mem";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
 
-Feels like missing port or ports. Are you sure your example is complete?
+Why are these needed?
 
-> +    };
-> 
-> -- 
-> 2.49.0
-> 
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +			#interconnect-cells = <0>;
+
+No, you cannot just add any properties to any custom node. You need ABI
+for all this.
+
+> +		};
+> +
+>  		syscon_rcpu: system-controller@c0880000 {
+>  			compatible = "spacemit,k1-syscon-rcpu";
+>  			reg = <0x0 0xc0880000 0x0 0x2048>;
+> @@ -358,6 +369,64 @@ syscon_rcpu2: system-controller@c0888000 {
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		usb_dwc3: usb@c0a00000 {
+> +			compatible = "spacemit,k1-dwc3";
+> +			reg = <0x0 0xc0a00000 0x0 0x10000>;
+> +			clocks = <&syscon_apmu CLK_USB30>;
+> +			clock-names = "usbdrd30";
+> +			resets = <&syscon_apmu RESET_USB3_0>;
+> +			interrupt-parent = <&plic>;
+> +			interrupts = <125>;
+> +			interconnects = <&mbus0>;
+> +			interconnect-names = "dma-mem";
+> +			phys = <&usbphy2>, <&combphy PHY_TYPE_USB3>;
+> +			phy-names = "usb2-phy", "usb3-phy";
+> +			dr_mode = "host";
+
+This does not look like property of the soc.
+
+> +			phy_type = "utmi";
+> +			snps,hsphy_interface = "utmi";
+> +			snps,dis_enblslpm_quirk;
+> +			snps,dis-u2-freeclk-exists-quirk;
+> +			snps,dis-del-phy-power-chg-quirk;
+> +			snps,dis_u2_susphy_quirk;
+> +			snps,dis_u3_susphy_quirk;
+> +			snps,dis_rxdet_inp3_quirk;
+> +			status = "disabled";
+> +		};
+> +
+> +		usbphy0: phy@c0940000 {
+> +			compatible = "spacemit,k1-usb2-phy";
+> +			reg = <0x0 0xc0940000 0x0 0x200>;
+> +			clocks = <&syscon_apmu CLK_USB_AXI>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+
+What is missing here? Why is this node disabled?
+
+Best regards,
+Krzysztof
+
