@@ -1,159 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7181A2206BC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88CF126F0A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747698139; cv=none; b=FiTO7fvaWMrGFroEZkZ1wiyMWqXI20y1JEzBDgBGTJLDxNpTXGGjft8o0IBpGI5no1k1XQ9gqfewbiO8PHrRvSoLfltZzOBMyCGAKki6026NDWQqyS496Y0IZFpIBAnVin4BK38c0DgPW2B/Qwd5744/iMwE+EgtfxMB5zrHQpA=
+	t=1747698254; cv=none; b=Js+1z67hvHPv9/M107a1F1FjpMH5qE3HiKgqjtOyOugmjLE2dRQE7GTqUeg7tKU8ZIZUS1G8YjPrwdkCMLcbYHaM8LqraA2U4hPFpuyjr/jGvQMzp7joPqR7TVEWl0Fl+i8p+l0fwuK1lsgcG5Rn415X+XclXRn8YeYlhYmseYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747698139; c=relaxed/simple;
-	bh=ZKYV4DZqCzOu7XtrDoRxpxOQ2X8r++kTwWByKtXDhrI=;
+	s=arc-20240116; t=1747698254; c=relaxed/simple;
+	bh=XjDLoT2QHXCTqz8BCXPXR1Qng/tmWuoD+g1I8LQifj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XIJujlfHopqEFX0DE5UreU4hoNMFwCiPBcCB6J5cfjD8SLKyUGKhcWbVwe3fssTDFj5cIistV9IEGQ6ZwDqpz3N2b6JCP4MG7TXHVnmCb2EMAQlQmr19uQhIgCxgth0gZgCnD0npFN4jxAo4nBNt7a7ouzs5S1j05U6RrmJscRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcQWP80d; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=JLNlHjhi6FXYlZiqVho5kelwSnuIDCLvea2Ms0xkYx+/JZWcpFirG9o4mwz1QjRUedcJyzIZBrrXQaKLAwmLbp3iTlXnSWgKLLgFKiIINs/AQ/a3OJuesIKkrvLPTyuBqrAskhAqogGE11R5jzYFPw1zsNj9dNupxbAdMb6HGKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eilY/GR9; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcQWP80d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10025C4CEFF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747698139;
-	bh=ZKYV4DZqCzOu7XtrDoRxpxOQ2X8r++kTwWByKtXDhrI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TcQWP80dqZf6wsvV46hfhbTO/IwcHkluZg9gwlAJFqA4nPRc6j1YFLmQJtaAY+re1
-	 r6KwA0YpngRxsaYwDegU8IRBmfb2DX/xHbQYWRDtiZtUMl3K0+wv3kCs/BNHL8XKVo
-	 ygRM0Dj8edMrC3lEXrMqVpKFHE8jPUzI9twSqdjyHF1ekm8EtSeC/ylD8vXIwTpwnm
-	 AaqU/swIMCkJHDGVuJ7yxk/8AYDS6T7xHiBImEzyOo11qLtzeZOlZAjh8G94L8btBT
-	 OaXfds5P5StEhfx+AaUM5UvfuSIhfq6IckwMm2CLKYDJSF2XVgUha6NZ5uurJ7VCWV
-	 ++9nrEevi9YKw==
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4769f3e19a9so34515371cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:42:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWxPR18ZmsfZeOUl+XIFYrxWUNFVB0mw0DndGm4F9w3pp/i1lHvLFdXlyQ2ZKz2lctfABORd0KmFA8m8Bc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvc7KX1JPO0b57as1ffXtAUDHBVFKAPyL9qhWxDm9ZHesX6PVj
-	C/xfkhP+69DnrFAOW2nDDsEz9HVUQY+IqGgoZSSQncnNu950tj21lHv2SNi+MTrwpR9XkVekrFh
-	g3/lc4tumd3kSM0LLYFQG0UX8hBNwDjHgtqbAxUMC
-X-Google-Smtp-Source: AGHT+IF3yXeBG7TOl1OWLmx6UHDF/3YbnaTG/HjinvwYXZmduyt29cvicBww1a9vAZvlcO0xk5OSvjlLpQi0hnBcD0E=
-X-Received: by 2002:ac8:5654:0:b0:494:af82:7804 with SMTP id
- d75a77b69052e-494af8278f4mr201668631cf.29.1747698137942; Mon, 19 May 2025
- 16:42:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eilY/GR9"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231f6c0b692so451225ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747698252; x=1748303052; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XjDLoT2QHXCTqz8BCXPXR1Qng/tmWuoD+g1I8LQifj8=;
+        b=eilY/GR9kmizYIT8INKIn9VPWosDwcFG0tRilYWZUlOatghqDuv/XCGYIdtUFSIbcu
+         5S9fqKmN6yi55oa97OheNv8XLfhLZr6KfYgumMwDGR1Kb6CptyQ6UGaWjX3dm5g3trSF
+         bBz/kiWnMZUiNbEEF/8UVdJuVVxmzZJ4xUELf+gNQ1ne6Jvw4aYro+RGNOwKf4ZBinqO
+         DKmSfO6NSI5vlzj6kYox4V7lNMM/KloXAjGAgUXpPB1b2L5mxDr+F9Rt1UF2l5RyIcF/
+         FYWmsh26wfm0h9v7DoRtvFnxopgyysfHLnWbyC1Cf+uh4efNFcpbbB6bGxyqnh9s/jJJ
+         CFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747698252; x=1748303052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XjDLoT2QHXCTqz8BCXPXR1Qng/tmWuoD+g1I8LQifj8=;
+        b=ntkpvcA6S5TyokJF987hcd25jahETtgdJ4z2zD9/HcpSKuIS0XRtUpRlOWUfMeWQOb
+         4oq0SZyq/HN83krPcnwPyBC5rq4C3WudJDQjAu0KAzJ0UDJ2b7BlESOB5G/qXkjTLnfD
+         uPFhHMnIxZKd1yRley/dejICE2KGbbcebLdTHf86AWIJHGQJV/5Q/e2iCb5tFBBUHn4N
+         7ln0MEJP7TGWARnKKfsP20Q3zzV2wnMpGzvc87gp/gPzE2vG6v95yALVm+SPcauL+dXj
+         6JxIR6r5Pv9Flw91WSr6P6BB5HXnXCHoPcXtbttU4MBGrN0PpL5Wn7E+ZoQbGWhScstj
+         u+BA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx3U1N0lEovOwi2gi1qcKL9ZTgJ9+HkWq1GcztVWDcdLfxJQspInqKZFCY+Pcqk+asLoBMsUforAFkGvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY/2qD3mZRa3FsuC8+Sx0ouWzuywRSfxIJ4D2OkuazARhJiv9d
+	hovEYjdX/Tf1SFyjwD84vPl9AOB7c3Im0y/YL8HGcl3as4o6KX3o16z4rqKXQP6mUnz/YDruO7O
+	RBi6fZr4+Hr9QBF2S+8r6m8uayCtDDSJ9oEqH3fDU
+X-Gm-Gg: ASbGnct/KZsIC3x5F1ufTRRYY6NfWaCpJ+r+aqfmmkRe/YM3H0GCwarSectsyqnvbLU
+	31AsDaspBqEa9Laq+ji+LcuVDIJd9ICXTBorDByHwpZQgJWOvB0MLLWpT3UdGHl2r8M/2iJHg2d
+	D3CNDxLbgid2b3wV0JaAcqkgxLtF700GoURtJF6UMHdJEaDIIPXk0lmYitNtg2XOrf1Uc0nw==
+X-Google-Smtp-Source: AGHT+IE7AXqNSM168pnSSbm7/Qdp/rsZ5MJVswN9Uamoq5240bQF4qJjFwhtWVm+iT8b7LVuXFvADMYtnY0OTDWxPkg=
+X-Received: by 2002:a17:902:d4d0:b0:223:2630:6b86 with SMTP id
+ d9443c01a7336-23204043e30mr5347595ad.7.1747698251850; Mon, 19 May 2025
+ 16:44:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
- <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
- <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
- <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
- <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
- <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
- <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
- <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com>
- <CAHC9VhRKZdEia0XUMs2+hRVC7oDzkBfkk5FPMD+Fq5V7mAk=Vg@mail.gmail.com>
- <CACYkzJ7oxFA3u9eKDpKgCsZsYsBojVJPHVeHZnVaYQ5e9DavmQ@mail.gmail.com> <CAC1LvL2F_WbObrdcumVZCKc7yLeq4e9PQhYHrLiyVzpzf=V_Xg@mail.gmail.com>
-In-Reply-To: <CAC1LvL2F_WbObrdcumVZCKc7yLeq4e9PQhYHrLiyVzpzf=V_Xg@mail.gmail.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Tue, 20 May 2025 01:42:06 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ43yJRMS+e-7LefYts_v2ZH7_FCbw_LfG3mYfu6q6VD0g@mail.gmail.com>
-X-Gm-Features: AX0GCFuKLMZDwuoCJgohVN01wRXVU9M-dpj2qXdRHi2W4iwOU0W5kASpMuAgI_I
-Message-ID: <CACYkzJ43yJRMS+e-7LefYts_v2ZH7_FCbw_LfG3mYfu6q6VD0g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Zvi Effron <zeffron@riotgames.com>
-Cc: Paul Moore <paul@paul-moore.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
-	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
-	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
-	Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com> <CAH5fLgiK3T24gf6tjXGGMsjqj17dh0PFbRZboE5oXXp16yOLTg@mail.gmail.com>
+In-Reply-To: <CAH5fLgiK3T24gf6tjXGGMsjqj17dh0PFbRZboE5oXXp16yOLTg@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 20 May 2025 01:43:34 +0200
+X-Gm-Features: AX0GCFs2kKKvW7hzRLpDUAMJo7MeTUCLcCF-zBATZLkYTjuyGIG9AgDMXpbovfk
+Message-ID: <CAG48ez0cspY1x1oaVs=Jz_9UN3YuFzWb-w=Q5iNfE0cmRek77g@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > > No. New hook is not needed.
-
-[...]
-
-> > > > >
-> > > > > It would be good for you to explain how the existing LSM hook is sufficient
-> > > > > to authorize the loading of a BPF program using the signature validation
-> > > > > state determined in the BPF verifier.
-> > > >
-> > > > I already explained:
-> > > > .. a job of trivial LSM:
-> > > > if (prog_attr doesn't have signature &&
-> > > >    (task == .. || task is under certain cgroup || whatever))
-> > > >   disallow.
-> > >
-> > > I read that earlier reply as an example that covers a sample use case,
-> > > I didn't realize you were asserting that was the only approach you
-> > > were considering.  Perhaps that was the source of confusion earlier,
-> > > we may disagree, but I don't intentionally "twist" words; not only is
-> > > that rude, it's just stupid in public, archived discussions.
-> > >
-> > > As I mentioned previously, we really need to see an explicit yes/no
-> > > flag from the BPF verifier to indicate that the signature on the BPF
-> > > program has been validated.  It really should be as simple as adding a
-> > > bool to bpf_prog_aux which the BPF verifier sets to true upon
-> > > successful signature validation, and then an LSM can use this flag as
-> > > input to an access control decision in a hook placed after the
-> > > verifier.  Are you objecting to the addition of a flag in the
-> > > bpf_prog_aux struct (or some other struct tightly coupled to the BPF
-> > > program), the LSM hook after the verifier, or both?  It would also be
-> > > helpful if you can elaborate on the technical reasons behind these
-> > > objections.
+On Tue, May 20, 2025 at 1:12=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+> On Mon, May 19, 2025 at 3:51=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
+e:
+> > On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com> wro=
+te:
+> > > This is a port of the Binder data structure introduced in commit
+> > > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
+> > > Rust.
 > >
-> > Neither the aux field, nor the hook are required because:
+> > Stupid high-level side comment:
 > >
-> > * If the signature is passed, it will be enforced, there are no
-> > "runtime aspects" that need to be configurable here.
-> > * What the LSM can specify a policy for is when a signature is not
-> > passed, for this, it does not need an aux field or a signature or the
-> > new hook, existing hooks are sufficient.
-> >
+> > That commit looks like it changed a simple linear rbtree scan (which
+> > is O(n) with slow steps) into a bitmap thing. A more elegant option
+> > might have been to use an augmented rbtree, reducing the O(n) rbtree
+> > scan to an O(log n) rbtree lookup, just like how finding a free area
+> > used to work in MM code... That would let you drop that ID pool bitmap
+> > entirely. But I guess actually wiring up an augmented rbtree into Rust
+> > would be very annoying too.
 >
-> What about wanting to create a policy that requires signatures under certain
-> situations and allowing the lack of a signature under others? How is that
-> implemented with the existing hooks?
-> As I understand it, all the existing hooks know (would know) is that _if_ there
-> is a signature _then_ it will be enforced. There is no way to know _whether_
-> there is a signature.
->
+> If we're talking approaches to avoid the bitmap entirely, it would
+> probably be easier to replace the rb tree with xarray than to use an
+> augmented one.
 
-The signature is passed in bpf_attr and if there is a signature the
-LSM's job is done.
-
-   https://elixir.bootlin.com/linux/v6.14.7/source/kernel/bpf/syscall.c#L5771
-
- It will be enforced.
-
-
-- KP
-
-> An example policy I can think of is that most users (with CAP_BPF) must submit
-> signed programs but some users are exempted. Would that policy be able to be
-> made with the current hooks?
->
-> > - KP
-> >
-> > >
-> > > --
-> > > paul-moore.com
-> >
+Ah, yeah, maybe. I'm not familiar enough with xarray to know how
+annoying it would be to insert stuff in an xarray that you reach
+through a spinlock, which seems to be the requirement that made the
+API for the bitmap interface so complicated if I understand
+correctly...
