@@ -1,261 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AFB267391;
-	Mon, 19 May 2025 07:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAE5F4E2;
+	Mon, 19 May 2025 07:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747639615; cv=none; b=oYQ2LEMndiezdjPByFSvmb/dX8tO2DWh5zVjiF2NRPuYnOQjmBfYMItHpZaqblZQwMaLcD5Zw20JHttz7Kq7d0z6EFQ6grn+cXRtWh62D9k1bjS1t4BqG5/c1Oh+bbEatjWcZnussL7TnDMd7taT/dQSKElEj2m1MoF7yI/R8zg=
+	t=1747639651; cv=none; b=R/ezFuNyB+svdsK/MDkw5p4MkJkmSakCfaLjlbMbWH7rZoV6wgFuvIHaQjNsNEBsHTs3giVntK+qmALWYLV9OycJzl6quyGsb+FmBBVmwCsvId+IWM0uOUyELfedpjlBQFMbT/iR0M9QN66kIU2JW9Delh46PPhSNxsTEaYK/HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747639615; c=relaxed/simple;
-	bh=jBDQDjF2WV16Je5dIF0ttMaK0Ais3hiuqsAK13xa99E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YVFRH+6MvzyMzTCV+7zz8soAQE/9NaFvVfaVpKuAuOi/0Axa46MYCc0bfrWT6xyy3Huh0hpTQJm6QVs1fBVQHRpmjnhrghYGU4+gPJmee5hDGvUOSVCqJSE1D8VtAvCw82cTm+UfqauvaygHMpVAz6nEAeubNJyyy8XO02x6teg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f87s1JCP; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747639651; c=relaxed/simple;
+	bh=BOnEr9Rl2fHLZ5/jEW+mTH4Vq9hJYeh90JsFlGFCPaU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aH7uzoo3nBg1UhbjblpFjSuckXaOkkYrzrvK8/27PhG/ydtFAHtUJS9/p0+RuvR8t+yMKUBahFtsDQFKK8tvhvKcGbKNVE9bwfPT8+nZfSsqnLVckN8kxDXBTUHsogz+7gFyq/KgvklbH8xehhU9cS/P1wVYjlTlb7iyuXUhfaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=k18YC5ty; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f87s1JCP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747639614; x=1779175614;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jBDQDjF2WV16Je5dIF0ttMaK0Ais3hiuqsAK13xa99E=;
-  b=f87s1JCPJInDShPQjH4gAtpIAKdu5q5SgAidjYEm9JzZnp+Csgo+O7Ti
-   No+akwT0cWhcp+oI5MID2XdnYTaQilLyR3ZlsFkIa93Z98D6YqZ9fPpg3
-   CmRY6U+8iW2CXjW9qtuJ6SSmz3UQWsLk9m4JoOBTDgEBraY+sJUGxBYkc
-   30HueOs8hOJ4g16kCz8GRl7pnmCE29YShxmkmsHnfN2zdiak0D+CUAh+D
-   BmxeGp4i3dbpXEIjwISXnejSXUA6EHBHtyISv7W4xEOs5KouZyLT8v/QH
-   CubaHA79fnMlbAYd5tNsdaX3AREgcujdvI2FQbtSqlcmKos91TK+Y20Dj
-   g==;
-X-CSE-ConnectionGUID: LyL0Cs9gQrm6aM8rJtB6oQ==
-X-CSE-MsgGUID: gTuFG634TKSSijb0sE6eng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49591616"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49591616"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 00:26:54 -0700
-X-CSE-ConnectionGUID: o3QhuCBrTW+lkmXrGrpwmg==
-X-CSE-MsgGUID: yDl+W5hCQwSUwYl7jpCqPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139029803"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO eresheto-mobl3.ger.corp.intel.com) ([10.245.244.195])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 00:26:49 -0700
-From: Elena Reshetova <elena.reshetova@intel.com>
-To: dave.hansen@intel.com
-Cc: jarkko@kernel.org,
-	seanjc@google.com,
-	kai.huang@intel.com,
-	linux-sgx@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	asit.k.mallick@intel.com,
-	vincent.r.scarlata@intel.com,
-	chongc@google.com,
-	erdemaktas@google.com,
-	vannapurve@google.com,
-	dionnaglaze@google.com,
-	bondarn@google.com,
-	scott.raynor@intel.com,
-	Elena Reshetova <elena.reshetova@intel.com>
-Subject: [PATCH v5 5/5] x86/sgx: Enable automatic SVN updates for SGX enclaves
-Date: Mon, 19 May 2025 10:24:31 +0300
-Message-ID: <20250519072603.328429-6-elena.reshetova@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250519072603.328429-1-elena.reshetova@intel.com>
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="k18YC5ty"
+Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J1HIkR017553;
+	Mon, 19 May 2025 00:27:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=Xk63N9eSkVMHuKTHBf+krYV
+	UirUlULcHk8wZOb2zrvA=; b=k18YC5ty1+iDXs33TviiCJRO68N2dZUdd7eM4N2
+	tCVf9wts/Pzmsv1HhwfTGPKXxRtuWN+OM54/ys1Y+C9rj/uTMjBEfQQQmWOGa4Fu
+	v+DF1PYbWUjAyplT8RdN5YfQaOAIdl6fgPBYZobKy3VaQW8WYAbcjdRozUFK1W0R
+	aI+isx2rv3aJ+WFKbKFvzFEwfcxSpqw7JjGH5yqRLvxBLX3ISqoJlyqXfyB6KJKc
+	U91p2RLProYSNTv/HMOBnOcYgtIHmLUJYZ/QbXMPbPk/DBmzfPaHK7r88snl22hz
+	r6LlD/1DUR7G0MXwUsiJMjkDbTmDjvmvjQd0WaJX0stjyRA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46qb799dcc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 00:27:08 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 19 May 2025 00:27:07 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 19 May 2025 00:27:07 -0700
+Received: from localhost.localdomain (unknown [10.28.36.166])
+	by maili.marvell.com (Postfix) with ESMTP id E61733F7080;
+	Mon, 19 May 2025 00:27:02 -0700 (PDT)
+From: Suman Ghosh <sumang@marvell.com>
+To: <sgoutham@marvell.com>, <gakula@marvell.com>, <sbhatta@marvell.com>,
+        <hkelam@marvell.com>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <bbhushan2@marvell.com>,
+        <andrew+netdev@lunn.ch>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Suman Ghosh <sumang@marvell.com>
+Subject: [net PATCH] octeontx2-pf: Avoid adding dcbnl_ops for LBK and SDP vf
+Date: Mon, 19 May 2025 12:56:58 +0530
+Message-ID: <20250519072658.2960851-1-sumang@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: zoK2cDfe-H6ph1Q6rJKPlnM7g0oJt5lY
+X-Proofpoint-ORIG-GUID: zoK2cDfe-H6ph1Q6rJKPlnM7g0oJt5lY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA2OSBTYWx0ZWRfX+sJsjopTO48u BBPeqcJX/WXcChDXaAOHir4NVHnociEVRGF5YUG8cW/83q79y0tBwK6BmW1fuCttPdFMts+/U+k +G8T4HqhjrzKs4pATZGuEN96LYbwCdfx7T5JkVQ7b6T7kXc0vtjPSOHGTT5JIUODhl0w7wl1MhF
+ xlVtpuRoKOkFLQBZ2KeaA6SMN0o52ico08YKmEr3mahEwxf22KycSYODaAKsOJ/YoFX0PD/KYzX 8g1dXhFIMtwIM5+jiH63/tgskkO6H4chQLanwi7s4yseVIkACr5aU36HXVOOKuFdu8ZzvIskEuP gJeJIAtxn85qHgj0p2K2cXdVEXGs4gR+oxFed2ANAPu9CDaajoTRzwU/K+q+Zray0vsC1y0v1GN
+ MgDhSFucxE0vmndfFW9Mxw8gIS+swG0tf6wXfykHkad19zjtvR1mW6ZkEQ4p22PoWINCAEa8
+X-Authority-Analysis: v=2.4 cv=YvQPR5YX c=1 sm=1 tr=0 ts=682add4c cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=Z0Ml1a-pTqFXQDG8VyoA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_03,2025-05-16_03,2025-03-28_01
 
-SGX enclaves have an attestation mechanism.  An enclave might,
-for instance, need to attest to its state before it is given
-a special decryption key.  Since SGX must trust the CPU microcode,
-attestation incorporates the microcode versions of all processors
-on the system and is affected by microcode updates. This enables
-deployment decisions based on the microcode version.
-For example, an enclave might be denied a decryption key if it
-runs on a system that has old microcode without a specific mitigation.
+Priority flow control is not supported for LBK and SDP vf. This patch
+adds support to not add dcbnl_ops for LBK and SDP vf.
 
-Unfortunately, this attestation metric (called CPUSVN) is only a snapshot.
-When the kernel first uses SGX (successfully executes any ENCLS instruction),
-SGX inspects all CPUs in the system and incorporates a record of their
-microcode versions into CPUSVN. CPUSVN is only automatically updated at reboot.
-This means that, although the microcode has been updated, enclaves can never
-attest to this fact. Enclaves are stuck attesting to the old version until
-a reboot.
-
-The SGX architecture has an alternative to these reboots: the ENCLS[EUPDATESVN]
-instruction [1]. It allows another snapshot to be taken to update CPUSVN
-after a runtime microcode update without a reboot.
-
-Whenever a microcode update affects SGX, the SGX attestation architecture
-assumes that all running enclaves and cryptographic assets (like internal
-SGX encryption keys) have been compromised. To mitigate the impact of this
-presumed compromise, EUPDATESVN success requires that all SGX memory to be
-marked as “unused” and its contents destroyed. This requirement ensures
-that no compromised enclave can survive the EUPDATESVN procedure and provides
-an opportunity to generate new cryptographic assets.
-
-Attempt to execute EUPDATESVN on the first open of sgx_(vepc)open().
-If EUPDATESVN fails with any other error code than SGX_INSUFFICIENT_ENTROPY,
-this is considered unexpected and the open() returns an error. This
-should not happen in practice. On contrary SGX_INSUFFICIENT_ENTROPY might
-happen due to a pressure on the system DRNG (RDSEED) and therefore
-the open() is not blocked to allow normal enclave operation.
-
-[1] Runtime Microcode Updates with Intel Software Guard Extensions,
-https://cdrdv2.intel.com/v1/dl/getContent/648682
-
-Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+Fixes: 8e67558177f8 ("octeontx2-pf: PFC config support with DCBx")
+Signed-off-by: Suman Ghosh <sumang@marvell.com>
 ---
- arch/x86/kernel/cpu/sgx/driver.c | 23 +++++++++++++-------
- arch/x86/kernel/cpu/sgx/main.c   | 36 ++++++++++++++++++++++++++++++--
- arch/x86/kernel/cpu/sgx/virt.c   | 16 +++++++++++---
- 3 files changed, 63 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
-index b5ffe104af4c..bde06b6755f2 100644
---- a/arch/x86/kernel/cpu/sgx/driver.c
-+++ b/arch/x86/kernel/cpu/sgx/driver.c
-@@ -19,10 +19,15 @@ static int sgx_open(struct inode *inode, struct file *file)
- 	struct sgx_encl *encl;
- 	int ret;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index 7ef3ba477d49..9b28be4c4a5d 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -729,9 +729,12 @@ static int otx2vf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	}
  
--	sgx_inc_usage_count();
-+	ret = sgx_inc_usage_count();
-+	if (ret)
-+		return -EBUSY;
-+
- 	encl = kzalloc(sizeof(*encl), GFP_KERNEL);
--	if (!encl)
--		return -ENOMEM;
-+	if (!encl) {
-+		ret = -ENOMEM;
-+		goto err_usage_count;
+ #ifdef CONFIG_DCB
+-	err = otx2_dcbnl_set_ops(netdev);
+-	if (err)
+-		goto err_free_zc_bmap;
++	/* Priority flow control is not supported for LBK and SDP vf(s) */
++	if (!(is_otx2_lbkvf(vf->pdev) || is_otx2_sdp_rep(vf->pdev))) {
++		err = otx2_dcbnl_set_ops(netdev);
++		if (err)
++			goto err_free_zc_bmap;
 +	}
+ #endif
+ 	otx2_qos_init(vf, qos_txqs);
  
- 	kref_init(&encl->refcount);
- 	xa_init(&encl->page_array);
-@@ -32,14 +37,18 @@ static int sgx_open(struct inode *inode, struct file *file)
- 	spin_lock_init(&encl->mm_lock);
- 
- 	ret = init_srcu_struct(&encl->srcu);
--	if (ret) {
--		kfree(encl);
--		return ret;
--	}
-+	if (ret)
-+		goto err_encl;
- 
- 	file->private_data = encl;
- 
- 	return 0;
-+
-+err_encl:
-+		kfree(encl);
-+err_usage_count:
-+		sgx_dec_usage_count();
-+		return ret;
- }
- 
- static int sgx_release(struct inode *inode, struct file *file)
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index fd71e2ddca59..d58e0c46cbf9 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -917,6 +917,8 @@ EXPORT_SYMBOL_GPL(sgx_set_attribute);
- 
- /* Counter to count the active SGX users */
- static atomic64_t sgx_usage_count;
-+/* Mutex to ensure EUPDATESVN is called when EPC is empty */
-+static DEFINE_MUTEX(sgx_svn_lock);
- 
- /**
-  * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN]
-@@ -976,8 +978,38 @@ static int sgx_update_svn(void)
- 
- int sgx_inc_usage_count(void)
- {
--	atomic64_inc(&sgx_usage_count);
--	return 0;
-+	int ret;
-+
-+	/*
-+	 * Increments from non-zero indicate EPC other
-+	 * active EPC users and EUPDATESVN is not attempted.
-+	 */
-+	if (atomic64_inc_not_zero(&sgx_usage_count))
-+		return 0;
-+
-+	/*
-+	 * Ensure no other concurrent threads can start
-+	 * touching EPC while EUPDATESVN is running.
-+	 */
-+	guard(mutex)(&sgx_svn_lock);
-+
-+	if (atomic64_inc_not_zero(&sgx_usage_count))
-+		return 0;
-+
-+	/*
-+	 * Attempt to call EUPDATESVN since EPC must be
-+	 * empty at this point.
-+	 */
-+	ret = sgx_update_svn();
-+
-+	/*
-+	 * If EUPDATESVN failed with a non-expected error
-+	 * code, return failure to sgx_(vepc_)open and
-+	 * do not increment the sgx_usage_count.
-+	 */
-+	if (!ret)
-+		atomic64_inc(&sgx_usage_count);
-+	return ret;
- }
- 
- void sgx_dec_usage_count(void)
-diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
-index 83de0907f32c..e6e29c09c3b9 100644
---- a/arch/x86/kernel/cpu/sgx/virt.c
-+++ b/arch/x86/kernel/cpu/sgx/virt.c
-@@ -262,17 +262,27 @@ static int sgx_vepc_release(struct inode *inode, struct file *file)
- static int sgx_vepc_open(struct inode *inode, struct file *file)
- {
- 	struct sgx_vepc *vepc;
-+	int ret;
-+
-+	ret = sgx_inc_usage_count();
-+	if (ret)
-+		return -EBUSY;
- 
--	sgx_inc_usage_count();
- 	vepc = kzalloc(sizeof(struct sgx_vepc), GFP_KERNEL);
--	if (!vepc)
--		return -ENOMEM;
-+	if (!vepc) {
-+		ret = -ENOMEM;
-+		goto err_usage_count;
-+	}
- 	mutex_init(&vepc->lock);
- 	xa_init(&vepc->page_array);
- 
- 	file->private_data = vepc;
- 
- 	return 0;
-+
-+err_usage_count:
-+		sgx_dec_usage_count();
-+		return ret;
- }
- 
- static long sgx_vepc_ioctl(struct file *file,
 -- 
-2.45.2
+2.25.1
 
