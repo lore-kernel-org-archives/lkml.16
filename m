@@ -1,290 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5BF275846;
-	Mon, 19 May 2025 12:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CAA1DFFD
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656926; cv=none; b=qWOwPT3+qoDKjKLGvtIMJq41GI2lG0r1Z+/NJCpZFMmvRLe4KMWR2Xk0gucGgvoYlT6hreEtzD04kaubSxFesBCkXlcr65/DTWdZNPuOuIxD2jLzEYJkiXCmwVk5hx6EbjoriCWSdtJoVLru9nSRABM+Prb1ShkMb6yfnfqfu8E=
+	t=1747656968; cv=none; b=LVvgHNMNBNQwvCWdRuYDfH9uwdMVUdk45taFF3W89d1CtQXKXY9zC/rKTaYfzTYXk+U/Wm4FO+UlA3uKVIlmF+xcSstKpyOaxBMm2QFiRV4FY5foOi2ThG3RegBzyQPFBxx5XRhrCQdPh8lSIs6dVcCgyv5ggajZLndgqsshXXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656926; c=relaxed/simple;
-	bh=tNM305ttJ97N5szcmiZosc3SsEJonoEDwtoWV06EsW8=;
+	s=arc-20240116; t=1747656968; c=relaxed/simple;
+	bh=5d/DDH6dTwZh2uUANC/W0lg2Tuxf2KcmFuOdU/wNZY8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHuXg8ngJf2Nr5dqxRMocyAkslwGhunusufh8+YccQ4u5BAah71Fuo59FGB+kWREaHJE2ZoLZVkainO7/A0hNqU+J/+XRxZg5Ks8/USZxB8ZxPUB2l1Xx+CxsBR1rwVxLQB1cE9qXTOo3eLc3jyIP1SvRVBYzmx8IBK9od78tmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: zEjjuuF2SXOZ8c9yvnFH7A==
-X-CSE-MsgGUID: NVY0tqKNQz2VJXX634cAyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49657670"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49657670"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:15:23 -0700
-X-CSE-ConnectionGUID: g1C1h59sRKa7mLT+S9tB+w==
-X-CSE-MsgGUID: /yvKf85WRYizI3FayBA+YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139395929"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:15:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uGzOn-000000031pb-3X9A;
-	Mon, 19 May 2025 15:15:17 +0300
-Date: Mon, 19 May 2025 15:15:17 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
-	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 09/12] iio: accel: adxl313: add activity sensing
-Message-ID: <aCsg1XddkT6sGjev@smile.fi.intel.com>
-References: <20250518111321.75226-1-l.rubusch@gmail.com>
- <20250518111321.75226-10-l.rubusch@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtPMk0p80J6Dr0CD0ojhmlP1B2S25TtEesgeZwk6EGtRsgOmIy83DAcpvpFz0VOGKe+xHqFcKHL2celg1b2HjFyC+rChmOlp5EFCri/qRfz/tI+CHfbUlvq/YMmZyRBSWwtqO2RD2iLEFH9O5RwAMyp0+UjpnkcV06taegIxf00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=di5gD4U9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="di5gD4U9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 749D840E0238;
+	Mon, 19 May 2025 12:15:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id nI4udhmzhqeD; Mon, 19 May 2025 12:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747656955; bh=6CHIkidWvoI2GyW7+dnBtnkD8kdvxKK8XJWdkFMoXsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=di5gD4U92S1EVPhTvkJiNvz9KO1QsS5Mt9/0v2JcTAnTdCn39RlfSG/iKAbqwWleD
+	 gJGYv4wLya7NfH5H4qrHGF9Wt+x5szoUEpMbT8vbyHqaT8ZXgtQhObxTYdIsfeUUHN
+	 Ag1rdZtAhY+RAY0/ws9mwUYEfDGsfPVAwIZbdULR/U80hDhP+w5vXMuqY6YeEdmHNQ
+	 +YMl6v3GqgAVPZUT5iqSnYRqVR0wy6bfmzRfIEKU+JOCe/foA2JJusF1+dig/6AN1e
+	 4/NU41MDnEAqb8/FyfsrggH1vMJGWIbjF74KeAV1VY94sKI8Dhj8155B8MMt3KWNs2
+	 mXoOa8kNDRq9hYcwYgYEKQjx8rlTeeu6evxy+4m9Fe/dFMoeNMMYsNPodu4xviI5+Q
+	 /fSZW9PO1Laa9Oc+JzNS3NzXup08AvlIWFMkJSHWSuANIerHUlXSubRZ5FOn4I8hzM
+	 +yao5FdrZbmx106P9PHkieBE6vGyUvHxpXcOa1WU3EkREXr8d+438P09XFuf/YxyVi
+	 VpsXn1ID01FB2mNEmzZ3Bm0r0qFOgnx06GyYUed/PTiSeXFZDEHczxLSZiVeq+UKF2
+	 sE+ssA1uUMX5ReS9D9j9+tNNhX/7V8Pa2h5PCwjE9A5gSg0Kb0KMiajY0x3/T2AuXh
+	 2vk2J36scqttmSD6tivcpFUk=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C4BC40E01CF;
+	Mon, 19 May 2025 12:15:47 +0000 (UTC)
+Date: Mon, 19 May 2025 14:15:41 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+Message-ID: <20250519121541.GAaCsg7YZ3-HDYgiBu@fat_crate.local>
+References: <20250517091639.3807875-8-ardb+git@google.com>
+ <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+ <CAMj1kXEFykYgtHb0UaNQ5fk_0+q+ZHVJa4Gs8-v_Jq1_35-gEw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250518111321.75226-10-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAMj1kXEFykYgtHb0UaNQ5fk_0+q+ZHVJa4Gs8-v_Jq1_35-gEw@mail.gmail.com>
 
-On Sun, May 18, 2025 at 11:13:18AM +0000, Lothar Rubusch wrote:
-> Add possibilities to set a threshold for activity sensing. Extend the
-> interrupt handler to process activity interrupts. Provide functions to set
-> the activity threshold and to enable/disable activity sensing. Further add
-> a fake channel for having x, y and z axis anded on the iio channel.
-> 
-> This is a preparatory patch. Some of the definitions and functions are
-> supposed to be extended for inactivity later on.
+On Mon, May 19, 2025 at 11:46:34AM +0200, Ard Biesheuvel wrote:
+> That is what the old code does. It results in the flag transiently
+> being set and cleared again, which is what I am trying to avoid.
 
-...
+Right, something like this clumsy thing ontop. It'll have to be macro-ized
+properly and we had macros for those somewhere - need to grep...
 
-> +static int adxl313_is_act_inact_en(struct adxl313_data *data,
-> +				   enum adxl313_activity_type type,
-> +				   bool *en)
-> +{
-> +	unsigned int axis_ctrl;
-> +	unsigned int regval;
-> +	int ret;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 104944e93902..a6a1892a9215 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -704,7 +704,10 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
+ }
+ 
+ /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
+-__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
++__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long)) = {
++	[X86_FEATURE_LA57 / 32] = BIT(X86_FEATURE_LA57 & 0x1f)
++};
++
+ __u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+ 
+ #ifdef CONFIG_X86_32
 
-> +	*en = false;
+asm looks correct to me:
 
-Even in case of an error? The rule of thumb is to avoid assigning output when
-we know that the error will be returned to the caller.
-
-> +	ret = regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axis_ctrl);
-> +	if (ret)
-> +		return ret;
-
-> +	if (type == ADXL313_ACTIVITY)
-> +		*en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-> +
-> +	if (*en) {
-
-This doesn't need to re-write the value of *en. Just declare local boolean
-temporary variable and use it and only assign it on success.
-
-> +		ret = regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*en = adxl313_act_int_reg[type] & regval;
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int adxl313_set_act_inact_en(struct adxl313_data *data,
-> +				    enum adxl313_activity_type type,
-> +				    bool cmd_en)
-> +{
-> +	unsigned int axis_ctrl = 0;
-> +	unsigned int threshold;
-> +	bool en;
-> +	int ret;
-> +
-> +	if (type == ADXL313_ACTIVITY)
-> +		axis_ctrl = ADXL313_ACT_XYZ_EN;
-> +
-> +	ret = regmap_update_bits(data->regmap,
-> +				 ADXL313_REG_ACT_INACT_CTL,
-> +				 axis_ctrl,
-> +				 cmd_en ? 0xff : 0x00);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(data->regmap, adxl313_act_thresh_reg[type], &threshold);
-> +	if (ret)
-> +		return ret;
-
-> +	en = false;
-
-Instead...
-
-> +	if (type == ADXL313_ACTIVITY)
-> +		en = cmd_en && threshold;
-
-	else
-		en = false;
-
-> +	return regmap_update_bits(data->regmap, ADXL313_REG_INT_ENABLE,
-> +				  adxl313_act_int_reg[type],
-> +				  en ? adxl313_act_int_reg[type] : 0);
-> +}
-
-...
-
-> +static int adxl313_read_event_config(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir)
-> +{
-> +	struct adxl313_data *data = iio_priv(indio_dev);
-
-> +	bool int_en;
-
-Why? You return the int here... I would expect rather to see unsigned int...
-
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case IIO_EV_TYPE_MAG:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			ret = adxl313_is_act_inact_en(data,
-> +						      ADXL313_ACTIVITY,
-> +						      &int_en);
-> +			if (ret)
-> +				return ret;
-> +			return int_en;
-
-...or even simply
-
-			return adx1313...(...);
-
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-...
-
-> +static int adxl313_read_event_value(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    enum iio_event_type type,
-> +				    enum iio_event_direction dir,
-> +				    enum iio_event_info info,
-> +				    int *val, int *val2)
-> +{
-> +	struct adxl313_data *data = iio_priv(indio_dev);
-> +	unsigned int act_threshold;
-> +	int ret;
-> +
-> +	/* measurement stays enabled, reading from regmap cache */
-> +
-> +	switch (type) {
-> +	case IIO_EV_TYPE_MAG:
-> +		switch (info) {
-> +		case IIO_EV_INFO_VALUE:
-> +			switch (dir) {
-> +			case IIO_EV_DIR_RISING:
-> +				ret = regmap_read(data->regmap,
-> +						  adxl313_act_thresh_reg[ADXL313_ACTIVITY],
-> +						  &act_threshold);
-> +				if (ret)
-> +					return ret;
-> +				*val = act_threshold * 15625;
-
-> +				*val2 = 1000000;
-
-MICRO?
-
-> +				return IIO_VAL_FRACTIONAL;
-> +			default:
-> +				return -EINVAL;
-> +			}
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int adxl313_write_event_value(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir,
-> +				     enum iio_event_info info,
-> +				     int val, int val2)
-> +{
-> +	struct adxl313_data *data = iio_priv(indio_dev);
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = adxl313_set_measure_en(data, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (type) {
-> +	case IIO_EV_TYPE_MAG:
-
-This can be collapsed to the conditional, making indentation better overall.
-Same applies to the other parts of the code outside of this function.
-
-> +		switch (info) {
-> +		case IIO_EV_INFO_VALUE:
-> +			/* The scale factor is 15.625 mg/LSB */
-> +			regval = DIV_ROUND_CLOSEST(1000000 * val + val2, 15625);
-
-MICRO?
-
-> +			switch (dir) {
-> +			case IIO_EV_DIR_RISING:
-> +				ret = regmap_write(data->regmap,
-> +						   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
-> +						   regval);
-> +				if (ret)
-> +					return ret;
-> +				return adxl313_set_measure_en(data, true);
-> +			default:
-> +				return -EINVAL;
-> +			}
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-...
-
-> +		ret = regmap_write(data->regmap, ADXL313_REG_ACT_INACT_CTL, 0);
-
-0x00 ?
-
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(data->regmap, ADXL313_REG_THRESH_ACT, 0x52);
-> +		if (ret)
-> +			return ret;
+        .type   cpu_caps_cleared, @object
+        .size   cpu_caps_cleared, 96    
+cpu_caps_cleared:
+        .zero   64
+        .long   65536
+        .zero   28
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
