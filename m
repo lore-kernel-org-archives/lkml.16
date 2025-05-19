@@ -1,122 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0D1E1A3B;
-	Mon, 19 May 2025 12:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A398278E42;
+	Mon, 19 May 2025 12:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747659107; cv=none; b=B24sMa0sIqfR/BWCUSmIeHC6iRS0hWUcuP6I2QYldFeZkNl63p9ATsO97Pjqwqwcw0s9+DEYhzpXJmUYW9jy7juI6Z2lofbzNmD+1klAut3AnN4e1ojsEvTKzD+W+TaObX81+dIdDnoyFU5QXTXrg7jOWTjFhswq6Llxzug9BeA=
+	t=1747659124; cv=none; b=eLWAb00Ca3aN9vUvNpPYBhGM82hUkJ0JulFdyeAo09fwctxEyxVzE4ZC3FesRSjyCOxkZ9fClc3HijFgj/MtX8O/3sZKsnNae1JBqyOM5LT/mXtpIfyqBK1x6j1YPgZDT8+AjUscvYX/Qtqbrvs6xwz1SDTmuM76EFq3q1w3YDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747659107; c=relaxed/simple;
-	bh=mzzzruDQgEOQ2CruLB6tT4vqA3MySrj9ZLu9bop9JIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZhqYkAZsJUAI70Aezf4LUV3fvMQj9d34c5FWHrKeytYVDBpsFaLMzBF0084hHFKF/UiA9j1CwoZ0aAo8QFv/ASgAvW3j0wssFl07u19pEIPnmlYhZ/roEA8VrEpCYO25f6aaSi02GqHK2s/zcHkpGtiVz9SatFwrPmpRG7Igm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqiHjRFi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747659124; c=relaxed/simple;
+	bh=sfW3T+vo1+Sy5qSz9UXUWZ/rKPHP36qwJ6NQxledKXc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=b8blglemLLbUb/RTphTFywEXAyh2WJbNSH8S4JiALbAKSb9PeE+aIuXSldXOrrsN1Bnmbpyle2kZlfMSdjZP6BRftke+sE313rOZqiehXc+prxeIMlMErKJB19PWiOX5WFeMxWHKCArmoc4vgdP9r2+2OmYLN2xsMzcM7QQ4TUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaytfcXk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqiHjRFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74FCC4CEE4;
-	Mon, 19 May 2025 12:51:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaytfcXk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBB1C4CEE4;
+	Mon, 19 May 2025 12:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747659106;
-	bh=mzzzruDQgEOQ2CruLB6tT4vqA3MySrj9ZLu9bop9JIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rqiHjRFiZegscLIQbrVYUUR0xeVODuKlIM6M7yEuAXT5em0X5ulmfkxvUtkjXjvlv
-	 +xzoYY3HWKIPGWl86ouxSLSyJzroBzQYiwiVoc/nThbzaNYXIR6Wm05uJuAD/ZARuA
-	 RC7XsvY22JJm58lVAaGPUV/m/3FZzV9vAIghwuP4fwITco+GyZCqS4hXh1g2YcvFVk
-	 hL1WX/f37XWCtxFpuNNVVY7x/uRbGG0cxPca+X8w3t4aqzfHQbZTzFmzbzyJK92brv
-	 v8IIOlXBlEp7HXBdjC1zuPt3sp+eoSW7ta9EdIuwN7VuqQUkIouUpYrVWCc8r4699v
-	 2j3XMf1Odks4w==
-Date: Mon, 19 May 2025 14:51:39 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	"jarkko@kernel.org" <jarkko@kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
-	"Cai, Chong" <chongc@google.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"bondarn@google.com" <bondarn@google.com>,
-	"Raynor, Scott" <scott.raynor@intel.com>
-Subject: Re: [PATCH v5 5/5] x86/sgx: Enable automatic SVN updates for SGX
- enclaves
-Message-ID: <aCspW0MweLoODLC8@gmail.com>
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
- <20250519072603.328429-6-elena.reshetova@intel.com>
- <aCrlFfl2lAzzHOA8@gmail.com>
- <DM8PR11MB57504A6B41329214262E16E2E79CA@DM8PR11MB5750.namprd11.prod.outlook.com>
+	s=k20201202; t=1747659123;
+	bh=sfW3T+vo1+Sy5qSz9UXUWZ/rKPHP36qwJ6NQxledKXc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=LaytfcXkBzo1JYDQs1kmjiB56pSbeBrNpE1LgdKpfoBYR7YKFhKD9Bq3bsqCJDRSf
+	 z0gNVal+VZjmhk7VaDxwzKWhxzyst5z21AIBYa0/738kxOnm+OmFrscu7UuMiOcqXA
+	 p11542j4iuWbGQ/bLfONlyLRJ5WJMhqbOIpjX5JXAYOchJIAP7wVHW00T6lPIzojCE
+	 ZoBQ71JIORNKtRyIBOFBiytUppWc2I2o6A0QczLMHs1D8RYwHV34MAC5R9Sr94EJ9K
+	 F/1YvKtkmP2+jJv1UzbbF/ZJcsqTA6cWW3NPdrwfzxUdIk8FWML5xxTU+CTIo/m+xq
+	 Jm+31dgbaxPMQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM8PR11MB57504A6B41329214262E16E2E79CA@DM8PR11MB5750.namprd11.prod.outlook.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 May 2025 14:51:55 +0200
+Message-Id: <DA05GA6QUD1R.1XR0GFPLNXPTQ@kernel.org>
+Cc: <ansuelsmth@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+ <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+ <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+ <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+ <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+ <kabel@kernel.org>, <andrei.botila@oss.nxp.com>, <tmgross@umich.edu>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <dakr@kernel.org>,
+ <sd@queasysnail.net>, <michael@fossekall.de>, <daniel@makrotopia.org>,
+ <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
+ match_phy_device C changes
+From: "Benno Lossin" <lossin@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <D9YO3781UI2X.1CI7FG1EATN8G@kernel.org>
+ <20250519.210059.2097701450976383427.fujita.tomonori@gmail.com>
+ <DA051LGPX0NX.20CQCK4V3B6PF@kernel.org>
+ <20250519.214449.1761137544422192991.fujita.tomonori@gmail.com>
+In-Reply-To: <20250519.214449.1761137544422192991.fujita.tomonori@gmail.com>
 
+On Mon May 19, 2025 at 2:44 PM CEST, FUJITA Tomonori wrote:
+> On Mon, 19 May 2025 14:32:44 +0200
+> "Benno Lossin" <lossin@kernel.org> wrote:
+>>>>> The other use case, as mentioned above, is when using the generic hel=
+per
+>>>>> function inside match_phy_device() callback. For example, the 4th
+>>>>> patch in this patchset adds genphy_match_phy_device():
+>>>>>
+>>>>> int genphy_match_phy_device(struct phy_device *phydev,
+>>>>>                            const struct phy_driver *phydrv)
+>>>>>
+>>>>> We could add a wrapper for this function as phy::Device's method like
+>>>>>
+>>>>> impl Device {
+>>>>>     ...
+>>>>>     pub fn genphy_match_phy_device(&self, drv: &phy::DriverVTable) ->=
+ i32=20
+>>>>=20
+>>>> Not sure why this returns an `i32`, but we probably could have such a
+>>>
+>>> Maybe a bool would be more appropriate here because the C's comment
+>>> says:
+>>>
+>>> Return: 1 if the PHY device matches the driver, 0 otherwise.
+>>>
+>>>> function as well (though I wouldn't use the vtable for that).
+>>>
+>>> What would you use instead?
+>>=20
+>> The concept that I sketched above:
+>>=20
+>>     impl Device {
+>>         fn genphy_match_phy_device<T: Driver>(&self) -> bool {
+>>             self.phy_id() =3D=3D T::PHY_DEVICE_ID.id
+>>         }
+>>     }
+>
+> I think there might be a misunderstanding.
+>
+> Rust's genphy_match_phy_device() is supposed to be a wrapper for C's
+> genphy_match_phy_device():
+>
+> https://lore.kernel.org/rust-for-linux/20250517201353.5137-5-ansuelsmth@g=
+mail.com/
 
-* Reshetova, Elena <elena.reshetova@intel.com> wrote:
+Oh yeah you're right. But using `DriverVTable` for that doesn't sound
+nice...
 
->  
-> > * Elena Reshetova <elena.reshetova@intel.com> wrote:
-> > 
-> > > @@ -19,10 +19,15 @@ static int sgx_open(struct inode *inode, struct file
-> > *file)
-> > >  	struct sgx_encl *encl;
-> > >  	int ret;
-> > >
-> > > +	ret = sgx_inc_usage_count();
-> > > +	if (ret)
-> > > +		return -EBUSY;
-> > 
-> > So if sgx_inc_usage_count() returns nonzero, it's in use already and we
-> > return -EBUSY, right?
-> 
-> I guess my selection of error code here was wrong. 
-> The intended logic is if sgx_inc_usage_count() returns nonzero,
-> the *incrementing of counter failed* (due to failed EUPDATESVN)
-> and we want to stop and report error.
->   
-> > 
-> > But:
-> > 
-> > >  int sgx_inc_usage_count(void)
-> > >  {
-> > > +	int ret;
-> > > +
-> > > +	/*
-> > > +	 * Increments from non-zero indicate EPC other
-> > > +	 * active EPC users and EUPDATESVN is not attempted.
-> > > +	 */
-> > > +	if (atomic64_inc_not_zero(&sgx_usage_count))
-> > > +		return 0;
-> > 
-> > If sgx_usage_count is 1 here (ie. it's busy), this will return *zero*,
-> > and sgx_open() will not run into the -EBUSY condition and will continue
-> > assuming it has claimed the usage count, while it hasn't ...
-> 
-> Yes, meaning is different, see above. 
-
-So that's rather convoluted:
-
-	atomic64_inc_not_zero():   returns 1 on successful increase, 0 on failure
-        sgx_inc_usage_count():     returns 0 on successful increase, 1 on failure
-        sgx_open():                returns 0 on successful increase, -EBUSY on failure
-
-Could we at least standardize sgx_inc_usage_count() on -EBUSY in the 
-failure case, so it's a more obvious pattern:
-
-+       ret = sgx_inc_usage_count();
-+       if (ret < 0)
-+               return ret;
-
-Thanks,
-
-	Ingo
+---
+Cheers,
+Benno
