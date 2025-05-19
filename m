@@ -1,74 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDC5211297
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EE21D7985
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747682889; cv=none; b=ZnZM0nbn6b1DAycsZryZ0EkK2vNAolxkGediomtQNRXlicGFFkpmJbPe+Pvv+k+mxJUlCHABvL/LvKQQUNiXexpnsT7VEWciT+5IME6NMoX0eSeHzDByFdg3FaZ7f7xCuq3JUCkNQikH1Kh9Y4C+taGJv37RZFTG4Vxn/njshV4=
+	t=1747682953; cv=none; b=F3adq5BtwWlN4+lBpfBWeBgdS9afpx/ph9xYiSJ/6ToX52tiH/Nwa1wzGt1yNbNJUjcuIi8rGQ9mGou46bQhp1rEE5CzQ+52TmMP3HCtyOEACVGCy4urteTSGD741uulMgwKWRZ29WtJAa0j7thNJJpkhNCUyE0Zgo9ca3Z33XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747682889; c=relaxed/simple;
-	bh=2jMJ4qG5PKHly2MQR94Rkj0h/xPhqfeJw+aExviwfkM=;
+	s=arc-20240116; t=1747682953; c=relaxed/simple;
+	bh=xBK45x3TEPNypTTHawIHs2KLj1Ypp9sh1kxLAgDZEtc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pkXKH1UWau1t6PFGXptvOaUTZEadKcsOeskwdGZtTbwhLTt2MKVwfFqB8+yqavB56Abbz1+oQqo2vGVhqdVE1WvyhAYD3PCRpi6aeNhnn4pdPlL/VwbVoJmHGar6yJdwf5yrP0+3bGhj9Lh9545Ov47W14K68GP+vR6IO0THFJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DNbvWoQl; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=pes2pjYupfVCE63kLW8+eLIJS+e2blLZ2fqoZmF06EZgzxVLAuLfQWcizONlBVoR5lQkfBoX0GSl7XZsw347EzV65TRsnFTFOKLdzeYBJ6y2j+GPS12wt+T6pXyxbDx1qNXE1ktQQkPtoz1IcdT2QmIOpM6XuKXkmKOJZixUsWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpqzgYJ4; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DNbvWoQl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpqzgYJ4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747682886;
+	s=mimecast20190719; t=1747682949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qVQZc5INnoqutZYmTut12ZA5XDVGTeIuyWo7ArztSjg=;
-	b=DNbvWoQlyGI+1MukcRo2/gFk61hsTKyJ84BOI5zZMPfGiTCZcWLV4JXyISjMKyeHeju6U+
-	TJOFpepP8MPP4SlMIVx9duGDVdgt80veRdJZe8patZpoxJPa6V3DRthTs7bmvFLJwcPa4u
-	pgX3e9VU1IOKOfjPA9RkvQebig7GGGo=
+	bh=n/A5udE0xFsUfjluCthGJRT0KVJ/nbPqupKt9mvOjwI=;
+	b=EpqzgYJ4fSJ7Qjjj0hupcsTEaUV7e2TZxWHQYOHq1SUnIyoTGtOQnfO2l3VWDjCe12v4p/
+	DebWeIPUVBJLyE0I6NXdvAcBaNy7zt7vNPNw2Fk1h/i/eZcFuJXrKcEO21bW/cCRsB+wXu
+	9rc1ntsS/GLZipMAUS1GceaMciikkEQ=
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
  [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-Aww4PPueOL-cWpg-aliphQ-1; Mon, 19 May 2025 15:28:05 -0400
-X-MC-Unique: Aww4PPueOL-cWpg-aliphQ-1
-X-Mimecast-MFC-AGG-ID: Aww4PPueOL-cWpg-aliphQ_1747682884
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso42732425e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:28:05 -0700 (PDT)
+ us-mta-561-SvLwVrK3PU-8pOMcIXOfGQ-1; Mon, 19 May 2025 15:29:08 -0400
+X-MC-Unique: SvLwVrK3PU-8pOMcIXOfGQ-1
+X-Mimecast-MFC-AGG-ID: SvLwVrK3PU-8pOMcIXOfGQ_1747682947
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so27948495e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:29:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747682884; x=1748287684;
+        d=1e100.net; s=20230601; t=1747682947; x=1748287747;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qVQZc5INnoqutZYmTut12ZA5XDVGTeIuyWo7ArztSjg=;
-        b=PBRy2i5Ve/ii7E5E2f629XO4CePzlslg+PXWJUVH7fuxNF4BeX0A9H8p+2MCgPXuPu
-         4AJnkaS6pOIw4aq2AWiLpYZALKYOCMPZ7ghmrB6X+35CQ/lopEtRWf21AwzOZv9P8/Y5
-         mFTLA2KhFu1vioHtYZPhnlJBXljFkoYagD3tGau2K9SO2QKQ/ipCduOEqtmsQooCklyR
-         mjL3Rk6SB7FTncwmbiuIy8QYo55m0hbXqXqYQ2Ve8TH1du9B/8rX0xGQVjR4yU7t0749
-         y+9OGxxyih06963P5ZoOxgCCrZhJTaSh+1xPcq/C+EJR6FNrEZ9cwlxzRERVSXYjxs1g
-         N61A==
-X-Forwarded-Encrypted: i=1; AJvYcCX7z6XPf63ASPeFxT37I/00KX594OzMoFEDIwhkIfz0ruhfso7RxDBk9I+/DuySYJd6/jZaykf5B0J06Kg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHOmwc4ynQnGYAf3VUNhSEGCuUQ78650hAivHaVE3Qvjfaj0mD
-	z7moFW4GEbt6Rom6wPU/peOyOLB2wVzIfTdfTIoin9jEFGIIWhZW2CDX30FCPtUopXYIGmt/zXs
-	xuv9mm/rB3l9PiHzm74bfdQu7eaDEsQbTrnRNqMQebUBz7QtmVaLQdJCJcIyZvXEfJsNTXoSzG8
-	n1
-X-Gm-Gg: ASbGnctMFTxsg76maE3KjEtnJPUQFrPEMiP50GrqbfRBavgY8YO9TYkBC/kx1tmuqGe
-	M9ySTF7xQIaaRD+qv8bbxVUNQuXrbZOWDgS+w4NmuLmaIAhucwbcLdQ1npPKaF4iOD/P91oTYUN
-	fgmw3fMOVAucyuur0U3+EOAWAEYUa+a5EGazXnJ28YftKOVu07weHudABEuUYKvAzbABJOqCdP/
-	R10hnhuuzh8Yay8yjB7Y/Z1ZLipU+j+vbgGaZVoUPkwCoFBsHCS3g+IP/x+6JmSk97nqNCzCkVL
-	I6JMZREQPZ0cpySCNQaq9D57Swg2Pp2Shw+8qSbXzO2t2xb9dZ0g0cNrT977VonV7VTOOOaFI0u
-	ovyi0FnmXdeL/c/BP4C2YwANCV4Zn8Cc48nbHPB0=
-X-Received: by 2002:a05:600c:c1b:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-442feffbb8dmr150315545e9.17.1747682884059;
-        Mon, 19 May 2025 12:28:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IESb912KpWPc+1WCxDZznxhcbTv/hYw+6+52hmHHhfCLzW1q+2VC3U6RSKNRPFkZUWbVZWovg==
-X-Received: by 2002:a05:600c:c1b:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-442feffbb8dmr150315345e9.17.1747682883673;
-        Mon, 19 May 2025 12:28:03 -0700 (PDT)
+        bh=n/A5udE0xFsUfjluCthGJRT0KVJ/nbPqupKt9mvOjwI=;
+        b=Dhjr+HseSU0G2+KvCxCkgcRlekQrIzY6RvZZE0+e1pSN7ayh0ssV40x7IjK5WwLC/2
+         SjzutomQellkbyzJiEQvWBxvINHO7FSg0ER7w148Qormd6aRKBsnv8XHQLuJgEg2c0Ab
+         nd8SCOX2jBPbJxvdLKA+hxJ3hehUmjBZb3jWtQIWxiiPfFLunTSxW+OF1oxWLhs02QsD
+         8QWCmHrHqEVrewMDgzFjHGUGyomByFgMCngFWkTURtdfHLW6pQ0KTVLsajuV7BcEQAo5
+         rDSQxwO8xVI4yl3gGWQd8H2BtIjoLG+Fy28B8c6RsSDgikyx2cApYjNSVtn0qHSeQUGd
+         LtMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUT5WQXAGU+EzI5NR5qURFWNNWxdgJsk0q1gR62K51fxTqVYYTuSbUxtRDDiS+ZktP6W3t1ZrFueLYsOZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8D+3bSoywacX+W8jxB/GdHSSZ2u+ZZSHys1VWDNM9CEAcnSub
+	Zka3U8isAkI/7u+EzZemHHDhxlcMYUpnSWdcutE5Mz3zb2E6PLu4/AyU2M2DKYmh7ERUB1F9HIs
+	87ds4NiDno1iFRPPfscqUPx6Uz+TLdQDZy3ujN6iVeJLHazs1Vw9oNg6RFv3km6klHQ==
+X-Gm-Gg: ASbGnctjNP+O+7bOgE2nTRWcPNQNfZPhlbG6fQe0NpHCLBr2G9QThA9Zu4DaZGd3YFG
+	1qr642fUtfWFzZPTR96baiRedGm3A5yxBuJEGYJJ1joipe8LGP50zUKrlpVWjWyjgIk1Ms0FDqO
+	xymWwx+B/0tCFktelBSAJDmgvXrzc8YIx1N69iZQ4sa8peTFKuLwBebUl0P3UolsFBf3022EMz3
+	OlBPSgryfu3q/vNEv21PVSiLN0ydtjh0SiajArlak42VX3ewjWwb5rAUNy/hY/sz6mg3/VPocu7
+	SC+FmpDT6/8u2Ff352keWytq3jgF2yyBpUhrpmXuvD25cGGf7sUVbVey6UbMjMgTvdQT7c5oc/m
+	0vWyg3P1IjEGu/JXqCnbqalmN0hakk6dRABDG/Ww=
+X-Received: by 2002:a05:600c:3e0a:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-442fd5a2c09mr163645335e9.0.1747682947185;
+        Mon, 19 May 2025 12:29:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElwndSxsvYGiPSfmwEdluQQgF5em0NgqI0FO0EfTofaeJHmVDskBJCeT6akaFpuN6ZVrpCIA==
+X-Received: by 2002:a05:600c:3e0a:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-442fd5a2c09mr163645205e9.0.1747682946811;
+        Mon, 19 May 2025 12:29:06 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm736785e9.10.2025.05.19.12.28.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7d975cfsm730805e9.38.2025.05.19.12.29.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 12:28:03 -0700 (PDT)
-Message-ID: <de02f1cc-558b-46c5-add9-5c55385c409a@redhat.com>
-Date: Mon, 19 May 2025 21:28:01 +0200
+        Mon, 19 May 2025 12:29:06 -0700 (PDT)
+Message-ID: <0ba29e21-22f1-446f-a9fd-863c99904ce2@redhat.com>
+Date: Mon, 19 May 2025 21:29:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,9 +88,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
  <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
  <e5d0b98f-6d9c-4409-82cd-7d23dc7c3bda@redhat.com>
- <2be98bcf-abf5-4819-86d4-74d57cac1fcd@lucifer.local>
- <e2910260-8deb-44ce-b6c9-376b4917ecea@redhat.com>
- <fed73be7-6f34-48b9-a9c9-2fe5ad46f5ba@lucifer.local>
+ <3e2d3bbb-8610-41d3-9aee-5a7bba3f2ce8@redhat.com>
+ <d8e20b76-1eed-459f-8860-a902d46bc444@lucifer.local>
+ <e5085602-e97a-4b30-b640-e1e4f2e77cf1@redhat.com>
+ <36ea1ee7-bb6c-47ff-a6cf-18f43fb23493@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -139,34 +139,90 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <fed73be7-6f34-48b9-a9c9-2fe5ad46f5ba@lucifer.local>
+In-Reply-To: <36ea1ee7-bb6c-47ff-a6cf-18f43fb23493@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 19.05.25 21:26, Lorenzo Stoakes wrote:
+> On Mon, May 19, 2025 at 09:11:10PM +0200, David Hildenbrand wrote:
+>> On 19.05.25 21:02, Lorenzo Stoakes wrote:
+>>> On Mon, May 19, 2025 at 08:04:22PM +0200, David Hildenbrand wrote:
 >>>>
->>>> So, assuming we could remove the VM_PFNMAP | VM_IO | VM_DONTEXPAND |
->>>> VM_MIXEDMAP constraint from vma_ksm_compatible(), could we simplify?
+>>>>>> +/*
+>>>>>> + * Are we guaranteed no driver can change state such as to preclude KSM merging?
+>>>>>> + * If so, let's set the KSM mergeable flag early so we don't break VMA merging.
+>>>>>> + *
+>>>>>> + * This is applicable when PR_SET_MEMORY_MERGE has been set on the mm_struct via
+>>>>>> + * prctl() causing newly mapped VMAs to have the KSM mergeable VMA flag set.
+>>>>>> + *
+>>>>>> + * If this is not the case, then we set the flag after considering mergeability,
+>>>>>> + * which will prevent mergeability as, when PR_SET_MEMORY_MERGE is set, a new
+>>>>>> + * VMA will not have the KSM mergeability VMA flag set, but all other VMAs will,
+>>>>>> + * preventing any merge.
+>>>>>
+>>>>> Hmmm, so an ordinary MAP_PRIVATE of any file (executable etc.) will get
+>>>>> VM_MERGEABLE set but not be able to merge?
+>>>>>
+>>>>> Probably these are not often expected to be merged ...
+>>>>>
+>>>>> Preventing merging should really only happen because of VMA flags that
+>>>>> are getting set: VM_PFNMAP, VM_MIXEDMAP, VM_DONTEXPAND, VM_IO.
+>>>>>
+>>>>>
+>>>>> I am not 100% sure why we bail out on special mappings: all we have to
+>>>>> do is reliably identify anon pages, and we should be able to do that.
+>>>>>
+>>>>> GUP does currently refuses any VM_PFNMAP | VM_IO, and KSM uses GUP,
+>>>>> which might need a tweak then (maybe the solution could be to ... not
+>>>>> use GUP but a folio_walk).
+>>>>
+>>>> Oh, someone called "David" already did that. Nice :)
+>>>>
+>>>> So we *should* be able to drop
+>>>>
+>>>> * VM_PFNMAP: we correctly identify CoWed pages
+>>>> * VM_MIXEDMAP: we correctly identify CoWed pages
+>>>> * VM_IO: should not affect CoWed pages
+>>>> * VM_DONTEXPAND: no idea why that should even matter here
 >>>
->>> Well I question removing this constraint for above reasons.
+>>> I objected in the other thread but now realise I forgot we're talking about
+>>> MAP_PRIVATE... So we can do the CoW etc. Right.
 >>>
->>> At any rate, even if we _could_ this feels like a bigger change that we
->>> should come later.
+>>> Then we just need to be able to copy the thing on CoW... but what about
+>>> write-through etc. cache settings? I suppose we don't care once CoW'd...
 >>
->> "bigger" -- it might just be removing these 4 flags from the check ;)
->>
->> I'll dig a bit more.
+>> Yes. It's ordinary kernel-managed memory.
 > 
-> Right, but doing so would be out of scope here don't you think?
+> Yeah, it's the CoW'd bit right? So it's fine.
+> 
+>>
+>>>
+>>> But is this common enough of a use case to be worth the hassle of checking this
+>>> is all ok?
+>>
+>> The reason I bring it up is because
+>>
+>> 1) Just because some drivers do weird mmap() things, we cannot merge any
+>> MAP_PRIVATE file mappings (except shmem ;) and mmap_prepare).
+>>
+>> 2) The whole "early_ksm" checks/handling would go away, making this patch
+>> significantly simpler :)
+> 
+> OK you're starting to convince me...
+> 
+> Maybe this isn't such a big deal if the KSM code handles it already anwyay.
+> 
+> If you're sure GUP isn't relying on this... it could be an additional patch
+> like:
+> 
+> 'remove VM_SPECIAL limitation, KSM can already handle this'
+> 
+> And probably we _should_ let any insane driver blow up if they change stupid
+> things they must not change.
 
-I'm fine with moving forward with this here. Just thinking how we can 
-make more VMA merging "easily" possible and avoid the KSM magic in the 
-mmap handling code.
+That is exactly my thinking.
 
-(that early ksm check handling is rather ugly)
-
-Your patch promises "prevent KSM from completely breaking VMA merging", 
-and  I guess that's true: after this patch merging with at least anon 
-and MAP_PRIVATE of shmem it's not broken anymore. :)
+But I'm also fine with doing that later, if you want to be careful.
 
 -- 
 Cheers,
