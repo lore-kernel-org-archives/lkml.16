@@ -1,162 +1,86 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3AC1CF96;
-	Mon, 19 May 2025 05:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6DE1E0B86;
+	Mon, 19 May 2025 05:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747632302; cv=none; b=aCM9PLb8s6DAlPOwsm3hjH5YktSxGHZcUc4T6IQKNs6NwV82uJZ1QAId2/7H7oMvf3P2qCc0VKis7KwW/19hzVi/oUvNXsOlB3O9/0Yck41WE/vWPlhfnEr8anZv4hxWNnbHZZubx69xH5jTVahwtGnVeiK5UDLFKJdC+2VrLvA=
+	t=1747632740; cv=none; b=f1sHgrybV4Qk+ykF+o4iy9oazHOBnttHsLAENqyyAIwcPNxdJugxRCuTxqVKyRo7OlTsQe4Um3jExul/HfLQMNDq8pBSqxMCV8+kcSsZWjuz1VWcz0nEWuj3HdJ0kL5O7XsimOcHT0SMY0fYFQ6r7KtLhzXuk3cV8tMhqbFhmco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747632302; c=relaxed/simple;
-	bh=DcNtTSjJRfPh0JXirryZ/pFXiyFUVCYRXBOF0XJ2lZg=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DvJ1GGvuZ5m/mK1MHgRd0hhgcfuLJ0zU/d8zQXvROsLKN/xNKXgzalc0sPWm729gaHmeXEDtb2DKybc1eI9LmuNrXLs1vCEUK4wBJwtIZx/aYA1AY1tEE8BUVVn2RdQIhjTdXUGvyt0Xq3VpeTVxWRqPeHP0JjbyHSeDITB9jNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eIgyNFfb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747632740; c=relaxed/simple;
+	bh=jWYI5g+vVLiBOzrfAXt/iaQKvkvYcWBSghpAXs28Q3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q7KFArxSEsVLrsplWN8In3u+asRkTF6jAMwT5qJEMF3sx4PngNWLhNgNGkEASHogzGxdYtR/8C1bj+A13j0ZZWvpO+IXOecALvDHG8A/e5tboKYx9miPOkuvSf8wQWR2oYf01YY0mGBxRFtTtkr3omUWWdh3fxf4Q76E33siTas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iUouCGxF; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eIgyNFfb"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54ILb0og017287;
-	Mon, 19 May 2025 05:24:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hmZZzjSy/eT0NOji6i3HAopjzSWwfq+/gwsuSksAV3w=; b=eIgyNFfbG9ynjRLg
-	Uxv0PFO7QsMyTuHr4GO1dYH8sWynOJoThWFr7SFXR7gpfvxfqgnDpw2Wkeri+fZR
-	SZLWQfqkmC9eFVNtYi3ty3fjvpGUIf2oIHRRa8GUZhgachENHq8TBMnYnIZoSbnO
-	SHx+3PsO7t8JGXnKUCPjHWy17MpThe3Sqlt6LY3GAotsCXce2hQ9AJAn6v0hH/zz
-	uCbQWIJwRC8Mah25OADqhBtFqdILymvq/NWtFiQHJhFsVcIhTMSfVoOEv3OGXQHr
-	TLSofz0ciRSN/HKeQbaIjlg1g9FtvtpFpLYe7MDPB42rIs7LChEMnRLlMZbBlDVI
-	NJBRNQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjnyk4rn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 05:24:56 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54J5OtC3026903
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 05:24:55 GMT
-Received: from [10.219.56.16] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 18 May
- 2025 22:24:53 -0700
-Subject: Re: [PATCH v5] remoteproc: Add device awake calls in rproc boot and
- shutdown path
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
- <91d8efa0-c61c-eb17-b6f4-cb9804e5fff9@quicinc.com>
-CC: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Message-ID: <cf3fffda-8d88-b962-398d-d038cd10b981@quicinc.com>
-Date: Mon, 19 May 2025 10:54:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iUouCGxF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IEsfDykr8+4fWC+m7DpvjtvuBBE7sgNCtd1n2wYel9k=; b=iUouCGxFog+mPPutazH6N0pUPC
+	Qr3eyxBur/7ohGjygeXPb4BBiG5JlNP1Y3KBG25V1lLRrDAOwUzG9deUNGeziJ1sw7YHXwv5dXGI/
+	idbgsmxcpnH5izAZUmaMQmG5y+oqFNfdngLCdSX+KU9r9KxE9XYqA1YDOSkJts56NE+liDH6kUHcg
+	ImqHueG8Hgeu/TYOggPLmRxlGy4Y2tGescukkaiYbUaC7WYrAtJUT3blUZ81dJtquxjLmTEFDUvVN
+	Q1laRD1UgMiz8BVSWKHm7eRKbiyg8xyQAkOblwDLkEMwmZlIYRR35C4iqyv2lr2e7f8TCEAidkosl
+	HNuKvKAA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uGt6n-000000081xS-19vB;
+	Mon, 19 May 2025 05:32:17 +0000
+Date: Sun, 18 May 2025 22:32:17 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Benjamin Marzinski <bmarzins@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>,
+	Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
+	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCrCYbvOJs44Kj5a@infradead.org>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+ <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
+ <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
+ <aCW95f8RGpLJZwSA@redhat.com>
+ <aCbUcdew393RZIkV@infradead.org>
+ <aCdifWdCQCR3Nqb0@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <91d8efa0-c61c-eb17-b6f4-cb9804e5fff9@quicinc.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA0OSBTYWx0ZWRfX8VmkWuwDPg1i
- vy4LX1NFeI7wUs5UzmaWVTEWcsgEwgsdZ8N0IiOorggeXco+JZ6MVCR8+eg5X0RsDuoe412RiNx
- +Tx66Mq0b1dggRU7fLJ8u2acPB2nqwSu+h6PBZb/WNA0gRg5T6+HRsIueiuzQTNwamH1nSpZTuU
- PQ74Y3H1H4ToIxKFVMWwKSy216Xwl/3uNClblqdw2VAHnmdQsPvkKogHcDZIQmzlaTz/YyRRgdl
- 14n29L+K+pxxKS3Nc4H9EtvDWulTOPQf3dDVbZZlXlyKWrJQJPT1mzqyA1egkge5ZK/sB5WVdFG
- Vw2/OfhoBlb9UvOUJuq5igFDdXukrN24VjzFhYEAD99vJwSETlgWSX6tyzWyc2Lsz8Odzn/Ixnk
- tVt8CqQ3xM7XiEcrJ3wfn7oxKcUOLKygQq+rknpW4Baww+7p+PNOK+zKH3tweX3LS6GZC2AQ
-X-Authority-Analysis: v=2.4 cv=Z9XsHGRA c=1 sm=1 tr=0 ts=682ac0a8 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=N659UExz7-8A:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=T9jlel3K9Aby5IBUjGQA:9 a=pILNOxqGKmIA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: IczBKUOMeQbkjJWOWgIvyHlYuFNNBJ2w
-X-Proofpoint-ORIG-GUID: IczBKUOMeQbkjJWOWgIvyHlYuFNNBJ2w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_02,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1015
- malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCdifWdCQCR3Nqb0@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Gentle Reminder
+On Fri, May 16, 2025 at 12:06:21PM -0400, Benjamin Marzinski wrote:
+> I've run into SCSI arrays that always act like they were called with the
+> ALL_TG_PT flag set (or perhaps they were just configured that way, I
+> never could get a straight answer about that).
 
+Hmm, that's pretty strange.
 
-On 5/14/2025 1:03 PM, Souradeep Chowdhury wrote:
-> Gentle Reminder
->
->
-> On 4/8/2025 4:13 PM, Souradeep Chowdhury wrote:
->> Add device awake calls in case of rproc boot and rproc shutdown path.
->> Currently, device awake call is only present in the recovery path
->> of remoteproc. If an user stops and starts rproc by using the sysfs
->> interface, then on pm suspension the firmware fails to load as the
->> request_firmware call under adsp_load relies on usermodehelper
->> process which gets freezed on pm suspension. Add device awake calls
->> to fix this.
->>
->> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
->> Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
->> ---
->> Changes in v5
->>
->> *Added more details to commit description
->>
->> Changes in v4
->>
->> *Remove stability from mailing list
->> *Remove the extra tab in v3
->> *Change the commit description
->>
->>   drivers/remoteproc/remoteproc_core.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c 
->> b/drivers/remoteproc/remoteproc_core.c
->> index c2cf0d277729..5d6c4e694b4c 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
->>           return -EINVAL;
->>       }
->>   +    pm_stay_awake(rproc->dev.parent);
->>       dev = &rproc->dev;
->>         ret = mutex_lock_interruptible(&rproc->lock);
->> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
->>           atomic_dec(&rproc->power);
->>   unlock_mutex:
->>       mutex_unlock(&rproc->lock);
->> +    pm_relax(rproc->dev.parent);
->>       return ret;
->>   }
->>   EXPORT_SYMBOL(rproc_boot);
->> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
->>       struct device *dev = &rproc->dev;
->>       int ret = 0;
->>   +    pm_stay_awake(rproc->dev.parent);
->>       ret = mutex_lock_interruptible(&rproc->lock);
->>       if (ret) {
->>           dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
->> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
->>       rproc->table_ptr = NULL;
->>   out:
->>       mutex_unlock(&rproc->lock);
->> +    pm_relax(rproc->dev.parent);
->>       return ret;
->>   }
->>   EXPORT_SYMBOL(rproc_shutdown);
->
+> libmpathpersist accepts
+> this flag, and only sends one registration per initiator & target device
+> when it's set, instead of one per initator & target port.
+
+With "this flag" you mean ALL_TG_PT?
+
+> dm-multipath
+> currently doesn't have the knowledge necessary to figure out which
+> devices it needs to send reservations to, even if the kernel PR API
+> supported this.
+> 
+> But I supposed it could just send the registration normally down one
+> path and if that works, it could just ignore the existing key when it
+> sends the registration down all the other paths.
+
+We could add support for a similar flag to the kernel PR API.  The
+problem is to figure out how to discover support for it.  What does
+the library do for that currently?
 
