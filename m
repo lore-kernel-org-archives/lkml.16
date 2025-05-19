@@ -1,214 +1,180 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702EA2135D7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19DB2116F5;
+	Mon, 19 May 2025 20:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747686269; cv=none; b=B8jqTdrHJqAgBIVC23D0W4hgbT3WvSPV+AOkLzwdyeSgtFpCmfv3nn5lLzEAeaQQHYy1U250kidyeOtxhkUjSMnSrLcKRSBLGdpe7sEN402JUXdsCihoLTwPJ1dah07lL2jKuOZSgJWoER8QJ4WK0EHjF/pJa0SrYwKi5ab5Evo=
+	t=1747686399; cv=none; b=Jli+K//Tm4hfbyq0fMlI1gNKlLADm/SxGv1onf3ns+LeA1kMwNPoOWuVNFriQF17tzaitTq3sJt+MSnIhwHLhazbKLs9emjtrUdHK1Xmbb8LwQ3O/lYYwixy3PJNhIF7GU1J9PJPnHc467d2XRyR3XZ5PMNrXPmGeCTbgpM1BQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747686269; c=relaxed/simple;
-	bh=vKVPad6NB2x2jxACj0etyvY1GH+oppiv1umngiMCaSo=;
+	s=arc-20240116; t=1747686399; c=relaxed/simple;
+	bh=M3Qm7UxyqVWZ7NlBEwv26O0riHxC3eGrEkrMHZFTCvM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hu0QJRlUk9G8ST7VRL5svvSGvSmgwzEGZFkGcHjhfoiimuvsJVdI1zl/rAVyc8jJcrv3KBIrCGnv7luF/tdp17fEW6cIBciSlwfu2uuDvrdlZ8/XGOFHlC+198FyJJwQ8G0NXPmCPKRoD7nFkGjUrWGwCXBE4j0zMYsUYDQqzC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bEaZMTjB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bbv64XgJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bEaZMTjB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bbv64XgJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=iafTTjnKcNX/eg5jo68cS/vUENTUbaoAP69iQHD/KPDEBg5sgiI/VWZcHqOjLz9nh9QzDDIElKqAZTDz1tgR9GgFHAbLLqs9lY12sVZttRjn7Qr1iu9UZLXbR3FfY/Gy10cOmG7D15PPvFnri9mFSFLNopsIZj+JZwYQbx6SkX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmR1xifO; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bEaZMTjB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bbv64XgJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bEaZMTjB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bbv64XgJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5CAB5204CC;
-	Mon, 19 May 2025 20:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747686265; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k879OpuEXQUarLUFeeLE7zaY4SZBkg/56/Kn+adTwh0=;
-	b=bEaZMTjB1rkeZvjA75uuaZvayPkhjTe2nQvggcEzNU4HpBy1JdHEPuPvWH2eNomu5UsuKu
-	CBWOaldt6ttzMI/LC2gGyzjCnDr9DIG1H8jv04ZdM0ShEiRkee8UPqQ2/Q6vuLkEuqW9T2
-	Q3Y5k+tIyodtu+KKekObxBbyneCCabY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747686265;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k879OpuEXQUarLUFeeLE7zaY4SZBkg/56/Kn+adTwh0=;
-	b=Bbv64XgJcexinKjvI1nctVf3RR2Ol0aLlHdoX7DbNXuoINK+2fCbyzD5VBPe1fX1fe/ke9
-	4GThIgl87AQYv5DQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bEaZMTjB;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Bbv64XgJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747686265; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k879OpuEXQUarLUFeeLE7zaY4SZBkg/56/Kn+adTwh0=;
-	b=bEaZMTjB1rkeZvjA75uuaZvayPkhjTe2nQvggcEzNU4HpBy1JdHEPuPvWH2eNomu5UsuKu
-	CBWOaldt6ttzMI/LC2gGyzjCnDr9DIG1H8jv04ZdM0ShEiRkee8UPqQ2/Q6vuLkEuqW9T2
-	Q3Y5k+tIyodtu+KKekObxBbyneCCabY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747686265;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k879OpuEXQUarLUFeeLE7zaY4SZBkg/56/Kn+adTwh0=;
-	b=Bbv64XgJcexinKjvI1nctVf3RR2Ol0aLlHdoX7DbNXuoINK+2fCbyzD5VBPe1fX1fe/ke9
-	4GThIgl87AQYv5DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4DD4213A7C;
-	Mon, 19 May 2025 20:24:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6dq0EnmTK2giFgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 19 May 2025 20:24:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0A56AA0A31; Mon, 19 May 2025 22:24:25 +0200 (CEST)
-Date: Mon, 19 May 2025 22:24:24 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu, adilger.kernel@dilger.ca, 
-	jack@suse.cz, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH v2 5/8] ext4: correct the journal credits calculations of
- allocating blocks
-Message-ID: <nhxfuu53wyacsrq7xqgxvgzcggyscu2tbabginahcygvmc45hy@t4fvmyeky33e>
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmR1xifO"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231bf5851b7so37020515ad.0;
+        Mon, 19 May 2025 13:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747686397; x=1748291197; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=02GL2wKVW0LkdsZTCqM47NTuhtkoo30AFjaowy05cuE=;
+        b=GmR1xifO1D3A4T86M68yyjXXigcxNzg1slcBm4/V+hM7vjHo42BDynRRu/wt9kPDPk
+         LFJGopUFmXFDa787bu3qU5R01dt7LcD5W3l7dZ6sZVTg+2jY7/aU3beo06xBCUoltdG6
+         hbCMbNlUl8wfiQCqOa9P6F+Vq+62QD22Emccat79MHbDIVRkKNyJ5cNVg+iu1Ateux7W
+         WM5mTHUXsveJL5Z1uJNxi+bNac7TdoU+z0zPlrtT29Qf0Zqg8RgY+tRkI+9U0eBbpk6K
+         JUKdUVBnwYZAUv8PJOw5RIKjnszn0mD9HvTIiM62mRyg0/UIpi/aS8SckvolAyP3w0NK
+         Y9ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747686397; x=1748291197;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=02GL2wKVW0LkdsZTCqM47NTuhtkoo30AFjaowy05cuE=;
+        b=DMwFdfEH5Nqwp9FRJBkupWKYGDg0Ugo9+95CMiGvAprZphLjnCJ/IyKHuD7S4j8CXC
+         j3Kgg06rPQomlBD4nYUF/1EXcU15bWHrG8SYvr9vZzv0Xjy7zO9VdiSXzEa1kljYCIIe
+         UgYKWeD7IDrSYCsEZyH8GK8uQWealKOS37HMWU5zZeg8tYGy9sfX2TF1Xy/+VACPcHbB
+         SBPM6Wc7dl9Te6BbCgC3COgWoSB+yFezPILUuyBml6/hI2HPBQkbtGDn58ajntOwuZgy
+         wmKOTBHY+FUe4f1uXcaqa08wLR+A14SUE1OJGASut4NOjNd10w4dj3IBHyYzHDlwNGZG
+         vVPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPTKC5M/9ksnaEYjQ9K/OfnghTnN0tgMcxYfBgVklOcVak/fmC7BwkxOG5WFHPWqytylplu/SCD1BQenqYunop@vger.kernel.org, AJvYcCXye2TCh5MVaH6Qv/bUb14f2/JRpWkFoQVSwJ9976GDcwp8BW+Q7DJ93RK3Uuum4zoxnwQ7dJbmQ/Q9dik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfP/n52UfT9XSrrCO1jECG4MF449wTRRHaxNaG6EXER56z6U4Y
+	6w3lz42JfJWczExORbIdJTk/T0LvrKuhOrbhOBPlEQSLYSe3EQnGww4=
+X-Gm-Gg: ASbGncs/8uZkYMs6eEtn3tPOxTcBQr4zERlNfFBuD0wYhS/z0iFY+LR1owj7ikCi6U0
+	ElF8p+XfzhQuG8LfcxVM8bsC7Akav2Z4XzDL2b8AjZRnHSkOCDBsO2yOsFXK48SGntffZBXbMlq
+	Gta+30+HWapFZijYzpQvF6YfUq/LYjEubtNlnsviaXfA1SsyS6ERotXFFWH3MdE1f+HfMEtBID7
+	CxLhzzj9yIUNxPlg6cRCl7YHa4lS2MUMiNNfSN/dvh6mkVFJHQmHSb9/HAwoL9tpM8uc2xKgse4
+	LGXqOiZUYDeO8+O7U8torhf4C/Ml66O8gpFiPqTcrEUAy5UHeayT82BixOL/UeuoWhRrivHIwAi
+	qjVJKb8tiMEIE
+X-Google-Smtp-Source: AGHT+IH3Njb1ruXaok9z6rsx1z8T8I9pAGPNq77aZ6L/zHkoVRfFzVXe9cnxvfL59FRWkvqTEomqdQ==
+X-Received: by 2002:a17:903:94f:b0:223:5ca1:3b0b with SMTP id d9443c01a7336-231d45a9aa0mr217834815ad.40.1747686397006;
+        Mon, 19 May 2025 13:26:37 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4adbfcbsm64224505ad.75.2025.05.19.13.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 13:26:36 -0700 (PDT)
+Date: Mon, 19 May 2025 13:26:35 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	David Ahern <dsahern@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
+	sdf@fomichev.me, ap420073@gmail.com, praan@google.com,
+	shivajikant@google.com
+Subject: Re: [PATCH net-next v1 5/9] net: devmem: ksft: add ipv4 support
+Message-ID: <aCuT-3rdNQTzb6UD@mini-arch>
+References: <20250519023517.4062941-1-almasrymina@google.com>
+ <20250519023517.4062941-6-almasrymina@google.com>
+ <aCtPEBmBFvM-bA_i@mini-arch>
+ <CAHS8izMjCX=PkU0bE6s46uXxrnHjP71G6LN0v6oQumNa2Mouzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,huawei.com:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
-X-Rspamd-Queue-Id: 5CAB5204CC
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izMjCX=PkU0bE6s46uXxrnHjP71G6LN0v6oQumNa2Mouzg@mail.gmail.com>
 
-On Mon 12-05-25 14:33:16, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
+On 05/19, Mina Almasry wrote:
+> On Mon, May 19, 2025 at 8:32 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> >
+> > On 05/19, Mina Almasry wrote:
+> > > ncdevmem supports both ipv4 and ipv6, but the ksft is currently
+> > > ipv6-only. Propagate the ipv4 support to the ksft, so that folks that
+> > > are limited to these networks can also test.
+> > >
+> > > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> > >
+> > > ---
+> > >  .../selftests/drivers/net/hw/devmem.py        | 33 ++++++++++++-------
+> > >  1 file changed, 22 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/testing/selftests/drivers/net/hw/devmem.py
+> > > index f5d7809400ea..850381e14d9e 100755
+> > > --- a/tools/testing/selftests/drivers/net/hw/devmem.py
+> > > +++ b/tools/testing/selftests/drivers/net/hw/devmem.py
+> > > @@ -18,30 +18,36 @@ def require_devmem(cfg):
+> > >          raise KsftSkipEx("Test requires devmem support")
+> > >
+> > >
+> > > -def check_rx(cfg) -> None:
+> > > -    cfg.require_ipver("6")
+> > > +def check_rx(cfg, ipver) -> None:
+> > >      require_devmem(cfg)
+> > >
+> > > +    addr = cfg.addr_v[ipver]
+> > > +    if ipver == "6":
+> > > +        addr = "[" + addr + "]"
+> >
+> > I think you can add [] unconditionally, no need to special case v6.
+> >
 > 
-> The journal credits calculation in ext4_ext_index_trans_blocks() is
-> currently inadequate. It only multiplies the depth of the extents tree
-> and doesn't account for the blocks that may be required for adding the
-> leaf extents themselves.
+> I'll double check, but IIRC the [] were v6-only.
 > 
-> After enabling large folios, we can easily run out of handle credits,
-> triggering a warning in jbd2_journal_dirty_metadata() on filesystems
-> with a 1KB block size. This occurs because we may need more extents when
-> iterating through each large folio in
-> ext4_do_writepages()->mpage_map_and_submit_extent(). Therefore, we
-> should modify ext4_ext_index_trans_blocks() to include a count of the
-> leaf extents in the worst case as well.
+> > > +
+> > > +    socat = f"socat -u - TCP{ipver}:{addr}:{port}"
+> > > +
+> > >      port = rand_port()
+> > >      listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port}"
+> > >
+> > > -    with bkg(listen_cmd) as socat:
+> > > +    with bkg(listen_cmd) as ncdevmem:
+> > >          wait_port_listen(port)
+> > > -        cmd(f"echo -e \"hello\\nworld\"| socat -u - TCP6:[{cfg.addr_v['6']}]:{port}", host=cfg.remote, shell=True)
+> > > +        cmd(f"echo -e \"hello\\nworld\"| {socat}", host=cfg.remote, shell=True)
+> > >
+> > > -    ksft_eq(socat.stdout.strip(), "hello\nworld")
+> > > +    ksft_eq(ncdevmem.stdout.strip(), "hello\nworld")
+> > >
+> > >
+> > > -def check_tx(cfg) -> None:
+> > > -    cfg.require_ipver("6")
+> > > +def check_tx(cfg, ipver) -> None:
+> > >      require_devmem(cfg)
+> > >
+> > >      port = rand_port()
+> > > -    listen_cmd = f"socat -U - TCP6-LISTEN:{port}"
+> > > +    listen_cmd = f"socat -U - TCP{ipver}-LISTEN:{port}"
+> > >
+> > > -    with bkg(listen_cmd, exit_wait=True) as socat:
+> > > +    addr = cfg.addr_v[ipver]
+> > > +
+> > > +    with bkg(listen_cmd) as socat:
+> > >          wait_port_listen(port)
+> > > -        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port}", host=cfg.remote, shell=True)
+> > > +        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifname} -s {addr} -p {port}", host=cfg.remote, shell=True)
+> > >
+> > >      ksft_eq(socat.stdout.strip(), "hello\nworld")
+> > >
+> > > @@ -51,8 +57,13 @@ def main() -> None:
+> > >          cfg.bin_local = path.abspath(path.dirname(__file__) + "/ncdevmem")
+> > >          cfg.bin_remote = cfg.remote.deploy(cfg.bin_local)
+> > >
+> > > +        if "4" in cfg.addr_v:
+> > > +            ipver = "4"
+> > > +        else:
+> > > +            ipver = "6"
+> >
+> > If we have both, we prefer v4, can we do the opposite?
 > 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> Sure, but why? Just curious.
 
-One comment below
-
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index c616a16a9f36..e759941bd262 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -2405,9 +2405,10 @@ int ext4_ext_index_trans_blocks(struct inode *inode, int extents)
->  	depth = ext_depth(inode);
->  
->  	if (extents <= 1)
-> -		index = depth * 2;
-> +		index = depth * 2 + extents;
->  	else
-> -		index = depth * 3;
-> +		index = depth * 3 +
-> +			DIV_ROUND_UP(extents, ext4_ext_space_block(inode, 0));
->  
->  	return index;
->  }
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index ffbf444b56d4..3e962a760d71 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5792,18 +5792,16 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->  	int ret;
->  
->  	/*
-> -	 * How many index blocks need to touch to map @lblocks logical blocks
-> -	 * to @pextents physical extents?
-> +	 * How many index and lead blocks need to touch to map @lblocks
-> +	 * logical blocks to @pextents physical extents?
->  	 */
->  	idxblocks = ext4_index_trans_blocks(inode, lblocks, pextents);
->  
-> -	ret = idxblocks;
-> -
->  	/*
->  	 * Now let's see how many group bitmaps and group descriptors need
->  	 * to account
->  	 */
-> -	groups = idxblocks + pextents;
-> +	groups = idxblocks;
-
-I don't think you can drop 'pextents' from this computation... Yes, you now
-account possible number of modified extent tree leaf blocks in
-ext4_index_trans_blocks() but additionally, each extent separately may be
-allocated from a different group and thus need to update different bitmap
-and group descriptor block. That is separate from the computation you do in
-ext4_index_trans_blocks() AFAICT...
-
-								Honza
-
->  	gdpblocks = groups;
->  	if (groups > ngroups)
->  		groups = ngroups;
-> @@ -5811,7 +5809,7 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->  		gdpblocks = EXT4_SB(inode->i_sb)->s_gdb_count;
->  
->  	/* bitmaps and block group descriptor blocks */
-> -	ret += groups + gdpblocks;
-> +	ret = idxblocks + groups + gdpblocks;
->  
->  	/* Blocks for super block, inode, quota and xattr blocks */
->  	ret += EXT4_META_TRANS_BLOCKS(inode->i_sb);
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+We want to be in the v6-only world at some point (unlikely to get there
+though), and having dualstack deployments prefer v6 is the way to go.
