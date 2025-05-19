@@ -1,121 +1,119 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E56285418;
-	Mon, 19 May 2025 15:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC762853FF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667675; cv=none; b=gI4JWxE0B+qbl2W0R+rReipvdK5bSHVNkJQ4ZihIyWhSJvcNgXY7TA3VCVqrXnmhD7sgg8crDng9l5ZwZrnfPsHl8DUo86fE+BOV8WCZGfHlwZ9VKooCkpWKoO+Yn4rL0e4yp4rx2qvdSwN8owEFgx6g3XXZA3PKUbmUgaXxlxU=
+	t=1747667691; cv=none; b=MMtCu5RC2zVcbpPalYTHhevYXSvzGgwyVZOKVVvXGuCFBk1F++snTv4ULaHZhPSPRMDZ72Y4EZDFtuuMQrdK0YOb/G3hM3JihfSdyKUHAIVbz1MXUX1qvYhMu0P9BUpuLGAQVhOFCriqhnnAcIv7oZGJ5An1BC7k888iDSi4bcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667675; c=relaxed/simple;
-	bh=jBoiZ2GaWcghwbS8pyGx4WZcTi5x2cK8RY/sPEKxu5Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UYLzPo8yuwh+LAWZ/aJXNympwdlG/Cv+YP6ZNQ1gAW2RxSs82EbgOgJ8lLXa1TxnrZRbXPWQkHjHFMaoGLDtRRtT9tvAeEM4WAQzJ0gh6kH3I1E8RPuDRVbB0mSZTenbT+YKYRKkESA9X+wkUwtlqCjIrB3dHLDpE5rz+2pqj5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=McyPLrHJ; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747667691; c=relaxed/simple;
+	bh=7jeWlc3eTHA7YmtyvmjhMU+jNXG2C4BfsNcorU/SoCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UgVb3GNVswZ3VTNqFldSmjAyEbP2bALNcNv3zrNq1JGhDAxkBs0xF6Dp/f1mdzTCrU59pZ5q2Bdl7pMvQanLCPbGymIQppBai6QlScpMcf4tf6TFUOLJpWLLqeZ5mRnNZ83upw2Okwpkdj7xU9j3VNPiJiOywgTqyUkErgFVqlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBIbJg+v; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McyPLrHJ"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad52dfe06ceso346506666b.3;
-        Mon, 19 May 2025 08:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747667671; x=1748272471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AzPLTyR8BLY/EVNJO6GgeWhpConHv27PYp6Y5vYD5J0=;
-        b=McyPLrHJkVIhMoo/jGkf2uZKOXfd0vPCBLzmokev2hnaUmA+Fq4xWunSdLsnJHj9e8
-         i0wCt7dkTR2sDIq3S+mpVQyOpL7oZq7KDy4DpZef4qlCENEnszCXcoiv7MLciLjvHTF2
-         5fHuOn9oLsBx0DNPVDwjuHhr/9Q8PfyHhkt12Ysrxu1zKbAGb5SFFH5ARZVqUfjzQ4bI
-         9TKf33GHVf3dNyrBXVh9ghczGEYmgX19CVF0LpvW4RghKv62pW49HSxiA3KrWCES5cOb
-         gmfdMm6TvAXF6o0hWfAKpoYt8zRu+oPZ8pyAYFHb2M08VDs84s8zIZ/tMsVOjLNlMgdC
-         9jxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747667671; x=1748272471;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AzPLTyR8BLY/EVNJO6GgeWhpConHv27PYp6Y5vYD5J0=;
-        b=XmOlynnTSyb68lOythlDjydE3mVC2emYCz3N23ZxSuyiwXaVINwhcxVVPOpqPUqKZt
-         /+GSBE//q7v/fWDjD4UgQ5qzIYT4B7JBCB23/pa34cVnYsQPtxI/WoDvPqyzLi9NqxrJ
-         E9gRQyHXpQe6Fnjz5+Ch99Vs1m2sHzaCjLEZHCWRGHVeKZza08kblZHvQMG/OkYWNiPS
-         nIiQuU/d0Drg3R1GHJZZK+q9mfQe1dK22oHHK2+n6BCh4NZ+pBx0JuJYF62OG2N+/W9F
-         Z9qDONf0kZiAkES1WOnTXoBt3fHzQBGBp0w8Agk0kQOSMktCyLQLlKVkNVYQGmTc8y1P
-         8E1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+/hC5JLZ6Ts20r+H0abIsWHb931YOV28uuKXKevADp8xR1bDCijsFmklf0XTSReJHSKZdj5ctZTUpEnM=@vger.kernel.org, AJvYcCVC6na32E849MqXipI+VSL4dK5xwtoUWTTUkzQOxdqj/worfDV89cTl+LmWhdmP3zrCquXgCIXgO6fItWCT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZAe4GsOj/sL0tQu17/h9lCFVulJlfsYiRjp0/jx38def8gP2H
-	78GJtM2CC76W6Yeje0xncPvyL3Wbim+A6qILzRit0a3gB4QXCGF+Ovm+1lk6Dw==
-X-Gm-Gg: ASbGncsHc7qZKQuO9OGLr3asTRrhKFmK9oKPbr2orWkgOvbXsKBQqovxkvDDWQ5J+dj
-	YupO8CMCHfnvjwCewK1bQJHPFlkqzquVCNeF5puCmyFp8WaxnS8AubPv+Zn3sU5x/AXE6j1i0JL
-	cRUGj0tadAqDfPXvjm9541reXaWOF6O8y25/gcKfUAWebP6qa4h/7CMLMgC/zASlSdIgjZIWwYu
-	KuVV0F14dDNxSP8WezKd0XUcE/+mlISViUVqHGUdV++r+DkPQ/cc+FKwW+OY/lyuwzs0rhNG8H1
-	pfbzsiGT6IKC9N+p6QldSmDdHjVPPxIpWDXVG/IbYDrN8Z/DQljs2EMSXCKHnm8QeaMneP4IbF8
-	dQJ8=
-X-Google-Smtp-Source: AGHT+IHgJ+seY57z+XoTNGawx66JWeSgri2TnpAdEN3iSpX2I08ljlzJynMEjU7v1ngmRpqeLCLRKA==
-X-Received: by 2002:a17:906:dc93:b0:ad5:6ca3:c795 with SMTP id a640c23a62f3a-ad56ca3cb15mr472987066b.33.1747667671489;
-        Mon, 19 May 2025 08:14:31 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2f07:610b:a400:6472:d2f9:d536:4c30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b08bsm608522566b.13.2025.05.19.08.14.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 08:14:31 -0700 (PDT)
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-To: clabbe.montjoie@gmail.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	linux-crypto@vger.kernel.org
-Cc: wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Subject: [PATCH 3/3] crypto: sun8i-ce - use helpers to get hash block and digest sizes
-Date: Mon, 19 May 2025 18:13:50 +0300
-Message-ID: <20250519151350.3442981-3-ovidiu.panait.oss@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250519151350.3442981-1-ovidiu.panait.oss@gmail.com>
-References: <20250519151350.3442981-1-ovidiu.panait.oss@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBIbJg+v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747667690; x=1779203690;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7jeWlc3eTHA7YmtyvmjhMU+jNXG2C4BfsNcorU/SoCg=;
+  b=bBIbJg+vOh1iaK77eeMSfyf9WOFpHGeDxDkRi/S6DNjPC1FWP7yV/L4c
+   LNc0CCnmJ5WXthRvtzMdM3UsXDPKNmHV+ex+pjghT3GVUjzL57qUUDKRz
+   rT11tcKqET19fZjOudvYBYyBK7GPsF2tPplpOJEVjC1WjJfo9SSXtaSB5
+   P/xZaaG6zO71mg4gi2ZyFtbyVyCMqFGBMyTiQ1Bh7a33TrahFKbTqgrOM
+   NFo/7z8eYAHbV1qYkjz3nw2h+g4XoaBbZLMQOSmVHZmTStRbmfROPPgHp
+   cn7pQ9bvEcOpGU2RwNgXcYhfNnQe/0toRAqb4VgAoHfT/z3wwmlvzhOee
+   g==;
+X-CSE-ConnectionGUID: QLoWAa8XSYyl3Y+dZTN8ZA==
+X-CSE-MsgGUID: FxJuBWtdQx6bsmTgs/oC9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="59802205"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="59802205"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:14:50 -0700
+X-CSE-ConnectionGUID: 0BeUY0OZSreuyhFdA4pmoA==
+X-CSE-MsgGUID: RsJdg5gUS7Gkw0yUhQH9dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="139441734"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO [10.245.245.41]) ([10.245.245.41])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:14:47 -0700
+Message-ID: <32da3736-9ac1-4524-94e6-28a81f23bf31@linux.intel.com>
+Date: Mon, 19 May 2025 17:14:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] drm/xe: Allow building as kernel built-in
+To: Harry Austen <hpausten@protonmail.com>, intel-xe@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Jani Nikula <jani.nikula@intel.com>
+References: <20250516104210.17969-1-hpausten@protonmail.com>
+Content-Language: en-US
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+In-Reply-To: <20250516104210.17969-1-hpausten@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use crypto_ahash_blocksize() and crypto_ahash_digestsize() helpers instead
-of directly accessing 'struct ahash_alg' members.
+Hey,
 
-Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 2025-05-16 12:42, Harry Austen wrote:
+> Fix Kconfig symbol dependency on KUNIT, which isn't actually required
+> for XE to be built-in. However, if KUNIT is enabled, it must be built-in
+> too.
+> 
+> Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
+> isn't, since that results in duplicate symbol errors.
+> 
+> Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=m")
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Signed-off-by: Harry Austen <hpausten@protonmail.com>
+> Acked-by: Jani Nikula <jani.nikula@intel.com>
+> ---
+> v4: Add Jani Nikula's Acked-by tag
+> v3: Simplify KUNIT dependency, as suggested by Jani Nikula
+> v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+> 
+>  drivers/gpu/drm/xe/Kconfig | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+> index 9bce047901b22..214f40264fa12 100644
+> --- a/drivers/gpu/drm/xe/Kconfig
+> +++ b/drivers/gpu/drm/xe/Kconfig
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_XE
+>  	tristate "Intel Xe Graphics"
+> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=y))
+> +	depends on DRM && PCI && MMU
+> +	depends on KUNIT || KUNIT=n
+>  	select INTERVAL_TREE
+>  	# we need shmfs for the swappable backing store, and in particular
+>  	# the shmem_readpage() which depends upon tmpfs
+> @@ -51,7 +52,7 @@ config DRM_XE
+>  
+>  config DRM_XE_DISPLAY
+>  	bool "Enable display support"
+> -	depends on DRM_XE && DRM_XE=m && HAS_IOPORT
+> +	depends on DRM_XE && (DRM_XE=m || DRM_I915!=y) && HAS_IOPORT
+>  	select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
+>  	select I2C
+>  	select I2C_ALGOBIT
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-index bef44f350167..13bdfb8a2c62 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-@@ -342,8 +342,8 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, void *breq)
- 	algt = container_of(alg, struct sun8i_ce_alg_template, alg.hash.base);
- 	ce = algt->ce;
- 
--	bs = algt->alg.hash.base.halg.base.cra_blocksize;
--	digestsize = algt->alg.hash.base.halg.digestsize;
-+	bs = crypto_ahash_blocksize(tfm);
-+	digestsize = crypto_ahash_digestsize(tfm);
- 	if (digestsize == SHA224_DIGEST_SIZE)
- 		digestsize = SHA256_DIGEST_SIZE;
- 	if (digestsize == SHA384_DIGEST_SIZE)
-@@ -455,7 +455,7 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, void *breq)
- err_unmap_result:
- 	dma_unmap_single(ce->dev, addr_res, digestsize, DMA_FROM_DEVICE);
- 	if (!err)
--		memcpy(areq->result, result, algt->alg.hash.base.halg.digestsize);
-+		memcpy(areq->result, result, crypto_ahash_digestsize(tfm));
- 
- err_unmap_src:
- 	dma_unmap_sg(ce->dev, areq->src, ns, DMA_TO_DEVICE);
--- 
-2.48.1
+Can we also get rid of the IOSF_MBI select? Not even xe_display depends on it, leftover from initial porting. :)
 
