@@ -1,46 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321A4189906;
-	Mon, 19 May 2025 16:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC23283FDC;
+	Mon, 19 May 2025 16:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672826; cv=none; b=Yz+ynMl//dB92YVpIxaMICk2dr9kH39oHKMiA807ze/+G55mL3uA+a15zXZOZMuIKDGcdUFwQathcqvxOkVJeDPDalSC98bLwuDoC0XvnwlKtLDiXq/weiYw6XTdUQSVOZTpTiCZt1YT5IGEtOgXXNJDrXzdwQK01l9mxxpy5uQ=
+	t=1747672841; cv=none; b=IEPAHkPOZulpnY59SObAPH+Br4eARB4nVyypR7wsnTaGOQMzmZP7ZCeXOG051UArA+sIdwNkUKRkdxBeCqtm/tph7HUb0JvU2XPUvrQsWSPSh2meahdB/ZZvJ74jVZL3LRxG9z4vwYtzbp4Nitl/nHYMLuIpnMYSv2kTXbXtugU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672826; c=relaxed/simple;
-	bh=8AekMnk7LJZuUtqQ1X0wseXmvLHDUBX7h+wM+z7I/ww=;
+	s=arc-20240116; t=1747672841; c=relaxed/simple;
+	bh=ok3hf+ijd2mlfIKeyHy3icFw3GSdz7RItoOTVT8fpzI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dj4Wb3Zig6JgUqcUCK16FpotF1FfTrhJkVsU4IWb9KnA0JYbP/K0xpSGdXTButMUwop+EaarK3OOwhZlPhpoW9BhpfVpoznPwLh+MvxZlvnwEdIR25+4i/QJHrZoDrCR10qOK71/vFSeDOpztAoDjEOUjUmtMEDgEYtZSkdeLEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCNnrMTO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCNnrMTO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9354BC4CEE4;
-	Mon, 19 May 2025 16:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747672825;
-	bh=8AekMnk7LJZuUtqQ1X0wseXmvLHDUBX7h+wM+z7I/ww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCNnrMTOytetYBMrRAwp1W0dzqcMOnVDJ1J2TaqS1eTxFEMoUWCMFlYu7VgKjQWqr
-	 t1kqRsaYadf6EaoZq+UF2KwCuhAmcj3tdwk3qi7aV70zYrIXSfZX3s9rPFffWLQcIR
-	 9n+M8Bn3W+Wm70mH//h3UqRlaxqsXbDf2e3qIVCa8l031H1iST9bxPMyMObW+CUjrO
-	 MDriWmWr0Z9+sQ1niXPjBx/fwpPbDoA508vyKK2YRd3JhkxksDXXko2Q57rtKzBcRe
-	 035934n5qtj+C/0H1v/iJqTVwib7zy+0owU9tyvR27vEtWd8k2foPf2zETy0LB7mk6
-	 LoGj7Lli8jq5w==
-Date: Mon, 19 May 2025 17:40:21 +0100
-From: Simon Horman <horms@kernel.org>
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Xu Liang <lxu@maxlinear.com>
-Subject: Re: [PATCH net-next v2] net: phy: add driver for MaxLinear MxL86110
- PHY
-Message-ID: <20250519164021.GL365796@horms.kernel.org>
-References: <20250516164126.234883-1-stefano.radaelli21@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lH3z+PCDzAAOKqvqLEbNv/Ues29yyKrSo2FKt0Shh/zjB5rrCl73aocHqO2I3LduJk50KzkXUsz48wVRXQe8f3IqytumXU0/nMvY9QJ6U90sVd7qnXkt2pQS7NPVVx0Tl8oRfvRU3kLzAFUAiwxV/dVyul1cBGJpXU06RJx+TzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0299113E;
+	Mon, 19 May 2025 09:40:25 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F6E93F5A1;
+	Mon, 19 May 2025 09:40:36 -0700 (PDT)
+Date: Mon, 19 May 2025 17:40:33 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Song Liu <song@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
+	live-patching@vger.kernel.org, indu.bhagat@oracle.com,
+	puranjay@kernel.org, wnliu@google.com, irogers@google.com,
+	joe.lawrence@redhat.com, jpoimboe@kernel.org, peterz@infradead.org,
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
+Message-ID: <aCtfAcg32kbczs-g@J2N7QTR9R3>
+References: <20250320171559.3423224-1-song@kernel.org>
+ <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
+ <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,123 +41,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516164126.234883-1-stefano.radaelli21@gmail.com>
+In-Reply-To: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
 
-On Fri, May 16, 2025 at 06:41:23PM +0200, Stefano Radaelli wrote:
-> Add support for the MaxLinear MxL86110 Gigabit Ethernet PHY, a low-power,
-> cost-optimized transceiver supporting 10/100/1000 Mbps over twisted-pair
-> copper, compliant with IEEE 802.3.
+On Fri, May 16, 2025 at 09:53:36AM -0700, Song Liu wrote:
+> ARM folks, please share your thoughts on this work. To fully support
+> livepatching of kernel modules, we also need [1]. We hope we can
+> land this in the 6.16 kernel.
 > 
-> The driver implements basic features such as:
-> - Device initialization
-> - RGMII interface timing configuration
-> - Wake-on-LAN support
-> - LED initialization and control via /sys/class/leds
+> Thanks,
+> Song
 > 
-> This driver has been tested on multiple Variscite boards, including:
-> - VAR-SOM-MX93 (i.MX93)
-> - VAR-SOM-MX8M-PLUS (i.MX8MP)
-> 
-> Example boot log showing driver probe:
-> [    7.692101] imx-dwmac 428a0000.ethernet eth0:
->         PHY [stmmac-0:00] driver [MXL86110 Gigabit Ethernet] (irq=POLL)
-> 
-> Changes from v1:
-> - Add net-next support
-> - Improved locking management and tests using CONFIG_PROVE_LOCKING
-> - General cleanup
-> 
-> Started a new thread
-> 
-> Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+> [1] https://lore.kernel.org/linux-arm-kernel/20250412010940.1686376-1-dylanbhatch@google.com/
 
-Hi Stefano,
+I've had a quick look at [1], and IIUC that's a hard prerequisite for
+livepatching, as without it the kernel *will* crash if it attempts a
+late module relocation.
 
-Some minor feedback from my side.
+Given that, I don't think that we can take patch 2 until Will's comments
+on [1] have been addressed, but I think that we could take patch 1 (with
+fixups) as per my other reply.
 
-...
-
-> diff --git a/drivers/net/phy/mxl-86110.c b/drivers/net/phy/mxl-86110.c
-> new file mode 100644
-> index 000000000000..63f32c49fcc1
-> --- /dev/null
-> +++ b/drivers/net/phy/mxl-86110.c
-> @@ -0,0 +1,570 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * PHY driver for Maxlinear MXL86110
-> + *
-> + * Copyright 2023 MaxLinear Inc.
-> + *
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/etherdevice.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/phy.h>
-> +
-> +/* PHY ID */
-> +#define PHY_ID_MXL86110		0xc1335580
-> +
-> +/* required to access extended registers */
-> +#define MXL86110_EXTD_REG_ADDR_OFFSET	0x1E
-> +#define MXL86110_EXTD_REG_ADDR_DATA		0x1F
-> +#define PHY_IRQ_ENABLE_REG				0x12
-> +#define PHY_IRQ_ENABLE_REG_WOL			BIT(6)
-> +
-> +/* SyncE Configuration Register - COM_EXT SYNCE_CFG */
-> +#define MXL86110_EXT_SYNCE_CFG_REG						0xA012
-
-For Networking code, please restrict lines to no more than 80 columns
-wide where you can do so without reducing readability (I'd say that is the
-case here.
-
-Likewise elsewhere in this patch.
-
-checkpatch.pl --max-line-length=80 can be helpful here.
-
-...
-
-> +/**
-> + * mxl86110_write_extended_reg() - write to a PHY's extended register
-> + * @phydev: pointer to a &struct phy_device
-> + * @regnum: register number to write
-> + * @val: value to write to @regnum
-> + *
-> + * NOTE: This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * returns 0 or negative error code
-> + */
-
-Tooling expects 'Return:' or 'Returns: ' to document return values.
-
-Likewise elsewhere in this patch.
-
-Flagged by ./scripts/kernel-doc -Wall -none
-
-...
-
-> +static int mxl86110_led_hw_control_get(struct phy_device *phydev, u8 index,
-> +				       unsigned long *rules)
-> +{
-> +	u16 val;
-> +
-> +	if (index >= MXL86110_MAX_LEDS)
-> +		return -EINVAL;
-> +
-> +	phy_lock_mdio_bus(phydev);
-> +	val = mxl86110_read_extended_reg(phydev, MXL86110_LED0_CFG_REG + index);
-> +	phy_unlock_mdio_bus(phydev);
-> +	if (val < 0)
-> +		return val;
-
-val is unsigned. It cannot be less than zero.
-
-Likewise in mxl86110_broadcast_cfg() and mxl86110_enable_led_activity_blink().
-
-Flagged by Smatch.
-
-...
+Mark.
