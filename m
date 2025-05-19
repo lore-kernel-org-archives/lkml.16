@@ -1,74 +1,75 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D013D286896
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C6E286D79
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670660; cv=none; b=LKEDqMQlsfePscBYExwUkh5MCcz0rCx5DduO/BQkiqMax7bAehg9AcESuI0VtrwM1rv/E2EGMMQqs17L5d3gPc8n330cXDOf0Z7wzKpdy6D1wCSZLXoRkC9FE8c+/y5gym5kSSPd42Blda7BF+FBRRuDPV87v1IGvDwz2eZswN0=
+	t=1747670664; cv=none; b=RDTfLkl/aq7V43f53ITbBJWLhYMYvET/U+sIrP/YPCT7VALU9bYajH9VScV9n4Uu2SXRSKJ8n2GzSirPBjJNkC2oKck0DkB+BVEW4e4ZfumKWBf1/FpAZibuK5ZIrFlyAhMqXmPtGGuVttM/hYu3l06OANo9OnbTlbuuygPL1Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670660; c=relaxed/simple;
-	bh=uJMKq0JLE1bARBxJ7zLLvunqVZ02tC4rp/yup9kp3DE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hDGUJ9GL8OQaZRd3ZuWh/yiLvNSYnoGyihwXkKsranIimcpvFse3dnSEHyEDqAhTyRMP6NBmgqawihzUjBkt9ZPIBjOaSzeZbr8ccVK7PFHMBL/xmxFmUk6pLrWLq2033P1o1F+i/baQqHQLDQig8GycwYfg3drtRbv0DtDpGq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BqUbHqTs; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1747670664; c=relaxed/simple;
+	bh=nagNOzapCUuPGlQPQGi4WABkctSZzP6RbdDNVIp/Uro=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VpbraSTCCfjoXnGLQpJvESvGWLeeHE8nZ+8zCqhsJbVQcM4KgtI0Al09e3MZSuC8Z0/pSBnWlv4swL5qWupER7DH2i+64yF8eUlS9oM38DJ0fzEFO4lCl38QUGotaWnmjlR7akI0xhIvUkKqbTCWp9ahOlieJVq6VKSGqTVhKI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gS2J3baG; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BqUbHqTs"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JE3rhh006074
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:18 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gS2J3baG"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9j7km023329
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=jxWvAcx+btlkTvxlgLONDQ
-	zMycdb0G68/297niKyl+0=; b=BqUbHqTs1etyPg6RKYcG8uGaoLxLEnRo+N/J9q
-	URHkmWZ/cOhSEM5QJASY+RGjxNsWKbFeKSupZ2wGMJdZqPqmdkenMiGfdGgbSnBG
-	k1P3+6GAJCENFCdu6e7ckbHdJ76grz7/4qOjL3EXYtXh57QNhH3VvsYY8kG+Ot7Q
-	GkpQ3Km6oJ1ZXgBbdPBcgIJp/xTRW2JZtbOUsy+Aa8M/6eUr9WrsK/Jklvekzh0c
-	blxOgRBbo3o/Qgdwud4MwTVUNLO+oLsWgDE40f01S+PIESmXeXb2xp+XHAapIKCv
-	h+gnxDUCuX6tDX30HcC9iB7SPVvEcHTKFI8WRU3tx0urccwg==
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qybkhmtn-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+junJqgQyRnn8zodYMx+P6mCYUvUx4LWqgBpoCQ/W90=; b=gS2J3baG230S3KHQ
+	BaqfXM7DLtGSG5SUmB977e7P/EKNsluAnqWYD/FZOylhLBcWOt6544SaGIynX68Y
+	csroqt+7LN/bLxe81QRVUtEej764YRFCSJDIIBWYj/Yr2E4/+C87BKDcZqUdFqL9
+	i86D3O/5OFOfpD4W74z4o+ZR0pvIgZWPPbS/K53sftPbTHxAM2aTyh2s+Yck05BZ
+	UwdjlCOZQO6chIjj/BKWKdRQRsI0yGBDauOJLh4GApUA6eiwKiLVIP8rC1ueW2Ts
+	E9p0CInf4Y7QEWYxl6MdHHEPeFpLf60X1QUak5PYKQbDiQU0LiF0csc8c1ldQAuK
+	2Z3B4g==
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r29d11n4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:17 +0000 (GMT)
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-72b862d2e23so4078996a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:17 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:21 +0000 (GMT)
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-4002eec4df4so5097342b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747670656; x=1748275456;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jxWvAcx+btlkTvxlgLONDQzMycdb0G68/297niKyl+0=;
-        b=bFRxGp1CVXm4F48qTmc0TFJ1rTD/d3AZQmhSTa22sd6uaYswqBucFFqAsFKjUkfPnu
-         JpDiOw1+e6nw0I3yTIkwm0UfO91HjtMFKRjMtqcoCfxOh2v5uG965f3KIexI2X84UOIp
-         wAUr2aiVIoTmhTnweuGATvRjLhynTXV7yqFYXABAzLpTCq9Nj4qZEIe4A1WFcNz7PPN8
-         kQjWFOa5+biiN/1v/4G1sLnZI76yzLq0EdHJzXC91LNjHWvWf1vAHkqmf7GUMm7C2Z7Q
-         EzNypkupwMyjNlRmJnYSNElEH6nSw97J9uoyNoDx/rA8VuPDXRu3xT7DsTjPuyqPFE3s
-         ovBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGiHHfdJvFNCX6/UA9jol9DQn649Z1L0t1WF0zm1883/YQ8yXZ8kXM4O6CheUoqbaaHvxihN1BJq40wwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqOLMmBszBciotQvbDGXgIC6NCpl9EG7y515MYusQW7sAr19KQ
-	j/r83O96464SSsdXKy1HDpLxM/KAq/0TxucizdyXWxL2JUsDUI0JRV5Ss48Hekun0F3fsSNOzFb
-	jU93chgjrCJwgZTiurgzWp3E7hpjhzxtEdNy1+B2Rrn30DRCwc0fT8/WegBtM4Sb2Kam0RZFX5u
-	8=
-X-Gm-Gg: ASbGnctH8g3t9xpRKEAdhc86pG88RpGNXD/Szu6xY9q5iOLjrxSWwKLUCU/+3NPQXfI
-	hEH4OUNWgZpn0Je7HFJ/Y03FkIt11Kub754Tfot8PQfs3c+XanlcZzojaj19g/vJAcoMXMS7GKA
-	/3RQE+RBjMR8E6heY8G02unIkcdCS+K+QxiLx4TMq5aL4GVlxxeZgK4WsyT963dri6WKBie093e
-	PpXPGfXKHQS/OlfNWGh2xtsmGaDZp6y7dNr0+4tFNxLgJiEqw33kmwCiifSUrtYivWjuoiHeyRe
-	7Rczwa0gnMbkKkZylMck+1CYEZj8WUQCIVDWNtmm7pepy8FNrJlrSa2WLzHZ/Fn6zqFbELphH1F
-	UjP/tlsaHhzeJtGMXm8uZhHG7
-X-Received: by 2002:a05:6808:6b97:b0:401:e5fc:e726 with SMTP id 5614622812f47-404d88898b3mr8551963b6e.31.1747670656227;
-        Mon, 19 May 2025 09:04:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyFGZpmlXywRLZ1++pjBqVEBauvf55pcbHXxBAFTvleGfzMF/V0y74nyr1VHNLJveGo86+lQ==
-X-Received: by 2002:a05:6808:6b97:b0:401:e5fc:e726 with SMTP id 5614622812f47-404d88898b3mr8551925b6e.31.1747670655849;
-        Mon, 19 May 2025 09:04:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747670660; x=1748275460;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+junJqgQyRnn8zodYMx+P6mCYUvUx4LWqgBpoCQ/W90=;
+        b=kF5AtgWPXbH9WCiIlSFEgc82kyvUpzewURPsuomrJjBLLpgvNaypuPJW76ZuLYu7v0
+         BjG8WlkPHR05pWhlBjYLlSDRVFgKUBdP+pAv/E5jBWXJucN9knLiPjlR4AN8pYy0i0/v
+         MnRKm6irgk1sDych49f7CxvM7rCAcDvw4uHXZBH4Gr9bhY3X4fO3dIWd3RY0psTBJosO
+         D1q3wgeiTg0nb675GhEcRSRWqWa5kO24vZSfAyiUi00V3CQOrxjpAQYKnWcOgkRNwzGA
+         cwq6GFx8t6sMtlX7bex754G8r6neGYDkcGfz29FKX/8FfVMnkhGkuUNLqf0kFfUlskqv
+         JpUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPTi5eoKitDc7wQr8JzELqpg8osM39nQ+Ag0Y9PUxxG6og+SttdGeXflxQ8O2zSKNDz0YolE6j4xXu95E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT9f2mhvPmt6UPD6KpdJd9IG2KEgfLp38gWTkORjsJ/YZbr0N7
+	L94tTKfqkX4I3B54x2JrA+j/hfa87FegwmIF9SU1uiN8qDV7d3v5Vged5TI1oMCu+lzBAHtI7m6
+	48rPShBeEb29IJjGMCWSwnR9jw0QXuaIduqcyznh5fSweIM6GbLSurAjeAr1Jl+Eilti/fxflnR
+	I=
+X-Gm-Gg: ASbGncvXoHT70078rqxM8Gr2DPe+xRaKJSZYV5fHabS8zb/czyD9Pug0dxl880XU/sm
+	o7LxlKiaBGZETK8LGGa4cfzn5otI4vQljRa7sZObuOzFnX86Cll2d2iEWV55JSX2R+4llJrnhGv
+	L+WOgrfuN+g+1+dXetX9Efnn5pO4KVenIKvO5SbBQuqLJ0XTo49pGaHA9dy4aM8+VTOeNXxNi00
+	g7l4dFJeSraRKIq4xFYVa9AyKFL39miNSB/nGmdV32ikEJn83JcUs0whjLKvQlYCLx6grt/eYap
+	37e/Yb4Rk5Q6GXpxC52dvcqfoVH4M5K/CFjFk7hLrfC3ZnN+MxuTG0FFolWxqjyPeKo3XaF2Ydl
+	8duU1qFmlVwIr4Yj2nquCJpwN
+X-Received: by 2002:a05:6808:3090:b0:3f9:176a:3958 with SMTP id 5614622812f47-404cd6a9338mr9457891b6e.11.1747670660463;
+        Mon, 19 May 2025 09:04:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXLRFHvxuEE5irIcoQrOo5X+fviqDAHP7YPG7eI4HROz/F3c4AoxGfJuGZQirebYHQQ1UHEA==
+X-Received: by 2002:a05:6808:3090:b0:3f9:176a:3958 with SMTP id 5614622812f47-404cd6a9338mr9457834b6e.11.1747670660027;
+        Mon, 19 May 2025 09:04:20 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.14
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 09:04:14 -0700 (PDT)
+        Mon, 19 May 2025 09:04:19 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v4 00/30] drm/msm/dpu: rework HW block feature handling
-Date: Mon, 19 May 2025 19:04:02 +0300
-Message-Id: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
+Date: Mon, 19 May 2025 19:04:05 +0300
+Subject: [PATCH v4 03/30] drm/msm/dpu: inline _setup_ctl_ops()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,11 +78,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHNWK2gC/4XNSw6CMBCA4auYri3pA0pxxT2Mi6GdahOl2ALRE
- O5u1bgjcTPJP8l8s5CE0WMih91CIs4++dDnKPc7Yi7Qn5F6m5sIJkouuKR2mKiNYaAOYZwiJlo
- rJq2RiFw3JN8NEZ1/fMzjKffFpzHE5+fFzN/bn1ZuaDOnjDZaO6aUMF2N7dX3EEMR4pm8uVn8i
- IqVYpMQmWDQgFJQdxJEG1Iq7hNcTbjdijy+kPwLyQwZCwY0t7JSbgNa1/UFCNs4ekUBAAA=
-X-Change-ID: 20241213-dpu-drop-features-7603dc3ee189
+Message-Id: <20250519-dpu-drop-features-v4-3-6c5e88e31383@oss.qualcomm.com>
+References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
+In-Reply-To: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
         Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
@@ -91,159 +90,169 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6421;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5882;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=uJMKq0JLE1bARBxJ7zLLvunqVZ02tC4rp/yup9kp3DE=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ4Z2WOX6zet01+xxy4yZKhm7snvxqZLZ2X9Pn+J8/t3Hr
- VNoreWmTkZjFgZGLgZZMUUWn4KWqTGbksM+7JhaDzOIlQlkCgMXpwBchIH9N4uf/L5n5gt+qZ42
- Ov764nuZD0x/baMttrkvCmfhepH75XjZ8j+iP4/Obeh48CnIPqGGRX1m80vZ/e9qpfd/M4xskIm
- bJpbwfN3Zoy6T2KJ+HRXZ9kT8J+tlro/FGs4yYmo5LwSYHvhd4DvXYHNhukyKopJo0KaLlXvTK+
- 4GrFwww3yOIz/Th3p2sSTd1K6QN6szgwL21uc8uxt2fdJSM7cFTz2vs6nyz/zYemrLvFoN5UUPk
- t+LecR965/2te7mjufrAttLNNb3vrc6aWa874lU2MN0ph2/yw6KvSztZvm5h0fJ9E/p1fb7heay
- llIvTsgtkpLuP+ZpI2Who5Vk9suSs/Nmk0Tn5JMWQoExAA==
+ bh=L2J78TQwlePt+wn5GF3lSQf1F0XcZ7MGKmi83q+Bgfo=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoK1Z5mV6ojA+ItvfDayVELzkB2wYuP4WG+dNez
+ OB/CoLqQE6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCtWeQAKCRCLPIo+Aiko
+ 1cu4B/4ro/dYaCWYudj5494vSCNYFTI7tN7tm/EF4SeEtQcGnyBhiWk+aq7RSSjsRJGg+CIbbjh
+ 8b2O6lZePklCx56nhivLVFdUXWsUWm7QH1Zuu7EGyUEn/tj0BFsniJUN3Yc6p8P2D3w8rvnVqpT
+ 9AsTODWRlhXwD2uyoI2boa10u983lJ8qo+itcPPxAXXFoFvI8H41TZLh+WVpZGXKCq4QOd7qBaR
+ J2WymgGUH/O2ZD5AIzNJbERYciGuQ4W0i+OpKOCG4pV00EooUp4b4OiOdwZ6UQpRB8dmA+i5Uh9
+ Tsu07+4YTeGs3fNq0s0h4eQQcVqBT9S1sxxRVGwGuxWbrn5J
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: 7QeDU1Ig1Cp0R0gfL1Cp-5uPupcdv58e
-X-Proofpoint-ORIG-GUID: 7QeDU1Ig1Cp0R0gfL1Cp-5uPupcdv58e
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX2BcjM6smvUeh
- M2oZBbT3/CHJqmKQdkpDaGJE9N/CFICBlmsRSZHewmzK6npHFgHW8lO2I5uf8e2Oz9cKEAifIs5
- /ArrigmHHhFaVDkWp/6+prPWGCWxMu6h0UqOr+aUGecttdBpq4Lmfb5DUWu2fD/z3m9CQ8czAga
- AZ3cCvks2yEhQVP28By93JyHVPoOEspiQ2Fep8K6k3yvOxR9QEP4T9Sy7j6l6jZ/sTpQmIWcasJ
- 6ZVj3FUKQjhhJjg12jQ+8lj+tGxLzieRXRgvTD8tvEv6abbIvcN4uLcFKNIP6H1e6pW49Ou44rm
- dT82AAHzE/zEm8DMgjI7JiPgoEWbgn08OWMEr9bGfVnQC0Cvsih5JjRoPvNgWva7RJfbjNmRaNd
- FUYFOK+trmfUNNmp7KpnDJ4QVBEVw5Vu6dP74tApyrnekQ37ap4dmspIw9nMFLZQ/yyZCel7
-X-Authority-Analysis: v=2.4 cv=RZeQC0tv c=1 sm=1 tr=0 ts=682b5682 cx=c_pps
- a=OI0sxtj7PyCX9F1bxD/puw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
- a=t8tNeZB39Io7CcBQPAcA:9 a=QEXdDO2ut3YA:10 a=Z1Yy7GAxqfX1iEi80vsk:22
- a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX/qmKvJlHq1H6
+ Rj8SCY5+RfGHo0z5a46TJqnwV+GY8Aq20jcmsYeRIbEvt4AUAlX34TKWUZAZvcDRFCpdiE7RO0t
+ hgQfKuaRTJRQiwFbjXJ/+9wv1B23kqvI+umfJ+9VsMwlKX0iue8E+ZRrixbqwYOaKsrlB3k6r/q
+ wmHagT+lhsoZJd6dSUkvEYrepSAD6cyrethVIhNR2n8KhgBIaTunWwdBD1skuIrTIGKKPMaympQ
+ dcbZA+l4HYozfioqhcBp533A39ORjhHUxCqw0p+7WTAxkfAYUiOo2t7vlbSqpcE4Bcr/8fwFHsU
+ //GV4U42KNZ/ZOmTXW5FmRWlr2qlyvwsSci6n7RvrcXzTzvG+2yUN8xG90BGjUsM+crKVmLM4iU
+ dKzSw5J+jJlZ5owJG5atPkfNhmvtoEVWnWvaMzRq1Mn79i5DP1NlOZhFCcBTUGhDpyP5oJT7
+X-Proofpoint-GUID: yrJZpGg4ERxvYl3tOFlgZ0VzGSX-JruC
+X-Authority-Analysis: v=2.4 cv=KLdaDEFo c=1 sm=1 tr=0 ts=682b5685 cx=c_pps
+ a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=J8zulDhgwS0aM89Qmk8A:9
+ a=QEXdDO2ut3YA:10 a=efpaJB4zofY2dbm2aIRb:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: yrJZpGg4ERxvYl3tOFlgZ0VzGSX-JruC
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0 suspectscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ adultscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
  definitions=main-2505190150
 
-Some time ago we started the process of converting HW blocks to use
-revision-based checks instead of having feature bits (which are easy to
-miss or to set incorrectly). Then the process of such a conversion was
-postponed. (Mostly) finish the conversion. The only blocks which still
-have feature bits are SSPP, WB and VBIF. In the rare cases where
-behaviour actually differs from platform to platform (or from block to
-block) use unsigned long bitfields, they have simpler syntax to be
-checked and don't involve test_bit() invocation.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+Inline the _setup_ctl_ops() function, it makes it easier to handle
+different conditions involving CTL configuration.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
-Changes in v4:
-- Rebased on top of linux-next
-- Dropped three controversial patches, will be submitted separately
-- Folded MIXER_SDM845_MASK into MIXER_MSM8998_MASK as they are equal
-  now.
-- Link to v3: https://lore.kernel.org/r/20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c | 98 ++++++++++++++----------------
+ 1 file changed, 47 insertions(+), 51 deletions(-)
 
-Changes in v3:
-- Repost, fixing email/author issues caused by b4 / mailmap interaction
-- Link to v2: https://lore.kernel.org/r/20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+index 573e42b06ad068445b947c59955281ba6e238dad..d58a0f1e8edb524ff3f21ff8c96688dd2ae49541 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+@@ -737,56 +737,6 @@ static void dpu_hw_ctl_set_active_fetch_pipes(struct dpu_hw_ctl *ctx,
+ 	DPU_REG_WRITE(&ctx->hw, CTL_FETCH_PIPE_ACTIVE, val);
+ }
+ 
+-static void _setup_ctl_ops(struct dpu_hw_ctl_ops *ops,
+-		unsigned long cap)
+-{
+-	if (cap & BIT(DPU_CTL_ACTIVE_CFG)) {
+-		ops->trigger_flush = dpu_hw_ctl_trigger_flush_v1;
+-		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
+-		ops->reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
+-		ops->update_pending_flush_intf =
+-			dpu_hw_ctl_update_pending_flush_intf_v1;
+-
+-		ops->update_pending_flush_periph =
+-			dpu_hw_ctl_update_pending_flush_periph_v1;
+-
+-		ops->update_pending_flush_merge_3d =
+-			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
+-		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
+-		ops->update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
+-		ops->update_pending_flush_dsc =
+-			dpu_hw_ctl_update_pending_flush_dsc_v1;
+-		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
+-	} else {
+-		ops->trigger_flush = dpu_hw_ctl_trigger_flush;
+-		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
+-		ops->update_pending_flush_intf =
+-			dpu_hw_ctl_update_pending_flush_intf;
+-		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
+-		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
+-	}
+-	ops->clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
+-	ops->update_pending_flush = dpu_hw_ctl_update_pending_flush;
+-	ops->get_pending_flush = dpu_hw_ctl_get_pending_flush;
+-	ops->get_flush_register = dpu_hw_ctl_get_flush_register;
+-	ops->trigger_start = dpu_hw_ctl_trigger_start;
+-	ops->is_started = dpu_hw_ctl_is_started;
+-	ops->trigger_pending = dpu_hw_ctl_trigger_pending;
+-	ops->reset = dpu_hw_ctl_reset_control;
+-	ops->wait_reset_status = dpu_hw_ctl_wait_reset_status;
+-	ops->clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
+-	ops->setup_blendstage = dpu_hw_ctl_setup_blendstage;
+-	ops->update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
+-	ops->update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
+-	if (cap & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
+-		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
+-	else
+-		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
+-
+-	if (cap & BIT(DPU_CTL_FETCH_ACTIVE))
+-		ops->set_active_fetch_pipes = dpu_hw_ctl_set_active_fetch_pipes;
+-};
+-
+ /**
+  * dpu_hw_ctl_init() - Initializes the ctl_path hw driver object.
+  * Should be called before accessing any ctl_path register.
+@@ -812,7 +762,53 @@ struct dpu_hw_ctl *dpu_hw_ctl_init(struct drm_device *dev,
+ 	c->hw.log_mask = DPU_DBG_MASK_CTL;
+ 
+ 	c->caps = cfg;
+-	_setup_ctl_ops(&c->ops, c->caps->features);
++
++	if (c->caps->features & BIT(DPU_CTL_ACTIVE_CFG)) {
++		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush_v1;
++		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
++		c->ops.reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
++		c->ops.update_pending_flush_intf =
++			dpu_hw_ctl_update_pending_flush_intf_v1;
++
++		c->ops.update_pending_flush_periph =
++			dpu_hw_ctl_update_pending_flush_periph_v1;
++
++		c->ops.update_pending_flush_merge_3d =
++			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
++		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
++		c->ops.update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
++		c->ops.update_pending_flush_dsc =
++			dpu_hw_ctl_update_pending_flush_dsc_v1;
++		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
++	} else {
++		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush;
++		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg;
++		c->ops.update_pending_flush_intf =
++			dpu_hw_ctl_update_pending_flush_intf;
++		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
++		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
++	}
++	c->ops.clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
++	c->ops.update_pending_flush = dpu_hw_ctl_update_pending_flush;
++	c->ops.get_pending_flush = dpu_hw_ctl_get_pending_flush;
++	c->ops.get_flush_register = dpu_hw_ctl_get_flush_register;
++	c->ops.trigger_start = dpu_hw_ctl_trigger_start;
++	c->ops.is_started = dpu_hw_ctl_is_started;
++	c->ops.trigger_pending = dpu_hw_ctl_trigger_pending;
++	c->ops.reset = dpu_hw_ctl_reset_control;
++	c->ops.wait_reset_status = dpu_hw_ctl_wait_reset_status;
++	c->ops.clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
++	c->ops.setup_blendstage = dpu_hw_ctl_setup_blendstage;
++	c->ops.update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
++	c->ops.update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
++	if (c->caps->features & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
++		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
++	else
++		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
++
++	if (c->caps->features & BIT(DPU_CTL_FETCH_ACTIVE))
++		c->ops.set_active_fetch_pipes = dpu_hw_ctl_set_active_fetch_pipes;
++
+ 	c->idx = cfg->id;
+ 	c->mixer_count = mixer_count;
+ 	c->mixer_hw_caps = mixer;
 
-Changes in v2:
-- Rebased on top of the current msm-next
-- Link to v1: https://lore.kernel.org/r/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org
-
----
-Dmitry Baryshkov (30):
-      drm/msm/dpu: stop passing mdss_ver to setup_timing_gen()
-      drm/msm/dpu: drop INTF_SC7280_MASK
-      drm/msm/dpu: inline _setup_ctl_ops()
-      drm/msm/dpu: inline _setup_dsc_ops()
-      drm/msm/dpu: inline _setup_dspp_ops()
-      drm/msm/dpu: inline _setup_mixer_ops()
-      drm/msm/dpu: remove DSPP_SC7180_MASK
-      drm/msm/dpu: get rid of DPU_CTL_HAS_LAYER_EXT4
-      drm/msm/dpu: get rid of DPU_CTL_ACTIVE_CFG
-      drm/msm/dpu: get rid of DPU_CTL_FETCH_ACTIVE
-      drm/msm/dpu: get rid of DPU_CTL_DSPP_SUB_BLOCK_FLUSH
-      drm/msm/dpu: get rid of DPU_CTL_VM_CFG
-      drm/msm/dpu: get rid of DPU_DATA_HCTL_EN
-      drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
-      drm/msm/dpu: get rid of DPU_INTF_INPUT_CTRL
-      drm/msm/dpu: get rid of DPU_PINGPONG_DSC
-      drm/msm/dpu: get rid of DPU_PINGPONG_DITHER
-      drm/msm/dpu: get rid of DPU_MDP_VSYNC_SEL
-      drm/msm/dpu: get rid of DPU_MDP_PERIPH_0_REMOVED
-      drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
-      drm/msm/dpu: get rid of DPU_MIXER_COMBINED_ALPHA
-      drm/msm/dpu: get rid of DPU_DIM_LAYER
-      drm/msm/dpu: get rid of DPU_DSC_HW_REV_1_2
-      drm/msm/dpu: get rid of DPU_DSC_OUTPUT_CTRL
-      drm/msm/dpu: get rid of DPU_WB_INPUT_CTRL
-      drm/msm/dpu: get rid of DPU_SSPP_QOS_8LVL
-      drm/msm/dpu: drop unused MDP TOP features
-      drm/msm/dpu: drop ununused PINGPONG features
-      drm/msm/dpu: drop ununused MIXER features
-      drm/msm/dpu: move features out of the DPU_HW_BLK_INFO
-
- .../drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h    |  49 +++-------
- .../drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h   |   2 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h   |   2 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h   |   2 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h    |   7 --
- .../drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h    |   7 --
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h |   7 --
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h |   4 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h |  17 +---
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h |  11 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h |  39 ++------
- .../drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h    |  43 ++-------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h |  29 +-----
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  19 +---
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  16 +---
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h |  38 ++------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h |  14 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h |   5 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h |  16 +---
- .../drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h    |   5 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h |   6 --
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h |  40 ++------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h |  22 +----
- .../drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h   |  46 ++-------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h |  43 ++-------
- .../drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h    |  49 ++--------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h |  43 ++-------
- .../drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h   |  43 ++-------
- .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   |  48 ++--------
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   |   2 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |   5 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |   7 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  42 +--------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     | 102 ++------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 105 ++++++++++-----------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |   4 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c         |  21 ++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.h         |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c     |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c        |  10 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  14 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |  28 +++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c     |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c    |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c         |  11 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c          |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             |   8 +-
- 52 files changed, 256 insertions(+), 813 deletions(-)
----
-base-commit: de63bbeb5af60172f1dd4d45bdc897816753fa69
-change-id: 20241213-dpu-drop-features-7603dc3ee189
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+2.39.5
 
