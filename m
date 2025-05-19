@@ -1,126 +1,102 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAD826FDB9
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE622701CE;
+	Mon, 19 May 2025 09:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747646961; cv=none; b=rUwrMcceaN0KZW0fZnRiaLWFRC+j+nODRB4GunARzJ5/aP7M/N4D7ISucpCQ9df694ggcLkvlJoy3a8umbl4e8pemzoh/o3ray+m2vILdztJfNRXAQhYdtIdi9Is4h5eFW/pHMuPOHypj54wInhXhUjuA2CoumlhP+uzDaLw3SE=
+	t=1747646969; cv=none; b=YDsXs7G+k/95W5lI/DBusbU+2I8byGdfRvhr8N/8e4EMZKGzS3aJGHcQyFzJrjJhl2e5TSYpUCdL4dIc1/wUIF19gV6me5AgNwQX7XlXgWPNS7+aIQwqsBYNH36w8qV3RyH/MWjcXirRGfAj6PzrPRtI0UsGDqJzODP/6xlXYqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747646961; c=relaxed/simple;
-	bh=DjgRCEdJ83elEzSvGykMTo6aeQJl5+Vqze7Lag7Gvho=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=CXg+2SYwxC/ZLv1otGlfaxg+IZ1X1XxC6q/Yj9QbjXsalOB0Z72+CewR7LXwyU7DCYn+H4xDd7+FbVS4twQ3SbX3WXls1qfK3Q8ueSUOWe+5pbAljPHsLU4iWZQatxYCYCMQqllfk5+TzQND9b9cpkqNsfcXwN5tOwRjWMXtlso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=L/RVJ+Wm; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L/RVJ+Wm"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250519092917epoutp03f878eb1458ffce02234f5f5d3c5e4631~A46YABWeu2924629246epoutp03U
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:29:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250519092917epoutp03f878eb1458ffce02234f5f5d3c5e4631~A46YABWeu2924629246epoutp03U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747646957;
-	bh=hyCYV5tKTc12SwshmyJzcHUJ5CSInB31JwFZiJ35RyE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L/RVJ+WmnF96JHVNFe0+ng4FE/5lFVX1zpPcfpmzNf6Z/GkFcrcyAVS3WhTpWt2Fe
-	 hSHqQHohli5Crd13u3La/XW1wX8F3DH4STiUQKJXdbg9hyzBrLHSPTj0gWcwiC024t
-	 lX/7K9u7WpNMdswguMCxZazFOiO92oJspsqb0hto=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250519092916epcas5p1f944d982a0b8d7b7f94b8e9145e1268b~A46XDOp1s1962019620epcas5p15;
-	Mon, 19 May 2025 09:29:16 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4b1C7G1Yrdz6B9mJ; Mon, 19 May
-	2025 09:29:14 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250518193230epcas5p3dfb178a6528556c55e9b694ca8f8ad6c~Atfwy15Xp1682016820epcas5p36;
-	Sun, 18 May 2025 19:32:30 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250518193230epsmtrp184b5daf49957acd8fd047704d2f70457~AtfwyAvh82445124451epsmtrp1b;
-	Sun, 18 May 2025 19:32:30 +0000 (GMT)
-X-AuditID: b6c32a52-40bff70000004c16-61-682a35ce3ed9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FD.39.19478.EC53A286; Mon, 19 May 2025 04:32:30 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250518193227epsmtip1824ce2e47b768b1b9d1560fcc5809d57~Atft8GoVD0974409744epsmtip1f;
-	Sun, 18 May 2025 19:32:27 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
-	m.szyprowski@samsung.com, jh80.chung@samsung.com, Shradha Todi
-	<shradha.t@samsung.com>, Hrishikesh Dileep <hrishikesh.d@samsung.com>
-Subject: [PATCH 02/10] PCI: exynos: Remove unused MACROs in exynos PCI file
-Date: Mon, 19 May 2025 01:01:44 +0530
-Message-ID: <20250518193152.63476-3-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250518193152.63476-1-shradha.t@samsung.com>
+	s=arc-20240116; t=1747646969; c=relaxed/simple;
+	bh=5c2Ku1wig+ZbqHNf0CWd4HEo00taToj/2izTVObVMQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dUXIT1bVvedfeEcTB4YFzbeOkAqBYlfZ9HnRqA8ZKac6ACEd8hrtcyq49yOq/+gm5Om16ZAN8UfdoF2HBA1etQBh+ZOtmmB5PbFMSvLOVpVZ0Zc06fxbQFGuTokyxP+nTutfSrg361P+qhE0mGcJsyLq3U8G5j/i5Fpg/N1zfQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4b1C8M5DMWz27hTJ;
+	Mon, 19 May 2025 17:30:11 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 70F301402C3;
+	Mon, 19 May 2025 17:29:23 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 19 May
+ 2025 17:29:22 +0800
+Message-ID: <4c4b0140-9126-4586-92f8-f7c9fd7a4a34@huawei.com>
+Date: Mon, 19 May 2025 17:29:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWy7bCSnO45U60Mgxc3WSwezNvGZvF30jF2
-	iyVNGRZr9p5jsph/5Byrxc2zu9ktbvxqY7VY8WUmu8XR1v/MFi9n3WOzaOj5zWqx6fE1VovL
-	u+awWZydd5zNYsKqbywWZ78vYLJo+dPCYrH2yF12i7stnawW//fsYLfoPVxrsfPOCWYHMY/f
-	vyYxeuycdZfdY8GmUo9NqzrZPO5c28Pm8eTKdCaPzUvqPfq2rGL0OPJ1OovH501yAVxRXDYp
-	qTmZZalF+nYJXBlXtq9kKpjDXvG/o5WlgXEWWxcjJ4eEgInEtctnmLsYuTiEBLYzSjz/8IQJ
-	IiEp8fniOihbWGLlv+fsILaQwCdGiaa5FiA2m4CWROPXLmYQW0TgBKNE3y1LkEHMAvOZJRqa
-	v4E1Cwt4S6x495wVxGYRUJWYs70FLM4rYCVx7OlboKEcQAvkJfo7JEDCnALWEtvWT2WC2GUl
-	sfDJTkaIckGJkzOfsIDYzEDlzVtnM09gFJiFJDULSWoBI9MqRtHUguLc9NzkAkO94sTc4tK8
-	dL3k/NxNjOBo1Arawbhs/V+9Q4xMHIyHGCU4mJVEeFdt1sgQ4k1JrKxKLcqPLyrNSS0+xCjN
-	waIkzquc05kiJJCeWJKanZpakFoEk2Xi4JRqYCpYl/vJ5syNgIY7jZns8a0JIatnvN93/lhE
-	0LU8Uf1NQdwX7lj+U598WTXZcMWFvD9z1l+KDoo3sHj9w5GVTW3Hvz/6MwSrfTNZ2b/ozfx9
-	kn/WhdZaoYY/eyJv8B1Qtpqr8fzMqfoZPcIFns3Wp7RsTHa2heilqJb7L2E6Nzf1n2/sCfmP
-	HkZiAeo23o8ybn9v8Xr3dqJ9/s3f0ws43bSrth9KWDYj61iRTIZXSqm4i4BDpOWWlseuO5Nm
-	bT8hG3tjWd22iBn28cVff9w4duMbWx1TZ8kLH7G6XVk7u24zSLUt58qYt9L53P43YXdO1ZUk
-	6ybNbFTa7DJd12/9zRV1BznUJk22/HTE1uqflxJLcUaioRZzUXEiAOa88Dk1AwAA
-X-CMS-MailID: 20250518193230epcas5p3dfb178a6528556c55e9b694ca8f8ad6c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250518193230epcas5p3dfb178a6528556c55e9b694ca8f8ad6c
-References: <20250518193152.63476-1-shradha.t@samsung.com>
-	<CGME20250518193230epcas5p3dfb178a6528556c55e9b694ca8f8ad6c@epcas5p3.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in
+ cppc_cpufreq
+To: Viresh Kumar <viresh.kumar@linaro.org>
+CC: <rafael@kernel.org>, <pierre.gondois@arm.com>, <sumitg@nvidia.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <mario.limonciello@amd.com>,
+	<yumpusamongus@gmail.com>, <srinivas.pandruvada@linux.intel.com>,
+	<jonathan.cameron@huawei.com>, <zhanjie9@hisilicon.com>,
+	<lihuisong@huawei.com>, <cenxinghai@h-partners.com>, <yubowen8@huawei.com>,
+	<hepeng68@huawei.com>
+References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
+ <20250519081850.7ycbcw56jzpiwkth@vireshk-i7>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <20250519081850.7ycbcw56jzpiwkth@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-Some MACROs are defined in the exynos PCI file but are
-not used anywhere within the file. Remove such unused
-MACROs.
+On 2025/5/19 16:18, Viresh Kumar wrote:
+> On 07-05-25, 11:19, Lifeng Zheng wrote:
+>> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
+>> driver.
+>>
+>> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> 
+> Sumit, can you provide your tag if it looks fine to you ?
+> 
+>> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+>> index 206079d3bd5b..37065e1b8ebc 100644
+>> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+>> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+>> @@ -268,6 +268,60 @@ Description:	Discover CPUs in the same CPU frequency coordination domain
+>>  		This file is only present if the acpi-cpufreq or the cppc-cpufreq
+>>  		drivers are in use.
+>>  
+>> +What:		/sys/devices/system/cpu/cpuX/cpufreq/auto_select
+> 
+> Is the path correct? Should this be cpufreq/policyN/auto_select ?
 
-Suggested-by: Hrishikesh Dileep <hrishikesh.d@samsung.com>
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 2 --
- 1 file changed, 2 deletions(-)
+cpufreq/policyN/ is linked to cpuX/cpufreq/, both paths correct. The
+description of freqdomain_cpus uses cpuX/cpufreq/, so I followed.
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 1c70b036376d..990aaa16b132 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -31,8 +31,6 @@
- #define EXYNOS_IRQ_INTB_ASSERT			BIT(2)
- #define EXYNOS_IRQ_INTC_ASSERT			BIT(4)
- #define EXYNOS_IRQ_INTD_ASSERT			BIT(6)
--#define EXYNOS_PCIE_IRQ_LEVEL			0x004
--#define EXYNOS_PCIE_IRQ_SPECIAL		0x008
- #define EXYNOS_PCIE_IRQ_EN_PULSE		0x00c
- #define EXYNOS_PCIE_IRQ_EN_LEVEL		0x010
- #define EXYNOS_PCIE_IRQ_EN_SPECIAL		0x014
--- 
-2.49.0
+> 
+>> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+>> index b3d74f9adcf0..3c3d00cec298 100644
+>> --- a/drivers/cpufreq/cppc_cpufreq.c
+>> +++ b/drivers/cpufreq/cppc_cpufreq.c
+>> @@ -808,10 +808,119 @@ static ssize_t show_freqdomain_cpus(struct cpufreq_policy *policy, char *buf)
+>>  
+>>  	return cpufreq_show_cpus(cpu_data->shared_cpu_map, buf);
+>>  }
+>> +
+>> +static ssize_t show_auto_select(struct cpufreq_policy *policy, char *buf)
+>> +{
+>> +	bool val;
+>> +	int ret;
+>> +
+>> +	ret = cppc_get_auto_sel(policy->cpu, &val);
+>> +
+>> +	/* show "<unsupported>" when this register is not supported by cpc */
+> 
+> s/cpc/cppc/ ?
+
+It means Continuous Performance Control, you can see that in ACPI 6.5,
+s8.4.6.1 _CPC (Continuous Performance Control). Use "_CPC" might be better.
 
