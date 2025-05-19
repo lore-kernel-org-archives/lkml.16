@@ -1,118 +1,114 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E9C26B084
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1348B26B084
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663379; cv=none; b=XP/LeyNCAdTaqLxaMzNhTZFnVWyT7Vp/j3vFma1AN+K3rqMEGzI7LUxBQimMskz4LmNwwcrTOzAkaY4nLebSlPupYMKNO6+rVVZTbxhVZOddt3bFQfFBT/z3AX1/ZY52LUD9K69DyZLUstM8PK/K7VqI7KlvwaxzGJFRFBsszJE=
+	t=1747663385; cv=none; b=tpZVKmJhfSUCuxuovs4g6GcaHmUlIQR061FflJFjKqeYgpkLK6EYOdl9/WWmH9TcEhR08/NRojveuEX8+nb9yYdNSOQHGvDQj6LzpMikSIxjuLJ7cF7ElXQjtIREUnG2vBLXUmwYbs+YjSBv38u4+hF2s9655IR6BED2ngwXcy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663379; c=relaxed/simple;
-	bh=6JeicjUHmHodkNN/zM/djUCuOR2HOijRfC1PdA6i1Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TfplfCUDrqejb4rstBmeXWpEJ/XaLDvfkX3Qlq/IvLyeidXs+lsGjvaM62pOTr04N7qyY8eqnin4JZGGqKzaypuc5gst0bu8U7rqQf4cL8yn2/qsKVbYNpcOCG48B0kh3CmYuciN7R6QC3NwYjYLQtq6ZgTCx0QEqzHXI6HrVg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P636DutZ; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P636DutZ"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a365a68057so1924162f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747663375; x=1748268175; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yWHK376VyM/OI/YTUsa3tJsiwaElzvKB3NW3NOhpiiM=;
-        b=P636DutZeVZfwjnLwuxbXt9gvNyYJSKX2bNgrVDsov0uHT4nKxEBaOfkCx+Upz0I7T
-         VLN42EeAIvGmwPhJkQsQ0l0iJN/KBsDN3/qk1xsPE3oTKcxYm7HshGQpOcR6xGnoJWYs
-         qXsOvMNFlV6lXskj8xwEqoaEK56QpQOlXqIf0I13Nf/Vt2VQCPUnOWFXipvCATD7dt0O
-         rRCMm6/sQopHxPZbDy2Nsf0cXgB05xh3dcs4n47rn2PuQkds16tjOCIFtlCofp4E1QJO
-         pUdEivieJJ5zG9fNXD3OYNAiJUEN/aNfVfW4KfMJK45zsfCjGlrgo5lFMbrxD3TWyuG9
-         R7NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747663375; x=1748268175;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yWHK376VyM/OI/YTUsa3tJsiwaElzvKB3NW3NOhpiiM=;
-        b=N1Ya3ZFLdK2ABOIagIISWlNOKD94UDpyskSuoIsjwWpr+/vDsd8dRQ6Aln7+kpHJfF
-         sQ+RFdTXz6m663mgOM4mAyZVi/wy3ulvGL+gK9XPPvrxp2LH5+jG2AgdV5UUrxJYUBQX
-         pd8i3rPVEgGM063IjI0aJuviZDeDasreZ9KhkQIH+BoGUDLwrs3fBuFyfgvmvkknJ1EQ
-         +8rLqxCPZjOkoCBsN5Pq/sTwke/9NVTeDVWi/NRlPWwhUS+NIbwTa02aMgvXtedWdMqo
-         466hACFEZBZGYT+OeoZR/8Ju55UTXFEP8ApCDu0baleYi9frwyXyl8PseOlYUO1uHLvZ
-         RC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXNOcBZOdr3JTBo9Yx0wNDGvRIjVxsvwd26zeYDBy4SE7T508xWvYi07V3TzmBrbIuduBENIS7Rp9jaqoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/Bya+dDMkYIJDlO/z956JtqDlO7L9iOeCo7pnl1+byjf7gjAy
-	82IBLrLE/YVD/TqG3tajyF+qUYNzi7tExs8rhzz0bxBt4RSpsd4WwE6HDbA+Id8tMhg=
-X-Gm-Gg: ASbGncvMssKiUZU1v5kwLqzMKfZ1gHYEBzWdDzurTTHR5QvsLLOMLWqJsVAh8yFc0fS
-	fZzbCdmPNPvyFuQ3/jOgM7i702irmEw0GHZTWL2CtzB7iBHZGF7+9T0A+orkGU8rMcxRTg1Pzwr
-	671VDQu5++Er9wJt39NOEHVQgD6UsRZl8s7YwfaXSZeUnZm65ZxRu1lw/+5uWldj48IQs9YiqJh
-	Wluw+3S5sF/J42cx27kzGq1SzNsCIVlrGu11hz38wq+WPxZD/8L8hJBM573UHSPT18zThQQhyqJ
-	trl7vgNSLOMMFk4=
-X-Google-Smtp-Source: AGHT+IHgFSt1Ji7/vd8gjbKHf9/ZDkJicJQQ8h96um9tpOt5m+Et9jN1XlhPEUTYTozb2xYGapLzmg==
-X-Received: by 2002:a05:6000:2482:b0:3a3:652d:1631 with SMTP id ffacd0b85a97d-3a3652d1856mr7082207f8f.16.1747663375211;
-        Mon, 19 May 2025 07:02:55 -0700 (PDT)
-Received: from localhost ([213.208.157.38])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca4d230sm12787370f8f.4.2025.05.19.07.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 07:02:54 -0700 (PDT)
-Date: Mon, 19 May 2025 16:02:51 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Bharat Agrawal <bharat.agrawal@ansys.com>
-Cc: "hughd@google.com" <hughd@google.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"zhangyiru3@huawei.com" <zhangyiru3@huawei.com>,
-	"mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-	"liuzixian4@huawei.com" <liuzixian4@huawei.com>,
-	"wuxu.wu@huawei.com" <wuxu.wu@huawei.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: mlock ulimits for SHM_HUGETLB
-Message-ID: <aCs6C2vKbecx-boy@tiehlicka>
-References: <SJ2PR01MB8345DF192742AC4DB3D2CBB78E9CA@SJ2PR01MB8345.prod.exchangelabs.com>
+	s=arc-20240116; t=1747663385; c=relaxed/simple;
+	bh=dw5r6EoWycX44USnmGuyhAxfmRCq5hYiS8psNX4a8Q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
+	 In-Reply-To:Content-Type; b=sWvwf1aCElUppIivrsFhToRZZ25KK9CtZ+1CJBKi3RwcSmorf2w3IR4dY6MpC4GkuStHG/YEbAGoNJ0LeQyAHnNycX/hNDO6I0Qbd5pM7Zxh0DQlWRA+12eGpLis0dPohvn0+rgdubzx+M+Eg9ydONd2+cY4JpHPuu5zX+rqp9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4b1K6n1KxXz1Z1xR;
+	Mon, 19 May 2025 21:59:13 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 76773180477;
+	Mon, 19 May 2025 22:02:54 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 19 May 2025 22:02:53 +0800
+Message-ID: <eaab881c-086d-47b0-993e-0312f0bbf1e2@huawei.com>
+Date: Mon, 19 May 2025 22:02:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ2PR01MB8345DF192742AC4DB3D2CBB78E9CA@SJ2PR01MB8345.prod.exchangelabs.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] erofs: add 'fsoffset' mount option to specify
+ filesystem offset
+Content-Language: en-US
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+References: <20250517090544.2687651-1-shengyong1@xiaomi.com>
+ <aCqrceu67F3rh3JM@debian>
+CC: Sheng Yong <shengyong2021@gmail.com>, <hsiangkao@linux.alibaba.com>,
+	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>,
+	<dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, Wang Shuai <wangshuai12@xiaomi.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <aCqrceu67F3rh3JM@debian>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-Hi,
-On Mon 19-05-25 10:21:17, Bharat Agrawal wrote:
-> Hi all,
+
+
+On 2025/5/19 11:54, Gao Xiang wrote:
+> Hi Yong,
 > 
-> Could anyone please help comment on the risks associated with an
-> application throwing the "Using mlock ulimits for SHM_HUGETLB is
-> deprecated" message on RHEL 8.9 with 4.18.0-513.18.1.el8_9.x86_64
-> Linux kernel?
+> On Sat, May 17, 2025 at 05:05:43PM +0800, Sheng Yong wrote:
+>> From: Sheng Yong <shengyong1@xiaomi.com>
+>>
+>> When attempting to use an archive file, such as APEX on android,
+>> as a file-backed mount source, it fails because EROFS image within
+>> the archive file does not start at offset 0. As a result, a loop
+>> or a dm device is still needed to attach the image file at an
+>> appropriate offset first. Similarly, if an EROFS image within a
+>> block device does not start at offset 0, it cannot be mounted
+>> directly either.
+>>
+>> To address this issue, this patch adds a new mount option `fsoffset=x'
+>> to accept a start offset for the primary device. The offset should be
+>> aligned to the block size. EROFS will add this offset before performing
+>> read requests.
+>>
+>> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+>> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
+> 
+> I applied the following diff to fulfill the Hongbo's previous suggestion
+> and refine an error message:
+> 
+> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+> index 11b0f8635f04..d93b30287110 100644
+> --- a/Documentation/filesystems/erofs.rst
+> +++ b/Documentation/filesystems/erofs.rst
+> @@ -128,7 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
+>   fsid=%s                Specify a filesystem image ID for Fscache back-end.
+>   domain_id=%s           Specify a domain ID in fscache mode so that different images
+>                          with the same blobs under a given domain ID can share storage.
+> -fsoffset=%lu           Specify image offset for the primary device.
+> +fsoffset=%lu           Specify block-aligned filesystem offset for the primary device.
 
-This is not RHEL specific behavior. The current Linus tree has the same
-warning which has been added by 
-: commit 2584e517320bd48dc8d20e38a2621a2dbe58fade
-: Author: Ravikiran G Thirumalai <kiran@scalex86.org>
-: Date:   Tue Mar 31 15:21:26 2009 -0700
-: 
-:     mm: reintroduce and deprecate rlimit based access for SHM_HUGETLB
-: 
-:     Allow non root users with sufficient mlock rlimits to be able to allocate
-:     hugetlb backed shm for now.  Deprecate this though.  This is being
-:     deprecated because the mlock based rlimit checks for SHM_HUGETLB is not
-:     consistent with mmap based huge page allocations.
-: 
-:     Signed-off-by: Ravikiran Thirumalai <kiran@scalex86.org>
-:     Reviewed-by: Mel Gorman <mel@csn.ul.ie>
-:     Cc: William Lee Irwin III <wli@holomorphy.com>
-:     Cc: Adam Litke <agl@us.ibm.com>
-:     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-:     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Thanks,
 
-HTH
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+
+>   ===================    =========================================================
+>   
+>   Sysfs Entries
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 3185bb90f549..e1e9f06e8342 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -654,9 +654,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>   	}
+>   
+>   	if (sbi->dif0.fsoff) {
+> -		if (sbi->dif0.fsoff & ((1 << sbi->blkszbits) - 1))
+> -			return invalfc(fc, "fsoffset %llu not aligned to block size",
+> -				       sbi->dif0.fsoff);
+> +		if (sbi->dif0.fsoff & (sb->s_blocksize - 1))
+> +			return invalfc(fc, "fsoffset %llu is not aligned to block size %lu",
+> +				       sbi->dif0.fsoff, sb->s_blocksize);
+>   		if (erofs_is_fscache_mode(sb))
+>   			return invalfc(fc, "cannot use fsoffset in fscache mode");
+>   	}
