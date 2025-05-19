@@ -1,146 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143FC21FF45;
-	Mon, 19 May 2025 23:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20575220F52;
+	Mon, 19 May 2025 23:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747698530; cv=none; b=Rj0g+FKOIUhx15Q4mAD1U51M5yo86H25/JY+EVfsOXUqTgb1u6P024FDxiwJgeBFJEPl4s+E0guO8N45nPL4BSh2fc9CjvmDVDkxp7e9J8JbjJO3uznQUy4OaZaWGc9utxuLzqbuReAsQvwKfa6IDHToJRspgf7y4UkQickkljk=
+	t=1747698531; cv=none; b=k9qiDdvwF/Lr7JdjDUB36le+5WV93NE1975ZFZSb98ZPZ8NsYIbgaEdCvjE1elykXF9kySUfnqfTcfNrl2AapIT061FObYXZICzx6hhvTsOE65yi06srArKyno6L9wEmqwSy9XALVxYty46bVVv05OfqAup19BvglW8PHVtQSXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747698530; c=relaxed/simple;
-	bh=LJOuant5C3INJ16GsM0ycGuMue6hzGDfnJVPCWAo/VU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I7QdYw6zbwamUnuku60ZyOxmpVHxr2y3CSho/Nw1/H92nSzKFvF5v+KkkVZLX4DcX0cfK9Of70XX3Z93QzdtJQD2D+kufg+/r8FB8XfWdzmsNhllDFGNmjg+cO8HA3UXe6MkQRFTZcehA+KMecHc3GAtnJ08RTGjUvI82fgRqRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VGnfdIER; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747698531; c=relaxed/simple;
+	bh=LMijej7gFtPDNBIOlBJu1tJ8zpVTvJVhOg0iGAqbUB4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qfe+xLTB4hqy9/KQ5fy655WWQ4/ZlpfwoyJ67uRAvSeMKofVuaRs2k02YOEuQ1ARdAdJp+F6CszdH1s69Yhi0QDBj8ynCEhqMPrNcm3UchqhCKX3P1QdVtQ2pmyIBRf8uFLddzcsonR9gOc4QSMbyKOMXEGiNrkFjUHxoMS09JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p79LCThA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VGnfdIER"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747698529; x=1779234529;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LJOuant5C3INJ16GsM0ycGuMue6hzGDfnJVPCWAo/VU=;
-  b=VGnfdIERP7lalJ3NFdH8E3VR8vQW2/YVMaGpy9AQNPpOUrIhmg1uUTvp
-   1plaqfwucvPhVSzSc4QAPyybCvxq4x4SRvfyL8DEjhlU0rIz2Us5DPi8+
-   Tl/7GzDWepw5aSQTuTJdwT2H5ntw245D44DjOTCuegsZNDqJd05W9PxTK
-   uqBuBOh2o6yePjeOYh0Du1mVRlfYZB9IKi2BgTeqCDArJsVU/HE4LkGeU
-   6VFBwsEwDUHmnvL3MWfV02lZ9X4Go592368oXFSn7EKz8Nx/d+6GBf7L0
-   OorNfcxEEyZshWemKGSPwfIJqVZYnEpuZ4hWGmO10dgk8tg9UY0MmpdSf
-   Q==;
-X-CSE-ConnectionGUID: 4cBWmqhiRsq14BGjQNSg7A==
-X-CSE-MsgGUID: sajXz5ipQqCXFN2NoLfpZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="52245949"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="52245949"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:48:48 -0700
-X-CSE-ConnectionGUID: F8EwIusvRgytG6VTL3CYQg==
-X-CSE-MsgGUID: AH2P0i/EQZa7HbERW4MxuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139421191"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:48:47 -0700
-Message-ID: <e8cf0a90-638d-446a-a5df-2dff3d091e38@linux.intel.com>
-Date: Mon, 19 May 2025 16:48:46 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p79LCThA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71C4C4CEE4;
+	Mon, 19 May 2025 23:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747698530;
+	bh=LMijej7gFtPDNBIOlBJu1tJ8zpVTvJVhOg0iGAqbUB4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p79LCThAtnHz+EDt53BzdMUN6qagFtutqFTVD3F35ZSzCJxO0VXbNLV03KoUCdtjq
+	 /LMV73wPmUxo48wg9Y8XWztyKz9KR6oLY+bg+j00yRPj+LK2bDu6I2H9UPrjfVYP70
+	 /jmOmTkQ3tju7Ur4CPiWXTkBkbZX4kpsQr/EA6y1aa36SHyC3yt+zZhMj2x200cZTR
+	 bp/nqglcL5VuHI20xid+S+OA822wfZFdC9IBrj6qvRMM5XdFOcUsToGOpz7/9S9PoF
+	 WVP0X3YH9kZGMPQ7VpQCp0DRqHue528ouTn6ZkNeUjn0Wxtg42NdDKNwknkyWrI5Yo
+	 tXULjqg5FexNA==
+Date: Tue, 20 May 2025 08:48:45 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv2 perf/core 01/22] uprobes: Remove breakpoint in
+ unapply_uprobe under mmap_write_lock
+Message-Id: <20250520084845.6388479dd18658d2c2598953@kernel.org>
+In-Reply-To: <20250515121121.2332905-2-jolsa@kernel.org>
+References: <20250515121121.2332905-1-jolsa@kernel.org>
+	<20250515121121.2332905-2-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/16] PCI/AER: Rename aer_print_port_info() to
- aer_print_source()
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-6-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-6-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Thu, 15 May 2025 14:10:58 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Jon Pan-Doh <pandoh@google.com>
->
-> Rename aer_print_port_info() to aer_print_source() to be more descriptive.
-> This logs the Error Source ID logged by a Root Port or Root Complex Event
-> Collector when it receives an ERR_COR, ERR_NONFATAL, or ERR_FATAL Message.
->
-> [bhelgaas: aer_print_rp_info() -> aer_print_source()]
-> Link: https://lore.kernel.org/r/20250321015806.954866-5-pandoh@google.com
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Currently unapply_uprobe takes mmap_read_lock, but it might call
+> remove_breakpoint which eventually changes user pages.
+> 
+> Current code writes either breakpoint or original instruction, so
+> it can probably go away with that, but with the upcoming change that
+> writes multiple instructions on the probed address we need to ensure
+> that any update to mm's pages is exclusive.
+> 
+
+So, this is a bugfix, right?
+
+Thanks,
+
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
+>  kernel/events/uprobes.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 84ee7b590861..257581432cd8 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -483,7 +483,7 @@ static int __uprobe_write_opcode(struct vm_area_struct *vma,
+>   * @opcode_vaddr: the virtual address to store the opcode.
+>   * @opcode: opcode to be written at @opcode_vaddr.
+>   *
+> - * Called with mm->mmap_lock held for read or write.
+> + * Called with mm->mmap_lock held for write.
+>   * Return 0 (success) or a negative errno.
+>   */
+>  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> @@ -1464,7 +1464,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  	struct vm_area_struct *vma;
+>  	int err = 0;
+>  
+> -	mmap_read_lock(mm);
+> +	mmap_write_lock(mm);
+>  	for_each_vma(vmi, vma) {
+>  		unsigned long vaddr;
+>  		loff_t offset;
+> @@ -1481,7 +1481,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  		vaddr = offset_to_vaddr(vma, uprobe->offset);
+>  		err |= remove_breakpoint(uprobe, vma, vaddr);
+>  	}
+> -	mmap_read_unlock(mm);
+> +	mmap_write_unlock(mm);
+>  
+>  	return err;
+>  }
+> -- 
+> 2.49.0
+> 
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->   drivers/pci/pcie/aer.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index dc8a50e0a2b7..eb42d50b2def 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -733,8 +733,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->   			info->severity, info->tlp_header_valid, &info->tlp);
->   }
->   
-> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
-> -				const char *details)
-> +static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
-> +			     const char *details)
->   {
->   	u16 source = info->id;
->   
-> @@ -932,7 +932,7 @@ static bool find_source_device(struct pci_dev *parent,
->   	 * RCEC that received an ERR_* Message.
->   	 */
->   	if (!e_info->error_dev_num) {
-> -		aer_print_port_info(parent, e_info, " (no details found)");
-> +		aer_print_source(parent, e_info, " (no details found)");
->   		return false;
->   	}
->   	return true;
-> @@ -1299,7 +1299,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   			e_info.multi_error_valid = 0;
->   
->   		if (find_source_device(pdev, &e_info)) {
-> -			aer_print_port_info(pdev, &e_info, "");
-> +			aer_print_source(pdev, &e_info, "");
->   			aer_process_err_devices(&e_info);
->   		}
->   	}
-> @@ -1318,7 +1318,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   			e_info.multi_error_valid = 0;
->   
->   		if (find_source_device(pdev, &e_info)) {
-> -			aer_print_port_info(pdev, &e_info, "");
-> +			aer_print_source(pdev, &e_info, "");
->   			aer_process_err_devices(&e_info);
->   		}
->   	}
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
