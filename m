@@ -1,121 +1,74 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138F7284B32;
-	Mon, 19 May 2025 15:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A658EBE5E;
+	Mon, 19 May 2025 15:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747666814; cv=none; b=I+ihBr0uHcT3wObm5UT+sGipTtveKereSJRxmwj8gK1FxMhvp9ZSjFRTH71T1+F4vhx+O4Cuzslhya01s+dHaudMSDROiNNufm/yxW3525DX1SzE+s8ph2DvIVQ4CB4djapfIduYm9ApC0RNlDI4ynfWurkdrzgGM7MST1z7b7M=
+	t=1747666883; cv=none; b=Ow52etk6tUxpo6vGCd6xq98SPJVHz/ZWCVd1DwiJXgDI9QdSLXR7X8zInD0ZdW0DnqpeFWYm/HBNxMDKl0fLLyONpTzni9qrFCfgsARYHp8N5iKDB9mFO9LjF++yO3qKEpZuvSog7i+VDRxKkMxv9JplLS8egb4zNZTAYLUM/9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747666814; c=relaxed/simple;
-	bh=U4GPv/OEwuURUdMov/CmVGo+Cn6wNOn2vY+JOwulIyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwnmCq0KhbJhDkjnd9n8NwLFWzrrqfbUxwfom+DQ0Col0AhEwqd/PNpppcOs2AJWuAb9UmXpwdQSc/nj5R+J5jZ88YV7ggmyeQLWhZiNlYHFHe/0NpB+S3xJ3eKXq9UXvsGZAIll8JHd3Cs6zbTEGED4cdj6UHjsOXtfY8cu1tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlrcDWKI; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747666883; c=relaxed/simple;
+	bh=SP+3uwUr1dUqOoOJChhGpSJSREZe1bvlmtKjcOsOu9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkU7Hxm9M1nb2FG+yX4G3S0+DZJ9x3de7LuUAiZw8fX50SDY+Z7ybR7gu8aoTIckOuRmcvkzKSvPO9Bzt/nwVmB3ZuWEAmo9+f+feSm3TWYH+XcWDuJQXyrXwA7ix6E27qAfz0GknZ0ZvEFm/Z1B8fiG+rfupj/XZWp4T409R1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cbvsoKzI; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BlrcDWKI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FD121FD58;
-	Mon, 19 May 2025 15:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747666809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zAnJxDH2cQNUkyYzrOZMk+S9iW0aoM/UKY9IFB7P0gI=;
-	b=BlrcDWKIV79p/Nbt0Xh+Zt/BftW3xjkeQJTQnChTfqsL/QJSllXnuNw6dAQUnOnmIUsRtm
-	KSNcU3JqRelJteSXDXFkffd3WHWzlVOhZebpJMqBX3zVQDqvkebzIkM+upiOgh49FvE7t8
-	XBpxGAxmbnLdgWUgXnlma9exg5WYXSMsnf+jKTZ1F5/zhFy6y5dgvRYfJQVuWDx9wO6Gth
-	tFGi86S0BghEV3YKxfBpeBYqhhr3qjsNyzgFA5296OaRyjXg7WbW5YlC2/BblNOfQwHvzL
-	LioPfHZLzqGusr+Qoi/ERBvUNbMAmyY7IGYaK1hnyOFQABEn/j2LT4L3TxWUwA==
-Date: Mon, 19 May 2025 17:00:04 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific
- data
-Message-ID: <20250519170004.631d99af@bootlin.com>
-In-Reply-To: <aB0ERYKdRreDe7Wt@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-24-herve.codina@bootlin.com>
-	<aB0ERYKdRreDe7Wt@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cbvsoKzI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=D+WlcLSTHUk7L2L0T5ZmVak0RKGML7Ka2WOYeq1OccI=; b=cbvsoKzIvnU/T53Bdebc0qBAEJ
+	zgHYXgAtOn+jHwiFDrxux21nNS29sR5FIMUxb3QY6Vz0Yx8omQhDFrfTpvaW6CSNVD4m7RqV+VfOX
+	+LRaLWnzTdLue3Gx+CM/m7X01wDSizLhT+m4q90L6JnJDCoa1ccT+my36cBJ9SiubiwY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uH1zL-00D1pn-Jy; Mon, 19 May 2025 17:01:11 +0200
+Date: Mon, 19 May 2025 17:01:11 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: chalianis1@gmail.com
+Cc: hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linux@armlinux.org.uk,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net] phy: dp83869: fix interrupts issue when using with
+ an optical fiber sfp. to correctly clear the interrupts both status
+ registers must be read.
+Message-ID: <97d0e167-ef11-4cbf-a473-fb823d7b727a@lunn.ch>
+References: <20250519144701.92264-1-chalianis1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519144701.92264-1-chalianis1@gmail.com>
 
-Hi Andy,
-
-On Thu, 8 May 2025 22:21:41 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
-> > Only one device-tree overlay (lan966x_evb_lan9662_nic.dtbo) is handled
-> > and this overlay is directly referenced in lan966x_pci_load_overlay().
-> > 
-> > This avoid to use the code for an other board.
-> > 
-> > In order to be more generic and to allow support for other boards (PCI
-> > Vendor/Device IDs), introduce the lan966x_pci_info structure and attach
-> > it to PCI Vendor/Device IDs handled by the driver.
-> > 
-> > This structure contains information related to the PCI board such as
-> > information related to the dtbo describing the board we have to load.  
+On Mon, May 19, 2025 at 10:47:01AM -0400, chalianis1@gmail.com wrote:
+> From: Anis Chali <chalianis1@gmail.com>
 > 
-> ...
-> 
-> >  static struct pci_device_id lan966x_pci_ids[] = {
-> > -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> > +	{ PCI_VDEVICE(EFAR, 0x9660), (kernel_ulong_t)&evb_lan9662_nic_info },  
-> 
-> PCI_DEVICE_DATA() ?
+> from datasheet of dp83869hm
+> 7.3.6 Interrupt
+> The DP83869HM can be configured to generate an interrupt when changes of internal status occur. The interrupt
+> allows a MAC to act upon the status in the PHY without polling the PHY registers. The interrupt source can be
+> selected through the interrupt registers, MICR (12h) and FIBER_INT_EN (C18h). The interrupt status can be
+> read from ISR (13h) and FIBER_INT_STTS (C19h) registers. Some interrupts are enabled by default and can
+> be disabled through register access. Both the interrupt status registers must be read in order to clear pending
+> interrupts. Until the pending interrupts are cleared, new interrupts may not be routed to the interrupt pin.
+> Fixes: interrupts issue when using with an optical fiber sfp.
 
-PCI_DEVICE_DATA() need the device ID defined using a #define in the form
-PCI_DEVICE_ID_##vend##_##dev
+The subject is now correct, but the Fixes: tag is supposed to be a git
+hash for when the problem was introduced:
 
-PCI_VDEVICE() allows the device ID value passed as an integer in the same
-way as for PCI_DEVICE().
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
 
-Also, according to its kdoc, it allows the next field to follow as the
-device private data.
+    Andrew
 
-IMHO, I think PCI_VDEVICE() use is correct here and I will keep it.
-
-Best regards,
-Hervé
+---
+pw-bot: cr
 
