@@ -1,95 +1,87 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C254C92
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2658AFBF6;
+	Mon, 19 May 2025 10:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747651074; cv=none; b=JC+d2zFsSKM0XwLXBJpKN4bI7OxnxrI44gCvNVb7VIFO1NN9iYSfz1/Z5xAEtPPsgjXHvLDjIdaxPqGMrOE9od356Lov647BwB3ZgAKMovYC+GGCV//3dEjGOyCI3HGRxRw4TZmyFImmP4xx6ltFWnQ0g0fiX0y43y0v0bEVkKY=
+	t=1747651085; cv=none; b=DkcJnAtnJDRSbhmcQiZjSMKcxxT05gWb2X7z9pXI8wxOZ8RGUhHCN/UcBJ/FEOm4/z7UiwbELaKVqExAt/EYi6xvUMsSQjdIC5iz1WC0mBmTkw+iPFCViGAqfbhDU5QMpe/cRxZv3SbmJZGpLtlv3MwrKump8Fm+YmsgC585EnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747651074; c=relaxed/simple;
-	bh=uLUsUinTMdjmLW5wpU4q/NnLHv21b+lbzGHwrlwL4dk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IqKMME3RSASNhQk1ays8Lfl3QoyE+adCb0Ogn/rC9oUWGfBjj/Zr9M4fToHQML+ReoX633fJWQiUeNpl/AyWit7AFn7JSwNcGy3eaZpipU3CjGtOQInQ+wW0vimyd3Df/+tejjRG+slsvPSkEeANYjn0TsceB+hJg3nqqI7AxHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=ZiOo8jr1; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1747651085; c=relaxed/simple;
+	bh=rZE8erx96JB97Sl1nprYcvzNzhyW/SJMOxi+lcu07TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSfqWLZ4VDRQfQE+FEfWILtajQglY4WQ3vIGXIKAA24CgNZxFcf4V9TTp0C94cDQXu6LkqRz4SuPIk6HqdLGZwfCwPDuQKSWRM2Gg4n6cm65aJdNM9WqRaRoSNZv+HH9dGoc2PhAhKhZVdQCfv0/EmyWRMSBNbgIVeO98BxeuyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmD04v18; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="ZiOo8jr1"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ac73c76fso62527491cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1747651071; x=1748255871; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uLUsUinTMdjmLW5wpU4q/NnLHv21b+lbzGHwrlwL4dk=;
-        b=ZiOo8jr17u6jnVDGpiqO/C0Ldqxp0nyMkchr/GZ4mdrx2X6HJDPS/ZKmSr3EmeO1GM
-         I0j+5OGebQ5DM6GjOLPgD6Ud0Eld1qEHyPkpepTGKImivF8KtZTwLYXgsV3+Vdzxlcw5
-         VF79hQ7g4tMA1FKzHhLKP/IJ4mkbPM0iSPCe5hg+WDpw5Z/k75DyxB9ZQX9ubUKi5QB+
-         RT63IEJPsIY4sbmy0hlRvojwq87VPFF8Ge7Pfqv/j8Fndu7GujyJFY6Ur07aKkD393+z
-         7LSBNMVr7uNtA9yBpnW9CGMzIS+zfIwLDsUIBKEAguzp0Gzqr9d8lPw1BPFBc/EzXfUJ
-         iuHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747651071; x=1748255871;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uLUsUinTMdjmLW5wpU4q/NnLHv21b+lbzGHwrlwL4dk=;
-        b=rKd0v0s6WBLslKPYLPWaB+ZF+VuFfqsb8imL6m2x1jSVUucr2WpXxw6bna0ahW+lUI
-         UCLGGcFL+1WWDefNaL8YQRrkdtia4GmrMhsaIYBsdl9/E7aXK/CSjisgVU3zxtKoeS3z
-         DbiY7W8S8actk1aOUDnhLf1Wo8i/9NuZO25Fn2vhZujJW3VCS4OpQIX9wjnO/Ba9wEVz
-         umkcEgtsyjtvbpT5EWzt034Mn5dQNFpa6gBLio/WVJL6zMu2X2bRycJYQ7mVootwmaYU
-         f7w18qTVlLOhAFv4KODAl1eN+KZHP7zMFp7FRJWo5nrWj1ueKxFxYk5wiyZIhhpNHZZg
-         jcrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpkBofgZGSq+T5XVy5Tq3gWViLMblbz+OZapc87/h1m/+n+BL/mFqd6ZR3JxT8OejVu6XAi3ripf1kJlU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo7TGZL4V3xEEiGsrY0OLMRhwisV5DbxEg6zM0ju1zXcdc01Ci
-	Dufvq0EWRCNkennQcqoCJYGJwlTc6cdfJ8yNXcOkB1qUZ+sW6cNCQcXt2wdZgogx+VR25Cd7NmV
-	XhRaLcqO80DXuhOBQVJ0VpxPUwBG60iRm+u5/CgUDxQ==
-X-Gm-Gg: ASbGncsTc7oPsmPGbWZLy5x4x+qUCRoqeCSk2lQwVyFTyxDDHzgIiqaDPeejAvMJT2l
-	RKoIvqS+1KKUlYHgs3ZieQ++yJPgz95eTXwwCCzSevzxItw4VslCWUkh46Ya70twhFSEnOb64QX
-	m/6mh8tfxcXn6BRihDYwl5nWE9HZ5gk+w=
-X-Google-Smtp-Source: AGHT+IHpoUyld3bWH/ccuYhs5XzdWrCcsdpq7tt7nhCOmlUkWwsRYL1EjQOis7dWQLywSekRjLeCOO/84Vo4YpYBUNY=
-X-Received: by 2002:a05:622a:343:b0:480:7147:1998 with SMTP id
- d75a77b69052e-494ae3d017bmr155270341cf.22.1747651070647; Mon, 19 May 2025
- 03:37:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmD04v18"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C595BC4CEE4;
+	Mon, 19 May 2025 10:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747651084;
+	bh=rZE8erx96JB97Sl1nprYcvzNzhyW/SJMOxi+lcu07TA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LmD04v18oGsZgb4clnGSoDB21C7tK9SavpiieRyTKZivwF71U3jd/Q1Yc3m0nQru6
+	 QDtFaywV8DqWmQMov4bwC+CFPblgYLgzuPZNItEWCPib9yk47cUMOx66eDljLndxoE
+	 MbrPfFGoRg1OiXamZ429+xyL/pSnkN9i1mQD3nZM736A411FaxF0atDv1LoD84llF+
+	 u7ru2xZihpFG+zz5U7I4gKdG+FrEknKBxDCmP4L5Cjpbb2ZtlBMeXTACC2mTu821fB
+	 cYTdJnTanRC45TCoMGF3YpjKmjUc+VI+sqp2X9GVgEjmH1vB4SxgU6AT9AHhNT4aXL
+	 iBbTJCeOpTZ+w==
+Date: Mon, 19 May 2025 11:38:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: James Calligeros <jcalligeros99@gmail.com>
+Cc: Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	asahi@lists.linux.dev, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 3/9] ASoC: apple: mca: Move clock shutdown to backend
+ shutdown
+Message-ID: <d590b26c-67b1-4fa9-8659-2665e73a6aae@sirena.org.uk>
+References: <20250518-mca-fixes-v1-0-ee1015a695f6@gmail.com>
+ <20250518-mca-fixes-v1-3-ee1015a695f6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514050340.1418448-1-vignesh.raman@collabora.com>
-In-Reply-To: <20250514050340.1418448-1-vignesh.raman@collabora.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Mon, 19 May 2025 11:37:39 +0100
-X-Gm-Features: AX0GCFseuNxg2cyB31Kw8bdxaPv3D0EAGzhfq8OnlO6TTPxanjeFtSt3PM_LQL0
-Message-ID: <CAPj87rMR9C4bgZBPhu=Pm7E-kqszt=GPQdnt4tCn_8-QqQAx=w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] drm/ci: mesa uprev and python-artifacts fixes
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, 
-	robdclark@gmail.com, guilherme.gallo@collabora.com, 
-	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
-	lumag@kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
-	quic_abhinavk@quicinc.com, mripard@kernel.org, 
-	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5sSemejpnJug2TKh"
+Content-Disposition: inline
+In-Reply-To: <20250518-mca-fixes-v1-3-ee1015a695f6@gmail.com>
+X-Cookie: We have ears, earther...FOUR OF THEM!
 
-Hi Vignesh,
 
-On Wed, 14 May 2025 at 06:04, Vignesh Raman <vignesh.raman@collabora.com> wrote:
-> The python-artifacts job has a timeout of 10 minutes, which causes
-> build failures as it was unable to clone the repository within the
-> specified limits. Set GIT_DEPTH to 10 to speed up cloning and avoid
-> build failures due to timeouts when fetching the full repository.
->
-> The current s3cp stopped working after the migration. Update to the
-> latest mesa and ci-templates to get s3cp working again and adapt to
-> recent changes in mesa-ci.
+--5sSemejpnJug2TKh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I thought I already did this, sorry; the series is:
-Acked-by: Daniel Stone <daniels@collabora.com>
+On Sun, May 18, 2025 at 08:50:48PM +1000, James Calligeros wrote:
+> From: Hector Martin <marcan@marcan.st>
+>=20
+> Codecs are set to mute after hw_free, so yanking the clock out from
+> under them in hw_free leads to breakage. Move the clock shutdown to the
+> shutdown op, which is late enough.
 
-Cheers,
-Daniel
+The mute should be the first thing that happens, before we do the DAPM
+stream stop event or hw_free() for precisely this reason?  See
+soc_pcm_hw_clean().  The reason we do the mute is to cover any glitches
+introduced into the stream during the teardown process.
+
+--5sSemejpnJug2TKh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrCgcACgkQJNaLcl1U
+h9Aw7Af/W7WvCidzGoJbaNKUpzh2um4hlSwR8+3PyXRvqe6547f7R0prqIC1WGec
+V2utIYikPJBxv6LRuSU5UCV819jDSgrGwj4UJ6f1d77C5VnIjqho/Vzif48iKMKo
+VUtH8C3lMjsbTH7y5W5LMjWPCzcq5CGAKj+ICOzTrj4YBoXzSuWxMYPb6Twpk/6s
+uFMHwcvrBn1fOgtNT0lQXQtdv0oc2BkyitO616hBDHeXLIdBglm0VhWtMEiszb3g
+cocyu8OoUE5PIENQLxzY1/iVnUA3KbNhBKy+qohg52p3A2jF7uXTEpUhT/O7hdz0
+XB06g/9kPz/uAdt1Nzi2ZGExS/HgOw==
+=46aR
+-----END PGP SIGNATURE-----
+
+--5sSemejpnJug2TKh--
