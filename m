@@ -1,113 +1,99 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA27679FE
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B591C84C0;
+	Mon, 19 May 2025 18:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747679538; cv=none; b=FgBlUCzJJWMVhJ+vRde7mK+DTOvNlURqXge5UN/1Uv+kcGap5rkbFx344AzoM/lkBYsYKcwGSCQo36ZYPDMJ9GXCO/HF9JBjE/gLFWjRZVPmk0w5K+HBTMaw1xmmF6PZkLHaTUqiwI6I0WNIoU2kxBjp0e/oNX9pu/Iz1vUtkzs=
+	t=1747679548; cv=none; b=jKlv0GiH0Fl7QB9xxfVpxgNbgbMplw3lX0d1cSLWxCyYTPtvSJ1xL5X3O8GF4XDI64AVJU8RjkWIX7oRKOeyui/SACStQNjG9F6aX+Y2XEErkUxUx0LYQLyP82/MrOCKCh2PxR8XWzcG53x4AhXalgd1+b353aLiYp7boS+YmuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747679538; c=relaxed/simple;
-	bh=P0+BvqT6Ysl7rrk0C5kjhOP/Ds4FsTeqcC13DrzqPwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AIiEuKb3kkROwS6kfKrF9RFMXv5T9hsMl1FLRDKPzk4QrrmW57TYssnlrhELbpLxNi3aIUIy3AeeiX9LepGf7gnzfBaLMFF3uc1b1XfwJdHq8WPIaoaguM2kPw7yOeGETpVGgl9kPGyRIafYk6F3+RaA4ZPcCkEQ5DUZmynYXcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qJe0Z0rx; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747679548; c=relaxed/simple;
+	bh=H1AP0trpR498y+A4st74/UHQvp6akcwoeEWb0O18RGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxqAcYFXx1CNUmhx3F2FXuqnnBYeREZbjln1NX2VLjoS5UKCC73P4NXUhqinVp5t/3qCx3p19fH8l61dFD2q+z6dh359CUqi+zEFrSL6XgnFd96AdP/H2LNP4CRjb4lgli+wAdgtHy6lH2V0SbtenfTmXHj8vz18aUf44Vm4sA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYeGoFaC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJe0Z0rx"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-443d4bff5dfso114145e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747679534; x=1748284334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xLUT3QeRgGdo7f8VdpZlNNkkvkkzawS11uAKz4Rzhok=;
-        b=qJe0Z0rxfoYam93epo33SB03mIssykBVLVkosahDlgB130RCvPpkDbQpg2r133rSmG
-         M3JbKIdjCaF3MLTXKhTMdnvzxmdSKycUT+5aCnLhRRjV2cot4V5MbblGhKKTf1tcudLK
-         sQEm4q23NmLSbWJfGnWQ6YS9gja3oJcnjXt1C7hMF36LXiO/NTwdKmhxnX5iKgwTkukj
-         bGoLjHu4ZXWoqvqFOCjoyKNChkTFxgGX70/fLSWbXGOdFB+m0Z0qpJe9nWY44abiw1EP
-         BtAMlrqvSLSMbbqi2t70w5gxZoMEQDpJLw8soHR01s+uH58HZgrJcEAtnu1aq0kdCIdd
-         ftQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747679534; x=1748284334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xLUT3QeRgGdo7f8VdpZlNNkkvkkzawS11uAKz4Rzhok=;
-        b=Ed06mEx9iAXpYwbPMHHG1U6BCY0NJrECEcwTAYDxn9ajmdN6dRWhhb/aqvgWRiTniY
-         zc3A895rkVCY4/q7UhAHjViAACwM+h+agd5vcnRUiTVRJnWwND9Re8xYU7muXrNHUP/v
-         GKXWNgiNQqRdFgvl+tbmEvVU0u+T/KY3VvXeff0jnAOQpx8gt28e7kAbKYwuWyqMKK35
-         qEtavTCOzlIWwONSZPc8Uhj8fNbPp0/OWuC4h8WScKfnsVbZjIoMdTHCWXiJ2yA3jEVr
-         OxCJpfd3PL9iIXpik1Edlg8jjoy/8mHFgLOTOS1I1yp+1Q2ECQyDY0OHtlzYbcIdBB+A
-         EfrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXx3mjjtpt216CJojVGRdJLeS1y89V1VDIOkyQT4Y1eWsMY4LJajzumAMpk/uCUFQ2EXcuUQAiNj0Dxv5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7pz9cr8NvfYKta12XomxTq3uDCYWIDoIbmSj5ByUswdJ4YofX
-	om6jOB8bu2SQ8CGkpk/jWDAT/Yk2z4aXZ53FR4b/yfIHbkVZyLWte2wunuRz7Z08EDaB1HNw/2b
-	y6v5ZakMGGOJSUxTQmDYKr24TvehJvbCEl9C4+7k4
-X-Gm-Gg: ASbGncthERSVXDZGdmUYyuI3NrMtRE6bswP4LkijxkkNYfdn2E9p7sS0sR0E8a1qWBX
-	YiNIrVNJbzc7bs865/Vk2TVK9psmuZfWngqZkLOeE27UK9sgaFYEeKvICvzCl9skUXlvsOnAs8K
-	owjkAZqztXTwOqGw78nx5iwCBo8kXPlMKpwom46TABW1ufDJWqF0LEWYAj7LJre3Wl6nQ+mgEF6
-	A==
-X-Google-Smtp-Source: AGHT+IFeQBMSJPGO6v2VuM8ztRxqMzIqpj33vzCux4RHIlkwC3+m/YPs7WMFqhoM7/7BuqtI2xAWugCPRVwZNdXYQS8=
-X-Received: by 2002:a05:600c:8417:b0:43b:df25:8c4 with SMTP id
- 5b1f17b1804b1-443ae3dbb82mr3982765e9.4.1747679533912; Mon, 19 May 2025
- 11:32:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYeGoFaC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2869EC4CEE4;
+	Mon, 19 May 2025 18:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747679547;
+	bh=H1AP0trpR498y+A4st74/UHQvp6akcwoeEWb0O18RGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mYeGoFaC0aX6zfFbwh8/n0ekDh2z2mQRABLYp4+J3mMdpe19jBTBbcvuOjqhDgJhP
+	 TWXgW9x2UA1n9dgn5zFEWMdnRoRXJDf8OHJLXiVfhRmTnIY4Z/iKzEcS0iFBpuHiq3
+	 B+mjb5HGRmVSWKEvtl6nEkIQ2gvCbIMe9G3m0aFEyQdA6kjxJrBUjCPsmVUJFjJbZ0
+	 6CSZjd7VjfIqXyW1GxjLYh/bz70yfGnMCJo2UzxWcovHxI2/xa9Ca248R5Lz2w/MXG
+	 Ox4nyQq0pq+n+Oq4CtYy3DGKMYmA7nGn1yIKmYMLvfeT1S1VYSSsFRZwCr+hCXcgp3
+	 r6FjiDcJXNBDw==
+Date: Mon, 19 May 2025 21:32:23 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, seanjc@google.com, kai.huang@intel.com,
+	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, asit.k.mallick@intel.com,
+	vincent.r.scarlata@intel.com, chongc@google.com,
+	erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v5 5/5] x86/sgx: Enable automatic SVN updates for SGX
+ enclaves
+Message-ID: <aCt5Nx06rItmWcYR@kernel.org>
+References: <20250519072603.328429-1-elena.reshetova@intel.com>
+ <20250519072603.328429-6-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517001110.183077-1-hramamurthy@google.com>
- <20250517001110.183077-8-hramamurthy@google.com> <20250516185225.137d0966@kernel.org>
-In-Reply-To: <20250516185225.137d0966@kernel.org>
-From: Ziwei Xiao <ziweixiao@google.com>
-Date: Mon, 19 May 2025 11:32:02 -0700
-X-Gm-Features: AX0GCFtcDw89GhEYpTmvUrwgGsrlQLb2hyDI-d2hTEgfQI3bhERRmIlPbeST0F8
-Message-ID: <CAG-FcCNVAMsvrtZscdoFEFerdTcM9OeSL_GM49ou8ftFraXpMw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 7/8] gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, jeroendb@google.com, 
-	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
-	yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org, 
-	thostet@google.com, jfraker@google.com, richardcochran@gmail.com, 
-	jdamato@fastly.com, vadim.fedorenko@linux.dev, horms@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519072603.328429-6-elena.reshetova@intel.com>
 
-On Fri, May 16, 2025 at 6:52=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Sat, 17 May 2025 00:11:09 +0000 Harshitha Ramamurthy wrote:
-> > Subject: [PATCH net-next v2 7/8] gve: Add support for SIOC[GS]HWTSTAMP =
-IOCTLs
->
-> Sorry for the very shallow review, the subject jumped out at me.
-> You're not implementing the shouty ioctl, you're adding ndos.
->
-I see, I will change the title and commit message to be more related
-with the ndos.
-> > +     if (kernel_config->tx_type !=3D HWTSTAMP_TX_OFF) {
-> > +             dev_err(&priv->pdev->dev, "TX timestamping is not support=
-ed\n");
->
-> please use extack
->
-> > +             return -ERANGE;
-> > +     }
-> > +
-> > +     if (kernel_config->rx_filter !=3D HWTSTAMP_FILTER_NONE) {
-> > +             kernel_config->rx_filter =3D HWTSTAMP_FILTER_ALL;
-> > +             if (!priv->nic_ts_report) {
-> > +                     err =3D gve_init_clock(priv);
-> > +                     if (err) {
-> > +                             dev_err(&priv->pdev->dev,
-> > +                                     "Failed to initialize GVE clock\n=
-");
->
-> and here. Remember to remove the \n when converting.
-Thanks, I will update these to use extack in V3.
+On Mon, May 19, 2025 at 10:24:31AM +0300, Elena Reshetova wrote:
+> SGX enclaves have an attestation mechanism.  An enclave might,
+> for instance, need to attest to its state before it is given
+> a special decryption key.  Since SGX must trust the CPU microcode,
+> attestation incorporates the microcode versions of all processors
+> on the system and is affected by microcode updates. This enables
+> deployment decisions based on the microcode version.
+> For example, an enclave might be denied a decryption key if it
+> runs on a system that has old microcode without a specific mitigation.
+> 
+> Unfortunately, this attestation metric (called CPUSVN) is only a snapshot.
+> When the kernel first uses SGX (successfully executes any ENCLS instruction),
+> SGX inspects all CPUs in the system and incorporates a record of their
+> microcode versions into CPUSVN. CPUSVN is only automatically updated at reboot.
+> This means that, although the microcode has been updated, enclaves can never
+> attest to this fact. Enclaves are stuck attesting to the old version until
+> a reboot.
+> 
+> The SGX architecture has an alternative to these reboots: the ENCLS[EUPDATESVN]
+> instruction [1]. It allows another snapshot to be taken to update CPUSVN
+> after a runtime microcode update without a reboot.
+> 
+> Whenever a microcode update affects SGX, the SGX attestation architecture
+> assumes that all running enclaves and cryptographic assets (like internal
+> SGX encryption keys) have been compromised. To mitigate the impact of this
+> presumed compromise, EUPDATESVN success requires that all SGX memory to be
+> marked as “unused” and its contents destroyed. This requirement ensures
+> that no compromised enclave can survive the EUPDATESVN procedure and provides
+> an opportunity to generate new cryptographic assets.
+> 
+> Attempt to execute EUPDATESVN on the first open of sgx_(vepc)open().
+> If EUPDATESVN fails with any other error code than SGX_INSUFFICIENT_ENTROPY,
+> this is considered unexpected and the open() returns an error. This
+> should not happen in practice. On contrary SGX_INSUFFICIENT_ENTROPY might
+> happen due to a pressure on the system DRNG (RDSEED) and therefore
+> the open() is not blocked to allow normal enclave operation.
+> 
+> [1] Runtime Microcode Updates with Intel Software Guard Extensions,
+> https://cdrdv2.intel.com/v1/dl/getContent/648682
+
+I'd hope, despite having the wealth of information in it, this commit
+message would a go round or few of editing, and nail the gist of this
+commit better. Then it would be easier in future review the choices
+made.
+
+BR, Jarkko
