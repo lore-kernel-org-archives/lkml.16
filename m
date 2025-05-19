@@ -1,83 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B939881E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F005881E;
+	Mon, 19 May 2025 10:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649569; cv=none; b=tW05pfgUuxbxhCJIOaHndNKjN0yFx0InnSwyRnMF0id1SIe3MNh8ndfCot15XUJNFaLLoe7KS7aLA/puTEsbq8rPNlJKo9fT+Jn2hKo792txfzVkkPaLXm5F2Rm6yaL5Rukc6zdmUxHmwYoDuN0rs+G6griC3S4mQTBWr4Y/Wa4=
+	t=1747649664; cv=none; b=CUCLBSZFrrh6YRUiYe8dam9IqjjEvncoxX4wqai8RXl10seJqArLXZGoses3NshTvpK0bUP14/cOjifz9WUMhJkKqSjfiO8LAGCLDVe2KA9J8Eav8EMj9zHnoMY5nDUkixWsoglUZyI5PjrV/sH9hVA5+O4WQdrPnhyhHApXeao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649569; c=relaxed/simple;
-	bh=lRW51PxRDt4POMK3MmQOCewzQF6lAIkyvOIS1e/ukE0=;
+	s=arc-20240116; t=1747649664; c=relaxed/simple;
+	bh=+qY/W+Tl5bBKT/y1ObIIiIHY/AW5ZPx+TXJ/Ggj8xHA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSfvLRwjkzhxvZVtIXUa/vnRUMW5YgzgSq45ww6akTfbhfL4lxXWKEuKtaHp5KnxqUdTqfzn+qcwsazJ/nsxjQHLeybDfBzVtWroi9nJy2gFgiW4JP+8rF63+Y7M51idna/00etv2UVKm85mtcNih+1/6mE+MdqJ8SFiicVGe5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3FCb0xH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3FCb0xH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36390C4CEE4;
-	Mon, 19 May 2025 10:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747649568;
-	bh=lRW51PxRDt4POMK3MmQOCewzQF6lAIkyvOIS1e/ukE0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k3FCb0xH+u35CUhOGXpo6a6M8UcY3qzVEi93m6jwui01+/HPdZTbUtEVOUcf48eBo
-	 lnOLFxfUo+e4dc+6D8gpqb9OcRE4RAtkDWhBnc/lELqiOTxCmp9KdmH0sgjwYM98ly
-	 E74y0M62u2xxxbkW3+DaruD7xut6sQ6e+bUwQDg2r7TmftRQ8nOGp2HXdYw1rGpKD5
-	 19caxE8prCeGGXlwiXWuip46h/4qqFMKQ9EStNbk4rEJTj8kWRe+amNwTYtKK8uTUp
-	 ZUD1j6kH4HMoTtV1IZ8ZkUUTn+6XIY6YlLJ0Lp2Nr0rksLrcZ5M9hqaTTpU8HZ6iXj
-	 c0oLZhyO0nB7Q==
-Date: Mon, 19 May 2025 11:12:42 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Andrew Davis <afd@ti.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] regmap: Move selecting for REGMAP_MDIO and REGMAP_IRQ
-Message-ID: <5340db48-f7cb-4c81-ae2b-2fdd31694416@sirena.org.uk>
-References: <20250516141722.13772-1-afd@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAsHNIikVaxamKno1MplcZ2sIGkFGCcO9j7m4Cnmoj7KXiTAC9bBKSHHJ5Rk/XUnipEg1Q8/VXaTeZXPnctXovxsA5YvlmD0LpGLEHlr+i3wruht8qH/baIV6ekXxPqvNUtVDqIn9jUmDhrMAC64ywhjQDf0qCYhGRhzyPDdu20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: FYz9cRoRTqmhHxWjgSLyaQ==
+X-CSE-MsgGUID: /3UEGO4fREuR+ctDj8ntXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49697120"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49697120"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:14:22 -0700
+X-CSE-ConnectionGUID: KXafi+e/TJekXaV/pJPQCQ==
+X-CSE-MsgGUID: qj8D3cXCTpO2/sb/3vMoPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="140350370"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:14:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uGxVh-00000002yrh-1LHz;
+	Mon, 19 May 2025 13:14:17 +0300
+Date: Mon, 19 May 2025 13:14:17 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <aCsEeQQyGdBg2ex9@smile.fi.intel.com>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-5-91a3f2837e6b@baylibre.com>
+ <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
+ <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="37aLQjy7+/fVUBfC"
-Content-Disposition: inline
-In-Reply-To: <20250516141722.13772-1-afd@ti.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-
-
---37aLQjy7+/fVUBfC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 16, 2025 at 09:17:22AM -0500, Andrew Davis wrote:
-> If either REGMAP_IRQ or REGMAP_MDIO are set then REGMAP is also set.
-> This then enables the selecting of IRQ_DOMAIN or MDIO_BUS from REGMAP
-> based on the above two symbols respectively. This makes it very easy
-> to end up with "circular dependencies".
->=20
-> Instead select the IRQ_DOMAIN or MDIO_BUS from the symbols that make
-> use of them. This is almost equivalent to before but makes it less
-> likely to end up with false circular dependency detections.
+On Mon, May 19, 2025 at 11:40:09AM +0200, Angelo Dureghello wrote:
+> On 08.05.2025 22:00, Andy Shevchenko wrote:
+> > On Thu, May 08, 2025 at 12:06:09PM +0200, Angelo Dureghello wrote:
 
-None of these selects should actually do anything since the symbols are
-themselves selected?
+...
 
---37aLQjy7+/fVUBfC
-Content-Type: application/pgp-signature; name="signature.asc"
+> > > +	device_for_each_child_node_scoped(dev, child) {
+> > > +		u32 reg, r_gain;
+> > > +
+> > > +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> > > +		if (ret)
+> > > +			continue;
+> > 
+> > > +		/* Chan reg is a 1-based index. */
+> > > +		if (reg < 1 || reg > num_channels) {
+> > > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> > > +			continue;
+> > > +		}
+> > 
+> > But this will allow to have a broken DT. This check basically diminishes the
+> > effort of the DT schema validation. If there are limits one still would be able
+> > to create a DT that passes the driver but doesn't pass the validation.
+> 
+> fixed all your points on other patches of this patch-set. Still your
+> emails are going to google spam, just could catch them on friday. 
+> Really not clear why.
 
------BEGIN PGP SIGNATURE-----
+DKIM which I still need to configure...
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrBBkACgkQJNaLcl1U
-h9Dplwf/T76cvn6B7x9MZB+nlxh9BvMip0sCZzOMlrMKyYl0tFonslOik/4EMCsg
-Vhdry4kll8aFgM2I4Sa3wKHNsdcw1xvGtlyI0MUVsefPefgC2AX7FaQzGzh36h71
-JY21M/C4SJos6iWSAuueVuv0HcJ2ohAJgspgD3sID4Sgd2cD9UXj9/gNeDRnj7Sn
-Wz7LxmHvF+mEf3SUYuyOpw84BigNIFJjdVU1kwBR2ieEfz+oZc7vXdTS74LPudrg
-R82KgHDjLFb0ZyKwJwJ2ENHwS3x3Np2hraYtoaNQqUUz8KeVnLYp1NWm0+gNyAOs
-AzJQXjSVl8kkpfSPVXB+b4rnphj/Jg==
-=I5sr
------END PGP SIGNATURE-----
+> About the above, i understand, but the check is actually the same as
+> in ad7606_get_chan_config(), a warning that fdt is not correct, 
+> i dont see a blocking issue here now, so not going to change it
+> in this next patchset.
 
---37aLQjy7+/fVUBfC--
+I think the 'continue' above is simply wrong. We should not allow to have
+broken tables. And I think it's kinda blocking issue.
+
+> > > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> > > +					       &r_gain);
+> > > +		if (ret)
+> > > +			/* Keep the default register value. */
+> > > +			continue;
+> > > +
+> > > +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
+> > > +			dev_warn(dev, "wrong gain calibration value");
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> > > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> > > +		if (ret) {
+> > > +			dev_warn(dev, "error writing r_gain");
+> > > +			continue;
+> > > +		}
+> > > +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
