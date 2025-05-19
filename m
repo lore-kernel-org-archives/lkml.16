@@ -1,136 +1,341 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011033.outbound.protection.outlook.com [52.101.125.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9681448E3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747616832; cv=none; b=XBjNYsX+vLmDGUSxP50jI7yEN6w4RqpHXZQyH8o5D3WCMZxYngIqR8iqdhgzHuT2RvKZX5ztsXRaKjTysiZow6J54Gat2nRsIj96QlbqptwBUJTNJDOyBiXzHXoIogkFiVThGrcZ7muV0HY43HhOg9Eoq/tCoPp4KJ0nnStysc0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747616832; c=relaxed/simple;
-	bh=u3coNIEXcwpQF3VClyn+QPxuX3xpkCJDAeCZxa9HiA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZyoNLe4sXj/54OvgigkHzuXYZiXiPk1xqgLJ/VVfYI81NOjc6uQGGU31M7CEMpuH8DwMhVO1wDe0siRDsfdSL14TpYfqbjMEalJyK9W98lt1MDwIR0Ca8yd9XIV5CUutETITkpF/uLtAmSBYAnV4i/jGNcdCBJyy77qb32EPBpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VZsviGbt; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9814B1E72;
+	Mon, 19 May 2025 01:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747617323; cv=fail; b=cUk0KSWB9bn8hNp0uaS1lVYrGQQKQkB2SQ7wwWpsAUNulRQlwVBz+6O3RzVwkT6U1u7nycu6zYdGSJW/oAgtqgbLr4WFLT1CcELpEjcM5Shp2gLzOjQf9bpGU2inJa1pPAiDlvjTvoK3Lko6Syg6aUI0dN1bszxK+FgfRCIlZlU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747617323; c=relaxed/simple;
+	bh=2H4NVw5Sv3wrYiGnABeJ+l1NY+KoHacfkrUPskkjRzM=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=gOHhuBthFAvJzdt0a53bcoGUDsoIIMMtIAriIUTMNUKoUDooA4+xfJGYzj/OtmfGzPxKMN05J6FNALJd0P44IFMTgRuC9/Ki3wC2H5PFRyOyXmqs9j3z9lsA2YJoYCKA/Q+pGsHtBZkLwvzwdgcZbrDXTpborL3UhvMDUKXBsvo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=W4txh5lE; arc=fail smtp.client-ip=52.101.125.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VZsviGbt"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54ILLgDX025672
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:07:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=9NaSP65lkazc1pMW1ainLK3h
-	J0x0G4klMCtgn2cCzbg=; b=VZsviGbturYRMZsqYAxoR+//1K79EaiMXT55ntD1
-	f1EAv3eR+B8zpw05vAgQC6WrHac3JpMOUyKMY1nd8wBpoo08kmEzTQ5Viu6k9y3C
-	JjKSjWKDzql7Daiz1Ng04Nv5dpqEhmvXG0EMXy4eEQBjc+nK0olJ+sgAI5S4wjx7
-	zeaNPkaj2QSwHAj0OH9t6mYM3kpe8e3Te0klX6vgLYf8O+3rPygvd0DtxaOzYfu7
-	niivAisE8nPtgs0+GyM17+AuVxZzBwjrT8DJ+9aUZ2qhm2BETVP7bDRlCosb9T7v
-	4kv5Iavv5VYEovKQzhUiaps7Nl38qyF4xaXowQ1Cm//vmA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7an28-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:07:08 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f6e5d2f612so88321436d6.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 18:07:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747616828; x=1748221628;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9NaSP65lkazc1pMW1ainLK3hJ0x0G4klMCtgn2cCzbg=;
-        b=CVmIVOIW72Hq9w5QIF02YFZRLcJGubrOVZnrG9/6xP3siOo4FDs/lq6rkMI8evIRur
-         Q1PsLbrN6GxABTdxxSevobHClR0jvZFgld1Eq2Ia3qOwrG4fLYmVjf0nvPYOg8PEKjAT
-         jymyRuZ67jtiVLLsxt0NAzdRVE4zU02fOzfPxsuMUNPm41RvBcAO9D0dIAr8kJwLWxN6
-         5aJi+Stgmp6ZZLRQGBXkum4Hct2CUT9ROxOBTh3tzPMI5oJOP2K4oc7T2h3EEqigoZ43
-         rXv/u1sKyODEB3nyiKnBGPaBUnkeYlgvNsk+bfGTHnsAbi5Lomp+izeXtWRk+MHMpdGT
-         RFnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUt2cL26aOi8ZJ2O8AyavlUYPV0F+NYNaVBvPcI0qIGlQDiIqziebfVihdILjKWU0qYwZluP0tAxtxEn5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Jddf75QbJURVtm4tjYuiH82KBAmVASZv3DHVaSg7CaeLhdLk
-	/DIUKrFV4Sz6MNJR6QKl6QLrlzMzZf7jBvCKPyWXuGMtO64Uq+VjlcQYPfF3GREqLtg/pcZeJT5
-	yi/ond3uVhPD8G0N9daLKYK7HRN3Sh+mzGDeHKcwpGyReVhbtYT5+eKGszBEGZj2Bwaw=
-X-Gm-Gg: ASbGncufTMc10p4hFe8HTm/FiFi0OWXkZc2UyhT7t9fsUMZw1az6gZMhFgWJsuBYGTF
-	Efx0RCTmtVrhil/7lj5mBTk9X5OWINbMOdgk3I9ql7TZfxVxlfvmPKhxJzuRBdalFoR0gujHOIz
-	ytZacadmoh/X5/8BFT0hYXuUGEchYuJgpylsUVKNz4Kv+hOLGVU2kKPPalaluDVMIo4+d2xr9fw
-	ePKhavIMGius0FGQVY7DWCrCaMKaadrWhy3AzO1ym8o+dQSk/DhxVZat27jXyMcUI3GjWJ5HwRt
-	hH5YppbtE4M4ONlNnpZhNhJafyzeu2FjdyETK99hEH/dlwYn9NrG5xrcjy7sHihR7PXNMnBZZR0
-	=
-X-Received: by 2002:a05:6214:2428:b0:6ea:d629:f47d with SMTP id 6a1803df08f44-6f8b08f9a5bmr185310286d6.44.1747616827891;
-        Sun, 18 May 2025 18:07:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFqSJk/SqdkBbYqLR2IEs/FtCzb710T2GK5kX1TaRaCIGQhWa06z2VX/5aEjyY122E/NinQbg==
-X-Received: by 2002:a05:6214:2428:b0:6ea:d629:f47d with SMTP id 6a1803df08f44-6f8b08f9a5bmr185309936d6.44.1747616827515;
-        Sun, 18 May 2025 18:07:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f350b9sm1619828e87.94.2025.05.18.18.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 18:07:06 -0700 (PDT)
-Date: Mon, 19 May 2025 04:07:05 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Sayali Lokhande <quic_sayalil@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Add UFS support for qcs9075 IQ-9075-EVK
-Message-ID: <bhu7ifrgg4fgy56lc3ix37drxyciyzl46qkicv6lr4svjejcgi@dqdv63ogxtjr>
-References: <20250513084309.10275-1-quic_sayalil@quicinc.com>
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="W4txh5lE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P/z79WQtAQyt3GJslGxYXLD3wGJPKmCkFovXqYxsqIwvRQhesEmNezegwqpI1iSbVqrA0/xOo4iq74/sYR2SZkcPUrdNT6C665AtAj3JNtj03yLHkn5n+3X2/ENF0t+OemC44NsP1vW7yFAoBs1IurZtj8iuEZQ505WfOflK8gBWScUCPkItzIPRXP1H5tgLfWMJ4N7M+vC1CMhVgNRmhMMxCb8Ylc8S1nIejfKKDf2XJbKBQe5uuqmfQipjfXUJvLsPb1O4slp9gyvxFLN3vDwL0LwqKtnKezMlOf1cw85D/BIvOt9i2w63sLskSiNx7XREaDG0B4JvwLG9faJC/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RDWhJzQm4dFuEVHAbo4fHIyx67bEc4hu2IXM/0nbTw8=;
+ b=mia+9h3PQS2zsfhgEQ3NGvGmp+WhCzodDZu0VBl/INP0nqQv+pFrFDkQ9JaHeFHZH3Ls3vYjEGhiyLeWS3PPr/8ISo84l+fD1TENHb3fV4l6iCUD45PH0e9OXD8xovg6JX3ZyKkv+OzaKtKKfh7NSFrwDgHop39N4e7guETxbCwYCcw84mi/UwYWJhX9pLmLry01pkdkhMCqhQwbj6joQhAETCKBN8N69+Bci8YEECojoAnOEtJb22lEm9+oQimPdNlgQH+mjNMF7KuSuMMZICOi6xI6OZ5jFZEa5xU4LqqMVo2oi9InSNBWKrvfuiAE07/rdnFJoFo+d6qO/rcxnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RDWhJzQm4dFuEVHAbo4fHIyx67bEc4hu2IXM/0nbTw8=;
+ b=W4txh5lExJTYj9j5Ji8bj5kygkZhycW24RuN0HmDLGuDo1FnYlljunP/+Fg4iE/5WPit8hB4Fv9K8bk3zzEPD/L9QIOeVhbZIlk7rpAKAQ8DUxd4DmtN/J8qSY7ToKJCgVha+V4jZnY49ULiluXv7oovN2ahYqxnOrSMy6sSRiU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by TY3PR01MB11875.jpnprd01.prod.outlook.com
+ (2603:1096:400:40c::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
+ 2025 01:15:16 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%6]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 01:15:16 +0000
+Message-ID: <871psls8nw.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH RFC 2/3] ASoC: audio-graph-card2: support explicitly disabled links
+In-Reply-To: <0aa11ef6-4166-41d8-98bc-6c7687d10b11@gmail.com>
+References: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
+	<20250515153128.147457-3-laurentiumihalcea111@gmail.com>
+	<874ixltjzw.wl-kuninori.morimoto.gx@renesas.com>
+	<0aa11ef6-4166-41d8-98bc-6c7687d10b11@gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Mon, 19 May 2025 01:15:16 +0000
+X-ClientProxiedBy: TYAPR01CA0149.jpnprd01.prod.outlook.com
+ (2603:1096:404:7e::17) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513084309.10275-1-quic_sayalil@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682a843c cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=tguQkwLf3mHSJAPor5UA:9
- a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: PUh4HpMcHmahLAlCae3nqWuMAo_1PN-0
-X-Proofpoint-GUID: PUh4HpMcHmahLAlCae3nqWuMAo_1PN-0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDAwNyBTYWx0ZWRfX0NZKvZHcJJa7
- rBUthehnwUmJd8V+Xktq3GBUv7OpeqBowQ4jru3YlEej3vU8mL/a4DDyG34tQR99Fmpwfi2KUw0
- manirM0nKWHAtAvTMHGHBY5R4F/CMBNeZxKDVEqIis16VmIrMqQseZeBFy7PdZ5S5OFjK3GtRiG
- n+y5/y420Xv61Rj41aEA9KOtqM22KaRVnQBcqGdJkyet8KT+4VuCSBrDLTtK3ANZ0KoEScVfI7O
- UtbecyZWuCiZG4UH8k008gyDhmQwogJFEENr4ykzI5k6SFpydohvgqZBSRrn3MbDB0SCc0BWyXp
- lPmvjTOUhAFJdNWZThnAQ2XkaR+ShBTk8yznu5uDLTxq5RcMEO8QopyKJt0vxki8kUXwlbw4fN5
- 7cxw3r7tSl6q+bbm7EQYdSm/l0bFfVqiwqNySi4D2yXJ67Uh/uY4SjIv/i3HM7VSybnd99xS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-18_12,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
- spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
- mlxlogscore=848 phishscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505190007
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|TY3PR01MB11875:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0569c77-68ba-49ef-f4cc-08dd96729d1c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rMzKewBZRIpXDl+F1uQtmu/3AAhT5PeQPaxjiItgc1vU6be4ZrwC4S9UQ7m5?=
+ =?us-ascii?Q?72IClrSoHzwlexFgI2XDDHu6cbaES9lgdwIKVCALsdgIqTUaGkkPes+K1e7S?=
+ =?us-ascii?Q?YfVPdWB9enenuHoK8S4xmliXPmmTXupMOYrKgbWyLsiHJAgyb2MzMozSTxy2?=
+ =?us-ascii?Q?dmCTbxqdw1J/pgNyX8EPnoXsjnFJO2RrHm3+wXzMGCiGZoS8IuwrFR3bQl5s?=
+ =?us-ascii?Q?XTtyR0pWRXVLyQH1K9Bxh0K5FI28DDODxet0F/k02d/U3ylS4UqodSOSUITb?=
+ =?us-ascii?Q?mRqcQgEjTen9knXcBgKNLN2WXDmFgWN2son7T9q5fKUx2jDle7IGBUgWonz+?=
+ =?us-ascii?Q?LmGP2FzDy1I9daydKCOtDUJUkzPZk2qc8y8fscJV3aWrRObJHJvH5NqYey9D?=
+ =?us-ascii?Q?0XUftvt3m/F9I+JESBfPrJ/IJjMTcft4Qt1mHkOC8IEueNJ4bUqzGF+vzt4e?=
+ =?us-ascii?Q?R+qxn3TAoiIxvDZaqjIA6zmkW763QTeHHdG2OacdGNSbmlr9IVAATd2yh0To?=
+ =?us-ascii?Q?QxB/fUBkgAyF5JHoW5fUuPB/qYy9AUX9KxMlGnf1kXFefPhmf3k3p9/ZeMPw?=
+ =?us-ascii?Q?Q93DXPspHskyQ0t0jBiwPBXsaTdDy36cza1gHEW9ixnWCwar5uf0G2hL9mo4?=
+ =?us-ascii?Q?TAHfze8MEQ+EnEbYY15mK927g6LkcBkcCYvacQPateLemw1pV/fkCD1UKUCp?=
+ =?us-ascii?Q?V8WADGdJpiKNw6E7WbE5mD+YerKz6AdycBIzts0ihXi2XmlNqJE+ejkM3/n5?=
+ =?us-ascii?Q?qrhOa/Nsadp1jVg12nmYUYKcnbfOH8dw2MbkRoORFKeIdwHE9rWz07tyA+1X?=
+ =?us-ascii?Q?dqlSWK/wPiwzALPqFKNHa/B/dKKbyQPa8JLYtSXMU9jPW2gPRizbSxviFaa/?=
+ =?us-ascii?Q?p5byjF0Av+/jQwamNjW0QQhZg9luXUPnHmSwOiqEOxPrDKbm2b5X4YK24H5h?=
+ =?us-ascii?Q?P/RzAH8Kyg9LzmoRFXs9Nsdjw34SRgopOaf3B62pt6uUSQKHoLw/qIWPs0xJ?=
+ =?us-ascii?Q?j6WVKwF3Hg6Lyq914TJNb7T/EvPjeH0k82EUyHO0bwZfstXNgE+hVAGKaM74?=
+ =?us-ascii?Q?IlWDg47XRldWBABzAz4OvslIuFN4FDJ0uGlSPET8zANJddMV3O/hMrEABzNo?=
+ =?us-ascii?Q?/wxGPHGcky3p16QOTeuWhCozCU3LVIIBDpwm4JYWwhs6CLnJfbaynP8x4QtW?=
+ =?us-ascii?Q?r6G87xuwKchT4fbu3VhXsWtCMo+EFfQ2texrcejyi5Am1BZVXvoPnfpIrDES?=
+ =?us-ascii?Q?Eugu1HvJBvbp6uFZhkbN2M7xqG0T+j1rwbsMIQsbVvJZR08YVMyclGCny1PP?=
+ =?us-ascii?Q?1uhSGddB1XU5pYHxIY7SeGgK7DI7hgccLGmC+ZzlQVBGpMrNH9TZaKwqatNq?=
+ =?us-ascii?Q?zFmvVGLjUfcYRIA96lIqmyUms7Amzgt4LJfVzJfvCC6bVAeVgZwbJrfL0l+/?=
+ =?us-ascii?Q?A2w4VZYujHqnIxzhkeLuH/MQRysAFumEJfPuOxL1qF3JIR9cOYuUtA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Wk4VGCCP3kAX5ewuxcGfEc3aHFnEp3CWjIvK0tncbhZGM68IZeAOeeiyK9dO?=
+ =?us-ascii?Q?9bRcK7LRy6+DlSXCXUkrk6Q74OgWdUsImEN7XJYlP4AzQ8KrbXMAX6IfKQ5T?=
+ =?us-ascii?Q?HYFzyM2SfmzvbnE9g52xhvRoZzmt/wlcJ2Yo2Bwb7qhDWyfVC/RGJVFEF5JQ?=
+ =?us-ascii?Q?ppRMgsRUq1tQdbx2lcpvUd4ibFjHPubDO8V9ba2PdTM6ocbI2eL0ydwlUrNU?=
+ =?us-ascii?Q?YfUW6oCuSWeY52SiFdV+N76G0hChaEEtZT6n7up3JXFCw7vEvea6CP5ur5Hi?=
+ =?us-ascii?Q?aarFB78t/wPf44cO/ucM+LryFis9hOcTs7MW5QpY1vvCm6Asgh8tGEvC+YPa?=
+ =?us-ascii?Q?XemfCkcG5YHHEEUjMqDTY3OVOgmXVyoomC4LpLJyhJX9YGuVlONOR7wax1uK?=
+ =?us-ascii?Q?TAZyQ15ugrrWAJQ4LJy+tAjV31YTk3S7kW4SGkGVCxIZo/4OWR7OqSn5tYOn?=
+ =?us-ascii?Q?viC7a3OyBVXLrDYzjol2TF0C01jvgdAr8fV2pPlukkLToUJcUtNWb23Y/QZO?=
+ =?us-ascii?Q?J4GHcM4lPOmmWwWG7AtRgditJmkXlrkMg4FJNA3FwPTUNKJxuKtCNyssoZXh?=
+ =?us-ascii?Q?K64HQotYh5Jnge0TnNUdRKdKBdl1ofABHP2L5ZNdVYqjQIx7eDdxI1OKPw1/?=
+ =?us-ascii?Q?HR0bocL7sIvXgULUKg1rekrFOd/NTvldry4NtwXp5hCua0a2r+D861eOn9Qu?=
+ =?us-ascii?Q?1Ik9ic5BvOn9Zu3wqodmdlDsQmm4wPyqwdY6mPIUejkI0MUAgV2Ukb375dB1?=
+ =?us-ascii?Q?L+bjLXv7Zk9JkRmIE9lrUu/K6I+UxNzFyKhw0vCXhdJyu96lju3QhRYu4U6q?=
+ =?us-ascii?Q?1j+Io3b5PgeGv2hZCjjUGhSkM7HqwpgaCWQkn1UWVvZsDZ2tkGNzguV5RWjn?=
+ =?us-ascii?Q?fQVg58cLG3YmDeSrlarsRBZJcZtrKljTYa1RbE8yFbUHuWxh3VbipzMZmw8E?=
+ =?us-ascii?Q?caLleTJ8nx3kuncdrb3609/aXRDIqAXl06BznOvO0DZgmbfpQWxuHCqWYgKr?=
+ =?us-ascii?Q?wYMf4HSzvpED0xDvQIcBLdxKpS8Ii9sO427D8fCUuVncP+OUt72yiyWOEiw7?=
+ =?us-ascii?Q?v2vhmiWyAoOXuuP15tKmVfZvgx7ou47iNzKckG95gY8eo3EzN2qHNARUDbbf?=
+ =?us-ascii?Q?mlh12IqlwI4Qhe/3/2/BYxlqTk+yLvQMSqxzyVY7p10IpZDdbcja3I0IvH4J?=
+ =?us-ascii?Q?usXAOjqMV1THEkjyG9BvKvhNBm4w5RGko8rkKgu07IaKWIy833DDXfMaIBk7?=
+ =?us-ascii?Q?9mtUnAA+aTOqx1Q4dRmd+25lrDy5StxGqWCO/qYfr5lovl+1YUETNMLmvxBw?=
+ =?us-ascii?Q?eXxIJOqhJrUHcNVO+uhfiaDlO+4tDwMEm6M60HZHG6UKVXQimdit60jEb2KT?=
+ =?us-ascii?Q?x2OhYzNXmc3Jbgik4/4C8b4x2XxBEvw8i+JZAk+tt/0kdpdjGM5tbclbW0fZ?=
+ =?us-ascii?Q?L1kpGifArY7/zEmlT1Rqspm7UUr3M3TRVjcwEtOb/fIGPPd8fkv2Krh/BTkK?=
+ =?us-ascii?Q?wo3RZiL9X8/pL9tTz/N9PmujT3L0ENmMjt8KyB1QKxVerSVAJ1EyEYKdZxHh?=
+ =?us-ascii?Q?j4vQ0nqPfLehkI8JkdGzcyAjJX8aL0mP44GhVEc0jch9jNy84fCOW5CMf+OX?=
+ =?us-ascii?Q?gqfXZL7Guw1OA8jFihTE5hc=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0569c77-68ba-49ef-f4cc-08dd96729d1c
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 01:15:16.4426
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nEYO4q9icFbRh2BfRNN6XcN7QdTWct1iMEKXiykus4C2iQ1SlVNoYMFngxnho4M6rMUej5jV+/04NKC+vVQE57vXQrfQpxdb7qh6jwKqg1aMPUHyQgN6sr9ZzS4Hxzbl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11875
 
-On Tue, May 13, 2025 at 02:13:07PM +0530, Sayali Lokhande wrote:
-> Add UFS support for qcs9075 IQ-9075-EVK.
-> 
-> Rakesh Kota (1):
->   arm64: dts: qcom: Add support L4C LDO for qcs9075 IQ-9075-EVK
-> 
-> Sayali Lokhande (1):
->   arm64: dts: qcom: Add UFS support for qcs9075 IQ-9075-EVK
-> 
->  .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> Please note this change is dependent on [1] which add
-> qcs9075 IQ-9075-EVK board support.
 
-Please squash it into the original patch.
+Hi Mihalcea
 
-> 
-> [1] https://lore.kernel.org/all/20250429054906.113317-5-quic_wasimn@quicinc.com/
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Thank you for clarify details.
 
--- 
-With best wishes
-Dmitry
+> [snippet from base.dts]
+> 
+> 	my_card: card {
+> 		compatible = "audio-graph-card2";
+> 		links = <&l2>; /* here, we're only allowed to specify links that exist */
+> 		routing = "Headphones", "C20",
+> 			  "Headphones", "C21",
+> 			  "Line", "C01";
+> 	};
+(snip)
+> &my_card {
+> 	/* here we're forced to also specify l2 even if this is already done
+>          * in base.dts. This is because DT overlays don't support appending to
+> 	 * properties.
+>          */
+> 	remote-endpoint = <&l0>, <&l1>, <&l2>;
+> };
+
+This is very nit pickking, but I need to confirm.
+You want to indicate here is this ?
+
+	&my_card {
+-		remote-endpoint = <&l0>, <&l1>, <&l2>;
++		links = <&l0>, <&l1>, <&l2>;
+	};
+
+> &l0_ep {
+> 	remote-endpoint = <&c1_ep>;
+> };
+> 
+> &l1_ep {
+> 	remote-endpoint = <&c2_ep>;
+> };
+> 
+> c0: codec@0 {
+> 	port { c0_ep: endpoint { remote-endpoint = <&l0_ep>; } };
+> };
+> 
+> c1: codec@1 {
+> 	port { c1_ep: endpoint { remote-endpoint = <&l1_ep>; } };
+> };
+
+This is also nit pickking, but I think above is wrong.
+I guess you want to indicate is...
+
+	&l0_ep {
+-		remote-endpoint = <&c1_ep>;
++		remote-endpoint = <&c0_ep>;
+	};
+
+	&l1_ep {
+-		remote-endpoint = <&c2_ep>;
++		remote-endpoint = <&c1_ep>;
+	};
+
+
+Your are indicating very confusable naming, so I want to understand
+correctly as much as possible.
+
+> >> 	CODEC A has widgets A0, A1.
+> >> 	CODEC B has widgets B0, B1.
+> >>
+> >> 	my-card {
+> >> 		compatible = "audio-graph-card2":
+> >> 		label = "my-label";
+> >> 		links = <&cpu0_port>, <&cpu1_port>;
+> >> 		routing = "A0", "A1",
+> >> 		          "B0", "B1";
+> >> 	};
+> >>
+> >> 	CODEC A's DT node was disabled.
+> >> 	CODEC B's DT node is enabled.
+> >> 	CPU0's DT node is enabled.
+> >> 	CPU1's DT node is enabled.
+(snip)
+> Assume that we also have BASE1 that is compatible with PLUGIN but
+> C0 and C1 are connected to BASE1's D0 and D5. Since there's no D1-C1
+> connection that means you'll have to create another DT overlay. Thus,
+> the scalability of plugin.dtso decreases.
+> 
+> Now, for our particular case, we have BASE0 and BASE1 with the following
+> DAIs and CODECS (these are physically present on the base boards):
+> 
+> BASE0 has DAIs D0, D1 and CODEC C0
+> BASE1 has DAIs D0, D1 and CODEC C1
+> 
+> Both of these boards are compatible with plugin PLUGIN that has codec C2.
+> The possible DAI links are:
+> 
+> For BASE0:
+> 
+> D0 <----> C0
+> D1 <----> C2 (only possible with PLUGIN connected)
+> 
+> For BASE1:
+> 
+> D0 <----> C1
+> D1 <----> C2 (only possible with PLUGIN connected)
+> 
+> Since the D1 <---> C2 connection is valid for both BASE0-PLUGIN and
+> BASE1-PLUGIN combinations I think we can make do without the support
+> for explicitly disabled links. But I don't think this is ideal because:
+
+Let's avoid BASE3 case here to avoid _if_ story.
+You are now indicating too many complex/cofusable situations with wrong
+setting samples (D0/D1/D2..., C0/C1/C2. BASEx has no D1-C1..., etc, etc...)
+
+I noticed that why you need to add disabled Codec routing on BASE DT ?
+It is the reason why you can't detect BASE only sound card, right ?
+
+	---- 8< ---- 8< ---- 8< ---- 8< ---- 8< ----
+[snippet from base.dts]
+
+	my_card: card {
+		compatible = "audio-graph-card2";
+		links = <&l2>; /* here, we're only allowed to specify links that exist */
+		routing = "Headphones", "C20",
+			  "Headphones", "C21",
+=>			  "Line", "C01";
+	};
+
+	---- 8< ---- 8< ---- 8< ---- 8< ---- 8< ----
+
+If my understanding was correct, your system can be indicated like below
+(It is not same as your D0/D1/D2 sample, but I think same things, and
+ not confusable sample)
+
+	BASE			  PLUGIN
+	+-----------------+
+	| CPU0 <-> Codec0 |     +--------+
+	| CPU1		  | <-> | Codec1 |
+	| CPU2		  | <-> | Codec2 |
+	+-----------------+     +--------+
+
+How it works by below ?
+
+BASE
+	/*
+	 * detect CPU0-Codec0 connection only
+	 * Codec1/2 are disabled, but not related to BASE
+	 */
+	my_card: card {
+		links = <&cpu0>;
+		routing = "Headphone0", "Codec0"; /* for CPU0-Codec0 */
+	};
+
+PLUGIN
+	/* detect all
+	 * CPU0-Codec0 connection
+	 * CPU1-Codec1 connection
+	 * CPU2-Codec2 connection, and its routings */
+	&my_card {
+		links = <&cpu0>, <&cpu1>, <&cpu2>;
+		routing = "Headphone0", "Codec0", /* for CPU0-Codec0 */
+			  "Headphone1", "Codec1", /* for CPU1-Codec1 */
+			  "Headphone2", "Codec2"; /* for CPU2-Codec2 */
+	};
+
+
+And/Or your situation is similar as mine (I should have noticed
+about this sooner).
+
+	d70be079c3cf34bd91e1c8f7b4bc760356c9150c
+	("arm64: dts: renesas: ulcb/kf: Use multi Component sound")
+
+	547b02f74e4ac1e7d295a6266d5bc93a647cd4ac
+	("ASoC: rsnd: enable multi Component support for Audio Graph Card/Card2")
+
+	45655ec69cb954d7fa594054bec33d6d5b99f8d5
+	("ASoC: soc-core.c: enable multi Component")
+
+My board is handling above sample as 2 cards, by using "multi Component"
+
+	BASE			  PLUGIN
+	+-----------------+			^
+	| CPU0 <-> Codec0 |			| Card1
+	|		  |			v
+	|		  |     +--------+	^
+	| CPU1		  | <-> | Codec1 |	| Card2
+	| CPU2		  | <-> | Codec2 |	|
+	+-----------------+     +--------+	v
+
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
