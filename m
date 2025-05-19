@@ -1,187 +1,102 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59C027874E;
-	Mon, 19 May 2025 12:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0AE27876C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658122; cv=none; b=hQfCa6qusamH/J7iGCpWfiG4P3HBWkjk3eRU/mJozYwPwXZ+DYivwMo9lylgGQh09BG9+EwHLsTGU5BkFTxo+RvdQNBIwGWMOKOq03YJDzjT55Idv6Ve7qQsAbiGh7clKwUKowdArir58y6y4aeVMB/qdpUIX6c5HLnB9gIbBJE=
+	t=1747658142; cv=none; b=ure9e0PYR6jPfTfJiVuRbwZcdMhL4StdOsaJLmwbn9+fphLaDg2h15laYxiYXGKdQEDF4Q0EhKguPSF5vHCNcbGYnSu1g1VjF5PFj5/g0ugrMzx3MgHQG7WQVLlE/g7Nmz7f8OuDxnXxGuGdhR6U3Eep68SZwtTtcQVrsMqIDAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658122; c=relaxed/simple;
-	bh=rdzxM2Ez+OpL9Z4JCGL5QU5vGcivUVrVBFMJHd1PqFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ut/R1xh1kVwZEnNMK1f0U9cy27y6kyPaW71H+1DB4fViVLK7oelUueIDwshp2qUMPIOtMg7G8BIVBfazGbAhCJ4mr8c8cFJYHBFc1bYF9BjTYdb7JJWKJ7ywUtw+EZheVktvw7x2jLjxfQWAd/YvWD5Qqs0SyxEYOstYvgTJJr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Bi98E4iu; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747658142; c=relaxed/simple;
+	bh=h/jHKw3kD1UoLZdhvu9N8CX7eVHnHrwSEacWRDnO27c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E8Odub9/cETl9OzRGASHofEdvoaQ/NIOkfBQCaGGCzMjGL/JGVzvI/Dgvg47lcKHQ+d37E5w1g1AeVdD5Z2WRvhSDSB58XBYSsvG3tHcGtZ4zgRTDa0cGcu4kkKnG6GJWuItQ+t7CiK1CnF2lnTt3fs5ncb1UEk45nt9/gXFXuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QWZAF9mz; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Bi98E4iu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kRMzGd0CTkhFlejlUnubv81+L+CuV5nEq1Y/WORmQkM=; b=Bi98E4iuRXWgTXbw6ChqdAq/LI
-	c+0OQ2GtOnxqQZl6cUhF7W45jc+ZZbDYD75xT4Y2OQwQZ6Dylybq36DvjaCy2wVEBLeQfa/qmJyLX
-	RXbqWMAndEzXJRakQAePXhnw3E0Q19COvEN6wtO7XPZAf9Pc8qhIQNf+hxBDG3WbcoqQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uGzi7-00D1GN-V5; Mon, 19 May 2025 14:35:15 +0200
-Date: Mon, 19 May 2025 14:35:15 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Xu Liang <lxu@maxlinear.com>
-Subject: Re: [PATCH net-next v2] net: phy: add driver for MaxLinear MxL86110
- PHY
-Message-ID: <de1514f8-7612-4a26-a74e-cf87ce3c8819@lunn.ch>
-References: <20250516142707.163457-1-stefano.radaelli21@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QWZAF9mz"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad1b94382b8so796667766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747658139; x=1748262939; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jaqnelmhXDMJ9MVU43vitj0wc6YSbcEgfnfp1MR4UNk=;
+        b=QWZAF9mz6/OFydTa06zC4q6DYcEoelDrhUQqn2IYfcypSTiQYP6MURflYZNa9ZpyH+
+         xkqC52LDP+7+tifGMw7LyeYOMvmNaJTIEtn7LFeWSXwFbljSaxP9vExt3we0hvbIJ6KT
+         klp24sA2wC7+RGAm+7nAztxOe5Mz6pYnH97yjW3op/bEEbm6VcR25GsaxTOgw4hqigs8
+         FxQCtneal0T3eoK8iUhmBYDijvIQALlwJcyqceNMZrQSDHeGspk3ZA0vM61SBBeb6AyX
+         e3IdJmfvOWj0dT+71OXoOfB3mbetYoO7iCDQhJgTRuX6liUXMEIseT42Xf7H2RXV/Wj+
+         ijwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747658139; x=1748262939;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jaqnelmhXDMJ9MVU43vitj0wc6YSbcEgfnfp1MR4UNk=;
+        b=WOl0z5mwVCBecSl2IlZ8300+8CY8igwPxMJWdtfVTdI0e+Fm5R1AJEv7nHVU+cOrPi
+         CEJGklw2zGj8nrTVF8Xy+hgZWo44foEiA9uaV9PIjg4dd8AVjFmtcinVBhNpvSrj6v+E
+         8ik5HNJzKAU2kJ80TWKVB270kDh523IVKQjo27/g9XHlFQL2mZovqyWInQxlQojAlI5C
+         lTKWmgM+KzJ3wY0tJCgT8+mVZg8JaIlyrTuz3RY+f0mvY8MHiLqGFQ4D54s7ZH9ySx/e
+         iLGGL1V92ontp/c9LErP4A3fRQaxiGuCYI2UAxwLdWqFZlb6EZfP4SzPmdkYUjKHeZZ7
+         EMyw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+1rO2VTscf2NdXSLFUO/LQdNZakIfKQv9KcPryZsYCBqnv4f+wuG6qdkBjM0rTa7xC+LEhdoZOQrWtfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybFT6jPChMMmFN28gyLFVJLbSLJpomjZOeHA2jFeM7kfs7btRf
+	/Cyg3D6DhGRUDZhC1mYcdmBaI10bAIJNQRD59SiHTA5Jee6lOcC+xTKIK+FIC3SBK6WVgiqZMU/
+	rRbCFyuv1niflHmyEgYmT51pyT1ARzdHgvdKf920uMQ==
+X-Gm-Gg: ASbGncuSCWfaA+kqCwrg0BeTXZZfuRMAWktrsTpDgM+3Y1b0f8FssjoFmdmHfwk6D0L
+	8qDNK83z2rAIyG0MnZaG+qCL7oUxIzzrbWwJlhc9J4OE90Vc0dbe36LKRNxLGX/ZcOTRM6RLhZn
+	LsaS7EBkfFrfVL1kz2npFHZnm6wvDBOjEn3TOFEqQjgc3BUhYf/Az5fqhG3Wuk0w==
+X-Google-Smtp-Source: AGHT+IF4eIqhtrc+6I57JtzN8T69+0a5kBByXRsTt5Vgm1fGY3uwK3UwQBXHYFy3TDCpoGVeZtntfDbE3hCBM0igRZg=
+X-Received: by 2002:a17:907:60d6:b0:ad5:211e:8cff with SMTP id
+ a640c23a62f3a-ad52d5ba7b7mr1057424266b.37.1747658139023; Mon, 19 May 2025
+ 05:35:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516142707.163457-1-stefano.radaelli21@gmail.com>
+References: <20250519092540.3932826-1-limingming3@lixiang.com> <20250519093857.GC24938@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250519093857.GC24938@noisy.programming.kicks-ass.net>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 19 May 2025 14:35:26 +0200
+X-Gm-Features: AX0GCFtwAPx-On4jvEu1RgfjZ7x8W6B4v1YRjdYURF1h2r811b2tPgdoSKyBZn0
+Message-ID: <CAKfTPtB-fjPH+=EBbeZvvWvOdbecVJvPzmNB2sQrAM4H0gL8Dw@mail.gmail.com>
+Subject: Re: [PATCH] sched/eevdf: avoid pick_eevdf() returns NULL
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: limingming3 <limingming890315@gmail.com>, mingo@redhat.com, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, limingming3@lixiang.com
+Content-Type: text/plain; charset="UTF-8"
 
-> +static int mxl86110_set_wol(struct phy_device *phydev, struct ethtool_wolinfo *wol)
-> +{
-> +	struct net_device *netdev;
-> +	const u8 *mac;
-> +	int ret = 0;
-> +
-> +	phy_lock_mdio_bus(phydev);
-> +
-> +	if (wol->wolopts & WAKE_MAGIC) {
-> +		netdev = phydev->attached_dev;
-> +		if (!netdev) {
-> +			ret = -ENODEV;
-> +			goto error;
-> +		}
+On Mon, 19 May 2025 at 11:39, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, May 19, 2025 at 05:25:39PM +0800, limingming3 wrote:
+> > pick_eevdf() may return NULL, which would triggers NULL pointer
+> > dereference and crash when best and curr are both NULL.
+> >
+> > There are two cases when curr would be NULL:
+> >       1) curr is NULL when enter pick_eevdf
+> >       2) we set it to NUll when curr is not on_rq or eligible.
+> >
+> > And when we went to the best = curr flow, the se should never be NULL,
+> > So when best and curr are both NULL, we'd better set best = se to avoid
+> > return NULL.
+> >
+> > Below crash is what I encounter very low probability on our server and
+> > I have not reproduce it, and I also found other people feedback some
+> > similar crash on lore. So believe the issue is really exit.
+>
+> If you've found those emails, you'll also have found me telling them
+> this is the wrong fix.
+>
+> This (returning NULL) can only happen when the internal state is
+> broken. Ignoring the NULL will then hide the actual problem.
+>
+> Can you reproduce on the latest kernels?, 6.1 is so old I don't even
+> remember what's in there.
 
-...
-
-> +
-> +	phy_unlock_mdio_bus(phydev);
-> +	return 0;
-> +error:
-> +	phy_unlock_mdio_bus(phydev);
-> +	return ret;
-> +}
-
-You should be able to simplify this. If you have not had an error, ret
-should be 0. So you can also return ret. You have the same pattern in
-other places.
-
-> +/**
-> + * mxl86110_synce_clk_cfg() - applies syncE/clk output configuration
-> + * @phydev: pointer to the phy_device
-> + *
-> + * Custom settings can be defined in custom config section of the driver
-> + * returns 0 or negative errno code
-> + */
-
-Maybe add a comment that the bus is expected to be locked.
-
-> +static int mxl86110_synce_clk_cfg(struct phy_device *phydev)
-> +{
-> +	u16 mask = 0, value = 0;
-> +	int ret = 0;
-> +
-> +	/*
-> +	 * Configures the clock output to its default setting as per the datasheet.
-> +	 * This results in a 25MHz clock output being selected in the
-> +	 * COM_EXT_SYNCE_CFG register for SyncE configuration.
-> +	 */
-> +	value = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> +			FIELD_PREP(MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK,
-> +				   MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_25M);
-> +	mask = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> +	       MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK |
-> +	       MXL86110_EXT_SYNCE_CFG_CLK_FRE_SEL;
-> +
-> +	/* Write clock output configuration */
-> +	ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
-> +					   mask, value);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * mxl86110_broadcast_cfg - Configure MDIO broadcast setting for PHY
-> + * @phydev: Pointer to the PHY device structure
-> + *
-> + * This function configures the MDIO broadcast behavior of the MxL86110 PHY.
-> + * Currently, broadcast mode is explicitly disabled by clearing the EPA0 bit
-> + * in the RGMII_MDIO_CFG extended register.
-
-here as well.
-
-> + *
-> + * Return: 0 on success or a negative errno code on failure.
-> + */
-> +static int mxl86110_broadcast_cfg(struct phy_device *phydev)
-> +{
-> +	int ret = 0;
-> +	u16 val;
-> +
-> +	val = mxl86110_read_extended_reg(phydev, MXL86110_EXT_RGMII_MDIO_CFG);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	val &= ~MXL86110_EXT_RGMII_MDIO_CFG_EPA0_MASK;
-> +	ret = mxl86110_write_extended_reg(phydev, MXL86110_EXT_RGMII_MDIO_CFG, val);
-
-Could _modify_ be used here?
-
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * mxl86110_enable_led_activity_blink - Enable LEDs activity blink on PHY
-> + * @phydev: Pointer to the PHY device structure
-> + *
-> + * Configure all PHY LEDs to blink on traffic activity regardless of their
-> + * ON or OFF state. This behavior allows each LED to serve as a pure activity
-> + * indicator, independently of its use as a link status indicator.
-> + *
-> + * By default, each LED blinks only when it is also in the ON state. This function
-> + * modifies the appropriate registers (LABx fields) to enable blinking even
-> + * when the LEDs are OFF, to allow the LED to be used as a traffic indicator
-> + * without requiring it to also serve as a link status LED.
-> + *
-> + * NOTE: Any further LED customization can be performed via the
-> + * /sys/class/led interface; the functions led_hw_is_supported, led_hw_control_get, and
-> + * led_hw_control_set are used to support this mechanism.
-> + *
-> + * Return: 0 on success or a negative errno code on failure.
-> + */
-> +static int mxl86110_enable_led_activity_blink(struct phy_device *phydev)
-> +{
-> +	int ret, index;
-> +	u16 val = 0;
-> +
-> +	for (index = 0; index < MXL86110_MAX_LEDS; index++) {
-> +		val = mxl86110_read_extended_reg(phydev, MXL86110_LED0_CFG_REG + index);
-> +		if (val < 0)
-> +			return val;
-> +
-> +		val |= MXL86110_LEDX_CFG_TRAFFIC_ACT_BLINK_IND;
-> +		ret = mxl86110_write_extended_reg(phydev, MXL86110_LED0_CFG_REG + index, val);
-> +		if (ret < 0)
-> +			return ret;
-
-_modify_ ?
-
-Getting pretty close to finished now. Thanks for keeping working on
-it.
-
-	Andrew
+Wasn't eevdf merhged in v6.6 ?
