@@ -1,119 +1,225 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57CC286434
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C970286D7A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673881; cv=none; b=fylKM2FaOJezpzjkB9oac7JeBcP+ZsdAd+441WhmM6xROqJIIHqSWGXugcc6ogLqsVwQdc7u+NbQiZs9MY3iZvmbmExvKVFOUk0wzPZP2W7ou9pSSNnGuuvvSekdDGZrVRpRskzAJQ2vkjbMeYwiuYcn803rbq/hRTMbwmy1mq8=
+	t=1747673976; cv=none; b=YVOMdXJRkrtGH0+N4Q0jTQz15bKleKylasstnZapjRH6zYObohHs216w4knOZexPoPuJEyI98QZTvz4nQNV/GvpCBYY6JJQEHCjjXjVnvoon8YgRSCl3dUZa7eL6zt7sm++xXiV1HmX+RL5I0JkSHwgsX4lfYMk0an210I0JduM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673881; c=relaxed/simple;
-	bh=r6ISo7Bdezx8pW//FQkvGipbBI+YOE9Pca37dhR9eqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rCoDmGzz2XSKLHtmR0MVY25TTbthfQ/UVyz/j3RiqgkMc0rGvnXCSYh2sLLJf8q2GNnmLBNFDKEQhuuwTsQaJw84WmbV6tt9UbnJjasNFPB8KsD8LsP71KcZhoKzWgc83VLRjHgRu5i5lTKe6WvjpORFnywLpvCDbPJ2Leamj/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yBADrWpS; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747673976; c=relaxed/simple;
+	bh=zuoMwm3Fi1tu/yOuE4z8nGew8+H+DeVtGJuNkhaiCGE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MQk/k0VZlSQpaWc41BGYpfHRZ11c0z4jvBEAtNb9gpaKvHMQhbhC3BJuFDz+TTUhvcNaPaN6k/3alGlKh5TIvo8Mcq9EIxUuEASUwUvIyTQwal+s0E70apzmYeeVLAB/wday5tHLtmijuFJBQfxp4ZaZswaCNhjq5XviMUpWU0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igL9T8Hx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yBADrWpS"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47e9fea29easo814001cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747673879; x=1748278679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H//Q2/k0U/bxWK4hAN7S8ohOo4uWoLiyXOyReNaLkpY=;
-        b=yBADrWpSkMakpA+QNSQV3VE8wE8Ss8KOGzhbO8KCgZ0t+c1uD7M0XiyiV1XOygEuqf
-         BpejeApKtmrinEmw9ZFMdNh84rP2cFJaB0Yda2dLMcdewJn22QS1GyCqXLXR5TctKZI4
-         ikPkSAEksQXWPnhBGn6fQq1oXAI8S+1Qj2DafIxkESDJp/Fx8+tUj8PGThRZhroiA5fb
-         nuaLKXCC4PnkEwWd8y0QIV5/Z3Xvn5LEOEtqy9YIeFuhQR788OOAe5c2fjhAJPUTHSp3
-         J0P+V1aUPOMFWjN/2DKPi5mK40YxCK+t+rDCBB11XGRtevnH7Z78U/yFhd0rkhZt3tv9
-         dDLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747673879; x=1748278679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H//Q2/k0U/bxWK4hAN7S8ohOo4uWoLiyXOyReNaLkpY=;
-        b=flcwI31iryUSUMgdDmZvYaAXr+ROS5cr4N/gwx7CuY7qz+HgNnkA/gZXlsghjuh0K+
-         9O4AgZm4w50llDT6BSedHF5R2sqUu9xRmdoPz/x6srRkoDqG+VnITIUAr5PVvxJ5fa5O
-         HRTIcT98wTDDxPk6xX2fouAC43Z30TUBneIuK04K4VsUYr4v9LD0l63U569VUp+K8I0r
-         xNZ//YrTDLMCKDRGcTwQLCf/1IDYj0DOsXd9brqcbFCsUjFRmcvsOHRjgOmME/KeCM/C
-         mRNI4HY0gW3L4IFjrYJOtXdoj0wDi8guZ3FujFynYoCXUDYRoLwaXB4K9Z37Ie/YVCnd
-         9rnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhlSxytp7XD5zrJx2monIdcmYVvtSrCUq7wvrnlTXaE4ucQG3r8qnTkJk443BEX1mL0oqden0hcpRW3p8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygV9EceolKoZsEAK/28IWfB1o16wCtw7/lqHPiwbFqqZMCRAv9
-	ZPAnfbw8RaiSSEqh2S1dPnQbcvbCePklAlYU/fkPi3dPdNpblLAAv42Sw+bx/ZxTG8KZp5eqnIr
-	GewLy8adzOrPFlyX6hKOdbatNbmp2k7Lm9EmRb/KK
-X-Gm-Gg: ASbGncuqy9jumEz2mrcvj7nsOp+/1BsU4AbOUu/FC/Vo4u5lWSOdfseYKmjjpbWJFUA
-	EE0oiU7unSRz783LvVrFIkDKsPlPiTJ1GMII1vi5zNA8vtBZN8y5dVO83gkIPCNlLjBvNbBJAFj
-	Q057YlflBDEctjqA6XDb4/ZnsvsvAxhu8=
-X-Google-Smtp-Source: AGHT+IF8sFbhe1lBDyTtsq0AmZROP9KAhFo8XpiyLcElzavRh5qezB1QIrU79vI/a0W4h9IpzLoXJpJHPNtU9wzb24I=
-X-Received: by 2002:ac8:5f83:0:b0:47d:4e8a:97ef with SMTP id
- d75a77b69052e-495ff5d8949mr7638091cf.1.1747673878410; Mon, 19 May 2025
- 09:57:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igL9T8Hx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747673973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=de5QczKhzDILlofV3VvBYBfmYguEK4gP2S/GreOWyBg=;
+	b=igL9T8HxmQKDZPOWViUAP7zT2rDGHYGmjDW1rHbYICMaORAGCw9HWcjuKCpCknqCc02gf9
+	ayWc14iytTHq5313OEPF6oa1STtaG7204tCY3m8/Wk3Xe9NLGIlQpN7lXFzJ51BCLMLXDz
+	yyDQJr9oNjX8jF6PQOnrnmN2jSTYE4c=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-241-0njOWL6mM3aBo3HobqfX2A-1; Mon,
+ 19 May 2025 12:59:29 -0400
+X-MC-Unique: 0njOWL6mM3aBo3HobqfX2A-1
+X-Mimecast-MFC-AGG-ID: 0njOWL6mM3aBo3HobqfX2A_1747673967
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C14951846EF8;
+	Mon, 19 May 2025 16:59:16 +0000 (UTC)
+Received: from [10.45.224.62] (unknown [10.45.224.62])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5D4951955F35;
+	Mon, 19 May 2025 16:59:11 +0000 (UTC)
+Message-ID: <612b24c5-8100-4bf1-afae-78d6f38c6bbb@redhat.com>
+Date: Mon, 19 May 2025 18:59:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518101212.19930-1-00107082@163.com> <20250519163823.7540-1-00107082@163.com>
- <CAJuCfpFzhroY2hm9o0sWF=NUOuyWjUhnnyFLoPYw-sR8MFEptA@mail.gmail.com>
-In-Reply-To: <CAJuCfpFzhroY2hm9o0sWF=NUOuyWjUhnnyFLoPYw-sR8MFEptA@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 19 May 2025 09:57:47 -0700
-X-Gm-Features: AX0GCFsPUvxyPNAFYs_469fMSBr3-hVnPuM1Rcdz3o8wVxBiXnQnHLsCgYWQ-vY
-Message-ID: <CAJuCfpEHvSS+UUeRpk1Mr8D+cAii_DiXTJsE5EALMRC6nUmiAg@mail.gmail.com>
-Subject: Re: [PATCH v2] module: release codetag section when module load fails
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: petr.pavlu@suse.com, mcgrof@kernel.org, linux-modules@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+From: Ivan Vecera <ivecera@redhat.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250507124358.48776-1-ivecera@redhat.com>
+ <20250507124358.48776-9-ivecera@redhat.com>
+ <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
+ <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
+ <aBt1N6TcSckYj23A@smile.fi.intel.com> <20250507152609.GK3865826@google.com>
+ <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
+ <20250513094126.GF2936510@google.com>
+ <6f693bb5-da3c-4363-895f-58a267e52a18@redhat.com>
+Content-Language: en-US
+In-Reply-To: <6f693bb5-da3c-4363-895f-58a267e52a18@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Mon, May 19, 2025 at 9:46=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Mon, May 19, 2025 at 9:38=E2=80=AFAM David Wang <00107082@163.com> wro=
-te:
-> >
-> > When module load fails after memory for codetag section is ready,
-> > codetag section memory will not be properly released. This
-> > causes memory leak, and if next module load happens to get the
-> > same module address, codetag may pick the uninitialized section
-> > when manipulating tags during module unload, and leads to
-> > "unable to handle page fault" BUG.
-> >
 
-Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate
-contiguous memory")
 
-> > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.=
-com/
-> > Signed-off-by: David Wang <00107082@163.com>
-> > Acked-by: Suren Baghdasaryan <surenb@google.com>
->
-> Sending to Andrew for adding into the mm tree.
->
-> > ---
-> >  kernel/module/main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > index a2859dc3eea6..5c6ab20240a6 100644
-> > --- a/kernel/module/main.c
-> > +++ b/kernel/module/main.c
-> > @@ -2829,6 +2829,7 @@ static void module_deallocate(struct module *mod,=
- struct load_info *info)
-> >  {
-> >         percpu_modfree(mod);
-> >         module_arch_freeing_init(mod);
-> > +       codetag_free_module_sections(mod);
-> >
-> >         free_mod_mem(mod);
-> >  }
-> > --
-> > 2.39.2
-> >
+On 13. 05. 25 12:47 odp., Ivan Vecera wrote:
+> On 13. 05. 25 11:41 dop., Lee Jones wrote:
+>> On Mon, 12 May 2025, Ivan Vecera wrote:
+>>
+>>> On 07. 05. 25 5:26 odp., Lee Jones wrote:
+>>>> On Wed, 07 May 2025, Andy Shevchenko wrote:
+>>>>
+>>>>> On Wed, May 07, 2025 at 03:56:37PM +0200, Ivan Vecera wrote:
+>>>>>> On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
+>>>>>>> On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> 
+>>>>>>> wrote:
+>>>>>
+>>>>> ...
+>>>>>
+>>>>>>>> +static const struct zl3073x_pdata 
+>>>>>>>> zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+>>>>>>>> +       { .channel = 0, },
+>>>>>>>> +       { .channel = 1, },
+>>>>>>>> +       { .channel = 2, },
+>>>>>>>> +       { .channel = 3, },
+>>>>>>>> +       { .channel = 4, },
+>>>>>>>> +};
+>>>>>>>
+>>>>>>>> +static const struct mfd_cell zl3073x_devs[] = {
+>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 0),
+>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 1),
+>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 2),
+>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 3),
+>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 4),
+>>>>>>>> +};
+>>>>>>>
+>>>>>>>> +#define ZL3073X_MAX_CHANNELS   5
+>>>>>>>
+>>>>>>> Btw, wouldn't be better to keep the above lists synchronised like
+>>>>>>>
+>>>>>>> 1. Make ZL3073X_CELL() to use indexed variant
+>>>>>>>
+>>>>>>> [idx] = ...
+>>>>>>>
+>>>>>>> 2. Define the channel numbers
+>>>>>>>
+>>>>>>> and use them in both data structures.
+>>>>>>>
+>>>>>>> ...
+>>>>>>
+>>>>>> WDYM?
+>>>>>>
+>>>>>>> OTOH, I'm not sure why we even need this. If this is going to be
+>>>>>>> sequential, can't we make a core to decide which cell will be given
+>>>>>>> which id?
+>>>>>>
+>>>>>> Just a note that after introduction of PHC sub-driver the array 
+>>>>>> will look
+>>>>>> like:
+>>>>>> static const struct mfd_cell zl3073x_devs[] = {
+>>>>>>          ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
+>>>>>>          ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
+>>>>>>          ZL3073X_CELL("zl3073x-dpll", 1),  // ...
+>>>>>>          ZL3073X_CELL("zl3073x-phc", 1),
+>>>>>>          ZL3073X_CELL("zl3073x-dpll", 2),
+>>>>>>          ZL3073X_CELL("zl3073x-phc", 2),
+>>>>>>          ZL3073X_CELL("zl3073x-dpll", 3),
+>>>>>>          ZL3073X_CELL("zl3073x-phc", 3),
+>>>>>>          ZL3073X_CELL("zl3073x-dpll", 4),
+>>>>>>          ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
+>>>>>> };
+>>>>>
+>>>>> Ah, this is very important piece. Then I mean only this kind of change
+>>>>>
+>>>>> enum {
+>>>>>     // this or whatever meaningful names
+>>>>>     ..._CH_0    0
+>>>>>     ..._CH_1    1
+>>>>>     ...
+>>>>> };
+>>>>>
+>>>>> static const struct zl3073x_pdata 
+>>>>> zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+>>>>>          { .channel = ..._CH_0, },
+>>>>>          ...
+>>>>> };
+>>>>>
+>>>>> static const struct mfd_cell zl3073x_devs[] = {
+>>>>>          ZL3073X_CELL("zl3073x-dpll", ..._CH_0),
+>>>>>          ZL3073X_CELL("zl3073x-phc", ..._CH_0),
+>>>>>          ...
+>>>>> };
+>>>>
+>>>> This is getting hectic.  All for a sequential enumeration.  Seeing as
+>>>> there are no other differentiations, why not use IDA in the child
+>>>> instead?
+>>>
+>>> For that, there have to be two IDAs, one for DPLLs and one for PHCs...
+>>
+>> Sorry, can you explain a bit more.  Why is this a problem?
+>>
+>> The IDA API is very simple.
+>>
+>> Much better than building your own bespoke MACROs.
+> 
+> I will try to explain this in more detail... This MFD driver handles
+> chip family ZL3073x where the x == number of DPLL channels and can
+> be from <1, 5>.
+> 
+> The driver creates 'x' DPLL sub-devices during probe and has to pass
+> channel number that should this sub-device use. Here can be used IDA
+> in DPLL sub-driver:
+> e.g. ida_alloc_max(zldev->channels, zldev->max_channels, GFP_KERNEL);
+> 
+> This way the DPLL sub-device get its own unique channel ID to use.
+> 
+> The situation is getting more complicated with PHC sub-devices because
+> the chip can provide UP TO 'x' PHC sub-devices depending on HW
+> configuration. To handle this the MFD driver has to check this HW config
+> for particular channel if it is capable to provide PHC functionality.
+> 
+> E.g. ZL30735 chip has 5 channels, in this case the MFD driver should
+> create 5 DPLL sub-devices. And then lets say channel 0, 2 and 4 are
+> PHC capable. Then the MFD driver should create 3 PHC sub-devices and
+> pass 0, 2 resp. 4 for them.
+> 
+> In that case IDA cannot be simply used as the allocation is not
+> sequential.
+> 
+> So yes, for DPLL sub-devices IDA could be used but for the PHCs another
+> approach (platform data) has to be used.
+> 
+> There could be a hacky way to use IDA for PHCs: MFD would create PHC
+> sub-devices for all channels and PHC sub-driver would check the channel
+> config during probe and if the channel is not capable then returns
+> -ENODEV. But I don't think this is good idea to create MFD cells this
+> way.
+> 
+> Thanks for advices.
+> 
+> Ivan
+
+Lee, any comment? What about my proposal in v8?
+
+Thanks,
+Ivan
+
