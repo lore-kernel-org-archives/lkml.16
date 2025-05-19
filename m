@@ -1,111 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74201267B87
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFAA1EFFB7;
+	Mon, 19 May 2025 09:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747648521; cv=none; b=QWCEKhO1pmBTc9cNl1S0yQh35hayHwtgPcPSkOseT/sT6A6ONXcJZZfSY6dqXGhFB0IB3GWjC7XeTO8i4H3B2PhHLp6TiFSEsyRZAxltYXXGBViP01YDrZ6b4yL/QdHomHpOaMrPFyeKrd7P9L3p3/T7RTJ7t1D85lSdkG+kQYU=
+	t=1747648560; cv=none; b=XmU1bGvH/RaIWpeFJoPK9wcgttMjzFCN8CzRTif0xQE08OTILvSrzoZgDB1x8l9/Md42sxjvxxamZOA3VrApQ9E5awM+ETJ1FjsCjSU8nB3UgbsdoGpj2PpnWMW3w0Z/N+9yPLZfPgAmfZQrV2MnJX31+n3/K8/qRPAwhSoeQvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747648521; c=relaxed/simple;
-	bh=x962P5jjhfK06VJoGYfXsOxsJ0DuLlZs6GC+F00vyj4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Wjj/3nRtRdexPlqguLRs+f3roFV3+x9Mp7asVGzlQmqWvZ9k44xIQbczqFESHXIJT9hg0G7F1h9AdauO/8VbCQsLd5AgFQ/HpKvYP1w7T8paByGTT/ziDs9bPK1ezVizU2rgxbzdTA6SYhHM+EMpRA84YIokpEaQFbsw1gpWhH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J/l2XGG6; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J/l2XGG6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747648519; x=1779184519;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=x962P5jjhfK06VJoGYfXsOxsJ0DuLlZs6GC+F00vyj4=;
-  b=J/l2XGG6p/+vFpEa/iBgjKkxVex0Cc3MRjT+t0vj/gBpeVOv1U8xAXGE
-   RcTbHCmzJrhu0laNkS5r+7uSJ8IUM7kqEW/fHMyooI++7PJEQIvuJd7vk
-   9NtwCfWKPX1oy2VYnlEf4Iw1LhsCRY4eS22Lal1z0lLku6xubeW01u6qS
-   T3e8eg8Hvcy3mLF59uRXH0TlM4CXgdxkKLLTcey10SbWF6wO6vVF+XpG3
-   3QyoaJfEJt9CX/eX2Ed9w5JWGahmAeWZl1+g+vtJa3M9bpzy6nao2xlgi
-   J+t/nLKhEbr1nXnxFaE4f1oJbdoCL9eekS4cOVBwgE2zFZelRg4GghSeC
-   A==;
-X-CSE-ConnectionGUID: PYMavetHS9KWISpE4wjMWw==
-X-CSE-MsgGUID: WtUdTfDjS8ywUKe95izESg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49240581"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49240581"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:55:18 -0700
-X-CSE-ConnectionGUID: vb+tJycCR4iZf8sl7kTbtg==
-X-CSE-MsgGUID: jeWBbJfySr2WrSbuB9lHMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144089755"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:55:14 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: "feijuan.li" <feijuan.li@samsung.com>, jingoohan1@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: feijuan.li@samsung.com, hongfei.tang@samsung.com,
- minggui.yan@samsung.com, qilin.wang@samsung.com
-Subject: Re: [PATCH v3] drm/edid: fixed the bug that hdr metadata was not reset
-In-Reply-To: <878qmzio16.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CGME20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e@epcas5p2.samsung.com>
- <20250514063511.4151780-1-feijuan.li@samsung.com>
- <878qmzio16.fsf@intel.com>
-Date: Mon, 19 May 2025 12:55:12 +0300
-Message-ID: <87r00kvsan.fsf@intel.com>
+	s=arc-20240116; t=1747648560; c=relaxed/simple;
+	bh=/BBt/YKZxcHqUw83XYKVQf4e84Ptzk+g75V+O9txIR8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B3w6UUv7cArUyWUz/wrARm+0JQbEGqebkKu9VwygCb9ArJDIOKzkIe+dmqnBYA1tRf7BmBt3imtIVwIWPUM47KTt80n4JEUcXDZgz7AmHU6dx7WFHqTJ2YV4RoOk8Pn1e7N0vB849DnCLmbVP6tVJNoMtPDhD/Z7P6itTERqegw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b1Cj56Nstz6K9nQ;
+	Mon, 19 May 2025 17:55:05 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EA99C1402F0;
+	Mon, 19 May 2025 17:55:52 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 19 May
+ 2025 11:55:52 +0200
+Date: Mon, 19 May 2025 10:55:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+CC: <skhan@linuxfoundation.org>, <dave.jiang@intel.com>,
+	<ira.weiny@intel.com>, <dave@stgolabs.net>, <ming.li@zohomail.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] docs: ABI: Fix "firwmare" to "firmware"
+Message-ID: <20250519105550.000051ab@huawei.com>
+In-Reply-To: <20250517110332.1289718-1-sumanth.gavini@yahoo.com>
+References: <20250517110332.1289718-1-sumanth.gavini.ref@yahoo.com>
+	<20250517110332.1289718-1-sumanth.gavini@yahoo.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 14 May 2025, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> On Wed, 14 May 2025, "feijuan.li" <feijuan.li@samsung.com> wrote:
->> When DP connected to a device with HDR capability,
->> the hdr structure was filled.Then connected to another
->> sink device without hdr capability, but the hdr info
->> still exist.
->>
->> Signed-off-by: feijuan.li <feijuan.li@samsung.com>
->
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+On Sat, 17 May 2025 04:03:16 -0700
+Sumanth Gavini <sumanth.gavini@yahoo.com> wrote:
 
-And pushed to drm-misc-fixes, with
+> Fix misspelling reported by codespell
+> 
+> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
++CC linux-cxl
 
-Fixes: e85959d6cbe0 ("drm: Parse HDR metadata info from EDID")
-Cc: <stable@vger.kernel.org> # v5.3+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Thanks for the patch.
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 99bb3faf7a0e..d0d58b74f382 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -242,7 +242,7 @@ Description:
+>  		decoding a Host Physical Address range. Note that this number
+>  		may be elevated without any regionX objects active or even
+>  		enumerated, as this may be due to decoders established by
+> -		platform firwmare or a previous kernel (kexec).
+> +		platform firmware or a previous kernel (kexec).
+>  
+>  
+>  What:		/sys/bus/cxl/devices/decoderX.Y
 
-BR,
-Jani.
-
-
->
->
->> ---
->>  drivers/gpu/drm/drm_edid.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
->> index 13bc4c290b17..9edb3247c767 100644
->> --- a/drivers/gpu/drm/drm_edid.c
->> +++ b/drivers/gpu/drm/drm_edid.c
->> @@ -6596,6 +6596,7 @@ static void drm_reset_display_info(struct drm_connector *connector)
->>  	info->has_hdmi_infoframe = false;
->>  	info->rgb_quant_range_selectable = false;
->>  	memset(&info->hdmi, 0, sizeof(info->hdmi));
->> +	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_metadata));
->>  
->>  	info->edid_hdmi_rgb444_dc_modes = 0;
->>  	info->edid_hdmi_ycbcr444_dc_modes = 0;
-
--- 
-Jani Nikula, Intel
