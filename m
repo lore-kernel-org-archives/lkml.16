@@ -1,106 +1,107 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B926980F;
-	Mon, 19 May 2025 14:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1295D283FCA
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747664862; cv=none; b=dLKBN40QyB7iLDZRtm9+o6vGtTqXtN5SsMmuStZU8gupJtYRhFVKXc42mG4kEYOPrPBMYaML67C7U1CKLZWMc52d+ymhCshqhSRrM/0RnBX7uD+aSsCzZ+XStQnFEWZh0TA8mGLi8BcVN/21GfcF3mvCHuQDgTv+JZb6aZexafc=
+	t=1747664885; cv=none; b=hco174TBi8TjID9eB5bdzUTchlICfRvtX8rlz+bUfkcM/bbuSC8FcG9lUjcMFEZ1vyXsk9mCG49dbIAlwj9ATC3vgr81xyPzVu0b+Qd1xXdKf1Tw9SwbvFku5aODTTe4ZP0/Hk3MAJGVOJAPWAKAyKweJlIa9JQMRVoepdIIw1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747664862; c=relaxed/simple;
-	bh=xhKmM+gfHAy6/K2yCwonmggKcnhDD1pEwXUFZhRnD6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iDPBYpZmReyZV+x7VB1eFZrlQRBD7e+7WFqLnFKUW4ujMm3UVXz/xoGDpOqijhSXA/A2s1J2UA9HPlSmMefk0zDaqUpzKtnR3Ya08Jmlyo4gf8c8k68DpiFFAOSmavkwIyeO5jFj3cskbtBVM0nLankAf2EQJFUEwyjXXRnSQP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KPDyy+L4; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747664885; c=relaxed/simple;
+	bh=Ec6so1mXK7PYIl4ePJtuR09PRnO4g6cAtK3x4K4qwYQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fXbAV7EB8x281CxwYRtXLhdtzqo9yRgxCe5RuA7rtpxFMM+6JmmwunyXGmVSjwR2RpVdcw6gpr5cxvOBxIdbd38n8Thfoah0fjAvge/iTtPZNOnYmeCstcH0mY6ls3vsi7rj91kLt2KKZR2nLGlk+XCybfNeZuwFBXDFtIq6hAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHfTeVn3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KPDyy+L4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F23D14397E;
-	Mon, 19 May 2025 14:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747664858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QMIQ5j4O4hhkkXDBrtnUP9c1BM9Lw9LhW4rCV+JF4qo=;
-	b=KPDyy+L4/pZBa2cLkw0ZUcC/t8rYe1alekyOJHI2L357/ABWIW2l77vPCeqjLt6ZKftunk
-	gc9U3l6270Yon2+sihKOQPrx1ucqucmm0w2hVe3oE+xzPMvnDzakmKrrioYOQIeCHJTrDV
-	w19guANFSsFUeD26WaHkWPZUKztJoPMOj2HylC8EZxi7qDsNCG4zA9/f1fMDYMXfwWvn28
-	1KyRQciYejW0VpyxKN5Hcs5cMXQWddLeUW0vN9Fi3V4gbfTrIcssDSaU5ip7653w8+a7JM
-	bbqYCTx6pZP/NdQ4WhEdcO1tSehTzs6BHuCTO77ylHRy8J+eAwmJQ4WpkO4wDg==
-Date: Mon, 19 May 2025 16:27:33 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 06/26] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <20250519162733.2ef82127@bootlin.com>
-In-Reply-To: <aBt2EHYf6j6Ulthb@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-7-herve.codina@bootlin.com>
-	<aBt2EHYf6j6Ulthb@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHfTeVn3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644DAC4CEE4;
+	Mon, 19 May 2025 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747664884;
+	bh=Ec6so1mXK7PYIl4ePJtuR09PRnO4g6cAtK3x4K4qwYQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YHfTeVn39xgQlmHNE9gL+amRgbq8b2y0P4EgtJGFD6b4OJqkQfgKqw+SuvyssMQkM
+	 0uHBK/DxP3BgcosHt4IN3KkNlyqNBOllk3L7xqZ6BCY5p/C+jSNP8N1cbXsYRo81C1
+	 3P4lulpv5cefeUg7rq71WioDa2LVyxuF2rlwqRUk46BEhgkP9yP6aQJkb9oSavCOgL
+	 WXOnviA3uYaNsuI9cKB9O0Pfd3H5TN1vT3g5mT1r24I1GQIIeF8nCg32lLgGGSvArf
+	 2FDoec5sK5yLCCTwps0coJO80egPeNVynkJl++Szo7Pbai4X+WRHs+MIp7+/0OY7FX
+	 N7/5NC5sLfTdA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uH1TG-00GFoI-8U;
+	Mon, 19 May 2025 15:28:02 +0100
+Date: Mon, 19 May 2025 15:28:01 +0100
+Message-ID: <86v7pwekum.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sascha Bischoff
+ <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 5/5] irqchip/gic-v3-its: Use allocation size from the prepare call
+In-Reply-To: <87zff8hk1x.ffs@tglx>
+References: <20250513163144.2215824-1-maz@kernel.org>
+	<20250513163144.2215824-6-maz@kernel.org>
+	<8734d1iwcp.ffs@tglx>
+	<86wmacewjr.wl-maz@kernel.org>
+	<87zff8hk1x.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Andy,
-
-On Wed, 7 May 2025 18:02:40 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Wed, May 07, 2025 at 09:12:48AM +0200, Herve Codina wrote:
-> > Setting fwnode->dev is specific to fw_devlink.
-> > 
-> > In order to avoid having a direct 'fwnode->dev = dev;' in several
-> > place in the kernel, introduce fw_devlink_set_device() helper to perform
-> > this operation.  
+On Mon, 19 May 2025 13:16:58 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Makes sense, can you also mark that field as __private? So sparse can catch
-> the abusers up.
+> On Mon, May 19 2025 at 11:15, Marc Zyngier wrote:
+> > On Sun, 18 May 2025 19:53:42 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> 
+> >> On Tue, May 13 2025 at 17:31, Marc Zyngier wrote:
+> >> 
+> >> > Now that .msi_prepare() gets called at the right time and not
+> >> > with semi-random parameters, remove the ugly hack that tried
+> >> > to fix up the number of allocated vectors.
+> >> >
+> >> > It is now correct by construction.
+> >> 
+> >> FWIW, while looking at something related, it occured to me that with
+> >> this change you can enable MSI_FLAG_PCI_MSIX_ALLOC_DYN now on GIC ITS.
+> >
+> > Maybe. It is rather unclear to me what this "dynamic allocation"
+> > actually provides in terms of guarantees to the endpoint driver.
 > 
+> It allows the driver to avoid allocating a gazillion of interrupts
+> upfront during initialization. Instead it can allocate them on demand,
+> when e.g. a queue is initialized. Of course that means that such an
+> allocation can fail, but so can request_irq() and other things. I'm not
+> sure what you mean with guarantees here.
 
-I didn't know about __private tag and related ACCESS_PRIVATE().
-Indeed, It makes perfect sense.
+What is the endpoint driver allowed to expect in terms of continuity
+of allocation in the IRQ space? If this is solely limited to MSI-X,
+then the answer probably is "none whatsoever", and the driver should
+only manage the MSI descriptor index.
 
-I will add it in next iteration.
+Can any other MSI-like mechanism end-up with multiple allocations and
+require extra alignment/contiguity guarantees in the hwirq space, more
+or less similar to what MultiMSI requires? Because that'd be much
+harder to provide.
 
-Thanks for pointing out.
+	M.
 
-Best regards,
-Hervé
+-- 
+Without deviation from the norm, progress is not possible.
