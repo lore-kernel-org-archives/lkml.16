@@ -1,78 +1,70 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353D71E4AB;
-	Mon, 19 May 2025 20:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16F84B1E73
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684821; cv=none; b=JOg4s43z869IXBGsldOnAY2xefXEjQBqTWTCScHTdrkgK26pVuOCt6FTU6cl88rhCYzlFrB7CsvQGN0PoyP1YdRTFAgUn7vcq6MJq5gLYYfYdRWVv9n4vX9dob4uzxUrRy96ONrEpUWg95S5VXabxUI282p82GR8+I+ojP/v4Hw=
+	t=1747685033; cv=none; b=fq0aNK9mZrZGWKlA5u99MfmcneICk0EGAJaYDbMvIHZnHPOeyLZY6ZyfYlTsNSkzxnmTwfx1/S1pGWucB1RMlQJjHPbO5WiTVzrecj1b/adqdEgFFZX94uX9EQdy43evAp5VRksLi1T3TNj1obZdevqHsz17f0wPC33INCXNolI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684821; c=relaxed/simple;
-	bh=gDJDEDtqlLFibqDVY77tsX8YrdWJQP1Y3MY0GrR+7P8=;
+	s=arc-20240116; t=1747685033; c=relaxed/simple;
+	bh=EqLwxJVbgW2ecK92/FYG4YVeOgBfW1zvuSftBl8Ttxc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gh49WNlgMWCZMRyW9VX2MHOu8lyk6wWvu5GhgsWpXWK8V+Ql0fOcg6DFbmmwCo6eX/PTy3oQxAtIlpFWR7PjOmQECy+pPVg0eCchytmB+Oc6sJFcRM+lpst4z68xEuO2H9gGyZZemlPu764hRKUwCisfsH9gp6kiEvxxqJXqzZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yl4raMbB; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FT/r3SpHuWjHZTjj1qfcQVDusPG9Kch45jjq9ul29jrfYVQz8yU9amdj/ZevO9EnqvIuS0HralM7sE+1n12ND1TmWFqvdt2oPhl3qS79xEMhzhDGZ25DBniAVOisfuKm563xadKC86b+UUtjeWO3plmx7GyOkUp/+m03Nx4XFpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FPWsAQfj; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl4raMbB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2321c38a948so20746345ad.2;
-        Mon, 19 May 2025 13:00:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FPWsAQfj"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231fc83a33aso23614645ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747684817; x=1748289617; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1747685031; x=1748289831; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PyrSfMkWxF68QAYkbl+yVox/D2cWlK35xRBgggxH3m0=;
-        b=Yl4raMbBBIeLkd0gsoQT0rPL1ejhUo2cnjmlpbON2xYT0sqbIe39sugQSjG5IKUjrp
-         EsXLNlGVrRagmkfYarf0ReeeFcRp4oLLD9qvcAvWAUiS1apqJZ2Yzyxi9fijiPy0Z8OY
-         ElC7ppDNoMlvaAOAVJMl2ss+xdcRpwUynVYommj52nctp2dZMVVmYrinC9FidbdbakXZ
-         65duf9IQgbxuInZaI8nepVE0CtZujZuczmMOynZTu8Lx/H9ubGkaO+qEK6vCtpPKdLUf
-         0pFLskofEOYs5cJkV6zbIh95UIItoiJG2bpdAfKmflAqzqXqwPZBRzv1OTmNwSrntVyb
-         P3zA==
+        bh=cbwzvSnj/Pe5rfAqdyUm19jDsv5CwuOGOQ67ehueUkQ=;
+        b=FPWsAQfjitbApWczANsXXq3RKaQJSu+TAcb1bQYdDmrgIwsnJ1COzT8c1tYr7NCjGd
+         aHTCYJMdzotz53hww1BoWzdTGZ/I48WZpLjTT6gU2TTEaxJsnmrylXUFPlLqe6tFDcs5
+         1cusCZhd8OmE69QpLurp8Y2WxoEEY/dKbuyjY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684817; x=1748289617;
+        d=1e100.net; s=20230601; t=1747685031; x=1748289831;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PyrSfMkWxF68QAYkbl+yVox/D2cWlK35xRBgggxH3m0=;
-        b=czu/8KKZTbkMlGroEm5bBvsj1w9UnPzGe/k5b6I5dC8wTxHEiLAU8L85HxurWWq/dY
-         z3kkDvipGjuRGo8rxFfcQxuEBculQ7Wtl2DOwIOo+1+zH40Ci7DKDr8DScrjk6H1Areu
-         7d9X5xMGBkGjQa3awJUY4MBOSILCFk5CZm9Kjkzvw9T/0AchzrPfpttv4CyXc5X2V9ci
-         TwerxPfKrMxiGOURi/b78j8CIFJzkkVk2m01OCBiBoWFwiQbsHXFTemjhvOTiT4KPNb+
-         lq2xExjy3+fTQl1MhAMP/2FaMttzu3nD1fcQLxNWx8RRrMUP0w/RtjBq47MbmYwNhbFD
-         M+6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUbQ+7BY7+33gRB1g/+WMjM0Z0G3GMg82xV3VySS+JTzomvyHcKSFh/Hx6XM7OqIf7QUGJS6fHRq6Vde3jo@vger.kernel.org, AJvYcCVABzRxK9QHwzfriJ7Nx2JJllIrSWqDonbFnDRYKAGLhw3ijyyUxjsJ+i/+9WQSXKsQNLo=@vger.kernel.org, AJvYcCWFVm0ZlwfFVJirbA9Ma0S51H/G9Knd1pe1aeQkK/3w7N/c/XMMwD4wwMuazu1qq9LMOivfp3JK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJPMlIm860KGZqvBf4uCuxC3GwiInaXmBj7UsYbe9lkzw0wubn
-	cgk3V93AvucFAw01WjbbdaV9c4egCOqEPoBUBvMh+xJQ1pa4eloMKwoQZPSA7w==
-X-Gm-Gg: ASbGncsoHaAHLuR2kGe181huwGjeBa1t52NS7xUA1HjpxzxHPX3io3t/QC82yjlFrwB
-	Y/MDmywz5uuT04ebe31Btcp1JGChkAUiCajzopg9LcBErrT3RVQ5syCeexqm82iUT7yzVONPfIu
-	n4oNM8LN8MfvqQf+XLWlYTipdXzQtJgdUz/V3diS9SnmTix1VkCd+0mizkE3jIyNC97LxJFaXzC
-	Nk7e+F/gFFobgNMDOZarZr2Q9S8vaRDTy2YppdQrjgw9Wf55Dm1ZDwXUeZSZJ2ugBvpZLVq45zq
-	ldU5bgUdz9ZHhD+OBq4gZuAKZvNuGX+fNoH5LASBEO+Xah/zLXk=
-X-Google-Smtp-Source: AGHT+IHt6QfA2F6kwpFWBtZop56Dyx7wuHXPSe127sz2HGe75T+9/4tLv/VECGkyWpD903a+rfF2mg==
-X-Received: by 2002:a17:902:ce8f:b0:224:c46:d166 with SMTP id d9443c01a7336-231de3ae584mr206812435ad.40.1747684817188;
-        Mon, 19 May 2025 13:00:17 -0700 (PDT)
-Received: from gmail.com ([98.97.32.68])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebae24sm63905955ad.197.2025.05.19.13.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 13:00:16 -0700 (PDT)
-Date: Mon, 19 May 2025 13:00:03 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Cong Wang <cong.wang@bytedance.com>,
-	Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix concurrency issues between
- memory charge and uncharge
-Message-ID: <20250519200003.46elezpkkfx5grl4@gmail.com>
-References: <20250508062423.51978-1-jiayuan.chen@linux.dev>
- <aCorf4Cq3Fuwiw2h@pop-os.localdomain>
+        bh=cbwzvSnj/Pe5rfAqdyUm19jDsv5CwuOGOQ67ehueUkQ=;
+        b=qpTzvd5otrKmbegwToSaSkKc+sEorJ7/0yVCgmxflI1WgXHdh9ZQB/usv8rreQKS1T
+         rwP+go+z9yIJUjnPrjNCTnraOtPeP3+q2hmBEBmABpbKap9KOk1C/Y2X/N+yCW7RkZ5Z
+         flDNsox9YvUyuuZ4JY2aQ9x5HVtua9sXXiSbFVg/Gh+65TrbdyHplbnlSGX0ABxsphuY
+         c99lUcltW96tYuX+dseo2+tGKVFTdgOCflKe6GVlTW7SJcLjOn474tG6LKywvW9En6yJ
+         kfTKDYCh0ZPMaNbW70p4L8P8dUb9ktvQ4qbW6m8ztoscHY6nWm5eu1J+8UGdz8rRrnCr
+         vjgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHLFLPyBMXFiQdLnDAReJCwstWJaYbBQun8MCALDOB46n/xogLUWp6qN7KXAqPpivGfpVunKUVmfLhiNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw47GhbgkJXExdJrg120NcJEb9bsplLT1IoisYjN6CIcJndYe7c
+	BbHospQvX2w/4lBUongBdCe+Sv9Xs2mcRlsE+7pxnQhX9MABe1B6L4RZE4N2FRWjZw==
+X-Gm-Gg: ASbGncsM2pesMg+hJywNVQv7N8jNUa97PHSVn2E6Ex/SjYR7H9rfs2Tz1l9sKCMMryc
+	J6G3WQWFNdKI1vquhKuuSmHEuW9Chm1CE5qfJV4uFtYmVNJlaktZtOHC974HsnuMyNXlPY2eqTh
+	QegMmF599FmT/H4f+a5IlqG33GI3YniME3mECNP6yXWMA28+i0ZbMyH6Ds/03crRGaRYtTmOzGB
+	DNFe1/i1Qu3kG6ZgKZ/cYWFGjhzrlFHR8AcaY3foHW4i+hFVWGKu2ikUecw96D8Tag3Kg/3TmYV
+	SR/IOPJmkzClIkA9fXddTlFW2A8k9upGYcB0ALbFJtcQAn4oqh60VFjUgx+5bA1cXIn7DJy768H
+	EjEOVcwFESAplwSvz4Y+KFakW
+X-Google-Smtp-Source: AGHT+IErS9e6RSBXT2pW/pk4zdNSHk5nSRHMvO7tTzp6d6cj7O03GKefBpQUhfUVuc954nlDtpmekw==
+X-Received: by 2002:a17:903:2301:b0:231:d160:adec with SMTP id d9443c01a7336-231de351d48mr192316705ad.11.1747685031132;
+        Mon, 19 May 2025 13:03:51 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:379b:e49d:8d8d:4983])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231ecd5ea41sm55316945ad.228.2025.05.19.13.03.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 13:03:50 -0700 (PDT)
+Date: Mon, 19 May 2025 13:03:48 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Cc: heiko@sntech.de, devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 1/1] Fixing a minor typo in YAML document
+Message-ID: <aCuOpFdTQK3cqeP3@google.com>
+References: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,80 +73,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCorf4Cq3Fuwiw2h@pop-os.localdomain>
+In-Reply-To: <20250517020552.737932-1-jihed.chaibi.dev@gmail.com>
 
-On 2025-05-18 11:48:31, Cong Wang wrote:
-> On Thu, May 08, 2025 at 02:24:22PM +0800, Jiayuan Chen wrote:
-> > Triggering WARN_ON_ONCE(sk->sk_forward_alloc) by running the following
-> > command, followed by pressing Ctrl-C after 2 seconds:
-> > ./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress
-> > '''
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 2 PID: 40 at net/ipv4/af_inet.c inet_sock_destruct
-> > 
-> > Call Trace:
-> > <TASK>
-> > __sk_destruct+0x46/0x222
-> > sk_psock_destroy+0x22f/0x242
-> > process_one_work+0x504/0x8a8
-> > ? process_one_work+0x39d/0x8a8
-> > ? __pfx_process_one_work+0x10/0x10
-> > ? worker_thread+0x44/0x2ae
-> > ? __list_add_valid_or_report+0x83/0xea
-> > ? srso_return_thunk+0x5/0x5f
-> > ? __list_add+0x45/0x52
-> > process_scheduled_works+0x73/0x82
-> > worker_thread+0x1ce/0x2ae
-> > '''
-> > 
-> > Reason:
-> > When we are in the backlog process, we allocate sk_msg and then perform
-> > the charge process. Meanwhile, in the user process context, the recvmsg()
-> > operation performs the uncharge process, leading to concurrency issues
-> > between them.
-> > 
-> > The charge process (2 functions):
-> > 1. sk_rmem_schedule(size) -> sk_forward_alloc increases by PAGE_SIZE
-> >                              multiples
-> > 2. sk_mem_charge(size)    -> sk_forward_alloc -= size
-> > 
-> > The uncharge process (sk_mem_uncharge()):
-> > 3. sk_forward_alloc += size
-> > 4. check if sk_forward_alloc > PAGE_SIZE
-> > 5. reclaim    -> sk_forward_alloc decreases, possibly becoming 0
-> > 
-> > Because the sk performing charge and uncharge is not locked
-> > (mainly because the backlog process does not lock the socket), therefore,
-> > steps 1 to 5 will execute concurrently as follows:
-> > 
-> > cpu0                                cpu1
-> > 1
-> >                                     3
-> >                                     4   --> sk_forward_alloc >= PAGE_SIZE
-> >                                     5   --> reclaim sk_forward_alloc
-> > 2 --> sk_forward_alloc may
-> >       become negative
-> > 
-> > Solution:
-> > 1. Add locking to the kfree_sk_msg() process, which is only called in the
-> >    user process context.
-> > 2. Integrate the charge process into sk_psock_create_ingress_msg() in the
-> >    backlog process and add locking.
-> > 3. Reuse the existing psock->ingress_lock.
+(CC a few more)
+
+Hi Jihed,
+
+On Sat, May 17, 2025 at 04:05:52AM +0200, Jihed Chaibi wrote:
+> A small typo in the rockchip,rk3399 YAML document ;
+> "less then" should become: "less than"
 > 
-> Reusing the psock->ingress_lock looks weird to me, as it is intended for
-> locking ingress queue, at least at the time it was introduced.
-> 
-> And technically speaking, it is the sock lock which is supposed to serialize
-> socket charging.
-> 
-> So is there any better solution here?
+> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 
-Agree I would be more apt to add the sock_lock back to the backlog then
-to punish fast path this way.
+The content is fine:
 
-Holding the ref cnt on the psock stops blocks the sk_psock_destroy() in
-backlog now so is this still an issue?
+Acked-by: Brian Norris <briannorris@chromium.org>
 
-Thanks,
-John
+(Feel free to include that line in your patch for v2 submission,
+assuming you don't make massive changes.)
+
+But you might consider looking through 'git log
+Documentation/devicetree/bindings/memory-controllers/' to see what kind
+of commit subjects are used. You should probably title it:
+
+  dt-bindings: memory-controllers: rk3399-dmc: ...
+
+Or something similar.
+
+Since you suggested you're still learning the contribution process, I'd
+suggest this as a good starter:
+
+https://docs.kernel.org/devicetree/bindings/submitting-patches.html
+
+and also its links out to other general documentation, like:
+
+https://docs.kernel.org/process/submitting-patches.html
+
+Regards,
+Brian
