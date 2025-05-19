@@ -1,52 +1,73 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3EF280A3B;
-	Mon, 19 May 2025 13:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D3E280006
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747662259; cv=none; b=eHOQy2yM+IhiKyOdLFb+wH2S9BdYtvD9Pkv7xfD9WcOJuG+pEfghe0blk5vgV3Rvu+CZ5WqYDPCBmh5jlSxlBgse/EwqO+IGbvqAXrFz3Mc6855b2xIaILrJms7LXPS9OMBhC23I8fXGGDTUBWnVXQjxV339eEd635RWieuYVjc=
+	t=1747662257; cv=none; b=hYL3V2KjlietwsJXTJZK/SZDuZGKMsA+LHhz2+Tff5WJj31W+Es9PjMSw21n8NKuA0d6G5LjODjibSS5t35HAQ74yM/fDiBZOufpRxokAvggdzQ6XCxWXXKKAZOhQqwIJiRop6XtbeJbazWG4B6O5tD6h/8GJJ7zTkcFTXT2eEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747662259; c=relaxed/simple;
-	bh=qcLANFQYB6F1aTadtJclYNPeTflXqceuvsxjG9tl5Gg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A2zSdJORS95riE+JE0mPhuSp2fn3gfS0odNDAC2DGbB8jz/2838F0bzkme+VC3jvaJWbgyGXiC2vaIk9hJeV89EgoCIy9MspNEoDwqowrJbREIqVXStNatj8E+9TkuFPD2uf4uOW9724iAH70szcLPKI7I4zPHLf/FeOo1c3vmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so34970875e9.1;
-        Mon, 19 May 2025 06:44:16 -0700 (PDT)
+	s=arc-20240116; t=1747662257; c=relaxed/simple;
+	bh=yolDzczYpjPodf29Rfbyb9DI2HpvxGwqgiLVvEp10jc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KICC5mKb0SXnHI/EvpwLLMhqMxRlXeIarRzucIKlg4tZl7OVr6SctVHomXMRJn/w//PWNTb6DbsegjEgGb++MVnyQjQRDXriRSaIx/nUFfC18/h/+eu1I3MHDIU5yrii7OIO06SQNXsLPVvMm78doHJqOo7vx3J20LUIFKAPI5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kIUFAD3a; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kIUFAD3a"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9W9vF026158
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:44:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=xRZkj0PsbJSbrYHAqES7DG
+	XowTaGFY8sh3Gy0YZ8AWg=; b=kIUFAD3aULLaEX9l0oph1yfdN3gsuTdSGmaJt8
+	dE+KVxnDUXIHcNYzQGoy87z/uTS30P0DDTNRe7fwdLiZaG3o1qzOmsBSi84KTOzr
+	cOXWOy1xKIRk4BXHHbN8FhzcD1kkwZD6kcBdJSe4MTewKrMQTyMAuICHhfMa2xa/
+	i/HL9USX6o/A4cxMU5YmkTJCUl471LsseroYxemPg+SVJk27xQHTbb8Qu6u9KRh4
+	1Bi2yWrCrwVM+IUNSUrcvZNbXqKySyrt87IfnzeQ+iBfpquPaqgR6gRb1b0LV0WR
+	aUK1U1kb91vOiLaDM998UUY7MCoc3NGbLYKzWwY5YepEmh7w==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7cgkk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:44:14 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-73e0094706bso6099745b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:44:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747662255; x=1748267055;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=anhtEfC+aYWJeJvUly60jdWH8rm+sVcW8pcF9vb2eMk=;
-        b=JiRQnIT89gp3qQKVDS/XQW8/dezcgrQXukPDjnDpP/9lA7OI2ZoENbpkB5x9xeERHC
-         HjdtBHoeRxaMnQFoOTjbqM0Z4sp5NudtzcP/0/wsPiU85XwLhFEd6aHzPWsaWfF+tehB
-         ucgHkWRiQxWVUG+Bob1yyJaNOCeroPvFVyekX6NtFAkZZV7tRudHnz3m/LjOKl8bUXF0
-         /guxoWrYBlCWDyROTOrueYHtd/1KUyhyxP6EeBe6LEFMh7s47y96MO8utKOzA/8Rf8cQ
-         7Ydm40TDXC/AlNtYQB8yk0e46mT+ujBEZGhwBjaIs7kqi0eBEWptiaHx2rjm7U8fZxjh
-         eFcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpaepuvQexXnndCBUNShopKAmnMKSmeSXncMExdwvm7vsq00B3v+OUhuu84Rktml4RShjBAildYcGt42ON@vger.kernel.org, AJvYcCVHwOgc6kTO3BKktEaVWsud508huNuhpnNZRJB2/gnlltEXE/3cSBfPjHeGebZI8ICfcK1evhP2Ury5m+E=@vger.kernel.org, AJvYcCXhHZ+BZAyw66AEh3+NM7PQkiYjqp+XlO/6n1+JyFCmhMQxyN7XeT//+wOSW3I/RhMFYUnkdnxdM0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI6BISDbp7zIRG4D9LeyzHHLmXKFLAwyedC/HLYkRrU3vmIHkC
-	6xlYaf0hRpJ5jugtxAyFhDwJYjFjNLR5dyvqZAAxj8KcXJfTCAJ50slq
-X-Gm-Gg: ASbGncswP9RmnLumsaGQQx2xviokPlLFHz6gpTh9q73C4RgfvG6TEEBR5pBqeT+pGMF
-	rhv3GQu+1zzxpnQL6LUW1joDF66U5Niho0WKiLK28eqFbGvq6P1fhWosNHuhBmUxbO/2oeKPiua
-	XY1Ar0neQoC+cf7xRe+1xl/p3SPdwiGl1FN9hHEDYObYTOOWxd+fht6MxCd/zBB+v/gfBcCzkWz
-	MEMap5wi30crncCkCp0VTYrYh1sGRa4WEyVwEPVsNowp/ZiTWojjqIw5TORWjvcrXzPJBStbnao
-	Og5qjj1IIKSoc8dECSak9g4UYScDOuaTRpBXum+zIkrsN8Rkk1MzxXEPr8EgSwMXMiBlGd7NWYe
-	/A5tmZ2+y8A==
-X-Google-Smtp-Source: AGHT+IEWSM8pwbQ+eewtaNC0pityD3poeCoFUie9piHQXV3RLcUMbKhDhTRCudb5lKuMqUm4AA1Amw==
-X-Received: by 2002:a05:600c:529b:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-442fd5a347emr129006045e9.0.1747662255196;
-        Mon, 19 May 2025 06:44:15 -0700 (PDT)
-Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f8ab839esm171263005e9.17.2025.05.19.06.44.13
+        d=1e100.net; s=20230601; t=1747662253; x=1748267053;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xRZkj0PsbJSbrYHAqES7DGXowTaGFY8sh3Gy0YZ8AWg=;
+        b=Q2cESkon0P4MRshaWpuNgUw5RcLqFveE9IKIdDktAyw8k4aeSy4/MaOPMNtXEkrffm
+         UHJHIoHFmTu3zjuKbjy9VpkFX9GgODv39tEEaN9ZwtBVJnejaBhPtHz9ovwEn6h8GBmS
+         g3LK3fLtzfo4RL/MYrjWr+VL7+qc357LgIqHLcOzn6Z7CvHBUJIPZfzWFeu0z02YvqqO
+         S7z4EkLYoSdc8D0fT4/q2VI3QtkA2F21OujtQoeLheGY+lqE2OJ+5W28yb3jUsYUQMNH
+         KgSo+hyWKgTqFbtB3tEn0yQT1PeOaPDKn0fT1BfmjKBTYF2WVvGFK02+i1j2UbqqU0si
+         baWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyQHwWn7dwkZVQp5rgR7zC4Enl918pH8CoJEO6TGzDpRi+KhOOsPg6q9g1FR4Dv0hO7ntdW4iYYLgpiRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQNlfX7jk6AiuPX9W1gCta10Flq7QELsLI2xIjCZWuc9WxWqYi
+	n6KfWlMieeAkpny72oUTAma1rvtYSCawR7AvZ4GeDB93ethN057574xpn/tjjnDSizIx0liHKoh
+	7GXPLrlpXqSqgFlq50KI+IgRDYvB//Qvlrxl+nZ71cMR4AxvG4YZ1yX7N+KsuVx4ZkR4=
+X-Gm-Gg: ASbGncvlRBIVo4BmOQPAV5u1i5fexYyBiLS+Z4E7ztEUhb/2W+SDPdaNqL1Aj4SS8wo
+	UwRumL2jZmfzcJ9+bXqE2JXnlff0fpyzsG81KGzZonmQNK1ydOwEI0Q6HBZb5It3il45+U7EsOx
+	/iv3D4MHDCZ8bmWCxgndhKTtfg5KZlXE4JXm4XuySObGzOJXB1AuTNxbTa7s9A/nBVYDSvP//os
+	d5zfc88XgQDlT95mKy0KuJ/HEUoc7C3/IlAmTC14QKGqgYClOkisik5c7N/wIzqNyPKhZZ+gMm5
+	srRGJXHzc1jYrKCTL4tvkEv4e2BZonD/HQw9ZcRtAu2G/bbKnUOxLUHL09pwhQ6Cuk88p0FrpSk
+	LyWIJZWDEDxnHN4aAZKa8uRVJo5fI2EpElY/HUDMOLUKyDMc=
+X-Received: by 2002:a05:6a21:6e4a:b0:1f5:67e2:7790 with SMTP id adf61e73a8af0-216218c9b00mr18986024637.17.1747662252949;
+        Mon, 19 May 2025 06:44:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGigiSPG56p4nzNA806fGLVPlqz8iHmGoh9R+kqK0uOaBp+WtDnh7QYxYoYPX/S8Opata9wyw==
+X-Received: by 2002:a05:6a21:6e4a:b0:1f5:67e2:7790 with SMTP id adf61e73a8af0-216218c9b00mr18985987637.17.1747662252576;
+        Mon, 19 May 2025 06:44:12 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829c7asm6224051b3a.85.2025.05.19.06.44.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 06:44:14 -0700 (PDT)
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Mon, 19 May 2025 15:43:42 +0200
-Subject: [PATCH v4 10/10] arm64: dts: rockchip: enable NPU on ROCK 5B
+        Mon, 19 May 2025 06:44:12 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Date: Mon, 19 May 2025 19:14:01 +0530
+Subject: [PATCH] soc: qcom: socinfo: Add support to retrieve TME build
+ details
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,121 +76,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-6-10-rocket-v4-10-d6dff6b4c0ae@tomeuvizoso.net>
-References: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
-In-Reply-To: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
- Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Message-Id: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAKE1K2gC/x2MSQqAMAwAvyI5G2gr4vIV8VBi1ByskkoRxL9bP
+ Q7MzA2RVThCX9ygnCTKHjLYsgBafVgYZcoMzrja1LbDc2Mk3TCxfi56S433FXHrDOTqUJ7l+o/
+ D+Dwvm8Gba2EAAAA=
+X-Change-ID: 20250519-tme-crm-version-a1c7aa3ce820
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747662250; l=1476;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=yolDzczYpjPodf29Rfbyb9DI2HpvxGwqgiLVvEp10jc=;
+ b=hqd+Frb16y2/LvEKRCK5XyT3xzYM+U1MeoW7Z9/rtXv9jRgvhAzxVi1Q4xpKncJnRsyi1tuHg
+ kE4F9JRgGbJAEc6RNKsy4QZMj7aqeR6PBqCFCqI9GWMKITIRloUnrxI
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682b35ae cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=0tr5gUXQH48V7W0Z41EA:9
+ a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-ORIG-GUID: QonNYmmSEnxz7IiZETZWNR5p7oX1mXB_
+X-Proofpoint-GUID: QonNYmmSEnxz7IiZETZWNR5p7oX1mXB_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEyNyBTYWx0ZWRfX282IefEwetnO
+ p9p0VqwgjHlYuaGQQqkC2BN0gFC3MrPKGsPx4iy8/ipMRAzfxqQwgv8vjaQOFZ2f/ASW2oa95C2
+ 2a7xkhedlkD1rFxDpqRHcD/IeON7eHXaUjFlrD7ZobUIqhI7saUDwx647E5pttcRIdZCi7Kg0N/
+ NzIIUUumfCaGCmP2GmFDPAKHU/OBxi6IMVVhy02b5HSn4g8ZU9tc0LSOrgGtQMQ9/Bvnz6fetTh
+ i85epBJ9bSOdM25qqTFWEDu0V1VdjqYwW5ejR/85nmMcXgKeJjOipYjJu9cUqFcyGvaI4p5G9wB
+ YitWBpTndtLbznnyzns8xnCrEZxLyqHQPMTu/pep2ReTTp3g+ombF0b/8afERsItebhxkMAFMAt
+ PCEWekkCEUzmv+Kmv24qTNJbFfACAoOS32wqKzUsuhF/cj609Ar/flO4bzWjsIFVpr5IpZvI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=841 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190127
 
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Add support to retrieve Trust Management Engine (TME) image details
+from SMEM, which is present in the IPQ5424 SoC.
 
-The NPU on the ROCK5B uses the same regulator for both the sram-supply
-and the npu's supply. Add this regulator, and enable all the NPU bits.
-Also add the regulator as a domain-supply to the pd_npu power domain.
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 56 +++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Note: On IPQ SoCs, the Trust Management Engine is referred to as TME-L
+(Lite). Other SoCs from different business units may use variants like
+TME-M. For consistency, the image name is retained as "TME".
+---
+ drivers/soc/qcom/socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-index d22068475c5dc6cb885f878f3f527a66edf1ba70..49500f7cbcb14af4919a6c1997e9e53a01d84973 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -316,6 +316,28 @@ regulator-state-mem {
- 	};
+diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+index 8c4147737c35e3878db2def47f34c03ffc1fea52..391380820f082d8daa5c764d5f3c44e6240e18a2 100644
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -48,6 +48,7 @@
+ #define SMEM_IMAGE_TABLE_CDSP1_INDEX    19
+ #define SMEM_IMAGE_TABLE_GPDSP_INDEX    20
+ #define SMEM_IMAGE_TABLE_GPDSP1_INDEX   21
++#define SMEM_IMAGE_TABLE_TME_INDEX	28
+ #define SMEM_IMAGE_VERSION_TABLE       469
+ 
+ /*
+@@ -67,6 +68,7 @@ static const char *const socinfo_image_names[] = {
+ 	[SMEM_IMAGE_TABLE_CDSP1_INDEX] = "cdsp1",
+ 	[SMEM_IMAGE_TABLE_GPDSP_INDEX] = "gpdsp",
+ 	[SMEM_IMAGE_TABLE_GPDSP1_INDEX] = "gpdsp1",
++	[SMEM_IMAGE_TABLE_TME_INDEX] = "tme",
  };
  
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1m2_xfer>;
-+	status = "okay";
-+
-+	vdd_npu_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_npu_s0";
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <950000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
- &i2c6 {
- 	status = "okay";
- 
-@@ -440,6 +462,10 @@ &pd_gpu {
- 	domain-supply = <&vdd_gpu_s0>;
- };
- 
-+&pd_npu {
-+	domain-supply = <&vdd_npu_s0>;
-+};
-+
- &pinctrl {
- 	hdmirx {
- 		hdmirx_hpd: hdmirx-5v-detection {
-@@ -500,6 +526,36 @@ &pwm1 {
- 	status = "okay";
- };
- 
-+&rknn_core_top {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
-+};
-+
-+&rknn_core_1 {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
-+};
-+
-+&rknn_core_2 {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
-+};
-+
-+&rknn_mmu_top {
-+	status = "okay";
-+};
-+
-+&rknn_mmu_1 {
-+	status = "okay";
-+};
-+
-+&rknn_mmu_2 {
-+	status = "okay";
-+};
-+
- &saradc {
- 	vref-supply = <&avcc_1v8_s0>;
- 	status = "okay";
+ static const char *const pmic_models[] = {
 
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250519-tme-crm-version-a1c7aa3ce820
+
+Best regards,
 -- 
-2.49.0
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 
