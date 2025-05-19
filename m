@@ -1,57 +1,57 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C08221F32
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D263221FCF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747697308; cv=none; b=BUNX40Yg3D/N6wIkM3qLX1lf/qd88lxX/DT0gq0N+Yswb49qgLqCGJvwMHd5FZ+/pgomuImy2sVNwfZTIJztiwbW65roLakMij695T/9fnkoUKEXwUsU71p36TdMGLJR2Z3ITndM2AXO1y5oEVkisy55O/GCTRUjXBKJo4YP5Nk=
+	t=1747697309; cv=none; b=iQqVXHNa9vLq8KUcO5VQgeo9FdEARL0v84+tsOpwrF4S7yRE0HYTSo9U68s/TBYYFQkh7HIWmoGQgzAE6Deb61Ip8q+JWHjSGcbxvU2sFuWAYCtnvz7ETJvFc5ThO3Ce4QTB+LrsACI3vQrXNOUg5/WyOxo18FzLhn5mguwQGEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747697308; c=relaxed/simple;
-	bh=v27lpHZToMipvRUY1lUmbKWwt8EtNtWm7nK3+oLgxfA=;
+	s=arc-20240116; t=1747697309; c=relaxed/simple;
+	bh=EeoGiFAd9e7iVkaKUKX4cOG8l0ZAUdT5S/GdOseA0v4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Cc7PlrOYxyIjG4xPlWWEnNk/CmWLUhONElKU7YxXCw8mwYsBQLAIclp0NqN3y+DwJ+5dBZZ0U8wXZLlRwekGfAgHo8oMLZM1j+J4HVRWGYn2SQHNa7BRBBZoTwwEjc/wr4zmMlF5QZ4krJTK8RWsEZZNf+wM11PpGKwqxJQz/A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1zq/cwN0; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=BMbjA1vUijlmchY7oriEoEETkAh+vdVShGSehXEi6pSH/MbIz4d/7dCrkaEsJS+NZ4QWVBhYwkstKXat5h34Ap7HUGrLlv4lkc0U0dxsZ+JhbQ7wa1K6iRrGyxJmU6KnsH4HBlM7lBbo9OLZd6r4LLrAEOZbTbubvITxQKWpl8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r/2tP6Rp; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1zq/cwN0"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30f0ffde3ecso1109882a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r/2tP6Rp"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9659a391so2619985a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747697306; x=1748302106; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747697308; x=1748302108; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYNfSz3c0MEIbufxqfSo89Xbj3evJh8YTPDSU4jQxx8=;
-        b=1zq/cwN0rVSkRru9SQ2KsxsySymkGirUyyPgXRMVpxsRD+JmlatYLqUhlv3vpuWZGL
-         5dUWOd5w4itj+igPcFUb0kknmNvbytmKVinrMk+NuVYlPQ8escyWIfHMM+yuBZRgjdpZ
-         0f/+GT6u4U2Jyk/fj/jSf49CImKOzf22zC4EOCSC9lbU8ghEv5ATlTEuRLt53ocaetYU
-         HpHIPlvC88F4auqcJdCTFgG/DdgwyCtWsfVecul02GK+3Co/7zFWMXn2i8HEa5+OtGFz
-         gxfrE7Jnzea5lP1MRpY/cOvYMY44hBYS25mmOBg9RyrZRw+RK1gXbVDhuRztsLW6S/cf
-         0PsQ==
+        bh=k5bXYrAobPzWNfhMoyWUANBVY5VTCDdA5KxrSZD6wWU=;
+        b=r/2tP6RpFz0i88zYKgbxl8h7I+6Qk7b05Iu4Q4IirVDMMM09u+tTg5ERhgZ/GDnRPO
+         DmWgfwc6vBP4aeP82AbQw7B0zUDg94Sy8zqkQwuFAc8HZCM8aF2BS9YZiNsyWor56Hl0
+         ppccoCmHCd687OVd6ExgJJZw/BLE6FzFfhhW4ZkFimFwZZUdoCpQdJ2hDt6cJB2QpxCh
+         mX4/UrdqhDmGSNQtJJh+e8ohj7YHgSte+Kxjln7AKwM3QDgwpiK6RZssJzJE41cGB8+W
+         PfMGL5wJ99arJ9PJVnfzQ2B6+AwD5NF9TBJch1uTFqeSnF9vWPjKxL1KsygVrr0H8Ecq
+         gb6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747697306; x=1748302106;
+        d=1e100.net; s=20230601; t=1747697308; x=1748302108;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CYNfSz3c0MEIbufxqfSo89Xbj3evJh8YTPDSU4jQxx8=;
-        b=WWK3nvJLImb7QbFHgfp77eqjJsdx9tvpU9hFm8viITSUE33O8fp4wH6fnbdCj0QAlw
-         xmHp2t3bx0cnHCe5kMymDNiQdbux9sy5Zd6Dsu/EcGsCWvZdytkI5exnQE9E8yCKifa+
-         qio/mLN61kam/17hlo4HGNKm93AwJpHB2lkMHQyU3HZP2MMyHcpldzTKZL5jejESZ+IQ
-         ak2/FX4dMizUeqRs5lmdumeIRdK+1YRQgXngAWgSjyvBWcecnKmZQORKAt//TE7WGgPW
-         XV2hlPO9SU5qG3F40rXaEc3aTfc7xkWayQD5fE7hS+1aRYDi+43GJaQvhG++OhVnovvD
-         5O3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtogJ6JFjODyjPnc6nVftDnYrhST7HHZuCnZ99DZbWV22+RDYi/2EomX9aLL4YGmI2n9BjCUPtLgdKics=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtVjH6R2phMPoMh5JYMQ56TlmzRW1Cp7pWoxv5hZqAp/LQ7R8V
-	bEA7U1L6XEBkbGJd9/rnqLawDRrlLu2BrDzYgmkhSz81bDz3XM/z7aRi24UO/luZT43Rha9tTRt
-	uYlai7Q==
-X-Google-Smtp-Source: AGHT+IHD3d0FUo1F+its1m5Q/ZuLYZpcWvtxoKmFmQSmXNfoYPiCCl0K+3fw4yCk8ORbs3n5QKanZNe6CZM=
-X-Received: from pjbso6.prod.google.com ([2002:a17:90b:1f86:b0:2ee:3128:390f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b86:b0:30e:8c5d:8f8
- with SMTP id 98e67ed59e1d1-30e8c5d09b3mr23125425a91.14.1747697306228; Mon, 19
- May 2025 16:28:26 -0700 (PDT)
+        bh=k5bXYrAobPzWNfhMoyWUANBVY5VTCDdA5KxrSZD6wWU=;
+        b=sgSvaVJivSQfqRNh3GGiKC3Z1iI3LR+ZTxPLKUJEgMwpJdwY7Tz0EqAVgIMcV+JGm9
+         WXVifL2J1GsaUCYPsIzdKI43E0l5aVr0OznAc81UyCurHfm+c51f0hM41P+2KqbhRSq7
+         osEjHvHwcMlxkyfOkfxRUwTLSs3HxpLv94WXj8Ddwb6hXau6xnDs66tcZgZc6TxR6hkq
+         Dnf+kBDayPiV1Mk0PvfttKBhKC5NFSmtEDldEosiE7jSVa8bvRbSic0OTBfhUytl5stH
+         PhdCqbfBh1t25UY9J4WnxBdolq6XtvtZm64cBCCluBSKG7F6kTfv5aTIfZ7BVRAOgVVp
+         Afbg==
+X-Forwarded-Encrypted: i=1; AJvYcCURUaYhGcrqzvF7aD5Ox2NazNATHL0p/z2nmXEqqcS21IGAhzXpECyoJ+zaiOVyuwOprzDDsdO3/PePtnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmseUGGWJ2fROdDcJiKVCpB0mT8N0UkDbyRMSj/8nOwTCuGoR2
+	R+CFeWaCgTheUx1/yGh9O1D64BLdFwqah/ZpwEL5aQnsBWRfjUhIlOEKzI3hnQdmk6/lPUhDhU2
+	06Gys4Q==
+X-Google-Smtp-Source: AGHT+IGOVFyvbbjOcdVaDL1tDlyXnQVlPOhO3+t9xBt7HdnFXlctjkbTyTD3yxn4zuA3RoYGgNhwnpL+OcY=
+X-Received: from pjbsl15.prod.google.com ([2002:a17:90b:2e0f:b0:2ea:448a:8cd1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dc2:b0:2ee:693e:ed7a
+ with SMTP id 98e67ed59e1d1-30e832357d7mr20116257a91.35.1747697307921; Mon, 19
+ May 2025 16:28:27 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 May 2025 16:28:00 -0700
+Date: Mon, 19 May 2025 16:28:01 -0700
 In-Reply-To: <20250519232808.2745331-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,181 +61,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250519232808.2745331-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519232808.2745331-8-seanjc@google.com>
-Subject: [PATCH 07/15] KVM: x86: Hardcode the PIT IRQ source ID to '2'
+Message-ID: <20250519232808.2745331-9-seanjc@google.com>
+Subject: [PATCH 08/15] KVM: x86: Don't clear PIT's IRQ line status when
+ destroying PIT
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hardcode the PIT's source IRQ ID to '2' instead of "finding" that bit 2
-is always the first available bit in irq_sources_bitmap.  Bits 0 and 1 are
-set/reserved by kvm_arch_init_vm(), i.e. long before kvm_create_pit() can
-be invoked, and KVM allows at most one in-kernel PIT instance, i.e. it's
-impossible for the PIT to find a different free bit (there are no other
-users of kvm_request_irq_source_id().
+Don't bother clearing the PIT's IRQ line status when destroying the PIT,
+as userspace can't possibly rely on KVM to lower the IRQ line in any sane
+use case, and it's not at all obvious that clearing the PIT's IRQ line is
+correct/desirable in kvm_create_pit()'s error path.
 
-Delete the now-defunct irq_sources_bitmap and all its associated code.
+When called from kvm_arch_pre_destroy_vm(), the entire VM is being torn
+down and thus {kvm_pic,kvm_ioapic}.irq_states are unreachable.
+
+As for the error path in kvm_create_pit(), the only way the PIT's bit in
+irq_states can be set is if userspace raises the associated IRQ before
+KVM_CREATE_PIT{2} completes.  Forcefully clearing the bit would clobber's
+userspace's input, nonsensical though that input may be.  Not to mention
+that no known VMM will continue on if PIT creation fails.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 -
- arch/x86/kvm/i8254.c            | 55 +++++----------------------------
- arch/x86/kvm/i8254.h            |  1 -
- arch/x86/kvm/x86.c              |  6 ----
- include/linux/kvm_host.h        |  1 +
- 5 files changed, 8 insertions(+), 56 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 --
+ arch/x86/kvm/i8254.c            | 10 ----------
+ arch/x86/kvm/i8259.c            | 10 ----------
+ arch/x86/kvm/ioapic.c           | 10 ----------
+ arch/x86/kvm/ioapic.h           |  1 -
+ 5 files changed, 33 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f25ec3ec5ce4..c8654e461933 100644
+index c8654e461933..ebda93979179 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1396,7 +1396,6 @@ struct kvm_arch {
- 	bool pause_in_guest;
- 	bool cstate_in_guest;
+@@ -2207,8 +2207,6 @@ static inline int __kvm_irq_line_state(unsigned long *irq_state,
+ 	return !!(*irq_state);
+ }
  
--	unsigned long irq_sources_bitmap;
- 	s64 kvmclock_offset;
+-void kvm_pic_clear_all(struct kvm_pic *pic, int irq_source_id);
+-
+ void kvm_inject_nmi(struct kvm_vcpu *vcpu);
+ int kvm_get_nr_pending_nmis(struct kvm_vcpu *vcpu);
  
- 	/*
 diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
-index 2a0964c859af..d4fc20c265b2 100644
+index d4fc20c265b2..518e2e042605 100644
 --- a/arch/x86/kvm/i8254.c
 +++ b/arch/x86/kvm/i8254.c
-@@ -248,8 +248,8 @@ static void pit_do_work(struct kthread_work *work)
- 	if (atomic_read(&ps->reinject) && !atomic_xchg(&ps->irq_ack, 0))
- 		return;
- 
--	kvm_set_irq(kvm, pit->irq_source_id, 0, 1, false);
--	kvm_set_irq(kvm, pit->irq_source_id, 0, 0, false);
-+	kvm_set_irq(kvm, KVM_PIT_IRQ_SOURCE_ID, 0, 1, false);
-+	kvm_set_irq(kvm, KVM_PIT_IRQ_SOURCE_ID, 0, 0, false);
- 
- 	/*
- 	 * Provides NMI watchdog support via Virtual Wire mode.
-@@ -641,47 +641,11 @@ static void kvm_pit_reset(struct kvm_pit *pit)
+@@ -641,14 +641,6 @@ static void kvm_pit_reset(struct kvm_pit *pit)
  	kvm_pit_reset_reinject(pit);
  }
  
--static int kvm_request_irq_source_id(struct kvm *kvm)
-+static void kvm_pit_clear_all(struct kvm *kvm)
- {
--	unsigned long *bitmap = &kvm->arch.irq_sources_bitmap;
--	int irq_source_id;
--
- 	mutex_lock(&kvm->irq_lock);
--	irq_source_id = find_first_zero_bit(bitmap, BITS_PER_LONG);
--
--	if (irq_source_id >= BITS_PER_LONG) {
--		pr_warn("exhausted allocatable IRQ sources!\n");
--		irq_source_id = -EFAULT;
--		goto unlock;
--	}
--
--	ASSERT(irq_source_id != KVM_USERSPACE_IRQ_SOURCE_ID);
--	ASSERT(irq_source_id != KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID);
--	set_bit(irq_source_id, bitmap);
--unlock:
+-static void kvm_pit_clear_all(struct kvm *kvm)
+-{
+-	mutex_lock(&kvm->irq_lock);
+-	kvm_ioapic_clear_all(kvm->arch.vioapic, KVM_PIT_IRQ_SOURCE_ID);
+-	kvm_pic_clear_all(kvm->arch.vpic, KVM_PIT_IRQ_SOURCE_ID);
 -	mutex_unlock(&kvm->irq_lock);
--
--	return irq_source_id;
 -}
 -
--static void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id)
--{
--	ASSERT(irq_source_id != KVM_USERSPACE_IRQ_SOURCE_ID);
--	ASSERT(irq_source_id != KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID);
--
--	mutex_lock(&kvm->irq_lock);
--	if (irq_source_id < 0 ||
--	    irq_source_id >= BITS_PER_LONG) {
--		pr_err("IRQ source ID out of range!\n");
--		goto unlock;
--	}
--	clear_bit(irq_source_id, &kvm->arch.irq_sources_bitmap);
--	if (!irqchip_kernel(kvm))
--		goto unlock;
--
--	kvm_ioapic_clear_all(kvm->arch.vioapic, irq_source_id);
--	kvm_pic_clear_all(kvm->arch.vpic, irq_source_id);
--unlock:
-+	kvm_ioapic_clear_all(kvm->arch.vioapic, KVM_PIT_IRQ_SOURCE_ID);
-+	kvm_pic_clear_all(kvm->arch.vpic, KVM_PIT_IRQ_SOURCE_ID);
- 	mutex_unlock(&kvm->irq_lock);
- }
- 
-@@ -715,10 +679,6 @@ struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
- 	if (!pit)
- 		return NULL;
- 
--	pit->irq_source_id = kvm_request_irq_source_id(kvm);
--	if (pit->irq_source_id < 0)
--		goto fail_request;
--
- 	mutex_init(&pit->pit_state.lock);
- 
- 	pid = get_pid(task_tgid(current));
-@@ -770,8 +730,7 @@ struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
+ static void pit_mask_notifer(struct kvm_irq_mask_notifier *kimn, bool mask)
+ {
+ 	struct kvm_pit *pit = container_of(kimn, struct kvm_pit, mask_notifier);
+@@ -730,7 +722,6 @@ struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
  	kvm_pit_set_reinject(pit, false);
  	kthread_destroy_worker(pit->worker);
  fail_kthread:
--	kvm_free_irq_source_id(kvm, pit->irq_source_id);
--fail_request:
-+	kvm_pit_clear_all(kvm);
+-	kvm_pit_clear_all(kvm);
  	kfree(pit);
  	return NULL;
  }
-@@ -788,7 +747,7 @@ void kvm_free_pit(struct kvm *kvm)
+@@ -747,7 +738,6 @@ void kvm_free_pit(struct kvm *kvm)
  		kvm_pit_set_reinject(pit, false);
  		hrtimer_cancel(&pit->pit_state.timer);
  		kthread_destroy_worker(pit->worker);
--		kvm_free_irq_source_id(kvm, pit->irq_source_id);
-+		kvm_pit_clear_all(kvm);
+-		kvm_pit_clear_all(kvm);
  		kfree(pit);
  	}
  }
-diff --git a/arch/x86/kvm/i8254.h b/arch/x86/kvm/i8254.h
-index a768212ba821..14fb310357f2 100644
---- a/arch/x86/kvm/i8254.h
-+++ b/arch/x86/kvm/i8254.h
-@@ -42,7 +42,6 @@ struct kvm_pit {
- 	struct kvm_io_device speaker_dev;
- 	struct kvm *kvm;
- 	struct kvm_kpit_state pit_state;
--	int irq_source_id;
- 	struct kvm_irq_mask_notifier mask_notifier;
- 	struct kthread_worker *worker;
- 	struct kthread_work expired;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4a9c252c9dab..9e2c249d45ca 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -12790,12 +12790,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	INIT_HLIST_HEAD(&kvm->arch.mask_notifier_list);
- 	atomic_set(&kvm->arch.noncoherent_dma_count, 0);
+diff --git a/arch/x86/kvm/i8259.c b/arch/x86/kvm/i8259.c
+index 0150aec4f523..4de055efc4ee 100644
+--- a/arch/x86/kvm/i8259.c
++++ b/arch/x86/kvm/i8259.c
+@@ -206,16 +206,6 @@ int kvm_pic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
+ 	return ret;
+ }
  
--	/* Reserve bit 0 of irq_sources_bitmap for userspace irq source */
--	set_bit(KVM_USERSPACE_IRQ_SOURCE_ID, &kvm->arch.irq_sources_bitmap);
--	/* Reserve bit 1 of irq_sources_bitmap for irqfd-resampler */
--	set_bit(KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID,
--		&kvm->arch.irq_sources_bitmap);
+-void kvm_pic_clear_all(struct kvm_pic *s, int irq_source_id)
+-{
+-	int i;
 -
- 	raw_spin_lock_init(&kvm->arch.tsc_write_lock);
- 	mutex_init(&kvm->arch.apic_map_lock);
- 	seqcount_raw_spinlock_init(&kvm->arch.pvclock_sc, &kvm->arch.tsc_write_lock);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 0d4506598d62..44b439c5fcf4 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -190,6 +190,7 @@ bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req);
+-	pic_lock(s);
+-	for (i = 0; i < PIC_NUM_PINS; i++)
+-		__clear_bit(irq_source_id, &s->irq_states[i]);
+-	pic_unlock(s);
+-}
+-
+ /*
+  * acknowledge interrupt 'irq'
+  */
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index dc45ea9f5b9c..7d2d47a6c2b6 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -498,16 +498,6 @@ int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
+ 	return ret;
+ }
  
- #define KVM_USERSPACE_IRQ_SOURCE_ID		0
- #define KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID	1
-+#define KVM_PIT_IRQ_SOURCE_ID			2
+-void kvm_ioapic_clear_all(struct kvm_ioapic *ioapic, int irq_source_id)
+-{
+-	int i;
+-
+-	spin_lock(&ioapic->lock);
+-	for (i = 0; i < KVM_IOAPIC_NUM_PINS; i++)
+-		__clear_bit(irq_source_id, &ioapic->irq_states[i]);
+-	spin_unlock(&ioapic->lock);
+-}
+-
+ static void kvm_ioapic_eoi_inject_work(struct work_struct *work)
+ {
+ 	int i;
+diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
+index a86f59bbea44..fee17eb201ef 100644
+--- a/arch/x86/kvm/ioapic.h
++++ b/arch/x86/kvm/ioapic.h
+@@ -114,7 +114,6 @@ void kvm_ioapic_destroy(struct kvm *kvm);
+ int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
+ 		       int irq_source_id, int level, bool line_status);
  
- extern struct mutex kvm_lock;
- extern struct list_head vm_list;
+-void kvm_ioapic_clear_all(struct kvm_ioapic *ioapic, int irq_source_id);
+ void kvm_get_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
+ void kvm_set_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
+ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu,
 -- 
 2.49.0.1101.gccaa498523-goog
 
