@@ -1,128 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA2A4B1E5E;
-	Mon, 19 May 2025 23:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F9F4B1E5E;
+	Mon, 19 May 2025 23:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747698443; cv=none; b=sDpLxVEItZPcIhiQwQ+BrXOf48Uzyd4DAO50VM9VGgAFyAWCGiMzsnDDEw/hh1IjG8/OytMiXfa1HQ5eQQtHUaiVC7yMfVx080vBusik2CueFgtO6gMr4S74cRjhQdkRiYGqeMAY315r8KgzA82Yk7pmoDgFnZsalKFuBmbeWFw=
+	t=1747698528; cv=none; b=Fg3OORQcQoj4ppo0pmC+QFG9UAulEV0hL5eJ+FGeQjXXCvNxwHY50NxYyk76Y/8oLJE5IXgC5PVRIFQOrTYeiH5ZNJBmYJEbUOzqR5RHJHoubgrfxFLcCFxgclshD0Yj3iNSireYC3dSYOOmdOhTgph2SqaTMGbzfsyIFxXX2Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747698443; c=relaxed/simple;
-	bh=2BXuPy0dtOIAjcn43s0b9leWNNf00rEj6dxgDnly9m4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sGVXkxyJXLTLhVCt8ClKEOdRry+N5HiZAr7r0I8hnUzXacn/MWuRf+FuGT7A/1HLqCdI0dtc/TJVBQeKqMut6SPhXygnA7tlF65dk3KGqKYFBX84MRqVCoyFs9wTtEHc6eNicN0tZnsSwOYQVK5ewW5AFBT1PyvR03qO7HupSAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbppcEK3; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747698528; c=relaxed/simple;
+	bh=KY1eMq/GYCaPfzTkzeeKII/x7ctTj9mKeTjTe1ksYQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cDqTlc2CdnSOVVBZEEK2iH1oU6cyeR6FrQo5k+I7Jdsre1YRgWmLvnP/ceiDPQz5oehVEcPZ2yUoCJQ5cc7UiodnzhjOcYyftLnKfhwLDPUAWp88buUqkfCx1In8rBh8A4vBzddjCQzS4HnBWdxJclrcWukBBGKU3TFN1E+yYI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfTUfceC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbppcEK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747698441; x=1779234441;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2BXuPy0dtOIAjcn43s0b9leWNNf00rEj6dxgDnly9m4=;
-  b=cbppcEK3+rUbm7/vy1WG0LI3QtNbdPT4jPj0Hs8WY6g8r6We+ddxlFS+
-   POcl0GpJ+3rR3NajGbknedhJLNFWE3pbF9sZoHT6Lqz3fOgb3QV8SPb9o
-   yKi3NGzXxaa6r4vJ7qMBUr5UiogsXv6LFd7hDfO0nvbOt9FuEqEYFZ0KJ
-   D5UIYj9JIgQ1sr/lFpn5sGQ4fjMM4HOzmtovc0eJRI5NMF4erMaBOHqYF
-   HfJTgk8yl8EaQVIMG8I9KlulvavQJ5B/awl47eqyQ+UTcI03D0F87PlrU
-   Z3nfYxnAJIYU1WhMz57wnMQ2kplsX2HpaPUY+9unE3sJhTnydBtd+xyLx
-   w==;
-X-CSE-ConnectionGUID: 3LpQVSMpQcyoMbYahtBJNA==
-X-CSE-MsgGUID: c6O9nxykTJaRNqOU24OqSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="52245871"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="52245871"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:47:19 -0700
-X-CSE-ConnectionGUID: QWIh/uQRSY+1nhDqJrlsaw==
-X-CSE-MsgGUID: OwcPBSk6TZS2d7dRiA+p6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139421077"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:47:18 -0700
-Message-ID: <2889da2a-5cda-4a78-9457-864276c92410@linux.intel.com>
-Date: Mon, 19 May 2025 16:47:17 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfTUfceC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3110DC4CEED;
+	Mon, 19 May 2025 23:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747698527;
+	bh=KY1eMq/GYCaPfzTkzeeKII/x7ctTj9mKeTjTe1ksYQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JfTUfceCoa6lkj7bKXecnZoPZPki2zZjT0xTf1jakn8U9GrVa0efdOwsbV1YblNdL
+	 +/hQYHBNtG8Eel3jwrPlnDZBhIVlatLBuxGMoEJu9jYPjm8Xb/hPdojjLo4VtINz8j
+	 hJ3vFKFxQwnrvQIhTEsaImnzW5voGbmZjPPkaZAh3ev8lgLbj9u77cabFlgncuM1d3
+	 E0fekisSWd1Iv9F8QdGd8EfXxdiZnLPLCtMiMw7S2wtajmeQ8vEq1T37wrgASJkoRb
+	 yIgldeav/X7arKnYC73NjPGoBz2ritOrQiO54ljTzTo2ZpyxpBD9ARxshS2RM7KIYH
+	 QXQ/yLQwbZHSw==
+Date: Mon, 19 May 2025 16:48:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Ilias
+ Apalodimas <ilias.apalodimas@linaro.org>, Neal Cardwell
+ <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, David Ahern
+ <dsahern@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan
+ <shuah@kernel.org>, sdf@fomichev.me, ap420073@gmail.com, praan@google.com,
+ shivajikant@google.com
+Subject: Re: [PATCH net-next v1 5/9] net: devmem: ksft: add ipv4 support
+Message-ID: <20250519164846.40cd01e4@kernel.org>
+In-Reply-To: <20250519023517.4062941-6-almasrymina@google.com>
+References: <20250519023517.4062941-1-almasrymina@google.com>
+	<20250519023517.4062941-6-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/16] PCI/AER: Extract bus/dev/fn in
- aer_print_port_info() with PCI_BUS_NUM(), etc
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-5-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-5-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon, 19 May 2025 02:35:13 +0000 Mina Almasry wrote:
+> +    addr = cfg.addr_v[ipver]
+> +    if ipver == "6":
+> +        addr = "[" + addr + "]"
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Use PCI_BUS_NUM(), PCI_SLOT(), PCI_FUNC() to extract the bus number,
-> device, and function number directly from the Error Source ID.  There's no
-> need to shift and mask it explicitly.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+You want baddr ?
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/tools/testing/selftests/drivers/net/lib/py/env.py#n155
 
->   drivers/pci/pcie/aer.c | 7 +++----
->   1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index b8494ccd935b..dc8a50e0a2b7 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -736,14 +736,13 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->   static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
->   				const char *details)
->   {
-> -	u8 bus = info->id >> 8;
-> -	u8 devfn = info->id & 0xff;
-> +	u16 source = info->id;
->   
->   	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
+In general you should use cfg.addr, cfg.addr_remote and self.addr_ipver 
+if you don't care about what IP version env provides.
 
-Since it is used in many places in PCI driver, may be define
-
-#define PCI_ADDR_FMT "%04x:%02x:%02x.%d"
-
->   		 info->multi_error_valid ? "Multiple " : "",
->   		 aer_error_severity_string[info->severity],
-> -		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> -		 PCI_FUNC(devfn), details);
-> +		 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
-> +		 PCI_SLOT(source), PCI_FUNC(source), details);
->   }
->   
->   #ifdef CONFIG_ACPI_APEI_PCIEAER
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+If you want to test specifically v4 or v6 they should be separate test
+cases (doesn't sound like that's your intention here tho)
