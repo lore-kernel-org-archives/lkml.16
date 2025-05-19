@@ -1,91 +1,112 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D48643147;
-	Mon, 19 May 2025 15:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBAA22A7FF;
+	Mon, 19 May 2025 15:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669392; cv=none; b=cWDmk60/22Tuw9/dm71/2e3Ez4ulqa4/onAaYM4/vzS9nd6Rdh5D/By/9J+JMr7ESyB9i0UgTVYkoVq8gAe4Q+x55qeV4iIoL6cwJjz/nF2zm1ou49C7U03/b4RT2rLbr6wE6ylt1f0m0U8BJzs84U4Br6lBfBmX3HbMNk3Ynls=
+	t=1747669407; cv=none; b=I41k6J2YfEq42KmUDarl59i/KTGf/u5POH/N6ZscGv31SZLpAXMhIOZMeSqE3JHoXtGspd08Vpo4EMYHpARLu5l+Sh4rtNgz0f6lZsxk++bbwbGhesUqf51IvSe0q8Xk4nyqL6oSeoAy+LUEOkeNfvbqPnnNEuryZbnImSX0gkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747669392; c=relaxed/simple;
-	bh=zV0VW4DN1bDPoQ2dgjlFiDvPJcGxgfxR7bRSjD9D65I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h78zIV0sX+chD2KGg7ecSpk+fy39C3P5pVyPtUKzWc91RuMx5lTLbgrDOfxm6XLck3NRKsa0XuqU9Kp9gWnb/uZ+UtKn6zguW/5gV7Y9RyvirvBnkbEBEeqsk+xgm5fi5b8g9iTDcOi8nAyMFZbqKrqevH8ulQctlZ77mEF0/9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAAHcL96UStoD9NmAQ--.49806S2;
-	Mon, 19 May 2025 23:42:52 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	ruanjinjie@huawei.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-mtd@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] mtd: nand: sunxi: Add randomizer configuration before randomizer enable
-Date: Mon, 19 May 2025 23:42:24 +0800
-Message-ID: <20250519154225.2928-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747669407; c=relaxed/simple;
+	bh=p5928QSFsda2kyYixsE46n79NEDGlaX9y6Xh4Lt2g00=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=B5FJcIe0LYy4ywadS6zlFSwqVIT4YGKquGsW2SRHH5WsqATq/I5q50/woM82CyFMAb5UTddI/0l4ZCKiOJfxY3xyM/DnWCod0KZsN4eFsG4eJ4RUxtm6tH7E+2l2wdc2ZRSXlznitrQrK1iHQNt4RGsgLw91iCV31YGJkkhiuDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b1MQx5Rbjz9syt;
+	Mon, 19 May 2025 17:43:21 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAHcL96UStoD9NmAQ--.49806S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7XF4rGr1DtFy8GF4xtFb_yoWDtFc_W3
-	y2v34kKr1Uur93JF1fuF4xCry7tw4UWr4vqwnIqrW3A3W3XryIq3s0vrn7AF1kXF18uFy5
-	Aaykt3WxA34jqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_XrWl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrgA7UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgoHA2grSSUO0QABs5
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 May 2025 17:43:17 +0200
+Message-Id: <DA093HA2415H.29OCPLS0M7H84@buenzli.dev>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v4 6/9] rust: device: Add bindings for reading device
+ properties
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-7-remo@buenzli.dev> <aCH5WgORn9ZGl9Il@pollux>
+In-Reply-To: <aCH5WgORn9ZGl9Il@pollux>
 
-In sunxi_nfc_hw_ecc_read_chunk(), the sunxi_nfc_randomizer_enable() is
-called without the config of randomizer. A proper implementation can be
-found in sunxi_nfc_hw_ecc_read_chunks_dma().
+On Mon May 12, 2025 at 3:36 PM CEST, Danilo Krummrich wrote:
+>> +/// Implemented for all integers that can be read as properties.
+>> +///
+>> +/// This helper trait is needed on top of the existing [`Property`]
+>> +/// trait to associate the integer types of various sizes with their
+>> +/// corresponding `fwnode_property_read_*_array` functions.
+>> +pub trait PropertyInt: Copy {
+>> +    /// # Safety
+>> +    ///
+>> +    /// Callers must uphold the same safety invariants as for the vario=
+us
+>> +    /// `fwnode_property_read_*_array` functions.
+>
+> I think you have additional requirements on the fwnode, propname and val
+> pointers as well as on nval, please document them as well.
 
-Add sunxi_nfc_randomizer_config() before the start of randomization.
+What are the additional requirements? The implementation just calls the
+underlying `fwnode_property_read_*_array` with the exact same arguments,
+so I don't know what the additional requirements are.
 
-Fixes: 4be4e03efc7f ("mtd: nand: sunxi: add randomizer support")
-Cc: stable@vger.kernel.org # v4.6
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/mtd/nand/raw/sunxi_nand.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-index fab371e3e9b7..9179719f639e 100644
---- a/drivers/mtd/nand/raw/sunxi_nand.c
-+++ b/drivers/mtd/nand/raw/sunxi_nand.c
-@@ -817,6 +817,7 @@ static int sunxi_nfc_hw_ecc_read_chunk(struct nand_chip *nand,
- 	if (ret)
- 		return ret;
- 
-+	sunxi_nfc_randomizer_config(nand, page, false);
- 	sunxi_nfc_randomizer_enable(nand);
- 	writel(NFC_DATA_TRANS | NFC_DATA_SWAP_METHOD | NFC_ECC_OP,
- 	       nfc->regs + NFC_REG_CMD);
--- 
-2.42.0.windows.2
-
+>> +    unsafe fn read_array_from_fwnode_property(
+>> +        fwnode: *const bindings::fwnode_handle,
+>> +        propname: *const ffi::c_char,
+>> +        val: *mut Self,
+>> +        nval: usize,
+>> +    ) -> ffi::c_int;
+>> +}
+>> +// This macro generates implementations of the traits `Property` and
+>> +// `PropertyInt` for integers of various sizes. Its input is a list
+>> +// of pairs separated by commas. The first element of the pair is the
+>> +// type of the integer, the second one is the name of its corresponding
+>> +// `fwnode_property_read_*_array` function.
+>> +macro_rules! impl_property_for_int {
+>> +    ($($int:ty: $f:ident),* $(,)?) =3D> { $(
+>> +        impl PropertyInt for $int {
+>> +            unsafe fn read_array_from_fwnode_property(
+>> +                fwnode: *const bindings::fwnode_handle,
+>> +                propname: *const ffi::c_char,
+>> +                val: *mut Self,
+>> +                nval: usize,
+>> +            ) -> ffi::c_int {
+>> +                // SAFETY: The safety invariants on the trait require
+>> +                // callers to uphold the invariants of the functions
+>> +                // this macro is called with.
+>> +                unsafe {
+>> +                    bindings::$f(fwnode, propname, val.cast(), nval)
+>> +                }
+>> +            }
+>> +        }
+>> +    )* };
+>> +}
+>> +impl_property_for_int! {
+>> +    u8: fwnode_property_read_u8_array,
+>> +    u16: fwnode_property_read_u16_array,
+>> +    u32: fwnode_property_read_u32_array,
+>> +    u64: fwnode_property_read_u64_array,
+>> +    i8: fwnode_property_read_u8_array,
+>> +    i16: fwnode_property_read_u16_array,
+>> +    i32: fwnode_property_read_u32_array,
+>> +    i64: fwnode_property_read_u64_array,
+>> +}
