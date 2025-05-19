@@ -1,38 +1,66 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED9126E16A;
-	Mon, 19 May 2025 09:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667FD26E17C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645662; cv=none; b=Vbx0hbdmnd364nYspQq2/VzTDeuUqi513oAWN01dym5TKQkuLrXEePfFPjaD9igxz2jKQFupsO3tb6ZA68HLSWWUEjDaUW0nE01chr3bJSEorjjIatwNScZBJfXVe2Lr/uoswBgxwlYCvOiRV4OjX56EckloVMDj9EgGl5eic30=
+	t=1747645665; cv=none; b=VPTOg8JBVkNUXFX6Xpm3MDJz9RQ31wggwA5gQxKyix3/64z2Xbn7SX731+jDv8JY39cZyygl2W1977iqYXdrKdpUotLyrbmwFJ3/k6bdRdE2378iFnGhrt0uyhOoo0DRkUrZuOEzXbfVeYQtZd9dMCYQd2fxRvCFJJQrZT0fLyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645662; c=relaxed/simple;
-	bh=11/1wu26fy3F+Wu9zvLz9z6WBxzZn2rsxyOQYMgPKkw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fpILk7QHx+cNDC8wbJPrrSJ8PRghsxypShOfqUAxTUL/So5Nyf5BLQb/HRnsHS5hROD9C0IKaB8hGIPfERzG8y/WqoB+Lu6e5/c4I8bguHFe7DAFjB//MQZbgznLKNHhAlx2Z+RNf1U6SmvBjMzz4LQOta4IKuqVy7d6X4gXV/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7D0B11A0692;
-	Mon, 19 May 2025 10:57:59 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4492C1A069A;
-	Mon, 19 May 2025 10:57:59 +0200 (CEST)
-Received: from lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com (lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com [10.52.9.99])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 43F121800097;
-	Mon, 19 May 2025 16:57:58 +0800 (+08)
-From: Joseph Guo <qijian.guo@nxp.com>
-To: Bastien Nocera <hadess@hadess.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-input@vger.kernel.org (open list:GOODIX TOUCHSCREEN),
-	linux-kernel@vger.kernel.org (open list)
-Cc: qijian.guo@nxp.com
-Subject: [PATCH] input: goodix: add poll mode for goodix touchscreen
-Date: Mon, 19 May 2025 17:57:43 +0900
-Message-Id: <20250519085744.3116042-1-qijian.guo@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747645665; c=relaxed/simple;
+	bh=LQrd4yFx9Zi2ppp7QhSS0Ll8Z3ZFW05C4a2qhTIpsUc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JJ/enrX/xX+H7YQTJFF1bANiercY2+7JgAFY/JR3U8IJwIUtAyu8FttL/v1Jm94pd90Y0/y8lVtIsOCBzA/gFTHEl2f+QMCVKrSv4yqfHx96leZHTmYie1n4nby4oyWQ7CAhbtBqzReSbB1YOy3MWZ158rmbq4uaPI6G9rqUXxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+lfjxCC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+lfjxCC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747645661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TrB2Aw1ntB+Bpn0UqujzmfA3wFcSMVE2Hwqc2M33TLM=;
+	b=T+lfjxCCxTyPCrHZbfR4UkS1gYh/nRPoQAojizpNZPeXqrdkzC4c5GpNiEoVwwKARtPwxQ
+	IXae9rRp4dd+D4EF5/yaI74/gVMBRZleubhuBPYDnsS3fJR8PyXD/eX5UMEfVGrRF59S0i
+	EcC66ECBBSVB9tJplr4OMAHV9I9HLvk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-7-IBiVNZXLNeelQ2XrgeohUg-1; Mon,
+ 19 May 2025 05:07:37 -0400
+X-MC-Unique: IBiVNZXLNeelQ2XrgeohUg-1
+X-Mimecast-MFC-AGG-ID: IBiVNZXLNeelQ2XrgeohUg_1747645655
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99FBF18004A7;
+	Mon, 19 May 2025 09:07:34 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.188])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AFA9C1956095;
+	Mon, 19 May 2025 09:07:30 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Steve French <stfrench@microsoft.com>
+Subject: [PATCH 3/4] netfs: Fix the request's work item to not require a ref
+Date: Mon, 19 May 2025 10:07:03 +0100
+Message-ID: <20250519090707.2848510-4-dhowells@redhat.com>
+In-Reply-To: <20250519090707.2848510-1-dhowells@redhat.com>
+References: <20250519090707.2848510-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,171 +68,1239 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-goodix touchscreen only support interrupt mode by default.
-Some panels like waveshare panel which is widely used on raspeberry pi
-don't have interrupt pins and only work on i2c poll mode.
-The waveshare panel 7inch panel use goodix gt911 touchscreen chip.
+When the netfs_io_request struct's work item is queued, it must be supplied
+with a ref to the work item struct to prevent it being deallocated whilst
+on the queue or whilst it is being processed.  This is tricky to manage as
+we have to get a ref before we try and queue it and then we may find it's
+already queued and is thus already holding a ref - in which case we have to
+try and get rid of the ref again.
 
-Update goodix touchscreen to support both interrupt and poll mode.
+The problem comes if we're in BH or IRQ context and need to drop the ref:
+if netfs_put_request() reduces the count to 0, we have to do the cleanup -
+but the cleanup may need to wait.
 
-Signed-off-by: Joseph Guo <qijian.guo@nxp.com>
+Fix this by adding a new work item to the request, ->cleanup_work, and
+dispatching that when the refcount hits zero.  That can then synchronously
+cancel any outstanding work on the main work item before doing the cleanup.
+
+Adding a new work item also deals with another problem upstream where it's
+sometimes changing the work func in the put function and requeuing it -
+which has occasionally in the past caused the cleanup to happen
+incorrectly.
+
+As a bonus, this allows us to get rid of the 'was_async' parameter from a
+bunch of functions.  This indicated whether the put function might not be
+permitted to sleep.
+
+Fixes: 3d3c95046742 ("netfs: Provide readahead and readpage netfs helpers")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Steve French <stfrench@microsoft.com>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- drivers/input/touchscreen/goodix.c | 69 +++++++++++++++++++++++++++---
- drivers/input/touchscreen/goodix.h |  4 ++
- 2 files changed, 67 insertions(+), 6 deletions(-)
+ fs/9p/vfs_addr.c             |  2 +-
+ fs/afs/write.c               |  8 ++---
+ fs/cachefiles/io.c           | 16 +++++-----
+ fs/ceph/addr.c               |  2 +-
+ fs/erofs/fscache.c           |  6 ++--
+ fs/netfs/buffered_read.c     | 30 +++++++++---------
+ fs/netfs/direct_read.c       |  6 ++--
+ fs/netfs/direct_write.c      |  2 +-
+ fs/netfs/fscache_io.c        | 10 +++---
+ fs/netfs/internal.h          | 11 +++----
+ fs/netfs/objects.c           | 47 +++++++++++++--------------
+ fs/netfs/read_collect.c      | 44 ++++++++++++++++----------
+ fs/netfs/read_pgpriv2.c      |  4 +--
+ fs/netfs/read_retry.c        |  2 +-
+ fs/netfs/read_single.c       |  6 ++--
+ fs/netfs/write_collect.c     | 61 +++++++++++++++++-------------------
+ fs/netfs/write_issue.c       | 16 +++++-----
+ fs/netfs/write_retry.c       |  2 +-
+ fs/smb/client/cifsproto.h    |  3 +-
+ fs/smb/client/cifssmb.c      |  4 +--
+ fs/smb/client/file.c         |  7 ++---
+ fs/smb/client/smb2pdu.c      |  4 +--
+ include/linux/fscache.h      |  2 +-
+ include/linux/netfs.h        | 13 ++++----
+ include/trace/events/netfs.h |  7 ++---
+ net/9p/client.c              |  6 ++--
+ 26 files changed, 159 insertions(+), 162 deletions(-)
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index aaf79ac50004..87991b56494d 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -47,6 +47,7 @@
- #define RESOLUTION_LOC		1
- #define MAX_CONTACTS_LOC	5
- #define TRIGGER_LOC		6
-+#define POLL_INTERVAL_MS		17	/* 17ms = 60fps */
-
- /* Our special handling for GPIO accesses through ACPI is x86 specific */
- #if defined CONFIG_X86 && defined CONFIG_ACPI
-@@ -497,6 +498,23 @@ static void goodix_process_events(struct goodix_ts_data *ts)
- 	input_sync(ts->input_dev);
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index 32619d146cbc..b5a4a28e0fe7 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -59,7 +59,7 @@ static void v9fs_issue_write(struct netfs_io_subrequest *subreq)
+ 	len = p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
+ 	if (len > 0)
+ 		__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
+-	netfs_write_subrequest_terminated(subreq, len ?: err, false);
++	netfs_write_subrequest_terminated(subreq, len ?: err);
  }
-
-+static void goodix_ts_irq_poll_timer(struct timer_list *t)
-+{
-+	struct goodix_ts_data *ts = from_timer(ts, t, timer);
-+
-+	schedule_work(&ts->work_i2c_poll);
-+	mod_timer(&ts->timer, jiffies + msecs_to_jiffies(POLL_INTERVAL_MS));
-+}
-+
-+static void goodix_ts_work_i2c_poll(struct work_struct *work)
-+{
-+	struct goodix_ts_data *ts = container_of(work,
-+			struct goodix_ts_data, work_i2c_poll);
-+
-+	goodix_process_events(ts);
-+	goodix_i2c_write_u8(ts->client, GOODIX_READ_COOR_ADDR, 0);
-+}
-+
+ 
  /**
-  * goodix_ts_irq_handler - The IRQ handler
-  *
-@@ -523,16 +541,50 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
-
-+static void goodix_enable_irq(struct goodix_ts_data *ts)
-+{
-+	if (ts->client->irq) {
-+		enable_irq(ts->client->irq);
-+	} else {
-+		ts->timer.expires = jiffies + msecs_to_jiffies(POLL_INTERVAL_MS);
-+		add_timer(&ts->timer);
-+	}
-+}
-+
-+static void goodix_disable_irq(struct goodix_ts_data *ts)
-+{
-+	if (ts->client->irq) {
-+		disable_irq(ts->client->irq);
-+	} else {
-+		del_timer(&ts->timer);
-+		cancel_work_sync(&ts->work_i2c_poll);
-+	}
-+}
-+
- static void goodix_free_irq(struct goodix_ts_data *ts)
- {
--	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-+	if (ts->client->irq) {
-+		devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-+	} else {
-+		del_timer(&ts->timer);
-+		cancel_work_sync(&ts->work_i2c_poll);
-+	}
- }
-
- static int goodix_request_irq(struct goodix_ts_data *ts)
- {
--	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
--					 NULL, goodix_ts_irq_handler,
--					 ts->irq_flags, ts->client->name, ts);
-+	if (ts->client->irq) {
-+		return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-+						 NULL, goodix_ts_irq_handler,
-+						 ts->irq_flags, ts->client->name, ts);
-+	} else {
-+		INIT_WORK(&ts->work_i2c_poll,
-+			  goodix_ts_work_i2c_poll);
-+		timer_setup(&ts->timer, goodix_ts_irq_poll_timer, 0);
-+		if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE)
-+			goodix_enable_irq(ts);
-+		return 0;
-+	}
- }
-
- static int goodix_check_cfg_8(struct goodix_ts_data *ts, const u8 *cfg, int len)
-@@ -1420,6 +1472,11 @@ static void goodix_ts_remove(struct i2c_client *client)
- {
- 	struct goodix_ts_data *ts = i2c_get_clientdata(client);
-
-+	if (!client->irq) {
-+		del_timer(&ts->timer);
-+		cancel_work_sync(&ts->work_i2c_poll);
-+	}
-+
- 	if (ts->load_cfg_from_disk)
- 		wait_for_completion(&ts->firmware_loading_complete);
- }
-@@ -1435,7 +1492,7 @@ static int goodix_suspend(struct device *dev)
-
- 	/* We need gpio pins to suspend/resume */
- 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
--		disable_irq(client->irq);
-+		goodix_disable_irq(ts);
- 		return 0;
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 18b0a9f1615e..7df7b2f5e7b2 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -120,17 +120,17 @@ static void afs_issue_write_worker(struct work_struct *work)
+ 
+ #if 0 // Error injection
+ 	if (subreq->debug_index == 3)
+-		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
++		return netfs_write_subrequest_terminated(subreq, -ENOANO);
+ 
+ 	if (!subreq->retry_count) {
+ 		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+-		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
++		return netfs_write_subrequest_terminated(subreq, -EAGAIN);
  	}
-
-@@ -1479,7 +1536,7 @@ static int goodix_resume(struct device *dev)
- 	int error;
-
- 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
--		enable_irq(client->irq);
-+		goodix_enable_irq(ts);
- 		return 0;
+ #endif
+ 
+ 	op = afs_alloc_operation(wreq->netfs_priv, vnode->volume);
+ 	if (IS_ERR(op))
+-		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
++		return netfs_write_subrequest_terminated(subreq, -EAGAIN);
+ 
+ 	afs_op_set_vnode(op, 0, vnode);
+ 	op->file[0].dv_delta	= 1;
+@@ -166,7 +166,7 @@ static void afs_issue_write_worker(struct work_struct *work)
+ 		break;
  	}
-
-diff --git a/drivers/input/touchscreen/goodix.h b/drivers/input/touchscreen/goodix.h
-index 87797cc88b32..132e49d66324 100644
---- a/drivers/input/touchscreen/goodix.h
-+++ b/drivers/input/touchscreen/goodix.h
-@@ -56,6 +56,7 @@
- #define GOODIX_ID_MAX_LEN			4
- #define GOODIX_CONFIG_MAX_LENGTH		240
- #define GOODIX_MAX_KEYS				7
-+#define GOODIX_NAME_MAX_LEN			38
-
- enum goodix_irq_pin_access_method {
- 	IRQ_PIN_ACCESS_NONE,
-@@ -91,6 +92,7 @@ struct goodix_ts_data {
- 	enum gpiod_flags gpiod_rst_flags;
- 	char id[GOODIX_ID_MAX_LEN + 1];
- 	char cfg_name[64];
-+	char name[GOODIX_NAME_MAX_LEN];
- 	u16 version;
- 	bool reset_controller_at_probe;
- 	bool load_cfg_from_disk;
-@@ -104,6 +106,8 @@ struct goodix_ts_data {
- 	u8 main_clk[GOODIX_MAIN_CLK_LEN];
- 	int bak_ref_len;
- 	u8 *bak_ref;
-+	struct timer_list timer;
-+	struct work_struct work_i2c_poll;
+ 
+-	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
++	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len);
+ }
+ 
+ void afs_issue_write(struct netfs_io_subrequest *subreq)
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index 92058ae43488..c08e4a66ac07 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -63,7 +63,7 @@ static void cachefiles_read_complete(struct kiocb *iocb, long ret)
+ 				ret = -ESTALE;
+ 		}
+ 
+-		ki->term_func(ki->term_func_priv, ret, ki->was_async);
++		ki->term_func(ki->term_func_priv, ret);
+ 	}
+ 
+ 	cachefiles_put_kiocb(ki);
+@@ -188,7 +188,7 @@ static int cachefiles_read(struct netfs_cache_resources *cres,
+ 
+ presubmission_error:
+ 	if (term_func)
+-		term_func(term_func_priv, ret < 0 ? ret : skipped, false);
++		term_func(term_func_priv, ret < 0 ? ret : skipped);
+ 	return ret;
+ }
+ 
+@@ -271,7 +271,7 @@ static void cachefiles_write_complete(struct kiocb *iocb, long ret)
+ 	atomic_long_sub(ki->b_writing, &object->volume->cache->b_writing);
+ 	set_bit(FSCACHE_COOKIE_HAVE_DATA, &object->cookie->flags);
+ 	if (ki->term_func)
+-		ki->term_func(ki->term_func_priv, ret, ki->was_async);
++		ki->term_func(ki->term_func_priv, ret);
+ 	cachefiles_put_kiocb(ki);
+ }
+ 
+@@ -301,7 +301,7 @@ int __cachefiles_write(struct cachefiles_object *object,
+ 	ki = kzalloc(sizeof(struct cachefiles_kiocb), GFP_KERNEL);
+ 	if (!ki) {
+ 		if (term_func)
+-			term_func(term_func_priv, -ENOMEM, false);
++			term_func(term_func_priv, -ENOMEM);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -366,7 +366,7 @@ static int cachefiles_write(struct netfs_cache_resources *cres,
+ {
+ 	if (!fscache_wait_for_operation(cres, FSCACHE_WANT_WRITE)) {
+ 		if (term_func)
+-			term_func(term_func_priv, -ENOBUFS, false);
++			term_func(term_func_priv, -ENOBUFS);
+ 		trace_netfs_sreq(term_func_priv, netfs_sreq_trace_cache_nowrite);
+ 		return -ENOBUFS;
+ 	}
+@@ -665,7 +665,7 @@ static void cachefiles_issue_write(struct netfs_io_subrequest *subreq)
+ 		pre = CACHEFILES_DIO_BLOCK_SIZE - off;
+ 		if (pre >= len) {
+ 			fscache_count_dio_misfit();
+-			netfs_write_subrequest_terminated(subreq, len, false);
++			netfs_write_subrequest_terminated(subreq, len);
+ 			return;
+ 		}
+ 		subreq->transferred += pre;
+@@ -691,7 +691,7 @@ static void cachefiles_issue_write(struct netfs_io_subrequest *subreq)
+ 		len -= post;
+ 		if (len == 0) {
+ 			fscache_count_dio_misfit();
+-			netfs_write_subrequest_terminated(subreq, post, false);
++			netfs_write_subrequest_terminated(subreq, post);
+ 			return;
+ 		}
+ 		iov_iter_truncate(&subreq->io_iter, len);
+@@ -703,7 +703,7 @@ static void cachefiles_issue_write(struct netfs_io_subrequest *subreq)
+ 					 &start, &len, len, true);
+ 	cachefiles_end_secure(cache, saved_cred);
+ 	if (ret < 0) {
+-		netfs_write_subrequest_terminated(subreq, ret, false);
++		netfs_write_subrequest_terminated(subreq, ret);
+ 		return;
+ 	}
+ 
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 29be367905a1..557c326561fd 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -539,7 +539,7 @@ static void ceph_set_page_fscache(struct page *page)
+ 	folio_start_private_2(page_folio(page)); /* [DEPRECATED] */
+ }
+ 
+-static void ceph_fscache_write_terminated(void *priv, ssize_t error, bool was_async)
++static void ceph_fscache_write_terminated(void *priv, ssize_t error)
+ {
+ 	struct inode *inode = priv;
+ 
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index 9c9129bca346..34517ca9df91 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -102,8 +102,7 @@ static void erofs_fscache_req_io_put(struct erofs_fscache_io *io)
+ 		erofs_fscache_req_put(req);
+ }
+ 
+-static void erofs_fscache_req_end_io(void *priv,
+-		ssize_t transferred_or_error, bool was_async)
++static void erofs_fscache_req_end_io(void *priv, ssize_t transferred_or_error)
+ {
+ 	struct erofs_fscache_io *io = priv;
+ 	struct erofs_fscache_rq *req = io->private;
+@@ -180,8 +179,7 @@ struct erofs_fscache_bio {
+ 	struct bio_vec bvecs[BIO_MAX_VECS];
  };
-
- int goodix_i2c_read(struct i2c_client *client, u16 reg, u8 *buf, int len);
---
-2.34.1
+ 
+-static void erofs_fscache_bio_endio(void *priv,
+-		ssize_t transferred_or_error, bool was_async)
++static void erofs_fscache_bio_endio(void *priv, ssize_t transferred_or_error)
+ {
+ 	struct erofs_fscache_bio *io = priv;
+ 
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index 0d1b6d35ff3b..cb6202efc466 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -262,9 +262,9 @@ static void netfs_read_to_pagecache(struct netfs_io_request *rreq)
+ 				if (ret < 0) {
+ 					subreq->error = ret;
+ 					/* Not queued - release both refs. */
+-					netfs_put_subrequest(subreq, false,
++					netfs_put_subrequest(subreq,
+ 							     netfs_sreq_trace_put_cancel);
+-					netfs_put_subrequest(subreq, false,
++					netfs_put_subrequest(subreq,
+ 							     netfs_sreq_trace_put_cancel);
+ 					break;
+ 				}
+@@ -297,8 +297,8 @@ static void netfs_read_to_pagecache(struct netfs_io_request *rreq)
+ 			subreq->error = ret;
+ 			trace_netfs_sreq(subreq, netfs_sreq_trace_cancel);
+ 			/* Not queued - release both refs. */
+-			netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_cancel);
+-			netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_cancel);
++			netfs_put_subrequest(subreq, netfs_sreq_trace_put_cancel);
++			netfs_put_subrequest(subreq, netfs_sreq_trace_put_cancel);
+ 			break;
+ 		}
+ 		size -= slice;
+@@ -365,12 +365,10 @@ void netfs_readahead(struct readahead_control *ractl)
+ 		goto cleanup_free;
+ 	netfs_read_to_pagecache(rreq);
+ 
+-	netfs_put_request(rreq, true, netfs_rreq_trace_put_return);
+-	return;
++	return netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 
+ cleanup_free:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_failed);
+-	return;
++	return netfs_put_request(rreq, netfs_rreq_trace_put_failed);
+ }
+ EXPORT_SYMBOL(netfs_readahead);
+ 
+@@ -470,11 +468,11 @@ static int netfs_read_gaps(struct file *file, struct folio *folio)
+ 		folio_mark_uptodate(folio);
+ 	}
+ 	folio_unlock(folio);
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 	return ret < 0 ? ret : 0;
+ 
+ discard:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_discard);
++	netfs_put_request(rreq, netfs_rreq_trace_put_discard);
+ alloc_error:
+ 	folio_unlock(folio);
+ 	return ret;
+@@ -530,11 +528,11 @@ int netfs_read_folio(struct file *file, struct folio *folio)
+ 
+ 	netfs_read_to_pagecache(rreq);
+ 	ret = netfs_wait_for_read(rreq);
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 	return ret < 0 ? ret : 0;
+ 
+ discard:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_discard);
++	netfs_put_request(rreq, netfs_rreq_trace_put_discard);
+ alloc_error:
+ 	folio_unlock(folio);
+ 	return ret;
+@@ -689,7 +687,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
+ 	ret = netfs_wait_for_read(rreq);
+ 	if (ret < 0)
+ 		goto error;
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 
+ have_folio:
+ 	ret = folio_wait_private_2_killable(folio);
+@@ -701,7 +699,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
+ 	return 0;
+ 
+ error_put:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_failed);
++	netfs_put_request(rreq, netfs_rreq_trace_put_failed);
+ error:
+ 	if (folio) {
+ 		folio_unlock(folio);
+@@ -752,11 +750,11 @@ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
+ 
+ 	netfs_read_to_pagecache(rreq);
+ 	ret = netfs_wait_for_read(rreq);
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 	return ret < 0 ? ret : 0;
+ 
+ error_put:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_discard);
++	netfs_put_request(rreq, netfs_rreq_trace_put_discard);
+ error:
+ 	_leave(" = %d", ret);
+ 	return ret;
+diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
+index 5e3f0aeb51f3..cb3c6dc0b165 100644
+--- a/fs/netfs/direct_read.c
++++ b/fs/netfs/direct_read.c
+@@ -85,7 +85,7 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
+ 		if (rreq->netfs_ops->prepare_read) {
+ 			ret = rreq->netfs_ops->prepare_read(subreq);
+ 			if (ret < 0) {
+-				netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_cancel);
++				netfs_put_subrequest(subreq, netfs_sreq_trace_put_cancel);
+ 				break;
+ 			}
+ 		}
+@@ -144,7 +144,7 @@ static ssize_t netfs_unbuffered_read(struct netfs_io_request *rreq, bool sync)
+ 	ret = netfs_dispatch_unbuffered_reads(rreq);
+ 
+ 	if (!rreq->submitted) {
+-		netfs_put_request(rreq, false, netfs_rreq_trace_put_no_submit);
++		netfs_put_request(rreq, netfs_rreq_trace_put_no_submit);
+ 		inode_dio_end(rreq->inode);
+ 		ret = 0;
+ 		goto out;
+@@ -236,7 +236,7 @@ ssize_t netfs_unbuffered_read_iter_locked(struct kiocb *iocb, struct iov_iter *i
+ 	}
+ 
+ out:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 	if (ret > 0)
+ 		orig_count -= ret;
+ 	return ret;
+diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
+index 42ce53cc216e..c98f1676f86d 100644
+--- a/fs/netfs/direct_write.c
++++ b/fs/netfs/direct_write.c
+@@ -117,7 +117,7 @@ ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov_iter *
+ 	}
+ 
+ out:
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(wreq, netfs_rreq_trace_put_return);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(netfs_unbuffered_write_iter_locked);
+diff --git a/fs/netfs/fscache_io.c b/fs/netfs/fscache_io.c
+index b1722a82c03d..e4308457633c 100644
+--- a/fs/netfs/fscache_io.c
++++ b/fs/netfs/fscache_io.c
+@@ -192,8 +192,7 @@ EXPORT_SYMBOL(__fscache_clear_page_bits);
+ /*
+  * Deal with the completion of writing the data to the cache.
+  */
+-static void fscache_wreq_done(void *priv, ssize_t transferred_or_error,
+-			      bool was_async)
++static void fscache_wreq_done(void *priv, ssize_t transferred_or_error)
+ {
+ 	struct fscache_write_request *wreq = priv;
+ 
+@@ -202,8 +201,7 @@ static void fscache_wreq_done(void *priv, ssize_t transferred_or_error,
+ 					wreq->set_bits);
+ 
+ 	if (wreq->term_func)
+-		wreq->term_func(wreq->term_func_priv, transferred_or_error,
+-				was_async);
++		wreq->term_func(wreq->term_func_priv, transferred_or_error);
+ 	fscache_end_operation(&wreq->cache_resources);
+ 	kfree(wreq);
+ }
+@@ -255,14 +253,14 @@ void __fscache_write_to_cache(struct fscache_cookie *cookie,
+ 	return;
+ 
+ abandon_end:
+-	return fscache_wreq_done(wreq, ret, false);
++	return fscache_wreq_done(wreq, ret);
+ abandon_free:
+ 	kfree(wreq);
+ abandon:
+ 	if (using_pgpriv2)
+ 		fscache_clear_page_bits(mapping, start, len, cond);
+ 	if (term_func)
+-		term_func(term_func_priv, ret, false);
++		term_func(term_func_priv, ret);
+ }
+ EXPORT_SYMBOL(__fscache_write_to_cache);
+ 
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index 1c4f953c3d68..b6500a7cda81 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -23,7 +23,7 @@
+ /*
+  * buffered_read.c
+  */
+-void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error, bool was_async);
++void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error);
+ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
+ 			     size_t offset, size_t len);
+ 
+@@ -71,9 +71,8 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 					     loff_t start, size_t len,
+ 					     enum netfs_io_origin origin);
+ void netfs_get_request(struct netfs_io_request *rreq, enum netfs_rreq_ref_trace what);
+-void netfs_clear_subrequests(struct netfs_io_request *rreq, bool was_async);
+-void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+-		       enum netfs_rreq_ref_trace what);
++void netfs_clear_subrequests(struct netfs_io_request *rreq);
++void netfs_put_request(struct netfs_io_request *rreq, enum netfs_rreq_ref_trace what);
+ struct netfs_io_subrequest *netfs_alloc_subrequest(struct netfs_io_request *rreq);
+ 
+ static inline void netfs_see_request(struct netfs_io_request *rreq,
+@@ -94,7 +93,7 @@ static inline void netfs_see_subrequest(struct netfs_io_subrequest *subreq,
+  */
+ void netfs_read_collection_worker(struct work_struct *work);
+ void netfs_wake_read_collector(struct netfs_io_request *rreq);
+-void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error, bool was_async);
++void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error);
+ ssize_t netfs_wait_for_read(struct netfs_io_request *rreq);
+ void netfs_wait_for_pause(struct netfs_io_request *rreq);
+ 
+@@ -177,7 +176,7 @@ static inline void netfs_stat_d(atomic_t *stat)
+  */
+ int netfs_folio_written_back(struct folio *folio);
+ void netfs_write_collection_worker(struct work_struct *work);
+-void netfs_wake_write_collector(struct netfs_io_request *wreq, bool was_async);
++void netfs_wake_write_collector(struct netfs_io_request *wreq);
+ 
+ /*
+  * write_issue.c
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index dc6b41ef18b0..d3eb9ba3013a 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -10,6 +10,8 @@
+ #include <linux/delay.h>
+ #include "internal.h"
+ 
++static void netfs_free_request(struct work_struct *work);
++
+ /*
+  * Allocate an I/O request and initialise it.
+  */
+@@ -34,6 +36,7 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	}
+ 
+ 	memset(rreq, 0, kmem_cache_size(cache));
++	INIT_WORK(&rreq->cleanup_work, netfs_free_request);
+ 	rreq->start	= start;
+ 	rreq->len	= len;
+ 	rreq->origin	= origin;
+@@ -49,7 +52,7 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	INIT_LIST_HEAD(&rreq->io_streams[0].subrequests);
+ 	INIT_LIST_HEAD(&rreq->io_streams[1].subrequests);
+ 	init_waitqueue_head(&rreq->waitq);
+-	refcount_set(&rreq->ref, 1);
++	refcount_set(&rreq->ref, 2);
+ 
+ 	if (origin == NETFS_READAHEAD ||
+ 	    origin == NETFS_READPAGE ||
+@@ -63,7 +66,9 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 		INIT_WORK(&rreq->work, netfs_write_collection_worker);
+ 	}
+ 
++	/* The IN_PROGRESS flag comes with a ref. */
+ 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
++
+ 	if (file && file->f_flags & O_NONBLOCK)
+ 		__set_bit(NETFS_RREQ_NONBLOCK, &rreq->flags);
+ 	if (rreq->netfs_ops->init_request) {
+@@ -75,7 +80,7 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	}
+ 
+ 	atomic_inc(&ctx->io_count);
+-	trace_netfs_rreq_ref(rreq->debug_id, 1, netfs_rreq_trace_new);
++	trace_netfs_rreq_ref(rreq->debug_id, refcount_read(&rreq->ref), netfs_rreq_trace_new);
+ 	netfs_proc_add_rreq(rreq);
+ 	netfs_stat(&netfs_n_rh_rreq);
+ 	return rreq;
+@@ -89,7 +94,7 @@ void netfs_get_request(struct netfs_io_request *rreq, enum netfs_rreq_ref_trace
+ 	trace_netfs_rreq_ref(rreq->debug_id, r + 1, what);
+ }
+ 
+-void netfs_clear_subrequests(struct netfs_io_request *rreq, bool was_async)
++void netfs_clear_subrequests(struct netfs_io_request *rreq)
+ {
+ 	struct netfs_io_subrequest *subreq;
+ 	struct netfs_io_stream *stream;
+@@ -101,8 +106,7 @@ void netfs_clear_subrequests(struct netfs_io_request *rreq, bool was_async)
+ 			subreq = list_first_entry(&stream->subrequests,
+ 						  struct netfs_io_subrequest, rreq_link);
+ 			list_del(&subreq->rreq_link);
+-			netfs_put_subrequest(subreq, was_async,
+-					     netfs_sreq_trace_put_clear);
++			netfs_put_subrequest(subreq, netfs_sreq_trace_put_clear);
+ 		}
+ 	}
+ }
+@@ -118,13 +122,19 @@ static void netfs_free_request_rcu(struct rcu_head *rcu)
+ static void netfs_free_request(struct work_struct *work)
+ {
+ 	struct netfs_io_request *rreq =
+-		container_of(work, struct netfs_io_request, work);
++		container_of(work, struct netfs_io_request, cleanup_work);
+ 	struct netfs_inode *ictx = netfs_inode(rreq->inode);
+ 	unsigned int i;
+ 
+ 	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
++
++	/* Cancel/flush the result collection worker.  That does not carry a
++	 * ref of its own, so we must wait for it somewhere.
++	 */
++	cancel_work_sync(&rreq->work);
++
+ 	netfs_proc_del_rreq(rreq);
+-	netfs_clear_subrequests(rreq, false);
++	netfs_clear_subrequests(rreq);
+ 	if (rreq->netfs_ops->free_request)
+ 		rreq->netfs_ops->free_request(rreq);
+ 	if (rreq->cache_resources.ops)
+@@ -145,8 +155,7 @@ static void netfs_free_request(struct work_struct *work)
+ 	call_rcu(&rreq->rcu, netfs_free_request_rcu);
+ }
+ 
+-void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+-		       enum netfs_rreq_ref_trace what)
++void netfs_put_request(struct netfs_io_request *rreq, enum netfs_rreq_ref_trace what)
+ {
+ 	unsigned int debug_id;
+ 	bool dead;
+@@ -156,15 +165,8 @@ void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+ 		debug_id = rreq->debug_id;
+ 		dead = __refcount_dec_and_test(&rreq->ref, &r);
+ 		trace_netfs_rreq_ref(debug_id, r - 1, what);
+-		if (dead) {
+-			if (was_async) {
+-				rreq->work.func = netfs_free_request;
+-				if (!queue_work(system_unbound_wq, &rreq->work))
+-					WARN_ON(1);
+-			} else {
+-				netfs_free_request(&rreq->work);
+-			}
+-		}
++		if (dead)
++			WARN_ON(!queue_work(system_unbound_wq, &rreq->cleanup_work));
+ 	}
+ }
+ 
+@@ -206,8 +208,7 @@ void netfs_get_subrequest(struct netfs_io_subrequest *subreq,
+ 			     what);
+ }
+ 
+-static void netfs_free_subrequest(struct netfs_io_subrequest *subreq,
+-				  bool was_async)
++static void netfs_free_subrequest(struct netfs_io_subrequest *subreq)
+ {
+ 	struct netfs_io_request *rreq = subreq->rreq;
+ 
+@@ -216,10 +217,10 @@ static void netfs_free_subrequest(struct netfs_io_subrequest *subreq,
+ 		rreq->netfs_ops->free_subrequest(subreq);
+ 	mempool_free(subreq, rreq->netfs_ops->subrequest_pool ?: &netfs_subrequest_pool);
+ 	netfs_stat_d(&netfs_n_rh_sreq);
+-	netfs_put_request(rreq, was_async, netfs_rreq_trace_put_subreq);
++	netfs_put_request(rreq, netfs_rreq_trace_put_subreq);
+ }
+ 
+-void netfs_put_subrequest(struct netfs_io_subrequest *subreq, bool was_async,
++void netfs_put_subrequest(struct netfs_io_subrequest *subreq,
+ 			  enum netfs_sreq_ref_trace what)
+ {
+ 	unsigned int debug_index = subreq->debug_index;
+@@ -230,5 +231,5 @@ void netfs_put_subrequest(struct netfs_io_subrequest *subreq, bool was_async,
+ 	dead = __refcount_dec_and_test(&subreq->ref, &r);
+ 	trace_netfs_sreq_ref(debug_id, debug_index, r - 1, what);
+ 	if (dead)
+-		netfs_free_subrequest(subreq, was_async);
++		netfs_free_subrequest(subreq);
+ }
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index d3cf27b2697c..1197ebce5675 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -301,7 +301,7 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
+ 						 struct netfs_io_subrequest, rreq_link);
+ 		stream->front = front;
+ 		spin_unlock(&rreq->lock);
+-		netfs_put_subrequest(remove, false,
++		netfs_put_subrequest(remove,
+ 				     notes & ABANDON_SREQ ?
+ 				     netfs_sreq_trace_put_abandon :
+ 				     netfs_sreq_trace_put_done);
+@@ -399,7 +399,7 @@ static void netfs_rreq_assess_single(struct netfs_io_request *rreq)
+  * Note that we're in normal kernel thread context at this point, possibly
+  * running on a workqueue.
+  */
+-static void netfs_read_collection(struct netfs_io_request *rreq)
++static bool netfs_read_collection(struct netfs_io_request *rreq)
+ {
+ 	struct netfs_io_stream *stream = &rreq->io_streams[0];
+ 
+@@ -409,11 +409,11 @@ static void netfs_read_collection(struct netfs_io_request *rreq)
+ 	 * queue is empty.
+ 	 */
+ 	if (!test_bit(NETFS_RREQ_ALL_QUEUED, &rreq->flags))
+-		return;
++		return false;
+ 	smp_rmb(); /* Read ALL_QUEUED before subreq lists. */
+ 
+ 	if (!list_empty(&stream->subrequests))
+-		return;
++		return false;
+ 
+ 	/* Okay, declare that all I/O is complete. */
+ 	rreq->transferred = stream->transferred;
+@@ -436,12 +436,14 @@ static void netfs_read_collection(struct netfs_io_request *rreq)
+ 
+ 	trace_netfs_rreq(rreq, netfs_rreq_trace_wake_ip);
+ 	clear_and_wake_up_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
++	/* As we cleared NETFS_RREQ_IN_PROGRESS, we acquired its ref. */
+ 
+ 	trace_netfs_rreq(rreq, netfs_rreq_trace_done);
+-	netfs_clear_subrequests(rreq, false);
++	netfs_clear_subrequests(rreq);
+ 	netfs_unlock_abandoned_read_pages(rreq);
+ 	if (unlikely(rreq->copy_to_cache))
+ 		netfs_pgpriv2_end_copy_to_cache(rreq);
++	return true;
+ }
+ 
+ void netfs_read_collection_worker(struct work_struct *work)
+@@ -449,9 +451,13 @@ void netfs_read_collection_worker(struct work_struct *work)
+ 	struct netfs_io_request *rreq = container_of(work, struct netfs_io_request, work);
+ 
+ 	netfs_see_request(rreq, netfs_rreq_trace_see_work);
+-	if (test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags))
+-		netfs_read_collection(rreq);
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_work);
++	if (test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags)) {
++		if (netfs_read_collection(rreq))
++			/* Drop the ref from the IN_PROGRESS flag. */
++			netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
++		else
++			netfs_see_request(rreq, netfs_rreq_trace_see_work_complete);
++	}
+ }
+ 
+ /*
+@@ -461,11 +467,7 @@ void netfs_wake_read_collector(struct netfs_io_request *rreq)
+ {
+ 	if (test_bit(NETFS_RREQ_OFFLOAD_COLLECTION, &rreq->flags) &&
+ 	    !test_bit(NETFS_RREQ_RETRYING, &rreq->flags)) {
+-		if (!work_pending(&rreq->work)) {
+-			netfs_get_request(rreq, netfs_rreq_trace_get_work);
+-			if (!queue_work(system_unbound_wq, &rreq->work))
+-				netfs_put_request(rreq, true, netfs_rreq_trace_put_work_nq);
+-		}
++		queue_work(system_unbound_wq, &rreq->work);
+ 	} else {
+ 		trace_netfs_rreq(rreq, netfs_rreq_trace_wake_queue);
+ 		wake_up(&rreq->waitq);
+@@ -580,14 +582,14 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq)
+ 	    test_bit(NETFS_RREQ_RETRYING, &rreq->flags))
+ 		netfs_wake_read_collector(rreq);
+ 
+-	netfs_put_subrequest(subreq, true, netfs_sreq_trace_put_terminated);
++	netfs_put_subrequest(subreq, netfs_sreq_trace_put_terminated);
+ }
+ EXPORT_SYMBOL(netfs_read_subreq_terminated);
+ 
+ /*
+  * Handle termination of a read from the cache.
+  */
+-void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error, bool was_async)
++void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error)
+ {
+ 	struct netfs_io_subrequest *subreq = priv;
+ 
+@@ -623,7 +625,11 @@ ssize_t netfs_wait_for_read(struct netfs_io_request *rreq)
+ 		    (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags) ||
+ 		     test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags))) {
+ 			__set_current_state(TASK_RUNNING);
+-			netfs_read_collection(rreq);
++			if (netfs_read_collection(rreq)) {
++				/* Drop the ref from the NETFS_RREQ_IN_PROGRESS flag. */
++				netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
++				break;
++			}
+ 			continue;
+ 		}
+ 
+@@ -678,7 +684,11 @@ void netfs_wait_for_pause(struct netfs_io_request *rreq)
+ 			    (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags) ||
+ 			     test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags))) {
+ 				__set_current_state(TASK_RUNNING);
+-				netfs_read_collection(rreq);
++				if (netfs_read_collection(rreq)) {
++					/* Drop the ref from the NETFS_RREQ_IN_PROGRESS flag. */
++					netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
++					break;
++				}
+ 				continue;
+ 			}
+ 		}
+diff --git a/fs/netfs/read_pgpriv2.c b/fs/netfs/read_pgpriv2.c
+index cf7727060215..5bbe906a551d 100644
+--- a/fs/netfs/read_pgpriv2.c
++++ b/fs/netfs/read_pgpriv2.c
+@@ -116,7 +116,7 @@ static struct netfs_io_request *netfs_pgpriv2_begin_copy_to_cache(
+ 	return creq;
+ 
+ cancel_put:
+-	netfs_put_request(creq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(creq, netfs_rreq_trace_put_return);
+ cancel:
+ 	rreq->copy_to_cache = ERR_PTR(-ENOBUFS);
+ 	clear_bit(NETFS_RREQ_FOLIO_COPY_TO_CACHE, &rreq->flags);
+@@ -155,7 +155,7 @@ void netfs_pgpriv2_end_copy_to_cache(struct netfs_io_request *rreq)
+ 	smp_wmb(); /* Write lists before ALL_QUEUED. */
+ 	set_bit(NETFS_RREQ_ALL_QUEUED, &creq->flags);
+ 
+-	netfs_put_request(creq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(creq, netfs_rreq_trace_put_return);
+ 	creq->copy_to_cache = NULL;
+ }
+ 
+diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
+index 0f294b26e08c..1378dc7fa2cc 100644
+--- a/fs/netfs/read_retry.c
++++ b/fs/netfs/read_retry.c
+@@ -173,7 +173,7 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
+ 						      &stream->subrequests, rreq_link) {
+ 				trace_netfs_sreq(subreq, netfs_sreq_trace_superfluous);
+ 				list_del(&subreq->rreq_link);
+-				netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_done);
++				netfs_put_subrequest(subreq, netfs_sreq_trace_put_done);
+ 				if (subreq == to)
+ 					break;
+ 			}
+diff --git a/fs/netfs/read_single.c b/fs/netfs/read_single.c
+index fea0ecdecc53..fa622a6cd56d 100644
+--- a/fs/netfs/read_single.c
++++ b/fs/netfs/read_single.c
+@@ -142,7 +142,7 @@ static int netfs_single_dispatch_read(struct netfs_io_request *rreq)
+ 	set_bit(NETFS_RREQ_ALL_QUEUED, &rreq->flags);
+ 	return ret;
+ cancel:
+-	netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_cancel);
++	netfs_put_subrequest(subreq, netfs_sreq_trace_put_cancel);
+ 	return ret;
+ }
+ 
+@@ -185,11 +185,11 @@ ssize_t netfs_read_single(struct inode *inode, struct file *file, struct iov_ite
+ 	netfs_single_dispatch_read(rreq);
+ 
+ 	ret = netfs_wait_for_read(rreq);
+-	netfs_put_request(rreq, true, netfs_rreq_trace_put_return);
++	netfs_put_request(rreq, netfs_rreq_trace_put_return);
+ 	return ret;
+ 
+ cleanup_free:
+-	netfs_put_request(rreq, false, netfs_rreq_trace_put_failed);
++	netfs_put_request(rreq, netfs_rreq_trace_put_failed);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(netfs_read_single);
+diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
+index 3fca59e6475d..7241d1fd2c14 100644
+--- a/fs/netfs/write_collect.c
++++ b/fs/netfs/write_collect.c
+@@ -280,7 +280,7 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+ 							 struct netfs_io_subrequest, rreq_link);
+ 			stream->front = front;
+ 			spin_unlock(&wreq->lock);
+-			netfs_put_subrequest(remove, false,
++			netfs_put_subrequest(remove,
+ 					     notes & SAW_FAILURE ?
+ 					     netfs_sreq_trace_put_cancel :
+ 					     netfs_sreq_trace_put_done);
+@@ -356,30 +356,21 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+ /*
+  * Perform the collection of subrequests, folios and encryption buffers.
+  */
+-void netfs_write_collection_worker(struct work_struct *work)
++static bool netfs_write_collection(struct netfs_io_request *wreq)
+ {
+-	struct netfs_io_request *wreq = container_of(work, struct netfs_io_request, work);
+ 	struct netfs_inode *ictx = netfs_inode(wreq->inode);
+ 	size_t transferred;
+ 	int s;
+ 
+ 	_enter("R=%x", wreq->debug_id);
+ 
+-	netfs_see_request(wreq, netfs_rreq_trace_see_work);
+-	if (!test_bit(NETFS_RREQ_IN_PROGRESS, &wreq->flags)) {
+-		netfs_put_request(wreq, false, netfs_rreq_trace_put_work);
+-		return;
+-	}
+-
+ 	netfs_collect_write_results(wreq);
+ 
+ 	/* We're done when the app thread has finished posting subreqs and all
+ 	 * the queues in all the streams are empty.
+ 	 */
+-	if (!test_bit(NETFS_RREQ_ALL_QUEUED, &wreq->flags)) {
+-		netfs_put_request(wreq, false, netfs_rreq_trace_put_work);
+-		return;
+-	}
++	if (!test_bit(NETFS_RREQ_ALL_QUEUED, &wreq->flags))
++		return false;
+ 	smp_rmb(); /* Read ALL_QUEUED before lists. */
+ 
+ 	transferred = LONG_MAX;
+@@ -387,10 +378,8 @@ void netfs_write_collection_worker(struct work_struct *work)
+ 		struct netfs_io_stream *stream = &wreq->io_streams[s];
+ 		if (!stream->active)
+ 			continue;
+-		if (!list_empty(&stream->subrequests)) {
+-			netfs_put_request(wreq, false, netfs_rreq_trace_put_work);
+-			return;
+-		}
++		if (!list_empty(&stream->subrequests))
++			return false;
+ 		if (stream->transferred < transferred)
+ 			transferred = stream->transferred;
+ 	}
+@@ -430,6 +419,7 @@ void netfs_write_collection_worker(struct work_struct *work)
+ 	_debug("finished");
+ 	trace_netfs_rreq(wreq, netfs_rreq_trace_wake_ip);
+ 	clear_and_wake_up_bit(NETFS_RREQ_IN_PROGRESS, &wreq->flags);
++	/* As we cleared NETFS_RREQ_IN_PROGRESS, we acquired its ref. */
+ 
+ 	if (wreq->iocb) {
+ 		size_t written = min(wreq->transferred, wreq->len);
+@@ -440,27 +430,36 @@ void netfs_write_collection_worker(struct work_struct *work)
+ 		wreq->iocb = VFS_PTR_POISON;
+ 	}
+ 
+-	netfs_clear_subrequests(wreq, false);
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_work_complete);
++	netfs_clear_subrequests(wreq);
++	return true;
++}
++
++void netfs_write_collection_worker(struct work_struct *work)
++{
++	struct netfs_io_request *rreq = container_of(work, struct netfs_io_request, work);
++
++	netfs_see_request(rreq, netfs_rreq_trace_see_work);
++	if (test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags)) {
++		if (netfs_write_collection(rreq))
++			/* Drop the ref from the IN_PROGRESS flag. */
++			netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
++		else
++			netfs_see_request(rreq, netfs_rreq_trace_see_work_complete);
++	}
+ }
+ 
+ /*
+  * Wake the collection work item.
+  */
+-void netfs_wake_write_collector(struct netfs_io_request *wreq, bool was_async)
++void netfs_wake_write_collector(struct netfs_io_request *wreq)
+ {
+-	if (!work_pending(&wreq->work)) {
+-		netfs_get_request(wreq, netfs_rreq_trace_get_work);
+-		if (!queue_work(system_unbound_wq, &wreq->work))
+-			netfs_put_request(wreq, was_async, netfs_rreq_trace_put_work_nq);
+-	}
++	queue_work(system_unbound_wq, &wreq->work);
+ }
+ 
+ /**
+  * netfs_write_subrequest_terminated - Note the termination of a write operation.
+  * @_op: The I/O request that has terminated.
+  * @transferred_or_error: The amount of data transferred or an error code.
+- * @was_async: The termination was asynchronous
+  *
+  * This tells the library that a contributory write I/O operation has
+  * terminated, one way or another, and that it should collect the results.
+@@ -470,17 +469,13 @@ void netfs_wake_write_collector(struct netfs_io_request *wreq, bool was_async)
+  * negative error code.  The library will look after reissuing I/O operations
+  * as appropriate and writing downloaded data to the cache.
+  *
+- * If @was_async is true, the caller might be running in softirq or interrupt
+- * context and we can't sleep.
+- *
+  * When this is called, ownership of the subrequest is transferred back to the
+  * library, along with a ref.
+  *
+  * Note that %_op is a void* so that the function can be passed to
+  * kiocb::term_func without the need for a casting wrapper.
+  */
+-void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error,
+-				       bool was_async)
++void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error)
+ {
+ 	struct netfs_io_subrequest *subreq = _op;
+ 	struct netfs_io_request *wreq = subreq->rreq;
+@@ -543,8 +538,8 @@ void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error,
+ 	 * transferring a ref to it if we were the ones to do so.
+ 	 */
+ 	if (list_is_first(&subreq->rreq_link, &stream->subrequests))
+-		netfs_wake_write_collector(wreq, was_async);
++		netfs_wake_write_collector(wreq);
+ 
+-	netfs_put_subrequest(subreq, was_async, netfs_sreq_trace_put_terminated);
++	netfs_put_subrequest(subreq, netfs_sreq_trace_put_terminated);
+ }
+ EXPORT_SYMBOL(netfs_write_subrequest_terminated);
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 77279fc5b5a7..8744ed3faf29 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -134,7 +134,7 @@ struct netfs_io_request *netfs_create_write_req(struct address_space *mapping,
+ 	return wreq;
+ nomem:
+ 	wreq->error = -ENOMEM;
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_failed);
++	netfs_put_request(wreq, netfs_rreq_trace_put_failed);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ 
+@@ -233,7 +233,7 @@ static void netfs_do_issue_write(struct netfs_io_stream *stream,
+ 	_enter("R=%x[%x],%zx", wreq->debug_id, subreq->debug_index, subreq->len);
+ 
+ 	if (test_bit(NETFS_SREQ_FAILED, &subreq->flags))
+-		return netfs_write_subrequest_terminated(subreq, subreq->error, false);
++		return netfs_write_subrequest_terminated(subreq, subreq->error);
+ 
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
+ 	stream->issue_write(subreq);
+@@ -542,7 +542,7 @@ static void netfs_end_issue_write(struct netfs_io_request *wreq)
+ 	}
+ 
+ 	if (needs_poke)
+-		netfs_wake_write_collector(wreq, false);
++		netfs_wake_write_collector(wreq);
+ }
+ 
+ /*
+@@ -599,8 +599,9 @@ int netfs_writepages(struct address_space *mapping,
+ 	netfs_end_issue_write(wreq);
+ 
+ 	mutex_unlock(&ictx->wb_lock);
++	netfs_wake_write_collector(wreq);
+ 
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(wreq, netfs_rreq_trace_put_return);
+ 	_leave(" = %d", error);
+ 	return error;
+ 
+@@ -694,7 +695,7 @@ int netfs_end_writethrough(struct netfs_io_request *wreq, struct writeback_contr
+ 		wait_on_bit(&wreq->flags, NETFS_RREQ_IN_PROGRESS, TASK_UNINTERRUPTIBLE);
+ 		ret = wreq->error;
+ 	}
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(wreq, netfs_rreq_trace_put_return);
+ 	return ret;
+ }
+ 
+@@ -885,7 +886,7 @@ int netfs_writeback_single(struct address_space *mapping,
+ 		goto couldnt_start;
+ 	}
+ 
+-	trace_netfs_write(wreq, netfs_write_trace_writeback);
++	trace_netfs_write(wreq, netfs_write_trace_writeback_single);
+ 	netfs_stat(&netfs_n_wh_writepages);
+ 
+ 	if (__test_and_set_bit(NETFS_RREQ_UPLOAD_TO_SERVER, &wreq->flags))
+@@ -914,8 +915,9 @@ int netfs_writeback_single(struct address_space *mapping,
+ 	set_bit(NETFS_RREQ_ALL_QUEUED, &wreq->flags);
+ 
+ 	mutex_unlock(&ictx->wb_lock);
++	netfs_wake_write_collector(wreq);
+ 
+-	netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
++	netfs_put_request(wreq, netfs_rreq_trace_put_return);
+ 	_leave(" = %d", ret);
+ 	return ret;
+ 
+diff --git a/fs/netfs/write_retry.c b/fs/netfs/write_retry.c
+index 9b1ca8b0f4dd..7408f6bb8e42 100644
+--- a/fs/netfs/write_retry.c
++++ b/fs/netfs/write_retry.c
+@@ -132,7 +132,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
+ 						      &stream->subrequests, rreq_link) {
+ 				trace_netfs_sreq(subreq, netfs_sreq_trace_discard);
+ 				list_del(&subreq->rreq_link);
+-				netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_done);
++				netfs_put_subrequest(subreq, netfs_sreq_trace_put_done);
+ 				if (subreq == to)
+ 					break;
+ 			}
+diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
+index ecf774a8f1ca..66093fa78aed 100644
+--- a/fs/smb/client/cifsproto.h
++++ b/fs/smb/client/cifsproto.h
+@@ -151,8 +151,7 @@ extern bool is_size_safe_to_change(struct cifsInodeInfo *cifsInode, __u64 eof,
+ 				   bool from_readdir);
+ extern void cifs_update_eof(struct cifsInodeInfo *cifsi, loff_t offset,
+ 			    unsigned int bytes_written);
+-void cifs_write_subrequest_terminated(struct cifs_io_subrequest *wdata, ssize_t result,
+-				      bool was_async);
++void cifs_write_subrequest_terminated(struct cifs_io_subrequest *wdata, ssize_t result);
+ extern struct cifsFileInfo *find_writable_file(struct cifsInodeInfo *, int);
+ extern int cifs_get_writable_file(struct cifsInodeInfo *cifs_inode,
+ 				  int flags,
+diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
+index f55457b4b82e..477792c07d45 100644
+--- a/fs/smb/client/cifssmb.c
++++ b/fs/smb/client/cifssmb.c
+@@ -1725,7 +1725,7 @@ cifs_writev_callback(struct mid_q_entry *mid)
+ 			      server->credits, server->in_flight,
+ 			      0, cifs_trace_rw_credits_write_response_clear);
+ 	wdata->credits.value = 0;
+-	cifs_write_subrequest_terminated(wdata, result, true);
++	cifs_write_subrequest_terminated(wdata, result);
+ 	release_mid(mid);
+ 	trace_smb3_rw_credits(credits.rreq_debug_id, credits.rreq_debug_index, 0,
+ 			      server->credits, server->in_flight,
+@@ -1813,7 +1813,7 @@ cifs_async_writev(struct cifs_io_subrequest *wdata)
+ out:
+ 	if (rc) {
+ 		add_credits_and_wake_if(wdata->server, &wdata->credits, 0);
+-		cifs_write_subrequest_terminated(wdata, rc, false);
++		cifs_write_subrequest_terminated(wdata, rc);
+ 	}
+ }
+ 
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 950aa4f912f5..3000c8a9d3ea 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -130,7 +130,7 @@ static void cifs_issue_write(struct netfs_io_subrequest *subreq)
+ 	else
+ 		trace_netfs_sreq(subreq, netfs_sreq_trace_fail);
+ 	add_credits_and_wake_if(wdata->server, &wdata->credits, 0);
+-	cifs_write_subrequest_terminated(wdata, rc, false);
++	cifs_write_subrequest_terminated(wdata, rc);
+ 	goto out;
+ }
+ 
+@@ -2423,8 +2423,7 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+ 	return rc;
+ }
+ 
+-void cifs_write_subrequest_terminated(struct cifs_io_subrequest *wdata, ssize_t result,
+-				      bool was_async)
++void cifs_write_subrequest_terminated(struct cifs_io_subrequest *wdata, ssize_t result)
+ {
+ 	struct netfs_io_request *wreq = wdata->rreq;
+ 	struct netfs_inode *ictx = netfs_inode(wreq->inode);
+@@ -2441,7 +2440,7 @@ void cifs_write_subrequest_terminated(struct cifs_io_subrequest *wdata, ssize_t
+ 			netfs_resize_file(ictx, wrend, true);
+ 	}
+ 
+-	netfs_write_subrequest_terminated(&wdata->subreq, result, was_async);
++	netfs_write_subrequest_terminated(&wdata->subreq, result);
+ }
+ 
+ struct cifsFileInfo *find_readable_file(struct cifsInodeInfo *cifs_inode,
+diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+index 4e28632b5fd6..399185ca7cac 100644
+--- a/fs/smb/client/smb2pdu.c
++++ b/fs/smb/client/smb2pdu.c
+@@ -4888,7 +4888,7 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 			      0, cifs_trace_rw_credits_write_response_clear);
+ 	wdata->credits.value = 0;
+ 	trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_progress);
+-	cifs_write_subrequest_terminated(wdata, result ?: written, true);
++	cifs_write_subrequest_terminated(wdata, result ?: written);
+ 	release_mid(mid);
+ 	trace_smb3_rw_credits(rreq_debug_id, subreq_debug_index, 0,
+ 			      server->credits, server->in_flight,
+@@ -5061,7 +5061,7 @@ smb2_async_writev(struct cifs_io_subrequest *wdata)
+ 				      -(int)wdata->credits.value,
+ 				      cifs_trace_rw_credits_write_response_clear);
+ 		add_credits_and_wake_if(wdata->server, &wdata->credits, 0);
+-		cifs_write_subrequest_terminated(wdata, rc, true);
++		cifs_write_subrequest_terminated(wdata, rc);
+ 	}
+ }
+ 
+diff --git a/include/linux/fscache.h b/include/linux/fscache.h
+index 9de27643607f..266e6c9e6f83 100644
+--- a/include/linux/fscache.h
++++ b/include/linux/fscache.h
+@@ -628,7 +628,7 @@ static inline void fscache_write_to_cache(struct fscache_cookie *cookie,
+ 					 term_func, term_func_priv,
+ 					 using_pgpriv2, caching);
+ 	else if (term_func)
+-		term_func(term_func_priv, -ENOBUFS, false);
++		term_func(term_func_priv, -ENOBUFS);
+ 
+ }
+ 
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 497c4f4698f6..c3f230732f51 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -51,8 +51,7 @@ enum netfs_io_source {
+ 	NETFS_INVALID_WRITE,
+ } __mode(byte);
+ 
+-typedef void (*netfs_io_terminated_t)(void *priv, ssize_t transferred_or_error,
+-				      bool was_async);
++typedef void (*netfs_io_terminated_t)(void *priv, ssize_t transferred_or_error);
+ 
+ /*
+  * Per-inode context.  This wraps the VFS inode.
+@@ -223,9 +222,10 @@ enum netfs_io_origin {
+  */
+ struct netfs_io_request {
+ 	union {
+-		struct work_struct work;
++		struct work_struct cleanup_work; /* Deferred cleanup work */
+ 		struct rcu_head rcu;
+ 	};
++	struct work_struct	work;		/* Result collector work */
+ 	struct inode		*inode;		/* The file being accessed */
+ 	struct address_space	*mapping;	/* The mapping being accessed */
+ 	struct kiocb		*iocb;		/* AIO completion vector */
+@@ -270,7 +270,7 @@ struct netfs_io_request {
+ #define NETFS_RREQ_NO_UNLOCK_FOLIO	2	/* Don't unlock no_unlock_folio on completion */
+ #define NETFS_RREQ_DONT_UNLOCK_FOLIOS	3	/* Don't unlock the folios on completion */
+ #define NETFS_RREQ_FAILED		4	/* The request failed */
+-#define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes */
++#define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes (has ref) */
+ #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache from read */
+ #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
+ #define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
+@@ -440,15 +440,14 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq);
+ void netfs_get_subrequest(struct netfs_io_subrequest *subreq,
+ 			  enum netfs_sreq_ref_trace what);
+ void netfs_put_subrequest(struct netfs_io_subrequest *subreq,
+-			  bool was_async, enum netfs_sreq_ref_trace what);
++			  enum netfs_sreq_ref_trace what);
+ ssize_t netfs_extract_user_iter(struct iov_iter *orig, size_t orig_len,
+ 				struct iov_iter *new,
+ 				iov_iter_extraction_t extraction_flags);
+ size_t netfs_limit_iter(const struct iov_iter *iter, size_t start_offset,
+ 			size_t max_size, size_t max_segs);
+ void netfs_prepare_write_failed(struct netfs_io_subrequest *subreq);
+-void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error,
+-				       bool was_async);
++void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error);
+ void netfs_queue_write_request(struct netfs_io_subrequest *subreq);
+ 
+ int netfs_start_io_read(struct inode *inode);
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index f880835f7695..402c5e82e7b8 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -30,6 +30,7 @@
+ 	EM(netfs_write_trace_dio_write,		"DIO-WRITE")	\
+ 	EM(netfs_write_trace_unbuffered_write,	"UNB-WRITE")	\
+ 	EM(netfs_write_trace_writeback,		"WRITEBACK")	\
++	EM(netfs_write_trace_writeback_single,	"WB-SINGLE") \
+ 	E_(netfs_write_trace_writethrough,	"WRITETHRU")
+ 
+ #define netfs_rreq_origins					\
+@@ -128,17 +129,15 @@
+ #define netfs_rreq_ref_traces					\
+ 	EM(netfs_rreq_trace_get_for_outstanding,"GET OUTSTND")	\
+ 	EM(netfs_rreq_trace_get_subreq,		"GET SUBREQ ")	\
+-	EM(netfs_rreq_trace_get_work,		"GET WORK   ")	\
+ 	EM(netfs_rreq_trace_put_complete,	"PUT COMPLT ")	\
+ 	EM(netfs_rreq_trace_put_discard,	"PUT DISCARD")	\
+ 	EM(netfs_rreq_trace_put_failed,		"PUT FAILED ")	\
+ 	EM(netfs_rreq_trace_put_no_submit,	"PUT NO-SUBM")	\
+ 	EM(netfs_rreq_trace_put_return,		"PUT RETURN ")	\
+ 	EM(netfs_rreq_trace_put_subreq,		"PUT SUBREQ ")	\
+-	EM(netfs_rreq_trace_put_work,		"PUT WORK   ")	\
+-	EM(netfs_rreq_trace_put_work_complete,	"PUT WORK CP")	\
+-	EM(netfs_rreq_trace_put_work_nq,	"PUT WORK NQ")	\
++	EM(netfs_rreq_trace_put_work_ip,	"PUT WORK IP ")	\
+ 	EM(netfs_rreq_trace_see_work,		"SEE WORK   ")	\
++	EM(netfs_rreq_trace_see_work_complete,	"SEE WORK CP")	\
+ 	E_(netfs_rreq_trace_new,		"NEW        ")
+ 
+ #define netfs_sreq_ref_traces					\
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 61461b9fa134..5c1ca57ccd28 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1704,7 +1704,7 @@ p9_client_write_subreq(struct netfs_io_subrequest *subreq)
+ 				    start, len, &subreq->io_iter);
+ 	}
+ 	if (IS_ERR(req)) {
+-		netfs_write_subrequest_terminated(subreq, PTR_ERR(req), false);
++		netfs_write_subrequest_terminated(subreq, PTR_ERR(req));
+ 		return;
+ 	}
+ 
+@@ -1712,7 +1712,7 @@ p9_client_write_subreq(struct netfs_io_subrequest *subreq)
+ 	if (err) {
+ 		trace_9p_protocol_dump(clnt, &req->rc);
+ 		p9_req_put(clnt, req);
+-		netfs_write_subrequest_terminated(subreq, err, false);
++		netfs_write_subrequest_terminated(subreq, err);
+ 		return;
+ 	}
+ 
+@@ -1724,7 +1724,7 @@ p9_client_write_subreq(struct netfs_io_subrequest *subreq)
+ 	p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", len);
+ 
+ 	p9_req_put(clnt, req);
+-	netfs_write_subrequest_terminated(subreq, written, false);
++	netfs_write_subrequest_terminated(subreq, written);
+ }
+ EXPORT_SYMBOL(p9_client_write_subreq);
+ 
 
