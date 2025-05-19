@@ -1,44 +1,44 @@
 Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369CA22422A;
-	Mon, 19 May 2025 06:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF33A2253BD;
+	Mon, 19 May 2025 06:09:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747634965; cv=none; b=kdFtoCLzHcALohAVMbHS5enxcYXB5cygl/HxmQrz4YPkvKqiLthW9IsjExztIJNtlqZG4B+0OQ9YhFtIkZd9qogeOrfNrEfmDtIj15vc7WiPtMTUMbAizisvyffMMl9my/N3CXooIjfA01TeH59peXIN5vFPOBKS30FeeiYBEqw=
+	t=1747634974; cv=none; b=czZKdF/RoPJQuT0vvFTVHjvYGvYZPA1+/TKAayJKU41Chd5545udRiwapd9a/8LNQsCnok1i3No8gbPKBd3LwajWP3Vw6qvOxnDoy7/MnygefJhKQ8UjJr8pUjKr9yHKEYG/nGPhFlNOrf5wareA9GA8cXOJLETxL1RRXHj361Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747634965; c=relaxed/simple;
-	bh=JFXh0UmvB1uXyN+c4SwPO7I3Kv92fk+6q4OTM2LBtxI=;
+	s=arc-20240116; t=1747634974; c=relaxed/simple;
+	bh=4hDFARImdHW8q9Xkt1GJf+mXey0ax2ZFZf6iSRxik/8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XGCaiNOChwhGT9VY1amYWPgsxah9Woqnx7P4IauFzUqsUtCFPqDaDQelrCqodOax6Yuyl+u5JpJaHHprbG9WAb1Olq09LvIy49mP69DDxjacM0mYKkgwPgeQoMUS2YB72oIw5PRRlqRREFuyG2N/zcb4qeFqmsCcNSFt899LPO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=iZQUuzBG; arc=none smtp.client-ip=78.46.3.230
+	 MIME-Version; b=aAtpOiK+Q4C29ieIyn9BXaJ38jtDxzmrrRtdRj3X5U7cvfv40PrWzoK2NWa3TTn2n9+Bzp76KrHjE702Yu8yBE3exyNksRv30cHcy0uy6ohjpLSH7EsMQeJSGPiMcjhOOotCvpcO5QOuqzhGD++fbxeBTe/fygDXj9ql8q/LTC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=bLzxZKJS; arc=none smtp.client-ip=78.46.3.230
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="iZQUuzBG"
+	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="bLzxZKJS"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=it-klinger.de; s=default2502; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Z1yjOM7mfQmYrtvU5Bojq8sDhROmKsvPzkPUXkARBXU=; b=iZQUuzBGDLbJ1mtJmmPn0Syzl4
-	LYNP3BEhYiARW4fzquSPFe8mXZCeuvDi+wfJR9e6RPeEJjhnSYg61tdMjKd5p8gtPADyft0bcTsVi
-	qNW57fTDwJHQQ+mSGRHMOPUfybbH6vnu0vQl99Omn7iXRVQND/juS6Afcr+uowrCbZhMOhvnqLjNB
-	45s2agKKXeOwGmfq7qJHyf2uunXfwBliLv89sVc+L6Zsy6Q66dVhimUvGCgiVboGD3AEBcN5SxU8F
-	kI+rddbD5p8MGlr8pDseNo7rny5E+U1hEEO5rQDngIVkwV0NEy9FzDeuE1tiIkBwvCFQVciYGuMxr
-	xF2T+Eyg==;
+	bh=SwZCyK5YKWN6Lzgo880+koOFD+smQUGpll47r1Ci+jc=; b=bLzxZKJS2PdeYvbI+rwtGAoKbT
+	WxPCSljV/maQWfvJfantzyVAVn5QPoG8lb4CjgW7n6X0ydlJCMV+gyQ7HDdM7BRH82kczT0bUzNuL
+	Ya22YtW9kSSvqMVILnmFPCl6i9+jAkv4G8sOkmY2ZZHARJQnlGUPXyygn0cA+nDZU5sO3yU3ArKAc
+	T4I18AZKnNHaoubKGk36ncjve7R56g5f34XqWkeQ8imAL2xO/KdxvxVa3aon38r3zgTA/Rmwv8I9A
+	zA9PMoAq9qyNNiaR+/nzxYgKKGXMJEwifEcyVTMYytJcau/MpT6JnqCpTTPQblnbCOYNjhwOSo0uS
+	LVldmWpg==;
 Received: from sslproxy06.your-server.de ([78.46.172.3])
 	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <ak@it-klinger.de>)
-	id 1uGtge-000FCn-2O;
-	Mon, 19 May 2025 08:09:20 +0200
+	id 1uGtgo-000FEF-1O;
+	Mon, 19 May 2025 08:09:30 +0200
 Received: from localhost ([127.0.0.1])
 	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ak@it-klinger.de>)
-	id 1uGtge-000Ogq-0e;
-	Mon, 19 May 2025 08:09:20 +0200
+	id 1uGtgn-000Ogq-32;
+	Mon, 19 May 2025 08:09:29 +0200
 From: Andreas Klinger <ak@it-klinger.de>
 To: jic23@kernel.org,
 	robh@kernel.org,
@@ -57,11 +57,10 @@ Cc: lars@metafoo.de,
 	ak@it-klinger.de,
 	devicetree@vger.kernel.org,
 	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 1/3] dt-bindings: iio: light: veml6046x00: add color sensor
-Date: Mon, 19 May 2025 08:08:02 +0200
-Message-Id: <20250519060804.80464-2-ak@it-klinger.de>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/3] MAINTAINER: add maintainer for veml6046x00
+Date: Mon, 19 May 2025 08:08:04 +0200
+Message-Id: <20250519060804.80464-4-ak@it-klinger.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250519060804.80464-1-ak@it-klinger.de>
 References: <20250519060804.80464-1-ak@it-klinger.de>
@@ -75,73 +74,31 @@ Content-Transfer-Encoding: 8bit
 X-Authenticated-Sender: ak@it-klinger.de
 X-Virus-Scanned: Clear (ClamAV 1.0.7/27641/Sun May 18 10:31:14 2025)
 
-Add a new compatible for Vishay high accuracy RGBIR color sensor
-veml6046x00.
+Add maintainer for Vishay veml6046x00 RGBIR color sensor driver and dt
+binding.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- .../iio/light/vishay,veml6046x00.yaml         | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml b/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
-new file mode 100644
-index 000000000000..112d448ff0bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/vishay,veml6046x00.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f21f1dabb5fe..872273ee6bf6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25859,6 +25859,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/light/vishay,veml6030.yaml
+ F:	drivers/iio/light/veml6030.c
+ 
++VISHAY VEML6046X00 RGBIR COLOR SENSOR DRIVER
++M:	Andreas Klinger <ak@it-klinger.de>
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
++F:	drivers/iio/light/veml6046x00.c
 +
-+title: Vishay VEML6046X00 High accuracy RGBIR color sensor
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description:
-+  VEML6046X00 datasheet at https://www.vishay.com/docs/80173/veml6046x00.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,veml6046x00
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        color-sensor@29 {
-+            compatible = "vishay,veml6046x00";
-+            reg = <0x29>;
-+            vdd-supply = <&vdd_reg>;
-+            interrupt-parent = <&gpio2>;
-+            interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+        };
-+    };
-+...
+ VISHAY VEML6075 UVA AND UVB LIGHT SENSOR DRIVER
+ M:	Javier Carrasco <javier.carrasco.cruz@gmail.com>
+ S:	Maintained
 -- 
 2.39.5
 
