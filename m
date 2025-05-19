@@ -1,314 +1,164 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF8C1E833D;
-	Mon, 19 May 2025 17:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B35772639
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676366; cv=none; b=EJPchPJy+WDwZ5z1tR4Dq3uRI1phwPr3nfVVlgHBNG6JV2QQDLvlPX+XZwkDu68FWuX4jhgriBnHvap6Xjb7ZxjYKUdsbgKvHF1Sw92dIyBkvnu91/g98SR2jaQGaw5JeXy312h/7NJvDTb8J9F1ANYigyPuqm8aGPRJwHnXI4E=
+	t=1747676440; cv=none; b=NpQv8fIQbpkzuWMmbMIYfFz9X8QTi95Xhw+HeHT16RW5uxS52s5bm2iGSaasGvhQVS4Bn0FLbWPuBarKLcEqD2NrNlzu8U6tuPeqfnmn70pEgPocXCIeGyLwn5XS4Yeyqiw36AfM1AMbXnRs3FSfebdALMtY/V0r8F2csw13qd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676366; c=relaxed/simple;
-	bh=MWElh7+L+WHmEbVBx+JO1axCQb8vStjXejhC6+uWO6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6/zRUcM4JN5xva3Ieb7zKobNar9brTbBvH763jR1esKr9PRDdUCgQlawy1aEFzPeK7Qnj9qZ1BY7BBDijQGLl80gF2IWn+ZzxFVEookVaG/QiT5K2+++oCTLvkIYGy1JcgHYlIyk8AFkIV5K0k32/joZTqus7kmqMfDoQPTcY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJV8TE38; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747676440; c=relaxed/simple;
+	bh=SGYRJ/Pa/rCRIAEp2DzT9CKDo2DR1Kor41Jpn068XTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GQg7cUmiEbAbbHa60iV+qYtWX+4RFgMJZ3ddKRUkokz9ZyefAZN71zqML+q782ia/gub4icWDCY2lMBbpbRmrYwn9YiQUuaeVEFsT3glaiOGHbb9sJCZjduLPUldeK1Gd7D5EjLckArFrVD7lbZmZ01LsovGyEVd8Gs9qJVwZtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RAUqQZSx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJV8TE38"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-231e011edfaso35870915ad.0;
-        Mon, 19 May 2025 10:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747676364; x=1748281164; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqH96lFJrunSkB8waBY3FqEiyTkUqVagz5gksV1z9Do=;
-        b=WJV8TE38r3qFD+7lspT4np5sEP3i8NWuTEjEDg3v623w5A/3KmB/WEMAN17AqJicIO
-         +nqq2MeHhaNg+tRtKff4590MNSqa5NPSPk4NNaF+lluiOVlxJcp20BUh5MCrp+KQUtEv
-         Fcn0y8Be7KySQKwu7qHwQEkpbPp02ol/DUm3y/RiQ+t0dKumKCfdyaJp/A3MWhI5JBYe
-         +KIB0Sfcb97syzoWTgSMQDV3UvGsRePjJlq0c1741UBka/diCiyx3DzjjMXjkY34cZCx
-         R7vjaQWMA/kKi85n561lCigonrIWIr5s7PgXcoNs/25U4ARgvi2+oDt5jsQH1JpXwYa7
-         wjKw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAUqQZSx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747676437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=K36xPLX2EO98K8la7E6clUlgO3MhKSVoAV5X8FkiL4Y=;
+	b=RAUqQZSxAbeLklPO/IW4i0RYQ52wJdqZwwoS1hmJT9AanLcJMjyWswzLMnpJByGaU0eeTc
+	b1XtWqMhcl+m7gky+ROREaI+65ITDsbdxsZbYaIX/CAVmCxhOqZ7Yp8iRFYi6IsziKrpdG
+	E7HGK99tc+UjKjxZWiKHX6BB+IgyjR4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-684-L-xygKyQMCOdGFPQx0IUEQ-1; Mon, 19 May 2025 13:40:35 -0400
+X-MC-Unique: L-xygKyQMCOdGFPQx0IUEQ-1
+X-Mimecast-MFC-AGG-ID: L-xygKyQMCOdGFPQx0IUEQ_1747676434
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cec217977so25069275e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747676364; x=1748281164;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iqH96lFJrunSkB8waBY3FqEiyTkUqVagz5gksV1z9Do=;
-        b=k/A5KLr2ljGL03EnhLcDljoCOL132TpR7M6+of4bebqiJ18xx4I5oRHFh9aKsDqskH
-         IInNnWQ25d3jxULEBg/l9pOeYVcD+N/LFDsw4ezSjwRTExPoQ870iBONzVEcCpoO3wLH
-         RKgmZHDCfclRk92UYiVFgFqEOPuiZy6QR5IvjQfIAPVrmTl2Y9AT6PsAf0WjVer6cs+B
-         QV1K/l7ap9HweuHt9mCladzb2uq+hfDuJfu+irtfLSDnbgyJRorhO1D2DnsUC01kacNh
-         P3e1QY0jY0K7lZnALcE2LCkA9A8irwR2fzy7pK/2W5fFTvP3E6g3r7LUZlEdEw730/71
-         bU+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWVmeBxm0WCWorICkf4MRD2VnZC+T72y94+gbtMd82GMMZR41EpHrz0K9symp8GYJMiQJffp73YsK/soYMG@vger.kernel.org, AJvYcCWrfCrH7i1bL31HXPtd8LpplgnnsDVyIEt/xdu/hKVPY0dOXwkgQ3PzTt0Bou413a/bSre3ONgBQy4UzeTNWBc=@vger.kernel.org, AJvYcCXv9yN4UV7Gci5qnBvU+FefGA9om+lE1DqC7xYJRaoXucRC+n41aOratsU/8c2d+3uNAuX1XoWYJuTbj7sLIEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3u9qnBFVCsv1QNJJG3iLBgKxdNPvILV5+BYDOdc3lGTyQh6h4
-	Qz8jMhR7SrAaK8JMRf7Niyec8XdfBorKov7K71hEkVNUTB59aJGjj6x6
-X-Gm-Gg: ASbGncsyTYmrCU62zyFkjzjF02UITSTFHFcWI3MIdDB5tZewSMzASfHzT8DaltFKbZF
-	hfG5euTrvvrzP/HssDuzWyEuHX+TJuHBEMQ2KjR2CVwgw6UKuLW1MCSkf1RKoVRU/SBcLzAspWz
-	IHzvqnNFI6MfUZM5k/1FYnNvKLD42qtkzQzN3VBCjwTQJxwV7e6GZiqLRQvt8ex2VkE3aXcA1Q0
-	X0iZP5C7jX96NI1vLmjPamybTWkc9/XG4CLOGoUgNXngCeujbiOYwqNwEIzr8mveeC54XimJ83e
-	peqkHdv33WKlseVBMkZCKO5N/L9HMYgJTzN+DMHT+wTYrFlVPJo=
-X-Google-Smtp-Source: AGHT+IGv6kLMhddLH8nklvlDYSAML91GwX3c9uWtTcWhB7LfFCs0tkmzp/GJdOluH2hGfBByqVZMag==
-X-Received: by 2002:a17:902:d481:b0:232:4f8c:1b01 with SMTP id d9443c01a7336-2324f8c1cb2mr56440245ad.43.1747676363740;
-        Mon, 19 May 2025 10:39:23 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9619sm62575655ad.37.2025.05.19.10.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 10:39:23 -0700 (PDT)
-Date: Mon, 19 May 2025 13:39:20 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Burak Emir <bqe@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 4/5] rust: add find_bit_benchmark_rust module.
-Message-ID: <aCtsyA6-kzNLlf4L@yury>
-References: <20250519161712.2609395-1-bqe@google.com>
- <20250519161712.2609395-5-bqe@google.com>
+        d=1e100.net; s=20230601; t=1747676434; x=1748281234;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K36xPLX2EO98K8la7E6clUlgO3MhKSVoAV5X8FkiL4Y=;
+        b=uhcidAkZ2YcWwlZ82kuUw84mDNI1oWI8CJRtWnqXX4Nkm5zrkDNPRtsdZtJ2zVcVtc
+         ZIXrXLRQXfdaU94qmWCO7FtdHoB6x0mRSp8KrJEKWmNbLiZTrwaNXa1zD/OjLWQcuUJ9
+         0/I0kKTtzH8SJOQgDSSLr5FaLAtuxkSKWO9iP9p+uXgfYJABAVPrDOdAwAtCgC4wE3q6
+         JTXv5M9Dlcvw8kutZFdIQRM9VfEWkbN1lMx5ExfacMhzk2JMkKe3MVXvzynQ6st76pFf
+         IaY/bOqPsCHRrMqyachhn5XllUE8BXkGF3ZZKHeP0A4fnjMYuDYCNu5ottSZDEZPHFKP
+         wiRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyvZA3jrVuD3B+rdIpWScx1Ad+QVm2r/eve5BjsA1TeIDkVkcx2KTJSyoCTGMkZT2zKqY91ZKl72mrcuw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKzzi7bOG4fWU9eru6yMVl+nE2N+uxyGcXGlIzNABEeVnr+Oy7
+	a6BH6Ox1pNAquG/a6F4xJq+LyEJUvqISh2KEVHwgLnPhg2WW56CtrvIQicVLteQoxxtkDzAMGiH
+	ARSIc642AY2CXSwYTW0RiWYTNiI7uyhLpZkcFxBWqkDAGyUg3a6lLdrsXqPu154L/AQ==
+X-Gm-Gg: ASbGnct8T8bDqU2rdiwSTPlOqkuwUTSS6kAMDPCBk/ZbsmWWT4le7GzwLhX/9jZeG/N
+	1PjP6JCEVf8z1HCvrQuX/q1N0sRLn9YQ1nmojNiUwDgftcCmHAL546AVePTEWLL2KjrRKV2s5Z7
+	ty+SiUiOR80KZPV1WqlePLWqk36tN733L4RBwkpQKsvIFw6G8vYbvel/zeqQ4u1DkYxidxvLc0r
+	5xTDqqk1k8eDN62KxDawlu0ovla3iIyhgLV+SUedTy0lxE4EZOoVXSKvCA39XbnYo5SzmMtW24e
+	IrqdSUZ37GT9Cetoa1i0evUwGi46+q4tKCwkB5QzjcIVBGgXwfaD1LDW2jHnaIjSSdtFgso/oUX
+	OUaAEfCd+WNMlSV0xCQ2O/YAqqlHUVcXknAFvllM=
+X-Received: by 2002:a05:600c:a46:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-442feffb5a0mr148453305e9.16.1747676434479;
+        Mon, 19 May 2025 10:40:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUICFVfnitZqeXCiHKTi2mEcLXl0asuTZmmpVM4HpKVDE2zGdtICR9BqQW79GLRMernQBoBA==
+X-Received: by 2002:a05:600c:a46:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-442feffb5a0mr148453035e9.16.1747676434156;
+        Mon, 19 May 2025 10:40:34 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583e84sm143807005e9.25.2025.05.19.10.40.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 10:40:33 -0700 (PDT)
+Message-ID: <1296c1ee-cb0a-456d-b5b4-e6153928d32a@redhat.com>
+Date: Mon, 19 May 2025 19:40:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519161712.2609395-5-bqe@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] mm: ksm: have KSM VMA checks not require a VMA
+ pointer
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
+ <daf12021354ce7302ad90b42790d8776173b3a81.1747431920.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <daf12021354ce7302ad90b42790d8776173b3a81.1747431920.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025 at 04:17:04PM +0000, Burak Emir wrote:
-> Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
-> following `find_bit_benchmark.c` but testing the Rust Bitmap API.
-
-I already asked this: please print the output of this test together
-wit C version, and please make sure it's collected on bare metal
-machine.
- 
-> We add a fill_random() method protected by the config in order to
-> maintain the abstraction.
+On 19.05.25 10:51, Lorenzo Stoakes wrote:
+> In subsequent commits we are going to determine KSM eligibility prior to a
+> VMA being constructed, at which point we will of course not yet have access
+> to a VMA pointer.
 > 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
-> Signed-off-by: Burak Emir <bqe@google.com>
+> It is trivial to boil down the check logic to be parameterised on
+> mm_struct, file and VMA flags, so do so.
+> 
+> As a part of this change, additionally expose and use file_is_dax() to
+> determine whether a file is being mapped under a DAX inode.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->  MAINTAINERS                     |  1 +
->  lib/Kconfig.debug               | 13 +++++
->  lib/Makefile                    |  1 +
->  lib/find_bit_benchmark_rust.rs  | 94 +++++++++++++++++++++++++++++++++
->  rust/bindings/bindings_helper.h |  1 +
->  rust/kernel/bitmap.rs           | 14 +++++
->  6 files changed, 124 insertions(+)
->  create mode 100644 lib/find_bit_benchmark_rust.rs
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 565eaa015d9e..943d85ed1876 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4132,6 +4132,7 @@ M:	Alice Ryhl <aliceryhl@google.com>
->  M:	Burak Emir <bqe@google.com>
->  R:	Yury Norov <yury.norov@gmail.com>
->  S:	Maintained
-> +F:	lib/find_bit_benchmark_rust.rs
->  F:	rust/kernel/bitmap.rs
->  
->  BITOPS API
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index f9051ab610d5..37a07559243e 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2605,6 +2605,19 @@ config FIND_BIT_BENCHMARK
->  
->  	  If unsure, say N.
->  
-> +config FIND_BIT_BENCHMARK_RUST
 
-Shouldn't this depend on config RUST, and maybe something else?
+Looking all good :)
 
-> +	tristate "Test find_bit functions in Rust"
-> +	help
-> +	  This builds the "find_bit_benchmark_rust" module. It is a micro
-> +          benchmark that measures the performance of Rust functions that
-> +          correspond to the find_*_bit() operations in C. It follows the
-> +          FIND_BIT_BENCHMARK closely but will in general not yield same
-> +          numbers due to extra bounds checks and overhead of foreign
-> +          function calls.
-> +
-> +	  If unsure, say N.
-> +
-> +
->  config TEST_FIRMWARE
->  	tristate "Test firmware loading via userspace interface"
->  	depends on FW_LOADER
-> diff --git a/lib/Makefile b/lib/Makefile
-> index f07b24ce1b3f..99e49a8f5bf8 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -62,6 +62,7 @@ obj-y += hexdump.o
->  obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
->  obj-y += kstrtox.o
->  obj-$(CONFIG_FIND_BIT_BENCHMARK) += find_bit_benchmark.o
-> +obj-$(CONFIG_FIND_BIT_BENCHMARK_RUST) += find_bit_benchmark_rust.o
->  obj-$(CONFIG_TEST_BPF) += test_bpf.o
->  test_dhry-objs := dhry_1.o dhry_2.o dhry_run.o
->  obj-$(CONFIG_TEST_DHRY) += test_dhry.o
-> diff --git a/lib/find_bit_benchmark_rust.rs b/lib/find_bit_benchmark_rust.rs
-> new file mode 100644
-> index 000000000000..13830477a8d2
-> --- /dev/null
-> +++ b/lib/find_bit_benchmark_rust.rs
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//! Benchmark for find_bit-like methods in Bitmap Rust API.
-> +
-> +use kernel::alloc::flags::GFP_KERNEL;
-> +use kernel::bindings;
-> +use kernel::bitmap::Bitmap;
-> +use kernel::error::{code, Result};
-> +use kernel::pr_err;
-> +use kernel::prelude::module;
-> +use kernel::time::Ktime;
-> +use kernel::ThisModule;
-> +
-> +const BITMAP_LEN: usize = 4096 * 8 * 10;
-> +// Reciprocal of the fraction of bits that are set in sparse bitmap.
-> +const SPARSENESS: usize = 500;
-> +
-> +/// Test module that benchmarks performance of traversing bitmaps.
-> +struct FindBitBenchmarkModule();
-> +
-> +fn test_next_bit(bitmap: &Bitmap) {
-> +    let mut time = Ktime::ktime_get();
-> +    let mut cnt = 0;
-> +    let mut i = 0;
-> +
-> +    while let Some(index) = bitmap.next_bit(i) {
-> +        cnt += 1;
-> +        i = index + 1;
-> +    }
-> +
-> +    time = Ktime::ktime_get() - time;
-> +    pr_err!(
-> +        "next_bit:           {:18} ns, {:6} iterations\n",
-> +        time.to_ns(),
-> +        cnt
-> +    );
-> +}
-> +
-> +fn test_next_zero_bit(bitmap: &Bitmap) {
-> +    let mut time = Ktime::ktime_get();
-> +    let mut cnt = 0;
-> +    let mut i = 0;
-> +
-> +    while let Some(index) = bitmap.next_zero_bit(i) {
-> +        cnt += 1;
-> +        i = index + 1;
-> +    }
-> +
-> +    time = Ktime::ktime_get() - time;
-> +    pr_err!(
-> +        "next_zero_bit:      {:18} ns, {:6} iterations\n",
-> +        time.to_ns(),
-> +        cnt
-> +    );
-> +}
-> +
-> +fn find_bit_test() {
-> +    pr_err!("Start testing find_bit() Rust with random-filled bitmap\n");
-> +
-> +    let mut bitmap = Bitmap::new(BITMAP_LEN, GFP_KERNEL).expect("alloc bitmap failed");
-> +    bitmap.fill_random();
-> +
-> +    test_next_bit(&bitmap);
-> +    test_next_zero_bit(&bitmap);
-> +
-> +    pr_err!("Start testing find_bit() Rust with sparse bitmap\n");
-> +
-> +    let mut bitmap = Bitmap::new(BITMAP_LEN, GFP_KERNEL).expect("alloc sparse bitmap failed");
-> +    let nbits = BITMAP_LEN / SPARSENESS;
-> +    for _i in 0..nbits {
-> +        // SAFETY: BITMAP_LEN fits in 32 bits.
-> +        let bit: usize =
-> +            unsafe { bindings::__get_random_u32_below(BITMAP_LEN.try_into().unwrap()) as _ };
-> +        bitmap.set_bit(bit);
-> +    }
-> +
-> +    test_next_bit(&bitmap);
-> +    test_next_zero_bit(&bitmap);
-> +}
-> +
-> +impl kernel::Module for FindBitBenchmarkModule {
-> +    fn init(_module: &'static ThisModule) -> Result<Self> {
-> +        find_bit_test();
-> +        // Return error so test module can be inserted again without rmmod.
-> +        Err(code::EINVAL)
-> +    }
-> +}
-> +
-> +module! {
-> +    type: FindBitBenchmarkModule,
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Can you explain the meaning of 'type' section? To me your type is too
-unique. This way, we'll end up having the number of types equal to
-the number of modules.
+-- 
+Cheers,
 
-Maybe just 'Benchmark'?
+David / dhildenb
 
-> +    name: "find_bit_benchmark_rust_module",
-> +    authors: ["Rust for Linux Contributors"],
-
-To me it's pretty useless. I think this 'authors' section exists to
-help those having troubles with the module to reach the right people.
-Can you please add your name and email here?
-
-> +    description: "Module with benchmark for bitmap code!",
-> +    license: "GPL v2",
-> +}
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index b6bf3b039c1b..f6ca7f1dd08b 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -31,6 +31,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/poll.h>
->  #include <linux/property.h>
-> +#include <linux/random.h>
->  #include <linux/refcount.h>
->  #include <linux/sched.h>
->  #include <linux/security.h>
-> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
-> index 943dbef7948b..fb0c687420cd 100644
-> --- a/rust/kernel/bitmap.rs
-> +++ b/rust/kernel/bitmap.rs
-> @@ -124,6 +124,20 @@ pub fn len(&self) -> usize {
->          self.nbits
->      }
->  
-> +    /// Fills this `Bitmap` with random bits.
-> +    #[cfg(CONFIG_FIND_BIT_BENCHMARK_RUST)]
-> +    pub fn fill_random(&mut self) {
-> +        // SAFETY: `self.as_mut_ptr` points to either an array of the
-> +        // appropriate length or one usize.
-> +        unsafe {
-> +            bindings::get_random_bytes(
-> +                self.as_mut_ptr() as *mut ffi::c_void,
-> +                usize::div_ceil(self.nbits, bindings::BITS_PER_LONG as usize)
-> +                    * bindings::BITS_PER_LONG as usize,
-> +            );
-> +        }
-> +    }
-> +
->      /// Returns a mutable raw pointer to the backing [`Bitmap`].
->      #[inline]
->      fn as_mut_ptr(&mut self) -> *mut usize {
-> -- 
-> 2.49.0.1101.gccaa498523-goog
