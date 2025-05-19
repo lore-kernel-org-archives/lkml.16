@@ -1,108 +1,122 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D7526B2B1
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F8E279787;
+	Mon, 19 May 2025 13:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660165; cv=none; b=HBAdOjrlx0OL9aq5b1p2rT6dJLdmjtsjWTWsTgBwMFCJJYaUFP2tWRgwncNLzBVhXLCLgSdvJxAdPJiHCULNUXwpSgFuXxlzZNUTxXrkWgVB5x4yZ1H4U5+dv0P0cOb3MpX6R5MRxg7Ui6oLB5J/oumFcKmtZFMPxCK98BzdC8w=
+	t=1747660182; cv=none; b=fJtRgeKqLCW2LmXVbJZ+jxYusipS8xqjI5wHoOUGj99rYAZ2VxPQKzK7jyzgT+cj5apSXxHnt87QCRyWDUWxdxCBQgW5+thMU/CzTFOy4E6QFbQ5a7IgYo3TbgS45DK963i+cGbJnKg3hNi6VNoLXSMbZvBPUUwT66kRU10Ypx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747660165; c=relaxed/simple;
-	bh=pSodbc3V4LQg415hXRwcYmpy6/55GRV7K5MO1Cpr8WY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S7hKGEyl7YTq3tnB8s+vQw1h8Ysvf/dIRrUbCogmj4bebrWO/esFHXFQrqOlzCoPDUH0F97KnXbdkqZMV1gqu9n3qhQfVRYT2yhVuHHYUz9jMohRdAn5NlTZxfNvxfUg42FKPQaLYMF4k7JIYbDl9wYYi5SWcCmHxcFpDrGpK7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kVt6FymV; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747660182; c=relaxed/simple;
+	bh=XkpJ6tPlbFlgCwUloxB4+DSdIpU5E6VB27qBjkhOUZY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=L4C3n48eX6f4AYIcs74HKKnLgb7VJFl+WKN1bsr7mOoY0gFaIRQTVtHRekBhGBXKVccyKtDaV40mFkNQuz4UXwHeK+VRQLhplUR7yASAQpflEWheTnSSwJLxp73XXgju02jvdaPPd3LkKZ3F4p5Pp8TFwNF84oFjuX2bJ/NGV6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nCId4YK7; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kVt6FymV"
-Message-ID: <4be335ac-8b6e-4714-bce3-f62495dbee8d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747660158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rdkhBGRvUC+ooGHKKuYF8USNZA83y6OB9dcv1mAc5tE=;
-	b=kVt6FymVrPtkk86vbo79J/uBt+0rC5tjRuQe08F5KwEFzrpo8lRPNbd3FC7quxOK+Us5Cn
-	yyT69rVVn5Sfo8ovWAv+sCcoKZgTZoLfWWcX+/fOGVjNu30rz7Rw3H6szxU62MfPhdRvcs
-	c3Dg+0hNCPkpkTRjbiU1EFlwvdmKJBU=
-Date: Mon, 19 May 2025 21:08:57 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nCId4YK7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747660181; x=1779196181;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XkpJ6tPlbFlgCwUloxB4+DSdIpU5E6VB27qBjkhOUZY=;
+  b=nCId4YK7/MDDVzX7wFmoDPGqTLuSnz9qgVi0hI0CcWZfnxmGQ7EP812M
+   9Y0tDNZw2w+/jXN7PYYy+FPzFd3fgyxUjACax3f7rAmFQAfyDlIbcDBB5
+   vpHIvP/0LqgPxmAPSEt9ZZ4Sku3cvrYN4l24ftBeT1YMEzw22y9PtVNCy
+   kU9jW5+i0qgff0MwR/yQtyfWWV4+1M9m17vClvinZYyhOHedTosVvRGmW
+   S0VWRb0bd2DvQYYdvsffa7xf/ho4khzTaIfdtW6YQhpDyDx9cOC4FZKx6
+   jHMXOgWUJIG15xCm1kxZl5TRgRvvyz26+1tMRl7c/Shybyg56LzoNi037
+   A==;
+X-CSE-ConnectionGUID: sCPLbqiiSXKm+JCvX/Ed/w==
+X-CSE-MsgGUID: qB6hA4C7Q36lJEYNSOjMIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49461251"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49461251"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:09:40 -0700
+X-CSE-ConnectionGUID: i7eVy+IHQsae7CF1FyJ1Zg==
+X-CSE-MsgGUID: dqBI7AaxQyeWNq1kumUO4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="170396769"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:09:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 16:09:30 +0300 (EEST)
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
+    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
+    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: Re: [PATCH v3 01/11] PCI: Update current bus speed as part of
+ pci_pwrctrl_notify()
+In-Reply-To: <20250519-mhi_bw_up-v3-1-3acd4a17bbb5@oss.qualcomm.com>
+Message-ID: <10de35f5-bec6-5df3-768d-04f88c4e3d77@linux.intel.com>
+References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com> <20250519-mhi_bw_up-v3-1-3acd4a17bbb5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
- Xu Xin <xu.xin16@zte.com.cn>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
- <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
 
-On 2025/5/19 16:51, Lorenzo Stoakes wrote:
-> If a user wishes to enable KSM mergeability for an entire process and all
-> fork/exec'd processes that come after it, they use the prctl()
-> PR_SET_MEMORY_MERGE operation.
-> 
-> This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
-> (in order to indicate they are KSM mergeable), as well as setting this flag
-> for all existing VMAs.
-> 
-> However it also entirely and completely breaks VMA merging for the process
-> and all forked (and fork/exec'd) processes.
-> 
-> This is because when a new mapping is proposed, the flags specified will
-> never have VM_MERGEABLE set. However all adjacent VMAs will already have
-> VM_MERGEABLE set, rendering VMAs unmergeable by default.
+On Mon, 19 May 2025, Krishna Chaitanya Chundru wrote:
 
-Great catch!
-
-I'm wondering how about fixing the vma_merge_new_range() to make it mergeable
-in this case?
-
+> If the link is not up till the pwrctl drivers enable power to endpoints
+> then cur_bus_speed will not be updated with correct speed.
 > 
-> To work around this, we try to set the VM_MERGEABLE flag prior to
-> attempting a merge. In the case of brk() this can always be done.
+> As part of rescan, pci_pwrctrl_notify() will be called when new devices
+> are added and as part of it update the link bus speed.
 > 
-> However on mmap() things are more complicated - while KSM is not supported
-> for file-backed mappings, it is supported for MAP_PRIVATE file-backed
-> mappings.
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/pwrctrl/core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 9cc7e2b7f2b5608ee67c838b6500b2ae4a07ad52..034f0a5d7868fe956e3fc6a9b7ed485bb69caa04 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -10,16 +10,21 @@
+>  #include <linux/pci-pwrctrl.h>
+>  #include <linux/property.h>
+>  #include <linux/slab.h>
+> +#include "../pci.h"
+>  
+>  static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
+>  			      void *data)
+>  {
+>  	struct pci_pwrctrl *pwrctrl = container_of(nb, struct pci_pwrctrl, nb);
+>  	struct device *dev = data;
+> +	struct pci_bus *bus = to_pci_dev(dev)->bus;
+>  
+>  	if (dev_fwnode(dev) != dev_fwnode(pwrctrl->dev))
+>  		return NOTIFY_DONE;
+>  
+> +	if (bus->self)
+> +		pcie_update_link_speed((struct pci_bus *)bus);
 
-So we don't need to set VM_MERGEABLE flag so early, given these corner cases
-that you described below need to consider.
+Why are you casting here?? (Perhaps it's a leftover).
 
+> +
+>  	switch (action) {
+>  	case BUS_NOTIFY_ADD_DEVICE:
+>  		/*
 > 
-> And these mappings may have deprecated .mmap() callbacks specified which
-> could, in theory, adjust flags and thus KSM merge eligiblity.
-> 
-> So we check to determine whether this at all possible. If not, we set
-> VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
-> previous behaviour.
-> 
-> When .mmap_prepare() is more widely used, we can remove this precaution.
-
-Sounds good too.
-
-> 
-> While this doesn't quite cover all cases, it covers a great many (all
-> anonymous memory, for instance), meaning we should already see a
-> significant improvement in VMA mergeability.
 > 
 
-Agree, it's a very good improvement.
+-- 
+ i.
 
-Thanks!
