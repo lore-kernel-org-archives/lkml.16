@@ -1,194 +1,120 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29142580D5
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5B27701C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657507; cv=none; b=kWQq/i9UpkbjOMrgbNvF3GNNd8Ek+8/z/3QywocquKj4bgG9yqJBUM5AAObWJWpSBCjmFmCYjXsDhLSOiU9FbLnY2F5GTJDbl9OKJCnXmlh/DhfM1Wspz7ChCMOTLvFplfiTKrYE8KGKXABgrEq7Lghjw22c+W+ieIOREm4+IYg=
+	t=1747657533; cv=none; b=qdNt0ZI8VID/OYZNueUPM7jQauDDcPDgEBwfk11CHNGxYFzmq/hSgV2X7WHwV82aiF787Y1tESmsyyqHM0bjN7GQtCfTWz/2EgVPRNLs1Uy6Wk8m42+K45GS0YuHCPg5xwFST4q5L7ZjX5z0nEd0GfexIf/L5siFYtlMyzRLKcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657507; c=relaxed/simple;
-	bh=i8lStx9MZrOnfLyoy6ixYxAxv57m+42YK9zyquTDgvY=;
+	s=arc-20240116; t=1747657533; c=relaxed/simple;
+	bh=JZNe0HfZZDhNevSX49ax+j+R7pQymrwQi3kwBBaLzPU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tI8Vk7Tp0TlYczbKvQ2nMmghJV4lkedBhqkZWOq5JwoH4n3BkJTNDG5y7x58rG5sgdWx8eVNUtUQ83JtNKOwnkOOi2RSCPVwa/D2366Of+r6ftVk5vVVvh3w7ovFhrz0j4Ss+n9C3AdTg5bvYdbLr9UW43CbuH1B75MnCqM4RKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HBA9plV5; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=e9GGeuDDUmuYFrlwJX2F29o2h7owYomrcZQdN1PRDKzyX9KJBCrVzkAiIlF1LUhgdDQjQmeOTSXR29IOrDd1ds8HFVWzLR4nMZvEHUaDvJst5x2ML+3hAL2Asn8x/4g/fJn7TJlL5IWDyVxdzg9wruidIiKt8OLBDCgMDh+lNwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a330Qgvv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBA9plV5"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7b3178473eso3936036276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747657505; x=1748262305; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hw0RrkoAM9knnJQWc1ponuJoeLASxwb9luyTQRlpOCc=;
-        b=HBA9plV5wT1zCasT7mI0brIeA3/RWvYhYbVzgT1K/DPVZSfnbAgU6KtaBl9Ttx3E3Z
-         Y9s5uBn/eW51EgVk+31AHWtAJTwmm2wjLjDUP7z9Fl9ASuFr2vKm+RznplAfD2zu+NBT
-         GwcrAlKq+6JeFc7j2xUyZwn3X57Dt8ITbCTYT6UK1kWkpTu8RA7n7kDT/DmJW7Sj3cMU
-         aHaG2vD6TRfg5Etvrbl1IN84fK/mbPnMzqODBxo8Cgo30M2dU5LfhDEjTGSuoBWf9Tve
-         0cIDPf03xU6MMXvrWuvquEUtX/NsYL159Mz0BkfVODxFKjpcvDGzQdxf2qt6nhoxkbRW
-         iqfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747657505; x=1748262305;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hw0RrkoAM9knnJQWc1ponuJoeLASxwb9luyTQRlpOCc=;
-        b=laEXEX1A2HAWlc86OWoT38yykHCDzV8F4jJttGC2njF1duDFK/MJ48x+o5U+nXXyCk
-         aYHBXeU+ExvPzaA8iT9CTMU60/hvIXLsPluQ+miWXkFmOAJI4qjEFHBuFoDncHCxojfw
-         HFVbXtkx3+aOOIqzX5jzYFGE1OC/RjpCXHG6k+ukXAO4mpK/FY4AdOx+kNXLu36ywS7l
-         LOR8TJpZmOU5EV2IL5KyCwLOgihmX/JN3KNdDNbc79RcxyPbDXkD1EaBch928+JJ2pp4
-         GWTNg8nJG3JMPSBxoJj44onNaQG+tJ/Hdvze/VfLX5FNVoRdOsbnytVjnskrhZdsziCy
-         cjAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9cvbl+mMB1YICC4cYig0ps7nYilL1FCTx5rK0DWscI2JlSYj4BnOqx9MJ42KoWsUdzVsV/BVxnFNxeVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw2sweu9ifaMZnAjddYDVZUiq26pzcmpBZJmpaD3S+OzKfZ5P5
-	CAB7JUR1wh7daF6XF1WuMMnhwcqUyoSl5YLn560nzVxh2wVyjmIedTvTTSJjVbGmw7Vn4eXc8Fb
-	37LgP+xyz2ycq76nuP9RqXPomu3RCAA4mo/m1aQO5YQ==
-X-Gm-Gg: ASbGncsiUYKsJtbDT5rc7XxxNbBKSBPcqSncUE9xoPdCDs7KcShRBOyFlGQq5XY7MP/
-	9KhlCMalSn96SfG1UsdZcXn2i9buy1w0JD5WsLNzJT/AjzuIuuTq5+LZ/qxE1dE22UNX1ITVElw
-	L1N7CPqsVxmOxD1pdf9eJmVcc85xtlwx///Q==
-X-Google-Smtp-Source: AGHT+IH7yUGB1EiCDoGxwBB/WyWUZnZ73SldROyVTnQxmPw6RjEohZHFonLFRz3zXaPKDnKhdJfKJ9LLmLXCPuSDemU=
-X-Received: by 2002:a05:6902:e02:b0:e7b:96e0:68e0 with SMTP id
- 3f1490d57ef6-e7b96e06d2fmr7718910276.13.1747657504656; Mon, 19 May 2025
- 05:25:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a330Qgvv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57BEBC4CEEF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747657532;
+	bh=JZNe0HfZZDhNevSX49ax+j+R7pQymrwQi3kwBBaLzPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a330QgvvXD0eYbaw94XYPzpNsqvKDEQWdjCQKdCOq87dPz8i6T5kspluYcKawfGne
+	 S1SGHr8dNRuhPi63Kr7GHvN0OR6Z2oYA43Tbj41HHaN84fJlygL4xfIlAVBBW9drM8
+	 bt6xwlZRi4zhh5KVgC6FawTcnVGyZVQqUoAErxoFc3lgXHPMk8JTzm4MctqxdHugji
+	 NWvcoPGFfXHfil3hFm5xHfNqwgZUiFG0eHQrajKldokEbymUWpXnpX6sqtUvLcTwyk
+	 JXlFtRtMsGr7dxB2z7ZJ8Nyr0QXa9I3CVp1b/jv8gcId5h/va3Dw8EismSPcFhJqNH
+	 N+u0dc4aQ8iJQ==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso42174041fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:25:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU488UXWgI40nZ4d0hBSPDQq/i581rEOMCvfs8O1lTl1veFwZWkzDSKCpPX0Rg9opnhf3iLjWtHhww0eBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEWbT64mobXI0T+FJ6FsGa/5K9340TeTuMe6to7ygFJ1T7qgeG
+	0YekCSDRhZph+DZ5QVOQpnFy2rPg1DbhB6k4yzqbDCeRtyh9V8JFdQJ+xEZo4NExGB0KFwAZJAq
+	9tlHIAxsvnCyWIz2k4r4L1B+L3SPN4OA=
+X-Google-Smtp-Source: AGHT+IGGSCRyT9Q6HZYrZXvjQtxF9MgfyYtqR4jy/sjA9LbIN4TF+3YDBWGHQInU0eaxb1ASpBupBn4kbv1+O8ww0p0=
+X-Received: by 2002:a05:651c:e18:b0:30c:2590:124c with SMTP id
+ 38308e7fff4ca-328096b5d66mr32813311fa.11.1747657530639; Mon, 19 May 2025
+ 05:25:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516092716.3918-1-victorshihgli@gmail.com> <20250516092716.3918-3-victorshihgli@gmail.com>
-In-Reply-To: <20250516092716.3918-3-victorshihgli@gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 19 May 2025 14:24:28 +0200
-X-Gm-Features: AX0GCFux-Dp9aFVC9q0ZPMWtr_1CzLEvp1YieGpAtSbFQdRvWz0hn5qATIpk2Pc
-Message-ID: <CAPDyKFqCo2-9fYYAoNpmJf7XOiTvLM07hQks1io-S0MvmbAjCQ@mail.gmail.com>
-Subject: Re: [PATCH V1 2/2] mmc: sdhci-uhs2: Adjust some error messages and
- register dump for SD UHS-II card
-To: Victor Shih <victorshihgli@gmail.com>
-Cc: adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, benchuanggli@gmail.com, 
-	HL.Liu@genesyslogic.com.tw, Greg.tu@genesyslogic.com.tw, 
-	Ben Chuang <ben.chuang@genesyslogic.com.tw>, 
-	Victor Shih <victor.shih@genesyslogic.com.tw>
+References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local> <CAMj1kXEFykYgtHb0UaNQ5fk_0+q+ZHVJa4Gs8-v_Jq1_35-gEw@mail.gmail.com>
+ <20250519121541.GAaCsg7YZ3-HDYgiBu@fat_crate.local>
+In-Reply-To: <20250519121541.GAaCsg7YZ3-HDYgiBu@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 May 2025 14:25:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEr0_hCp7GspR4YcQTuYCo19BRSnM5H_GVb8-z8Zrui=A@mail.gmail.com>
+X-Gm-Features: AX0GCFvRvQV-wmClBYA6cUDml9yIx85K9O3bRF3xdTUen3DLlQbOvtNQkY5DNFU
+Message-ID: <CAMj1kXEr0_hCp7GspR4YcQTuYCo19BRSnM5H_GVb8-z8Zrui=A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Brian Gerst <brgerst@gmail.com>, "Kirill A. Shutemov" <kirill@shutemov.name>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 16 May 2025 at 11:27, Victor Shih <victorshihgli@gmail.com> wrote:
+On Mon, 19 May 2025 at 14:16, Borislav Petkov <bp@alien8.de> wrote:
 >
-> From: Victor Shih <victor.shih@genesyslogic.com.tw>
+> On Mon, May 19, 2025 at 11:46:34AM +0200, Ard Biesheuvel wrote:
+> > That is what the old code does. It results in the flag transiently
+> > being set and cleared again, which is what I am trying to avoid.
 >
-> Adjust some error messages to debug mode and register dump to dynamic
-> debug mode to avoid causing misunderstanding it is an error.
-
-Dumping the register may be useful for the debug level, I am not sure.
-Maybe Adrian has an opinion?
-
+> Right, something like this clumsy thing ontop. It'll have to be macro-ized
+> properly and we had macros for those somewhere - need to grep...
 >
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
-> ---
->  drivers/mmc/host/sdhci-uhs2.c | 18 +++++++++---------
->  drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
->  2 files changed, 25 insertions(+), 9 deletions(-)
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 104944e93902..a6a1892a9215 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -704,7 +704,10 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
+>  }
 >
-> diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-uhs2.c
-> index c53b64d50c0d..9ff867aee985 100644
-> --- a/drivers/mmc/host/sdhci-uhs2.c
-> +++ b/drivers/mmc/host/sdhci-uhs2.c
-> @@ -99,8 +99,8 @@ void sdhci_uhs2_reset(struct sdhci_host *host, u16 mask)
->         /* hw clears the bit when it's done */
->         if (read_poll_timeout_atomic(sdhci_readw, val, !(val & mask), 10,
->                                      UHS2_RESET_TIMEOUT_100MS, true, host, SDHCI_UHS2_SW_RESET)) {
-> -               pr_warn("%s: %s: Reset 0x%x never completed. %s: clean reset bit.\n", __func__,
-> -                       mmc_hostname(host->mmc), (int)mask, mmc_hostname(host->mmc));
-> +               DBG("%s: %s: Reset 0x%x never completed. %s: clean reset bit.\n", __func__,
-> +                   mmc_hostname(host->mmc), (int)mask, mmc_hostname(host->mmc));
-
-As I said on patch1, please use pr_debug() and drop the macro.
-
->                 sdhci_writeb(host, 0, SDHCI_UHS2_SW_RESET);
->                 return;
->         }
-> @@ -335,8 +335,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci_host *host)
->         if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IF_DETECT),
->                               100, UHS2_INTERFACE_DETECT_TIMEOUT_100MS, true,
->                               host, SDHCI_PRESENT_STATE)) {
-> -               pr_warn("%s: not detect UHS2 interface in 100ms.\n", mmc_hostname(host->mmc));
-> -               sdhci_dumpregs(host);
-> +               DBG("%s: not detect UHS2 interface in 100ms.\n", mmc_hostname(host->mmc));
-> +               sdhci_dbg_dumpregs(host, "UHS2 interface detect timeout in 100ms");
-
-If we really need this, I think we should first introduce the helper
-function in a separate patch, that precedes $subject patch in the
-series.
-
->                 return -EIO;
->         }
->
-> @@ -345,8 +345,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci_host *host)
->
->         if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_LANE_SYNC),
->                               100, UHS2_LANE_SYNC_TIMEOUT_150MS, true, host, SDHCI_PRESENT_STATE)) {
-> -               pr_warn("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostname(host->mmc));
-> -               sdhci_dumpregs(host);
-> +               DBG("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostname(host->mmc));
-> +               sdhci_dbg_dumpregs(host, "UHS2 Lane sync fail in 150ms");
->                 return -EIO;
->         }
->
-> @@ -417,12 +417,12 @@ static int sdhci_uhs2_do_detect_init(struct mmc_host *mmc)
->                 host->ops->uhs2_pre_detect_init(host);
->
->         if (sdhci_uhs2_interface_detect(host)) {
-> -               pr_warn("%s: cannot detect UHS2 interface.\n", mmc_hostname(host->mmc));
-> +               DBG("%s: cannot detect UHS2 interface.\n", mmc_hostname(host->mmc));
->                 return -EIO;
->         }
->
->         if (sdhci_uhs2_init(host)) {
-> -               pr_warn("%s: UHS2 init fail.\n", mmc_hostname(host->mmc));
-> +               DBG("%s: UHS2 init fail.\n", mmc_hostname(host->mmc));
->                 return -EIO;
->         }
->
-> @@ -504,7 +504,7 @@ static int sdhci_uhs2_check_dormant(struct sdhci_host *host)
->         if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IN_DORMANT_STATE),
->                               100, UHS2_CHECK_DORMANT_TIMEOUT_100MS, true, host,
->                               SDHCI_PRESENT_STATE)) {
-> -               pr_warn("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_hostname(host->mmc));
-> +               DBG("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_hostname(host->mmc));
->                 sdhci_dumpregs(host);
->                 return -EIO;
->         }
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index cd0e35a80542..2c28240e6003 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -898,4 +898,20 @@ void sdhci_switch_external_dma(struct sdhci_host *host, bool en);
->  void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
->  void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd);
->
-> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DYNAMIC_DEBUG_MODULE))
-> +#define SDHCI_DBG_ANYWAY 0
-> +#elif defined(DEBUG)
-> +#define SDHCI_DBG_ANYWAY 1
-> +#else
-> +#define SDHCI_DBG_ANYWAY 0
-> +#endif
+>  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
+> -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+> +__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long)) = {
+> +       [X86_FEATURE_LA57 / 32] = BIT(X86_FEATURE_LA57 & 0x1f)
+> +};
 > +
-> +#define sdhci_dbg_dumpregs(host, fmt)                                  \
-> +do {                                                                   \
-> +       DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);                 \
-> +       if (DYNAMIC_DEBUG_BRANCH(descriptor) || SDHCI_DBG_ANYWAY)       \
-> +               sdhci_dumpregs(host);                                   \
-> +} while (0)
-> +
->  #endif /* __SDHCI_HW_H */
-> --
-> 2.43.0
+>  __u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 >
 
-Kind regards
-Uffe
+Setting the bit in cpu_caps_cleared[] is the easy part. I'd lean
+towards something like the below instead, though.
+
+*However*, this will still result in the associated bit in
+boot_cpu_data.x86_capability[] to get set and cleared again if the CPU
+is LA57 capable but not running with 5 levels of paging. Any code that
+evaluates pgtable_l5_enabled() in the meantime will get the wrong
+value, which is why we have these KAsan false positives etc. The whole
+point of these changes is that pgtable_l5_enabled() is guaranteed to
+always produce the correct value.
+
+We could modify the CPU capability detection code to take
+cpu_caps_cleared[] into account whenever it sets any bits in
+cpu_capability[], but that is going be a lot more intrusive in the
+end. Using a fake capability that will only get set or cleared
+explicitly much cleaner.
+
+I still think avoiding a CPU capability altogether (and testing
+CR4.LA57 directly combined with a ternary alternative) is the better
+solution, but that was shot down by Linus on aesthetic grounds.
+
+
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -67,9 +67,10 @@ SYM_CODE_START_NOALIGN(startup_64)
+        mov     %cr4, %rax
+        btl     $X86_CR4_LA57_BIT, %eax
+        jnc     0f
+        setup_force_cpu_cap X86_FEATURE_LA57
++       jmp     1f
++0:     setup_clear_cpu_cap X86_FEATURE_LA57
++1:
+
+        /* Set up the stack for verify_cpu() */
+        leaq    __top_init_kernel_stack(%rip), %rsp
