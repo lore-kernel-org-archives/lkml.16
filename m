@@ -1,140 +1,73 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FBA2135D7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB6021770A;
+	Mon, 19 May 2025 20:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687099; cv=none; b=Ffml1Gag4BRo7NNnTAdcnDzPIE+OeMkMJXJwVbybfjDvcj/LcnGE1K7boelI4vb9EY551nuLXgD165EGk0Zad96ngOXeULCXUXhgWPtP8FFxkJajZ1Bddm6umXy88TLVZR9zbBQdimO7hmujJwUgHqpCZ3z034VPqmDyUgDNEDc=
+	t=1747687106; cv=none; b=pwndjmV4Q7PmlRH/7N613RJ/zsYgHcVKKYeL8+KMZoj0RQ2wqtEOJ4KpEkmXzawxfS0f3iNvojIlz2gTtyaaiK/Yw1IsgwPXgrOvd7/EQ+LFJr54Cm5Q/4xNOG6fRIsppVbo6xrjj404p+1gjng+UzIGRyYJDztSZIlO9+rcvAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687099; c=relaxed/simple;
-	bh=WnLUcmymGixTzqL+j3K1lA0RnLyFcEIn6jhQj2Payy4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qnauN8pw/hw9v4XzVbm9nL+2wfxSYK1Nv9xXAuZOf7ZTbtqt//XXsI3kAEXhMhdBLk+3kKFFNVQxdkcvmEeiW860VZsbQ0q8l5SUHfBK43nSS7hwVFN6JraymDKKat6JjJvBjVxJjmK0/jX0TGQ3lchUnIAryCCz+a7cbIsOSOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bRc+1E5K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+/SAWzaI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bRc+1E5K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+/SAWzaI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747687106; c=relaxed/simple;
+	bh=/U7LrkpfpUpFNeKeDpiSOEJ2XWoMvUPa4Ey+unUtmy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKGOwashzafl9IXPPS7av3AqlmgQ1lcRKl2i6J9N0tP6ZpSHJJZeMbnpRv+bh9UX9Q/Zodcqsoae0ZDAi4QH2+agXiMU5zfYUv1Y3PcURrsJuIymPK1X+IPGkeNXTE6nMQIesZsnzNEXGIDiaz2I12anqwyEGTvfLn8smq2Lun4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GP0qDkXt; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bRc+1E5K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+/SAWzaI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bRc+1E5K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+/SAWzaI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DE131204D1;
-	Mon, 19 May 2025 20:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747687095; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kqScQH/4kKffHalsGTZ69r5JatMjElCGgkdeLC5fHo=;
-	b=bRc+1E5KhESYKlWP0azhBRSBwiHkcqRdl1rMcAh5DFT/pB60radjsTjpGupBf2h28AF836
-	9rFyOr7oPOAPAD0O+GKCswwI36qv4lubTASVrb4I1dLkvrPX7aOWQNeX/+XqC9IICK3sBV
-	G/eFlYyWbMD5DFQ/L7sBczJs3GTjgwE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747687095;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kqScQH/4kKffHalsGTZ69r5JatMjElCGgkdeLC5fHo=;
-	b=+/SAWzaIrxz4cI8BkfLgbyu2tn7kMQu7NOvFbx3jxWkujxbr1C+yXlj5YYKNUwr20WdokB
-	yB+WmZD7CW6VZeDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bRc+1E5K;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="+/SAWzaI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747687095; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kqScQH/4kKffHalsGTZ69r5JatMjElCGgkdeLC5fHo=;
-	b=bRc+1E5KhESYKlWP0azhBRSBwiHkcqRdl1rMcAh5DFT/pB60radjsTjpGupBf2h28AF836
-	9rFyOr7oPOAPAD0O+GKCswwI36qv4lubTASVrb4I1dLkvrPX7aOWQNeX/+XqC9IICK3sBV
-	G/eFlYyWbMD5DFQ/L7sBczJs3GTjgwE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747687095;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kqScQH/4kKffHalsGTZ69r5JatMjElCGgkdeLC5fHo=;
-	b=+/SAWzaIrxz4cI8BkfLgbyu2tn7kMQu7NOvFbx3jxWkujxbr1C+yXlj5YYKNUwr20WdokB
-	yB+WmZD7CW6VZeDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C18651372E;
-	Mon, 19 May 2025 20:38:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RiKMLreWK2g6GgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 19 May 2025 20:38:15 +0000
-Date: Mon, 19 May 2025 22:38:15 +0200
-Message-ID: <87frh05oaw.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Siddarth Gundu <siddarthsgml@gmail.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	u.kleine-koenig@baylibre.com,
-	zhujun2@cmss.chinamobile.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: dbri: replace strcpy() with strscpy()
-In-Reply-To: <20250519194833.106463-1-siddarthsgml@gmail.com>
-References: <20250519194833.106463-1-siddarthsgml@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GP0qDkXt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=O/0IcdVQE5Us1JeC/7Mie5tysbAZM3UKBVkJQ6942JA=; b=GP0qDkXtjwpwP4f1GOOTvWNQDw
+	MEnvFI+0pp6nHGYpcvjNmLUV2j4HbrlArpvjLp3VunvgL2GEYDmFpxnbdIcx9sKh4lyiSKCY0cCTK
+	pfmWqr1u4mtpz89N18QVW5tFQ3+tK/RFBduWyxlFtN192Ydmw1L86QUUfE5pbmopBKyQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uH7Fc-00D3Sq-9r; Mon, 19 May 2025 22:38:20 +0200
+Date: Mon, 19 May 2025 22:38:20 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH] net: dwmac-sun8i: Use parsed internal PHY address
+ instead of 1
+Message-ID: <0ee2c181-1ab2-4d81-89f0-9d2992464a88@lunn.ch>
+References: <20250519164936.4172658-1-paulk@sys-base.io>
+ <d89565fc-e338-4a58-b547-99f5ae87b559@lunn.ch>
+ <aCuLwuSliICh86SP@collins>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.51
-X-Rspamd-Queue-Id: DE131204D1
-X-Spam-Level: 
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCuLwuSliICh86SP@collins>
 
-On Mon, 19 May 2025 21:48:33 +0200,
-Siddarth Gundu wrote:
+> There's actually only two users of this (this code path for internal PHYs is
+> only used by two chips), which are platform dtsi files that have the address
+> already set to 1.
 > 
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Both the destination and source buffer are of fixed length
-> so strscpy with 2-arguments is used.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+> I have actually tested both with hardware and they work fine.
 
-Applied now.  Thanks.
+O.K.
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Takashi
+This is something to think about for patches in general. What
+questions are reviewers likely to ask, and can you answer them in the
+commit message?
+
+    Andrew
