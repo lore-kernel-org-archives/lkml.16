@@ -1,152 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA7C26C39A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F3226D1D;
+	Mon, 19 May 2025 09:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645484; cv=none; b=FbgdL9MENaT+6o5onjvOL/vpuUf/XxwzRsvmuKPwMkTR4ahkvewUhNh5UrOr8/cBV7bUfaU6aF3GW8fmmzq8cKdYk4hIggvqUcWuZE6vLPgdrXPlzXICQ6XelHCglvfygpAU6eyni2mO7qbApeliZzRiTOcLgTs7gHeEgkOVF7M=
+	t=1747645485; cv=none; b=aJp59Z8Yt4LYWD0cxw+YG0j6PfhqzazJ05uYnIVfvQ4cIO8hYeBaoQJxJR6817J1zSKyEVylSJ4oXcTYoa9nKoZwZ5x9cmzrrje7DxqcrKVtw6jM10dWo6ZHSB0z5DHrOPzlHYjOS1JSahIz/BlgfFhFC57PdINuojecAqA34uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645484; c=relaxed/simple;
-	bh=s3ZF/R71XbQ2Wv8UWMHptS1RGAgFwyxTx7aSnB/lvm8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AoTobwX5OUbw8KLa4cCrUvMhkn98MMpeWEwVhsEreLIuHPEQP+eJYhXmjNcIOaWV2GB7Q3G3Xc1rJjCGsckAkVa/0V1eVVpRJrZFmuCoMx6ePG9YH+FJf5uIsKI5LXNkEFFdPcwHPK8I113VCYBl2RF0Noo+jPLJnmdL/wz0XQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A16mladY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747645485; c=relaxed/simple;
+	bh=5wSfd8iVGQRXhXY5iUwyBOYl/S5k745NZ69NsV4xJxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rxt7KS3joojnPJ4Vr4D3jGFoeOSly94LQidskKImvCU1H7/SZ6BQEAnqJ73a4cxycyqPbE2MWIPZX8Bws81Z+mahcIuRMTiIRnA3zV8xIxGSRZQRPPbbN6Yager2vTFPSdNRBhYeB1/UmO55xv+Iy71HIAGIPbrOu+0xWA3bOWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KzEnOhtS; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A16mladY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747645481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b+x4vTIQvSf2FWpLg3QbvkOR5KW8aweHD+AVnGY/4x4=;
-	b=A16mladYeC2yACADKg42Cz+2irTFDpgXpS9ZyERYIQcTPvos5QrKQEABLDqsy/VDG8mhgY
-	o276q07oqu5jGmpNN0vFqHhUS/zffEvJfoN+eFNZKUav8nYbHTtMmu0AAQ0WD4YhLFkwLN
-	pu1GEwoMZoWuFKV2ret1L4wRe72JMjg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-386-4W23eg3MOPmJj57bSZcCZw-1; Mon, 19 May 2025 05:04:40 -0400
-X-MC-Unique: 4W23eg3MOPmJj57bSZcCZw-1
-X-Mimecast-MFC-AGG-ID: 4W23eg3MOPmJj57bSZcCZw_1747645479
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so30937255e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:04:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747645479; x=1748250279;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b+x4vTIQvSf2FWpLg3QbvkOR5KW8aweHD+AVnGY/4x4=;
-        b=bwVNn3n+wm3H4ULjBLRUBs5zHM4+txDrghydmSpBhHnoCtsN1JFsns+Gkc7803+xLk
-         Z6a2fIyELBIScwavNsbAKL1BlF3WyqayQ/Rn8LF+KIEOAyg36BOTDy1JWX+rrD9tU0mI
-         s2U5lEu5b0hzVzUyO4WWhsT67xCFo5oxuPb1WvXgObgnjOFN2yplRFh7zw/xJxhbuFNb
-         y+STf0IjuXSoZ8H/0qKSF55Js9AUzmVHtvVGLiMLIL7+EWmXfMgTcDT4jLDmUoVJhtoa
-         tS3Kkq+NVTzcH/5fmT2GWtVhGGOyTxHp8vKPpi98v9UcRwN9wqilFCDwzE5eOwL/Xsq5
-         FZRw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0GJkbxscsb7xx+lf4OyJGo8b64xgoLu55Rj8fs5r6yj4U8rgxJ6WoqdGrjWbC/D9j0oyn6nXbsBWmioU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypf9jDw0SV6SL6FyAEgBhudQgQnsqWVy3JNAPCoCEeqNcdRgXl
-	uXG77nNzgcq7q8MGbIwiNHwQg6ouDAatf90zSxuFs0JjXJaATucnlzn11iTtrjhJo6wxBr4Kiu9
-	hCUDoEP30d1XPYHWSdTxEMiPtUoQhcTXDkdp/k2e/qbkmd3g0aC3hNib/OWCNvj5UYw==
-X-Gm-Gg: ASbGncvSAhlqNux3VyIfPQLhtk3L111qEI+mQAmM4hUq2m9dqn1TnPyiLNKw2bOK9S5
-	H0GtMtzpmZBY4MFJ7EUMCtlLe4NINE/HRT4tb9GgCXvzhKhHWqUQz3r2WyB6DumnP0ZgTxXIp/4
-	5gmS/8oMhBI9MHONhk2epR7WzZf99C4dHtzGH2gvZntLauiWzDwX38bX+l45mWlPSEEd/TZEMfI
-	4gwIEMvlqZO3ux8Z9w+m5c4UAUeW3KM4jzdpSg722e6sXLzD6CcN0b27G3YDtxfB+M80vjPK2YM
-	4v0oawlaN3ARCXgqvk8kDRRKmHrm4UXcFyx3NYGHpw==
-X-Received: by 2002:a05:600c:524d:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442fd6649bdmr105814925e9.24.1747645478940;
-        Mon, 19 May 2025 02:04:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBHT37+a7uQLiNF7xXa9+Pq3Q8b9W3F1Dvt9NV0dg1vkagGrtK9lGqM9kuxuBv+sLOTByRBg==
-X-Received: by 2002:a05:600c:524d:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442fd6649bdmr105814645e9.24.1747645478524;
-        Mon, 19 May 2025 02:04:38 -0700 (PDT)
-Received: from localhost ([195.166.127.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3369293sm207128905e9.6.2025.05.19.02.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 02:04:37 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, gregkh@linuxfoundation.org,
- hdegoede@redhat.com, arvidjaar@gmail.com
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
- stable@vger.kernel.org
-Subject: Re: [PATCH] dummycon: Trigger redraw when switching consoles with
- deferred takeover
-In-Reply-To: <20250519071026.11133-1-tzimmermann@suse.de>
-References: <20250519071026.11133-1-tzimmermann@suse.de>
-Date: Mon, 19 May 2025 11:04:35 +0200
-Message-ID: <874ixhotss.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KzEnOhtS"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7AB3040E0238;
+	Mon, 19 May 2025 09:04:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Hkju7R45Z25h; Mon, 19 May 2025 09:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747645477; bh=QCJTUXLOBmRGJZAYdNXk9FNir1HXdrpoMGsuigXKN7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KzEnOhtSEbzy4G6BhBh6fp9JLZIEjzxXJQH+0SZQ9QA1SL1AtnS19zhapU3dLmkeG
+	 os1xYVSJm+P2Rtc79poPx5AvT4T5BYuRKac86K1ID9Aun9xitmoE3kCPnxM/Z/4erI
+	 b8caNgDhfcFbnrbaQXWhu80xcHzHYxqD2gjcVojcKFWvbXyMG10+Y1V/NfAY2NBQWz
+	 IWf4Me70vVFnIjoSPHo9769KQKqh2iMs9uSDtqWktdl+qsPd3XOEZu/zrV+RTXaNY8
+	 nuPK7mRUFCOtvszSyZEPIG/AtEdju+5WS0oOzir2QgbFK06KQV+DYva7s7qIG/bnQV
+	 Y5k5Cjf5ydyxJq28KOjmXjb3JJoXUiUrdEAYkAsOSyTPAEhbZmmFIOJ4Ex/QcpXjKT
+	 mVTDRwpH+BSNYggyX5xv0TF+dURkg9dQYr3IzbXl7BMHlDoimx/Ns5IR//EGNbRTtn
+	 vk2zavQY6IKC2eOefkSTT8vE5zi8bgRfxXDz7EnDMiwAOG8UdaYFFY2f3KRGV8Ufna
+	 dKTU0WBSxEkPJeLjXAIbTA6gLR8+P9rigdkfcY3bx4UCpycAY6dh4ZrO8DOg42sTVR
+	 PcxRGRRIR/Sb0o8jKP7eDwAyhBMaBFdM6rtGUpv3Fhja3pnKBOMJgej7bT2RFaprC6
+	 qQgMpCUfZoEgdInty9TJK1pk=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57C6440E0173;
+	Mon, 19 May 2025 09:04:22 +0000 (UTC)
+Date: Mon, 19 May 2025 11:04:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc: Tony Luck <tony.luck@intel.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] EDAC: Add EDAC driver for Cortex A72
+Message-ID: <20250519090421.GHaCr0FWKaH1v1b5lV@fat_crate.local>
+References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
+ <1747353973-4749-4-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1747353973-4749-4-git-send-email-vijayb@linux.microsoft.com>
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-Hello Thomas,
-
-> Signal vt subsystem to redraw console when switching to dummycon
-> with deferred takeover enabled. Makes the console switch to fbcon
-> and displays the available output.
->
-> With deferred takeover enabled, dummycon acts as the placeholder
-> until the first output to the console happens. At that point, fbcon
-> takes over. If the output happens while dummycon is not active, it
-> cannot inform fbcon. This is the case if the vt subsystem runs in
-> graphics mode.
->
-> A typical graphical boot starts plymouth, a display manager and a
-> compositor; all while leaving out dummycon. Switching to a text-mode
-> console leaves the console with dummycon even if a getty terminal
-> has been started.
->
-> Returning true from dummycon's con_switch helper signals the vt
-> subsystem to redraw the screen. If there's output available dummycon's
-> con_putc{s} helpers trigger deferred takeover of fbcon, which sets a
-> display mode and displays the output. If no output is available,
-> dummycon remains active.
->
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Reported-by: Andrei Borzenkov <arvidjaar@gmail.com>
-> Closes: https://bugzilla.suse.com/show_bug.cgi?id=1242191
-> Tested-by: Andrei Borzenkov <arvidjaar@gmail.com>
-> Fixes: 83d83bebf401 ("console/fbcon: Add support for deferred console takeover")
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: <stable@vger.kernel.org> # v4.19+
+On Thu, May 15, 2025 at 05:06:13PM -0700, Vijay Balakrishna wrote:
+> The driver is designed to support error detection and reporting for Cortex A72
+> cores, specifically within their L1 and L2 cache systems.
+> 
+> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
 > ---
->  drivers/video/console/dummycon.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
-> index 139049368fdc..afb8e4d2fc34 100644
-> --- a/drivers/video/console/dummycon.c
-> +++ b/drivers/video/console/dummycon.c
-> @@ -85,6 +85,12 @@ static bool dummycon_blank(struct vc_data *vc, enum vesa_blank_mode blank,
->  	/* Redraw, so that we get putc(s) for output done while blanked */
->  	return true;
->  }
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3563492e4eba..1fa51e39e266 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8430,6 +8430,13 @@ F:	Documentation/driver-api/edac.rst
+>  F:	drivers/edac/
+>  F:	include/linux/edac.h
+>  
+> +EDAC-A72
+> +M:	Vijay Balakrishna <vijayb@linux.microsoft.com>
+> +M:	Tyler Hicks <code@tyhicks.com>
+> +L:	linux-edac@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/edac/edac_a72.c
 > +
-> +static bool dummycon_switch(struct vc_data *vc)
-> +{
-> +	/* Redraw, so that we get putc(s) for output done while switched away */
+>  EDAC-DMC520
+>  M:	Lei Wang <lewan@microsoft.com>
+>  L:	linux-edac@vger.kernel.org
+> -- 
 
-Maybe this comment could be a little bit more verbose about why this is needed
-for the framebuffer console deferred takeover case? It doesn't have to be as
-elaborated as how you have it in the commit message, but more information would
-be nice IMO.
-
-> +	return true;
-> +}
-
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+You can merge this one with patch 1.
 
 -- 
-Best regards,
+Regards/Gruss,
+    Boris.
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+https://people.kernel.org/tglx/notes-about-netiquette
