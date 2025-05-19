@@ -1,124 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F005881E;
-	Mon, 19 May 2025 10:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ADD270ECE
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649664; cv=none; b=CUCLBSZFrrh6YRUiYe8dam9IqjjEvncoxX4wqai8RXl10seJqArLXZGoses3NshTvpK0bUP14/cOjifz9WUMhJkKqSjfiO8LAGCLDVe2KA9J8Eav8EMj9zHnoMY5nDUkixWsoglUZyI5PjrV/sH9hVA5+O4WQdrPnhyhHApXeao=
+	t=1747649722; cv=none; b=mnfKzEIfn2AsH1V/A/lpc36FO/OrHVKhN9tfn4nYzksnRoffchwBZQZ67OU+JjepKC+9Mg43rMRrsa0kk/SI0lHj7L2lz5gPzSixYZJcBn62EAcExLhrUlL4pALzS3scxl231+Bcxpe4+d9EIK7ld7YVs3puS5fsgzsT45HCv1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649664; c=relaxed/simple;
-	bh=+qY/W+Tl5bBKT/y1ObIIiIHY/AW5ZPx+TXJ/Ggj8xHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAsHNIikVaxamKno1MplcZ2sIGkFGCcO9j7m4Cnmoj7KXiTAC9bBKSHHJ5Rk/XUnipEg1Q8/VXaTeZXPnctXovxsA5YvlmD0LpGLEHlr+i3wruht8qH/baIV6ekXxPqvNUtVDqIn9jUmDhrMAC64ywhjQDf0qCYhGRhzyPDdu20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: FYz9cRoRTqmhHxWjgSLyaQ==
-X-CSE-MsgGUID: /3UEGO4fREuR+ctDj8ntXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49697120"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49697120"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:14:22 -0700
-X-CSE-ConnectionGUID: KXafi+e/TJekXaV/pJPQCQ==
-X-CSE-MsgGUID: qj8D3cXCTpO2/sb/3vMoPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="140350370"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:14:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uGxVh-00000002yrh-1LHz;
-	Mon, 19 May 2025 13:14:17 +0300
-Date: Mon, 19 May 2025 13:14:17 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] iio: adc: ad7606: add gain calibration support
-Message-ID: <aCsEeQQyGdBg2ex9@smile.fi.intel.com>
-References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
- <20250508-wip-bl-ad7606-calibration-v4-5-91a3f2837e6b@baylibre.com>
- <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
- <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
+	s=arc-20240116; t=1747649722; c=relaxed/simple;
+	bh=zmhle5L+4+qv5m22mzveX9dJEVdEfimEphe3FmWOtr8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ifnnmkHLnmOZZT2GEGUqO6Evd+xjSV9jgeit1t34OefIKZBlCGbUwXr33HWkvjzXcpmLQErLeKxqytg2VPhCCjyW3SDf80ijtLp+/euSifFkhFIhLy76qFmrWBzDadGKKAtSbY8ySkTUAkq12TUNB+dgSG4MOhs1VuvDBUoZfmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OStWKLtH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OStWKLtH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D772C4CEE4;
+	Mon, 19 May 2025 10:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747649722;
+	bh=zmhle5L+4+qv5m22mzveX9dJEVdEfimEphe3FmWOtr8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OStWKLtHJDkSh0hLs02gQ1/jU2XchxaiFeDsGaMlxlzVC5TuBUOz3r3f2jLnZuloi
+	 ymoBk1vhbSaIOejWtSyD36oT1/Ufe9wLNTbb+vhhJpgtGp6qAzMzPRoziS4e3w9pF+
+	 NSh36GDfBLryuH7whCKq2DgzNYlnThMgkE9oMtMwlvcAxVZs2eAvtthH3X/QoTsU11
+	 XPM5jgWT5O5ziBdafdfrt9cBHR9SijBsRruSroKuRSH1mpkrs1xGvQc+qTl4bJ+LxQ
+	 3XoQzBTXkkx9ZrTtWe6Ba4WbACCFAq2tXFXWvfrZVYRgk+cHEA7easbOwvNWanbU8T
+	 BFG2O4R/VPnDw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uGxWi-00GByQ-CG;
+	Mon, 19 May 2025 11:15:20 +0100
+Date: Mon, 19 May 2025 11:15:20 +0100
+Message-ID: <86wmacewjr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sascha Bischoff
+ <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 5/5] irqchip/gic-v3-its: Use allocation size from the prepare call
+In-Reply-To: <8734d1iwcp.ffs@tglx>
+References: <20250513163144.2215824-1-maz@kernel.org>
+	<20250513163144.2215824-6-maz@kernel.org>
+	<8734d1iwcp.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, May 19, 2025 at 11:40:09AM +0200, Angelo Dureghello wrote:
-> On 08.05.2025 22:00, Andy Shevchenko wrote:
-> > On Thu, May 08, 2025 at 12:06:09PM +0200, Angelo Dureghello wrote:
-
-...
-
-> > > +	device_for_each_child_node_scoped(dev, child) {
-> > > +		u32 reg, r_gain;
-> > > +
-> > > +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> > > +		if (ret)
-> > > +			continue;
-> > 
-> > > +		/* Chan reg is a 1-based index. */
-> > > +		if (reg < 1 || reg > num_channels) {
-> > > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
-> > > +			continue;
-> > > +		}
-> > 
-> > But this will allow to have a broken DT. This check basically diminishes the
-> > effort of the DT schema validation. If there are limits one still would be able
-> > to create a DT that passes the driver but doesn't pass the validation.
+On Sun, 18 May 2025 19:53:42 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> fixed all your points on other patches of this patch-set. Still your
-> emails are going to google spam, just could catch them on friday. 
-> Really not clear why.
+> On Tue, May 13 2025 at 17:31, Marc Zyngier wrote:
+> 
+> > Now that .msi_prepare() gets called at the right time and not
+> > with semi-random parameters, remove the ugly hack that tried
+> > to fix up the number of allocated vectors.
+> >
+> > It is now correct by construction.
+> 
+> FWIW, while looking at something related, it occured to me that with
+> this change you can enable MSI_FLAG_PCI_MSIX_ALLOC_DYN now on GIC ITS.
 
-DKIM which I still need to configure...
+Maybe. It is rather unclear to me what this "dynamic allocation"
+actually provides in terms of guarantees to the endpoint driver.
 
-> About the above, i understand, but the check is actually the same as
-> in ad7606_get_chan_config(), a warning that fdt is not correct, 
-> i dont see a blocking issue here now, so not going to change it
-> in this next patchset.
-
-I think the 'continue' above is simply wrong. We should not allow to have
-broken tables. And I think it's kinda blocking issue.
-
-> > > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-> > > +					       &r_gain);
-> > > +		if (ret)
-> > > +			/* Keep the default register value. */
-> > > +			continue;
-> > > +
-> > > +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
-> > > +			dev_warn(dev, "wrong gain calibration value");
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-> > > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
-> > > +		if (ret) {
-> > > +			dev_warn(dev, "error writing r_gain");
-> > > +			continue;
-> > > +		}
-> > > +	}
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Without deviation from the norm, progress is not possible.
