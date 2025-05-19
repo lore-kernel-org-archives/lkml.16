@@ -1,116 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D368217733
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFE177104;
+	Mon, 19 May 2025 21:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747688498; cv=none; b=UInketdS4Kj2RoKTITPmcApJYUkww0E3ZvidimQEiNMYfWPIHQo/x2jZqE+QICbX9R/tWwX2OsQi9g97tBbChfOUHsKjRuPSHHPjSQbISFOOMdw0yCAjulpXB2wJ6VK7+3SbD+dV3VzXCHcSwu5rQ/vpbtWHXF9slaiNllzWs2E=
+	t=1747688581; cv=none; b=iawuQAKSX1DiUZdpqebmApa1NVUQCe7f/XRSMDBKaV+jP+EKb9JmSjRZXi/xplRK7nyVc/hfzuUyeEJKTqh1iKEDvB2vH4aHWsrp3TVbnIrRDG2QV9NO6sOqobDLJAzsIRf0Z2tfpWw6bF9p54m5FrOQO/NmjZ60M0Ki5FJeN2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747688498; c=relaxed/simple;
-	bh=XixqqRpjosG48i2+PvsQ5v+yrNqZcfiuvL820bhOgm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UbeomimG1ahfs5rof0jm/ebzPoG559lny+ph9YSaChMnyfe5bdpYjmAR1qIpLi+uYMG5Xjhwl9L+qv19yf3JCDfSsEbG8KGpEvWlzorZhuw3tV5NcxKSr3dwmxOKYMkImvsWYMxOTRZcvAMsXMpABK0yR9/n3p+apn54PR2MThc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njwescSh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747688581; c=relaxed/simple;
+	bh=xSVxlqInoshGkcnJUBt9D1AEiriLSrgitkvnvPVT+l4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=msF+KNC8ibtDR0StMtM55wNOjLXkfZZz426LgWMhU/8hc3anJ3ef/M3eBuQSJbQv7XsXcvj73ns5pyMdqx6Hazc/HUTkHypb9W5GzVSIm31dUT0eNR+MlukK2oxNfMFFsbfwcR42aYYXHzrvt1sN8zpJkGQKn57XaMPjROpEfaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=4dFFAmoZ; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njwescSh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0968C4CEE4;
-	Mon, 19 May 2025 21:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747688497;
-	bh=XixqqRpjosG48i2+PvsQ5v+yrNqZcfiuvL820bhOgm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=njwescShl3J8q+voT2CHdV71X8obbaNmulLvx+jpoIMAVzhVduIdS61UtgO3Heqar
-	 2gTyrxMewL3bijQ+Cp/GTD4g2ewjq7c2dSnKjujegZIHGMSxgpE+mtEN0y0gM2dsdG
-	 U3RNgjaKVBvvZ5NGqnRsWr8yLRIEq871USajKdCQBtTcAerB1QUEiUguLdXMpG+6u9
-	 mFu9zMgqOodoTmcn2Elji+/kDmz6FeWXZvdaR+9gOVb02T8ZtRn0KujPZU8q27FpnN
-	 fK6QSr1lqm8+6uF2vcAtjFR7fthuh1MBt6V+fQVE5bdPEhBx8iGXu28bTdtTGkUWap
-	 3NpTSyrAMHnAw==
-Date: Mon, 19 May 2025 23:01:27 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Chen Ridong <chenridong@huaweicloud.com>, akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
-	pfalcato@suse.de, bigeasy@linutronix.de, paulmck@kernel.org,
-	chenridong@huawei.com, roman.gushchin@linux.dev, brauner@kernel.org,
-	pmladek@suse.com, geert@linux-m68k.org, mingo@kernel.org,
-	rrangel@chromium.org, francesco@valla.it, kpsingh@kernel.org,
-	guoweikang.kernel@gmail.com, link@vivo.com, viro@zeniv.linux.org.uk,
-	neil@brown.name, nichen@iscas.ac.cn, tglx@linutronix.de,
-	frederic@kernel.org, peterz@infradead.org, oleg@redhat.com,
-	joel.granados@kernel.org, linux@weissschuh.net, avagin@google.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	lujialin4@huawei.com, "Serge E. Hallyn" <serge@hallyn.com>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [RFC next v2 0/2] ucounts: turn the atomic rlimit to
- percpu_counter
-Message-ID: <aCucJ9731YzaZI5b@example.org>
-References: <20250519131151.988900-1-chenridong@huaweicloud.com>
- <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="4dFFAmoZ"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4b1VWl04lrzlvxb9;
+	Mon, 19 May 2025 21:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1747688575; x=1750280576; bh=YEPofVvgLXeaS7bTEy/4niL9
+	XtDAUhUTLDA0AO+iElY=; b=4dFFAmoZjm/t+WIfTczGm1srH0zZuAqVYjf9JGMt
+	diQ0Biz/ahwGoS6xYMD9mPyvPfIURd1nLyIjmuV9enGrLaPQT5ugEzDoI84rjqSB
+	lnoFKCWYMcVIZtJRKHgromm0S5JlM3kBGSDUSujcZHFeN1h927hDRgZxUWMpXzzE
+	eJ0WTuGhBRT9G+5N8rJr8xsvgpNB8WlucQpgwgwa6SaTyh1LeWImW4RuErtfUliZ
+	q+FdGp6puXXe6+9eTn8ISyndPDu/AjfZCOAsvZtNHA+5qq1zN2no83gpiaOQK/7l
+	SNDIn9Br0Ai8lfu4S7dysE+uoaDbSO3GKzAUBBUj5QoSvg==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 2xkBi9KeFzdj; Mon, 19 May 2025 21:02:55 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4b1VWR5x85zlvq7Q;
+	Mon, 19 May 2025 21:02:42 +0000 (UTC)
+Message-ID: <08e67735-d5b0-47d0-b476-c22a3b5acdda@acm.org>
+Date: Mon, 19 May 2025 14:02:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ufs: core: Add HID support
+To: Huan Tang <tanghuan@vivo.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, peter.wang@mediatek.com,
+ manivannan.sadhasivam@linaro.org, quic_nguyenb@quicinc.com,
+ luhongfei@vivo.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Cc: opensource.kernel@vivo.com, Wenxing Cheng <wenxing.cheng@vivo.com>
+References: <20250519022912.292-1-tanghuan@vivo.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250519022912.292-1-tanghuan@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025 at 09:32:17PM +0200, Jann Horn wrote:
-> On Mon, May 19, 2025 at 3:25 PM Chen Ridong <chenridong@huaweicloud.com> wrote:
-> > From: Chen Ridong <chenridong@huawei.com>
-> >
-> > The will-it-scale test case signal1 [1] has been observed. and the test
-> > results reveal that the signal sending system call lacks linearity.
-> > To further investigate this issue, we initiated a series of tests by
-> > launching varying numbers of dockers and closely monitored the throughput
-> > of each individual docker. The detailed test outcomes are presented as
-> > follows:
-> >
-> >         | Dockers     |1      |4      |8      |16     |32     |64     |
-> >         | Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
-> >
-> > The data clearly demonstrates a discernible trend: as the quantity of
-> > dockers increases, the throughput per container progressively declines.
+On 5/18/25 7:29 PM, Huan Tang wrote:
+> Follow JESD220G, support HID(Host Initiated Defragmentation)
+> through sysfs, the relevant sysfs nodes are as follows:
+> 	1.analysis_trigger
+> 	2.defrag_trigger
+> 	3.fragmented_size
+> 	4.defrag_size
+> 	5.progress_ratio
+> 	6.state
+> The detailed definition	of the six nodes can be	found in the sysfs
+> documentation.
 > 
-> But is that actually a problem? Do you have real workloads that
-> concurrently send so many signals, or create inotify watches so
-> quickly, that this is has an actual performance impact?
+> HID's execution policy is given to user-space.
 > 
-> > In-depth analysis has identified the root cause of this performance
-> > degradation. The ucouts module conducts statistics on rlimit, which
-> > involves a significant number of atomic operations. These atomic
-> > operations, when acting on the same variable, trigger a substantial number
-> > of cache misses or remote accesses, ultimately resulting in a drop in
-> > performance.
+> Changelog
+> ===
+> v2 - > v3:
+> 	1.Remove the "ufs_" prefix from directory name
+> 	2.Remove the "hid_" prefix from node names
+> 	3.Make "ufs" appear only once in the HID group name
+> 	4.Add "is_visible" callback for "ufs_sysfs_hid_group"
+> v1 - > v2:
+> 	1.Refactor the HID code according to Bart and Peter and
+> 	Arvi's suggestions
 > 
-> You're probably running into the namespace-associated ucounts here? So
-> the issue is probably that Docker creates all your containers with the
-> same owner UID (EUID at namespace creation), causing them all to
-> account towards a single ucount, while normally outside of containers,
-> each RUID has its own ucount instance?
+> v2
+> 	https://lore.kernel.org/all/20250512131519.138-1-tanghuan@vivo.com/
+> v1
+> 	https://lore.kernel.org/all/20250417125008.123-1-tanghuan@vivo.com/
 > 
-> Sharing of rlimits between containers is probably normally undesirable
-> even without the cacheline bouncing, because it means that too much
-> resource usage in one container can cause resource allocations in
-> another container to fail... so I think the real problem here is at a
-> higher level, in the namespace setup code. Maybe root should be able
-> to create a namespace that doesn't inherit ucount limits of its owner
-> UID, or something like that...
+> Signed-off-by: Huan Tang <tanghuan@vivo.com>
+> Signed-off-by: Wenxing Cheng <wenxing.cheng@vivo.com>
+> ---
 
-If we allow rlimits not to be inherited in the userns being created, the
-user will be able to bypass their rlimits by running a fork bomb inside
-the new userns.
+The patch changelog should occur below the three hyphens (---) such that
+it doesn't end up in the kernel changelog. Otherwise this patch looks
+good to me. Hence:
 
-Or I missed your point ?
-
-In init_user_ns all rlimits that are bound to it are set to RLIM_INFINITY.
-So root can only reduce rlimits.
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/fork.c#n1091
-
--- 
-Rgrds, legion
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
