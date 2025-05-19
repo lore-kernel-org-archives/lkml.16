@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E9B1C5F13;
-	Mon, 19 May 2025 05:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7D15B135;
+	Mon, 19 May 2025 05:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747631251; cv=none; b=BlKDHO4tZpKWyqCq396NazDiTaqBO32z1cO7jx7jGHi/RYqrh3bv233UdC1FbdR22G5/ED1dzKZg/5oUMQjjwu+IoxdmWxUvtkjeDPVJ3/020c7r6qh4TIRgVq3RfkJMkINOyqOH4rc0+2jOTP5pl3yQh29J7U8ZDbLaTsd4CSM=
+	t=1747631303; cv=none; b=LHA71CIkFiHTNbOVZaVYAl6U1+nPmbxd5BE3exd0+fDZeMFGWLeu75GEKRoI8mqSrMKcL6eSXjmRg9dNcGulLv7OSREDpyDzNZ2vlAaGkjZJcgTuy24zvcYg8Rgq3B2RmEFJOnlGBs40Q4A6LVtACaUwUauxJDLnqF4ibc8gAUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747631251; c=relaxed/simple;
-	bh=S5ZNbdsg4wDUCuKqxM5YRSWGM9yiZiVQDInfyPth+p8=;
+	s=arc-20240116; t=1747631303; c=relaxed/simple;
+	bh=+5uQRfunz6MK8/PF2kn3g7bE2yl482T3Sfm+L9qP65U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XJu0RflkA+0RCtmy/N4EIQEkxiCbKbr/rqnTR/p9Eqk7HgxTI6kHAgQ9d85F35j/3UUMKoNYjnVEE0GTJS7hXJbVdP0EwomgqpklaEUL2x2P/5OEkByFKSgvORjI+IMsUc2r4qLT4vjnutSOh7FzHCt76KQAE8e3qHNfUITTgPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dhzcRnil; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=LZjxaEDBGpkLH6tf3xy3H+Ssh1APR1IBhKcvYb9K7gozxVOBlwTxXeJLxAzwVq0l6yrRl0NxyZvezO8jD7RVa6JgqYgH4wMG/FeWc8f0ILxmPR5wrpfaW+gVUCxz35XgiruEhSgA1vW2LwGemqk2/rbI1Y+drYbmbczbsD86ooE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuuJkNFa; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhzcRnil"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747631250; x=1779167250;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=S5ZNbdsg4wDUCuKqxM5YRSWGM9yiZiVQDInfyPth+p8=;
-  b=dhzcRnilgMS8V9kw1KCKyahJJjGgbO1kPLRSBCl6tF2GzEa+JZu0DeZl
-   1tWK5BrC8dRgN9e0FmRJuAr6Q9l3pdf3olEqpXkejw7bJGG1b4ArkIw8D
-   kOip0TzBoxaQNnfZJrWMTAOxw2n6HNjR3DZYqrfasw9pOBdBoe/3g5a/k
-   N+v1YJG/aV8UTnP96Zfg5XP1Cjc7f+eJ+VqoqY69jYfM8G1nPNWIqZ57P
-   8vcC67JCH3tKSVpZj5VdpGxC2ODBbpEH/4NWoeA8hI+SiAWDbCzBmPB//
-   oOwO5YpitbN7Jf2DRJTcUNsKur0ZZTEKYWdfEhQtjvjnmw0qRbn71pC6g
-   A==;
-X-CSE-ConnectionGUID: UJe2NOuYTK+lpTojavpkfA==
-X-CSE-MsgGUID: l5CgHdScRRGWErYWJAgqBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="74917057"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="74917057"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:07:29 -0700
-X-CSE-ConnectionGUID: +L7rLQChRQy2cqMJacaboQ==
-X-CSE-MsgGUID: uN+tIhaBQPCdLB/rMn2vPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139100836"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:07:21 -0700
-Message-ID: <b1cf61c7-956b-4614-82b2-78d964e20b55@linux.intel.com>
-Date: Mon, 19 May 2025 13:07:19 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuuJkNFa"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b074d908e56so2492260a12.2;
+        Sun, 18 May 2025 22:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747631301; x=1748236101; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xwD16IY+mV1vOg/kDG6DOdFjfPbkL9odEag4Ga7a+G8=;
+        b=LuuJkNFaNVtZQH22rYD7EKrrGVzEHfe5d1nR02WGGjrufWutnxN9T+91EUjHi1/F55
+         y4HOc7rlbKGiv705TryzmDLdDPU1V1bGwQe1bFLosad19zyvYlkNc44BBIeI/XE0y77X
+         07w8IhzMCM6A6PSVAbd8j43LW9+h2e3+hE5TyXOLEppm9AiXSN7twYzXWZ5vwCtMcM53
+         mkWDjS5wSSaZU2teKmjBrwFtVkQyODuyb1euZGa/j+D1yB4Q7GBcSktlbEqiSrYXpNmm
+         UzHvqydmDNAeG0lrVd1peD4UFvXtQCBWjWjFJu5ijKcXQvxaQdPFWVQYW0KX/sQUYp6q
+         21Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747631301; x=1748236101;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xwD16IY+mV1vOg/kDG6DOdFjfPbkL9odEag4Ga7a+G8=;
+        b=sp+OyrDl3Fpu7xoPjow8mMQSI4eh7Dt2SZSlTwMeVQgUCZlsWWGAVAIx/glsBEe0Xg
+         koTiQef8UeivApVQuRXl/v58JOLuxLZuNbsXA3PABlRGNe5cVzp5SmAXPCIRLb45NfsX
+         2/yrPboGOD1xF1A2UGz7s132iO3WDVLxdlgn+IC/A08cV61qhmKC4fcJPU/G44OHQ1Eq
+         ho9lYcgOndW2gm5uRzGNfijbgXeYLKiWku8tzqReMxnOK35oWa3GLLO0fFl2lFVLsweD
+         sAZ+NszB9Wep7QASVrCSxWyRmbHrbY7JHWrfIl9a1ZI97rzEJpEQNyDuAzpqzpK58BQw
+         XQyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtvNMXL+5UlWVJ2itV59Dk6nV3VI3iGxlvdpa5MmUT2CGdxOfNAVkiahTNxcXj7AqTKkGvVsHv87O1@vger.kernel.org, AJvYcCW3LZJFdi+ATLay1QwTUx9SIbb07eDGe2jYfnLEvBC6jQoBTN6Mer6xODf4sWwFFCE+Nmu3xn7kXcB09Ec9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNF+fMlxiOofs3CiSZ2XCyReZIijN65tr/1txfS3ycX431cb4U
+	c7jKa+c8xP9nrDtL9HPUz2p6XcbMmSFnbtTHLRS7WNwNS1YRB7g0q5PE
+X-Gm-Gg: ASbGncunqA+9qRyMMCJe7vGqletGtNBmOivm1HW1Qvf8s3XjDBf0Crfz/SU+Mv5q2VE
+	bsIiTG//C87+tOS7ReFNRf7rOKrjt5DYjrB3tmDKe886EaR09llGshyyIXFTo7o1iz6ubgA+oNT
+	anpDv4FiFHg3DXS9NiHvZ8xuH9dmd7HBVdMc7Lx2ILc6DKHE4tQeVgyPmaZJkFwW+QEIfx0qx00
+	oyBhD9NQGjZ1iZnmVH5yC4RQ42idvT4K+WzJFAgt3nwxm05KLQrrbIE97h113h2odE+eXHKwDnG
+	DAof8xP5PkibJNeGALpZrlbkyo2Gbot12PTfAy2CwNSYQAGZSyGzDZSCdxMkEULWdaUQjCxuv1+
+	nvUayqHds3hM=
+X-Google-Smtp-Source: AGHT+IH1Es9V7bpGSmK5k3mh2cazGmbf4vrH1kHrZdJfLjtCFQhaKIOHJ1kkKU2QJM7iDgNER1ixxA==
+X-Received: by 2002:a05:6a20:728e:b0:215:df90:b298 with SMTP id adf61e73a8af0-2170ce19eaemr15743817637.26.1747631301368;
+        Sun, 18 May 2025 22:08:21 -0700 (PDT)
+Received: from [192.168.1.6] ([171.61.103.229])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb081aafsm5322931a12.47.2025.05.18.22.08.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 May 2025 22:08:21 -0700 (PDT)
+Message-ID: <6065e339-704c-4081-b4be-ab86417b9ec7@gmail.com>
+Date: Mon, 19 May 2025 10:38:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,90 +67,178 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 29/38] KVM: x86/pmu: Switch host/guest PMU context at
- vm-exit/vm-entry
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-30-mizhang@google.com> <aCc9CKw3DGXXQbbe@google.com>
+Subject: Re: [PATCH] dt-bindings: mmc: ti-omap: convert text based binding to
+ json schema
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250510-ti-omap-v1-1-588b0ccb1823@gmail.com>
+ <b18bc629-6bf6-4490-be98-033b771ecda7@gmail.com>
+ <ecf3565a-e0ec-4848-a157-d0b5d1770b11@kernel.org>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCc9CKw3DGXXQbbe@google.com>
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+In-Reply-To: <ecf3565a-e0ec-4848-a157-d0b5d1770b11@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 5/16/2025 9:26 PM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> +	/*
->> +	 * Clear hardware selector MSR content and its counter to avoid
->> +	 * leakage and also avoid this guest GP counter get accidentally
->> +	 * enabled during host running when host enable global ctrl.
->> +	 */
->> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
->> +		pmc = &pmu->gp_counters[i];
->> +		eventsel_msr = pmc_msr_addr(pmu, pmu->gp_eventsel_base, i);
->> +		counter_msr = pmc_msr_addr(pmu, pmu->gp_counter_base, i);
->> +
->> +		rdpmcl(i, pmc->counter);
->> +		rdmsrl(eventsel_msr, pmc->eventsel_hw);
-> As pointed out by Dapeng offlist, this RDMSR is unnecessary since event selector
-> MSRs are always intercepted.
->
->> +		if (pmc->counter)
->> +			wrmsrl(counter_msr, 0);
->> +		if (pmc->eventsel_hw)
->> +			wrmsrl(eventsel_msr, 0);
->> +	}
->> +
->> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
->> +		pmc = &pmu->fixed_counters[i];
->> +		counter_msr = pmc_msr_addr(pmu, pmu->fixed_base, i);
->> +
->> +		rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i, pmc->counter);
->> +		if (pmc->counter)
->> +			wrmsrl(counter_msr, 0);
->> +	}
->> +
->> +}
->> +static void intel_put_guest_context(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +
->> +	/* Global ctrl register is already saved at VM-exit. */
->> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
->> +
->> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
->> +	if (pmu->global_status)
->> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
->> +
->> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
-> And same thing here.  Though I'm confused as to why KVM always intercept
-> FIXED_CTR_CTRL.
->
-> /me rummages around the SDM
->
-> Ahh, because there are Any Thread bits in there.  That absolutely needs to be
-> called out, probably in the interception logic in pmu_intel.c.  I'll add a comment.
 
-Another reason is event filter. User may select to filter out some but not
-all fixed counters, so PERF_FIXED_CTR_CTRL has to be intercepted.
+On 12-05-2025 01:48, Krzysztof Kozlowski wrote:
+> On 10/05/2025 19:20, Charan Pedumuru wrote:
+>>
+>>
+>> On 10-05-2025 22:07, Charan Pedumuru wrote:
+>>> Convert TI MMC host controller binding to YAML format. It's a
+>>> straight-forward conversion of the typical mmc host controller.
+> 
+> 
+> Not really - you added properties.
+> 
+> 
+>>>
+>>> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
+>>>  Documentation/devicetree/bindings/mmc/ti-omap.yaml | 61 ++++++++++++++++++++++
+>>>  2 files changed, 61 insertions(+), 26 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.txt b/Documentation/devicetree/bindings/mmc/ti-omap.txt
+>>> deleted file mode 100644
+>>> index 02fd31cf361d6ed893ec2f9eb8368b358ab2bae1..0000000000000000000000000000000000000000
+>>> --- a/Documentation/devicetree/bindings/mmc/ti-omap.txt
+>>> +++ /dev/null
+>>> @@ -1,26 +0,0 @@
+>>> -* TI MMC host controller for OMAP1 and 2420
+>>> -
+> 
+> ...
+> 
+>>> -	};
+>>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.yaml b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
+> 
+> 
+> Filename based on the compatible. Didn't you get exactly such feedback
+> already?
 
+Yes, I will rename it.
 
->
+> 
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..3660f54550e0ee46d3a7cfa3f531d95802f1e2fb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
+>>> @@ -0,0 +1,61 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/mmc/ti-omap.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: TI MMC host controller for OMAP1 and 2420
+>>> +
+>>> +description:
+>>> +  The MMC Host controller for TI OMAP1 and 2420 family provides
+>>> +  an interface for MMC, SD and SDIO types of memory cards.
+>>> +
+>>> +allOf:
+>>> +  - $ref: mmc-controller.yaml
+>>> +
+>>> +maintainers:
+>>> +  - Ulf Hansson <ulf.hansson@linaro.org>
+> 
+> 
+> No, this is supposed someone responsible for the device, not subsystem
+> maintainer.
+> 
+
+Okay.
+
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: ti,omap2420-mmc
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +
+>>> +  dmas:
+>>> +    maxItems: 2
+>>> +
+>>> +  dma-names:
+>>> +    items:
+>>> +      - const: tx
+>>> +      - const: rx
+>>> +
+>>> +  ti,hwmods:
+>>> +    items:
+>>> +      pattern: "^msdi[0-9]+$"
+> 
+> Missing type: string-array
+> min/maxItems?
+> 
+
+I think the type can be string, will modify defining type and maxItems. If it's string-array, the defaults can only be "msdi0" and "msdi1". So, I thought to define pattern with string type.
+
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - interrupts
+>>> +  - dmas
+>>> +  - dma-names
+> 
+> That's a change - binding did not mention it, did not make it required.
+> Every change should be explain in commit msg.
+> 
+>>> +  - ti,hwmods
+>>> +
+>>> +unevaluatedProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    mmc@4809c000 {
+>>> +        compatible = "ti,omap2420-mmc";
+>>> +        ti,hwmods = "msdi1";
+>>> +        reg = <0x4809c000 0x80>;
+>>> +        interrupts = <83>;
+>>
+>> Forgot to include irq interrupt-controller header and use it for the interrupts, will change in next revision.
+> 
+> Header does not look like used...
+
+Yeah, will change the interrupts format to take header format.
+
+> 
+>>
+>>
+>>> +        dmas = <&sdma 61 &sdma 62>;
+> 
+> But here you need two <> phandles.
+
+Sure, I will rewrite them in 2 different phandles separated by , .
+
+> 
+>>> +        dma-names = "tx", "rx";
+>>> +    };
+>>> +...
+>>>
+>>> ---
+>>> base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
+>>> change-id: 20250502-ti-omap-12655fa9db3e
+>>>
+>>> Best regards,
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
+
+-- 
+Best Regards,
+Charan.
+
