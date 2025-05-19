@@ -1,99 +1,106 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246631A83F8;
-	Mon, 19 May 2025 14:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3FD26AA88;
+	Mon, 19 May 2025 14:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747664143; cv=none; b=jhwZ+6CFq4k97yrBwGfnaNZFu9BSjoUBPkGh3TQBYdQmJLwkuxyviNZKYDmqbdXqknwo7jGgkxbiQRbBpmkJi1R6famfRvjHAYuoBdAMxTqEj1FkRBbCLPKiU5nWiSbXzaxQlOQDiQw+/w3op8sH8XrjKGGTA0oCU6+5AMwR2PQ=
+	t=1747664272; cv=none; b=IpL/PJJsrhOWQ0f2FWOtEg3fts7jejjiwfLhZPH/7qVedRLthnhK1gMOcQ1HdTmGWNwitwvMay4dknrROdustO8sakqQ8kCHM69C7XzQYxsKi2mWomzKhV44AEmdFYcQBTwFec2UCbdL1e8ZVkbsMzwXDH2GesGYOrGFgXrWf88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747664143; c=relaxed/simple;
-	bh=LBz7CbTok9hiT/Rd4gD+6R6Afb6EOxFXMSfsbOL4IRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dqoPXo0mQF9qzQK6W3Z3w0WvDt7KQOnDz4jEU5tYjRvTgDS+2raKen54XDqJoKcA9UEi2XlPd9ao2k57+gIk/5ZixJqIQyIGj7uNEfzuilJ2CWlTS+JWHX7Vbjvz0fHIlBzRiKqIocxWB/RFteMFemkRVy99EJsssYZhh2GU5IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrt7RWpH; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747664272; c=relaxed/simple;
+	bh=F9YUAtGxzRKzqxiaEcNL9j1uUwgXa9TGLGYUo1DfYzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mvnWSWZVjUVM7tar8K5c/EydUfM+zbZKcFMs1iOQDAgkikPu3km+OxFAsFH3ooSgV6JAoDgFShyVgcdIXzIgK8K66pDH3vw45A89OizAgtrUk44kvwDTYKA6Hb1zsiZAlzJ6r6bBPBjTszBWM/PxUyYtahcfNHdRmK/4388oe+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JsOL34wN; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrt7RWpH"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e17b7173bso2295715ad.3;
-        Mon, 19 May 2025 07:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747664141; x=1748268941; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JFWLr6OI5wVVnuVWXpsQry3bxwa2eh/RNHdZAeSrn9E=;
-        b=jrt7RWpHtthPTXQ3CzVTiGI7DyDQ8ze3MSA6+8u3Bek/dP84X6ii8IItJyuS+qMD5x
-         dxRAOCj3mVUQQDWujd6bVUJrnJUSgLSwDrq5iAjBsa71Bs9FgmjfDpsWHlfeVSYGwYdj
-         1aKIWemP1rrMFhn3x7PbDtwVCnnIwgWfP2wjFGPAv8iR9dwxKsGcSH7fvmTAPicovD6q
-         YQ18xI6EBql0YjuRrn97hnPgkxmkTD9yZ11+g52iDszP9Cjfnbd2d+p9q9IZH2d4FhVP
-         bP5UkzrsGVSKQ5vSB5JQvt4oKeEU5FgwONzFepaMXxzA1YtV8S/oVstRy8VekXpSLYze
-         ePww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747664141; x=1748268941;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JFWLr6OI5wVVnuVWXpsQry3bxwa2eh/RNHdZAeSrn9E=;
-        b=nkouM/Q1hC4IeXbfBsJxjpMyIzWVY9bba/TNQj4GtCQlN2Zfsy2CCpUce9OjAwE3qn
-         IdylnGAQv7NRi4roPtql9y0wifGk48gf5kjPhWtLJLvsCIe6ZrjeVctTfTd1o/DTB5EZ
-         8tTE55hFYsgME4ZrxdtOq89eUXg82ouQvAH4hLEWNGPaMhqb1yqdcZ/WhUf0VPvHz8wc
-         X1vHXEROc2y5s1CQYZHwGhdttFRz63L98yPp9Hkp4fok6nHk8f1jikO8fqpP7P/sYcIM
-         8XjscpFMnwTsbsEMMGM4Kw2tfDcRQza+Be6tMAPG0OdynYpZqP0WxRX7NZRcOh1WDTEA
-         y2AA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+6N06doPk/OZEkWNKdVQ4avfa3EHtxzggPDnXqME3NU5xpCEPk49hvj9eFWV0PjU0P1wHw6G6OOOurZDyOlQ=@vger.kernel.org, AJvYcCVCH67AZgW7MtqWYrky2ywOcAk1m4ZtnGwDgRyfCHiGbiUc1gNDcEhkDc3MJWBpDHET24bVBBGTyok=@vger.kernel.org, AJvYcCVYZOhLO6iCEDZq8/4HBlgYOzvCO9X3mXopeoW55zaC0xWeWoWz9NcOYejrBXOxwGHF8s2Sj9uI++0=@vger.kernel.org, AJvYcCWlvu7c2XM+oUtyXJ5DA81F/hW6u3ZlWfJvw+p7v+dHjqzMuhF7JE37J8B05ha4kg8GPk2vS4aLECZCFY8w@vger.kernel.org
-X-Gm-Message-State: AOJu0YylrHS5HieXMc+N3nlm74Cf5D0ganffYnNlZgRHFriguSEcF/Xg
-	R/KmkVPQ7hWkf/nxbRho/DVCpKBG5Saw1mT6GhI7rPNHF8vTsISHB/mNd2+x1DPXimYBvA51Tke
-	EgDNKOEyWf8KRcDfsiZVVeuLSH8NNYZM=
-X-Gm-Gg: ASbGncs1rBO3nlywNkZQMXXLakBMO6e1OvGf7Jq3qdJXQnIIcHQnK9kqjqyjgzNV9Xk
-	jZKk61+PRD1rjzQebEZtsTTyRxQxcU8pVxEN+6nUITnmVe2RIzs32Tfc4bWqNuJOVqeooHRFDFy
-	LQL2h1jlWU8XIXYgl4k2N0S8B00KeFvRbs
-X-Google-Smtp-Source: AGHT+IEYa3sccvA8xQ5p1zCSL1p/yZXI4bGMmkiDApxIBC1xjOK5CDTHXaWyMmXLa8VfSf8paFTObwZ3GjovVzMUVuw=
-X-Received: by 2002:a17:902:f543:b0:212:48f0:5b6f with SMTP id
- d9443c01a7336-231d45262a6mr65988125ad.9.1747664141111; Mon, 19 May 2025
- 07:15:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JsOL34wN"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J6ikge019882;
+	Mon, 19 May 2025 14:17:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=jfAvfmaP4Vog/zDqvYg6fB4Jhk0Eh
+	rxYNvfTR89+Dec=; b=JsOL34wNPM9qjS2RAT3p9bjofTFk3/rMBw7Md+QhgP+Yh
+	PuIK66fviQuGMUSZ/eTd42L62Dz7fqtpaPs2ud0iebd0b7j07Pmba/i3hm/3N4dN
+	kljAmoLKnlCgddXfLgpi3h9cLedd5opa/0lu4va8eqYv8OQUWHXV0pbk+DU/3HrZ
+	/xS1sEbZsSN45aOaw0tT01sENqDWVc9Kj1tKpNXR2+dpfuMWVIL2qwBn8B31SigH
+	92IEksgGG2GOyW5X/tPEtAxV5M1lCRMKrOTH65vkb8JPmETa+2Y6fNbF9WBsLbpr
+	/Y1qVohKD0evPFYkkh5aQA8NCyQiJ6pIfW+zu5qvQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46phcdu5jm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 14:17:36 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54JDjmJx037137;
+	Mon, 19 May 2025 14:17:35 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw7ggwn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 14:17:35 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54JEHZuM017600;
+	Mon, 19 May 2025 14:17:35 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46pgw7ggv1-1;
+	Mon, 19 May 2025 14:17:34 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] emulex/benet: correct command version selection in be_cmd_get_stats()
+Date: Mon, 19 May 2025 07:17:19 -0700
+Message-ID: <20250519141731.691136-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747634382.git.viresh.kumar@linaro.org> <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
-In-Reply-To: <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 19 May 2025 16:15:28 +0200
-X-Gm-Features: AX0GCFtC-8NcfIsvsg4cU78ogkZiXh9AmQGXjdzvJiPpuVhnrDGer3E08jYPZ1U
-Message-ID: <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
-Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module names
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	Andrew Ballance <andrewjballance@gmail.com>, Anisse Astier <anisse@astier.eu>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505190132
+X-Authority-Analysis: v=2.4 cv=a6gw9VSF c=1 sm=1 tr=0 ts=682b3d81 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=5cChKmV2vpbr6EMTWcEA:9 cc=ntf awl=host:13186
+X-Proofpoint-GUID: QcRoVyzC2eeXFONFrJN4_1mMTrC8SgHw
+X-Proofpoint-ORIG-GUID: QcRoVyzC2eeXFONFrJN4_1mMTrC8SgHw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEzMiBTYWx0ZWRfX49YumU+mtCMS j2KxLvBJtRU4z09XDGX7/c6lo9qEgA6EeZa+CVjeiHhthg2WkPZBQ7fOXdJlQ3/SDseBQjxcsBK uTrAxAdNpDDmilsdRdDHxtxfcIz1GULC5jB0kpnFhAP8NAOkTvL94MpygruA0/TjUd40318FtnQ
+ PR6oCUdzATm/sA7NpslHASeWS0awBkQlNNXN3Flg0AJOjUrbPfEIojzzGu4KAnDkAbsSiGYBiZV BnNLaMIVZovT17qkik1EEgfxjbl/it0z1qXXFkK7TGSoyIbOt6sxdi9V4yxlJf5UdUYNYQqEZNC YT7BZno6VrW7WTGCyk92/9uaRGck51Z8d7VKmvVRhl6IzXjLMH5fPFXQ1GF1njp9IPp/K7YEGwm
+ QRUSVIE/+bDLm4ZmBBggJ8wHmz8EnR+PpvuVM/sHFOECaBqkhH/o84/sVkKvL5NAQWDxuQoQ
 
-On Mon, May 19, 2025 at 9:08=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> +    /* Rust does not allow hyphens in identifiers, use underscore instea=
-d */
+Logic here always sets hdr->version to 2 if it is not a BE3 or Lancer chip,
+even if it is BE2. Use 'else if' to prevent multiple assignments, setting
+version 0 for BE2, version 1 for BE3 and Lancer, and version 2 for others.
+Fixes potential incorrect version setting when BE2_chip and
+BE3_chip/lancer_chip checks could both be true.
 
-(In case you see this before you apply)
+Fixes: 61000861e860 ("be2net: Call version 2 of GET_STATS ioctl for Skyhawk-R")
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/net/ethernet/emulex/benet/be_cmds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nit: `//` for comments, also please end with a period.
+diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.c b/drivers/net/ethernet/emulex/benet/be_cmds.c
+index 51b8377edd1d..a89aa4ac0a06 100644
+--- a/drivers/net/ethernet/emulex/benet/be_cmds.c
++++ b/drivers/net/ethernet/emulex/benet/be_cmds.c
+@@ -1609,7 +1609,7 @@ int be_cmd_get_stats(struct be_adapter *adapter, struct be_dma_mem *nonemb_cmd)
+ 	/* version 1 of the cmd is not supported only by BE2 */
+ 	if (BE2_chip(adapter))
+ 		hdr->version = 0;
+-	if (BE3_chip(adapter) || lancer_chip(adapter))
++	else if (BE3_chip(adapter) || lancer_chip(adapter))
+ 		hdr->version = 1;
+ 	else
+ 		hdr->version = 2;
+-- 
+2.47.1
 
-Cheers,
-Miguel
