@@ -1,178 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C56189F3B;
-	Mon, 19 May 2025 17:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071F0189F3B;
+	Mon, 19 May 2025 17:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677066; cv=none; b=o/h6M5nnZsC/WD9pALvm4wWWrr4JOhTbqSRnL+/iOTJ5rUi+c8QUE/BT3Ckj9fl0h6naXqXEJtxxOp6XC0pv0inRjT//2TbUiVr7IFo6sOq7eWeL3Xc5S13gJJKWUz27Qlhp8vHuXhn0/pQV6za5dZOLjcB8fK4tZpQJgIOEkfc=
+	t=1747677117; cv=none; b=Ukbc3d8Mu9GOzIvccfDVN3HpUDNbA+bZgEZUZUNFfG4jnXiQvDSiCTnjOp+gnvW90AMhe3TOdB00EFC+EPDEkMRKTxlCA4lHcod8jdg0rTrQcXDJ3auGUB2CHsCt5wIel3SAT2Z2Pf5xwFveBSef7M3fCSiu5FU2Aaw0cL7Bfnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747677066; c=relaxed/simple;
-	bh=nKa4bHZyPQdUF/i6uNjxZLF1LDuKJHocPAQdDgqVICc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RZNSgLhrsXEVntGTzEGeWtI1+olX9L2WR1vhG6SFRfxii6y3yAPjSTMkaiWrD406YPQwBgK0fe2KixXuMMxNsPqjJMX6tiomxgFTlmgHM68ixmMttp3ld179bmxg9tulbrse8ZWiF39VAhil0MKiRDyb1+GBHrTjJromPjxEgkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c2vW3R9q; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747677117; c=relaxed/simple;
+	bh=6UQF5G5Q/IqfsqFiqjSqhb91XPJLD0TluJRUmBXqaqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qvyiTTAgTl7xmOqacSyGEoZRl3bMWt3IsbTQya7UxtoTtyu0x9Mnf04kK5aeGs5bT1nl9INFHsIzGKn2w8wEe/qfPL/Za3jlIhx0SDG8upHW9iu2wM53cundA1RMNVinpWxXoPTFQ96tXeILsMRVvJ7w9MlRKlwk0fySQX6OOnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyAmKu5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2vW3R9q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747677064; x=1779213064;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nKa4bHZyPQdUF/i6uNjxZLF1LDuKJHocPAQdDgqVICc=;
-  b=c2vW3R9q3OVSmv9NpuNm7etcX9c5Qg/YrfWQqdZcJVT5TT3QN3I2wiFZ
-   9NCD9ZqauKYP654TNDkPCAMI6OApe0WPAVf5z3uceDEBOZRmU5LmmYEkb
-   Tr3XGvV6Qp9qRoSmMvK+1VbmbAesLs3csPHwpQ98kakBSMAdk3oaKSOmW
-   I62/Q9QI94F1SUAtMGnVTycAIooq5jhKKnjxgnNxlrNcHFqYs9XiDCQVt
-   sx+vR1j6fBQ798y8H8nUVpJaN5Haj6RoFCnVTy8+eSdGsjfcj7uV/8p+3
-   9+i32vT8iGDJAG/eDyIDQ4TJJzwvF/T0OynYtSgu/bHX4i7g32F0aC2hY
-   Q==;
-X-CSE-ConnectionGUID: RBbbY0eRRQyuyz7V38bRiQ==
-X-CSE-MsgGUID: uetXqAtRTkay86FK0Q0I8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49493458"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="49493458"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:51:03 -0700
-X-CSE-ConnectionGUID: glWSRu+/T1+fFYiMbL4DLA==
-X-CSE-MsgGUID: FwYFkZhNQ1+Ss/Cy0nueLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="170471752"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:51:03 -0700
-Date: Mon, 19 May 2025 10:56:06 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250519175606.GA9693@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <20250504-original-leopard-of-vigor-5702ef@kuoka>
- <20250506051610.GC25533@ranerica-svr.sc.intel.com>
- <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
- <20250515035338.GA4955@ranerica-svr.sc.intel.com>
- <20250519152937.GA2227051-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyAmKu5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27ABCC4CEE9;
+	Mon, 19 May 2025 17:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747677116;
+	bh=6UQF5G5Q/IqfsqFiqjSqhb91XPJLD0TluJRUmBXqaqQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dyAmKu5xNvuarM5vll1Jey/CJZjtEoDjLh6iLorHPO/yseAOXLY+oF8lH6ci/8KJO
+	 TMuLob6QZg33xzOkRASomXI8c6ahg7pErY5fzW/g4u1uwYVlquLsUIfIZ9n2S7QO7p
+	 FwFSqEHmmpX/HpRPYS9GFmC7jgotcyv4sdCNswZXQTLGyEC5BNvSOdhke+38z0btl+
+	 JP674PRmUux1BbbsX3YqIbd7z3xI77s5mpsrfLlyplI/DKOfbHAJ8p37Tc9+pvkAXJ
+	 oa61PBvhk6Gr78GARy0TGIkjbuqCqeKgXHt+AByH0eLHZsJdqW91nvwZTZLhZbTdnB
+	 UFyKvgTEeD8lA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: netdev@vger.kernel.org
+Cc: linux-nvme@lists.infradead.org,
+	linux-sctp@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v2 00/10] net: faster and simpler CRC32C computation
+Date: Mon, 19 May 2025 10:50:02 -0700
+Message-ID: <20250519175012.36581-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519152937.GA2227051-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
-> On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
-> > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > > > 
-> > > > > > > > > Why do you need compatible in the first place?
-> > > > > > > > 
-> > > > > > > > Are you suggesting something like this?
-> > > > > > > > 
-> > > > > > > > reserved-memory {
-> > > > > > > > 	# address-cells = <2>;
-> > > > > > > > 	# size-cells = <1>;
-> > > > > > > > 
-> > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > > > 	}
-> > > > > > > > 
-> > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > > > phandle?
-> > > > > > > 
-> > > > > > > Yes just like every other, typical reserved memory block.
-> > > > > > 
-> > > > > > Thanks! I will take this approach and drop this patch.
-> > > > > 
-> > > > > If there is nothing else to this other than the reserved region, then 
-> > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
-> > > > 
-> > > > Thank you for your feedback!
-> > > > 
-> > > > I was planning to use one reserved-memory node and inside of it a child
-> > > > node to with a `reg` property to specify the location and size of the
-> > > > mailbox. I would reference to that subnode from the kernel code.
-> > > > 
-> > > > IIUC, the reserved-memory node is only the container and the actual memory
-> > > > regions are expressed as child nodes.
-> > > > 
-> > > > I had it like that before, but with a `compatible` property that I did not
-> > > > need.
-> > > > 
-> > > > Am I missing anything?
-> > > 
-> > > Without a compatible, how do you identify which reserved region is the 
-> > > wakeup mailbox?
-> > 
-> > I thought using a phandle to the wakeup_mailbox. Then I realized that the
-> > device nodes using the mailbox would be CPUs. They would need a `memory-
-> > region` property. This does not look right to me.
-> 
-> That doesn't really make sense unless it's a memory region per CPU.
+Update networking code that computes the CRC32C of packets to just call
+crc32c() without unnecessary abstraction layers.  The result is faster
+and simpler code.
 
-Agreed.
+Patches 1-7 add skb_crc32c() and remove the overly-abstracted and
+inefficient __skb_checksum().
 
-> 
-> 
-> > > Before you say node name, those are supposed to be 
-> > > generic though we failed to enforce anything for /reserved-memory child 
-> > > nodes.
-> > 
-> > I see. Thanks for preventing me from doing this.
-> > 
-> > Then the `compatible` property seems the way to go after all.
-> > 
-> > This what motivated this patch in the first place. On further analysis,
-> > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-> > is already defined in the ACPI spec. No need to redefine.
-> 
-> You lost me...
-> 
-> You don't need to redefine the layout of the memory region as that's 
-> defined already somewhere,
+Patches 8-10 replace skb_copy_and_hash_datagram_iter() with
+skb_copy_and_crc32c_datagram_iter(), eliminating the unnecessary use of
+the crypto layer.  This unblocks the conversion of nvme-tcp to call
+crc32c() directly instead of using the crypto layer, which patch 9 does.
 
-Great!
+Please consider this series for net-next for 6.16.
 
-> but you do need to define where it is for DT. 
-> And for that, you need a compatible. Do you know where it is in this 
-> case?
+Changed in v2:
+  - Added some benchmarks to commit message of "net: add skb_crc32c()"
+  - Added "Return:" to kerneldoc for skb_copy_and_crc32c_datagram_iter()
+  - Added Reviewed-by's
+  - Addressed review comments on nvme-tcp patch
 
-The compatible is not defined anywhere yet. Is a DT schema needed to
-document it? If yes, I am usure what to put in the description. We tried
-to not redefine the mailbox and refer to the ACPI spec. That was a NAK
-from Krzysztof [1].
+Eric Biggers (10):
+  net: introduce CONFIG_NET_CRC32C
+  net: add skb_crc32c()
+  net: use skb_crc32c() in skb_crc32c_csum_help()
+  RDMA/siw: use skb_crc32c() instead of __skb_checksum()
+  sctp: use skb_crc32c() instead of __skb_checksum()
+  net: fold __skb_checksum() into skb_checksum()
+  lib/crc32: remove unused support for CRC32C combination
+  net: add skb_copy_and_crc32c_datagram_iter()
+  nvme-tcp: use crc32c() and skb_copy_and_crc32c_datagram_iter()
+  net: remove skb_copy_and_hash_datagram_iter()
 
-Thanks and BR,
-Ricardo
+ drivers/infiniband/sw/siw/Kconfig |   1 +
+ drivers/infiniband/sw/siw/siw.h   |  22 +----
+ drivers/nvme/host/Kconfig         |   4 +-
+ drivers/nvme/host/tcp.c           | 124 +++++++++-------------------
+ include/linux/crc32.h             |  23 ------
+ include/linux/skbuff.h            |  16 +---
+ include/net/checksum.h            |  12 ---
+ include/net/sctp/checksum.h       |  29 +------
+ lib/crc32.c                       |   6 --
+ lib/tests/crc_kunit.c             |   6 --
+ net/Kconfig                       |   4 +
+ net/core/datagram.c               |  36 ++++----
+ net/core/dev.c                    |  10 +--
+ net/core/skbuff.c                 | 132 ++++++++++++++++++------------
+ net/netfilter/Kconfig             |   4 +-
+ net/netfilter/ipvs/Kconfig        |   2 +-
+ net/openvswitch/Kconfig           |   2 +-
+ net/sched/Kconfig                 |   2 +-
+ net/sctp/Kconfig                  |   2 +-
+ net/sctp/offload.c                |   1 -
+ 20 files changed, 161 insertions(+), 277 deletions(-)
 
-[1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
+
+base-commit: a8ae8a0e848e3506c95e45e7cb6e640502495f1a
+-- 
+2.49.0
+
