@@ -1,756 +1,227 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA8D22579E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FC122759B
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747697321; cv=none; b=j4d2f++wq8zvy33lMh175csc1ZM6dYLq7l4UyJy6txOm5WNKEe9Vuwx+W/b80d95dCG2DsREhHaAV+RN0CWwFTBrWsPt0Q8pouvoBd4jSUh6oW2QuuYcuxOPoKfQaHE7z0dFtTqu+aRKy1m/mr+MFvah7GLzd903vjpn7m9q8x0=
+	t=1747697326; cv=none; b=ny6CgvOTuaaCyPymzNbXhJDgzNyjYrZ28QzTspBaDj13hedL2zbtv3QL/EkvztWjA6eSlByQQaoU6trBVloZRwTa0m8Zf3ebU1C9rsDB9zFBBgH++7Cz7OlOpbz8B+fBa214DXoPyCmV7vFlZDCyZB7LjyfQLqMB3HukAXsYQ+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747697321; c=relaxed/simple;
-	bh=2h+R3oCjDJHijaqD59kpzjyUlIgPd4MTEsYrNuKVieg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VWKjouB3qmUvWwllrEM/8OvluZoa7Xll1fC+Uoj9vs3xUAL5wbxWPr/4M2ndIDqIkQGXv+YkTZfKBPaBHjWsTdJhc/qo2onyciFlR4y7jZ6QqGSRndZYfSxeXrYgJYplUgUITMNMK4SQ9xP6i8YHTE98hoxQRSJdTroWjwyP1kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W0kDoOx7; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747697326; c=relaxed/simple;
+	bh=O04m3lkWw9OEhzrv+D5kOETrkaKagJf3ljfVlUQ/u7A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bMrCyen0EH8B8nWM7hHhaXFA+p3oi1cs8Zxb2M6JOFM0Lc+aqnq0P6Q3eBUaaJr/r2KWHlpBKqzx/SLyv/lRuC1kd6r5HXAlOQGmdsnK1hPVh0Yt0GE5aNkDFFCfPzAmYMDoIXXcrpKo9fNYuwyUAa+nMrMM+Fnex8S/vWCVbCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w9wOR6Ra; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W0kDoOx7"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26e120e300so4641823a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747697319; x=1748302119; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYplnj3zQPro5+YI4R9fT1vffU3AD1XGCuuLElZqFbg=;
-        b=W0kDoOx7AhzCdNd+ZSmlzggf5Q/iSt9cUJ9y8EvM3vvJq3fzO/84Tt78lBQMkBWzYn
-         Obu9e6IKKEnEC/O1aoQ1WpSl13vpyhcEqHN5fX42tfi1uY9uqE4nIwbWyliVpU2Mrmpm
-         WmDCwz6cCsY3IPjQ3uYXaAa0py6RSg2hPJU0wrf/yZCRF8Y7j4lOwd800GaHMjf8BOha
-         OMgXnutivfkrD3ba0CaRKvZqsBThO56XgjsRlc1/YpqCo0zyI21xaLc8PEr5d+zl/LCs
-         25Xj2Im2MsOrnEIoXlDHyjIEsPMu/EeYucDbdg9bY8Wc0ya5IzHhem8STjWIjDpKldEY
-         3l6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747697319; x=1748302119;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GYplnj3zQPro5+YI4R9fT1vffU3AD1XGCuuLElZqFbg=;
-        b=oqvPTg0oruvJSrsGmXtEct7JwmC+nAd0AnPhB+LM8ulsSDDHJDICn4IRVXu02R72cN
-         NWcVTdoAHq1YasTV3ytdmUzFw0hq8H8rc3OeDvw2arWRw+TJrJBNx1ViCL4z8fI7j/be
-         57JC5qdwu3BvtjOnMX5bBOQ/8HTERqDZKs92x9Mdg8sM/aNLnaEX7TcbfqjKiHVLLAhP
-         KGsgfzGdcSaqIjq1gIwYuOaRHi9GHpZd+LIhsrK7gGyDlCzavxhGtoPYofWJlt5GcWHF
-         O1/RPPIP0lZpYo4BnXSDX/99jRY4CmeZ3sGfcSk61nhCRTT+o2Kw8HvaL6vvc2xehZ3g
-         tiCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRHgIFFtHzf4hbXj87tmRjqMqpHujvQcLKeS3WO0uV3v72DqwGydVp3ArEKXowZsWLAH87pNAS3I4TGdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsyvDHkLc+JvFvPuTY0Ib2Qi81UT2mPxeUK5psy/zu1c1rgU/j
-	IA3Fspb16kG7l3j3pEO5AE5L4w0sr4ukPFkBe/LxJIDr8uH18skNovLj3VmQV2eQVlCxZk9Q+Nq
-	GHHlTgQ==
-X-Google-Smtp-Source: AGHT+IGWa46bD0SKjXEZmQKHNSJP4I6FRXvqvQ4YBRiR5zoAR4K89jbzjqICZAPpFfqaZdmJiiLtMykGVOw=
-X-Received: from pjbsw12.prod.google.com ([2002:a17:90b:2c8c:b0:2ea:5084:5297])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f4c:b0:2ee:5958:828
- with SMTP id 98e67ed59e1d1-30e7d522155mr25648574a91.9.1747697319047; Mon, 19
- May 2025 16:28:39 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 May 2025 16:28:08 -0700
-In-Reply-To: <20250519232808.2745331-1-seanjc@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w9wOR6Ra"
+Message-ID: <7bb37bea-917c-4082-9eaa-063c4d97833b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747697320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YN4/HEa9sDxP2Z7RL5+mxoGiZVvfCkU7xA6VooLndAc=;
+	b=w9wOR6RaiLyWj5YbX8yxLIvDgvwTh7Jq0WreayRD2rt1JAzgyn53ikzJwG70M1wq8Q5U4a
+	P/2WI6G41QCFTI0nPDQeR0I0YDRMCc85FCJIGg11Njaz8Hcg7ygbTCSJEIZuezMWiSe2p8
+	+IenDzDtW6ALs7mEOpXIGiRzzE0xdX0=
+Date: Mon, 19 May 2025 19:28:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519232808.2745331-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519232808.2745331-16-seanjc@google.com>
-Subject: [PATCH 15/15] KVM: x86: Fold irq_comm.c into irq.c
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Subject: Re: [net-next PATCH v4 03/11] net: phylink: introduce internal
+ phylink PCS handling
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, llvm@lists.linux.dev
+References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
+ <20250511201250.3789083-4-ansuelsmth@gmail.com>
+ <5d004048-ef8f-42ad-8f17-d1e4d495f57f@linux.dev>
+ <aCOXfw-krDZo9phk@makrotopia.org>
+ <7b50d202-e7f6-41cb-b868-6e6b33d4a2b9@linux.dev>
+ <aCQHZnAstBXbYzgy@makrotopia.org>
+ <cdfbbdca-001b-4ed5-92ff-40fd3a8e3341@linux.dev>
+Content-Language: en-US
+In-Reply-To: <cdfbbdca-001b-4ed5-92ff-40fd3a8e3341@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Drop irq_comm.c, a.k.a. common IRQ APIs, as there has been no non-x86 user
-since commit 003f7de62589 ("KVM: ia64: remove") (at the time, irq_comm.c
-lived in virt/kvm, not arch/x86/kvm).
+On 5/19/25 14:10, Sean Anderson wrote:
+> On 5/13/25 23:00, Daniel Golle wrote:
+>> On Tue, May 13, 2025 at 03:23:32PM -0400, Sean Anderson wrote:
+>>> On 5/13/25 15:03, Daniel Golle wrote:
+>>> > just instead of having many
+>>> > more or less identical implementations of .mac_select_pcs, this
+>>> > functionality is moved into phylink. As a nice side-effect that also
+>>> > makes managing the life-cycle of the PCS more easy, so we won't need all
+>>> > the wrappers for all the PCS OPs.
+>>> 
+>>> I think the wrapper approach is very obviously correct. This way has me
+>>> worried about exciting new concurrency bugs.
+>> 
+>> You may not be surprised to read that this was also our starting point 2
+>> months ago, I had implemented support for standalone PCS very similar to
+>> the approach you have published now, using refcnt'ed instances and
+>> locked wrapper functions for all OPs. My approach, like yours, was to
+>> create a new subsystem for standalone PCS drivers which is orthogonal to
+>> phylink and only requires very few very small changes to phylink itself.
+>> It was a draft and not as complete and well-documented like your series
+>> now, of course.
+>> 
+>> I've then shared that implementation with Christian and some other
+>> experienced OpenWrt developers and we concluded that having phylink handle
+>> the PCS lifecycle and PCS selection would be the better and more elegant
+>> approach for multiple reasons:
+>>  - The lifetime management of the wrapper instances becomes tricky:
+>>    We would either have to live with them being allocated by the
+>>    MAC-driver (imagine test-case doing unbind and then bind in a loop
+>>    for a while -- we would end up oom). Or we need some kind of garbage
+>>    collecting mechanism which frees the wrapper once refcnt is zero --
+>>    and as .select_pcs would 'get' the PCS (ie. bump refcnt) we'd need a
+>>    'put' equivalent (eg. a .pcs_destroy() OP) in phylink.
+>> 
+>>    Russell repeatedly pointed me to the possibility of a PCS
+>>    "disappearing" (and potentially "reappearing" some time later), and
+>>    in this case it is unclear who would then ever call pcs_put(), or
+>>    even notify the Ethernet driver or phylink about the PCS now being
+>>    available (again). Using device_link_add(), like it is done in
+>>    pcs-rzn1-miic.c, prevents the worst (ie. use-after-free), but also
+>>    impacts all other netdevs exposed by the same Ethernet driver
+>>    instance, and has a few other rather ugly implications.
+> 
+> SRCU neatly solves the lifetime management issues. The wrapper lives as
+> long as anyone (provider or user) holds a reference. A PCS can disappear
+> at any point and everything still works (although the link goes down).
+> Device links are only an optimization; they cannot be relied on for
+> correctness.
+> 
+>>  - phylink currently expects .mac_select_pcs to never fail. But we may
+>>    need a mechanism similar to probe deferral in case the PCS is not
+>>    yet available.
+> 
+> Which is why you grab the PCS in probe. If you want to be more dynamic,
+> you can do it in netdev open like is done for PHYs.
+> 
+>>    Your series partially solves this in patch 11/11 "of: property: Add
+>>    device link support for PCS", but also that still won't make the link
+>>    come back in case of a PCS showing up late to the party, eg. due to
+>>    constraints such as phy drivers (drivers/phy, not drivers/net/phy)
+>>    waiting for nvmem providers, or PCS instances "going away" and
+>>    "coming back" later.
+> 
+> This all works correctly due to device links. The only case that doesn't
+> work automatically is something like
+> 
+> MAC built-in
+>   MDIO built-in
+>     PCS module
+> 
+> where the PCS module gets loaded late. In that case you have to manually
+> re-probe the MAC. I think the best way to address this would be to grab
+> the PCS in netdev open so that the MAC can probe without the PCS.
+> 
+>>  - removal of a PCS instance (eg. via sysfs unbind) would still
+>>    require changes to phylink. there is no phylink function to
+>>    impair the link in this case, and using dev_close() is a bit ugly,
+>>    and also won't bring the link back up once the PCS (re-)appears.
+> 
+> This works just fine. There are two cases:
+> 
+> - If the PCS has an IRQ, we notify phylink and then it polls the PCS
+>   (see below).
+> - If the PCS is polled, phylink will call pcs_get_state and see that the
+>   link is down.
+> 
+> Either way, the link goes down. But bringing the link back up is pretty
+> unusual anyway. Unlike PHYs (which theoretically can be on removable
+> busses) PCSs are generally permanently attached to their MACs. The only
+> removable scenario I can think of is if the PCS is on an FPGA and the
+> MAC is not.
+> 
+> So if the PCS goes away, the MAC is likely to follow shortly after
+> (since the whole thing is on a removable bus). Or someone has manually
+> removed the PCS, in which case I think it's reasonable to have them
+> manually remove the MAC as well. If you really want to support this,
+> then just grab the PCS in netdev open.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/Makefile   |   6 +-
- arch/x86/kvm/irq.c      | 305 ++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/irq_comm.c | 325 ----------------------------------------
- 3 files changed, 306 insertions(+), 330 deletions(-)
- delete mode 100644 arch/x86/kvm/irq_comm.c
+So I had a closer look at this and unfortunately it isn't as easy as
+just grabbing the PCS in ndo_open. The problem is that we need to
+know the supported interfaces before phylink_create. The interfaces are
+validated and are visible to userspace as soon as the netdev is
+registered. And we can't just defer phylink_create to ndo_open because a
+lot of the ethtool ops are implemented with phylink. So this would
+probably need something like phylink_update_supported_interfaces().
 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 92c737257789..c4b8950c7abe 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -5,10 +5,8 @@ ccflags-$(CONFIG_KVM_WERROR) += -Werror
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--kvm-y			+= x86.o emulate.o irq.o lapic.o \
--			   irq_comm.o cpuid.o pmu.o mtrr.o \
--			   debugfs.o mmu/mmu.o mmu/page_track.o \
--			   mmu/spte.o
-+kvm-y			+= x86.o emulate.o irq.o lapic.o cpuid.o pmu.o mtrr.o \
-+			   debugfs.o mmu/mmu.o mmu/page_track.o mmu/spte.o
- 
- kvm-$(CONFIG_X86_64) += mmu/tdp_iter.o mmu/tdp_mmu.o
- kvm-$(CONFIG_KVM_IOAPIC) += i8259.o i8254.o ioapic.o
-diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index a416ccddde5f..314a93599942 100644
---- a/arch/x86/kvm/irq.c
-+++ b/arch/x86/kvm/irq.c
-@@ -12,8 +12,10 @@
- #include <linux/export.h>
- #include <linux/kvm_host.h>
- 
-+#include "hyperv.h"
-+#include "ioapic.h"
- #include "irq.h"
--#include "i8254.h"
-+#include "trace.h"
- #include "x86.h"
- #include "xen.h"
- 
-@@ -191,3 +193,304 @@ bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
- {
- 	return irqchip_in_kernel(kvm);
- }
-+
-+int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
-+			     struct kvm_lapic_irq *irq, struct dest_map *dest_map)
-+{
-+	int r = -1;
-+	struct kvm_vcpu *vcpu, *lowest = NULL;
-+	unsigned long i, dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
-+	unsigned int dest_vcpus = 0;
-+
-+	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
-+		return r;
-+
-+	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
-+	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
-+		pr_info("apic: phys broadcast and lowest prio\n");
-+		irq->delivery_mode = APIC_DM_FIXED;
-+	}
-+
-+	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_apic_present(vcpu))
-+			continue;
-+
-+		if (!kvm_apic_match_dest(vcpu, src, irq->shorthand,
-+					irq->dest_id, irq->dest_mode))
-+			continue;
-+
-+		if (!kvm_lowest_prio_delivery(irq)) {
-+			if (r < 0)
-+				r = 0;
-+			r += kvm_apic_set_irq(vcpu, irq, dest_map);
-+		} else if (kvm_apic_sw_enabled(vcpu->arch.apic)) {
-+			if (!kvm_vector_hashing_enabled()) {
-+				if (!lowest)
-+					lowest = vcpu;
-+				else if (kvm_apic_compare_prio(vcpu, lowest) < 0)
-+					lowest = vcpu;
-+			} else {
-+				__set_bit(i, dest_vcpu_bitmap);
-+				dest_vcpus++;
-+			}
-+		}
-+	}
-+
-+	if (dest_vcpus != 0) {
-+		int idx = kvm_vector_to_index(irq->vector, dest_vcpus,
-+					dest_vcpu_bitmap, KVM_MAX_VCPUS);
-+
-+		lowest = kvm_get_vcpu(kvm, idx);
-+	}
-+
-+	if (lowest)
-+		r = kvm_apic_set_irq(lowest, irq, dest_map);
-+
-+	return r;
-+}
-+
-+void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
-+		     struct kvm_lapic_irq *irq)
-+{
-+	struct msi_msg msg = { .address_lo = e->msi.address_lo,
-+			       .address_hi = e->msi.address_hi,
-+			       .data = e->msi.data };
-+
-+	trace_kvm_msi_set_irq(msg.address_lo | (kvm->arch.x2apic_format ?
-+			      (u64)msg.address_hi << 32 : 0), msg.data);
-+
-+	irq->dest_id = x86_msi_msg_get_destid(&msg, kvm->arch.x2apic_format);
-+	irq->vector = msg.arch_data.vector;
-+	irq->dest_mode = kvm_lapic_irq_dest_mode(msg.arch_addr_lo.dest_mode_logical);
-+	irq->trig_mode = msg.arch_data.is_level;
-+	irq->delivery_mode = msg.arch_data.delivery_mode << 8;
-+	irq->msi_redir_hint = msg.arch_addr_lo.redirect_hint;
-+	irq->level = 1;
-+	irq->shorthand = APIC_DEST_NOSHORT;
-+}
-+EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
-+
-+static inline bool kvm_msi_route_invalid(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e)
-+{
-+	return kvm->arch.x2apic_format && (e->msi.address_hi & 0xff);
-+}
-+
-+int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
-+		struct kvm *kvm, int irq_source_id, int level, bool line_status)
-+{
-+	struct kvm_lapic_irq irq;
-+
-+	if (kvm_msi_route_invalid(kvm, e))
-+		return -EINVAL;
-+
-+	if (!level)
-+		return -1;
-+
-+	kvm_set_msi_irq(kvm, e, &irq);
-+
-+	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
-+}
-+
-+int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
-+			      struct kvm *kvm, int irq_source_id, int level,
-+			      bool line_status)
-+{
-+	struct kvm_lapic_irq irq;
-+	int r;
-+
-+	switch (e->type) {
-+#ifdef CONFIG_KVM_HYPERV
-+	case KVM_IRQ_ROUTING_HV_SINT:
-+		return kvm_hv_set_sint(e, kvm, irq_source_id, level,
-+				       line_status);
-+#endif
-+
-+	case KVM_IRQ_ROUTING_MSI:
-+		if (kvm_msi_route_invalid(kvm, e))
-+			return -EINVAL;
-+
-+		kvm_set_msi_irq(kvm, e, &irq);
-+
-+		if (kvm_irq_delivery_to_apic_fast(kvm, NULL, &irq, &r, NULL))
-+			return r;
-+		break;
-+
-+#ifdef CONFIG_KVM_XEN
-+	case KVM_IRQ_ROUTING_XEN_EVTCHN:
-+		if (!level)
-+			return -1;
-+
-+		return kvm_xen_set_evtchn_fast(&e->xen_evtchn, kvm);
-+#endif
-+	default:
-+		break;
-+	}
-+
-+	return -EWOULDBLOCK;
-+}
-+
-+bool kvm_arch_can_set_irq_routing(struct kvm *kvm)
-+{
-+	return irqchip_in_kernel(kvm);
-+}
-+
-+int kvm_set_routing_entry(struct kvm *kvm,
-+			  struct kvm_kernel_irq_routing_entry *e,
-+			  const struct kvm_irq_routing_entry *ue)
-+{
-+	/* We can't check irqchip_in_kernel() here as some callers are
-+	 * currently initializing the irqchip. Other callers should therefore
-+	 * check kvm_arch_can_set_irq_routing() before calling this function.
-+	 */
-+	switch (ue->type) {
-+#ifdef CONFIG_KVM_IOAPIC
-+	case KVM_IRQ_ROUTING_IRQCHIP:
-+		if (irqchip_split(kvm))
-+			return -EINVAL;
-+		e->irqchip.pin = ue->u.irqchip.pin;
-+		switch (ue->u.irqchip.irqchip) {
-+		case KVM_IRQCHIP_PIC_SLAVE:
-+			e->irqchip.pin += PIC_NUM_PINS / 2;
-+			fallthrough;
-+		case KVM_IRQCHIP_PIC_MASTER:
-+			if (ue->u.irqchip.pin >= PIC_NUM_PINS / 2)
-+				return -EINVAL;
-+			e->set = kvm_pic_set_irq;
-+			break;
-+		case KVM_IRQCHIP_IOAPIC:
-+			if (ue->u.irqchip.pin >= KVM_IOAPIC_NUM_PINS)
-+				return -EINVAL;
-+			e->set = kvm_ioapic_set_irq;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		e->irqchip.irqchip = ue->u.irqchip.irqchip;
-+		break;
-+#endif
-+	case KVM_IRQ_ROUTING_MSI:
-+		e->set = kvm_set_msi;
-+		e->msi.address_lo = ue->u.msi.address_lo;
-+		e->msi.address_hi = ue->u.msi.address_hi;
-+		e->msi.data = ue->u.msi.data;
-+
-+		if (kvm_msi_route_invalid(kvm, e))
-+			return -EINVAL;
-+		break;
-+#ifdef CONFIG_KVM_HYPERV
-+	case KVM_IRQ_ROUTING_HV_SINT:
-+		e->set = kvm_hv_set_sint;
-+		e->hv_sint.vcpu = ue->u.hv_sint.vcpu;
-+		e->hv_sint.sint = ue->u.hv_sint.sint;
-+		break;
-+#endif
-+#ifdef CONFIG_KVM_XEN
-+	case KVM_IRQ_ROUTING_XEN_EVTCHN:
-+		return kvm_xen_setup_evtchn(kvm, e, ue);
-+#endif
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+			     struct kvm_vcpu **dest_vcpu)
-+{
-+	int r = 0;
-+	unsigned long i;
-+	struct kvm_vcpu *vcpu;
-+
-+	if (kvm_intr_is_single_vcpu_fast(kvm, irq, dest_vcpu))
-+		return true;
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_apic_present(vcpu))
-+			continue;
-+
-+		if (!kvm_apic_match_dest(vcpu, NULL, irq->shorthand,
-+					irq->dest_id, irq->dest_mode))
-+			continue;
-+
-+		if (++r == 2)
-+			return false;
-+
-+		*dest_vcpu = vcpu;
-+	}
-+
-+	return r == 1;
-+}
-+EXPORT_SYMBOL_GPL(kvm_intr_is_single_vcpu);
-+
-+void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
-+			 u8 vector, unsigned long *ioapic_handled_vectors)
-+{
-+	/*
-+	 * Intercept EOI if the vCPU is the target of the new IRQ routing, or
-+	 * the vCPU has a pending IRQ from the old routing, i.e. if the vCPU
-+	 * may receive a level-triggered IRQ in the future, or already received
-+	 * level-triggered IRQ.  The EOI needs to be intercepted and forwarded
-+	 * to I/O APIC emulation so that the IRQ can be de-asserted.
-+	 */
-+	if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT, dest_id, dest_mode)) {
-+		__set_bit(vector, ioapic_handled_vectors);
-+	} else if (kvm_apic_pending_eoi(vcpu, vector)) {
-+		__set_bit(vector, ioapic_handled_vectors);
-+
-+		/*
-+		 * Track the highest pending EOI for which the vCPU is NOT the
-+		 * target in the new routing.  Only the EOI for the IRQ that is
-+		 * in-flight (for the old routing) needs to be intercepted, any
-+		 * future IRQs that arrive on this vCPU will be coincidental to
-+		 * the level-triggered routing and don't need to be intercepted.
-+		 */
-+		if ((int)vector > vcpu->arch.highest_stale_pending_ioapic_eoi)
-+			vcpu->arch.highest_stale_pending_ioapic_eoi = vector;
-+	}
-+}
-+
-+void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
-+			    ulong *ioapic_handled_vectors)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_kernel_irq_routing_entry *entry;
-+	struct kvm_irq_routing_table *table;
-+	u32 i, nr_ioapic_pins;
-+	int idx;
-+
-+	idx = srcu_read_lock(&kvm->irq_srcu);
-+	table = srcu_dereference(kvm->irq_routing, &kvm->irq_srcu);
-+	nr_ioapic_pins = min_t(u32, table->nr_rt_entries,
-+			       kvm->arch.nr_reserved_ioapic_pins);
-+	for (i = 0; i < nr_ioapic_pins; ++i) {
-+		hlist_for_each_entry(entry, &table->map[i], link) {
-+			struct kvm_lapic_irq irq;
-+
-+			if (entry->type != KVM_IRQ_ROUTING_MSI)
-+				continue;
-+
-+			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
-+
-+			if (!irq.trig_mode)
-+				continue;
-+
-+			kvm_scan_ioapic_irq(vcpu, irq.dest_id, irq.dest_mode,
-+					    irq.vector, ioapic_handled_vectors);
-+		}
-+	}
-+	srcu_read_unlock(&kvm->irq_srcu, idx);
-+}
-+
-+void kvm_arch_irq_routing_update(struct kvm *kvm)
-+{
-+#ifdef CONFIG_KVM_HYPERV
-+	kvm_hv_irq_routing_update(kvm);
-+#endif
-+
-+	if (irqchip_split(kvm))
-+		kvm_make_scan_ioapic_request(kvm);
-+}
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-deleted file mode 100644
-index fc0fa8155882..000000000000
---- a/arch/x86/kvm/irq_comm.c
-+++ /dev/null
-@@ -1,325 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * irq_comm.c: Common API for in kernel interrupt controller
-- * Copyright (c) 2007, Intel Corporation.
-- *
-- * Authors:
-- *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
-- *
-- * Copyright 2010 Red Hat, Inc. and/or its affiliates.
-- */
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/kvm_host.h>
--#include <linux/slab.h>
--#include <linux/export.h>
--#include <linux/rculist.h>
--
--#include "hyperv.h"
--#include "ioapic.h"
--#include "irq.h"
--#include "lapic.h"
--#include "trace.h"
--#include "x86.h"
--#include "xen.h"
--
--int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
--		struct kvm_lapic_irq *irq, struct dest_map *dest_map)
--{
--	int r = -1;
--	struct kvm_vcpu *vcpu, *lowest = NULL;
--	unsigned long i, dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
--	unsigned int dest_vcpus = 0;
--
--	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
--		return r;
--
--	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
--	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
--		pr_info("apic: phys broadcast and lowest prio\n");
--		irq->delivery_mode = APIC_DM_FIXED;
--	}
--
--	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
--
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!kvm_apic_present(vcpu))
--			continue;
--
--		if (!kvm_apic_match_dest(vcpu, src, irq->shorthand,
--					irq->dest_id, irq->dest_mode))
--			continue;
--
--		if (!kvm_lowest_prio_delivery(irq)) {
--			if (r < 0)
--				r = 0;
--			r += kvm_apic_set_irq(vcpu, irq, dest_map);
--		} else if (kvm_apic_sw_enabled(vcpu->arch.apic)) {
--			if (!kvm_vector_hashing_enabled()) {
--				if (!lowest)
--					lowest = vcpu;
--				else if (kvm_apic_compare_prio(vcpu, lowest) < 0)
--					lowest = vcpu;
--			} else {
--				__set_bit(i, dest_vcpu_bitmap);
--				dest_vcpus++;
--			}
--		}
--	}
--
--	if (dest_vcpus != 0) {
--		int idx = kvm_vector_to_index(irq->vector, dest_vcpus,
--					dest_vcpu_bitmap, KVM_MAX_VCPUS);
--
--		lowest = kvm_get_vcpu(kvm, idx);
--	}
--
--	if (lowest)
--		r = kvm_apic_set_irq(lowest, irq, dest_map);
--
--	return r;
--}
--
--void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
--		     struct kvm_lapic_irq *irq)
--{
--	struct msi_msg msg = { .address_lo = e->msi.address_lo,
--			       .address_hi = e->msi.address_hi,
--			       .data = e->msi.data };
--
--	trace_kvm_msi_set_irq(msg.address_lo | (kvm->arch.x2apic_format ?
--			      (u64)msg.address_hi << 32 : 0), msg.data);
--
--	irq->dest_id = x86_msi_msg_get_destid(&msg, kvm->arch.x2apic_format);
--	irq->vector = msg.arch_data.vector;
--	irq->dest_mode = kvm_lapic_irq_dest_mode(msg.arch_addr_lo.dest_mode_logical);
--	irq->trig_mode = msg.arch_data.is_level;
--	irq->delivery_mode = msg.arch_data.delivery_mode << 8;
--	irq->msi_redir_hint = msg.arch_addr_lo.redirect_hint;
--	irq->level = 1;
--	irq->shorthand = APIC_DEST_NOSHORT;
--}
--EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
--
--static inline bool kvm_msi_route_invalid(struct kvm *kvm,
--		struct kvm_kernel_irq_routing_entry *e)
--{
--	return kvm->arch.x2apic_format && (e->msi.address_hi & 0xff);
--}
--
--int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
--		struct kvm *kvm, int irq_source_id, int level, bool line_status)
--{
--	struct kvm_lapic_irq irq;
--
--	if (kvm_msi_route_invalid(kvm, e))
--		return -EINVAL;
--
--	if (!level)
--		return -1;
--
--	kvm_set_msi_irq(kvm, e, &irq);
--
--	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
--}
--
--int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
--			      struct kvm *kvm, int irq_source_id, int level,
--			      bool line_status)
--{
--	struct kvm_lapic_irq irq;
--	int r;
--
--	switch (e->type) {
--#ifdef CONFIG_KVM_HYPERV
--	case KVM_IRQ_ROUTING_HV_SINT:
--		return kvm_hv_set_sint(e, kvm, irq_source_id, level,
--				       line_status);
--#endif
--
--	case KVM_IRQ_ROUTING_MSI:
--		if (kvm_msi_route_invalid(kvm, e))
--			return -EINVAL;
--
--		kvm_set_msi_irq(kvm, e, &irq);
--
--		if (kvm_irq_delivery_to_apic_fast(kvm, NULL, &irq, &r, NULL))
--			return r;
--		break;
--
--#ifdef CONFIG_KVM_XEN
--	case KVM_IRQ_ROUTING_XEN_EVTCHN:
--		if (!level)
--			return -1;
--
--		return kvm_xen_set_evtchn_fast(&e->xen_evtchn, kvm);
--#endif
--	default:
--		break;
--	}
--
--	return -EWOULDBLOCK;
--}
--
--bool kvm_arch_can_set_irq_routing(struct kvm *kvm)
--{
--	return irqchip_in_kernel(kvm);
--}
--
--int kvm_set_routing_entry(struct kvm *kvm,
--			  struct kvm_kernel_irq_routing_entry *e,
--			  const struct kvm_irq_routing_entry *ue)
--{
--	/* We can't check irqchip_in_kernel() here as some callers are
--	 * currently initializing the irqchip. Other callers should therefore
--	 * check kvm_arch_can_set_irq_routing() before calling this function.
--	 */
--	switch (ue->type) {
--#ifdef CONFIG_KVM_IOAPIC
--	case KVM_IRQ_ROUTING_IRQCHIP:
--		if (irqchip_split(kvm))
--			return -EINVAL;
--		e->irqchip.pin = ue->u.irqchip.pin;
--		switch (ue->u.irqchip.irqchip) {
--		case KVM_IRQCHIP_PIC_SLAVE:
--			e->irqchip.pin += PIC_NUM_PINS / 2;
--			fallthrough;
--		case KVM_IRQCHIP_PIC_MASTER:
--			if (ue->u.irqchip.pin >= PIC_NUM_PINS / 2)
--				return -EINVAL;
--			e->set = kvm_pic_set_irq;
--			break;
--		case KVM_IRQCHIP_IOAPIC:
--			if (ue->u.irqchip.pin >= KVM_IOAPIC_NUM_PINS)
--				return -EINVAL;
--			e->set = kvm_ioapic_set_irq;
--			break;
--		default:
--			return -EINVAL;
--		}
--		e->irqchip.irqchip = ue->u.irqchip.irqchip;
--		break;
--#endif
--	case KVM_IRQ_ROUTING_MSI:
--		e->set = kvm_set_msi;
--		e->msi.address_lo = ue->u.msi.address_lo;
--		e->msi.address_hi = ue->u.msi.address_hi;
--		e->msi.data = ue->u.msi.data;
--
--		if (kvm_msi_route_invalid(kvm, e))
--			return -EINVAL;
--		break;
--#ifdef CONFIG_KVM_HYPERV
--	case KVM_IRQ_ROUTING_HV_SINT:
--		e->set = kvm_hv_set_sint;
--		e->hv_sint.vcpu = ue->u.hv_sint.vcpu;
--		e->hv_sint.sint = ue->u.hv_sint.sint;
--		break;
--#endif
--#ifdef CONFIG_KVM_XEN
--	case KVM_IRQ_ROUTING_XEN_EVTCHN:
--		return kvm_xen_setup_evtchn(kvm, e, ue);
--#endif
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
--bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
--			     struct kvm_vcpu **dest_vcpu)
--{
--	int r = 0;
--	unsigned long i;
--	struct kvm_vcpu *vcpu;
--
--	if (kvm_intr_is_single_vcpu_fast(kvm, irq, dest_vcpu))
--		return true;
--
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!kvm_apic_present(vcpu))
--			continue;
--
--		if (!kvm_apic_match_dest(vcpu, NULL, irq->shorthand,
--					irq->dest_id, irq->dest_mode))
--			continue;
--
--		if (++r == 2)
--			return false;
--
--		*dest_vcpu = vcpu;
--	}
--
--	return r == 1;
--}
--EXPORT_SYMBOL_GPL(kvm_intr_is_single_vcpu);
--
--void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
--			 u8 vector, unsigned long *ioapic_handled_vectors)
--{
--	/*
--	 * Intercept EOI if the vCPU is the target of the new IRQ routing, or
--	 * the vCPU has a pending IRQ from the old routing, i.e. if the vCPU
--	 * may receive a level-triggered IRQ in the future, or already received
--	 * level-triggered IRQ.  The EOI needs to be intercepted and forwarded
--	 * to I/O APIC emulation so that the IRQ can be de-asserted.
--	 */
--	if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT, dest_id, dest_mode)) {
--		__set_bit(vector, ioapic_handled_vectors);
--	} else if (kvm_apic_pending_eoi(vcpu, vector)) {
--		__set_bit(vector, ioapic_handled_vectors);
--
--		/*
--		 * Track the highest pending EOI for which the vCPU is NOT the
--		 * target in the new routing.  Only the EOI for the IRQ that is
--		 * in-flight (for the old routing) needs to be intercepted, any
--		 * future IRQs that arrive on this vCPU will be coincidental to
--		 * the level-triggered routing and don't need to be intercepted.
--		 */
--		if ((int)vector > vcpu->arch.highest_stale_pending_ioapic_eoi)
--			vcpu->arch.highest_stale_pending_ioapic_eoi = vector;
--	}
--}
--
--void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
--			    ulong *ioapic_handled_vectors)
--{
--	struct kvm *kvm = vcpu->kvm;
--	struct kvm_kernel_irq_routing_entry *entry;
--	struct kvm_irq_routing_table *table;
--	u32 i, nr_ioapic_pins;
--	int idx;
--
--	idx = srcu_read_lock(&kvm->irq_srcu);
--	table = srcu_dereference(kvm->irq_routing, &kvm->irq_srcu);
--	nr_ioapic_pins = min_t(u32, table->nr_rt_entries,
--			       kvm->arch.nr_reserved_ioapic_pins);
--	for (i = 0; i < nr_ioapic_pins; ++i) {
--		hlist_for_each_entry(entry, &table->map[i], link) {
--			struct kvm_lapic_irq irq;
--
--			if (entry->type != KVM_IRQ_ROUTING_MSI)
--				continue;
--
--			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
--
--			if (!irq.trig_mode)
--				continue;
--
--			kvm_scan_ioapic_irq(vcpu, irq.dest_id, irq.dest_mode,
--					    irq.vector, ioapic_handled_vectors);
--		}
--	}
--	srcu_read_unlock(&kvm->irq_srcu, idx);
--}
--
--void kvm_arch_irq_routing_update(struct kvm *kvm)
--{
--#ifdef CONFIG_KVM_HYPERV
--	kvm_hv_irq_routing_update(kvm);
--#endif
--
--	if (irqchip_split(kvm))
--		kvm_make_scan_ioapic_request(kvm);
--}
--- 
-2.49.0.1101.gccaa498523-goog
+But TBH I don't think this use case is very relevant. As I said above,
+it only affects FPGA reconfiguration and people manually unbinding
+drivers. Either way I think they are savvy enough to reprobe the netdev.
 
+--Sean
+
+>>  - phylink anyway is the only user of PCS drivers, and will very likely
+>>    always be. So why create another subsystem?
+> 
+> To avoid adding overhead for the majority of PCSs where the PCS is built
+> into the MAC and literally can't be removed. We only pay the price for
+> dynamicism on the drivers where it matters.
+> 
+>> All that being said I also see potential problems with Christians
+>> current implementation as it doesn't prevent the Ethernet driver to
+>> still store a pointer to struct phylink_pcs (returned eg. from
+>> fwnode_pcs_get()).
+>> 
+>> Hence I would like to see an even more tight integration with phylink,
+>> in the sense that pointers to 'struct phylink_pcs' should never be
+>> exposed to the MAC driver, as only in that way we can be sure that
+>> phylink, and only phylink, is responsible for reacting to a PCS "going
+>> away".
+> 
+> OK, but then how does the MAC select the PCS? If there are multiple PCSs
+> then ultimately someone has to configure a mux somewhere.
+> 
+>> Ie. instead of fwnode_phylink_pcs_parse() handing pointers to struct
+>> phylink_pcs to the Ethernet driver, so it can use it to populate struct
+>> phylink_config available_pcs member, this should be the responsibility
+>> of phylink alltogether, directly populating the list of available PCS in
+>> phylink's private structure.
+>> 
+>> Similarly, there should not be fwnode_pcs_get() but rather phylink
+>> providing a function fwnode_phylink_pcs_register(phylink, fwnode) which
+>> directly adds the PCS referenced to the internal list of available PCS.
+> 
+> This is difficult to work with for existing drivers. Many of them have
+> non-standard ways of looking up their PCS that they need to support for
+> backwards-compatibility. And some of them create the PCS themselves
+> (such as if they are PCI devices with internal MDIO busses). It's much
+> easier for the MAC to create or look up the PCS itself and then hand it
+> off to phylink.
+> 
+>> I hope we can pick the best of all the suggested implementations, and
+>> together come up with something even better.
+> 
+> Sure. And I think we were starting from a clean slate then this would be
+> the obvious way to do things. But we must support existing drivers and
+> provide an upgrade path for them. This is why I favor an incremental
+> approach.
+> 
+> --Sean
