@@ -1,199 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1D21C9F8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7409D21170D;
+	Mon, 19 May 2025 22:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747693225; cv=none; b=tAMOMJUqjLZZwZCR28e/NK+f5UZnXwTXg0d8eTuXprblVrJ4brr//cgFt7JNnP75rB6LgtK71akG/Ubsu1FQKh3+m/+gsvSv+A9mhsHLEBmbNMHa/xLutnw2nd5gcTCAwomdlAC+YP9+hyR0b4NZFSUUUKu6gAgPA695kmYjDfo=
+	t=1747693394; cv=none; b=l4vdvL3uWyflQ5LjB/NwaUUOEEPmsC8WrUf+s1Ea0M/PdxN9e1+dV9ThBeYcFX+tEPmx+v2CJZl6cqqJb4J2c6bLCOR5Of4uY1I2y6ae6W7SudGX/5111LT8LtBT6/HHDJdA0aeOOYJeTCKyvytsTT6u9WI/ncGaXfXZ2p3SXYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747693225; c=relaxed/simple;
-	bh=uZ8XlymW+4rF1CnsOePthFc1cGC0345sXJLUZ4Dhuzo=;
+	s=arc-20240116; t=1747693394; c=relaxed/simple;
+	bh=RYED3sQgGz9EupaD5CYEhvZIMBoQfnY09zAfixeh7p0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4XCLJYjQkm1I1JmQsdD6JZSTVi4r75Kx9EOWWeIalHvNPaelpEuOkJuBmySaAXJSjQC+vDI00p7v0tW1yEK0BPNCFOhAYtb8684r3vpT4dn8awKjceCuQ4bb6hiscDmVBLQsOXqWxfmIeV1ik48WZy0iTxNksLzFNm49f+f2go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNvPmYB/; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=qEDzU0bIselx1r7wREzyIcBcVm6g0rWx93rHAnMT4toJTDKl9mR+4ng89b9sPRsDqqQ5jokJ/YVjgk/SkFgBlPg0JPyIRWsPH7rSAvOgS9lGeyqToXUYKfv/YGEI3NdAS28E9J8Z9UiIOb0s1GG1J2q7V36OOZboevGyXEb43vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=foJmAxA1; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNvPmYB/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AAA9C4CEF8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747693225;
-	bh=uZ8XlymW+4rF1CnsOePthFc1cGC0345sXJLUZ4Dhuzo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FNvPmYB/BWE9H4pFifR9X4JmFNEKfwcxgDeIguIj5zAZKVk7BKI0J+2xg1E9KOLg5
-	 7rXzPwj/YIhKUjsjgTPMxVgO1+LfTr/uJeV48TOWrOtDgjUnHT473ZgihBJIyUalqd
-	 LQrpmeF10pD6ZFTGdg86YK6y4WgAFc74hg1wKhocZyIANc0AnGJGagJgpmJozYK2jN
-	 +ELzpKsjWQJyxv/z5cGc+7xoul9LFqVo4np6BVa2cITCASyfIJvLDowtHPLcCcZJFW
-	 Fl+TVqlb6VZiIxO4iCIbUx3qFFJiL0b4PORwjEduJnZQ3SpI4KFXCfsXXQ6l1kYpCc
-	 Y5U59y7sAH+VA==
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f8b10b807fso52124376d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:20:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXbcQczBPn018IbtqdcBzLM1Eo4R0aKrz9kcOrhJX3c0g/jZKFnPTQ+X8WFsAJrD2ZHr6y/ss/jNkPBbzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyziH++nyD1vAhuvwdQHVqrrVdv8qCo+bDNYh4y2zUf9GP4BWBV
-	UgFq4485RuoF7yEjHK+2pEBSsRX398Q4g5c7G7uZ3MmogB+RVMD2krhAWOQgwm6SHmV0/aHamRw
-	Hw+G+oH6dtsZ0xkc4wDz7ob6dCA+HQtzeaxwJtV8j
-X-Google-Smtp-Source: AGHT+IHFHdg5xMZ80kod/4sph2VycUtK9qNlkm2FnJGRZxVkUq3RbTcJ3jP0aO1H2L1OVI6jAzpln5vFVLpAvKyKmlI=
-X-Received: by 2002:a05:6214:d4a:b0:6e8:9086:261 with SMTP id
- 6a1803df08f44-6f8b084b144mr244282176d6.3.1747693224025; Mon, 19 May 2025
- 15:20:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foJmAxA1"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30f1bde0399so159798a91.2;
+        Mon, 19 May 2025 15:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747693392; x=1748298192; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G22uQtTerCT2IQLmvJfExO7LKRCrhoW6/tlkev0t9aE=;
+        b=foJmAxA1ojTS83t/PdC3O5ozS5fMMfDMZ4iZi3UDTqBNGm6mDekz4QZs88Kd4CtvD/
+         v+JQ/Jw+QJfZDn2BQ2m3sXLuC9w4hLKEL4UTElxFoE20aYlJpLMHaAKEqVtQQdRM6ZnY
+         /iEGEEczA+SNBmGHVP77tKxpdqyOjr8UnNaa/I+fufKVdathVwQZTgIduxjvYcYaVTHn
+         7fEy839xT/mzUJMfxs/V8fUoIfsVWHY+FM861Cp/vQ8rpMSpOcePxo/iMJip4p7bjEig
+         FEHeOXVje26wvtzSVpScaQ7tfM+Id8JC+6T2y0cz2Fxscs8h12C3fFPl/xvKUFBRdd6v
+         Nt8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747693392; x=1748298192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G22uQtTerCT2IQLmvJfExO7LKRCrhoW6/tlkev0t9aE=;
+        b=GAcEkV+pofEcslHp5prPm2uxKUj7T0kxnltSjEdzd3xK9S5F34wbXIhcof1xfPakzn
+         hrfAmfb6UbXCmPw0Afyjqk7DuIoS7l3WuUjO2yai6gMOqROHCdoKteazlSUmmiyS2EMJ
+         kvD5u7uFNREXlsrIx+hrQHt+oe5BcBKhBXH0dLyio6xGsa0FEP4PBcDcFthlcL42tmJY
+         9zGu3Y6gQI7NEhkzaxvBCyXd9n5L5UbVwsrLYnV5bBHBjYXTCMEMhioQpVDZhLiH+ph4
+         4rZao/yhAG2qeUOfs2kH/15ubOUOoc3t7DjZLUzCsRS5M7WqdJeCK0+QOtNUf22ZOwrd
+         E0Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVTa1H7EZb0ZuGLphtdGQ1ERMOMrD3dADezx0QquDMqKI6YKRfb4QdKCJ4KiHHbj0QNB8LzwATnXMNWde/p@vger.kernel.org, AJvYcCW09IFEEXxFTiljoFxTDWjtqPFZfN6aZzF9cMjPZr1ZOM6nE+2f21hWofR/+DiKmVwab1HPa9nSJG315NHn@vger.kernel.org, AJvYcCW8hFk3wTGSpaDrUH6Qkqw4XD//TvAtvpUmrfMD7z+NSdjkrHTeIsQH6PeESU5hxCGppYK5lL8IHxpqA1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRZFqSlRwpZIxmIUY2PewWYf6VMLSexkEAmaqXm6lwnKT/LdH2
+	rkdQaCIAlrJPRnjxJg8dZflQkmnVfQnAPq5uX0Dnq84rIFO32ZRfe8Y3tai8HRR3GV40STQD151
+	n9Ib60EiI8Z3sv0yKDLgFO7aBtKWxv4Q=
+X-Gm-Gg: ASbGncsj5GQG9+weWo8pJk4/Vi0dtmRvaPFpxPBSHgUFPxkEgMy4SYr+yNQ8acH5oMY
+	it3/pE8hs7cg3y0zLeG3QDWGtjX37cBCvLwtaXMTuFNgAYI4QqfpLmRmqqGeRqDZQ5Q9bOzxf5t
+	yeS1TKs5c1pRKfPFvFXx0emOELdj7NY2v9
+X-Google-Smtp-Source: AGHT+IHzzYJdNjGnggVED+WkMWpZnSPWu15906SWYLh7fgSNgz1VKnuTByR3QO+KIJPYuFChXuYVwQZLc03eivgxOW4=
+X-Received: by 2002:a17:90b:3e8b:b0:30e:7127:644c with SMTP id
+ 98e67ed59e1d1-30e7d622f13mr8368159a91.6.1747693391512; Mon, 19 May 2025
+ 15:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <CAHC9VhQL_FkUH8F1fvFZmC-8UwZh3zkwjomCo1PiWNW0EGYUPw@mail.gmail.com>
- <CACYkzJ4+=3owK+ELD9Nw7Rrm-UajxXEw8kVtOTJJ+SNAXpsOpw@mail.gmail.com>
- <CAHC9VhTeFBhdagvw4cT3EvA72EYCfAn6ToptpE9PWipG9YLrFw@mail.gmail.com>
- <CAADnVQJ4GDKvLSWuAMdwajA0V2DEw5m-O228QknW8Eo9jxhyig@mail.gmail.com>
- <CAHC9VhTJcV1mqBpxVUtpLhrN4Y9W_BGgB_La5QCqObGheK28Ug@mail.gmail.com>
- <CAADnVQ+wE5cGhy6tgmWgUwkNutueEsrhh6UR8N2fzrZjt-vb4g@mail.gmail.com>
- <196e1f03128.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
- <CAADnVQ+=2PnYHui2L0g0brNc+NqV8MtaRaU-XXpoXfJoghXpww@mail.gmail.com> <CAHC9VhRKZdEia0XUMs2+hRVC7oDzkBfkk5FPMD+Fq5V7mAk=Vg@mail.gmail.com>
-In-Reply-To: <CAHC9VhRKZdEia0XUMs2+hRVC7oDzkBfkk5FPMD+Fq5V7mAk=Vg@mail.gmail.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Tue, 20 May 2025 00:20:12 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ7oxFA3u9eKDpKgCsZsYsBojVJPHVeHZnVaYQ5e9DavmQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtuAbaLmBw9yy0173D8s7LpAOVbxR9TeXNkvABXPMZF511wGOkzeZtojxE
-Message-ID: <CACYkzJ7oxFA3u9eKDpKgCsZsYsBojVJPHVeHZnVaYQ5e9DavmQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Paul Moore <paul@paul-moore.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, bpf <bpf@vger.kernel.org>, 
-	code@tyhicks.com, Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
-	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com, 
-	Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250519175348.11924-1-robdclark@gmail.com> <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
+ <CAF6AEGuDTGVq7sw4oVuHb+cOE_DuKbEPO956oddVcsV2boieoQ@mail.gmail.com>
+ <CAPM=9twuSfvQ0_NUdRmp0_VtTE_Br7GAysRw+XOoX7BTxUBGYQ@mail.gmail.com> <CAF6AEGs1hNGMMBjZuXoGjxF+JA1AHY_wx=gmqK4z=zShYoR6=w@mail.gmail.com>
+In-Reply-To: <CAF6AEGs1hNGMMBjZuXoGjxF+JA1AHY_wx=gmqK4z=zShYoR6=w@mail.gmail.com>
+From: Connor Abbott <cwabbott0@gmail.com>
+Date: Mon, 19 May 2025 18:23:00 -0400
+X-Gm-Features: AX0GCFuLTqHkTFoflT1PTGQWqYxrqs7RNvsrTX0PlbvFOcOu3Zb_RqPfkkrC9DU
+Message-ID: <CACu1E7EJp1fvQZV0=qeAqH97qaeoiaybHqxfYa7hFmi9P048kw@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
+To: Rob Clark <robdclark@gmail.com>
+Cc: Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
+	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Jun Nie <jun.nie@linaro.org>, 
+	Kevin Tian <kevin.tian@intel.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linaro-mm-sig@lists.linaro.org>, 
+	"m oderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linux-media@vger.kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, 
+	Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 18, 2025 at 11:34=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+On Mon, May 19, 2025 at 5:51=E2=80=AFPM Rob Clark <robdclark@gmail.com> wro=
+te:
+>
+> On Mon, May 19, 2025 at 2:45=E2=80=AFPM Dave Airlie <airlied@gmail.com> w=
 rote:
->
-> On Sun, May 18, 2025 at 11:52=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > On Sat, May 17, 2025 at 10:49=E2=80=AFPM Paul Moore <paul@paul-moore.co=
-m> wrote:
-> > > On May 17, 2025 12:13:50 PM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > > On Sat, May 17, 2025 at 8:03=E2=80=AFAM Paul Moore <paul@paul-moore=
-.com> wrote:
-> > > >> On Fri, May 16, 2025 at 7:49=E2=80=AFPM Alexei Starovoitov
-> > > >> <alexei.starovoitov@gmail.com> wrote:
-> > > >>> On Fri, May 16, 2025 at 12:49=E2=80=AFPM Paul Moore <paul@paul-mo=
-ore.com> wrote:
-> > > >>>>
-> > > >>>> I think we need some clarification on a few of these details, it=
- would
-> > > >>>> be good if you could answer the questions below about the
-> > > >>>> authorization aspects of your design?
-> > > >>>>
-> > > >>>> * Is the signature validation code in the BPF verifier *always* =
-going
-> > > >>>> to be enforced when a signature is passed in from userspace?  In=
- other
-> > > >>>> words, in your design is there going to be either a kernel build=
- time
-> > > >>>> or runtime configuration knob that could selectively enable (or
-> > > >>>> disable) signature verification in the BPF verifier?
-> > > >>>
-> > > >>> If there is a signature in union bpf_attr and it's incorrect
-> > > >>> the prog_load command will be rejected.
-> > > >>> No point in adding a knob to control that.
-> > > >>
-> > > >> I agree that when a signature is provided and that signature check
-> > > >> fails, the BPF load should be rejected.  I'm simply trying to
-> > > >> understand how you envision your design handling all of the cases,=
- not
-> > > >> just this one, as well as what build and runtime options you expec=
-t
-> > > >> for controlling various aspects of this behavior.
-> > > >>
-> > > >>>> * In the case where the signature validation code in the BPF ver=
-ifier
-> > > >>>> is active, what happens when a signature is *not* passed in from
-> > > >>>> userspace?  Will the BPF verifier allow the program load to take
-> > > >>>> place?  Will the load operation be blocked?  Will the load opera=
-tion
-> > > >>>> be subject to a more granular policy, and if so, how do you plan=
- to
-> > > >>>> incorporate that policy decision into the BPF program load path?
-> > > >>>
-> > > >>> If there is no signature the existing loading semantics will rema=
-in intact.
-> > > >>> We can discuss whether to add a sysctl or cgroup knob to disallow
-> > > >>> loading when signature is not present ...
-> > > >>
-> > > >> As mentioned earlier this week, if the BPF verifier is performing =
-the
-> > > >> signature verification as KP described, we will need a LSM hook af=
-ter
-> > > >> the verifier to serve as an access control point.  Of course that
-> > > >> doesn't preclude the addition of some type of sysctl/cgroup/whatev=
-er
-> > > >> based access control, but the LSM hook would be needed regardless.
-> > > >
-> > > > No. New hook is not needed.
-> > >
-> > > It would be good for you to explain how the existing LSM hook is suff=
-icient
-> > > to authorize the loading of a BPF program using the signature validat=
-ion
-> > > state determined in the BPF verifier.
 > >
-> > I already explained:
-> > .. a job of trivial LSM:
-> > if (prog_attr doesn't have signature &&
-> >    (task =3D=3D .. || task is under certain cgroup || whatever))
-> >   disallow.
+> > On Tue, 20 May 2025 at 07:25, Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > On Mon, May 19, 2025 at 2:15=E2=80=AFPM Dave Airlie <airlied@gmail.co=
+m> wrote:
+> > > >
+> > > > On Tue, 20 May 2025 at 03:54, Rob Clark <robdclark@gmail.com> wrote=
+:
+> > > > >
+> > > > > From: Rob Clark <robdclark@chromium.org>
+> > > > >
+> > > > > Conversion to DRM GPU VA Manager[1], and adding support for Vulka=
+n Sparse
+> > > > > Memory[2] in the form of:
+> > > > >
+> > > > > 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_=
+OP_MAP/
+> > > > >    MAP_NULL/UNMAP commands
+> > > > >
+> > > > > 2. A new VM_BIND ioctl to allow submitting batches of one or more
+> > > > >    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+> > > > >
+> > > > > I did not implement support for synchronous VM_BIND commands.  Si=
+nce
+> > > > > userspace could just immediately wait for the `SUBMIT` to complet=
+e, I don't
+> > > > > think we need this extra complexity in the kernel.  Synchronous/i=
+mmediate
+> > > > > VM_BIND operations could be implemented with a 2nd VM_BIND submit=
+queue.
+> > > >
+> > > > This seems suboptimal for Vulkan userspaces. non-sparse binds are a=
+ll
+> > > > synchronous, you are adding an extra ioctl to wait, or do you manag=
+e
+> > > > these via a different mechanism?
+> > >
+> > > Normally it's just an extra in-fence for the SUBMIT ioctl to ensure
+> > > the binds happen before cmd execution
+> > >
+> > > When it comes to UAPI, it's easier to add something later, than to
+> > > take something away, so I don't see a problem adding synchronous bind=
+s
+> > > later if that proves to be needed.  But I don't think it is.
+> >
+> > I'm not 100% sure that is conformant behaviour to the vulkan spec,
+> >
+> > Two questions come to mind:
+> > 1. where is this out fence stored? vulkan being explicit with no
+> > guarantee of threads doing things, seems like you'd need to use a lock
+> > in the vulkan driver to store it, esp if multiple threads bind memory.
 >
-> I read that earlier reply as an example that covers a sample use case,
-> I didn't realize you were asserting that was the only approach you
-> were considering.  Perhaps that was the source of confusion earlier,
-> we may disagree, but I don't intentionally "twist" words; not only is
-> that rude, it's just stupid in public, archived discussions.
->
-> As I mentioned previously, we really need to see an explicit yes/no
-> flag from the BPF verifier to indicate that the signature on the BPF
-> program has been validated.  It really should be as simple as adding a
-> bool to bpf_prog_aux which the BPF verifier sets to true upon
-> successful signature validation, and then an LSM can use this flag as
-> input to an access control decision in a hook placed after the
-> verifier.  Are you objecting to the addition of a flag in the
-> bpf_prog_aux struct (or some other struct tightly coupled to the BPF
-> program), the LSM hook after the verifier, or both?  It would also be
-> helpful if you can elaborate on the technical reasons behind these
-> objections.
+> turnip is protected dev->vm_bind_fence_fd with a u_rwlock
 
-Neither the aux field, nor the hook are required because:
-
-* If the signature is passed, it will be enforced, there are no
-"runtime aspects" that need to be configurable here.
-* What the LSM can specify a policy for is when a signature is not
-passed, for this, it does not need an aux field or a signature or the
-new hook, existing hooks are sufficient.
-
-- KP
+To add to that, it doesn't really matter the exact order the fence
+gets updated because a Vulkan app can't use anything in a submit until
+after we return from the turnip function that allocates + binds the BO
+and then the Vulkan-level object is returned to the user. We just have
+to make sure that the fence is "new enough" when we return the BO. It
+doesn't matter if multiple threads are creating/destroying objects,
+the thread doing the VkQueueSubmit() must have observed the creation
+of all resources used in the submit and will therefore see a new
+enough fence.
 
 >
-> --
-> paul-moore.com
+> > 2. If it's fine to lazy bind on the hw side, do you also handle the
+> > case where something is bound and immediately freed, where does the
+> > fence go then, do you wait for the fence before destroying things?
+>
+> right no turnip is just relying on the UNMAP/unbind going thru the
+> same queue.. but I guess it could also use vm_bind_fence_fd as an
+> in-fence.
+>
+> BR,
+> -R
+
+Yeah, we always submit all non-sparse map/unmap on the same queue so
+they're always synchronized wrt each other. We destroy the GEM object
+right away after submitting the final unmap and rely on the kernel to
+hold a reference to the BO in the unmap job.
+
+Connor
