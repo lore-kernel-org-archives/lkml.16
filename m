@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C660926A1AA;
-	Mon, 19 May 2025 08:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DD226AA9E;
+	Mon, 19 May 2025 08:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643602; cv=none; b=CO7ExytcyqEHONifCWvkD17tEXRBymQ/KD7FPc++Nt28vHlXUpeRi6ATI3+UTJl31LX7zLkDzN23I76j8pxU1KXnLaKZ5/Z1Kq9nz9AzQ6xBqezym7x9+hnpcvoe0Yebd/SxNG6g2foV7ysL9L6EWIPDBn5G8NujFZ2h004iDgA=
+	t=1747643603; cv=none; b=rW9qgp18c0F0Dur95xW7YjVv9sSE3XYdNpvTqtDGdu0DQasYoV8ewk9grR4LLijXDPBMKhmwJqAg//dwIxv5mU0D0XqA+kY9voKzzF+83MzMLXt7eXSOVYTAY7BlxT2eOtM/RNZxsyo1VkjRyTS6lCpYm8rN6PK8wgaqetsBle4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643602; c=relaxed/simple;
-	bh=gyOJgOUoQbY5FBMQmvSUz4XJj9IBjeHrsRkyBykdNIs=;
+	s=arc-20240116; t=1747643603; c=relaxed/simple;
+	bh=yZ2CxMBFDslosCsaU9H6xC8XDWQs6w4ZmIcPTpft4A4=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=n+4D7VkU3ZIAdWqYFgwgUrBUg4tZQStk6PCmzdRmlW9fRCf/P4OsQ1/9qIgVJI9s6ZhESZ4vxpAg8CJH4GMOaagMTtUcIDS25zAYQ6xIfC+FFuJTqTVp+6R/1bJoQvsUcawnvbDyp8CH928TQa+2rFHBpsJwmK8VNzh7ueRTX38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RQpUXCb0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nMCINpJd; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=cF740MirehckAbaoBnXU42pR/9TWthysMwtfzdU6lBu1keOP2u7Z5jlH6JbmjLlQzuImLb6xB/jdEJVy8DE4m//uFexGdMpFzKIptpLMDEXsIBdideOJPHX9z817wTn6raEImZ+jvobwhYHwNa4iNyMEyDFHDYvF41UrHm8UIN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p+/DUNs0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pT391Mru; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RQpUXCb0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nMCINpJd"
-Message-ID: <20250519083025.779267274@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p+/DUNs0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pT391Mru"
+Message-ID: <20250519083025.905800695@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747643598;
+	s=2020; t=1747643600;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=kvTMA6AVgoKok8yWA4AdNkJvlsrtitDM+TfHbVeiIw4=;
-	b=RQpUXCb0L9j/pQgVUYYZZHVs6oG9YpLbgzjkQ2XhBFieVdttBZS+P+gqqYrNJmxbq9lt3X
-	bBmN0cYUeF+kMgyRF2fGh7aWf5v5s7ZzSaJRN+Yniq+SSmpmih8tp3gOSv0qwEDHFjI3Pb
-	wDqWfa0285w8TPt+cpx6dzGleZBG/uvmpD5ySEhYT22WouAOK/1xXX16gra02ira/079eX
-	dVpG8kvD2SpjxwQvZeo/uE7THNnz6dX3Pr5pUuHeZwS7+rzT6c782qcUN6DcGFkgMlsrqL
-	wWzSPLI+KZOJfhqitFIUc05baXbw57tixVxEeD6X0dLTp+uKL4sejrnN6lNi/g==
+	 references:references; bh=tDFFxWQgqXHC1kYIc4ua9v4PhXUgIm5hvteunQy/FmE=;
+	b=p+/DUNs0fwBiQlFFRDFKUekpBBGL8l535M5GVBlTlzWtRJBi9gaYl7MoTsd79s5SmBbNuG
+	JfcxBKEXox9D5EWzCYHTGMKZXgbesKCN0nwgD1oIbOiIrgzsV15tc62wfLFOjkq6td+Bwq
+	aSinChCf9bcXuhMxk4I34D/phV6KODgkv3cOJHhKs3Z1opv96l9yZVEaqgxd/QmgR7RA4w
+	iwWgUwUsG/6Dcx0XZI+fz0fNekpQCWS8LFd9fcLwztSwSMCjDIvbdcu23Zn7NV0ijGOJ0v
+	5Mw7cieTfpQzK5oTa6t9hmTYrtydfFJQgb0wxlR4CafyRQ8j1PBSTYhe3jeW1g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747643598;
+	s=2020e; t=1747643600;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=kvTMA6AVgoKok8yWA4AdNkJvlsrtitDM+TfHbVeiIw4=;
-	b=nMCINpJdScnIdJ3o3eF8J24Xq2VZ8+E/+cFV8oHIm7Vh0TcPylztzvt6vi/6vUGXfYnpuF
-	1fsB1p3FOVbVwTCw==
+	 references:references; bh=tDFFxWQgqXHC1kYIc4ua9v4PhXUgIm5hvteunQy/FmE=;
+	b=pT391MruRl+C92/xlOm2g2pnfLwazPEUucBB7+6/vKBxtt029OieyYx3/pV1zfMmt93VMx
+	OktfVfCaaFoLZdBg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -51,8 +51,7 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Antoine Tenart <atenart@kernel.org>
-Subject: [patch V2 03/26] timekeeping: Avoid double notification in
- do_adjtimex()
+Subject: [patch V2 05/26] time: Introduce auxiliary POSIX clocks
 References: <20250519082042.742926976@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,192 +60,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 10:33:17 +0200 (CEST)
+Date: Mon, 19 May 2025 10:33:20 +0200 (CEST)
 
-Consolidate do_adjtimex() so that it does not notify about clock changes
-twice.
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
+To support auxiliary timekeeping and the related user space interfaces,
+it's required to define a clock ID range for them.
+
+Reserve 8 auxiliary clock IDs after the regular timekeeping clock ID space.
+
+This is the maximum number of auxiliary clocks the kernel can support. The actual
+number of supported clocks depends obviously on the presence of related devices
+and might be constraint by the available VDSO space.
+
+Add the corresponding timekeeper IDs as well.
+
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- kernel/time/timekeeping.c |   98 ++++++++++++++++++++++++++--------------------
- 1 file changed, 56 insertions(+), 42 deletions(-)
+ include/linux/timekeeper_internal.h |    6 ++++++
+ include/uapi/linux/time.h           |   11 +++++++++++
+ kernel/time/Kconfig                 |   15 +++++++++++++--
+ 3 files changed, 30 insertions(+), 2 deletions(-)
 ---
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1418,40 +1418,49 @@ int do_settimeofday64(const struct times
- EXPORT_SYMBOL(do_settimeofday64);
- 
+--- a/include/linux/timekeeper_internal.h
++++ b/include/linux/timekeeper_internal.h
+@@ -14,10 +14,16 @@
  /**
-- * timekeeping_inject_offset - Adds or subtracts from the current time.
-+ * __timekeeping_inject_offset - Adds or subtracts from the current time.
-  * @ts:		Pointer to the timespec variable containing the offset
-  *
-  * Adds or subtracts an offset value from the current time.
+  * timekeeper_ids - IDs for various time keepers in the kernel
+  * @TIMEKEEPER_CORE:	The central core timekeeper managing system time
++ * @TIMEKEEPER_AUX:	The first AUX timekeeper
++ * @TIMEKEEPER_AUX_LAST:The last AUX timekeeper
+  * @TIMEKEEPERS_MAX:	The maximum number of timekeepers managed
   */
--static int timekeeping_inject_offset(const struct timespec64 *ts)
-+static int __timekeeping_inject_offset(const struct timespec64 *ts)
- {
-+	struct timekeeper *tks = &tk_core.shadow_timekeeper;
-+	struct timespec64 tmp;
+ enum timekeeper_ids {
+ 	TIMEKEEPER_CORE,
++#ifdef CONFIG_POSIX_AUX_CLOCKS
++	TIMEKEEPER_AUX,
++	TIMEKEEPER_AUX_LAST = TIMEKEEPER_AUX + MAX_AUX_CLOCKS - 1,
++#endif
+ 	TIMEKEEPERS_MAX,
+ };
+ 
+--- a/include/uapi/linux/time.h
++++ b/include/uapi/linux/time.h
+@@ -64,6 +64,17 @@ struct timezone {
+ #define CLOCK_TAI			11
+ 
+ #define MAX_CLOCKS			16
 +
- 	if (ts->tv_nsec < 0 || ts->tv_nsec >= NSEC_PER_SEC)
- 		return -EINVAL;
- 
--	scoped_guard (raw_spinlock_irqsave, &tk_core.lock) {
--		struct timekeeper *tks = &tk_core.shadow_timekeeper;
--		struct timespec64 tmp;
--
--		timekeeping_forward_now(tks);
- 
--		/* Make sure the proposed value is valid */
--		tmp = timespec64_add(tk_xtime(tks), *ts);
--		if (timespec64_compare(&tks->wall_to_monotonic, ts) > 0 ||
--		    !timespec64_valid_settod(&tmp)) {
--			timekeeping_restore_shadow(&tk_core);
--			return -EINVAL;
--		}
-+	timekeeping_forward_now(tks);
- 
--		tk_xtime_add(tks, ts);
--		tk_set_wall_to_mono(tks, timespec64_sub(tks->wall_to_monotonic, *ts));
--		timekeeping_update_from_shadow(&tk_core, TK_UPDATE_ALL);
-+	/* Make sure the proposed value is valid */
-+	tmp = timespec64_add(tk_xtime(tks), *ts);
-+	if (timespec64_compare(&tks->wall_to_monotonic, ts) > 0 ||
-+	    !timespec64_valid_settod(&tmp)) {
-+		timekeeping_restore_shadow(&tk_core);
-+		return -EINVAL;
- 	}
- 
--	/* Signal hrtimers about time change */
--	clock_was_set(CLOCK_SET_WALL);
-+	tk_xtime_add(tks, ts);
-+	tk_set_wall_to_mono(tks, timespec64_sub(tks->wall_to_monotonic, *ts));
-+	timekeeping_update_from_shadow(&tk_core, TK_UPDATE_ALL);
- 	return 0;
- }
- 
-+static int timekeeping_inject_offset(const struct timespec64 *ts)
-+{
-+	int ret;
++/*
++ * AUX clock support. AUXiliary clocks are dynamically configured by
++ * enabling a clock ID. These clock can be steered independently of the
++ * core timekeeper. The kernel can support up to 8 auxiliary clocks, but
++ * the actual limit depends on eventual architecture constraints vs. VDSO.
++ */
++#define	CLOCK_AUX			MAX_CLOCKS
++#define	MAX_AUX_CLOCKS			8
++#define CLOCK_AUX_LAST			(CLOCK_AUX + MAX_AUX_CLOCKS - 1)
 +
-+	scoped_guard (raw_spinlock_irqsave, &tk_core.lock)
-+		ret = __timekeeping_inject_offset(ts);
+ #define CLOCKS_MASK			(CLOCK_REALTIME | CLOCK_MONOTONIC)
+ #define CLOCKS_MONO			CLOCK_MONOTONIC
+ 
+--- a/kernel/time/Kconfig
++++ b/kernel/time/Kconfig
+@@ -82,9 +82,9 @@ config CONTEXT_TRACKING_IDLE
+ 	help
+ 	  Tracks idle state on behalf of RCU.
+ 
+-if GENERIC_CLOCKEVENTS
+ menu "Timers subsystem"
+ 
++if GENERIC_CLOCKEVENTS
+ # Core internal switch. Selected by NO_HZ_COMMON / HIGH_RES_TIMERS. This is
+ # only related to the tick functionality. Oneshot clockevent devices
+ # are supported independent of this.
+@@ -208,6 +208,17 @@ config CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
+ 	  interval and NTP's maximum frequency drift of 500 parts
+ 	  per million.	If the clocksource is good enough for NTP,
+ 	  it is good enough for the clocksource watchdog!
++endif
 +
-+	/* Signal hrtimers about time change */
-+	if (!ret)
-+		clock_was_set(CLOCK_SET_WALL);
-+	return ret;
-+}
-+
- /*
-  * Indicates if there is an offset between the system clock and the hardware
-  * clock/persistent clock/rtc.
-@@ -2186,7 +2195,7 @@ static u64 logarithmic_accumulation(stru
-  * timekeeping_advance - Updates the timekeeper to the current time and
-  * current NTP tick length
-  */
--static bool timekeeping_advance(enum timekeeping_adv_mode mode)
-+static bool __timekeeping_advance(enum timekeeping_adv_mode mode)
- {
- 	struct timekeeper *tk = &tk_core.shadow_timekeeper;
- 	struct timekeeper *real_tk = &tk_core.timekeeper;
-@@ -2194,8 +2203,6 @@ static bool timekeeping_advance(enum tim
- 	int shift = 0, maxshift;
- 	u64 offset, orig_offset;
++config POSIX_AUX_CLOCKS
++	bool "Enable auxiliary POSIX clocks"
++	depends on POSIX_TIMERS
++	help
++	  Auxiliary POSIX clocks are clocks which can be steered
++	  independently of the core timekeeper, which controls the
++	  MONOTONIC, REALTIME, BOOTTIME and TAI clocks.  They are useful to
++	  provide e.g. lockless time accessors to independent PTP clocks
++	  and other clock domains, which are not correlated to the TAI/NTP
++	  notion of time.
  
--	guard(raw_spinlock_irqsave)(&tk_core.lock);
--
- 	/* Make sure we're fully resumed: */
- 	if (unlikely(timekeeping_suspended))
- 		return false;
-@@ -2249,6 +2256,12 @@ static bool timekeeping_advance(enum tim
- 	return !!clock_set;
- }
- 
-+static bool timekeeping_advance(enum timekeeping_adv_mode mode)
-+{
-+	guard(raw_spinlock_irqsave)(&tk_core.lock);
-+	return __timekeeping_advance(mode);
-+}
-+
- /**
-  * update_wall_time - Uses the current clocksource to increment the wall time
-  *
-@@ -2537,10 +2550,10 @@ EXPORT_SYMBOL_GPL(random_get_entropy_fal
-  */
- int do_adjtimex(struct __kernel_timex *txc)
- {
-+	struct timespec64 delta, ts;
- 	struct audit_ntp_data ad;
- 	bool offset_set = false;
- 	bool clock_set = false;
--	struct timespec64 ts;
- 	int ret;
- 
- 	/* Validate the data before disabling interrupts */
-@@ -2549,21 +2562,6 @@ int do_adjtimex(struct __kernel_timex *t
- 		return ret;
- 	add_device_randomness(txc, sizeof(*txc));
- 
--	if (txc->modes & ADJ_SETOFFSET) {
--		struct timespec64 delta;
--
--		delta.tv_sec  = txc->time.tv_sec;
--		delta.tv_nsec = txc->time.tv_usec;
--		if (!(txc->modes & ADJ_NANO))
--			delta.tv_nsec *= 1000;
--		ret = timekeeping_inject_offset(&delta);
--		if (ret)
--			return ret;
--
--		offset_set = delta.tv_sec != 0;
--		audit_tk_injoffset(delta);
--	}
--
- 	audit_ntp_init(&ad);
- 
- 	ktime_get_real_ts64(&ts);
-@@ -2573,6 +2571,19 @@ int do_adjtimex(struct __kernel_timex *t
- 		struct timekeeper *tks = &tk_core.shadow_timekeeper;
- 		s32 orig_tai, tai;
- 
-+		if (txc->modes & ADJ_SETOFFSET) {
-+			delta.tv_sec  = txc->time.tv_sec;
-+			delta.tv_nsec = txc->time.tv_usec;
-+			if (!(txc->modes & ADJ_NANO))
-+				delta.tv_nsec *= 1000;
-+			ret = __timekeeping_inject_offset(&delta);
-+			if (ret)
-+				return ret;
-+
-+			offset_set = delta.tv_sec != 0;
-+			clock_set = true;
-+		}
-+
- 		orig_tai = tai = tks->tai_offset;
- 		ret = __do_adjtimex(txc, &ts, &tai, &ad);
- 
-@@ -2583,13 +2594,16 @@ int do_adjtimex(struct __kernel_timex *t
- 		} else {
- 			tk_update_leap_state_all(&tk_core);
- 		}
-+
-+		/* Update the multiplier immediately if frequency was set directly */
-+		if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
-+			clock_set |= __timekeeping_advance(TK_ADV_FREQ);
- 	}
- 
--	audit_ntp_log(&ad);
-+	if (txc->modes & ADJ_SETOFFSET)
-+		audit_tk_injoffset(delta);
- 
--	/* Update the multiplier immediately if frequency was set directly */
--	if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
--		clock_set |= timekeeping_advance(TK_ADV_FREQ);
-+	audit_ntp_log(&ad);
- 
- 	if (clock_set)
- 		clock_was_set(CLOCK_SET_WALL);
+ endmenu
+-endif
 
