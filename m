@@ -1,163 +1,310 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365111E9B35
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB412874F5;
+	Mon, 19 May 2025 17:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676048; cv=none; b=dMXoXGggCYcZmsoFsPKtMQAIU1t8tQ2wjb5vIE563kgavJrFNvjvVBmp5Tx1iP7T0EnT1Emghrw1bNpBeCuOBk0Ak+gQMi9KeNxWBLIad8D1i6ouMBZUWnSraM6Lng4OjJkDK316lPaaNdCYFK90V4egX0lIUy0ESKIQKgWNmoA=
+	t=1747676166; cv=none; b=TiSwBVAhloJaT3IkX432XFjep8bMdfxrp+g3qvRJtygYhnWPb6kSi85K05PjXS6I8m94+5Ub16QgatZP/UWgcuWxoJFquLAYNwL/3x1aHkhRbkvJivdD8Qb1hX7XIvz1e8g393xWdOoDoPYtYI9jW1MqaIYEAmyk64ievS8Cq3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676048; c=relaxed/simple;
-	bh=soUWVotbkkPRGuzJ5h72BMPmsZ4YC7rwHPlMAUx9rCk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AiYWeiccWI4P4g8q98I5oVp/Cx8IvEBWsHZaOazu8WL1zD3ZnX5qlhlGIsMuNN4zSoXvS+GRMCHaq4rHUI6QfsOF5lZ8kWi+E0Utj1zbjG+HQq8iGGoQxNbQ1WWqtbLgNQpwdVY45vyuwT/J+RoqQ5hJygSSnjDMLwAYUQ6GJUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fn8xRRtJ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fn8xRRtJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fn8xRRtJ";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fn8xRRtJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2C88C203FA;
-	Mon, 19 May 2025 17:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747676044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afqcAyMEWhDg/X6AbdQWIN3do8w2PdHrulOvuB61EUI=;
-	b=fn8xRRtJohlDN9hqWTU+Ed4AlDpbThX1VU7zm96WYsmx35UnZLrXrYLzKIjEaME4PBvpMQ
-	ZK1AHnLuRhLTajVVQSj/decfOuLlM+y6k8MRMT2KYpOypi6pNP/iwkhDW7SMTxAxLKQzgN
-	Df2RJeEjRRF177hJarGEhEZixBeLhDw=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=fn8xRRtJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747676044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afqcAyMEWhDg/X6AbdQWIN3do8w2PdHrulOvuB61EUI=;
-	b=fn8xRRtJohlDN9hqWTU+Ed4AlDpbThX1VU7zm96WYsmx35UnZLrXrYLzKIjEaME4PBvpMQ
-	ZK1AHnLuRhLTajVVQSj/decfOuLlM+y6k8MRMT2KYpOypi6pNP/iwkhDW7SMTxAxLKQzgN
-	Df2RJeEjRRF177hJarGEhEZixBeLhDw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 922431372E;
-	Mon, 19 May 2025 17:33:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iSd6JoRrK2hiaQAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Mon, 19 May 2025 17:33:56 +0000
-Message-ID: <f114a8d8497da0c452af33cbf02a55e91c47d94e.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Christoph Hellwig <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>
-Cc: Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev, 
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 19 May 2025 19:33:50 +0200
-In-Reply-To: <aCbUcdew393RZIkV@infradead.org>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-	 <aCIRUwt5BueQmlMZ@redhat.com>
-	 <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
-	 <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
-	 <aCW95f8RGpLJZwSA@redhat.com> <aCbUcdew393RZIkV@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	s=arc-20240116; t=1747676166; c=relaxed/simple;
+	bh=uRxGMqVvMhdnhZUCOSCjxyGRSKnkRsYIWlWK7s5f0LE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YzlcwrehXQm0bnrUv6qaUlONUmwJdi2bNn/fek4IXjSh+Vx6h5dyQTPExcNKtXICV5cCMce54oVR5OSCUaoKgjz8L6e3JY4c+o9D7CfEidaYyXEj2u9p/nExQxW/LX00AleRrJwHhwjuQ1L4JxGQKRg1yFi0eS9B2sysnQ/mcDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 323FD1655;
+	Mon, 19 May 2025 10:35:50 -0700 (PDT)
+Received: from [10.57.50.157] (unknown [10.57.50.157])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C790F3F673;
+	Mon, 19 May 2025 10:35:59 -0700 (PDT)
+Message-ID: <3a04995a-524c-4d07-8c8b-82930f9bca72@arm.com>
+Date: Mon, 19 May 2025 18:35:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
-X-Rspamd-Queue-Id: 2C88C203FA
-X-Spam-Level: 
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 20/43] arm64: RME: Runtime faulting of memory
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-21-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250416134208.383984-21-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-05-15 at 23:00 -0700, Christoph Hellwig wrote:
-> On Thu, May 15, 2025 at 12:11:49PM +0200, Kevin Wolf wrote:
-> > If you're talking about SG_IO in dm-mpath, then PRIN/PROUT commands
-> > are
-> > actually the one thing that we don't need. libmpathpersist sends
-> > the
-> > commands to the individual path devices, so dm-mpath will never see
-> > those. It's mostly about getting the full results on the SCSI level
-> > for
-> > normal I/O commands.
-> >=20
-> > There has actually been a patch series on qemu-devel last year
-> > (that I
-> > haven't found the time to review properly yet) that would add
-> > explicit
-> > persistent reservation operations to QEMU's block layer that could
-> > then
-> > be used with the emulated scsi-hd device. On the backend, it only
-> > implemented it for iscsi, but I suppose we could implement it for
-> > file-posix, too (using the same libmpathpersist code as for
-> > passthrough). If that works, maybe at least some users can move
-> > away
-> > from SCSI passthrough.
->   x
-> Please call into the kernel PR code instead of hacking up more of
-> this, which will just run into problems again.
+Hi Steven
 
-I still don't get what this buys us. The guest (which might be Windows
-or whatever else) sends SCSI reservation commands. qemu will have to
-intercept these anyway, unless the backend device is a plain SCSI
-device (in which case transformation into generic PR command would be a
-strange thing to do).
+On 16/04/2025 14:41, Steven Price wrote:
+> At runtime if the realm guest accesses memory which hasn't yet been
+> mapped then KVM needs to either populate the region or fault the guest.
+> 
+> For memory in the lower (protected) region of IPA a fresh page is
+> provided to the RMM which will zero the contents. For memory in the
+> upper (shared) region of IPA, the memory from the memslot is mapped
+> into the realm VM non secure.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-If the backend device is multipath on SCSI, qemu-pr-helper would take=20
-the most appropriate action and return the most appropriate result
-code. The dm-multipath layer can't do it as well, as it doesn't have
-the full information about the target that's available in user space
-(see Ben's note about ALL_TG_PT for example). I don't see any benefit
-from using a generic reservation on dm-mpath instead of using qemu-pr-
-helper for this important use case.=C2=A0
+Please find some comments below.
 
-I also don't see why this way of handling SCSI PR commands would be
-dangerous. You are of course right to say that passthrough of other
-SCSI commands (except regular IO and PR) is highly dangerous, but in
-the concept that Kevin described that wouldn't happen.
+...
 
-Transforming the SCSI reservation commands into generic reservation
-commands makes sense for _other_ types of backend devices. NVMe=C2=A0comes
-to mind, but (for real-world applications) not much else. (But does it
-make sense to present NVMe devices to guests as SCSI devices?).
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index f6af3ea6ea8a..b6959cd17a6c 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -714,6 +714,186 @@ static int realm_create_protected_data_page(struct realm *realm,
+>   	return -ENXIO;
+>   }
+>   
+> +static int fold_rtt(struct realm *realm, unsigned long addr, int level)
+> +{
+> +	phys_addr_t rtt_addr;
+> +	int ret;
+> +
+> +	ret = realm_rtt_fold(realm, addr, level, &rtt_addr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	free_delegated_granule(rtt_addr);
+> +
+> +	return 0;
+> +}
+> +
+> +int realm_map_protected(struct realm *realm,
+> +			unsigned long ipa,
+> +			kvm_pfn_t pfn,
+> +			unsigned long map_size,
+> +			struct kvm_mmu_memory_cache *memcache)
+> +{
+> +	phys_addr_t phys = __pfn_to_phys(pfn);
+> +	phys_addr_t rd = virt_to_phys(realm->rd);
+> +	unsigned long base_ipa = ipa;
+> +	unsigned long size;
+> +	int map_level;
+> +	int ret = 0;
+> +
+> +	if (WARN_ON(!IS_ALIGNED(map_size, RMM_PAGE_SIZE)))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+> +		return -EINVAL;
+> +
+> +	if (IS_ALIGNED(map_size, RMM_L2_BLOCK_SIZE))
+> +		map_level = 2;
 
-Regards
-Martin
+minor nit : RMM_RTT_BLOCK_LEVEL
+
+> +	else
+> +		map_level = 3;
+
+minor nit:  RMM_RTT_MAX_LEVEL ?
+
+> +
+> +	if (map_level < RMM_RTT_MAX_LEVEL) {
+> +		/*
+> +		 * A temporary RTT is needed during the map, precreate it,
+> +		 * however if there is an error (e.g. missing parent tables)
+> +		 * this will be handled below.
+> +		 */
+> +		realm_create_rtt_levels(realm, ipa, map_level,
+> +					RMM_RTT_MAX_LEVEL, memcache);
+> +	}
+> +
+> +	for (size = 0; size < map_size; size += RMM_PAGE_SIZE) {
+> +		if (rmi_granule_delegate(phys)) {
+> +			/*
+> +			 * It's likely we raced with another VCPU on the same
+> +			 * fault. Assume the other VCPU has handled the fault
+> +			 * and return to the guest.
+> +			 */
+> +			return 0;
+> +		}
+> +
+> +		ret = rmi_data_create_unknown(rd, phys, ipa);
+> +
+> +		if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> +			/* Create missing RTTs and retry */
+> +			int level = RMI_RETURN_INDEX(ret);
+> +
+> +			WARN_ON(level == RMM_RTT_MAX_LEVEL);
+> +
+> +			ret = realm_create_rtt_levels(realm, ipa, level,
+> +						      RMM_RTT_MAX_LEVEL,
+> +						      memcache);
+> +			if (ret)
+> +				goto err_undelegate;
+> +
+> +			ret = rmi_data_create_unknown(rd, phys, ipa);
+> +		}
+> +
+> +		if (WARN_ON(ret))
+> +			goto err_undelegate;
+> +
+> +		phys += RMM_PAGE_SIZE;
+> +		ipa += RMM_PAGE_SIZE;
+> +	}
+> +
+> +	if (map_size == RMM_L2_BLOCK_SIZE) {
+> +		ret = fold_rtt(realm, base_ipa, map_level + 1);
+> +		if (WARN_ON(ret))
+> +			goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_undelegate:
+> +	if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +		/* Page can't be returned to NS world so is lost */
+> +		get_page(phys_to_page(phys));
+> +	}
+> +err:
+> +	while (size > 0) {
+> +		unsigned long data, top;
+> +
+> +		phys -= RMM_PAGE_SIZE;
+> +		size -= RMM_PAGE_SIZE;
+> +		ipa -= RMM_PAGE_SIZE;
+> +
+> +		WARN_ON(rmi_data_destroy(rd, ipa, &data, &top));
+> +
+> +		if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +			/* Page can't be returned to NS world so is lost */
+> +			get_page(phys_to_page(phys));
+> +		}
+> +	}
+> +	return -ENXIO;
+> +}
+> +
+> +int realm_map_non_secure(struct realm *realm,
+> +			 unsigned long ipa,
+> +			 kvm_pfn_t pfn,
+> +			 unsigned long size,
+> +			 struct kvm_mmu_memory_cache *memcache)
+> +{
+> +	phys_addr_t rd = virt_to_phys(realm->rd);
+> +	phys_addr_t phys = __pfn_to_phys(pfn);
+> +	unsigned long offset;
+> +	int map_size, map_level;
+> +	int ret = 0;
+> +
+> +	if (WARN_ON(!IS_ALIGNED(size, RMM_PAGE_SIZE)))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(!IS_ALIGNED(ipa, size)))
+> +		return -EINVAL;
+> +
+> +	if (IS_ALIGNED(size, RMM_L2_BLOCK_SIZE)) {
+> +		map_level = 2;
+> +		map_size = RMM_L2_BLOCK_SIZE;
+
+Same here, stick to the symbols than digits.
+
+> +	} else {
+> +		map_level = 3;
+> +		map_size = RMM_PAGE_SIZE;
+> +	}
+> +
+> +	for (offset = 0; offset < size; offset += map_size) {
+> +		/*
+> +		 * realm_map_ipa() enforces that the memory is writable,
+
+The function names seems to be obsolete, please fix.
+
+> +		 * so for now we permit both read and write.
+> +		 */
+> +		unsigned long desc = phys |
+> +				     PTE_S2_MEMATTR(MT_S2_FWB_NORMAL) |
+> +				     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_R |
+> +				     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_W;
+> +		ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+> +
+> +		if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+
+Could we hit the following case and end up in failure ?
+
+* Initially a single page is shared and the S2 is mapped
+* Later the Realm shares the entire L2 block and encounters a fault
+   at a new IPA within the L2 block.
+
+In this case, we may try to L2 mapping when there is a L3 mapping and
+we could encounter (RMI_ERROR_RTT, 2).
+
+
+> +			/* Create missing RTTs and retry */
+> +			int level = RMI_RETURN_INDEX(ret);
+
+So we should probably go down the rtt create step, with the following
+check.
+
+			if (level < map_level) {
+
+> +
+> +			ret = realm_create_rtt_levels(realm, ipa, level,
+> +						      map_level, memcache);
+> +			if (ret)
+> +				return -ENXIO;
+> +
+> +			ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+
+
+		} else {
+
+Otherwise, may be we need to do some more hard work to fix it up.
+
+1. If map_level == 3, something is terribly wrong or we raced with 
+another thread ?
+
+2. If map_level < 3 and we didn't race :
+
+   a. Going one level down and creating the mappings there and then 
+folding. But we could endup dealing with ERROR_RTT,3 as in (1).
+
+   b. Easiest is to destroy the table at "map_level + 1" and retry the map.
+
+
+Suzuki
+
+
+
+> +		}
+> +		/*
+> +		 * RMI_ERROR_RTT can be reported for two reasons: either the
+> +		 * RTT tables are not there, or there is an RTTE already
+> +		 * present for the address.  The call to
+> +		 * realm_create_rtt_levels() above handles the first case, and
+> +		 * in the second case this indicates that another thread has
+> +		 * already populated the RTTE for us, so we can ignore the
+> +		 * error and continue.
+> +		 */
+> +		if (ret && RMI_RETURN_STATUS(ret) != RMI_ERROR_RTT)
+> +			return -ENXIO;
+> +
+> +		ipa += map_size;
+> +		phys += map_size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static int populate_region(struct kvm *kvm,
+>   			   phys_addr_t ipa_base,
+>   			   phys_addr_t ipa_end,
+
