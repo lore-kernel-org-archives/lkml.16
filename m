@@ -1,94 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F663266B5A;
-	Mon, 19 May 2025 07:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033C623FC52;
+	Mon, 19 May 2025 07:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747639098; cv=none; b=j7JojfjV0TrRosWEHcJpwJcX1ttOYfODIj7CJ5j5LoCo9ixxLauDcR+abcIIx+Sf7e845u6DF1pe5Z7PX3PZ4JNKezP6rjrzpl5z0Bm2QZFXpOOmd0dDavwA2NfWn/W6U/i+6yIs8u/3sXwwlY++El/0KCH8bivVMnToTcQ1VL8=
+	t=1747639239; cv=none; b=Ah6bQ7kJ54i4/21MNy77MpYV+HQikXu7sm0roYdsE/eIsoCG+d13aaG4DhvIaFW5LkJpVRtQxhw9GkFvQMEUyiAWWEU6ibAacGUPalGtF2ReyA9BvfMFuc823O3FleQBQdqoygEoDRbSts5LE0teCIyZH4TecNoK/5hpC0pPEF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747639098; c=relaxed/simple;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=T7I8XqvTl7g9bfER1KpjDMbTgdkHOicdm/HPo/4LijxuDd9+BTT0YspyVXhdY4pZzTfsTfHCdB1d5+x1sDxbGDwJbJrvG8RPsUHKHPAM2FyGKK4AjGRa7Prd7pit8EboR6llxhofi16Zzvi5N5W98C0zDACQUtSXxAtejj9sPxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0BS5Rxg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747639239; c=relaxed/simple;
+	bh=Y+C59h/qCKqtCEBhRtM+dfq6uWu6DUbfGTucGvd/FNA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WN0lckdoiytUVOyjZysL0YGW+MdH/5kqohxRKbzQ8/Bs7gKoDoFKeCLA457N13Ls20dHugtB3eAfcgwhoCkHKTRZ3uRluyZmCVdwb8W7NdyGSLfkQLoNQZti+iJLEn+VAq3Xj5mpYPSCpMSQp5f89JKInBgdYgyk6bqzfg42+/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gsb3TWj/; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0BS5Rxg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7253C4CEE4;
-	Mon, 19 May 2025 07:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747639095;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=k0BS5Rxgt4U0/i86dz7UIpg3UKkDxPhQ5JuCjwFY62f2OsEX/6IhWIGRy2qOznqxR
-	 h3vRwgnH9d9FS2yZRNJwGvYoVICPXVrUrKQ3AcT987ALQ6Oj7lGtYS7Bzr9rrmtkq9
-	 Cq86PyXB0lGOo1CDmA9OdPSdBNope+d1z3U+z8C/2N2u+am6t+dTZFjNaKAcz9Fp9Z
-	 elM87hyyrbEhSdzNyF0L8gRQ0xdxkVGFyVs0wUxF3s/IEEoibAZ8bt/cuB4t7pwJvn
-	 cToVOVAYRwAq7bmV/7k2cv43SDzvXwfl22h4tscYfB4CkJXr+PCQdf9b+fJuvDdrFy
-	 rWv5g3oSaxwUw==
-Date: Mon, 19 May 2025 02:18:13 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gsb3TWj/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747639238; x=1779175238;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Y+C59h/qCKqtCEBhRtM+dfq6uWu6DUbfGTucGvd/FNA=;
+  b=Gsb3TWj/1q8wyF9haA6I+WU6fzs8np1GRtUnNGLTm0DNp5K5I5DLkb3Z
+   X2Dpy38xMiLkxjTjlddQGLQFmYcrHohd4DKhc35vc4noi02Le/0vzWCQZ
+   18xKgkSOL45FhjkSKjtodEb8tU3SENnXJcK0AYNWGP8suRphKTY2mxPI+
+   sBIypJDi661F6grmrX/6Ks0WKZz/5v5SmdorEkO9fegg4xxAxtNc0BmyE
+   EcHoWxZZncL5auTjubccG2KBiPFycaW2Iut4f2Im04Zw4aKfjJwxhD8kA
+   QYVELmQO8/vX7mGooXAHtFMHNoK/mbzhxw6M22PM9OZmKNCINBTNTzZOc
+   w==;
+X-CSE-ConnectionGUID: q4oOD9CoRvaI+9g/rfa++Q==
+X-CSE-MsgGUID: h7FH46yASCOO7goIbrsVXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="72030685"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="72030685"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 00:20:37 -0700
+X-CSE-ConnectionGUID: YyPRf72qRi2gzLQRKklzKA==
+X-CSE-MsgGUID: mvKcYUVhR9WuQj+iar3zTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139798719"
+Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
+  by orviesa007.jf.intel.com with ESMTP; 19 May 2025 00:20:34 -0700
+From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Chwee-Lin Choong <chwee.lin.choong@intel.com>
+Subject: [PATCH iwl-next v3 0/7] igc: harmonize queue priority and add preemptible queue support
+Date: Mon, 19 May 2025 03:19:04 -0400
+Message-Id: <20250519071911.2748406-1-faizal.abdul.rahim@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, Robert Foss <rfoss@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Todor Tomov <todor.too@gmail.com>, linux-kernel@vger.kernel.org, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-References: <20250518-qcs615_camss-v1-0-12723e26ea3e@quicinc.com>
- <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-Message-ID: <174755315042.2793587.17691583538434075316.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Add qcom,qcs615-camss binding
-Message-ID: <20250519071813.MF_SY6QsdOrzK51xLJMxGLa6KYvmkgK-cte_aoKlbHs@z>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 
-On Sun, 18 May 2025 14:33:07 +0800, Wenmeng Liu wrote:
-> Add bindings for qcom,qcs615-camss in order to support the camera
-> subsystem for qcs615.
-> 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
-> ---
->  .../bindings/media/qcom,qcs615-camss.yaml          | 356 +++++++++++++++++++++
->  1 file changed, 356 insertions(+)
-> 
+MAC Merge support for frame preemption was previously added for igc:
+https://patchwork.kernel.org/project/netdevbpf/patch/20250318030742.2567080-1-faizal.abdul.rahim@linux.intel.com/
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This series builds on that work and adds support for:
+- Harmonizing taprio and mqprio queue priority behavior, based on past
+  discussions and suggestions:
+  https://lore.kernel.org/all/20250214102206.25dqgut5tbak2rkz@skbuf/
+- Enabling preemptible queue support for both taprio and mqprio, with
+  priority harmonization as a prerequisite.
 
-yamllint warnings/errors:
+Patch organization:
+- Patches 1–3: Preparation work for patches 6 and 7
+- Patches 4–5: Queue priority harmonization
+- Patches 6–7: Add preemptible queue support
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dts:25:18: fatal error: dt-bindings/clock/qcom,qcs615-camcc.h: No such file or directory
-   25 |         #include <dt-bindings/clock/qcom,qcs615-camcc.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+v3 changes:
+- v2: https://patchwork.kernel.org/project/netdevbpf/cover/20250514042945.2685273-1-faizal.abdul.rahim@linux.intel.com/
+- Patch 8 fixes a HW limitation and should precede preemption support. Merged into patch 6. (Simon)
+- Add Reviewed-by tag from Simon for patch 1-5
 
-doc reference errors (make refcheckdocs):
+v2 changes:
+- v1: https://patchwork.kernel.org/project/netdevbpf/cover/20250428060225.1306986-1-faizal.abdul.rahim@linux.intel.com/
+- Move RXDCTL macros for consistency with TXDCTL (Ruinskiy, Dima)
+- Rename RX descriptor control macros with RXDCTL prefix (Ruinskiy, Dima)
+- Add FPE acronym explanation in commit description (Loktionov, Aleksandr)
+- Add Reviewed-by tag from Aleksandr for patch 6
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com
+Faizal Rahim (7):
+  igc: move TXDCTL and RXDCTL related macros
+  igc: add DCTL prefix to related macros
+  igc: refactor TXDCTL macros to use FIELD_PREP and GEN_MASK
+  igc: assign highest TX queue number as highest priority in mqprio
+  igc: add private flag to reverse TX queue priority in TSN mode
+  igc: add preemptible queue support in taprio
+  igc: add preemptible queue support in mqprio
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+ drivers/net/ethernet/intel/igc/igc.h         |  33 +++++-
+ drivers/net/ethernet/intel/igc/igc_base.h    |   8 --
+ drivers/net/ethernet/intel/igc/igc_defines.h |   1 +
+ drivers/net/ethernet/intel/igc/igc_ethtool.c |  12 +-
+ drivers/net/ethernet/intel/igc/igc_main.c    |  56 ++++++---
+ drivers/net/ethernet/intel/igc/igc_tsn.c     | 116 ++++++++++++++++---
+ drivers/net/ethernet/intel/igc/igc_tsn.h     |   5 +
+ 7 files changed, 188 insertions(+), 43 deletions(-)
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+--
+2.34.1
 
