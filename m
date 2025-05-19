@@ -1,139 +1,169 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AB527CCE3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C21327F75D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663027; cv=none; b=HqOn1y/A6whYuy6OPaevs9eKbPK+MSudwNoDDiSOlSnVvjCXrLBR7qB8pjM/A/XW97IT8MHOlRf6xujLMXOSPJ5XKsfd8NlETOgVwzIBIEqrosqyITaMvYijgn9n5OZLfPJTpsXF3A9BTyYVVTiOMzrTOHD7HR8jddPGLzhYu7c=
+	t=1747663061; cv=none; b=mAF2+JQypMaqupgaz9AjkxcI0sh6gRGBAJEtezbbF5B6JZO0T+MeedrXPBDP58sA5z3omKnTE+sS128gWO87BJZOn2qNNZFEbqB7vAMgi4f8Liu8wP1kfvlG3/vX7oiiAlA0z3NUAGpHON66UuHkyMSwzBzxbx5vJPnSelvhIRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663027; c=relaxed/simple;
-	bh=rZgZ/8cZcK6GmxkP6B5Rj9Qd4W10PQ9uZM5AiqkSMww=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=k2Snj/N5JLbodNF+R2k1ZNlOpdyZWGynIgAj/bO3TCTPZtLpo5tVTNaM0SnkzjHac8i+zLbhDdAksaESEpRA5+oK3V9zJFJfAOq+BH13chnfhRxcBB8aV8Yj4qybElmhoNj1kVd+zhvvukaW0vR3TeJULl8bYRVkc3qZUfpg1Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=brEeSHqm; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747663061; c=relaxed/simple;
+	bh=/3d+7p2XGyrBNLdkUtkYQdU5cqgWDCn/zyDD8E0IsCQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qu0e9uWF9IINj3G0H068bbtriyUNEBxHjqTo/MbAHLCw8Mzy9dwPkvSx4APN8iQliY4c/gjkxpimVs9lG5SwXu2OtpIg3MzgG4tQm910emm4hdKmtCuqcW/TwDKZlcLgJY65x/w4ILCr4madrlKGOwQqZt740NkDF4iuuEN9EkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=ZX6LbTY5; arc=none smtp.client-ip=188.40.203.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="brEeSHqm"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a36f26584bso631652f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747663023; x=1748267823; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vFCMOI9nPrYw/8JlYbGHlTlK1kDbm93jyyKWVu1S7sI=;
-        b=brEeSHqmI7hIcxfmhmVyZhwO9GACtOr9E7/TFo9g7ndjHnUJhJz6k++Hn763PYTIPF
-         x3L6/qBL7Y3+7saIBKqHwK30kOVG3evl84pshSVMsqGLo4e8XpIsLPi6Tu7FoJnaCGaj
-         ygzQZpxNzQoOc95zE9A9WZZT9oFFkFAFUmwqDObbR2mg4tUx1rFFFyUuIZJJFofYugyr
-         CUjStmT3zUR64aSqM/dbCIJ/Iup7ddEkHgQCTNQvMuk15FzFnmHQdwFt/yKA0FlUvFRT
-         C8h0Fz+bwVVczsUKreOwP8gZI9VjPxW8IxUC2w1RPKgvnmpVJlDdti//lkKfallydPik
-         ABLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747663023; x=1748267823;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vFCMOI9nPrYw/8JlYbGHlTlK1kDbm93jyyKWVu1S7sI=;
-        b=w9oOeDexAc/KsB8W6kxElFvbSifqQ6Ms4zzigPgcp+9RH9HWCAHhmsf1HJrg89Bwv9
-         1WSXMmkjo1Pdiu3f5qTCXg1Cy5FTsZt0jm+R+1MXxKk0Zb0IPEnamMsZxDInd7m5KL+v
-         B9STre6XcT9ENv4twifIouE7GJKtnvfXEbywa3OPzKxJGOw7uyQC89uxT+RwJq7evQ1e
-         JEZ5iMlVBICN1yOXO30wf+s5J1kLOqCDlyC2/hDHXcPwPgFN1BoJuIfILslQlRefmoMV
-         fPf7hcMjtJl+TB/2vXt15cTeOqCU4hWlA89voeKJBNpyeBCMv+wfBYUH8qMzHdm59aGv
-         Ck3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXSj6nTAa8jTvy55TRNzvnCQ36XQfBpJvukgLkAQ6Nj7Q2yOzDZu42dfnw94b6PW5JeTEeEnHZhFPyhR+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPBnFK467fmsHVMPvqyb2DZTKrl8OnVPTQ/1Mc7W2ot6W1X6bs
-	TB5Da0U5akf8pYLYisaZBwht5X/G7mf98KmD1TWMHX59xoSyz9zdKHann4KNjOE96JE=
-X-Gm-Gg: ASbGnculZ/LUBZSgkmpQMuCCMLSesXDkk7XEW7jaC2NP/fC2BixuxvbayFtAFw9Hlg4
-	4UJgLYhVdCdCZJwbBUh49DQfFC8wNQIXQX1FO7ummnR2vC+KWc6Ak3ojN/sBDfPqcyHECnXhYMK
-	9zRookoxzEyrlCKL1qByONl11OOf6C2XcdFSvrntjUE5t/LVHj6SV681DRR2Kp1SYNTz3QZ25C3
-	4yXEdkwMwiBWUkrZGVkje8GoUz0RLGKRZYy5jsWaS8TZwXKDr7Td6ZSkc3OwbH0h4R9g5clEVoF
-	b1qbF7zSqKABkj0+OAI1g1FmiNzuU3cnXiSp5ZRTjs9SLQsc0zvVafdAfrmviCpQygtQvLX4
-X-Google-Smtp-Source: AGHT+IFBVJT+2kDAfJDajT8jkfNEiaJp3Qdp+HJAzDT4NXvnGe8YcuK9c2zTSlB02v/GqvZZG53/tw==
-X-Received: by 2002:a05:6000:2907:b0:3a3:64b9:bced with SMTP id ffacd0b85a97d-3a364b9bd1dmr7824606f8f.54.1747663023523;
-        Mon, 19 May 2025 06:57:03 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62961sm12732800f8f.49.2025.05.19.06.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 06:57:03 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Mon, 19 May 2025 15:57:02 +0200
-Subject: [PATCH] interconnect: qcom: sm8650: remove regmap config for
- mc_virt & clk_virt
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="ZX6LbTY5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JC2I0gVyCfBd3OAMFRX+9D/1gPz2ZjOtZ3VihBkJzow=; b=ZX6LbTY5+WQ/ZRf6j7CNVT4Nuq
+	Fxs8K8Jvmx8ZqUGuynK1Tar+cAZZ6tQaiHxVf8ZT1wwFM9jHVTk+11DA8Bee4YMV3bm27pfE6QnYe
+	Vbhg9AQhQPDyK+RDNxj/1tgQdyoC4Y0YO/df8UsEuoZZJytTpHcL0zahRyeQ7RdVFvq8qqPwO+o/7
+	RjiuTOgKz9nakSOGbD6U4ESrgJequlJEUAR/Fd4u/qIFyE4VFokuAfuXugb8fh0goZmk0Qxu9dF9m
+	ozbMfiCT8QZXyvecRACw4zpgy+Wbc5rDNIAjxwWUqx9vvfl16vEFgzlvefajFbVxjVsiE0c4/7jsI
+	prRCjqZw==;
+Received: from [167.98.27.226] (helo=[10.17.3.142])
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1uH0bW-00EBO2-Sv; Mon, 19 May 2025 14:32:31 +0100
+Message-ID: <92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
+Subject: Re: SCHED_DEADLINE tasks missing their deadline with
+ SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
+From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+To: luca abeni <luca.abeni@santannapisa.it>
+Cc: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Vineeth
+ Pillai	 <vineeth@bitbyteword.org>
+Date: Mon, 19 May 2025 15:32:27 +0200
+In-Reply-To: <20250507222549.183e0b4a@nowhere>
+References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
+		<aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
+		<f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
+	 <20250507222549.183e0b4a@nowhere>
+Organization: Codethink
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-topic-sm8650-upstream-icc-qos-fix-v1-1-6ace779250aa@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAK04K2gC/x2NywqEMAwAf0VyNtDK1teviAfNZjUHbW1UFsR/t
- 3icOcxcoByFFdrsgsinqPg1gc0zoHlYJ0b5JobCFM442+DugxDqUpfO4BF0jzwsKES4ecWf/NF
- WNI6OKyrpA6kTIif9Prr+vh+HcgW+cwAAAA==
-X-Change-ID: 20250519-topic-sm8650-upstream-icc-qos-fix-17cbb5e7c6c4
-To: Georgi Djakov <djakov@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Pengyu Luo <mitltlatltl@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1554;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=rZgZ/8cZcK6GmxkP6B5Rj9Qd4W10PQ9uZM5AiqkSMww=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoKziusvxmMmYLJtz6801A+fA0O7iUVXs/JZB0oyET
- lu6kuMaJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaCs4rgAKCRB33NvayMhJ0d8DEA
- CT8YnsK44YmGN9l1B572Ym0X/qZl/qXLXuG4xNnOx2ypxGBqyZvCMumuiouOvc3cUHaKu2eeGT/Nfs
- FskXQo1l5IIGxNoS+VeiM1frl2XIFp/DIoz01o9NgiMA1qit7gnaUtQh5banEhULY8dAkBmyBGBpCc
- iDgr6+PB6gk6iMwM7hAepfAwLNPOzKV7tfN/31I7x/qz68b8eluftbwgwxuIGJEPbsDNdjJKQ5ovZU
- +cO5jk1XXaWMLG5R5ga6JQPNXSLMQfVIGmZ67SuqR5jeySVYvXz1RZNhnP2e4gR9gubAyA72AiApwz
- Qb9lQ07wzy8DGRNM3Ha7wFf/V11p1uaIoZeLCHEskbOdmPHqabVBzj/lYXAEdPkS9LHPfYCf03UA/J
- Dkw9DUjpchQUS8WAQXGO2mlSpzKMfOwoGIkV/UahKiKm2OXdpas0yoGmh8DkyWkUn9QbpkmjR+Qfag
- qwzwRK7UIUw2kw2hc1+O+pa4stsv05t4mg07BgszYywZjda1jHgH9GezOG6VbkaYwDrEiyYQpFWdDl
- 5Sc24PmV5DuPCa8/onRlB3ElJk5VFRDuWHzz7qQOk0P+F1H2uwYoI6Kc3SCmPOzFijzVJ2UzSqkFaP
- gI2k0TAEusnHG7BAKv1Pbbf/rXkf0s/ZC5v+4UtusRYowT5CH87CJ2Wux5Cg==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Sender: marcel.ziswiler@codethink.co.uk
 
-The mc_virt & clk_virt nodes are virtual and doesn't have associated registers,
-thus the regmap config will fail with:
-qnoc-sm8650 interconnect-0: error -EINVAL: invalid resource (null)
+Hi Luca
 
-Remove the regmap config since QoS will never be applied to those virtual
-nodes.
+Thanks and sorry, for my late reply. I was traveling the Cretan wilderness =
+without access to any work related
+infrastructure.
 
-Reported-by: Pengyu Luo <mitltlatltl@gmail.com>
-Fixes: 40ef9b6b778f ("interconnect: qcom: sm8650: enable QoS configuration")
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- drivers/interconnect/qcom/sm8650.c | 2 --
- 1 file changed, 2 deletions(-)
+On Wed, 2025-05-07 at 22:25 +0200, luca abeni wrote:
+> Hi Marcel,
+>=20
+> just a quick question to better understand your setup (and check where
+> the issue comes from):
+> in the email below, you say that tasks are statically assigned to
+> cores; how did you do this? Did you use isolated cpusets,
 
-diff --git a/drivers/interconnect/qcom/sm8650.c b/drivers/interconnect/qcom/sm8650.c
-index 1eb2cc3bea672a01f88bfcf24fd82395a07ea36f..b7c321f4e4b51cbcb138e906e561325393e3e14e 100644
---- a/drivers/interconnect/qcom/sm8650.c
-+++ b/drivers/interconnect/qcom/sm8650.c
-@@ -1701,7 +1701,6 @@ static struct qcom_icc_node * const clk_virt_nodes[] = {
- };
- 
- static const struct qcom_icc_desc sm8650_clk_virt = {
--	.config = &icc_regmap_config,
- 	.nodes = clk_virt_nodes,
- 	.num_nodes = ARRAY_SIZE(clk_virt_nodes),
- 	.bcms = clk_virt_bcms,
-@@ -1881,7 +1880,6 @@ static struct qcom_icc_node * const mc_virt_nodes[] = {
- };
- 
- static const struct qcom_icc_desc sm8650_mc_virt = {
--	.config = &icc_regmap_config,
- 	.nodes = mc_virt_nodes,
- 	.num_nodes = ARRAY_SIZE(mc_virt_nodes),
- 	.bcms = mc_virt_bcms,
+Yes, we use the cpuset controller from the cgroup-v2 APIs in the linux kern=
+el in order to partition CPUs and
+memory nodes. In detail, we use the AllowedCPUs and
+AllowedMemoryNodes in systemd's slice configurations.
 
----
-base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-change-id: 20250519-topic-sm8650-upstream-icc-qos-fix-17cbb5e7c6c4
+> or did you
+> set the tasks affinities after disabling the SCHED_DEADLINE admission
+> control (echo -1 > /proc/sys/kernel/sched_rt_runtime_us)?
 
-Best regards,
--- 
-Neil Armstrong <neil.armstrong@linaro.org>
+No.
 
+> Or am I misunderstanding your setup?
+
+No, I don't think so.
+
+> Also, are you using HRTICK_DL?
+
+No, not that I am aware of and definitely not on ROCK5Bs while our amd64 co=
+nfiguration currently does not even
+enable SCHED_DEBUG. Not sure how to easily judge the specific HRTICK featur=
+e set in such case.
+
+> 			Thanks,
+> 				Luca
+
+Thank you very much!
+
+Cheers
+
+Marcel
+
+> On Sat, 03 May 2025 13:14:53 +0200
+> Marcel Ziswiler <marcel.ziswiler@codethink.co.uk> wrote:
+> [...]
+> > We currently use three cores as follows:
+> >=20
+> > #### core x
+> >=20
+> > > sched_deadline =3D sched_period | sched_runtime | CP max run time 90%
+> > of sched_runtime | utilisation | reclaim | | -- | -- | -- | -- | -- |
+> > > =C2=A05 ms=C2=A0 | 0.15 ms | 0.135 ms |=C2=A0 3.00% | no |
+> > > 10 ms=C2=A0 | 1.8 ms=C2=A0 | 1.62 ms=C2=A0 | 18.00% | no |
+> > > 10 ms=C2=A0 | 2.1 ms=C2=A0 | 1.89 ms=C2=A0 | 21.00% | no |
+> > > 14 ms=C2=A0 | 2.3 ms=C2=A0 | 2.07 ms=C2=A0 | 16.43% | no |
+> > > 50 ms=C2=A0 | 8.0 ms=C2=A0 | 7.20 ms=C2=A0 | 16:00% | no |
+> > > 10 ms=C2=A0 | 0.5 ms=C2=A0 | **1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 5.00% | no |
+> >=20
+> > Total utilisation of core x is 79.43% (less than 100%)
+> >=20
+> > **1 - this shall be a rogue process. This process will
+> > =C2=A0a) run for the maximum allowed workload value=20
+> > =C2=A0b) do not collect execution data
+> >=20
+> > This last rogue process is the one which causes massive issues to the
+> > rest of the scheduling if we set it to do reclaim.
+> >=20
+> > #### core y
+> >=20
+> > > sched_deadline =3D sched_period | sched_runtime | CP max run time 90%
+> > of sched_runtime | utilisation | reclaim | | -- | -- | -- | -- | -- |
+> > > =C2=A05 ms=C2=A0 | 0.5 ms | 0.45 ms | 10.00% | no |
+> > > 10 ms=C2=A0 | 1.9 ms | 1.71 ms | 19.00% | no |
+> > > 12 ms=C2=A0 | 1.8 ms | 1.62 ms | 15.00% | no |
+> > > 50 ms=C2=A0 | 5.5 ms | 4.95 ms | 11.00% | no |
+> > > 50 ms=C2=A0 | 9.0 ms | 8.10 ms | 18.00% | no |
+> >=20
+> > Total utilisation of core y is 73.00% (less than 100%)
+> >=20
+> > #### core z
+> >=20
+> > The third core is special as it will run 50 jobs with the same
+> > configuration as such:
+> >=20
+> > > sched_deadline =3D sched_period | sched_runtime | CP max run time 90%
+> > of sched_runtime | utilisation | | -- | -- | -- | -- |
+> > > =C2=A050 ms=C2=A0 | 0.8 ms | 0.72 ms | 1.60% |
+> >=20
+> > jobs 1-50 should run with reclaim OFF
+> >=20
+> > Total utilisation of core y is 1.6 * 50 =3D 80.00% (less than 100%)
+> >=20
+> > Please let me know if you need any further details which may help
+> > figuring out what exactly is going on.
+> >=20
+> > > Adding Luca in Cc so he can also take a look.
+> > >=20
+> > > Thanks,=C2=A0=20
+> >=20
+> > Thank you!
+> >=20
+> > > Juri=C2=A0=20
+> >=20
+> > Cheers
+> >=20
+> > Marcel
