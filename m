@@ -1,62 +1,60 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A8321FF5A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1747A220680;
 	Mon, 19 May 2025 22:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747694036; cv=none; b=I3DZh6xSVNfj0LNJ22YrSd1ELfYdZzjsY1EY3g81cQ4Zq5rRXIHv0wWHew5Dk39ecoJEo7VlosCAMO/1rpj0OlAzPgYiE+Ip9X0gqKzXq8Jbo991IBNbuESZWTiZ5c9VWZZuQw5kIOm7n8f/y4dgQ7xldMKGKXh3ICCb8pM+yqU=
+	t=1747694036; cv=none; b=LB2B84CMOxWVqy+TVx2x/bWFAzyBs/XYJT9AEgDSUJPmMzXR294mBzioGDe6Z1GaqmcJkVSTvCNruQtOUHLe3L2bOBs/b1O0LtKuDvw+rxxm/sW66txkwJpfu/hiwL724Xx9ircqFyz7XJZFCyXu7b6O6m56xFHFZFza4IraiVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747694036; c=relaxed/simple;
-	bh=mdjyDN1GqLCpsZy/2bMMWG1/g7ATnYg6QL8zmUB4dEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qjF9wRpuinGQ83yGDhlLpEBJYTkaKgvQldOXr3zK9ZlDOluiLa3lxwiG1jADKIlb04EstEMLaYtE+yLKUU+Jwh4EJVR0xgY/IUN2PbQjas4jTqpjMSEV/IahNY3nToa1Qajm1WZ3ymjB6EiBvy6rkPCRDCWZ+Ykjwhrw+dXjLaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gc8zR7UE; arc=none smtp.client-ip=209.85.160.179
+	bh=VNV6UduRFqWLkLaJ9InTUQk8ok9iiWNF+codDWJu3KE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBHRr2helN2t4cUjkqM5XVWmKRcMQBMRHgTMfpF91QvGrrd2hFDgY0+jysbf4pGAxIq0VRobfiU2NsEj7mczZEf3omrVwgnL4tiesRPsW4I5Lx9zsggaGIJX1AoB+nY0V11BhF4LibbMyUrhszZUP9akU7XDjNBtHFi4+/ekrmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hmEvyCsO; arc=none smtp.client-ip=209.85.219.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc8zR7UE"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4766cb762b6so56129361cf.0;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmEvyCsO"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f8d663fa22so23100076d6.0;
         Mon, 19 May 2025 15:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747694033; x=1748298833; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QBedgeD+gExl3gWB2aOy4e3KdH1CGamnabmn5JJeaHM=;
-        b=Gc8zR7UE+5VjGeCNCY6rzh/3SoXhx3T2Ft9EOIaodPWSeYJwvnYt8w8uh+wHtjYXVY
-         GFQ8J5nEaXeAaDLGL4js11CsYAZHtU6cFJ8sOduIY9/ZodpA1dx2BPOa2JfDrzacnI7a
-         wjcRPGdIM1Q6Ft65YFM5QMyvSyS5L06YF1/11lGuWUibINzeypoW3D5YZ+FQCODX5cxy
-         1bsm8RtL94DBxoWhmXu0ajqKjuvtVgnju3QgDmN3iVEVaQ9ET9d9vId4D5xfKaBrpXwP
-         HGVj7CAhMyqqA2EpahONhOyJFSE5fCbQXpZ1/iPAxxORNFC8fveySKEBWEBKHr9QuBbo
-         5nXA==
+        d=gmail.com; s=20230601; t=1747694034; x=1748298834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LpRy7jJXH2X94qR+7Z08vVSeFahgcmDit4WvxDXTDr8=;
+        b=hmEvyCsO0CqG3/KJSXrxiWl8zUE6KaEUB3kQ6qXNlZI3Hnmu2uGy++P4R3M80in2K/
+         p7C3GHLmpW0giJiQexMVJNyrEX1MmjjSM95Cq5uPUeBadQBvgWBUYhygSpl82OyrVVkn
+         7VUaUH4Uia8zpj21dfaXNbnYeOXg7LHHxy0gkbJlw9CBtZRVV9wvnA+Ih6ONok+n+X/h
+         ekDcAuP6Oongc90VeX2UYm9R/QxH++sCNkD1eshOxx1mMgy65Q2Zt2ADiqbIvAH/tm9q
+         MeFYUegUjbtbc2ThAyKYHiYsR8KYmTW0Qi5AF149rHx5Q09z/7fXgHFyypYXcdi731QG
+         Gwfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747694033; x=1748298833;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QBedgeD+gExl3gWB2aOy4e3KdH1CGamnabmn5JJeaHM=;
-        b=K8d4S2t2UiDrkU+em0fSGN6refVux4zawqkvzf/HgqzOcjgLvWt1C9D99oY0RNESBC
-         2uGN4DGNRUFZh1t0XPOe7qpdHcxwj+HBgmV+GKIPTKH0NKwpBM7sfAsfXkIn1sjzl3jq
-         m9AVNiuFRHO9Heh6cohI3IsBrYWbo6zXKRW5ad2bpxAUNRRkHbwcg1eCsfOIuFUo2EbD
-         i2Aot1gy4g/II87CUKb+5RC6kViBiFQPSmWQuOnUg+aplw93ERaXm9ktliEUDV/QsxHO
-         iJfNZDdhFaQm2QND0A7X4ZBICTgOB+Nm3QJaJq9HT7kspC++8ol3L/9tFRyd5s0sBcBx
-         5t/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUt22HHGdTmPN3tvOlhjuQrt1KTZVhYfdwp0WErj96P9bXbpXZVnZBvZQZslLVzOiwYkLW12Ubepb8=@vger.kernel.org, AJvYcCX0l2WGb/HnQhP/A3kw3aO2ZwpwXLPkQBbzZsTlcnvr0JptpL0Dyd/vcTF0fYhU7tf1D70C+FbggKNGZBOv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFB7PMw046ABuzTkbWFYR3wBFty2pCxHqiZ9k6JSzIH2jcBRXB
-	32ekhXUiUunnS33En4oLbRweB+mR2LUF1bqUoFFiAKHoEtr96JNEpEL2
-X-Gm-Gg: ASbGncv+nSMY5ER5Goz0sGA2y6L3n+NGCBPCvBUyEIDcKMGKqhBU4KPF8dA14PDj5yz
-	EHvo1KyQ9hD003hqaF+ouIkLqhzJuVkTSpcJfguCEglvFW9NPr1KjcZddO1piVkK7ZD7oRGnP4A
-	uT1cZDKBM6cTU54ZpDRz6dG8hR0aQE59UZG71HXdanehtLreEK9xlx78e/iyLvwVbctjHltKA+Q
-	m+2Efl5QTYN8329Ho5xcVxmld0Mg3dNRW+WVJMx0s/ZPVd+G50JBbZvQMBfk9txi3FkYzcR1+W8
-	Zjsqcz02lm+gR4dIVKY6aWOxeiWZ+J+S5Xayl3xMQ+aqa5Jd
-X-Google-Smtp-Source: AGHT+IHIMtoPpH0aTMNDuPw4CtAj8gWgNrBxIjYiHH9b7GKsL6dv3EnaDjorXwPudxtkzQKEOIFtfg==
-X-Received: by 2002:a05:622a:4d4f:b0:494:b8fd:b565 with SMTP id d75a77b69052e-494b8fdb73fmr226540651cf.17.1747694033571;
-        Mon, 19 May 2025 15:33:53 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:4::])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3ccfd5sm61080091cf.2.2025.05.19.15.33.53
+        d=1e100.net; s=20230601; t=1747694034; x=1748298834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LpRy7jJXH2X94qR+7Z08vVSeFahgcmDit4WvxDXTDr8=;
+        b=A64BBgEV+zz8alP7FMk1d8KOs/kyQPGUlIXHK5NAph3pW7ohtcthvug5yE753VDykd
+         w1gvWHSY8QPt60KeJcpJgNH1GKZemAtDWW+5xmjRYYcSSm0HcN4kYlOrma07SEgA2YJu
+         B6XsNUqy2buSz5aPpLj3nOHOF3oyzC4++upYq/j00vkMG4XqRnszdZE0EyNFjR3cOE1Z
+         ZKM7GPwDaa6u7SyhYi8TXMftcgC3qfjVddtKCjyDQHmbZxuSLSU6mXtvBCy2z5vKziOr
+         kT+sKCdy9JCvYHwdEtQSIIgNMqHSP9oW88XN9kEIr46uS8DJAnm7+Vh4Q3FxYD9qNPua
+         cJnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnqBy/Op6T8NL2wOUJJeX9cDJS7qcI/k7/Q4qDGcfZEoyrv1ks3bRS3SFvuImPbNQatye6tprl2CylvK5Q@vger.kernel.org, AJvYcCXi40UUWUmHm8Bgh2Zx4+DX8Pq9l9Aa5Yk5oPFKj3PnLNpZUgB5OADZzTp4wb6jF7MPvKOWsZmholk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJO4Eyffb8x55OSIfRRMo9BeQkvKHbTgtvgRmnzzHh4YqlC9VV
+	ke6F+TRk4q/gPgjh3/toQc3tgKLwJb1yGn1QsqHcG9BypIE1KAS9htZEtLctkBc1
+X-Gm-Gg: ASbGnctIGwyJ+qbkeDyuJv9aYY8+e/E0YTzyXqGHaCN3axRRWujj10wkrbg6vqOxoXc
+	ITaeK9Y2penjAWb3XkSwREwMJNbVbrdvzMiERvln/1dLjpukASuxP/Wq3/kldJNAt83PjlUP98J
+	Q4wDuJXP0u+dFZMrlycZF7CJ6R8N+GLW945/5PwHLKOXWPkHeUK+1lyQbLl7zMiOH86yMB3hCOb
+	UOuvb0nI4AMNu1JDdMNjfVEI3ZMSRPbkBbDaBMOUmhugE3k/j3JxZ19Wb86CKINXu1Tghnbnh+A
+	nNooDSh3zIc2m9IYyF/7LGxNgYymBukpyDgVZCeoJHCUucKx
+X-Google-Smtp-Source: AGHT+IG9Rf1Ms6o1Iff8MOEn683LCyyVRYFlfukNUf26S1dHPnjB4DocWIpWObG8j4FUWQJEzi8IUA==
+X-Received: by 2002:a05:622a:5805:b0:476:8db0:8cae with SMTP id d75a77b69052e-494b074cbf8mr167938981cf.10.1747694023468;
+        Mon, 19 May 2025 15:33:43 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:9::])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494afbabee4sm59006981cf.55.2025.05.19.15.33.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 15:33:53 -0700 (PDT)
+        Mon, 19 May 2025 15:33:41 -0700 (PDT)
 From: Usama Arif <usamaarif642@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	david@redhat.com,
@@ -78,12 +76,10 @@ Cc: hannes@cmpxchg.org,
 	linux-doc@vger.kernel.org,
 	kernel-team@meta.com,
 	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH v3 6/7] selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_HUGE
-Date: Mon, 19 May 2025 23:29:58 +0100
-Message-ID: <20250519223307.3601786-7-usamaarif642@gmail.com>
+Subject: [PATCH v3 0/7] prctl: introduce PR_SET/GET_THP_POLICY
+Date: Mon, 19 May 2025 23:29:52 +0100
+Message-ID: <20250519223307.3601786-1-usamaarif642@gmail.com>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250519223307.3601786-1-usamaarif642@gmail.com>
-References: <20250519223307.3601786-1-usamaarif642@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,117 +88,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The test is limited to 2M PMD THPs. It does not modify the system
-settings in order to not disturb other process running in the
-system.
-It runs if the PMD size is 2M, if the 2M policy is set to inherit
-and if the system global THP policy is set to "madvise", so that
-the change in behaviour due to PR_THP_POLICY_DEFAULT_HUGE can
-be seen.
+This series allows to change the THP policy of a process, according to the
+value set in arg2, all of which will be inherited during fork+exec:
+- PR_DEFAULT_MADV_HUGEPAGE: This will set VM_HUGEPAGE and clear VM_NOHUGEPAGE
+  for the default VMA flags. It will also iterate through every VMA in the
+  process and call hugepage_madvise on it, with MADV_HUGEPAGE policy.
+  This effectively allows setting MADV_HUGEPAGE on the entire process.
+  In an environment where different types of workloads are run on the
+  same machine, this will allow workloads that benefit from always having
+  hugepages to do so, without regressing those that don't.
+- PR_DEFAULT_MADV_NOHUGEPAGE: This will set VM_NOHUGEPAGE and clear VM_HUGEPAGE
+  for the default VMA flags. It will also iterate through every VMA in the
+  process and call hugepage_madvise on it, with MADV_NOHUGEPAGE policy.
+  This effectively allows setting MADV_NOHUGEPAGE on the entire process.
+  In an environment where different types of workloads are run on the
+  same machine,this will allow workloads that benefit from having
+  hugepages on an madvise basis only to do so, without regressing those
+  that benefit from having hugepages always.
+- PR_THP_POLICY_SYSTEM: This will reset (clear) both VM_HUGEPAGE and
+  VM_NOHUGEPAGE process for the default flags.
 
-This tests if:
-- the process can successfully set the policy
-- carry it over to the new process with fork
-- if hugepage is gotten both with and without madvise
-- the process can successfully reset the policy to
-  PR_DEFAULT_SYSTEM
-- if hugepage is gotten after the policy reset only with MADV_HUGEPAGE
+In hyperscalers, we have a single THP policy for the entire fleet.
+We have different types of workloads (e.g. AI/compute/databases/etc)
+running on a single server.
+Some of these workloads will benefit from always getting THP at fault
+(or collapsed by khugepaged), some of them will benefit by only getting
+them at madvise.
 
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- tools/testing/selftests/prctl/thp_policy.c | 74 +++++++++++++++++++++-
- 1 file changed, 73 insertions(+), 1 deletion(-)
+This series is useful for 2 usecases:
+1) global system policy = madvise, while we want some workloads to get THPs
+at fault and by khugepaged :- some processes (e.g. AI workloads) benefits
+from getting THPs at fault (and collapsed by khugepaged). Other workloads
+like databases will incur regression (either a performance regression or
+they are completely memory bound and even a very slight increase in memory
+will cause them to OOM). So what these patches will do is allow setting
+prctl(PR_DEFAULT_MADV_HUGEPAGE) on the AI workloads, (This is how
+workloads are deployed in our (Meta's/Facebook) fleet at this moment).
 
-diff --git a/tools/testing/selftests/prctl/thp_policy.c b/tools/testing/selftests/prctl/thp_policy.c
-index 7791d282f7c8..62cf1fa6fd28 100644
---- a/tools/testing/selftests/prctl/thp_policy.c
-+++ b/tools/testing/selftests/prctl/thp_policy.c
-@@ -203,6 +203,77 @@ static int test_global_always_process_nohuge(void)
- 		return -1;
- }
+2) global system policy = always, while we want some workloads to get THPs
+only on madvise basis :- Same reason as 1). What these patches
+will do is allow setting prctl(PR_DEFAULT_MADV_NOHUGEPAGE) on the database
+workloads. (We hope this is us (Meta) in the near future, if a majority of
+workloads show that they benefit from always, we flip the default host
+setting to "always" across the fleet and workloads that regress can opt-out
+and be "madvise". New services developed will then be tested with always by
+default. "always" is also the default defconfig option upstream, so I would
+imagine this is faced by others as well.)
+
+v2->v3: (Thanks Lorenzo for all the below feedback!)
+v2: https://lore.kernel.org/all/20250515133519.2779639-1-usamaarif642@gmail.com/
+- no more flags2.
+- no more MMF2_...
+- renamed policy to PR_DEFAULT_MADV_(NO)HUGEPAGE
+- mmap_write_lock_killable acquired in PR_GET_THP_POLICY
+- mmap_write lock fixed in PR_SET_THP_POLICY
+- mmap assert check in process_default_madv_hugepage
+- check if hugepage_global_enabled is enabled in the call and account for s390
+- set mm->def_flags VM_HUGEPAGE and VM_NOHUGEPAGE according to the policy in
+  the way done by madvise(). I believe VM merge will not be broken in
+  this way.
+- process_default_madv_hugepage function that does for_each_vma and calls
+  hugepage_madvise.
+
+v1->v2:
+- change from modifying the THP decision making for the process, to modifying
+  VMA flags only. This prevents further complicating the logic used to
+  determine THP order (Thanks David!)
+- change from using a prctl per policy change to just using PR_SET_THP_POLICY
+  and arg2 to set the policy. (Zi Yan)
+- Introduce PR_THP_POLICY_DEFAULT_NOHUGE and PR_THP_POLICY_DEFAULT_SYSTEM
+- Add selftests and documentation.
  
-+/* Global policy is madvise, process is changed to HUGE (process becomes always) */
-+static int test_global_madvise_process_huge(void)
-+{
-+	int is_anonhuge = 0, res = 0, status = 0;
-+	pid_t pid;
-+
-+	if (prctl(PR_SET_THP_POLICY, PR_DEFAULT_MADV_HUGEPAGE, NULL, NULL, NULL) != 0) {
-+		perror("prctl failed to set process policy to always");
-+		return -1;
-+	}
-+
-+	/* Make sure prctl changes are carried across fork */
-+	pid = fork();
-+	if (pid < 0) {
-+		perror("fork");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	res = prctl(PR_GET_THP_POLICY, NULL, NULL, NULL, NULL);
-+	if (res != PR_DEFAULT_MADV_HUGEPAGE) {
-+		printf("prctl PR_GET_THP_POLICY returned %d pid %d\n", res, pid);
-+		goto err_out;
-+	}
-+
-+	/* global = madvise, process = always, we should get HPs irrespective of MADV_HUGEPAGE */
-+	is_anonhuge = test_mmap_thp(0);
-+	if (!is_anonhuge) {
-+		printf("PR_DEFAULT_MADV_HUGEPAGE set but didn't get hugepages\n");
-+		goto err_out;
-+	}
-+
-+	is_anonhuge = test_mmap_thp(1);
-+	if (!is_anonhuge) {
-+		printf("PR_DEFAULT_MADV_HUGEPAGE set but did't get hugepages\n");
-+		goto err_out;
-+	}
-+
-+	/* Reset to system policy */
-+	if (prctl(PR_SET_THP_POLICY, PR_DEFAULT_SYSTEM, NULL, NULL, NULL) != 0) {
-+		perror("prctl failed to set policy to system");
-+		goto err_out;
-+	}
-+
-+	is_anonhuge = test_mmap_thp(0);
-+	if (is_anonhuge) {
-+		printf("global policy is madvise\n");
-+		goto err_out;
-+	}
-+
-+	is_anonhuge = test_mmap_thp(1);
-+	if (!is_anonhuge) {
-+		printf("global policy is madvise\n");
-+		goto err_out;
-+	}
-+
-+	if (pid == 0) {
-+		exit(EXIT_SUCCESS);
-+	} else {
-+		wait(&status);
-+		if (WIFEXITED(status))
-+			return 0;
-+		else
-+			return -1;
-+	}
-+err_out:
-+	if (pid == 0)
-+		exit(EXIT_FAILURE);
-+	else
-+		return -1;
-+}
-+
- int main(void)
- {
- 	if (sysfs_check())
-@@ -210,5 +281,6 @@ int main(void)
- 
- 	if (system_thp_policy == SYSTEM_POLICY_ALWAYS)
- 		return test_global_always_process_nohuge();
--
-+	else
-+		return test_global_madvise_process_huge();
- }
+Usama Arif (7):
+  mm: khugepaged: extract vm flag setting outside of hugepage_madvise
+  prctl: introduce PR_DEFAULT_MADV_HUGEPAGE for the process
+  prctl: introduce PR_DEFAULT_MADV_NOHUGEPAGE for the process
+  prctl: introduce PR_THP_POLICY_SYSTEM for the process
+  selftests: prctl: introduce tests for PR_DEFAULT_MADV_NOHUGEPAGE
+  selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_HUGE
+  docs: transhuge: document process level THP controls
+
+ Documentation/admin-guide/mm/transhuge.rst    |  42 +++
+ include/linux/huge_mm.h                       |   2 +
+ include/linux/mm.h                            |   2 +-
+ include/linux/mm_types.h                      |   4 +-
+ include/uapi/linux/prctl.h                    |   6 +
+ kernel/sys.c                                  |  53 ++++
+ mm/huge_memory.c                              |  13 +
+ mm/khugepaged.c                               |  26 +-
+ tools/include/uapi/linux/prctl.h              |   6 +
+ .../trace/beauty/include/uapi/linux/prctl.h   |   6 +
+ tools/testing/selftests/prctl/Makefile        |   2 +-
+ tools/testing/selftests/prctl/thp_policy.c    | 286 ++++++++++++++++++
+ 12 files changed, 436 insertions(+), 12 deletions(-)
+ create mode 100644 tools/testing/selftests/prctl/thp_policy.c
+
 -- 
 2.47.1
 
