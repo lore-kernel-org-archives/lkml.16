@@ -1,277 +1,150 @@
-Received: from mx0b-009a6c02.pphosted.com (mx0b-009a6c02.pphosted.com [148.163.141.152])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78621E32CF;
-	Mon, 19 May 2025 02:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.141.152
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747622983; cv=fail; b=V3eTb9STyh4ksRipCaO+KK3n8UKYvDn7R3r6eQz7bB375oLRYB7rqJ1f5V9cdf7NU3BhfC7ZYa1cjtLO/K/WyoVMk5TA06LdRWxA4GW6ejk+Ul8srbnxqxeRE9n1ElKHiQrZygqqocbKxEZ/Y0TJiNohfXwBxkQFBxOaYf80zCE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747622983; c=relaxed/simple;
-	bh=ns3s38piX7JVMw1PO5nfFSrt3wlCuOixaMMznaeL4pg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VPeEV3fmfm7ThqJTkvdixcr65tW1P62tWnMzhtcM4cvozOMt1Oj15F+PPmhKrVQ2EnfCbAYRVDWXaV8VMsft9neHC01tZyrvwmk1i1EDCNb+E4Uvn/qx1JUwm8DWk0sVyNA9QRDuKAnwLzVZQHo6A6sMPG6E8ykPa6tyFrDVc8k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=gIBwyCKh; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=zjEK+qXG; arc=fail smtp.client-ip=148.163.141.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EF44B1E76
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747623321; cv=none; b=NxH9KikkZufeUj2D6Y886f7d/5rt9pDxewZNHrWDgmXm5n2ow4B+05czZxKI9WRgX0UgV8fwijFnGhg/xYynLKl9l99dKupgdkP/BfgE6oirKl4Xs4uktu8aYZiWnTjU8ladfv2KySgy+bdHLKhM44yIgp+EkDzOuR+0hJ/k9jQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747623321; c=relaxed/simple;
+	bh=dAJUqFlUiU7t/FY5+basqnTiCVZGegoSbGuO7Nvscnc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=PszTmC+OAGfnJ9PpUxXPjOLEW0JslIwctJWSw9dbLQBaPiJ15KHLE++EBqeveLm5wL3BL2VuJqOCTU5/6q2b92XK1damfl5cEuMqVpINHxD9Z5YknVoKRr0ehGPxLrDmomEkXfdjLioheWK28sFkXULdlatoiRbeBq7tZETLPpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=RzuMq3oH; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="gIBwyCKh";
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="zjEK+qXG"
-Received: from pps.filterd (m0462407.ppops.net [127.0.0.1])
-	by mx0b-009a6c02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54IMnjBu000509;
-	Mon, 19 May 2025 10:49:04 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=20250420; bh=bCLEV7KkM6Wk27Z6GRbaq0k
-	oBeER3YTsfyOFro69GGU=; b=gIBwyCKhokxTGdvSHGugzId4OhrJmIWUgFaIW7W
-	Aq/72pWENMjM7vBwY9s84+7D/XxROck13dNOvWy8eIUas3q9ceO/ubuc4l5LDUmY
-	JOZ9ekelBLP5B5C33IOoM8JCGISp0j0K/OrQF6k+BAUoVz52ZG7qeM5E2YD5/rdr
-	D6E6yqnEZMXqZbbNwYzZAglAgkWe7O3G9YJ1DBV8NswtNYArVkUgPapboUEfNpji
-	PDMwn+RDpL+T1r2xOULjLPuVb7FGxi7adwa6Tgdab5aFUYSZ3KEeLpSrBkiiR0so
-	/FQ810c4gNXmzRQ0COtrDK22OHp5QW8x+7thpOq7xSS1O+A==
-Received: from os8pr02cu002.outbound.protection.outlook.com (mail-japanwestazlp17012052.outbound.protection.outlook.com [40.93.130.52])
-	by mx0b-009a6c02.pphosted.com (PPS) with ESMTPS id 46pxra8y84-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 10:49:03 +0800 (WST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qHTocmvZzjyEL3rv/O2C/Av1P1mkO6pZcTFP62AKFcy2zi+7Bn46xgpBGgnp4M8+nIKIx1akZYEL0dMZo5ir0al/SajN2VLIcW2NMq+sJfsvx8ddV/54GdnbYQgtRLNqv8Ze7GrZHZ2Mvgi/BZ9Ikmx4OXSc23aasW8Pkul9ttG2TnyDrCEu7kiOZe1hkPNBgslLwzOt4asxmLlPRNUlXNqwRzNhTfOb+7SI0ZQZCJDhP5b4E8g2mSs2RTI18tpXLN+xJyU4hwlObf6QMqpfH+16qKngiyX8JH+qPZ9eUQia2h7HOLbCv0rsZ6b2cbMA5K0mWqQFexkljV/RIZO2GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bCLEV7KkM6Wk27Z6GRbaq0koBeER3YTsfyOFro69GGU=;
- b=pGalSDzCXGOmdXl8KHoBSyjHDWAYbjTTeS7KKegLHp1wCgVFVlD1JDO9KaXczuXCDFa+WTcp7vbFofjmyAuU+VeRCM28OJbiw0s89nU3SMwKN1mlW6jF58h5ct2Bhi9/AdAV9EG5CMeJu9OPii2/iASPZ30au4lYnVAhp5hCyou+7rINPMcRPR0l4F3/3NRmU5NVSRbmrBHg+W8K6TvZHbvg7tAJ8UG47/peVHBAMLD1UwOi9rMlZeSeU49ivd+nx0obKqdsu6H5Mb/TeSC5/olUC2IOhFY9+teSgqumJZjK0zAgXa18aeFyEpnPGqo987d6spYhfzwYhZCvPGmhgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bCLEV7KkM6Wk27Z6GRbaq0koBeER3YTsfyOFro69GGU=;
- b=zjEK+qXG9e2FnqGDJaoZOmA0VA4VT2tfjxih88HifHmZ8hTIUV5/eihyXfy55A4RONnl7OpYvkCuxxYHIqHy0AoQ4jeuCY91V1zYm/ZYJ6Z1Sr1pvkV9ONfWIN6H3qfkns8ZKDceo+S28H6qNBHGR5W2NPF6xc8o4jWhxeMsW7QsS+lqlVbHdOP1PXpTrPrP/E8iWdVaxMo9gQsY+Zxaja9DUyr0iDT48gI+XFQXj4d6ya6cvxJozxN/0OrCuAyG8DIcYaoTiE1Hz1oErmjV9S8n33xB7eDGT/fCIWoDK0AI5GGZ3yM6GQ5yTvEIpxYBWvInPM43izuDxaaKhB+EZg==
-Received: from TYCP286CA0232.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3c7::18)
- by OSQPR04MB7910.apcprd04.prod.outlook.com (2603:1096:604:290::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
- 2025 02:48:54 +0000
-Received: from TY2PEPF0000AB87.apcprd03.prod.outlook.com
- (2603:1096:400:3c7:cafe::5) by TYCP286CA0232.outlook.office365.com
- (2603:1096:400:3c7::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.30 via Frontend Transport; Mon,
- 19 May 2025 02:48:54 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- TY2PEPF0000AB87.mail.protection.outlook.com (10.167.253.6) with Microsoft
- SMTP Server id 15.20.8769.18 via Frontend Transport; Mon, 19 May 2025
- 02:48:53 +0000
-From: Delphine CC Chiu <delphine_cc_chiu@wiwynn.com>
-To: patrick@stwcx.xyz, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Marshall Zhan <marshall.zhan.wiwynn@gmail.com>,
-        Delphine CC Chiu <delphine_cc_chiu@wiwynn.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm: dts: aspeed: yosemite4: add gpio name for uart mux sel
-Date: Mon, 19 May 2025 10:48:49 +0800
-Message-Id: <20250519024850.2894895-1-delphine_cc_chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RzuMq3oH"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250519025510epoutp0365d19cca31d058076c35c7569f545822~AziRI5diG1240012400epoutp03i
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:55:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250519025510epoutp0365d19cca31d058076c35c7569f545822~AziRI5diG1240012400epoutp03i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747623310;
+	bh=ChUFgxAEw7CGR5BqcUfKWMh9hVPhBwi/jH40Uw0p4mo=;
+	h=From:To:Subject:Date:References:From;
+	b=RzuMq3oHpJcO1bmvRBYX/LRjLUfMSIFe+Izkn2m6qi0a2zW1opdXRgiHdkxqWJAZx
+	 T8jvCvOZc2srT2fUi5u52B3VHGoNPunJBws+Ca66z61wPvSmFT4FYiR9S4aL2rzKMk
+	 OQBrppbsORhxbO9k/Vm/sc0aUrU6GV7+rCCXpZCw=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250519025510epcas5p16f160fe564496ed3b780a0a9efc906f3~AziQnyOBH1845818458epcas5p1d;
+	Mon, 19 May 2025 02:55:10 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4b12NZ0CCwz6B9m6; Mon, 19 May
+	2025 02:55:10 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250519025509epcas5p2bdc884392dafa224289b337c1232daf3~AziQCMQxB0852108521epcas5p2n;
+	Mon, 19 May 2025 02:55:09 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250519025509epsmtrp2f8e521a4b3e6c7929b6f100d99e0a5ff~AziQA6CHA0363803638epsmtrp22;
+	Mon, 19 May 2025 02:55:09 +0000 (GMT)
+X-AuditID: b6c32a2a-d63ff70000002265-9f-682a9d8d6c93
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DF.B2.08805.D8D9A286; Mon, 19 May 2025 11:55:09 +0900 (KST)
+Received: from hzsscr.. (unknown [109.120.22.104]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250519025508epsmtip22234b35ee80c7eded73a8b77ebbcfab3~AziPDPQID0352803528epsmtip2a;
+	Mon, 19 May 2025 02:55:08 +0000 (GMT)
+From: "ping.gao" <ping.gao@samsung.com>
+To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+	James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+	peter.wang@mediatek.com, minwoo.im@samsung.com,
+	manivannan.sadhasivam@linaro.org, chenyuan0y@gmail.com,
+	ping.gao@samsung.com, cw9316.lee@samsung.com, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs: mcq: delete ufshcd_release_scsi_cmd in
+ ufshcd_mcq_abort
+Date: Mon, 19 May 2025 10:55:59 +0800
+Message-Id: <20250519025559.1263821-1-ping.gao@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB87:EE_|OSQPR04MB7910:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 09ea8e30-495a-47bd-9b2c-08dd967fb1ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WrtmSClM+jq0pYmVA8kHVxfwlQ2xYw2C3iCSuQIBher46HSoto3XzjPEPuiE?=
- =?us-ascii?Q?fi6Ja9qsenunDZqm+B2NFuwARX1PWEfejPx6DYWcPvzinj4rRaSQ/GxL/9Zb?=
- =?us-ascii?Q?2XdzHU5+zLCaJdBpRIZ3ak1j6Wm99gpbOrlJO+ALNnLG1wxh9SekaVJvvcRm?=
- =?us-ascii?Q?qjjRza/QSD7MQaNKelWsXX3atDduZkctEWYtDCr9xaQbqxOCUnXeCzOQQBUR?=
- =?us-ascii?Q?zMgAHhe8iWCnVwBQWuX6RQ6fEhOgPCG/6YHHpTGznzdUqAVRWwHhTboNw3Ui?=
- =?us-ascii?Q?VC3PkP2lIIA0k7iU1Wd6DP5rOm7JdKqEY1QbLmh1dvcXP7GAaKhfKij/mHBf?=
- =?us-ascii?Q?rg/fAchC/EVqQKnnhMk+fHZGk/sxIgW33jByIsB0joUr+YsNEwZNpqMwk+3g?=
- =?us-ascii?Q?0uvObDBCk1C5nW7bNZzZAwC814I2yLE+KJGmQm6dt7L/k8lP8yKzjnRXbLbM?=
- =?us-ascii?Q?vFNSg2kaCjdvKOqq0dQWzNZ9Bmfb5VCzV6FfOilwuE31zZtZpk1EF8QLoRKL?=
- =?us-ascii?Q?mTUUSIOBUnFJBXS9ppRLwobc3jzhTJuo8btstVFQyT16+8jcaPgbUA2SpiaK?=
- =?us-ascii?Q?Jx4B8idUIGw3htNWbBQiNA5Ze9/ySO+JEiqAA9difqod6ANSr7B+MV8Y+Ayt?=
- =?us-ascii?Q?648qv3IIS+VzEVnZU7lbh07meWNWeHWBcshqr8fEtp0LWy5qcbuwCK7H3ZI2?=
- =?us-ascii?Q?euTW8nO59myzH2pJhuIfperaGettGuubSkLXsbaSJmOkmBQ8oxbB28VwE9FV?=
- =?us-ascii?Q?eHU+IXjXBNa5NP5UvYqvC2Uodbgj0cNW7OEQqZXGrFWGrteQrDbho76U1JHt?=
- =?us-ascii?Q?OseNvntpCMGf34fBvtETguGwE7t/Z4gOZEbhK50IfFeb8LPS6Wn8GGTTBChG?=
- =?us-ascii?Q?Rc+lhBNziITKQawoaT3/ywBXbit4E5AjA+xp8jqn1jpTnXb5WqmvMaO3FWdo?=
- =?us-ascii?Q?LhM6ExwFt0o1GUGmnyo0B987CLvn/CcCEKqrIVrQ7+bwx4oBLA2rDCezinBd?=
- =?us-ascii?Q?+E07BvWLWIsTDeq77Kh/L8rGRdlT8xKQKd4BKnB3QZChE2mcwSIr911xlUD6?=
- =?us-ascii?Q?ZFRzz1w/fWvbZ21b+nX1a3mO2RXdjYSBYvltT8HtVBhokuhk2h6DE9yzA2O7?=
- =?us-ascii?Q?e3MBXnTje6lDCPy46M7syax5F7OS6UOkuu1dGRky1Mw+HXb3jzWdvSPBnBb2?=
- =?us-ascii?Q?qczjSulronP7MOsO2/H1SZWCsR/b3LLjqIlseiD19DnZh0HpiTvVMfDy5GnF?=
- =?us-ascii?Q?hcydU9YFJjrmlkjWQBHY2LCmFVOR2s9BnbJrMKZ6hd8xTzyIXat9HXSSMbB0?=
- =?us-ascii?Q?Ig6Q+VDAvvIMy1Y5mrzZKG8MhKmy1iy/sCDv+uXp21FMOr8avOMtnwxNW/PW?=
- =?us-ascii?Q?OQKsUMzUWdkSLAur20Uf4am3orrT+ry7/GqoWnMd1V1gCP6FBYdq7EuckXU9?=
- =?us-ascii?Q?aGi4kWc3goNYfAJo5XgUj9UO7TDM7XQSfQWurlNe9uLz5xDW0ZktiJysnReo?=
- =?us-ascii?Q?XTFHUnh7fxiQqAqZHhtKR7xjia4PI4P7rxG5?=
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	0cg2+NEOuaU7YllK7Lw6JMpM1wEDsVQpcXjqg6K9UpoMvXShahozV4FFakTWqboTzmYGAr4fovH2xGUqojIG0dVsLYBJMkJJ1FvpdaPtX4jvpshufoWAn4R+FExptxtOZUofFTraJeupwyCD4GiLMAV4ynY4nRh/5oHufV6UeFu/ErzjqGle1yC2Y2faPSj6BMgBOfw6UldYkuW5XNK0avObfzgF7lOtqH+VrskDINVj6eX0JA0d1H9LoSFikF2+HUUicojz4xEa4SID+jvpl8BLNnydh6xC05k6spd5tmg/EUFKcNaDWkRV409c8hywI3+UaAivY3xu7MSekY+HuAkXCG+Y8lZt6h2opm696gsy5g7kQ5YDqAOX6xa9D1zXq/7Fnx1reY3MXGBle0zC6IjKzzzeSJSYMoB++22P6CCUHcdwETvB94N6K/38943PXaAggb/C/YkM/VRfGg/jj+OqfGEV3bpOOkcfwM8IiQp3UyZRtCut4EJ9LVWpSCUrXF/Hyu/Ul8nQBj3Dd7RgD7tc+4wd8yff8EZmGdsMHwwT/EJSZxPc+yybZnq0bhXEEh2fF8X5NI9gqfGw6Ae2Jj/9p6n3V1o8gyktymWZMi585PD9I6uzPy2VUgoSbLIe
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 02:48:53.8549
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09ea8e30-495a-47bd-9b2c-08dd967fb1ba
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB87.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR04MB7910
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDAyNCBTYWx0ZWRfX53RBFHSIC21r 8cV7IwoxbIwqoFzHRz5TJXXWhssjn9eUwvmc5zNFs6ymxVTN2XQ4LCuphwQ6WTOXUXz7TZRHPtD qzqN+qVA3q8QJy6tfONTnZVHiEW7BdwE4b8zCoxj5+85L1vmwjOCWvH322mGTzb3/AAc/rjOJHk
- BOi80U9pK2VKGz9GURup4v9NilJ/J+cMnHw7I1m0mGEVVVLYH2UNkuGkBo1XA/1tDuEl4ZfOi7P ttxbmtWS1PqYx71qA3qlcifl+qduZL09B0ZnVFHoHPVylME/kPauKNN7JpzytQy13baJHLTzYVx Knq4yb8SjpByYetJY9/U6O51w+UNtnkpLsnuja89FpjVAt/ZAgu5W6aPsMtelsVHRveQOuaibC7 Rkw9peA3
-X-Proofpoint-GUID: pJwXHJi0yCxLTXEm5Z8hnp0EzPMigK72
-X-Authority-Analysis: v=2.4 cv=bqNMBFai c=1 sm=1 tr=0 ts=682a9c1f cx=c_pps a=I+j65ROInpFcKU+zCE/nCA==:117 a=6rDDh2uRNVCE5HFPCIqeAA==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=dt9VzEwgFbYA:10 a=4AL28aEVfeMA:10 a=pGLkceISAAAA:8
- a=cPYzWk29AAAA:8 a=4NkRDkXW3gmRkeDejOAA:9 a=oSR2DF9YFqZEN4IGatwP:22
-X-Proofpoint-ORIG-GUID: pJwXHJi0yCxLTXEm5Z8hnp0EzPMigK72
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_01,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 phishscore=0 clxscore=1011 spamscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.21.0-2505070000 definitions=main-2505190024
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSvG7vXK0MgymtQhYP5m1js3j58yqb
+	xbQPP5ktXs5Yymwx41Qbq8XGfg6Ly7vmsFl0X9/BZnG3pZPVYvnxf0wWz04fYLbY+uk3q8Xn
+	pwuYHHg9Ll/x9tg56y67x7RJp9g87lzbw+bRcnI/i8fHp7dYPPq2rGL0+LxJzqP9QDdTAGcU
+	l01Kak5mWWqRvl0CV8aB22eYCqbxVkzb85SpgfEpVxcjJ4eEgInEpOuXWLoYuTiEBHYzStxe
+	vJgFIiEh8bnzDyuELSyx8t9zdoiip4wSr69eYAZJsAmoS/y5fpcVJCEi8J5J4ui9VrBuYYFg
+	iT2PjrCD2CwCqhJndi4Hm8QrYC3xeMNpNoip8hL7D55lhogLSpyc+QSslxko3rx1NvMERt5Z
+	SFKzkKQWMDKtYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIDngtrR2Me1Z90DvEyMTB
+	eIhRgoNZSYR31WaNDCHelMTKqtSi/Pii0pzU4kOM0hwsSuK83173pggJpCeWpGanphakFsFk
+	mTg4pRqY7PuybBl5zhbXqSs84GK+qx/xPJvlWeUNu/SFTGpTW8vu1T57H/DzoY/TfLtoHxnx
+	tad/XVf38P0adeDk/LQUhUjtkByb67rFtx+3H/6quSdrD5dKluX0qG69FfE3fEWWHziQuVLL
+	4fyXMr+bMx/5s8rIRz+47MGnO5PxmLDDTj4Ly5/LzTJMtGt63e2is3UNNykGCbMcXbuwdsJH
+	q5R9i6My5l3OKt66o8RL6/eymRN5HjPemLF63R/+PS+f+TycXfGN4+aphW6L9uqbpxX909vy
+	rXnXreV7+FYXb43/EWTHPyG2pylVdJvcieMTNdnPlrxkN9/iVPNjetra8zvW6x0wfnq4RH2W
+	vff+uxtElViKMxINtZiLihMB6NIrwucCAAA=
+X-CMS-MailID: 20250519025509epcas5p2bdc884392dafa224289b337c1232daf3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20250519025509epcas5p2bdc884392dafa224289b337c1232daf3
+References: <CGME20250519025509epcas5p2bdc884392dafa224289b337c1232daf3@epcas5p2.samsung.com>
 
-From: Marshall Zhan <marshall.zhan.wiwynn@gmail.com>
+after ufs UFS_ABORT_TASK process successfully , host will generate
+mcq irq for abort tag with response OCS_ABORTED
+ufshcd_compl_one_cqe ->
+    ufshcd_release_scsi_cmd
 
-Add gpio line name to support multiplexed console
+But in ufshcd_mcq_abort already do ufshcd_release_scsi_cmd, this means
+ __ufshcd_release will be done twice.
 
-Signed-off-by: Marshall Zhan <marshall.zhan.wiwynn@gmail.com>
-Signed-off-by: Delphine CC Chiu <delphine_cc_chiu@wiwynn.com>
+This means hba->clk_gating.active_reqs also will be decrease twice, it
+will be negtive, so delete ufshcd_release_scsi_cmd in ufshcd_mcq_abort
+function.
+
+static void __ufshcd_release(struct ufs_hba *hba)
+{
+    if (!ufshcd_is_clkgating_allowed(hba))
+        return;
+
+    hba->clk_gating.active_reqs--;
+
+    if (hba->clk_gating.active_reqs < 0) {
+        panic("ufs abnormal active_reqs!!!!!!");
+    }
+
+    ...
+}
+
+Fixes: f1304d442077 ("scsi: ufs: mcq: Added ufshcd_mcq_abort()")
+Signed-off-by: ping.gao <ping.gao@samsung.com>
 ---
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/ufs/core/ufs-mcq.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/a=
-rch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index 29f224bccd63..aae789854c52 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -189,6 +189,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT1_UART_SEL0","SLOT1_UART_SEL1",
-+                               "SLOT1_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -235,6 +240,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT2_UART_SEL0","SLOT2_UART_SEL1",
-+                               "SLOT2_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -281,6 +291,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT3_UART_SEL0","SLOT3_UART_SEL1",
-+                               "SLOT3_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -327,6 +342,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT4_UART_SEL0","SLOT4_UART_SEL1",
-+                               "SLOT4_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -373,6 +393,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT5_UART_SEL0","SLOT5_UART_SEL1",
-+                               "SLOT5_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -419,6 +444,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT6_UART_SEL0","SLOT6_UART_SEL1",
-+                               "SLOT6_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -465,6 +495,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT7_UART_SEL0","SLOT7_UART_SEL1",
-+                               "SLOT7_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
-@@ -511,6 +546,11 @@ gpio@22 {
-                reg =3D <0x22>;
-                gpio-controller;
-                #gpio-cells =3D <2>;
-+               gpio-line-names =3D "SLOT8_UART_SEL0","SLOT8_UART_SEL1",
-+                               "SLOT8_UART_SEL2","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","",
-+                               "","","","","","","","";
-        };
-
-        gpio@23 {
---
+diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+index f1294c29f484..1e50675772fe 100644
+--- a/drivers/ufs/core/ufs-mcq.c
++++ b/drivers/ufs/core/ufs-mcq.c
+@@ -674,7 +674,6 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+ 	int tag = scsi_cmd_to_rq(cmd)->tag;
+ 	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
+ 	struct ufs_hw_queue *hwq;
+-	unsigned long flags;
+ 	int err;
+ 
+ 	/* Skip task abort in case previous aborts failed and report failure */
+@@ -713,10 +712,5 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+ 		return FAILED;
+ 	}
+ 
+-	spin_lock_irqsave(&hwq->cq_lock, flags);
+-	if (ufshcd_cmd_inflight(lrbp->cmd))
+-		ufshcd_release_scsi_cmd(hba, lrbp);
+-	spin_unlock_irqrestore(&hwq->cq_lock, flags);
+-
+ 	return SUCCESS;
+ }
+-- 
 2.25.1
 
-WIWYNN PROPRIETARY
-This email (and any attachments) contains proprietary or confidential infor=
-mation and is for the sole use of its intended recipient. Any unauthorized =
-review, use, copying or distribution of this email or the content of this e=
-mail is strictly prohibited. If you are not the intended recipient, please =
-notify the sender and delete this email immediately.
