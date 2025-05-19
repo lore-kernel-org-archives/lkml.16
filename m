@@ -1,107 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D9D13635C;
-	Mon, 19 May 2025 19:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1329813635C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747681860; cv=none; b=Wit2Gh8j3vc/sWNUL1iRWQkJ8ammYrR42fONhm3RyPphbpqlusPyrgu0mVwbOaxx4sVfm1K3tAZ14r3UHmpoDYIBqQ400qu9Kolg+W4Xh46NjEpNWiC6oOqazXitYKnrVNj2aYv7ezQYldIoudl2WmNIGcDtEhGSu2L8pbB1k94=
+	t=1747681877; cv=none; b=SRYuWSs3u182QHvh6C/xmSRb+rkwdAEnAIOqEsbaiV3gDhCdBYtD3wowAy9UUJUHetXlWqX0jTMuqoHSi5glKhnuyqkAvxvBfXIddY8pbuVRye7uEAvFp1egtc/VATe48uataVAUr7veYkHpP+5wwsjYU0TTo8gjoXG5DQKwrqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747681860; c=relaxed/simple;
-	bh=5UpWvRtyyVKCNBvlRnU6EYbY0K1yCTIYPFLr2mvenlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zy69l633tuGptpZeg0UcVWsZYUbe5SGUo+xl9jxoDvzU1iD9kXD+x3t5T8Ovc+ztBAWqTsgFqresfU1IMFti6UDabmytwFhi9rppX8S3hkJ0d8nVFxLz+ZneugydkGiexgY4BIPV4Wd9xnWi2H8B9PJrOoL52IKdrKZWPlL8VQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBuGTRVL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747681877; c=relaxed/simple;
+	bh=+UXG5KVn1c1Z/FIO49Iaqlfp0eBw74D9gUdMAt+iCyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MxLHyamPlbF+r82CMvGQ9o4zEVNJwKt14pcTHBH6pEtiMImYreJPR+INAMkqEqjGKjX+QJN7/se0ox5xr9GyX6r5VNawAbt/OaeFDWqIt8SyJ9fg/b0jTTvbiYsTOGJT7wV80/jmAwjspT+Sc0LfPIjBFLAhsbKy+r0pDK3fIiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dOYk0cEO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBuGTRVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89BE0C4CEE4;
-	Mon, 19 May 2025 19:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747681860;
-	bh=5UpWvRtyyVKCNBvlRnU6EYbY0K1yCTIYPFLr2mvenlE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bBuGTRVLg4fWt2z/M81jOfcC2axuGKzLH8jCjG9ZIUD4C0k9d6gA3PWuexagWjAsc
-	 c3t4H6TRTrTvp3qESekKOxsFvCyHZiFmvchlBUGSRwYU3NVANrDIPRD43I60RCvMQ1
-	 1V2rrM6X/lqEaGHwdwpkSDfVGJEef4YkE71sZmsruyO25zC5VBuijXq1atBeVGmr5L
-	 +agZOhd2+vyehkFufLbOx9S/PbQCRlizJOTAHv3ZBayb6MZ1ooNrcTjnGRl8EoJVIh
-	 z1qx//JslcW+aucVeFFEEin3Q2JiWe3KUqnOkOLdpyw58wvu32FxCUPxv5JCQdApk2
-	 czgRMwv8Q8FYA==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-606440d92eeso2516139eaf.2;
-        Mon, 19 May 2025 12:11:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVG3SKeJosPZ16xwtz8wUmHeTtYrw3tgE4xIOH7XfuE8J5XqMVs+LQ29+szuO6VwUfVbAyKoaDaR4uLNUc=@vger.kernel.org, AJvYcCXX1/lw8YTd2318ByfPT/MQC9GDF0t6jwu/u8YRzK8RiZoJTSx1SQuP28uP0oKfVMMwSG2wE6Ub9Q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySMO/sbmX+lDCIrvp3rON8FGH2Vfl/J32HM4qXhR3PRep9KZ5p
-	Thh5COmRblg6V9Qmhl/TmKVRjHDO2RHgAzeZBo7fyyQG0xNcT1d1Y8C9/ZMLlpsKHI0fO/I270p
-	cD9yVgdCFk8uFMgl+FGTEfxlkEOpiVQk=
-X-Google-Smtp-Source: AGHT+IG8HY1pU0LJCDkdPqsrocfW1VbvRMSWOddpdCXa87vWDDROVqAHWs5AtZqDwRfqdWn3T++3IzYKm2pPhOqCRSE=
-X-Received: by 2002:a05:6820:2705:b0:606:26bd:7208 with SMTP id
- 006d021491bc7-609f37bc37dmr8119192eaf.7.1747681859874; Mon, 19 May 2025
- 12:10:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOYk0cEO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747681874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2jyxouBg1HYLQqhe+gRH8QVZmgkwBCZKGRVrdqW+W3E=;
+	b=dOYk0cEObonpsuxrKBIQ/lMlNfjMz+ByRjAd5u9He2BmGQ0lsBkrIkSKwywbFahEHrdghd
+	trp5LKgpuXLV8ceFndmsT8VFw/vk+i5PtSwjVeH33lDh35NJXR2vwXUK5IiVShy8cyRJQZ
+	itZu8C8GPPW32ntl04wGJOncQ7VYaQU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-400-GCEvEtLgPhuzgRxJr-rOwg-1; Mon, 19 May 2025 15:11:13 -0400
+X-MC-Unique: GCEvEtLgPhuzgRxJr-rOwg-1
+X-Mimecast-MFC-AGG-ID: GCEvEtLgPhuzgRxJr-rOwg_1747681872
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a36e6b7404so968577f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:11:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747681872; x=1748286672;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2jyxouBg1HYLQqhe+gRH8QVZmgkwBCZKGRVrdqW+W3E=;
+        b=wJLIEtS4NF3+zEBkU1zy03dFAdvvOIoxTLYwRZFCNSQZGstCpsOTHBNQK1moJCKIlu
+         bwghgGBssqxW7E/34vQwpmT9NlCgy4Ef+WHldjTFUTZSQNWzYIzcsjsiQp2Onyv2clpR
+         qMFdqiVZK+efe5IgVkBhDHLpXNSaIE536r5CqOgjlZMqsKHeG14J+ZX6BdCZwTF6yeno
+         NK+GVXFWdewJ10tCBHHin8VSSDPTevrVFSc+4vy6AYOeGUU03oCJbXFDiRFxMZC5Vovx
+         jGlbNhWTl3auIPCvChPxu2sz0EdgQN6lCgpkgyHTr6l/8pP3Z1FOedSx554BUs+JMINf
+         k3JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXf3qN//TKkZzcGXCp/wWveh61Z/3YdR9TX90FrH3Yxy9Jjq3x8nrthcnKaexqDDPiqaXEi3a4h42MIES4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKI6ED9rjxyrIlHG7uLiuVywU9dAk8yLjES49T5uB5rdasQ5c1
+	rDc8VcY2fGc77nMJXQaLqwpf27U9QCAVuYAp7xQwBXUYvgonIHAn64PklYPZX2XDg2iHUvJjNZp
+	9KjYeAaXxMlm13QMVH5mpFtbKBQy141A6S9h35YMzVXa05Rtd+RsnehDPgj9k0pGaxA==
+X-Gm-Gg: ASbGnct0muxzYvXVsLtFlEW+p7y3CrFMUSU20COaC+hKj1XQbz06Aoy8AhSuWjgHh5T
+	1apSUQLo19ydbg44R1UuhGepziD4HIpCJ3zq0si/BGKW2e+fl9TCbLHxAw35jdvs1IqNPvOnyhP
+	zn94h8R0+rWOILuGo0vO5MHG4BaBtKaVIV8vS3LvpPNYQQ/3p0aBWyhDn0TAeREYCbLIpLKgL3M
+	vJPDX++b5OxhgaMh3iIKksczraEsg3OIvbxR1SMQgU6SSVsDVVOYW+YBJQa3HZC9MKrTbdKVIxR
+	7yZBHSCxO+66EhWa3kniXJGt5Mcc6vLFS6G0Y9/mU8+XMjkgNYS4Uz1Y656Wtjt+fnrOjqRMfb1
+	rRMxSjDfp48cRZhH9/RJp4OTI+RXodQl/4Y887eo=
+X-Received: by 2002:a05:6000:2af:b0:39d:724f:a8ae with SMTP id ffacd0b85a97d-3a35c8355admr13648993f8f.33.1747681872532;
+        Mon, 19 May 2025 12:11:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwckM4TNG/OJ3qmyxFMBlEGoD03WvyZ1S9xdb8yfXlmxW1hvC3dxoJRQOGPhDOZqMf2XiqqA==
+X-Received: by 2002:a05:6000:2af:b0:39d:724f:a8ae with SMTP id ffacd0b85a97d-3a35c8355admr13648972f8f.33.1747681872159;
+        Mon, 19 May 2025 12:11:12 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36749f622sm9953371f8f.93.2025.05.19.12.11.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 12:11:11 -0700 (PDT)
+Message-ID: <e5085602-e97a-4b30-b640-e1e4f2e77cf1@redhat.com>
+Date: Mon, 19 May 2025 21:11:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519070901.1031233-1-rui.zhang@intel.com>
-In-Reply-To: <20250519070901.1031233-1-rui.zhang@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 19 May 2025 21:10:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iZVjbnJKfpzWsmz_j978FRpw+ocQKjUU+u2e2OZQOZMw@mail.gmail.com>
-X-Gm-Features: AX0GCFuODlhskytFNMsfpAga0_WiJT1WXXb9MMNg-aSgbgO4B9N4ZwC1K7l1zKE
-Message-ID: <CAJZ5v0iZVjbnJKfpzWsmz_j978FRpw+ocQKjUU+u2e2OZQOZMw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: intel: x86_pkg_temp_thermal: Fix bogus trip temperature
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: rafael.j.wysocki@intel.com, zhangn1985@outlook.com, 
-	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
+ <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+ <e5d0b98f-6d9c-4409-82cd-7d23dc7c3bda@redhat.com>
+ <3e2d3bbb-8610-41d3-9aee-5a7bba3f2ce8@redhat.com>
+ <d8e20b76-1eed-459f-8860-a902d46bc444@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d8e20b76-1eed-459f-8860-a902d46bc444@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025 at 9:09=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> wro=
-te:
->
-> The tj_max value obtained from the Intel TCC library are in Celsius,
-> whereas the thermal subsystem operates in milli-Celsius.
-> This discrepancy leads to incorrect trip temperature calculations.
->
-> Fix bogus trip temperature by converting tj_max to milli-Celsius Unit.
->
-> Fixes: 8ef0ca4a177d ("Merge back other thermal control material for 6.3."=
-)
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> Reported-by: zhang ning <zhangn1985@outlook.com>
-> Closes: https://lore.kernel.org/all/TY2PR01MB3786EF0FE24353026293F5ACCD97=
-A@TY2PR01MB3786.jpnprd01.prod.outlook.com/
-> Tested-by: zhang ning <zhangn1985@outlook.com>
-> ---
-> Commit 983eb370cb87 ("thermal/x86_pkg_temp_thermal: Use Intel TCC
-> library") converts tj_max to use the standard API without switching the
-> Unit, which is a bug. This was mitigated by the next commit 58374a3970a0
-> ("thermal/x86_pkg_temp_thermal: Add support for handling dynamic tjmax")
-> which uses the Celsius tj_max for failure check only.
->
-> This may confuse the maintainer and the bug was introduced by commit
-> 8ef0ca4a177d ("Merge back other thermal control material for 6.3."),
-> when addressing the conflicts with commit d3ecaf17b586
-> ("thermal/drivers/intel: Use generic thermal_zone_get_trip() function").
-> ---
->  drivers/thermal/intel/x86_pkg_temp_thermal.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/therm=
-al/intel/x86_pkg_temp_thermal.c
-> index 4894a26b1e4e..3fc679b6f11b 100644
-> --- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
-> +++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
-> @@ -330,6 +330,7 @@ static int pkg_temp_thermal_device_add(unsigned int c=
-pu)
->         tj_max =3D intel_tcc_get_tjmax(cpu);
->         if (tj_max < 0)
->                 return tj_max;
-> +       tj_max *=3D 1000;
->
->         zonedev =3D kzalloc(sizeof(*zonedev), GFP_KERNEL);
->         if (!zonedev)
-> --
+On 19.05.25 21:02, Lorenzo Stoakes wrote:
+> On Mon, May 19, 2025 at 08:04:22PM +0200, David Hildenbrand wrote:
+>>
+>>>> +/*
+>>>> + * Are we guaranteed no driver can change state such as to preclude KSM merging?
+>>>> + * If so, let's set the KSM mergeable flag early so we don't break VMA merging.
+>>>> + *
+>>>> + * This is applicable when PR_SET_MEMORY_MERGE has been set on the mm_struct via
+>>>> + * prctl() causing newly mapped VMAs to have the KSM mergeable VMA flag set.
+>>>> + *
+>>>> + * If this is not the case, then we set the flag after considering mergeability,
+>>>> + * which will prevent mergeability as, when PR_SET_MEMORY_MERGE is set, a new
+>>>> + * VMA will not have the KSM mergeability VMA flag set, but all other VMAs will,
+>>>> + * preventing any merge.
+>>>
+>>> Hmmm, so an ordinary MAP_PRIVATE of any file (executable etc.) will get
+>>> VM_MERGEABLE set but not be able to merge?
+>>>
+>>> Probably these are not often expected to be merged ...
+>>>
+>>> Preventing merging should really only happen because of VMA flags that
+>>> are getting set: VM_PFNMAP, VM_MIXEDMAP, VM_DONTEXPAND, VM_IO.
+>>>
+>>>
+>>> I am not 100% sure why we bail out on special mappings: all we have to
+>>> do is reliably identify anon pages, and we should be able to do that.
+>>>
+>>> GUP does currently refuses any VM_PFNMAP | VM_IO, and KSM uses GUP,
+>>> which might need a tweak then (maybe the solution could be to ... not
+>>> use GUP but a folio_walk).
+>>
+>> Oh, someone called "David" already did that. Nice :)
+>>
+>> So we *should* be able to drop
+>>
+>> * VM_PFNMAP: we correctly identify CoWed pages
+>> * VM_MIXEDMAP: we correctly identify CoWed pages
+>> * VM_IO: should not affect CoWed pages
+>> * VM_DONTEXPAND: no idea why that should even matter here
+> 
+> I objected in the other thread but now realise I forgot we're talking about
+> MAP_PRIVATE... So we can do the CoW etc. Right.
+> 
+> Then we just need to be able to copy the thing on CoW... but what about
+> write-through etc. cache settings? I suppose we don't care once CoW'd...
 
-Applied as 6.15-rc material, thanks!
+Yes. It's ordinary kernel-managed memory.
+
+> 
+> But is this common enough of a use case to be worth the hassle of checking this
+> is all ok?
+
+The reason I bring it up is because
+
+1) Just because some drivers do weird mmap() things, we cannot merge any 
+MAP_PRIVATE file mappings (except shmem ;) and mmap_prepare).
+
+2) The whole "early_ksm" checks/handling would go away, making this 
+patch significantly simpler :)
+
+-- 
+Cheers,
+
+David / dhildenb
+
