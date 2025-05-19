@@ -1,100 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6D221B90B;
-	Mon, 19 May 2025 21:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A08E217679;
+	Mon, 19 May 2025 21:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689697; cv=none; b=lwocmv7VeAz9nl3CuHHNIRid5PQ8aYIKNKtRmc8j/xdDNJfndGccynn/DcPxYaiTe6BVovD8rxxckk1bh0GsoHxXYr4Mj/jPFwyLnZLkytiGlOKIexLDCJwNbBtn7M5jCWY4dcytpqHV+3ePMH7g5vTeH3oCRmcE3N2Te3dtv0Y=
+	t=1747689699; cv=none; b=SzRTTr8pJsUX4v4wTojo8jquW9/mHrDmSFsXtyapy6CdfSco90Twq70CJM2R84emiTTnOc9E7YZEXrL+2JlnBKyFLtxXVILrSTSocv8Gpm+UesQEW+zGfsg9xFKrjEyeS1lTkedKZKWj98XIqqEti5BJx4fxeRVwmVLFidJO4gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689697; c=relaxed/simple;
-	bh=q6Dx+Avw0IjBUYxnwLhQy9SWA1FLeEFicTrkNIFoN0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BMb+117+RblEnfIG/IHHryYHwuIpQUz1U8kQsI3tN7pjRQEb1lK3qjJcCWxKdQrysb6TN4grYllivBUKfmwkpNqvwMFDWnRvRFZisw7LsdqBqzWrjrPnr7vJxVCVLm0RBqFu6/U0CdTcTDhlUeLCgYc+wfLk5nHgwiu2v6HQOAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCQkvPSO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747689699; c=relaxed/simple;
+	bh=3yfVvu6ctqWi+Mp9M69igcy+47NYdaPDBKZNyw0wM4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BSXQi2LAibH8qsA9mUR7aPfCcVKg44RvtmjNYHZeuITb21j5eOFUok+t45flST54JpsgV28WIyMPVjPY4OFDJRnggMOnmPNKzv27qHOrbuaIkNhokO4Q26vinzHOmx80cVf0KeW0TuUTmRJTW3HrRcmycM5k4gd/LzTa6KiagYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=pcmkDMFX; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCQkvPSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85EABC4CEE9;
-	Mon, 19 May 2025 21:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689696;
-	bh=q6Dx+Avw0IjBUYxnwLhQy9SWA1FLeEFicTrkNIFoN0I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eCQkvPSOf2ETZuldsokCJWieHffW4s/haIWKXnbl6cwxGLglq+pxLDN6Wn63xtDEC
-	 OX07ga7GEpM/ZjDWfzJDV3teIZ74eqixnVx7Z1/LwQ8IgsXjkm0/LTTJCeXryKwVtd
-	 CZuYpJyS9fwgTGyoyyz+pTBc3xBPn3vhEUsMENhUbfcVYXW0kACUQSFpXOIhXC+CM6
-	 EiNqBUnFcNlz3W2CY10uvqmnt+DB39m5cLgGWDOmkYT8bNBIj16KtOYktIey2sirna
-	 Y+la54/VK+b6WiTVyCDMX0QAthYELSXZrVXEekBq7ePnCAU7Y0Hf1FPLnjH5bc9m41
-	 UK25Aixqge5IA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Milton Barrera <miltonjosue2001@gmail.com>,
-	Jiri Kosina <jkosina@suse.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	benjamin.tissoires@redhat.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 03/23] HID: quirks: Add ADATA XPG alpha wireless mouse support
-Date: Mon, 19 May 2025 17:21:10 -0400
-Message-Id: <20250519212131.1985647-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519212131.1985647-1-sashal@kernel.org>
-References: <20250519212131.1985647-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="pcmkDMFX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=QMMUftil4FlsregLW3WZllvx1g/ssMdCAfRuynRUtyw=; b=pcmkDMFXzjkKlk3kgFLPUqLZUp
+	V9R85rTjGwdqhigl/1QzO4ZBclt+nLhwImLYwU1ouFm0fR0zwkAbsg21Zck53BKUZuS+94COX31RQ
+	shcEKsQNLcvEkJG6/W8GsCUvTEcGTB4B3jbSbZztB8ydANBTmK3xvxZqH2dr2ms8ivdjclQ7hPEoV
+	qE2KMvEPKxlvhuhHnPaRYyf9BxJnXI8iWhGHtKxRuAuJKzf2Ow8Hy+nWdG1MTBkIMRRyLiTDfKbC2
+	nuGg8/OOmZdd/MyLtDS1eboTTjDhPjQXXhm1K0Owgjc8WzyS2KmHBTQKRZryw2OLuO1nCICmbSW22
+	1mAjVltA==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uH7v5-00AQE4-LW; Mon, 19 May 2025 23:21:11 +0200
+Message-ID: <2ebb7982-5462-4ca0-9936-f0821cbb9036@igalia.com>
+Date: Mon, 19 May 2025 18:21:06 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/futex: Fix usage() message to clarify timeout
+ value unit
+To: Jonathan Velez <jonvelez12345@gmail.com>, tglx@linutronix.de,
+ mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
+ dave@stgolabs.net, shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250515174523.349331-1-jonvelez12345@gmail.com>
+ <FBB34B65-F524-484C-A505-09AC20AF1ECB@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <FBB34B65-F524-484C-A505-09AC20AF1ECB@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Milton Barrera <miltonjosue2001@gmail.com>
+Hi Jonathan,
 
-[ Upstream commit fa9fdeea1b7d6440c22efa6d59a769eae8bc89f1 ]
+Em 19/05/2025 17:30, Jonathan Velez escreveu:
+> 
+> 
+>> On May 15, 2025, at 1:45 PM, Jonathan Velez <jonvelez12345@gmail.com> wrote:
+>>
+>> futex_wait_timeout: Fix usage() message to clarify timeout value unit
+>>
+>> Signed-off-by: Jonathan Velez <jonvelez12345@gmail.com>
+>> ---
+>> tools/testing/selftests/futex/functional/futex_wait_timeout.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/futex/functional/futex_wait_timeout.c b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
+>> index d183f878360b..737475df9242 100644
+>> --- a/tools/testing/selftests/futex/functional/futex_wait_timeout.c
+>> +++ b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
+>> @@ -31,7 +31,7 @@ void usage(char *prog)
+>> 	printf("Usage: %s\n", prog);
+>> 	printf("  -c	Use color\n");
+>> 	printf("  -h	Display this help message\n");
+>> -	printf("  -t N	Timeout in nanoseconds (default: 100,000)\n");
+>> +	printf("  -t N	Set timeout duration in nanoseconds (default: 100,000 ns = 100 us)\n");
+>> 	printf("  -v L	Verbosity level: %d=QUIET %d=CRITICAL %d=INFO\n",
+>> 	       VQUIET, VCRITICAL, VINFO);
+>> }
+>> -- 
+>> 2.43.0
+>>
+>     Hello,
+>     
+>     I’m following up on the validity of this Patch.
+>     
+>     Best Regards,
+>     Jonathan Velez
+> 
 
-This patch adds HID_QUIRK_ALWAYS_POLL for the ADATA XPG wireless gaming mouse (USB ID 125f:7505) and its USB dongle (USB ID 125f:7506). Without this quirk, the device does not generate input events properly.
-
-Signed-off-by: Milton Barrera <miltonjosue2001@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-ids.h    | 4 ++++
- drivers/hid/hid-quirks.c | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 288a2b864cc41..1062731315a2a 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -41,6 +41,10 @@
- #define USB_VENDOR_ID_ACTIONSTAR	0x2101
- #define USB_DEVICE_ID_ACTIONSTAR_1011	0x1011
- 
-+#define USB_VENDOR_ID_ADATA_XPG 0x125f
-+#define USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE 0x7505
-+#define USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE_DONGLE 0x7506
-+
- #define USB_VENDOR_ID_ADS_TECH		0x06e1
- #define USB_DEVICE_ID_ADS_TECH_RADIO_SI470X	0xa155
- 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 5d7a418ccdbec..73979643315bf 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -27,6 +27,8 @@
- static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AASHIMA, USB_DEVICE_ID_AASHIMA_GAMEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AASHIMA, USB_DEVICE_ID_AASHIMA_PREDATOR), HID_QUIRK_BADPAD },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ADATA_XPG, USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ADATA_XPG, USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE_DONGLE), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AFATECH, USB_DEVICE_ID_AFATECH_AF9016), HID_QUIRK_FULLSPEED_INTERVAL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AIREN, USB_DEVICE_ID_AIREN_SLIMPLUS), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AKAI_09E8, USB_DEVICE_ID_AKAI_09E8_MIDIMIX), HID_QUIRK_NO_INIT_REPORTS },
--- 
-2.39.5
-
+I think the current string already states what's the value unit of the 
+timeout in nanoseconds and is good as it is.
