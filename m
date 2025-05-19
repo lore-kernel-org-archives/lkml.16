@@ -1,109 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAD51B4248;
-	Mon, 19 May 2025 09:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BF126C3A7
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645590; cv=none; b=Bxo9OOdMfgzlm6MZMGCAnEZxNeJIlZH77oglpiZGs1yBJiJHwwCjdsygh+zF5fAYnkBjmSH3gzpAEWRtDZ16acKsI8nHDb4JMcxeWwqiI6a1g5EHNTNL72ybZFSnRch4s0TbBJ3IySUuFHF8Rxo1xS1+g1kRcnmIq+rEYfASAp0=
+	t=1747645647; cv=none; b=NoKzzU1Hvxu5EuCOEBxsLKvix7RJXGvWMKGoYO4xKXvKlko0qHwhS3Bk/zapTLhvnsy2Yekel6FPzmmSOpe0QYvgb/rnv3Doxg4pMIJHRmtMKrHRP0hcOVcQ8KM8IOigKeLQCZLTHFa8ZWVBCb037ER/Pzn/9iHOQMTMIOz4YN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645590; c=relaxed/simple;
-	bh=9cF2yw1+beWx5noinRADvsH7sW/E6B2OE/164Oqn3jY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kFaYH3gm9GX7D2slrY3E1Kxv4xSporePRhIhQfAJ/kHeFNw1y9YRzWNM1MQT+3UCHvkakkeIyyHwZht0D9wHV//SZmt4+sPnCZquoGT2w4oRsOe2u2zNP6/umK4lKHvvmmZp4kLpOJzirP1JiMYHrqdWGH6IJM6w2HTY5ng6BFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ssDPL5Pc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aHq/oLQa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747645647; c=relaxed/simple;
+	bh=4rBX6YspVYCIDPNLZKRc2wJwrp2OYC47FhKHqNl0FwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T1bw+Gxleo92iXGjUCZbL2cgiBRmSg6ILpRBS3d8VD/bFcrwpOkPRwakpGZqyPOq1mePndIQlIJ51rDtAvM91ze5ZrkrUIJR4mNjUgTCUYW3dQwFgzLyeY7NVDf+tl7viAIIBkzHCVknFTqrSKJwJ1DrE4qSXkeHeenM+JtRcws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NsCCb64K; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ssDPL5Pc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHq/oLQa"
-Date: Mon, 19 May 2025 11:06:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747645587;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NsCCb64K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747645645;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fRhtlACFEuO5BN2NE25bytv9HCzJDqtEa6EwhxIrQZc=;
-	b=ssDPL5Pce5O/gzWTZNr3Gv/e5YHTnKWULPQvz2wRh10zdjuqGjN4AS4cixG2stZW3OyLM+
-	t7PA/xdDZmYkP7mY6tDlT4UtcTx66dkgF2szjpcd6CGH7t5VKDdEMnCG27VsI7HW0HlQae
-	cA/86bPscLjDv3Ewp05u3n1fMXFDjGKiUzckltpdDfCnifX8/0PiTrBG2zUkBRCpFqSgz9
-	o1jjnQgXEixC12dUBSAC4LWf1po/BsCT85syg2kX6KdCxDQjJHrg1x1F6515JWpr25wlVk
-	i4RStu+lISvHw1ly8/oX7MUalMtPJ6AJTwbK07VdMVJxraMMxHyRp0leGgAdeQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747645587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fRhtlACFEuO5BN2NE25bytv9HCzJDqtEa6EwhxIrQZc=;
-	b=aHq/oLQaoNbvDkF4+ZBE04rWlwqVUZnMI9saea3VLrGmqnAzhDY0ExtYMHeF/oykOe7r1e
-	sw9zbJ99wPq6lHAQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 10/12] rv: Retry when da monitor detects race
- conditions
-Message-ID: <20250519090626.zjiYgUGW@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-11-gmonaco@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DkN9GuwbtueXsDOI2wUEzNlSJ5jf3RNLBFIQXl+y3I0=;
+	b=NsCCb64KZQtKGAAmCgpM1gtrBwUzd5J7toCwL7hi3oyVhl5MP4Hfg2u1keWAKdNc+kuLWD
+	7Cfyow9ri6yDt8ANNYlgQJIELRkcJkx1Of5NlgCr4i99f40emro5aS0Dlzw04jfkZbK2D7
+	q77kj16UbkVkPQCOu2XO2GBCSLEa8mw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-1IDUbA_mOAWUFZRkcSDKlg-1; Mon,
+ 19 May 2025 05:07:19 -0400
+X-MC-Unique: 1IDUbA_mOAWUFZRkcSDKlg-1
+X-Mimecast-MFC-AGG-ID: 1IDUbA_mOAWUFZRkcSDKlg_1747645638
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80BD41800447;
+	Mon, 19 May 2025 09:07:17 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.188])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CEBE9195608D;
+	Mon, 19 May 2025 09:07:13 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] netfs: Miscellaneous fixes
+Date: Mon, 19 May 2025 10:07:00 +0100
+Message-ID: <20250519090707.2848510-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-11-gmonaco@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, May 14, 2025 at 10:43:12AM +0200, Gabriele Monaco wrote:
-> -static inline void										\
-> -da_monitor_set_state_##name(struct da_monitor *da_mon, enum states_##name state)		\
-> +static inline bool										\
-> +da_monitor_set_state_##name(struct da_monitor *da_mon, enum states_##name prev_state,		\
-> +			    enum states_##name state)						\
->  {												\
-> -	da_mon->curr_state = state;								\
-> +	return try_cmpxchg(&da_mon->curr_state, &prev_state, state);				\
->  }												\
+Hi Christian,
 
-This is a very thin wrapper. Should we just call try_cmpxchg() directly?
+Here are some miscellaneous fixes and changes for netfslib, if you could
+pull them:
 
->  static inline bool										\
->  da_event_##name(struct da_monitor *da_mon, enum events_##name event)				\
->  {												\
-> -	type curr_state = da_monitor_curr_state_##name(da_mon);					\
-> -	type next_state = model_get_next_state_##name(curr_state, event);			\
-> +	bool changed;										\
-> +	type curr_state, next_state;								\
->  												\
-> -	if (next_state != INVALID_STATE) {							\
-> -		da_monitor_set_state_##name(da_mon, next_state);				\
-> +	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {					\
-> +		curr_state = da_monitor_curr_state_##name(da_mon);				\
+ (1) Fix an oops in write-retry due to mis-resetting the I/O iterator.
 
-For the follow-up iterations (i > 0), it is not necessary to read
-curr_state again here, we already have its value from try_cmpxchg() below.
+ (2) Fix the recording of transferred bytes for short DIO reads.
 
-Also, thinking about memory barrier hurts my main, but I'm not entirely
-sure if reading curr_state without memory barrier here is okay.
+ (3) Fix a request's work item to not require a reference, thereby avoiding
+     the need to get rid of it in BH/IRQ context.
 
-How about something like below?
+ (4) Fix waiting and waking to be consistent about the waitqueue used.
 
-curr_state = da_monitor_curr_state_##name(da_mon);
-for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
-	next_state = model_get_next_state_##name(curr_state, event);
-	if (next_state == INVALID_STATE)
-		break;
-	if (try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))
-		break;
-}
+The patches can also be found here:
 
-Furthermore, it is possible to replace for(...) with while (1)? I don't
-think we can have a live lock, because if we fail to do try_cmpxchg(),
-the "other guy" surely succeed.
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
 
-Best regards,
-Nam
+Thanks,
+David
+
+David Howells (3):
+  netfs: Fix oops in write-retry from mis-resetting the subreq iterator
+  netfs: Fix the request's work item to not require a ref
+  netfs: Fix wait/wake to be consistent about the waitqueue used
+
+Paulo Alcantara (1):
+  netfs: Fix setting of transferred bytes with short DIO reads
+
+ fs/9p/vfs_addr.c             |   2 +-
+ fs/afs/write.c               |   8 +-
+ fs/cachefiles/io.c           |  16 +--
+ fs/ceph/addr.c               |   2 +-
+ fs/erofs/fscache.c           |   6 +-
+ fs/netfs/buffered_read.c     |  32 +++--
+ fs/netfs/buffered_write.c    |   2 +-
+ fs/netfs/direct_read.c       |  10 +-
+ fs/netfs/direct_write.c      |  12 +-
+ fs/netfs/fscache_io.c        |  10 +-
+ fs/netfs/internal.h          |  42 +++++--
+ fs/netfs/misc.c              | 218 +++++++++++++++++++++++++++++++++++
+ fs/netfs/objects.c           |  47 ++++----
+ fs/netfs/read_collect.c      | 178 ++++------------------------
+ fs/netfs/read_pgpriv2.c      |   4 +-
+ fs/netfs/read_retry.c        |  26 +----
+ fs/netfs/read_single.c       |   6 +-
+ fs/netfs/write_collect.c     |  81 +++++--------
+ fs/netfs/write_issue.c       |  38 +++---
+ fs/netfs/write_retry.c       |  19 ++-
+ fs/smb/client/cifsproto.h    |   3 +-
+ fs/smb/client/cifssmb.c      |   4 +-
+ fs/smb/client/file.c         |   7 +-
+ fs/smb/client/smb2pdu.c      |   4 +-
+ include/linux/fscache.h      |   2 +-
+ include/linux/netfs.h        |  14 +--
+ include/trace/events/netfs.h |   7 +-
+ net/9p/client.c              |   6 +-
+ 28 files changed, 427 insertions(+), 379 deletions(-)
+
