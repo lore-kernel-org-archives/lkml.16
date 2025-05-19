@@ -1,63 +1,63 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B7B288C0F;
-	Mon, 19 May 2025 17:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5E1289E3A;
+	Mon, 19 May 2025 17:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677498; cv=none; b=f6xIZyRol1SVrrjGVV07iPtga5A1ydu7fplvrZ8VYDv61FVZEaK+2PPp2fmsOZJfCWqfLbIQ3pCoetAeCPwbdsW7MSPPdcmRc2jiNKTHuMtbUXLL9YXsYq5dTqKnPQm7jJQ3Ehzf4Xl28I5aofyz1rZjBZabm+AmVlgGlktaJw0=
+	t=1747677500; cv=none; b=J0L8g0TuGUR8pC6Eh+nupZZmEtnp+ujBUp+xI9stlVv1HB4kMyNeVzD8Ty0oa1faGA/iVeStDOos6yJE5LWBNuZy7dUEmJmWUhkldha4A0h1J8SUHg3hSm+nXwzByJ5r6N81JtpHmHHBPbUKU7vhSJWVSdfBUOa7wbqeAPtbUqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747677498; c=relaxed/simple;
-	bh=h0LM7y3HUhdp4vKxYG/KykLjtSwzZLPYiRqlbsRlb/M=;
+	s=arc-20240116; t=1747677500; c=relaxed/simple;
+	bh=RlQo8YAghCDJm/SaXs8MaKXbZ2FsLwHEJSBVL5STJf4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=geStwmeMn1OZbwykPSiW7u7xk3CyKWAuVSMZ9EIFMUhz6XTnKqlgs+Fe1peSDmYsvBenCthBkhlIOxPyCKRKjYQHhs4zxTQv3sLiqvx0F9xwmftDU71Sd7ERM5u7ODFG8KZKVNzrDojKZA5olDonupQdQuFmb6LrxdKC4US6pbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S9uO7TGM; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=EUY0nwVz0wVnL9OPGXbbY6GE+PIZnQmaoklmtQn+4WXuhw98dKqTRSezcBOgRyYQ9Fcc7BfOALJDVodTo7R0ReXUKmJvsbgwgfyC8puFu8/Mgk73BrG93r2uf/wUahHOM50wdOVJgLqk3/pAI1dOwtwUXAjGRZsXdTeM+46/e3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwTpriB4; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9uO7TGM"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-231f5a7baa2so21665025ad.0;
-        Mon, 19 May 2025 10:58:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwTpriB4"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-232059c0b50so19328115ad.2;
+        Mon, 19 May 2025 10:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747677495; x=1748282295; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747677498; x=1748282298; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oSQkQS6gUCueUQ4Hx1PQ5yLuWwzx74JFyGcJ6vU2NiI=;
-        b=S9uO7TGM6tRiiWcQd9bexbfRLqKw6bfsdsI8xWEl/Pbs4qxLScBzfvY1kCFU6PhLjG
-         9QtEUDrf8j20bflfAAIOzDVeWSfcMPaP76dONKzV2EH3IR++/1SQeann6Nka0CUEsrO6
-         Xd3AXfs0W0+cczqmRHAJgrKxK/whm4Gpd0W+qeGiGkZTbyaMM5rUlP/MZYHgust/Pxkt
-         uccGXb7t67Jx8J/Fyvgk01GHKaBCjXexBgZyG1HjAq3l+UIqhSBVIGdJK+6kb6XEJz96
-         djj9bwHH3HlsUljNFSMl/zxtOg2zoFbBXW2YfOpdGNodUxue4T14a0FPqXoerNzCoOsi
-         3Z+g==
+        bh=r+D65lEByNc4LMsDIcZTWRQIukmgFnZvdvZtXU4eE4o=;
+        b=gwTpriB4OOfH8+RSFRxHCozKjeE4QTgwn3tQxpJFwoHqWXXo2URQbEwaCDzHcZgVlS
+         dt2yBbKdIaaQJHjWJvMxrGmfg6b7xCKtMjgsBT9KtqDiaikCE+IK3vO+zp8da9ghfQm3
+         NLpdKzueXgU8h0DAyuL28QRoJZFBLnXhHB8TCyQ8T9Y8A8T3LT3xyzLskvqyYw26R+zm
+         88b/8IrdWK0tOWtmYVawOVUi6mqqaTvkDl6oa0umJFLQF5xuapNmAp1wmW9hxsEApN1S
+         N+tjGnr4dvP7+0679wFgDWI4PEt5OsbEsP6SfADVQwIjS+7IxhmydZrX+tEjT9UmlTbQ
+         KDIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747677495; x=1748282295;
+        d=1e100.net; s=20230601; t=1747677498; x=1748282298;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oSQkQS6gUCueUQ4Hx1PQ5yLuWwzx74JFyGcJ6vU2NiI=;
-        b=XDrnFjXCvxvUyv4M9XDexmMoWe/rnM1Cs2EiJgHsSvZaE4YDEWHkxQrGE3w3PNbZiY
-         DKsiMe/T1WS5YQ+Gq+9c3O4Fo2KTn93XYp5KSoEqbL+YSyxS0yqzf1IQg0T8dG10hYxU
-         pVIyj+V3yPAiolMFt6oLQ5V2uY2KWSjPufT5Qcgp3bck9q/Vsfas0eTO0H4cQbgwbckg
-         0S6Pyevt9wIWmwg+jn2N9GUQ7VKnBnQVLg7XZLDAm9mTZp/P5iB9uViqqk3FNi0iFnrN
-         77I+X20loe7cR4p3MhA5pZiaokqUU4sU3uHNE4HSmKtu8NSPYwwdvgdIeno4692V2zsf
-         dxGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVte2CBu9+2mHKb9C5f1dR6GjYQlcE1DLQOD5GVHE0VaOpOZ5ya0fk/2aGul1C/nI0/aSFvRTvhYNQ7604t@vger.kernel.org, AJvYcCXzEc2uuvnJb983nXqTMbJGad9E2D3fmmrDI9xqVg6/JWo5uBP118jajOgbY+qurx2FdEJ7b/nPXS9DmMnx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3aqTTM45X/7Ox5ijO8pnhgCmU5bxbTrGj2BacB0aZZMNu6EGT
-	yJQZa6xLHhbQYRsDC8Uq+KIi46bB78EbKyIG8fqu7Bei7XNd5sbSvySm
-X-Gm-Gg: ASbGncumKxH/m1g6sahmNXAZUZKQnSQt8q3E91Z0faPJmufOCr1mFb4uksXt5xCAUyp
-	Xgf8yH2cWGEIi5lPoRBkDRM7ykQDzsJ0lovcuECqi0saBGbXC8+aSweMtGWerU9gsNWH0RqIS6U
-	Y6YKLxfAkL5cOMkyNSQcWJ990/FlbXc+8evkwrzSOSssHQ81FtQosPtWHYDnb8c9ciykt7Bn7b0
-	2RKDAp5lrQxtEA070MLTpbqx2I1Bjg71K0AJcj5yVjxtTZKSIvukj1NPeuF3rQYMr3OD/6Fjh16
-	g8H7Xrqt4MTyI3Pg5rj+acnG65pwOGl87EvIEbbS4nAI/ZjPvQWuGa2NWxRHqpk3Iek1PgnhiGZ
-	PvNHC8gOoqRlZZhyWnVt16KSWlQ==
-X-Google-Smtp-Source: AGHT+IFd9XZtWJ8GT07VyLdYZzMpDphs3K+QujX8XgAxBMMoKxGzCGJZYFE+xZNJPKrHrsqet7BTEw==
-X-Received: by 2002:a17:902:ce87:b0:223:653e:eb09 with SMTP id d9443c01a7336-231d438a294mr182426675ad.7.1747677495374;
-        Mon, 19 May 2025 10:58:15 -0700 (PDT)
+        bh=r+D65lEByNc4LMsDIcZTWRQIukmgFnZvdvZtXU4eE4o=;
+        b=HROKYsWDZ4QK42MZuN00rR8kCggahcwFoPQITuyDJ3mEHnbPmx3/Z1siVjm1zAdAK6
+         miIdgaSrv+FfD0lLmSXFa/X4dLW/+SCtkDzd374y1g3BiFeOOeCSXXejFgfzUaevsCHu
+         YiWmPQX8gIsjhfvugcc8vzFZNZmeSCHImNTiiWUgcTR4BUU9ga2Ox7uik37a8LGqaI8l
+         TUUqRFQyL/4i1a+cWcPY6iRpMPUT8LHGjEm2PJ0tq1i8F63SSDGSD8sUPPOmSTXBNEl7
+         Z6CRujs5ydDDGRdtlEMo+CTWFU2hwVNEzmxs0FZoj+gDXpKpojug8oTpqBWQzfFhjnr+
+         ourw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8iAV39sLwehIqz/TyzNBd2IQUS3vC4WmUFa7wea9qFBkBGpDErR9RyDHA7HeF1KNEBMDgTeGFEJJD/h6n@vger.kernel.org, AJvYcCVWcwCgZdwi+DE0fk+Y9QJZJHo5oQl1RFfuq1TCbQ9bcyPqeixfoL+YM+431Vcsmm5Q1ghEyWCSRpYtRGwg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXuAPcT4AmPDIOoIWQbwfkLLCHM6wagECgPsVlbot2L5BfXI4b
+	3ZxMGMyCd+xNVgYgZcKCE+u6rMvqtdQ66B0iGChIt5T+0MVm5qUEybsk
+X-Gm-Gg: ASbGncu46Vk11n5h9s+QlQY6SZ2uAqDy0mYEitDBrHPmCuoLI6NibJcBY0u9qA7Sn2L
+	6sRDsYsYLyPD4Bb0Oqvss3P32sfBdDNzBi/Uq8WBw7gkEQ108aHM2OXt9Al+LTof+x00yb0547V
+	sXcN0N4U1okhnXTTEMviFGjoV/gR86PmMumMBvABvsKUNQCqWDmIJX8odC4egb9JpR8hdY9gZ+B
+	6G3ydcEeSzibnhQbPtv7NtnvPflhx3WykwiLBKstt7QZGlHkHnsmB9r6mxPdwfSNe8RT3DlztT6
+	Np6uT/AyVR3XKrIvNx5tQf6YuRWmTOHwHELpdAfeWB7rPzMDOy31KOGED6dfhfUV+MJ5nd3Cjms
+	FLvV67JH1EgKiYUYfGjBzZFar+Q==
+X-Google-Smtp-Source: AGHT+IFQcPSehL1xYQOTKUm0XOa2dBmJUhV+7tQ0TuiltDzL7TcBBkxmzlJzQ3pvrH4U2wsCD79HSw==
+X-Received: by 2002:a17:902:ef4e:b0:225:ac99:ae08 with SMTP id d9443c01a7336-231de2e6bbfmr207857375ad.5.1747677498278;
+        Mon, 19 May 2025 10:58:18 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adbf5esm62981905ad.64.2025.05.19.10.58.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed5460sm62461485ad.241.2025.05.19.10.58.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 10:58:14 -0700 (PDT)
+        Mon, 19 May 2025 10:58:17 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
@@ -65,16 +65,20 @@ Cc: freedreno@lists.freedesktop.org,
 	Connor Abbott <cwabbott0@gmail.com>,
 	Rob Clark <robdclark@chromium.org>,
 	Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konradybcio@kernel.org>,
 	Abhinav Kumar <quic_abhinavk@quicinc.com>,
 	Dmitry Baryshkov <lumag@kernel.org>,
-	Sean Paul <sean@poorly.run>,
 	Marijn Suijten <marijn.suijten@somainline.org>,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 16/40] drm/msm: Split out helper to get iommu prot flags
-Date: Mon, 19 May 2025 10:57:13 -0700
-Message-ID: <20250519175755.13037-4-robdclark@gmail.com>
+Subject: [PATCH v5 18/40] drm/msm: Add PRR support
+Date: Mon, 19 May 2025 10:57:15 -0700
+Message-ID: <20250519175755.13037-6-robdclark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519175755.13037-1-robdclark@gmail.com>
 References: <20250519175348.11924-1-robdclark@gmail.com>
@@ -89,58 +93,165 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-We'll re-use this in the vm_bind path.
+Add PRR (Partial Resident Region) is a bypass address which make GPU
+writes go to /dev/null and reads return zero.  This is used to implement
+vulkan sparse residency.
+
+To support PRR/NULL mappings, we allocate a page to reserve a physical
+address which we know will not be used as part of a GEM object, and
+configure the SMMU to use this address for PRR/NULL mappings.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 12 ++++++++++--
- drivers/gpu/drm/msm/msm_gem.h |  1 +
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 10 ++++
+ drivers/gpu/drm/msm/msm_iommu.c         | 62 ++++++++++++++++++++++++-
+ include/uapi/drm/msm_drm.h              |  2 +
+ 3 files changed, 73 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 81500066369f..5b8b9c1d6c74 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -444,10 +444,9 @@ static struct drm_gpuva *get_vma_locked(struct drm_gem_object *obj,
- 	return vma;
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index f6624a246694..e24f627daf37 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -361,6 +361,13 @@ int adreno_fault_handler(struct msm_gpu *gpu, unsigned long iova, int flags,
+ 	return 0;
  }
  
--int msm_gem_pin_vma_locked(struct drm_gem_object *obj, struct drm_gpuva *vma)
-+int msm_gem_prot(struct drm_gem_object *obj)
- {
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
--	struct page **pages;
- 	int prot = IOMMU_READ;
- 
- 	if (!(msm_obj->flags & MSM_BO_GPU_READONLY))
-@@ -463,6 +462,15 @@ int msm_gem_pin_vma_locked(struct drm_gem_object *obj, struct drm_gpuva *vma)
- 	else if (prot == 2)
- 		prot |= IOMMU_USE_LLC_NWA;
- 
-+	return prot;
++static bool
++adreno_smmu_has_prr(struct msm_gpu *gpu)
++{
++	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(&gpu->pdev->dev);
++	return adreno_smmu && adreno_smmu->set_prr_addr;
 +}
 +
-+int msm_gem_pin_vma_locked(struct drm_gem_object *obj, struct drm_gpuva *vma)
+ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
+ 		     uint32_t param, uint64_t *value, uint32_t *len)
+ {
+@@ -444,6 +451,9 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
+ 	case MSM_PARAM_UCHE_TRAP_BASE:
+ 		*value = adreno_gpu->uche_trap_base;
+ 		return 0;
++	case MSM_PARAM_HAS_PRR:
++		*value = adreno_smmu_has_prr(gpu);
++		return 0;
+ 	default:
+ 		return UERR(EINVAL, drm, "%s: invalid param: %u", gpu->name, param);
+ 	}
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 2fd48e66bc98..756bd55ee94f 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -13,6 +13,7 @@ struct msm_iommu {
+ 	struct msm_mmu base;
+ 	struct iommu_domain *domain;
+ 	atomic_t pagetables;
++	struct page *prr_page;
+ };
+ 
+ #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+@@ -112,6 +113,36 @@ static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
+ 	return (size == 0) ? 0 : -EINVAL;
+ }
+ 
++static int msm_iommu_pagetable_map_prr(struct msm_mmu *mmu, u64 iova, size_t len, int prot)
 +{
-+	struct msm_gem_object *msm_obj = to_msm_bo(obj);
-+	struct page **pages;
-+	int prot = msm_gem_prot(obj);
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	struct msm_iommu *iommu = to_msm_iommu(pagetable->parent);
++	phys_addr_t phys = page_to_phys(iommu->prr_page);
++	u64 addr = iova;
 +
- 	msm_gem_assert_locked(obj);
++	while (len) {
++		size_t mapped = 0;
++		size_t size = PAGE_SIZE;
++		int ret;
++
++		ret = ops->map_pages(ops, addr, phys, size, 1, prot, GFP_KERNEL, &mapped);
++
++		/* map_pages could fail after mapping some of the pages,
++		 * so update the counters before error handling.
++		 */
++		addr += mapped;
++		len  -= mapped;
++
++		if (ret) {
++			msm_iommu_pagetable_unmap(mmu, iova, addr - iova);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
+ 				   struct sg_table *sgt, size_t off, size_t len,
+ 				   int prot)
+@@ -122,6 +153,9 @@ static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
+ 	u64 addr = iova;
+ 	unsigned int i;
  
- 	pages = msm_gem_get_pages_locked(obj, MSM_MADV_WILLNEED);
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 813e886bc43f..3a853fcb8944 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -158,6 +158,7 @@ struct msm_gem_object {
- #define to_msm_bo(x) container_of(x, struct msm_gem_object, base)
++	if (!sgt)
++		return msm_iommu_pagetable_map_prr(mmu, iova, len, prot);
++
+ 	for_each_sgtable_sg(sgt, sg, i) {
+ 		size_t size = sg->length;
+ 		phys_addr_t phys = sg_phys(sg);
+@@ -177,9 +211,16 @@ static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
+ 	 * If this is the last attached pagetable for the parent,
+ 	 * disable TTBR0 in the arm-smmu driver
+ 	 */
+-	if (atomic_dec_return(&iommu->pagetables) == 0)
++	if (atomic_dec_return(&iommu->pagetables) == 0) {
+ 		adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, NULL);
  
- uint64_t msm_gem_mmap_offset(struct drm_gem_object *obj);
-+int msm_gem_prot(struct drm_gem_object *obj);
- int msm_gem_pin_vma_locked(struct drm_gem_object *obj, struct drm_gpuva *vma);
- void msm_gem_unpin_locked(struct drm_gem_object *obj);
- void msm_gem_unpin_active(struct drm_gem_object *obj);
++		if (adreno_smmu->set_prr_bit) {
++			adreno_smmu->set_prr_bit(adreno_smmu->cookie, false);
++			__free_page(iommu->prr_page);
++			iommu->prr_page = NULL;
++		}
++	}
++
+ 	free_io_pgtable_ops(pagetable->pgtbl_ops);
+ 	kfree(pagetable);
+ }
+@@ -336,6 +377,25 @@ struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
+ 			kfree(pagetable);
+ 			return ERR_PTR(ret);
+ 		}
++
++		BUG_ON(iommu->prr_page);
++		if (adreno_smmu->set_prr_bit) {
++			/*
++			 * We need a zero'd page for two reasons:
++			 *
++			 * 1) Reserve a known physical address to use when
++			 *    mapping NULL / sparsely resident regions
++			 * 2) Read back zero
++			 *
++			 * It appears the hw drops writes to the PRR region
++			 * on the floor, but reads actually return whatever
++			 * is in the PRR page.
++			 */
++			iommu->prr_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++			adreno_smmu->set_prr_addr(adreno_smmu->cookie,
++						  page_to_phys(iommu->prr_page));
++			adreno_smmu->set_prr_bit(adreno_smmu->cookie, true);
++		}
+ 	}
+ 
+ 	/* Needed later for TLB flush */
+diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
+index 2342cb90857e..5bc5e4526ccf 100644
+--- a/include/uapi/drm/msm_drm.h
++++ b/include/uapi/drm/msm_drm.h
+@@ -91,6 +91,8 @@ struct drm_msm_timespec {
+ #define MSM_PARAM_UBWC_SWIZZLE 0x12 /* RO */
+ #define MSM_PARAM_MACROTILE_MODE 0x13 /* RO */
+ #define MSM_PARAM_UCHE_TRAP_BASE 0x14 /* RO */
++/* PRR (Partially Resident Region) is required for sparse residency: */
++#define MSM_PARAM_HAS_PRR    0x15  /* RO */
+ 
+ /* For backwards compat.  The original support for preemption was based on
+  * a single ring per priority level so # of priority levels equals the #
 -- 
 2.49.0
 
