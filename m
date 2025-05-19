@@ -1,131 +1,146 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5810622126A;
-	Mon, 19 May 2025 21:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4F620B1FC;
+	Mon, 19 May 2025 21:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747691018; cv=none; b=Bg4ruNRdkOFA/NvYeQfTENoczJIiROM8aDcP2KbVjp7dE+w2FPVeVip2CA0TUI72S+XMUJOc6j1/EYMHcBtaLw3iQHlC9ex4LmZR7arO6gC/3mbU98C4VxkFfi5NM4lcNZHMezawrMjNZyRB469Jr9IQkLkCqVnReeWFaEYXpt0=
+	t=1747691147; cv=none; b=AQLxCZ40HJgVLkr5ZDd7KtnD3dbciJY7ga2WHbXnLoC/om41RjCwLMofR+YtYFEQ1MTDLfI1JuIDLyrnl5GGwyqNmWBWcsux5nURm7GmJiOMFtjDs5blyJH1FqtHSFwuT3d8DsdjmVKppG/m9qgzIdmckgCCwwvYWNiDs3pdEJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747691018; c=relaxed/simple;
-	bh=eoKyZZeh4dCJi1ifrO/HYH0EZs1icYueUurBrUQhaeQ=;
+	s=arc-20240116; t=1747691147; c=relaxed/simple;
+	bh=dBmQ7ZVzsrxRsdMLl6QUAymnlQw5BhCQ/Hfi6mcSQGA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ov5os74jB7S/V07Zk5AzngxIP7GoV3FgFtq3Em/zv0fdKw4Y7+8L0IylI7m16f6ZNLIbobrKVDJV3f9JfwbjD50nxLmbblwGyVOexvg8wYVeNF+kcd+/JzhyFHsP2aV36sYSRFBF3zJQc/VgCVNPIn2yotxEPD3nhy+q+5cU1uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsmHtKsz; arc=none smtp.client-ip=209.85.128.176
+	 To:Cc:Content-Type; b=Hw8eLZjLW+DwJS6l3ZAicPpB/Uyq6VLB2kGUvn0glmIMrQm7mexckSuZ5zllZ9u597O/U0kBOrwk6bs3b+q0EjwYXo/Ya+ueEiUag1Wb647d0Pp2GW2xHcXkDWIy/pzgEqyNdr4GpwacgjCI+uWzG0BRsEjJe4LfizZV2SiEYDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7OiR3fH; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsmHtKsz"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-703cd93820fso44541027b3.2;
-        Mon, 19 May 2025 14:43:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7OiR3fH"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fff52493e0so5757508a12.3;
+        Mon, 19 May 2025 14:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747691015; x=1748295815; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747691144; x=1748295944; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eoKyZZeh4dCJi1ifrO/HYH0EZs1icYueUurBrUQhaeQ=;
-        b=gsmHtKszgz6TJfDMsA/E/PLiNnMw0TSc1qklHbowRZVSLX4p7NUjTkKiWTfq6lKAqk
-         ewSHn33OCum5XU2xAFtKYBucDvJg6uUKxZV3DJiOubn5PfgPSwOAhPfUQdQSrYz0H2HY
-         zig3ufO0D5kq5qBudc+NoLXmzfV+H0W7Mx6XF4y4RDXq3O1SIS9lQj2Tlf4i93Y6WFd6
-         hzHZ3c8BV3UW9hQIxNRnIlDtKaYVeMSmKw6d0cnz+88Q3lZNfpxBoTYqayJ9SLGdNFjD
-         V1wMsJdF9iRMZPqEG3GM0hLe3lRFbKEHbsXTpJdExv5J/fl4o6tfCG9K9CuXm1TuKnXQ
-         yLrA==
+        bh=lgwrUkrkaZb0leOIfftTpt2Z9U+8ge4TCRzTvr8HRfg=;
+        b=W7OiR3fHjF+RryRQD3D0fShlGAgZabdSUj28WBxV4TCHYGa0n68a8tnWskh+OFHw/k
+         wZpvxr7TxDaLYE8ug8vy0Y+wIjY8hdbQclaa4pSLv9Z1xUabmiIajAN3mBRYk6DnUaja
+         EodrcEKAGWAEADM9h0tgmziuh9nxxj6Eub9510PL42M+8ZLSAamO58KbMrRoCF0giA2u
+         7Yc9JvhUunacoy/1Ixc8P5RNB/ONErdlIWZyyn9wGv8K/U+tV+y28sgBTX78PaB10qnp
+         +xvfkxPZmH9A1EZUdoTzi1ZDRdcgpQVlK+MZjdn/KCkB3O73yzPBln79tzBsGAy4WKXF
+         xL/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747691015; x=1748295815;
+        d=1e100.net; s=20230601; t=1747691144; x=1748295944;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eoKyZZeh4dCJi1ifrO/HYH0EZs1icYueUurBrUQhaeQ=;
-        b=r0dscLAlIjSgX/swd3GV/Ois7YHgA+IASguGj0nzwuB7s7y2uG40do6QtW//SvzqJI
-         H5K7nnnY9TVafZ/qlbVTu7LCHEkW0QOTw/4XDXIcmvjsYOq7BaMZejqPLFr2iTHexxO4
-         9ztIwdazlx+p9oErHyhPywrOQLZt+xcKP+ckhK3KonuBi8yCkKZHSnx25Lr38jacjiXV
-         j8KvQ0Kdiw62p8QShY/62JrDTPHXEPwQGwdWupxU1B2C0YgKUGro+k8o9tts8i19Iq1J
-         h/l3BGY51y7FByWbPYkuKKSLeW2w3kSZSo1Lwkax34ptfqbhaOHPRFvXFBT0fA7itftk
-         dH6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNU+zNnOJWLTJrhvewyVE0/8viNQ2gasH5+DJMao5fv+lqeuAjVf+l1vk+mU1+tVkXfK9fA8l4@vger.kernel.org, AJvYcCX1xn6RNqeneWaRRevoWo+GTDXm+bT3JG91zs5SXkaygpFh1dp3cXSZYRaRQQdXnvjM6PMgs6pfdior8OI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE9uGpXZZbGRQ/xjeAL0O6bZ2OjQhyB+v8lybRvHdDwQYQMBwW
-	XCqOsZm5YPYa1BfAIIPZv4X2eOsNdVfBRFnRWBjN7jkqqeloB0eqLuYwLMprfpkRcXtrEVddVUR
-	3vN7BjkIUXifVH9yzJVQclr3Dv8WQHIw=
-X-Gm-Gg: ASbGncvV1zqw9px9xgkFexjbcl19PQvFIQDT73Dq2hR+IRsezdnjwpxTi+axKzBSIh2
-	p5jP9jz2xNWlltVP8JXcXWt48MxP+Ov8UIyupaL1th2vSW8vgR8O3wGfIX/Dq1M6ROOJct9ZcRb
-	Cxy7j/nv4x8HRQ8QvWMdZ3DpoeEwYfi7k=
-X-Google-Smtp-Source: AGHT+IEVUXmqrqf2co1CDu/Xmw3prCw0ZQz+oMhqZMl6b1KMNFNeeeKC4jcgxBIUdxXH/dECMmbWYTHGehpcjK3jYz8=
-X-Received: by 2002:a05:690c:951b:b0:708:35b1:d55b with SMTP id
- 00721157ae682-70caaf38bc4mr144684617b3.8.1747691015300; Mon, 19 May 2025
- 14:43:35 -0700 (PDT)
+        bh=lgwrUkrkaZb0leOIfftTpt2Z9U+8ge4TCRzTvr8HRfg=;
+        b=Q3UxBW71HtfKqpJXL/XGfZ6ouv4wkFNpD15d4O67xXXEMHLGEAsnySQcCOaEDjFr+c
+         rNuDzTFwriyomxDUfDCcQCtw0BECGpUSZ78QvGLsY+I6XXIl2C/VGsXcZvIbOVabHTzt
+         czXowiwpfJlg/HDs2kYGeODoQQUdg5q/KaKndIAPjPdHa/QCAAEQ/x8ozLIZlkr/01G5
+         TRuIyHyVdCACjiIwWOLtW23pSnLK4hkdYhJLO+khV09LD0dO1ZRsxC1bQQ1r2os9v6ms
+         v02mNzMR1xTI/F8j+zdLke8At5mOko2Qq/6TVzkCqsseImAoVAD79I0LCWTIcjGa1o1O
+         O8LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV40drYqBwxFaAyiLX0exJmn8GWhf9DH8xEg9GwkuQPTqKyXZNocd/SYKFZEfJdCt9QqzI0JA0fn+olMlM=@vger.kernel.org, AJvYcCVPhSgizAlS9GCLZT8T6U5yrngJkExbiKex3+ajhiTcDgeuQDeMo1m9PYSZRl2fB0T1HwagIi7wti1mvbsz@vger.kernel.org, AJvYcCW5TX38JGeHAAdRiCxFuzrna1q+LupXbgZV2dNL7U1mSpOKgqh7Gk9mnarIUrZfm81vTCq0RCADXw363E0Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAI9LZWKvixDJ+5rQe4NrEDhj7FiHAbKIz6VLXJd8njGVF1OMs
+	L24WBSma7BBClFjOAHGxBAM13YmosqWgQD5QkKwsDN38JyJ6vdr1j8TqlmzwmKoEg9g99VvlK+d
+	eXu13vNq2+W6SdxLIBQM0mcj+edAfE4w=
+X-Gm-Gg: ASbGnctDfmA1D3lUXIIxqS95nEFcqLlMSZfNxYHD0WY8gZn1p7d4d6c7tEkkiFip1yg
+	lZPR5Qzjw08U4i1wRhUkdKkrJp2dATPgtntOljAClPrSsGzmIKhdi2ahCSO5eNecPW8fRXqXd3U
+	vQtKEDbwkLBOYUYOxWN39svWLIU6gzOOY=
+X-Google-Smtp-Source: AGHT+IGi6092BG38fgC8XNqiOOL5230Qmrls9fUA/vdLAMqijhah9L16wARI5KlQBQHVpTG9u4i5MttpQIJ/uhwrqx8=
+X-Received: by 2002:a17:907:3342:b0:ad5:465d:8855 with SMTP id
+ a640c23a62f3a-ad5465d9f5amr870659766b.36.1747691143715; Mon, 19 May 2025
+ 14:45:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
- <20250519174550.1486064-3-jonas.gorski@gmail.com> <ed75677c-c3fb-41d1-a2cd-dd84d224ffe3@lunn.ch>
- <CAOiHx=nwbs7030GKZHLc6Pc6LA6Hqq0NYfNSt=3zOgnj5zpAYQ@mail.gmail.com> <2e5e16a1-e59e-470d-a1d9-618a1b9efdd4@lunn.ch>
-In-Reply-To: <2e5e16a1-e59e-470d-a1d9-618a1b9efdd4@lunn.ch>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Mon, 19 May 2025 23:43:24 +0200
-X-Gm-Features: AX0GCFs0Cd-tkQBXp_ukkEPbXXlQllmjZxbVCmyPTiMZwzFkGeq5Bg99ndcdFpg
-Message-ID: <CAOiHx=mQ8z1CO1V-8b=7pjK-Hm9_4-tcvucKXpM1i+eOOB4axg@mail.gmail.com>
-Subject: Re: [PATCH net 2/3] net: dsa: b53: fix configuring RGMII delay on bcm63xx
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vivien Didelot <vivien.didelot@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519175348.11924-1-robdclark@gmail.com> <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
+ <CAF6AEGuDTGVq7sw4oVuHb+cOE_DuKbEPO956oddVcsV2boieoQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGuDTGVq7sw4oVuHb+cOE_DuKbEPO956oddVcsV2boieoQ@mail.gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Tue, 20 May 2025 07:45:31 +1000
+X-Gm-Features: AX0GCFtlQu6thz2-DodB9_hvAiBP83MybA9d3wKL9euWSYgx05ywhuPOmKRAvxs
+Message-ID: <CAPM=9twuSfvQ0_NUdRmp0_VtTE_Br7GAysRw+XOoX7BTxUBGYQ@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
+	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
+	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Jun Nie <jun.nie@linaro.org>, 
+	Kevin Tian <kevin.tian@intel.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linaro-mm-sig@lists.linaro.org>, 
+	"m oderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linux-media@vger.kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, 
+	Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 10:34=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
-:
+On Tue, 20 May 2025 at 07:25, Rob Clark <robdclark@gmail.com> wrote:
 >
-> > > These changes look wrong. There is more background here:
-> > >
-> > > https://elixir.bootlin.com/linux/v6.15-rc7/source/Documentation/devic=
-etree/bindings/net/ethernet-controller.yaml#L287
+> On Mon, May 19, 2025 at 2:15=E2=80=AFPM Dave Airlie <airlied@gmail.com> w=
+rote:
 > >
-> > This is what makes it work for me (I tested all four modes, rgmii,
-> > rgmii-id, rgmii-txid and rgmii-rxid).
+> > On Tue, 20 May 2025 at 03:54, Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > Conversion to DRM GPU VA Manager[1], and adding support for Vulkan Sp=
+arse
+> > > Memory[2] in the form of:
+> > >
+> > > 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP_M=
+AP/
+> > >    MAP_NULL/UNMAP commands
+> > >
+> > > 2. A new VM_BIND ioctl to allow submitting batches of one or more
+> > >    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+> > >
+> > > I did not implement support for synchronous VM_BIND commands.  Since
+> > > userspace could just immediately wait for the `SUBMIT` to complete, I=
+ don't
+> > > think we need this extra complexity in the kernel.  Synchronous/immed=
+iate
+> > > VM_BIND operations could be implemented with a 2nd VM_BIND submitqueu=
+e.
+> >
+> > This seems suboptimal for Vulkan userspaces. non-sparse binds are all
+> > synchronous, you are adding an extra ioctl to wait, or do you manage
+> > these via a different mechanism?
 >
-> So you have rgmii-id which works, and the rest are broken?
-
-I have four rgmii ports with PHYs, I configured each one to a
-different mode (rgmii, rgmii-txid, rgmii-rxid, rgmii-id).
-
-Without this change no mode/port works, since there is always either a
-0 ns delay or a 4 ns delay in the rx/tx paths (I assume, I have no
-equipment to measure).
-
-With this change all modes/ports work. With "rgmii-id" the mac doesn't
-configure any delays (and the phy does instead), with "rgmii" it's
-vice versa, so there is always the expected 2 ns delay. Same for rxid
-and txid.
-
-Though on testing again RGMII_CTRL_TIMING_SEL doesn't seem to be needed.
-
-> > E.g. with a phy-mode of "rgmii-id", both b53 and the PHY driver would
-> > enable rx and tx delays, causing the delays to be 4 ns instead of 2
-> > ns. So I don't see how this could have ever worked.
+> Normally it's just an extra in-fence for the SUBMIT ioctl to ensure
+> the binds happen before cmd execution
 >
-> In this situation, the switch port is playing the role of MAC. Hence i
-> would stick to what is suggested in ethernet-controller.yaml. The MAC
-> does not add any delays, and leaves it to the PHY.
-> phylink_fwnode_phy_connect() gets the phy-mode from the DT blob, and
-> passes it to phylib when it calls phy_attach_direct().
->
-> There is a second use case for DSA, when the port is connected to the
-> host, i.e. the port is a CPU port. In that setup, the port is playing
-> the PHY side of the RGMII connection, with the host conduit interface
-> being the MAC. In that setup, the above recommendations is that the
-> conduit interface does not add delays, with the expectation the 'PHY'
-> adds the delays. Then the DSA port does need to add delays. So you
-> might want to use dsa_is_cpu_port() to decide if to add delays or not.
+> When it comes to UAPI, it's easier to add something later, than to
+> take something away, so I don't see a problem adding synchronous binds
+> later if that proves to be needed.  But I don't think it is.
 
-The Switch is always integrated into the host SoC, so there is no
-(r)gmii cpu port to configure. There's basically directly attached DMA
-to/from the buffers of the cpu port. Not sure if there are even
-buffers, or if it is a direct to DMA delivery.
+I'm not 100% sure that is conformant behaviour to the vulkan spec,
 
-Best Regards,
-Jonas
+Two questions come to mind:
+1. where is this out fence stored? vulkan being explicit with no
+guarantee of threads doing things, seems like you'd need to use a lock
+in the vulkan driver to store it, esp if multiple threads bind memory.
+
+2. If it's fine to lazy bind on the hw side, do you also handle the
+case where something is bound and immediately freed, where does the
+fence go then, do you wait for the fence before destroying things?
+
+Dave.
+
+
+Dave.
