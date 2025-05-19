@@ -1,115 +1,91 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail-02-1.mymagenta.at (mail-02-1.mymagenta.at [80.109.253.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C24C92
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D379D1373
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.109.253.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650951; cv=none; b=UKhwi77XLEXEmLql6KPUoCQZjyOfg+RNBjLRSH7Wbk9gvKZrqpHaGlzHW93hugJi4ww4fbgIBxwyjM6CZPstLJ1qulk0pQHabvLeCtuGOheBkYGF0f2syOoXzubkd9h501hAXe9OKgWSFdlIwjMfFlHsIpbyzFnmYw+tCVUWJC8=
+	t=1747650983; cv=none; b=pICp34kY7yszms3VA63WYh+0Ewg2o65PipXI/+IrQ3u9R3GxDqwdnhMPMSCWQtWkOVAwfgkaNhK08REJHeah1Y4aeRrc+q1LUqeadG5ODjsMA1axuwoWdb/HklalSqGLqmmq6QJwjE+Tca/FhgWl/U1NjsG8MIf7jfeQcu9lLQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650951; c=relaxed/simple;
-	bh=jtB7PHlQfSBY3IYgiJFF4EXqqJieedjKydBtE/22bS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a9ZIBTs8ba8aNZ+dFhnHMAEI6vVqCNWzwkaZ0CRvYTqhHQBu1TCZt2SvbJWv7HzJbtUABGpvwe+WYfUB6+ESV8zRP69MEuyvVn0MYrDciLVdf/8oAmosq7XfIcvExrWrjuhu5fwermh5Tavi+RDswjeB6lU0CpgdLXKgvjlN67k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=i31B5qxi; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="i31B5qxi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747650947;
-	bh=jtB7PHlQfSBY3IYgiJFF4EXqqJieedjKydBtE/22bS0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i31B5qxibamcvqdrVJ599/69s9CrJ0SXjU1hObfJQEuCm8NTZEKYSV7ywgLxRgZ/2
-	 3faSMVr6V+aYuhHZlSkjUD8KP8OSCnDAlJqna6cftQ93xAfAUw/p84vRpO7zwH+rhK
-	 Hm3I0VHHnQ/e+si5+mdgwYKCspcyL/kl13HJiVhtWYHYYIxo236ipGfvKMn4U7GYiV
-	 IM1hW2X1rWgoq5WAeGRt3oSMAc3zDg9HHT3k18KJblucbbwXMp0RP3wip9ech+2u+0
-	 LKPc8QQOgCpyZljlTEPmuaqB8DEPT/bRedG91LVNwvtP5wAgU75aEV+9+OMaoqQWzz
-	 NOlIUPMdqbDUw==
-Received: from [192.168.1.90] (unknown [82.76.59.134])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1773717E0F47;
-	Mon, 19 May 2025 12:35:47 +0200 (CEST)
-Message-ID: <7ce1a2d1-f4cb-4975-be24-b47e184ce1a8@collabora.com>
-Date: Mon, 19 May 2025 13:35:46 +0300
+	s=arc-20240116; t=1747650983; c=relaxed/simple;
+	bh=tT6agNi7xxg5K2wITU0NU7gd+7WeQNHkcL2VsgqlysI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GAAWzJXZKGWupx2EAX3x3k9I955jvA6OJ3ExxYrZHFyFwXY55pOtQSpd6bGJH3LtwOt42pGu1qB7twSz9pngiWLg4uz+dEU3bUO6w7rSFp8ZDDThdbkzlile8I8pdrqVBdm7L4zpvADPkM/YE1xONEoZqQP3lNIBbcPM5txP3ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ze-it.at; spf=none smtp.mailfrom=ze-it.at; arc=none smtp.client-ip=80.109.253.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ze-it.at
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ze-it.at
+Received: from [192.168.232.75] (helo=ren-mail-psmtp-mg11.mx.mymagenta.at)
+	by mail-02.mymagenta.at with esmtp (Exim 4.98.1)
+	(envelope-from <thomas.zeitlhofer+lkml@ze-it.at>)
+	id 1uGwGm-00000005lnb-2xty
+	for linux-kernel@vger.kernel.org;
+	Mon, 19 May 2025 10:54:48 +0200
+Received: from mr1 ([80.108.110.13])
+	by ren-mail-psmtp-mg11.mx.mymagenta.at with ESMTPS
+	id GwGmu6ErbjYL1GwGmuL30c; Mon, 19 May 2025 10:54:48 +0200
+X-Env-Mailfrom: thomas.zeitlhofer+lkml@ze-it.at
+X-Env-Rcptto: linux-kernel@vger.kernel.org
+X-SourceIP: 80.108.110.13
+X-CNFS-Analysis: v=2.4 cv=RIOzH5i+ c=1 sm=1 tr=0 ts=682af1d8
+ a=M3c6w4RM9ieumcaO06RGLA==:117 a=M3c6w4RM9ieumcaO06RGLA==:17
+ a=kj9zAlcOel0A:10 a=FwmdilmEVaCSPuVMSy4A:9 a=CjuIK1q_8ugA:10
+Date: Mon, 19 May 2025 10:54:46 +0200
+From: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>
+To: Ping Cheng <ping.cheng@wacom.com>,
+	Jason Gerecke <jason.gerecke@wacom.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Josh Dickens <joshua.dickens@wacom.com>,
+	Tatsunosuke Tobita <tatsunosuke.wacom@gmail.com>,
+	Aaron Skomra <aaron.skomra@wacom.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: wacom: fix crash in wacom_aes_battery_handler()
+Message-ID: <aCrx1iRQ-9tXiyJp@x1.ze-it.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
- handling
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-14-5e55e2aaa3fa@collabora.com>
- <20250519-sturdy-cyan-mouse-6bd0f1@houat>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250519-sturdy-cyan-mouse-6bd0f1@houat>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-CMAE-Envelope: MS4xfLWz0mEbM2txYtcRX/bze9DB3ero9MIH93S699XN6Dk5CFcQx6PhLlLgV+ZQcsq0K+hX0U/zEhV3L4F3wP3G9Jqj+gKPhHyy/A3sX6VNTmF3f8UCSo7o
+ iALZ3GDNRPJJoCd7snwz+mwGXVjg00mb7FIEb8gL82fbZrj0REpjNzXKO6SfpDlUUOh5ApjahS95u0db5cKap+LByIQLUZ2U6+WFMGBN0uwkWJdixxkXxmny
+ st8LIrX97+PdGQjjwqyC5JoB4hyDzCyToDgajcBkcxNiwXG2YoS7favwF6PnSfiFLMs3uGDGKF3Uoznz4jA3z3o7Yyqn0FNpHnwMuqZ9QOTKksO72mpV7pYs
+ /0fl/WaUhCR0AyREKq1r6aIeUvB26gyRYJtIMIkBUWyxArsorTS6yC9kyx0wwYL/r9zy36k2/LYBltz0SszL4Ck9+d1vXTjxl6E92U30FdZHLWKOEeEmm0hK
+ 5/jV45L+9aYk2yL1
 
-On 5/19/25 10:22 AM, Maxime Ripard wrote:
-> Hi,
-> 
-> On Fri, Apr 25, 2025 at 01:27:05PM +0300, Cristian Ciocaltea wrote:
->> In preparation to improve error handling throughout all test cases,
->> introduce a macro to check for EDEADLK and automate the restart of the
->> atomic sequence.
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> index c8969ee6518954ab4496d3a4398f428bf4104a36..c8bb131d63ea6d0c9e166c8d9ba5e403118cd9f1 100644
->> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> @@ -224,6 +224,16 @@ drm_kunit_helper_connector_hdmi_init(struct kunit *test,
->>  				test_edid_hdmi_1080p_rgb_max_200mhz);
->>  }
->>  
->> +#define drm_kunit_atomic_restart_on_deadlock(ret, state, ctx, start) do {	\
->> +	if (ret == -EDEADLK) {							\
->> +		if (state)							\
->> +			drm_atomic_state_clear(state);				\
->> +		ret = drm_modeset_backoff(ctx);					\
->> +		if (!ret)							\
->> +			goto start;						\
->> +	}									\
->> +} while (0)
->> +
-> 
-> I'm not sure here either, for pretty much the same reason. As far as
-> locking goes, I really think we should prefer something explicit even if
-> it means a bit more boilerplate.
-> 
-> If you still want to push this forward though, this has nothing to do
-> with kunit so it should be made a common helper. 
+Commit fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extended
+inactivity") introduced wacom_aes_battery_handler() which is scheduled
+as a delayed work (aes_battery_work).
 
-Ack.
+In wacom_remove(), aes_battery_work is not canceled. Consequently, if
+the device is removed while aes_battery_work is still pending, then hard
+crashes or "Oops: general protection fault..." are experienced when
+wacom_aes_battery_handler() is finally called. E.g., this happens with
+built-in USB devices after resume from hibernate when aes_battery_work
+was still pending at the time of hibernation.
 
-> I do think it should be
-> done in a separate series though. Ever-expanding series are a nightmare,
-> both to contribute and to review :)
+So, take care to cancel aes_battery_work in wacom_remove().
 
-Indeed, let me take this separately.
+Fixes: fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extended inactivity")
+Signed-off-by: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>
+---
+ drivers/hid/wacom_sys.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you agree, I'd prefer to drop EDEADLK handling from the new tests as
-well, to allow sorting this out for all in a consistent manner.
+diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+index eaf099b2efdb..e74c1a4c5b61 100644
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -2901,6 +2901,7 @@ static void wacom_remove(struct hid_device *hdev)
+ 	hid_hw_stop(hdev);
+ 
+ 	cancel_delayed_work_sync(&wacom->init_work);
++	cancel_delayed_work_sync(&wacom->aes_battery_work);
+ 	cancel_work_sync(&wacom->wireless_work);
+ 	cancel_work_sync(&wacom->battery_work);
+ 	cancel_work_sync(&wacom->remote_work);
+-- 
+2.39.5
 
-Thanks,
-Cristian
