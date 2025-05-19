@@ -1,91 +1,94 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1724AC148
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221934431;
+	Mon, 19 May 2025 23:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747696652; cv=none; b=E/r19DC1wfAhPfJMO4iOPGbsWzCOIq8D60JUizW1jDecypt5ofUSIkdPzxxnfL0LYUAcv+yXH7x0z6CPLQxjRBpz1V1KdxCV5FRNOMQFfm8VuK/1rxQar3FrovoxFQN8pbjh/33RPl3QvVF2OQdZ/1MNK9tVGdisRdAvSbrqkow=
+	t=1747697141; cv=none; b=uDSgOn2gqw9J60hCJGIGIOWbHwxViZccJe6FOaEeIZHddOv9QgYIoGH7ov8myoqZ5kWahG4ecIJNFpZ30+NFxEukN7nNO/iJZbo49napuUUhVIB8ZmvI4gY+1T1fcWNpvJQhHH4nv/k9/hTowbi78aBtmvjy0Txvqhn+pJ6FhAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747696652; c=relaxed/simple;
-	bh=55ZYTaT8FhZkUhoSUBYMxFmVPzxp4fF4+mTXu/Jyphw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rnNnccmC8mCYp8vvjlsmVBeXNnf06/zt3pzbsY6182gB3U2UG0ZDRgga0ck4g7v1im4N7xW8KgpwOWj2QKfpP3MBE+gyeO1F5nrawrmXYuLjNqe+aAfHOGJTvgI0ATzhcdPqODXYganPVt/R29eOrFhyE9Tv4UA267c6U2HwdJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QV+069+b; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
+	s=arc-20240116; t=1747697141; c=relaxed/simple;
+	bh=jeM+0KCxVQu4BssWwcCM/gXTDYldLQzE6cH8hDbP7t4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rG7/8pjizV2tI1fN2bLI/7zNZwotDZD6jopSMvYHrRlbjVMKjOdkF6H2n+0yBaOkaBwh4cKfj/FRmyTNZReE6FkSZkdkaKqw8OSEvTmHixZqj2XW5FxrmdpCkqBO2XG+AwrU9tA42RgN0jTeFvu0KHtbfTVidVQFwCWX9gxVx7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7W9zS4v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QV+069+b"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742cede1473so2378998b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747696650; x=1748301450; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DmthD9gOjRMYbFYgwf7f3Pp9m7CO5reBPjPZv+5NJUo=;
-        b=QV+069+b3eYszERQfclDdMSC9Sl6Ztu2kZJf56NNRpTxdqUxjWQjrOSZFL3PR5B7Q7
-         bV5D6SVVbl/112QkdA2oOCxznq4iFCXqbvzFKtfE4cALfctS8LFh5CQLvyOMJdoW0bpq
-         h4SmfPFW9OE9BxDNBZUO8k2ND3CcVNbo6SUl7iAKWPvQsy5jKMM65fH1YGry7iY3/znF
-         ct69POPrO8opNixw/d35lMLui56FuEf23+dYGuiaPZJMr/tz9jihhp4nr1Tj7LUi7XZA
-         43MDo7z17FHIs28CjpzyIYPV3xRdlZ2A3NiNrkboxUPD150je55Mrrjn0mxWVasCn/Mj
-         Os0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747696650; x=1748301450;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DmthD9gOjRMYbFYgwf7f3Pp9m7CO5reBPjPZv+5NJUo=;
-        b=I5mC97QIJFL9+Mh5NbcQEKys6IltqvtflLPcIpUQtvCch8urhciWZ63lMRwjNbk4aO
-         Xx4dDMY+94BGuRfHYl8aSrvm4+rxphmBJLCsAwoC1evq7+u48yaZEwnIVrZUf2bdFbAh
-         GAC97ZAk+wYgmWZ+VId3koXbri88ck1hNbvjaFNg2PMYXCmQAxgnzJEDIsPrUonGlHdr
-         uagkTczVorIf4dp/iD6Ju3jCbqMM+7RWRG9OAJnTA/AXoL34d3wFXrDgOImDhGA/BeVi
-         w5FnHRpVpwg1cBdcIw8PmDyvNSZLIU0b1en3qvtI/DxNK0PzUg5akUVZAyIHqKFiLEvA
-         35LA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBLOIKxdCMWM/xKhxjqMMLLRK0YGx2FjMiNvJ6pTXK+dHg9z7Dk1dFyHG+t5lBhkVLutazLCCU+EIfzyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4pLUgCVCGxXv2h9NyW/u+ZNPc8m5p5fILN7wDpeBo9XXrBfZY
-	MeGxd8K05Vd31DG4sOk+cdwPyyOV9WvKKb+l6gTJlVsMv7H3q4WcGd6eY44YfjUHlrBYpfJ+1CP
-	PDw==
-X-Google-Smtp-Source: AGHT+IGHEcM9TKn9Xc+i00afYHv2TzrmaQimUBUqfrRdNBd15kPNJCmvHKHimXydU6G//VEGl/fNmC3mKA==
-X-Received: from pfnj10.prod.google.com ([2002:aa7:83ca:0:b0:730:743a:f2b0])
- (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:391a:b0:740:a879:4f7b
- with SMTP id d2e1a72fcca58-742acd5115amr18271072b3a.18.1747696650122; Mon, 19
- May 2025 16:17:30 -0700 (PDT)
-Date: Mon, 19 May 2025 23:17:28 +0000
-In-Reply-To: <20250519213603.1257897-12-helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7W9zS4v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A778C4CEE4;
+	Mon, 19 May 2025 23:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747697140;
+	bh=jeM+0KCxVQu4BssWwcCM/gXTDYldLQzE6cH8hDbP7t4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=I7W9zS4v5Nxl0SZZHHJAMh8KvQBXK8Wdcn/ytlbbhwVMrTNYZr5QJTJS0EEhI/jKl
+	 /lYV3NUZcul7R5n2OkkvN2wIU1HgpDa3AK7nGLdEs5XHQWS7v+Ckz5SdI18S7O3LLn
+	 D+ErkHrPYXD0teLZq5oMGoeCFfPXYTpoxRz9KHIDAkDSPeC61QwIZ9Fh1oq0vnWNf3
+	 qgUsyrOf5IdNxSHuiumqEzmAIj9rJdIAY560xsPMuUT2cWsmMh+2m5udhjzzOj1VHj
+	 XPUCWGWcXkL+LZrkIHHQPomTAPICkeLT25dEa2Ns/vajof/fppO7Y2GYd9PUHX6ZTr
+	 +a5gJtmlpuNjw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf trace: Increase syscall handler map size to 1024
+Date: Mon, 19 May 2025 16:25:39 -0700
+Message-ID: <20250519232539.831842-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519213603.1257897-12-helgaas@kernel.org>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519231728.2550572-1-wnliu@google.com>
-Subject: [PATCH v6 11/16] PCI/AER: Check log level once and remember it
-From: Weinan Liu <wnliu@google.com>
-To: helgaas@kernel.org
-Cc: Jonathan.Cameron@huawei.com, anilagrawal@meta.com, ben.fuller@oracle.com, 
-	bhelgaas@google.com, dave.jiang@intel.com, drewwalton@microsoft.com, 
-	ilpo.jarvinen@linux.intel.com, kaihengf@nvidia.com, 
-	karolina.stolarek@oracle.com, kbusch@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, lukas@wunner.de, 
-	mahesh@linux.ibm.com, martin.petersen@oracle.com, oohall@gmail.com, 
-	pandoh@google.com, paulmck@kernel.org, rrichter@amd.com, sargun@meta.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, shiju.jose@huawei.com, 
-	terry.bowman@amd.com, tony.luck@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
+max entries of 512.  Usually syscall numbers are smaller than this but
+x86 has x32 ABI where syscalls start from 512.
 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 315bf2bfd570..34af0ea45c0d 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -252,6 +252,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
->   else
->   info->severity = AER_NONFATAL;
->
-> + info->level = KERN_WARNING;
->  return 1;
-> }
+That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middle
+of the loop when it accesses those keys.  As the loop iteration is not
+ordered by syscall numbers anymore, the failure can affect non-x32
+syscalls.
 
-I think the print level should be KERN_ERR for uncorrectable errors.
+Let's increase the map size to 1024 so that it can handle those ABIs
+too.  While most systems won't need this, increasing the size will be
+safer for potential future changes.
+
+Cc: Howard Chu <howardchu95@gmail.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index e4352881e3faa602..c814ab01f9c7800f 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -44,7 +44,7 @@ struct syscalls_sys_enter {
+ 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
+ 	__type(key, __u32);
+ 	__type(value, __u32);
+-	__uint(max_entries, 512);
++	__uint(max_entries, 1024);
+ } syscalls_sys_enter SEC(".maps");
+ 
+ /*
+@@ -56,7 +56,7 @@ struct syscalls_sys_exit {
+ 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
+ 	__type(key, __u32);
+ 	__type(value, __u32);
+-	__uint(max_entries, 512);
++	__uint(max_entries, 1024);
+ } syscalls_sys_exit SEC(".maps");
+ 
+ struct syscall_enter_args {
+-- 
+2.49.0.1101.gccaa498523-goog
 
