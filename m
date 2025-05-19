@@ -1,72 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C594267B95;
-	Mon, 19 May 2025 08:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB884B1E76;
+	Mon, 19 May 2025 08:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747642005; cv=none; b=f7KJcC1BAjThq6/MbNdFDS1fxRf0b/KL22x6xs2w5c2jMxdK1FmzMGPn2UgSjIDqz8gOxrwt3NqS1pMN6JP5/TvWP9d5SmaH4JwG0pkYExyVlm6WMeaKnsVTJ6REP4Bp10svRDLhFd/UZsX9XfTADC/0u5CMo9imMkOW4lcZvyI=
+	t=1747642071; cv=none; b=JJI1KDvZlvjrEDaehgo7wExL6mrzOLnv+fHYPHEi8pxZUUie5zCyC0Px0J+XcLZuA9LI0b8krMAJChJ62Fw1wDg5aR3bY458N/5xM/+hBQwGCdTQ0as5RbAaMeS9Rh2Dj5bfMggSiQI33PgKbwfFw9gBLQWcY9yKYHW45RjU+mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747642005; c=relaxed/simple;
-	bh=csniL7wD1w/bBQKn3ZejzxYLSGU6BV74pp5nNU1S06s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aC42/umeA/Zf0BYBiGPgacvjnuPgqNa1vZkWYlZbLlYrjwKtV80fvgQpMgmyTjAUm7pwoVtSvijn/I1AwpAbs2DsPh/8yUqQZxrC1NQ5wkcEqsXp/28OQiPFBkjZL0JBKB8qlJ2RfbUnOVMhL4Rt+BR8V0a46LHfNPJm9tgkeEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EJ8pVt9q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e1qCOISC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747642071; c=relaxed/simple;
+	bh=JLeWHAnLgnW13tBLYVzMl8kjd+UbLkzM0dHdMfNKK9g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rdx6xXGf6gMJbi8pT9ZWwtMeq6X5c2HNpROV3i6o/HOKLy9E3uUORplvGn4gKK6XdzBC7xnxsSW3Ea63sW8TQAgJhkgteaDR775/rA9SKN2Z8FmRb+6bAc/6a1C3B17R8Pys7w1V7/8/hsXCba3qtHP9oC9eQ8n5gPeh1T9VVA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3Oye9eR; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EJ8pVt9q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e1qCOISC"
-Date: Mon, 19 May 2025 10:06:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747642002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vN2VdDYE+3QR4LES1aXoh7cKQ1zmhVMtFasl+jhB2MY=;
-	b=EJ8pVt9q1/DOaWnWfdAmb44OzciQALvSw7efazU6AzoCraAPunnJTf3UvDByBj8Iz0XHza
-	Pq+SwJoJ26KFDUfI63Atwnjc51aD65BNvjFj5UBYCzI61sMYeOoH7MD8l7AVaGfFw4JXqa
-	5FwcNIxct+rRow8JTLZvg+CwrRnjmA2pMKC3E8B0qkHmIOnTsyOAAn/KU/uE+7HEndcBOD
-	EsICIZQzwLtOdHlPzPvN7nJS29MdAIOkF4jhrWTtPi72etKlKMpgy9ZbtKXEHUBDp/XN5W
-	fcdI0XbF/NXq9FgRV1sJTnEbu+fP+RZzo9XVnbRYHlhQKmn3QPCS+Ub+5Q5cyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747642002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vN2VdDYE+3QR4LES1aXoh7cKQ1zmhVMtFasl+jhB2MY=;
-	b=e1qCOISCnXHBzddOKU5iD56Ej8rC9Cy/ViJAxrTufnvDr7BmuE+CkCbdLGTwsox0WTSjRz
-	odB6ZFRbyevtQABg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 05/12] rv: Return init error when registering
- monitors
-Message-ID: <20250519080641.6FFQAC2k@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-6-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3Oye9eR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747642069; x=1779178069;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JLeWHAnLgnW13tBLYVzMl8kjd+UbLkzM0dHdMfNKK9g=;
+  b=l3Oye9eRWaNJzEF25ui/3CDlG1voh//rGNhe5Wpw8Yw0YnmnBKgF3uX+
+   sg5uIgFw/5nA5lN//R0zY7CpytID9I9Px/k59ceEzh0fMHZuj2Bix2b3k
+   zDGjeDcyHPJUMIEXZhEPOt7CEL39jHkTQ7InfOHEpepDv6HtuCvRNNbax
+   adt/VIh9/vjs3yVTbbJe3iZ3Knytw3+pzcuUGg6jNNoO3eHDHMjKuiwWf
+   9BAcHejnzpWFZUlDeIMUaN37UWhMydgOGXJvim5Rn/ScvE9dVwxV5rEzx
+   XoFRSaXpMBUROXraKBqx/I4D2v1cBhl9ZG/+isWNN3i3BqucN3+rapQMW
+   g==;
+X-CSE-ConnectionGUID: A/GmD9ITRYyH9s+fYhY7gQ==
+X-CSE-MsgGUID: HGLOUuxmSdKih9LulcJFdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="52163497"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="52163497"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:48 -0700
+X-CSE-ConnectionGUID: BSSWDcMUR6e3PRXrcWoviA==
+X-CSE-MsgGUID: 8bM6wIo3S5SBv83I45HXMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139205800"
+Received: from mwiniars-desk2.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.4])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:44 -0700
+From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org
+Cc: linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	guennadi.liakhovetski@linux.intel.com,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kw@linux.com
+Subject: [PATCH v2 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+Date: Mon, 19 May 2025 11:08:50 +0300
+Message-ID: <20250519080855.16977-1-peter.ujfalusi@linux.intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-6-gmonaco@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 10:43:07AM +0200, Gabriele Monaco wrote:
-> Monitors generated with dot2k have their registration function (the one
-> called during monitor initialisation) return always 0, even if the
-> registration failed on RV side.
-> This can hide potential errors.
-> 
-> Return the value returned by the RV register function.
-> 
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Hi,
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Changes since v1:
+- The PCI ID patch commit subject and message updated
+- Reviewed-by, Acked-by tags added to patches
+
+The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+Panther Lake, the main difference is the number of DSP cores, memory
+and clocking.
+It is based on the same ACE3 architecture.
+
+In SOF the PTL topologies can be re-used for WCL to reduce duplication
+of code and topology files. 
+
+Regards,
+Peter
+---
+
+
+Kai Vehmanen (1):
+  ALSA: hda: add HDMI codec ID for Intel WCL
+
+Peter Ujfalusi (4):
+  PCI: Add Intel Wildcat Lake audio Device ID
+  ASoC: SOF: Intel: add initial support for WCL
+  ALSA: hda: intel-dsp-config: Add WCL support
+  ALSA: hda: hda-intel: add Wildcat Lake support
+
+ include/linux/pci_ids.h       |  1 +
+ sound/hda/intel-dsp-config.c  |  6 +++++-
+ sound/pci/hda/hda_intel.c     |  2 ++
+ sound/pci/hda/patch_hdmi.c    |  1 +
+ sound/soc/sof/intel/hda.h     |  1 +
+ sound/soc/sof/intel/pci-ptl.c | 30 ++++++++++++++++++++++++++++++
+ sound/soc/sof/intel/ptl.c     | 23 +++++++++++++++++++++++
+ 7 files changed, 63 insertions(+), 1 deletion(-)
+
+-- 
+2.49.0
+
