@@ -1,93 +1,148 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4468F278E7B;
-	Mon, 19 May 2025 12:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550B126D4E3;
+	Mon, 19 May 2025 12:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658149; cv=none; b=nNxKQYQMejuUTRdDQVlUkBAZXoa4ySw0G9Zvt658dFH22XxFlbGXMU6sQyP2bT8y8zxng3d6inwNtwvRK86ImeQ0vE4wjrf/89+A25h8pTMnAxnlnzjpapRyX7B6quFKa9U9BIgls0PDO3qL7trvXWZ7UYPxHtmk5ary5+DYBtw=
+	t=1747658243; cv=none; b=NqnRsxuPBhoPKsiqPL4if+HYw4ePtA315gpgh1ezWzVfWZ089v2CG85j384tYPnvPxtiZtskYSZVD+d+WbMGWXfU/7/73OhQ+VS1cz495lapfsX2fVc4IQFh/xqEBlsjpWi3jkJp/hig+IpyoLkAsAOsC4Fj64qGzS2UI9ZYKQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658149; c=relaxed/simple;
-	bh=tQcVxlLI9bM+pe7af0fXzLng2vNzXhJRM2jTEWPjDFE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mUHlCOsmxWPOJQdl8/7/p0g5RpH+BYoOGpHFLogppskGtB3cRiZNdIGlGWSduHDx4V9ARkpNBZDzoMpsxKHJk4P7dj5SRnb/7rS0tRWLkF2bSCuXyvOuhkbmdxRmawX7vi8hO2MT7eP/1BZOHHzs191mRfIsh8Z+gG0u2CtfDhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowABXa_aZJStow+1jAQ--.14873S2;
-	Mon, 19 May 2025 20:35:41 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: adrian.hunter@intel.com,
-	ulf.hansson@linaro.org,
-	orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	zhang.lyra@gmail.com
-Cc: linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-sprd: Add error handling for sdhci_runtime_suspend_host()
-Date: Mon, 19 May 2025 20:33:47 +0800
-Message-ID: <20250519123347.2242-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747658243; c=relaxed/simple;
+	bh=OPb24WSHEv+e9i6+TiE/kgAU14z58rgNG8YvtfGAmNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Twvzz3RrcEXHh2EJQUCMcpLNiATOqDimN6QGRmS1PKh3JcXR3xVCrrYXU713VCRbjO1zaEOudUx8aWESvwcEx6xZEWIpNKsxpQKMI7RQemFL+p3MEHnaTtyc8PV+d0tZMPDmuGUbIIGdqh2xlyO2LGYNsdUR6RcgtyW+2l6iUsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU7+x1Mi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU7+x1Mi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966CEC4CEF0;
+	Mon, 19 May 2025 12:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747658243;
+	bh=OPb24WSHEv+e9i6+TiE/kgAU14z58rgNG8YvtfGAmNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nU7+x1MiVYMZ4adC2o5Djg/3jXiEFeTCWeX7Rn+txQz+GbF5B/UN/7zSXdV5R6gva
+	 jAriXBxj66W3nHTbhU2o5gpl4AjgznmNecIOy736OR52dlBfTScUwbeLPNu3LGfDgB
+	 Q3fjLLbSGh1z6hvOItfvN9ToITZkokb5cFpHyBrrOLF4+bAAUChcnqubGYJMnd1G6I
+	 kh2xODkRFCWkKWhF9WznwH8/POJu+QcxKXDAI6GLiFq2DG4pWkxJJ6WodUe9f2jsN9
+	 SR1v3HQEMnZGDh+CpEJ8Q6mLB25PjIrmFDzmAj9HeJYjmbVmOZhwrVrOZzNLAG4uVz
+	 XqWGPPE8DoBmg==
+Date: Mon, 19 May 2025 13:37:19 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alejandro Enrique <alejandroe1@geotab.com>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
+Message-ID: <20250519-dining-tumbling-ff005fcdae03@spud>
+References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
+ <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
+ <20250514-saggy-shifter-e4ac7152f823@spud>
+ <CAN=L63qsjEAvfocgP0tGrpe-x6Rx1gvTAkPE9i99Ai2zJj6ssA@mail.gmail.com>
+ <20250515-varying-swan-31ca63615b43@spud>
+ <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
+ <20250516-unfasten-submersed-e854fc9a0142@spud>
+ <CAN=L63phSnssXs1p2HXhf08HMaHCE80EgMZQR0vPqhME2tknBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXa_aZJStow+1jAQ--.14873S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrZF1UCw4DJF4xKw1UGr4rKrg_yoW8JF18pa
-	yagrW29w1UWw1FkF1DG3WkZr1rW34rKrWUKrZ8Xw18Wa1UK34rKrW3CFyjqFyjkr9xGa1U
-	XF1qq3y5CFyUAFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	Jw0_GFylc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUlApnUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwoHA2gq8-Gx-wABsG
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1sJ959amROs/zspS"
+Content-Disposition: inline
+In-Reply-To: <CAN=L63phSnssXs1p2HXhf08HMaHCE80EgMZQR0vPqhME2tknBQ@mail.gmail.com>
 
-The dhci_sprd_runtime_suspend() calls sdhci_runtime_suspend_host() but
-does not handle the return value. A proper implementation can be found
-in sdhci_am654_runtime_suspend().
 
-Add error handling for sdhci_runtime_suspend_host(). Return the error
-code if the suspend fails.
+--1sJ959amROs/zspS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Cc: stable@vger.kernel.org # v4.20
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/mmc/host/sdhci-sprd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Fri, May 16, 2025 at 05:00:50PM +0200, Alejandro Enrique wrote:
+> On Fri, May 16, 2025 at 4:01=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
+> >
+> > On Fri, May 16, 2025 at 12:23:35PM +0200, Alejandro Enrique wrote:
+> > > On Thu, May 15, 2025 at 5:02=E2=80=AFPM Conor Dooley <conor@kernel.or=
+g> wrote:
+> > > >
+> > > > On Wed, May 14, 2025 at 06:53:25PM +0200, Alejandro Enrique wrote:
+> > > > > On Wed, May 14, 2025 at 5:49=E2=80=AFPM Conor Dooley <conor@kerne=
+l.org> wrote:
+> > > > >
+> > > > > > On Wed, May 14, 2025 at 01:55:54PM +0200, Alejandro Enrique via=
+ B4 Relay
+> > > > > > wrote:
+> > > > > > > From: Alejandro Enrique <alejandroe1@geotab.com>
+> > > > > > >
+> > > > > > > Add compatible for u-blox NEO-9M GPS module.
+> > > > > > >
+> > > > > > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+> > > > > > > ---
+> > > > > > >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | =
+1 +
+> > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,ne=
+o-6m.yaml
+> > > > > > b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > > > > index
+> > > > > > 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8=
+156a72170965929bb7e
+> > > > > > 100644
+> > > > > > > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.ya=
+ml
+> > > > > > > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.ya=
+ml
+> > > > > > > @@ -22,6 +22,7 @@ properties:
+> > > > > > >        - u-blox,neo-6m
+> > > > > > >        - u-blox,neo-8
+> > > > > > >        - u-blox,neo-m8
+> > > > > > > +      - u-blox,neo-m9
+> > > > > >
+> > > > > > No match data in the driver, why is a fallback not sufficient?
+> > > > > >
+> > > > >
+> > > > > I added the match data in the driver in the PATCH 2/2 of this ser=
+ies
+> > > > > in the same fashion as previously supported modules.
+> > > >
+> > > > Did you? When I looked, there was just a compatible and no match da=
+ta.
+> > >
+> > > You are right. I just added a compatible string, no match data. Sorry,
+> > > I was not following.
+> > > I just added the neo-m9 compatible the same way the neo-6m was previo=
+usly
+> > > added.
+> > >
+> > > What do you mean by using a fallback? Using one of the existent
+> > > compatibles (none have match data) or adding a new fallback
+> > > compatible, something like just "u-blox,neo"?
+> >
+> > Falling back to one of the existing ones, like neo-m8.
+>=20
+> That is perfectly possible. I added the new compatible string based
+> on what was previously done for the neo-6m one.
+> https://lore.kernel.org/lkml/20190401115616.21337-5-megous@megous.com/
+>=20
+> If that is not a good approach I think this series can be discarded alrea=
+dy.
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index db5e253b0f79..dd41427e973a 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -922,9 +922,12 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
- {
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-+	int ret;
- 
- 	mmc_hsq_suspend(host->mmc);
--	sdhci_runtime_suspend_host(host);
-+	ret = sdhci_runtime_suspend_host(host);
-+	if (ret)
-+		return ret;
- 
- 	clk_disable_unprepare(sprd_host->clk_sdio);
- 	clk_disable_unprepare(sprd_host->clk_enable);
--- 
-2.42.0.windows.2
+If you did use a fallback, you still need to modify the binding to
+permit it, so there'd be a different v2 rather than throwing it away.
 
+--1sJ959amROs/zspS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCsl/wAKCRB4tDGHoIJi
+0nhvAP4mRo7x0fJA+I3lYEavYP/JBhtUg/TLe3db/kEtTqrw8AEA7OVlgKjS0Zid
+urR1jOv2BUN9YCgHf5y9WSQJp4CNKgU=
+=jT3w
+-----END PGP SIGNATURE-----
+
+--1sJ959amROs/zspS--
