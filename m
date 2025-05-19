@@ -1,120 +1,157 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DDC3B2A0;
-	Mon, 19 May 2025 01:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E354B4A00;
+	Mon, 19 May 2025 01:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747618087; cv=none; b=lT9n76btEWQ8xnk/tjxiEK14zrtQOesLYhcZ94HCTGdUHmjB5iusBsrlQC4XsaYGHFerksNbAm0clVYSY0xJyDj0wSvvfjgkME6BuBLGJgDtMFbiSpQAPHr+NgIIw2hrrkBtj9wZ78+ZAHOPO1hSHqGsC/91CPi3BLYzAcFL6Gw=
+	t=1747618365; cv=none; b=N1Hph8s2JEdGbTkKuusp/OPg7rLhbLoGP/iqlJT3i1YC0Sn94V5MhG4c4ZA3WFdP5hIw/GqHMXQHN0DO3I4JO14tsk0EA3GkGWM77mQTnWgps3n7Z6QursGZ2zjIEQyhCnFyFW+zghgqdcexNkLIBrwJ3lOOMsrpHpOb5CPqaxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747618087; c=relaxed/simple;
-	bh=MdN1HB7F3PmKUydOEZxIWvd5oJ9kjpSLtLFURYEVO4o=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=FxJRR7PKkzcC6tf0Fkts7WPtqSi8xgXJLgP5XrRMr2Q6OSq6dnGccoRp89a18+cSIOgHk13GV/pauFtKQzRpURNQTLcPZ6l3Nm4shi3rXJEq5bllJw4PI6BeD21+HXDbAP0IEQsWgQW7kIFJkUUWlCe5454l3gSMQpb3626kw4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=sTxILT+d; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+	s=arc-20240116; t=1747618365; c=relaxed/simple;
+	bh=OCpenyVmzMNspCJ0HhYI8vdrocz2CXAY/lIG/YoiGJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D+hRLvt4IX+wz+hLnA/TM1yOAKJH+SmHkVkg0WXbcj/Yfq/PWUy2wIMd2XzKubeKeRs8VmjzSXM0rrwT8zHOBqS1RqFBRp18H5Eoce7roIydyw4b8GxwU8wVn206Oi4W7PY4x5LvbwZDTpsetg06ltMx5UwvUqm6UAyBeohLBkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkUUXxsD; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="sTxILT+d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1747618024;
-	bh=HICLe6kVYfHxQosMAWfBiGfk8HLTkoJiRdDPSs0zKGM=;
-	h=From:To:Subject:Date:Message-Id;
-	b=sTxILT+dqEbdHTEDkxfQ4gAHtg10L7ev9Vd/SyAQ3bq+0YEqJM3qgA7lVrlzy7TaN
-	 WsPSVYSXePXoXRF2SA8dIFwMrr8uv3pzHMjC5sRHgIcgDvsIZi9W9A2i4TBfhae9aw
-	 cx1FMlUz3kMBuvzY8yZUw8FjntdUY9/hJaV9wRls=
-X-QQ-mid: zesmtpgz7t1747618022ta4b8f366
-X-QQ-Originating-IP: 7G1uptdJJorXsZPmkObXhl/zsV7bqPGJiWN1BLGTKso=
-Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 19 May 2025 09:27:00 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6823201925033719388
-From: Chaoyi Chen <kernel@airkyi.com>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/2] Convert Rockchip CDN DP binding to yaml
-Date: Mon, 19 May 2025 09:26:30 +0800
-Message-Id: <20250519012632.94-1-kernel@airkyi.com>
-X-Mailer: git-send-email 2.17.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: Mutteg8H72qD0e3+xNdYv7CPv9n3fer6jIlYOhSBxwS1Qb5035U63Bo/
-	ChGME7AodpRWzJIwmr3+jO9bGVKQS+OrfFMPczEqQ6w6hJVsuNUe9pHrlgsJG75KgfQlwxT
-	Xq6C6iC4AZm/wZ6j10KgedSTY/8R/BOy783WubRqSygWJnEXHly3+8hErm+GMdY/ORhN+sJ
-	bcyYylgyCzi/ZyI8dj5ysHqGp8rZQK331Lmn0evKAtF02F1iht7cVgiCHeIQQLRnbO/4tf4
-	QerPhb4G9NyXHbvnmv9PyIVjJacw8a5FgrkU4+/OSNJdgkAYzCsboZxlkE+EHRO9HbDjX8V
-	xsWqID5Zaw/kbhzBL7diMy7WsK0lnmJGcZTifx4JwlLfndhgM4zxos3yVcCMH13JA3OGeid
-	cqjp53GKw4AS5DCDrlwHpepNKwZwqHotjELhZh+XlCKCxKAF/cZjNgankS5RC+43qRoIDnp
-	NmSyLa5EfngwpacW03UUdvbgjAyDuYJAIyHaWvs45Fpy8rqEHCGOOU2zLbXSC2jquBUatjJ
-	/CjF+MbLLyijwioJB8NTecc/mNJ9oyO9+0S8N7x/UoPWXcrAH6f+keuaiUhrzSqUowDECsW
-	3LubinxmUPl92ZYgM7zNTVsIfrjT16vr/jTfszswJZyhjFSSQZax6sljt8+9jWENLW2y4uq
-	TIoHSkH8ASywe5t6JrQM8O762hp/TjpIPE/Uafl+2wjulvVKOntxLovtTyUmYNewm37t1cd
-	EQbk7/ikBLT79mUC5kClsnjydzwvOVkfFnng5MvYCpLDfvXC5NJwXTxHEvE1/WiQBbkAuvR
-	zVCT3wNHccw9JWNEaJD51ox3v2N3cHzUXsV84NibiADupxzstvZTLJExj304Q/6LYzj1mTp
-	vbvkh/EW5wO6LF6pBYqRRlljbMZorQXJobWhNCtStXL6LYLWlJ59KpvrLCKdgLr/kS+KZFi
-	ll5JzuyhOGxcV/L041anxZzZ5n9G2LfnZQzyoHH3i+YtmKQ==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkUUXxsD"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30e57a37294so3386801a91.2;
+        Sun, 18 May 2025 18:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747618363; x=1748223163; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lnqrZDZzf90eu14tYTM06CJVvHruKSKjISbfnuXjTIc=;
+        b=fkUUXxsDcc/sVaV2xF87sV27Y0ohDGfGCGjJkMOEphIKlXhGicTdXT76BUtqKJ4o4u
+         up2BtuExcs1+V1RQk7CmcCP0IS1lvgsX36S6MI3//L9ovXbWQsVzcE1khmHywkLfwe4H
+         H0eQey4cMgGWzcWy4SeZUhxLS/N53o9hAhxNIq3aqa2HG9leIxpKeBOkFCBCIgB3aFDm
+         vQ0SD7zKqdbXr+iG5OTHHjPKAZxEAtx0fQq+H/LTm+vkx5q0pIgUpW+4Q+wcJaRrf60A
+         UXVeBpXhN0Ijy8slwu99UzLEgLNm/PtBYn+Jyn6YNvpiZwP54ietknVr0CG9DOwNCJiw
+         ZosQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747618363; x=1748223163;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lnqrZDZzf90eu14tYTM06CJVvHruKSKjISbfnuXjTIc=;
+        b=w5weWyN0AJqR5RLMAHHO7ZnK7LrYxPf7rUuyppZLCV7ajoozeoctqAxVFxgZrz9AlM
+         RmewAXZJfYs/XBwTiz8u9XY8vYQAhHaDJoDWYalBGG2ZlUgE+5G3TrSKDIYDkMmAo2b7
+         UFY0sr/LZK8bJYAJZlYLMBx+l5fQSsjclcj+asK0OyPMXz7NeoIDLjr94mqQO6cuz3nT
+         JmTiQCsk7jpEybMuzvb1rZ8jggP/UhgkM3mO8l10rOM1JgNFJH5XuxU0Os+4hz6sV26d
+         yp5/SZ8fXcKyBRc5jACpc+5SiXMEfx1aVgsRr7wOig8dwIqDl2zelDDuYImxHw5t01pk
+         aUXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzQ4BJjkmb0iPCBFw00vf7N3tjBdDeTieiJfVJ2oKkeV3NchOZIO3l6KtcwWYssaof2nOPK5M7IEmcXsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxehdbEYzLXRbMhNZtywJ7pHCblfMUBrAPY9yl/hjsUs++SfXqI
+	oAdwVz/IKJUPwqkZurb6/iR79/OapTQWYXoB1PHcfVzEENbotWCgCDcq
+X-Gm-Gg: ASbGncsoovsluKIQmnVZAooj5Y2sEbRezr84WBc84nAOoLHNysIe+SQgDc3PXjdSCOQ
+	0DOVJGB25gmViZZ/H6DCElosXiD+dzhFYzAZ7u8RKK8NKmVRObtOaCpq/QNNRJZFImqUrUBJy95
+	fBJNktG6lx1vHvpX1jejgNN4g8hdjdUN1Nd+lTsyVMRMIpPIgjbjHSu66jQYTpdynAYTjkq0oyG
+	vBsKXxXWpoJUE5y9m52hhCTZIgL0bEX1oyIedjzopPAwng+MmRpxYhIERIwYbvoJhVHFsxD+85y
+	Od4feCPn/35nA5O1oo2rLs99IOAtDejPSeqRjgYsrz9HJlgYYdU=
+X-Google-Smtp-Source: AGHT+IEEor4XHs6ywQ+j/8lyLON6X6CuON/lYU1DbSsn330MrFeoRFaJLXbZsA/bE06czjb6frPRig==
+X-Received: by 2002:a17:90b:264e:b0:305:2d27:7cb0 with SMTP id 98e67ed59e1d1-30e831b842amr14947791a91.21.1747618362926;
+        Sun, 18 May 2025 18:32:42 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8e090sm5090478a12.38.2025.05.18.18.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 May 2025 18:32:42 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8D0E94208F51; Mon, 19 May 2025 08:32:38 +0700 (WIB)
+Date: Mon, 19 May 2025 08:32:38 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
+	mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
+	hljunggr@cisco.com, dave.jiang@intel.com, jgg@ziepe.ca,
+	saeedm@nvidia.com, Jonathan.Cameron@huawei.com, corbet@lwn.net,
+	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+	W_Armin@gmx.de, mpearson-lenovo@squebb.ca
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH 3/4] docs: Improve grammar in Userspace API/fwctl
+Message-ID: <aCqKNg3p_VlGbce_@archie.me>
+References: <20250517132711.117618-1-hannelotta@gmail.com>
+ <20250517132711.117618-3-hannelotta@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DMgdOt+z8l69n+lb"
+Content-Disposition: inline
+In-Reply-To: <20250517132711.117618-3-hannelotta@gmail.com>
 
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-This series convert cdn-dp-rockchip.txt to yaml.
+--DMgdOt+z8l69n+lb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PATCH 1 try to improve coding style on the existing rk3399 cdn-dp
-node.
-PATCH 2 try to convert cdn-dp-rockchip.txt to yaml.
+On Sat, May 17, 2025 at 04:27:10PM +0300, Hanne-Lotta M=C3=A4enp=C3=A4=C3=
+=A4 wrote:
+> Fix typos and improve grammar in the documentation for
+> fwctl subsystem.
+>=20
+> Use the word user space consistently, instead of having
+> two variants (user space vs. userspace).
+>=20
+> Change wording of denied behaviour to be disallowed
+> behaviour when describing the interface.
+>=20
+> Signed-off-by: Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com>
+> ---
+>  Documentation/userspace-api/fwctl/fwctl.rst | 30 ++++++++++-----------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/=
+userspace-api/fwctl/fwctl.rst
+> index fdcfe418a83f..a74eab8d14c6 100644
+> --- a/Documentation/userspace-api/fwctl/fwctl.rst
+> +++ b/Documentation/userspace-api/fwctl/fwctl.rst
+> @@ -54,7 +54,7 @@ operated by the block layer but also comes with a set o=
+f RPCs to administer the
+>  construction of drives within the HW RAID.
+> =20
+>  In the past when devices were more single function, individual subsystem=
+s would
 
-Both of them add new port@1 node that represents the CDN DP output to
-keep the same style as the other display interfaces.
+Do you mean that devices used to be singleton in its functionality? Or havi=
+ng
+multiple functions?
 
-Changes in v4:
-- Link to V3: https://lore.kernel.org/all/20250513011904.102-1-kernel@airkyi.com/
-- Add commit about port@1 node
+> -grow different approaches to solving some of these common problems. For =
+instance
+> +grow different approaches to solving some of these common problems. For =
+instance,
+>  monitoring device health, manipulating its FLASH, debugging the FW,
+>  provisioning, all have various unique interfaces across the kernel.
+> =20
+> <snipped>...
+>   3. Write access to function & child debug information strictly compatib=
+le with
+>      the principles of kernel lockdown and kernel integrity protection. T=
+riggers
+> -    a kernel Taint.
+> +    a kernel taint.
 
-Changes in v3:
-- Link to V2: https://lore.kernel.org/all/20250509070247.868-1-kernel@airkyi.com/
-- Add more description about phy/extcon
-- Fix some coding style
+Improving grammar includes s/Taint/taint/?
 
-Changes in v2:
-- Link to V1: https://lore.kernel.org/all/20250508064304.670-1-kernel@airkyi.com/
-- Rename binding file name to match compatible
-- Add more description about grf/phy/extcon
-- Fix coding style
+Confused...
 
-Chaoyi Chen (2):
-  arm64: dts: rockchip: Improve coding style for rk3399 cdn_dp
-  dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
+--=20
+An old man doll... just what I always wanted! - Clara
 
- .../display/rockchip/cdn-dp-rockchip.txt      |  74 --------
- .../rockchip/rockchip,rk3399-cdn-dp.yaml      | 165 ++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-base.dtsi |  10 +-
- 3 files changed, 174 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
+--DMgdOt+z8l69n+lb
+Content-Type: application/pgp-signature; name=signature.asc
 
---
-2.49.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaCqKNgAKCRD2uYlJVVFO
+o/zqAQDCULnwGc9Y+Y878eDVKxSzSu86SkQrzCEY28FujsLfYgD/YzO9FSTCuIuJ
+2cwNDYHSKorB85Yxqcdpfx4Hxw2gqA4=
+=Kzqn
+-----END PGP SIGNATURE-----
+
+--DMgdOt+z8l69n+lb--
