@@ -1,269 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839262868BA
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03C02857F2
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671308; cv=none; b=LdYm8wcFEHWuBduUB0Rs/weXLIwtKjWUa+CF9qN7Xnj1EHrIdWjwoJbdEdiknN9jFGhRRoFA5bMSWZ7I0z/zfSIYmqmAHXyh4P5Zh61oaa0x+g0Q06WXlACWr43R+IuBSg+OSDdIjBYDwbo0xFIZAngHLzglvqYHPc6ko6czERU=
+	t=1747671419; cv=none; b=AcffjyeyELJix/du8IKDfj9lSYT+9+gfLPPcVpmf4ERSVExSm3kfB8FSoZuRgdv+KWbAPOny1wf3oizAFLF/WCbBHY1NTs32GZS6+5FQP2TURijMuP/ILOme3GZljCYCf93/oNLHQpVEpnPJvwNjnyzuT1z96Au7fB7vK6oAmvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671308; c=relaxed/simple;
-	bh=c93LfdDMdxxL1G2N4IRzJFli1vNWVx+Ilmk1Vy42WsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=saNdJ/KqNAToI5ucJ3o3WvJT3TgTXM/IGp+2n6uXnxxeL9IM8vlSAsNy/nfpFAcfvUp6AAplToHxbTYq6TBXP41iWCS36OMK4up4dX149H3wYbGboWP5/F2SwXPHdU2k6+JPer1VYeNR3S7DsqF3Y3fgw0XnWXUA9xTnhBrgBoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GUTDGwhW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747671419; c=relaxed/simple;
+	bh=6y5PZ4QFULPYq/QswZTiV7sH1aYiVPHL+DEDTZs0PpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DCzV2aEQ7Z+Cvq6H7jf/KwCk19P4JodU6hEpUlRpTMdcYKduIUXBui7DjQQRoE2JuFfLlJX2ZzFkMK4ZmtG4b1gy1R/gFKIxZ8ebI/q4W3B7YErrXdOdVEr8KglyP5xpTPVP0I+O28GQFTdVMNLg27atFFLT7PRdyuhAkU9Mu10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NuNCk8Ut; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GUTDGwhW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747671305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RhRu6EuymcFvDIFk2FD/5bzqcstVfgi8WU4KbHCXAUU=;
-	b=GUTDGwhWLWBIpsFntEHbb9gyV9QXw68aM8tEzCR3o1scDGcAKUuEbIFiWAapOCKQLGT4yj
-	5Y1AcsINvr8wBD3JEl4ij9COfmuZrgdhbPBnx1XFbFEag9jdkB1oCNb3vbjcQnaz8Y4jHM
-	V8zXZ/nwY/PX4aWD2UKYsFgow6kVOF8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-ItCgDrUWPUe7Xze-VfimUg-1; Mon, 19 May 2025 12:15:04 -0400
-X-MC-Unique: ItCgDrUWPUe7Xze-VfimUg-1
-X-Mimecast-MFC-AGG-ID: ItCgDrUWPUe7Xze-VfimUg_1747671303
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ad540ac3219so253774966b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:15:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NuNCk8Ut"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so56427645e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747671416; x=1748276216; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qbRq/IqSwZ8N/cKfIIl6SwnJgAlK1OFrVnQY7MK26Lg=;
+        b=NuNCk8UtVp5BvFTvE9cwLcwCGCDEAc66Uw3ocjV5UT6A+NG89fHAWWrexrhxQ5xxBf
+         EPyRCvhlyO+KaeN7j7YPg03DkKPzY+WX+PIJaU584T2cjHVLjn+et73jqIZItt+F+6j2
+         z7sI55a3pQNAOfHVZGTZLYE/s+Gey1Wd1c4VyQgT4Rf/d8wtZwOBkZ6e5dl0wK8FM0pW
+         VAXadVE1vNsfXy3dkDNxX8lKrHRI1QchogFTi7jkqTjy6IXxBYsy1EvGBUuXFM65GApH
+         MGy8lQelKSswr7PJ/PnXqDS5JtjlLx99iPmTc1iWnGmjbsiMHpnhADS2DYruYxQ9EFws
+         LvrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747671303; x=1748276103;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RhRu6EuymcFvDIFk2FD/5bzqcstVfgi8WU4KbHCXAUU=;
-        b=QQOv3ILbA/w6Fz78bCkqYdQT3nXxk8tv/RxWhOqdjoMHlQGpzzbuda56X8GiQjyy6+
-         wNJY2M0loSM299tuKF3t5h3JLlaIlY1Rj40jizln4xtvzQ2+5Il10M06YnfBaQfDjAYK
-         3DK/3d4ZmPGJXeatsxgKnnEfW+OWWpbKJteozUEnNAAzzbDMxq42JT0oMAmXZOr7O84P
-         gCIMAfzfBnAnq7ZSQzUgkYF0W4dCJZ3SCWmr5VuU6n2uAWQnxUB+tErBJ4HBQbwYuB2+
-         vusc54Z+iTFvGoi7pQaIJ+tFhmnhtpaGA4OpbLLh7N9KCDLV9abAs/9Je62VkT776jVa
-         WWiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfZ1SA4XaI854WChfBN/qq8BjhPgIGjgsQJmEG3WTpePwdzCPYbRMoNe9/VXqjsl7AdaiUOCZMyu3Y6nM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsPaO6imrZpH0mTQBFxBqUkpFJH+Ec4ju1MTht05K24+0ZcssJ
-	NOCn9V6EKQH+PwGTga/tksa1chGfzyG9cQvMPwm17Hwzazq3Q45TeNywjfMu3rYirpkgDkcbGek
-	ZWH8kA69VPC9oFEf0P0aYD9Gj6jiluoc69X1yW6zbQbGTsp207VD9dMGoLsk/qv2iaw==
-X-Gm-Gg: ASbGncskwuveSQixDwDr8WtFiGcnARWA+Hzp7EXwTF4d/kQLGWRDHUu8lu3kGuWxofC
-	yem+9cMyASSxl52mvmlAwwvj1u5kTjS/XKm0XJ4TQlkt2a2+92buiB5vXwjhCdJaz7VOpuqplV/
-	1zLreslZ6I/FznHpd3YNY0OGFO9pkd/i3lE7RD3U+hG9UmwJN0bnnanI116talpfk1a55/tHWSZ
-	AGScOnmMuzkXkZ7hEzE6MPArkRd82nTBzIL8CleyNghQspVVTdqEq44C/3/nRNO3/NoTUBBrYSU
-	dv6uxQsTDFpAndclGwOG6cBTxKIq0inmF3iuXvrS7jt+5Mp+ld7IkMD+sIrFWNFWmHVTJJKByu8
-	XPWNnMtL53HrJotT4BgFp6aPpRzb5FyFs9tdnGytwIkDV1GYw/zQrEOVBE890HQ==
-X-Received: by 2002:a17:907:1b2a:b0:ad2:233f:f024 with SMTP id a640c23a62f3a-ad536b82ac2mr1329213366b.17.1747671302821;
-        Mon, 19 May 2025 09:15:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmFp34WQgxmGxbjDO27qbsv1VbZr+WF5JVEmDYgXua/9BqdR1gBDhL+GhA1myY8aVTZpE5SA==
-X-Received: by 2002:a17:907:1b2a:b0:ad2:233f:f024 with SMTP id a640c23a62f3a-ad536b82ac2mr1329210466b.17.1747671302369;
-        Mon, 19 May 2025 09:15:02 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d498737sm606674366b.138.2025.05.19.09.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 09:15:01 -0700 (PDT)
-Message-ID: <0dfc74c9-7cec-4453-80fc-d6ff8d1a46f6@redhat.com>
-Date: Mon, 19 May 2025 18:15:01 +0200
+        d=1e100.net; s=20230601; t=1747671416; x=1748276216;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qbRq/IqSwZ8N/cKfIIl6SwnJgAlK1OFrVnQY7MK26Lg=;
+        b=LYdg686PX7gsgnyzFKYulH7ca4QZMlZQbzEtGChGxsuL9YUHbJipY8DvR3bNdbMKhC
+         kHBS+ilK7WJ/VM/foKQijdZEYEhSRZlSX4Qt4QmfpNlCR0PNXovzbpT6FWDs0UDdrw4C
+         9sCwMWF21/9u+mcRXcbqlmGpdsJtiinv44rsXCoc+btFsMv99q2JyA2q2LBCWhmTtAI6
+         Yvk2rlvFTe9Sbi+ki5a7yTEMRCFWBZIIce9ksRjoZIkuwzFHN5J6ROURWjCcf7bPmbr8
+         S4WflcBj1WHRk82/Sb1c16Kl/9qwTfx9Y3Lhoh6MvMNKpTGY/1gGVh6DONcpg24q461k
+         b0+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXaA9T72xjwuwUyDT0wQLraXwMIgnDy9DvGitrX26imsVDZRkgiJ5JTdZxsirbgjKABLkIc+oVUmLPctVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGbWXiEYhzwoTsqGrTXqbHllWxLHg5Z0/te4Y8Hzh8qdUwCIG9
+	O+s3g2KYnU7LYU/7/kYVU9e40JinR4rmg7YEyjxTRbMqDZBVA90Im1t5bSbjs2THQa4=
+X-Gm-Gg: ASbGncsA2SWBht8qB+2WzZrfohs7I8VgkqRpgY7XIUHQ2PXFZ685dRXMkHjgAMlPKmT
+	n3oCJnzongsnDhoW9mWmM+hLTwY672b7T0Rukr3ja3SobCBihh2pfMpizqxjmfgFSo3l8h53nK5
+	SUEanfT9hnoPVrovMKvAuPDBFGq/T11YsrePegeU35A44AnXOE8n1HL0nTYMx+tQoB1JWAKssGB
+	pEieTFgc9e9LCsMaoLgGPXLnGrq/4WihgzZs//knsbAYxtCRbI6c/tjwHtp1NecbQDe26UnwrS0
+	bPTbM4nPh+zsXs+gS9AVpe3PBp7Ze+LMH4PagEOov3Yb9AKQcP5rOC13stcZ/447TGy1ZVPwdwG
+	w0RcH2ow9sjbEVw==
+X-Google-Smtp-Source: AGHT+IGESgtH2Ti9kUKi9EEM5pD2kJzzzhq7d3TT8vNc8zbGwIiJoy3yiTUgXnBwaMkM7GjijoPgTA==
+X-Received: by 2002:a05:600c:154a:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-442fd664848mr98779135e9.25.1747671416164;
+        Mon, 19 May 2025 09:16:56 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd516a51sm144640015e9.24.2025.05.19.09.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 09:16:55 -0700 (PDT)
+Date: Mon, 19 May 2025 18:16:53 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: rafael@kernel.org
+Cc: krzysztof.kozlowski@linaro.org, luca.ceresoli@bootlin.com,
+	kike.correo99.f@gmail.com, angelogioacchino.delregno@collabora.com,
+	arnd@arndb.de, ansuelsmth@gmail.com, srichara@quicinc.com,
+	george.moussalem@outlook.com, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [GIT PULL] thermal drivers changes for v6.16-rc1
+Message-ID: <aCtZdbNA5UwE4j4b@mai.linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] input: goodix: add poll mode for goodix touchscreen
-To: Joseph Guo <qijian.guo@nxp.com>, Bastien Nocera <hadess@hadess.net>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "open list:GOODIX TOUCHSCREEN" <linux-input@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250519085744.3116042-1-qijian.guo@nxp.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250519085744.3116042-1-qijian.guo@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Rafael,
 
-On 19-May-25 10:57 AM, Joseph Guo wrote:
-> goodix touchscreen only support interrupt mode by default.
-> Some panels like waveshare panel which is widely used on raspeberry pi
-> don't have interrupt pins and only work on i2c poll mode.
-> The waveshare panel 7inch panel use goodix gt911 touchscreen chip.
-> 
-> Update goodix touchscreen to support both interrupt and poll mode.
-> 
-> Signed-off-by: Joseph Guo <qijian.guo@nxp.com>
-> ---
->  drivers/input/touchscreen/goodix.c | 69 +++++++++++++++++++++++++++---
->  drivers/input/touchscreen/goodix.h |  4 ++
->  2 files changed, 67 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index aaf79ac50004..87991b56494d 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -47,6 +47,7 @@
->  #define RESOLUTION_LOC		1
->  #define MAX_CONTACTS_LOC	5
->  #define TRIGGER_LOC		6
-> +#define POLL_INTERVAL_MS		17	/* 17ms = 60fps */
-> 
->  /* Our special handling for GPIO accesses through ACPI is x86 specific */
->  #if defined CONFIG_X86 && defined CONFIG_ACPI
-> @@ -497,6 +498,23 @@ static void goodix_process_events(struct goodix_ts_data *ts)
->  	input_sync(ts->input_dev);
->  }
-> 
-> +static void goodix_ts_irq_poll_timer(struct timer_list *t)
-> +{
-> +	struct goodix_ts_data *ts = from_timer(ts, t, timer);
-> +
-> +	schedule_work(&ts->work_i2c_poll);
-> +	mod_timer(&ts->timer, jiffies + msecs_to_jiffies(POLL_INTERVAL_MS));
-> +}
-> +
-> +static void goodix_ts_work_i2c_poll(struct work_struct *work)
-> +{
-> +	struct goodix_ts_data *ts = container_of(work,
-> +			struct goodix_ts_data, work_i2c_poll);
-> +
-> +	goodix_process_events(ts);
-> +	goodix_i2c_write_u8(ts->client, GOODIX_READ_COOR_ADDR, 0);
-> +}
-> +
->  /**
->   * goodix_ts_irq_handler - The IRQ handler
->   *
-> @@ -523,16 +541,50 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
-> 
-> +static void goodix_enable_irq(struct goodix_ts_data *ts)
-> +{
-> +	if (ts->client->irq) {
-> +		enable_irq(ts->client->irq);
-> +	} else {
-> +		ts->timer.expires = jiffies + msecs_to_jiffies(POLL_INTERVAL_MS);
-> +		add_timer(&ts->timer);
-> +	}
-> +}
-> +
-> +static void goodix_disable_irq(struct goodix_ts_data *ts)
-> +{
-> +	if (ts->client->irq) {
-> +		disable_irq(ts->client->irq);
-> +	} else {
-> +		del_timer(&ts->timer);
-> +		cancel_work_sync(&ts->work_i2c_poll);
-> +	}
-> +}
-> +
->  static void goodix_free_irq(struct goodix_ts_data *ts)
->  {
-> -	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-> +	if (ts->client->irq) {
-> +		devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-> +	} else {
-> +		del_timer(&ts->timer);
-> +		cancel_work_sync(&ts->work_i2c_poll);
-> +	}
->  }
-> 
->  static int goodix_request_irq(struct goodix_ts_data *ts)
->  {
-> -	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-> -					 NULL, goodix_ts_irq_handler,
-> -					 ts->irq_flags, ts->client->name, ts);
-> +	if (ts->client->irq) {
-> +		return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-> +						 NULL, goodix_ts_irq_handler,
-> +						 ts->irq_flags, ts->client->name, ts);
-> +	} else {
-> +		INIT_WORK(&ts->work_i2c_poll,
-> +			  goodix_ts_work_i2c_poll);
-> +		timer_setup(&ts->timer, goodix_ts_irq_poll_timer, 0);
-> +		if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE)
-> +			goodix_enable_irq(ts);
-> +		return 0;
-> +	}
->  }
-> 
->  static int goodix_check_cfg_8(struct goodix_ts_data *ts, const u8 *cfg, int len)
-> @@ -1420,6 +1472,11 @@ static void goodix_ts_remove(struct i2c_client *client)
->  {
->  	struct goodix_ts_data *ts = i2c_get_clientdata(client);
-> 
-> +	if (!client->irq) {
-> +		del_timer(&ts->timer);
-> +		cancel_work_sync(&ts->work_i2c_poll);
-> +	}
-> +
->  	if (ts->load_cfg_from_disk)
->  		wait_for_completion(&ts->firmware_loading_complete);
->  }
-> @@ -1435,7 +1492,7 @@ static int goodix_suspend(struct device *dev)
-> 
->  	/* We need gpio pins to suspend/resume */
->  	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
-> -		disable_irq(client->irq);
-> +		goodix_disable_irq(ts);
->  		return 0;
->  	}
-> 
-> @@ -1479,7 +1536,7 @@ static int goodix_resume(struct device *dev)
->  	int error;
-> 
->  	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
-> -		enable_irq(client->irq);
-> +		goodix_enable_irq(ts);
->  		return 0;
->  	}
-> 
-> diff --git a/drivers/input/touchscreen/goodix.h b/drivers/input/touchscreen/goodix.h
-> index 87797cc88b32..132e49d66324 100644
-> --- a/drivers/input/touchscreen/goodix.h
-> +++ b/drivers/input/touchscreen/goodix.h
-> @@ -56,6 +56,7 @@
->  #define GOODIX_ID_MAX_LEN			4
->  #define GOODIX_CONFIG_MAX_LENGTH		240
->  #define GOODIX_MAX_KEYS				7
-> +#define GOODIX_NAME_MAX_LEN			38
-> 
->  enum goodix_irq_pin_access_method {
->  	IRQ_PIN_ACCESS_NONE,
-> @@ -91,6 +92,7 @@ struct goodix_ts_data {
->  	enum gpiod_flags gpiod_rst_flags;
->  	char id[GOODIX_ID_MAX_LEN + 1];
->  	char cfg_name[64];
-> +	char name[GOODIX_NAME_MAX_LEN];
+Please consider pulling the following changes since commit
+82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-This adding of the name variable, seems to be some leftover change from another patch?
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-Please drop this for v2.
+are available in the Git repository at:
 
-Regards,
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v6.16-rc1
 
-Hans
+for you to fetch changes up to e23cba0ab49a9cf95e9bc3a86cfbf336b0e285f6:
 
+  thermal/drivers/airoha: Fix spelling mistake (2025-05-16 12:50:01 +0200)
 
+----------------------------------------------------------------
+- Make the Hisilicon driver to compile by default when ARCH_HISI is
+  set (Krzysztof Kozlowski)
 
->  	u16 version;
->  	bool reset_controller_at_probe;
->  	bool load_cfg_from_disk;
-> @@ -104,6 +106,8 @@ struct goodix_ts_data {
->  	u8 main_clk[GOODIX_MAIN_CLK_LEN];
->  	int bak_ref_len;
->  	u8 *bak_ref;
-> +	struct timer_list timer;
-> +	struct work_struct work_i2c_poll;
->  };
-> 
->  int goodix_i2c_read(struct i2c_client *client, u16 reg, u8 *buf, int len);
-> --
-> 2.34.1
-> 
+- Cleanup printk format with use of %pC instead of %pCn in the bcm2835
+  driver (Luca Ceresoli)
 
+- Fix variable naming coding style in the AmLogic driver (Enrique
+  Isidoro Vazquez Ramos)
+
+- Fix missing debugfs entry removal on failure by using the devm_
+  variant in the LVTS driver (AngeloGioacchino Del Regno)
+
+- Remove the unused lvts_debugfs_exit() function as the devm variant
+  introduced before takes care of removing the debugfs entry in the
+  LVTS driver (Arnd Bergmann)
+
+- Add the Airoha EN7581 thermal sensor support along with its DT
+  bindings (Christian Marangi)
+
+- Add ipq5018 compatible string DT binding, cleanup and add its suppot
+  in the QCom Tsens driver driver (Sricharan Ramabadhran and George
+  Moussalem)
+
+- Fix comments typos in the Airoha driver (Christian Marangi)
+
+----------------------------------------------------------------
+AngeloGioacchino Del Regno (1):
+      thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure
+
+Arnd Bergmann (1):
+      thermal/drivers/mediatek/lvts: Remove unused lvts_debugfs_exit
+
+Christian Marangi (3):
+      dt-bindings: thermal: Add support for Airoha EN7581 thermal sensor  
+      thermal/drivers: Add support for Airoha EN7581 thermal sensor
+      thermal/drivers/airoha: Fix spelling mistake
+
+Enrique Isidoro Vazquez Ramos (1):
+      thermal/drivers/amlogic: Rename Uptat to uptat to follow kernel coding style
+
+George Moussalem (2):
+      thermal/drivers/qcom/tsens: Update conditions to strictly evaluate for IP v2+
+      thermal/drivers/qcom/tsens: Add support for tsens v1 without RPM
+
+Krzysztof Kozlowski (1):
+      thermal/drivers/hisi: Do not enable by default during compile testing
+
+Luca Ceresoli (2):
+      thermal/drivers/bcm2835: Use %pC instead of %pCn
+      vsprintf: remove redundant and unused %pCn format specifier
+
+Sricharan Ramabadhran (2):
+      dt-bindings: thermal: qcom-tsens: Add ipq5018 compatible
+      thermal/drivers/qcom/tsens: Add support for IPQ5018 tsens
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
