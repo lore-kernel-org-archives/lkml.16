@@ -1,33 +1,41 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97E4189F3B;
-	Mon, 19 May 2025 01:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15D7800;
+	Mon, 19 May 2025 01:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747619107; cv=none; b=gAedRx/tzp5nvIPd84p/tzGywH6Gg8TFShUGyekBmt8Oy0oqAkuX/ut8tnE69TChBwftb3WcMS0o0dLJfkY+iVZZY39BgwcSf5TDV4ikA7mLBDTNeRnBhmsGeUR1fVXpQUDVeI06OdkzWPuZfwv3isbWASVsQTn7APZ6sYyo7Rs=
+	t=1747619371; cv=none; b=YY1Z8XTU2LZ2UOLabgT6kEC6xRwc1nhOT5AWpz/gAwiIbS5kzdoCdy3kM2g4wHXcyK4QuVnYIAjnLU+0eaVBcKj40xGD5qnDLwGYJRTEUo4QugYrP1+S/7Yo4vj1uOsSpeBxlFvEFrkHKMcA2wDUOaUR+piK5FanMswhL+64eVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747619107; c=relaxed/simple;
-	bh=mkXiKGazl8RhlDprzmRKeQK2jbkx6SSl5MrzY8BDARg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nu4L8HPIwJHMzq5y4jKSoVPaAfhkHY6Oe9IxYMqWGRncQUOYLbDOxDtcW9Wihp+pU5tW5q0kO2Et5Js0IrPAadno9tFThZnlhkbLowgvVdqjjzCPXJ4sDH7Vqx+Ey+LrqaqUhbG6xcWklS57Z6cHAlc1fmhulSvlXyeyynkGCL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowADX6vUXjSpowbhAAQ--.9555S2;
-	Mon, 19 May 2025 09:44:57 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
-Date: Mon, 19 May 2025 09:44:33 +0800
-Message-ID: <20250519014434.901-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747619371; c=relaxed/simple;
+	bh=oBPqWgNEO3LHi6gfybIzSZBi9uygHnOkLMRg23vnv2k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LxFm0A6DVRonggyzMTHx2oD8fSN4UnHk2H9M6R+B8hLGuYtZ69xMlzbK3ZFHL4ChFnRv4ro9xMlhrFQDQ8YGh0vHCEQW9gRAonE0xgSd7ntAVjwQunQTpr27T24tgKIlN8GOoVngkb1AmvVmcNNjTLUqwli8HiB1X4BGreVzBOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from Jtjnmail201615.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202505190948104200;
+        Mon, 19 May 2025 09:48:10 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ Jtjnmail201615.home.langchao.com (10.100.2.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 09:48:08 +0800
+Received: from locahost.localdomain.com (10.94.15.43) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 09:48:08 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <krzk@kernel.org>, <sre@kernel.org>, <akpm@linux-foundation.org>,
+	<lee@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Charles Han
+	<hanchunchao@inspur.com>
+Subject: [PATCH V2] charger: max14577: Handle NULL pdata when CONFIG_OF is not set
+Date: Mon, 19 May 2025 09:48:04 +0800
+Message-ID: <20250519014804.2244-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250516095346.24169-1-hanchunchao@inspur.com>
+References: <20250516095346.24169-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,77 +43,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADX6vUXjSpowbhAAQ--.9555S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXFW7AF1fWFg_yoW8Cr4DpF
-	WxWr4Yqw1qkrWrZw17JF4vyFn5tFy8trWUuFW09w1fZr4kZw1Skr4fXFy5Xrn0q3ZrCw18
-	Xr10vF4jgF10yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVb
-	kUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8HA2gqddc7ZQABs9
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201613.home.langchao.com (10.100.2.13) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 2025519094810e2f3103a560da4deb09ee40e6ad14f43
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-The wilc_sdio_read_size() calls wilc_sdio_cmd52() but does not check the
-return value. This could lead to execution with potentially invalid data
-if wilc_sdio_cmd52() fails. A proper implementation can be found in
-wilc_sdio_read_reg().
+When the kernel is not configured  CONFIG_OF, the max14577_charger_dt_init
+function returns NULL. Fix the max14577_charger_probe functionby returning
+ -ENODATA instead of potentially passing a NULL pointer to PTR_ERR.
 
-Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
-log an error message via dev_err().
+Fix below smatch warning.
+smatch warnings:
+drivers/power/supply/max14577_charger.c:576 max14577_charger_probe() warn: passing zero to 'PTR_ERR'
 
-Fixes: 0e1af73ddeb9 ("staging/wilc1000: use proper naming for global symbols")
-Cc: stable@vger.kernel.org # v4.15
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Fixes: e30110e9c96f ("charger: max14577: Configure battery-dependent settings from DTS and sysfs")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
-v2: Fix code error.
+ drivers/power/supply/max14577_charger.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/net/wireless/microchip/wilc1000/sdio.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 5262c8846c13..8ff49b08bbd2 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -771,6 +771,7 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supply/max14577_charger.c
+index 1cef2f860b5f..af1694cac5ea 100644
+--- a/drivers/power/supply/max14577_charger.c
++++ b/drivers/power/supply/max14577_charger.c
+@@ -501,7 +501,7 @@ static struct max14577_charger_platform_data *max14577_charger_dt_init(
+ static struct max14577_charger_platform_data *max14577_charger_dt_init(
+ 		struct platform_device *pdev)
  {
- 	u32 tmp;
- 	struct sdio_cmd52 cmd;
-+	struct sdio_func *func = dev_to_sdio_func(wilc->dev);
+-	return NULL;
++	return -ENODATA;
+ }
+ #endif /* CONFIG_OF */
  
- 	/**
- 	 *      Read DMA count in words
-@@ -780,12 +781,20 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
- 	cmd.raw = 0;
- 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret) {
-+		dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
-+		return ret;
-+	}
- 	tmp = cmd.data;
+@@ -572,7 +572,7 @@ static int max14577_charger_probe(struct platform_device *pdev)
+ 	chg->max14577 = max14577;
  
- 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret) {
-+		dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
-+		return ret;
-+	}
- 	tmp |= (cmd.data << 8);
+ 	chg->pdata = max14577_charger_dt_init(pdev);
+-	if (IS_ERR_OR_NULL(chg->pdata))
++	if (IS_ERR(chg->pdata))
+ 		return PTR_ERR(chg->pdata);
  
- 	*size = tmp;
+ 	ret = max14577_charger_reg_init(chg);
 -- 
-2.42.0.windows.2
+2.43.0
 
