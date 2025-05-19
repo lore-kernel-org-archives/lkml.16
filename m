@@ -1,122 +1,174 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0813528368E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D89199931;
+	Mon, 19 May 2025 16:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672483; cv=none; b=c4p+bDlI2gshp9eVUe3VDF03VTD15B6Lk6mSirpdHsnqvz0u+7nRQn0ykTTFRIjgr8Pv+ZKPoPyLB7Oo+bB/n5O1ZrgdN5UA38KLXSQEKsrOsXyBMaJABZdsXTutQT2faZTs1RENVwZAo5bA3qrk6K2RgHLDamorgiKit+KkGWw=
+	t=1747672530; cv=none; b=uXUkZYZTnJfvk9gLO6jkU2sjzGjvtDOjnoGjHx5wXRXGD60CE0maFSPoaIYrPxWJ1cvPdqc2CHp70o2b/NvJg4sW9mYXkxOZJPch18c59DyKFMx03zRqryPL1OedQloJkkSyPzSwIt96/fsYmyKhjYMd7aHtvXQ7ZsNPue/a0vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672483; c=relaxed/simple;
-	bh=HiNonMtdaAz5TQIcX+lq1jeBQ2cEztMYiD+glrCqktA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nTSzcSO+J5X3iuZt4KLZ+2dh0m2bxK0+rjerfuB3jMP2L+zhdaZQVOqnCls4uW0v8nH3OXQAK6fCf75p9QYCw/KiwCPbbs54xCsmThvkfaLNQuLnxUfw73/o+APcArbFNUk1pOMH3Kf4NHl9g1ZDM6vPv03Ck/VgPQrMffUk0No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FZW72mIb; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZW72mIb"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so7052009a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747672480; x=1748277280; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zv3GTZ1OQoWAPfijjQY1dYYsvZlBkqwnY1otuI5HeM=;
-        b=FZW72mIbIQuzp36nN3i/VvCuZ/uZReNsePRa+yoChufQN2OobUEXwnWxLlHtOXsYWj
-         0dOBiEFAGYbQeIezPSzlj9uWNztmVCJbQxVrUOacd6/xbheIZRenJeBAmQfmTFQRDeUl
-         SluEkv6MptjrWNbRUoAiG0CEz2/iya9oK1LE6Ei5vTUyLPJoDAh/ct60Sv7snbASPGq2
-         bqIa1Jg99kCKM3PhApDBv6aIWTGN/UtzgoDaVf6spI8FBVyo/KggJjGLcGj2Av0t/kRn
-         DDC1vLz/flTPhRk9HHD8NyHQfP9acLrBJ8YII3ZMraqEHdJo3V4GyAH33efrrNkAx5cn
-         hSZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747672480; x=1748277280;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zv3GTZ1OQoWAPfijjQY1dYYsvZlBkqwnY1otuI5HeM=;
-        b=HeaP786yhhpFy363PUj1h5hHr5hNs8N/R2hS1+L4gpJSsCRtd3duKDziPucuKraW2f
-         iqRmWbX+q9F35dACFkt1oKWmLiZdQYHZzPEQafxTaLgDfQiuj/9cW8JNjU2OaXPwNX7K
-         ScU+BbBzss98VRs2Yt+wVWXFEIoCH247ygYb81FrpEB+EJeJ/jbjE3b+et03hcKXrYZg
-         U7ONdOkU4P4CbRdM88zzMz/TjHf38Sn5MoKkL5aOmBJdVI6D6grpO95q3Vk7r99sb5Tn
-         pC+bqqNL6C2SJD406TGbJX8WGHMLFp/BzRKjgnppFuU+SjMHehTgZ6oqrszGbT1KGR3b
-         m9ug==
-X-Forwarded-Encrypted: i=1; AJvYcCW14d2ij3S37rXeuZfAg74tEeWXqgjw18pO80OwA6HtDmRVYJif3rpaCcF88xBdIdgXQjD7+eKSfH1SUiU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgFOpYBSVTPB0FrPBx6xXhvvUAahi7QH95XLNRdoCSuNLXxhEs
-	oEip7UxRHoNrj1y5CQoAnSOJMJUmb1WMi14ZgZuY6KHBHQz+ubkNTK6rgK50uCbj2D2mygMPwKb
-	olVhDlw==
-X-Google-Smtp-Source: AGHT+IF7Pp0SGv2aGgzlEI/adpem8+WPZlHOMtK6iV/1Zu8WqJx6oDl5Gz/qVNTkZFz9jTihYXpZXJvKkyk=
-X-Received: from pjbsw16.prod.google.com ([2002:a17:90b:2c90:b0:2ff:84e6:b2bd])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d4c:b0:301:1c11:aa74
- with SMTP id 98e67ed59e1d1-30e7d5a84a3mr22376515a91.28.1747672480225; Mon, 19
- May 2025 09:34:40 -0700 (PDT)
-Date: Mon, 19 May 2025 09:34:38 -0700
-In-Reply-To: <aCg0Xc9fEB2Qn5Th@gmail.com>
+	s=arc-20240116; t=1747672530; c=relaxed/simple;
+	bh=9eriE1PkVOELR+xjnTYu3UMZywdiBv6Uqwk/7wWDUgY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=i1140EZXdn7x6C1dC3/pzdn8R6uuoZpdz0sg3Srj2UW59lGPrroKs/Qs4ANq8MZ58LDu+y9G2BjH5OdE1oC+dwDvXtuXPcrpA5vYuKyapmAcdU3B9xb/K2mtrAcrquSlB2LTMlra8CCFBde0HaLomUuQorZufX5Z6gQybTiYNko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6F63A439B0;
+	Mon, 19 May 2025 16:35:15 +0000 (UTC)
+Message-ID: <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
+Date: Mon, 19 May 2025 18:35:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516212833.2544737-1-seanjc@google.com> <20250516212833.2544737-8-seanjc@google.com>
- <aCg0Xc9fEB2Qn5Th@gmail.com>
-Message-ID: <aCtdnqqvIbHr-ed5@google.com>
-Subject: Re: [PATCH v2 7/8] x86, lib: Add wbinvd and wbnoinvd helpers to
- target multiple CPUs
-From: Sean Christopherson <seanjc@google.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Zheyun Shen <szy0127@sjtu.edu.cn>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>, Kai Huang <kai.huang@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] riscv/fixes test error: can't ssh into the instance (2)
+To: syzbot <syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com>,
+ aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, syzkaller-bugs@googlegroups.com,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-acpi@vger.kernel.org
+References: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -51
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpefkffggfgfuvfhfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepuefhffegtddujedvveejkeffhfetueehkefhleduvdelleeffeejgfffleeikeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpshihiihkrghllhgvrhdrrghpphhsphhothdrtghomhdpghhoohhglhgvrghpihhsrdgtohhmpdhgohhordhglhdpihhnfhhrrgguvggrugdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefngdpmhgrihhlfhhrohhmpegrlhgvg
+ iesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehshiiisghothdovdgtrggvledvuggvugejheektdekfehfhegsuggvsehshiiikhgrlhhlvghrrdgrphhpshhpohhtmhgrihhlrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepshihiihkrghllhgvrhdqsghughhssehgohhoghhlvghgrhhouhhpshdrtghomhdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-GND-Sasl: alex@ghiti.fr
 
-On Sat, May 17, 2025, Ingo Molnar wrote:
-> 
-> * Sean Christopherson <seanjc@google.com> wrote:
-> 
-> > From: Zheyun Shen <szy0127@sjtu.edu.cn>
-> > 
-> > Extract KVM's open-coded calls to do writeback caches on multiple CPUs to
-> > common library helpers for both WBINVD and WBNOINVD (KVM will use both).
-> > Put the onus on the caller to check for a non-empty mask to simplify the
-> > SMP=n implementation, e.g. so that it doesn't need to check that the one
-> > and only CPU in the system is present in the mask.
-> > 
-> > Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
-> > Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> > Link: https://lore.kernel.org/r/20250128015345.7929-2-szy0127@sjtu.edu.cn
-> > [sean: move to lib, add SMP=n helpers, clarify usage]
-> > Acked-by: Kai Huang <kai.huang@intel.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/include/asm/smp.h | 12 ++++++++++++
-> >  arch/x86/kvm/x86.c         |  8 +-------
-> >  arch/x86/lib/cache-smp.c   | 12 ++++++++++++
-> >  3 files changed, 25 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> > index e08f1ae25401..fe98e021f7f8 100644
-> > --- a/arch/x86/include/asm/smp.h
-> > +++ b/arch/x86/include/asm/smp.h
-> > @@ -113,7 +113,9 @@ void native_play_dead(void);
-> >  void play_dead_common(void);
-> >  void wbinvd_on_cpu(int cpu);
-> >  void wbinvd_on_all_cpus(void);
-> > +void wbinvd_on_many_cpus(struct cpumask *cpus);
-> >  void wbnoinvd_on_all_cpus(void);
-> > +void wbnoinvd_on_many_cpus(struct cpumask *cpus);
-> 
-> Let's go with the _on_cpumask() suffix:
-> 
->     void wbinvd_on_cpu(int cpu);
->    +void wbinvd_on_cpumask(struct cpumask *cpus);
->     void wbinvd_on_all_cpus(void);
+On 5/19/25 12:12, syzbot wrote:
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    01534f3e0dd7 Merge tag 'riscv-fixes-6.15-rc6' of ssh://git..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+> console output: https://syzkaller.appspot.com/x/log.txt?x=158796f4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2c32351e59d854b7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2cae92ded758083f5bde
+> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: riscv64
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-01534f3e.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/4ca1cbb891a9/vmlinux-01534f3e.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/5fb1db315d47/Image-01534f3e.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com
+>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-How about wbinvd_on_cpus_mask(), to make it more obvious that it operates on
-multiple CPUs?  At a glance, wbinvd_on_cpumask() could be mistaken for a masked
-version of wbinvd_on_cpu().
+
+So we hit the following warning:
+
+[   33.466472][    C6] WARNING: CPU: 6 PID: 1 at fs/sysfs/group.c:131 
+internal_create_group+0xa22/0xdd8
+[   33.471115][    C6] Modules linked in:
+[   33.475123][    C6] CPU: 6 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
+6.15.0-rc6-dirty #3 PREEMPT
+[   33.476075][    C6] Hardware name: riscv-virtio,qemu (DT)
+[   33.476615][    C6] epc : internal_create_group+0xa22/0xdd8
+[   33.477194][    C6]  ra : internal_create_group+0xa22/0xdd8
+[   33.477696][    C6] epc : ffffffff80dd956c ra : ffffffff80dd956c sp : 
+ffffffc600087b50
+[   33.478048][    C6]  gp : ffffffff89a659e0 tp : ffffffd681688000 t0 : 
+ffffffc600087a80
+[   33.478377][    C6]  t1 : 1ffffff8c0010f78 t2 : ffffffff89b70a80 s0 : 
+ffffffc600087cc0
+[   33.478690][    C6]  s1 : ffffffc600087c40 a0 : 0000000000000000 a1 : 
+0000000000000000
+[   33.478990][    C6]  a2 : 0000000000000002 a3 : ffffffff80dd956c a4 : 
+0000000000000000
+[   33.479291][    C6]  a5 : ffffffd681689000 a6 : fffffffff1f1f1f1 a7 : 
+ffffffff80dd8b4a
+[   33.479602][    C6]  s2 : dfffffff00000000 s3 : ffffffff86a381a0 s4 : 
+ffffffc600087dc0
+[   33.479967][    C6]  s5 : 0000000000000002 s6 : 0000000000000000 s7 : 
+0000000000000000
+[   33.480327][    C6]  s8 : 1ffffffff136df40 s9 : ffffffff89b6fa00 s10: 
+1ffffff8c0010fa4
+[   33.480673][    C6]  s11: ffffffff87bece20 t3 : 0000000000000000 t4 : 
+fffffffef10e33b2
+[   33.481019][    C6]  t5 : fffffffef10e33b3 t6 : ffffffd68aabf2f8
+[   33.481326][    C6] status: 0000000200000120 badaddr: 
+ffffffff80dd956c cause: 0000000000000003
+[   33.481962][    C6] [<ffffffff80dd956c>] 
+internal_create_group+0xa22/0xdd8
+[   33.482681][    C6] [<ffffffff80dd9944>] sysfs_create_group+0x22/0x2e
+[   33.483136][    C6] [<ffffffff86289d82>] platform_profile_init+0x74/0xb2
+[   33.483555][    C6] [<ffffffff80061860>] do_one_initcall+0x198/0xa9e
+[   33.484158][    C6] [<ffffffff8620293e>] kernel_init_freeable+0x6d8/0x780
+[   33.484689][    C6] [<ffffffff8609fe54>] kernel_init+0x28/0x24c
+[   33.485208][    C6] [<ffffffff860c2542>] ret_from_fork+0xe/0x18
+[   33.485885][    C6] irq event stamp: 950699
+[   33.486072][    C6] hardirqs last  enabled at (950699): 
+[<ffffffff80a6182c>] kasan_quarantine_put+0x1a8/0x208
+[   33.486710][    C6] hardirqs last disabled at (950698): 
+[<ffffffff80a61726>] kasan_quarantine_put+0xa2/0x208
+[   33.487398][    C6] softirqs last  enabled at (950420): 
+[<ffffffff801533a6>] handle_softirqs+0x98e/0x119c
+[   33.487930][    C6] softirqs last disabled at (950413): 
+[<ffffffff80153fd6>] __irq_exit_rcu+0x2e8/0x53c
+
+Because we don't have acpi enabled and then acpi_kobj is null 
+(https://elixir.bootlin.com/linux/v6.15-rc6/source/fs/sysfs/group.c#L131).
+
+The following patch fixes it, but not sure this is the right way, let me 
+know if I should send it, it would be nice to have it in 6.15:
+
+diff --git a/drivers/acpi/platform_profile.c 
+b/drivers/acpi/platform_profile.c
+index ffbfd32f4cf1b..afbe4705d3e7a 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
+  {
+         int err;
+
++       if (acpi_disabled)
++               return -ENOTSUPP;
++
+         err = class_register(&platform_profile_class);
+         if (err)
+                 return err;
+
+Thanks,
+
+Alex
+
