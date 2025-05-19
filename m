@@ -1,101 +1,112 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D851A288C19
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FA320AF87;
+	Mon, 19 May 2025 17:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674678; cv=none; b=LncDSLybWVlCFR22ahdonA5oGkFK43c+yp7IerC1KUBoT9sa0WO+y8n5rny+WAWbdu7wurrlxKNEvn/dEvW5UtHMjDFNLP7IupAPfUYB5XbYVxTcgTxE32bC0hPJFh2DY0wRswQRN9uNw/sAe+NlcfsOsFugTP7TfGGJ2N90Rr0=
+	t=1747674723; cv=none; b=Im+yf55kt/eRUfWd1OAJuTXVRfv8y4VmYSzal0uf+Rwy20ZUo5ArqooNrzr+lkrHbuTBLJHpk/3EtnhWDl1/Aju5E9LLM40HZ4PFAYI74o2QF3U37NlGXvyLx6V7B7bkvaHZLgMiSeAz3aL7YKfg9Zxh4bl4S0uHclZBYDkfD0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674678; c=relaxed/simple;
-	bh=J9+AOPXxrsjtGniILsGnZjKCgDv3F7K2+yKjpaFrVAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7rNYxx+b3S3+BNROGtM+7uSaJRrIxFqsVvDL3q+V9tf2DLn54h8smLFz6eEXBoRD7nHmaupwPFIXz7ei15XB2lluHrwLHwCYFeJhSwcaZfcNfzLhqs8h8SGY9swNsozURo5Ga/WQ1NYC5y8gNhlbQ8MQ8XxXB1F1iJq2kaaXEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vA2bxeQ2; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747674723; c=relaxed/simple;
+	bh=1M08tbMPKZIQwA166WgmYRAIrkDv6G6ToLEOnILqPFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LT6ZV1H5oQvY5TdxXLKgmTm8FBpfnHupSiLVGnA73QlKuFES9xQqPqPGtAUUDBOKvD1g/A2Lz4GPeD5b56KseA+r2cmqGk6UzLiZZxYyNVzmrNytG7O56csddFWMoHElln1W4Uf8TlgaSNDDms8rUksx2Dea8YK9dr73f7TWayM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=hJBMq/Kw; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vA2bxeQ2"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f6eaa017d0so4144446b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747674676; x=1748279476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J9+AOPXxrsjtGniILsGnZjKCgDv3F7K2+yKjpaFrVAI=;
-        b=vA2bxeQ2hxhxrjv579QWNYg9GDXb8fdMYCFA9URc94af113SsbNyv+30o7+SURKiIg
-         6zFMajDF17S87QgUndDl5EPnFqFtLptDbgBybksXAt8OkZOS4yxJyGIOMu3/5q56UYQM
-         Y0Ed5JQwjbAs3zdh5wwgLSttv+fvHO6whtpDTQVlnGTJHd+lBhlQBXlGdoZDvAn3HkSi
-         W0i5Nn9d7Y3mgWCvKFQJ+gNiKCx4dXq024tG+1A+8E4hcCJc8rFOD/sPYYB+ptxCYJgs
-         iY3hvRPnn4SVvm1i2y8XpP4GFWdebGDBRv1T1PKYdvdBd7s80J99akTaMByPt5s/79W+
-         qAkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747674676; x=1748279476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J9+AOPXxrsjtGniILsGnZjKCgDv3F7K2+yKjpaFrVAI=;
-        b=MfsqpQ2SvS7uJ+PgIZEVRJ7Q0Sw9tdHM90bwGXFKeFfZtLHdqspmLIQUz8MDJux3Te
-         MteicmCNGjL8qaQX2O6NT9MqFPb1PyyAikT8fm3vz9/irhoXH2zr1s+RYo/EsfVi8DQJ
-         0563hKM6SdY3TPiyXHQYTwPPpefZGVoX0xgPwpPuoHD+n5nxOdbJ/ITnogGpIeyzSawM
-         pUoxVgBK2Pfv+0zqHKL5NMjGxSSr0E5kdyOox98gbW2NEdh/qcsukOUS9HkmAIDYonYf
-         gbN/dpNi6tFlYKrcz/6aQE1gbqhol1KCntRt/SlTKVuMi616vxZQ+VYBbAvpvg7oAS4H
-         gssQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUApVfHHMMs9fU2muRdS11oDKBLQk2o6CK9rLfOMGN6eXFGS6rc5Pge3frD3K8ItpT5CnXATXHG7RmAU7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXAZgP56GYVaoEBm9BYtmpOVQ1iDEeZ8HlAWYphGKyMqNYTPod
-	trVqpY5EOo0W6LF/nxhaFLcX72lkPOqT/U13mrfL3NgDrJeu+1t8JA4m0qwOYlWtli+4dw0hOuQ
-	rsSf7ic4qO6elpWWslWt4QNk5SMUW1ActK87IfUKq
-X-Gm-Gg: ASbGncsIamObgg7gpuyIiCrfUML2eBWbC3MXVbb3Off1U16oCKnlBsgT2yA8EvHhZIL
-	/q3M4HBpXc9zEetzFLHVWmAaRdMRr8ll7snDvK1rzBYN2rYJS/iJDXlFCj2RGZj8OtfSdeiuLBt
-	wkNwik3eoYh/+wojflS50TtWQXeujWUrAxnKfp4G7kpfQ=
-X-Google-Smtp-Source: AGHT+IGbc3Cqvl0hgY9PsJO87Lm1XcEa46xCiiwbO5jWDmdGQWmCs6c23IP7AUXSBHo3+nusSu+IzZxGz9BjH90D83k=
-X-Received: by 2002:a05:6808:6c91:b0:404:df89:85d9 with SMTP id
- 5614622812f47-404df8988e9mr6567361b6e.33.1747674675605; Mon, 19 May 2025
- 10:11:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="hJBMq/Kw"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6D21425A24;
+	Mon, 19 May 2025 19:12:00 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ShMum505WjK7; Mon, 19 May 2025 19:11:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747674719; bh=1M08tbMPKZIQwA166WgmYRAIrkDv6G6ToLEOnILqPFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hJBMq/Kw4XA76Nuf9u+aIIaa8FYuHF5IdWTy+M6dSd1fPRry8yXkbNc4be1LyT+Ja
+	 C2bj8zMtqUwgz61KwraY7pSqBcaqa5bwx2wVlpukeNzT6e3bEZnnCe4XlVkHNFMOOj
+	 rfWddaatS0X1FFU/KeY9uCcs8FElX+xVtkSu+OT6VAAwZzRaeGGKqfdiI8rjlJegK/
+	 mEUylHgwmKOGnPN0eWbt3oqSr8bSrxi2APOAh/WN66K+sZIQTh18fEkEi8XSeV+sPJ
+	 VuceCm6xhSe0YhEz7NfzbRp0k8kP+kPv69bWTgvPuxIc8voFcCauZxDIwfpOtY/aTk
+	 HmBaVKWqee0Hg==
+Date: Mon, 19 May 2025 17:11:32 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chukun Pan <amadeus@jmu.edu.cn>,
+	linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] pmdomain: rockchip: Add support for RK3528
+Message-ID: <aCtmREp_H6_K00jR@pie.lan>
+References: <20250518220707.669515-1-jonas@kwiboo.se>
+ <20250518220707.669515-3-jonas@kwiboo.se>
+ <aCthtDxm25RU_fd3@pie.lan>
+ <3416319.KgjxqYA5nG@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320171559.3423224-1-song@kernel.org> <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
- <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com> <aCtfAcg32kbczs-g@J2N7QTR9R3>
-In-Reply-To: <aCtfAcg32kbczs-g@J2N7QTR9R3>
-From: Dylan Hatch <dylanbhatch@google.com>
-Date: Mon, 19 May 2025 10:11:04 -0700
-X-Gm-Features: AX0GCFsWLG4-Bb9vmj3DbSo8XE63IQ1V3WuVgVTvtIAVe62z6XsrFewtIVMSBqU
-Message-ID: <CADBMgpzPyW+EnB3A1Hr=LQGhuen4pUuJ0QYa44nH0qfQ9TFaSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Song Liu <song@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org, 
-	indu.bhagat@oracle.com, puranjay@kernel.org, wnliu@google.com, 
-	irogers@google.com, joe.lawrence@redhat.com, jpoimboe@kernel.org, 
-	peterz@infradead.org, roman.gushchin@linux.dev, rostedt@goodmis.org, 
-	will@kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3416319.KgjxqYA5nG@diego>
 
-> FWIW: I reviewed the patch above ([1]) already but didn't hear anything
-> back.
+On Mon, May 19, 2025 at 07:07:39PM +0200, Heiko Stübner wrote:
+> Hi,
+> 
+> Am Montag, 19. Mai 2025, 18:52:04 Mitteleuropäische Sommerzeit schrieb Yao Zi:
+> > On Sun, May 18, 2025 at 10:06:49PM +0000, Jonas Karlman wrote:
+> > > Add configuration and power domains for RK3528 SoC.
+> > > 
+> > > Only PD_GPU can fully be powered down. PD_RKVDEC, PD_RKVENC, PD_VO and
+> > > PD_VPU are used by miscellaneous devices in RK3528.
+> > 
+> > Thanks for your work!
+> > 
+> > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > ---
+> > >  drivers/pmdomain/rockchip/pm-domains.c | 27 ++++++++++++++++++++++++++
+> > >  1 file changed, 27 insertions(+)
+> > > 
+> > > diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+> > > index 4cce407bb1eb..242570c505fb 100644
+> > > --- a/drivers/pmdomain/rockchip/pm-domains.c
+> > > +++ b/drivers/pmdomain/rockchip/pm-domains.c
+> > > @@ -35,6 +35,7 @@
+> > >  #include <dt-bindings/power/rk3366-power.h>
+> > >  #include <dt-bindings/power/rk3368-power.h>
+> > >  #include <dt-bindings/power/rk3399-power.h>
+> > > +#include <dt-bindings/power/rockchip,rk3528-power.h>
+> > >  #include <dt-bindings/power/rockchip,rk3562-power.h>
+> > 
+> > But I had some trouble applying this patch on either Rockchip SoC tree
+> > or linux-pm. Looking through the context, seems the patch depends on
+> > some RK3562 PMU driver changes, which I couldn't find with some brief
+> > searching among the list.
+> > 
+> > Which branch is the series based on?
+> 
+> are you sure you looked at the right linux-pm tree?
+> 
+> In [0] I do see rk3562 powerdomains applied.
 
-Sorry for the delay on this, last week was busier than expected on my
-end. I'm aiming to send the revised patch within the next couple of
-days.
+Oops, thanks for the link! I was digging through rafael/linux-pm.git
+actually...
 
-On Mon, May 19, 2025 at 9:40=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
-> I've had a quick look at [1], and IIUC that's a hard prerequisite for
-> livepatching, as without it the kernel *will* crash if it attempts a
-> late module relocation.
->
+> Heiko
+> 
+> 
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git/commit/?h=next&id=f89c082d44914f24dfb5b0219eb140369de5b612
+> 
+> 
 
-This is correct. In both module-patch scenarios (module is loaded
-first, or patch is loaded first) the relocations on the livepatch
-module occur after it is already RX-only, so a crash is inevitable
-with the current relocation code.
-
-Thanks,
-Dylan
+Best regards,
+Yao Zi
