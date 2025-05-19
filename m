@@ -1,445 +1,236 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3533920E314;
-	Mon, 19 May 2025 08:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644730; cv=none; b=GseaC4zZ2vK91zTSrbAK18IrsIuF3MiSL911+12pGu9i/w8dfI2S2DMw/t+nbEJLmJ4wRZM2TmMrfr6uLzx+mfxY7lJs4mifkc3WNuYrkpGxPhc9iV1ZuZaBedT/gBweMO4tg4GgCRyLY0gDEmNZWvJEROVTX89alntlkH6ndqM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644730; c=relaxed/simple;
-	bh=q7dnLFf6kxJfpCghs26+SPYkdIcYU8faAbnHQgdOfwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+hQDxMS5dIP74uyV999sA9CsHjW7G7pkHAAzo2/ruSsZlUceNWbxzvdgD/e1mJ1tawc9LCiZniQ40Hln1XAElVEbtGd5uy/BAVr1fiTXfzV/JKRNURlyQUOhXyW745KVWC/Lo4g/BhU7llYlGni94Lx8OHGjYgnDtrztibk3Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H6KHD67x; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9757B19B3EC;
+	Mon, 19 May 2025 08:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747644741; cv=fail; b=Lq173PBUuOuMEMO0GQhe9LhJXEl4hCEfKNH7t3Akzc7GN5y40fQO6MG2LI9N5L8OMlACREd6jACjpgaIQgC7ghks7RiTBXb8W9kEMAJ+n832akBW1Ke2X4qfpr5baU3kj2CreBFi0K1Au2qEGwlPXJWYMH/IrENlQlCU8leqfp8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747644741; c=relaxed/simple;
+	bh=ou0e0ysUXjzaL7tc10Ydhkjj7jiUz/G6yvX9hwRPVcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QiRZlK8L3LRA1sarKhEymC/c9aX4rGI/L8KkMfmDTT7M+X6cEPMJWSrb0xkcJ3vJkOvvaq+chWe0ejVRRT8MxzYu5BHbjarBnvj9E3+esdwyaF/iE0oMjOJUIz/wWZp6DAVw6Si016fVmhN4sovYlhSWGRYm0gq2fFnW1eVmIG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OLEEbfGu; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=sBvGQds9; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H6KHD67x"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6D77440E0238;
-	Mon, 19 May 2025 08:51:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TUoEEvZbuIj3; Mon, 19 May 2025 08:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747644712; bh=H1Dbx+jlVuY40/17dX2Qjsfgczw/R7D5OBHWT8mp4p0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6KHD67xN/ODLnFhuA1OlWrFuYNJL4tray6Od+ZB+yD60rXqyuRvU6ZMu94qvjh8M
-	 let3GSm0c7+VsOALw8ZxOS205J5Npd0GsV89A2xlIFNwg32F+y3w2m2ZMFg87qjo95
-	 Udc6koTzMP8iwxRLFfhd1ftdHSnYL1ancr+X0jfNZpJ8tcxFOgpT5ZHopw3or+Yozj
-	 s/AVFq+3G1InczVfKQC8b1G2Gjq8QHCH0o9ov6RCuDDmO1fdm3xNl7HGNlo1/vE8H7
-	 J0JKEn5nbNbh/xbvkMEwR7ZVfTJ/5lzoZse7OWr5gGY8C6OnpnOG4D4VJLgHScg0qG
-	 RrGTBLJaRTVb8ND8cwvkgg9T/ItCbaHthMoL0rNWadx1MAm/aSMbDAHjjCz9Qmeka1
-	 80zpoMliBvzoAZ9/jUUzL6dbLj45YzVnmcAlLpCUGnM6EHKo8C/TMPu2CE2iQCrcq1
-	 sm/mI1ruxoSp2u/3d50z9gcoUxipLARxQd00hEPFi0jFfrq9ZxohyxsBGA4uw7PPol
-	 uPPiJ0oMTIELKHvjVK+gRcmi/CVz6115yhAeqroUoPpnI2hxKNdO8KcS9odFcxveMv
-	 2QGO4uZwSMI7Kkw4Yx3IAaRYPa+4s3a8eMPfWtaMOqwkLF80awOw/iRiAdhk4PtdPD
-	 cusshacPCogQ5YC3mSGDILQs=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5367740E015E;
-	Mon, 19 May 2025 08:51:37 +0000 (UTC)
-Date: Mon, 19 May 2025 10:51:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Cc: Tony Luck <tony.luck@intel.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] drivers/edac: Add L1 and L2 error detection for A72
-Message-ID: <20250519085130.GFaCrxEnZvaoETKrao@fat_crate.local>
-References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
- <1747353973-4749-2-git-send-email-vijayb@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OLEEbfGu";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="sBvGQds9"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J6ijNi013002;
+	Mon, 19 May 2025 08:51:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=YpeG8+j6MaPVVYPP
+	K1mOTktzXbEHbB8bQWSjZYblmpk=; b=OLEEbfGutyjetT4VltSE/QUrVH44ihYu
+	EeskKo6RV+pYwf2LJD45lNQ9YwBCLFYMj4eCWWEE8xrTEz+Xtb6ngPr2RDc+o5aO
+	1Bk/s7k1r4KzmjNv5xN51Z/a8tCg0BDB7qKa9fi/A0c0A8nwk3sX3hz2HtZrTHCO
+	MF9JBSGmMnkP21LGjJqH8/HxJv5Vjj2Lw6mJvmSKpts3t/Hm7qQO2/M9DNMJuCRA
+	wBIrsnM+0jFdkvbi4EP1BfAJCQre9T5/jGQP8g1Q/Iy6cKR6Z+kyBURmWEeq/rfB
+	V84s46Z28Gkxccglbo3ebJYU1BCjCmTVxUEz+DBeSyWuuofTzAFnhw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46pj2uaeen-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 08:51:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54J70enS029005;
+	Mon, 19 May 2025 08:51:55 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2172.outbound.protection.outlook.com [104.47.58.172])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw6684y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 08:51:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mD4wEmjGUXTMDTqYBnWZPPeEv61cIbD0MXXoKsIddTOTFTESCc7257oo4P7Kz2zSpwJSkwik3tL93m0JnZE8kIR/YR4lfaNjwJpFixkG+UDAKeDuxEaDMyEECFxEaa4ljCYWNpmXyv3xxypQ8X6kzx5x57/9g6QMYTtpf62m+JIBErGf1oluwbfSdqCbcOZiEI3Arvj+H8fNvVIkLuaW3IsYMyiYUpTYWMh+I/aOL03XoKlREgdQNqxkOgF4h3ME7Gup6DtEqhSxT7VmAcE0skqS8YlWIEibj1HuizDwaPy3GT658YThK0aRB+exwgrVculli53YiBJ8aU8aCHvE6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YpeG8+j6MaPVVYPPK1mOTktzXbEHbB8bQWSjZYblmpk=;
+ b=LQLqeOP+3glZjVTfX+iElshvcaBGonZ6luiIKahp3rVEJuQftq59okrlzELXNNA1ilJSLs2r4Fxg48jpfqjm8LgGSx3GXIwjO61PCOruNAJqo8i3l7K8nSBowM398aKwAx8ErTfIjxdT0zRgbRQOB3c+iHR9Rq+265jWnYLfcGu925DAQJENO1DA3gOGujto+7JxymQpSjOoPUNH19tea4qrYMru5SN0qMAR8HUG6avqlTx37Nxq9ethKOxTc9x0nRLUcASpQ4zL+bZm6gwNpEWWDobRe4wlI16nh/KTTZMNp7BVOuU7Ej8Xo8d3ljKZBxBubCynBvN3QmBWHGVl7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YpeG8+j6MaPVVYPPK1mOTktzXbEHbB8bQWSjZYblmpk=;
+ b=sBvGQds9V4mBB+jBxQRViAOcrjBKc6QUV1DigElaCcPG4XYEITpbNtjTRVvF3ry6m6osgyF1OS4WrNKN4Ov9i1Z8kT4IuunhVJkcscBO7H2X+43XylDzpS4Qjc20XEmnryf6RzcfaFclRglYHusok8kjMGbuFeYq1GAX8pZVqS0=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH3PR10MB7833.namprd10.prod.outlook.com (2603:10b6:610:1ad::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
+ 2025 08:51:52 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 08:51:52 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/4] mm: ksm: prevent KSM from entirely breaking VMA merging
+Date: Mon, 19 May 2025 09:51:38 +0100
+Message-ID: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0236.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a7::7) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1747353973-4749-2-git-send-email-vijayb@linux.microsoft.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH3PR10MB7833:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77e71d87-6961-410a-e26c-08dd96b26697
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HRYWy0vugsAve5YsZpspdfkLlT8totH7L8/PIhn1zeNoQzmONGokHfZF+PBe?=
+ =?us-ascii?Q?WwO9FoXnMMUYXBxb9SjIrponURJQkzimq/2Vc3I69MkHKWJkiqO4WsDhDkLL?=
+ =?us-ascii?Q?hgOOq0/kz4AwUYHfUfPQGUgz6jMWBccBvD/hCXdxOhKa9EvCmRsR5DwVPPkJ?=
+ =?us-ascii?Q?lo+JokIaCV05xwSWhcd1V7V1smS0fGgZRzmK2lLSqwOTuoJB3iGDiOnoVQjA?=
+ =?us-ascii?Q?AN/21urYNKMk9kWnFjgOIbeht877P8T6iCc4RtcmL2YYCBDT9Uo93LHO4vtX?=
+ =?us-ascii?Q?sh87axuhSshj73jYqJlh0I24zyRUVRrRFHXpsLWRBxLMqGw2C+R9k0S/uB4c?=
+ =?us-ascii?Q?zPV+5xKZQO+OvaiOivVKH7YzN09XrvQbsNoKr0ARiKW3J/7VPAWIKTxpFHRE?=
+ =?us-ascii?Q?qknXtT3/AJdjEAHtKzj7QNN2Iu7l506HQZgNxpxFXCFtSyjnK0zozY34EA4P?=
+ =?us-ascii?Q?o7otkGfIenOmBSFYkTbV3aCaSP1SwSWSYTxIa7KFqvN6YiwvTE+o8YLmGiPf?=
+ =?us-ascii?Q?4ucflzf6BLOVtsgDL3+37owPvQkShWu9Q6y/pm3JfNiHJl7U7HDrvirx2wg+?=
+ =?us-ascii?Q?Lm1Du2BLH2atgX094w5ZrRkA2j0DQsvp9+hUeoj18sMki7cTlYijQNzaw6Wh?=
+ =?us-ascii?Q?EomTLSMwjfagxe3fKx+sIcufELECN2JyfiHodT9J0j1ArZihtaJp/mKpuX+R?=
+ =?us-ascii?Q?GchMWr4HZ9lf/sxFzgx82Fi3JmXZ0kZLtJTM8NMLMAG5OuIphNzGrKxmoPRd?=
+ =?us-ascii?Q?+q/u0H4tQh73HAkDCXhAFRb7qhCJhZ4Gvypq/fAWOG/PHsWGUhzbvIRu322s?=
+ =?us-ascii?Q?YBjZkhJD9UW2eyW2vwcP5suAcLlr5SqMvARjxX02KMjvusf0HacQGfWTBksb?=
+ =?us-ascii?Q?rGDf3+PM2z+F4xG2TV1ruxadzvxFjJNPTNLpr/a0tyt+a3ywfl314JtobUJE?=
+ =?us-ascii?Q?u7SFGMMoF3Hkis7ofFxcfhDTasA8uIcBD/6YHIOyb7H/TqCXrqPQ5YOWyWXR?=
+ =?us-ascii?Q?XM+j6YBbH6hnNBFgYDYGgDNYICsc/5L3vJ8W42eNrhEx1qfUtaTDdZGa/k+l?=
+ =?us-ascii?Q?tWDQvsGV5uMLmK1Thr6BtYIPWT8b0oxSiznGjCNwocbqB/qFvcZdI4y712WD?=
+ =?us-ascii?Q?0D/nSm+TxlEg0w+iq/KttUz4J7vIPKJIjmYDiNNj/e7JX6VOl3BjoZI4iwow?=
+ =?us-ascii?Q?DUW1D1+2DNPppsyM9SjVa0bRJ50F5DX58R79oCeb7KbjWl9fmDYI95aNbKYq?=
+ =?us-ascii?Q?m/ueEu4NpZZSp83CKYFEa6F8m6PWQotuBxPsjpJGNV1ZPuZ53pRq5wUWEpwZ?=
+ =?us-ascii?Q?l6KNoo5zUaAaKJPaBd8xzMdbZd9ZWiinKCHqwquXASCklLmYGccsQhVPARLA?=
+ =?us-ascii?Q?0rabVmMbkk62SXigZZAS6REhA7xLsbhN4x/nRZ35f6rVJJRnkkSwKG9q5nkN?=
+ =?us-ascii?Q?oTrvEImNjrc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T3f36YQXHkBpKpjZg0A5+oa+ZKbluDYQcsM/G6szu0skUXxByzjscBlMcaxs?=
+ =?us-ascii?Q?6x5DZHhEz9m/YZL8R0wwXdE+m/xrxfnVn49bjjDojg3GEc1vaprfjZj8Id/n?=
+ =?us-ascii?Q?S37Wa8lJjcCLrxpg0H32HlxwswTGVAanHKJc09555klHDcyEYL0/zqSDoEG6?=
+ =?us-ascii?Q?dh3+1drTx264gm04sIGSdedE+737g/AsAePhlyVxMaa+/elyIoIYRp5AiROV?=
+ =?us-ascii?Q?Am25/MbLl9+9/O8T9GjOOVBB+WRc2x9j3740sX6padIo9C8wKI0iw0Qie51Z?=
+ =?us-ascii?Q?eee8eaGl5mNoPR8U2a2r61sVfdC2Jitt1ttwZ39uu/fLHqU5t3bM+7RHDrmO?=
+ =?us-ascii?Q?eNUL1rwhHQxnXy5nH/PWerXghbmUbNSduvaDlrYoAqOLSl/PqklEb6xyHEQX?=
+ =?us-ascii?Q?xjRuIu2HkXGOCMsPkcecDRBkVL7hV+DosvAQl5gA55seN0/zNV2KATolwXHx?=
+ =?us-ascii?Q?mx82q9VpBFpElN/1tRpabSGxJbfe5LD2VRslKCGoO5mFEZ31/750vRjkd5Ji?=
+ =?us-ascii?Q?5cyEsVG7iefNyiCtQvhUe3A6nsRNhXxnIxZFgYfwv0qGiWDkufS+F2yaMtw5?=
+ =?us-ascii?Q?7kTzrXcquv7Cb3cU6JH9ziQRcG7Aco5O2n7x3xCZt8p62aU45SeuTXZqeJxO?=
+ =?us-ascii?Q?0mB64GtXZ4rdWbcs1z2AbxaS5i2yhSfF9HN41y86/qAs//An7NSlksLHrn+B?=
+ =?us-ascii?Q?ndEraLcf9xo36Yj4N2+zHLu139tljkTltX8T3iAjsrr0wPQDQ8pBAHOESh51?=
+ =?us-ascii?Q?HHQI7G2po8oISolK5d3g8kLLGIlf9M0UpNexv7EQzbKM4NXwVXlVYiKWVzEM?=
+ =?us-ascii?Q?UJoVgUFScG0slrvyIvJjI3dTY/gqY3cddUnIVHr/n9QTcIEoBXqkAlBlkxIN?=
+ =?us-ascii?Q?JUcQko1J9quhk+rYpSa8ObznVD8vpVYxBMT9yvCULSagfvfC9r0PXBcfBedO?=
+ =?us-ascii?Q?EDM/5QgROboP+rKlti/2oDIiKBClAEv/1l5VLovm3sgiBm2EGGw7b88lhKip?=
+ =?us-ascii?Q?QqjSV1VXFZjjzwWvxdSYSVOZrfuL9wR0oHMoZjsstOsiLT7/H4k6GVFjOLiJ?=
+ =?us-ascii?Q?XwPUMYfKq9spjq0RZImT7I51jQWDp+hvD6VWgaiQO2aan7sEOqY6hzqCqwcL?=
+ =?us-ascii?Q?pa5XCnNFbH3UVWoUjWsFUEWTE5asEofb9qvrdlDDHMb+riCqYtvGaY/vW355?=
+ =?us-ascii?Q?++ISFS2ipKQPmpPxlBIDWHp/z9+CoysgsSeTSQXAsA/LFEKnqKCJhu7P02BM?=
+ =?us-ascii?Q?LLBeBLVaqfGsXzGWOzI3XRZUPRXbvIH8cQKGhQHvr7bSATqzb5gSA8nX0Rrf?=
+ =?us-ascii?Q?KKV2VxgK4ltYdv4c/DL15LHgynZg0CC26Lqrw37R829CO+aNh/wEx4D+1mwt?=
+ =?us-ascii?Q?zz9zBzqP3q5YP6SQmTzmh3M9kSkDtm2kQoeNnALPjH10pkKn6E/0PimllC4f?=
+ =?us-ascii?Q?IHMb+mymkoUdyNUn8J5X7F8et33greUWXxsjH6pkW16B/adppVw+CJy5qkLb?=
+ =?us-ascii?Q?oXRYQG50/Ir3s/m8Xxl4MV9ZUy6d9CKKFW5i+1vy5bC8pWNd8oKmRpp6cEOw?=
+ =?us-ascii?Q?uUbt4fQxfUz4T1Z0yGPYoPXrfmA25xBD63z6Zcnb565E2jvSHgl836gp0m4v?=
+ =?us-ascii?Q?gw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	McwZIW7Y/2DvV7jbBKNiFWMfpjDI3LJrnOJRcgRuVI7jOhPWuxU+M9hUhC6mzuwCxeVdrL24p7dqsr6r1Gw+uzbb4oSRk+SHoqECq89QVtVC/B1vQoKWwrYu1kZA4jTkUMDIlvhV6C3tCOTTN8JpSOuIjF5V+rk0fVydqydX5b94U2i72QLp2fNPMP7uiQV3lVtH/FzYq7sggqSnru1xjZ2kbY4p1jpALx6jCCLpwdxJ8OF92hrNoyTI5tD2qr9ItxEIoWcRSFqupeCPgH17dplamFdRBap8oBCnL32BskYx1DHGh4Uh84zntbcP7J/RDVwl79aVCnamslalsdN3QVio8i9ikXJkqweYMqq3mQ6M0tq6EONJMAzYVpOQR8orvt+5cR+Jh59koESUxuBBILC902SDgti/62+NkQfNjLvzIbmarrHnjtbBGkHZi+TIyog1HcgK73ttmhhWPGnC/r576JOp5s5HRcCM8Z70ezXl+qcsCK5ci0QiN8vt2gCLU45ZmIwWcnu06630TCkqgxq4EL2WclWxbcqE6bBiuxT72CtFEekYFxmA/LiNL1E9uU6e3/hy/XRTYLEaUBNyXn+JZ5LTZC8UX1OV4JJNxKI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77e71d87-6961-410a-e26c-08dd96b26697
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 08:51:52.6917
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6OxU55C0uG9TayUe8/hA/hSe7mwow/ZGSSbdQw9X569Nj09tgrkDiG2x2ducEtzmTQNYVUtWpqdqxGyaXz3OP4DSDnajjmlm21/ZsNEUzrk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7833
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_03,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ bulkscore=1 mlxscore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505190083
+X-Authority-Analysis: v=2.4 cv=UKndHDfy c=1 sm=1 tr=0 ts=682af12c cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=wP4JhQTrMU2qUWX1qwwA:9
+X-Proofpoint-GUID: LEaMN8_OzTZiSHEWLQC4_lpKlPk8x5hf
+X-Proofpoint-ORIG-GUID: LEaMN8_OzTZiSHEWLQC4_lpKlPk8x5hf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA4NCBTYWx0ZWRfX6thQ8v7aWCTw 9nIwEZzDqNVivkubVPkOo+cIg8eC3oXCZ0HqokLO8V+vJ0N1OwxUusQ5Jr1cfR5qxPdtngCRtJ1 iutid31AsRlMJ4Bb0974lwLy4UdM53g7K3NSXTXlNNztS1tR83mEPqiTugtMiw7Kh0In5hgARMA
+ WPaLetJ3qsK9KCCwgBqjbDqOxqlNEI26KdyJ9uGYFd2WRUED2rrffrG/aYN9qH4t5kmBoXQzB2b BRV3lgiUYuCIsgfaP10RXj/MGBq/fU5p5EHk1GPCkwOSiGjm5WZe2PeYk7KxTar/b7iodTp/Efx 5phnzYXFCTjufn0qRQcv3ToIiEGzFKHgSMIv82bS+7xdW/CioX85na2xON+578FYfYuiZQEQtw0
+ d9FZF+XEfGPCiXLjV4sQj2x8OsdlmuF27k3Ykxc1CSvZj30xFVMb0Dr084cdKZmUPu4S+LDS
 
-On Thu, May 15, 2025 at 05:06:11PM -0700, Vijay Balakrishna wrote:
-> Subject: Re: [PATCH 1/3] drivers/edac: Add L1 and L2 error detection for A72
+When KSM-by-default is established using prctl(PR_SET_MEMORY_MERGE), this
+defaults all newly mapped VMAs to having VM_MERGEABLE set, and thus makes
+them available to KSM for samepage merging. It also sets VM_MERGEABLE in
+all existing VMAs.
 
-git log drivers/edac/
+However this causes an issue upon mapping of new VMAs - the initial flags
+will never have VM_MERGEABLE set when attempting a merge with adjacent VMAs
+(this is set later in the mmap() logic), and adjacent VMAs will ALWAYS have
+VM_MERGEABLE set.
 
-to get inspired about proper commit titles and prefix.
+This renders literally all VMAs in the virtual address space unmergeable.
 
-> From: Sascha Hauer <s.hauer@pengutronix.de>
-> 
-> The Cortex A72 cores have error detection capabilities for
-> the L1/L2 Caches, this patch adds a driver for them. The selected errors
+To avoid this, this series performs the check for PR_SET_MEMORY_MERGE far
+earlier in the mmap() logic, prior to the merge being attempted.
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+However we run into a complexity with the depreciated .mmap() callback - if
+a driver hooks this, it might change flags thus adjusting KSM merge
+eligibility.
 
-Also, do
+This isn't a problem for brk(), where the VMA must be anonymous. However
+for mmap() we are conservative - if the VMA is anonymous then we can always
+proceed, however if not, we permit only shmem mappings and drivers which
+implement .mmap_prepare().
 
-$ git grep 'This patch' Documentation/process
+If we can't be sure of the driver changing things, then we maintain the
+same behaviour of performing the KSM check later in the mmap() logic (and
+thus losing VMA mergeability).
 
-for more details.
+Since the .mmap_prepare() hook is invoked prior to the KSM check, this
+means we can always perform the KSM check early if it is present. Over time
+as drivers are converted, we can do away with the later check altogether.
 
-> to detect/report are by reading CPU/L2 memory error syndrome registers.
-> 
-> Unfortunately there is no robust way to inject errors into the caches,
-> so this driver doesn't contain any code to actually test it. It has
-> been tested though with code taken from an older version [1] of this
-> driver.  For reasons stated in thread [1], the error injection code is
-> not suitable for mainline, so it is removed from the driver.
-> 
-> [1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-> ---
->  drivers/edac/Kconfig    |   8 ++
->  drivers/edac/Makefile   |   1 +
->  drivers/edac/edac_a72.c | 233 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 242 insertions(+)
->  create mode 100644 drivers/edac/edac_a72.c
-> 
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 19ad3c3b675d..7c99bb04b0c4 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -576,4 +576,12 @@ config EDAC_LOONGSON
->  	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
->  	  are compatible.
->  
-> +config EDAC_CORTEX_A72
-> +	tristate "ARM Cortex A72"
-> +	depends on ARM64
-> +	help
-> +	  Support for L1/L2 cache error detection for ARM Cortex A72 processor.
-> +	  The detected and reported erros are from reading CPU/L2 memory error
+A great many use-cases for this logic will use anonymous or shmem memory at
+any rate, as KSM is not supported for the page cache, and the driver
+outliers in question are MAP_PRIVATE mappings of these files.
 
-+         The detected and reported erros are from reading memory error
-Unknown word [erros] in Kconfig help text.
-Suggestions: ['errors', 'Eros', 'errs', 'euros'...
+So this change should already cover the majority of actual KSM use-cases.
 
-> +	  syndrome registers.
-> +
->  endif # EDAC
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index a8f2d8f6c894..835539b5d5af 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
->  obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
->  obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
->  obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-> +obj-$(CONFIG_EDAC_CORTEX_A72)	+= edac_a72.o
+Lorenzo Stoakes (4):
+  mm: ksm: have KSM VMA checks not require a VMA pointer
+  mm: ksm: refer to special VMAs via VM_SPECIAL in ksm_compatible()
+  mm: prevent KSM from completely breaking VMA merging
+  tools/testing/selftests: add VMA merge tests for KSM merge
 
-I don't know what tree you are preparing your patches against - it should be
-this one:
+ include/linux/fs.h                 |  7 ++-
+ include/linux/ksm.h                |  4 +-
+ mm/ksm.c                           | 51 ++++++++++++-------
+ mm/vma.c                           | 49 ++++++++++++++++++-
+ tools/testing/selftests/mm/merge.c | 78 ++++++++++++++++++++++++++++++
+ 5 files changed, 166 insertions(+), 23 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-for-next
-
-but the indentation level here is wrong:
-
-obj-$(CONFIG_EDAC_ZYNQMP)^I^I+= zynqmp_edac.o$
-obj-$(CONFIG_EDAC_VERSAL)^I^I+= versal_edac.o$
-obj-$(CONFIG_EDAC_LOONGSON)^I^I+= loongson_edac.o$
-obj-$(CONFIG_EDAC_CORTEX_A72)^I+= edac_a72.o$
-			     ^^^
-
-after I apply your patch.
-
-> diff --git a/drivers/edac/edac_a72.c b/drivers/edac/edac_a72.c
-> new file mode 100644
-> index 000000000000..13acd7e7cef0
-> --- /dev/null
-> +++ b/drivers/edac/edac_a72.c
-> @@ -0,0 +1,233 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cortex A72 EDAC L1 and L2 cache error detection
-> + *
-> + * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
-> + *
-> + * Based on Code from:
-> + * Copyright (c) 2018, NXP Semiconductor
-> + * Author: York Sun <york.sun@nxp.com>
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/bitfield.h>
-> +#include <asm/smp_plat.h>
-> +
-> +#include "edac_module.h"
-> +
-> +#define DRVNAME				"edac-a72"
-> +
-> +#define CPUMERRSR_EL1_RAMID		GENMASK(30, 24)
-> +
-> +#define CPUMERRSR_EL1_VALID		BIT(31)
-> +#define CPUMERRSR_EL1_FATAL		BIT(63)
-> +
-> +#define L1_I_TAG_RAM			0x00
-> +#define L1_I_DATA_RAM			0x01
-> +#define L1_D_TAG_RAM			0x08
-> +#define L1_D_DATA_RAM			0x09
-> +#define TLB_RAM				0x18
-> +
-> +#define L2MERRSR_EL1_CPUID_WAY	GENMASK(21, 18)
-> +
-> +#define L2MERRSR_EL1_VALID		BIT(31)
-> +#define L2MERRSR_EL1_FATAL		BIT(63)
-> +
-> +struct merrsr {
-> +	u64 cpumerr;
-> +	u64 l2merr;
-> +};
-
-That struct naming needs some making the names more understandable. "merrsr"
-doesn't tell me anything.
-
-> +
-> +#define MESSAGE_SIZE 64
-> +
-> +#define SYS_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-> +#define SYS_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-
-Please group all defines together, align them vertically and then put other
-definitions below. Look at other drivers for inspiration.
-
-> +
-> +static struct cpumask compat_mask;
-> +
-> +static void report_errors(struct edac_device_ctl_info *edac_ctl, int cpu,
-> +			  struct merrsr *merrsr)
-> +{
-> +	char msg[MESSAGE_SIZE];
-> +	u64 cpumerr = merrsr->cpumerr;
-> +	u64 l2merr = merrsr->l2merr;
-
-The edac-tree preferred ordering of variable declarations at the
-beginning of a function is reverse fir tree order::
-
-	struct long_struct_name *descriptive_name;
-	unsigned long foo, bar;
-	unsigned int tmp;
-	int ret;
-
-The above is faster to parse than the reverse ordering::
-
-	int ret;
-	unsigned int tmp;
-	unsigned long foo, bar;
-	struct long_struct_name *descriptive_name;
-
-And even more so than random ordering::
-
-	unsigned long foo, bar;
-	int ret;
-	struct long_struct_name *descriptive_name;
-	unsigned int tmp;
-
-Please check all your functions.
-
-> +
-> +	if (cpumerr & CPUMERRSR_EL1_VALID) {
-> +		const char *str;
-> +		bool fatal = cpumerr & CPUMERRSR_EL1_FATAL;
-> +
-> +		switch (FIELD_GET(CPUMERRSR_EL1_RAMID, cpumerr)) {
-> +		case L1_I_TAG_RAM:
-> +			str = "L1-I Tag RAM";
-> +			break;
-> +		case L1_I_DATA_RAM:
-> +			str = "L1-I Data RAM";
-> +			break;
-> +		case L1_D_TAG_RAM:
-> +			str = "L1-D Tag RAM";
-> +			break;
-> +		case L1_D_DATA_RAM:
-> +			str = "L1-D Data RAM";
-> +			break;
-> +		case TLB_RAM:
-> +			str = "TLB RAM";
-> +			break;
-> +		default:
-> +			str = "Unspecified";
-> +			break;
-> +		}
-> +
-> +		snprintf(msg, MESSAGE_SIZE, "%s %s error(s) on CPU %d",
-> +			 str, fatal ? "fatal" : "correctable", cpu);
-> +
-> +		if (fatal)
-> +			edac_device_handle_ue(edac_ctl, cpu, 0, msg);
-> +		else
-> +			edac_device_handle_ce(edac_ctl, cpu, 0, msg);
-> +	}
-> +
-> +	if (l2merr & L2MERRSR_EL1_VALID) {
-> +		bool fatal = l2merr & L2MERRSR_EL1_FATAL;
-> +
-> +		snprintf(msg, MESSAGE_SIZE, "L2 %s error(s) on CPU %d CPUID/WAY 0x%lx",
-> +			 fatal ? "fatal" : "correctable", cpu,
-> +			 FIELD_GET(L2MERRSR_EL1_CPUID_WAY, l2merr));
-> +		if (fatal)
-> +			edac_device_handle_ue(edac_ctl, cpu, 1, msg);
-> +		else
-> +			edac_device_handle_ce(edac_ctl, cpu, 1, msg);
-> +	}
-> +}
-> +
-> +static void read_errors(void *data)
-> +{
-> +	struct merrsr *merrsr = data;
-> +
-> +	merrsr->cpumerr = read_sysreg_s(SYS_CPUMERRSR_EL1);
-> +	if (merrsr->cpumerr & CPUMERRSR_EL1_VALID) {
-> +		write_sysreg_s(0, SYS_CPUMERRSR_EL1);
-> +		isb();
-> +	}
-> +	merrsr->l2merr = read_sysreg_s(SYS_L2MERRSR_EL1);
-> +	if (merrsr->l2merr & L2MERRSR_EL1_VALID) {
-> +		write_sysreg_s(0, SYS_L2MERRSR_EL1);
-> +		isb();
-> +	}
-> +}
-> +
-> +static void cortex_arm64_edac_check(struct edac_device_ctl_info *edac_ctl)
-
-All static functions don't need a prefix "cortex_arm64_".
-
-> +{
-> +	struct merrsr merrsr;
-> +	int cpu;
-
-I'd venture a guess you need to protect here against CPU hotplug...
-
-> +	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-> +		smp_call_function_single(cpu, read_errors, &merrsr, true);
-> +		report_errors(edac_ctl, cpu, &merrsr);
-> +	}
-> +}
-> +
-> +static int cortex_arm64_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_ctl;
-> +	struct device *dev = &pdev->dev;
-> +	int rc;
-> +
-> +	edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-> +					      num_possible_cpus(), "L", 2, 1,
-> +					      edac_device_alloc_index());
-> +	if (!edac_ctl)
-> +		return -ENOMEM;
-> +
-> +	edac_ctl->edac_check = cortex_arm64_edac_check;
-> +	edac_ctl->dev = dev;
-> +	edac_ctl->mod_name = dev_name(dev);
-> +	edac_ctl->dev_name = dev_name(dev);
-> +	edac_ctl->ctl_name = DRVNAME;
-> +	dev_set_drvdata(dev, edac_ctl);
-> +
-> +	rc = edac_device_add_device(edac_ctl);
-> +	if (rc)
-> +		goto out_dev;
-> +
-> +	return 0;
-> +
-> +out_dev:
-> +	edac_device_free_ctl_info(edac_ctl);
-> +
-> +	return rc;
-> +}
-> +
-> +static void cortex_arm64_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-> +
-> +	edac_device_del_device(edac_ctl->dev);
-> +	edac_device_free_ctl_info(edac_ctl);
-> +}
-> +
-> +static const struct of_device_id cortex_arm64_edac_of_match[] = {
-> +	{ .compatible = "arm,cortex-a72" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-> +
-> +static struct platform_driver cortex_arm64_edac_driver = {
-> +	.probe = cortex_arm64_edac_probe,
-> +	.remove = cortex_arm64_edac_remove,
-> +	.driver = {
-> +		.name = DRVNAME,
-> +	},
-> +};
-> +
-> +static int __init cortex_arm64_edac_driver_init(void)
-> +{
-> +	struct device_node *np;
-> +	int cpu;
-> +	struct platform_device *pdev;
-> +	int err;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		np = of_get_cpu_node(cpu, NULL);
-> +
-
-^ Superfluous newline.
-
-> +		if (!np) {
-> +			pr_warn("failed to find device node for cpu %d\n", cpu);
-
-In visible strings s/cpu/CPU/g
-
-> +			continue;
-> +		}
-> +		if (!of_match_node(cortex_arm64_edac_of_match, np))
-> +			continue;
-> +		if (!of_property_read_bool(np, "edac-enabled"))
-> +			continue;
-> +		cpumask_set_cpu(cpu, &compat_mask);
-> +		of_node_put(np);
-> +	}
-> +
-> +	if (cpumask_empty(&compat_mask))
-> +		return 0;
-> +
-> +	err = platform_driver_register(&cortex_arm64_edac_driver);
-> +	if (err)
-> +		return err;
-> +
-> +	pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
-> +	if (IS_ERR(pdev)) {
-> +		pr_err("failed to register cortex arm64 edac device\n");
-
-That driver is called edac_a72 now.
-
-"cortex arm64 edac" is too broad.
-
-> +		platform_driver_unregister(&cortex_arm64_edac_driver);
-> +		return PTR_ERR(pdev);
-> +	}
-> +
-> +	return 0;
-> +}
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+2.49.0
