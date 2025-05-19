@@ -1,244 +1,227 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PUWP216CU001.outbound.protection.outlook.com (mail-koreasouthazon11020143.outbound.protection.outlook.com [52.101.156.143])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7D15B135;
-	Mon, 19 May 2025 05:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747631303; cv=none; b=LHA71CIkFiHTNbOVZaVYAl6U1+nPmbxd5BE3exd0+fDZeMFGWLeu75GEKRoI8mqSrMKcL6eSXjmRg9dNcGulLv7OSREDpyDzNZ2vlAaGkjZJcgTuy24zvcYg8Rgq3B2RmEFJOnlGBs40Q4A6LVtACaUwUauxJDLnqF4ibc8gAUA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747631303; c=relaxed/simple;
-	bh=+5uQRfunz6MK8/PF2kn3g7bE2yl482T3Sfm+L9qP65U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZjxaEDBGpkLH6tf3xy3H+Ssh1APR1IBhKcvYb9K7gozxVOBlwTxXeJLxAzwVq0l6yrRl0NxyZvezO8jD7RVa6JgqYgH4wMG/FeWc8f0ILxmPR5wrpfaW+gVUCxz35XgiruEhSgA1vW2LwGemqk2/rbI1Y+drYbmbczbsD86ooE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuuJkNFa; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307E51F1501;
+	Mon, 19 May 2025 05:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.156.143
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747631309; cv=fail; b=jW+ZmKR60mcVDFCocRSDycDOFKy8hF1ykpWDctCyD64BrPOu/74yoPw2uaOlMpKGSDACDop4HcK4ki3ayA7e2K6rg7NFIMsHhFh4mtud8WV1I052FUOHx/uF9EFCc2vRVCpZJqhKJes1ibnw3V7lx6IBYFMzagcd4q0gY+TgN30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747631309; c=relaxed/simple;
+	bh=6JWdi7khWNEyPg58tVhmdz2Hg661C70G4n3rh34lU8A=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lMrkUhlVebGHvaYU9tOM6tRTKzzgD4DsXxjW9ZiCGXoxClKMULDNNJ12PNrzdtcHO07Zf6xJ4RoZloBGVjU6kANqW6GWyFohJLlUaynma/JU/YuG1emgCwEelVBdN8uNs3cWFEJO7Y7m6Ic7Rl2j9y+K4aoeIWXrlonfzyg7iZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=DM43X9b2; arc=fail smtp.client-ip=52.101.156.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuuJkNFa"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b074d908e56so2492260a12.2;
-        Sun, 18 May 2025 22:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747631301; x=1748236101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xwD16IY+mV1vOg/kDG6DOdFjfPbkL9odEag4Ga7a+G8=;
-        b=LuuJkNFaNVtZQH22rYD7EKrrGVzEHfe5d1nR02WGGjrufWutnxN9T+91EUjHi1/F55
-         y4HOc7rlbKGiv705TryzmDLdDPU1V1bGwQe1bFLosad19zyvYlkNc44BBIeI/XE0y77X
-         07w8IhzMCM6A6PSVAbd8j43LW9+h2e3+hE5TyXOLEppm9AiXSN7twYzXWZ5vwCtMcM53
-         mkWDjS5wSSaZU2teKmjBrwFtVkQyODuyb1euZGa/j+D1yB4Q7GBcSktlbEqiSrYXpNmm
-         UzHvqydmDNAeG0lrVd1peD4UFvXtQCBWjWjFJu5ijKcXQvxaQdPFWVQYW0KX/sQUYp6q
-         21Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747631301; x=1748236101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xwD16IY+mV1vOg/kDG6DOdFjfPbkL9odEag4Ga7a+G8=;
-        b=sp+OyrDl3Fpu7xoPjow8mMQSI4eh7Dt2SZSlTwMeVQgUCZlsWWGAVAIx/glsBEe0Xg
-         koTiQef8UeivApVQuRXl/v58JOLuxLZuNbsXA3PABlRGNe5cVzp5SmAXPCIRLb45NfsX
-         2/yrPboGOD1xF1A2UGz7s132iO3WDVLxdlgn+IC/A08cV61qhmKC4fcJPU/G44OHQ1Eq
-         ho9lYcgOndW2gm5uRzGNfijbgXeYLKiWku8tzqReMxnOK35oWa3GLLO0fFl2lFVLsweD
-         sAZ+NszB9Wep7QASVrCSxWyRmbHrbY7JHWrfIl9a1ZI97rzEJpEQNyDuAzpqzpK58BQw
-         XQyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtvNMXL+5UlWVJ2itV59Dk6nV3VI3iGxlvdpa5MmUT2CGdxOfNAVkiahTNxcXj7AqTKkGvVsHv87O1@vger.kernel.org, AJvYcCW3LZJFdi+ATLay1QwTUx9SIbb07eDGe2jYfnLEvBC6jQoBTN6Mer6xODf4sWwFFCE+Nmu3xn7kXcB09Ec9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNF+fMlxiOofs3CiSZ2XCyReZIijN65tr/1txfS3ycX431cb4U
-	c7jKa+c8xP9nrDtL9HPUz2p6XcbMmSFnbtTHLRS7WNwNS1YRB7g0q5PE
-X-Gm-Gg: ASbGncunqA+9qRyMMCJe7vGqletGtNBmOivm1HW1Qvf8s3XjDBf0Crfz/SU+Mv5q2VE
-	bsIiTG//C87+tOS7ReFNRf7rOKrjt5DYjrB3tmDKe886EaR09llGshyyIXFTo7o1iz6ubgA+oNT
-	anpDv4FiFHg3DXS9NiHvZ8xuH9dmd7HBVdMc7Lx2ILc6DKHE4tQeVgyPmaZJkFwW+QEIfx0qx00
-	oyBhD9NQGjZ1iZnmVH5yC4RQ42idvT4K+WzJFAgt3nwxm05KLQrrbIE97h113h2odE+eXHKwDnG
-	DAof8xP5PkibJNeGALpZrlbkyo2Gbot12PTfAy2CwNSYQAGZSyGzDZSCdxMkEULWdaUQjCxuv1+
-	nvUayqHds3hM=
-X-Google-Smtp-Source: AGHT+IH1Es9V7bpGSmK5k3mh2cazGmbf4vrH1kHrZdJfLjtCFQhaKIOHJ1kkKU2QJM7iDgNER1ixxA==
-X-Received: by 2002:a05:6a20:728e:b0:215:df90:b298 with SMTP id adf61e73a8af0-2170ce19eaemr15743817637.26.1747631301368;
-        Sun, 18 May 2025 22:08:21 -0700 (PDT)
-Received: from [192.168.1.6] ([171.61.103.229])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb081aafsm5322931a12.47.2025.05.18.22.08.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 May 2025 22:08:21 -0700 (PDT)
-Message-ID: <6065e339-704c-4081-b4be-ab86417b9ec7@gmail.com>
-Date: Mon, 19 May 2025 10:38:17 +0530
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="DM43X9b2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BeTgjZ2r/Us9Gp/QlhAduEJgz5O6Jo3/BLUl61pup1M6aIH+KQu4XGQoICnATJq9h2DzKkYYP6ZbYpc5fVDndeayZ6Ie7fJrQkJUBgQeGs7AxAp5ph+O6FBsNC5Flvg0QjkR8sW3d4kCfnja5SfRmCTIlHeTcEEAUI5tVKrxVik85ycyLAs25fQ9AEG94jizgdcg/Win2saY2u7Y+GiW5lvPXxFLPYQsex9TlO45zOvypvw3mnkomEQ1YMO2srHxOBRj48KevNvreIDLQqYQQieZzQBuJ3yDktqKXjFysnDMZSYtDJSXsxjWqaIGsMlhF9r4ZGNVWukN3P3OCFpvVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t6Q1EepZQVCYtXCjaEuOFUtLlwhUTm+wtIh5uugoHU4=;
+ b=wvi9yEaGoBHN3rVupy5p+gI4S/Y0ljkQfsP6WIupYHnQMs4jELEJ0TkuTvhdG/SRoegqAMS1RS5WjVMJqQKK8EQmx5Amonvwef5JE8U1cKnx5L0m1lBMEwo/s5d+Pn1efjMZapdhGdPN8YyDqQEecHPYO8cCd/RiLXYWtIsOoX0DPIpGRUFq67ao+lNEzXXtVaBemm+NIO2mxdULkRgkpLEp+gPRKI4tH6+5SzHzDdMep+xoW108MK7J0n+4Ee7FuvohUiSuXb0+IVzJxQSmuyXnu5E2j0vN1RvB5M2nfojNdlyRJGM+YQfumg93QsaRNIVXB/FFYjI1cgsniscKsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
+ header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t6Q1EepZQVCYtXCjaEuOFUtLlwhUTm+wtIh5uugoHU4=;
+ b=DM43X9b2ERNuE4DxPw2el3Xi5E+cbqjuEg3WMuJMGQy/3YSe5o9oR1feN30rdyMxI70ec6HxAqzJ2lQca9C4YuS/MVNpJxo1aMQWbLrTKZh/d9HhZzlvHbbwcKo85c8T/fxF8aL8zKuqLBRmjXwV13EvTwFpXW9Vj6+1T/hb/8c=
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
+ SE1P216MB2083.KORP216.PROD.OUTLOOK.COM (2603:1096:101:15a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.30; Mon, 19 May 2025 05:08:24 +0000
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07%3]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 05:08:23 +0000
+From: Nas Chung <nas.chung@chipsnmedia.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl"
+	<hverkuil@xs4all.nl>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>,
+	"marex@denx.de" <marex@denx.de>, jackson.lee <jackson.lee@chipsnmedia.com>,
+	lafley.kim <lafley.kim@chipsnmedia.com>
+Subject: RE: [PATCH v2 2/8] dt-bindings: media: nxp: Add Wave6 video codec
+ device
+Thread-Topic: [PATCH v2 2/8] dt-bindings: media: nxp: Add Wave6 video codec
+ device
+Thread-Index:
+ AQHbs2lXzy1gLrNeZ0ijKXj6PUT3srO0NFSAgBWF9JCAAHRxAIAFp7/wgAWGbQCAA/TX8A==
+Date: Mon, 19 May 2025 05:08:23 +0000
+Message-ID:
+ <SL2P216MB1246B1DA93D85C1536476D74FB9CA@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+References: <20250422093119.595-1-nas.chung@chipsnmedia.com>
+ <20250422093119.595-3-nas.chung@chipsnmedia.com>
+ <20250425-romantic-truthful-dove-3ef949@kuoka>
+ <SL2P216MB124656A87931B153F815820BFB8AA@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <f1073f21-0885-486f-80c8-00f91dfd7448@kernel.org>
+ <SL2P216MB1246002B8EFD5CBE69E447ACFB96A@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <cafba18a-5391-4d9d-aa4c-2f06f93af0f8@kernel.org>
+In-Reply-To: <cafba18a-5391-4d9d-aa4c-2f06f93af0f8@kernel.org>
+Accept-Language: en-US, ko-KR
+Content-Language: ko-KR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SL2P216MB1246:EE_|SE1P216MB2083:EE_
+x-ms-office365-filtering-correlation-id: c3509634-61be-4afc-3d4b-08dd96932e5c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?HZQg8HhDrru0BHek4K3IOqrEE5bxcrUcAZvKHCGFnKwiW1Il41LFBA7mXyF4?=
+ =?us-ascii?Q?FtoiA03LoJ5WAd563kQjlP47bGuGRmLAEeivoMUcYa/WKPQLouJ/KEPZACTD?=
+ =?us-ascii?Q?Rlo/GhXjz+YrOUND6n2HpSdH4+h89InStSGru4PzMnNceH9uqmjMODp0B8IB?=
+ =?us-ascii?Q?ChnLRfQwEMN+UAqDyRy27qjdDodbKjr1TsqCSDQS8SY8uONa5FmmBJzirEPE?=
+ =?us-ascii?Q?kicmdRmQSn5PWnOctuA27vdoe8rpr3unWkh1B9lVmRNAQYdrUx7pPNVIUoWy?=
+ =?us-ascii?Q?75as6CBGYKQCcbsvQItAQkrVlBd49K1IMUzsM4Q/h6nHHAXIY2yeaog8G+GG?=
+ =?us-ascii?Q?DQ/Jn+GcXtnWj/d9iRyptsUw9dsqvQgt28HPPkvrTcKIhan7LIhkUI53ZamC?=
+ =?us-ascii?Q?ykyLjjHg66OFoNoSbkJpC+Dmoce7nVpzKqR/ZQEAkhzxNgIOhnAOBNzpxu8e?=
+ =?us-ascii?Q?OQX+Hw1Bj37yUBesC74/oyMyL4J1FwYdzjWnG/9le21tjNNup3cWtYC+YXV/?=
+ =?us-ascii?Q?KaqlPLlC79jAQHA+6bwOKilr4ccLLC3xoM13HftUh7py2VmfbwOB5JdKJMyA?=
+ =?us-ascii?Q?QOL1kEkrwlwruXnBDMl4HXwRRVW7Y0/SCtJlZRwG1GaYIw5uId8WbH1d59HG?=
+ =?us-ascii?Q?3kjMbEL1gDY8tlYGY8Z5vI7HHfI/ZU/DXEWCQVRYT9oncgiykzTSOXoshYUN?=
+ =?us-ascii?Q?6EsJRdGudYSinUEvJPEdPdnFlgnv32yymeE5J//QDPzzCemWhetpXBZK7Hxo?=
+ =?us-ascii?Q?nJe9H4kq8QiFmAZvU0R/l9OI2lSaXyjl9Hv1hVpoitwyvi08LbfbiJAFmP6Z?=
+ =?us-ascii?Q?l5VYUdvkkX86SsFCSYeYwMln2SGsBhHSw77Te4S3KAvlpmX+kAv0zyTVDPe2?=
+ =?us-ascii?Q?OQalK1sFyNHwLfSq44o53Sxm5EGIeDjQGYZ8RSLfMCxWrH0yFCwtg2ZBOZEg?=
+ =?us-ascii?Q?cVdtCkgL/altjHtZfSfAm+jFjJCcvGJm6Dj4V+JY+YjRKwZsaQg+Lmzcu90E?=
+ =?us-ascii?Q?bIZH/6ndYTxpJRLZhSuUp/pjX/gpEz0y5TNUfRzxe+wzgD0DhgJgDT/FCktW?=
+ =?us-ascii?Q?pdH1kwamsBrLWCQhF88727cer4aKHWdgkbeQrNVviThZxnzrLNHpiUlSWGEi?=
+ =?us-ascii?Q?DyahSKvcOcFMsYH1tvufdmESYUUIZdni5/dTiP6a7hugx8M0bscgEoYolaVy?=
+ =?us-ascii?Q?CSeP5bC8VDVzFE5ld6jtpfUYy04esCAe6lwCMdh6rNBpWe7gBWBSHf82TWLh?=
+ =?us-ascii?Q?N8DzjOOh5qRJdSIwsZX9L988xOUWCqX/0V7B34d+P1g1pI+UcRteb05wnRW0?=
+ =?us-ascii?Q?/Yi0JFd0kEQ+n6ontB/4UcXsUA5juX0fvX3VxZAc6/f/v68t3JpFesrLqdhQ?=
+ =?us-ascii?Q?nHN0B6rc/8ZbzKY2GbT2UAn/KFuftdcrUCH78dBsLtAX7wZ33cbPth0wrylR?=
+ =?us-ascii?Q?QtIc8w6lz1gMrqSEDoD6A/aOXl0Y6Iyinvd4BZv5uuXt6Gw6tiNhAg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?KoGN/MJp3FkKLxJQcyJ5rMS6ITootUOwEjUL9kKlta10VASyE1YoIskWeLM9?=
+ =?us-ascii?Q?WFlQg5mh39KihzYOhEsoj5Uu1IE8xOpF3gXAv5t3dLzxF3Vi5dIQyi5BfBpY?=
+ =?us-ascii?Q?aRNATIqhvUU7+zPhBbw17GKW/i9RTl1hP5NeJQwWUpbDIxNT7T3D3eiNpkQy?=
+ =?us-ascii?Q?zeXzyk/5AdY+Ntksl77Q6NK01FCLXeN2RuANDk5L3wfpVyfF1d3cnvBxVUV/?=
+ =?us-ascii?Q?vyIxB8k7ZboeDUjvZAeofPVZ9VJNCd1b+5LCUifoGhBc10GYM0AhFeX2J07n?=
+ =?us-ascii?Q?rLtsjPjRM2+GpJTrdxTY2drwxAH9Zlyjb2Py8H2JwZOqAfwhHkToDtFeoptx?=
+ =?us-ascii?Q?T/PM2otBiNXEmx7b7pxwmKcbP1/xQCpmsahAJ4rAirn03/qKnogAiU1h0cwA?=
+ =?us-ascii?Q?UxVJQXJ7skJQbpc4rXdluqE32rSsjrIRqncoRkdahsz2BVWE+U07IIGVIXRx?=
+ =?us-ascii?Q?ZaKLQy4e0Pa+xmACXjvUhAJUC195z9np994yoMHVClZ80BGq0tlGB1TajZZv?=
+ =?us-ascii?Q?QAARWL+grbVJuosUSqbTPjCctkfwgIurqu9nsU1E39eC1RB8u+0FP3hm1AoR?=
+ =?us-ascii?Q?1GYb+o+Knb7T8+CJmOGorvbTJ3Zx0JnH+VK2qN/BvvIvj8bbqNWFxnsG24cc?=
+ =?us-ascii?Q?93+C2iewBbcyHTm7QIVaU/NfHja6klORDQkO+iFE2NJ6j6lTnhfXH1Nk9bQW?=
+ =?us-ascii?Q?UxTmQXKqBQNhahVXqSCscOHGF9gnDHLtA59zPmVpE1YoCFJ5saiyTnG9BUsd?=
+ =?us-ascii?Q?tYe9xhzK+znLQS5u5GxHoEUbrf0ILiTmVSjtl8UWrHHxhOp5E3T92/iQ8aJJ?=
+ =?us-ascii?Q?nNnW281eWhwYKTZwDNo/sRLiV7BEABksPUauGwfPe0ReGKWfZuvygYZz59GZ?=
+ =?us-ascii?Q?D9/ZSPn6E/2bzk/BN1NBz3OIvjqpyZ4h8wF+cH/yCjreUaLE6g7sXjFYaNWh?=
+ =?us-ascii?Q?bw3McyFk85ZQ0SfVLkjnb0oYEyQrmpk14Urer7cCkcJ/XK5my9dLn6XaQRZX?=
+ =?us-ascii?Q?K2pabnNASCH30Cep7s8UW6q38ajKe5ctf2ft6lYmOPKoNhu8vcY++h9/v5jb?=
+ =?us-ascii?Q?dL2uTWfKiiOlG6fGiLz3pDy5V3NrCX9R+CMcinxPBYlyKCrQ+HE1o804ZNTn?=
+ =?us-ascii?Q?z+NbDYEV4wz600MBKpI7PogiKo3L7e80bO1AvQEyZtA0ovmbLG8w4inRLEd8?=
+ =?us-ascii?Q?2GkF6JMLuQsynBrLAIy/4W8UrXd9MzpXe9OYlTAzw7HZvGmjKHtGc87Ab7wM?=
+ =?us-ascii?Q?mhSDWK0KZzZuutDr03KtwGKUJo5C/LLOuxl/WpMXCBL8/cth6syKBaeZsG4b?=
+ =?us-ascii?Q?F7pxILNQNy2gifWBMejKCEtFWzAU+hPHHm+y1xF2vKpNtFdd5Z5m4z+XNpub?=
+ =?us-ascii?Q?uzZrxrshbuyw9PKz8J8gq7AcmSXvAMrsTwq0/hBfJiyjspoZLRVXv4Z1DQM/?=
+ =?us-ascii?Q?mdcvMf6StU82g1OeiL7FMH8qs3gkVZ5RZ6k3NR1fLZ/IFH56mUVF2ItN8Rrq?=
+ =?us-ascii?Q?Xz1lDik9IaMChinGRCrWq7fxJ5asHBZ0I0eobg+IG6J/mED+M4nbja+lEAGV?=
+ =?us-ascii?Q?aqBw+UJ3Ii53hY9FpRf8J1zkka5G1nviwu8/LDvp?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: mmc: ti-omap: convert text based binding to
- json schema
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250510-ti-omap-v1-1-588b0ccb1823@gmail.com>
- <b18bc629-6bf6-4490-be98-033b771ecda7@gmail.com>
- <ecf3565a-e0ec-4848-a157-d0b5d1770b11@kernel.org>
-Content-Language: en-US
-From: Charan Pedumuru <charan.pedumuru@gmail.com>
-In-Reply-To: <ecf3565a-e0ec-4848-a157-d0b5d1770b11@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: chipsnmedia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3509634-61be-4afc-3d4b-08dd96932e5c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2025 05:08:23.8358
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n9F1LF0JX1mIPYYkbeeUWJEDShw4iThNZ3H/Qv20yMt2p0xV5NmoT0euuwaXracSbog6nBAM+acqAgKdV4cLUkLJP0qdpUiFpCYOuEkXq2g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1P216MB2083
 
+Hi, Krzysztof.
 
-
-On 12-05-2025 01:48, Krzysztof Kozlowski wrote:
-> On 10/05/2025 19:20, Charan Pedumuru wrote:
->>
->>
->> On 10-05-2025 22:07, Charan Pedumuru wrote:
->>> Convert TI MMC host controller binding to YAML format. It's a
->>> straight-forward conversion of the typical mmc host controller.
-> 
-> 
-> Not really - you added properties.
-> 
-> 
+>-----Original Message-----
+>From: Krzysztof Kozlowski <krzk@kernel.org>
+>Sent: Friday, May 16, 2025 9:56 PM
+>To: Nas Chung <nas.chung@chipsnmedia.com>
+>Cc: mchehab@kernel.org; hverkuil@xs4all.nl; sebastian.fricke@collabora.com=
+;
+>robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; linux-
+>media@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>kernel@vger.kernel.org; linux-imx@nxp.com; marex@denx.de; jackson.lee
+><jackson.lee@chipsnmedia.com>; lafley.kim <lafley.kim@chipsnmedia.com>
+>Subject: Re: [PATCH v2 2/8] dt-bindings: media: nxp: Add Wave6 video codec
+>device
+>
+>On 13/05/2025 09:39, Nas Chung wrote:
 >>>
->>> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
->>>  Documentation/devicetree/bindings/mmc/ti-omap.yaml | 61 ++++++++++++++++++++++
->>>  2 files changed, 61 insertions(+), 26 deletions(-)
+>>> All of above are wrong for the SoC...
 >>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.txt b/Documentation/devicetree/bindings/mmc/ti-omap.txt
->>> deleted file mode 100644
->>> index 02fd31cf361d6ed893ec2f9eb8368b358ab2bae1..0000000000000000000000000000000000000000
->>> --- a/Documentation/devicetree/bindings/mmc/ti-omap.txt
->>> +++ /dev/null
->>> @@ -1,26 +0,0 @@
->>> -* TI MMC host controller for OMAP1 and 2420
->>> -
-> 
-> ...
-> 
->>> -	};
->>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.yaml b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
-> 
-> 
-> Filename based on the compatible. Didn't you get exactly such feedback
-> already?
-
-Yes, I will rename it.
-
-> 
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..3660f54550e0ee46d3a7cfa3f531d95802f1e2fb
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
->>> @@ -0,0 +1,61 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/mmc/ti-omap.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: TI MMC host controller for OMAP1 and 2420
->>> +
->>> +description:
->>> +  The MMC Host controller for TI OMAP1 and 2420 family provides
->>> +  an interface for MMC, SD and SDIO types of memory cards.
->>> +
->>> +allOf:
->>> +  - $ref: mmc-controller.yaml
->>> +
->>> +maintainers:
->>> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> 
-> 
-> No, this is supposed someone responsible for the device, not subsystem
-> maintainer.
-> 
-
-Okay.
-
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: ti,omap2420-mmc
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  dmas:
->>> +    maxItems: 2
->>> +
->>> +  dma-names:
->>> +    items:
->>> +      - const: tx
->>> +      - const: rx
->>> +
->>> +  ti,hwmods:
->>> +    items:
->>> +      pattern: "^msdi[0-9]+$"
-> 
-> Missing type: string-array
-> min/maxItems?
-> 
-
-I think the type can be string, will modify defining type and maxItems. If it's string-array, the defaults can only be "msdi0" and "msdi1". So, I thought to define pattern with string type.
-
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - dmas
->>> +  - dma-names
-> 
-> That's a change - binding did not mention it, did not make it required.
-> Every change should be explain in commit msg.
-> 
->>> +  - ti,hwmods
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    mmc@4809c000 {
->>> +        compatible = "ti,omap2420-mmc";
->>> +        ti,hwmods = "msdi1";
->>> +        reg = <0x4809c000 0x80>;
->>> +        interrupts = <83>;
->>
->> Forgot to include irq interrupt-controller header and use it for the interrupts, will change in next revision.
-> 
-> Header does not look like used...
-
-Yeah, will change the interrupts format to take header format.
-
-> 
->>
->>
->>> +        dmas = <&sdma 61 &sdma 62>;
-> 
-> But here you need two <> phandles.
-
-Sure, I will rewrite them in 2 different phandles separated by , .
-
-> 
->>> +        dma-names = "tx", "rx";
->>> +    };
->>> +...
+>>>>
+>>>>         #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>         #include <dt-bindings/clock/nxp,imx95-clock.h>
+>>>>
+>>>>         soc {
+>>>>           #address-cells =3D <2>;
+>>>>           #size-cells =3D <2>;
+>>>>
+>>>>           vpu: video-codec {
+>>>>             compatible =3D "nxp,imx95-vpu", "cnm,wave633c";
 >>>
->>> ---
->>> base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
->>> change-id: 20250502-ti-omap-12655fa9db3e
->>>
->>> Best regards,
+>>> What does this device represent? It is not "ctrl", because you made ctr=
+l
+>>> separate device node. Your binding description suggests that is the VPU
+>>> control region.
 >>
-> 
-> 
-> Best regards,
-> Krzysztof
+>> My intention was to represent the MMIO VPU device, which includes
+>> both the core and control nodes.
+>
+>Then what is the VPU device if not CTRL? What is the CTRL device?
 
--- 
-Best Regards,
-Charan.
+The VPU device represents the entire VPU hardware block,
+which includes 1 CTRL component(node) and 4 CORE components(nodes).
 
+The CTRL device represents the VCPU, a 32-bit processor embedded within the
+VPU hardware block. This VCPU is responsible for executing the VPU firmware=
+.
+The CTRL device is in charge of tasks such as firmware booting, power manag=
+ement
+(sleep and wakeup command), and managing memory regions that are exclusivel=
+y
+accessed by the firmware.
+
+The CORE device represents the Video Coding Engine, which is the hardware c=
+ore
+responsible for performing the actual video encoding and decoding operation=
+s.
+
+I intended to represent the VPU device as a single grouping or parent node =
+to
+reflect that CTRL and CORE are integrated in a VPU hardware block.
+
+Thanks.
+Nas.
+
+>
+>
+>Best regards,
+>Krzysztof
