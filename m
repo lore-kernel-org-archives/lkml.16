@@ -1,155 +1,142 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2126.outbound.protection.partner.outlook.cn [139.219.146.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DB478F4E;
-	Mon, 19 May 2025 21:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747691496; cv=none; b=GCgwmUv3ZBxUUNW5NX545Ln5Af9H0YB7p+u6RQ7TChYZJZ2rWVz3Ucz8jiNVmpnoUP6trozah3ix3Vi33Mfw5srsq4FSu+shLtyBEshNIw0usMReeZcSoHGzl09Qa3HAiuRZvqJ0hMD04GFBKcFarpMtuKeim2LCgwLJFxmpPR4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747691496; c=relaxed/simple;
-	bh=D+gc71TQ6arDdz5CgOztRV+6NsleF2QKzmZFFkhPPvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sJsJ7EQK8TnR5yaPAJB1WfQnbTKQ882hWDN7bKo5brCoaVGgVi3Dzie1mVb0io7Qyj2FhZXfgfD9ulv4M7AzUTsELyc7RyZ5k68KkA6U8jrT8v1110aQEDnbnEIg9vuvLrjMMPdNDiOaTT7I4u40Hs9edfMrWvEqI8Vq2ADGfv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7sc1QWF; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7sc1QWF"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86a07a1acffso350277439f.0;
-        Mon, 19 May 2025 14:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747691494; x=1748296294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xPEYHOAa9cIet4iZua5k6szVG47y0INiUwKTR9frvBc=;
-        b=d7sc1QWFL5CiMhOclmmVWkLWlF6n/UYOx1Psr9UUqVu7qB+fZ+gTSUkhPALyBkuUHb
-         /ai13xP3CQsF/wnfTHyZ/o7XBxkUOe/w6H6NkTrH0e17f2N6l2D3sL86N1r9Tqg0OZ5f
-         lHLQ2Vpbhi5Gmghpi/j3pHe2Fiqk3nArkSjscFhiqJOk6Vee39xDhq/+bZso1Wj9otyG
-         GbWZHqM55vtdB/gCokw4nda+9RGdE8AGlI6XEiOtv+aYYdLpYZMOuN0tD4QYL+q0i7YO
-         TyTKocU3BlKFrYdTUipYNYABwXwsj906y9UxKkIM1EJln71jyhicGGb/JAFWCA8iWcZM
-         n0Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747691494; x=1748296294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xPEYHOAa9cIet4iZua5k6szVG47y0INiUwKTR9frvBc=;
-        b=ePz9+MgXjwt3SLRQCgyINyv06dWuwXp9VGUZh1YUlQknho+mxIVGVVWkptKQWkrA0B
-         cYygB5mmGf8hKO1FXXO6QueTczWqrHvYqpLcaRGTpS46VQHGIT7S92tUri/co+5KT/zz
-         NL3J/94c14VthgyI+zar4T+2f1w6Pb/nVLOC27aLaEXt/E2VDovKtLTzYBwLliGbrnx9
-         1s+clVJjjO/weiQawqURttJc5vQmlR9cHkifk0uwGl3QKucGZZNpNx048x3U6278mDun
-         CsrT3dFatW8G4sAPUoeyBCyWqbacNrmndrmpcO5OhuNNptvcaXVZmQZndeq5pbxu7dut
-         HrcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVh2NST23nXsgYZ/27wLm574qja4g6HSwaBZdRO6A5AT1ewzlB0PQo8lZZvp8ofzI7L/t58P1+SNkE+iB1x@vger.kernel.org, AJvYcCVqYbML1ANA28S5UWYMTit+tjUtG1LJb8gwoWDQhTuJLKIY4c0R4jA90mVI7CQTkOB/cGTChmTNxoIS2pU=@vger.kernel.org, AJvYcCX9bR8oGl4pmaAw8WOTi7SFo9HXCDTV44qKK9QGrZPhnh9m/rnIrrwzxUAc0THHm4btkAnRYxji3kjyGfTX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeTdQElsdR5QOXMJHxSxUDrRHE595/70ZbzeqB4M+xrgRSrHAu
-	rEEnBl1VsT1QzuNJHCBCANJnKiHvL6y914eYidMtdLL/C++YkC0lY97cE8oT5fsnwTIpY+nOz+U
-	OkR+nx9lkJDlCt4onS3LTCJgQK551RMJuQUb+
-X-Gm-Gg: ASbGncvNuiO24DzsGMFDFl5abFFf7Vv+AcYwjfhYhQahzFEzGjmXY1LHINCFkqvtDX8
-	RIAa1DDgg33VtESgQqd2plvlDHBB/rYFF3tj2wwBzWdMyxIvgcJ3jd/aGAHBsMGrKxDi71tUNyy
-	o+vG7tG8WOPt2ll1p355A8wwDJqsO7jtTRNyWbz1EbYjGfEvdJQK9gH8j8rmp3mPPhO8B5e/MOG
-	5ezUA==
-X-Google-Smtp-Source: AGHT+IH7GskHnBBBnN3dCWe5+4wA68V6kn1SwK+BKY5czWCCWv4gMQRXKFVR4ovK9isr0sjORC+Rjt5sK8DipW7Cf4U=
-X-Received: by 2002:a05:6602:6cce:b0:86a:93c:f5fb with SMTP id
- ca18e2360f4ac-86a231901efmr1968076439f.1.1747691494249; Mon, 19 May 2025
- 14:51:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964B9225D6;
+	Mon, 19 May 2025 21:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.126
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747691572; cv=fail; b=BPTVDweeFFOH41GVKRvpDhT2mp6CoR7vUSv3+u3YuREhPif17H/XwbiMJGpCuDarWNdltN5qVcqUFevqu830JfClobRpRHJtpbG06Ulx9wqeMrOecbmkxJYFabqIquqAeDUcr38xykRDO2sxqiAXM0G6midh0AIS9fptSnPAQ80=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747691572; c=relaxed/simple;
+	bh=xpFrrVau2dE5/yQ4o8IxgO9jCOw2sn+3J9ej8RU0Grg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=IEHmJZSuOhUu409o8ApYLzTZJTuRJ/U1bhEeOQw3SMTk0nKBvqxXy7NgIWvIHGlZkxirmJFuuH0bAA8FaCifO71cr5134o2GaFd9l8yLVvGu5otrA9djaYQ/7B82EUDhLxJTAJ7qOV1urRYCsJt4bvr4oSKOWW9QhwN2womIpR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from ZQ0PR01MB0949.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::5) by NTZPR01MB0954.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:b::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.40; Mon, 19 May
+ 2025 17:15:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MtROLElZpeFzaMy99pUXr3sujl5jXmLTd4fmX3S9TsJXbnWZARgCH4R+nCt8hahJrNCNrZksj/L1VvspKiFLUl8DeZtDwGxitrAzz8NzzgJUnZCklyqu+zoXcxdzAYt2FhfrkllTPDlAl2ktAQ71vo6jM+3FfLeCRCpVx7xxsLkYvb0o5DMObNk/kRxmNhP4jKne84APnoNfkiUlkxML6TRjwPszwyFvXdwW4YurQt9WxYETALsW/F88IfI5h6+o6+pVQlyfxHoYfHrZkuxcSjzYmiKCOYyn4sm3Emjp//rgnZA6YHETODfz+yADJ8jYYZwov9/VQ7rY2SMbwAUxuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ADqH1ZtIIfOusG6NH2u3/ZQeJxZV+5xH5FVhwcRJMvk=;
+ b=MP9pHu9R7/wfL+a6o+ZPX7ahZ8eU9mIIa6WckBWWaOvK53C0FRTkxDn24JDpQ3E0C5B5OoXkxbUIo2fpyv9GgRZ9JtR2ieYP2tQv+JmWAVGS4ilIndpaVXXPlFEgVq4qZV6/p3g+cchNyOfVfZyfVq5ZudLDljse2QCwo2edRaPSYUlOaInSF6eVR7WpmoGYuzLOzy5JhT3IGAoxy3c8nwkPEylL1muZDOFnh/Y8wDlfDuSnzj7USKjVR4RsbUj8B9iP3gJYMWLQmJhXDyG22iRDBHe9q/7Y+MJZrYdjzEIB7/HKV0nyZkQ4Pfu5eG2hNcydRdkpN3qb2ujcsCADyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB0949.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.40; Mon, 19 May
+ 2025 06:07:30 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%5])
+ with mapi id 15.20.8699.040; Mon, 19 May 2025 06:07:30 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Pandith N <pandith.n@intel.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Changhuang Liang <changhuang.liang@starfivetech.com>
+Subject: [PATCH] dmaengine: dw-axi-dmac: Fix CH_CFG2_H_PRIORITY_POS shift macro
+Date: Sun, 18 May 2025 23:07:22 -0700
+Message-Id: <20250519060722.307285-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0031.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::16) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519175348.11924-1-robdclark@gmail.com> <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
- <CAF6AEGuDTGVq7sw4oVuHb+cOE_DuKbEPO956oddVcsV2boieoQ@mail.gmail.com> <CAPM=9twuSfvQ0_NUdRmp0_VtTE_Br7GAysRw+XOoX7BTxUBGYQ@mail.gmail.com>
-In-Reply-To: <CAPM=9twuSfvQ0_NUdRmp0_VtTE_Br7GAysRw+XOoX7BTxUBGYQ@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Mon, 19 May 2025 14:51:20 -0700
-X-Gm-Features: AX0GCFvmTvCANqDHHj2TPhXNkmFs3wC8dEXWRCEtBjip_pfclRDeM3uxGEixFZM
-Message-ID: <CAF6AEGs1hNGMMBjZuXoGjxF+JA1AHY_wx=gmqK4z=zShYoR6=w@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
-To: Dave Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
-	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
-	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
-	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	Jonathan Marek <jonathan@marek.ca>, Jun Nie <jun.nie@linaro.org>, 
-	Kevin Tian <kevin.tian@intel.com>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linaro-mm-sig@lists.linaro.org>, 
-	"m oderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linux-media@vger.kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
-	"Rob Herring (Arm)" <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, 
-	Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+	ZQ0PR01MB1302:EE_|ZQ0PR01MB0949:EE_|NTZPR01MB0954:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fe3432a-85f3-45ba-2644-08dd969b6ff3
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|366016|41320700013|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ vLyJK6pwNJsfYsho3cGXg0Jwab7FhhJWU7vrQVhwHjIU1mYC6lcSnCt2B4vOInNM0D/hbNO47r1I2c5uWVZ3oY8v0gtLjTbouLUQWHOmlrgHDiEL8NDAPrXsp4NZkyIdtpzF2PCSj5u81butG1Ew9lmivEVYhO1VSvwGP5lmR+DlLnaogsbgkgXAsunROhG9XJQ0fp1FnqQYv2McIhh0LGBMQKommKoDXdJPvTJO45eP9jmBoittnUZnadt0mQe8ocVfJC6w9csEsvmGuRPrA+1QLSfjHSJGq89a8lrGQMXLQ+S3/ZJqsv4IxQSxHHi0btAm/sfXdrvmAgR8xKfqQQ2HV0QIJgNSFY3rYQGAS1CUqEEldshf2QOWU6GJ+c3lVkm6TXrrdepXXWHdkXewu2j9HoVO/aV7EoGfNbr3p4x1wQKazE9v25Qwg74J7mL74MrmGL1DLdwgeMII/v4KSsKEIl1vG47jq4hN9HY2NyNNKr6avV+VDh5UYg0W0p3UlFsBAh3SUzQeLfFRPVO7TTjY6T27pd/UcZlIXt8qLxcNAtG66TSDayRaWcOSTOTUuEWr3mqtiBSuoqqeFYhGoPfv9hyYQc9o9Bqb0I8hs+Y=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(41320700013)(52116014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?I83qPhIglNT8H00pupSy8syYeZifCYBBVTvgrSGFpBHD6EYWRlisTylxBFxd?=
+ =?us-ascii?Q?dZ7ywTtMkyMS95OIImzhPmzCqKZHiOHWs9qgBP8hrvM35NZKtRsZnU8NEoHg?=
+ =?us-ascii?Q?uMq5YkOXYMSPEVwnIqwnzER4Jja5/gS+ZAE1g/6WoEHmNM99fTC/3Lh30iaQ?=
+ =?us-ascii?Q?v5Gy12fAqZGcstpWtD05nRwXgDPknoNYvwlU4/m3lUfDywIs2Lbq7om7t9qg?=
+ =?us-ascii?Q?vcwAu4HJ3AqaM8z/W/DOvIXsX6N12duZ57jm8pywHD51YEgkE2cZ61SO+tkI?=
+ =?us-ascii?Q?btKzEQW511K/ourVAu/wxWcuMA8hoSYpV4eJoybB1o0gEbeZZi0qUug6hEKu?=
+ =?us-ascii?Q?tIZMxzDsf9VTVdCqPkfK7ViYe6EIHtMk/T+XaJDudCY+NEUV7kLBdY2oGO7f?=
+ =?us-ascii?Q?vEWVPSul8yxxlbs/+90p6mAUOZdYh4pEQBcVKsCBtjhcdyayYiuyBwPXy6FU?=
+ =?us-ascii?Q?ZtP3p/lyUeAqW42xN5A03PmXBbz7ZfNGyjg3ZuNNJNg35sQpEiYEU0gkixHh?=
+ =?us-ascii?Q?QsWf2GQ6e0kL/GRd9u5xjm4z72iIv+xQFFLKcqPa9pcksfUabaJwr3SAGnzv?=
+ =?us-ascii?Q?SmtaZwrPqJYo36KKdAFIXlZcffyeiNV1JF6fN50OKhFDbvlprJns+3J6xRte?=
+ =?us-ascii?Q?YDjwzSz8PAyhEomhQ5XfO4bszccxkEokvnri0J/bGcykaKhwb3sof1ozdT1e?=
+ =?us-ascii?Q?QcuUz2c4YVgz6Qkq0tFUER7b2teFdch3isG35KEaTMfNA7y3kxe3CfpQ+TR/?=
+ =?us-ascii?Q?eho7hdan3D5txopKuvbeUItePJN+mJc6yrsKjrvnBIkG4Aj7Gg/PxucaY3t1?=
+ =?us-ascii?Q?hRmTwi4b/fRnQ2tr/lRxDkwait9NuI4Ujl5948jzsRBM4q8QLI5HZSUgI6JS?=
+ =?us-ascii?Q?cUh2fT4n0AU7pcdjpzrd9p7eHW536WiRBneYCAj5vnuu41w/TxWcEXPp2isI?=
+ =?us-ascii?Q?onqs5JXQS/uejOtUnn7lnd3uTWL8S97GGbdDdOWXq0Wq+8Uo619olUAZ8KWv?=
+ =?us-ascii?Q?qZOPR1Gzpq9wBs5utehDg0rK4vBkqckpJ8slIGxTRzc0f2lORQ6GT7N9qz3N?=
+ =?us-ascii?Q?8Cn4lbGl6CnV5Ynpz1bIkmZ8nGjqXWwDL6Z8TwIp35yyrcFOIajPA7iVCAIG?=
+ =?us-ascii?Q?Tav8Bu6+KDd3xyJCItSfLfnsSdxcGhCbB7a8idoyOoGTEyksNJIyxoxYmvGg?=
+ =?us-ascii?Q?vdrz9kOCWXqIzw5Eg9FhPf7tBFUPdKsqx/mggArCVgjGDvXxq7oKcAxNOox0?=
+ =?us-ascii?Q?qiHJws1GEHMNYA19k4Pbu8I6eUY4Pje0PvHJqEo8J6JNcUmMo7hsjvJ1ciE0?=
+ =?us-ascii?Q?8v4sNVS5JiZ0hpkIt2hcTumyjnDPsiGn3b0p3i8dLR5lIiU+I123FMBe1Bd3?=
+ =?us-ascii?Q?t8N2YDrXeik8YWECPORCJ3wRsG1Rt35+nkpXymSfdZnHNUVNJVBnKlBbR898?=
+ =?us-ascii?Q?MuY4q3TBMUaOKszQhVBf7tlYsGsrPTrNUW05zSkXa3WSB1wzGvV4RDS5tnPL?=
+ =?us-ascii?Q?XWSSUDdLbu96dFS2LpWHoyKiNKrRUhiYmCn2g5ErgYXLcTmvWNvmXTu+P+LX?=
+ =?us-ascii?Q?VfFAtnlgrgy1lvQ9ZS5HZAvy8KTDtFQ76bKKS9cv5CjkS2BEWfwjIrEY2vDP?=
+ =?us-ascii?Q?f1jXovA9V1FxHICdhYVfK4Q=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fe3432a-85f3-45ba-2644-08dd969b6ff3
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 06:07:30.1019
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GtMBdkwF12nEb5NUdY/y+dHUvjbQj1DFXKlwa7P21hrcvX7rgzFq5UMcRqDUA5GxRiT1BqZaLjw/0Fd+AqiMysgVXGkUo60nsnhJqcJMzqyZQmElI3PNWbc83bgYaogH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0949
+X-OriginatorOrg: starfivetech.com
 
-On Mon, May 19, 2025 at 2:45=E2=80=AFPM Dave Airlie <airlied@gmail.com> wro=
-te:
->
-> On Tue, 20 May 2025 at 07:25, Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Mon, May 19, 2025 at 2:15=E2=80=AFPM Dave Airlie <airlied@gmail.com>=
- wrote:
-> > >
-> > > On Tue, 20 May 2025 at 03:54, Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > Conversion to DRM GPU VA Manager[1], and adding support for Vulkan =
-Sparse
-> > > > Memory[2] in the form of:
-> > > >
-> > > > 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP=
-_MAP/
-> > > >    MAP_NULL/UNMAP commands
-> > > >
-> > > > 2. A new VM_BIND ioctl to allow submitting batches of one or more
-> > > >    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
-> > > >
-> > > > I did not implement support for synchronous VM_BIND commands.  Sinc=
-e
-> > > > userspace could just immediately wait for the `SUBMIT` to complete,=
- I don't
-> > > > think we need this extra complexity in the kernel.  Synchronous/imm=
-ediate
-> > > > VM_BIND operations could be implemented with a 2nd VM_BIND submitqu=
-eue.
-> > >
-> > > This seems suboptimal for Vulkan userspaces. non-sparse binds are all
-> > > synchronous, you are adding an extra ioctl to wait, or do you manage
-> > > these via a different mechanism?
-> >
-> > Normally it's just an extra in-fence for the SUBMIT ioctl to ensure
-> > the binds happen before cmd execution
-> >
-> > When it comes to UAPI, it's easier to add something later, than to
-> > take something away, so I don't see a problem adding synchronous binds
-> > later if that proves to be needed.  But I don't think it is.
->
-> I'm not 100% sure that is conformant behaviour to the vulkan spec,
->
-> Two questions come to mind:
-> 1. where is this out fence stored? vulkan being explicit with no
-> guarantee of threads doing things, seems like you'd need to use a lock
-> in the vulkan driver to store it, esp if multiple threads bind memory.
+CH_PRIOR field is located in CH_CFG2 bits [51:47]. So its shift in
+CH_CFG2_H_ is 15. Correct it.
 
-turnip is protected dev->vm_bind_fence_fd with a u_rwlock
+Fixes: 824351668a41 ("dmaengine: dw-axi-dmac: support DMAX_NUM_CHANNELS > 8")
+Cc: Pandith N <pandith.n@intel.com>
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 2. If it's fine to lazy bind on the hw side, do you also handle the
-> case where something is bound and immediately freed, where does the
-> fence go then, do you wait for the fence before destroying things?
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index b842e6a8d90d..facdfb453ffc 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -326,7 +326,7 @@ enum {
+ #define CH_CFG2_H_TT_FC_POS		0
+ #define CH_CFG2_H_HS_SEL_SRC_POS	3
+ #define CH_CFG2_H_HS_SEL_DST_POS	4
+-#define CH_CFG2_H_PRIORITY_POS		20
++#define CH_CFG2_H_PRIORITY_POS		15
 
-right no turnip is just relying on the UNMAP/unbind going thru the
-same queue.. but I guess it could also use vm_bind_fence_fd as an
-in-fence.
-
-BR,
--R
+ /**
+  * DW AXI DMA channel interrupts
+--
+2.25.1
