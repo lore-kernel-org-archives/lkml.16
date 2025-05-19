@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093762701C8;
-	Mon, 19 May 2025 09:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B13627AC37;
+	Mon, 19 May 2025 09:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747646341; cv=none; b=sYFyhOJRMZqGbTqYYj0JgvCbwPUpLeXYbvuz31V3M+R3BuMsEy6WjmYyV+umBHnwqC75tBLKgZwRKhgYhKFf09c0jkQxq8H/vorydn8STKtDmt6QvHErJWI/9stc5q5o6x6a83IEUusStH3Q9Kw43xJiOfsI8tTEg140l77YWqo=
+	t=1747646344; cv=none; b=aHlM6o4CsqVjhI2nJC/o5yRgL+IAuMBqcT1G0LUJL8m5kqSBLuK4wErNbcxYwiBg4MHOTN2nah/wpdevsxrS1yYu5UriqapDBZzsqcCXx4CnKBVDbzKht52MHEV2ecmng73N/BthE02b/nRW4JCo6Ircc5B+BTOOtLCEQaeiQQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747646341; c=relaxed/simple;
-	bh=eqhIu4Ytfemwyxgng3iHH4sQt4GfdE3Wth8zaCAgCgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=f3rnHNbmzAtyTv7fivOFuDTJH8PpRHpn9OZRJsD9WZ3uM4e16OB3BRzZHMiRwCMEhSgUxp1yGeO42ypLHC/bLEKkPNQ9kKxWuz4PWbzCZ4no6yttJvICk29oG80D1xDYHV1h9i+CyRFPmlzYv7/n61uwrTL1qHIdY0zkUUdEdXM=
+	s=arc-20240116; t=1747646344; c=relaxed/simple;
+	bh=YIhasWAI2DFiyLXsGvo/xd87ErP0zWnVDexTxa/J6wA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=fNKmTGygENd3ji5ff2pbd9Rr4xYYSYTZx9nYiYBxlu7Lf/m2NDgAEfaeZWy2FYyEsC16ZSBe0bqKQ+7ONCx6Urs/VDmzZOkP+7imU2936Go+6CfRVUxUjcp4XDd6HcMZ23KUnvFC0jbwhCCdOhJIHavTtl3lnyyqi4o08rNqwOQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-5e-682af76f6d09
+X-AuditID: a67dfc5b-681ff7000002311f-b9-682af770961a
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -75,44 +75,44 @@ Cc: kernel_team@skhynix.com,
 	netdev@vger.kernel.org,
 	matthew.brost@intel.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v16 25/42] dept: track PG_locked with dept
-Date: Mon, 19 May 2025 18:18:09 +0900
-Message-Id: <20250519091826.19752-26-byungchul@sk.com>
+Subject: [PATCH v16 31/42] dept: assign dept map to mmu notifier invalidation synchronization
+Date: Mon, 19 May 2025 18:18:15 +0900
+Message-Id: <20250519091826.19752-32-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250519091826.19752-1-byungchul@sk.com>
 References: <20250519091826.19752-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0yTZxTHfd47leprR9wrLrrVuDlUFIJ4YtQtJmaPLrol24dlftAqb2y1
-	XFIUxUQtcgmDQeqlVLFiC6MyWqC2xKCjBGFUwBsqtsCgm3jZkJuptgiCrmD8cvLL/5/zO18O
-	R8pa6UhOlXRA1CQp1HJGQkmGw80rk8eilKufemMh8CqXAmONjYGOaisCW20GAQMt34A3OITg
-	ze27JBj0HQjMj/pIqHX7ELgqTjDw4Mkc6AyMMtCmz2cgs6yGgXuDkwT0Fp0iwOrYBn9bnlFw
-	U1dKgGGAgfOGTCI0/iNg3FLJgkW7FPorilmYfBQDbT4PDa6e5XCupJeBelcbBe66fgIeXDMy
-	4LO9o+Gmu5WCYOFC6DhZQEPVSCkDg0ELCZbAKAv3G00EuE3zwZ4VEua8fEvDjYJGAnJ+u0xA
-	Z/cfCBpy/yHAYfMw0BwYIsDp0JMwcakFQX/hMAvZv46zcD6jEEF+dhEFWb1r4M3r0OULr2Ig
-	46KdgqopD/p6A7aV2BBuHholcZbzEJ4IPGSwK2iicHupgK8W97E4q6GHxSbHQeysiMJl9QME
-	NvsDNHZU/sJgh/8Ui/OGOwk8cucO+/0nP0vWJ4hqVZqoWbVxl0SZO2WnU1p3Hb7fP0Jpkfa7
-	PBTGCXycMNB+lv3AZTdezDDDfyF0dY2T0xzBfyo4C57ReUjCkbxntuC90I2mi4/4dYJ7TEtM
-	M8UvFVo8ZTO5lI8XBnuL0HvpYsFqb5wRhYXynvzmmVzGrxE6rSXUtFTgDWFC362n1PuFBcL1
-	ii5Kh6QmNKsSyVRJaYkKlTouWpmepDocvSc50YFC/2U5OrmjDvk7fmhCPIfk4VK760uljFak
-	paYnNiGBI+UR0krnMqVMmqBIPyJqkndqDqrF1Ca0kKPkH0tjg4cSZPxexQFxvyimiJoPLcGF
-	RWqRMv6zl4bN11ui8x47Pk83Z24pNUSW7710zHiuTle+qJosVv+0ZEVaOYvO3HV7rUZdyfzw
-	Iz7SQ/nNJ/XGTc+9l7trt85r3z5RNfeKd/W3urHj3O7YiW27F8dn/5mjkqwt/H3ljziY0kPr
-	j/v/2jp1NqLq39NxmmjN9iW+r07vGNv3Qk6lKhUxUaQmVfE/ra0sz1sDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzHfX+P13H2cxq/iWlnqExkZR8P87jlJ48bZvOPTn78btVld0kZ
-	cymkujxsFaVcxcndxXWnrXC0TqdjSOV6WIVjTStldEcP4sr889lrr/f2fv/zEeFSAzlHpFAm
-	8iqlPE5GiQnxzjVpSxN+hgjL7U1zwTOUQcCN+yYKGu8ZEZgepGLQW78FWr39CEZfvcEhP7cR
-	QcnHLhweOLoR2MrPUtD8eTq0eAYpcOZmUZBWdp+Ct31jGHTmXcXAaNkB7/U9BLy8XIpBfi8F
-	hflpmO98wWBYb6BBr1kI7vICGsY+hoGz20WCvchJgq1jCVwv7qTgsc1JgKPajUHzwxsUdJv+
-	kPDS0UCANycAGq9oSagYKKWgz6vHQe8ZpKGpVoeBQzcLzOm+1vM/xkl4rq3F4PytSgxa2h8h
-	eJLxAQOLyUWB3dOPgdWSi8PInXoE7pyvNJzLHqahMDUHQda5PALSOyNg9JdvuWgoDFJvmgmo
-	+O1CG9ZxpmIT4uz9gziXbj3BjXjeUZzNqyO4F6UsV1PQRXPpTzpoTmc5zlnLQ7iyx70YV/Ld
-	Q3IWw0WKs3y/SnOZX1swbuD1a3r3vAPitYf5OEUSr1q2LlosZPw2k8caopOb3AOEBml2ZSI/
-	EcuEs2XPv9ETTDGL2ba2YXyC/ZlA1qrtITORWIQzrqlsa1E7mghmMqtZx08NNsEEs5Ctd5VN
-	egmzku3rzEP/SuezRnPtZJGfz3dk2Se9lIlgW4zFxGUk1qEpBuSvUCbFyxVxEaHqWCFFqUgO
-	jUmItyDfB+lPj12pRkPNW+oQI0KyaRKzLViQkvIkdUp8HWJFuMxfYrAGCVLJYXnKSV6VcFB1
-	PI5X16EAESGbLYnaz0dLmaPyRD6W54/xqv8pJvKbo0F3nSujSgvnx4bbosJ7cjpqPux1r254
-	FLlnVd72bxJlyubI9cLGS9JnimBvW8TW7HtFrk8a4Vp1zbXAqhkzTNqqI2zyoikLNgZqRzzj
-	43Vd/TFrbey7bfSzvWTYvqdLrWOHTjQKlZtyE0tODQeciQw9WWG7XWnUXUgaDcpiVhy8dDRb
-	RqgFeVgIrlLL/wK/9ilkPQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0yTZxTHfd47lZrXjuijYGaaEDdMFYzY88EZk2l8YrLMxMREjbpuvLGN
+	LWKLCCbLQBGVSoMiMG9YQEtD66itiZdZglQLaERQpEgQsSpZJ7dh2w1FXUH9cvLL+Z/zO1+O
+	QCta2fmCLjNbMmZq9EpOxsiG46tVWf+maFPf2NQQCR9h4GyDk4OOPxwInFcKKAjdWQeB6BCC
+	d/cf0FBZ3oGg+vlTGq74+xF47Qc4ePRyFnRFRjloKzdzcLC2gYPO15MU9FWcoMDh/gGe2QYZ
+	uFdaQ0FliIMzlQepWPmLgglbPQ+2/GQI2k/zMPk8Ddr6u1nw9i6GU1V9HNz0tjHgvxak4NGN
+	sxz0Oz+ycM/fykDUkggdx0tYuDRSw8HrqI0GW2SUh4dNVgr81jngKowJi958YKGlpImCoguX
+	Keh68ieCxiMDFLid3Rz4IkMUeNzlNLytu4MgaBnm4dCxCR7OFFgQmA9VMFDYlw7v/otdPhdO
+	g4LzLgYuve9Gq78jzionIr6hUZoUevaRt5HHHPFGrQy5W4PJ9dNPeVLY2MsTq3sv8dhTSO3N
+	EEWqxyMscdcf5Yh7/ARPioe7KDLS3s5vSNoiW5kh6XU5knHpqp9k2tqBMZQVUOeOTf7N5qN+
+	VTGKE7C4HD8Mt1Bf+J+TL6aZExfhnp4JeooTxIXYUzLIFiOZQIvdM3Hg3BM0FXwlbsPvexqn
+	mRGT8cvyID/FcnEFtlSHPku/xg5X07QoLtbvNfum5xViOu5yVDFTUiyWxWHnhIX7tDAP37L3
+	MKVIbkUz6pFCl5lj0Oj0y5do8zJ1uUt+2W1wo9h/2X6d3HoNjXdsbEaigJTxcpf3W62C1eSY
+	8gzNCAu0MkFe7/lGq5BnaPL2S8bdO4x79ZKpGSUKjHKufFl0X4ZC3KnJlnZJUpZk/JJSQtz8
+	fJQtpeJjnSrf7c7AesgvYneWPUZXRxrC5kFYIWTnOlLjfbWdJ0/pAy0H7qevPRosTUxX5+GK
+	7c+2JiSNLuM572GVuXl/HTNzU3z7QOXGV78ZdgUO3yrIKFk1Vqa/vfmj4XuiDq3ZHjLZk3+W
+	1y1QXdyj/j3UmlzlZ11JYfTjbCVj0mrSUmijSfM/8QQ2DVsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzHfb+/p+s4fjuN34qxMyRT2hwfY3nY6Dvk4R+MmW75zZ0ed3dS
+	zFZKo3SLqTyVq+y0u4vrzoa4pDiOSZRKUoqZdOShi3Lhyvzz2Wuf92evzz9vCSU3M0ESTaJe
+	1Caq4hWslJZuXJa5IPlHqHqhpzEAvAPHaLhw1cpC4xULAuu1DAy996OgddCD4NeTpxQUFTQi
+	KO1+TcE1VycCZ8URFpreTYRmbz8L7oJcFjLLr7LwrM+HoaPwFAaLPRq6TO9peJxfhqGol4Xz
+	RZnYPz5gGDKZOTClz4aeinMc+LojwN3ZwkB9sZsBZ/t8OFvSwcJtp5sG140eDE3VF1jotP5h
+	4LHrIQ2DhmBoPJnHQOXnMhb6Bk0UmLz9HDyvNWJwGaeALctvzf7+m4EHebUYsi9VYWh+eQtB
+	zbE3GOzWFhbqvR4MDnsBBcOX7yPoMXzi4OiJIQ7OZxgQ5B4tpCGrQwm/fvo/Fw9EQMZFGw2V
+	Iy1oZSSxllgRqff0UyTLcYAMe1+wxDlopMmjMoHcPPeaI1k17Rwx2vcTR0UoKb/di0npNy9D
+	7ObjLLF/O8WRnE/NmHxuaOA2T98hXb5HjNekiNrwyBipuvzNF5TcuiT1i+8jk446F+SgAInA
+	LxK+nn6LR5nl5wptbUPUKAfyMwVH3nsmB0klFN8yXmgtfolGg8n8LmGkrWaMaX628K6ghxtl
+	Gb9YMJT24n/SGYLFVjsmCvDv23Prx+7lvFJotpTQ+UhqROPMKFCTmJKg0sQrw3Rx6rRETWpY
+	bFKCHfkbZDrsO3kDDTRF1SFeghQTZDbnPLWcUaXo0hLqkCChFIEysyNELZftUaUdFLVJu7X7
+	40VdHQqW0IqpsnXbxBg5v1elF+NEMVnU/k+xJCAoHc1Syyb6fDGXZbp74UsMO+92BYfFXp+q
+	Lt8effbtNoIyHu17vrrK69Gv6ftTTc95kW+SrjqyN3B9Q/vWV6UrTgwob0Zmb+Ydu1zdXfq4
+	YVg61xM+LarK/SCkmlg3rtWzkcIhRYVpfVDXmexN0TXKSVs2hMpi19g+WHTW8KTCOyOpClqn
+	VkWEUlqd6i9J66ZnPQMAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -120,359 +120,217 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Makes dept able to track PG_locked waits and events, which will be
-useful in practice.  See the following link that shows dept worked with
-PG_locked and detected real issues in practice:
+Resolved the following false positive by introducing explicit dept map
+and annotations for dealing with this case:
 
-   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
+   *** DEADLOCK ***
+   context A
+       [S] (unknown)(<sched>:0)
+       [W] lock(&mm->mmap_lock:0)
+       [E] try_to_wake_up(<sched>:0)
+
+   context B
+       [S] lock(&mm->mmap_lock:0)
+       [W] mmu_interval_read_begin(<sched>:0)
+       [E] unlock(&mm->mmap_lock:0)
+
+   [S]: start of the event context
+   [W]: the wait blocked
+   [E]: the event not reachable
+
+dept already tracks dependencies between scheduler sleep and ttwu based
+on internal timestamp called wgen.  However, in case that more than one
+event contexts are overwrapped, dept has chance to wrongly guess the
+start of the event context like the following:
+
+   <before this patch>
+
+   context A: lock L
+   context A: mmu_notifier_invalidate_range_start()
+
+   context B: lock L'
+   context B: mmu_interval_read_begin() : wait
+   <- here is the start of the event context of C.
+   context B: unlock L'
+
+   context C: lock L''
+   context C: mmu_notifier_invalidate_range_start()
+
+   context A: mmu_notifier_invalidate_range_end()
+   context A: unlock L
+
+   context C: mmu_notifier_invalidate_range_end() : ttwu
+   <- here is the end of the event context of C.  dept observes a wait,
+      lock L'' within the event context of C.  Which causes a false
+      positive dept report.
+
+   context C: unlock L''
+
+By explicitly annotating the interesting event context range, make dept
+work with more precise information like:
+
+   <after this patch>
+
+   context A: lock L
+   context A: mmu_notifier_invalidate_range_start()
+
+   context B: lock L'
+   context B: mmu_interval_read_begin() : wait
+   context B: unlock L'
+
+   context C: lock L''
+   context C: mmu_notifier_invalidate_range_start()
+   <- here is the start of the event context of C.
+
+   context A: mmu_notifier_invalidate_range_end()
+   context A: unlock L
+
+   context C: mmu_notifier_invalidate_range_end() : ttwu
+   <- here is the end of the event context of C.  dept doesn't observe
+      the wait, lock L'' within the event context of C.  context C is
+      responsible only for the range delimited by
+      mmu_notifier_invalidate_range_{start,end}().
+
+   context C: unlock L''
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm_types.h   |   2 +
- include/linux/page-flags.h | 125 +++++++++++++++++++++++++++++++++----
- include/linux/pagemap.h    |  16 ++++-
- mm/filemap.c               |  26 ++++++++
- mm/mm_init.c               |   2 +
- 5 files changed, 158 insertions(+), 13 deletions(-)
+ include/linux/mmu_notifier.h | 26 ++++++++++++++++++++++++++
+ mm/mmu_notifier.c            | 31 +++++++++++++++++++++++++++++--
+ 2 files changed, 55 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 56d07edd01f9..7e9d63cef28a 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -20,6 +20,7 @@
- #include <linux/seqlock.h>
- #include <linux/percpu_counter.h>
- #include <linux/types.h>
-+#include <linux/dept.h>
- 
- #include <asm/mmu.h>
- 
-@@ -224,6 +225,7 @@ struct page {
- 	struct page *kmsan_shadow;
- 	struct page *kmsan_origin;
- #endif
-+	struct dept_ext_wgen pg_locked_wgen;
- } _struct_page_alignment;
- 
- /*
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index e6a21b62dcce..73cb8a1ad4f3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -194,6 +194,61 @@ enum pageflags {
- 
- #ifndef __GENERATING_BOUNDS_H
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index bc2402a45741..1e256f5305b7 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -428,6 +428,14 @@ static inline int mmu_notifier_test_young(struct mm_struct *mm,
+ 	return 0;
+ }
  
 +#ifdef CONFIG_DEPT
-+#include <linux/kernel.h>
-+#include <linux/dept.h>
-+
-+extern struct dept_map pg_locked_map;
-+
-+/*
-+ * Place the following annotations in its suitable point in code:
-+ *
-+ *	Annotate dept_page_set_bit() around firstly set_bit*()
-+ *	Annotate dept_page_clear_bit() around clear_bit*()
-+ *	Annotate dept_page_wait_on_bit() around wait_on_bit*()
-+ */
-+
-+static inline void dept_page_set_bit(struct page *p, int bit_nr)
-+{
-+	if (bit_nr == PG_locked)
-+		dept_request_event(&pg_locked_map, &p->pg_locked_wgen);
-+}
-+
-+static inline void dept_page_clear_bit(struct page *p, int bit_nr)
-+{
-+	if (bit_nr == PG_locked)
-+		dept_event(&pg_locked_map, 1UL, _RET_IP_, __func__, &p->pg_locked_wgen);
-+}
-+
-+static inline void dept_page_wait_on_bit(struct page *p, int bit_nr)
-+{
-+	if (bit_nr == PG_locked)
-+		dept_wait(&pg_locked_map, 1UL, _RET_IP_, __func__, 0, -1L);
-+}
-+
-+static inline void dept_folio_set_bit(struct folio *f, int bit_nr)
-+{
-+	dept_page_set_bit(&f->page, bit_nr);
-+}
-+
-+static inline void dept_folio_clear_bit(struct folio *f, int bit_nr)
-+{
-+	dept_page_clear_bit(&f->page, bit_nr);
-+}
-+
-+static inline void dept_folio_wait_on_bit(struct folio *f, int bit_nr)
-+{
-+	dept_page_wait_on_bit(&f->page, bit_nr);
-+}
++void mmu_notifier_invalidate_dept_ecxt_start(struct mmu_notifier_range *range);
++void mmu_notifier_invalidate_dept_ecxt_end(struct mmu_notifier_range *range);
 +#else
-+#define dept_page_set_bit(p, bit_nr)		do { } while (0)
-+#define dept_page_clear_bit(p, bit_nr)		do { } while (0)
-+#define dept_page_wait_on_bit(p, bit_nr)	do { } while (0)
-+#define dept_folio_set_bit(f, bit_nr)		do { } while (0)
-+#define dept_folio_clear_bit(f, bit_nr)		do { } while (0)
-+#define dept_folio_wait_on_bit(f, bit_nr)	do { } while (0)
++static inline void mmu_notifier_invalidate_dept_ecxt_start(struct mmu_notifier_range *range) {}
++static inline void mmu_notifier_invalidate_dept_ecxt_end(struct mmu_notifier_range *range) {}
 +#endif
 +
- #ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- DECLARE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
- 
-@@ -415,27 +470,51 @@ static __always_inline bool folio_test_##name(const struct folio *folio) \
- 
- #define FOLIO_SET_FLAG(name, page)					\
- static __always_inline void folio_set_##name(struct folio *folio)	\
--{ set_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	set_bit(PG_##name, folio_flags(folio, page));			\
-+	dept_folio_set_bit(folio, PG_##name);				\
-+}
- 
- #define FOLIO_CLEAR_FLAG(name, page)					\
- static __always_inline void folio_clear_##name(struct folio *folio)	\
--{ clear_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	clear_bit(PG_##name, folio_flags(folio, page));			\
-+	dept_folio_clear_bit(folio, PG_##name);				\
-+}
- 
- #define __FOLIO_SET_FLAG(name, page)					\
- static __always_inline void __folio_set_##name(struct folio *folio)	\
--{ __set_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	__set_bit(PG_##name, folio_flags(folio, page));			\
-+	dept_folio_set_bit(folio, PG_##name);				\
-+}
- 
- #define __FOLIO_CLEAR_FLAG(name, page)					\
- static __always_inline void __folio_clear_##name(struct folio *folio)	\
--{ __clear_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	__clear_bit(PG_##name, folio_flags(folio, page));		\
-+	dept_folio_clear_bit(folio, PG_##name);				\
-+}
- 
- #define FOLIO_TEST_SET_FLAG(name, page)					\
- static __always_inline bool folio_test_set_##name(struct folio *folio)	\
--{ return test_and_set_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	bool __ret = test_and_set_bit(PG_##name, folio_flags(folio, page)); \
-+									\
-+	if (!__ret)							\
-+		dept_folio_set_bit(folio, PG_##name);			\
-+	return __ret;							\
-+}
- 
- #define FOLIO_TEST_CLEAR_FLAG(name, page)				\
- static __always_inline bool folio_test_clear_##name(struct folio *folio) \
--{ return test_and_clear_bit(PG_##name, folio_flags(folio, page)); }
-+{									\
-+	bool __ret = test_and_clear_bit(PG_##name, folio_flags(folio, page)); \
-+									\
-+	if (__ret)							\
-+		dept_folio_clear_bit(folio, PG_##name);			\
-+	return __ret;							\
-+}
- 
- #define FOLIO_FLAG(name, page)						\
- FOLIO_TEST_FLAG(name, page)						\
-@@ -450,32 +529,54 @@ static __always_inline int Page##uname(const struct page *page)		\
- #define SETPAGEFLAG(uname, lname, policy)				\
- FOLIO_SET_FLAG(lname, FOLIO_##policy)					\
- static __always_inline void SetPage##uname(struct page *page)		\
--{ set_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	set_bit(PG_##lname, &policy(page, 1)->flags);			\
-+	dept_page_set_bit(page, PG_##lname);				\
-+}
- 
- #define CLEARPAGEFLAG(uname, lname, policy)				\
- FOLIO_CLEAR_FLAG(lname, FOLIO_##policy)					\
- static __always_inline void ClearPage##uname(struct page *page)		\
--{ clear_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	clear_bit(PG_##lname, &policy(page, 1)->flags);			\
-+	dept_page_clear_bit(page, PG_##lname);				\
-+}
- 
- #define __SETPAGEFLAG(uname, lname, policy)				\
- __FOLIO_SET_FLAG(lname, FOLIO_##policy)					\
- static __always_inline void __SetPage##uname(struct page *page)		\
--{ __set_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	__set_bit(PG_##lname, &policy(page, 1)->flags);			\
-+	dept_page_set_bit(page, PG_##lname);				\
-+}
- 
- #define __CLEARPAGEFLAG(uname, lname, policy)				\
- __FOLIO_CLEAR_FLAG(lname, FOLIO_##policy)				\
- static __always_inline void __ClearPage##uname(struct page *page)	\
--{ __clear_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	__clear_bit(PG_##lname, &policy(page, 1)->flags);		\
-+	dept_page_clear_bit(page, PG_##lname);				\
-+}
- 
- #define TESTSETFLAG(uname, lname, policy)				\
- FOLIO_TEST_SET_FLAG(lname, FOLIO_##policy)				\
- static __always_inline int TestSetPage##uname(struct page *page)	\
--{ return test_and_set_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	bool ret = test_and_set_bit(PG_##lname, &policy(page, 1)->flags);\
-+	if (!ret)							\
-+		dept_page_set_bit(page, PG_##lname);			\
-+	return ret;							\
-+}
- 
- #define TESTCLEARFLAG(uname, lname, policy)				\
- FOLIO_TEST_CLEAR_FLAG(lname, FOLIO_##policy)				\
- static __always_inline int TestClearPage##uname(struct page *page)	\
--{ return test_and_clear_bit(PG_##lname, &policy(page, 1)->flags); }
-+{									\
-+	bool ret = test_and_clear_bit(PG_##lname, &policy(page, 1)->flags);\
-+	if (ret)							\
-+		dept_page_clear_bit(page, PG_##lname);			\
-+	return ret;							\
-+}
- 
- #define PAGEFLAG(uname, lname, policy)					\
- 	TESTPAGEFLAG(uname, lname, policy)				\
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 26baa78f1ca7..c4c9742c7a29 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -1097,7 +1097,12 @@ void folio_unlock(struct folio *folio);
-  */
- static inline bool folio_trylock(struct folio *folio)
+ static inline void
+ mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
  {
--	return likely(!test_and_set_bit_lock(PG_locked, folio_flags(folio, 0)));
-+	bool ret = !test_and_set_bit_lock(PG_locked, folio_flags(folio, 0));
+@@ -439,6 +447,12 @@ mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+ 		__mmu_notifier_invalidate_range_start(range);
+ 	}
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
 +
-+	if (ret)
-+		dept_page_set_bit(&folio->page, PG_locked);
-+
-+	return likely(ret);
++	/*
++	 * From now on, waiters could be there by this start until
++	 * mmu_notifier_invalidate_range_end().
++	 */
++	mmu_notifier_invalidate_dept_ecxt_start(range);
  }
  
  /*
-@@ -1133,6 +1138,15 @@ static inline bool trylock_page(struct page *page)
- static inline void folio_lock(struct folio *folio)
- {
- 	might_sleep();
-+	/*
-+	 * dept_page_wait_on_bit() will be called if __folio_lock() goes
-+	 * through a real wait path.  However, for better job to detect
-+	 * *potential* deadlocks, let's assume that folio_lock() always
-+	 * goes through wait so that dept can take into account all the
-+	 * potential cases.
-+	 */
-+	dept_page_wait_on_bit(&folio->page, PG_locked);
-+
- 	if (!folio_trylock(folio))
- 		__folio_lock(folio);
- }
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 7b90cbeb4a1a..cab03b41add2 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -48,6 +48,7 @@
- #include <linux/rcupdate_wait.h>
- #include <linux/sched/mm.h>
- #include <linux/sysctl.h>
-+#include <linux/dept.h>
- #include <asm/pgalloc.h>
- #include <asm/tlbflush.h>
- #include "internal.h"
-@@ -1145,6 +1146,7 @@ static int wake_page_function(wait_queue_entry_t *wait, unsigned mode, int sync,
- 		if (flags & WQ_FLAG_CUSTOM) {
- 			if (test_and_set_bit(key->bit_nr, &key->folio->flags))
- 				return -1;
-+			dept_page_set_bit(&key->folio->page, key->bit_nr);
- 			flags |= WQ_FLAG_DONE;
- 		}
+@@ -459,6 +473,12 @@ mmu_notifier_invalidate_range_start_nonblock(struct mmu_notifier_range *range)
+ 		ret = __mmu_notifier_invalidate_range_start(range);
  	}
-@@ -1228,6 +1230,7 @@ static inline bool folio_trylock_flag(struct folio *folio, int bit_nr,
- 	if (wait->flags & WQ_FLAG_EXCLUSIVE) {
- 		if (test_and_set_bit(bit_nr, &folio->flags))
- 			return false;
-+		dept_page_set_bit(&folio->page, bit_nr);
- 	} else if (test_bit(bit_nr, &folio->flags))
- 		return false;
- 
-@@ -1235,6 +1238,9 @@ static inline bool folio_trylock_flag(struct folio *folio, int bit_nr,
- 	return true;
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
++
++	/*
++	 * From now on, waiters could be there by this start until
++	 * mmu_notifier_invalidate_range_end().
++	 */
++	mmu_notifier_invalidate_dept_ecxt_start(range);
+ 	return ret;
  }
  
-+struct dept_map __maybe_unused pg_locked_map = DEPT_MAP_INITIALIZER(pg_locked_map, NULL);
-+EXPORT_SYMBOL(pg_locked_map);
-+
- static inline int folio_wait_bit_common(struct folio *folio, int bit_nr,
- 		int state, enum behavior behavior)
- {
-@@ -1246,6 +1252,8 @@ static inline int folio_wait_bit_common(struct folio *folio, int bit_nr,
- 	unsigned long pflags;
- 	bool in_thrashing;
+@@ -470,6 +490,12 @@ mmu_notifier_invalidate_range_end(struct mmu_notifier_range *range)
  
-+	dept_page_wait_on_bit(&folio->page, bit_nr);
+ 	if (mm_has_notifiers(range->mm))
+ 		__mmu_notifier_invalidate_range_end(range);
 +
- 	if (bit_nr == PG_locked &&
- 	    !folio_test_uptodate(folio) && folio_test_workingset(folio)) {
- 		delayacct_thrashing_start(&in_thrashing);
-@@ -1339,6 +1347,23 @@ static inline int folio_wait_bit_common(struct folio *folio, int bit_nr,
- 		break;
- 	}
- 
 +	/*
-+	 * dept_page_set_bit() might have been called already in
-+	 * folio_trylock_flag(), wake_page_function() or somewhere.
-+	 * However, call it again to reset the wgen of dept to ensure
-+	 * dept_page_wait_on_bit() is called prior to
-+	 * dept_page_set_bit().
-+	 *
-+	 * Remind dept considers all the waits between
-+	 * dept_page_set_bit() and dept_page_clear_bit() as potential
-+	 * event disturbers. Ensure the correct sequence so that dept
-+	 * can make correct decisions:
-+	 *
-+	 *	wait -> acquire(set bit) -> release(clear bit)
++	 * The event context that has been started by
++	 * mmu_notifier_invalidate_range_start() ends.
 +	 */
-+	if (wait->flags & WQ_FLAG_DONE)
-+		dept_page_set_bit(&folio->page, bit_nr);
++	mmu_notifier_invalidate_dept_ecxt_end(range);
+ }
+ 
+ static inline void mmu_notifier_arch_invalidate_secondary_tlbs(struct mm_struct *mm,
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index fc18fe274505..850d75952f98 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -46,6 +46,7 @@ struct mmu_notifier_subscriptions {
+ 	unsigned long active_invalidate_ranges;
+ 	struct rb_root_cached itree;
+ 	wait_queue_head_t wq;
++	struct dept_map dmap;
+ 	struct hlist_head deferred_list;
+ };
+ 
+@@ -165,6 +166,25 @@ static void mn_itree_inv_end(struct mmu_notifier_subscriptions *subscriptions)
+ 	wake_up_all(&subscriptions->wq);
+ }
+ 
++#ifdef CONFIG_DEPT
++void mmu_notifier_invalidate_dept_ecxt_start(struct mmu_notifier_range *range)
++{
++	struct mmu_notifier_subscriptions *subscriptions =
++		range->mm->notifier_subscriptions;
 +
++	if (subscriptions)
++		sdt_ecxt_enter(&subscriptions->dmap);
++}
++void mmu_notifier_invalidate_dept_ecxt_end(struct mmu_notifier_range *range)
++{
++	struct mmu_notifier_subscriptions *subscriptions =
++		range->mm->notifier_subscriptions;
++
++	if (subscriptions)
++		sdt_ecxt_exit(&subscriptions->dmap);
++}
++#endif
++
+ /**
+  * mmu_interval_read_begin - Begin a read side critical section against a VA
+  *                           range
+@@ -246,9 +266,12 @@ mmu_interval_read_begin(struct mmu_interval_notifier *interval_sub)
+ 	 */
+ 	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+-	if (is_invalidating)
++	if (is_invalidating) {
++		sdt_might_sleep_start(&subscriptions->dmap);
+ 		wait_event(subscriptions->wq,
+ 			   READ_ONCE(subscriptions->invalidate_seq) != seq);
++		sdt_might_sleep_end();
++	}
+ 
  	/*
- 	 * If a signal happened, this 'finish_wait()' may remove the last
- 	 * waiter from the wait-queues, but the folio waiters bit will remain
-@@ -1496,6 +1521,7 @@ void folio_unlock(struct folio *folio)
- 	BUILD_BUG_ON(PG_waiters != 7);
- 	BUILD_BUG_ON(PG_locked > 7);
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-+	dept_page_clear_bit(&folio->page, PG_locked);
- 	if (folio_xor_flags_has_waiters(folio, 1 << PG_locked))
- 		folio_wake_bit(folio, PG_locked);
- }
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 327764ca0ee4..39cf0bc355ba 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -31,6 +31,7 @@
- #include <linux/execmem.h>
- #include <linux/vmstat.h>
- #include <linux/hugetlb.h>
-+#include <linux/dept.h>
- #include "internal.h"
- #include "slab.h"
- #include "shuffle.h"
-@@ -586,6 +587,7 @@ void __meminit __init_single_page(struct page *page, unsigned long pfn,
- 	atomic_set(&page->_mapcount, -1);
- 	page_cpupid_reset_last(page);
- 	page_kasan_tag_reset(page);
-+	dept_ext_wgen_init(&page->pg_locked_wgen);
+ 	 * Notice that mmu_interval_read_retry() can already be true at this
+@@ -625,6 +648,7 @@ int __mmu_notifier_register(struct mmu_notifier *subscription,
  
- 	INIT_LIST_HEAD(&page->lru);
- #ifdef WANT_PAGE_VIRTUAL
+ 		INIT_HLIST_HEAD(&subscriptions->list);
+ 		spin_lock_init(&subscriptions->lock);
++		sdt_map_init(&subscriptions->dmap);
+ 		subscriptions->invalidate_seq = 2;
+ 		subscriptions->itree = RB_ROOT_CACHED;
+ 		init_waitqueue_head(&subscriptions->wq);
+@@ -1070,9 +1094,12 @@ void mmu_interval_notifier_remove(struct mmu_interval_notifier *interval_sub)
+ 	 */
+ 	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+-	if (seq)
++	if (seq) {
++		sdt_might_sleep_start(&subscriptions->dmap);
+ 		wait_event(subscriptions->wq,
+ 			   mmu_interval_seq_released(subscriptions, seq));
++		sdt_might_sleep_end();
++	}
+ 
+ 	/* pairs with mmgrab in mmu_interval_notifier_insert() */
+ 	mmdrop(mm);
 -- 
 2.17.1
 
