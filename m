@@ -1,104 +1,170 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C344C92
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FAA27464F
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747651217; cv=none; b=YIw0Y+ls0l7uBALHUPj/jtGDCCxD6j2nsHaE0928GLNf5SMXGftRLO+sln9Krt8xXYyDPUsL7VJ2VEgA2f1/nkaEo6iq3PptK7v/NaAEgBtttaBuiRFl4GJkeROac522rnKaJq3ZGoFVgwCl4uzQUTx9X8OETjUwSA0lfX4c0/g=
+	t=1747651219; cv=none; b=jlKdy5hWZcrC2Kv+hWCe7onTYo8s8mBOnA2wI9u7vJbkStTlMdUKAzXbtsTTJ5ghRhqQfPSpSQDhbOyJUQPqCIcsPG7T6Yf1wE3PPYmOfpqu8xvYrZLVuVYcN35mD4jER3FfbIp6pE+hdkDlWb+E8eS2408OdSCX5Kr0YMj1bcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747651217; c=relaxed/simple;
-	bh=/Vmq3QFqnBlwuwwR+4xyRvi/TqRMdnogscI2G00PWto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/bLm1hpoyfGEAyAn5CpPopQABan+BmFcxTjDmsH4tCVdSfVrXaScnLAc06BO7LtTSzxrniBCLcwG6kdBQ78UFZ59JRr2DE8nUWBObGK5HGWhDdFPtP9Ke9RkjRsB2tmlD0ZA7ZYYqotudDSbOi0+qd8PsGuA9uxhoZMupqfpZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kNqFJQy2; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747651219; c=relaxed/simple;
+	bh=g84ZbQQBNZAZVCDuB5DQ1dXFC0XI1GSPWp3OkBhpjb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dIyfFnd/vsPaZFh3UIQKmy0tOn7CxkASUmY3GkHuHAc5EwhPwFdAjo4hqGMVri4lKnUBnJHZXqfIC7mHIsEpEF/0gyA0Lx+Xm8V5wFBdwMnG+mqEYxKIiHxRR9WLpnRuYuaBX7nJVanR7LpujAYj8l/yfcQn3GbcCIyBds9WC4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jtwP8YOY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kNqFJQy2"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e16234307so39270075ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747651215; x=1748256015; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/aIx7AvdzS5nlXdZ8v4o/L4Qip57mcjCKYS6Puq9LQ=;
-        b=kNqFJQy2TEm5Y4Gjl6B5LCjDKKjoYIwMG4kwifLNNegw+vAfKCl/G6Y0CNZdq5Vzgs
-         NKjA9BkTm/JYrfewSN2YtEEQDfHgH9wU0O3DgOE/VTf4vpGZluS71v0Up3S43xY1Dw6I
-         CiOEd2sBKm7iprYQP8xneVLewfdd+fZoqzxqgOvxGqgQTw198u8DnWACUWWQovrSnpPA
-         mbBuy2H9c/JcVEuoTbDqcKGC7dgxQvoovE7qKpGN6cATZFveG3saN/w1Gnnp6CM5SNN8
-         NFjIN2YmXpKtQHLTWK5/VdH+J4z2HujBC4nGLatM1b6PndOufWeT2kVG4VPic8nUKoak
-         nOkw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jtwP8YOY"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9Mbki000806
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gNunvHAyKDRuQjsR5Fk3dGl22lS8zfx04q4ZmVMevxI=; b=jtwP8YOYH80PO8LJ
+	ABnPoGcVt+YjCrc/xbkA0ZoWc9MvForvYW1qzms6fEM8yHxPUqCwLblwcWi638cr
+	mJZFb0IOwRavM2xOgLL7epeUznpglQbpq7ci/9/ELs7XokMmBrjnQsQJcRIFfDLR
+	q6fJf1rYqzhw7x2ucFyRdAPZOBczO1y0r+r4SV3GjVwRhvObk39Mpi469fbvDB/R
+	W3DjHLs9he/GdyOd7tCXvzGmYI8GN2/CtzUX0x3WHXu+Iy/pllfBEyyqirtiEiGM
+	BwbeexUJx+C+tn+3hZ0owN4gp9CIcuDe2WRyHSIWru50kDha20odrLYS3BaqhD8s
+	sVrtbw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9v1hx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:40:17 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8dfae341eso5269986d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:40:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747651215; x=1748256015;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/aIx7AvdzS5nlXdZ8v4o/L4Qip57mcjCKYS6Puq9LQ=;
-        b=KZuysEVCn+/7ZKhhu75lRakLCb1fR5JxpM4+8V7xHEwsOagUtKATE00RxF3cdyIJSD
-         aszrPXgbaMuLMikUj1MBvWP/76WXl8+J6blF6eyVY7lXuhRs9voWN0rmIFg5kivR0mqR
-         UVNy5eomqBF3zXTx1cp9ZuhcWd0A/HpoLz53W5nU3MXiVBjczxGdyYChRF5ASSiiQRHw
-         ImwANHCi34HDuYP3YiNw0ze+QjvwYVUn6Z6Uzybj0ShlyaeeZIZfk/VVMQ6B1sFUXSXq
-         ShBKwLKEVPz3QZbgN4bGdwLXcCmFB7PYcPOQGK1+oIZft6repr3agS+X8TpddhzcpwZP
-         vUvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGJ63rgbJGg3akvmVT+0RWJTH5TrwfkoBdAwaWNp+GluShtiYxrLMwiw0+n79MDGqtZtU1bNIYFKOIRQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzePXAQusbFw+h9twMTBrPyDAt+m+7DMYjCAp11GgECdfsIxO/F
-	N/v4Ft56pSLfUVzE/gTGcBQe5irtj2YuZYep/l8RN+Pau7bfDS1UCiSm2xQ6m+27lzk=
-X-Gm-Gg: ASbGnctcRLT5CUXi14DBucdyIs0hRoCh6mLTqZcMd7tZrpJ++uHk+5OuJtTuuLY7d0p
-	91hCevBnO/oqihGhmxOQh/NRfvYmpu9rflKrsNOkDbbfy1edj1/qqXjJnH/g8MWhNd0UrdllmhQ
-	hCsGSeBkMo/wAWr9cj9JFKU/3/kGnSsVHWAsWabULQuoYWvyhO0SQ1quCMHG/a95z6B7St28F7a
-	+n2y0+YAZbRrRtmPtXC1qsuf/BNp9+I8KgkBxVXS8mSoDXU8q/M6cs3iTktE+AsjVyP1xV8r7aG
-	opJ2LxtB1Hcg08+TUtviB4PTDOHA/eF3CTMCzx1Pa9NbkRdMXGs1
-X-Google-Smtp-Source: AGHT+IGV+/iosPw4tJfGLDNquYrwXS7YO+74bIwXmyBHISJk19CDoPFblHZ0P+89TKUcqBjFApznxA==
-X-Received: by 2002:a17:902:c209:b0:231:bc7e:a54f with SMTP id d9443c01a7336-231bc7ea667mr160254935ad.26.1747651215411;
+        d=1e100.net; s=20230601; t=1747651216; x=1748256016;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gNunvHAyKDRuQjsR5Fk3dGl22lS8zfx04q4ZmVMevxI=;
+        b=rnPahfiwobstWIvPCs/r41ItHwd2dFSi1nR8Xf8sB5YtLjx3a3jrBWOBwVexHabmFT
+         3k3JJB+uapWLSe4q+76rHDx/ntipBqxKHdb9W5DvnwIuUAYcFP8RFue19Qbkegg/eh4h
+         4PALb9UfrPoNaOQApV0YsR0JANfnIVwTkjPbErEgtwvMJyYeEU95TqmY+wKlcGxJJXts
+         jRMzYt4Cgk3se+snbNQmcPmLUB5pMzvFFbEifCPeuXzYEmPmgd0CqVxXTX6GdzZrJH6W
+         3av3JqvRI7HHFQf/1Y8lyQSQYDqJI0OX6RFmLcVzoekcI8ZIUtBDMhwTihswbRJPxkm8
+         gZNA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6d5QIeTgthveGcLcqH5pV7KYgIWzKOoBRg7VQmpBlv/szY8MWnK+W9s8X/NhrIogQfw0vS0ka6fEkCuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbE4rs7c2XkJm3ScTcFLrRBDCuKVYUN3dF7YJ62M5SnMM6/xTq
+	GZY4nj/dzkeVz1KMIL3PnJ4fLKpueGe6q5aGxtHM1EnFmu+iR4hK6BEpuXfEL401eZ1RiSihC52
+	OJhcGbhDzRR7GCNaELNDDhw3xjn3e+24+ObxHFpWw7AB1J2zunN0M92eFp/nE90mGqhY=
+X-Gm-Gg: ASbGncsXSQM6dkNxf/DWWFb+H4mPJMnNPonNx7E88U2IxfLvg+Ck5MVc+WU/2p60dkK
+	Vft/ML6cFKqmAZ6/D3JcwNub3INuX4zSoK+hvTVDQ2quC19rZathhtFjNuk/+ScowtHtSTU3lTr
+	hFKE705u3e1R9PvSf1LGNDy1K8qA2S5dELXg31ML8ZsWoo13+ogPfT9omylVZeW1TgVzP8EYep0
+	o4dSClcwvX0wAIigWNi73kNFH6bEBD1b1XHeFp+AKCOTDWOC3r4mZwYWZW1x+3hf45omsjYOG9n
+	+a7mGOou8+CAK+Rp1ScPwWU2fvTZlh4pSHdJLg==
+X-Received: by 2002:a05:6214:d08:b0:6e8:ede1:237 with SMTP id 6a1803df08f44-6f8b08f8b10mr180754506d6.43.1747651216012;
+        Mon, 19 May 2025 03:40:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/Skc9ACExrbEwLnHLmp+Q0PppdvM9V5a695hjjw29Yz8NJtOmhXksNLJDqqYJRHflxLJ8RQ==
+X-Received: by 2002:a05:6214:d08:b0:6e8:ede1:237 with SMTP id 6a1803df08f44-6f8b08f8b10mr180754126d6.43.1747651215476;
         Mon, 19 May 2025 03:40:15 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97fa6sm56235095ad.135.2025.05.19.03.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 03:40:14 -0700 (PDT)
-Date: Mon, 19 May 2025 16:10:12 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Mike Tipton <quic_mdtipton@quicinc.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v4] cpufreq: scmi: Skip SCMI devices that aren't used by
- the CPUs
-Message-ID: <20250519104012.acyfoffelestwgtt@vireshk-i7>
-References: <20250515035312.3119884-1-quic_mdtipton@quicinc.com>
+Received: from [192.168.68.115] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a79asm12163358f8f.25.2025.05.19.03.40.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 03:40:15 -0700 (PDT)
+Message-ID: <c80c48a1-f1b6-4520-9d7c-3a83915c7717@oss.qualcomm.com>
+Date: Mon, 19 May 2025 11:40:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515035312.3119884-1-quic_mdtipton@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/5] misc: fastrpc: Add NULL check to fastrpc_buf_free
+ to prevent crash
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org,
+        quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
+        quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
+        arnd@arndb.de, stable@kernel.org
+References: <20250513042825.2147985-1-ekansh.gupta@oss.qualcomm.com>
+ <20250513042825.2147985-2-ekansh.gupta@oss.qualcomm.com>
+ <0afd9fc3-3748-40b0-934b-ba5b5f6b0bc7@oss.qualcomm.com>
+ <7svn6kgajzw6p7hxw3zzjbxz7ipakgv3gacbj4v3gxdw5ssdsj@lvj3hxn7qxu6>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+In-Reply-To: <7svn6kgajzw6p7hxw3zzjbxz7ipakgv3gacbj4v3gxdw5ssdsj@lvj3hxn7qxu6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: MTIl_FienDcisbFVJBQnoUVicuCIL0cO
+X-Proofpoint-ORIG-GUID: MTIl_FienDcisbFVJBQnoUVicuCIL0cO
+X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=682b0a91 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=qkwAhwrShwPuNbHiLtAA:9 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEwMSBTYWx0ZWRfX03ZPjBiSzRlh
+ S1Socr35gcuB9M+PCgKsJC/FtXf1g+2KI2wemv88IGsFDaCJB00FMt4cALaDayuKerNBy3dRpc8
+ zi0NftrT0/KtXMdupWYfnij0pojvniIyNv7M7iaRgRuuNo2CmvVJkdlybIoJ/eIKU1do97gdE8w
+ qH6Z4bOmQXTdal+VY0BNJzms4n83/g0QdgoOKO/tyPxtj7e72MW8/AsiijcVT0vi9w0tHs60EYX
+ 490cdWUtCl5eM01Fo/CBHmOkovCmkns8dDoJyjHo4E5niQ2YL3EF4/aNlF/gMWHIG/WlUHSXq/w
+ gnJpNMkBheNGGAxOkUSSXlDm7ioIYnm6LCzeqS0uy+m6ArI8iRFVoI1djw0T4MQ07md6Nm+/BDT
+ bRnSFPJB0TW1DwzBYBH8eqeTuE5O4YDcdnv9TuJzqODdb5j2jJj6Df8VnWgrjA1Peo7zTjFd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190101
 
-On 14-05-25, 20:53, Mike Tipton wrote:
-> Currently, all SCMI devices with performance domains attempt to register
-> a cpufreq driver, even if their performance domains aren't used to
-> control the CPUs. The cpufreq framework only supports registering a
-> single driver, so only the first device will succeed. And if that device
-> isn't used for the CPUs, then cpufreq will scale the wrong domains.
+On 5/19/25 11:09, Dmitry Baryshkov wrote:
+> On Mon, May 19, 2025 at 10:25:46AM +0100, Srinivas Kandagatla wrote:
+>> On 5/13/25 05:28, Ekansh Gupta wrote:
+>>> The fastrpc_buf_free function currently does not handle the case where
+>>> the input buffer pointer (buf) is NULL. This can lead to a null pointer
+>>> dereference, causing a crash or undefined behavior when the function
+>>> attempts to access members of the buf structure. Add a NULL check to
+>>> ensure safe handling of NULL pointers and prevent potential crashes.
+>>>
+>> You are mostly defining the code here, but not the root cause of it,
+>> What exactly is the call trace for this crash?
+>>
+>>> Fixes: c68cfb718c8f9 ("misc: fastrpc: Add support for context Invoke method")
+>>> Cc: stable@kernel.org
+>>> Signed-off-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+>>> ---
+>>>  drivers/misc/fastrpc.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+>>> index 7b7a22c91fe4..ca3721365ddc 100644
+>>> --- a/drivers/misc/fastrpc.c
+>>> +++ b/drivers/misc/fastrpc.c
+>>> @@ -394,6 +394,9 @@ static int fastrpc_map_lookup(struct fastrpc_user *fl, int fd,
+>>>  
+>>>  static void fastrpc_buf_free(struct fastrpc_buf *buf)
+>>>  {
+>>> +	if (!buf)
+>>> +		return;
+>>> +
+>> Most of the users of the fastrpc_buf_free() already have the null
+>> checks, It will be Interesting to know.
+>>
+>> If we decide to make this function to do null null check, then the
+>> existing checks in the caller are redundant.
 > 
-> To avoid this, return early from scmi_cpufreq_probe() if the probing
-> SCMI device isn't referenced by the CPU device phandles.
-> 
-> This keeps the existing assumption that all CPUs are controlled by a
-> single SCMI device.
-> 
-> Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Tested-by: Cristian Marussi <cristian.marussi@arm.com>
+> I think it was a primary reason for a change: to eliminate NULL checks
+> on the caller side, as we do in a lot of other kernel API.
 
-Applied. Thanks.
+Lets remove the existing NULL checks at caller side as part of this
+patch too.
 
--- 
-viresh
+
+--Srini
+
+> 
+>>
+>> --srini
+>>>  	dma_free_coherent(buf->dev, buf->size, buf->virt,
+>>>  			  FASTRPC_PHYS(buf->phys));
+>>>  	kfree(buf);
+>>
+> 
+
