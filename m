@@ -1,141 +1,99 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BD721ABD4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27651DC997;
+	Mon, 19 May 2025 19:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684351; cv=none; b=s3cm0e8jypCkrpns6tX8CmjA7rBz05Kc+JZi89Y6tgkk1WJ5OBIl7C/ntnrpl9mWtLVWyUqzFteqVjdxz2P+PDrCorrao10Fjh3UvEM+KeY7xJOA0LJlSvk8fEDrxPOllmpU4LUXdbO755HmzevhdB5NhfFC+oxrrF2EwSeyzaA=
+	t=1747684385; cv=none; b=id0Plxwuifz9Qds4iAdKdMSz6T2NqJ2/DsLuQRVy0l1EXF8Va2bmxIeQlPODYHHky7Gnwns24JOsozacJjdN54TV2rCK4EPzDqgyjBEVpEgdp7Yjp+7chxN8CnX/8WDZvqd+vSCrr0k7Q7DlAxw7Y9YiygWg4GlTaiiaRrUxK1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684351; c=relaxed/simple;
-	bh=eSrz67FjkchHelHVafOEmeAWHUr6NPRPEc/rDzBRpBU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C8z4o14jEkuJu57b9AQbI4j+rQJlQvxhNxvX91D/PMHQYwpA1pI8ZiwWphrrhPwnFFsSUpKYpVVZuan/bgAkpMLDNmABebapYzhus0GkT1QHU9vGg07J9D9EMZJpve8SI3EbyJVPZpBqexUTKJFoYlzn3hcqguqSxwZEf2erD7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BP/HmT3w; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1747684385; c=relaxed/simple;
+	bh=GJjWCf/dE6EIwK2zl2af9t8fxnk0uK+2x2QGZAC2ias=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8553aBVXE448HC0RZgNFHxQ6XogRnvWuMvTZfb4n+S7D6iXFlR1PjiAnn1in99da01wwCYRCqBftm2ecUdCvFlY4b659P5KZjQ2emCdZ9zZ/4JODFTtoVjRqfyayxYz642F1EJRdaIekOxWkhZ5+23B190oGSkIqnLEGcHMD+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Skz5FWMK; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BP/HmT3w"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-708b13627abso81046937b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:52:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Skz5FWMK"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-232059c0b50so20257665ad.2;
+        Mon, 19 May 2025 12:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747684349; x=1748289149; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPgXaI8tTFRwCefa6hNl0JPB2ZmpLpvML91z05dCmvc=;
-        b=BP/HmT3wqOXkbxBe3cWLT6uQWQCGlIZh4j7Rh1epn3t5yEta1kTjlgwd23r/r7TDJH
-         FaYQb0WU3hCLhJi50HcUb+pPOEIT8kCfP15pr2OpONd0tXWhGJi1LU43a0iR7NhwmQOC
-         lZ9vkJOin1+kx4MLJpzCfAxGOLGxtvWq/pMecXcVDXdM19i2iOyirSISdD2OOyLcHbGU
-         Vwoh2szLwZ4DhSZmkC5gSVv6x1hVdymHqJ0AieQtIMoJeeRDbalSMiwNmmHsc4uK6f2t
-         mBrXTsABAJdcAQHCQ59JM3MliQi+3S+x67+qaaHqWn0w9/zBobrxrSQiuXlf04hO2EoX
-         wVHQ==
+        d=gmail.com; s=20230601; t=1747684383; x=1748289183; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cfEl5gKVr3ig5EX/NUXc2HBqSWYk2BVTccrrysu9YwU=;
+        b=Skz5FWMKXA4VZ8tU05qIby5/pEJhh+SS4MDBTEv/M1bGgUu+Sd9EhEvVeU513WTuRo
+         WN5uRHvAg4s2UmV7R5YOq8KZ4u2LCqLbvSBBkln8X0G5UIxHda0OtV+wNIMitwCmSKuV
+         Q4C8qoPq3GsWEh/GdCDUd7dTMaOELvM7YP3jRf/WMEAIQMXs0G+RqfDC2oCSLW4j15in
+         j6gD7QNc0vDiRUYLabvrNUGYVYTwPQzcKD75WSw3bxBdPLfuzZWNR1vGYHLesxa36tAQ
+         6dcc+heZUqfiF4cIUSWiDC/wehAFWlEsY8z2FsPl/ncd9TbJX1zF5liKx+ccHFUQz0VY
+         ZUqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684349; x=1748289149;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPgXaI8tTFRwCefa6hNl0JPB2ZmpLpvML91z05dCmvc=;
-        b=J3eBwq5cc2sX3lgzf8kBu2dNgwZ3U0rsoZ0gLUeSJviAawFmJjCWg8AgRBtl8rVlO1
-         ZpX9mLLHTIBPDLCPtq7jxphns6nTeOMi2OzwMgATDO5j+JVJLDGi29HA6pbH4GQjvR3B
-         cxDxHMML86TMSOHOkTdV8hVCB+Wz2fl7F/TcSknuYqjq58VK4Ss3bSPP7xB8nMpQrnlF
-         QVRU7VLJwsy9ai6QUALl3A18nylk4fEZI1ZbCTmrvV5OdjDw5TevVgc1Sid+fLKNApTc
-         36RISU1y2OI1zPgIiCn0RsFsLpljPRxYexK9SSJ42yoxKL9QuCqaNbg7ec5PnLwG6iWB
-         Fvmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdnJnvPe9iwJNSx3dZX6OpxMMDfkAqkwg4ds7nJW0pmb3l0OBGRUkghwjmnQ+lmGfqIpKxNKZWt502TUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzzo6l5p0Noqgm7YyD+ZnY6y95XpUSQSHg7yAg14VhKN2cMLRc
-	XP3IGyycoTaT8bRYQk+PrIuDJT3q8Ooj0pEm7481yzGRleMYJcWO00LqcMZgLtHWQ3IhYoY2IRI
-	oBWu0GtnpJg==
-X-Google-Smtp-Source: AGHT+IE5I8VoxfmFAqXpjWibQjEDWEqVKRsT3H7Fw6rw3klfVG1MgxDQDM9hd8bGKD0W7XqOKDtbBGECTEBK
-X-Received: from ybdm17.prod.google.com ([2002:a05:6902:6b11:b0:e7a:b53d:558])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:488e:b0:e7b:9972:5cc
- with SMTP id 3f1490d57ef6-e7b997206c0mr7412820276.24.1747684348890; Mon, 19
- May 2025 12:52:28 -0700 (PDT)
-Date: Mon, 19 May 2025 12:51:44 -0700
-In-Reply-To: <20250519195148.1708988-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1747684383; x=1748289183;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cfEl5gKVr3ig5EX/NUXc2HBqSWYk2BVTccrrysu9YwU=;
+        b=fn3y9lxqiiVOV0iebv7lYnnjVJrF3Bz0ZHNaLpoIFwzgUNFuSlOy8AE66MwbhksKRI
+         /T+JcZb6ofiTM1UxAP6yIBwmC2TPygg+6QxX2WUUk25dS8z9rJYCS31Bb0V93I3v9vMc
+         tIK11hOAAXOQzNGUv31aSNhlxZOnic5dy4q2c45d6ZJW7GoX3NccZrsx97I4wT3b9YZ/
+         tIpvle6XM0QEDGGOTQiE+HSvkDTVPlQ2RZKfsuSDpiCZ23npkn6V6/jzdxlNoPb+krly
+         C5DYnm2gnqv9ZUcaYt6BCrhxe9xqTOnojgregff4foY+PzUCMHTXftUqVf/xsgQiYZpm
+         G3KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJTb57B4m/qsY2JVArKZ9SUDL/pli8UwaOxyAJoKFzXJD/FPdLE0m+OiI8g2AX83COu8bnomCi@vger.kernel.org, AJvYcCXO3OIyuSbuxqNC2RSuurZC9AgscCEsT5cCJ08EXiTM76PYLz1cDWVjbtiwKMXAhZGWj81USGkY4Jsn+s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0b3BvGzGj1/OcV0j+hXE0KkbRTXtwnajVk4IMUFfMVp65ZiTe
+	4ednTqL1OFXrK6HF8dSYPRn2G8y17jpHNzG1VatMu9XwZft2pZsmMcfD
+X-Gm-Gg: ASbGncscgXiBm6wcWdaMFtN72JMYK3z/1sYITNQbzSgK0fMGK7mbI4hTcVpemjXUiy4
+	6Or4Jps0DLEaqIvYktppXk8UGChtps1ifGF2tHcd7EiNvzlZE1CQZmgWWp0ijoNlzgx7Wvljr3n
+	5pR1i+Gf+DixuStuHhSXQBSfTArGJ5h1u4+WxKoML8UwAqXymuoZLyw/Op/aik3spVi2zdzkT2m
+	Wu5xhg+ZWybD7kfSqKT4EGizSQ3Hvh8jNEUY3ftDMU8D1l1ALFu+dhEn7lpEFVaLwpzErWBRYb3
+	oe3IehmLiMvLFs7gQU1USNUgYG0o3Gi4ea/8Iqmu219ior3mfWXavddbeKxSzA==
+X-Google-Smtp-Source: AGHT+IFC3Gu/VtV0c0rVVrNpv7I5JPBPT6pwWKUrXoeh1vBmhM8/LyUvP+4lJSuK2GS5VZmkFhsKsQ==
+X-Received: by 2002:a17:902:e742:b0:223:4341:a994 with SMTP id d9443c01a7336-231de2e6c97mr170926535ad.9.1747684382726;
+        Mon, 19 May 2025 12:53:02 -0700 (PDT)
+Received: from gmail.com ([98.97.32.68])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb749sm63836205ad.55.2025.05.19.12.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 12:53:02 -0700 (PDT)
+Date: Mon, 19 May 2025 12:52:57 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after
+ free when sending
+Message-ID: <20250519195257.bscfvzw2td7uoccv@gmail.com>
+References: <20250516141713.291150-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519195148.1708988-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519195148.1708988-8-irogers@google.com>
-Subject: [PATCH v3 7/7] perf python: Add counting.py as example for counting
- perf events
-From: Ian Rogers <irogers@google.com>
-To: Gautam Menghani <gautam@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: maddy@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516141713.291150-1-jiayuan.chen@linux.dev>
 
-From: Gautam Menghani <gautam@linux.ibm.com>
+On 2025-05-16 22:17:12, Jiayuan Chen wrote:
+> The sk->sk_socket is not locked or referenced in backlog thread, and
+> during the call to skb_send_sock(), there is a race condition with
+> the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
+> will be affected.
 
-Add counting.py - a python version of counting.c to demonstrate
-measuring and reading of counts for given perf events.
+[...]
 
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-Ian modified from v2 to make the API take a CPU and thread then
-compute from these the appropriate indices. This was discussed as the
-preferred API with Arnaldo:
-https://lore.kernel.org/linux-perf-users/20250512055748.479786-1-gautam@linux.ibm.com/
-The use of a thread_map and cpu_map was also removed to make the code
-cleaner, instead the cpus and threads of the parsed evsel are
-used. Support for command line events is also added. The indent is
-reduced from 8 to 4 to match the preferred python PEP8 indent.
----
- tools/perf/python/counting.py | 36 +++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100755 tools/perf/python/counting.py
+> 
+> Reported-by: Michal Luczaj <mhal@rbox.co>
+> Fixes: 4b4647add7d3 ("sock_map: avoid race between sock_map_close and sk_psock_put")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
-new file mode 100755
-index 000000000000..02121d2bb11d
---- /dev/null
-+++ b/tools/perf/python/counting.py
-@@ -0,0 +1,36 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# -*- python -*-
-+# -*- coding: utf-8 -*-
-+
-+import argparse
-+import perf
-+
-+def main(event: str):
-+    evlist = perf.parse_events(event)
-+
-+    for evsel in evlist:
-+        evsel.read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
-+
-+    evlist.open()
-+    evlist.enable()
-+
-+    count = 100000
-+    while count > 0:
-+        count -= 1
-+
-+    evlist.disable()
-+
-+    for evsel in evlist:
-+        for cpu in evsel.cpus():
-+            for thread in evsel.threads():
-+                counts = evsel.read(cpu, thread)
-+                print(f"For {evsel} val: {counts.val} enable: {counts.ena} run: {counts.run}")
-+
-+    evlist.close()
-+
-+if __name__ == '__main__':
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument('-e', '--event', help="Events to open", default="cpu-clock,task-clock")
-+    args = ap.parse_args()
-+    main(args.event)
--- 
-2.49.0.1101.gccaa498523-goog
+LGTM thanks for fixing the tag.
 
+Reviewed-by: John Fastabend <john.fastabend@gmail.com>
