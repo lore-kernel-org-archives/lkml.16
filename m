@@ -1,140 +1,187 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B33A2874EA;
-	Mon, 19 May 2025 18:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C932857C4;
+	Mon, 19 May 2025 18:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747679056; cv=none; b=KKMJiwdG++nZy4dRqYT7Z9oniCddH6WK7b5PiD0FYH8i6YXuo5V37jZSZHhPuVH4AuCRrcO/2KDBP721uelSxU7id95HDQ+TSAStaH2bjxyVc9ybJx8H31nYBNhwMRpSFk6S7dFMJObwxKEuzsIH515+F8ZHd/kB+5dD+wdioHo=
+	t=1747679073; cv=none; b=BBScI/T/gM0lbdH7laIsjOOPZYM/evpAA29rd7ib7dJ7HT38h+Yd6Z3e1tJ5cCt5GpBfan3AkRnlvGwcU3/8fd/l69sIRihTU6lXRFwFKBIE6nX/e8HB0qO3rlU900OfeDT3go6B49UCGzE1TOPUGRM+xApRDiKhS3bkX8JBbfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747679056; c=relaxed/simple;
-	bh=3yuG6YCZZkTsEZ4sjG0vHbbdeqds1A8LT7+eP2zjudo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mu8JBiumxBeYeOfNy7sCDwnM1jxOwVyxXVL9EMaSBoRXE1jKWoXkETLQ1391VdAvx0X4bFt/8rlT/S9JSY+N8SHoSdn5ZpnvVzDodns/Chuvq0TwmTrnDCAeKgQ1/aC/m9miqSnoQldSauhtKojE4WSfpds1yfYEEmcjqemedFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CC2/Cw3K; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747679073; c=relaxed/simple;
+	bh=1KXAzjMSe/ri37+m07NJN/eRVwd604m2Fdfu1XxKbZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNNzoJFQWkMR+zM0KwsHm73HajmQidWVtkrt/AS7+bhLEi4aSuwPm7V+R6uz9EGR8s7im3CkIjqueznlD/AeH5amOq2kl5AL03QsA9xhYXNk4ozILaMm7drBHdFTUws7CYYgszpPGoQKwHjn3gU2qBvKjK+sQjopQcnJNAtwbok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+LWGzHw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CC2/Cw3K"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so2187697a91.3;
-        Mon, 19 May 2025 11:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747679054; x=1748283854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3yuG6YCZZkTsEZ4sjG0vHbbdeqds1A8LT7+eP2zjudo=;
-        b=CC2/Cw3K6/QCgS/c8gGH0/uWN4iVdq57riVWgUPehyNbJKWNZjmywbMIqjZUy12w0H
-         udJ4Drs3cKNxs+hkZfORP23JqbaNjhJJxCyphs4FDqtSJZrLap7yAnyJk7W/q+lyA3mT
-         2ey9Bd2RVQQZfkHaWlMA4jl2fTRuei+KneauQ0FzBfSk2RuK5pati4l4QS0XejCcHbVh
-         +zzaqVOCftrfNydKLs7OarwkzvMKXQ3loNGfe3jHTS89ACc0QnQysDyu/BshkMwvJbCj
-         0RvHorAdKZyH7PVmqfjBWKFHVVrbOTLT2FIAxLuBGnW7QYHMuBeBRcmteYQtOMGdagSb
-         8lvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747679054; x=1748283854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3yuG6YCZZkTsEZ4sjG0vHbbdeqds1A8LT7+eP2zjudo=;
-        b=meuImoqKaGbzs6+b6pEW8sRXEUNMi3FDj5qzQvI4s/aT3ckYemhmFPREhVJdeET5hc
-         KrUz515oyMtRB7nPrhhdadEw15+iqC6wfsqcLB7QM9qOl2uZ41XmiPrKTQbDOvJPcPtA
-         iXtxubuYvdJ8l4m/pi9sNIcK37yocC1OI6C6/cAJSSQG7h6p+ichwDfW9zbjK5OxbuWD
-         Hq82gznIeqvtbii1jOr7Ja1Z1iWouOp7TZyzPbg4e26zqFtlgmyF8k5OWyQZ0ztnS+FR
-         8gYpbZGBmdL77rKXIjxGowoMmY54pY/Svmmbr7z27lqwnx+JnNmRehi/2aBzGNlJ257A
-         Egvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyc95/9RnMhFU8NYqY6kv0JGtA7ruQrGsRkIgyvYS9EsehOEQJJPWIG3J4GJadTbpPGyI3m+R8YjT2Tj/5@vger.kernel.org, AJvYcCWj7X+aFQiHuDlSvNbctSzweKwwgXcVHb/JZWrMf/mBSIxOgn7h0ULgDSIUeGArv0ZfUn7boSGKEaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp6sdwLGrAumuYE85nX9TVtUVqAE+XYTLcY+6ZWoi5iVPFwq/Y
-	Ru7w5kNvMQXAk8mGnYT2eZdPnFL4C5VBSJFiwahLIfJQOP0IrbH90SZm5YNvDtTQ3H9JmKSiNUG
-	4HTgmu1fmG/9VvqHDVlF6eP8HgJvjZ60=
-X-Gm-Gg: ASbGncstINKzZPVdmsbLIh1idyHMkYci7fohcTFEmpgb94IvPlWWFI/Iue3QeHYpyn4
-	EWSB7V8m8OUUf7xvV8sp4P/alaakM1XU1K0LR0XFopk9Veelk/HapeprWhJiBrn96LxUbip9A6j
-	wunuMTl996o0VGY4z7otXF0YC3LJCpsd2XnA==
-X-Google-Smtp-Source: AGHT+IHmlpnUrqtWUhYfgZb4ImW7swMGNC/uf5vTuHRu1M1uwil4qqjaBE1ka+WOyVPVZg4y/tYqvYW68YNFda/fAfY=
-X-Received: by 2002:a17:90b:6c8:b0:30e:8f60:b4c with SMTP id
- 98e67ed59e1d1-30e8f600d77mr21594237a91.16.1747679054505; Mon, 19 May 2025
- 11:24:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+LWGzHw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A402CC4CEE4;
+	Mon, 19 May 2025 18:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747679073;
+	bh=1KXAzjMSe/ri37+m07NJN/eRVwd604m2Fdfu1XxKbZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l+LWGzHwPLt9tuDO2OcldxtSI5ZY3J8HPzrk0cPNCGCz6dcAEu2vQfDlzMOAjU1Ls
+	 VjTCWQlsOiSydSXIjojXyUgFyOijsOk4u4Sy9ZHQm58p4drcySd3SdMnf2YsSv3/Mv
+	 AHRCjp4VqAzvufFY3qJgxWtYWybUTut7PVTjp7CdNAqvfMCzBQhE0qAUzFtHw+z9ZJ
+	 kAxVQ0HRFoWe0RRjMUNqDiNrXBhB+8HjRPNNLRYLL/PrXzxxsFsEtYOVpKy9A6GDpG
+	 hB44nxs98KijGU7OowwfGML52gsiHF7vPf8rILBu6vgC+2SvmiqkSXP/7bxzY0vFjv
+	 NvluuWmqBIrTA==
+Date: Mon, 19 May 2025 21:24:29 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, seanjc@google.com, kai.huang@intel.com,
+	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, asit.k.mallick@intel.com,
+	vincent.r.scarlata@intel.com, chongc@google.com,
+	erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v5 4/5] x86/sgx: Implement ENCLS[EUPDATESVN]
+Message-ID: <aCt3XZ0m40wuA9bU@kernel.org>
+References: <20250519072603.328429-1-elena.reshetova@intel.com>
+ <20250519072603.328429-5-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com> <f06d231d-297f-4c83-b457-b9eb242b9c93@baylibre.com>
-In-Reply-To: <f06d231d-297f-4c83-b457-b9eb242b9c93@baylibre.com>
-From: Gyeyoung Baek <gye976@gmail.com>
-Date: Tue, 20 May 2025 03:24:03 +0900
-X-Gm-Features: AX0GCFvmEWIRJCR1b9xEYVREnCG9wYgk71oNXkvAWn9Tpq1GQNEWrvNKYGsdrow
-Message-ID: <CAKbEzntfFix95SG5CkCzMWGuDXdztTQRv+SYOEaWsSHwmYoCOA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] iio: Introduce new timestamp grabbing APIs
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519072603.328429-5-elena.reshetova@intel.com>
 
-On Tue, May 20, 2025 at 12:28=E2=80=AFAM David Lechner <dlechner@baylibre.c=
-om> wrote:
->
-> On 5/19/25 9:25 AM, Gyeyoung Baek wrote:
-> > Support automatic timestamp grabbing by passing `true` to the `timestam=
-p_enabled` parameter of `iio_triggered_buffer_setup_new()`.
-> > So consumer drivers don't need to set `iio_pollfunc_store_time()` as ei=
-ther the tophalf or bottomhalf manually.
-> >
-> > For this, triggers must indicate whether they will call `poll()`, `poll=
-_nested()`, or both before
-> > calling `iio_trigger_register()`. This is necessary because the consume=
-r's handler does not know
-> > in advance which trigger will be attached.
-> >
-> > Once `iio_trigger_attach_poll_func()` is called, a timestamp is grabbed=
- in either the
-> > tophalf or bottomhalf based on the trigger's type (POLL or POLL_NESTED)=
-. If the trigger
-> > supports both (e.g., at91-sama5d2-adc.c), it is treated as POLL_NESTED =
-since the consumer's
-> > tophalf is not invoked in poll_nested(), but the bottomhalf always is.
-> >
-> > If the attached trigger supports timestamp grabbing itself, the consume=
-r does not need to handle it.
-> > Instead, the consumer's `poll_func` pointer is passed to the trigger, w=
-hich can then store the
-> > timestamp directly into consumer. Trigger drivers can pass timestamp va=
-lues to consumers in a consistent
-> > interface using the new API `iio_trigger_store_time()`.
->
-> This is explaining what it does and how it works, but we really want to
-> know first _why_ we need this and why it is better that what we already
-> have or what sort of problem this is fixing that the current situation
-> can't handle.
+On Mon, May 19, 2025 at 10:24:30AM +0300, Elena Reshetova wrote:
+> The SGX attestation architecture assumes a compromise
+> of all running enclaves and cryptographic assets
+> (like internal SGX encryption keys) whenever a microcode
+> update affects SGX. To mitigate the impact of this presumed
+> compromise, a new supervisor SGX instruction: ENCLS[EUPDATESVN],
+> is introduced to update SGX microcode version and generate
+> new cryptographic assets in runtime after SGX microcode update.
+> 
+> EUPDATESVN requires that SGX memory to be marked as "unused"
+> before it will succeed. This ensures that no compromised enclave
+> can survive the process and provides an opportunity to generate
+> new cryptographic assets.
+> 
+> Add the method to perform ENCLS[EUPDATESVN].
+> 
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/encls.h |  5 +++
+>  arch/x86/kernel/cpu/sgx/main.c  | 57 +++++++++++++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/encls.h b/arch/x86/kernel/cpu/sgx/encls.h
+> index 99004b02e2ed..d9160c89a93d 100644
+> --- a/arch/x86/kernel/cpu/sgx/encls.h
+> +++ b/arch/x86/kernel/cpu/sgx/encls.h
+> @@ -233,4 +233,9 @@ static inline int __eaug(struct sgx_pageinfo *pginfo, void *addr)
+>  	return __encls_2(EAUG, pginfo, addr);
+>  }
+>  
+> +/* Attempt to update CPUSVN at runtime. */
+> +static inline int __eupdatesvn(void)
+> +{
+> +	return __encls_ret_1(EUPDATESVN, "");
+> +}
+>  #endif /* _X86_ENCLS_H */
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index 80d565e6f2ad..fd71e2ddca59 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/vmalloc.h>
+>  #include <asm/sgx.h>
+> +#include <asm/archrandom.h>
+>  #include "driver.h"
+>  #include "encl.h"
+>  #include "encls.h"
+> @@ -917,6 +918,62 @@ EXPORT_SYMBOL_GPL(sgx_set_attribute);
+>  /* Counter to count the active SGX users */
+>  static atomic64_t sgx_usage_count;
+>  
+> +/**
+> + * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN]
+> + * If EPC is empty, this instruction attempts to update CPUSVN to the
+> + * currently loaded microcode update SVN and generate new
+> + * cryptographic assets.sgx_updatesvn() Most of the time, there will
 
-Hello David, thanks for the review.
-I see that I didn=E2=80=99t explain the reason properly.
-The following explains the reason for these patch series.
+Is there something wrong here in the text? It looks malformed.
 
-There are three cases when a timestamp can be grabbed:
-1. In the consumer=E2=80=99s top half (which is the most common case, using
-`iio_pollfunc_store_time()`),
-2. In the consumer=E2=80=99s bottom half,
-3. Directly by the trigger before polling the consumer (for drivers
-using their own trigger).
+> + * be no update and that's OK.
+> + *
+> + * Return:
+> + * 0: Success, not supported or run out of entropy
+> + */
+> +static int sgx_update_svn(void)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * If EUPDATESVN is not available, it is ok to
+> +	 * silently skip it to comply with legacy behavior.
+> +	 */
+> +	if (!X86_FEATURE_SGX_EUPDATESVN)
+> +		return 0;
+> +
+> +	for (int i = 0; i < RDRAND_RETRY_LOOPS; i++) {
+> +		ret = __eupdatesvn();
+> +
+> +		/* Stop on success or unexpected errors: */
+> +		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * SVN either was up-to-date or SVN update failed due
+> +	 * to lack of entropy. In both cases, we want to return
+> +	 * 0 in order not to break sgx_(vepc_)open. We dont expect
+> +	 * SGX_INSUFFICIENT_ENTROPY error unless underlying RDSEED
+> +	 * is under heavy pressure.
+> +	 */
+> +	if ((ret == SGX_NO_UPDATE) || (ret == SGX_INSUFFICIENT_ENTROPY))
+	
+	if (ret == SGX_NO_UPDATE || ret == SGX_INSUFFICIENT_ENTROPY)
 
-Since the consumer can't know what type of trigger will be attached at
-runtime, the following two problems can arise:
+> +		return 0;
+> +
+> +	if (!ret) {
+> +		/*
+> +		 * SVN successfully updated.
+> +		 * Let users know when the update was successful.
+> +		 */
 
-1. When a trigger that calls `iio_trigger_poll_nested()` instead of
-`iio_trigger_poll()`is attached:
-most consumer register `iio_pollfunc_store_time()` as top-half
-expecting a timestamp, but top-half is not invoked.
-And this is not the intended behavior of consumer devices.
-2. When a trigger directly provides a timestamp:
-The consumer=E2=80=99s handler checks whether a timestamp has already been
-grabbed using if statement (like light/rpr0521.c),
-or overwrites the existing timestamp even though it was already
-provided by the trigger.
+This comment is like as useless as an inline comment can ever possibly
+be. Please, remove it.
 
-This patch series addresses these two issues.
+> +		pr_info("SVN updated successfully\n");
 
---
-Best regards,
-Gyeyoung
+Let's not add this either in the scope of this patch set.
+
+> +		return 0;
+> +	}
+
+Since you parse error codes already, I don't understand why deal with
+the success case in the middle of doing that.
+
+More consistent would be (not also the use of unlikely()):
+
+	if (ret == SGX_NO_UPDATE || ret == SGX_INSUFFICIENT_ENTROPY)
+		return 0;
+
+	/*
+	 * EUPDATESVN was called when EPC is empty, all other error
+	 * codes are unexpected.
+	 */
+	if (unlikely(ret)) {
+		ENCLS_WARN(ret, "EUPDATESVN");
+		return ret;
+	}
+		
+	return 0;
+}
+
+This is how I would rewrite the tail of this function.
+
+BR, Jarkko
