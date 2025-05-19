@@ -1,210 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9D22820BC;
-	Mon, 19 May 2025 15:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7352727A47A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747668454; cv=none; b=QmATNAAGLmw0oIQl0Fnoxs+Iz+KY0TGMQ8GCMYAl7ixomDKgZTThttm4tCzLxNaCbdAaOWixklNNHd0IFHAY2nw7cyTQJj4k/FzTC4Mq7N9Xu0P4eaMCvJ9U9nnUbNWsP06v+Z+Lt8d7QpbyjSZBFwHm6bVdzO5zn8VU8YQRVHM=
+	t=1747668505; cv=none; b=WilvVhFSh+ELC5dvMgaKd+XLF6z5GJbSP5V9aPlAaj3xzCloDTyH/C2VTydXIgSmgJDEqEZWYQ/+KLR0UYEmXGDV8qF9ZX3wuRDFKzUVIKBh9NUIYLcMD4UBf/0naKD0ZjHkD1KknNH8CbKCL8ZCbvWQWPsqOjCx0Eu5jdD6E4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747668454; c=relaxed/simple;
-	bh=t+V18x9K5U3txXXfD8+PUaO/b5cpwqu1b7n9tWAOFPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M0WT6XKrBbkCWhlVJ/8aLgQ1XimkI+lLL7JeJ+rTEzgWiL2ZSFIkHGd4MJWB9MUA63dbcbnzrDhlVhtbz2UEJ0ekGKQkEicsUXR5znaCKoT+Ud+LXUT/qfKrfhgT5P0LUpNhVb0YdkyyA8FASyfgWKboTqoYO+N6eojKbDZ+QoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wz+6uRX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747668505; c=relaxed/simple;
+	bh=KHxgPGkHJc47h2T7vaf1QrsDbAkmsHgS+s5O8Uan+Pc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SjmCa6Jc2Gq96hx6NkodD/gy9T1tHMCR/y9gOG+5mTiy2XpzW2VrcOfx4IahiB+9Ak8BaAytjSm9NP7k3SA3uktji27mLyPX+VHnKsF8pmJtrBsdou9XxZKI3coOKNdw6pC97L+VLBK+SBr1r10z/+ePv+epOFAaAXhSwIEGAFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=g2ZCtaCj; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wz+6uRX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F26C4CEE4;
-	Mon, 19 May 2025 15:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747668453;
-	bh=t+V18x9K5U3txXXfD8+PUaO/b5cpwqu1b7n9tWAOFPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wz+6uRX0un26SiQI4WLnR7eoKrHilQeIdCP3yUyIP5wyq8PMHyQV4mxaxyaiyg+QZ
-	 5fOSpYU9hlHSVPVq/3HXij8x9xlYI69sTdFWSzoMfEDxsDp8mMbVTzfq3aNJZnEWkZ
-	 GhB5Nb4pdGlBlGDbZGwm2/nICqffO4CBqxcd4RCM=
-Date: Mon, 19 May 2025 17:27:30 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Natanael Copa <ncopa@alpinelinux.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	Darren Kenny <darren.kenny@oracle.com>
-Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
-Message-ID: <2025051931-hardy-had-44a3@gregkh>
-References: <20250514125617.240903002@linuxfoundation.org>
- <861004b4-e036-4306-b129-252b9cb983c7@oracle.com>
- <2025051440-sturdily-dragging-3843@gregkh>
- <9af6afb1-9d91-48ea-a212-bcd6d1a47203@oracle.com>
- <e1ea37bd-ea7d-4e8a-bb2f-6be709eb99f4@roeck-us.net>
- <2025051527-travesty-shape-0e3b@gregkh>
- <20250515152557.a4q2cqab4uvhnpia@desk>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="g2ZCtaCj"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-404e580bf09so387645b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747668502; x=1748273302; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gunr5yrkLk/n2a5iSHnU+A4FlqS7JkXXxLbIjVojZgc=;
+        b=g2ZCtaCjO82Af217o/dnZNkg8yDVj5g5HY/zI+6tqqzWKJDmuJ82bhYv5cFDQ0vvOn
+         1OvMW/r68fFmwYhpUugfXNoDVqBIXEWKR64HoWSKb7XkNPyLW2Vy3MafTNodej5t6/S6
+         yzKSFKM6ZoobR86Tqv9wMdSSUZQCauA2wp2iuaGynlAdsMTgyDGAtb7D90AcKvl5qxeS
+         aFnlfRxMinlC349E4TsN4XcnrcDCyfJ5s6qIMCWeV8DZ6QBQJhnPHQMmaUGygpSAFgyi
+         QXU3GXNPtNAk7u9g4jDzl+VyW9ktcziV+MJKK1cL5ruhOpjYDZ+RtFHwkMZBcnG1oVvS
+         ZSDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747668502; x=1748273302;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gunr5yrkLk/n2a5iSHnU+A4FlqS7JkXXxLbIjVojZgc=;
+        b=GZV+eexn/Pe+MOA1rsYI2Cknzkj6mTCoRtjMTQGrsR7zSYnS+uULO+ripEL6+wGlex
+         gniR2WPAQrADV0eybs9ONebYT01VGczymGV9lBYx8Z6GlLFiNbb/UzUzkjQE+ej2U57P
+         GymD9qIZxB3pGhxFU6iha+FIZu2/2ELc0Cto0ms3AAfsUycH6YXeyqCTRSFkByhtl9FU
+         GCdUGmW7W1nHTYUsjWdZtiHJdFwe6+arP6Xq0oBNjBPI7xCVsTCUAfHiBwqDCdna7exn
+         6hZdhY/kjVBZLTwReIGBYNpP/XxVVWzXq1wgaKgqWJvQ+3XD9oE8YRAS6KwylKqoupsr
+         /l6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVaGh3IP/k/+tRIADzpfzPwVzsB6oabkuR4OZAPXOhrR4r21D8Rxz4s6tGKfKa6NosAeb2K3n0CpvDfKJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6ApCKfw8hI21yYNiFQ0PUF8vmdwz4AOE4y9ZWBDB8Avb4INJf
+	e/rNLwQiJn121k+fUHB/c+uSsACZjsG9ovKaAZgRdujXQfuy01u/E5lsj6YQcKyFfYw=
+X-Gm-Gg: ASbGncuUNCSrHMW8syN/VszcmLWYFxb4ZRYR11EwYOUEpApv7OAoClUctdLPadqVsB7
+	kYfCsWXl0Vb4aleVMXMSkAIfmWXitIlledkVnbha2bPVqeCHN1SrM+udTS2xNCytPRN4TbPz5jQ
+	hqGidGcqT+i9fi+p7sjWvNniXbMg3okCukCagdLfzIBYigLOgzHndMVHL1aKdXa676Pex+s79iF
+	MXeyC1FxMCyOMLLmFFLorZLg9IsHNWUIWyiQdsnvUqlkTGYukwUf5nIA5y0G3G814i0/ecNEDzf
+	H7pPmkoFtDyJ4lhmGXoqO7H81U8PvEOdJb+wY/3bMWlNwmDpcCogAJ30uh6nAb0APKBGfTwgzMx
+	74wbDswE4B4MUpflisFrVxQMaLg==
+X-Google-Smtp-Source: AGHT+IENnuG/YXszL2204Pk9pF5KDxPDHR3fkgrZVRSzJWcNVc/KUH1Sh44zKC9K6d9mhWQi2kpzSg==
+X-Received: by 2002:a05:6808:164a:b0:3f7:8f77:2a97 with SMTP id 5614622812f47-404da82c7a9mr7623243b6e.34.1747668502340;
+        Mon, 19 May 2025 08:28:22 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5? ([2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-404dc2d4954sm1265375b6e.48.2025.05.19.08.28.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 08:28:21 -0700 (PDT)
+Message-ID: <f06d231d-297f-4c83-b457-b9eb242b9c93@baylibre.com>
+Date: Mon, 19 May 2025 10:28:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515152557.a4q2cqab4uvhnpia@desk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/9] iio: Introduce new timestamp grabbing APIs
+To: Gyeyoung Baek <gye976@gmail.com>, Jonathan Cameron <jic23@kernel.org>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 08:25:57AM -0700, Pawan Gupta wrote:
-> On Thu, May 15, 2025 at 07:35:26AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, May 14, 2025 at 01:49:06PM -0700, Guenter Roeck wrote:
-> > > On 5/14/25 13:33, Harshit Mogalapalli wrote:
-> > > > Hi Greg,
-> > > > 
-> > > > On 15/05/25 01:35, Greg Kroah-Hartman wrote:
-> > > > > On Thu, May 15, 2025 at 12:29:40AM +0530, Harshit Mogalapalli wrote:
-> > > > > > Hi Greg,
-> > > > > > On 14/05/25 18:34, Greg Kroah-Hartman wrote:
-> > > > > > > This is the start of the stable review cycle for the 6.6.91 release.
-> > > > > > > There are 113 patches in this series, all will be posted as a response
-> > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > let me know.
-> > > > > > > 
-> > > > > > > Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
-> > > > > > > Anything received after that time might be too late.
-> > > > > > 
-> > > > > > ld: vmlinux.o: in function `patch_retpoline':
-> > > > > > alternative.c:(.text+0x3b6f1): undefined reference to `module_alloc'
-> > > > > > make[2]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
-> > > > > > 
-> > > > > > We see this build error in 6.6.91-rc2 tag.
-> > > > > 
-> > > > > What is odd about your .config?  Have a link to it?  I can't duplicate
-> > > > > it here on my builds.
-> > > > > 
-> > > > 
-> > > > So this is a config where CONFIG_MODULES is unset(!=y) -- with that we could reproduce it on defconfig + disabling CONFIG_MODULES as well.
-> > > > 
-> > > 
-> > > Key is the combination of CONFIG_MODULES=n with CONFIG_MITIGATION_ITS=y.
-> > 
-> > Ah, this is due to the change in its_alloc() for 6.6.y and 6.1.y by the
-> > call to module_alloc() instead of execmem_alloc() in the backport of
-> > 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches").
+On 5/19/25 9:25 AM, Gyeyoung Baek wrote:
+> Support automatic timestamp grabbing by passing `true` to the `timestamp_enabled` parameter of `iio_triggered_buffer_setup_new()`.
+> So consumer drivers don't need to set `iio_pollfunc_store_time()` as either the tophalf or bottomhalf manually.
 > 
-> Sorry for the trouble. I wish I had a test to catch problems like this. The
-> standard config targets defconfig, allyesconfig, allnoconfig, etc. do not
-> expose such issues. The only thing that comes close is randconfig.
+> For this, triggers must indicate whether they will call `poll()`, `poll_nested()`, or both before
+> calling `iio_trigger_register()`. This is necessary because the consumer's handler does not know
+> in advance which trigger will be attached.
 > 
-> CONFIG_MODULES=n is not a common setting, I wonder how people find such
-> issues? (trying to figure out how to prevent such issues in future).
+> Once `iio_trigger_attach_poll_func()` is called, a timestamp is grabbed in either the
+> tophalf or bottomhalf based on the trigger's type (POLL or POLL_NESTED). If the trigger
+> supports both (e.g., at91-sama5d2-adc.c), it is treated as POLL_NESTED since the consumer's
+> tophalf is not invoked in poll_nested(), but the bottomhalf always is.
 > 
-> > Pawan, any hints on what should be done here instead?
-> 
-> Since dynamic thunks are not possible without CONFIG_MODULES, one option is
-> to adjust the already in 6.6.91-rc2 patch 9f35e331144a (x86/its: Fix build
-> errors when CONFIG_MODULES=n) to also bring the ITS thunk allocation under
-> CONFIG_MODULES.
-> 
-> I am not seeing any issue with below build and boot test:
-> 
->   #!/bin/bash -ex
-> 
->   ./scripts/config --disable CONFIG_MODULES
->   ./scripts/config --disable CONFIG_MITIGATION_ITS
->   # https://github.com/arighi/virtme-ng
->   vng -b
->   vng -- lscpu
-> 
->   # main test
->   ./scripts/config --disable CONFIG_MODULES
->   ./scripts/config --enable CONFIG_MITIGATION_ITS
->   vng -b
->   vng -- lscpu
-> 
->   ./scripts/config --enable CONFIG_MODULES
->   ./scripts/config --disable CONFIG_MITIGATION_ITS
->   vng -b
->   vng -- lscpu
-> 
->   ./scripts/config --enable CONFIG_MODULES
->   ./scripts/config --enable CONFIG_MITIGATION_ITS
->   vng -b
->   vng -- lscpu
-> 
->   echo "PASS"
-> 
-> Similar change is required for 6.1 and 5.15 as well. 6.12 is fine because
-> it uses execmem_alloc().
-> 
-> --- 8< ---
-> From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Subject: [PATCH 6.6] x86/its: Fix build errors when CONFIG_MODULES=n
-> 
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> commit 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65 upstream.
-> 
-> Fix several build errors when CONFIG_MODULES=n, including the following:
-> 
-> ../arch/x86/kernel/alternative.c:195:25: error: incomplete definition of type 'struct module'
->   195 |         for (int i = 0; i < mod->its_num_pages; i++) {
-> 
->   [ pawan: backport: Bring ITS dynamic thunk code under CONFIG_MODULES ]
-> 
-> Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> Acked-by: Dave Hansen <dave.hansen@intel.com>
-> Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  arch/x86/kernel/alternative.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 6085919d3b3e..c6d9a3882ec8 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -129,6 +129,7 @@ const unsigned char * const x86_nops[ASM_NOP_MAX+1] =
->  
->  #ifdef CONFIG_MITIGATION_ITS
->  
-> +#ifdef CONFIG_MODULES
->  static struct module *its_mod;
->  static void *its_page;
->  static unsigned int its_offset;
-> @@ -244,7 +245,16 @@ static void *its_allocate_thunk(int reg)
->  	return thunk;
->  }
->  
-> -#endif
-> +#else /* CONFIG_MODULES */
-> +
-> +static void *its_allocate_thunk(int reg)
-> +{
-> +	return NULL;
-> +}
-> +
-> +#endif /* CONFIG_MODULES */
-> +
-> +#endif /* CONFIG_MITIGATION_ITS */
->  
->  /*
->   * Fill the buffer with a single effective instruction of size @len.
-> -- 
-> 2.34.1
-> 
+> If the attached trigger supports timestamp grabbing itself, the consumer does not need to handle it.
+> Instead, the consumer's `poll_func` pointer is passed to the trigger, which can then store the
+> timestamp directly into consumer. Trigger drivers can pass timestamp values to consumers in a consistent
+> interface using the new API `iio_trigger_store_time()`.
 
-This looks to still be causing problems, see these two reports of build
-problems with the latest 6.1 and 6.6 releases with this commit in it:
-	https://lore.kernel.org/r/20250519164717.18738b4e@ncopa-desktop
-	https://lore.kernel.org/r/2f1ae598-0339-4e17-8156-03e8525a213d@roeck-us.net
+This is explaining what it does and how it works, but we really want to
+know first _why_ we need this and why it is better that what we already
+have or what sort of problem this is fixing that the current situation
+can't handle.
 
-thanks,
-
-greg k-h
