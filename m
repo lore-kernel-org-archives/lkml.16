@@ -1,211 +1,68 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC0C1EE032
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB220B67F;
+	Mon, 19 May 2025 18:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747678224; cv=none; b=eRn3Y5BTXmtygIPHupRQVYy/tq7RcNLvYNJDwuqB4clQC32TwXoqAfwS7dmCEuzcl4gcJvSrUOEqZIXggx/A8cZOMi9KgnukbMV6AkeeITkPrltpljObTbVG68cFHcGmFW1uQeRvbDDRKF2vMD8bCwKd+7EcQSjIFcnb4Inl0hI=
+	t=1747678280; cv=none; b=KMFkCSlWuJC4rgJlvfC3kb/IYksqg9eotHFlpx44i4Dt1GNXwSDMLDmpAoYHBLwjbL9v1Ye6qaeKp123SHXGzGDnrZHqI0TkelBTloIVEKvO5nAB4Xq57emr/jmYIOIu2ZNHlWEEW67HZp5CCNyr19w2LbdZ2cQ7lTlwfd0bayk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747678224; c=relaxed/simple;
-	bh=LnYkAPd36XTGcadNiI+c6HhVZDT0kXBC/MH9tFxGy8o=;
+	s=arc-20240116; t=1747678280; c=relaxed/simple;
+	bh=QWLv/sNrajXnw7weVtqS83ydRKmVbNikmGQnAG98wso=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vGL3sHvLSCh0yaWE6YvNwjrf1JXfnpPWclKC8XpY5ESmi2trHB3CpH2Rg+IKOE8jov9fLdrpnXFdoqo8+aR9lZlL02SVjHoqTY6h6h2KSs3ssHdxErI9WN0NrKJdBtHuZMj+hOnhDT6/ZeCEiIG+YbZCDCbHdN6Wy/HLgJRSq24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gaHdvqY2; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gaHdvqY2"
-Message-ID: <cdfbbdca-001b-4ed5-92ff-40fd3a8e3341@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747678219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HyMjGq7CIo1Ix6y7J/Aaf3P2JOQ8ZABmbRvvSeNXTAo=;
-	b=gaHdvqY2JIJOTR1JlRCXgG+/mlzaSw8i0xZPPOWLqYrV6iHZ+ccjsICnzaPZpPTTlvlOZN
-	aH+50Syp1uUDXoH4dA5AdjOxbhraOvIDQEhVn6YvuAO2xlzHxavxYYIEBIdvpbPUony6Ar
-	fWHy5JZBBV7cAXL3OBsmijryUGvpnLQ=
-Date: Mon, 19 May 2025 14:10:12 -0400
+	 In-Reply-To:Content-Type; b=SYkf5LAWlsiWioPc9jWa6EqSzOdsgznV9Pqi+tgUCDGndOHPfq2iFFXo6FL4tSzjHPwqa088jY5d3n2lMZulP0sxMDgfuBVk0PYLy+KiAbOrnWSO9dNDW/rmzufiOdxhDXtIkUwXcHcr/zr3DUaOzYf9Pg50/sG8jghLlOCNlnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0352715A1;
+	Mon, 19 May 2025 11:11:05 -0700 (PDT)
+Received: from [10.57.50.157] (unknown [10.57.50.157])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E9DF73F5A1;
+	Mon, 19 May 2025 11:11:13 -0700 (PDT)
+Message-ID: <10a4d7be-b5a2-4ca8-8457-d4149c6a265c@arm.com>
+Date: Mon, 19 May 2025 19:11:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v4 03/11] net: phylink: introduce internal
- phylink PCS handling
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, llvm@lists.linux.dev
-References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
- <20250511201250.3789083-4-ansuelsmth@gmail.com>
- <5d004048-ef8f-42ad-8f17-d1e4d495f57f@linux.dev>
- <aCOXfw-krDZo9phk@makrotopia.org>
- <7b50d202-e7f6-41cb-b868-6e6b33d4a2b9@linux.dev>
- <aCQHZnAstBXbYzgy@makrotopia.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <aCQHZnAstBXbYzgy@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 18/43] KVM: arm64: Handle realm MMIO emulation
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-19-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250416134208.383984-19-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 5/13/25 23:00, Daniel Golle wrote:
-> On Tue, May 13, 2025 at 03:23:32PM -0400, Sean Anderson wrote:
->> On 5/13/25 15:03, Daniel Golle wrote:
->> > just instead of having many
->> > more or less identical implementations of .mac_select_pcs, this
->> > functionality is moved into phylink. As a nice side-effect that also
->> > makes managing the life-cycle of the PCS more easy, so we won't need all
->> > the wrappers for all the PCS OPs.
->> 
->> I think the wrapper approach is very obviously correct. This way has me
->> worried about exciting new concurrency bugs.
+On 16/04/2025 14:41, Steven Price wrote:
+> MMIO emulation for a realm cannot be done directly with the VM's
+> registers as they are protected from the host. However, for emulatable
+> data aborts, the RMM uses GPRS[0] to provide the read/written value.
+> We can transfer this from/to the equivalent VCPU's register entry and
+> then depend on the generic MMIO handling code in KVM.
 > 
-> You may not be surprised to read that this was also our starting point 2
-> months ago, I had implemented support for standalone PCS very similar to
-> the approach you have published now, using refcnt'ed instances and
-> locked wrapper functions for all OPs. My approach, like yours, was to
-> create a new subsystem for standalone PCS drivers which is orthogonal to
-> phylink and only requires very few very small changes to phylink itself.
-> It was a draft and not as complete and well-documented like your series
-> now, of course.
+> For a MMIO read, the value is placed in the shared RecExit structure
+> during kvm_handle_mmio_return() rather than in the VCPU's register
+> entry.
 > 
-> I've then shared that implementation with Christian and some other
-> experienced OpenWrt developers and we concluded that having phylink handle
-> the PCS lifecycle and PCS selection would be the better and more elegant
-> approach for multiple reasons:
->  - The lifetime management of the wrapper instances becomes tricky:
->    We would either have to live with them being allocated by the
->    MAC-driver (imagine test-case doing unbind and then bind in a loop
->    for a while -- we would end up oom). Or we need some kind of garbage
->    collecting mechanism which frees the wrapper once refcnt is zero --
->    and as .select_pcs would 'get' the PCS (ie. bump refcnt) we'd need a
->    'put' equivalent (eg. a .pcs_destroy() OP) in phylink.
-> 
->    Russell repeatedly pointed me to the possibility of a PCS
->    "disappearing" (and potentially "reappearing" some time later), and
->    in this case it is unclear who would then ever call pcs_put(), or
->    even notify the Ethernet driver or phylink about the PCS now being
->    available (again). Using device_link_add(), like it is done in
->    pcs-rzn1-miic.c, prevents the worst (ie. use-after-free), but also
->    impacts all other netdevs exposed by the same Ethernet driver
->    instance, and has a few other rather ugly implications.
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-SRCU neatly solves the lifetime management issues. The wrapper lives as
-long as anyone (provider or user) holds a reference. A PCS can disappear
-at any point and everything still works (although the link goes down).
-Device links are only an optimization; they cannot be relied on for
-correctness.
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
->  - phylink currently expects .mac_select_pcs to never fail. But we may
->    need a mechanism similar to probe deferral in case the PCS is not
->    yet available.
 
-Which is why you grab the PCS in probe. If you want to be more dynamic,
-you can do it in netdev open like is done for PHYs.
-
->    Your series partially solves this in patch 11/11 "of: property: Add
->    device link support for PCS", but also that still won't make the link
->    come back in case of a PCS showing up late to the party, eg. due to
->    constraints such as phy drivers (drivers/phy, not drivers/net/phy)
->    waiting for nvmem providers, or PCS instances "going away" and
->    "coming back" later.
-
-This all works correctly due to device links. The only case that doesn't
-work automatically is something like
-
-MAC built-in
-  MDIO built-in
-    PCS module
-
-where the PCS module gets loaded late. In that case you have to manually
-re-probe the MAC. I think the best way to address this would be to grab
-the PCS in netdev open so that the MAC can probe without the PCS.
-
->  - removal of a PCS instance (eg. via sysfs unbind) would still
->    require changes to phylink. there is no phylink function to
->    impair the link in this case, and using dev_close() is a bit ugly,
->    and also won't bring the link back up once the PCS (re-)appears.
-
-This works just fine. There are two cases:
-
-- If the PCS has an IRQ, we notify phylink and then it polls the PCS
-  (see below).
-- If the PCS is polled, phylink will call pcs_get_state and see that the
-  link is down.
-
-Either way, the link goes down. But bringing the link back up is pretty
-unusual anyway. Unlike PHYs (which theoretically can be on removable
-busses) PCSs are generally permanently attached to their MACs. The only
-removable scenario I can think of is if the PCS is on an FPGA and the
-MAC is not.
-
-So if the PCS goes away, the MAC is likely to follow shortly after
-(since the whole thing is on a removable bus). Or someone has manually
-removed the PCS, in which case I think it's reasonable to have them
-manually remove the MAC as well. If you really want to support this,
-then just grab the PCS in netdev open.
-
->  - phylink anyway is the only user of PCS drivers, and will very likely
->    always be. So why create another subsystem?
-
-To avoid adding overhead for the majority of PCSs where the PCS is built
-into the MAC and literally can't be removed. We only pay the price for
-dynamicism on the drivers where it matters.
-
-> All that being said I also see potential problems with Christians
-> current implementation as it doesn't prevent the Ethernet driver to
-> still store a pointer to struct phylink_pcs (returned eg. from
-> fwnode_pcs_get()).
-> 
-> Hence I would like to see an even more tight integration with phylink,
-> in the sense that pointers to 'struct phylink_pcs' should never be
-> exposed to the MAC driver, as only in that way we can be sure that
-> phylink, and only phylink, is responsible for reacting to a PCS "going
-> away".
-
-OK, but then how does the MAC select the PCS? If there are multiple PCSs
-then ultimately someone has to configure a mux somewhere.
-
-> Ie. instead of fwnode_phylink_pcs_parse() handing pointers to struct
-> phylink_pcs to the Ethernet driver, so it can use it to populate struct
-> phylink_config available_pcs member, this should be the responsibility
-> of phylink alltogether, directly populating the list of available PCS in
-> phylink's private structure.
-> 
-> Similarly, there should not be fwnode_pcs_get() but rather phylink
-> providing a function fwnode_phylink_pcs_register(phylink, fwnode) which
-> directly adds the PCS referenced to the internal list of available PCS.
-
-This is difficult to work with for existing drivers. Many of them have
-non-standard ways of looking up their PCS that they need to support for
-backwards-compatibility. And some of them create the PCS themselves
-(such as if they are PCI devices with internal MDIO busses). It's much
-easier for the MAC to create or look up the PCS itself and then hand it
-off to phylink.
-
-> I hope we can pick the best of all the suggested implementations, and
-> together come up with something even better.
-
-Sure. And I think we were starting from a clean slate then this would be
-the obvious way to do things. But we must support existing drivers and
-provide an upgrade path for them. This is why I favor an incremental
-approach.
-
---Sean
