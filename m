@@ -1,122 +1,142 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA723595D;
-	Mon, 19 May 2025 04:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB8C1E9B29;
+	Mon, 19 May 2025 04:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747628336; cv=none; b=l5/mqrxrbMkcFI9wmkuDUJ97nYWo6b0+RRPQtc1TTyXY3wSYUslXB2w2DEmqz2o/X72C+kaIGipvsBSkIzVbqAfMQODePY/wnoW2fNgM3rc7wXctRAWHqlOdtx7oqtj5L5xWz7JAXje86LrjGG5RmMiM7dgtci1mlR8F4EXlxDA=
+	t=1747628827; cv=none; b=FAYuB2uuHkL9zjd9IxYvYXM//sYfDTYzTy+CrSH8arf4o16iV9uPlWVEfwi80uQ2l/JfwqXt7HBVbLwiYgPZFhRSY4B2BJLS6+AGohrT6C9AgjzcfE79LKT+405RTo7ImoCYQI5fQkqM7pHIlVb+/yTRmROFMm+XmwrmFw8OZ8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747628336; c=relaxed/simple;
-	bh=jLerpliY8lwNJ63awyCH5IEpb6UjJKtwxck0FuxpfxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dkd7i88hT+tF8yQDT/3UFU9DpyEu1NVoU+CNQ3e+YhMUdlx1f35N4uP8gPzvNLilBQ5AVebigSEwi4RAO0JTvX6QdR/MdRFzh5RRLVS9vvQHHqu4LqdyDN/iZAaHhm4opyR8pL1DD7Uw2NpnQTdW8bGbzhYEfN3LRACrwneGgME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/3gz55C; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747628827; c=relaxed/simple;
+	bh=D+BxbR1R/7GuzjXXZsA9L4v+Ig3eZDfJMkxSGuO5IxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IbBD8+XXOoY/5VVrm1SFHBfh/b1lnwMuptOuwDgVIUQ9kEKiNuaLoc+kcb82EYt975v5bj/D35iTgU4Th31RhEXxI4xOcov4Ixl3ixcwE1yuTTQ3vJj4T8M9fLqCaJTCPfNCBs6IAaMULbFUqWp9Uty952tc9wK1cDw/f1+xgaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=mcOow3cE; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/3gz55C"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5e2fe5f17so424160485a.3;
-        Sun, 18 May 2025 21:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747628334; x=1748233134; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i672wSfl8bozbLq8tqyBq5/SvDJJOrrVRB0z3aIo+3Y=;
-        b=L/3gz55CBSN4hNnBQ47dGz17QseiENKfFlv6zOWxTWU6EaKEaQa7b6ediWpzQWCzQF
-         kJj1RRNh6EBOJvHxjYWDtN/h1jv1dh22kVgoSnCiaMDepipqgccAwM2epZZdcA4eVau8
-         /ereKWILZ8OXq84lWwpqVXZ9FN7JqNZuIAw5uLCk8ZeOzAtZd+ebtBHMouh82bZjEHkm
-         snQMuxRKeYT6f5BtXF90XqarfMvB1Sbb0tFOFYLjaAUGrM/nziLxgdUZYmwX4qRgpRtI
-         WwzwEX+/MPpQwdR/t7Mai1oDF+wKlmL1FWDDz1cRgdR2iMZV5LBb4kVx6j5O7kIszylK
-         msRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747628334; x=1748233134;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i672wSfl8bozbLq8tqyBq5/SvDJJOrrVRB0z3aIo+3Y=;
-        b=cDdSMjmxb9/JDaW9c2+qNLOCXkb7HGIwiQHHSAhV23qnDT+3e/NBsmDrTNpOtD6DS0
-         rnR2GDFdC2spsDdZpUmJ+TtGlmrAx09bOl8X/AbELdp5dO9py32CIJD6DsJR0yExUBPK
-         zqz82+shgdS0IMvNFQ637nmvqaIbg8n0trTusFKPvCrDthpkM7mr0nIhb6XVkdOqRC3r
-         lFiCD7gzdU6wHyJ8oqTYCTR6qEHa6KahbQ/NwB9PGi2fyRvqkiyo1rJK0yvcSJI+NVIO
-         yVfo46GgHjLWA+Mt1W/x2maxamCw6n1rcvLAHcIQ9IIbjbGrkiUTqKJJRkaxpvN1eFDx
-         gZjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW93QkyDl6NKrbIk1YjKli++FT8GS6CO9dOL1wmTPLA91Q1BDvBBu0iBPidCoPF0nbP6eCCz9blvbQRXLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfsS3mRxlynUCQzdIzqxBURjxoVr5kcV4t6/4krocEVW6TRjyZ
-	TlMH3gsN4m4NWBQaRMlTDh8RrnZL73Jpo9vkrsQQvN2Z8sMPbg7j2VlG
-X-Gm-Gg: ASbGncspLlX0aiCpY9iNZJaKidaOywUb44AVDb98Evx0txJE3NYokXLdgsaWO1Qoio+
-	rfGkt8bYMmWtPVfnOL3zaPv3BQnYFxcby5kWvBM5Mmv7X9fgOKXAYnvGkFDVWP+7EU2sDom4DdL
-	J8bZZ99vtrRkDxXqmR1e/KWIXX3G7Uff9QZ5/AVw6soQahRh+imT4TOYFYjFPmYwrteSFfEv0qk
-	jgtjWXZLOE2sCC724qwTdPhJ4p+Z81wjuwkms5Gtz4Z2Q+rrSY6P55TMJPyorQGTu+bBLgrJv0A
-	vPC9MBujqXqhyjkY92cosjf1XCz5NN26YXORoIB0OIYtwc8rDcyL
-X-Google-Smtp-Source: AGHT+IEUs4IT/lhjtYKsJEVnWX5RmdlqFA+buH+dPVoqP2Ad1Pps6JHJvnOI+w6H9lOPftx148Sdzg==
-X-Received: by 2002:a05:620a:290e:b0:7c5:4278:d15f with SMTP id af79cd13be357-7cd46724cc8mr1598390185a.17.1747628333605;
-        Sun, 18 May 2025 21:18:53 -0700 (PDT)
-Received: from CNCMK0001D007E.ht.home ([2607:fa49:8c41:2600::f21d])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467be47bsm525713085a.16.2025.05.18.21.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 21:18:53 -0700 (PDT)
-From: chalianis1@gmail.com
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Anis Chali <chalianis1@gmail.com>
-Subject: [PATCH] gpiochip: expose gpiochip set data to be able to use it with a an usb gpio expander for example.
-Date: Mon, 19 May 2025 00:18:50 -0400
-Message-ID: <20250519041850.13095-1-chalianis1@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="mcOow3cE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=RBKhMTgodoS0/tflFpfhE9/Na+KY+SoCg6nBvDiYDmE=; b=mcOow3cEciheDpJiVqxC73jiwC
+	O1DNSYs+QyufvwSDGlKD2he91LmIXA+N2hkH4Vc7DpESXcbw5qCQ/81fTgZnQ30GJ8pK5jSPB9l9n
+	WIiKv/wJc2qtHPxKH+wdWEdikOG22ee+5L+DypFNSXO2LgCruideo9rPE0Iwr9jjAggOBJxAJE3J5
+	vESLZ2KePkFGWedEeeiHzc5MezHUzAbnpMAxZgZTaR/4SpawuSv8KjjPFsQi0T7f7RI0tDZIRuU6Q
+	2MAJWd7AtMAftUaJtHcAcznkXGq8YAg0IpvSqNo3cW+w6n5z3mzAeeGjLyG0Q1m2dOiZD8f6mBbUF
+	7Slb3VpQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uGs5J-0077S2-0e;
+	Mon, 19 May 2025 12:26:42 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 19 May 2025 12:26:41 +0800
+Date: Mon, 19 May 2025 12:26:41 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Bharat Bhushan <bbhushan2@marvell.com>
+Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
+	davem@davemloft.net, giovanni.cabiddu@intel.com, linux@treblig.org,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bharatb.linux@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH 3/4 RESEND] crypto: octeontx2: Fix address alignment on
+ CN10K A0/A1 and OcteonTX2
+Message-ID: <aCqzAQH06FAoYpYO@gondor.apana.org.au>
+References: <20250514051043.3178659-1-bbhushan2@marvell.com>
+ <20250514051043.3178659-4-bbhushan2@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514051043.3178659-4-bbhushan2@marvell.com>
 
-From: Anis Chali <chalianis1@gmail.com>
+On Wed, May 14, 2025 at 10:40:42AM +0530, Bharat Bhushan wrote:
+>
+> @@ -429,22 +431,50 @@ otx2_sg_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
+>  		return NULL;
+>  	}
+>  
+> -	g_sz_bytes = ((req->in_cnt + 3) / 4) *
+> -		      sizeof(struct otx2_cpt_sglist_component);
+> -	s_sz_bytes = ((req->out_cnt + 3) / 4) *
+> -		      sizeof(struct otx2_cpt_sglist_component);
+> +	/* Allocate memory to meet below alignment requirement:
+> +	 *  ----------------------------------
+> +	 * |    struct otx2_cpt_inst_info     |
+> +	 * |    (No alignment required)       |
+> +	 * |     -----------------------------|
+> +	 * |    | padding for 8B alignment    |
+> +	 * |----------------------------------|
+> +	 * |    SG List Gather/Input memory   |
+> +	 * |    Length = multiple of 32Bytes  |
+> +	 * |    Alignment = 8Byte             |
+> +	 * |----------------------------------|
+> +	 * |    SG List Scatter/Output memory |
+> +	 * |    Length = multiple of 32Bytes  |
+> +	 * |    Alignment = 8Byte             |
+> +	 * |    (padding for below alignment) |
+> +	 * |     -----------------------------|
+> +	 * |    | padding for 32B alignment   |
+> +	 * |----------------------------------|
+> +	 * |    Result response memory        |
+> +	 *  ----------------------------------
+> +	 */
+>  
+> -	dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
+> -	align_dlen = ALIGN(dlen, align);
+> -	info_len = ALIGN(sizeof(*info), align);
+> -	total_mem_len = align_dlen + info_len + sizeof(union otx2_cpt_res_s);
+> +	info_len = sizeof(*info);
+> +
+> +	g_len = ((req->in_cnt + 3) / 4) *
+> +		 sizeof(struct otx2_cpt_sglist_component);
+> +	s_len = ((req->out_cnt + 3) / 4) *
+> +		 sizeof(struct otx2_cpt_sglist_component);
+> +
+> +	dlen = g_len + s_len + SG_LIST_HDR_SIZE;
+> +
+> +	/* Allocate extra memory for SG and response address alignment */
+> +	total_mem_len = ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN) + dlen;
+> +	total_mem_len = ALIGN(total_mem_len, OTX2_CPT_RES_ADDR_ALIGN) +
+> +			 sizeof(union otx2_cpt_res_s);
 
-Signed-off-by: Anis Chali <chalianis1@gmail.com>
----
- drivers/gpio/gpiolib.c      | 8 +++++++-
- include/linux/gpio/driver.h | 3 +++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+This doesn't look right.  It would be correct if kzalloc returned
+a 32-byte aligned pointer to start with.  But it doesn't anymore,
+which is why you're making this patch in the first place :)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cd4fecbb41f2..58d051141f53 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -900,10 +900,16 @@ static void gpiochip_setup_devs(void)
- 	}
- }
- 
--static void gpiochip_set_data(struct gpio_chip *gc, void *data)
-+/**
-+ * gpiochip_set_data() - set per-subdriver data for the chip
-+ * @gc: GPIO chip
-+ * @data: Data for GPIO chip
-+ */
-+void gpiochip_set_data(struct gpio_chip *gc, void *data)
- {
- 	gc->gpiodev->data = data;
- }
-+EXPORT_SYMBOL_GPL(gpiochip_set_data);
- 
- /**
-  * gpiochip_get_data() - get per-subdriver data for the chip
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 4c0294a9104d..b1206fe42c26 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -717,6 +717,9 @@ const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc);
- /* get driver data */
- void *gpiochip_get_data(struct gpio_chip *gc);
- 
-+/* gpiochip set data */
-+void gpiochip_set_data(struct gpio_chip *gc, void *data);
-+
- struct bgpio_pdata {
- 	const char *label;
- 	int base;
+So you need to add extra memory to bridge the gap between what it
+returns and what you expect.  Since it returns 8-byte aligned
+memory, and you expect 32-byte aligned pointers, you should add
+24 bytes.
+
+IOW the calculation should be:
+
+	total_mem_len = ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN) + dlen;
+	total_mem_len = ALIGN(total_mem_len, OTX2_CPT_DPTR_RPTR_ALIGN);
+	total_mem_len += (OTX2_CPT_RES_ADDR_ALIGN - 1) &
+			 ~(OTX2_CPT_DPTR_RPTR_ALIGN - 1);
+
+>  	info = kzalloc(total_mem_len, gfp);
+>  	if (unlikely(!info))
+>  		return NULL;
+>  
+>  	info->dlen = dlen;
+> -	info->in_buffer = (u8 *)info + info_len;
+> +	info->in_buffer = PTR_ALIGN((u8 *)info + info_len,
+> +				    OTX2_CPT_DPTR_RPTR_ALIGN);
+> +	info->out_buffer = info->in_buffer + 8 + g_len;
+
+I presume the 8 here corresponds to SG_LIST_HDR_SIZE from the dlen
+calculation above.  If so please spell it out as otherwise it's just
+confusing.
+
+Cheers,
 -- 
-2.49.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
