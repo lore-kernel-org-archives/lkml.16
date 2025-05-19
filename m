@@ -1,99 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12151FDA9E;
-	Mon, 19 May 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57CC286434
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673861; cv=none; b=hF0/U3HuMucdnpqsdPsHccvZ8LEIx3qZuQ9188eBlY+V8gI/v8DzVQrPsReJ+WUZ8MEB2yfxLgPRFCpTWMS/mvJ70co6x0cPYuOozrF8MOUmfE+Yak1TAR2BZFsQedqUrmbQnfatVyjf1U10lzNE2rT1Dbm+4b4pNclMbr7MDWs=
+	t=1747673881; cv=none; b=fylKM2FaOJezpzjkB9oac7JeBcP+ZsdAd+441WhmM6xROqJIIHqSWGXugcc6ogLqsVwQdc7u+NbQiZs9MY3iZvmbmExvKVFOUk0wzPZP2W7ou9pSSNnGuuvvSekdDGZrVRpRskzAJQ2vkjbMeYwiuYcn803rbq/hRTMbwmy1mq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673861; c=relaxed/simple;
-	bh=IRKTNHfasU8+lo/XRIkxokS5HAPWIZgFKA1nHJYL56g=;
+	s=arc-20240116; t=1747673881; c=relaxed/simple;
+	bh=r6ISo7Bdezx8pW//FQkvGipbBI+YOE9Pca37dhR9eqo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1vT1yfVy9aIDa5c68jfLrS4B2EMPssK/iHEeZmBaP/5lEvjqrdo8IyvIY6m5+GMAInyI+7QpfGRWowlM5cEGvFgjLDvCZHrrq6tqiCj4LgMp2kQkaMmMubYLUnLd8jjc8exi8BByZFZ4nPaYigH0Em6FHpVJFy4Sz/SHO10+Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNOIRe6l; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=rCoDmGzz2XSKLHtmR0MVY25TTbthfQ/UVyz/j3RiqgkMc0rGvnXCSYh2sLLJf8q2GNnmLBNFDKEQhuuwTsQaJw84WmbV6tt9UbnJjasNFPB8KsD8LsP71KcZhoKzWgc83VLRjHgRu5i5lTKe6WvjpORFnywLpvCDbPJ2Leamj/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yBADrWpS; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNOIRe6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3C8C4CEF1;
-	Mon, 19 May 2025 16:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747673859;
-	bh=IRKTNHfasU8+lo/XRIkxokS5HAPWIZgFKA1nHJYL56g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oNOIRe6lZs7jzW6yF8dc/2pf+jxK9H6XJ6yGxQb7WUVmS4MBMBIoRoxO3s4tLxvPD
-	 qCHZUZ2TcZULip9ppmX4JKa47qerHL330KIOW2kCitvaolZyVZoQDvVma5aAmqOYmG
-	 HdHfhz5mWE6y5F3MGctO7ehNrUmrlRZ5JHwYNx1BPqruAzXBMDwCmQ7g5ZkLIlnszu
-	 osLehQG5He4sWXdVGHNWMRBBIcZLk7wVuV1ntYcwJXL7/9vjnlQrY2h01/azYxa7IE
-	 sXSHSicrNYXdHkzX+V3MgS6NNs5q2FsAjqCDhDYrOUiF2Y3O1qIYvAGYD7opo+I5PN
-	 6FPwDtjuo+3/g==
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476977848c4so50816711cf.1;
-        Mon, 19 May 2025 09:57:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAnCOvjP7dQjU+lz3ioOOIExI1+lkbPJfrkJswgdyclI9E8MRP+sj545zh3Bi3UfRO5TtGbTQE0X2f7SYyA5vXXg==@vger.kernel.org, AJvYcCVpBQJGAlbvuW05hAmzxOFFU8oDaUGbahPC13AJKwS47wn1pbGYJejXpZgnSkdX4b9AjViwZiFkZWtejbbFNQ==@vger.kernel.org, AJvYcCWvUg54kk8MNxBSN9dHZWYXjF6hElR/sNn5GnRUn+O9VH+FerSPS5q+J0ccfo7rnSZ3vrENxAdUpz7wsC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhJpBqJUj+pfVz007i6rbaiYQG/7uhwaiMn6DQKRzXmEEgRT73
-	6L+SB+67ldvYWfLoiyXx6/DMHWMprb6tneb7d0B3PV1/NXT1/RdM/2ByNSz+58IEGNHGNvipU+4
-	9HRNk89pIwwtwrPnG6Twcz5HalPkJbkE=
-X-Google-Smtp-Source: AGHT+IF4eIILYLE82QhVaFVC1hc40xNHoFgLB4h94upYDsq2OsAWvZWF03w5aHy3ywmb0cwEeuEgMULJtrLNil5Qb+Q=
-X-Received: by 2002:a05:622a:2610:b0:494:7c90:da18 with SMTP id
- d75a77b69052e-494ae47daf7mr251639231cf.38.1747673858027; Mon, 19 May 2025
- 09:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yBADrWpS"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47e9fea29easo814001cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:57:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747673879; x=1748278679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H//Q2/k0U/bxWK4hAN7S8ohOo4uWoLiyXOyReNaLkpY=;
+        b=yBADrWpSkMakpA+QNSQV3VE8wE8Ss8KOGzhbO8KCgZ0t+c1uD7M0XiyiV1XOygEuqf
+         BpejeApKtmrinEmw9ZFMdNh84rP2cFJaB0Yda2dLMcdewJn22QS1GyCqXLXR5TctKZI4
+         ikPkSAEksQXWPnhBGn6fQq1oXAI8S+1Qj2DafIxkESDJp/Fx8+tUj8PGThRZhroiA5fb
+         nuaLKXCC4PnkEwWd8y0QIV5/Z3Xvn5LEOEtqy9YIeFuhQR788OOAe5c2fjhAJPUTHSp3
+         J0P+V1aUPOMFWjN/2DKPi5mK40YxCK+t+rDCBB11XGRtevnH7Z78U/yFhd0rkhZt3tv9
+         dDLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747673879; x=1748278679;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H//Q2/k0U/bxWK4hAN7S8ohOo4uWoLiyXOyReNaLkpY=;
+        b=flcwI31iryUSUMgdDmZvYaAXr+ROS5cr4N/gwx7CuY7qz+HgNnkA/gZXlsghjuh0K+
+         9O4AgZm4w50llDT6BSedHF5R2sqUu9xRmdoPz/x6srRkoDqG+VnITIUAr5PVvxJ5fa5O
+         HRTIcT98wTDDxPk6xX2fouAC43Z30TUBneIuK04K4VsUYr4v9LD0l63U569VUp+K8I0r
+         xNZ//YrTDLMCKDRGcTwQLCf/1IDYj0DOsXd9brqcbFCsUjFRmcvsOHRjgOmME/KeCM/C
+         mRNI4HY0gW3L4IFjrYJOtXdoj0wDi8guZ3FujFynYoCXUDYRoLwaXB4K9Z37Ie/YVCnd
+         9rnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhlSxytp7XD5zrJx2monIdcmYVvtSrCUq7wvrnlTXaE4ucQG3r8qnTkJk443BEX1mL0oqden0hcpRW3p8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygV9EceolKoZsEAK/28IWfB1o16wCtw7/lqHPiwbFqqZMCRAv9
+	ZPAnfbw8RaiSSEqh2S1dPnQbcvbCePklAlYU/fkPi3dPdNpblLAAv42Sw+bx/ZxTG8KZp5eqnIr
+	GewLy8adzOrPFlyX6hKOdbatNbmp2k7Lm9EmRb/KK
+X-Gm-Gg: ASbGncuqy9jumEz2mrcvj7nsOp+/1BsU4AbOUu/FC/Vo4u5lWSOdfseYKmjjpbWJFUA
+	EE0oiU7unSRz783LvVrFIkDKsPlPiTJ1GMII1vi5zNA8vtBZN8y5dVO83gkIPCNlLjBvNbBJAFj
+	Q057YlflBDEctjqA6XDb4/ZnsvsvAxhu8=
+X-Google-Smtp-Source: AGHT+IF8sFbhe1lBDyTtsq0AmZROP9KAhFo8XpiyLcElzavRh5qezB1QIrU79vI/a0W4h9IpzLoXJpJHPNtU9wzb24I=
+X-Received: by 2002:ac8:5f83:0:b0:47d:4e8a:97ef with SMTP id
+ d75a77b69052e-495ff5d8949mr7638091cf.1.1747673878410; Mon, 19 May 2025
+ 09:57:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320171559.3423224-1-song@kernel.org> <20250320171559.3423224-2-song@kernel.org>
- <aCs08i3u9C9MWy4M@J2N7QTR9R3>
-In-Reply-To: <aCs08i3u9C9MWy4M@J2N7QTR9R3>
-From: Song Liu <song@kernel.org>
-Date: Mon, 19 May 2025 09:57:26 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4UVkXdShpo2TvisPhr6S1jFPkS_BKXAjN9cT3=k5SAFg@mail.gmail.com>
-X-Gm-Features: AX0GCFuUA2XAT-QJ7wQt7Tq4_RFoArpXkaTjxNGeXw5LP4FBthHONfACFli45WE
-Message-ID: <CAPhsuW4UVkXdShpo2TvisPhr6S1jFPkS_BKXAjN9cT3=k5SAFg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: Implement arch_stack_walk_reliable
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org, 
-	indu.bhagat@oracle.com, puranjay@kernel.org, wnliu@google.com, 
-	irogers@google.com, joe.lawrence@redhat.com, jpoimboe@kernel.org, 
-	peterz@infradead.org, roman.gushchin@linux.dev, rostedt@goodmis.org, 
-	will@kernel.org, kernel-team@meta.com
+References: <20250518101212.19930-1-00107082@163.com> <20250519163823.7540-1-00107082@163.com>
+ <CAJuCfpFzhroY2hm9o0sWF=NUOuyWjUhnnyFLoPYw-sR8MFEptA@mail.gmail.com>
+In-Reply-To: <CAJuCfpFzhroY2hm9o0sWF=NUOuyWjUhnnyFLoPYw-sR8MFEptA@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 19 May 2025 09:57:47 -0700
+X-Gm-Features: AX0GCFsPUvxyPNAFYs_469fMSBr3-hVnPuM1Rcdz3o8wVxBiXnQnHLsCgYWQ-vY
+Message-ID: <CAJuCfpEHvSS+UUeRpk1Mr8D+cAii_DiXTJsE5EALMRC6nUmiAg@mail.gmail.com>
+Subject: Re: [PATCH v2] module: release codetag section when module load fails
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: petr.pavlu@suse.com, mcgrof@kernel.org, linux-modules@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+On Mon, May 19, 2025 at 9:46=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Mon, May 19, 2025 at 9:38=E2=80=AFAM David Wang <00107082@163.com> wro=
+te:
+> >
+> > When module load fails after memory for codetag section is ready,
+> > codetag section memory will not be properly released. This
+> > causes memory leak, and if next module load happens to get the
+> > same module address, codetag may pick the uninitialized section
+> > when manipulating tags during module unload, and leads to
+> > "unable to handle page fault" BUG.
+> >
 
-Thanks for your review and the fixups!
+Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate
+contiguous memory")
 
-On Mon, May 19, 2025 at 6:41=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+> > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.=
+com/
+> > Signed-off-by: David Wang <00107082@163.com>
+> > Acked-by: Suren Baghdasaryan <surenb@google.com>
 >
-[...]
+> Sending to Andrew for adding into the mm tree.
 >
-> ... and then in future we can add anything spdecific to reliable
-> stacktrace there.
->
-> That aside, this generally looks good to me. The only thing that I note
-> is that we're lacking a check on the return value of
-> kretprobe_find_ret_addr(), and we should return -EINVAL when that is
-> NULL, but that should never happen in normal operation.
->
-> I've pushed a arm64/stacktrace-updates branch [1] with fixups for those
-> as two separate commits atop this one. If that looks good to you I
-> suggest we post that as a series and ask Will and Catalin to take that
-> as-is.
->
-> I'll look at the actual patching bits now.
->
-> Mark.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/ arm64=
-/stacktrace-updates
-
-For the fixups:
-
-Reviewed-and-tested-by: Song Liu <song@kernel.org>
-
-Tested with 2/2 of this set and samples/livepatch.
-
-Song
+> > ---
+> >  kernel/module/main.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > index a2859dc3eea6..5c6ab20240a6 100644
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -2829,6 +2829,7 @@ static void module_deallocate(struct module *mod,=
+ struct load_info *info)
+> >  {
+> >         percpu_modfree(mod);
+> >         module_arch_freeing_init(mod);
+> > +       codetag_free_module_sections(mod);
+> >
+> >         free_mod_mem(mod);
+> >  }
+> > --
+> > 2.39.2
+> >
