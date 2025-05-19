@@ -1,64 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC23283FDC;
-	Mon, 19 May 2025 16:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A98F283FDC
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672841; cv=none; b=IEPAHkPOZulpnY59SObAPH+Br4eARB4nVyypR7wsnTaGOQMzmZP7ZCeXOG051UArA+sIdwNkUKRkdxBeCqtm/tph7HUb0JvU2XPUvrQsWSPSh2meahdB/ZZvJ74jVZL3LRxG9z4vwYtzbp4Nitl/nHYMLuIpnMYSv2kTXbXtugU=
+	t=1747672848; cv=none; b=Z4JfjDPJ3DDk1shg9BmJXpPaMKgacVESDgoBp9Ya1o4bGZym5gmhk51frA+Jkxv3eZX+z+wvW/bW2+0yF/Y8jTe4AqYhBBLdFnkZtFfLcuDZ39RzRFdskUjnjIRkX4eL7ZwGWLESaLirn0ohAU798b2to3kzFsSVAv1/0YYP/Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672841; c=relaxed/simple;
-	bh=ok3hf+ijd2mlfIKeyHy3icFw3GSdz7RItoOTVT8fpzI=;
+	s=arc-20240116; t=1747672848; c=relaxed/simple;
+	bh=+LbGvO0IL9htaGDo2jxSFU5mMPt08NBRUB/FEzz/8sg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lH3z+PCDzAAOKqvqLEbNv/Ues29yyKrSo2FKt0Shh/zjB5rrCl73aocHqO2I3LduJk50KzkXUsz48wVRXQe8f3IqytumXU0/nMvY9QJ6U90sVd7qnXkt2pQS7NPVVx0Tl8oRfvRU3kLzAFUAiwxV/dVyul1cBGJpXU06RJx+TzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0299113E;
-	Mon, 19 May 2025 09:40:25 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F6E93F5A1;
-	Mon, 19 May 2025 09:40:36 -0700 (PDT)
-Date: Mon, 19 May 2025 17:40:33 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Song Liu <song@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
-	live-patching@vger.kernel.org, indu.bhagat@oracle.com,
-	puranjay@kernel.org, wnliu@google.com, irogers@google.com,
-	joe.lawrence@redhat.com, jpoimboe@kernel.org, peterz@infradead.org,
-	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
-Message-ID: <aCtfAcg32kbczs-g@J2N7QTR9R3>
-References: <20250320171559.3423224-1-song@kernel.org>
- <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
- <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ks6+JEO9wosOKnpCE1OuiXCMYm6nMnpKf4e5tsF/u01soXdh0xBYfTMrWwNfH9xmYuhR4JzW4Yd9AqeVIFnK3P5AkwkThuTgyChl9Okwv5xXxaoVvyihE5LYLQ/OlQgzBIopfhXrcgz1pFhRCI4qFKpaggKKWQq7+UG+DdrYpdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Mwb4TPgw; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Mwb4TPgw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=+LbG
+	vO0IL9htaGDo2jxSFU5mMPt08NBRUB/FEzz/8sg=; b=Mwb4TPgwmkVvYu59dJJG
+	iK6hZJhSxK/4JCs2ya6AfeZIgWRT4hc63ipdMhQSQcXip7pj/cwdbOqdSn0B5/8e
+	3IyW/YAK+xHpV4UEMDVtASnuCCuZ9q21NXRd6wD1nzWGNODSthcgv3hBT0+GzRjq
+	87osj9k4OSDrBx/0cRJw+S0ZvRFOs9+IYVUyUDNrHTEWOZI4efIsboAUjsR1Fkcf
+	L98tjNdzUGasutVe+6qpDa/PX+zhUw5ehktEtMH5S+xlfc6kNQi0Canke4TTa0rT
+	/ga67CpuQPEA2aS3+blhOMMuISdvu3Uztiw0ozBXzAG7UCjYtEKGrWZVtjN4A7UY
+	HA==
+Received: (qmail 2565292 invoked from network); 19 May 2025 18:40:42 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 18:40:42 +0200
+X-UD-Smtp-Session: l3s3148p1@8a/PyX816rRZz6uL
+Date: Mon, 19 May 2025 18:40:14 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Harshal <embedkari167@gmail.com>
+Cc: jdelvare@suse.com, skhan@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] docs: i2c: fix spelling mistake
+Message-ID: <aCte7oUUMIYSow-z@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Harshal <embedkari167@gmail.com>, jdelvare@suse.com,
+	skhan@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+References: <20250516100445.8484-1-embedkari167@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cmgRhpjTpldy9DG0"
+Content-Disposition: inline
+In-Reply-To: <20250516100445.8484-1-embedkari167@gmail.com>
+
+
+--cmgRhpjTpldy9DG0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16, 2025 at 09:53:36AM -0700, Song Liu wrote:
-> ARM folks, please share your thoughts on this work. To fully support
-> livepatching of kernel modules, we also need [1]. We hope we can
-> land this in the 6.16 kernel.
-> 
-> Thanks,
-> Song
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20250412010940.1686376-1-dylanbhatch@google.com/
+On Fri, May 16, 2025 at 03:34:38PM +0530, Harshal wrote:
+> fix resistors spelling in i2c-parport.rst
+>=20
+> Signed-off-by: Harshal <embedkari167@gmail.com>
 
-I've had a quick look at [1], and IIUC that's a hard prerequisite for
-livepatching, as without it the kernel *will* crash if it attempts a
-late module relocation.
+I ended up applying a similar patch with more precise descriptions and a
+full contributor name. But still, thanks and happy hacking!
 
-Given that, I don't think that we can take patch 2 until Will's comments
-on [1] have been addressed, but I think that we could take patch 1 (with
-fixups) as per my other reply.
 
-Mark.
+--cmgRhpjTpldy9DG0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgrXu4ACgkQFA3kzBSg
+KbboKw/7BhagxXCJXRmB6ajcF+qFlo257T6uCMVkdh0jpg8u0SctHvoN8AunxspO
+2Q4BXzeAnxZp5yxuhH5AndXeDsO5i1DbO10P7poIXvly0l3rNoMOoyg60iFhv9MI
+vnkLx7YA5CZoISu+kedx8csVHr5J9n/uZbiyHslOGo53VdoxQ/WS87wB8d1qFFEu
+x2+6RnRKy1HRWrnAtA4KmltzE+3TnyOHSpbggvhA+S7u+56halkO68VMhU62pS7D
+erQTfiIlnawqtJ5oBmI86Iu42QQoRyUa+UZ1gq2+8yaZYuwwS89wDcUVw6BuCqJX
+jVjjanQKvm3ZJv1poEXVFPPN4evOifiVuuPDNDoDXT9e6CiELMqU1oq9EQZrAqt/
+bvDLTzpr48WiqurnrY+LjKKmpu5bG+E3zFQyw3m8qPdQOqfyqAFDtS+ukipgFaun
+f47ajxMeoK4UcSriQiTEkN9ktuJ47ZbYwr6k7kHwOA13RvSPvJhzFXRLJ+mP6Q9q
+oBm8wtBZ81NcvP2Tok6BPxVlmwHBmx3eP74h1zo+S+PjvYx971btvg2NuY6yWLXl
+x23XD0sYe/t879WIwgoDEzxEvWwOvAeF7A3c/Fswbdgw8sgYmE925GRrUoxjNua2
+ER3Q6XY0UbgMvITFh2FQOmEevxDLmqGmWUW8t8FywW5l6Z9+4Z4=
+=/P+d
+-----END PGP SIGNATURE-----
+
+--cmgRhpjTpldy9DG0--
