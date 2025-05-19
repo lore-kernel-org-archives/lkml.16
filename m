@@ -1,43 +1,46 @@
 Received: from smtpcmd03117.aruba.it (smtpcmd03117.aruba.it [62.149.158.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13322A55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133751C700D
 	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660333; cv=none; b=lA++9YpS4QQWsDuw9n+354YFhRo/7mi784nRerifsd/sCTgIF0eD8g+BJ7YBz6etpBSDN30Zd6jiu2XDbvRYfefI248QrelBalEM+ZWqmvGwwFTBQn1COZBjuuozrsu7l1VaYpvabvMJgJYffg1l/90s8xlgtzhwAFzRXn/8QEA=
+	t=1747660333; cv=none; b=EEmN8lhDoaVa966yt22QeYNwMgmmguUVQyoIt+QBvPuwhXXIckLnRJh/3mYGyR2n4+Bz2tMjhj3WuVILnGZf5b8zVBAMQul+6seksVmNDY/kFrw/rN3KgNRSZoD299uCZtxWXvTjSddJmuWDFBGSpauqm9/WyWHKL7ikIodeVgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747660333; c=relaxed/simple;
-	bh=ML39nuP2riC2sW3IXoGz4oBLnULYWaCSwZod4+GgjiA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uhGXOsg5MAX2+JlzcMtWFDGvGeyBZSvBdSMKM+kOl4kCqP3Y4TOf0pbUlm8bR6AvT9UkLioP70NAaXSj17JHXisBwSJVmfi/oCd7oJmN2p227O3+46Bo40mNrKYD6czfjdJo7Et9o0vwJ2pGgH1akzHUFCUhxmuKKzxwoMSIgLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=X0nRl60l; arc=none smtp.client-ip=62.149.158.117
+	bh=STOexT3aeaNgS0jX6aWr+6om6VU5pRTy84ucbTxf4PI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J4tFxaQhOGChGIJsssndI+oW6fVa0mKIt2WJF5XEIPDHXexc75v0CAiD3ZCSBRjcxVJ6ebwXR/1a7YtOFJpJfjT9BEeYOTA0q1/mEel9BpeUKu+axSNf+QCnw5l/5R5y5JOSuTNi8UD5yUKCsgxR2WhY6YHm2M6AbRBKmUuO44w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=H06pDR4w; arc=none smtp.client-ip=62.149.158.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="X0nRl60l"
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="H06pDR4w"
 Received: from polimar.homenet.telecomitalia.it ([79.0.204.227])
 	by Aruba SMTP with ESMTPSA
-	id H0EluBSummHkSH0Emu8qyj; Mon, 19 May 2025 15:09:00 +0200
+	id H0EluBSummHkSH0Emu8qz3; Mon, 19 May 2025 15:09:00 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1747660140; bh=ML39nuP2riC2sW3IXoGz4oBLnULYWaCSwZod4+GgjiA=;
+	t=1747660140; bh=STOexT3aeaNgS0jX6aWr+6om6VU5pRTy84ucbTxf4PI=;
 	h=From:To:Subject:Date:MIME-Version;
-	b=X0nRl60lHCcTmM8wPCrXQPbaWagBNNvv4ajNRWXsX+BKxQJMBYMH1fnLz+EOlvxbJ
-	 iEBm62yD/8yUwuLqrHZ/AG73netX+q5iFUJ2FXfc7z0pS3+jS4ym714XggSyCwng+9
-	 p62PlLXykzpGSGZqUJIfCVLNAp2vl05POa52dFeu/6QezKm9qSh2URP/rYLhZ3gT4S
-	 kQp05/1Uqf/zh4/EjCN9oYJS7SYuv9lq2/FJTZRHRp4CgvQDPLC430O/OJ5veBX7d7
-	 XVcS3C7/GxoPJDgDKqejYlQUbp4bZRyIX1P+kEkzXpxQPEQFz6VsMqzwMsePrnGZbP
-	 aVJkyfush9/rg==
+	b=H06pDR4wPPLRP/LbUc9Rjv+rNc5evEgU35POt+QJuUbmqsIDjqxi4fTngG3EokHU4
+	 2WOg/3CnRJhFjUknjMlPgz3yqWQ0DfUp5+ouRzKCsDwOhY6pIcC3JjR44fU/OZpWrx
+	 HykwWtx1gxrDlzgSHgGnO2i1oDc8XwZ5hMYVLqpUKf+fYKR6zs/9UA/TEsC9/SCX61
+	 cMsPgyDK7FqpK6jPZwdoRo3ftufm7ibPlHQxLdh+T++Y6nbNLqXnZ6FTd/ch/ugy/Z
+	 yjAmCxYrbd84hEDvKkgfBcZx+Z1ls3Sra9rB+sdkXKJ1P7eqIKDVqwRJsGv5KbJWAy
+	 iw0IG008k9riQ==
 From: Rodolfo Giometti <giometti@enneenne.com>
 To: linux-kernel@vger.kernel.org
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Eric Fourmont <eric.fourmont-ext@st.com>,
 	Yann GAUTIER <yann.gautier@foss.st.com>,
-	Rodolfo Giometti <rodolfo.giometti@kbact.org>
-Subject: [V1 0/2] Add SoC support for stm32mp13xx CPUs
-Date: Mon, 19 May 2025 13:08:57 +0000
-Message-Id: <20250519130859.3389704-1-giometti@enneenne.com>
+	Rodolfo Giometti <giometti@enneenne.com>
+Subject: [V1 1/2] arm stm32mp131.dtsi: add "encoding_mode" nvmem definition
+Date: Mon, 19 May 2025 13:08:58 +0000
+Message-Id: <20250519130859.3389704-2-giometti@enneenne.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250519130859.3389704-1-giometti@enneenne.com>
+References: <20250519130859.3389704-1-giometti@enneenne.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,31 +50,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CMAE-Envelope: MS4xfMh/Fpk+pwBEkLTfzO4y4TYc9xaEfBudgO7tsUE0KkBxzid2iibSSSWCC/vQ7vakhsCbCw+9PNUaoJaD6+xay9nl/QAcuPtszO9sB8jayo0P0p87WSTR
  d2/i5HCoS0x0p1B/U8E0V+iM0d4LSTMNH9DzIU6nCW6UBgz/vmCRahhK3F0mtCQpOtKbpCLy1eR1kelAN7f14CjeOvZfbTTJqmVVECrwwCcAml4KbKNund29
- FWQqVHeOAQtXh7cIH8c9ikgF/opK/9qRMZL5BQqGlnHFbSqbC/H2dsyuu9yumnoEyq9J46SJ6XwcG/hXA1Vpw5KCI+S+qD3MFLqUMqlow4C0O/2UMDWi6aHy
- +22nA9dDMWfEzpzKURSZ0lilt3tyKm5V3qpkknSliGAr9KcAM/kEpAGD9M2ez32ttzZnhGEh
+ FWQqVHeOAQtXh7cIH8c9ikgF/opK/9qRMZL5BQqGlnHFbSqbC/H2dsyuu9yumnoEyq9J46SJ6XwcG/hXA1Vpw5KCI+S+qD3MFLqUMqlow4DIFC/e6luDWPgW
+ LHq2P9DgotXjP5V5wZFPyKbWtZkLYp92EMa/vYC/tfpa6N1wAFEywtLJfNvwwiVxmFmafiGF
 
-From: Rodolfo Giometti <rodolfo.giometti@kbact.org>
+This patch adds the definition for the nvmem location "encoding_mode"
+related to the "cpu0" node.
 
-This patchset adds SoC support for stm32mp13xx CPUs, allowing users to
-read the following information:
+Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
+---
+ arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-    # ls /sys/bus/soc/devices/soc0/
-    family         power          secure         soc_id         uevent
-    machine        revision       serial_number  subsystem
-
-All entries are standard SoC entries except "secure", which reports
-the CPU security status as described in the CPU datasheet.
-
-Rodolfo Giometti (2):
-  arm stm32mp131.dtsi: add "encoding_mode" nvmem definition
-  drivers soc: add support for ST stm32mp13xx family
-
- arch/arm/boot/dts/st/stm32mp131.dtsi |   7 +
- drivers/soc/st/Makefile              |   1 +
- drivers/soc/st/soc-stm32mp13.c       | 253 +++++++++++++++++++++++++++
- 3 files changed, 261 insertions(+)
- create mode 100644 drivers/soc/st/soc-stm32mp13.c
-
+diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+index e555717c0048..52bf497e26bb 100644
+--- a/arch/arm/boot/dts/st/stm32mp131.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+@@ -24,6 +24,9 @@ cpu0: cpu@0 {
+ 			clocks = <&scmi_perf 0>;
+ 			clock-names = "cpu";
+ 			#cooling-cells = <2>;
++
++			nvmem-cells = <&encoding_mode_otp>;
++			nvmem-cell-names = "encoding_mode";
+ 		};
+ 	};
+ 
+@@ -1167,6 +1170,10 @@ part_number_otp: part-number-otp@4 {
+ 				reg = <0x4 0x2>;
+ 				bits = <0 12>;
+ 			};
++			encoding_mode_otp: encoding-mode-otp@4 {
++				reg = <0x0 0x1>;
++				bits = <0 9>;
++			};
+ 			vrefint: vrefin-cal@52 {
+ 				reg = <0x52 0x2>;
+ 			};
 -- 
 2.25.1
 
