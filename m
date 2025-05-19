@@ -1,88 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A46278E60;
-	Mon, 19 May 2025 12:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D97E278E79;
+	Mon, 19 May 2025 12:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747659455; cv=none; b=RY9hXLCOm24hPKpG5Kr8WlC8Z2unopalnvpRnLTDeaZBuv2AWPdt6gU1z2sE4BdODHMK3hFgAe8QhaCSqd6Ta65MkC0l0URBZ6n/IIN7LuV/lTWzheOaNmwF06K1eyfqjQUgkTN7mQ5Ed88ALQlIOGMZzJrmnlemsWlcDMvsNAI=
+	t=1747659472; cv=none; b=L7gvx9yuA7tOPr9uApRIXKyFvl8WUvOeZx6irqvuL4QZ0jx2ca17mZZTb788Wcz7QRvSa42eaKD0NayFEwie6/GGVIiEJs/aLSajOc/jV1v3hhf1QpDgTP51YvbLP+9oIXXKBFweczLyFVKT6D0uFa8VPgIbINCVtF98pury5b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747659455; c=relaxed/simple;
-	bh=gXpTYgvGTAJG68tcffNCQMuQVt48NcFXktn/s8H7oeo=;
+	s=arc-20240116; t=1747659472; c=relaxed/simple;
+	bh=kEOXFQHC9RoM8eAOkKs69L7ICX7VhE3OmdVsIRdGCTU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGLpy1Mc10o1ChR1BxgyImE010B4NhYfbCGMFv2oHBS32JDCWF01abetKGBgKp9jycR+T2o343rdJYb9ibSrGI3NFroWkhKZfnbX3WHEPrsCR9BUXm2KI6EBLQzEyL2dNP4EkNgq7SYvIRebFGvbRJy3iYCt5/BX2pOULLMiT20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 309091655;
-	Mon, 19 May 2025 05:57:19 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64BCE3F6A8;
-	Mon, 19 May 2025 05:57:29 -0700 (PDT)
-Date: Mon, 19 May 2025 13:57:23 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Song Liu <song@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
-	live-patching@vger.kernel.org, indu.bhagat@oracle.com,
-	puranjay@kernel.org, wnliu@google.com, irogers@google.com,
-	joe.lawrence@redhat.com, jpoimboe@kernel.org, peterz@infradead.org,
-	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
-Message-ID: <aCsqsyjvD72YXtOJ@J2N7QTR9R3>
-References: <20250320171559.3423224-1-song@kernel.org>
- <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
- <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nqJf4IIsNgGtbk9PIbH3vZdCVAUlmtmt/wEIjKPl5W8YpTEyZ+x5X2xtQ5dQLBy+VaDZkxTxg3TqCKgx0kbpXigosQP4/I1d6Htsj0pfR1S6RQn1dGp9aPYXexeVWerF9n5hWr0PdkkiwISS9mPt9CJm64Qvtw9D3LzIUaZU5EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRwXHkt4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRwXHkt4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBEFC4CEE4;
+	Mon, 19 May 2025 12:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747659471;
+	bh=kEOXFQHC9RoM8eAOkKs69L7ICX7VhE3OmdVsIRdGCTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IRwXHkt41r88inU1cYD9K+LCn94Q8Ws6urXoNboBr8VBvQCWA4V5kfGosC6qdJR/C
+	 1c7J/73vEj/kTeRIF5XHlh3oqw5ttiZKLEp10C8MM8GDXVpcHdhEmtDUPEp4qD6XIe
+	 nO3/P45Or0YwpgI1iVyGObUXvRZ2cqcxTzKsbHf0yYRVkqahahdv5vGnPCEYF0w6B5
+	 Y2aqhZNcpombt/nRzszMzK9Jha2/lcNI9Uuk8Qc5qmGmJtPVEBiMYCw4dn8QEhxqTS
+	 KUAdwLevGYC6hMGntBQzgxKA73TD8XEW39gc5dukXPDbWwGxwDeprPkumRQHsw5kXS
+	 T3iUFMdZydSOQ==
+Date: Mon, 19 May 2025 14:57:46 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when
+ irqs_disabled()
+Message-ID: <aCsqyrHdMWlU3yc0@gmail.com>
+References: <20250516231858.27899-1-ebiggers@kernel.org>
+ <20250516231858.27899-4-ebiggers@kernel.org>
+ <aCg2DSYp0nakwX3l@gmail.com>
+ <20250517183919.GC1239@sol>
+ <aCl_cSO2XqtSQEZT@gmail.com>
+ <CAMj1kXGVAbD9zxUQSwwGo=ueadqWWSdaQNDe_-7ZezpFLMJRMA@mail.gmail.com>
+ <20250518200114.GA1764@sol>
+ <aCrmZnSokvmqfel3@gmail.com>
+ <CAMj1kXGe0hMD-71KYN_htJztAL+P8vFNf+9+W_aVDkHx3nCEWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
+In-Reply-To: <CAMj1kXGe0hMD-71KYN_htJztAL+P8vFNf+9+W_aVDkHx3nCEWA@mail.gmail.com>
 
-On Fri, May 16, 2025 at 09:53:36AM -0700, Song Liu wrote:
-> On Thu, Apr 10, 2025 at 8:17 AM Petr Mladek <pmladek@suse.com> wrote:
+
+* Ard Biesheuvel <ardb@kernel.org> wrote:
+
+> On Mon, 19 May 2025 at 10:06, Ingo Molnar <mingo@kernel.org> wrote:
 > >
-> [...]
+> >
+> > * Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > > > # echo PANIC > /sys/kernel/debug/provoke-crash/DIRECT
+> > > >
+> > > > Another case that likely executes with IRQs disabled (but I haven't
+> > > > double checked) is reset_system(), which may return with an error, or
+> > > > reboot/poweroff the machine and never return.
 > > >
-> > > [1] https://lore.kernel.org/live-patching/20250127213310.2496133-1-wnliu@google.com/
-> > > [2] https://lore.kernel.org/live-patching/20250129232936.1795412-1-song@kernel.org/
-> > > [3] https://sourceware.org/bugzilla/show_bug.cgi?id=32589
-> > > [4] https://lore.kernel.org/linux-arm-kernel/20241017092538.1859841-1-mark.rutland@arm.com/
-> > >
-> > > Changes v2 => v3:
-> > > 1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
-> > > 2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
+> > > That makes sense to me.  preempt_disable() and preempt_enable() are already
+> > > allowed when IRQs are disabled, and I'm not sure why local_bh_disable() and
+> > > local_bh_enable() are different.
 > >
-> > The approach and both patches look reasonable:
+> > Because local_bh_enable() may run softirq handlers immediately if
+> > there's pending softirqs, which shouldn't be done in hardirq context.
 > >
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> >
-> > Is anyone, Arm people, Mark, against pushing this into linux-next,
-> > please?
 > 
-> Ping.
+> Sure, but why is that mandatory?
+>
 > 
-> ARM folks, please share your thoughts on this work. To fully support
-> livepatching of kernel modules, we also need [1]. We hope we can
-> land this in the 6.16 kernel.
+> preempt_disable() has preempt_enable() and preempt_enable_no_resched()
+> counterparts.
 
-Hi; apologies for the delay -- my time had been consumed by
-FPSIMD/SVE/SME fixes and related non-upstream stuff for the last few
-weeks, and now I'm catching up.
+> [...] Could we have a local_bh_enable_no_xxx() version that 
+> re-enables async softirq processing on the current CPU but does not 
+> kick off a synchronous processing run?
 
-For the stacktrace side, I'm happy with enabling this without sframe,
-and I hase some minor nits which we can either fix up now or as a
-follow-up. I'll cover those in another reply, and chase up the module /
-code-patching bit shortly.
+Yes, that's what __local_bh_enable() does, but if used it for 
+kernel_fpu_end() we'd be introducing random softirq processing 
+latencies. The softirq execution model is for softirqs to be 
+immediately executed after local_bh_enable(), and various networking 
+code is tuned to that behavior.
 
-Mark.
+You can try talking the networking folks into an asynchronous 
+local_bh_enable() executed on the next IRQ or the next scheduler tick 
+or so, but it's a non-trivial behavioral change. It would probably also 
+need user-return callback activation.
 
-> Thanks,
-> Song
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20250412010940.1686376-1-dylanbhatch@google.com/
+I'm pretty sure that the naive implementation would increase LAN ping 
+latencies by +4 msecs on a typical distro kernel.
+
+Thanks,
+
+	Ingo
