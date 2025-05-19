@@ -1,179 +1,290 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C440A20102B
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5BF275846;
+	Mon, 19 May 2025 12:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656647; cv=none; b=LFoScq/tzf3t0sTXNcqHttFdbjAzaEIg9Dxu4upguUmd5XXKWAqLnB1A9gR7w5U+MSj0iPQn3dYKNqGsMzLjFzbud9JvhKQ6QL5XXh0gAovRL/AJkiXSjQT6xdvAGCKyULm1y+RQUMKYrnTTuFmky7gOi7ncOu6bWqFXanbat0s=
+	t=1747656926; cv=none; b=qWOwPT3+qoDKjKLGvtIMJq41GI2lG0r1Z+/NJCpZFMmvRLe4KMWR2Xk0gucGgvoYlT6hreEtzD04kaubSxFesBCkXlcr65/DTWdZNPuOuIxD2jLzEYJkiXCmwVk5hx6EbjoriCWSdtJoVLru9nSRABM+Prb1ShkMb6yfnfqfu8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656647; c=relaxed/simple;
-	bh=jS7W/OQfhloeRDbKosQAwm7ioICWhn7Ru8KJpfOQGc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LMLVc5VRDz2nnakjXaVqJZofa72uR+Sv0sL8pk0SDoLS3GATsF6TCDzB5q0Z1gvyi2HfOXsWSnN32/BiZUX4f/yDjS+ek3ew2Cv0bVjEJRWPjSK/WOzML5uMyvRWG+CKa5Sg/JXXLTCUybLS2etOTqk1lN+VSJW0QZSGpLFJcS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=vrTjvypu; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="vrTjvypu"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-476f4e9cf92so32701261cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747656644; x=1748261444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sxj5tV4ZjtLTjypVmyMI86S9Wm14CRi4YEthyQjDYJE=;
-        b=vrTjvypuMshQCVidlLl8tRR4bFvQLTSI/6HyP7y5EzYqgPZwUDV4e2J0nrF1liL6yT
-         cwxCXmPi3xLnN1Ee0+3Mo1tHcob6cxwGyWTEDNdaQnofqyn5TG1RcyP+QGelVl/xqC+1
-         aw7P2xVEIlfl7V1Y7VDCvFwP/CoWnx4Oi7uwZ6db3bmkK6MCZDjBBxmLzop8F7ddpke0
-         MEVcHWVozwtnQGEZ2Os1f8Aaz9ykZl7p2b8aCMEIorYXY/XDKrgF02kLuh7Qm1pGQo8o
-         DCnH+Acrp9TIjQpdoUqD7Qus6IBgXhYl1+r6S23uljAjv3GGNVtQmU5j3D7lpOyK9AD8
-         95DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747656644; x=1748261444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sxj5tV4ZjtLTjypVmyMI86S9Wm14CRi4YEthyQjDYJE=;
-        b=IflMzFjw5mAHbo+LbwEuUi5MGjEABsH0E+QtyO6j6wFkj5sfydALSr9QBQ/EjPAu4P
-         iaYmomF6jsp+Ko+pTEONAANHNW65qEvB9MQoreTQMQyBooWPyiFQMXcCDZDeH4XPwpTp
-         RaqJQNy+ZeKSkYYm1WvQy7Z7/4JOx6C2WWMyfhNkbgMCeM3C8Ej0vboqAsGyvPkFrui3
-         5D5kQWHuRIUv9y6cMO02y/f0GMSClcGIcaXVERjI0Yd4whdCsczwB3mNAuqV2sh39pDO
-         Yg25J9dtsluO4RbhjzPHW4y3zJOy8GqL8eCQchAreqpXQtg/oKSZScpZ3YbbXcaiIMYD
-         gS4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWjpjnpteYY/6V/04yJC8riETefP4JBBijXBatwLJ2ZRHT1lO0wFV2k9q/K3VTcG4qfLtXoQR+pWHUv+GY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9LzHgw7rlzWNiv+22K09JC127PQgudSGKMscHBH8MQfCmRt06
-	69uxxDLEgO79rGCZ72YgGH9cFrBqfbn46CkkIf7r8jUMYBdN6CWO6/HfCuCdfQyNsDkIcsEF8Tc
-	VS3ExYTuRDCc1eI9ZHShOgagp/cRRJmXHyw/BXgFAnA==
-X-Gm-Gg: ASbGncutqMn2zjiEPIXHrX0bgVbn2eBWU4IuKEtaO2ItXnmwaq47Oeay/CzblBKy6C4
-	2JebZr/w4ENLOKIOnzoaKI/obr/zNP9Eu6NkqqiP22ug48iB+j7qbLaGglVP4K5fM0jIkSw/Bgh
-	bORvGzyM8CNazMaSu7VysE+PelJIZqFA==
-X-Google-Smtp-Source: AGHT+IHFVZaN/KoXQKmix7VBW6TAlcDBvQWjHHP9O9i0WPdPw4x+eCBlpXYOmcHm5M0gwFeXPJdS+ox//5pK2zRXTgs=
-X-Received: by 2002:a05:622a:1b10:b0:48a:d21f:4ea with SMTP id
- d75a77b69052e-494ae377aadmr250581171cf.13.1747656644392; Mon, 19 May 2025
- 05:10:44 -0700 (PDT)
+	s=arc-20240116; t=1747656926; c=relaxed/simple;
+	bh=tNM305ttJ97N5szcmiZosc3SsEJonoEDwtoWV06EsW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHuXg8ngJf2Nr5dqxRMocyAkslwGhunusufh8+YccQ4u5BAah71Fuo59FGB+kWREaHJE2ZoLZVkainO7/A0hNqU+J/+XRxZg5Ks8/USZxB8ZxPUB2l1Xx+CxsBR1rwVxLQB1cE9qXTOo3eLc3jyIP1SvRVBYzmx8IBK9od78tmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: zEjjuuF2SXOZ8c9yvnFH7A==
+X-CSE-MsgGUID: NVY0tqKNQz2VJXX634cAyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49657670"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49657670"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:15:23 -0700
+X-CSE-ConnectionGUID: g1C1h59sRKa7mLT+S9tB+w==
+X-CSE-MsgGUID: /yvKf85WRYizI3FayBA+YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139395929"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:15:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uGzOn-000000031pb-3X9A;
+	Mon, 19 May 2025 15:15:17 +0300
+Date: Mon, 19 May 2025 15:15:17 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 09/12] iio: accel: adxl313: add activity sensing
+Message-ID: <aCsg1XddkT6sGjev@smile.fi.intel.com>
+References: <20250518111321.75226-1-l.rubusch@gmail.com>
+ <20250518111321.75226-10-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518142315.241670-1-changyuanl@google.com>
- <20250518142315.241670-3-changyuanl@google.com> <aCoB6KkQr4xFBlEu@kernel.org>
-In-Reply-To: <aCoB6KkQr4xFBlEu@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 19 May 2025 08:10:07 -0400
-X-Gm-Features: AX0GCFvC73OzkVuPTBSZiZm6D6fkjt14tbJiCBHbeRPZlSwcNy9mM8PHVLc8h78
-Message-ID: <CA+CK2bD7Zf_zvzi6zvQamUTJR19vKkWB8eux5vcwn-8ns=ZRKA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KHO: init new_physxa->phys_bits to fix lockdep
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org, graf@amazon.com, 
-	bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, chrisl@kernel.org, jasonmiu@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518111321.75226-10-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, May 18, 2025 at 11:51=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> On Sun, May 18, 2025 at 07:23:15AM -0700, Changyuan Lyu wrote:
-> > From: Pasha Tatashin <pasha.tatashin@soleen.com>
-> >
-> > Lockdep shows the following warning:
-> >
-> > INFO: trying to register non-static key.
-> > The code is fine but needs lockdep annotation, or maybe
-> > you didn't initialize this object before use?
-> > turning off the locking correctness validator.
-> >
-> > [<ffffffff810133a6>] dump_stack_lvl+0x66/0xa0
-> > [<ffffffff8136012c>] assign_lock_key+0x10c/0x120
-> > [<ffffffff81358bb4>] register_lock_class+0xf4/0x2f0
-> > [<ffffffff813597ff>] __lock_acquire+0x7f/0x2c40
-> > [<ffffffff81360cb0>] ? __pfx_hlock_conflict+0x10/0x10
-> > [<ffffffff811707be>] ? native_flush_tlb_global+0x8e/0xa0
-> > [<ffffffff8117096e>] ? __flush_tlb_all+0x4e/0xa0
-> > [<ffffffff81172fc2>] ? __kernel_map_pages+0x112/0x140
-> > [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> > [<ffffffff81359556>] lock_acquire+0xe6/0x280
-> > [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> > [<ffffffff8100b9e0>] _raw_spin_lock+0x30/0x40
-> > [<ffffffff813ec327>] ? xa_load_or_alloc+0x67/0xe0
-> > [<ffffffff813ec327>] xa_load_or_alloc+0x67/0xe0
-> > [<ffffffff813eb4c0>] kho_preserve_folio+0x90/0x100
-> > [<ffffffff813ebb7f>] __kho_finalize+0xcf/0x400
-> > [<ffffffff813ebef4>] kho_finalize+0x34/0x70
-> >
-> > This is becase xa has its own lock, that is not initialized in
-> > xa_load_or_alloc.
-> >
-> > Modifiy __kho_preserve_order(), to properly call
-> > xa_init(&new_physxa->phys_bits);
-> >
-> > Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation=
-")
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-> > ---
-> >  kernel/kexec_handover.c | 29 +++++++++++++++++++++++++----
-> >  1 file changed, 25 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> > index 69b953551677..f0ac6a9170f8 100644
-> > --- a/kernel/kexec_handover.c
-> > +++ b/kernel/kexec_handover.c
-> > @@ -144,14 +144,35 @@ static int __kho_preserve_order(struct kho_mem_tr=
-ack *track, unsigned long pfn,
-> >                               unsigned int order)
-> >  {
-> >       struct kho_mem_phys_bits *bits;
-> > -     struct kho_mem_phys *physxa;
-> > +     struct kho_mem_phys *physxa, *new_physxa;
-> >       const unsigned long pfn_high =3D pfn >> order;
-> >
-> >       might_sleep();
-> >
-> > -     physxa =3D xa_load_or_alloc(&track->orders, order, sizeof(*physxa=
-));
-> > -     if (IS_ERR(physxa))
-> > -             return PTR_ERR(physxa);
-> > +     physxa =3D xa_load(&track->orders, order);
-> > +     if (!physxa) {
-> > +             new_physxa =3D kzalloc(sizeof(*physxa), GFP_KERNEL);
-> > +             if (!new_physxa)
-> > +                     return -ENOMEM;
-> > +
-> > +             xa_init(&new_physxa->phys_bits);
-> > +             physxa =3D xa_cmpxchg(&track->orders, order, NULL, new_ph=
-ysxa,
-> > +                                 GFP_KERNEL);
-> > +             if (xa_is_err(physxa)) {
-> > +                     int err_ret =3D xa_err(physxa);
-> > +
-> > +                     xa_destroy(&new_physxa->phys_bits);
-> > +                     kfree(new_physxa);
-> > +
-> > +                     return err_ret;
-> > +             }
-> > +             if (physxa) {
-> > +                     xa_destroy(&new_physxa->phys_bits);
-> > +                     kfree(new_physxa);
-> > +             } else {
-> > +                     physxa =3D new_physxa;
-> > +             }
-> > +     }
->
-> You are nearly duplicating xa_load_or_alloc() here.
-> Is xa_destroy() is really needed here? In the end we destroying an empty
-> xarray.
->
-> Unless xa_destroy() is a must something like this would be simpler IMHO:
+On Sun, May 18, 2025 at 11:13:18AM +0000, Lothar Rubusch wrote:
+> Add possibilities to set a threshold for activity sensing. Extend the
+> interrupt handler to process activity interrupts. Provide functions to set
+> the activity threshold and to enable/disable activity sensing. Further add
+> a fake channel for having x, y and z axis anded on the iio channel.
+> 
+> This is a preparatory patch. Some of the definitions and functions are
+> supposed to be extended for inactivity later on.
 
-I wanted to do proper xa_destroy(), as the whole point of this patch
-is to satisfy lockdep, and do a proper xa_init(). The patch fixes a
-warning in linux-next, and I think should be taken as is. We can do a
-separate clean-up once the series lands, where xa_load_or_alloc()
-could either take another argument, or split into two functions.
+...
 
-Pasha
+> +static int adxl313_is_act_inact_en(struct adxl313_data *data,
+> +				   enum adxl313_activity_type type,
+> +				   bool *en)
+> +{
+> +	unsigned int axis_ctrl;
+> +	unsigned int regval;
+> +	int ret;
+
+> +	*en = false;
+
+Even in case of an error? The rule of thumb is to avoid assigning output when
+we know that the error will be returned to the caller.
+
+> +	ret = regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axis_ctrl);
+> +	if (ret)
+> +		return ret;
+
+> +	if (type == ADXL313_ACTIVITY)
+> +		*en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +
+> +	if (*en) {
+
+This doesn't need to re-write the value of *en. Just declare local boolean
+temporary variable and use it and only assign it on success.
+
+> +		ret = regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*en = adxl313_act_int_reg[type] & regval;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int adxl313_set_act_inact_en(struct adxl313_data *data,
+> +				    enum adxl313_activity_type type,
+> +				    bool cmd_en)
+> +{
+> +	unsigned int axis_ctrl = 0;
+> +	unsigned int threshold;
+> +	bool en;
+> +	int ret;
+> +
+> +	if (type == ADXL313_ACTIVITY)
+> +		axis_ctrl = ADXL313_ACT_XYZ_EN;
+> +
+> +	ret = regmap_update_bits(data->regmap,
+> +				 ADXL313_REG_ACT_INACT_CTL,
+> +				 axis_ctrl,
+> +				 cmd_en ? 0xff : 0x00);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(data->regmap, adxl313_act_thresh_reg[type], &threshold);
+> +	if (ret)
+> +		return ret;
+
+> +	en = false;
+
+Instead...
+
+> +	if (type == ADXL313_ACTIVITY)
+> +		en = cmd_en && threshold;
+
+	else
+		en = false;
+
+> +	return regmap_update_bits(data->regmap, ADXL313_REG_INT_ENABLE,
+> +				  adxl313_act_int_reg[type],
+> +				  en ? adxl313_act_int_reg[type] : 0);
+> +}
+
+...
+
+> +static int adxl313_read_event_config(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+
+> +	bool int_en;
+
+Why? You return the int here... I would expect rather to see unsigned int...
+
+> +	int ret;
+> +
+> +	switch (type) {
+> +	case IIO_EV_TYPE_MAG:
+> +		switch (dir) {
+> +		case IIO_EV_DIR_RISING:
+> +			ret = adxl313_is_act_inact_en(data,
+> +						      ADXL313_ACTIVITY,
+> +						      &int_en);
+> +			if (ret)
+> +				return ret;
+> +			return int_en;
+
+...or even simply
+
+			return adx1313...(...);
+
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +static int adxl313_read_event_value(struct iio_dev *indio_dev,
+> +				    const struct iio_chan_spec *chan,
+> +				    enum iio_event_type type,
+> +				    enum iio_event_direction dir,
+> +				    enum iio_event_info info,
+> +				    int *val, int *val2)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	unsigned int act_threshold;
+> +	int ret;
+> +
+> +	/* measurement stays enabled, reading from regmap cache */
+> +
+> +	switch (type) {
+> +	case IIO_EV_TYPE_MAG:
+> +		switch (info) {
+> +		case IIO_EV_INFO_VALUE:
+> +			switch (dir) {
+> +			case IIO_EV_DIR_RISING:
+> +				ret = regmap_read(data->regmap,
+> +						  adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> +						  &act_threshold);
+> +				if (ret)
+> +					return ret;
+> +				*val = act_threshold * 15625;
+
+> +				*val2 = 1000000;
+
+MICRO?
+
+> +				return IIO_VAL_FRACTIONAL;
+> +			default:
+> +				return -EINVAL;
+> +			}
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int adxl313_write_event_value(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir,
+> +				     enum iio_event_info info,
+> +				     int val, int val2)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = adxl313_set_measure_en(data, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (type) {
+> +	case IIO_EV_TYPE_MAG:
+
+This can be collapsed to the conditional, making indentation better overall.
+Same applies to the other parts of the code outside of this function.
+
+> +		switch (info) {
+> +		case IIO_EV_INFO_VALUE:
+> +			/* The scale factor is 15.625 mg/LSB */
+> +			regval = DIV_ROUND_CLOSEST(1000000 * val + val2, 15625);
+
+MICRO?
+
+> +			switch (dir) {
+> +			case IIO_EV_DIR_RISING:
+> +				ret = regmap_write(data->regmap,
+> +						   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> +						   regval);
+> +				if (ret)
+> +					return ret;
+> +				return adxl313_set_measure_en(data, true);
+> +			default:
+> +				return -EINVAL;
+> +			}
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +		ret = regmap_write(data->regmap, ADXL313_REG_ACT_INACT_CTL, 0);
+
+0x00 ?
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_write(data->regmap, ADXL313_REG_THRESH_ACT, 0x52);
+> +		if (ret)
+> +			return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
