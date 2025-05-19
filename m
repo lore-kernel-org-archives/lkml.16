@@ -1,53 +1,61 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E71D2750E3;
-	Mon, 19 May 2025 10:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E612277000;
+	Mon, 19 May 2025 10:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650482; cv=none; b=BOePmSM1psKgQ9F70G3bijucuIHzlGlBofqTKFx6ve9OoQ+ge/7DBw6pDeKf+ThJ8R/tuS+Lx3+7yOA6ky5vZb0y44cmTr4gfYTSX/3599n4iydE7j21RREBZCFyeonXpxxEEOKEgWGLc9Sq8bL9AVTS1mBiH6OC6ccAKeOm/xA=
+	t=1747650484; cv=none; b=Tm8mO7k3x5assu4kzYs9MpCON+swZNRWdrGhfBaQwoQedycYvzvL9eUBLMvfhDH1AZ/rltCfsLzYs8I5ynnzWsWZfaFZK33rgFeah2O07w62WIKjotTLEQP9MrJS09FGYHgA66cSx2UsIphsfUmzRRUiADHLmYmnRHBf+OFsGRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650482; c=relaxed/simple;
-	bh=UszEQq6lsPFRfBHM7nHRRkL7K2X1EKuCM0p+KnG5igU=;
+	s=arc-20240116; t=1747650484; c=relaxed/simple;
+	bh=A4EJCMnwn1nvmjlAmIL8RCldwVes+eDt/ZK/Lm5Mnow=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RLXqejxMhWnWR2UtO62tP39PA6RpEmJFcelduIrduTtnGlnRMhAH6r3NV4yFl3x+obol6Ou6TyxoK+fquPFhQOnIRgKGUFDNpRGG25RsijGlNpXxajmiuPOrLO6OcdkjRSPheQBLF615w+q5+PJFcr+04PPBqoz+KKmeXgdk9sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1TjaSXV8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q70lt0aN; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=VqH8tHrr/5aLjBQaa5GVcnSinXdpOIdjkE4yVP/u77lq9JZFETCNBHMx0MhEsnfvp+y+AWZHsfN9Nx1Cm5ij0o7rUqKsdU3StedlTolwx0Zr4+6U7cACPwvVCwuoq/+ggWnIVzZkrUs9a2nQSz2OWQqAQ1vZIEuJW0vuVAxL7rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zDQg9nOP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sGy0XyOL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1TjaSXV8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q70lt0aN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zDQg9nOP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sGy0XyOL"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747650478;
+	s=2020; t=1747650480;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NaFew1jGaEi6CxbD4hayUOm9FNrReyDgE4abUKZ5NBI=;
-	b=1TjaSXV8bgFRgUOYsboeAh2Q9rlT15V4DWOgYK0IjBcsHyO7OL8oIBXFGEhbwHsdXBKMDd
-	bpe9GLG0Gv4fQXTgzNRZ6jK9nGtBzgbuVpXESgf9XFHK41RqUIxVFhmDd2NZErC6k8AfOH
-	QFMkLvUvqIthh3dE+YI6MtlH/BPCnTSEN/lZX6QSlZ05kRnnJ53CIEmvd6ZYn7IueyT1yN
-	z28ksw9PS1EqU8/p8sl3ljNmVpRIQEfni3JQpvcwbALlNnt1wbq/FlfLTyVQl2rcjyvI2M
-	ZRHc6jMYLpSzaFTCeiJ39hYV3y9syzwzzxEvjUm7c9yjy6Zg67BnpFgGCpMAHQ==
+	bh=gwFkxej4QZC7RTlNI207kU5RD71foXihmtUnBoEIdew=;
+	b=zDQg9nOPYH4TwsxtZOLIUpOB9ObB0xKrCfYR94kRZDjR8R06nmWIRx1Yq+KQbd+HpTp0xZ
+	DMil9hP9PH6Dxktu+PpZYF7BoAAcMJf1N3Dd8JymUtoUE/Po8WAA2tkVOH323yhjv593sC
+	W3vwzs/X7Y4wa7W5g4xyt29CnTQboP650Z6saZ/4PO6lNv4G882DJAAJ/tLyuKfzl+NcbL
+	K+hh6hddg8qnDxNtU9luZYL/GAQZ4UgX/qzcSirLkNf52ThCIn99Y41IYU//fIpB2BBJA5
+	QQu6v5CqlNN2T4IMt4/Z3tsKmOqfzmjBY10F1WU7Ze3Ax+JAvSDDcLFWzuoCdg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747650478;
+	s=2020e; t=1747650480;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NaFew1jGaEi6CxbD4hayUOm9FNrReyDgE4abUKZ5NBI=;
-	b=Q70lt0aNNc4ElsCP4j3xJyZrbgSi98KWdajzEG9RcJyABuKVqiVv4feRltEVRK8e9UBoQP
-	2pbN75IwkgSaeEDA==
+	bh=gwFkxej4QZC7RTlNI207kU5RD71foXihmtUnBoEIdew=;
+	b=sGy0XyOLyIJmG1TnAiqd8jYX3xU4zazf5KPq63/vgR3gVGvfxmxPJjKF/1Az9/IeSRGX3f
+	uilY69snl0/fAlCg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v9 11/22] verification/rvgen: Restructure the templates files
-Date: Mon, 19 May 2025 12:27:29 +0200
-Message-Id: <337fa803bd4cafdf4d3d479be86c828cddd0ad78.1747649899.git.namcao@linutronix.de>
+	Nam Cao <namcao@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v9 16/22] x86/tracing, x86/mm: Move page fault tracepoints to generic
+Date: Mon, 19 May 2025 12:27:34 +0200
+Message-Id: <b631a2818c9761c2e8c873f1c6898d7ad673599d.1747649899.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747649899.git.namcao@linutronix.de>
 References: <cover.1747649899.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,210 +66,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To simply the scripts and to allow easy integration of new monitor types,
-restructure the template files as followed:
+Page fault trace points are interesting for other architectures as well.
+Move them to be generic.
 
-1. Move the template files to be in the same directory as the rvgen
-   package. Furthermore, the installation will now only install the
-   templates to the package directory, not /usr/share/. This simplify
-   templates reading, as the scripts do not need to find the templates at
-   multiple places.
-
-2. Move dot2k_templates/* to:
-     - templates/dot2k/
-     - templates/container/
-
-   This allows sharing templates reading code between DA monitor generation
-   and container generation (and any future generation type).
-
-   For template files which can be shared between different generation
-   types, support putting them in templates/
-
-This restructure aligns with the recommendation from:
-https://python-packaging.readthedocs.io/en/latest/non-code-files.html
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/rvgen/Makefile             |  5 +-
- tools/verification/rvgen/rvgen/dot2k.py       | 47 ++++++++-----------
- .../templates}/Kconfig                        |  0
- .../templates/container/Kconfig}              |  0
- .../templates/container/main.c}               |  0
- .../templates/container/main.h}               |  0
- .../templates/dot2k}/main.c                   |  0
- .../templates/dot2k}/trace.h                  |  0
- 8 files changed, 20 insertions(+), 32 deletions(-)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates}/Kco=
-nfig (100%)
- rename tools/verification/rvgen/{dot2k_templates/Kconfig_container =3D> rv=
-gen/templates/container/Kconfig} (100%)
- rename tools/verification/rvgen/{dot2k_templates/main_container.c =3D> rvg=
-en/templates/container/main.c} (100%)
- rename tools/verification/rvgen/{dot2k_templates/main_container.h =3D> rvg=
-en/templates/container/main.h} (100%)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
-k}/main.c (100%)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
-k}/trace.h (100%)
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ arch/x86/mm/Makefile                                |  2 --
+ arch/x86/mm/fault.c                                 |  2 +-
+ .../asm/trace =3D> include/trace/events}/exceptions.h | 13 ++++---------
+ 3 files changed, 5 insertions(+), 12 deletions(-)
+ rename {arch/x86/include/asm/trace =3D> include/trace/events}/exceptions.h=
+ (79%)
 
-diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/M=
-akefile
-index cea9c21c3bce..8d08825e7e54 100644
---- a/tools/verification/rvgen/Makefile
-+++ b/tools/verification/rvgen/Makefile
-@@ -3,7 +3,6 @@ INSTALL=3Dinstall
- prefix  ?=3D /usr
- bindir  ?=3D $(prefix)/bin
- mandir  ?=3D $(prefix)/share/man
--miscdir ?=3D $(prefix)/share/rvgen
- srcdir  ?=3D $(prefix)/src
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index 32035d5be5a0..629a8bf12219 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -34,8 +34,6 @@ obj-y				+=3D pat/
+ CFLAGS_physaddr.o		:=3D -fno-stack-protector
+ CFLAGS_mem_encrypt_identity.o	:=3D -fno-stack-protector
 =20
- PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
-th("purelib"))')
-@@ -21,6 +20,4 @@ install:
- 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
- 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
- 	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+-CFLAGS_fault.o :=3D -I $(src)/../include/asm/trace
 -
--	mkdir -p ${miscdir}/
--	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
-+	cp -rp rvgen/templates $(DESTDIR)$(PYLIB)/rvgen/
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
-vgen/rvgen/dot2k.py
-index e29462413194..a9ed97d0b224 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -14,14 +14,16 @@ import os
+ obj-$(CONFIG_X86_32)		+=3D pgtable_32.o iomap_32.o
 =20
- class dot2k(Dot2c):
-     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
--    monitor_templates_dir =3D "rvgen/dot2k_templates/"
-     rv_dir =3D "kernel/trace/rv"
-     monitor_type =3D "per_cpu"
+ obj-$(CONFIG_HUGETLB_PAGE)	+=3D hugetlbpage.o
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 7e3e51fa1f95..ad4cb1502316 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -38,7 +38,7 @@
+ #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
 =20
-     def __init__(self, file_path, MonitorType, extra_params=3D{}):
-         self.container =3D extra_params.get("subcmd") =3D=3D "container"
-         self.parent =3D extra_params.get("parent")
--        self.__fill_rv_templates_dir()
-+        if self.container:
-+            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/container")
-+        else:
-+            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/dot2k")
+ #define CREATE_TRACE_POINTS
+-#include <asm/trace/exceptions.h>
++#include <trace/events/exceptions.h>
 =20
-         if self.container:
-             if file_path:
-@@ -33,9 +35,7 @@ class dot2k(Dot2c):
-             self.name =3D extra_params.get("model_name")
-             self.events =3D []
-             self.states =3D []
--            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.c")
--            self.main_h =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.h")
--            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig_container")
-+            self.main_h =3D self._read_template_file("main.h")
-         else:
-             super().__init__(file_path, extra_params.get("model_name"))
+ /*
+  * Returns 0 if mmiotrace is disabled, or if the fault is not
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/include/trace/events=
+/exceptions.h
+similarity index 79%
+rename from arch/x86/include/asm/trace/exceptions.h
+rename to include/trace/events/exceptions.h
+index 34bc8214a2d7..a631f8de8917 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/include/trace/events/exceptions.h
+@@ -7,7 +7,7 @@
 =20
-@@ -43,35 +43,16 @@ class dot2k(Dot2c):
-             if self.monitor_type is None:
-                 raise ValueError("Unknown monitor type: %s" % MonitorType)
-             self.monitor_type =3D MonitorType
--            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main.c")
--            self.trace_h =3D self.__read_file(self.monitor_templates_dir +=
- "trace.h")
--            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig")
-+            self.trace_h =3D self._read_template_file("trace.h")
-+
-+        self.main_c =3D self._read_template_file("main.c")
-+        self.kconfig =3D self._read_template_file("Kconfig")
-         self.enum_suffix =3D "_%s" % self.name
-         self.description =3D extra_params.get("description", self.name) or=
- "auto-generated"
-         self.auto_patch =3D extra_params.get("auto_patch")
-         if self.auto_patch:
-             self.__fill_rv_kernel_dir()
+ #include <linux/tracepoint.h>
 =20
--    def __fill_rv_templates_dir(self):
+-DECLARE_EVENT_CLASS(x86_exceptions,
++DECLARE_EVENT_CLASS(exceptions,
+=20
+ 	TP_PROTO(unsigned long address, struct pt_regs *regs,
+ 		 unsigned long error_code),
+@@ -22,7 +22,7 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+=20
+ 	TP_fast_assign(
+ 		__entry->address =3D address;
+-		__entry->ip =3D regs->ip;
++		__entry->ip =3D instruction_pointer(regs);
+ 		__entry->error_code =3D error_code;
+ 	),
+=20
+@@ -30,18 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 		  (void *)__entry->address, (void *)__entry->ip,
+ 		  __entry->error_code) );
+=20
+-DEFINE_EVENT(x86_exceptions, page_fault_user,
++DEFINE_EVENT(exceptions, page_fault_user,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
 -
--        if os.path.exists(self.monitor_templates_dir):
--            return
--
--        if platform.system() !=3D "Linux":
--            raise OSError("I can only run on Linux.")
--
--        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
-t2k_templates/" % (platform.release())
--
--        if os.path.exists(kernel_path):
--            self.monitor_templates_dir =3D kernel_path
--            return
--
--        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
--            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
-es/"
--            return
--
--        raise FileNotFoundError("Could not find the template directory, do=
- you have the kernel source installed?")
--
-     def __fill_rv_kernel_dir(self):
+-DEFINE_EVENT(x86_exceptions, page_fault_kernel,
++DEFINE_EVENT(exceptions, page_fault_kernel,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
 =20
-         # first try if we are running in the kernel tree root
-@@ -109,6 +90,16 @@ class dot2k(Dot2c):
-         fd.close()
-         return content
+-#undef TRACE_INCLUDE_PATH
+-#undef TRACE_INCLUDE_FILE
+-#define TRACE_INCLUDE_PATH .
+-#define TRACE_INCLUDE_FILE exceptions
+ #endif /*  _TRACE_PAGE_FAULT_H */
 =20
-+    def _read_template_file(self, file):
-+        try:
-+            path =3D os.path.join(self.abs_template_dir, file)
-+            return self.__read_file(path)
-+        except Exception:
-+            # Specific template file not found. Try the generic template f=
-ile in the template/
-+            # directory, which is one level up
-+            path =3D os.path.join(self.abs_template_dir, "..", file)
-+            return self.__read_file(path)
-+
-     def fill_monitor_type(self):
-         return self.monitor_type.upper()
-=20
-diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig b/tools/verif=
-ication/rvgen/rvgen/templates/Kconfig
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/Kconfig
-rename to tools/verification/rvgen/rvgen/templates/Kconfig
-diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig_container b/t=
-ools/verification/rvgen/rvgen/templates/container/Kconfig
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/Kconfig_container
-rename to tools/verification/rvgen/rvgen/templates/container/Kconfig
-diff --git a/tools/verification/rvgen/dot2k_templates/main_container.c b/to=
-ols/verification/rvgen/rvgen/templates/container/main.c
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main_container.c
-rename to tools/verification/rvgen/rvgen/templates/container/main.c
-diff --git a/tools/verification/rvgen/dot2k_templates/main_container.h b/to=
-ols/verification/rvgen/rvgen/templates/container/main.h
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main_container.h
-rename to tools/verification/rvgen/rvgen/templates/container/main.h
-diff --git a/tools/verification/rvgen/dot2k_templates/main.c b/tools/verifi=
-cation/rvgen/rvgen/templates/dot2k/main.c
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main.c
-rename to tools/verification/rvgen/rvgen/templates/dot2k/main.c
-diff --git a/tools/verification/rvgen/dot2k_templates/trace.h b/tools/verif=
-ication/rvgen/rvgen/templates/dot2k/trace.h
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/trace.h
-rename to tools/verification/rvgen/rvgen/templates/dot2k/trace.h
+ /* This part must be outside protection */
 --=20
 2.39.5
 
