@@ -1,182 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E66C27703E;
-	Mon, 19 May 2025 12:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A46278E60;
+	Mon, 19 May 2025 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747659431; cv=none; b=nBj5VnBzi0njAh+EsHVScg17GbwcxctE0+QONZW+7iXww2jLOFZDY7pJzXR4PO+qxU0ex3rcbGdGtDTvXkWXlRnJajfw0Ir2Y3JR43WXAFn4mk9c13g83zKR0NXe/J1mL/p/j6BpMrygf7mcUtXIKP2mpjif62CQHuDDXvjh340=
+	t=1747659455; cv=none; b=RY9hXLCOm24hPKpG5Kr8WlC8Z2unopalnvpRnLTDeaZBuv2AWPdt6gU1z2sE4BdODHMK3hFgAe8QhaCSqd6Ta65MkC0l0URBZ6n/IIN7LuV/lTWzheOaNmwF06K1eyfqjQUgkTN7mQ5Ed88ALQlIOGMZzJrmnlemsWlcDMvsNAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747659431; c=relaxed/simple;
-	bh=+Hj/d6ssy2LIaoVs+qT/pmyMB1aHgw67hcTEXsHqb8Y=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eVodSwzoMaOeTjaqBEku64bJSJIqc+JC8+GvS0ikD3gmwW82d0ql1LxnWyxNgI+zOQ4Pd7l+/F0KxAp8hX/s3OV9LQOU5lRc0xkZf+o5/xPFTQTt2iJft+YlRhEJ+qqv6u71oEGtNHD6DtBM7FeLHyYHihalXedJApjpc3BvPPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kArS0jIK; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kArS0jIK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747659429; x=1779195429;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+Hj/d6ssy2LIaoVs+qT/pmyMB1aHgw67hcTEXsHqb8Y=;
-  b=kArS0jIKrUVTyZ7nN8kt3EDHvzpWC+HNHZsrINIWJyFy/XUjlaAwuS9M
-   2R5a2ThzbAy3TUpSP3HxypxbY1VqSRfLtxiwzuRyfUHiWglt8ADQfgtfg
-   jnmK/gNGlV8YuQ42MqP4HusOZmHLLLpDeiO5D4tk9zjhbNkW8s4BhU6S3
-   IkmdivyzIhict/slh4eUlpUgjenxIqIXvJ8ZM9aKmjtRYe4iHIzO/MLRU
-   LWLOhfhO+30RkXhnb5kNvyPc5uZ6h9sVbfWxLEZ46pY3vDe3AnyZAJY0N
-   hNm9yRAGFNENshFgQ/HtBc7SrBVEHzIPddhF/fdAZU9RFginzOKw04cjU
-   g==;
-X-CSE-ConnectionGUID: 1Scl1h1DSKeu9hg+h4oI4w==
-X-CSE-MsgGUID: 2xwr/dvORmif95NRxDykqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="66970070"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="66970070"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:57:08 -0700
-X-CSE-ConnectionGUID: 6yq14e2aTuOsVRMsmjF0VA==
-X-CSE-MsgGUID: 8WEbuWthT/uztNSZMGFpUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="140248978"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:56:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 May 2025 15:56:55 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Fix attribute name usage for
- non-compliant items
-In-Reply-To: <20250517023825.2968200-1-mpearson-lenovo@squebb.ca>
-Message-ID: <0fbeced8-a225-4151-dda5-086490f8345a@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250517023825.2968200-1-mpearson-lenovo@squebb.ca>
+	s=arc-20240116; t=1747659455; c=relaxed/simple;
+	bh=gXpTYgvGTAJG68tcffNCQMuQVt48NcFXktn/s8H7oeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGLpy1Mc10o1ChR1BxgyImE010B4NhYfbCGMFv2oHBS32JDCWF01abetKGBgKp9jycR+T2o343rdJYb9ibSrGI3NFroWkhKZfnbX3WHEPrsCR9BUXm2KI6EBLQzEyL2dNP4EkNgq7SYvIRebFGvbRJy3iYCt5/BX2pOULLMiT20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 309091655;
+	Mon, 19 May 2025 05:57:19 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64BCE3F6A8;
+	Mon, 19 May 2025 05:57:29 -0700 (PDT)
+Date: Mon, 19 May 2025 13:57:23 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Song Liu <song@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
+	live-patching@vger.kernel.org, indu.bhagat@oracle.com,
+	puranjay@kernel.org, wnliu@google.com, irogers@google.com,
+	joe.lawrence@redhat.com, jpoimboe@kernel.org, peterz@infradead.org,
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
+Message-ID: <aCsqsyjvD72YXtOJ@J2N7QTR9R3>
+References: <20250320171559.3423224-1-song@kernel.org>
+ <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
+ <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
 
-On Fri, 16 May 2025, Mark Pearson wrote:
-
-> A few, quite rare, WMI attributes have names that are not compatible with
-> filenames. e.g. "Intel VT for Directed I/O (VT-d)".
-
-filenames. -> filenames,
-
-> For these cases the '/' gets replaced with '\' for display, but doesn't
-> get switched again when doing the WMI access.
+On Fri, May 16, 2025 at 09:53:36AM -0700, Song Liu wrote:
+> On Thu, Apr 10, 2025 at 8:17 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> [...]
+> > >
+> > > [1] https://lore.kernel.org/live-patching/20250127213310.2496133-1-wnliu@google.com/
+> > > [2] https://lore.kernel.org/live-patching/20250129232936.1795412-1-song@kernel.org/
+> > > [3] https://sourceware.org/bugzilla/show_bug.cgi?id=32589
+> > > [4] https://lore.kernel.org/linux-arm-kernel/20241017092538.1859841-1-mark.rutland@arm.com/
+> > >
+> > > Changes v2 => v3:
+> > > 1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
+> > > 2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
+> >
+> > The approach and both patches look reasonable:
+> >
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> >
+> > Is anyone, Arm people, Mark, against pushing this into linux-next,
+> > please?
 > 
-> Fix this by keeping the original attribute name and using that for sending
-> commands to the BIOS
+> Ping.
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ARM folks, please share your thoughts on this work. To fully support
+> livepatching of kernel modules, we also need [1]. We hope we can
+> land this in the 6.16 kernel.
 
-Fixes tag?
+Hi; apologies for the delay -- my time had been consumed by
+FPSIMD/SVE/SME fixes and related non-upstream stuff for the last few
+weeks, and now I'm catching up.
 
-> ---
->  drivers/platform/x86/think-lmi.c | 27 +++++++++++++++------------
->  drivers/platform/x86/think-lmi.h |  1 +
->  2 files changed, 16 insertions(+), 12 deletions(-)
+For the stacktrace side, I'm happy with enabling this without sframe,
+and I hase some minor nits which we can either fix up now or as a
+follow-up. I'll cover those in another reply, and chase up the module /
+code-patching bit shortly.
+
+Mark.
+
+> Thanks,
+> Song
 > 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 0fc275e461be..be01085055a1 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -137,6 +137,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * You must reboot the computer before the changes will take effect.
->   */
->  #define LENOVO_CLEAR_BIOS_CERT_GUID  "B2BC39A7-78DD-4D71-B059-A510DEC44890"
-> +
->  /*
->   * Name: CertToPassword
->   * Description: Switch from certificate to password authentication.
-
-An unrelated change.
-
-> @@ -1061,8 +1062,8 @@ static ssize_t current_value_store(struct kobject *kobj,
->  			ret = -EINVAL;
->  			goto out;
->  		}
-> -		set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->display_name,
-> -					new_setting, tlmi_priv.pwd_admin->signature);
-> +		set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->name,
-> +				    new_setting, tlmi_priv.pwd_admin->signature);
->  		if (!set_str) {
->  			ret = -ENOMEM;
->  			goto out;
-> @@ -1092,7 +1093,7 @@ static ssize_t current_value_store(struct kobject *kobj,
->  				goto out;
->  		}
->  
-> -		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
-> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->name,
->  				    new_setting);
->  		if (!set_str) {
->  			ret = -ENOMEM;
-> @@ -1120,11 +1121,11 @@ static ssize_t current_value_store(struct kobject *kobj,
->  		}
->  
->  		if (auth_str)
-> -			set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->display_name,
-> -					new_setting, auth_str);
-> +			set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->name,
-> +					    new_setting, auth_str);
->  		else
-> -			set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
-> -					new_setting);
-> +			set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->name,
-> +					    new_setting);
->  		if (!set_str) {
->  			ret = -ENOMEM;
->  			goto out;
-> @@ -1629,9 +1630,6 @@ static int tlmi_analyze(struct wmi_device *wdev)
->  			continue;
->  		}
->  
-> -		/* It is not allowed to have '/' for file name. Convert it into '\'. */
-> -		strreplace(item, '/', '\\');
-> -
->  		/* Remove the value part */
->  		strreplace(item, ',', '\0');
->  
-> @@ -1644,11 +1642,16 @@ static int tlmi_analyze(struct wmi_device *wdev)
->  		}
->  		setting->wdev = wdev;
->  		setting->index = i;
-> +
-> +		strscpy(setting->name, item);
-> +		/* It is not allowed to have '/' for file name. Convert it into '\'. */
-> +		strreplace(item, '/', '\\');
->  		strscpy(setting->display_name, item);
-> +
->  		/* If BIOS selections supported, load those */
->  		if (tlmi_priv.can_get_bios_selections) {
-> -			ret = tlmi_get_bios_selections(setting->display_name,
-> -					&setting->possible_values);
-> +			ret = tlmi_get_bios_selections(setting->name,
-> +						       &setting->possible_values);
->  			if (ret || !setting->possible_values)
->  				pr_info("Error retrieving possible values for %d : %s\n",
->  						i, setting->display_name);
-> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-> index a80452482227..9b014644d316 100644
-> --- a/drivers/platform/x86/think-lmi.h
-> +++ b/drivers/platform/x86/think-lmi.h
-> @@ -90,6 +90,7 @@ struct tlmi_attr_setting {
->  	struct kobject kobj;
->  	struct wmi_device *wdev;
->  	int index;
-> +	char name[TLMI_SETTINGS_MAXLEN];
->  	char display_name[TLMI_SETTINGS_MAXLEN];
->  	char *possible_values;
->  };
-> 
-
--- 
- i.
-
+> [1] https://lore.kernel.org/linux-arm-kernel/20250412010940.1686376-1-dylanbhatch@google.com/
