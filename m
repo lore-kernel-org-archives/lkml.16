@@ -1,101 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A02524468E;
-	Mon, 19 May 2025 06:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F124503F;
+	Mon, 19 May 2025 06:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636065; cv=none; b=SODsbg3MWr6CoP0xG7FIOan7rt8a+p2D1vviFwXIny61ZhQlzxm3urwimnjtxXF5pZHVaJxLaDDexOk+72VVWpEwTDzl3hFfVCOSegzbzLq+M6h5OI+v+8YQfxuNTDxpIDcFtdOdV23ODTD6CjVkU6kY/h2Z57fY8HupR7rPY2s=
+	t=1747636070; cv=none; b=mnl9zNSvn1cXLTyRGJ0YwlJQVQZ0bW3AIjZH3tm1GekPgTeANx51Tx7w5cvLcTa9UWm2IjhpRu1f1Tliw6di5mSzZsS5c5YoydwWQDdBYZNdgxYnL89JbyIoQbxrOppbJL6dCV2p6Vc5gD+2uUBYZfNpw2bgVW+9/VzhZUE8l50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636065; c=relaxed/simple;
-	bh=05be7fLfzW+Lkh9/B6CDCkEvJrnVcJV+48VP51XW+4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HQOJncN4Le6bj5892TZPut7AR2WVyhMXLbnfLVoRv2HqXGaccO23pH74/qPw9btzEL/wifvI4FKpcXrQ66e+nBpuQ9H+eufQiPlMFeftPiPo+JJxQqtANdB4gJYfoep5Qeou1C3bg7OdrpXW7nsQOtXqiYxWOoLHDelR9klWj34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dDGSci3L; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dDGSci3L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747636064; x=1779172064;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=05be7fLfzW+Lkh9/B6CDCkEvJrnVcJV+48VP51XW+4I=;
-  b=dDGSci3L0NxJ6+0HS5/VT4r0p3H0vHaH6SGvrp6ZHtgzzgqKcivfo4Yc
-   rDkZmL4T9EsM0Yp5/5SWbkjiOZ4HqqsZkv+RftgT6VKdkZKLADRpPg17l
-   hra4dMx9fM35Bkr14/m5VhczfjgnLnYlB5vYCyO4MfG754dHG69FnSNUI
-   MxPE3JcA+ScjOIR7xgBPa682cuRWI5/aNLsgpPHVrYC1d+jRkb+/WI+yy
-   URLQP/64uJXt5i7viZNjUTy9NklF1D7a2oljkm+Nb0BDF0TxCxuIvR/WW
-   0HqdFTPSWzNnoRwUWXkU0lHFXpBj5whuTietw7lry1EIn2pvmmaBTE4rC
-   A==;
-X-CSE-ConnectionGUID: 3W948e2hQwSCWUOv9wUs0g==
-X-CSE-MsgGUID: ZoSeOeUKRnSwZVf+RXL+Ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49503810"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49503810"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:27:42 -0700
-X-CSE-ConnectionGUID: UK5odDNjSF+5FI6KHpYkxA==
-X-CSE-MsgGUID: KP5sPoGBQVKkqbLHSlAehg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="170313674"
-Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.73.217]) ([10.247.73.217])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:27:38 -0700
-Message-ID: <12093d3c-ca0a-46fd-950e-6af1448ee079@linux.intel.com>
-Date: Mon, 19 May 2025 14:27:36 +0800
+	s=arc-20240116; t=1747636070; c=relaxed/simple;
+	bh=6flp1UUXguSYzp/SnYPLP9qX9DtOoSw+aELD6OUR8bE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oWIB2P9cUMll1MuR+02EZclxAUd0JbygHwLh/IcndvOi/oTebu+T6FdNC9ghE0MSj5aY2dowwVq6GKp0DT7gMyct1qZpPKaopL4+nh55tF2fyuplEfqupVzpW3dxbzZPnxmkHiG302Xly3J6zesYtl6Ws+65tODPbWpQjbeofGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAAnO_ZfzypoXUhPAQ--.10629S2;
+	Mon, 19 May 2025 14:27:43 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] usb: gadget: epautoconf: Use USB API functions rather than constants
+Date: Mon, 19 May 2025 14:25:44 +0800
+Message-Id: <20250519062545.724727-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next v2 8/8] igc: SW pad preemptible frames for
- correct mCRC calculation
-To: Simon Horman <horms@kernel.org>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
- Chwee-Lin Choong <chwee.lin.choong@intel.com>
-References: <20250514042945.2685273-1-faizal.abdul.rahim@linux.intel.com>
- <20250514042945.2685273-9-faizal.abdul.rahim@linux.intel.com>
- <20250516094336.GH1898636@horms.kernel.org>
-Content-Language: en-US
-From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
-In-Reply-To: <20250516094336.GH1898636@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAAnO_ZfzypoXUhPAQ--.10629S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWfWFX_ua
+	yUZ347WwsrWa4qyr4UG3ySkrWI9asaq3WvvF9YgFn8AFW5Ka1UXr18JrWkGFn7uFnF9r9x
+	u3sxKa90k3yxZjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU83kuDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Use the function usb_endpoint_type() rather than constants.
 
+The Coccinelle semantic patch is as follows:
 
-On 16/5/2025 5:43 pm, Simon Horman wrote:
-> On Wed, May 14, 2025 at 12:29:45AM -0400, Faizal Rahim wrote:
->> From: Chwee-Lin Choong <chwee.lin.choong@intel.com>
->>
->> A hardware-padded frame transmitted from the preemptible queue
->> results in an incorrect mCRC computation by hardware, as the
->> padding bytes are not included in the mCRC calculation.
->>
->> To address this, manually pad frames in preemptible queues to a
->> minimum length of 60 bytes using skb_padto() before transmission.
->> This ensures that the hardware includes the padding bytes in the
->> mCRC computation, producing a correct mCRC value.
->>
->> Signed-off-by: Chwee-Lin Choong <chwee.lin.choong@intel.com>
->> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> 
-> Hi Faizal, all,
-> 
-> Perhaps it would be best to shuffle this patch within this series
-> so that it appears before the patches that add pre-emption support.
-> That way, when the are added the bug isn't present.
-> 
+@@ struct usb_endpoint_descriptor *epd; @@
 
-Makes sense, will update. Thanks!
+- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
++ usb_endpoint_type(epd)
+
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/usb/gadget/epautoconf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
+index ed5a92c474e5..30016b805bfd 100644
+--- a/drivers/usb/gadget/epautoconf.c
++++ b/drivers/usb/gadget/epautoconf.c
+@@ -158,7 +158,7 @@ struct usb_ep *usb_ep_autoconfig(
+ 	if (!ep)
+ 		return NULL;
+ 
+-	type = desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
++	type = usb_endpoint_type(desc);
+ 
+ 	/* report (variable) full speed bulk maxpacket */
+ 	if (type == USB_ENDPOINT_XFER_BULK) {
+-- 
+2.25.1
+
