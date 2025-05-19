@@ -1,89 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A642278E42;
-	Mon, 19 May 2025 17:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957992874F8
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674279; cv=none; b=gxLL2QUGbxjUh2dxqVl+dmp5nao7jw5l2PiMeoPWedsV5H39P+vyiPQA/WggXbPeNxqnP3b/OJyiDK0VxmE1i/5IAkevq4AR7r7Oo1x8J7dYcmNaLZ5oluF6HYenS4u2VHlhPtl1byjRrHfJ1C2cXYnG0raMQtmVAH/w+YPHaVY=
+	t=1747674290; cv=none; b=bxDqUO4d8u+NmSuUQ6+idVCsQTLCom+UPogK4t7/fLDTGgjibbksJ9c8UUhrmNWhKA0ymnR7MbYpjBurnGSl39Wc/KebS495/vfXIYbx5dICERzh1DRKpAS/xgoci/kxAVWghqlHp5rzuhISKHKlxusUk9J2hfVWaHneQ2reHUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674279; c=relaxed/simple;
-	bh=HWkGmX9ohMbCMO6qUrUKVHhYa4EPfAeTkJYjRuW53NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aUBlIomKHSwAqK+Lpfu3S48pK7oGdBNrl8c9y+u04ztolP3992reI5U8FkRtTdPq87ILAqs3xAu1LaIl/OVd8iR7MzeecxXw2PwLKzB1CA0lwEGdRiYc1EKK6bWl+nJAfsM0NfDy0HOBVf7H68+cQ1zG2QNHKDStnLdi8jF8Zxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXDJch8+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747674290; c=relaxed/simple;
+	bh=01w4XwT5rgnUWhWg7mruXsUD7XvOWhDH57c8K7bFTHk=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=j6KHWvTM2pNMiS5NFVXY3LCWtRMiOsh0VDLkjvGEgl3+K7TVx+zMUgEls/hxM6IUjabhXaz5t0eQy28jgNEAYfzQ3JYYNI/PxSjtNr0hgTnAC8wphZD+YIu93CXpdFmHZcvFm93ibDw0GzeXHMcYCHP+KZA2TKfWBhrT+ULFrls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tAP6QcQy; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXDJch8+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848ACC4CEE4;
-	Mon, 19 May 2025 17:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747674278;
-	bh=HWkGmX9ohMbCMO6qUrUKVHhYa4EPfAeTkJYjRuW53NE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KXDJch8+prcSr6CgtqqoWE5FzlVsN2RLtoFCuZV0b8ciHhYNY1lo59UjeKJRUAU98
-	 BGlvo/zbPCt9dG1VtlRI06AtJLlM+yHyOi5UexPAUZsXDWHU0jcByDFhMkBAh/tukh
-	 uR9vlBR2VUiR93eJZNCGvSOCdgJPvcqB1gjke1igQ93yTDb01r9318F1HQnv6tT8rN
-	 WaUO4OMMMshndtKGyKv+o3+rQiE8IHtqbfslTCCp3gitKxQIhTaa/fONagcuGkqR82
-	 Doy+RU/Xl8A5v0CVwvueE6IRl02umJHdNxl40f8RuutuP6Poif8h/8tP3P7P9UEnLf
-	 mIfy0RmrWE3Bw==
-Date: Mon, 19 May 2025 10:04:25 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ayush Jain <Ayush.Jain3@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] x86/fpu: Fix irq_fpu_usable() to return false during CPU
- onlining
-Message-ID: <20250519170425.GA1243@sol>
-References: <20250518193212.1822-1-ebiggers@kernel.org>
- <aCrrMEN01O7FWY6V@gmail.com>
- <aCrsiPd3u1-tEVd0@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tAP6QcQy"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7370e73f690so5731152b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747674287; x=1748279087; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Goq4u7JwRNa/mNKgeJWxWxL3A/olzwx0SUya3IskYzo=;
+        b=tAP6QcQyorM6ILuTPiWEtFgc55dmE/x61zd0zl8Rr/6nErXk5aTErWRTxxpXl+TRSE
+         J12tNE6OYfFw1mb+ku4VvOllKsehlJmluZFzLwhOGHPTc5G1R2htLAgpsBvb3UrpLsR2
+         ffOjInJMm040HZ9Hx6KmVDpx7Na9f67xB26CVdcDeyvKDXgckUbHYavdZIN1H3vM7MTQ
+         FGT8ZOEEv73w1fmfBDiRVt3JL6MayuHzHji4UqEG8VI4GmgJUO9NpwtWU3pmQetheK5X
+         FOwWmI5bSFNd029woHzG3ijz/eDd3+RnI2bqf0uX0wzh3Clmgg160bOE0TIr7uCFITxB
+         7Zhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747674287; x=1748279087;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Goq4u7JwRNa/mNKgeJWxWxL3A/olzwx0SUya3IskYzo=;
+        b=Z6FixVQRMPWHe6RkIDJ6JoZ5ebqA5b/atcZK7gTsNoAVL6QG7f2FPtGHAqaGvRx6HX
+         TW5cprqNHnCQrv9ukrIVyLiG2MS4+czc2jYcy4nr5PnC210z6YSttCWeGb284T3kjH4v
+         7CAt13BJKLXjZOVm9N9NKZX/R0rjt52Rd2fuwvcWZXAtBNBhPzK7q6dTRDLXWkCXJdwO
+         /W0b19SvU2sSm67Txn1ZtNxk0OLsaeH0MSsYAYBw9gfSOLswf/iuyZAjtd8gFl9G6IxQ
+         GVnMpUtUo5j4HUSKxELrR0aYCJ33SydcNIZAH1xv/Mnm/PpE2IZGOo4tEmddyUNiOxc3
+         ktyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ+nkXbOgPyKXCwWrMlcI51tmBU//OL1x2KJ9/HWGzKV1RtZrAETeX/rcwpjTLCUdjnAa0bTaGzGf/iRM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOCh6Gim3KUvc2RoNNd5ghqPNwUhQysGgX441OzK8mkcl0h1Ec
+	MIaB/N4GEd4stt4L8Kn8gxkz7CCt6IpeVPm/zhvWj0PbFDUANKa0xGEtejb37eWVbynJxP78U3N
+	WXQLnsddckyT6mAlt5pzhjhpe1w==
+X-Google-Smtp-Source: AGHT+IFMPwogMPOLeEVsy9zVVtiGIXpX7XWCAue2qkIgrW2Gtgg1AnNlznNb/LyQz+ITtedo/7pWya9Uw1d88i2rcQ==
+X-Received: from pfbbo8.prod.google.com ([2002:a05:6a00:e88:b0:740:b0f1:1ede])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:3a14:b0:740:67ce:1d8b with SMTP id d2e1a72fcca58-742a97b7a1bmr20111944b3a.7.1747674286740;
+ Mon, 19 May 2025 10:04:46 -0700 (PDT)
+Date: Mon, 19 May 2025 10:04:45 -0700
+In-Reply-To: <diqzjz7azkmf.fsf@ackerleytng-ctop.c.googlers.com> (message from
+ Ackerley Tng on Wed, 23 Apr 2025 13:30:16 -0700)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCrsiPd3u1-tEVd0@gmail.com>
+Mime-Version: 1.0
+Message-ID: <diqz8qmsfs5u.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [PATCH 3/5] KVM: gmem: Hold filemap invalidate lock while
+ allocating/preparing folios
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: yan.y.zhao@intel.com, michael.roth@amd.com, kvm@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	jroedel@suse.de, thomas.lendacky@amd.com, pbonzini@redhat.com, 
+	seanjc@google.com, vbabka@suse.cz, amit.shah@amd.com, 
+	pratikrajesh.sampat@amd.com, ashish.kalra@amd.com, liam.merwick@oracle.com, 
+	david@redhat.com, vannapurve@google.com, quic_eberman@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 19, 2025 at 10:32:08AM +0200, Ingo Molnar wrote:
-> 
-> > void fpu__init_cpu(void)
-> > {
-> >        fpu__init_cpu_generic();
-> >        fpu__init_cpu_xstate();
-> > +
-> > +       /* Start allowing kernel-mode FPU: */
-> > +       this_cpu_write(kernel_fpu_allowed, true);
-> > }
-> 
-> BTW., this is the chunk that fixes the crypto crash, right? If yes, 
-> then could you please split this from the main patch, with the main 
-> patch setting kernel_fpu_allowed very early, which should make the main 
-> patch an identity transformation with no (expected) change in behavior.
-> 
-> Likewise, the cpu_disable_common change should similarly replicate the 
-> current code, and should only be changed in the second patch.
-> 
-> Phasing it in like that should improve bisectability, for the off 
-> chance of some regression.
+Ackerley Tng <ackerleytng@google.com> writes:
 
-The line in fpu__init_cpu() is needed at the same time that the boolean is
-inverted (when in_kernel_fpu is replaced with kernel_fpu_allowed), since
-otherwise it never gets set to true and kernel-mode FPU is never allowed.
+> Yan Zhao <yan.y.zhao@intel.com> writes:
+>
+>> On Fri, Mar 14, 2025 at 05:20:21PM +0800, Yan Zhao wrote:
+>>> This patch would cause host deadlock when booting up a TDX VM even if huge page
+>>> is turned off. I currently reverted this patch. No further debug yet.
+>> This is because kvm_gmem_populate() takes filemap invalidation lock, and for
+>> TDX, kvm_gmem_populate() further invokes kvm_gmem_get_pfn(), causing deadlock.
+>>
+>> kvm_gmem_populate
+>>   filemap_invalidate_lock
+>>   post_populate
+>>     tdx_gmem_post_populate
+>>       kvm_tdp_map_page
+>>        kvm_mmu_do_page_fault
+>>          kvm_tdp_page_fault
+>> 	   kvm_tdp_mmu_page_fault
+>> 	     kvm_mmu_faultin_pfn
+>> 	       __kvm_mmu_faultin_pfn
+>> 	         kvm_mmu_faultin_pfn_private
+>> 		   kvm_gmem_get_pfn
+>> 		     filemap_invalidate_lock_shared
+>> 	
+>> Though, kvm_gmem_populate() is able to take shared filemap invalidation lock,
+>> (then no deadlock), lockdep would still warn "Possible unsafe locking scenario:
+>> ...DEADLOCK" due to the recursive shared lock, since commit e918188611f0
+>> ("locking: More accurate annotations for read_lock()").
+>>
+>
+> Thank you for investigating. This should be fixed in the next revision.
+>
 
-We could include the fpu__init_cpu() change in patch 1 and leave CPU hotplug
-broken, and fix it in patch 2 by updating cpu_disable_common().  I think it
-makes a lot more sense to keep them together though.
+This was not fixed in v2 [1], I misunderstood this locking issue.
 
-Or we could use DEFINE_PER_CPU() = true in patch 1, then revert that in patch 2
-and replace it with the line in fpu__init_cpu().  But again I think the split
-would be more likely to create problems than solve them.
+IIUC kvm_gmem_populate() gets a pfn via __kvm_gmem_get_pfn(), then calls
+part of the KVM fault handler to map the pfn into secure EPTs, then
+calls the TDX module for the copy+encrypt.
 
-- Eric
+Regarding this lock, seems like KVM'S MMU lock is already held while TDX
+does the copy+encrypt. Why must the filemap_invalidate_lock() also be
+held throughout the process?
+
+If we don't have to hold the filemap_invalidate_lock() throughout, 
+
+1. Would it be possible to call kvm_gmem_get_pfn() to get the pfn
+   instead of calling __kvm_gmem_get_pfn() and managing the lock in a
+   loop?
+
+2. Would it be possible to trigger the kvm fault path from
+   kvm_gmem_populate() so that we don't rebuild the get_pfn+mapping
+   logic and reuse the entire faulting code? That way the
+   filemap_invalidate_lock() will only be held while getting a pfn.
+
+[1] https://lore.kernel.org/all/cover.1747264138.git.ackerleytng@google.com/T/
+
+>>> > @@ -819,12 +827,16 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>> >  	pgoff_t index = kvm_gmem_get_index(slot, gfn);
+>>> >  	struct file *file = kvm_gmem_get_file(slot);
+>>> >  	int max_order_local;
+>>> > +	struct address_space *mapping;
+>>> >  	struct folio *folio;
+>>> >  	int r = 0;
+>>> >  
+>>> >  	if (!file)
+>>> >  		return -EFAULT;
+>>> >  
+>>> > +	mapping = file->f_inode->i_mapping;
+>>> > +	filemap_invalidate_lock_shared(mapping);
+>>> > +
+>>> >  	/*
+>>> >  	 * The caller might pass a NULL 'max_order', but internally this
+>>> >  	 * function needs to be aware of any order limitations set by
+>>> > @@ -838,6 +850,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>> >  	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &max_order_local);
+>>> >  	if (IS_ERR(folio)) {
+>>> >  		r = PTR_ERR(folio);
+>>> > +		filemap_invalidate_unlock_shared(mapping);
+>>> >  		goto out;
+>>> >  	}
+>>> >  
+>>> > @@ -845,6 +858,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>> >  		r = kvm_gmem_prepare_folio(kvm, file, slot, gfn, folio, max_order_local);
+>>> >  
+>>> >  	folio_unlock(folio);
+>>> > +	filemap_invalidate_unlock_shared(mapping);
+>>> >  
+>>> >  	if (!r)
+>>> >  		*page = folio_file_page(folio, index);
+>>> > -- 
+>>> > 2.25.1
+>>> > 
+>>> > 
+
