@@ -1,116 +1,162 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027C5286428
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B26284691;
+	Mon, 19 May 2025 15:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667815; cv=none; b=JXfRB1cGxQnh+zNaj+WbmdEJLJMv8osgjSd0X0NNL2mL7Eg/BSN9q6nQf2bS/e3DgHf9t7AwX2689PRFwnskD2dhJQlD/BOQLmNEj1AUCFzgHfLQtFoBk64az9CAzmCDOYOkOKdSjOAQOyLFIxiOHX7HLOvGWi/jWASYlQ+mY5g=
+	t=1747667825; cv=none; b=f2wtyt040RxjghJAiQF6Uz3muwhFVVOZLFSj9okhv6HetBWQ/ciV2qiyEPuQEoQqhkzhFzwdo7k4nY2gabirTEsAvi08TFQy1OXPgRxSWFQ4dM5/I9MlgdED6r2PVl4L9jAEUMH3yXqklJiYfaQkWqhU9WPwcP4kh86YUeiOBJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667815; c=relaxed/simple;
-	bh=PDzZ1P1yWg+XkiFO2hZgTshq3CQ2YwSCHmY/IiLp4cw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UAKij5DeU5PlztgSUbwFxl09iTeiLduoCMYqNlWVCLoz+JTs4VE4POP/afRRNgeoHF7DJirLR/RtRp/lzu9lcUvIgUSrr9Z/tLlJgGMddX4YVGMSdZ9XtkI6Df5WvqlTz04CSpFdiXd9VOfydTzZyeIrrFVnvxw7dDNj70giHiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PZhlAbj9; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747667825; c=relaxed/simple;
+	bh=zkf8O0bw+vc+o28mPlO7IXvrATDPICkFdP+Lo0ulh00=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=u7nk3RNaznTZKym9KA0WRx77txI8hGpSFodRoIIb2twiUWUO9leHZnAieob7DtAFN4lmKi8NOfPpKkGGFt2zpEJ6l7Z7QHuNYBGI4N5KNXIiQUyFnvYPx+CHQw2svo900lW8kcHLJqD2cZkq6+QnlGZcVUeGKIzL0WGPU7K8SFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hZpI/vpF; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PZhlAbj9"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-609e7f27c66so1422977eaf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747667813; x=1748272613; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ls1NLWaG7mKMxoaQ03EnBMu7MOLjXKiH9mRh6OqI8xk=;
-        b=PZhlAbj9XdlQ+ZWfNtuqw2nx4/z0pi3327NzV3X7SeU4/ZcA5volZ+kj6ZY4ih3igS
-         yPYgaguqZZ5q3yab6o+43O/AmKgmWc7IJRKe2vEemShmqpwxEwBqQJ2vBINeov+wQK9P
-         GO+sJuDZ9XykmnNxivADUAyLK/78myRvA1/xYbYI2/sPI22su1engcEKQ/uZegf9G4YK
-         hE9+mfDewgKfWSPo17vS1UYhR/wd9ihS+qMAUR5qMUK+b1+0vIVCUFXaLa7peXz4Jw36
-         q2JPiVVEXwfWlil3EMnd7kg0JU5IhCVh7Ftj64g/9xVapNsdZrAoF2knlIiWkLebsP8d
-         swLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747667813; x=1748272613;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ls1NLWaG7mKMxoaQ03EnBMu7MOLjXKiH9mRh6OqI8xk=;
-        b=O3y1QhCGUCwU2aeaODSrdjnjydlwcpiZqQWPMmD5Ef9sSmnHMOYbJracQ3c20QMJgi
-         YywrgPx9MxsWxlXBrNuGwqml2bTEEeozhH1AbWgk3QM7tZ9LndzDyJOcjgIzWK0ZXzxm
-         swXeboaPu2ANZ6C32MbfFyiCCkYoCiex1B8gg9/VrztSsgvKm+TGmhNQqbdS6lKzNBkH
-         mJ7Koj081U+0qEZInf94KlSy5zRH6tiNrrN9/kjfWQef/pEsyxLjawMsVDZIjpTls1yq
-         i1r+2fSx6Mj62ndFhC6Dhlc1NQcDX9rpsdD1enz+IV2mWJ2BAQpaL7wobjGnAvavyzjp
-         BuHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4ZpQ3/w/taKc/h4XYxOsWO8TYFiXKoWu/LeAg58Dm9nELxq1QF/gWkMZDzE2T7z84Fu+Oq9FWqEUW4d8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiOP9mAViHXgIQlHVJ9WLi74nMnOjUi/7ZrzRo2NpTtNYUeZ7o
-	QXNCSKgUNIpYxY9oI/+uFqOboC95NFdlpn7X7Weq/SzfWDcOSVxmIcf/x9ar2GfAz0k=
-X-Gm-Gg: ASbGncs/2W4MquZb+fxcKpajsMPqFg1Lj9FZQ7YvyGGjcis8fD7a7OrVYIbNa8Grqhd
-	87aVAtKm04BcgR/LCO2JxEigYp54bkKYoM1aneC7moevDvFRfmx5c73JWCH7a5GGymbXCc/9Jzj
-	dl4Fk6xkp4+8EWJR3SaE7avRDpdGo2vzpjX9NQhv+A2JuIutzME7D9J0Gxd31fR9ZIOW+xVtWiY
-	2JrQZWzg4HOQmozbTZiQFa2C7nC/b4CjVDe2EI+AaOiUznEnBsjDw30pRejRYhEhfI0TQ+hD1rG
-	zUPbANUN8pbULyBaGYi4+neREDooTZ0/bzl0g/BiqEjmSYaul7zDps0raBy/23MFa/yHCPUEGdI
-	u9+tZISC+NO+/KYE83ctMQNmxIrSzzjr/B6bq
-X-Google-Smtp-Source: AGHT+IGrr7JqsWk7yzixXETOAT3kkODRr/vioemwEunpOKJE8L7wTEMGjjVZ4Ec2n8rsdrQ80Lfp9A==
-X-Received: by 2002:a05:6871:d08a:b0:2d8:957a:5176 with SMTP id 586e51a60fabf-2e3c8186ff6mr7690014fac.5.1747667812956;
-        Mon, 19 May 2025 08:16:52 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5? ([2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c075bdfdsm1792167fac.25.2025.05.19.08.16.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 08:16:52 -0700 (PDT)
-Message-ID: <bd9dd280-0baa-4b03-b286-f16ae848a772@baylibre.com>
-Date: Mon, 19 May 2025 10:16:50 -0500
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hZpI/vpF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0FF70438E1;
+	Mon, 19 May 2025 15:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747667820;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=slOxvsQxm/VN4tCHbzdZt/zyw1/DFM663Xlr25p0n4o=;
+	b=hZpI/vpFiSjpzplUpgnJMyDNz2gZeYZ6nuW3i9SqeWX7RVSTYBcD2obv1dyuJwfy7Sq/Mn
+	DIq5GIN0aGB6+/Avo30qh54kYZ+CRrLjNDP20JtgfKMLzJJwbX5/rw5bImOPV7gmE5GUVk
+	WBmczrmK+xSn6JuINnBKj61mO7+yW8ngii0R19727gDhW8JFAYU4kk6iD8x0rFwYraXF04
+	9196U2V9ExldWV+GjWRh+8rRFOXFlHa4oN1lZMIWhaOilaKwjsD5R/uVWm6f6dW3dY3N0v
+	1YuNF7wfdH9Y9trIy9e0yNnFwKS5uo0i3f/8n7kIrXyyQdpC9+gtoVsNGl2YCA==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Mon, 19 May 2025 17:16:39 +0200
+Subject: [PATCH v5] backlight: led-backlight: add devlink to supplier LEDs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] dt-bindings: iio: adc: add ad7405
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
- Dragos Bogdan <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
- <20250519140220.81489-5-pop.ioan-daniel@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250519140220.81489-5-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250519-led-backlight-add-devlink-to-supplier-class-device-v5-1-76d6fd4aeb2f@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAFZLK2gC/x2NwQrCMBAFf6Xs2YVYEkF/RTzE7LNdGtKSrUUo/
+ Xejx2FgZidDVRjdup0qNjWdS4Nw6iiNsQxglcbUuz64cL5yhvAzpinrMK4cRViwZS0TrzPbe1m
+ yonLK0exnNIEvguThvPchUgsvFS/9/Kf3x3F8ASI6mIqEAAAA
+X-Change-ID: 20250519-led-backlight-add-devlink-to-supplier-class-device-6dec4e04445a
+To: Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
+ Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+ Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, 
+ Jean-Jacques Hiblot <jjhiblot@ti.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Saravana Kannan <saravanak@google.com>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Daniel Thompson <daniel.thompson@linaro.org>, 
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddujedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvueelteffuedthfevvdejffdutdetjedthfffvdehvdelveetkeejjefgjefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurhhiqdguv
+ ghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepjhhinhhgohhohhgrnhdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepuggvlhhlvghrsehgmhigrdguvgdprhgtphhtthhopehprghvvghlsehutgifrdgtiidprhgtphhtthhopehjjhhhihgslhhothesthhirdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 5/19/25 9:02 AM, Pop Ioan Daniel wrote:
-> Add devicetree bindings for ad7405/adum770x family.
-> 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
+led-backlight is a consumer of one or multiple LED class devices, but
+devlink is currently unable to create correct supplier-producer links when
+the supplier is a class device. One consequence is that removal order is
+not correctly enforced.
 
-This patch got a Reviewed-by tag in v3, so that should have been picked
-up (or give an explanation why it wasn't if there was a reason for this).
+Issues happen for example with the following sections in a device tree
+overlay:
 
-Also, Jonathan had some questions about the clock that didn't get answered.
+    // An LED driver chip
+    pca9632@62 {
+        compatible = "nxp,pca9632";
+        reg = <0x62>;
 
-> It's definitely wired to the ADC as a clock but it's also (I think) either
-> wired up to the IP we map to the backend (from software point of view)
-> or generated by that.
+	// ...
 
-Yes, the clock is a standalone IP block that is connected to both the backend
-and the ADC. There are some diagrams in the link below.
+        addon_led_pwm: led-pwm@3 {
+            reg = <3>;
+            label = "addon:led:pwm";
+        };
+    };
 
-https://analogdevicesinc.github.io/hdl/projects/ad7405_fmc/index.html
+    backlight-addon {
+        compatible = "led-backlight";
+        leds = <&addon_led_pwm>;
+        brightness-levels = <255>;
+        default-brightness-level = <255>;
+    };
+
+On removal of the above overlay, the LED driver can be removed before the
+backlight device, resulting in:
+
+    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+    ...
+    Call trace:
+     led_put+0xe0/0x140
+     devm_led_release+0x6c/0x98
+
+Another way to reproduce the bug without any device tree overlays is
+unbinding the LED class device (pca9632@62) before unbinding the consumer
+(backlight-addon):
+
+  echo 11-0062 >/sys/bus/i2c/drivers/leds-pca963x/unbind
+  echo ...backlight-dock >/sys/bus/platform/drivers/led-backlight/unbind
+
+Fix by adding a devlink between the consuming led-backlight device and the
+supplying LED device, as other drivers and subsystems do as well.
+
+Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Fixes: ae232e45acf9 ("backlight: add led-backlight driver")
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+Changes in v5:
+- separated this patch as a standalone patch
+- improved commit message, adding feedback from Alexander
+- no code changes
+
+This patch first appeared in the v4 of a longer series, even though the
+issue is orthogonal:
+https://lore.kernel.org/all/20240917-hotplug-drm-bridge-v4-6-bc4dfee61be6@bootlin.com/
+---
+ drivers/video/backlight/led_bl.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+index d2db157b2c290adc3a159023e9e2394fc877388c..8fe645b5b75447d009e1045dcf0c62d3bbc5425e 100644
+--- a/drivers/video/backlight/led_bl.c
++++ b/drivers/video/backlight/led_bl.c
+@@ -209,6 +209,19 @@ static int led_bl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->bl_dev);
+ 	}
+ 
++	for (i = 0; i < priv->nb_leds; i++) {
++		struct device_link *link;
++
++		link = device_link_add(&pdev->dev, priv->leds[0]->dev->parent,
++				       DL_FLAG_AUTOREMOVE_CONSUMER);
++		if (!link) {
++			dev_err(&pdev->dev, "Failed to add devlink (consumer %s, supplier %s)\n",
++				dev_name(&pdev->dev), dev_name(priv->leds[0]->dev->parent));
++			backlight_device_unregister(priv->bl_dev);
++			return -EINVAL;
++		}
++	}
++
+ 	for (i = 0; i < priv->nb_leds; i++) {
+ 		mutex_lock(&priv->leds[i]->led_access);
+ 		led_sysfs_disable(priv->leds[i]);
+
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250519-led-backlight-add-devlink-to-supplier-class-device-6dec4e04445a
+
+Best regards,
+-- 
+Luca Ceresoli <luca.ceresoli@bootlin.com>
+
