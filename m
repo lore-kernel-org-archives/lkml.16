@@ -1,203 +1,167 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB5C268FE4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB12257ACF;
+	Mon, 19 May 2025 07:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747640964; cv=none; b=qg4pNfz6LhHA4yys9GZLo8Bx2YDO/emSliDvSDWzKCcaLmstnjhgC9a3TQa6StzNSe1RtFBtwKdrEze42wxpHtoLgFU8mlOw0VCMZOh88er9uoP/YZSO2UCm1CAmajTNY8x35wGcLZYFIs9B+4nXPK5iLqLaLtHuw1SJMTEpmeM=
+	t=1747641010; cv=none; b=UTqbib/KBcg2L+BZqSqVh+zDASdKItpHRvSN52EfC+HXulqJrTb8Wcx9hi1Upkyf32GipR/OsCzBVQfWJ//jtl0n9YU9zwHca+vINbnDysw/yePPQi6scApXcI8cmltRaPrQbwIHQ6jh0ir19zfOySAElnbl7yb62GEIEvIZv3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747640964; c=relaxed/simple;
-	bh=Eih7Jwr9aLKmMT/1FNkqR0A3T8ea2bOMDx9vVGUKU70=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=N8MyH4oKX8zO403x4A5QcEtxW2SHKT19nxWyFMr1CZsZsly4/r/FKdf2uB7+++bQNvuq1qTqyttJbKHVDcYr/JOtTG3EE73sG4zi2EkWH9NuZT+kkjHS0ywkE2s8E9+vToKB9fIgJxQxIV2uBhwZ6djOW3Fur9MWKHaVNrdNrUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HGjLiBkh; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747641010; c=relaxed/simple;
+	bh=7AYBXBv9hJZfDoLFBvBon3/3G/8xWmXD3D7ANQ1f3jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5kT7/wLdwQ5qylNHsFDhFuh+m4LjePXTwS1rOPOprxAJMz1opo/1vgoqssUuk0777TLK8yRiM/bAkbxMgnb9IGYJ3HUtJyeoJEWgdgBBGq+NiNXv2Arqb72/SHWqDLSRClApYpnH5vpweFySJ0Gfo+q2TvTfk+AuWOOq0UKb7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=OXhGwQ3g; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HGjLiBkh"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250519074918epoutp037367354f7b27d5c47698441583fba3d8~A3jExsfIx2274322743epoutp03p
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:49:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250519074918epoutp037367354f7b27d5c47698441583fba3d8~A3jExsfIx2274322743epoutp03p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747640958;
-	bh=4xDbXaFiXjjPLwOIeH7ETthFjn9WSJxyoSC/RyFK+8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HGjLiBkhx2qWIdDqVjs5/5lu1pomw4YYWFgyp0DpHyGbNRySnUs0tU3t0nVZ835Ao
-	 ls8kO8YYCB2oSJNNUKhxG7PBdgoX/6DYJZx+2nwreZ3VcZUKLehOXoX8RWXKVWv6u2
-	 9qhi5PHhsnOHscribw3xdd6Ll3mPX834l0tW/Ero=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250519074917epcas2p43eae1add4550fa7a4091b7ebd6193509~A3jEGEBK80407704077epcas2p4R;
-	Mon, 19 May 2025 07:49:17 +0000 (GMT)
-Received: from epcas2p1.samsung.com (unknown [182.195.36.101]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4b18vw4sTBz2SSKd; Mon, 19 May
-	2025 07:49:16 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250519074915epcas2p4ee77d7320363e980b4af70d0dbe3e5d7~A3jCmhAbx0726107261epcas2p4z;
-	Mon, 19 May 2025 07:49:15 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250519074915epsmtrp1048df9cbd92f1f2a2da77df17ae15a98~A3jClnqwX0631106311epsmtrp1o;
-	Mon, 19 May 2025 07:49:15 +0000 (GMT)
-X-AuditID: b6c32a28-46cef70000001e8a-99-682ae27b7482
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	58.68.07818.B72EA286; Mon, 19 May 2025 16:49:15 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250519074915epsmtip2f110c71e19f4b1c2f2b54bb8a846c8e2~A3jCU42SM1921019210epsmtip2j;
-	Mon, 19 May 2025 07:49:15 +0000 (GMT)
-Date: Mon, 19 May 2025 16:53:51 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner
-	<tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, junhosj.choi@samsung.com,
-	hajun.sung@samsung.com, joonki.min@samsung.com, d7271.choe@samsung.com,
-	jkkkkk.choi@samsung.com, jt1217.kim@samsung.com, qperret@google.com,
-	willdeacon@google.com, dhyun.cha@samsung.com, kn_hong.choi@samsung.com,
-	mankyum.kim@samsung.com, Youngmin Nam <youngmin.nam@samsung.com>
-Subject: Re: [QUESTION] arch_counter_register() restricts CNTPT access when
- booted in EL1, even if EL2 is supported
-Message-ID: <aCrjj1A8udt1UJLc@perf>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="OXhGwQ3g"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 8687726048;
+	Mon, 19 May 2025 09:50:04 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ovcAx9lpnpgW; Mon, 19 May 2025 09:50:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747641003; bh=7AYBXBv9hJZfDoLFBvBon3/3G/8xWmXD3D7ANQ1f3jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=OXhGwQ3g2G/nirDRBc2kkgRofonOnnq3yruIY9oMnedr84KF1isk3GDb3lxpIjDZP
+	 IZIu28K9c0x6xyZllGhSb4W+YJqDNR1VWGd99D/jXR3nur78tQHQP2o1bXngKLRgif
+	 zwGnPACWX29107UwopKMoh09lX1mPKeXN7AtBwyJzqYG/R7+h7lvAWSVX01Sk1FJe+
+	 XIOdrroksMRxxdla4itzkO6RSfgwtEhNhZJziR4GDrt16v44naqm1h8VG1gL+tufD5
+	 /ttR+4tRCr60jvOV7usyJdHt8BQU6tG4ClZj37+5HWRjqJ5bKIUMAK5NzY5uPMrSy7
+	 p5fXrGV0cdbtw==
+Date: Mon, 19 May 2025 07:49:47 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH v2 3/4] LoongArch: dts: Add initial SoC devicetree for
+ Loongson 2K0300
+Message-ID: <aCrim32dGexKJvXl@pie.lan>
+References: <20250518080356.43885-1-ziyao@disroot.org>
+ <20250518080356.43885-4-ziyao@disroot.org>
+ <CAMpQs4L7U=Mkw=pburiUpJLEm=tHeMOW+6PRhWPTMnOGHxFqyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <86y0utdqg7.wl-maz@kernel.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsWy7bCSvG71I60Mg65VRhbX9k5kt5j3Wdbi
-	9YXfTBZN+y8xW5w/OJ3d4urud8wWEybvYbf43dTMajHh/WZGi02Pr7FaXN41h83i2rWn7BY7
-	55xktTizaRuLxeZNU5kt2n++ZrFYfOATu4Ogx4JNpR6bVnWyedy5tofN4925c+wem5fUe/Rt
-	WcXo8XmTXAB7FJdNSmpOZllqkb5dAldG9+2HrAUnZCtOP+lnbWD8INbFyMEhIWAi8a+JpYuR
-	i0NIYDejxISbTaxdjJxAcRmJ2ysvQ9nCEvdbjrBCFN1nlOhdcIwdJMEioCrx/nITI4jNJqAr
-	se3EPzBbREBR4tOFk4wgDcwCN5kljvcdYwZJCAuUShzZdoWpi5Gdg1dAWWKqBcTMy4wSf64u
-	YQMp4RUQlDg58wkLiM0soC7xZ94lZpBDmQWkJZb/44AIy0s0b50NNpFTQFvi/ddTrBMYBWch
-	6Z6FpHsWQvcsJN0LGFlWMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefnbmIEx6KWxg7Gd9+a
-	9A8xMnEwHmKU4GBWEuFdtVkjQ4g3JbGyKrUoP76oNCe1+BCjNAeLkjjvSsOIdCGB9MSS1OzU
-	1ILUIpgsEwenVAOT7b0J//cej0qaWPbZ1Ktwyf4HIk7rFX69X/tiw9Y1xo73/KW9659KXF41
-	qbxxdfmEpytdNvsJlr57NpPBct9Sy2Y/zb1bbblLzlxymlpycNH3Rr3KR9Hqcnediu/ETIrk
-	674pdXfd/Z3i/DMYs58vVG42VPIrTDs4xS3opLSAYcQbM+sZwT0l6Tcmqk5pLG5p5FwvEbdF
-	VdBGgL3ywAO7FqOrN63r5nxoqp4bsspYZ8Lm5TZPMkpc3ebflz11UHaTxwH/VMPYFyLvX3be
-	Y9tXdj/ShDWjSi0wenPO0d2Lo19ZXFhjK+O7Yum7k81cd/YE3emYJHy5aqHcknUz10nk1Ho+
-	vaF1sEO76OH67fJdSizFGYmGWsxFxYkABKOiUjQDAAA=
-X-CMS-MailID: 20250519074915epcas2p4ee77d7320363e980b4af70d0dbe3e5d7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----oRxFN-IW6TEbmBusn.EXIiq7I5yRwYOXOizBgewo77BvK4Z6=_703b9_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770
-References: <CGME20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770@epcas2p2.samsung.com>
-	<aCbhBttvi8mvsyGE@perf> <86frh4gazr.wl-maz@kernel.org>
-	<aCqM1Z2ApdvGYfb9@perf> <86y0utdqg7.wl-maz@kernel.org>
-
-------oRxFN-IW6TEbmBusn.EXIiq7I5yRwYOXOizBgewo77BvK4Z6=_703b9_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4L7U=Mkw=pburiUpJLEm=tHeMOW+6PRhWPTMnOGHxFqyA@mail.gmail.com>
 
-On Mon, May 19, 2025 at 08:12:24AM +0100, Marc Zyngier wrote:
-> On Mon, 19 May 2025 02:43:49 +0100,
-> Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > 
-> > [1  <text/plain; utf-8 (8bit)>]
-> > On Fri, May 16, 2025 at 10:28:56AM +0100, Marc Zyngier wrote:
-> > > On Fri, 16 May 2025 07:53:58 +0100,
-> > > Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > > > 
-> > > > [1  <text/plain; utf-8 (8bit)>]
-> > > > Hi arm arch timer experts,
-> > > > 
-> > > > While reviewing the arm_arch_timer code in Linux 6.12,
-> > > > I noticed that the function arch_counter_register() restricts the
-> > > > use of the physical counter (cntpct_el0) on systems where the kernel
-> > > > is running in EL1, even if EL2 is supported and cntpct_el0 is
-> > > > accessible.
-> > > > 
-> > > > In our case:
-> > > > - We are not using pKVM.
-> > > > - The kernel is booted in EL1.
-> > > > - We disabled VIRT_PPI and explicitly selected PHYS_NONSECURE_PPI for the timer refering to below code.
-> > > 
-> > > That's not legal. The architecture guarantees that there is a virtual
-> > > timer and a physical timer. No ifs, no buts.
-> > > 
-> > > [...]
-> > > 
-> > > > As I understand it, `is_hyp_mode_available()` checks whether the
-> > > > kernel booted into EL2 — not whether EL2 is *supported* by the
-> > > > hardware.
-> > > > 
-> > > > Therefore, even on systems where EL2 exists and `cntpct_el0` is
-> > > > accessible from EL1, the kernel still forces the use of `cntvct_el0`
-> > > > if the boot EL is EL1.
-> > > 
-> > > Yes, because it isn't architecturally valid to not have a virtual
-> > > timer. This isn't about EL2 being present of not. The switch to the
-> > > physical timer is purely an optimisation for KVM so that it doesn't
-> > > have to switch the virtual timer back and forth when running a guest,
-> > > as the virtual timer is the most likely used timer.
-> > > 
-> > 
-> > Thanks for the clarification.
-> > 
-> > As a follow-up question:
-> > 
-> > We are working on a system that uses a vendor-specific hypervisor instead of KVM.
-> > In this setup, we also want to optimize timer virtualization overhead and are considering using
-> > the physical timer (CNTPT) in the host context for performance reasons, just like KVM does.
-> > 
-> > Would it be acceptable (from the upstream kernel's perspective) to make a similar switch
-> > to the physical timer in this case ?
+On Mon, May 19, 2025 at 11:10:16AM +0800, Binbin Zhou wrote:
+> Hi Yao:
 > 
-> No. Your hypervisor already has *two* private timers it can freely
-> make use of (virtual and physical EL2 timers), and doesn't need to
-> encroach on something that a guest (be it Linux or any other guest)
-> relies on.
+> Thanks for your patch.
 > 
-> The alternative is to trap and emulate the EL1 timer for the guest so
-> that it *appears* to be functional. But that's obviously bad from a
-> performance perspective.
+> On Sun, May 18, 2025 at 4:05 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
+> > core and targets embedded market. Only CPU core, legacy interrupt
+> > controllers and UARTs are defined for now.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 184 +++++++++++++++++++
+> >  1 file changed, 184 insertions(+)
+> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> >
+> > diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> > new file mode 100644
+> > index 000000000000..17974f793947
+> > --- /dev/null
+> > +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> > @@ -0,0 +1,184 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> > + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +/ {
+> > +       compatible = "loongson,ls2k0300";
+> > +       #address-cells = <2>;
+> > +       #size-cells = <2>;
+> > +
+> > +       cpus {
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +
+> > +               cpu0: cpu@0 {
+> > +                       compatible = "loongson,la264";
+> > +                       reg = <0>;
+> > +                       device_type = "cpu";
+> > +                       clocks = <&cpu_clk>;
+> > +               };
+> > +
+> > +       };
+> > +
+> > +       cpuintc: interrupt-controller {
+> > +               compatible = "loongson,cpu-interrupt-controller";
+> > +               interrupt-controller;
+> > +               #interrupt-cells = <1>;
+> > +       };
+> > +
+> > +       cpu_clk: clock-1000m {
+> > +               compatible = "fixed-clock";
+> > +               clock-frequency = <1000000000>;
+> > +               #clock-cells = <0>;
+> > +       };
+> > +
+> > +       soc {
+> I found the following warning while doing dtbs_check, please check again:
 > 
-> > Or is this kind of optimization strictly tied to KVM's internal behavior
-> > and not something the kernel is expected to support generically?
-> 
-> It is purely Linux/KVM specific, and only works because we own both
-> side of that equation, meaning we can enforce whatever is required to
-> make the two work together. This obviously isn't possible with third
-> party software. Look at it from a different point of view: how would
-> you make this work with, say, Windows? or MacOS?
-> 
-> On the bright side, the architecture already gives you everything you
-> need to implement your hypervisor. Just use it correctly.
-> 
-> Thanks,
-> 
-> 	M.
+>   DTC [C] arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dtb
+> arch/loongarch/boot/dts/loongson-2k0300.dtsi:41.6-183.4: Warning
+> (unit_address_vs_reg): /soc: node has a reg or ranges property, but no
+> unit name
 
-Hi Marc,
+Oops, seems -Wunit_address_vs_reg is silent without W=1 specified.
+Commit 8654cb8d0371 (dtc: update warning settings for new bus and
+node/property name checks, 2017-03-21) shows it's a temporary workaround
+("Disable the new dtc warnings by default as there are 1000s").
 
-Thank you very much for the detailed explanation and your time.
-Your clarification about the architectural intent and KVM-specific behavior
-was really helpful and made things much clearer on our side.
+I'll the node to soc@10000000 in v3. Thanks for catching something I've
+never noticed before. Yanteng, is it okay for you to keep your
+reviewed-by tag with the change?
 
-Best regards,
-Youngmin
+> > +               compatible = "simple-bus";
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges = <0x00 0x10000000 0x00 0x10000000 0x0 0x10000000>,
+> > +                        <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
+> > +                        <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
+> > +
 
+...
+
+> > 2.49.0
+> >
+> >
 > 
 > -- 
-> Without deviation from the norm, progress is not possible.
+> Thanks.
+> Binbin
 > 
 
-------oRxFN-IW6TEbmBusn.EXIiq7I5yRwYOXOizBgewo77BvK4Z6=_703b9_
-Content-Type: text/plain; charset="utf-8"
-
-
-------oRxFN-IW6TEbmBusn.EXIiq7I5yRwYOXOizBgewo77BvK4Z6=_703b9_--
+Thanks,
+Yao Zi
