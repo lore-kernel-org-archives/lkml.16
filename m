@@ -1,120 +1,327 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB60288C86;
-	Mon, 19 May 2025 17:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6918D288C0A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676785; cv=none; b=Ki9nDfhApgNBAdOymnBfF8GZa6wWifBYeAfJFJ6WRN5QBU3/Zo+l+c1wtvU0yUxhMo7ZqtwM105Zk2VrXkA/I8/2XcA1Er9VJSOsQKLXl+zrFYlT7wW7CJx7mRPYKPZPMmjZt1RzQllhXEIbALj2M6IKpD/t0EL92agC8cef1jo=
+	t=1747676814; cv=none; b=l1RrX/Kl9z5NRo6V9/ItyVpQ4lE4/od8Phrm3d+QSBQbOS/nA70yeV9HED7/yaDWDgaMFIDGPXlVP5Z/0aQd7sYISeCJWdoo2vkQhnll19lcaoqnEZKnJz+aCMAPJWrKy4XvWb+8xUxIUZ+UiEan78tr6NIk15oIsJIZPJbK/bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676785; c=relaxed/simple;
-	bh=uqiw7kPHnRXfh4KjJ6YjxUfuMjfIRbxc3MxfKiuob40=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q5H5CgrNHcDR5Cn+53mu+eKAqmbrrhVUD2XY25i6aMcx5LNYAWM0Bqv1cih2wcp8DdmuJfU7DdmbTiythCx7byfWKKWjOg5QXSWvsfh0bvEiO1B8INA24Cyg0rfCLIbx3ydkur7l1jbcfBoc4tSdWTCZ+wcY0rwaJ216Go7rKY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgF8yVqT; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747676814; c=relaxed/simple;
+	bh=t/Aw2kILSRs4ald3v7pjsP5ESZ2BM0Oh8pP15nw8+fE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D3NQdeNDhmMX/t3dN/LtWwEQw7+4g0xTT2xGIA/IG0QveuO9kPMrJJQM5CTKodYSmtrr74MxfWosIx03a2mnDUn6mnJSx28Q2tXDw20Z+zLZYbAGzpYJiPN8h7nV86Gmlu9pm5NmdgmQbo2Tl+MBR/K/LYG7b3b85T2Grry/QO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TNsy/ilu; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgF8yVqT"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6000f2f217dso3962452a12.1;
-        Mon, 19 May 2025 10:46:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TNsy/ilu"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad551342f08so295294766b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747676782; x=1748281582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GUhHJEXQrlPdO/IBxhxTsANnm82xLSOlInc80+87whs=;
-        b=dgF8yVqTczljL/ocjchAMjYEwieu6TifSpZAC5Byl9e/N+4HFlGOWSPkT6EeRsvoRv
-         diLaBpUcoQvwO2YK20ab/Go1jvHWrL2U+nwIVvlL1Mb7rwfza6XVQWPYJ2eoC30zzAyI
-         Gu0+R2ivtc76eUJUpW0+qrK7LBM9QZ5lN7Ig6veTq/vFYrZtFllntqfmgPe2Ag0WOCJY
-         n5n6bI+KIuJ7PpovVCIXLiDz1hQsDQausYvQzYgy6GuOqoIg6e5iVShFlvcgsYHnOJ1h
-         6cUuf1O//lprZFttDjX+dFZInaRgT+N4sBXrxXK+Xj5A1f9U1sLhSXFT3kJe990j5hTo
-         6mlQ==
+        d=suse.com; s=google; t=1747676809; x=1748281609; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0nPs85tW7j1RabtI/IPGgsIXGckQjdybUsjhz9dcqKM=;
+        b=TNsy/ilufaFgDG+ih0Hcp3O1oUwHX+vX3suSfNR1i8Uc+gwYJMMbrycMb58+DllCyY
+         x9qq7mpFq1ycu/dTsyUDWRxMCsJAl9j546xGaqxMD383PNkVU7hKG1qPWNgr2HuMlR7U
+         iZxNx+Se7y8zewwqAzlvKKNP4f++4XOORI8MEnOGKOgg1XUKv6/XvllBXYWzTLT34uL9
+         fZC1ZeX8cEPxkLmS0IxMsb/DqecF+p8dkKL0TthhGqEKpt70qhOXST7vu46aJhEoSLBK
+         BU4G5aWYlcZ1za50JR6sAMsp4uhJZoFKXuLX+kWkICCPozPveZRBG4MXLlFMn27li84r
+         dDvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747676782; x=1748281582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GUhHJEXQrlPdO/IBxhxTsANnm82xLSOlInc80+87whs=;
-        b=ESYqedq3C2Z8QyMvzOq4+DcQpKH8TVf3Kkdkx6Pk7ZUZ1yFuPljY7+/rvHLUDj5Y6A
-         vnJ3WK/fPLaHYqZ0xyKFefIQi+fltIXAP7a+VGK9w4aUomGGC2zPKrI5f9HMh1YcsMCr
-         eMj4L7rEHkn2ZOx7BT1MKsLqSrZiX0BRnOchNZat2RPTdU6m6QwblGvpj9YG335i5P3r
-         GhIkF8lzL10czZtOAgVLXsDbZ1CEOd2PCQvKXYFB4udQnlC8qPtcm9Zg5kuO5RhViKYQ
-         tfwrDyaL16FVBTCu7N0lGOnsD84VhC2rqN73FUAIireudDNwVU83YTVAt05yEauX3AFZ
-         3VoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoBsH3EROtv9PmjcLJ5O7XczFl1G9qrjbgth8NzuQ9NyeimfL+zkeTm7gt6UqYlkiAPFuAZ1n+DyO9EMI=@vger.kernel.org, AJvYcCVqwJY1BNcDbTAZBm9Zt3UmxcbiPfpWSV/qg4xDafUCPcOSiiAetqUl8g5MSvXgiw+87kUwm3vi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJSYJtLqtePOXKuOcTFPlIEPNQvUf1o5AdOlhjTt7h4Yvh0nBR
-	kM31HD6j0WjAMKV64hxxIubfqG3TbwU+I2wfsKUVQQh5EuBnWWOnOhzk
-X-Gm-Gg: ASbGnctVUj8ujAX5Y1CEyOiM906WvRTIWYJUHUFiAVhse+l2q8HLtzs6fi8FcKGi8u0
-	u5p/hvHnefZ3AOJ6fj5a9nJDKptESFD6VEz/qxbr6Ocfra+9Ww2ENDzGNjrWdNnSgX2daD0+uYo
-	9am13pNjCsN+EPsFEPhPAwbbxO1wD0ncZU2bhAanDikdemTt49x57MrYjbSWwCCEwVS4eSbf+Tb
-	jxZiXCs3LS+CikUgzacqEVlhZGCF1+lV9u9klHmoRH8Z+UpAy6Q3TGticNDd8szCvLrQQ/qw03R
-	InjagFHUczEA44iPPOLG4LJbnt/LHW+OGLq7hisbOMdUcKpnud/bJqR6J4maIvCZ+yTtyMZBypj
-	ChDBUJNxBtFrjCTD1Oz6WTYfHLq0+n37h3rZI+/7j/A==
-X-Google-Smtp-Source: AGHT+IFeYwhCeA6tAalFdp6N+IAjFVHwQXe3scg3Xdf5BUfVsFrivmVXWqv6JMq7KetvOHwL3ocb4A==
-X-Received: by 2002:a05:6402:4301:b0:602:3e4:54de with SMTP id 4fb4d7f45d1cf-60203e45620mr711671a12.10.1747676781464;
-        Mon, 19 May 2025 10:46:21 -0700 (PDT)
-Received: from localhost (dslb-002-205-017-193.002.205.pools.vodafone-ip.de. [2.205.17.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d50364dsm6047560a12.32.2025.05.19.10.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 10:46:21 -0700 (PDT)
-From: Jonas Gorski <jonas.gorski@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vivien Didelot <vivien.didelot@gmail.com>,
-	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/3] net: dsa: b53: allow RGMII for bcm63xx RGMII ports
-Date: Mon, 19 May 2025 19:45:50 +0200
-Message-ID: <20250519174550.1486064-4-jonas.gorski@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250519174550.1486064-1-jonas.gorski@gmail.com>
-References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
+        d=1e100.net; s=20230601; t=1747676809; x=1748281609;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0nPs85tW7j1RabtI/IPGgsIXGckQjdybUsjhz9dcqKM=;
+        b=krzpe+Psyf6tY24PG0Ktj4uHQ65kuUlKBgf4XM1KcXl+lbvazdmdIWkj3mnsZub/3e
+         5oa9f/UimuXhp02TIre7npUVixwiH7XLRdt9XyIsZijJNxbZYK/DJpZmBU/yPmAF8AIA
+         GAiE2DyEiiKajbFjd1a0V7tEQ62NuEutH8Ro4JQ7NFxFysk9wiYriHioDOKBE3w5Nffq
+         LgVlmHBVrLId/alBwWUwlc6gNdqoqc4V22cXqWFhKiPOa/ET9Hp+mJbh680pP1ggoKlw
+         RoHxyGRp6ODnAhiRGWHN1mgY3qkl9AGuHgPPsnXhygwV4waZFDAiw9toIaHxP4eldyoR
+         WvHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFzk9yX57M5RUibuIQctvsDQUfPPZxk4yUtmPqgsjgIck29dRtinErVgB1K6Q1w7bJAU5opvoanMLbT2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys+oYUhOR6nd4uJ7u3fJmmUa36DHnbXmnSQDI6eS6P0Clmnu1Z
+	tYgxkVgQMm9VDsZKWCUjzsHM4kEe0GiEBKpqZGjUvZSLwlB8JjEsFC6o6pmJwcjneptfKpQtvBN
+	r7jClgZwoWfxtwTnjFqnLJv+b9P4ceu4dDE60gqVrGw==
+X-Gm-Gg: ASbGncvShBbpt5zdm0roFOTpF/n4G//u4IjOewxPm9ezpHDbfJd//aEValIdp05BAcq
+	z/ufZ1ywaznCkeQ2+9+uNhpmdu/s7IyFq2K05b4iqU0B5KEzoTo1Q6SxdwiWOZ6ogy07QhpJ2z3
+	hGuUOUfWkUOZzG9fcER+7qdepHBcrmMLuFBUmq4AQkcQ==
+X-Google-Smtp-Source: AGHT+IEd4sAjp/SQEBcTnjdU3gIi5ZU4ZvNJnoo1p857/bbxOVdYODCCcgHLJDF9cfWaSFNCYk5zfEy1B0Tqydffffg=
+X-Received: by 2002:a17:906:4fd4:b0:ad2:50ef:4925 with SMTP id
+ a640c23a62f3a-ad536bca526mr1166082466b.25.1747676809479; Mon, 19 May 2025
+ 10:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <681fbc4c.050a0220.f2294.0018.GAE@google.com> <20250519155149.2382-1-superman.xpt@gmail.com>
+In-Reply-To: <20250519155149.2382-1-superman.xpt@gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Mon, 19 May 2025 19:46:38 +0200
+X-Gm-Features: AX0GCFue8YnFym0Fy3ShNTRkWNKL4FjUo4-KISSxLHzHCPHtUkn7xXXmV8Ormbg
+Message-ID: <CAPjX3FcDxXUi=hK1KPUDQK-H-joAmii0yUgz=_XzyQoO43a0xA@mail.gmail.com>
+Subject: Re: [syzbot] [btrfs?] possible deadlock in btrfs_quota_enable (2)
+To: Penglei Jiang <superman.xpt@gmail.com>
+Cc: syzbot+3a88c590edd72179657c@syzkaller.appspotmail.com, clm@fb.com, 
+	dsterba@suse.com, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add RGMII to supported interfaces for BCM63xx RGMII ports so they can be
-actually used in RGMII mode.
+On Mon, 19 May 2025 at 17:53, Penglei Jiang <superman.xpt@gmail.com> wrote:
+>
+> On Sat, 10 May 2025 13:51:24 -0700, syzbot wrote:
+> > syz.4.219/7436 is trying to acquire lock:
+> > ffff88806ce71918 (&fs_info->qgroup_ioctl_lock){+.+.}-{4:4}, at: btrfs_quota_enable+0x2be/0x1d50 fs/btrfs/qgroup.c:1059
+> >
+> > but task is already holding lock:
+> > ffff88806ce724f8 (btrfs_trans_num_extwriters){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
+> >
+> > which lock already depends on the new lock.
+> >
+> >
+> > the existing dependency chain (in reverse order) is:
+> >
+> > -> #5 (btrfs_trans_num_extwriters){++++}-{0:0}:
+> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+> >        join_transaction+0x1a4/0xd70 fs/btrfs/transaction.c:321
+> >        start_transaction+0x6ae/0x1620 fs/btrfs/transaction.c:705
+> >        btrfs_dirty_inode+0x9f/0x190 fs/btrfs/inode.c:6129
+> >        inode_update_time fs/inode.c:2076 [inline]
+> >        touch_atime+0x2f6/0x6d0 fs/inode.c:2149
+> >        file_accessed include/linux/fs.h:2599 [inline]
+> >        filemap_read+0x1024/0x11d0 mm/filemap.c:2774
+> >        __kernel_read+0x469/0x8c0 fs/read_write.c:528
+> >        integrity_kernel_read+0x89/0xd0 security/integrity/iint.c:28
+> >        ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
+> >        ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >        ima_calc_file_hash+0x152c/0x18d0 security/integrity/ima/ima_crypto.c:568
+> >        ima_collect_measurement+0x42e/0x8e0 security/integrity/ima/ima_api.c:293
+> >        process_measurement+0x1121/0x1a40 security/integrity/ima/ima_main.c:385
+> >        ima_file_check+0xd7/0x120 security/integrity/ima/ima_main.c:613
+> >        security_file_post_open+0xbb/0x290 security/security.c:3130
+> >        do_open fs/namei.c:3882 [inline]
+> >        path_openat+0x2f26/0x3830 fs/namei.c:4039
+> >        do_filp_open+0x1fa/0x410 fs/namei.c:4066
+> >        do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+> >        do_sys_open fs/open.c:1444 [inline]
+> >        __do_sys_openat fs/open.c:1460 [inline]
+> >        __se_sys_openat fs/open.c:1455 [inline]
+> >        __x64_sys_openat+0x138/0x170 fs/open.c:1455
+> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > -> #4 (btrfs_trans_num_writers){++++}-{0:0}:
+> >        reacquire_held_locks+0x127/0x1d0 kernel/locking/lockdep.c:5383
+> >        __lock_release kernel/locking/lockdep.c:5572 [inline]
+> >        lock_release+0x1b4/0x3e0 kernel/locking/lockdep.c:5887
+> >        percpu_up_read include/linux/percpu-rwsem.h:100 [inline]
+> >        __sb_end_write include/linux/fs.h:1778 [inline]
+> >        sb_end_intwrite+0x26/0x1c0 include/linux/fs.h:1895
+> >        __btrfs_end_transaction+0x248/0x640 fs/btrfs/transaction.c:1075
+> >        btrfs_dirty_inode+0x14c/0x190 fs/btrfs/inode.c:6143
+> >        inode_update_time fs/inode.c:2076 [inline]
+> >        __file_update_time fs/inode.c:2305 [inline]
+> >        file_update_time+0x344/0x490 fs/inode.c:2335
+> >        btrfs_page_mkwrite+0x634/0x16a0 fs/btrfs/file.c:1814
+> >        do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
+> >        wp_page_shared mm/memory.c:3688 [inline]
+> >        do_wp_page+0x2626/0x5760 mm/memory.c:3907
+> >        handle_pte_fault mm/memory.c:6013 [inline]
+> >        __handle_mm_fault+0x1028/0x5380 mm/memory.c:6140
+> >        handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
+> >        do_user_addr_fault+0xa81/0x1390 arch/x86/mm/fault.c:1337
+> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
+> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+> >
+> > -> #3 (sb_pagefaults#2){.+.+}-{0:0}:
+> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+> >        percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
+> >        __sb_start_write include/linux/fs.h:1783 [inline]
+> >        sb_start_pagefault include/linux/fs.h:1948 [inline]
+> >        btrfs_page_mkwrite+0x3b2/0x16a0 fs/btrfs/file.c:1798
+> >        do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
+> >        do_shared_fault mm/memory.c:5594 [inline]
+> >        do_fault mm/memory.c:5656 [inline]
+> >        do_pte_missing mm/memory.c:4160 [inline]
+> >        handle_pte_fault mm/memory.c:5997 [inline]
+> >        __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
+> >        handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
+> >        do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1388
+> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
+> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+> >
+> > -> #2 (&mm->mmap_lock){++++}-{4:4}:
+> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+> >        down_read_killable+0x50/0x350 kernel/locking/rwsem.c:1547
+> >        mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
+> >        get_mmap_lock_carefully mm/memory.c:6355 [inline]
+> >        lock_mm_and_find_vma+0x2a8/0x300 mm/memory.c:6406
+> >        do_user_addr_fault+0x331/0x1390 arch/x86/mm/fault.c:1360
+> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
+> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+> >        filldir64+0x2b3/0x690 fs/readdir.c:371
+> >        dir_emit include/linux/fs.h:3861 [inline]
+> >        kernfs_fop_readdir+0x534/0x870 fs/kernfs/dir.c:1907
+> >        iterate_dir+0x5ac/0x770 fs/readdir.c:108
+> >        __do_sys_getdents64 fs/readdir.c:403 [inline]
+> >        __se_sys_getdents64+0xe4/0x260 fs/readdir.c:389
+> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > -> #1 (&root->kernfs_rwsem){++++}-{4:4}:
+> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+> >        down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
+> >        kernfs_add_one+0x41/0x520 fs/kernfs/dir.c:791
+> >        kernfs_create_dir_ns+0xde/0x130 fs/kernfs/dir.c:1091
+> >        sysfs_create_dir_ns+0x123/0x280 fs/sysfs/dir.c:59
+> >        create_dir lib/kobject.c:73 [inline]
+> >        kobject_add_internal+0x59f/0xb40 lib/kobject.c:240
+> >        kobject_add_varg lib/kobject.c:374 [inline]
+> >        kobject_init_and_add+0x125/0x190 lib/kobject.c:457
+> >        btrfs_sysfs_add_qgroups+0x111/0x2b0 fs/btrfs/sysfs.c:2616
+> >        btrfs_quota_enable+0x278/0x1d50 fs/btrfs/qgroup.c:1030
+> >        btrfs_ioctl_quota_ctl+0x183/0x1c0 fs/btrfs/ioctl.c:3676
+> >        vfs_ioctl fs/ioctl.c:51 [inline]
+> >        __do_sys_ioctl fs/ioctl.c:906 [inline]
+> >        __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
+> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > -> #0 (&fs_info->qgroup_ioctl_lock){+.+.}-{4:4}:
+> >        check_prev_add kernel/locking/lockdep.c:3166 [inline]
+> >        check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+> >        validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
+> >        __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
+> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+> >        __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+> >        __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
+> >        btrfs_quota_enable+0x2be/0x1d50 fs/btrfs/qgroup.c:1059
+> >        btrfs_ioctl_quota_ctl+0x183/0x1c0 fs/btrfs/ioctl.c:3676
+> >        vfs_ioctl fs/ioctl.c:51 [inline]
+> >        __do_sys_ioctl fs/ioctl.c:906 [inline]
+> >        __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
+> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > other info that might help us debug this:
+> >
+> > Chain exists of:
+> >   &fs_info->qgroup_ioctl_lock --> btrfs_trans_num_writers --> btrfs_trans_num_extwriters
+> >
+> >  Possible unsafe locking scenario:
+> >
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   rlock(btrfs_trans_num_extwriters);
+> >                                lock(btrfs_trans_num_writers);
+> >                                lock(btrfs_trans_num_extwriters);
+> >   lock(&fs_info->qgroup_ioctl_lock);
+> >
+> >  *** DEADLOCK ***
+> >
+> > 5 locks held by syz.4.219/7436:
+> >  #0: ffff8880259ac420 (sb_writers#17){.+.+}-{0:0}, at: mnt_want_write_file+0x60/0x200 fs/namespace.c:600
+> >  #1: ffff88806ce70bd0 (&fs_info->subvol_sem){+.+.}-{4:4}, at: btrfs_ioctl_quota_ctl+0x178/0x1c0 fs/btrfs/ioctl.c:3675
+> >  #2: ffff8880259ac610 (sb_internal#3){.+.+}-{0:0}, at: btrfs_quota_enable+0x2b1/0x1d50 fs/btrfs/qgroup.c:1057
+> >  #3: ffff88806ce724d0 (btrfs_trans_num_writers){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
+> >  #4: ffff88806ce724f8 (btrfs_trans_num_extwriters){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
+>
+> We assign a sequence number to each lock to represent the order in which
+> they are held:
+>
+>         0: vfs freeze semaphores
+>         1: qgroup_ioctl_lock
+>         2: kernfs_rwsem
+>         3: mmap_lock
+>         4: btrfs_trans_num_writers
+>         5: btrfs_trans_num_extwriters
+>
+>         cpu-0
+>         =====
+>         0: vfs freeze semaphores
+>         4: btrfs_trans_num_writers
+>         5: btrfs_trans_num_extwriters
+>         1: qgroup_ioctl_lock
 
-Without this, phylink will fail to configure them:
+I understand this was introduced with commit a855fbe69229 trying to
+prevent another deadlock.
+Perhaps it would be better to break the chain somewhere else?
 
-[    3.580000] b53-switch 10700000.switch GbE3 (uninitialized): validation of rgmii with support 0000000,00000000,00000000,000062ff and advertisement 0000000,00000000,00000000,000062ff failed: -EINVAL
-[    3.600000] b53-switch 10700000.switch GbE3 (uninitialized): failed to connect to PHY: -EINVAL
-[    3.610000] b53-switch 10700000.switch GbE3 (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 4
+Or maybe get rid of the qgroup_ioctl_lock and use subvol_sem instead?
+I mean that one is already being used in this code path.
 
-Fixes: ce3bf94871f7 ("net: dsa: b53: add support for BCM63xx RGMIIs")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
----
- drivers/net/dsa/b53/b53_common.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index b00975189dab..9d97ad146ce4 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1458,6 +1458,10 @@ static void b53_phylink_get_caps(struct dsa_switch *ds, int port,
- 	__set_bit(PHY_INTERFACE_MODE_MII, config->supported_interfaces);
- 	__set_bit(PHY_INTERFACE_MODE_REVMII, config->supported_interfaces);
- 
-+	/* BCM63xx RGMII ports support RGMII */
-+	if (is63xx(dev) && port >= B53_63XX_RGMII0)
-+		phy_interface_set_rgmii(config->supported_interfaces);
-+
- 	config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
- 		MAC_10 | MAC_100;
- 
--- 
-2.43.0
-
+>         cpu-1
+>         =====
+>         1: qgroup_ioctl_lock
+>         2: kernfs_rwsem
+>
+>         cpu-2
+>         =====
+>         2: kernfs_rwsem
+>         3: mmap_lock
+>
+>         cpu-3
+>         =====
+>         3: mmap_lock
+>         4: btrfs_trans_num_writers
+>         5: btrfs_trans_num_extwriters
+>
+> I believe we should adjust the order of locks in the CPU-0 call stack by moving
+> the acquisition of qgroup_ioctl_lock inside the start_transaction() function.
+> After the adjustment, it becomes as follows:
+>
+>         0: vfs freeze semaphores
+>         1: qgroup_ioctl_lock
+>         4: btrfs_trans_num_writers
+>         5: btrfs_trans_num_extwriters
+>
+>         static struct btrfs_trans_handle *
+>         start_transaction(struct btrfs_root *root, unsigned int num_items,
+>                         unsigned int type, enum btrfs_reserve_flush_enum flush,
+>                         bool enforce_qgroups)
+>         {
+>                 ...
+>
+>                 /*
+>                 * If we are JOIN_NOLOCK we're already committing a transaction and
+>                 * waiting on this guy, so we don't need to do the sb_start_intwrite
+>                 * because we're already holding a ref.  We need this because we could
+>                 * have raced in and did an fsync() on a file which can kick a commit
+>                 * and then we deadlock with somebody doing a freeze.
+>                 *
+>                 * If we are ATTACH, it means we just want to catch the current
+>                 * transaction and commit it, so we needn't do sb_start_intwrite().
+>                 */
+>                 if (type & __TRANS_FREEZABLE)
+>                         sb_start_intwrite(fs_info->sb);
+>
+>                 mutex_lock(&fs_info->qgroup_ioctl_lock);
+>                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+>                 if (may_wait_transaction(fs_info, type))
+>                         wait_current_trans(fs_info);
+>
+>                 do {
+>                         ret = join_transaction(fs_info, type);
+>                         if (ret == -EBUSY) {
+>                                 wait_current_trans(fs_info);
+>                                 if (unlikely(type == TRANS_ATTACH ||
+>                                         type == TRANS_JOIN_NOSTART))
+>                                         ret = -ENOENT;
+>                         }
+>                 } while (ret == -EBUSY);
+>
+>                 ...
+>         }
+>
