@@ -1,50 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E06A21CA14;
-	Mon, 19 May 2025 22:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFC021C9F8
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747694515; cv=none; b=ohpntFUO732KbJucd3N9fy/Eba48gkT8po1q7QCEbF8x0GSZqvBw0bBeerRETunVmPusTuC9ZbAAMkp15qSU3e+tTaBiS74MljZLybG2emRSYesJkBT5J70VhVpPy1ovgrjKjZkhzN5Ks7QLtM77TzeAej4Yg2doEe2ME5JfEVs=
+	t=1747694644; cv=none; b=X7lS7hY5J3b39q0DexJLLuXgDFGPRsfdNF2jxbUDCgBUiDV3YqtOteri+VkxoQm26l/CyfeivPpxV/tl6xe/4Wdk92DmuNwo1ShEdhvkea6DX/6RhjSiuBHPf8nFIBw9M0qtS84r8UWJHgIATEIKKzz/S5RStZoiBR17cxSdo78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747694515; c=relaxed/simple;
-	bh=mMXMidsfCoqJOKi8B+7joSdBmF/Wv4ltuLs090jXvPg=;
+	s=arc-20240116; t=1747694644; c=relaxed/simple;
+	bh=W08Jo+9FHd07kDbDBftwTug+2s2lcmnYyG8VcdD/muQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MPuNHMJTvQyKLJQcNzWRwL2XTX70TgcQhHALPvwfqXUOnJ4XahQ69ak1oKwYBXjZNW5CnxT1x8c0uj/aquUOGPRUQD7VJCAqs0mCWsFf5xXHk4xIrA5gf3LGtr0ZQ4NIG/xGiV6pZ5++3oj62G32PCYyTMMG3qlpESSoLkbaqPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V2jty9u4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=oXaelkrWdLaTq+NQD4VA/eXcQBVTRblG1pEjQuZggDexnCjEicjexT232KgNkd5QMU+JnpgEU1scZ4Y/By/R1F7HXe+mC/KCUUmuQXa47zu8KyMBJ4zHlUEfhS/qWht4GA1iIhKdyFE/4/jTrC+5cqjo8CsvbvKKEPnG4R+GTe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fSUyTXP0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V2jty9u4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747694514; x=1779230514;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mMXMidsfCoqJOKi8B+7joSdBmF/Wv4ltuLs090jXvPg=;
-  b=V2jty9u4IVbRey4tHTdEwCEciPB6z266zntcnKPkmt+Wlb4Z9s8ui4mf
-   +CBFWxsDra8LRkNl+M0SM0rWhCc4G+0MADgrtg9goERbnJx7/RVLkPkNl
-   a1ZaV3hEM6wmJeFKqxnV0Jir5Yj93kYdefB08hDZGLWCc2axdYuP54TmU
-   5/8tVV6OOaB1H2u2dWIhueSPLytdCboOna+tcs/bSid3tpHldXmCPZb3c
-   DWHmArjWi4VYyKoNwGMvxvTeUVQATWBfJDTyELLSB6tvw+qKyi+869h9l
-   Def9426YgBY6qQQwwW9T6K9UZluXrZCuAXudAQojWQ+xJvkap8e1vRHMe
-   Q==;
-X-CSE-ConnectionGUID: JI0JtucwQPmDL7b4uk79XA==
-X-CSE-MsgGUID: v3+5KhuiQW+oSdKqyv5r+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="53408064"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="53408064"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 15:41:53 -0700
-X-CSE-ConnectionGUID: 61PQEioIQ/iJ1hNNkacuzg==
-X-CSE-MsgGUID: Zp6lnw4ETfKVUtkIljdg1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139230552"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 15:41:52 -0700
-Message-ID: <1b1b80e2-4f59-462e-96a9-546b1d7a7644@linux.intel.com>
-Date: Mon, 19 May 2025 15:41:50 -0700
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fSUyTXP0"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKDrFB020271
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:44:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4B3h1KneRsR4g4P8DoAhcb5VoEzgECZqghlNOYZOMuU=; b=fSUyTXP0wQdu3qa6
+	NSZ2pz+xtkiPjjuHJ5zP6gekDpFkkVLJFqjIFDf0n/bQCDeNkjrHXx4vvZ21oOCY
+	sYKydzjoTJebqU1GuAzz+RCEqmSkV7BWPFz/09QFqPMpq2UyauS4MHrt/mvYUDc9
+	i9FyChWzyvh4hmAXExD/rG/+Pjr8j08EcbWnda/aiYhYxSkhbT6DbO48r/A51aYh
+	WaVfA/4vNyvXpdOVp9akIqp4HH0nrP7h+bvwkKa9XSrgSh1r2PDrc8X9FMl+pv2W
+	wBnJh1H3BCQ2AVNNhHzeptA0CD0xQQ4ckKAG4ZZMWv6uSvtOTQ1q7b9a0j3FRqgx
+	MlueGg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9wsxj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:44:01 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f2c8929757so15029196d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:44:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747694639; x=1748299439;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4B3h1KneRsR4g4P8DoAhcb5VoEzgECZqghlNOYZOMuU=;
+        b=JXqR0I97g1IV1fxnV/7EvTjOvUwwiS3rKnjneRVQj4RK592H4vFUyqsDqZpn9LUkqg
+         DYhp8fSyRs9sV52EyL2FhUt4XQ5uk9zXkuuvye/T9NOiI7BsLWOWwIB6msQcpAK5LGXH
+         MeUmFevAji0jkpvkttmsUS6h1/6McwCJupBFwAjPcix0ho72gr78s5Q6NAdjj0awcRol
+         n4xEbLUHz/aJdo/8Kufs1tygHpagq0eKxRO5PJtykC8zgs1CQuKZxxy8B+J5FctD84gY
+         Rh/KDylIiR9F+upnC+zHeRvqHJM0vftWcpKpf0kirj8/pP1qaUNPhyuLb/OHVJgR8Ki7
+         JpNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJj+I/g/EOl0QD9Cxqh8lxkMpZGCyf5zmBK8YQ90fAkzyfJNNYNi1efE3DHWCY9mqa84+40QvZW8j+lvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzdhv4io26YSNTNPVS6MMvkCrD9f3QIij0BX5v1S16ZAIuIoMZ
+	phE1bXRaHBeR92nOwS4YER+AVCEnn2SFb1ptRcLwpFMdmigEUayOdhN3+TCfKiaslCeCGRQJWmX
+	pDsNwwwdu/+UUGxCxuugi2KQK121+LR/OonVDPkMfe+hmXa6yhq1kXZQo0pcYOzIc83Q=
+X-Gm-Gg: ASbGncueM/pl21yE7zrk4uiiXt82zAYZx3K/Flsv+iWdY6vVKWQVMqa04g8whYpiooW
+	EUI7R5Tf9yl20hoyeHEFKd7uCacDw3nLC7a64UkEBq/Cy71RejDoNNyXgtKaJ6bFbiJGLazO3Sa
+	KRK9DkvvI3/Mkave67+1JcNPiKQCvRCzg5gR0N88GGocqZzf0a67T5FkG7FviqZIiES/O3evRXQ
+	GQ9Y3Gpc9VRTp60zr250bPAxBozPqchFLAfXHPZ0+3I5Y3v1puaAZKzwzx54rEDJeOMLtuLrVR9
+	oGipTYdrpBLPB82T8eEpuGVyyxXTNP1ZAeyBOEfftPmFaLVPp3LqQLJW7OcFkLjpmQ==
+X-Received: by 2002:a05:6214:2e09:b0:6f8:b1e9:e5df with SMTP id 6a1803df08f44-6f8b1e9e6afmr67305616d6.3.1747694639362;
+        Mon, 19 May 2025 15:43:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEIcNvJxTpaX4aSwxX8+XLPauKtBWB3PQV78lz2duPuZaNPM5o3XDBuZzyTejxUixxBkLYQYA==
+X-Received: by 2002:a05:6214:2e09:b0:6f8:b1e9:e5df with SMTP id 6a1803df08f44-6f8b1e9e6afmr67305326d6.3.1747694638927;
+        Mon, 19 May 2025 15:43:58 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4e8afdsm649638066b.176.2025.05.19.15.43.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 15:43:57 -0700 (PDT)
+Message-ID: <3fcc04b8-42b5-4715-a2ea-815b7c4808a1@oss.qualcomm.com>
+Date: Tue, 20 May 2025 00:43:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,69 +74,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/16] PCI/DPC: Initialize aer_err_info before using it
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-2-helgaas@kernel.org>
+Subject: Re: [PATCH v4 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+To: Wesley Cheng <quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc: Melody Olvera <melody.olvera@oss.qualcomm.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20250409-sm8750_usb_master-v4-0-6ec621c98be6@oss.qualcomm.com>
+ <20250409-sm8750_usb_master-v4-6-6ec621c98be6@oss.qualcomm.com>
+ <Z/exOF4T+0vNLQwg@vaman> <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
+ <aCRVaNDQP/PdAXPR@vaman> <5183b76b-8043-4309-b25d-e1ae505f929e@quicinc.com>
+ <6fa4959c-d733-4d50-904f-caf933e02da9@oss.qualcomm.com>
+ <f3727b53-8da3-d4f6-575b-108a8d6898e5@quicinc.com>
 Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <f3727b53-8da3-d4f6-575b-108a8d6898e5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: Qemoo-2p1jb7Fj-r8DGM1B-q1OKg1O2t
+X-Proofpoint-ORIG-GUID: Qemoo-2p1jb7Fj-r8DGM1B-q1OKg1O2t
+X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=682bb431 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=jJrOw3FHAAAA:8 a=VwQbUJbxAAAA:8
+ a=7CQSdrXTAAAA:8 a=9j9lLQFCJERsiU0aoWIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=-FEs8UIgK8oA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDIxMiBTYWx0ZWRfX9/P2M74SAe8V
+ 6RjeROll+bbQ+fruqEU9Jwf/wQEqZqMWDVLFZMOD/4KSbTfmQRgeH8XcUxVGyR6AhVDqVbCxrS0
+ LEXquSdhrsWaptGl/3G9x+i2zWuF2t2J6mOca6IV4Tcw7GAzugHL9Ho0JFArNrRpBdYG2Gi0jKC
+ YcpX3YUMSodNOnZcI8kLMm+P4NiRTFQq2aR1mkw35TXdDe+Xto5NlLg3EZdUnKEtxT53GoVzNfq
+ vEqBwRJ8YTWXUFHiGERvsUUNY32Fg4jQM3POmbYvZXNjKY1bNM1o72/1ypDssbCBIgInmUSYStu
+ 5fzbYoVq0uT49yRnLnyzSu4JBxXmULvE04AnWpT0fIs1YbxM7tNhyy+8vZhglwy/HSXCccR25MH
+ Tn35Pv+ARvLnd83E3suAYRCRlpQ3ZsbCoX0iBAcmVsJDyqMcwlDJzbk4t7d3Z4jQl6MJopKq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_09,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190212
 
-Hi,
+On 5/20/25 12:04 AM, Wesley Cheng wrote:
+> Hi Konrad,
+> 
+> On 5/17/2025 11:28 AM, Konrad Dybcio wrote:
+>> On 5/14/25 8:24 PM, Wesley Cheng wrote:
+>>> Hi Vinod,
+>>>
+>>> On 5/14/2025 1:33 AM, Vinod Koul wrote:
+>>>> On 16-04-25, 15:45, Wesley Cheng wrote:
+>>>>> Hi Vinod,
+>>>>>
+>>>>> On 4/10/2025 4:53 AM, Vinod Koul wrote:
+>>>>>> On 09-04-25, 10:48, Melody Olvera wrote:
+>>>>>>
+>>>>>>> +static int m31eusb2_phy_write_readback(void __iomem *base, u32 offset,
+>>>>>>> +                    const u32 mask, u32 val)
+>>>>>>> +{
+>>>>>>> +    u32 write_val;
+>>>>>>> +    u32 tmp;
+>>>>>>> +
+>>>>>>> +    tmp = readl_relaxed(base + offset);
+>>>>>>> +    tmp &= ~mask;
+>>>>>>> +    write_val = tmp | val;
+>>>>>>> +
+>>>>>>> +    writel_relaxed(write_val, base + offset);
+>>>>>>> +
+>>>>>>> +    tmp = readl_relaxed(base + offset);
+>>>>>>
+>>>>>> Why are you using _relaxed version here?
+>>>>>>
+>>>>>
+>>>>> No particular reason.  I think someone pointed this out previously, and I
+>>>>> was open to use the non-relaxed variants, but I assume using the relaxed vs
+>>>>> non-relaxed apis comes down to preference in this case.
+>>>>
+>>>> Nope you cant! There _needs_ to be a specific reasons!
+>>>> When you are doing read, modify, write, it is very important to know the
+>>>> right version to use...
+>>>>
+>>>
+>>> I mean, its a write readback, which ensures the bus transaction is complete
+>>> based on [1], hence why **in this situation** it is up to preference.
+>>>
+>>> Otherwise, w/o the readback then we'd need to ensure writes are made
+>>> depending on the required sequencing (in spots where the sequence is
+>>> strictly defined), and that can be enforced using barriers.  If you feel
+>>> like using the non-relaxed variant is preferred let me know.  I can replace
+>>> it and remove the readback.
+>>
+>> Readback is stronger on arm64, as otherwise the writes may be buffered and
+>> not observable at the other endpoint even though the instruction has been
+>> issued, even if a barrier has been issued
+>>
+>> Some resources:
+>>
+>> https://youtu.be/i6DayghhA8Q
+>> https://lore.kernel.org/linux-arm-msm/20240618153419.GC2354@willie-the-truck/
+>> https://developer.arm.com/documentation/ddi0487/latest sec B2.6.9
+>>
+>> There's been a real bug observed (pun not intended):
+>> Commit 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+>>
+> 
+> Thanks for sharing.  Useful info...The way I interpret it, even between relaxed and non-relaxed variants, a readback is always desired.
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Previously the struct aer_err_info "info" was allocated on the stack
+Yes, and IIRC it didn't exactly matter which of the parameters was set
+first, so we can use relaxed
 
-/s/Previously/Currently ?
-
-> without being initialized, so it contained junk except for the fields we
-> explicitly set later.
->
-> Initialize "info" at declaration so it starts as all zeroes.
-
-/s/zeroes/zeros
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->   drivers/pci/pcie/dpc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index df42f15c9829..fe7719238456 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
->   void dpc_process_error(struct pci_dev *pdev)
->   {
->   	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
-> -	struct aer_err_info info;
-> +	struct aer_err_info info = { 0 };
->   
->   	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
->   	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Konrad
