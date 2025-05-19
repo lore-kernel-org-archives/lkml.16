@@ -1,284 +1,271 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020098.outbound.protection.outlook.com [52.101.193.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFED71DA5F;
-	Mon, 19 May 2025 19:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747683075; cv=fail; b=ad1ynIgg6pRVTMCiZ7uYTq6m+cZD30Z6xGhuB7SytLVPn7uwdZui1Ijep4IvGhHJeOmjWYo43NCGboV/W97uFZMXjD9cuBeMeWP43/Pp7dNeZDwjIh/fZ6dkM32ritN7jeSEcYcTPyaXttiuDbayckUGZ8mDPwv2xwQ9Vi3YOJY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747683075; c=relaxed/simple;
-	bh=XL32JkVD4XOdtlE/kc0AwAkztIl9RKCnM9pJn3kxhHU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ivNXR1Yz1/3ngbI40Tgweir5e/GFneqZMmo8jQXJ/UOBjVik+gxa1lgHphwH6Ev9+jEfRPEYgXOR/rTTkhOntG0740bBRyAvdpUt3wauPC+0FletvnzRNfsQZE73xvVD7tQS1q+XrLIGVDadarYjwy7F2k4Og41li1JPJA9M+ko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=dkEO7pNZ; arc=fail smtp.client-ip=52.101.193.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A532321171D;
+	Mon, 19 May 2025 19:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747683078; cv=none; b=Rbs4/LkuJDXX+gbflZ7x9l6dVru4zUx6efrIzBnkX8UF2vT7iuhWc6BqjVq3UOnaqzQUj4A9TLfz9W5gk5cU5vIvMdDII+UZ9tPTDHR2Z+82Ll0XP9oeW1vJ7Vt714+JZRYGH8I/mhob0+LZWinf3OhPXKBOcJgyKOBVEvdVimo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747683078; c=relaxed/simple;
+	bh=gNg/DaGQnuA//ujvR2i1hxwQU/CrZUxguVa5vf6EakQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FOliP20VD/hVL6vXsGtjtGcePQKTibFp7b0nV+g1MiFTmgAs3k9ZegDvNSuHfJ223dY0JJ1n+ygJe2eINhTQzkvgFlvG3oWt8bGkd2O3lwnq6SmwprcMp5amu5X1ZXiN/od7gWPDqvSvvw+EkQ3p9ftiGiKEjASvPIzIN3Y11Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4IBLEQs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="dkEO7pNZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TDLrhs8zoJ+GF5BPjMNkfAabXMZVXl1tDpFMDmhXo5wSNvL7OwfM6FY5UKr3MjeRxbfQ6HVndgMn0JMC/17HBgSI6/Q8YKiDfMoVfp5O+d3Bbn85Yrtvnr1fy4j2609WH4QIwbQbWJ3TzqKAl1mibNHnMAE4mcpPsDXxXbOt9SHlwMAZW5LYXzuPaISE6KeqWs08YyscUw0qk6lsdT5y8MPNUuqqC9fOF4O59wzbTybM0U040TXjqZKwf75qt1IpZkUBsseUV8vh5Injal7WxCt2ZMWEVnlcCPER/rW2/SmSn+q9QqbR94kkSw6dBOXMqQm5BTYQ5KfrEFLlqH3/SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=imhQWmpXHDh1+ecwLwhprNkjRooyWpfwLjrBOxmuWxQ=;
- b=yTR2R1xK3fDTD+gK9A4FDXS+ueiMUITRw8JIu1dkkqccmSjAjMP78TntIop7pxqkqkaFpUVsXnXeGfHLRCb+0o/ZI3nmxHglJEZ9JMSkLHzbT7Bidg9Lm+Pnx9ve10ta1hQiaiiqDgA+g0rJkxHWsinCMTwPmUNEMWeyYjKr6grUTcc0gUUxfhx2YHqscmYypfOSz8G15Ioqu2xJ/dXBYHxlOSW2cVWof56Z8s65+1EWuCnbi7QjWEk/t02teGn1U+z/m5YJ6AaE86eCXCh3pzZN+vIJbrWHdt/wgcgJNWkJyrYrdeGb5G6TrRi68nJzgYEZh4AnNlEvVeMX7DHdLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=imhQWmpXHDh1+ecwLwhprNkjRooyWpfwLjrBOxmuWxQ=;
- b=dkEO7pNZVlAKKJPdt7YiE09aYv+cL7ylJx1xileDcDBlz5AZ6GYM5/bRlbtBTVVodMGkVG55JoixlyJcKNp+33MlbCRPBO9s/Wp9+OX0lZcM+wTca/JPgPPkjmzeK7WCu7kARUU6d7ATS9ft3bVIS9eLj50KdiaaFI8DMvOHc/A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
- CH1PR01MB9216.prod.exchangelabs.com (2603:10b6:610:2ad::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.30; Mon, 19 May 2025 19:31:09 +0000
-Received: from CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8722.031; Mon, 19 May 2025
- 19:31:09 +0000
-Message-ID: <f781e51a-b193-4bd1-abf0-71f816aa0d5e@os.amperecomputing.com>
-Date: Mon, 19 May 2025 12:31:04 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: James Houghton <jthoughton@google.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
- David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Matthew Wilcox <willy@infradead.org>, Janosch Frank <frankja@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
- kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1747338438.git.lorenzo.stoakes@oracle.com>
- <bb9d43d6-9a66-46db-95c5-686d3cc89196@lucifer.local>
-Content-Language: en-US
-From: Yang Shi <yang@os.amperecomputing.com>
-In-Reply-To: <bb9d43d6-9a66-46db-95c5-686d3cc89196@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0117.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::32) To CH0PR01MB6873.prod.exchangelabs.com
- (2603:10b6:610:112::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4IBLEQs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB437C4CEE4;
+	Mon, 19 May 2025 19:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747683078;
+	bh=gNg/DaGQnuA//ujvR2i1hxwQU/CrZUxguVa5vf6EakQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M4IBLEQs1j7rqqlJMrer+R9eK8Uu3wPF+8htwN6MfYqavo8fsdG+TXKGawl6qgll5
+	 Xpvk34Sp9b7SEw4th06cWm2bmnLa13ffJ27fy+ghspt2o0WcFg2l8TQcATKoz+TwOQ
+	 jWE1aurFQNUwWjz7BNJG/vizT7BUJFIdovfI1e3IOiRqAQ7Unb8KiGZl2RkPop2qVU
+	 PVq1+vpoI7HR2+ywAgau9Lr57jXx7He1nii4IIrpwI1BtK7lSHtrRlP6OZrZx7I2Te
+	 E2Z7oiA5zZelFCeZ7xmX6xLkC2JP+CDAb3IXmvUDj3qi60rFFsVtw5jK+atauATUAk
+	 2zyk+YDbKYeUA==
+Date: Mon, 19 May 2025 14:31:16 -0500
+From: Rob Herring <robh@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v21 2/4] arm64: Handle BRBE booting requirements
+Message-ID: <20250519193116.GA2650608-robh@kernel.org>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-2-ff187ff6c928@kernel.org>
+ <20250519140713.GA16991@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|CH1PR01MB9216:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54f79ca6-6d79-4ffa-934b-08dd970bb511
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aEVXamw2bWpucWh0eVpja2w2NFdSa01XUkcrd2I2a3Q4MXNqaCtUUkZmQWNq?=
- =?utf-8?B?TUx5WnFUZHRRbWF0NDBHQjdPa3grVzZNMnRGYWhYSUU0UHZ0dG1QcDdMRHBW?=
- =?utf-8?B?N1ExdTdZWTg4L3F0K1ZpaWJiMUhHSVNYL3J1eFJyUDhRYVY2L2ZXUTVHUFQz?=
- =?utf-8?B?eUpZSVkxTzMvSnI0bG5Sa3VRZ2kydnVRMUZKZ2dXLzJhSjluaGJrM0lTc01M?=
- =?utf-8?B?eDBKb2pVNThQbGpmTEJ4Um5GbUdteUd4UVdVS0FsWXAwZWl4Z1lGMk1xa3Fw?=
- =?utf-8?B?R2ZYa1pubEI0ZEdFamJsWlkxY3RIRjlhOVR0K2NFS1krMEpOWWw1SXNSS1JG?=
- =?utf-8?B?YUJQWkhiR3lMcHh6SEZ3V1FVcnNkZ3BTYTJod0J3MkpyRXVoSytvcmFkcXdk?=
- =?utf-8?B?bzBWVE5GWTBjcThKam9yNVJqbVQwU1FuSkxiR3UrcGdMVEpTSjErWGhEQkxR?=
- =?utf-8?B?aEc5UTh4NmdlNS82TTltbUl5RHRGSXpYbFl1YW9vMVY0M0VrMDlGQ0U5azNz?=
- =?utf-8?B?SThpSG51dzZzblFucXFodVFhc0hRSFllV2lxOHFtVmV3SEFHbk80d01wLzEx?=
- =?utf-8?B?VEJ6dllybXJTNDBqMmVUSU1HN056dnBkV21BZFEvZXVzOEl2Wm1zc1dWWGkv?=
- =?utf-8?B?cWl2R1ZLeGpXRTV5aDA0ODFuVkpuem00QXkzUEY3ZTEwQ1YrbUZtMVoycUht?=
- =?utf-8?B?OEp6RXFSQnU5U045QXhnNityb1JoYndXUmVId2UyOE8wZ2xLMzlITVM1SXVW?=
- =?utf-8?B?M01NdnBZV2FkNnV2ZnBiNGtYeE1vWjA2VjFrc1RXdHZocEIxZ3gvd0xPZ2V5?=
- =?utf-8?B?WVNrNnZYWkt5MkJtWlRabzZrcVFrcE4zWW1BZlJsL00zN3ZIK09NSm8wRGE1?=
- =?utf-8?B?ZUFFNVhUcVRUZjJFUW9uNk1Kb2VTcTBPVDFGaGFqNFg1ZXR6QXEyS3BIY0NR?=
- =?utf-8?B?K2ptYzR6WXZEMHJ5SUZNOUVDRGZCbmd5SjArdUQ5RDZqcEJ1QU9BRlo5UHhs?=
- =?utf-8?B?enFYbE9xamZGYzYrQm5wWG1pY2MvUmk3Q3hsU0FXRGJSbXFGS2VMWHhNaUtr?=
- =?utf-8?B?TGhqNnJRdTVwaEpza1cxYUU3MnlXYVRZYXZTLzRPYTZQY2pIM1hseTVlNUE1?=
- =?utf-8?B?STRISGJ0cWJ6SXRZTnVmYnZXS0o2VERZSTBscTR6OGZQQzFBRHYyYkd0ZE0w?=
- =?utf-8?B?Wm8vVlA1MlBzTkI2VGVocnF0cEtBbHF0c28vMDl6K2ZRejFCR3VYbWlVWWQ5?=
- =?utf-8?B?d2VNR0l1ZGpzS0tmMVg3Y09taFF5cXA5NE53a0lLV21Zd2trRytXOFYwc0E5?=
- =?utf-8?B?VXMwcjgxT0tHR1dlZ2tZTUs0MWxmbXIzUXFwY0pHT3RBbUd0aVpoTDB3eTNw?=
- =?utf-8?B?N0xKbDZCaXdRT2ViOFNHWXJObmhheGpIMjFJSmpFcEhwTGdheFM1bzZaRkdn?=
- =?utf-8?B?eUc0SCt5ZW9pSWl1c2ZoMk0wTEVOR0k2MDlLbmE1RFI2eGRWbjlsYUxqYVcy?=
- =?utf-8?B?TlBWV3hSUm0xSEhDL3R4RmlZcnR5ekd3MkpscmlTM3BqNlhBbGp2Q0hWaDhy?=
- =?utf-8?B?L1hxNWJIYW9Oak5udThGU1A3Y0lqVDROVFNobjkybXhVVEVmZHczV0k3dEw1?=
- =?utf-8?B?c2ordmlHaFV6Q0YrRWpQK1J1NUVxbHUvZDY3OUNkbk1KdUw4TXRMY0FwSFVm?=
- =?utf-8?B?MmJhNDRDSzNDOXBsSmN1eVFFaURxSENuZm5CVXN4QnBtS3JNZDJFNG5acFNo?=
- =?utf-8?B?RWZWSitVZW5yZXNsOFBnVTExSUgzSkJWYVl0bTlKckcwWEFLMXk5cTBvMit4?=
- =?utf-8?B?a2hQUitoS3dDenFpR0JPQ1pjWGU1ZC9DYTY1V3d4bmthS3laU0xNVjlyNjdR?=
- =?utf-8?B?djFqZkIzK3lzOG1iRngxdS9qQitnUS9XblFuVXorQTlMY0JUL29SdlZRbTdB?=
- =?utf-8?Q?v4ZxGi264qM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b1BmQnU5eFpuSkxwc29RTmNXMDVmVE5LRFFPeitPZmhTRHFSM3d1dDNRUHp6?=
- =?utf-8?B?R2V3SDNmRVNaTlNQTFZjUlk3SlVJMU53SmpJN2tLajFNb3I2REhEbXA1QmZO?=
- =?utf-8?B?UlpNQ0V6bmFpZFBVNjg3UE5EME5SRkJSZldqV3QzdmQ4TS9WRXAvMG9IRi9G?=
- =?utf-8?B?aDhiNDBxenRXNlpYS1RTZDhMVU14OXdvcEhhUy9XdHZ2NXQwc1hSWjZUeFFY?=
- =?utf-8?B?Nm11ZjJnc0hmbzBnWnRWZ3V3WWpmZDFYaHIwUHVvTnk1d25DZ1ZNNmhITndu?=
- =?utf-8?B?YjI2SVFyV0ZidWZjUUdMS3Q0N2xSQjhBMVVNSnBzR3crbVJCQzExcFV0Y0FW?=
- =?utf-8?B?NXBVSTEwdW04bVNUK3BDYmxqaUYwODh6WWdnY00yLzZhZFNYTTRBdG5HVEgw?=
- =?utf-8?B?UHQ0SE5UQ0xZWmY2ZE83b3Rzcm1UZ3FjeTlnSDFkSjE0ZVFIbVQ4dU81VEc1?=
- =?utf-8?B?TGNsVnQ1K0VqaTN4Z2FxZXhNcTR0YkdPVVhtWEZoQlJrZmpmQWJMeE5zMjcw?=
- =?utf-8?B?WW45NW1hak1wMCsrTW5JQzljT00xcjNsMldtdlRXQjhnWWpuaHNoTS9nK1dn?=
- =?utf-8?B?Z3g2RCtmY3cwRkVNaTV5RkhjclllOGt4Q05mRERzS2tOVkVsbzJmSUJId0dh?=
- =?utf-8?B?ZGxlQ1JDQVA5R1E4WXJDaEFDTWo3anlFOEtvK2UwQ0wvTGhHcldEd2Q5ZUR3?=
- =?utf-8?B?cDkvOUV5dFdNWmdwZkhQVC9DRXBibHN6ZXlud25kU2tJa2o2dmp5RFlsdjdx?=
- =?utf-8?B?MEJqSWNUK3FXQUgwbys2c3dmVmVWdlVkREdTcm84dVZzM3F2N0JDdkpvbWJ1?=
- =?utf-8?B?eHV6dzZJS2QxUmJZNksrMWY1MVlrY3NWVEdPOVpWZDFmbHpMVHM4TDBIR1Fl?=
- =?utf-8?B?ZnEzcFl5dVFKb2pRM25BdDhaaU9MVG9NZzNmSWpSM2FqSDRaZmhFWjNJeHM5?=
- =?utf-8?B?aE9CbGoyVUd5SVE0bnpBYUZpTVZMcElTWlEvTURCeDlvWlRBV2JHOENsSU1w?=
- =?utf-8?B?eTBxNWFTN1AzK1ZSZHMrL3RoY2RjZnZnK2UwWldJczh0cGREMGRTY09mV0Na?=
- =?utf-8?B?ckdkeGpSNDNaWTNPMk5RL2dWRk1pV0RVanZiQi9JRkYvd2dRU1lvbFNwV0Za?=
- =?utf-8?B?am9udFBaZTY5aXROZTl2WTZQQTUxc3IzaWtDUzBPUGh1U3ZwbktDOGxtU0Jr?=
- =?utf-8?B?WmxqT3RsY3lnSm03cmJZRjhuZlVxY1JpQ1JMa3FCdFpqOWJORFJPOG1zcEpi?=
- =?utf-8?B?ajhTQkpid3BFNjl6cE5pck1kR0k2T3ZaaXMvc1FJUFRpaFJyam4rY1NvVVFr?=
- =?utf-8?B?Z3kxS2Q4R0E3LzQ2Z1ArS0FQSlNzUE5nOTFRRjJOelRnVlNYSFp5dHdpTWR4?=
- =?utf-8?B?eUN4bU9KS3hBK1pzVDJ2NkFlVlgxUjYzcFNOemliOW8yWWEreEhXeFhaTU5Y?=
- =?utf-8?B?OFh2VVVHUzVEYzROYUhuTEIyblViTEw2QnpXbTFzOTljN3JmdWFKY00reFhp?=
- =?utf-8?B?UnB6UG0wY1cxQlR3cWl0WFZFMGhUaFBJbXA4QkY5UkN2c2JCK1JkbkoxMHUx?=
- =?utf-8?B?aENFWVRKbWtsNmcvd2M0NjVmSEhXL200aVRyRHFWemhTYUY3MWllbUpYN05n?=
- =?utf-8?B?UDFFbHY3aWpiVHlaZFR2Ykx3OGgyc2U2d083NFlQd29vNWlKemtOSU5UNnpH?=
- =?utf-8?B?NDRITStqekVWVmN2WndxMU5LMzZ1enpheHJBa1NiWXpqaDU1UzlzL3krcVRo?=
- =?utf-8?B?ZzNaOFFzRTBudEpHNEthckQzRENCRmpSRENqMVpsb1FOampmTWE4VVhMb25C?=
- =?utf-8?B?Tkd6am1pTzdSZFpXQ3pyL1NqU1F6N05sVC9wa1J2OVBiQk1PazJlTTU2U2sz?=
- =?utf-8?B?WGZPMW52UVpLb2lKMGd5SEtqcGVscGpveEE0ZC9uYW8zZVZXYlU4WXNnbEJz?=
- =?utf-8?B?dkRRditlY1BaMmRTcGZyYzljSmVzOU9uZ21yZjZsQThFeTdOTkNmQThFdmt0?=
- =?utf-8?B?Yk9ZMVNzN05SRVA0VHRYTzhKb1A3bjMzK3l4dUttbWZodnZicFhrcFpOWlFi?=
- =?utf-8?B?cGZwemdoNnNpQjljOEJNRDc3NTFIUjdPQmc2YXlFVmJjL0d6R2JCekVrWVFo?=
- =?utf-8?B?cUZqa3QwR3hyV25yZWJ3cW9wUGxZaGNEdHV1KzlhSDlyYVZqeDhNemhGanY1?=
- =?utf-8?Q?rMs1pXh9Ltt08f3tqK2L95M=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54f79ca6-6d79-4ffa-934b-08dd970bb511
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 19:31:09.6364
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dSjCJp/NcAYNJI/MleEycw31RVb6Jr8yN+jAnRhUbgzd0Z/QJcy+nKnOvHLVB3VcRdqmtIrP5TcaB0O4dHcVUgAjXyo3f72eBabEcYApqYo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR01MB9216
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519140713.GA16991@willie-the-truck>
+
+On Mon, May 19, 2025 at 03:07:15PM +0100, Will Deacon wrote:
+> On Mon, Apr 07, 2025 at 12:41:31PM -0500, Rob Herring (Arm) wrote:
+> > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> > 
+> > To use the Branch Record Buffer Extension (BRBE), some configuration is
+> > necessary at EL3 and EL2. This patch documents the requirements and adds
+> > the initial EL2 setup code, which largely consists of configuring the
+> > fine-grained traps and initializing a couple of BRBE control registers.
+> > 
+> > Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
+> > HDFGWTR_EL2 with the same value, relying on the read/write trap controls
+> > for a register occupying the same bit position in either register. The
+> > 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
+> > 59 of HDFGWTR_EL2 is RES0, and so this assumption no longer holds.
+> > 
+> > To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
+> > layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
+> > HDFGWTR_EL2 control bits separately. While making this change the
+> > open-coded value (1 << 62) is replaced with
+> > HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
+> > 
+> > The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
+> > initialisation: even though they are subject to E2H renaming, both have
+> > an effect regardless of HCR_EL2.TGE, even when running at EL2, and
+> > consequently both need to be initialised. This is handled in
+> > __init_el2_brbe() with a comment to explain the situation.
+> > 
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > Cc: Oliver Upton <oliver.upton@linux.dev>
+> > Reviewed-by: Leo Yan <leo.yan@arm.com>
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > [Mark: rewrite commit message, fix typo in comment]
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+> > Tested-by: James Clark <james.clark@linaro.org>
+> > ---
+> > v20:
+> >  - Document that MDCR_EL3.SBRBE can be 0b01 also
+> >  - Fix "HDFGWTR_EL2 is RES0" in commit msg
+> > ---
+> >  Documentation/arch/arm64/booting.rst | 21 +++++++++
+> >  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
+> >  2 files changed, 104 insertions(+), 3 deletions(-)
+> 
+> It would be good to have an Ack from the kvm/arm64 side on this, but in
+> the meantime I've left some comments inline.
+> 
+> > diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> > index dee7b6de864f..a627c1e0e4a0 100644
+> > --- a/Documentation/arch/arm64/booting.rst
+> > +++ b/Documentation/arch/arm64/booting.rst
+> > @@ -358,6 +358,27 @@ Before jumping into the kernel, the following conditions must be met:
+> >  
+> >      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+> >  
+> > +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
+> 
+> This doesn't make sense ^^^
+
+You mean it should be "with the Branch Record Buffer Extension feature" 
+instead?
+
+> 
+> > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> > index ebceaae3c749..e7fcba1e7d8e 100644
+> > --- a/arch/arm64/include/asm/el2_setup.h
+> > +++ b/arch/arm64/include/asm/el2_setup.h
+> > @@ -189,6 +189,39 @@
+> >  .Lskip_set_cptr_\@:
+> >  .endm
+> >  
+> > +/*
+> > + * Configure BRBE to permit recording cycle counts and branch mispredicts.
+> > + *
+> > + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
+> > + * BRBCR_EL1.CC=1.
+> > + *
+> > + * At any EL, to record branch mispredicts BRBE requires that both
+> > + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
+> > + *
+> > + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
+> > + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
+> > + *
+> > + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
+> > + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
+> > + * ends up executing in EL1 or EL2.
+> > + */
+> > +.macro __init_el2_brbe
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_\@
+> > +
+> > +	mov_q	x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
+> > +	msr_s	SYS_BRBCR_EL2, x0
+> > +
+> > +	__check_hvhe .Lset_brbe_nvhe_\@, x1
+> > +	msr_s	SYS_BRBCR_EL12, x0	// VHE
+> > +	b	.Lskip_brbe_\@
+> > +
+> > +.Lset_brbe_nvhe_\@:
+> > +	msr_s	SYS_BRBCR_EL1, x0	// NVHE
+> > +.Lskip_brbe_\@:
+> 
+> Why do we have to poke BRBCR_EL12/BRBCR_EL1 here rather than in the BRBE
+> driver code?
+
+Yeah, I think we can drop this. Originally, the driver did not touch 
+SYS_BRBCR_EL12, but it turns out we need to for freeze on overflow to 
+work correctly with VHE (see the comment in the driver for 
+SYS_BRBCR_EL12 access).
+
+The only other reason I can come up with is some fields reset to UNKNOWN 
+and there may be no driver. However, the important ones, ExBRE, reset to 
+0, so we should be fine.
 
 
+> > +.endm
+> > +
+> >  /* Disable any fine grained traps */
+> >  .macro __init_el2_fgt
+> >  	mrs	x1, id_aa64mmfr0_el1
+> > @@ -196,16 +229,48 @@
+> >  	cbz	x1, .Lskip_fgt_\@
+> >  
+> >  	mov	x0, xzr
+> > +	mov	x2, xzr
+> >  	mrs	x1, id_aa64dfr0_el1
+> >  	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+> >  	cmp	x1, #3
+> >  	b.lt	.Lskip_spe_fgt_\@
+> > +
+> >  	/* Disable PMSNEVFR_EL1 read and write traps */
+> > -	orr	x0, x0, #(1 << 62)
+> > +	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
+> > +	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+> >  
+> >  .Lskip_spe_fgt_\@:
+> > +#ifdef CONFIG_ARM64_BRBE
+> 
+> Why is this gated on CONFIG_ARM64_BRBE?
 
-On 5/19/25 7:43 AM, Lorenzo Stoakes wrote:
-> Andrew -
->
-> OK, I realise there's an issue here with patch 2/2. We're not accounting
-> for the fact that madvise() will reject this _anyway_ because
-> madvise_behavior_valid() will reject it.
+Shrug. We don't do that anywhere else, so I'll drop it.
 
-Good catch. The purpose of this patch is to make MADV_NOHUGEPAGE a 
-no-op, so we can just simply bail out early? The point of madvise 
-behavior check is to avoid taking mmap_lock and walking vmas for invalid 
-behavior, but it doesn't consider no-op (I treat op-op as valid but do 
-nothing), so if we know this advise is a no-op, we just bail out by 
-returning 0.
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_reg_fgt_\@
+> > +
+> > +	/*
+> > +	 * Disable read traps for the following registers
+> > +	 *
+> > +	 * [BRBSRC|BRBTGT|RBINF]_EL1
+> > +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> > +	 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
+> > +
+> > +	/*
+> > +	 * Disable write traps for the following registers
+> > +	 *
+> > +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> > +	 */
+> > +	orr	x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
+> > +
+> > +	/* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
+> > +	orr	x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
+> > +
+> > +	/* Disable read traps for BRBIDR_EL1 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
+> > +
+> > +.Lskip_brbe_reg_fgt_\@:
+> 
+> I think this label should become .Lset_debug_fgt_\@:. That way, we have
+> a clear point at which we're done with HDFG*TR_EL2. We can zero x0 and
+> x2 and from then on we can focus on HFG*TR + HFGITR.
+> 
+> nit: the existing .Lskip_debug_fgt_\@ label looks to be misnamed -- it
+> should probably be .Lskip_sme_fgt_\@ ?
+> 
+> > +#endif /* CONFIG_ARM64_BRBE */
+> >  	msr_s	SYS_HDFGRTR_EL2, x0
+> > -	msr_s	SYS_HDFGWTR_EL2, x0
+> > +	msr_s	SYS_HDFGWTR_EL2, x2
+> 
+> nit: It would be cleaner to use x0/x1 for the pair of trap registers
+> but I can see that would be a more invasive change.
 
-Maybe MADV_UNMERGEABLE should be no-op too, it returns 0 for !KSM anyway.
+That would not be worth the churn IMO. We'd want to just swap x1 and x2 
+everywhere so we consistently use x2 for ID registers. 
 
-Thanks,
-Yang
+And then I'd be to blame for *all* this wonderful code. ;)
 
+> 
+> >  	mov	x0, xzr
+> >  	mrs	x1, id_aa64pfr1_el1
+> > @@ -246,7 +311,21 @@
+> >  .Lset_fgt_\@:
+> >  	msr_s	SYS_HFGRTR_EL2, x0
+> >  	msr_s	SYS_HFGWTR_EL2, x0
+> > -	msr_s	SYS_HFGITR_EL2, xzr
+> > +	mov	x0, xzr
+> > +#ifdef CONFIG_ARM64_BRBE
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_insn_fgt_\@
+> 
+> It would probably scale better if we unconditionally stick x2 in
+> HFGITR_EL2 and zero that register in '.Lset_debug_fgt_\@'. We still have
+> two checks for BRBE, but at least '.Lset_fgt_\@' could just stick to
+> writing the registers.
 
->
-> I've tried to be especially helpful here to aid Ignacio in his early
-> contributions, but I think it's best now (if you don't mind Igancio) for me
-> to figure out a better solution after the merge window.
->
-> We're late in the cycle now so I will just resend the 1st patch (for s390)
-> separately if you're happy to take that for 6.16? It's a simple rename of
-> an entirely static identifier so should present no risk, and is approved by
-> the arch maintainers who have also agreed for it to come through the mm
-> tree.
->
-> Apologies for the mess!
->
-> Cheers, Lorenzo
->
-> On Thu, May 15, 2025 at 09:15:44PM +0100, Lorenzo Stoakes wrote:
->> Andrew -
->>
->> I hope the explanation below resolves your query about the header include
->> (in [0]), let me know if doing this as a series like this works (we need to
->> enforce the ordering here).
->>
->> Thanks!
->>
->> [0]: 20250514153648.598bb031a2e498b1ac505b60@linux-foundation.org
->>
->>
->>
->> Currently, when somebody attempts to set MADV_NOHUGEPAGE on a system that
->> does not enable CONFIG_TRANSPARENT_HUGEPAGE the confguration option, this
->> results in an -EINVAL error arising.
->>
->> This doesn't really make sense, as to do so is essentially a no-op.
->>
->> Additionally, the semantics of setting VM_[NO]HUGEPAGE in any case are such
->> that, should the attribute not apply, nothing will be done.
->>
->> It therefore makes sense to simply make this operation a noop.
->>
->> However, a fly in the ointment is that, in order to do so, we must check
->> against the MADV_NOHUGEPAGE constant. In doing so, we encounter two rather
->> annoying issues.
->>
->> The first is that the usual include we would import to get hold of
->> MADV_NOHUGEPAGE, linux/mman.h, results in a circular dependency:
->>
->> * If something includes linux/mman.h, we in turn include linux/mm.h prior
->>    to declaring MADV_NOHUGEPAGE.
->> * This then, in turn, includes linux/huge_mm.h.
->> * linux/huge_mm.h declares hugepage_madvise(), which then tries to
->>    reference MADV_NOHUGEPAGE, and the build fails.
->>
->> This can be reached in other ways too.
->>
->> So we work around this by including uapi/asm/mman.h instead, which allows
->> us to keep hugepage_madvise() inline.
->>
->> The second issue is that the s390 arch declares PROT_NONE as a value in the
->> enum prot_type enumeration.
->>
->> By updating the include in linux/huge_mm.h, we pull in the PROT_NONE
->> declaration (unavoidably, this is ultimately in
->> uapi/asm-generic/mman-common.h alongside MADV_NOHUGEPAGE), which collides
->> with the enumeration value.
->>
->> To resolve this, we rename PROT_NONE to PROT_TYPE_DUMMY.
->>
->> The ordering of these patches is critical, the s390 patch must be applied
->> prior to the MADV_NOHUGEPAGE patch, and therefore the two patches are sent
->> as a series.
->>
->> v1:
->> * Place patches in series.
->> * Correct typo in comment as per James.
->>
->> previous patches:
->> huge_mm.h patch - https://lore.kernel.org/all/20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com/
->> s390 patch - https://lore.kernel.org/all/20250514163530.119582-1-lorenzo.stoakes@oracle.com/
->>
->> Ignacio Moreno Gonzalez (1):
->>    mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
->>
->> Lorenzo Stoakes (1):
->>    KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
->>
->>   arch/s390/kvm/gaccess.c | 8 ++++----
->>   include/linux/huge_mm.h | 5 +++++
->>   2 files changed, 9 insertions(+), 4 deletions(-)
->>
->> --
->> 2.49.0
+All that looks doable.
 
+Rob
