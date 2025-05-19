@@ -1,111 +1,170 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F3226D1D;
-	Mon, 19 May 2025 09:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68AB26A0B3
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645485; cv=none; b=aJp59Z8Yt4LYWD0cxw+YG0j6PfhqzazJ05uYnIVfvQ4cIO8hYeBaoQJxJR6817J1zSKyEVylSJ4oXcTYoa9nKoZwZ5x9cmzrrje7DxqcrKVtw6jM10dWo6ZHSB0z5DHrOPzlHYjOS1JSahIz/BlgfFhFC57PdINuojecAqA34uk=
+	t=1747645505; cv=none; b=aqsGGKmvaKzZ4SdeegFWDNsK0eaQt4NNe0Av1tLAGP7m8ga924k6FNiz+udNAYTX6IQGSk7fNwekhlDP8JOOuV7/Lwo5pHuiknOgY6zNV4ukRLlWfHCl/mpD7hLw2d5tAiFNOTpp4+3tQLMLp4NGMvWxIwf7zUn99M4cDvBvTUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645485; c=relaxed/simple;
-	bh=5wSfd8iVGQRXhXY5iUwyBOYl/S5k745NZ69NsV4xJxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rxt7KS3joojnPJ4Vr4D3jGFoeOSly94LQidskKImvCU1H7/SZ6BQEAnqJ73a4cxycyqPbE2MWIPZX8Bws81Z+mahcIuRMTiIRnA3zV8xIxGSRZQRPPbbN6Yager2vTFPSdNRBhYeB1/UmO55xv+Iy71HIAGIPbrOu+0xWA3bOWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KzEnOhtS; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747645505; c=relaxed/simple;
+	bh=YjbtpUGlNEv5zF08hpRyZW7vUzTqaWMFJYNJKvujq+U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pz7s1bwuUvKZ2EDhdrpPhnOluntBAy9PtUod15Fnwu0quNKBBOi/OqrlD/r7+Q/yxbkOCyc6rRiW9qO4Bl+gKXfRkUROPU9++0Jxzz12vpDpwhzDoTMX+0mF0d+jgDs8XtAVQlArqq7Cy3rf5hXBX1hXbgirS511W0v9+GqY9Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VkrcYEj9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KzEnOhtS"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7AB3040E0238;
-	Mon, 19 May 2025 09:04:41 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Hkju7R45Z25h; Mon, 19 May 2025 09:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747645477; bh=QCJTUXLOBmRGJZAYdNXk9FNir1HXdrpoMGsuigXKN7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KzEnOhtSEbzy4G6BhBh6fp9JLZIEjzxXJQH+0SZQ9QA1SL1AtnS19zhapU3dLmkeG
-	 os1xYVSJm+P2Rtc79poPx5AvT4T5BYuRKac86K1ID9Aun9xitmoE3kCPnxM/Z/4erI
-	 b8caNgDhfcFbnrbaQXWhu80xcHzHYxqD2gjcVojcKFWvbXyMG10+Y1V/NfAY2NBQWz
-	 IWf4Me70vVFnIjoSPHo9769KQKqh2iMs9uSDtqWktdl+qsPd3XOEZu/zrV+RTXaNY8
-	 nuPK7mRUFCOtvszSyZEPIG/AtEdju+5WS0oOzir2QgbFK06KQV+DYva7s7qIG/bnQV
-	 Y5k5Cjf5ydyxJq28KOjmXjb3JJoXUiUrdEAYkAsOSyTPAEhbZmmFIOJ4Ex/QcpXjKT
-	 mVTDRwpH+BSNYggyX5xv0TF+dURkg9dQYr3IzbXl7BMHlDoimx/Ns5IR//EGNbRTtn
-	 vk2zavQY6IKC2eOefkSTT8vE5zi8bgRfxXDz7EnDMiwAOG8UdaYFFY2f3KRGV8Ufna
-	 dKTU0WBSxEkPJeLjXAIbTA6gLR8+P9rigdkfcY3bx4UCpycAY6dh4ZrO8DOg42sTVR
-	 PcxRGRRIR/Sb0o8jKP7eDwAyhBMaBFdM6rtGUpv3Fhja3pnKBOMJgej7bT2RFaprC6
-	 qQgMpCUfZoEgdInty9TJK1pk=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57C6440E0173;
-	Mon, 19 May 2025 09:04:22 +0000 (UTC)
-Date: Mon, 19 May 2025 11:04:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Cc: Tony Luck <tony.luck@intel.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] EDAC: Add EDAC driver for Cortex A72
-Message-ID: <20250519090421.GHaCr0FWKaH1v1b5lV@fat_crate.local>
-References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
- <1747353973-4749-4-git-send-email-vijayb@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkrcYEj9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747645502;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=YjbtpUGlNEv5zF08hpRyZW7vUzTqaWMFJYNJKvujq+U=;
+	b=VkrcYEj9njhMtOBltjcm3e9oDxNhI+debwyvslBl81gZ2KEDnY16FvM4pBfre+t4/IshO7
+	QlGi2FikO4F8io1FCcG5MMZJ5pmem59DtK+ZGln0gc9Uddyizl56CGaVEZn2lsCas9f3Hu
+	F9sWQ30UWZGh/4lTOG7cEQj68ujPYCM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-31-LpzqL-VrM9mTiMoDu130fg-1; Mon, 19 May 2025 05:05:01 -0400
+X-MC-Unique: LpzqL-VrM9mTiMoDu130fg-1
+X-Mimecast-MFC-AGG-ID: LpzqL-VrM9mTiMoDu130fg_1747645500
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so22698525e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:05:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747645500; x=1748250300;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjbtpUGlNEv5zF08hpRyZW7vUzTqaWMFJYNJKvujq+U=;
+        b=voZnJyZheYkuLSV21dgVLMnFWAfoteSl6gSZqqKbrc18U50DZKg+Zul64NQd7sQmGf
+         OQ4sGURkdcyf7FPgxJmA0V31s3McnsyhXJw99ojw/meEPtHa7B9AuTaF2Ul/wYW8iQ5D
+         7Cpu5tYUH4KsTjffLBuGSa2nkptXlTwpFOEIjbuy9vzetO2Vt8ELj1GPO2K//r+y9Pcr
+         OBw4vzj56YzXLjxSXkor/+cOkzvbygOlkG0VHdXdEqGM/5eE/9Z0MmlCywAWnT+CRvvU
+         DcutUGBtz+FURm6SeX0Kks68C0krhOaYGYf76A6gTXQaS9bexZzYS+zuhls9JtjsRCPv
+         8QrA==
+X-Gm-Message-State: AOJu0YwHC9nSdFINIHArdlwKl9moRT3XkhlJYTbtEd+3ZhCAGwrlAahv
+	oe4Nv2tEs6m3K9KOJn0ZkFTVhU0JOG3Ww0KSCFyC9Fw8KKpeVuq40Oew5CJH6DqkFxKvBwZmJZW
+	BfR8B6Tw7vW2wLLzmBI8CI5cdN3eIEV9WMPwmnbLiacewqkxuHch1ZHALfS6ICoc2RYvaCvS3an
+	gH
+X-Gm-Gg: ASbGncstq34mO6Z0D7mUNm3mMoZfvzQVtil4tyl+ppp7F9lICNbO5UhIdiI5YrxlL95
+	X+mLmSVuEEH0HXHBROriSgzPX4+wux3z/PnfaG4Tl9QGCulSc9JLNCk+zrsK1BhYu19W3miUOR1
+	8yC4pn4GdV11z6RGqYH9Kt33XcIFpex40BiwfObduCpTiNmKyhOpZdUircRM0HLOw1e6WB4FsKD
+	VOlwCtU1vSjpyfeOEYWeLNT7Viq/OPUCXz/2bBGAhgVtym5jRGXGImcA+d6ca+mS1VjhmT7PJyL
+	LckMB/JvHsTCn3riHv6zYzk0WfHRo9VvZlGqfQ==
+X-Received: by 2002:a05:600c:1f87:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-442ff03281dmr62660885e9.22.1747645500182;
+        Mon, 19 May 2025 02:05:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtHmBiJiIZSAh1CkB/DnMloy3lXPe4XZ0UFDPkqDYHYqqpW0CHXsKxcray4myhNO5vOONyUw==
+X-Received: by 2002:a05:600c:1f87:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-442ff03281dmr62660665e9.22.1747645499817;
+        Mon, 19 May 2025 02:04:59 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583fb7sm131633895e9.32.2025.05.19.02.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 02:04:59 -0700 (PDT)
+Message-ID: <2b501844f1a238ef7eb12b98f14db02a64d06226.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 07/12] rv: Adapt the sco monitor to the new
+ set_state
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar
+	 <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar
+	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Date: Mon, 19 May 2025 11:04:56 +0200
+In-Reply-To: <20250519084220.iProU-cg@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+	 <20250514084314.57976-8-gmonaco@redhat.com>
+	 <20250519084220.iProU-cg@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1747353973-4749-4-git-send-email-vijayb@linux.microsoft.com>
 
-On Thu, May 15, 2025 at 05:06:13PM -0700, Vijay Balakrishna wrote:
-> The driver is designed to support error detection and reporting for Cortex A72
-> cores, specifically within their L1 and L2 cache systems.
-> 
-> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3563492e4eba..1fa51e39e266 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8430,6 +8430,13 @@ F:	Documentation/driver-api/edac.rst
->  F:	drivers/edac/
->  F:	include/linux/edac.h
->  
-> +EDAC-A72
-> +M:	Vijay Balakrishna <vijayb@linux.microsoft.com>
-> +M:	Tyler Hicks <code@tyhicks.com>
-> +L:	linux-edac@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/edac/edac_a72.c
-> +
->  EDAC-DMC520
->  M:	Lei Wang <lewan@microsoft.com>
->  L:	linux-edac@vger.kernel.org
-> -- 
+CgpPbiBNb24sIDIwMjUtMDUtMTkgYXQgMTA6NDIgKzAyMDAsIE5hbSBDYW8gd3JvdGU6Cj4gT24g
+V2VkLCBNYXkgMTQsIDIwMjUgYXQgMTA6NDM6MDlBTSArMDIwMCwgR2FicmllbGUgTW9uYWNvIHdy
+b3RlOgo+ID4gwqAJLmZ1bmN0aW9uID0gewo+ID4gLQkJe8KgwqDCoMKgIHRocmVhZF9jb250ZXh0
+X3NjbywKPiA+IHNjaGVkdWxpbmdfY29udGV4dF9zY28swqDCoMKgwqDCoMKgwqDCoMKgIElOVkFM
+SURfU1RBVEUgfSwKPiA+IC0JCXvCoMKgwqDCoMKgwqDCoMKgwqAgSU5WQUxJRF9TVEFURSzCoMKg
+wqDCoMKgwqDCoMKgwqAKPiA+IElOVkFMSURfU1RBVEUswqDCoMKgwqAgdGhyZWFkX2NvbnRleHRf
+c2NvIH0sCj4gPiArCQl7wqDCoMKgwqAgdGhyZWFkX2NvbnRleHRfc2NvLMKgwqDCoMKgwqDCoMKg
+wqDCoCBJTlZBTElEX1NUQVRFLAo+ID4gc2NoZWR1bGluZ19jb250ZXh0X3NjbyzCoMKgwqDCoMKg
+wqDCoMKgwqAgSU5WQUxJRF9TVEFURSB9LAo+ID4gKwkJe8KgwqDCoMKgwqDCoMKgwqDCoCBJTlZB
+TElEX1NUQVRFLAo+ID4gc2NoZWR1bGluZ19jb250ZXh0X3NjbyzCoMKgwqDCoMKgwqDCoMKgwqAg
+SU5WQUxJRF9TVEFURSzCoMKgwqDCoAo+ID4gdGhyZWFkX2NvbnRleHRfc2NvIH0sCj4gCj4gVGhp
+cyBpcyBvdmVyIHRoZSAxMDAgY29sdW1uIGxpbWl0Lgo+IAo+IEkga25vdyBpdCBpcyBub3QgeW91
+ciBmYXVsdCwgdGhpcyBpcyBnZW5lcmF0ZWQuIEJhY2sgd2hlbiBJIHdhcwo+IHBsYXlpbmcKPiB3
+aXRoIERBIG1vbml0b3IsIEkgbWFkZSBhIHBhdGNoIHRvIGZpeCB0aGlzLiBNYXliZSB5b3UgY291
+bGQgaW5jbHVkZQo+IGl0IGluCj4geW91ciBzZXJpZXM/Cj4gCj4gRnJvbSBiNGZiNjQ4Mzk4YTI5
+YTljMGQ4ZTA4YmQxMjM5NDk3OGQzOTQ4YTVlIE1vbiBTZXAgMTcgMDA6MDA6MDAKPiAyMDAxCj4g
+RnJvbTogTmFtIENhbyA8bmFtY2FvQGxpbnV0cm9uaXguZGU+Cj4gRGF0ZTogRnJpLCAxNSBOb3Yg
+MjAyNCAxNDo1NjozMyArMDEwMAo+IFN1YmplY3Q6IFtQQVRDSF0gdG9vbHMvcnYvZG90MmM6IEZp
+eCBnZW5lcmF0ZWQgZmlsZXMgZ29pbmcgb3ZlciAxMDAKPiBjb2x1bW4KPiDCoGxpbWl0Cj4gCj4g
+VGhlIGRvdDJjLnB5IHNjcmlwdCBnZW5lcmF0ZXMgYWxsIHN0YXRlcyBpbiBhIHNpbmdsZSBsaW5l
+LiBUaGlzCj4gYnJlYWtzIHRoZQo+IDEwMCBjb2x1bW4gbGltaXQgd2hlbiB0aGUgc3RhdGUgbWFj
+aGluZXMgYXJlIG5vbi10cml2aWFsLgo+IAo+IENoYW5nZSBkb3QyYy5weSB0byBnZW5lcmF0ZSB0
+aGUgc3RhdGVzIGluIHNlcGFyYXRlIGxpbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5hbSBDYW8g
+PG5hbWNhb0BsaW51dHJvbml4LmRlPgo+IC0tLQo+IMKgdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2Vu
+L3J2Z2VuL2RvdDJjLnB5IHwgMTMgKysrLS0tLS0tLS0tLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDMg
+aW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3Zl
+cmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9kb3QyYy5weQo+IGIvdG9vbHMvdmVyaWZpY2F0aW9uL3J2
+Z2VuL3J2Z2VuL2RvdDJjLnB5Cj4gaW5kZXggNjAwOWNhZjU2OGQ5Li5hYmMwZWU1NjliMzQgMTAw
+NjQ0Cj4gLS0tIGEvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJjLnB5Cj4gKysr
+IGIvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJjLnB5Cj4gQEAgLTE1MiwyOSAr
+MTUyLDIyIEBAIGNsYXNzIERvdDJjKEF1dG9tYXRhKToKPiDCoMKgwqDCoMKgwqDCoMKgIG1heF9z
+dGF0ZV9uYW1lID0gbWF4KHNlbGYuc3RhdGVzLCBrZXkgPSBsZW4pLl9fbGVuX18oKQo+IMKgwqDC
+oMKgwqDCoMKgwqAgcmV0dXJuIG1heChtYXhfc3RhdGVfbmFtZSwgc2VsZi5pbnZhbGlkX3N0YXRl
+X3N0ci5fX2xlbl9fKCkpCj4gwqAKPiAtwqDCoMKgIGRlZiBfX2dldF9zdGF0ZV9zdHJpbmdfbGVu
+Z3RoKHNlbGYpOgo+IC3CoMKgwqDCoMKgwqDCoCBtYXhsZW4gPSBzZWxmLl9fZ2V0X21heF9zdHJs
+ZW5fb2Zfc3RhdGVzKCkgKwo+IHNlbGYuZW51bV9zdWZmaXguX19sZW5fXygpCj4gLcKgwqDCoMKg
+wqDCoMKgIHJldHVybiAiJSIgKyBzdHIobWF4bGVuKSArICJzIgo+IC0KPiDCoMKgwqDCoCBkZWYg
+Z2V0X2F1dF9pbml0X2Z1bmN0aW9uKHNlbGYpOgo+IMKgwqDCoMKgwqDCoMKgwqAgbnJfc3RhdGVz
+ID0gc2VsZi5zdGF0ZXMuX19sZW5fXygpCj4gwqDCoMKgwqDCoMKgwqDCoCBucl9ldmVudHMgPSBz
+ZWxmLmV2ZW50cy5fX2xlbl9fKCkKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYgPSBbXQo+IMKgCj4g
+LcKgwqDCoMKgwqDCoMKgIHN0cmZvcm1hdCA9IHNlbGYuX19nZXRfc3RhdGVfc3RyaW5nX2xlbmd0
+aCgpCj4gLQo+IMKgwqDCoMKgwqDCoMKgwqAgZm9yIHggaW4gcmFuZ2UobnJfc3RhdGVzKToKPiAt
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsaW5lID0gIlx0XHR7ICIKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBidWZmLmFwcGVuZCgiXHRcdHsiKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBm
+b3IgeSBpbiByYW5nZShucl9ldmVudHMpOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIG5leHRfc3RhdGUgPSBzZWxmLmZ1bmN0aW9uW3hdW3ldCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgaWYgbmV4dF9zdGF0ZSAhPSBzZWxmLmludmFsaWRfc3RhdGVfc3RyOgo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmV4dF9zdGF0ZSA9IHNl
+bGYuZnVuY3Rpb25beF1beV0gKwo+IHNlbGYuZW51bV9zdWZmaXgKPiDCoAo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHkgIT0gbnJfZXZlbnRzLTE6Cj4gLcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxpbmUgPSBsaW5lICsgc3RyZm9ybWF0ICUgbmV4
+dF9zdGF0ZSArICIsICIKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+YnVmZi5hcHBlbmQoJycuam9pbigoIlx0XHRcdCIsIG5leHRfc3RhdGUsCj4gIiwiKSkpCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgbGluZSA9IGxpbmUgKyBzdHJmb3JtYXQgJSBuZXh0X3N0YXRl
+ICsgIiB9LCIKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZChsaW5lKQo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgnJy5qb2lu
+KCgiXHRcdFx0IiwgbmV4dF9zdGF0ZSwKPiAiXG5cdFx0fSwiKSkpCj4gwqAKPiDCoMKgwqDCoMKg
+wqDCoMKgIHJldHVybiBzZWxmLl9fYnVmZl90b19zdHJpbmcoYnVmZikKPiDCoAoKVGhhbmtzIGZv
+ciBicmluZ2luZyB0aGlzIHVwLCBJJ20gYSBiaXQgdW5kZWNpZGVkIG9uIHRoaXMgb25lLi4KClRo
+ZSBuaWNlIHRoaW5nIG9mIHRoZSBjdXJyZW50IHJlcHJlc2VudGF0aW9uIGlzIHRoYXQgaXQgc2hv
+d3MgYSBtYXRyaXgKYW5kIGl0J3MgcmVsYXRpdmVseSBlYXN5IHRvIHNlZSB3aGF0IGVhY2ggZXZl
+bnQgZG9lcy4KT24gdGhlIG90aGVyIGhhbmQgaXQncyB0cnVlIGxhcmdlciBtb2RlbHMgZG8gZXhj
+ZWVkIHF1aXRlIGEgYml0IHRoZQpzaXplIGxpbWl0cyBhbmQgY29uc2lkZXJpbmcgeW91IGFyZW4n
+dCByZWFsbHkgc3VwcG9zZWQgdG8gdG91Y2ggdGhpcwpmaWxlIGRpcmVjdGx5IChhcyB0aGUgc2Ny
+aXB0IGRvZXMgaXQgZm9yIHlvdSksIHBlcmhhcHMgY2xlYW5lciBDIGNvZGUKc2hvdWxkIGJlIHRo
+ZSBwcmlvcml0eS4KCkknbGwgcGxheSB3aXRoIHlvdXIgcGF0Y2ggYW5kIHNlZSBpZiBpdCBuZWdh
+dGl2ZWx5IGFmZmVjdHMgdGhlIHdvcmtmbG93CmluIGFueSB3YXkuIElmIG5vdCwgSSdkIGluY2x1
+ZGUgaXQgYW5kIGFkYXB0IHRoZSBtb25pdG9ycyAocGVyaGFwcyBvbmx5CnRob3NlIHdpdGggbG9u
+ZyBsaW5lcywgbm90IHJlYWxseSBuZWVkIHRvIGNoYW5nZSBhbGwpLgoKVGhhbmtzLApHYWJyaWVs
+ZQo=
 
-You can merge this one with patch 1.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
