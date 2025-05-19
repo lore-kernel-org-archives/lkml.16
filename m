@@ -1,156 +1,244 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B008215F5C
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EC9217705;
+	Mon, 19 May 2025 20:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687939; cv=none; b=l2sZpEdqqzYFh+33iMPtHoPU4v8qApwzBABenCOGydJOKO08Pj5MlSoickgmadM/AwIOVoKqUbb3O5htMfHCmf+vk3vTzrdBlHpg4YGxv5qqYom+tZflcCiqAz3Gkunn4pYS7mNoJSTXwkoNavtKjdouJVIv3+r9fjkJ914gPrk=
+	t=1747687940; cv=none; b=kqQN+opIIYIAIsmCw6uTZdl7GVIGuXa8ie+odnqwaEQXMePPvIOqexzuchZd8lq9CFGXIXrzRdtEplBABNo7QPM1aIAbES7HIv5pcvvi9+sCHJEn1ciG22mEcY8ejNGEtMI/8yQxpUhWhrrfDCBmqJljY7cg6Qyb2l8OtTPv0Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687939; c=relaxed/simple;
-	bh=gotcqngVU/LNJrmk3BD7vjAbx35qGYtgx6w9I0sm2iM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M2EfMMGB1bfrSd1eVnhGfWdw6l8ZNqWJQ1ZliQb5PArqZuGkFrfnqYQ9agNv86vCYNU6YzABEqwTE0TiOvS3hcH7vFOM3th+b63NfxGIhW/1u3u29diVws1WYSWCQwYR9QrQ8BJ10+qyubPOhelhRnD5qhQrmBHcwkuU7Bw1UZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQSVDob+; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747687940; c=relaxed/simple;
+	bh=GHBvbY3fgn9tKe86kfPJG/2c8/ck7nOT9M0uEfF+cv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IaPHWM4YP62R7QBdY1+Qd8448PDujNWLIcnGztClXjTh3GS+vUPRTU7PGTMPtxcj+8E2OSiLZvVc4x2vx/q0q8c3yCy+JUYORiER13ThTy5yOOHw1f70HIeoGpD9RTWh2UdimMm4pYr7eY1+5FPr1udrEWs55k9LQbt36CK1iHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=MdKEOgQ2; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQSVDob+"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231f37e114eso524155ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747687937; x=1748292737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
-        b=JQSVDob+80I+UwecKk4nVlrMKhK/JY2SI6BE9gzqU46mGZ78YUIOStmJvHxwJIpAiy
-         dGTpZdI442S6LTyR/atNJR3zkKQX8R65OmwS+Y1deCiHGIivo95nMfJd3y3gOt9ESOow
-         GWwTaOu7/sjqiPN9G1Ni713v5OSP0BpLkeokjLA0zQ6L7dIMZmg7bwcrYEhpywU7YkgR
-         eschxmfoIOuDqeWdXEUrHZV4D5zYNKIS9QR9O6eniUUG5iTAxqI9BMUwCkNFXaYWnl0/
-         1SHQn3ho9cnrILVGuZgby/J0jNC1fH825MTvFOu5yGKLDyNJD5v6mtPtwh/fCcxvsMdw
-         w6XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747687937; x=1748292737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
-        b=iXSGsSLCc8SvjN7G7x6tcPQqAhb1O5I7Qze4QnGHRm7+s0v5Z8kiaOpPzOmreRYDER
-         XMdHG+3Sx8EyRhUQWpLVkOzY3nu3Z/dEUCG73d8v4mavib+vrT52a2eAvEYd6XSfLx3O
-         UiZg9+LLJsBmMTUKDL7SpoFyithHq7SlW7U27S1L0QUWh6hr8dWzpl7tBjOjsJTaCE1O
-         8cLBBHx2xKr8fERKdEyCmrRKLFJJwSU3HcCyzmvgXa9YO9cwEacmQ12fjnheSPbO3Vaf
-         AeWS7WycnNPVfuZdFpuGnHR73TY/fOQ7Aqqlfr/H0TV7Q3aD+W43WjV6dqN8+ArHd0wl
-         hEOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ4tioL6rhwLKSheWHWUAYbcjEJAMdlFzJYeWSgbkFBrmo0XCpXf08GManQsYxh2mijrg6NWzOxHgvpEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlJV7YUeyYZKUO3Z2FzOK//x30ym3XbPk4B0Wq/HAGK8s8SpGB
-	INYAIbLZd0njutfl+C3PY1Wj5eXMSPP3DAwl+2cMxPNhCnm3jN/9UQa35yfVLNGwkg08m2FWLcl
-	ZJZKHwjsrYVngPbBvRpdeM65xNJYRiXQcUWKub0Yc
-X-Gm-Gg: ASbGncsXds1BxbaE+BOiTzHhXrpD5nC8KRc90Nn3vs7QwTYEdbwJLToUDHcR1kEP/S/
-	1WCVuo6/EQAj9w4F0+FEE+elMELT8ihXkz6cmqWTrNpIf4dqKvh+QLhK5uT2Vs2TfTkMy6O9Lbi
-	82h1RAhr+hinAxE9HbSWVwIWvA81CW2EKX/bKi/7FpmXf7n9V1vo5qEb7+st0=
-X-Google-Smtp-Source: AGHT+IGxZCvW5ilyWe4G2aJ3s73rSdZKGMvO3ZakFJUNOl2mQD609UI/QNd6ant0eUVyMVuoIqykCtNvIgjuCK3LvWk=
-X-Received: by 2002:a17:902:eccb:b0:223:ff93:322f with SMTP id
- d9443c01a7336-231ffd192c0mr5758425ad.2.1747687936496; Mon, 19 May 2025
- 13:52:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="MdKEOgQ2"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E433C1039728C;
+	Mon, 19 May 2025 22:52:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1747687934; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=xi0fa9hZtQ3xUfjh/Fd+6H85XEzvRV9KyKLSSoEBIho=;
+	b=MdKEOgQ2NYMapNfr6nWpzieFKGxPSRJvQ75R1YB86etandc2/tz4Gw51ZJxeKtPDcCGFZm
+	jps1OdMdqB19S7kvfimr8bHMPMia877rQmTJ0/EMDs81TVfUyi8P7ogE5ksjtvTzzzMdjd
+	SxuV+oa002NkrORXIibfJc2D6cDRzgS89bkKjuiVmE4mKMwnLlAswiicF780OX3xQ0uYiI
+	4FD0zTngteBD5df6JzSt5bsNDpA2+yF2qwg5EQvU9/ATfcdAOLVX3n85Cdyb6BOPFKixc5
+	V27CH5iBzELG9fL7mGxX3yGwyf2NqPflDDyDitP7wOF1dKfUIuSSz/uQQV+6pw==
+Date: Mon, 19 May 2025 22:52:08 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v11 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250519225208.50d60df5@wsk>
+In-Reply-To: <20250516075402.5104a0b6@wsk>
+References: <20250504145538.3881294-1-lukma@denx.de>
+	<20250504145538.3881294-5-lukma@denx.de>
+	<61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+	<20250513073109.485fec95@wsk>
+	<20250516075402.5104a0b6@wsk>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
- <aCt23djKOzUiP9L4@yury> <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
-In-Reply-To: <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 19 May 2025 22:51:38 +0200
-X-Gm-Features: AX0GCFvywXFtRKxlB3xYrJMhJn5q7nT3YMayIgLVBsF9n18XEC45GTPOn8bRz1I
-Message-ID: <CAG48ez1NM7B8Vk7GOwhsitCipmfHi9eK6JNb3ve8aR4m8Cj0gA@mail.gmail.com>
-Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/TOeu=qW_6zT9zkkN5+sCnzY";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/TOeu=qW_6zT9zkkN5+sCnzY
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 10:42=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
-> On Mon, May 19, 2025 at 8:22=E2=80=AFPM Yury Norov <yury.norov@gmail.com>=
- wrote:
-> > On Mon, May 19, 2025 at 04:17:03PM +0000, Burak Emir wrote:
-> > > +    /// Set bit with index `index`.
-> > > +    ///
-> > > +    /// ATTENTION: `set_bit` is non-atomic, which differs from the n=
-aming
-> > > +    /// convention in C code. The corresponding C function is `__set=
-_bit`.
-> > > +    ///
-> > > +    /// # Panics
-> > > +    ///
-> > > +    /// Panics if `index` is greater than or equal to `self.nbits`.
-> > > +    #[inline]
-> > > +    pub fn set_bit(&mut self, index: usize) {
-> > > +        assert!(
-> > > +            index < self.nbits,
-> > > +            "Bit `index` must be < {}, was {}",
-> > > +            self.nbits,
-> > > +            index
-> > > +        );
-> >
-> > Shouldn't this assertion be protected with hardening too? I already
-> > said that: panicking on  out-of-boundary access with hardening
-> > disabled is a wrong way to go.
->
-> I considered it, but could not convince myself that __set_bit etc are
-> actually always safe.
-> For the methods that have the hardening assert, I was sure, but for
-> this one, not.
->
-> Are all bit ops guaranteed to handle out-of-bounds gracefully?
->
-> > Can you turn your bitmap_hardening_assert() to just bitmap_assert(),
-> > which panics only if hardening is enabled, and otherwise just prints
-> > error with pr_err()?
->
-> If there is no risk of undefined behavior, then I agree that checking
-> bounds is hardening.
-> If a missing bounds check loses safety, we then we should not skip it.
+Hi Paolo,
 
-There are no bounds checks in these C APIs, and there can't be,
-because the C side does not store a length. bitmap_zalloc() just gives
-you a raw array of bits (represented in C as an array of unsigned
-longs), it's a very lightweight wrapper around kmalloc_array().
+> Hi Paolo,
+>=20
+> > Hi Paolo,
+> >  =20
+> > > On 5/4/25 4:55 PM, Lukasz Majewski wrote:   =20
+> > > > +		/* This does 16 byte alignment, exactly what we
+> > > > need.
+> > > > +		 * The packet length includes FCS, but we don't
+> > > > want to
+> > > > +		 * include that when passing upstream as it
+> > > > messes up
+> > > > +		 * bridging applications.
+> > > > +		 */
+> > > > +		skb =3D netdev_alloc_skb(pndev, pkt_len +
+> > > > NET_IP_ALIGN);
+> > > > +		if (unlikely(!skb)) {
+> > > > +			dev_dbg(&fep->pdev->dev,
+> > > > +				"%s: Memory squeeze, dropping
+> > > > packet.\n",
+> > > > +				pndev->name);
+> > > > +			pndev->stats.rx_dropped++;
+> > > > +			goto err_mem;
+> > > > +		} else {
+> > > > +			skb_reserve(skb, NET_IP_ALIGN);
+> > > > +			skb_put(skb, pkt_len);      /* Make
+> > > > room */
+> > > > +			skb_copy_to_linear_data(skb, data,
+> > > > pkt_len);
+> > > > +			skb->protocol =3D eth_type_trans(skb,
+> > > > pndev);
+> > > > +			napi_gro_receive(&fep->napi, skb);
+> > > > +		}
+> > > > +
+> > > > +		bdp->cbd_bufaddr =3D
+> > > > dma_map_single(&fep->pdev->dev, data,
+> > > > +
+> > > > bdp->cbd_datlen,
+> > > > +
+> > > > DMA_FROM_DEVICE);
+> > > > +		if (unlikely(dma_mapping_error(&fep->pdev->dev,
+> > > > +
+> > > > bdp->cbd_bufaddr))) {
+> > > > +			dev_err(&fep->pdev->dev,
+> > > > +				"Failed to map descriptor rx
+> > > > buffer\n");
+> > > > +			pndev->stats.rx_errors++;
+> > > > +			pndev->stats.rx_dropped++;
+> > > > +			dev_kfree_skb_any(skb);
+> > > > +			goto err_mem;
+> > > > +		}     =20
+> > >=20
+> > > This is doing the mapping and ev. dropping the skb _after_ pushing
+> > > the skb up the stack, you must attempt the mapping first.   =20
+> >=20
+> > I've double check it - the code seems to be correct.
+> >=20
+> > This code is a part of mtip_switch_rx() function, which handles
+> > receiving data.
+> >=20
+> > First, on probe, the initial dma memory is mapped for MTIP received
+> > data.
+> >=20
+> > When we receive data, it is processed and afterwards it is "pushed"
+> > up to the network stack.
+> >=20
+> > As a last step we do map memory for next, incoming data and leave
+> > the function.
+> >=20
+> > Hence, IMHO, the order is OK and this part shall be left as is. =20
+>=20
+> Is the explanation sufficient?
 
-And if you expand __set_bit(nr, addr), you'll see that it turns into:
+I would do appreciate your feedback as your OK is required to prepare
+v12, so I would had the opportunity to have this patch set accepted to
+net-next before cut-off date.
 
-bitop(___set_bit, nr, addr)
+Thanks in advance for your help.
 
-which turns into:
+>=20
+> >  =20
+> > >    =20
+> > > > +static void mtip_free_buffers(struct net_device *dev)
+> > > > +{
+> > > > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
+> > > > +	struct switch_enet_private *fep =3D priv->fep;
+> > > > +	struct sk_buff *skb;
+> > > > +	struct cbd_t *bdp;
+> > > > +	int i;
+> > > > +
+> > > > +	bdp =3D fep->rx_bd_base;
+> > > > +	for (i =3D 0; i < RX_RING_SIZE; i++) {
+> > > > +		skb =3D fep->rx_skbuff[i];
+> > > > +
+> > > > +		if (bdp->cbd_bufaddr)
+> > > > +			dma_unmap_single(&fep->pdev->dev,
+> > > > bdp->cbd_bufaddr,
+> > > > +					 MTIP_SWITCH_RX_FRSIZE,
+> > > > +					 DMA_FROM_DEVICE);
+> > > > +		if (skb)
+> > > > +			dev_kfree_skb(skb);     =20
+> > >=20
+> > > I suspect that on error paths mtip_free_buffers() can be invoked
+> > > multiple consecutive times with any successful allocation in
+> > > between: skb will be freed twice. Likely you need to clear
+> > > fep->rx_skbuff[i] here.   =20
+> >=20
+> > +1 - I will add it with v12.
+> >  =20
+> > >=20
+> > > Side note: this patch is way too big for a proper review: you need
+> > > to break it in multiple smaller ones, introducing the basic
+> > > features separately.
+> > >=20
+> > > Cheers,
+> > >=20
+> > > Paolo
+> > >    =20
+> >=20
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> >=20
+> > Lukasz Majewski
+> >=20
+> > --
+> >=20
+> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
+> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
+> > lukma@denx.de =20
+>=20
+>=20
+>=20
+>=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> --
+>=20
+> DENX Software Engineering GmbH,      Managing Director: Erika Unter
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
+> lukma@denx.de
 
-((__builtin_constant_p(nr) &&
-  __builtin_constant_p((uintptr_t)(addr) !=3D (uintptr_t)NULL) &&
-  (uintptr_t)(addr) !=3D (uintptr_t)NULL &&
-  __builtin_constant_p(*(const unsigned long *)(addr))) ?
-const___set_bit(nr, addr) : ___set_bit(nr, addr))
 
-which (assuming a non-constant index) is:
 
-___set_bit(nr, addr)
 
-which is a debug-instrumented wrapper around
+Best regards,
 
-arch___set_bit(nr, addr)
+Lukasz Majewski
 
-which just leads to a raw assembly instruction (example from x86):
+--
 
-static __always_inline void
-arch___set_bit(unsigned long nr, volatile unsigned long *addr)
-{
-    asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
-}
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/TOeu=qW_6zT9zkkN5+sCnzY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgrmfgACgkQAR8vZIA0
+zr09nAf+PrG7I521kkXUYZKC2dEjxU/q4ixwas9hAklmPl5J8w3C7wiM5/X4unzo
+vgyoBo1oGToGHEV79FZkeZxn/MF9YXMrKl2WEAaLyNhHpKeusus4my0xt1Ao/Q9R
+dkyM0jAeOSnUNpcIl0zhOmgEyBzPFPeRMz263XvTekvJet3E/gTAPHHc1Cg2PfA1
+EyxCnsiGy4aHuPJGg+zMhVHxWkt1awEIwSwEZu5O4OtjpUAqfllFn4eiapelBHb7
+Z7IM3C1tqdvKGO8lU9nqIoBnYpU9ZzZcg4N27morc9NfrAbF0KlJr/a+pxbM7ptD
+rXo54/GaGqwWVq3BcFVpWi3OD+9oJA==
+=WWM9
+-----END PGP SIGNATURE-----
+
+--Sig_/TOeu=qW_6zT9zkkN5+sCnzY--
