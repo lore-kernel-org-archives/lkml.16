@@ -1,127 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0578B270543;
-	Mon, 19 May 2025 09:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F8D33086;
+	Mon, 19 May 2025 09:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747648161; cv=none; b=CLW7jd8eIMdpgKeCsn5pG3lm8aYs33wfM/sHeNxRAjwbFZHtcHv5IunoFKQmA/DJXHYy/rmwO3uc3RQP1S9WHOm8f1tqP74Ep+hZ1kQ0p4MXPq9uBZADoTqFGOO8hcpblwBj/N2Dz8GfjtCHWMXkz2Rmu/+cD276fvAfuNr3g4U=
+	t=1747648184; cv=none; b=lMBtP1vUTT1CBoVYmm54neTdoDlsfXnAZWTEUymsmNpoZhc5GgBa/YhexsV9U12yYPk5m4gG683kS77nCL1QIjJlG/AoiC6ExSd9C7IZuSnpcabY3uIXPGn5L42nrVbTiHlMMlyZixuitZG6Ikc7ol1g4Wwe+okYneZYdMi78Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747648161; c=relaxed/simple;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=YUXbaFD+ayBVKkQQs2LokXcTdLZx8dD+dHH7kZSYbI88A+yCRjMbQL0LSagprTDPolL6jaK1JM195TFWeUVrO9bycuCQVgH5pGj6VZBHg8kGLadL7p0l4He9dhwF97Bavb9l8LKyhFYlxodVix/bnN+h9919xsFFgn+lOYilVIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPuhYqwj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747648184; c=relaxed/simple;
+	bh=GsbMk3lBqAULDnb+QrS3EC8rrwMu4pNT1Ee885kOqtA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QyMi/bUkpgDbgXqPfzQhy8UcibrEtfTS6P629VpWv/GXCUlpLPTCXQQG60VPYWTc8/0/4gdCZkKs5CYXFMDdV0Gr+H+YRZ3a7IDkndDMXGJRuFOreigO5Rb7dfleGRw+QjjwCHhg794OefwoUIOzm9XuslTkudZyyQCo2dhB0LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkJQYffE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPuhYqwj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E635C4CEE4;
-	Mon, 19 May 2025 09:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkJQYffE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7487DC4AF09;
+	Mon, 19 May 2025 09:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747648158;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=nPuhYqwj8v/tc/7qY5bU12RGUyTz/xO6Ql3LT74ISSeq7WZoLRR+VNfpx7PLosa8j
-	 I4mqqESu2fgtWqh1hHc0AxkBIE6xybCKMWICzlbmf7bmzSSQ0uuQW1quP0BXUoxnRG
-	 zK/0ewt2JP1JguFmBG7lWJoNZoSheONy/RM9FuHoqD3QMBG8aDjJewYj/0ZiTr+1Hm
-	 exIduw0kwbx5Pccf/AWDIyoT1o2DO6SKfVD/N9Xi4DDkrODxTRgoE4NVQAra3jdqbE
-	 Y3A+nAIoEXk8lJH8Nk+dAfx9jP9gxmlheBCQgUbn6S1B7gTZTxzx76QdIw4j7x6aZw
-	 rOexiIGSWWjeQ==
-Date: Mon, 19 May 2025 04:49:16 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1747648181;
+	bh=GsbMk3lBqAULDnb+QrS3EC8rrwMu4pNT1Ee885kOqtA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EkJQYffE1VqZHkjAq8NPxnUmAvtmF1S/yPp41BlsOVOx1Xx94bzNIDoBAVrL3fpTr
+	 9/hl7J7473dDm1wdx1jxs51MI1l6n5tfUlMtnOxUfjPJDhLHcMZcZG/dJS67TsOfYE
+	 Kic0GIHbjkz9e10d/EUewreZLaXJL6I9rNuX7vFyJFESBIvODelHTnjNMq0nHtIxId
+	 5QUbd4AWBUcYmtaCVD8rhf4dSr2kxKLWL9r5RWDYRVOKaQSQOgkNpYlMjN7BbxRxHL
+	 gs9uhBCd60Asb1SipGkbzCbwAP1DM6GF8M4pjjPSdFZANjRTs65SuX+kG/QPC+G6PE
+	 hlYo1NsOuI94A==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54b166fa41bso6345569e87.0;
+        Mon, 19 May 2025 02:49:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUC9g/f+SZurNX9+y3vUQMsTs4/mSBIC4UIsXbZ6T+fgJFzhQXk1Zvtc9ZysOIjcqSRgB4P5cHsY/Q6cic=@vger.kernel.org, AJvYcCVuIRC/HQmuleEB7lUHpGx8B/8dSA7URluOJUxLMZCJxAMgFpEri4cE0m6vtcIJ2jRZ03fTFY17qrnSviXM@vger.kernel.org, AJvYcCWezp3KLx0zEiQGFu8EnkXxKgFXwohBzh7nGtla58XBkPi59Hj9QW+je4UfHAayAvpA0tnSqDv8Zi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKmlPyEdUl6UlC1WvZ+7tY8GoeVrMB/wXAjSCkLERuBL+JfRYj
+	DifH2+9f8KjeCxdNTbj3xDyQKmAK5GppOTZzmIwTv+X1Q29yFEHNmurFSp8TCHxk8Yn0t+TzLt1
+	MDBUg+FwKnRzC04rMl15GwI1jOVNlK+M=
+X-Google-Smtp-Source: AGHT+IFHpwka7r/jvwA9nGkxVeZQ1YTP11Ojb06eAYdaCEkmB9G5ujZDY/NFjf5ABOkcMR8fScaCOANQVjIL+X/hH5w=
+X-Received: by 2002:a05:6512:1342:b0:551:f780:a6d0 with SMTP id
+ 2adb3069b0e04-551f780a82fmr270916e87.40.1747648179867; Mon, 19 May 2025
+ 02:49:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Oded Gabbay <ogabbay@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
- linux-doc@vger.kernel.org
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
- <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
-Message-ID: <20250519094916.s-lTtQQCfePV2P4zcxpHhoowylR8bjDyQgmrMYMdYyk@z>
+References: <20250516231858.27899-1-ebiggers@kernel.org> <20250516231858.27899-4-ebiggers@kernel.org>
+ <aCg2DSYp0nakwX3l@gmail.com> <20250517183919.GC1239@sol> <aCl_cSO2XqtSQEZT@gmail.com>
+ <CAMj1kXGVAbD9zxUQSwwGo=ueadqWWSdaQNDe_-7ZezpFLMJRMA@mail.gmail.com>
+ <20250518200114.GA1764@sol> <aCrmZnSokvmqfel3@gmail.com>
+In-Reply-To: <aCrmZnSokvmqfel3@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 May 2025 11:49:28 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGe0hMD-71KYN_htJztAL+P8vFNf+9+W_aVDkHx3nCEWA@mail.gmail.com>
+X-Gm-Features: AX0GCFtaUNa2B-7_aRHLOnxbWmvQvGoR1F6bLsfojcbDm8Cwpd0zWGPWxHlaz9Y
+Message-ID: <CAMj1kXGe0hMD-71KYN_htJztAL+P8vFNf+9+W_aVDkHx3nCEWA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when irqs_disabled()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ayush Jain <Ayush.Jain3@amd.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 19 May 2025 at 10:06, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> > > # echo PANIC > /sys/kernel/debug/provoke-crash/DIRECT
+> > >
+> > > Another case that likely executes with IRQs disabled (but I haven't
+> > > double checked) is reset_system(), which may return with an error, or
+> > > reboot/poweroff the machine and never return.
+> >
+> > That makes sense to me.  preempt_disable() and preempt_enable() are already
+> > allowed when IRQs are disabled, and I'm not sure why local_bh_disable() and
+> > local_bh_enable() are different.
+>
+> Because local_bh_enable() may run softirq handlers immediately if
+> there's pending softirqs, which shouldn't be done in hardirq context.
+>
 
-On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
-> 
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->   IOMMU)
-> - Several misc. fixes from Sebastian Reichel
-> 
-> v3:
-> - Split register block in its constituent subblocks, and only require
->   the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
-> 
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
->  1 file changed, 162 insertions(+)
-> 
+Sure, but why is that mandatory?
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
-	False schema does not allow 3
-	1 was expected
-	3 is greater than the maximum of 2
-	hint: "minItems" is only needed if less than the "items" list length
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
-	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
-	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+preempt_disable() has preempt_enable() and preempt_enable_no_resched()
+counterparts. Could we have a local_bh_enable_no_xxx() version that
+re-enables async softirq processing on the current CPU but does not
+kick off a synchronous processing run?
