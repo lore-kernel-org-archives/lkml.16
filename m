@@ -1,111 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEDB4B1E73
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9125A267396;
+	Mon, 19 May 2025 07:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747639985; cv=none; b=S1KO9pCB32ZY1e/HFHqq4DUwrVCAVpIyODPjEHJqC22VdYtdlokhiJbK1m80gl4FmZ09AJuJCx8nVptVO0KwzLz/tHCv3mrMGx5NrUWZBVRCS6niqg20Ivf2o3pdpp4Q6etczV1WofVD6B+U0uAPHoHKfNDsSF4y0MFRA+d2bpM=
+	t=1747639988; cv=none; b=Yey7BTaMbxWdaqGQkdjYl1GDIBq+s/opVC44OMQdFDuvhLnFsvwgiwLJt5FctswN6FTwGnt3HJs9W+S8SKvDaDSa+ITDSi6HmSISMaDCbdyQY0ao/2fCSW+k00ERrU1/Z5rIhEvtwbvu1XKmee/A24qO4VSh5Rto5TTDZakpBp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747639985; c=relaxed/simple;
-	bh=NIIBGgdcUvKU9PXZWWl8yZ2hQCYtCo95kYBZvG/Mh5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BFls/E6Jp+Bma4sMOMVQ/dHZmYJEwrNZ7FJRP9WwlsRJ4XoBikHzrvOY+xNjUsqcwxeV+mjoQJuEViuS3D2G02mbLmy24iYvwhIHnsIzhjplWRiZhNlE3zahEcP9iUGI9njwNo6sZbsynOeoF7+NaIGSCMe7NqNPkvz5v0prDbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R5W+9Vy9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5W+9Vy9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747639982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mpbF5ydmLJC97ArKOHWf3B+/uOH4TOjBfUDJxighhMg=;
-	b=R5W+9Vy9OH+IxrDgsbbkro8845th7OZMb7588o9soyhrsI2W+W3SiQ5wFspWdmZR72Owqm
-	VALkoplbWmyUM/brWiczn90rNy4dvmovGG8cLwyFzqudg2x211CAKTBMw7C3jxND5icBEb
-	SplL7aRroFutA3khWafoONEDZzo5OWE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-59-Oo2Tp78qPMeOXito1x8y0w-1; Mon, 19 May 2025 03:33:00 -0400
-X-MC-Unique: Oo2Tp78qPMeOXito1x8y0w-1
-X-Mimecast-MFC-AGG-ID: Oo2Tp78qPMeOXito1x8y0w_1747639979
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so22309945e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 00:33:00 -0700 (PDT)
+	s=arc-20240116; t=1747639988; c=relaxed/simple;
+	bh=jz37jXkqFlTdllQA2QcYD917Kx1k3Z4qHcOyFzR/TX8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gO14Ke82c7oNxLrikkpKFET53a4NS8w7a8AKLmSbhNz73oQvA/4P1KqFWjXG/da1mTWDuQJdT2TCcPUhQFXasBPqa/7JDcHXB/wB5etfj3B+k82rbpltP3/hU1QRuPVh5X9Abh8VxAhfKIybZ7dgUu0DrAgjNauna5NCqp4vsek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5259327a93bso1273815e0c.2;
+        Mon, 19 May 2025 00:33:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747639979; x=1748244779;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mpbF5ydmLJC97ArKOHWf3B+/uOH4TOjBfUDJxighhMg=;
-        b=SNKk6XLabpxDojC/eEq5vV8tmziiaF0dsyIY1inDp0jhn8f76Wy/K0irEJxe125V6m
-         xoVpmJYh/RO8A8d47Gc9iT7cMXkrhM32vvSbYLDExYD40Ix7xsSRUZ8SZ89j8wh4/Wgx
-         3A0T16qiwHzWtFLMEM7oTvULw24LBLkkwRySWXLRGFD65bcc86UK4/p7X6txjAn/K/Ja
-         16rATA5jDcFN+Gh52pFNTxcWDeeYJJ+tnHr3eZ9mbs0CTDZaJRjdrmgOmHrTLQ04WzVL
-         f24ATTzyYDuOxaHVbqLH9SSNbTdNCgPjw0Cwa1MYajz1tYGisw5nqLSB3bG26mFqXVFN
-         sdFA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4hKtQLGdJnaNveQ8ErnrTmFmuNVBvT+tivn1fZ6avINy0pCc17ujWDWlg638WEq+03VDleDa5zqYwYgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvyXCxlNvDpoM5yyHXWDbccXjrtlb/ntoO0E+Llc6DHJoqF3rn
-	Z3U67WYo8B1yzrhXkaQJB7GnpanWUmLc5VranS31dWuQCgRfiN8QAJU7oLvOieDkklaMOav+eDv
-	1TW+if250t5Gg09qkYCr8MRGQhlPoOd0kN1v5FMxPQvJGj8bQfTBw/S7KxALTTtcZYQ==
-X-Gm-Gg: ASbGnctEPzUWLbomW1WMDaJd12ewCdZoSKyF5/NUI3Y3AD1nxBWFs+0gOEXkz+uvJHF
-	TpgdM9MWFfalgKN6Ou664ayj+64rnMbUMIkek1Flog+U9GmdI0TjdRy1x+xgYS4WT46jnBRpRVm
-	9R392ZXbROkLC7gsZgZKi19FvUj/0bFHQUfpZbULlFMG7GU38h1STvqhPbofnfNjdYkkZhBLck/
-	Y1mc1HQmAcZY0sqQlt9YYdzEsa1Vo/5Qcz1zkVWk3mQE6a9KdU55W38nXJ50ilSadVIuL+K8o96
-	SISX6q1yq7OrbSmYeWE=
-X-Received: by 2002:a05:600c:3e84:b0:442:e9eb:1b48 with SMTP id 5b1f17b1804b1-442ff029b73mr96855765e9.24.1747639979518;
-        Mon, 19 May 2025 00:32:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGaCZYbZM8t/6WKW5V6Yyjso0NzAYq5rzjSYKf6LP3dgLjQUUu5ZcEz3TrYG1/+BWgXIUJTqw==
-X-Received: by 2002:a05:600c:3e84:b0:442:e9eb:1b48 with SMTP id 5b1f17b1804b1-442ff029b73mr96855505e9.24.1747639979159;
-        Mon, 19 May 2025 00:32:59 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:244f:5710::f39? ([2a0d:3344:244f:5710::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd516a51sm127705335e9.24.2025.05.19.00.32.58
+        d=1e100.net; s=20230601; t=1747639984; x=1748244784;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J3qgKwHLt5P4bRuuOKVpHIxKeEfaWTv63kxyj0yKhe8=;
+        b=bBUBkcUQdlETh0l8OIG+WQAfIHLDcaMlBoXi9NGfpCJXmFtbNLaOKVuOzRNBYcqQDi
+         EfkzT5jN4V0JCyl8GIi1yu/p7rxtYkgEypaN32P519eUbFbV47U1wJJfDeCryef7yduH
+         DKvlKR9FnUYGEJijhU5n2LNIcdJjUUSWIF8cSWFjEZnyLwOAaW79p1gYFbftdPgt6Nn9
+         ZUnb/rfw/wHz+zpFt/DKfoQeInQnL7fT+UBm50rlJ1c2FIiNuK4qrbhrL98cVid4kHhC
+         NMCiL0ai45X+vSiSGvKywiknMH5u8jO37JIkK8vhYlOCmp+h3DrOLBQnd7MbBLAWmd7l
+         Y0Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbhUlZyxasuuOxwfaRa6jVEBWmnH65ojIDYkZRWedxacxQIvPtjLU4Dw6VR0EmMHj+QrD1kHqq9c7TxvI=@vger.kernel.org, AJvYcCW/trhayuGYDx5e6nr+wkXiYBPZkGb3wkhhaWrXdDEbUfSnCL9y5xEe5Rh2pNQOMXHOUeySVUUO@vger.kernel.org, AJvYcCWCNhINTkHTr8tUdYVoUY2r5RdKNNFJeNYhiyFJhgnO07hh9NTJgUTiw6dsrlzYlyBLmIhhIhh0LRVnUUES7GU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzVhegeVenb1zT6s41DmrarwoZqxTDJFMrhLWMrP0k/t16X1Fh
+	fsrovhA8gKWeEebVWA7seSGcJhDszuk7+Tjg/OeNrIXL+2ivAORYRxdT/za7pbpJ
+X-Gm-Gg: ASbGnctTP7X3E+QiU7JRqTb1sLRHAVItOWuHr0ZTHHv5lUfOh97423wK+j4KQ4YeX4a
+	tZVttXLsUl3uAWOhFbcpdoD2Bdta/10/nJJiXmx8rZKqzkUcVCdbGkLycQOXT2O6rlYK+t5HeYp
+	Y7qxfpQju9QWzuadLjgrn57wJTbycV2zLbw0eXQQl3n5jaBPtkw5NQpUGkkog47KkcaHne2czbO
+	J0l0CzY+LB56CQllVGrf9t+kp2zk73zfhDsoMqJrdw9kRbob27hmO8RrwPl0TlNnKmzNO2IFmEg
+	BJzYsSFkpRyLabqEGae/m3vya9up+pPC5T4F/Pco5h0cd2HmTLptdwTA7qdKbGzUU79XNI5S7Yh
+	HOi78y/MojgiXXg==
+X-Google-Smtp-Source: AGHT+IFpIS/CvTbnNT+e9lasiTIcvTFpICG4kZhikG4xBdDIIJ3TlQOTifqNK3w1H/ZtoYuItfx0JQ==
+X-Received: by 2002:a05:6122:4317:b0:520:6773:e5bf with SMTP id 71dfb90a1353d-52dba800001mr9095958e0c.1.1747639984486;
+        Mon, 19 May 2025 00:33:04 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dbab6b275sm6194781e0c.39.2025.05.19.00.33.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 00:32:58 -0700 (PDT)
-Message-ID: <6ec93824-1db7-4839-a0ba-845f4e30d883@redhat.com>
-Date: Mon, 19 May 2025 09:32:57 +0200
+        Mon, 19 May 2025 00:33:04 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e2534c08a5so556245137.1;
+        Mon, 19 May 2025 00:33:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWt1AoynpW+6b51yaugVwSaR5ja4ltJjEEIpbt6QT7Vs6BQ3E5Fr3uezcrWe9y5EI30Ag//qCknzW9CsQ8cWMk=@vger.kernel.org, AJvYcCX1V7u4v0aTnqb8FrJsBE5tkFJEBHCyn2BFjoHPZVNhX7m3ZxNgaJKNu2DPEGsrTnZmF7vESJcvs/z8GXg=@vger.kernel.org, AJvYcCXrsK14Xgi9E1j8rBLsGFfgsQz7vqnn0QvZE/mWxWluyzzQPwnj559MqbRe+d7nkRtiP0RgcIdI@vger.kernel.org
+X-Received: by 2002:a05:6102:50a4:b0:4c1:7ece:88d9 with SMTP id
+ ada2fe7eead31-4dfa6c431c4mr10663276137.21.1747639983678; Mon, 19 May 2025
+ 00:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] vmxnet3: correctly report gso type for UDP tunnels
-To: Ronak Doshi <ronak.doshi@broadcom.com>, Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Guolin Yang <guolin.yang@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, open list <linux-kernel@vger.kernel.org>
-References: <20250513210504.1866-1-ronak.doshi@broadcom.com>
- <20250515070250.7c277988@kernel.org>
- <CAP1Q3XQcPnjOYRb+G7hSDE6=GH=Yzat_oLM3PMREp-DWgfmT6w@mail.gmail.com>
- <20250515142551.1fee0440@kernel.org>
- <CAP1Q3XT-2uD87bm-Ch7Oj49=0NBba6vdcwp7dAf51FfmwJhUew@mail.gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CAP1Q3XT-2uD87bm-Ch7Oj49=0NBba6vdcwp7dAf51FfmwJhUew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250516083842.903-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250516083842.903-1-vulab@iscas.ac.cn>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 19 May 2025 09:32:51 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV=96tSH77P9Gqr1M3VfiKB9jYCeJDDFCNq_TGdYb0vFQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtZWuEUgkZTPTuuMD1TIn0WiwNaXw3_TLGkuFPdIiaP9JAMXSxC6tz5Ais
+Message-ID: <CAMuHMdV=96tSH77P9Gqr1M3VfiKB9jYCeJDDFCNq_TGdYb0vFQ@mail.gmail.com>
+Subject: Re: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: ajay.kathat@microchip.com, claudiu.beznea@tuxon.dev, kvalo@kernel.org, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/16/25 1:38 AM, Ronak Doshi wrote:
-> On Thu, May 15, 2025 at 2:25 PM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> Not sure if the stack itself cares, but drivers look at those
->> fields for TSO. I see a call to skb_inner_transport_offset()
->> in vmxnet3_parse_hdr(). One thing to try would be to configure
->> the machine for forwarding so that the packet comes via LRO
->> and leaves via TSO.
-> 
-> I see. Yes, drivers do check for it. Sure, let me update the patch to not set
-> encapsulation.
+Hi Wentao,
 
-AFAICS, not setting skb->encapsulation, but still building a GSO packet
-would still break the s/w segmentation in the scenario described by my
-previous email.
+Thanks for your patch!
 
-/P
+On Fri, 16 May 2025 at 10:39, Wentao Liang <vulab@iscas.ac.cn> wrote:
+> The wilc_sdio_read_size() calls wilc_sdio_cmd52() but does not check the
+> return value. This could lead to execution with potentially invalid data
+> if wilc_sdio_cmd52() fails. A proper implementation can be found in
+> wilc_sdio_read_reg().
+>
+> Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+> log an error message via dev_err().
 
+There is no need to print an error message, as wilc_sdio_cmd52()
+already does that. Same with the existing wilc_sdio_read_reg(), and
+with all of its callers, which leads to multiple error messages for
+a single failure.
+
+> Fixes: 0e1af73ddeb9 ("staging/wilc1000: use proper naming for global symbols")
+
+This is not the commit you are looking for...
+
+> Cc: stable@vger.kernel.org # v4.15
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+
+> --- a/drivers/net/wireless/microchip/wilc1000/sdio.c
+> +++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+> @@ -771,6 +771,8 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+>  {
+>         u32 tmp;
+>         struct sdio_cmd52 cmd;
+> +       struct sdio_func *func = dev_to_sdio_func(wilc->dev);
+> +       int ret;
+>
+>         /**
+>          *      Read DMA count in words
+> @@ -780,12 +782,20 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+>         cmd.raw = 0;
+>         cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
+>         cmd.data = 0;
+> -       wilc_sdio_cmd52(wilc, &cmd);
+> +       ret = wilc_sdio_cmd52(wilc, &cmd);
+> +       if (ret) {
+> +               dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+
+Looks like the AI wasn't trained properly.  Please try to (at least)
+test-compile your patches.
+
+> +               return ret;
+> +       }
+>         tmp = cmd.data;
+>
+>         cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
+>         cmd.data = 0;
+> -       wilc_sdio_cmd52(wilc, &cmd);
+> +       ret = wilc_sdio_cmd52(wilc, &cmd);
+> +       if (ret) {
+> +               dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
+
+Likewise.
+
+> +               return ret;
+> +       }
+>         tmp |= (cmd.data << 8);
+>
+>         *size = tmp;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
