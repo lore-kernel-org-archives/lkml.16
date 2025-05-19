@@ -1,23 +1,65 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D89199931;
-	Mon, 19 May 2025 16:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDE31E5701
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672530; cv=none; b=uXUkZYZTnJfvk9gLO6jkU2sjzGjvtDOjnoGjHx5wXRXGD60CE0maFSPoaIYrPxWJ1cvPdqc2CHp70o2b/NvJg4sW9mYXkxOZJPch18c59DyKFMx03zRqryPL1OedQloJkkSyPzSwIt96/fsYmyKhjYMd7aHtvXQ7ZsNPue/a0vk=
+	t=1747672554; cv=none; b=iziY5SFDCKDltSKPNNaargMijEyPXZwnn9cz24I4r/pijb5OFZTmCIH6tf6ENYJlACyskqANsrRllMx2ERuY61Oq2BMGdW7HaW3KL+GSDJjFyzO03SbSE3+JyKLRTJm0EPjfl1cWfVnXdHotSYbmKee08Na8FfUth+/vMxNytOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672530; c=relaxed/simple;
-	bh=9eriE1PkVOELR+xjnTYu3UMZywdiBv6Uqwk/7wWDUgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i1140EZXdn7x6C1dC3/pzdn8R6uuoZpdz0sg3Srj2UW59lGPrroKs/Qs4ANq8MZ58LDu+y9G2BjH5OdE1oC+dwDvXtuXPcrpA5vYuKyapmAcdU3B9xb/K2mtrAcrquSlB2LTMlra8CCFBde0HaLomUuQorZufX5Z6gQybTiYNko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6F63A439B0;
-	Mon, 19 May 2025 16:35:15 +0000 (UTC)
-Message-ID: <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
-Date: Mon, 19 May 2025 18:35:15 +0200
+	s=arc-20240116; t=1747672554; c=relaxed/simple;
+	bh=0QbvWiCAa+GioZRtVuR1peg4Ser/UC7UOzTp8JIZmZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VG3kVAhhxWADeLxSBAbBDIHm53vrHP9TFLq5VBm/tROqTzRFXpDWnOugNYOWBmRokXP2+hSaS58lHEili+N/MwTnalAdQCKFrJzc0V5SrINkZfOV5R8KqW1blmxpTzZYfW+RsjZWUuhynT7Sr/3aPF/i4XI6UfW/ddhpDkxA2/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hY3aAFwM; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hY3aAFwM"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2da73155e91so1074371fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747672550; x=1748277350; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W58GfmIWiZ3U0eNBo2ssjSmziqMleoXnnwt1PGdnFxg=;
+        b=hY3aAFwMukUfRB4AEd3dg6nw0Qs+GhudysQ/b7DPD6wJ1IDksewyTz7pA7Xiu4wBsC
+         MdCc81yOBJZ5HMK3/TqeQaPyH8yLJmvyU3rW1mN96Y2d0AIJHZPI8++eTkfrj86/ZjXy
+         3j8xWG9XVMpO15C6FKlCxVwPju6N5yWS9gdZy1ADxJghtsX18J/c3vnfYNWmiySrNc3t
+         0s0NP5/TMh6Nc5m2ly6XV+2GDT9mu1cf0N9BxJfHih+0X9r2HcUfBcyM3+T5O3E85oKB
+         EIF2F0yxJsExwNsc8BcUkUF8gO6w5aZNt64W7FcA0fdYz2VecfhatUXstNNyhlQouFzV
+         d+tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747672550; x=1748277350;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W58GfmIWiZ3U0eNBo2ssjSmziqMleoXnnwt1PGdnFxg=;
+        b=dkVihAMTxdcIIgXugOg/LyNTkhT7A/izec/iTYpIMHgvVK8QbMq2HAw/hiEdUP6mhd
+         5qauTv2mlymB53gbvznBpEEg4fjkwgVFa8Awer/LC7TzX8/xuR5BLz4pbX2NOogV2aHj
+         RT/JhkHV/qo39heheSbL1Mn5xCxvIQ2/axWNBvBDm5OOVWt7fD4NEBJSxV0RaqnKHr4j
+         9/tf7zrYW60U926yhtatszmgFzhZz563pOtt4+EhgLH+2GopsnmmP6G3E7eRZ4XELeom
+         jWTRvbof2rvNZVnCbxKDVJQYuvAyRhAm6VPDVEtx8Xe7d0D/Lx05DD9C4j09RnzeCTzT
+         zM4A==
+X-Forwarded-Encrypted: i=1; AJvYcCULwDDc1FxCyX8ZiHAYCsYnBLrj3XT1uW2Q+VMFb+Zq/IdLQadeT1Ue0ZQcl3ttyJKc3K7G29vkI56SZOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYGxrdg+G45PcHaErSc0a8bF8KrXuOhmAxw48XDRKg2/Px+yuL
+	GwY2brL8l8hNGW8sr6Awp4/T8vCloOWumMwqzmnrkaRptEi+ZsHRLFNPDOyvLXkcH7I=
+X-Gm-Gg: ASbGncukLzyq0GMkf7jXn5FgPAk2ffN4Ad/6BEnyu7XtOEfUpVvOpiqDBbHa3f+JwM8
+	UZ6861BLIm50cB2EQ9hKOtklVt0/kJ0yoJEUDStrKtvA+YZ+UYRlbs1Ruus850rCGKHFgRoyllw
+	LSsi5G94ATYfA7JzxMpNRimwKvtM5XJ1CRu2UnCHdPxQGBMP7QokelfokiERPctHBAE2EnydmWE
+	JP9ER9IzJBnSFRk8ITlponuPkvjVvirmz9GbbzVvS8O0LVo7Qcyrp08wnBxoQqn2aA9U0CO3AUe
+	/oVovAiiEeshz09SLNX2aKpO0Hm++MDz7fGGNd72tGK/3YsbhlGdvl/+GvFzESULqQ7zee2ye4s
+	QNBJyl+3JHBVfOskQp1Jmpe5w9zEAwV9MkoeK
+X-Google-Smtp-Source: AGHT+IEqxryGUIrvlFRjjbZt/fpBB4e1H0kstalMU3B2lw3tKXhvZEegqt/3++j3ZSdhGSKMO3o38w==
+X-Received: by 2002:a05:6870:ad97:b0:2d9:45b7:8ffc with SMTP id 586e51a60fabf-2e3c817196amr7065629fac.3.1747672550446;
+        Mon, 19 May 2025 09:35:50 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5? ([2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c06baca3sm1795657fac.19.2025.05.19.09.35.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 09:35:50 -0700 (PDT)
+Message-ID: <ba79221f-9acd-4919-abe9-e2c49e80fb6c@baylibre.com>
+Date: Mon, 19 May 2025 11:35:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,150 +67,154 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] riscv/fixes test error: can't ssh into the instance (2)
-To: syzbot <syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com>,
- aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, syzkaller-bugs@googlegroups.com,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-acpi@vger.kernel.org
-References: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
+Subject: Re: [PATCH 16/16] lib: move find_closest() and
+ find_closest_descending() to lib functions
+To: Alexandru Soponar <asoponar@taladin.ro>, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com, linux@roeck-us.net, jic23@kernel.org, pavel@ucw.cz,
+ lee@kernel.org, baocheng.su@siemens.com, wim@linux-watchdog.org,
+ tobias.schaffner@siemens.com, angelogioacchino.delregno@collabora.com,
+ benedikt.niedermayr@siemens.com, matthias.bgg@gmail.com,
+ aardelean@baylibre.com, contact@sopy.one
+References: <20250515081332.151250-1-asoponar@taladin.ro>
+ <20250515081332.151250-17-asoponar@taladin.ro>
 Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -51
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpefkffggfgfuvfhfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepuefhffegtddujedvveejkeffhfetueehkefhleduvdelleeffeejgfffleeikeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpshihiihkrghllhgvrhdrrghpphhsphhothdrtghomhdpghhoohhglhgvrghpihhsrdgtohhmpdhgohhordhglhdpihhnfhhrrgguvggrugdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejjeeiudemiegsgeeimegrsgguugemfhgvtgefngdpmhgrihhlfhhrohhmpegrlhgvg
- iesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehshiiisghothdovdgtrggvledvuggvugejheektdekfehfhegsuggvsehshiiikhgrlhhlvghrrdgrphhpshhpohhtmhgrihhlrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepshihiihkrghllhgvrhdqsghughhssehgohhoghhlvghgrhhouhhpshdrtghomhdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-GND-Sasl: alex@ghiti.fr
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250515081332.151250-17-asoponar@taladin.ro>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/19/25 12:12, syzbot wrote:
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    01534f3e0dd7 Merge tag 'riscv-fixes-6.15-rc6' of ssh://git..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
-> console output: https://syzkaller.appspot.com/x/log.txt?x=158796f4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2c32351e59d854b7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2cae92ded758083f5bde
-> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: riscv64
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-01534f3e.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/4ca1cbb891a9/vmlinux-01534f3e.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/5fb1db315d47/Image-01534f3e.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com
->
->
->
+On 5/15/25 3:13 AM, Alexandru Soponar wrote:
+> Move the utility macros find_closest() and find_closest_descending()
+> from inline macros to proper library functions in lib/.
+> 
+> Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>  include/linux/find_closest.h | 13 +++++++
+>  include/linux/util_macros.h  | 61 +------------------------------
+>  lib/Makefile                 |  2 +-
+>  lib/find_closest.c           | 71 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 86 insertions(+), 61 deletions(-)
+>  create mode 100644 include/linux/find_closest.h
+>  create mode 100644 lib/find_closest.c
+> 
+> diff --git a/include/linux/find_closest.h b/include/linux/find_closest.h
+> new file mode 100644
+> index 000000000000..28a5c4d0c768
+> --- /dev/null
+> +++ b/include/linux/find_closest.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Find closest element functions
+> + */
+> +#ifndef _LINUX_FIND_CLOSEST_H_
+> +#define _LINUX_FIND_CLOSEST_H_
+> +
+> +#include <linux/types.h>
 
+Is this header really needed?
 
-So we hit the following warning:
+> +
+> +unsigned int find_closest(int x, const int *a, unsigned int as);
+> +unsigned int find_closest_descending(int x, const int *a, unsigned int as);
+> +
+> +#endif /* _LINUX_FIND_CLOSEST_H_ */
 
-[   33.466472][    C6] WARNING: CPU: 6 PID: 1 at fs/sysfs/group.c:131 
-internal_create_group+0xa22/0xdd8
-[   33.471115][    C6] Modules linked in:
-[   33.475123][    C6] CPU: 6 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-6.15.0-rc6-dirty #3 PREEMPT
-[   33.476075][    C6] Hardware name: riscv-virtio,qemu (DT)
-[   33.476615][    C6] epc : internal_create_group+0xa22/0xdd8
-[   33.477194][    C6]  ra : internal_create_group+0xa22/0xdd8
-[   33.477696][    C6] epc : ffffffff80dd956c ra : ffffffff80dd956c sp : 
-ffffffc600087b50
-[   33.478048][    C6]  gp : ffffffff89a659e0 tp : ffffffd681688000 t0 : 
-ffffffc600087a80
-[   33.478377][    C6]  t1 : 1ffffff8c0010f78 t2 : ffffffff89b70a80 s0 : 
-ffffffc600087cc0
-[   33.478690][    C6]  s1 : ffffffc600087c40 a0 : 0000000000000000 a1 : 
-0000000000000000
-[   33.478990][    C6]  a2 : 0000000000000002 a3 : ffffffff80dd956c a4 : 
-0000000000000000
-[   33.479291][    C6]  a5 : ffffffd681689000 a6 : fffffffff1f1f1f1 a7 : 
-ffffffff80dd8b4a
-[   33.479602][    C6]  s2 : dfffffff00000000 s3 : ffffffff86a381a0 s4 : 
-ffffffc600087dc0
-[   33.479967][    C6]  s5 : 0000000000000002 s6 : 0000000000000000 s7 : 
-0000000000000000
-[   33.480327][    C6]  s8 : 1ffffffff136df40 s9 : ffffffff89b6fa00 s10: 
-1ffffff8c0010fa4
-[   33.480673][    C6]  s11: ffffffff87bece20 t3 : 0000000000000000 t4 : 
-fffffffef10e33b2
-[   33.481019][    C6]  t5 : fffffffef10e33b3 t6 : ffffffd68aabf2f8
-[   33.481326][    C6] status: 0000000200000120 badaddr: 
-ffffffff80dd956c cause: 0000000000000003
-[   33.481962][    C6] [<ffffffff80dd956c>] 
-internal_create_group+0xa22/0xdd8
-[   33.482681][    C6] [<ffffffff80dd9944>] sysfs_create_group+0x22/0x2e
-[   33.483136][    C6] [<ffffffff86289d82>] platform_profile_init+0x74/0xb2
-[   33.483555][    C6] [<ffffffff80061860>] do_one_initcall+0x198/0xa9e
-[   33.484158][    C6] [<ffffffff8620293e>] kernel_init_freeable+0x6d8/0x780
-[   33.484689][    C6] [<ffffffff8609fe54>] kernel_init+0x28/0x24c
-[   33.485208][    C6] [<ffffffff860c2542>] ret_from_fork+0xe/0x18
-[   33.485885][    C6] irq event stamp: 950699
-[   33.486072][    C6] hardirqs last  enabled at (950699): 
-[<ffffffff80a6182c>] kasan_quarantine_put+0x1a8/0x208
-[   33.486710][    C6] hardirqs last disabled at (950698): 
-[<ffffffff80a61726>] kasan_quarantine_put+0xa2/0x208
-[   33.487398][    C6] softirqs last  enabled at (950420): 
-[<ffffffff801533a6>] handle_softirqs+0x98e/0x119c
-[   33.487930][    C6] softirqs last disabled at (950413): 
-[<ffffffff80153fd6>] __irq_exit_rcu+0x2e8/0x53c
+...
 
-Because we don't have acpi enabled and then acpi_kobj is null 
-(https://elixir.bootlin.com/linux/v6.15-rc6/source/fs/sysfs/group.c#L131).
+> diff --git a/lib/find_closest.c b/lib/find_closest.c
+> new file mode 100644
+> index 000000000000..d481625cae9d
+> --- /dev/null
+> +++ b/lib/find_closest.c
+> @@ -0,0 +1,71 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Find closest element functions
+> + *
+> + * Based on previous util_macros.h implementation
+> + */
+> +
+> +#include <linux/find_closest.h>
+> +#include <linux/module.h>
+> +
+> +/**
+> + * find_closest - locate the closest element in a sorted array
+> + * @x: The reference value.
+> + * @a: The array in which to look for the closest element. Must be sorted
+> + *  in ascending order.
+> + * @as: Size of 'a'.
+> + *
+> + * Returns the index of the element closest to 'x'.
 
-The following patch fixes it, but not sure this is the right way, let me 
-know if I should send it, it would be nice to have it in 6.15:
+s/Returns/Returns:/
 
-diff --git a/drivers/acpi/platform_profile.c 
-b/drivers/acpi/platform_profile.c
-index ffbfd32f4cf1b..afbe4705d3e7a 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
-  {
-         int err;
+for kernel-doc semantics
 
-+       if (acpi_disabled)
-+               return -ENOTSUPP;
-+
-         err = class_register(&platform_profile_class);
-         if (err)
-                 return err;
+> + */
+> +unsigned int find_closest(int x, const int *a, unsigned int as)
+> +{
+> +	unsigned int array_size = as - 1;
+> +	int mid_x, left, right;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < array_size; i++) {
+> +		mid_x = (a[i] + a[i + 1]) / 2;
+> +		if (x <= mid_x) {
+> +			left = x - a[i];
+> +			right = a[i + 1] - x;
+> +			if (right < left)
+> +				i++;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return i;
+> +}
+> +EXPORT_SYMBOL_GPL(find_closest);
+> +
+> +/**
+> + * find_closest_descending - locate the closest element in a sorted array
+> + * @x: The reference value.
+> + * @a: The array in which to look for the closest element. Must be sorted
+> + *  in descending order.
+> + * @as: Size of 'a'.
+> + *
 
-Thanks,
+Would repeat the Returns: section here for completeness.
 
-Alex
+> + * Similar to find_closest() but 'a' is expected to be sorted in descending
+> + * order.
+
+This seems redundant since @a already says this.
+
+>             The iteration is done in reverse order, so that the comparison> + * of 'right' & 'left' also works for unsigned numbers.
+
+This seems like an implementation detail so would be better as a comment inside
+the function. Although, since @a is always signed, is this comment actually
+still applicable?
+
+> + */
+> +unsigned int find_closest_descending(int x, const int *a, unsigned int as)
+> +{
+> +	unsigned int array_size = as - 1;
+> +	int mid_x, left, right;
+> +	unsigned int i;
+> +
+> +	for (i = array_size; i >= 1; i--) {
+> +		mid_x = (a[i] + a[i - 1]) / 2;
+> +		if (x <= mid_x) {
+> +			left = x - a[i];
+> +			right = a[i - 1] - x;
+> +			if (right < left)
+> +				i--;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return i;
+> +}
+> +EXPORT_SYMBOL_GPL(find_closest_descending);
 
