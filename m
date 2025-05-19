@@ -1,115 +1,101 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DACA243364
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A02524468E;
+	Mon, 19 May 2025 06:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747635979; cv=none; b=inf5yIDfIa/NcVmRc54I9i70HlSZDUGMQbGDn2QWGJhLHdz4VhMMv1fYE2JkOyOXxKukIsSOjSN5UyTiSK4Ea0WqA7l9TUUAfo2P7/jKRRWh9PX4pdhn9SRIgCs3Y78IZKrzzKp9IHOylHLwlBMjxJ1GO+4u/cmObfRPyxKtH7k=
+	t=1747636065; cv=none; b=SODsbg3MWr6CoP0xG7FIOan7rt8a+p2D1vviFwXIny61ZhQlzxm3urwimnjtxXF5pZHVaJxLaDDexOk+72VVWpEwTDzl3hFfVCOSegzbzLq+M6h5OI+v+8YQfxuNTDxpIDcFtdOdV23ODTD6CjVkU6kY/h2Z57fY8HupR7rPY2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747635979; c=relaxed/simple;
-	bh=3/0YNkCjboebYy7FYvRPStFV/R6BxhWufBSPZl9LRoA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nlx7SlxgUoi98qEp1rV/JYhbckU5cwHYz58tJa6XG/5+Z6wPGF9oCkD8nj+YgJBQVBjzpJFKqLQhxXYPz4ZWS9XnylGEH1UtV+Fm0t2vxXY5IMvYaba9ZHlliO3NK+JsbgMNckjM6EgV8orI0LFqEgtKnxT5vF45RB5sOmrsv2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6WppDsA; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747636065; c=relaxed/simple;
+	bh=05be7fLfzW+Lkh9/B6CDCkEvJrnVcJV+48VP51XW+4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HQOJncN4Le6bj5892TZPut7AR2WVyhMXLbnfLVoRv2HqXGaccO23pH74/qPw9btzEL/wifvI4FKpcXrQ66e+nBpuQ9H+eufQiPlMFeftPiPo+JJxQqtANdB4gJYfoep5Qeou1C3bg7OdrpXW7nsQOtXqiYxWOoLHDelR9klWj34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dDGSci3L; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6WppDsA"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73712952e1cso3720648b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 23:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747635976; x=1748240776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWxiWWoevLtui+2Q816C18FoVZShKeU4+z72oyVMeAE=;
-        b=c6WppDsAXquKWFTla61+sWuDwBa6QhZJ71AfVaWNbC1pLR/jxtlrY/L8+lALevn9KX
-         9wyyL3wpql1S3n1PWvSBtMgUC8i1dR0I3m7RwkZl4h5KE/ShMN/tU3a+E4WK6AohjuDD
-         0K5Tmj9IqUVIrNXNsiv5870HZj5w9F3Bbt4JZH+BuRKQT5hoB6G9VAQDBgw7y9/TcHFW
-         vLzKl9SNbxo8HNa5xUF8QecWhzxEChq4uPQVRwDZ8dAP4N/kR1Taxp58wwdd1Y84VQ/u
-         Vujhvb3ViodniNa4KYkSTSROQCdfaCEXgNQlBK1O2Dc/8Oio3Z2WNaXwT6PJZV38b5aG
-         oKPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747635976; x=1748240776;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NWxiWWoevLtui+2Q816C18FoVZShKeU4+z72oyVMeAE=;
-        b=nVqqlAIvmvX62WvkdztuLnOukubDFFWFvnneldkAuwx4y89BZ2mSdjnK4oGb6ayXqs
-         rlYIwl/hXHJ1QAMiXXA23HA72y4buoUG3KVlhnyv4WWnIy5pHvOFNx3r709KvUvgsCWj
-         cFF4ixV514caWh7ON8RB4nfAmsudfOQIQHtqB0v5gtjGeIMCP9TNHr0HIhuFfB8XUHhg
-         ehcNtq2w/pqiKyLNu0RUvdaMZtEvVVdNjPSN8hDbrXaOUWYLCL0wl/oxK9tzzO3J23Ok
-         YmMfwI5nSHsyGAD9YOf2y+Aoy53MNZzc+eqIL0a7Y8nKE12RtSKsaaqYr8vHDy8Re05D
-         7Kwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIfarJBfrl9NGZZ3B1Ju0BEopNDaTCOqVDF7KxJFPRrCnaW2+oiODpd9zk5pbKqjrbcDqjFjlrf1ytDxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2UihJUXu1f5tZSQ0xr//2sODIg1rAJe7kzJJEQhrwb+kT9hvE
-	1TdWSRXK0hI7dcPMfm4T2OhnwUbzghJYIGgoyPVE6h6UNPO/QYZ8vgLl
-X-Gm-Gg: ASbGnctu549CypQ0wtknN/qnCuyEgGigh9DZQKHJCHXm7q6dpO0i2X1uSLPtxFmjb/o
-	GMbHHj3lCMY3NklD/qt4Npio26BI+OhJc8eoc1v9ll3LexYw2POCetKisjifPRYdrMhU5gAmDmT
-	zeZVEH8qYf4EbcM5ulmvP+XxmKFjjwpjOudTkEgQsNlsEVAerhtvc16YuRtQv/xU6A98Qw1XRKk
-	0bqqZ/uNuVN1HRdL5KTWYcn/gK9PyA3GpFfgzDSxiftCZnZBlKcVwh7prXFUl42jX+CCdtidtWk
-	+wHF0LLP6Ub/mUIYpMK3VnYks3H3RmjkmCYf7YekXZkjwtaq2mxCUljEprHnmI8FtdZQ1Q==
-X-Google-Smtp-Source: AGHT+IGmkOUH6qpMHvgR5iUTW6clZrFuf6mfg/hIbJxOzrjlpLKw3fd9givoUpchP3/XsUsjRRQWjQ==
-X-Received: by 2002:a05:6a21:9208:b0:1f5:839e:ece8 with SMTP id adf61e73a8af0-2170cafa2demr17995676637.2.1747635976266;
-        Sun, 18 May 2025 23:26:16 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.138.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a2550sm5460847b3a.167.2025.05.18.23.26.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 18 May 2025 23:26:15 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: ryncsn@gmail.com
-Cc: akpm@linux-foundation.org,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	bhe@redhat.com,
-	chrisl@kernel.org,
-	david@redhat.com,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	kaleshsingh@google.com,
-	kasong@tencent.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	nphamcs@gmail.com,
-	ryan.roberts@arm.com,
-	shikemeng@huaweicloud.com,
-	tim.c.chen@linux.intel.com,
-	willy@infradead.org,
-	ying.huang@linux.alibaba.com,
-	yosryahmed@google.com
-Subject: Re: [PATCH 06/28] mm, swap: rearrange swap cluster definition and helpers
-Date: Mon, 19 May 2025 18:26:05 +1200
-Message-Id: <20250519062605.2357-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250514201729.48420-7-ryncsn@gmail.com>
-References: <20250514201729.48420-7-ryncsn@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dDGSci3L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747636064; x=1779172064;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=05be7fLfzW+Lkh9/B6CDCkEvJrnVcJV+48VP51XW+4I=;
+  b=dDGSci3L0NxJ6+0HS5/VT4r0p3H0vHaH6SGvrp6ZHtgzzgqKcivfo4Yc
+   rDkZmL4T9EsM0Yp5/5SWbkjiOZ4HqqsZkv+RftgT6VKdkZKLADRpPg17l
+   hra4dMx9fM35Bkr14/m5VhczfjgnLnYlB5vYCyO4MfG754dHG69FnSNUI
+   MxPE3JcA+ScjOIR7xgBPa682cuRWI5/aNLsgpPHVrYC1d+jRkb+/WI+yy
+   URLQP/64uJXt5i7viZNjUTy9NklF1D7a2oljkm+Nb0BDF0TxCxuIvR/WW
+   0HqdFTPSWzNnoRwUWXkU0lHFXpBj5whuTietw7lry1EIn2pvmmaBTE4rC
+   A==;
+X-CSE-ConnectionGUID: 3W948e2hQwSCWUOv9wUs0g==
+X-CSE-MsgGUID: ZoSeOeUKRnSwZVf+RXL+Ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49503810"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49503810"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:27:42 -0700
+X-CSE-ConnectionGUID: UK5odDNjSF+5FI6KHpYkxA==
+X-CSE-MsgGUID: KP5sPoGBQVKkqbLHSlAehg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="170313674"
+Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.73.217]) ([10.247.73.217])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 23:27:38 -0700
+Message-ID: <12093d3c-ca0a-46fd-950e-6af1448ee079@linux.intel.com>
+Date: Mon, 19 May 2025 14:27:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH iwl-next v2 8/8] igc: SW pad preemptible frames for
+ correct mCRC calculation
+To: Simon Horman <horms@kernel.org>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, intel-wired-lan@lists.osuosl.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+ Chwee-Lin Choong <chwee.lin.choong@intel.com>
+References: <20250514042945.2685273-1-faizal.abdul.rahim@linux.intel.com>
+ <20250514042945.2685273-9-faizal.abdul.rahim@linux.intel.com>
+ <20250516094336.GH1898636@horms.kernel.org>
+Content-Language: en-US
+From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
+In-Reply-To: <20250516094336.GH1898636@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> From: Kairui Song <kasong@tencent.com>
 
-> @@ -889,10 +849,8 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si, int o
->  		/* Serialize HDD SWAP allocation for each device. */
->  		spin_lock(&si->global_cluster_lock);
->  		offset = si->global_cluster->next[order];
-> -		if (offset == SWAP_ENTRY_INVALID)
-> -			goto new_cluster;
 
-We are implicitly dropping this. Does it mean the current code is wrong?
-Do we need some clarification about this?
+On 16/5/2025 5:43 pm, Simon Horman wrote:
+> On Wed, May 14, 2025 at 12:29:45AM -0400, Faizal Rahim wrote:
+>> From: Chwee-Lin Choong <chwee.lin.choong@intel.com>
+>>
+>> A hardware-padded frame transmitted from the preemptible queue
+>> results in an incorrect mCRC computation by hardware, as the
+>> padding bytes are not included in the mCRC calculation.
+>>
+>> To address this, manually pad frames in preemptible queues to a
+>> minimum length of 60 bytes using skb_padto() before transmission.
+>> This ensures that the hardware includes the padding bytes in the
+>> mCRC computation, producing a correct mCRC value.
+>>
+>> Signed-off-by: Chwee-Lin Choong <chwee.lin.choong@intel.com>
+>> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+> 
+> Hi Faizal, all,
+> 
+> Perhaps it would be best to shuffle this patch within this series
+> so that it appears before the patches that add pre-emption support.
+> That way, when the are added the bug isn't present.
+> 
 
->  
-> -		ci = lock_cluster(si, offset);
-> +		ci = swap_lock_cluster(si, offset);
->  		/* Cluster could have been used by another order */
->  		if (cluster_is_usable(ci, order)) {
->  			if (cluster_is_empty(ci))
-
-Thanks
-Barry
+Makes sense, will update. Thanks!
