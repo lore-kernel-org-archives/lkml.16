@@ -1,177 +1,98 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C745288C93
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B37627453;
+	Mon, 19 May 2025 18:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747678102; cv=none; b=j5zG2vBnqfgRL2mmM/38c0FmvP3864h9cfNKfy1q7BuzUtxqMCoipoHjNX8pkrJ0ViIMGnU/28yPEYfRC5vWyPe3Q4piMGvRNA/8vGwiEmWPIABH2SJj/7zjdu9Z5FkNZLr226xP23X5GvEH3vNLdDnTu93HVyWLsGoo628PqGU=
+	t=1747678138; cv=none; b=PzrBX92FVW4LCX3yEbnP9JH/1oOiUpkCD1FuobNopH7+Wn1BHtDXiAQ/UcyqoVCohoWS3gzo9fe6+Uqd/WTs/KEHGeGEeHrJr3xO7l1lg+B2pSQXy4a2ZV5pkFH9uQ7K9cBJ/eRH/K7SQrPhWXDYSkr/GKJQOsLf3Zt5vO5QmCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747678102; c=relaxed/simple;
-	bh=h25b1ZQHWUy7GA1BKwsRv4lBzQgq/l+ecx3lVX8QMB0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YRWUblwRWd5yPMQ95oJU+PMCTdPH+S+9ouc/QXYMbAc0JFQGuWr/n/z9kdUP1BFRI+028fhr5NcLxaHaRrpmUsi0NDRtU3VaVlmCP4t/CuPUYTOjHOK/FAmxotsipY6AMlHVzxMyd2X03arn8po7UT+txcJppcM3eW8runbYq0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g5PG1DKN; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747678138; c=relaxed/simple;
+	bh=JbE03/Q2/LmhajuKXaRvpexgYr2FUkGKuhsLPhxmzJY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EaIlzs+On2dIjJJ4ZNfcj8Lok+zvcRaNUZ9iTVTtqG+thSGkAnhcxp+T80SJxQAEcrSonCBBNsCJJ0P0M5lfQuu5GCG7sFMKvWyfW7NZRKTzMokrhG5itHX38INMbLPk8ZebcbwQ0EPqIvByWCOtm97MoQbjtRrt/K2RIdlu/WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gG1uMeiy; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5PG1DKN"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442d472cf7fso38063085e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:08:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gG1uMeiy"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231f39b1b7aso1485025ad.2;
+        Mon, 19 May 2025 11:08:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747678099; x=1748282899; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yVFuYQ5+RK+jobpgYs8UNNrUAZW+AMGmHxrUYMucspg=;
-        b=g5PG1DKNb4CHYkH7t1pqtI6HOny2iDoBxERSBVb4ijfqE1/uz0W7LlUl9llFBL/+Xf
-         FWs2f6F0KbDg3f0f4/XsotZ9Wo2aznXrMPetUc76MVfLMfW2I9mF0ribIByxyss04H7t
-         tC0N3yDfkE5iRk4aeOim57eccNfqPU760v+8MIrPl9c9WqjqDohKGFoNTosrgAH00mcy
-         R1rrMC0xAMrNUa5Ksytdrao0g5qUb9CEzWmPWzvahLvOsDTAAtWeIS7RBvgTK3TWZGGK
-         sKx9aOl0msLsFWMlVc/FxbXfTmIH6GXydK6CrFySAYl/nxGYZh5Y7VofERet1BBhGaHM
-         3VeA==
+        d=gmail.com; s=20230601; t=1747678136; x=1748282936; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbE03/Q2/LmhajuKXaRvpexgYr2FUkGKuhsLPhxmzJY=;
+        b=gG1uMeiysx6V+FvB+urq9W6tF4HDDkLuDiupsDlyb6YHx41/iY2RGf6RoXyUzt5AoQ
+         n/O0Ji4r/2JWQDdGP6ItpWQySvcTWMvQsKLhSov0tpgHRWpP2gvDHEYFP8LASknUBBDW
+         gtr+Muvo8Hq634XH7yiTvD17lpynBKfIgLSC8XM0WS5O5/1xtGMETAsRHl9s1UsVHBGv
+         QklLvb0F6XmYirWvr+djXGV93oJ4r7Wo8Nzvw5cCMakHngYYev74/AzCMy/A5RnScB7I
+         XI5xWzfkMR+hw5KKyiExPRZS+VAHrZwwUVy4aSdlDChpekufFhJ6iZigzB5oFe8yr5td
+         y+Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747678099; x=1748282899;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yVFuYQ5+RK+jobpgYs8UNNrUAZW+AMGmHxrUYMucspg=;
-        b=idvwHAQelyaEjgE3HAIoyXPEas9+Yf5LJs9CT2sUbLE6qb/TSxPA2M/L9/m6MbTPxT
-         0+cR7brbEsvIVObB9JZI3awDMGq+tFZFPLMpUAObAeSzkUZUNljjMF5NEkFu5OMqNIGN
-         B3MflTXGJdiWtFNa8dsr0FkSPWrzQp37iBKf8URbpUA+cuOP+XtznM9h7S4iOC8tx7Qx
-         9XZb2fN8x8n8YwouDDagynHLEgW7W2tU3OoX7MWzBL0JuuW3m5ASJcKYVrGfQn4HyCXv
-         yNKS93/yKNV9t+UNlrczzw4nmgfrTuSU6CUXuKJiNNVhZQWP9EcrD2rHrkKEcmRgdser
-         duxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWq1MvF91qd/u6AnZnea7zD8naIqASBZe5cq8ap9/yTrX1NQBl9fCrh1tbqjMHrPIoegNc8IA8ak0kWdlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaQS0XG61pQpW7+ry6hKC8G4+kdZjNDOFJ8P/6Tv02AxSn3Umz
-	d6wMtAmoUx3F97799D72KVGXlSYG3TXugcPzsbwqgI+zmKqeayEPGPaS70C40TRZZln+N4xT7N/
-	B9jdtddE97YTwfejquQ==
-X-Google-Smtp-Source: AGHT+IGbmbkLxQ6+c+1jvf284DkuCMXNCx0iTcuUM30vDlHFtVeT2ykVdEf82/2w+mxDQEcmu8s27itQ8/1huBM=
-X-Received: from wrbft8.prod.google.com ([2002:a05:6000:2b08:b0:3a1:f532:5b8f])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:144c:b0:3a3:6843:497a with SMTP id ffacd0b85a97d-3a368434aefmr6924653f8f.27.1747678098818;
- Mon, 19 May 2025 11:08:18 -0700 (PDT)
-Date: Mon, 19 May 2025 18:08:16 +0000
-In-Reply-To: <20250517170957.1317876-1-cmllamas@google.com>
+        d=1e100.net; s=20230601; t=1747678136; x=1748282936;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbE03/Q2/LmhajuKXaRvpexgYr2FUkGKuhsLPhxmzJY=;
+        b=iQi8ogC8asotrp0kfY612/0zOPyhYqbOT3AsnE53+YENGts6nx3uGt44PM3B5WJeN/
+         AW96TwYj8pXgOpfimaOrDkCnXV54m8A/mK/AHz5rZbcpWOqqsr5RZU4SmOAEt6B5aWUT
+         JlFQcjWcC1cNXTN206owYgTE81+Kv3neoFjrl8P0FMY22h8NEf4ql9Iidzx2LEy9KCS5
+         0IC5ppZrW13lXcrwcKebmiZdMk8mnH2SbXWZH/LT8UNj06T3M/0VFzMSNywqvIiuCpAm
+         IkmYFIXIS5YZfLN+6wwpf17tEpOE2IQCfP1dFahojrzE1cOvX5l/ZaRQKPydRtjYdeoc
+         kDfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHEAZDZTsNGAUfy4PW0pgpI5FsrlgPPlL+ijJERLoRbdQJPpaMrt/w3wgW/qUPcxGgQQZGeHW8oSSNtlw=@vger.kernel.org, AJvYcCXAO9X9P+hm9nIq9+Xw5d2TlsuwE9py/B7jru9sj/zZ+Tozx5aubrLufKktcJSN6abLUKfnzGrLSUIb1KNNExI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvW00fFsgcII8RAKK46svPnAoX5L92eUr4L7e/JnLfT47PmkIk
+	FRGUUeAOPc/SgVnmPufZLUIWsrJrKzWawV45YmHzZWucp/ETv8hpgTFu7T0Eu3BkZ/RDuHAJ+k2
+	2Sr6V6zv6Y6nPLw3VWF9OjrbEfhCRE6c=
+X-Gm-Gg: ASbGncvgRV7ED2+VuiFmZJMkzi8SAJ5xT72carcPtxBNBU6A7L1IihGQ6G2GRaq5Aab
+	v+imYYcb1vZ2w0Gcqg3kmcU3VcwYHc9ywmVtQvfabvmaAUnM10IrZGAWEwhwV3QE/c9T7ViHiE2
+	UkL9so7XJ/fnqNsvRE322WblaH752ymDivGIdxqY2cgw4=
+X-Google-Smtp-Source: AGHT+IEi4SYGBmAI9K1fWq00zmyMO1UW86bb1P7ysCjJPKIDBdiDiWw8fVFzf8Ct5gTDVJ1N00zeinsmzKy6Fw9ZOlM=
+X-Received: by 2002:a17:903:2b10:b0:22e:7913:d360 with SMTP id
+ d9443c01a7336-231d43d0c8amr71258905ad.7.1747678136616; Mon, 19 May 2025
+ 11:08:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250517170957.1317876-1-cmllamas@google.com>
-Message-ID: <aCtzkI2HGqIStHg-@google.com>
-Subject: Re: [PATCH v2] binder: fix use-after-free in binderfs_evict_inode()
-From: Alice Ryhl <aliceryhl@google.com>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, kernel-team@android.com, 
-	Dmitry Antipov <dmantipov@yandex.ru>, stable@vger.kernel.org, 
-	syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com, 
-	"open list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250519124304.79237-1-lossin@kernel.org> <CAH5fLgj1k6juFMoBWeeWgdkF0UDewF1=VThj-dnusXwjKGFnSg@mail.gmail.com>
+In-Reply-To: <CAH5fLgj1k6juFMoBWeeWgdkF0UDewF1=VThj-dnusXwjKGFnSg@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 19 May 2025 20:08:43 +0200
+X-Gm-Features: AX0GCFsplH6H9wPx6R2-7TpOp7s9l34G3QDWiP2nXuAO1gYFQ8672FI2LGwZMIw
+Message-ID: <CANiq72=Y6aZwZpQwKHFq2D9H9qFYH-b19SJgTRyUZA18UZvjfA@mail.gmail.com>
+Subject: Re: [PATCH] rust: types: remove `Either<L, R>`
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Tamir Duberstein <tamird@gmail.com>, 
+	Dirk Behme <dirk.behme@de.bosch.com>, Kartik Prajapati <kartikprajapati987@gmail.com>, 
+	Aliet Exposito Garcia <aliet.exposito@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 17, 2025 at 05:09:56PM +0000, Carlos Llamas wrote:
-> From: Dmitry Antipov <dmantipov@yandex.ru>
-> 
-> Running 'stress-ng --binderfs 16 --timeout 300' under KASAN-enabled
-> kernel, I've noticed the following:
-> 
-> BUG: KASAN: slab-use-after-free in binderfs_evict_inode+0x1de/0x2d0
-> Write of size 8 at addr ffff88807379bc08 by task stress-ng-binde/1699
-> 
-> CPU: 0 UID: 0 PID: 1699 Comm: stress-ng-binde Not tainted 6.14.0-rc7-g586de92313fc-dirty #13
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
-> Call Trace:
->  <TASK>
->  dump_stack_lvl+0x1c2/0x2a0
->  ? __pfx_dump_stack_lvl+0x10/0x10
->  ? __pfx__printk+0x10/0x10
->  ? __pfx_lock_release+0x10/0x10
->  ? __virt_addr_valid+0x18c/0x540
->  ? __virt_addr_valid+0x469/0x540
->  print_report+0x155/0x840
->  ? __virt_addr_valid+0x18c/0x540
->  ? __virt_addr_valid+0x469/0x540
->  ? __phys_addr+0xba/0x170
->  ? binderfs_evict_inode+0x1de/0x2d0
->  kasan_report+0x147/0x180
->  ? binderfs_evict_inode+0x1de/0x2d0
->  binderfs_evict_inode+0x1de/0x2d0
->  ? __pfx_binderfs_evict_inode+0x10/0x10
->  evict+0x524/0x9f0
->  ? __pfx_lock_release+0x10/0x10
->  ? __pfx_evict+0x10/0x10
->  ? do_raw_spin_unlock+0x4d/0x210
->  ? _raw_spin_unlock+0x28/0x50
->  ? iput+0x697/0x9b0
->  __dentry_kill+0x209/0x660
->  ? shrink_kill+0x8d/0x2c0
->  shrink_kill+0xa9/0x2c0
->  shrink_dentry_list+0x2e0/0x5e0
->  shrink_dcache_parent+0xa2/0x2c0
->  ? __pfx_shrink_dcache_parent+0x10/0x10
->  ? __pfx_lock_release+0x10/0x10
->  ? __pfx_do_raw_spin_lock+0x10/0x10
->  do_one_tree+0x23/0xe0
->  shrink_dcache_for_umount+0xa0/0x170
->  generic_shutdown_super+0x67/0x390
->  kill_litter_super+0x76/0xb0
->  binderfs_kill_super+0x44/0x90
->  deactivate_locked_super+0xb9/0x130
->  cleanup_mnt+0x422/0x4c0
->  ? lockdep_hardirqs_on+0x9d/0x150
->  task_work_run+0x1d2/0x260
->  ? __pfx_task_work_run+0x10/0x10
->  resume_user_mode_work+0x52/0x60
->  syscall_exit_to_user_mode+0x9a/0x120
->  do_syscall_64+0x103/0x210
->  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0xcac57b
-> Code: c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8
-> RSP: 002b:00007ffecf4226a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-> RAX: 0000000000000000 RBX: 00007ffecf422720 RCX: 0000000000cac57b
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffecf422850
-> RBP: 00007ffecf422850 R08: 0000000028d06ab1 R09: 7fffffffffffffff
-> R10: 3fffffffffffffff R11: 0000000000000246 R12: 00007ffecf422718
-> R13: 00007ffecf422710 R14: 00007f478f87b658 R15: 00007ffecf422830
->  </TASK>
-> 
-> Allocated by task 1705:
->  kasan_save_track+0x3e/0x80
->  __kasan_kmalloc+0x8f/0xa0
->  __kmalloc_cache_noprof+0x213/0x3e0
->  binderfs_binder_device_create+0x183/0xa80
->  binder_ctl_ioctl+0x138/0x190
->  __x64_sys_ioctl+0x120/0x1b0
->  do_syscall_64+0xf6/0x210
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Freed by task 1705:
->  kasan_save_track+0x3e/0x80
->  kasan_save_free_info+0x46/0x50
->  __kasan_slab_free+0x62/0x70
->  kfree+0x194/0x440
->  evict+0x524/0x9f0
->  do_unlinkat+0x390/0x5b0
->  __x64_sys_unlink+0x47/0x50
->  do_syscall_64+0xf6/0x210
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> This 'stress-ng' workload causes the concurrent deletions from
-> 'binder_devices' and so requires full-featured synchronization
-> to prevent list corruption.
-> 
-> I've found this issue independently but pretty sure that syzbot did
-> the same, so Reported-by: and Closes: should be applicable here as well.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=353d7b75658a95aa955a
-> Fixes: e77aff5528a18 ("binderfs: fix use-after-free in binder_devices")
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-> Acked-by: Carlos Llamas <cmllamas@google.com>
-> Signed-off-by: Carlos Llamas <cmllamas@google.com>
+On Mon, May 19, 2025 at 7:30=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> I don't mind making a custom enum, but I do use this in Rust Binder.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Yeah, Wedson added the type back then for Binder and kasync from a
+quick look -- in those times, I see it in a few places only, e.g. in
+`get_work_or_register`. Do you have many nowadays?
+
+i.e. I don't want to add extra work for upstreaming Rust Binder, so if
+that would make it harder downstream, we can live with it for the
+moment.
+
+We may want to add a line in the docs to ask the potential user to
+consider whether a custom enum would be better nevertheless.
+
+Cheers,
+Miguel
