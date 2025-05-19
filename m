@@ -1,139 +1,216 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53F02459C4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6673C2561A8;
+	Mon, 19 May 2025 06:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747637011; cv=none; b=h+39BHsGWX1oLeVud+j67a72WSqVxMsSmblaSxv5AZzSm8l4pLrziH8Jrx3NoMZ/0THEEEi24xmFlbItv6OFyY+d2nFXxk5go3S395A3V5qp9dfifVqaiAe0cTRTswCc0vpuvRbFJDDI90B5iFTj2VThfWeNSc2G6/eEldYk8Dw=
+	t=1747637132; cv=none; b=UPPfAOGSWUS6ctx2bgw1wxxUpbswCce3dZwFNjoka4iYXFT7AGdGW6ApWGhPuoh/OAIgG6qk2NPs1C7SAwfh1hav10V5K5vbiJmiM+rfN3yiwscA1WsrRYWxICoQ2gAc4Ki2I1KKogzU6sviYiQWDz4MaQwCoXOLvKoQFa3IQ/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747637011; c=relaxed/simple;
-	bh=04HsNv8CBzaQtdlPDlkFSwLi7tGyS5XkVBBnZ14l0LI=;
+	s=arc-20240116; t=1747637132; c=relaxed/simple;
+	bh=Q/EuBFxYLHacrAtoDgyo+Cp+NqiGu+iQD1Hv+BWylno=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c3I/cXPiDqrPGpAwlE01QuvFNERIiL3THkM6r7N8EB/HgDYrcNG09RGcQWTw8mO3Og63bTmn9jFIrDNAOUQU+m+WtR3mhkHU8GiWvz2sVp6+wpmIAz6e2hSbRV5T+IO32Lha5YIJtwD3SfsRq2qR9KEIgq1YkuCOCXpdxJC/fMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FAbvlPM1; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=Y+d7IEdqbzSNlTQf5o6desFU+dAwBhlY/RoTJSgBoVTEnRVdVebUOoaA6NSEVQOCIVKg9qy035ROz88NFpra3yo0mentyUdbEe3F/uaHLxoTE37w6KwQxRavwG9L+LiBZrDntHWZJnB6sqQ8zXmrjQWn4MYOcJqcQCCSNAN5uHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R9oUP07t; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAbvlPM1"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-601ab204085so2329468a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 23:43:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9oUP07t"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-601a9e65228so2183460a12.2;
+        Sun, 18 May 2025 23:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747637008; x=1748241808; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747637129; x=1748241929; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=niRuJgiYnQwDy7VGIGyhqtewi5msGlLjN6lHsdQjCVY=;
-        b=FAbvlPM1smh6NTlloj9meLyEdkWiolBEfX+0i7QArp92GcwjBtla/dic3Uaj+5AmkM
-         ZzbW7/IJwC5yA3WIZyDoIfg1YM+Oiy3UkqSzp8RN7cPEpyJszltq5GOQPB5Vj4vHIVTo
-         w8B7TATmKVxViC2TUBx4xYCiu2UAqcB+I9F/NJuxeKLutwk2UefCNNTmSf+w1ta33Yvu
-         GPDSnehpAci0qGXvsjjz5Z/PRGLZkQRLcon9zDptCMmnfSlD9n/cWyOeh8C0x2/SNxWM
-         lGQRbBx0bj89hBsSaAT82hTETnMi3z6WvJ7lmVMFKD0cupHB2M1wTulZAL9XZr+pwlL5
-         pCOQ==
+        bh=7dywUjDT8o21WvwXU4M6vIQErqeNKabKpWm7swQyA/U=;
+        b=R9oUP07tvzvWilMahP2g4NXeVHsPQArwdVJ5fCFJWYmNwKstjVjBwpHvCFyFHkiQY4
+         Uux2mAgf+4akYzQyTwVGkNv7UgYNRu+Wsh3q6erfMN4RsKInH89kEqfJp+LLaKZLKTSI
+         sA2xpWCf289oQKQikaq9TBSillqWQbPqKFpHb2AwxgBkNLLjP729ZngVoWJuRcdJUEUU
+         PCV3Hb9ObWBjpw/Q5Sv2xMVxc8GWMN6bSYHQl1zBkOqcylTmwpnQpBnQExoa8yi4AB67
+         rBg38/jP+XrT2dn6xGRmEE/6H51GTvXiyxzcJahW46XRPcjpdIwOmOfrIVdBMOlqbCi8
+         5NTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747637008; x=1748241808;
+        d=1e100.net; s=20230601; t=1747637129; x=1748241929;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=niRuJgiYnQwDy7VGIGyhqtewi5msGlLjN6lHsdQjCVY=;
-        b=CcCLsgF5yDlVKbj2Ps30N9ynGRXrR9plYZux8TCB8dI1wU0B0N7TEManFMSOYipLkb
-         DafpepduL9nPVHziqevAEW2YqZ6iQfdMuuZyf2OTbFgXP9aQ1EjV5cz+ZdzdklpMbgBa
-         64sFoGyFngrr78cbgkYkfe5mXv3ITqqhuxk6xL9nJtj4wp2VKYBwzKPatigOnWvSni1f
-         506xIw9Q90/cnQYyckyVYUnJ8Dy2fU0qNxh15UnHk3yln0FfSb7wmkekm4imjpN1kDDu
-         5NGzGdgTTsNbQKyODI4X+cFRnAS4OZ2GpkXGwf74qMzKE6+bIDFH2ejZnu/hbhHv1hjG
-         kblQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw/W6B07g43EVIybyE/rtFOKAn2Q+eiVuPL0YOJOllLyIqXctklQX7N4tdTiZSUxUiuGuGSyGuvXjl8hI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6MGYZRi2JbHs0HpaxGSE0NTuUM7qDMMPWcveAbvCUGccszJGZ
-	ReOQ7bj+PWH7nLk/TYG1SgvTvKl/ll5yiAiKM8tH4xNDVtjUCDh+CMK/77tvAP1nK0SPQbB9cD4
-	4ZASuiR3vm1rQHM6XdMEtkENr5Jm8r/o=
-X-Gm-Gg: ASbGncv2pBws+Q2jXdeCZI8oMYZOefoXsvRNlbHNUOOV1seDd8QCwyMBQWd6exgN5kx
-	Lr081U8krdfl/CjFig9tP+36ZeCU9eb/3bgP0Eh4lyh/7ICDPntyee4I4OpED/ANFJuTIahaOpm
-	7NfbapKLYJS97I67I0E5jsCzTNyPw1XKtZ
-X-Google-Smtp-Source: AGHT+IGQGDTImDb7hemjK0C6CG0zw8Tx7GPZRPnPRwbyqjKhyQQF4dNsCj7gEWhIea0B/s5rk35n1JTdQXkHkaKYrOY=
-X-Received: by 2002:a17:907:9486:b0:ad5:7048:5177 with SMTP id
- a640c23a62f3a-ad57048647emr215220866b.23.1747637007581; Sun, 18 May 2025
- 23:43:27 -0700 (PDT)
+        bh=7dywUjDT8o21WvwXU4M6vIQErqeNKabKpWm7swQyA/U=;
+        b=n9rHc23+QDkzQfaCtdOmJ2wAkxqMpz8vq/vc5CvF0NyBqzXLSQlUR78cBcq3/vq/Uw
+         Lc5UXzDD0O/TiSIV4bC8ZgD2Ag0I4iePyObG+zQsxDtfsq/WIOwr2czNLxjkQCVUUA8i
+         Cr3/vsMHfa0damiolw1gLgHnjaF1/QgtQHDAkSPXeoCvRSb6HXrzh2Oo7aCXkWjCBDjU
+         mQ7WWRbshgV7rTBSRUWX6OblPyZ+MOU6eEX2cU9hU7++sug+iHsWlrl3bmoRqd8igHP3
+         V/3V1CztnGTS6q6PDv+FYtATyfL2ZjRJITkclv+PcqvtLO2vZeAtpYK9xYq5atHxfMeM
+         CBoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAofZyWo00DnSVweJZdDgifcFTzZeHpm52BhKPJkl2nZdUfISVQ2V6cKgpNCWo3eNdLnlvBff2bF8MeUfMkDh6@vger.kernel.org, AJvYcCXOQ++6x7SXyzByUqNJ5Y54j9OxUR7UzzzqXyL4iF8qEjADNrUP8314tbKxVmS6Uq4PKjfSe+pj8T+XSYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQmEKbc3ujAa7Qk6aKB6avYzIlqqOyHlGlwRoucIgyJY6EZgEb
+	cwgdYMdBXfuQJEl3iXoh6e8wwIXUVPCzXk2+HpapOm+1XRDdMV1mGq1Msd8+FAzL2ssJMMU9gZK
+	az8scclSVBDnCj1fRB1ty330hvkXbBGE=
+X-Gm-Gg: ASbGnctLFeA4zNLivlyOEdBa6+diiNzcemkWxLejDYYgfwVyXd+5ToKP7kxCIxTDQNs
+	+vmTAKLqbNWtFMoEdrtfzprjpUAdTvp1+iQHCjQmdzCyuUAcLmm9d0xNrtzU/4uw7E2EPOeZgnO
+	UXtIDF0NhwALpyla9GO3K07jVczaDdJ5/EBHA=
+X-Google-Smtp-Source: AGHT+IF3L8AEKICmzGQm5Dojg79LCCoJK0F7RtvPfyM64CES29vCUgrPrAWhmo0Ub4qh5k07rF4LLYu7OYPAWeeMwNM=
+X-Received: by 2002:a05:6402:3547:b0:601:e99c:9b19 with SMTP id
+ 4fb4d7f45d1cf-601e99c9c00mr1880146a12.1.1747637128468; Sun, 18 May 2025
+ 23:45:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519041100.7611-1-hanchunchao@inspur.com>
-In-Reply-To: <20250519041100.7611-1-hanchunchao@inspur.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 19 May 2025 08:43:16 +0200
-X-Gm-Features: AX0GCFt6TX-kpcqo6wFJopSCzFQ-753sUod7TzdE4KcmBnMO8hkNcQ5Eo9TeftY
-Message-ID: <CAOQ4uxjU+RC_8Ec62irOy-Kd7H6UGuqpasq1qb5fXmZgkj_tUg@mail.gmail.com>
-Subject: Re: [PATCH] ovl: Fix PTR_ERR zero argument warning
-To: Charles Han <hanchunchao@inspur.com>
-Cc: miklos@szeredi.hu, linux-kernel@vger.kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250519023517.4062941-1-almasrymina@google.com> <20250519023517.4062941-2-almasrymina@google.com>
+In-Reply-To: <20250519023517.4062941-2-almasrymina@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
+Date: Mon, 19 May 2025 15:45:17 +0900
+X-Gm-Features: AX0GCFua0Whe2SPSz3kVScCNpt1xz5InpnKb57gfS0HzR5yNtmzH2eWzkLVWbEk
+Message-ID: <CAMArcTWQY5FW5x3x-OM6tHh6nX4Fu91e7GNSQ97x6Qy80gCH6g@mail.gmail.com>
+Subject: Re: [PATCH net-next v1 1/9] net: devmem: move list_add to net_devmem_bind_dmabuf.
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, David Ahern <dsahern@kernel.org>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, 
+	praan@google.com, shivajikant@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 6:11=E2=80=AFAM Charles Han <hanchunchao@inspur.com=
-> wrote:
+On Mon, May 19, 2025 at 11:35=E2=80=AFAM Mina Almasry <almasrymina@google.c=
+om> wrote:
 >
-> In the ovl_check_origin()  and ovl_index_upper()function, the
-> PTR_ERR function was potentially passed a null pointer.
-> To fix this issue, separated the null pointer check and the error
-> pointer check, ensuring that PTR_ERR is only called with a valid
-> error pointer.
+> It's annoying for the list_add to be outside net_devmem_bind_dmabuf, but
+> the list_del is in net_devmem_unbind_dmabuf. Make it consistent by
+> having both the list_add/del be inside the net_devmem_[un]bind_dmabuf.
 >
-> Fix below smatch warning.
-> smatch warnings:
-> fs/overlayfs/namei.c:479 ovl_check_origin() warn: passing zero to 'PTR_ER=
-R'
-> fs/overlayfs/namei.c:581 ovl_index_upper() warn: passing zero to 'ERR_CAS=
-T'
+> Cc: ap420073@gmail.com
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+
+Hi Mina,
+Thanks a lot for this work!
+
+I tested it and it works well.
+
+Tested-by: Taehee Yoo <ap420073@gmail.com>
+
+Thanks!
+Taehee Yoo
+
 >
-> Fixes: ad1d615cec1c ("ovl: use directory index entries for consistency ve=
-rification")
-> Fixes: e8f9e5b780b0 ("ovl: verify directory index entries on mount")
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 > ---
->  fs/overlayfs/namei.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  net/core/devmem.c      | 5 ++++-
+>  net/core/devmem.h      | 5 ++++-
+>  net/core/netdev-genl.c | 8 ++------
+>  3 files changed, 10 insertions(+), 8 deletions(-)
 >
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index 0b8b28392eb7..bc917b56e2b1 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -475,7 +475,9 @@ static int ovl_check_origin(struct ovl_fs *ofs, struc=
-t dentry *upperdentry,
->         struct ovl_fh *fh =3D ovl_get_fh(ofs, upperdentry, OVL_XATTR_ORIG=
-IN);
->         int err;
+> diff --git a/net/core/devmem.c b/net/core/devmem.c
+> index 0dba26baae18..b3a62ca0df65 100644
+> --- a/net/core/devmem.c
+> +++ b/net/core/devmem.c
+> @@ -178,7 +178,8 @@ int net_devmem_bind_dmabuf_to_queue(struct net_device=
+ *dev, u32 rxq_idx,
+>  struct net_devmem_dmabuf_binding *
+>  net_devmem_bind_dmabuf(struct net_device *dev,
+>                        enum dma_data_direction direction,
+> -                      unsigned int dmabuf_fd, struct netlink_ext_ack *ex=
+tack)
+> +                      unsigned int dmabuf_fd, struct netdev_nl_sock *pri=
+v,
+> +                      struct netlink_ext_ack *extack)
+>  {
+>         struct net_devmem_dmabuf_binding *binding;
+>         static u32 id_alloc_next;
+> @@ -299,6 +300,8 @@ net_devmem_bind_dmabuf(struct net_device *dev,
+>         if (err < 0)
+>                 goto err_free_chunks;
 >
-> -       if (IS_ERR_OR_NULL(fh))
-> +       if (!fh)
-> +               return -ENODATA;
-
-Not good. This is changing behavior.
-
-> +       else if (IS_ERR(fh))
->                 return PTR_ERR(fh);
-
-PTR_ERR_OR_ZERO if you must.
-
+> +       list_add(&binding->list, &priv->bindings);
+> +
+>         return binding;
 >
->         err =3D ovl_check_origin_fh(ofs, fh, false, upperdentry, stackp);
-> @@ -577,7 +579,9 @@ struct dentry *ovl_index_upper(struct ovl_fs *ofs, st=
-ruct dentry *index,
->                 return dget(index);
+>  err_free_chunks:
+> diff --git a/net/core/devmem.h b/net/core/devmem.h
+> index 58d8d3c1b945..e7ba77050b8f 100644
+> --- a/net/core/devmem.h
+> +++ b/net/core/devmem.h
+> @@ -11,6 +11,7 @@
+>  #define _NET_DEVMEM_H
 >
->         fh =3D ovl_get_fh(ofs, index, OVL_XATTR_UPPER);
-> -       if (IS_ERR_OR_NULL(fh))
-> +       if (!fh)
-> +               return ERR_PTR(-ENODATA);
-> +       else if (IS_ERR(fh))
->                 return ERR_CAST(fh);
-
-I don't see what's wrong with casting a NULL pointer.
-This looks like a dubious smatch warning.
-
-We could add ERR_OR_NULL_CAST() but it seems pointless.
-
-Thanks,
-Amir.
+>  #include <net/netmem.h>
+> +#include <net/netdev_netlink.h>
+>
+>  struct netlink_ext_ack;
+>
+> @@ -82,7 +83,8 @@ void __net_devmem_dmabuf_binding_free(struct work_struc=
+t *wq);
+>  struct net_devmem_dmabuf_binding *
+>  net_devmem_bind_dmabuf(struct net_device *dev,
+>                        enum dma_data_direction direction,
+> -                      unsigned int dmabuf_fd, struct netlink_ext_ack *ex=
+tack);
+> +                      unsigned int dmabuf_fd, struct netdev_nl_sock *pri=
+v,
+> +                      struct netlink_ext_ack *extack);
+>  struct net_devmem_dmabuf_binding *net_devmem_lookup_dmabuf(u32 id);
+>  void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)=
+;
+>  int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
+> @@ -170,6 +172,7 @@ static inline void __net_devmem_dmabuf_binding_free(s=
+truct work_struct *wq)
+>  static inline struct net_devmem_dmabuf_binding *
+>  net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf_fd,
+>                        enum dma_data_direction direction,
+> +                      struct netdev_nl_sock *priv,
+>                        struct netlink_ext_ack *extack)
+>  {
+>         return ERR_PTR(-EOPNOTSUPP);
+> diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+> index 762570dcda61..2afa7b2141aa 100644
+> --- a/net/core/netdev-genl.c
+> +++ b/net/core/netdev-genl.c
+> @@ -908,7 +908,7 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struc=
+t genl_info *info)
+>         }
+>
+>         binding =3D net_devmem_bind_dmabuf(netdev, DMA_FROM_DEVICE, dmabu=
+f_fd,
+> -                                        info->extack);
+> +                                        priv, info->extack);
+>         if (IS_ERR(binding)) {
+>                 err =3D PTR_ERR(binding);
+>                 goto err_unlock;
+> @@ -943,8 +943,6 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struc=
+t genl_info *info)
+>                         goto err_unbind;
+>         }
+>
+> -       list_add(&binding->list, &priv->bindings);
+> -
+>         nla_put_u32(rsp, NETDEV_A_DMABUF_ID, binding->id);
+>         genlmsg_end(rsp, hdr);
+>
+> @@ -1020,15 +1018,13 @@ int netdev_nl_bind_tx_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>                 goto err_unlock_netdev;
+>         }
+>
+> -       binding =3D net_devmem_bind_dmabuf(netdev, DMA_TO_DEVICE, dmabuf_=
+fd,
+> +       binding =3D net_devmem_bind_dmabuf(netdev, DMA_TO_DEVICE, dmabuf_=
+fd, priv,
+>                                          info->extack);
+>         if (IS_ERR(binding)) {
+>                 err =3D PTR_ERR(binding);
+>                 goto err_unlock_netdev;
+>         }
+>
+> -       list_add(&binding->list, &priv->bindings);
+> -
+>         nla_put_u32(rsp, NETDEV_A_DMABUF_ID, binding->id);
+>         genlmsg_end(rsp, hdr);
+>
+> --
+> 2.49.0.1101.gccaa498523-goog
+>
