@@ -1,137 +1,161 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8594431
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543402206BB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747697297; cv=none; b=PZ5OfYKmzvv3dgFBbPmjlCcEPwi4ZwDEW7ZSajbbQ8XKbBFZbej1PRY256M8ZjVaGHLOUjWDOl9Iwn+OS2xMAm8ljCiR/vp/W73xMUT/GEKoqVKALIUd/CKgvP//rBTL7W34ft4SURXq7zyAoeLn5FnOm/hjzIcJE+O5Y1ymWy8=
+	t=1747697299; cv=none; b=KUK6YMmNrPNLJhUy6vB3joAX31OtKLC+98112nndqNvg/OQyjazYE5HQQOpfbLUcTmjzXUqEj7zR83u8ydOMDgqN/zVGDajFrSlnVDygCZRYlH+G22UIYinLHVm05NLP2M567Uo0owm1IaEBPW5/WtoK6rJS3wPoGbkyFpxjfRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747697297; c=relaxed/simple;
-	bh=ABYKT87hUcjZ47YhZTQDIPC9cAn/v+Sry3menbwd5+k=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nOSaE5eJRUA8rxDnzVU5j87K9Eo2+QmsdS1qWPucZ+FxhLALbFIMGZZBe5adMq4nOKg8Y9VmLWoeu79BWKhJAN8xK2nW8hBMO3l/yRtmACTjT5rdfP+45NFyLr25lykL+exlPjSx1qyjCOe1hD9nzVfiSXewhiybPhwdhv+JZ1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wiyed438; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1747697299; c=relaxed/simple;
+	bh=7XLMy6k3euXlqZoZIk6NOl+uE5XTQOe7T5Piz8sEjIE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=I2CDBI86qJgAGAbXZnhXNyJRhq4Lb3jgPiK8uWitOl6HixUVZywTx1VNeNGTpiYh8LGDkc1yBRvjSmfWkTgE7m1QizClb2radpzyVIM5QvZhfERgJXgJlsqMsIjAHqWLPLgNv8fvsKLdYITNVaIwtooexxDZEwIJdS+gRTeDjFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CgI3bHOw; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wiyed438"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2323bd7f873so14499015ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CgI3bHOw"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ed376a927so1554477a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747697295; x=1748302095; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eosjEUPXX9wu9dJnrDuC2wPHanGn2nAIE+9tvUyY9+Q=;
-        b=Wiyed4389z4h26irDZVQyqKmQJQLYSGNBG/lGr3Op5OElu3W4Rwye+5m5NBA8XBr1c
-         4BvI27fmSLsIOF42plID+uR+zGymLAU6Lpoz7/Nc9chD8eSjDrj/Xdpnm6E/qy/Sx6xI
-         6iGWmE6lJ+tvjXkNGC88/ib1uGzwS6Lodkq8Aev/TfJ9/tSlOyCelOx5EMK0He8/5VE8
-         Am8J5xJrTC0AzFmHBTsQhNfdHMNKun9K5adQJBjuGfEtzmvMxKuk0YxRLmlIAyFDF4lP
-         khSwuRSldFDHulHG5ubvo0Iq2lxhnW0uVSeD7gZd48A97qf8dfjt3f9SD+4vi/k/eIRc
-         9wfQ==
+        d=google.com; s=20230601; t=1747697296; x=1748302096; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZFZL/kH4WRlINTL3eamUJbEcDFBeTVdE3ERRtxKHz5s=;
+        b=CgI3bHOwwC5ZzIt4N+CUiQ49COZPzu0fzTbaGfoVi4ePAw7JHmMjPGZHFsu+ndv6LA
+         cCv0RSBq3zkkW5p8yp9YvtU3ddIXrBhFFTNZNPAu3uvecZdswLFTzDIqj7NKxoibwClp
+         9rwUuFF1aZbhCaVZ5yfuWps4kviQHMcXdRI9MwCYgDRAt0en7MMDr2vpKzaEQPo9R58P
+         zKVgzzl/Rolwj1IlQfHOFlGcTd3er8Y2Oo50IRXKJFHJaCi4XTih+U7VNI/mdXas1zgj
+         ++qTeriAf38RQf2XAPRX1M8n7uS/wiAyctqF5V5Q1FAD4EfjkOkydMfllE9YI7WCGk/0
+         ZPIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747697295; x=1748302095;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eosjEUPXX9wu9dJnrDuC2wPHanGn2nAIE+9tvUyY9+Q=;
-        b=D+Vp0N92452prwKHCmxuMcwmbQcgbrAXc65xMrom4Ez+D/U804titglHsUGk8JXAxN
-         CGFiBGrI0cbDIko5Qo3zjfQP5zdTVZC83ZvV5EnjqvdL4i0YkCVag6EUfvJRspHuXwur
-         4WEc62UpPpf0DkxO3bsJqmR4q98OGO7HBfcggtB2DQDKWsdxnmdaPwZDp1kLVl7WK8LV
-         tVpseZWOlcRZG2uG5HWAQWD4ze8kRKmyuXoswY19xzTHr6HGxmExc7CJvQMPuZHCHG3M
-         8LeFBBzTXmR0TsK3tCYj6Ek+RDrQgy+PQit5DtEjWS3PXM0+GcSyQKwSTAYg/KDLt2QN
-         1uTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUT68ZgHbp8qCwOxK2bJTY3404qVprJjL3W7XrP5yJKJgd/IscmNA+PRJA60IAE3yPI6ZmIHMLBuaSlcYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUMJIQgOuJpVWvQdBbGpsXeYgVEr0T+qJnji21YWqcmgH2+6ie
-	z/FhD5LlRQkB5NFB33l1Gs/kFZ9X2rX4wo+CvVJIMleaAWo6aCWzsz5gOp+ITFgVpA3cwzfHXgc
-	jlRmZ4A==
-X-Google-Smtp-Source: AGHT+IG78zcntgjKlrty4n74EQTp4yTRbBdkG1kjpn+sAJZJpv8icqYrL30aPlVyOesK1rcC7UWDb/BPFow=
-X-Received: from plki13.prod.google.com ([2002:a17:903:1a0d:b0:231:f3aa:e763])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f791:b0:223:501c:7576
- with SMTP id d9443c01a7336-231d439b01dmr229344175ad.12.1747697294762; Mon, 19
- May 2025 16:28:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747697296; x=1748302096;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZFZL/kH4WRlINTL3eamUJbEcDFBeTVdE3ERRtxKHz5s=;
+        b=hT3BtZyC4D1cETdKxP2XOjAhymg1kRyL1PqX2uoKp7U9z/DLuXXK/4k0SrdiFdMQWc
+         FbPXbny3RaWZEEAsSsXLxM0anYwL1ojMgu/iThYDR8wf906Z75D6RcFh8GEQQeam0YWV
+         3S/q3OrxfWh7OlavSOwAPUGzdQZL0Qx7GF3To4VS4Q3QSCD0Y2Q+wqIDtOqwWcpGMsLq
+         HjANwwTuCgy32r64nIxnJnf8/pAHuQhq42f/0ZUtFmpNW2pjcBk8xo/YQyQ/LkA3xae8
+         O2fuX6OUT83dIs1M96HfymPZ23hLn9i8tz0Z843/GV/c597HFIYliFTQEvLBshdGKyWt
+         z5JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJIqhiM04ZMR/sWrTneBkBgUWMN/wyF5Eh9eNvbTVMHOUbnnjY+yHU+r1OVGbLvqcH2fm+JThM7E2EIb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIwXFLHhsxreRkKTJUKsg3iV10DLz9m5YVGiSiWe3GDItzfJ0i
+	C2SqwLZWkz6Tpi4n/7SJ+80MGMZnxdZXAYum5VSAF2nUQc3JgtxL07WEKt7arp7AGILmgN2JzBS
+	/tgFVmA==
+X-Google-Smtp-Source: AGHT+IHQHbcXZtaoWAtgRshiy3d8CBLPCDH18KzA2veAqY8K4gctlw03Pifc9NLOszqBQATvWqPErDxNwGg=
+X-Received: from pjk3.prod.google.com ([2002:a17:90b:5583:b0:30a:4874:5389])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e85:b0:2ee:c30f:33c9
+ with SMTP id 98e67ed59e1d1-30e7e770523mr18211368a91.14.1747697296528; Mon, 19
+ May 2025 16:28:16 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 May 2025 16:27:53 -0700
+Date: Mon, 19 May 2025 16:27:54 -0700
+In-Reply-To: <20250519232808.2745331-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250519232808.2745331-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519232808.2745331-1-seanjc@google.com>
-Subject: [PATCH 00/15] KVM: x86: Add I/O APIC kconfig, delete irq_comm.c
+Message-ID: <20250519232808.2745331-2-seanjc@google.com>
+Subject: [PATCH 01/15] KVM: x86: Trigger I/O APIC route rescan in kvm_arch_irq_routing_update()
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This series is prep work for the big device posted IRQs overhaul[1], in which
-Paolo suggested getting rid of arch/x86/kvm/irq_comm.c[2].  As I started
-chipping away bits of irq_comm.c to make the final code movement to irq.c as
-small as possible, I realized that (a) a rather large amount of irq_comm.c was
-actually I/O APIC code and (b) this would be a perfect opportunity to further
-isolate the I/O APIC code.
+Trigger the I/O APIC route rescan that's performed for a split IRQ chip
+after userspace updates IRQ routes in kvm_arch_irq_routing_update(), i.e.
+before dropping kvm->irq_lock.  Calling kvm_make_all_cpus_request() under
+a mutex is perfectly safe, and the smp_wmb()+smp_mb__after_atomic() pair
+in __kvm_make_request()+kvm_check_request() ensures the new routing is
+visible to vCPUs prior to the request being visible to vCPUs.
 
-So, a bit of hacking later and voila, CONFIG_KVM_IOAPIC.  Similar to KVM's SMM
-and Xen Kconfigs, this is something we would enable in production straightaway,
-if we could magically fast-forwarded our kernel, as fully disabling I/O APIC
-emulation puts a decent chunk of guest-visible surface entirely out of reach.
+In all likelihood, commit b053b2aef25d ("KVM: x86: Add EOI exit bitmap
+inference") somewhat arbitrarily made the request outside of irq_lock to
+avoid holding irq_lock any longer than is strictly necessary.  And then
+commit abdb080f7ac8 ("kvm/irqchip: kvm_arch_irq_routing_update renaming
+split") took the easy route of adding another arch hook instead of risking
+a functional change.
 
-Side topic, Paolo's recollection that irq_comm.c was to hold common APIs between
-x86 and Itanium was spot on.  Though when I read Paolo's mail, I parsed "ia64"
-as x86-64.  I got quite a good laugh when I eventually realized that he really
-did mean ia64 :-)
+Note, the call to synchronize_srcu_expedited() does NOT provide ordering
+guarantees with respect to vCPUs scanning the new routing; as above, the
+request infrastructure provides the necessary ordering.  I.e. there's no
+need to wait for kvm_scan_ioapic_routes() to complete if it's actively
+running, because regardless of whether it grabs the old or new table, the
+vCPU will have another KVM_REQ_SCAN_IOAPIC pending, i.e. will rescan again
+and see the new mappings.
 
-[1] https://lore.kernel.org/all/20250404193923.1413163-1-seanjc@google.com
-[2] https://lore.kernel.org/all/cf4d9b81-c1ab-40a6-8c8c-36ad36b9be63@redhat.com
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/irq_comm.c  | 10 +++-------
+ include/linux/kvm_host.h |  4 ----
+ virt/kvm/irqchip.c       |  2 --
+ 3 files changed, 3 insertions(+), 13 deletions(-)
 
-Sean Christopherson (15):
-  KVM: x86: Trigger I/O APIC route rescan in
-    kvm_arch_irq_routing_update()
-  KVM: x86: Drop superfluous kvm_set_pic_irq() => kvm_pic_set_irq()
-    wrapper
-  KVM: x86: Drop superfluous kvm_set_ioapic_irq() =>
-    kvm_ioapic_set_irq() wrapper
-  KVM: x86: Drop superfluous kvm_hv_set_sint() => kvm_hv_synic_set_irq()
-    wrapper
-  KVM: x86: Fold kvm_setup_default_irq_routing() into kvm_ioapic_init()
-  KVM: x86: Move kvm_{request,free}_irq_source_id() to i8254.c (PIT)
-  KVM: x86: Hardcode the PIT IRQ source ID to '2'
-  KVM: x86: Don't clear PIT's IRQ line status when destroying PIT
-  KVM: x86: Explicitly check for in-kernel PIC when getting ExtINT
-  KVM: Move x86-only tracepoints to x86's trace.h
-  KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling in-kernel I/O APIC
-  KVM: Squash two CONFIG_HAVE_KVM_IRQCHIP #ifdefs into one
-  KVM: selftests: Fall back to split IRQ chip if full in-kernel chip is
-    unsupported
-  KVM: x86: Move IRQ mask notifier infrastructure to I/O APIC emulation
-  KVM: x86: Fold irq_comm.c into irq.c
-
- arch/x86/include/asm/kvm_host.h            |  22 +-
- arch/x86/kvm/Kconfig                       |  10 +
- arch/x86/kvm/Makefile                      |   7 +-
- arch/x86/kvm/hyperv.c                      |  10 +-
- arch/x86/kvm/hyperv.h                      |   3 +-
- arch/x86/kvm/i8254.c                       |  11 +-
- arch/x86/kvm/i8254.h                       |   3 +-
- arch/x86/kvm/i8259.c                       |  17 +-
- arch/x86/kvm/ioapic.c                      |  87 +++-
- arch/x86/kvm/ioapic.h                      |  22 +-
- arch/x86/kvm/irq.c                         | 336 ++++++++++++++-
- arch/x86/kvm/irq.h                         |   3 +-
- arch/x86/kvm/irq_comm.c                    | 469 ---------------------
- arch/x86/kvm/lapic.c                       |   7 +-
- arch/x86/kvm/trace.h                       |  80 ++++
- arch/x86/kvm/x86.c                         |  37 +-
- include/linux/kvm_host.h                   |   9 +-
- include/trace/events/kvm.h                 |  84 +---
- tools/testing/selftests/kvm/lib/kvm_util.c |  13 +-
- virt/kvm/irqchip.c                         |   2 -
- 20 files changed, 577 insertions(+), 655 deletions(-)
- delete mode 100644 arch/x86/kvm/irq_comm.c
-
-
-base-commit: 3f7b307757ecffc1c18ede9ee3cf9ce8101f3cc9
+diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+index d6d792b5d1bd..e2ae62ff9cc2 100644
+--- a/arch/x86/kvm/irq_comm.c
++++ b/arch/x86/kvm/irq_comm.c
+@@ -395,13 +395,6 @@ int kvm_setup_default_irq_routing(struct kvm *kvm)
+ 				   ARRAY_SIZE(default_routing), 0);
+ }
+ 
+-void kvm_arch_post_irq_routing_update(struct kvm *kvm)
+-{
+-	if (!irqchip_split(kvm))
+-		return;
+-	kvm_make_scan_ioapic_request(kvm);
+-}
+-
+ void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
+ 			 u8 vector, unsigned long *ioapic_handled_vectors)
+ {
+@@ -466,4 +459,7 @@ void kvm_arch_irq_routing_update(struct kvm *kvm)
+ #ifdef CONFIG_KVM_HYPERV
+ 	kvm_hv_irq_routing_update(kvm);
+ #endif
++
++	if (irqchip_split(kvm))
++		kvm_make_scan_ioapic_request(kvm);
+ }
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index c685fb417e92..963e250664d6 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1020,14 +1020,10 @@ void vcpu_put(struct kvm_vcpu *vcpu);
+ 
+ #ifdef __KVM_HAVE_IOAPIC
+ void kvm_arch_post_irq_ack_notifier_list_update(struct kvm *kvm);
+-void kvm_arch_post_irq_routing_update(struct kvm *kvm);
+ #else
+ static inline void kvm_arch_post_irq_ack_notifier_list_update(struct kvm *kvm)
+ {
+ }
+-static inline void kvm_arch_post_irq_routing_update(struct kvm *kvm)
+-{
+-}
+ #endif
+ 
+ #ifdef CONFIG_HAVE_KVM_IRQCHIP
+diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+index 162d8ed889f2..6ccabfd32287 100644
+--- a/virt/kvm/irqchip.c
++++ b/virt/kvm/irqchip.c
+@@ -222,8 +222,6 @@ int kvm_set_irq_routing(struct kvm *kvm,
+ 	kvm_arch_irq_routing_update(kvm);
+ 	mutex_unlock(&kvm->irq_lock);
+ 
+-	kvm_arch_post_irq_routing_update(kvm);
+-
+ 	synchronize_srcu_expedited(&kvm->irq_srcu);
+ 
+ 	new = old;
 -- 
 2.49.0.1101.gccaa498523-goog
 
