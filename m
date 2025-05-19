@@ -1,169 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA941C84B8;
-	Mon, 19 May 2025 09:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4FF26F476
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647964; cv=none; b=unDXnvXU4PwRaYE9Ml4TZkujSfi8yXi1ecTrhBWyjMU3s2tWHYMUzAb5Lk6seEG2yjujGEwYuxFNI2LDd6hDOBQKKlMLJ7o2y7QFjM2EsaJreaiKEKe/EU/AIjcFQJH4dUVCaTzJlTHFfIB/87F9Xq5IlxjSofUE3TKfa4/jYvk=
+	t=1747648008; cv=none; b=B3qidFE0t00CMaBnZd5IODS2UfxO5RJOvDeWF0K7S1xf6ptzuBNt1OEvaK31CA2zemDMv9aLM/6VQ0Lbf4Rqr0xWvJ1HDkZ1QLjiMSXQnJWbqWlR++NPbtrmlY4xK7gzRDjg5KNQM+IohLIGnp0RAqrOpyzkY1+wpabLDx4OI0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647964; c=relaxed/simple;
-	bh=v1zk102uKTVC4imT+UtGRjoS7bC/SRZoc5fRnhB9cqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EnogZ9S8vjlwHVe5uEoAviBfq6/ujYNuMsR2VOAXmGCzDSZ7UwmBGNhh4TGP61yhfqlBKEcVMKs/cHB5SE22pxEP4LhTTVuYimcXGTPoqM8ApEETvw6xXx77p3SdODmerPYsn8QH9JI0BcYHvNLa0ryBJ4O1V8oVOtxwh02hD8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4sncMub; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747648008; c=relaxed/simple;
+	bh=0u8ogeRxRSDh3NFo8oyAdKpDEInEANCluWNSHrLUU+g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EhtSBUrYuIxrJOj6NgqAsT1iYsrgDQtwB5+tXfaLptOR8aE/S4tfwcmhqPcAqLqNnAnP1e5Q7V+YHlWIgmgqrdkWvCQXCEdrT5GMK8/UtgHOb2Y4ZhebqGRmqFfSG9VFQUu4g/UmDSDewav/Q7Dm9BK9XVQAenfjFn2C1atVcb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaVBUBEb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4sncMub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747647961; x=1779183961;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v1zk102uKTVC4imT+UtGRjoS7bC/SRZoc5fRnhB9cqg=;
-  b=N4sncMub0cJYPhR6Q5q3jydTktD9uUEkHtCP4DChgFPO0qXq7t9aThWo
-   +P07aXsSz9ZNGbO7vvqMis2NGjQxneA7WpamRQrZ67aGoIA0D7tIk4QX9
-   J2zehoXnrdW+/b97bD+VoQmKr12Vc5CrE67A28utl1/zInqzQT++De9OB
-   WPa+tMDNPPbocwc63hz0tmEDwUxyP5EblT7P29RjhozJc/6umPqAZCnHy
-   Q7GLnxzhrI+RibE7GxFOKZFdwcSJDALnkG1pX8+N22w8Tc++U5c63a2qB
-   Y/7lT+/7J9mv1/U589BVPIZO1/XDC9xo7Eu2qguz9HE3LkIkf/ofM/ni5
-   Q==;
-X-CSE-ConnectionGUID: d9f6lwwjRIurGQh6L3SKiA==
-X-CSE-MsgGUID: ID4AxI6bSLyHVa+jEa2MwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="60193783"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="60193783"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:46:00 -0700
-X-CSE-ConnectionGUID: yPlT+hViQ9O+tOiod6B+6A==
-X-CSE-MsgGUID: yFbWCfFHRjq9JzxlJPiOiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139222597"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.253])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:45:57 -0700
-Date: Mon, 19 May 2025 11:45:49 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans de Goede <hdegoede@redhat.com>, tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, 
-	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com, naush@raspberrypi.com, 
-	mchehab@kernel.org, dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <bmvv2cc75baovi5hxfyuubl332btxxq7h6w447dwngzmizykoq@ly6lonub3qxy>
-References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
- <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
- <20250515084403.GQ23592@pendragon.ideasonboard.com>
- <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
- <20250515124050.GA12492@pendragon.ideasonboard.com>
- <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
- <aCZTi2odVXVZjJE8@svinhufvud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaVBUBEb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB53C4CEF1
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747648007;
+	bh=0u8ogeRxRSDh3NFo8oyAdKpDEInEANCluWNSHrLUU+g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TaVBUBEbMJLC5ggbHQ/b+OpW6Vk9XR9LaONrmlb0scO4xil29MEvb0MATsXeiPRVC
+	 9z7LiqG5OgC7VA/n+NbjoegbXZ93oAdWQwWt4yLSyp5FWdneGo9FMf+5U/wX4l3Ft9
+	 omw2dOVBuHaBgUcMcvxvetKrBV1n7mZB1JyR4PlrHIjqK1jzGynHkHRAL3t/aGTvMW
+	 G/Jh5Vcd25zNP+Qj4GrHB4tWr6phYaKlX06KaAQ9R4jx0f/Mj6p0mG4SGD0NjyvZYQ
+	 kZ6MrtyixFEhVBEirKmHrHrtO503CGlPJraMxUHH9IcpI3lTxOcDZK1zDLp2dYAQOk
+	 EeYVFhvtMzQCw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-551f00720cfso1231792e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:46:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWPaErsG/PSwEzBG3sfafoF3/Zoja/CRqVB9WXrfFOdfhddASe6J2Bpo8NLdVK/oyt6aWk/ONTZxXTAHvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybJqhiX5ybH1yqg8Yz3HrlIGTHGJk9s/UmFTPzQeZEx6kzxZVY
+	2/GQlk+qSAKYQPPpAOfMxQy7K2630uSONTmDm9qn02fZPEMXg2BvstJ3vOW3vc1u3vxcZlosTag
+	YcS6gvwV0Ex0OsHN/H9glDndHaEV0Yco=
+X-Google-Smtp-Source: AGHT+IEsfrxMJlY8VR6uLHRe4StJlVBbD8J6F7QXEZaujsRBClRAYH/6jw92RYcwzZSn/j/izpTLLmzfKIaDd4CyfMw=
+X-Received: by 2002:a05:6512:6614:b0:550:e608:410b with SMTP id
+ 2adb3069b0e04-550e71e9968mr2978430e87.33.1747648006115; Mon, 19 May 2025
+ 02:46:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCZTi2odVXVZjJE8@svinhufvud>
+References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+In-Reply-To: <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 May 2025 11:46:34 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEFykYgtHb0UaNQ5fk_0+q+ZHVJa4Gs8-v_Jq1_35-gEw@mail.gmail.com>
+X-Gm-Features: AX0GCFskD-h72YKL6c-zBWjPPNbm_KArgeLXtMYA3tsluGmXjpiBUBZLg452Pjc
+Message-ID: <CAMj1kXEFykYgtHb0UaNQ5fk_0+q+ZHVJa4Gs8-v_Jq1_35-gEw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Brian Gerst <brgerst@gmail.com>, "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Sakari,
+On Mon, 19 May 2025 at 11:41, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Sat, May 17, 2025 at 11:16:41AM +0200, Ard Biesheuvel wrote:
+> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > index f67a93fc9391..5c19bee0af11 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -395,7 +395,7 @@
+> >  #define X86_FEATURE_AVX512_BITALG    (16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
+> >  #define X86_FEATURE_TME                      (16*32+13) /* "tme" Intel Total Memory Encryption */
+> >  #define X86_FEATURE_AVX512_VPOPCNTDQ (16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
+> > -#define X86_FEATURE_LA57             (16*32+16) /* "la57" 5-level page tables */
+> > +#define X86_FEATURE_LA57             (16*32+16) /* 57-bit linear addressing */
+> >  #define X86_FEATURE_RDPID            (16*32+22) /* "rdpid" RDPID instruction */
+> >  #define X86_FEATURE_BUS_LOCK_DETECT  (16*32+24) /* "bus_lock_detect" Bus Lock detect */
+> >  #define X86_FEATURE_CLDEMOTE         (16*32+25) /* "cldemote" CLDEMOTE instruction */
+> > @@ -483,6 +483,7 @@
+> >  #define X86_FEATURE_PREFER_YMM               (21*32+ 8) /* Avoid ZMM registers due to downclocking */
+> >  #define X86_FEATURE_APX                      (21*32+ 9) /* Advanced Performance Extensions */
+> >  #define X86_FEATURE_INDIRECT_THUNK_ITS       (21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
+> > +#define X86_FEATURE_5LEVEL_PAGING    (21*32+11) /* "la57" Whether 5 levels of page tables are in use */
+>
+> I don't think we need this second flag - you can simply clear the existing
+> one.
 
-On Thu, May 15, 2025 at 11:50:19PM +0300, Sakari Ailus wrote:
-> Hi Mehdi, Laurent,
-> 
-> On Thu, May 15, 2025 at 03:51:33PM +0200, Mehdi Djait wrote:
-> > Hi Laurent,
-> > 
-> > On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
-> > > On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
-> > > > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
-> > > > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
-> > > > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
-> > > > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
-> > > > > > > platforms to retrieve a reference to the clock producer from firmware.
-> > > > > > > 
-> > > > > > > This helper behaves the same as clk_get_optional() except where there is
-> > > > > > > no clock producer like in ACPI-based platforms.
-> > > > > > > 
-> > > > > > > For ACPI-based platforms the function will read the "clock-frequency"
-> > > > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
-> > > > > > > indicated in the property.
-> > > > > > > 
-> > > > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> > > > > > 
-> > > > > > This certainly looks quite useful, thank you for working
-> > > > > > on this.
-> > > > > > 
-> > > > > > Note on some IPU3 platforms where the clk is provided by
-> > > > > > a clk-generator which is part of a special sensor-PMIC
-> > > > > > the situation is a bit more complicated.
-> > > > > > 
-> > > > > > Basically if there is both a clk provider and a clock-frequency
-> > > > > > property then the clock-frequency value should be set as freq
-> > > > > > to the clk-provider, see:
-> > > > > > 
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
-> > > > > > 
-> > > > > > for an example of a driver which handles this case.
-> > > > > 
-> > > > > On a side note, the DT bindings for the OV8865 doesn't specify the
-> > > > > clock-frequency property...
-> > > > 
-> > > > Is this wrong ?
-> > > > 
-> > > > The OV8865 driver was introduced for DT-based systems, where you will
-> > > > get a reference to the "struct clk corresponding to the clock producer"
-> > > > and then get the clock-rate/frequency with a call to:
-> > > > 
-> > > > 	rate = clk_get_rate(sensor->extclk);
-> > > > 
-> > > > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
-> > > > adding support for clock-frequency came later to support ACPI-based
-> > > > systems (IPU3 here)
-> > > 
-> > > I'd expect all device properties to be documented in DT bindings. Is
-> > > that an incorrect assumption ?
-> > > 
-> > 
-> > I am actually genuinely asking, is the clock-frequency a device property
-> > of the ov8865 camera sensor or the clock source, which is a separate device ?
-> 
-> The sensor's.
+That is what the old code does. It results in the flag transiently
+being set and cleared again, which is what I am trying to avoid.
 
-Ack.
+> Diff ontop below:
+>
 
-> 
-> Could we document how this is supposed to work on DT and ACPI?
-
-I can include a documentation patch in the next version.
-
-> 
-> I think we should also select COMMON_CLK on ACPI systems for sensor
-> drivers (in a separate patch maybe?), instead of relying on distributions
-> enabling it.
-> 
-
-makes sense.
-
-> > 
-> > Example the imx258 with a fixed-clock, which has its own compatible
-> > and DT bindings under bindings/clock/fixed-clock.yaml
-> > 
-> > So when adding support for ACPI-based systems, the DT bindings should
-> > not be changed because getting the clock-frequency from the ACPI _DSD
-> > property is a workaround only needed on ACPI-based systems.
-> 
-> I wouldn't say it's a workaround, but something that's only needed on ACPI
-> systems.
-> 
-
-Ack.
-
---
-Kind Regards
-Mehdi Djait
+How is that not just a revert?
