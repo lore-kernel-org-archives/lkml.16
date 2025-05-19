@@ -1,84 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB85245037;
-	Mon, 19 May 2025 11:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4D9274657
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654715; cv=none; b=hYslOJ1NkIImqO0xaNAFb+e0jQ+C1bcOYUKzsgjcbr/KrPGCafwntLDI6SWe8QK3wbF5ajjsJcGRmsB7apL5165inWjTUMfeZbZkBJHRqmYxlv0NQXffBWnlGy9Elgy/N//VqZ+w8402d2Dlwi/NCTISLSG1UZ/qeJiJSk/VKz8=
+	t=1747654740; cv=none; b=eSg8+oCqqchg2tHxA+HglcM5H6/74MC7PE27JX7/lNUt2FD/hP6WKsmN+amhaGFOxrOCUlhDD9+tk75nlouOVgg9xyXbbbTRLq6MSnllLS6YAN+Z0G6/X+gYUA3PI7Uu3ZVA4xL7w37dk3YJWgZLtFQqOrU8Ssa2z7X27LNkQHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654715; c=relaxed/simple;
-	bh=o/lm+VZOypRUlEm/5/CgUttywrWrG+hYImr/DbWxDQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQx4myObieg3Bhy73Lhq0kNaVQM71omiMIzOG0HdDURuZHUiYQ5uzwNOa0qGKCCc9ZHEmZCc42dEV/02KauLU0L4emFKjEpjrkFF/1vr0I3L0tMh7C3GwMNUyRwUkeIAyeZoLOxB6MBg+j3rXen6vccpJo9R23EcrpFCvxQUcrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NAu76rHm; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747654740; c=relaxed/simple;
+	bh=TMHxhEkJeLRrFVomKdfUPmg32HngiwuN7Y8XouZQTSs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QvoaxQ5BY9rzNqEcdQYJ0O8dl+Iqc0oFTfhwaESm1OCQek7vTWpzZBasjxl5V1HEUxaEE9vybfrkDnC8zPblvPVsomYOBjXUA92UsZJb2IRP+FIGRYVTYvFqf27dmbrFmEvr5aLHswQl25hKoDGQl1bITXnqkzxKc22UBSHpzKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qplCrzOO; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NAu76rHm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747654714; x=1779190714;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o/lm+VZOypRUlEm/5/CgUttywrWrG+hYImr/DbWxDQM=;
-  b=NAu76rHm11ZoN/qa9heTyq8EBew2yrMhipfHPWgGPqPJn7gOB7IqBxgZ
-   FyVvDlOWrjWmaECUXsvrGfavX8UUiutH0Qwq3bnCOovSQ83xCrvWtO1Dp
-   CGcR4m3baD6aCVU+Gi+LuayXcWxa5AipqwMe99tBwQZ3Q0g44iHrdRIwH
-   ypoZEijhdKGPYkkcw7L8NGysPOPuPRjMPVvAoSRNYHZXqyhIb0mp9M7W1
-   A7BIGskGkeDipusuHV6z/B1QbCVixUMvistez7vIdVzrxfvV7Z4cmFgZ6
-   Ee8kzVhXrOvvM8hI8Q+IgjfVVFBcP1wbMq7IqnaUaUW39phfln32FzOOg
-   w==;
-X-CSE-ConnectionGUID: 9+p+xgzDRVqemJdWXyl5mQ==
-X-CSE-MsgGUID: rEak/GP1S4uBB4lrvfzfcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49479940"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="49479940"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:38:33 -0700
-X-CSE-ConnectionGUID: 3nYxEmY7RQChBg5qPRVnwA==
-X-CSE-MsgGUID: Sik00Sy3QvS6PUdMoJQ5hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144222927"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:38:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uGyp9-000000031IF-1OwW;
-	Mon, 19 May 2025 14:38:27 +0300
-Date: Mon, 19 May 2025 14:38:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/6]
-Message-ID: <aCsYMzWrV3bGpMWb@smile.fi.intel.com>
-References: <20250519112959.25487-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qplCrzOO"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7b98303087so889423276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 04:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747654738; x=1748259538; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jGbkzJ0eqqimJI7DwVKRZ7T05jAEAZTanGLLnplCIgc=;
+        b=qplCrzOOeNGb+ExJFbmhlwgae5MQ/NMv0uqLEQIn1I1n5sVGLEbN21aaxQ3J6nqHa2
+         jR8nMUxnKoAUeVh+cRd5kf2rwMaOoLNDGYVJxXkL9DnOECscng6dlzaclADb6RPbk0pn
+         4oUgXaDC95CFSnqhEt+Ej3VlSZGvCbjQk/pGfQWL7BsltrNFChoLGshigd8jLbhJ3c3S
+         GnQtbctZb6/i1WkiSnY4nX3EC+lf+B12Se0x9sbmzkM1JgkVJTNjzonW0h7lrg8S8qsm
+         DHmbYg7EUx2INULKcSW6QPNM/PfRaMbtbjskt3dFuiHh6psBuuB/98HAl5M3MtZg7kKe
+         IpKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747654738; x=1748259538;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGbkzJ0eqqimJI7DwVKRZ7T05jAEAZTanGLLnplCIgc=;
+        b=S67M1URjvjNx+VGY33Cm4jsT9UQjobBB9RosOBbNzw0SopbGn1zU044wGQuPuZWxg/
+         HVOMsFPzSdK5H1d3VVgylurX8UbybJd2n0Cgsgw9KAgKrbLmuUpaBlwrMZXqCoCFAQV3
+         jGvQC8dWiKtznztL+lWPZE0upj1ozHgjoWbtBho1bFm8W5Ca6WdkarvXU//tb3Q1K4NN
+         g1hOGmcPGLrN+eU87anbI2RmP5pmVYriTgkAN76U0iUolRPV0ZGPEXsBUGwGe7scg7J6
+         cDZVHks6y97sNiu+nyhyy0AKOp8zu6NbCtI4CIS9jr9jFXs2QpKwSlPGth9+7CjT9/a1
+         1e+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCRchs7BVBo8oTtTe580/dRN4Tp/dL0A+bkYDl/EFTLPXau3iauuonM4oRzy5kJCB3XPs3QHJpjB1pbrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIMfRbFLh//aQk+AJ1IKH21jBDORRsDs4eo9Tag1yIGuoLx63q
+	5r7c0AMelY0+mTE8gjHRT82vCHbWcN4yTlHJXlZt/SbE6uIlG9bdzLgwQzwySo6FOOAVkpK/s1H
+	swRarXygzokxT4Y5fCKv+NtRzYaozfJS+AdcBQ1UHXA==
+X-Gm-Gg: ASbGncs+wV34Z0zM1MA5sPiIRIfAoetMhVbeArGpzUbsbPPyK506lPoYXTvlzcnNAdX
+	dg1tf2DeiFAB2HL30Xf1plDJ9nEiB52eV4mmMcAjKB0mk4115vcY99/9M1BEzt2QqV3yWsE90Zx
+	SfICCU1fBt0z1bfuaJf7qRonzqGEsMBw0+Vg==
+X-Google-Smtp-Source: AGHT+IGEhk9xvOXamJcUf2c7oYgnHzt7/Q6Jc8A16RlKxL4KhnX0gE0Bk6C5w2N1j0qtNoul2O4nnkYi1A17Lqm3muU=
+X-Received: by 2002:a05:6902:1547:b0:e7b:9763:6676 with SMTP id
+ 3f1490d57ef6-e7b97636a60mr5570580276.17.1747654737919; Mon, 19 May 2025
+ 04:38:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519112959.25487-2-phasta@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250509-20-k1-sdhci-v3-0-526c35feaa20@gentoo.org>
+ <20250509-20-k1-sdhci-v3-2-526c35feaa20@gentoo.org> <4cee9284-8f71-4214-8bc2-48bcb4030e40@intel.com>
+ <20250512075631-GYA517379@gentoo>
+In-Reply-To: <20250512075631-GYA517379@gentoo>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 19 May 2025 13:38:21 +0200
+X-Gm-Features: AX0GCFuvP9LYuHS81_oe6T9DU2l0mF54pVYJmbBwMEiyFEMW40gm2OmA7P10SVI
+Message-ID: <CAPDyKFpgCMsaP=CZx210Ov=gTCkez-fwEPMwKTGHrzF51p5_TA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mmc: sdhci-of-k1: add support for SpacemiT K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, linux-mmc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 19, 2025 at 01:29:54PM +0200, Philipp Stanner wrote:
+On Mon, 12 May 2025 at 09:56, Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Ulf,
+>
+> On 09:04 Mon 12 May     , Adrian Hunter wrote:
+> > On 09/05/2025 16:22, Yixun Lan wrote:
+> > > The SDHCI controller found in SpacemiT K1 SoC features SD,
+> > > SDIO, eMMC support, such as:
+> > >
+> > > - Compatible for 4-bit SDIO 3.0 UHS-I protocol, up to SDR104
+> > > - Compatible for 4-bit SD 3.0 UHS-I protocol, up to SDR104
+> > > - Compatible for 8bit eMMC5.1, up to HS400
+> > >
+> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> >
+> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> >
+>
+> If this isn't too late (as v6.15-rc6 is tagged), I'd like to seek
+> the opportunity to queue for v6.16 as no big changes during these
+> two review cycles..
+>
+> I also know people who would expect to have a full rootfs support,
+> and this driver is sufficient to bring eMMC up and will make their
+> life of development easy..
+>
+> But if you have different opinion, then I'm totally fine to delay
+> it to next merge window, thanks
 
-Just for your info: Subject is clean. Forgot?
+I have been busy the last week, apoligize for the delay.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I just posted a few minor comments on an earlier version, I didn't see
+v3 sorry. Anyway, should be pretty easy to address those comments. If
+you manage to send another version within the next couple of days I
+can certainly pick this up for v6.16.
 
-
+Kind regards
+Uffe
