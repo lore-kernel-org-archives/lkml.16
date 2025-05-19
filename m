@@ -1,196 +1,253 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2080.outbound.protection.outlook.com [40.107.21.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F578279337
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747659532; cv=none; b=mRR3F4KxBwUr5mcml6m6DVS/QGko8uEylaCkmUb966PVW75MUGNv0HaG94oo8/sqKrDlwvBTjT9zBINyYzCWh5zqBCP0DSEVsA+s1X4Mq7YPStMZRhMWljMgI1ZDddgKs7xBfAJ8aS2NjJYX5QShzjuTmYbtuLnxzp/ymUiy56Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747659532; c=relaxed/simple;
-	bh=Vv3Q70AU7dfNnHPVeuV/+a/UgXM5GhdvKCfzwHZA8CE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rAmkSMa+sVA8IelcqLGdGx5CnDhHgshAismWrEDKJHEv48NsgRi9N71bfhzPvAPCi4CYcDgK5WMrgnKYKYfSu8MimHYaVnblHVTmnOE+vOnwUDE7Xvfq49cmZlIFk8RbvRtHDG0kK5ZueJQ3MG07cjcPafXpysGzN32OtxqjjTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l2bqKB8j; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD3B27978B;
+	Mon, 19 May 2025 12:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747659535; cv=fail; b=fmBhgdxMlk3Mi8KyJ7EZ7Ow8BX0ElxshHrTFIl5bVU9WzL9bgwxZwMb9Ga8aJMvhP2ho74/3QooHD45M/21KsPoTQOuWR8qPP7tRKzI8n7TVFF25BNNyzniNImwI6gtEjqdwPiT2VBzjyhcd+TeZZuH2sEHiKwY6/jH0qkcylog=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747659535; c=relaxed/simple;
+	bh=AeAtCjnhxw2p5yIY4+UOjot18VG5sVfOlcJQMnbzyzE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=twSn+I+6Df5VT+J2GZetXcKyFiupcTAmEMTL+QeJfXog5tf3hGpiDPeLJ79MQfdpVo9WcqW6AQHh8k1Q+EJrUUJAhFQzJ4AzYOQfvXLvBDYvx+nDhQkKDxFve+TmLlp0Lanl043nqopbkvY+SJu8eMq3PIDiDMRKRC/o0MuG+n8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bTHm+EAj; arc=fail smtp.client-ip=40.107.21.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2bqKB8j"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a36e090102so595369f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747659528; x=1748264328; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xDAeoWtbnKB6P/zjHBNTMfXxf0ibh6HhQEV5pECfZLA=;
-        b=l2bqKB8j+lwaPMv08B89aPd9QiOt5s/GTummpLIS7NjZCzkkAfXTC9QOKbVO9p0yHx
-         MhlgUqLHSQROP6sj6jEg11v6NB7ny4qiTAedPEwePGZwNaxxDfhvHFzmn2BRIaF/aZAn
-         jTllDW9fhdMSSS9EzA2kBHExiA7T3VEqEdD8/rgxk2VJINo6HAxWltgYPPH/NNaZ2G89
-         xtLzrPn87N4WwyVXTKCQrfazUwDyY0A+x5bYflBdnEbwmkxWbGsMZecEwuDRfdIFP7io
-         pbP5PqcVdL7eAjU9DSKO+GGX2WOjheX7zBHxa8cd6dsRYwRqVQ5+3NFgYO3fJl+ETW5W
-         Lk7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747659528; x=1748264328;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xDAeoWtbnKB6P/zjHBNTMfXxf0ibh6HhQEV5pECfZLA=;
-        b=tKnlvwCKHIlBcQCvxM6QrY+lJ6ky+OckfeApfhcJ6dFXdHF4dxVnEreV9DdNRprHoM
-         ts6S5dgUgRW07pDTGWjFVS0QJPdsijwczQhjp6VGYxAmYHTZFxQSjw8dzJeIZRvsszFY
-         hEk3lAELUqCJ7nPe+cEXKqSmWs3lNmdhsARfB/i0WlU1dmXN8cop6PdTrVjeU+iWHoQ6
-         oDtAVurTO54RFjSJCLoUNXLITGSGeCQip4DOwcujMUF7w8MQ+So2OBy9iM+ZK2rIk8+K
-         sMz3JEMFG8KNQ/DpXoDSp8+q+vkh83CRWcuSEC352GqGhEypB4o8UKab5ER5D3XZwifq
-         VZAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyBlP0HKge/ZZGLdhc+l2ze1VAJjD9QsoQIlBBrEU3uinrBFghnnEpp/5hVZWyKbreaRe8oYfDg6x+g3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSN2P/s83v3aMF9BLbEbLu+voBTHPRpUSDvio79VcKlp7iLQGD
-	GUkVGvD9KNoVCWF0TSXn3K63wG7utGH6/lK6trf0qiBR6xMLkl7UhEqFga3vIaHH5rE=
-X-Gm-Gg: ASbGncs1gjUImoFFi41ZNL+8vog8Gtl9PaQJizSYSKdIDm5JbovxwUe8itOhAcuvc07
-	JCWcDl7CGOK8QyO50aIi8VNFlPW+jn23fRZJkhQO8Oevo6i9liCS5k4x1bKNfCJ4fkVMP/mG9xb
-	OhRp+O/Gkddag0i5d1a44K8AwdQwb6MB8D2gSfucWaHLxUOQVMMJ7RI8Nbt7ZtcuDvUe7z9fknL
-	BD86epX0d4DkiTfY3wrdT7zWuuS7v7iiYaM/TvfRpQ056KrIr5jTqdeD6k4hvomEGivgIxtHE5E
-	UJ6ya9JPFLfFKPZ1BxS1GltreF/Hg6FlIWNinlWxRV6lBRR1qsPBSzTLZslRp7uuFwbqDiiUeZH
-	1I9iMuyJj4qRLqr46H7Uoezzo8Lb9
-X-Google-Smtp-Source: AGHT+IE2jbS/WrOWl6VOpZZrzWvyYrqiY2DC7a8nSQu7OpS2BKTDXTieUo3VSWC+NsQLBWWeGzDgow==
-X-Received: by 2002:a5d:64ee:0:b0:3a0:b23c:15b9 with SMTP id ffacd0b85a97d-3a35c808c9fmr10886861f8f.4.1747659528291;
-        Mon, 19 May 2025 05:58:48 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:ce80:58bb:54b7:ad18? ([2a01:e0a:3d9:2080:ce80:58bb:54b7:ad18])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca6265fsm12524381f8f.43.2025.05.19.05.58.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 05:58:47 -0700 (PDT)
-Message-ID: <491d2d64-b06f-43ec-ba74-a623613beec6@linaro.org>
-Date: Mon, 19 May 2025 14:58:47 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bTHm+EAj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KXMAHuKkDzqx8Nvoh0iQc8Obwl60kYOVDcvClehJ3vlKbfEmjrflkF2h6Qend1rM7oIDaOLakOovBaddE/drx045UefzuaqbWJ8cfJsXSd5sKc/yrnjlUrlX+hbOcvOxzTxeFol7KpkAPWZTbb2z55KkGb5NCGVuaXI7hx4SrkhIn5o/qrsaN6GSPix/CFcjcJ/50XvkVbmfTgHQy/IWCZcBCnH9XmneV4EzkYhDjKgSGE74ThQBqLzRLpNwqBOLuwp8WcE3jcMrX+BKLaLwA/dEk5GXOGChBnDhO7cC4+o6noA7QwDYBtV3ZmrLmgbfSFxOf5/5tx6ZL4xrH/z8xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vUdWQRoW2auTukb/rV3QimySLTPIL+Hthv480dqyGXs=;
+ b=yjJYXCngUgpOVbdeQhR7HplOiLAuRfFaeqMoi7gElkb2MCFflvhVDFWEiYDMysS9uFnyN9mCIXkxDgFcev19OfBNEYmqmu6grM4qr9WqGqVU5vHl6+heEkUUzkOPDFCyWVbWL9jAFmgcK6O+U01uMRvkWsEsZh79ZqOcbztXKtdmNb+aqGXFUVAw2nFoMtMoi8uKw01/Q/pqP0D7QqNcf+XkHTUKheg3aBdseaBCRgYpraHw6aQAAnnRGDciXFWm0YU7KXKRQ/kl54nDq8/AH2yeq+PQA1uLivdgsPsIPtrvLz6gLLXdYeprkXQKEWDxOCQrIb6sG5hoL+dE+tryGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vUdWQRoW2auTukb/rV3QimySLTPIL+Hthv480dqyGXs=;
+ b=bTHm+EAj7LW1kzB8xNMDNYK+GZPofvN/lIAwAF1fn+UDMhWts8G+xaUeebC7F+d61BylUGvdboCbsRpzwYHI6ENs5zh2ioq2iBobuKIbn07OGM3E4U+USckuSiI4F1+6pYMgO7Yoc7KS97PPPLa7LbT5koVTq2jbRre9JzvhxQjLR8RcR+MxZ6YNMOfHZJsKSBK47XxtPdJapyWdu55kd4ujRoxfWdXugr6Dakxpy7idf3aZsvLKke0NdppI2iOk7gBr31pWfbawRDNZPkH3k9vWvsL4u+0pFSrIg/DYeZ9XM5uoDKy6+bk7zNy4Ks5Znneg2pDDrPbSp3OBcCzNhw==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DB8PR04MB6986.eurprd04.prod.outlook.com (2603:10a6:10:116::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Mon, 19 May
+ 2025 12:58:49 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8722.031; Mon, 19 May 2025
+ 12:58:49 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: "linux-amarula@amarulasolutions.com" <linux-amarula@amarulasolutions.com>,
+	Mark Brown <broonie@kernel.org>, Abel Vesa <abelvesa@kernel.org>, Fabio
+ Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd
+	<sboyd@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org"
+	<linux-clk@vger.kernel.org>
+Subject: RE: [linux-next, 1/1] clk: imx: imx8mm-anatop: probe only on i.MX8MM
+ platforms
+Thread-Topic: [linux-next, 1/1] clk: imx: imx8mm-anatop: probe only on i.MX8MM
+ platforms
+Thread-Index: AQHbxmlndbo5DRcb3EWQwqZj+VRMErPZvpfA
+Date: Mon, 19 May 2025 12:58:48 +0000
+Message-ID:
+ <PAXPR04MB8459312B18CBAEDF9192A188889CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250516134945.14692-1-dario.binacchi@amarulasolutions.com>
+In-Reply-To: <20250516134945.14692-1-dario.binacchi@amarulasolutions.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|DB8PR04MB6986:EE_
+x-ms-office365-filtering-correlation-id: 7b31fda3-594b-4d73-0ef2-08dd96d4e5fd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?hKV4Oh9b1VxowzIgAOfjsOew4+/m8hwbpFhrB5Uh7LcQUrZzSwb3V0Z5PQZv?=
+ =?us-ascii?Q?BMpfCR/qcSd94mn3Q8eSSMXBVsThiTcEwb3o/EQB9kVE3xrAyNoFp1wBPVii?=
+ =?us-ascii?Q?1xvsQcAh9TlPVwqSeQbnH30801X2wumnSPVqKCk7bXe34kh2LNoEniF2O/7N?=
+ =?us-ascii?Q?PqZ/2PkV4UFp3yABTv07VoHcno+qTRzmlzwOkss2ZK42W5QWO5OtHuGMl7l0?=
+ =?us-ascii?Q?y8xOTc0GPHIs32YC6/gc13x4+OA8YXxKmlTuE0WJYvAycTUfKLvrh5LWjMd7?=
+ =?us-ascii?Q?uWluHyTaokLjIOR1WlK/DVtK61V4zR09B+3aONpupNLjI/7OzmmisFWEj4np?=
+ =?us-ascii?Q?TbaJvoT/vwyj6525fDfPuTI/PTPOKKXNJuDMbqo/fE2b8ix57Z41RQ15Vdbu?=
+ =?us-ascii?Q?1uDxHNiae2OFli5khP4KeoZzhZ5SyehPhWSWNrt3yxAQZ02KJi2A9hl2pzXd?=
+ =?us-ascii?Q?2uEmmBr3PvruqVi2OTTaswIg4yG3jEIZ4TXFrX1hcXi18oXjm/hwTLwGWX7U?=
+ =?us-ascii?Q?5B7qG4zAnc7/EPIMjgJ37jDOfsDjtCilwPlLbG7wxB5zXi3osI1MVAqV1HgP?=
+ =?us-ascii?Q?VP1q7PnAbTQlVQo8MKiOE5kgjy1cy+WWaDG0ZyBIK0r0aeWDp8bHStoPgWbe?=
+ =?us-ascii?Q?9p7yISXCoSXr62jzzMfZcGI/H6yBKVzGU5iM6AdI1C6bfTzbvEGFj0/apqR1?=
+ =?us-ascii?Q?VuAZrYWO1pzgYasnPkJDNIOYf3satOmVsqwHWgEwTc8vxG9CQSySz8ucvuis?=
+ =?us-ascii?Q?cPHBZMmclRoiel9QcZV8jA0xSV0Yx7mDKsrnCitrcTsfznKEe1RPbqD/aSiA?=
+ =?us-ascii?Q?GgQqoNNwjprpQqfuxVdvlotzT2t638JUU6H2bYVYvx6iMMjkk3sFtZbVcNdF?=
+ =?us-ascii?Q?GWUecaD2B9NaT3WzM8iQxGYuodHCdyVWUDYifge0ydrXuGTfY7pHIc+IT4X3?=
+ =?us-ascii?Q?wl/aoLZ/pKZmRxeE4emE8CpF82QnfK5e2Umzt5PwNrOQBBEehOy1OPJvubyG?=
+ =?us-ascii?Q?OKqsIiywa54nFZ8K3+OPcfWhyrvDnuAqgC8QFQryyy2MPy2D+8s8CwsDDL+n?=
+ =?us-ascii?Q?G1/WAjbW9jdfs+jwnBmK0gWHT18QZQfMnHzfg+JQBqk+ZDcfa0htY4F3k7eK?=
+ =?us-ascii?Q?bOF9YIrGvxPIx+fCKYXIhlUDxzsdG5E/UdRnQ43620y40fMZT4Y98jzmpiUv?=
+ =?us-ascii?Q?LzQxXFYUStA5CmQieUQHpSVQkhp3NjSJV2WE9PvVzKUH9UFXtHu4j33HmWOH?=
+ =?us-ascii?Q?wJWJ5tUFOb7R3jGSn3XFeFNidlafBN33cQueAxyulZELNe6dsKOdy4k3dFxn?=
+ =?us-ascii?Q?84mxB8ZZki54e4Uh1HDHMbCSPUNG+dVvgS2ONXR5vLAxEBNv4Gd+OytZwzs6?=
+ =?us-ascii?Q?jzwCCcXoa1u0IZ5hhIwTEhgsyS6sEqX7r8AEuYGSKd8OtC/ID1C4pfflLtnr?=
+ =?us-ascii?Q?Nllu7NMg10M=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ZG57gJ0lor/h3UJ+Gz34jp5azQz1rLLl18CvWJma2u3OwJDYrbNcGuSC5VLM?=
+ =?us-ascii?Q?Soi2fj+PrHNdCAmKbnd0z/arf44936cy7w9G93z3loDayn5vSlTbk6aUh2hQ?=
+ =?us-ascii?Q?4MLQnvi41UUKOHkt6qu4t7cVOTFSJV7Saxe0U8NyvGJy/cvkgLAm4rDWsuWv?=
+ =?us-ascii?Q?dha8xjU8HPx8ApO++Dzb//gZUgih1+D7QUCXVPVIbVNceAEG/ELgsD0MTbW7?=
+ =?us-ascii?Q?AnRYjQEPMC0cy5q4QkkOXb9BSH0RjE2D6mlITi8vOSRbQvdN0tTiR1f/Y7WQ?=
+ =?us-ascii?Q?O4ReF7woI+9YQTnTRlrs9UlNHvzU3qgX6Xe0pVpb202NjhjgAfkeKiXFgWhr?=
+ =?us-ascii?Q?60m51LijCoxDYCtsEqbIbLTUMt9EPXTItRGYtqOINiQtNJlZ2ZIIuxR5a0Ov?=
+ =?us-ascii?Q?8PcpgNoxuFHnGpSV0eTF7wQJcdUJFIglz15ZA06tb9/tyiTAcMDUIeNYRvI5?=
+ =?us-ascii?Q?jds9v57d21WoKeQ5A7aYzhMWl2r8f4w/1PHZmGZqEWkDd5cCa6gDOBQopYAm?=
+ =?us-ascii?Q?ruXxz2Pl20SegqDoGQ+PuJcX3NQzxIolAa0Ea1O1xmBbaXvLHqoi8ys8Y7Gj?=
+ =?us-ascii?Q?l49defOMGTNJYqj5shohvZ25Kgt5FEt5gEiwmVthArgwZmwDR6Q77JezbLZS?=
+ =?us-ascii?Q?BXwWDxib8DL7GqcxfrLwkj0d0H0B6rFl3BzYcx2S9+BjtSx0lMemSEAi024N?=
+ =?us-ascii?Q?m62Y78GvwGQdDRyNg5LgmCYpIa/QpxFcMtlaePg/wwExLIzLKCWdYtZ2IGuX?=
+ =?us-ascii?Q?xVQ/NQUDZn8qFoKcBW7yaix1nmuAWfjjY950+kLTwtG5mzeDTmf6Krn0sf1C?=
+ =?us-ascii?Q?X8Q0HR23rKgAe+RMZT4aeuUUYRq7ipCxurhsLEM/skVbp6fPbKNGTRM2i4gB?=
+ =?us-ascii?Q?WW2y+VIHCuuPD0LIX8gEHrP/XNlQQ99IYlYnQiFQpmy5qOUPq4LOmrtP1XEF?=
+ =?us-ascii?Q?aH24wuzsUF6d6pSnHqzjk+a4sXoaxZMhhcgDI/zsJ93dI5rytBbVRP2fX6Xi?=
+ =?us-ascii?Q?uZS/K+R0mP+XkxyPYkXMm9UMPapI0x0TqvZ8OYtyiddOIh3OgBuvxJ9kbsA8?=
+ =?us-ascii?Q?HyTWAtMl5jdpQN8NYX8l5KJtxSwe0W0ELQF13I2kG9InYWjOgikEMdjfC2lY?=
+ =?us-ascii?Q?Ej9EHcPCCATaQBcjQBnKDVX+MoDZl9jkmdZ6KqKSdEiM2efnDNA9RWIlDMJR?=
+ =?us-ascii?Q?UKXGZAuSH5ZlGx9jgkT91kKscexN6h9J54dtjiqK1Eb5Bzbkh4G6fMZDo1Tx?=
+ =?us-ascii?Q?v02BuCo7AE+wcAPCHUtjcPM2/y8GQ+UWiMK02EqUF+qfb52gL3mLuJaAghgf?=
+ =?us-ascii?Q?C/hHs6+Q0kPRmwwoiRS8ER8Bvu2RQVAPaUR3SpF3P9kOcTnc7hugeEoPiHEj?=
+ =?us-ascii?Q?rxW7OtadlSUCcWN0k8JuYH7H7Jou/7J7HJdWESv3UEPq1e0OXKbD9Ybn7aRl?=
+ =?us-ascii?Q?3D3HtChzHjGxxzqDGlQpzp3Gd0ZN74D8eo6dpNS+DpdF7qRaVQ6xPscBUQ3z?=
+ =?us-ascii?Q?LN9MbEViFHCYOXjEwAWnXU39t9YjdfTG6iAGmC8iwQjvArcTUFaPm2YL4UIh?=
+ =?us-ascii?Q?KlC9i1CUo53PerWeifQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 2/2] phy: exynos5-usbdrd: Add support for the Exynos990
- usbdrd phy
-To: Igor Belwon <igor.belwon@mentallysanemainliners.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250515-usb-resends-may-15-v3-0-ad33a85b6cee@mentallysanemainliners.org>
- <20250515-usb-resends-may-15-v3-2-ad33a85b6cee@mentallysanemainliners.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250515-usb-resends-may-15-v3-2-ad33a85b6cee@mentallysanemainliners.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b31fda3-594b-4d73-0ef2-08dd96d4e5fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2025 12:58:49.2098
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GG+S+hbmmDVdcwpFiA8fVx19KbZwHEsO+JLZnbqskOeFetYiHlJHAbCQyk1lYb4pG8jypNuWTUh0UfhvyawiOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6986
 
-On 15/05/2025 16:43, Igor Belwon wrote:
-> The Exynos990 usbdrd PHY is a combo PHY which supports USB SS, HS and
-> DisplayPort outputs. This commit adds support only for UTMI+ (USB HS).
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+> Subject: [linux-next, 1/1] clk: imx: imx8mm-anatop: probe only on
+> i.MX8MM platforms
+
+DT Maintainer Krzysztof NACKed [1] because of ABI break.
+
+Are we continuing breaking the ABI?=20
+
+[1] https://lore.kernel.org/imx/6a28f9bb-05fa-45ff-8c0b-790c0caf3252@kernel=
+.org/T/#u
+
+Regards,
+Peng.
+
+>=20
+> Commit 9c1e388af87c ("clk: imx: add support for i.MX8MM anatop
+> clock
+> driver") breaks boot on i.MX8M{P,N} platforms.
+>=20
+> Here's the log for a board based on the i.MX8MP platform:
+>=20
+> [    1.439320] i.MX clk 1: register failed with -2
+> [    1.441014] i.MX clk 2: register failed with -2
+> [    1.445610] imx8mm-anatop 30360000.clock-controller: NXP
+> i.MX8MM anatop clock driver probed
+> [    1.455068] Unable to handle kernel paging request at virtual address
+> fffffffffffffffe
+>=20
+> ...
+>=20
+> [    1.634650] Call trace:
+> [    1.637102]  __clk_get_hw+0x4/0x18 (P)
+> [    1.640862]  imx8mp_clocks_probe+0xdc/0x2f50
+> [    1.645152]  platform_probe+0x68/0xc4
+> [    1.648827]  really_probe+0xbc/0x298
+> [    1.652413]  __driver_probe_device+0x78/0x12c
+>=20
+> In the imx8mp.dtsi device tree, the anatop compatible string is:
+>=20
+> compatible =3D "fsl,imx8mp-anatop", "fsl,imx8mm-anatop";
+>=20
+> So, in configurations like arm64 defconfig, where
+> CONFIG_CLK_IMX8MP and CONFIG_CLK_IMX8MM as well as
+> CONFIG_CLK_IMX8MN are enabled, the driver for the i.MX8MM
+> anatop is incorrectly loaded.
+>=20
+> The patch fixes the regression by ensuring that the i.MX8MM anatop
+> driver only probes on i.MX8MM platforms.
+>=20
+> Fixes: 9c1e388af87c ("clk: imx: add support for i.MX8MM anatop clock
+> driver")
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+>=20
 > ---
->   drivers/phy/samsung/phy-exynos5-usbdrd.c    | 32 +++++++++++++++++++++++++++++
->   include/linux/soc/samsung/exynos-regs-pmu.h |  3 +++
->   2 files changed, 35 insertions(+)
-> 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index 917a76d584f0856f1e445630e2cf97b3c3e46b13..dd660ebe80458a13413ca9735339b4e1095af8ea 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -2025,6 +2025,35 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
->   	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
->   };
->   
-> +static const struct exynos5_usbdrd_phy_tuning exynos990_tunes_utmi_postinit[] = {
-> +	PHY_TUNING_ENTRY_PHY(EXYNOS850_DRD_HSPPARACON,
-> +			     (HSPPARACON_TXVREF |
-> +			      HSPPARACON_TXPREEMPAMP | HSPPARACON_SQRX |
-> +			      HSPPARACON_COMPDIS),
-> +			     (FIELD_PREP_CONST(HSPPARACON_TXVREF, 7) |
-> +			      FIELD_PREP_CONST(HSPPARACON_TXPREEMPAMP, 3) |
-> +			      FIELD_PREP_CONST(HSPPARACON_SQRX, 5) |
-> +			      FIELD_PREP_CONST(HSPPARACON_COMPDIS, 7))),
-> +	PHY_TUNING_ENTRY_LAST
-> +};
+>=20
+>  drivers/clk/imx/clk-imx8mm-anatop.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mm-anatop.c b/drivers/clk/imx/clk-
+> imx8mm-anatop.c
+> index 4ac870df6370..90ff11a93fe5 100644
+> --- a/drivers/clk/imx/clk-imx8mm-anatop.c
+> +++ b/drivers/clk/imx/clk-imx8mm-anatop.c
+> @@ -37,6 +37,19 @@ static const char * const clkout_sels[] =3D
+> {"audio_pll1_out", "audio_pll2_out", "
+>  static struct clk_hw_onecell_data *clk_hw_data;  static struct clk_hw
+> **hws;
+>=20
+> +static int is_really_imx8mm(struct device_node *np) {
+> +	const char *compat;
+> +	struct property *p;
 > +
-> +static const struct exynos5_usbdrd_phy_tuning *exynos990_tunes[PTS_MAX] = {
-> +	[PTS_UTMI_POSTINIT] = exynos990_tunes_utmi_postinit,
-> +};
+> +	of_property_for_each_string(np, "compatible", p, compat) {
+> +		if (strcmp(compat, "fsl,imx8mm-anatop"))
+> +			return -EFAULT;
+> +	}
 > +
-> +static const struct exynos5_usbdrd_phy_drvdata exynos990_usbdrd_phy = {
-> +	.phy_cfg		= phy_cfg_exynos850,
-> +	.phy_ops		= &exynos850_usbdrd_phy_ops,
-> +	.phy_tunes		= exynos990_tunes,
-> +	.pmu_offset_usbdrd0_phy	= EXYNOS990_PHY_CTRL_USB20,
-> +	.clk_names		= exynos5_clk_names,
-> +	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-> +	.core_clk_names		= exynos5_core_clk_names,
-> +	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-> +	.regulator_names	= exynos5_regulator_names,
-> +	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
-> +};
+> +	return 0;
+> +}
 > +
->   static const struct exynos5_usbdrd_phy_config phy_cfg_gs101[] = {
->   	{
->   		.id		= EXYNOS5_DRDPHY_UTMI,
-> @@ -2228,6 +2257,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
->   	}, {
->   		.compatible = "samsung,exynos850-usbdrd-phy",
->   		.data = &exynos850_usbdrd_phy
-> +	}, {
-> +		.compatible = "samsung,exynos990-usbdrd-phy",
-> +		.data = &exynos990_usbdrd_phy
->   	},
->   	{ },
->   };
-> diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
-> index 1a2c0e0838f99821151661878f022f2129a0c19b..7754697e581077ec0fd60b63649728896ca145c9 100644
-> --- a/include/linux/soc/samsung/exynos-regs-pmu.h
-> +++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-> @@ -662,6 +662,9 @@
->   #define EXYNOS5433_PAD_RETENTION_UFS_OPTION			(0x3268)
->   #define EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION		(0x32A8)
->   
-> +/* For Exynos990 */
-> +#define EXYNOS990_PHY_CTRL_USB20				(0x72C)
+>  static int imx8mm_anatop_clocks_probe(struct platform_device *pdev)
+> {
+>  	struct device *dev =3D &pdev->dev;
+> @@ -44,6 +57,10 @@ static int imx8mm_anatop_clocks_probe(struct
+> platform_device *pdev)
+>  	void __iomem *base;
+>  	int ret;
+>=20
+> +	ret =3D is_really_imx8mm(np);
+> +	if (ret)
+> +		return ret;
 > +
->   /* For Tensor GS101 */
->   /* PMU ALIVE */
->   #define GS101_SYSIP_DAT0					(0x810)
-> 
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>  	base =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base)) {
+>  		dev_err(dev, "failed to get base address\n");
+> --
+> 2.43.0
+>=20
+> base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+> branch: fix-imx8mm-probing
