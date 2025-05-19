@@ -1,94 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C70C24729E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A22472AC;
 	Mon, 19 May 2025 06:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636377; cv=none; b=V2bXXKbQHSWB7WSPHcT5o0A5pnjvnvNhqofidIbixqK+P5sxp+2VRL3BdCWdlqBOH6XfcHWWthItGn3iSVLB+tf7kFXggqP+LqaYLD7Eh10ueX2bXSI403HunCux3rPOiqIJQiBPOiS3G0RbtJn+POWZPZMmYHKUSPuJ//okueQ=
+	t=1747636380; cv=none; b=jkynJEsqyHkUtZ0T6AmHptU7QvAPrQ6lCdXp4gLAmPYzOVU1nb3lMRzIJhkDgkoHmu8FRvD1OGRqnOy3xI0W5EbneQRuPPl2j+bHpE6ReqDsu18qml9bE3dJi5sWvrwNfBCSRKAgG/TpaBhZyWDaCNouppaxUxmKH9msiZj4PMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636377; c=relaxed/simple;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=YE4s4zfsIPXRSGO5FNf/oj+EMlkfN2V3UkHF2sLTGtkCMMYlAdo1RD2Ew7WoLG3DFI19PCgv6LDCyGlcPE7/cMKRxw3Vhj0IG61m0gbcyVIddjadx7ZPCMga/ULmWMHvClKUTjeEYeUCxzch6oSCGnLn3lpK1I0n++gLW6PUzUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNpER9zY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNpER9zY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9174C4CEE4;
-	Mon, 19 May 2025 06:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747636377;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=HNpER9zYHB2ceUS/GV3Zayu4TmyNLyXtBBbfzy7n2/bZ+YXrzkJwUNREWX7yN6/b0
-	 yfhgnI7mFrCpw90x3CrKhqm+DTdIplOHyemrEhC5vU/mgIuZzr4wMEezC3+HpagPoZ
-	 cgmrN6xkn4AS2TiuegAFfLsa4RMJbdw0t0la61pRhAErkjcDR8rc8FnF4PIf/Rabeu
-	 cwB6ScoL+EIc+sHv9gdTFgQMybpWietRuLyKavCaWBdmLEpjqjWAhzml3Pe+ST2xqy
-	 H9W0J+HzIaW9+qQiPVqc5c4WyOpxfiBwZVCrwYjSYfBBOHVa80WqqBFzXozV/Y/gUv
-	 TzNRFrzX+ILAg==
-Date: Mon, 19 May 2025 01:32:55 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1747636380; c=relaxed/simple;
+	bh=qKnTI+8ooBcc0qEgjndBra4NDNbSRuwpwtL+t3T29pw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CDd/pnB8a52hyiAPzttPRLbRT2KogqNhYeuTJm9SDRwmbdACbU2ipbeODxRi6vzkdVXc8YRgwaO8IOSH6o+UxDxjlinH/4kdKRzzcr9gk1/z+OuCDwTWDKAXbFU4jcwHavq9K91OyQSaogOcQO6jAx/776Xt/eezPMQSy7WFCSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowABXavWO0Cpo9YxPAQ--.11520S2;
+	Mon, 19 May 2025 14:32:46 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: gregkh@linuxfoundation.org,
+	vz@mleia.com,
+	piotr.wojtaszczyk@timesys.com,
+	liyuesong@vivo.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] usb: gadget: lpc32xx_udc: Use USB API functions rather than constants
+Date: Mon, 19 May 2025 14:31:20 +0800
+Message-Id: <20250519063120.724793-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, Robert Foss <rfoss@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Todor Tomov <todor.too@gmail.com>, linux-kernel@vger.kernel.org, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-References: <20250518-qcs615_camss-v1-0-12723e26ea3e@quicinc.com>
- <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-Message-ID: <174755315042.2793587.17691583538434075316.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Add qcom,qcs615-camss binding
-Message-ID: <20250519063255.IEFXCVoWDioq8ecAOtlxw4eKOB-ncUChGyT2Zz0DJXk@z>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABXavWO0Cpo9YxPAQ--.11520S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWfCFgEkw
+	48ur13Ww17Xay5Cr1xG343JrWI9an5X3WDuFn5K3s0yFW3KF4UXrWUJrZ5JF47ZrW2gF9r
+	C3yqy3yYyF4SqjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUtVW8ZwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU5UDGDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Use the function usb_endpoint_type() rather than constants.
 
-On Sun, 18 May 2025 14:33:07 +0800, Wenmeng Liu wrote:
-> Add bindings for qcom,qcs615-camss in order to support the camera
-> subsystem for qcs615.
-> 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
-> ---
->  .../bindings/media/qcom,qcs615-camss.yaml          | 356 +++++++++++++++++++++
->  1 file changed, 356 insertions(+)
-> 
+The Coccinelle semantic patch is as follows:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+@@ struct usb_endpoint_descriptor *epd; @@
 
-yamllint warnings/errors:
+- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
++ usb_endpoint_type(epd)
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dts:25:18: fatal error: dt-bindings/clock/qcom,qcs615-camcc.h: No such file or directory
-   25 |         #include <dt-bindings/clock/qcom,qcs615-camcc.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/usb/gadget/udc/lpc32xx_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+index 89d6daf2bda7..1a7d3c4f652f 100644
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -1629,7 +1629,7 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
+ 		return -ESHUTDOWN;
+ 	}
+ 
+-	tmp = desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
++	tmp = usb_endpoint_type(desc);
+ 	switch (tmp) {
+ 	case USB_ENDPOINT_XFER_CONTROL:
+ 		return -EINVAL;
+-- 
+2.25.1
 
