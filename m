@@ -1,103 +1,96 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CD12750FB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71795275105
 	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652338; cv=none; b=PQUS3S2ITuamJugIdQpVO3Z2dasMmDqfmyzHS2smdK4wYpV4BHHwRT5o8+QkrkQ0m3Nb95f54BQbvePLVmvDoLIwvnoJFA191zwc7S0dRxW7V4zNULT7HbrQExHnwkDAVY9Y9Xr7mYwUUW3oI3FxqiDBl09ATljm02R2cAPeeUI=
+	t=1747652338; cv=none; b=CXBG1Y+U1FnrhvJa/FPHSS/yCjT9M/ZPzH+YV2bRGqL1FjUjosML6Nw+FkG2qjGNq2dMRGmSbtPrnnq0dm2OwIrE0wcddTelIcQDgPFMIvNB6OCpRAT7wyyvspclkHevgX64QFR6F9+USeqPFi8aNPVYx8j/IBhKwEqjPDem84g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747652338; c=relaxed/simple;
-	bh=Skbd065aT0ZHQcN9uGka7V6r73b5ykLWPWeCTpFhdBE=;
+	bh=k+dXzlqMIg75u0mEM2Z8oVwbF0JGO6yHXhkMZsH6N+o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lgkZf+hinPLmDiT6+5PnyFMAdl0p0VzDsxFnFaz2dCu8XwTJoZp77fjQZcT3CT5bcVzU0PEYZzOu/op5qtzU16khjVP0InC3M508c+eRFJzudsAXlVrq3sadcp6SIrpu8RYgOi7/XlmqUpkwOSjpynxoxqAlyp8N1jJ/m/qPgUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ofkjOmZE; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=rs/V93eBZ0zuFqy7ZXEJtkA2ZlnAs106ZlvLcN7lRYfX5VO1XO2dNmeWc+CYilmzUe8iR9GYcjVSMi7+bOZqGcz7zUe1ySQWRPh8yIf44vTUX7O0Fq8Nb1c8LM02SIWm2Y4ZJCpSsOfcZpk7T5JkGNfStlgikU6xJS6hHRcdxfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SHd7AOVs; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ofkjOmZE"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SHd7AOVs"
 Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J4FGqZ014521
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J4FdMi014725
 	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:58:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UZZqo/joJUMTmddqZvrzyvK+OoeIHz4Jyy9kaXceNaA=; b=ofkjOmZErSlLIt1d
-	mCkbYMVN6TGC+Zeeyp/dr2vOSNDHi5I7gYcJ4gAq4tHof7zmYPf/F4bkCN55suW3
-	J3wsTvqI51Br/tQ/yLNYFwBYY49E3FX6M011ogCt7V0fFUsW3oSE2g2L50UfoLgz
-	8hNaw9OjXQANs8i2P7IgxiDYqXK6+GhLFmz7arXhtKvbNAhv+ccPDtGSOk8xIsyi
-	H/ufduINiGxfqdaiAQEBb/0jbg5jWEI/Tu1x0sXE7CdsbWmhTOTsOdtSSttFbV5s
-	6MMsK4noJhOoArE2iKWgOvtgxiqGaEAsJ3Y5IFRZCiWnvoCYVPk04YxG6d93OzAs
-	c1AF9Q==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qwenh5b9-1
+	86cBgxAbBj1uawgk6dKg3/xrbG+UFcgr07uuksYBAN8=; b=SHd7AOVs/dj+b+CH
+	C0DqMZTpuZePwmK8MfQxgGgSX62LuWE60uRxDKBJXXvPecR3Ouc9yzNv2R4TaL0T
+	yycGhVWuYVoitxHTUEZ3vGsGRjSQMekr6lXAtrTC+qIPAcy2307UcnuOEBm5+X3L
+	RbqlZMGaH7Y0DJ0tvTygIvDw/o65/Qf0egGyymBhuegpGq2hXUljiNYr5+YC6q8m
+	qgWXBxAjsPDDWC5JvcEmoLpYA25AhBOKoA//7A3tPt7AiVftM9kOcu5eqvdU69B0
+	igmNlV2HsNiP7goxxfQ0yhsu3Yr3xPmJSeCiqVPwE/FoZE+c0X3585kMF5jsMbfD
+	tm1gSw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qwenh5at-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:58:55 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6eeb5e86c5fso45117076d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:58:55 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:58:54 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c7c30d8986so1403809585a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:58:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747652334; x=1748257134;
+        d=1e100.net; s=20230601; t=1747652328; x=1748257128;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UZZqo/joJUMTmddqZvrzyvK+OoeIHz4Jyy9kaXceNaA=;
-        b=qUFK2CO7PY5HGRxxgdZR1pJdsyZ8nuZplpq50ZwfH1e+eX9S3Fh11DZnRe71gyg8gw
-         0VQkfPGf08FOv/IuTE7PHs3Ia8eGx5sFsiRG6GAGZOfqSdQEG2VFvU2RlLGqwXWVTqxN
-         gMBprAQL7BKyq7Mp4GYv4qOo+FJJtsh1b0HleJzrcAfj12M3o6TITeXT6CTIfFSvpshu
-         dx+K2L487kj3c8oadzsA5m7A5lsHm9YfhynK6CR6C4+4S60Hs+K5QF2NDe0qgK0otSpM
-         BQ3kaetOcvIkfe1A38vpHnQ0fcUDLnJO+SAMtn6wlRV5JLDZvDRZT986dlBWEeqUkRCC
-         uCYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTy7bSdu+epgWF7dbr5Xt23hcghvyqrd/QRowgOJjv0LwUGIk5RBvoyThGUQzjQyDVpsbb+l5Lrj9NXEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFjzNItyZPeZGREgYuBXZQ8LnMCa9Ui/80RVFnVT6A1SqlGDwA
-	IeYzVtQEoEfQh/5Mexg/nwkKUt4Uta1GIhbYJInqOBWFXbCBat9lPxSlyplpKItZecViRYFIfjp
-	QmY1vU6gKoUdHikb7w7LeUSfsOzVIqEvZK3oNxCHiXLiNJQrNTlXy082EgN33LUyNUug=
-X-Gm-Gg: ASbGnctX7oarJpepcaAEEs9kKyjQUSjWwkCr7R7akQY9gKNF5QyuMaV0mSZKxMOlROm
-	WVy/r2atCbEgtRUsjWwh9gw+QSefNUBEMAsA1LP6XfgxGx7XQXYj3LiXi6SaSrW7wf1uWSmrb6c
-	PyYDH7I31x9OkQ9KBE22ZL4yEVryrz/P/iL0nfGafMIpJYQmyo7PGe6Ss5NXJ0hroDaQVyH2j+3
-	9Cw2LOqmSIucV59vdr15W5oT+8XGZMwnHA97A00tfyN9HHwXElP0gyUJt7X9FyZp9mNCe13rZXq
-	YRIDPi5DI6ds7JSXQbL4k4P4ttsan4bvgpt9HeYFFf/3jaFYyu2GyJihMwdRIVAMsVIFT9eQHqI
-	G7laULIqYF2gfn5swLX6XvHPu
-X-Received: by 2002:ad4:5f8e:0:b0:6f2:b551:a65 with SMTP id 6a1803df08f44-6f8b094f396mr220670216d6.38.1747652334363;
-        Mon, 19 May 2025 03:58:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG9NmA4hTkaWiWt1DG/4qc7GE2Tx99AjTx/JlvVe7S5Gwt2EQWgtvBoTnNLcaq/78n2BYfQyQ==
-X-Received: by 2002:ad4:5f8e:0:b0:6f2:b551:a65 with SMTP id 6a1803df08f44-6f8b094f396mr220669566d6.38.1747652333886;
-        Mon, 19 May 2025 03:58:53 -0700 (PDT)
+        bh=86cBgxAbBj1uawgk6dKg3/xrbG+UFcgr07uuksYBAN8=;
+        b=sZKSsVeSVKTNtiIOhAlfCY7g3MaVPHsSDKlrwSDQ56bBK6i5SmydVgDT9xjeyenuUQ
+         NJjV8CBeUsfDmuqzqzvivZihhUpl5bwXDBWrjrXhE6Tky9DTXbvdQH9RiFkWLR1Rgyck
+         GqOz6vDP24g1KdcgWhDElHtAiH2NWMcqUsGO55BWY6CEi3YiOrHO2i5Fjxpmuwcum1sS
+         v0WS/PvtrCVKy/TBSeOPcSS7mjbnjzjfW3Y5VYn/of5lbqUizGkkWBQ/Cvs2VJrPJW1L
+         Oh2jFZz4i7VJcbGjGDH0njClzAorzZAH/2tOz4VwcoK+hxxgxxB+3pqE6EOmg4xY+5Fe
+         POrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWV9uXWMEegRGAqVEi4hdAf3ZDLPHL8FvbiHmaBWUENG6kmPBJ4DiQrZLoii/ydzmlli8g2C9f/ScdiGG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsQ2Ye6YnkOXGsMc7DZ+3pbSh0TSSVDqfbWqhRHaFUOl+XtlqH
+	a+ewbTkNnAOQSUXDO8bTBUi/3ZOZzSwn/O9rJfTUmFU62DM184ceDNjIr+MQt1t18p6/Mu1SMRe
+	NlnsJ0TEcLgU0pHpRcq7y4DoXa6Y76q0tmR0Ko+zrRtgfHhk4F3fW6Yi9gRM/PvU/rLU=
+X-Gm-Gg: ASbGncusOMyEQ6yPAhRZ71s6hkqxdsyz/z2HBAMHmbfUcbUaoN9o0UlMYiDeqK+RFJ/
+	e1VMDwlfuR9AqJPow9uz+tV1D+b97Qsk/9iorCqGWaimdWViBE6f+6r7Cwfh/gL3FbubD/tA0Ju
+	m7Fmh3gacnszysVzfYLudgc6lHvt2M/ylCu+ghRu13Klw2yCiuWV1AK6T/JdUJZKKqhBHK6o5yW
+	lpoTv20Vb7ug0YozDcUzhcUMhTGeZIoufHLP4inkMgD8DeYRK+0wIW8WPP2O4Y1Dz6G+EkehQN7
+	NpTPZf37bt6fH5WvYTR/DjRD/OljZXLyyh7UBNFUqWJgDYTp0zX0gS0mb7OE+HUxaWvwz6qZIWX
+	8bnu5QcuL8i/kSpW1VKtty8Pb
+X-Received: by 2002:a05:620a:248c:b0:7c5:562d:ccf4 with SMTP id af79cd13be357-7cd47f0004amr1688584685a.4.1747652327984;
+        Mon, 19 May 2025 03:58:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGC0Dkz5uT81kjybYAt3wNQ4m8l4BP7fLJQGKLKFt5m0JWT/MZxJVQhBDzIpWZrb3G3Vyxmbw==
+X-Received: by 2002:a05:620a:248c:b0:7c5:562d:ccf4 with SMTP id af79cd13be357-7cd47f0004amr1688580085a.4.1747652327658;
+        Mon, 19 May 2025 03:58:47 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f314a2sm1801140e87.77.2025.05.19.03.58.52
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f314a2sm1801140e87.77.2025.05.19.03.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 03:58:52 -0700 (PDT)
+        Mon, 19 May 2025 03:58:46 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        Robert Foss <rfoss@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>,
-        Kyle Deng <quic_chunkaid@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
         Dmitry Baryshkov <lumag@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux.dev,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-usb@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 00/11] Various dt-bindings fixes
-Date: Mon, 19 May 2025 13:58:37 +0300
-Message-ID: <174637445759.1385605.15383087742490646226.b4-ty@oss.qualcomm.com>
+Subject: Re: [PATCH v4 0/7] drm/msm/mdp4: rework LVDS/LCDC panel support
+Date: Mon, 19 May 2025 13:58:33 +0300
+Message-ID: <174637445761.1385605.15776598312432418446.b4-ty@oss.qualcomm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250306-topic-dt_bindings_fixups-v1-0-0c84aceb0ef9@oss.qualcomm.com>
-References: <20250306-topic-dt_bindings_fixups-v1-0-0c84aceb0ef9@oss.qualcomm.com>
+In-Reply-To: <20250425-fd-mdp4-lvds-v4-0-6b212160b44c@oss.qualcomm.com>
+References: <20250425-fd-mdp4-lvds-v4-0-6b212160b44c@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -106,40 +99,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 9RyjRR1WWCc5gMg_vuxUro1mm6n1pj4Y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEwNCBTYWx0ZWRfXzP7M4eHlN25i
- fCKXwDNx2n92X7OjorvNaqF/Bn8N310mlF0F/LkByFgysJt9SePWXg40It2XKFpNjgZoZi70Bvw
- mqRIOPPOeliTMiTX5y17ksqjs3D0mi2+RNn5tx2Qv8e6xNudX7IxJkLeYTA5z18cYilbRgejQVy
- b3aAVwTM+8/AEEdQ4LwOsQXPq+KOysavv2giBIqWPNAb+9ODKeMbHJpItX8RDVfQYPPfIbp7AdZ
- +/E+nrUmXyOqKtHjRc0M767EvYr4K9tqggJPFYrmNmVDhqY/arxwmiDfvKL9OEGSyXsu0QQaz9b
- aojHdTPMdMUb6uP8+3OpfG3DiaTUQRQzibDUOhUwpq/MXF8QJnCNxIUelG1psxmlyI5OGznhP5Z
- 0m/w8EHVzOtOjMk3w3xG52Vx9Huf5weIWzEky3+Hk3ifRdWbthPL0fe4LhycVaUzRJh4Y9mq
-X-Authority-Analysis: v=2.4 cv=Wd8Ma1hX c=1 sm=1 tr=0 ts=682b0eef cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8 a=AprTATsQUE9CPNEuHX8A:9
- a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22 a=Vxmtnl_E_bksehYqCbjh:22
-X-Proofpoint-ORIG-GUID: 9RyjRR1WWCc5gMg_vuxUro1mm6n1pj4Y
+X-Proofpoint-GUID: plnceyaUQ56XHCy8SZJDFwId_E4Jqqgc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEwNCBTYWx0ZWRfX5nugZP0IddA0
+ 6LBodZQ89anPARZp3VbPF0Bc3OI/omXZSCVsdsaF7Fi/o363qwHo1vJM8O8kYIjDFzqxn6PkmDf
+ CCdPmujE3AOpElrOazvKOJ77JD2Lz+Z1X98vKhPfPNGvWIpmG+BAu0ykIzf7oHvsKCpW5G6XDs3
+ 60E+erkfSK2Xv9DU163O8+As3CBz4j5BJr5uy1GLTpOJaWWvvKjH+7RQbUrMoI1EhARAmcBmFHr
+ b51X1krCuctAEi38z+1O0eE1pGcwgksLcApZyp9RZx+hD6HMFttMXMRV1V3EgKptA4CNd8s8Kip
+ jrpKLqp0vi1qr+vSBwXWdzaxPXbBm2MVWPfUINo6tuySfOLRIa0kVkhlJLJK/9GIyF38E2fvp/y
+ aI4d3Rs4m7wSXSsuVNWK8kfn8/SRXrivhjCpLo6oNWwNsm24kZtknKaju/Tp6Rll3MhMah8P
+X-Authority-Analysis: v=2.4 cv=Wd8Ma1hX c=1 sm=1 tr=0 ts=682b0eee cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8 a=JuEGTYreKb10gHM5aT0A:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-ORIG-GUID: plnceyaUQ56XHCy8SZJDFwId_E4Jqqgc
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 spamscore=0
- clxscore=1015 mlxlogscore=827 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
  malwarescore=0 bulkscore=0 adultscore=0 classifier=spam authscore=0
  authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505070000 definitions=main-2505190104
-Message-ID: <20250519105837.rZXq35HRZPM5UgGFkJ38HX73LlfSVHDdpAoQcum0Hjw@z>
+Message-ID: <20250519105833.DxuHVyq_cGppRS97WaKb2tsDkk8Lzyg_Cz_JEYngD1c@z>
 
 
-On Thu, 06 Mar 2025 19:11:12 +0100, Konrad Dybcio wrote:
-> A set of not quite related bindings warnings fixes.
+On Fri, 25 Apr 2025 12:51:50 +0300, Dmitry Baryshkov wrote:
+> The LCDC controller uses pixel clock provided by the multimedia clock
+> controller (mmcc) instead of using LVDS PHY clock directly. Link LVDS
+> clocks properly, taking MMCC into account.
 > 
+> MDP4 uses custom code to handle LVDS panel. It predates handling
+> EPROBE_DEFER, it tries to work when the panel device is not available,
+> etc. Switch MDP4 LCDC code to use drm_panel_bridge/drm_bridge_connector
+> to follow contemporary DRM practices.
 > 
+> [...]
 
 Applied, thanks!
 
-[02/11] dt-bindings: display: msm: sm8350-mdss: Describe the CPU-CFG icc path
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/60b8d3a2365a
+[1/7] dt-bindings: display: msm: mdp4: add LCDC clock and PLL source
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/2f1d131147aa
+[2/7] drm/msm/mdp4: drop mpd4_lvds_pll_init stub
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/f6720d64d8eb
+[3/7] drm/msm/mdp4: register the LVDS PLL as a clock provider
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/9c2f63da6a70
+[4/7] drm/msm/mdp4: use parent_data for LVDS PLL
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/b641bf534cf4
+[5/7] drm/msm/mdp4: move move_valid callback to lcdc_encoder
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/f26b80359bc7
+[6/7] drm/msm/mdp4: switch LVDS to use drm_bridge/_connector
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/9b565edc44b6
 
 Best regards,
 -- 
