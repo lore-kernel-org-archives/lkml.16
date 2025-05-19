@@ -1,69 +1,68 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465722B9A5;
-	Mon, 19 May 2025 11:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2511C5D59;
+	Mon, 19 May 2025 11:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652616; cv=none; b=XYVjZDWPU63nq3XYdbwJN6pL2R2osimaKOBCQY5LJzFZDjm4wKhyDluB5JSQm8klfB9CIm5tw3P7+aRl1wRSOvhecQo4iHeNLB18dVoz69YbsW6Vte0szm6wOvYTPtiRNjEyAw3pCkRwL3XlWc6sZh+sQvBUMQLkv29z+sSSvy8=
+	t=1747652659; cv=none; b=B45WWcITcjFa62J+LDD376+9anZpQh+nLg41WBCXnnwd+EekWGcGdhw2fDG6BhTXJ8L7mrn/o/kJRMY0TlDPjxKTFGKGBWgSllUTqKS6Gwz6bTnWI9IjSdMW2MsWB7IM/WuP6FU6tar9x7AD1+5lRglhyRJsGLdY90ZtQvdnnt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747652616; c=relaxed/simple;
-	bh=jWFKKI+8DujAliA5gTb9l1ZcCEXo3qM/I74AOaXXwEI=;
+	s=arc-20240116; t=1747652659; c=relaxed/simple;
+	bh=IFqYdA5CJmC5pnMDWMZMrcHc0IELQjmqxnRh7eOMbVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHS8Lrn7ItmrhFvQuyaJCGvhv1bFFisr5qJpCbURkg7IV1RnyOdp37kADZPZ2PQidPEUd1ka2tkJFnRs50nkBuAvyTc8hI+U7OCHTwcEnk/414klCNOK2upTxxaIW8e+GgjOi9JsbKlFntUdIYrG/TAAL9RNmE9813Lm00Q52+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SD6CbBf7; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hoNVZqpeeDgK+fbzeHk3aBXrAmjm5y8kOBg/HZgm3zCLFzSSJa8IcxRUIYbV3FsjZTi+AHGGZCj8veApFGsK5SGvpTmwQ1x9Ut2rqMxCrobYnTvbKJdwMRMjsUvqVZztUBuRFG2ZTfKzi/OgaLK7Nqt866FJopiGYK1PQknUL/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NM8V/f7P; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SD6CbBf7"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JAF07v008690;
-	Mon, 19 May 2025 11:03:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=dgmPtD82+qx4IuowidCfCa23Ougofx
-	TYfYJkwcWoZrA=; b=SD6CbBf7yIjPMBqtp3MaO/t+SkKttS7+QWy8aZYlidz5Z6
-	W/jcWE1JRbqgb/osGlOO5YK/IbexH1V4YoTU7Pnhbut+dixmj+sEjnebo2WUT5pj
-	S6ZWLiTSCrYoUl1ByAAYmITxWuBvoea+YTae6pdOHAy7QRsJ4eBsPX3vXrIwB8Aq
-	DvXbY6YyOl2uPFefbLqcNnJIeiLgFbTPfJ3WREn0LQRPlx8ZQIwI+dOT1Xz2VaPA
-	SzPgVuB2iYrQQAeMABc0i9PegmIVV82jqD0lyakyQwrSA8Pp9Q3ZOilyIrKiHWDX
-	2URTfCYLtgsI5B/aMn1dcOJeShnyFPKaG3tp3Y+Q==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46r2qhr70c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 11:03:05 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54J7no9p015958;
-	Mon, 19 May 2025 11:03:04 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g25ytx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 11:03:04 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54JB32Po19333532
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 11:03:03 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D1B17200BC;
-	Mon, 19 May 2025 11:03:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 47C71200B8;
-	Mon, 19 May 2025 11:03:00 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.249])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 19 May 2025 11:03:00 +0000 (GMT)
-Date: Mon, 19 May 2025 16:32:57 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com,
-        libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 0/8] ext4: enable large folio for regular files
-Message-ID: <aCsP4bW6c08h3DJv@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <aCcmGyse9prx-D7S@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <33b938e9-bd81-4017-a7e0-e5ffb216ac70@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NM8V/f7P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747652658; x=1779188658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IFqYdA5CJmC5pnMDWMZMrcHc0IELQjmqxnRh7eOMbVU=;
+  b=NM8V/f7PQacW2CwOJK66l8BgE5WqPP8S3gURdsylOCaWPv3Vru3peCFn
+   BCetZOrtHo8tIhtH+AasI++N/FxHFSmFlB1P2c/JRWSKMEb94HNJ4deqo
+   aEgxWFu5hoKmJGvz12KFdAmBIh6javT2X9VMs+4JvFFvcH/RSsye3wV4/
+   xQWdiXsGzI6ah13oB8uWk1IZExHN09aCXeMMwlN02BfYfJ4HVbtj7VV0E
+   lnpireuvubPTF+skbWwvTIA1CDyhVOKcm4Sfw4vvtfniuTmJPMuEnYzNS
+   jhZlFFXqcCi4SR5+9jT7970j6aZQky8TRXBnjP7w8Xd/LMnrWcTAW5+ow
+   w==;
+X-CSE-ConnectionGUID: UaSfB3STT9OwPTW2Vrc04w==
+X-CSE-MsgGUID: uybaOrHOTYmv9DD/fNEaJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="74947753"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="74947753"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:04:17 -0700
+X-CSE-ConnectionGUID: PjVnlk5jSzeKs83Q8Pz5tA==
+X-CSE-MsgGUID: 5jNkiY8aRCK/wLvmbgswFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="176453314"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:04:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uGyHx-000000030Ul-49Cx;
+	Mon, 19 May 2025 14:04:09 +0300
+Date: Mon, 19 May 2025 14:04:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lars@metafoo.de,
+	javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
+	arthur.becker@sentec.com, perdaniel.olsson@axis.com,
+	mgonellabolduc@dimonoff.com, muditsharma.info@gmail.com,
+	clamor95@gmail.com, emil.gedenryd@axis.com,
+	devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] iio: light: add support for veml6046x00 RGBIR
+ color sensor
+Message-ID: <aCsQKUwGeq4Ed4ai@smile.fi.intel.com>
+References: <20250519060804.80464-1-ak@it-klinger.de>
+ <20250519060804.80464-3-ak@it-klinger.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,214 +71,215 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <33b938e9-bd81-4017-a7e0-e5ffb216ac70@huaweicloud.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEwMCBTYWx0ZWRfX+ghVC3HcGR0Z MG7YjVgYXbIpoRc3CVtxhEO/G6o36N6WuziHihlnQh6Ug2Cnu3cwxH44x5da6KdwMqkd7xBG1lP PWl/mzOE14WOv1fohTL3XwSGanhrVU1d8IZs1cFQsWV3/I4zoonIeZj/MGD5Hjw5LIMIVHtPPyY
- +unUVf9offQWh5B4TaUEbA9oNj804ThwN8TLqI/NIdDWjILe28WDCspXp0rkXAUfNFk+ThN3jBV LRJyqHth5R1UAGYCn/Dtl0/wmpS4vSRZosyW9E3/y0s8Q1Ulj0KFJuG+rDVZK2YqpAl04PC2hip A7PTZFhBPK3FHXiVhbOZNi0LVmQeZs7oB0fglgQ8a6C2bg7DUOfkm52AGwYJpQMIE+sn6KIz6Gj
- 9TxkyeZtaiNl+8HVDth3RaUIIfux4Iqh+uOTlkgZ0pT3MpWC5JmTdG33ijkTMVgPb9KmW/rW
-X-Proofpoint-ORIG-GUID: OXLPx6dTN16GSKp6k9WKFNUVaypBk-4q
-X-Proofpoint-GUID: OXLPx6dTN16GSKp6k9WKFNUVaypBk-4q
-X-Authority-Analysis: v=2.4 cv=P406hjAu c=1 sm=1 tr=0 ts=682b0fe9 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=Z-27RSRBR0MrnfT4iaMA:9
- a=CjuIK1q_8ugA:10 a=l2o5i1_H8WVCs5eH1y1M:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 mlxscore=0 adultscore=0 impostorscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190100
+In-Reply-To: <20250519060804.80464-3-ak@it-klinger.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 19, 2025 at 09:19:10AM +0800, Zhang Yi wrote:
-> On 2025/5/16 19:48, Ojaswin Mujoo wrote:
-> > On Mon, May 12, 2025 at 02:33:11PM +0800, Zhang Yi wrote:
-> >> From: Zhang Yi <yi.zhang@huawei.com>
-> >>
-> >> Changes since v1:
-> >>  - Rebase codes on 6.15-rc6.
-> >>  - Drop the modifications in block_read_full_folio() which has supported
-> >>    by commit b72e591f74de ("fs/buffer: remove batching from async
-> >>    read").
-> >>  - Fine-tuning patch 6 without modifying the logic.
-> >>
-> >> v1: https://lore.kernel.org/linux-ext4/20241125114419.903270-1-yi.zhang@huaweicloud.com/
-> >>
-> >> Original Description:
-> >>
-> >> Since almost all of the code paths in ext4 have already been converted
-> >> to use folios, there isn't much additional work required to support
-> >> large folios. This series completes the remaining work and enables large
-> >> folios for regular files on ext4, with the exception of fsverity,
-> >> fscrypt, and data=journal mode.
-> >>
-> >> Unlike my other series[1], which enables large folios by converting the
-> >> buffered I/O path from the classic buffer_head to iomap, this solution
-> >> is based on the original buffer_head, it primarily modifies the block
-> >> offset and length calculations within a single folio in the buffer
-> >> write, buffer read, zero range, writeback, and move extents paths to
-> >> support large folios, doesn't do further code refactoring and
-> >> optimization.
-> >>
-> >> This series have passed kvm-xfstests in auto mode several times, every
-> >> thing looks fine, any comments are welcome.
-> >>
-> >> About performance:
-> >>
-> >> I used the same test script from my iomap series (need to drop the mount
-> >> opts parameter MOUNT_OPT) [2], run fio tests on the same machine with
-> >> Intel Xeon Gold 6240 CPU with 400GB system ram, 200GB ramdisk and 4TB
-> >> nvme ssd disk. Both compared with the base and the IOMAP + large folio
-> >> changes.
-> >>
-> >>  == buffer read ==
-> >>
-> >>                 base          iomap+large folio base+large folio
-> >>  type     bs    IOPS  BW(M/s) IOPS  BW(M/s)     IOPS   BW(M/s)
-> >>  ----------------------------------------------------------------
-> >>  hole     4K  | 576k  2253  | 762k  2975(+32%) | 747k  2918(+29%)
-> >>  hole     64K | 48.7k 3043  | 77.8k 4860(+60%) | 76.3k 4767(+57%)
-> >>  hole     1M  | 2960  2960  | 4942  4942(+67%) | 4737  4738(+60%)
-> >>  ramdisk  4K  | 443k  1732  | 530k  2069(+19%) | 494k  1930(+11%)
-> >>  ramdisk  64K | 34.5k 2156  | 45.6k 2850(+32%) | 41.3k 2584(+20%)
-> >>  ramdisk  1M  | 2093  2093  | 2841  2841(+36%) | 2585  2586(+24%)
-> >>  nvme     4K  | 339k  1323  | 364k  1425(+8%)  | 344k  1341(+1%)
-> >>  nvme     64K | 23.6k 1471  | 25.2k 1574(+7%)  | 25.4k 1586(+8%)
-> >>  nvme     1M  | 2012  2012  | 2153  2153(+7%)  | 2122  2122(+5%)
-> >>
-> >>
-> >>  == buffer write ==
-> >>
-> >>  O: Overwrite; S: Sync; W: Writeback
-> >>
-> >>                      base         iomap+large folio    base+large folio
-> >>  type    O S W bs    IOPS  BW     IOPS  BW(M/s)        IOPS  BW(M/s)
-> >>  ----------------------------------------------------------------------
-> >>  cache   N N N 4K  | 417k  1631 | 440k  1719 (+5%)   | 423k  1655 (+2%)
-> >>  cache   N N N 64K | 33.4k 2088 | 81.5k 5092 (+144%) | 59.1k 3690 (+77%)
-> >>  cache   N N N 1M  | 2143  2143 | 5716  5716 (+167%) | 3901  3901 (+82%)
-> >>  cache   Y N N 4K  | 449k  1755 | 469k  1834 (+5%)   | 452k  1767 (+1%)
-> >>  cache   Y N N 64K | 36.6k 2290 | 82.3k 5142 (+125%) | 67.2k 4200 (+83%)
-> >>  cache   Y N N 1M  | 2352  2352 | 5577  5577 (+137%  | 4275  4276 (+82%)
-> >>  ramdisk N N Y 4K  | 365k  1424 | 354k  1384 (-3%)   | 372k  1449 (+2%)
-> >>  ramdisk N N Y 64K | 31.2k 1950 | 74.2k 4640 (+138%) | 56.4k 3528 (+81%)
-> >>  ramdisk N N Y 1M  | 1968  1968 | 5201  5201 (+164%) | 3814  3814 (+94%)
-> >>  ramdisk N Y N 4K  | 9984  39   | 12.9k 51   (+29%)  | 9871  39   (-1%)
-> >>  ramdisk N Y N 64K | 5936  371  | 8960  560  (+51%)  | 6320  395  (+6%)
-> >>  ramdisk N Y N 1M  | 1050  1050 | 1835  1835 (+75%)  | 1656  1657 (+58%)
-> >>  ramdisk Y N Y 4K  | 411k  1609 | 443k  1731 (+8%)   | 441k  1723 (+7%)
-> >>  ramdisk Y N Y 64K | 34.1k 2134 | 77.5k 4844 (+127%) | 66.4k 4151 (+95%)
-> >>  ramdisk Y N Y 1M  | 2248  2248 | 5372  5372 (+139%) | 4209  4210 (+87%)
-> >>  ramdisk Y Y N 4K  | 182k  711  | 186k  730  (+3%)   | 182k  711  (0%)
-> >>  ramdisk Y Y N 64K | 18.7k 1170 | 34.7k 2171 (+86%)  | 31.5k 1969 (+68%)
-> >>  ramdisk Y Y N 1M  | 1229  1229 | 2269  2269 (+85%)  | 1943  1944 (+58%)
-> >>  nvme    N N Y 4K  | 373k  1458 | 387k  1512 (+4%)   | 399k  1559 (+7%)
-> >>  nvme    N N Y 64K | 29.2k 1827 | 70.9k 4431 (+143%) | 54.3k 3390 (+86%)
-> >>  nvme    N N Y 1M  | 1835  1835 | 4919  4919 (+168%) | 3658  3658 (+99%)
-> >>  nvme    N Y N 4K  | 11.7k 46   | 11.7k 46   (0%)    | 11.5k 45   (-1%)
-> >>  nvme    N Y N 64K | 6453  403  | 8661  541  (+34%)  | 7520  470  (+17%)
-> >>  nvme    N Y N 1M  | 649   649  | 1351  1351 (+108%) | 885   886  (+37%)
-> >>  nvme    Y N Y 4K  | 372k  1456 | 433k  1693 (+16%)  | 419k  1637 (+12%)
-> >>  nvme    Y N Y 64K | 33.0k 2064 | 74.7k 4669 (+126%) | 64.1k 4010 (+94%)
-> >>  nvme    Y N Y 1M  | 2131  2131 | 5273  5273 (+147%) | 4259  4260 (+100%)
-> >>  nvme    Y Y N 4K  | 56.7k 222  | 56.4k 220  (-1%)   | 59.4k 232  (+5%)
-> >>  nvme    Y Y N 64K | 13.4k 840  | 19.4k 1214 (+45%)  | 18.5k 1156 (+38%)
-> >>  nvme    Y Y N 1M  | 714   714  | 1504  1504 (+111%) | 1319  1320 (+85%)
-> >>
-> >> [1] https://lore.kernel.org/linux-ext4/20241022111059.2566137-1-yi.zhang@huaweicloud.com/
-> >> [2] https://lore.kernel.org/linux-ext4/3c01efe6-007a-4422-ad79-0bad3af281b1@huaweicloud.com/
-> >>
-> >> Thanks,
-> >> Yi.
-> >>
-> >> Zhang Yi (8):
-> >>   ext4: make ext4_mpage_readpages() support large folios
-> >>   ext4: make regular file's buffered write path support large folios
-> >>   ext4: make __ext4_block_zero_page_range() support large folio
-> >>   ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large
-> >>     folio
-> >>   ext4: correct the journal credits calculations of allocating blocks
-> >>   ext4: make the writeback path support large folios
-> >>   ext4: make online defragmentation support large folios
-> >>   ext4: enable large folio for regular file
-> >>
-> >>  fs/ext4/ext4.h        |  1 +
-> >>  fs/ext4/ext4_jbd2.c   |  3 +-
-> >>  fs/ext4/ext4_jbd2.h   |  4 +--
-> >>  fs/ext4/extents.c     |  5 +--
-> >>  fs/ext4/ialloc.c      |  3 ++
-> >>  fs/ext4/inode.c       | 72 ++++++++++++++++++++++++++++++-------------
-> >>  fs/ext4/move_extent.c | 11 +++----
-> >>  fs/ext4/readpage.c    | 28 ++++++++++-------
-> >>  fs/jbd2/journal.c     |  7 +++--
-> >>  include/linux/jbd2.h  |  2 +-
-> >>  10 files changed, 88 insertions(+), 48 deletions(-)
-> >>
-> >> -- 
-> >> 2.46.1
-> > 
-> > Hi Zhang,
-> > 
-> > I'm currently testing the patches with 4k block size and 64k pagesize on
-> > power and noticed that ext4/046 is hitting a bug on:
-> > 
-> > [  188.351668][ T1320] NIP [c0000000006f15a4] block_read_full_folio+0x444/0x450
-> > [  188.351782][ T1320] LR [c0000000006f15a0] block_read_full_folio+0x440/0x450
-> > [  188.351868][ T1320] --- interrupt: 700
-> > [  188.351919][ T1320] [c0000000058176e0] [c0000000007d7564] ext4_mpage_readpages+0x204/0x910
-> > [  188.352027][ T1320] [c0000000058177e0] [c0000000007a55d4] ext4_readahead+0x44/0x60
-> > [  188.352119][ T1320] [c000000005817800] [c00000000052bd80] read_pages+0xa0/0x3d0
-> > [  188.352216][ T1320] [c0000000058178a0] [c00000000052cb84] page_cache_ra_order+0x2c4/0x560
-> > [  188.352312][ T1320] [c000000005817990] [c000000000514614] filemap_readahead.isra.0+0x74/0xe0
-> > [  188.352427][ T1320] [c000000005817a00] [c000000000519fe8] filemap_get_pages+0x548/0x9d0
-> > [  188.352529][ T1320] [c000000005817af0] [c00000000051a59c] filemap_read+0x12c/0x520
-> > [  188.352624][ T1320] [c000000005817cc0] [c000000000793ae8] ext4_file_read_iter+0x78/0x320
-> > [  188.352724][ T1320] [c000000005817d10] [c000000000673e54] vfs_read+0x314/0x3d0
-> > [  188.352813][ T1320] [c000000005817dc0] [c000000000674ad8] ksys_read+0x88/0x150
-> > [  188.352905][ T1320] [c000000005817e10] [c00000000002fff4] system_call_exception+0x114/0x300
-> > [  188.353019][ T1320] [c000000005817e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> > 
-> > which is:
-> > 
-> > int block_read_full_folio(struct folio *folio, get_block_t *get_block)
-> > {
-> > 	...
-> > 	/* This is needed for ext4. */
-> > 	if (IS_ENABLED(CONFIG_FS_VERITY) && IS_VERITY(inode))
-> > 		limit = inode->i_sb->s_maxbytes;
-> > 
-> > 	VM_BUG_ON_FOLIO(folio_test_large(folio), folio);    <-------------
-> > 
-> > 	head = folio_create_buffers(folio, inode, 0);
-> > 	blocksize = head->b_size;
-> > 
-> > This seems like it got mistakenly left out. Wihtout this line I'm not
-> > hitting the BUG, however it's strange that none the x86 testing caught
-> > this. I can only replicate this on 4k blocksize on 64k page size power
-> > pc architecture. I'll spend some time to understand why it is not
-> > getting hit on x86 with 1k bs. (maybe ext4_mpage_readpages() is not
-> > falling to block_read_full_folio that easily.)
-> > 
-> > I'll continue testing with the line removed.
+On Mon, May 19, 2025 at 08:08:03AM +0200, Andreas Klinger wrote:
+> Add Vishay VEML6046X00 high accuracy RGBIR color sensor.
 > 
-> Hi Ojaswin.
+> This sensor provides three colour (red, green and blue) as well as one
+> infrared (IR) channel through I2C.
 > 
-> Thanks for the test again, I checked the commit, this line has already
-> been removed by commit e59e97d42b05 ("fs/buffer fs/mpage: remove large
-> folio restriction").
+> Support direct and buffered mode.
 > 
-> Thanks,
-> Yi.
+> An optional interrupt for signaling green colour threshold underflow or
+> overflow is not supported so far.
 
-Hi Yi,
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/time.h>
+> +#include <linux/types.h>
+> +#include <linux/units.h>
 
-Thanks, seems like they came in via Christian's 6.15-rc1 vfs branch,
-maybe Ted rebased recently since I didnt see this change in the fairly
-recent branhc that I was testing on.
+...
 
-Good to see it is fixed. I've another overnight auto run going on, I'll
-update if I see any regressions.
+> +/*
+> + * veml6046x00_gain_pd - translation from gain index (used in the driver) to
+> + * gain (sensor) and PD
+> + * @gain_sen:	Gain used in the sensor as described in the datasheet of the
+> + *		sensor
+> + * @pd:		Photodiode size in the sensor
 
-Thanks,
-Ojaswin
-> 
+This is made to look like kernel-doc, but it's not marked as a such, why?
+
+> + */
+> +struct veml6046x00_gain_pd {
+> +	int gain_sen;
+> +	int pd;
+> +};
+
+...
+
+> +/*
+> + * Factors for lux / raw count in dependency of integration time (IT) as rows
+> + * and driver gain in columns
+
+Missing period at the end. Please, fix all your multi-line comments
+accordingly.
+
+> + */
+
+...
+
+> +	ret = regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF0,
+> +							VEML6046X00_CONF0_ON_0);
+
+Something wrong with the indentation. Please, fix all places like this...
+
+> +	if (ret) {
+> +		dev_err(dev, "Failed to set bit for power on %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
+> +							VEML6046X00_CONF1_ON_1);
+
+...or like this.
+
+> +}
+
+...
+
+> +static int veml6046x00_get_it_index(struct veml6046x00_data *data)
+> +{
+> +	int ret;
+> +	int reg;
+
+Why the 'reg' is signed? regmap API doesn't operate on signed values. Please
+fix all places in your code.
+
+> +
+> +	ret = regmap_field_read(data->rf.it, &reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* register value is identical with index of array */
+> +	if ((reg < 0) || (reg >= ARRAY_SIZE(veml6046x00_it)))
+
+in_range() ?
+
+> +		return -EINVAL;
+> +
+> +	return reg;
+> +}
+
+...
+
+> +static int veml6046x00_get_it_usec(struct veml6046x00_data *data, int *it_usec)
+
+Same comments as per above function.
+
+...
+
+> +static int veml6046x00_get_val_gain_idx(struct veml6046x00_data *data, int val,
+> +								int val2)
+> +{
+> +	u32 i;
+
+Why fixed-width type? Wouldn't unsigned int i work?
+Please, fix in all places. The rule of thumb is to use fixed-width types either
+when it's HW / protocol specific, or when the respective API uses the same type.
+Otherwise use PODs.
+
+> +	int it_idx;
+> +
+> +	it_idx = veml6046x00_get_it_index(data);
+> +	if (it_idx < 0)
+> +		return it_idx;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(veml6046x00_it_gains[it_idx]); i++) {
+> +		if ((veml6046x00_it_gains[it_idx][i][0] == val) &&
+> +		    (veml6046x00_it_gains[it_idx][i][1] == val2)) {
+> +			return i;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+...
+
+> +static int veml6046x00_wait_data_available(struct iio_dev *iio, int usecs)
+> +{
+> +	struct veml6046x00_data *data = iio_priv(iio);
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +	int ret, i, cnt = 2;
+> +	u8 reg[2];
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		/*
+> +		 * Note from the vendor, but not explicitly in the datasheet: we
+> +		 * should always read both registers together
+> +		 */
+> +		ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_INT_L,
+
+Please, drop _L if not used as a single byte access.
+
+> +							&reg, sizeof(reg));
+> +		if (ret) {
+> +			dev_err(dev,
+> +				"Failed to read interrupt register %d\n", ret);
+> +			return -EIO;
+> +		}
+> +
+> +		if (reg[1] & VEML6046X00_INT_DRDY)
+> +			return 1;
+> +
+> +		fsleep(usecs);
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	/* integration time + 10 % to ensure completion */
+> +	fsleep(it_usec + it_usec / 10);
+
+I would suggest  / 8 as it gives much better code generation. Divisions are
+slow and hard.
+
+> +	ret = veml6046x00_wait_data_available(iio, it_usec * 10);
+
+Also it won't mess with semantics of '10' here.
+
+> +	if (ret != 1)
+
+Can it return negative error? If not, why is error code shadowed?
+
+> +		goto no_data;
+
+...
+
+> +static int veml6046x00_validate_part_id(struct veml6046x00_data *data)
+> +{
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +	int part_id, ret;
+> +	__le16 reg;
+> +
+> +	ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_ID,
+> +							&reg, sizeof(reg));
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to read ID\n");
+> +
+> +	part_id = le16_to_cpu(reg);
+> +	if (part_id != 0x0001)
+
+Here you put 4 digits...
+
+> +		dev_info(dev, "Unknown ID %#02x\n", part_id);
+
+...and here you are expecting that it may be two only. Please, make these two
+consistent.
+
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
