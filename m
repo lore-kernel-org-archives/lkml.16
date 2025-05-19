@@ -1,87 +1,123 @@
-Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58691EE7BE;
-	Mon, 19 May 2025 10:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D326A1B8;
+	Mon, 19 May 2025 10:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747648823; cv=none; b=QSckNOoDSDzo0K9H2+bLeezD70H2jBzho1mZJjTVSeRdE847pws6aFlUDCcMYAmwRhbgnRt4Ej+tEpdilOvgbtd3iYRJag1qtK89xhuXAwYo4hkZlmdnFGgUb8lTXzc6l5DitOsiCss3IjzI8J1hIF0OytxeH5Omft/zrUWLgEY=
+	t=1747648923; cv=none; b=UDTt10CGpeMLl/dmr+xkGdmGriM7cyHAoRLjXoY7MyM+oN3a7L8g1fvjPu8NTm4y19/61Y0fPk7qOrfQ+hlxgeZCza6bwUWEABBLAXmTNh29iZ2XICkxFk/UpAA777mHLPeSEGEo4w3EQEhVy0m5Nya8vQGAaOsI20p+RwaXPUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747648823; c=relaxed/simple;
-	bh=HHSitiozwfNiWVJ06ieuIpL5bxaDJ1ifVhX7Rkvx2RI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Cc:Subject:
-	 References:In-Reply-To; b=cRAHTR7Uxks01PeY0gsVW81zFwdD1nCLbYa8wDzqTdyUrdcLij+IPx7gj8+0k3r2mdxa0+c/gMAXQlQsZ1R3eh5Pt4hJ86DxeTMR50cJ95ayNox4QyMaej9KelBFK1syqhRhKm1Ky4qVDZVrKddeQhsZnNDuByGahUTR6bnX4VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=BwXCJSTE; arc=none smtp.client-ip=195.113.20.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+	s=arc-20240116; t=1747648923; c=relaxed/simple;
+	bh=nfGjAmRusdnHy0utbcl82JupWWBu05y/buhmdLs3ic4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JKjN1Y4/0BOemwLIWshG4Z5TnB+9/vbe3d4rb+LV0NgkB7muOd3GaXMZz5nivh8nBZi6QOSDlBJdx7XkyHKcSwx3OZjKtijOeWmZeWozj/TWAGdzvxpVXpBw4j6v9P/pCgH9oxlhI69C7vfKc7Y/UkI1izGp4FHJWOSnri0RuO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNzz+hwe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="BwXCJSTE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
-	s=submission; t=1747647245; x=1748947245;
-	bh=WfhZWsojv/52yaorrbcpAgqYpchyuwYJo8yoDgMhlv4=; h=From;
-	b=BwXCJSTEDpL1MB6EU3+T4TTgUdRe2xHgDia6xMGQWiL0yWikro1kO/rVfPf3MnFqM
-	 lro7yTrACWrFU9+MsCA2GOe/tyNay1lvwVbJgO35vf9YSANHNrd/20kSjf6KF7eYid
-	 /ues9juJZYfaCE3Ai21FMXwBni7XeJFieKKxiwBVhT/lUKQtWULjt9jBkJUGkfkxSG
-	 rjqyv8jGL1OLhUkkp1zAf2eCi6vyTABLzjQI35q2MV9gFkaFiBDXVDHFkCAUssYAA6
-	 yLhdZ93o2JV2reNrSJJjE+aFtKEWcNEjLcPZ3OjgKow52f5JN9vXZloThLjM14h7eq
-	 GFI6P3rhNrwPw==
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(authenticated)
-	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 54J9Y333099263
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 11:34:05 +0200 (CEST)
-	(envelope-from balejk@matfyz.cz)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNzz+hwe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C73C4CEE4;
+	Mon, 19 May 2025 10:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747648922;
+	bh=nfGjAmRusdnHy0utbcl82JupWWBu05y/buhmdLs3ic4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VNzz+hweTHX+k6aokJkJd/pWyRJ65OXEmVIES3IqDdme72h8vSATCts0gihA98ibW
+	 zzXXKxkzdC0xWDNOzE/1PMTztoN+WD85XfY79fLXtiZ/MLJjr9fKjBxol8QOB00P88
+	 2pm/1Ls9OuU5E4UClzAGhS3fkfSiwNcvuCPqqkGA3UgX4qgX89utWpRWwpqQZIvlQX
+	 2SgWSEcuXCYA6T2e9RANQMQFfg/Q4kFAbRNzhHg+858gn2q4yJUD1tyyy3KRUo0JYM
+	 jwiXeYGG9ADy0g5hgkchAsRiiFIvBm7htxLxNtFytxRDuP3ghDQLWcG4Aq/LX+qLjY
+	 KVeLj3SufeB+g==
+Date: Mon, 19 May 2025 13:01:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Mike Rapoport <rppt@gmail.com>, Rich Felker <dalias@libc.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] sh: kprobes: remove unused variables in
+ kprobe_exceptions_notify()
+Message-ID: <aCsBk6OUnkKGSJm3@kernel.org>
+References: <20250517093048.1149919-1-rppt@kernel.org>
+ <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 11:34:03 +0200
-Message-Id: <DA018S0Q8E24.2KK8DE7QWLZTX@matfyz.cz>
-To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
-        "Lee Jones"
- <lee@kernel.org>
-From: "Karel Balej" <balejk@matfyz.cz>
-Cc: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] mfd: 88pm886: Constify struct regmap_irq_chip and some
- other structures
-References: <1681629840761e30494cb8920668710df60a81b8.1746996137.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <1681629840761e30494cb8920668710df60a81b8.1746996137.git.christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
 
-Christophe JAILLET, 2025-05-11T22:42:30+02:00:
-> 'struct regmap_irq_chip' is not modified in this driver.
->
-> Constifying this structure moves some data to a read-only section, so
-> increase overall security, especially when the structure holds some
+On Mon, May 19, 2025 at 10:48:20AM +0200, Geert Uytterhoeven wrote:
+> Hi Mike,
+> 
+> On Sat, 17 May 2025 at 11:30, Mike Rapoport <rppt@kernel.org> wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> >
+> > kbuild reports the following warning:
+> >
+> >    arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
+> > >> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
+> >      412 |         struct kprobe *p = NULL;
+> >          |                        ^
+> >
+> > The variable 'p' is indeed unused since the commit fa5a24b16f94
+> > ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
+> >
+> > Remove that variable along with 'kprobe_opcode_t *addr' which also
+> > becomes unused after 'p' is removed.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
+> > Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
+> Thanks for your patch!
+> 
+> "p" and "addr" are definitely unused (besides side-effects?), so
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> > --- a/arch/sh/kernel/kprobes.c
+> > +++ b/arch/sh/kernel/kprobes.c
+> > @@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> >  int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+> >                                        unsigned long val, void *data)
+> >  {
+> > -       struct kprobe *p = NULL;
+> >         struct die_args *args = (struct die_args *)data;
+> >         int ret = NOTIFY_DONE;
+> > -       kprobe_opcode_t *addr = NULL;
+> >         struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> >
+> > -       addr = (kprobe_opcode_t *) (args->regs->pc);
+> >         if (val == DIE_TRAP &&
+> >             args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
+> >                 if (!kprobe_running()) {
+> > @@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+> >                                 ret = NOTIFY_DONE;
+> >                         }
+> >                 } else {
+> > -                       p = get_kprobe(addr);
+> >                         if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
+> >                             (kcb->kprobe_status == KPROBE_REENTER)) {
+> >                                 if (post_kprobe_handler(args->regs))
+> 
+> I have no idea what this code is supposed to do, and if it actually
+> works.  Red flags are that the assigned "p" was never used at all
+> since the inception of this function.
 
-increases
+"p" was used before fa5a24b16f94 ("sh/kprobes: Don't call the
+->break_handler() in SH kprobes code"), but I can't say I understand that
+code either :)
 
-> function pointers.
->
-> While at it, also constify some other structures.
->
-> On a x86_64, with allmodconfig, as an example:
-> Before:
-> =3D=3D=3D=3D=3D=3D
->    text	   data	    bss	    dec	    hex	filename
->    5032	   3304	     64	   8400	   20d0	drivers/mfd/88pm886.o
->
-> After:
-> =3D=3D=3D=3D=3D
->    text	   data	    bss	    dec	    hex	filename
->    5800	   2536	     64	   8400	   20d0	drivers/mfd/88pm886.o
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Compile tested-only.
-> ---
->  drivers/mfd/88pm886.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+CC'ing Masami, he probably knows what this code does.
+ 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 
-Reviewed-by: Karel Balej <balejk@matfyz.cz>
-
-Thanks,
-K. B.
+-- 
+Sincerely yours,
+Mike.
