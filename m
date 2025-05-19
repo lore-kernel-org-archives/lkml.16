@@ -1,236 +1,156 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2052.outbound.protection.outlook.com [40.107.212.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849A91F5433
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665358; cv=fail; b=P2n6b886FScHPL9bmIHVz/7L1r9zJRzCvwuFgABwDteehRlPEoUCGUpWEQloVSQ1/ZAZBvQvyRO6h/xmr10v7oCOtb4YmObhgiBV3Ya5ApcrUZLs6rR1q1M1YKdoy6z6hz2Eqw7tP/e45aSNvEklqcUrxsq65dXZyb8/i2vOZIE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665358; c=relaxed/simple;
-	bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hn4VdP+rxM+1ob9+Mzf2jG9YBXQDL/E+7TrSGFrFKncocKIdD/FGPdXl7s3iq69LlgYd73eUY4bcinUxdWfcHqZGFhyB4ZHewuUnL2FyWI4nG0QDMIna5Spx9BBM2FmJ8SjHsG091H/D3GOq9YoO6rngnpLIT4hCYufZwmeP6mI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ckCArHwT; arc=fail smtp.client-ip=40.107.212.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0762820DA
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747665431; cv=none; b=VNP5eU8U5RRfLcdFuqJ1OgCpoxyxIJBCXatdan3jr47lEHUlbYs675hjiPbvRD5+gSAD1w5dEe0a6LFPReZ1+9LH4XPVV4bSjR2SZDV7abtNvExaGuUtwbsBJr67EZ9D3OG4AFozyuMXcl7IOM2+vy2XDFHgWlifhxw7BPBqI8I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747665431; c=relaxed/simple;
+	bh=5/V2tABvYgLP5UNbooAOeTQyZUJ+sJi2zBNmH3pYgAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IWCmy+ENL/sWkZ4jfSjBo/GCUoRP6ITFJ/7SDNPCFYPOAp9drI5QjM6U3jl36rdqS+CIRDS4Y2Rons8RPOsE+11obCZW9A+kNmGWhtWVfX1Ks10mA2j69Gr+GKXC/ausUoRuHl1cYF+rtdMp/Ne5/0++6X3SO+yL3nNRmxTGnI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QdGBriuI; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ckCArHwT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ghs6b5Xux8mYlpJdD2nh7qo5415km/Um/O3ChjQC1UR+4iDWTi4MAHqkZNa10RN0++XGAdkHz4r4lV0N2yTJEw8usMRDeWe9MRhwtIgEEL58TvnlknEJon5cTqAKO2tGuvrMPBrwXPXrUxYbTQPjFcV0XWfWEtkKdqXDmiba13FwnSpEEtMeegdVOklvU3o+tkI8SYj78ZW9xYu5O1hfLNVWNq9ZnJGWiSndq8DsRpQ4wmdJLfD2Melu5Q+yE+4YVOxdFAE+taI7Qa3deBDfkuqmkHQB1v9wQVIC9IUbusclCq5USX7wCLW0r5wemLgFa3hM9UGUxInwcfpYK2KRXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
- b=KqzQOyNkZ528o9W8VSBUhKo1qI3Li7v4bwesfc8gxMIOOqe59ackNmhxmY73t3YwLCVqBMX3QkAkyVT47HONedu1/cE4viTHxMl7SE3DxGTxGTDTdkZF/yK0GuR0dYB7uULaNMm4DpT783Ktp5SuJyw3ndXIiHnEDUZazLxqtWp3IAQsg6VcncG/hOyzWRB3rWE31b2xfwo8Xvek1Il9W1OpqibZo2pdk2yuiuQZvnM04PJMgX3GNr0EgITXkpvswKV2aF8VXN48r6Yo6itY/O7E79yN4okgXkfu3Hn9aw2GWkijhaVfOF+m9PzYEficvB4fOGM0+NBc1MmNF0NzFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C61WOlfWFsWHvY8/ZUO57HwsyGGtQGBoqM/apawNPHk=;
- b=ckCArHwTU9PAayHOe7cNdVXVfeL1lCpqtWYE+n/X3O2utql/H6sDqHvrNKIUVhd2d7czR/hCsjmafJW/QT60RtsHeVBmy8tqdmyp5zyCspIczvJEJL0U4CppH/XCKiDVzp+6XH9c43c3dD6F3LS/ih8T1nXVrQ+s6ZE4id8DG4oScwZh64GeEyWStzZeufn0UXbShUBb8P1Xg+HEIs0W66PPKoAJ/YaisyiDHuP8gwIZLomoOtEL4DljiC+TyDJ6hDTXTsx6JIkucl0WiQHlXQis757dkhVUTU2tU/JuXGi14sgBCx2HIJcYo7DgCFDcbv6Ea0HaD/LLilfd2Bk23Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DS7PR12MB6312.namprd12.prod.outlook.com (2603:10b6:8:93::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.31; Mon, 19 May 2025 14:35:52 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 14:35:52 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Oscar Salvador <osalvador@suse.de>,
- Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Make MIGRATE_ISOLATE a standalone bit
-Date: Mon, 19 May 2025 10:35:50 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <0A1FA061-9E8E-4E86-A479-EFA9FF083D4F@nvidia.com>
-In-Reply-To: <794d741f-44ac-4cd8-97e8-091f12387f39@redhat.com>
-References: <20250509200111.3372279-1-ziy@nvidia.com>
- <fed40607-edcd-4338-85ae-7656a374728b@suse.cz>
- <FCED1CCE-B9A9-4B8B-9319-B1002848AC3B@nvidia.com>
- <794d741f-44ac-4cd8-97e8-091f12387f39@redhat.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL1PR13CA0337.namprd13.prod.outlook.com
- (2603:10b6:208:2c6::12) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QdGBriuI"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b26ee6be1ecso2109652a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747665429; x=1748270229; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1vPXUaqLnASCk26v8AYq/xyh0dL2NbOqMP5+RZIYdN8=;
+        b=QdGBriuInvPdBnyzr2DPbyoWOTtWYDtX1FcQ1z2g8cil9eLmph2m4QzB4YWRifqdwr
+         uJIn5tZj/UWY96Rq9QlVL8avkczXw7/8bhl33KsH1/aK3LrxxRahlxfBC5VLDUhWqyua
+         FkmhAMorI8jsHjK8BD+AABceE0iGaWIWXGe39ktpka4xAO/4+HpM7MkABnzeg/HBJ/E2
+         Tlr/DRR8iVuuSW9iFzfxNQZLosqES50CetSHSUaWm9oZ+7NnAgmgZjeuWjmBrVrt/gvZ
+         /GgaeHCTF7GIesKmBairoLgUx/12TxTPjz25Sfwp0WCXm4bBCvEaRiemFYEj9t/uPzMM
+         1vcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747665429; x=1748270229;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1vPXUaqLnASCk26v8AYq/xyh0dL2NbOqMP5+RZIYdN8=;
+        b=qYUuwhjtoDLQgriEMFm+Gh5ECGNJSRMXkC/uh6rzVHMS0Y+JZGc4Fih/a6LmeC82+5
+         qB8kZmqXoMY8fe9Yte0YRLnbAnGZ7V5i2of75qrSjjmw/EsSOgipNq46vtyE7vJQlTtA
+         SHSCwiUml2NA+vLWpmCxsWBek0+Dp+98iZeR1eJqhCkqsqVTaSw6lCUmJXTy36AGZPmC
+         IPbDogszCGJE8PdegKgqGDeLsbgaBTe3moxlHkBsSWP7txmXmpeUIpz2gwsVFdwEbG6R
+         9tdXRG1RcjfbOkmStDHJfl5kcqiO6hcJhxPEdX2CNr5158SWNUXbKmFkYBbUhnmLAmtW
+         M/XA==
+X-Forwarded-Encrypted: i=1; AJvYcCXETexNtKMOQAzuy2q3LM9b2/9HjRvJpGbkDhrsSQr2yHIJDstEYn2K2yDj10UU8g27G+6DxVEq5bAUanE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdwaaA9xAQovZ0ThfYwuLVvTnC6JlLF2v5ExWRFsiF4k3eJCgp
+	6g3B3edN3ovTKPZcwvonKidlyG4q4zHYVZMH9EZm7s2Ks+aAKoR87ZiwniovUsK123M=
+X-Gm-Gg: ASbGnct0XPWpSx3KZEt24z9oSt7Qe7ELRIfMdaobPdvkxuNXGZr/KXGaOIRRMiuCZRo
+	GRCML5c3Z6ZhTg/zFRrkuIkytTELH4oeHVEnawwX+ggHHqZNfrCGTiHNPOzBvtI3V89Gy7gp/8r
+	w6yww/0K5SGazyG+Ju6K1axJDZ2OJq52aHpYA64yFatDqOSGO1iasb9gbLAHUInm7eTMRFUf/al
+	ivoC8P57kdyoWeROHiIIUzQWtw/hgHo06b6q47cgIkEVjX2tHnZiZXDIsbjGGa3Zp8NFsD6Uxcc
+	vPpwXsaEj/hTeyLwLJnIXdVNj7+pzthJ/e2mQDBLGcb94fpYYYoaldo=
+X-Google-Smtp-Source: AGHT+IF/y9xxWUyxf7UmJBXjeSXfMuDpXpZ/CMmnWi60Hs/4WXDf6kx+HvnkJigPJrS3fZ5zy6fEPw==
+X-Received: by 2002:a17:902:db07:b0:22f:bf03:8dac with SMTP id d9443c01a7336-231de375428mr166495295ad.26.1747665429289;
+        Mon, 19 May 2025 07:37:09 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:196b:a5e3:3e1c:c6bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4af9f65sm60755855ad.87.2025.05.19.07.37.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:37:08 -0700 (PDT)
+Date: Mon, 19 May 2025 08:37:06 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Beleswar Prasad Padhi <b-padhi@ti.com>
+Cc: andersson@kernel.org, afd@ti.com, hnagalla@ti.com, u-kumar1@ti.com,
+	jm@ti.com, jan.kiszka@siemens.com, christophe.jaillet@wanadoo.fr,
+	jkangas@redhat.com, eballetbo@redhat.com,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	martyn.welch@collabora.com
+Subject: Re: [PATCH v12 04/36] remoteproc: k3-m4: Don't assert reset in
+ detach routine
+Message-ID: <aCtCEvGlqIIDYtcn@p14s>
+References: <20250513054510.3439842-1-b-padhi@ti.com>
+ <20250513054510.3439842-5-b-padhi@ti.com>
+ <aCddoCUIpIV1ZxEW@p14s>
+ <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS7PR12MB6312:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3734b100-1e9b-49a2-8ef8-08dd96e274f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dVgUhixI4YsCu1fpb+QFjKNqdkz17VeJeyQvNMR0TgjJqd1eJCReLlOI3kRV?=
- =?us-ascii?Q?NdhgIjtNCcikl7tyQvq6AlHx5w17hNV196tM4FUxj+qdLWHWsfsjuUcpb0QE?=
- =?us-ascii?Q?zFAa8zvU1Nz6XAQj9whSpd71UHCArJS0N5fKvdpAlmJkvVxVTYo6grC9UtDO?=
- =?us-ascii?Q?IGVf/BPOvY6T0QTMm12stODLYJlX3fPSWnQmfU34LEWZ344vnSLPMmc70vAz?=
- =?us-ascii?Q?YFdkyQDboa08ypmmzOSKdPxtbeULAe/yy4/Nb9cCiTVEbUbJyg125x+tnxnl?=
- =?us-ascii?Q?rU2W23r9vNHPF9P64fQX4BK+atJeMNvgMMSXDSPgNcTiKZ5ISEoM00Y4NZY8?=
- =?us-ascii?Q?XPfpUmohvCi5ZUbhYYVCVhHlwUMzmmj7rQ5v90Ov/I3Iy6kkm2v06hBuvVVP?=
- =?us-ascii?Q?5eDWflA6MVpJFpM8zsHeX7RCCCPFI6ORXnQVxn+Bi5tTD9hmO7C/JrvOMhdU?=
- =?us-ascii?Q?TnnFjyZgrjbq5gsmyFER/TQY8bS9Nm0cV0QSUXALXm/BCFQy6BYoDNVzTtKm?=
- =?us-ascii?Q?ngB4ie5i5CxBTIZccTUCO7s5AV4u9tJqpE4yEHEc5KlOZQtv//OGsG8iiD5B?=
- =?us-ascii?Q?7GxhrhifezG5vP7uf0AvVf52dVCI/u1UZg+Ptdtd4x+iWhjZMR2Mwdjpk6GP?=
- =?us-ascii?Q?u/r/QHHDnVYXPJlPAx6eMF+622rHSGfRgBFpWijsdiuySC8J6xM9jaS02jsL?=
- =?us-ascii?Q?MJ3X8r2yNjz282OPO4hnI8AKQEeBr+42iQfdIdGs7STM5z8barVQn3toCG8T?=
- =?us-ascii?Q?aGuZngd7EUT9nMOMui/a8eANArFAgO7xZGcOcRzJ55T6tdZ3ubsO95BqO9l+?=
- =?us-ascii?Q?TAD9hzOOXcZPtd24FiG5eZV2yTtsIMMfHD9dxagWh6QmFPrkLaIxpweO2PzZ?=
- =?us-ascii?Q?Cl45Xkq6KD7e0Uk34xttqyXnoJW7jHQUeCUxPugv7qPPoNw0aytckxoIfkF/?=
- =?us-ascii?Q?LYXnEbx8EHvN/WCuoF1HPVqv/2ImLAVK4fV4dgyyuFbzWcqswTDogYzuf2eX?=
- =?us-ascii?Q?jorZcPDpvSecSSa8NP5woUoPrzdQ3aWLPkgDR4r4v+Db+Fmw093nje0V6bIN?=
- =?us-ascii?Q?fHtlEHaL0gdPvWGXQp0c0sbk+u2vXSAmRg0JyVBogUsmq8xncIJ2djg0BBgY?=
- =?us-ascii?Q?ew0b3qMHU22cFWyLq19xkU9wPbu7qlCwzgH75hcYn8cU+xwMesqEfhXm43j3?=
- =?us-ascii?Q?nEqKNljbyggO0wvEgsvokRgZoG12C/1N8HEhI/rqIQBRXJBmmixdv4tS9+p9?=
- =?us-ascii?Q?5kxe5nKzOi5ckS4W9wrgd3NDGrfB8OsNgMGcpksh1d+7MMnwnvXh5egM23lb?=
- =?us-ascii?Q?fTwMOmfV97T9N6hhmHRnT46QIi2g9FWk/E1qpvZqndQHDtdqn+TUjoLyHdmX?=
- =?us-ascii?Q?GRbyO3xO3GJ/hoBYFbREWFk7IBy9O0I2JAx+GpRSXfjvcdgcmr+KEwHP3DfD?=
- =?us-ascii?Q?N3nskQjifuE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6rXxAEsC4quiPw2IAba3wAuGsQOa/ZYsl+MA06aTO3bliMxX9ups3x9ae08G?=
- =?us-ascii?Q?CX4Dzo02uQaukRA/x8NgqTxRLammbxihqOjgVugzfo9hwFhSkaCMWdOXSJtq?=
- =?us-ascii?Q?8pJ/60vrfzL3kBv5zpeD5bKvZ3wQJvgEfFndTVDh+mfiBQBDd3L9rlYl4c7p?=
- =?us-ascii?Q?TRna08D+4vERfYlAFWpZGcmzT1Mk0/+518nAX7xZgRrezle8sYJz1g9dKKY8?=
- =?us-ascii?Q?/z43mxvIzS5cYBETn19yIGgOVObGAjB4qz8P0nfipr8pZeN2SJv7wnaDfHgO?=
- =?us-ascii?Q?QDHlI523J8h0SCdmc6tkatZw3/eZIS+n1cTH/eEZmwZjnNxSF49VTqqz9JMb?=
- =?us-ascii?Q?PB/Kg5hbqjLWYwmOj94n2x9//G+DOjJc8SNf+3SwqFW0YsxYY+Bmm3r8tjyI?=
- =?us-ascii?Q?nvDvFG2lZjPcKyEjNBZxMKAoIqy5umQRboVdCosANnrnaPAOi278BCl9Lg88?=
- =?us-ascii?Q?L52J9/1Ko2LOZgrBKOns3H3bTTXmhoBkMsFEj6084WTRN97aJ77GRHCLXhUz?=
- =?us-ascii?Q?u5/I0STGn9lWTqP2kRK20+EETheKJ+UCBslqzqpjhj0LfV8fJ+owEwpcNf2z?=
- =?us-ascii?Q?dx508qXxxFvemyhlbPEuKRYZeMLUcX03LtV0cG3LeEQfIwDurJHYDAhAKhC6?=
- =?us-ascii?Q?08vHkVmrXjU0Z93SroQJ5TsLXs79LJ4bFHopzuPdyhWjnGnldj0rJKVlG3DS?=
- =?us-ascii?Q?a0zZCxMLQ1TprxYfGtPKY2YgSp1cecatDjakouCQfQd74gzo1QY3HXk4PklR?=
- =?us-ascii?Q?YJsZIEUj8lUO3cIKkZAzte9lo9a6hKVf2vfqdnu9MGNBdpHOcqKQbr+kCeUI?=
- =?us-ascii?Q?tLgVMT8QdSnTViAC5Fu8iQ4DLl3BPORcBb8rnAUL6hhcWE7nMC4nfAfFisFG?=
- =?us-ascii?Q?2kSyT2tTkTQGBstHvTTRQ4yLoIe81IjTuMpzkTRoJ+w5mj90+6lwYilI2Jhj?=
- =?us-ascii?Q?rlHfgCmCmNcXz0djrv33vYkcAA1FgU9/cz9OrJ8jsJiyz61Rp7sBMGqx5sRW?=
- =?us-ascii?Q?UBZXNqdz8pcUWpi3MnjaG9BqMXVpVMMcnUbRYS9in/pHpWSnX1v2fEYpsvJK?=
- =?us-ascii?Q?gGA+KjiwlF3eJbVxNWHW2HhN4aENHB6AYWrCo1+L+/cIlR+o8KcXDFgpgnBN?=
- =?us-ascii?Q?5wjbfqeKjEWqvB8cEcgy1KmepxUIL9BpyqKmbjTaJsV+SIJAS5gSBkDOVlSP?=
- =?us-ascii?Q?mFtfyG9CJfumEsUkFZSVHUo0jrI6m7jmGUjaj7lioVdmfBlQwHfJPsdGTvJX?=
- =?us-ascii?Q?1aWCiqTIDQKxke/nYaoAKcXiRwcRfDHSVsBQ3nI9iHml6A8i1edXr2yCvXrE?=
- =?us-ascii?Q?V+EGiPWRbbB/ka/tABC/nFbRXgwGLIC3GFpU+wWAl2+LQ+2CKGz5qOBg53Jg?=
- =?us-ascii?Q?gIP0BqPjupvmPC2sS3s5S6D/H44WpOoeoZ7lL1gurlBKo2CSGg0DG0AMTZxk?=
- =?us-ascii?Q?cBJQTxGzIq8hPhuI2mqGpwle7+hFBm3/L/Z5+wJLOJpYY2EApi0KL6ynRaPI?=
- =?us-ascii?Q?hW2S+D/EynL90frdhTXeykdFWGBcN/A7IaW/wtTyY91IC8APwPLSfEIWL0xE?=
- =?us-ascii?Q?Tp1/LuyiTnf8rv/asNpP13HXR3liHD6hXUBxbfqw?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3734b100-1e9b-49a2-8ef8-08dd96e274f9
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 14:35:52.7132
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9EJKCiPCPpu5zzucpOYEPafuN5sQjWyonR5T7lpEZsbGGeJdXwzbKWbfpsvMr4zh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6312
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com>
 
-On 19 May 2025, at 10:15, David Hildenbrand wrote:
-
-> On 18.05.25 02:20, Zi Yan wrote:
->> On 17 May 2025, at 16:26, Vlastimil Babka wrote:
->>
->>> On 5/9/25 22:01, Zi Yan wrote:
->>>> Hi David and Oscar,
->>>>
->>>> Can you take a look at Patch 2, which changes how online_pages() set=
-
->>>> online pageblock migratetypes? It used to first set all pageblocks t=
-o
->>>> MIGRATE_ISOLATE, then let undo_isolate_page_range() move the pageblo=
-cks
->>>> to MIGRATE_MOVABLE. After MIGRATE_ISOLATE becomes a standalone bit, =
-all
->>>> online pageblocks need to have a migratetype other than MIGRATE_ISOL=
-ATE.
->>>> Let me know if there is any issue with my changes.
->>>>
->>>> Hi Johannes,
->>>>
->>>> Patch 2 now have set_pageblock_migratetype() not accepting
->>>> MIGRATE_ISOLATE. I think it makes code better. Thank you for the gre=
-at
->>>> feedback.
->>>>
->>>> Hi all,
->>>>
->>>> This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
->>>> being overwritten during pageblock isolation process. Currently,
->>>> MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone=
-=2Eh),
->>>> thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original=
-
->>>> migratetype. This causes pageblock migratetype loss during
->>>> alloc_contig_range() and memory offline, especially when the process=
-
->>>> fails due to a failed pageblock isolation and the code tries to undo=
- the
->>>> finished pageblock isolations.
->>>
->>> Seems mostly fine to me, just sent suggestion for 4/4.
->>
->> Thanks.
->>
->>> I was kinda hoping that MIGRATE_ISOLATE could stop being a migratetyp=
-e. But
->>> I also see that it's useful for it to be because then it means it has=
- the
->>> freelists in the buddy allocator, can work via __move_freepages_block=
-() etc.
->>
->> Yeah, I wanted to remove MIGRATE_ISOLATE from migratetype too, but the=
-re
->> is a MIGRATE_ISOLATE freelist and /proc/pagetypeinfo also shows isolat=
-ed
->> free pages.
+On Sat, May 17, 2025 at 06:53:29PM +0530, Beleswar Prasad Padhi wrote:
+> 
+> On 5/16/2025 9:15 PM, Mathieu Poirier wrote:
+> > On Tue, May 13, 2025 at 11:14:38AM +0530, Beleswar Padhi wrote:
+> > > The rproc_detach() function invokes __rproc_detach() before
+> > > rproc_unprepare_device(). The __rproc_detach() function sets the
+> > > rproc->state to "RPROC_DETACHED".
+> > > 
+> > > However, the TI K3 M4 driver erroneously looks for "RPROC_ATTACHED"
+> > > state in its .unprepare ops to identify IPC-only mode; which leads to
+> > > resetting the rproc in detach routine.
+> > > 
+> > > Therefore, correct the IPC-only mode detection logic to look for
+> > > "RPROC_DETACHED" in k3_m4_rproc_unprepare() function.
+> > > 
+> > This driver has been upstream for 9 whole months, it is hard for me to believe
+> > this but was just noticed.  Martyn from Collabora should be CC'ed on this, and I
+> > will also need the required R-b/T-b tags.
+> 
+> 
+> Cc: Martyn Welch martyn.welch@collabora.com
+> 
+> Requesting Andrew/Judith for review and test too.
+> 
+> > 
+> > Typically bug fixes are not part of refactoring exercises.
+> 
+> 
+> Typically, yes. But the refactor depends on this fix. This
+> k3_m4_rproc_unprepare() function is entirely refactored to common driver in
+> [PATCH v12 26/36].
 >
-> The latter, we can likely fake.
->
-> Is there a reasonable way to remove MIGRATE_ISOLATE completely?
->
-> Of course, we could simply duplicate the page lists (one set for isolat=
-ed, one set for !isolated), or keep it as is and simply have a
+> So, If the refactor is picked without this patch fix, the mainline M4 driver
+> would be fixed, but the older stable kernels would always have this bug. Let
+> me know what you think.
+> 
 
-That could work. It will change vmcore layout and I wonder if that is a c=
-oncern
-or not.
+I suggest you send this patch on its own and then the series (without this
+patch) with a note in the cover letter that it depends on the fix.  That way we
+get the best of both worlds.
 
-> separate one that we separate out. So, we could have a migratetype+isol=
-ated pair instead.
-
-What do you mean by a migratetype+isolate pair?
-
->
-> Just a thought, did not look into all the ugly details.
-
-Another thought is that maybe caller should keep the isolated free pages =
-instead
-to make it actually isolated. We might need to keep per-order isolated fr=
-ee page
-stats to fake /proc/pagetypeinfo.
-
---
-Best Regards,
-Yan, Zi
+> Thanks,
+> Beleswar
+> 
+> >   I suggest to apply
+> > this set without this patch - you can then work on fixing this bug.
+> > 
+> > Thanks,
+> > Mathieu
+> > 
+> > > Fixes: ebcf9008a895 ("remoteproc: k3-m4: Add a remoteproc driver for M4F subsystem")
+> > > Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+> > > ---
+> > > v12: Changelog:
+> > > 1. New patch. Fixup a state detection logic.
+> > > 
+> > >   drivers/remoteproc/ti_k3_m4_remoteproc.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> > > index a16fb165fcedd..6cd50b16a8e82 100644
+> > > --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> > > +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> > > @@ -228,7 +228,7 @@ static int k3_m4_rproc_unprepare(struct rproc *rproc)
+> > >   	int ret;
+> > >   	/* If the core is going to be detached do not assert the module reset */
+> > > -	if (rproc->state == RPROC_ATTACHED)
+> > > +	if (rproc->state == RPROC_DETACHED)
+> > >   		return 0;
+> > >   	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+> > > -- 
+> > > 2.34.1
+> > > 
