@@ -1,109 +1,90 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A88A94F;
-	Mon, 19 May 2025 10:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834762741A1
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650135; cv=none; b=i9hVhtI1NZ7/L4BgaFHzleMdl2lfgeMk54wfod98MsAPLB6ET08RK7/EUS1fgZ1Dggs/hiubZqPQlFbz5BI7OTN02FUHcDc2uirHjh+Hf8zH3VTAfsSIsB4fFmZ4rf2HWT5+YESW25bkVZM0khK1n3ieZ6y6qRnhu6bP5Sht3Yg=
+	t=1747650216; cv=none; b=Bwq0G1FQQiv6wkuRsRHkZvm5Q6+gyakae9LYCkRS7NL6ZIFNOSNZcvgSB4c82RP/ENMjd6P6CKd1WCNJKFYeZIqodsDQOA+HoVGYttd4hpcfTwfrF4AIKlfQPWSCluPtTXgZx2bthO4Ny6RdDBuzDzO3TuTnymzWyKS88gUpx/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650135; c=relaxed/simple;
-	bh=M66grIRayxuiFCfPOtRCmOUI64aUQPuVQIUUf0osrtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=owBGxmQkFfrCKJ/F/7iMZ/zaknGLu3MlJIYhhWPLCihlkTVQLdGIHl5GxNaq5Hw8p7Rw0Idc1W5EmN8HASLm5iWUunt4MGb0K9dOEf+DYtixDAQpTHVNr0la8h/TslH31TxJUXh3WBdxNlRgCT9UJrMTVgJFb00oiQcR8LnbnMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAB3tylFBitovWVxAQ--.12796S2;
-	Mon, 19 May 2025 18:21:58 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: irusskikh@marvell.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] net: atlantic: Add error handling in set_raw_ingress_record()
-Date: Mon, 19 May 2025 18:21:32 +0800
-Message-ID: <20250519102132.2089-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747650216; c=relaxed/simple;
+	bh=qVYT7soGacmdnnA6v9cyT/+kbXKli+6EeB29u7HK+pw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NNMsrt5hGwQncfidKCm2b41GhUdlmlSEJleeSl39lEUYJPPd91ZykX064TdiaFE4IQlU7WIAtTqmaM5KVlAcJpqgWC/55mQdkNCwe+KtGdzNGi2HM74+pijLqx6Q0hDUl44kmoGAp+PH29scRNkkHqQU+WRN+VY3d8JcmKAC7dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b5e46a526so397059039f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:23:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747650213; x=1748255013;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jII1busYs4xnfa0qv3L8ZQ55pH0fVJVHYY14hn+MxwU=;
+        b=uxMU1DXQaFL36ZdVIxuViMV/ARuL3RW7cTS8ujBreKLP/XJavxNT9DbAZE6LpdySKX
+         ZGcOldlQe0aKeZz368Z9xWIuTA5Dywds205K1bKnG5+qWy/61rbs2VD7gdzUC+7U0wMP
+         KQGv5FVZhhHsB3aYtJNyziQ3kmcxLsEYgnzkPZDLkJpD/9OQW4LF/Oj922eQdTCAe3wa
+         Whn7V+tZDL9ku3j3SJIFXftRY9TPxhKCJR59NMC2uArWQImAn2sQqA1IDKAxv+E3h8Ih
+         Ot/7UE15BPe1CdGslG3gVaSJUxP78mEN6N+I+yO/nV+sp0zm2GqHcW+kfoEGE2z0IUre
+         Amcw==
+X-Gm-Message-State: AOJu0YyxwDN2vsIz2RBOmTs0fW6mC5fLmXT53FIbIUjw6Co6ae7oYOJv
+	OwkXql0sHlggActGDntYuNWVyVCM8twZHo+RTNFEBWiSYz+l47M7jJpwBImVHY4bontpi3QSN8d
+	cTBnzwdSqtUp9iZKEuYZzjnZ3el10xtNHAi0NRa1zqlnrqtxZEi0GyvWExko=
+X-Google-Smtp-Source: AGHT+IHqR4AfI5timqitN3mlFHSN2ov7sUk7uSod5GMRxFEvnH8gBcgVkwq2BchnttNMRH+s+/D3fsPZnbExr8zVWzyS9wk22y+v
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3tylFBitovWVxAQ--.12796S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFWxXw48GF45tF4UJry5Arb_yoW8CFy8pw
-	4a9F90g34Utw4fuFW8Ja1rCr45Z3y8try7Way3Gw1fZFyFyr4DtF4rXryF9F15WFWUAanI
-	9rW0krW2kwn0y3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgHA2gq9CsK8QABsn
+X-Received: by 2002:a05:6602:388b:b0:85b:b82f:965b with SMTP id
+ ca18e2360f4ac-86a24cd615cmr1287509039f.12.1747650213625; Mon, 19 May 2025
+ 03:23:33 -0700 (PDT)
+Date: Mon, 19 May 2025 03:23:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682b06a5.a70a0220.3849cf.00b4.GAE@google.com>
+Subject: [syzbot] Monthly trace report (May 2025)
+From: syzbot <syzbot+list1df466906ec8f148731d@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The set_raw_ingress_record() calls aq_mss_mdio_write() but does not
-check the return value. A proper implementation can be found in
-get_raw_ingress_record().
+Hello trace maintainers/developers,
 
-Add error handling for aq_mss_mdio_write(). If the write fails,
-return immediately.
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-Fixes: b8f8a0b7b5cb ("net: atlantic: MACSec ingress offload HW bindings")
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+During the period, 1 new issues were detected and 2 were fixed.
+In total, 13 issues are still open and 45 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 1768    Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<2> 179     Yes   WARNING in bpf_get_stack_raw_tp
+                  https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+<3> 52      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<4> 42      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<5> 27      Yes   WARNING in tracepoint_probe_unregister (3)
+                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
+<6> 24      Yes   WARNING in tracing_buffers_mmap_close
+                  https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
+<7> 18      Yes   INFO: task hung in blk_trace_remove (2)
+                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+
 ---
- .../aquantia/atlantic/macsec/macsec_api.c         | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-index 431924959520..5e87f8b749c5 100644
---- a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-@@ -62,6 +62,7 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
- {
- 	struct mss_ingress_lut_addr_ctl_register lut_sel_reg;
- 	struct mss_ingress_lut_ctl_register lut_op_reg;
-+	int ret;
- 
- 	unsigned int i;
- 
-@@ -105,11 +106,15 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
- 	lut_op_reg.bits_0.lut_read = 0;
- 	lut_op_reg.bits_0.lut_write = 1;
- 
--	aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
--			  MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
--			  lut_sel_reg.word_0);
--	aq_mss_mdio_write(hw, MDIO_MMD_VEND1, MSS_INGRESS_LUT_CTL_REGISTER_ADDR,
--			  lut_op_reg.word_0);
-+	ret = aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
-+				MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
-+				lut_sel_reg.word_0);
-+	if (unlikely(ret))
-+		return ret;
-+	ret = aq_mss_mdio_write(hw, MDIO_MMD_VEND1, MSS_INGRESS_LUT_CTL_REGISTER_ADDR,
-+				lut_op_reg.word_0);
-+	if (unlikely(ret))
-+		return ret;
- 
- 	return 0;
- }
--- 
-2.42.0.windows.2
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
