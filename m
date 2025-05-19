@@ -1,123 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041511A83E5;
-	Mon, 19 May 2025 13:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCB27817A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660775; cv=none; b=LLuzJmnxSOBVfW+hIe41KGRuFOrJ1VkvY3DCyQdgbRCNx6d4h++nv+JKsakpHBJyq5aF/k6WGc9CgXeERE+ZZRVdDTIk3/thrbsIsUVUZXUVCw7w5yrYvILSAP0EdNrcgUDthjnFcA04frDkMOp9lYRXZZtuae5V2Rqn2vEcgKU=
+	t=1747660808; cv=none; b=c38DJazvmpKLH4GHRhueD5GHlkItAOKrLxhK472rJnCdJq1uRZC+n4Vi8freuV2iUFT81I5TUkfPCK0QCGpdwInxv0UINbPHHw3Q0IAgryhiLjfeHqw6Ih5Mj8VBR9w2CrsY/xb3piQG0YXQfiay6h1Wpe9Ea+Mt+B4RtISODI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747660775; c=relaxed/simple;
-	bh=lMgcrPUdSRcfHOD+aZWOG+tFela1rati+BKxiKrpcEI=;
+	s=arc-20240116; t=1747660808; c=relaxed/simple;
+	bh=g3ZozbinENRScyPV2xxw+ZFrBdJFXASo/Co1oK1uMVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dt5ooNdrzISkz75CLdaY7+rcbPJq8C9ttY19caZc2nHYENacn6UbB2ZIy6ldVuEyHaTYv0Ov56aoTe+4bll0nbbJYo3Y+Bw/rbCkvOh/RhSwYLqx6hpL0JyIojPEMSFmBz08R3zNiWjmaEJ0jOZxpBe3uG9zGpUW8Jc7fSGkdmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YCAkhZj1; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OXQTDZj2yaKqUVQIV+n4vCbVSkm4Fno/V0rlaWxRLQxRA0ennKICN0zZcdU5Aj8yZRnpJ/huajZa59U76CLPMfwuopCe2W9hh5Xwo1pNt4UXB+jTRK67nl1GdtecBAvCTS5U4QKKW83rAhnmLSUSi0KBN8NFqBNnREjss28oC7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=igUglUHe; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YCAkhZj1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747660774; x=1779196774;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lMgcrPUdSRcfHOD+aZWOG+tFela1rati+BKxiKrpcEI=;
-  b=YCAkhZj1CJFWs2jSENE/hzZnW2H3Ef59MYQzRZRTCiji4vMU8AQnAMoS
-   0oyRBdUkJMzMG57HtjHqvIHpPBpiOmDTIdVR6MDis2xeqTd8q8cPU4JDm
-   T72umeXodv9Xm5i0VtXrHv/RLByF+zOfRKUmtp1uklK+yU+RABiSsIZw/
-   B1q/5P4AsRBrtNlLiOg5N2Bblv2acQ3HuXXPYZ+G6MmTlGyUhLFS3KbWC
-   TzVn2qXYvmcx4OzaBJS0uiw/nsIyIQKz/SEdzQnkJZXHG4KiZwJd0YNr8
-   HWIXKiFj643yUpJCfpePUOFwWaicUuA2RxXXe4hEo9cPNZSwq1JWHl4ri
-   w==;
-X-CSE-ConnectionGUID: dLlMuemyRD+smsrY6kjznA==
-X-CSE-MsgGUID: vfxiiHzvTCSESJ9enfsoJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="60589711"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="60589711"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:19:33 -0700
-X-CSE-ConnectionGUID: kCEb/0Q5SOuF/fe049fuKQ==
-X-CSE-MsgGUID: oI6uzQMCSvKzD70cbw+yRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139885490"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:19:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uH0Or-0000000331J-0uhR;
-	Mon, 19 May 2025 16:19:25 +0300
-Date: Mon, 19 May 2025 16:19:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v8 08/11] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <aCsv3Me2J8cotW6s@smile.fi.intel.com>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-8-bbe486f6bcb7@bootlin.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="igUglUHe"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0A64340E0238;
+	Mon, 19 May 2025 13:20:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id LKmry1jTl_9Q; Mon, 19 May 2025 13:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747660800; bh=eALvwRRqtlo+1eJlwR+ponANKqmb4Vp8XbSE5dbRFJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=igUglUHefLy+8mK0I1rx8k904b9ZgNK7sYAov6f0d8vTM2zhD4w+zcyonub6ipTwa
+	 76NCrliEMxPT83PEN50t4gBiMAc3F0Cvt6f3sIUshyIdi8tMrzJz0ctRNJGPWdsjbH
+	 oBBTcON4ymzHgJ1DGST20qb+ycuO0Yb0Gnh1E0IpHSDlPgIrECbVbXc8CM6Ub+/Ox4
+	 2aXH5fiw8jOk07bhqlC68fumXd/F7BwFC6xTi1krxLd0axKIFQSVxS0KjvKV2tcCp8
+	 pAGdgMGrsk6bYDcOCMvD2rxy67TIp+0+8C26wsa8BDwsB+xQd3VOMVNuYd6aKbojw/
+	 mmb+s3KPzv7MhvnaP3GMwL3m5MszaXObTS543pTMN29xX4x+Kw2YStKDEsdXd5ICwr
+	 0goYvuU1Pl7doCuoB0gCo/xxriHVhffFAPljaivdjudZw2nvMHK3yGs1r9mR249u0C
+	 p393AIzCOLOxIdIVDw3Itdl/66AUBDin10Yb2I3+KGTyrtqY3bwPzKS2qMnKcgJgnZ
+	 +SVTYmcHTHxFbRr0kP8oCSFvj8tOaVeXNconKg9JhgDNRW6sv9PriQpJFKYbIyAYh7
+	 Ws0WqKl6r6PeWOdjB1oOlwy8QktEKxS34QsFpg8VzEWE2qRwegghTqBq3l7ORajd3h
+	 5DbyZ5D7PcNNZw8uPR8376f0=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 48EA740E016A;
+	Mon, 19 May 2025 13:19:50 +0000 (UTC)
+Date: Mon, 19 May 2025 15:19:44 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ingo Molnar <mingo@kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+Message-ID: <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local>
+References: <20250517091639.3807875-8-ardb+git@google.com>
+ <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+ <aCstaIBSfcHXpr8D@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250509-mdb-max7360-support-v8-8-bbe486f6bcb7@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <aCstaIBSfcHXpr8D@gmail.com>
 
-On Fri, May 09, 2025 at 11:14:42AM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
-> 
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
+On Mon, May 19, 2025 at 03:08:56PM +0200, Ingo Molnar wrote:
+> The second best thing we can do is to have a sane, constant LA57 flag 
+> for the hardware capability, and introduce a synthethic flag that is 
+> set conditionally (X86_FEATURE_5LEVEL_PAGING) - which is how it should 
+> have been done originally, and to maintain compatibility, expose the 
+> synthethic flag in /proc/cpuinfo as 'la57' to maintain the ABI.
 
-...
+- we don't expose every CPUID flag in /proc/cpuinfo for obvious reasons:
 
-> +	for (unsigned int i = 0; i < MAX7360_MAX_GPIO; ++i) {
+  Documentation/arch/x86/cpuinfo.rst
 
-Is there any special reaso to use pre-increment?
+- if you want to mirror CPUID *capability* flags with X86_FEATURE flags *and*
+  use the same alternatives infrastructure to test *enabled* feature flags,
+  then you almost always must define *two* flags - a capability one or an
+  enabled one. I don't think we want that.
 
-> +		ret = regmap_assign_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +					 MAX7360_PORT_CFG_INTERRUPT_MASK, mask_buf & BIT(i));
-> +		if (ret)
-> +			return ret;
-> +	}
+And since we're dealing with ancient infrastructure which has grown warts over
+the years, we all - x86 maintainers - need to decide here how we should go
+forward. I have raised these questions multiple times but we have never
+discussed it properly.
 
-...
+Also, Ahmed and tglx are working on a unified CPUID view where you can test
+capability.  Which means, what is enabled can be used solely by the
+X86_FEATURE flags but I haven't looked at his set yet.
 
-> +			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
-
-Here, for instance, post-increment works good.
-
-> +				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +							MAX7360_PORT_CFG_INTERRUPT_EDGES,
-> +							MAX7360_PORT_CFG_INTERRUPT_EDGES);
-> +				if (ret)
-> +					return dev_err_probe(dev, ret,
-> +							     "Failed to enable interrupts\n");
-> +			}
+So it is high time we sit down and hammer out the rules for the feature flags
+as apparently what we have now is a total mess.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
