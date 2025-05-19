@@ -1,110 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C806A26A1DA;
-	Mon, 19 May 2025 14:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951B327AC2D;
+	Mon, 19 May 2025 14:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663877; cv=none; b=WXBxSksG1RBQ02FixWaLCC9vFdwJyo2gqDAGt7MgUsUC0/DtbQRuvt8zA0qZenLa4Y9sCNgcQOpv5ZneFDosb72X0COtkrmavWe4JiVnHPzXCRPklg+n2xHuaLUZsnI7TAx2BSyDXiaYNoaZ3zYnjnvjnNsmdKB14rGjXRltmJ8=
+	t=1747663949; cv=none; b=cA3DHDd1Q6TdUTHA5M5Opy2SficTdReAhcQ0rTLbVroTpUeXzqtrM6dzM5Yc/zdCrgYxGsAAoE1ShWIZMUCI+AzZiPgZww15vET2t7EfZH5wt35K5Y0EGtLqRGsrZPdxz4u66rDOUSqOiGIxehWJ25umBUAyUYKUmkg/bEl+NmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663877; c=relaxed/simple;
-	bh=e1ejy1mxpIjt2Bw3FSFixCpdrvKaPbVj5b42czyYzxg=;
+	s=arc-20240116; t=1747663949; c=relaxed/simple;
+	bh=/jT7zhKK44/tVNMbL7tUsOcNpndx2GehOuVyg/BMdwM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMpclgJrUM/4xXc+Es7QOv7z2OZbiyYR0/2bx1UhDVcgO2xVvT/NBhaYUTiw45Di+R9xwZJ7TN3kv/YjNhvGCB8prisMtVRz5iN5uX4sy/MKhN27n6YoG8FXjSKWJA3LiDzdKvGFIrmjLBEhO4UeXBLVjRc1TBmrLzc3Ord500Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuwiVYBO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sgt8F/6JtsBqlRcbUeyv3KTYQNXuZuC/nqIkGbOecfz5WlpC+3IxvsKAUX3kxgYvn/25epaS3UyVVo4F57zERqDFRN8JgPM4iS/XZJStYgJwMNacbuogae/Qa9bb9ktE8D6Fn9kJ2cYzoyWg1KM/JoLXzYdvGX5ZyntzMreRKC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcoF39yL; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuwiVYBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA3BC4CEE4;
-	Mon, 19 May 2025 14:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747663877;
-	bh=e1ejy1mxpIjt2Bw3FSFixCpdrvKaPbVj5b42czyYzxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UuwiVYBOmT0r42eJ2BqI4kUGWbraux+H8fHr1YvAZeA9N9XwhGUYwmIXillv60Ih9
-	 /kCS7UbncUQhT1kEgfPVltZdCiGO4EanQSEKr8vci8xkPu27AYe1tHnGn0g6pHiVRi
-	 4N3l359n5U3jgumzYPeuR5rRhukDobMO2WzWpCRDMJUhT87QF8K7EJJe0lQ8kMu1X/
-	 5eqDmq7Q0tRQuOm7M3bogWphHNV/480ddeGJLnGUXZifEC24lUKmPMAzMUn22R7wr7
-	 IZ8UWdYDSsMQlvY/GZFu9phFXmpLAj7fz8By3/nS93KPzpNrJkpwxddkt66syizpKC
-	 SfoWiaf3/nmPA==
-Date: Mon, 19 May 2025 15:11:11 +0100
-From: Will Deacon <will@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v21 3/4] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Message-ID: <20250519141106.GC16991@willie-the-truck>
-References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
- <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcoF39yL"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-601470b6e93so5991882a12.3;
+        Mon, 19 May 2025 07:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747663946; x=1748268746; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kwtbZtu19diGt8rO4aMjYr/TvMAtVyWlER65gf6wNZo=;
+        b=mcoF39yLsVM8z7MapsjX62r2ZDjQ0pWZhVVewf1lQekTNloPto7i74fssggXfYLEmZ
+         pgBwqoEhYTnM12TGmiPxSPgE51PcYx2VEhylwq4Ko5p31CwWw7wCWqC9Zt2uLqDNt711
+         1lQ6HTC6WYNNsr8MueJJX8gqrlckq52/rtPMnz9PjvVxQzqVgcI1CtsRaXz0hKbjBaoa
+         X/mbldoQ/Hlhus0dXmnsneS7NrAmHUiXyvQGUddrKtgm4AKZhe6FoHv/0jIzJZwR6fTW
+         oT5+/CrPZNeOPKBb5B2xdQvmFWfQjdrCuTUOzqdvezWLi4Ag8jc7e97uftw1342f+3Ob
+         xMYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747663946; x=1748268746;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kwtbZtu19diGt8rO4aMjYr/TvMAtVyWlER65gf6wNZo=;
+        b=TemAP1gudEkK8Gy6F4IttXTGQc8d6KUkY4agnnDkzBHQT9O33vniMXsAyJfBV+TH/N
+         Gcl2Qzb1nqsKcpscHizRjocq1ZMZAYAKAoXfMwk6GOTeKWTzMs/sprIC6KQqeyz7Hd+J
+         b8oY73KJh9Z2g+sIGRgb04EypqTrKLTc4poeSZqzN8NKhFNZ2fXLwJ/wu1HuiicRrDBU
+         qDQHWlUA9smAE6A4Nhu4foBJzZJZ/D/SPqWYdfn+gM9m5oRpxSVbxayfWml4RZhgp0wX
+         XY5CS10U9OlR2epKqzuhvHjR2d8SZMlrH449fA2dc5WqqiE3IuaqAjonQG43OxL4B/U0
+         Jk6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW69m5hMzpzxWkTk2dKdbjY5jFkQpGEogQKZV5LuNM0304HihppNJlITbn4AkpWkgec30CWGfIqmnUYTUj9@vger.kernel.org, AJvYcCWYiZdZDLMvVYWRSfMIICkbb5kpqGO/j45Wuw4SXmm+a3FOX87ufgzytWKD8skUOqZgWlM6+9RREPOL@vger.kernel.org, AJvYcCWjNN8YJ1wtCDpj+DblL+G8SwaWz4chYU5SJpKMxodF1+PIj71zeDmxHnj6v8vao/9AcpnEcGOTSe8ddQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1WEdWJcQKbfDE/zz5dLQ8CF9d1xlivtpqGKozeCNEfSAi1Bee
+	siuhqTWU2EtcefmGIQeyQmW3R5FZGiNVIWl+u1lx6hNAJngZvFgpV03S
+X-Gm-Gg: ASbGnctn28iAY+N1pIw5sP7Pje4i3Z3tWccjAHhsSKUsCYtPHIftCsSEN92jgsTjnhP
+	TqTUScUb5WWl0B/ZkNPxzsyUnwXSzX4h6yzblbDNnQh64ftP4Av42uYzVWTqf/HJjLU0ewvRUsT
+	oOjxRJuitYE1RmoXqf3QQinSKNqbLP5nQnbhF5BvCTnzxH+R0+yzao1VOpMx16o01CWn+Iq2XX0
+	4jcI0FXG1EHGe+okBdzm/2blK3eyoA40EH0ij6C3m3XByZyITI4WYfGbFult4ejDt58/G5Suwgj
+	BkJnY92DJrnEHe5jvXiP8Q5Gqc6MftGevaj6yjl56M2165yq+Q==
+X-Google-Smtp-Source: AGHT+IHK4hAyenYRwp/iiAquA8hU23t4d+efyJR24TCPKyECsV3X++jVDkcGuPKqFTaWtP034PfkIA==
+X-Received: by 2002:a05:6402:35c5:b0:600:298b:5948 with SMTP id 4fb4d7f45d1cf-6008a392685mr10730325a12.2.1747663945527;
+        Mon, 19 May 2025 07:12:25 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:604:5d00:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d4f5fe5sm5815344a12.7.2025.05.19.07.12.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:12:25 -0700 (PDT)
+Date: Mon, 19 May 2025 16:12:23 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250519141223.GA668288@legfed1>
+References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+ <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
+ <20250519124028.GA423953@legfed1>
+ <kvckrtgbdxlzezxzn5xe6owmbaxa5rygknsv3hne32awfc7y5s@k2akbs6u7tkr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <kvckrtgbdxlzezxzn5xe6owmbaxa5rygknsv3hne32awfc7y5s@k2akbs6u7tkr>
 
-On Mon, Apr 07, 2025 at 12:41:32PM -0500, Rob Herring (Arm) wrote:
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
+Am Mon, May 19, 2025 at 03:47:26PM +0200 schrieb Uwe Kleine-König:
+> Hello Dimitri,
 > 
-> While BRBE can record branches within guests, the host recording
-> branches in guests is not supported by perf (though events are).
-> Support for BRBE in guests will supported by providing direct access
-> to BRBE within the guests. That is how x86 LBR works for guests.
-> Therefore, BRBE needs to be disabled on guest entry and restored on
-> exit.
+> On Mon, May 19, 2025 at 02:40:28PM +0200, Dimitri Fedrau wrote:
+> > Perfering IS_REACHABLE over IS_ENABLED is fine for me. Is there a reason
+> > why you just didn't replace IS_ENABLED with IS_REACHABLE ?
 > 
-> For nVHE, this requires explicit handling for guests. Before
-> entering a guest, save the BRBE state and disable the it. When
-> returning to the host, restore the state.
+> Because if (IS_REACHABLE(...)) is nicer than #if IS_REACHABLE(...). It
+> has better compile coverage and is easier to parse for a human.
 > 
-> For VHE, it is not necessary. We initialize
-> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
-> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
-> branch recording in the host. When entering the guest, we set
-> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
-> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
-> running a guest.
-> 
-> Should recording in guests (by the host) ever be desired, the perf ABI
-> will need to be extended to distinguish guest addresses (struct
-> perf_branch_entry.priv) for starters. BRBE records would also need to be
-> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
-> be distinguished.
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v20:
->  - Reword commit message about no guest recording.
->  - Add BRBE to __kvm_vcpu_run() synchronization comment
-> 
-> v19:
->  - Rework due to v6.14 debug flag changes
->  - Redo commit message
-> ---
->  arch/arm64/include/asm/kvm_host.h  |  2 ++
->  arch/arm64/kvm/debug.c             |  4 ++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 32 ++++++++++++++++++++++++++++++++
->  arch/arm64/kvm/hyp/nvhe/switch.c   |  2 +-
->  4 files changed, 39 insertions(+), 1 deletion(-)
+Sorry, my question was not precise. Diff below is about the replacement
+of IS_ENABLED.
 
-This one also needs reviewing from the KVM/arm64 side...
+diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+index c1b99b114314..b17912ffab19 100644
+--- a/drivers/pwm/pwm-mc33xs2410.c
++++ b/drivers/pwm/pwm-mc33xs2410.c
+@@ -163,7 +163,7 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
+        return mc33xs2410_write_reg(spi, reg, tmp);
+ }
+ 
+-#if IS_ENABLED(CONFIG_HWMON)
++#if IS_REACHABLE(CONFIG_HWMON)
+ static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
+        HWMON_CHANNEL_INFO(temp,
+                           HWMON_T_LABEL | HWMON_T_INPUT,
 
-Will
+
+Best regards,
+Dimitri Fedrau
