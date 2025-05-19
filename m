@@ -1,36 +1,37 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2324A94F;
-	Mon, 19 May 2025 02:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCB64C8F;
+	Mon, 19 May 2025 02:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747622480; cv=none; b=mkl9NDZV7ZMOv9Z6UanQkVOQh3Se9hiJEkIChvkdaHag4DNrZqjiihxcNljJY0fkGuiAqLgq31/bBd6UcC1x73Asgq8bcoM9RTRoowm7TVGZqcOOi67zyex8bD5zB1k4QWHNMpAR3SHvWPLdBvWSkntqrRfV5c/YZgyIAD3N7Jo=
+	t=1747622873; cv=none; b=BcR/uqPfhHIa2xLWlxVj/1wlepKRQt9U6lkEdn3yj5mxCHjMGYcMnoSn4oeiV+pqTOeyZ4wnaDI3ZrO0Ms4E7xX2J4DPPw2l5U/3y+xn/z9Cv4zu9hPhAK1Orl8EAqHn5nteFX0KMwZBcDq1W17IQ4Zw7q8YOUilITXV/q9lJqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747622480; c=relaxed/simple;
-	bh=FvP3hUURlzaObOTyBgrf0qa89O3CbPtk5X36mTObOys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XYrQZrQi77KdS5IS17Wy+pl8QSlea34X3MKzFT6kHo4PUid/iPP4qZ5q1xHzZ+xhtIh4YK8aOE2HZKSAxaBRg213iv44e2tUr+NnhV1O+4dUjK/4Xd9HfXjmYPGmTq6vgTV82eliJswtzytznbathyGv8+GNiX/Ms1475dkEmRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAAHGvVEmipoO59DAQ--.10155S2;
-	Mon, 19 May 2025 10:41:10 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm: radeon: ci_dpm: Add error handling in ci_enable_vce_dpm()
-Date: Mon, 19 May 2025 10:40:35 +0800
-Message-ID: <20250519024036.1119-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747622873; c=relaxed/simple;
+	bh=ov5MozL0+auJvcCcrKOTiQNZgIoA/QRYKpVO6oJxWD4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=khp3OMgCk5stEwmsCeMZzROU651hPxDAO7og+3zIhSANFbb5RxoDgdrzr0tXJdm0lLD50G126GgWdtIoGW/LHBJPTYQTn4m2R1cU+TOTdVNDCuL2MXKPuFIdbuM6kiX5CwOGt37eOh+moFqGuL5vDCKyhDOcgevnx7oEZgumlCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201603.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202505191047446688;
+        Mon, 19 May 2025 10:47:44 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201603.home.langchao.com (10.100.2.3) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 10:47:43 +0800
+Received: from locahost.localdomain.com (10.94.15.43) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 19 May 2025 10:47:43 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <sre@kernel.org>, <philipp@uvos.xyz>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Charles Han
+	<hanchunchao@inspur.com>
+Subject: [PATCH] power: supply: cpcap-charger: Fix null check for power_supply_get_by_name
+Date: Mon, 19 May 2025 10:47:41 +0800
+Message-ID: <20250519024741.5846-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,66 +39,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAHGvVEmipoO59DAQ--.10155S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1DZr4ruF1fXF43tF4fZrb_yoW8WFW8p3
-	yDWFyYyrZ5Aay8WanFyw4DAryruws7JFWxJFsFk345uw4ayFy8JF13XryayFy0vr92gFya
-	vrn2k3WkZr4UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOtC7UUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwHA2gqdbeYjQAAsb
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201613.home.langchao.com (10.100.2.13) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 202551910474498259a1827014c7e1b80724de4b499bd
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-The ci_enable_vce_dpm() calls ci_send_msg_to_smc_with_parameter()
-but does not check the return value. A proper implementation can be
-found in the ci_upload_dpm_level_enable_mask().
+In the cpcap_usb_detect() function, the power_supply_get_by_name()
+function may return `NULL` instead of an error pointer.
+To prevent potential null pointer dereferences, Added a null check.
 
-Add a check after calling ci_send_msg_to_smc_with_parameter(), return
--EINVAL if the sending fails.
-
-Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
-Cc: stable@vger.kernel.org # v3.12
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Fixes: eab4e6d953c1 ("power: supply: cpcap-charger: get the battery inserted infomation from cpcap-battery")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
- drivers/gpu/drm/radeon/ci_dpm.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/power/supply/cpcap-charger.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index 3877863c6893..c4faaa16a5c4 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -3945,6 +3945,7 @@ static int ci_enable_vce_dpm(struct radeon_device *rdev, bool enable)
- 	struct ci_power_info *pi = ci_get_pi(rdev);
- 	const struct radeon_clock_and_voltage_limits *max_limits;
- 	int i;
-+	PPSMC_Result result;
+diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cpcap-charger.c
+index 13300dc60baf..d0c3008db534 100644
+--- a/drivers/power/supply/cpcap-charger.c
++++ b/drivers/power/supply/cpcap-charger.c
+@@ -689,9 +689,8 @@ static void cpcap_usb_detect(struct work_struct *work)
+ 		struct power_supply *battery;
  
- 	if (rdev->pm.dpm.ac_power)
- 		max_limits = &rdev->pm.dpm.dyn_state.max_clock_voltage_on_ac;
-@@ -3962,9 +3963,11 @@ static int ci_enable_vce_dpm(struct radeon_device *rdev, bool enable)
- 			}
+ 		battery = power_supply_get_by_name("battery");
+-		if (IS_ERR_OR_NULL(battery)) {
+-			dev_err(ddata->dev, "battery power_supply not available %li\n",
+-					PTR_ERR(battery));
++		if (!battery) {
++			dev_err(ddata->dev, "battery power_supply not available\n");
+ 			return;
  		}
  
--		ci_send_msg_to_smc_with_parameter(rdev,
--						  PPSMC_MSG_VCEDPM_SetEnabledMask,
--						  pi->dpm_level_enable_mask.vce_dpm_enable_mask);
-+		result = ci_send_msg_to_smc_with_parameter(rdev,
-+				PPSMC_MSG_VCEDPM_SetEnabledMask,
-+				pi->dpm_level_enable_mask.vce_dpm_enable_mask);
-+		if (result != PPSMC_Result_OK)
-+			return -EINVAL;
- 	}
- 
- 	return (ci_send_msg_to_smc(rdev, enable ?
 -- 
-2.42.0.windows.2
+2.43.0
 
