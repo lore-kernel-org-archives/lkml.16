@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7A42750E5;
-	Mon, 19 May 2025 10:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4612527511A;
+	Mon, 19 May 2025 10:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650482; cv=none; b=fsqrJa9T1C3odK6UFR5Xl8KizXC8hoInsegbUXTT3KzVsnJZf6c/qhAuH5++uY+vJ2buDI48bUMN50J6HSM0rh9o9zdmLPoaEHzE6zw3XqyW8pa67xIWYHmHCIILRP0QE8LDewcQRE7InOYeIVlbIrXE+2HadSjG6dR6491fda8=
+	t=1747650483; cv=none; b=sH3QEOjDqwc4em8UdmFg908mjIgyFivcNlSc6XKVrUBRhZwuWxuxazhHdIFz8dPSEdYa3caybEVomHIB0VRGZy1pvya8TtcwlBNBMpCpOEahuJlAFVpO9tIV8/UBVFPLi/u99s/jE6MndbLliTTPVVCLgd0cSeSNsumdppTCsJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650482; c=relaxed/simple;
-	bh=WgE1aO9YUvOmlhuTjVRspOHWrraepbPoXdmSTVuPrz4=;
+	s=arc-20240116; t=1747650483; c=relaxed/simple;
+	bh=rIw11Zll8gfZyXn921OMUK/umkLs8qpFl0Fgt2tFyKg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gIodSLcFrC+/0qJF3azVCvXpKhDyrx9FRddOCFBfNJHOyvPiJitGrbFf4ZmmL4xry0Q/zMGtsmbkT0I9xNDNSKrxJQbRQWzeiy7oGVqr4RKWOTyXpgq58V6N+LeMeFG5gR5npix5d40nibOuGD9nLVLtrnGxAU2oRFDGTLrjBD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VFbf3m+z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JePzUQ8n; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=HBBIinqZNp2mkmqPBnnI72YtPYprPz5xCkZ5E65xjQ+YqJzYdAUKJxOWBn5WXsJdLO14wAGYIze147oR7IvtRtjghRgJY9GZyAQL1I29zE+zMpkdQQPL46sN4vvHpBRmbXLwQP5QxWOmEGnKbgTxeHxDtHyUCdftBy2JiGMNy4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qqrrfclV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SHfd9r2G; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VFbf3m+z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JePzUQ8n"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qqrrfclV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SHfd9r2G"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747650477;
+	s=2020; t=1747650479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WwJdSQU9Mp7gY25s96zSaz0i/71ZPlHWpcJ0xxxuTBQ=;
-	b=VFbf3m+zwZw6v3yAT2w/65xQo9YC0xPFIjFbKXnor3CffObhDp5sDae06EzvDTiz1zFYHE
-	6RQgtTBhFsGyFSxEkx2vXIc+JIC4FbybRmYGMCfGay+cnA+Jw2YJooabdQwp/rkhvben5N
-	G+4/Sng9MuhUjlOdnD3UahDQxrR4xHu5a41/r6zoRfYC7jAdMDKbk6kBrQqc9nnuTaIASz
-	roQRr0opj0VOw3ZUe7PqfO2HKHKm4Cb2TXMaysxer4CMXEcxNDxXRxJTUbFw82DgTMz2zW
-	fgU6lojeCKFk1TdLk+kevgk7nVeRl69a7Npa1bG+lC8Q9lYv9x3aQhAevZHZkg==
+	bh=Pniv2XiPVav7l2RNqiguNnZ/6Zs0ZqDeX4qxyOQZv3I=;
+	b=qqrrfclV9M57FVjjpilRVZ0aWImYjm+UK+p/Ch6WZWXqH4uZaT0gL8aqzNy5zd/6NKs8pr
+	brOIjqBYAGLRt8xEeLn6CnDK8HD+OvEIgJSNqC7jHd3TWiolfysmWBwsTvtUPW3wONalse
+	ydPuDXcNoSfyz4ugXWmAaNfotyZHcidqsbo4DmZksEGywrVyrIjbVQ50/hgIZX19oYih+V
+	TqL0NHAPfbayjViWsVUv8izoR3o9SR9Hulp2Jl6lxtgPvzux5bIEP/o5o0QizUC0bChk7F
+	jJVYhEn7qyPer8/55RxAGD2WJcc1HJmYA9Ac1HgriMJOKRdcql+FJ+YpqfouZw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747650477;
+	s=2020e; t=1747650479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WwJdSQU9Mp7gY25s96zSaz0i/71ZPlHWpcJ0xxxuTBQ=;
-	b=JePzUQ8n+uN4ZMcT03kjrzk2RgnLj9tzSQtRtvTvYcxogq4Qn1G4fSVvyQjlpI1IujDphl
-	Z/78h+Tk3oaGk4Bg==
+	bh=Pniv2XiPVav7l2RNqiguNnZ/6Zs0ZqDeX4qxyOQZv3I=;
+	b=SHfd9r2GJlQPUBSnuMyaCLQvuOMCkM3XSQPLAjQ4SDpoxLEg0KJkKa3e2VADIJwlqbkglW
+	kdVag5hQUrPa5rAA==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v9 10/22] Documentation/rv: Prepare monitor synthesis document for LTL inclusion
-Date: Mon, 19 May 2025 12:27:28 +0200
-Message-Id: <7db17ac4db8cc10ddbfedb2b91bd39ac129d095f.1747649899.git.namcao@linutronix.de>
+Subject: [PATCH v9 14/22] rv: Add rtapp container monitor
+Date: Mon, 19 May 2025 12:27:32 +0200
+Message-Id: <20137b23b322d230be0c1bef4f63823499a2d118.1747649899.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747649899.git.namcao@linutronix.de>
 References: <cover.1747649899.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,119 +58,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Monitor synthesis from deterministic automaton and linear temporal logic
-have a lot in common. Therefore a single document should describe both.
-
-Change da_monitor_synthesis.rst to monitor_synthesis.rst. LTL monitor
-synthesis will be added to this file by a follow-up commit.
-
-This makes the diff far easier to read. If renaming and adding LTL info is
-done in a single commit, git wouldn't recognize it as a rename, but a file
-removal and a file addition.
-
-While at it, correct the old dot2k commands to the new rvgen commands.
+Add the container "rtapp" which is the monitor collection for detecting
+problems with real-time applications. The monitors will be added in the
+follow-up commits.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- Documentation/trace/rv/index.rst              |  2 +-
- ...or_synthesis.rst =3D> monitor_synthesis.rst} | 20 +++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
- rename Documentation/trace/rv/{da_monitor_synthesis.rst =3D> monitor_synth=
-esis.rst} (92%)
+ kernel/trace/rv/Kconfig                |  1 +
+ kernel/trace/rv/Makefile               |  1 +
+ kernel/trace/rv/monitors/rtapp/Kconfig | 14 +++++++++++
+ kernel/trace/rv/monitors/rtapp/rtapp.c | 33 ++++++++++++++++++++++++++
+ kernel/trace/rv/monitors/rtapp/rtapp.h |  3 +++
+ 5 files changed, 52 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/rtapp/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.c
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.h
 
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
-x.rst
-index e80e0057feb4..8e411b76ec82 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -8,7 +8,7 @@ Runtime Verification
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 6e157f964991..5c407d291661 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -41,6 +41,7 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
+ source "kernel/trace/rv/monitors/scpd/Kconfig"
+ source "kernel/trace/rv/monitors/snep/Kconfig"
+ source "kernel/trace/rv/monitors/sncid/Kconfig"
++source "kernel/trace/rv/monitors/rtapp/Kconfig"
+ # Add new monitors here
 =20
-    runtime-verification.rst
-    deterministic_automata.rst
--   da_monitor_synthesis.rst
-+   monitor_synthesis.rst
-    da_monitor_instrumentation.rst
-    monitor_wip.rst
-    monitor_wwnr.rst
-diff --git a/Documentation/trace/rv/da_monitor_synthesis.rst b/Documentatio=
-n/trace/rv/monitor_synthesis.rst
-similarity index 92%
-rename from Documentation/trace/rv/da_monitor_synthesis.rst
-rename to Documentation/trace/rv/monitor_synthesis.rst
-index 0a92729c8a9b..85624062073b 100644
---- a/Documentation/trace/rv/da_monitor_synthesis.rst
-+++ b/Documentation/trace/rv/monitor_synthesis.rst
-@@ -1,5 +1,5 @@
--Deterministic Automata Monitor Synthesis
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Runtime Verification Monitor Synthesis
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- The starting point for the application of runtime verification (RV) techni=
-ques
- is the *specification* or *modeling* of the desired (or undesired) behavior
-@@ -36,24 +36,24 @@ below::
-                                   |  +----> panic ?
-                                   +-------> <user-specified>
-=20
--DA monitor synthesis
-+RV monitor synthesis
- --------------------
-=20
- The synthesis of automata-based models into the Linux *RV monitor* abstrac=
-tion
--is automated by the dot2k tool and the rv/da_monitor.h header file that
-+is automated by the rvgen tool and the rv/da_monitor.h header file that
- contains a set of macros that automatically generate the monitor's code.
-=20
--dot2k
-+rvgen
- -----
-=20
--The dot2k utility leverages dot2c by converting an automaton model in
-+The rvgen utility leverages dot2c by converting an automaton model in
- the DOT format into the C representation [1] and creating the skeleton of
- a kernel monitor in C.
-=20
- For example, it is possible to transform the wip.dot model present in
- [1] into a per-cpu monitor with the following command::
-=20
--  $ dot2k -d wip.dot -t per_cpu
-+  $ rvgen monitor -c da -s wip.dot -t per_cpu
-=20
- This will create a directory named wip/ with the following files:
-=20
-@@ -87,7 +87,7 @@ the second for monitors with per-cpu instances, and the t=
-hird with per-task
- instances.
-=20
- In all cases, the 'name' argument is a string that identifies the monitor,=
- and
--the 'type' argument is the data type used by dot2k on the representation of
-+the 'type' argument is the data type used by rvgen on the representation of
- the model in C.
-=20
- For example, the wip model with two states and three events can be
-@@ -134,7 +134,7 @@ Final remarks
- -------------
-=20
- With the monitor synthesis in place using the rv/da_monitor.h and
--dot2k, the developer's work should be limited to the instrumentation
-+rvgen, the developer's work should be limited to the instrumentation
- of the system, increasing the confidence in the overall approach.
-=20
- [1] For details about deterministic automata format and the translation
-@@ -142,6 +142,6 @@ from one representation to another, see::
-=20
-   Documentation/trace/rv/deterministic_automata.rst
-=20
--[2] dot2k appends the monitor's name suffix to the events enums to
-+[2] rvgen appends the monitor's name suffix to the events enums to
- avoid conflicting variables when exporting the global vmlinux.h
- use by BPF programs.
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index f9b2cd0483c3..9b28c2419995 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_RV_MON_SNROC) +=3D monitors/snroc/snroc.o
+ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
+ obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
+ obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
++obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
+ors/rtapp/Kconfig
+new file mode 100644
+index 000000000000..658bb78e733a
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+@@ -0,0 +1,14 @@
++config RV_MON_RTAPP
++	depends on RV
++	bool "rtapp monitor"
++	help
++	  Collection of monitors to check for common problems with real-time
++	  application that may cause unexpected latency.
++
++	  If you are developing a real-time system and not entirely sure whether
++	  the applications are designed correctly for real-time, you want to say
++	  Y here.
++
++	  Beware that enabling this may have impact on performance, even if the
++	  monitors are not running. Therefore you probably should say N for
++	  production kernel.
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.c b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.c
+new file mode 100644
+index 000000000000..fd75fc927d65
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++
++#define MODULE_NAME "rtapp"
++
++#include "rtapp.h"
++
++struct rv_monitor rv_rtapp;
++
++struct rv_monitor rv_rtapp =3D {
++	.name =3D "rtapp",
++	.description =3D "Collection of monitors for detecting problems with real=
+-time applications",
++};
++
++static int __init register_rtapp(void)
++{
++	return rv_register_monitor(&rv_rtapp, NULL);
++}
++
++static void __exit unregister_rtapp(void)
++{
++	rv_unregister_monitor(&rv_rtapp);
++}
++
++module_init(register_rtapp);
++module_exit(unregister_rtapp);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
++MODULE_DESCRIPTION("Collection of monitors for detecting problems with rea=
+l-time applications");
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.h b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.h
+new file mode 100644
+index 000000000000..4c200d67c7f6
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_rtapp;
 --=20
 2.39.5
 
