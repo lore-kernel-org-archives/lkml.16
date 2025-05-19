@@ -1,311 +1,114 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D1F43147
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C302284667;
+	Mon, 19 May 2025 15:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669145; cv=none; b=YhdDvkjn8BbSZieh3MS3aeJiyPOv3m/dm6zSRmiNaPDofXoxRbU0uZXmsp+n9qgOYmh6sExWBT0lxaPPvS8lW8iUPCeZx6H71oXwtQEmU3+4k142ozNtUVdHyieQgD/uuvBedmaSNHbHjy76ARIhWgWsHO6ZYn6tn5Yneind54k=
+	t=1747669164; cv=none; b=aC+ylGJUaJ64oDF6kuJ4fJ4s7QKcdtqrQVAWFDV3a1bAbhVdRX6DLIA5KcR71lAmyKnenmsvJJgHyB9gl2DFOwAaEJbUXtYzfSTUt2AT5GezYbOqBfUHBIfvCS67f+cq+2tjVvnijEnCXdd6YB7YA2+c63tphDBUH/5NUybcxXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747669145; c=relaxed/simple;
-	bh=RkiTEaTgsDKZS1LMzYtSUiwJJoAkW85IpypuMzS8fh0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FrPz63WgsnaqXrDWPPcSMOCuTgt6puNdgMKGNeOCuFN39Mfc6tMqdWHuVqSvbC4Aalo6HVk+6HCDn7+ivTlHEDX3FX6e2yTXfNiP7Gaebp81EzVHk4Rp1CeK9N34F3YNBfakG9625jN74YueyVBNj+inqvEkhIs4DVBhERYoZC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FYX5hZEM; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747669164; c=relaxed/simple;
+	bh=yisF4/ZaG2aKyL8oy44jbRcTwJqvD3QTXjIWJP5t+1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BfsLR/3gL4Wqqu/QdMXOM8DQCGaV11VhQz5Sn6O7MEhCys+UqXKEeYCQF2YidNmpHM2SE063Mk4OwT9IR/QROv3ZDQQT3nmCgj1sj13VB+HvE5BQ2bdKTDbFW+dQZYXKTrAp1GTtbQkGH8tkRJb02zgc/PDiXUWbCobZCWBKIoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zuo2xE3i; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FYX5hZEM"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231d7f590ffso23277435ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:39:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zuo2xE3i"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso4159575b3a.2;
+        Mon, 19 May 2025 08:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747669143; x=1748273943; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1QdhIevUckRM85Eul7weCGqK25Pk22Hqm4bxUt5Zutk=;
-        b=FYX5hZEMfxWiM1Yx/XiGBh7PUbXGLMy3RbRTfyb+wZlAeFE+nFvesXeUp3IH8fjX9B
-         EbbKYUyWLBmuTQMn07IGAMdJ4vu3QCeAljQ7wDdHcdzJ0U7rxfZGSVOfHift4YSKTx0U
-         DmE2mlq2+bOzbiMhcyiboKlsfx/7pEsKijOHqX0xcPyRyS6gGrti6LHck/mcTCtQu/Fe
-         +mQB+ijiDk8R/7ALEiTKUZ7tQ0yUVaWPYtzVdH/mZGbv//Tdh0+psULB+xiRuzEVwGeG
-         zTS84RCZ71AzfuXHgahp9JScenHQ5XaiylR66zi2zPs9qMRprfuiOBx46VKtm0pKUOPK
-         zqbQ==
+        d=gmail.com; s=20230601; t=1747669162; x=1748273962; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CuMNzltIPIYPP2KT2k8psLqUU3G8daSumuRYfumtKY0=;
+        b=Zuo2xE3iCRJ2pogtq4+dYUbHBKDkFurcKjVDC5rSEJN9hH5IrINiiZP1umwcWBPqeV
+         sBFLcor6/nkBWCGY6mXfMwK7uwIH3/2c+yJw+LlW1yG3r29vq9E9FFspob0T3UTY9r5j
+         6K+4oCSvE3paE91EOvdrVNFffZQRWJHo7K1Sa6zYBXbasAYfHw97vxuuHYOVIdp5lVuc
+         TWb2hWGf03elUS7JoE/TORELgLU97bAdnvQCs34KwksJoaMDNcRmzBvGXUWLhaPwvuIZ
+         vcjC2DiZiYJFW8fL1sYUp+lFmZrzEEUJhRpkBc7xyGL6Au3A2Phwvm+Wf36kwRPiQcol
+         S2zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747669143; x=1748273943;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1QdhIevUckRM85Eul7weCGqK25Pk22Hqm4bxUt5Zutk=;
-        b=eYP7Bvbr9cLDc6ZPw1sB8V95uMdfY45O+4r8xytFVkyDl4zy1P3ljPpgrxb4IJLeWl
-         Hm12nkO0mBX0PbC441Isiwkm2KC+I32RnJzVwYKg+meLHt3oa4KNFn3tCMVFMVsg/ozV
-         OlSaENHD1g4Yo+eO/CLyWiVHziTplMN9+8y2p57SAd/0joJDlyr71tEBUSBQbIOQK0wJ
-         d5Be56M7IB8wV/J5F5ga5oT7Pas3yNsvc+Fi+NqpJ/sxAlXg7+qci1eg/KtVKonRhmR0
-         +eobjiPmiU9UbFAliOAEIzurPt+JZpcEPD5uqsOFXPVefaoZHQ/dCtJFOENehu/w/QvF
-         z+6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXwjlUN1iC3hGKYGry50DcuYN+P1dDsdSMm3dIyhWFP+Q/8gdC8XQoevj+P6PU7a3YUFxCDkDtnRgOWuTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUFailtDp7fZfxCO5t3f740yL5iphA1LjK6fqW/QMMaoIi/AFa
-	7snj6odlPWIn2GmDSM2f/QDR+bSjZ/2idkUE8W5x22k9qD+nxQKz1jlLLGtHrw5P6yeG3T0Mawn
-	UkzZUyg==
-X-Google-Smtp-Source: AGHT+IEyqfPKnawqbuXKFepZP285ulA/QK6RDEu1gwwb0LyeFW4qWKWMIH8ZiO/mqNoKhEj601dDIn5Fxdg=
-X-Received: from plbcp12.prod.google.com ([2002:a17:902:e78c:b0:231:cb69:764d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef4e:b0:21f:45d:21fb
- with SMTP id d9443c01a7336-231de2e962cmr147708915ad.3.1747669142994; Mon, 19
- May 2025 08:39:02 -0700 (PDT)
-Date: Mon, 19 May 2025 08:39:01 -0700
-In-Reply-To: <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com>
+        d=1e100.net; s=20230601; t=1747669162; x=1748273962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CuMNzltIPIYPP2KT2k8psLqUU3G8daSumuRYfumtKY0=;
+        b=rmp3uj5Rof2OYbRiTmgRbk5wdVOJADmRkJK2zvqWsxL57VhsjZ5PBIphZ9TbkUCAp8
+         7r8ePQtBCzb0b9Rg7XWpdgWhKy+jk+C7PlT19y/7WxxBikvvPLKSMTS9JSR/yMhtuDpU
+         AJylGnOa6kxlQcWHmOILMAwheJyPbfJpCLWOIFZW599t1aLkDEtcJ+ynwHDlJURaar8o
+         bq91L1ITHk0Etnjv+30q/mLvdsnv40HQqgwahHo76Hj+EHYgo/1c33yS38tWL2AO2A4Z
+         nFnW9iqZGgg2b4D2rgg7q1Y6STXOvHx3v/ZYuqAjbmspLibPxIlSp53SPjSgTzIezVns
+         ZRnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoika+AXdgbbVGPGx9xnfamKhY0E9rnaTcI435btuQUlGi7Fwm//cDJzg20i1E+wzlAb+ND+zQTfKFIUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypbpedmzzECj9x+dSF240Zu9JHYjk2iiWJlAM/lqzboDN2VEMK
+	+81VaMw+OH87hvdUlLha3776Dfa4nOOkstuk0Mm39JPGNnS3AWrKqdE=
+X-Gm-Gg: ASbGnct1d8i6KVxoegUIQtl55ZeWTsQPDC0IQAGzIVNsJuOW6NGCKbUIMYbQQKhvo1M
+	C9iFGmMIa32Y7jZFJjcJ1QI/bwRB8X89qX0ZrbAJyPaJRkr5YVKv1jMYJmPp8S0Z5jBoUH0Owuy
+	0zEpehjSD4XnOZbjw/Ri2npqsKMFbmNIbOslHPcIEEKLybvY/L0Z8QLs+VvoabbjHLS5funi+AB
+	bZNRfcX8QHE1tBufnD5IBqTmlfH6SYkyMno+X6c6GBxtW1hiLf63pT8LBOhx71ey3+7TCBenu4P
+	Ii29fY5rLwj8NvzMrE4K3eYU+SRgZs0pPsyrGaxYc8fCWbMkZ76EKXvqv0h5plarFjUsp0xz1FH
+	4WvPG1449TqkmOReQ4S/SVvs=
+X-Google-Smtp-Source: AGHT+IFAvBtcLCJ1nDyg8HFYOfju2Duf9SHaBHXAqTVpThVm86vnectbWC6sjLwRVnoXB3EYvUY54Q==
+X-Received: by 2002:a05:6a20:76a9:b0:216:5fa9:55ad with SMTP id adf61e73a8af0-2165fb897f8mr13730867637.39.1747669162460;
+        Mon, 19 May 2025 08:39:22 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf8de24sm6448004a12.36.2025.05.19.08.39.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 08:39:22 -0700 (PDT)
+Date: Mon, 19 May 2025 08:39:21 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	sagi@grimberg.me, willemb@google.com, almasrymina@google.com,
+	kaiyuanz@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: devmem: drop iterator type check
+Message-ID: <aCtQqQGJJbdO-bqh@mini-arch>
+References: <20250516225441.527020-1-stfomichev@gmail.com>
+ <ab1959f9-1b94-4e7f-ba33-12453cb50027@gmail.com>
+ <aCtDMJDtP0DxUBqj@mini-arch>
+ <0665ead7-56b4-4066-a21e-9a759d9af38f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516215422.2550669-1-seanjc@google.com> <20250516215422.2550669-3-seanjc@google.com>
- <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com>
-Message-ID: <aCtQlanun-Kaq4NY@google.com>
-Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Vipin Sharma <vipinsh@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0665ead7-56b4-4066-a21e-9a759d9af38f@gmail.com>
 
-On Sat, May 17, 2025, Paolo Bonzini wrote:
-> On 5/16/25 23:54, Sean Christopherson wrote:
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index 0ad1a6d4fb6d..d13e475c3407 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -5675,6 +5675,8 @@ static int __init svm_init(void)
-> >   {
-> >   	int r;
-> > +	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_svm);
-> > +
-> >   	__unused_size_checks();
-> >   	if (!kvm_is_svm_supported())
-> > diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-> > index d1e02e567b57..e18dfada2e90 100644
-> > --- a/arch/x86/kvm/vmx/main.c
-> > +++ b/arch/x86/kvm/vmx/main.c
-> > @@ -64,6 +64,8 @@ static __init int vt_hardware_setup(void)
-> >   		vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
-> >   	}
-> > +	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_tdx);
+On 05/19, Pavel Begunkov wrote:
+> On 5/19/25 15:41, Stanislav Fomichev wrote:
+> > On 05/19, Pavel Begunkov wrote:
+> > > On 5/16/25 23:54, Stanislav Fomichev wrote:
+> > > > sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
+> > > > iovs becomes ITER_IOVEC. Instead of adjusting the check to include
+> > > > ITER_UBUF, drop the check completely. The callers are guaranteed
+> > > > to happen from system call side and we don't need to pay runtime
+> > > > cost to verify it.
+> > > 
+> > > I asked for this because io_uring can pass bvecs. Only sendzc can
+> > > pass that with cmsg, so probably you won't be able to hit any
+> > > real issue, but io_uring needs and soon will have bvec support for
+> > > normal sends as well. One can argue we should care as it isn't
+> > > merged yet, but there is something very very wrong if an unrelated
+> > > and legal io_uring change is able to open a vulnerability in the
+> > > devmem path.
+> > 
+> > Any reason not to filter these out on the io_uring side? Or you'll
+> > have to interpret sendmsg flags again which is not nice?
 > 
-> I would put either both or no checks in main.c.
+> Right, io_uring would need to walk cmsg for all sends, which is not
+> great for layering. And then it's really a devmem quirk that it uses
+> iterators in a non orthodox way, it'd be awkward to check a random
+> devmem restriction in io_uring, when otherwise they know nothing
+> about each other. And it's safer to keep local to devmem, because
+> try to remember if something changes, and what if there is someone
+> new passing non-iovec iter + cmsg in the future.
 
-Yeah, I agree the current split is ugly.  I originally had 'em both in main.c,
-but then the assert effectively becomes dependent on CONFIG_KVM_INTEL_TDX=y.
-
-Aha!  If we add a proper tdx_hardware_setup(), then there's a convenient location
-for the assert, IMO it's much easier to see/document the "TDX module not loaded"
-behavior, and the TDX-specific kvm_x86_ops hooks don't need to be visible symbols.
-
-I'll slot the below in, unless you've got a better idea.
-
-> Or if you use static_assert, you can also place the macro invocation close
-> to the struct definition.
-
-Already tried that, get_order() doesn't play nice with static_assert :-/
-
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 May 2025 07:15:27 -0700
-Subject: [PATCH] KVM: TDX: Move TDX hardware setup from main.c to tdx.c
-
-Move TDX hardware setup to tdx.c, as the code is obviously TDX specific,
-co-locating the setup with tdx_bringup() makes it easier to see and
-document the success_disable_tdx "error" path, and configuring the TDX
-specific hooks in tdx.c reduces the number of globally visible TDX symbols.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/vmx/main.c    | 36 ++---------------------------
- arch/x86/kvm/vmx/tdx.c     | 46 +++++++++++++++++++++++++++-----------
- arch/x86/kvm/vmx/tdx.h     |  1 +
- arch/x86/kvm/vmx/x86_ops.h | 10 ---------
- 4 files changed, 36 insertions(+), 57 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index d1e02e567b57..d7178d15ac8f 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -29,40 +29,8 @@ static __init int vt_hardware_setup(void)
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Update vt_x86_ops::vm_size here so it is ready before
--	 * kvm_ops_update() is called in kvm_x86_vendor_init().
--	 *
--	 * Note, the actual bringing up of TDX must be done after
--	 * kvm_ops_update() because enabling TDX requires enabling
--	 * hardware virtualization first, i.e., all online CPUs must
--	 * be in post-VMXON state.  This means the @vm_size here
--	 * may be updated to TDX's size but TDX may fail to enable
--	 * at later time.
--	 *
--	 * The VMX/VT code could update kvm_x86_ops::vm_size again
--	 * after bringing up TDX, but this would require exporting
--	 * either kvm_x86_ops or kvm_ops_update() from the base KVM
--	 * module, which looks overkill.  Anyway, the worst case here
--	 * is KVM may allocate couple of more bytes than needed for
--	 * each VM.
--	 */
--	if (enable_tdx) {
--		vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size,
--				sizeof(struct kvm_tdx));
--		/*
--		 * Note, TDX may fail to initialize in a later time in
--		 * vt_init(), in which case it is not necessary to setup
--		 * those callbacks.  But making them valid here even
--		 * when TDX fails to init later is fine because those
--		 * callbacks won't be called if the VM isn't TDX guest.
--		 */
--		vt_x86_ops.link_external_spt = tdx_sept_link_private_spt;
--		vt_x86_ops.set_external_spte = tdx_sept_set_private_spte;
--		vt_x86_ops.free_external_spt = tdx_sept_free_private_spt;
--		vt_x86_ops.remove_external_spte = tdx_sept_remove_private_spte;
--		vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
--	}
-+	if (enable_tdx)
-+		tdx_hardware_setup();
- 
- 	return 0;
- }
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b952bc673271..b4985a64501c 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -738,7 +738,7 @@ bool tdx_interrupt_allowed(struct kvm_vcpu *vcpu)
- 	       !to_tdx(vcpu)->vp_enter_args.r12;
- }
- 
--bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
-+static bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
- {
- 	u64 vcpu_state_details;
- 
-@@ -1543,8 +1543,8 @@ static int tdx_mem_page_record_premap_cnt(struct kvm *kvm, gfn_t gfn,
- 	return 0;
- }
- 
--int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, kvm_pfn_t pfn)
-+static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
-+				     enum pg_level level, kvm_pfn_t pfn)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
- 	struct page *page = pfn_to_page(pfn);
-@@ -1624,8 +1624,8 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 	return 0;
- }
- 
--int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, void *private_spt)
-+static int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
-+				     enum pg_level level, void *private_spt)
- {
- 	int tdx_level = pg_level_to_tdx_sept_level(level);
- 	gpa_t gpa = gfn_to_gpa(gfn);
-@@ -1760,8 +1760,8 @@ static void tdx_track(struct kvm *kvm)
- 	kvm_make_all_cpus_request(kvm, KVM_REQ_OUTSIDE_GUEST_MODE);
- }
- 
--int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, void *private_spt)
-+static int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
-+				     enum pg_level level, void *private_spt)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
- 
-@@ -1783,8 +1783,8 @@ int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
- 	return tdx_reclaim_page(virt_to_page(private_spt));
- }
- 
--int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
--				 enum pg_level level, kvm_pfn_t pfn)
-+static int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
-+					enum pg_level level, kvm_pfn_t pfn)
- {
- 	struct page *page = pfn_to_page(pfn);
- 	int ret;
-@@ -3507,10 +3507,14 @@ int __init tdx_bringup(void)
- 	r = __tdx_bringup();
- 	if (r) {
- 		/*
--		 * Disable TDX only but don't fail to load module if
--		 * the TDX module could not be loaded.  No need to print
--		 * message saying "module is not loaded" because it was
--		 * printed when the first SEAMCALL failed.
-+		 * Disable TDX only but don't fail to load module if the TDX
-+		 * module could not be loaded.  No need to print message saying
-+		 * "module is not loaded" because it was printed when the first
-+		 * SEAMCALL failed.  Don't bother unwinding the S-EPT hooks or
-+		 * vm_size, as kvm_x86_ops have already been finalized (and are
-+		 * intentionally not exported).  The S-EPT code is unreachable,
-+		 * and allocating a few more bytes per VM in a should-be-rare
-+		 * failure scenario is a non-issue.
- 		 */
- 		if (r == -ENODEV)
- 			goto success_disable_tdx;
-@@ -3524,3 +3528,19 @@ int __init tdx_bringup(void)
- 	enable_tdx = 0;
- 	return 0;
- }
-+
-+
-+void __init tdx_hardware_setup(void)
-+{
-+	/*
-+	 * Note, if the TDX module can't be loaded, KVM TDX support will be
-+	 * disabled but KVM will continue loading (see tdx_bringup()).
-+	 */
-+	vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size, sizeof(struct kvm_tdx));
-+
-+	vt_x86_ops.link_external_spt = tdx_sept_link_private_spt;
-+	vt_x86_ops.set_external_spte = tdx_sept_set_private_spte;
-+	vt_x86_ops.free_external_spt = tdx_sept_free_private_spt;
-+	vt_x86_ops.remove_external_spte = tdx_sept_remove_private_spte;
-+	vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
-+}
-diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-index 51f98443e8a2..ca39a9391db1 100644
---- a/arch/x86/kvm/vmx/tdx.h
-+++ b/arch/x86/kvm/vmx/tdx.h
-@@ -8,6 +8,7 @@
- #ifdef CONFIG_KVM_INTEL_TDX
- #include "common.h"
- 
-+void tdx_hardware_setup(void);
- int tdx_bringup(void);
- void tdx_cleanup(void);
- 
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index b4596f651232..87e855276a88 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -136,7 +136,6 @@ int tdx_vcpu_pre_run(struct kvm_vcpu *vcpu);
- fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
- void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
- void tdx_vcpu_put(struct kvm_vcpu *vcpu);
--bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
- int tdx_handle_exit(struct kvm_vcpu *vcpu,
- 		enum exit_fastpath_completion fastpath);
- 
-@@ -151,15 +150,6 @@ int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 
- int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
- 
--int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, void *private_spt);
--int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, void *private_spt);
--int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
--			      enum pg_level level, kvm_pfn_t pfn);
--int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
--				 enum pg_level level, kvm_pfn_t pfn);
--
- void tdx_flush_tlb_current(struct kvm_vcpu *vcpu);
- void tdx_flush_tlb_all(struct kvm_vcpu *vcpu);
- void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level);
-
-base-commit: 7ef51a41466bc846ad794d505e2e34ff97157f7f
---
+SG, will change this to filter both IOVEC and UBUF, thanks!
+(pending discussion with Al about what to do with UBUF in
+https://lore.kernel.org/netdev/20250517000907.GW2023217@ZenIV/)
