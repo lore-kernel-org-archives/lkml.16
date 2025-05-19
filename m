@@ -1,127 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DCB27877E;
-	Mon, 19 May 2025 09:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2249326FA7B;
+	Mon, 19 May 2025 09:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747646337; cv=none; b=MVn4BfI7LRMI4dMFow0aR3ft2Y5629L20uUHW5VdfLuBHWj/fE7nIeCbGcRVfSbAqFT+avDwaHaxQl+kNmkctWg3Gu5XRCCf1dZwuzGvM2wFj3SgEw7qdZ4scpQan9beWu+e0OMyntx4nVcYK+73M9kFJ/gxfc+IsYxoec7lw9I=
+	t=1747646336; cv=none; b=La7AulW3k6/yzen0dPMAJni3eRVecuSvDR2e5kvJatpLC8HkJbr4KcX36NuM8UCsqLr0m8Tgltq0KwgXGb9J4UL9LeEcbYf8Y81OvgheG8N5ejJGoyXMWezqZQT8RWQrDELNo4IBPceUqOt3eCmqkGTAiSGHQOc28NGccJ2YKLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747646337; c=relaxed/simple;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=OiI99OCKfe1CNGuePrLtL88yxCKglfqVY4MRt9GAQsH4QW+kxr1nf8PVBTZVrcUFV2JrwgqmeRrzVsAe+Vj9zOlDplbBfAdpK/39JNVzH9iVPrjibFeVYDd1iOG5fHRcquspy2VyV0svFowboRAXzehZBjtU4ebl4KXDnGbrjJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtLIIpFQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtLIIpFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377E3C4CEF0;
-	Mon, 19 May 2025 09:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747646336;
-	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rtLIIpFQVtYo6VXTO0s1zvBVtvBa82kjvThqya8pE2en+MjB9S8VGf6I9jeN66TP/
-	 FNdd0ocloPoy/nXYzhNvor2c/qUUdvfZ6mMsAF7hRSTjyapp3fve7gUCQiqr8EJXMI
-	 es1PVIoWZ6q+TCUOHnKunlgYB7WSzOwfz85wzGYSiJN4fbCsRbZPSTN4ebQtqEY4Eu
-	 3VbwrgOE+Haz3Wi8Fbj+wumy3Zir2TJJl/01H55fiNMgX8TDWBg+XhQuiu8o7ck/Pa
-	 Ir9YRaU1/knWPYpFA8luAyaRqbte37FCnIdxHuU56r0nWAKXHjjFwwyCpSI+gtCiVN
-	 UfbpjWM/IqYtw==
-Date: Mon, 19 May 2025 04:18:54 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1747646336; c=relaxed/simple;
+	bh=mVczWw5AJvTGaUa2k+kGuAdITLqzYAqLiO2CNQ+CNGE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ORE1fSdhIPwPHMUW0RvcHoz0plL3w2ozVIPcGnPT0I6woXhgGmtUjP3DO3NKRnqTGZ6q9z9E6qdol8hhG4/6K/9sBWCbusB+HYjAXhBi5lNWxzKCZJ0Gi3coyyB12Rr5J/nGE+QEcCkStW4xph608peCGqUGNbqhqd6qVs8DKFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-a4-682af76e43e1
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	harry.yoo@oracle.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	yskelg@gmail.com,
+	yunseong.kim@ericsson.com,
+	yeoreum.yun@arm.com,
+	netdev@vger.kernel.org,
+	matthew.brost@intel.com,
+	her0gyugyu@gmail.com
+Subject: [PATCH v16 13/42] dept: apply sdt_might_sleep_{start,end}() to wait_for_completion()/complete()
+Date: Mon, 19 May 2025 18:17:57 +0900
+Message-Id: <20250519091826.19752-14-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250519091826.19752-1-byungchul@sk.com>
+References: <20250519091826.19752-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUxTZxTH9zz39t5LZ/Xaod6BZqzxFSOKojnZpjHGZY8mbMaRJc4P8zpu
+	druValpBWLKNjkK0CPGtoKKsFlOatghrTWRqCYOAMAPr8IrQIFM2iUSQCLQMYW4F45eTX845
+	/9/5cjhKe1uVwOmNRySTUTToGDWtHpnnXGecTJY39JQuh8jEMRou1voYCF31IvBds2AYavkI
+	7keHEUx3/E5BuT2E4PKjBxRca+1HEHT/yMDdv+eDEhlloN1ezEBBVS0DfzydwdBXdhqD158O
+	f7oGabhz0omhfIiBivICHCtPMEy5PCy48lfAgPsCCzOPUqG9v1sFwfBaOF/Zx8CtYDsNrfUD
+	GO7euMhAv+8/FdxpbaMhWpoIoVMlKqh55mTgadRFgSsyykJXowNDq2Mx1FljwqLxlyq4XdKI
+	oejKzxiU3psIGo49xOD3dTPQHBnGEPDbKXhR3YJgoHSEhcITUyxUWEoRFBeW0WDt2wzT/8Qu
+	X5pIBctPdTTU/NuNtm8lvkofIs3DoxSxBo6SF5F7DAlGHTT5zSmQXy48YIm1IcwShz+bBNzJ
+	pOrWECaXxyIq4vccZ4h/7DRLbCMKJs86O9k9Sz9Xf5ApGfQ5kmn9tgNqebrJhg8HF+Y+uRdC
+	+Sgw34biOIFPE5wtN6nXXHBiEM0yw68Senqm5vrxfJIQKBlU2ZCao/juN4X7l3rnlt7iZeGU
+	vYqdZZpfITy+0hZjjtPwW4Si6ytfOd8RvHWNc564WDtc3DwX1fKbBcVbSc86Bb4iThhVXrKv
+	Am8Lv7p76JNI40BveJBWb8zJEvWGtBQ5z6jPTfnyUJYfxd7L9d3M/no0Fvq0CfEc0s3T1AXX
+	yFqVmGPOy2pCAkfp4jWewGpZq8kU876VTIe+MGUbJHMTSuRo3RLNxujRTC3/lXhE+kaSDkum
+	11PMxSXko2VtwarkFMb6mKOaTQcXTe7tqH6eJH8ibhW2LFqdF1bSf9jpsHTYupSMsc9qPuxa
+	suPc2gXbJhzjSbkG847wROL6so74dHd/b+/XmQ2WNFKbsvv7eGVPtlK9a+b9xfJf19/L+HgS
+	nx2ub9ugT9jnWXfGC+PLVoo1V1sKM97dtMDeqaPNspiaTJnM4v/IgWivWgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0yTZxTH9zzvlWrJa0V9I3FbOtkcDFaimBM1xLkYnyxx2TcTv8wqb2xj
+	KaRVpCYq2EKwCAGTFpXLCjSVQbmsJRleylgZ1c6JXCooQxSCBCJKghRF8FIwfjn55fzP+Z0v
+	h6cUvzMbea3+uGTQq3VKVkbLft5pTtS/iteobMUyCM8V0FDR7Gahp6kBgbs1F8NU1z4YnJ9G
+	sHj3HgVlth4E1aOPKGgNjCDw1Z1joX88GkLhGRaCtkIWzLXNLPQ+W8IwbL+IocGzHx67Jmi4
+	U1KDoWyKhfIyM46USQwLrnoOXDlxMFZ3hYOl0WQIjgww0FkZZMA3lACXq4ZZuOkL0hBoG8PQ
+	f72ChRH3ewbuBG7TMF8cCz2lRQw0vqhh4dm8iwJXeIaDvg4HhoBjPbRYItb8l+8YuFXUgSHf
+	+QeG0MMbCNoLnmDwuAdY6AxPY/B6bBS8udqFYKz4OQd5FxY4KM8tRlCYZ6fBMpwCi68jlyvn
+	kiH3txYaGt8OoN2pxF3lRqRzeoYiFu9J8iZ8nyW+eQdN/q0RybUrjzhiaR/iiMNzgnjr4knt
+	zSlMqmfDDPHUn2eJZ/YiR6zPQ5i86O7mftl0ULYrTdJpsyTD96mHZJpFvxVn+tZkT97vQTnI
+	G21FUbwobBPNFybQMrPCN+KDBwvUMscIX4reognGimQ8JQysEgcrH64MrRU0YqmtlltmWogT
+	nzpvR5jn5cJ2Mf/Prz86vxAbWjpWPFGR9lBh58qqQkgRQw1VdAmSOdBn9ShGq89KV2t1KUnG
+	YxqTXpuddCQj3YMiD+Q6vVTahub69/mRwCPlanmL71uNglFnGU3pfiTylDJGXu/dolHI09Sm
+	U5Ih41fDCZ1k9KNYnlZukP90QDqkEI6qj0vHJClTMnxKMR+1MQflv8pzdv/N6kx7MlWXNs3G
+	SRomsfXHrvH/3QmmJ18xaUOLTZ7RaWe7dLZ1whm95od1ZpWpuuRdwa5AwKo6nNWU2rg/ru1w
+	KDaI24823zqTtGXr5b0laxNtvXfRjVVocLxg82QGcR+4/p89z96XvQNZ/+m2+PZGv/Zf/fw7
+	e4LqLyVt1KiT4ymDUf0B+5bOWzwDAAA=
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Oded Gabbay <ogabbay@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
- linux-doc@vger.kernel.org
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
- <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
-Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
-Message-ID: <20250519091854.4N503AqWihyMKXc1-PIzsqgwz-uLM4j2_0Vhqo73YPo@z>
 
+Make dept able to track dependencies by wait_for_completion()/complete().
 
-On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
-> 
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->   IOMMU)
-> - Several misc. fixes from Sebastian Reichel
-> 
-> v3:
-> - Split register block in its constituent subblocks, and only require
->   the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
-> 
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
->  1 file changed, 162 insertions(+)
-> 
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+---
+ include/linux/completion.h | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
-	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
-	False schema does not allow 3
-	1 was expected
-	3 is greater than the maximum of 2
-	hint: "minItems" is only needed if less than the "items" list length
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
-	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
-	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
-	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
-	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/include/linux/completion.h b/include/linux/completion.h
+index fb2915676574..bd2c207481d6 100644
+--- a/include/linux/completion.h
++++ b/include/linux/completion.h
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include <linux/swait.h>
++#include <linux/dept_sdt.h>
+ 
+ /*
+  * struct completion - structure used to maintain state for a "completion"
+@@ -26,14 +27,33 @@
+ struct completion {
+ 	unsigned int done;
+ 	struct swait_queue_head wait;
++	struct dept_map dmap;
+ };
+ 
++#define init_completion(x)				\
++do {							\
++	sdt_map_init(&(x)->dmap);			\
++	__init_completion(x);				\
++} while (0)
++
++/*
++ * XXX: No use cases for now. Fill the body when needed.
++ */
+ #define init_completion_map(x, m) init_completion(x)
+-static inline void complete_acquire(struct completion *x) {}
+-static inline void complete_release(struct completion *x) {}
++
++static inline void complete_acquire(struct completion *x)
++{
++	sdt_might_sleep_start(&x->dmap);
++}
++
++static inline void complete_release(struct completion *x)
++{
++	sdt_might_sleep_end();
++}
+ 
+ #define COMPLETION_INITIALIZER(work) \
+-	{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
++	{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait), \
++	  .dmap = DEPT_MAP_INITIALIZER(work, NULL), }
+ 
+ #define COMPLETION_INITIALIZER_ONSTACK_MAP(work, map) \
+ 	(*({ init_completion_map(&(work), &(map)); &(work); }))
+@@ -75,13 +95,13 @@ static inline void complete_release(struct completion *x) {}
+ #endif
+ 
+ /**
+- * init_completion - Initialize a dynamically allocated completion
++ * __init_completion - Initialize a dynamically allocated completion
+  * @x:  pointer to completion structure that is to be initialized
+  *
+  * This inline function will initialize a dynamically created completion
+  * structure.
+  */
+-static inline void init_completion(struct completion *x)
++static inline void __init_completion(struct completion *x)
+ {
+ 	x->done = 0;
+ 	init_swait_queue_head(&x->wait);
+-- 
+2.17.1
 
