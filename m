@@ -1,134 +1,177 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A527C1C3306
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C745288C93
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747678072; cv=none; b=aQpGyCcIs55fr8gl6tnDmpUg+rmMjWqYeBsFehWSlEtkYYg8i0uwOYGxoVJiBLo3oGezq7ZrMgYpZfN7/SFEgqNf9ErtDLpRBFmx3ElS68CuO2n3DTuub6o4LuCM5v9iMLMEbKWhBavR52SNyPyeKTnadKCJGkKLRnL8Lxmmi6Y=
+	t=1747678102; cv=none; b=j5zG2vBnqfgRL2mmM/38c0FmvP3864h9cfNKfy1q7BuzUtxqMCoipoHjNX8pkrJ0ViIMGnU/28yPEYfRC5vWyPe3Q4piMGvRNA/8vGwiEmWPIABH2SJj/7zjdu9Z5FkNZLr226xP23X5GvEH3vNLdDnTu93HVyWLsGoo628PqGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747678072; c=relaxed/simple;
-	bh=TVu6Ue0+tThI4wwiN68DTgRJxBwb2V+yzajqnxj7Xc0=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ud31aVDjhhMIkqmv++SgwNzfmjksCCjV/3m8+4UcWiPuGUUcLHMGDE6IPzKjWx6x/XEqTbeu0kQTJWLi2b09/bY/jCfs5/YJEjD/nfdmF9aTnBAAEvINBtAPNoDruUTInyPJVH8JU+9yh5NT0+7ADBdFF9wpdnCNLYCZFW/ioSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hse0VHlA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747678102; c=relaxed/simple;
+	bh=h25b1ZQHWUy7GA1BKwsRv4lBzQgq/l+ecx3lVX8QMB0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YRWUblwRWd5yPMQ95oJU+PMCTdPH+S+9ouc/QXYMbAc0JFQGuWr/n/z9kdUP1BFRI+028fhr5NcLxaHaRrpmUsi0NDRtU3VaVlmCP4t/CuPUYTOjHOK/FAmxotsipY6AMlHVzxMyd2X03arn8po7UT+txcJppcM3eW8runbYq0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g5PG1DKN; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hse0VHlA"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JFQ9vj031505;
-	Mon, 19 May 2025 18:07:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ynTozM
-	TkisgWm7nLVFPVfSuICeiaDry/u5m5nFTRhCQ=; b=hse0VHlAxrCKal/Re3pBAL
-	fGX8SVKxGOvJJeoYmqzR+U9C7FU4NVHRFV9YhLzvGRAdlf5W+E9ESXRXxPbHMNBg
-	fFSQvF0ghDD6paDP+h3NPIS6FvWzTABC+PwATUidobKKkiCWPHDXwex98k99SgsC
-	m1yDQ0SrwPxT+hjBf4UzIxdDfpDeQjyqvwoKWmbf8ZqpI/LvurFrA4wTjh+vdSU6
-	MB8JdEkaZu/uQ04pD/7KV4nXRGZ+GNozdzGv2NGPbfDyW4061/nMXo3S0BEaTY8k
-	oYYXT7D9UDo2OgP27KAWG+jsuy1dIl2/gRU23bfgU6aUXq3oTH3p205udLl06NJA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qn68na0b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 18:07:18 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54JHxlmK008758;
-	Mon, 19 May 2025 18:07:17 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qn68na09-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 18:07:17 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54JHBDZj030098;
-	Mon, 19 May 2025 18:07:16 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46q55yr334-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 18:07:16 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54JI7F0T20841104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 18:07:15 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D25A58055;
-	Mon, 19 May 2025 18:07:15 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45AF558043;
-	Mon, 19 May 2025 18:07:14 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 19 May 2025 18:07:14 +0000 (GMT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5PG1DKN"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442d472cf7fso38063085e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747678099; x=1748282899; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yVFuYQ5+RK+jobpgYs8UNNrUAZW+AMGmHxrUYMucspg=;
+        b=g5PG1DKNb4CHYkH7t1pqtI6HOny2iDoBxERSBVb4ijfqE1/uz0W7LlUl9llFBL/+Xf
+         FWs2f6F0KbDg3f0f4/XsotZ9Wo2aznXrMPetUc76MVfLMfW2I9mF0ribIByxyss04H7t
+         tC0N3yDfkE5iRk4aeOim57eccNfqPU760v+8MIrPl9c9WqjqDohKGFoNTosrgAH00mcy
+         R1rrMC0xAMrNUa5Ksytdrao0g5qUb9CEzWmPWzvahLvOsDTAAtWeIS7RBvgTK3TWZGGK
+         sKx9aOl0msLsFWMlVc/FxbXfTmIH6GXydK6CrFySAYl/nxGYZh5Y7VofERet1BBhGaHM
+         3VeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747678099; x=1748282899;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yVFuYQ5+RK+jobpgYs8UNNrUAZW+AMGmHxrUYMucspg=;
+        b=idvwHAQelyaEjgE3HAIoyXPEas9+Yf5LJs9CT2sUbLE6qb/TSxPA2M/L9/m6MbTPxT
+         0+cR7brbEsvIVObB9JZI3awDMGq+tFZFPLMpUAObAeSzkUZUNljjMF5NEkFu5OMqNIGN
+         B3MflTXGJdiWtFNa8dsr0FkSPWrzQp37iBKf8URbpUA+cuOP+XtznM9h7S4iOC8tx7Qx
+         9XZb2fN8x8n8YwouDDagynHLEgW7W2tU3OoX7MWzBL0JuuW3m5ASJcKYVrGfQn4HyCXv
+         yNKS93/yKNV9t+UNlrczzw4nmgfrTuSU6CUXuKJiNNVhZQWP9EcrD2rHrkKEcmRgdser
+         duxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWq1MvF91qd/u6AnZnea7zD8naIqASBZe5cq8ap9/yTrX1NQBl9fCrh1tbqjMHrPIoegNc8IA8ak0kWdlg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaQS0XG61pQpW7+ry6hKC8G4+kdZjNDOFJ8P/6Tv02AxSn3Umz
+	d6wMtAmoUx3F97799D72KVGXlSYG3TXugcPzsbwqgI+zmKqeayEPGPaS70C40TRZZln+N4xT7N/
+	B9jdtddE97YTwfejquQ==
+X-Google-Smtp-Source: AGHT+IGbmbkLxQ6+c+1jvf284DkuCMXNCx0iTcuUM30vDlHFtVeT2ykVdEf82/2w+mxDQEcmu8s27itQ8/1huBM=
+X-Received: from wrbft8.prod.google.com ([2002:a05:6000:2b08:b0:3a1:f532:5b8f])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:144c:b0:3a3:6843:497a with SMTP id ffacd0b85a97d-3a368434aefmr6924653f8f.27.1747678098818;
+ Mon, 19 May 2025 11:08:18 -0700 (PDT)
+Date: Mon, 19 May 2025 18:08:16 +0000
+In-Reply-To: <20250517170957.1317876-1-cmllamas@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Mon, 19 May 2025 23:37:13 +0530
-From: Misbah Anjum N <misanjum@linux.ibm.com>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Ritesh Harjani <riteshh@linux.ibm.com>, yosry.ahmed@linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, maddy@linux.ibm.com,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG][powerpc] OOPs: Kernel access of bad area during zram swap
- write - kswapd0 crash
-In-Reply-To: <6r6hex7p53bsbaje4u7so7tfsz6jemazerzujzraibiah7eq4b@m5vgjaff2cdz>
-References: <89bfdedb74416156423d36d28c5b92e9@linux.ibm.com>
- <87ldrujhr5.fsf@gmail.com> <3374b7cf6a68364c389a260d7ec9067f@linux.ibm.com>
- <6r6hex7p53bsbaje4u7so7tfsz6jemazerzujzraibiah7eq4b@m5vgjaff2cdz>
-Message-ID: <29cec5ca090a1b833c6a68d103ef9e15@linux.ibm.com>
-X-Sender: misanjum@linux.ibm.com
-Organization: IBM
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _fj80Oq0bAsyCG92_EMOzTZw27KKKfMK
-X-Proofpoint-GUID: 6tsfe39TkC4xcpBIw-_ajd4QhVuq24I7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE2MyBTYWx0ZWRfX9Cs51r9TPd0d nksTwKvgORZ7YCfcoEDvqeI6EImOm0pshn79iq7bqdeYeb8MbHh23469hQT++X9YK3jB75eVX37 j1x4v03fK1hXutqI+YVVdouU0N2QIHHY5/R1ZVIK7XwPJ7eNrRmwK89A9EGXdK7tbUts254L+X5
- zJazLoL6vVz6PZ//4dwV9VKy+a34AT5sLIq37mKwvjM3S9rJdlMGR0nAxXoyJ1q4lkJ3M1E+Bl4 rYC11ZaKNnGpP5IJA5xcTBrcbhyMuDVrYSMM13A5hMTX37xernd92PFKBu/2nducXp+3BdxkQdZ x7qnRlOhICzRKibqbMd3G3x8DRu8DwCHV8LyGFKH9jIlk2TcQ/MERV/+YmjDJZoMyigoX/afY0R
- uaZuxnwhW+G9C79vvp0QaioI3Cc5BbtlMqDhjDOEDJWp2DNUIIbPtqRd2lf9owIP7Br8yZMa
-X-Authority-Analysis: v=2.4 cv=CN4qXQrD c=1 sm=1 tr=0 ts=682b7356 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=JK2cp3ES9FE06y1yGSoA:9
- a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190163
+Mime-Version: 1.0
+References: <20250517170957.1317876-1-cmllamas@google.com>
+Message-ID: <aCtzkI2HGqIStHg-@google.com>
+Subject: Re: [PATCH v2] binder: fix use-after-free in binderfs_evict_inode()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, kernel-team@android.com, 
+	Dmitry Antipov <dmantipov@yandex.ru>, stable@vger.kernel.org, 
+	syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com, 
+	"open list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-On 2025-05-07 06:03, Sergey Senozhatsky wrote:
-> Hi,
+On Sat, May 17, 2025 at 05:09:56PM +0000, Carlos Llamas wrote:
+> From: Dmitry Antipov <dmantipov@yandex.ru>
 > 
-> On (25/05/06 11:09), Misbah Anjum N wrote:
->> I am facing this issue even with the latest kernel: 
->> 6.15.0-rc4-g5721cf0b9352
->> The suspecting commit is: 44f76413496ec343da0d8292ceecdcabe3e6ec16. 
->> The
->> commit introduces zs_obj_write() function.
->> Link: 
->> https://github.com/torvalds/linux/commit/44f76413496ec343da0d8292ceecdcabe3e6ec16
+> Running 'stress-ng --binderfs 16 --timeout 300' under KASAN-enabled
+> kernel, I've noticed the following:
 > 
-> Can you try the following fix
-> https://lore.kernel.org/linux-mm/20250504110650.2783619-1-senozhatsky@chromium.org
+> BUG: KASAN: slab-use-after-free in binderfs_evict_inode+0x1de/0x2d0
+> Write of size 8 at addr ffff88807379bc08 by task stress-ng-binde/1699
+> 
+> CPU: 0 UID: 0 PID: 1699 Comm: stress-ng-binde Not tainted 6.14.0-rc7-g586de92313fc-dirty #13
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x1c2/0x2a0
+>  ? __pfx_dump_stack_lvl+0x10/0x10
+>  ? __pfx__printk+0x10/0x10
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __virt_addr_valid+0x18c/0x540
+>  ? __virt_addr_valid+0x469/0x540
+>  print_report+0x155/0x840
+>  ? __virt_addr_valid+0x18c/0x540
+>  ? __virt_addr_valid+0x469/0x540
+>  ? __phys_addr+0xba/0x170
+>  ? binderfs_evict_inode+0x1de/0x2d0
+>  kasan_report+0x147/0x180
+>  ? binderfs_evict_inode+0x1de/0x2d0
+>  binderfs_evict_inode+0x1de/0x2d0
+>  ? __pfx_binderfs_evict_inode+0x10/0x10
+>  evict+0x524/0x9f0
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __pfx_evict+0x10/0x10
+>  ? do_raw_spin_unlock+0x4d/0x210
+>  ? _raw_spin_unlock+0x28/0x50
+>  ? iput+0x697/0x9b0
+>  __dentry_kill+0x209/0x660
+>  ? shrink_kill+0x8d/0x2c0
+>  shrink_kill+0xa9/0x2c0
+>  shrink_dentry_list+0x2e0/0x5e0
+>  shrink_dcache_parent+0xa2/0x2c0
+>  ? __pfx_shrink_dcache_parent+0x10/0x10
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __pfx_do_raw_spin_lock+0x10/0x10
+>  do_one_tree+0x23/0xe0
+>  shrink_dcache_for_umount+0xa0/0x170
+>  generic_shutdown_super+0x67/0x390
+>  kill_litter_super+0x76/0xb0
+>  binderfs_kill_super+0x44/0x90
+>  deactivate_locked_super+0xb9/0x130
+>  cleanup_mnt+0x422/0x4c0
+>  ? lockdep_hardirqs_on+0x9d/0x150
+>  task_work_run+0x1d2/0x260
+>  ? __pfx_task_work_run+0x10/0x10
+>  resume_user_mode_work+0x52/0x60
+>  syscall_exit_to_user_mode+0x9a/0x120
+>  do_syscall_64+0x103/0x210
+>  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0xcac57b
+> Code: c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8
+> RSP: 002b:00007ffecf4226a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+> RAX: 0000000000000000 RBX: 00007ffecf422720 RCX: 0000000000cac57b
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffecf422850
+> RBP: 00007ffecf422850 R08: 0000000028d06ab1 R09: 7fffffffffffffff
+> R10: 3fffffffffffffff R11: 0000000000000246 R12: 00007ffecf422718
+> R13: 00007ffecf422710 R14: 00007f478f87b658 R15: 00007ffecf422830
+>  </TASK>
+> 
+> Allocated by task 1705:
+>  kasan_save_track+0x3e/0x80
+>  __kasan_kmalloc+0x8f/0xa0
+>  __kmalloc_cache_noprof+0x213/0x3e0
+>  binderfs_binder_device_create+0x183/0xa80
+>  binder_ctl_ioctl+0x138/0x190
+>  __x64_sys_ioctl+0x120/0x1b0
+>  do_syscall_64+0xf6/0x210
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Freed by task 1705:
+>  kasan_save_track+0x3e/0x80
+>  kasan_save_free_info+0x46/0x50
+>  __kasan_slab_free+0x62/0x70
+>  kfree+0x194/0x440
+>  evict+0x524/0x9f0
+>  do_unlinkat+0x390/0x5b0
+>  __x64_sys_unlink+0x47/0x50
+>  do_syscall_64+0xf6/0x210
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> This 'stress-ng' workload causes the concurrent deletions from
+> 'binder_devices' and so requires full-featured synchronization
+> to prevent list corruption.
+> 
+> I've found this issue independently but pretty sure that syzbot did
+> the same, so Reported-by: and Closes: should be applicable here as well.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=353d7b75658a95aa955a
+> Fixes: e77aff5528a18 ("binderfs: fix use-after-free in binder_devices")
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> Acked-by: Carlos Llamas <cmllamas@google.com>
+> Signed-off-by: Carlos Llamas <cmllamas@google.com>
 
-Hi,
-
-Thank you for the patch. I can confirm that it resolves the issue. After 
-applying it, the kernel panic no longer occurs during memory reclaim 
-with in my KVM guest testing environment. The Avocado-VT functional 
-tests now complete successfully.
-
-Patch:
-Author: Sergey Senozhatsky <senozhatsky@chromium.org>
-Date:   Sun May 4 20:00:22 2025 +0900
-     zsmalloc: don't underflow size calculation in zs_obj_write()
-
-Thank You,
-Misbah Anjum N
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
