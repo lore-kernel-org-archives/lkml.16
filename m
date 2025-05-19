@@ -1,45 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D326A1B8;
-	Mon, 19 May 2025 10:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369871A2396
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747648923; cv=none; b=UDTt10CGpeMLl/dmr+xkGdmGriM7cyHAoRLjXoY7MyM+oN3a7L8g1fvjPu8NTm4y19/61Y0fPk7qOrfQ+hlxgeZCza6bwUWEABBLAXmTNh29iZ2XICkxFk/UpAA777mHLPeSEGEo4w3EQEhVy0m5Nya8vQGAaOsI20p+RwaXPUE=
+	t=1747648978; cv=none; b=EI4kBVddNFyCqi+S4aZusH6A2kkD7kXJh4/SW9fz+2hz3ENKilQjcsDrZBecBEkE0c9vaDm5/y5q+fXm9DJ2RJFc5bAa+0jHbsDUVXdf/v0p0CWtk/2Z3Yhom/P8M1uYnW2u7DctGZHCYeoHMXEEcT6GzsbRrOHMfHkokVoR+5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747648923; c=relaxed/simple;
-	bh=nfGjAmRusdnHy0utbcl82JupWWBu05y/buhmdLs3ic4=;
+	s=arc-20240116; t=1747648978; c=relaxed/simple;
+	bh=rYj7MqOM64QRmp+/C5FKJsL9QHVa0o1AU7Ui2HtSwIg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKjN1Y4/0BOemwLIWshG4Z5TnB+9/vbe3d4rb+LV0NgkB7muOd3GaXMZz5nivh8nBZi6QOSDlBJdx7XkyHKcSwx3OZjKtijOeWmZeWozj/TWAGdzvxpVXpBw4j6v9P/pCgH9oxlhI69C7vfKc7Y/UkI1izGp4FHJWOSnri0RuO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNzz+hwe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFfj1lWeByFQBGIR3i59vekJkpeJPBzqx7rYBF7gxR/jwHiyoeZu6VG48pk6eRa0LDxxtgSZg6yWCuvtuLvE1Hbyt6XepHq+lYBdoeai/lw2O/0PgWPK/i3KgTD5aaUwyOGD2qo+4b3+baRvCmPGv5a4qLMkJov/feFCbwYYs6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JvTsOyYy; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNzz+hwe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C73C4CEE4;
-	Mon, 19 May 2025 10:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747648922;
-	bh=nfGjAmRusdnHy0utbcl82JupWWBu05y/buhmdLs3ic4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VNzz+hweTHX+k6aokJkJd/pWyRJ65OXEmVIES3IqDdme72h8vSATCts0gihA98ibW
-	 zzXXKxkzdC0xWDNOzE/1PMTztoN+WD85XfY79fLXtiZ/MLJjr9fKjBxol8QOB00P88
-	 2pm/1Ls9OuU5E4UClzAGhS3fkfSiwNcvuCPqqkGA3UgX4qgX89utWpRWwpqQZIvlQX
-	 2SgWSEcuXCYA6T2e9RANQMQFfg/Q4kFAbRNzhHg+858gn2q4yJUD1tyyy3KRUo0JYM
-	 jwiXeYGG9ADy0g5hgkchAsRiiFIvBm7htxLxNtFytxRDuP3ghDQLWcG4Aq/LX+qLjY
-	 KVeLj3SufeB+g==
-Date: Mon, 19 May 2025 13:01:55 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Mike Rapoport <rppt@gmail.com>, Rich Felker <dalias@libc.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] sh: kprobes: remove unused variables in
- kprobe_exceptions_notify()
-Message-ID: <aCsBk6OUnkKGSJm3@kernel.org>
-References: <20250517093048.1149919-1-rppt@kernel.org>
- <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JvTsOyYy"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso3646355b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747648975; x=1748253775; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y+A3f4LcWplGbhyssnSLFwJnEojTcFJ9ydF25cRQg1M=;
+        b=JvTsOyYyeBHy+Z8psOYPni99Opw7W5+uAkXVAyB3qU9FRQsmBdcOecfNE2FcJ51brz
+         7VM0SEgT9GU0+ppXc6JeZ+H+OVpXTrcQNjl9ZUanqGkErvjp3lWUh9A7VPVR5gqECaOk
+         v0hhopDFwG6K8dWvzcy9AdfwHtXE+b6BRGjyKOeOsFSYT+OUmOTSyFoqywooFjvzn3ZQ
+         0HdnTIR1yv8o0tMEbM2mk3yg5v14SFIbisdbCd6FLFQeW47TdmWC4OjGHGV3DozUM+Ai
+         yA5cS0DShG5cqH6XupAg5oTuCrfNcMMpiZEwVyz9vt1LydAls11bOhWm4f2jpJHzUixS
+         Spzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747648975; x=1748253775;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y+A3f4LcWplGbhyssnSLFwJnEojTcFJ9ydF25cRQg1M=;
+        b=HuM26RkMoGUMJWbYYHtG6LBciRLR4lm2N5fAkxVbSHFhBLJpcJ4UBTpb+9skYSY1fu
+         HesjTzvxtPddkKBVh0Snwq/3oCgangy9ECTn1SbmMGlJJvngPIZgIW/UgQG9kMr4g4NT
+         ozaK3dKS5yQeKJIxQurJf8/ezSW9SmGgVx31rijGJDrEdgQZcYwYuhgkBuJIETysHs3/
+         ctjXEzmFAVStYSnfM+GL8+0+Bqc+mp92u1rN3hqgRo5orjs+GU8wpD9Zq0muB87mbTDd
+         8GsDpycIIijokjs7qS8u3V/f0ltv6K/DbyKE+fkuGOi9+iVwuCyiWcRRVJ/vsZLRZNFQ
+         hRww==
+X-Forwarded-Encrypted: i=1; AJvYcCWix0Vgo/MpCkRaGKB+hdEyr1rJLSfIEO7Ral2JtAGbYbYrF/KQi2gpQxlQCREL+31TPYWhQZdZYX4c2VU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOM2IrgBxvcSQcMCl42wCuFB33Yiqd7wyeahdZNgUq2FpJt3Oq
+	euYoicbCTS6Yg1DkiBMB5v+Fr8fual81bNarDSlBokIbEg6BvKm2oAfLuqvuVhM2N5g=
+X-Gm-Gg: ASbGnctKiGVjirMmlL5nbow0YJIjv6F5Gz2LzqBxElvUzv3b5/SgdjGmOBMFlF8+SXc
+	vMDO3B9AT7vIM3R8Z++oaGcXGzXrvtOi7yUbSDTQd/1eg73z/W9g5eMKq6QHfGkbarrfDEEZRjI
+	AJF+sJetn0UUSAkUJSCjVK/4RZzJm1SlxOV+zIL+HrM44ukvyNSedts1n0TysDsKoPCLLNHaOHN
+	YphtYwxaWQAbvvqkcgDc3/py7epbJq6RPaedIdy49ztVpoeU/A/+XVGHdxUiYieaZE4qneM5vvj
+	3s6BJnVwA0nMRZyQf5f8f4bRX1pU2hldJkzu4mLOXdI/nX5IvkUl
+X-Google-Smtp-Source: AGHT+IEJdanszISLWDbmYOQ7WlA7HzgrJl8GG9AsDfB8VFNBB0tqhXCjynngqe+PSU3JARtFE7Mqpg==
+X-Received: by 2002:a05:6a20:728e:b0:1ee:b8bc:3d2e with SMTP id adf61e73a8af0-21621882819mr19035889637.8.1747648975483;
+        Mon, 19 May 2025 03:02:55 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf5a34bsm5044895a12.4.2025.05.19.03.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 03:02:54 -0700 (PDT)
+Date: Mon, 19 May 2025 15:32:52 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Bowen Yu <yubowen8@huawei.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+	zhanjie9@hisilicon.com, jonathan.cameron@huawei.com,
+	lihuisong@huawei.com, zhenglifeng1@huawei.com,
+	cenxinghai@h-partners.com
+Subject: Re: [PATCH] cpufreq: Replace magic number
+Message-ID: <20250519100252.wme2gfdvl752efe2@vireshk-i7>
+References: <20250519070908.930879-1-yubowen8@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,76 +75,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
+In-Reply-To: <20250519070908.930879-1-yubowen8@huawei.com>
 
-On Mon, May 19, 2025 at 10:48:20AM +0200, Geert Uytterhoeven wrote:
-> Hi Mike,
+On 19-05-25, 15:09, Bowen Yu wrote:
+> Setting the length of str_governor with a magic number could cause
+> overflow when max length increases, it is better to use the defined
+> macro in this case.
 > 
-> On Sat, 17 May 2025 at 11:30, Mike Rapoport <rppt@kernel.org> wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> >
-> > kbuild reports the following warning:
-> >
-> >    arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
-> > >> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
-> >      412 |         struct kprobe *p = NULL;
-> >          |                        ^
-> >
-> > The variable 'p' is indeed unused since the commit fa5a24b16f94
-> > ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
-> >
-> > Remove that variable along with 'kprobe_opcode_t *addr' which also
-> > becomes unused after 'p' is removed.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
-> > Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Bowen Yu <yubowen8@huawei.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks for your patch!
-> 
-> "p" and "addr" are definitely unused (besides side-effects?), so
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> > --- a/arch/sh/kernel/kprobes.c
-> > +++ b/arch/sh/kernel/kprobes.c
-> > @@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
-> >  int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
-> >                                        unsigned long val, void *data)
-> >  {
-> > -       struct kprobe *p = NULL;
-> >         struct die_args *args = (struct die_args *)data;
-> >         int ret = NOTIFY_DONE;
-> > -       kprobe_opcode_t *addr = NULL;
-> >         struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-> >
-> > -       addr = (kprobe_opcode_t *) (args->regs->pc);
-> >         if (val == DIE_TRAP &&
-> >             args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
-> >                 if (!kprobe_running()) {
-> > @@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
-> >                                 ret = NOTIFY_DONE;
-> >                         }
-> >                 } else {
-> > -                       p = get_kprobe(addr);
-> >                         if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
-> >                             (kcb->kprobe_status == KPROBE_REENTER)) {
-> >                                 if (post_kprobe_handler(args->regs))
-> 
-> I have no idea what this code is supposed to do, and if it actually
-> works.  Red flags are that the assigned "p" was never used at all
-> since the inception of this function.
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 0c842edd1a76..a3a376f030f0 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -809,7 +809,7 @@ static ssize_t show_scaling_governor(struct cpufreq_policy *policy, char *buf)
+>  static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
+>  					const char *buf, size_t count)
+>  {
+> -	char str_governor[16];
+> +	char str_governor[CPUFREQ_NAME_LEN];
+>  	int ret;
+>  
+>  	ret = sscanf(buf, "%15s", str_governor);
 
-"p" was used before fa5a24b16f94 ("sh/kprobes: Don't call the
-->break_handler() in SH kprobes code"), but I can't say I understand that
-code either :)
-
-CC'ing Masami, he probably knows what this code does.
- 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-Sincerely yours,
-Mike.
+viresh
