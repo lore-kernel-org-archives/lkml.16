@@ -1,252 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7220928369F;
-	Mon, 19 May 2025 17:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F402882C7
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675610; cv=none; b=vGL5LwpwQka5dKBV05TZiJoZ+Om0odin13JO/zS6hC7ETE6yDogn6hGlaxWHVnED/WSs6wJhkTulTx2Mid2HhMN5V7VX0u7nNQ09dWWEI+a13aY8h4cUaMmY+2Oy6Wt7oKkFRn/IsXS3FPB0aXfoXCl0KCesso66zDmvrimhtek=
+	t=1747675652; cv=none; b=nEdjddSfN7ockV/vgIP/eCNwtuh1GWaWnD3kfjrR88nKn8tvITpQygX6hCwvcOIzUTfmGDgwNUAm+JPSq+N13dcoBeJQPmAzeG+dN+N2HE1g3mHWPoVbjfUjaYZ1MdPEGBkJ//uLUSGvYEzNpX901I1RCrJfVNEC5Hg+sgF31Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675610; c=relaxed/simple;
-	bh=h7V5zlLLmpxyamsNWnoGoWuIKl2M4zypQlTV2IRSXhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Py5CnSd/ILWrqvkhzqeLEsXexHktptpn3gFu9gw7HUtoQk58W52HOkUeQLAVvH3oVsGp/L4rZZfvzQ7ms8Jxvumkgu8EsLua38pSlSC6DTArlw5xx5yrJAYqDIh5V31fDwYWFW2SMHQr+vQHXLkt9+jq4w538nDpSks9EuXKr5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lA3kVei6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lA3kVei6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27DFC4CEE4;
-	Mon, 19 May 2025 17:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747675609;
-	bh=h7V5zlLLmpxyamsNWnoGoWuIKl2M4zypQlTV2IRSXhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lA3kVei6l88TJII9OoHBPTluRg6LW+Q+SitMeZ+aXKahz0zDQ2Da62QX9vCBDk9Um
-	 FuTTtKSyVALSwLI9XiYkPnxhE280IY4F3/6MTvVlX1lGtL8eZrzG43HiPoKylvPaMR
-	 3eYKw0xaJlYcm9sDKwMhTShnPLQP/vxW9J91V3EJZFtUOp5+JuTiSL9dy5ew09t9dw
-	 8lfbfWVET5sf9X40mZWXe5BRij7BUX+nykYmqYzKgZ1mO/+UUO6knyW9wxM++JijRC
-	 YPWjdEqt3zRscodXo/FnBTQ8ffs+lmq0qJLZzBLxof7BU7lYQL/Tjn6e/voHXLeLZ1
-	 RfKjSXpanrxtA==
-Date: Mon, 19 May 2025 12:26:47 -0500
-From: Rob Herring <robh@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/23] dt-bindings: mailbox: Add bindings for RPMI
- shared memory transport
-Message-ID: <20250519172647.GA2603742-robh@kernel.org>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-3-apatel@ventanamicro.com>
+	s=arc-20240116; t=1747675652; c=relaxed/simple;
+	bh=0kAB772pePIEa78fYStfll0cavrQWzChCajzTBxnhsQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=O2bv9OSNxHGxoAr6kAcf9Ijrqj0isbB0m476/j0mexzJ5k03DTX8T/VRVXuIg52EeLuiniqmqPtSMhG3TtB97nTZdQisu45f6xLVInTosjkNhjae+0e4fjJEm3u05ANjSxWom8Vm5wBA+wrjKwXRrBa8aP8kdtEW9K137R9BxVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86176e300fdso399942239f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:27:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747675650; x=1748280450;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6HQddT6eWN3F0IWqabdJeWfb4X02qL99QSl4DYJc82Q=;
+        b=v/lqOkpRnXiNap7i9F5qNkt6NK+SDPntjhJ5edXOAPvoWQfH/R0cYfAY87yhCEEOjs
+         tiL8nwzWFft3wFQpztEjsfPsuwZzqsMHc29ubPOpIJqhlvyH/33cXRybJGN4cbgD+UJF
+         99VTSaX7zJ7GoupN8lekSC22irE/VNVzhE6E1AQH2XtSOVwtTU3FqSy/w3x9nDsqT9Un
+         GeHqlKfxhHhbLQQF1GIilH9z/SYsoYwnfr65q8J2ZsJ2RQMnY2cwc6UAHFvhRmR7o5q0
+         eHjyMUXDxgLXVdf3qv/+1VdWxA00ooeM/XJH/w/REHm7DAf+KYvr6E+y/Onrk9ZKnrHN
+         OBEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYF+VKzpjlGUObD/V/OX9b7CRT+klJvkCaXurFyH3XkEavMehzht4gEA8kM2JLcQ5YQwMwneq1mIecOUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS182P7Orbl4Y8uqMM3XHw1jffnyZOgQePkP1oQKi94S3u6ZLo
+	k3E7X1wHBDDlmxN8RAYPiYr2U0YAujT3iN2sR1C9G6argDGeNSK1/zKMekAlBmaQt5wXloV4sU1
+	+NOC20GXcEiSGxk46dvEn9EnanFcPnkCLTEIH4UbVOrHQDTHiy8Yh/QojXGQ=
+X-Google-Smtp-Source: AGHT+IGc1hnJlRHNmLmirDP3e2VP+yy7wOrWXyz45hSuNyE0nDypeGZmPFZ3T31SkgWTsMJMf60s2nANLUVPWGUPncVETPB0UfKu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511133939.801777-3-apatel@ventanamicro.com>
+X-Received: by 2002:a05:6602:3805:b0:867:6680:cfd with SMTP id
+ ca18e2360f4ac-86a2316ec56mr1866755439f.1.1747675650006; Mon, 19 May 2025
+ 10:27:30 -0700 (PDT)
+Date: Mon, 19 May 2025 10:27:29 -0700
+In-Reply-To: <00000000000052c1d00616feca15@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682b6a01.a00a0220.7a43a.0078.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] WARNING in hci_recv_frame
+From: syzbot <syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com>
+To: hdanton@sina.com, johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 11, 2025 at 07:09:18PM +0530, Anup Patel wrote:
-> Add device tree bindings for the common RISC-V Platform Management
-> Interface (RPMI) shared memory transport as a mailbox controller.
-> 
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->  .../mailbox/riscv,rpmi-shmem-mbox.yaml        | 148 ++++++++++++++++++
->  1 file changed, 148 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml b/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> new file mode 100644
-> index 000000000000..3194c066d952
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> @@ -0,0 +1,148 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/riscv,rpmi-shmem-mbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RISC-V Platform Management Interface (RPMI) shared memory mailbox
-> +
-> +maintainers:
-> +  - Anup Patel <anup@brainfault.org>
-> +
-> +description: |
-> +  The RISC-V Platform Management Interface (RPMI) [1] defines a common shared
-> +  memory based RPMI transport. This RPMI shared memory transport integrates as
-> +  mailbox controller in the SBI implementation or supervisor software whereas
-> +  each RPMI service group is mailbox client in the SBI implementation and
-> +  supervisor software.
-> +
-> +  ===========================================
-> +  References
-> +  ===========================================
-> +
-> +  [1] RISC-V Platform Management Interface (RPMI)
-> +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> +
-> +properties:
-> +  compatible:
-> +    const: riscv,rpmi-shmem-mbox
-> +
-> +  reg:
-> +    oneOf:
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: P2A request queue base address
-> +          - description: A2P acknowledgment queue base address
-> +          - description: A2P doorbell address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: P2A request queue base address
-> +          - description: A2P acknowledgment queue base address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: A2P doorbell address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +
-> +  reg-names:
-> +    oneOf:
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: p2a-req
-> +          - const: a2p-ack
-> +          - const: a2p-doorbell
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: p2a-req
-> +          - const: a2p-ack
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: a2p-doorbell
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
+syzbot has found a reproducer for the following issue on:
 
-This can all be just:
+HEAD commit:    a5806cd506af Linux 6.15-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14bd52d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6c2cd7998c108ba7
+dashboard link: https://syzkaller.appspot.com/bug?extid=3e07a461b836821ff70e
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12bd52d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170ab1f4580000
 
-minItems: 2
-items:
-  - const: a2p-req
-  - const: p2a-ack
-  - enum: [ p2a-req, a2p-doorbell ]
-  - const: a2p-ack
-  - const: a2p-doorbell
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-a5806cd5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/114e439a107e/vmlinux-a5806cd5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/28859a387c14/bzImage-a5806cd5.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+workqueue: cannot queue hci_rx_work on wq hci0
+WARNING: CPU: 0 PID: 7345 at kernel/workqueue.c:2258 __queue_work+0xd62/0xfe0 kernel/workqueue.c:2256
+Modules linked in:
+CPU: 0 UID: 0 PID: 7345 Comm: syz-executor130 Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:__queue_work+0xd62/0xfe0 kernel/workqueue.c:2256
+Code: 42 80 3c 20 00 74 08 4c 89 ef e8 89 de 96 00 49 8b 75 00 49 81 c7 78 01 00 00 48 c7 c7 40 cc 69 8b 4c 89 fa e8 9f 40 f9 ff 90 <0f> 0b 90 90 e9 f1 f4 ff ff e8 00 e4 34 00 90 0f 0b 90 e9 dd fc ff
+RSP: 0018:ffffc9000f4d7a88 EFLAGS: 00010046
+RAX: 701780e79c022b00 RBX: 0000000000000000 RCX: ffff88803d9a0000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: 1ffff110022be938 R08: ffff88801fe23e93 R09: 1ffff11003fc47d2
+R10: dffffc0000000000 R11: ffffed1003fc47d3 R12: dffffc0000000000
+R13: ffff8880437f0a98 R14: ffff88803d9a0000 R15: ffff8880115f4978
+FS:  00007f9904bca6c0(0000) GS:ffff88808d6c2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000040 CR3: 000000004012c000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ queue_work_on+0x181/0x270 kernel/workqueue.c:2392
+ queue_work include/linux/workqueue.h:662 [inline]
+ hci_recv_frame+0x5ad/0x700 net/bluetooth/hci_core.c:2926
+ vhci_get_user drivers/bluetooth/hci_vhci.c:512 [inline]
+ vhci_write+0x358/0x4a0 drivers/bluetooth/hci_vhci.c:608
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x548/0xa90 fs/read_write.c:684
+ ksys_write+0x145/0x250 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9905433a6f
+Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 d9 6b 02 00 48 8b 54 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 2c 6c 02 00 48
+RSP: 002b:00007f9904bca1e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f99054bf3f8 RCX: 00007f9905433a6f
+RDX: 0000000000000007 RSI: 0000200000000040 RDI: 00000000000000ca
+RBP: 0000200000000040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f99054bf3f0
+R13: 00007f99054bf3fc R14: 0000000000000040 R15: 00007ffdd9006d98
+ </TASK>
 
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-> +      The RPMI shared memory transport supports wired interrupt specified by
-> +      this property as the P2A doorbell.
-
-"The RPMI shared memory transport P2A doorbell"
-
-
-> +
-> +  msi-parent:
-> +    description:
-> +      The RPMI shared memory transport supports P2A doorbell as a system MSI
-> +      and this property specifies the target MSI controller.
-> +
-> +  riscv,slot-size:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 64
-> +    description:
-> +      Power-of-2 RPMI slot size of the RPMI shared memory transport.
-> +
-> +  riscv,a2p-doorbell-value:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0x1
-> +    description:
-> +      Value written to the 32-bit A2P doorbell register.
-> +
-> +  riscv,p2a-doorbell-sysmsi-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The RPMI shared memory transport supports P2A doorbell as a system MSI
-> +      and this property specifies system MSI index to be used for configuring
-> +      the P2A doorbell MSI.
-> +
-> +  "#mbox-cells":
-> +    const: 1
-> +    description:
-> +      The first cell specifies RPMI service group ID.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - riscv,slot-size
-> +  - "#mbox-cells"
-> +
-> +anyOf:
-> +  - required:
-> +      - interrupts
-> +  - required:
-> +      - msi-parent
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    // Example 1 (RPMI shared memory with only 2 queues):
-> +    mailbox@10080000 {
-> +        compatible = "riscv,rpmi-shmem-mbox";
-> +        reg = <0x10080000 0x10000>,
-> +              <0x10090000 0x10000>;
-> +        reg-names = "a2p-req", "p2a-ack";
-> +        msi-parent = <&imsic_mlevel>;
-> +        riscv,slot-size = <64>;
-> +        #mbox-cells = <1>;
-> +    };
-> +  - |
-> +    // Example 2 (RPMI shared memory with only 4 queues):
-> +    mailbox@10001000 {
-> +        compatible = "riscv,rpmi-shmem-mbox";
-> +        reg = <0x10001000 0x800>,
-> +              <0x10001800 0x800>,
-> +              <0x10002000 0x800>,
-> +              <0x10002800 0x800>,
-> +              <0x10003000 0x4>;
-> +        reg-names = "a2p-req", "p2a-ack", "p2a-req", "a2p-ack", "a2p-doorbell";
-> +        msi-parent = <&imsic_mlevel>;
-> +        riscv,slot-size = <64>;
-> +        riscv,a2p-doorbell-value = <0x00008000>;
-> +        #mbox-cells = <1>;
-> +    };
-> -- 
-> 2.43.0
-> 
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
