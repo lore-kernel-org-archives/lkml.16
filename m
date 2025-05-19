@@ -1,83 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D232874FF;
-	Mon, 19 May 2025 16:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90872874FF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671038; cv=none; b=JPYWcIN4IJAwqGTPq9w6VPSisgNJP6xwQKJK5CU6x02nLpWqIX66TN1SHmK3n3JQ/FXxKUhWHTBeDi4x1Ob6KsPZ4Z9/SXM1IMUemdm06SguiYf29KCjqMWH9pIJaGMlPQbiyha/YOyJ/fILqsp3KaEReXZpOYXlFz5yGK2IEHo=
+	t=1747671106; cv=none; b=niXdu5BbrwLfIBPJ2bCkX98ho+4UK7VO5vkXsP01vgPB/9moMvucYvKqiWEcL9X+ZvfKhXzLBmgenZ3IWP2T/4AnKIG+ZREvJ35NlQpnyeIOTUE3aETgmcG9Z4mT9vE7BrzwHsLIUEsiNHBD5F5JY18C3XmjNW1O81AV6oxcB3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671038; c=relaxed/simple;
-	bh=8Gfs1ppaN2jlWBdNlgUpnLmCuisZo8JpB/m7e1EOfY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wx5Fg8xJsDEKHrOi3VDqWW8oPx+Qfi0v5bXa30XSWAGs2j6Y7iksXzCWpUjd4eORRNu7X3eVhFb2SD39hAQJS5SrXfTFPAAwIcolt1+xfvicFdhUDex3ORFNPT+fbiEdXtl4feuSFB8oh/OAlCfs4zd9HcWG2f59m1nElC7CZOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ux0OAwzs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747671106; c=relaxed/simple;
+	bh=fQqhwRct2zYiKUV2MxExt+YwBxnmcowniZIdiq9mLVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qonE+apeoGqVnG1bDA9K2jejSJS8xW7V0Zf3C+8lPZE8YAfIlubAKDdGiIbNiN5tXUas1Z8b88/ps4UNgSJjyedxIsCbkIK1dD/iWdH2GGoqf+I8Yuqd5E1H/KCw+rim7n5Mt9gJZK85I70+kAkM+5FW69E9FPv/dARu6CksYr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VZCb34FS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ux0OAwzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57595C4CEE4;
-	Mon, 19 May 2025 16:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747671037;
-	bh=8Gfs1ppaN2jlWBdNlgUpnLmCuisZo8JpB/m7e1EOfY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ux0OAwzsDhwEUzAgkYnF1PBlXBNY6/IoCrn18FzOxHABKpbXVPdqB/F05wVxnJi/L
-	 MlZfa298W9L0UwoSlLPSOqLLs3UmFc3YwUt2v1OKWKNMZNg5Iou6qkVl8aQxWb+zBw
-	 MXuhC6BIghUZOGzqYiW3cVf9Pio9XGDImV+ZL9u665zImRAbTKd/GTrHVtp7O7q/fd
-	 4DkuDjCcYityBt6kZfId6BQhugdI/032oTdCFCPMHpNCzVr0iVYiJCrOssmCc19hIH
-	 m97TkiLH9BUIaPwlKrxlhh7swkUzHiIonUfghBOq63e070hZ5Ige8DSZf+ONWROGT0
-	 KdS9NfvBn+dJA==
-Date: Mon, 19 May 2025 17:10:32 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>,
-	linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZCb34FS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747671102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FCUDQGeA3DvixcZApWgoXlHly+SHL0ArXKwLqnATz8k=;
+	b=VZCb34FSQBoz+bP43qXFitvQTuvpHiASgAgyVJqup1mJwvctEzKMgeQQ5/E+eDWxyJJ0IM
+	Vg7sbjcWirRbMepEVIwM2pY8fp8W9GkqHcaEOZHUkG4iYpqRqm7yYCyCqYnadv8xnwIPKl
+	9shHJ8QSj2lsOxhrTW2qgJgWtva29zc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-261-_vgrlQGDMO2TtSQZQBDesg-1; Mon,
+ 19 May 2025 12:11:37 -0400
+X-MC-Unique: _vgrlQGDMO2TtSQZQBDesg-1
+X-Mimecast-MFC-AGG-ID: _vgrlQGDMO2TtSQZQBDesg_1747671096
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFB171801A17;
+	Mon, 19 May 2025 16:11:35 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.188])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C18F019560AA;
+	Mon, 19 May 2025 16:11:33 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: gpu: mali-utgard: Add Rockchip RK3528
- compatible
-Message-ID: <20250519-tweak-showplace-264a15576e76@spud>
-References: <20250518225418.682182-1-jonas@kwiboo.se>
- <20250518225418.682182-2-jonas@kwiboo.se>
+Subject: [PATCH 0/2] vfs, afs, bash: Fix miscomparison of foreign user IDs in the VFS
+Date: Mon, 19 May 2025 17:11:21 +0100
+Message-ID: <20250519161125.2981681-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zE6C03YwwDfltbjP"
-Content-Disposition: inline
-In-Reply-To: <20250518225418.682182-2-jonas@kwiboo.se>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+Hi Christian,
 
---zE6C03YwwDfltbjP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here's a pair of fixes that deal with some places the VFS mishandles
+foreign user ID checks.  By "foreign" I mean that the user IDs from the
+filesystem do not belong in the same number space as the system's user IDs.
+Network filesystems are prime examples of this, but it may also impact
+things like USB drives or cdroms.
 
-On Sun, May 18, 2025 at 10:54:11PM +0000, Jonas Karlman wrote:
-> Rockchip RK3528 SoC has a Mali-450 MP2. Add a compatible for it.
->=20
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Take AFS as example: Whilst each file does have a numeric user ID, the file
+may be accessed from a world-accessible public-facing server from some
+other organisation with its own idea of what that user ID refers to.  IDs
+from AFS may also collide with the system's own set of IDs and may also be
+unrepresentable as a 32-bit UID (in the case of AuriStor servers).
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Further, kAFS uses a key containing an authentication token to specify the
+subject doing an RPC operation to the server - and, as such, this needs to
+be used instead of current_fsuid() in determining whether the current user
+has ownership rights over a file.
 
---zE6C03YwwDfltbjP
-Content-Type: application/pgp-signature; name="signature.asc"
+Additionally, filesystems (CIFS being a notable example) may also have user
+identifiers that aren't simple integers.
 
------BEGIN PGP SIGNATURE-----
+Now the problem in the VFS is that there are a number of places where it
+assumes it can directly compare i_uid (possibly id-mapped) to either than
+on another inode or a UID drawn from elsewhere (e.g. current_uid()) - but
+this doesn't work right.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtX+AAKCRB4tDGHoIJi
-0no8AQDkDSkDoPmDYFg2jj31yNSF71G37/q7Z+IxLIzuuuABUQD+IxyTT4p/MLMI
-izTE/i5XxqvB776nHAIckmO8hCXKmgI=
-=b3XN
------END PGP SIGNATURE-----
+This causes the write-to-sticky check to work incorrectly for AFS (though
+this is currently masked by a workaround in bash that is slated to be
+removed) whereby open(O_CREAT) of such a file will fail when it shouldn't.
 
---zE6C03YwwDfltbjP--
+Two patches are provided: The first specifically fixes the bash workaround
+issue, delegating the check as to whether two inodes have the same owner
+and the check as to whether the current user owns an inode to the
+filesystem.
+
+AFS then uses the result of a status-fetch with a suitable key to determine
+file ownership and just compares the 64-bit owner IDs to determine if two
+inodes have the same ownership.
+
+The second patch expands the use of the VFS helper functions added by the
+first to other VFS UID checks.
+
+The patches can be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=afs-fixes
+
+Thanks,
+David
+
+David Howells (2):
+  afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+  vfs: Fix inode ownership checks with regard to foreign ownership
+
+ fs/afs/dir.c       |  2 ++
+ fs/afs/file.c      |  2 ++
+ fs/afs/internal.h  |  3 ++
+ fs/afs/security.c  | 52 ++++++++++++++++++++++++++++++
+ fs/attr.c          | 58 ++++++++++++++++++++-------------
+ fs/coredump.c      |  3 +-
+ fs/inode.c         |  8 +++--
+ fs/internal.h      |  1 +
+ fs/locks.c         |  7 ++--
+ fs/namei.c         | 80 ++++++++++++++++++++++++++++++++--------------
+ fs/remap_range.c   | 20 ++++++------
+ include/linux/fs.h |  3 ++
+ 12 files changed, 177 insertions(+), 62 deletions(-)
+
