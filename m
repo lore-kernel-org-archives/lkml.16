@@ -1,99 +1,104 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A4526B2A3;
-	Mon, 19 May 2025 11:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE252580D5;
+	Mon, 19 May 2025 11:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654860; cv=none; b=um0KbU7H5c1dAhvpFhmcJCqRjYAmNEMXd55Ih6iEdbE+3HZFsDJLCHfnNzEgsqdr9UvSYsnwVx1Sg/hqeJqnlDpsTtc2H0CQx8XcS52wXzvwA4fjXIFTBISEWympS2N0KCGATT+lzJ4TF19bosfn/hcHTIZqzFE4N5TrHrdQC0Q=
+	t=1747654879; cv=none; b=sOMrwD0vllN+H9lq9lnECWt8Lv7R3XD5w1gTxrAQ3pk2VtLjRAU6VgzkMY/DojIn5zbZQBS/YkvnTb/Eirc49omnvmaK8UKOktJS8HZelVhkpHpSglCyzCQ1/32SiyXw92OBBgGNThHcDbrSEqfKDtO5lpOooPic0pNO0GUrX6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654860; c=relaxed/simple;
-	bh=LM84ppQ9Hg02rY5UNCGCTjxb3PjzmksqWSwV5wkfBRU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tnyXBMvpkrYB2mnXwWj4nxEAVw75DV2oxPCvsIwt6qdJBCEzHsJQAl7Y8TNHxwlLi9HN0uQ2eJQk/CBAGkSB3Dtt9XlvT4QhTsm2ptHB5bgdkOXTA80tQb92tchrzlgF/pSSxPjnyCspoidFj8lB0xEM6vDd+SmpR3Nv6mooid4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=e4DkHtP1; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1747654879; c=relaxed/simple;
+	bh=5Vo96rwwbeqGuD7SKuZQDOxh+cFjL5FGVQRjtEcFIV0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ajM907H4stf6kJNHZIBwl4mC62FB0oI/KzD3B/qSXB1PkjneVzx26j42vGp8bdF3bZJaFNDv7ahmjr5nG7wpFCPNji9HYECBAYVcXoC23LKExom6bt6gmop5biYZnsVZnVJ37XGZ+79fp+dU9leS4l6utouQ8iJd32Th/Ik5In0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VAeO5PhE; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="e4DkHtP1"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B14FD41086
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1747654858; bh=Z6Bxy9uoNLh7c/QDDh1HyXpjukuWj/JEVnqjK+01yu0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=e4DkHtP1D8bzrSrvP8n9sn/9OlbRnU4vMxGAgGudPzXUsBSG932QRLUdLEht4WMCt
-	 ceo2MjzYkbYbcr6mJO4V14/2Gp6SKeSrCEGxRWq3IfGl+ajoybVdsU0pGucxaGu7bl
-	 ropk27x594qshfC9C37ZmqDAWx4vysSMtuuropuy1Fp5ku9qigoI00Vd6WMlrGfiQ2
-	 SngK3relCRGNWL/dbBPn4DzI0wTug06r0B3dH0GX96sb7weck2vqygbWslVzm1dLBv
-	 K7QYR1S/mOwDl7NCfNFunxgIGpZAWLphhmWdsRiQBL57NOp7iYWX7K/n3sx4L80cFI
-	 Pw3MJKLZsoIkw==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VAeO5PhE"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id B14FD41086;
-	Mon, 19 May 2025 11:40:57 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: rujra <braker.noob.kernel@gmail.com>, skhan@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation : kernel-hacking : hacking.rst : fixed
- spelling mistake
-In-Reply-To: <CAG+54DZ4YqBfqkvCWBWSZWE0LGmcs0GdE2_HiSB8JUsau3OvOw@mail.gmail.com>
-References: <CAG+54DZ4YqBfqkvCWBWSZWE0LGmcs0GdE2_HiSB8JUsau3OvOw@mail.gmail.com>
-Date: Mon, 19 May 2025 05:40:54 -0600
-Message-ID: <87jz6ckeux.fsf@trenco.lwn.net>
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b1G3X3KMnz9t7w;
+	Mon, 19 May 2025 13:41:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747654872; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02qyQguP64ZZwtrSPx68nkmGaO3o+TTS6Su6EUVfz/g=;
+	b=VAeO5PhEZg2vHq/WRsS8NwbUWscEsSNq/3UkhAlboXIG+WobMwkLWlizLEyzpznQR/rQTF
+	N2/WyCwPeHA7O5gtf8kGx+BYXIWxgjLRAlsu5P8tbYnDx3qsk8Bs4xRHCJ0wYicqeaFTeF
+	V9+xmC9Hwbh86yCkoKOZ+F2vjSMQazbdWOmoxn/reWjkFlE8AK2US4C2JM+maW9Il5JLrh
+	32D8KkLLDyeq0aNetrk3sWrp6lWWyXjKuNGHJ1RqtHbcxyBaxWPMCfMalI44vY30Bdb2WF
+	iJFfgkraTSwS0oKLlNqxkO6zX2GjKdQiCOu1Og4bgBR8q+J12tiWwK/Mwm+fPg==
+Message-ID: <6e46fbe01199d420dc2c9f6c5bd564ea45b0a0e9.camel@mailbox.org>
+Subject: Re: [PATCH v3 0/6]
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Philipp Stanner
+	 <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yang Yingliang
+ <yangyingliang@huawei.com>,  Zijun Hu <quic_zijuhu@quicinc.com>,
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Date: Mon, 19 May 2025 13:41:07 +0200
+In-Reply-To: <aCsYMzWrV3bGpMWb@smile.fi.intel.com>
+References: <20250519112959.25487-2-phasta@kernel.org>
+	 <aCsYMzWrV3bGpMWb@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MBO-RS-ID: 407da09aacdcef2975c
+X-MBO-RS-META: upjszsqh7sgf4zue37orw8sd49exwkrf
 
-rujra <braker.noob.kernel@gmail.com> writes:
+On Mon, 2025-05-19 at 14:38 +0300, Andy Shevchenko wrote:
+> On Mon, May 19, 2025 at 01:29:54PM +0200, Philipp Stanner wrote:
+>=20
+> Just for your info: Subject is clean. Forgot?
+>=20
 
-> fixed spelling mistake
-> LOG :
-> ----------------------------------------
-> Documentation/kernel-hacking/hacking.rst
-> ----------------------------------------
-> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-> +.. _kernel_hacking_hack:
->
-> CHECK: 'compatability' may be misspelled - perhaps 'compatibility'?
-> +     * Sun people can't spell worth damn. "compatability" indeed.
->                                             ^^^^^^^^^^^^^
->
-> total: 0 errors, 1 warnings, 1 checks, 830 lines checked
-> -----------------------------------------------------------------
-> as first patch for documentation.
+Yup.
 
-This information is not particularly useful; a changelog should say what
-you have done and why.
+checkpatch doesn't detect that, though:
 
-> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
-> ---
->  Documentation/kernel-hacking/hacking.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/kernel-hacking/hacking.rst
-> b/Documentation/kernel-hacking/hacking.rst
-> index 0042776a9e17..22b880add846 100644
-> --- a/Documentation/kernel-hacking/hacking.rst
-> +++ b/Documentation/kernel-hacking/hacking.rst
-> @@ -794,7 +794,7 @@ Some favorites from browsing the source. Feel free
-> to add to this list.
->  ``arch/sparc/kernel/head.S:``::
->
->      /*
-> -     * Sun people can't spell worth damn. "compatability" indeed.
-> +     * Sun people can't spell worth damn. "compatibility" indeed.
->       * At least we *know* we can't spell, and use a spell-checker.
->       */
+scripts/checkpatch.pl outgoing/pcim/hybrid/pci-rest/v3/v3-000*       (base)=
+=20
+-----------------------------------------------------------
+outgoing/pcim/hybrid/pci-rest/v3/v3-0000-cover-letter.patch
+-----------------------------------------------------------
+WARNING: 'seperately' may be misspelled - perhaps 'separately'?
+#13:=20
+    resend seperately. (Andy)
+           ^^^^^^^^^^
 
-The misspelling here is entirely the point of the comment - fixing it is
-exactly the wrong thing to do.  (Whether we need all of this material at
-all is a different question...)
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit desc=
+ription?)
+#67:=20
+[1] https://lore.kernel.org/all/174657893832.4155013.12131767110464880040.b=
+4-ty@kernel.org/
 
-Thanks,
+total: 0 errors, 2 warnings, 0 lines checked
 
-jon
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e.
+
+outgoing/pcim/hybrid/pci-rest/v3/v3-0000-cover-letter.patch has style probl=
+ems, please review.
+
+
+
+Maybe someone(tm) should fix that :no_mouth_emoji:
+
+P.
