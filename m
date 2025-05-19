@@ -1,133 +1,117 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B491854
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A129286D47
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670582; cv=none; b=nlzGM9FNpysRll3GJJ9W0I4OBeTACDI4EIa5ank7KzXFWnjTFEy+7UEuRp6BFRyX+SCV9tf0cxA3A7t/DPuVjfj5Nkn7g+Qu9+wJaD5m6pVniFcwVU9uHAR8F/NlCW3THbC6o8oyS9ZYYir+U2fXQRqgDS/HlqvMKAwCXLeMVIg=
+	t=1747670610; cv=none; b=sbUPFdXzKhuFBOu2WC5wIu42ZIWS4b7KYk/kj8HkjH0mW4bO9n7EUlGSl/NKw5fTqwaDWYw0ivFSuTvfeRV2x6/mZWuGfqaYLgw61dIQ0ExlDfMb6PFtGYNxJkMK8GCt0B60YOV0QxqCbFtP+Hbu2u+Edut/bTnE7Tp8Xk1mFNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670582; c=relaxed/simple;
-	bh=jJebhOC5pck9JgTcHl2pSKfcuNTMt61u6YUTJ5kvTUw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JWh4yf5/QE0CXnuN6EqakjGCfO+vaV0uiZ5txb7QebpxW+0nL7daTtDrBhE383qAuGVRDktF8eU3DrF4TcnE7Wgvlh9sCFm0UAjykyiYHloyXC67v7JGFdC8tsBYFC20vFyjdGXGKYK9LIF8jnBQRv4m+6duN4EtvmFy6nwY7MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=coH15fm8; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1747670610; c=relaxed/simple;
+	bh=qfosA1+czaieYstJoGp8+CfQqfn5uNyaJNphjp2Z4Pg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gqqw/2gc6rVrS6lCbY4W28dvJ5vkD9QqpJgQDBijF6DFYOKVz1S51aQc6XyIUBSN2Zsttmxph4koOhQQC8pA8StgBR2sJFOl55I4kPEWm3ulwYkwELIbmJUdn4kQJnVGA8zj/99wnCUVBbeh3txb75zvCXI4cVay80Q5XFiUYd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aS8hs0wH; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="coH15fm8"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e78145dc4so4712751a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:03:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aS8hs0wH"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-48b7747f881so653661cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747670580; x=1748275380; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ebJzx1LorPbf1NWqtTpnidvsrFRDAcdzNorkYWG1GY4=;
-        b=coH15fm8DVgjJ9oVSK3pCxJlawUFPoHKISQE8BhpNKYwmBUliHUCewwDchSulcNumd
-         LdvmKH3uF3FH//WFA4pI67zykejtgvMNAdvTUD1Mp4uXq3283uHUkZ74/RTmm3etKu+G
-         KKsfUjsPXPBH3T3X3S8FDrfMdQmtfCzap8btLV53zHZIYl20gfP888Vc8EFwksn04HnD
-         HbnKZxqcwDmzFmYvD7mo2U/nWYtoVrM/w8/K/ek2s3Xv/23sNjEVwZprupLZZkZIlhK/
-         d7peMsu1j3yHtyNIpKxcWjgaS2TgKUrlxl3UpUkW0biPVs8xqJQiM5okPefBDAXzQDXk
-         L2Zg==
+        d=google.com; s=20230601; t=1747670608; x=1748275408; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EwFo7rvRgNULrT5RtzzDoxbCBW4PYATrFYKV2nFZanI=;
+        b=aS8hs0wHBm/iT2/IpvDgewubKhbYl3NyVllQ0DK6nJ9jiV72kHjBIBVJINKsLbcW4/
+         2TWZz+uodEOG+F8CpEVgDpSOyeggX6sZyGHQCi3UvTw3jmQXUJWs2RJFr9bSip3TBKW/
+         fes0aoGzS3YhAJbqVRD44/SDb7/i0qe90wDGTn7WjYTxSZJ1/jDWMaTnVrVbR4bdJ6Fn
+         0TVZ+wMQY1TT7iEcLovpQUKIb24HACseLSl7DdoVEKzaQ4MV4yFn1oV6vj8W9O09mQxd
+         TFfxFncgbYEt6VWdMM5BR3VCBvBErmHOl2MvG6IS1diYQLKQSE7GvFDKz3NbrjJNPouY
+         sIBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747670580; x=1748275380;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ebJzx1LorPbf1NWqtTpnidvsrFRDAcdzNorkYWG1GY4=;
-        b=b+cWE74TnvgTEuUUf8f8IHTq/88R8TwDMgQ2pPl1kK/DyOubn9IommIjotgFSt/lZ7
-         I+MwZfo1+d9BvPEpfiya8Ai2u2Py7mCuJzt8pxl1IismpgWdSzEVnubFtms0WjLq5GAO
-         nKwBmTmml6MmBWUF0RXlWNMNyfXCWFCKviG4RfL0xBcsC62D4IY4TufQEp8BJFg9PAo5
-         JULiLSp1oQ9AdcvBiTI1qs0/aVooONDi59D4uI1iG+l2R4hPfEYYOdxpYKXKhf+8TPzu
-         4ha1AIEWTfTMrWIOhjy9q9nYCpY/qmjYunobyYdUEIdyKhdu08G9D1gmp4BOuNTChJ6k
-         +fLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVa0FCg/KfcgCtGpuMxgkqXmhqpGS3KH1FepmAIB4nCmswHk+MIlYxY69OxaWHFRZvaVWj6l/BA+ygXyPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT2ssZZKkDVie/ok3fd0t+vw1yWHEUThpwYljvApY+gB71Nvw7
-	8ONXbT8FwWzqBfRKLbB6Vq3mC8osiu50F3DqUTu3Q+XSHKs4SSUfJQ+FrjVGmDOXyBOuV49Bpz4
-	Okl1OWg==
-X-Google-Smtp-Source: AGHT+IGgPwGOMBLaCWE5KFajgM1k5GAAtbgHFzAkvoKLZILtRQoRL0lrXZ29F1zNrZz+oqAiBi5JJlM1Uas=
-X-Received: from pja16.prod.google.com ([2002:a17:90b:5490:b0:30a:3021:c1af])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d888:b0:30e:823f:ef3c
- with SMTP id 98e67ed59e1d1-30e823ff09dmr21512162a91.25.1747670580528; Mon, 19
- May 2025 09:03:00 -0700 (PDT)
-Date: Mon, 19 May 2025 09:02:59 -0700
-In-Reply-To: <aCg0Xc9fEB2Qn5Th@gmail.com>
+        d=1e100.net; s=20230601; t=1747670608; x=1748275408;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EwFo7rvRgNULrT5RtzzDoxbCBW4PYATrFYKV2nFZanI=;
+        b=L2108M4gy2pTA8NLQPrY1FEZgnKFFHR2zmdZiuJEmZg0ZgiZC5+4Z32nI9KTR2Bvv5
+         Wdu0Jnqk6ZFPyGacRpiciIxNuag4bSU+khO8t8Tbd+7qHkZZh/a8T496vWBgm2LRmj8b
+         Nc7GNOdnjS+/6cGlm22V09gNrFc8scqh4M3A8jSgZTwWSqDJTe6hSkoAnJ5MUIQbMG0z
+         4Sfx9WeWn5vocdGczXbS7CUtZfjiqZlOoPvQAWt5fXa1rXv/v6LJaotG/EVPLEgXwfLv
+         lYMxGqsMoMAX4L7KKX4wfWOOpKWzM+gKiasNOvqpNVqNWQPoAZt/I1+KOstly1LLEK4A
+         hU9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXI9dgMbUxlhtCLzEinhd43K4EKOx7XGL0WfO6f/E83vQBGRmT1vIpjzbHt4JQPGhW+yqBODYOgcwK6avs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztkTGzrxrByD483xElg3ecvIdfFv/o4hzhAFL7xVwHiZ8ffufo
+	IFDUO1EJWmYJc+b7RQFJ0UG7uVH9yzN1zJAvKy5lqYWwPrUJ9IJwEx+KTEuGZsa/+nD6SW7RX0G
+	LMQCWXALt9LueXuY4H54kfifPbKoXcibn8JmMUQ16
+X-Gm-Gg: ASbGnctCD3Dmd5U8njgL3TniIfgZJ9m57NKXhTwaioDIR9ScIBewugmxmH7on1zTDvw
+	yzZ7+PQZE4F8lxJVZSpYHE04f0CmOUJ0tB3jac2R+iI1d83Iu+QmRSgpV5orGK5S1gjfnLHPIji
+	4imsu91WqqTDQY1wrDcuHdHCO8AuX9de9tIG2FEya5MA==
+X-Google-Smtp-Source: AGHT+IFjOFo+QFAwm+vxGHsUhwf4M00RZb1Cl72fJqBWGIrhqZZm3lCaA06XNasSEqb51z7OdnA5j7D1iI1aERKQ1so=
+X-Received: by 2002:ac8:7d0a:0:b0:48d:8f6e:ece7 with SMTP id
+ d75a77b69052e-495ff7c853fmr6292921cf.3.1747670607520; Mon, 19 May 2025
+ 09:03:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516212833.2544737-1-seanjc@google.com> <20250516212833.2544737-8-seanjc@google.com>
- <aCg0Xc9fEB2Qn5Th@gmail.com>
-Message-ID: <aCtWM63FyQKMJzqE@google.com>
-Subject: Re: [PATCH v2 7/8] x86, lib: Add wbinvd and wbnoinvd helpers to
- target multiple CPUs
-From: Sean Christopherson <seanjc@google.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Zheyun Shen <szy0127@sjtu.edu.cn>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>, Kai Huang <kai.huang@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250518101212.19930-1-00107082@163.com>
+In-Reply-To: <20250518101212.19930-1-00107082@163.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 19 May 2025 09:03:16 -0700
+X-Gm-Features: AX0GCFtzR1oBhFGIyDxznuUx7HQDG0rFycuh7HxGmy0Ebdyc64y5ZoZ7wYq18bc
+Message-ID: <CAJuCfpEeo2qKcyan9BnYGvEaYeso24wQT1eX-CxnBkjbEuY7sg@mail.gmail.com>
+Subject: Re: [PATCH] module: release codetag section when module load fails
+To: David Wang <00107082@163.com>
+Cc: mcgrof@kernel.org, petr.pavlu@suse.com, linux-modules@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 17, 2025, Ingo Molnar wrote:
-> 
-> * Sean Christopherson <seanjc@google.com> wrote:
-> 
-> > From: Zheyun Shen <szy0127@sjtu.edu.cn>
-> > 
-> > Extract KVM's open-coded calls to do writeback caches on multiple CPUs to
-> > common library helpers for both WBINVD and WBNOINVD (KVM will use both).
-> > Put the onus on the caller to check for a non-empty mask to simplify the
-> > SMP=n implementation, e.g. so that it doesn't need to check that the one
-> > and only CPU in the system is present in the mask.
-> > 
-> > Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
-> > Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> > Link: https://lore.kernel.org/r/20250128015345.7929-2-szy0127@sjtu.edu.cn
-> > [sean: move to lib, add SMP=n helpers, clarify usage]
-> > Acked-by: Kai Huang <kai.huang@intel.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/include/asm/smp.h | 12 ++++++++++++
-> >  arch/x86/kvm/x86.c         |  8 +-------
-> >  arch/x86/lib/cache-smp.c   | 12 ++++++++++++
-> >  3 files changed, 25 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> > index e08f1ae25401..fe98e021f7f8 100644
-> > --- a/arch/x86/include/asm/smp.h
-> > +++ b/arch/x86/include/asm/smp.h
-> > @@ -113,7 +113,9 @@ void native_play_dead(void);
-> >  void play_dead_common(void);
-> >  void wbinvd_on_cpu(int cpu);
-> >  void wbinvd_on_all_cpus(void);
-> > +void wbinvd_on_many_cpus(struct cpumask *cpus);
-> >  void wbnoinvd_on_all_cpus(void);
-> > +void wbnoinvd_on_many_cpus(struct cpumask *cpus);
-> 
-> Let's go with the _on_cpumask() suffix:
-> 
->     void wbinvd_on_cpu(int cpu);
->    +void wbinvd_on_cpumask(struct cpumask *cpus);
->     void wbinvd_on_all_cpus(void);
-> 
-> And the wb*invd_all_cpus() methods should probably be inlined wrappers 
-> with -1 as the cpumask, or so - not two separate functions?
+On Sun, May 18, 2025 at 3:12=E2=80=AFAM David Wang <00107082@163.com> wrote=
+:
+>
+> When module load failed after memory for codetag sections ready,
 
-Using two separate functions allows _on_all_cpus() to defer the mask generation
-to on_each_cpu(), i.e. avoids having to duplicate the passing of cpu_online_mask.
-IMO, duplicating passing __wbinvd is preferable to duplicating the use of
-cpu_online_mask.
- 
-> In fact it would be nice to have the DRM preparatory patch and all the 
-> x86 patches at the beginning of the next version of the series, so 
-> those 4 patches can be applied to the x86 tree. Can make it a separate 
-> permanent branch based on v6.15-rc6/rc7.
+nit: s/ready/is ready
 
-Can do, assuming there's no lurking dependency I'm missing.
+> codetag section memory was not properly released. This
+> causes memory leak, and if next module load happens to got the
+
+nit: s/happens to got/happens to get
+
+
+> same module address, codetag may pick the uninitialized section
+> when manipulating tags during module unload, and lead to
+> "unable to handle page fault" BUG.
+>
+> Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.co=
+m/
+> Signed-off-by: David Wang <00107082@163.com>
+
+Acked-by: Suren Baghdasaryan <surenb@google.com>
+
+> ---
+>  kernel/module/main.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index a2859dc3eea6..5c6ab20240a6 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2829,6 +2829,7 @@ static void module_deallocate(struct module *mod, s=
+truct load_info *info)
+>  {
+>         percpu_modfree(mod);
+>         module_arch_freeing_init(mod);
+> +       codetag_free_module_sections(mod);
+>
+>         free_mod_mem(mod);
+>  }
+> --
+> 2.39.2
+>
