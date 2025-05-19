@@ -1,259 +1,138 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5197B2749FC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08A4272E5D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649741; cv=none; b=cIV1IgkuL/Nc4Ywot49Eu7E1hXUZrkiYcbRVsxXUfs0uZn7gf3ljRR5AXm42u0fHsNWzkFuXHZhNmHtVeeVhMDyc1S1qLOns32RMLXppabvB/UO/TQ1NqOHilEwsv7qPRv5uzb/GfvqWgaWp3WpU7+cUM/bmLfVrcXPq33eyFVQ=
+	t=1747649823; cv=none; b=G/lcerithgimOQqKSsVxnRecAGzAoz2908BySkU5JNGgm1/iZ0BJUtmf89jd14tcu1PwA5E/nOzQdZCudLNHulRHB2KZnweGdSNPHsb/5MxPHXcgqrKBF23QyhssZ+grydKX9xi7TMGn13luBtBLDvdrEKkHUQHI4k1DuD/UK64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649741; c=relaxed/simple;
-	bh=k8C+7ZKPgiBvpe9orKJUPwV3VT8i/8pM3z/vkYUKVYg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FciEBiZgg1keu+yqxOthtyAWBdfxFlC318lbXBPE4BacoaJPH8giYZngbSPIxUu+AFtfo9N7GesBYTtv74c15APMH98RAYofuikwIJCrMXyfXWz/ehFARB1euBWLrYdX2tL0FYzfOFhT2XfUs3SBhKOoNjO4KZhgp9+gVyqKBME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YjBN2vJ7; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747649823; c=relaxed/simple;
+	bh=/Iana3T40X9oEq+80UaIgm+Zgnii4IyVu0CKEuX4i+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m81LNnnTTVrmA/pdzqGWI1UusURN/X9/mGZkbBn4M5Vu4BykWwoZWG94p1Uako5XvMXuWHWUVocvN4W98z7Np8aThZBAhdwANrN6Iw7RGst/+NOalxyQ0ZWQmunOObosk10AhHm4Rk1F7RZ74imr9rGYuQXOKvkCQ6eCsjnMr38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=f3Vk66tE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YjBN2vJ7"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a375e72473so203844f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747649737; x=1748254537; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LDGwTef4sEIXmEjkxTASZN7dUj6mE4M4+Vtn0mnrAsA=;
-        b=YjBN2vJ7jv9xZi6nNKa4Nrjghhd5zf8h9BGLuPTqvwgu2+iYWyg0jhsFVWEMB74ZuF
-         78hk/eRuc56MR2625uUm1G8mz78bT8EopumaUaLAdv/CQvCPQVNEbN0BmsirTaaf0C/t
-         26dW9PPLPLQOYDdZlRx9FJtUJqTpYytS5sOHvb5GjXQIcnBEzSdsnnDAzhG9TszcURx4
-         6M3mn6n70A50DiIewwTbyVldU5aQJxtntSBsSt+67qeHmMLG8vO5186D1GSxVKkxdl+r
-         uK87z9a8KzvkPkBv3be0S3ohO87/RN54lyNbW0T4dt8CpzVvTobzv8ArtWTJMBjBbE/8
-         Z1Dw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="f3Vk66tE"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9iko0000992
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:17:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=38yFzxzLP7WsusMjcMJPjscf
+	7gCZ50TIPoH3b8yCTvI=; b=f3Vk66tEMveDPmgf5+iiE5bbqSNBNmKzhHQLsJG4
+	dBmkEHKjeJtGW7OrlNcPf5AayrEQOABgPVAgScYBUpK10FuH72/WCc5L889u9zm9
+	H4SujaIn8/6eLeM0RQyF83SJ2IjSKN+wYhysPMQmD00qtItHI1Y1mi5jUQGczcm2
+	F0/ZMNBe6LqIrvD+PM7RluaySQeOo/8RdjMg7WlzTD/cOjp3Ssj8P1raXOchwn8U
+	REUY6Y4KRsWRx3eAtDf0uR4yhpT9sky48xP7Z14Kc6T76XE2N+/V1YoWYkTAp2nm
+	zvtXan7l+7jc93Hnr4ralvO2u3gtJiaO3so8B3z5lA7HCw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsuxtr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:17:00 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8e1d900e5so399536d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:17:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747649737; x=1748254537;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LDGwTef4sEIXmEjkxTASZN7dUj6mE4M4+Vtn0mnrAsA=;
-        b=KJchbQ9urQHi3j0VgqewQE/kO7TfnG5N6kiighP0+Jh7SGCNj27rTVBDSKgpstp4ym
-         0oMRCXla+XrEoJx6x+koUq4l5HGxnS2J4PUUOncpo1S73bV1GDSiAQ9eCs5dhExGWonr
-         3Ld7GNlydqFsCn7Yj4AbyOGV0xet+PRwjN8RhqYVEx92XC35402qHKKbIpzsV5YK5Xcn
-         4/mz2G9HaQFr2GQEGhv2TPpLS4/lu2uvWySkyOyocodLEMSHVzvcl+dDIKjiC92JxN9k
-         qo9ZNKU6BUs/MCIuIAIE43YJ7h1na74wl5tz2bCOstPdf8luDsGpaKSs9XyQEvISlTlL
-         xMbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRlSZD+mwsr4zUHwi62TPPBJx6U6EzMqKssA8sp5RWGiJY+M35uojqL0a1bRS2wPw3/owMIQsnxrLk2pI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzExPMAXtdNTygBR3AdQgppISHQvRvHlHw2POOrPsAk8kvL9sSk
-	mqmGrE9A4LjmGwH9f1sUHvex2slugBxZf4nen+XxMu2Ame0I/biueOvtc+3jYZYoCdWHN0qpwiN
-	8QePi
-X-Gm-Gg: ASbGncsq7/3f+9E5fz/vDja1u42tNHwArnAGlXRZIYlFMT7a+cOC39yVy1e1xqG+p4D
-	ARS1uF/VfvlwbeRxmpVH84T2HPB4m1u5wnAuB8wGsJYc0aQvlPNIYV5zKYVldi2aemIGxZaOSmQ
-	L4tzDfrpYOVpMLdOPjF8eTIpzueGZHyFb3EbMmqpHXHm18FhelUcfbiuV0YTh65mkTlOXpPT1BM
-	yPRvp3zVN+TYD0oTV8fJ8OKzVHr6/osC5HQaKr0Q07PQnG3x/7iBCdf8vel3GE45sod0154Ma/U
-	qaxaidg7yGdVGf5KDU8PWvZR1JazO7Qc38k/oaZtUZzIu+G8oShI6CeVIQ5g5bzt9ujVV0p2Lre
-	XU+HzSl1Y32Ql4gjWJK2IPual0HwKLWg=
-X-Google-Smtp-Source: AGHT+IG6untCYVljUwKCNJpWBawGnPsAus8uJcLZGOrYcJGO297sZTir+y1sKaGYKgA9M9Pqy5tNKQ==
-X-Received: by 2002:a5d:588d:0:b0:3a3:6cb6:defa with SMTP id ffacd0b85a97d-3a36cb6e114mr3852262f8f.40.1747649737411;
-        Mon, 19 May 2025 03:15:37 -0700 (PDT)
-Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d105sm12499021f8f.11.2025.05.19.03.15.36
+        d=1e100.net; s=20230601; t=1747649820; x=1748254620;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=38yFzxzLP7WsusMjcMJPjscf7gCZ50TIPoH3b8yCTvI=;
+        b=qrKBwLbxHR07uzWNEH4mNmm7Bp06vmkR0wp/WptUyhVU0w0yFUj9QAputg6R/j1I5d
+         JPlOMmW5yBpqKt6y2P+9xRHaIpwwlfFUKmSi+FlmX8sJvoVjxLQFH4IhTizu9m6TDJMz
+         XXuEPGQRk0kJyZQzm1nyVEeVuCo+tnHCFCx9+TGmr/WlQyWeCf5vEocoJjZbgDRCLISW
+         2jcGwASAz8M4QF7+5micCzbX0Omguh8hqGFs3cweCzbm+saBjZ/m7vRRraqYydelW/b3
+         TWn0AMOIoB0P7Pot8v7mGRpS6v9XyuhjIzCGuxNe5K1Eq1W3GsEtJ2UIO3aFA7deFYyz
+         TKLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb+ayXdKLaMRSl/FqATrL+pnuqOLLCTLjia7T7QyrYu8uolbNhmX00KJhab2YYi6Y2fuGV7aMnVOCjqQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy80aJ2o2jLLZEv+tCU8QwVWhvymjc+oNthVeu+/OYsih3dO+q
+	OrXhk612LHLa348MrblAq1XEePGKYS98CZ0XLVgOWIZI+p4zK7azNCMKefEWS8/nFcjWHYoH4x2
+	ZlfD9I7aK5aNzK1pf4UgKdatZGHmHvYIlkmT+g7xe7oWpkRveKmh3BGx3lOJxdqP3+LE=
+X-Gm-Gg: ASbGncvgu2g4WwpZcb9jY+NozJXDtQH9rD7SVMyB3IKUfXk4YpA5YD0MC6BaJx+wdYV
+	vOurEKO3UUgu2koEkVXr78kONVxw9dCoeKlnKWL1BVZwnwQVvsYJz4EHJEoH6wWVogrVflymFVD
+	TaMrdpSB3TRNhBC9ALRCgc6YKrYB7EtgGnrhQs54WJZD3onI8pkrsQNfZemWrXfT0GOa7hUVPQU
+	gUe0+k4UU05fsXZOwtnCu2F11NM5QsFXoPIduS8esyrr4uKbdewd8K6ibrkbcEwRhiT+TYgD1gz
+	gPIJIBaWgxR4WTBVzdPmiQJWshHYjyqFwVZl6/Dh926tMoeJ3Bma6Ry1Y8Lh0QZQLH1DrHpmrKE
+	=
+X-Received: by 2002:ad4:4eec:0:b0:6f5:473d:e5b5 with SMTP id 6a1803df08f44-6f8b087c74emr194929946d6.12.1747649819761;
+        Mon, 19 May 2025 03:16:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+oCZWiMuQKd0V0u/hu5x0ZrwQMkcvyy3CgWC8JSOWfYmSMsneaNA31X6/lkqwY/cjCvhyXA==
+X-Received: by 2002:ad4:4eec:0:b0:6f5:473d:e5b5 with SMTP id 6a1803df08f44-6f8b087c74emr194929606d6.12.1747649819411;
+        Mon, 19 May 2025 03:16:59 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f161ecsm1787219e87.43.2025.05.19.03.16.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 03:15:36 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Mon, 19 May 2025 12:13:42 +0200
-Subject: [PATCH v5 5/5] iio: adc: ad7606: add gain calibration support
+        Mon, 19 May 2025 03:16:58 -0700 (PDT)
+Date: Mon, 19 May 2025 13:16:56 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+Cc: srinivas.kandagatla@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+        dri-devel@lists.freedesktop.org, arnd@arndb.de, stable@kernel.org
+Subject: Re: [PATCH v1 2/5] misc: fastrpc: Move all remote heap allocations
+ to a new list
+Message-ID: <sgfcaujjpbvirwx7cwebgj46uwlcvgr4cgcnav5fmwmjsf4uku@iytanuqqiwxo>
+References: <20250513042825.2147985-1-ekansh.gupta@oss.qualcomm.com>
+ <20250513042825.2147985-3-ekansh.gupta@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250519-wip-bl-ad7606-calibration-v5-5-4054fc7c9f3d@baylibre.com>
-References: <20250519-wip-bl-ad7606-calibration-v5-0-4054fc7c9f3d@baylibre.com>
-In-Reply-To: <20250519-wip-bl-ad7606-calibration-v5-0-4054fc7c9f3d@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5809;
- i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=U7IdkRU8bIy3slfzEZWptpFJZiO7glTgD+eqaNh8CLE=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYsjQZimV4kq7kBW+7Nvj7LyOWw7eE+89+Nwq8213Tk3YB
- ckX95w+dZSyMIhxMciKKbLUJUaYhN4OlVJewDgbZg4rE8gQBi5OAZjISVmG/6n5d+8+3rzpTcci
- De77m/jqFrxjiT0+6alTxqK9Owp9p+ow/NOMdm25EC83t8Oh5ZJpwO+wQ/s2yeavcvU4uen+tKu
- 1K9kB
-X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
- fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513042825.2147985-3-ekansh.gupta@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: g8E0kJWKVvDSY7DRAsbE0T6RV1-Q3o7b
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA5NyBTYWx0ZWRfX8LSOSngzZVlR
+ p594bOOQEsbGoQ6/N231/mGt6w/F0a9fWDwzivO58HVKswR3YMwG0Ex4R61Vqdn0ocypGYo6a7u
+ HpsCGa4TKOS7cboZ+8F4iCus4C9PpsXScqql4Ihhp+s3jOK+tJYs4mtMLkeo3GFpGKmfSSBCXyn
+ uOMJIcIEIPVufwfHBSiNi6t4dbCZrEzlcBxIEMmNxrd+APXgCX8gAB+9ASGbNKs5dzYfkvJzgK9
+ M5vvFSa9NxAmLSi/S8JQcyU41R/Nmfs4Qpa8avZ1+Je3P9ofGKEdA0P2eWVnqiIEgLPpLg5CTYG
+ d14zhSrAs/RAmMdK92Cu32+OmD8HC5hkDVTOi9mJEFlC5W5RDatsvOW3JoGNY1EtdrFQqIcgj3c
+ qLCxe4QlXXa1fvMNOkOp+tfP6ZB38gvj/giO7F0MCn1ZB+d4Ig0CwBmDah3BKCCDd4JilR16
+X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682b051c cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=S1xa-9Qv24Ug1fQ2RIkA:9
+ a=CjuIK1q_8ugA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-GUID: g8E0kJWKVvDSY7DRAsbE0T6RV1-Q3o7b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190097
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+On Tue, May 13, 2025 at 09:58:22AM +0530, Ekansh Gupta wrote:
+> Remote heap allocations are not organized in a maintainable manner,
+> leading to potential issues with memory management. As the remote
 
-Add gain calibration support, using resistor values set on devicetree,
-values to be set accordingly with ADC external RFilter, as explained in
-the ad7606c-16 datasheet, rev0, page 37.
+Which issues? I think I have been asking this question previously.
+Please expand the commit message here.
 
-Usage example in the fdt yaml documentation.
+> heap allocations are maintained in fl mmaps list, the allocations
+> will go away if the audio daemon process is killed but there are
 
-Tested-by: David Lechner <dlechner@baylibre.com>
-Reviewed-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
- drivers/iio/adc/ad7606.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/ad7606.h |  3 +++
- 2 files changed, 64 insertions(+)
+What is audio daemon process?
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index bb0c89fc618874f4a5948d8e537716f87127bc92..19802bb7ec6624203b50589b6b76085c9f2f9628 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -33,6 +33,10 @@
- 
- #include "ad7606.h"
- 
-+#define AD7606_CALIB_GAIN_MIN	0
-+#define AD7606_CALIB_GAIN_STEP	1024
-+#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
-+
- /*
-  * Scales are computed as 5000/32768 and 10000/32768 respectively,
-  * so that when applied to the raw values they provide mV values.
-@@ -125,6 +129,7 @@ static int ad7609_chan_scale_setup(struct iio_dev *indio_dev,
- 				   struct iio_chan_spec *chan);
- static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
- static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev);
- 
- const struct ad7606_chip_info ad7605_4_info = {
- 	.max_samplerate = 300 * KILO,
-@@ -180,6 +185,7 @@ const struct ad7606_chip_info ad7606b_info = {
- 	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606b_calib_phase_avail,
- };
-@@ -195,6 +201,7 @@ const struct ad7606_chip_info ad7606c_16_info = {
- 	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -246,6 +253,7 @@ const struct ad7606_chip_info ad7606c_18_info = {
- 	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -357,6 +365,52 @@ static int ad7606_get_chan_config(struct iio_dev *indio_dev, int ch,
- 	return 0;
- }
- 
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	unsigned int num_channels = st->chip_info->num_adc_channels;
-+	struct device *dev = st->dev;
-+	int ret;
-+
-+	/*
-+	 * This function is called once, and parses all the channel nodes,
-+	 * so continuing on next channel node on errors, informing of them.
-+	 */
-+	device_for_each_child_node_scoped(dev, child) {
-+		u32 reg, r_gain;
-+
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
-+		if (ret)
-+			continue;
-+
-+		/* Chan reg is a 1-based index. */
-+		if (reg < 1 || reg > num_channels) {
-+			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
-+			continue;
-+		}
-+
-+		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-+					       &r_gain);
-+		if (ret)
-+			/* Keep the default register value. */
-+			continue;
-+
-+		if (r_gain > AD7606_CALIB_GAIN_MAX) {
-+			dev_warn(dev, "wrong gain calibration value");
-+			continue;
-+		}
-+
-+		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-+			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
-+		if (ret) {
-+			dev_warn(dev, "error writing r_gain");
-+			continue;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
- 					  struct iio_chan_spec *chan)
- {
-@@ -1448,6 +1502,13 @@ static int ad7606_probe_channels(struct iio_dev *indio_dev)
- 	if (slow_bus)
- 		channels[i] = (struct iio_chan_spec)IIO_CHAN_SOFT_TIMESTAMP(i);
- 
-+	/* Setting up gain calibration for all channels. */
-+	if (st->sw_mode_en && st->chip_info->calib_offset_avail) {
-+		ret = st->chip_info->calib_gain_setup_cb(indio_dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	indio_dev->channels = channels;
- 
- 	return 0;
-diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-index f613583a7fa4095115b0b28e3f8e51cd32b93524..6313eea2bd0ccf97222a50dc26d8ec65042d0db7 100644
---- a/drivers/iio/adc/ad7606.h
-+++ b/drivers/iio/adc/ad7606.h
-@@ -50,6 +50,7 @@ struct ad7606_state;
- typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
- 				       struct iio_chan_spec *chan);
- typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-+typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev);
- 
- /**
-  * struct ad7606_chip_info - chip specific information
-@@ -66,6 +67,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-  * @init_delay_ms:	required delay in milliseconds for initialization
-  *			after a restart
-  * @offload_storagebits: storage bits used by the offload hw implementation
-+ * @calib_gain_setup_cb: callback to setup of gain calibration
-  * @calib_offset_avail: pointer to offset calibration range/limits array
-  * @calib_phase_avail:  pointer to phase calibration range/limits array
-  */
-@@ -81,6 +83,7 @@ struct ad7606_chip_info {
- 	bool				os_req_reset;
- 	unsigned long			init_delay_ms;
- 	u8				offload_storagebits;
-+	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
- 	const int			*calib_offset_avail;
- 	const int			(*calib_phase_avail)[2];
- };
+> chances that audio PD might still be using the memory. Move all
+> remote heap allocations to a dedicated list where the entries are
+> cleaned only for user requests and subsystem shutdown.
+> 
+> Fixes: 0871561055e66 ("misc: fastrpc: Add support for audiopd")
+> Cc: stable@kernel.org
+> Signed-off-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+> ---
+>  drivers/misc/fastrpc.c | 93 ++++++++++++++++++++++++++++++++----------
+>  1 file changed, 72 insertions(+), 21 deletions(-)
+> 
 
 -- 
-2.49.0
-
+With best wishes
+Dmitry
