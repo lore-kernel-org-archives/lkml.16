@@ -1,478 +1,107 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44262144CF;
-	Mon, 19 May 2025 23:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747695606; cv=fail; b=mSWP7pnx04wK6mRB09ySPTIpvNc8akPIQGo/2qlsPIfiaxZJ42uT1Kfgo7kK/DAjXPSizwAwDd7tBe2W4eNcSoDtjPklAsDlMLWz5DoKUxlEn6c3ZBZP/+1L3V3MOH1ZQrmdG2TUkJqdjIrGCDriEzeF4ABUZx0bcEBc8sT+kGg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747695606; c=relaxed/simple;
-	bh=OSTyQ2bTj7v/lw4MeqYVcKP7e+iQ/vdyw3Wvx9xf6YQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sTS37Q8qLiD9U1aTR2FTXvc2sJyYiC3dAGdOk2TjEQIskUgr/IDcF8aDwfTbwLJ7fkk8c4KOo+ClgBNURVxQjNDKGxZlHFwBJoyj8xjwPhmo8pVdkWsryUTJ3+f2JCO2eT2wkfQdpzfICsniUx9kD7M/hee7+mhsdfzrcdGHf60=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gcRFQV87; arc=fail smtp.client-ip=40.107.93.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1451021FF46
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747695613; cv=none; b=TlMLZx3EWYFdPRT0sI5C/O0gM6wSGFoOAx7wQ/9vOXk0aiaPJbGhl6rTF/LJKJ1aYewxhXiaYWFhpLYd3UXpcdH1DOmQ9Gy37TleEIhQvA1Mk+Evrnx7C3lKWJkccuO9YepD0ht4g0VG94Nqb4DFXxu1L4rF/ZFmr6BZmljQ0mg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747695613; c=relaxed/simple;
+	bh=Af6s7bS6lpBpNpbJl9hSOqfkStT7xsxkOR1pt3Xodlw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=Vzl9kRviGdEJPifuHKKwYWCxh1jGbFYfYvr367MfO9SbRIDApj2ClW5Jp2jnrwlhwOTN2ipj8szTJoR0am5bqJRfYf1tWqLdJMAP6V0ESmiHuEjfmfmZjzqFtNpBa7dNCuRolW74ZhPTPoBi+SLjb1bMI+6iWS/O/wS/9evdenU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deltaq.org; spf=pass smtp.mailfrom=deltaq.org; dkim=pass (1024-bit key) header.d=deltaq.org header.i=@deltaq.org header.b=DctZN+Ac; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deltaq.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltaq.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gcRFQV87"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ib0/s8n1CLZwVwTXaQcfBHU6t8DSBEmiC+9xsQXHGJ23EWDVjxSm/SX29ratlnmKh9fohzzz+amqgLNijsOSBKu6idlr9tFHZPtVAx322HhNEiwvb1s/MPOvBKurn1xyvr2YeNdjfzjx62pLedv/tTTSF3ETR9tTeADfK3mK8CDHMHhViRf/WSJD8ksNaFLlpFati9S6pWCutBt62cL3oKJnMkZ39TiCjhGCtq4kbboNSHmAzdx6oLBvh4S+wIRSAICfBxAt224dUbg7NpPI8IoecAOantgfjSePK0KdyJQf0ah9YS+edvcSqBogQkRMx+6XIL07ZTNR06VdglS90Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fwuHCo6wfWwXQUaETwyhZviG+hpnJuNOl0PxeudkUxs=;
- b=V55++A6FtvuoRTu3aIFf0Uv3yxwXQDtxSQAFX3rBzcmkMPCwnaDUrwravJ1GEbd+NXLAUkbOCXJbQi3AzRFdWZNi12oWLgr//wFn6qtOIZD+1j/K2OfQZkT+uEH1vIyoftqBxbAfrhDanUdQ3Ona5LLqREyNRuJUKoHawaRIL2SVETSkwECGRfss8cJgER6uX8eA2vWj4Jf/1mJCKaZ73AejpnYOItmuuDWrPeNplEOxhwNP0mtBx3/EyO/Bbak9TSTKiis7tpE6Qi/vC+jYeNQM8SEvzjr701e5dLj19Tt7N5FsusQLw3oKjiP6SrOblOq7y/KFfRnRo4j4NRAwOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fwuHCo6wfWwXQUaETwyhZviG+hpnJuNOl0PxeudkUxs=;
- b=gcRFQV87JK6OsSvb5YWqdN4+rQ/aHOJAKI+IsYBeMP2HtuGA4/ZJdI7wUdzWkuzrj96bqY0Rxfz2mtQgY6KeOfGCA8/5Wcu1geggXRIoJ7WsG0eVYI3wYwMxLZq/UhFsC53AYmBUzTYT00+8gKJrPA+h8HvEv/SjRoS6abi0T5QCIbHCyD0cq4cFmqZ3981er+gIOXpdCVs9774oKk8ohJv7aNCDEIl9MxBobt99n4/MMqtX5aR/QmGLcfWTP5l9a0OnuWtCdm+azBTOYfSGYSVyqzuy24yVrsLcTNRvUvFKL/G9ldz85cHEHwPpDVwHNMYTtIEIfZ/z6Ao5xVDYnA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by SA3PR12MB8024.namprd12.prod.outlook.com (2603:10b6:806:312::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Mon, 19 May
- 2025 22:59:58 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 22:59:58 +0000
-Message-ID: <d79dd1dd-8660-4e67-8d44-a49b1a4a3add@nvidia.com>
-Date: Mon, 19 May 2025 18:59:55 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 16/19] nova-core: Add support for VBIOS ucode
- extraction for boot
-To: Danilo Krummrich <dakr@kernel.org>,
- Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Shirish Baskaran <sbaskaran@nvidia.com>
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com> <aCTDk9UKRWHWYexR@pollux>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <aCTDk9UKRWHWYexR@pollux>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN0PR05CA0017.namprd05.prod.outlook.com
- (2603:10b6:208:52c::21) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (1024-bit key) header.d=deltaq.org header.i=@deltaq.org header.b="DctZN+Ac"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3da73e9cf17so43898005ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=deltaq.org; s=deltaq; t=1747695608; x=1748300408; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5aJtRM3UP36+jGGBeMpGiYFYT7pElbdskUQEOB0FjgQ=;
+        b=DctZN+AcZU5qbXC3CQwISaIsoC9BInhBWp8lZWT1WYIrKLjNpHLmmZCXSKTSiI4nTv
+         lzC4EW6n5zcwMMJUNlaFe5otsjWY7KRQe6KJSxmfMVL4O8xm+KhByjXOIzc9u1RL1N4j
+         d2iZvbWYeDDANqK9sijFOOxhraAqf9FWOsKzo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747695608; x=1748300408;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5aJtRM3UP36+jGGBeMpGiYFYT7pElbdskUQEOB0FjgQ=;
+        b=GyRSS4IW5fNis4DhNrIYJj25pz1b1EvRUg3lIVmE4XiH6iLI7P57DSKviFB4qbw/JR
+         UJimUNKRgC/gjzMqhhGyx05a8NPaTEvGJ4u+ysJ9MDm61aSInZBB7F6RufrypnuZBWLq
+         wW+QcPHpik67WvN6jhiU6zoCRhwpeRDfo8984M6/hco9lWQNLAHbvp8JWIaXOFFx8BHV
+         xoetsNfeYgfLHEqipP8H+3xIm/Noj4BlaRIRIP+Q9YgFA0nUKIQxQatH3GGqUo0fVYR6
+         KMJ6FM6Z5zbRooQloda4bMi+Tmz6HQGdALx2zhoGIgXhVge1d6iomCO84Nw5vVssNISh
+         MxJg==
+X-Gm-Message-State: AOJu0YwKTM/epyUtmiyV1GsAfPP96rlhFrwo9WhmNrpuMbfrd0fWbewg
+	TVSDn8LYC4/PpAnuo/6i/uTPZsJNxOvaBZRpG9BAyxCL9bkhKJoxct4p+i1ZVRpi5la7eL5A/uc
+	MfGYCsk0=
+X-Gm-Gg: ASbGncvJHyIui8Oi6mauEFoYDeGG4TDmRAybXdYqr6Vy4N6afOfcwkWdHkg9Csvoaj4
+	Z8JqP1w+7be36mgQ8rHOA+zPQJU1QGVSDiKJXOx7ByM6X+a5Ag8ZcHXaGp51iVFzF7oSzRWDGO4
+	eLDx+R9Z1r0rxNfotat6kTuA/P4vNMmTWEKFocTEErpZ/bZJZiKd1rUbxT8PJDnWZ9TOHzxql/w
+	ZTAcFAVOSKSOqHr7lDYABOtPCMI0rY6603Au6Ikktab2HNI1cvTkzorEqKvx5g/C176vfnw099+
+	wY05HTDwrWEkoK5Kqdd/gW5ebrBsvMgrYF7pdRjLW5EPHGwztoBj
+X-Google-Smtp-Source: AGHT+IGA54DBoUqPtnnXdKH8acpqbck3N38be0M73BkHAamQsbgRPZJLNs3oxrBiu6lhcW4zJwYjTA==
+X-Received: by 2002:a05:6e02:3784:b0:3d9:6485:39f0 with SMTP id e9e14a558f8ab-3db842bd205mr144487965ab.9.1747695608337;
+        Mon, 19 May 2025 16:00:08 -0700 (PDT)
+Received: from [10.128.1.182] ([104.246.135.111])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc48c4c1sm1941754173.95.2025.05.19.16.00.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 16:00:07 -0700 (PDT)
+Message-ID: <6a40fcbf-7e73-4557-a79c-fea764d1ff3e@deltaq.org>
+Date: Mon, 19 May 2025 18:00:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SA3PR12MB8024:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4fb911b4-1e30-4b6b-747e-08dd9728e0dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aFl0R04wVTVEVFMwZFJ2cHRKL0V1N3VnZzMvSmtVL3REbEFQdk5Oa3hCRW54?=
- =?utf-8?B?N21FL1VZWW1FZUg4amgwajdWdzd1QUhZVjVwYm5Ud2g1ZWl1cWljejJuQ2lI?=
- =?utf-8?B?M1dkR1ZYNndDWi9ua08xQmJXNWxIMjZSNkZqNHNTNHFwNnh5M2tCeXpCcUFD?=
- =?utf-8?B?aWtSWllNV0gxWVM4eTNORGdEaGxkZTFjQXNGdEtPd1cwQTE1VUdRVXVPYnpX?=
- =?utf-8?B?U2pCeEdXa0s3VndlaCszZ2gzZURONUpXbU5LdTVqdFBCeTdkTlBQOTJuZEF1?=
- =?utf-8?B?a2FSaHNVNjV0bmREeGFXUG9xNUxZYTRTTVBGU0xhSDRwM0piL0VDMkZFSWxO?=
- =?utf-8?B?bjc4ejBIL0t6eEhjaHlvYXpnZ1RCdFIxbGFzUnFCZ3V2aFA4TG1CWlF5VDVp?=
- =?utf-8?B?OTJ1YjJxWEUyNWhEL01ZWXM5czJqVzl3bngxMWJZUHFGcXRTbklKWmp0VDFG?=
- =?utf-8?B?SEtxSVJ1SnB2ZitDLzdLOEJIV085NjhnbHZQa2tWMWZZWnJleUNoY2QyQzR1?=
- =?utf-8?B?VmVZck9sVnorNXBycWR0T1R0d2p1TGV1MXZ3QXFLWVRHbzNKOEF2Q1dNN2VC?=
- =?utf-8?B?dzVsOFRXWEdtV0NFdndUUmt1ZitSU3VQWVlWS3JLWGpTMXM3WURrRnFmMVY0?=
- =?utf-8?B?S0R6Qyt2bXU2dTFxNUxLTTQwY1IrbHdiRzVORUp1Y1lQbGF5ZnhuM2t3amFK?=
- =?utf-8?B?YUhERTY3MmtxRHp2T0ova2FoNFNHWElUVmJpY0gwNlZPemNzaXNWd3NuMFJF?=
- =?utf-8?B?SHB6UGpQRk5halE0KzdPQjk5MWM1YlRKYUN0eUphdnpyamtidm80WVUzUVdx?=
- =?utf-8?B?aDJ0TW1lMW0vZUM3aDExdnF5NFl4S0I5ZHlUckUxWEMyNEpNV1U5YmMzVVh5?=
- =?utf-8?B?c3Q2RzJFNUExM0hvbmo4NXdUZ1doa3hFUFhnRmxxWVZxQjhyazlGNmc0by83?=
- =?utf-8?B?ZWJ3dm5neVM4cENBSnFqZW11ZkViangvd2lWdXd1Tlh6VE1RWFJnM1V5ZVd3?=
- =?utf-8?B?T3k2bE80UnV6ZFkrK05heDhLNDU3VjZIR2x1K3Z4RzE4QzFkYm82d3RRVFAz?=
- =?utf-8?B?ejdTSnJrNzRuMVYrRmkyT1dKS2lmTDVZQ2JRaDJ1RktoMy9GZTBYT3h4dGh4?=
- =?utf-8?B?UUd4dkdQQzd6d2pJRElTK1JadzVySTVTUzRCY3BoYUc3TUU3cXdWU2tXclJF?=
- =?utf-8?B?RVkwTVlZZXZFdUJSemtWcXVCUU0yL1dVTXJBa0dDWU5XOTFicXRxdGJjM3dq?=
- =?utf-8?B?UGplTTNVNGNyVGw5VlFBQzIzc0hXMGZtRlgxQTN1V1lLNUlwWFhaSVk4S0M3?=
- =?utf-8?B?OFloSHNNcjZTZnpxNXhQQkRGc3hRSVNJL1J1TXhQYnp6YzBUZ2hIRmNTcWg5?=
- =?utf-8?B?c2dUeGI2bWhEeGhwMXU4cWhwR25DWmYzeE9BOUtkWk1uUkQ4RlJOMnhXQm1m?=
- =?utf-8?B?YVgwVy9YSmJ6Rkc3OWFlOXRPSFdNUVhRdTVIdUIyOVkvdVNRM2M2VGRFdUlr?=
- =?utf-8?B?OC9NQy9IbE1idWx6dWNvUkREUDhmbEl3Y1BMbnRUOEpuREhZZCtETEFrcVc1?=
- =?utf-8?B?N2Z3TWFOVzI5RXByZWVla21KU3EvVEpDaFRMOGk5VWt0T2hvUHUzRFAxTGJX?=
- =?utf-8?B?ZEVITGVmZkR0M29GVXR1RUtFdGRCTjk0STR3VGY5K3VpOVZrZEI5QWhUaC95?=
- =?utf-8?B?aUpPclFXNkZiWVdWWW5uZTY5WVZ0MVpWZVcwdFMvVCtIREUrL05wa2YycnJo?=
- =?utf-8?B?VDJ6UEEvaEFzYThCUjkvaVh3cU5ydTlyek9mU1pOWXZndi9mQ0hyUnNEdFRn?=
- =?utf-8?B?MUhicGt5UUsya3gzZmdOK2NzcGJ0amxMT1lqOWpFcm5WdlQvK0RNc1k3QWlq?=
- =?utf-8?B?TWxnTExJaU5nRkdVN3Z6SGdKZnlUOHQ1d3krVy9ZbUtEYlJwVVA2Wnd6dTVn?=
- =?utf-8?Q?ajeaY61etI8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UDBmZzNSYVByZ3NxTjB5QVYzd1BoZDFWc2sydkN2eXJCZUNoYnllUjd0SUtC?=
- =?utf-8?B?ZHUwQ1Rmc015b3gybmV3bUFlUXowSCtVc0R6Z0k3OStjOTR5U3F1M2ovZy9N?=
- =?utf-8?B?SmxiOXZpTnRNdTNuME9KVVJNbGx0VFk5Q1ltaXhFMU1pR2J4bGVmZDBsclRK?=
- =?utf-8?B?NlBoT0hUTWFJenF0dGhQc2gySWNhN0duU0ZDYVFHN3BHZTIzY2pVdkJhbXV2?=
- =?utf-8?B?V0RibzBFbHA0VS9oQ2ZBUGxsZEZXTnpFUXpHd1hzUW1sZ1BpcTgzOThqTGIw?=
- =?utf-8?B?V3RYU1A5NkFHdGtFTWFQVXdqRVY0WHN5MkJ1VFFuQ2JoMjFmV2wvWVZUdmht?=
- =?utf-8?B?dUcvRks4TklmOG9PRFVDSDhObmpsTHB6MGRIUWtPbjBsVUI5dVZkM2lyRHhu?=
- =?utf-8?B?N1lWN05yRHFwLytPSjBOZy9XOWhocEErK005WjROTStDMEZnMC81OEhIUzFt?=
- =?utf-8?B?ckZRUG50dVR1bkNsMU9qUWo2K0oxbFF0RUdBUzF0NFVoOE0xZWQyaFdmRTBO?=
- =?utf-8?B?N21jUE9la2RBakU4V2lXbzUvV1RFdGQvYnpoNm5BaWx2ZVI1c1pkMjNta09I?=
- =?utf-8?B?bEJsMkZVVGpaOE1uZWpjditUcUNGN1NXc1dzNm9xenFMS1NUQ3lJdlRCclhM?=
- =?utf-8?B?dUhnMk5QYUVWM1hSNzhxMUtWRnNTRjRDaUx4UUdUREVLYUVGTWxkTmo1TUdo?=
- =?utf-8?B?ek9TZjA0TU82UWNnbUtDL0JwdzE5R0twYStqM21QMzM0eWVCUk45TnVjRGJQ?=
- =?utf-8?B?UFF1NVBhZUxzRzQwK2FxVkJ2a0hTQXQxZ1FxcDNia09UdW13bEZwYnRsdy9S?=
- =?utf-8?B?bG92N25ETkwyRkxJdm9oL00reFFzTktxS1ZKSXBlUFI1WkRIOVhQMCt3ajEx?=
- =?utf-8?B?cG45Q0ZJL3AwdHBmd0E3QmZQbmk3MDhndlRodDRPL2pOZXloY2tLenFORzUz?=
- =?utf-8?B?QmpTWUlMVVZmVkVONml6bk9PSS9TOG1IbGhZZXdsVlpkTVRTQTlLWVZpK1Ew?=
- =?utf-8?B?RnkvUUJyK21OcTNrVzBLSnhBVGkycGc3S215ODIwa2dIa2VTWnlkZWtmSHBH?=
- =?utf-8?B?YzJWYmo0Ry9udE13REs0UnFTMHhLSlM3QVNRNnpnMGdsSGhXNXhxdmtHQTcx?=
- =?utf-8?B?WkdTMS83TndydnZ2ekNyRHA1cUVTWXpITmhuWUJpMUNsVmVTMzhLdmdncGhB?=
- =?utf-8?B?VFYxc2QzZXNsbUJzRVNmZS9RSXplUzBlZDNXZFY5TE41eFoyQlhRNk5uRXJE?=
- =?utf-8?B?UE1nUUJRY0hWV3YxN1lGYUJ3d0JrUXNacm1TS3BYd3dNdFBwK1RVbHZjOXQy?=
- =?utf-8?B?enM2RW9QZHZVQUtDTmRacDIzdFBkVGY2N3U2ZkRTY2tkMVhaREtHVitVZkFr?=
- =?utf-8?B?cDF2RUVpS0pGQ2E5SHZzM2JHRGhCZVBYb1k3bFZrbVp3alZaYnRtdkNTMlZD?=
- =?utf-8?B?TGRMT2U0VGxnNnZqcEptZzRYSHQ0UThiNU5nYTZtWnNLZmdaK1FoSG1qcFB3?=
- =?utf-8?B?cHZJM3B6YU90QXZXVmVZQXg0MmtzVEVaY2xucnJDRURqaUphbXZXTlpqdGxY?=
- =?utf-8?B?UkI0aHVCbjRjWEJZQUNrUVdzdmlJdWhOc21WWlUwbWk3YnZWNGpvK1k3ZjZL?=
- =?utf-8?B?NTBCSVpKVmFlVHhVQmcwNlJGZWhMT1gzYi82d3YyL3hOYTJLdXhTcHFhcGZG?=
- =?utf-8?B?Zkp1QmYxZGtVYk1NZkpIeXIwcVpkQkpSK1BnNTBKY2ZsMkR3ZHUyZnExd2dw?=
- =?utf-8?B?ZTJ1YWU3SXBnV28xM2pKTTd2MUhKc1U1OFFldXhsd21xY3pSM3FwLy9lQ1hM?=
- =?utf-8?B?V1BaN0VsZXpLb3ZyeVdPQVpDeDRlVW1ORjZsaFBSaEpMd2dQR2UyTDBCNm9u?=
- =?utf-8?B?MkE3QkF0eCtmbmhOODhDTERoZUw5a0l3bHM0eVpnSTgzZ3k1Ris2THFpbGlL?=
- =?utf-8?B?M3I2YkxaVVJHTzNTSytmR1NCNkRwNGprMERPMlc1aWg4dWlUUlpHWVQ3RXJ5?=
- =?utf-8?B?YzNJSHRZaFVwQ0N0c1NrT2NEU25waU1NVXNxNnJLWGc0R2lsdjluZVJkVElC?=
- =?utf-8?B?di9oUDl2TW5aSDJsM0lScFNBdSs2ZkwzcnptbDBQS2pYWjMvUi9GcUVNbm9U?=
- =?utf-8?Q?dpmHiEunyCJikY4ZsJ6924zjN?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fb911b4-1e30-4b6b-747e-08dd9728e0dc
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 22:59:58.5094
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tuDoM6F83dYeRsraIRr/qAbfSPar0Jo5LlPpuRH94tjHcw0bh3HV0RjdOCuIGfB3bisEIqa92/JjrpJadYfUFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8024
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Jonathan Gilbert <logic@deltaq.org>
+Subject: figuring out which monitors and which audio devices correspond
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Danilo,
+Hello :-)
 
-On 5/14/2025 12:23 PM, Danilo Krummrich wrote:
-> On Wed, May 07, 2025 at 10:52:43PM +0900, Alexandre Courbot wrote:
->> +/// PCI Data Structure as defined in PCI Firmware Specification
->> +#[derive(Debug, Clone)]
->> +#[repr(C)]
->> +struct PcirStruct {
->> +    /// PCI Data Structure signature ("PCIR" or "NPDS")
->> +    pub signature: [u8; 4],
->> +    /// PCI Vendor ID (e.g., 0x10DE for NVIDIA)
->> +    pub vendor_id: u16,
->> +    /// PCI Device ID
->> +    pub device_id: u16,
->> +    /// Device List Pointer
->> +    pub device_list_ptr: u16,
->> +    /// PCI Data Structure Length
->> +    pub pci_data_struct_len: u16,
->> +    /// PCI Data Structure Revision
->> +    pub pci_data_struct_rev: u8,
->> +    /// Class code (3 bytes, 0x03 for display controller)
->> +    pub class_code: [u8; 3],
->> +    /// Size of this image in 512-byte blocks
->> +    pub image_len: u16,
->> +    /// Revision Level of the Vendor's ROM
->> +    pub vendor_rom_rev: u16,
->> +    /// ROM image type (0x00 = PC-AT compatible, 0x03 = EFI, 0x70 = NBSI)
->> +    pub code_type: u8,
->> +    /// Last image indicator (0x00 = Not last image, 0x80 = Last image)
->> +    pub last_image: u8,
->> +    /// Maximum Run-time Image Length (units of 512 bytes)
->> +    pub max_runtime_image_len: u16,
->> +}
-> 
-> Here and in a couple more cases below, please don't use pub for fields of
-> private structures.
+When an HDMI cable is connected from my computer to a device that 
+handles both video and audio, the system automatically sets up multiple 
+logical devices for it. One of them represents the monitor for the 
+purposes of display. I can list monitors with a tool like xrandr. The 
+other one is an audio sink (correct term?) for delivering sound down 
+that HDMI cable. These I can list with e.g. "aplay -l". Is there any way 
+to figure out which ones correspond?
 
-Fixed thanks.
+* Is there a way to enumerate these and, from the enumeration, procure 
+pairs of monitor identifiers and audio device identifiers?
 
->> +
->> +impl PcirStruct {
->> +    fn new(pdev: &pci::Device, data: &[u8]) -> Result<Self> {
->> +        if data.len() < core::mem::size_of::<PcirStruct>() {
->> +            dev_err!(pdev.as_ref(), "Not enough data for PcirStruct\n");
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        let mut signature = [0u8; 4];
->> +        signature.copy_from_slice(&data[0..4]);
->> +
->> +        // Signature should be "PCIR" (0x52494350) or "NPDS" (0x5344504e)
->> +        if &signature != b"PCIR" && &signature != b"NPDS" {
->> +            dev_err!(
->> +                pdev.as_ref(),
->> +                "Invalid signature for PcirStruct: {:?}\n",
->> +                signature
->> +            );
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        let mut class_code = [0u8; 3];
->> +        class_code.copy_from_slice(&data[13..16]);
->> +
->> +        Ok(PcirStruct {
->> +            signature,
->> +            vendor_id: u16::from_le_bytes([data[4], data[5]]),
->> +            device_id: u16::from_le_bytes([data[6], data[7]]),
->> +            device_list_ptr: u16::from_le_bytes([data[8], data[9]]),
->> +            pci_data_struct_len: u16::from_le_bytes([data[10], data[11]]),
->> +            pci_data_struct_rev: data[12],
->> +            class_code,
->> +            image_len: u16::from_le_bytes([data[16], data[17]]),
->> +            vendor_rom_rev: u16::from_le_bytes([data[18], data[19]]),
->> +            code_type: data[20],
->> +            last_image: data[21],
->> +            max_runtime_image_len: u16::from_le_bytes([data[22], data[23]]),
->> +        })
-> 
-> Quite some of those fields seem unused, do we still want to have them? Same for
-> other structures below.
+* Is there a way to find a corresponding audio device identifier 
+starting with a monitor identifier? Vice versa?
 
-I think we discussed this in the previous posting as well. As such, I am not
-keen on removing unused fields of structures part of 'standard' specifications
-since I only see drawbacks of doing so:
-1. Obfuscation
-2. Replacement of the fields with some kind of padding so that size_of() works.
-3. Goes in the opposite direction of documentation and transparency in how the
-structures work.
-4. Partially filling structures.
+* What is the authoritative way to refer to these devices? "xrandr 
+--listactivemonitors" describes monitors with strings like "eDP" and 
+"DisplayPort-8" on my system, and assigns them numbers. Meanwhile, 
+"aplay -l" seems to identify sound sinks with the combination of a card 
+number and a device number. From what I've read, the most direct way to 
+refer to a device is a string like "hw:0,3". These don't seem to have 
+anything in common whatsoever. Is there some centralized namespace where 
+both of these things coexist? /dev? /proc? If so, is there a way to go 
+between the authoritative name and device names/numbers that are used at 
+the top end? I ask in case this would provide some way to figure out 
+that the two logical devices of different types are actually part of the 
+same physical device.
 
+* Is the Device Tree relevant here?
 
->> +
->> +    /// Check if this is the last image in the ROM
->> +    fn is_last(&self) -> bool {
->> +        self.last_image & LAST_IMAGE_BIT_MASK != 0
->> +    }
->> +
->> +    /// Calculate image size in bytes
->> +    fn image_size_bytes(&self) -> Result<usize> {
->> +        if self.image_len > 0 {
->> +            // Image size is in 512-byte blocks
->> +            Ok(self.image_len as usize * 512)
->> +        } else {
->> +            Err(EINVAL)
->> +        }
->> +    }
->> +}
->> +
->> +/// BIOS Information Table (BIT) Header
->> +/// This is the head of the BIT table, that is used to locate the Falcon data.
->> +/// The BIT table (with its header) is in the PciAtBiosImage and the falcon data
->> +/// it is pointing to is in the FwSecBiosImage.
->> +#[derive(Debug, Clone, Copy)]
->> +#[expect(dead_code)]
->> +struct BitHeader {
->> +    /// 0h: BIT Header Identifier (BMP=0x7FFF/BIT=0xB8FF)
->> +    pub id: u16,
->> +    /// 2h: BIT Header Signature ("BIT\0")
->> +    pub signature: [u8; 4],
->> +    /// 6h: Binary Coded Decimal Version, ex: 0x0100 is 1.00.
->> +    pub bcd_version: u16,
->> +    /// 8h: Size of BIT Header (in bytes)
->> +    pub header_size: u8,
->> +    /// 9h: Size of BIT Tokens (in bytes)
->> +    pub token_size: u8,
->> +    /// 10h: Number of token entries that follow
->> +    pub token_entries: u8,
->> +    /// 11h: BIT Header Checksum
->> +    pub checksum: u8,
->> +}
->> +
->> +impl BitHeader {
->> +    fn new(data: &[u8]) -> Result<Self> {
->> +        if data.len() < 12 {
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        let mut signature = [0u8; 4];
->> +        signature.copy_from_slice(&data[2..6]);
->> +
->> +        // Check header ID and signature
->> +        let id = u16::from_le_bytes([data[0], data[1]]);
->> +        if id != 0xB8FF || &signature != b"BIT\0" {
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        Ok(BitHeader {
->> +            id,
->> +            signature,
->> +            bcd_version: u16::from_le_bytes([data[6], data[7]]),
->> +            header_size: data[8],
->> +            token_size: data[9],
->> +            token_entries: data[10],
->> +            checksum: data[11],
->> +        })
->> +    }
->> +}
->> +
->> +/// BIT Token Entry: Records in the BIT table followed by the BIT header
->> +#[derive(Debug, Clone, Copy)]
->> +#[expect(dead_code)]
->> +struct BitToken {
->> +    /// 00h: Token identifier
->> +    pub id: u8,
->> +    /// 01h: Version of the token data
->> +    pub data_version: u8,
->> +    /// 02h: Size of token data in bytes
->> +    pub data_size: u16,
->> +    /// 04h: Offset to the token data
->> +    pub data_offset: u16,
->> +}
->> +
->> +// Define the token ID for the Falcon data
->> +pub(in crate::vbios) const BIT_TOKEN_ID_FALCON_DATA: u8 = 0x70;
-> 
-> This can just be private.
+Thanks,
 
-Yep, fixed.
-
->> +
->> +impl BitToken {
->> +    /// Find a BIT token entry by BIT ID in a PciAtBiosImage
->> +    pub(in crate::vbios) fn from_id(image: &PciAtBiosImage, token_id: u8) -> Result<Self> {
-> 
-> Same here.
-
-Fixed.
-
-> <snip>
-> 
->> +struct PciAtBiosImage {
->> +    base: BiosImageBase,
->> +    bit_header: Option<BitHeader>,
->> +    bit_offset: Option<usize>,
-> 
-> Why are those Options? AFAICS, this structure is only ever created from
-> 
-> 	impl TryFrom<BiosImageBase> for PciAtBiosImage
-> 
-> and there you fail if you can't find the bit header anyways.
-> 
-> Also BitToken::from_id fails if bit_header == None, and it doesn't seem to be
-> used anywhere else.
-> 
-> I think we should remove the Option wrapper for both.
-
-Yes, thanks. That does simplify the code, I made the change and it works.
-
-
-> 
->> +/// The PmuLookupTableEntry structure is used to find the PmuLookupTableEntry
->> +/// for a given application ID. The table of entries is pointed to by the falcon
->> +/// data pointer in the BIT table, and is used to locate the Falcon Ucode.
->> +#[expect(dead_code)]
->> +struct PmuLookupTable {
->> +    version: u8,
->> +    header_len: u8,
->> +    entry_len: u8,
->> +    entry_count: u8,
->> +    table_data: KVec<u8>,
->> +}
->> +
->> +impl PmuLookupTable {
->> +    fn new(data: &[u8]) -> Result<Self> {
->> +        if data.len() < 4 {
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        let header_len = data[1] as usize;
->> +        let entry_len = data[2] as usize;
->> +        let entry_count = data[3] as usize;
->> +
->> +        let required_bytes = header_len + (entry_count * entry_len);
->> +
->> +        if data.len() < required_bytes {
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        // Create a copy of only the table data
->> +        let mut table_data = KVec::new();
->> +
->> +        // "last_entry_bytes" is a debugging aid.
->> +        let mut last_entry_bytes: Option<KVec<u8>> = if cfg!(debug_assertions) {
->> +            Some(KVec::new())
->> +        } else {
->> +            None
->> +        };
->> +
->> +        for &byte in &data[header_len..required_bytes] {
->> +            table_data.push(byte, GFP_KERNEL)?;
-> 
-> This should just be
-> 
-> 	table_data.extend_from_slice(&data[header_len..required_bytes], GFP_KERNEL)?;
-> 
-> so you don't need the loop and potentially lots of re-allocations.
-> 
-> Subsequently you can implement the debugging stuff as
-> 
-> 	if cfg!(debug_assertions) {
-> 	    let mut last_entry_bytes = KVec::new();
-> 	
-> 	    for &byte in &data[header_len..required_bytes] {
-> 	        // Debugging (dumps the table data to dmesg):
-> 	        last_entry_bytes.push(byte, GFP_KERNEL)?;
-> 	
-> 	        let last_entry_bytes_len = last_entry_bytes.len();
-> 	        if last_entry_bytes_len == entry_len {
-> 	            pr_info!("Last entry bytes: {:02x?}\n", &last_entry_bytes[..]);
-> 	            last_entry_bytes = KVec::new();
-> 	        }
-> 	    }
-> 	}
-
-Ok, that's better, I took the opportunity to replace this code with:
-
-(Sorry for wrapping)
-
-        // Create a copy of only the table data
-        let data_entries = &data[header_len..required_bytes];
-        let table_data = {
-            let mut ret = KVec::new();
-            ret.extend_from_slice(&data_entries, GFP_KERNEL)?;
-            ret
-        };
-
-        // Debug logging of entries (dumps the table data to dmesg)
-        if cfg!(debug_assertions) {
-            for i in 0..entry_count {
-                pr_info!("PMU entry: {:02x?}\n", &data_entries[i * entry_len..(i
-+ 1) * entry_len]);
-            }
-        }
-
-
-> In general, I feel like this patch utilizes the Option type way too much and
-> often without actual need. Can you please also double check?
-
-Yeah, sorry, I'm somewhat new to rust. :-D. I am going through all my Options now.
-
-I will continue addressing the rest of the comments and those in the other email
-and will reply soon. Thanks!
-
- - Joel
+Jonathan Gilbert
 
