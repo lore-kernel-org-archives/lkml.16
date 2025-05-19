@@ -1,111 +1,149 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mail-m49243.qiye.163.com (mail-m49243.qiye.163.com [45.254.49.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E162626A1C9;
-	Mon, 19 May 2025 08:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC2E194098;
+	Mon, 19 May 2025 08:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645034; cv=none; b=H2E4HOxdtDxnWMyMbuC7Jw1+iLOY4/VZqw/nR2KiB08CcCkmf+B5hZP5J2yBkChV65GQgCzPmmgSYh89w3RAmkoC+HxLpUh4TiwJjORapSNF1IXYquSQSQZ1jZ/VWa4x9ufnCtLCRM9qC89MIID9maYsO2O7HyQiBkzb0WY8yqc=
+	t=1747645184; cv=none; b=QYkfLu2+KAhloTtGirWPCwlH6WP/CKXV4X1QuNQA6WcpQIBER69QeMs70atoVJSrV1XRYGB2JodNjkB9xYzvC4i5KVC4CLcc5oAw5VxbgHC6BG7DjspU0nrTN1FrawixlukzEiTNFkrUyLJQ9mLx2KYwDP7Gp4LHoUo4hloXBL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645034; c=relaxed/simple;
-	bh=dYhjbV/+rEQ9Mg3Mizvz04VcwRwhCUiqf2+R1uJ0tm8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K6tXwiipvLpatpNt2Lq724+n/khUVyEr/OuaF8fvG08l1TN8aHPA/GLr85raiptn/LVYi/uXJLBnQHog1yhV91Bnc8+Pj0EQF+dkKYpH+nwu10/tXzY4t7ClGxS4JGnPqAxN7+0FwVAZQFP8vu3B7f9lizi2q11fJGxs8xgkWOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=pass smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chainsx.cn
-X-QQ-mid: esmtpsz19t1747644985t3448e8f9
-X-QQ-Originating-IP: KewNoiMQncWF6172/GixGn+r8xA+9YghBeeHMdJoq/U=
-Received: from localhost.localdomain ( [182.245.65.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 19 May 2025 16:56:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 1955181229310767366
-EX-QQ-RecipientCnt: 17
-From: Hsun Lai <i@chainsx.cn>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: i@chainsx.cn,
-	heiko@sntech.de,
-	andrew@lunn.ch,
-	inindev@gmail.com,
-	quentin.schulz@cherry.de,
-	jonas@kwiboo.se,
-	sfr@canb.auug.org.au,
-	nicolas.frattaroli@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	linux-rockchip@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 2/3] dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
-Date: Mon, 19 May 2025 16:56:13 +0800
-Message-Id: <20250519085614.2245892-3-i@chainsx.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250519085614.2245892-1-i@chainsx.cn>
-References: <20250519085614.2245892-1-i@chainsx.cn>
+	s=arc-20240116; t=1747645184; c=relaxed/simple;
+	bh=UEBlw8vboLiO7dN2wOjs6AQukQENUwMD9NDOlANOesQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gNWZH3vtcqVYz2xpwpGyL+CRwj9/ZiimVW2C/Iq15UMNN5iHffvBihQirB6VmMxv6ZoBFOTHTCS1JagKTPBnSm6/rgpqgYSbSGQcfatrvBMKo041u3bHNDRSviddHItq1pMC7RHudGU31HyuN4Xp/6WVG5p8SSjbTxryTxkddtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ZPU7PwL+; arc=none smtp.client-ip=45.254.49.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ZPU7PwL+"
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 158ccae3f;
+	Mon, 19 May 2025 16:44:14 +0800 (GMT+08:00)
+Message-ID: <6dac10df-d410-4d52-8711-4c8046f90fbd@rock-chips.com>
+Date: Mon, 19 May 2025 16:43:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NKv2G1wnhDBn+Dox2tI6ftS3Hlw0lkqqK/EMoRG3orfNt2M2yRO4k1m7
-	540F0ljzSOxetHlbnmKrzMNmsrpbmWk4sSyf5U7Lpauv71Q6vc69tbidpxIdVSyv/ZWJ2wf
-	KqKM6RpMMenmv0urtyc11OgNbcyi/WBu3oCxsIAEVB57l3zQR+qK//O/2TLxHRVmhQIYG7N
-	bV5HcQlXJ/24BU7TgtCymi096WZmiUzNldofbZkGf2qdWCko5dorRehaxZIR4sTx9MLtqCC
-	TXDxgA0B/Dsv8G8GNoOVbAe786xM3TeH/fUwtOVzz9BuAcT4ftStSAWSxsOYdiz/zcjsxlZ
-	r+7RfLBCO5PrGcrTkOvbyrJ0zXZvrVYEInanOaqjll0VIOSa49ZOMez6Maj4lGWsalLIw0u
-	K1YXiY6avAJ5iRc8R4hiTQf+oBM9sjx09T9WngZm4cPYymx/UZecMp1jJXOhfduz/7Nju+o
-	qhy8d4MXKDSucSQq/v229abtjn/RCUVIVrb5KgB1xQFMy8uv/12ga5w//so4BbrxfKuzQCf
-	Z1OdClJXYKgKXYbcmiKlqQPhqxFFlReSsmg43uprisPeOa7DXETbkK64dvS5a2x9GP2vku3
-	O7w+HPPqH3VW/O4c4oRphiKPEdcwgh50Stlciz6P7FCBQTqKBLkFj3dn+vNtl3HT6Zj5d3v
-	G9yoY2DiQM5er/cbC5AjimvzZvdWL1cxSSzSTplb+WmJVpF38DOXljtEio/fah1wNn4oT04
-	Pu4xUpNK16wBPkcrsMpRPdmv5MQ3ZxduSERmy5hOORcTI2lu91f43K7ivs3YYNKIUiDTKiA
-	Z/VUNL2S6oa44N0qOOVu2diTLx77B8KSl2TB3YXI5Mj9jmMOJ8nSfCjyco4trTlGmsl2ySW
-	hV6tp7uImZWuhQKcvYYcMD+MleXBhD3x38StJtwOsCuIeKdVfoqGz5GZboZSjXZBpa6klsR
-	r9/tbJTGqtLnjCo4Yamy/7Y/x4ngQGmvJwGT21gKEAEt468qyWTozkcKS3DZDwTYfZk5Bc4
-	hkv2UCgCfzMQ3rbt5j6OlZOkqqe2BLXQe4xsJrgw==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] dt-bindings: display: rockchip: Convert
+ cdn-dp-rockchip.txt to yaml
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Chaoyi Chen <kernel@airkyi.com>, Sandy Huang <hjc@rock-chips.com>,
+ Heiko Stuebner <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250519012632.94-1-kernel@airkyi.com>
+ <20250519012632.94-3-kernel@airkyi.com>
+ <20a565da-296c-4920-b962-e9de9af464d9@kernel.org>
+ <632f9f4d-ec0f-4512-a153-d2abfd9f6841@rock-chips.com>
+ <20250519-tall-glistening-quokka-9ffa6f@kuoka>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+In-Reply-To: <20250519-tall-glistening-quokka-9ffa6f@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkMeT1ZLThpIHxhJHkgdTUpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96e7b7094a03aekunm158ccae3f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6HSo5LjExDC0zLio4FRhI
+	STMwCS5VSlVKTE9MTU9PSU1KSEpDVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBT0pOTzcG
+DKIM-Signature:a=rsa-sha256;
+	b=ZPU7PwL+nAfueycpdY2yJue2tLZTRMoaiSKoIlGm+G9Xi5nboCuoO35Wc21TaIz7dmKHezIH5NNK7VX/AwNFNGs4VT9yz1RQ8ILaIY3w7ZNE2aSZPqay6utDnKSNSgECauwziW8cxvAKh6tB/lrJCpw5w5MseqaRQIiz8er641o=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=UN9mV4Ay8ghFsuFemLHGgtg/VXgBJG+F9kHs6DqrncA=;
+	h=date:mime-version:subject:message-id:from;
 
-This patch adds device tree binding support for
-Sakura Pi RK3308B, with compatibility for the
-Rockchip RK3308 SoC.
+Hi Krzysztof,
 
-Link: https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
+On 2025/5/19 16:23, Krzysztof Kozlowski wrote:
+> On Mon, May 19, 2025 at 02:56:03PM GMT, Chaoyi Chen wrote:
+>> Hi Krzysztof,
+>>
+>> On 2025/5/19 14:16, Krzysztof Kozlowski wrote:
+>>> On 19/05/2025 03:26, Chaoyi Chen wrote:
+>>>> +maintainers:
+>>>> +  - Andy Yan <andy.yan@rock-chip.com>
+>>>> +  - Heiko Stuebner <heiko@sntech.de>
+>>>> +  - Sandy Huang <hjc@rock-chips.com>
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: /schemas/sound/dai-common.yaml#
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    items:
+>>>> +      - const: rockchip,rk3399-cdn-dp
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  clocks:
+>>>> +    items:
+>>>> +      - description: DP core work clock
+>>>> +      - description: APB clock
+>>>> +      - description: SPDIF interface clock
+>>>> +      - description: GRF clock
+>>>> +
+>>>> +  clock-names:
+>>>> +    items:
+>>>> +      - const: core-clk
+>>>> +      - const: pclk
+>>>> +      - const: spdif
+>>>> +      - const: grf
+>>>> +
+>>>> +  extcon:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>>>> +    items:
+>>>> +      maxItems: 1
+>>>> +    maxItems: 2
+>>> Instead of this, list the items. Old binding said only "specifier", so
+>>> this is technically a change, which should be explained in commit msg.
+>> Will fix in v5.
+>>
+>>
+>>>> +    description:
+>>>> +      List of phandle to the extcon device providing the cable state for the DP PHY.
+>>>> +
+>>>> +  interrupts:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  phys:
+>>>> +    items:
+>>>> +      maxItems: 1
+>>>> +    maxItems: 2
+>>>> +    description: |
+>>>> +      List of phandle to the PHY device for DP output.
+>>>> +      RK3399 have two DP-TPYEC PHY, specifying one PHY which want to use,
+>>>> +      or specify two PHYs here to let the driver determine which PHY to use.
+>>> You do not allow one phy, so your description is not accurate. OTOH,
+>>> original binding did not allow two phandles, so that's another change in
+>>> the binding. You need to document all changes done to the binding in the
+>>> commit msg.
+>> Oh, the original binding example use two phandles. I think only one PHY can
+> Example is not the binding, just an example.
+>
+>> also pass the dtb check here, or maybe I'm missing something else?
+> You think or you tested it? What is the minItems value? 2, so even if
+> this works it's rather a bug in dtschema.
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
+Yes I tested it. Both of "phys = <&tcphy0_dp>", "phys = <&tcphy0_dp>, 
+<&tcphy1_dp>" pass the dtb check.
 
-(no changes since v1)
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+>
+> Also, inner maxItems:1 is not really correct. Why can't this work with
+> different phy providers?
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 115c3ca43..c64adc0d0 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -1109,6 +1109,11 @@ properties:
-           - const: rockchip,rk3588-toybrick-x0
-           - const: rockchip,rk3588
- 
-+      - description: Sakura Pi RK3308B
-+        items:
-+          - const: sakurapi,rk3308-sakurapi-rk3308b
-+          - const: rockchip,rk3308
-+
-       - description: Sinovoip RK3308 Banana Pi P2 Pro
-         items:
-           - const: sinovoip,rk3308-bpi-p2pro
--- 
-2.34.1
+I'll see what other bindings do. Thanks for the clarification!
 
