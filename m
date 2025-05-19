@@ -1,241 +1,182 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECEAA55;
-	Mon, 19 May 2025 12:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E66C27703E;
+	Mon, 19 May 2025 12:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747659328; cv=none; b=Rx8eyr3KdPZMhdUzmOEQmg7rG9qma26BG9C3HajuhnT39/7vDVyONcDhuIlUSSNPr5/fonV5q5s2R6UjNKm82zAn8eZcKvpHCytRM68QJGWIXPztsUmx9WtYxOUvlfT8wP0XFkM9MPHROy2QErjeZhSts42JWTepjB8Qb7ytve4=
+	t=1747659431; cv=none; b=nBj5VnBzi0njAh+EsHVScg17GbwcxctE0+QONZW+7iXww2jLOFZDY7pJzXR4PO+qxU0ex3rcbGdGtDTvXkWXlRnJajfw0Ir2Y3JR43WXAFn4mk9c13g83zKR0NXe/J1mL/p/j6BpMrygf7mcUtXIKP2mpjif62CQHuDDXvjh340=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747659328; c=relaxed/simple;
-	bh=nqyTvZnuN0HY7wJI7LSdFcsCCyDBoE9iuykTtH/rF4s=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Tjuyo0BK5G36y4e5mHHvKzR1zkuP3bmACO2yUArfDH6789qgq4dYNY2aZRcQOy8hjhTo7B2//wGh9RJhYGlA3KM6bhsGXuv0t+nw98aloASaqDS4qv3ohlaY+4XXtMrRykicIMA4j4O/Fw3lFoMbWxFqI7ajNugltfVuuULP8es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qDnpC5Pz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YMryAjt8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747659431; c=relaxed/simple;
+	bh=+Hj/d6ssy2LIaoVs+qT/pmyMB1aHgw67hcTEXsHqb8Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=eVodSwzoMaOeTjaqBEku64bJSJIqc+JC8+GvS0ikD3gmwW82d0ql1LxnWyxNgI+zOQ4Pd7l+/F0KxAp8hX/s3OV9LQOU5lRc0xkZf+o5/xPFTQTt2iJft+YlRhEJ+qqv6u71oEGtNHD6DtBM7FeLHyYHihalXedJApjpc3BvPPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kArS0jIK; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qDnpC5Pz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YMryAjt8"
-Date: Mon, 19 May 2025 12:55:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747659323;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MAoqUZLxB1cNDmjrU0QVE8Kkin+DY8geZSdxsOxiqKA=;
-	b=qDnpC5PzhOTeF5Yl/zSyXWxLfDuGh9BEG0O3yzXaVqRjzCQpHu+VCFfc6zpY5fxV0iXrMO
-	eV8OmaOxArp5eTELciExrL0KSNxTCNczgyhFZ0381akqoDqFNbpBBuDW+e/6uuwOvJRvmX
-	tLfYhSgCsYuV7rcjWT6CpWM9hbVDQ5TTC/sAHKWqr9e7V1VAxDsYds3GKVIhlifXCKKQJU
-	oFfq0frhxZyBhO0IKzrRtCuph89iqBDRreiNQjg79jWRsdi9WLTIgok0LMi3CCTKKwjYNM
-	+00oUDClLIdypuDovwOmo+mS6pspXAwo7PdTNHWUe9NZP9y4XACSMwmF4pbWzA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747659323;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MAoqUZLxB1cNDmjrU0QVE8Kkin+DY8geZSdxsOxiqKA=;
-	b=YMryAjt8b6f2FQA+Di9odtcp/5G40bdFSu7BCo5bYiSKgOLZ8znU9BbqBkN4FnxmTYQaVw
-	OmQhbd/Nf8yBd+Dg==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/cpu: Use a new feature flag for 5-level paging
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- "Ahmed S. Darwish" <darwi@linutronix.de>,
- Andrew Cooper <andrew.cooper3@citrix.com>, Brian Gerst <brgerst@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Juergen Gross <jgross@suse.com>, "Kirill A. Shutemov" <kirill@shutemov.name>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250517091639.3807875-9-ardb+git@google.com>
-References: <20250517091639.3807875-9-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kArS0jIK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747659429; x=1779195429;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=+Hj/d6ssy2LIaoVs+qT/pmyMB1aHgw67hcTEXsHqb8Y=;
+  b=kArS0jIKrUVTyZ7nN8kt3EDHvzpWC+HNHZsrINIWJyFy/XUjlaAwuS9M
+   2R5a2ThzbAy3TUpSP3HxypxbY1VqSRfLtxiwzuRyfUHiWglt8ADQfgtfg
+   jnmK/gNGlV8YuQ42MqP4HusOZmHLLLpDeiO5D4tk9zjhbNkW8s4BhU6S3
+   IkmdivyzIhict/slh4eUlpUgjenxIqIXvJ8ZM9aKmjtRYe4iHIzO/MLRU
+   LWLOhfhO+30RkXhnb5kNvyPc5uZ6h9sVbfWxLEZ46pY3vDe3AnyZAJY0N
+   hNm9yRAGFNENshFgQ/HtBc7SrBVEHzIPddhF/fdAZU9RFginzOKw04cjU
+   g==;
+X-CSE-ConnectionGUID: 1Scl1h1DSKeu9hg+h4oI4w==
+X-CSE-MsgGUID: 2xwr/dvORmif95NRxDykqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="66970070"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="66970070"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:57:08 -0700
+X-CSE-ConnectionGUID: 6yq14e2aTuOsVRMsmjF0VA==
+X-CSE-MsgGUID: 8WEbuWthT/uztNSZMGFpUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="140248978"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:56:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 15:56:55 +0300 (EEST)
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: think-lmi: Fix attribute name usage for
+ non-compliant items
+In-Reply-To: <20250517023825.2968200-1-mpearson-lenovo@squebb.ca>
+Message-ID: <0fbeced8-a225-4151-dda5-086490f8345a@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20250517023825.2968200-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174765932243.406.15487430117390098144.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-The following commit has been merged into the x86/core branch of tip:
+On Fri, 16 May 2025, Mark Pearson wrote:
 
-Commit-ID:     ae41ee699c6c89850d11ba64a282490f287d9be7
-Gitweb:        https://git.kernel.org/tip/ae41ee699c6c89850d11ba64a282490f287d9be7
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Sat, 17 May 2025 11:16:41 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 19 May 2025 10:37:21 +02:00
+> A few, quite rare, WMI attributes have names that are not compatible with
+> filenames. e.g. "Intel VT for Directed I/O (VT-d)".
 
-x86/cpu: Use a new feature flag for 5-level paging
+filenames. -> filenames,
 
-Currently, the LA57 CPU feature flag is taken to mean two different
-things at once:
+> For these cases the '/' gets replaced with '\' for display, but doesn't
+> get switched again when doing the WMI access.
+> 
+> Fix this by keeping the original attribute name and using that for sending
+> commands to the BIOS
+> 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
- - Whether the CPU implements the LA57 extension, and is therefore
-   capable of supporting 5-level paging;
+Fixes tag?
 
- - whether 5-level paging is currently in use.
+> ---
+>  drivers/platform/x86/think-lmi.c | 27 +++++++++++++++------------
+>  drivers/platform/x86/think-lmi.h |  1 +
+>  2 files changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 0fc275e461be..be01085055a1 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -137,6 +137,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+>   * You must reboot the computer before the changes will take effect.
+>   */
+>  #define LENOVO_CLEAR_BIOS_CERT_GUID  "B2BC39A7-78DD-4D71-B059-A510DEC44890"
+> +
+>  /*
+>   * Name: CertToPassword
+>   * Description: Switch from certificate to password authentication.
 
-This means the LA57 capability of the hardware is hidden when a LA57
-capable CPU is forced to run with 4-level paging. It also means the
-the ordinary CPU capability detection code will happily set the LA57
-capability and it needs to be cleared explicitly afterwards to avoid
-inconsistencies.
+An unrelated change.
 
-Separate the two so that the CPU hardware capability can be identified
-unambigously in all cases.
+> @@ -1061,8 +1062,8 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+> -		set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->display_name,
+> -					new_setting, tlmi_priv.pwd_admin->signature);
+> +		set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->name,
+> +				    new_setting, tlmi_priv.pwd_admin->signature);
+>  		if (!set_str) {
+>  			ret = -ENOMEM;
+>  			goto out;
+> @@ -1092,7 +1093,7 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  				goto out;
+>  		}
+>  
+> -		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->name,
+>  				    new_setting);
+>  		if (!set_str) {
+>  			ret = -ENOMEM;
+> @@ -1120,11 +1121,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  		}
+>  
+>  		if (auth_str)
+> -			set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->display_name,
+> -					new_setting, auth_str);
+> +			set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->name,
+> +					    new_setting, auth_str);
+>  		else
+> -			set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+> -					new_setting);
+> +			set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->name,
+> +					    new_setting);
+>  		if (!set_str) {
+>  			ret = -ENOMEM;
+>  			goto out;
+> @@ -1629,9 +1630,6 @@ static int tlmi_analyze(struct wmi_device *wdev)
+>  			continue;
+>  		}
+>  
+> -		/* It is not allowed to have '/' for file name. Convert it into '\'. */
+> -		strreplace(item, '/', '\\');
+> -
+>  		/* Remove the value part */
+>  		strreplace(item, ',', '\0');
+>  
+> @@ -1644,11 +1642,16 @@ static int tlmi_analyze(struct wmi_device *wdev)
+>  		}
+>  		setting->wdev = wdev;
+>  		setting->index = i;
+> +
+> +		strscpy(setting->name, item);
+> +		/* It is not allowed to have '/' for file name. Convert it into '\'. */
+> +		strreplace(item, '/', '\\');
+>  		strscpy(setting->display_name, item);
+> +
+>  		/* If BIOS selections supported, load those */
+>  		if (tlmi_priv.can_get_bios_selections) {
+> -			ret = tlmi_get_bios_selections(setting->display_name,
+> -					&setting->possible_values);
+> +			ret = tlmi_get_bios_selections(setting->name,
+> +						       &setting->possible_values);
+>  			if (ret || !setting->possible_values)
+>  				pr_info("Error retrieving possible values for %d : %s\n",
+>  						i, setting->display_name);
+> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+> index a80452482227..9b014644d316 100644
+> --- a/drivers/platform/x86/think-lmi.h
+> +++ b/drivers/platform/x86/think-lmi.h
+> @@ -90,6 +90,7 @@ struct tlmi_attr_setting {
+>  	struct kobject kobj;
+>  	struct wmi_device *wdev;
+>  	int index;
+> +	char name[TLMI_SETTINGS_MAXLEN];
+>  	char display_name[TLMI_SETTINGS_MAXLEN];
+>  	char *possible_values;
+>  };
+> 
 
-The 'la57' flag's behavior in /proc/cpuinfo remains unchanged.
+-- 
+ i.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ahmed S. Darwish <darwi@linutronix.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250517091639.3807875-9-ardb+git@google.com
----
- arch/x86/include/asm/cpufeatures.h      |  3 ++-
- arch/x86/include/asm/page_64.h          |  2 +-
- arch/x86/include/asm/pgtable_64_types.h |  2 +-
- arch/x86/kernel/cpu/common.c            | 16 ++--------------
- drivers/iommu/amd/init.c                |  4 ++--
- drivers/iommu/intel/svm.c               |  4 ++--
- 6 files changed, 10 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f67a93f..5c19bee 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -395,7 +395,7 @@
- #define X86_FEATURE_AVX512_BITALG	(16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
- #define X86_FEATURE_TME			(16*32+13) /* "tme" Intel Total Memory Encryption */
- #define X86_FEATURE_AVX512_VPOPCNTDQ	(16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
--#define X86_FEATURE_LA57		(16*32+16) /* "la57" 5-level page tables */
-+#define X86_FEATURE_LA57		(16*32+16) /* 57-bit linear addressing */
- #define X86_FEATURE_RDPID		(16*32+22) /* "rdpid" RDPID instruction */
- #define X86_FEATURE_BUS_LOCK_DETECT	(16*32+24) /* "bus_lock_detect" Bus Lock detect */
- #define X86_FEATURE_CLDEMOTE		(16*32+25) /* "cldemote" CLDEMOTE instruction */
-@@ -483,6 +483,7 @@
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
- #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
-+#define X86_FEATURE_5LEVEL_PAGING	(21*32+11) /* "la57" Whether 5 levels of page tables are in use */
- 
- /*
-  * BUG word(s)
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index 015d23f..754be17 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -85,7 +85,7 @@ static __always_inline unsigned long task_size_max(void)
- 	unsigned long ret;
- 
- 	alternative_io("movq %[small],%0","movq %[large],%0",
--			X86_FEATURE_LA57,
-+			X86_FEATURE_5LEVEL_PAGING,
- 			"=r" (ret),
- 			[small] "i" ((1ul << 47)-PAGE_SIZE),
- 			[large] "i" ((1ul << 56)-PAGE_SIZE));
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 4604f92..9217688 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -33,7 +33,7 @@ static inline bool pgtable_l5_enabled(void)
- 	return __pgtable_l5_enabled;
- }
- #else
--#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_LA57)
-+#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING)
- #endif /* USE_EARLY_PGTABLE_L5 */
- 
- extern unsigned int pgdir_shift;
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 8feb8fd..67cdbd9 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1755,20 +1755,8 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
- 	setup_clear_cpu_cap(X86_FEATURE_PCID);
- #endif
- 
--	/*
--	 * Later in the boot process pgtable_l5_enabled() relies on
--	 * cpu_feature_enabled(X86_FEATURE_LA57). If 5-level paging is not
--	 * enabled by this point we need to clear the feature bit to avoid
--	 * false-positives at the later stage.
--	 *
--	 * pgtable_l5_enabled() can be false here for several reasons:
--	 *  - 5-level paging is disabled compile-time;
--	 *  - it's 32-bit kernel;
--	 *  - machine doesn't support 5-level paging;
--	 *  - user specified 'no5lvl' in kernel command line.
--	 */
--	if (!pgtable_l5_enabled())
--		setup_clear_cpu_cap(X86_FEATURE_LA57);
-+	if (native_read_cr4() & X86_CR4_LA57)
-+		setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
- 
- 	detect_nopl();
- }
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 14aa0d7..083fca8 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3084,7 +3084,7 @@ static int __init early_amd_iommu_init(void)
- 		goto out;
- 
- 	/* 5 level guest page table */
--	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
-+	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
- 	    FIELD_GET(FEATURE_GATS, amd_iommu_efr) == GUEST_PGTABLE_5_LEVEL)
- 		amd_iommu_gpt_level = PAGE_MODE_5_LEVEL;
- 
-@@ -3691,7 +3691,7 @@ __setup("ivrs_acpihid",		parse_ivrs_acpihid);
- bool amd_iommu_pasid_supported(void)
- {
- 	/* CPU page table size should match IOMMU guest page table size */
--	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
-+	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
- 	    amd_iommu_gpt_level != PAGE_MODE_5_LEVEL)
- 		return false;
- 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index ba93123..1f615e6 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -37,7 +37,7 @@ void intel_svm_check(struct intel_iommu *iommu)
- 		return;
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
-+	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
- 	    !cap_fl5lp_support(iommu->cap)) {
- 		pr_err("%s SVM disabled, incompatible paging mode\n",
- 		       iommu->name);
-@@ -165,7 +165,7 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
- 		return PTR_ERR(dev_pasid);
- 
- 	/* Setup the pasid table: */
--	sflags = cpu_feature_enabled(X86_FEATURE_LA57) ? PASID_FLAG_FL5LP : 0;
-+	sflags = cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) ? PASID_FLAG_FL5LP : 0;
- 	ret = __domain_setup_first_level(iommu, dev, pasid,
- 					 FLPT_DEFAULT_DID, mm->pgd,
- 					 sflags, old);
