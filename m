@@ -1,146 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F93A210FB
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84B267B9F;
+	Mon, 19 May 2025 08:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644160; cv=none; b=eg+kYfYGkI3q9gswCBJec/nE5FNRWLCHJr5V/j4a8ST+NSJ1GC9CmQxHxcveBXqWr5em7XyCb/TOIJS4bClC5TIa+8JWnQcYMH9CWnAsUTYZdq8p8iLUTR7r1vnKwIXMmBWD1//fLOv2OdBFkoDzdT3AsWu8v1jINqGCAwt04O4=
+	t=1747644171; cv=none; b=cEsxP4i8p/TItq+rEUnuQ8sbHP19J/lHgK+pOiFPJObvStRmeGJg6uZsfMMUMDsUNZwfBcVNZMnmOsettoxsJRKM22mzBrNwfj9lw9eSX8SRHFQQnDvSQgbvjpkPDzn54i5i4aEYDtSfMWIwB99fZEBomUkAPqFNSEfAgf+MDJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644160; c=relaxed/simple;
-	bh=+03kt9iwtLbG5099ncvcgBRXBcr3CMG+xuHJpXjVv8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dnh35PbGlpm/GOUBM+Nh74y9Wq4z7pSs4AtWXRgPXWVlfDr3ggBpkpfgV2R2jf+8ocVyegUlOrLHUPe/Vv1IePq0o80WCEsy0xiyQTngS9PZOb4VLN31YW1a0L5QpIkgqscu57lwsVAa3nluqImoyKzvUQpB8Q2S7wCJAPuXhNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruo60tw3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruo60tw3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE772C4CEE4;
-	Mon, 19 May 2025 08:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747644160;
-	bh=+03kt9iwtLbG5099ncvcgBRXBcr3CMG+xuHJpXjVv8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ruo60tw34zleKTt4jpUqfFIJ3YMcB6k/v+uuq3cOv/rMDR3RnaOVZyEtJ4734/L3E
-	 +EkCePqWJBJHrJQPrIlBrQtPFSyt9DGBzarHT4rYTGE06RNeUuufcGFHLYxV8p9Ecw
-	 Un2quvG4Yg/hYIB1CoTUlveWIZno3351Jfk0Qvi2PRhIyPFO1lcSsrk9VpOxnrCgjv
-	 QJ7F99dUA6Zphj32joniv6FSThYfSMeDX5Xl+myxNH1711W+EI9gQJ+h9Hr14wD5eB
-	 I7X0FyI0VfAIzJKW/CwMDSl9J2VAtx1mFE7aDhsnD2mWywA9WIGm49Uzfk7dHXHe8V
-	 cBYQ72jCr/LZw==
-Date: Mon, 19 May 2025 10:42:37 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
- RGB/YUV420 mode
-Message-ID: <20250519-classy-millipede-of-competence-4bb6ad@houat>
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
+	s=arc-20240116; t=1747644171; c=relaxed/simple;
+	bh=GDrbtMczbadqW+M8hR3/h5c36OlbYcm8zQPsfTySveY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dCJfGx+fropC49hDV82nvkOnxglF5sLnGkfLD3KE31/vNSbhJHeGnM8BttyIBnPMV4ZpNJ3BjahDcsfzmUMCX3+95489Bsn5hnpwHfc9URHb9rNXQ6R5TL9xpQobHuUq6pidUPyYltRxMGvEjO+WPqSHDyTzQDwnBD4i7Yg9SfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAD3OSz_7ipoUmNrAQ--.11134S2;
+	Mon, 19 May 2025 16:42:41 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: ajay.kathat@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+Date: Mon, 19 May 2025 16:42:11 +0800
+Message-ID: <20250519084211.1752-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="itn5qs25mfwdt27d"
-Content-Disposition: inline
-In-Reply-To: <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3OSz_7ipoUmNrAQ--.11134S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXw48JryUtrb_yoW8Ar1UpF
+	Wxuw4jqwnIkrWrZw4xJF4kA3Z5tayvyrWUuFWxuw1fZr4kAw1S9r4fXFy5Xrn0q3W7Gw1x
+	X3Wvqr4YgFn2yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUU
+	UU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAHA2gqs4joywAAsH
 
+The wilc_sdio_read_size() calls wilc_sdio_cmd52() but does not check the
+return value. This could lead to execution with potentially invalid data
+if wilc_sdio_cmd52() fails. A proper implementation can be found in
+wilc_sdio_read_reg().
 
---itn5qs25mfwdt27d
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
- RGB/YUV420 mode
-MIME-Version: 1.0
+Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+log an error message via dev_err().
 
-Hi,
+Fixes: ea5779b4fbc7 ("staging: wilc1000: wilc_sdio_cmd52: pass struct wilc")
+Cc: stable@vger.kernel.org # v4.5
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v3: Remove redundant error log. Fix code error. Fix fixes flag error.
+v2: Fix code error.
 
-On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
-> Provide a test to verify that if both driver and screen support RGB and
-> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
-> when trying to set a mode unsupported by the display.
->=20
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
->  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 ++++++++++++++++=
-++++++
->  1 file changed, 66 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
-/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f446c4=
-995e7ee63dbc084 100644
-> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_fall=
-back_yuv420(struct kunit *test
->  	drm_modeset_acquire_fini(&ctx);
->  }
-> =20
-> +/*
-> + * Test that if a driver and screen supports RGB and YUV420 formats, but=
- the
-> + * chosen mode cannot be supported by the screen, we end up with unsucce=
-ssful
-> + * fallback attempts.
-> + */
-> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(struc=
-t kunit *test)
-> +{
-> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
-> +	struct drm_modeset_acquire_ctx ctx;
-> +	struct drm_crtc_state *crtc_state;
-> +	struct drm_atomic_state *state;
-> +	struct drm_display_info *info;
-> +	struct drm_display_mode *preferred, *unsupported_mode;
-> +	struct drm_connector *conn;
-> +	struct drm_device *drm;
-> +	struct drm_crtc *crtc;
-> +	int ret;
-> +
-> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
-> +				BIT(HDMI_COLORSPACE_RGB) |
-> +				BIT(HDMI_COLORSPACE_YUV420),
-> +				10,
-> +				&dummy_connector_hdmi_funcs,
-> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
-> +	KUNIT_ASSERT_NOT_NULL(test, priv);
-> +
-> +	drm =3D &priv->drm;
-> +	crtc =3D priv->crtc;
-> +	conn =3D &priv->connector;
-> +	info =3D &conn->display_info;
-> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
-> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
-> +
-> +	preferred =3D find_preferred_mode(conn);
-> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
-> +
-> +	unsupported_mode =3D drm_kunit_display_mode_from_cea_vic(test, drm, 96);
-> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-I'm not sure what this one is supposed to test. If the mode is
-unsupported by the screen, it will be for both YUV and RGB, right? So
-what are we testing here?
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 5262c8846c13..d77f88996250 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -771,6 +771,7 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+ {
+ 	u32 tmp;
+ 	struct sdio_cmd52 cmd;
++	int ret;
+ 
+ 	/**
+ 	 *      Read DMA count in words
+@@ -780,12 +781,16 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+ 	cmd.raw = 0;
+ 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
+ 	cmd.data = 0;
+-	wilc_sdio_cmd52(wilc, &cmd);
++	ret = wilc_sdio_cmd52(wilc, &cmd);
++	if (ret)
++		return ret;
+ 	tmp = cmd.data;
+ 
+ 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
+ 	cmd.data = 0;
+-	wilc_sdio_cmd52(wilc, &cmd);
++	ret = wilc_sdio_cmd52(wilc, &cmd);
++	if (ret)
++		return ret;
+ 	tmp |= (cmd.data << 8);
+ 
+ 	*size = tmp;
+-- 
+2.42.0.windows.2
 
-Maxime
-
---itn5qs25mfwdt27d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaCru/QAKCRAnX84Zoj2+
-dpkPAX9GdEFrGMnaPgHsQYafngD7rrP1g7XAmzcFOpgFYItZhI1qolmUM49ckdRB
-yBw98JEBfjSASo48jnLPA51hoO+zrUdLQpRH8EB3d50j+yyodfMb5jxLo1SqUfCF
-Y6qeLcFhyw==
-=4oAs
------END PGP SIGNATURE-----
-
---itn5qs25mfwdt27d--
