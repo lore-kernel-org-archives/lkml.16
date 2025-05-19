@@ -1,157 +1,295 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C331F1507;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE94265CCB;
 	Mon, 19 May 2025 07:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638781; cv=none; b=Mz7C+D6PbUo8q9mgCOkJWem3w2khQvCTfI91jQfbNqXZS0WKOrSUWnrWZ8/9NMuhtuzJ82TxXxarMOTL+YN9FdyUDh5TQd45HN1GnA2mE6ZLkP+yANeiwRCpCdAVWJM6MrkbFTZf7n5E1KSJ0bIwOvmJvOV5RnczgFqmgg8QBZE=
+	t=1747638781; cv=none; b=o8gfRnjnglRyhMctHFO7X+hiF4NPciuwwrG1DxRG5M6ZcxkRJkNVhxi0+Nt/85rSP9bFF7Ao0Lzc/kgoEZgJAzKsXlzmRfG25OeqbbSaiumCOE/RvtmIDiy2OMotPxf7klD9pAkx1WfA8xk5cvlHDvhTZ8uy7ONTkqL5w0Pvj4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747638781; c=relaxed/simple;
-	bh=7/SWLXW5Hy6DaiAx0ceb1uY2JzdxPxmqQ8x1Y1jN5VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jl5+E6k3qCWGAg+5A/fcSnqfm2QTrlrRdAfDoUWBR5V6cwMzNUqvcYEI+eFsERiKT8cwy/noWwfG12m+/IGiutbDqHFIctrmdlTpdDNhCiKtke1ew6WUB1bJvmHYcoLe2fJTJ5QtdmuxcihKNRtPY8kF7b6/2ddDaD3Hboiv/aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmxJHsqX; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=PnwZA14QOCUUCEk8Bt+W2UUBUbI+zIvl3biSK65U+Zs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=cY7ofqV9ZLjvNKB/LU2HwXYiuuBRIyqCqB3+zBrsHlOlOh66kUr25dOwBfjPLktnWVdnO+2f6cHClywAe/WjimWqxXRUHacOEFJ9UTqBaAhVVIz4qI+Yh1UjfmYOkj+d+F1GW/8xpjYQs/DFJD1odwIFEAvCBlKrOJ31Z4FYlV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=paSDLiA1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmxJHsqX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747638780; x=1779174780;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7/SWLXW5Hy6DaiAx0ceb1uY2JzdxPxmqQ8x1Y1jN5VE=;
-  b=hmxJHsqXrJwZV/ar1cPbNDdWTuz2eGKFeiuMN8+558eqJgnMrzkp7Iy4
-   9A5465w6nrEcP/0pyBpCZPQK8yFpRABlCcRF+wrJHqcF74YJRoUGAmpVB
-   nwkQUd6yBKcInW5UqVMKTcyDRO57woBRm3ZUzdEo9NIAmFvcC5ogQq8P2
-   yuB+7uVXEAVEQwKFE42/QcS93C2hiBYnNYRjVZTXJWndNM/CuutkSptz9
-   izzCMEnx0ZuFW76s0AkPbZuuhbI2qW2gevBWBgn3aM+uTkSIrjyMGEOIu
-   XN5WOg37q4qFC+HswLDYVhVZgeWX5jovAFbMi9ZuJ9t0M1EjY5hoP5s2L
-   A==;
-X-CSE-ConnectionGUID: ZUqo5DFwTCObKj/5c5PLAw==
-X-CSE-MsgGUID: 068ZW2KNSpOX4xhOrmAcXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="37142812"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="37142812"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 00:12:59 -0700
-X-CSE-ConnectionGUID: TPxZaDTwQjG4bRil4Fs00A==
-X-CSE-MsgGUID: 3XDW3SxGQiOJ1pnp0+rzZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139700215"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 19 May 2025 00:12:56 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGugA-000LFH-0G;
-	Mon, 19 May 2025 07:12:54 +0000
-Date: Mon, 19 May 2025 15:12:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev, kvalo@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: wilc1000: Add error handling for
- wilc_sdio_cmd52()
-Message-ID: <202505191448.OycntzLM-lkp@intel.com>
-References: <20250519014434.901-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="paSDLiA1"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J4EtLO014120;
+	Mon, 19 May 2025 07:12:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	skTbQItYDY2Q4CNqdshM54G2jZGaMdhFzPIQjwKFYfQ=; b=paSDLiA1Ie+LpagT
+	+IZ/NmF742qVLthUKI3UYYEZbfJ/Kh9Vuzv9jomb14dg7+tA0Da3GXjiv17Mxphp
+	OD4zPwD0H/gkE2QzW/snTn2N4xBpyNF5cnhaJ0Kat7WC6JMvs4+VrvjAQOSVIP/C
+	2OOqaGvNrXMpzGV4MVs/sFORIs7qHD4N4BfHlvXiUwE5xbpl99BTsgtDNNB/7wE2
+	IMxcXllvkk8Bm/6rz8p0YPV0ugtVtVn99qJ7yfwqYAEycNcyCJXhlgV9Y8R5G+XL
+	bwlVa00Txj+Y2+VS0Na1g18w74xHgLTsENmY+4Z71kVzLuKMzdFpPdZhxrIOi8d8
+	dGjwug==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qwenggd8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 07:12:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54J7CkGA010318
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 07:12:46 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 19 May 2025 00:12:43 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Mon, 19 May 2025 12:42:22 +0530
+Subject: [PATCH v4 2/2] media: venus: Fix OOB read due to missing payload
+ bound check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519014434.901-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250519-venus-fixes-v4-2-3ae91d81443d@quicinc.com>
+References: <20250519-venus-fixes-v4-0-3ae91d81443d@quicinc.com>
+In-Reply-To: <20250519-venus-fixes-v4-0-3ae91d81443d@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Vedang Nagar <quic_vnagar@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747638757; l=6532;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=0GpUI7sBAeWUP4zXPEcTyiTK22HXss2bkBm09XyHFps=;
+ b=6SX8yYTlF+XJiEhQVlmEgbezDnE5jxKtUa7Gdd3u2ddN/1EfQwmzkufqJRhK5uz8qjuBlziWn
+ tC962cQGGQ2AtILse18pttYYDEPRjph7ACFO0fj0VNGUc3+ZfHrLjW0
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: XfY90tPCd7mQwBaDvdGDY2rlQHeuvox4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA2NiBTYWx0ZWRfXx3IYMaFM9mDK
+ sqXBx5qNzB2rPbIsuUD7S0doJgGZfGMUX8UsoKb1uzJw0NwfT4S839bHYsTx9raJyluPiJ+xwr5
+ 0nBAAkpvlHGo7pTX4icHxfybjfav0KhRlryN7VvgZct/szStunTFDVesGD1BkMSvT7zw71sdQ+x
+ +AJPyE6hfHXs2WIWjDQfVDzG9Eggs2tVP5UJpf6RYwC0RCGLEstTrF6XN+D+rWgRllmNybEx7h7
+ odCD0/UWeGYROPTi9ncmZO0gCd3r3PdHghe8nrKe0gs9iNcR0Qm0zRsxUKxpvKydq7lxQ6FGvE6
+ 0bcTQEdicMSHTHEe7Dl3CnMlm37rWdXsaOAO/RW1u/VZYRc76KBGLFAmdHzRVJLwmMuIPjknD2O
+ swLdNuBIFmXC/4FX5umhYapI4RZmvlN7RleeibCSzxyuXQKAttFR5P+5zIRWzAivDInljcjh
+X-Authority-Analysis: v=2.4 cv=Wd8Ma1hX c=1 sm=1 tr=0 ts=682ad9f5 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=KKAkSRfTAAAA:8 a=czAQvarDjluRZCkWtMUA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: XfY90tPCd7mQwBaDvdGDY2rlQHeuvox4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_02,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190066
 
-Hi Wentao,
+From: Vedang Nagar <quic_vnagar@quicinc.com>
 
-kernel test robot noticed the following build errors:
+Currently, The event_seq_changed() handler processes a variable number
+of properties sent by the firmware. The number of properties is indicated
+by the firmware and used to iterate over the payload. However, the
+payload size is not being validated against the actual message length.
 
-[auto build test ERROR on wireless-next/main]
-[also build test ERROR on wireless/main linus/master v6.15-rc7 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This can lead to out-of-bounds memory access if the firmware provides a
+property count that exceeds the data available in the payload. Such a
+condition can result in kernel crashes or potential information leaks if
+memory beyond the buffer is accessed.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/wifi-wilc1000-Add-error-handling-for-wilc_sdio_cmd52/20250519-094706
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
-patch link:    https://lore.kernel.org/r/20250519014434.901-1-vulab%40iscas.ac.cn
-patch subject: [PATCH v2] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250519/202505191448.OycntzLM-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191448.OycntzLM-lkp@intel.com/reproduce)
+Fix this by properly validating the remaining size of the payload before
+each property access and updating bounds accordingly as properties are
+parsed.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505191448.OycntzLM-lkp@intel.com/
+This ensures that property parsing is safely bounded within the received
+message buffer and protects against malformed or malicious firmware
+behavior.
 
-All errors (new ones prefixed by >>):
+Fixes: 09c2845e8fe4 ("[media] media: venus: hfi: add Host Firmware Interface (HFI)")
+Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Co-developed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+---
+ drivers/media/platform/qcom/venus/hfi_msgs.c | 83 +++++++++++++++++++---------
+ 1 file changed, 58 insertions(+), 25 deletions(-)
 
->> drivers/net/wireless/microchip/wilc1000/sdio.c:789:2: error: use of undeclared identifier 'ret'
-     789 |         ret = wilc_sdio_cmd52(wilc, &cmd);
-         |         ^
-   drivers/net/wireless/microchip/wilc1000/sdio.c:790:6: error: use of undeclared identifier 'ret'
-     790 |         if (ret) {
-         |             ^
-   drivers/net/wireless/microchip/wilc1000/sdio.c:792:10: error: use of undeclared identifier 'ret'
-     792 |                 return ret;
-         |                        ^
-   drivers/net/wireless/microchip/wilc1000/sdio.c:798:2: error: use of undeclared identifier 'ret'
-     798 |         ret = wilc_sdio_cmd52(wilc, &cmd);
-         |         ^
-   drivers/net/wireless/microchip/wilc1000/sdio.c:799:6: error: use of undeclared identifier 'ret'
-     799 |         if (ret) {
-         |             ^
-   drivers/net/wireless/microchip/wilc1000/sdio.c:801:10: error: use of undeclared identifier 'ret'
-     801 |                 return ret;
-         |                        ^
-   6 errors generated.
-
-
-vim +/ret +789 drivers/net/wireless/microchip/wilc1000/sdio.c
-
-   774	
-   775	static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
-   776	{
-   777		u32 tmp;
-   778		struct sdio_cmd52 cmd;
-   779		struct sdio_func *func = dev_to_sdio_func(wilc->dev);
-   780	
-   781		/**
-   782		 *      Read DMA count in words
-   783		 **/
-   784		cmd.read_write = 0;
-   785		cmd.function = 0;
-   786		cmd.raw = 0;
-   787		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
-   788		cmd.data = 0;
- > 789		ret = wilc_sdio_cmd52(wilc, &cmd);
-   790		if (ret) {
-   791			dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
-   792			return ret;
-   793		}
-   794		tmp = cmd.data;
-   795	
-   796		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
-   797		cmd.data = 0;
-   798		ret = wilc_sdio_cmd52(wilc, &cmd);
-   799		if (ret) {
-   800			dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
-   801			return ret;
-   802		}
-   803		tmp |= (cmd.data << 8);
-   804	
-   805		*size = tmp;
-   806		return 0;
-   807	}
-   808	
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
+index 0a041b4db9efc549621de07dd13b4a3a37a70d11..cf0d97cbc4631f907faf255a338ceca673eaab2b 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.c
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
+@@ -33,8 +33,9 @@ static void event_seq_changed(struct venus_core *core, struct venus_inst *inst,
+ 	struct hfi_buffer_requirements *bufreq;
+ 	struct hfi_extradata_input_crop *crop;
+ 	struct hfi_dpb_counts *dpb_count;
++	u32 ptype, rem_bytes;
++	u32 size_read = 0;
+ 	u8 *data_ptr;
+-	u32 ptype;
+ 
+ 	inst->error = HFI_ERR_NONE;
+ 
+@@ -44,86 +45,118 @@ static void event_seq_changed(struct venus_core *core, struct venus_inst *inst,
+ 		break;
+ 	default:
+ 		inst->error = HFI_ERR_SESSION_INVALID_PARAMETER;
+-		goto done;
++		inst->ops->event_notify(inst, EVT_SYS_EVENT_CHANGE, &event);
++		return;
+ 	}
+ 
+ 	event.event_type = pkt->event_data1;
+ 
+ 	num_properties_changed = pkt->event_data2;
+-	if (!num_properties_changed) {
+-		inst->error = HFI_ERR_SESSION_INSUFFICIENT_RESOURCES;
+-		goto done;
+-	}
++	if (!num_properties_changed)
++		goto error;
+ 
+ 	data_ptr = (u8 *)&pkt->ext_event_data[0];
++	rem_bytes = pkt->shdr.hdr.size - sizeof(*pkt);
++
+ 	do {
++		if (rem_bytes < sizeof(u32))
++			goto error;
+ 		ptype = *((u32 *)data_ptr);
++
++		data_ptr += sizeof(u32);
++		rem_bytes -= sizeof(u32);
++
+ 		switch (ptype) {
+ 		case HFI_PROPERTY_PARAM_FRAME_SIZE:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_framesize))
++				goto error;
++
+ 			frame_sz = (struct hfi_framesize *)data_ptr;
+ 			event.width = frame_sz->width;
+ 			event.height = frame_sz->height;
+-			data_ptr += sizeof(*frame_sz);
++			size_read = sizeof(struct hfi_framesize);
+ 			break;
+ 		case HFI_PROPERTY_PARAM_PROFILE_LEVEL_CURRENT:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_profile_level))
++				goto error;
++
+ 			profile_level = (struct hfi_profile_level *)data_ptr;
+ 			event.profile = profile_level->profile;
+ 			event.level = profile_level->level;
+-			data_ptr += sizeof(*profile_level);
++			size_read = sizeof(struct hfi_profile_level);
+ 			break;
+ 		case HFI_PROPERTY_PARAM_VDEC_PIXEL_BITDEPTH:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_bit_depth))
++				goto error;
++
+ 			pixel_depth = (struct hfi_bit_depth *)data_ptr;
+ 			event.bit_depth = pixel_depth->bit_depth;
+-			data_ptr += sizeof(*pixel_depth);
++			size_read = sizeof(struct hfi_bit_depth);
+ 			break;
+ 		case HFI_PROPERTY_PARAM_VDEC_PIC_STRUCT:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_pic_struct))
++				goto error;
++
+ 			pic_struct = (struct hfi_pic_struct *)data_ptr;
+ 			event.pic_struct = pic_struct->progressive_only;
+-			data_ptr += sizeof(*pic_struct);
++			size_read = sizeof(struct hfi_pic_struct);
+ 			break;
+ 		case HFI_PROPERTY_PARAM_VDEC_COLOUR_SPACE:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_colour_space))
++				goto error;
++
+ 			colour_info = (struct hfi_colour_space *)data_ptr;
+ 			event.colour_space = colour_info->colour_space;
+-			data_ptr += sizeof(*colour_info);
++			size_read = sizeof(struct hfi_colour_space);
+ 			break;
+ 		case HFI_PROPERTY_CONFIG_VDEC_ENTROPY:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(u32))
++				goto error;
++
+ 			event.entropy_mode = *(u32 *)data_ptr;
+-			data_ptr += sizeof(u32);
++			size_read = sizeof(u32);
+ 			break;
+ 		case HFI_PROPERTY_CONFIG_BUFFER_REQUIREMENTS:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_buffer_requirements))
++				goto error;
++
+ 			bufreq = (struct hfi_buffer_requirements *)data_ptr;
+ 			event.buf_count = hfi_bufreq_get_count_min(bufreq, ver);
+-			data_ptr += sizeof(*bufreq);
++			size_read = sizeof(struct hfi_buffer_requirements);
+ 			break;
+ 		case HFI_INDEX_EXTRADATA_INPUT_CROP:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_extradata_input_crop))
++				goto error;
++
+ 			crop = (struct hfi_extradata_input_crop *)data_ptr;
+ 			event.input_crop.left = crop->left;
+ 			event.input_crop.top = crop->top;
+ 			event.input_crop.width = crop->width;
+ 			event.input_crop.height = crop->height;
+-			data_ptr += sizeof(*crop);
++			size_read = sizeof(struct hfi_extradata_input_crop);
+ 			break;
+ 		case HFI_PROPERTY_PARAM_VDEC_DPB_COUNTS:
+-			data_ptr += sizeof(u32);
++			if (rem_bytes < sizeof(struct hfi_dpb_counts))
++				goto error;
++
+ 			dpb_count = (struct hfi_dpb_counts *)data_ptr;
+ 			event.buf_count = dpb_count->fw_min_cnt;
+-			data_ptr += sizeof(*dpb_count);
++			size_read = sizeof(struct hfi_dpb_counts);
+ 			break;
+ 		default:
++			size_read = 0;
+ 			break;
+ 		}
++		data_ptr += size_read;
++		rem_bytes -= size_read;
+ 		num_properties_changed--;
+ 	} while (num_properties_changed > 0);
+ 
+-done:
++	inst->ops->event_notify(inst, EVT_SYS_EVENT_CHANGE, &event);
++	return;
++
++error:
++	inst->error = HFI_ERR_SESSION_INSUFFICIENT_RESOURCES;
+ 	inst->ops->event_notify(inst, EVT_SYS_EVENT_CHANGE, &event);
+ }
+ 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
