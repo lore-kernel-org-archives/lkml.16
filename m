@@ -1,88 +1,91 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527191DF98D
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A9D561FCE;
+	Mon, 19 May 2025 08:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643273; cv=none; b=rs7t/OCeSUW7YE5Zi1Vz6Qn7Sb3/1pK54pFMbVF0uR7QD4smN8lhq4rNPj34kObegnBcQHlI/D+MHvsn3avyx18UzPaAZq1axmn7EwhOHQiZLJFI1KZqDie7bFdyZyfwFL1boEm3a+ECeokYJ0UwoEEP++OQfuthzVwvgvXGWtk=
+	t=1747643293; cv=none; b=Tyi7oHVmUv8DhCG56d2vQRVkMajF8/QwAPf7VbDdo15IELyWkL8xkdhDekvRBPpMoFbUDHHzdpSEHNTNb7HJdbZjl37Vhi2hnIQjZD5WYngWVaeUHY2UBJCqM07he60vqW9x9/mWoCuDonIyil2SnbyJIYrQ96QAq1EfsmT7gMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643273; c=relaxed/simple;
-	bh=z3GOOWslze767ZXUnyiXmcPnSLnDPCM4xD6CmiyIW54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TgYGF2HW7whUtg+T4nrE1sqAClm3///CYMqeAB+oQzf4O72YxREKLnzM/xl+v/Cl+dps6udyqJOEUhBapyjgOADNdao2JznP1WMKNG3eD2FnRpdIOiksNZK7ydrQ9cs9z70ZKwcdSYBUBnWZjtcqkM//Y2XSr691JVaBo6tga30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LBIzuo8R; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LBIzuo8R"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32805275d68so20296621fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747643269; x=1748248069; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3GOOWslze767ZXUnyiXmcPnSLnDPCM4xD6CmiyIW54=;
-        b=LBIzuo8RsO2DqFL+UrwEWqlL0KSV6+tC5Jx77sEjCuKUXEiJsQ8YXGJLMCnvyLO2Xd
-         +2NjnPimOt1a74VS37x0kpF5M6gzWsTufmY/5DTJbfji4d1aiBfwYKKhOZA9rS06PoQJ
-         wl95GBt58g61F71lPmfXLgpdiJSAaHGif7Q2AN3F8ryanqZGA6FXgewFD2TZDGMES9Tn
-         2v+SzCi8bojs8IDq1djyCiEEHMckE9RJB1ySOc6ahjVzZs03o1G5Gwz6a66OjfgsCNf3
-         dQA/Sjwtin8exCgDXMus7n/WHAnO3csvYtWwD3Nt5Xiord52Q+yjdCqRBWths4f5Xc5q
-         QI5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747643269; x=1748248069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z3GOOWslze767ZXUnyiXmcPnSLnDPCM4xD6CmiyIW54=;
-        b=fWuF4PtJgVj1kk8y95JcwebiRHiW0tihU55bwfVpfYnstC5c7A6rLz6TgpRtx86C4t
-         TcmkFAS/JM3mxhxW9jNLuJsAELzJ/KBcqQvYQJBmIzOO3faUfuZvY2WAG3E/DYG2Hf4r
-         lspqNNh2E/vHluZzRO8V1oHbxZePNuIf/N3itbA6PrzOQHZo5QJugjChZ6muSLKBRapz
-         z4bRWol3JPwEvG7HNlbizpxFTCsdgL4tYskTPvI5uSTXgtauGz4y67HscmJOoevlLr5E
-         nzgNwJ/b0qjvxltPV+vrLUZ8NtSTz61KwGgXJI/lB0zkU6Qq72secGaaECuI6Q3xjZ8w
-         kvkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXDlBYR0Fi0Qh20EFtNXRHybGQPJ1XqaV9GKz2ZRWsre0h1UK2CUDk0CX21+iSMtWKwzzNu/BZKS80vHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJE0HAp4Y/o0sZLUEi4eznT0/ZIXG/3tqDbS4oxBd/Ty8lCj3L
-	CBzGxBUfiVDqboo9jNSntk3fWNYr6pHZhzx4jZD3bc40c2eKwZVrRwZOfrtB/FqQ3Tq2OmUjPbh
-	54yViy1rpvL2YfB0JkF93GqCylCYsE5UI6k+gII+pzg==
-X-Gm-Gg: ASbGnculcF8/wmhNMP/mzleBFFNOfNF/yQ7F0AvjeVddfEjXnWMkrp1Y2P1rsh3rjho
-	VZpC3bKqway3L5deUNkPPSw5HAiT6tAx/uGao97VCiVDhdKPnBt+Q8x8SCg/IWTxg6vH0Y1BAzd
-	77UdRB+KpfEVvHFm2jpJeJreJg1M00Ee2uH5urWHZqWrVQVJC+gQtoHn1Xv5vuKRQupFEkfpAlx
-	A==
-X-Google-Smtp-Source: AGHT+IHkWo3T4fmnBPXjA9hhOFnYmSmUwbX5sPEWAwMYvh43Bud56lnIHt6z8iNgiDx10hwY4T/0DDuc6HSnlwQftFM=
-X-Received: by 2002:a05:651c:41d4:b0:30b:b956:53bd with SMTP id
- 38308e7fff4ca-328076ef3cemr30688951fa.4.1747643269217; Mon, 19 May 2025
- 01:27:49 -0700 (PDT)
+	s=arc-20240116; t=1747643293; c=relaxed/simple;
+	bh=EZwYfI6UoItoqaAQx0P/SnWP4DI4Px525DAcQTTWdgc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qWbP5NsLAuNwu5CJW6NbEJ2fB6XJMqES0pHvxeHG0gMaRhUg0+C/1zd6FFC0mXDUwwO6mzteAFDFCyCXTB+1Ttg5lrzzWCCxzZZwZxx08Tr0vrVLEmyiKo5ZsRLxDHZzLG9kH8K0gk7pOBb+w/dfSHqM86cxAKdfdZy+oI+p3Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A475E153B;
+	Mon, 19 May 2025 01:27:52 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 285BD3F5A1;
+	Mon, 19 May 2025 01:28:04 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Jakub Brnak <jbrnak@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2] perf test probe_vfs_getname: Add regex for searching probe line
+Date: Mon, 19 May 2025 09:27:55 +0100
+Message-Id: <20250519082755.1669187-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519041850.13095-1-chalianis1@gmail.com>
-In-Reply-To: <20250519041850.13095-1-chalianis1@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 19 May 2025 10:27:38 +0200
-X-Gm-Features: AX0GCFunzpV0XliXViisGLif-SfxEjisRlfKg_vdkE0KlhLaS0oVW17eNx19MOA
-Message-ID: <CAMRc=MexsDgNRkHtP65t9qe=mR0COMCb+6A5XRqnU3Q7FQOPZg@mail.gmail.com>
-Subject: Re: [PATCH] gpiochip: expose gpiochip set data to be able to use it
- with a an usb gpio expander for example.
-To: chalianis1@gmail.com
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 6:18=E2=80=AFAM <chalianis1@gmail.com> wrote:
->
-> From: Anis Chali <chalianis1@gmail.com>
->
-> Signed-off-by: Anis Chali <chalianis1@gmail.com>
-> ---
+Since commit 611851010c74 ("fs: dedup handling of struct filename init
+and refcounts bumps"), the kernel has been refactored to use a new
+inline function initname(), moving name initialization into it.
 
-I will definitely need a more elaborate explanation of what you're
-trying to do and why. We don't export symbols that have no users in
-the kernel so I would at least expect a second patch adding it.
+As a result, the perf probe test can no longer find the source line that
+matches the defined regular expressions. This causes the script to fail
+when attempting to add probes.
 
-Bart
+Add a regular expression to search for the call site of initname(). This
+provides a valid source line number for adding the probe. Keeps the
+older regular expressions for passing test on older kernels.
+
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Fixes: 611851010c74 ("fs: dedup handling of struct filename init and refcounts bumps")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+
+Changes from v1:
+- Keep old regexps to be compatible with older kernels (Arnaldo)
+
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 89f72a4c818c..58debce9ab42 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,8 +13,16 @@ cleanup_probe_vfs_getname() {
+ add_probe_vfs_getname() {
+ 	add_probe_verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+-		result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
+-		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
++		result_initname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname.*"
++		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_initname_re" | sed -r "s/$result_initname_re/\1/")
++
++		# Search the old regular expressions so that this will
++		# pass on older kernels as well.
++		if [ -z "$line" ] ; then
++			result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
++			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
++		fi
++
+ 		if [ -z "$line" ] ; then
+ 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
+ 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+-- 
+2.34.1
+
