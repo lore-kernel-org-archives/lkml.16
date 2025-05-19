@@ -1,86 +1,127 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26351F17E8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD9C1F192B;
+	Mon, 19 May 2025 10:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650859; cv=none; b=IdMZsJU8y9Szrd4uCK6OdDhLLN2q5dYTORHlLKTnV+KtI1bnai5/xV3/VXwDed3YVYKoUCt5MYJd4VohzFezRL09OAcQyLwfuqvAbrb8W13muU0xzLxUhkZ8XZdcFNIcUn9PIrTBPA3NykaclOz6Qk/oEwx9mNLEEeogToRnsio=
+	t=1747650879; cv=none; b=GW5L883+MNIxpFLxTrxvcQyOmxepWq9vlquGmM2b7NTU0Nkgrm4dcUTvBPAmYOzQ1qMEvJK3IfAPizvD+vhWquRRdtdeG2ZaYrlP7LKZX/K/gLZiW1zUmEsfY6SgGIH7Qgy3kZUH2ABvHTSRPutsxKrNTBg1GlSkA8O8mID3is0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650859; c=relaxed/simple;
-	bh=OCiXCgXTsdRzlcaZtWeBhlKDQeWUe+XaeEuHpx1+3FE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p/d48yiIzp5em1YUy1zkpKK8QDG1VDdHE+MwhPUAYD/pmAPgLj1ygs0wAjGQh3ixqRTZlgEi6U+6/LLCHs/VJ4OqVvlWA8KST4PC84IBbq8xdOibBiJnrqvutkHsSZesgL12DV9cq1od7KsiM+pxi8iQGHP4vL0pGU4xtF9RwAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ahtPnSJ/; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747650879; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Uj9WtYegah9XCg+TFI/Yt9KmvLdAi7/iHFZ28VdXkmv2JTzJABnJBSdPs1xRbKmnUrlUcYZDUJYw/AyfRiO/4cCP+BIjoO97YBjqCD81XjT4yA2u9Lg/BO5gdVv/0BSPES0dZ7GHT+FPyANq/caH9aIR279v1RjjinCu5NvLyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTr36NzD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ahtPnSJ/"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad563b69908so168513766b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747650854; x=1748255654; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OCiXCgXTsdRzlcaZtWeBhlKDQeWUe+XaeEuHpx1+3FE=;
-        b=ahtPnSJ/Gc1ZTkiBUqsk9zNazJ3dOZXidTo+KO5ZxwHMK94OTuRYK8qSteP39a3ElU
-         eRLLPo87GjdqptTPhEQXCSa/nxoJRzcNoXKxzc8kN1D1AGSJPTMLspsmkA+e+P1jHXwe
-         khCwJiHEOR0hGahag+CxmDvNEh1N/UZBOasRuLsGAHn4p9/GqtvHz5lwpvNkGL8/b2Hi
-         Xwg8joQWcW1hw/DNiex3aac0bGEZ2YdarTWsPKLGbgV5XnC0g0zuwZAyt8z9LUgcvXeT
-         JjbkDdFKRCWmHlXYmBfBSmD7GSOSmtAblrQbzURH9d+JlCOUIChd/u5acZVGo1lF4bvD
-         C1ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747650854; x=1748255654;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OCiXCgXTsdRzlcaZtWeBhlKDQeWUe+XaeEuHpx1+3FE=;
-        b=MrJC90A1q0ituuwK9RR3QabNH/zStWxJ87AhrSUuVIOD3gjom4o51LngXTYr0/iH5G
-         EEVx5GwBEKe6mfRODAOjfkVEu6XzIS2ooVeokWiDLYldtEMg6DNdAVPIfg5938hh4aMW
-         o7GF4M5K9ns/tetfnTg7osDQSOqonk2G5hJAXtVSKbXfPW2ugTjp9O9Tsuo/lQuCNXJt
-         3lW6Gwerz3GsCJ9ZEl5iSoSCFlzduevyTTGY/JJCXxI32jwJV3XoPewSjz6Vq2E3pzHI
-         FOXwOyoXJORkIJCyvOYczEHzrARQ0k/XD6sgAimHshlLz+u/km6HyVXc7beJUcMA1lCM
-         96jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtGTL0Bi7HFdaIp691IDeWlmOtz8nEiEa9wFjpk9u10BbsaACmHqlxZ7woyBAo+xWQ5e5eD2/0YqCNnH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5k45MeeEtQIcAYPquq2Ll8RB9CENeNFKUrTrqOkBzGXHU05vO
-	nGYk2S8DpcU76GH++wXpRN8YfckI1WvxT7KqJdImKxu7SZRTFEx3T+rjKyxYyhTPzGi76BcuNne
-	rzXKEVD847TUwdtuFU+xnulYmYeB+1iRZCoS0p4HTgw==
-X-Gm-Gg: ASbGnctbnr4vAuXBouBxmtqfTEwBBj/sttbHnQro/PYGf9kbrqqBVojhtHS5/WF1mTT
-	/MgvvAhO9fZt9ZvLNYHO7RIGHa6jqf/klC6qm/sb09yUfgEwMXQphss/NHedl/Mx0MUDK1qb2Vc
-	O6I0Rx6sANo2dQSVVuUzAN1LPJ5NnMLjQ=
-X-Google-Smtp-Source: AGHT+IFDp8A2zyqmQfoHj5jH3cPFOL82cfvhbT89hIH6TA5DLkVoMIRPLMREfOyoE29O/ZDFknRlG6y9JUGlUCAi8RU=
-X-Received: by 2002:a17:907:3e16:b0:ad2:3fa9:7511 with SMTP id
- a640c23a62f3a-ad536dce687mr1138427866b.41.1747650854046; Mon, 19 May 2025
- 03:34:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTr36NzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B38C4CEE4;
+	Mon, 19 May 2025 10:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747650878;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=XTr36NzDbtffNGFv46VY4I7hwVU0ohx9KYN63WxtbmVKBLwZKctG8tZidKFtLjjid
+	 CGAV5lVg/vHsoNvAL//H2geZMXvOw4wQxRg9O6+jmAkhW6oTQR3gyI1wZzjZQfZJ5V
+	 uJq/lMOtXJZm+o8NxA5+hTcDYSWLgXJw3E6atC8wtbhGg9v1qBBIn69KByeA9aIhAE
+	 bgJluY6ondFAtHKQ4V+utkzkSyp/0gTf+9A1/MZH83XqB40tdim0QV1MxqE9irYIeP
+	 /885NguXhiqtJ2rXqDauzf9V6jxIDId/9oroyKIKKoz0DOKo/1fAYriWUVu+Ki4eLt
+	 DVw6DJlD37L8A==
+Date: Mon, 19 May 2025 05:34:36 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514131240.3343747-1-neelx@suse.com> <3c08a5d6-bf17-4a74-a889-b1658a2a75d1@wdc.com>
- <ad599778-43c1-49ae-9662-ecd5b79292ca@wdc.com>
-In-Reply-To: <ad599778-43c1-49ae-9662-ecd5b79292ca@wdc.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 19 May 2025 12:34:03 +0200
-X-Gm-Features: AX0GCFvyJrl471zarGWZbjYduBBOoR_Tqci57jCpNqeeLfhsT5ctT_BHaSCe-gw
-Message-ID: <CAPjX3FdLkt1DCmKkZDQvHOauGE1m3dgjP_3Jt-kHq7FDpjOzBA@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: btrfs_backref_link_edge() cleanup
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250519103436.G7i7Nbn8x8j_Pla2vcos3AzQASFJ0Yd6rM1aaVxP0yo@z>
 
-On Wed, 14 May 2025 at 17:48, Johannes Thumshirn
-<Johannes.Thumshirn@wdc.com> wrote:
->
-> On 14.05.25 17:47, Johannes Thumshirn wrote:
-> > Looks good,
-> > Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> >
->
-> Hit sent too early sorry, I'd also mention in the changelog that it
-> isn't used outside of backref.c so it can be made static.
 
-Yeah, that could be mentioned explicitly.
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
