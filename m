@@ -1,65 +1,80 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C71835947;
-	Mon, 19 May 2025 09:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C571F5402
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645943; cv=none; b=MdFEZ8SoL4g3TvDDvOJHlWBKOA+qeE9xw++u25JslUbu/wsZMQW7BQrO2oHL1a5QHIfU8rrPKuT59x07XyU0lybCOU2ogkfGQeD0viQQMJlLvvPyo1azRMkMYN7dAT8VzapiNuJXztyZbiz8h7mpJLq6lMVeseAjkNxeTW/UewA=
+	t=1747645954; cv=none; b=nzQ3kSqHDYkMqjqvLvUWZC/k75YE0cAqFasGu5Q9yZlSBOgWdhRojHwsNztFQBqfautccBAQRkryBOlJdHlnjWRzkF9xyBLpSFpHLtxi8p9JcRxK9uZqxdQoMrBxFKsEIiIVUT6i4+bodU8TZkp6BiC53WgGKQ5+rqgW/iMgQqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645943; c=relaxed/simple;
-	bh=Q/r+/Zon8SsRaNOI0f+eNA796nFcU1p/BFRcYLCCsVM=;
+	s=arc-20240116; t=1747645954; c=relaxed/simple;
+	bh=oRAgfjZjZ1nzEbUbUOLMfziEE0zozxiWcUxmkDiGpM0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I8BZ+8D/CtFdl5XaMvm28QvnZj/N12D7V8SDB0kepn1RklB0qbuKVzzWuRCMvDrcUXL8oooljx0TuJrkMoIsDYfMpRoNT72EzB+Ae/VJf6yvRSxe+mhljXqLMR0NkmmOCR3YMEc2UZ6QGSjJcAvceN1A3jtOctitVnwxoT4ycGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YjUT14rl; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=fvYvYLYBIwHcezhY31gUlQsdUe1YjO/7Z470Sc0kVgLvJCShGC5klKW9tgq4kIl9ZhSXRaGwcv1gZuJqpxZ3gzYKBvkiJjnVB5nv9tD8VfAEu2b3UXp033TPwqtpOTkYkyz926QNEJY0hDxH3IJT+ktgM3Crl2s3Mq7u9WvCXUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BWPcKpg9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tM1p0OIv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=l7XNFP3/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VK75ClBa; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjUT14rl"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso5917863a12.1;
-        Mon, 19 May 2025 02:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747645939; x=1748250739; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LGat+CqdPFtcg5jQSgfD98mPtp2nCHlBED2Mf+O2MZo=;
-        b=YjUT14rlS3uc34OXufXnCD2lX/Mj9IdkKiStZN7U1hEQjd+/OxfuxMKqr3FnETZQaC
-         EAlJV7sj9oS4HVNj7mLJjkO90SsULA6O/Sx1G1el9UYeIgKoMP61CoKaBid/lmBnDPr1
-         vtuQj5NsjHmvdkQf4RppFf59uHKGTlPjP2jTBka3knQT+tdehNlo45ONLRhUJKl5lsFc
-         s2BBX4+Z9y3kY75Jd3KVLODMoV9Zi98Gx7Ohl2g93itVJzhfb9kl9q7c6wa2euZ/AAyy
-         kYjnP5xXPoYCcgIvchGFXUjhwmMriVtYjhKP5afjzMZp9dLxTXza6ag1hnsFe4eRHTxa
-         CZpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747645939; x=1748250739;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LGat+CqdPFtcg5jQSgfD98mPtp2nCHlBED2Mf+O2MZo=;
-        b=vUh3a0I1eXvxoGGYLeLLBOyyEIgEear7ZBlwgIaWPMbWGGrByJnAJRtCzowJAWauCw
-         UGmawgBIP9apXEmexVLF0LBat32smycBIla+ZfiGyH0lz7I/2n5lAt2WCMwkxYTw914+
-         py0wKjM/ykzY3es6y/x448Zd/2SXybtgZ8KcBGkZpItQnBZYUVfyDDb/9WqqJTXKgXXe
-         BCh1mMQsrEu58gPVOUOAmWCwVjf+dpk7OO/OIhHLhGOBxbKk46MHmNfyNTqXr9Wy1aKi
-         LzEVADlp4IyGpWbKXcKw4GAxM5UBaRtXE6y6YmSj8NHboEHl4uwA7GFAR8VjCxZeacSb
-         gTSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVngJNLUyqmVKf90Ys+aX+5KrnXhTjc7VOxdSpSXnV5cXaxEHBNcZJDD0PNVwTDGx0uJUhia4jEV22Hjw=@vger.kernel.org, AJvYcCXDQ3Rb1rZE2+egfS56qifKQ2sgFbgCMAI4mxcz08bMT/3347brevakjii/KTb944TfmjhyfRw5lTOj0zU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOsWrzojdTPTUoFxwrW78pBoZwSTYPQOeqYGuBl/yt5WCaNovj
-	6Pa8Bq4MErdpzqs9WmLKKmRI8G12Qo+g8cPaWL7LDdF/ZCUx4tVK1ngb
-X-Gm-Gg: ASbGncsFulwQBRU4jS/XI5Ou8F4DFWERzQbqCxxonjRXO+z+azmZ7++4dnVc0Wm2Xj2
-	yjcFeHa+qFEfvlWVsUPL8LuvAbz6z+dkBQmvf20e6lhKL0xfTA4sY+N1uJfcDbo6CFdBxdUH64e
-	3m+LNPPcUuCBZLkleHXDhlbTAauOoV1FGxASdx2l1wtNTFMXBEItbaXcaDwnfJH1Xx0u+Xz03Hc
-	9EGs3jRJsVmNKJEj1D6c0HfoJZPo+pRVupbnvRrVVJygRI2Rhg7xd3wbDDs83FFBLvFiaxrt8f1
-	fgWqaLX9QfV4OT4Bx/3VixikuAbd4yiwMOdRaRTkzNdu5ifcJ0Ycc9sTPrUNPPvyldoy+AqLbF2
-	wRw==
-X-Google-Smtp-Source: AGHT+IFi0xTP9AswLVv6RpQNL+inz9R10asKObEYdcOw+GpNVRxRmF4gLn/+2931Dvys9Ua653cX2g==
-X-Received: by 2002:a17:907:7e87:b0:acb:5c83:25b with SMTP id a640c23a62f3a-ad52d42bf0cmr1168206266b.7.1747645939103;
-        Mon, 19 May 2025 02:12:19 -0700 (PDT)
-Received: from [192.168.5.163] ([92.120.5.12])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e665sm557812666b.5.2025.05.19.02.12.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 02:12:18 -0700 (PDT)
-Message-ID: <e6d88cbc-accb-4423-80e4-3972766047f4@gmail.com>
-Date: Mon, 19 May 2025 12:30:23 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BWPcKpg9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tM1p0OIv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="l7XNFP3/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VK75ClBa"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B8F582026F;
+	Mon, 19 May 2025 09:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747645951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CxQ89a9q28JTurhDVDxMqnAC8LAbCOepjWefrVxQTkY=;
+	b=BWPcKpg9p6IRKguFfdBOSwzNb4pkYJsyFagIVipJz100ykQ6Gk6W8GXx7jbVsFPKBSloWD
+	spfRgBjk6FC+T/C98q7UnvuOPabDqoFCC+X8xFF6KSCuP6wo2zPWEpJRJk428HCIJrsIph
+	kXkQsXb7GyMZz1Ssnx8vdueXDiLfKDc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747645951;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CxQ89a9q28JTurhDVDxMqnAC8LAbCOepjWefrVxQTkY=;
+	b=tM1p0OIvhTm8krEgzW8x2kQjfiobi1OSRcjOjhLjiSox/nWUbTl95bwpEles6KJZ7cH0vQ
+	Vrr13ZYOTlOPBPDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747645950; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CxQ89a9q28JTurhDVDxMqnAC8LAbCOepjWefrVxQTkY=;
+	b=l7XNFP3/sEjhh2tO+iZsKl7jV1UOPf3m7VW/+pzQ8pcLlaFPon9p3xcgoJzr0ApCwBQJMT
+	lSY6+N9cGKIzS7jsD5zekotPrGUJW4ySTRxg/woUjooZD8dU7i/YGMq+eI79wTWmfr/7mv
+	cJ+ygDD9y3V+i5HBTL2P/AcZybWVmbQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747645950;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CxQ89a9q28JTurhDVDxMqnAC8LAbCOepjWefrVxQTkY=;
+	b=VK75ClBa3QOoerGkYdkyn4ldKcOGOhBu2tdKTcIzZjn3oY357PZTwQftaXpShxSgr43F20
+	FvIFy9cftu7eDsAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 806401372E;
+	Mon, 19 May 2025 09:12:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id biT7Hf71KmgKaAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 19 May 2025 09:12:30 +0000
+Message-ID: <ab7c28cf-0c00-46b6-a2eb-97cee71b5e5c@suse.de>
+Date: Mon, 19 May 2025 11:12:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,272 +82,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/3] ASoC: audio-graph-card2: support explicitly
- disabled links
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
- <20250515153128.147457-3-laurentiumihalcea111@gmail.com>
- <874ixltjzw.wl-kuninori.morimoto.gx@renesas.com>
- <0aa11ef6-4166-41d8-98bc-6c7687d10b11@gmail.com>
- <871psls8nw.wl-kuninori.morimoto.gx@renesas.com>
-Content-Language: en-GB
-From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
-In-Reply-To: <871psls8nw.wl-kuninori.morimoto.gx@renesas.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] dummycon: Trigger redraw when switching consoles with
+ deferred takeover
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ gregkh@linuxfoundation.org, hdegoede@redhat.com, arvidjaar@gmail.com
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250519071026.11133-1-tzimmermann@suse.de>
+ <874ixhotss.fsf@minerva.mail-host-address-is-not-set>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <874ixhotss.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_TO(0.00)[redhat.com,linuxfoundation.org,gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	URIBL_BLOCKED(0.00)[suse.de:email,suse.de:mid,suse.com:url,lists.freedesktop.org:email,imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,lists.freedesktop.org:email,suse.com:url,suse.de:email,suse.de:mid]
 
 
-On 19.05.2025 04:15, Kuninori Morimoto wrote:
-> Hi Mihalcea
+
+Am 19.05.25 um 11:04 schrieb Javier Martinez Canillas:
+> Thomas Zimmermann <tzimmermann@suse.de> writes:
 >
-> Thank you for clarify details.
+> Hello Thomas,
 >
->> [snippet from base.dts]
+>> Signal vt subsystem to redraw console when switching to dummycon
+>> with deferred takeover enabled. Makes the console switch to fbcon
+>> and displays the available output.
 >>
->> 	my_card: card {
->> 		compatible = "audio-graph-card2";
->> 		links = <&l2>; /* here, we're only allowed to specify links that exist */
->> 		routing = "Headphones", "C20",
->> 			  "Headphones", "C21",
->> 			  "Line", "C01";
->> 	};
-> (snip)
->> &my_card {
->> 	/* here we're forced to also specify l2 even if this is already done
->>          * in base.dts. This is because DT overlays don't support appending to
->> 	 * properties.
->>          */
->> 	remote-endpoint = <&l0>, <&l1>, <&l2>;
->> };
-> This is very nit pickking, but I need to confirm.
-> You want to indicate here is this ?
->
-> 	&my_card {
-> -		remote-endpoint = <&l0>, <&l1>, <&l2>;
-> +		links = <&l0>, <&l1>, <&l2>;
-> 	};
-
-
-yes, I'm very sorry for the mistakes....
-
-
->
->> &l0_ep {
->> 	remote-endpoint = <&c1_ep>;
->> };
+>> With deferred takeover enabled, dummycon acts as the placeholder
+>> until the first output to the console happens. At that point, fbcon
+>> takes over. If the output happens while dummycon is not active, it
+>> cannot inform fbcon. This is the case if the vt subsystem runs in
+>> graphics mode.
 >>
->> &l1_ep {
->> 	remote-endpoint = <&c2_ep>;
->> };
+>> A typical graphical boot starts plymouth, a display manager and a
+>> compositor; all while leaving out dummycon. Switching to a text-mode
+>> console leaves the console with dummycon even if a getty terminal
+>> has been started.
 >>
->> c0: codec@0 {
->> 	port { c0_ep: endpoint { remote-endpoint = <&l0_ep>; } };
->> };
+>> Returning true from dummycon's con_switch helper signals the vt
+>> subsystem to redraw the screen. If there's output available dummycon's
+>> con_putc{s} helpers trigger deferred takeover of fbcon, which sets a
+>> display mode and displays the output. If no output is available,
+>> dummycon remains active.
 >>
->> c1: codec@1 {
->> 	port { c1_ep: endpoint { remote-endpoint = <&l1_ep>; } };
->> };
-> This is also nit pickking, but I think above is wrong.
-> I guess you want to indicate is...
->
-> 	&l0_ep {
-> -		remote-endpoint = <&c1_ep>;
-> +		remote-endpoint = <&c0_ep>;
-> 	};
->
-> 	&l1_ep {
-> -		remote-endpoint = <&c2_ep>;
-> +		remote-endpoint = <&c1_ep>;
-> 	};
->
->
-> Your are indicating very confusable naming, so I want to understand
-> correctly as much as possible.
-
-
-yep, you're right. Again, very sorry.
-
-
->
->>>> 	CODEC A has widgets A0, A1.
->>>> 	CODEC B has widgets B0, B1.
->>>>
->>>> 	my-card {
->>>> 		compatible = "audio-graph-card2":
->>>> 		label = "my-label";
->>>> 		links = <&cpu0_port>, <&cpu1_port>;
->>>> 		routing = "A0", "A1",
->>>> 		          "B0", "B1";
->>>> 	};
->>>>
->>>> 	CODEC A's DT node was disabled.
->>>> 	CODEC B's DT node is enabled.
->>>> 	CPU0's DT node is enabled.
->>>> 	CPU1's DT node is enabled.
-> (snip)
->> Assume that we also have BASE1 that is compatible with PLUGIN but
->> C0 and C1 are connected to BASE1's D0 and D5. Since there's no D1-C1
->> connection that means you'll have to create another DT overlay. Thus,
->> the scalability of plugin.dtso decreases.
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Reported-by: Andrei Borzenkov <arvidjaar@gmail.com>
+>> Closes: https://bugzilla.suse.com/show_bug.cgi?id=1242191
+>> Tested-by: Andrei Borzenkov <arvidjaar@gmail.com>
+>> Fixes: 83d83bebf401 ("console/fbcon: Add support for deferred console takeover")
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>> Cc: linux-fbdev@vger.kernel.org
+>> Cc: dri-devel@lists.freedesktop.org
+>> Cc: <stable@vger.kernel.org> # v4.19+
+>> ---
+>>   drivers/video/console/dummycon.c | 15 ++++++++++-----
+>>   1 file changed, 10 insertions(+), 5 deletions(-)
 >>
->> Now, for our particular case, we have BASE0 and BASE1 with the following
->> DAIs and CODECS (these are physically present on the base boards):
->>
->> BASE0 has DAIs D0, D1 and CODEC C0
->> BASE1 has DAIs D0, D1 and CODEC C1
->>
->> Both of these boards are compatible with plugin PLUGIN that has codec C2.
->> The possible DAI links are:
->>
->> For BASE0:
->>
->> D0 <----> C0
->> D1 <----> C2 (only possible with PLUGIN connected)
->>
->> For BASE1:
->>
->> D0 <----> C1
->> D1 <----> C2 (only possible with PLUGIN connected)
->>
->> Since the D1 <---> C2 connection is valid for both BASE0-PLUGIN and
->> BASE1-PLUGIN combinations I think we can make do without the support
->> for explicitly disabled links. But I don't think this is ideal because:
-> Let's avoid BASE3 case here to avoid _if_ story.
-> You are now indicating too many complex/cofusable situations with wrong
-> setting samples (D0/D1/D2..., C0/C1/C2. BASEx has no D1-C1..., etc, etc...)
+>> diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
+>> index 139049368fdc..afb8e4d2fc34 100644
+>> --- a/drivers/video/console/dummycon.c
+>> +++ b/drivers/video/console/dummycon.c
+>> @@ -85,6 +85,12 @@ static bool dummycon_blank(struct vc_data *vc, enum vesa_blank_mode blank,
+>>   	/* Redraw, so that we get putc(s) for output done while blanked */
+>>   	return true;
+>>   }
+>> +
+>> +static bool dummycon_switch(struct vc_data *vc)
+>> +{
+>> +	/* Redraw, so that we get putc(s) for output done while switched away */
+> Maybe this comment could be a little bit more verbose about why this is needed
+> for the framebuffer console deferred takeover case? It doesn't have to be as
+> elaborated as how you have it in the commit message, but more information would
+> be nice IMO.
+
+I copied that from dummycon_blank(), as I assumed that the relevant 
+people know why. But yeah, I can elaborate a bit more. Best regards Thomas
 >
-> I noticed that why you need to add disabled Codec routing on BASE DT ?
-> It is the reason why you can't detect BASE only sound card, right ?
-
-
-exactly!!!
-
-
+>> +	return true;
+>> +}
+> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 >
-> 	---- 8< ---- 8< ---- 8< ---- 8< ---- 8< ----
-> [snippet from base.dts]
->
-> 	my_card: card {
-> 		compatible = "audio-graph-card2";
-> 		links = <&l2>; /* here, we're only allowed to specify links that exist */
-> 		routing = "Headphones", "C20",
-> 			  "Headphones", "C21",
-> =>			  "Line", "C01";
-> 	};
->
-> 	---- 8< ---- 8< ---- 8< ---- 8< ---- 8< ----
->
-> If my understanding was correct, your system can be indicated like below
-> (It is not same as your D0/D1/D2 sample, but I think same things, and
->  not confusable sample)
->
-> 	BASE			  PLUGIN
-> 	+-----------------+
-> 	| CPU0 <-> Codec0 |     +--------+
-> 	| CPU1		  | <-> | Codec1 |
-> 	| CPU2		  | <-> | Codec2 |
-> 	+-----------------+     +--------+
 
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-pretty much. The only difference would be that PLUGIN has only 1 codec
-
-in our case. I think it'll be much easier to just stick to your naming conventions...
-
-
->
-> How it works by below ?
->
-> BASE
-> 	/*
-> 	 * detect CPU0-Codec0 connection only
-> 	 * Codec1/2 are disabled, but not related to BASE
-> 	 */
-> 	my_card: card {
-> 		links = <&cpu0>;
-> 		routing = "Headphone0", "Codec0"; /* for CPU0-Codec0 */
-> 	};
->
-> PLUGIN
-> 	/* detect all
-> 	 * CPU0-Codec0 connection
-> 	 * CPU1-Codec1 connection
-> 	 * CPU2-Codec2 connection, and its routings */
-> 	&my_card {
-> 		links = <&cpu0>, <&cpu1>, <&cpu2>;
-> 		routing = "Headphone0", "Codec0", /* for CPU0-Codec0 */
-> 			  "Headphone1", "Codec1", /* for CPU1-Codec1 */
-> 			  "Headphone2", "Codec2"; /* for CPU2-Codec2 */
-> 	};
-
-
-so, the problem with this is the fact that (assuming you've used a DT overlay
-
-for the PLUGIN) you won't be able to use the DT overlay on other boards because
-
-you've also added the "Headphone0", "Codec0" route which is specific to BASE's
-
-Codec0. We have multiple boards so our system would look like this:
-
-
-	BASE0			  PLUGIN
-	+-----------------+
-	| CPU0 <-> Codec0 |     +--------+
-	| CPU1		  | <-> | Codec1 |
-	+-----------------+     +--------+
-
-
-	BASE1			  PLUGIN
-	+-----------------+
-	| CPU0 <-> Codec3 |     +--------+
-	| CPU1		  | <-> | Codec1 |
-	+-----------------+     +--------+
-
-
-The plugin is the same. The only difference between BASE1 and BASE0 is the fact that CPU0
-
-is connected to Codec0 on BASE0, while, on BASE1, CPU0 is connected to a different codec: Codec3.
-
-
->
->
-> And/Or your situation is similar as mine (I should have noticed
-> about this sooner).
->
-> 	d70be079c3cf34bd91e1c8f7b4bc760356c9150c
-> 	("arm64: dts: renesas: ulcb/kf: Use multi Component sound")
->
-> 	547b02f74e4ac1e7d295a6266d5bc93a647cd4ac
-> 	("ASoC: rsnd: enable multi Component support for Audio Graph Card/Card2")
->
-> 	45655ec69cb954d7fa594054bec33d6d5b99f8d5
-> 	("ASoC: soc-core.c: enable multi Component")
->
-> My board is handling above sample as 2 cards, by using "multi Component"
->
-> 	BASE			  PLUGIN
-> 	+-----------------+			^
-> 	| CPU0 <-> Codec0 |			| Card1
-> 	|		  |			v
-> 	|		  |     +--------+	^
-> 	| CPU1		  | <-> | Codec1 |	| Card2
-> 	| CPU2		  | <-> | Codec2 |	|
-> 	+-----------------+     +--------+	v
-
-
-one important thing to note here is the fact that we can only
-
-have 1 sound card because all DAIs (CPU0, CPU1, CPU2) belong
-
-to the same component.
-
-
->
->
-> Thank you for your help !!
->
-> Best regards
-> ---
-> Kuninori Morimoto
