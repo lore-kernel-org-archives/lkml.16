@@ -1,206 +1,165 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697C01FC7CA
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCB178F4E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647662; cv=none; b=XSSZABTiNPRZHKaOqobe3ecB2BVksaiEgJyjmsHB+BEtn/uyAvBP+L22bfSwQThC5ACQEG4ty6zMM0O3tWveD1lsmUGc7/Sx/dFh+NcDNk1uTsINHLYZgj8hjjYTS/08Ixwfi7kwQbtHsl9iy5ZMCqXu2mceZivLqjdRnudO18U=
+	t=1747647684; cv=none; b=nVoIHnRmMXI3cpNMj2oArW1sI7LiR4MDdxex0oM+IANPOVvehJVbZZJleqbhX9fMCD2fW5cNOl8+x59sCazy1g3ZiE7b/9I5uHOEIAt+zqAGFl4iKyYIQy/FXh9obAfJ60gSaXbiewlerM2ZBUjavCQyl2tOVeOxa/Q5MULG/Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647662; c=relaxed/simple;
-	bh=eTNmEe4DOaQ32UissRn1hz5ErOGQ6xPgtQqEURYP/zs=;
+	s=arc-20240116; t=1747647684; c=relaxed/simple;
+	bh=1N8vBcWhIabGytynruQG56eLkX8CxqpQ09i3kQSPOCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7/E1x7tF7fys7Oo8Pu2/Esl0zjkWQjkI/+5LUMQmgT3CVV7GjMc0W7YCL7pvz2lNizbYYXYF5d1ImJJx/1evpXwYqM3sAlgQ+pX+WncNifA6kFOv0BSuqwBE2Dq9YX+xmjig7iqToYQvk7yvL9duu6gGLQG47eNRPxfE5cj2sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZySM7qT5; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=XlX+BupooTZkcUZohbxXxSOfU8w3EYZFnzI6TsceP99S9jMDOC/lWFeSIuCu8AAG8jfeClFHyqpXDao0smD3CK6U5u0zUmlpRZZ45trQcOvTl4rycau/Qi5tQF6zZX5mImdHlA5mpgJiGn+N4Z9HDfmTz2dqsDebdLltEYBN/ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Dd1zGFWi; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZySM7qT5"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8466340E0240;
-	Mon, 19 May 2025 09:40:56 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id f7staS3xzTLK; Mon, 19 May 2025 09:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747647652; bh=CgeKTfEJxEthOuBnwVpghf/oVuTHW5JeXSBGitlvlr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZySM7qT5OdAdtEpDZqRZnmZIBYcKlY1L+PmkD7e4ONyv4hjaL0D62B4JllVWbzZ1D
-	 FSbEPHIiESq/ymgzncHSr25PeXU/mS5x39wSYlaU+XO/284Zs4oMmFPtp+QSpyOkPE
-	 IYm8Nzmf9b93RJS1v2ogdNScCXNaDcB/ZEtr8ZpQe1UGB5Wm1EzCPJ21gwGxDPv/A3
-	 0/GJoBUcADGi1pFWp8BcauF+HqNBySS7qfczTVriNR/U6rK5QBHuaYRykKEKWjT7eH
-	 G1QpN1QkfYu4SxIow4ER81QMGnm3Z9azSp9k+fHCPufLETIZ4UE8Qj5kVr+pOoTTs5
-	 d59bQNpqUQPupX9YncdXPYrsoT8hjc4L/DtOy6moLOS2eKPoNPDStASZtExZ1sHmUP
-	 HxV4UNogF8VJDu4kNQr6J4Q/JMfdnxoEa+0fnnh8jPKFsA3bL34hPPiK/9GOdS1yhC
-	 FnZUgnuKWA0cThskVLXFqyLJv/2IIoTL9Xb7TD6T0MrBbZ01cxJOb6N7eXoAjtj9Q+
-	 UtUznG54oeoHG7OmL6v1Rzisez0ualOn6y5BjZQLxczEZJt5Rg9Z6vrnkVAno0sQ51
-	 8c2M4dBbFnoEa/xUEPJkFmjG+rKM6Y+lIX4kzQEdg4qaWi5EiCDKIhyTu9EY0p89YX
-	 EOIIRtEL0RwnaWM1LaJeDgk4=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 646BB40E0173;
-	Mon, 19 May 2025 09:40:44 +0000 (UTC)
-Date: Mon, 19 May 2025 11:40:38 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Dd1zGFWi"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a375e72473so178133f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747647681; x=1748252481; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9mkHsltLutO5Q2FogJQA4q6XiEXER0Twfd94ZZbKAnk=;
+        b=Dd1zGFWiUp042yecqm0TkK0hJHhMHo9ZgqHARUfeUVjvHoFdV/7zedVZCVwcJkuUpW
+         HSIhUyzc5xTYCEg39NWCKAzCNXc4Avb7p9aSavAIHT0o9RWWJG35tcYmpFW02XrGYaW0
+         kVlbnVYBW9LrbGFLEen0zh8sk8kwf+NWQFtl+uI1Ofmg0Pd48PoAUfKheaOR7SOmLOkb
+         pkXcqgJI4Xn8MGN8NWJTJ4JLcGBzHpHVNMDOU85x8onWlgMhezD4UqW1SxqPFZ3dFQvY
+         D0acDT9xz4ao/0dMmNEk/58bfwAHc6FPYwb8i/TMuJHnt6Aajed5n7E1qDXnMuZsnQ9V
+         bjWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747647681; x=1748252481;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9mkHsltLutO5Q2FogJQA4q6XiEXER0Twfd94ZZbKAnk=;
+        b=l182ionkubpKDcy0U4iSCy4HSSzQv/NsnGrHKOblijfOY7XWQkZQ39FOwAO2rF7MP6
+         5gJO4rFmk+YeXI9AhGOFBP1dNnrluDe2qHPlN3X4xluWy0J1pCcYPiSrah4ff5frpj6/
+         bI2tunNdjZhF0uiOjqwwSbLGRnavlO/FCdqtSBIhZk/+xf9oNm//dgg4TosUe/eSUsAa
+         T1nliQ87pq64bm//ERBiCSZGCJ7rVOVEVsRMao844ASwTaVrP+zW5YnRCRTuw/AD+/Qj
+         Lg9vfjZddNPH61k2hZwvmfF+oki/LF+Z5n3r1P+aDjxpApES37zogL6nfwGG6qpd2hjx
+         4E6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV55GSLe5/+89enEfixiGlv9JsYT9+Cvf9wpGn3YssNHoM6PykMDVVcViZw8UVbiFmKUtbXS9GNAACQsv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEAbQvUCI5PloRJhY2SkGiw03Ce6RdJWE/cbMNe/ggr87TgPcY
+	avkRZ6AKaXA0at1hIvtE9OM/Ap9ZBJoXN2sA0Lc/ll5WopSXgZtyK1xT0KhbebYnOm8=
+X-Gm-Gg: ASbGnct9d0Itn3UPRrLhNKybNzhTRDQhF/u/EmZNpj6bnvGsDlY8eDkX+rEh6daD5HF
+	tTHLZa2+VA7xkqMOeZXvfd0avGzK7+C7AN8qqUPVfxWxJKBZ2B46gIqipu+SXRMssasf20R+AdM
+	90ERCVwDsLFsRD0xHKhS/nmPihjmQSGRXaZ829pQb9g13jyoqLHXLAnEHcRkj4Frm/EPhpEDk++
+	9cEBjXLLYzX/UzoH9N/tz7bYcMrk3+zP0YNYFHH8aLBl/nADhkdtw82upvtBH/woWYauO76JKo2
+	1HSRUYfd1VuPOH6PH78xWAVl+f/Zp+ZIcQch50ICl5v7jUz41qWw9zNQQdb4SjsSPtMIeZ4r5+A
+	AMXgrCgwpXULh44kLyyPBWqvRa1sL3F2Kv6pr
+X-Google-Smtp-Source: AGHT+IFbj+WYBa3qzJuAo96O0EsxKbMiAB2DsVMptXbWkzDD93S6xvquNDnxGoJkRMYfSk9pZVte6A==
+X-Received: by 2002:a5d:5888:0:b0:3a3:7351:6f0b with SMTP id ffacd0b85a97d-3a3735171ebmr1122593f8f.57.1747647680868;
+        Mon, 19 May 2025 02:41:20 -0700 (PDT)
+Received: from archlinux (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a04csm11974249f8f.23.2025.05.19.02.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 02:41:20 -0700 (PDT)
+Date: Mon, 19 May 2025 11:40:09 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-5-91a3f2837e6b@baylibre.com>
+ <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250517091639.3807875-9-ardb+git@google.com>
+In-Reply-To: <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
 
-On Sat, May 17, 2025 at 11:16:41AM +0200, Ard Biesheuvel wrote:
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index f67a93fc9391..5c19bee0af11 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -395,7 +395,7 @@
->  #define X86_FEATURE_AVX512_BITALG	(16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
->  #define X86_FEATURE_TME			(16*32+13) /* "tme" Intel Total Memory Encryption */
->  #define X86_FEATURE_AVX512_VPOPCNTDQ	(16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
-> -#define X86_FEATURE_LA57		(16*32+16) /* "la57" 5-level page tables */
-> +#define X86_FEATURE_LA57		(16*32+16) /* 57-bit linear addressing */
->  #define X86_FEATURE_RDPID		(16*32+22) /* "rdpid" RDPID instruction */
->  #define X86_FEATURE_BUS_LOCK_DETECT	(16*32+24) /* "bus_lock_detect" Bus Lock detect */
->  #define X86_FEATURE_CLDEMOTE		(16*32+25) /* "cldemote" CLDEMOTE instruction */
-> @@ -483,6 +483,7 @@
->  #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
->  #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
->  #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
-> +#define X86_FEATURE_5LEVEL_PAGING	(21*32+11) /* "la57" Whether 5 levels of page tables are in use */
+Hi Andy,
 
-I don't think we need this second flag - you can simply clear the existing
-one. Diff ontop below:
+On 08.05.2025 22:00, Andy Shevchenko wrote:
+> On Thu, May 08, 2025 at 12:06:09PM +0200, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Add gain calibration support, using resistor values set on devicetree,
+> > values to be set accordingly with ADC external RFilter, as explained in
+> > the ad7606c-16 datasheet, rev0, page 37.
+> > 
+> > Usage example in the fdt yaml documentation.
+> 
+> ...
+> 
+> > +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
+> > +{
+> > +	struct ad7606_state *st = iio_priv(indio_dev);
+> > +	unsigned int num_channels = st->chip_info->num_adc_channels;
+> > +	struct device *dev = st->dev;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * This function is called once, and parses all the channel nodes,
+> > +	 * so continuing on next channel node on errors, informing of them.
+> > +	 */
+> > +	device_for_each_child_node_scoped(dev, child) {
+> > +		u32 reg, r_gain;
+> > +
+> > +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> > +		if (ret)
+> > +			continue;
+> 
+> > +		/* Chan reg is a 1-based index. */
+> > +		if (reg < 1 || reg > num_channels) {
+> > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> > +			continue;
+> > +		}
+> 
+> But this will allow to have a broken DT. This check basically diminishes the
+> effort of the DT schema validation. If there are limits one still would be able
+> to create a DT that passes the driver but doesn't pass the validation.
+> 
 
----
+fixed all your points on other patches of this patch-set. Still your
+emails are going to google spam, just could catch them on friday. 
+Really not clear why.
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 371eaf3f300e..3b34e7c6d1b9 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -395,7 +395,7 @@
- #define X86_FEATURE_AVX512_BITALG	(16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
- #define X86_FEATURE_TME			(16*32+13) /* "tme" Intel Total Memory Encryption */
- #define X86_FEATURE_AVX512_VPOPCNTDQ	(16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
--#define X86_FEATURE_LA57		(16*32+16) /* 57-bit linear addressing */
-+#define X86_FEATURE_LA57		(16*32+16) /* "la57" 57-bit linear addressing */
- #define X86_FEATURE_RDPID		(16*32+22) /* "rdpid" RDPID instruction */
- #define X86_FEATURE_BUS_LOCK_DETECT	(16*32+24) /* "bus_lock_detect" Bus Lock detect */
- #define X86_FEATURE_CLDEMOTE		(16*32+25) /* "cldemote" CLDEMOTE instruction */
-@@ -483,7 +483,6 @@
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
- #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
--#define X86_FEATURE_5LEVEL_PAGING	(21*32+11) /* "la57" Whether 5 levels of page tables are in use */
- 
- /*
-  * BUG word(s)
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index 754be17cc8c2..015d23f3e01f 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -85,7 +85,7 @@ static __always_inline unsigned long task_size_max(void)
- 	unsigned long ret;
- 
- 	alternative_io("movq %[small],%0","movq %[large],%0",
--			X86_FEATURE_5LEVEL_PAGING,
-+			X86_FEATURE_LA57,
- 			"=r" (ret),
- 			[small] "i" ((1ul << 47)-PAGE_SIZE),
- 			[large] "i" ((1ul << 56)-PAGE_SIZE));
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 92176887f8eb..4604f924d8b8 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -33,7 +33,7 @@ static inline bool pgtable_l5_enabled(void)
- 	return __pgtable_l5_enabled;
- }
- #else
--#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING)
-+#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_LA57)
- #endif /* USE_EARLY_PGTABLE_L5 */
- 
- extern unsigned int pgdir_shift;
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 67cdbd916830..104944e93902 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1755,8 +1755,8 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
- 	setup_clear_cpu_cap(X86_FEATURE_PCID);
- #endif
- 
--	if (native_read_cr4() & X86_CR4_LA57)
--		setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
-+	if (!(native_read_cr4() & X86_CR4_LA57))
-+		setup_clear_cpu_cap(X86_FEATURE_LA57);
- 
- 	detect_nopl();
- }
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 083fca8f8b97..14aa0d77df26 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3084,7 +3084,7 @@ static int __init early_amd_iommu_init(void)
- 		goto out;
- 
- 	/* 5 level guest page table */
--	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
-+	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
- 	    FIELD_GET(FEATURE_GATS, amd_iommu_efr) == GUEST_PGTABLE_5_LEVEL)
- 		amd_iommu_gpt_level = PAGE_MODE_5_LEVEL;
- 
-@@ -3691,7 +3691,7 @@ __setup("ivrs_acpihid",		parse_ivrs_acpihid);
- bool amd_iommu_pasid_supported(void)
- {
- 	/* CPU page table size should match IOMMU guest page table size */
--	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
-+	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
- 	    amd_iommu_gpt_level != PAGE_MODE_5_LEVEL)
- 		return false;
- 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 1f615e6d06ec..ba93123cb4eb 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -37,7 +37,7 @@ void intel_svm_check(struct intel_iommu *iommu)
- 		return;
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) &&
-+	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
- 	    !cap_fl5lp_support(iommu->cap)) {
- 		pr_err("%s SVM disabled, incompatible paging mode\n",
- 		       iommu->name);
-@@ -165,7 +165,7 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
- 		return PTR_ERR(dev_pasid);
- 
- 	/* Setup the pasid table: */
--	sflags = cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING) ? PASID_FLAG_FL5LP : 0;
-+	sflags = cpu_feature_enabled(X86_FEATURE_LA57) ? PASID_FLAG_FL5LP : 0;
- 	ret = __domain_setup_first_level(iommu, dev, pasid,
- 					 FLPT_DEFAULT_DID, mm->pgd,
- 					 sflags, old);
+About the above, i understand, but the check is actually the same as
+in ad7606_get_chan_config(), a warning that fdt is not correct, 
+i dont see a blocking issue here now, so not going to change it
+in this next patchset.
 
--- 
-Regards/Gruss,
-    Boris.
+Regards,
+angelo
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> > +					       &r_gain);
+> > +		if (ret)
+> > +			/* Keep the default register value. */
+> > +			continue;
+> > +
+> > +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
+> > +			dev_warn(dev, "wrong gain calibration value");
+> > +			continue;
+> > +		}
+> > +
+> > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> > +		if (ret) {
+> > +			dev_warn(dev, "error writing r_gain");
+> > +			continue;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
