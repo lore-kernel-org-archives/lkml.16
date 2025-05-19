@@ -1,95 +1,124 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121E3EEB1;
-	Mon, 19 May 2025 08:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E62326AAA9
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644107; cv=none; b=GW9QRPGILLfh3grnI2niOIkX9dXRQuXa0MKJ/+XR8c3S6LoSIXoWUiuXNq6ZZC5wHVdYXmIbnbl2Mxw6Y1z8TaX0BaWMMfpL1ySbmzuB1Li9J1+mPzm6uSWRDMhGLTV1XauO3RSYt8CELN1rbL9QpNRnAUlI6wbuMULr1IACv4c=
+	t=1747644115; cv=none; b=CKANm4Y0O2mAjg5GaN+Mmu5cU0bEQd4m8mrM/23FiFmwdfD+6Qk6K+uXSZ3KOTV9nksJmR/I9q3FxVGn41yi+CilhzRV1x8zWGvTaohBsYZSutD3rsHTVGqUjS2j93gTvdh5SmJxUxiknqWmYXOhLlxrASvgVLwdgFNTSOwvWws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644107; c=relaxed/simple;
-	bh=FfeXpaI/Ry0jTNfKMExK6pstVzErw1I4Sfr4H3AVZGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V5NgCtRbDNURseRAnsg8gMBT8cxyAt25/ZqR9ER3GkmUwXnSdWi5BolA7MwHDAx8dG/fP2hOHtgRnNEeb+DN+r4gbDtiXqHrfc0LmIOx729nte+2s855vXxgfveG+bXtt1Pqwxs5j65j9kaXsnXWxn+7auyZqap8SGMZdSZEQ6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2s9fGln; arc=none smtp.client-ip=209.85.216.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747644115; c=relaxed/simple;
+	bh=0nx/oTHIkqejYfsAptvCrdthiDzUdgABWyjbNFLntRU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=b8y/cqBOPydQM0IhIR44s7sIc/NbIRRGtMDQORKJ9Fn5qOkiGreTZx7kfwAl4WbSwD83jv0NEsp4tkieqNxbjesVc34G5IsNBaKVdduepV58sGYVn6wH38ZC1Fp9jyOAF0Rk/51GO59Zn6ARKJNb5JHDQiuUivfP2Zaq3wJgT1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpWVy7HQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2s9fGln"
-Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-30e8f4dbb72so2876699a91.1;
-        Mon, 19 May 2025 01:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747644104; x=1748248904; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AvRUDBggjQrkeFVZcFd8aL7npkTR9uKvpgi0YdQ9wUA=;
-        b=R2s9fGln2CZxSz5Z4gJRWlvuD+rbQ8tazhovSjMaaTkHUQx6cDGqjVLZfRNEcUJnhv
-         c2Jx3wFGWWc0/Nt/93yi5+nyrsbfQH0Vl6wEhDGUGZ+5syp5IlqcEZG28fvFzn/lya1s
-         Tf36+G0uhWC6be8qCjr5le1FIlPmGsU3l3bsxByiRV6l+Obx7ZUQpIU78IMFL/zyRObw
-         gSeumfNBKk3HfJ5gnRd+xb7dorqTUvEWb4G3zrFrUZECqWd7hqJ6eWPynO9wEcDpgD2H
-         dquogKhKTnGHV5PxNe1tfOwf6OxsJ/e57VtKz84kT1o4FFeJzhktHAWPD9L3lDv7c92g
-         wMHw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpWVy7HQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747644112;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5/93kRZ04MljWKTXpgSsuqhHDlJ+9nDlXduLY3K5LE4=;
+	b=TpWVy7HQNrzSEUDAaECFmbXP/Y83wZjUCdxZyzn8zxxFisaXy2dzhUue0OODOLeLyu4QTk
+	YRdVVIW2ZR0EPw5K5X21RcQEVIMMfAcCNSQ/EmVgdFCqKJrEZCcGq0f/JlfFlJK1X1C5Sr
+	+/loolJjRlllZyn1Fd8w1jArY0fNsv0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-3Qt5Nw2kMx2y4NqR_nm8FA-1; Mon, 19 May 2025 04:41:50 -0400
+X-MC-Unique: 3Qt5Nw2kMx2y4NqR_nm8FA-1
+X-Mimecast-MFC-AGG-ID: 3Qt5Nw2kMx2y4NqR_nm8FA_1747644109
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a370309dcbso294893f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:41:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747644104; x=1748248904;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AvRUDBggjQrkeFVZcFd8aL7npkTR9uKvpgi0YdQ9wUA=;
-        b=W/74HvESe/4sSNhb54xx87YiBnh+0Lsj3Eq5OCGkML9+gbMrAkvig4WmJbDOIkP1rY
-         P3aho0ZTJQahDaJ53qdCLzx02aFxmfgC70iu0Gs51vUoRmpXhtk8/3Iwn56oAsOIoyzc
-         MNS7yJcHHNKZx/5MfxMjWH8BkwGGwUiL65OCy6uZPZ1L0WjxtupXl4ogK7/8JyKsfVqp
-         Vy1LqXPuIM9w90Mruc8F+zi7Zr/GefbZ+Anz32pRH6kes1BEp+T6Yqsd9hNrZta/uIsA
-         aBotTJGyM63qYApMjxoaoQWK3o0Yi+omRBsgXIx0FRt+tYBjPPKk7Wl88UPuUtKfYskH
-         chVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWb1tF5Y9mVZBOLb2uZHW0kwJd1KNxiHm+e+txua9SsfoVI4I5lT3VftXbaEpY7vwCQ+aB4fD0bAzHE3g==@vger.kernel.org, AJvYcCWfDvW6CFD1gG4iIuTib5LRf8J7Mr5nRuiYdpHZ/wHZ15G6HzuiyKkFnnSCICb68LQ2z8S76lg1gvVBgeTC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLg41zRHgRethVJ/UTrhclFMsiNRMPGARc/1l/JQJtvO+/SAAQ
-	dGRulle2INO4iZA+67ka62qP+bqvTQEOnsfP0tvV9KIkgzM3xuqJ+ZV5
-X-Gm-Gg: ASbGncvZbo61j/1NYT5v9MwHuu3Rn2101yFppXHnH+XPbX6lwBxyjey5xb42hFVB2Ma
-	hU963QZwysr3vZDtff2hQf+f+8nztixsTUp9tjvKMdNalpdh69G7OPFeh8prbOhTGv4Iuxf0YUb
-	+Ug/rWcY/YXlKPE6yr+Ef+sxPb7lQMATRR0V3uKbrxGi8LQXIoFIAo4HOcgCfUk3Ja1J8tsRwqu
-	11O0vv7p8wk7Dl80Txv1XjQWA8e1PS1QXNqRa2Ys17UoTCJMy+0cdPW5PIx1Lpv71r+qcjUOrSc
-	9wA+8I9t3msNoBWyhVhcj+5hDzufkkf+0+rx0A3d1VcupBw5ZOPjq/NZoMlIOTA/is5zn91lZtt
-	pb8lC0+nqB8zWEURG+wYgx+ZA5k63BLCSs1s=
-X-Google-Smtp-Source: AGHT+IF/EL/A6KgYWtiUE/oefYxhyRZnJUOJ1QhsszUFMdKx1Dg67NU7yO6eBgLxi0Q5L5yTdX8p0A==
-X-Received: by 2002:a17:90b:3a48:b0:2ff:72f8:3708 with SMTP id 98e67ed59e1d1-30e8314fdb5mr22269718a91.17.1747644104272;
-        Mon, 19 May 2025 01:41:44 -0700 (PDT)
-Received: from ubuntu20.wiwynn.corp (39-14-65-183.adsl.fetnet.net. [39.14.65.183])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401768sm9870275a91.3.2025.05.19.01.41.42
+        d=1e100.net; s=20230601; t=1747644109; x=1748248909;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/93kRZ04MljWKTXpgSsuqhHDlJ+9nDlXduLY3K5LE4=;
+        b=ePsJb1UTLdYCrILRbXFrln6xbRV1HyM0kdtuVkcg4Qb3Ez3sozyaY3BvM+1aBWtGCj
+         vveiz0eMYeVHW8Dl6aSqTYXiBkCpEphh1mdYLsDO19Rj+h2GWlk17AEeTPvN/TCciEoK
+         i8uc0Ce5sNEBZeXVspcmR+eb87QELN4ZwVLuCcDWn0S2ZBcstSyjtl/APhzvuQmYMYUJ
+         NI9pzEciOS+2ECDC2fSHRp5+udVNdGd8dgX7Nlc4HCY5B2787j7TaDLVjwbJdcambKCY
+         vjqUHmvGzawkNq1JufWjPWIcwhQK6g12s3agLGTEMxgD18/yIqkh3S7zKpPI849lRYSw
+         5TcQ==
+X-Gm-Message-State: AOJu0Yzn5R5cioj0E+IxB7Yqt6LZejdbMfa4CTwWlCct/lJGwrWBot4O
+	Q8cvkmZwiktKcbnuLF8zx+pJd7TUAe+97R/7STANppijqn4NhyksoyGQL8Rjtu1f9Yjhdk9EQbf
+	cxORdc5t/SqSEx0jOE0NdHl09arIjoH1ZKW6dHIkLviyC0c4E2nOIfg411gh+gJZd1Q==
+X-Gm-Gg: ASbGncvS6biTAMSSIdsJ/MFyaNnxHTj2hUL6od2aCUm9QumBxZY9r2xbKC+iG+6gEnA
+	SvFxQwmdAxQ7+bFwSr7emC51CBGyGBBUYwmg8jWZeBioCWUZG0dTbCiRPsT8dfyFVopL6WpZV80
+	TfnvSpIdhRtAY1jkv0DQxtGVaN1lNof8mZVBcLPcrOFeGq3cbBjEXML4zzOd3km6FPLWpfhscjJ
+	/sI1ysCipfiwsYVsyxzrteXWHfrC31tjegaad0Pv98+zljTYTUURABuQ5lTFvSfpx+KldfDbzob
+	6VynjXTJcDdGYFn1FjJczRHRqEGXZaO1o3KIoA==
+X-Received: by 2002:a5d:5f4a:0:b0:3a3:6c61:9d52 with SMTP id ffacd0b85a97d-3a36c619e19mr3264654f8f.18.1747644109319;
+        Mon, 19 May 2025 01:41:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH28JFnGXE2eWgrYdBC+axL242T6gdtGDhErZoZ6MaHmnwYhN6EO7AXsV9hXveJ9/cPyNzopg==
+X-Received: by 2002:a5d:5f4a:0:b0:3a3:6c61:9d52 with SMTP id ffacd0b85a97d-3a36c619e19mr3264637f8f.18.1747644108994;
+        Mon, 19 May 2025 01:41:48 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a366e08747sm8498929f8f.95.2025.05.19.01.41.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 01:41:43 -0700 (PDT)
-From: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>
-To: patrick@stwcx.xyz
-Cc: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>,
-	=?UTF-8?q?Carsten=20Spie=C3=9F?= <mail@carsten-spiess.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/1] hwmon: (isl28022) Fix current reading calculation
-Date: Mon, 19 May 2025 16:40:50 +0800
-Message-Id: <20250519084055.3787-1-yikai.tsai.wiwynn@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 19 May 2025 01:41:48 -0700 (PDT)
+Message-ID: <5385360f8f01a213ec3918dbc341f48339d7b8e5.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 06/12] sched: Adapt sched tracepoints for RV task
+ model
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu	 <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Tomas Glozar	 <tglozar@redhat.com>,
+ Juri Lelli <jlelli@redhat.com>
+Date: Mon, 19 May 2025 10:41:47 +0200
+In-Reply-To: <20250519082908.Nak_YDaO@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+	 <20250514084314.57976-7-gmonaco@redhat.com>
+	 <20250519082908.Nak_YDaO@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Fix the driver for Renesas ISL28022 power monitor chip.
-According to the ISL28022 datasheet, bit15 of the current register is
-representing -32768. Fix the calculation to properly handle this bit,
-ensuring correct measurements for negative values.
+On Mon, 2025-05-19 at 10:29 +0200, Nam Cao wrote:
+> On Wed, May 14, 2025 at 10:43:08AM +0200, Gabriele Monaco wrote:
+> > =C2=A0DECLARE_TRACE_CONDITION(sched_set_state_tp,
+> > -	TP_PROTO(struct task_struct *tsk, int state),
+> > -	TP_ARGS(tsk, state),
+> > +	TP_PROTO(struct task_struct *tsk, int state, bool
+> > from_signal),
+> > +	TP_ARGS(tsk, state, from_signal),
+> > =C2=A0	TP_CONDITION(!!(tsk->__state) !=3D !!state));
+>=20
+> Doesn't this break the build? Because the monitors still use the old
+> signatures?
+>=20
+> I understand you adapt the monitor to this new signature in a follow-
+> up
+> patch. But every commits in the series should be buildable, otherwise
+> you
+> break "git bisect".
+>=20
 
-v2: Add the missing variable declaration
-v1: fix current reading calculation
+Yeah good point, do you suggest at least fixing signatures in monitors
+inside this commit?
+I can keep the other commits to actually fix/adapt monitors but at
+least allow building from here.
 
-Yikai Tsai (1):
-  hwmon: (isl28022) Fix current reading calculation
-
- drivers/hwmon/isl28022.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
--- 
-2.25.1
+Thanks,
+Gabriele
 
