@@ -1,52 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB1F221D80;
-	Mon, 19 May 2025 21:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375F7221F1C;
+	Mon, 19 May 2025 21:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690926; cv=none; b=XI/X2iY6d5MDRkVNg2CC7MBxuY6FbkXMPLw79uI0fXFQy9jE9+Z/ygPtGfq4+NmafctaK+zkWgE3GrKlyvJ9H5zA7N6yuJEaBCh7QEXkemzeBcCCiKrbgxAI7nph0ML2j+GPJ3iBOWxSuBrBMfLAus3LN7gXfb/Kd52pHzBNlCA=
+	t=1747690932; cv=none; b=S2Rgo5Pqzt/z3gBI+ghJACvH2O2XCesOBL45S/SUYu9ZiGSfh9JZxdYCVejJojmIZAmbXzxlyKbMo4XjJHWBvaYfWeQyBX9dLoBnUPPWIlEnXGUE5y3lBy3k9kbZn6B8uuqS6Ztv/3JBd4YVAFV1SyEeMBkEKX8k8RavIBmrJqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690926; c=relaxed/simple;
-	bh=hSFbYg8OWGPPQrOY28FmY6n86ImIh7i2KLy+D4o/8Fs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c5rZjwGOYFfyX7pOK52DedIld6Cmsjp+mi5OaIaKUnD9+OjITr18QLInp5M/SG/uVV99Y2/wNf/iQH/EAq7LinsflS0liiCAUwvfMLt7j4+Pt7Igq31qIYf5URag4ZYnXMZZlgfRWmRlZBRZnmtq6sv3Kat99bsBtAFZmfSB1LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stHw1mRa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747690932; c=relaxed/simple;
+	bh=JJn1G/j91f61FBbpVWMImfHtWIFluem4iH8Pp25ZfAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gQ0sI7aqgXKzNpAoXcDb56jwynQ1I/JHM5BokIamLvDQfXH5XcHEc0klEJM8j9oUlO6lqHmnipXVjXJ94pOAIwWZCRQq8ivp02q2IgClnJcsecVvbCPBROFqVgFLIk+Kp7BWyBKfz4RvoJYKJeYJ7cKtxH2nVXV3I7KbuHqYAcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUWITi1p; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stHw1mRa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF3C4CEE4;
-	Mon, 19 May 2025 21:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690925;
-	bh=hSFbYg8OWGPPQrOY28FmY6n86ImIh7i2KLy+D4o/8Fs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=stHw1mRajJxtnKs2g7cdpPgek066WnIpMC1BPlb5mZ6z0ki33D1S14rV3vEoDFfFs
-	 RJ/dJ31YBKkPfDOk1/B2l/y1/a7bvgg4uVobA/2ZBEBCfWTdyKvjP10mc18YR5iIT4
-	 lMR2+PDOQkJPa4GOJqzGo3/JJl1FT9Z1eeaZ69XLlvv+/dQrfc9Y/4G5RXLPlsce/g
-	 UwkWBAYRVH5CIvSXsmrnOqSeg2pNTvRC/tuYXVYKr50x6sCmAbAw1WjeiYSxRyAs4D
-	 QEBk6zXqvDj3M8j4uWzyjEyg/JIUDt5A2dlcqvVehPtPK7jgm6ZlgVBv6+dlxTYDVu
-	 wXyMtgJ2w7ZOQ==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 7/7] tools headers: Synchronize linux/bits.h with the kernel sources
-Date: Mon, 19 May 2025 18:41:26 -0300
-Message-ID: <20250519214126.1652491-8-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUWITi1p"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6314234b3a.2;
+        Mon, 19 May 2025 14:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747690930; x=1748295730; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bGI/w48fIiA0eeXLnGtGjWEjUDoal1CE/ntvGdj0dd8=;
+        b=lUWITi1p0uefDEy27pM06sQ4GSSxC2YUk4aGjEyRhAYyrw1kZ254u7MjTANxWR4P45
+         D5nWHigzd6LeF8WBwd7UQ0Cx+l1fMOURe9RMZuf7bA7VmaRWlP0dM8LcYeByaSBvJA+h
+         sLCV18UPeHaSy+5QpIPE8iHufvEZ4xoHrFTh5kFRZHwKz3G4DgCCo0lgP+H17Uzl3Y8A
+         9yetX1AMfsGHpROfLKJcFHrB7kuGXaUxYoZo4Pu4wh4nC4w/QiC85pPVKIc9eSq+rcH5
+         87J7arTTVALeuClRebdjsAlc/NXlBHtgBkmSl2TYUe+yyFnEKeyIP7HVNlbVXM2JNYw4
+         3dyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747690930; x=1748295730;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bGI/w48fIiA0eeXLnGtGjWEjUDoal1CE/ntvGdj0dd8=;
+        b=KkNiUvVqjvWWGBWWKRNw3Jc0sIgMjGZ9vAYt2PUluW3hkYqWzyIP/5QkVADw/e/7Yj
+         6i4hqn/F6s3rX7CBku1qSkOEYJN7y120OCGaj3dPm979xrWHFpdBjTbP/AOm98hQbRM/
+         HXEB04yK3hLTx+eOR1mQ0PpLX0pr2aA1erxEut6dVbJ4OFbny99w2zbeSB3t/MYM/+7V
+         hFIqvPCeBBEUK+xvqSGXgITfiDLxsFewMNm4uPc8zFUQMz5OmwK2t7+xBAyoI7X2/K7z
+         M/PTVPhmI5nUvHVaNlEPzL88tC9ASsfmi6zjVDHHLyTKbgeUsYKwW8JgcKD71gRIQq5S
+         AeuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgBNRlCNYYhf/5SVQBYUdORyfBZvZEXCWsTnudC4cBm2wAFUITH5iJY1pCYLLygpEDtxqxILMW@vger.kernel.org, AJvYcCXILN1FEkm1ZEySbijIh9L+S7EkIB2JOrSH8J/c1Pqf5prZXtx9EbnVrIioJIjfbNJCqmiAhDLi41U1yqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBErsaaTnqopHwLZec1mdCqsWO+WLz7Ntt+GA6RP9GI4Mj9153
+	FkKIOmtiDDzFjtDil4THCzuQHXKEBcwXMWF0VZ6QCyCAw0D5cQnIwmqZ
+X-Gm-Gg: ASbGncszMWAJ/d7a1vJ2RGef0z/rHnCjXzrqwLNYUxM6qRXLfjV8fcpeY+5CSRzWrC0
+	W0/EltXHiWbDLd1CmVOSFbjiC6TQcCCmJkYDnxtwPnafgD+jNlsf8GACWR3quTi8XWYfbPLGKhC
+	vvbCBn6226HyYnaJbEnFaiQ0+8Ab4lMxbvYXAuw8N5Bl+Ru3qU5FOZjLhxfpOO7N0Tfgb+OPQ1y
+	ziCBGECwvxhonDT0DJpkaNtce9dxsCSDWSjjyKJBZt/7fNvLPdNDL/mwYRzbQWf/IO9jDjb3iI7
+	2Z5fuxqkEpIcM+YP6zUucE0GxnWrJgUDN9otO170amRoCPjuAHic6A==
+X-Google-Smtp-Source: AGHT+IFBKOgUUFYbx5HEkm5y610RN4G6qp5hlW9ZWIayFQyg20n9R7JbChB2PEzDQ1MkbCRG1BJj9A==
+X-Received: by 2002:a05:6a21:3a89:b0:1f5:8a1d:3904 with SMTP id adf61e73a8af0-216fbfe1f94mr20912540637.7.1747690930196;
+        Mon, 19 May 2025 14:42:10 -0700 (PDT)
+Received: from mythos-cloud.. ([125.138.201.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a0ca7sm6664909b3a.158.2025.05.19.14.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 14:42:09 -0700 (PDT)
+From: Moon Yeounsu <yyyynoom@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Moon Yeounsu <yyyynoom@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: dlink: add Kconfig option for RMON registers
+Date: Tue, 20 May 2025 06:40:45 +0900
+Message-ID: <20250519214046.47856-2-yyyynoom@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250519214126.1652491-1-acme@kernel.org>
-References: <20250519214126.1652491-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,52 +76,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+This patch adds a Kconfig option to enable MMIO for RMON registers.
 
-To pick up the changes in this cset:
+To read RMON registers, the code `dw32(RmonStatMask, 0x0007ffff);`
+must also be skipped, so this patch adds a preprocessor directive to
+that line as well.
 
-  0312e94abe484b9e ("treewide: fix typo 'unsigned __init128' -> 'unsigned __int128'")
+On the `D-Link DGE-550T Rev-A3`, RMON statistics registers can be read
+correctly and statistic data can be collected. However, the behavior on
+other hardware is uncertain, and there may be undiscovered issues even
+on this device. Thus, the default setting is `no`, allowing users to
+enable it manually if necessary.
 
-This addresses these perf build warnings:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/include/linux/bits.h include/linux/bits.h
-
-This required picking the const_true() define in linux/compiler.h as a
-prep patch as that macro is used in the new linux/bits.h
-
-Please see tools/include/uapi/README for further details.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Yury Norov <yury.norov@gmail.com>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-on: D-Link DGE-550T Rev-A3
+Signed-off-by: Moon Yeounsu <yyyynoom@gmail.com>
 ---
- tools/include/linux/bits.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/dlink/Kconfig | 18 ++++++++++++++++++
+ drivers/net/ethernet/dlink/dl2k.c  |  2 ++
+ drivers/net/ethernet/dlink/dl2k.h  |  4 ++++
+ 3 files changed, 24 insertions(+)
 
-diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
-index 8de2914e65101463..14fd0ca9a6cd1733 100644
---- a/tools/include/linux/bits.h
-+++ b/tools/include/linux/bits.h
-@@ -20,9 +20,8 @@
-  */
- #if !defined(__ASSEMBLY__)
- #include <linux/build_bug.h>
--#define GENMASK_INPUT_CHECK(h, l) \
--	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
--		__is_constexpr((l) > (h)), (l) > (h), 0)))
-+#include <linux/compiler.h>
-+#define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
- #else
- /*
-  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+diff --git a/drivers/net/ethernet/dlink/Kconfig b/drivers/net/ethernet/dlink/Kconfig
+index e9e13654812c..40c8c861c5a9 100644
+--- a/drivers/net/ethernet/dlink/Kconfig
++++ b/drivers/net/ethernet/dlink/Kconfig
+@@ -32,4 +32,22 @@ config DL2K
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called dl2k.
+ 
++if DL2K
++
++config DL2K_MMIO
++	bool "RMON MMIO"
++	depends on DL2K
++	default n
++	help
++	  Enable memory-mapped I/O for RMON registers.
++
++	  Since this feature may have potential issues,
++	  it should default to 'no'.
++
++	  If unsure, say N.
++
++endif # DL2K
++
+ endif # NET_VENDOR_DLINK
++
++
+diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
+index 232e839a9d07..197142aa63ff 100644
+--- a/drivers/net/ethernet/dlink/dl2k.c
++++ b/drivers/net/ethernet/dlink/dl2k.c
+@@ -576,7 +576,9 @@ static void rio_hw_init(struct net_device *dev)
+ 	dw8(TxDMAPollPeriod, 0xff);
+ 	dw8(RxDMABurstThresh, 0x30);
+ 	dw8(RxDMAUrgentThresh, 0x30);
++#ifndef MEM_MAPPING
+ 	dw32(RmonStatMask, 0x0007ffff);
++#endif
+ 	/* clear statistics */
+ 	clear_stats (dev);
+ 
+diff --git a/drivers/net/ethernet/dlink/dl2k.h b/drivers/net/ethernet/dlink/dl2k.h
+index 0e33e2eaae96..3a13068d89a2 100644
+--- a/drivers/net/ethernet/dlink/dl2k.h
++++ b/drivers/net/ethernet/dlink/dl2k.h
+@@ -38,6 +38,10 @@
+ #define TX_TOTAL_SIZE	TX_RING_SIZE*sizeof(struct netdev_desc)
+ #define RX_TOTAL_SIZE	RX_RING_SIZE*sizeof(struct netdev_desc)
+ 
++#ifdef CONFIG_DL2K_MMIO
++#define MEM_MAPPING
++#endif
++
+ /* Offsets to the device registers.
+    Unlike software-only systems, device drivers interact with complex hardware.
+    It's not useful to define symbolic names for every register bit in the
 -- 
 2.49.0
 
