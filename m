@@ -1,357 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDDA22B8A9;
-	Mon, 19 May 2025 21:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E583A22D7A4;
+	Mon, 19 May 2025 21:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689750; cv=none; b=q8Sm2g4djrvhxwnp71s9Mpo0t7pbtkTtS+8sMyDJwCV6KzihozbiHX75wqzrtgQeAPJ/ABDML0+Um1ApOnSogZyj9KtoJ/Wd27L3y/bmFmfLWxbrrbEn+9E88QZ2CV8z6OAvplxzPMrPrdYRX8/ja3qwJPQigaDGHBNTCXTvork=
+	t=1747689753; cv=none; b=X9iuMl8uLOXP7s2rZNk5wQjRnWuR/dASFPUq6PXvd9tmsPfZ9FxVeEOgY0ILMFheDLi49ZQAtoLx5B4MOJpvllJKnnnYdUCpQTgf2+BXE6zBfe5mX6oYSM6DpGjfDK6cJ6H3IZd58UTy+y81bv07DOzAgNnFRy6fQbQBTL63ybg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689750; c=relaxed/simple;
-	bh=J0BlCamg5o6rjixyQoVYTi6MUMronxaa7LD88b00Oz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsCN5To9mllNNwjfivm+lq23yZtDL2tKY088DeqprUSButukJcEHaM1izaALBO6+XMLC4wuPqZEhX+wfElAEZ8A8BWWYrmpx886wEm9uD221nH+dxKvlVgvCDUIbRjJOIeK3Bgt1rO2uu3Skqm6R26RCQXqqk1+Cr3Y8wGozo9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gxko3O6M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747689753; c=relaxed/simple;
+	bh=dBGuIOIWlp/el9IYWu4JiMWESDa/kRlskhlFhzheVRc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W+XnXqGI0qcySGCODo9ntRQF4xomAqp037Df1nW7QjKG9lBTFscbn066ZFam9wo8J57OXW3mmGHpsoFHxe57t9B49TOcYjdB77MSW8hW6bXatpy+lfTZNwUapK5bOjhNet0JJn2Y1BDTnwd+D14XW3E10xVIqrUWttestMLuJY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=co5W3Ofp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gxko3O6M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3CAC4CEE9;
-	Mon, 19 May 2025 21:22:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="co5W3Ofp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA22C4CEE4;
+	Mon, 19 May 2025 21:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689749;
-	bh=J0BlCamg5o6rjixyQoVYTi6MUMronxaa7LD88b00Oz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gxko3O6MFzH1MF+E9CFihuydLjsb6AZM2vNDWfVjuBFZJpVBgCGA4hqI5eQJ8ixRD
-	 VZNprab2t5YXQhWlEeyf8rAW72rb7mnaps+q30mp/X4bwv5o+/0grr+j+SGI0ipcR6
-	 vue1lBdSsQtOvz4C2tJg+D9hxowig2Bjs9iOXIq/5GCP7MvO31Td0TxwiF5h2rXS6m
-	 Rf0TA1WLr9l4yaAg/Qh3BaeGxClCDzYyLBf8OLWOY3k/+nXUPEcfs3qWF21AFPPPGE
-	 ReIquJGGND2s/dlLR+qKJZNNOVtTeldwxBYXcEmghec01sxDGdeDJVk2FjI7D3e/g7
-	 F6v5luShInlSQ==
-Date: Mon, 19 May 2025 18:22:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: Re: [PATCH v2] perf ftrace: Use process/session specific trace
- settings
-Message-ID: <aCufoLXkMjjwGt0a@x1>
-References: <20250519145235.56006-1-tmricht@linux.ibm.com>
+	s=k20201202; t=1747689752;
+	bh=dBGuIOIWlp/el9IYWu4JiMWESDa/kRlskhlFhzheVRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=co5W3OfpFoKtg+N9x6V0dchAfhDVEwFdCAh/Cw97hjJhAKyNrmBJAfi1ElDCioPg2
+	 1Eme2axBHQZ6DTocGCXp9TlSY+FnlNbzEfH5eZYzHY1oRRxnp6y+Zf2ref8PwSV2hl
+	 G3B9HTuHpSM0rcmH3n/M5EJyZ02+clqRmYyyiUlR3kh93wH23M+RlpTxsXQEdHJ9Hv
+	 OpYXgVDUwbvgGAnPhVeqiUQlu/cJHjyctfjhTwUDxQao5FpQVbeY/kX1f+SjuGMsvV
+	 H8NbYB+GNP40Flw8Xl0OwqM7wnjc2qE5fxptf89mu9BuK/DQdFluiI1ZwrGU1k3FOc
+	 iIjwlTFL/feDg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	airlied@linux.ie,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 15/18] drm/xe: Save the gt pointer in lrc and drop the tile
+Date: Mon, 19 May 2025 17:22:04 -0400
+Message-Id: <20250519212208.1986028-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250519212208.1986028-1-sashal@kernel.org>
+References: <20250519212208.1986028-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519145235.56006-1-tmricht@linux.ibm.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.29
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 04:52:35PM +0200, Thomas Richter wrote:
-> V1 --> V2: Add Suggestion from Arnaldo Cavalho de Melo confirmed by
->            Steven Rostedt. Use rmdir(../tracing/instances/dir) to stop
-> 	   process/session specific tracing and delete all 
-> 	   process/session specific setings.
-> 
-> Executing perf ftrace commands ftrace, profile and latency
-> leave tracing disabled as can seen in this output:
-> 
->  # echo 1 > /sys/kernel/debug/tracing/tracing_on
->  # cat /sys/kernel/debug/tracing/tracing_on
->  1
->  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
->  # cat /sys/kernel/debug/tracing/tracing_on
->  0
->  #
-> 
-> The tracing_on file is not restored to its value before the command.
-> Fix this behavior and restore the trace setting to what
-> is was before the invocation of the command.
+From: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
 
-The above paragraph doesn't apply after you moved to instances, right?
+[ Upstream commit ce15563e49fb0b5c802564433ff8468acd1339eb ]
 
-I changed the commit log message to:
+Save the gt pointer in the lrc so that it can used for gt based helpers.
 
-----------------------
-perf ftrace: Use process/session specific trace settings
+Signed-off-by: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Link: https://lore.kernel.org/r/20250509161159.2173069-7-umesh.nerlige.ramappa@intel.com
+(cherry picked from commit 741d3ef8b8b88fab2729ca89de1180e49bc9cef0)
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/xe/xe_lrc.c       | 4 ++--
+ drivers/gpu/drm/xe/xe_lrc_types.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Executing 'perf ftrace' commands 'ftrace', 'profile' and 'latency' leave
-tracing disabled as can seen in this output:
+diff --git a/drivers/gpu/drm/xe/xe_lrc.c b/drivers/gpu/drm/xe/xe_lrc.c
+index aec7db39c061e..f78b59b220a8f 100644
+--- a/drivers/gpu/drm/xe/xe_lrc.c
++++ b/drivers/gpu/drm/xe/xe_lrc.c
+@@ -874,7 +874,7 @@ static void *empty_lrc_data(struct xe_hw_engine *hwe)
+ 
+ static void xe_lrc_set_ppgtt(struct xe_lrc *lrc, struct xe_vm *vm)
+ {
+-	u64 desc = xe_vm_pdp4_descriptor(vm, lrc->tile);
++	u64 desc = xe_vm_pdp4_descriptor(vm, gt_to_tile(lrc->gt));
+ 
+ 	xe_lrc_write_ctx_reg(lrc, CTX_PDP0_UDW, upper_32_bits(desc));
+ 	xe_lrc_write_ctx_reg(lrc, CTX_PDP0_LDW, lower_32_bits(desc));
+@@ -905,6 +905,7 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
+ 	int err;
+ 
+ 	kref_init(&lrc->refcount);
++	lrc->gt = gt;
+ 	lrc->flags = 0;
+ 	lrc_size = ring_size + xe_gt_lrc_size(gt, hwe->class);
+ 	if (xe_gt_has_indirect_ring_state(gt))
+@@ -923,7 +924,6 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
+ 		return PTR_ERR(lrc->bo);
+ 
+ 	lrc->size = lrc_size;
+-	lrc->tile = gt_to_tile(hwe->gt);
+ 	lrc->ring.size = ring_size;
+ 	lrc->ring.tail = 0;
+ 	lrc->ctx_timestamp = 0;
+diff --git a/drivers/gpu/drm/xe/xe_lrc_types.h b/drivers/gpu/drm/xe/xe_lrc_types.h
+index 71ecb453f811a..cd38586ae9893 100644
+--- a/drivers/gpu/drm/xe/xe_lrc_types.h
++++ b/drivers/gpu/drm/xe/xe_lrc_types.h
+@@ -25,8 +25,8 @@ struct xe_lrc {
+ 	/** @size: size of lrc including any indirect ring state page */
+ 	u32 size;
+ 
+-	/** @tile: tile which this LRC belongs to */
+-	struct xe_tile *tile;
++	/** @gt: gt which this LRC belongs to */
++	struct xe_gt *gt;
+ 
+ 	/** @flags: LRC flags */
+ #define XE_LRC_FLAG_INDIRECT_RING_STATE		0x1
+-- 
+2.39.5
 
- # echo 1 > /sys/kernel/debug/tracing/tracing_on
- # cat /sys/kernel/debug/tracing/tracing_on
- 1
- # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
- # cat /sys/kernel/debug/tracing/tracing_on
- 0
- #
-
-The 'tracing_on' file is not restored to its value before the command.
-
-To fix that this patch uses the .../tracing/instances/XXX subdirectory
-feature.
-
-Each 'perf ftrace' invocation creates its own session/process
-specific subdirectory and does not change the global state
-in the .../tracing directory itself.
-
-Use rmdir(../tracing/instances/dir) to stop process/session specific
-tracing and delete all process/session specific setings.
-
------------
-
-followed by the tags you provided, ok?
-
-- Arnaldo
-
-> On Fedora 41 and 42 tracing is turned on by default.
-> 
-> This patch use the .../tracing/instances/XXX subdirectory feature.
-> Each perf ftrace invocation creates its own session/process
-> specific subdirectory and does not change the global state
-> in the .../tracing directory itself.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> ---
->  tools/perf/builtin-ftrace.c | 105 +++++++++++++++++++++++++++++++-----
->  1 file changed, 91 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 7caa18d5ffc3..3faf96e7185e 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -38,6 +38,8 @@
->  #include "util/units.h"
->  #include "util/parse-sublevel-options.h"
->  
-> +#include <sys/stat.h>
-> +
->  #define DEFAULT_TRACER  "function_graph"
->  
->  static volatile sig_atomic_t workload_exec_errno;
-> @@ -45,6 +47,8 @@ static volatile sig_atomic_t done;
->  
->  static struct stats latency_stats;  /* for tracepoints */
->  
-> +static char tracing_instance[PATH_MAX];	/* Trace instance directory */
-> +
->  static void sig_handler(int sig __maybe_unused)
->  {
->  	done = true;
-> @@ -100,6 +104,34 @@ static bool is_ftrace_supported(void)
->  	return supported;
->  }
->  
-> +/*
-> + * Wrapper to test if a file in directory .../tracing/instances/XXX
-> + * exists. If so return the .../tracing/instances/XXX file for use.
-> + * Otherwise the file exists only in directory .../tracing and
-> + * is applicable to all instances, for example file available_filter_functions.
-> + * Return that file name in this case.
-> + *
-> + * This functions works similar to get_tracing_file() and expects its caller
-> + * to free the returned file name.
-> + *
-> + * The global variable tracing_instance is set in init_tracing_instance()
-> + * called a the  beginning to a process specific tracing subdirectory.
-> + */
-> +static char *get_tracing_instance_file(const char *name)
-> +{
-> +	char *file;
-> +
-> +	if (asprintf(&file, "%s/%s", tracing_instance, name) < 0)
-> +		return NULL;
-> +
-> +	if (!access(file, F_OK))
-> +		return file;
-> +
-> +	put_tracing_file(file);
-> +	file = get_tracing_file(name);
-> +	return file;
-> +}
-> +
->  static int __write_tracing_file(const char *name, const char *val, bool append)
->  {
->  	char *file;
-> @@ -109,7 +141,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
->  	char errbuf[512];
->  	char *val_copy;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -167,7 +199,7 @@ static int read_tracing_file_to_stdout(const char *name)
->  	int fd;
->  	int ret = -1;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -209,7 +241,7 @@ static int read_tracing_file_by_line(const char *name,
->  	char *file;
->  	FILE *fp;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -299,6 +331,36 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
->  	return 0;
->  }
->  
-> +/* Remove .../tracing/instances/XXX subdirectory created with
-> + * init_tracing_instance().
-> + */
-> +static void exit_tracing_instance(void)
-> +{
-> +	rmdir(tracing_instance);
-> +}
-> +
-> +/* Create subdirectory within .../tracing/instances/XXX to have session
-> + * or process specific setup. To delete this setup, simply remove the
-> + * subdirectory.
-> + */
-> +static int init_tracing_instance(void)
-> +{
-> +	char dirname[] = "instances/perf-ftrace-XXXXXX";
-> +	char *path;
-> +
-> +	path = get_tracing_file(dirname);
-> +	if (!path)
-> +		return -1;
-> +	strcpy(tracing_instance, path);
-> +	put_tracing_file(path);
-> +	path = mkdtemp(tracing_instance);
-> +	if (!path) {
-> +		pr_err("failed to create tracing/instances directory\n");
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int set_tracing_pid(struct perf_ftrace *ftrace)
->  {
->  	int i;
-> @@ -629,14 +691,19 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  
->  	select_tracer(ftrace);
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-> +		goto out;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
-> -		goto out;
-> +		goto out_reset;
->  	}
->  
->  	/* reset ftrace buffer */
->  	if (write_tracing_file("trace", "0") < 0)
-> -		goto out;
-> +		goto out_reset;
->  
->  	if (set_tracing_options(ftrace) < 0)
->  		goto out_reset;
-> @@ -648,7 +715,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  
->  	setup_pager();
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		goto out_reset;
-> @@ -723,7 +790,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  out_close_fd:
->  	close(trace_fd);
->  out_reset:
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  out:
->  	return (done && !workload_exec_errno) ? 0 : -1;
->  }
-> @@ -924,6 +991,11 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  	if (ftrace->target.use_bpf)
->  		return perf_ftrace__latency_prepare_bpf(ftrace);
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-> +		return -1;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
->  		return -1;
-> @@ -942,7 +1014,7 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  		return -1;
->  	}
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		return -1;
-> @@ -993,7 +1065,7 @@ static int cleanup_func_latency(struct perf_ftrace *ftrace)
->  	if (ftrace->target.use_bpf)
->  		return perf_ftrace__latency_cleanup_bpf(ftrace);
->  
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  	return 0;
->  }
->  
-> @@ -1304,17 +1376,22 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  		goto out;
->  	}
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-> +		goto out;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
-> -		goto out;
-> +		goto out_reset;
->  	}
->  
->  	/* reset ftrace buffer */
->  	if (write_tracing_file("trace", "0") < 0)
-> -		goto out;
-> +		goto out_reset;
->  
->  	if (set_tracing_options(ftrace) < 0)
-> -		return -1;
-> +		goto out_reset;
->  
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
-> @@ -1323,7 +1400,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  
->  	setup_pager();
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		goto out_reset;
-> @@ -1385,7 +1462,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  out_close_fd:
->  	close(trace_fd);
->  out_reset:
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  out:
->  	return (done && !workload_exec_errno) ? 0 : -1;
->  }
-> -- 
-> 2.49.0
