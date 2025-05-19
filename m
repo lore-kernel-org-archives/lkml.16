@@ -1,85 +1,112 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882712116F2
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0AE44C94;
+	Mon, 19 May 2025 21:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689295; cv=none; b=L/hDThvLMd8i5IFEKqv6SnVU/pDzX3wbDFHsci/rDw1oUwGlHO1Cwg/avYpEHR/CW9t9fOAFAW9c+mFn2plI4owCismgJloDUT0NJgdbbq6vvowoDMR6jh7fcvYHxlQPS3PPcpakLk04xglpKUBiNBQ+Io73evXIR9T6jXlxesE=
+	t=1747689348; cv=none; b=WLEgDM/bbbtLwpOPFcSFG9Ii9Zp/CG8y7aB4WvpH1b0KLCR/On0+Y21mGNOyNn8K32DNr9UabwvikL6OgAsBlWe0s5ToVa/ESBXvgk3qwP2UJU1U4unKztwXShdM1ajk0n3Apnv2rkfz0Qv6EA90KijM+uJPkVBkF/4vAhoXKtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689295; c=relaxed/simple;
-	bh=qx+yJToTgznisPaKQ0tu8vZ6/s5mpC2KHIepWrlE2/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T/Cg0LM7cp4MSa/9oud/rhkM70jQUR7kqvvvyYyFXUZ50zW+AjTq+7bnwpGnSOsUY4100kP2/Exh/DqLcIOabK28yBL3o+7Ns/Mx+pomoVFLr3Haux/V5szMAQtrCO88xzjznk+r1hPQUIfqDitjDTCCQ3jWrd4LPncQE0aJiRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=w0YBehPz; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747689348; c=relaxed/simple;
+	bh=muFhmXyLo0DEmnYrqAEiQ7Yzh6caV+km2177Wl6cRao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iLt7ApGNa19ssbx1BwQsP0SE1De91mw+IAXez1dZw0szRuvmSTRaQ5NjbFcEql7KkEw0H+R8P6rhUUkXu8AIq+rptMaxEEqcALBIP8+hqIFowxyFTJpe8z9P9MUO/BTzmRWR888zeaROLitr+zdgqlzzk5i2lDNbgddTFFCmfkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSiHz0E8; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w0YBehPz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=YXwpzfXWK/fhvKs0xuOgmE8U/L8nhcWlhpfO+B4LPWU=; b=w0YBehPz2Bls7nN5fK9gUfqhuw
-	AnsGVInFdP0E1nGZ1tb6j9JcKdMMTQkDW6FCc44Wq+AoG7pDdeoCln+N5Ds9t7qHaki70zaeYBLW8
-	uouMbk28f0K6lmXQARhbugjczUFYCy5I3xawc3qv/TJE6A3Ec86bpujL57lBHhSnZ/LZMN9no5oNj
-	bdFKh5fHdUWe0DP/eatElaxaaTb1tJf01NzlAcDEFtg0MySV/IkAL9VlNQVOSn0Ldw6p65DVrM8DY
-	+0kaC0ZfW3IDiRAlH/tkEtnbYJkFbozzQ8fOnbLeRDa9OuK+sUuuTiVZBfjcnAsx5urCbCp/Y2PoB
-	IQCgOIdQ==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH7oz-0000000AV13-1biT;
-	Mon, 19 May 2025 21:14:53 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] futex: fix waitwake kernel-doc warnings
-Date: Mon, 19 May 2025 14:14:51 -0700
-Message-ID: <20250519211451.903973-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSiHz0E8"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601dd3dfc1fso3611259a12.0;
+        Mon, 19 May 2025 14:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747689345; x=1748294145; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xfCxvNrNXH6YMvxiBWl55URv30Vk5ImyK9KqXeiCoPg=;
+        b=HSiHz0E82U1H/9bMs2aAg566Uoa1j6/eUyWq6VGF2en6q6VP+zvLDVAicDcDgXtnj0
+         rZws/VnZXT7TkNTTSL3bq9vjIimpik7ztB36OTORvhKm5XMYRBzaHxRtxQRlf6ocHqId
+         FUle8tpeR81j6G47MkZCGsAXQCrph/2IKOnaCWJDHIbyg5F15k6QK7dppLNFVzex//7G
+         NWv2HzgYEcVPUQCyDFk4bhF6JqY5/Si/aV9iOYn9/OIPPH4BvEwoXb5uREAEZt+h4A2g
+         Ry29oGQ6TNsznpfxO26zCSP4/F/vSp1os10EZClxowQdBK6A7u5beXPcGd0rGbl08bVV
+         hy+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747689345; x=1748294145;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xfCxvNrNXH6YMvxiBWl55URv30Vk5ImyK9KqXeiCoPg=;
+        b=Zt/ZQwdEERZVE3B1uATANXg1WrL1LrKNU/I/gdTwKkOX55LhBxU68jupLOLTt2CtrM
+         48SzZQsHdbPicN5tXRN2A8byIjJ/ubZjzDD04I6Yp2rAC0dHySMgwa2jWLDuWCqDyumS
+         cgf5XkJhsVj7ygYoRpfltosI7TnZ8cLYSEw68dXwZeUtQTMa/q4+NH3tGdSlU0gSzZtK
+         h0H8sFwYZ12/z6kxXC06XM3xxMjeKa8ZPwfz0/AWNwrXCny6uJ/IXaQirxv9+ia+rHwK
+         psGLtouIsBJX+5jFd1gcxMgUUYZoudIvLU6AQT+XNK9wg3ii4qZbe/Jv4RjfHsEB/+Qn
+         QQng==
+X-Forwarded-Encrypted: i=1; AJvYcCUR1M1Wryg0pvQqqFzB4rO+O+x8AfwrvLqJZPbwtyjtSFyuBg43MzhH7aCGw+7f0ioTGOXljZRzhnsq+XY=@vger.kernel.org, AJvYcCVXRm2oqU3oI2GzKTj5VBuywl1rrnHQpWiZ6khDMimIlZytrYFnYQLXXywIWR/Yq/R1brdUe2mG1I/eixNW@vger.kernel.org, AJvYcCXYn3WikETmHd20iX8ZqAhe09Ej5Wqdam1XvdssJVCBzyva5Ha3eb5LUChZInmkfRpef4kzIyFEQTnqo20c@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOg5MHJyO5Y9XGTJPrVXWujWGgZ8CyRPzcWeP2qc4gyjvfl+Xp
+	Qspjw1M1TvySdaJwy8vhf1Xp8ZdpHQEBs1QpyNasqSJI4CgqfGn6S2YOo4T8N1eLSkCnwP8K5N0
+	y3De0CZpmy8dJBID9s8vpaloGCFcRUHU=
+X-Gm-Gg: ASbGncuuMbAXPHUDuaMkK/dSDDsGIG3vKZI9VxdY0C5WTc8E08WTutcjxrtloBDFEMd
+	eOPYslJYD/bGR2O8YrhHAA9dFTWPj5/pOIwBeT0G34JUHOwPe3kdNMGE5jXAH+shi1X6njtcBug
+	BaScPjHMaz9ffnbbr5BKvUR6JNrwqg+xI=
+X-Google-Smtp-Source: AGHT+IEdHJ5TsiYJUOSilPNO+z3JABvgvB65Ct1aB4PjJ2fABaDgZlQuvx2XmPkklIghfrLSC+0u0HMeQGgesMbdSWY=
+X-Received: by 2002:a17:907:94d0:b0:ad2:2949:bdfc with SMTP id
+ a640c23a62f3a-ad536b7ca51mr1349013266b.3.1747689344467; Mon, 19 May 2025
+ 14:15:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250519175348.11924-1-robdclark@gmail.com>
+In-Reply-To: <20250519175348.11924-1-robdclark@gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Tue, 20 May 2025 07:15:32 +1000
+X-Gm-Features: AX0GCFs4JnXwsJdajW1l7s7toaeaNTWjF5f0e497pSZ8wodPL0eA75PFrE0O5i4
+Message-ID: <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
+	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
+	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Jun Nie <jun.nie@linaro.org>, 
+	Kevin Tian <kevin.tian@intel.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linaro-mm-sig@lists.linaro.org>, 
+	"m oderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linux-media@vger.kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, 
+	Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Match a function comment to the actual function name. [futex_do_wait()]
-Drop the kernel-doc for a removed function parameter. [@hb]
-Use @task: for a function parameter description. [futex_wait_setup()]
+On Tue, 20 May 2025 at 03:54, Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Conversion to DRM GPU VA Manager[1], and adding support for Vulkan Sparse
+> Memory[2] in the form of:
+>
+> 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP_MAP/
+>    MAP_NULL/UNMAP commands
+>
+> 2. A new VM_BIND ioctl to allow submitting batches of one or more
+>    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+>
+> I did not implement support for synchronous VM_BIND commands.  Since
+> userspace could just immediately wait for the `SUBMIT` to complete, I don't
+> think we need this extra complexity in the kernel.  Synchronous/immediate
+> VM_BIND operations could be implemented with a 2nd VM_BIND submitqueue.
 
-kernel/futex/waitwake.c:343: warning: expecting prototype for futex_wait_queue(). Prototype was for futex_do_wait() instead
-kernel/futex/waitwake.c:594: warning: Function parameter or struct member 'task' not described in 'futex_wait_setup'
+This seems suboptimal for Vulkan userspaces. non-sparse binds are all
+synchronous, you are adding an extra ioctl to wait, or do you manage
+these via a different mechanism?
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- kernel/futex/waitwake.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
---- linux-next-20250516.orig/kernel/futex/waitwake.c
-+++ linux-next-20250516/kernel/futex/waitwake.c
-@@ -334,8 +334,7 @@ out_unlock:
- static long futex_wait_restart(struct restart_block *restart);
- 
- /**
-- * futex_wait_queue() - futex_queue() and wait for wakeup, timeout, or signal
-- * @hb:		the futex hash bucket, must be locked by the caller
-+ * futex_do_wait() - futex_queue() and wait for wakeup, timeout, or signal
-  * @q:		the futex_q to queue up on
-  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
-  */
-@@ -578,7 +577,7 @@ int futex_wait_multiple(struct futex_vec
-  * @flags:	futex flags (FLAGS_SHARED, etc.)
-  * @q:		the associated futex_q
-  * @key2:	the second futex_key if used for requeue PI
-- * task:	Task queueing this futex
-+ * @task:	Task queueing this futex
-  *
-  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
-  * compare it with the expected value.  Handle atomic faults internally.
+Dave.
