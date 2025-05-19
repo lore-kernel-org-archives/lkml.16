@@ -1,206 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE91D5AD4;
-	Mon, 19 May 2025 15:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667189; cv=none; b=szcbzEvEA7eAzuAxTd7G68Kz43i9ntDOMJIuSA8lcyHtD2DxIrnKUY9CWc3DOyP86drOTXTSar2ilLJf/WlJ1XprRy7vGbenyhFsoBep+o6aeTEAKnLgf882IiSyJ2/KaEAF3MPvc+laxp7wstFW0alvokInQqHxTJjFQP1aDYw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667189; c=relaxed/simple;
-	bh=NxCscuWDEk40ScYO6BS2xsUrg53DUDC+eeyYtmp5F9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4Ge/q5NX48+RBcM1tjlfL0YCvcDI6yEyVK+qLV0FJbDCqVS+NgmIwpAqkttDGiu17GSx3cU5xJB3w5axqsC+UnPep14fk3qJw6b9b1x6bieiOiMowyBOAvxacP8RH49zMVzT/v0P8XHiMXLuPz2esfR7CuVZ/bztHT1HG92l3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyKlxc9J; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D62128466A;
+	Mon, 19 May 2025 15:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747667202; cv=fail; b=O4uSmVEaRxjNkhYkQezVSrzOU0GGRPWE9cllVKNOCTqba6UPNFGzDwjaAQLvJ+rYj+8mWRjfmhpuRJvdkL6lVAb8gBH0bNQ6L9GV8C5Xt+YJYpg27EvJHYnbBt9xYjtKxoCEspKMbEKLQAd6Oh0vK5jpuMAcsAsRrM1mFunFYzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747667202; c=relaxed/simple;
+	bh=RMLnJnHQpbSwfq43BGOonOPaJajL9NiRLW6vm+M4Qbo=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YmIsjDEnOah4ynvi2utHjj+I+EEVj8VJ/lCreALvfsSSX1MONHSqSjDnlE//CKEbOCdk59Xw+1kVoVg6EzrI9nj6YLLfYy+exnaKDNdJqh1F0tEH6RcjKsQHG4mY/8Mxm6NHyzAClTjJkoLxlKkAqtiMY7K3p2lgHvh58Xy/Sok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VxBPVslv; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyKlxc9J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFAFC4CEE9;
-	Mon, 19 May 2025 15:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747667188;
-	bh=NxCscuWDEk40ScYO6BS2xsUrg53DUDC+eeyYtmp5F9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PyKlxc9JGfp8zqj+F7Qo0tV+o1iYgCctIO5AHaP9Js5pqYnaaldq2+b32dJmiapmM
-	 OPgDd1FtR8UdhM/f6W10ClhUUlXzZ9qcG+iCOL9KYzyrg8kJXeML64MoOM0HRBci98
-	 /K+O0amOXixJxEna0qr8KNl+0Gbx4wy9U1Rd5muimUpe5zJqAbA1R6rk15olRjM6rL
-	 u2BVzsXM7XUUNpEnlA/GKgXUx0UcxbM+l6aOABY/JWXsZC8sEMX2q0+8ceuXjpMvtx
-	 EkM0n9Feo1KtJIWu+foOa12t7SJgAlkLBeBas0qmM1S/iY98JYUUK3930sW+IatGGI
-	 NJjuJvUsxg6xg==
-Date: Mon, 19 May 2025 16:06:22 +0100
-From: Will Deacon <will@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250519150621.GA17177@willie-the-truck>
-References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
- <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VxBPVslv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747667201; x=1779203201;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=RMLnJnHQpbSwfq43BGOonOPaJajL9NiRLW6vm+M4Qbo=;
+  b=VxBPVslvgfDdRIt+bqlFFhzyiwW4KzWwNugwtBhYSULmo8Mm+mEbiNBD
+   369tL234K4pLJLA4OIrOmEFhO4QL3/louc3nFCkynCC8XPfgn3Pd+W01y
+   eL/c73MgxGBQRvjAVxQvG+Ji3ak+nrPgknnaIRvkFOF+Wzp46yyLTl17S
+   qy3PBOCCSetq1F7BqyPwBTtOucA14/pOcAItk55K17gvFRPTVQOCn2HxW
+   Ce9QScUMvg5Cy/KqOIeGbOWDlAPht1PS4zyC9ypY9tHoKCU/N3OPpTFoz
+   vG+3UzaTjJ4sAeXzHV4aVfR9KjDLOWmfDaRuNx0W5fRInEN6O++Td+KFW
+   Q==;
+X-CSE-ConnectionGUID: 7VQ8UGKHTPKkKAUvNF+zmQ==
+X-CSE-MsgGUID: aF9WHFgqSv6Pp25zmnymag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="60205494"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="60205494"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:06:38 -0700
+X-CSE-ConnectionGUID: lfJJGr5eSfGotJgoWWP0qQ==
+X-CSE-MsgGUID: x9kNJ174R0C3ry+pxjDRsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="140288396"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:06:38 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 19 May 2025 08:06:37 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 19 May 2025 08:06:37 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.48) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 19 May 2025 08:06:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b+jMUOfyEnnzKkkB/Toah5Md/FbpRdTvRVlMZycfaJMIu10rwOvU7iUSfGB+94/2RPEFHv1Ont0y/w08wk7rsJg9DGA2sCwebKrG7jN4b0hp8ggAU0hRFIkqy09l8TYET8wXIroUd2M4hyV6SQ8BDdHbDFf9sd1USpgMiu7L6cUBVDBmvmQj0/iqUcmFMM3QDIV5O2URsgfk0YzZsBxQChXKxYl3AlegOHKossMx66UBr2H6ZBxRhOH9hykdaE4+VZ0+lYceRt07bZ7/xBJPSipf3QYgXSfMfMysWK2lNUjvfjJk1sYtl9NksE758Wtr9OhLdGT3l2J4PX5w3jKXug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j0rpRvxOw6LEhBWR4m51u8rkDbWivAV6iPcrFMPUb48=;
+ b=kCTzFyk8uwSzvyH6LymYKURxFpEF0qS3VceVoLSRJ+8gv3HGhOjajWjMKyr9soO90ZtdokPd8y+SMIHXHNPXUT+HKKZOxnFmjQvKZR/uHDP1x/OOMtgJldEhtVt6PKqaR03PNlKgKEggC8lcPaauawXliSiFexEJ3D4OcoSv8x5j2Kj2z3pjXR59JXK0xpAkefQ7oH3dgGP9/+iP0h9Ed/U9iZp/9x32CniprS9HDk7eR6U1bDaM2pSPy+1CLDJz3+XT03QyV67fKnWdBRCahJ+SmnKTaantLpyOeLFWJqYcY+gGRUpgxXXrNFknkomWI7t59QOXMxERivoF0y2oUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN7PR11MB7566.namprd11.prod.outlook.com (2603:10b6:806:34d::7)
+ by PH0PR11MB4791.namprd11.prod.outlook.com (2603:10b6:510:43::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Mon, 19 May
+ 2025 15:05:52 +0000
+Received: from SN7PR11MB7566.namprd11.prod.outlook.com
+ ([fe80::2b7:f80e:ff6b:9a15]) by SN7PR11MB7566.namprd11.prod.outlook.com
+ ([fe80::2b7:f80e:ff6b:9a15%7]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 15:05:52 +0000
+Message-ID: <8f9df54a-ada6-4887-9537-de2a51eff841@intel.com>
+Date: Mon, 19 May 2025 08:05:50 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for fault
+ retry on invalid slot
+To: Sean Christopherson <seanjc@google.com>, Yan Zhao <yan.y.zhao@intel.com>
+CC: <pbonzini@redhat.com>, <rick.p.edgecombe@intel.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+References: <20250519023613.30329-1-yan.y.zhao@intel.com>
+ <20250519023737.30360-1-yan.y.zhao@intel.com> <aCsy-m_esVjy8Pey@google.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <aCsy-m_esVjy8Pey@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0064.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::9) To SN7PR11MB7566.namprd11.prod.outlook.com
+ (2603:10b6:806:34d::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR11MB7566:EE_|PH0PR11MB4791:EE_
+X-MS-Office365-Filtering-Correlation-Id: d2c59d20-f891-492a-8d58-08dd96e6a5c6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aC9mM1NxcFhNWlZJak5NNmNwRjJuUEJGODNiYTJHQVVwcjZyY3BOSmdGdWxD?=
+ =?utf-8?B?djZCeWFtSXZveTg1b0F4VEpwL0RIMU1CRDZIN29zQkJDeHZDb0VTanJyMkZQ?=
+ =?utf-8?B?S3hKcmg1Z0xIMGNSZE9GbjhRNWx6NWczRGtySEpJM3poMVdGdVpGN213ems5?=
+ =?utf-8?B?OVRtdElJWG5BNVB5RzJ5TmZnNW9FR01wT0UvOHFZQTV5Y25icFlqVnhrZmdL?=
+ =?utf-8?B?V2h4M205Lyt3cGlBZmlkejRacXNVMUwrTkVtK0QzREtwR2d1dEpxalludzhl?=
+ =?utf-8?B?VVZQTE5WQnhVbEJWMmZKUngwZy90U3dOdVJmTmRxM2pCbXBXOSs3Z1ZTYVZ5?=
+ =?utf-8?B?R2VSNHZlYUdTQ2FBTG41QUZzb3BlRndHbWQ0SlRheXlqVDBZS2Njd2hoSHdh?=
+ =?utf-8?B?ZXc1b1JOcC9WSytEcElEVVRZRVhuK0dRRWd4UzB4aUVWLzhHNnBuNnhCNHZY?=
+ =?utf-8?B?RndFZ3JXSlN3WFNJcElRSWVkaFRvN1BDYVZSc1VvNFVvRXRhTnZ6eEViNlBl?=
+ =?utf-8?B?TFp1S3pKRkYwTWNDb3lCTnpqaTg4VWtGWHNrSlpFTm1tLzlSUmhwT2pLdTMv?=
+ =?utf-8?B?Sy9aMk1NYWQzVTh5L1lCQVlxZXZNVDdaYU5RNnB3OTMwTmh4Rnh5OHZOL2R1?=
+ =?utf-8?B?MlMySE1Qbk1tQ2tvWTArV1k5YnZ0bFFpcEtLUHVqQzJzZ0haNXA4TldSdXpW?=
+ =?utf-8?B?MkhIRllNVlBjL2xDNjl0Z0NFcGhZY2R6WkxYODlMMmdHOHI3Nm8yOXM0M0Q4?=
+ =?utf-8?B?eVlhdGxaZHNOT2dBQmt5WjN6ZUl0NU5UbVlxUWZGVVpreFZDUWdocXV4MzhH?=
+ =?utf-8?B?YmJ4ZVFleFdBMVpFOUorQ1hac2lvMWFualNQZ2lnRmJyVXFuUHhPNXNiczlL?=
+ =?utf-8?B?M0xBWEh3WGNWQ3dKNkNib3phWVNjNGY5TlE0TitmT2NOOFp5eTVyQVpZWVBt?=
+ =?utf-8?B?SmFyd1RPV2xvc3E5RXVSVW5MaXRLRXhwSWV1OXdYMmtVa3lucjNOcnEwSW9G?=
+ =?utf-8?B?UGVteWx0VlZpZ0hBSGxkWjF3d2JRMnRzeGlXS0s0Y3NtY1V1M0NmUGRjSnhZ?=
+ =?utf-8?B?YWRHei9sS2s3TnNvcWtaRlBpazJ6L2dPUkVYamV4eFBYQjErVUp0YmZwZmdt?=
+ =?utf-8?B?SGxKL1NyT2w1M0QvSEtRYmpNaGZMZkUyTWdiRDlXYTZvYTJCdTdSY1Y4eGpv?=
+ =?utf-8?B?U0hjb0pscmoyVDBjaVFyenlRNGdHVWVvYlkvSG5pVnNSa0xpSnRUUk1xMUNB?=
+ =?utf-8?B?YUVIajN4SkdqTXZvSmVzT1dPK3Q2RWh2VWlaRDl4RWRHOFcxUERKOTlxR2Uy?=
+ =?utf-8?B?NkIwM0daRFczOHFDam5ZUUpMd2JXSEJxZlFlRWNkTEhMZUNWQzY2VmNZcGM3?=
+ =?utf-8?B?bFBwbFF3Z0RNZkdtaHFQY2NucTVPbHNHR01oTmVwYzlVSFFOYXM2dUsxQjR4?=
+ =?utf-8?B?a3IzWlNyV3dzNEx0Rit3M2FBdm91MnRjOG1MV08xM0VmbXQ5K1lHVEoxVVVu?=
+ =?utf-8?B?dXpaMmhhQmN2dVh3Uk5aZ29JcUV3M0ZFK0lCMCtiYnlUQnV3eGwwZStqU01X?=
+ =?utf-8?B?WldsMEl4SC9MNXBlZWhwQUdPdUlQZHZzRHUxVlBLSjEvKy93emU1SFhWbS9Q?=
+ =?utf-8?B?bTFlWVAvQ1lIY0crSmt4M3MwM2d4ZFBGN042ZExmMkhTNjd1bmtxT0ZONjlV?=
+ =?utf-8?B?QjJZRTlDQm1tckw2WHVWR2pKWlEzVFg1S1Jhc1V1ZGcyZWFtd1hSMHh6SXVx?=
+ =?utf-8?B?d29CR0pNNFpEbWJ0TEsxRmtjTUhxNFViOFdmLzBpS01kdnhJbVNvSUo3d01l?=
+ =?utf-8?B?RzgxcUJKRjl5MXRLTE52SlhFT3E4bEtTVmNTYjRjbHkweUhMN1F6OTFkVURu?=
+ =?utf-8?Q?D7bj7pmVci9GZ?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7566.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q1BTVEtuK1htMWRyMnVwTWYrTmtFTzJBYjV0ZWp3bDFUQVNyTWUyYU9zQkRK?=
+ =?utf-8?B?S1M0cFg0eDFkemsxdTdiUzFZOEUxeFdORVh0SjA0bEhhSkVvR3g4QzRYZTM5?=
+ =?utf-8?B?c1V3ODh0dGN1dllYdnJ6N3hObzdmYjVEMzJNeEZ2WlIxNXFVeW9xemorRzN6?=
+ =?utf-8?B?RmlCMytubFJVNzBKL281YXNJOFdzeW5NbGZ2QTlvdVY0T3YxWmhtbXRLbzFS?=
+ =?utf-8?B?K1BqeThBNG9DaGlHUEh5RFZhWDBGSERNUzhNUHc3NjhpM29CTGhBWWZiRGhN?=
+ =?utf-8?B?Sjg0N0JMWk9OVFFtSUNnR21kRzUveFdsYm1jZWNTWE9RMnc4VCtucS9WdDY0?=
+ =?utf-8?B?dkZFem9sSElKWmxSbE5keXVSRmE0b0IwWHliMUt0TUlQWHZJYzBhYmltcXAx?=
+ =?utf-8?B?SG1RWDFzR0hJaVVUaTF6aDlaSWFwSlM5Nnk5cVhoZEFmS1NJc2hoYWV2WEZv?=
+ =?utf-8?B?Rmc0dmNOdXFrbEpsK1NnSTBQQUFDK3BJaUF1K2FlbXQrREhURXg2Y1h0QXI1?=
+ =?utf-8?B?K3BkVFAzVC8vYVowNlZXZXYwMGJQczZSRDYwV0NYaUNVbm1Nb0hZbHJzRUJr?=
+ =?utf-8?B?aldvckN1dzJkSTU3d05obC91MU9jVmFZS2svOFYrYmNDdVpIM0xyekVtMWVk?=
+ =?utf-8?B?YjFLbHI2Q29ja3pXZVhFZ1Q3TzlCTTZPNjZxb3YwQ0hSRzBCdEFHYVUzRTNC?=
+ =?utf-8?B?dWVXTUhMYXZKWTNuYzY4ZHFSb1RoMmRCZm5jTVNLMlp4c3NUaGxnZXlESEZJ?=
+ =?utf-8?B?Zitqc0Flc3R4dXBhMkV3emM1VVB0cGF1eHBvOFJSK0lkY1g0RitTdWM0bjNP?=
+ =?utf-8?B?TE9oVWg5OGEvOUtFdUJzWlJMYzk0Nis5QXlFMHhzbWRXeTdIeUNBUTk1bHJ0?=
+ =?utf-8?B?QXpCZHlZWmxtVHZDbGV3RjlNUGlXa3Rsdzd3Zmt2bEI2aUJWcjlaWjEyQ3FY?=
+ =?utf-8?B?czZMYXpVb21DR1ZaMGNpcnM1bmQvR2ZjVEFrTjkvZEZCMW50MCtUTHl1c1o0?=
+ =?utf-8?B?VTh5am9XNnJINVhiWGFSMkYrYVNZcmpTQ25yc0RUcktFT1hOM0VpK0RBMTAx?=
+ =?utf-8?B?MnhtNjU4N0UvOFRXaCtyRUZrTzh3K2FPSnBseTdXSTlFdk9JbG9ETEpDNUZv?=
+ =?utf-8?B?Y1lqT3M4WTF5RStuL1R3dUFlZEZBODBmQXg3cis2cm1BTmNLWkdFZEVrSGZ1?=
+ =?utf-8?B?WXZad3JodytPdXB6Z0NRcGRKcVhhU2lYWjluUGlaeWROY3NHQklMeWEvcGJi?=
+ =?utf-8?B?N25WcXBvMUt0L1laaWlaclgxL29zbWhsdnk4VURvQUkybGxqKzZJcXRINWh0?=
+ =?utf-8?B?ejNSWGFSK1o0VG9TbG1OWENBUEptUG5BMUg5RjRCaW1nbUtvbzF2U1ZmTVVu?=
+ =?utf-8?B?bTlmYmk1ZUVjekl0cFZDRzNWTmZZek5obmZUNTV4dUc0UzM4ZkpqRVQ5d3dt?=
+ =?utf-8?B?aFdaM1diUE1HbkFWcnJzc1BuWHptTjZlNmhORjYxMHZaNHAxTU5PQkY1NWVE?=
+ =?utf-8?B?d1h3ejNQMHdVNHRmckVreklGeERETmgyU3d1NmRQYmFQVSsvdjNUMStOcTJj?=
+ =?utf-8?B?VVJZYmU2MUxiWTVOM2ZaeHBUNVhXZitRTnYyZ3VLejVWZys4NENFMXFxeGpt?=
+ =?utf-8?B?a1dBQjdCWng3SXpxaEl2SFZjdUVnQXltd3FNM09qVFJtaTAyU3FWaituQTd3?=
+ =?utf-8?B?c2MwN2Z0RE81MUorZ3FFYXlHRkJHd3lSc3BoSWYzTGt2MVRwaGpsZG1Vb1Jr?=
+ =?utf-8?B?K1NxdU84bGJMMjAyMkQrNDRadVBtTm04MXVUbVVBU2d5YmdsMG9veFIyNThk?=
+ =?utf-8?B?anhiMUdtQS9Kenl0WDU2cGpsd2FtMWsvMkFwTmdpUEtndE9ET2RWMFVNUjF6?=
+ =?utf-8?B?R28zWlFMdlVSRE4yS1AyaWRBOUFVRjBXa1hUZEkySVVJdnhiVkl3K0J5K0Vo?=
+ =?utf-8?B?UEM0OVVXK0oyeWV1ZmdvRlZqZWZLVGNPVzFDeTlta0ZYQk1uOGNSTEUwSVMx?=
+ =?utf-8?B?Q0w2aEF5NEpxalJWMkVnSzh5YWM4aU9Gek8wMkY2K3QxT0F6V2FTa2VCelZh?=
+ =?utf-8?B?V3NiQi9NaTFhSTlwMjFNWm0ycWJHcS82Z0drM0RRTmwxbkNpZXBpTG1sbnZM?=
+ =?utf-8?B?VFYvcG5yYytnckpjUThjeXBkbEU2bTU5K083Nzh5bWZFaFJrSmh2T3ZrMDVJ?=
+ =?utf-8?B?Rnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2c59d20-f891-492a-8d58-08dd96e6a5c6
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7566.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 15:05:52.5952
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vreqIQNl2Obxv6oe5028lJwe4PvDFdNQnxl0ES89KASRYPAsbPc7YV0j/7TvwJsik7yh1V09bf0EpKzZutCia9zvhLFvFsrQCKPtduehvHg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4791
+X-OriginatorOrg: intel.com
 
-Hey Rob,
+Hi Sean,
 
-On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
+On 5/19/25 6:33 AM, Sean Christopherson wrote:
+> On Mon, May 19, 2025, Yan Zhao wrote:
+>> Introduce a new return value RET_PF_RETRY_INVALID_SLOT to inform callers of
+>> kvm_mmu_do_page_fault() that a fault retry is due to an invalid memslot.
+>> This helps prevent deadlocks when a memslot is removed during pre-faulting
+>> GPAs in the memslot or local retry of faulting private pages in TDX.
+>>
+>> Take pre-faulting as an example.
+>>
+>> During ioctl KVM_PRE_FAULT_MEMORY, kvm->srcu is acquired around the
+>> pre-faulting of the entire range. For x86, kvm_arch_vcpu_pre_fault_memory()
+>> further invokes kvm_tdp_map_page(), which retries kvm_mmu_do_page_fault()
+>> if the return value is RET_PF_RETRY.
+>>
+>> If a memslot is deleted during the ioctl KVM_PRE_FAULT_MEMORY, after
+>> kvm_invalidate_memslot() marks a slot as invalid and makes it visible via
+>> rcu_assign_pointer() in kvm_swap_active_memslots(), kvm_mmu_do_page_fault()
+>> may encounter an invalid slot and return RET_PF_RETRY. Consequently,
+>> kvm_tdp_map_page() will then retry without releasing the srcu lock.
+>> Meanwhile, synchronize_srcu_expedited() in kvm_swap_active_memslots() is
+>> blocked, waiting for kvm_vcpu_pre_fault_memory() to release the srcu lock,
+>> leading to a deadlock.
 > 
-> The ARMv9.2 architecture introduces the optional Branch Record Buffer
-> Extension (BRBE), which records information about branches as they are
-> executed into set of branch record registers. BRBE is similar to x86's
-> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-> (BHRB).
+> Probably worth calling out that KVM will respond to signals, i.e. there's no risk
+> to the host kernel.
+> 
+>> "slot deleting" thread                   "prefault" thread
+>> -----------------------------            ----------------------
+>>                                          srcu_read_lock();
+>> (A)
+>> invalid_slot->flags |= KVM_MEMSLOT_INVALID;
+>> rcu_assign_pointer();
+>>
+>>                                          kvm_tdp_map_page();
+>>                                          (B)
+>>                                             do {
+>>                                                r = kvm_mmu_do_page_fault();
+>>
+>> (C) synchronize_srcu_expedited();
+>>
+>>                                             } while (r == RET_PF_RETRY);
+>>
+>>                                          (D) srcu_read_unlock();
+>>
+>> As shown in diagram, (C) is waiting for (D). However, (B) continuously
+>> finds an invalid slot before (C) completes, causing (B) to retry and
+>> preventing (D) from being invoked.
+>>
+>> The local retry code in TDX's EPT violation handler faces a similar issue,
+>> where a deadlock can occur when faulting a private GFN in a slot that is
+>> concurrently being removed.
+>>
+>> To resolve the deadlock, introduce a new return value
+>> RET_PF_RETRY_INVALID_SLOT and modify kvm_mmu_do_page_fault() to return
+>> RET_PF_RETRY_INVALID_SLOT instead of RET_PF_RETRY when encountering an
+>> invalid memslot. This prevents endless retries in kvm_tdp_map_page() or
+>> tdx_handle_ept_violation(), allowing the srcu to be released and enabling
+>> slot removal to proceed.
+>>
+>> As all callers of kvm_tdp_map_page(), i.e.,
+>> kvm_arch_vcpu_pre_fault_memory() or tdx_gmem_post_populate(), are in
+>> pre-fault path, treat RET_PF_RETRY_INVALID_SLOT the same as RET_PF_EMULATE
+>> to return -ENOENT in kvm_tdp_map_page() to enable userspace to be aware of
+>> the slot removal.
+> 
+> Userspace should already be "aware" of the slot removal.
+> 
+>> Returning RET_PF_RETRY_INVALID_SLOT in kvm_mmu_do_page_fault() does not
+>> affect kvm_mmu_page_fault() and kvm_arch_async_page_ready(), as their
+>> callers either only check if the return value > 0 to re-enter vCPU for
+>> retry or do not check return value.
+>>
+>> Reported-by: Reinette Chatre <reinette.chatre@intel.com>
+> 
+> Was this hit by a real VMM?  If so, why is a TDX VMM removing a memslot without
+> kicking vCPUs out of KVM?
 
-Since you picked this up from v19, the driver has changed considerably
-and I presume you will be continuing to extend it in future as the
-architecture progresses. Perhaps having you listed as Author (and
-crucially, in git blame :p) with Anshuman as a Co-developed-by: would be
-more appropriate?
+No, this was not hit by a real VMM. This was hit by a TDX MMU stress test (built
+on top of [1]) that is still under development.
 
-> ---
->  drivers/perf/Kconfig         |  11 +
->  drivers/perf/Makefile        |   1 +
->  drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/perf/arm_brbe.h      |  47 +++
->  drivers/perf/arm_pmu.c       |  15 +-
->  drivers/perf/arm_pmuv3.c     | 129 ++++++-
->  include/linux/perf/arm_pmu.h |   8 +
->  7 files changed, 1006 insertions(+), 7 deletions(-)
+Reinette
 
-Do you know if James Clark's tests [1] are going to be respun for the
-perf tool? It would be handy to have some way to test this new
-functionality.
+[1] https://lore.kernel.org/lkml/20250414214801.2693294-1-sagis@google.com/
 
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 4e268de351c4..3be60ff4236d 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -223,6 +223,17 @@ config ARM_SPE_PMU
->  	  Extension, which provides periodic sampling of operations in
->  	  the CPU pipeline and reports this via the perf AUX interface.
->  
-> +config ARM64_BRBE
-> +	bool "Enable support for branch stack sampling using FEAT_BRBE"
-> +	depends on ARM_PMUV3 && ARM64
-> +	default y
-> +	help
-> +	  Enable perf support for Branch Record Buffer Extension (BRBE) which
-> +	  records all branches taken in an execution path. This supports some
-> +	  branch types and privilege based filtering. It captures additional
-> +	  relevant information such as cycle count, misprediction and branch
-> +	  type, branch privilege level etc.
-
-It's a shame that this can't be modular, but I suppose the tight
-integration with the CPU PMU driver precludes that. Oh well.
-
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> new file mode 100644
-> index 000000000000..2f254bd40af3
-> --- /dev/null
-> +++ b/drivers/perf/arm_brbe.c
-
-(The driver code looks fine to me but I'd like an Ack from Mark on the
-UAPI).
-
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index 2f33e69a8caf..df9867c0dc57 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -99,7 +99,7 @@ static const struct pmu_irq_ops percpu_pmunmi_ops = {
->  	.free_pmuirq = armpmu_free_percpu_pmunmi
->  };
->  
-> -static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
-> +DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
->  static DEFINE_PER_CPU(int, cpu_irq);
->  static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
->  
-> @@ -317,6 +317,11 @@ armpmu_del(struct perf_event *event, int flags)
->  	struct hw_perf_event *hwc = &event->hw;
->  	int idx = hwc->idx;
->  
-> +	if (has_branch_stack(event)) {
-> +		hw_events->branch_users--;
-> +		perf_sched_cb_dec(event->pmu);
-> +	}
-
-Shouldn't we decrement this *after* calling armpmu_stop()?
-
-> +
->  	armpmu_stop(event, PERF_EF_UPDATE);
->  	hw_events->events[idx] = NULL;
->  	armpmu->clear_event_idx(hw_events, event);
-
-[...]
-
-> +static int branch_records_alloc(struct arm_pmu *armpmu)
-> +{
-> +	struct perf_branch_stack *branch_stack_cpu;
-> +	struct perf_branch_stack __percpu *branch_stack;
-> +	size_t size = struct_size(branch_stack_cpu, entries, brbe_num_branch_records(armpmu));
-> +	int cpu;
-> +
-> +	branch_stack = __alloc_percpu_gfp(size, __alignof__(*branch_stack_cpu),
-> +					  GFP_KERNEL);
-> +	if (!branch_stack)
-> +		return -ENOMEM;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		struct pmu_hw_events *events_cpu;
-> +
-> +		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
-> +		branch_stack_cpu = per_cpu_ptr(branch_stack, cpu);
-> +		events_cpu->branch_stack = branch_stack_cpu;
-> +	}
-> +	return 0;
->  }
-
-How does this work in a heterogeneous system? Shouldn't we at least
-scope the allocation to the CPUs associated with this PMU?
-
->  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-> @@ -1255,7 +1367,15 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->  	if (ret)
->  		return ret;
->  
-> -	return probe.present ? 0 : -ENODEV;
-> +	if (!probe.present)
-> +		return -ENODEV;
-> +
-> +	if (brbe_num_branch_records(cpu_pmu)) {
-> +		ret = branch_records_alloc(cpu_pmu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
->  }
->  
->  static void armv8pmu_disable_user_access_ipi(void *unused)
-> @@ -1314,6 +1434,7 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
->  	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
->  
->  	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
-> +	cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
-
-Can we avoid assigning this unless BRBE actually probed?
-
-Will
-
-[1] https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
