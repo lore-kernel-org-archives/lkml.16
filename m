@@ -1,105 +1,113 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0967288522
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2BF2741BE
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674197; cv=none; b=n8mdo385H3J+2QW7MqctHfqdsMViUO54WCFn7giXxH62ihlm5JpRFuadta4ZSnb0/SRQIR0RcsIlvKK4QfL/oknaospPz1Rogs6G7DuNWngWk/S7TVdzp4jisx41YbP2wKkEzRqAlzA/HCE82rphQrOX6R6OKjsm47lMWvSSgvA=
+	t=1747674239; cv=none; b=CKruGTrdmxHwqP5+6UAU9NvUvfhHed1ITTIJvyomBk2pgWEfWEFxJtGNOUDtXWPyQOuEMDN3KYmrz7/NGHocrXY6DVinWsEYL9iw+KhhdFUtagag4JN1m/c1L2KBdzIf5jjKIT8iHKbNkHOtbn5vt4u5ZU+CEPsovlCSiyj7Ktw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674197; c=relaxed/simple;
-	bh=JYOLy1V8LnTKP6Ii4/TJACY1NDLLiuoT+YsL1UYreTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OqBy5lgPuU26MKmH7G1uoGT+jWl7DptzoamFQ7Ho93TExeRkkEQLRD9UrwgtzecTJnBRVkdYAztRRFMHF5xTEK1dFDtpwLO58JNrngSG8wTScVzwCxa1yvmKjomAco7pKSnhzFx+4/rgbCzW+icfVtSVvkM+HP+HDtN7GQe6hmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=J3ct4x9S; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1747674239; c=relaxed/simple;
+	bh=2SS1JDECgAZ7wyOLDUyXlv5e8y/+ai9XPAapwG9ryMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=llSqefr2GP1bgQ7vk0Mv4nTdzAfcBkYAN2JUNO6PyuIGV/0rpmKGMQP5FkZPM9/7dtzaZrBVS27K8iG7EiaOCugLZ87PP4u14hsKyAZ9Ih7kqTxPeJV3pI3EJa+aT7GUQ9WYLltQ80q1RjctMHJX5qOtsiL/BWVxem2FSzfNhfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=z+mGKypN; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="J3ct4x9S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=tosP
-	yPyOgyvRyFhM+9E8VMFTT2SJO0IgrpkZvR345OM=; b=J3ct4x9SlIVLdaBucsJI
-	d1VMAnBxqggeYDVxkfa0hzoQ8NzTsSkr/7VPh9xXMF2+U5BN01fzS1lNirZYCUut
-	yUWwdsn2s7tR6EhsJHc2eFcDs9uCjk3Ca+jhNfd0H8TDRXVZV/8htMh5sBbRB4eu
-	3NJqEEyotDDImG1BfAadVGfm+ysfJLa4mcjlj20f3s2Ux52oQ2DhzjLtckIs8N0K
-	yrQlHdNPBnZrhqIv8YfsaPZSEIJMdLYEOdmHh/1b7cbM33rM8PualCdIl9H90Ulv
-	nXYXxBHerAZzEu9XgaEHeueqGbRjY6du+TCIWK1E2LR3lwx8j1GErf2swnzv+prL
-	zQ==
-Received: (qmail 2572961 invoked from network); 19 May 2025 19:03:12 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 19:03:12 +0200
-X-UD-Smtp-Session: l3s3148p1@cM4CG4A1jpBZz6uL
-Date: Mon, 19 May 2025 19:03:04 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Jian Zhang <zhangjian.3032@bytedance.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: slave-eeprom: add latch mode
-Message-ID: <aCtkSBZfkc2k1jnb@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Jian Zhang <zhangjian.3032@bytedance.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241209060422.1021512-1-zhangjian.3032@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="z+mGKypN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1747674237;
+ bh=clyOHWY2IVfI9AZJ05BeTXpQUTL0uNha47hEQW+o2gA=;
+ b=z+mGKypN+zProKs+1HrUTN6poSbsytksUqa7koOfQl5dYADjo15QeeCaDX4CKA9sxrpYBID7S
+ 40pRPPht4fbJHRcYEK7TtDgdsomw6DBcUw8wNWt6cIe/S1xwJIyoO3mdz4wx+HlwUE46TPaEXpn
+ N3TF6lDJLKbdsqedH9/UfBo20aT6u2kit/dCwbE4s1d+v4gVLzHX0ul/XTNCgr5tx4woLQ6Qvts
+ IXn8g85IXa7eMo2k8oSg4dlETfh+VqTIqY2hcE7osQTvGkGZUwbHe4wStqLs/nXZtXAkvraTYXc
+ BF0p/gT06c9T7F9bkrhqYq+UjTaW3wDIryYz5V9K1S8w==
+X-Forward-Email-ID: 682b646ef094abf9f55cc97f
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <2d0524a9-50ff-4b49-bee9-8158c4c5b88b@kwiboo.se>
+Date: Mon, 19 May 2025 19:03:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tyMNv7CWzo/9Mar1"
-Content-Disposition: inline
-In-Reply-To: <20241209060422.1021512-1-zhangjian.3032@bytedance.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/9] dt-bindings: mmc: sdhci-of-dwcmhsc: Allow use of a
+ power-domain
+To: Conor Dooley <conor@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+ Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>,
+ linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250518220707.669515-1-jonas@kwiboo.se>
+ <20250518220707.669515-6-jonas@kwiboo.se>
+ <20250519-caress-traps-f61f0c6067b4@spud>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250519-caress-traps-f61f0c6067b4@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Conor,
 
---tyMNv7CWzo/9Mar1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2025-05-19 18:12, Conor Dooley wrote:
+> On Sun, May 18, 2025 at 10:06:52PM +0000, Jonas Karlman wrote:
+>> The commit 7e856617a1f3 ("dt-bindings: mmc: Add support for rk3576
+>> eMMC") limited use of power-domains to Rockchip RK3576.
+>>
+>> Remove the power-domains: false to allow use of power-domains with more
+>> controllers, e.g. with SDHCI on Rockchip RK3528.
+> 
+> Meanwhile, you're allowing it for all devices, even ones where it is not
+> valid. I'm not keen on that.
 
-On Mon, Dec 09, 2024 at 02:04:21PM +0800, Jian Zhang wrote:
-> The read operation is locked by byte, while the write operation is
-> locked by block (or based on the amount of data written). If we need to
-> ensure the integrity of a "block" of data that the other end can read,
-> then we need a latch mode, lock the buffer when a read operation is
-> requested.
+All Rockchip variants technically belong to a power-domain, not just the
+RK3576. E.g. for RK3588 a PD_NVM0 domain (not described in DT), for
+RK3568 a VD_LOGIC ALIVE / BIU_SECURE_FLASH idle-only domain, and as
+shown in this series for the RK3528 the PD_VPU idle-only domain.
 
-I don't really understand what you want to fix here. Does this patch
-really fix your issue because...
+Any suggestion on how to best allow describing these links?
 
->  	switch (event) {
->  	case I2C_SLAVE_WRITE_RECEIVED:
-> +		if (eeprom->latch) {
-> +			spin_lock(&eeprom->buffer_lock);
-> +			memcpy(eeprom->buffer_latch, eeprom->buffer, eeprom->bin.size);
-> +			spin_unlock(&eeprom->buffer_lock);
-> +		}
+Regards,
+Jonas
 
-... what advantage brings you this memcpy of the buffer to a latch after
-every single byte is received?
+> 
+>>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 4 ----
+>>  1 file changed, 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+>> index 5fb347167004..f882219a0a26 100644
+>> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+>> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+>> @@ -120,10 +120,6 @@ allOf:
+>>        required:
+>>          - power-domains
+>>  
+>> -    else:
+>> -      properties:
+>> -        power-domains: false
+>> -
+>>  unevaluatedProperties: false
+>>  
+>>  examples:
+>> -- 
+>> 2.49.0
+>>
 
-> +	if (of_property_read_bool(client->adapter->dev.of_node, "use-latch")) {
-
-If there really is a problem, we don't need a binding for it but should
-use the fix in all cases.
-
-
---tyMNv7CWzo/9Mar1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgrZEQACgkQFA3kzBSg
-KbapsA/7B0NXjBKo61utDIL4MDx8yXm2LrModlmuPjzmxkLcnLgpK8uSmUQNM2XC
-KJbxf5Klqy3PwwX0X6t+yqti997smRGALB5dFHAAZP4XjtJ4lnv+2X0CTHmNBrli
-r++c3Pc63x9ZMRPPnRsriT+wS4XRI8GUIkHDW/ViCXoprMxqS9YjvUXOauRj/8vF
-JWE1JvfaEQwC1tbKjhl8kyNiHzHWAy+rxT6YowbcNPup/DhUS+3BsV/yNH6hPfmk
-vm7Gkw61UU3U/kteNmNN8zh2mp2zVzGEFSmuZUv9+Gmp7jOKEI7p/A4QvKlFXjy7
-RwqPYnyXPNLcw4vEMI2apFHBPo9jNb5khkv4r3hiuvjXFsQwu/8r7/DhdNXICB35
-gTO8r1RIimAqdHBnVoCWnbDyQLWeK+WtKxYNYS3jiFayUnw5GhEZ+ASMgzd1prw7
-V9lKGV1hFsPr731vrOaqebf0lKPfy+vNF53Z347ZMMOhRVsQMPDiYEmwpz/9POB1
-soEdma9U+TjNjAEyWYLf/Hwo4jBfvs+iL9C1L9ZliBi++uomRQ4fwPpdXK4qyrig
-S+Y5iA8KWe35XCKFMPhC4C+cjoHkCDtxNl0E/QQgmEMBDShGmn3+cEpCeIuPtSW/
-HlQ16YrIVMxqYn/jWbqdbJtdOwopfQxlHf8wqFPakNcQFYsejzc=
-=CLRB
------END PGP SIGNATURE-----
-
---tyMNv7CWzo/9Mar1--
