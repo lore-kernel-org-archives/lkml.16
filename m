@@ -1,100 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EA0A55
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D7526B2B1
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660142; cv=none; b=anaSCZvuNniSha6Xi1L7qFhrIjIBcmgaHlditEOf5uImdcoXx07leId2T+LOD84PMklJbr7bj4gC35Kp5G1OHEmBcxH3+ePHMcm6N4wwHYeP6y0U/AjdNc8QRYnmoI03bKB2wOztxnzfYPfLxfqZBfEJq60JbLhPbr0mbRJ2r7Q=
+	t=1747660165; cv=none; b=HBAdOjrlx0OL9aq5b1p2rT6dJLdmjtsjWTWsTgBwMFCJJYaUFP2tWRgwncNLzBVhXLCLgSdvJxAdPJiHCULNUXwpSgFuXxlzZNUTxXrkWgVB5x4yZ1H4U5+dv0P0cOb3MpX6R5MRxg7Ui6oLB5J/oumFcKmtZFMPxCK98BzdC8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747660142; c=relaxed/simple;
-	bh=HBNY5o/P7iBTQR6GooYGfMdU4y7r7nGhbSj7w7z8Ssw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0qVXsFoB9yB568mPX5jjEt3TEhZsTUOyOzm3y8fi/8mcKRo4gGumfz3twRCA7Boodu31DunLPFxMk3huhH7htJDnzAYzpXFLrFkAuWwdSGuaTonS4ZavY3cbzm6C0/oIbkRIXJIwLr/d/FhUrlCJLf7++NwFoxGPGgt/SSfX4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDdexVON; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747660165; c=relaxed/simple;
+	bh=pSodbc3V4LQg415hXRwcYmpy6/55GRV7K5MO1Cpr8WY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S7hKGEyl7YTq3tnB8s+vQw1h8Ysvf/dIRrUbCogmj4bebrWO/esFHXFQrqOlzCoPDUH0F97KnXbdkqZMV1gqu9n3qhQfVRYT2yhVuHHYUz9jMohRdAn5NlTZxfNvxfUg42FKPQaLYMF4k7JIYbDl9wYYi5SWcCmHxcFpDrGpK7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kVt6FymV; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDdexVON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CE2C4CEE4;
-	Mon, 19 May 2025 13:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747660141;
-	bh=HBNY5o/P7iBTQR6GooYGfMdU4y7r7nGhbSj7w7z8Ssw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDdexVONW2TB3fG6h5qRnzq8C3q6XhZyl/XFKnzs2O+dU6ZQ/Km60Ds6WAF9KO5r3
-	 S4hb4dmpKpTkaA9X2BTT20n9EybSLiv/FDU4q8hyhGA07ZcDK0vL05lF22sf6gAVL7
-	 yccLZDkYPyjzfnvN3tp+aeab8bBa7nH+eT8T2WMVyX/Bj/xKq8LzEh3amMizpOl99s
-	 WjMU4DOZ+q0WK06f0vdTBvBmjqkV22Rz3ZW1G1ESfA0bXoWhwqaLtBA0UR0f+ztkcT
-	 a1S5vqgV/OymI78Bu9NTGR0tm5KCZ8wxL2jxRihF0I9orzGOBFG/10qBJX0r/2mcBN
-	 6OESW8eNesYXg==
-Date: Mon, 19 May 2025 15:08:56 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <aCstaIBSfcHXpr8D@gmail.com>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kVt6FymV"
+Message-ID: <4be335ac-8b6e-4714-bce3-f62495dbee8d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747660158;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rdkhBGRvUC+ooGHKKuYF8USNZA83y6OB9dcv1mAc5tE=;
+	b=kVt6FymVrPtkk86vbo79J/uBt+0rC5tjRuQe08F5KwEFzrpo8lRPNbd3FC7quxOK+Us5Cn
+	yyT69rVVn5Sfo8ovWAv+sCcoKZgTZoLfWWcX+/fOGVjNu30rz7Rw3H6szxU62MfPhdRvcs
+	c3Dg+0hNCPkpkTRjbiU1EFlwvdmKJBU=
+Date: Mon, 19 May 2025 21:08:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
+Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+ Xu Xin <xu.xin16@zte.com.cn>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
+ <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-
-* Borislav Petkov <bp@alien8.de> wrote:
-
-> On Sat, May 17, 2025 at 11:16:41AM +0200, Ard Biesheuvel wrote:
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index f67a93fc9391..5c19bee0af11 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -395,7 +395,7 @@
-> >  #define X86_FEATURE_AVX512_BITALG	(16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
-> >  #define X86_FEATURE_TME			(16*32+13) /* "tme" Intel Total Memory Encryption */
-> >  #define X86_FEATURE_AVX512_VPOPCNTDQ	(16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
-> > -#define X86_FEATURE_LA57		(16*32+16) /* "la57" 5-level page tables */
-> > +#define X86_FEATURE_LA57		(16*32+16) /* 57-bit linear addressing */
-> >  #define X86_FEATURE_RDPID		(16*32+22) /* "rdpid" RDPID instruction */
-> >  #define X86_FEATURE_BUS_LOCK_DETECT	(16*32+24) /* "bus_lock_detect" Bus Lock detect */
-> >  #define X86_FEATURE_CLDEMOTE		(16*32+25) /* "cldemote" CLDEMOTE instruction */
-> > @@ -483,6 +483,7 @@
-> >  #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
-> >  #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
-> >  #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
-> > +#define X86_FEATURE_5LEVEL_PAGING	(21*32+11) /* "la57" Whether 5 levels of page tables are in use */
+On 2025/5/19 16:51, Lorenzo Stoakes wrote:
+> If a user wishes to enable KSM mergeability for an entire process and all
+> fork/exec'd processes that come after it, they use the prctl()
+> PR_SET_MEMORY_MERGE operation.
 > 
-> I don't think we need this second flag - you can simply clear the existing
-> one.
+> This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
+> (in order to indicate they are KSM mergeable), as well as setting this flag
+> for all existing VMAs.
+> 
+> However it also entirely and completely breaks VMA merging for the process
+> and all forked (and fork/exec'd) processes.
+> 
+> This is because when a new mapping is proposed, the flags specified will
+> never have VM_MERGEABLE set. However all adjacent VMAs will already have
+> VM_MERGEABLE set, rendering VMAs unmergeable by default.
 
-That's what the old code did, and it was an error to do that, we almost 
-never do that for CPU hardware capability flags:
+Great catch!
 
- - Do we clear the PAE flag just because the kernel isn't PAE?  We don't.
- - Do we clear the CX8 flag just because it's a UP kernel?      We don't.
- - Do we clear the VMX/SVM flag just because KVM isn't running? We don't.
- - etc. etc.
+I'm wondering how about fixing the vma_merge_new_range() to make it mergeable
+in this case?
 
-The handling of the LA57 flag is the odd one out, and it was a mistake 
-for the 5-level paging kernel to clear the LA57 flag.
+> 
+> To work around this, we try to set the VM_MERGEABLE flag prior to
+> attempting a merge. In the case of brk() this can always be done.
+> 
+> However on mmap() things are more complicated - while KSM is not supported
+> for file-backed mappings, it is supported for MAP_PRIVATE file-backed
+> mappings.
 
-The second best thing we can do is to have a sane, constant LA57 flag 
-for the hardware capability, and introduce a synthethic flag that is 
-set conditionally (X86_FEATURE_5LEVEL_PAGING) - which is how it should 
-have been done originally, and to maintain compatibility, expose the 
-synthethic flag in /proc/cpuinfo as 'la57' to maintain the ABI.
+So we don't need to set VM_MERGEABLE flag so early, given these corner cases
+that you described below need to consider.
 
-And let's remember this the next time someone submits a kernel series 
-with CPU flag clearing... ;-)
+> 
+> And these mappings may have deprecated .mmap() callbacks specified which
+> could, in theory, adjust flags and thus KSM merge eligiblity.
+> 
+> So we check to determine whether this at all possible. If not, we set
+> VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
+> previous behaviour.
+> 
+> When .mmap_prepare() is more widely used, we can remove this precaution.
 
-Thanks,
+Sounds good too.
 
-	Ingo
+> 
+> While this doesn't quite cover all cases, it covers a great many (all
+> anonymous memory, for instance), meaning we should already see a
+> significant improvement in VMA mergeability.
+> 
+
+Agree, it's a very good improvement.
+
+Thanks!
