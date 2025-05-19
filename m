@@ -1,48 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78DE1714B3;
-	Mon, 19 May 2025 12:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666BE24676D;
+	Mon, 19 May 2025 12:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657028; cv=none; b=YCSgAu1vf9SL3Ya2aabe0A3QF3xSu9Ftyb/horupLKTFXbIexkcTUa2aNlRQARKCF8JFkozssQKajnl4ZB7iHoJ0rL+RZNa8ZuxK10q5DI9DoEwzn2INWgKBDKNVPEc5kM8KvgCieIOH/v5ZRX+8449RNcXH00fSFL7PXPcXjak=
+	t=1747657042; cv=none; b=G29UKGWv2VHG5ORQDR020JxEtS4+nTJSmH11ATjcGg/Od8ApeqiW7zGreKYH3U9Q+svywjPVE3g8O52uN4xyzCx+1R5oyqnqgr0Q2dbnNHCnJBg0zCxkZPPigplQRIQ5ZqATbjexmzSyuCSDWCHshE4SHI6oZEZ3Z4pB60hT78M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657028; c=relaxed/simple;
-	bh=II7Uh3XayjV3u8X4CGxA51vygQVXJFl7Ri4yS+3JM78=;
+	s=arc-20240116; t=1747657042; c=relaxed/simple;
+	bh=k0xV1VkDQ3B536csRC+jiMRyNVQ0qgRkWYlYUKKdAQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpvYg7PXGjqlmbih3bdJmFun23keiMYGqHuyLuvxudAXppOSjjxTIr5GHFIi9gaHktiDfiSvn64MSMBwmJXaU33SIV9JAeJWxG9zdaCrOi3WMd6AaPCX0IOmpfSaX7FFa4WlHv0/J76ArtBKHbacnDzon7wMiNXkUtA7DgOJ1KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 8/ty2+JLRnC/zIsF7Y5l5Q==
-X-CSE-MsgGUID: rgzUCgEiQ/qLXVICs9TLJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="37171605"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="37171605"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:17:06 -0700
-X-CSE-ConnectionGUID: eBUO6ahkSvS6rDE3t3ffUg==
-X-CSE-MsgGUID: 321et6/9QRGM4gOomXMoow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144235502"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:17:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uGzQS-000000031qj-3nJw;
-	Mon, 19 May 2025 15:17:00 +0300
-Date: Mon, 19 May 2025 15:17:00 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
-	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 10/12] iio: accel: adxl313: add inactivity sensing
-Message-ID: <aCshPOIHVqluhXYs@smile.fi.intel.com>
-References: <20250518111321.75226-1-l.rubusch@gmail.com>
- <20250518111321.75226-11-l.rubusch@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRyD67YMFgubzdNbm8rks87akBu2uzNdpCY20RupdbWjtAa3WU4LVTWulxWC5uol/8o/Bwe3LusWtR2FjKwTvk3cwa/w9xeKGVgehkVRIMtBE3T8wGM9P6IsL3QRA1tVN5qei71d6hEM+FdNexDvIZOLTUL3I9UI/m/MOspPrZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=o7TGT9Ky; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="o7TGT9Ky"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=p3Jk7mrRxc72y5w6oSHqx0DIyvPhGZeH42P6iahSphU=; b=o7TGT9KyomAL0hZUq0KqSv+eZM
+	OIQ4RN+onf9BV2skg969AE7PhZONZXIkvkwQwjA/t6T//5OtR2Uz/fTiq7l0B7UvQeyBinybhui78
+	jCI9VhIJX88lQtOrPEjyP1FtZzbwUEDrtvnQsJ+lrzEUOQ6m4JrolTP110inEy85gwBg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uGzQX-00D19r-Ng; Mon, 19 May 2025 14:17:05 +0200
+Date: Mon, 19 May 2025 14:17:05 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: atlantic: Add error handling in
+ set_raw_ingress_record()
+Message-ID: <9ce386ad-72f2-4a8e-8055-1fc7906dd916@lunn.ch>
+References: <20250519102132.2089-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,52 +46,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250518111321.75226-11-l.rubusch@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250519102132.2089-1-vulab@iscas.ac.cn>
 
-On Sun, May 18, 2025 at 11:13:19AM +0000, Lothar Rubusch wrote:
-> Extend the interrupt handler to process interrupts as inactivity events.
-> Add functions to set threshold and period registers for inactivity. Add
-> functions to enable / disable inactivity. Extend the fake iio channel to
-> deal with inactivity events on x, y and z combined with AND.
+On Mon, May 19, 2025 at 06:21:32PM +0800, Wentao Liang wrote:
+> The set_raw_ingress_record() calls aq_mss_mdio_write() but does not
+> check the return value. A proper implementation can be found in
+> get_raw_ingress_record().
+> 
+> Add error handling for aq_mss_mdio_write(). If the write fails,
+> return immediately.
+> 
+> Fixes: b8f8a0b7b5cb ("net: atlantic: MACSec ingress offload HW bindings")
+> Cc: stable@vger.kernel.org # v5.7
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  .../aquantia/atlantic/macsec/macsec_api.c         | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
+> index 431924959520..5e87f8b749c5 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
+> +++ b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
+> @@ -62,6 +62,7 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
+>  {
+>  	struct mss_ingress_lut_addr_ctl_register lut_sel_reg;
+>  	struct mss_ingress_lut_ctl_register lut_op_reg;
+> +	int ret;
+>  
+>  	unsigned int i;
+>  
+> @@ -105,11 +106,15 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
+>  	lut_op_reg.bits_0.lut_read = 0;
+>  	lut_op_reg.bits_0.lut_write = 1;
+>  
+> -	aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
+> -			  MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
+> -			  lut_sel_reg.word_0);
+> -	aq_mss_mdio_write(hw, MDIO_MMD_VEND1, MSS_INGRESS_LUT_CTL_REGISTER_ADDR,
+> -			  lut_op_reg.word_0);
+> +	ret = aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
+> +				MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
+> +				lut_sel_reg.word_0);
+> +	if (unlikely(ret))
+> +		return ret;
 
-...
+What about the comment above:
 
->  	en = false;
+	/* NOTE: MSS registers must always be read/written as adjacent pairs.
+	 * For instance, to write either or both 1E.80A0 and 80A1, we have to:
+	 * 1. Write 1E.80A0 first
+	 * 2. Then write 1E.80A1
 
-You see, now it becomes even useless code.
+If the first write where to fail, is it better to perform the second
+write anyway, just to keep to this rule?
 
-> -	if (type == ADXL313_ACTIVITY)
-> +	if (type == ADXL313_ACTIVITY) {
->  		en = cmd_en && threshold;
-> +	} else {
-> +		ret = regmap_read(data->regmap, ADXL313_REG_TIME_INACT, &inact_time_s);
-> +		if (ret)
-> +			return ret;
-> +
-> +		en = cmd_en && threshold && inact_time_s;
-> +	}
-
-...
-
-> +			case IIO_EV_DIR_FALLING:
-> +				ret = regmap_read(data->regmap,
-> +						  adxl313_act_thresh_reg[ADXL313_INACTIVITY],
-> +						  &inact_threshold);
-> +				if (ret)
-> +					return ret;
-> +				*val = inact_threshold * 15625;
-> +				*val2 = 1000000;
-
-MICRO ?
-
-> +				return IIO_VAL_FRACTIONAL;
->  			default:
->  				return -EINVAL;
->  			}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+	Andrew
