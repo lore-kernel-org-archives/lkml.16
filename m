@@ -1,151 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA3B217705;
-	Mon, 19 May 2025 20:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C746217705;
+	Mon, 19 May 2025 20:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687764; cv=none; b=Tt7DQVyG1Qj8KhAWy+2TCqV1fIFMM1KktIDCggp8nh1oixbwE6g9sMUZ/lpSJAv/+Ku8P1zUZEQ51zlkfjZWZqmp9UQxL9qDViEMTnDDkZw1HOST0r450dQZJrbPQh7iLmvXPyESFaQT+s1l4jTxZSgMk3fKac7rA5z3QJ53Xeg=
+	t=1747687770; cv=none; b=rhEebsmY19dwzAN7KtQrls0R9SKFlD5Q/tGcb14RyICLDX6XSoccI1ivvKZ4YLFDGVIYgAVkpJH4mkv2vtLZjLihDtW2MdSb2jkBIAixnVmTZD9NFUzXf5T64SuFmNMui4MoNUmvJIpllh4xUiO4Lns/Xllp8T1VwYJF+AQrzW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687764; c=relaxed/simple;
-	bh=d21QzBGxlqzPe54ryu3bKLL6cd4E+LxiktzQR+uBz+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uG9Bf88Eczy+Fb3NK0vqyvlGAN8AXVc5d5iB+8LYxgrzWW2xbBpolhglOWEZ32xhuZ4f3tY47LJJ4kxNxJfSw5gaBnTtzqJ4X2fK9Y6zjZ1iBBpYtaBmrDGTMCHLzwIs3C+iLaHrpKYda3SLWVNWjHluhBTCT9ntKRB0cXi+R4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGqUbUTE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747687770; c=relaxed/simple;
+	bh=61QUkV6FFeafFq9O8dDnfMdlriHIrLQIZlsBf0U+ry0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o05/q2QGfBsC/lxK66fSGJkTWsCr/+ArfvfVXRKwt5I4boQjk26FR3pi8gyNMb1DlgmmnaPCnGKZ7neTEHtbOLxSC/yc/PdMqK+rxctZZ0o3/FD/d9ExbbjEDu7jkp/rSKA2XEzQZ48CNd8y7Fadq1CbL6ruGb3ytbkH1Yjs0sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hR4VYt8V; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGqUbUTE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C0300C4CEE4;
-	Mon, 19 May 2025 20:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747687763;
-	bh=d21QzBGxlqzPe54ryu3bKLL6cd4E+LxiktzQR+uBz+I=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=UGqUbUTEhn5JUTT3Jledo344426qln9TJftK4zexmqnKobkpyGzqJNlguwP1nljiV
-	 TT09oerJ7TBK7z+Q+rqE/HsrXIQCPX+t4gtzG1FKOX8Iq5CiDDIdaSFKMM0Ci4csyj
-	 oHnSUKwEHE/8n5xO/nyl54+oF3SjONSyXD6/jdGDhMXSlWsM2w/gjEcLJwGf/X7VA3
-	 /Q0HRIYlcMpEimhAzdaAHP8yDpD3JmhJ2AVViZU93C3ptlbumaUBG4I+/Zu75WJEWb
-	 6BYkWDK6SL9DFa8l4yBl8A4Jhi2oNOFftYbwLh81GHXiz4npSVB58W5/KXH2Djwh+6
-	 T9r7/YtkyhTYg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0D2C3ABDD;
-	Mon, 19 May 2025 20:49:23 +0000 (UTC)
-From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Date: Mon, 19 May 2025 22:49:20 +0200
-Subject: [PATCH v2] HID: lenovo: Remove CONFIG_ACPI dependency
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hR4VYt8V"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c546334bdeso436016385a.2;
+        Mon, 19 May 2025 13:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747687768; x=1748292568; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmUS+xqCVn16FoWqjtvNjGBaJ530wNpl6spKg06DASg=;
+        b=hR4VYt8VeXaTYTkGgzVqFEw7YLZyMEEA7lQ/O5Vu4Ak+QmoPPOAJElCqZ9lW1AarXD
+         /2KD47TZQwxYUjYDTsQacy+vXDNGAlLLSqPx15H9JBHmGSDTZf0+VPDvQutf/3lNCYaG
+         fh5GUBXUt0HUCd6ZmIjjZvaegUZ4hJIoUOEtBRCHij7h1oF07yAh5Q0fNv008MWyynEv
+         GBKG8mScLRUJb+OUaIyPvo4b3NwgzQRNyLc4iVJTmaP+jfpCIbAL2qKYtqHwPKzG6VxX
+         nD8umy34eug+WX86rKFhyYEdyApLhfZl0zdYSPOkK5JaFLyq3E2wMkc6EfiTsUwS4/xo
+         a3Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747687768; x=1748292568;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TmUS+xqCVn16FoWqjtvNjGBaJ530wNpl6spKg06DASg=;
+        b=rBbRY6aMyuDq68rLZbLZfyZAqVInQc3iNKpIb45Syfl0I0YRRTL725WNsN187foknb
+         OuZThXwLTwdNmAByisySq9NReDhr/Y2EyGOiguG1P+vX85Zh82MZjYLb+hbdZ4YlcElU
+         HqnO3OWOlWxSuK3E0KlLL21YPbl3YM4P0+MseWCl7V25LbLC2NKvolT2x1Yu7hdcKgVN
+         53kjna398xtINwu3DE+OpaSvayfioUKL1R61EvcbFvceAhPWPxvh7LaBFqbRisC9IwM6
+         xON0yFiAQdLFUX7EaN5AQk0tVM0DdAETWqW+fzPYN2OE6z2b+PbCyW88MSiLZmIVM0dR
+         uxkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUELYcRj1Re5xK+MnC6YyLzSOyrrvGZW3pkObnvzLmIIWatNwcVpeUtpqc4UUuhO6gkg+habpZ5tPa8AAbz@vger.kernel.org, AJvYcCVnSJLGXJJrXmzuHq7e8pgVoyX9euItjqbCbm2jOPwWlgHEGnqtvB997+D59iMAFgs9sCl7mQVO48wJHtdB/8s=@vger.kernel.org, AJvYcCVz1ZdXes8svOgQZaFMlnsIkXuwOBS9/UmX93CDthtlB3sCdmCQjvy5qb7Lu+8JKwOtmmoVNL1spLXU7Stvyqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKkTzorOpptirh7hDK9F9qI8iG6hawOFvNotJqG9oXI0jW5kPp
+	sSRbAn3BzOkXE5lNpgBkinHmv26BHr/BciRv+9MiG8Ne9FXATcIJQ72e
+X-Gm-Gg: ASbGncvlttstIjQ9/KsZMTkHLVE3SFW3Pw9zd2p5hQIlwHZyxqlNjZFkKBPgbyQrRoh
+	0Sw+Pd460zMBfcQ8ynnDEwf65K26nLYNRtuSHOjbeRAqKsiFYQE+h8SgMzH4rwAMrrSsBjkNBvN
+	QAZ01/9yGLOrp1PE8RDbONLgMg/7MSO2qO8eGW6+BTCUIdVqJjlJkLWtQjuqk/iMCPDlpI2b15y
+	/vfDlWRxu7iev0dx60w/LFNWX9pH9K+KJbRmcqM1rotJKOoQEv/WkiCuu+EKXDahQJVMTfVClqh
+	FCd2Zn7D8jnKgjUlRixVwrBBSDzoOpbUSR7h2X2NjfPTn4MA0cqVpNOCsFObHLH7eOzq4W/I5uB
+	djBdmAB1qxjcMLYtaA7TJjI8CvKhwEJXs0N/MJL3iQNgERQDIJIbH
+X-Google-Smtp-Source: AGHT+IE8WGoO383xB7RHGc6KxOPQi6O8WNGtDC2weY3CkPEhoXPFQzoQ0sLYxMGfAqd6kBPycEKSig==
+X-Received: by 2002:a05:620a:318d:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7cd47fee743mr2454708985a.53.1747687768078;
+        Mon, 19 May 2025 13:49:28 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468b69fcsm630949385a.81.2025.05.19.13.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 13:49:27 -0700 (PDT)
+Message-ID: <682b9957.050a0220.3d035.a5e1@mx.google.com>
+X-Google-Original-Message-ID: <aCuZVb6Lcdj4jyiP@winterfell.>
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 0E06A1200043;
+	Mon, 19 May 2025 16:49:27 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Mon, 19 May 2025 16:49:27 -0400
+X-ME-Sender: <xms:VpkraN7_1N5IrJGIFx0w1hL2NIn13XfDxGlQMEvHKq3o1U8j2bsi-g>
+    <xme:VpkraK6BMOsdDMK0qVtClB8U9ZU84N9pElqQ54E6GXk--G103_MRbn0aHDo0F6F1M
+    lQqgeiC29cN-EXO0w>
+X-ME-Received: <xmr:VpkraEfj8R_LC71r5PjNRP_nCY3igq-nCR6Ls_k1fU0fSGQzsj3omE-BPX8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddvfeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
+    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
+    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduledp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtohepsghqvgesghhoohhglhgvrdgtohhmpdhrtghpthhtohephihurhih
+    rdhnohhrohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlihhnuhigsehrrghsmhhushhvihhllhgvmhhovghsrdgu
+    khdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtg
+    hpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhg
+    rgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuoh
+    drnhgvth
+X-ME-Proxy: <xmx:VpkraGL7hkjiZULRWkD-QemorhG_a92lkYfZjA32f1_Va26vjY7Scw>
+    <xmx:VpkraBLZ7h3dcSLrDc3sm-jnpZRd63fjqBZSWznAfyojztB5EYaFnw>
+    <xmx:VpkraPw0N4-l3z_DLPJiMLtS2ZQZpWE8hFH59j22ysPkuglM-zrezw>
+    <xmx:VpkraNKICWeJi3sSAUm8Ai0N9ZEl5f4JSwlLEh9uKPXgIUt48Gdx9A>
+    <xmx:V5kraEa6RLYP7LcH6f8v81o53ZiEBgEjxFrp5tM6LfYULPgjZyU5RSu3>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 19 May 2025 16:49:26 -0400 (EDT)
+Date: Mon, 19 May 2025 13:49:25 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Jann Horn <jannh@google.com>
+Cc: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+References: <20250519161712.2609395-1-bqe@google.com>
+ <20250519161712.2609395-4-bqe@google.com>
+ <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com>
+ <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
+ <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-hid_lenovo_acpi_dependency-v2-1-124760ddd6f7@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAE+ZK2gC/43NTQ6CMBCG4auQWVvTovzoynsYQgY6yBgzJS02E
- sLdrZzA5fMt3m+FQJ4pwDVbwVPkwE4S8kMG/YjyIMU2GXKdF7owtRrZti8SF12L/cStpYnEkvS
- L0oRVjWVnq7OGFJg8DfzZ4/cmeeQwO7/sX9H81r+y0SitcLDd5dQV1mB5e6IIvo9CMzTbtn0Be
- /HAJ8UAAAA=
-X-Change-ID: 20250518-hid_lenovo_acpi_dependency-0ea78a6bd740
-To: Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <bentiss@kernel.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-acpi@vger.kernel.org, Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3410; i=j@jannau.net;
- s=yk2024; h=from:subject:message-id;
- bh=Bitucw1yaCIqyRa0nTR6FoFtUSPlCwvKN7PBGDQsgTI=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhgztmUExzVNNrU5d+bm3lbGH47zQsumf/q/xWLvAVuj7v
- O/RDNryHaUsDGJcDLJiiixJ2i87GFbXKMbUPgiDmcPKBDKEgYtTACbSWMTwz2zLpDfhYuc+nd8z
- 8ey8xtLHm34VlUcLuHLIe/iJJPx0i2Nk+LihpPzlXO/eZ41OytO+76pWv3ki6GuymkXI1KNPTl9
- dyAYA
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
-X-Original-From: Janne Grunau <j@jannau.net>
-Reply-To: j@jannau.net
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
 
-From: Janne Grunau <j@jannau.net>
+On Mon, May 19, 2025 at 10:36:52PM +0200, Jann Horn wrote:
+> On Mon, May 19, 2025 at 10:08 PM Burak Emir <bqe@google.com> wrote:
+> > On Mon, May 19, 2025 at 9:01 PM Jann Horn <jannh@google.com> wrote:
+> > > On Mon, May 19, 2025 at 6:24 PM Burak Emir <bqe@google.com> wrote:
+> > > > +    /// Set bit with index `index`, atomically.
+> > > > +    ///
+> > > > +    /// ATTENTION: The naming convention differs from C, where the corresponding
+> > > > +    /// function is called `set_bit`.
+> > > > +    ///
+> > > > +    /// # Safety
+> > > > +    ///
+> > > > +    /// This is a relaxed atomic operation (no implied memory barriers, no
+> > > > +    /// ordering guarantees). The caller must ensure that this is safe, as
+> > > > +    /// the compiler cannot prevent code with an exclusive reference from
+> > > > +    /// calling atomic operations.
+> > >
+> > > How can atomic operations through an exclusive reference be unsafe?
+> > > You can't have a data race between two atomic operations, and an
+> > > exclusive reference should anyway prevent any concurrency, right?
+> >
+> > The atomic operations take a &self (shared reference).
+> >
+> > The patch is missing the implementation of Sync for now. With that,
+> > one would get concurrent write access through shared references.
+> >
+> > The "unsafe" here should serve as reminder to argue why it is ok to
+> > not have any ordering guarantees.
 
-The hid-lenovo driver supports external Bluetooth and USB devices which
-can be used with non-ACPI systems/kernels. Call platform_profile_cycle()
-only if CONFIG_ACPI_PLATFORM_PROFILE is enabled and select
-CONFIG_ACPI_PLATFORM_PROFILE only if ACPI is enabled.
-This should not affect functionality since only the detachable keyboard
-of a x86 tablet with a custom connector has an hotkey for cycling
-through power profiles.
+I don't think ordering is safety related. For example, relaxed atomics
+are still safe function. I think it's wrong to mark this as unsafe, do
+you have an example that you can construct an UB with pure safe code?
 
-Fixes: 52572cde8b4a4 ("HID: lenovo: select CONFIG_ACPI_PLATFORM_PROFILE")
-Signed-off-by: Janne Grunau <j@jannau.net>
----
-hid-lenovo supports external generic USB and Bluetooth devices and
-should be buildable and usable on non-ACPI kernels and systems. Commit
-84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn
-keys") added a hot key to cycle through power profiles using ACPI's
-platform_profile. This resulted in adding a dependency on ACPI and
-selecting CONFIG_ACPI_PLATFORM_PROFILE to fix build an link errors in
-commit 52572cde8b4a ("HID: lenovo: select
-CONFIG_ACPI_PLATFORM_PROFILE"). This is undesirable for HID drivers
-supporting generic USB and Bluetooth devices. So instead call
-platform_profile_cycle() only CONFIG_ACPI_PLATFORM_PROFILE is enabled
-and select the latter only if ACPI is enabled.
+Regards,
+Boqun
 
-Supercedes with Armin Wolf's "ACPI: platform_profile: Add support for
-non-ACPI platforms" [1] the earlier removel in "HID: lenovo: Unbreak
-USB/BT keyboards on non-ACPI platforms" [2].
-
-[1]: https://lore.kernel.org/linux-acpi/20250518185111.3560-1-W_Armin@gmx.de/
-[2]: https://lore.kernel.org/linux-input/20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net/
----
-Changes in v2:
-- drop stub platform_profile_cycle()
-- call platform_profile_cycle() conditioanlly
-- drop 'depends on ACPI || !ACPI'
-- Link to v1: https://lore.kernel.org/r/20250518-hid_lenovo_acpi_dependency-v1-0-afdb93b5d1a6@jannau.net
----
- drivers/hid/Kconfig      | 3 +--
- drivers/hid/hid-lenovo.c | 6 ++++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index a503252702b7b43c332a12b14bc8b23b83e9f028..1656bb1504f750d73011d3f008e27b4436a58678 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -595,8 +595,7 @@ config HID_LED
- 
- config HID_LENOVO
- 	tristate "Lenovo / Thinkpad devices"
--	depends on ACPI
--	select ACPI_PLATFORM_PROFILE
-+	select ACPI_PLATFORM_PROFILE if ACPI
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	help
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index af29ba840522f99bc2f426d4753f70d442cef3af..73c6a26638a22ad1c8368112e8ab185232a9df12 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -728,9 +728,11 @@ static int lenovo_raw_event_TP_X12_tab(struct hid_device *hdev, u32 raw_data)
- 			if (hdev->product == USB_DEVICE_ID_LENOVO_X12_TAB) {
- 				report_key_event(input, KEY_RFKILL);
- 				return 1;
-+			} else if (IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)) {
-+				platform_profile_cycle();
-+				return 1;
- 			}
--			platform_profile_cycle();
--			return 1;
-+			return 0;
- 		case TP_X12_RAW_HOTKEY_FN_F10:
- 			/* TAB1 has PICKUP Phone and TAB2 use Snipping tool*/
- 			(hdev->product == USB_DEVICE_ID_LENOVO_X12_TAB) ?
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250518-hid_lenovo_acpi_dependency-0ea78a6bd740
-
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
-
-
+> >
+> > The last sentence is supposed to say: when you have a &mut bitmap, you
+> > can reborrow it as &bitmap, and then happily call this atomic op.
+> > Even though it is unnecessary.
+> 
+> But using an atomic op when you have a &mut reference is not a safety
+> issue, right? You wrote a comment about behavior with exclusive
+> references in the "# Safety" comment block. If that's not supposed to
+> be a safety problem, this should probably not be in the "# Safety"
+> section?
