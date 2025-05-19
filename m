@@ -1,68 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A84286896;
-	Mon, 19 May 2025 16:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B491854
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670561; cv=none; b=ejLfDgAQahsY0Wc2LU8bqyO1a1ganpRsBqe8mKfwhSFByWcmxBLBBfs+MzPvyt9RtBbZi4GyhiFPOmGXNtLKB9ccCwtdAOGiclhwL3pmXgcjW+esRC01Jx8Ly6nrnLUHQPecMphbKF3y1oM+3nwGPE5BZE6f39aIH35+gkT8kn0=
+	t=1747670582; cv=none; b=nlzGM9FNpysRll3GJJ9W0I4OBeTACDI4EIa5ank7KzXFWnjTFEy+7UEuRp6BFRyX+SCV9tf0cxA3A7t/DPuVjfj5Nkn7g+Qu9+wJaD5m6pVniFcwVU9uHAR8F/NlCW3THbC6o8oyS9ZYYir+U2fXQRqgDS/HlqvMKAwCXLeMVIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670561; c=relaxed/simple;
-	bh=Li97ibJu1i6lhzJ/tLMhuWTsxC88CFjJlHWA5uOhlos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIgPHWNYwTIWnSlhe3sZVZtKv1L5fPRmIHVc4oZYXmb6ZS3DVePvg5UCn1QXqzfLddIrxwN8pKt65b1aqGMJ7SprbCB4BO4FmdIQdbIlsFBhQD1MTu7Tn5BJzXN5dfN5TfOIeQMbbjnCYTY+lHI/LuzI3/bfQtc4Kq1OnHODx0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skc/SERR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747670582; c=relaxed/simple;
+	bh=jJebhOC5pck9JgTcHl2pSKfcuNTMt61u6YUTJ5kvTUw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JWh4yf5/QE0CXnuN6EqakjGCfO+vaV0uiZ5txb7QebpxW+0nL7daTtDrBhE383qAuGVRDktF8eU3DrF4TcnE7Wgvlh9sCFm0UAjykyiYHloyXC67v7JGFdC8tsBYFC20vFyjdGXGKYK9LIF8jnBQRv4m+6duN4EtvmFy6nwY7MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=coH15fm8; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skc/SERR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630DEC4CEE4;
-	Mon, 19 May 2025 16:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747670561;
-	bh=Li97ibJu1i6lhzJ/tLMhuWTsxC88CFjJlHWA5uOhlos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=skc/SERR9kAJqX6L/iCOjvMP1MGlfVjHBcPY/ImjDmPHn+WYpo06XoKZUqL1z+rtQ
-	 6ckU9iFhLfgGn0fmp+RhvHfdle25xSHh/cFHCQdQH38Swx44HFgkpjxmNMme6vpIHT
-	 3jLsrGz35R/cYSbGrXBhqWFZqQVjh/TbcGGy9wmtwS0lW4J6lLXn9KAT/lQu53kPK+
-	 bh6Hpvr1igwytkTDuSCF3lGfga/h3Y59H1ORsBWQLHxDnpy+YjUOMKL3bvXu/zonUG
-	 N1m/GLWm3v7UOzELiHzxhVcAoZ/Ur+Y6+nhK52nWQQAXQByIBW1hssWBxJCKQ3XLcn
-	 lzVKI36QSGRzw==
-Date: Mon, 19 May 2025 17:02:37 +0100
-From: Simon Horman <horms@kernel.org>
-To: Nishanth Menon <nm@ti.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: ti: am65-cpsw: Lower random mac address
- error print to info
-Message-ID: <20250519160237.GJ365796@horms.kernel.org>
-References: <20250516122655.442808-1-nm@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="coH15fm8"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e78145dc4so4712751a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747670580; x=1748275380; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ebJzx1LorPbf1NWqtTpnidvsrFRDAcdzNorkYWG1GY4=;
+        b=coH15fm8DVgjJ9oVSK3pCxJlawUFPoHKISQE8BhpNKYwmBUliHUCewwDchSulcNumd
+         LdvmKH3uF3FH//WFA4pI67zykejtgvMNAdvTUD1Mp4uXq3283uHUkZ74/RTmm3etKu+G
+         KKsfUjsPXPBH3T3X3S8FDrfMdQmtfCzap8btLV53zHZIYl20gfP888Vc8EFwksn04HnD
+         HbnKZxqcwDmzFmYvD7mo2U/nWYtoVrM/w8/K/ek2s3Xv/23sNjEVwZprupLZZkZIlhK/
+         d7peMsu1j3yHtyNIpKxcWjgaS2TgKUrlxl3UpUkW0biPVs8xqJQiM5okPefBDAXzQDXk
+         L2Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747670580; x=1748275380;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ebJzx1LorPbf1NWqtTpnidvsrFRDAcdzNorkYWG1GY4=;
+        b=b+cWE74TnvgTEuUUf8f8IHTq/88R8TwDMgQ2pPl1kK/DyOubn9IommIjotgFSt/lZ7
+         I+MwZfo1+d9BvPEpfiya8Ai2u2Py7mCuJzt8pxl1IismpgWdSzEVnubFtms0WjLq5GAO
+         nKwBmTmml6MmBWUF0RXlWNMNyfXCWFCKviG4RfL0xBcsC62D4IY4TufQEp8BJFg9PAo5
+         JULiLSp1oQ9AdcvBiTI1qs0/aVooONDi59D4uI1iG+l2R4hPfEYYOdxpYKXKhf+8TPzu
+         4ha1AIEWTfTMrWIOhjy9q9nYCpY/qmjYunobyYdUEIdyKhdu08G9D1gmp4BOuNTChJ6k
+         +fLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa0FCg/KfcgCtGpuMxgkqXmhqpGS3KH1FepmAIB4nCmswHk+MIlYxY69OxaWHFRZvaVWj6l/BA+ygXyPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT2ssZZKkDVie/ok3fd0t+vw1yWHEUThpwYljvApY+gB71Nvw7
+	8ONXbT8FwWzqBfRKLbB6Vq3mC8osiu50F3DqUTu3Q+XSHKs4SSUfJQ+FrjVGmDOXyBOuV49Bpz4
+	Okl1OWg==
+X-Google-Smtp-Source: AGHT+IGgPwGOMBLaCWE5KFajgM1k5GAAtbgHFzAkvoKLZILtRQoRL0lrXZ29F1zNrZz+oqAiBi5JJlM1Uas=
+X-Received: from pja16.prod.google.com ([2002:a17:90b:5490:b0:30a:3021:c1af])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d888:b0:30e:823f:ef3c
+ with SMTP id 98e67ed59e1d1-30e823ff09dmr21512162a91.25.1747670580528; Mon, 19
+ May 2025 09:03:00 -0700 (PDT)
+Date: Mon, 19 May 2025 09:02:59 -0700
+In-Reply-To: <aCg0Xc9fEB2Qn5Th@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516122655.442808-1-nm@ti.com>
+Mime-Version: 1.0
+References: <20250516212833.2544737-1-seanjc@google.com> <20250516212833.2544737-8-seanjc@google.com>
+ <aCg0Xc9fEB2Qn5Th@gmail.com>
+Message-ID: <aCtWM63FyQKMJzqE@google.com>
+Subject: Re: [PATCH v2 7/8] x86, lib: Add wbinvd and wbnoinvd helpers to
+ target multiple CPUs
+From: Sean Christopherson <seanjc@google.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Zheyun Shen <szy0127@sjtu.edu.cn>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>, Kai Huang <kai.huang@intel.com>, 
+	Mingwei Zhang <mizhang@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, May 16, 2025 at 07:26:55AM -0500, Nishanth Menon wrote:
-> Using random mac address is not an error since the driver continues to
-> function, it should be informative that the system has not assigned
-> a MAC address. This is inline with other drivers such as ax88796c,
-> dm9051 etc. Drop the error level to info level.
+On Sat, May 17, 2025, Ingo Molnar wrote:
 > 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
+> * Sean Christopherson <seanjc@google.com> wrote:
 > 
-> This is esp irritating on platforms such as J721E-IDK-GW which has a
-> bunch of ethernet interfaces, and not all of them have MAC address
-> assigned from Efuse.
-> Example log (next-20250515):
-> https://gist.github.com/nmenon/8edbc1773c150a5be69f5b700d907ceb#file-j721e-idk-gw-L1588
+> > From: Zheyun Shen <szy0127@sjtu.edu.cn>
+> > 
+> > Extract KVM's open-coded calls to do writeback caches on multiple CPUs to
+> > common library helpers for both WBINVD and WBNOINVD (KVM will use both).
+> > Put the onus on the caller to check for a non-empty mask to simplify the
+> > SMP=n implementation, e.g. so that it doesn't need to check that the one
+> > and only CPU in the system is present in the mask.
+> > 
+> > Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
+> > Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Link: https://lore.kernel.org/r/20250128015345.7929-2-szy0127@sjtu.edu.cn
+> > [sean: move to lib, add SMP=n helpers, clarify usage]
+> > Acked-by: Kai Huang <kai.huang@intel.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/include/asm/smp.h | 12 ++++++++++++
+> >  arch/x86/kvm/x86.c         |  8 +-------
+> >  arch/x86/lib/cache-smp.c   | 12 ++++++++++++
+> >  3 files changed, 25 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> > index e08f1ae25401..fe98e021f7f8 100644
+> > --- a/arch/x86/include/asm/smp.h
+> > +++ b/arch/x86/include/asm/smp.h
+> > @@ -113,7 +113,9 @@ void native_play_dead(void);
+> >  void play_dead_common(void);
+> >  void wbinvd_on_cpu(int cpu);
+> >  void wbinvd_on_all_cpus(void);
+> > +void wbinvd_on_many_cpus(struct cpumask *cpus);
+> >  void wbnoinvd_on_all_cpus(void);
+> > +void wbnoinvd_on_many_cpus(struct cpumask *cpus);
+> 
+> Let's go with the _on_cpumask() suffix:
+> 
+>     void wbinvd_on_cpu(int cpu);
+>    +void wbinvd_on_cpumask(struct cpumask *cpus);
+>     void wbinvd_on_all_cpus(void);
+> 
+> And the wb*invd_all_cpus() methods should probably be inlined wrappers 
+> with -1 as the cpumask, or so - not two separate functions?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Using two separate functions allows _on_all_cpus() to defer the mask generation
+to on_each_cpu(), i.e. avoids having to duplicate the passing of cpu_online_mask.
+IMO, duplicating passing __wbinvd is preferable to duplicating the use of
+cpu_online_mask.
+ 
+> In fact it would be nice to have the DRM preparatory patch and all the 
+> x86 patches at the beginning of the next version of the series, so 
+> those 4 patches can be applied to the x86 tree. Can make it a separate 
+> permanent branch based on v6.15-rc6/rc7.
 
+Can do, assuming there's no lurking dependency I'm missing.
