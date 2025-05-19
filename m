@@ -1,143 +1,127 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB012459D0
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E5245035;
+	Mon, 19 May 2025 06:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636367; cv=none; b=obTqO7C0JRIAQJUPRsj1yIRNHJLEhUJbsHygkMnBDfbZziyk/bdPyrKLFN8NnyHiLAMw7RD7fmiHcyRypxsX/aNjKi0MI1pPFwrPtkjjbRdvO0dxfHd42WIeyzcKog3kAnloINK5ksXTQDUyh0jVQmfd4KMxAdHRRdp2QxZHw2M=
+	t=1747636376; cv=none; b=YbRWCLeOPFrJHCp7zf0bnkMB9RO3j/I5JTGW/6EdyfVN3Kc4qLTXnqRy636TdyKa1REY7odzfaMWV4ku0/ZRB83zjegqhXJYyJJwY09mQMpnbw9OmBWNEPcuDILcclqBSc93lJEPJlkPqMbfYC6hqoFn7G/8A9p1taf+oyWHT/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636367; c=relaxed/simple;
-	bh=zpQV+9dKBFMz0NMRuQk1XpOfnJeBe5qEYx8GDJUURSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ne6jmaBbmAVsvSgLCdlpzTSTCpEyexXiE5wS8chfgXQZPtbAzgruMe/sbyLvduyvurm9OZxUuZ9XBUznPW3le4UNta6hjHCLAN31BYguKy1T6ywsChesB/Y1g+FnAqgLg4IQcYw7h4QzL1hQwN+YJzE7K/+P/NswgysWq3FD/qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FdGqUyA8; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747636376; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=SrOPa+63X4Z/wclZ4LWTR3HetMWsUuUAsXSCm0TIWJhm2Sim5GcEoMeSqsdvYwGG5jNXBkNn68oFcRpFV5XIzTJHoG3oXgsyAAHNauhVZ2mWArybpqkfngBCGlt2bI7Uz9nHzMD7dJwFwqO3XcSjRFp/kKDQTaFgmX7G8c+k8VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhMR1wU/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FdGqUyA8"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747636363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3J9VYeJdzFyFt/r30VdtnojDV07sIKVHy9ZuJmlHEhM=;
-	b=FdGqUyA8q/wu0MKPYl/Jd5WQk+valS0uXcqTSrA7HeaS0rJKtXWinY6tqJzFissWdtw6RX
-	0ioq/9nJJ3AKb3g2n9fiz1T+vUsLgok+WaiU286qyo6C817DiOPSSYJTNxwjk5xEsn1riP
-	ZRpyRBdJ+CYP1NQ+BcccZAfMmvm/szI=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tejun Heo <tj@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH v4 5/5] memcg: make memcg_rstat_updated nmi safe
-Date: Sun, 18 May 2025 23:31:42 -0700
-Message-ID: <20250519063142.111219-6-shakeel.butt@linux.dev>
-In-Reply-To: <20250519063142.111219-1-shakeel.butt@linux.dev>
-References: <20250519063142.111219-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhMR1wU/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8470C4CEE4;
+	Mon, 19 May 2025 06:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747636375;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=ZhMR1wU/X0Ftyf6ohXFPrJXQwhkWzueNT8/spvuGLMldbiR4tGeBv435mgPBDj2fh
+	 h25+ZLh+a/oVqqUA5g0Ccm5c9J0tXEjJbDzOuHGcX5mBwdxO8AhQpofalAsMrAtDuI
+	 BvQN/BzF702ipIzpZ5PzL79fM7+EJ84LPtubD4wh4tD8ilYMNr5f3dWQJEDjpyzcBY
+	 m1aFqPnt6pLdPNgeIhHQD+2RALGu6wORmSWzaoT8REybCVfUD8Tb+snf3J9uDFIM3Z
+	 xyh3qQx4S/YK7PS+R2D1lczDI7cXCS5I1PU6CR1Ve2TSAfIiSA1ftZ1WaugAZ9Mt6H
+	 VqjHQ+lP7NuqA==
+Date: Mon, 19 May 2025 01:32:53 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250519063253.z4SU03iX3VWmiF5Opxs_8_U2Z_O8D5pNQc9Iqa0V3Rw@z>
 
-Currently kernel maintains memory related stats updates per-cgroup to
-optimize stats flushing. The stats_updates is defined as atomic64_t
-which is not nmi-safe on some archs. Actually we don't really need 64bit
-atomic as the max value stats_updates can get should be less than
-nr_cpus * MEMCG_CHARGE_BATCH. A normal atomic_t should suffice.
 
-Also the function cgroup_rstat_updated() is still not nmi-safe but there
-is parallel effort to make it nmi-safe, so until then let's ignore it in
-the nmi context.
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/memcontrol.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index f1a46c29dde8..59d969283cc0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -533,7 +533,7 @@ struct memcg_vmstats {
- 	unsigned long		events_pending[NR_MEMCG_EVENTS];
- 
- 	/* Stats updates since the last flush */
--	atomic64_t		stats_updates;
-+	atomic_t		stats_updates;
- };
- 
- /*
-@@ -559,7 +559,7 @@ static u64 flush_last_time;
- 
- static bool memcg_vmstats_needs_flush(struct memcg_vmstats *vmstats)
- {
--	return atomic64_read(&vmstats->stats_updates) >
-+	return atomic_read(&vmstats->stats_updates) >
- 		MEMCG_CHARGE_BATCH * num_online_cpus();
- }
- 
-@@ -573,7 +573,9 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 	if (!val)
- 		return;
- 
--	cgroup_rstat_updated(memcg->css.cgroup, cpu);
-+	/* TODO: add to cgroup update tree once it is nmi-safe. */
-+	if (!in_nmi())
-+		cgroup_rstat_updated(memcg->css.cgroup, cpu);
- 	statc_pcpu = memcg->vmstats_percpu;
- 	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
- 		statc = this_cpu_ptr(statc_pcpu);
-@@ -591,7 +593,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 			continue;
- 
- 		stats_updates = this_cpu_xchg(statc_pcpu->stats_updates, 0);
--		atomic64_add(stats_updates, &statc->vmstats->stats_updates);
-+		atomic_add(stats_updates, &statc->vmstats->stats_updates);
- 	}
- }
- 
-@@ -599,7 +601,7 @@ static void __mem_cgroup_flush_stats(struct mem_cgroup *memcg, bool force)
- {
- 	bool needs_flush = memcg_vmstats_needs_flush(memcg->vmstats);
- 
--	trace_memcg_flush_stats(memcg, atomic64_read(&memcg->vmstats->stats_updates),
-+	trace_memcg_flush_stats(memcg, atomic_read(&memcg->vmstats->stats_updates),
- 		force, needs_flush);
- 
- 	if (!force && !needs_flush)
-@@ -4120,8 +4122,8 @@ static void mem_cgroup_css_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 	}
- 	WRITE_ONCE(statc->stats_updates, 0);
- 	/* We are in a per-cpu loop here, only do the atomic write once */
--	if (atomic64_read(&memcg->vmstats->stats_updates))
--		atomic64_set(&memcg->vmstats->stats_updates, 0);
-+	if (atomic_read(&memcg->vmstats->stats_updates))
-+		atomic_set(&memcg->vmstats->stats_updates, 0);
- }
- 
- static void mem_cgroup_fork(struct task_struct *task)
--- 
-2.47.1
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
