@@ -1,161 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EAB1EA7C8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C331F1507;
+	Mon, 19 May 2025 07:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638748; cv=none; b=CTBpZ67nJzrhuIhaSZsyqM4RxXYDSmUVukbgF1FwPQ01qvjNg+MmTMb3ZpnMV0f0PGKn64ONLBqz7z+swntfsbEc/ENz8+RjdKM/AANje6c6tSR/r3wK9khxucTbumcpUDmjzbL7vz+9o4VQbAWlvszUoZ38VG0iGm0Z3GACnJs=
+	t=1747638781; cv=none; b=Mz7C+D6PbUo8q9mgCOkJWem3w2khQvCTfI91jQfbNqXZS0WKOrSUWnrWZ8/9NMuhtuzJ82TxXxarMOTL+YN9FdyUDh5TQd45HN1GnA2mE6ZLkP+yANeiwRCpCdAVWJM6MrkbFTZf7n5E1KSJ0bIwOvmJvOV5RnczgFqmgg8QBZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638748; c=relaxed/simple;
-	bh=berpNQksN4I5+X+UnGQ86pZZ6eKvZ+gP0gHo+g2EPzI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b7dn/In1HzuUhiaugIX0l4SoQlfW+9ykbLR2jEj2r1vKL8DEDWv47i6nS90Y11dpZLvPzcobU7gMT5/f508ulRj7QtlQq0XcvQJoZaNkLHE62ye2onjhyiYUmsqra4vT+zctG0mwY7viJcSmqEzZDvBzG0UP/emOo9bwa9NGOC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuiWXUBG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747638781; c=relaxed/simple;
+	bh=7/SWLXW5Hy6DaiAx0ceb1uY2JzdxPxmqQ8x1Y1jN5VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jl5+E6k3qCWGAg+5A/fcSnqfm2QTrlrRdAfDoUWBR5V6cwMzNUqvcYEI+eFsERiKT8cwy/noWwfG12m+/IGiutbDqHFIctrmdlTpdDNhCiKtke1ew6WUB1bJvmHYcoLe2fJTJ5QtdmuxcihKNRtPY8kF7b6/2ddDaD3Hboiv/aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmxJHsqX; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuiWXUBG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CADEC4CEE4;
-	Mon, 19 May 2025 07:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747638748;
-	bh=berpNQksN4I5+X+UnGQ86pZZ6eKvZ+gP0gHo+g2EPzI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TuiWXUBGZsSZbyblobntkQU4Wznr+TWCnb5Om/fbKKu4Wj/tkEJ8hkh/bVtxH/lBj
-	 hQOY0ES7+kWcdPF+KPPeWd27Y29lpI/p24NIJwwX9Url6vJX0ydoZovy0bEV5a3uVv
-	 GiOS5dCJycbaIk03zOBEgzTT2f/rkfaApk7IHg+r1Rwkp7fCLYrPQB0X+hhlmcA/0C
-	 MDYeb6+PzLD4iEv0kOcjjD6pk9DbwFBTpfqpAgfBeDTURvf/5bdboag/qM3obGDSiW
-	 f8jOtMzhVufYnX5IR+gFOeUDhA8urvnQoEaSEsTvirDgUU+VXI7qjPjvEHjMlPDIf+
-	 4uQtzMe1O6CTw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uGufh-00G8VH-PX;
-	Mon, 19 May 2025 08:12:25 +0100
-Date: Mon, 19 May 2025 08:12:24 +0100
-Message-ID: <86y0utdqg7.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner
-	<tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	junhosj.choi@samsung.com,
-	hajun.sung@samsung.com,
-	joonki.min@samsung.com,
-	d7271.choe@samsung.com,
-	jkkkkk.choi@samsung.com,
-	jt1217.kim@samsung.com,
-	qperret@google.com,
-	willdeacon@google.com,
-	dhyun.cha@samsung.com,
-	kn_hong.choi@samsung.com,
-	mankyum.kim@samsung.com
-Subject: Re: [QUESTION] arch_counter_register() restricts CNTPT access when booted in EL1, even if EL2 is supported
-In-Reply-To: <aCqM1Z2ApdvGYfb9@perf>
-References: <CGME20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770@epcas2p2.samsung.com>
-	<aCbhBttvi8mvsyGE@perf>
-	<86frh4gazr.wl-maz@kernel.org>
-	<aCqM1Z2ApdvGYfb9@perf>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmxJHsqX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747638780; x=1779174780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7/SWLXW5Hy6DaiAx0ceb1uY2JzdxPxmqQ8x1Y1jN5VE=;
+  b=hmxJHsqXrJwZV/ar1cPbNDdWTuz2eGKFeiuMN8+558eqJgnMrzkp7Iy4
+   9A5465w6nrEcP/0pyBpCZPQK8yFpRABlCcRF+wrJHqcF74YJRoUGAmpVB
+   nwkQUd6yBKcInW5UqVMKTcyDRO57woBRm3ZUzdEo9NIAmFvcC5ogQq8P2
+   yuB+7uVXEAVEQwKFE42/QcS93C2hiBYnNYRjVZTXJWndNM/CuutkSptz9
+   izzCMEnx0ZuFW76s0AkPbZuuhbI2qW2gevBWBgn3aM+uTkSIrjyMGEOIu
+   XN5WOg37q4qFC+HswLDYVhVZgeWX5jovAFbMi9ZuJ9t0M1EjY5hoP5s2L
+   A==;
+X-CSE-ConnectionGUID: ZUqo5DFwTCObKj/5c5PLAw==
+X-CSE-MsgGUID: 068ZW2KNSpOX4xhOrmAcXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="37142812"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="37142812"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 00:12:59 -0700
+X-CSE-ConnectionGUID: TPxZaDTwQjG4bRil4Fs00A==
+X-CSE-MsgGUID: 3XDW3SxGQiOJ1pnp0+rzZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139700215"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 19 May 2025 00:12:56 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGugA-000LFH-0G;
+	Mon, 19 May 2025 07:12:54 +0000
+Date: Mon, 19 May 2025 15:12:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, ajay.kathat@microchip.com,
+	claudiu.beznea@tuxon.dev, kvalo@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: wilc1000: Add error handling for
+ wilc_sdio_cmd52()
+Message-ID: <202505191448.OycntzLM-lkp@intel.com>
+References: <20250519014434.901-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: youngmin.nam@samsung.com, daniel.lezcano@linaro.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, junhosj.choi@samsung.com, hajun.sung@samsung.com, joonki.min@samsung.com, d7271.choe@samsung.com, jkkkkk.choi@samsung.com, jt1217.kim@samsung.com, qperret@google.com, willdeacon@google.com, dhyun.cha@samsung.com, kn_hong.choi@samsung.com, mankyum.kim@samsung.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519014434.901-1-vulab@iscas.ac.cn>
 
-On Mon, 19 May 2025 02:43:49 +0100,
-Youngmin Nam <youngmin.nam@samsung.com> wrote:
->=20
-> [1  <text/plain; utf-8 (8bit)>]
-> On Fri, May 16, 2025 at 10:28:56AM +0100, Marc Zyngier wrote:
-> > On Fri, 16 May 2025 07:53:58 +0100,
-> > Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > >=20
-> > > [1  <text/plain; utf-8 (8bit)>]
-> > > Hi arm arch timer experts,
-> > >=20
-> > > While reviewing the arm_arch_timer code in Linux 6.12,
-> > > I noticed that the function arch_counter_register() restricts the
-> > > use of the physical counter (cntpct_el0) on systems where the kernel
-> > > is running in EL1, even if EL2 is supported and cntpct_el0 is
-> > > accessible.
-> > >=20
-> > > In our case:
-> > > - We are not using pKVM.
-> > > - The kernel is booted in EL1.
-> > > - We disabled VIRT_PPI and explicitly selected PHYS_NONSECURE_PPI for=
- the timer refering to below code.
-> >=20
-> > That's not legal. The architecture guarantees that there is a virtual
-> > timer and a physical timer. No ifs, no buts.
-> >=20
-> > [...]
-> >=20
-> > > As I understand it, `is_hyp_mode_available()` checks whether the
-> > > kernel booted into EL2 =E2=80=94 not whether EL2 is *supported* by the
-> > > hardware.
-> > >=20
-> > > Therefore, even on systems where EL2 exists and `cntpct_el0` is
-> > > accessible from EL1, the kernel still forces the use of `cntvct_el0`
-> > > if the boot EL is EL1.
-> >=20
-> > Yes, because it isn't architecturally valid to not have a virtual
-> > timer. This isn't about EL2 being present of not. The switch to the
-> > physical timer is purely an optimisation for KVM so that it doesn't
-> > have to switch the virtual timer back and forth when running a guest,
-> > as the virtual timer is the most likely used timer.
-> >=20
->=20
-> Thanks for the clarification.
->=20
-> As a follow-up question:
->=20
-> We are working on a system that uses a vendor-specific hypervisor instead=
- of KVM.
-> In this setup, we also want to optimize timer virtualization overhead and=
- are considering using
-> the physical timer (CNTPT) in the host context for performance reasons, j=
-ust like KVM does.
->=20
-> Would it be acceptable (from the upstream kernel's perspective) to make a=
- similar switch
-> to the physical timer in this case ?
+Hi Wentao,
 
-No. Your hypervisor already has *two* private timers it can freely
-make use of (virtual and physical EL2 timers), and doesn't need to
-encroach on something that a guest (be it Linux or any other guest)
-relies on.
+kernel test robot noticed the following build errors:
 
-The alternative is to trap and emulate the EL1 timer for the guest so
-that it *appears* to be functional. But that's obviously bad from a
-performance perspective.
+[auto build test ERROR on wireless-next/main]
+[also build test ERROR on wireless/main linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Or is this kind of optimization strictly tied to KVM's internal behavior
-> and not something the kernel is expected to support generically?
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/wifi-wilc1000-Add-error-handling-for-wilc_sdio_cmd52/20250519-094706
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
+patch link:    https://lore.kernel.org/r/20250519014434.901-1-vulab%40iscas.ac.cn
+patch subject: [PATCH v2] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250519/202505191448.OycntzLM-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191448.OycntzLM-lkp@intel.com/reproduce)
 
-It is purely Linux/KVM specific, and only works because we own both
-side of that equation, meaning we can enforce whatever is required to
-make the two work together. This obviously isn't possible with third
-party software. Look at it from a different point of view: how would
-you make this work with, say, Windows? or MacOS?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505191448.OycntzLM-lkp@intel.com/
 
-On the bright side, the architecture already gives you everything you
-need to implement your hypervisor. Just use it correctly.
+All errors (new ones prefixed by >>):
 
-Thanks,
+>> drivers/net/wireless/microchip/wilc1000/sdio.c:789:2: error: use of undeclared identifier 'ret'
+     789 |         ret = wilc_sdio_cmd52(wilc, &cmd);
+         |         ^
+   drivers/net/wireless/microchip/wilc1000/sdio.c:790:6: error: use of undeclared identifier 'ret'
+     790 |         if (ret) {
+         |             ^
+   drivers/net/wireless/microchip/wilc1000/sdio.c:792:10: error: use of undeclared identifier 'ret'
+     792 |                 return ret;
+         |                        ^
+   drivers/net/wireless/microchip/wilc1000/sdio.c:798:2: error: use of undeclared identifier 'ret'
+     798 |         ret = wilc_sdio_cmd52(wilc, &cmd);
+         |         ^
+   drivers/net/wireless/microchip/wilc1000/sdio.c:799:6: error: use of undeclared identifier 'ret'
+     799 |         if (ret) {
+         |             ^
+   drivers/net/wireless/microchip/wilc1000/sdio.c:801:10: error: use of undeclared identifier 'ret'
+     801 |                 return ret;
+         |                        ^
+   6 errors generated.
 
-	M.
 
---=20
-Without deviation from the norm, progress is not possible.
+vim +/ret +789 drivers/net/wireless/microchip/wilc1000/sdio.c
+
+   774	
+   775	static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+   776	{
+   777		u32 tmp;
+   778		struct sdio_cmd52 cmd;
+   779		struct sdio_func *func = dev_to_sdio_func(wilc->dev);
+   780	
+   781		/**
+   782		 *      Read DMA count in words
+   783		 **/
+   784		cmd.read_write = 0;
+   785		cmd.function = 0;
+   786		cmd.raw = 0;
+   787		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
+   788		cmd.data = 0;
+ > 789		ret = wilc_sdio_cmd52(wilc, &cmd);
+   790		if (ret) {
+   791			dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
+   792			return ret;
+   793		}
+   794		tmp = cmd.data;
+   795	
+   796		cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
+   797		cmd.data = 0;
+   798		ret = wilc_sdio_cmd52(wilc, &cmd);
+   799		if (ret) {
+   800			dev_err(&func->dev, "Fail cmd 52, interrupt data register...\n");
+   801			return ret;
+   802		}
+   803		tmp |= (cmd.data << 8);
+   804	
+   805		*size = tmp;
+   806		return 0;
+   807	}
+   808	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
