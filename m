@@ -1,98 +1,128 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3DF1DF963;
-	Mon, 19 May 2025 17:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D7288C13;
+	Mon, 19 May 2025 17:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674182; cv=none; b=JSH2EiEqC7Ke9kuJuCKXIBSmgv1cHlvFV9F/wytGsmPTnH7J1M8JJwc35LdqwAERVBGe+A/F74sCk/XIhMLH1WS3A/1qLjO/GeiJjFGJDL0qeeaWDJPPL7LLIMTrrwz7FT0LaTrm3Bwqwo7QSrVRWegzK87hW8XOIbDfl2YO+fg=
+	t=1747674187; cv=none; b=bDrGblNmbUS7RTGudPacjqUzcVPVnQuuhymUklGvEuURywbL5HBcj2W6gQHXFiPD/dJXQyR7LIN9Uv96mkjq2ER4NRIN4JanqsSPW7P232mMqAHDoXQouPjXcsKwiVG00s+pd+on6kJh9ODGLMwRuZQxwfphpIP9FhT1HSEp9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674182; c=relaxed/simple;
-	bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=go0idILoSExK7xv5B2f+h/9dpEJo5VKWfL0PMqh4obwCe3Am4T0xpBNaQGNAWOs6UFC0yE3fTu1DWRqTNaDl83sI+aefHWZnA6y0hBc/SbL1VcDbzs3pEpnYJTqr42nRgJ+2I5XMakkYuyXvj2HxBy9giz889Q3NGd6EmW8+zYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7vPJq8u; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747674187; c=relaxed/simple;
+	bh=id6sLlLT8e6OOCvWPFO2ag8J665oE4QuQbuDd62e+sA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z2I0rrmRhyg/X6yrBrEcwAcv6tTA5LCt4S20+987ZePD8FXtfCw29oliO7mDkZi6PI7OVXHAn+fdcxtY4I8z86RS3yJtMJwl39qV7iOYqYoNBeE215m/9qOjY1Qj814ylG+NlOIUYZLZ8TjCR+T21I8lLzElq2z52NNOYTqd9MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oNuqiAW1; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7vPJq8u"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e19c71070so7750245ad.3;
-        Mon, 19 May 2025 10:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747674180; x=1748278980; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
-        b=D7vPJq8uLTS77eJMBVVjfKXLvbtBDqQXZJFN9jvYyca8ORMjH3Khdskm9McsmEMCvH
-         SJDY0O8EkwPIf19Q4Jgh3q6AuwuifOytn99HzGUkA03wP9ys8g8534PQlTUmXqU/Jkjf
-         j9+NLbhRUW0EumCm9pIGkKcf3wwTy6ZCW60aXKqtDJCqCz51obhGJyUbQQoW5K6ez52M
-         8S7NevuHV1+B8AM1Zo/qDusSEivw3Y47P+Lm2cLexqJawfUZ468C1ihpEJT/Czutiosw
-         efIXoGKVd8SULufoBnA3OayuEvi5EGrWkrXaPnr4zbli/3+2t7+EM+AtSVYceAk4nprS
-         4jaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747674180; x=1748278980;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dLkUJ3SdmyWzypJshGqqCuSQZ/CXnDd1H8MEMaxlk4s=;
-        b=sjWU+nF+4DNvnpCCsDwetyp2VDsD9s5nizR4ngSrNzGh3qH1/mZ/IknTNxHnUat56J
-         Fiz6M5kQlAsS+YKSFH92h1VJyhn6PkS+gvV4XzHd2FG5DWN2cjBYMVL+Zvhr3kyjBYiw
-         neJAmA7DsQ1gIlpbOkE0eGaeu8VOq4Ksh+OJcdu8+94aAp/Zg3kkJRPfYQPGoAnNzTgU
-         larGBaFb2jdQpHWokYRHTQr1mvwj6mkj6Qhd0cx2R+W7RWEZtLGV3tpT+qPBvKydrMI4
-         UWW8AMWkM1xKvfuV/SKGE55+9fjcBF0nam9jogIYJfiAF/KS3bODTLrznJMLOGN/ySlf
-         q4RA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNCF4xhwVcBK2wPUdliGp/A/mVeaQ3JEquq3GbraN/aN46Tbzvz6jIop8Jd+0iDymx7LoTD7CN@vger.kernel.org, AJvYcCVACHazgQB0fAbFWtpNEY/8zAnKUcyWXvPThWcK4A8PBLD8eurJJ2P+ZcX0TBGAC0J+KoxmwYqx8LGmVNAaIMU=@vger.kernel.org, AJvYcCXTBOgwKl9zs6HTdmUuant0Lu7qHCrZVGBVMDvxmN9DVlpReO+gVdJjaNdBJB2zhddu5xGyCMSnwMjx+e8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjlyRiPImYMDE0G3OrWofOHB/nkKy3O5nxcEeYiDHKLaMm6kqK
-	+MtKA7sWXLrscNQ6MUT+Hl0obIkGQoRg4UTzFnT6EaIZUuyWtDbp60kTgyvVN6s9Y6//uWYeDaV
-	craID05992Fizd8rM8pRg7mzZsWyq1ns=
-X-Gm-Gg: ASbGncu53POEL6yiYuGMWhmFijJh3V9wkoOcd3kAEPcGg7Ciqx397edDrA43TFISkSg
-	KdjFFhGhdZWeIwq3BC2IaCXTY5ehsiOADL7kZlHmPExEWgOwr0ZcNsXQLFvSew7Bwk8LTSlze3B
-	PA9msvDR0JNy1yn5OITztAyQP2UUcmMkqU
-X-Google-Smtp-Source: AGHT+IFbR/hkcZrextwiHSaNvyH4tAV9pXid5iCOxR5MP99p8ZrfDGeKZfpphVbbGXYZSk5vQ78hf1JU1jwExjH5G/s=
-X-Received: by 2002:a17:903:2cc:b0:22e:361e:7572 with SMTP id
- d9443c01a7336-231d43bb4f5mr63483115ad.7.1747674180455; Mon, 19 May 2025
- 10:03:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oNuqiAW1"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JENVIQ010263;
+	Mon, 19 May 2025 19:02:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=/GHcyFS0HynTNqpKjFvRFs
+	q5Oc2635v1fvZXhZzErh0=; b=oNuqiAW1ifBHjNyvHpFVETOZ0KvqqrmF6zMp4Y
+	8CVo/IWxBq/PvB/qyIW/QA2FP091vTAmFj9r0AazMhtMV7Q1gy27YsdfQFb3s3//
+	qmeOQZjmaAl+jZA/JtktB3FkcfkTvp5UTgbA4z4qK+PKB0LG6+0YVpsY+NJvQ+Be
+	+E/Ckl509SJvGeJW/DRlo6PQbj3cSMfdqY21Oqe3uxRu0k92+MFY9wg9nrXDQ5d+
+	cfMXfTQRw9OOLpyaiiez2elqEdfztHh0KYF5mqRqID9nFFPzwG+HZfTUlFrtGob6
+	raZADNeuPopF6ZcGaX8eYjCD+tz/aqs/TH0U33mnJa11dp4w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pfka13yw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 19:02:47 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A48D40052;
+	Mon, 19 May 2025 19:01:46 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5E64DAF7007;
+	Mon, 19 May 2025 19:01:17 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 19 May
+ 2025 19:01:17 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Julius Werner <jwerner@chromium.org>, Evan Benn <evanbenn@chromium.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+	<linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
+Date: Mon, 19 May 2025 19:00:55 +0200
+Message-ID: <20250519170055.205544-1-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517085600.2857460-1-gary@garyguo.net>
-In-Reply-To: <20250517085600.2857460-1-gary@garyguo.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 19 May 2025 19:02:47 +0200
-X-Gm-Features: AX0GCFtaysJVcUQOMTcbPDH1T0mGXdawyzH-WpOc8Eu6TBiYqOuUj-gxkOrlqTk
-Message-ID: <CANiq72kdReW=OVdKPo4CJ1b+DU0GbkLxOOmEh+5C7zW9NgFtaA@mail.gmail.com>
-Subject: Re: [PATCH] rust: compile libcore with edition 2024 for 1.87+
-To: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, est31@protonmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
 
-On Sat, May 17, 2025 at 10:56=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
->
-> Rust 1.87 (released on 2025-05-15) compiles core library with edition
-> 2024 instead of 2021 [1]. Ensure that the edition matches libcore's
-> expectation to avoid potential breakage.
->
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned i=
-n older LTSs).
-> Link: https://github.com/rust-lang/rust/pull/138162 [1]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1163
-> Signed-off-by: Gary Guo <gary@garyguo.net>
+The optional SMCWD_GET_TIMELEFT command can be used to detect if
+the watchdog has already been started.
+See the implementation in OP-TEE secure OS [1].
 
-Cc'ing est31 -- I will add:
+If CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set, at probe time check
+if the watchdog is already started and then set WDOG_HW_RUNNING in
+the watchdog status. This will cause the watchdog framework to
+ping the watchdog until a userspace watchdog daemon takes over the
+control.
 
-Reported-by: est31 <est31@protonmail.com>
+Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
 
-Thanks!
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ drivers/watchdog/arm_smc_wdt.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-Cheers,
-Miguel
+diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
+index 8f3d0c3a005fb..f1268f43327ea 100644
+--- a/drivers/watchdog/arm_smc_wdt.c
++++ b/drivers/watchdog/arm_smc_wdt.c
+@@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, enum smcwd_call call,
+ 		return -ENODEV;
+ 	if (res->a0 == PSCI_RET_INVALID_PARAMS)
+ 		return -EINVAL;
++	if (res->a0 == PSCI_RET_DISABLED)
++		return -ENODATA;
+ 	if (res->a0 != PSCI_RET_SUCCESS)
+ 		return -EIO;
+ 	return 0;
+@@ -131,10 +133,20 @@ static int smcwd_probe(struct platform_device *pdev)
+ 
+ 	wdd->info = &smcwd_info;
+ 	/* get_timeleft is optional */
+-	if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
+-		wdd->ops = &smcwd_ops;
+-	else
++	err = smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
++	switch (err) {
++	case 0:
++		if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED))
++			set_bit(WDOG_HW_RUNNING, &wdd->status);
++		fallthrough;
++	case -ENODATA:
+ 		wdd->ops = &smcwd_timeleft_ops;
++		break;
++	default:
++		wdd->ops = &smcwd_ops;
++		break;
++	}
++
+ 	wdd->timeout = res.a2;
+ 	wdd->max_timeout = res.a2;
+ 	wdd->min_timeout = res.a1;
+
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+-- 
+2.34.1
+
