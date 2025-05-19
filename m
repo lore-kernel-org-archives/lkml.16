@@ -1,111 +1,133 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6BB1F874C;
-	Mon, 19 May 2025 08:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330FD2676FF;
+	Mon, 19 May 2025 08:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643129; cv=none; b=sFqQVdqQvZ8VmiEaObeFbKZmlLu5PCxWVMYyH6rik5ZsBiR8Sv4BtzscaNPzMDxRfA6iEz3hlFnsSYZCOJO7mjrHcaWRydqFzlNAHuTfm4Dxz3RgOzMHYSsa2+fZspeTHWoYvt/Y8qbrJC5jMH1I8Dfc7AP7Zufn65K5CAUblAM=
+	t=1747643167; cv=none; b=tt08uysG1HtzapAdzd4Sa6v/FLJ98DxKWfZMuWjAYN+AuZkTOpfRf41eapAb73SbYS7PgUQMg1gLaQllt2FR+acDlWypKp9i09pWNA7lLaFsaHUb8ySM1BuoaurcVdWled6pQMrO91t3chyY3BVIc4ZilhbR2lq5DJCT7IrZD2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643129; c=relaxed/simple;
-	bh=eMOjK4ny5tlsIE1Kv6uWa7nnzXuh9RGNZUWDU0nj4k0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u8Ji5LDKQFKFiRuXYst9akfkzw/cOuQ9ZzMvt6NEy/fce6idbOuimlZR0eTlWPHH9yG0hS/qC0UAvW1JFYVO4RBgBX4uWlXNI0FXS94bdlIk6m+0UEShLFQOgRN24EU/qHSrriytZsLXS/kPxlpbGrFrCL9Z6jJwV+YLZy3WJYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eakknYTZ; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747643167; c=relaxed/simple;
+	bh=yAQG7CT+mqanmUd2f1Pd4pOmu/OZwX6kWCA/QHpkodk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcoCJW915BPDmRhaXo19xT/C+0gxQNrMSFxf9Fo1Z0j7yjaSjntKtqgiGTYBhzoZwTmce/cZn2aL6UGqH260UCs3OAWEL7+OQV6Fku1Ys+SeeLRaC9ahoRq3Gi4aktsjSM5QLjCznA8AqFywUSt/rBiWqWioXBa3/BVMaP/hgc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnCHcLiT; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eakknYTZ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e16234307so38362115ad.0;
-        Mon, 19 May 2025 01:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747643127; x=1748247927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EB8Oc00xqk49eqIaVgN6SCH9WvXJ93D+KXaomxhB/Tw=;
-        b=eakknYTZbt9qDky9IXXtQkeG5BHgQ//ZkJQ3lp7qfFH6IUYZ7dVfrZneyEZZUdr+XJ
-         ZmumOGNNW3pC8S1A7jIkPa1ozuBTDcG3x86SmVdJ5wxAZvpxPQ60hL3nj8D8+MRGqUFp
-         7/feHFNij3B//41g9EBdZf7rNkyvNyqeusd4za5EFuY5EA16Lp8paDDzUN8jr459xWk7
-         87Jg6FYy2IkvgCVqqBJtikzk1JhSbn89zx9u2Nde1DAsD5QldTZ3j4YyZGnlypK/SKKg
-         zJ8RrX3VIQjYjbh/KNu4SKcfUuYm6bmrVQf2FuZ/5p5nxIBrSX3wfpBVRCMDIGxEAFqY
-         9nPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747643127; x=1748247927;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EB8Oc00xqk49eqIaVgN6SCH9WvXJ93D+KXaomxhB/Tw=;
-        b=XDI+nsrn6F0hIbAmZFAeFoljtHPWA4/MSzjDgqjJAq+RPQMI6qrAZd48wjp6o2P7AC
-         +p/mq02yReYhgpHmkiCiUBCWX4Ii5gZOEpcc/8dcSo9mZbmnf5omnpssYNC9ssaIgH5c
-         qZKOKludmMml8UlERV3k2xSHsStE0tRafdVX1xaAbKBve272EGRa5STrvR7XlGNO3Pek
-         lghppxliWC/Z9W7OtRSIcQ2ei1vU83RDd1LD/FANOUy2z1oFdm7nCTiOf4kxfAkqWwsb
-         0x3kTunabUP95yDkZH29lo2FSxGhjAZOgiaXjv904AJDSzebo25i/+3TZrkfPsJjZ8gZ
-         FT4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUYbb1fcg0ceLY1T729SKaIDFMnMqtrpIDZFCxzHiQvqZb/Iwd876xGj4Hxkr3DGHe9HKQB+EvMu2A=@vger.kernel.org, AJvYcCV1FVtUI3HwojKwtQ7Mr4ioDBO3iHDQqB/LIBFsDC3jRnvS0bXYLvutyGpVICChzduPuu15QXEVZraFXKI2@vger.kernel.org, AJvYcCVFrPgQbp6Q9J4wEokMni47+WXHgUJ/6rLlJ1nS2vtGXUOrlmspFH9OEGyGKXn6RA01RGzyOvM1HWlHVTVQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzipIKXTd0tMWeSs13mfEEerfnG42x2elsOqUU2a5w8Xu0mLiuO
-	+4+omqCZgBlpojpwEPbTrxNsyCa4XlbgiHRpqYKdXOW8UINuAQtF9ZvA
-X-Gm-Gg: ASbGnctP+sGoFGhspbRWukxypaUI+Lxf1Ji5FGkhEZU4gHb9pC6wMSLFGR6UCodTJ6i
-	CNA2gpv3Ks+nxd6A7QiZOJNSb307g2nh1DymnuenXzfSy8lDdLo17+zCHab9m3rLJ5eC2q5w8gg
-	JPrWo5d/Z5dB4DF4MBX3GHqqLn2nZuCP4Y/S9SNv1MqPQNfop/E8a7QBzpIryfCdISVogoHHn3g
-	u2ZveZB5ywby0Ja8VGGHh0Cn0+/UVtpz3O2pLuSLFvXkavpIGWr+jHyfPcA5Wov+G/8/U6+d9+2
-	6nbuABNdS9SR6bFHwaTvqYBunNVD+XoF3i+F0F7Ehd6ONV6dZQ==
-X-Google-Smtp-Source: AGHT+IH0FhaLeua24wAVXTMVkMGORVd6mm/ERqfZ62DUy9u0xQgAfyPXpBUDr58944/ivIlr9YjaJA==
-X-Received: by 2002:a17:903:2f05:b0:22e:5406:4f62 with SMTP id d9443c01a7336-231b39d7456mr214023755ad.24.1747643127199;
-        Mon, 19 May 2025 01:25:27 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-232046b3f98sm36107075ad.224.2025.05.19.01.25.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 01:25:26 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: neil.armstrong@linaro.org
-Cc: djakov@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH] interconnect: qcom: sm8650: enable QoS configuration
-Date: Mon, 19 May 2025 16:23:05 +0800
-Message-ID: <20250519082305.81258-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407-topic-sm8650-upstream-icc-qos-v1-1-93b33f99a455@linaro.org>
-References: <20250407-topic-sm8650-upstream-icc-qos-v1-1-93b33f99a455@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnCHcLiT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747643166; x=1779179166;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yAQG7CT+mqanmUd2f1Pd4pOmu/OZwX6kWCA/QHpkodk=;
+  b=WnCHcLiTiBX8tdYkhGwtGHnywmDvrItxLA4UrBcOTjBJiz/O58u2pTFv
+   JFNulL53Krs0uzLvLJ4gpK4yv/uH6QLq16GYHmnbVEls75n8ttfsSYpiU
+   Xvw5Z+Syv/SEJB+rVaxzsUE94mDhhdGj534+sQaZf/qp+PocwN42sd6k1
+   82xw1AcVXuUUjFa6IlU85KFnEJ85UkMK94doCZ4CuC+cGsGdS7GjuMut5
+   /Cq8M339hyofR5kXBXwVqr4mf07IkhIcN57YNYg62oz/veVPCjZuPJzwI
+   YnRSwO+0lM+r0gxVjwhhqEBKDQdBuyOyyypRlfrkfJp+Ibb21CWkQ4xpt
+   Q==;
+X-CSE-ConnectionGUID: LDvQ6KBuQqWKJLInVt0WFQ==
+X-CSE-MsgGUID: 1mPdJcvXRkSEGpw0tjY4cQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49434163"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49434163"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:26:04 -0700
+X-CSE-ConnectionGUID: TCqkIGRPSdSk5dN3KrV3Sw==
+X-CSE-MsgGUID: H3z9d4RPRgmoHVY3/zQ7xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139043905"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 19 May 2025 01:26:02 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGvot-000LHX-2I;
+	Mon, 19 May 2025 08:25:59 +0000
+Date: Mon, 19 May 2025 16:25:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>, patrick@stwcx.xyz,
+	Carsten =?iso-8859-1?Q?Spie=DF?= <mail@carsten-spiess.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: oe-kbuild-all@lists.linux.dev, Yikai Tsai <yikai.tsai.wiwynn@gmail.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] hwmon: (isl28022) Fix current reading calculation
+Message-ID: <202505191635.mix4vgrC-lkp@intel.com>
+References: <20250519061637.8796-2-yikai.tsai.wiwynn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519061637.8796-2-yikai.tsai.wiwynn@gmail.com>
 
-On Mon, 07 Apr 2025 17:16:47 +0200 Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> Enable QoS configuration for master ports with predefined values
-> for priority and urgency forwarding.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Hi Yikai,
 
-[...]
+kernel test robot noticed the following build errors:
 
-> +static const struct regmap_config icc_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +	.fast_io = true,
-> +};
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[...]
+url:    https://github.com/intel-lab-lkp/linux/commits/Yikai-Tsai/hwmon-isl28022-Fix-current-reading-calculation/20250519-142038
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20250519061637.8796-2-yikai.tsai.wiwynn%40gmail.com
+patch subject: [PATCH v1 1/1] hwmon: (isl28022) Fix current reading calculation
+config: s390-randconfig-001-20250519 (https://download.01.org/0day-ci/archive/20250519/202505191635.mix4vgrC-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191635.mix4vgrC-lkp@intel.com/reproduce)
 
->  static const struct qcom_icc_desc sm8650_mc_virt = {
-> +	.config = &icc_regmap_config,
->  	.nodes = mc_virt_nodes,
->  	.num_nodes = ARRAY_SIZE(mc_virt_nodes),
->  	.bcms = mc_virt_bcms,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505191635.mix4vgrC-lkp@intel.com/
 
-Hi, Neil. It seems that the config for clk_virt, mc_virt is not working
-on some devices. My device Oneplus Pad 2(pineappleP variant, mtp based,
-but without modem) shown the following.
+All errors (new ones prefixed by >>):
 
-Apr 30 01:56:16 oneplus-caihong kernel: qnoc-sm8650 interconnect-0: error -EINVAL: invalid resource (null)
-Apr 30 01:56:16 oneplus-caihong kernel: qnoc-sm8650 interconnect-1: error -EINVAL: invalid resource (null)
+   drivers/hwmon/isl28022.c: In function 'isl28022_read_current':
+>> drivers/hwmon/isl28022.c:164:3: error: 'sign_bit' undeclared (first use in this function); did you mean 'assign_bit'?
+      sign_bit = (regval >> 15) & 0x01;
+      ^~~~~~~~
+      assign_bit
+   drivers/hwmon/isl28022.c:164:3: note: each undeclared identifier is reported only once for each function it appears in
 
-Best wishes,
-Pengyu
+
+vim +164 drivers/hwmon/isl28022.c
+
+   151	
+   152	static int isl28022_read_current(struct device *dev, u32 attr, long *val)
+   153	{
+   154		struct isl28022_data *data = dev_get_drvdata(dev);
+   155		unsigned int regval;
+   156		int err;
+   157	
+   158		switch (attr) {
+   159		case hwmon_curr_input:
+   160			err = regmap_read(data->regmap,
+   161					  ISL28022_REG_CURRENT, &regval);
+   162			if (err < 0)
+   163				return err;
+ > 164			sign_bit = (regval >> 15) & 0x01;
+   165			*val = (((long)(((u16)regval) & 0x7FFF) - (sign_bit * 32768)) *
+   166				1250L * (long)data->gain) / (long)data->shunt;
+   167			break;
+   168		default:
+   169			return -EOPNOTSUPP;
+   170		}
+   171	
+   172		return 0;
+   173	}
+   174	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
