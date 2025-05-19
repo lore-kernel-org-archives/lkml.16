@@ -1,258 +1,103 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03661DEFE0
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78D21F12FB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747682492; cv=none; b=UR12VqhZm9zL7NXZZ6+4upWoFJQxhdYae7sLfl2i+T+6Wc9RrZbPiV5uFiXs7WaiRLk3PmyMSthaOVlsTKzUOb01cY+9YIFogn5SvUgywutroH8akfbR+i71ELMETwdzRtS2+B9tDx6u5Xswh/Y2f0Bzo+bE491yvbhIxOMw0FE=
+	t=1747682766; cv=none; b=pGkks2OuX+FqGq8SAxC7HrjiGVedRC4XQ1rZ7NDoxEuR2N8FeKgNfsTLqfxXYtSJAOH3faDUPlSVvIUBHxvMlakqUa+bdOh7S0rS8+A8+ECwYFaEheEz/z6j8Um6ok5lNn2bWeIiYWFhK8m4JNlZeSaV5hr6ROieWSGZ/lqvIXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747682492; c=relaxed/simple;
-	bh=ocs4PoPPTWbTf3NMu4FAH3UKU5tSIIh0TWkmyd//WRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N2pGU5nyx+UGTh5mx8211FvjLtX50F9IF1rnAIf3TT/65KGTbuxe3CopkocpcW1AMg7MNaFJVMmuQGLRmFYcCsq5TIvXxZfh34nu0eZJJ4Wco9dDmRQgFnOaBUnh+qNPt0UPgty24ff8NkFIWx07TK/B2m3/DC3HudUcWow7q34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u4kHjIgp; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747682766; c=relaxed/simple;
+	bh=9xuGA6fBDxFhENDH1SondD0iCWhT+zg49bTQjeSgZ+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ak9Pc7iUrRGB4WuJXm5YDC8vN8mcpeAJwoDcybCBooWhU378IbgAjiIQnfTpP4sJN3aydMr1vW3DvUt8tViqpLTJdOSMaXUO24Fp23Y/RZoxL7cnzxxpSL9R8fb++DSAxTEcT7hZj62ITk7nb44kkl2Q2twket13BaSlchJA7BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5Im6j0O; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4kHjIgp"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231ba6da557so395545ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:21:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5Im6j0O"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so5698899e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747682490; x=1748287290; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CBaPdK9KEC1FIJe6XWoniG9ySiw1tVbaWCS/pMC/19A=;
-        b=u4kHjIgp2QwBF0deqS5WqZXfAlXIBD8ap0GdG/BbkZwE09frepFEAQuCPKRxurkdes
-         ovivD9+urOnbCXE4xxgsJJr1446dQgGQF9SdNhZUXlb4ECUwvhO+anFo4wJILgVPIZ2H
-         5BDi/EGx38U6tR0z0UjRt0zG7H037DSIdh/7oqoujSgZfGTV/wkuKMPyohfc4QgNFjuZ
-         6VUnPz0tB9S8I8eCfE5ShgMBp7ELCzd/Mzfr3QvIRvcvT6aLihWbTAxbXyT52E2EUF5G
-         EwqtZpvrXzT5lfcy8VOM4nHMJP0HwubNhHnQyDS+sMmyCW0tBTVqRXcSLmqClN778E3o
-         l2cA==
+        d=gmail.com; s=20230601; t=1747682763; x=1748287563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+u2mOvp6gwGiK4quOZ9KpEErRK+CQKraF/9fsG4d2Bk=;
+        b=f5Im6j0OxeJsLA7+5Vk7MSrKaSMVT1+c2/oNpNddk5XVAE8uOgHIgSZ/WP1l16wb3y
+         jQzyTe7KcNeIe2KWu9BSPosgnrUtnt9C8GsrV0FwDlckpOBtF0IaSk+0G9SH0Qud/rCD
+         TRWRcu3i3IGGrWN/5wqol2v9xa5tae/8VuDeyJIebCRmiFg49sGkrZN7nkw0fvX6Dhm9
+         DcX4NKmjsI2/0lml1Fb2q+uVLImHelCHALuC9+iO0cmzRWFRKAZEhiSGjICMxaK5uu1f
+         Eq4BojHXju+i9lNrGaoEU+CHeq+exxNFKZ+Y0GLM572t5gnGFFiZZLWcRGoyOpTANHGa
+         /AKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747682490; x=1748287290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CBaPdK9KEC1FIJe6XWoniG9ySiw1tVbaWCS/pMC/19A=;
-        b=KhcPmw4mNQhX0wyra55zjKhpeWIFraHNzpQdXDIk0YoL54KvkM/YeyNuagzrL1dQvi
-         HcYGRNneqYT3vM0gwyIYOPiq3paPSYxlc+1DwCXMODw91fB1Q3kBm7SCH504nWL3oWJd
-         JR8ilwWROScaJmDu3vXO6MwNOBgj2mCEjLupJCN2rha6pEUbke+gWZuz2kRJz8hjOaPF
-         QnKTKaUPd1UbKXY3jzpSW43de4QRH5QjXRQcvy7ISkwmlGadAscLHGKLsR8MAU76awbd
-         oLMECpuseMf6jHIa7AUGYhmKFM6bHdbTCtw3IVS0FYpP1EBdcxASSLtXqUUw0wy0OpMd
-         SffQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUanp9hAORoSKXsrYGHbKrZjBHrDfWx2+fCnCnTj7NfyP3R8LqD3sq3w1soab1mob73FtsCDMCirl9gEMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlAsu9lTmPJIApN6DNJOgt9wKIz4Paa2zbRmgYPJV3tZjsLKYP
-	/08KPKgYMWTVu9pg0OGrVVcfGOeQM/DirgP+V6ekUcHBPLvAQSE62B4XS6yv8bY6QXQkiZNVJPd
-	69vu6TK1gbfyWwc4rgRrO5S7k+kRFbA6aSaKbgZa7
-X-Gm-Gg: ASbGncs0Q5Ls2r9gEadMc/vaZtD5CK8KYLv1PuO35kO2U2a8954jdMoRdpyRUJbZvOR
-	3PWDkNMpRPDq6+wQWdkKOe3Zf1I+0RleizDUknB7O1MzCo5uqd2xAB9RA30IAj2wPkgjV0LO94L
-	5jGts7tIyr0vUDTS37QAmrhI9EWrszUlWzjf1cwyEvMNtPwDmOydfwxmmMlD0ilXg=
-X-Google-Smtp-Source: AGHT+IFQTBMhjQ4UqSbGbWsEL1d6RocSL1UQvOsthQP8iEU6ov/g1bSMRXI7uUXn0vaXWPww9RbtJgdH1n1G9/yz4js=
-X-Received: by 2002:a17:903:228c:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-231ffd0e58dmr5717895ad.12.1747682489831; Mon, 19 May 2025
- 12:21:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747682763; x=1748287563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+u2mOvp6gwGiK4quOZ9KpEErRK+CQKraF/9fsG4d2Bk=;
+        b=KzRStf90CoU4v911+rLNjy/BJv9xmuroVFs4KoNyhS8vVt3d2OFDI0ByAhIdCrgbo0
+         u4S7ZFHUmaAHxM66klPIpQE1F5JvrJYrqjXRBqTUOTXFr52eAnLpi/oGTi4PfY22xkMP
+         rNUSTwQi4usKza/iSFvOWz8YpSiudz4mVygniRD/+c7IKMVmuuD5zcw8oWXOTW2T3qBt
+         OGMDq4nrRewxiTykuPJQ9Zm3l93C/Jbk0sHqSx4LonJoq4b5xuMGgSM9SFosKtqFK0Hi
+         hJZRERBdvPo1e63x+Ghbdt3Gb7V66+uyuWx6rhEvWDnf47LV5LdZMtPMx68ifISfRPmE
+         6ieQ==
+X-Gm-Message-State: AOJu0YzaEu532m/ofbZJExLMTcONon5oLDi7RNunyoYt/jjPcgkuxG36
+	eRGd/syljS1Nu7RqRHDBeDhXcBG8R0PlnR+v9At7dsdLvSyhLds8xObhsHIaIl5d
+X-Gm-Gg: ASbGncsBtKvoif6AfKiiVx8p9M1qeufAhXs0eEccmKxEjp+dgeGJTgY1SaKeOf69hIP
+	SqugJ2sk6pFd4i3WD8fE5AuM+fA3+Qn8TRZRYNOjf+IKCu5/mSN9sXGNoazSvNyfZFeZEnXcffw
+	geIkme30McWfaGg/A7LnQcYIrakNpVMr4SyP6lYBFW82F68XUNJnA4EoUmdTCl8RAq34F7KbxNO
+	Vp/kbZMmRvbaEJB03Jcq24iqXdPwSNgNLgckXYN/YzcC2+Cnl+zy7kDPoMoRqDezQafJr/XXq8c
+	Q74cR3oNlY4QQ52lGvrBru9qqj9i9YS1C+0Ng7IhqKG7dp6kPygBqJrmYNmhqsa/LWHbtovdsyX
+	6oNO4MGxV9itnhkzYJltF5bHcf98R
+X-Google-Smtp-Source: AGHT+IF+MDeZP3QIBEJzINtTXk6BXFYjgitD8BkKJznP22b6VtQvUEg9qNjqR89fCuy7utStHaoGKw==
+X-Received: by 2002:a05:6512:2216:b0:549:39b1:65c2 with SMTP id 2adb3069b0e04-550e72443e9mr4107818e87.48.1747682762396;
+        Mon, 19 May 2025 12:26:02 -0700 (PDT)
+Received: from anton-desktop.. (109-252-120-31.nat.spd-mgts.ru. [109.252.120.31])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017ea8sm1998021e87.113.2025.05.19.12.26.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 12:26:01 -0700 (PDT)
+From: ant.v.moryakov@gmail.com
+To: trix@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	Anton Moryakov <ant.v.moryakov@gmail.com>
+Subject: [PATCH v2] tiny-printf: handle NULL pointer for %s format string
+Date: Mon, 19 May 2025 22:25:57 +0300
+Message-Id: <20250519192557.1505924-1-ant.v.moryakov@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513083123.3514193-1-dongchenchen2@huawei.com>
- <CAHS8izOio0bnLp3+Vzt44NVgoJpmPTJTACGjWvOXvxVqFKPSwQ@mail.gmail.com> <34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
-In-Reply-To: <34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 19 May 2025 12:20:59 -0700
-X-Gm-Features: AX0GCFuTTbdFDQ3Q3jzbOg1ekJYHd7I6fnzt95zb6m3zDrMKz8yKVB-QpAKu66I
-Message-ID: <CAHS8izPh5Z-CAJpQzDjhLVN5ye=5i1zaDqb2xQOU3QP08f+Y0Q@mail.gmail.com>
-Subject: Re: [BUG Report] KASAN: slab-use-after-free in page_pool_recycle_in_ring
-To: "dongchenchen (A)" <dongchenchen2@huawei.com>
-Cc: hawk@kernel.org, ilias.apalodimas@linaro.org, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhangchangzhong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 13, 2025 at 8:11=E2=80=AFPM dongchenchen (A)
-<dongchenchen2@huawei.com> wrote:
->
->
-> > On Tue, May 13, 2025 at 1:28=E2=80=AFAM Dong Chenchen <dongchenchen2@hu=
-awei.com> wrote:
-> >> Hello,
-> >>
-> >> syzkaller found the UAF issue in page_pool_recycle_in_ring[1], which i=
-s
-> >> similar to syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com.
-> >>
-> >> root cause is as follow:
-> >>
-> >> page_pool_recycle_in_ring
-> >>    ptr_ring_produce
-> >>      spin_lock(&r->producer_lock);
-> >>      WRITE_ONCE(r->queue[r->producer++], ptr)
-> >>        //recycle last page to pool
-> >>                                  page_pool_release
-> >>                                    page_pool_scrub
-> >>                                      page_pool_empty_ring
-> >>                                        ptr_ring_consume
-> >>                                        page_pool_return_page //release=
- all page
-> >>                                    __page_pool_destroy
-> >>                                       free_percpu(pool->recycle_stats)=
-;
-> >>                                       kfree(pool) //free
-> >>
-> >>       spin_unlock(&r->producer_lock); //pool->ring uaf read
-> >>    recycle_stat_inc(pool, ring);
-> >>
-> >> page_pool can be free while page pool recycle the last page in ring.
-> >> After adding a delay to the page_pool_recycle_in_ring(), syzlog[2] can
-> >> reproduce this issue with a high probability. Maybe we can fix it by
-> >> holding the user_cnt of the page pool during the page recycle process.
-> >>
-> >> Does anyone have a good idea to solve this problem?
-> >>
-> > Ugh. page_pool_release is not supposed to free the page_pool until all
-> > inflight pages have been returned. It detects that there are pending
-> > inflight pages by checking the atomic stats, but in this case it looks
-> > like we've raced checking the atomic stats with another cpu returning
-> > a netmem to the ptr ring (and it updates the stats _after_ it already
-> > returned to the ptr_ring).
-> >
-> > My guess here is that page_pool_scrub needs to acquire the
-> > r->producer_lock to make sure there are no other producers returning
-> > netmems to the ptr_ring while it's scrubbing them (and checking after
-> > to make sure there are no inflight netmems).
-> >
-> > Can you test this fix? It may need some massaging. I only checked it
-> > builds. I haven't thought through all the possible races yet:
-> >
-> > ```
-> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> > index 2b76848659418..8654608734773 100644
-> > --- a/net/core/page_pool.c
-> > +++ b/net/core/page_pool.c
-> > @@ -1146,10 +1146,17 @@ static void page_pool_scrub(struct page_pool *p=
-ool)
-> >
-> >   static int page_pool_release(struct page_pool *pool)
-> >   {
-> > +       bool in_softirq;
-> >          int inflight;
-> >
-> > +
-> > +       /* Acquire producer lock to make sure we don't race with anothe=
-r thread
-> > +        * returning a netmem to the ptr_ring.
-> > +        */
-> > +       in_softirq =3D page_pool_producer_lock(pool);
-> >          page_pool_scrub(pool);
-> >          inflight =3D page_pool_inflight(pool, true);
-> > +       page_pool_producer_unlock(pool, in_softirq);
-> >          if (!inflight)
-> >                  __page_pool_destroy(pool);
-> > ```
-> Hi, Mina!
->
-> I tested this patch and the problem still exists.
-> Although this patch ensures that lock access is safe, the page recycle
-> process
-> can access the page pool after unlock.
->
+From: Anton Moryakov <ant.v.moryakov@gmail.com>
 
-Sorry for the very late reply; got a bit busy with some work work.
+Avoid NULL pointer dereference in string formatting by printing "(null)"
+when a NULL pointer is passed to a %s format specifier.
 
-My initial analysis was wrong as the test shows with the candidate
-fix. I took another look, and here is what I can tell so far. The full
-syzbot report is here for reference:
+This change makes the behavior consistent with standard printf()
+implementations and prevents potential crashes in constrained environments.
 
-https://syzkaller.appspot.com/bug?extid=3D204a4382fcb3311f3858
+Signed-off-by: Anton Moryakov <ant.v.moryakov@gmail.com>
 
-page_pool_release_retry is supposed to block freeing the page_pool
-until all netmems have been freed via page_pool_put_unrefed_netmem
-using the inflight logic. What is clear from the syzbot report is that
-this inflight logic didn't work properly, because the
-page_pool_put_unrefed_netmem call happened after
-page_pool_release_retry has allowed the page_pool to be freed
-(__page_pool_destroy has already been called).
+---
+ lib/tiny-printf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The inflight logic works by taking the diff between
-`pool->pages_state_release_cnt` and `pool->pages_state_hold_cnt`.
-pages_state_hold_cnt is incremented when the page_pool allocates a new
-page from the buddy allocator. pages_state_hold_cnt is incremented at
-the end of the page_pool_put_unrefed_netmem.
+diff --git a/lib/tiny-printf.c b/lib/tiny-printf.c
+index 2a7a4d286c0..df5f6829db5 100644
+--- a/lib/tiny-printf.c
++++ b/lib/tiny-printf.c
+@@ -307,6 +307,8 @@ static int _vprintf(struct printf_info *info, const char *fmt, va_list va)
+ 				break;
+ 			case 's':
+ 				p = va_arg(va, char*);
++				if (!p)
++					p = "(null)";
+ 				break;
+ 			case '%':
+ 				out(info, '%');
+-- 
+2.34.1
 
-We don't expect new pages to be allocated by the page_pool owner after
-page_pool_destroy has been called, so pages_state_hold_cnt is supposed
-to not move after page_pool_destroy is called I think.
-pages_state_release_cnt should be <=3D pages_state_hold_cnt at the time
-of page_pool_destroy is called. Then when all the inflight netmems
-have been freed via page_pool_put_unrefed_netmem,
-pool->pages_state_release_cnt should be =3D=3D to
-pool->pages_state_hold_cnt, and the page_pool should be allowed to be
-freed.
-
-Clearly this is not working, but I can't tell why. I also notice the
-syzbot report is from the bpf/test_run.c, but I don't think we have
-reports from prod, so it may be a test issue. Some possibilities:
-
-1. Maybe the test is calling a page_pool allocation like
-page_pool_dev_alloc_pages in parallel with page_pool_destroy. That may
-increment pages_state_hold_cnt unexpectedly?
-
-2.  Maybe one of the pages_state_*_cnt overflowed or something?
-
-3. Memory corruption?
-
-I'm afraid I'm not sure. Possibly littering the code with warnings for
-unexpected cases would give some insight. For example, I think this
-would catch case #1:
-
-```
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 4011eb305cee..9fa70c60f9b5 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -536,6 +536,9 @@ static struct page
-*__page_pool_alloc_page_order(struct page_pool *pool,
-        alloc_stat_inc(pool, slow_high_order);
-        page_pool_set_pp_info(pool, page_to_netmem(page));
-
-+       /* Warn if we're allocating a page on a destroyed page_pool */
-+       DEBUG_NET_WARN_ON(pool->destroy_cnt);
-+
-        /* Track how many pages are held 'in-flight' */
-        pool->pages_state_hold_cnt++;
-        trace_page_pool_state_hold(pool, page_to_netmem(page),
-@@ -582,6 +585,8 @@ static noinline netmem_ref
-__page_pool_alloc_pages_slow(struct page_pool *pool,
-                page_pool_set_pp_info(pool, netmem);
-                pool->alloc.cache[pool->alloc.count++] =3D netmem;
-                /* Track how many pages are held 'in-flight' */
-+               /* Warn if we're allocating a page on a destroyed page_pool=
- */
-+               DEBUG_NET_WARN_ON(pool->destroy_cnt);
-                pool->pages_state_hold_cnt++;
-                trace_page_pool_state_hold(pool, netmem,
-                                           pool->pages_state_hold_cnt);
-@@ -1271,6 +1276,8 @@ void net_mp_niov_set_page_pool(struct page_pool
-*pool, struct net_iov *niov)
-
-        page_pool_set_pp_info(pool, netmem);
-
-+       /* Warn if we're allocating a page on a destroyed page_pool */
-+       DEBUG_NET_WARN_ON(pool->destroy_cnt);
-        pool->pages_state_hold_cnt++;
-        trace_page_pool_state_hold(pool, netmem, pool->pages_state_hold_cnt=
-);
-```
-
-If you have steps to repro this, maybe post them and I'll try to take
-a look when I get a chance if you can't root cause this further.
-
---
-Thanks,
-Mina
