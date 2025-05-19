@@ -1,98 +1,212 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C01283FF2;
-	Mon, 19 May 2025 14:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F377283C8D;
+	Mon, 19 May 2025 14:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665716; cv=none; b=qcSHavcIq5xrujG+oXNRvoxpGL9lbhxhOjArV8dzTEhxlX0khqs2pN5Eo4sgjJGVkirKa8H7T1NeJ454Cp6Pzj6Re+Sz4gZdQxjzoDjjWpKMSHHz7CJc6KT0CA/40sgOt3/gduEicyjjnCKfp9Bw2cDnePPFWbeSb8Gmgq565CY=
+	t=1747665731; cv=none; b=hSKMDE3stKKW8/Uj1Z+ebaGe0dIZZiAHoyBquBS1sPhfVhUvV7XMGIwp3pPwhPHtFrNVBdx00pGkP9QOTajVLkoExlSvNIL1rweQOVLm3pvNlYabrzU5s5P+bOGIIko6iUj620yLCXY8h5ti4AAYOJ2lrXtt36ixpSpKP6tCPhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665716; c=relaxed/simple;
-	bh=ML143J+/Kn3jIc1eIZG0hGbK1RpU7d4laW0wjMgBeYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bs4TlNUzwNzqooBy1XObAHbARcQlgEPwy1m0VawddSl7un08AjuJoeH5wyWdmQtciazjWJTCJjaRfGriSfCWxvw6G5GlL1JufhAmF7GzpJA70VitAf5BSFmLb3fXlwAG7UGEPHnsZUKqfbDvvl6+AzieTNsI/vfjRgugPdQEyjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUPgu37h; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747665731; c=relaxed/simple;
+	bh=DaOCYWXng+bb+aRYRVQm2JJU3PH7hKp12qAzn1qQlzg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=buGjKjaQQdAI1YHgYzWS/nNySfie0jkgF0cq5rQZipnEC1YJTwJNx3XjISoCVnH5Z0c3slLWnGNbQcurhxKniLnsMcAuJhiekSxd4b37GWRKDUXrJi5UamVpmJ+iClPP2bWG48lsDdVTxW3IJLuQ+Hu97FsZZAR0AChlnhW5tyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Fl3xvs8S; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUPgu37h"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742caef5896so1249347b3a.3;
-        Mon, 19 May 2025 07:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747665714; x=1748270514; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aw5n6tsCSDHyMQ+j8LxQhjXH9U1Kb6RLRDfUGa4F/V4=;
-        b=mUPgu37hSPcQt2WnW8HbJYQewq1ToNC8m+mcrb+SPXtWHVS3lJ1VGrruB0t23v3rAi
-         z5Ncd6xrdft4MNg09ch2XcnwhVt6IE8yvpi9vk1wc9kt/if5SVtgrPo8TxrskQ/90Lvf
-         y+edilCXAsIo8d4SvaPRAjLjpc4/I2AkNjNwNNNX629CTBTAbcdpzO6zTFvXQUO0q4yB
-         sTNnk2vW7YOKFePMttYZWJV0Z9HvrynACQ8AmXqozIDJBYdGPPvQVamC32qB6fM2SVDZ
-         OPLZXuEMEq/XsMUExln3sTWyuwxJmW24giQ82XjPCkpp7VgVOytmTQwyL+nmNYV31Jqx
-         1frw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747665714; x=1748270514;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aw5n6tsCSDHyMQ+j8LxQhjXH9U1Kb6RLRDfUGa4F/V4=;
-        b=TY1qd2Bq33E6Sn3Or8j0J70Cq+Ihm/A3VmjEUzu5kP1Dma+KnO0l5PJ8Zwgv6GDWEw
-         p+31N7Rn0Rd0VbO5O4H2smCB1AJoIoIkLhLb+xRPxnyTlnSLlo/Ts9b9CKgQdb86V9QG
-         6Eo8gAkM/lqReBTi09ljrI2hoFWrTpCE5qzeG2nWMUoQHypbD6ipiQRRNRaduNGYElBx
-         CVpkwBU4JUEQhj4nRmqyoYUYAnKZ0Mi1RoIcW0MypDo6LA5Scf62QRbmY+Dmc6NEtcys
-         VHMQ6w0VUU0HGIyUwXYQNB4Qx+UuojcTPWvgtO7JfjgqlYSCM3bPnZKcV8JAGQx2/O9C
-         sRIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdl0a421Lkbr5ZJILOU818QrDFI9TZQYsBJX4hhhyBpj3YQCBk9obYvEWRtMvhXjWyLsFqEyPU9o9fSDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwknwaICgIpq2iPA4OuByp2A8Df2CYUcbeeTvEvhrNahD+ggKGy
-	H+QUn2gs9eXQiCfyi2q8faBJFY595HEhydKYykQzMEmSB3KEamjcCMw=
-X-Gm-Gg: ASbGncvsMu8nMtaaxGpZIXTGAGRxFF5F7a+tZ31GW/zem0o8+1/dEMvAb9SgvOO2oaM
-	UwjE84d7h9gGjNn63nPJZf1if8YFMLlApDHVUPecxgbsQjH089+zkXxzsm/XR6ht0mm8433Ytgt
-	SurHkQIEmchrX43DgUtik8KKH51jBqRVLKLBfkIWAlC3+9uLcxVL1hQ0cJ3xOwp71aLRY/PJpaR
-	tcCNBGDhRRAQMemdzuJiz7ncJoo0fYx/kNBCa4zoeU912Qz4rFsO+p+3Y4O71P8ZGnvAwrR0E5C
-	ir8WvmHW7FBt3F6lXy7asahY9RsPgjoEAzVPrcHJhYG3fjRzCPLMteOXnMBLmm19XvIiXx7nI8Y
-	5l633+HFNpIvJ
-X-Google-Smtp-Source: AGHT+IHtUXVvbyfz/wUk/NPtlQsWt3ANZFh5Vd5DCTyznNBWdm3FahFaArdDxlec41yDtf15OLtwkA==
-X-Received: by 2002:a05:6a21:33a5:b0:1fe:6bbf:af22 with SMTP id adf61e73a8af0-21621875a3dmr19276547637.1.1747665714077;
-        Mon, 19 May 2025 07:41:54 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a96e58a9sm6304089b3a.34.2025.05.19.07.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 07:41:53 -0700 (PDT)
-Date: Mon, 19 May 2025 07:41:52 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	sagi@grimberg.me, willemb@google.com, almasrymina@google.com,
-	kaiyuanz@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: devmem: drop iterator type check
-Message-ID: <aCtDMJDtP0DxUBqj@mini-arch>
-References: <20250516225441.527020-1-stfomichev@gmail.com>
- <ab1959f9-1b94-4e7f-ba33-12453cb50027@gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Fl3xvs8S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:To:
+	Content-Type; bh=+bDEs4YvFGFvsVERzFVHp93VMAxXcdRq+jn9IvMHqRw=;
+	b=Fl3xvs8SvCi4Zhs3rMFvVXx3NsYnUHeww1T5Sd97BYxRIlwVUhBWe8IKWrHOxd
+	4yvmZZVKUJD8MQ2WoeD3aiCt99fhrpUkpPRUfodCoN9xHplfOC5t9wu46gYWUarP
+	bLH6qbTSZaF+QBXqNBwwSYzPJ2hlkbCgnrk/niP8TcX48=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD31xYTQytocPGwCg--.349S2;
+	Mon, 19 May 2025 22:41:24 +0800 (CST)
+Message-ID: <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
+Date: Mon, 19 May 2025 22:41:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ab1959f9-1b94-4e7f-ba33-12453cb50027@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+From: Hans Zhang <18255117159@163.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+Content-Language: en-US
+In-Reply-To: <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD31xYTQytocPGwCg--.349S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4UJr4kAw13XFy5try7KFg_yoW7tF4kpa
+	yrGa1YkrWkGF92van2k3WIqFyYyas3t345WrykGw13XFnIvFyjqrWSvFWYkFZIgrZYgw45
+	ZrW0v347Wrn8AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UjiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwZSo2grPXGRfAAAsO
 
-On 05/19, Pavel Begunkov wrote:
-> On 5/16/25 23:54, Stanislav Fomichev wrote:
-> > sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
-> > iovs becomes ITER_IOVEC. Instead of adjusting the check to include
-> > ITER_UBUF, drop the check completely. The callers are guaranteed
-> > to happen from system call side and we don't need to pay runtime
-> > cost to verify it.
+
+
+On 2025/5/19 22:21, Hans Zhang wrote:
 > 
-> I asked for this because io_uring can pass bvecs. Only sendzc can
-> pass that with cmsg, so probably you won't be able to hit any
-> real issue, but io_uring needs and soon will have bvec support for
-> normal sends as well. One can argue we should care as it isn't
-> merged yet, but there is something very very wrong if an unrelated
-> and legal io_uring change is able to open a vulnerability in the
-> devmem path.
+> 
+> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>
+>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>> The following series introduces a new kernel command-line option 
+>>> aer_panic
+>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>> mission-critical environments. This feature ensures deterministic 
+>>> recover
+>>> from fatal PCIe errors by triggering a controlled kernel panic when 
+>>> device
+>>> recovery fails, avoiding indefinite system hangs.
+>>
+>> Why would a device recovery failure lead to a system hang? Worst case
+>> that device may not be accessible, right?  Any real use case?
+>>
+> 
+> 
+> Dear Sathyanarayanan,
+> 
+> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
+> SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
+> design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers 
+> have designed it this way.)  For example, when many mobile phone SoCs of 
+> Qualcomm handle AER interrupts and there is a link down, that is, a 
+> fatal problem occurs in the current PCIe physical link, the system 
+> cannot recover.  At this point, a system restart is needed to solve the 
+> problem.
+> 
+> And our company design of SOC: http://radxa.com/products/orion/o6/, it 
+> has 5 road PCIe port.
+> There is also the same problem.  If there is a problem with one of the 
+> PCIe ports, it will cause the entire system to hang.  So I hope linux OS 
+> can offer an option that enables SOC manufacturers to choose to restart 
+> the system in case of fatal hardware errors occurring in PCIe.
+> 
+> There are also products such as mobile phones and tablets.  We don't 
+> want to wait until the battery is completely used up before restarting 
+> them.
+> 
+> For the specific code of Qualcomm, please refer to the email I sent.
+> 
 
-Any reason not to filter these out on the io_uring side? Or you'll
-have to interpret sendmsg flags again which is not nice?
+
+Dear Sathyanarayanan,
+
+Supplementary reasons:
+
+drivers/pci/controller/cadence/pcie-cadence-host.c
+cdns_pci_map_bus
+     /* Clear AXI link-down status */
+     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+
+https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+
+If there has been a link down in this PCIe port, the register 
+CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
+continue.  This is different from Synopsys.
+
+If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD saving 
+files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it causes 
+CPU Core1 to be unable to send TLP transfers and hang.  This is a very 
+extreme situation.
+(The current Cadence code is Legacy PCIe IP, and the HPA IP is still in 
+the upstream process at present.)
+
+Radxa O6 uses Cadence's PCIe HPA IP.
+http://radxa.com/products/orion/o6/
+
+Best regards,
+Hans
+
+> 
+>>>
+>>> Problem Statement
+>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>> traditional error recovery mechanisms may leave the system unresponsive
+>>> indefinitely. This is unacceptable for high-availability environment
+>>> requiring prompt recovery via reboot.
+>>>
+>>> Solution
+>>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>>
+>>> Patch Summary:
+>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, 
+>>> explaining
+>>> its purpose and usage.
+>>>
+>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>> management in PCI core.
+>>>
+>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
+>>> mode is active.
+>>>
+>>> Panic Trigger: Modifies recovery logic to panic the system when recovery
+>>> fails and aer_panic is enabled.
+>>>
+>>> Impact
+>>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
+>>> reboots.
+>>>
+>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>
+>>> Dependency: Requires CONFIG_PCIEAER.
+>>>
+>>> For example, in mobile phones and tablets, when there is a problem with
+>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>> alternative method to make the system panic without waiting for the
+>>> battery power to be completely exhausted before restarting the system.
+>>>
+>>> ---
+>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>> system when they are linked down.
+>>>
+>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>
+>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>
+>>>
+>>> Since the design schemes of each SOC manufacturer are different, the AXI
+>>> and other buses connected by PCIe do not have a design to prevent 
+>>> hanging.
+>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>> system needs to be restarted.
+>>>
+>>>
+>>> Dear Mani,
+>>>
+>>> I wonder if you know how other SoCs of qcom handle FATAL errors that 
+>>> occur
+>>> in PCIe link.
+>>> ---
+>>>
+>>> Hans Zhang (4):
+>>>    pci: implement "pci=aer_panic"
+>>>    PCI/AER: Introduce aer_panic kernel command-line option
+>>>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
+>>>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
+>>>
+>>>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
+>>>   drivers/pci/pci.c                              |  2 ++
+>>>   drivers/pci/pci.h                              |  4 ++++
+>>>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
+>>>   drivers/pci/pcie/err.c                         |  8 ++++++--
+>>>   5 files changed, 37 insertions(+), 2 deletions(-)
+>>>
+>>>
+>>> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+>>> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
+>>> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
+>>
+
