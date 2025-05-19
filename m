@@ -1,118 +1,135 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B00D26B2D8;
-	Mon, 19 May 2025 08:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9003226B2D8;
+	Mon, 19 May 2025 08:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644124; cv=none; b=FTkcT+dPsCXUmxchSZCs7phxv4I1Ddi7n375jHGY3Yuav0aOXWf3B4y0vqOW9MoCQtx2bJefzQRdR7IyNhmBbeCo3NR/Ohv+4uE/cgXQ0Af9bFeauvIWiv3yG14jL8CeLdN85Mz0LPWJmhEZuIv/6XQiXgXlOZmOIlmS5OSdAZ8=
+	t=1747644146; cv=none; b=HKdKxxV4UqFQgv4UJ1Y2GGSZi9Q5K42+J4tzl/f2GKhpKwoZ5WEEAX+HsxAZt6F/j3Zfm00HSLtC9EgK1KIxxPoUI3VsetFqVMlx4MOtdhquYr2eIFIRceIpEUZA5wmAhtAZm4cwDaDu/zrGFNmV9V66lXE9XPnFB7bKKflSVUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644124; c=relaxed/simple;
-	bh=M6YH7hLJw/FAhL1abjDJ4cyTRkLOUbxnR154Ohgc8dY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ze6J3DFoVJ22QRvz3wm+tTgVe7AYgtn3ih4bVTuAvibzqZLzObfFDl70cmU/C/SDkCbNSHbtJev3hXwbmUf9ToBHqV1dj1UxB3YLjqLQ4ZLGBKR1j/60PHvlwH7X8OREsEunrpoL5NPaKxw8Ty/5WsijDtBx5/zpg92wDR7GHDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRvkv4ke; arc=none smtp.client-ip=209.85.216.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747644146; c=relaxed/simple;
+	bh=/HRLDkt+Ui17Ewjay2IkB2Ip02Jr3M9xwlPXp7quBVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tdk/4DmM0slBbgKAApSLzxk2ZlrTRhKvidk2NB1ixwfHc3rrCWicmbUWy/8KNyPJ7+aBod7dkhAe+Pqt6XG1Rj8aPEZzD3BpWfVTcLDcASs3AD4nfZo6+pLEeiw5M2CHRcM/Jaz60qfyKpzxt9S20qGkstn8m2u2FNqd9GVSD7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vyWqfl2e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aqomLv1G; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRvkv4ke"
-Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-30ea7f783a0so2238503a91.1;
-        Mon, 19 May 2025 01:42:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747644122; x=1748248922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TzWt6m0lDRu2ZdNfH+iSSvH3DFXB/9zKcDZo79oc998=;
-        b=mRvkv4ke7n7/lmoA4eI2Sj8uSMoJdE0wB8zzzYr8CnkmpnzV5oA6iasWR0Y18h8cTs
-         CbDHafolUNPQQSJwxKYXyYbQMZvRxXr/eT1ByApe3e+YFZDXxDAe++nKNTEhOlH456Tw
-         qO5c1eN8BzIuxOYI4leYN7/lKayfDtSpEEnd7hcNZRNdCBdr0BOoFvEkMpo753Y4mEUK
-         u0G9rYTXIFNIgZFNAfeO3sFHwEhzHA8SvU0a2OzMF1JNILmVhSI9uQy4jDpxX+6n6jkx
-         nyetwZe+EqtJKuXDjlOAb/vJJzvm/xOCsnGVgTed7EGiNoAEXv5iF6wsFtsHdEelg4cP
-         G8Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747644122; x=1748248922;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TzWt6m0lDRu2ZdNfH+iSSvH3DFXB/9zKcDZo79oc998=;
-        b=C2SMgmqH0nj8IcKA/Y5F2Td1IdIqcgb+EbE00auK1/g5hfenHY5kimpJyc5DjsOL/T
-         n3HAasAGZUTUhL5lsrU9s7uPOHzd5PHT0Tx0eB5LNs9Pz+byMO3zF2I0aFfdVMty3uyT
-         TKHamwExpcX6E/8fS5kVqXSQkftxNYCb12b1gCW3ibePhBG9/Nw+uKI+LAXA/nBd6zNg
-         BktNcCSNZF7jAXAfKQYmnGuk7nJHFUozMhjbCPm1P93ybMqJaRSOzDfThGpMEUZ/HMzz
-         Fei50a5z+9pnxNKqP/+Ew7X+E3vOnZMIKlusBVOfhdVqxrscE+QKsdU0oSECSiRaz7dK
-         wjYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxCMMmXtTNtF2cOdGhNfVCrlx5laoWitG8EDuNDm0/Hnt/QDP9USz7iLdgrir/Niky/+UIsXDyLoEeww==@vger.kernel.org, AJvYcCWrPUv+uq1rEnAeXkK20OO9bs0zrsZXW6G4itdRMPIUPVAlgA8juTkfGLquHGk54R1otq5WQHjZNMgyV0EI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG5y02fnn0BlJXOIpKdzVswxW2TtbBT/dtCvClWDVxtb4HLYNZ
-	B6PecFBj0oFNQM7siVi8yj24xbXcM+09OEdM0UKJ3VkZGi1/gNFWebJX
-X-Gm-Gg: ASbGnct22VvrJZihhzZgwxNTjajDMm9Fu2OBflwrzHbmUOsWwYNJG/3k1AokSmHB/aF
-	i60VkBEyDM+hUvZyTgM9mSAOutn+RNkXk2V3olEdmquiMZ+OIV9fu+yq8ufsXSzvYygN+3okQ+L
-	kYFk2XpL4muWT0NYFWcWPFqs65gQ9ejiSZfY7quJNin7dzaxGB/8QCyeKWBMkH1vmMdopwQNan7
-	4T5sLztCdq8ugbJbSMx9D4YB3lxMWAtiubI+EiWdDN2fHQeDBcHQrcZps5gvn/ECglRP6wTRJV/
-	IFiEnAcCB4ju7Bq3VvbFWtaSHxO2K4sSJxlmR25RVYKXenaOwB5pevEQ/1/eB0s3uFykBZEHTsj
-	GvNOxXJm5DSkEUCFLo+miheKiD5F/pq022s4=
-X-Google-Smtp-Source: AGHT+IHp2B3z4W2bMyd5TBuk4PgK8+n1UaYCOLFHzmeY+snMZLImvlBRPKDCnxDxS2d4pCyCurKslw==
-X-Received: by 2002:a17:90b:3905:b0:2fe:b8ba:62de with SMTP id 98e67ed59e1d1-30e7d5a96d7mr18939544a91.25.1747644122485;
-        Mon, 19 May 2025 01:42:02 -0700 (PDT)
-Received: from ubuntu20.wiwynn.corp (39-14-65-183.adsl.fetnet.net. [39.14.65.183])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401768sm9870275a91.3.2025.05.19.01.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 01:42:02 -0700 (PDT)
-From: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>
-To: patrick@stwcx.xyz,
-	=?UTF-8?q?Carsten=20Spie=C3=9F?= <mail@carsten-spiess.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] hwmon: (isl28022) Fix current reading calculation
-Date: Mon, 19 May 2025 16:40:51 +0800
-Message-Id: <20250519084055.3787-2-yikai.tsai.wiwynn@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250519084055.3787-1-yikai.tsai.wiwynn@gmail.com>
-References: <20250519084055.3787-1-yikai.tsai.wiwynn@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vyWqfl2e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqomLv1G"
+Date: Mon, 19 May 2025 10:42:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747644142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCQgi10UR992dlQaoDPJB7yxvwRcrEs7GWQVXJ/StA8=;
+	b=vyWqfl2e01zzIkoAlczlLbWUZsXt3dFksf2d0OsI9vjBOZEBCeWAuQ1aTB5Pwebs2dMShy
+	FfYUtKMWXG34vxokQ3xeeLsTXmiLT6C+pBh9K7gwuI7dkch6pnlG6E/ft0rlh3pH0g/h2J
+	3dE6gd4Wd5VNq28Sw0wShGkfZlfAaRPRfsWH1uSks/GOtojb7uCzqsDExH4le7p5nt/Sfw
+	5dwIRqNymrKZQX8mu6GsDQ+LZQVcXTN3p3mjBDOGUXZm3OFY31tkhdMlPwqQqvEr+p4RE+
+	ahYQWHklXVxaDveXunbVC3kZMmC/U5hpRrBKkf2UZNQ/jhWEKBPHkiq238Y6Tg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747644142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCQgi10UR992dlQaoDPJB7yxvwRcrEs7GWQVXJ/StA8=;
+	b=aqomLv1Gmgp7tEXc8UIWNdjxYTH53YmENrIPEIM37jiONNWWjvTBMotaA7OwApJrXrwvUZ
+	mhuDNhOCakK05fCA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH v2 07/12] rv: Adapt the sco monitor to the new
+ set_state
+Message-ID: <20250519084220.iProU-cg@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+ <20250514084314.57976-8-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514084314.57976-8-gmonaco@redhat.com>
 
-According to the ISL28022 datasheet, bit15 of the current register is
-representing -32768. Fix the calculation to properly handle this bit,
-ensuring correct measurements for negative values.
+On Wed, May 14, 2025 at 10:43:09AM +0200, Gabriele Monaco wrote:
+>  	.function = {
+> -		{     thread_context_sco, scheduling_context_sco,          INVALID_STATE },
+> -		{          INVALID_STATE,          INVALID_STATE,     thread_context_sco },
+> +		{     thread_context_sco,          INVALID_STATE, scheduling_context_sco,          INVALID_STATE },
+> +		{          INVALID_STATE, scheduling_context_sco,          INVALID_STATE,     thread_context_sco },
 
-Signed-off-by: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>
+This is over the 100 column limit.
+
+I know it is not your fault, this is generated. Back when I was playing
+with DA monitor, I made a patch to fix this. Maybe you could include it in
+your series?
+
+From b4fb648398a29a9c0d8e08bd12394978d3948a5e Mon Sep 17 00:00:00 2001
+From: Nam Cao <namcao@linutronix.de>
+Date: Fri, 15 Nov 2024 14:56:33 +0100
+Subject: [PATCH] tools/rv/dot2c: Fix generated files going over 100 column
+ limit
+
+The dot2c.py script generates all states in a single line. This breaks the
+100 column limit when the state machines are non-trivial.
+
+Change dot2c.py to generate the states in separate lines.
+
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/hwmon/isl28022.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/verification/rvgen/rvgen/dot2c.py | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwmon/isl28022.c b/drivers/hwmon/isl28022.c
-index 1fb9864635db..1b4fb0824d6c 100644
---- a/drivers/hwmon/isl28022.c
-+++ b/drivers/hwmon/isl28022.c
-@@ -154,6 +154,7 @@ static int isl28022_read_current(struct device *dev, u32 attr, long *val)
- 	struct isl28022_data *data = dev_get_drvdata(dev);
- 	unsigned int regval;
- 	int err;
-+	u16 sign_bit;
+diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
+index 6009caf568d9..abc0ee569b34 100644
+--- a/tools/verification/rvgen/rvgen/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -152,29 +152,22 @@ class Dot2c(Automata):
+         max_state_name = max(self.states, key = len).__len__()
+         return max(max_state_name, self.invalid_state_str.__len__())
  
- 	switch (attr) {
- 	case hwmon_curr_input:
-@@ -161,8 +162,9 @@ static int isl28022_read_current(struct device *dev, u32 attr, long *val)
- 				  ISL28022_REG_CURRENT, &regval);
- 		if (err < 0)
- 			return err;
--		*val = ((long)regval * 1250L * (long)data->gain) /
--			(long)data->shunt;
-+		sign_bit = (regval >> 15) & 0x01;
-+		*val = (((long)(((u16)regval) & 0x7FFF) - (sign_bit * 32768)) *
-+			1250L * (long)data->gain) / (long)data->shunt;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
+-    def __get_state_string_length(self):
+-        maxlen = self.__get_max_strlen_of_states() + self.enum_suffix.__len__()
+-        return "%" + str(maxlen) + "s"
+-
+     def get_aut_init_function(self):
+         nr_states = self.states.__len__()
+         nr_events = self.events.__len__()
+         buff = []
+ 
+-        strformat = self.__get_state_string_length()
+-
+         for x in range(nr_states):
+-            line = "\t\t{ "
++            buff.append("\t\t{")
+             for y in range(nr_events):
+                 next_state = self.function[x][y]
+                 if next_state != self.invalid_state_str:
+                     next_state = self.function[x][y] + self.enum_suffix
+ 
+                 if y != nr_events-1:
+-                    line = line + strformat % next_state + ", "
++                    buff.append(''.join(("\t\t\t", next_state, ",")))
+                 else:
+-                    line = line + strformat % next_state + " },"
+-            buff.append(line)
++                    buff.append(''.join(("\t\t\t", next_state, "\n\t\t},")))
+ 
+         return self.__buff_to_string(buff)
+ 
 -- 
-2.25.1
+2.39.5
 
+
+Best regards,
+Nam
