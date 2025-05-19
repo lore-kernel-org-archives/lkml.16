@@ -1,134 +1,241 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CF61EDA09;
-	Mon, 19 May 2025 19:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC852116F5;
+	Mon, 19 May 2025 19:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684171; cv=none; b=EPMVkELSXrzEbVNDsCnIoT/v7A4nLKbkMxWhxg4+7SyBYvBTnvDB2tVeQUfxOfWiXxM51/M0bvUVP2lGwHvTTNnqoXIZ4gvQXvkv6qHMpABtdMXWhUShqQVrl/JlSr1VE1h22TInrrs4JGIFc6hBR3ZBwT+iyRDf7k/d5xG9wZI=
+	t=1747684232; cv=none; b=EkvBH8jJCAVDLBsITh15I5Y6Wm+JbybZmrxKBsG/UkxovyArwO1nYN70gh5MGrHJ2zX/Sy18cH3KKTxE5HmCKubD5qzIOSoZNUxLFd99Uz39fGFI6K9dRsXi8+GVxfci/a9ueOuj4te8Rr6h/weNj21WzrAM462quP8Kczx10l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684171; c=relaxed/simple;
-	bh=JAHTKn8lVgXuUVHRTPHzx458VYN8Zmh2D4bwM7zCltE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pr96Yq/Q6xWoAcmT2TX1co2hry85PbCKCzcjQt84W7V2OXxn4EDsP1JKEZ0/SQTe6RjK4wYArBQgv7Qx/crc3og9cmIe+uiS9GKZalTkfk/tokOZkkoEiZOnqS4rwHGgFrq3Wyb0+RCDrUPzaI1DowYkxLBORjK1WB9Efo5aW00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZcnNGys; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747684232; c=relaxed/simple;
+	bh=YD+qRoMazuh2TKk+L6Zu0sganjL3uVQPsYulM1ha2UA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kNv3PTPjuvB4fow/tmJQRN3dggMCRY68e5EJKJIiuJDA8n4W8nYknYAcjD8VXCq0CzHa43pGjT4N9HZEcuwmIqzIRyMC2pFJInYyyF3JeNS00pfm13Fcvcn+dP7UkNYglgBaYJTQm+6ZAtWAQfUE4hohwExTkzXLvX1XxttGdRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHPfxdAC; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZcnNGys"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-30e57a373c9so4751379a91.2;
-        Mon, 19 May 2025 12:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747684169; x=1748288969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hw19EiGToKy2THNoRev7BZGz3jBlbmgZK3UBr01gL+I=;
-        b=OZcnNGysIDwTU1QvqrrUb5cPZfDQgsIBhqFLdZJDWaSjcLeEs+2soIWMGJGIyorZon
-         I+BfaKuAsLxzpU1obEwracNsmgQEJRlfi32l+HL/PrjehZ8i3MWdp3wbS7DiDAB49P/n
-         SIiEO52vGGUDXlJH0mtXRGzYiwQEy5Rv9aak0GuPepkD0xndqPnZ+YI1GV3XR9xgneNL
-         KqV9q4mG0BZhB3NtRXJny0FO3EVP3Lj4sP1Npnrk808S1GCWuMXkjZXib+/Tz5apesIz
-         hWYIO5qrjz4yZ7d9vt9BRvTnvDZR9pjATFGw6dGXXfMsqpwKbk7S225GcFV4Y97Rl0zP
-         Ah3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684169; x=1748288969;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hw19EiGToKy2THNoRev7BZGz3jBlbmgZK3UBr01gL+I=;
-        b=lM9lgT817TLVKUX38JWF1UE/++qTVSnSnjEDMQazOpwT3u4rMaFjnK17Gd7ovkD1cT
-         +BLxVhH0C1I5fbT+FxpBGV874xLyjF/MyTW1moltbPVUrdBH7JZXGo4dvcCkkYmAtqZL
-         k5GW4rYI9KFZol2EEY9WNPgOqJzXmkG4nLVM4j5S2tB2Iee32ZmV0cnCcfAo1BvqHYFu
-         zbwNLeeOLLtnY4ZxJxhW+03ZXonl0wZPYwmszctuJC20ZQcBPQHB6ZH2WmFcxWbI/HrO
-         NDVOcvzdbzGT63503DKoJafNBUGue/lDjbSO9+p7Jnor4DNM03er3FQzqHmzbuiMjwG4
-         8Ozw==
-X-Forwarded-Encrypted: i=1; AJvYcCUItI3w6WNPCYcKGixib3KZa7sexzFFc5SkyYVukFd7F7spCh5c0nE6pgCmXH8AogiAHVzZtGBUp0kh6Wc=@vger.kernel.org, AJvYcCWKy3Ky14/K9+/BL88v84Z80T1ZJZYfAkVnmw2CmSlW6ufFKtkUXEeVyZKUyv9waILXxzNMtL3CL60/OI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx14BcQBID89ZwPaRa9UO8jFeAj6nzFbq7u9zoNOFtE+iWNsi8h
-	C+HYSuuoEYjq6yAkpRDZIjTylJK2Xnlhha1hiGVwwOd1ewJCLtWEFZ6v
-X-Gm-Gg: ASbGncteDcMjVjPiUdonhN26Gc/iQozQxWv7Bxhdod3a6KTFAPVF6lTRJQHhq58Ymja
-	7F0ja4o0BLjEEPCfKNwqd8gXznycaP1jRr61ZpuP6cdz3ExJk74mefETbG1FmjQkbLsHKH/Dak5
-	NqvFCJKzBnZ8o3nc8AwwFpSN+Jn1Vs7Nqslx6ZEkK84blqoCNSm8gOcYD1w+JuH3yhkIs4V4wDv
-	PNKbncmszLcR1CH+0fvFLw86NmQDSMlCpFaD4/PkspbIvZ+33fqkGgp1PwJjHwlGEOCtSAutKy0
-	QLyuCEe9Nr8G3j/anjduBderHJ1j02uNhQj3+wxbOWWsGfK5K/xpFgMS16ghJ9vtlRjY1Q==
-X-Google-Smtp-Source: AGHT+IHnVKVbYxmr+S8L6MVseig+zzby2xRqN+CEjlLhV5A3fcWvh+4ML4zRmQfCRfQVUbsS/9KOXQ==
-X-Received: by 2002:a17:90b:1648:b0:30a:3dde:6af4 with SMTP id 98e67ed59e1d1-30e7d5be456mr19786507a91.31.1747684168635;
-        Mon, 19 May 2025 12:49:28 -0700 (PDT)
-Received: from sid-Inspiron-15-3525.. ([106.222.234.65])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb08450csm6705252a12.55.2025.05.19.12.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 12:49:28 -0700 (PDT)
-From: Siddarth Gundu <siddarthsgml@gmail.com>
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: u.kleine-koenig@baylibre.com,
-	zhujun2@cmss.chinamobile.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Siddarth Gundu <siddarthsgml@gmail.com>
-Subject: [PATCH] ALSA: dbri: replace strcpy() with strscpy()
-Date: Tue, 20 May 2025 01:18:33 +0530
-Message-ID: <20250519194833.106463-1-siddarthsgml@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHPfxdAC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747684229; x=1779220229;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YD+qRoMazuh2TKk+L6Zu0sganjL3uVQPsYulM1ha2UA=;
+  b=gHPfxdAC7NQBOxIb0AG880nsiqcMjwjUDWNkMd1V81/cQbea+a/1Gk9A
+   62c0ngkq/wBn36EAGjI8ECVhbbEnBjK79xtXcp8piQ5v7/NFIkxcDiM4q
+   qkGsaelINd441zBZdk5CGjAwjHbVTV4phS+S49a9zPc2D4ucX5mWCE323
+   5A8EDKttc9vmecYCypnEfDzVPAPo/8PrnqBMeTFd9IppJMkIhDuvPsjRQ
+   PTtggDamLNajPq3/8ISBkK0dn7dCX+9C7NernsJN5Tro9zzT0v3r4r7E4
+   ziqUsZ8QvjbvtshID/lVeBNcgjV/JMTy4+BxLWOQfMiIskEuqW1zjGyMo
+   Q==;
+X-CSE-ConnectionGUID: baFOUgByTFO9AY+EyWGz3Q==
+X-CSE-MsgGUID: HmSe+odUQtCU1+2kw1pX3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="74997028"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="74997028"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 12:50:28 -0700
+X-CSE-ConnectionGUID: odPu1XaHSW2Rae7MLZxRww==
+X-CSE-MsgGUID: m2vyWQeQSRSMfl/yBWF+Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="140364826"
+Received: from shikevix-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.20])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 12:50:28 -0700
+Date: Mon, 19 May 2025 12:50:21 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Natanael Copa <ncopa@alpinelinux.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Darren Kenny <darren.kenny@oracle.com>
+Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
+Message-ID: <20250519195021.mgldcftlu5k4u5sw@desk>
+References: <20250514125617.240903002@linuxfoundation.org>
+ <861004b4-e036-4306-b129-252b9cb983c7@oracle.com>
+ <2025051440-sturdily-dragging-3843@gregkh>
+ <9af6afb1-9d91-48ea-a212-bcd6d1a47203@oracle.com>
+ <e1ea37bd-ea7d-4e8a-bb2f-6be709eb99f4@roeck-us.net>
+ <2025051527-travesty-shape-0e3b@gregkh>
+ <20250515152557.a4q2cqab4uvhnpia@desk>
+ <2025051931-hardy-had-44a3@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025051931-hardy-had-44a3@gregkh>
 
-strcpy() is deprecated; use strscpy() instead.
+On Mon, May 19, 2025 at 05:27:30PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 15, 2025 at 08:25:57AM -0700, Pawan Gupta wrote:
+> > On Thu, May 15, 2025 at 07:35:26AM +0200, Greg Kroah-Hartman wrote:
+> > > On Wed, May 14, 2025 at 01:49:06PM -0700, Guenter Roeck wrote:
+> > > > On 5/14/25 13:33, Harshit Mogalapalli wrote:
+> > > > > Hi Greg,
+> > > > > 
+> > > > > On 15/05/25 01:35, Greg Kroah-Hartman wrote:
+> > > > > > On Thu, May 15, 2025 at 12:29:40AM +0530, Harshit Mogalapalli wrote:
+> > > > > > > Hi Greg,
+> > > > > > > On 14/05/25 18:34, Greg Kroah-Hartman wrote:
+> > > > > > > > This is the start of the stable review cycle for the 6.6.91 release.
+> > > > > > > > There are 113 patches in this series, all will be posted as a response
+> > > > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > > > let me know.
+> > > > > > > > 
+> > > > > > > > Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> > > > > > > > Anything received after that time might be too late.
+> > > > > > > 
+> > > > > > > ld: vmlinux.o: in function `patch_retpoline':
+> > > > > > > alternative.c:(.text+0x3b6f1): undefined reference to `module_alloc'
+> > > > > > > make[2]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
+> > > > > > > 
+> > > > > > > We see this build error in 6.6.91-rc2 tag.
+> > > > > > 
+> > > > > > What is odd about your .config?  Have a link to it?  I can't duplicate
+> > > > > > it here on my builds.
+> > > > > > 
+> > > > > 
+> > > > > So this is a config where CONFIG_MODULES is unset(!=y) -- with that we could reproduce it on defconfig + disabling CONFIG_MODULES as well.
+> > > > > 
+> > > > 
+> > > > Key is the combination of CONFIG_MODULES=n with CONFIG_MITIGATION_ITS=y.
+> > > 
+> > > Ah, this is due to the change in its_alloc() for 6.6.y and 6.1.y by the
+> > > call to module_alloc() instead of execmem_alloc() in the backport of
+> > > 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches").
+> > 
+> > Sorry for the trouble. I wish I had a test to catch problems like this. The
+> > standard config targets defconfig, allyesconfig, allnoconfig, etc. do not
+> > expose such issues. The only thing that comes close is randconfig.
+> > 
+> > CONFIG_MODULES=n is not a common setting, I wonder how people find such
+> > issues? (trying to figure out how to prevent such issues in future).
+> > 
+> > > Pawan, any hints on what should be done here instead?
+> > 
+> > Since dynamic thunks are not possible without CONFIG_MODULES, one option is
+> > to adjust the already in 6.6.91-rc2 patch 9f35e331144a (x86/its: Fix build
+> > errors when CONFIG_MODULES=n) to also bring the ITS thunk allocation under
+> > CONFIG_MODULES.
+> > 
+> > I am not seeing any issue with below build and boot test:
+> > 
+> >   #!/bin/bash -ex
+> > 
+> >   ./scripts/config --disable CONFIG_MODULES
+> >   ./scripts/config --disable CONFIG_MITIGATION_ITS
+> >   # https://github.com/arighi/virtme-ng
+> >   vng -b
+> >   vng -- lscpu
+> > 
+> >   # main test
+> >   ./scripts/config --disable CONFIG_MODULES
+> >   ./scripts/config --enable CONFIG_MITIGATION_ITS
+> >   vng -b
+> >   vng -- lscpu
+> > 
+> >   ./scripts/config --enable CONFIG_MODULES
+> >   ./scripts/config --disable CONFIG_MITIGATION_ITS
+> >   vng -b
+> >   vng -- lscpu
+> > 
+> >   ./scripts/config --enable CONFIG_MODULES
+> >   ./scripts/config --enable CONFIG_MITIGATION_ITS
+> >   vng -b
+> >   vng -- lscpu
+> > 
+> >   echo "PASS"
+> > 
+> > Similar change is required for 6.1 and 5.15 as well. 6.12 is fine because
+> > it uses execmem_alloc().
+> > 
+> > --- 8< ---
+> > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > Subject: [PATCH 6.6] x86/its: Fix build errors when CONFIG_MODULES=n
+> > 
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > commit 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65 upstream.
+> > 
+> > Fix several build errors when CONFIG_MODULES=n, including the following:
+> > 
+> > ../arch/x86/kernel/alternative.c:195:25: error: incomplete definition of type 'struct module'
+> >   195 |         for (int i = 0; i < mod->its_num_pages; i++) {
+> > 
+> >   [ pawan: backport: Bring ITS dynamic thunk code under CONFIG_MODULES ]
+> > 
+> > Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > Acked-by: Dave Hansen <dave.hansen@intel.com>
+> > Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  arch/x86/kernel/alternative.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index 6085919d3b3e..c6d9a3882ec8 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -129,6 +129,7 @@ const unsigned char * const x86_nops[ASM_NOP_MAX+1] =
+> >  
+> >  #ifdef CONFIG_MITIGATION_ITS
+> >  
+> > +#ifdef CONFIG_MODULES
+> >  static struct module *its_mod;
+> >  static void *its_page;
+> >  static unsigned int its_offset;
+> > @@ -244,7 +245,16 @@ static void *its_allocate_thunk(int reg)
+> >  	return thunk;
+> >  }
+> >  
+> > -#endif
+> > +#else /* CONFIG_MODULES */
+> > +
+> > +static void *its_allocate_thunk(int reg)
+> > +{
+> > +	return NULL;
+> > +}
+> > +
+> > +#endif /* CONFIG_MODULES */
+> > +
+> > +#endif /* CONFIG_MITIGATION_ITS */
+> >  
+> >  /*
+> >   * Fill the buffer with a single effective instruction of size @len.
+> > -- 
+> > 2.34.1
+> > 
+> 
+> This looks to still be causing problems, see these two reports of build
+> problems with the latest 6.1 and 6.6 releases with this commit in it:
+> 	https://lore.kernel.org/r/20250519164717.18738b4e@ncopa-desktop
+> 	https://lore.kernel.org/r/2f1ae598-0339-4e17-8156-03e8525a213d@roeck-us.net
 
-Both the destination and source buffer are of fixed length
-so strscpy with 2-arguments is used.
+These reports appear to be related to a merge resolution of "x86/its:
+FineIBT-paranoid vs ITS" in 6.6 (and 6.1):
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
----
-- test-compiled and no functional changes intended
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.6.91&id=772934d9062a0f7297ad4e5bffbd904208655660
 
- sound/sparc/dbri.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+which is different from 6.12:
 
-diff --git a/sound/sparc/dbri.c b/sound/sparc/dbri.c
-index 69f1c9e37f4b..93cbe158009f 100644
---- a/sound/sparc/dbri.c
-+++ b/sound/sparc/dbri.c
-@@ -60,6 +60,7 @@
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
- #include <linux/gfp.h>
-+#include <linux/string.h>
- 
- #include <sound/core.h>
- #include <sound/pcm.h>
-@@ -2239,7 +2240,7 @@ static int snd_dbri_pcm(struct snd_card *card)
- 
- 	pcm->private_data = card->private_data;
- 	pcm->info_flags = 0;
--	strcpy(pcm->name, card->shortname);
-+	strscpy(pcm->name, card->shortname);
- 
- 	snd_pcm_set_managed_buffer_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS,
- 				       NULL, 64 * 1024, 64 * 1024);
-@@ -2446,7 +2447,7 @@ static int snd_dbri_mixer(struct snd_card *card)
- 		return -EINVAL;
- 	dbri = card->private_data;
- 
--	strcpy(card->mixername, card->shortname);
-+	strscpy(card->mixername, card->shortname);
- 
- 	for (idx = 0; idx < ARRAY_SIZE(dbri_controls); idx++) {
- 		err = snd_ctl_add(card,
-@@ -2613,8 +2614,8 @@ static int dbri_probe(struct platform_device *op)
- 	if (err < 0)
- 		return err;
- 
--	strcpy(card->driver, "DBRI");
--	strcpy(card->shortname, "Sun DBRI");
-+	strscpy(card->driver, "DBRI");
-+	strscpy(card->shortname, "Sun DBRI");
- 	rp = &op->resource[0];
- 	sprintf(card->longname, "%s at 0x%02lx:0x%016llx, irq %d",
- 		card->shortname,
--- 
-2.48.1
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.29&id=7e78061be78b8593df9b0cd0f21b1fee425035de
 
+Basically its_static_thunk() needs to be under #ifdef CONFIG_MITIGATION_ITS
+
+I guess there needs to be a separate patch to fix this?
