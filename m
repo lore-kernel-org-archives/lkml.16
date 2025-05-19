@@ -1,130 +1,169 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DD11C84B8;
-	Mon, 19 May 2025 09:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA941C84B8;
+	Mon, 19 May 2025 09:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647949; cv=none; b=m8w5e2CUjE1exL+5CtMAZPqafWVIcUXtwn12LnaShwsWqXdzX+GFZu2UwHxIKP5PybOYTh2E0pUXBxxn1/PkAPMYr1f0OtsXUlpVfmjx5lHQYBixjCxYp7o3sQpdSap3SkSOczdsi94b+i79GBckyUvfZvboUws3mCOLpuvMzDc=
+	t=1747647964; cv=none; b=unDXnvXU4PwRaYE9Ml4TZkujSfi8yXi1ecTrhBWyjMU3s2tWHYMUzAb5Lk6seEG2yjujGEwYuxFNI2LDd6hDOBQKKlMLJ7o2y7QFjM2EsaJreaiKEKe/EU/AIjcFQJH4dUVCaTzJlTHFfIB/87F9Xq5IlxjSofUE3TKfa4/jYvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647949; c=relaxed/simple;
-	bh=gth7CHYYNDX5MdGfaO8LJ2FN2cN2NuN0sWe+Tk6eoZE=;
+	s=arc-20240116; t=1747647964; c=relaxed/simple;
+	bh=v1zk102uKTVC4imT+UtGRjoS7bC/SRZoc5fRnhB9cqg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RDoBGWePdRPWdui+WzCEuYSut6/EkWA4/Y+1ild9g47CNgmZELhXf8x1ggujM/tz0HyN6q2w6P2VVmRyENgBesdTg18ZZyY8M7V9dRpMxr46yyKl36x1HItPzUIXt3/8M0Tm8LGBRaMQeEoYs277P5e/OrvME4ufJ7z0YhW7N5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c5oSWHzZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xx+xZPCL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=EnogZ9S8vjlwHVe5uEoAviBfq6/ujYNuMsR2VOAXmGCzDSZ7UwmBGNhh4TGP61yhfqlBKEcVMKs/cHB5SE22pxEP4LhTTVuYimcXGTPoqM8ApEETvw6xXx77p3SdODmerPYsn8QH9JI0BcYHvNLa0ryBJ4O1V8oVOtxwh02hD8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4sncMub; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c5oSWHzZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xx+xZPCL"
-Date: Mon, 19 May 2025 11:45:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747647945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kh5YNJbsenpOdAJ3ZCZ/uJk0ypi6vPEtUU1Y01srTxA=;
-	b=c5oSWHzZ/zyTxNycDLQHAzOcEKfiU+AEyy0sJrVNfEtNKJ6AgnBP8lNKnukFR5kuQyujui
-	/5aFrsuc709T4L21Rh8fOA7TVavXvVpKb7yaffKkWvPbmr8uAH5fmEH7ATyYiMMq5LuuLL
-	UfHeIr65avpBwp8M73ISjizgwGMUPrThhG4DydTwK8x5zgFUFtFZSs1zIUlAPOktw/K4gC
-	3WatHsshmTi3FNAwOTVJB7ww1o86MOSZFfP1Z5YSo+SyqfpfdKSx8kUiI3qoamidr64AU9
-	QOl0boRvkvA2FPhJJzul+0nCYsulelFEZ1mOZn5924nQQ7tZhLyUJFg4jDlYjw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747647945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kh5YNJbsenpOdAJ3ZCZ/uJk0ypi6vPEtUU1Y01srTxA=;
-	b=xx+xZPCLWjjGpkDQrVhGl6mGrYVqrC5CgBMoaMDuATKQk377CoJLl/HISY5TDkR7S0Ld89
-	U+6OnkZOC74CM7AQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Florian Bezdeka <florian.bezdeka@siemens.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Andreas Ziegler <ziegler.andreas@siemens.com>
-Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
-Message-ID: <20250519094543.m4bNJP6X@linutronix.de>
-References: <20250519074016.3337326-1-namcao@linutronix.de>
- <ae4985d3b157e31c667f532906cb6ff55633141b.camel@siemens.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4sncMub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747647961; x=1779183961;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v1zk102uKTVC4imT+UtGRjoS7bC/SRZoc5fRnhB9cqg=;
+  b=N4sncMub0cJYPhR6Q5q3jydTktD9uUEkHtCP4DChgFPO0qXq7t9aThWo
+   +P07aXsSz9ZNGbO7vvqMis2NGjQxneA7WpamRQrZ67aGoIA0D7tIk4QX9
+   J2zehoXnrdW+/b97bD+VoQmKr12Vc5CrE67A28utl1/zInqzQT++De9OB
+   WPa+tMDNPPbocwc63hz0tmEDwUxyP5EblT7P29RjhozJc/6umPqAZCnHy
+   Q7GLnxzhrI+RibE7GxFOKZFdwcSJDALnkG1pX8+N22w8Tc++U5c63a2qB
+   Y/7lT+/7J9mv1/U589BVPIZO1/XDC9xo7Eu2qguz9HE3LkIkf/ofM/ni5
+   Q==;
+X-CSE-ConnectionGUID: d9f6lwwjRIurGQh6L3SKiA==
+X-CSE-MsgGUID: ID4AxI6bSLyHVa+jEa2MwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="60193783"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="60193783"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:46:00 -0700
+X-CSE-ConnectionGUID: yPlT+hViQ9O+tOiod6B+6A==
+X-CSE-MsgGUID: yFbWCfFHRjq9JzxlJPiOiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139222597"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.253])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 02:45:57 -0700
+Date: Mon, 19 May 2025 11:45:49 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Hans de Goede <hdegoede@redhat.com>, tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, 
+	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com, naush@raspberrypi.com, 
+	mchehab@kernel.org, dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <bmvv2cc75baovi5hxfyuubl332btxxq7h6w447dwngzmizykoq@ly6lonub3qxy>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
+ <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+ <20250515124050.GA12492@pendragon.ideasonboard.com>
+ <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
+ <aCZTi2odVXVZjJE8@svinhufvud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae4985d3b157e31c667f532906cb6ff55633141b.camel@siemens.com>
+In-Reply-To: <aCZTi2odVXVZjJE8@svinhufvud>
 
-On Mon, May 19, 2025 at 11:25:51AM +0200, Florian Bezdeka wrote:
-> Hi all,
-> 
-> sorry for top-posting, but I think it makes sense in this case as I'm
-> trying to merge different workstreams, likely working on the same
-> problem showing up in different colors.
-> 
-> Main goal is to make everybody aware of the other stream / patch
-> series.
-> 
-> We have colleagues from Bytedance working on non-RT performance
-> optimizations related to CONFIG_CFS_BANDWIDTH at [1]. 
-> 
-> This series came to light while searching for a solution for a RT
-> lockup, reported at [2]. 
-> 
-> We heavily tested [1] during the last month on RT and can report
-> success now. In our tests we saw read-lock holder preemption only
-> within the epoll interface. It might be that [1] fixes more potential
-> issues in this regard.
-> 
-> Today [3] (= the patch I'm replying to, see below) got posted.
-> Linutronix reworking the epoll infrastructure.
-> 
-> I would love to learn how/if the combination, basically [1] and [3] fit
-> together.
+Hi Sakari,
 
-[1] fixes stall problem involving rw semaphore which epoll uses, but it
-doesn't fix the possible priority inversion with epoll
-
-[3] fixes priority inversion problem with epoll by stop using rw semaphore,
-but it doesn't do anything about rw semaphore
-
-So I propose we keep both.
-
-Best regards,
-Nam
-
-> My understanding right now is, that [1] fixes a CFS issue, throttling
-> while holding a lock is not ideal on !RT - but might cause a critical
-> lockup on RT - while [3] is addressing a similar (RT) problem in epoll.
+On Thu, May 15, 2025 at 11:50:19PM +0300, Sakari Ailus wrote:
+> Hi Mehdi, Laurent,
 > 
-> Best regards,
-> Florian
+> On Thu, May 15, 2025 at 03:51:33PM +0200, Mehdi Djait wrote:
+> > Hi Laurent,
+> > 
+> > On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
+> > > On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
+> > > > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> > > > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > > > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > > > > > platforms to retrieve a reference to the clock producer from firmware.
+> > > > > > > 
+> > > > > > > This helper behaves the same as clk_get_optional() except where there is
+> > > > > > > no clock producer like in ACPI-based platforms.
+> > > > > > > 
+> > > > > > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > > > > > indicated in the property.
+> > > > > > > 
+> > > > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > > > > > 
+> > > > > > This certainly looks quite useful, thank you for working
+> > > > > > on this.
+> > > > > > 
+> > > > > > Note on some IPU3 platforms where the clk is provided by
+> > > > > > a clk-generator which is part of a special sensor-PMIC
+> > > > > > the situation is a bit more complicated.
+> > > > > > 
+> > > > > > Basically if there is both a clk provider and a clock-frequency
+> > > > > > property then the clock-frequency value should be set as freq
+> > > > > > to the clk-provider, see:
+> > > > > > 
+> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > > > > > 
+> > > > > > for an example of a driver which handles this case.
+> > > > > 
+> > > > > On a side note, the DT bindings for the OV8865 doesn't specify the
+> > > > > clock-frequency property...
+> > > > 
+> > > > Is this wrong ?
+> > > > 
+> > > > The OV8865 driver was introduced for DT-based systems, where you will
+> > > > get a reference to the "struct clk corresponding to the clock producer"
+> > > > and then get the clock-rate/frequency with a call to:
+> > > > 
+> > > > 	rate = clk_get_rate(sensor->extclk);
+> > > > 
+> > > > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+> > > > adding support for clock-frequency came later to support ACPI-based
+> > > > systems (IPU3 here)
+> > > 
+> > > I'd expect all device properties to be documented in DT bindings. Is
+> > > that an incorrect assumption ?
+> > > 
+> > 
+> > I am actually genuinely asking, is the clock-frequency a device property
+> > of the ov8865 camera sensor or the clock source, which is a separate device ?
 > 
-> [1] https://lore.kernel.org/all/20250409120746.635476-1-ziqianlu@bytedance.com/
-> [2] https://lore.kernel.org/linux-rt-users/xhsmhttqvnall.mognet@vschneid.remote.csb/
-> [3] https://lore.kernel.org/linux-rt-users/20250519074016.3337326-1-namcao@linutronix.de/T/#u
+> The sensor's.
+
+Ack.
+
+> 
+> Could we document how this is supposed to work on DT and ACPI?
+
+I can include a documentation patch in the next version.
+
+> 
+> I think we should also select COMMON_CLK on ACPI systems for sensor
+> drivers (in a separate patch maybe?), instead of relying on distributions
+> enabling it.
+> 
+
+makes sense.
+
+> > 
+> > Example the imx258 with a fixed-clock, which has its own compatible
+> > and DT bindings under bindings/clock/fixed-clock.yaml
+> > 
+> > So when adding support for ACPI-based systems, the DT bindings should
+> > not be changed because getting the clock-frequency from the ACPI _DSD
+> > property is a workaround only needed on ACPI-based systems.
+> 
+> I wouldn't say it's a workaround, but something that's only needed on ACPI
+> systems.
+> 
+
+Ack.
+
+--
+Kind Regards
+Mehdi Djait
