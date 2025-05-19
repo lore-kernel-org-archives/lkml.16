@@ -1,131 +1,157 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D289E2135D7;
-	Mon, 19 May 2025 20:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB03218ABA;
+	Mon, 19 May 2025 20:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747686415; cv=none; b=cIrKUvLvatUqoEHok8H9ZdphFQr23F0ZTZQUel3+9HrGBJDHIytxLGY0zAn7LR9Ghtjlv3C3Qj0v6hhCMB3UXJbjczhm6vnShp5u64wyu91x+IbtQ4hwdYy5sNrEJyHnerP5ha9V8YaA9dkJpHEz66yKrA4DIf897FKA8LawdIw=
+	t=1747686422; cv=none; b=X1cf8L5BIeAMimGGKCY01UTIkNMCGAxPBDIKa98iiSXTxmlhPCvQemU+LNLr6+oWkO1WEcF2NBBdeoFC7n5D54vTPo540wU0frj5Fld4CjH/7C7wh/eb5yjDrHAZetXIAPwulW3yrTrz0sbV07BmAPmJjaHxUXF07hkeN44v2yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747686415; c=relaxed/simple;
-	bh=Xfgi/huhRD3QKFohIyYcC2vXun+kKeP4iFdyd7cNWwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W/2rLcDHJ0MmRB1t8Y7EV9akyDwpG86gqTCef5x+8VRSzQu3q++CyLELbFz2kIfpwfpaAZdDCW9HbxeTF0ItP4OT18LBqfE6IJlkbV0v2N8uRAIsAiCOaOsHfMdGfBN2cEOgcCCBDtNVZC4QrscQ10HaHmQanxtaviG8NtfeAaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEnJZOYJ; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747686422; c=relaxed/simple;
+	bh=l5upmzFVp75abDu6YqRT8MBIFAQxtBa3/aCt6W+nB2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pfPnG6Dis7PSdhk8DYF7kOk5zQYOXGEkQUSTS7HH7iS4bDStMxK+mQs6K5NbN77svYgKf+keFNPk/VKBy8qKAlBmeeUI4FB+ZeQs5j1AnkfsmH7pWhu+dg7UyJ24G1UrwczXdZ7VUp7xRuRuyK5EJ2/isrYSJ35UJH3ltXcexkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CLscnDOK; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEnJZOYJ"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af5085f7861so3205442a12.3;
-        Mon, 19 May 2025 13:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747686413; x=1748291213; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dTkaky/nRg9EbtmKa6hM+RsjLSVrfB0T6dQZXKXV1eg=;
-        b=XEnJZOYJ5uz92JZEVCmjQoVppA5w5I1fyM0mBRHWEpvfCLV+y1MJTUAuKXVjNXhhCO
-         hua7XbDV+jELl10lWU7jAcSqfoMqNLfSaGp9+udddawRutUzxds8/Yui9BnbtZ8jBtth
-         5ZxkuVV6fUqNkqhX10uurqEb5iOzfLWgHyNg+lnZc8pxPmXfFM2egB75QWI5TZSjuUM3
-         czwhEk4oXWwf0s8qte9ta59AJTXvat2m0MJN6dH24wQxjYp69FiSmxP7ah8DuSE6E+SI
-         iVtB7NABa3fEFVyMW/nCBoG063keYsYnEO8rk0y5o5fyrZM6OIsRIwFJsMhYEuq5HZni
-         VXZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747686413; x=1748291213;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dTkaky/nRg9EbtmKa6hM+RsjLSVrfB0T6dQZXKXV1eg=;
-        b=DByvabV5vPKPM4QyxYdBdcK4xlr5Znd5xZUdrIjwcIF3ldXkF3f5kYBM3c4FxF0RHr
-         LiFmomoqogapskwE0/GzSA7FFsROLyPUSiiV9k/Y+xQJrsnafb0SpAQHhRbiW6t0TMlK
-         RMzocs8shHSACHf1k7yHjWDF92CU2gw86xg8SqikTBy+Wr/dIM0fh/jBl5Zq1NBI51fv
-         vZkLzNKF1wr70TGoF6KdShCfPgXewX0pqvAqwqlj/thGolCa+zSO8vxsJTVFOxoGwtp2
-         30+qqqUIk/dHSsUFNT8sYshZECmUPQdwJs8K2g44/CmR573FSzKFc2mmXJ5YqMa0rhkg
-         ZCtw==
-X-Forwarded-Encrypted: i=1; AJvYcCULGnmCzd04NAtdYF5n7E1Xmqr7lPOjtJpmfOVFe2rCoeKP+//NKwA+W24rktHcrZek21DmFCQt6RAKuEo=@vger.kernel.org, AJvYcCWBGIVbPAgjec0qLtuSR9wyGnUqpkwnse62I4HxdPAg1LMXIMPz+fpVq7onWZ2d/2ejVRhjfrxWhvSnFz3OrKYW@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl+D7JSzOBRh13HSes00bLv1IjOQC/htdq3hOIHgBCiEkTat2u
-	vR7TOYTCtYgX1p7IESv6LECN8aIoxOZ/SGJRxDz2DP2c0LFXDgzCAVw=
-X-Gm-Gg: ASbGnctwujIt50G3E+KWLSziCLzErw/Uw17rRP3s+BlHtRn7XFZujN8caihl+szoLZB
-	PzBj9Pg87Y+5oTb2zSHuPIGyiwJIalzHEeKffiHUKwNuiKjeW6Vl1L48Zc8sLnOQv9FCpLqAAKN
-	k4hUf67qCz51SHNXJ3FkPg/Q819OQqKjXKxVUNvKxpJ6pvJu+uD87koo1HSBcCwDO9DrimquepT
-	2mhdvoKpwkUYo7S3i9aBZwT78HBeM2AuhQGdHWc1S5WvzPP8jJ5/nz4WoCtMI79Zcgn98MGHtOG
-	jRJ9dqeTPdT+9ep6Gcf664BiKi7L4fhlXWnij1k8zdYgMAxhNDdZTSpMCT4yaMLkPgQ5IpkLmbm
-	MwdN5zQs2fYS6
-X-Google-Smtp-Source: AGHT+IFUYkHuhjtDrVkEAjwa2HBW4fkXFodXqyRvW8H3uqxNuVa91mgNdEMV5UXY9aQSAx4RnxRuug==
-X-Received: by 2002:a17:90b:1f90:b0:30c:52c5:3dc5 with SMTP id 98e67ed59e1d1-30e83216dc2mr17507550a91.26.1747686412885;
-        Mon, 19 May 2025 13:26:52 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30f365b158fsm85644a91.8.2025.05.19.13.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 13:26:52 -0700 (PDT)
-Date: Mon, 19 May 2025 13:26:51 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	David Ahern <dsahern@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
-	sdf@fomichev.me, ap420073@gmail.com, praan@google.com,
-	shivajikant@google.com
-Subject: Re: [PATCH net-next v1 7/9] net: devmem: ksft: add 5 tuple FS support
-Message-ID: <aCuUC7gGj4pzDO0R@mini-arch>
-References: <20250519023517.4062941-1-almasrymina@google.com>
- <20250519023517.4062941-8-almasrymina@google.com>
- <aCtQIK-vFm6j6o9w@mini-arch>
- <CAHS8izOKZBtDQT7zjd81v8X5sAXB0NAsL8iXYg3_0zurwF1WhA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CLscnDOK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=OdUPEKiubFLR9XRzcKGanx11EyQE8ZL6x7BAXWrg/PI=; b=CLscnDOKMkzEFZ5iGP70Ggp0PI
+	LbQG+GsCzcZ69OfvnoiAm7kcYMOTdLZPZ8UBx+UdqLb3HQbRmO5rJglxm4OL5B4BLJGcKic3421jV
+	zkYk7amFu6aj1s3+IVp+/b44zkJBZ/VEKRUyefCRyZ7Wik7ZQ/t2Tt8LHqIROBnb95bgb+1lVjFwk
+	Rs+R0ohgaer/95Phhg0JaIgsokrSgNjEgvtuSiIt+oAHK4nOt7tPVnsqi4x9xXgUgbPrUvUfWJiWW
+	fC1+8EoVhXrMOsog1exMDdkLYUD8YDqppmjrYx7cV7kPRN4sx/nOS2H/kM/TumkC4QswqiTpEBhM1
+	FbEP/WnA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uH74Z-00000002LEv-0zCU;
+	Mon, 19 May 2025 20:26:55 +0000
+Message-ID: <d645a0a2-4ffd-4dc6-b8a9-522ec3d27d7f@infradead.org>
+Date: Mon, 19 May 2025 13:26:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for May 16 (security/landlock/ruleset.c)
+To: Kees Cook <kees@kernel.org>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-security-module@vger.kernel.org, =?UTF-8?Q?G=C3=BCnther_Noack?=
+ <gnoack@google.com>
+References: <20250516202417.31b13d13@canb.auug.org.au>
+ <e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org>
+ <20250519.jiveise8Rau8@digikod.net> <202505191117.C094A90F88@keescook>
+ <20250519.ba8eoZu3XaeJ@digikod.net> <202505191212.61EE1AE80@keescook>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <202505191212.61EE1AE80@keescook>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izOKZBtDQT7zjd81v8X5sAXB0NAsL8iXYg3_0zurwF1WhA@mail.gmail.com>
 
-On 05/19, Mina Almasry wrote:
-> On Mon, May 19, 2025 at 8:37 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> >
-> > On 05/19, Mina Almasry wrote:
-> > > ncdevmem supports drivers that are limited to either 3-tuple or 5-tuple
-> > > FS support, but the ksft is currently 3-tuple only. Support drivers that
-> > > have 5-tuple FS supported by adding a ksft arg.
-> > >
-> > > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> > >
-> > > ---
-> > >  .../testing/selftests/drivers/net/hw/devmem.py  | 17 +++++++++++++++--
-> > >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/testing/selftests/drivers/net/hw/devmem.py
-> > > index 39b5241463aa..40fe5b525d51 100755
-> > > --- a/tools/testing/selftests/drivers/net/hw/devmem.py
-> > > +++ b/tools/testing/selftests/drivers/net/hw/devmem.py
-> > > @@ -21,14 +21,27 @@ def require_devmem(cfg):
-> > >  def check_rx(cfg, ipver) -> None:
-> > >      require_devmem(cfg)
-> > >
-> > > +    fs_5_tuple = False
-> > > +    if "FLOW_STEERING_5_TUPLE" in cfg.env:
-> > > +        fs_5_tuple = cfg.env["FLOW_STEERING_5_TUPLE"]
-> >
-> > I wonder if we can transparently handle it in ncdevmem: if -c is passed,
-> > try installing 3-tuple rule, and if it fails, try 5-tuple one. This
-> > should work without any user input / extra environment variable.
-> >
+
+
+> From 6fbf66fdfd0a7dac809b77faafdd72c60112bb8d Mon Sep 17 00:00:00 2001
+> From: Kees Cook <kees@kernel.org>
+> Date: Mon, 19 May 2025 11:52:06 -0700
+> Subject: [PATCH] string.h: Provide basic sanity checks for fallback memcpy()
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
 > 
-> This seems like a good idea, yes, but I think install a 5-tuple one
-> first, and if that fails, try a 3-tuple one? 5-tuple rules are more
-> specific and should take precedence when the driver supports both. It
-> doesn't really matter but the 3-tuple one can match unintended flows.
+> Instead of defining memcpy() in terms of __builtin_memcpy() deep
+> in arch/x86/include/asm/string_32.h, notice that it is needed up in
+> the general string.h, as done with other common C String APIs. This
+> allows us to add basic sanity checking for pathological "size"
+> arguments to memcpy(). Besides the run-time checking benefit, this
+> avoids GCC trying to be very smart about value range tracking[1] when
+> CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
+> 
+> Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-SG!
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: <x86@kernel.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Uros Bizjak <ubizjak@gmail.com>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
+>  arch/x86/include/asm/string_32.h |  6 ------
+>  include/linux/string.h           | 13 +++++++++++++
+>  2 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+> index e9cce169bb4c..74397c95fa37 100644
+> --- a/arch/x86/include/asm/string_32.h
+> +++ b/arch/x86/include/asm/string_32.h
+> @@ -145,12 +145,6 @@ static __always_inline void *__constant_memcpy(void *to, const void *from,
+>  #define __HAVE_ARCH_MEMCPY
+>  extern void *memcpy(void *, const void *, size_t);
+>  
+> -#ifndef CONFIG_FORTIFY_SOURCE
+> -
+> -#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> -
+> -#endif /* !CONFIG_FORTIFY_SOURCE */
+> -
+>  #define __HAVE_ARCH_MEMMOVE
+>  void *memmove(void *dest, const void *src, size_t n);
+>  
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 01621ad0f598..ffcee31a14f9 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_STRING_H_
+>  
+>  #include <linux/args.h>
+> +#include <linux/bug.h>
+>  #include <linux/array_size.h>
+>  #include <linux/cleanup.h>	/* for DEFINE_FREE() */
+>  #include <linux/compiler.h>	/* for inline */
+> @@ -390,7 +391,19 @@ static inline const char *kbasename(const char *path)
+>  
+>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+>  #include <linux/fortify-string.h>
+> +#else
+> +/* Basic sanity checking even without FORTIFY_SOURCE */
+> +# ifndef __HAVE_ARCH_MEMCPY
+> +#  define memcpy(t, f, n)					\
+> +	do {							\
+> +		typeof(n) __n = (n);				\
+> +		/* Skip impossible sizes. */			\
+> +		if (!WARN_ON(__n < 0 || __n == SIZE_MAX))	\
+> +			__builtin_memcpy(t, f, __n);		\
+> +	} while (0)
+> +# endif
+>  #endif
+> +
+>  #ifndef unsafe_memcpy
+>  #define unsafe_memcpy(dst, src, bytes, justification)		\
+>  	memcpy(dst, src, bytes)
+
+-- 
+~Randy
