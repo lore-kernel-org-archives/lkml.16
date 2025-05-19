@@ -1,80 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6601DEFF3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB026A1B9;
+	Mon, 19 May 2025 14:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663534; cv=none; b=iZlQCZG9yIpuztxKVl2vvMm2vW4pqxqpVrjyKIFWuj7ECqtu9y1ePWQ+IQs/zuBL8CNetQBjSfwrVrs4yV1sOK6kr4kiJeZ/smbcP5EISeD+21Uw3Z+d7+g5jlHqPy3jy9T1L7c2AVpvRocoKGWmMPdJOVBKK7GvUPMrPHhmnlM=
+	t=1747663642; cv=none; b=o9k8CJ1Bl65za1Zvevh6JvieuhyxnLCsXVEMDktoXXX9rsoGGpk3vQ7j+ufXbElnm5dvmZwAjD3DGs5q4jFLRZLkJPnSUHhBCal545TXZrAS2PJwA+puPIqqTG3iU+++eMO3QQG8VReL35gecRLC9Qcmy+wSzEQJWMlaJlgZzpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663534; c=relaxed/simple;
-	bh=mTV4BK2qfjbUtqotPH31b3r0RSBtimJqNdwrEbp6QFM=;
+	s=arc-20240116; t=1747663642; c=relaxed/simple;
+	bh=Vjxx3sdINLSP5xcLk8gOYpfc7PhkgV2RnCzn4FnV044=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrynYFnAexWYpRnoFcj3GhgieyGY4L3xNmHqzVHDoViSSpFgpTQhEQvyA5gWFbqE3WP2jbn1ChAptVwW4APR3Zkqm4Bx1iGlkK6m22aCTWeYUNRx85AWVVTA2wpZS2s6EU0av7V0/xZeOD91XnX6vJMTfkB+hp93I9rUhlfa+VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nHTARNcA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bqdrYJ2xt/pRklAdAjPrvHq9ILZgkdPZsa6u4Vwy4mI1KqjzetIQq3FXsDB7bQyakdQ/OHoSoZgJ8TcQJVGd6WYdY8PjZ8EeWtu0iN4Ug+TAAF5MjO5nSrCKUR01mbseVvYOSONg3uNN/TQmoXFimjQP6fLR0oAX1wRUTznayDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUGyJqZB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nHTARNcA"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9WqU7014464
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=kkHo6XHPeTMOyNCSzAjow0H/
-	jYOdseS2973aNB14vqU=; b=nHTARNcABLaLMLh43n8IaZmeqPwUGviG+5i9q/Dd
-	rOfwz8GDvdCqJk/4GYTrCIZok92nLO2Vr6lqFDD0+4J5PrZP17L2kv8cuW4BtfnM
-	PHdHxMF/3ERUdKTY8jVTcSj6DT3/mePmz/uazvnHC/AIchzHRxoIr4kmnhEJmKSy
-	jDn+4eUwDXT18HSN1aco0wm2uuhxcvLtdQNFv3Wpqahd1NyNS2d6dKxYvV1SZP7K
-	lx9+sSiuNpZFtbbfiAK0AcoWB9UCReXc9aWayJss7SMR1bW16YCKxF9rX7AhlToJ
-	1HlUV8ukG0VBREgsyKEuEGzzCjzu+llaH8hvDHpb0zkz/g==
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4vm9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:05:31 +0000 (GMT)
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85db3356bafso881530339f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:05:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747663530; x=1748268330;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kkHo6XHPeTMOyNCSzAjow0H/jYOdseS2973aNB14vqU=;
-        b=qnOEaUcpirkWNENtE7mxAqUCzDqQ2FVeR5P9YRCS/tmiB0hSGfgCd/usrjK96ViWK0
-         cBQU5UHbVAo+SBlr3t5jV3MbSyCLDsNmCB9rPu5zGRhozZVULcuckK59CTGPZPEHe8vW
-         x1FnFVmMtr2AeHwbJ6woYqQ0BvpcSx2ds6Wb7fZM4rpg/yxG6ZRkwpT1tMUVCOlm3lY+
-         QiVptch8Q6Ee6jZJ87d3MYsdgJMq1Yszqd6HNXk3B8jv/8lm0KZ/D8XqHk21h582E+4W
-         RwVQ8XesRar1qfmeDlookXVrX+QuH51NQxHGhOikqMLreJhNIGfDkvS8gPBNt4p+DIQy
-         lsDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUree9O0TW8YWQ6v59ZrXpTJ69JojmPbasl/+i0qhNThtceIa7d4aQV57qopLl4qHuZbAs/sUf7PXjSNfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1b1rZ7YsrX7MdXmOjKMrCAcp2OX0dky02jLs4B09LkJ9YhDAD
-	FQyh9yb7JwYI7MlnXuxP5Fl4Ew27Cf33Yh2dwwPXtV8Mv75z/85l1RDZb5l7cZTIjctzx0O/C+i
-	GFwOg6qOPQC7g2V3EjaZhy5QQL1xVrP2fis12T3Z5B1apvaPNrd+1/wcIMjxbb6p5fmM=
-X-Gm-Gg: ASbGncsOdG+ApMwyO6Bv26rAW8P8L+Y1P94/XnMK+RLtmVfyv+iH4ONOUG3ktzVWINw
-	xlJIoBOfCZ8/LtUP7cUQGdgiN8GbW/9thINdRBa+hkIj22L4Qdoxm4YI5WCFGhiUoDQD4vvPi6n
-	Z9QksfGKEH35LrBZCO3HTuKuuBS8eXLndisJ1CJW45R29MNZaGZjMx5e6pJZ6SwcPEVAj4lmILZ
-	q5dW8jBGAABKeEw7bLsiwIlD42AItakz8CSNnNigsCOjVYi+P+BvdItGNGCKTJtNHfILJ7x+c7+
-	KNDm1gxk0CV/xxwNJQCl1ntrJYNGINe24lSjswJUMP7Y8QbUOQaIZe8gZAr76hXcvmyPhsh064g
-	=
-X-Received: by 2002:a05:6e02:4414:20b0:3dc:6a27:7c14 with SMTP id e9e14a558f8ab-3dc6a277c71mr34500125ab.7.1747663530576;
-        Mon, 19 May 2025 07:05:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElHCzRUlcSmkePX3oMcw+Ft8vd7nE8mHJmMO5fmpzntvorhLTQD2zarO0h4A0QZ8OWYTbnZQ==
-X-Received: by 2002:a05:6e02:4414:20b0:3dc:6a27:7c14 with SMTP id e9e14a558f8ab-3dc6a277c71mr34499715ab.7.1747663530131;
-        Mon, 19 May 2025 07:05:30 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084b4becsm19262941fa.12.2025.05.19.07.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 07:05:29 -0700 (PDT)
-Date: Mon, 19 May 2025 17:05:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: socinfo: Add support to retrieve TME build
- details
-Message-ID: <6dri4ig5iox7wctvc7umltcsstrtghrtjvdwajdlgz4sb5g6nn@zyrys4re4576>
-References: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUGyJqZB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EC2C4CEE4;
+	Mon, 19 May 2025 14:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747663641;
+	bh=Vjxx3sdINLSP5xcLk8gOYpfc7PhkgV2RnCzn4FnV044=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OUGyJqZBxfE0T2+hgIza/5xrQaClypfGHZhlPS1OYpQeM8FkeJOsiGDVJqL52nuf4
+	 yYhKAwzAS7Tf31lG5xoLcEgQRssYWn/b0k8H5zsT96akuXDLsx0FNB67Wp/tujIhYg
+	 Ifak/vE8mTwOLZSLDJtGDHbKbWJ8CN23U+zQNrOxnkQPym0MxrkldTS6iHxQ1poH9e
+	 SbKan18lTHozANPl1Gg2U+bCVFx1oHv0KEEhbb4C3hfCqAi6hOMCm77yMnGrqJqJ8r
+	 ZP3eTjXHstTzFVTU6Lc4olp0eh9QxVMCJ1Uq55V3qLLxT9Ca2CYoqXs1YOrjmDEI69
+	 bJX2rLrdgnXlQ==
+Date: Mon, 19 May 2025 15:07:15 +0100
+From: Will Deacon <will@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v21 2/4] arm64: Handle BRBE booting requirements
+Message-ID: <20250519140713.GA16991@willie-the-truck>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-2-ff187ff6c928@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,46 +53,194 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=682b3aab cx=c_pps
- a=7F85Ct0dzgNClt63SJIU8Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=hASR2W6MItGKdFUF1uMA:9 a=CjuIK1q_8ugA:10
- a=LKR0efx6xuerLj5D82wC:22
-X-Proofpoint-ORIG-GUID: OCwio5gmzVIfW08VC32ohFDJRI6O7swx
-X-Proofpoint-GUID: OCwio5gmzVIfW08VC32ohFDJRI6O7swx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEzMCBTYWx0ZWRfX9SlHLMEUdKbY
- dRUojKByAI6SHO2RSl3bIz7UZ7ZqsG0GMO+8VtlyoQ9v5ZVKwwqvnBSR6V8a+ZGbQDiVtTSWVZK
- fv0VkZJqzJffjwF2uxuZCTU2Q6vZzW/W03JB5u9q79sHQ5d/LsrY4ehqKtxTZ5W2TMnRt7a9W6a
- ihIAvlEI/zQUiLqOL0B3RdaxtHTB/H6rfZxCLBdWLCQxNbINBL9M9gv17m+H+aPgJZksfXhEXuw
- 27+0VQM34FGuoErrgl9F19Q39EH1XuI13g08RjCgQ0ueYjs+53n3zeh7pGAZZedMA5WlHh50JHy
- Pe+HV809AqayzMjuHza+uYBJMc4PeBHEP1C9OYnnC823MwMmfaZO1SM49ojhD8+FaTZ7suCLQ5X
- gMsl5gUuk7HDYjEoM4QucKftxXo1W81NU/vqjA1wkATV45l8v7jXR/ANKWroKyoC2GgGx6dA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=659 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190130
+In-Reply-To: <20250407-arm-brbe-v19-v21-2-ff187ff6c928@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, May 19, 2025 at 07:14:01PM +0530, Kathiravan Thirumoorthy wrote:
-> Add support to retrieve Trust Management Engine (TME) image details
-> from SMEM, which is present in the IPQ5424 SoC.
+On Mon, Apr 07, 2025 at 12:41:31PM -0500, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
-> Note: On IPQ SoCs, the Trust Management Engine is referred to as TME-L
-> (Lite). Other SoCs from different business units may use variants like
-> TME-M. For consistency, the image name is retained as "TME".
-> ---
->  drivers/soc/qcom/socinfo.c | 2 ++
->  1 file changed, 2 insertions(+)
+> To use the Branch Record Buffer Extension (BRBE), some configuration is
+> necessary at EL3 and EL2. This patch documents the requirements and adds
+> the initial EL2 setup code, which largely consists of configuring the
+> fine-grained traps and initializing a couple of BRBE control registers.
 > 
+> Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
+> HDFGWTR_EL2 with the same value, relying on the read/write trap controls
+> for a register occupying the same bit position in either register. The
+> 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
+> 59 of HDFGWTR_EL2 is RES0, and so this assumption no longer holds.
+> 
+> To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
+> layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
+> HDFGWTR_EL2 control bits separately. While making this change the
+> open-coded value (1 << 62) is replaced with
+> HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
+> 
+> The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
+> initialisation: even though they are subject to E2H renaming, both have
+> an effect regardless of HCR_EL2.TGE, even when running at EL2, and
+> consequently both need to be initialised. This is handled in
+> __init_el2_brbe() with a comment to explain the situation.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> [Mark: rewrite commit message, fix typo in comment]
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+> Tested-by: James Clark <james.clark@linaro.org>
+> ---
+> v20:
+>  - Document that MDCR_EL3.SBRBE can be 0b01 also
+>  - Fix "HDFGWTR_EL2 is RES0" in commit msg
+> ---
+>  Documentation/arch/arm64/booting.rst | 21 +++++++++
+>  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
+>  2 files changed, 104 insertions(+), 3 deletions(-)
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+It would be good to have an Ack from the kvm/arm64 side on this, but in
+the meantime I've left some comments inline.
 
--- 
-With best wishes
-Dmitry
+> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> index dee7b6de864f..a627c1e0e4a0 100644
+> --- a/Documentation/arch/arm64/booting.rst
+> +++ b/Documentation/arch/arm64/booting.rst
+> @@ -358,6 +358,27 @@ Before jumping into the kernel, the following conditions must be met:
+>  
+>      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+>  
+> +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
+
+This doesn't make sense ^^^
+
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index ebceaae3c749..e7fcba1e7d8e 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -189,6 +189,39 @@
+>  .Lskip_set_cptr_\@:
+>  .endm
+>  
+> +/*
+> + * Configure BRBE to permit recording cycle counts and branch mispredicts.
+> + *
+> + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
+> + * BRBCR_EL1.CC=1.
+> + *
+> + * At any EL, to record branch mispredicts BRBE requires that both
+> + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
+> + *
+> + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
+> + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
+> + *
+> + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
+> + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
+> + * ends up executing in EL1 or EL2.
+> + */
+> +.macro __init_el2_brbe
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +	cbz	x1, .Lskip_brbe_\@
+> +
+> +	mov_q	x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
+> +	msr_s	SYS_BRBCR_EL2, x0
+> +
+> +	__check_hvhe .Lset_brbe_nvhe_\@, x1
+> +	msr_s	SYS_BRBCR_EL12, x0	// VHE
+> +	b	.Lskip_brbe_\@
+> +
+> +.Lset_brbe_nvhe_\@:
+> +	msr_s	SYS_BRBCR_EL1, x0	// NVHE
+> +.Lskip_brbe_\@:
+
+Why do we have to poke BRBCR_EL12/BRBCR_EL1 here rather than in the BRBE
+driver code?
+
+> +.endm
+> +
+>  /* Disable any fine grained traps */
+>  .macro __init_el2_fgt
+>  	mrs	x1, id_aa64mmfr0_el1
+> @@ -196,16 +229,48 @@
+>  	cbz	x1, .Lskip_fgt_\@
+>  
+>  	mov	x0, xzr
+> +	mov	x2, xzr
+>  	mrs	x1, id_aa64dfr0_el1
+>  	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+>  	cmp	x1, #3
+>  	b.lt	.Lskip_spe_fgt_\@
+> +
+>  	/* Disable PMSNEVFR_EL1 read and write traps */
+> -	orr	x0, x0, #(1 << 62)
+> +	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
+> +	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+>  
+>  .Lskip_spe_fgt_\@:
+> +#ifdef CONFIG_ARM64_BRBE
+
+Why is this gated on CONFIG_ARM64_BRBE?
+
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +	cbz	x1, .Lskip_brbe_reg_fgt_\@
+> +
+> +	/*
+> +	 * Disable read traps for the following registers
+> +	 *
+> +	 * [BRBSRC|BRBTGT|RBINF]_EL1
+> +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> +	 */
+> +	orr	x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
+> +
+> +	/*
+> +	 * Disable write traps for the following registers
+> +	 *
+> +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> +	 */
+> +	orr	x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
+> +
+> +	/* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
+> +	orr	x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
+> +	orr	x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
+> +
+> +	/* Disable read traps for BRBIDR_EL1 */
+> +	orr	x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
+> +
+> +.Lskip_brbe_reg_fgt_\@:
+
+I think this label should become .Lset_debug_fgt_\@:. That way, we have
+a clear point at which we're done with HDFG*TR_EL2. We can zero x0 and
+x2 and from then on we can focus on HFG*TR + HFGITR.
+
+nit: the existing .Lskip_debug_fgt_\@ label looks to be misnamed -- it
+should probably be .Lskip_sme_fgt_\@ ?
+
+> +#endif /* CONFIG_ARM64_BRBE */
+>  	msr_s	SYS_HDFGRTR_EL2, x0
+> -	msr_s	SYS_HDFGWTR_EL2, x0
+> +	msr_s	SYS_HDFGWTR_EL2, x2
+
+nit: It would be cleaner to use x0/x1 for the pair of trap registers
+but I can see that would be a more invasive change.
+
+>  	mov	x0, xzr
+>  	mrs	x1, id_aa64pfr1_el1
+> @@ -246,7 +311,21 @@
+>  .Lset_fgt_\@:
+>  	msr_s	SYS_HFGRTR_EL2, x0
+>  	msr_s	SYS_HFGWTR_EL2, x0
+> -	msr_s	SYS_HFGITR_EL2, xzr
+> +	mov	x0, xzr
+> +#ifdef CONFIG_ARM64_BRBE
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +	cbz	x1, .Lskip_brbe_insn_fgt_\@
+
+It would probably scale better if we unconditionally stick x2 in
+HFGITR_EL2 and zero that register in '.Lset_debug_fgt_\@'. We still have
+two checks for BRBE, but at least '.Lset_fgt_\@' could just stick to
+writing the registers.
+
+Will
