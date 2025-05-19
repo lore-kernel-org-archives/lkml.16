@@ -1,115 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F8F142E83;
-	Mon, 19 May 2025 08:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9AE12FF6F;
+	Mon, 19 May 2025 08:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747641636; cv=none; b=JW2UxB6ITkMW6srQVKMwt+PN0E7GfwAvs8zXUzX97YK7gs16MEMqYeHs87KBfmisY1wxCxhxjviY4yjgMmufQC1kLUGJkHVYiksy5EMz0WRzoCZqeXLIKUrAwFpWT2gfE1MXxIe1BLl1m2tFYXGdNE1N0vOFvGPnmRAEVcFc/bM=
+	t=1747641784; cv=none; b=jZZBhfCECi52ORljbQmJAVKd1mJG/GvSwvs6sD9iH0hxgz7l1/DX3lfajkxvf9RLs/95lPFXL0U+Di/+SIfFUfPmcd/cX0Vtj3uRf7Q3siHXMxnlaR89ZdEYJx3O/ZHuh8HzHrVrmQE9ey+HBcyatd1zzLjJXme6xOPEI5cVwUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747641636; c=relaxed/simple;
-	bh=8NFJmtCrqy2M+sgpOfFXk1sfROnmArrwPBKg4L1GLXI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sfWgzB7Ueyh5u5hzph/u5CNRrI6h/YoF2WoZUyN5oNwD1u1RFAJFDG44ALPmcMig7GPYTNYzFB7n97Cez7taTnVeGMvBDJ+oDU5w4t0q7dj6lgtLbhdELhuEI0wOlUGoP0xyI2PfxzAvhwtu/z+twXzETndlnvIUNpKq02P7fOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWHW5T38; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747641784; c=relaxed/simple;
+	bh=lBa5YTZkMvuUtwce6u4tOUSxz48BGhJyHh7YNCMEW50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V93eBxLxLXStIMpR4A1bLMR/B92Yz8uYg54eNLoIS9zKlbjHU0GkSxJXj+e5XtsDoOvKy5Ha9MiLgseehsZNsjXVgnn1S4+I8pbG6wQuEz4YUo5ozBbt450ikUVDqZmGI8nDclE+jlTz8F6Z3Hh/JjJzi4gMiC1RukiPCuPwHq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ju94p8AQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n5vrctMm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWHW5T38"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B6AC4CEE4;
-	Mon, 19 May 2025 08:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747641635;
-	bh=8NFJmtCrqy2M+sgpOfFXk1sfROnmArrwPBKg4L1GLXI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=oWHW5T38bj54HB2n5rv0HTOKrEyKNgsfQ9EwaIV41lzuCXOfDAiB6EEeOMnF/dxme
-	 q5jHVXwoLZhsfUms3QfthBspiyV79nhxwuhuANNGvGLo9mxH962hBWGGdWC4LpLCmt
-	 hEgqTfgW50KDGDkIe5EUGYO91SVSGjo48xg+1tRgDi2Hy1KHSCVVg7ZyNdhdizt6TA
-	 Ku+aYrnVPS3lXgM2MRovs5QQ3edkIrceJ//XlCHSODIdkueKrpYDctUr2pnm3LxvlA
-	 Qdl3z/FKHk9DdoGl3ymJ7iojBdSCXTa6meqGmGuXmH1g1xkvFcX36KxbGC/apxxjGy
-	 S56JPPm2YIf/A==
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ju94p8AQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n5vrctMm"
+Date: Mon, 19 May 2025 10:02:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747641780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7UKdQC4LHOSIht84R3Mn36AaWF5sKTsoRKuOqQ9j8=;
+	b=Ju94p8AQLFfRldxTcs8MVikKtJGtA0cY8PODOeRyRox7osIL8xockLa5SmaVYp5UgVWQpW
+	u6zryGvSkzuLh+gEP3rjmrV2B49sN2YSkv6GEP/aC9mWHIckuW1oZQipTpXNkJaf65iX6q
+	R7WH1qAgTViXvHC7CBFRc5izFJlifiRTkF3xlip0AnmQIP+AWD9zjhDWvqzQdzVrT2BfKU
+	nolDJwFgOsH2mUa/2K0fAtqfT/9g6p4mdp4qfjMcR7nfByvGX0FsyBhw4ArXS+2y5aqFOj
+	1nk6RLjJhwOkNxfQ8YUcRuSQvJQZ6Pe02sLPmOMm9rdwKemWomdOGMkwr0KyCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747641780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7UKdQC4LHOSIht84R3Mn36AaWF5sKTsoRKuOqQ9j8=;
+	b=n5vrctMmY1SzpNnbdlZ4I/P1d/Y+oDijqmTduoFyDj42WLTb4cD1osSx3GjlLE1DKLPYMB
+	SDp1hb0tBwU/9HBg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH v2 03/12] rv: Add da_handle_start_run_event_ to
+ per-task monitors
+Message-ID: <20250519080256.kLt-OF34@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+ <20250514084314.57976-4-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 10:00:27 +0200
-Message-Id: <D9ZZ93ZGKC3N.9VGUE5QBJS4H@kernel.org>
-Cc: <linux-pm@vger.kernel.org>, "Vincent Guittot"
- <vincent.guittot@linaro.org>, "Stephen Boyd" <sboyd@kernel.org>, "Nishanth
- Menon" <nm@ti.com>, <rust-for-linux@vger.kernel.org>, "Manos Pitsidianakis"
- <manos.pitsidianakis@linaro.org>, =?utf-8?q?Alex_Benn=C3=A9e?=
- <alex.bennee@linaro.org>, "Joakim Bech" <joakim.bech@linaro.org>, "Rob
- Herring" <robh@kernel.org>, "Yury Norov" <yury.norov@gmail.com>, "Burak
- Emir" <bqe@google.com>, "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
- "Russell King" <linux@armlinux.org.uk>, <linux-clk@vger.kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Andrew Ballance"
- <andrewjballance@gmail.com>, "Anisse Astier" <anisse@astier.eu>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module
- names
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Viresh Kumar" <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,
- "Danilo Krummrich" <dakr@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <cover.1747634382.git.viresh.kumar@linaro.org>
- <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
-In-Reply-To: <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514084314.57976-4-gmonaco@redhat.com>
 
-On Mon May 19, 2025 at 9:07 AM CEST, Viresh Kumar wrote:
-> From: Anisse Astier <anisse@astier.eu>
->
-> Some modules might need naming that contains hyphens "-" to match the
-> auto-probing by name in the platform devices that comes from the device
-> tree.
->
-> But rust identifiers cannot contain hyphens, so replace the module name
-> by an underscore anywhere we'd use it as an identifier.
+On Wed, May 14, 2025 at 10:43:05AM +0200, Gabriele Monaco wrote:
+> The RV da_monitor API allows to start monitors in two ways:
+> da_handle_start_event_NAME and da_handle_start_run_event_NAME.
+> The former is used when the event is followed by the initial state of
+> the module, so we ignore the event but we know the monitor is in the
+> initial state and can start monitoring, the latter can be used if the
+> event can only occur in the initial state, so we do handle the event as
+> if the monitor was in the initial state.
+> This latter API is defined for implicit monitors but not per-task ones.
+> 
+> Define da_handle_start_run_event_NAME macro also for per-task monitors.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-I think this is supposed to read "But Rust identifier cannot contain
-hyphens, so replace them with underscores.".
-
-> Signed-off-by: Anisse Astier <anisse@astier.eu>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> [Viresh: Replace "-" with '-', and fix line length checkpatch warnings]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  rust/macros/module.rs | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-
-One nit below, with or without:
-
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
-> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-> index a9418fbc9b44..27cc72d474f0 100644
-> --- a/rust/macros/module.rs
-> +++ b/rust/macros/module.rs
-> @@ -185,7 +185,9 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream =
-{
-> =20
->      let info =3D ModuleInfo::parse(&mut it);
-> =20
-> -    let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
-> +    /* Rust does not allow hyphens in identifiers, use underscore instea=
-d */
-> +    let name_identifier =3D info.name.replace('-', "_");
-
-I think we could just name this variable `ident`.
-
----
-Cheers,
-Benno
-
-> +    let mut modinfo =3D ModInfoBuilder::new(name_identifier.as_ref());
->      if let Some(author) =3D info.author {
->          modinfo.emit("author", &author);
->      }
+Reviewed-by: Nam Cao <namcao@linutronix.de>
