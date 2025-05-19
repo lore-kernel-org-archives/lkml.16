@@ -1,73 +1,73 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C45269D09
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C2561FCE
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747642866; cv=none; b=ZBtvaipCncG8DLP9lBp5Jsz9o2KAvEvxmvFxQ6FxPsdnL0UWO8RzYOHEvSfiIM847jgbcGr77q/o6JTmOVoqT+2ke+fOy4FqpRBuD4vzD7FFr2nfhOtpTpxzFtRqoQP691MTriNjQaztNC/vlVe1ZKXRPQOFtlPBa/HenTGBAXs=
+	t=1747642909; cv=none; b=i1PGWZ+HbHfeQ4ezSHiIrgE+CIm6OQ/K01uS3fAqciVyB+lWFOpzHCAzQ+chzIHZAjQyaDmcM8g6XrNG18ouNHEPkdEGrCxIboAv6g/0hACAdsicHLpwwvYQlCC4RZqbn1unlTN4Ui5cy08EKBfngCO8gCTf3VXkbZuq6nL5jIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747642866; c=relaxed/simple;
-	bh=VdWmfL0lNgtn8uxvWm6gULA7r4+2sBVofDkK3Xnk6wM=;
+	s=arc-20240116; t=1747642909; c=relaxed/simple;
+	bh=bBjjj9zsbk9H9i6/iZApKjtgWkJguNo3d+xw1A7B87s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GVoJCaXSTyDA6hQrT1Sse0OVTucPt0ai3qYK75UoGTX2TfPH14AL3B6gNy92luK/ckdW7iZ1wNCcp5AsPQvKwcl8M3QX0sWX9F1KvIr7WnhV6xxNXCY1UmefVdoqCYOQH/vU+EUsGSoQK0kDjk8PeKMmGDjnQMqyNVe5LMwx6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lnnAGXAk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=qrdaWbGovcsAtnAaf6pPYZIdFaGAIHHzpVViNLArNdKkVIWOPr9UdngtglfgwBD2pvAT4U/vi7/kAvA8O119FE1+IrNPuHEhpvfVoC5XvDKNEgkVIYjIbRQoPhocx7h4qNNRwSU38VXn/tbrQcVu1mmJFeM9UaOgS6Qyeq3rPSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EsKz0aCd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lnnAGXAk"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54ILt7NX016028
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:20:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4jHLqJtJR/H3L9Lz2o55CQrsBxGQmwWALeH+iCx6r2k=; b=lnnAGXAkX9bvVc+c
-	MDoiNeKyAZ6+YHh6Vm64VTQCAiO4OxKUniUBaOMq0tP2wWjDB7Iu6WWcTdkfdXz6
-	jJUXmlPxXEyhicgAIkEwocycqLxUVMzw+jIhSA9Tp3zlNdU6hlOQGTAcrplMLPoA
-	Fs3damtX6wYljLhPAsJ+cFNhp7v8mCP0GnsMASEjlJ9YQPY1vuIpUuOh/B940hSb
-	eJKDHYKCBXRQnNhbpEa6la2zSQpTR2DULiV/mMIpBdx3VHIOmj5bJiaRpSAT6IvB
-	NNHqF91fm3AOwMQSmnZBJBTO3AG7VjbZ33rSOFsx7DBNPRS8odkGqyosYAjbSSLY
-	pNm27w==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjnykn2w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:20:57 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b15232ce0a4so136302a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:20:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EsKz0aCd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747642905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=u+MG9y4O8ppEorrD5bhLn8mSmUVZv9zwa5Zj0IOyggI=;
+	b=EsKz0aCdujDIVCD1FTbUXocfDanVLmXdFagmcXTlr80hMsXgekdTzzZ6NrQjsIdTykBasP
+	paPUojbtj3roBR4Se3d5jJR/+wfMAnLv+03Bw2D23n+Qo9xal49faf5wAr5imGG65b7RBj
+	yXfTtaPmdUMs/4tZDu+w2VDxahb9ULo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-2-6b5q6TpoMTiB8a2P_O0PcQ-1; Mon, 19 May 2025 04:21:44 -0400
+X-MC-Unique: 6b5q6TpoMTiB8a2P_O0PcQ-1
+X-Mimecast-MFC-AGG-ID: 6b5q6TpoMTiB8a2P_O0PcQ_1747642903
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-445135eb689so6279755e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:21:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747642856; x=1748247656;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4jHLqJtJR/H3L9Lz2o55CQrsBxGQmwWALeH+iCx6r2k=;
-        b=KmJn44sjWXCCv3r5YSV8g4GoidMcv1RzDLsu2ZjaFf4V8rKSCaB1pii2ScSxQv0guO
-         xtCyRMwcQMgkX+Ex9uOVzFUPIm5pHPNZSruJL8aUlf7l/UnboNMh6tmRvEOnbc9e7nFe
-         OH/teZuV/Rq8vgDaJgQxq10smwfuxMtAqt3COe15tL2V/1LQer+qZiz6I2flZu/8ZJxW
-         sVMfn0ksG5Nb5o6J+2rKYFfOK+yzNT7vAqFSvIpb5yrX/LCTBUy3U/BFTNC0IeRALo17
-         OgfbvrM8Qxra7tDOZsNvlaYHgv1PMdrgiiu9uEM8eUo166pmV2SCBSoaDu2pWt5+y0mK
-         JbNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeWM5pcwo0qBGXnOTtv2P6cp7Ll5eW6YQ7XFJmZZgjiBEuBPCQsQZbVGTW3TAe7dJCtA/yy3brrb0Kh+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY0Tf/wpa473smse2bMt+pbynbjKC3cxotdPBhFo770aVChXUm
-	TP8Y1kyy/a2rsApK0BhxA2zwcTCiKzi45eh11CiFj+sWUeiPAMV8L5yLHvz9Py2GPRklzU8P3UA
-	51lV/zpWZYYt8FRqs6yyng0+h0WqeFe/xvotQa5Z0cQSlE+38ixXI0rg04TJt2E6d2x8=
-X-Gm-Gg: ASbGnctkBZmIT+1bN8+pOBLTLePzCSwWZkrYDWWTWVfRUizi5ij3FNiz4rcBm5sZQ91
-	IA8IHjHJOF+xpVpet9/CBvFuq/rv0aYMRIw3qs4FnliJ3xgj6Hjie6NT5il+SfdL40ad76PBkE9
-	sJewFEVSBAKad0scbI174t6Dif3RSlP+rfsb/yD18Q7tchrANs5V1oix154/bQhb0GYaFvjX11V
-	7CD8ERXhvLZdHw/rEQkhxhu3GBmCO08qav1FFyOi/5DTyKfESgQvYKK6JgnSFnkLvyNy8h1nvgz
-	mUENVVdg6WTRnLKCMJhaSRV0ByfVjXEm9zt/8eUS4ufxmhOSBPk19UONhAHzPvlJdhrklWjubcJ
-	P
-X-Received: by 2002:a05:6a20:3d92:b0:215:e979:762f with SMTP id adf61e73a8af0-216219c656fmr6623507637.7.1747642856044;
-        Mon, 19 May 2025 01:20:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH5PAUzn0GvTsPJRCt2MyJ3o5jDvz2ViCLBGKCluWBuApDplJDI6WCxq8gdmWk+kRTeXlzKjw==
-X-Received: by 2002:a05:6a20:3d92:b0:215:e979:762f with SMTP id adf61e73a8af0-216219c656fmr6623485637.7.1747642855515;
-        Mon, 19 May 2025 01:20:55 -0700 (PDT)
-Received: from [10.133.33.47] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a9ac9sm5654824a12.78.2025.05.19.01.20.47
+        d=1e100.net; s=20230601; t=1747642903; x=1748247703;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=u+MG9y4O8ppEorrD5bhLn8mSmUVZv9zwa5Zj0IOyggI=;
+        b=rg78cvtYe5GuFRZJRTPJLF9Hd/kVaIRGIdZHf9IEb2tbWYBuPaNYo3x58LGVZ/ObIH
+         qzM22DOTEdyfcbopTqqMfsexwHsb60CA9DXsT8Sac14A0Nkb0xDQzdNXhAHrhTXVmeFD
+         Ic8a66yWp4R+rI0e2unRo4zcCXEoNlqJKPNEOQDWYWOk5kF2srfq+8Ll7yDM+dxCVIpq
+         cvBi/vY3emYeILmqaZes2vKAObCRLW8riUfRbTcR+31/4RRTZCuyGzYQ0AoJJIjLDviB
+         y5FwDUBs48MJ5nFgxRNd8ZuM3QHD/kj2JRNIy/5iSsU8gIMv2NifIU+HCUohynboWz2I
+         GFMA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0aVpFahxON2PcihfUioyZlrUCgPYVAH8/twDp3Xh+TPHCNzKhd2o8dUbouTSHeGB+QYrMHE/WYWcb3NY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2gIFQIPrRwuILNabS2Nh+cQkbbNrlITHajRDmE3ExtV1Bj24+
+	kGGmp76f7ElbnPZ/qLaU68QDRlzYhXXWZMlEMPywVMyFfa+VMWSX44JGNLzwxa17XuiR2h7RyEa
+	MGO8J3U1ceMAfk5lKB03PtzpdjT2i58jI5GCPlFzr+xwnvNhSM3JJOr2UBdsxLEh0pw==
+X-Gm-Gg: ASbGnctEEhTYtyGchH2LIZ+DJC42k/QWVtVA4AUmrehhzYTkjfROFx490AxdZvIjDNA
+	VQn4mpYzcJFrptE92N0kPXOdkYOg0KZaPNNHD4tGxdzllxK/NZQgGI1uko+dm11g5xgl7Xfq7h1
+	tSCjEQ2gGrkgd/FlUgUVjVZ2mDRDo3wDpBFXmFb/BG87L5tQdI5KJ7btcMRAsPQ50hNKI2VzLyQ
+	DidYuwX+/F5aCRCxMXbLvxhZIYXQLpyV8ymgmFZTFHZDu6ltcqXEFssmrR8YSikFNrfhmgt5wgF
+	GwOQzjT5WOCZiV/fotHGkEaitdLZj1tLftAOp0zzHGNrjUdS/KpoWwfpjNJBPz6ZOJbwTQ15i+T
+	hAzxBpuwwD95zFRimuUb+srkoRFNYXI7DzJoSDdM=
+X-Received: by 2002:a05:600c:3114:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-442fd6445bdmr117043865e9.17.1747642903171;
+        Mon, 19 May 2025 01:21:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSAFjAk60JdnbWGV8nMpoKRSo95W61/xKU0nMNnL2WA8IKD61o0r0m8m7GIhp6pzuiWP8kSw==
+X-Received: by 2002:a05:600c:3114:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-442fd6445bdmr117043585e9.17.1747642902730;
+        Mon, 19 May 2025 01:21:42 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebd46aa4sm142242045e9.1.2025.05.19.01.21.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 01:20:55 -0700 (PDT)
-Message-ID: <84500975-eb32-471f-a64a-283e885ae84e@oss.qualcomm.com>
-Date: Mon, 19 May 2025 16:20:46 +0800
+        Mon, 19 May 2025 01:21:42 -0700 (PDT)
+Message-ID: <63ba9fe3-e384-4396-bd86-fe62150ed1ab@redhat.com>
+Date: Mon, 19 May 2025 10:21:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,293 +75,312 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] drm/msm/dp: Add support for lane mapping
- configuration
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        dmitry.baryshkov@oss.qualcomm.com
-Cc: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
- <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
- <brgl@bgdev.pl>, quic_lliu6@quicinc.com,
-        quic_fangez@quicinc.com, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
-        quic_xiangxuy@quicinc.com
-References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
- <20241129-add-displayport-support-for-qcs615-platform-v1-5-09a4338d93ef@quicinc.com>
- <CAA8EJpoY8hySQd00yODGeHjSpVZpEBLjF3aBiKGJPUhpr-2mgw@mail.gmail.com>
- <d2a3cd6f-1077-4edb-9f0c-0c940a639050@quicinc.com>
- <zvapsvfftai4fp6vwrn33edqsyuuprq2pxz6spij6j7t4y6xmn@zzgp7gbsivbk>
- <93ddb63c-42da-43c8-9a77-c517ca5d6432@quicinc.com>
- <CAA8EJprAFYD6ykN10-r=JwHM4A4XeDDcZVcVWYp_5A5FP-=RyA@mail.gmail.com>
- <e647d143-dc6e-483d-ac81-2733fb526fc3@quicinc.com>
- <h6tmbuv26tdv633udphttsydpbvnwownulvglcxktdaxqdhtvw@ereftfs5hiso>
- <9fb34496-d823-414a-b7dc-54b4677829e5@quicinc.com>
- <td4dkb6qoxfa7lfmfszlowov6qxdukqq5qnwnhmajnskr5mu2u@todczb6inttv>
-From: Xiangxu Yin <xiangxu.yin@oss.qualcomm.com>
-In-Reply-To: <td4dkb6qoxfa7lfmfszlowov6qxdukqq5qnwnhmajnskr5mu2u@todczb6inttv>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA3OCBTYWx0ZWRfX0TPi0GLZVbEe
- RvgIvVpRFBdA1++JEr3BsWA7aIq2ws9HYq1hQTCdgnfAw4Fd5LyNjTMJWq9VeWAUXKcYEO2WMAk
- vbxHV7sssjZm+7IGW+MsBCxLEvnLaxBrQ6xT9XOmAkIRBDP+Xc8wWcnAPMX/cm0itkH3FYYyx29
- DvszOPnTKtK101FFynHC0+Jq2oYMhq3pR1dRvJ+AAgOLd/kR771Rg94C33fAwF7nYbbxfEn3Sz7
- y1lEa8pzDOdJEmXMxJqSU3+lx1uu8g2XOlnkrRrc7SqtFDnvasl8s8lE7HDX9rA5Gzt15xFUSp8
- D73aWbnpVunerNlgyqcQBrSYuxoi4viaivrZr3yNXIzBDWa5u0qNnBF9p7aPYHRIzzz8YrSd2hm
- BI2MEAKZaOFAfToKHeCffOPetdhPeIkGAPPkQyuoVAiGhzfoCIOc0R9/ZoX5KYWQf857iF0T
-X-Authority-Analysis: v=2.4 cv=Z9XsHGRA c=1 sm=1 tr=0 ts=682ae9e9 cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=Oh2cFVv5AAAA:8
- a=JfrnYn6hAAAA:8 a=COk6AnOGAAAA:8 a=mb-A_Saak2OZ3Y13WnMA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22 a=Vxmtnl_E_bksehYqCbjh:22
- a=7KeoIwV6GZqOttXkcoxL:22 a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 56FDLdlQWzxyh8KXnIYHXKjVun-_ATzv
-X-Proofpoint-ORIG-GUID: 56FDLdlQWzxyh8KXnIYHXKjVun-_ATzv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1011
- malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190078
+Subject: Re: [PATCH v4 2/4] mm/page_isolation: remove migratetype from
+ move_freepages_block_isolate()
+To: Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
+ Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang
+ <richardycc@google.com>, linux-kernel@vger.kernel.org
+References: <20250509200111.3372279-1-ziy@nvidia.com>
+ <20250509200111.3372279-3-ziy@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250509200111.3372279-3-ziy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 3/6/2025 5:14 AM, Dmitry Baryshkov wrote:
-> On Wed, Mar 05, 2025 at 06:16:45PM +0800, Xiangxu Yin wrote:
->>
->>
->> On 12/20/2024 5:45 AM, Dmitry Baryshkov wrote:
->>> On Thu, Dec 19, 2024 at 06:36:38PM +0800, Xiangxu Yin wrote:
->>>>
->>>>
->>>> On 12/5/2024 7:40 PM, Dmitry Baryshkov wrote:
->>>>> On Thu, 5 Dec 2024 at 13:28, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 12/2/2024 6:46 PM, Dmitry Baryshkov wrote:
->>>>>>> On Mon, Dec 02, 2024 at 04:40:05PM +0800, Xiangxu Yin wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 11/29/2024 9:50 PM, Dmitry Baryshkov wrote:
->>>>>>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
->>>>>>>>>>
->>>>>>>>>> Add the ability to configure lane mapping for the DP controller. This is
->>>>>>>>>> required when the platform's lane mapping does not follow the default
->>>>>>>>>> order (0, 1, 2, 3). The mapping rules are now configurable via the
->>>>>>>>>> `data-lane` property in the devicetree. This property defines the
->>>>>>>>>> logical-to-physical lane mapping sequence, ensuring correct lane
->>>>>>>>>> assignment for non-default configurations.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
->>>>>>>>>> ---
->>>>>>>>>>  drivers/gpu/drm/msm/dp/dp_catalog.c | 11 +++++------
->>>>>>>>>>  drivers/gpu/drm/msm/dp/dp_catalog.h |  2 +-
->>>>>>>>>>  drivers/gpu/drm/msm/dp/dp_ctrl.c    |  2 +-
->>>>>>>>>>  drivers/gpu/drm/msm/dp/dp_panel.c   | 13 ++++++++++---
->>>>>>>>>>  drivers/gpu/drm/msm/dp/dp_panel.h   |  3 +++
->>>>>>>>>>  5 files changed, 20 insertions(+), 11 deletions(-)
->>>>>>>>>>
->>>>>>>
->>>>>>>>>> @@ -461,6 +460,7 @@ static int msm_dp_panel_parse_dt(struct msm_dp_panel *msm_dp_panel)
->>>>>>>>>>         struct msm_dp_panel_private *panel;
->>>>>>>>>>         struct device_node *of_node;
->>>>>>>>>>         int cnt;
->>>>>>>>>> +       u32 lane_map[DP_MAX_NUM_DP_LANES] = {0, 1, 2, 3};
->>>>>>>>>>
->>>>>>>>>>         panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
->>>>>>>>>>         of_node = panel->dev->of_node;
->>>>>>>>>> @@ -474,10 +474,17 @@ static int msm_dp_panel_parse_dt(struct msm_dp_panel *msm_dp_panel)
->>>>>>>>>>                 cnt = drm_of_get_data_lanes_count(of_node, 1, DP_MAX_NUM_DP_LANES);
->>>>>>>>>>         }
->>>>>>>>>>
->>>>>>>>>> -       if (cnt > 0)
->>>>>>>>>> +       if (cnt > 0) {
->>>>>>>>>> +               struct device_node *endpoint;
->>>>>>>>>> +
->>>>>>>>>>                 msm_dp_panel->max_dp_lanes = cnt;
->>>>>>>>>> -       else
->>>>>>>>>> +               endpoint = of_graph_get_endpoint_by_regs(of_node, 1, -1);
->>>>>>>>>> +               of_property_read_u32_array(endpoint, "data-lanes", lane_map, cnt);
->>>>>>>>>> +       } else {
->>>>>>>>>>                 msm_dp_panel->max_dp_lanes = DP_MAX_NUM_DP_LANES; /* 4 lanes */
->>>>>>>>>> +       }
->>>>>>>>>
->>>>>>>>> Why? This sounds more like dp_catalog or (after the refactoring at
->>>>>>>>> [1]) dp_ctrl. But not the dp_panel.
->>>>>>>>>
->>>>>>>>> [1] https://patchwork.freedesktop.org/project/freedreno/series/?ordering=-last_updated
->>>>>>>>>
->>>>>>>> We are used the same prop 'data-lanes = <3 2 0 1>' in mdss_dp_out to keep similar behaviour with dsi_host_parse_lane_data.
->>>>>>>> From the modules used, catalog seems more appropriate, but since the max_dp_lanes is parsed at dp_panel, it has been placed here.
->>>>>>>> Should lane_map parsing in msm_dp_catalog_get, and keep max_dp_lanes parsing at the dp_panel?
->>>>>>>
->>>>>>> msm_dp_catalog_get() is going to be removed. Since the functions that
->>>>>>> are going to use it are in dp_ctrl module, I thought that dp_ctrl.c is
->>>>>>> the best place. A better option might be to move max_dp_lanes and
->>>>>>> max_dp_link_rate to dp_link.c as those are link params. Then
->>>>>>> lane_mapping also logically becomes a part of dp_link module.
->>>>>>>
->>>>>>> But now I have a more important question (triggered by Krishna's email
->>>>>>> about SAR2130P's USB): if the lanes are swapped, does USB 3 work on that
->>>>>>> platform? Or is it being demoted to USB 2 with nobody noticing that?
->>>>>>>
->>>>>>> If lanes 0/1 and 2/3 are swapped, shouldn't it be handled in the QMP
->>>>>>> PHY, where we handle lanes and orientation switching?
->>>>>>>
->>>>>> I have checked the DP hardware programming guide and also discussed it with Krishna.
->>>>>>
->>>>>> According to the HPG section '3.4.2 PN and Lane Swap: PHY supports PN swap for mainlink and AUX, but it doesn't support lane swap feature.'
->>>>>>
->>>>>> The lane swap mainly refers to the logical to physical mapping between the DP controller and the DP PHY. The PHY handles polarity inversion, and the lane map does not affect USB behavior.
->>>>>>
->>>>>> On the QCS615 platform, we have also tested when DP works with lane swap, other USB 3.0 ports can works normally at super speed.
->>>>>
->>>>> "Other USB 3.0 ports"? What does that mean? Please correct me if I'm
->>>>> wrong, you should have a USB+DP combo port that is being managed with
->>>>> combo PHY. Does USB 3 work on that port?
->>>>>
->>>>> In other words, where the order of lanes is actually inverted? Between
->>>>> DP and combo PHY? Within combo PHY? Between the PHY and the pinout?
->>>>> Granted that SM6150 was supported in msm-4.14 could you possibly point
->>>>> out a corresponding commit or a set of commits from that kernel?
->>>>>
->>>> For "Other USB 3.0 ports", as replied in USBC driver, USB3 primary phy works for other four USB type-A port.
->>>
->>> So if that's the USB3 primary, then why do you mention here at all? We
->>> are taling about the secondary USB3 + DP.
->>>
->> OK, sorry for confusing you.
->>>> The REG_DP_LOGICAL2PHYSICAL_LANE_MAPPING mapping determines how logical lanes (0, 1, 2, 3) map to physical lanes sent to the PHY.
->>>> This ensures alignment with hardware requirements.
->>>> The PHY’s polarity inversion only adjusts signal polarity and doesn’t affect lane mapping.
->>>> Both DP ctrl and PHY lane related config will not affect USB phy.
->>>
->>> Probably we misundersand each other. The DP PHY should have orientation
->>> switch register, which controls whether 2-lane DP uses lanes 0/1 or 2/3.
->>> Can you use that register?
->>>
->> Yes, DP PHY have orientation register as below.
->> DP_PHY_DP_PHY_CFG_1(0x88e9014) bit(7) SW_PORTSELECT
->>> Also, could you _please_ answer the question that I have asked? Is the
->>> order of lanes inverted between the DP controller and DP PHY? Or between
->>> DP PHY and the DP connector? If one uses USB3 signals coming from this
->>> port (yes, on the other board, not on the Ride), would they also need to
->>> switch the order of USB3 lanes? If one uses a DP-over-USB-C, are DP
->>> lanes are swapped?
->>>
->> It's inverted between the DP controller and DP PHY.
->> If other use USB3 on the other board, will not need switch order of USB3 lanes,
->> If one use DP-over-USB-C, then need DP lanes swap.
+On 09.05.25 22:01, Zi Yan wrote:
+> Since migratetype is no longer overwritten during pageblock isolation,
+> moving pageblocks to and from MIGRATE_ISOLATE no longer needs migratetype.
 > 
-> Thanks!
+> Add MIGRATETYPE_NO_ISO_MASK to allow read before-isolation migratetype
+> when a pageblock is isolated. It is used by move_freepages_block_isolate().
 > 
->>>> Without extra Type-C mapping, the DP controller’s mapping indirectly decides how signals are transmitted through Type-C.
->>>> Mapping ensures proper data transmission and compatibility across interfaces.
->>>>
->>>> We only found sm6150 need this lane mapping config, 
->>>> For msm 4.14, please refer these links,
->>>> https://android.googlesource.com/kernel/msm/+/af03eef7d4c3cbd1fe26c67d4f1915b05d0c1488/arch/arm64/boot/dts/qcom/sm6150-sde.dtsi (qcom,logical2physical-lane-map)
->>>> https://android.googlesource.com/kernel/msm/+/af03eef7d4c3cbd1fe26c67d4f1915b05d0c1488/drivers/gpu/drm/msm/dp/dp_parser.c (dp_parser_misc)
->>>> https://android.googlesource.com/kernel/msm/+/af03eef7d4c3cbd1fe26c67d4f1915b05d0c1488/drivers/gpu/drm/msm/dp/dp_catalog_v200.c (dp_catalog_ctrl_lane_mapping_v200)
->>>>
->>>> If need process orientation info like dp_catalog_ctrl_lane_mapping_v200, 
->>>> then 
->>>> if implement in DP phy, then we need config dp_link register in PHY,
->>>> if implement in DP link, then we need pass orientation info to DP driver, perhaps we could add a new attribute to the phy_configure_opts_dp structure to pass this.
->>>> Do you have any suggestions?
->>>
->>> Does SW_PORTSEL_VAL affect the DP lanes on this platform?
->>>
->> SW_PORTSEL_VAL for USB3PHY_PCS_MISC_TYPEC_CTRL will not affect DP lanes in this DP or USB3 chip series.
->> USB3 will use USB3PHY_PCS_MISC_TYPEC_CTRL(SW_PORTSEL_VAL BIT_0) and DP will use DP_PHY_DP_PHY_CFG_1(SW_PORTSELECT BIT_7)
+> Add pageblock_isolate_and_move_free_pages() and
+> pageblock_unisolate_and_move_free_pages() to be explicit about the page
+> isolation operations. Both share the common code in
+> __move_freepages_block_isolate(), which is renamed from
+> move_freepages_block_isolate().
 > 
-> Is it possible to set this bit from the PHY driver rather than remapping
-> the lanes in the DP driver?
+> Make set_pageblock_migratetype() only accept non MIGRATE_ISOLATE types,
+> so that one should use set_pageblock_isolate() to isolate pageblocks.
 > 
-I have verified and confirmed with chip verification team.
+> Two consequential changes:
+> 1. move pageblock migratetype code out of __move_freepages_block().
+> 2. in online_pages() from mm/memory_hotplug.c, move_pfn_range_to_zone() is
+>     called with MIGRATE_MOVABLE instead of MIGRATE_ISOLATE and all affected
+>     pageblocks are isolated afterwards. Otherwise, all online pageblocks
+>     will have non-determined migratetype.
+> 
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>   include/linux/mmzone.h         |  4 +-
+>   include/linux/page-isolation.h |  5 ++-
+>   mm/memory_hotplug.c            |  7 +++-
+>   mm/page_alloc.c                | 73 +++++++++++++++++++++++++---------
+>   mm/page_isolation.c            | 27 ++++++++-----
+>   5 files changed, 82 insertions(+), 34 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 7ef01fe148ce..f66895456974 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -107,8 +107,10 @@ static inline bool migratetype_is_mergeable(int mt)
+>   extern int page_group_by_mobility_disabled;
+>   
+>   #ifdef CONFIG_MEMORY_ISOLATION
+> -#define MIGRATETYPE_MASK ((BIT(PB_migratetype_bits) - 1) | PB_migrate_isolate_bit)
+> +#define MIGRATETYPE_NO_ISO_MASK (BIT(PB_migratetype_bits) - 1)
+> +#define MIGRATETYPE_MASK (MIGRATETYPE_NO_ISO_MASK | PB_migrate_isolate_bit)
+>   #else
+> +#define MIGRATETYPE_NO_ISO_MASK MIGRATETYPE_MASK
+>   #define MIGRATETYPE_MASK (BIT(PB_migratetype_bits) - 1)
+>   #endif
+>   
+> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+> index 898bb788243b..b0a2af0a5357 100644
+> --- a/include/linux/page-isolation.h
+> +++ b/include/linux/page-isolation.h
+> @@ -26,9 +26,10 @@ static inline bool is_migrate_isolate(int migratetype)
+>   #define REPORT_FAILURE	0x2
+>   
+>   void set_pageblock_migratetype(struct page *page, int migratetype);
+> +void set_pageblock_isolate(struct page *page);
+>   
+> -bool move_freepages_block_isolate(struct zone *zone, struct page *page,
+> -				  int migratetype);
+> +bool pageblock_isolate_and_move_free_pages(struct zone *zone, struct page *page);
+> +bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct page *page);
+>   
+>   int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+>   			     int migratetype, int flags);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index b1caedbade5b..c86c47bba019 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1178,6 +1178,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>   	const int nid = zone_to_nid(zone);
+>   	int ret;
+>   	struct memory_notify arg;
+> +	unsigned long isol_pfn;
+>   
+>   	/*
+>   	 * {on,off}lining is constrained to full memory sections (or more
+> @@ -1192,7 +1193,11 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>   
+>   
+>   	/* associate pfn range with the zone */
+> -	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_ISOLATE);
+> +	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_MOVABLE);
+> +	for (isol_pfn = pfn;
+> +	     isol_pfn < pfn + nr_pages;
+> +	     isol_pfn += pageblock_nr_pages)
+> +		set_pageblock_isolate(pfn_to_page(isol_pfn));
 
-We configured the logical2physical mapping primarily to correct the PHY output mapping.
-Currently, the logical2physical mapping defines the input-to-output mapping for the DP controller, 
-while the SW_PORTSELECT in PHY determines the swapping between PHY input ports 0↔3 and 1↔2.
-When the DP controller input to PHY output mapping is correctly configured, PHY's SW_PORTSELECT can be used to implement flip operations. 
-However, due to the improper mapping implementation on Talos platforms, using SW_PORTSELECT would require additional modifications to the logical2physical mapping.
+Can we move that all the way into memmap_init_range(), where we do the
+set_pageblock_migratetype()?
 
-For example, other platform except Talos implementations the data-lanes mapping follows <0 1 2 3> sequence. 
-A proper flip operation should produce <3 2 1 0>, which can be equivalently achieved either through DP driver configuration or PHY portselect.
-But in the Talos where the initial mapping is arranged as <3 2 0 1>, the expected post-flip sequence should be <0 1 3 2>. 
-then when applying PHY SW_PORTSELECT setting 1, the PHY output becomes <1 0 2 3> which mismatches the expected pattern.
+The MIGRATE_UNMOVABLE in mhp_init_memmap_on_memory() is likely fine: all
+pages in that pageblock will be used for the memmap. Everything is unmovable,
+but no free pages so ... nobody cares? :)
 
-To maintain cross-platform compatibility between Talos and other platforms, recommend the flip handling at the DP driver level such like dp_catalog_ctrl_lane_mapping_v200 in sm6150.
->>>>
->>>>>>
->>>>>> Additionally, if it were placed on the PHY side, the PHY would need access to dp_link’s domain which can access REG_DP_LOGICAL2PHYSICAL_LANE_MAPPING.
->>>>>
->>>>> I was thinking about inverting the SW_PORTSEL_VAL bit.
->>>>>
->>>>>> Therefore, we believe that the  max_dp_link_rate,max_dp_lanes and lane_map move to dp_link side is better.
->>>>>>
->>>>>>>>>> +
->>>>>>>>>> +       memcpy(msm_dp_panel->lane_map, lane_map, msm_dp_panel->max_dp_lanes * sizeof(u32));
->>>>>>>>>>
->>>>>>>>>>         msm_dp_panel->max_dp_link_rate = msm_dp_panel_link_frequencies(of_node);
->>>>>>>>>>         if (!msm_dp_panel->max_dp_link_rate)
->>>>>>>>>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
->>>>>>>>>> index 0e944db3adf2f187f313664fe80cf540ec7a19f2..7603b92c32902bd3d4485539bd6308537ff75a2c 100644
->>>>>>>>>> --- a/drivers/gpu/drm/msm/dp/dp_panel.h
->>>>>>>>>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.h
->>>>>>>>>> @@ -11,6 +11,8 @@
->>>>>>>>>>  #include "dp_aux.h"
->>>>>>>>>>  #include "dp_link.h"
->>>>>>>>>>
->>>>>>>>>> +#define DP_MAX_NUM_DP_LANES    4
->>>>>>>>>> +
->>>>>>>>>>  struct edid;
->>>>>>>>>>
->>>>>>>>>>  struct msm_dp_display_mode {
->>>>>>>>>> @@ -46,6 +48,7 @@ struct msm_dp_panel {
->>>>>>>>>>         bool video_test;
->>>>>>>>>>         bool vsc_sdp_supported;
->>>>>>>>>>
->>>>>>>>>> +       u32 lane_map[DP_MAX_NUM_DP_LANES];
->>>>>>>>>>         u32 max_dp_lanes;
->>>>>>>>>>         u32 max_dp_link_rate;
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> --
->>>>>>>>>> 2.25.1
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> --
->>>>>>>> linux-phy mailing list
->>>>>>>> linux-phy@lists.infradead.org
->>>>>>>> https://lists.infradead.org/mailman/listinfo/linux-phy
->>>>>>>
->>>>>>
->>>>>
->>>>>
->>>>
->>>
->>
-> 
+
+diff --git a/mm/internal.h b/mm/internal.h
+index 6b8ed20177432..bc102846fcf1f 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -821,7 +821,7 @@ extern void *memmap_alloc(phys_addr_t size, phys_addr_t align,
+  			  int nid, bool exact_nid);
+  
+  void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
+-		unsigned long, enum meminit_context, struct vmem_altmap *, int);
++		unsigned long, enum meminit_context, struct vmem_altmap *, bool);
+  
+  #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+  
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index b1caedbade5b1..4b2cf20ad21fb 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -764,13 +764,13 @@ static inline void section_taint_zone_device(unsigned long pfn)
+   * and resizing the pgdat/zone data to span the added pages. After this
+   * call, all affected pages are PageOffline().
+   *
+- * All aligned pageblocks are initialized to the specified migratetype
+- * (usually MIGRATE_MOVABLE). Besides setting the migratetype, no related
+- * zone stats (e.g., nr_isolate_pageblock) are touched.
++ * All aligned pageblocks are initialized to MIGRATE_MOVABLE, and are isolated
++ * if requested. Besides setting the migratetype, no related zone stats (e.g.,
++ * nr_isolate_pageblock) are touched.
+   */
+  void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+  				  unsigned long nr_pages,
+-				  struct vmem_altmap *altmap, int migratetype)
++				  struct vmem_altmap *altmap, bool isolate)
+  {
+  	struct pglist_data *pgdat = zone->zone_pgdat;
+  	int nid = pgdat->node_id;
+@@ -802,7 +802,7 @@ void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+  	 * are reserved so nobody should be touching them so we should be safe
+  	 */
+  	memmap_init_range(nr_pages, nid, zone_idx(zone), start_pfn, 0,
+-			 MEMINIT_HOTPLUG, altmap, migratetype);
++			 MEMINIT_HOTPLUG, altmap, isolate);
+  
+  	set_zone_contiguous(zone);
+  }
+@@ -1127,7 +1127,7 @@ int mhp_init_memmap_on_memory(unsigned long pfn, unsigned long nr_pages,
+  	if (mhp_off_inaccessible)
+  		page_init_poison(pfn_to_page(pfn), sizeof(struct page) * nr_pages);
+  
+-	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_UNMOVABLE);
++	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, false);
+  
+  	for (i = 0; i < nr_pages; i++) {
+  		struct page *page = pfn_to_page(pfn + i);
+@@ -1192,7 +1192,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+  
+  
+  	/* associate pfn range with the zone */
+-	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_ISOLATE);
++	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, true);
+  
+  	arg.start_pfn = pfn;
+  	arg.nr_pages = nr_pages;
+diff --git a/mm/memremap.c b/mm/memremap.c
+index c417c843e9b1f..e47f6809f254b 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -254,7 +254,7 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+  		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
+  		move_pfn_range_to_zone(zone, PHYS_PFN(range->start),
+  				PHYS_PFN(range_len(range)), params->altmap,
+-				MIGRATE_MOVABLE);
++				false);
+  	}
+  
+  	mem_hotplug_done();
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 1c5444e188f82..041106fc524be 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -867,14 +867,14 @@ static void __init init_unavailable_range(unsigned long spfn,
+   * up by memblock_free_all() once the early boot process is
+   * done. Non-atomic initialization, single-pass.
+   *
+- * All aligned pageblocks are initialized to the specified migratetype
+- * (usually MIGRATE_MOVABLE). Besides setting the migratetype, no related
+- * zone stats (e.g., nr_isolate_pageblock) are touched.
++ * All aligned pageblocks are initialized to MIGRATE_MOVABLE, and are isolated
++ * if requested. Besides setting the migratetype, no related zone stats (e.g.,
++ * nr_isolate_pageblock) are touched.
+   */
+  void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone,
+  		unsigned long start_pfn, unsigned long zone_end_pfn,
+  		enum meminit_context context,
+-		struct vmem_altmap *altmap, int migratetype)
++		struct vmem_altmap *altmap, bool isolate)
+  {
+  	unsigned long pfn, end_pfn = start_pfn + size;
+  	struct page *page;
+@@ -931,7 +931,9 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+  		 * over the place during system boot.
+  		 */
+  		if (pageblock_aligned(pfn)) {
+-			set_pageblock_migratetype(page, migratetype);
++			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
++			if (isolate)
++				set_pageblock_isolate(page, isolate)
+  			cond_resched();
+  		}
+  		pfn++;
+@@ -954,7 +956,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
+  		return;
+  
+  	memmap_init_range(end_pfn - start_pfn, nid, zone_id, start_pfn,
+-			  zone_end_pfn, MEMINIT_EARLY, NULL, MIGRATE_MOVABLE);
++			  zone_end_pfn, MEMINIT_EARLY, NULL, false);
+  
+  	if (*hole_pfn < start_pfn)
+  		init_unavailable_range(*hole_pfn, start_pfn, zone_id, nid);
+-- 
+2.49.0
+
+
+
+As an alterantive, a second "isolate" parameter and make sure that migratetype is
+never MIGRATE_ISOLATE.
+
+[...]
+
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -25,6 +25,12 @@ static inline void clear_pageblock_isolate(struct page *page)
+>   	set_pfnblock_flags_mask(page, 0, page_to_pfn(page),
+>   			PB_migrate_isolate_bit);
+>   }
+> +void set_pageblock_isolate(struct page *page)
+> +{
+> +	set_pfnblock_flags_mask(page, PB_migrate_isolate_bit,
+> +			page_to_pfn(page),
+> +			PB_migrate_isolate_bit);
+> +}
+
+Probably better placed in the previous patch, and in the header (see comment to #1).
+
+-- 
+Cheers,
+
+David / dhildenb
 
