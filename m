@@ -1,885 +1,330 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2692820C3;
-	Mon, 19 May 2025 14:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747664628; cv=none; b=mMbWdTaXm/1CCf6TjfrdPwwvM6mtx480i8wud8GZ6RhoJqZYuQ8kL1d6DPIsiXZVwlnVvcywkl3zp2mRgyhhVJAklV9bUI2eKiOeuEt4Xlj/lRiHoR4tL7uZc56ajHV1vKoLYP5moky68gx5/eUXhJdJRiOtKD/yghhGrh5uUxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747664628; c=relaxed/simple;
-	bh=Set3nCNshNqApPZIwIFMIJtLMfCOECK09Nx7eLhp7h4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NUURL4w7qs3cN4pQVRa86se8E1IaXr7HzDitzYq88+3oUAaCeRCHjR4KI1l3CqXZ//JkRJ5seoYRGcXCgRx+yzA+YnGPhUZBSsMST9gLSKblUgxGAHNI/soKuRAOMXkw51gkAF79ZdCtJeX29po6VnxhhRWp+XkW/IoaxLDNs/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lgMh/Ics; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3332B267386;
+	Mon, 19 May 2025 14:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747664657; cv=fail; b=mct1D37XfFxwnq69HF88i87qJQFKZM8cB3Q5Mj+pKFm3fwAoYVLLZrRhWcJZnc6uMFeB+ph6hI7oWN7BbyxvXhHTHJGFBdgi7/P7JDxj3fp3u9D/HugYMPsn2RpYPWroR+fJwWDkOSVtTifMgjmyxpfEPMplv9ktbToSuDpxs5s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747664657; c=relaxed/simple;
+	bh=UG7vBu6rJ5KjtoPhVIDRV241/1cu+J3q71OADKuplD8=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=DK4Po6xFeh8Sbu4Pk3w9bRC1WyChOnJ0iGx+0fdBM2KKsTfPvXFdWJsPf0OhsnHNy6w4G4o9agZh/Wvw3oJDLz6cdGYJXd58lNAURNW4HWYWPvQTsW+xt7AvjPQYZxWVuJ/KD1j7bSfP1YGzVJCSQAQkIF6q5fV2fy4evnqVxaE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fq8D70w1; arc=fail smtp.client-ip=40.107.92.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lgMh/Ics"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JE8Z3J010273;
-	Mon, 19 May 2025 16:23:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	BIvCHK2oyZRZr+vA/I+ax2KFfx9dvqVh8KXYzuBCfJ8=; b=lgMh/IcsCU0uXk+I
-	ZsyIFXsGX2Gy94b1yci57ajfNlD0o57uX26MDarxp7hCY/ZEVFXOypYNXpcGjmGi
-	1QU1pwr7/tvtyA2PhTgiVLYGqjgtM/tmsqk5e1jSBJ1iWj2s8YG6TMr7mNJGvCoz
-	GiuFQz4X84nJJulbHF0KIBudaeJxJLgMkgV5Jbr0QjRmeyWZBe6nNyvGOkull7yO
-	D1WBPrS8mz9rXBx+QPGz+qjezACot7v7XUy3F0cdUM2ohgQ51Y5evl00kLlnM8i/
-	330iTAOEcNOJGQ9c19jy99/Ne00iK6wPd3KA0is+qhWu2EsX++HodY8cQmzxYr2w
-	tuJyRQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pfka0cab-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 16:23:30 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AF46A40048;
-	Mon, 19 May 2025 16:22:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0644DAC4CF8;
-	Mon, 19 May 2025 16:21:14 +0200 (CEST)
-Received: from localhost (10.48.87.146) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 19 May
- 2025 16:21:13 +0200
-From: <gabriel.fernandez@foss.st.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Nicolas Le Bayon <nicolas.le.bayon@st.com>
-Subject: [PATCH 1/2] dt-bindings: stm32: add STM32MP21 clocks and reset bindings
-Date: Mon, 19 May 2025 16:20:56 +0200
-Message-ID: <20250519142057.260549-2-gabriel.fernandez@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250519142057.260549-1-gabriel.fernandez@foss.st.com>
-References: <20250519142057.260549-1-gabriel.fernandez@foss.st.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fq8D70w1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rm/wMJvwBaF4WRDsTBYcgqjBxQsftR5lOCA3+f5V8m0dRmWEcm0VhdJLSGRuLj42CSsR/gLvrOrvk9S/WcCx/N6aixhH/cIVsBuryHqVd8ztG2RN3gKuNqXtR8aP+sg2/EhgtBhASgeBKW7JwFSBlD2DUQUKhQRxpNTc6SxB5dserhZZM0AzBJRkPz9O6YkrnR2y3ShBWcwWu/6pfgrtBA46aioONmHgVqO8vj7pZWJO4vQsNafEaG9VicuAREFlC9ytmLy797m5pRGIh+5l+WUw6c0ryewHgS3axnjm4MtKbS+68o0ybFgBvla0oTa0FD3kU0J9iFmk+BbD25kpcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ECQUdvns9u4reGBhF5sEo6Os9GTJwB/VyzCWsSzdGqk=;
+ b=NnQ5r36k90bFaS3orEmY1cCrFumRkee/o7yV93ChkBESHxlgkZO+hKAJ8BFyL3YIIrH0++OmcMbZSW9IinkpvABKdd2oXelJZWZ9JFwJ9KBvpQnpAUx+3ufl29RAuwEoiVNVXqStuMqpmLa9UDXulfKok2wtxaG+6Uojhv1R1uF7u1dW3doXdj4giCpUtIUfqDC1cJ2viwGnrpHkiamBnngxIeImdHai+9TUjkAn4yeC2XfugxhMj904BmKrbt25TPMmKndAlNZBdGAFFQIx/Dg8DwM2M7XnuqAq+fvjOl559aUzcJnpMyFohrgt0GsvaY6s1eIVHOx/xLZRpKgNOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ECQUdvns9u4reGBhF5sEo6Os9GTJwB/VyzCWsSzdGqk=;
+ b=Fq8D70w1qMgzRkwmYkS33gD8juqGNBD/me3e6sJI+Yo+qhYJwe5/a+bnR+OcOI6wxHSX5OGuLDsCKYMXy/Oe8R4AOE2h6rvxkg6LDH9+rFDFReQAmXQHqpsNDZWIjg6fBYjfT9596JU/MhdLT0gVzyWs+R8TsyQyiE0PLfsdP0V8Uyx/hiUfclNaKbIFH2LgGueOeF+0Sy+g4IkIXHqYa6z09c1a4neZebhECQqtGLv08d4goXwRvzz7Qa+BKo8OWHZmbytL/eFNFp8HbHk4XZD/13wkpGo5VLrN/LuAjJQBz86IUhgFMl9GJzkEcE6BNyBBTstNivMxAc1qpCzi1g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by LV8PR12MB9084.namprd12.prod.outlook.com (2603:10b6:408:18e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
+ 2025 14:24:11 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 14:24:11 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 May 2025 23:24:08 +0900
+Message-Id: <DA07EVNAJXQW.MF79KW7CZAOV@nvidia.com>
+Subject: Re: [PATCH v3 18/19] gpu: nova-core: extract FWSEC from BIOS and
+ patch it to run FWSEC-FRTS
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
+ <corbet@lwn.net>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
+ <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-18-fcb02749754d@nvidia.com>
+ <aCTHBO0Wqx3rc81W@pollux>
+In-Reply-To: <aCTHBO0Wqx3rc81W@pollux>
+X-ClientProxiedBy: TYAPR04CA0021.apcprd04.prod.outlook.com
+ (2603:1096:404:15::33) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|LV8PR12MB9084:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52997816-60b0-4e61-2e59-08dd96e0d2c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UDR3cmRhTEsxTEFURkNxZlROaHJUaHVsS0dUSlVzbHlxR1JWejlLUzNteVMx?=
+ =?utf-8?B?OHZwWmtGU3haa0gzZU5wTEF1Y3hKREhmYmttTnVKcDVWbk5rK0QwZWlhVEZu?=
+ =?utf-8?B?WWg4R3grbUc1bmdTOFRRWmlvbWQ4ZFo4eVIwRElxcnkxbVQvRHU0czdnRy9X?=
+ =?utf-8?B?S3VJQStCenRzOUJCWlJQeXM2bkQvNVdpQjRVNjBnVUlnbGdPK2crOUFwd3dO?=
+ =?utf-8?B?T0FBK0I3dDQxZWlIaFhSWWJzTzloL0VwSXdvS2hrZk1scStycVhNdDFOWnVL?=
+ =?utf-8?B?elhxa0prbHo5TWU0dTBXLyt2YkRpOUN5cVVRSUZMV2RlYklkSUFvemlzWDN4?=
+ =?utf-8?B?ckFZR0tOaUtXSXVsU3E1K0k2Q0JoeEgrN1p2K2dNV0FtUWpzTVJNSUw5NWIv?=
+ =?utf-8?B?VHp3K0Y3UU9iNFJ0WGw4RUhvV3VNZVk4a3NqejMzb3Rjc3hCcUxzVDdzM2FC?=
+ =?utf-8?B?VUVkY2lSMkhySUtueExLQXlvdjNENzYwaWFpYWRISUhQS0pPWkpyZ1V4N2k1?=
+ =?utf-8?B?SnkzMHNvRmpZV3VuNkdnS2ZPYUtaN0FDUkhzeFlrTTJmK1B6bVBqa29DU1JX?=
+ =?utf-8?B?dVM0WnlZRW1lQURnWnlKNHIwUnNYTDNoalNIV3FyelJWOXlnNWJHYTVYM2l1?=
+ =?utf-8?B?R2htc1gycUhWN0ZRVUtTZXc4cU9NbktKeE1aa25wb25kVko4aG9EQThKSlhh?=
+ =?utf-8?B?cW02a0ZMSnFtL1FBL2MxNXl6OHNWQ1NMbEJWVXhsb2kwb3BBWUQ2eGMxeUkx?=
+ =?utf-8?B?bTBhL3RuTnduR0xIZ2FITU1wQWo0NE5NT0tvMEk2WmVwaStZR00raWZCVHJ2?=
+ =?utf-8?B?dlozMmFqOVZ4bWFjMVZIWjRZWDRMampjR0RwdU1USEhVWElPOFU4YnlmSzVi?=
+ =?utf-8?B?RmpscVBKaWZVbTE2b2Rnc3IwUXJwSFhUckRxMkd5VFA1MGMwOWtKVTJCcEI2?=
+ =?utf-8?B?RGtOcmFtM0ZBTW10UG1lMnZIdGZCMVdYZ1I1SjhRODAwRk4xUitzQnRWRExW?=
+ =?utf-8?B?WDZERnI4ZTJydy91M2QrZ3RGdmxjOXZnVFM1UkZvaHd4NEZadnRSRk9IK2py?=
+ =?utf-8?B?THl6NHdzV2d0UDBYR29vbXJISnZXZng4dzVZWWdhdFpYQU5TeHFLUTVrcllv?=
+ =?utf-8?B?MElYczBCbEg1SXRIR2cwZ3dia2dwNmFoQm5qWU9rcDV4SkxLcnpOUmJkQXQ3?=
+ =?utf-8?B?N0NNeHRWODBTc0tqbDRtQ2p3RGYxTXh1dDE5ang2dVZsSHc3RDJKUHJBaDhG?=
+ =?utf-8?B?Yk0rZDFWbUpXZE5GaXlxWmE4OGkwYXFjS01BWm9oRUFLNlpMUXRGeTJpTlY3?=
+ =?utf-8?B?cktkQVhqQzVXTDRwN0tjN3RHMnU3TElQeDNlV0djNUVhUnNUdE96eTFqRjZR?=
+ =?utf-8?B?T3JDRE4yaHZDSXpuM01nakR0QXEyQzRJSk1NTGNta1RIazQ1R0hWT1QxQ0hQ?=
+ =?utf-8?B?OTRyKzBBKy85dVUwQzcyZDdZVUZjblJodytmZW9MOUJ1M1k1TXoweHFFVzZX?=
+ =?utf-8?B?NkNRaGl4Vk5LTGk1aFRsdno1UHYxTS9GVHhNd0ZsdlhaOHZ6aE5qMUtJbW5E?=
+ =?utf-8?B?Y2dWeXVtZjNZSG0vSksyZGNrd1BzVVdNamJ1UDF5NngzRWkyaTc1RHdRcGt0?=
+ =?utf-8?B?elAyQmpVZUxCT1FFVlVQOTBTUkRtbmxWN2dYTmJ1SmJSSkdha3Q2WXh6Umxs?=
+ =?utf-8?B?SElJL2NDcm53aU8xcTNNTnAwdUxXTjBaRDROQUp1c01UdVl2R2tlenh3eWdr?=
+ =?utf-8?B?NFV4MWVkY3ViekZSbFdOS1VJVUxPdFVCS2Y1UmhkL0FCQmR4SGVrTDdwb1h3?=
+ =?utf-8?B?bzc2MkJEVXZyaE0yVzJSbmFEbUV1VGs1TklrOGdBVGtZM3lwY3pPcVk3SWRW?=
+ =?utf-8?B?SDNsSTErR2FPbnBrSU5pczN4T1BCaGd6SkdpUHFFL3JtZmEvUzZpR0IyMEY3?=
+ =?utf-8?Q?6K+gNRB5Sls=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T25raE9jZTBvMkVSbjdwSzhxUUY5NVF3NU9zMTQ4Zm5FMVB1cXZQTkhFM0JQ?=
+ =?utf-8?B?R2FkSDJtUTZObWpmNm1OZi9ON2trM210Ym4xVWNwcTFCVFQ2ZzI0ekhhUzZ2?=
+ =?utf-8?B?R2xlNHl5bVdINW5RclREVElRckNBWmQxbDd0eHl3dUdrZnVVbHFiUUVPaEdx?=
+ =?utf-8?B?ZFNraFZaa1l2Z3FCM2RBYjkrcUpRbVE2ZDFEYTEyTVp4WkxIUi80SFo1QTl0?=
+ =?utf-8?B?cGhXWW5SNlJQbU85M1FiY2JVandKWXRBS0dmemtTRDlaTUFEWThZYm1ycVd1?=
+ =?utf-8?B?d3AxU3UyaUtsOTZITjVXRnZvQ05rMWlJNkJ2RkVTTDg4THBiQTNHTldkRnVH?=
+ =?utf-8?B?OVJTQlZvUkhIQWVQZUFGd01FejJSUjJjTmN6Z1ptTEwxeHhxWDdHR3k2b2ZG?=
+ =?utf-8?B?eW93Skw2dkNydmtHUHVqQ1I4WGU1SWE3ejh0MDVtVTRJa0pkeVdvayswakxn?=
+ =?utf-8?B?RU0vUW9odjlJZ1c2cnN3UkRFZVZ5STVhbGJiQng4UmNVakVLVDFkUGFBMVdZ?=
+ =?utf-8?B?SFc5bkQraEppY0NlaHIxUFI5RkFQQVdCWll1dUFnZWVONjhtOUZlTDBIKzdt?=
+ =?utf-8?B?Vk9lWHRUSlRXamd4MHNFRDAxbGxKb1NIT3BJWWloaCsrOW1BT05JeTJkTVpl?=
+ =?utf-8?B?U1ZHaGw2MTBGV2JwTDQ4bXJLSktEemQzbXFxTzlrQUtZeHZqNUZ0WTQxRGJw?=
+ =?utf-8?B?eEdiR2pETEJUQ1lETWJOVDEwQVNHWkV4dlBpYnI5emtFaE4zV1ZRYi92MEVz?=
+ =?utf-8?B?SWt0d0NnUXVEVllRTUtEQmN6Wllaei8vRmlXZWg3M1U2aXk5eEdGTzZCOXFO?=
+ =?utf-8?B?OHhaMTRLM1ppK0h6TG4vOUg5ZGp5V3NvRFVGaUtKbFcwUUpzL1IrejZPZ2Nh?=
+ =?utf-8?B?dTZHdEFEbERlOWNYWFVINGM0UjFScExDWitkUUM2czdSVFFsYzFaRU03bklo?=
+ =?utf-8?B?Y1FzenlIVHNpdlAzaHJHVFpDOUtPK3BpTk9UMHo3NzZpZitVaGdsbUwvSUFT?=
+ =?utf-8?B?cVcyS2ZZQzJuVUFhZEJpdmE2aTNFNUxBM2xaVGVNWkVVZXZ4cXlPSnNlZjZS?=
+ =?utf-8?B?U3pxTi9kKzlCT3FFcHdSY1hSQ2NyUU5CYm1JNnB0dE9JQVNFNVpzVVRGSGIy?=
+ =?utf-8?B?R0x6UGtBaW00NGIrOE16TDczR3NXOTB3TXhhRElhTWwxNjN1QndFY3hma1Nt?=
+ =?utf-8?B?V29qT2c2SERCT3RXREp6d2Q4Qmg3OHBHa1N5TGZZOHRPZFVTUnV0cXMycHhl?=
+ =?utf-8?B?bFhJdUJudFppL1F4bXUxUkNrb1hRMFI5U21BeWtHaWkxby9wazlFUnBHbzh4?=
+ =?utf-8?B?UmtOKys3K1d6NDBiVGhKVm81akFVR2hSZXJzV0pDUVhURzlmOUowek1ZcnJU?=
+ =?utf-8?B?SnhxbVdYbjBkSXJyTGs3VEZxaVdaSWVmNDZIZXpRRms5Qkc0aDJIY3BxOWww?=
+ =?utf-8?B?d1c0Z1RBRk5UbGlZMmlQK1V0MStVWkRQSS9NVnhsNUF0NU5sUWpVeTFXcWVM?=
+ =?utf-8?B?eTZBV1FUY1JUM2Jua3d2Uzkzdk5xcGVKczVNOTVsMitCVzRVRTVJeGVxdDR6?=
+ =?utf-8?B?bDlOeEp1VFFHV2R0aDd4cnFqMlp1OXlqT2MrTjgxdHlaWllrblVMdStFajNr?=
+ =?utf-8?B?ZDJpREhzenE0TWYwbUVHTTJkdm5FeUxSZ0RETWhlOGlUcDZJQXI0UGMwQ1ZZ?=
+ =?utf-8?B?eFl1R0JJMWlkYVB2UzRkalQ1czA2U2N4NWtMMVlvZmV5VSsvdGpFdGlwZndF?=
+ =?utf-8?B?b24zV3doZGhJQTRJZGFZZkZKRktVNkZkdnl5SDBHeDZmOTIrYkFhMVpVY2J5?=
+ =?utf-8?B?eWJIVFVLTzRRVUlXYmhxYWlVNjkxWWhZelhaQTVvSEhwUXRHQnp2QmllMlJp?=
+ =?utf-8?B?VmhuMkYydEhWYjJlSjlWN3plTk1KVDd2YVZNNFJoeG9tMnhtWlE2bmxNc1pZ?=
+ =?utf-8?B?Y1VjeER0VGFwaE9nQW9MUjQwZUdkQWxOS3p3OCtya3BRajFETC9sbnoyRDgx?=
+ =?utf-8?B?Sk1jYVJ0QXZRWWk5ZVN1Yk5kOWZRQnV4WWVOUFM4ck42NGhCY0UzRTN6cjJU?=
+ =?utf-8?B?RmM1dmtCSHJTMk5yQ1cvWG5CbnN4WU41VGdGaGsvZUZwNVpsSERwU2pwT1dq?=
+ =?utf-8?B?VWhMcjZ6VGVFS09SUitwa2ZHQXRvdGJWblZ4OUxUdEU0QWk4dWhEQnlNRUYy?=
+ =?utf-8?Q?FBhdfZvsizrbnjBqZHgMPxztsx2CihqdjP31nZg+R/oI?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52997816-60b0-4e61-2e59-08dd96e0d2c7
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 14:24:11.1910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3E0flucK/rAFpXWknehjPnvL9Nc8dUBBnHFYNcVM5Khe5AxT8yKrwOrF/y1YKRSce8hRtgXNOPCPesQSMrgYTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9084
 
-From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+On Thu May 15, 2025 at 1:38 AM JST, Danilo Krummrich wrote:
+> On Wed, May 07, 2025 at 10:52:45PM +0900, Alexandre Courbot wrote:
+>> The FWSEC firmware needs to be extracted from the VBIOS and patched with
+>> the desired command, as well as the right signature. Do this so we are
+>> ready to load and run this firmware into the GSP falcon and create the
+>> FRTS region.
+>>=20
+>> [joelagnelf@nvidia.com: give better names to FalconAppifHdrV1's fields]
+>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>> ---
+>>  drivers/gpu/nova-core/dma.rs            |   3 -
+>>  drivers/gpu/nova-core/firmware.rs       |  18 ++
+>>  drivers/gpu/nova-core/firmware/fwsec.rs | 359 +++++++++++++++++++++++++=
++++++++
+>>  drivers/gpu/nova-core/gpu.rs            |  20 +-
+>>  drivers/gpu/nova-core/vbios.rs          |   3 -
+>>  5 files changed, 395 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/drivers/gpu/nova-core/dma.rs b/drivers/gpu/nova-core/dma.rs
+>> index 9d90ae01d0044eaab4ddbc3eba216741d7a623ef..a12d0dff574aa38fb5eb8f4d=
+759611af2f8ba3ec 100644
+>> --- a/drivers/gpu/nova-core/dma.rs
+>> +++ b/drivers/gpu/nova-core/dma.rs
+>> @@ -2,9 +2,6 @@
+>> =20
+>>  //! Simple DMA object wrapper.
+>> =20
+>> -// To be removed when all code is used.
+>> -#![expect(dead_code)]
+>> -
+>>  use core::ops::{Deref, DerefMut};
+>> =20
+>>  use kernel::device;
+>> diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/f=
+irmware.rs
+>> index 960982174d834c7c66a47ecfb3a15bf47116b2c5..3945fd18499555ddd6fb2e0e=
+a69535b40fcc4b08 100644
+>> --- a/drivers/gpu/nova-core/firmware.rs
+>> +++ b/drivers/gpu/nova-core/firmware.rs
+>> @@ -8,9 +8,12 @@
+>>  use kernel::prelude::*;
+>>  use kernel::str::CString;
+>> =20
+>> +use crate::dma::DmaObject;
+>>  use crate::gpu;
+>>  use crate::gpu::Chipset;
+>> =20
+>> +pub(crate) mod fwsec;
+>> +
+>>  pub(crate) const FIRMWARE_VERSION: &str =3D "535.113.01";
+>> =20
+>>  /// Structure encapsulating the firmware blobs required for the GPU to =
+operate.
+>> @@ -86,6 +89,21 @@ pub(crate) fn size(&self) -> usize {
+>>      }
+>>  }
+>> =20
+>> +/// Patch the `ucode_dma` firmware at offset `sig_base_img` with `signa=
+ture`.
+>> +fn patch_signature(ucode_dma: &mut DmaObject, signature: &[u8], sig_bas=
+e_img: usize) -> Result<()> {
+>> +    if sig_base_img + signature.len() > ucode_dma.size() {
+>> +        return Err(EINVAL);
+>> +    }
+>> +
+>> +    // SAFETY: we are the only user of this object, so there cannot be =
+any race.
+>> +    let dst =3D unsafe { ucode_dma.start_ptr_mut().add(sig_base_img) };
+>> +
+>> +    // SAFETY: `signature` and `dst` are valid, properly aligned, and d=
+o not overlap.
+>> +    unsafe { core::ptr::copy_nonoverlapping(signature.as_ptr(), dst, si=
+gnature.len()) };
+>> +
+>> +    Ok(())
+>> +}
+>
+> Why is this not in firmware/fwsec.rs, like patch_command()?
 
-Adds clock and reset binding entries for STM32MP21 SoC family.
+Ah, there is no way to know it now, but this function will also be used
+to patch the booter firmware that runs on sec2, so having it here makes
+it available to both sub-modules. I'm fine with moving it into the fwsec
+module temporarily if you prefer though.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
----
- .../bindings/clock/st,stm32mp21-rcc.yaml      | 200 ++++++++
- include/dt-bindings/clock/st,stm32mp21-rcc.h  | 428 ++++++++++++++++++
- include/dt-bindings/reset/st,stm32mp21-rcc.h  | 140 ++++++
- 3 files changed, 768 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml
- create mode 100644 include/dt-bindings/clock/st,stm32mp21-rcc.h
- create mode 100644 include/dt-bindings/reset/st,stm32mp21-rcc.h
+>
+> Also, please wrap the ucode DmaObject in its own type, i.e.
+> `struct UcodeDma(DmaObject)` and make the patch_*() functions methods of =
+this
+> type. They're only applicable for the ucode DmaObject.
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml
-new file mode 100644
-index 000000000000..66302a68606d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml
-@@ -0,0 +1,200 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/st,stm32mp21-rcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STM32MP21 Reset Clock Controller
-+
-+maintainers:
-+  - Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-+
-+description: |
-+  The RCC hardware block is both a reset and a clock controller.
-+  RCC makes also power management (resume/supend).
-+
-+  See also::
-+    include/dt-bindings/clock/st,stm32mp21-rcc.h
-+    include/dt-bindings/reset/st,stm32mp21-rcc.h
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32mp21-rcc
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
-+      - description: CK_SCMI_HSI High Speed Internal oscillator (~ 64 MHz)
-+      - description: CK_SCMI_MSI Low Power Internal oscillator (~ 4 MHz or ~ 16 MHz)
-+      - description: CK_SCMI_LSE Low Speed External oscillator (32 KHz)
-+      - description: CK_SCMI_LSI Low Speed Internal oscillator (~ 32 KHz)
-+      - description: CK_SCMI_HSE_DIV2 CK_SCMI_HSE divided by 2 (could be gated)
-+      - description: CK_SCMI_ICN_HS_MCU High Speed interconnect bus clock
-+      - description: CK_SCMI_ICN_LS_MCU Low Speed interconnect bus clock
-+      - description: CK_SCMI_ICN_SDMMC SDMMC interconnect bus clock
-+      - description: CK_SCMI_ICN_DDR DDR interconnect bus clock
-+      - description: CK_SCMI_ICN_DISPLAY Display interconnect bus clock
-+      - description: CK_SCMI_ICN_HSL HSL interconnect bus clock
-+      - description: CK_SCMI_ICN_NIC NIC interconnect bus clock
-+      - description: CK_SCMI_FLEXGEN_07 flexgen clock 7
-+      - description: CK_SCMI_FLEXGEN_08 flexgen clock 8
-+      - description: CK_SCMI_FLEXGEN_09 flexgen clock 9
-+      - description: CK_SCMI_FLEXGEN_10 flexgen clock 10
-+      - description: CK_SCMI_FLEXGEN_11 flexgen clock 11
-+      - description: CK_SCMI_FLEXGEN_12 flexgen clock 12
-+      - description: CK_SCMI_FLEXGEN_13 flexgen clock 13
-+      - description: CK_SCMI_FLEXGEN_14 flexgen clock 14
-+      - description: CK_SCMI_FLEXGEN_16 flexgen clock 16
-+      - description: CK_SCMI_FLEXGEN_17 flexgen clock 17
-+      - description: CK_SCMI_FLEXGEN_18 flexgen clock 18
-+      - description: CK_SCMI_FLEXGEN_19 flexgen clock 19
-+      - description: CK_SCMI_FLEXGEN_20 flexgen clock 20
-+      - description: CK_SCMI_FLEXGEN_21 flexgen clock 21
-+      - description: CK_SCMI_FLEXGEN_22 flexgen clock 22
-+      - description: CK_SCMI_FLEXGEN_23 flexgen clock 23
-+      - description: CK_SCMI_FLEXGEN_24 flexgen clock 24
-+      - description: CK_SCMI_FLEXGEN_25 flexgen clock 25
-+      - description: CK_SCMI_FLEXGEN_26 flexgen clock 26
-+      - description: CK_SCMI_FLEXGEN_27 flexgen clock 27
-+      - description: CK_SCMI_FLEXGEN_29 flexgen clock 29
-+      - description: CK_SCMI_FLEXGEN_30 flexgen clock 30
-+      - description: CK_SCMI_FLEXGEN_31 flexgen clock 31
-+      - description: CK_SCMI_FLEXGEN_33 flexgen clock 33
-+      - description: CK_SCMI_FLEXGEN_36 flexgen clock 36
-+      - description: CK_SCMI_FLEXGEN_37 flexgen clock 37
-+      - description: CK_SCMI_FLEXGEN_38 flexgen clock 38
-+      - description: CK_SCMI_FLEXGEN_39 flexgen clock 39
-+      - description: CK_SCMI_FLEXGEN_40 flexgen clock 40
-+      - description: CK_SCMI_FLEXGEN_41 flexgen clock 41
-+      - description: CK_SCMI_FLEXGEN_42 flexgen clock 42
-+      - description: CK_SCMI_FLEXGEN_43 flexgen clock 43
-+      - description: CK_SCMI_FLEXGEN_44 flexgen clock 44
-+      - description: CK_SCMI_FLEXGEN_45 flexgen clock 45
-+      - description: CK_SCMI_FLEXGEN_46 flexgen clock 46
-+      - description: CK_SCMI_FLEXGEN_47 flexgen clock 47
-+      - description: CK_SCMI_FLEXGEN_48 flexgen clock 48
-+      - description: CK_SCMI_FLEXGEN_50 flexgen clock 50
-+      - description: CK_SCMI_FLEXGEN_51 flexgen clock 51
-+      - description: CK_SCMI_FLEXGEN_52 flexgen clock 52
-+      - description: CK_SCMI_FLEXGEN_53 flexgen clock 53
-+      - description: CK_SCMI_FLEXGEN_54 flexgen clock 54
-+      - description: CK_SCMI_FLEXGEN_55 flexgen clock 55
-+      - description: CK_SCMI_FLEXGEN_56 flexgen clock 56
-+      - description: CK_SCMI_FLEXGEN_57 flexgen clock 57
-+      - description: CK_SCMI_FLEXGEN_58 flexgen clock 58
-+      - description: CK_SCMI_FLEXGEN_61 flexgen clock 61
-+      - description: CK_SCMI_FLEXGEN_62 flexgen clock 62
-+      - description: CK_SCMI_FLEXGEN_63 flexgen clock 63
-+      - description: CK_SCMI_ICN_APB1 Peripheral bridge 1
-+      - description: CK_SCMI_ICN_APB2 Peripheral bridge 2
-+      - description: CK_SCMI_ICN_APB3 Peripheral bridge 3
-+      - description: CK_SCMI_ICN_APB4 Peripheral bridge 4
-+      - description: CK_SCMI_ICN_APB5 Peripheral bridge 5
-+      - description: CK_SCMI_ICN_APBDBG Peripheral bridge for degub
-+      - description: CK_SCMI_TIMG1 Peripheral bridge for timer1
-+      - description: CK_SCMI_TIMG2 Peripheral bridge for timer2
-+
-+  access-controllers:
-+    minItems: 1
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/st,stm32mp21-rcc.h>
-+
-+    rcc: clock-controller@44200000 {
-+        compatible = "st,stm32mp21-rcc";
-+        reg = <0x44200000 0x10000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        clocks =  <&scmi_clk CK_SCMI_HSE>,
-+                  <&scmi_clk CK_SCMI_HSI>,
-+                  <&scmi_clk CK_SCMI_MSI>,
-+                  <&scmi_clk CK_SCMI_LSE>,
-+                  <&scmi_clk CK_SCMI_LSI>,
-+                  <&scmi_clk CK_SCMI_HSE_DIV2>,
-+                  <&scmi_clk CK_SCMI_ICN_HS_MCU>,
-+                  <&scmi_clk CK_SCMI_ICN_LS_MCU>,
-+                  <&scmi_clk CK_SCMI_ICN_SDMMC>,
-+                  <&scmi_clk CK_SCMI_ICN_DDR>,
-+                  <&scmi_clk CK_SCMI_ICN_DISPLAY>,
-+                  <&scmi_clk CK_SCMI_ICN_HSL>,
-+                  <&scmi_clk CK_SCMI_ICN_NIC>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_07>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_08>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_09>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_10>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_11>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_12>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_13>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_14>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_16>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_17>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_18>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_19>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_20>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_21>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_22>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_23>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_24>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_25>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_26>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_27>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_29>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_30>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_31>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_33>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_36>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_37>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_38>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_39>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_40>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_41>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_42>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_43>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_44>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_45>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_46>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_47>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_48>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_50>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_51>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_52>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_53>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_54>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_55>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_56>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_57>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_58>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_61>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_62>,
-+                  <&scmi_clk CK_SCMI_FLEXGEN_63>,
-+                  <&scmi_clk CK_SCMI_ICN_APB1>,
-+                  <&scmi_clk CK_SCMI_ICN_APB2>,
-+                  <&scmi_clk CK_SCMI_ICN_APB3>,
-+                  <&scmi_clk CK_SCMI_ICN_APB4>,
-+                  <&scmi_clk CK_SCMI_ICN_APB5>,
-+                  <&scmi_clk CK_SCMI_ICN_APBDBG>,
-+                  <&scmi_clk CK_SCMI_TIMG1>,
-+                  <&scmi_clk CK_SCMI_TIMG2>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/st,stm32mp21-rcc.h b/include/dt-bindings/clock/st,stm32mp21-rcc.h
-new file mode 100644
-index 000000000000..8e64bc149c00
---- /dev/null
-+++ b/include/dt-bindings/clock/st,stm32mp21-rcc.h
-@@ -0,0 +1,428 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+ * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-+ * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_STM32MP21_CLKS_H_
-+#define _DT_BINDINGS_STM32MP21_CLKS_H_
-+
-+/* INTERNAL/EXTERNAL OSCILLATORS */
-+#define HSI_CK			0
-+#define HSE_CK			1
-+#define MSI_CK			2
-+#define LSI_CK			3
-+#define LSE_CK			4
-+#define I2S_CK			5
-+#define RTC_CK			6
-+#define SPDIF_CK_SYMB		7
-+
-+/* PLL CLOCKS */
-+#define PLL1_CK			8
-+#define PLL2_CK			9
-+#define PLL4_CK			10
-+#define PLL5_CK			11
-+#define PLL6_CK			12
-+#define PLL7_CK			13
-+#define PLL8_CK			14
-+
-+#define CK_CPU1			15
-+
-+/* APB DIV CLOCKS */
-+#define CK_ICN_APB1		16
-+#define CK_ICN_APB2		17
-+#define CK_ICN_APB3		18
-+#define CK_ICN_APB4		19
-+#define CK_ICN_APB5		20
-+#define CK_ICN_APBDBG		21
-+
-+/* GLOBAL TIMER */
-+#define TIMG1_CK		22
-+#define TIMG2_CK		23
-+
-+/* FLEXGEN CLOCKS */
-+#define CK_ICN_HS_MCU		24
-+#define CK_ICN_SDMMC		25
-+#define CK_ICN_DDR		26
-+#define CK_ICN_DISPLAY		27
-+#define CK_ICN_HSL		28
-+#define CK_ICN_NIC		29
-+#define CK_ICN_VID		30
-+#define CK_FLEXGEN_07		31
-+#define CK_FLEXGEN_08		32
-+#define CK_FLEXGEN_09		33
-+#define CK_FLEXGEN_10		34
-+#define CK_FLEXGEN_11		35
-+#define CK_FLEXGEN_12		36
-+#define CK_FLEXGEN_13		37
-+#define CK_FLEXGEN_14		38
-+#define CK_FLEXGEN_15		39
-+#define CK_FLEXGEN_16		40
-+#define CK_FLEXGEN_17		41
-+#define CK_FLEXGEN_18		42
-+#define CK_FLEXGEN_19		43
-+#define CK_FLEXGEN_20		44
-+#define CK_FLEXGEN_21		45
-+#define CK_FLEXGEN_22		46
-+#define CK_FLEXGEN_23		47
-+#define CK_FLEXGEN_24		48
-+#define CK_FLEXGEN_25		49
-+#define CK_FLEXGEN_26		50
-+#define CK_FLEXGEN_27		51
-+#define CK_FLEXGEN_28		52
-+#define CK_FLEXGEN_29		53
-+#define CK_FLEXGEN_30		54
-+#define CK_FLEXGEN_31		55
-+#define CK_FLEXGEN_32		56
-+#define CK_FLEXGEN_33		57
-+#define CK_FLEXGEN_34		58
-+#define CK_FLEXGEN_35		59
-+#define CK_FLEXGEN_36		60
-+#define CK_FLEXGEN_37		61
-+#define CK_FLEXGEN_38		62
-+#define CK_FLEXGEN_39		63
-+#define CK_FLEXGEN_40		64
-+#define CK_FLEXGEN_41		65
-+#define CK_FLEXGEN_42		66
-+#define CK_FLEXGEN_43		67
-+#define CK_FLEXGEN_44		68
-+#define CK_FLEXGEN_45		69
-+#define CK_FLEXGEN_46		70
-+#define CK_FLEXGEN_47		71
-+#define CK_FLEXGEN_48		72
-+#define CK_FLEXGEN_49		73
-+#define CK_FLEXGEN_50		74
-+#define CK_FLEXGEN_51		75
-+#define CK_FLEXGEN_52		76
-+#define CK_FLEXGEN_53		77
-+#define CK_FLEXGEN_54		78
-+#define CK_FLEXGEN_55		79
-+#define CK_FLEXGEN_56		80
-+#define CK_FLEXGEN_57		81
-+#define CK_FLEXGEN_58		82
-+#define CK_FLEXGEN_59		83
-+#define CK_FLEXGEN_60		84
-+#define CK_FLEXGEN_61		85
-+#define CK_FLEXGEN_62		86
-+#define CK_FLEXGEN_63		87
-+
-+/* LOW SPEED MCU CLOCK */
-+#define CK_ICN_LS_MCU		88
-+
-+#define CK_BUS_STM		89
-+#define CK_BUS_FMC		90
-+#define CK_BUS_ETH1		91
-+#define CK_BUS_ETH2		92
-+#define CK_BUS_DDRPHYC		93
-+#define CK_BUS_SYSCPU1		94
-+#define CK_BUS_HPDMA1		95
-+#define CK_BUS_HPDMA2		96
-+#define CK_BUS_HPDMA3		97
-+#define CK_BUS_ADC1		98
-+#define CK_BUS_ADC2		99
-+#define CK_BUS_IPCC1		100
-+#define CK_BUS_DCMIPSSI		101
-+#define CK_BUS_CRC		102
-+#define CK_BUS_MDF1		103
-+#define CK_BUS_BKPSRAM		104
-+#define CK_BUS_HASH1		105
-+#define CK_BUS_HASH2		106
-+#define CK_BUS_RNG1		107
-+#define CK_BUS_RNG2		108
-+#define CK_BUS_CRYP1		109
-+#define CK_BUS_CRYP2		110
-+#define CK_BUS_SAES		111
-+#define CK_BUS_PKA		112
-+#define CK_BUS_GPIOA		113
-+#define CK_BUS_GPIOB		114
-+#define CK_BUS_GPIOC		115
-+#define CK_BUS_GPIOD		116
-+#define CK_BUS_GPIOE		117
-+#define CK_BUS_GPIOF		118
-+#define CK_BUS_GPIOG		119
-+#define CK_BUS_GPIOH		120
-+#define CK_BUS_GPIOI		121
-+#define CK_BUS_GPIOZ		122
-+#define CK_BUS_RTC		124
-+#define CK_BUS_LPUART1		125
-+#define CK_BUS_LPTIM3		126
-+#define CK_BUS_LPTIM4		127
-+#define CK_BUS_LPTIM5		128
-+#define CK_BUS_TIM2		129
-+#define CK_BUS_TIM3		130
-+#define CK_BUS_TIM4		131
-+#define CK_BUS_TIM5		132
-+#define CK_BUS_TIM6		133
-+#define CK_BUS_TIM7		134
-+#define CK_BUS_TIM10		135
-+#define CK_BUS_TIM11		136
-+#define CK_BUS_TIM12		137
-+#define CK_BUS_TIM13		138
-+#define CK_BUS_TIM14		139
-+#define CK_BUS_LPTIM1		140
-+#define CK_BUS_LPTIM2		141
-+#define CK_BUS_SPI2		142
-+#define CK_BUS_SPI3		143
-+#define CK_BUS_SPDIFRX		144
-+#define CK_BUS_USART2		145
-+#define CK_BUS_USART3		146
-+#define CK_BUS_UART4		147
-+#define CK_BUS_UART5		148
-+#define CK_BUS_I2C1		149
-+#define CK_BUS_I2C2		150
-+#define CK_BUS_I2C3		151
-+#define CK_BUS_I3C1		152
-+#define CK_BUS_I3C2		153
-+#define CK_BUS_I3C3		154
-+#define CK_BUS_TIM1		155
-+#define CK_BUS_TIM8		156
-+#define CK_BUS_TIM15		157
-+#define CK_BUS_TIM16		158
-+#define CK_BUS_TIM17		159
-+#define CK_BUS_SAI1		160
-+#define CK_BUS_SAI2		161
-+#define CK_BUS_SAI3		162
-+#define CK_BUS_SAI4		163
-+#define CK_BUS_USART1		164
-+#define CK_BUS_USART6		165
-+#define CK_BUS_UART7		166
-+#define CK_BUS_FDCAN		167
-+#define CK_BUS_SPI1		168
-+#define CK_BUS_SPI4		169
-+#define CK_BUS_SPI5		170
-+#define CK_BUS_SPI6		171
-+#define CK_BUS_BSEC		172
-+#define CK_BUS_IWDG1		173
-+#define CK_BUS_IWDG2		174
-+#define CK_BUS_IWDG3		175
-+#define CK_BUS_IWDG4		176
-+#define CK_BUS_WWDG1		177
-+#define CK_BUS_VREF		178
-+#define CK_BUS_DTS		179
-+#define CK_BUS_SERC		180
-+#define CK_BUS_HDP		181
-+#define CK_BUS_DDRPERFM		182
-+#define CK_BUS_OTG		183
-+#define CK_BUS_LTDC		184
-+#define CK_BUS_CSI		185
-+#define CK_BUS_DCMIPP		186
-+#define CK_BUS_DDRC		187
-+#define CK_BUS_DDRCFG		188
-+#define CK_BUS_STGEN		189
-+#define CK_SYSDBG		190
-+#define CK_KER_TIM2		191
-+#define CK_KER_TIM3		192
-+#define CK_KER_TIM4		193
-+#define CK_KER_TIM5		194
-+#define CK_KER_TIM6		195
-+#define CK_KER_TIM7		196
-+#define CK_KER_TIM10		197
-+#define CK_KER_TIM11		198
-+#define CK_KER_TIM12		199
-+#define CK_KER_TIM13		200
-+#define CK_KER_TIM14		201
-+#define CK_KER_TIM1		202
-+#define CK_KER_TIM8		203
-+#define CK_KER_TIM15		204
-+#define CK_KER_TIM16		205
-+#define CK_KER_TIM17		206
-+#define CK_BUS_SYSRAM		207
-+#define CK_BUS_RETRAM		208
-+#define CK_BUS_OSPI1		209
-+#define CK_BUS_OTFD1		210
-+#define CK_BUS_SRAM1		211
-+#define CK_BUS_SDMMC1		212
-+#define CK_BUS_SDMMC2		213
-+#define CK_BUS_SDMMC3		214
-+#define CK_BUS_DDR		215
-+#define CK_BUS_RISAF4		216
-+#define CK_BUS_USBHOHCI		217
-+#define CK_BUS_USBHEHCI		218
-+#define CK_KER_LPTIM1		219
-+#define CK_KER_LPTIM2		220
-+#define CK_KER_USART2		221
-+#define CK_KER_UART4		222
-+#define CK_KER_USART3		223
-+#define CK_KER_UART5		224
-+#define CK_KER_SPI2		225
-+#define CK_KER_SPI3		226
-+#define CK_KER_SPDIFRX		227
-+#define CK_KER_I2C1		228
-+#define CK_KER_I2C2		229
-+#define CK_KER_I3C1		230
-+#define CK_KER_I3C2		231
-+#define CK_KER_I2C3		232
-+#define CK_KER_I3C3		233
-+#define CK_KER_SPI1		234
-+#define CK_KER_SPI4		235
-+#define CK_KER_SPI5		236
-+#define CK_KER_SPI6		237
-+#define CK_KER_USART1		238
-+#define CK_KER_USART6		239
-+#define CK_KER_UART7		240
-+#define CK_KER_MDF1		241
-+#define CK_KER_SAI1		242
-+#define CK_KER_SAI2		243
-+#define CK_KER_SAI3		244
-+#define CK_KER_SAI4		245
-+#define CK_KER_FDCAN		246
-+#define CK_KER_CSI		247
-+#define CK_KER_CSITXESC		248
-+#define CK_KER_CSIPHY		249
-+#define CK_KER_STGEN		250
-+#define CK_KER_USB2PHY2EN	251
-+#define CK_KER_LPUART1		252
-+#define CK_KER_LPTIM3		253
-+#define CK_KER_LPTIM4		254
-+#define CK_KER_LPTIM5		255
-+#define CK_KER_TSDBG		256
-+#define CK_KER_TPIU		257
-+#define CK_BUS_ETR		258
-+#define CK_BUS_SYSATB		259
-+#define CK_KER_ADC1		260
-+#define CK_KER_ADC2		261
-+#define CK_KER_OSPI1		262
-+#define CK_KER_FMC		263
-+#define CK_KER_SDMMC1		264
-+#define CK_KER_SDMMC2		265
-+#define CK_KER_SDMMC3		266
-+#define CK_KER_ETH1		267
-+#define CK_KER_ETH2		268
-+#define CK_KER_ETH1PTP		269
-+#define CK_KER_ETH2PTP		270
-+#define CK_KER_USB2PHY1		271
-+#define CK_KER_USB2PHY2		272
-+#define CK_MCO1			273
-+#define CK_MCO2			274
-+#define CK_KER_DTS		275
-+#define CK_ETH1_RX		276
-+#define CK_ETH1_TX		277
-+#define CK_ETH1_MAC		278
-+#define CK_ETH2_RX		279
-+#define CK_ETH2_TX		280
-+#define CK_ETH2_MAC		281
-+#define CK_ETH1_STP		282
-+#define CK_ETH2_STP		283
-+#define CK_KER_LTDC		284
-+#define HSE_DIV2_CK		285
-+#define CK_DBGMCU		286
-+#define CK_DAP			287
-+#define CK_KER_ETR		288
-+#define CK_KER_STM		289
-+
-+#define STM32MP21_LAST_CLK	290
-+
-+#define CK_SCMI_ICN_HS_MCU	0
-+#define CK_SCMI_ICN_SDMMC	1
-+#define CK_SCMI_ICN_DDR		2
-+#define CK_SCMI_ICN_DISPLAY	3
-+#define CK_SCMI_ICN_HSL		4
-+#define CK_SCMI_ICN_NIC		5
-+#define CK_SCMI_FLEXGEN_07	7
-+#define CK_SCMI_FLEXGEN_08	8
-+#define CK_SCMI_FLEXGEN_09	9
-+#define CK_SCMI_FLEXGEN_10	10
-+#define CK_SCMI_FLEXGEN_11	11
-+#define CK_SCMI_FLEXGEN_12	12
-+#define CK_SCMI_FLEXGEN_13	13
-+#define CK_SCMI_FLEXGEN_14	14
-+#define CK_SCMI_FLEXGEN_15	15
-+#define CK_SCMI_FLEXGEN_16	16
-+#define CK_SCMI_FLEXGEN_17	17
-+#define CK_SCMI_FLEXGEN_18	18
-+#define CK_SCMI_FLEXGEN_19	19
-+#define CK_SCMI_FLEXGEN_20	20
-+#define CK_SCMI_FLEXGEN_21	21
-+#define CK_SCMI_FLEXGEN_22	22
-+#define CK_SCMI_FLEXGEN_23	23
-+#define CK_SCMI_FLEXGEN_24	24
-+#define CK_SCMI_FLEXGEN_25	25
-+#define CK_SCMI_FLEXGEN_26	26
-+#define CK_SCMI_FLEXGEN_27	27
-+#define CK_SCMI_FLEXGEN_28	28
-+#define CK_SCMI_FLEXGEN_29	29
-+#define CK_SCMI_FLEXGEN_30	30
-+#define CK_SCMI_FLEXGEN_31	31
-+#define CK_SCMI_FLEXGEN_32	32
-+#define CK_SCMI_FLEXGEN_33	33
-+#define CK_SCMI_FLEXGEN_34	34
-+#define CK_SCMI_FLEXGEN_35	35
-+#define CK_SCMI_FLEXGEN_36	36
-+#define CK_SCMI_FLEXGEN_37	37
-+#define CK_SCMI_FLEXGEN_38	38
-+#define CK_SCMI_FLEXGEN_39	39
-+#define CK_SCMI_FLEXGEN_40	40
-+#define CK_SCMI_FLEXGEN_41	41
-+#define CK_SCMI_FLEXGEN_42	42
-+#define CK_SCMI_FLEXGEN_43	43
-+#define CK_SCMI_FLEXGEN_44	44
-+#define CK_SCMI_FLEXGEN_45	45
-+#define CK_SCMI_FLEXGEN_46	46
-+#define CK_SCMI_FLEXGEN_47	47
-+#define CK_SCMI_FLEXGEN_48	48
-+#define CK_SCMI_FLEXGEN_49	49
-+#define CK_SCMI_FLEXGEN_50	50
-+#define CK_SCMI_FLEXGEN_51	51
-+#define CK_SCMI_FLEXGEN_52	52
-+#define CK_SCMI_FLEXGEN_53	53
-+#define CK_SCMI_FLEXGEN_54	54
-+#define CK_SCMI_FLEXGEN_55	55
-+#define CK_SCMI_FLEXGEN_56	56
-+#define CK_SCMI_FLEXGEN_57	57
-+#define CK_SCMI_FLEXGEN_58	58
-+#define CK_SCMI_FLEXGEN_59	59
-+#define CK_SCMI_FLEXGEN_60	60
-+#define CK_SCMI_FLEXGEN_61	61
-+#define CK_SCMI_FLEXGEN_62	62
-+#define CK_SCMI_FLEXGEN_63	63
-+#define CK_SCMI_ICN_LS_MCU	64
-+#define CK_SCMI_HSE		65
-+#define CK_SCMI_LSE		66
-+#define CK_SCMI_HSI		67
-+#define CK_SCMI_LSI		68
-+#define CK_SCMI_MSI		69
-+#define CK_SCMI_HSE_DIV2	70
-+#define CK_SCMI_CPU1		71
-+#define CK_SCMI_SYSCPU1		72
-+#define CK_SCMI_PLL2		73
-+#define CK_SCMI_RTC		74
-+#define CK_SCMI_RTCCK		75
-+#define CK_SCMI_ICN_APB1	76
-+#define CK_SCMI_ICN_APB2	77
-+#define CK_SCMI_ICN_APB3	78
-+#define CK_SCMI_ICN_APB4	79
-+#define CK_SCMI_ICN_APB5	80
-+#define CK_SCMI_ICN_APBDBG	81
-+#define CK_SCMI_TIMG1		82
-+#define CK_SCMI_TIMG2		83
-+#define CK_SCMI_BKPSRAM		84
-+#define CK_SCMI_BSEC		85
-+#define CK_SCMI_BUS_ETR		86
-+#define CK_SCMI_FMC		87
-+#define CK_SCMI_GPIOA		88
-+#define CK_SCMI_GPIOB		89
-+#define CK_SCMI_GPIOC		90
-+#define CK_SCMI_GPIOD		91
-+#define CK_SCMI_GPIOE		92
-+#define CK_SCMI_GPIOF		93
-+#define CK_SCMI_GPIOG		94
-+#define CK_SCMI_GPIOH		95
-+#define CK_SCMI_GPIOI		96
-+#define CK_SCMI_GPIOZ		97
-+#define CK_SCMI_HPDMA1		98
-+#define CK_SCMI_HPDMA2		99
-+#define CK_SCMI_HPDMA3		100
-+#define CK_SCMI_IPCC1		101
-+#define CK_SCMI_RETRAM		102
-+#define CK_SCMI_SRAM1		103
-+#define CK_SCMI_SYSRAM		104
-+#define CK_SCMI_OSPI1		105
-+#define CK_SCMI_TPIU		106
-+#define CK_SCMI_SYSDBG		107
-+#define CK_SCMI_SYSATB		108
-+#define CK_SCMI_TSDBG		109
-+#define CK_SCMI_BUS_STM		110
-+#define CK_SCMI_KER_STM		111
-+#define CK_SCMI_KER_ETR		112
-+
-+#endif /* _DT_BINDINGS_STM32MP21_CLKS_H_ */
-diff --git a/include/dt-bindings/reset/st,stm32mp21-rcc.h b/include/dt-bindings/reset/st,stm32mp21-rcc.h
-new file mode 100644
-index 000000000000..56a0d46955b2
---- /dev/null
-+++ b/include/dt-bindings/reset/st,stm32mp21-rcc.h
-@@ -0,0 +1,140 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+ * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-+ * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_STM32MP21_RESET_H_
-+#define _DT_BINDINGS_STM32MP21_RESET_H_
-+
-+#define TIM1_R		0
-+#define TIM2_R		1
-+#define TIM3_R		2
-+#define TIM4_R		3
-+#define TIM5_R		4
-+#define TIM6_R		5
-+#define TIM7_R		6
-+#define TIM8_R		7
-+#define TIM10_R		8
-+#define TIM11_R		9
-+#define TIM12_R		10
-+#define TIM13_R		11
-+#define TIM14_R		12
-+#define TIM15_R		13
-+#define TIM16_R		14
-+#define TIM17_R		15
-+#define LPTIM1_R	16
-+#define LPTIM2_R	17
-+#define LPTIM3_R	18
-+#define LPTIM4_R	19
-+#define LPTIM5_R	20
-+#define SPI1_R		21
-+#define SPI2_R		22
-+#define SPI3_R		23
-+#define SPI4_R		24
-+#define SPI5_R		25
-+#define SPI6_R		26
-+#define SPDIFRX_R	27
-+#define USART1_R	28
-+#define USART2_R	29
-+#define USART3_R	30
-+#define UART4_R		31
-+#define UART5_R		32
-+#define USART6_R	33
-+#define UART7_R		34
-+#define LPUART1_R	35
-+#define I2C1_R		36
-+#define I2C2_R		37
-+#define I2C3_R		38
-+#define SAI1_R		39
-+#define SAI2_R		40
-+#define SAI3_R		41
-+#define SAI4_R		42
-+#define MDF1_R		43
-+#define FDCAN_R		44
-+#define HDP_R		45
-+#define ADC1_R		46
-+#define ADC2_R		47
-+#define ETH1_R		48
-+#define ETH2_R		49
-+#define USBH_R		50
-+#define USB2PHY1_R	51
-+#define USB2PHY2_R	52
-+#define SDMMC1_R	53
-+#define SDMMC1DLL_R	54
-+#define SDMMC2_R	55
-+#define SDMMC2DLL_R	56
-+#define SDMMC3_R	57
-+#define SDMMC3DLL_R	58
-+#define LTDC_R		59
-+#define CSI_R		60
-+#define DCMIPP_R	61
-+#define DCMIPSSI_R	62
-+#define WWDG1_R		63
-+#define VREF_R		64
-+#define DTS_R		65
-+#define CRC_R		66
-+#define SERC_R		67
-+#define I3C1_R		68
-+#define I3C2_R		69
-+#define I3C3_R		70
-+#define IWDG2_KER_R	71
-+#define IWDG4_KER_R	72
-+#define RNG1_R		73
-+#define RNG2_R		74
-+#define PKA_R		75
-+#define SAES_R		76
-+#define HASH1_R		77
-+#define HASH2_R		78
-+#define CRYP1_R		79
-+#define CRYP2_R		80
-+#define OSPI1_R		81
-+#define OSPI1DLL_R	82
-+#define OTG_R		83
-+#define FMC_R		84
-+#define DBG_R		85
-+#define GPIOA_R		86
-+#define GPIOB_R		87
-+#define GPIOC_R		88
-+#define GPIOD_R		89
-+#define GPIOE_R		90
-+#define GPIOF_R		91
-+#define GPIOG_R		92
-+#define GPIOH_R		93
-+#define GPIOI_R		94
-+#define GPIOZ_R		95
-+#define HPDMA1_R	96
-+#define HPDMA2_R	97
-+#define HPDMA3_R	98
-+#define IPCC1_R		99
-+#define C2_HOLDBOOT_R	100
-+#define C1_HOLDBOOT_R	101
-+#define C1_R		102
-+#define C1P1POR_R	103
-+#define C1P1_R		104
-+#define C2_R		105
-+#define SYS_R		106
-+#define VSW_R		107
-+#define C1MS_R		108
-+#define DDRCP_R		109
-+#define DDRCAPB_R	110
-+#define DDRPHYCAPB_R	111
-+#define DDRCFG_R	112
-+#define DDR_R		113
-+#define DDRPERFM_R	114
-+#define IWDG1_SYS_R	116
-+#define IWDG2_SYS_R	117
-+#define IWDG3_SYS_R	118
-+#define IWDG4_SYS_R	119
-+
-+#define STM32MP21_LAST_RESET	120
-+
-+#define RST_SCMI_C1_R		0
-+#define RST_SCMI_C2_R		1
-+#define RST_SCMI_C1_HOLDBOOT_R	2
-+#define RST_SCMI_C2_HOLDBOOT_R	3
-+#define RST_SCMI_FMC		4
-+#define RST_SCMI_OSPI1		5
-+#define RST_SCMI_OSPI1DLL	6
-+
-+#endif /* _DT_BINDINGS_STM32MP21_RESET_H_ */
--- 
-2.25.1
+Indeed, good idea. We will event want to specialize that type against
+the kind of firmware as not all patching methods may be applicable
+depending on the firmware.
+
+<snip>
+>> +impl FwsecFirmware {
+>> +    /// Extract the Fwsec firmware from `bios` and patch it to run with=
+ the `cmd` command.
+>> +    pub(crate) fn new(
+>> +        falcon: &Falcon<Gsp>,
+>> +        dev: &Device<device::Bound>,
+>> +        bar: &Bar0,
+>> +        bios: &Vbios,
+>> +        cmd: FwsecCommand,
+>> +    ) -> Result<Self> {
+>> +        let v3_desc =3D bios.fwsec_header(dev)?;
+>> +        let ucode =3D bios.fwsec_ucode(dev)?;
+>> +
+>> +        let mut ucode_dma =3D DmaObject::from_data(dev, ucode)?;
+>> +        patch_command(&mut ucode_dma, v3_desc, cmd)?;
+>> +
+>> +        const SIG_SIZE: usize =3D 96 * 4;
+>
+> 96 * 4? :-)
+
+Mmmm let me look that up. ^_^; But I think it means that a signature is
+made of 96 32-bit integers.
+
+>
+>> +        let signatures =3D bios.fwsec_sigs(dev)?;
+>> +        let sig_base_img =3D (v3_desc.imem_load_size + v3_desc.pkc_data=
+_offset) as usize;
+>> +
+>> +        if v3_desc.signature_count !=3D 0 {
+>> +            // Patch signature.
+>> +            let desc_sig_versions =3D v3_desc.signature_versions as u32=
+;
+>> +            let reg_fuse_version =3D falcon.get_signature_reg_fuse_vers=
+ion(
+>> +                bar,
+>> +                v3_desc.engine_id_mask,
+>> +                v3_desc.ucode_id,
+>> +            )?;
+>> +            dev_dbg!(
+>> +                dev,
+>> +                "desc_sig_versions: {:#x}, reg_fuse_version: {}\n",
+>> +                desc_sig_versions,
+>> +                reg_fuse_version
+>> +            );
+>> +            let signature_idx =3D {
+>> +                let reg_fuse_version_bit =3D 1 << reg_fuse_version;
+>> +
+>> +                // Check if the fuse version is supported by the firmwa=
+re.
+>> +                if desc_sig_versions & reg_fuse_version_bit =3D=3D 0 {
+>> +                    dev_warn!(
+>> +                        dev,
+>> +                        "no matching signature: {:#x} {:#x}\n",
+>> +                        reg_fuse_version_bit,
+>> +                        v3_desc.signature_versions
+>> +                    );
+>
+> Looks like this should be dev_err!().
+
+Indeed, fixed.
 
