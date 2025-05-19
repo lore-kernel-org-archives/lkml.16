@@ -1,126 +1,301 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420ED278E42;
-	Mon, 19 May 2025 17:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1264A288521
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674367; cv=none; b=eJOZtoT/XQFc91d6IebhlrA5UqJRlXJuvo2w2FnSm5NkMNpoHMptxFtztO5KXE9Su4CPYyeI91fvT5QswdAdQHaIBvUBK5+gtIPB/BbLyVygmbrwlOEXJMq+71hKFj10AdpdJy1l4E+5xC/7SLH0BzGbgY4PDNk5GBzS+g6Dl30=
+	t=1747674386; cv=none; b=bWl3lJGWaN30BMVCSkhOFnMBmiZmicW5jHfzr+63WdBIDlEkJRDpczf/cyU5XRNEEWkt48+uLNRlA3vT9CnS1QzulI4NaS14bW1N5ikxxJvz6QpPMxqGAWsCysGfAXKDSytjbrMF8yV3Orp+iSj186oFpBijEQ/L7H3FMX6x3iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674367; c=relaxed/simple;
-	bh=MZFRrNTk6ViWc/ChOfN0rfaLCkD0DjAwZcW6S1HSzPs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mU/qA+yP7sPlWd+pu7GGLlnst4sIMfu9YyLvRdyNcqkissRpzguLbG7TY1hRt4ddMuFbE/oaEnMR9KSn/m0YMlIxPC9A8poK1rID+reArrJh6p5Zxq4f6Xpui/aoXirqlfO5V76cRqXqnkAjtExuhxibxtGJxsqwEbLLeiZ4MC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=TDYGuEm2; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747674386; c=relaxed/simple;
+	bh=rPtEnueZu1fQ1Z+0L4jzWuZxgdvWIZWOxFaQr0QuS9k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QI/jEcQafHqwOr8eHj6PF2iC+awTl/qpLcnh9lI522umw6U+CaRsqVhT7szjrbQLy//2YIN+SvF5BI+K2vZDxfTUM7+2bn0bvIzvGrw7oiRPOcgR9Yx105mJ1GjQprSnRZL3Sw8bQpK0cejZY3MjieQfur2SmoPtYkNQ1JqR5WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IdAImZ6J; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TDYGuEm2"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54JH51I01806864
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 19 May 2025 10:05:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54JH51I01806864
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747674303;
-	bh=ts02ww6rWZGYsDbofaKTTtQ1Jg1+MlPMrtXd6RLkuKk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=TDYGuEm2xJdqKpSk9HUb6mLJjH8QfE3z/oRA2V/xIDKmePX33e93goxahOmGQ2I3j
-	 tYmxL9ORcxAW+J0TECixYkLKG+VvUkIVrFR7yvt59YT3tr5smdcmQgUS0uVOC96Mkn
-	 sSYguCgZWvX68kWJfDpbLo49PiSKPGTK5KTXUuFPqjsw2DvpSrIN0U0mJhhDP8pDR3
-	 tivIbhQZNZ0T9EUyoseNddg/rbQq/eIVkdiejdUHd5BnnDJ3tTJPUqPT6EH/5Qi9t1
-	 GvaCx74S+pp94gbDUxJgdUmfAktr9DJqlgg4T78CgXwPWy65LB1zIctvM/IzjBuafK
-	 1u5AG60T+DDfw==
-Message-ID: <3486006e-f1ad-4ed2-bdb5-5d39c04c2691@zytor.com>
-Date: Mon, 19 May 2025 10:05:01 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IdAImZ6J"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e9b2e7a34so2010975a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747674384; x=1748279184; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2CSC+HCWpqN6SsYs8tw1wIkbTL0pH3vw2ecb/zV3Ilw=;
+        b=IdAImZ6JSofA3wvLclsmFTxQOmlq1xLR1jnQRsKjMAjIyHKKI3lXX/EBGuoCe1ZYOB
+         m5pFIHf/WKwQ1pY59hO4lIk3T/fVho07N6l/uB7VFzOhWz92iesvPPN58wmvS5vDuZJX
+         iNFWKOwGmqQZr/Mc6AGECIhcIZy3WbePlO+9wwRhmC5eFOu8FiKpOjvnOjMblth/NQfi
+         raDGlEz+o+aBBBmyzfRlyrv7+rr5ErD0ZOI6rI9lY5G6a5qM2p2wn+rUYw2gdfmo32FP
+         f8ONMxqDXquKLBtb1eYcn96Yyw+VBfNGQTlhaoMf6wTzFlZWclrJsvW9bIfMpqs1zZIs
+         okFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747674384; x=1748279184;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2CSC+HCWpqN6SsYs8tw1wIkbTL0pH3vw2ecb/zV3Ilw=;
+        b=pYMfH5NrZXawrf1qVF7H/n0km2OrlEUDCsM+Piay5o97qQ2Mm6Dv4s+/oL8I8SVBTq
+         cCOvFqKGnhTuweNOjpGg+hRYFfunsp0A2a1atqsbNf1gbNhepOnGCiL3stipyvsnbudC
+         0QYP8CvLT+N4LoON6p06KVPaphVcm8kLwoMuPy83V82sl0hfzufj9E4bjM5lgS3N4Frb
+         cLrDmpDASxNR+ZmyrgbqCgleQBjMiBuC7E7eJofskZlkniK2DaTqz336USGFHY+jsPcQ
+         NQ+oaA5Y770gHRJeP0HQ3jKJ4UGIM8ybizreE28VOaqOj46bIIUzFt8anzGiigRMncYm
+         b7nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqdLrRN7/rkBv7RFmHdFrGqrxYauaFcq5ObB9zGJz335xhk/YSk2ZojdnTov1aqzInxpszevHrG9Im4Bg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+h6h03s+sMVIO7wA17htRykc2DTPTivMs5pbjHjWmjUnWz9dB
+	G3pWBCTHIVQGc1WA5rjhdiNga5owkdYrP9rBydAVcE1LWhIRJRilVLY1nTPyE9t8ZztThGvS2g4
+	j+gCiJA==
+X-Google-Smtp-Source: AGHT+IErhOyhbUJocygbMiLfwF85LDGz9gDIuF1ttLyAMZsqm1b+6hEX7SsSUvup2vSy2R5Hda75UX7lY/4=
+X-Received: from pjk3.prod.google.com ([2002:a17:90b:5583:b0:30a:4874:5389])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5105:b0:2ff:62f8:9a12
+ with SMTP id 98e67ed59e1d1-30e7d5b763emr19408120a91.23.1747674384237; Mon, 19
+ May 2025 10:06:24 -0700 (PDT)
+Date: Mon, 19 May 2025 10:06:22 -0700
+In-Reply-To: <52bdeeec0dfbb74f90d656dbd93dc9c7bb30e84f.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-From: Xin Li <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-        rafael@kernel.org, lenb@kernel.org
-References: <20250512084552.1586883-1-xin@zytor.com>
- <20250512084552.1586883-4-xin@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <20250512084552.1586883-4-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250519023613.30329-1-yan.y.zhao@intel.com> <20250519023737.30360-1-yan.y.zhao@intel.com>
+ <aCsy-m_esVjy8Pey@google.com> <52bdeeec0dfbb74f90d656dbd93dc9c7bb30e84f.camel@intel.com>
+Message-ID: <aCtlDhNbgXKg4s5t@google.com>
+Subject: Re: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for fault
+ retry on invalid slot
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Yan Y Zhao <yan.y.zhao@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Reinette Chatre <reinette.chatre@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/12/2025 1:45 AM, Xin Li (Intel) wrote:
-> Convert a native_wrmsr() use to native_wrmsrq() to zap meaningless type
-> conversions when a u64 MSR value is splitted into two u32.
-> 
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->   arch/x86/coco/sev/core.c | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index ff82151f7718..b3ce6fc8b62d 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -282,12 +282,7 @@ static inline u64 sev_es_rd_ghcb_msr(void)
->   
->   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
->   {
-> -	u32 low, high;
-> -
-> -	low  = (u32)(val);
-> -	high = (u32)(val >> 32);
-> -
-> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
-> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
->   }
->   
->   static int vc_fetch_insn_kernel(struct es_em_ctxt *ctxt,
+On Mon, May 19, 2025, Rick P Edgecombe wrote:
+> On Mon, 2025-05-19 at 06:33 -0700, Sean Christopherson wrote:
+> > Was this hit by a real VMM?=C2=A0 If so, why is a TDX VMM removing a me=
+mslot without
+> > kicking vCPUs out of KVM?
+> >=20
+> > Regardless, I would prefer not to add a new RET_PF_* flag for this.=C2=
+=A0 At a glance,
+> > KVM can simply drop and reacquire SRCU in the relevant paths.
+>=20
+> During the initial debugging and kicking around stage, this is the first
+> direction we looked. But kvm_gmem_populate() doesn't have scru locked, so=
+ then
+> kvm_tdp_map_page() tries to unlock without it being held. (although that =
+version
+> didn't check r =3D=3D RET_PF_RETRY like you had). Yan had the following c=
+oncerns and
+> came up with the version in this series, which we held review on for the =
+list:
 
-Just noticed that this patch doesn't apply to tip/x86/core, I will send
-it as a separate one.
+Ah, I missed the kvm_gmem_populate() =3D> kvm_tdp_map_page() chain.
 
-Thanks!
-     Xin
+> > However, upon further consideration, I am reluctant to implement this f=
+ix for
+
+Which fix?
+
+> > the following reasons:
+> > - kvm_gmem_populate() already holds the kvm->slots_lock.
+> > - While retrying with srcu unlock and lock can workaround the
+> >   KVM_MEMSLOT_INVALID deadlock, it results in each kvm_vcpu_pre_fault_m=
+emory()
+> >   and tdx_handle_ept_violation() faulting with different memslot layout=
+s.
+
+This behavior has existed since pretty much the beginning of KVM time.  TDX=
+ is the
+oddball that doesn't re-enter the guest.  All other flavors re-enter the gu=
+est on
+RET_PF_RETRY, which means dropping and reacquiring SRCU.  Which is why I do=
+n't like
+RET_PF_RETRY_INVALID_SLOT; it's simply handling the case we know about.
+
+Arguably, _TDX_ is buggy by not providing this behavior.
+
+> I'm not sure why the second one is really a problem. For the first one I =
+think
+> that path could just take the scru lock in the proper order with kvm-
+> >slots_lock?
+
+Acquiring SRCU inside slots_lock should be fine.  The reserve order would b=
+e
+problematic, as KVM synchronizes SRCU while holding slots_lock.
+
+That said, I don't love the idea of grabbing SRCU, because it's so obviousl=
+y a
+hack.  What about something like this?
+
+---
+ arch/x86/kvm/mmu.h     |  2 ++
+ arch/x86/kvm/mmu/mmu.c | 49 +++++++++++++++++++++++++++---------------
+ arch/x86/kvm/vmx/tdx.c |  7 ++++--
+ virt/kvm/kvm_main.c    |  5 ++---
+ 4 files changed, 41 insertions(+), 22 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index b4b6860ab971..0fc68f0fe80e 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -259,6 +259,8 @@ extern bool tdp_mmu_enabled;
+=20
+ bool kvm_tdp_mmu_gpa_is_mapped(struct kvm_vcpu *vcpu, u64 gpa);
+ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 =
+*level);
++int kvm_tdp_prefault_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code=
+,
++			  u8 *level);
+=20
+ static inline bool kvm_memslots_have_rmaps(struct kvm *kvm)
+ {
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index cbc84c6abc2e..4f16fe95173c 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4851,24 +4851,15 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t g=
+pa, u64 error_code, u8 *level
+ {
+ 	int r;
+=20
+-	/*
+-	 * Restrict to TDP page fault, since that's the only case where the MMU
+-	 * is indexed by GPA.
+-	 */
+-	if (vcpu->arch.mmu->page_fault !=3D kvm_tdp_page_fault)
+-		return -EOPNOTSUPP;
++	if (signal_pending(current))
++		return -EINTR;
+=20
+-	do {
+-		if (signal_pending(current))
+-			return -EINTR;
++	if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu))
++		return -EIO;
+=20
+-		if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu))
+-			return -EIO;
+-
+-		cond_resched();
+-		r =3D kvm_mmu_do_page_fault(vcpu, gpa, error_code, true, NULL, level);
+-	} while (r =3D=3D RET_PF_RETRY);
++	cond_resched();
+=20
++	r =3D kvm_mmu_do_page_fault(vcpu, gpa, error_code, true, NULL, level);
+ 	if (r < 0)
+ 		return r;
+=20
+@@ -4878,10 +4869,12 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t g=
+pa, u64 error_code, u8 *level
+ 	case RET_PF_WRITE_PROTECTED:
+ 		return 0;
+=20
++	case RET_PF_RETRY:
++		return -EAGAIN;
++
+ 	case RET_PF_EMULATE:
+ 		return -ENOENT;
+=20
+-	case RET_PF_RETRY:
+ 	case RET_PF_CONTINUE:
+ 	case RET_PF_INVALID:
+ 	default:
+@@ -4891,6 +4884,28 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gp=
+a, u64 error_code, u8 *level
+ }
+ EXPORT_SYMBOL_GPL(kvm_tdp_map_page);
+=20
++int kvm_tdp_prefault_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code=
+, u8 *level)
++{
++	int r;
++
++	/*
++	 * Restrict to TDP page fault, since that's the only case where the MMU
++	 * is indexed by GPA.
++	 */
++	if (vcpu->arch.mmu->page_fault !=3D kvm_tdp_page_fault)
++		return -EOPNOTSUPP;
++
++	for (;;) {
++		r =3D kvm_tdp_map_page(vcpu, gpa, error_code, level);
++		if (r !=3D -EAGAIN)
++			break;
++
++		/* Comment goes here. */
++		kvm_vcpu_srcu_read_unlock(vcpu);
++		kvm_vcpu_srcu_read_lock(vcpu);
++	}
++}
++
+ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+ 				    struct kvm_pre_fault_memory *range)
+ {
+@@ -4918,7 +4933,7 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *=
+vcpu,
+ 	 * Shadow paging uses GVA for kvm page fault, so restrict to
+ 	 * two-dimensional paging.
+ 	 */
+-	r =3D kvm_tdp_map_page(vcpu, range->gpa, error_code, &level);
++	r =3D kvm_tdp_prefault_page(vcpu, range->gpa, error_code, &level);
+ 	if (r < 0)
+ 		return r;
+=20
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..1a232562080d 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -3075,8 +3075,11 @@ static int tdx_gmem_post_populate(struct kvm *kvm, g=
+fn_t gfn, kvm_pfn_t pfn,
+ 	if (ret !=3D 1)
+ 		return -ENOMEM;
+=20
+-	ret =3D kvm_tdp_map_page(vcpu, gpa, error_code, &level);
+-	if (ret < 0)
++	do {
++		ret =3D kvm_tdp_map_page(vcpu, gpa, error_code, &level);
++	while (ret =3D=3D -EAGAIN);
++
++	if (ret)
+ 		goto out;
+=20
+ 	/*
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index b24db92e98f3..21a3fa7476dd 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4266,7 +4266,6 @@ static int kvm_vcpu_ioctl_get_stats_fd(struct kvm_vcp=
+u *vcpu)
+ static int kvm_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+ 				     struct kvm_pre_fault_memory *range)
+ {
+-	int idx;
+ 	long r;
+ 	u64 full_size;
+=20
+@@ -4279,7 +4278,7 @@ static int kvm_vcpu_pre_fault_memory(struct kvm_vcpu =
+*vcpu,
+ 		return -EINVAL;
+=20
+ 	vcpu_load(vcpu);
+-	idx =3D srcu_read_lock(&vcpu->kvm->srcu);
++	kvm_vcpu_srcu_read_lock(vcpu);
+=20
+ 	full_size =3D range->size;
+ 	do {
+@@ -4300,7 +4299,7 @@ static int kvm_vcpu_pre_fault_memory(struct kvm_vcpu =
+*vcpu,
+ 		cond_resched();
+ 	} while (range->size);
+=20
+-	srcu_read_unlock(&vcpu->kvm->srcu, idx);
++	kvm_vcpu_srcu_read_unlock(vcpu);
+ 	vcpu_put(vcpu);
+=20
+ 	/* Return success if at least one page was mapped successfully.  */
+
+base-commit: 12ca5c63556bbfcd77fe890fcdd1cd1adfb31fdd
+--
