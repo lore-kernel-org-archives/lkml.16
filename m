@@ -1,94 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B2F26A084;
-	Mon, 19 May 2025 08:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530A6154BE2
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747642718; cv=none; b=WUIPA6Z/8hKk/lEbCD/irwnHsaekNmHpeohiQvFzub8AybkJZMx41080GKflURlHEIPOCZ6S+yowpEUUC3KoDJEDzcyduxVNfiy0b+8OKyiVZ5E7BysxOOKGlhRV9En1FH1jam7iiTnmE8rP18LorLXwgaBw5xgq7EN3kLqwISo=
+	t=1747642735; cv=none; b=TxHq8VoAP3lwb3MRtUqPyCT21Hq9rzDt9evm0ZX8nZ15ZuIyh2OLtpGRWwmXTldeL0v6rjG4NHdpZKWqmYBil+MpUaXik4h9sMSYXNROn5veotyA8jFm3Skm5AVjJPA2hjtMu4lytsnRcw/e1rs55s1g8441qr/ZnbnQy6Mi8Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747642718; c=relaxed/simple;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=YBs6B8OenfvULCWECrtT/pXjQZStyhWmc8+/eMiDYHNe4ENoz+WpSAkMGkbyi+6bmJ3HKF5nCvCXGi2jSCjPELxT9CNKF166NEpbFPWtkDjiNJQ7Lw5bl2tbUlDB5sZE/SKeCcC8tE98zDjAWM4qSuvUJBX9zvNhvEOqA0lfkwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPC2rFkg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747642735; c=relaxed/simple;
+	bh=Wn681Xv/yqYOMFas1Vd76gEewSHlCuTtlwxSjiwuLNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6dwu/Vk6cHNr1kgcWtAj8eoPOorvBxrPag82GzkP75KV4kJYAgr5blD5+6ebcFA6Qj3T0RJT5mN5TdMEYWrlxXpqBRRly7NbdTXvvqxuMnHRREz4/zLDnya/eV1FT/ps+mwqndVeIF/TMa9mxGJZiwuIYpnPBubPU6uxCeRms4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OI5+jU52; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPC2rFkg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 666FFC4CEE4;
-	Mon, 19 May 2025 08:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747642717;
-	bh=ky8ltk0PF8tipHAfrZMLL47eVSRk2GhrTPhK+KO2jkM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=HPC2rFkgeyu31M8bBRwUeViyrg9UqtSLwZRMwsK7rP97W6kSAtq2KNXLzpPI/xgTG
-	 4LiZqJHbGkbe9ZWWL76KwOBfkQOtcXHkYpvSxfaw3nNqtp1AFTmiw//1MIMlxMBCgH
-	 JEYQIjUfvrl960b38H5lkrGflUtq+2CX9NtVfm5AQIHk9iAXE+tmQNnWnuh51qObNq
-	 596dC0CPbYpN7p2lTbmQ7NsTEzqnheia51vcDTPDcv3bm00K1ke3PimiKgcDvM8J5n
-	 9hrcp+Gw0SubXOC5qy871J4KXGBjuVd8mc5yBHuD16glq+5oKfWDn6duSqz4VdA/o7
-	 LlnZPL7eNzSow==
-Date: Mon, 19 May 2025 03:18:35 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OI5+jU52"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2322f8afe02so5872835ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 01:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747642733; x=1748247533; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L/jRk1lKTYKxjfzB0d/5fmN7ISMp4AsTVyPahE4uA88=;
+        b=OI5+jU52G9/bHw4sAe702FX6t4MYpHkFlJWM5A56vu64csTOqaCcNd6Ry/CXGJANzr
+         Sbxf+PtY7M3MHhDuU0N25zTSggPEXVwv/ByRAyRW/ebQV0t7mOvQrgeasGLdGmnzcies
+         vxogiii8JCZTLZTHt3MvReDEWnDCML5UUU6COTaEhYLbjQUPPORFFBzcr7/wjztUMqi/
+         mZ8DqOYTtLxjoTazrTzP2gCeiW4bAtOv8lDyUK9DEWBSk0ix27Ml3FoHXhp95ACA7uEa
+         PTyY2sespdCUTqLPpDUXu8X58QkdzfeHP0dVdmi/KuLUwCgOjAy/+51SsNfWKffT+IeU
+         AZYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747642733; x=1748247533;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L/jRk1lKTYKxjfzB0d/5fmN7ISMp4AsTVyPahE4uA88=;
+        b=JgGx8ru/Lg2sLfef2CEXJGba68lK4EOTtNbui/++NGAB1CadY6zW3TYPThIdanQykT
+         42n8mZjJVG1HS0Ltv8R06fk+EUcl6FULmMirKbEj+24tb+8QOWoiUmcMM5yC2QDp99sa
+         v+wMMyvcN/QxM/s5RV+BkHzjotyTW/uoXd8OEBBgQvuD6kTsE2ePDUYScAem3EwqHB55
+         a2xBDR6U+fDP/fU1fz00P0hr6IeA0ScCrweXPaXNoTkn3u0VuUjmB1lZmAjSyHMwmPpu
+         V1U6nVwkZiPibNjs3gD53SuNnLLgUeJ+ogpoQG/6qorXERNxB7KqKEfC6q9GYOgmO+iT
+         VGMg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2/sTIvjJaoLy7qMIZl9BskF3dGYBXUKrI6nPI9rCyn70x20++cOIf9bWyAfLwMD5b29KzAA1WtJee9O0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjWGUCo2aAEIPjY+D0VS5PxsWJgWXr/MC3nor7BER5a2wYsEeC
+	Yo4fOiKl93MwIVSu+iAZMF3kDgFFPo4qA5EkZqxEtRVwWC8zvFqPynJWVxGe8G+GsPE=
+X-Gm-Gg: ASbGncvCbJItz7iu2hUHqyuAw01h6kzF2BbtUrjv5+O1lYJJSGYOIrr9ABqufqhfVBn
+	dHy+uq8p0yU+h8OmVJioGgaYeTbUl16uJpfNiLZR8sIRYOsq3da7Us8Z8oR58Xnh6s9h6/XWVKN
+	YjjMc7oPXg+XAbSAdlFP0Ru8U7ESXk77VewGQADDoqcWlGwK+nXlAvj+qCKIOUd+uCN2bCncfit
+	SAG1eG/WtJSj+T7Q1iixSBYonh5YBmqMecIodJ0SgU+xgxqPdPWeywUwxAZYDMeJR4O8VbpXP0+
+	M0Jj+5l6yt/+MCRO2mtOBpmBHjUXF0EMUDjDcs4LrwAL2Pbybiea
+X-Google-Smtp-Source: AGHT+IFABa+b5/H3kNq1B5GdqG8U1MHI7NF5+thziNBuElvttoR7p0nq2thgnZn01iOd4ND/LFuwhA==
+X-Received: by 2002:a17:903:2ec8:b0:224:1943:c65 with SMTP id d9443c01a7336-231d44e64e6mr171158295ad.14.1747642733567;
+        Mon, 19 May 2025 01:18:53 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97dadsm54603105ad.141.2025.05.19.01.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 01:18:52 -0700 (PDT)
+Date: Mon, 19 May 2025 13:48:50 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, pierre.gondois@arm.com, sumitg@nvidia.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linuxarm@huawei.com, mario.limonciello@amd.com,
+	yumpusamongus@gmail.com, srinivas.pandruvada@linux.intel.com,
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com,
+	lihuisong@huawei.com, cenxinghai@h-partners.com,
+	yubowen8@huawei.com, hepeng68@huawei.com
+Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in
+ cppc_cpufreq
+Message-ID: <20250519081850.7ycbcw56jzpiwkth@vireshk-i7>
+References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, Robert Foss <rfoss@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Todor Tomov <todor.too@gmail.com>, linux-kernel@vger.kernel.org, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-References: <20250518-qcs615_camss-v1-0-12723e26ea3e@quicinc.com>
- <20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com>
-Message-ID: <174755315042.2793587.17691583538434075316.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Add qcom,qcs615-camss binding
-Message-ID: <20250519081835.5GY4UXQVbuuUji7DvsBrTPbuQfLfYMLbn6GEYhWQpeM@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
 
-
-On Sun, 18 May 2025 14:33:07 +0800, Wenmeng Liu wrote:
-> Add bindings for qcom,qcs615-camss in order to support the camera
-> subsystem for qcs615.
+On 07-05-25, 11:19, Lifeng Zheng wrote:
+> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
+> driver.
 > 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
-> ---
->  .../bindings/media/qcom,qcs615-camss.yaml          | 356 +++++++++++++++++++++
->  1 file changed, 356 insertions(+)
-> 
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Sumit, can you provide your tag if it looks fine to you ?
 
-yamllint warnings/errors:
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index 206079d3bd5b..37065e1b8ebc 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -268,6 +268,60 @@ Description:	Discover CPUs in the same CPU frequency coordination domain
+>  		This file is only present if the acpi-cpufreq or the cppc-cpufreq
+>  		drivers are in use.
+>  
+> +What:		/sys/devices/system/cpu/cpuX/cpufreq/auto_select
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dts:25:18: fatal error: dt-bindings/clock/qcom,qcs615-camcc.h: No such file or directory
-   25 |         #include <dt-bindings/clock/qcom,qcs615-camcc.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/media/qcom,qcs615-camss.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Is the path correct? Should this be cpufreq/policyN/auto_select ?
 
-doc reference errors (make refcheckdocs):
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index b3d74f9adcf0..3c3d00cec298 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -808,10 +808,119 @@ static ssize_t show_freqdomain_cpus(struct cpufreq_policy *policy, char *buf)
+>  
+>  	return cpufreq_show_cpus(cpu_data->shared_cpu_map, buf);
+>  }
+> +
+> +static ssize_t show_auto_select(struct cpufreq_policy *policy, char *buf)
+> +{
+> +	bool val;
+> +	int ret;
+> +
+> +	ret = cppc_get_auto_sel(policy->cpu, &val);
+> +
+> +	/* show "<unsupported>" when this register is not supported by cpc */
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250518-qcs615_camss-v1-1-12723e26ea3e@quicinc.com
+s/cpc/cppc/ ?
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+viresh
