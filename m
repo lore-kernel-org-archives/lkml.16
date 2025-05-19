@@ -1,127 +1,106 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4D6A2D
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 04:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC48BA2D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 04:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747629540; cv=none; b=WQeoRWIUfGO9iqsL+DLwIC644HN4NbyCdU5S4l/nB9DAL5x8PkZ7UuHGdaQ/1Gl+jPGsavaN4gz/qGzqJba8ln9WdvHLTcQQVe09YA9Kv07UdWyNzn3+QvOFrTFBSPmk+CruEt+HTkDLEFl56MLSUo72rscyzs+2r0prHdUclts=
+	t=1747629598; cv=none; b=GP2+PEKd8lf23yJ0vO7gGFwZjR3dKlln/g2Qke3IP4OBpsFxBnJ7gweMDJQf5/0ndOcFiteNeBUpj2kzNRFqvtddXveDwDcVHx6A6REmJKDqyV17FH9aS+2tD8A5aWhEV07T0m4+0EAGcwv8cbRlDNROsFzUq5kA6J+3dGOykUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747629540; c=relaxed/simple;
-	bh=shw8XG/3u3quipp4vwRmP5PaojKFiLofuTofQGyCl0U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uJPmDEEm5kayMl0vS8bM40px4YtyaLXX3z6kwsXKQynCEIiHBeyTTvBAQknCdKVPehPJBO9YPRbRRHeEmsgjxoC7kl+ejq0qlinR3FCt4AYsUvNxjuQjUB34Qwb3FAZdBU2vIxor/kqcZ2gMfiyk05NZC6pHHQCQta2/4iq85iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WgQL+xF8; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1747629598; c=relaxed/simple;
+	bh=y0uOJBG49lBfEhU+I1bcegH0E6/QgST4QGKSSPWkqZQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HYFcsy/JFwVdeLW1aCBs7R+pHSe5bzQU8HSplgm3V1DztR2ZPTCJE2qdBpab3ru7jYCQGAbixqAFw8CmfXLuITcOhED4yFq7GLg14YuAt7HtrIfD91V2pT/0m1Yu/9RKICrNMwmoruOFmJHjc/5/4Nf38/8wVxQRVs9kCErAK7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nInRmagM; arc=none smtp.client-ip=209.85.219.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgQL+xF8"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30ec226b7d6so1042454a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:38:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nInRmagM"
+Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e7b9972069dso609239276.3
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 21:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747629539; x=1748234339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vAfY/KEFs3Nnw4j+JwYD/mkRdFSm5hVCKhpfrM8/duk=;
-        b=WgQL+xF8oBXp4FVSBiPVSaP7oWG/dSHD8YBNxeOWV/j/7kmNfW8cN+p+R//4/Fxan+
-         qss36nC+DnUJbfm9V1uSWJ7Foo7vYJmChBOgKUjcHSnL9WMJ2BTyWPewN+mRcE2D5Hgi
-         1SUDt/mc2epUKBGvEGwp+KbzJPumHR2fKIlAe3PMuifsjbCz1gJuIvJWcYZyshmJE4za
-         lUrzcFRcKA7w2wisGbsqpy5yLXL98A6p4HSxxrqFzJ4OiUmX2dShjG1flRSboUUcInla
-         nFMEfWpGvpIj8OMOD0aR8pmnfu1q2W7oOKSmd+le4Vyuc3TjwaDTV4gXcGj1s2MkmsGW
-         6tjA==
+        d=gmail.com; s=20230601; t=1747629595; x=1748234395; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y0uOJBG49lBfEhU+I1bcegH0E6/QgST4QGKSSPWkqZQ=;
+        b=nInRmagM1n9gKiN45lBUNJN+0/76Kg2hAWBs1xZb3SG1ct0Lg3tS79bMxPAXBLhHW9
+         dWxb30FDS5qBiCa7DVq6y0D/XMyAPam5w0ABIrg1+rFA94fc5/hlOrPSIjUgGHTPuqPE
+         XNepJvAtzWdHMKTURizx7Q+O1SbX6yVOU1dKLMMu1lfr6oPcy+rtX8jokxHydI+PrbfG
+         6NDHO5T9GDRzHNJn5WBPrUwc3Z3ilc4h7yFPV3kC7qB/SuP77hkEk8fVy4DDp/+tj9RM
+         rPHurNDPlOM224oJS25m4UKHDSrmG7EbVVBngwPymaWyBMbzcQWLmoXKLHFpdcbU827T
+         QqSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747629539; x=1748234339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vAfY/KEFs3Nnw4j+JwYD/mkRdFSm5hVCKhpfrM8/duk=;
-        b=VjWgJbEtmE9auefRlivvvN+L+N3V3UZaXjsy6P8aiIuVqxAjv/cWYz1ZBroS2JmqY8
-         VW+O6ZzgnyuNZqyAS/mKWbv31JrCdbDAiXqrQ4BNu2F//57yK9t8eKUBG2wT5QVoeI2C
-         o3d56AOCAth82kHNRrz5miNEQkD/XwGT6Bd+f+mXXjwUhZIr01uGfpovdGT48yp9V/dV
-         ViTi16wK9qDEYvKd7jh7Ysf25ReNaWNGQkEo8Z8rB0uqPBqnqdW1E8MD7qD6cPm04Umz
-         PC411fsVss13DRcLD4bz4xFpOU4VkxHTguBzy7rv26yfbHNHYijHtXWiKdczTd0MaOB/
-         kSgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxwTEWN825ZUl9c8V8Pr1hHG/xrvddx4pM2/OUzWCZ1IIMgxa+ijOts7UqgG+BKFTRvBDeTF33y9nNQ3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGNgdnzFZKfs9+tm2lyo1RrV3Igzlm3ETVc+pZiIEnObDVZerP
-	HvGn/7wTA1ac//FhosBqf5mtY2q+9zI52RKMNl+f1dFyDX/kN/GZK7fR
-X-Gm-Gg: ASbGnctf67BvDgCiO43nMdTVHMk00WAoOmFUIlzOhEt1tBJWa9hp5Bd8Ie+HIB5e51L
-	k+XdYRL09Z8hNlU8rVYMmE4PETg0iepCz77YK4+lIUSyHSluFYiNJ2QANB9X1UX6jPspBTO6908
-	U2cxYd0xsmL2m6hGXzNvbNHvjaaVojYW4E1RBmx+jUqrBywNJLO7b6bok+t0JaUhMBeHCg1NQGR
-	bDpKvWXXXMgi1IAVpWg3lbkyC9kJX4UWnHZJ6nceR0AEtNxnlhYaK6C7MM3lSBS1PYW3FbC7C6B
-	MPoy9Unj7g58RYXlqP2oFanJUIfqNG6QQXPiQvz7idmC/0B0FR0UVSid+IogIpzL/Qum7A==
-X-Google-Smtp-Source: AGHT+IEAeJ+bJmyxtXDNaFlfx7Bn3bxXTxbgWpW2guDrKArEZpwPg3CE3vDsvqo54QS63bj/RjMEdQ==
-X-Received: by 2002:a17:90b:3e8e:b0:301:1bce:c255 with SMTP id 98e67ed59e1d1-30e7d5a93bamr17027254a91.27.1747629538588;
-        Sun, 18 May 2025 21:38:58 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.138.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d4892c3sm5642403a91.12.2025.05.18.21.38.51
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 18 May 2025 21:38:58 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: ryncsn@gmail.com
-Cc: akpm@linux-foundation.org,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	bhe@redhat.com,
-	chrisl@kernel.org,
-	david@redhat.com,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	kaleshsingh@google.com,
-	kasong@tencent.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	nphamcs@gmail.com,
-	ryan.roberts@arm.com,
-	shikemeng@huaweicloud.com,
-	tim.c.chen@linux.intel.com,
-	willy@infradead.org,
-	ying.huang@linux.alibaba.com,
-	yosryahmed@google.com
-Subject: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
-Date: Mon, 19 May 2025 16:38:47 +1200
-Message-Id: <20250519043847.1806-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250514201729.48420-6-ryncsn@gmail.com>
-References: <20250514201729.48420-6-ryncsn@gmail.com>
+        d=1e100.net; s=20230601; t=1747629595; x=1748234395;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y0uOJBG49lBfEhU+I1bcegH0E6/QgST4QGKSSPWkqZQ=;
+        b=msqN6Vk8ySIdZ78ykaUG5HE11RdSVXpObGAmu2L46UHYad+HcHt30Ojkz9ZNwDBF/T
+         MCathtQogzvzeJysBVJMPLCbsf4IkP0Ef8ozmJt9FED2HIkfeMixsI6EOeLVH49ZVmtu
+         lgXrc/NHE5Ty9/gkxUgoEz7KNY/tunr9oiSnPSJfos6E/nFEay87W3EnzoXv1M8G6LJQ
+         kHhh5xXStg9EXp6srnTEv4oVUvDLQjeslMJmTkbDvQ4p4tiywjv0LMTfo/cC2Dj/69Ip
+         KK3YwGKJ9BiO7vUB+TpVGxbwlCVpNFqxE8OvmTaoPSe/mErZnUhq56Q1CXj3b33ti9wz
+         ZP0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIJi2PQ41EapTaDCbonzST59qoy5O492ftwLYDJYLB9HoaW8xP+vZLjapKIjncE3xfyOLUsUHFvO7hNhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3U3UvAkez1mia/DbskxgvjDuooKQKOUh+jJumd5KCQtkGuFgF
+	rZBA0ufaTSi7PqNfoEl9iDfI/l+72Wz6gGhDTBeJT26ih6QZ6LSdmlTvNqtKNQXv7poPnT6B3MR
+	i8Xszo/kJjMeSLdkfJc3nmCAhGCnPvdc=
+X-Gm-Gg: ASbGncubqKfCiIEAZE5pSpklA8xVPWmW5jvNwll6dopa5K1j5ZZU2ptVpGli4h6mW4W
+	ePkOWolDeKgxDj4wx1735giHww82Y+nXWWif8/C2LGDDcTmNaBobm7I2cdHQif7s9kFWlWbcyYH
+	leS2x0D2fFTYYYATyuAY0h01WRJC2CcS4UbA==
+X-Google-Smtp-Source: AGHT+IEX3MxWt/dORjFhGvNhJ9GwFDD561jalJRC+jBy+mHSpUu8blwiT4u9rybqcDDs+f55pcmGCifYHvlvFMDjw+k=
+X-Received: by 2002:a05:6902:12c9:b0:e75:bea4:5ea4 with SMTP id
+ 3f1490d57ef6-e7b6a412026mr14608253276.46.1747629595681; Sun, 18 May 2025
+ 21:39:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Guoyu Yin <y04609127@gmail.com>
+Date: Mon, 19 May 2025 12:39:44 +0800
+X-Gm-Features: AX0GCFvcV0P9cCPFB1RYcgX8fK2UXRBnjjRIB5m2manzO5ZCnHuk61OyvNPeX2U
+Message-ID: <CAJNGr6u38oVsWeh57rmW15H80DpPrd0CH0uLH5kff1W0v6SHLw@mail.gmail.com>
+Subject: [BUG] INFO: rcu detected stall in sys_io_submit
+To: anna-maria@linutronix.de
+Cc: frederic@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-> From: Kairui Song <kasong@tencent.com>
+Hi,
 
-> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> index e5a0db7f3331..5b4f01aecf35 100644
-> --- a/mm/userfaultfd.c
-> +++ b/mm/userfaultfd.c
-> @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
->  				goto retry;
->  			}
->  		}
-> +		if (!folio_swap_contains(src_folio, entry)) {
-> +			err = -EBUSY;
-> +			goto out;
-> +		}
+I discovered a kernel crash using the Syzkaller framework, described
+as "INFO: rcu detected stall in sys_io_submit". This issue occurs
+during the execution of the sys_io_submit system call, where RCU
+detects a stall on CPU 3.
 
-It seems we don't need this. In move_swap_pte(), we have been checking pte pages
-are stable:
+From the dmesg log, CPU 3 is stuck in the enqueue_hrtimer function
+(kernel/time/hrtimer.c:1085) while handling an hrtimer interrupt.
+Meanwhile, the task syz-executor.1 is stuck in memory management
+functions (e.g., unmap_mapping_pages, mm/memory.c:3849) during
+sys_io_submit execution. This likely causes the RCU stall.
 
-        if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src_pte,
-                                 dst_pmd, dst_pmdval)) {
-                double_pt_unlock(dst_ptl, src_ptl);
-                return -EAGAIN;
-        } 
+I suspect this is due to delays in hrtimer processing or prolonged
+blocking in memory management operations. I recommend reviewing the
+enqueue_hrtimer implementation and the interaction between
+sys_io_submit, AIO, and the EXT4 filesystem.
 
-Also, -EBUSY is somehow incorrect error code.
+The full dmesg log is attached. Please feel free to contact me for
+additional information or reproduction steps.
 
-> 		err = move_swap_pte(mm, dst_vma, dst_addr, src_addr, dst_pte, src_pte,
->  				orig_dst_pte, orig_src_pte, dst_pmd, dst_pmdval,
->  				dst_ptl, src_ptl, src_folio);
->
+This can be reproduced on:
 
-Thanks
-Barry
+HEAD commit:
+
+fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+
+report: https://pastebin.com/raw/D6PmW878
+
+console output : https://pastebin.com/raw/qeLqJsRF
+
+kernel config: https://pastebin.com/raw/zrj9jd1V
+
+C reproducer : https://pastebin.com/raw/EprKHENh
+
+Best regards,
+
+Guoyu
