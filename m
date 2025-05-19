@@ -1,106 +1,141 @@
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F991EA7EC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0AA3595D;
+	Mon, 19 May 2025 05:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747631961; cv=none; b=mXWtJQP0f1/psI2r/z0xAjhCjyIOj89XHIogGBW2ef1vr7zN6wdaNHNuD/dJbevw+Gnr9AT0Ym6XAL6Z9++WmpJXJTXgSNZg6KsW67pJy9bRUGQFNEHn+zsEgmPOsQWnTbZ+vkDZe53CnKXIt+DhhIJmQYcvThrmpKBATZZo7L8=
+	t=1747632082; cv=none; b=WoFSQEGGG4dw0wjZ2L2RawfKRkaZF9W5fcedR5nABnout9NrvWp7OuT913HiC9/qcG1YR3/eJkKiARdFLS3c25DJ5JgJrCRM5Zzlzo/5CusHN8/2M2NlvuhgJ+7FAH2jBqd8/G5uqpVRJb/lQQdCrNEpz7VzlptoaXW91t2e3Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747631961; c=relaxed/simple;
-	bh=Mzp2y9qZnoJFTRXdo2PmXje+XJzl1PCZcCPOk7FGWCI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ixaDVg3jNzPQ4HeCyXAL8qYLosOpuBYwwue8YIMjFGyG8PPULUZy+oUoy8QPzCS1jCNQDJfotQJfk2KQzGKf2oO0UTAzN9CV8NzixKWLTCJy1wimtIcs/LXAwRx30F9vjzu2OnDOb7zJze4V5mpgkDQIaGgt0vY2HMvXNAnXA9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMdaDt9b; arc=none smtp.client-ip=209.85.219.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747632082; c=relaxed/simple;
+	bh=SY0Y7hYN39xgQcVqGaPVqYZ0mV3XyiT8xPuG0QcFo2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EygCJgn+DouUNfllVwLDSlliUagmd5WE/bxi9gZEh8bbVv8HFTmK7jfxMH33As4f6dva+998Y6tzwRquO/lWCJwZNnRGHHRMszHe79peKdeG2wwKCZm9x17yklXH2/HFt9CTwPY9r6Gblrg5R4KwwE8mk/2sHkAMItqC+NXQsBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+XTDIfh; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMdaDt9b"
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e7c5d4709caso431292276.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 22:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747631955; x=1748236755; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Mzp2y9qZnoJFTRXdo2PmXje+XJzl1PCZcCPOk7FGWCI=;
-        b=RMdaDt9bEZm3X472hbH0bGmIWm2nmj/nfSC2RZb6bvl9kF8adGw7VYzfh8+jNV9kcP
-         u/vfdIDkMBwgzS1YQr3qA9ZIc21wbtaWPe7BvvYLjGziCgd7llSpzFW8JWPET8/b2Tje
-         tIc2fbdAeukEFA8MZiHewfycqGoLrghUgwgXJpvA7PZh2dtqqcKu3zn4DlV0FF2Q4q7c
-         pTKJzUwmbkFRVLAJ4SvMheQBRkhGtsUDkhs8JRPSK4YxQpAKhjfiiAJTiB7K+o32C7YG
-         9iZfVXudZHlT1y1/KnMMixLA+pVLuQMXW5SdfxeF0Shb00VHhUPI3sVrOtCqAy/AmKEF
-         huMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747631955; x=1748236755;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mzp2y9qZnoJFTRXdo2PmXje+XJzl1PCZcCPOk7FGWCI=;
-        b=TTHrUJRPgxKQz5IcnBGUQPwOTxf3S921Q2aUBdAsNqcdQoohmRc3NyMz7bB8rD+HTM
-         UpWkkrWq7OZZyy5Sj/dYaedE4vsIT8b1iGvj0AXTy4X9AvaRExV+vEdb22LPR5VfcgN9
-         WDdny0gz2W7YmwsB064CGCH5tyWvn8BT3gkMQB4QNum23Z8JI03kPVMX7D8dmEuXLCJk
-         4A2G/SCZByNK8XMeKR9hIGozdrnFWDnpam+TIKMl/C17E/u5VbdmZPtTylWyzbnQ5qGy
-         +mGfrdyRn4Ust+0BFh5V/fMravsfJ/zPEEr0jcYM/X7BKmI6av7+69AbP528chirpnot
-         KXIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7xLIy3PqpLzgXpAfwKtRnXLRzR+jF9ENfdHzJd58uBD0Qvwqt3gwYBpsVHDU5v16pNpQ79zFfDkC/q/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywej1aKnJbKxjAlsZY3ox5BD4xMIVrePokev3sgLpsdZdaiIEnp
-	o38wqeJ19N5rtyyuACQN5bFOpYOsSZDd6l7T0EfXU5SvyvQir+qmXddmzngKNqMjWDf8KaCHYSk
-	ss+aVHdZctP3pt7wyiDo3lhDIiCfrvOI=
-X-Gm-Gg: ASbGncvDEB/VGHuvvpMH8qS9ccndXecOQf2yhNf6itYbTpveU1nMhScJY6Wv3vYmtLO
-	7JLWOBlVNdEhFVL4cr9c+rudOzx5HkOBzi2akq6mczDiCUwk7QFor5tbcUDDCAb2f5SM2QbxbGu
-	k6x8rfpy8OJ6PwsND0Geyf9IkCCmAxQcmg8w==
-X-Google-Smtp-Source: AGHT+IH/joJxBYqiRTH/uPR8cDT+aXxnniJ5h4EoMihnIcBb0JEcFuRXT98gVJWfCnX7KaO8+W21sFg0GhxHsePNmQQ=
-X-Received: by 2002:a05:6902:2b86:b0:e72:bb4d:80d9 with SMTP id
- 3f1490d57ef6-e7b6d32d2abmr14413984276.3.1747631955432; Sun, 18 May 2025
- 22:19:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+XTDIfh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747632081; x=1779168081;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SY0Y7hYN39xgQcVqGaPVqYZ0mV3XyiT8xPuG0QcFo2c=;
+  b=B+XTDIfhcqW1OAJyexVvKh1XlAbs1f+uJCR0G4macooHP1J1bibo+9OH
+   SV1LoiOovebp42ocLuN2jeUTEyjOjoow8xA+lj2DO7Trm4F0sU2ysTbG1
+   yp/v1YxK84myNHoUvaWZREvGvqp4xKjBPYTc2zDKXJabXkUgdTYwGWWU8
+   tPEhtO9zkzr0ZM1iS/5l9q40gMzpH6bYgdTgeJEtyjh+SBx9uVaMU0ZfG
+   lXHzLMVeD1MriltVR9SyloHJNpkQShWxBPbYo0e6Nboer0MY/hjGIeEUc
+   zfO/+i5ZWwxImD3UvAdglNsUX+9jmXTMDr287GsGOVlrqF6Mzz15bg85Q
+   g==;
+X-CSE-ConnectionGUID: s9MD7767Qz6eQcuBD4FFCQ==
+X-CSE-MsgGUID: XieQkNdpSui4VnHgRBqwtg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49582890"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49582890"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:21:17 -0700
+X-CSE-ConnectionGUID: Nzk8Ek0NSROmy59+BkNG1g==
+X-CSE-MsgGUID: okCR8U7+T1W2PHghfzmjtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="144238544"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:21:08 -0700
+Message-ID: <5dc2527f-8fd4-4f66-8168-f2f9653a3712@linux.intel.com>
+Date: Mon, 19 May 2025 13:21:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Guoyu Yin <y04609127@gmail.com>
-Date: Mon, 19 May 2025 13:19:04 +0800
-X-Gm-Features: AX0GCFuD6t2dmAz79LzViKtIGCDV9jMsDTBJ9pE1zjqD8zFQ9OEemW_a9IGd0Go
-Message-ID: <CAJNGr6v1GL=ZzgGar7NCjCGVBaAO7YVYU7bBhUt3T4T-DAnUAw@mail.gmail.com>
-Subject: [BUG] RCU Detected Stall in sys_process_vm_writev
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
-	hpa@zytor.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 24/38] KVM: x86/pmu: Exclude PMU MSRs in
+ vmx_get_passthrough_msr_slot()
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-25-mizhang@google.com> <aCc_LmORNibXBt8V@google.com>
+ <aCdPbZiYmtni4Bjs@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCdPbZiYmtni4Bjs@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-I discovered a kernel crash using the Syzkaller framework, described
-as "INFO: rcu detected stall in sys_process_vm_writev". This issue
-occurs during the execution of the sys_process_vm_writev system call,
-where RCU detects a stall on CPU 0.
+On 5/16/2025 10:45 PM, Sean Christopherson wrote:
+> On Fri, May 16, 2025, Sean Christopherson wrote:
+>> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>>> Reject PMU MSRs interception explicitly in
+>>> vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+>>> specially handled in intel_passthrough_pmu_msrs().
+>>>
+>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>>> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> ---
+>>>  arch/x86/kvm/vmx/vmx.c | 12 +++++++++++-
+>>>  1 file changed, 11 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index 38ecf3c116bd..7bb16bed08da 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -165,7 +165,7 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+>>>  
+>>>  /*
+>>>   * List of MSRs that can be directly passed to the guest.
+>>> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+>>> + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
+> Except y'all forgot to actually do the "special" handling, vmx_msr_filter_changed()
+> needs to refresh the PMU MSR filters.  Only the x2APIC MSRs are excluded from
+> userspace filtering (see kvm_msr_allowed()), everything else can be intercepted
+> by userespace.  E.g. if an MSR filter is set _before_ PMU refresh, KVM's behavior
+> will diverge from a filter that is set after PMU refresh.
 
-From the dmesg log, CPU 3 is stuck trying to acquire a spinlock in the
-pgd_free function (arch/x86/mm/pgtable.c:490), leading to the RCU
-stall. This is likely caused by spinlock contention triggered by the
-page pinning and unpinning logic in sys_process_vm_writev under high
-load or abnormal conditions.
+Yes, it's indeed missed. Needs to add them. Thanks for reminding it.
 
-I recommend reviewing the page pinning (pin_user_pages_remote) and
-unpinning (unpin_user_pages_dirty_lock) logic in
-process_vm_rw_single_vec (mm/process_vm_access.c) to ensure it does
-not cause prolonged spinlock blocking due to scheduling delays or
-resource contention.
 
-This can be reproduced on:
-
-HEAD commit:
-
-fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
-
-report: https://pastebin.com/raw/v7xV4BdD
-
-console output : https://pastebin.com/raw/GfJLqkpf
-
-kernel config: https://pastebin.com/raw/zrj9jd1V
-
-C reproducer : https://pastebin.com/raw/8Mm5f2kh
-
-Best regards,
-
-Guoyu
+>
+>>>   */
+>>>  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+>>>  	MSR_IA32_SPEC_CTRL,
+>>> @@ -691,6 +691,16 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+>>>  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+>>>  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+>>>  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+>>> +	case MSR_IA32_PMC0 ...
+>>> +		MSR_IA32_PMC0 + KVM_MAX_NR_GP_COUNTERS - 1:
+>>> +	case MSR_IA32_PERFCTR0 ...
+>>> +		MSR_IA32_PERFCTR0 + KVM_MAX_NR_GP_COUNTERS - 1:
+>>> +	case MSR_CORE_PERF_FIXED_CTR0 ...
+>>> +		MSR_CORE_PERF_FIXED_CTR0 + KVM_MAX_NR_FIXED_COUNTERS - 1:
+>>> +	case MSR_CORE_PERF_GLOBAL_STATUS:
+>>> +	case MSR_CORE_PERF_GLOBAL_CTRL:
+>>> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+>>> +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+>>>  		return -ENOENT;
+>>>  	}
+>> This belongs in the patch that configures interception.  A better split would be
+>> to have an Intel patch and an AMD patch, 
+> I take that back, splitting the Intel and AMD logic makes is just as messy,
+> because the control logic is very much shared between VMX and SVM.
