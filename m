@@ -1,180 +1,266 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E296A21147B;
-	Mon, 19 May 2025 22:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4B158218;
+	Mon, 19 May 2025 22:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747692303; cv=none; b=gw7qCFY+W6dM/eQUQNOKJpt9a5Q+eeS7+w/cv7HFJq0+YzzxnanLFsXFC48oUD7+nd8XgmTGwYWQtSv3obIxOJ+aBVZX2VoeDftb7S1nyCyo9yyLWFqRj2nOi08Iichxchy2+ALtUQGFLszLYgx23vXeB8CXu9RMHlECB8+v8/A=
+	t=1747692464; cv=none; b=Xyn2pnvad4lIoODcVf0ePh42Tgto0ErbeOcVZbLuh6R8z85PLkcPZSLaplen/HmmMeCyeOMAm3EgFY8J3RRNEA7CscVP1GOxQjils7Utj6Mao7Qcl/Ne1tha/PyjQL5osIbYIYiZzYkh+/U7kr0uHBnngwAMIXOEbHU07cZF5mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747692303; c=relaxed/simple;
-	bh=CM8ZHMND7YXvqzO8+Kz4TpDUNwHHZU01RXS5hzcvDLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=a/k9PkGd44CHYMDAfqfkYPG1+19mxjludD+/sbbqPDvAT0o36oxHTHAIWVsZ44L15qSuRT+9viV2cQqHZ3jmTUB7pCKrNXA++/Ejan1GrAX3X7Q3Cc5a0SBybXhVdqqif3giSpiHYdKlZ6J8Hw0j22U79E4lIaisrLS6eFBNqmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Zx91c72B; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747692464; c=relaxed/simple;
+	bh=tGJG3BGVwnfOfqG0pD9Jn7QT2AuJ1JskGwWW8nhUuw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9x07dVLwHz8MLXwYWsdLSm2jKC3YZhio1Bcj9EdrdhvKnnUzJcKnEw3QA/6DddsxzE97A+kZWr+mLAcq3TSnplWA0k/0pjOCflAW6nImyGTfD1PsMuWHAw09kJpiiaxBRi2UBirR7qGWbEQEtdJUvkJF056KdocV9CLa7ccO8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m3kEQXzB; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Zx91c72B"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JHmmtt027166;
-	Mon, 19 May 2025 22:04:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	T8g9hmVvqjn8rXNSXykqDJITIJDGdI8Suwi98GQc/zA=; b=Zx91c72BFkw4dnbv
-	pjjVQNEwoUp4uvmhh0pAqmcR/IvsJZ2Mi6AfKsTmTW+pYrLSW8S4STQ8I6YO1qMN
-	m0wVTJorpC6PJ5OYV5m4hqj19onpE4j2xr+ZOk2VLVqKAFDr/Yu9YzujgiZXYTz8
-	bmnydtbKQMK/y1YCC6R2E1qDbbbEyLYEFpeAeq2AC4Xm5uHHZTD22nD+aHoPXVaK
-	HrnlF371qSbAabnD2+Re6+rI/tjFbs3adXLdlHRmMsgpUcN0HBFcBTOPuUF2QB4a
-	nwXxDDP05qzSsGNflUehxd2wAC42T/0kNwTSS1m7DANlXrkhckexYSxkjQ/GS1FX
-	6BwMHw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9wqnm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 22:04:35 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54JM4YkV014811
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 22:04:34 GMT
-Received: from [10.110.43.57] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 19 May
- 2025 15:04:33 -0700
-Message-ID: <f3727b53-8da3-d4f6-575b-108a8d6898e5@quicinc.com>
-Date: Mon, 19 May 2025 15:04:27 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3kEQXzB"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso5745540b3a.2;
+        Mon, 19 May 2025 15:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747692461; x=1748297261; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GsKQLfbRjGz1UTGHrEqHLBrI6P02Dgqdd0Lbpjk3qKs=;
+        b=m3kEQXzBrfrDhbXWNo+lMzUQwb0uNRUi+IXGoHVuEjHhifI7KCWNth0KmAb+W2+ZXs
+         ViMjfn5GZ+Rq1pFk1FrhEPPS7ZNsPu3rl99MkdO24+Qi/UIYtG1S+7E6hcS/r890RyGe
+         ZakJLHEQhilGtYyPQrVzas30MQsleZ0eUE8EKQWRpi/c/pUEHM4s9qW3RedIflJXoK1e
+         ViVqoiUFp1nvqt4tNtqlpoojBQzVutujeWHEEY1aiF56JhX5gMqZdgUrL81TD9XjinRN
+         YYqqM1ieTQ3r4VfhDGKiLIAuEKxYMhADeBIhaX2Gh2GqZ1et9mAeCdH09+SpzF6LB3DQ
+         L1Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747692461; x=1748297261;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GsKQLfbRjGz1UTGHrEqHLBrI6P02Dgqdd0Lbpjk3qKs=;
+        b=pA6xi9Jmw4RBvk2wJde5+++aRkN1ydy1Da9v0ZzCWn0BDZ7Vcha1/1HfNcObLZEhUL
+         kS1gIQbVfJ824PCrbvSGvQVHPCLETYNmytN/9zDLfWF1KxKGGgwYLylPRwlqiGAIgjwm
+         /RQuMq81xBulLeI/+H/unjY/X2AvhAhze0oScJmkP7wWzf8r6Fpb3mlBWdnFeezYqg+M
+         pMeDnfCePcol1rC00fCFNM5LGCifldMaCZoalG7+Y8GtBwzNWJR28Iik4PYNx/ZWioGV
+         WwGj8A+d7riBCeNaIu2U9SNdnp8xDekvgdziAq4jzCt408hjuB28weCJVC9B26QqVP3u
+         MMFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUy66SiqczqoYGi4g9eIcvNrPIqO96XgTqUd3EypoboOyayi2FfeMWl4P1/Uj5HPPOj7F5YQ891TbRkllCbo0Y=@vger.kernel.org, AJvYcCVT/SMuGtrT09ljkttAdUSgr6XvWPfUBpZZUxccqJc8KEKvhgdmJhSeNwMQx5Fha5HdI7Rx5VPnCNdWm5ur0aU=@vger.kernel.org, AJvYcCWa8Ca1blW1uY3e0N4FFVNfHgll5AC9mUshb086ef/oXzVtx5CEzGkJghij0tKAQ1YbOqzVGW/gDhv3hP89@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8L8ONV2byFDxZLANOWpNk9OrwUtTB7XmQwOFs9SsJN917j8yK
+	WcX8Lv+WioJj+x+3s+ysaSTfKS/41GBapq8yyNgVeeIm2Gp0XpJ+GK7d
+X-Gm-Gg: ASbGncsB4A+sfCVYDI1WdP7+I2o67HRrIuKMTey8jkR0/voLaO203bTqGaW5Vm21+2G
+	h26n2hCCvzVEM6ep5BA+T9sLT/QEeAe5EtPVDd9P43ZafPXD+pasn6A52DwBkkki2/mBoJGBNI3
+	B+oGk5bE/VteBjc/1Zz4WpaisSk9+a801zyxqvhBMDaILDsX3PEK8+d7I4+wzrtqPMsP3//jlL/
+	LqnrwkkyR8tq6JJNdn+VmIh6qwR9em9LB47MLvdNVgXkmmlSemk2aSR7jLo9qeBkH+XFwpfpVju
+	MPPXjSIge5qTxFGRH0L2ReeZRgGM+hF+iIdqQe38vl2JKOJLjEo=
+X-Google-Smtp-Source: AGHT+IFN/glchZUzWbm/7UP3n2CrUuYAqQxmN2QFRKVUdVR/8U/2QhE1NxAMOc+i0u+19zTbaQl+ig==
+X-Received: by 2002:a05:6a21:103:b0:1f5:7c6f:6c96 with SMTP id adf61e73a8af0-21621902a69mr24006099637.22.1747692460592;
+        Mon, 19 May 2025 15:07:40 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d9c3sm6646198b3a.121.2025.05.19.15.07.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 15:07:39 -0700 (PDT)
+Date: Mon, 19 May 2025 18:07:37 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Burak Emir <bqe@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+Message-ID: <aCurhRZzWZG3tpXK@yury>
+References: <20250519161712.2609395-1-bqe@google.com>
+ <20250519161712.2609395-4-bqe@google.com>
+ <aCt23djKOzUiP9L4@yury>
+ <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Vinod Koul
-	<vkoul@kernel.org>
-CC: Melody Olvera <melody.olvera@oss.qualcomm.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250409-sm8750_usb_master-v4-0-6ec621c98be6@oss.qualcomm.com>
- <20250409-sm8750_usb_master-v4-6-6ec621c98be6@oss.qualcomm.com>
- <Z/exOF4T+0vNLQwg@vaman> <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
- <aCRVaNDQP/PdAXPR@vaman> <5183b76b-8043-4309-b25d-e1ae505f929e@quicinc.com>
- <6fa4959c-d733-4d50-904f-caf933e02da9@oss.qualcomm.com>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <6fa4959c-d733-4d50-904f-caf933e02da9@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7tkQXt10AubyxISGwOFWZdq0ny_YbYf5
-X-Proofpoint-ORIG-GUID: 7tkQXt10AubyxISGwOFWZdq0ny_YbYf5
-X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=682baaf3 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=jJrOw3FHAAAA:8
- a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=WksZTEnvWCXEbMr8NocA:9 a=QEXdDO2ut3YA:10
- a=-FEs8UIgK8oA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDIwNSBTYWx0ZWRfX4Vcchgh/WruK
- V7ZkJSFPodRTjs/iAtlDkF49Z8ENM9Zur72GPcH4aOTTlSSaRnzyDOiHS5u2ZXWWH8JRmXIGkWM
- ZEgCmEEKBHkqm8vHsn9ce/iNhHwwxRho/3tVIz29aSph9km0aEVfVQ3L4C6V9eBAXXLeaSiP3aE
- qnX2/7ZN4n9frNYVvm8aP5J6jVZixiPXsGjgN9HT2Tfj9bAGHHy+NG0mju7X81XgZ5J70ZTAMiR
- Z3RY8ONHh9RnFFgPzukmH2ZXwxKT/mQZQeVfciu8HENPNxD94UEnz2Y+q4l5rf99kgG0ujiy38D
- 7eU5UxSLU7UXkgM44okzqJID/bHMPJXZAKvW0R5ZNR8FHfsfPnTyE3b0hq6PRbajL6YKtgn62mr
- oyUZboS50pTuJRFG9RwdImoQvNmT9L9GfZEGE8zOBbHjPsEVJBU/wVs6ldIuw7LR1sxn9MAi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_09,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505190205
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
 
-Hi Konrad,
+On Mon, May 19, 2025 at 10:41:58PM +0200, Burak Emir wrote:
+> On Mon, May 19, 2025 at 8:22 PM Yury Norov <yury.norov@gmail.com> wrote:
+> >
+> > On Mon, May 19, 2025 at 04:17:03PM +0000, Burak Emir wrote:
+> > > Provides an abstraction for C bitmap API and bitops operations.
+> > > We follow the C Bitmap API closely in naming and semantics, with
+> > > a few differences that take advantage of Rust language facilities
+> > > and idioms:
+> > >
+> > >   * We leverage Rust type system guarantees as follows:
+> > >
+> > >     * Ownership transfer of a Bitmap is restricted so that it cannot
+> > >     be passed between threads (does not implement `Send`).
+> >
+> > Can you explain why you decided to not implement it? You can 'share' a
+> > reference, but prohibit 'sending' it...
+> >
+> 
+> My intention here was to be conservative. It seems safe to send a
+> Bitmap to a different thread,
+> in the sense that it would not cause data races.
+> 
+> Maybe it would be better to commit now to keep Bitmap "send"able - for all time.
+> It would however constrain the API quite a bit. One could never use this API
+> with a thread-local bitmap.
 
-On 5/17/2025 11:28 AM, Konrad Dybcio wrote:
-> On 5/14/25 8:24 PM, Wesley Cheng wrote:
->> Hi Vinod,
->>
->> On 5/14/2025 1:33 AM, Vinod Koul wrote:
->>> On 16-04-25, 15:45, Wesley Cheng wrote:
->>>> Hi Vinod,
->>>>
->>>> On 4/10/2025 4:53 AM, Vinod Koul wrote:
->>>>> On 09-04-25, 10:48, Melody Olvera wrote:
->>>>>
->>>>>> +static int m31eusb2_phy_write_readback(void __iomem *base, u32 offset,
->>>>>> +					const u32 mask, u32 val)
->>>>>> +{
->>>>>> +	u32 write_val;
->>>>>> +	u32 tmp;
->>>>>> +
->>>>>> +	tmp = readl_relaxed(base + offset);
->>>>>> +	tmp &= ~mask;
->>>>>> +	write_val = tmp | val;
->>>>>> +
->>>>>> +	writel_relaxed(write_val, base + offset);
->>>>>> +
->>>>>> +	tmp = readl_relaxed(base + offset);
->>>>>
->>>>> Why are you using _relaxed version here?
->>>>>
->>>>
->>>> No particular reason.  I think someone pointed this out previously, and I
->>>> was open to use the non-relaxed variants, but I assume using the relaxed vs
->>>> non-relaxed apis comes down to preference in this case.
->>>
->>> Nope you cant! There _needs_ to be a specific reasons!
->>> When you are doing read, modify, write, it is very important to know the
->>> right version to use...
->>>
->>
->> I mean, its a write readback, which ensures the bus transaction is complete
->> based on [1], hence why **in this situation** it is up to preference.
->>
->> Otherwise, w/o the readback then we'd need to ensure writes are made
->> depending on the required sequencing (in spots where the sequence is
->> strictly defined), and that can be enforced using barriers.  If you feel
->> like using the non-relaxed variant is preferred let me know.  I can replace
->> it and remove the readback.
+I'd implement the Send method, or just say that the method is to be
+implemented in future when it will be needed.
+ 
+> > >     * all (non-atomic) mutating operations require a &mut reference which
+> > >     amounts to exclusive access.
+> > >
+> > >     * It is permissible to pass shared references &Bitmap between
+> > >     threads, and we expose atomic operations through interior mutability.
+> > >     Since these atomic operations do not provide any ordering guarantees,
+> > >     we mark these as `unsafe`. Anyone who calls the atomic methods needs
+> > >     to document that the lack of ordering is safe.
+> > >
+> > >   * The Rust API offers `{set,clear}_bit` vs `{set,clear}_bit_atomic`,
+> > >     which is different from the C naming convention (set_bit vs __set_bit).
+> > >
+> > >   * we include enough operations for the API to be useful, but not all
+> > >     operations are exposed yet in order to avoid dead code. This commit
+> >
+> > This sentence and the following one say the same thing. Can you please
+> > rephrase?
 > 
-> Readback is stronger on arm64, as otherwise the writes may be buffered and
-> not observable at the other endpoint even though the instruction has been
-> issued, even if a barrier has been issued
+> Thanks for catching that, will do.
 > 
-> Some resources:
+> > >     includes enough to enable a Rust implementation of an Android Binder
+> > >     data structure that was introduced in commit 15d9da3f818c ("binder:
+> > >     use bitmap for faster descriptor lookup"), which can be found in
+> > >     drivers/android/dbitmap.h. We need this in order to upstream the Rust
+> > >     port of Android Binder driver.
+> > >
+> > >   * We follow the C API closely and fine-grained approach to safety:
+> > >
+> > >     * Low-level bit-ops methods get a safe API with bounds checks.
+> > >
+> > >     * methods correspond to find_* C methods tolerate out-of-bounds
+> > >     arguments. Since these are already safe we the same behavior, and
+> > >     return results using `Option` types to represent "not found".
+> >
+> > Nit: the above 2 lines look misaligned. Everywhere else you align
+> > items such that new lines under asterisk align with the first
+> > character, not the asterisk itself.
 > 
-> https://youtu.be/i6DayghhA8Q
-> https://lore.kernel.org/linux-arm-msm/20240618153419.GC2354@willie-the-truck/
-> https://developer.arm.com/documentation/ddi0487/latest sec B2.6.9
+> Yes, will fix.
 > 
-> There's been a real bug observed (pun not intended):
-> Commit 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+> > >
+> > >   * the Rust API is optimized to represent the bitmap inline if it would
+> > >     take the space of a pointer. This saves allocations which is
+> >
+> > s/take the space of/fits into/
+> >
+> > >     relevant in the Binder use case.
+> > >
+> > >   * Bounds checks where out-of-bounds values would not result in
+> > >     immediate access faults are configured via a RUST_BITMAP_HARDENED
+> > >     config.
+> > >
+> > > The underlying C bitmap is *not* exposed, and must never be exposed
+> > > (except in tests). Exposing the representation would lose all static
+> > > guarantees, and moreover would prevent the optimized representation of
+> > > short bitmaps.
+> >
+> > Does it mean that all existing kernel bitmaps declared in C are not
+> > accessible in Rust as well?
 > 
+> At the moment, we do not permit construction of a Rust Bitmap from an
+> existing C bitmap.
+> The point is more about the other direction though, not being able to
+> pass the Rust-owned bitmap to C code.
+> 
+> One could think of an API that requires an exclusively owned (no one
+> else has access) pointer to a C bitmap to Rust.
+> Though there is no general way to ensure that property, there are
+> situations where it would make sense (e.g. newly created).
 
-Thanks for sharing.  Useful info...The way I interpret it, even between 
-relaxed and non-relaxed variants, a readback is always desired.
+OK. Can you also mention it? And if we'll need to share bitmaps
+between C and Rust modules, are you going to create a new class, or
+extent the existing one?
 
-Thanks
-Wesley Cheng
+> > > An alternative route of vendoring an existing Rust bitmap package was
+> > > considered but suboptimal overall. Reusing the C implementation is
+> > > preferable for a basic data structure like bitmaps. It enables Rust
+> > > code to be a lot more similar and predictable with respect to C code
+> > > that uses the same data structures and enables the use of code that
+> > > has been tried-and-tested in the kernel, with the same performance
+> > > characteristics whenever possible.
+> >
+> > This should go in cover letter as well. Did you run any performance
+> > tests against the native bitmaps?
+> 
+> ok, I will mention it there. I have not run this against the Rust native bitmap.
+> I'd need to find out how to get a Rust native bitmap into kernel Rust code.
+> 
+> [...]
+> 
+> > > +    /// Set bit with index `index`.
+> > > +    ///
+> > > +    /// ATTENTION: `set_bit` is non-atomic, which differs from the naming
+> > > +    /// convention in C code. The corresponding C function is `__set_bit`.
+> > > +    ///
+> > > +    /// # Panics
+> > > +    ///
+> > > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > > +    #[inline]
+> > > +    pub fn set_bit(&mut self, index: usize) {
+> > > +        assert!(
+> > > +            index < self.nbits,
+> > > +            "Bit `index` must be < {}, was {}",
+> > > +            self.nbits,
+> > > +            index
+> > > +        );
+> >
+> > Shouldn't this assertion be protected with hardening too? I already
+> > said that: panicking on  out-of-boundary access with hardening
+> > disabled is a wrong way to go.
+> 
+> I considered it, but could not convince myself that __set_bit etc are
+> actually always safe.
+> For the methods that have the hardening assert, I was sure, but for
+> this one, not.
+> 
+> Are all bit ops guaranteed to handle out-of-bounds gracefully?
+
+No. set_bit(), clear_bit() and test_bit() don't know the bitmap size
+and can't check out-of-boundary. 
+
+But your Rust set_bit() does! You can check boundaries unconditionally,
+and throw errors depending on the hardening config. If user wants to set
+an out-of-boundary bit, you should just do nothing,
+
+> > Can you turn your bitmap_hardening_assert() to just bitmap_assert(),
+> > which panics only if hardening is enabled, and otherwise just prints
+> > error with pr_err()?
+> 
+> If there is no risk of undefined behavior, then I agree that checking
+> bounds is hardening.
+> If a missing bounds check loses safety, we then we should not skip it.
+> 
+> > Did you measure performance impact of hardening? Are those numbers in
+> > cover letter collected with hardening enabled or disabled? If
+> > performance impact is measurable, it should be mentioned in config
+> > description.
+> 
+> The hardening was enabled and it crossed my mind to mention it.
+> Given that not all methods have hardening, I though it might be misleading.
+> 
+> I'll have a more complete comparision and description in the next version.
+ 
+The hardening should be disabled for benchmarking reasons, isn't?
+
