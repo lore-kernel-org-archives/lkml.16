@@ -1,423 +1,152 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2040.outbound.protection.outlook.com [40.107.22.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2EE288528;
-	Mon, 19 May 2025 16:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673653; cv=fail; b=ay79IHMi8mjaogfcQ9YJWoAM/xpsaTQtGPXUuoEz2qekmjK3E0Gio7ZMYvYmRjJzpF/ZWL5nDg/iP1oeroDYk6eDwpY5IaAn2rafxDD7q7aQ8Yk+4sOJtoNkw7vV3g9KETUIi4uKwjCoEX6Mr7dHrw1dQo4AhshcbpVvdmrtX7M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673653; c=relaxed/simple;
-	bh=OHQNZXLF4QiHcAVdTlJERSGH7zIopMBs647K0sYr+2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QE6xaaNQWvQJg/afMyo4aLOyf9WZuaKqqvCvUje00svbgTLR2byNvF2iieiQ8c+P9nsDRfDeO4yLMzvlIdz80lR4z4R/CmESNHQadM+npr1r8lQtqaJuY6EMi5zdUYDxRUyTbe1KPf7P+wiywj/jsxw2puAkLAL5YPPhmGltBMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=P1y4Y6Zm; arc=fail smtp.client-ip=40.107.22.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DACB28313B;
+	Mon, 19 May 2025 16:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747673697; cv=none; b=T9a83Y8sEhY3MuHKwgWo1yjScx9Tuz/zRtzf6Gy6T1V4q+4ViPkoa3sc37bd8EXDineXK7vLKyhBzo0JpDdz/LyMNGECsXPvSIUQvkDVae6N5GXLQyt9xx9s9zRrL8bmZKu9tv3fzIfIPEuTcm5tEZ8JFcdUg1OBbwSUsqF1WJ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747673697; c=relaxed/simple;
+	bh=bW+o8oCViCCYXcAqVtY/0UB3qmmBvGj7Uz+FyS2bPSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmoODVSTbSWHTSj1COX/EIpuLoni7dFbaNa0SJKs0m6otLd0XsgSiJIRQ/WlNSZlVRX+PzkrY84jM2cmGsO4CymoyyrmLAHq20LGgZCON/BE3jX96uEo3o0VdNprx3TNGM7938Kr4hHYcdae95JsbFUJbpI7eQ7SevfSWK9fKKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P7L81j2k; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="P1y4Y6Zm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bref3QJic6BZukm9nQrbhDoKFoEYDH8pg5JhVpSYtPXZSiu5FnIn2HZAS8lddZ2dqP+KemcnBMK//fGPeLvt6YlAd/LfXm2YXIkNwzJhoOZmOgInUwQYWn7lUnI3brIzVBLwe1n9SSSS4JQZdt0U5I/NwPOz5saDGYTHRCfIBj4vd0VT5DBqDyWLnXe5JYetp1FeNtlf+i3FD5RcfqG+1itHF0ZHLfstWW4PvVEk7bP/8aQVhjBkmYkMMIqYAx+EOibX9s5tSP4t0yFcwoyHJMUE5ecUYxUzZpEdZe4d7OrVVJUsdf0b+GbaiUC3CNhVwQWOYIZM5llNquTbZ50VNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hWXEOXyTDrt1729ZnvtJ7cL5/Nt4XayWy53+MTnhq6s=;
- b=LCQHtmoBLX6uqqipPqUUsufv8Ar1AkyrQ0QApK8goiOfqDlCddIiCBLVR+TAcNglZYI1rE6pjJ9ExSVbpgTAlb+SXgO0kli4duJ+1n8KY9fq+aXyLh0o8Vn8KhD0OW11+J+f8gqaFciSvywxP+iwFjb007zCy5QYGJUdOtVnWwF88q43DB608GZ/FxLtMi2Mv3QthPS6zza0i95/79nSUq72jmvc+1X7J312pXwWOAnZboIF0/uL1pfu92IjweM8mT/iYHqaCqRG+Xg8y25QMuTki95VDAW3o7PNhsISCMq/KTHXryR13dxgcBiRVe/QulpGrX7+T/yXiAGK8SZ2Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hWXEOXyTDrt1729ZnvtJ7cL5/Nt4XayWy53+MTnhq6s=;
- b=P1y4Y6Zm8WDA5RuU1JJM6UY06buBFoKE04M9vNtznw7Bu8A9uHp2oguljZGrJmNWcVhHm2cX7pP3SHaiz+IzUTiS8XFQUNEbm7j2KPszv3qj7aFaTHJLywHm7ZzrZlrQa92+BBx0WxbZ3yYklaSGa3J5t1Its5924LJLkdlTP8RDbUpBf28UR+eYRSwjbhTr9+MFfckkdDBBH8R122mCuJVIRWvAhragPTJiRGkjVqAdg8LYsOALeFf5FC3LCq8xTC52Rui3k0+7ZQTfxXMotYcKQHm62j1iVtVZbV2eejMAPhOr5d87aJtR4G1WqNBXB3r7v6PlnWHaUDLPWkzV4w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8109.eurprd04.prod.outlook.com (2603:10a6:102:1c2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Mon, 19 May
- 2025 16:54:07 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 16:54:07 +0000
-Date: Mon, 19 May 2025 12:54:01 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ARM: dts: add ngpios for vf610 compatible gpio
- controllers
-Message-ID: <aCtiKXJNRUGTMEE0@lizhi-Precision-Tower-5810>
-References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
- <20250519-gpio-dts-v2-1-b9e77173e9c5@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519-gpio-dts-v2-1-b9e77173e9c5@nxp.com>
-X-ClientProxiedBy: AM8P191CA0011.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:21a::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P7L81j2k"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 039812067864; Mon, 19 May 2025 09:54:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 039812067864
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747673695;
+	bh=wg6hvFqkqMq7BInGeV8wn3GSM9YWzn8YzNDbZ6ZxWFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P7L81j2kqiuVsDt0TAWtSv/U5ulAeQg6gOh08uzjdHgtJAOiPqYoDh2Aw2/qhJ3Dn
+	 4sgBCfookyA6OQNNJ/6NSR2l4ujeDjSZgAhgm8MSiVEfDzxk/TJLjFCRnpEumkTZX8
+	 Twb8s27sufQ4Go3mdGcrcax0JfCNhiMKQHBvaW8Q=
+Date: Mon, 19 May 2025 09:54:54 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
+	"javierm@redhat.com" <javierm@redhat.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
+ for Hyper-V guests
+Message-ID: <20250519165454.GA11708@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250516235820.15356-1-mhklinux@outlook.com>
+ <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8109:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0aefd28d-2d92-412a-2528-08dd96f5c503
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Mw1xzNXq2VzHr3UgHI7U5dQXdFmDVBIWoFmz5Dslcm8x2XQtHGxK7ji1ApzF?=
- =?us-ascii?Q?DsjPq2Sd16odnribrx60uMhrW9ZQzqnEdAEgM/vnx2ShP2WwXOnP6E7RbUAC?=
- =?us-ascii?Q?lLkxZ49A2O8j3UpISQ1lSiy7QMgJGWYg3WqUWqCl8gCbN66RzERXQctqeyG1?=
- =?us-ascii?Q?zLU/WpesT5a7Pwf4o75aEOw6AMxYvJGtpv5Xf1E1gAvU3yY09VEz1Nofe2rS?=
- =?us-ascii?Q?MnczujQ7ex6m9h0EmjAZx4IWZjo8i3Y2tc7Fpzf4uhbHeWF6NOI5SyrOQ0Qq?=
- =?us-ascii?Q?m1j9oGGydlvV1RyFcPa9/4zVHPo2jEfy2DBrs52eJH1CPxHg7Dil9EG+WWgs?=
- =?us-ascii?Q?cFKLnWgv+ndIV6gtC8uCB4/7edZXm4wuQUEvdz6d18iMr2jApdZIit7mPh3R?=
- =?us-ascii?Q?YoXoWfSkCJuu1XJ+0RxUcUwYPecXKOU3ezYb9l/oYM16d0PjGkai0ty3Sk1Y?=
- =?us-ascii?Q?HVAd61CKvRlAT6GWx13/ngAeceh0ZB0FTNJUfF5vnWO4zFP4Te5b5ZHzs/aJ?=
- =?us-ascii?Q?0FDSMxEqti7pP0hc6CC33cnNaTQDOITTYECI2PQU7UrDgTaiTYaL4hQpcawG?=
- =?us-ascii?Q?OcUMndwJBjI3L7sTZBsNIHGZSSvs6BnXDfr6XORlDRPBk7HVdR+KsdBOVFkg?=
- =?us-ascii?Q?ap7FKBwD5X0hEdDPjWHybw0gsxQ0UFq8MfobqnT41AUp3ahezJ0HMFiSm9Zt?=
- =?us-ascii?Q?AJK0CP7DZtTYIw2JV0umivS5PwziOaTfnt0Yj5J5WyahIaKLN99x2Kkkokc5?=
- =?us-ascii?Q?8dax2hG28+9+NZZIHa7TcngLAIks7H3msewFVqavOYEnWWgLIzSgIqsc/n+M?=
- =?us-ascii?Q?yUlLCUK8EDeAoVHx/Gr2b1sL82lwnONyMElf5UonsFsUq3I+IlkuZ+pxyjOM?=
- =?us-ascii?Q?+L1+rdFiH3xoob8bWaJIzDoUsv1uWF4ARNoIn76CWOwfSXXYbAKX3Nguzi6q?=
- =?us-ascii?Q?dsKFGwM+6JB2PZ4cWyH5vYmR5GCmKhtT5oIVhPLf4JfFIXzepTnp2ywLzSyy?=
- =?us-ascii?Q?kSDcnIduhLtclSsGscxTHDknOtiUqeWt8Zzu86h4ZqPt/b/ZbqldIO89AmVQ?=
- =?us-ascii?Q?Ropviy1B54n9Jn2JGua2C1xeUhsJKbl8Ghs7EK9jy6DJM/2wjV6MNKNRmBIw?=
- =?us-ascii?Q?nIz5chac9r37kNORfkwLcZmfXp/U60m8qtI+YIn6W13BFcaCCgkhSX8n01rD?=
- =?us-ascii?Q?q+pmHx+NcfrkTNG0X7otCYbURsIZLWfAv0S4sPghOI0nsr/EcfQPYT/VV3cd?=
- =?us-ascii?Q?adMpAeXfj2C6yyz7t1Y6J2aZkpbWLWrAqdpMERpZJV/eodQBoct1scfxT98G?=
- =?us-ascii?Q?4A1pBR+9q28M9AlpsF7yJne+YLup3MWE5wZ0CUlSl4JBmD3kU8zSZ/kyFT8z?=
- =?us-ascii?Q?7t+yhwV7YZ5F+wkSg+ZqCQr274tMnq/iOL3i8H+cSBOo5lelm4mbkRcSk0Y6?=
- =?us-ascii?Q?Gpt+iChMsGpf4GVTdGH5xtGrWse0bP65aaCXc9FQ8NPg6AiRQOR7PQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZX+w8mmTqHsgxsI7XlP9SPmzY3t844zqsDkUYtbzgaW0YUJb0DvfJqNAXHrc?=
- =?us-ascii?Q?m6YIoTQXdwbLyc/LhYMhRa8bim6j9AWbVHFkOviGVek30dhV7r91khVYIGrB?=
- =?us-ascii?Q?GYstvw4IhwkZBO6/SVh3L/X1++Fq48xXIaIIehR4Z+lO057h6cbjv1iGlE8s?=
- =?us-ascii?Q?7ZdTZk2hCtjJviJ0GYtPXG7bHlu85SVCl9s4N1m0iYxC8wbfUvM/Ptz+xKwz?=
- =?us-ascii?Q?WarO5xn+MhuBGbmBCYDdQwzJAOKH9uNsqyZmQBSjIzRrSdyQUEj32yXRXLEw?=
- =?us-ascii?Q?ns3LL6lb1FT1TTpI2JIvWlHjBi+F9LjeNXG01SgxE/Q7RowxyRrt1TxCbb/A?=
- =?us-ascii?Q?mdiMHKn7imYt8djMt3fGAb1aVW7b5JjuTC7AKhxVzOrIJKtjkdWc07H8Dg+g?=
- =?us-ascii?Q?sqYrNzqSRpWhmaQf4XSOkPPdErONKMOjVTGQUpowYoNBMAXSsWVit8bzb+iB?=
- =?us-ascii?Q?G9uO3dCo2JJIjdZnv01GLEI7BKTZmzZ5kxt1dPVy15JgKJzCHe7Hhi8wN0wF?=
- =?us-ascii?Q?ZkvktpgU/lG+wln4XPScjlU5dGJaZX/KLG8MEQDbdkPoyyNMP+cgE0O6+bm1?=
- =?us-ascii?Q?evWwrhi4ZIUBREYEI/rMTv1/yVCfQFF4pT7JTr7qHBzBXSk3ab1WXrx0Is7I?=
- =?us-ascii?Q?68lEpbiqOqfxhxH67GCrk8uiOSMPBrEluNfLvv00j/fETfmlLIO03N0Z0sbC?=
- =?us-ascii?Q?+djeifIdqEm1afQZN4MYdeAddSZmse0vMoornRK2kmk9ExRfyU9l4kPB3qr7?=
- =?us-ascii?Q?eQ7Gx6pbqyzr/JGL1EFFjznQhp9Q0jzurDAbj/XP2GWJde9pc8HxbgeAZoP2?=
- =?us-ascii?Q?x1AK7DG/jkadaLeQnbpEA+jbrfIdWd4jAbpY45FF6KO9Z0t5ftHuRp9BRbuA?=
- =?us-ascii?Q?aAAUNWR24554hPhbczy04n0eiqUNWDJ8uPpjNUAFS81JLoR1R47iGtmmASGj?=
- =?us-ascii?Q?Naipg70JTzmPZvgvK50OGLQ64uW1sAUNVtDv3biKSljBycckEqKMon5+fnQu?=
- =?us-ascii?Q?qM+rdgowKl4R3TIjGXqj18GamwzL5W4FqFr0txmcsuiRomxeAeRTuVh8AOqG?=
- =?us-ascii?Q?UuX90XBnXvjxbJBE2uIs3LRIm5qbTEV8tQHND6cSFqi+JEYa6/ycWQXT6eiI?=
- =?us-ascii?Q?db0JJ4dcfCdrWsIJH6DZIDs4dynBBS0EdeeBWVY7u6J//RbIcCRQHNDOaT5f?=
- =?us-ascii?Q?llvrNo7kAJCbqakfehscJjQk6BlsZ9hlwlkZQO6zKveXZgz9MR0jsIZNrgjP?=
- =?us-ascii?Q?SuCnENy50gcDSu8g9nltvoiY5EW/Z0iWCgnHR5JvsWkwkvoqFgcuEw1b34Yp?=
- =?us-ascii?Q?baXGCxBljr3QlFlJjW+YmQQuUKGaImJaqNyB7blrBWI0X9E+EePxaroWhi1D?=
- =?us-ascii?Q?WH+MoPJkmpBc6wMLX1Nhrf4EXa1HPcYn1C1khWqNb+q0ILNrg0KyMtGCXK7U?=
- =?us-ascii?Q?WFa+ehM+gxKdTU0TKfsjHOKM/3czoSofJW+9Pd++xnHXgAzrtYViQKmCKYG6?=
- =?us-ascii?Q?7UP7DHVRkalBnLzkmTxcg+NYt5YvgqJbRwW228qYvhcDvAAfcj3XZf1mRaL0?=
- =?us-ascii?Q?GFDTFblzBeaCgOD8QIF+UsLqZn9+UapL1FkSFBR5?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aefd28d-2d92-412a-2528-08dd96f5c503
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 16:54:07.4642
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EIUa8hrFFZkccdeMy4vQ3/RDNg8KhQfw4iD7iYvN/vesfjnQxl+jG+0ZoxIjSNpMouRV12Hh8miOJxxkLm28+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, May 19, 2025 at 02:03:42PM +0800, Haibo Chen wrote:
-> After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"), vf610
-> gpio driver no more use the static number 32 for gc->ngpio, user has a
-> chance to config it through device tree for each port.
+On Sat, May 17, 2025 at 06:47:22PM +0000, Michael Kelley wrote:
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, May 17, 2025 9:14 AM
+> > 
+> > On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
+> > > From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
+> > > >
+> > > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > > >
+> > > > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
+> > > > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
+> > > > > space, and allocates portions to drivers upon request. As part of managing
+> > > > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
+> > > > > portion of the MMIO space that Hyper-V has designated for the synthetic
+> > > > > frame buffer, and not allocate this space to VMBus drivers other than graphics
+> > > > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
+> > > > > the screen_info data structure that is passed to the Linux kernel at boot time,
+> > > > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
+> > > > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
+> > > > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
+> > > > >
+> > > > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
+> > > > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
+> > > > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
+> > > > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
+> > > > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
+> > > > > anything. But it's valid to have none of these enabled, in which case
+> > > > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
+> > > > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
+> > > > > framebuffer MMIO space may be assigned to some other VMBus driver, with
+> > > > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
+> > > > > controller to host the OS disk, the PCI NVMe controller is probed before any
+> > > > > graphic devices, and the NVMe controller is assigned a portion of the
+> > > > > framebuffer MMIO space.
+> > > > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
+> > > > > get setup. Then Linux fails to boot in the VM.
+> > > > >
+> > > > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
+> > > > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
+> > > > > framebuffer driver, and prevent the undefined behavior.
+> > > >
+> > > > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
+> > > > which is expected to use it. With this patch this option will be enabled irrespective
+> > > > if there is any user for it or not, wondering if we can better optimize it for such systems.
+> > > >
+> > >
+> > > That approach doesn't work. For a cloud-based server, it might make
+> > > sense to build a kernel image without either of the Hyper-V graphics
+> > > framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
+> > > Linux console is the serial console. But the problem could still occur
+> > > where a PCI pass-thru NVMe controller tries to use the MMIO space
+> > > that Hyper-V intends for the framebuffer. That problem is directly tied
+> > > to CONFIG_SYSFB because it's the VMBus driver that must treat the
+> > > framebuffer MMIO space as special. The absence or presence of a
+> > > framebuffer driver isn't the key factor, though we've been (incorrectly)
+> > > relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
+> > >
+> > 
+> > Thank you for the clarification. I was concerned because SYSFB is not currently
+> > enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
+> > as minimal as possible. I haven't yet looked into the details to determine
+> > whether this might have any impact on the kernel binary size or runtime memory
+> > usage. I trust this won't affect negatively.
+> > 
+> > OpenHCL Config Ref:
+> > https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
+> > 
+> 
+> Good point.
+> 
+> The OpenHCL code tree has commit a07b50d80ab6 that restricts the
+> screen_info to being available only when CONFIG_SYSFB is enabled.
+> But since OpenHCL in VTL2 gets its firmware info via OF instead of ACPI,
+> I'm unsure what the Hyper-V host tells it about available MMIO space,
+> and whether that space includes MMIO space for a framebuffer. If it
+> doesn't, then OpenHCL won't have the problem I describe above, and
+> it won't need CONFIG_SYSFB. This patch could be modified to do
+> 
+> select SYSFB if !HYPERV_VTL_MODE
 
-After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"), the vf610
-GPIO driver no longer uses the static number 32 for gc->ngpio. This allows
-users to configure the number of GPIOs per port.
+I am worried that this is not very scalable, there could be more such
+Hyper-V systems in future.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Can you find out what MMIO space Hyper-V provides to VTL2 via OF?
+> It would make sense if no framebuffer is provided. And maybe
+> screen_info itself is not set up when VTL2 is loaded, which would
+> also make adding CONFIG_SYSFB pointless for VTL2.
 
->
-> And some gpio controllers did have less pads. So add 'ngpios' here,
-> this can save some memory when request bitmap, and also show user
-> more accurate information when use gpio tools.
->
-> Besides, some gpio controllers have hole in the gpio ranges, so use
-> 'gpio-reserved-ranges' to cover that, then the gpioinfo tool show the
-> correct result.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> ---
->  arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi     | 4 ++++
->  arch/arm/boot/dts/nxp/vf/vfxxx.dtsi        | 5 +++++
->  arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 3 +++
->  arch/arm64/boot/dts/freescale/imx93.dtsi   | 4 ++++
->  arch/arm64/boot/dts/freescale/imx94.dtsi   | 7 +++++++
->  arch/arm64/boot/dts/freescale/imx95.dtsi   | 5 +++++
->  6 files changed, 28 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi b/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi
-> index 3c6ef7bfba60986b797bb01b843830d364c96d45..880b9a4f32b0846a773dbf9ad30715c84ac2fda6 100644
-> --- a/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi
-> +++ b/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi
-> @@ -399,6 +399,7 @@ gpio_ptc: gpio@40ae0000 {
->  				 <&pcc3 IMX7ULP_CLK_PCTLC>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc1 0 0 20>;
-> +			ngpios = <20>;
->  		};
->
->  		gpio_ptd: gpio@40af0000 {
-> @@ -413,6 +414,7 @@ gpio_ptd: gpio@40af0000 {
->  				 <&pcc3 IMX7ULP_CLK_PCTLD>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc1 0 32 12>;
-> +			ngpios = <12>;
->  		};
->
->  		gpio_pte: gpio@40b00000 {
-> @@ -427,6 +429,7 @@ gpio_pte: gpio@40b00000 {
->  				 <&pcc3 IMX7ULP_CLK_PCTLE>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc1 0 64 16>;
-> +			ngpios = <16>;
->  		};
->
->  		gpio_ptf: gpio@40b10000 {
-> @@ -441,6 +444,7 @@ gpio_ptf: gpio@40b10000 {
->  				 <&pcc3 IMX7ULP_CLK_PCTLF>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc1 0 96 20>;
-> +			ngpios = <20>;
->  		};
->  	};
->
-> diff --git a/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi b/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi
-> index 597f20be82f1ee044e14bfaf3bd05cff37a8ad39..a275821c35d41e97eb2139a081ef5765d07672aa 100644
-> --- a/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi
-> @@ -318,6 +318,7 @@ gpio0: gpio@40049000 {
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				gpio-ranges = <&iomuxc 0 0 32>;
-> +				ngpios = <32>;
->  			};
->
->  			gpio1: gpio@4004a000 {
-> @@ -329,6 +330,7 @@ gpio1: gpio@4004a000 {
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				gpio-ranges = <&iomuxc 0 32 32>;
-> +				ngpios = <32>;
->  			};
->
->  			gpio2: gpio@4004b000 {
-> @@ -340,6 +342,7 @@ gpio2: gpio@4004b000 {
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				gpio-ranges = <&iomuxc 0 64 32>;
-> +				ngpios = <32>;
->  			};
->
->  			gpio3: gpio@4004c000 {
-> @@ -351,6 +354,7 @@ gpio3: gpio@4004c000 {
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				gpio-ranges = <&iomuxc 0 96 32>;
-> +				ngpios = <32>;
->  			};
->
->  			gpio4: gpio@4004d000 {
-> @@ -362,6 +366,7 @@ gpio4: gpio@4004d000 {
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				gpio-ranges = <&iomuxc 0 128 7>;
-> +				ngpios = <7>;
->  			};
->
->  			anatop: anatop@40050000 {
-> diff --git a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> index 2562a35286c208869d11d7fb970ac84638f45088..13b01f3aa2a4950c37e72e04f6bfb5995dc19178 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> @@ -686,6 +686,7 @@ gpioe: gpio@2d000000 {
->  					 <&pcc4 IMX8ULP_CLK_PCTLE>;
->  				clock-names = "gpio", "port";
->  				gpio-ranges = <&iomuxc1 0 32 24>;
-> +				ngpios = <24>;
->  		};
->
->  		gpiof: gpio@2d010000 {
-> @@ -701,6 +702,7 @@ gpiof: gpio@2d010000 {
->  					 <&pcc4 IMX8ULP_CLK_PCTLF>;
->  				clock-names = "gpio", "port";
->  				gpio-ranges = <&iomuxc1 0 64 32>;
-> +				ngpios = <32>;
->  		};
->
->  		per_bridge5: bus@2d800000 {
-> @@ -855,6 +857,7 @@ gpiod: gpio@2e200000 {
->  				 <&pcc5 IMX8ULP_CLK_RGPIOD>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc1 0 0 24>;
-> +			ngpios = <24>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi b/arch/arm64/boot/dts/freescale/imx93.dtsi
-> index 64cd0776b43d38219fee312baadd4665674a141e..52be83a168d9ee6452a63039c89169d49b63eb60 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
-> @@ -1197,6 +1197,7 @@ gpio2: gpio@43810000 {
->  				 <&clk IMX93_CLK_GPIO2_GATE>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc 0 4 30>;
-> +			ngpios = <30>;
->  		};
->
->  		gpio3: gpio@43820000 {
-> @@ -1213,6 +1214,7 @@ gpio3: gpio@43820000 {
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc 0 84 8>, <&iomuxc 8 66 18>,
->  				      <&iomuxc 26 34 2>, <&iomuxc 28 0 4>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio4: gpio@43830000 {
-> @@ -1228,6 +1230,7 @@ gpio4: gpio@43830000 {
->  				 <&clk IMX93_CLK_GPIO4_GATE>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc 0 38 28>, <&iomuxc 28 36 2>;
-> +			ngpios = <30>;
->  		};
->
->  		gpio1: gpio@47400000 {
-> @@ -1243,6 +1246,7 @@ gpio1: gpio@47400000 {
->  				 <&clk IMX93_CLK_GPIO1_GATE>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&iomuxc 0 92 16>;
-> +			ngpios = <16>;
->  		};
->
->  		ocotp: efuse@47510000 {
-> diff --git a/arch/arm64/boot/dts/freescale/imx94.dtsi b/arch/arm64/boot/dts/freescale/imx94.dtsi
-> index 3661ea48d7d2994df7b02084e9681beb303aa133..b8ffc428e95be1938bf5e73316b4163acaa04701 100644
-> --- a/arch/arm64/boot/dts/freescale/imx94.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx94.dtsi
-> @@ -785,6 +785,7 @@ gpio2: gpio@43810000 {
->  			#gpio-cells = <2>;
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 4 32>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio3: gpio@43820000 {
-> @@ -797,6 +798,7 @@ gpio3: gpio@43820000 {
->  			#gpio-cells = <2>;
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 36 26>;
-> +			ngpios = <26>;
->  		};
->
->  		gpio4: gpio@43840000 {
-> @@ -810,6 +812,7 @@ gpio4: gpio@43840000 {
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 62 4>, <&scmi_iomuxc 4 0 4>,
->  				      <&scmi_iomuxc 8 140 12>, <&scmi_iomuxc 20 164 12>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio5: gpio@43850000 {
-> @@ -822,6 +825,7 @@ gpio5: gpio@43850000 {
->  			#gpio-cells = <2>;
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 108 32>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio6: gpio@43860000 {
-> @@ -834,6 +838,7 @@ gpio6: gpio@43860000 {
->  			#gpio-cells = <2>;
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 66 32>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio7: gpio@43870000 {
-> @@ -846,6 +851,8 @@ gpio7: gpio@43870000 {
->  			#gpio-cells = <2>;
->  			gpio-controller;
->  			gpio-ranges = <&scmi_iomuxc 0 98 10>, <&scmi_iomuxc 16 152 12>;
-> +			gpio-reserved-ranges = <10 6>;
-> +			ngpios = <28>;
->  		};
->
->  		aips1: bus@44000000 {
-> diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> index 632631a2911224cadc16a943cdb467e091e43384..a2f4fcffcde59849bafcedced3ff317ca6c7cf78 100644
-> --- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> @@ -1152,6 +1152,7 @@ gpio2: gpio@43810000 {
->  				 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&scmi_iomuxc 0 4 32>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio3: gpio@43820000 {
-> @@ -1168,6 +1169,7 @@ gpio3: gpio@43820000 {
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&scmi_iomuxc 0 104 8>, <&scmi_iomuxc 8 74 18>,
->  				      <&scmi_iomuxc 26 42 2>, <&scmi_iomuxc 28 0 4>;
-> +			ngpios = <32>;
->  		};
->
->  		gpio4: gpio@43840000 {
-> @@ -1183,6 +1185,7 @@ gpio4: gpio@43840000 {
->  				 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&scmi_iomuxc 0 46 28>, <&scmi_iomuxc 28 44 2>;
-> +			ngpios = <30>;
->  		};
->
->  		gpio5: gpio@43850000 {
-> @@ -1198,6 +1201,7 @@ gpio5: gpio@43850000 {
->  				 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&scmi_iomuxc 0 92 12>, <&scmi_iomuxc 12 36 6>;
-> +			ngpios = <18>;
->  		};
->
->  		aips1: bus@44000000 {
-> @@ -1508,6 +1512,7 @@ gpio1: gpio@47400000 {
->  				 <&scmi_clk IMX95_CLK_M33>;
->  			clock-names = "gpio", "port";
->  			gpio-ranges = <&scmi_iomuxc 0 112 16>;
-> +			ngpios = <16>;
->  			status = "disabled";
->  		};
->
->
-> --
-> 2.34.1
->
+I can only see below address range passed for MMIO to VMBus driver:
+ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
+
+I don't think we have any use of scrren_info or framebuffer in OpenHCL.
+
+- Saurabh
