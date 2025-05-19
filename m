@@ -1,83 +1,130 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F124503F;
-	Mon, 19 May 2025 06:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E666244E8C;
+	Mon, 19 May 2025 06:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636070; cv=none; b=mnl9zNSvn1cXLTyRGJ0YwlJQVQZ0bW3AIjZH3tm1GekPgTeANx51Tx7w5cvLcTa9UWm2IjhpRu1f1Tliw6di5mSzZsS5c5YoydwWQDdBYZNdgxYnL89JbyIoQbxrOppbJL6dCV2p6Vc5gD+2uUBYZfNpw2bgVW+9/VzhZUE8l50=
+	t=1747636080; cv=none; b=qWKpL/5/lQmMGV4s4i1cxxE8CrnpnmKk/78ANouTsROT4VOcYkYWqAas7SARTGMyb3FMn3dYHnW2sA61qotrblFGWFJsaYtTHUWCZqwHD7JATzaaT1PcwU3T/QJPHlITNT58MrVTt6n+fBEAF7Om8OdLviw2ZTU99Wd30tTlbcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636070; c=relaxed/simple;
-	bh=6flp1UUXguSYzp/SnYPLP9qX9DtOoSw+aELD6OUR8bE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oWIB2P9cUMll1MuR+02EZclxAUd0JbygHwLh/IcndvOi/oTebu+T6FdNC9ghE0MSj5aY2dowwVq6GKp0DT7gMyct1qZpPKaopL4+nh55tF2fyuplEfqupVzpW3dxbzZPnxmkHiG302Xly3J6zesYtl6Ws+65tODPbWpQjbeofGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAnO_ZfzypoXUhPAQ--.10629S2;
-	Mon, 19 May 2025 14:27:43 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: gadget: epautoconf: Use USB API functions rather than constants
-Date: Mon, 19 May 2025 14:25:44 +0800
-Message-Id: <20250519062545.724727-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747636080; c=relaxed/simple;
+	bh=hwm8WBOYDHtDa9VLp9WuAR1DlNYMdyOk8vi1d//7JHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rHGj10L7/Gu5ll4Ol9HMkd/XJ5ORiCS3HVnMj4b3mmEIkWKK0+Xv1v+rrLCPX8mvRmlvgGyzD1PAQGsitkayczzy1mSSB0rrGPPkc3mP4HJ1638xAfWQ7K/6++dRFUNvensxgFy2S+Sn+vMG9c6rX0PExY9gc28jRs+mo2la4MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f+VhVPnu; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+VhVPnu"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso578670a12.1;
+        Sun, 18 May 2025 23:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747636076; x=1748240876; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pXsyUMIQ0XIOxEd0HgUN3xKydqhCFVjspZ5Sh+H499A=;
+        b=f+VhVPnummHbpNX+xL4dpxie8Z5TmgD9P8uxm4NaNfbYtx3uU/zAbNFACGXar7jf75
+         9lFJGQbQZe1CR8vPg+0jS4RoBRC7mXE4lxRTS+Y5lPCtM5SDAI8YvtIWlore588a2IHC
+         oloKIyALwfZKr4J2dRfTLGTaA4RRqiHam85c4r6uR/ZILgt0mP83EC0WTolOiWP1Ijbs
+         +PEMKw0L/ivOuY/2B3G3dMMS2skkYYT6mhlHGvlycMz2jFRBB45JMRPk6nez8DE9rreJ
+         RURMLVAZFlZZ1r92HQbinpnqSRQVZa0qap46n3BXejvKFv1e4pLWpmPJdnCcAXkZKsr9
+         n7Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747636076; x=1748240876;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pXsyUMIQ0XIOxEd0HgUN3xKydqhCFVjspZ5Sh+H499A=;
+        b=TlYezZTb4eIk1sFJDdBufso8Zy5y0gGsOD7UfqgWh76MXSYUOuubIsnFbuKnQS2LCx
+         UvJix+Bf6lKrGhg0nuHzqSNvz+ZyzlF/nk+yWpJ6rETGQ5GvJTcJQVmavGTur2ZTxXI/
+         MwFLZA5DXCdsvAjtv6eaqp9ALjugUefMAzCpqkHd1cofVG9aDqVi/dsJHgYoSZV0LDaa
+         FcchSKbgwqoil/WdaWWFrcr6d4WFkDCf+uViazmXRItmXPgWOLezvWYqmhQWn0TYgPbJ
+         P5rME5QdYR9s03nNMWh3rmB/fsnf8GkXAwRGEV+vrY0HRXBHSgsL2SjePY0d8jtu8WL/
+         ranQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ddJi6wzjvJXKogdXrdTWiEnveXnGmC0v0SoHKh1G0mYwMfxsrtWFW5fxv4N1rqRpIGoSKNEfv8F8ldaXUBMY@vger.kernel.org, AJvYcCWd1oR05C2oI+HdKY2LBVG7P3LXYLnK0NoeuFjiQCiMQSUS2/c9Xm3R9IdgSCO80cNEo5djShXc2V43967t@vger.kernel.org, AJvYcCWkdQi0C4INOJJWnI9gOknYgW3oUcDQXMCVB6JzMRovgU9L0QQH/Ygi32YO95Kx4MfQZ4D5aI2aoXOE7Xwj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuhKJiu/JqmKp2t6UOndTRzEWAKQoac5arRtId0n0ua/NPUQMx
+	WNyZ/7pOqYCdVyW3BsLBEaEcRRCWkJ3NevOPxaEJOx6+3ou8h90Y4xP0ZYCmLEpN/QllUrBNbIO
+	Odn20o7GV2XSDX7x3kPPu91GHeAhBHflrQNdUQSpHKW+s
+X-Gm-Gg: ASbGnctN4BRDoCJ55P5ieoHBwgEW4RVGyKWlsMJQzAOlZXTG9G0xOEpTPw7V+bPpn+7
+	BAb1GqQ2ehIPe40v95UHEtgP5N16ttPmT5nQNc9IWRlcu1zex6uBrojuP4JnW2DTJi9IGrlLZeb
+	OyDDIn+jFnr7CYLRWPFCyTCQTXGqmxRDcS
+X-Google-Smtp-Source: AGHT+IEDUGdgd57hqnJhmZWzmyJSlXQ/w0VUAPyqIuTv14bUuodHWsKKgLnu9TTSlwd8jxOtmZrz2M5cZBf+28PzXn0=
+X-Received: by 2002:a17:907:72c3:b0:ad1:e4e9:6b4f with SMTP id
+ a640c23a62f3a-ad52d53c8f3mr1061862966b.36.1747636076129; Sun, 18 May 2025
+ 23:27:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAnO_ZfzypoXUhPAQ--.10629S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWfWFX_ua
-	yUZ347WwsrWa4qyr4UG3ySkrWI9asaq3WvvF9YgFn8AFW5Ka1UXr18JrWkGFn7uFnF9r9x
-	u3sxKa90k3yxZjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfU83kuDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+References: <20250515073449.346774-2-chenlinxuan@uniontech.com>
+ <CAOQ4uxja322ZuOaHm2rLU1mPsqHsuSbAe=0g5Rc_oh=DmBcn0Q@mail.gmail.com> <CAC1kPDOyYyvvkJr3yX=j4JE3q-jQwUN7tdkOG55HFjy6wE+DeA@mail.gmail.com>
+In-Reply-To: <CAC1kPDOyYyvvkJr3yX=j4JE3q-jQwUN7tdkOG55HFjy6wE+DeA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 19 May 2025 08:27:45 +0200
+X-Gm-Features: AX0GCFsI_4JCzy0ZlWJFvPfBfY100MDbfqho3Xa_8QBQqEKLjBdq0aUYVA8ZMK0
+Message-ID: <CAOQ4uxh9Zyorcox8UHH-nhZig_gmV=YDqX=mizSe6tftXwt_Dw@mail.gmail.com>
+Subject: Re: [PATCH] selftests: Add functional test for the abort file in fusectl
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Shuah Khan <shuah@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com, wentao@uniontech.com, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the function usb_endpoint_type() rather than constants.
+On Mon, May 19, 2025 at 7:58=E2=80=AFAM Chen Linxuan <chenlinxuan@uniontech=
+.com> wrote:
+>
+> On Thu, May 15, 2025 at 6:27=E2=80=AFPM Amir Goldstein <amir73il@gmail.co=
+m> wrote:
+> >
+> > On Thu, May 15, 2025 at 9:35=E2=80=AFAM Chen Linxuan <chenlinxuan@union=
+tech.com> wrote:
+> > >
+> > > +       ret =3D read(test_fd, path_buf, sizeof(path_buf));
+> > > +       ASSERT_LT(ret, 0);
+> >
+> > Nice!
+> > I guess you could also verify errno =3D=3D ENOTCONN or whatever it is
+> > in this case.
+>
+> I am currently facing two issues:
+>
+> 1. I am not sure about the exact functions of max_background and
+> congestion_threshold. I have prepared a patch that adds documentation
+> for these two fields, which can be found here:
+> https://lore.kernel.org/all/20250514061703.483505-2-chenlinxuan@uniontech=
+.com/
 
-The Coccinelle semantic patch is as follows:
+It may be a bit challenging to design a test that does deterministic
+readahead, because there is usually no contract for readahead,
+so not sure.
 
-@@ struct usb_endpoint_descriptor *epd; @@
+>
+> 2. How should I test the "waiting" file? My current idea is to have my
+> FUSE daemon stay in a state where it does not respond to requests, and
+> then use some form of inter-process communication (maybe a Unix
+> socket?) to make it resume working. I am not sure if there is a better
+> approach.
 
-- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
-+ usb_endpoint_type(epd)
+This is a good approach that several selftests use.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/usb/gadget/epautoconf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looking at the bigger picture, your work to improve documentation and
+selftest coverage for fuse is very welcome! so I will add some wider
+context comments.
 
-diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
-index ed5a92c474e5..30016b805bfd 100644
---- a/drivers/usb/gadget/epautoconf.c
-+++ b/drivers/usb/gadget/epautoconf.c
-@@ -158,7 +158,7 @@ struct usb_ep *usb_ep_autoconfig(
- 	if (!ep)
- 		return NULL;
- 
--	type = desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
-+	type = usb_endpoint_type(desc);
- 
- 	/* report (variable) full speed bulk maxpacket */
- 	if (type == USB_ENDPOINT_XFER_BULK) {
--- 
-2.25.1
+One small nit: please rename the test subdir to filesystems/fuse rather
+than filesystems/fusectl, so that more fuse selftests could be added later.
 
+For the long run, I would consider a very minimal single threaded
+fuse server implementation that does not rely on libfuse for fuse selftests=
+,
+because the selftest should not rely on the libfuse version installed on
+the development system and also testing low level protocol issues
+would require this anyway.
+But this is not a requirement for this first test.
+
+Thanks,
+Amir.
