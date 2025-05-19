@@ -1,628 +1,292 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468A9289E15
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11222874E2;
+	Mon, 19 May 2025 16:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671461; cv=none; b=W6Kd8eATqY0tBbQmcd1hmGMmpNHgKYaJLmdd1LuO41h44d6oIFa1IKlbb7ZOkAgwE1A0GvGZ7GBoV0ce7M5Ax9bJNWAh+Cq1VJ5mibsPDZy/Pn8hQSoG9U3meCFHamObXuxHUiK6W0mjjxX19QsL1fc323rRI8KmLB88DRvqqZM=
+	t=1747671486; cv=none; b=Uu2gr29kAhz+gIExiCujbrLV68y5TpYfCfoTW/iEqH2zjVkWB6nQSyUT9r2JaZW0oZREcTTbHvPMYVAZQH0CqA4hT1g7NSjCGM+8fDEJ0gsOqxeyukA2As0Y+ssRGkeN8xrbABGyG5jqTC9oxTSGpws+UFoU6vHsjzla2Fi3JT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671461; c=relaxed/simple;
-	bh=QT8ZMTctfr1J+XzRoTakz5AJSOlWu121wMMwbdqDl8M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HZkTcE6b4GMEMurPaBDfQdg00Ljp2fQWItBJmBRhNVeVtncDRBO1/eJkanK+PE1gytybvszM404hNOlQVJDP//orBx/NYJBn0yY7mdoQAQCCnBsMhiaxAO/kFVCEXbn3EGA/KaC/z3g7cI9zO2jUx6jEc2BX4LWxyYgMSIAX4o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLz34hD+; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
+	s=arc-20240116; t=1747671486; c=relaxed/simple;
+	bh=3eoOV/NGXtwCafnQhCM2GGOVYlGtm2oY5dmzW5ifD5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BlZjik9DDJyZEOti5YY/O9wdlRshyL2wsvezvFEBp4ftlxiQEAi/feXydeoNQuO0DetSWMzfaMZY730xQAoLwCaIC15vJOPGve4k0dbAmfXPAqBhkXJXvAy/IritnH+wTmeRilJatBCQPS9ny2ei5upDs0kIOx4hh5mt4DkqOts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Qb0zj9wX; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLz34hD+"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso41590825e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747671455; x=1748276255; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfz9nEc/hxUJIcLaKW3k+sD8V+u1a0TDbRDrs80xXFA=;
-        b=eLz34hD+y+7ZUOZnkno6THEosVRbXIZOIYWZsttB8p33rw4NNDuqY6MXKEZJw9iJiI
-         zgKbUyCf0nygotQLGyzKCwzy6TuxZ3GyXniV3wVA9kMkPMcq2g/Pb9IU6EfBOCtt8xOJ
-         b5vbZ+GY7Nm8NUii2Ir0Ix8p/dbo9L1lje4WwmRoxrMuukOY1YSkC6wBOMK1be7SI7cA
-         ZwmSeM3zuasU8pChGZbDM0W4t3F+HEyedrEoH1NMPd53IvF665ucE7JZRNY3stmh7uZX
-         1fLCgXBnkx2lH8RlQN6dVbsJf7pQtiVQFWTm/V3niBeKmZtfNm/o+iCdPuqzqIWJnYPQ
-         2oeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747671455; x=1748276255;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfz9nEc/hxUJIcLaKW3k+sD8V+u1a0TDbRDrs80xXFA=;
-        b=H51yhTNX8uc4QbXVAGU4sHlqiLXp/92IxIVi9j9E8g3Tya41rQJZL/AtwvrEzMW64y
-         GQ7UvmeMtqSmtdbAnDSUxb2tt0WNXQ3/AwAIc8rcC4KTc5jSXsXs6VwpBDxlX952ktVv
-         sAvCwLwr9qqJFFJHgpGRmHNu5Rq1HI46mumAfSDumzGQIlkr8elYmZgghg3b8fKNRhms
-         Df9TsRgg/sP2cyTN2/Xu3X4jjgjUoP87BjShHGsnUTpJQSOjfaA19jLAAzmDZX0zmnug
-         tfz5Vl+37Uv+jKl98np1aVOwK2QMJD9Qak56EC72J3x09DF9jKLxTs1Zj4AZHzwnrMdo
-         mtAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0C76F3i77PvLTyTJmCFKbrgGEib+XyBYFTcZI/aifTW1rz/y0Te+++Qh+Ml5W+UZbZa159JOwwISUUoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE9t//9H+uILpwSeBSoJqBsR7PQo7g6yCDfxTGcIHSZs3tgxU+
-	Arc1q/MN2UIj580/Wnqs60e/RKlwP0HvLskpLSEWbub/p6L87lwlbOWlFjxVcGwpncF8EA==
-X-Google-Smtp-Source: AGHT+IGAeGn+PW2xEgj73EmbMuX5za13/vJqJ3FsRLehDvShqwrYK2lypzy1YOfhlXF1UW5TV8gf0EQ=
-X-Received: from wmbgw24.prod.google.com ([2002:a05:600c:8518:b0:440:68cb:bd4])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:c1b:b0:43c:e481:3353
- with SMTP id 5b1f17b1804b1-442feffbb8dmr143562675e9.17.1747671455773; Mon, 19
- May 2025 09:17:35 -0700 (PDT)
-Date: Mon, 19 May 2025 16:17:03 +0000
-In-Reply-To: <20250519161712.2609395-1-bqe@google.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Qb0zj9wX"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 1C5EA26102;
+	Mon, 19 May 2025 18:18:03 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 8BAyV_byNQUd; Mon, 19 May 2025 18:18:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747671482; bh=3eoOV/NGXtwCafnQhCM2GGOVYlGtm2oY5dmzW5ifD5s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Qb0zj9wX95PVy+eV/r4IguN+5lDvACvZLiowiz1MBzORG2zq5eSqMaKkOwEvOz/5x
+	 or10Pj2U6ux9eU34pkMJwLE0A2nnKolSE7qzOMiTVm4wq8i5UgrciQHWMHQmsXoDc/
+	 qNuBbwrR2SdZrZqPXmGt1VmWwSmor7hSh/wctUwPIry7bMn5qOpBe99lRp2MwnJH/p
+	 Cpo3Uy9OQ80se01KFcv+oY1VmJ9wv918qW9Ya5DoH9zIDeZrPTosMAJUhlneOyH7ur
+	 EZzhArQVYK97GuHUhKfgeI5Gb+1P2UkotwnlRqawfsjiaEPxC8F728IRj40xqBGro/
+	 /epAqa7ytj5gw==
+From: Yao Zi <ziyao@disroot.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/5] phy: rockchip: naneng-combphy: Add RK3528 support
+Date: Mon, 19 May 2025 16:16:10 +0000
+Message-ID: <20250519161612.14261-5-ziyao@disroot.org>
+In-Reply-To: <20250519161612.14261-1-ziyao@disroot.org>
+References: <20250519161612.14261-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519161712.2609395-1-bqe@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519161712.2609395-4-bqe@google.com>
-Subject: [PATCH v8 3/5] rust: add bitmap API.
-From: Burak Emir <bqe@google.com>
-To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Provides an abstraction for C bitmap API and bitops operations.
-We follow the C Bitmap API closely in naming and semantics, with
-a few differences that take advantage of Rust language facilities
-and idioms:
+Rockchip RK3528 integrates one naneng-combphy that is able to operate in
+PCIe and USB3 mode. The control logic is similar to previous variants of
+naneng-combphy but the register layout is apperantly different from the
+RK3568 one.
 
-  * We leverage Rust type system guarantees as follows:
-
-    * Ownership transfer of a Bitmap is restricted so that it cannot
-    be passed between threads (does not implement `Send`).
-
-    * all (non-atomic) mutating operations require a &mut reference which
-    amounts to exclusive access.
-
-    * It is permissible to pass shared references &Bitmap between
-    threads, and we expose atomic operations through interior mutability.
-    Since these atomic operations do not provide any ordering guarantees,
-    we mark these as `unsafe`. Anyone who calls the atomic methods needs
-    to document that the lack of ordering is safe.
-
-  * The Rust API offers `{set,clear}_bit` vs `{set,clear}_bit_atomic`,
-    which is different from the C naming convention (set_bit vs __set_bit).
-
-  * we include enough operations for the API to be useful, but not all
-    operations are exposed yet in order to avoid dead code. This commit
-    includes enough to enable a Rust implementation of an Android Binder
-    data structure that was introduced in commit 15d9da3f818c ("binder:
-    use bitmap for faster descriptor lookup"), which can be found in
-    drivers/android/dbitmap.h. We need this in order to upstream the Rust
-    port of Android Binder driver.
-
-  * We follow the C API closely and fine-grained approach to safety:
-
-    * Low-level bit-ops methods get a safe API with bounds checks.
-
-    * methods correspond to find_* C methods tolerate out-of-bounds
-    arguments. Since these are already safe we the same behavior, and
-    return results using `Option` types to represent "not found".
-
-  * the Rust API is optimized to represent the bitmap inline if it would
-    take the space of a pointer. This saves allocations which is
-    relevant in the Binder use case.
-
-  * Bounds checks where out-of-bounds values would not result in
-    immediate access faults are configured via a RUST_BITMAP_HARDENED
-    config.
-
-The underlying C bitmap is *not* exposed, and must never be exposed
-(except in tests). Exposing the representation would lose all static
-guarantees, and moreover would prevent the optimized representation of
-short bitmaps.
-
-An alternative route of vendoring an existing Rust bitmap package was
-considered but suboptimal overall. Reusing the C implementation is
-preferable for a basic data structure like bitmaps. It enables Rust
-code to be a lot more similar and predictable with respect to C code
-that uses the same data structures and enables the use of code that
-has been tried-and-tested in the kernel, with the same performance
-characteristics whenever possible.
-
-We use the `usize` type for sizes and indices into the bitmap,
-because Rust generally always uses that type for indices and lengths
-and it will be more convenient if the API accepts that type. This means
-that we need to perform some casts to/from u32 and usize, since the C
-headers use unsigned int instead of size_t/unsigned long for these
-numbers in some places.
-
-Adds new MAINTAINERS section BITMAP API [RUST].
-
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Suggested-by: Yury Norov <yury.norov@gmail.com>
-Signed-off-by: Burak Emir <bqe@google.com>
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 ---
- MAINTAINERS                |   7 +
- rust/kernel/bitmap.rs      | 415 +++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs         |   1 +
- security/Kconfig.hardening |   9 +
- 4 files changed, 432 insertions(+)
- create mode 100644 rust/kernel/bitmap.rs
+ .../rockchip/phy-rockchip-naneng-combphy.c    | 186 +++++++++++++++++-
+ 1 file changed, 185 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 04d6727e944c..565eaa015d9e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4127,6 +4127,13 @@ S:	Maintained
- F:	rust/helpers/bitmap.c
- F:	rust/helpers/cpumask.c
+diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+index 1d1c7723584b..bf00a85a113b 100644
+--- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+@@ -20,7 +20,46 @@
+ #define REF_CLOCK_25MHz			(25 * HZ_PER_MHZ)
+ #define REF_CLOCK_100MHz		(100 * HZ_PER_MHZ)
  
-+BITMAP API [RUST]
-+M:	Alice Ryhl <aliceryhl@google.com>
-+M:	Burak Emir <bqe@google.com>
-+R:	Yury Norov <yury.norov@gmail.com>
-+S:	Maintained
-+F:	rust/kernel/bitmap.rs
+-/* COMBO PHY REG */
++/* RK3528 COMBO PHY REG */
++#define RK3528_PHYREG6				0x18
++#define RK3528_PHYREG6_PLL_KVCO			GENMASK(12, 10)
++#define RK3528_PHYREG6_PLL_KVCO_VALUE		0x2
++#define RK3528_PHYREG6_SSC_DIR			GENMASK(5, 4)
++#define RK3528_PHYREG6_SSC_UPWARD		0
++#define RK3528_PHYREG6_SSC_DOWNWARD		1
 +
- BITOPS API
- M:	Yury Norov <yury.norov@gmail.com>
- R:	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
-new file mode 100644
-index 000000000000..943dbef7948b
---- /dev/null
-+++ b/rust/kernel/bitmap.rs
-@@ -0,0 +1,415 @@
-+// SPDX-License-Identifier: GPL-2.0
++#define RK3528_PHYREG40				0x100
++#define RK3528_PHYREG40_SSC_EN			BIT(20)
++#define RK3528_PHYREG40_SSC_CNT			GENMASK(10, 0)
++#define RK3528_PHYREG40_SSC_CNT_VALUE		0x17d
 +
-+// Copyright (C) 2025 Google LLC.
++#define RK3528_PHYREG42				0x108
++#define RK3528_PHYREG42_CKDRV_CLK_SEL		BIT(29)
++#define RK3528_PHYREG42_CKDRV_CLK_PLL		0
++#define RK3528_PHYREG42_CKDRV_CLK_CKRCV		1
++#define RK3528_PHYREG42_PLL_LPF_R1_ADJ		GENMASK(10, 7)
++#define RK3528_PHYREG42_PLL_LPF_R1_ADJ_VALUE	0x9
++#define RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ	GENMASK(6, 4)
++#define RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ_VALUE 0x7
++#define RK3528_PHYREG42_PLL_KVCO_ADJ		GENMASK(2, 0)
++#define RK3528_PHYREG42_PLL_KVCO_ADJ_VALUE	0x0
 +
-+//! Rust API for bitmap.
-+//!
-+//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap.h).
++#define RK3528_PHYREG80				0x200
++#define RK3528_PHYREG80_CTLE_EN			BIT(17)
 +
-+use crate::alloc::{AllocError, Flags};
-+use crate::bindings;
-+use core::ptr::NonNull;
++#define RK3528_PHYREG81				0x204
++#define RK3528_PHYREG81_CDR_PHASE_PATH_GAIN_2X	BIT(5)
++#define RK3528_PHYREG81_SLEW_RATE_CTRL		GENMASK(2, 0)
++#define RK3528_PHYREG81_SLEW_RATE_CTRL_SLOW	0x7
 +
-+/// Holds either a pointer to array of `unsigned long` or a small bitmap.
-+#[repr(C)]
-+union BitmapRepr {
-+    bitmap: usize,
-+    ptr: NonNull<usize>,
-+}
++#define RK3528_PHYREG83				0x20c
++#define RK3528_PHYREG83_RX_SQUELCH		GENMASK(2, 0)
++#define RK3528_PHYREG83_RX_SQUELCH_VALUE	0x6
 +
-+macro_rules! bitmap_hardening_assert {
-+    ($cond:expr, $($arg:tt)+) => {
-+        #[cfg(RUST_BITMAP_HARDENED)]
-+        assert!($e, $($arg)*);
-+    }
-+}
++#define RK3528_PHYREG86				0x218
++#define RK3528_PHYREG86_RTERM_DET_CLK_EN	BIT(14)
 +
-+/// Represents a bitmap.
-+///
-+/// Wraps underlying C bitmap API.
-+///
-+/// # Examples
-+///
-+/// Basic usage
-+///
-+/// ```
-+/// use kernel::alloc::flags::GFP_KERNEL;
-+/// use kernel::bitmap::Bitmap;
-+///
-+/// let mut b = Bitmap::new(16, GFP_KERNEL)?;
-+///
-+/// assert_eq!(16, b.len());
-+/// for i in 0..16 {
-+///     if i % 4 == 0 {
-+///       b.set_bit(i);
-+///     }
-+/// }
-+/// assert_eq!(Some(0), b.next_bit(0));
-+/// assert_eq!(Some(1), b.next_zero_bit(0));
-+/// assert_eq!(Some(4), b.next_bit(1));
-+/// assert_eq!(Some(5), b.next_zero_bit(4));
-+/// assert_eq!(Some(12), b.last_bit());
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
-+/// # Invariants
-+///
-+/// * `nbits` is `<= i32::MAX` and never changes.
-+/// * if `nbits <= bindings::BITS_PER_LONG`, then `repr` is a bitmap.
-+/// * otherwise, `repr` holds a non-null pointer that was obtained from a
-+///   successful call to `bitmap_zalloc` and holds the address of an initialized
-+///   array of `unsigned long` that is large enough to hold `nbits` bits.
-+pub struct Bitmap {
-+    /// Representation of bitmap.
-+    repr: BitmapRepr,
-+    /// Length of this bitmap. Must be `<= i32::MAX`.
-+    nbits: usize,
-+}
-+
-+/// Enable unsynchronized concurrent access to [`Bitmap`] through shared references.
-+///
-+/// # Safety
-+///
-+/// * When no thread performs any mutations, concurrent access is safe.
-+/// * Mutations are permitted through atomic operations and interior mutability.
-+///   All such methods are marked unsafe, to account for the lack of ordering
-+///   guarantees. Callers must acknowledge that updates may be observed in any
-+///   order.
-+unsafe impl Sync for Bitmap {}
-+
-+impl Drop for Bitmap {
-+    fn drop(&mut self) {
-+        if self.nbits <= bindings::BITS_PER_LONG as _ {
-+            return;
-+        }
-+        // SAFETY: `self.ptr` was returned by the C `bitmap_zalloc`.
-+        //
-+        // INVARIANT: there is no other use of the `self.ptr` after this
-+        // call and the value is being dropped so the broken invariant is
-+        // not observable on function exit.
-+        unsafe { bindings::bitmap_free(self.as_mut_ptr()) };
-+    }
-+}
-+
-+impl Bitmap {
-+    /// Constructs a new [`Bitmap`].
-+    ///
-+    /// Fails with [`AllocError`] when the [`Bitmap`] could not be allocated. This
-+    /// includes the case when `nbits` is greater than `i32::MAX`.
-+    #[inline]
-+    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError> {
-+        if nbits <= bindings::BITS_PER_LONG as _ {
-+            return Ok(Bitmap {
-+                repr: BitmapRepr { bitmap: 0 },
-+                nbits,
-+            });
-+        }
-+        if nbits > i32::MAX.try_into().unwrap() {
-+            return Err(AllocError);
-+        }
-+        let nbits_u32 = u32::try_from(nbits).unwrap();
-+        // SAFETY: `bindings::BITS_PER_LONG < nbits` and `nbits <= i32::MAX`.
-+        let ptr = unsafe { bindings::bitmap_zalloc(nbits_u32, flags.as_raw()) };
-+        let ptr = NonNull::new(ptr).ok_or(AllocError)?;
-+        // INVARIANT: `ptr` returned by C `bitmap_zalloc` and `nbits` checked.
-+        return Ok(Bitmap {
-+            repr: BitmapRepr { ptr },
-+            nbits,
-+        });
-+    }
-+
-+    /// Returns length of this [`Bitmap`].
-+    #[inline]
-+    pub fn len(&self) -> usize {
-+        self.nbits
-+    }
-+
-+    /// Returns a mutable raw pointer to the backing [`Bitmap`].
-+    #[inline]
-+    fn as_mut_ptr(&mut self) -> *mut usize {
-+        if self.nbits <= bindings::BITS_PER_LONG as _ {
-+            // SAFETY: Bitmap is represented inline.
-+            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
-+        } else {
-+            // SAFETY: Bitmap is represented as array of `unsigned long`.
-+            unsafe { self.repr.ptr.as_mut() }
-+        }
-+    }
-+
-+    /// Returns a raw pointer to the backing [`Bitmap`].
-+    #[inline]
-+    fn as_ptr(&self) -> *const usize {
-+        if self.nbits <= bindings::BITS_PER_LONG as _ {
-+            // SAFETY: Bitmap is represented inline.
-+            unsafe { core::ptr::addr_of!(self.repr.bitmap) }
-+        } else {
-+            // SAFETY: Bitmap is represented as array of `unsigned long`.
-+            unsafe { self.repr.ptr.as_ptr() }
-+        }
-+    }
-+
-+    /// Set bit with index `index`.
-+    ///
-+    /// ATTENTION: `set_bit` is non-atomic, which differs from the naming
-+    /// convention in C code. The corresponding C function is `__set_bit`.
-+    ///
-+    /// # Panics
-+    ///
-+    /// Panics if `index` is greater than or equal to `self.nbits`.
-+    #[inline]
-+    pub fn set_bit(&mut self, index: usize) {
-+        assert!(
-+            index < self.nbits,
-+            "Bit `index` must be < {}, was {}",
-+            self.nbits,
-+            index
-+        );
-+        // SAFETY: Bit `index` is within bounds.
-+        unsafe { bindings::__set_bit(index as u32, self.as_mut_ptr()) };
-+    }
-+
-+    /// Set bit with index `index`, atomically.
-+    ///
-+    /// ATTENTION: The naming convention differs from C, where the corresponding
-+    /// function is called `set_bit`.
-+    ///
-+    /// # Safety
-+    ///
-+    /// This is a relaxed atomic operation (no implied memory barriers, no
-+    /// ordering guarantees). The caller must ensure that this is safe, as
-+    /// the compiler cannot prevent code with an exclusive reference from
-+    /// calling atomic operations.
-+    ///
-+    /// # Panics
-+    ///
-+    /// Panics if `index` is greater than or equal to `self.nbits`.
-+    #[inline]
-+    pub unsafe fn set_bit_atomic(&self, index: usize) {
-+        assert!(
-+            index < self.nbits,
-+            "Bit `index` must be < {}, was {}",
-+            self.nbits,
-+            index
-+        );
-+        // SAFETY: `index` is within bounds and the caller has ensured that
-+        // there is no mix of non-atomic and atomic operations.
-+        unsafe { bindings::set_bit(index as u32, self.as_ptr() as *mut usize) };
-+    }
-+
-+    /// Clear `index` bit.
-+    ///
-+    /// ATTENTION: `clear_bit` is non-atomic, which differs from the naming
-+    /// convention in C code. The corresponding C function is `__clear_bit`.
-+    /// # Panics
-+    ///
-+    /// Panics if `index` is greater than or equal to `self.nbits`.
-+    #[inline]
-+    pub fn clear_bit(&mut self, index: usize) {
-+        assert!(
-+            index < self.nbits,
-+            "Bit `index` must be < {}, was {}",
-+            self.nbits,
-+            index
-+        );
-+        // SAFETY: `index` is within bounds.
-+        unsafe { bindings::__clear_bit(index as u32, self.as_mut_ptr()) };
-+    }
-+
-+    /// Clear `index` bit, atomically.
-+    ///
-+    /// ATTENTION: The naming convention differs from C, where the corresponding
-+    /// function is called `clear_bit`.
-+    ///
-+    /// # Safety
-+    ///
-+    /// This is a relaxed atomic operation (no implied memory barriers, no
-+    /// ordering guarantees). The caller must ensure that this is safe, as
-+    /// the compiler cannot prevent code with an exclusive reference from
-+    /// calling atomic operations.
-+    ///
-+    /// # Panics
-+    ///
-+    /// Panics if `index` is greater than or equal to `self.nbits`.
-+    #[inline]
-+    pub unsafe fn clear_bit_atomic(&self, index: usize) {
-+        assert!(
-+            index < self.nbits,
-+            "Bit `index` must be < {}, was {}",
-+            self.nbits,
-+            index
-+        );
-+        // SAFETY: `index` is within bounds and the caller has ensured that
-+        // there is no mix of non-atomic and atomic operations.
-+        unsafe { bindings::clear_bit(index as u32, self.as_ptr() as *mut usize) };
-+    }
-+
-+    /// Copy `src` into this [`Bitmap`] and set any remaining bits to zero.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+    /// use kernel::bitmap::Bitmap;
-+    ///
-+    /// let mut long_bitmap = Bitmap::new(256, GFP_KERNEL)?;
-+    //
-+    /// assert_eq!(None, long_bitmap.last_bit());
-+    //
-+    /// let mut short_bitmap = Bitmap::new(16, GFP_KERNEL)?;
-+    //
-+    /// short_bitmap.set_bit(7);
-+    /// long_bitmap.copy_and_extend(&short_bitmap);
-+    /// assert_eq!(Some(7), long_bitmap.last_bit());
-+    ///
-+    /// # Ok::<(), AllocError>(())
-+    /// ```
-+    #[inline]
-+    pub fn copy_and_extend(&mut self, src: &Bitmap) {
-+        let len = core::cmp::min(src.nbits, self.nbits);
-+        // SAFETY: access to `self` and `src` is within bounds.
-+        unsafe {
-+            bindings::bitmap_copy_and_extend(
-+                self.as_mut_ptr(),
-+                src.as_ptr(),
-+                len as u32,
-+                self.nbits as u32,
-+            )
-+        };
-+    }
-+
-+    /// Finds last set bit.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+    /// use kernel::bitmap::Bitmap;
-+    ///
-+    /// let bitmap = Bitmap::new(64, GFP_KERNEL)?;
-+    ///
-+    /// match bitmap.last_bit() {
-+    ///     Some(idx) => {
-+    ///         pr_info!("The last bit has index {idx}.\n");
-+    ///     }
-+    ///     None => {
-+    ///         pr_info!("All bits in this bitmap are 0.\n");
-+    ///     }
-+    /// }
-+    /// # Ok::<(), AllocError>(())
-+    /// ```
-+    #[inline]
-+    pub fn last_bit(&self) -> Option<usize> {
-+        // SAFETY: `_find_next_bit` access is within bounds due to invariant.
-+        let index = unsafe { bindings::_find_last_bit(self.as_ptr(), self.nbits) };
-+        if index >= self.nbits {
-+            None
-+        } else {
-+            Some(index)
-+        }
-+    }
-+
-+    /// Finds next set bit, starting from `start`.
-+    /// Returns `None` if `start` is greater of equal than `self.nbits`.
-+    #[inline]
-+    pub fn next_bit(&self, start: usize) -> Option<usize> {
-+        bitmap_hardening_assert!(start < self.nbits, "`start` must be < {} was {}", self.nbits, start);
-+        // SAFETY: `_find_next_bit` tolerates out-of-bounds arguments and returns a
-+        // value larger than or equal to `self.nbits` in that case.
-+        let index = unsafe { bindings::_find_next_bit(self.as_ptr(), self.nbits, start) };
-+        if index >= self.nbits {
-+            None
-+        } else {
-+            Some(index)
-+        }
-+    }
-+
-+    /// Finds next zero bit, starting from `start`.
-+    /// Returns `None` if `start` is greater than or equal to `self.nbits`.
-+    #[inline]
-+    pub fn next_zero_bit(&self, start: usize) -> Option<usize> {
-+        bitmap_hardening_assert!(start < self.nbits, "`start` must be < {} was {}", self.nbits, start);
-+        // SAFETY: `_find_next_zero_bit` tolerates out-of-bounds arguments and returns a
-+        // value larger than or equal to `self.nbits` in that case.
-+        let index = unsafe { bindings::_find_next_zero_bit(self.as_ptr(), self.nbits, start) };
-+        if index >= self.nbits {
-+            None
-+        } else {
-+            Some(index)
-+        }
-+    }
-+}
-+
-+use macros::kunit_tests;
-+
-+#[kunit_tests(rust_kernel_bitmap)]
-+mod tests {
-+    use super::*;
-+    use kernel::alloc::flags::GFP_KERNEL;
-+
-+    #[test]
-+    fn bitmap_new() {
-+        let b = Bitmap::new(0, GFP_KERNEL).unwrap();
-+        assert_eq!(0, b.len());
-+
-+        let b = Bitmap::new(3, GFP_KERNEL).unwrap();
-+        assert_eq!(3, b.len());
-+
-+        let b = Bitmap::new(1024, GFP_KERNEL).unwrap();
-+        assert_eq!(1024, b.len());
-+
-+        // Requesting too large values results in [`AllocError`].
-+        let b = Bitmap::new(1 << 31, GFP_KERNEL);
-+        assert!(b.is_err());
-+    }
-+
-+    #[test]
-+    fn bitmap_set_clear_find() {
-+        let mut b = Bitmap::new(128, GFP_KERNEL).unwrap();
-+
-+        // Zero-initialized
-+        assert_eq!(None, b.last_bit());
-+
-+        b.set_bit(17);
-+
-+        assert_eq!(Some(17), b.next_bit(0));
-+        assert_eq!(Some(17), b.last_bit());
-+
-+        b.set_bit(107);
-+
-+        assert_eq!(Some(17), b.next_bit(0));
-+        assert_eq!(Some(17), b.next_bit(17));
-+        assert_eq!(Some(107), b.next_bit(18));
-+        assert_eq!(Some(107), b.last_bit());
-+
-+        b.clear_bit(17);
-+
-+        assert_eq!(Some(107), b.next_bit(0));
-+        assert_eq!(Some(107), b.last_bit());
-+    }
-+
-+    #[test]
-+    fn bitmap_out_of_bounds() {
-+        let mut b = Bitmap::new(128, GFP_KERNEL).unwrap();
-+
-+        assert_eq!(None, b.next_bit(2048));
-+        assert_eq!(None, b.next_zero_bit(2048));
-+        assert_eq!(None, b.last_bit(2048));
-+    }
-+
-+    #[test]
-+    fn bitmap_copy_and_extend() {
-+        let mut long_bitmap = Bitmap::new(256, GFP_KERNEL).unwrap();
-+
-+        long_bitmap.set_bit(3);
-+        long_bitmap.set_bit(200);
-+
-+        let mut short_bitmap = Bitmap::new(32, GFP_KERNEL).unwrap();
-+
-+        short_bitmap.set_bit(17);
-+
-+        long_bitmap.copy_and_extend(&short_bitmap);
-+        // The larger bits have been cleared.
-+        assert_eq!(Some(17), long_bitmap.next_bit(0));
-+        assert_eq!(Some(17), long_bitmap.last_bit());
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5..8c4161cd82ac 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -38,6 +38,7 @@
- pub use ffi;
++/* RK3568 COMBO PHY REG */
+ #define RK3568_PHYREG6				0x14
+ #define RK3568_PHYREG6_PLL_DIV_MASK		GENMASK(7, 6)
+ #define RK3568_PHYREG6_PLL_DIV_SHIFT		6
+@@ -398,6 +437,147 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
  
- pub mod alloc;
-+pub mod bitmap;
- #[cfg(CONFIG_BLOCK)]
- pub mod block;
- #[doc(hidden)]
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 3fe9d7b945c4..926665bbc8f2 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -324,6 +324,15 @@ config LIST_HARDENED
- 
- 	  If unsure, say N.
- 
-+config RUST_BITMAP_HARDENED
-+	bool "Check integrity of linked list manipulation"
-+	help
-+	  Enables additional assertions in the Rust Bitmap API to catch
-+	  arguments that are not guaranteed to result in an immediate access
-+	  fault.
++static int rk3528_combphy_cfg(struct rockchip_combphy_priv *priv)
++{
++	const struct rockchip_combphy_grfcfg *cfg = priv->cfg->grfcfg;
++	unsigned long rate;
++	u32 val;
 +
-+	  If unsure, say N.
++	/* Set SSC downward spread spectrum */
++	val = FIELD_PREP(RK3528_PHYREG6_SSC_DIR, RK3528_PHYREG6_SSC_DOWNWARD);
++	rockchip_combphy_updatel(priv, RK3528_PHYREG6_SSC_DIR, val, RK3528_PHYREG6);
 +
- config BUG_ON_DATA_CORRUPTION
- 	bool "Trigger a BUG when data corruption is detected"
- 	select LIST_HARDENED
++	switch (priv->type) {
++	case PHY_TYPE_PCIE:
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->con0_for_pcie, true);
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->con1_for_pcie, true);
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->con2_for_pcie, true);
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->con3_for_pcie, true);
++		break;
++	case PHY_TYPE_USB3:
++		/* Enable adaptive CTLE for USB3.0 Rx */
++		rockchip_combphy_updatel(priv, RK3528_PHYREG80_CTLE_EN, RK3528_PHYREG80_CTLE_EN,
++					 RK3528_PHYREG80);
++
++		/* Set slow slew rate control for PI */
++		val = FIELD_PREP(RK3528_PHYREG81_SLEW_RATE_CTRL,
++				 RK3528_PHYREG81_SLEW_RATE_CTRL_SLOW);
++		rockchip_combphy_updatel(priv, RK3528_PHYREG81_SLEW_RATE_CTRL, val,
++					 RK3528_PHYREG81);
++
++		/* Set CDR phase path with 2x gain */
++		rockchip_combphy_updatel(priv, RK3528_PHYREG81_CDR_PHASE_PATH_GAIN_2X,
++					 RK3528_PHYREG81_CDR_PHASE_PATH_GAIN_2X, RK3528_PHYREG81);
++
++		/* Set Rx squelch input filler bandwidth */
++		val = FIELD_PREP(RK3528_PHYREG83_RX_SQUELCH, RK3528_PHYREG83_RX_SQUELCH_VALUE);
++		rockchip_combphy_updatel(priv, RK3528_PHYREG83_RX_SQUELCH, val, RK3528_PHYREG83);
++
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->pipe_txcomp_sel, false);
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->pipe_txelec_sel, false);
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->usb_mode_set, true);
++		break;
++	default:
++		dev_err(priv->dev, "incompatible PHY type\n");
++		return -EINVAL;
++	}
++
++	rate = clk_get_rate(priv->refclk);
++
++	switch (rate) {
++	case REF_CLOCK_24MHz:
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->pipe_clk_24m, true);
++		if (priv->type == PHY_TYPE_USB3) {
++			/* Set ssc_cnt[10:0]=00101111101 & 31.5KHz */
++			val = FIELD_PREP(RK3528_PHYREG40_SSC_CNT, RK3528_PHYREG40_SSC_CNT_VALUE);
++			rockchip_combphy_updatel(priv, RK3528_PHYREG40_SSC_CNT, val,
++						 RK3528_PHYREG40);
++		} else if (priv->type == PHY_TYPE_PCIE) {
++			/* tx_trim[14]=1, Enable the counting clock of the rterm detect */
++			rockchip_combphy_updatel(priv, RK3528_PHYREG86_RTERM_DET_CLK_EN,
++						 RK3528_PHYREG86_RTERM_DET_CLK_EN, RK3528_PHYREG86);
++		}
++		break;
++	case REF_CLOCK_100MHz:
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->pipe_clk_100m, true);
++		if (priv->type == PHY_TYPE_PCIE) {
++			/* PLL KVCO tuning fine */
++			val = FIELD_PREP(RK3528_PHYREG6_PLL_KVCO, RK3528_PHYREG6_PLL_KVCO_VALUE);
++			rockchip_combphy_updatel(priv, RK3528_PHYREG6_PLL_KVCO, val,
++						 RK3528_PHYREG6);
++
++			/* su_trim[6:4]=111, [10:7]=1001, [2:0]=000, swing 650mv */
++			writel(0x570804f0, priv->mmio + RK3528_PHYREG42);
++		}
++		break;
++	default:
++		dev_err(priv->dev, "Unsupported rate: %lu\n", rate);
++		return -EINVAL;
++	}
++
++	if (device_property_read_bool(priv->dev, "rockchip,ext-refclk")) {
++		rockchip_combphy_param_write(priv->phy_grf, &cfg->pipe_clk_ext, true);
++
++		if (priv->type == PHY_TYPE_PCIE && rate == REF_CLOCK_100MHz) {
++			val = FIELD_PREP(RK3528_PHYREG42_CKDRV_CLK_SEL,
++					 RK3528_PHYREG42_CKDRV_CLK_CKRCV);
++			val |= FIELD_PREP(RK3528_PHYREG42_PLL_LPF_R1_ADJ,
++					  RK3528_PHYREG42_PLL_LPF_R1_ADJ_VALUE);
++			val |= FIELD_PREP(RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ,
++					  RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ_VALUE);
++			val |= FIELD_PREP(RK3528_PHYREG42_PLL_KVCO_ADJ,
++					  RK3528_PHYREG42_PLL_KVCO_ADJ_VALUE);
++			rockchip_combphy_updatel(priv,
++						 RK3528_PHYREG42_CKDRV_CLK_SEL		|
++						 RK3528_PHYREG42_PLL_LPF_R1_ADJ		|
++						 RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ	|
++						 RK3528_PHYREG42_PLL_KVCO_ADJ,
++						 val, RK3528_PHYREG42);
++
++			val = FIELD_PREP(RK3528_PHYREG6_PLL_KVCO, RK3528_PHYREG6_PLL_KVCO_VALUE);
++			rockchip_combphy_updatel(priv, RK3528_PHYREG6_PLL_KVCO, val,
++						 RK3528_PHYREG6);
++		}
++	}
++
++	if (priv->type == PHY_TYPE_PCIE) {
++		if (device_property_read_bool(priv->dev, "rockchip,enable-ssc"))
++			rockchip_combphy_updatel(priv, RK3528_PHYREG40_SSC_EN,
++						 RK3528_PHYREG40_SSC_EN, RK3528_PHYREG40);
++	}
++
++	return 0;
++}
++
++static const struct rockchip_combphy_grfcfg rk3528_combphy_grfcfgs = {
++	/* pipe-phy-grf */
++	.pcie_mode_set		= { 0x0000, 5, 0, 0x00, 0x11 },
++	.usb_mode_set		= { 0x0000, 5, 0, 0x00, 0x04 },
++	.pipe_rxterm_set	= { 0x0000, 12, 12, 0x00, 0x01 },
++	.pipe_txelec_set	= { 0x0004, 1, 1, 0x00, 0x01 },
++	.pipe_txcomp_set	= { 0x0004, 4, 4, 0x00, 0x01 },
++	.pipe_clk_24m		= { 0x0004, 14, 13, 0x00, 0x00 },
++	.pipe_clk_100m		= { 0x0004, 14, 13, 0x00, 0x02 },
++	.pipe_rxterm_sel	= { 0x0008, 8, 8, 0x00, 0x01 },
++	.pipe_txelec_sel	= { 0x0008, 12, 12, 0x00, 0x01 },
++	.pipe_txcomp_sel	= { 0x0008, 15, 15, 0x00, 0x01 },
++	.pipe_clk_ext		= { 0x000c, 9, 8, 0x02, 0x01 },
++	.pipe_phy_status	= { 0x0034, 6, 6, 0x01, 0x00 },
++	.con0_for_pcie		= { 0x0000, 15, 0, 0x00, 0x110 },
++	.con1_for_pcie		= { 0x0004, 15, 0, 0x00, 0x00 },
++	.con2_for_pcie		= { 0x0008, 15, 0, 0x00, 0x101 },
++	.con3_for_pcie		= { 0x000c, 15, 0, 0x00, 0x0200 },
++};
++
++static const struct rockchip_combphy_cfg rk3528_combphy_cfgs = {
++	.num_phys	= 1,
++	.phy_ids	= {
++		0xffdc0000,
++	},
++	.grfcfg		= &rk3528_combphy_grfcfgs,
++	.combphy_cfg	= rk3528_combphy_cfg,
++};
++
+ static int rk3562_combphy_cfg(struct rockchip_combphy_priv *priv)
+ {
+ 	const struct rockchip_combphy_grfcfg *cfg = priv->cfg->grfcfg;
+@@ -1213,6 +1393,10 @@ static const struct rockchip_combphy_cfg rk3588_combphy_cfgs = {
+ };
+ 
+ static const struct of_device_id rockchip_combphy_of_match[] = {
++	{
++		.compatible = "rockchip,rk3528-naneng-combphy",
++		.data = &rk3528_combphy_cfgs,
++	},
+ 	{
+ 		.compatible = "rockchip,rk3562-naneng-combphy",
+ 		.data = &rk3562_combphy_cfgs,
 -- 
-2.49.0.1101.gccaa498523-goog
+2.49.0
 
