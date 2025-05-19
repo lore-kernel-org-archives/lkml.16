@@ -1,86 +1,90 @@
 Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1382227877E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0180E274FFA
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657938; cv=none; b=jO0AgCH47ODSR9s3RIZEF66ral0ffmBEj7gvfWrf0uYImnlwIO7PybWD59AWIr9hiTX33xZiDeVBQ3OrYZy6eyT8s3KlCmMym0tbcbOmWdW13eXtcKXSsyLB9XXN/oPaBdStkUPuy6hUFT94B1hbuh/eo+uDBTeJR7PB51lzFoE=
+	t=1747657943; cv=none; b=bZwMSSFQ/EIccJ+eNASHI8BUH2VexzBPZmwt/P4SAWI7QCkcPrL2BGJUyng7nP3Tq17lcwNMOj75ufuS/07jf3iH2aqTTw6pEsfr1g6WogTWGpfU3r/wAdO36wX06HqHsNZ3Trv1MTzFGjImxgxEOzUSWwQBuii9i/u11WU4QZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657938; c=relaxed/simple;
-	bh=6b8ZPtV5F994PMuvcCSu5RtuqE+uyQUk2qhJt6Rgzwg=;
+	s=arc-20240116; t=1747657943; c=relaxed/simple;
+	bh=yJmJBDqZKvDuVrVsQTB7p+hv1xxsfW41J0kmo5sfZwM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q6ynbke6I9PM3tZQ+QgSuOIAhsBSGrniqGYeHMg8+oDd45qpeeNHuZ+2hOpxInAc9twpDZIcdqS1j5NCpTM3Sxpw5FPXhR9KxbTq0LwDBEple0ojLMNwLi6XaSM0Gq5CT9zoI/RD7pa5l8sqcnSdckJ9+mTyy05oFHyirbva6vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RdTnRvyJ; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=We3KrIl8W6yiP5csJxWZT0H+6pZ8/tOKOZpO7tInhCVq+5Fx+YcZ6YOe6R7n7Fl9Qm+7NaSj8znzT5EOw6trfMR7ZVhHRRUuV0igptigkYztb2z+BLDdU1ub0kHf4Qp/cYik3W3ao+xu2ubRW1PmeX94ONXFOrI5HuYRMP6BOMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dX0dEEfL; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdTnRvyJ"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e733cd55f9eso4089289276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:32:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dX0dEEfL"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e733a6ff491so3927436276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747657936; x=1748262736; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747657941; x=1748262741; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rwPC3/sUg5alnk+vPawV+VRfKcVYwDAJB/XEbxtpgV8=;
-        b=RdTnRvyJRPZ502PFl5HL6d/UU9+p//wsXFqMbbZ9q5ddnWho3fT5soQ9FnPSj9mwJY
-         DGG8D1gkmMz4l7RO1KPRpxJSZnjsIJqFRMz2j9CzDyDLdF9hJ/gXWYLDA5JZMcAC3ZKX
-         b9SZdelV0biPugAkmcqK9wamllKQoW9u4cAKEDGGhmWNtxq/mbHHW3IhJJMr53CE2mOU
-         XCoPmX27cslnFA93SClB9OnEtOKRGSF6KyXeJGQLQH8OESMS38L46R4HRN1/9Kdl6kzm
-         n6xtNQsX7gf06fE76LCAGMG1DZJVDcFdWlf+KjtnouqTDbDTUZaxV25PyPaOz/ona2oL
-         ONrg==
+        bh=vHsufu+SF6+BkfAoJdbGGEtsqtE+xN15rWNgtA6qUrk=;
+        b=dX0dEEfL8+/Zke7XLR3A1vpOdD8VXakOBGZsEawh/ukpJAYXVvLqlxbIfDr2/SxcvK
+         gAc8AEqTd1yuzZ0KHrF8hvUVAHrOtvbOMi/nHuWTDsuJ6vqjAe9MXUj5uQRXLwN71RHc
+         mqv/c9mg36/HcuZdL7wgWW2SfH3vJhAcB5T5Zz3QEXw1nZFhczHl9sBcmUYZOIGynMiE
+         +RAlGt6Vom6X8fVjC1DhYUgP9zZc4mQ9/Y6Wz+kQQ9QrEmiaWUy+IGuLeVUiWhOXQzAC
+         9gm4FfL1lR6T371ZC5xuVBQLB7BGd+kENa/RngcriSBwQqP16gR74OThZn2mtAiuRupi
+         9bzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747657936; x=1748262736;
+        d=1e100.net; s=20230601; t=1747657941; x=1748262741;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rwPC3/sUg5alnk+vPawV+VRfKcVYwDAJB/XEbxtpgV8=;
-        b=Vnu0sv0tHdZewuwxH7dLnSmvxclaJM9eZNfr9X3PBaqW+Nmc0TaNVpyGMxFXuZcKJf
-         j1pcc708bjFtBYmx1KvcmHnjYSW/uUqcD3xkWCS1FezgstRJjSHRLxVsz9OeqA2tdeAQ
-         cUL3eFeeKjNm5alddlt+T9itWazqEDCrfWJ50OQnNZS8Msj60rLmPWoG+QcQ0d4r2ka6
-         DlT6FSHJCe/LaXj+3G187w2DWVNgJuNuCHIboX9r4H/x0sgyvNojXSQyvogZlmbiVjHT
-         Rw4OpwQ4xR3S6wR6ds/E1PzhB6dDjGXsMe05IrwkY6SGWacp9Boy0RJSaBB3LKUu5xiR
-         DTDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXENNQxlvkJDTVQYDrKvY+D7EmVYuIGnVAn4y/cBVRfod4YYeBFsyrRkgSZEeiHrgZwtFImpwEBbt19f/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGDWCmzkXBWRbk2Yg1syQMYbCW47sblaYXbVDL08dSMaWiAZ/K
-	VoatAT+irClHw86aaCjSlqhBMJIGOxcuI0b4IsmQXBosm41cKQp6W28BGGBzD1lJxXt7eAHIieW
-	oon9J0sWP5mPGXn5Gw7kNeFJ0Dq6ycZYj/A8zQ5LFNQ==
-X-Gm-Gg: ASbGncuOaQubWPwuCpsL3c92Yvt6ZKUR/2qnURkEZHim5JjRqOxz8eeRRAqksIR8kFV
-	KlEY1j6NwqLiBP3iLFFlOVjpwBOXuaL6DxYf5EctXrGHzu49xEw8yPjxcUEni7D4sbvCqNZlX+/
-	rW6oLM9jEatxbARwxOwQQHVdGwgi0cB7aK7g==
-X-Google-Smtp-Source: AGHT+IH+k05RenNE75G05lCkPIFd12fSQl1b4MXO59HUeKq46kiZr+jpNbTHEmQSsew+3IME0NcG8hlXcQsODDtf+tw=
-X-Received: by 2002:a05:6902:110f:b0:e7b:94da:55dc with SMTP id
- 3f1490d57ef6-e7b94da571amr8538048276.13.1747657935953; Mon, 19 May 2025
- 05:32:15 -0700 (PDT)
+        bh=vHsufu+SF6+BkfAoJdbGGEtsqtE+xN15rWNgtA6qUrk=;
+        b=MBp0kNfu32WC9TYWJF7BYBn9qNeLJ9CfWHByP++2iYX+x6DqJEitPpm5GE2OEZ5Rnn
+         sMWmbP304tcqqNq1prusQYPitACY0zv2Db0UJCtWdtl+/ESrXjf2E7m/4uHxzgjiWBBv
+         5YPDWXkxDtL2ypNJV2Tf1qKnQk5yvghPcRcjD9GpzVcUW/uJb/ma/WPY9EWnpxoFKVRT
+         bjK/ulIrFg9jYFRRJJGXwnBxo1WLNwGlIKHbySBxCyo3hfe5BuMkz5j3fDE6Lq7WlG0G
+         /WGoAV3fO+GOBdSJeOC7TalvzWsK99eNQ1WhxgXxBmSDuy7r5/iPi10JQ94+1cQoM37X
+         a7CA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3u8cGnWqyejY5AU9dOkY1vPiPl6W/5x7FaT8A4M0kDSEL05/qW4bFT11OXnX+kQpuBnfsYKC5GrLO2Mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0XtwPuZ1u8amw2f9dcAt//Gj0AEF3Kz9bMAmHX/JrZHSVbtrR
+	B+BJ19YYsg6gx/AojekEkTvlviRYMhVBuTZq2PZ61QKNKt9NvVP0VfjkzvhdIUvVOMsmuhE7lq/
+	xnWXqmY7cBOktxrYIIXUWw9X2KTbVeoqeyiVgmvWSOg==
+X-Gm-Gg: ASbGncujQdxW4NZnD1IAdfzCFK0FPVF6NFWWBynbSamhs32cmZahDQK1zw2mSEA7ZBB
+	BjQ1NFOQtp3zAT9FwApvNPenxnmgRGxOyo3CuGDRyhh1TLBIeOYFsSJeR8mrKkPbCDkaoEZzyge
+	fSKozsSo2mYKLVndElRaY7irWZaduTJbJ00A==
+X-Google-Smtp-Source: AGHT+IGQJih7ABrJkyHXOxVQqXeWFy+8tRFAAwAelY8XbJK42oN2ccbF+YYkI6zd7QDW809w0lHa6Kx2D4jNl++RLr8=
+X-Received: by 2002:a05:6902:1201:b0:e78:f901:6074 with SMTP id
+ 3f1490d57ef6-e7b6d39c8e6mr15228387276.5.1747657940585; Mon, 19 May 2025
+ 05:32:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515204201502Kzmj4I6k5Fv2FjqyEjF6n@zte.com.cn>
-In-Reply-To: <20250515204201502Kzmj4I6k5Fv2FjqyEjF6n@zte.com.cn>
+References: <20250516-b4-usdhc-v2-1-3fccd02f5602@nxp.com>
+In-Reply-To: <20250516-b4-usdhc-v2-1-3fccd02f5602@nxp.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 19 May 2025 14:31:40 +0200
-X-Gm-Features: AX0GCFtXdhUci2gSte12YEy9YP5JWc22zhs6HMihigJb0b76jaF6NMhMse_Mf_o
-Message-ID: <CAPDyKFrheefitHyBMz11pcUMi=cz_-nLzG9zY9cbYyZfjsQAKg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: bcm2835: Use str_read_write() helper
-To: long.yunjian@zte.com.cn
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-	rjui@broadcom.com, sbranden@broadcom.com, wahrenst@gmx.net, 
-	u.kleine-koenig@baylibre.com, fang.yumeng@zte.com.cn, 
-	linux-mmc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	ouyang.maochun@zte.com.cn, mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn
+Date: Mon, 19 May 2025 14:31:44 +0200
+X-Gm-Features: AX0GCFu0noKnxB0Y5FfzLidgfrO3RarPEU6zn_6BF2jOJDmCis2kwv2FoOkskmk
+Message-ID: <CAPDyKFrknTGmptb4K28eHtELEdu_7WXtJwV5L5zyxfzuGeR5WA@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-esdhc-imx: fix few build warnings
+To: Haibo Chen <haibo.chen@nxp.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Luke Wang <ziniu.wang_1@nxp.com>, imx@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, s32@nxp.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 May 2025 at 14:42, <long.yunjian@zte.com.cn> wrote:
+On Fri, 16 May 2025 at 09:44, Haibo Chen <haibo.chen@nxp.com> wrote:
 >
-> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+> drivers/mmc/host/sdhci-esdhc-imx.c:1566 sdhci_esdhc_imx_hwinit() warn: inconsistent indenting
+> drivers/mmc/host/sdhci-esdhc-imx.c:1251 esdhc_executing_tuning() error: uninitialized symbol 'target_min'.
+> drivers/mmc/host/sdhci-esdhc-imx.c:1251 esdhc_executing_tuning() error: uninitialized symbol 'target_max'.
 >
-> Remove hard-coded strings by using the str_read_write() helper.
->
-> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+> Fixes: be953af79cc6 ("mmc: sdhci-esdhc-imx: widen auto-tuning window for standard tuning")
+> Fixes: 541a95e64d76 ("mmc: sdhci-esdhc-imx: optimize the manual tuing logic to get the best timing")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/all/202505160225.Csr5USfq-lkp@intel.com/
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
 Applied for next, thanks!
 
@@ -89,45 +93,41 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/bcm2835.c | 8 ++++----
+>  drivers/mmc/host/sdhci-esdhc-imx.c | 8 ++++----
 >  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index e5f151d092cd..def054ddd256 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -44,6 +44,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/time.h>
->  #include <linux/workqueue.h>
-> +#include <linux/string_choices.h>
+> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> index c0160c69a027826c4099c9bcf82cd4d83f1113fd..741db169f44d9c9c1e5e1dee591b72221fa1e2b9 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> @@ -1216,8 +1216,8 @@ static int esdhc_executing_tuning(struct sdhci_host *host, u32 opcode)
+>         int win_length, target_min, target_max, target_win_length;
+>         u32 clk_tune_ctrl_status, temp;
 >
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/mmc.h>
-> @@ -391,8 +392,7 @@ static void bcm2835_transfer_block_pio(struct bcm2835_host *host, bool is_read)
+> -       min = ESDHC_TUNE_CTRL_MIN;
+> -       max = ESDHC_TUNE_CTRL_MIN;
+> +       min = target_min = ESDHC_TUNE_CTRL_MIN;
+> +       max = target_max = ESDHC_TUNE_CTRL_MIN;
+>         target_win_length = 0;
+>         while (max < ESDHC_TUNE_CTRL_MAX) {
+>                 /* find the mininum delay first which can pass tuning */
+> @@ -1591,8 +1591,8 @@ static void sdhci_esdhc_imx_hwinit(struct sdhci_host *host)
+>                          * wider, give auto tuning enough space to handle the sample
+>                          * point shift cause by temperature change.
+>                          */
+> -                        tmp &= ~ESDHC_TUNING_WINDOW_MASK;
+> -                        tmp |= FIELD_PREP(ESDHC_TUNING_WINDOW_MASK, ESDHC_AUTO_TUNING_WINDOW);
+> +                       tmp &= ~ESDHC_TUNING_WINDOW_MASK;
+> +                       tmp |= FIELD_PREP(ESDHC_TUNING_WINDOW_MASK, ESDHC_AUTO_TUNING_WINDOW);
 >
->                                 if (time_after(jiffies, wait_max)) {
->                                         dev_err(dev, "PIO %s timeout - EDM %08x\n",
-> -                                               is_read ? "read" : "write",
-> -                                               edm);
-> +                                               str_read_write(is_read), edm);
->                                         hsts = SDHSTS_REW_TIME_OUT;
->                                         break;
->                                 }
-> @@ -435,12 +435,12 @@ static void bcm2835_transfer_pio(struct bcm2835_host *host)
->                       SDHSTS_CRC7_ERROR |
->                       SDHSTS_FIFO_ERROR)) {
->                 dev_err(dev, "%s transfer error - HSTS %08x\n",
-> -                       is_read ? "read" : "write", sdhsts);
-> +                       str_read_write(is_read), sdhsts);
->                 host->data->error = -EILSEQ;
->         } else if ((sdhsts & (SDHSTS_CMD_TIME_OUT |
->                               SDHSTS_REW_TIME_OUT))) {
->                 dev_err(dev, "%s timeout error - HSTS %08x\n",
-> -                       is_read ? "read" : "write", sdhsts);
-> +                       str_read_write(is_read), sdhsts);
->                 host->data->error = -ETIMEDOUT;
->         }
->  }
+>                         /* Disable the CMD CRC check for tuning, if not, need to
+>                          * add some delay after every tuning command, because
+>
+> ---
+> base-commit: 484803582c77061b470ac64a634f25f89715be3f
+> change-id: 20250516-b4-usdhc-bcd8cea08ed6
+>
+> Best regards,
 > --
-> 2.25.1
+> Haibo Chen <haibo.chen@nxp.com>
+>
