@@ -1,66 +1,68 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3B42676C9
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CE42690CB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638480; cv=none; b=AQ0zEq3eCvUVvA/uOFRISgv0OCq6cmqqUSvDx8LQEpXducZUt0y/qpQU5cpYoXywm1gdUhmnGdbwf2rhjyiFZZ8nYo+2ILsLCTLzMaXm4RT51J2CpUbtmnnya7DMmUKO+FAqa0q6RETfzC4Vd5TEz+KnPRZds9m+ZnY/Yx0y/rY=
+	t=1747638485; cv=none; b=hhsoa8ft6GZaiXP4Xo4xysNTZAXfhjUGeYaI8wMjwRUgrPJRih/8iKY+OF4mTV692BzNs9iXsp4IdTHSyrtOECyAF6PpJG0BJRJ8oDMWWkyQC/5Lir2TdafGL7X25komOeOWL0+fuKWbBcf/eUMrD4tLL8aYJk88lNFGD8NuXCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638480; c=relaxed/simple;
-	bh=4HWksdgns8ejVb++Q4NJVdKDSuHEDHdMmvi+j+YhGlo=;
+	s=arc-20240116; t=1747638485; c=relaxed/simple;
+	bh=5L5Hmj+hoBZ1EgPgIOEh7N2LK8PQQuUGQGeNdU/vBY8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f8yFE7eufgklEthrbw04FuQOBLbSHvJjrI/75yyLDLGxjmxBtQcE0aV6xUXa55uNcKk99whUF09Dkmimdem8tmKVoOgNBXoFncgjzVzHsVP90EZ5Xj4oKHoFlBvoKxg4X67xKr3LmdYtuN4JJLMfT4RXUTl3MncydEIiK2zLXsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oURx1vhr; arc=none smtp.client-ip=209.85.210.172
+	 MIME-Version; b=rwB/J4ke+rrR7Cu5ISvSDiEMrsX3nTd8jr5b3h9BUDs/qQQexnhxRlS4H6YvIvv4dgGJs0G2mLQ9WuGUcG8e07eVEN3fphmX3CJB4SGvMhNICL+H/QBeW7nfFAoJLZzpmCzIPNnptxKEKeR6j/+z5OTkM1kEwIS6D1R38lFhM2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YSLARzX7; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oURx1vhr"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742af848148so1687298b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 00:07:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YSLARzX7"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1fd59851baso2400843a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 00:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747638478; x=1748243278; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747638482; x=1748243282; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WNsggH78Gujq22EIg5QA+ygoUlPHiqAj8S6vH5ayXvk=;
-        b=oURx1vhrE893jp72/YQ/sUBnRtO8aTJTcAZq5IkvzRVzrRghsh/zfhBt3kO+2Ga9/G
-         fnJkmwPOzd1K3K4/rrKi9ygZw1pfP93z2gBG8A344F1E5f7w5mN9TfgGNcvlT6Eijth2
-         Y2YFbybWguowNkOL5aE+oxSz7y2h+7zuZoRC0T+gxDZxj84wWzcmMcLv9Rn63M4Gbd9/
-         HLmVcagmqxawzKlfHBGBXrW+LhRhyTm13qBaomzswvepcjQl2Thmjm2o6R3asXRgHWbn
-         5HUMxLz35a+CGiV3YJJe2VzhL6cSdsEsj3ETo/AAcjtm6de/iYaX+dfhcp+i2R3ILLm2
-         XH4g==
+        bh=DO5+lgLPT8S/OeMtRlQPVr+3mHA37EzCb8FAlkZERxU=;
+        b=YSLARzX7eH7ppZvU6+QUxmSHLz1SdFkd4y3j7eOE9gzHMCnonJ4OVkRoGY0dy/TzkD
+         GFd7B0fwJH93rugUMJ7rRWxiz73Ccj/tpN7uENUIO0Nr6+HqpunLXk8MlI458qBB6AVZ
+         l9/AUAyfY39CGi/zG8zB892v9uTZ/6BT9E2C+jgwHOGnRkntsoTcJlbG99Oqpwgk+pxq
+         QDcS0c5WxoTxkmmBEM9N9DyVkYpgb769CDSUm9x1zRmQcwNLjCoNiSnWfFBX/glvbsgt
+         SnBvZ54Xc4a7gOmw31+Zvl61WjNshgmLDqTpL5rC8figEJNYHNdWMarJRshCP9gZFPSZ
+         SmQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747638478; x=1748243278;
+        d=1e100.net; s=20230601; t=1747638482; x=1748243282;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WNsggH78Gujq22EIg5QA+ygoUlPHiqAj8S6vH5ayXvk=;
-        b=QCGlkAqGYtvJ09v2qZDcdov9acvYtd+I/wIeZcXjtsTZ9uhyA/P+FQO2bXVZ91JeLu
-         N7gUY1/iTDtEWkvAAGgWxvOtx3QInCTdeDcwRncQGR5tX/AHMkGYkg1tK9v6HK9Mb3zE
-         QbyL0nQdekebhOVt2Qs5Yp13zdO9sb8ASFJBs2FFUM9O+P40RJufXLW0DXNFFaZiGpo8
-         kvsrFp7HFtSiY8P/aWhQlodNWNztfZ6UpUFEMmda6av70iOgEFKYyQ5S7FF3rI9PTWB/
-         PNFowyEZKknFkqm1z4jGTLZalnDPUL3hRU0Kn9AxNRIuWzcA0f7VkMUVSOjOY0ncTSzc
-         SIpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3gYfhf7sKp3wmeW7WbIQjsuagSVQBdAKIWaNSMUg3WcUP4fJkXZ0ykfusWtGlA/yYb3+jFxGXZRcbenQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8Z6IitxQyagPxL72El8uAZ6b5rwT6NsB/d5Rte7xQm1RtZ3TY
-	Rb8csKwt8uuaZwlUnHhNAnI96y+5GwZzerqIdwA9gjDuXuk+5VRmAJ25cgAPCHmQ3sI=
-X-Gm-Gg: ASbGncvhKK/cUjTgQ2KR/vOksEiDEOufg15I3oPl+VkEeOmpWnfLs7kIXrbtlTkcqwV
-	WB4ye1m6DmfKluL/4G8NluTQIZb+uGrGKgcNjm58G9UUUXDyHJ2TH2foNh8Qr/wyxa+xXzpHTpr
-	DUIopgisGWpemneki9pyddC52zBlMDJfGabjz8eko6ls1aVtUoSQCFo+Jl6xYLIceVTz8IsZZhk
-	gFYQRRTPzH245Z2cGLPrMwWtPx8vTBAv9f7fguOf/51n7r6oXnjjh9dfkT1mT89KnAxoPp6zdgM
-	Tdz0J3z03UjTjQmnZFMhmRldsOhkl6XEvuHwVEG8QVW5CCZYDlP2vKJRidB8xNc=
-X-Google-Smtp-Source: AGHT+IHyX79iTRiEese5DXhXzl4RcrDdeFt3S9RU8Ax4nAHLTvc2jaPooDG34VMRP3xDbTxlkEsoKQ==
-X-Received: by 2002:a17:90b:558e:b0:30e:840a:92ed with SMTP id 98e67ed59e1d1-30e840a93d2mr16053139a91.31.1747638478085;
-        Mon, 19 May 2025 00:07:58 -0700 (PDT)
+        bh=DO5+lgLPT8S/OeMtRlQPVr+3mHA37EzCb8FAlkZERxU=;
+        b=TllrtKH2S2BzzjsNoSnH61DbGnlUvirpPqioRdpDoyqpcXOKnxzJ4zi3bzHuQ6W86v
+         tjqYuGlPH1yifu4WYY00fRB0AIRsBXhDHfsguyfLsGfWF36SivfKB4TljHs7iaNQ+6wk
+         mM9zV3QW+OXj4rwcIqmyl5IpX/fxmwLam3gxbzpUlgaeqvM5zqK6iV8+/g2mgcQ8fIcU
+         8xxLaLQoAnDMwumcW+/jOWRcXpprmmVQxF13wUxh9UB72TRSi4KS7//XSv7ACtjqctPt
+         LjDp/5N2U9fANjjb0uFpnM8/vZYmKzHy2HHKIkrUmI0+k22RK8ILrpv8cv/pX/V3LTi/
+         Mc1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVEW3HZdH3Ws3yQr8SaxiyEVJNfhiM+oaqFgUPTfEF0Q8652olbM0QZeeo+QgdbR1A3RlvR3DDz2ngZi1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTkrl3P4Es6INYkJ3ElzlY1lplhSO7hK5VtPwwNFS+f5V8u7/i
+	7/G/1WUcscxFAfPuRbbiNW76bnycVlmK6YVh2+k/5pW0JKYvM57pVk11QHdljz917Jk=
+X-Gm-Gg: ASbGncvezn1Spx8JXBIWWhoPsk2FfXct2iJXRFJSuaG6iZZpe1SCM1z6X00t1MQ6FWj
+	sxMjTlOOlaB8R75dPCJo7QocRRdDuaPqrGVoHeNNS/NKv4UHPr3Fj1Vf5/b2y0jlGDGZkEgesYA
+	Ke7Z3mc9LHMBYhMBqIjebwfQz0ewZ2EXpi4yn5ROJ0jnOWY66TgdzqMW+ZJw+Q1sL2mjiYXERzB
+	ZMF5HHjJJNdE4nVKfLBDJ7dNmXaSFkMlpOBNfSsS0ZBjCdOTslfYQz5eygmiYdfUt2r4N7d0Rek
+	9akVoKMboKstMULjMhZJI/6QHGOtCgP/896/EzfT5x9KYMWfTmh2
+X-Google-Smtp-Source: AGHT+IHjKKphjMeTJbrWdHGlFJHlNdpGPNMrULzrgSDDhULG3ADFXBlhrBdHy3LnjqfpGfHSVht4nA==
+X-Received: by 2002:a17:903:41c7:b0:224:1221:1ab4 with SMTP id d9443c01a7336-231de317b43mr173678205ad.22.1747638482451;
+        Mon, 19 May 2025 00:08:02 -0700 (PDT)
 Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ef3c50c31sm1582169a91.45.2025.05.19.00.07.57
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9fc8sm53183405ad.27.2025.05.19.00.08.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 00:07:57 -0700 (PDT)
+        Mon, 19 May 2025 00:08:01 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
 	Danilo Krummrich <dakr@redhat.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
@@ -70,9 +72,7 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
@@ -90,9 +90,9 @@ Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	Andrew Ballance <andrewjballance@gmail.com>,
 	Daniel Almeida <daniel.almeida@collabora.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V12 04/15] rust: clk: Add helpers for Rust code
-Date: Mon, 19 May 2025 12:37:09 +0530
-Message-Id: <0ec0250c1170a8a6efb2db7a6cb49ae974d7ce05.1747634382.git.viresh.kumar@linaro.org>
+Subject: [PATCH V12 05/15] rust: clk: Add initial abstractions
+Date: Mon, 19 May 2025 12:37:10 +0530
+Message-Id: <a223f92ce22a2d1e04437559e5e8b79d392bb32a.1747634382.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1747634382.git.viresh.kumar@linaro.org>
 References: <cover.1747634382.git.viresh.kumar@linaro.org>
@@ -104,131 +104,386 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Non-trivial C macros and inlined C functions cannot be used directly
-in the Rust code and are used via functions ("helpers") that wrap
-those so that they can be called from Rust.
+Add initial abstractions for the clk APIs. These provide the minimal
+functionality needed for common use cases, making them straightforward
+to introduce in the first iteration.
 
-In order to prepare for adding Rust abstractions for the clock APIs,
-add clock helpers required by the Rust implementation.
+These will be used by Rust based cpufreq / OPP layers to begin with.
 
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- MAINTAINERS                     |  1 +
- rust/bindings/bindings_helper.h |  1 +
- rust/helpers/clk.c              | 66 +++++++++++++++++++++++++++++++++
- rust/helpers/helpers.c          |  1 +
- 4 files changed, 69 insertions(+)
- create mode 100644 rust/helpers/clk.c
+ MAINTAINERS        |   1 +
+ rust/kernel/clk.rs | 334 +++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs |   1 +
+ 3 files changed, 336 insertions(+)
+ create mode 100644 rust/kernel/clk.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index bd7c54af4fd4..608689342aaf 100644
+index 608689342aaf..12cde55579a0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5883,6 +5883,7 @@ F:	include/dt-bindings/clock/
- F:	include/linux/clk-pr*
+@@ -5884,6 +5884,7 @@ F:	include/linux/clk-pr*
  F:	include/linux/clk/
  F:	include/linux/of_clk.h
-+F:	rust/helpers/clk.c
+ F:	rust/helpers/clk.c
++F:	rust/kernel/clk.rs
  X:	drivers/clk/clkdev.c
  
  COMMON INTERNET FILE SYSTEM CLIENT (CIFS and SMB3)
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70..f53d6e1a21f2 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -10,6 +10,7 @@
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
-+#include <linux/clk.h>
- #include <linux/cpumask.h>
- #include <linux/cred.h>
- #include <linux/device/faux.h>
-diff --git a/rust/helpers/clk.c b/rust/helpers/clk.c
+diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
 new file mode 100644
-index 000000000000..6d04372c9f3b
+index 000000000000..6041c6d07527
 --- /dev/null
-+++ b/rust/helpers/clk.c
-@@ -0,0 +1,66 @@
++++ b/rust/kernel/clk.rs
+@@ -0,0 +1,334 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/clk.h>
++//! Clock abstractions.
++//!
++//! C header: [`include/linux/clk.h`](srctree/include/linux/clk.h)
++//!
++//! Reference: <https://docs.kernel.org/driver-api/clk.html>
 +
-+/*
-+ * The "inline" implementation of below helpers are only available when
-+ * CONFIG_HAVE_CLK or CONFIG_HAVE_CLK_PREPARE aren't set.
-+ */
-+#ifndef CONFIG_HAVE_CLK
-+struct clk *rust_helper_clk_get(struct device *dev, const char *id)
-+{
-+	return clk_get(dev, id);
++use crate::ffi::c_ulong;
++
++/// The frequency unit.
++///
++/// Represents a frequency in hertz, wrapping a [`c_ulong`] value.
++///
++/// ## Examples
++///
++/// ```
++/// use kernel::clk::Hertz;
++///
++/// let hz = 1_000_000_000;
++/// let rate = Hertz(hz);
++///
++/// assert_eq!(rate.as_hz(), hz);
++/// assert_eq!(rate, Hertz(hz));
++/// assert_eq!(rate, Hertz::from_khz(hz / 1_000));
++/// assert_eq!(rate, Hertz::from_mhz(hz / 1_000_000));
++/// assert_eq!(rate, Hertz::from_ghz(hz / 1_000_000_000));
++/// ```
++#[derive(Copy, Clone, PartialEq, Eq, Debug)]
++pub struct Hertz(pub c_ulong);
++
++impl Hertz {
++    /// Create a new instance from kilohertz (kHz)
++    pub fn from_khz(khz: c_ulong) -> Self {
++        Self(khz * 1_000)
++    }
++
++    /// Create a new instance from megahertz (MHz)
++    pub fn from_mhz(mhz: c_ulong) -> Self {
++        Self(mhz * 1_000_000)
++    }
++
++    /// Create a new instance from gigahertz (GHz)
++    pub fn from_ghz(ghz: c_ulong) -> Self {
++        Self(ghz * 1_000_000_000)
++    }
++
++    /// Get the frequency in hertz
++    pub fn as_hz(&self) -> c_ulong {
++        self.0
++    }
++
++    /// Get the frequency in kilohertz
++    pub fn as_khz(&self) -> c_ulong {
++        self.0 / 1_000
++    }
++
++    /// Get the frequency in megahertz
++    pub fn as_mhz(&self) -> c_ulong {
++        self.0 / 1_000_000
++    }
++
++    /// Get the frequency in gigahertz
++    pub fn as_ghz(&self) -> c_ulong {
++        self.0 / 1_000_000_000
++    }
 +}
 +
-+void rust_helper_clk_put(struct clk *clk)
-+{
-+	clk_put(clk);
++impl From<Hertz> for c_ulong {
++    fn from(freq: Hertz) -> Self {
++        freq.0
++    }
 +}
 +
-+int rust_helper_clk_enable(struct clk *clk)
-+{
-+	return clk_enable(clk);
++#[cfg(CONFIG_COMMON_CLK)]
++mod common_clk {
++    use super::Hertz;
++    use crate::{
++        device::Device,
++        error::{from_err_ptr, to_result, Result},
++        prelude::*,
++    };
++
++    use core::{ops::Deref, ptr};
++
++    /// A reference-counted clock.
++    ///
++    /// Rust abstraction for the C [`struct clk`].
++    ///
++    /// # Invariants
++    ///
++    /// A [`Clk`] instance holds either a pointer to a valid [`struct clk`] created by the C
++    /// portion of the kernel or a NULL pointer.
++    ///
++    /// Instances of this type are reference-counted. Calling [`Clk::get`] ensures that the
++    /// allocation remains valid for the lifetime of the [`Clk`].
++    ///
++    /// ## Examples
++    ///
++    /// The following example demonstrates how to obtain and configure a clock for a device.
++    ///
++    /// ```
++    /// use kernel::c_str;
++    /// use kernel::clk::{Clk, Hertz};
++    /// use kernel::device::Device;
++    /// use kernel::error::Result;
++    ///
++    /// fn configure_clk(dev: &Device) -> Result {
++    ///     let clk = Clk::get(dev, Some(c_str!("apb_clk")))?;
++    ///
++    ///     clk.prepare_enable()?;
++    ///
++    ///     let expected_rate = Hertz::from_ghz(1);
++    ///
++    ///     if clk.rate() != expected_rate {
++    ///         clk.set_rate(expected_rate)?;
++    ///     }
++    ///
++    ///     clk.disable_unprepare();
++    ///     Ok(())
++    /// }
++    /// ```
++    ///
++    /// [`struct clk`]: https://docs.kernel.org/driver-api/clk.html
++    #[repr(transparent)]
++    pub struct Clk(*mut bindings::clk);
++
++    impl Clk {
++        /// Gets [`Clk`] corresponding to a [`Device`] and a connection id.
++        ///
++        /// Equivalent to the kernel's [`clk_get`] API.
++        ///
++        /// [`clk_get`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_get
++        pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
++            let con_id = if let Some(name) = name {
++                name.as_ptr()
++            } else {
++                ptr::null()
++            };
++
++            // SAFETY: It is safe to call [`clk_get`] for a valid device pointer.
++            //
++            // INVARIANT: The reference-count is decremented when [`Clk`] goes out of scope.
++            Ok(Self(from_err_ptr(unsafe {
++                bindings::clk_get(dev.as_raw(), con_id)
++            })?))
++        }
++
++        /// Obtain the raw [`struct clk`] pointer.
++        #[inline]
++        pub fn as_raw(&self) -> *mut bindings::clk {
++            self.0
++        }
++
++        /// Enable the clock.
++        ///
++        /// Equivalent to the kernel's [`clk_enable`] API.
++        ///
++        /// [`clk_enable`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_enable
++        #[inline]
++        pub fn enable(&self) -> Result {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_enable`].
++            to_result(unsafe { bindings::clk_enable(self.as_raw()) })
++        }
++
++        /// Disable the clock.
++        ///
++        /// Equivalent to the kernel's [`clk_disable`] API.
++        ///
++        /// [`clk_disable`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_disable
++        #[inline]
++        pub fn disable(&self) {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_disable`].
++            unsafe { bindings::clk_disable(self.as_raw()) };
++        }
++
++        /// Prepare the clock.
++        ///
++        /// Equivalent to the kernel's [`clk_prepare`] API.
++        ///
++        /// [`clk_prepare`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_prepare
++        #[inline]
++        pub fn prepare(&self) -> Result {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_prepare`].
++            to_result(unsafe { bindings::clk_prepare(self.as_raw()) })
++        }
++
++        /// Unprepare the clock.
++        ///
++        /// Equivalent to the kernel's [`clk_unprepare`] API.
++        ///
++        /// [`clk_unprepare`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_unprepare
++        #[inline]
++        pub fn unprepare(&self) {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_unprepare`].
++            unsafe { bindings::clk_unprepare(self.as_raw()) };
++        }
++
++        /// Prepare and enable the clock.
++        ///
++        /// Equivalent to calling [`Clk::prepare`] followed by [`Clk::enable`].
++        #[inline]
++        pub fn prepare_enable(&self) -> Result {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_prepare_enable`].
++            to_result(unsafe { bindings::clk_prepare_enable(self.as_raw()) })
++        }
++
++        /// Disable and unprepare the clock.
++        ///
++        /// Equivalent to calling [`Clk::disable`] followed by [`Clk::unprepare`].
++        #[inline]
++        pub fn disable_unprepare(&self) {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_disable_unprepare`].
++            unsafe { bindings::clk_disable_unprepare(self.as_raw()) };
++        }
++
++        /// Get clock's rate.
++        ///
++        /// Equivalent to the kernel's [`clk_get_rate`] API.
++        ///
++        /// [`clk_get_rate`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_get_rate
++        #[inline]
++        pub fn rate(&self) -> Hertz {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_get_rate`].
++            Hertz(unsafe { bindings::clk_get_rate(self.as_raw()) })
++        }
++
++        /// Set clock's rate.
++        ///
++        /// Equivalent to the kernel's [`clk_set_rate`] API.
++        ///
++        /// [`clk_set_rate`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_set_rate
++        #[inline]
++        pub fn set_rate(&self, rate: Hertz) -> Result {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_set_rate`].
++            to_result(unsafe { bindings::clk_set_rate(self.as_raw(), rate.as_hz()) })
++        }
++    }
++
++    impl Drop for Clk {
++        fn drop(&mut self) {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for [`clk_put`].
++            unsafe { bindings::clk_put(self.as_raw()) };
++        }
++    }
++
++    /// A reference-counted optional clock.
++    ///
++    /// A lightweight wrapper around an optional [`Clk`]. An [`OptionalClk`] represents a [`Clk`]
++    /// that a driver can function without but may improve performance or enable additional
++    /// features when available.
++    ///
++    /// # Invariants
++    ///
++    /// An [`OptionalClk`] instance encapsulates a [`Clk`] with either a valid [`struct clk`] or
++    /// `NULL` pointer.
++    ///
++    /// Instances of this type are reference-counted. Calling [`OptionalClk::get`] ensures that the
++    /// allocation remains valid for the lifetime of the [`OptionalClk`].
++    ///
++    /// ## Examples
++    ///
++    /// The following example demonstrates how to obtain and configure an optional clock for a
++    /// device. The code functions correctly whether or not the clock is available.
++    ///
++    /// ```
++    /// use kernel::c_str;
++    /// use kernel::clk::{OptionalClk, Hertz};
++    /// use kernel::device::Device;
++    /// use kernel::error::Result;
++    ///
++    /// fn configure_clk(dev: &Device) -> Result {
++    ///     let clk = OptionalClk::get(dev, Some(c_str!("apb_clk")))?;
++    ///
++    ///     clk.prepare_enable()?;
++    ///
++    ///     let expected_rate = Hertz::from_ghz(1);
++    ///
++    ///     if clk.rate() != expected_rate {
++    ///         clk.set_rate(expected_rate)?;
++    ///     }
++    ///
++    ///     clk.disable_unprepare();
++    ///     Ok(())
++    /// }
++    /// ```
++    ///
++    /// [`struct clk`]: https://docs.kernel.org/driver-api/clk.html
++    pub struct OptionalClk(Clk);
++
++    impl OptionalClk {
++        /// Gets [`OptionalClk`] corresponding to a [`Device`] and a connection id.
++        ///
++        /// Equivalent to the kernel's [`clk_get_optional`] API.
++        ///
++        /// [`clk_get_optional`]:
++        /// https://docs.kernel.org/core-api/kernel-api.html#c.clk_get_optional
++        pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
++            let con_id = if let Some(name) = name {
++                name.as_ptr()
++            } else {
++                ptr::null()
++            };
++
++            // SAFETY: It is safe to call [`clk_get_optional`] for a valid device pointer.
++            //
++            // INVARIANT: The reference-count is decremented when [`OptionalClk`] goes out of
++            // scope.
++            Ok(Self(Clk(from_err_ptr(unsafe {
++                bindings::clk_get_optional(dev.as_raw(), con_id)
++            })?)))
++        }
++    }
++
++    // Make [`OptionalClk`] behave like [`Clk`].
++    impl Deref for OptionalClk {
++        type Target = Clk;
++
++        fn deref(&self) -> &Clk {
++            &self.0
++        }
++    }
 +}
 +
-+void rust_helper_clk_disable(struct clk *clk)
-+{
-+	clk_disable(clk);
-+}
-+
-+unsigned long rust_helper_clk_get_rate(struct clk *clk)
-+{
-+	return clk_get_rate(clk);
-+}
-+
-+int rust_helper_clk_set_rate(struct clk *clk, unsigned long rate)
-+{
-+	return clk_set_rate(clk, rate);
-+}
-+#endif
-+
-+#ifndef CONFIG_HAVE_CLK_PREPARE
-+int rust_helper_clk_prepare(struct clk *clk)
-+{
-+	return clk_prepare(clk);
-+}
-+
-+void rust_helper_clk_unprepare(struct clk *clk)
-+{
-+	clk_unprepare(clk);
-+}
-+#endif
-+
-+struct clk *rust_helper_clk_get_optional(struct device *dev, const char *id)
-+{
-+	return clk_get_optional(dev, id);
-+}
-+
-+int rust_helper_clk_prepare_enable(struct clk *clk)
-+{
-+	return clk_prepare_enable(clk);
-+}
-+
-+void rust_helper_clk_disable_unprepare(struct clk *clk)
-+{
-+	clk_disable_unprepare(clk);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index e1c21eba9b15..ae595c9cd91b 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -11,6 +11,7 @@
- #include "bug.c"
- #include "build_assert.c"
- #include "build_bug.c"
-+#include "clk.c"
- #include "cpumask.c"
- #include "cred.c"
- #include "device.c"
++#[cfg(CONFIG_COMMON_CLK)]
++pub use common_clk::*;
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 75f78f6bfaa6..3fd7c17cbc06 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -42,6 +42,7 @@
+ pub mod block;
+ #[doc(hidden)]
+ pub mod build_assert;
++pub mod clk;
+ pub mod cpumask;
+ pub mod cred;
+ pub mod device;
 -- 
 2.31.1.272.g89b43f80a514
 
