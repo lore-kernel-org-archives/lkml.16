@@ -1,103 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF67E22339;
-	Mon, 19 May 2025 12:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0F222339;
+	Mon, 19 May 2025 12:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658559; cv=none; b=G2Q6OmZUhsJH7Wib97/ofJBynWzwbyAind941n9EU6JssRK1exFpFuKaZJ14bPqbn/fNNTDOm7utabiPeCC4HgdqFAsy/FJITYTudiMwZNPFY2KEtGFT+3tt3/9JFyDTceUeX42Cx3tnlOKKd8+Iq6W8zDPsGSlEIJwoIpy7KAU=
+	t=1747658567; cv=none; b=Dxx8lBnFmr9umfRjc2Ve1RpduXWc8WyuBUATdzYRljJbsKpAwUtpnNHn2KvgsjViSx4qbv/Tve0Z2C+7kpl2/PZ3J1iyUfFycs18NJ69YwiFmpDbB/2NbbAJToQZBlNY1ba7nwJmhtEFLIuconTihDxQdf55c/GIgdIS/i/3raY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658559; c=relaxed/simple;
-	bh=iWb64mpfGWYFttCriCMI9AmY9YMbIIrfyB0yaxjiDPM=;
+	s=arc-20240116; t=1747658567; c=relaxed/simple;
+	bh=hH1Zhxyae+uYUwaXvNwzZCA39MatBPiXi0KkGdMyCak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ReQEHKP1KRKVnAagzCYxiOhSMrab01bkiNcpSI4e/0D6Lv5J+TjFLUEQPMu2pxd0Q/EcbiHoEG4TcHCykz7Y3n9YXPfj86OWpIqnlUt2LWcz1KdaarF1ftjgRKY7ge67YWRuoFZsoWCT+b+MBS7ixGZIZwbkcG/7VVlLJ5lN8RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXHUVwNu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=u+kP/5RzK9kz0LrRqTxDJ+QzV+jQFGrRmGhebTBK0R6jSE85binz6oSyQLNMuf+k09LXwDz695f+pGJkBsd1NxMm+DGpS/Y+iqrvIvxRPwH2c+ct8CutdiFtB3hOv4GwigM8v9sahbPKd9K8LwlyhljN6JMJAjY/0vLKHfdyXEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mSNtfKkr; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXHUVwNu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30FF0C4CEF1;
-	Mon, 19 May 2025 12:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747658559;
-	bh=iWb64mpfGWYFttCriCMI9AmY9YMbIIrfyB0yaxjiDPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BXHUVwNua4905w+hsZeutp4rRHq8dH/nVXBOTybw5lo+Xn+agxiIx+iD0u5EOLpmp
-	 izSdJthAxXTVSn/pr2zwc++p1PcqoBTCJwS3JUXGXOoXu8GN721IrYpKDVnqfYd2DN
-	 VmzNHJAX7ykmMFqT0J4h4s3zJ/g3iPHOvcvXhILc/b3N9P0rD1Uyi4UVe1f/ubprRu
-	 8EXjpdPHNzsHhBtilLuLZg5zhgWtRCUhLhFMxmkB6CHDnzUAYpweIf6E7c+Zo8a70P
-	 fGm1a5Ldiyh7GFug7Q9emdkIEiXdqK29p+FCKnT+KflRkV+rWtoIR83g460cTIHZSh
-	 e3VhZxSg7m6jA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uGzpC-000000006ah-23l0;
-	Mon, 19 May 2025 14:42:34 +0200
-Date: Mon, 19 May 2025 14:42:34 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] gpio: sysfs: add missing mutex_destroy()
-Message-ID: <aCsnOthU3z1jwWdb@hovoldconsulting.com>
-References: <20250516104023.20561-1-brgl@bgdev.pl>
- <aCckl9cC8fCBhHQT@hovoldconsulting.com>
- <CAMRc=Mf=xW6HFVYOOVS2W6GOGHS2tCRtDYAco0rz4wmEpMZhmA@mail.gmail.com>
- <aCdutI4J6r5kjCNs@hovoldconsulting.com>
- <CAMRc=MdS0QG_ThYUhwTRaKidyGcj3h6x0=jmaW7UK8EBPhrYrw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mSNtfKkr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Ti4HtWUOIVxKwphe2juMo13t1mG8jKogyW/68qm1dDE=; b=mSNtfKkrVtPbae5pdS/VmQp+e3
+	w8sThfGNyQuXGesjU/WnCvIRhki285u1PTaFa2vX60d+YIYVIZAybgXdLuWnmX8fV0mxYuH7vbuQw
+	K4ltrhJAdbEwrRW6s7x/QqwETKA4mJEBZ/b3smOAbkjkhlGdRjwFbxLdFVkhcwUlz+oY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uGzpG-00D1Kl-Fc; Mon, 19 May 2025 14:42:38 +0200
+Date: Mon, 19 May 2025 14:42:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: chalianis1@gmail.com
+Cc: hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linux@armlinux.org.uk,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: dp83869: fix interrupts issue, not correctly
+ handled when operate with an optical fiber sfp.
+Message-ID: <b62d0d20-6ba2-46ff-b581-7fea1e810300@lunn.ch>
+References: <20250519022417.338302-1-chalianis1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdS0QG_ThYUhwTRaKidyGcj3h6x0=jmaW7UK8EBPhrYrw@mail.gmail.com>
+In-Reply-To: <20250519022417.338302-1-chalianis1@gmail.com>
 
-On Mon, May 19, 2025 at 02:18:15PM +0200, Bartosz Golaszewski wrote:
-> On Fri, May 16, 2025 at 6:58 PM Johan Hovold <johan@kernel.org> wrote:
-> > On Fri, May 16, 2025 at 02:32:54PM +0200, Bartosz Golaszewski wrote:
-> > > On Fri, May 16, 2025 at 1:42 PM Johan Hovold <johan@kernel.org> wrote:
-> > > > On Fri, May 16, 2025 at 12:40:23PM +0200, Bartosz Golaszewski wrote:
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >
-> > > > > We initialize the data->mutex in gpiod_export() but lack the
-> > > > > corresponding mutex_destroy() in gpiod_unexport() causing a resource
-> > > > > leak with mutex debugging enabled. Add the call right before kfreeing
-> > > > > the GPIO data.
-> > > >
-> > > > No, there's no resource leak and it's perfectly fine not to call
-> > > > mutex_destroy().
-> > >
-> > > No, there's no leak but with lock debugging it still warns if the
-> > > mutex is locked when it's being destroyed so the change still makes
-> > > sense with a modified commit message.
-> > >
-> > > > You can't just make shit up and then pretend to fix it...
-> > >
-> > > There's no need for this kind of comment. You made your point clear in
-> > > the first sentence.
-> >
-> > Your claim that there's "a resource leak with mutex debugging enabled"
-> > is is quite specific. Now I had to go check that no one had changed
-> > something in ways they shouldn't have recently. But mutex_destroy()
-> > still works as it always has, which you should have verified yourself
-> > before sending a "fix" tagged for stable backport based on a hunch.
+On Sun, May 18, 2025 at 10:24:17PM -0400, chalianis1@gmail.com wrote:
+> From: Anis Chali <chalianis1@gmail.com>
 > 
-> Yes, I admitted that the commit message was wrong. And yes, it
-> sometimes happens that we get copied on crappy patches. However,
-> unlike what your comment suggests, I don't go around the kernel,
-> "making sh*t up" just to add a "Fixes: Johan's commit". I had this as
-> part of a bigger rework I have in progress[1] (discussed previously
-> here[2]) and figured that with the series growing in size, I'll at
-> least get the fix upstream before v6.16-rc1.
+> to correctly clear the interrupts both status registers must be read.
+> 
+> from datasheet: http://ti.com/lit/ds/symlink/dp83869hm.pdf
+> 7.3.6 Interrupt
+> The DP83869HM can be configured to generate an interrupt when changes of internal status occur. The interrupt
+> allows a MAC to act upon the status in the PHY without polling the PHY registers. The interrupt source can be
+> selected through the interrupt registers, MICR (12h) and FIBER_INT_EN (C18h). The interrupt status can be
+> read from ISR (13h) and FIBER_INT_STTS (C19h) registers. Some interrupts are enabled by default and can
+> be disabled through register access. Both the interrupt status registers must be read in order to clear pending
+> interrupts. Until the pending interrupts are cleared, new interrupts may not be routed to the interrupt pin.
+> 
+> Signed-off-by: Anis Chali <chalianis1@gmail.com>
 
-But it is not a fix. It is based on a misunderstanding that you should
-have caught yourself by just looking at the code before posting.
+This seems like something for stable?
 
-Sure, mutex_destroy() is an odd bird, but you still need to verify your
-guesses before posting patches based on them. It's that lazy attitude
-(and violation of the stable kernel policy) that I'm criticising.
+https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-Johan
+Please include a Fixes: tag.
+
+Please base this patch on the net tree:
+
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+
+> ---
+>  drivers/net/phy/dp83869.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> index a62cd838a9ea..98d773175462 100644
+> --- a/drivers/net/phy/dp83869.c
+> +++ b/drivers/net/phy/dp83869.c
+> @@ -25,6 +25,7 @@
+>  #define DP83869_CFG2		0x14
+>  #define DP83869_CTRL		0x1f
+>  #define DP83869_CFG4		0x1e
+> +#define DP83869_FX_INT_STS	0xc19
+
+It appears that this is an Extended register, so it belong after
+DP83869_FX_CTRL?
+
+    Andrew
+
+---
+pw-bot: cr
