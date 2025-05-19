@@ -1,88 +1,108 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E30223DC4;
-	Mon, 19 May 2025 06:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E2D1D8E1A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747635507; cv=none; b=Dn+pAgMe6tpOga2gok8+yP3nce9IYqgSPlQRazrIqChBdyiyJB7M9fAmVNeRQn6T30noUaUbvsdb1LM4zDR83PPbBH3QH4fFWtpwV2oMjVd6OqkzVGoy0dVIjgk50TawwkNoaQfytQim8BfKhixmvWqNoSallFsBZr8e7QacWcA=
+	t=1747635669; cv=none; b=L4758eSU8BXVQwqOYVQixDvTduo/C7TdTO6GJZcIBwWGN12JOGmBfhoKMQNrPVnPCs/UrAlx/9Rox1R/Q7jwblUqbWgLOOQUHRQMMaNkgWuWEBFGysxNwx6W1Dpl8MkYsi5XCcbS641EABxthC7evQlBBWoNK1rRFSzJYH5VXuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747635507; c=relaxed/simple;
-	bh=WdK/IunRAu6EOkZjU4kmntcNy4q62UNAiPE7MDyl/SQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T2FEmDcW+0Nd9Z777hnCD+t2JWgKhSaOtbWSpCnjAGGdYwHMek6F6Fu10lU43Rw+GLgPFojG+qTbCw+B2wwGKc2g2f0pZqaZ0egCoNuLTnqIPZHrOiniRes+R07OymzIbZSF8ipxaFGb2qXsdPFjOPvrz4/0o7aAqAioI1A3eJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABHlvEozSpovL9OAQ--.12640S2;
-	Mon, 19 May 2025 14:18:16 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: gregkh@linuxfoundation.org,
-	stern@rowland.harvard.edu,
-	krzysztof.kozlowski@linaro.org,
-	snovitoll@gmail.com,
-	amardeep.rai@intel.com,
-	r.kannappan@intel.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: core: config: Use USB API functions rather than constants
-Date: Mon, 19 May 2025 14:13:17 +0800
-Message-Id: <20250519061317.724602-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747635669; c=relaxed/simple;
+	bh=fH4ypnsI/MfhhHZ+DxWHo23PH+rJEDeMHxcWT6aZwo0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rluYQIVabgQaM4YF8fBji/61a93cWIAyMAfDdJcPFcLNLLeM0Mwcxs505EZfMyVujg1iqEmw8uS45gUPAopj4PLf55JgxGJY8gznrqiOO2UAct8jPJGQLyZaz2S3UgmDGldio83rA44CVbTTM+7NkAuWCGPHfbR+bp8Scq1jj0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P30h46wv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P30h46wv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747635665;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DxY7EgT/RNd0tv3+QSKlLScSTvHaTBPFXOYePAlhj1I=;
+	b=P30h46wvBaj+p8/JfFj/2aYaIusliad6C0U+JC+CTutn3a+Dz8tfJPuKnsUPxbRKqBmWHq
+	AixpdeFeLRuQCF0+7Mz83+AjYziDC1L9tuqx9yQ+aIJHg9lkmPhymq94YYDN2I2m/hVSzg
+	h6KN0DknBhG9rWbEadIrug8U8gV/3fA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-245-P-bwJeHjPPSVk2uH3a9jMQ-1; Mon, 19 May 2025 02:21:04 -0400
+X-MC-Unique: P-bwJeHjPPSVk2uH3a9jMQ-1
+X-Mimecast-MFC-AGG-ID: P-bwJeHjPPSVk2uH3a9jMQ_1747635663
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad56222a1easo82931266b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 23:21:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747635663; x=1748240463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DxY7EgT/RNd0tv3+QSKlLScSTvHaTBPFXOYePAlhj1I=;
+        b=VdbDhfNkFMQfXUlg7nZAViozCkgVPeABNKjSFO8zaZctyLS/WJBF4kY0hxQNuPti3G
+         04ITZIncuwdrPsPCOYxwmr8Ny+hdgkWqcfqBbaD5hOZFQdFsAjUPt6mhadcZrVS/505g
+         qODnuL6LeeU9ReAzckOXoEkRqdyZxzeVlQ2A5NeWxUzmKwyoAwbcPCekpfuD8h6/PLWW
+         lkX3dOjlC+GysyLqMrWeg/TM7Cu9UpdVeC7SAP7g7agWlXHw/M2iVgNSwiNi0bbG7rAH
+         v+9fXnJvk0qWLDSVW6YQfkE0lCOUDuy8yApKv68P9wSULOQCZ1swF4C5/MKcHn6j0CHQ
+         moCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz4wcq2dKQ/+ajtwzae468/6aPzaowJCUPk8ADUN4R20p+BPGzWvIXOqeZOuMoqqxOnHD/wt8U9Am/5/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyJJBtkjjYX4rcK4pvXKBkhjqi0OXd4UtxJ/V/VWpQ+WV1jvGw
+	sQTM2MZvr8AoxmBa2BCdABMdqBD48Elw5oPSjsetwHqFMHqq9wZB7HOQW6PIHKZZ/lxtf6DwyE0
+	4WMo0+a9Pi2H39OLzzGhvjnfn66GZaX3yvPGOQUNr8IGVXsIZQSxRGswwotpEVVx7avPAn+WF90
+	Sq67wGzHTjXnJU8UJNddm2/7zk/olx7iYNyZj+CpRm
+X-Gm-Gg: ASbGncsv7zWKDYmacyWVmYoBmpB+5OpycAyKSa2ozRbTpQj2FBHc4PNfGMDas0eJJVd
+	xveUg+kCwqV0Pk57+sdKfbOD3+IRIUmoeE+OT5VzPzVS7Zx/j/oreAOBm6+j/BSEEBbIpL3AkSk
+	vnH+k9IUX1q9m1tuxo25Xaf3g=
+X-Received: by 2002:a17:907:97ca:b0:ace:f2c2:5a4 with SMTP id a640c23a62f3a-ad52d49e2c7mr1055602366b.13.1747635662897;
+        Sun, 18 May 2025 23:21:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAmjmvIL3o1iKm123C/5o27j1Q6dvBrOmlO7D05cMeFXjqCGVtdtOGto6dJkIIUfbXvpluId+XTMClkgAgqEQ=
+X-Received: by 2002:a17:907:97ca:b0:ace:f2c2:5a4 with SMTP id
+ a640c23a62f3a-ad52d49e2c7mr1055600666b.13.1747635662518; Sun, 18 May 2025
+ 23:21:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABHlvEozSpovL9OAQ--.12640S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWfur1UJr4ktr4fCFy7GFg_yoWfKrb_Ga
-	yj9r4DuF9ruFyIkr1jvw4S9rW0k3WavFn7ZF1Fq3sxAFyjq39rZFWxJFW8J3WxZa4jyFyD
-	GFy2krn8u3WxWjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r1q6r43MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUSFAJUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+References: <20250430144651.621766-1-tglozar@redhat.com> <5c64d78a-1650-5404-c2cb-8190627d10fc@redhat.com>
+In-Reply-To: <5c64d78a-1650-5404-c2cb-8190627d10fc@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 19 May 2025 08:20:50 +0200
+X-Gm-Features: AX0GCFsSVtCoIj9QVehT1OHITqlahuu0UR84rYeizFCjucynqTCzS0iI1MSeYnQ
+Message-ID: <CAP4=nvThhq_0vF_xGCEnT6oNhpt_JHoEuOPmy3uT7jR_0r-YbQ@mail.gmail.com>
+Subject: Re: [PATCH] rtla: Define _GNU_SOURCE in timerlat_bpf.c
+To: John Kacur <jkacur@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the function usb_endpoint_num() rather than constants.
+so 17. 5. 2025 v 0:22 odes=C3=ADlatel John Kacur <jkacur@redhat.com> napsal=
+:
+> Question for Tomas, should we spend sometime to make this work for older
+> versions of glibc without a definition of struct sched_attr?
 
-The Coccinelle semantic patch is as follows:
+Older versions of glibc without a definition for struct sched_attr use
+the one in utils.h:
 
-@@ struct usb_endpoint_descriptor *epd; @@
+#ifndef SCHED_ATTR_SIZE_VER0
+struct sched_attr {
+    uint32_t size;
+    uint32_t sched_policy;
+    uint64_t sched_flags;
+    int32_t sched_nice;
+    uint32_t sched_priority;
+    uint64_t sched_runtime;
+    uint64_t sched_deadline;
+    uint64_t sched_period;
+};
+#endif /* SCHED_ATTR_SIZE_VER0 */
 
-- (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-+ usb_endpoint_num(epd)
+In fact, this one works fine in timerlat_bpf.c, if you build rtla on
+older glibc, it will work even without this patch. It's the glibc one
+which is not defined without _GNU_SOURCE.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/usb/core/config.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 13bd4ec4ea5f..fc0cfd94cbab 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -307,7 +307,7 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
- 		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
- 
--	i = d->bEndpointAddress & USB_ENDPOINT_NUMBER_MASK;
-+	i = usb_endpoint_num(d);
- 	if (i == 0) {
- 		dev_notice(ddev, "config %d interface %d altsetting %d has an "
- 		    "invalid descriptor for endpoint zero, skipping\n",
--- 
-2.25.1
+Tomas
 
