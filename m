@@ -1,121 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF45278756;
-	Mon, 19 May 2025 11:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D771420D509;
+	Mon, 19 May 2025 11:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654244; cv=none; b=rbHGWClqkMsLq6YZBAGMV+U5eb0e5tugiaR8nIy76ZZNu/atTNXFYN2ofncnq3KKI9Y2QQpRyxZBovBSwsW33YkKm7/v7JI0sFO3jmbLKYDoSqUhNjTRUkuBAAibwRkJmMJ9/bR49g1nMYzVRpE8OaDh+IBufYNQRCA3JmD1gM8=
+	t=1747654376; cv=none; b=WYl8/Q8ugQ03aEFr+fPefrsNkcm5CX4zJu4/r19S/Jh3jxEf17+fCnB581E5lMrOP5WkkadoyBUnXjG59nyiExb9axJeHu78n/Bu1vUYYk50WHfEQK24ZOt0UzxUxjL0zjH1bvXF4KMaLvusRrCQyKl9jF+MlvFt4J0tyQR2Cw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654244; c=relaxed/simple;
-	bh=Dmbm1Nsz0mLac3rVEQyjSTWhEKqeKGKYB7oPAJpKuco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEbGPiae9v2vSbLlj68tQiFc7M44hkB3Wj/ZaTWm+R0CPDLMWiNL8Xl27vC/8nDpaiYlGhZtGEEk7NsmAMEUBTJYVmFZrBbSoUA9OuICaSTYpN9bz1UTWZH+51PWvXurU5hQrhueqE7tKkAoRSVAWwrzp5qK27/16kPWqiJQkR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lY4cbMiM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747654376; c=relaxed/simple;
+	bh=aQ5zhyux3hMftcqOWcrOoFPGZ5RyMdC2sTKMO2fu8ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQ+Ik5VhPHEZEJQqDucosVVnKgXILTB6UqfgDSlIndKhDTSGCEE3SypzucIEnjy3dkg5WXVB+vLO/m3NNetYGRVNOEMwbDr4KAUkrTG1nH6gkiq2XYDgpfrcNyisQUi05nttMbGewedYDXN2MIEM+bfBcg7yCwBqS5YADYnyOvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Gq6O6PKY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lY4cbMiM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FC2C4CEE4;
-	Mon, 19 May 2025 11:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747654244;
-	bh=Dmbm1Nsz0mLac3rVEQyjSTWhEKqeKGKYB7oPAJpKuco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lY4cbMiMv6Z+P9EKta3qTSi8UgTM02ZQ2FlgtSfE5Qo6GK1tS6l9VBjTemm8fVs2S
-	 mS661TIhZ3d61gbOvIdGyTWe1ZaD7Y1LUrdclpqhP1GEWNMZRx7WRuemtIXuGGU3pL
-	 n+rv5P8VY+OZRLqvvvpz2WHS56VIMDsbcgw3IOzMc7AUG4ZiPSK7bD4ZFhMxz4y1KK
-	 RbsJMWfBtkSrU20pC0YV4EXqRNcx5w8T+TLnZu4CN4KBRXEjEfF7X8MbtyLLFYD1UW
-	 5OHIDWgUlQjb7yByJz3sf5fa/+uaSd6Yw0MMJh2NvhZfCdcA/IiwANnQtyw5sjeHuW
-	 LczAisYgykAEg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 6/6] PCI: Remove hybrid-devres hazzard warnings from doc
-Date: Mon, 19 May 2025 13:30:00 +0200
-Message-ID: <20250519112959.25487-8-phasta@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250519112959.25487-2-phasta@kernel.org>
-References: <20250519112959.25487-2-phasta@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Gq6O6PKY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B44C4CEE4;
+	Mon, 19 May 2025 11:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747654375;
+	bh=aQ5zhyux3hMftcqOWcrOoFPGZ5RyMdC2sTKMO2fu8ic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gq6O6PKYeAQcvV6EUmG+lkZZxnpfKbKLHxF8IJWIhFf8W1MUuxAYq2hkSXISmF6TS
+	 yNfSO+CjwWMx9hMXwvqst1dmrjBO4R3ToInAwlhkmOJiB/vGpJV7Q+t3eWWJ8dzdyc
+	 UTnUrapKRdE77dQN35hB/HieWx59bi7zLV+5JWZo=
+Date: Mon, 19 May 2025 13:32:52 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Bharat Agrawal <bharat.agrawal@ansys.com>
+Cc: "hughd@google.com" <hughd@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"zhangyiru3@huawei.com" <zhangyiru3@huawei.com>,
+	"liuzixian4@huawei.com" <liuzixian4@huawei.com>,
+	"mhocko@suse.com" <mhocko@suse.com>,
+	"wuxu.wu@huawei.com" <wuxu.wu@huawei.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: mlock ulimits for SHM_HUGETLB
+Message-ID: <2025051914-bounding-outscore-4d50@gregkh>
+References: <SJ2PR01MB8345DF192742AC4DB3D2CBB78E9CA@SJ2PR01MB8345.prod.exchangelabs.com>
+ <SJ2PR01MB834515EA00BD7C362A77972F8E9CA@SJ2PR01MB8345.prod.exchangelabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SJ2PR01MB834515EA00BD7C362A77972F8E9CA@SJ2PR01MB8345.prod.exchangelabs.com>
 
-pci/iomap.c still contains warnings about those functions not behaving
-in a managed manner if pcim_enable_device() was called. Since all hybrid
-behavior that users could know about has been removed by now, those
-explicit warnings are no longer necessary.
+On Mon, May 19, 2025 at 10:23:33AM +0000, Bharat Agrawal wrote:
+> Hi all,
+> 
+> Could anyone please help comment on the risks associated with an application throwing the "Using mlock ulimits for SHM_HUGETLB is deprecated" message on RHEL 8.9 with 4.18.0-513.18.1.el8_9.x86_64 Linux kernel?
 
-Remove the hybrid-devres warnings from the docstrings.
+Why not ask RHEL support, given that you are paying them for that in
+order to be using that kernel version, right?
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/iomap.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+Also note that 4.18.y is VERY old and obsolete and not supported by the
+community at all.
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index fe706ed946df..ea86c282a386 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -25,10 +25,6 @@
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR from offset to the end, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_range(struct pci_dev *dev,
- 			      int bar,
-@@ -76,10 +72,6 @@ EXPORT_SYMBOL(pci_iomap_range);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR from offset to the end, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
- 				 int bar,
-@@ -127,10 +119,6 @@ EXPORT_SYMBOL_GPL(pci_iomap_wc_range);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR without checking for its length first, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device(). If you need automatic cleanup, use pcim_iomap().
-  * */
- void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long maxlen)
- {
-@@ -152,10 +140,6 @@ EXPORT_SYMBOL(pci_iomap);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR without checking for its length first, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- {
--- 
-2.49.0
+Good luck!
 
+greg k-h
