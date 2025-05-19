@@ -1,55 +1,46 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E8C1DF98D;
-	Mon, 19 May 2025 08:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAD93FBB3;
+	Mon, 19 May 2025 08:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643352; cv=none; b=t3UsOlIRKA6dRSGRCMOsEDPeO+MUQKsew6ZyHGBPhTFNj+GnmPjI/jXnZ6PW5PUPz4klIkY1OsRTMi6IQMKlsvJmnAFpwuEFgTT/drn3Q95O3pvGXdQR6KSk81hEzw5uPgcmphrYcrsWLE65bw2dZAi1GR4ZkjEpTP5c9Jm6tac=
+	t=1747643534; cv=none; b=luVNjBH7Px5q27/FxtEyE+2vCzm69Ohe/l4+C2g1n+lHTN3TW7uPH/VLQ1a5Y5Oc+4LLqDZ3a9Du1a/tbC+xvjI0NXQcY0gbZB8DIgbSoKcFsYrYCUa4icHTeghDBBZjX1ZEmVJAof4A14jZDksd+vICMCsu+vZ6A0RSz+N/lV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643352; c=relaxed/simple;
-	bh=qFNFrLL5IqinsRuW6HsrvphkHN1hZTm+Ia7ulkwMH04=;
+	s=arc-20240116; t=1747643534; c=relaxed/simple;
+	bh=/SCnk4n14OSLgVEhEWxkq9MOcZlqdPW8Sok+wQhHM6I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHkc8eAM0bQ+VmKRy1BW4pEKFcPnkM2UZy9DydqPbPiyW5DrB9uZE4SplIFL3V+5ET2Uo1jqj0x6RVr0LDV4RWIfROxRNVYoos3x1FvTg8zUHuz1kHK6S7ACm+jvu3NCDkR68LK7efH9qITND9rf7wIwS554zXCx4ucExa0Gqok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4DhBIPCw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C3Tq+hoq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=kPdIr54qA/MoOVB+FTa8yBpsoJZy0RVQBFAr08f2UNzVePBDI92RzJ3K+YDGJXKlA+6lLnYShPjmLr22rHYKbHpTi9eMhMW/OjFSDepK5H75m1qV3obtEiux9BMol15teNw3pxepylepVI6/GFSIsUVaxtHmRj8dZSg0m81kmY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M//xSjAp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4DhBIPCw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C3Tq+hoq"
-Date: Mon, 19 May 2025 10:29:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747643349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hVzMhb4xXoLp6Sn2zegjH8TGSBdNSO9R/WTJI9cgJCc=;
-	b=4DhBIPCwrkVsDb7v362SqMdsrpV5Et9RhfseGyMA5PP3YH3HNVTbx8bXKXHUsgTEsUp6Vt
-	hRzA7s3Nx7ZVx4oEHF3MnY+bTw0nNQ0Wbz568o/+4sluVvI84vyFEcDVy0Vh0HkTKu3MLO
-	t6odZYUL2zMLFK+RUrLb5qAKwycl6nhLN5pvQGXCfLbCsoxysX4L+1vo6NO2ZOQNPnmEzb
-	Ubcn5zh3p4pZr4d7H1bTWL24rXqeP7JmHdrq8O4O5qXRbBw/+oMrUpXTrcQoYRAZ1nYyn9
-	auflFoBwKQ07maHWUK6Zzhi5pxmMWhdq+Jg+7X3oHRvKo7irJuyUfsqMYhD4Tw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747643349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hVzMhb4xXoLp6Sn2zegjH8TGSBdNSO9R/WTJI9cgJCc=;
-	b=C3Tq+hoqsScdPAlXEEAGj6acttr2Q+rKWqeqMMMbpjl0wEF7A0m89DAF53To0BadftKk7M
-	czpGpRQ2j1TvlXDQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 06/12] sched: Adapt sched tracepoints for RV task
- model
-Message-ID: <20250519082908.Nak_YDaO@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-7-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M//xSjAp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E888DC4CEE4;
+	Mon, 19 May 2025 08:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747643533;
+	bh=/SCnk4n14OSLgVEhEWxkq9MOcZlqdPW8Sok+wQhHM6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M//xSjApTsnhNhbk2bOZOXmgoZoB7kqQ+L1MfhHtmwx0yrC9prPdQ9/6UhYACBK6J
+	 VUwI/kmJPQtnmCZgG3I4qegwMIL7406hCezWkEQ1KFazQ7YxmaDhny7RiKLfrQynWc
+	 AavXuU7LA/xuh5MJbro92hSXv78h8RXxCRfSXIjQE0i49Jyl6ByDOEsr9YMKvwKTKO
+	 dZghwYvpdmHXbDXAqVpSglWz9u3AHsUvGqjEXIgNFJkxQ10aRP3A7ABlEK70TymIab
+	 Tgo8wWILdUwv4htWZbF/iHacrrdO1GASFArgBZauJeNrWK0NtfYqm9AkwTdYoa5h2B
+	 OBU04Pa20Llrg==
+Date: Mon, 19 May 2025 10:32:08 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] x86/fpu: Fix irq_fpu_usable() to return false during CPU
+ onlining
+Message-ID: <aCrsiPd3u1-tEVd0@gmail.com>
+References: <20250518193212.1822-1-ebiggers@kernel.org>
+ <aCrrMEN01O7FWY6V@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,22 +49,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-7-gmonaco@redhat.com>
+In-Reply-To: <aCrrMEN01O7FWY6V@gmail.com>
 
-On Wed, May 14, 2025 at 10:43:08AM +0200, Gabriele Monaco wrote:
->  DECLARE_TRACE_CONDITION(sched_set_state_tp,
-> -	TP_PROTO(struct task_struct *tsk, int state),
-> -	TP_ARGS(tsk, state),
-> +	TP_PROTO(struct task_struct *tsk, int state, bool from_signal),
-> +	TP_ARGS(tsk, state, from_signal),
->  	TP_CONDITION(!!(tsk->__state) != !!state));
 
-Doesn't this break the build? Because the monitors still use the old
-signatures?
+> void fpu__init_cpu(void)
+> {
+>        fpu__init_cpu_generic();
+>        fpu__init_cpu_xstate();
+> +
+> +       /* Start allowing kernel-mode FPU: */
+> +       this_cpu_write(kernel_fpu_allowed, true);
+> }
 
-I understand you adapt the monitor to this new signature in a follow-up
-patch. But every commits in the series should be buildable, otherwise you
-break "git bisect".
+BTW., this is the chunk that fixes the crypto crash, right? If yes, 
+then could you please split this from the main patch, with the main 
+patch setting kernel_fpu_allowed very early, which should make the main 
+patch an identity transformation with no (expected) change in behavior.
 
-Best regards,
-Nam
+Likewise, the cpu_disable_common change should similarly replicate the 
+current code, and should only be changed in the second patch.
+
+Phasing it in like that should improve bisectability, for the off 
+chance of some regression.
+
+Thanks,
+
+	Ingo
