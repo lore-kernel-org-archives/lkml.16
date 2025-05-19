@@ -1,263 +1,318 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C632741DB;
-	Mon, 19 May 2025 10:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3659194098;
+	Mon, 19 May 2025 10:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747651988; cv=fail; b=pY1ENGNqP67pP3J4uZqtdVvaoz+45Pnx8XWwc9CqbxMhHd1d0gUWf5/ip1uq0lFUXe3MYU8vSSJ9pJv24EkxkSK/dLJy3g7B+UyN9rPd+N58Kn8FYbWMpkhEKItGTlGI8tyVAfzQAk11T9ArUlL0wRpaai/n8AcX68bW3nuLTq4=
+	t=1747652011; cv=pass; b=QDfS98Kn+EfABs8VdMzyXpLkxSzyceqeMN9lqK3y1WHypkyh+daaHt+1R+S/eehc39Us/WztgziTrgsMl7iYA2eCpOASOKCDuaLXWo/hF6OlwUrCNB4uM1ozqxXkhZ5rZzGfoJb7X455AiZdbVSFI76P9c2SK3eALVawsfQIUSw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747651988; c=relaxed/simple;
-	bh=rj3K+d0EO+hj2R7Rk1F0kKgRQnd6v1bBCXR4Z1zIWk0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WbsuE1fknIiBcste+Aa0K2me2TmLlSJIva6k4fAHrecUqY/7TgvYC/6hxJgE6JZJT8tTmp7MFXMwtU2uiEXQMdG7mHFIRvS8vCaVaH6QyB/OIzXEpmdHI8O8SBpPD7abNljaTHBNCw9uU6ulALuBf7dE88FSzilBQg1GMgKhpHs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bm1wUA1w; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747652011; c=relaxed/simple;
+	bh=bWc7Jma6xawQpfCWQ8sMFIUE4fzRraPT+YuzcGuXDl0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=fwjwKbGnYPsyXuvXgfULjka16SoDTLHt4yEGwC/hO2bb9sLBUoAjC1hsXanyFFkczg+PEuWDZKhKeetrc/fa2ANBWrbhEsAtOmg94RtxUGL/WkCY0bZ+LeRdk1m1dPQcaAbzApBqt/W1Fdkf83zuGfeEhD3zpVhf8LCdSp+1N8M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=R0xFYFkK; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bm1wUA1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747651986; x=1779187986;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=rj3K+d0EO+hj2R7Rk1F0kKgRQnd6v1bBCXR4Z1zIWk0=;
-  b=Bm1wUA1w9FX8lIQDIZnD58M9Gl7KfDOVyIahU3tQr9r51xuk9iuti1TO
-   6mntHY+vI/sX2HOTGlVs5P874r3dF6iRn6g1cGq9aVcd+nz1jSb1IcrII
-   1Nse6Q/1lY/ohewMHKhoJbcNvLmdggYZ67n2E/36KPkc5hJRkNAXyGgPe
-   bwgPpERaJ4cJUQPsFcl1k3t7Omdizu/h25h8Zg5p0IEvRNOzB/zeQX0Eq
-   Or9d1YQlcJ1FfVIlQARgXCkdizgQHjbD34SOJl38JEiOAtvaVN5SIA5ep
-   2psyC2kc9mCWPuWGuqORjJVBOTGBDercTF83CNgvhBEDIHirRUaCJ16hE
-   Q==;
-X-CSE-ConnectionGUID: TlRV3Q2ARxGCt5HpUhGTDA==
-X-CSE-MsgGUID: cNLl2H5iR56fZ72KFzXgRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="59775476"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="59775476"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:53:05 -0700
-X-CSE-ConnectionGUID: Tgt1Vp9PQGq2PsG3qU5tqw==
-X-CSE-MsgGUID: d+UOiHRCSdmGsZGeDGGR0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139829990"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:53:05 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 19 May 2025 03:53:04 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 19 May 2025 03:53:04 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 19 May 2025 03:53:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PQwpbaZ78WSg5S9M6gbYoPcckC/x72EcMIxeK28PDn3yRO/dnXr0WdMAiVYr24ksJO6/a6jdJAkRjSqoOCVwb2FaJAzSCffIQw8RXuqGBUjcefwvup18JWxzrtWb7R+sSqZ72GkJn3omvX9DquuSmpWN650AB4/Xd6szwsYCGmFVB0yyPVCnoHeF2XsRPkcP/yvCQOd98eUSCx9iG17uWVY17milkkZRoQqsrgz7wUKiEoKqJ6xHi74POzxG3LrXURIl/8wU8Wu8XAkBZNqaocVlnkwUk1bppn9tcf5XdOjBbbPZz6ZxeN05KomgVKS6KE7om/zPPhYoHpAmNSZ20g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rj3K+d0EO+hj2R7Rk1F0kKgRQnd6v1bBCXR4Z1zIWk0=;
- b=Jzl/SRPX9+e+SZcfeIvfHZuc4Hn8Zole0ntof6HnAK49zlb5L9Zu97UZWDOKpHUiBpDyFQdJlMhtjqF+yYosvWRzTZJOSbxtxXeTG8+L9mvs9rc2H1R5g8L+qSVGo3CmGH6hGWfaON2cG9ifvBD8Ps//cn1Vz9XBjFISz7lk6RVtQtHM1+kwt3CwlKpZi2I7CJpz1ryrkU3waxTZMfMDnqmIqp0dxM8LZNTiiv1kIGELNe3ASxMlTf0RH3O4tQ1/x9kWTqgfYlMuiba2TMeFLlMqvqatvlxKbjNdfHbhVjgPhc4PlGjpujORBgZLo9cnlP+QAdaHsQogWU2s9oT1Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
- by PH0PR11MB7524.namprd11.prod.outlook.com (2603:10b6:510:281::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.29; Mon, 19 May
- 2025 10:53:02 +0000
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66%3]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 10:53:02 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>, "Hansen, Dave"
-	<dave.hansen@intel.com>
-CC: "Raynor, Scott" <scott.raynor@intel.com>, "linux-sgx@vger.kernel.org"
-	<linux-sgx@vger.kernel.org>, "Scarlata, Vincent R"
-	<vincent.r.scarlata@intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"jarkko@kernel.org" <jarkko@kernel.org>, "Annapurve, Vishal"
-	<vannapurve@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>, "Cai, Chong" <chongc@google.com>,
-	"bondarn@google.com" <bondarn@google.com>, "seanjc@google.com"
-	<seanjc@google.com>, "dionnaglaze@google.com" <dionnaglaze@google.com>
-Subject: Re: [PATCH v5 2/5] x86/cpufeatures: Add X86_FEATURE_SGX_EUPDATESVN
- feature flag
-Thread-Topic: [PATCH v5 2/5] x86/cpufeatures: Add X86_FEATURE_SGX_EUPDATESVN
- feature flag
-Thread-Index: AQHbyI9nTd7gTasinE6HELR9HmQs77PZxz2A
-Date: Mon, 19 May 2025 10:53:02 +0000
-Message-ID: <09fbf33ae17587c204e7f436887c48367f6797f0.camel@intel.com>
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
-	 <20250519072603.328429-3-elena.reshetova@intel.com>
-In-Reply-To: <20250519072603.328429-3-elena.reshetova@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.1 (3.56.1-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|PH0PR11MB7524:EE_
-x-ms-office365-filtering-correlation-id: 768ba0cf-aaa2-4ac3-b07a-08dd96c3538f
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?MmxHYTBobytFeU1Va25aTmhGV0l5aUNZcTdhRW9yUzdnQ2tLN3BRSldyZ1Bh?=
- =?utf-8?B?RmpPK3N5ajRya2phZlAzYmkzRlllMFAvMkNSdFhJa0tFdFd3dUtZODdDWEFE?=
- =?utf-8?B?UVRWYWc0RGpHRUxNM1hRd1BuUzBoNXpuKzlVOVhCaUdEK2wyb0ErQ0FqRjRQ?=
- =?utf-8?B?UE5rdFlLUjNIZVZKVTIzNHo1Y1lTd2FLc2w0YkRpbjd2MUk5K2o5SitMUnhM?=
- =?utf-8?B?L0xCZnEwU05qcjYwSkQ5dlFaNkkzRG5zNGdaNytJM3dkSnloNmVXNGlYN0E0?=
- =?utf-8?B?RSt3NGhGbkZ2OUtMSW9STzF2dThER3JPWnRmUkF1Vk1BTEZVeWN1eWUxSHRj?=
- =?utf-8?B?MmxVUWZGNUFlUWRNWVpsVm9CYkVTaDBMYWIrZUN5TU5PZXhkZWdPOSt4VmJk?=
- =?utf-8?B?VktYdEhpRHpMd1BURm1ackMvVndGbGtJRWM1djU1bnV4eklMWTVaREg1V2FN?=
- =?utf-8?B?YWxYbHBONzg2UG04NThCNE9kY2ZSQTZLdEw5MmdYRStTeWNnSkc0bnZ1SG9n?=
- =?utf-8?B?bzJYOXFMcmpPbEJvKzAvZFhPWklMUWJzTno4NENZR0F1ODR3REhZREM2V3ZX?=
- =?utf-8?B?TmJiUElNUmpuTHRlTFpodVV5RkNqUjUveXBSa21tc3VhNEpMcFE3RmJrcHVP?=
- =?utf-8?B?OWdQS2ZhY3ZSdkt2NCsyOXZyNE1aN29wbU82cW1zQ1dTMHFzbk9XdDVMek0r?=
- =?utf-8?B?UHhQUVVwMDhEU0kvZnhtcHZWTVF1azdPZWVLQ29obm9CWkluMlNHTVJUdXZ3?=
- =?utf-8?B?RWM1VHM0dDlwSXUvVE42Z3hjY2diZ2M5YUcrcW1Pdm1uTkxoN2k3L0ZzVW12?=
- =?utf-8?B?eWdITXVkd3RmaktuUmpkUFBLOGRhRGFXU0p2Y1hwRGlXRUhpM2dSZTVnQ2ov?=
- =?utf-8?B?STZVQU5hRjE0QW9BdWZzTjNnMDhOa3hUZ1NqcytxeUttbmtudWUzWjM1SXJE?=
- =?utf-8?B?UHpZVGJ2UlM4ZFhmc0J5V1oxbW1wTnRNeURUd2VTMVNRZXFtc2g2T01NUnpz?=
- =?utf-8?B?RmhJdDdXKzlpeGhydU1WNDByWHVWSXpiYU1mUHNCVSt0MVBuNDZHMlQ0U0hX?=
- =?utf-8?B?Z2d6VWlERnVXUmRhd3BLQVAzVFNkUVRVMzdpdm5RSWI3ak1nVC9MU3o4ZGVk?=
- =?utf-8?B?NDBFMkJtMlV4VmdXL0k5c1pYZ2lwU3kxTU55OUR4dHBrdEx5YUtrZTRSWU1o?=
- =?utf-8?B?czVkMWU4Zm9mSGRtcjFDeUpYR0l6UHpSbUV3L05jMGVFV0UyZXJieTQzNis1?=
- =?utf-8?B?NU9zTFJuaEFWbEx5cUkrNlorZWkwZzZ5T21oTkU0TFJQbjNHdVRjVk1MQ0c3?=
- =?utf-8?B?UEc2K3hxN0Z3MXlPYU5jNi83cFFsdjlpMWlldTllaEVlUUVBTEVyQU1DYXA2?=
- =?utf-8?B?ZTFuZGcyVFBFZmJDeW83eFlicVZ4bElxbXRnZGluOExYTUhLWTRlSzE0UHZW?=
- =?utf-8?B?ZjlLNFQ0OVdKcU5OelVDR0RyL2RDN0tCZHlMeVQ3Ri9RUDRwMEZHajBuVkZ0?=
- =?utf-8?B?eDNPYjNzRVp3NEltYXVqaUxFRXMvQzhrd1I1cGNjVVZpU3dzMVdJbmpNOWpC?=
- =?utf-8?B?Zk4wc011aHBLL0xrZVdVNmJjRTdoSnBFdjF5U1dBeEdYWU5JWTBLSUF6bW1z?=
- =?utf-8?B?dzB2bXZZaTF1bHBOa3NWREpaa3hidDAwUGhSVzRpTDcvaGkzYUdUTWhBWGFz?=
- =?utf-8?B?L2cwcDJFM1VFN285Ti9WdUhLUE5HemNqK0lPQ3F0VEFMdXRvNVBqWUM2YnN2?=
- =?utf-8?B?L3QyMmNVeEtodzhDYTA1TytuSEJEaFc5WVpnSmVMQmRYaitySW5xR3Fib0hJ?=
- =?utf-8?B?dnhVVDliZ2FvTHJGUjZjOEpJWWhkZGt6Si8yNVMxSHByZTJUT0Nqa2oxbGJ4?=
- =?utf-8?B?dlUyUmJZQnRNemZ5RlhaanZyYi9SQ0t5LzFDQkIxalZrUEdlK0liM1NTeEhW?=
- =?utf-8?B?SDV1K2FkMzZKZDJoVW9JaDYvTEtTUjdIemJiVDMvNlZyaWxJMlBQcGFZYmVD?=
- =?utf-8?Q?Cu0m1gkTOcLRsxI4yl8Sqn7DapAqQs=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a1dQMExGQ3pXa3VIbWM1U0RKMTdmUTRDck9mL0JZcmhseEFmeEg1aHhGbVdX?=
- =?utf-8?B?S0VHK1l6MEhKZHUwdXV0M3dsaExOa0h1TUJDUEJRMkpscHo3cjcycXBkcjdS?=
- =?utf-8?B?ellaR0dMdVo3TkpPOS9OUy82MitCS0pHc0d6ZWl4NUU2VjhyaitXdVJNVVlu?=
- =?utf-8?B?QmlkSUorNnlQWGFxTzBnWm1Od281Sjc3U01xZXFBblpQSWNudmRmclJVcXVQ?=
- =?utf-8?B?akZLTUhxaDA1TjNKZ3JuM3BLWE1XNVBURk5zK3VBL292YkZkVUJNM1BCaVdk?=
- =?utf-8?B?NCtoZjZQdlp1bmtBc2t5R2hoeFhzdTNlWG9NbGlCRjZReUFDTXVWYU5ub3M1?=
- =?utf-8?B?RlRlREd2ZUpVdmpNUENSU2JzKzFYYWtjQWJsSERSWG5tZUc2L2Nrc2NTMG0z?=
- =?utf-8?B?OE56cDRCaCsrL0RvK2dZa25ET2dGUmtVcWIrZ3FQZFd3eDlrQ3lIQi91YUNq?=
- =?utf-8?B?KzYySWlIcEZwQkNCSDYwdU1jaTgrVjVrUGVGSTJsOVJndDdieEN5K01CMEM1?=
- =?utf-8?B?dTd0bnJWQmwrMW9jczhBcjk1WVR3VFVqTDR1d0N4WSt0M1l6VFEzT3YxQmR2?=
- =?utf-8?B?b1ZiRktFcTJ4ZmgyZVNsb0ZnNGg0emluZFNhalBpNEtwSXVHRkw1YWhwOXNy?=
- =?utf-8?B?RmNvOUlMUUFMZ0hveXQ0ZGVxT0dEbDBqVlRDVm1TNkRDZHgvT09pQVhwRncr?=
- =?utf-8?B?ZUpYZDdwa1A3VmlraS96ZEZVZEE1dWhHYXo2QjlxcjE5SlNCSzcyaFBGRFI0?=
- =?utf-8?B?ZmU1WDlNelVDYjhYN05MNll4RnU5L043NnZrUEdJQzVCdkFPOHBhWWh1UDBC?=
- =?utf-8?B?SGlSWDhtMEx6cjJHYUZHaElxM0NJVnpFd3A0TUd0YTUxa0RKUDdkKzJZR3lC?=
- =?utf-8?B?MldkQnBUZ3BMQ1E1NjdGeE1HdUVIRVlVZmlleHZDbG9ZOVhnOWNjSjdKMjFk?=
- =?utf-8?B?MGIxOU9tVkpkVUEzNXo3aHppMHNTSlNZajlpU1hlTnIwNzd2NGgxUERBejN4?=
- =?utf-8?B?K2RVT3EzWEU3U1ZtVnBLT3BWWC9rd2RxNHoxZlFrNXJSeC9yUE1XeXhlVUxv?=
- =?utf-8?B?Wlc2Tm1YelhjcFNielRNYVFiZkFFMnZwK1AwNFV6UDJuR2E2N0xrb3Y3cmxM?=
- =?utf-8?B?RmFPellncElVQmJnWmVicFlJWDR0WmdDNDI0YkRrTkMwWEJnT3FMRHZPM1pm?=
- =?utf-8?B?N2lRbzB5QWlTUVlqWkVEdDZDanhBYXZ5OUNwR1pUd1RJSFh4QytQTjgxV1Ft?=
- =?utf-8?B?R2lQdjJJY3U4NGsxZDdtR3VnN0Z0Y3MrNE9jNmxUSnBnSE1SL1NZOVNTdndk?=
- =?utf-8?B?b09IclJMWE1FVGo3SkFmNVNNWUtpNFNVdFQrdXpjc3RkamRwREhyYytIeUtk?=
- =?utf-8?B?NnNjUmpOeFlEUFlHd0Y1TndtK0VBRnN0bUVyWHlkOXczckVmbFNzclVMQlNY?=
- =?utf-8?B?V0pjaW9yTkVhNi95T1lyL1hXRjFYTVl4ZVNteEFGbDViQ1NpdTVXdUtuNGQ4?=
- =?utf-8?B?WnZsVkhMU1JuQlNWekVWSk5ZdVgyU2xRQVpCcHIzRVg5eVp0MTBJUDNyYXZ2?=
- =?utf-8?B?czIyMTBadmtSSmlrUFNTVS9BZ0QxVmZUVnoyWDEzdlhTYlRjZ0FPaS9kOWpk?=
- =?utf-8?B?SDlnSngzU1k3c3VBS0NVci9NdnlIMXFjNzdhdmtNaGtaSHBzYlVLRGZLeitu?=
- =?utf-8?B?dGRoTGhDUkxkb3gzM3VmRW9WMFBGSzd0NlV6RENvNGQyaTUxY3pqSTZCTFI2?=
- =?utf-8?B?aU1VNEFhdUZrMG5haXpUMDg3SEdsUjBJb1hEVUdwUWdCWGxEYUVFbTlBOTQ2?=
- =?utf-8?B?OEY1TEJpMHJIQUtPbCtiLzR5a2hSaWlkbmZiSjlhMVJaTkRMY05TTFFEaVhj?=
- =?utf-8?B?Y3FwandtWGFRbXlmbHZIUHFrNXkzLzh1OUxxN1MrU3lBVGpoaUswM01YaHk0?=
- =?utf-8?B?YzFsRGlMMmEzMEtwNFkxRWZlK3RIRWRnUzFEK210MXZiRnNtUldwdERvWURZ?=
- =?utf-8?B?cTBMMHRKeXo1TDBxR29kNEtWNXp6UmVENGJ6NkllQXVTajBnNC8xZmYwN1pX?=
- =?utf-8?B?TnNsVVEzZDVGaHVkZ0FmOFR2bUM3bDExRHFiNU1Sa3FTZ1hqMUI2V0JYUW9r?=
- =?utf-8?Q?dsvv/8nhCOmOtJ8fXDr/yDGny?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <873EFE472AD75C4C8515E1A94A40F9E2@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="R0xFYFkK"
+ARC-Seal: i=1; a=rsa-sha256; t=1747651980; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X5DYjqFBe57gxXWuc6x1Ll8kEKWMjEMvJsOw9wIjYK3+rh+1/tYKC3aY+RedhU0jd0+4BuXfMxCZ0NjL0yRCVJqWV2n08dYsGIEOQi85NecPrd/t1inmzoDzW0xvpOUyH9MMagu+RqYuakGwKIpJXiDpQxhhuYOPW2p7eDOxo8w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747651980; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RjS5t3OT9jROMXVPQma0hsNunDtpkAqf76W3TPchlKE=; 
+	b=J+7OYsQ9b0PhMGDjNCq/msngfCdAFmRurJugGjJhePvEOGiw42Fj+9KGvj26e9GEB1EQJxDdatpVxbFsxc5bGlBDRJRvNDQm7zWzdx66/0AASg+C2UPtMb7UKXj+U/krAlcM/d9S+ctLVZl7DhW84cGW+FJFg0/++I7OE7k4VcY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747651980;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=RjS5t3OT9jROMXVPQma0hsNunDtpkAqf76W3TPchlKE=;
+	b=R0xFYFkKe2rYJZgj2lLhuLBujqr08Z2+JdPy5Xdfyf/jKQKPLTz6o0ZCk4zct+Dt
+	qUCOP+7unzBX279BfO3hZSBQE+E850egYTolAbWBCNTMFegsp+2V1FNMEaSPnneeffk
+	89RgmLVrDgl+9qR+3PYKGJtpSSsgS9A0n8s5wnC4=
+Received: by mx.zohomail.com with SMTPS id 1747651975112583.8563066102321;
+	Mon, 19 May 2025 03:52:55 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 768ba0cf-aaa2-4ac3-b07a-08dd96c3538f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2025 10:53:02.0675
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6dlKCw/YRRfI/UpRmtI0DV2g9a9uGP/Zuw56iKVy3Gr7m8FVfoIWi2o9IvHf+/QzcVmY8gK8CSBOkmmClNRNGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7524
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <D9ZQUUA4FLXD.19MJI9HD48EMZ@nvidia.com>
+Date: Mon, 19 May 2025 07:52:38 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8517D6F0-C1A2-4E38-8E62-57DCCD5E58D4@collabora.com>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+ <498AB71C-58EF-487E-8D9B-C7C113862948@collabora.com>
+ <D9ZQUUA4FLXD.19MJI9HD48EMZ@nvidia.com>
+To: Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-T24gTW9uLCAyMDI1LTA1LTE5IGF0IDEwOjI0ICswMzAwLCBFbGVuYSBSZXNoZXRvdmEgd3JvdGU6
-DQo+IEFkZCBhIGZsYWcgaW5kaWNhdGluZyB3aGVuZXZlciBFTkNMU1tFVVBEQVRFU1ZOXSBTR1gg
-aW5zdHJ1Y3Rpb24NCj4gaXMgc3VwcG9ydGVkLiBUaGlzIHdpbGwgYmUgdXNlZCBieSBTR1ggZHJp
-dmVyIHRvIHBlcmZvcm0gQ1BVDQo+IFNWTiB1cGRhdGVzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-RWxlbmEgUmVzaGV0b3ZhIDxlbGVuYS5yZXNoZXRvdmFAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGFy
-Y2gveDg2L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmggICAgICAgfCAxICsNCj4gIGFyY2gveDg2
-L2tlcm5lbC9jcHUvc2NhdHRlcmVkLmMgICAgICAgICAgfCAxICsNCj4gIHRvb2xzL2FyY2gveDg2
-L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmggfCAxICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgMyBp
-bnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vY3B1
-ZmVhdHVyZXMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmgNCj4gaW5kZXgg
-NmMyYzE1MmQ4YTY3Li5lZDBjMGZhNTgyMmEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL2NwdWZlYXR1cmVzLmgNCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vY3B1ZmVh
-dHVyZXMuaA0KPiBAQCAtNDgxLDYgKzQ4MSw3IEBADQo+ICAjZGVmaW5lIFg4Nl9GRUFUVVJFX0FN
-RF9IRVRFUk9HRU5FT1VTX0NPUkVTICgyMSozMiArIDYpIC8qIEhldGVyb2dlbmVvdXMgQ29yZSBU
-b3BvbG9neSAqLw0KPiAgI2RlZmluZSBYODZfRkVBVFVSRV9BTURfV09SS0xPQURfQ0xBU1MJKDIx
-KjMyICsgNykgLyogV29ya2xvYWQgQ2xhc3NpZmljYXRpb24gKi8NCj4gICNkZWZpbmUgWDg2X0ZF
-QVRVUkVfUFJFRkVSX1lNTQkJKDIxKjMyICsgOCkgLyogQXZvaWQgWk1NIHJlZ2lzdGVycyBkdWUg
-dG8gZG93bmNsb2NraW5nICovDQo+ICsjZGVmaW5lIFg4Nl9GRUFUVVJFX1NHWF9FVVBEQVRFU1ZO
-CSgyMSozMiArIDkpIC8qIFN1cHBvcnQgZm9yIEVOQ0xTW0VVUERBVEVTVk5dIGluc3RydWN0aW9u
-ICovDQo+ICANCj4gIC8qDQo+ICAgKiBCVUcgd29yZChzKQ0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYva2VybmVsL2NwdS9zY2F0dGVyZWQuYyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvc2NhdHRlcmVk
-LmMNCj4gaW5kZXggMTZmM2NhMzA2MjZhLi5hN2UxZmNlZGNhM2MgMTAwNjQ0DQo+IC0tLSBhL2Fy
-Y2gveDg2L2tlcm5lbC9jcHUvc2NhdHRlcmVkLmMNCj4gKysrIGIvYXJjaC94ODYva2VybmVsL2Nw
-dS9zY2F0dGVyZWQuYw0KPiBAQCAtNDEsNiArNDEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNw
-dWlkX2JpdCBjcHVpZF9iaXRzW10gPSB7DQo+ICAJeyBYODZfRkVBVFVSRV9QRVJfVEhSRUFEX01C
-QSwJCUNQVUlEX0VDWCwgIDAsIDB4MDAwMDAwMTAsIDMgfSwNCj4gIAl7IFg4Nl9GRUFUVVJFX1NH
-WDEsCQkJQ1BVSURfRUFYLCAgMCwgMHgwMDAwMDAxMiwgMCB9LA0KPiAgCXsgWDg2X0ZFQVRVUkVf
-U0dYMiwJCQlDUFVJRF9FQVgsICAxLCAweDAwMDAwMDEyLCAwIH0sDQo+ICsJeyBYODZfRkVBVFVS
-RV9TR1hfRVVQREFURVNWTiwJQ1BVSURfRUFYLCAxMCwgMHgwMDAwMDAxMiwgMCB9LA0KPiAgCXsg
-WDg2X0ZFQVRVUkVfU0dYX0VERUNDU1NBLAkJQ1BVSURfRUFYLCAxMSwgMHgwMDAwMDAxMiwgMCB9
-LA0KPiAgCXsgWDg2X0ZFQVRVUkVfSFdfUFNUQVRFLAkJQ1BVSURfRURYLCAgNywgMHg4MDAwMDAw
-NywgMCB9LA0KPiAgCXsgWDg2X0ZFQVRVUkVfQ1BCLAkJCUNQVUlEX0VEWCwgIDksIDB4ODAwMDAw
-MDcsIDAgfSwNCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NwdWZl
-YXR1cmVzLmggYi90b29scy9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcHVmZWF0dXJlcy5oDQo+IGlu
-ZGV4IDZjMmMxNTJkOGE2Ny4uZWQwYzBmYTU4MjJhIDEwMDY0NA0KPiAtLS0gYS90b29scy9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9jcHVmZWF0dXJlcy5oDQo+ICsrKyBiL3Rvb2xzL2FyY2gveDg2L2lu
-Y2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmgNCj4gQEAgLTQ4MSw2ICs0ODEsNyBAQA0KPiAgI2RlZmlu
-ZSBYODZfRkVBVFVSRV9BTURfSEVURVJPR0VORU9VU19DT1JFUyAoMjEqMzIgKyA2KSAvKiBIZXRl
-cm9nZW5lb3VzIENvcmUgVG9wb2xvZ3kgKi8NCj4gICNkZWZpbmUgWDg2X0ZFQVRVUkVfQU1EX1dP
-UktMT0FEX0NMQVNTCSgyMSozMiArIDcpIC8qIFdvcmtsb2FkIENsYXNzaWZpY2F0aW9uICovDQo+
-ICAjZGVmaW5lIFg4Nl9GRUFUVVJFX1BSRUZFUl9ZTU0JCSgyMSozMiArIDgpIC8qIEF2b2lkIFpN
-TSByZWdpc3RlcnMgZHVlIHRvIGRvd25jbG9ja2luZyAqLw0KPiArI2RlZmluZSBYODZfRkVBVFVS
-RV9TR1hfRVVQREFURVNWTgkoMjEqMzIgKyA5KSAvKiBTdXBwb3J0IGZvciBFTkNMU1tFVVBEQVRF
-U1ZOXSBpbnN0cnVjdGlvbiAqLw0KPiAgDQo+IA0KDQoNCkFkZGl0aW9uYWxseSwgdGhlIG5ldyBm
-ZWF0dXJlIGJpdCBzaG91bGQgYmUgYWRkZWQgdG8gdGhlIENQVUlEIGRlcGVuZGVuY3kgdGFibGU6
-DQoNCi0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcHUvY3B1aWQtZGVwcy5jDQorKysgYi9hcmNoL3g4
-Ni9rZXJuZWwvY3B1L2NwdWlkLWRlcHMuYw0KQEAgLTc4LDYgKzc4LDcgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBjcHVpZF9kZXAgY3B1aWRfZGVwc1tdID0gew0KICAgICAgICB7IFg4Nl9GRUFUVVJF
-X1NHWF9MQywgICAgICAgICAgICAgICAgICAgWDg2X0ZFQVRVUkVfU0dYICAgICAgIH0sDQogICAg
-ICAgIHsgWDg2X0ZFQVRVUkVfU0dYMSwgICAgICAgICAgICAgICAgICAgICBYODZfRkVBVFVSRV9T
-R1ggICAgICAgfSwNCiAgICAgICAgeyBYODZfRkVBVFVSRV9TR1gyLCAgICAgICAgICAgICAgICAg
-ICAgIFg4Nl9GRUFUVVJFX1NHWDEgICAgICB9LA0KKyAgICAgICB7IFg4Nl9GRUFUVVJFX1NHWF9F
-VVBEQVRFU1ZOLCAgICAgICAgICAgWDg2X0ZFQVRVUkVfU0dYMSAgICAgIH0sDQogICAgICAgIHsg
-WDg2X0ZFQVRVUkVfU0dYX0VERUNDU1NBLCAgICAgICAgICAgICBYODZfRkVBVFVSRV9TR1gxICAg
-ICAgfSwNCiAgICAgICAgeyBYODZfRkVBVFVSRV9YRkQsICAgICAgICAgICAgICAgICAgICAgIFg4
-Nl9GRUFUVVJFX1hTQVZFUyAgICB9LA0KICAgICAgICB7IFg4Nl9GRUFUVVJFX1hGRCwgICAgICAg
-ICAgICAgICAgICAgICAgWDg2X0ZFQVRVUkVfWEdFVEJWMSAgIH0sDQo=
+Hi Alex,
+
+I still don=E2=80=99t understand your use case 100% :/
+
+>=20
+> I just mean the cases where users will want to enable and disable the
+> regulator more frequently than just enabling it at probe time.
+
+This is already possible through kernel::types::Either.=20
+
+i.e.: the current design - or the proposed typestate one - can already =
+switch
+back and forth between Regulator and EnabledRegulator. Using Either =
+makes it
+just work, because you can change the variant at runtime without hassle. =
+This
+lets you consume self in an ergonomic way.
+
+By the way, the reason I'm pushing back slightly here is because you =
+seem
+(IIUC) to be trying to reintroduce the pattern we had to move away from =
+in v1.
+
+i.e.: we explicitly had to move away from trying to match enables and =
+disables
+in Rust, because it was hard to get this right.
+
+The current design is a simplification that apparently works, because at =
+best
+you have +1 on the count and that is encoded in the type itself, so =
+there is
+nothing to actually "track" or "balance" within a given instance. =
+Multiple
+calls to _get() or _enable() on the same instance are simply forbidden.
+
+Can you add some pseudocode that shows how this doesn't work (or is =
+otherwise
+unergonomic) in Nova? I think it will make your point clearer.
+
+>=20
+>>=20
+>>>=20
+>>> It has been proposed earlier to use a typestate, and this would =
+indeed
+>>> provide several benefits, the first one being the ability to have =
+shared
+>>> impl blocks (and shared documentation) between the enabled and =
+disabled
+>>> states for methods like set/get_voltage().
+>>>=20
+>>> But the key benefit I see is that it could also address the
+>>> aforementioned dynamic management problem through the introduction =
+of a
+>>> third state.
+>>>=20
+>>> Alongside the `Enabled` and `Disabled` states, there would be a =
+third
+>>> state (`Dynamic`?) in which the regulator could either be enabled or
+>>> disabled. This `Dynamic` state is the only one providing `enable` =
+and
+>>> `disable` methods (as well as `is_enabled`) to change its =
+operational
+>>> state without affecting its type.
+>>=20
+>> Dynamic is just "Regulator" in the current version of this patch. =
+There is no
+>> "Disabled" because there is no guarantee that someone else won't =
+enable the
+>> regulator, trivially breaking this invariant at any moment.
+>=20
+> There is a core difference, which is that in your version of
+> `Regulator`, `enable` takes ownership of `self` and returns a =
+different
+> type, whereas `Dynamic` would take `&mut self` and change its internal
+> state, like the C API does.
+
+I see now, but consuming self is something we're trying after =
+considering the
+&mut self approach, which did not work very well in v1.
+
+>=20
+>>=20
+>> The only thing we can guarantee is "Enabled", through our own call to
+>> "regulator_enable()".
+>>=20
+>> In fact, for the typestate solution, I was thinking about =
+"UnknownState" and
+>> "Enabled", or any nomenclature along these lines.
+>>=20
+>>>=20
+>>> All three states then implement `set_voltage` and `get_voltage` =
+through
+>>> a common impl block, that could be extended with other methods from =
+the
+>>> C API that are independent of the state, as needed.
+>>>=20
+>>> To handle typestate transitions:
+>>>=20
+>>> - The `Disabled` and `Dynamic` states provide a `try_into_enabled()`
+>>> method to transition the regulator to the `Enabled` state.
+>>=20
+>> Why not =E2=80=9Cenable()=E2=80=9D as we currently have?
+>=20
+> `enable()` to me sounds like a method that mutates `self` in-place,
+> whereas your version consumes it and turns it into a different type.
+> Such methods are typically named `into_*`, or `try_into_*` when they =
+can
+> fail.
+>=20
+> Actually, this could even be a `TryInto` implementation, but in this
+> particular case having methods with the target state in their names =
+may
+> result in clearer code and allow the reader to model the transition
+> graph more easily.
+>=20
+>>=20
+>> If we go with the "Dynamic" nomenclature, and we agree that there's =
+no
+>> "Disabled",  then we can implement "pub fn enable(self) -> =
+Regulator<Enabled>",
+>> for "Dynamic", which is what we currently have, but with other names.
+>=20
+> Not if we want to provide the behavior of the C consumer API, which
+> requires multiple calls to `regulator_enable()` to be matched by an =
+equal
+> number of calls to `regulator_disable()`, which could be useful to =
+some
+> drivers (lest they reimplement their own counter).
+
+This is explicitly not supported, because (given the current code) why =
+should it be?
+
+If you want a given regulator to be enabled, just make sure you have
+Regulator<Enabled> in your kernel::types::Either container.
+
+You don't need a counter either: Regulator<Enabled> has a count of one, =
+and
+when that goes out of scope, it's decremented.
+
+>=20
+>>=20
+>> Also, I personally dislike this term: it's hard to tell what =
+Regulator<Dynamic>
+>> means on a first glance.
+>=20
+> Yeah I'm not a fan of it and I'm sure there are better alternatives.
+> Maybe `Controlled`?
+>=20
+>>=20
+>>> - The `Enabled` and `Dynamic` states provide `try_into_disabled()`.
+>>> - `Enabled` and `Disabled` also provide `into_dynamic()` (which =
+cannot
+>>> fail).
+>>>=20
+>>> Essentially, the `Enabled` and `Disabled` states simply enforce an
+>>> additional operational state invariant on the underlying regulator, =
+and
+>>> do not provide methods to change it.
+>>>=20
+>>> The `Dynamic` state would be the default for `Regulator`, so by just
+>>> using `Regulator`, the user gets an interface that works very =
+similarly
+>>> to the C API it abstracts, making it intuitive to those familiar =
+with
+>>> it.
+>>=20
+>> This is already how it works: Regulator is the default and =
+EnabledRegulator
+>> adds an extra invariant.
+>=20
+> Hopefully the above clarified the differences.
+>=20
+>>=20
+>>>=20
+>>> But for cases where the regulator is known to always be in a =
+specific
+>>> state like `Enabled`, one can use `Regulator<Enabled>` and simplify
+>>> their code.
+>>>=20
+>>> This should retain the compile-time safety that your version =
+proposed
+>>> for common cases, while still exposing the flexibility of the C API =
+when
+>>> needed.
+>>>=20
+>>=20
+>> Yeah, I agree.
+>=20
+> I think the concept looks better if you consider the generic parameter
+> of `Regulator` not as a state, but as a marker of guaranteed =
+invariants
+> and allowed transitions.
+>=20
+> - `Regulator<Enabled>` guarantees that the regulator is enabled on the
+>  consumer side. It is also disabled when the object is dropped. Many
+>  drivers will just do `Regulator::<Enabled>::get()` at probe time (the
+>  equivalent of `regulator_get_enable()`), store the object into the
+>  device's state, and forget about it.
+>=20
+> - `Regulator<Disabled>` guarantees that the regulator is not enabled =
+on
+>  the consumer side. It could be useful to have for drivers that use
+>  distinct types to store their state depending on their power status:
+>  the powered-on type would store a `Regulator<Enabled>`, the
+>  powered-off type a `Regulator<Disabled>`. That way you cannot even
+>  write code transitioning between the states if you omit the regulator
+>  - which I think is really neat.
+>=20
+
+I thought we had agreed that there is no =E2=80=9CDisabled=E2=80=9D, =
+even in C?
+
+> These two should cover a large percentage of consumer needs, but for
+> those that need more fine-grained control we should also have one or =
+two
+> policies that follow the C API a bit closer, e.g.:
+>=20
+> - `Regulator<Controlled>` (or just `Regulator`): user is granted an =
+API
+>  very close to the C one, and is responsible for balancing calls to
+>  `enable()` and `disable()`. Regulator remains in the state it was in
+>  when dropped.
+>=20
+> - `Regulator<Switch>`: calls to `enable()` and `disable()` do not need
+>  to be balanced, and the regulator always transitions to one state if
+>  it was in the other. Regulator gets automatically disabled on drop.
+>  This provides a simpler, safer alternative to `Controlled`.
+>=20
+> Note that I am not advocating for including these two policies
+> specifically, these are just examples. My main point is that we should
+> also provide a way to change the regulator's enabled state without
+> requiring a change of type ; which policy(es) to adopt will depend on
+> which restrictions we conclude are adequate to place on the C API, if
+> any.
+
+Can you expand a bit on the issues of changing types? Again, some =
+pseudocode
+will probably help a lot :)
+
+=E2=80=94 Daniel
+
