@@ -1,91 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1F12749FC;
-	Mon, 19 May 2025 11:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F48274FCD;
+	Mon, 19 May 2025 11:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654687; cv=none; b=C+6pOdb1KWnZ+rZf/FTTAyIf/PXI0Pwhhaf3wN9bv4vGcdUOy/LrE8HL6QSrvtvaCjPca9KgQ8MDAlKNY86xBPRs9wF8E5wLSXNiJulwwFcYjHvkdSTj6V8Hcr08TmCgVrx6vScimYUNupeWRfxoshd6qGRi+bKwxFv4yqTDjtA=
+	t=1747654688; cv=none; b=QpYvCkHcq08LUkxNDyCa6t9XPeaf11PKuLJYe88cSEwH7uaG6InTYLCb9L1vraNBTw4+kgc6JzjyCI+BITiCrH0DUWAbPHIaS83hgfE48yysOtUpIjc8gX5tbZpQ+OjzaNlPGIaf59jwV6crt6YwB+a915K2dqBYG6/aRVDqdbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654687; c=relaxed/simple;
-	bh=K2WXDcCjenQ4M990QkeKh890F18UFEKYLYMgiEKPM/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQg4RbA5r5QAz0vjojEyBxdMC7NfMX7f4v45AcLKm8uoB/VuMHN5uEb5Xr0RTTnnWeZmCGJPfCgppwXVi40t1dq0LBxaTfkANsiD44HS5TJ2InQlAOJSa+XG9KlPrlTlblaUi18gigpDfLYidUts5oQ8u1q+DPb0gRB557u/GNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfGA/LTY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747654688; c=relaxed/simple;
+	bh=7TmHIFButu0/rC/hCn0tJ126dw1GXvpkvMpN+ZjRtPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G8rhmPTzq58n840UxmfPG9EkRWUcM0EBMXQglCLQQTpIG2BOFtReY5iltip54w5uHznfSzSCGbxi8I05bluycswC+zzmQ+fc3Rv7TlMU5ibaFsMRJ/vfQ2xvvRSlg41xzJP18SyG9HAeRsUiZaW/t1B46z25Swztoffd2h3+JIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMSnTket; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfGA/LTY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747654685; x=1779190685;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=K2WXDcCjenQ4M990QkeKh890F18UFEKYLYMgiEKPM/k=;
-  b=XfGA/LTYcOK14l0K5orSHdtRpXKBj+D1qSYCa6DNDtwaR/1h6fH7FZQa
-   gJc+Q20FofX0bE3u1/xYu496lLb25dO4K7LTXwgACTLoFGD3FdsdI7Gzm
-   /4ZUoBMJ/o+6xptvU3hRloOuKJ59V2NhLj+plfBnY18LLsNugJ8LwSv0u
-   sXvmKs3xeExk5Dn5jtkxoCL3FiGxAkACCAJ8LH6kGEzhIIjTs0aJC+WRZ
-   ilgiTapezd1eHuB+4XLBS77XtrTwVF5fzoQw5EIRIy0l0Vpyw8XMCvkrl
-   vv1kstw5vc3vgq1KwfB+447K5L0dKwRqboyg02fw0/0KvV60rGX7cqzUT
-   g==;
-X-CSE-ConnectionGUID: u3js8+AdTCa9IfAhU+Uncg==
-X-CSE-MsgGUID: Us4/JW0CSw+HeNa+offevg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="37167822"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="37167822"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:38:04 -0700
-X-CSE-ConnectionGUID: 4Kh95vYaQXeq6dcKEkRh2g==
-X-CSE-MsgGUID: jI/DbYysTyu4oJvvd/4FYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="144108373"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 04:38:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uGyog-000000031Hx-0sz3;
-	Mon, 19 May 2025 14:37:58 +0300
-Date: Mon, 19 May 2025 14:37:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] Documentation/driver-api: Update
- pcim_enable_device()
-Message-ID: <aCsYFVjZrARrzt2i@smile.fi.intel.com>
-References: <20250519112959.25487-2-phasta@kernel.org>
- <20250519112959.25487-4-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMSnTket"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a37535646aso332803f8f.0;
+        Mon, 19 May 2025 04:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747654685; x=1748259485; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PD/r7qfEReGXA3osi3B9vh/FP+woHInGVqSdMby7LA=;
+        b=mMSnTketD2fF3BxYO9753tA7mqeLmYq6MhVE9eXPwqAKbjWDrbQAAtLLvwulBg8eg7
+         cuMoCu6Qc9Id8rzkTLScvtXeZa0gEmW/6p/5XUikjYdxU+m8MS5qz5DWYtchFxyRAj8N
+         +kkKgfbwJM7eyR9jmTuqOarHSz6qlOTX4j3z1vShwhVHDM2rIhZrRPYZ0eh3XVrzakay
+         2GurPhZ+GwUU5q4WTuOFdl834kX+KWjHxZ5Aar62i2ka2FT9WaN+Xz9VWdKfLnw52ywG
+         m91TvpL7MhQm+KzNZMbTkiOKVuLksL2LHe4ydGIOXWDgGx9Oplq0gL9+E3YKnO0BiyYW
+         /MyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747654685; x=1748259485;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4PD/r7qfEReGXA3osi3B9vh/FP+woHInGVqSdMby7LA=;
+        b=B7U5IYgsTLxd+UoK9OHgoH/P8T3IMFSPSiewgIeXxPgzln6B4ePgOxeDH+xjGHkWDL
+         tczwFogbc3THFIrHb3vKmgZi9lprxY905jY62mHbZ2DDDMNJWuvqvcHjxICPv4VU4i/A
+         cLe2J380mr3+cKUNXCpiwlIS2GsPbWnGWtioqQWQjtO9xtoFvho5U+H8Py97TazaDZyw
+         rSf+fs4Udx0fRmHVnwIkCDRMcOuAxlBZm5s3OPMrsXQBWvA39w6nOBiDYCWKDOfxS4Dx
+         BvYLaMjqnfWOmSTq4gc4ScNvr0FZ/yo6KVXcrDvyGAYReHGd+lxVqk45YvpySlwugAR6
+         r2yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJyQsqXLwi35J/MIZNOTCE7XpHmtKgcJtcZXb6ZkWXSkR0D2kvO13dHVYvpthw2j6Jmi7qWYeCEVATL+Q=@vger.kernel.org, AJvYcCWBJLDCG3kojTW2VvBtLicGGQWx8zuLTHPoJcfCfOuhXhqg6qYNJ2lH5tIAzCfG3p7+H4Lfr7QP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3z8I3guSL9yHj9j8bYoALbhWjZWEatVmVdWCRwIcttNpu36oM
+	fMvoEFP0M6KOqYwuU/++08C2jCjv1DwI46aqeec0gFNM604eB/moYm2SDDVnS13Bwex/fNosOho
+	E/+MUxmHVgtZoEI9N+tTOWrOQu5p/wj0=
+X-Gm-Gg: ASbGncswDCqC8fxClVESA6FnqtRck697FCUWvmFGeJHQt/KC34/PYpBpc+FLe8Blhwk
+	dRvcvCGcIqPyNf11Ean9Tp8mZM0SsS5fhxGt1h9jxo6jsyA/Q/MbazSuDVQ+kkzscEr5wnr07MX
+	15ssPcto+Azkt7zv5Waukb9hDZEcM1YVuXMLACUITcqDcp3Ktrd9Hfx0eEXQgNHxaLfjc=
+X-Google-Smtp-Source: AGHT+IGlUi0WQ+8Hn7GUf3y+zK6i4y5xQwsE5jb6qnK+zrOMCASls4EDis4EHUhqpiUvC8TUCOfXFXvKlpRA+43TZxE=
+X-Received: by 2002:a05:6000:40e1:b0:3a3:71fb:78c6 with SMTP id
+ ffacd0b85a97d-3a371fb81admr1801156f8f.16.1747654685503; Mon, 19 May 2025
+ 04:38:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519112959.25487-4-phasta@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250515145142.1415-1-zakkemble@gmail.com> <20250515145142.1415-2-zakkemble@gmail.com>
+ <20250516175231.4049a53d@kernel.org>
+In-Reply-To: <20250516175231.4049a53d@kernel.org>
+From: Zak Kemble <zakkemble@gmail.com>
+Date: Mon, 19 May 2025 12:37:54 +0100
+X-Gm-Features: AX0GCFvFKRUD3QyA0n1hKV8cG9UDCp1h_ldb7fWV2yY32xyfr08_JxkGJiC5Mf8
+Message-ID: <CAA+QEuQ+2gFNCqK_txG-Lsye5JmsoKUYHnsmOgK0LSoabc7yeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: bcmgenet: switch to use 64bit statistics
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Doug Berger <opendmb@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 19, 2025 at 01:29:56PM +0200, Philipp Stanner wrote:
-> pcim_enable_device() is not related anymore to switching the mode of
-> operation of any functions. It merely sets up a devres callback for
-> automatically disabling the PCI device on driver detach.
-> 
-> Adjust the function's documentation.
+Thanks, v3 is here
+https://lore.kernel.org/all/20250519113257.1031-1-zakkemble@gmail.com/
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Sat, 17 May 2025 at 01:52, Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Thu, 15 May 2025 15:51:40 +0100 Zak Kemble wrote:
+> > @@ -2315,7 +2358,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+> >               if (unlikely(!(dma_flag & DMA_EOP) || !(dma_flag & DMA_SOP))) {
+> >                       netif_err(priv, rx_status, dev,
+> >                                 "dropping fragmented packet!\n");
+> > -                     ring->errors++;
+> > +                     BCMGENET_STATS64_INC(stats, fragmented_errors);
+>
+> Please refrain from adding new counters in the conversion patch.
+>
+> >                       dev_kfree_skb_any(skb);
+> >                       goto next;
+> >               }
+>
+> > @@ -3402,6 +3455,7 @@ static void bcmgenet_dump_tx_queue(struct bcmgenet_tx_ring *ring)
+> >  static void bcmgenet_timeout(struct net_device *dev, unsigned int txqueue)
+> >  {
+> >       struct bcmgenet_priv *priv = netdev_priv(dev);
+> > +     struct bcmgenet_tx_stats64 *stats = &priv->tx_rings[txqueue].stats64;
+> >       u32 int1_enable = 0;
+> >       unsigned int q;
+>
+> Please maintain the coding style of declaring variables from longest
+> line to shortest. If there are dependencies the init should happen
+> in the body of the function.
+>
+> > -static struct net_device_stats *bcmgenet_get_stats(struct net_device *dev)
+> > +static void bcmgenet_get_stats64(struct net_device *dev,
+> > +                                                              struct rtnl_link_stats64 *stats)
+>
+> the indent is way off here, in general please try to fit in 80chars
+> unless the readability suffers.
+> --
+> pw-bot: cr
