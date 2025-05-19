@@ -1,102 +1,83 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248A31D8E1A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05BE1D8E1A;
+	Mon, 19 May 2025 06:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747635695; cv=none; b=Jg2vUA3a13MNKzIhzVfaBHjW2wvH0pkuZomASlPI+eIHB9T6Gg5gyIGWXXIpHLzFVWHVDldm6HYYcB/idlx+9vtEkmvmCpr9D75rqwbENgX0hBHSY74ya2hhpY1OOlFlwqls+b8dYROWVSJVbtMSyighMBvfCM8mU8C6yW1k/rQ=
+	t=1747635773; cv=none; b=s6iZ6GgLP/bQ0vYK93sJrHEm1CPrrfPQfeeqb0iraYVa06oh4yUMkbyyzfPvmkMlJpRaRwIH0YwqZ/Xtloigzgzln/AY0w+3AfL4EZK4klbmwVVybSX1h7gB4fpqkL3Nnk0ReY7Vuk9T3pmOT8jYJrrIZq3jTQQ/o14xuRZPD/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747635695; c=relaxed/simple;
-	bh=ZzWrZIzNv7FCA60AVJMVClV8tpAwbaYHCdojX1DvWt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0EVl0/DJtMn+0wg6hXfIR7msfGd4v/w19a6DncS/4O44D2X019vNGSuqs7irgFMfGP1T+diYBqTPhikoBHyyR5aJAXczNBE5OlygeXS5g2MvtkSi9BE0btN2flOMlDtzBOi+BhHatTjGvuReiyu6fjKGPnBDYOgtE76DtvCZL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=VCwKl9og; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="VCwKl9og"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=ZzWr
-	ZIzNv7FCA60AVJMVClV8tpAwbaYHCdojX1DvWt8=; b=VCwKl9ogFfNHdrxAdIE7
-	nddeo00qwgInkvzcd9Dtcw6c2dmFDNJWidZWGWOcRzKkc6+94iYLIcY0Tq55VGD9
-	K3qjTYmKlT5oDgUlOS+TMptkrH6AMpVqkcwUGuHzT8d6iewzPt4vMY57MkHH3Jtm
-	2Sk6xOZ72IZJCKxHk/q4yQUeARYt9SJlfiGqoV0Hyk0IccgirhNwccqwnbXHYgfd
-	oTqkvQlWHuM4QJj5fPRBNdCnfFZdxkaRQC1ZDNNQ+DRb00KzSvPWxDwINMxKhcuN
-	/b+2iXhpRYpTRlYNXdtYwfiqI0aBtauOzd5H++25/ySmDC5LYic4pi7btAG4tf73
-	1A==
-Received: (qmail 2349233 invoked from network); 19 May 2025 08:21:22 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 08:21:22 +0200
-X-UD-Smtp-Session: l3s3148p1@chkLJHc1YJ9bRaAl
-Date: Mon, 19 May 2025 08:21:21 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: geert+renesas@glider.be, magnus.damm@gmail.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: renesas: r9a09g047e57-smarc: Reduce I2C2
- clock frequency
-Message-ID: <aCrN4TCplWsxNPVE@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	John Madieu <john.madieu.xa@bp.renesas.com>,
-	geert+renesas@glider.be, magnus.damm@gmail.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-References: <20250518220812.1480696-1-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1747635773; c=relaxed/simple;
+	bh=/tzdqWLhTWdQbSoRsSokYrGnFYp8tWEj7wAb09H5lzo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DPEiAobeGNBZvF8zUR9/JzK4Qjo+Qd74gkO5czN8kzGUs/U73E0f+RRfmMKTVRQsGK/YsaRKogc//IH787WqgFAmbXmf25U2gfTJ8wpgH5JQtZtxRGEILayXiC7JrD2yE7Q8+QbkRtyVFROqLpJDj8/yfzQyBW4CR3+/7w6vgug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowACXq_Y3zipo9_pOAQ--.13441S2;
+	Mon, 19 May 2025 14:22:47 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: hminas@synopsys.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] usb: dwc2: gadget: Use USB API functions rather than constants
+Date: Mon, 19 May 2025 14:22:29 +0800
+Message-Id: <20250519062229.724664-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="L7aQLVtzTEpVJPok"
-Content-Disposition: inline
-In-Reply-To: <20250518220812.1480696-1-john.madieu.xa@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACXq_Y3zipo9_pOAQ--.13441S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWfGrg_Ca
+	y0vr47Wr1DWa4qkry5t343JrW0k345Xwn7ZFnYqFnxAFWjyw4UXFy8JrWkJrykZFy2kryq
+	kay2kFn8Cr4xXjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JU3fHbUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Use the function usb_endpoint_type() rather than constants.
+The Coccinelle semantic patch is as follows:
 
---L7aQLVtzTEpVJPok
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+@@ struct usb_endpoint_descriptor *epd; @@
 
-On Mon, May 19, 2025 at 12:08:12AM +0200, John Madieu wrote:
-> Lower the I2C2 bus clock frequency on the RZ/G3E SMARC SoM from 1MHz to 4=
-00KHz
-> to improve compatibility with a wider range of I2C peripherals. The previ=
-ous
-> 1MHz setting was too aggressive for some devices on the bus, which experi=
-enced
-> timing issues at such a frequency.
->=20
-> Fixes: f7a98e256ee3 ("arm64: dts: renesas: rzg3e-smarc-som: Add I2C2 devi=
-ce pincontrol")
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
++ usb_endpoint_type(epd)
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/usb/dwc2/gadget.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index f323fb5597b3..d5b622f78cf3 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -4049,7 +4049,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 		return -EINVAL;
+ 	}
+ 
+-	ep_type = desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
++	ep_type = usb_endpoint_type(desc);
+ 	mps = usb_endpoint_maxp(desc);
+ 	mc = usb_endpoint_maxp_mult(desc);
+ 
+-- 
+2.25.1
 
---L7aQLVtzTEpVJPok
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgqzd0ACgkQFA3kzBSg
-Kbadag//U1Ke7hpuRWmAvEygCdhBd6w8kKyCaoPCPwhT8Vq1Q+A61ABA4Ie95ysn
-A65LHjLsqvgloHF4uQTVAfbkKU79YyybUdv7XZzKcUNmi8TPFOhuwLej/NVaHJFn
-Gf7WOx/fwggkUQcbN6gX13LqX29Jxzrakpyw6IzPKXASyDaMfcw/wSicBVHrhlWu
-GSeb1xal5PihlELuq7MC4RfvXUzK7hFt1HDDcwd7dm5L8EYmjv5/I/ztQyTPWWnE
-NKUMW1GKIbcJCIuIGTZkS//rbxTZwCJvXuB2nq8iuKG6QDj5K03I+8Yqc8i2X6/t
-nNR/uvdcgMrGvrLlMMFH3X27J47K2hyyCBfZg9K6jzZAjZVXf9gvKVsvK6oDOzF5
-RcLtc/7XXuuw+q8jp2wmPsWVuyUhOd4wWZ80KXuOVLHbo4PNB/nRDvfEjQF7uDOP
-vD4O9uPux9gA1mnN6JbyDh2+hrfL4She26/pOe3yx+FqZZJcHX7iQ1M4Xiw1fPvI
-CJN/Tgxv2iJIBV4guYu+yrANWaME3CcZtKQe38TIwSMtLR/jnvrCjZrBhdZbvtTH
-Y4X/bwyGfeeph5LJnXkUDg8lMh8PdNiebcEy5g6yxE0OZFeq6Xt9YeB99BKwG56p
-QfQ8ahMuv7OXTxMwv5YNN3oHAaJ1IbCDGb8gJQ0M0+J98AodzRQ=
-=0ZBV
------END PGP SIGNATURE-----
-
---L7aQLVtzTEpVJPok--
