@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73EF21D5A2
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B65220689
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747680940; cv=none; b=Jn68ftPd2kg9a71FSGSs0rYVgUYXx2DDvfd8k3dxH1rCsJXySxHYhFMgKtwl99o7fgOT1lJQd8p53hTjDNGQsQe9bI/fXgSv17dd2csrVVDNmd2VysKCpWrPExpRnjYvsyvgLs9BE8DkMh0q7u2YEaBjwECrArt3M2oJqXZDolc=
+	t=1747680943; cv=none; b=OEqUN6mfb2fTb272T7jD890dkh0CGsnCSVl59lK/tj2gEOWRYsuqTYp24kxM6hrCDNc1yWDDQUhsneyv+K8VMfzlp8hLhau8egIS/A5c6SkDiZj+zshLouuxiKbw/Nrpk9ZRdHEodvXB6c24EVioGQ868CRqDrxg2QGiCWilVgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747680940; c=relaxed/simple;
-	bh=02DhIDJiTY5SN586FcWil6j3M7CNOC2X358tokby4WI=;
+	s=arc-20240116; t=1747680943; c=relaxed/simple;
+	bh=aQcu4y4UtLWz9/5R61mPVfQF3kh3SVAwkRKMIhfaWQo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qK7bXhbVPksnSvgtpICH0tnDkovMQLrIIltAhWKJWgfuJG5tWjvuat6yMZSqIiEhYf53ooFiwkOmqsqzI2BFBAR5de1OawiC9wEsj6+zz83k6L0b5Mkxf9cPb6llpqlkrQFCGCFt/VgzdM3x1iXok/nLs5x8hmWDdoab4SXOw1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MQLPdmGG; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=ajgsN0UofNK4SfTroCXOeLWWIJeOvMo0MfBptdKM6FWxQAlhMZhoOJfixmyFCrZ/SJds2Nc7UnFd2fD9jCjQlmMBoc1Su2nccsAAgCGL3al4sylqD9ItowJbsMik6tHJhifJkHAMdaAZEFSXa57exZ1pD3kJ6O5B+FROrsKEcZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yj+7c6W8; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQLPdmGG"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so7235407a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:55:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yj+7c6W8"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af5310c1ac1so2833036a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:55:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747680938; x=1748285738; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747680940; x=1748285740; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=OKVb/rjt7xbg7iGYLrHxAz9ea9MJSgJFrfmn1LPAXvg=;
-        b=MQLPdmGGNrurKK9Z76ndvFmSq/po1e8tqpkQfF319JrfT5pSrhOlFB66LQRT+SvzZr
-         9k77+XBCHjGsR9G6qtdArqASdCekVOSuv1pzyIs3tPtnB4B4kVFGqaXM3DNvHhyI/eKo
-         4HncYAjYVR8UILzZBeomjMxwaY3Bd9zyp/1qVXH+c4FPM+RWg2glq8+k+a9UWqt6iDrP
-         bn5Kd+4eixnVzknvw/qfBcpv+vx3QiLCVUPSkhatdR3VsneW0+nc/NMD8p5bDXZICoK9
-         Ome9qK1UdMnD0pcX/l1QGRkRhutUfxn34pBGnT5l9QvtYCnxXrq4ZPYMUl9aXsewGH1D
-         lLDg==
+        bh=epd5QhukG4RMUXX9jB19LOAHKrcbjUAqfegEAiRpQQ4=;
+        b=Yj+7c6W8sPAiigXNDZ6EdH9W9/2pvWeSx9479WJiEwJH9SEHVcm5edkxOYVc7ajijT
+         jAK3U/tjeLjJfslI7RRhZDTh99pFh16OJwJkaYbdED/AegdTMyN8YPXFGAV05F7KvEka
+         M+JyZAKVMbS6MIw2+ioCqaIlk5mJ9C6cfXovKpYDvN/UWpDA20JirpLueLbJVdOZsDw/
+         GiuVGwGriiCt2w+e3LzrAZqrm1eHIAmBtfvAlzJwTLXL0DjDZFvlH8HOStmq7BYejX9M
+         XHF7H5TRG4Psig9pJ/gHRIkp1V2vN9x3UUI3t9OnI84tUQ8Om+yNNuTrAjKerHx6idbu
+         K7Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747680938; x=1748285738;
+        d=1e100.net; s=20230601; t=1747680940; x=1748285740;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OKVb/rjt7xbg7iGYLrHxAz9ea9MJSgJFrfmn1LPAXvg=;
-        b=Jp7GRZREkgyb+CGqDcQNZlaMYJhcVPRwrQB04MRjAO+PyzOaAWeLKcwqfIPIpr2PJC
-         j7OJQlqlxSiA9Xxhv6V12uYqFZvoi3/3Z4NPmNim6GgAYy/B8PndMrUKHAQx5IutrzjL
-         /gaHk6/3cBJpxlALW/8EP6tx/f9i9m4+DD7tLYBzUFfn1kD9lY6ULq87eK/fqa/25bAP
-         v8ODu/R/oiglKG9b4j8r7Qya4NibPYP3z0LAmoTm1zOMC+b+fbsM9ny0srEPbp/NyzO/
-         uJzvsne1OlqhIGvHnfiLwdBWcUkQBrEnnYEOZK+s146t+3NjnrW08X86cgAmtrpPrLWu
-         pcTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGC6ql9bh66DictphIlxa3i9RP+TbNev1CY7XvA+nRwsCXX+1zZa6xejMw1x0DLSQxN0fs4Q5ya6Gwls8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVVHS7D846kNizDc7Mdy7VdXuHsEVL7PBx4zwJIoN7Y2DnUDV
-	ZIkMDo533yRCYvxTvgDjbTSXKUIBJZ+KQF3TFi73m5NYJewnJPaV9omJqT1JbB5H0kkBRKtvz0s
-	yTDnBmg==
-X-Google-Smtp-Source: AGHT+IEj2WzLh67Ixl+YoFxokm7fFAzAUdnIzgu7IZZuNo0LIfTZvWOpLGE1fjEGyPSa8CLIT1wrF7Tf+5Y=
-X-Received: from pjbqa8.prod.google.com ([2002:a17:90b:4fc8:b0:30e:85f1:6fa5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c08:b0:30e:6a10:bb41
- with SMTP id 98e67ed59e1d1-30e7d5a85c1mr21316229a91.27.1747680938275; Mon, 19
- May 2025 11:55:38 -0700 (PDT)
+        bh=epd5QhukG4RMUXX9jB19LOAHKrcbjUAqfegEAiRpQQ4=;
+        b=o5I7BHFPDDIiH6KsKyQRarsMdRFv26OKukURkt0XQ7jrz7mLAW5Ma/axUzNyTvgmSH
+         3ypz90jRtAQdgPNwe7zvJ+mMQWIZFsSsfUEWPzVMpnpSa1rEs/tJXBdHOPXjGrlIx632
+         f9Fbg1jZWq/tHBu1e+Igf6n+PkdOgjiWNus6zTOuAVHeR2xWF6mCDed3wpmIEj+jmBwr
+         EU2l/KYOf+ekAVwsveGNaz9b+MieWQ3HgG3rFVv2c5Cg/HqnSQKYPf0QMRMvtzM7LK0e
+         Ph2swDoxFO/2L/7FCT82kaQAIzE4IlMMcxdYeSDJ8u7YquOIvjtDQDgAb5tO7QEGHItp
+         vnOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVo4V6pgCFuwXOLCDuY4Oje5FxWe9rq1OV8PeiSLfqKLR+cqUK/SHBVOdi2H7+m3AQtC2lsrk6fLENRFjY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdiJ/lxYBi/n9dqXp4Qq8FDMfd4XmGT8YeZh4XjDG/zHGkBAct
+	z4PSckd2u3UG9OnSj94NHfXrQEnvFFZFMzxWhog0T01TXKIBYXxmrbScmSXoWQh7Szc+Mzm7RzQ
+	IXqONIQ==
+X-Google-Smtp-Source: AGHT+IGBgkTOOJjqrOCr7f/TpoYr6FJS7i8wklMdXOmCklTJv4b98ohj2f5O8xsS1rt/iLaAKTKHNpn9mBQ=
+X-Received: from pjbdy14.prod.google.com ([2002:a17:90b:6ce:b0:2fc:1356:bcc3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:33c2:b0:2fe:afa7:eaf8
+ with SMTP id 98e67ed59e1d1-30e7d50b040mr21142830a91.13.1747680939950; Mon, 19
+ May 2025 11:55:39 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 May 2025 11:55:13 -0700
+Date: Mon, 19 May 2025 11:55:14 -0700
 In-Reply-To: <20250519185514.2678456-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250519185514.2678456-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519185514.2678456-12-seanjc@google.com>
-Subject: [PATCH v2 11/12] KVM: selftests: Add utilities to create eventfds and
- do KVM_IRQFD
+Message-ID: <20250519185514.2678456-13-seanjc@google.com>
+Subject: [PATCH v2 12/12] KVM: selftests: Add a KVM_IRQFD test to verify
+ uniqueness requirements
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
@@ -76,135 +76,165 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add helpers to create eventfds and to (de)assign eventfds via KVM_IRQFD.
+Add a selftest to verify that eventfd+irqfd bindings are globally unique,
+i.e. that KVM doesn't allow multiple irqfds to bind to a single eventfd,
+even across VMs.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/arm64/vgic_irq.c  | 12 ++----
- .../testing/selftests/kvm/include/kvm_util.h  | 40 +++++++++++++++++++
- .../selftests/kvm/x86/xen_shinfo_test.c       | 18 ++-------
- 3 files changed, 47 insertions(+), 23 deletions(-)
+ tools/testing/selftests/kvm/Makefile.kvm |   1 +
+ tools/testing/selftests/kvm/irqfd_test.c | 130 +++++++++++++++++++++++
+ 2 files changed, 131 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/irqfd_test.c
 
-diff --git a/tools/testing/selftests/kvm/arm64/vgic_irq.c b/tools/testing/selftests/kvm/arm64/vgic_irq.c
-index f4ac28d53747..a09dd423c2d7 100644
---- a/tools/testing/selftests/kvm/arm64/vgic_irq.c
-+++ b/tools/testing/selftests/kvm/arm64/vgic_irq.c
-@@ -620,18 +620,12 @@ static void kvm_routing_and_irqfd_check(struct kvm_vm *vm,
- 	 * that no actual interrupt was injected for those cases.
- 	 */
- 
--	for (f = 0, i = intid; i < (uint64_t)intid + num; i++, f++) {
--		fd[f] = eventfd(0, 0);
--		TEST_ASSERT(fd[f] != -1, __KVM_SYSCALL_ERROR("eventfd()", fd[f]));
--	}
-+	for (f = 0, i = intid; i < (uint64_t)intid + num; i++, f++)
-+		fd[f] = kvm_new_eventfd();
- 
- 	for (f = 0, i = intid; i < (uint64_t)intid + num; i++, f++) {
--		struct kvm_irqfd irqfd = {
--			.fd  = fd[f],
--			.gsi = i - MIN_SPI,
--		};
- 		assert(i <= (uint64_t)UINT_MAX);
--		vm_ioctl(vm, KVM_IRQFD, &irqfd);
-+		kvm_assign_irqfd(vm, i - MIN_SPI, fd[f]);
- 	}
- 
- 	for (f = 0, i = intid; i < (uint64_t)intid + num; i++, f++) {
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index a1fc52bbdf7a..befa3d8ea84c 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -18,6 +18,7 @@
- #include <asm/atomic.h>
- #include <asm/kvm.h>
- 
-+#include <sys/eventfd.h>
- #include <sys/ioctl.h>
- 
- #include "kvm_util_arch.h"
-@@ -496,6 +497,45 @@ static inline int vm_get_stats_fd(struct kvm_vm *vm)
- 	return fd;
- }
- 
-+static inline int __kvm_irqfd(struct kvm_vm *vm, uint32_t gsi, int eventfd,
-+			      uint32_t flags)
-+{
-+	struct kvm_irqfd irqfd = {
-+		.fd = eventfd,
-+		.gsi = gsi,
-+		.flags = flags,
-+		.resamplefd = -1,
-+	};
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index 307ef31d3557..d118b86f6acf 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -55,6 +55,7 @@ TEST_PROGS_x86 += x86/nx_huge_pages_test.sh
+ TEST_GEN_PROGS_COMMON = demand_paging_test
+ TEST_GEN_PROGS_COMMON += dirty_log_test
+ TEST_GEN_PROGS_COMMON += guest_print_test
++TEST_GEN_PROGS_COMMON += irqfd_test
+ TEST_GEN_PROGS_COMMON += kvm_binary_stats_test
+ TEST_GEN_PROGS_COMMON += kvm_create_max_vcpus
+ TEST_GEN_PROGS_COMMON += kvm_page_table_test
+diff --git a/tools/testing/selftests/kvm/irqfd_test.c b/tools/testing/selftests/kvm/irqfd_test.c
+new file mode 100644
+index 000000000000..286f2b15fde6
+--- /dev/null
++++ b/tools/testing/selftests/kvm/irqfd_test.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <errno.h>
++#include <pthread.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <signal.h>
++#include <stdint.h>
++#include <sys/sysinfo.h>
 +
-+	return __vm_ioctl(vm, KVM_IRQFD, &irqfd);
++#include "kvm_util.h"
++
++static struct kvm_vm *vm1;
++static struct kvm_vm *vm2;
++static int __eventfd;
++static bool done;
++
++/*
++ * KVM de-assigns based on eventfd *and* GSI, but requires unique eventfds when
++ * assigning (the API isn't symmetrical).  Abuse the oddity and use a per-task
++ * GSI base to avoid false failures due to cross-task de-assign, i.e. so that
++ * the secondary doesn't de-assign the primary's eventfd and cause assign to
++ * unexpectedly succeed on the primary.
++ */
++#define GSI_BASE_PRIMARY	0x20
++#define GSI_BASE_SECONDARY	0x30
++
++static void juggle_eventfd_secondary(struct kvm_vm *vm, int eventfd)
++{
++	int r, i;
++
++	/*
++	 * The secondary task can encounter EBADF since the primary can close
++	 * the eventfd at any time.  And because the primary can recreate the
++	 * eventfd, at the safe fd in the file table, the secondary can also
++	 * encounter "unexpected" success, e.g. if the close+recreate happens
++	 * between the first and second assignments.  The secondary's role is
++	 * mostly to antagonize KVM, not to detect bugs.
++	 */
++	for (i = 0; i < 2; i++) {
++		r = __kvm_irqfd(vm, GSI_BASE_SECONDARY, eventfd, 0);
++		TEST_ASSERT(!r || errno == EBUSY || errno == EBADF,
++			    "Wanted success, EBUSY, or EBADF, r = %d, errno = %d",
++			    r, errno);
++
++		/* De-assign should succeed unless the eventfd was closed. */
++		r = __kvm_irqfd(vm, GSI_BASE_SECONDARY + i, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
++		TEST_ASSERT(!r || errno == EBADF,
++			    "De-assign should succeed unless the fd was closed");
++	}
 +}
 +
-+static inline void kvm_irqfd(struct kvm_vm *vm, uint32_t gsi, int eventfd,
-+			      uint32_t flags)
++static void *secondary_irqfd_juggler(void *ign)
 +{
-+	int ret = __kvm_irqfd(vm, gsi, eventfd, flags);
++	while (!READ_ONCE(done)) {
++		juggle_eventfd_secondary(vm1, READ_ONCE(__eventfd));
++		juggle_eventfd_secondary(vm2, READ_ONCE(__eventfd));
++	}
 +
-+	TEST_ASSERT_VM_VCPU_IOCTL(!ret, KVM_IRQFD, ret, vm);
++	return NULL;
 +}
 +
-+static inline void kvm_assign_irqfd(struct kvm_vm *vm, uint32_t gsi, int eventfd)
++static void juggle_eventfd_primary(struct kvm_vm *vm, int eventfd)
 +{
-+	kvm_irqfd(vm, gsi, eventfd, 0);
++	int r1, r2;
++
++	/*
++	 * At least one of the assigns should fail.  KVM disallows assigning a
++	 * single eventfd to multiple GSIs (or VMs), so it's possible that both
++	 * assignments can fail, too.
++	 */
++	r1 = __kvm_irqfd(vm, GSI_BASE_PRIMARY, eventfd, 0);
++	TEST_ASSERT(!r1 || errno == EBUSY,
++		    "Wanted success or EBUSY, r = %d, errno = %d", r1, errno);
++
++	r2 = __kvm_irqfd(vm, GSI_BASE_PRIMARY + 1, eventfd, 0);
++	TEST_ASSERT(r1 || (r2 && errno == EBUSY),
++		    "Wanted failure (EBUSY), r1 = %d, r2 = %d, errno = %d",
++		    r1, r2, errno);
++
++	/*
++	 * De-assign should always succeed, even if the corresponding assign
++	 * failed.
++	 */
++	kvm_irqfd(vm, GSI_BASE_PRIMARY, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
++	kvm_irqfd(vm, GSI_BASE_PRIMARY + 1, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
 +}
 +
-+static inline void kvm_deassign_irqfd(struct kvm_vm *vm, uint32_t gsi, int eventfd)
++int main(int argc, char *argv[])
 +{
-+	kvm_irqfd(vm, gsi, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
++	pthread_t racing_thread;
++	int r, i;
++
++	/* Create "full" VMs, as KVM_IRQFD requires an in-kernel IRQ chip. */
++	vm1 = vm_create(1);
++	vm2 = vm_create(1);
++
++	WRITE_ONCE(__eventfd, kvm_new_eventfd());
++
++	kvm_irqfd(vm1, 10, __eventfd, 0);
++
++	r = __kvm_irqfd(vm1, 11, __eventfd, 0);
++	TEST_ASSERT(r && errno == EBUSY,
++		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
++
++	r = __kvm_irqfd(vm2, 12, __eventfd, 0);
++	TEST_ASSERT(r && errno == EBUSY,
++		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
++
++	kvm_irqfd(vm1, 11, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
++	kvm_irqfd(vm1, 12, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
++	kvm_irqfd(vm1, 13, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
++	kvm_irqfd(vm1, 14, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
++	kvm_irqfd(vm1, 10, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
++
++	close(__eventfd);
++
++	pthread_create(&racing_thread, NULL, secondary_irqfd_juggler, vm2);
++
++	for (i = 0; i < 10000; i++) {
++		WRITE_ONCE(__eventfd, kvm_new_eventfd());
++
++		juggle_eventfd_primary(vm1, __eventfd);
++		juggle_eventfd_primary(vm2, __eventfd);
++		close(__eventfd);
++	}
++
++	WRITE_ONCE(done, true);
++	pthread_join(racing_thread, NULL);
 +}
-+
-+static inline int kvm_new_eventfd(void)
-+{
-+	int fd = eventfd(0, 0);
-+
-+	TEST_ASSERT(fd >= 0, __KVM_SYSCALL_ERROR("eventfd()", fd));
-+	return fd;
-+}
-+
- static inline void read_stats_header(int stats_fd, struct kvm_stats_header *header)
- {
- 	ssize_t ret;
-diff --git a/tools/testing/selftests/kvm/x86/xen_shinfo_test.c b/tools/testing/selftests/kvm/x86/xen_shinfo_test.c
-index 34d180cf4eed..23909b501ac2 100644
---- a/tools/testing/selftests/kvm/x86/xen_shinfo_test.c
-+++ b/tools/testing/selftests/kvm/x86/xen_shinfo_test.c
-@@ -547,11 +547,8 @@ int main(int argc, char *argv[])
- 	int irq_fd[2] = { -1, -1 };
- 
- 	if (do_eventfd_tests) {
--		irq_fd[0] = eventfd(0, 0);
--		TEST_ASSERT(irq_fd[0] >= 0, __KVM_SYSCALL_ERROR("eventfd()", irq_fd[0]));
--
--		irq_fd[1] = eventfd(0, 0);
--		TEST_ASSERT(irq_fd[1] >= 0, __KVM_SYSCALL_ERROR("eventfd()", irq_fd[1]));
-+		irq_fd[0] = kvm_new_eventfd();
-+		irq_fd[1] = kvm_new_eventfd();
- 
- 		irq_routes.info.nr = 2;
- 
-@@ -569,15 +566,8 @@ int main(int argc, char *argv[])
- 
- 		vm_ioctl(vm, KVM_SET_GSI_ROUTING, &irq_routes.info);
- 
--		struct kvm_irqfd ifd = { };
--
--		ifd.fd = irq_fd[0];
--		ifd.gsi = 32;
--		vm_ioctl(vm, KVM_IRQFD, &ifd);
--
--		ifd.fd = irq_fd[1];
--		ifd.gsi = 33;
--		vm_ioctl(vm, KVM_IRQFD, &ifd);
-+		kvm_assign_irqfd(vm, 32, irq_fd[0]);
-+		kvm_assign_irqfd(vm, 33, irq_fd[1]);
- 
- 		struct sigaction sa = { };
- 		sa.sa_handler = handle_alrm;
 -- 
 2.49.0.1101.gccaa498523-goog
 
