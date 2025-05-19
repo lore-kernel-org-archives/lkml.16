@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D7628A719;
-	Mon, 19 May 2025 17:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF8A289826;
+	Mon, 19 May 2025 17:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677120; cv=none; b=Gn3COtg7/ImEVRwqqEemI7jkV4tgk300/BF/TngsQqHT8zZCoFweVUTO5CS0ouLxXn92Lvu6NTPngHRf0ivbtqvporiF7NjzL5rXNGhocy+QQUMl6LOkvuJFkOWnWuGRG2zvcioAUxWs+wfkA7hvon+jtG0TRRrxvhRdtKNtg6A=
+	t=1747677119; cv=none; b=fR1LQ3uGBiY1fJmMVBqywbVk2UssKEbYug0UpCSIj9eDmdyQCdaU/VyMNkqHzaAfcUNCFX5d9fe2aAy7xdje6rYY3k69fmyeJyyQr64Sy/LqeSkdK5ZplMl+1jtpuGBuMYPxY0DrpZOTjRQs73t4r+W7FLVHM1//vFSnqcqWz5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747677120; c=relaxed/simple;
-	bh=mIsfiVI45v2VPTWBozlSjRtw4VqrI/GcVcTcOwb4ZRY=;
+	s=arc-20240116; t=1747677119; c=relaxed/simple;
+	bh=9W6A/eAI/6T9jjyybm1nmFEiGSJ8YHRariNqFak7k5Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dev2BLGtVx1kP7FXZZDS+bsr18pP2pw5AukOizD9jk5qfoJoQIvUMbWmay25ANl9oyKKiWPpn5aqyzWFtZdRzZ3I0/JL4EwYHXqwMFPVuY9ZsN36cxWNBv5jAC+f7ahbmQ/1P4BIGgR5Qwxriz1E2JXHW0Fgdo1FRo0IWpaZOag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR2+iVWK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rFvJPgSq9m0BejEEATnnhvU9L1u/uR3UdXrRW7DZNbcn3fSQ2Td/S4ROO3918z9CiolD7gz6cQeSYOgSNzW6SFRmdHRodleWDnYl7+b7Xd1v9kGM/dDmJVwofsmqeMBE/OLUIMNHMDo9UVMjNOLwy20/rttGLkNneTSbUVn31Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqDgCFHe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR2+iVWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F53C4CEF1;
-	Mon, 19 May 2025 17:52:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqDgCFHe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12ECC4CEEB;
+	Mon, 19 May 2025 17:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747677120;
-	bh=mIsfiVI45v2VPTWBozlSjRtw4VqrI/GcVcTcOwb4ZRY=;
+	s=k20201202; t=1747677118;
+	bh=9W6A/eAI/6T9jjyybm1nmFEiGSJ8YHRariNqFak7k5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QR2+iVWKJqeHqPio6M358dZ6cQUWbOX/PBRAO2eoWIddik+He5js4DXnq6aqPbeYC
-	 6x+To/VR2K2WcczMELmWTmH2uhqmvKf9Ge4oKVWuJrZhPiZgZ4xAl34/1FENmTSEIe
-	 P5c8E3xZSsSx+Et92DossoX9+FwAlX7/23r2kUxcCQ9eiNGcjZH6nAgYvrI9UZxBmB
-	 qKSfwx/i2h7c5g7THDj7SPzNsg2zNqCqQVmW9CB5Ay+YoFCZbrvUXZ021BFfmkpBSD
-	 V+155XQBuNbNnmaTsxGZ08hIfgzf+MmGtyY1z1ND0UtLvq/iYbjAf8ccvf2cPmNuRw
-	 3/bMDyqVcqqiw==
+	b=fqDgCFHe8B1mn5iXFFjbvnu0VTeibtAMAGGfbkUHmpP7Q7Z1c3PP00hxMn5pp4WSg
+	 3IMqnhfcPeQsfYb/NqBJgwYBrnNc9lz3LSFHVUzQvQ1lHjgqJC9X/ByN9wYtC4sjnx
+	 SCuMMmkVH36210UXmI7/b9ZmiudEil9YC9ev0e+Rb7ZuZkNkd1F1YGYVROgxSnrlNw
+	 3/sO4HKDQtLo28wVhHc4quW//i/ZhOToGftyUMmtdZ+KnaX310Qv5Lrw9C2mUimJbj
+	 h89YDlxguBIjMBjbWRQmFNXj8nqd9cFWKCna2NSieZe1VW9b1ZiAAa8i3+1qQmQZsk
+	 lPivyl4aEPijQ==
 From: Eric Biggers <ebiggers@kernel.org>
 To: netdev@vger.kernel.org
 Cc: linux-nvme@lists.infradead.org,
@@ -36,9 +36,9 @@ Cc: linux-nvme@lists.infradead.org,
 	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2 10/10] net: remove skb_copy_and_hash_datagram_iter()
-Date: Mon, 19 May 2025 10:50:12 -0700
-Message-ID: <20250519175012.36581-11-ebiggers@kernel.org>
+Subject: [PATCH v2 06/10] net: fold __skb_checksum() into skb_checksum()
+Date: Mon, 19 May 2025 10:50:08 -0700
+Message-ID: <20250519175012.36581-7-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519175012.36581-1-ebiggers@kernel.org>
 References: <20250519175012.36581-1-ebiggers@kernel.org>
@@ -52,107 +52,211 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Now that skb_copy_and_hash_datagram_iter() is no longer used, remove it.
+Now that the only remaining caller of __skb_checksum() is
+skb_checksum(), fold __skb_checksum() into skb_checksum().  This makes
+struct skb_checksum_ops unnecessary, so remove that too and simply do
+the "regular" net checksum.  It also makes the wrapper functions
+csum_partial_ext() and csum_block_add_ext() unnecessary, so remove those
+too and just use the underlying functions.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- include/linux/skbuff.h |  4 ----
- net/core/datagram.c    | 37 -------------------------------------
- 2 files changed, 41 deletions(-)
+ include/linux/skbuff.h |  9 -------
+ include/net/checksum.h | 12 ---------
+ net/core/skbuff.c      | 59 +++++-------------------------------------
+ 3 files changed, 7 insertions(+), 73 deletions(-)
 
 diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 510adf63c2113..5520524c93bff 100644
+index 7ccc6356acaca..018c072305133 100644
 --- a/include/linux/skbuff.h
 +++ b/include/linux/skbuff.h
-@@ -272,11 +272,10 @@
- /* return minimum truesize of one skb containing X bytes of data */
- #define SKB_TRUESIZE(X) ((X) +						\
- 			 SKB_DATA_ALIGN(sizeof(struct sk_buff)) +	\
- 			 SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
- 
--struct ahash_request;
- struct net_device;
- struct scatterlist;
- struct pipe_inode_info;
- struct iov_iter;
- struct napi_struct;
-@@ -4132,13 +4131,10 @@ static inline int skb_copy_datagram_msg(const struct sk_buff *from, int offset,
+@@ -4190,19 +4190,10 @@ static inline int memcpy_from_msg(void *data, struct msghdr *msg, int len)
+ static inline int memcpy_to_msg(struct msghdr *msg, void *data, int len)
  {
- 	return skb_copy_datagram_iter(from, offset, &msg->msg_iter, size);
- }
- int skb_copy_and_csum_datagram_msg(struct sk_buff *skb, int hlen,
- 				   struct msghdr *msg);
--int skb_copy_and_hash_datagram_iter(const struct sk_buff *skb, int offset,
--			   struct iov_iter *to, int len,
--			   struct ahash_request *hash);
- int skb_copy_and_crc32c_datagram_iter(const struct sk_buff *skb, int offset,
- 				      struct iov_iter *to, int len, u32 *crcp);
- int skb_copy_datagram_from_iter(struct sk_buff *skb, int offset,
- 				 struct iov_iter *from, int len);
- int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *frm);
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index fa87abb666324..b352a10093041 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -60,11 +60,10 @@
- #include <net/checksum.h>
- #include <net/sock.h>
- #include <net/tcp_states.h>
- #include <trace/events/skb.h>
- #include <net/busy_poll.h>
--#include <crypto/hash.h>
- 
- #include "devmem.h"
- 
- /*
-  *	Is a socket 'connection oriented' ?
-@@ -482,46 +481,10 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 		goto fault;
- 
- 	return 0;
+ 	return copy_to_iter(data, len, &msg->msg_iter) == len ? 0 : -EFAULT;
  }
  
--static size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
--				    struct iov_iter *i)
--{
--#ifdef CONFIG_CRYPTO_HASH
--	struct ahash_request *hash = hashp;
--	struct scatterlist sg;
--	size_t copied;
+-struct skb_checksum_ops {
+-	__wsum (*update)(const void *mem, int len, __wsum wsum);
+-	__wsum (*combine)(__wsum csum, __wsum csum2, int offset, int len);
+-};
 -
--	copied = copy_to_iter(addr, bytes, i);
--	sg_init_one(&sg, addr, copied);
--	ahash_request_set_crypt(hash, &sg, NULL, copied);
--	crypto_ahash_update(hash);
--	return copied;
--#else
+-extern const struct skb_checksum_ops *crc32c_csum_stub __read_mostly;
+-
+-__wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
+-		      __wsum csum, const struct skb_checksum_ops *ops);
+ __wsum skb_checksum(const struct sk_buff *skb, int offset, int len,
+ 		    __wsum csum);
+ u32 skb_crc32c(const struct sk_buff *skb, int offset, int len, u32 crc);
+ 
+ static inline void * __must_check
+diff --git a/include/net/checksum.h b/include/net/checksum.h
+index 243f972267b8d..e57986b173f8e 100644
+--- a/include/net/checksum.h
++++ b/include/net/checksum.h
+@@ -96,16 +96,10 @@ static __always_inline __wsum
+ csum_block_add(__wsum csum, __wsum csum2, int offset)
+ {
+ 	return csum_add(csum, csum_shift(csum2, offset));
+ }
+ 
+-static __always_inline __wsum
+-csum_block_add_ext(__wsum csum, __wsum csum2, int offset, int len)
+-{
+-	return csum_block_add(csum, csum2, offset);
+-}
+-
+ static __always_inline __wsum
+ csum_block_sub(__wsum csum, __wsum csum2, int offset)
+ {
+ 	return csum_block_add(csum, ~csum2, offset);
+ }
+@@ -113,16 +107,10 @@ csum_block_sub(__wsum csum, __wsum csum2, int offset)
+ static __always_inline __wsum csum_unfold(__sum16 n)
+ {
+ 	return (__force __wsum)n;
+ }
+ 
+-static __always_inline
+-__wsum csum_partial_ext(const void *buff, int len, __wsum sum)
+-{
+-	return csum_partial(buff, len, sum);
+-}
+-
+ #define CSUM_MANGLED_0 ((__force __sum16)0xffff)
+ 
+ static __always_inline void csum_replace_by_diff(__sum16 *sum, __wsum diff)
+ {
+ 	*sum = csum_fold(csum_add(diff, ~csum_unfold(*sum)));
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 94b977db47f9d..85fc82f72d268 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3443,24 +3443,22 @@ int skb_store_bits(struct sk_buff *skb, int offset, const void *from, int len)
+ 	return -EFAULT;
+ }
+ EXPORT_SYMBOL(skb_store_bits);
+ 
+ /* Checksum skb data. */
+-__wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
+-		      __wsum csum, const struct skb_checksum_ops *ops)
++__wsum skb_checksum(const struct sk_buff *skb, int offset, int len, __wsum csum)
+ {
+ 	int start = skb_headlen(skb);
+ 	int i, copy = start - offset;
+ 	struct sk_buff *frag_iter;
+ 	int pos = 0;
+ 
+ 	/* Checksum header. */
+ 	if (copy > 0) {
+ 		if (copy > len)
+ 			copy = len;
+-		csum = INDIRECT_CALL_1(ops->update, csum_partial_ext,
+-				       skb->data + offset, copy, csum);
++		csum = csum_partial(skb->data + offset, copy, csum);
+ 		if ((len -= copy) == 0)
+ 			return csum;
+ 		offset += copy;
+ 		pos	= copy;
+ 	}
+@@ -3486,17 +3484,13 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
+ 
+ 			skb_frag_foreach_page(frag,
+ 					      skb_frag_off(frag) + offset - start,
+ 					      copy, p, p_off, p_len, copied) {
+ 				vaddr = kmap_atomic(p);
+-				csum2 = INDIRECT_CALL_1(ops->update,
+-							csum_partial_ext,
+-							vaddr + p_off, p_len, 0);
++				csum2 = csum_partial(vaddr + p_off, p_len, 0);
+ 				kunmap_atomic(vaddr);
+-				csum = INDIRECT_CALL_1(ops->combine,
+-						       csum_block_add_ext, csum,
+-						       csum2, pos, p_len);
++				csum = csum_block_add(csum, csum2, pos);
+ 				pos += p_len;
+ 			}
+ 
+ 			if (!(len -= copy))
+ 				return csum;
+@@ -3513,14 +3507,13 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
+ 		end = start + frag_iter->len;
+ 		if ((copy = end - offset) > 0) {
+ 			__wsum csum2;
+ 			if (copy > len)
+ 				copy = len;
+-			csum2 = __skb_checksum(frag_iter, offset - start,
+-					       copy, 0, ops);
+-			csum = INDIRECT_CALL_1(ops->combine, csum_block_add_ext,
+-					       csum, csum2, pos, copy);
++			csum2 = skb_checksum(frag_iter, offset - start, copy,
++					     0);
++			csum = csum_block_add(csum, csum2, pos);
+ 			if ((len -= copy) == 0)
+ 				return csum;
+ 			offset += copy;
+ 			pos    += copy;
+ 		}
+@@ -3528,22 +3521,10 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
+ 	}
+ 	BUG_ON(len);
+ 
+ 	return csum;
+ }
+-EXPORT_SYMBOL(__skb_checksum);
+-
+-__wsum skb_checksum(const struct sk_buff *skb, int offset,
+-		    int len, __wsum csum)
+-{
+-	const struct skb_checksum_ops ops = {
+-		.update  = csum_partial_ext,
+-		.combine = csum_block_add_ext,
+-	};
+-
+-	return __skb_checksum(skb, offset, len, csum, &ops);
+-}
+ EXPORT_SYMBOL(skb_checksum);
+ 
+ /* Both of above in one bottle. */
+ 
+ __wsum skb_copy_and_csum_bits(const struct sk_buff *skb, int offset,
+@@ -3763,36 +3744,10 @@ __sum16 __skb_checksum_complete(struct sk_buff *skb)
+ 
+ 	return sum;
+ }
+ EXPORT_SYMBOL(__skb_checksum_complete);
+ 
+-static __wsum warn_crc32c_csum_update(const void *buff, int len, __wsum sum)
+-{
+-	net_warn_ratelimited(
+-		"%s: attempt to compute crc32c without libcrc32c.ko\n",
+-		__func__);
 -	return 0;
--#endif
 -}
 -
--/**
-- *	skb_copy_and_hash_datagram_iter - Copy datagram to an iovec iterator
-- *          and update a hash.
-- *	@skb: buffer to copy
-- *	@offset: offset in the buffer to start copying from
-- *	@to: iovec iterator to copy to
-- *	@len: amount of data to copy from buffer to iovec
-- *      @hash: hash request to update
-- */
--int skb_copy_and_hash_datagram_iter(const struct sk_buff *skb, int offset,
--			   struct iov_iter *to, int len,
--			   struct ahash_request *hash)
+-static __wsum warn_crc32c_csum_combine(__wsum csum, __wsum csum2,
+-				       int offset, int len)
 -{
--	return __skb_datagram_iter(skb, offset, to, len, true,
--			hash_and_copy_to_iter, hash);
+-	net_warn_ratelimited(
+-		"%s: attempt to compute crc32c without libcrc32c.ko\n",
+-		__func__);
+-	return 0;
 -}
--EXPORT_SYMBOL(skb_copy_and_hash_datagram_iter);
 -
- #ifdef CONFIG_NET_CRC32C
- static size_t crc32c_and_copy_to_iter(const void *addr, size_t bytes,
- 				      void *_crcp, struct iov_iter *i)
- {
- 	u32 *crcp = _crcp;
+-static const struct skb_checksum_ops default_crc32c_ops = {
+-	.update  = warn_crc32c_csum_update,
+-	.combine = warn_crc32c_csum_combine,
+-};
+-
+-const struct skb_checksum_ops *crc32c_csum_stub __read_mostly =
+-	&default_crc32c_ops;
+-EXPORT_SYMBOL(crc32c_csum_stub);
+-
+  /**
+  *	skb_zerocopy_headlen - Calculate headroom needed for skb_zerocopy()
+  *	@from: source buffer
+  *
+  *	Calculates the amount of linear headroom needed in the 'to' skb passed
 -- 
 2.49.0
 
