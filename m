@@ -1,81 +1,123 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842AB1E573F;
-	Mon, 19 May 2025 16:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E06287505;
+	Mon, 19 May 2025 16:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672743; cv=none; b=NflIbW3VJFqlUwGz35TeV65tgiw1jEDFR8a48YPIjCGoeaNRms5kCtpPWF3u5Hzk4bS6t2bKSIZ7s0knVc2T8EKFIp9QINHPD0LMIxi0lAZHYWYMDy8m/L3t7bzTUZUBaTCWPuKf7PovAAw9oLqN22bkF7qxFulpyEpd2OFdU68=
+	t=1747672776; cv=none; b=knbxNlPCVlJF63Ut4va6oCxF8YEanNFyW8EX4OJ+ezygPAix0PhiYJIrQjBlF9VMTGoCFsORfk6oy5SAKCQZ95fYA0jrFS5rrrrTjuPRC2wHrjgFoUnlxBEShO9fWDUViEU8D9spZGAsRsk0jeNtUTTCMX+5+tzDtC7Sscqg5Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672743; c=relaxed/simple;
-	bh=uZOe9lmbBGmuo5/Ne4Zed6Db+GO58gvc24zPWbDmp6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=olDntqB+ongvxeA23fO116Q4hFXs5GBZG9pgGaOr7iD2iCESt3CwiF9XZv3JzmoK/E6TQhnlEG6aAt4qkid0+yxROHXBwjsg9k8FSX3xRJEazcJLu8KqjJOM8hCDO5lWDtLH51YxlMuPfrpmXLXbRataOKMbopkFeMLG/k6o8js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gOu2sx/1; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747672776; c=relaxed/simple;
+	bh=GX9Qj2ylG5i74myAAsHfk2ONtONtLM/ds6uhY2pLujQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Or66ZqZ4WoBN6M09pqXTWCmWqYZ6cHEqgAjBzEcpz9CNSL6ssxEQmZ4Jhih6lR/X8YDtI1Ih5ssLjtdz6MTt6l3K8pDYx+jQAJNHpJnS5MEj7ZrJ4Zvr9rYCFHsiH/D0c1bFQsvnjK6vm4BDzytx/bP5wEMd7i2N8heI0k4XBLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRHp0jDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gOu2sx/1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=jo
-	TivAkSBjTqIfYZ5iBOY30EupsNyTxNclneiFMNbWM=; b=gOu2sx/1vEfOzmwAOP
-	pVu5u0pi4VOKX3gVQclR2Fp2ldcKFiRll5NsuLSbuZhclcPN2BSf0bHKRleVYRk5
-	ksAvqWzSFhPydhNW50AWWlFeRK6KC9X3eZ+fEFrrryH8D5Dyvpr1R73UumOgoc39
-	XJX292elyt5a0+ATk63E5vjOc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAXgUmCXitoAHEECg--.49698S4;
-	Tue, 20 May 2025 00:38:39 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: surenb@google.com,
-	petr.pavlu@suse.com,
-	mcgrof@kernel.org
-Cc: linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Wang <00107082@163.com>
-Subject: [PATCH v2] module: release codetag section when module load fails
-Date: Tue, 20 May 2025 00:38:23 +0800
-Message-Id: <20250519163823.7540-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250518101212.19930-1-00107082@163.com>
-References: <20250518101212.19930-1-00107082@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRHp0jDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31193C4CEE4;
+	Mon, 19 May 2025 16:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747672775;
+	bh=GX9Qj2ylG5i74myAAsHfk2ONtONtLM/ds6uhY2pLujQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tRHp0jDqfAOLN1wEFih56Maz86WsbkL/gu6gA+5rOc/aO64DCVaZ0DfysUKuSoHy6
+	 fJAPNV6o9ertPmlCBxSpHolI9X3sp39HesR24mMb/sChtjyDRF0/5WvUg7u1do1v5S
+	 28EpEMut/7CPrAs0iTBPNOgjTxKeuZ+evOLwhzvygU5CkPYfyZYMHYgdrbDPAOROLD
+	 0o3ftPGARPKXvF/QnlhWGwJ7E1qCi4D9u15OBcWd2ag9ffLO4k7SkNpZW3GAUHqhE5
+	 LjpQ7mbT3FFzUWdvtd1S+TNyHXxcNLz6Ykqg6OkY+1XSRvINiO2e5JyjQGvGvpCJlc
+	 cAV8MYSAsT8fQ==
+Date: Mon, 19 May 2025 17:39:29 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>, Jonas Karlman <jonas@kwiboo.se>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: phy: rockchip: naneng-combphy: Add
+ RK3528 variant
+Message-ID: <20250519-smell-exhume-df5ee34e31bb@spud>
+References: <20250519161612.14261-1-ziyao@disroot.org>
+ <20250519161612.14261-3-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXgUmCXitoAHEECg--.49698S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKry7KFWDWryxJFyUXFWxXrb_yoWDWwb_X3
-	y8JryxWr1UJw409w4rt3ZagrsYgry8Gr95u3s7tay5t3W7Aw13ArnxKr9xXFn8GrZ7AFs3
-	AFnxJ3Wq9r1rCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRWBT5UUUUUU==
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0h1SqmgrV7WIRwAAsZ
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TLrji4TZnIyWLWDI"
+Content-Disposition: inline
+In-Reply-To: <20250519161612.14261-3-ziyao@disroot.org>
 
-When module load fails after memory for codetag section is ready,
-codetag section memory will not be properly released. This
-causes memory leak, and if next module load happens to get the
-same module address, codetag may pick the uninitialized section
-when manipulating tags during module unload, and leads to
-"unable to handle page fault" BUG.
 
-Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.com/
-Signed-off-by: David Wang <00107082@163.com>
-Acked-by: Suren Baghdasaryan <surenb@google.com>
----
- kernel/module/main.c | 1 +
- 1 file changed, 1 insertion(+)
+--TLrji4TZnIyWLWDI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index a2859dc3eea6..5c6ab20240a6 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2829,6 +2829,7 @@ static void module_deallocate(struct module *mod, struct load_info *info)
- {
- 	percpu_modfree(mod);
- 	module_arch_freeing_init(mod);
-+	codetag_free_module_sections(mod);
- 
- 	free_mod_mem(mod);
- }
--- 
-2.39.2
+On Mon, May 19, 2025 at 04:16:08PM +0000, Yao Zi wrote:
+> Rockchip RK3528 ships one naneng-combphy which operates in either PCIe
+> or USB 3 mode. Document its compatible string.
+>=20
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+> ---
+>  .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-co=
+mbphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-comb=
+phy.yaml
+> index 888e6b2aac5a..969d7b1850d6 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.y=
+aml
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.y=
+aml
+> @@ -12,6 +12,7 @@ maintainers:
+>  properties:
+>    compatible:
+>      enum:
+> +      - rockchip,rk3528-naneng-combphy
+>        - rockchip,rk3562-naneng-combphy
+>        - rockchip,rk3568-naneng-combphy
+>        - rockchip,rk3576-naneng-combphy
+> @@ -102,7 +103,9 @@ allOf:
+>        properties:
+>          compatible:
+>            contains:
+> -            const: rockchip,rk3588-naneng-combphy
+> +            enum:
+> +              - rockchip,rk3528-naneng-combphy
+> +              - rockchip,rk3588-naneng-combphy
+>      then:
+>        properties:
+>          resets:
+> --=20
+> 2.49.0
+>=20
+
+--TLrji4TZnIyWLWDI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtewQAKCRB4tDGHoIJi
+0lfYAQCtx96m/d5SWp3Mrz93mwH0LkNmQvVyWrBwI/VYaC49sgEAuh+Qt21wI2md
+Nx9jIB2xPDYbGdylaq36IjXZQc6inwQ=
+=eg7H
+-----END PGP SIGNATURE-----
+
+--TLrji4TZnIyWLWDI--
