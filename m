@@ -1,114 +1,254 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF922746A;
-	Mon, 19 May 2025 15:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C8B2746A;
+	Mon, 19 May 2025 15:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747668018; cv=none; b=mC3ZKDimIkXZyUoVN4+wCVN0mgqFu8bXAZ6kxk4bEbeV8KpqBYDO1AXMw55yFvzyQRJh0n2xHbX1eSxXi4XqF3xndviu/kpvP0YP54RbylMbIfW+1i2eBOitNfj98eVpbaDqMc0VJxK9y5nZTagyEqPtIOg7c02INfA0UqfHe1o=
+	t=1747668036; cv=none; b=ZOoGtwz4OiQr11Vthr1y18ZxRHGR0Lpj4QGFW5f0dLavDo3Hp6SLYNrOePXvE9CRfiwf9y+4WuH6yQJdndz8R5EwXg1J13B2f9o+Ya8bUacMKSAM8jmGkM/v0cgrU2645yaS7e6uCD05SW4lSApXJdWalZ5mfHUGQE0nU6tePDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747668018; c=relaxed/simple;
-	bh=x9hdDCWZ2SmxyLjneKm0gaUUE7Iv2UMdCIhLNsQ4wQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uh1N0EtpUDxxfJES8wOA4/qa9dqVFipEHqhwo5hrxgMDhXWFHjIXZn9tgYYEiksMKMRRyUPglIQZN600fUO5QHfnj9jTkr5v8YcMAUEWDvHqM2NPljpS9mtT7NQSy2GVtMRfEgBnluNlVGwX7P76SFA4CDCwBe7HzRm5u29HPVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=umIIrj0u; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747668036; c=relaxed/simple;
+	bh=hCsytdVeeJL9k59PuEkSeSt24V1PhRpfKVXpzj7jUtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmuY1pafp96XZnbeYS8sjGpmWiuaUkSysChoircafBfcFGvWGnzLE7OOlFFL3zIVN4PlNYNIc3eF9/EntNUE4nBeGEkLVXv0E2atWMLJ6v3Dj4lTQmZAh0h6WfhSEBBEBs2SvlqoPdtfVt4KaAJVmhAYKcG2VP3v3Da6ycANMkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg+W/TWK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="umIIrj0u"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DD57883D;
-	Mon, 19 May 2025 17:19:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747667994;
-	bh=x9hdDCWZ2SmxyLjneKm0gaUUE7Iv2UMdCIhLNsQ4wQ0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=umIIrj0uDPArooDnqXjzJz68RD+7Q4M4eJUfUx5J1QoQCbtgi8O0oc69wtSb5VoHN
-	 RoidOkUdKL3egevgM35fAVWGzVzZDR3/6zDiRuUwOEDOpuAV5CoVyfYUhYoZ9cf9Cp
-	 rVH02oerM3hvO18X6trc9x1YDsVvHJag/Rx+EGjs=
-Message-ID: <0b796f3f-8fcc-422e-892a-3e919518d5b0@ideasonboard.com>
-Date: Mon, 19 May 2025 18:20:10 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg+W/TWK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31192C4CEE4;
+	Mon, 19 May 2025 15:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747668035;
+	bh=hCsytdVeeJL9k59PuEkSeSt24V1PhRpfKVXpzj7jUtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pg+W/TWKKyjgF5xP20j0uAdD0cIn+UCdcUHoBD8pvqnECQMtWaatkCm3ynMk1tcKQ
+	 BnFX9YSkQqtUIqBJw8xMqDfNAU80qfQ5jKuhqN8lSxQ1uBnPX+xsF7kROYIXaoGtbi
+	 p41LAZ79T2BhxM69kZciPyVjVh+p1iGy9hvmiFowCNVhK4wPPalkEdnOUGWnvX3Ph2
+	 N2wvZe/D7j8ui6YHApTHqAm0hdwMIhqIYwg76JLjDrJAoUCh2T4wWySPbqF8c8KZPf
+	 XfUUm4HHS5mTc9BxQFVQ59h5CSgXnfwnOolD5CF6/Y97/QLWj/M15r9u+xhM86jyb7
+	 M5DYrZNKbxFoQ==
+Date: Mon, 19 May 2025 17:20:30 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org, 
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 01/12] module: Move modprobe_path and modules_disabled
+ ctl_tables into the module subsys
+Message-ID: <l7dgle5lhsvfrikd4rqvzuwrqwrseucf5ijgnbi6fxook6dnhj@sc7givb3qimb>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
+ <e2ebf88d-46a2-4f38-a0c8-940c3d3bee49@suse.com>
+ <g3e3ygz4jb73b3zhxexpwacwui3imlwauujzeq2nlopp2i2fjp@lzj33hcwztc2>
+ <f6058414-e04d-4b7f-b4e6-3ac3613edbc1@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/3] Add support for AM62L DSS
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
- s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com,
- jyri.sarha@iki.fi, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- simona@ffwll.ch, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-References: <20250507180631.874930-1-devarsht@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250507180631.874930-1-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="otw3l52sr4y45r5c"
+Content-Disposition: inline
+In-Reply-To: <f6058414-e04d-4b7f-b4e6-3ac3613edbc1@suse.com>
 
-Hi,
 
-On 07/05/2025 21:06, Devarsh Thakkar wrote:
-> This adds support for DSS subsystem present in TI's AM62L SoC
-> which supports single display pipeline with DPI output which
-> is also routed to DSI Tx controller within the SoC.
+--otw3l52sr4y45r5c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think this looks fine. I did some quick tests, and didn't notice 
-anything amiss. I'm still somewhat wary about the indexing we do wrt. 
-planes, and the possibility to introduce hard-to-find bugs by using the 
-wrong index. We can try to improve this on top.
+On Thu, May 15, 2025 at 02:45:22PM +0200, Petr Pavlu wrote:
+> On 5/15/25 12:04, Joel Granados wrote:
+> > On Thu, May 15, 2025 at 10:04:53AM +0200, Petr Pavlu wrote:
+> >> On 5/9/25 14:54, Joel Granados wrote:
+> >>> Move module sysctl (modprobe_path and modules_disabled) out of sysctl=
+=2Ec
+> >>> and into the modules subsystem. Make the modprobe_path variable static
+> >>> as it no longer needs to be exported. Remove module.h from the includ=
+es
+> >>> in sysctl as it no longer uses any module exported variables.
+=2E..
+> > Like this?:
+> > [...]
+>=20
+> Let's also move the KMOD_PATH_LEN definition and the modprobe_path
+> declaration from include/linux/kmod.h to kernel/module/internal.h, as
+> they are now fully internal to the module loader, and use "module"
+> instead of "kmod" in the sysctl registration to avoid confusion with the
+> modprobe logic.
+>=20
+> The adjusted patch is below.
+>=20
+> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+Thx for review and patch. Have applied it to my current V2 branch [1]
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Best
 
-I'll do a few more tests, and unless there are no other commets I'll 
-push to drm-misc tomorrow.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git=
+/log/?h=3Djag/mv_ctltables_iter2
 
-  Tomi
+>=20
+> --=20
+> Thanks,
+> Petr
+>=20
+>=20
+> diff --git a/include/linux/kmod.h b/include/linux/kmod.h
+> index 68f69362d427..9a07c3215389 100644
+> --- a/include/linux/kmod.h
+> +++ b/include/linux/kmod.h
+> @@ -14,10 +14,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/sysctl.h>
+> =20
+> -#define KMOD_PATH_LEN 256
+> -
+>  #ifdef CONFIG_MODULES
+> -extern char modprobe_path[]; /* for sysctl */
+>  /* modprobe exit status on success, -ve on error.  Return value
+>   * usually useless though. */
+>  extern __printf(2, 3)
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 8050f77c3b64..f4ab8d90c475 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -304,7 +304,6 @@ struct notifier_block;
+> =20
+>  #ifdef CONFIG_MODULES
+> =20
+> -extern int modules_disabled; /* for sysctl */
+>  /* Get/put a kernel symbol (calls must be symmetric) */
+>  void *__symbol_get(const char *symbol);
+>  void *__symbol_get_gpl(const char *symbol);
+> diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+> index 626cf8668a7e..0954c8de00c2 100644
+> --- a/kernel/module/internal.h
+> +++ b/kernel/module/internal.h
+> @@ -58,6 +58,9 @@ extern const struct kernel_symbol __stop___ksymtab_gpl[=
+];
+>  extern const u32 __start___kcrctab[];
+>  extern const u32 __start___kcrctab_gpl[];
+> =20
+> +#define KMOD_PATH_LEN 256
+> +extern char modprobe_path[];
+> +
+>  struct load_info {
+>  	const char *name;
+>  	/* pointer to module in temporary copy, freed at end of load_module() */
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index a2859dc3eea6..a336b7b3fb23 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -126,9 +126,37 @@ static void mod_update_bounds(struct module *mod)
+>  }
+> =20
+>  /* Block module loading/unloading? */
+> -int modules_disabled;
+> +static int modules_disabled;
+>  core_param(nomodule, modules_disabled, bint, 0);
+> =20
+> +static const struct ctl_table module_sysctl_table[] =3D {
+> +	{
+> +		.procname	=3D "modprobe",
+> +		.data		=3D &modprobe_path,
+> +		.maxlen		=3D KMOD_PATH_LEN,
+> +		.mode		=3D 0644,
+> +		.proc_handler	=3D proc_dostring,
+> +	},
+> +	{
+> +		.procname	=3D "modules_disabled",
+> +		.data		=3D &modules_disabled,
+> +		.maxlen		=3D sizeof(int),
+> +		.mode		=3D 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	=3D proc_dointvec_minmax,
+> +		.extra1		=3D SYSCTL_ONE,
+> +		.extra2		=3D SYSCTL_ONE,
+> +	},
+> +};
+> +
+> +static int __init init_module_sysctl(void)
+> +{
+> +	register_sysctl_init("kernel", module_sysctl_table);
+> +	return 0;
+> +}
+> +
+> +subsys_initcall(init_module_sysctl);
+> +
+>  /* Waiting for a module to finish initializing? */
+>  static DECLARE_WAIT_QUEUE_HEAD(module_wq);
+> =20
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 9b4f0cff76ea..473133d9651e 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -19,7 +19,6 @@
+>   *  Removed it and replaced it with older style, 03/23/00, Bill Wendling
+>   */
+> =20
+> -#include <linux/module.h>
+>  #include <linux/sysctl.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/printk.h>
+> @@ -1616,25 +1615,6 @@ static const struct ctl_table kern_table[] =3D {
+>  		.proc_handler	=3D proc_dointvec,
+>  	},
+>  #endif
+> -#ifdef CONFIG_MODULES
+> -	{
+> -		.procname	=3D "modprobe",
+> -		.data		=3D &modprobe_path,
+> -		.maxlen		=3D KMOD_PATH_LEN,
+> -		.mode		=3D 0644,
+> -		.proc_handler	=3D proc_dostring,
+> -	},
+> -	{
+> -		.procname	=3D "modules_disabled",
+> -		.data		=3D &modules_disabled,
+> -		.maxlen		=3D sizeof(int),
+> -		.mode		=3D 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	=3D proc_dointvec_minmax,
+> -		.extra1		=3D SYSCTL_ONE,
+> -		.extra2		=3D SYSCTL_ONE,
+> -	},
+> -#endif
+>  #ifdef CONFIG_UEVENT_HELPER
+>  	{
+>  		.procname	=3D "hotplug",
+>=20
 
+--=20
+
+Joel Granados
+
+--otw3l52sr4y45r5c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmgrTDAACgkQupfNUreW
+QU/twAv8DxA6gxRLdNSDZrJxSdnvcFu76bvp0iwD1X6Ms0Yq16tmcaIqSS8XtA7r
+Qe9aRNluUy/XUZj84T/WmyEBTVMLERBJAxp0moXvGXSHJ7hkKDJ2uM74VfH3xvcR
+RhM9Hlc6MkUqywUumSFsCUeqvsftJY/e/3Yg72ANzknwRuNC97dh+EZihUxDnufa
+JrBHT/f2y3qUHeJfpHS8aOa7LuZtL93rHeoju8Sacw6PQcmI2+hZWFr3nC3UK3FW
+jiEn6n2oZgzpdgpgnoguceNDRjqCJMVojeM24vEPT7XRxl8ez9cbu4w/vWqtuts4
+0fekBOrig2pDSWAA2u/Qkyk4uWpLxveSsYb8XCXjYqMWcZSJJ+Z+o/bv5z5niPZP
+DP7eTwecC+yS6lwU2aN0CLFu13QL9XAVp28YO2xzRLN0g5HqqViItD8bl4F3kZCr
+m9bb0y2TKAwncoFOEPGa5tEIZ39w2C7RWlXM8XIRYWR0vp4it6KAi92eO7Cb0374
+3lh/X1hk
+=Ofdx
+-----END PGP SIGNATURE-----
+
+--otw3l52sr4y45r5c--
