@@ -1,327 +1,202 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6918D288C0A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA1C288CA3;
+	Mon, 19 May 2025 17:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747676814; cv=none; b=l1RrX/Kl9z5NRo6V9/ItyVpQ4lE4/od8Phrm3d+QSBQbOS/nA70yeV9HED7/yaDWDgaMFIDGPXlVP5Z/0aQd7sYISeCJWdoo2vkQhnll19lcaoqnEZKnJz+aCMAPJWrKy4XvWb+8xUxIUZ+UiEan78tr6NIk15oIsJIZPJbK/bs=
+	t=1747676829; cv=none; b=M+YN1YZt1Csvz622V/rDklJafuIPCw9fznE5TeSQ+RSUSvvV5BXwYitwgLu2Q45FLaSMS/MZuV2Lrd8c8DOrTL6C8Ij5O3vO6FFlA/w0ef5w3VmoYzpgLvAkiw85jQIN3B/CeXb49/ML/YMoBwLwHWCv/Vka3vqk5ijvkeGpViY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747676814; c=relaxed/simple;
-	bh=t/Aw2kILSRs4ald3v7pjsP5ESZ2BM0Oh8pP15nw8+fE=;
+	s=arc-20240116; t=1747676829; c=relaxed/simple;
+	bh=DFhJYazfoHDblQFnaonh7jg5Y06axl6MG9yo5ppu7zo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D3NQdeNDhmMX/t3dN/LtWwEQw7+4g0xTT2xGIA/IG0QveuO9kPMrJJQM5CTKodYSmtrr74MxfWosIx03a2mnDUn6mnJSx28Q2tXDw20Z+zLZYbAGzpYJiPN8h7nV86Gmlu9pm5NmdgmQbo2Tl+MBR/K/LYG7b3b85T2Grry/QO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TNsy/ilu; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 To:Cc:Content-Type; b=jnIHYsjAKyCKSYEIUgWbRR6PgOg/x0TBTJFMDQipwiH0E0R1X8P0+gs6RoFS8S8+fADSpjC/ccyHE819Jxh2PyWiv/1f8g4gpFzTFAGv192s03KJGvMjK7HrKBbj/Rz6SWWkaYhtO/k6QT1iUeHjc1P5Dddv+yTWLEtuXzWJV+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PV/26R3w; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TNsy/ilu"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad551342f08so295294766b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:46:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PV/26R3w"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2db2f23f174so1719437fac.2;
+        Mon, 19 May 2025 10:47:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747676809; x=1748281609; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747676827; x=1748281627; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0nPs85tW7j1RabtI/IPGgsIXGckQjdybUsjhz9dcqKM=;
-        b=TNsy/ilufaFgDG+ih0Hcp3O1oUwHX+vX3suSfNR1i8Uc+gwYJMMbrycMb58+DllCyY
-         x9qq7mpFq1ycu/dTsyUDWRxMCsJAl9j546xGaqxMD383PNkVU7hKG1qPWNgr2HuMlR7U
-         iZxNx+Se7y8zewwqAzlvKKNP4f++4XOORI8MEnOGKOgg1XUKv6/XvllBXYWzTLT34uL9
-         fZC1ZeX8cEPxkLmS0IxMsb/DqecF+p8dkKL0TthhGqEKpt70qhOXST7vu46aJhEoSLBK
-         BU4G5aWYlcZ1za50JR6sAMsp4uhJZoFKXuLX+kWkICCPozPveZRBG4MXLlFMn27li84r
-         dDvQ==
+        bh=ChLEr86ZFedRuooYVXm+1oKgwf+je0INxoHyO6ITtYI=;
+        b=PV/26R3ww6fGpwoCBmsLugZnr5eHn3ZYnsubmBTo1wsWtZGglM7umQs4WF2kO/9Yu6
+         ZffzXiDFr7EjsXs8DHgP39q6MqaGwFiY54i7zW2/AwhTpWMRg/DAChnN6Syz6Q0uGKo2
+         6C82RToYQU3YkLqJFPYh1d4sf/jAvsV7PmoOcSUYj6C825EQFeXZTlZDke5Q20E8mpgh
+         kgebmg5o83Fg6GoeC4/Hm3cMYcMyMQ8a7THFuJA4YwFbvo25Cl05z+t3nHhOwpxJDkTA
+         kDOYxqq9DJZZEYPhMuH7BOl/JlxtbRV6GXtKXIMduRtT/Nf7I0/wnYRuRwxLgWcewHYw
+         l4+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747676809; x=1748281609;
+        d=1e100.net; s=20230601; t=1747676827; x=1748281627;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0nPs85tW7j1RabtI/IPGgsIXGckQjdybUsjhz9dcqKM=;
-        b=krzpe+Psyf6tY24PG0Ktj4uHQ65kuUlKBgf4XM1KcXl+lbvazdmdIWkj3mnsZub/3e
-         5oa9f/UimuXhp02TIre7npUVixwiH7XLRdt9XyIsZijJNxbZYK/DJpZmBU/yPmAF8AIA
-         GAiE2DyEiiKajbFjd1a0V7tEQ62NuEutH8Ro4JQ7NFxFysk9wiYriHioDOKBE3w5Nffq
-         LgVlmHBVrLId/alBwWUwlc6gNdqoqc4V22cXqWFhKiPOa/ET9Hp+mJbh680pP1ggoKlw
-         RoHxyGRp6ODnAhiRGWHN1mgY3qkl9AGuHgPPsnXhygwV4waZFDAiw9toIaHxP4eldyoR
-         WvHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFzk9yX57M5RUibuIQctvsDQUfPPZxk4yUtmPqgsjgIck29dRtinErVgB1K6Q1w7bJAU5opvoanMLbT2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys+oYUhOR6nd4uJ7u3fJmmUa36DHnbXmnSQDI6eS6P0Clmnu1Z
-	tYgxkVgQMm9VDsZKWCUjzsHM4kEe0GiEBKpqZGjUvZSLwlB8JjEsFC6o6pmJwcjneptfKpQtvBN
-	r7jClgZwoWfxtwTnjFqnLJv+b9P4ceu4dDE60gqVrGw==
-X-Gm-Gg: ASbGncvShBbpt5zdm0roFOTpF/n4G//u4IjOewxPm9ezpHDbfJd//aEValIdp05BAcq
-	z/ufZ1ywaznCkeQ2+9+uNhpmdu/s7IyFq2K05b4iqU0B5KEzoTo1Q6SxdwiWOZ6ogy07QhpJ2z3
-	hGuUOUfWkUOZzG9fcER+7qdepHBcrmMLuFBUmq4AQkcQ==
-X-Google-Smtp-Source: AGHT+IEd4sAjp/SQEBcTnjdU3gIi5ZU4ZvNJnoo1p857/bbxOVdYODCCcgHLJDF9cfWaSFNCYk5zfEy1B0Tqydffffg=
-X-Received: by 2002:a17:906:4fd4:b0:ad2:50ef:4925 with SMTP id
- a640c23a62f3a-ad536bca526mr1166082466b.25.1747676809479; Mon, 19 May 2025
- 10:46:49 -0700 (PDT)
+        bh=ChLEr86ZFedRuooYVXm+1oKgwf+je0INxoHyO6ITtYI=;
+        b=L+LUpLqiQ92Qw0wPWr6lEUziu8huOGGUqMQPno7tc8R/XhFAV7dn/Ae4Rcxqolhcxd
+         FRo76ON7zbwOTPU5S0hlbV7wiMeHJq1tsot2JVroLbqDd7YPA7tccsnqxrbhTRSKjWxh
+         ykWbiHKOzrcpRRTGOWpFr1C3WLfgbxUmxpxXod6dOnHuNjrO3KA3T1egtEAf++CD7cV8
+         M/q6l6u2rsdlPIXUZUCtvjY8NhuDmerM2Z6hrv+9T6UO5LS0VLKMwlhqUgP8H0yVj00R
+         q6zjXJHPwec+1sBp51dt8uMfq+QWBtnqz3qDXMJi68w5CvA0SatnDEVP7clkUHpM0e+Z
+         JLJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNZho6eGTkcXhI312A/f8OuJLdvicqUZiBxenmqoy5pXoKcPYZCu9lSy94yTvo6C4T483AVSr+Gow7@vger.kernel.org, AJvYcCVuYjzFY80+eu8qGms+n+nb8YraSiSEX3opZaoIJJs1lMfWmRi7WyCLGeJqyawsJr2W9LvIsOxM/sfUnWIZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxu6PR6B83wQMh6AOtQNaiZpBAr/8Vv1IayTZZERKyvsIQU5ux
+	PVdiWVo4c9T+AxC+mobOLhY7djI+PZ0gfPzRM+DwAl6ufDpfs2AB2OoZshm/U1NNQNyBbFeV7XX
+	siqwIguGeSliFDmcmWdd/M38ASQ0aBhI=
+X-Gm-Gg: ASbGncsENa9EHO+uGBaDx7FfrIlTILlGuZBa8+ryQyVpXiSgLF4aCBxN/gdQiQMoOmu
+	kfA33bk7uE1oQZL/z7J3s4kiS5TEQAP7rYIbogJCM//hlawZ52PYA/UOqPoKP1MTrGRUq9dIgCL
+	IpwXZ0OQnEVHomRxS2O/SZQZ2qN0f5MRsuFw==
+X-Google-Smtp-Source: AGHT+IEnVUWDSHozz254hL30P9c6EGyyee0LNYouexPzbQED3hJ2ptthmdDRcsit789Wt6mIUbjJZ0ZsBECK59uKEsA=
+X-Received: by 2002:a05:6871:d302:b0:2d8:957a:5164 with SMTP id
+ 586e51a60fabf-2e3c1c0489amr9135265fac.10.1747676826966; Mon, 19 May 2025
+ 10:47:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <681fbc4c.050a0220.f2294.0018.GAE@google.com> <20250519155149.2382-1-superman.xpt@gmail.com>
-In-Reply-To: <20250519155149.2382-1-superman.xpt@gmail.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 19 May 2025 19:46:38 +0200
-X-Gm-Features: AX0GCFue8YnFym0Fy3ShNTRkWNKL4FjUo4-KISSxLHzHCPHtUkn7xXXmV8Ormbg
-Message-ID: <CAPjX3FcDxXUi=hK1KPUDQK-H-joAmii0yUgz=_XzyQoO43a0xA@mail.gmail.com>
-Subject: Re: [syzbot] [btrfs?] possible deadlock in btrfs_quota_enable (2)
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: syzbot+3a88c590edd72179657c@syzkaller.appspotmail.com, clm@fb.com, 
-	dsterba@suse.com, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250513020327.414017-1-peter.chen@cixtech.com> <20250513020327.414017-6-peter.chen@cixtech.com>
+In-Reply-To: <20250513020327.414017-6-peter.chen@cixtech.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Mon, 19 May 2025 12:46:54 -0500
+X-Gm-Features: AX0GCFtqWXwTFFZgneO-96euSqh3v7WYcX1AxmZ5ENB9ZjD1grFsFnZXGgF2UB0
+Message-ID: <CABb+yY2fj13YDCYD9B-Hwta47=+CLy6eGSOOc_ez2HrR4-xbjg@mail.gmail.com>
+Subject: Re: [PATCH v8 5/9] mailbox: add CIX mailbox driver
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, maz@kernel.org, 
+	sudeep.holla@arm.com, kajetan.puchalski@arm.com, eballetb@redhat.com, 
+	Guomin Chen <Guomin.Chen@cixtech.com>, Gary Yang <gary.yang@cixtech.com>, 
+	Lihua Liu <Lihua.Liu@cixtech.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 19 May 2025 at 17:53, Penglei Jiang <superman.xpt@gmail.com> wrote:
->
-> On Sat, 10 May 2025 13:51:24 -0700, syzbot wrote:
-> > syz.4.219/7436 is trying to acquire lock:
-> > ffff88806ce71918 (&fs_info->qgroup_ioctl_lock){+.+.}-{4:4}, at: btrfs_quota_enable+0x2be/0x1d50 fs/btrfs/qgroup.c:1059
-> >
-> > but task is already holding lock:
-> > ffff88806ce724f8 (btrfs_trans_num_extwriters){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
-> >
-> > which lock already depends on the new lock.
-> >
-> >
-> > the existing dependency chain (in reverse order) is:
-> >
-> > -> #5 (btrfs_trans_num_extwriters){++++}-{0:0}:
-> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-> >        join_transaction+0x1a4/0xd70 fs/btrfs/transaction.c:321
-> >        start_transaction+0x6ae/0x1620 fs/btrfs/transaction.c:705
-> >        btrfs_dirty_inode+0x9f/0x190 fs/btrfs/inode.c:6129
-> >        inode_update_time fs/inode.c:2076 [inline]
-> >        touch_atime+0x2f6/0x6d0 fs/inode.c:2149
-> >        file_accessed include/linux/fs.h:2599 [inline]
-> >        filemap_read+0x1024/0x11d0 mm/filemap.c:2774
-> >        __kernel_read+0x469/0x8c0 fs/read_write.c:528
-> >        integrity_kernel_read+0x89/0xd0 security/integrity/iint.c:28
-> >        ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
-> >        ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
-> >        ima_calc_file_hash+0x152c/0x18d0 security/integrity/ima/ima_crypto.c:568
-> >        ima_collect_measurement+0x42e/0x8e0 security/integrity/ima/ima_api.c:293
-> >        process_measurement+0x1121/0x1a40 security/integrity/ima/ima_main.c:385
-> >        ima_file_check+0xd7/0x120 security/integrity/ima/ima_main.c:613
-> >        security_file_post_open+0xbb/0x290 security/security.c:3130
-> >        do_open fs/namei.c:3882 [inline]
-> >        path_openat+0x2f26/0x3830 fs/namei.c:4039
-> >        do_filp_open+0x1fa/0x410 fs/namei.c:4066
-> >        do_sys_openat2+0x121/0x1c0 fs/open.c:1429
-> >        do_sys_open fs/open.c:1444 [inline]
-> >        __do_sys_openat fs/open.c:1460 [inline]
-> >        __se_sys_openat fs/open.c:1455 [inline]
-> >        __x64_sys_openat+0x138/0x170 fs/open.c:1455
-> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > -> #4 (btrfs_trans_num_writers){++++}-{0:0}:
-> >        reacquire_held_locks+0x127/0x1d0 kernel/locking/lockdep.c:5383
-> >        __lock_release kernel/locking/lockdep.c:5572 [inline]
-> >        lock_release+0x1b4/0x3e0 kernel/locking/lockdep.c:5887
-> >        percpu_up_read include/linux/percpu-rwsem.h:100 [inline]
-> >        __sb_end_write include/linux/fs.h:1778 [inline]
-> >        sb_end_intwrite+0x26/0x1c0 include/linux/fs.h:1895
-> >        __btrfs_end_transaction+0x248/0x640 fs/btrfs/transaction.c:1075
-> >        btrfs_dirty_inode+0x14c/0x190 fs/btrfs/inode.c:6143
-> >        inode_update_time fs/inode.c:2076 [inline]
-> >        __file_update_time fs/inode.c:2305 [inline]
-> >        file_update_time+0x344/0x490 fs/inode.c:2335
-> >        btrfs_page_mkwrite+0x634/0x16a0 fs/btrfs/file.c:1814
-> >        do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-> >        wp_page_shared mm/memory.c:3688 [inline]
-> >        do_wp_page+0x2626/0x5760 mm/memory.c:3907
-> >        handle_pte_fault mm/memory.c:6013 [inline]
-> >        __handle_mm_fault+0x1028/0x5380 mm/memory.c:6140
-> >        handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-> >        do_user_addr_fault+0xa81/0x1390 arch/x86/mm/fault.c:1337
-> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-> >
-> > -> #3 (sb_pagefaults#2){.+.+}-{0:0}:
-> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-> >        percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-> >        __sb_start_write include/linux/fs.h:1783 [inline]
-> >        sb_start_pagefault include/linux/fs.h:1948 [inline]
-> >        btrfs_page_mkwrite+0x3b2/0x16a0 fs/btrfs/file.c:1798
-> >        do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-> >        do_shared_fault mm/memory.c:5594 [inline]
-> >        do_fault mm/memory.c:5656 [inline]
-> >        do_pte_missing mm/memory.c:4160 [inline]
-> >        handle_pte_fault mm/memory.c:5997 [inline]
-> >        __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
-> >        handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-> >        do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1388
-> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-> >
-> > -> #2 (&mm->mmap_lock){++++}-{4:4}:
-> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-> >        down_read_killable+0x50/0x350 kernel/locking/rwsem.c:1547
-> >        mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
-> >        get_mmap_lock_carefully mm/memory.c:6355 [inline]
-> >        lock_mm_and_find_vma+0x2a8/0x300 mm/memory.c:6406
-> >        do_user_addr_fault+0x331/0x1390 arch/x86/mm/fault.c:1360
-> >        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-> >        exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-> >        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-> >        filldir64+0x2b3/0x690 fs/readdir.c:371
-> >        dir_emit include/linux/fs.h:3861 [inline]
-> >        kernfs_fop_readdir+0x534/0x870 fs/kernfs/dir.c:1907
-> >        iterate_dir+0x5ac/0x770 fs/readdir.c:108
-> >        __do_sys_getdents64 fs/readdir.c:403 [inline]
-> >        __se_sys_getdents64+0xe4/0x260 fs/readdir.c:389
-> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > -> #1 (&root->kernfs_rwsem){++++}-{4:4}:
-> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-> >        down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-> >        kernfs_add_one+0x41/0x520 fs/kernfs/dir.c:791
-> >        kernfs_create_dir_ns+0xde/0x130 fs/kernfs/dir.c:1091
-> >        sysfs_create_dir_ns+0x123/0x280 fs/sysfs/dir.c:59
-> >        create_dir lib/kobject.c:73 [inline]
-> >        kobject_add_internal+0x59f/0xb40 lib/kobject.c:240
-> >        kobject_add_varg lib/kobject.c:374 [inline]
-> >        kobject_init_and_add+0x125/0x190 lib/kobject.c:457
-> >        btrfs_sysfs_add_qgroups+0x111/0x2b0 fs/btrfs/sysfs.c:2616
-> >        btrfs_quota_enable+0x278/0x1d50 fs/btrfs/qgroup.c:1030
-> >        btrfs_ioctl_quota_ctl+0x183/0x1c0 fs/btrfs/ioctl.c:3676
-> >        vfs_ioctl fs/ioctl.c:51 [inline]
-> >        __do_sys_ioctl fs/ioctl.c:906 [inline]
-> >        __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
-> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > -> #0 (&fs_info->qgroup_ioctl_lock){+.+.}-{4:4}:
-> >        check_prev_add kernel/locking/lockdep.c:3166 [inline]
-> >        check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-> >        validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-> >        __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-> >        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-> >        __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-> >        __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-> >        btrfs_quota_enable+0x2be/0x1d50 fs/btrfs/qgroup.c:1059
-> >        btrfs_ioctl_quota_ctl+0x183/0x1c0 fs/btrfs/ioctl.c:3676
-> >        vfs_ioctl fs/ioctl.c:51 [inline]
-> >        __do_sys_ioctl fs/ioctl.c:906 [inline]
-> >        __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
-> >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > other info that might help us debug this:
-> >
-> > Chain exists of:
-> >   &fs_info->qgroup_ioctl_lock --> btrfs_trans_num_writers --> btrfs_trans_num_extwriters
-> >
-> >  Possible unsafe locking scenario:
-> >
-> >        CPU0                    CPU1
-> >        ----                    ----
-> >   rlock(btrfs_trans_num_extwriters);
-> >                                lock(btrfs_trans_num_writers);
-> >                                lock(btrfs_trans_num_extwriters);
-> >   lock(&fs_info->qgroup_ioctl_lock);
-> >
-> >  *** DEADLOCK ***
-> >
-> > 5 locks held by syz.4.219/7436:
-> >  #0: ffff8880259ac420 (sb_writers#17){.+.+}-{0:0}, at: mnt_want_write_file+0x60/0x200 fs/namespace.c:600
-> >  #1: ffff88806ce70bd0 (&fs_info->subvol_sem){+.+.}-{4:4}, at: btrfs_ioctl_quota_ctl+0x178/0x1c0 fs/btrfs/ioctl.c:3675
-> >  #2: ffff8880259ac610 (sb_internal#3){.+.+}-{0:0}, at: btrfs_quota_enable+0x2b1/0x1d50 fs/btrfs/qgroup.c:1057
-> >  #3: ffff88806ce724d0 (btrfs_trans_num_writers){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
-> >  #4: ffff88806ce724f8 (btrfs_trans_num_extwriters){++++}-{0:0}, at: join_transaction+0x164/0xd70 fs/btrfs/transaction.c:320
->
-> We assign a sequence number to each lock to represent the order in which
-> they are held:
->
->         0: vfs freeze semaphores
->         1: qgroup_ioctl_lock
->         2: kernfs_rwsem
->         3: mmap_lock
->         4: btrfs_trans_num_writers
->         5: btrfs_trans_num_extwriters
->
->         cpu-0
->         =====
->         0: vfs freeze semaphores
->         4: btrfs_trans_num_writers
->         5: btrfs_trans_num_extwriters
->         1: qgroup_ioctl_lock
+Hi,
 
-I understand this was introduced with commit a855fbe69229 trying to
-prevent another deadlock.
-Perhaps it would be better to break the chain somewhere else?
 
-Or maybe get rid of the qgroup_ioctl_lock and use subvol_sem instead?
-I mean that one is already being used in this code path.
+> diff --git a/drivers/mailbox/cix-mailbox.c b/drivers/mailbox/cix-mailbox.c
+> new file mode 100644
+> index 000000000000..c2783dd7d145
+> --- /dev/null
+> +++ b/drivers/mailbox/cix-mailbox.c
+> @@ -0,0 +1,632 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 Cix Technology Group Co., Ltd.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "mailbox.h"
+> +
+> +/* Register define */
+> +#define REG_MSG(n)     (0x0 + 0x4*(n))                 /* 0x0~0x7c */
+> +#define REG_DB_ACK     REG_MSG(CIX_MBOX_MSG_LEN)       /* 0x80 */
+> +#define ERR_COMP       (REG_DB_ACK + 0x4)              /* 0x84 */
+> +#define ERR_COMP_CLR   (REG_DB_ACK + 0x8)              /* 0x88 */
+> +#define REG_F_INT(IDX) (ERR_COMP_CLR + 0x4*(IDX+1))    /* 0x8c~0xa8 */
+> +#define FIFO_WR                (REG_F_INT(MBOX_FAST_IDX+1))    /* 0xac */
+> +#define FIFO_RD                (FIFO_WR + 0x4)                 /* 0xb0 */
+> +#define FIFO_STAS      (FIFO_WR + 0x8)                 /* 0xb4 */
+> +#define FIFO_WM                (FIFO_WR + 0xc)                 /* 0xb8 */
+> +#define INT_ENABLE     (FIFO_WR + 0x10)                /* 0xbc */
+> +#define INT_ENABLE_SIDE_B      (FIFO_WR + 0x14)        /* 0xc0 */
+> +#define INT_CLEAR      (FIFO_WR + 0x18)                /* 0xc4 */
+> +#define INT_STATUS     (FIFO_WR + 0x1c)                /* 0xc8 */
+> +#define FIFO_RST       (FIFO_WR + 0x20)                /* 0xcc */
+> +
+> +/* [0~7] Fast channel
+> + * [8] doorbell base channel
+> + * [9]fifo base channel
+> + * [10] register base channel
+> + */
+> +#define CIX_MBOX_CHANS         (11)
+> +
+> +/*
+> + * The maximum transmission size is 32 words or 128 bytes.
+> + */
+> +#define CIX_MBOX_MSG_LEN       (32)    /* Max length = 32 words */
+> +#define MBOX_MSG_LEN_MASK      (0x7fL) /* Max length = 128 bytes */
+> +
+>
+Move these above register defines where these are used.
+Also, no need for brackets around numbers. Here and elsewhere.
+....
 
->         cpu-1
->         =====
->         1: qgroup_ioctl_lock
->         2: kernfs_rwsem
+> +
+> +static void cix_mbox_isr_reg(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
+> +       u32 int_status;
+> +       u32 data[CIX_MBOX_MSG_LEN];
+> +       int i;
+> +       u32 len;
 >
->         cpu-2
->         =====
->         2: kernfs_rwsem
->         3: mmap_lock
+cosmetic: tidy these up by merging and sorting in reverse christmas tree.
+
+
+> +
+> +       int_status = cix_mbox_read(priv, INT_STATUS);
+> +
+> +       if (priv->dir == MBOX_RX) {
+> +               /* rx interrupt is triggered */
+> +               if (int_status & DB_INT) {
+> +                       cix_mbox_write(priv, DB_INT, INT_CLEAR);
+> +                       data[0] = cix_mbox_read(priv, REG_MSG(0));
+> +                       len = mbox_get_msg_size(data);
+> +                       for (i = 0; i < len; i++)
+> +                               data[i] = cix_mbox_read(priv, REG_MSG(i));
+> +
+> +                       /* trigger ack interrupt */
+> +                       cix_mbox_write(priv, DB_ACK_INT_BIT, REG_DB_ACK);
+> +                       mbox_chan_received_data(chan, data);
+> +               }
+> +       } else {
+> +               /* tx ack interrupt is triggered */
+> +               if (int_status & ACK_INT) {
+> +                       cix_mbox_write(priv, ACK_INT, INT_CLEAR);
+> +                       mbox_chan_txdone(chan, 0);
+> +               }
+> +       }
+> +}
+> +
+> +static void cix_mbox_isr_fifo(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
+> +       u32 data[CIX_MBOX_MSG_LEN] = { 0 };
 >
->         cpu-3
->         =====
->         3: mmap_lock
->         4: btrfs_trans_num_writers
->         5: btrfs_trans_num_extwriters
+Is it really needed? Can we do with just zeroing the byte after valid data?
+At least move it under "FIFO waterMark interrupt is generated", so it
+is only done when needed.
+
+....
+> +
+> +static int cix_mbox_startup(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp = chan->con_priv;
+> +       int ret;
+> +       int index = cp->index;
+> +       u32 val_32;
+> +
+> +       ret = request_irq(priv->irq, cix_mbox_isr, 0,
+> +                         dev_name(priv->dev), chan);
 >
-> I believe we should adjust the order of locks in the CPU-0 call stack by moving
-> the acquisition of qgroup_ioctl_lock inside the start_transaction() function.
-> After the adjustment, it becomes as follows:
->
->         0: vfs freeze semaphores
->         1: qgroup_ioctl_lock
->         4: btrfs_trans_num_writers
->         5: btrfs_trans_num_extwriters
->
->         static struct btrfs_trans_handle *
->         start_transaction(struct btrfs_root *root, unsigned int num_items,
->                         unsigned int type, enum btrfs_reserve_flush_enum flush,
->                         bool enforce_qgroups)
->         {
->                 ...
->
->                 /*
->                 * If we are JOIN_NOLOCK we're already committing a transaction and
->                 * waiting on this guy, so we don't need to do the sb_start_intwrite
->                 * because we're already holding a ref.  We need this because we could
->                 * have raced in and did an fsync() on a file which can kick a commit
->                 * and then we deadlock with somebody doing a freeze.
->                 *
->                 * If we are ATTACH, it means we just want to catch the current
->                 * transaction and commit it, so we needn't do sb_start_intwrite().
->                 */
->                 if (type & __TRANS_FREEZABLE)
->                         sb_start_intwrite(fs_info->sb);
->
->                 mutex_lock(&fs_info->qgroup_ioctl_lock);
->                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
->                 if (may_wait_transaction(fs_info, type))
->                         wait_current_trans(fs_info);
->
->                 do {
->                         ret = join_transaction(fs_info, type);
->                         if (ret == -EBUSY) {
->                                 wait_current_trans(fs_info);
->                                 if (unlikely(type == TRANS_ATTACH ||
->                                         type == TRANS_JOIN_NOSTART))
->                                         ret = -ENOENT;
->                         }
->                 } while (ret == -EBUSY);
->
->                 ...
->         }
->
+Can we do this later just before returning from the function? Or
+atleast free the irq before error returns.
+
+Also please make sure you run scripts/checkpatch and have all warnings cleared.
+
+Thanks
+Jassi
