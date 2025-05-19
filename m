@@ -1,121 +1,205 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053F71D61AA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA011DA21;
 	Mon, 19 May 2025 21:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747691214; cv=none; b=SiVf5YpGEKVgBwTSc0hAdZhM7pHk5vSPURJDFXdCgmRR4TFU3QoluBsNS4fhAFAcAqwF9FHYZitcQ/UXJLwMSgY1eOOhaQcS+M3XGuRtKwfyYNr8qoD1KzOPmoXbp53Gr981G6REtf0mqGWb1rMqUFk0NGdPM2zdyb5I7iurKPE=
+	t=1747691214; cv=none; b=eddd8t81Z7lA8eL6BC8Hn41odPx0EpJZLtv9qa81oaM6iGG+7xDzSIOGtNvGGH1hkTPnM/MT3R1GXVd0fLQwNBZD9kdDW/QaB5e4d2EC8qFNHuWY1FPaqk67BZnWcRejLvcp+3m7dxGmiaczPShkA0eMtJJcaHFqZi71Fwluv14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747691214; c=relaxed/simple;
-	bh=ZkQPFGCfN/ytLLMuoMd9ferJS5QDlazCEthjWxV02ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sKO5CSVYvb64Q0wXUZBmiI/ZVY8+/6ebXEKmK2eznxpIEZUDdV61klCG6g72K/M+n3rrrsyd+FwIjTHxNpJWkmNbbyJSGbC3fNqmng5N+6o4lTZ7hiDBBNh/bAaJZcvB6t6v4BAhyvCWn+TK1/BS3oAGmXxHJs+Mspjzncf/TWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/ishHMh; arc=none smtp.client-ip=209.85.221.54
+	bh=N1521YN47TVp3G/xpFAXWoEuVbJW7GAojZiKgi5PgLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ph0lRwseYPdib0mE6SEkuqEYYQmfhacmWeJNeYmKYWhttttV/w3xw0acDnstUUaVWPKNScoOMGLRTdfxRwTrD8AX1N2RylhavbBPuwG8JAjWZBKVMA4POS7A9w512+fxmgQmcV9IgK2tcvT0y4Ftww4ZR37FNPcoFMzEDLG4mrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hljQo3jo; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/ishHMh"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a35919fa8bso1851847f8f.0;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hljQo3jo"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7ba37b2b5bso1552349276.0;
         Mon, 19 May 2025 14:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747691210; x=1748296010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gmYkai44PKYL/6IygmKZDMZnIvRanA9GMqnax9LQufs=;
-        b=R/ishHMhzhJkHwK/PTstOdAOXZayc42dQqmn4+Sdzjo+EjoB+YMnCLE8RnbGb4jGmm
-         LlAyOtuKeCrE0Rmqsp6GmSCBzhugZIe7MPqAO56CbkoK4BHYXGSy9wkEtiVRnJ0SSiEE
-         A26Xc5tHK/9eUKo/2Tl5/n7o7o8MBYntjyIcOoh6lAU5SOruRLVJLnEYTsivlT0KELNI
-         AWPt83IC7nLz0E3EyerUdczBXbRKoFprG72l7ORpLqkNbsOoDmjvViAZunF8CUALh6QX
-         f+33CkPOkN1AYj4w/Cy79YM1r1coFRBpehvb31oYtK44LEdEJwpKv5PFx0y3SuBtpWQ7
-         qAUg==
+        d=gmail.com; s=20230601; t=1747691211; x=1748296011; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qFqHFurMBZtPAapbA1XA+pcLlQHLYWNfAxkQ+sCmyUk=;
+        b=hljQo3jo/XJznTe6eYjD5riMmMdvs2psQ8fcgL08iNNRjq67fZ3tWx/B5s0rl7EFc0
+         A4DReY1BGF7K0r1J8fymBzfvuLVkGdHr+0GMnJCy2yj1e3xHVwauGmLqQUOYZx5oJPyU
+         54sJbuE9MytfizNLBqMsPjnIxiz3k5WwkiY3XPzA9Ghp6f1PSdOadJDVr37OBJhvk3E5
+         wsTcvcLSY5TF5RyASz+ZlKvYvBaLcrPR+m7oHqxXFbrl8d3Lfguo10qmHQPouOyuzQNw
+         icf2mifwSiOlU8//JZDUTKtWCSARBPvfpIbb/PqPIRIk1PiMGN2jaljgdDgpm/ZRkrt5
+         P5Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747691210; x=1748296010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gmYkai44PKYL/6IygmKZDMZnIvRanA9GMqnax9LQufs=;
-        b=Dn+HQ7MjUcENxadcp8egnddBtYUIIx9DP6ndv2K+NGM04CNNSMxCPFPqBVp6XsXtOi
-         R9V9xmQ30R4jEq31EOC3J2Q1UYhoK8BwawUj9tFJepubW9uIjPePGhUhBoPLexmbuNHu
-         cpePPhH1j1xqFViAbNbb7uhJwS9yfX3ZBbqQZ17cPR+5R82GWvMf0OyLEDSUMqwjAzg1
-         y08O0O0ciXb6C/0zphaA1lNk/32Z/QwCLOX1wbV6gV5DgvvkLxSfXhBIciddL5mdD+0X
-         J059i89ZetklitLIECMtELHXXcqryWDGWpQIzkN1iofIM0YbMDgycRoFnp4BopgTKGLH
-         Q2NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9sAAt/k1s6zm6MMuzfw726Mhla8mz8o+WfnvEwAFClDOwc0FF64CUN6V/A7rFN1M7BOdc3bHgkF8=@vger.kernel.org, AJvYcCUXpOEwK/QYR4iCOe4bztf2GzKZq8h6VJcHZnTbhE3VZkMOT+ilhIEFhvSznxajeRJobHF6BepNN5lRrGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhlOJP5sneu1UsoqS9JgBfX0B6EFf29n2YG1sPtVU4Gwq4Zxsf
-	bHdb2F1iVro0aDB9Xo/dV/kbnf1uEzn6Htx5JK0wj7cBUc26o6CXCktS
-X-Gm-Gg: ASbGncvG1mHCnnj3yvQRtVz48J62w18/oWJLOTgit+kN5qUtRmuXw+ERR0kxVLdhD8I
-	r7B5Exn2FwNynwvPTRjKuKvPdD8Mnj/1LcC70I0Evgu6Idpcva7v6JmHwTYTiDOERKAh3Fqxbyj
-	cUMtXMb/NE2VR1suKgp90bYwATzr6VsMSWdumGYdciJPtyOT6o8KDYCBpWyoiaEU9hMkykaegeb
-	zt9V91F/ACwLrDFU5zvgAaqrwlwUSzELl750gzZhuoOSrC4kpDoo78jlZkqFQ/4+wadwJATPayr
-	b97oggH49e8UxncG3K+MCUJyZ+9palSqJB0OPJ90hkSXZ5XHmUT5NBhR0leKWfxX1AYpZxC/GSj
-	JmNI4FuyLFW+NOw==
-X-Google-Smtp-Source: AGHT+IEK2QOoJgfuFsxY1nWaqjk+wOUVezaxUh7UVvak1VzaWuH6MGuGhsZJfCS0udCyeNBHKN6yeg==
-X-Received: by 2002:a05:6000:1862:b0:391:2e6a:30fe with SMTP id ffacd0b85a97d-3a35ffd2829mr12015008f8f.39.1747691210063;
-        Mon, 19 May 2025 14:46:50 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a360b0b766sm13783592f8f.56.2025.05.19.14.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 14:46:49 -0700 (PDT)
-Date: Mon, 19 May 2025 22:46:48 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Bowen Yu <yubowen8@huawei.com>
-Cc: <rafael@kernel.org>, <viresh.kumar@linaro.org>,
- <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linuxarm@huawei.com>, <zhanjie9@hisilicon.com>,
- <jonathan.cameron@huawei.com>, <lihuisong@huawei.com>,
- <zhenglifeng1@huawei.com>, <cenxinghai@h-partners.com>
-Subject: Re: [PATCH] cpufreq: Update sscanf() to kstrtouint()
-Message-ID: <20250519224648.41f2460d@pumpkin>
-In-Reply-To: <20250519070938.931396-1-yubowen8@huawei.com>
-References: <20250519070938.931396-1-yubowen8@huawei.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1747691211; x=1748296011;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qFqHFurMBZtPAapbA1XA+pcLlQHLYWNfAxkQ+sCmyUk=;
+        b=SB92ZPBstFUliZSo8iLfbe/olnqD1rl4k34vDzGE2q0PtPttWQjzjDZXeIzyT45uSZ
+         GRHJV56xk47duBxwSgQfKFsSE5G97Dq3s8pSUoXEI5+eX1DpcOSF0akkW/2jQNn4rJvk
+         esLcdsB9qhjCkjbL69EyS8uhjhC5Euov04jQeeg/uvf14BmRzyy3G+eiueMWUaStQhOc
+         ztVgRPJ9lE6v7v6QWwXhM6zgP4ibw6UBOHaG1ykDWZXa0kvBIMKpifV8K78Tq84grt0D
+         7BVQMacEOwDN/uw3cH4IHliWmXsPN/SJ/kZMMpujySpb/hW2nH7gLac4ZRzuhnDoPphB
+         BgDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlAB86XH/I8dZg2kNcZWS5zUJ1HtuJ81uPugEXnp//FZ3HWNbNfs12OkMzwkztyECWC1qP5WlM/5vUfRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9pRSnoOJdhyVyNlfNpQRuaLeGVkBAGLu2Cz4dM67+xrP86k/R
+	dksjuwIoXziYPM528dEKSDrL/0lwuxCXjMzWnZKA0LTGzcDJwbg1eZk4B/X5PVphKHtvqijtDoi
+	wL1HhhbLFBwxW2cFJ7QS22JsrgmJHtmU=
+X-Gm-Gg: ASbGncvguHbGL2SUqmEDYHYhAhKjbWCEkwZMFYTr6QPnxQTIzC2GpCgp/AKFTg++k+J
+	8ETfXPIXOLu1vOUOqRiM1dg2IVIWTZZTy5cggAb3gOwcXHR5tw8hkePA+g1PB5sMZ1+Y7R40pw3
+	Bs31cav0EhOBiTYGt22VMPkEKUhhJ2h5PWwQ==
+X-Google-Smtp-Source: AGHT+IGHodC3eA+AeXqJGy+cl40swETxEWeQdkJjh8gyft6+9faOheS8KTxGncgcx90cLYanFRvoexWTGw4SJAitFlQ=
+X-Received: by 2002:a05:6902:2086:b0:e79:1566:64fa with SMTP id
+ 3f1490d57ef6-e7b6d3fbda1mr16915479276.15.1747691210932; Mon, 19 May 2025
+ 14:46:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250516164126.234883-1-stefano.radaelli21@gmail.com> <20250519164021.GL365796@horms.kernel.org>
+In-Reply-To: <20250519164021.GL365796@horms.kernel.org>
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Date: Mon, 19 May 2025 23:46:34 +0200
+X-Gm-Features: AX0GCFuBR54LVZrUjDmsQ3vo2yUBgjCY-fYJr8Xxxmt2BtO0ogT56rYcYNxqfkg
+Message-ID: <CAK+owojiySqLBtHq-=OpotxR3_Z0uoZzukVrF9Ak=fiUHtPm5Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: phy: add driver for MaxLinear MxL86110 PHY
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Xu Liang <lxu@maxlinear.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 19 May 2025 15:09:38 +0800
-Bowen Yu <yubowen8@huawei.com> wrote:
+Hi Simon,
 
-> In store_scaling_setspeed(), sscanf is still used to read to sysfs.
-> Newer kstrtox provide more features including overflow protection,
-> better errorhandling and allows for other systems of numeration. It
-> is therefore better to update sscanf() to kstrtouint().
+Thank you for your feedback!
+v4 will be ready soon.
 
-This is a UAPI change.
-Since the value is a frequency there could easily be scripts
-that append Hz to the value.
-You're making them fail.
+Best Regards,
 
-	David
+Stefano
 
-> 
-> Signed-off-by: Bowen Yu <yubowen8@huawei.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index be727da0be4d..0c842edd1a76 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -920,9 +920,9 @@ static ssize_t store_scaling_setspeed(struct cpufreq_policy *policy,
->  	if (!policy->governor || !policy->governor->store_setspeed)
->  		return -EINVAL;
->  
-> -	ret = sscanf(buf, "%u", &freq);
-> -	if (ret != 1)
-> -		return -EINVAL;
-> +	ret = kstrtouint(buf, 0, &freq);
-> +	if (ret)
-> +		return ret;
->  
->  	policy->governor->store_setspeed(policy, freq);
->  
-
+Il giorno lun 19 mag 2025 alle ore 18:40 Simon Horman
+<horms@kernel.org> ha scritto:
+>
+> On Fri, May 16, 2025 at 06:41:23PM +0200, Stefano Radaelli wrote:
+> > Add support for the MaxLinear MxL86110 Gigabit Ethernet PHY, a low-power,
+> > cost-optimized transceiver supporting 10/100/1000 Mbps over twisted-pair
+> > copper, compliant with IEEE 802.3.
+> >
+> > The driver implements basic features such as:
+> > - Device initialization
+> > - RGMII interface timing configuration
+> > - Wake-on-LAN support
+> > - LED initialization and control via /sys/class/leds
+> >
+> > This driver has been tested on multiple Variscite boards, including:
+> > - VAR-SOM-MX93 (i.MX93)
+> > - VAR-SOM-MX8M-PLUS (i.MX8MP)
+> >
+> > Example boot log showing driver probe:
+> > [    7.692101] imx-dwmac 428a0000.ethernet eth0:
+> >         PHY [stmmac-0:00] driver [MXL86110 Gigabit Ethernet] (irq=POLL)
+> >
+> > Changes from v1:
+> > - Add net-next support
+> > - Improved locking management and tests using CONFIG_PROVE_LOCKING
+> > - General cleanup
+> >
+> > Started a new thread
+> >
+> > Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+>
+> Hi Stefano,
+>
+> Some minor feedback from my side.
+>
+> ...
+>
+> > diff --git a/drivers/net/phy/mxl-86110.c b/drivers/net/phy/mxl-86110.c
+> > new file mode 100644
+> > index 000000000000..63f32c49fcc1
+> > --- /dev/null
+> > +++ b/drivers/net/phy/mxl-86110.c
+> > @@ -0,0 +1,570 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * PHY driver for Maxlinear MXL86110
+> > + *
+> > + * Copyright 2023 MaxLinear Inc.
+> > + *
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/etherdevice.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy.h>
+> > +
+> > +/* PHY ID */
+> > +#define PHY_ID_MXL86110              0xc1335580
+> > +
+> > +/* required to access extended registers */
+> > +#define MXL86110_EXTD_REG_ADDR_OFFSET        0x1E
+> > +#define MXL86110_EXTD_REG_ADDR_DATA          0x1F
+> > +#define PHY_IRQ_ENABLE_REG                           0x12
+> > +#define PHY_IRQ_ENABLE_REG_WOL                       BIT(6)
+> > +
+> > +/* SyncE Configuration Register - COM_EXT SYNCE_CFG */
+> > +#define MXL86110_EXT_SYNCE_CFG_REG                                           0xA012
+>
+> For Networking code, please restrict lines to no more than 80 columns
+> wide where you can do so without reducing readability (I'd say that is the
+> case here.
+>
+> Likewise elsewhere in this patch.
+>
+> checkpatch.pl --max-line-length=80 can be helpful here.
+>
+> ...
+>
+> > +/**
+> > + * mxl86110_write_extended_reg() - write to a PHY's extended register
+> > + * @phydev: pointer to a &struct phy_device
+> > + * @regnum: register number to write
+> > + * @val: value to write to @regnum
+> > + *
+> > + * NOTE: This function assumes the caller already holds the MDIO bus lock
+> > + * or otherwise has exclusive access to the PHY.
+> > + *
+> > + * returns 0 or negative error code
+> > + */
+>
+> Tooling expects 'Return:' or 'Returns: ' to document return values.
+>
+> Likewise elsewhere in this patch.
+>
+> Flagged by ./scripts/kernel-doc -Wall -none
+>
+> ...
+>
+> > +static int mxl86110_led_hw_control_get(struct phy_device *phydev, u8 index,
+> > +                                    unsigned long *rules)
+> > +{
+> > +     u16 val;
+> > +
+> > +     if (index >= MXL86110_MAX_LEDS)
+> > +             return -EINVAL;
+> > +
+> > +     phy_lock_mdio_bus(phydev);
+> > +     val = mxl86110_read_extended_reg(phydev, MXL86110_LED0_CFG_REG + index);
+> > +     phy_unlock_mdio_bus(phydev);
+> > +     if (val < 0)
+> > +             return val;
+>
+> val is unsigned. It cannot be less than zero.
+>
+> Likewise in mxl86110_broadcast_cfg() and mxl86110_enable_led_activity_blink().
+>
+> Flagged by Smatch.
+>
+> ...
