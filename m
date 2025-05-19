@@ -1,138 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBEF61FCE;
-	Mon, 19 May 2025 08:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E921F1507;
+	Mon, 19 May 2025 08:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643038; cv=none; b=R7ruPUgnbpb8D7o0QVRtla5ntuu5TuWdE0b42YcTw9qI9lGX2AmFppDWnKHcoN8BCXSGhti0mqXrKDFTK9oyh+GwqJYOcfTmLKNBvKW7GHdAL/kNzGtSmSkAZyQyM1B/ULCgAqHZLOKnyB6ZWXvofzPdihqMzoDKr5EZGGhpj+0=
+	t=1747643111; cv=none; b=SCZ/d7dPD3SfZr9PwVmNrRtuPHjbWjTBbg5RykYK7r2IJBRtd+Fit2RAIldznuKCmjYsCWyBlvhBB6aselyWmyMwEbufp4D0Hz9I6d2D7/2XiMeXj/fxIjjSJmN+YwCbzdUdlPluxC6+V5oK3/w3XIYN6hNvDd2r3w49XS0vd/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643038; c=relaxed/simple;
-	bh=jPOmJuNtUtPeHXYDoq8UpiU1fLg1uJ77a4E3sjVJxEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UMPQfuc0LBmuQDrcVabhGQs4e3ipHbkJcidQdpTd8rY5uaj1ao/F3hdPjWtVXqMwhGmFjAizbq/qXY57dZJBKkKY5fOFm+hmObvPXCcuinpPB7iB0u1Y8fiufjBHGii4B2/Ul+9+HvDgMeAuRKqNqJ9E+9xAsRUxK+rC77CiTQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5qQz9lN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747643111; c=relaxed/simple;
+	bh=0VBOy+NVqaw0DEXJq/gyBScgHs9sRVM2+ZA7swkr91E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ltGcSFBeZrRn0y6lUKY0YFwmaJ7K5na/kuyARSFsuTaQWan3K37vFlFqhwPpvGqr8qCiaepATV64aWWUOFm7CLuecDuInRSGvViAzjiaQjl2H32onDNkc7V56yllcuh1iwOKyIhyYLQaHpOHvghb+C5o9xEQfFI681dYj4FkPME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NCdLB13W; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5qQz9lN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F15C4CEE4;
-	Mon, 19 May 2025 08:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747643037;
-	bh=jPOmJuNtUtPeHXYDoq8UpiU1fLg1uJ77a4E3sjVJxEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U5qQz9lNLqp+uykE3Gz6g6L7CJRrAXbzYGYaN2AituvPUZtSU3ZLuMsv+052yLqbP
-	 wi6+DQX8s2nnJ8Dq4bFlxQNO2Y1G/L8J8txqx8fibr7BmN5pwMWmbLDbrnI4rU9rHj
-	 dhehp1GkPvrZrFdbeemWlPN+2tbR4EPvx1N8SpAatTWH1y8NZET04N45u4Q4Hbu5Sm
-	 l6suFuy8dbBQajdGwrCvBmHmcCitoA8oczhABPantwJH0JIZjHwPY7kEmc+nA2D0A9
-	 rySdHlUDG9vdaO6MQu3yGdNLuZ5LgNBAVf8EHBi0eVNSG1txUF5VbDZhlRmyRW0REB
-	 BbFt9Ks5Whxdw==
-Date: Mon, 19 May 2025 10:23:54 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-Cc: Chaoyi Chen <kernel@airkyi.com>, Sandy Huang <hjc@rock-chips.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Dragan Simic <dsimic@manjaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: display: rockchip: Convert
- cdn-dp-rockchip.txt to yaml
-Message-ID: <20250519-tall-glistening-quokka-9ffa6f@kuoka>
-References: <20250519012632.94-1-kernel@airkyi.com>
- <20250519012632.94-3-kernel@airkyi.com>
- <20a565da-296c-4920-b962-e9de9af464d9@kernel.org>
- <632f9f4d-ec0f-4512-a153-d2abfd9f6841@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NCdLB13W"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54IKkW55027411;
+	Mon, 19 May 2025 08:25:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BL4+z0
+	uoYL14uPZ63eAU5FNl7XeygzOSxQmcHZOa3+w=; b=NCdLB13W1tNRtJ2pJdm/Ta
+	MNfhjKxwvcPCXPhFZYIGk6JYDl8keJUcZmpV9C474bI9OBnmYNcJsWId5Sw8m6Xo
+	SkPjrn185lwDr445Knm7KuqSFBV0E2N78e8HfKyZNd5zELUPEIgxhHhQsr7h6o5Z
+	qBQs70/n0dzzOGL1lVVTf8JpWMNZkBa20oC5+QJ6YvgFLaKDfBvVz+s8G8QuGhok
+	9gwpPDzetwJGMG7y3O3TdmnyMSDRU4fPn1W4GZCCPqGMn5qffnEybF8LBviW3I40
+	rQbZuv30QPey2p2QXwCuIInJestbkOow2e4tJ0ledUQX5SD88Vsn62KOCDFmnyzw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qgs2u820-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 08:25:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54J7H1gY007347;
+	Mon, 19 May 2025 08:25:06 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q70k5fyy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 08:25:06 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54J8P2TM23134858
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 08:25:02 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6C012024E;
+	Mon, 19 May 2025 08:25:02 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D5F372024C;
+	Mon, 19 May 2025 08:25:01 +0000 (GMT)
+Received: from [9.87.154.8] (unknown [9.87.154.8])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 19 May 2025 08:25:01 +0000 (GMT)
+Message-ID: <0cffcc15-1e75-4d6c-92d8-dd0158c912ba@de.ibm.com>
+Date: Mon, 19 May 2025 10:25:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <632f9f4d-ec0f-4512-a153-d2abfd9f6841@rock-chips.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/5] KVM: s390: remove unneeded srcu lock
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        seiden@linux.ibm.com, nsg@linux.ibm.com, nrb@linux.ibm.com,
+        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com
+References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
+ <20250514163855.124471-3-imbrenda@linux.ibm.com>
+Content-Language: en-US
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+In-Reply-To: <20250514163855.124471-3-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Z/fsHGRA c=1 sm=1 tr=0 ts=682aeae3 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=YHDewuclEeiYcwmWqesA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA3NiBTYWx0ZWRfX6vl3rz7pxhjs mYPhtmwWa+gJpWU78TFSEwMi7PQOu6kiqaADIPmTOQ+/N5WieVGsn6yusXPbO8e3p/QAD2m0i6P r+FBAYBI+VI8JGIlO09YHGM/hjN38fZ+3dxuNKC2c4i6wX4kGN4BjfcjAqRomwMoy/zSBTzn5BB
+ GOxjAPRXiKd2xEaej0TtMxiMeNuO4Gr95KxRkERbqI6UhGNY7kIL7B7VN9qW0A5CcLJuvcz80Hp cz8RdX4UhF+sCpLEVH7fAOh5/wEgqSWl2hHUR7XxKj70X05fbhxfuhILwoLCGZ6OTARYhPA17i3 D18RhGH+7wyEjdOLW1YA/owg7tpbZhOOcGkVwKbXNqFzUrmzQgWKBhQi3UwVEx4f1OPbuI4YedQ
+ CHqoSV7J0/URmJYBR7EcyyYBmMYWC5la/l9so37f0WHHkxOt9dYZDr+WRLtrAxH0q2c13T0s
+X-Proofpoint-ORIG-GUID: t-7vBzlRe2fFy7hDop-zZKlMmt76tChE
+X-Proofpoint-GUID: t-7vBzlRe2fFy7hDop-zZKlMmt76tChE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_03,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=969
+ suspectscore=0 phishscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ clxscore=1011 spamscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190076
 
-On Mon, May 19, 2025 at 02:56:03PM GMT, Chaoyi Chen wrote:
-> Hi Krzysztof,
+Am 14.05.25 um 18:38 schrieb Claudio Imbrenda:
+> All paths leading to handle_essa() already hold the kvm->srcu.
+You could add
+since commit 800c1065c320 ("KVM: s390: Lock kvm->srcu at the appropriate places").
+
+> Remove unneeded srcu locking from handle_essa().
 > 
-> On 2025/5/19 14:16, Krzysztof Kozlowski wrote:
-> > On 19/05/2025 03:26, Chaoyi Chen wrote:
-> > > +maintainers:
-> > > +  - Andy Yan <andy.yan@rock-chip.com>
-> > > +  - Heiko Stuebner <heiko@sntech.de>
-> > > +  - Sandy Huang <hjc@rock-chips.com>
-> > > +
-> > > +allOf:
-> > > +  - $ref: /schemas/sound/dai-common.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - const: rockchip,rk3399-cdn-dp
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: DP core work clock
-> > > +      - description: APB clock
-> > > +      - description: SPDIF interface clock
-> > > +      - description: GRF clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: core-clk
-> > > +      - const: pclk
-> > > +      - const: spdif
-> > > +      - const: grf
-> > > +
-> > > +  extcon:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > > +    items:
-> > > +      maxItems: 1
-> > > +    maxItems: 2
-> > Instead of this, list the items. Old binding said only "specifier", so
-> > this is technically a change, which should be explained in commit msg.
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+
+Reviewed-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+
+
+
+> ---
+>   arch/s390/kvm/priv.c | 4 ----
+>   1 file changed, 4 deletions(-)
 > 
-> Will fix in v5.
-> 
-> 
-> > 
-> > > +    description:
-> > > +      List of phandle to the extcon device providing the cable state for the DP PHY.
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  phys:
-> > > +    items:
-> > > +      maxItems: 1
-> > > +    maxItems: 2
-> > > +    description: |
-> > > +      List of phandle to the PHY device for DP output.
-> > > +      RK3399 have two DP-TPYEC PHY, specifying one PHY which want to use,
-> > > +      or specify two PHYs here to let the driver determine which PHY to use.
-> > 
-> > You do not allow one phy, so your description is not accurate. OTOH,
-> > original binding did not allow two phandles, so that's another change in
-> > the binding. You need to document all changes done to the binding in the
-> > commit msg.
-> 
-> Oh, the original binding example use two phandles. I think only one PHY can
-
-Example is not the binding, just an example.
-
-> also pass the dtb check here, or maybe I'm missing something else?
-
-You think or you tested it? What is the minItems value? 2, so even if
-this works it's rather a bug in dtschema.
-
-Also, inner maxItems:1 is not really correct. Why can't this work with
-different phy providers?
-
-Best regards,
-Krzysztof
+> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+> index 1a49b89706f8..758cefb5bac7 100644
+> --- a/arch/s390/kvm/priv.c
+> +++ b/arch/s390/kvm/priv.c
+> @@ -1297,12 +1297,8 @@ static int handle_essa(struct kvm_vcpu *vcpu)
+>   		/* Retry the ESSA instruction */
+>   		kvm_s390_retry_instr(vcpu);
+>   	} else {
+> -		int srcu_idx;
+> -
+>   		mmap_read_lock(vcpu->kvm->mm);
+> -		srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+>   		i = __do_essa(vcpu, orc);
+> -		srcu_read_unlock(&vcpu->kvm->srcu, srcu_idx);
+>   		mmap_read_unlock(vcpu->kvm->mm);
+>   		if (i < 0)
+>   			return i;
 
