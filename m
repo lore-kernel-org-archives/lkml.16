@@ -1,114 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C88E2AC17;
-	Mon, 19 May 2025 11:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257C42AC17
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747655683; cv=none; b=ozOy1c+PhBac0pmW52kW889Nv0KUz6N8ZgL/m+SVqB3WUoQZURw9POlO4uXArD427QpwHzTGmgGmsS7SF2DP2MP4Tvmxduu7MaRjjeTeHdj+7MNVxZcLnKYZOLE1YQ4zmiuC1nB1tUJegDQ7dp8TjFsv2hwq0VKj5Ss63ese4Jo=
+	t=1747655796; cv=none; b=I38KptjTvN2hcCdCXX99uGQYgN1Gqda7F6mQrUi5qyKYrxd74bc8hMzn/GGcXAXBxkWferN/m17ovxCKKSkEp2tNIlgqeraIiEbPqMlxKUOy3xTV4doxnUyhTkH25xdxl2H2LPuBfXAaF9pyPr3nPgiBNoilJaiSRL9dgioUGTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747655683; c=relaxed/simple;
-	bh=q0IaF6UsrxyRjjnf7tFg8zeXdfpGE28jKiTqv/WTi+Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=oPZLepG/ht63U7/FNOB9Zpel9wmJxfkUdgfqaEPI1CmVAXQNA5dscNV9Vn9YEGuYi80/+coFvgNXSz2xLM35RxXVuedG1YXq7SrW7XAezgMma2GenV/BzThDV1MHZaHPo0VbalE/ou4KqVYOkqpyuLpnYzo+FzLbmLkOaeWVCQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JaG6FFLC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JaG6FFLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FC11C4CEE9;
-	Mon, 19 May 2025 11:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747655682;
-	bh=q0IaF6UsrxyRjjnf7tFg8zeXdfpGE28jKiTqv/WTi+Y=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=JaG6FFLCAcEmET7AU8BuWu/dAZTev/cwwZNejhQL7FDl+WVP7K+Zu4nzv/6WI5xrJ
-	 iNUMtFrEj6L04IAwmRfYvo6Ag1NxILXAAZ4AcJVP6HZvDEGzd+o/xf//u/JLhwgv/o
-	 ykTVFwKkL5POE3BaOFr+ODc/HDpdKmp3SeMt+swNahgzTp/hOuoPxea7N3gZpNGCai
-	 dDuVTcxGKNT333QcBP/XR8uU05REFrl/d2mYEfqKNrrxhMyTpQkI221SRaL2/3l6Sx
-	 9dCum3nWkf4afPdKFT9UtO/aDbEyRuK/4vJo/i5L4/SfNUielFdRSK5rfVP4sJa924
-	 h1xUFeM48cz5w==
+	s=arc-20240116; t=1747655796; c=relaxed/simple;
+	bh=0n2JWhGyhvYwDbFac0GD4XIJ4ADLblcQohaWbwHNxUo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGINlk2RTNLk9X15OMxDLGXRzrMz18ax1U/BIZgvGXbvXfpVG11eFcDBuJ8vCL87PQcjZmLfzARNRP+cLfz+Y6R5jKObu7IhBrNdkJaQp9ZxHOiRcF7eHUDOGpurJAIfiR9b30atnao+B5UPQbQ5SaI3jemL8BE0sZ+yhZpGRyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4b1GJx0XJNz2CdWW;
+	Mon, 19 May 2025 19:52:49 +0800 (CST)
+Received: from kwepemk100018.china.huawei.com (unknown [7.202.194.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1597D1A016C;
+	Mon, 19 May 2025 19:56:30 +0800 (CST)
+Received: from huawei.com (10.175.104.170) by kwepemk100018.china.huawei.com
+ (7.202.194.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 19 May
+ 2025 19:56:29 +0800
+From: Fei Lang <langfei@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>
+CC: <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>, <james.clark@linaro.org>,
+	<linux-kernel@vger.kernel.org>, <hewenliang4@huawei.com>,
+	<liuchao173@huawei.com>, <laihangliang1@huawei.com>
+Subject: [PATCH] perf comm str: Fix perf top coredump due to concurrent read and write
+Date: Mon, 19 May 2025 19:48:36 +0800
+Message-ID: <20250519114836.611110-1-langfei@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 13:54:37 +0200
-Message-Id: <DA048ETXB1Q1.3KVZ2FHENWKDL@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Mark Brown" <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
- <498AB71C-58EF-487E-8D9B-C7C113862948@collabora.com>
- <D9ZQUUA4FLXD.19MJI9HD48EMZ@nvidia.com>
- <8517D6F0-C1A2-4E38-8E62-57DCCD5E58D4@collabora.com>
-In-Reply-To: <8517D6F0-C1A2-4E38-8E62-57DCCD5E58D4@collabora.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk100018.china.huawei.com (7.202.194.66)
 
-On Mon May 19, 2025 at 12:52 PM CEST, Daniel Almeida wrote:
->> I just mean the cases where users will want to enable and disable the
->> regulator more frequently than just enabling it at probe time.
->
-> This is already possible through kernel::types::Either.=20
->
-> i.e.: the current design - or the proposed typestate one - can already sw=
-itch
-> back and forth between Regulator and EnabledRegulator. Using Either makes=
- it
-> just work, because you can change the variant at runtime without hassle. =
-This
-> lets you consume self in an ergonomic way.
+(gdb) bt
+    __strcmp_evex () at ../sysdeps/x86_64/multiarch/strcmp-evex.S:314
+    sort.comm_collapse () at util/sort.c:202
+    hist_entry__collapse at util/hist.c:1312
+    hists__collapse_insert_entry at util/hist.c:1620
+    hists__collapse_resort at util/hist.c:1704
+    perf_top__resort_hists at builtin-top.c:303
+    perf_top__print_sym_table at builtin-top.c:350
+    display_thread at builtin-top.c:700
 
-Have you tried to write such a use-case using `Either`? My personal
-experience with `Either` was pretty horrible, since you always have to
-match on it before you can do anything to the values. It's not really
-ergonomic.
+Link:https://bugzilla.kernel.org/show_bug.cgi?id=220096
 
-I think we should remove it, as it also doesn't have any users at the
-moment. Anyone that needs it should define a custom enum for their
-use-case.
-
-And effectively an `Either<Regulator, EnabledRegulator>` is just a
-`Regulator<Switch>` in Alexandre's proposal if I understood it
-correctly.
-
-> By the way, the reason I'm pushing back slightly here is because you seem
-> (IIUC) to be trying to reintroduce the pattern we had to move away from i=
-n v1.
->
-> i.e.: we explicitly had to move away from trying to match enables and dis=
-ables
-> in Rust, because it was hard to get this right.
->
-> The current design is a simplification that apparently works, because at =
-best
-> you have +1 on the count and that is encoded in the type itself, so there=
- is
-> nothing to actually "track" or "balance" within a given instance. Multipl=
-e
-> calls to _get() or _enable() on the same instance are simply forbidden.
->
-> Can you add some pseudocode that shows how this doesn't work (or is other=
-wise
-> unergonomic) in Nova? I think it will make your point clearer.
-
-+1 on actual code examples :)
-
+Fixes: <3178f58b9894> ("perf comm str: Avoid sort during insert")
+Signed-off-by: Fei Lang <langfei@huawei.com>
 ---
-Cheers,
-Benno
+ tools/perf/util/comm.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 8aa456d7c2cd..0438870d31d2 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -209,13 +209,16 @@ struct comm *comm__new(const char *str, u64 timestamp, bool exec)
+ int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
+ {
+ 	struct comm_str *new, *old = comm->comm_str;
++	struct comm_strs *comm_strs = comm_strs__get();
+ 
+ 	new = comm_strs__findnew(str);
+ 	if (!new)
+ 		return -ENOMEM;
+ 
++	down_write(&comm_strs->lock);
+ 	comm_str__put(old);
+ 	comm->comm_str = new;
++	up_write(&comm_strs->lock);
+ 	comm->start = timestamp;
+ 	if (exec)
+ 		comm->exec = true;
+@@ -225,11 +228,22 @@ int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
+ 
+ void comm__free(struct comm *comm)
+ {
++	struct comm_strs *comm_strs = comm_strs__get();
++
++	down_write(&comm_strs->lock);
+ 	comm_str__put(comm->comm_str);
+ 	free(comm);
++	up_write(&comm_strs->lock);
+ }
+ 
+ const char *comm__str(const struct comm *comm)
+ {
+-	return comm_str__str(comm->comm_str);
++	struct comm_strs *comm_strs = comm_strs__get();
++	char *p;
++
++	down_read(&comm_strs->lock);
++	p = comm_str__str(comm->comm_str);
++	up_read(&comm_strs->lock);
++
++	return p;
+ }
+-- 
+2.33.0
+
