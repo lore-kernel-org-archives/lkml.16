@@ -1,91 +1,64 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013070.outbound.protection.outlook.com [40.107.162.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D041EFF8F;
-	Mon, 19 May 2025 18:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C125E20E32F;
+	Mon, 19 May 2025 18:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747680746; cv=fail; b=eH1zlE4xjfuNSldVPT1Red+d9QzGSVlORFoy1t3qZZ987ZGoL9bsH7TmDzZ43Bm40qV3PIgIfZS34Y8INYzsyOlKRfLLMVsFNdXD22MbN8tsSi5fk/zRVDEbe+mcpFDBQmQLPpbS6212T2va2xd6U5L2s1VzSzRP6KO3jIDezHs=
+	t=1747680750; cv=fail; b=EsOj4ZfOeTcLfsQEhRtnQnovXmHpkSpVLnDgau31ht+F29LovlinCMFqWs0ckAzsFzUGFNYPjfL4kxJjYwuo1rPye3UOSOq+R3kycQjA16FLy38kb2pNpxhsGIE0lVdz9Ev4966wTNlStMxVmMinLaF7sHKeW/orqyW9UESYDs8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747680746; c=relaxed/simple;
-	bh=vBsOQ1jxlOoVKH86TmmBqRxbjqiFXLJGVlIWNBgVEaU=;
+	s=arc-20240116; t=1747680750; c=relaxed/simple;
+	bh=KTAOEiOrBneEnnMs7cxTa3X1+0syc0OeNZKsnpc8SE0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gBscRYtT0y+0YC8XmGaJz3IEfMc/EceEa7PGSkyk8yq2Jb5yKlIXMPGJIe6nlvkJNfz3rIIE4AgoQqfdas39g4W/wdseeUVgs+cAix5BjEerjWJr6Im38eS2+hUXtmL2iwswU9qqNyYGJYRlnbYBpqG3cf/Qg2INDxvhWXgUb5w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FJyLVTJ7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nc8U+1JD; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	 Content-Disposition:In-Reply-To:MIME-Version; b=j2ROAMcM/UO7mqbk+mQNiUP464Ppj07xKlZv05NR+N+IJOSbZdwBKiIt83UCYRi8gxsjd6QmojgQ78ZS3f6qqyt9Vi2euTSEHK0rEG+0H++Ao5eamgZFzfZGWgHDeynzwwYc+DmmLQx+gkKDj56rP0A9/46CbBRhvl2hHk80HIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=AbOFejr8; arc=fail smtp.client-ip=40.107.162.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FJyLVTJ7";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nc8U+1JD"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JGMuOs028893;
-	Mon, 19 May 2025 18:52:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=U/O3WNGaZT+tXC6AcE
-	lWc0OeEmJxC6ItnAm65goFZzE=; b=FJyLVTJ76EhcU5YSK8AUpm/DiQg3xtGVBs
-	lGe+uUs0SkBBJI8mP8WKtBfhBP9/HZpgLORyqBbYFtAYzdZkQNrTsZmxHOUBUm+m
-	wGPEt6F4LmtvxFEQwXQYqs9X2R8EPAu/+XiMyQuXjHtV/6Q6z9sxDLj2lz+98WyA
-	8/31WgNvMrPOTtfoEkDvaxGn+6IbS8xh8dP2XxJtxf7B8Rc0vr/co+S0+GF5opuA
-	qTFwdnIh0DVukIQYk0m6ioj3kdcnVo/3wCHV8Y+Hf/onqY/ErSdjsstjB3KVxrGz
-	8DzHHiDbvRRbBWPG/IkDI4eVF6GKJEwMI4kM1s7ZN5D3HGDAn5WQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46pjbcuphs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 18:52:06 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54JIU9sx037162;
-	Mon, 19 May 2025 18:52:05 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw7tkat-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 18:52:05 +0000
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="AbOFejr8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ne9PNLtvhGBEzJ9YGt0UQAPdp28uWJEDfPTxzdJjyTuWnXcag5tCDzs0fErQlR2jpLk9IJpYBMRW5JdubnZbkby9ba7S/7wSHAoEecQTUmwO55MTS2iIJ2gGYA88eyfxtrPtoLfPmoJhCsHAzbXKOHvmSm4x5+ProlpTsX6sO5ksCnmA222E1pB5UIl7qRtws5xZHSOz/wO8P/+3foC0EcLBUqy2eATN8JA+/Qu+Ib5zvDNsZtemakSLIc/MqvJ+jXkLtKIJXV9RNCc/qOHNATXTrY4t51KsfQ7dW6/JJgpxKM3uDH8qrsKTb1Qvb5GjTczlIjnHJeEXlVzEeybTew==
+ b=eQjvKL964wfUV4IaD+5AusCsYj2i5lRYNrAhIrIai7yDFnknl6bPOGFrBvM/AMKV73e8gmageqbxW27/OGRp8gascDlS2jaaFAq61tpPWAMoFwm7vMEQKBT33PffR7l31pHy0v2NCPE6ZL0ni/lZGd0ThEVXA+5NsYVXzOZSQB+Nz5Gr53rbNkDXEZtF9dMuqzstrGrE39C7RiWkyVj2wdfMX5nSN2vB+fJSfhics46/ifDAKjx9rnoyjtJ5rcE+4qnejyPueISIqzwkdSDuAaXbNIC57cSPYdfe2aC27JXB3mKodsWG9jxcgPNGmJl5cRvV5pn6LYmRyc9PKOxWsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U/O3WNGaZT+tXC6AcElWc0OeEmJxC6ItnAm65goFZzE=;
- b=wTmS3hOAIuIctoZH7fuMgUMQOh7bs/6F6CQlD3e/Pu/IsiNjgQaYcjiI8/cINS80ddOUMNr33Y0o2LJ/MgqEaxeiYZQdShXitm8YxZsVYxxnAg3FPaApSk28ACM2nza5FyqHXMHuUnc/9k2CyEkhhu3pIg8DD1q5B4hdhmHaoJyX7YJq5YrfqH+8LKYb/+E0+1fwg9nSHRYqW+OFunCnOxwa1bAtc7hb+QK2Mdr+WdRZUd7PIokkL1G0z+Ug7/drvxX1L4EMsXRjyQITNEjDoC+/q/sY4i+WWF2zUXkROyVZSbqXSnWhYWX1df93qvyTPNKg3UW22IZg7K67Obytnw==
+ bh=ek15NoYJ7i9U8JHKXyjxvtbxJt6Rm74AghsIxqbM5EY=;
+ b=BhFrX9ehT2lIq98+rz7he6aawSKMBRRdOyttJ62vl69OhIUW7lYwdJ793SncGWqSbe0HEsretGjSwKcf5PJVYqzwtqhRBsh5vqiRU5+oVNI6zLHYQ29bzBZ6ik1j0NyF97Ev+iJVbmZWCsYvtBcN5kazywr24Rmi4SP10aIH3krlHDcn9MS5v2XuPXpp/+SL+XbAUHfWILektQBzSxBWEriMk53Vzo2SImdDadO67s5nt4D3RAErvl+Gz0c7pc5wNNnFwrZD5qp3aVb3Kil6fR3IS/qxn95j6d7krywExDasx01Nv+4quq0MP5xdslZmpOHJTpn12yELCTYSclhkMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U/O3WNGaZT+tXC6AcElWc0OeEmJxC6ItnAm65goFZzE=;
- b=nc8U+1JDeFR9yUo4FyVtvoU/koJugsyHwOMgeNikpoqveSzVF586UQSVTZ6yKPths+xwGVcBWfRooN+pJHxFhgnnPJWLGDCdwsFRKXytyOmjKUNAl0GjTZXNyxoEqFjzquJLd3cDwjLJ1azyAcgEhKXqIrGLEed6yhWgrb7L2ds=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB4573.namprd10.prod.outlook.com (2603:10b6:a03:2ac::23) with
+ bh=ek15NoYJ7i9U8JHKXyjxvtbxJt6Rm74AghsIxqbM5EY=;
+ b=AbOFejr8+EwQ/WYy1SCcwjm8Y2DAjbETJbqwQxi077IF0/PovbAEkHA0IEwWFYADfrrDN/xJPKqbJIZGCs89qpy2nDuKZjJXJvVOAHCwVQaOnNCVfYSkw69rCvjGFhpas6n2JWvKmbJ8/4W/M/U/UQJzIGwWQ7BCXSn30qkd8O0xEEKWgEKndzUvW/tn0ObxzzX2SyeJU19ZhJKVb0Lde9lu1KON0lH0sWb2+UgAJyeTipBuRMeulbqbjuBygqGhBt22fipHqMEJHyTZqZBCMx2mBhYPfCw4cAi/JJ16u6gJGArGlVNBZvgw2nL4hSYzAbINqcjrfSamjRT6Ewls1g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GV1PR04MB10799.eurprd04.prod.outlook.com (2603:10a6:150:20f::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
- 2025 18:52:02 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 18:52:02 +0000
-Date: Mon, 19 May 2025 19:52:00 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
-Message-ID: <2be98bcf-abf5-4819-86d4-74d57cac1fcd@lucifer.local>
-References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
- <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
- <e5d0b98f-6d9c-4409-82cd-7d23dc7c3bda@redhat.com>
+ 2025 18:52:23 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Mon, 19 May 2025
+ 18:52:22 +0000
+Date: Mon, 19 May 2025 14:52:14 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com, carlos.song@nxp.com
+Subject: Re: [PATCH 4/6] arm64: dts: imx943-evk: add sound-wm8962 support
+Message-ID: <aCt93j4jwbkkY/ml@lizhi-Precision-Tower-5810>
+References: <20250515051900.2353627-1-shengjiu.wang@nxp.com>
+ <20250515051900.2353627-5-shengjiu.wang@nxp.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5d0b98f-6d9c-4409-82cd-7d23dc7c3bda@redhat.com>
-X-ClientProxiedBy: LO2P265CA0162.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::30) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+In-Reply-To: <20250515051900.2353627-5-shengjiu.wang@nxp.com>
+X-ClientProxiedBy: SJ0PR13CA0112.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,301 +66,220 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0505ac8b-8571-4bc6-da68-08dd97063e1a
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10799:EE_
+X-MS-Office365-Filtering-Correlation-Id: acd734e4-3930-4bda-f170-08dd97064a2d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1rLAFyJx0vYAFteXlT2Bw1omCkJKjeWQXQtpxbJNoLirfji5b0T2UiHALd/W?=
- =?us-ascii?Q?ZZ6P00jjuHekmh3rutlpbM0i4WOooblEDZA1syYRNqkkgslb5a/kIuFy2bx2?=
- =?us-ascii?Q?h4VOcbIyonUba1dLO7ZFMLLAvrtdhc1O5yXsoJ+l9RwinKTRxkwKvKldrloA?=
- =?us-ascii?Q?+K1gwKAcdakJXvR+ZTrpv8tFIHqYBGtZGr/F1jEp21Q9cAG/br/qtXhMm/M/?=
- =?us-ascii?Q?untQLLApBItIlOcXQgwF47YgcF8/wcobivrKDF8SrPXbiGRmaPdrl26N4jiM?=
- =?us-ascii?Q?gOPX7T2oSa9oYLaYVUfxsHsUM/YkycnFwgsbATtSizZxGf/QPLwePM9jp6Xy?=
- =?us-ascii?Q?xRJqgFx/PPqrKxRaUr86FRC/2YHkwx1V54ovl4Vt7G9m+sAr0HTSqP+c5w+f?=
- =?us-ascii?Q?mM01pSWPrNcaj3nSBoZig6k5Vwu2TL11XKtzuCSj61Z1rfFuMTSviE6gPADo?=
- =?us-ascii?Q?zB0C+haU7DLKD3+XXhC/cXKJlfJC+LLQVe2GaW57/JVPpDRRr3Z8AH15+mBN?=
- =?us-ascii?Q?+MlRZJxNlxGYqa02+XgV0K+x8IJpeyoVopPS7v10uHKjo25oyQ3SdOidydSn?=
- =?us-ascii?Q?ERwvhVwG1Y9AujWNQnzJ5ZSbuyHJAvWRGNznI9WUIYa7CX2r7HNoBIZlGBex?=
- =?us-ascii?Q?85eyLUWf79VhjqLfNSI9XEO5vqWUG82AZoPFEui+DU+Pmp6m/pgoh3msPKdT?=
- =?us-ascii?Q?9W3xeyffTKSc+U9YQEzt3ED1xqrW/Qxn+2Hcwhv/5B9kaQzq2B9DKeLOp6df?=
- =?us-ascii?Q?7eSD6Lp2z44R6KXkp16nGlTXS3ZZuGrfpZJReqyzgN/Ivw0cUEwtSFToxXk4?=
- =?us-ascii?Q?Spb4Nijv9qYJZnkpc5vo1cVYs8AQTBsKwkyTYeOk6xfDMwe68z823xvGthpg?=
- =?us-ascii?Q?UOoUFwWPWfG4pbZKbhyuXP+7FqksW4MF4H26Kcla37eirgerg1YeF+Bcpfj7?=
- =?us-ascii?Q?Px7EtCdkvP1WqkbRzi3Djjo2cXawv1IBpN499GhftznU7RXG47APDyHQIQog?=
- =?us-ascii?Q?LulbMCgSaqpta03CTkySsWDkeNdXqw2qHwzVn2VwD4kpFH4W0xxNHdGJCziO?=
- =?us-ascii?Q?JDFelldlwo27S+/NxUHzHs5uJUuWxtdsd4qMBVjSTGAmkyU+WWRFSZCM15lS?=
- =?us-ascii?Q?NWZ6/XZBnLJ6nZ191SLQLWOihY9TfI15zdDdeoO2+HoQ5aZvJd9OinH6l+kN?=
- =?us-ascii?Q?fR8R7qurvfgoIYREM/lO72pajvBFb7H05hX6dKbfIdHRBG/VbVydMqQ3w4Yl?=
- =?us-ascii?Q?TAr0b5JfX/mFZhsuGKbEQWnz3ZXIw/xGaoxEKLMKrMn84YB3q9RoQAVPTVff?=
- =?us-ascii?Q?oVRyA8JuHCVJyQueE9akFjZ4jzHCr89uYT5fyGJ79FRpIFcbuLVtf46nknVB?=
- =?us-ascii?Q?dj04VeXlh6yPVx8agKZVmMAPcX9a17B44w4L1c45XopB0U7Nh3OgPzMj1+Oq?=
- =?us-ascii?Q?Ny3ygLoq57E=3D?=
+	=?us-ascii?Q?yLu6blqAx522zrgA1l91s7n8ZRT/fn06VenvkwXJlGox3UDlRutpm2jANbfr?=
+ =?us-ascii?Q?XqbdJyK7KvtEQ8sBA/XpXCm5H5oiWovoaOdehe0AJxXGkLT1etMXdKOs/QLs?=
+ =?us-ascii?Q?JKzSdMOBax/Tv1yiUX87x3maeYFMd6tf5TJSbbKNuMn1IKMWZOxTYRxE3JcB?=
+ =?us-ascii?Q?Axxu/ENy6dPzH9ZZLt3A9WaRvzlmppWoGfOBwridQDgSXqUr1yFxzujE40H8?=
+ =?us-ascii?Q?ekwvCPIsb+y3VuXGGUnKyuvIXRGsP/Kl30a+lEbYfQUb/PIT/p9tVeofX6e3?=
+ =?us-ascii?Q?c5IVK5NF0b09TwxRDXc99kElJv6ebddv37rRkW302tNUqPdDrZG5qjeWM4ZU?=
+ =?us-ascii?Q?omHzZ7F2gXejrDf5u0L3egaFdylG0y5xv/OWOJ9agcQQezGUZFd7TQVqIg3c?=
+ =?us-ascii?Q?hxFWnzKVvT+9hWcyKBSl69GdRZfcFLFtk8itTFPyBCkPIxpS7nwzvYGQbLbH?=
+ =?us-ascii?Q?w4Ve3XlYURoahPgc4sSQssoTv8ucR/UMyLOpaB/sGwdMkaAs1fFUHpVSoOsV?=
+ =?us-ascii?Q?6mksl7BLx3bVWd/CVtvqnDCnxePWc8DSfM3RYts5CG2GCq2pf1vF9tqy/dzR?=
+ =?us-ascii?Q?78MqGSVlrxiPY2hw5mN/SNk+hRMWxMcYKhN1OMNgZgnHF8gcW96dnZmzUTJT?=
+ =?us-ascii?Q?oihzkAsJiLqsWrRadagsPsVs9mPbytaKR7BY8dP4lOMiBm8HuKsGkNxlumAy?=
+ =?us-ascii?Q?Q12ch8mCYqZhWF7dEvnPB6ufG7B2zyfCB80xQiaGY6AIYF1iZLPCAkVX+Lta?=
+ =?us-ascii?Q?nWMcUYJBfJ5hM9p4sMbLIsxkv+sgMYJEosEzEC5nYWsGCbO06JnOzPvLCUjq?=
+ =?us-ascii?Q?emp4gD0WJECVbB3iszMnTnugGk1Mm2BZpku96Dya6dIeP/OFXrQB6uP4CO9h?=
+ =?us-ascii?Q?rVmE8ggP5F6Miol0BZPqfLlJV96pZyCGO7j5NKqpIOLIjF5k9ILEjEV+zgyl?=
+ =?us-ascii?Q?bRi4xlSLkbnk+rYpflx+7MT2qL70aLiEZnaTZM+VHkIPz4TOdDPjScL/mksX?=
+ =?us-ascii?Q?SJl1dspuZB9UNkR1WyXAOvlMbInxcM9jbLmn88qFNStDdJwJxob3mbGhai9Z?=
+ =?us-ascii?Q?1A9oNhXBGEMvRcUBbKUOaIXSh8EnmncloIFJGR5/Td8ZnDXuDwOBYJkhPTwC?=
+ =?us-ascii?Q?tkk050IEYO1kPD4shbXZDlL5unvlqG5C2dEpwj3lB3K4jJLl2z+FJtCxfWfi?=
+ =?us-ascii?Q?ou9JVLU8brOZtwJ7d1Atp4roShMMLZRzuHFT3CL1iHYIq57mbuG6dXXO/708?=
+ =?us-ascii?Q?cFVJHLQcgPUXf1z0NehLwTDxCtKUIH01Hvi+1oH0g4YFAidiXhfGhGdUC7no?=
+ =?us-ascii?Q?zITW+rotKmDH+/ZyvLCh17TsPjGPgcw9ABfEX///bhJEyHYopUmOb2bS/fhd?=
+ =?us-ascii?Q?Rg97fDu3BgVYVBH5rNXX/WA826ADc4pdwMBX1Iq7OgkASzgyUgsxgkflUgwD?=
+ =?us-ascii?Q?yEJGPIIFMIg8IiSADbwrhHUPFyhPuk/kd/HchI3mrqK0jF2orUu1Kw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?b/avXrunVE5Bup9q1PQTRznWlPlC1TXf84ItZuAyo8l+04Cw5O62M3PCnZEv?=
- =?us-ascii?Q?vPifJl7Un4FneQIQi1vPGMuGW0LPLuyDJ4qLbxZS4X8BK9h7JIyksjufK7gK?=
- =?us-ascii?Q?xRxLnGLEoOGDmKYmCyfMVP8YdF3zRF3z8cmnebf5jYyXrYD99HIdne+JnEvB?=
- =?us-ascii?Q?6pYeAlR/7GZjO8srg093ctz0JCGjR6UCoQdHwEMXAnUrbSgwWb8SoxuO4fhh?=
- =?us-ascii?Q?7P/kviGG2yYFtHQ2+fzMv2HJztY28QTB52s0F9KoSX2IBs3D2bwWmqdRXWvg?=
- =?us-ascii?Q?5oTUMKQxnkzXPZ+Ix9t0qP73Gb7T1xq5XH+BFRRa4Nmu//wYf06/LIFmZLQT?=
- =?us-ascii?Q?xsdnHyF9ciy1IO10gJlawN27ygP6j8IbuNIxQZ2jT/pEUa2/cWCV00cHh14b?=
- =?us-ascii?Q?BGtFSx/qMH4aD8EnCuOWpdBy+bWrnj+YIn4/48Tx1vrpkgAGoQH64ZLX+7Bh?=
- =?us-ascii?Q?syMxelOTiz7YHhSKSenlEYj3a9jPJfNrhHED7CU7GOk7KWIapp4TSAxKcvDC?=
- =?us-ascii?Q?ztZeWb46KgiialbK7w4REPvx6zUrQ7aCeg821bpcg+K7v+3XEhjs7Np0/YF/?=
- =?us-ascii?Q?mOsci2mNj6+L9IggFSv97etrHid4H7CW03ae1l28RJjs5Id3s8G3EI1GGjGf?=
- =?us-ascii?Q?j7J0ORdmhD8Bif5RrNiib/XxmkjACqhS0i3qn6VnHEfHjtqG/viO20ByKkqA?=
- =?us-ascii?Q?ewAyMqF11Z0RIjAWOaoTMX1hTby2xak3CPBN80b9hLyvHUv3yGtBZzsY70M/?=
- =?us-ascii?Q?YEJqlvGjepHLACV0HQMyYtr0lmLNv4/7fT2U0K7Q+J4xEL4/BpGesruYOc4/?=
- =?us-ascii?Q?iFxb4m7Z2JlFzWs1UvALU3iiL64gulB4lJsd1fqnXMeIyLdiEo9EKoetUKi2?=
- =?us-ascii?Q?nTqXlzEpTTeAqBvn7jgSZ4ghbKRuikSA8h+eSPy2BCES6WXX47+I1whfMZxa?=
- =?us-ascii?Q?bN97nOKm8M0ShcNmbRvBPlmv5QwwdElSPQLVkaAlEZid1XX8znl7esccojIw?=
- =?us-ascii?Q?hbGQCn2WQ+qRw64Oolc0VL9BQrHPIFTwGhPEnestl8e5L345z/eim4SWAYFF?=
- =?us-ascii?Q?BSXOuImN5EZ18I5h4SgAs5pRahLGP8GjVlwSJTXpvna2XHlEtJ/rf5CT/o9g?=
- =?us-ascii?Q?NFWF5eGeAYI+ObclvxNCBtgri4Syvj3a8PrIE5NQ7LD+IgjkMsier4o3QbXn?=
- =?us-ascii?Q?J8g1bQkn/p2gqgM+FvQR2pcyTQuja6kXtQ2EqIRmLl9Cy2lUTGBTJj0c1pyo?=
- =?us-ascii?Q?IANb/RG2jQ94kUDX087/vjLKcvtzNyxfn/utsyRq2gWn0bQuoE6Y6/z7ovMy?=
- =?us-ascii?Q?D9gd4blcAblNWJsgffc2DZyCs7CWddKKEkK5UutigG8FT528RnStugGE9hCg?=
- =?us-ascii?Q?kp7K38rEZR+SCNJY+56STabl2hicqmR8xssmgyAjPhOJA0KN0WrMYseRzX40?=
- =?us-ascii?Q?lD3vwEjI141OO4oEPfjfcbxGqFWkWX5EiBRK1s6lJ2Bo1O1bHDeLq+CPXEHs?=
- =?us-ascii?Q?01X+PCoLDQQm3rST7uXnk8Mr2iT+tB42YnIOEIp8vWHWxrjEhgLy07ygRE/m?=
- =?us-ascii?Q?uVvuVOdonAPYa1EPydr4GcJsGtLVRRNn6RKTLaxw7dGR/kRNV3t2fNg2GpPG?=
- =?us-ascii?Q?yA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ER116bAt4qJk/2kBu5yjx4/+c+6WEaEKzgj7HHGYJ163J2R9tJIcnFmL5jqEEg5LpdJS7W6JRWqXsKE5XN8qjkzmc/VoOgZ1OaW1ek7ZrQwChZ1gHnfeZzQeWXJhDdk/cx/u4XcjUsoqHXCi7ylTCPW2pkb4UZLKPm03iQ93cjTma2Cj5pEe2YaK3+dnBYdIo1ZFiPKofN+pygHAeDmIR4BAENyYBZPOsncn9mVAecikhX5FLSX4+xztiUkkopCB1lXwgrSWy405pzPQ8vKu47FH2Y3TI2XAbwSl+QCf2+e0dlC7ZddVO7bUCvBjNTzO6dk8MbrlzNFUZ5SJT195+HpIJE2nsDIqzwIxqsq62tUK2ESVqTHYzFOY5M1CXuYVM84HpjXANiFyyiXwYW4I3ZrbFt+Jf9Jt+qT6lhtmcM/FSQzFu8CiQzHwN26Dn8YCsxuf0sbwSqbm4+6BC5AWVIVJz617ViFLKrphi7GaJ1BIHrfhN2D6/rdLZ23qTrAJDNlK0rRKZn36KjXyIkhYvf7cNGc61JVHbXhIPEDnlIMzy/P3eqveXCO0GB/UYLzAvtecVueTXYOjc7hXpRlcGnzYf/bWvzs814m5zUOEzU4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0505ac8b-8571-4bc6-da68-08dd97063e1a
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+	=?us-ascii?Q?/5vKsCh6rO6kgx/EhNVFMfvuGl2yxGz0RQDeYGLrTHjDA2wbTCPJwZj+yTOC?=
+ =?us-ascii?Q?RYihyH8YRDYtvYjvYpiAz/5UP8aDF1SxuHmF55w2w0dlFBOmIFMTvR0lCS1Q?=
+ =?us-ascii?Q?ud+YG62UIBq8QbMitF7LzCpPfyexjjfniezZiipfp6W0DQmhiT8Nhe2CKVIZ?=
+ =?us-ascii?Q?+RI0oi5A7NT9lsOzgmBS5eqP86MmDXcVBCmWJw4ErgYZN00unwFZerWQOxjy?=
+ =?us-ascii?Q?HoXV+bL6yl9+gEqaJrrrEqc/XuP4aHAYjRYRu7zbxQz03nUmAApCYZ+ZWUDK?=
+ =?us-ascii?Q?JdwHVBPw2D0RLvY+1bq2ILzj2bqHw2++C2J8SkbPWS1unNJTehV7uCvTzUJV?=
+ =?us-ascii?Q?O6R6JdVjORRGGPiKVAGOG7fSM6VpYk0YlL2t4ZE6vpREzES359jJSCyuYQTs?=
+ =?us-ascii?Q?7up+F85o1gFuRPM7+f3ZQs6MWXn4FUOEaqAfEvBWZELTHK7kYLDAdCXu3JpG?=
+ =?us-ascii?Q?x8GYKHw5ZMoeawghuI95qwneGIFUM6QbsyV5d2GlsaOVh6gpNl7V0KWTNMzr?=
+ =?us-ascii?Q?lsQyZcoke+WhqQcu2MTfl1PfghhjDQ3ODV6AfdQBf+kjvLRKRp0tvaeI7t2y?=
+ =?us-ascii?Q?4od5hj5zzlGw46xBvt2yDpyvdLyx/SxojUFvYp1Za6OuA37SQ6h4FtSBXEZt?=
+ =?us-ascii?Q?oE4a5NhizLVwrVkk10DpRCQCeMunm0aFDEeGaHjKybiHb2PxiIS+JQ90Llat?=
+ =?us-ascii?Q?9zLMvVH41Hg7xima6m6C4waO8htpTZpNiKMttkqokkaegL1DUNjF1zywpxPR?=
+ =?us-ascii?Q?ZkZ+Q86285CLTbFvKGoFh7KnzULyqpZ8xTbAvAWW71AWP0D9LsK81sLC7TLF?=
+ =?us-ascii?Q?IKNhCjyrcipRyvmQw5fOYZj2x+9vUs4MAR4BHxSkuWaRmwm9hBJuXAVMR14Y?=
+ =?us-ascii?Q?DfSwf9Mx0MpisuQmUajvfPNum6D4op5buxzBnn9XhLSDHRgnwXFU5qbjoiCO?=
+ =?us-ascii?Q?aoSGX6rJw6zqZYX6dzmZaMCuW5M14YSAFJLO6HH2xs/c+rHlvq3v0pjPBRw7?=
+ =?us-ascii?Q?ZYudId+uyLgUS65tTJ9tpkxcBz67IDgpqpl0ldZe5ZWRuVtAxv5eEgJhWoYe?=
+ =?us-ascii?Q?HRO3ZdcHPqmEOaFVOUaMpN8zoQBuAb/pUSQRDpNktn37QvTBcLFkOvJTwlY8?=
+ =?us-ascii?Q?iTmS3z1T8CJQ4UHbCMOUq8+zICbm4RqKxv0Yd+4GA41RpC1utLzX0vsCpPIL?=
+ =?us-ascii?Q?AWIzi/HFsDI0YxHg5zArQoCX6+2UNwPr3V51gDBNbEosORe0Yif0xdcVbLVI?=
+ =?us-ascii?Q?31Ji/ZtXQ7a1yUmd70uq1Mi7gh1eUTDIbE9SOmM914SGW6+IanoSvbrLAma9?=
+ =?us-ascii?Q?boC8XIJDcTaYHkgMUiudH1pFAd8lUJTa3IGGvwoIdGq2jikBprhOd6HN2y2E?=
+ =?us-ascii?Q?AXGsawNG5B0veCjMtyMenhNFaN6C8v3yE0iPpjlUjf/tj/IM63GfD+6xPg8I?=
+ =?us-ascii?Q?WhrAU9WQbOyNQrJSgcVfy8/SDhBdJeRnL42sMGtRWRgDpqiqMoR7OJmnn9A+?=
+ =?us-ascii?Q?yAFJnG+uZKKxB+B7TDoydN9Kz8ezwb2rx2UII8BDrE1reh96V2p3/+z0FGBu?=
+ =?us-ascii?Q?Ngo9ZP5gWoT8y3lk7Nt6Qp558o03MkmApOcHz+8b?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acd734e4-3930-4bda-f170-08dd97064a2d
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 18:52:02.5915
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 18:52:22.8615
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HWmWByXrePzlWqx7w2EQpGA4C6gg8yIJ/yVUtFO1YtNrz5DZ8hQsAqOft4xwVjvGqLu9StCaUCJ1XDfImaSIIFyVy7rY7093FZbExQdcw1g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4573
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505070000 definitions=main-2505190175
-X-Authority-Analysis: v=2.4 cv=ec09f6EH c=1 sm=1 tr=0 ts=682b7dd6 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=EdfpRc32WRINEomMGnYA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13186
-X-Proofpoint-GUID: 3xVT0_nwaLW-Frbp0oAlWNw-Uadgsw38
-X-Proofpoint-ORIG-GUID: 3xVT0_nwaLW-Frbp0oAlWNw-Uadgsw38
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE3NiBTYWx0ZWRfXx2aknhnl3+yw dLzlkNzxJwzxkPV8n0KdbmwftzkaOoEcON09JCpxEtsuc8QW99ku+lbRRsZVzvWPgGHHVNMWcr2 fW044pZi8rFRz1KCb/Tp7YB1DthqxNfGCTih6fXbUMsIlty7OA8NIAwaofjf9B8R/FdNAqcZueb
- Dos6+8OcqhBUcXlHTfDQ1SvPeXiTa5nbEUCfTxVN5MgTshU1T/FRFDf+0G/f/CFRXmKFBFYtC1U POMW7hbVO725LdAOqqUf/jGr/LYT/Rul8+ms/cqkf155z3DV30inFCZdjHrZuJDjcmzeG6gLfk0 mN6+SieELYfB4G73CV8ePcM9f/NT+gPv2zG5v9vAUJcwUSL06svtkLTCphAWNUnDgOFiCv0dIoF
- 1XaSyqc5s0hihWMBJhckt21lcMnzikrTL1i1Lre3WnapRkYhyhnah1ehZ7Ye2f9fg+JmxlU2
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2xoEl5LnWizZriOdQlsB76bhrj5zvrwH3mVxAYS9beaNFAFTII56MMzwuVmpVTGDO90OXhIWnPsMhq8rwRl2CQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10799
 
-On Mon, May 19, 2025 at 08:00:29PM +0200, David Hildenbrand wrote:
-> On 19.05.25 10:51, Lorenzo Stoakes wrote:
-> > If a user wishes to enable KSM mergeability for an entire process and all
-> > fork/exec'd processes that come after it, they use the prctl()
-> > PR_SET_MEMORY_MERGE operation.
-> >
-> > This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
-> > (in order to indicate they are KSM mergeable), as well as setting this flag
-> > for all existing VMAs.
-> >
-> > However it also entirely and completely breaks VMA merging for the process
-> > and all forked (and fork/exec'd) processes.
-> >
-> > This is because when a new mapping is proposed, the flags specified will
-> > never have VM_MERGEABLE set. However all adjacent VMAs will already have
-> > VM_MERGEABLE set, rendering VMAs unmergeable by default.
-> >
-> > To work around this, we try to set the VM_MERGEABLE flag prior to
-> > attempting a merge. In the case of brk() this can always be done.
-> >
-> > However on mmap() things are more complicated - while KSM is not supported
-> > for file-backed mappings, it is supported for MAP_PRIVATE file-backed
-> > mappings.
-> >
-> > And these mappings may have deprecated .mmap() callbacks specified which
-> > could, in theory, adjust flags and thus KSM merge eligiblity.
-> >
-> > So we check to determine whether this at all possible. If not, we set
-> > VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
-> > previous behaviour.
-> >
-> > When .mmap_prepare() is more widely used, we can remove this precaution.
-> >
-> > While this doesn't quite cover all cases, it covers a great many (all
-> > anonymous memory, for instance), meaning we should already see a
-> > significant improvement in VMA mergeability.
->
-> We should add a Fixes: tag.
->
-> CCing stable is likely not a good idea at this point (and might be rather
-> hairy).
+On Thu, May 15, 2025 at 01:18:58PM +0800, Shengjiu Wang wrote:
+> Add wm8962 sound card which connects to sai1.
 
-We should probably underline to Andrew not to add one :>) but sure can add.
+Add WM8962 codec connected to SAI1 interface. Or
+Enable WM8962 audio codec via SAI1.
 
-A backport would be a total pain yes.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
 >
-> [...]
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx943-evk.dts | 79 ++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
 >
-> >   /**
-> > - * ksm_add_vma - Mark vma as mergeable if compatible
-> > + * ksm_vma_flags - Update VMA flags to mark as mergeable if compatible
-> >    *
-> > - * @vma:  Pointer to vma
-> > + * @mm:       Proposed VMA's mm_struct
-> > + * @file:     Proposed VMA's file-backed mapping, if any.
-> > + * @vm_flags: Proposed VMA"s flags.
-> > + *
-> > + * Returns: @vm_flags possibly updated to mark mergeable.
-> >    */
-> > -void ksm_add_vma(struct vm_area_struct *vma)
-> > +vm_flags_t ksm_vma_flags(const struct mm_struct *mm, const struct file *file,
-> > +			 vm_flags_t vm_flags)
-> >   {
-> > -	struct mm_struct *mm = vma->vm_mm;
-> > +	vm_flags_t ret = vm_flags;
-> > -	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags))
-> > -		__ksm_add_vma(vma);
-> > +	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags) &&
-> > +	    __ksm_should_add_vma(file, vm_flags))
-> > +		ret |= VM_MERGEABLE;
-> > +
-> > +	return ret;
-> >   }
+> diff --git a/arch/arm64/boot/dts/freescale/imx943-evk.dts b/arch/arm64/boot/dts/freescale/imx943-evk.dts
+> index ff6e9ac5477f..da08aaa95904 100644
+> --- a/arch/arm64/boot/dts/freescale/imx943-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx943-evk.dts
+> @@ -36,6 +36,15 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
+>  		enable-active-high;
+>  	};
 >
+> +	reg_audio_pwr: regulator-wm8962-pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-name = "audio-pwr";
+> +		gpio = <&pcal6416_i2c3_u171 12 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+>  	reserved-memory {
+>  		ranges;
+>  		#address-cells = <2>;
+> @@ -50,6 +59,21 @@ linux,cma {
+>  		};
+>  	};
 >
-> No need for ret without harming readability.
+> +	sound-wm8962 {
+> +		compatible = "fsl,imx-audio-wm8962";
+> +		audio-codec = <&wm8962>;
+> +		audio-cpu = <&sai1>;
+> +		audio-routing = "Headphone Jack", "HPOUTL",
+> +			"Headphone Jack", "HPOUTR",
+> +			"Ext Spk", "SPKOUTL",
+> +			"Ext Spk", "SPKOUTR",
+> +			"AMIC", "MICBIAS",
+> +			"IN3R", "AMIC",
+> +			"IN1R", "AMIC";
+> +		hp-det-gpio = <&pcal6416_i2c3_u48 14 GPIO_ACTIVE_HIGH>;
+> +		model = "wm8962-audio";
+> +	};
+> +
+>  	memory@80000000 {
+>  		reg = <0x0 0x80000000 0x0 0x80000000>;
+>  		device_type = "memory";
+> @@ -103,6 +127,28 @@ i2c@4 {
+>  			reg = <4>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> +
+> +			wm8962: codec@1a {
+> +				compatible = "wlf,wm8962";
+> +				reg = <0x1a>;
+> +				clocks = <&scmi_clk IMX94_CLK_SAI1>;
+> +				AVDD-supply = <&reg_audio_pwr>;
+> +				CPVDD-supply = <&reg_audio_pwr>;
+> +				DBVDD-supply = <&reg_audio_pwr>;
+> +				DCVDD-supply = <&reg_audio_pwr>;
+> +				gpio-cfg = <
+> +					0x0000 /* 0:Default */
+> +					0x0000 /* 1:Default */
+> +					0x0000 /* 2:FN_DMICCLK */
+> +					0x0000 /* 3:Default */
+> +					0x0000 /* 4:FN_DMICCDAT */
+> +					0x0000 /* 5:Default */
+> +				>;
+> +				MICVDD-supply = <&reg_audio_pwr>;
+> +				PLLVDD-supply = <&reg_audio_pwr>;
+> +				SPKVDD1-supply = <&reg_audio_pwr>;
+> +				SPKVDD2-supply = <&reg_audio_pwr>;
+> +			};
+>  		};
 >
-> if ()
-> 	vm_flags |= VM_MERGEABLE
-> return vm_flags;
-
-Ack this was just me following the 'don't mutate arguments' rule-of-thumb
-that obviously we violate constantly int he kernel anyway and probably
-never really matters... :>)
-
-But yeah ret is kind of gross here, will change.
-
+>  		i2c@5 {
+> @@ -128,6 +174,12 @@ pcal6416_i2c3_u171: gpio@21 {
+>  				reg = <0x21>;
+>  				#gpio-cells = <2>;
+>  				gpio-controller;
+> +
+> +				audio-pwren-hog {
+> +					gpios = <12 GPIO_ACTIVE_HIGH>;
+> +					gpio-hog;
+> +					output-high;
+> +				};
+>  			};
+>  		};
 >
-> [...]
+> @@ -262,6 +314,23 @@ &lpuart1 {
+>  	status = "okay";
+>  };
 >
-> > +/*
-> > + * Are we guaranteed no driver can change state such as to preclude KSM merging?
-> > + * If so, let's set the KSM mergeable flag early so we don't break VMA merging.
-> > + *
-> > + * This is applicable when PR_SET_MEMORY_MERGE has been set on the mm_struct via
-> > + * prctl() causing newly mapped VMAs to have the KSM mergeable VMA flag set.
-> > + *
-> > + * If this is not the case, then we set the flag after considering mergeability,
-> > + * which will prevent mergeability as, when PR_SET_MEMORY_MERGE is set, a new
-> > + * VMA will not have the KSM mergeability VMA flag set, but all other VMAs will,
-> > + * preventing any merge.
+> +&sai1 {
+> +	assigned-clocks = <&scmi_clk IMX94_CLK_AUDIOPLL1_VCO>,
+> +			  <&scmi_clk IMX94_CLK_AUDIOPLL2_VCO>,
+> +			  <&scmi_clk IMX94_CLK_AUDIOPLL1>,
+> +			  <&scmi_clk IMX94_CLK_AUDIOPLL2>,
+> +			  <&scmi_clk IMX94_CLK_SAI1>;
+> +	assigned-clock-parents = <0>, <0>, <0>, <0>,
+> +				 <&scmi_clk IMX94_CLK_AUDIOPLL1>;
+> +	assigned-clock-rates = <3932160000>,
+> +			       <3612672000>, <393216000>,
+> +			       <361267200>, <12288000>;
+> +	pinctrl-0 = <&pinctrl_sai1>;
+> +	pinctrl-names = "default";
+> +	fsl,sai-mclk-direction-output;
+> +	status = "okay";
+> +};
+> +
+>  &scmi_iomuxc {
 >
-> Hmmm, so an ordinary MAP_PRIVATE of any file (executable etc.) will get
-> VM_MERGEABLE set but not be able to merge?
+>  	pinctrl_ioexpander_int2: ioexpanderint2grp {
+> @@ -297,6 +366,16 @@ IMX94_PAD_GPIO_IO28__LPI2C6_SCL		0x40000b9e
+>  		>;
+>  	};
 >
-> Probably these are not often expected to be merged ...
->
-> Preventing merging should really only happen because of VMA flags that are
-> getting set: VM_PFNMAP, VM_MIXEDMAP, VM_DONTEXPAND, VM_IO.
->
->
-> I am not 100% sure why we bail out on special mappings: all we have to do is
-> reliably identify anon pages, and we should be able to do that.
-
-But they map e.g. kernel memory (at least for VM_PFNMAP, purely and by
-implication really VM_IO), it wouldn't make sense for KSM to be asked to
-try to merge these right?
-
-And of course no underlying struct page to pin, no reference counting
-either, so I think you'd end up in trouble potentially here wouldn't you?
-And how would the CoW work?
-
->
-> GUP does currently refuses any VM_PFNMAP | VM_IO, and KSM uses GUP, which
-> might need a tweak then (maybe the solution could be to ... not use GUP but
-> a folio_walk).
-
-How could GUP work when there's no struct page to grab?
-
->
-> So, assuming we could remove the VM_PFNMAP | VM_IO | VM_DONTEXPAND |
-> VM_MIXEDMAP constraint from vma_ksm_compatible(), could we simplify?
-
-Well I question removing this constraint for above reasons.
-
-At any rate, even if we _could_ this feels like a bigger change that we
-should come later.
-
-But hmm this has made me think :)
-
-So if something is backed by struct file *filp, and the driver says 'make
-this PFN mapped' then of course it won't erroneously merge anyway.
-
-If adjacent VMAs are not file-backed, then the merge will fail anyway.
-
-So actually we're probably perfectly safe from a _merging_ point of view.
-
-Buuut we are not safe from a setting VM_MERGEABLE point of view :)
-
-So I think things have to stay the way they are, sensibly.
-
-Fact that .mmap_prepare() will fix this in future makes it more reasonable
-I think.
-
->
-> That is: the other ones must not really be updated during mmap(), right?
-> (in particular: VM_SHARED  | VM_MAYSHARE | VM_HUGETLB | VM_DROPPABLE)
->
-> Have to double-check VM_SAO and VM_SPARC_ADI.
-
-_Probably_ :)
-
-It really is mostly VM_SPECIAL.
-
->
-> > + */
-> > +static bool can_set_ksm_flags_early(struct mmap_state *map)
-> > +{
-> > +	struct file *file = map->file;
-> > +
-> > +	/* Anonymous mappings have no driver which can change them. */
-> > +	if (!file)
-> > +		return true;
-> > +
-> > +	/* shmem is safe. */
-> > +	if (shmem_file(file))
-> > +		return true;
-> > +
-> > +	/*
-> > +	 * If .mmap_prepare() is specified, then the driver will have already
-> > +	 * manipulated state prior to updating KSM flags.
-> > +	 */
-> > +	if (file->f_op->mmap_prepare)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
->
-> So, long-term (mmap_prepare) this function will essentially go away?
-
-Yes, .mmap_prepare() solves this totally. Again it's super useful to have
-the ability to get the driver to tell us 'we want flags X, Y, Z' ahead of
-time. .mmap() must die :)
-
->
-> Nothing jumped at me, this definitely improves the situation.
-
-Thanks!
-
->
+> +	pinctrl_sai1: sai1grp {
+> +		fsl,pins = <
+> +			IMX94_PAD_SAI1_TXFS__SAI1_TX_SYNC	0x31e
+> +			IMX94_PAD_SAI1_TXC__SAI1_TX_BCLK	0x31e
+> +			IMX94_PAD_SAI1_TXD0__SAI1_TX_DATA0	0x31e
+> +			IMX94_PAD_SAI1_RXD0__SAI1_RX_DATA0	0x31e
+> +			IMX94_PAD_I2C2_SDA__SAI1_MCLK		0x31e
+> +		>;
+> +	};
+> +
+>  	pinctrl_uart1: uart1grp {
+>  		fsl,pins = <
+>  			IMX94_PAD_UART1_TXD__LPUART1_TX		0x31e
 > --
-> Cheers,
->
-> David / dhildenb
+> 2.34.1
 >
