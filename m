@@ -1,89 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F9D1DF273;
-	Mon, 19 May 2025 15:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E9927A121;
+	Mon, 19 May 2025 15:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667633; cv=none; b=WjFb/wYxxE7RVYyB0Wrha1xxhJzXpQb+eBmFNxubIjAKLvBmIsoI09IBm5BHfStbhR/rHPhGDo7H0E3zMUfX5nOar52xSSxOS6Oc/2Jt4qDH5t1JqpbeP0bDRxJH0Uwhmd/JUQEyPtEvDMQs1snA0DvrH3CsmhR273zZ/Mnq0P4=
+	t=1747667672; cv=none; b=S9EuVXIGKqhTAlzeZ+5MvSRTBGplydjcY03coZFcPSCslKIIwZEqc842M0eEKe4I2rUYHteteU6FSPq0lngdC61/6LuVZfUKBvTI88oE9crF1R+yKc5gnekDvbG+PpDbyexamWnrGoHkj/00QGqp803RjnhDGV0rtZue6L602lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667633; c=relaxed/simple;
-	bh=Q9LKuooXrzGHQU5apnOQ8oee7U4B4rgxUBwxG8Elpsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k53odfDNV1QVBq9K3mADJn5RJYo2zqSHEmcBJ+bc8y5Q9Lvl82dDft62CAw2HKApZ0FE4dchsA9O3Hes9mZE/jd9MevpAYutB9DXrekRdEsE34Gs4CHUZSs473HH5z/LE7DXoaH1Nxi7zK7wiN224fUII/fPfC8BGfDzhB/Bjeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EK2PeuCC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747667672; c=relaxed/simple;
+	bh=tlVXRvNMHzLQ2IjUl++okGPXDqq4MPvOzcHaYSkpS6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JslbY42Doh0LC7d746F5IPDArkc3cw0bqyvvP/HvAhzYT/f8mKaWyyWrYS0XdmSiot0noFMl3LllMutNJpgr7XYCxgreCbRysG7kFIZ7/xTB7wUSOOs+S+SeXu7dHhsYc9ezzoscw89wFv9rsKCr2Czl/wjwje8O3DmULPvatAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YfL7Add9; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EK2PeuCC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D20CC4CEE9;
-	Mon, 19 May 2025 15:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747667632;
-	bh=Q9LKuooXrzGHQU5apnOQ8oee7U4B4rgxUBwxG8Elpsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EK2PeuCCXN4Qdn0HbjIA7O/P1dkPFcR1Y7vHXymEBT3i9FmVF9FW3ZIBd5Y7FMWiC
-	 nTv1vl7VjFJSKkv/Rf6HdVfDR5i/tjM/Tn2kxLkpefymn9mhz08Xn6riygcRsv2lxh
-	 EXJmtBQQZhyY8xvdL+aD2kwFGwxN70g2fU92DScXGvhUuoOAoVfZ6EcuU9yh5LFBYH
-	 vvd5lODD7L0FSVyG+7lq6saVXLdeA5FXPEoyBbWG/1wFdkg6ZsGTjHRdGIldv47Iiq
-	 6r9h2fthwjA/bRjzTsYzCdcWilZFasK/sI8Pux0R6IaiOCYNcnnJe07jsj4a9h9pPS
-	 v7DsGsW+HIKqg==
-Date: Mon, 19 May 2025 16:13:47 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Julien Massot <julien.massot@collabora.com>
-Cc: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Garmin Chang <garmin.chang@mediatek.com>,
-	Friday Yang <friday.yang@mediatek.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek: Add #reset-cells
- property for MT8188
-Message-ID: <20250519-amaze-sloped-9e7d9a63a1db@spud>
-References: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com>
- <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfL7Add9"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso2124048a12.1;
+        Mon, 19 May 2025 08:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747667669; x=1748272469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqcrMvL7TRi/F7iH7e+SW+BnTVjngWX2CY239LaHS6A=;
+        b=YfL7Add9HNsWw6nwGx9ZAh+pTOyN/+2bEaex23JbtmsmTmxTBJXFLJ8ByrSDYTEfDA
+         nhB0EczZ8ZZ5QReuWZlRChyLf6pAYfSSuV8n24m854q/FanZ85l/Xiin+oIJiihHqwcN
+         0ohg1BooG6/On73uDrIu9HHc4xrPTnNRgnbpRmTh4wsjRsC93UvFAhg48N8hZ0QxFXNL
+         SUtMgTL9qjp0hstN77VNzE5i8fiV9vYcocfzjNCe1PRB98va4DoQ2/N0RzU+KBKyxEO3
+         LGly71PXNgQ+TnakfKn6HEZ7Rzcn1/R+xgOd28DQybv4pmdUIIOYqWw8TQdDSTR0g7M9
+         yCOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747667669; x=1748272469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IqcrMvL7TRi/F7iH7e+SW+BnTVjngWX2CY239LaHS6A=;
+        b=E8/PMmWSMvgOUOkrE0kgPMxd083rlBxXJsgN/p4CYOYnrt4DVju1XbG2mewYamHiQQ
+         phwt+QSfy6g5dbXxcODKy+WI8nEQDge1CzMS31E147e783mxJTGr/cYAh9kR7WGu7fvd
+         Pxidn18nmjWRaizdjX+cNDzl+2o+a5jwITslWWQsm6TBlkO3sJONmxove7gdrzZHbm3Y
+         QA4hrm9cyuIx5kinCddWZaiNF/+GeZcO3Mi4IEySp8A1lcUhVa29Ndb0WRRPotWpUaI6
+         Tn943AfqMjLXeGq9UqJhmiC/4DM4KfWIiaSYX+L63OBA17f97zbohKnGYJfEZgUVJajL
+         PkYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWU+RPqJ36Hp5XuSpCLYoIEji6P4MTH1yZf4SS8wnFGdZtKOht1QX69pGKQc8VPoDjJarC9Is7aEVp7SLB8@vger.kernel.org, AJvYcCWyxU3lR9MHgoZ3mAMjnJGDyS6qZpHQg/Z8Y1hyTmhvEGOZRxxa4P8NOt7B+HKs6nKJcRgzknZmpZL7tx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGch6+OeGxBOgqo4PR5Q2uqpZZx3Fw/HJZ0Sty6x1qlZXsSxEB
+	/afaY09b+uI3iKQZ56/krPpDbOHnmOcDvsHaAtRuMAz5zWWFBIj4Voek
+X-Gm-Gg: ASbGncuS+pDXvSvGkocExva4mOBu4XMjkuuIc+UPm+UEGSKULqOJmIXCGFJUNoUJanT
+	QGSGJnOQxqxwnn7bzYXTF6y64DYHY0pWiOKeZC9palFxH94tupxXLBDqqeQ9JaPqHvdofovAp9z
+	E9dtsrrQYkaM8nGjjOvwviYFEliwi3FafCC1dvbqiYiaHviHwqV9loAKqunXFrrnMadzpsEU4xN
+	eRiTfetkdyM8u/n6OYquWJtCIL2Q39m6Yc8/PFwnSu5Ki7mDjLUX4//mKSH1w6FtFeUMyqjd4xc
+	wgHtdeEwgR9DvJKOih3f96FjwRsegWFRlVBuepaZCKlqr/0VwLUT7Uzdo+tWVAEW+oFjq2slack
+	Q56A=
+X-Google-Smtp-Source: AGHT+IEyDWsgk5ZuKcJJnCwuMrygWqmpsdfXmccP5TnaNBnDa5/JU98yEJj7J7lss4EJg1nxvJYFvQ==
+X-Received: by 2002:a17:907:1b09:b0:acb:b900:2bca with SMTP id a640c23a62f3a-ad52d07636amr1189789966b.0.1747667669049;
+        Mon, 19 May 2025 08:14:29 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2f07:610b:a400:6472:d2f9:d536:4c30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b08bsm608522566b.13.2025.05.19.08.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 08:14:28 -0700 (PDT)
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: clabbe.montjoie@gmail.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Cc: wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH 1/3] crypto: sun8i-ce - fix nents passed to dma_unmap_sg()
+Date: Mon, 19 May 2025 18:13:48 +0300
+Message-ID: <20250519151350.3442981-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="080sWU4ve0SVO/mR"
-Content-Disposition: inline
-In-Reply-To: <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
+Content-Transfer-Encoding: 8bit
 
+In sun8i_ce_cipher_unprepare(), dma_unmap_sg() is incorrectly called with
+the number of entries returned by dma_map_sg(), rather than using the
+original number of entries passed when mapping the scatterlist.
 
---080sWU4ve0SVO/mR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To fix this, stash the original number of entries passed to dma_map_sg()
+in the request context.
 
-On Fri, May 16, 2025 at 04:12:13PM +0200, Julien Massot wrote:
-> The '#reset-cells' property is permitted for some of the MT8188
-> clock controllers, but not listed as a valid property.
->=20
-> Fixes: 9a5cd59640ac ("dt-bindings: clock: mediatek: Add SMI LARBs reset f=
-or MT8188")
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+Fixes: 0605fa0f7826 ("crypto: sun8i-ce - split into prepare/run/unprepare")
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index f9cf00d690e2..7cd3b13f3bdc 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -278,8 +278,8 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ 	}
+ 
+ 	chan->timeout = areq->cryptlen;
+-	rctx->nr_sgs = nr_sgs;
+-	rctx->nr_sgd = nr_sgd;
++	rctx->nr_sgs = ns;
++	rctx->nr_sgd = nd;
+ 	return 0;
+ 
+ theend_sgs:
+-- 
+2.48.1
 
---080sWU4ve0SVO/mR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtKqwAKCRB4tDGHoIJi
-0qBfAQD5AkEyB+46Q6g6BR2qh2MvFv0Vgj3nU9m2wiWm30jWFwD/U53P7fut2kFs
-/C+1oDJOzggWHzy1BqdNCgr7XWppCgg=
-=1n0W
------END PGP SIGNATURE-----
-
---080sWU4ve0SVO/mR--
