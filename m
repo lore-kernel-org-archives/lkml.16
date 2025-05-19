@@ -1,120 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AF27511E;
-	Mon, 19 May 2025 09:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118A347B4;
+	Mon, 19 May 2025 09:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647091; cv=none; b=Fc0asa0dhpDOIE0MC1vWRSjjb292c3/f86fMSkbb/v3YLEG35TdB2kIWBA1y1FMWr8NmN0ICZr8Spltj17f66NNWyJVDl6LXb24dDbRh/KgeV/5yvdqoSeHa58UG6NDKwH1PcSK2AeTc5hNCEJcAlWjkO4ca0P7tPZ9Q1/i4b3s=
+	t=1747647248; cv=none; b=EZ5CaVTD3UFRhEaGAFPKpblVq/Qr6F6QtwHYI5kIt+6ZPC+hiofNqc/HE4DDhXiResIo+5vcqIczb0bZox34JFAUhovMDI84yRTUSkrwS56TWDbQzCeTFTGC8tU62TH0G9SvKrLa4gkb26VxFiDN2PygGimfxbMKuI4/9cNKX4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647091; c=relaxed/simple;
-	bh=FXdfPhdfLVoRwDBosojS9gg4O/gtTxeDHKm6qIIKGEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brOIFx3m61vZBx7+J8ZpaPfi3BqnqduvGqQk7ep9x/Iim5V1esf1pxB5KfCBE5xf1zIinlls1ziz9WtiJkaSSpSQm0LaGdNRA+vicx2gUDXooQvvZgDtws38+06K0aR4DUgtzf1L4bDnkQp7IpepO47WJXqvNa06cda3uIvXkvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXhxJAlz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747647248; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=nJlRgFHHvpWtjX8E4GhuVWtT5xjiUBXJv0Zy7g9Qz5Y1OmNB85LiMWIeaNn9zx/DnFtMiPZDFnJxddfTQZHfGuU07ufV0sUZR01+8eIwNKUYs9rQZ/tj1PD6rCF7y0UgiYjGyeCajtgvjuazih1DvOiraoJkefN5gdqLI6jkddc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVWCbBnT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXhxJAlz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62211C4CEED;
-	Mon, 19 May 2025 09:31:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVWCbBnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6E4C4CEE4;
+	Mon, 19 May 2025 09:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747647090;
-	bh=FXdfPhdfLVoRwDBosojS9gg4O/gtTxeDHKm6qIIKGEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CXhxJAlzGJpMsG1OOb5FTHQQMMUBanDJTGOKz81MVpyJY7dDx2P19hv9QsB5+I61O
-	 lARLyHGnr+cyaMu4t46nnd7UKKq3HwR0LZBz+AgqsIJ0GzveHE6UPe5l9XO2ljfjve
-	 DaRrgoP1Zk7FnR25Po6imZPw1JY6oIeToNgOVbIRsqMeWPoW/WyKKWiXAtbgwd+i/G
-	 4BqfrsOyqbBG87GrgcbSI6xUWkyUkbCbFuhcQDfCMKws35SJiu0/srmPJUdnVBCZ0g
-	 udEmC1kL4Suoq2qEQnZEQK6jKwZT4S1A2vf45zfvm5F2rQwTC3WrjG8pLWFmO/kVtF
-	 2pLfBQ3bzvnHQ==
-Date: Mon, 19 May 2025 11:31:26 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Joj Loj3 <jojloj3@gmail.com>
-Cc: dlemoal@kernel.org, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] pata_jmicron - JMB368-based IDE to PCIe adapters capped at
- extremely slow speeds
-Message-ID: <aCr6bm7xyBXiF8-G@ryzen>
-References: <CAOnE0bQBVS2hz9Mbv+HFLSYUiuTcJJ=A6UqVrhP8Sgf_muMaCg@mail.gmail.com>
+	s=k20201202; t=1747647248;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=WVWCbBnTkk0ktrvABJxuaYyiplG2vJKmYpK4HgwTkwCIEtblM/AJ0+VyDW34WxQAa
+	 IpTEtWMVIuEdhVeYrBWqFMipUtdZn81FnjSXJ/HE3Pz0OdLCbGCxi969dgJztpZTv3
+	 vwILvrmwOiogJwIVgIyV/qGCvBXf/llm7L6Elezxs0w1wYR49dRbu3y3gKgAT6fSZ3
+	 i8vzRM0IMik4HSs5wZAZrd9o9YO3hugJ6ZxI58aEZVzRObKvZc8L/3XzuUq4tC3GNf
+	 WPrunVGCIB+xLmoWb3ESebQy498xiKiknOqZFZc0uZDmOkoWrdanoq/D8PJPfp8Tus
+	 uRMTlv160j9Qg==
+Date: Mon, 19 May 2025 04:34:06 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOnE0bQBVS2hz9Mbv+HFLSYUiuTcJJ=A6UqVrhP8Sgf_muMaCg@mail.gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250519093406.C9_2H_OveoiX61opXZdF_DwFhTbc0aQItLf3MJOTyQ4@z>
 
-Hello Joj Loj3,
 
-On Sat, May 17, 2025 at 02:18:33PM -0400, Joj Loj3 wrote:
-> Apologies for the previous email, which was not formatted as
-> plaintext. I have fixed this for this email.
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
 > 
-> Dear Maintainers,
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
 > 
-> Tested on several kernels, including the latest master at time of
-> testing ( 6.15.0-0.rc5.250509g9c69f8884904.47.fc43.x86_64 ),
-> JMB368-based IDE to PCIe adapters are capped at extremely slow speeds,
-> regardless of whether the device attached is capable of much higher
-> ones. This issue exists OOTB on Windows as well, but is fixed via
-> installing the proper drivers, see
-> http://forum.redump.org/topic/59287/fix-for-pex2ide-jmicron-36x-based-pci-adapters-on-windows-1011/
-> for more information. I have tested Windows on the same machine and
-> confirmed that the issue is fixed once I have installed the proper
-> drivers.
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
 > 
-> Please let me know what additional info is necessary. This is my first
-> time submitting a kernel bug, and I'm not sure what extra information
-> might be needed.
-
-I'm not sure what you want us to do with the information that you have
-provided.
-
-The performance with pata_jmicron is bad, on multiple kernel versions.
-(Which is the oldest kernel version you tested?)
-
-The fact that the default Windows driver has the same problem does not
-help us that much, unless you can figure out what the "good" driver is
-doing that the bad one is not.
-
-You seem to have an ATAPI device using UDMA/66:
-[    3.315037] ata7.00: ATAPI: PLEXTOR DVDR   PX-716A, 1.11, max UDMA/66
-
-There have been some reports for other PATA drivers (e.g. pata_via) to
-force PIO for ATAPI devices:
-https://lore.kernel.org/linux-ide/20250519085508.1398701-1-tasos@tasossah.com/T/#u
-
-Have you tried forcing other transfer modes?
-e.g. by adding 'libata.dma=0' on the kernel command line.
-
-
-Kind regards,
-Niklas
-
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
 > 
-> Relevant output from dmesg:
-> [    3.155555] scsi host6: pata_jmicron
-> [    3.159374] scsi host7: pata_jmicron
-> [    3.159457] ata7: PATA max UDMA/100 cmd 0xd010 ctl 0xd020 bmdma
-> 0xd000 irq 28 lpm-pol 0
-> [    3.159461] ata8: PATA max UDMA/100 cmd 0xd018 ctl 0xd024 bmdma
-> 0xd008 irq 28 lpm-pol 0
-> [    3.204963] FDC 0 is a post-1991 82077
-> [    3.229154] usb-storage 1-3:1.0: USB Mass Storage device detected
-> [    3.230081] scsi host8: usb-storage 1-3:1.0
-> [    3.230253] usbcore: registered new interface driver usb-storage
-> [    3.234360] tg3 0000:01:00.0 eth0: Tigon3 [partno(BCM95754) rev
-> 5784100] (PCI Express) MAC address 2c:27:d7:2d:99:f4
-> [    3.234367] tg3 0000:01:00.0 eth0: attached PHY is 5784
-> (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[0])
-> [    3.234370] tg3 0000:01:00.0 eth0: RXcsums[1] LinkChgREG[0]
-> MIirq[0] ASF[0] TSOcap[1]
-> [    3.234373] tg3 0000:01:00.0 eth0: dma_rwctrl[76180000] dma_mask[64-bit]
-> [    3.315037] ata7.00: ATAPI: PLEXTOR DVDR   PX-716A, 1.11, max UDMA/66
-> [    3.319542] scsi 6:0:0:0: CD-ROM            PLEXTOR  DVDR   PX-716A
->   1.11 PQ: 0 ANSI: 5
-> [    3.362459] sr 6:0:0:0: [sr1] scsi3-mmc drive: 40x/40x writer cd/rw
-> xa/form2 cdda tray
-> [    3.389254] sr 6:0:0:0: Attached scsi CD-ROM sr1
-> [    3.389402] sr 6:0:0:0: Attached scsi generic sg2 type 5
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
