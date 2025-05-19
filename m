@@ -1,116 +1,128 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from sonic308-20.consmr.mail.sg3.yahoo.com (sonic308-20.consmr.mail.sg3.yahoo.com [106.10.241.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1A1C148
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9F1148838
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747691662; cv=none; b=jscewLhX/+ukeiYlaR+WgIf2tDOwRXtk1Xv7vOETc1IHLo2ctpNnYqNsKnk/8cgkCjenLN5ZtBXLk8PYFzq2snZZpUauXo4U4rWe4ZAKc6ng8wjVcsuP68+pZkouAtZRnEgoCHh+DVf7F5FtrXS/bvPXWMRmJdSuVGOnCRXx1b4=
+	t=1747691709; cv=none; b=opPHeF37qfv5v59yaLQF4zc6Li4ArMVuwlKmc5Mn81NksZnbaKjCs3LZK/otwo15dFTtuELuc5M/vzFD07q7DJU8i1EgpvY2DakFAc0mBUVJwE+OZxI++fOI7WIG7k+1YTcirhm3bMJQykcbJQK/QlRYE9mmCIkpnd8GLOhlsQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747691662; c=relaxed/simple;
-	bh=1cMrRrD1wKYeXbyb4edK//2QLqfqx2FamRPjULNvPhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=chTqUeYBmydrnCBCFN6eGsL7MoBBxfdHGUaPdHghkxAFMEtWoZwPaEaBfO01RmJXxB0KbqwunePS3cRR0pKFTd9uynJPtcBgoUxbRLsxhqRBD2Pv7ca/DDOYsFKJloq11sqtSrTDRhVTDYWfpclO0P+SQDNzCwfIciNBt/OgwKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tm60BgJo; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747691709; c=relaxed/simple;
+	bh=C1Zqj3JRfLSuUvMUG12lgk9tmwQBWWOhW/vbeCEZVB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=XLKzv7sB1018KIkVMb23qdzlNwkD2Q3UZo3AA9QdzMr+bP6XuBV15aJh5A3qcAX4iXgg3kog9Qef20ZE7zevIKslP4BejHC4Jcxscth6BqJ/UEsvljjCeanMlK/xVP1+n518vhlRvpvw7GwzdsMNDd1VZjf+1pahgk+y2zTwqAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=h6dqn127; arc=none smtp.client-ip=106.10.241.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tm60BgJo"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231ba6da557so416655ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:54:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747691660; x=1748296460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1cMrRrD1wKYeXbyb4edK//2QLqfqx2FamRPjULNvPhc=;
-        b=Tm60BgJowglxwG0ADKJfC/kFivUSVg/1l+v7ESrne7cR7qxwtyERaO+D1IwRHA/baK
-         V86dIQbyPdRPCrd5cetOgnoDwv4+ejDND+njA1mc4dPNcegcHB7hIzdp/NLCjH8aOA1P
-         QY//U8wXxLQkGocSM8jrr3spx4eR8dMY0RQntPT1PsvX2kuNApk6wEwZxpryN95jddhz
-         j/MfHHREeqhMlk5RO83cGHZlu1Z5xPxwvh/zEgW/im7aQg/Uu7PZ4ZgpvA90Mch64dhZ
-         h98DP8iOY7vKrerjic+Ad+vu97Mwr00zQmzas5+W5gB4x6Lk4szjNkQH8T6WxzhBp37Q
-         6A8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747691660; x=1748296460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1cMrRrD1wKYeXbyb4edK//2QLqfqx2FamRPjULNvPhc=;
-        b=DKzG9BvRgLkiWfIW4tWE9WZSaWa9BXR8Ovv0Bjo9gGfaXs6FMGrQIeks5U4k0fqQlu
-         3niGP+gXfG3WcFbYVYXB8JmFfR8uyAflFd6VAo2CITZ5Ey9Lq64hykNWFk5UX3NG4gOl
-         xk9vyQEeaZCYVJM+7PPIawkM/3P/6G9TRQ1qDjSl7tYu1X/fpp3D/yX8MPahgsZJi4un
-         ExuPy2s7RFEh/kMxmDGkZGt366H7tMoRB5EIo91HuHBvK86nTkXKJLqf/WEAEp8PjUxo
-         WJGvjc0WbhCIK0qlDc2EbcfG1ZxdiDvHgETi4IVVFMPQr43MjfFEE1jUmDUt2o2nXHiY
-         qc9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWCn6nYLwhbuJjh+Mk/7dZjHZi6onMnTFN8Q40t1DgruRDDzhTSit/KbMU/REJ5Cr1QwQgFeVPC/25VBoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwZza/CLv42G0LwxeZy4+hjD1c+/qkdvexKGXCaxzSXr3TPmKZ
-	h7xMOySse39E0Gc9UWgAx1Go1d/8RExbCZ3eLnJbk25OKlGcrt7/s29NDdGWvTvtdngpHhsbBrl
-	XzERLrBj3g0IRaYUQ4VAY9pdNYQrdy718LH4mL1oJ
-X-Gm-Gg: ASbGncsiTKH4VzxP1OXgsMufJpH+H5KRicq/cTSfUK0fnPneZMayNf9+hTTl3zy39mc
-	EvEpCXOPOf39UOsojelj8tpbOQD3pI+Vs3HstnhhM5Ajk3P4Gwx6Jl2+8h8DIwzvVYAlZu11BZO
-	l+EkW4SWm1R/M6n9KIZ8BV5EdJo56H1R2zIREEmovnYmGeiDvhKvz4qxeqThkXTVkI5eg2WJR8Q
-	BCNsriy
-X-Google-Smtp-Source: AGHT+IGxMFzfxoMshf8o4a14Ejv5ySZeVudjy8uWADR3jrlyocSlHqGDCSnPrW5fBZgeWyiqUxNYjC030ER26Bgve7s=
-X-Received: by 2002:a17:902:d54f:b0:231:d0ef:e8fb with SMTP id
- d9443c01a7336-231ffd0e311mr5549935ad.10.1747691660258; Mon, 19 May 2025
- 14:54:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="h6dqn127"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747691700; bh=sZc8TW8Qe7ENGKIbNTGywz8wtSH+oZRNTWQbtWOIpTc=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=h6dqn1277mshiV+COm0TcIR6hGDhRb+KBsSAfZHY8JFc0ERkuD9rdeeRKaZslMLNeXeHNkNZTlWEe+rIzlCwMbva8gghY+ohuaq7PF+iElq6KKHlpF6IE5APNCpjYkymF4ApXE7qt2i/IHuvYBTtPggbycR77MQ4DbanBjeSRwrC6aAjwu2zemysYN/t5m0NFgst6nluzhgWzq3+3xJhr+jHsVo3ORGA5Vv1URdP5uE50gzIqGvGfPA2OP2TA3RVisiJ3mzXTcY4+/tyYTbHoe9YosIGKUgzcncPaQkbOtu/dvTj0O4cXHkR6UK1BrR6WeupqoI4KSzHFQUsSRFS0Q==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747691700; bh=E2dXjCzj1a0AfAYnitnSwHhKrcl2MxH4mPTeIG8Dy0A=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=P5ZYkV9XlKdmfKDeWiVMBlmKPOInYXRKKIhQ5cOFh18uktC55LmBfczSu/IZ2GQiwQOg3xKkd4yi+mJYHB4BHjFfDeymC6ngxj30k9eiLJhAjTUY+rTpgHbaYmE8q5LQ6iLyY3gLLDt4qRmx18spY2V6SizNoI/URDtbuneLN//kYyeAz2c4MeeuLs+5fWT+Iu74+vvbLD7DZvd0DnR1D3G6k3WY/sSA/rtaIaaXUWIS7RBSv1/5m3IJaNfCAAaRJGYUOgyyZqvj5xkQ/fRXPCXPWK1Aa54udnmp3HYPPB9lIajMnax2rpMQTTOizPuORAXwspYw3+O5gkMElKtfXA==
+X-YMail-OSG: N5QIzyAVM1n6A3Jv0sjFnYc6a5yRWDYT1I3keOBPGaGP8qX1hgi_JNUQ31cvtJV
+ bGsNdDRYuOh04ehMJAj8TwSMfLQCOuD2K_Y.IFsx3XoTA2m2RS2RpnU_7GbfBvskYBmPRFlSrq.h
+ GzGlj78EUUrPQV2sg_5CdORBNY89AsJU5E3WvgPXFTeNiLHNabMnhgdyB3JiIMTd3tX.FOalz8oO
+ N1SFHqqGVq1tFn8yzQC1yfrTz9GBRynOWK_1c_y6elYCdLVCE9_i3nYEsAAYuZ6SQQ430PeDagFL
+ WcbB0kxXdtUeLzjwXHRydT_auAhOupzUYzdTHMqZF0o06.YTABroJYTZiIowlUroMW8MYQM_nys6
+ aYj2XtFkd4ISBjF_vkkFh8Wzv7C1sW9YKV.0UrX368FxpQmP_JvP2qGsUvuOK_JA2t3ZyvXvBUZx
+ e6SHLJ3l1pii47FTUGY36By5BgDtgTlE0i0bmeZHNRJX6w8Tnt09vdFWjXmC0jFJDLwV183PKY0R
+ 4yQXN8d5tPgkJRjKBOogHMhNJV5fWqSdGm.ONaBSikRyGmGr4.FMi_SrWhDFBDd2NECimj.aQZtf
+ xFCrkBBXCJGS9XbY2g23U1c3L2usMmMm2.v4JD0HTAJpfySD062emM4NU6OLjHL11jFaFu6lLAv1
+ EdKVtPCtJ8cfjjFtaj4GpwQTC6qbNaPEq1avqKINo6w8fWb26efhf9ojw_EEkWrObzvQwsYdMmqF
+ GIjfK8daim2WWcgr9wB5LXWTE7pHXTELlnGj2g_KLc2Sk9c.nQjROXWAabatTs3xRd6dsyUSVMfd
+ tiEChbjA2N5ID64a_5xbvN44TYuIg8yzF5tfNfCqQnfoIAMnSnDcfQ9sXVtFhUxTJN5QmSJ0FPfY
+ hf.EQ17wHcBZdaVdUSDl_z3FajwpYXOWua829pw_ad6fDdwm7_9QSy_7jRAJWWOhv3aH1u24WV1V
+ yu1TMuNgfwEnRU4.UCevX8C5YK5NKurlOVBouo1_kNbubINSHQXrKU8t91HMn5erw0uX2P6m8bqR
+ J4rwV.drXguowjFlglEfNxPE598tBK06wBcb2_q2Y4z7vaxtStv1.zFTR2FfWp.RKQLtgdisouDT
+ cyLIm80qVHvjkw7TSbCniVrIlEdPZ0HSrGptJGQ7R0flZ0kjZ5Qrd1F6bk2rL1PNXbyX67Wb_RUe
+ rjgImDf1xrH4sFUptv.G.2z2TBJCoeCqmWb6lKOVWempRh2TgqI0stZwkrHPhFQilRmykeAe0esF
+ F0_0YX3z2PgpQPds6P6I0IZC56lgzcggVPlHbNncswUKtwAw8pbdS6_0u2Re_CvYcLnzorv4u1D9
+ mPWuK3UN6cBy4ELyKag324ZbafO6gjLBa5jyZtNbLi8QJcU8uC8dMe7KIn82pj6wPCC3K4J0MePq
+ BQrO5t29Z6lxuMa.UvbvtOMvlxpkGTv7qtInVZyP2QnxcSpYL325lGxK8KX5iQFhvXPzLz0SbHdX
+ QvCPJCAU0y5yJHsooOhfRMfxT7VfFx8NNf73wpUe2KzkcmzGN2iQNvqFRhT_g6AVIVII5.3cbyQZ
+ Ke4fIKNlm4JCPIKPm1sBvdEuK_RjBlJp672uNIGW5PMeFNgSNU2JAfqBX7tKCz2SD0Glpmgupke7
+ Xst6c17eUmi3jS8VwXj6N0kWLoZ2fXJOqb6FilEcDLStQ5PAz967ZDkJ7K3Pg6dPBe8b1ALmpzeh
+ lxLp9FQ5En6XsJe1ahSrtMcRrqqMqOXB.ueUCGLC5BjIyo5627ggI6ihY5uHNTstjPfGzNq9PdYk
+ GqwgnHXEWYi7xNJ5wOehAezHzlscJRV7tb8ZB_RK0AjwrOF0g.yN0P_owqubjpgRaJdB54_Tya_U
+ P5V4oyX.5vvsB.qtChnkaYj1EtvW8OmkOBEu9sCThcU8uJQADWmmhYOe4vlnh8CWFf6raceAmVAI
+ Nh_FMHJortHyfZpyF1uAEHdvu1L.pAVwuc6PWirRf3l6FPXgzsNTAavKzN8k15N1gSIfSWyiAUBr
+ tHJtDSKU_uifINQG0pWycuWEqV87YlEwjahoe8Piy_KiJjvBcO0MBRej.wP2uAEfHaHstQmxk7ba
+ mmaeqzMPf3ZCS7X9pCTuji11eKmSilIG7n5ra0lfZ0EjaMBuBxVEQVb.2iHeEj.w.EGXjYeuxbrm
+ HnRnHhabTtC5N4swFoWAAD_pHC6grtvAh_tlrxEZN3M2mKQEnk8czsrR5iJ7s62ITYrGtB1tLgs5
+ dEco.6.1kPFv9s9.bhZvpm4IdB4KxgD58oiGaA4QQsu2Uzey_DllZVOCdUkt3TZvGjXLWGVBAX55
+ Tk.PZ9k26BwOKlbMrKJ5e_Qm_7peL3f3YtfLIB19iJqOgHQ--
+X-Sonic-MF: <sumanth.gavini@yahoo.com>
+X-Sonic-ID: 4657896f-ebc8-4b38-83cb-2b6ea416c4c2
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.sg3.yahoo.com with HTTP; Mon, 19 May 2025 21:55:00 +0000
+Received: by hermes--production-gq1-74d64bb7d7-rstz2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID d5fa22a8ec8900100267a57050f58b0c;
+          Mon, 19 May 2025 21:54:56 +0000 (UTC)
+From: Sumanth Gavini <sumanth.gavini@yahoo.com>
+To: krzk@kernel.org,
+	bongsu.jeon@samsung.com,
+	cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org
+Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] fix: Correct Samsung 'Electronics' spelling in copyright headers
+Date: Mon, 19 May 2025 14:54:40 -0700
+Message-ID: <20250519215452.138389-1-sumanth.gavini@yahoo.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
-In-Reply-To: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 19 May 2025 23:53:43 +0200
-X-Gm-Features: AX0GCFvlTHWGpQXPrZqZ0zsT-FBytrKftqSVY8o-HTsRuDoHswTfw7vQf9EDQFQ
-Message-ID: <CAG48ez3-7EnBVEjpdoW7z5K0hX41nLQN5Wb65Vg-1p8DdXRnjg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>, 
-	Usama Arif <usamaarif642@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+References: <20250519215452.138389-1-sumanth.gavini.ref@yahoo.com>
 
-On Mon, May 19, 2025 at 10:53=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> 3. PMADV_SET_FORK_EXEC_DEFAULT
->
-> It may be desirable for a user to specify that all VMAs mapped in a proce=
-ss
-> address space default to having an madvise() behaviour established by
-> default, in such a fashion as that this persists across fork/exec.
+This series fixes the misspelling of "Electronics" as "Electrnoics"
+across multiple subsystems (MFD, NFC, EXTCON). Each patch targets
+a different subsystem for easier review.
 
-Settings that persist across exec are generally a bit dodgy and you
-have to ask questions like "what happens on setuid execution, could
-this somehow influence the behavior of a setuid binary in a
-security-relevant way", and I'm not sure whether that is the case with
-hugepage flags but I guess it could maybe influence the alignment with
-which mappings are created or something like that? And if you add more
-flags to this list later, you'll again have to think about annoying
-setuid considerations each time.
+The changes are mechanical and do not affect functionality.
 
-For comparison, personality flags are explicitly supposed to persist
-across execve, but they can be dangerous (stuff like READ_IMPLIES_EXEC
-and ADDR_NO_RANDOMIZE), so we have PER_CLEAR_ON_SETID which gets
-cleared only if the execution is privileged. (Annoyingly, the
-PER_CLEAR_ON_SETID handling is currently implemented separately for
-each type of privileged execution we can have
-[setuid/setgid/fscaps/selinux transition/apparmor transition/smack
-transition], but I guess you could probably gate it on
-bprm->secureexec instead...).
+v2:
+-- Addressed Krzysztof's comments:
+   - Squashed NFC patches into a single commit
+   - Combined "nfc: virtual_ncidev" and "nfc: s3fwrn5" corrections
 
-It would be nice if you could either make this a property of the
-mm_struct that does not persist across exec, or if that would break
-your intended usecase, alternatively wipe it on privileged execution.
+Sumanth Gavini (5):
+  nfc: Correct Samsung "Electronics" spelling in copyright headers
+  extcon: extcon-max77693: Correct Samsung "Electronics" spelling in
+    copyright headers
+  mfd: maxim: Correct Samsung "Electronics" spelling in copyright
+    headers
+  mfd: maxim: Correct Samsung "Electronics" spelling in headers
+  regulator: max8952: Correct Samsung "Electronics" spelling in
+    copyright headers
 
-> Since this is a very powerful option that would make no sense for many
-> advice modes, we explicitly only permit known-safe flags here (currently
-> MADV_HUGEPAGE and MADV_NOHUGEPAGE only).
+ drivers/extcon/extcon-max77693.c     | 2 +-
+ drivers/nfc/s3fwrn5/core.c           | 2 +-
+ drivers/nfc/s3fwrn5/firmware.c       | 2 +-
+ drivers/nfc/s3fwrn5/firmware.h       | 2 +-
+ drivers/nfc/s3fwrn5/i2c.c            | 2 +-
+ drivers/nfc/s3fwrn5/nci.c            | 2 +-
+ drivers/nfc/s3fwrn5/nci.h            | 2 +-
+ drivers/nfc/s3fwrn5/phy_common.c     | 4 ++--
+ drivers/nfc/s3fwrn5/phy_common.h     | 4 ++--
+ drivers/nfc/s3fwrn5/s3fwrn5.h        | 2 +-
+ drivers/nfc/virtual_ncidev.c         | 2 +-
+ include/linux/mfd/max14577-private.h | 2 +-
+ include/linux/mfd/max14577.h         | 2 +-
+ include/linux/mfd/max77686-private.h | 2 +-
+ include/linux/mfd/max77686.h         | 2 +-
+ include/linux/mfd/max77693-private.h | 2 +-
+ include/linux/mfd/max77693.h         | 2 +-
+ include/linux/mfd/max8997-private.h  | 2 +-
+ include/linux/mfd/max8997.h          | 2 +-
+ include/linux/mfd/max8998-private.h  | 2 +-
+ include/linux/mfd/max8998.h          | 2 +-
+ include/linux/regulator/max8952.h    | 2 +-
+ 22 files changed, 24 insertions(+), 24 deletions(-)
 
-Ah, sort of like a more generic version of prctl(PR_SET_THP_DISABLE,
-flag, 0, 0, 0) that also allows opt-in on top of opt-out.
+-- 
+2.43.0
+
