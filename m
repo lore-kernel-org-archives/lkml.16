@@ -1,110 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A811FAA
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04401FAA;
+	Mon, 19 May 2025 03:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747626874; cv=none; b=K3AcWFrEgIr3i/eXJb//iOPKKeKNUArgOO93VyP6sj9wBEcph9QLMbHo8mjTELEnyC+coLnYW+9iL26SxgDvBd+STUY7TcmI6ImNkxuXEEFV7VK7clV4voN10CnRSYt4CKZPjXDQyiQ9+S6gx/hdN2mqLq8mZvYCndE8ZfaOLLM=
+	t=1747626883; cv=none; b=emDil6nI+8/WfrpRzZnAy03etLwPtZx8k35e2Q7m7aEsA4seda1wL9f7fPKtxV8GLqFZhVASWYYaOcJ2ZlutKX4JbUKTjglvKEksDR4fSNcm5PSK2nKa3vtF93Elqerz5hCqF2F3lAP3aXbsSDNAf/VesrIBFiSVAg5+1F6SMoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747626874; c=relaxed/simple;
-	bh=bwGkZr4Chd/Kt6Yei9NegjbH4WXfuh+5CMBT2YhepHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvoLzKl+UJL/qNn3eJbdATF21LqPWJTLf0D5kVU7VKIIeewz4G5f+i29ozSKVdEV1OuZdaIZZ6Fxx7LVlIaHSwCeSWsw/i4xQWYKO86Jcxewupig3vh8K8B/krj7ASnD5T+LdboS5azyTcl5puBRz+FKsjdbegtsPFjp1DkF9c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlVJ2Ndr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747626883; c=relaxed/simple;
+	bh=7Ra3K2OwzVwWKet+svJjlzEF0rBmYKmRsd0XFB87m84=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G38nRRD/pOTFaXLkwUAxQD15sHtNgG72RNY0jfiOwbsvFo1ePq/w9yfw54tq8tAGqc5x8PPL+EyaN8U7INkivg/7W2f64M/3l6CbqspVDLmpyezQ4kTIEHd+EUG31MajJkBTFF2uHw2JhWAXfYMiHcg62UK4YCiEFTr8eW3gdkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=hrBdJGZ3; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlVJ2Ndr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8560C4CEE4;
-	Mon, 19 May 2025 03:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747626873;
-	bh=bwGkZr4Chd/Kt6Yei9NegjbH4WXfuh+5CMBT2YhepHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UlVJ2NdrdPCWf+GkB/5Oa1wjn4J5ewiH6Z5LkgQ6UAb4+wEyIG1hZZDot2MhzdpAE
-	 QblrLQr719nk/YWf8DjoF8j8TI+d7pzkCZcRDNByBrpWYDP4crSibeYesr5r/l48R0
-	 6k4RUiLcpWAPe1aawpJm8q021EU9GsaJJ6I9UayKZQLyCvunbIb5nZynXnrCLr+3bK
-	 QAM487GOhoY6S+3o05IWbwS5RUdvbLmv9nbB8dnF1KLch5goI1gGDnwYO8Ln7XC7N7
-	 45Vprvp2YPGqjK29x7dhyS4VuUmH/I9ytty+FWTs1QmGkydmNP3t+xjBI9T0dO+/Sc
-	 ApvpYMxPF1ypQ==
-Date: Mon, 19 May 2025 11:54:25 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Sheng Yong <shengyong2021@gmail.com>
-Cc: hsiangkao@linux.alibaba.com, chao@kernel.org, zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com, dhavale@google.com,
-	lihongbo22@huawei.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Sheng Yong <shengyong1@xiaomi.com>,
-	Wang Shuai <wangshuai12@xiaomi.com>
-Subject: Re: [PATCH v7] erofs: add 'fsoffset' mount option to specify
- filesystem offset
-Message-ID: <aCqrceu67F3rh3JM@debian>
-Mail-Followup-To: Sheng Yong <shengyong2021@gmail.com>,
-	hsiangkao@linux.alibaba.com, chao@kernel.org, zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com, dhavale@google.com,
-	lihongbo22@huawei.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Sheng Yong <shengyong1@xiaomi.com>,
-	Wang Shuai <wangshuai12@xiaomi.com>
-References: <20250517090544.2687651-1-shengyong1@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="hrBdJGZ3"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b13j25GPsz9sv1;
+	Mon, 19 May 2025 05:54:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1747626871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UeDu8PHSWuuIHAbS2PGJQ9cJz+KEZFn/PW/D40Wbw0k=;
+	b=hrBdJGZ3dy7w3pB4OAEc6WggTg+nsmMyToqVjzr7rMnHz3NdEJsZ9b6RROXL3O0gsidOby
+	OoJSx7/kYD9YCUUZoRUcFUt1j4XZWGOyHP7O85Q79XWucPT8YDBjyJUhwts9HCYKLNDKbV
+	gzBc5sHwzARIAkAm/gSl96wM5IXLsuAe7Pojhigk09mcdBbKrGolq3VKqLgb+5Q+EmZBdS
+	6PrHVnHjh18hOVEkzXZKNfbeqDPOp08IchNUPDXaQ1ZapUa7EPwo89RWgmSD8J9/cS19//
+	oZ7TeaCrO/Y0ce6g6mZJdIGNIjlmrUm5qtMmfgoYot/asIxmaskil4JvV/e2TA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sun, 18 May 2025 23:54:21 -0400
+Subject: [PATCH v2] ext4: replace strcpy() with '.' assignment
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250517090544.2687651-1-shengyong1@xiaomi.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAGyrKmgC/22NwQ6DIBAFf8XsuTRARGlP/kfjgS5L5VA1QKjG8
+ O+lnnucSd68AyIFTxHuzQGBso9+mSvISwM4mflFzNvKILlUXAnNaEstiyngujOhWoWd629PJaA
+ u1kDOb2ftMVaefExL2M94Fj/7v5MFE6xDbbR0jvfaDZTqOZL9mGDjFZc3jKWUL/OmnWCuAAAA
+X-Change-ID: 20250518-ext4-strcpy-1545c6f79b51
+To: Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2895;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=7Ra3K2OwzVwWKet+svJjlzEF0rBmYKmRsd0XFB87m84=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeFpHaXRMbDU3OXVQT0pydXk5Vnd2Q3BXOGI4aEVuYnFuCktCYngrcnRTZFRNdnB6N3oz
+ QmNkcFN3TVlsd01zbUtLTFA5emxOTWVhczVRMlBuWHBRbG1EaXNUeUJBR0xrNEIKbUVpbkdpUER
+ yS01XMVp2dTVaYitFNWhiTWFYbTlqeEZ2ZzJyR2VXaUtpVHE0MjJjajF3NHcvQlB4Mzl4NjFueg
+ oyWnRqbkQwRGs5NjlNVGt2dVY3V21rT0NNLy92emV1NVRSTzVBTHd0U2swPQo9bk9IOQotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-Hi Yong,
+strcpy() is deprecated; assignment can be used instead which
+theoretically/potentially increases speed as a function call is removed.
 
-On Sat, May 17, 2025 at 05:05:43PM +0800, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> When attempting to use an archive file, such as APEX on android,
-> as a file-backed mount source, it fails because EROFS image within
-> the archive file does not start at offset 0. As a result, a loop
-> or a dm device is still needed to attach the image file at an
-> appropriate offset first. Similarly, if an EROFS image within a
-> block device does not start at offset 0, it cannot be mounted
-> directly either.
-> 
-> To address this issue, this patch adds a new mount option `fsoffset=x'
-> to accept a start offset for the primary device. The offset should be
-> aligned to the block size. EROFS will add this offset before performing
-> read requests.
-> 
-> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
+Straight assignment works because the strings are not null-terminated
+which means they don't strictly require a str(s)cpy call.
 
-I applied the following diff to fulfill the Hongbo's previous suggestion
-and refine an error message:
+No functional changes intended.
 
-diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-index 11b0f8635f04..d93b30287110 100644
---- a/Documentation/filesystems/erofs.rst
-+++ b/Documentation/filesystems/erofs.rst
-@@ -128,7 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
- fsid=%s                Specify a filesystem image ID for Fscache back-end.
- domain_id=%s           Specify a domain ID in fscache mode so that different images
-                        with the same blobs under a given domain ID can share storage.
--fsoffset=%lu           Specify image offset for the primary device.
-+fsoffset=%lu           Specify block-aligned filesystem offset for the primary device.
- ===================    =========================================================
+Link: https://github.com/KSPP/linux/issues/88
+Suggested-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+There's an ongoing effort to remove calls to strcpy throughout the
+kernel.
+
+Link: https://github.com/KSPP/linux/issues/88
+---
+Changes in v2:
+- completely remove the call to strcpy and replace it with assignment
+  off of Theo's suggestion. Thanks.
+- Link to v1: https://lore.kernel.org/r/20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com
+---
+ fs/ext4/inline.c | 4 ++--
+ fs/ext4/namei.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+index 2c9b762925c72f2ff5a402b02500370bc1eb0eb1..f3bc8b3904a8a9b55162f002b5bd63a527b290a5 100644
+--- a/fs/ext4/inline.c
++++ b/fs/ext4/inline.c
+@@ -1314,7 +1314,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
+ 		if (pos == 0) {
+ 			fake.inode = cpu_to_le32(inode->i_ino);
+ 			fake.name_len = 1;
+-			strcpy(fake.name, ".");
++			fake.name[0] = ".";
+ 			fake.rec_len = ext4_rec_len_to_disk(
+ 					  ext4_dir_rec_len(fake.name_len, NULL),
+ 					  inline_size);
+@@ -1324,7 +1324,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
+ 		} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
+ 			fake.inode = cpu_to_le32(parent_ino);
+ 			fake.name_len = 2;
+-			strcpy(fake.name, "..");
++			fake.name[0] = fake.name[1] = ".";
+ 			fake.rec_len = ext4_rec_len_to_disk(
+ 					  ext4_dir_rec_len(fake.name_len, NULL),
+ 					  inline_size);
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index e9712e64ec8f04586f5ebcd332431e6af92e4f36..c7d7c46a0b18ae109d30358c157812ac2ded200e 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2926,7 +2926,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
+ 	de->name_len = 1;
+ 	de->rec_len = ext4_rec_len_to_disk(ext4_dir_rec_len(de->name_len, NULL),
+ 					   blocksize);
+-	strcpy(de->name, ".");
++	de->name[0] = '.';
+ 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
  
- Sysfs Entries
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3185bb90f549..e1e9f06e8342 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -654,9 +654,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	}
+ 	de = ext4_next_entry(de, blocksize);
+@@ -2940,7 +2940,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
+ 		de->rec_len = ext4_rec_len_to_disk(
+ 					ext4_dir_rec_len(de->name_len, NULL),
+ 					blocksize);
+-	strcpy(de->name, "..");
++	de->name[0] = de->name[1] = '.';
+ 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
  
- 	if (sbi->dif0.fsoff) {
--		if (sbi->dif0.fsoff & ((1 << sbi->blkszbits) - 1))
--			return invalfc(fc, "fsoffset %llu not aligned to block size",
--				       sbi->dif0.fsoff);
-+		if (sbi->dif0.fsoff & (sb->s_blocksize - 1))
-+			return invalfc(fc, "fsoffset %llu is not aligned to block size %lu",
-+				       sbi->dif0.fsoff, sb->s_blocksize);
- 		if (erofs_is_fscache_mode(sb))
- 			return invalfc(fc, "cannot use fsoffset in fscache mode");
- 	}
+ 	return ext4_next_entry(de, blocksize);
+
+---
+base-commit: 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
+change-id: 20250518-ext4-strcpy-1545c6f79b51
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
