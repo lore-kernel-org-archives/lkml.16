@@ -1,81 +1,71 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F50212D7C
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A60C1E5B60
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747686731; cv=none; b=EZ14sCtNirtZEyLMtpeTuMeDSbLVplIYWl3AdhG4VH5cnOsAL2u+4F+yuaZ1MQGZ4ZBlpaphejDXYqkPqiSiPNjO8jMvVDi6KvEXiU+W8Bl0gJ69izqZaIpah5WJq266eP1QvpRmWR3A9lIpTf27UG+3K5hNuU1l9PAkWliqZns=
+	t=1747686786; cv=none; b=nt1o7nb1wh1xCQblAIYf/ahsDjAPGBY5MYPZnY6rr4kWfsA61GfsPI489a9NYJ7AzU7Yazd2a7YlPHElMZsmn80uAg+aA648UfINWsA2PzA4Aiy4wUStq0xptR4B3acFpd5vChwOZDKzqAokI0ENo0nf7g1dtxBnsWOFT23iwBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747686731; c=relaxed/simple;
-	bh=adicYJFUFbcWI5VCpds+T+yRkPfU5MwBVrNmMuIk72Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dxiPrEv/Dpke1sfcsQ/zP8OIHJhcXLZV3DdBiD0VKHpZVi3zaz2Z2F3efPScVDiVidsc/fa8peNMIs9xB6LuGoqafaXgRK7tG/Widjn0gS0722eHesmnNeKBcFzbevpx55OIvk/fgviNQf1Mf+XXHR91zG6ElwyyyEvLzcF7vdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=CuKCu/if; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="CuKCu/if"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=lgc1mOORiC8HFkaMdvW9xX85kqMLmkBHdBu/nZcEIx8=; b=CuKCu/ifSJ0H3i3LkowTpcIUGR
-	1p+wk74pfLBfZ6I681e9iiZHymozFIxIdm4I5XWIydfQPhBezlHnJ1aiGNDQ/+dTd6suyukIPHeIb
-	FjUGkxeDG+N8o1X+3+a65XmfoHEIqRKmK6Sam0qThY6WLLcxabf1FhbvEpARG0y7m4KlHFssZAF4b
-	+qZFbsTkj4OIufdQynOkXdAZaSE+o0Yn+OnpScdcCS9dNWYqb+jB/S4pcuMFXsXfwnhwFOMvLl6zW
-	3QTYo7PQzZT8eaF+XPLe3AqUghxTyuttxOQjNzL8Z9y3oBS+R9gvj+R194SlNOgY+mv6TIoV5WOB0
-	GqdD5J6g==;
-Received: from i53875bdb.versanet.de ([83.135.91.219] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uH79R-0001JQ-OP; Mon, 19 May 2025 22:31:57 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	andrzej.p@collabora.com,
-	hjc@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	tzimmermann@suse.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH] drm/rockchip: cleanup fb when drm_gem_fb_afbc_init failed
-Date: Mon, 19 May 2025 22:31:45 +0200
-Message-ID: <174768669421.2818279.4158433368328822949.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250509031607.2542187-1-andyshrk@163.com>
-References: <20250509031607.2542187-1-andyshrk@163.com>
+	s=arc-20240116; t=1747686786; c=relaxed/simple;
+	bh=e1hfva+cetv23bGTTqWa3K/1jQyxFs2xFn/QL0L2K9E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JfhvycVCfNCR7c7HfVC0Gh/GGOYCGzHsfaD+upU+RkVycV3E8nrtxFYN3s9ZGZRffQ3m8qtp9RzFYH6AgSvzLD9vLyVTtAwFu1WZr24ziEb8aTKtW1JfbWaJZMOIwb0Gu9THG8qBtMU6h7JX2N5Xj8jQYIunqC7n/Sq2KsGRL5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b418faf73so857186339f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:33:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747686783; x=1748291583;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E+MRoqLeXUF0/EaBe4FpNgtC2KPyZbvlsKObRfqCd5E=;
+        b=wA81MMhNPDL+liFaYsFbSAZ6WZPJ5eoNOrxEmfcQp1oC2ijL+nJ1oRPZVp0eQLBwxn
+         6PFYuksEe93vV0cNoPO44vmNT0VcOdIaP8hlFkGQ8ajctAoGBD34RXEToTgOwQZhpUOl
+         7goCNLl5g9NwuV1UXWdZeRAlt2efuGgWo7blRUeRu7e/LrbOlaJbcZFldZrfpiBm1WRQ
+         hX20TWAwCMjju00XGbC4ewZePFK7JDWlyIhulfTwu3rNZj9+5MGmN/kLemXrahVKaqj6
+         B5OY4w2FZoe4rjzq5Ytc7TDQOuX8/9cxjTU0gzKUgMuz7xQkFGT0cDfCm5A2FC6QsHq7
+         W87g==
+X-Gm-Message-State: AOJu0YzSQesKwfx6IzhYyIV0yG0uarz/faGyczLBMfY00vfS//nILPeh
+	Ya4S0iS3dw/tnExZ3VkOxFTNwz18SM6/vh1lbEq6JX98D7l4LwOKMoj+6O0Lb7odKqcu3DYSayD
+	vAnDyF8VtH86n0DcxRg23B+/e0GrkQGb7t5l0DCY/cz2MOhlWX6hgEL15TRc=
+X-Google-Smtp-Source: AGHT+IHupsqRmekEkzZmlMA8WVt11I9nj99RWwh36kCBLmf+TCMNmJ4dWGu5HeCMBRwgDF92+/UR+aWahnyTwywkpua7u16D6AHa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:4186:b0:861:722e:2cbc with SMTP id
+ ca18e2360f4ac-86a2327c37bmr1836835339f.12.1747686783712; Mon, 19 May 2025
+ 13:33:03 -0700 (PDT)
+Date: Mon, 19 May 2025 13:33:03 -0700
+In-Reply-To: <20250519114357.2290474-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682b957f.a00a0220.7a43a.007d.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KMSAN: uninit-value in usbnet_probe (3)
+From: syzbot <syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
-On Fri, 09 May 2025 11:15:59 +0800, Andy Yan wrote:
-> In the function drm_gem_fb_init_with_funcs, the framebuffer (fb)
-> and its corresponding object ID have already been registered.
-> 
-> So we need to cleanup the drm framebuffer if the subsequent
-> execution of drm_gem_fb_afbc_init fails.
-> 
-> Directly call drm_framebuffer_put to ensure that all fb related
-> resources are cleanup.
-> 
-> [...]
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Applied, thanks!
+Reported-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
+Tested-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
 
-[1/1] drm/rockchip: cleanup fb when drm_gem_fb_afbc_init failed
-      commit: 099593a28138b48feea5be8ce700e5bc4565e31d
+Tested on:
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+commit:         a5806cd5 Linux 6.15-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15815e70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8610b3b94c7a5632
+dashboard link: https://syzkaller.appspot.com/bug?extid=3b6b9ff7b80430020c7b
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10b331f4580000
+
+Note: testing is done by a robot and is best-effort only.
