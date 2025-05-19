@@ -1,151 +1,130 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F24321B9F0
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5387921C9E7;
+	Mon, 19 May 2025 21:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689897; cv=none; b=WallQd5CVpg9GWY/AOIM4ceDJs7UsICJM6BuiO43Dx4ZyMpEmXOpw4oiJa6Gjkxg/VGV/s3ZNWGy61Q939zvu04mrAzrloxTqXuRkZHB1CEMGd6xSMmJCIVjY9gX6lmOJD3A3pHDbsfSvz7BTT3nsbGgRs3wUe/z6xVrNS5kp5w=
+	t=1747689913; cv=none; b=XFe2G3guEx9wHnKZt8anLsJQXMUy32iFVYGHKEnhq02AOGxw7R2WBlNGQ3+/mjUzWC5wRLTjEM7vWnQSexzc4Ua5nsPNA+u4sIs3TdVtR7EWPXGlskOfhI2WGoiMtZVgJ1aPbNegI3fmaqvO5AF8vxQ2epCExOnUpeGHfJIGkWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689897; c=relaxed/simple;
-	bh=KrJYF/8iAZAz6eieIlvrsorYC8ZuhwgjORMuJk5Vcng=;
+	s=arc-20240116; t=1747689913; c=relaxed/simple;
+	bh=CZ691peLINPSUAyU3kO729Ie7ID8c0016wN9NHPkQps=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F0DgnM9zeb6SGwyCLJFyhHscb5hDPFQ/LMJ+Lv6GAs17n1Pzu14mQ9wWR5IeniP1pbgjh/L4FGmykggvbS0e0rV1SVLx/9O6zcOBOmS8kjvnze+Ul4JDJBHY8tbnGbXQae2OSysMndUQLUeNQnq3KyVe6gQo2JcOBVpwmVRUo+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DjSgCwsa; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=TXyEM5gwxATiprjoMlAUcVU52MPccTag/ynW5Qjo302qWb7vbD8t/YNb2e/4I6uP03byy2g4n0hKlDA0O0f6AuYwJd/ulZcFtNYq+9HdR8tJZW7Yxe06yvZDQLjQXPk59cIv6ZYOKjrPG0pYLSO4EZIDTS5FYKKN6YAsnQUheRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lr73uh8z; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjSgCwsa"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231f37e114eso531595ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:24:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lr73uh8z"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86a52889f45so24020839f.3;
+        Mon, 19 May 2025 14:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747689895; x=1748294695; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747689911; x=1748294711; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jwr2UogZmg2vxMmFxh7M3ZUqGzc1B04mt9jo7F27B84=;
-        b=DjSgCwsar9Ue/Qr2tQh2ztjLU274k6nmGL5YV6jqCN8WY4qV5hOHnIYcf584L+w3qd
-         gwxF969ASztj9dPbZjgWpQYUCdiLScEux3MKIHlVxGsgHwvnORpPm5YrCzDTClFfpJGF
-         kLXTNDfuEKtIQQKEoqkmi2flV3bHzgwCzCbVr/MugkrrhtS7CgH58ZCvR4/b3WAHF/Rv
-         FSOnl5fJCh/Y+V+anBPkrL/PP1ouzgZI60n15JD6dW3f/iVQwJMGHDiGx+eGvyzn2L3M
-         taOAfnvPgVYco/KgdxKHUSHNCsceOm5w8HteRsc2gvgRDHl/8OrO4hTbgC1+PWFAWA6u
-         wKTQ==
+        bh=x4mHlbF3wl/qb51JPbWQ5yBWuZWdTliQjQN9iEmdGIg=;
+        b=lr73uh8zO4Eiy0DgiX5ySa30nM0aGc5N3JNgXFI1hZvRg1Z8p3Q52mb2zuXuL79QTl
+         um9N/Z5QqvJA1kCNibep/2aqnpVsUquhG/pGmDRnCxmF0zmQX+on8D+/QdwI0lQn5YtW
+         aRAfZSgayEU7WtoSz+CKbB3t4DSTnwlToIEjOeBl2ToPEG/NTu3roZT+b+Y51/J4rQSq
+         3IpU+DdeBvaPOZX5X+nxcQSimAPK0oN9W4Iyj/YeTOhaHYxd/Xb1YyBTLNUqacyBEp6T
+         vF46Ohpf6pJ37Kt/TTeiXIDTC45f4etNEMaYiTi6mllVHWak4HUBbej+Wv0ayZShEd7o
+         RXwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747689895; x=1748294695;
+        d=1e100.net; s=20230601; t=1747689911; x=1748294711;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jwr2UogZmg2vxMmFxh7M3ZUqGzc1B04mt9jo7F27B84=;
-        b=tOyApatQSqH37ngi0N9b/PpaaBVFrQz9oLXaNtV9NoCSAu5Oivn4P90ix0CpSx3bzP
-         6PIC2ZH3X9chkAGxXGoeBxNk74+GHmONNV4aR+MT9s26s6Dk+j10y/IuiWUsTWXUbSR1
-         fq55Wz12+8kAG2MOOGjnCO4RhoepVvrVXZLprz4u1AURB0evO8+8wOrBxVbOpOprA+v1
-         8D1n1g+r7dJodl8JsyoU3wX+EFrAGEptawv3bLB4CU3RDYXLOXYOOsBtllZL+1WInu1q
-         kcHfF1HOKM8nQPjeEPvj4PPaTy7woV92UVGD/dURsQrHYhRfmdDNbyAczAcR8DRCP7di
-         gXkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVApBfkhZa3aqxjO/xnYlM4Fgsz0Ta0cBddjeyPSkcBtb6TLASF8rxP0j8UI2wdb0nzulRh2X1dHo7sXZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy983sYulZ6CR1KVNFe6xd1G12C2v7pOKATbelTzU3Ud98zcM7i
-	GU1ZZGhcmgUVKg3+gGtx/yLJuzE/XIWDQIZ5I1vxiUUZIv9xnJ3fIwHIFao8Vw3M8l1IpTtTPED
-	GNnS6WM/y8W/aESND6NgnAM5tOsZZrjEXkPIIIPdQ
-X-Gm-Gg: ASbGncuvrcqnXvXyJYqhkx4gv/7QqE88iCgo9n1JrfDcYY1mP41qoznKbChGjGodmO3
-	b60xhKg6iQn0KcfLKoPIigdqx1/o9tHA03Ix4bzPGyW4LB0+pGTCje8sNNhbA7ftnOIpBfZOvCx
-	ld5GaYv4eYlRUCrdhhui7fHWLdGGvyc7CwAd+bY0e2c3Z802wJbuZossC78R4=
-X-Google-Smtp-Source: AGHT+IHZl20CThZazmHRrMzF0aowGtpRTo4hj8YBed0NBKl5Jgl1WKHtg5swYnZ0pDOCIVlVWLY5qNR7gScCJ/npWcE=
-X-Received: by 2002:a17:902:cccb:b0:22c:3cda:df11 with SMTP id
- d9443c01a7336-231ffd1b02dmr5984095ad.10.1747689894886; Mon, 19 May 2025
- 14:24:54 -0700 (PDT)
+        bh=x4mHlbF3wl/qb51JPbWQ5yBWuZWdTliQjQN9iEmdGIg=;
+        b=YQEFe+GZ4MSSDe1pumuSIc2VvqkeY+GJDcYGPhhm3zv9Wg5HPIPcYZAkh+3uoy10XB
+         wwj46Km/qIsVKHcM/2HAiVMtmW0xbpl2QYilX/tfL8PTnc2joqwDJBv8oXPj/E7YKGAo
+         HWh6Lg2Tosw/TRz/gpJSKmBD1PwjHF9tOuprfOuuH6JbtwaCRtccDtBULmedOe3nkipY
+         6UuN/NRv8aqGQ/+1NwgxXPThy55ANyLwFauoxj7fTFd3mArlUgNvJ7gUzjh41bd1u5hr
+         VU8iBuCUVMiEVVXvX1II1xMaI3dA4KqkAx08y+hbns27apB8GFwzduEoNfHbYJDdfU3y
+         HHew==
+X-Forwarded-Encrypted: i=1; AJvYcCV6G/HtYDFcaCDAbt6jJAf9T4fPXzoz85Uw1HGw7LyrzGXFFsmBLxJA0dJttDqLYlbKLWYV+v1BM0nkPM/b@vger.kernel.org, AJvYcCWSJHCGjMI/zBad6imMgM9VVP8qxN3Xj/GzCiqKd4nYEV76Kr6xfXwzekWt26+dyTs6oF3KAakWOi5B+KY=@vger.kernel.org, AJvYcCXk6zKHSwJImA9RZqnjebfZoj7YWglRp6D1w4LFMnkBocAVERfEOMVpFXSCb1m9q4Aapc6Sr81tGvUBFsIz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFn7eGg8yjXCKBFzryv/uXAHd7EiTdk93kwlzlxcEZ8GeKiMfT
+	hX6uZ8utgDvtMU3bSpFigNmGpSxfYwzk+rWnrfcISDGrGmUt6SMySZPh0m49V4IDEzcT0L6txHt
+	GKVOKHklhvMbWdVqfVwoa3izjROM6TsLauMSw
+X-Gm-Gg: ASbGnctR26FwVY4DzRxsG1lV/bzV5JY+Hb/4u38g4+IWSSC0g/SZULPXLaLfT7eZIWy
+	JkXhQJXslulq0RBPnCF7jBkQmyWUStAj16DMqgSdH2MtVQZfQH7U0ClVALu5+MtMYtfRnPh+oSV
+	m0JO9szK4lqF0UA/Qsc7ydIl/uvv8A/zxaNciawntT+RrQFZ6YBTiwHQytRs11EXFLt3CfNMTFw
+	qCrbA==
+X-Google-Smtp-Source: AGHT+IEpXnbxrm+y9gNaRiUJIS+Wr3A9qyJLNZQ6jRp+M8ohLE3gUy60b6QHqU0uVa09nwBcd4Z4m6UiuBOEBYIoxLA=
+X-Received: by 2002:a05:6602:4802:b0:864:48eb:30fd with SMTP id
+ ca18e2360f4ac-86a23227308mr1602924239f.11.1747689911296; Mon, 19 May 2025
+ 14:25:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519131151.988900-1-chenridong@huaweicloud.com>
- <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com> <aCucJ9731YzaZI5b@example.org>
-In-Reply-To: <aCucJ9731YzaZI5b@example.org>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 19 May 2025 23:24:16 +0200
-X-Gm-Features: AX0GCFskDhKj6EKh6Dgpb4RDwoGMnYtP53lzDT7-l2M_PC7fwkDAzd65ZS5_Flc
-Message-ID: <CAG48ez01rRTsB0PcxsrzcbMeVnr2bPjigc15GpFCoKQmdzmGrg@mail.gmail.com>
-Subject: Re: [RFC next v2 0/2] ucounts: turn the atomic rlimit to percpu_counter
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Chen Ridong <chenridong@huaweicloud.com>, akpm@linux-foundation.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz, 
-	pfalcato@suse.de, bigeasy@linutronix.de, paulmck@kernel.org, 
-	chenridong@huawei.com, roman.gushchin@linux.dev, brauner@kernel.org, 
-	pmladek@suse.com, geert@linux-m68k.org, mingo@kernel.org, 
-	rrangel@chromium.org, francesco@valla.it, kpsingh@kernel.org, 
-	guoweikang.kernel@gmail.com, link@vivo.com, viro@zeniv.linux.org.uk, 
-	neil@brown.name, nichen@iscas.ac.cn, tglx@linutronix.de, frederic@kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, joel.granados@kernel.org, 
-	linux@weissschuh.net, avagin@google.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, lujialin4@huawei.com, 
-	"Serge E. Hallyn" <serge@hallyn.com>, David Howells <dhowells@redhat.com>
+References: <20250519175348.11924-1-robdclark@gmail.com> <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
+In-Reply-To: <CAPM=9tw183FMOT8uUacqegnb5CREAyr8KbXxO2mCuFK-SmUB1A@mail.gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Mon, 19 May 2025 14:24:58 -0700
+X-Gm-Features: AX0GCFspyxeD68pvp-yDVVZyGDsNu-QeNUAbWG4ptcBy1923782_er28qi-T_4E
+Message-ID: <CAF6AEGuDTGVq7sw4oVuHb+cOE_DuKbEPO956oddVcsV2boieoQ@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
+To: Dave Airlie <airlied@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
+	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
+	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Jun Nie <jun.nie@linaro.org>, 
+	Kevin Tian <kevin.tian@intel.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linaro-mm-sig@lists.linaro.org>, 
+	"m oderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb" <linux-media@vger.kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, 
+	Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 11:01=E2=80=AFPM Alexey Gladkov <legion@kernel.org>=
- wrote:
-> On Mon, May 19, 2025 at 09:32:17PM +0200, Jann Horn wrote:
-> > On Mon, May 19, 2025 at 3:25=E2=80=AFPM Chen Ridong <chenridong@huaweic=
-loud.com> wrote:
-> > > From: Chen Ridong <chenridong@huawei.com>
-> > >
-> > > The will-it-scale test case signal1 [1] has been observed. and the te=
-st
-> > > results reveal that the signal sending system call lacks linearity.
-> > > To further investigate this issue, we initiated a series of tests by
-> > > launching varying numbers of dockers and closely monitored the throug=
-hput
-> > > of each individual docker. The detailed test outcomes are presented a=
-s
-> > > follows:
-> > >
-> > >         | Dockers     |1      |4      |8      |16     |32     |64    =
- |
-> > >         | Throughput  |380068 |353204 |308948 |306453 |180659 |129152=
- |
-> > >
-> > > The data clearly demonstrates a discernible trend: as the quantity of
-> > > dockers increases, the throughput per container progressively decline=
-s.
-> >
-> > But is that actually a problem? Do you have real workloads that
-> > concurrently send so many signals, or create inotify watches so
-> > quickly, that this is has an actual performance impact?
-> >
-> > > In-depth analysis has identified the root cause of this performance
-> > > degradation. The ucouts module conducts statistics on rlimit, which
-> > > involves a significant number of atomic operations. These atomic
-> > > operations, when acting on the same variable, trigger a substantial n=
-umber
-> > > of cache misses or remote accesses, ultimately resulting in a drop in
-> > > performance.
-> >
-> > You're probably running into the namespace-associated ucounts here? So
-> > the issue is probably that Docker creates all your containers with the
-> > same owner UID (EUID at namespace creation), causing them all to
-> > account towards a single ucount, while normally outside of containers,
-> > each RUID has its own ucount instance?
-> >
-> > Sharing of rlimits between containers is probably normally undesirable
-> > even without the cacheline bouncing, because it means that too much
-> > resource usage in one container can cause resource allocations in
-> > another container to fail... so I think the real problem here is at a
-> > higher level, in the namespace setup code. Maybe root should be able
-> > to create a namespace that doesn't inherit ucount limits of its owner
-> > UID, or something like that...
+On Mon, May 19, 2025 at 2:15=E2=80=AFPM Dave Airlie <airlied@gmail.com> wro=
+te:
 >
-> If we allow rlimits not to be inherited in the userns being created, the
-> user will be able to bypass their rlimits by running a fork bomb inside
-> the new userns.
+> On Tue, 20 May 2025 at 03:54, Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Conversion to DRM GPU VA Manager[1], and adding support for Vulkan Spar=
+se
+> > Memory[2] in the form of:
+> >
+> > 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP_MAP=
+/
+> >    MAP_NULL/UNMAP commands
+> >
+> > 2. A new VM_BIND ioctl to allow submitting batches of one or more
+> >    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+> >
+> > I did not implement support for synchronous VM_BIND commands.  Since
+> > userspace could just immediately wait for the `SUBMIT` to complete, I d=
+on't
+> > think we need this extra complexity in the kernel.  Synchronous/immedia=
+te
+> > VM_BIND operations could be implemented with a 2nd VM_BIND submitqueue.
 >
-> Or I missed your point ?
+> This seems suboptimal for Vulkan userspaces. non-sparse binds are all
+> synchronous, you are adding an extra ioctl to wait, or do you manage
+> these via a different mechanism?
 
-You're right, I guess it would actually still be necessary to have one
-shared limit across the entire container, so rather than not having a
-namespace-level ucount, maybe it would make more sense to have a
-private ucount instance for a container...
+Normally it's just an extra in-fence for the SUBMIT ioctl to ensure
+the binds happen before cmd execution
 
-(But to be clear I'm not invested in this suggestion at all, I just
-looked at that patch and was wondering about alternatives if that is
-actually a real performance problem...)
+When it comes to UAPI, it's easier to add something later, than to
+take something away, so I don't see a problem adding synchronous binds
+later if that proves to be needed.  But I don't think it is.
+
+BR,
+-R
