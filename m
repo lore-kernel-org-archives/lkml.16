@@ -1,138 +1,124 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C47217F33;
-	Mon, 19 May 2025 20:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2B71F3BA9
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747686952; cv=none; b=Cq3x7g1aKeJjBMWoXJM2h1eVPSO0cCJGoHsohERd4RIU441smykQi0DyIgUwRQiXI7NvGYw9y9GAtU0F8HUuIvluw8H59NeadVTy/IhsEbxghHp7eTCmYQPc3OVEfgENqApz7EIRrOjWE4Y4lvUVmkwv2u+62f2ZXx4B82sPBMs=
+	t=1747687052; cv=none; b=awDPXjvSr0rNANu+LFdmAOJHq34qe5Y6Dohqwsl8RLyOrd74xc6QceqWTOhmznymOLF44EnIIwsp9V9LApwBzAqkSX7ZJb2gLyuiBTzXZlw3TnQOwyvJKXloYc8UAIBcIKHITjXgMmHF7lV1nIWFHhD4dHSCPOYqtHoJSoN5ThM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747686952; c=relaxed/simple;
-	bh=RRfj6sklt52XV9KPvHuEGNGS2C+bYmaNrEa80a65PI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J+XJPROUVftIBWmlq6sw/RKAqaQKRAhDY1Yg95+8P7GjmRqb1gJBkE7RX8UxqvBoY5Y0UB2FeNNHo8JAqVxTITYFEjnWsMh42LKw8AlBWAdQ2/aDj/uuZsXf8zaiDLR4KwnM+DOhm3LhHys23+gqrGHJb/UGJCWrLuWBoMWP6Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NBgUCaLu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747687052; c=relaxed/simple;
+	bh=SC3p5hC8hMDNnCQGdXHPO8UFcYi9C6ed8jvNAt2Ai+8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IcBn9ONm559PFj+NSzct1H85E2GGADJhv5iK7vvi/1s04nlgjk75h5W2Ks0rroI5EXvCMFPA5ZsGvi9qvtIqGEQmhSkz9x+ZUbo5KVj1I5nRJtFIsS72tf3ANtGx6jX6tm3JfU8W4YmoGEZgaK/+5ZDtTABBAiYwUwl7I6ZSzcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WD1EOKB8; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBgUCaLu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=XaOMJJ7u0iVjtCw5+/d6aptsqLr44Y26RgnYyUy9xVc=; b=NBgUCaLuUPXMiMVXiPqUaXkdef
-	mlcIza4vAcC7k6AJTdxqfWCBK1Lu/hQz+GkIqtoKoI+dZu1nzxi8Z+gsRxGk4j4QIfduTINgTNxjk
-	3GPe+cvaWIZCOU96gYWLGvSSDxq8mQGJReeBzAPbc+TMVYmWPVj5I1rJGRvK/fZUOQ/ug9r5lpqeW
-	kLulKgVgI6/RFVnyuNRxZbParm/AeeKE82BOBAD9h7SehsOr56hEGvhkN//iiafM9bd6Bcl6I7GJH
-	y+YHlENrb7Qh42nM2FlMghYJuFK/wcWd4JlwAawkiSmMFcXogA5ljX94fUaI6WTwRjSLT1xxpribk
-	sINQz2DA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH7D8-00000002M1C-1ryQ;
-	Mon, 19 May 2025 20:35:46 +0000
-Message-ID: <e50896d2-f44a-42da-8bfc-446e80980e80@infradead.org>
-Date: Mon, 19 May 2025 13:35:42 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WD1EOKB8"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so14007a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747687049; x=1748291849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iwjd8j4QyED9qdYBTT0Bo1zt4l0EzpY7sgoCO0roN34=;
+        b=WD1EOKB8s4rDAq2mwVZDLVhzZfbvcn6jjqKwOWtSz9mKpgG9eJO2epK83AdgbM3hCF
+         7+ec6fmypxjnG2UiK/bVtoOt1/GAat/FPbic5XW3ft8z5dIFoO/JgQyhUzXIocqu1lSw
+         obrEpl+Iupb0GcoP2tJfIruDtWr/Xu+g1hKdcUMgT+H6oQSfG4nSJEnsET33LYoPEw4s
+         y2Mp0/YUi/J8g/xAPt74yZY/MCG7nFk3aTFA28SVUSkuaDj5ovmUIZwPz17WPzhg5OkW
+         KyCd9Uv5bkhNq5E7duV5CijT3OOw6WwvpXWVHykMDB3Dk9lQZDKNG+FcQkLyCsHOs3us
+         Kglw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747687049; x=1748291849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iwjd8j4QyED9qdYBTT0Bo1zt4l0EzpY7sgoCO0roN34=;
+        b=oIEsw6xcfekdcp1ZHkjz8Nng/NAPH0Ef4c54/jaGZBBEKebFArHk7JN8bJbSFei9Gg
+         7qk+MVVI5o1XF3AoT36O00+J8tZtpBl9qjZ3QNnJLrL2nN6dVpkT+hNpJMa25ijMmgGN
+         Va0pqpssGjyPuAp3OrNxcU6D8d5m9mZh0MiQk6vq95z6ysi7GYnEAGGoQOcEbiU7/Sq9
+         2/zASWITehpAlaWuprVn0bxl9SqS13AZdsFWXUjy/mrrCXTfQqGB3FTVijb5eZcEbHqp
+         FQVzWqX3QlFCMGgB/lhpnQ32FoUUlw1a4eFvOxlqtB1c/75qHDuAISEY8XxSoj+HCcAy
+         X4Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXomClRTKNaca+JdGbvjDASIHRAO9sjKc9VNJWZTrJIt+aT7bydTEDcxMef1nm8dcmuDvK6RejTsKWUONc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvvqwRQzRv+w+FRPrrujKqXzlNsljgKJMR/kCFu3GIORBuKn03
+	WQEg/FJc8Cp5tUoy2Gf0syH98/RWaTN4x0bONuE/+hKOTC4BH3cp1olHrm+AUqFFc9VytMuMb6w
+	yqHc6g4VlzS4SFkdkC4RumSTgpMiKVN4qTv+JFthZ
+X-Gm-Gg: ASbGncvbUcVDDdmSqlZ1ehbc473Fg8NErcoRC9ojiIZJgpPHMNQQJB3nb3ynToUc3hI
+	aYidxmiJ7hU6ApwHjQZ4T+pJYEtRkaLJ77JsKl51xJKnLh78zwAP0idoqn1OmrO4X8h1sakJB5m
+	3lEpKjKBXzsL2Zm5uY5xTisq/jE+VLuk6jx3Jrb90e+A2/ajtkprs8xCO0mgM=
+X-Google-Smtp-Source: AGHT+IH/u+qfIXXPEN3rnOUSM7iuh6vPNGj/l4Qc8eijLUmuYTxdqiITZPnWGZ6jYGmXZIBgL5nCJB7y+EVSlPfjHBg=
+X-Received: by 2002:a50:9f08:0:b0:601:f23b:a377 with SMTP id
+ 4fb4d7f45d1cf-601f23ba435mr105591a12.6.1747687048635; Mon, 19 May 2025
+ 13:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
- Documentation and MAINTAINERS
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Dongliang Mu <dzm91@hust.edu.cn>, Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
+ <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com> <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
+In-Reply-To: <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 19 May 2025 22:36:52 +0200
+X-Gm-Features: AX0GCFvbm9GK3YytAYW5KkKwW8G7S0FDKQ4iXt9eAphqt0Pv4tDqgAplSmqLVuU
+Message-ID: <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 19, 2025 at 10:08=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
+> On Mon, May 19, 2025 at 9:01=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
+e:
+> > On Mon, May 19, 2025 at 6:24=E2=80=AFPM Burak Emir <bqe@google.com> wro=
+te:
+> > > +    /// Set bit with index `index`, atomically.
+> > > +    ///
+> > > +    /// ATTENTION: The naming convention differs from C, where the c=
+orresponding
+> > > +    /// function is called `set_bit`.
+> > > +    ///
+> > > +    /// # Safety
+> > > +    ///
+> > > +    /// This is a relaxed atomic operation (no implied memory barrie=
+rs, no
+> > > +    /// ordering guarantees). The caller must ensure that this is sa=
+fe, as
+> > > +    /// the compiler cannot prevent code with an exclusive reference=
+ from
+> > > +    /// calling atomic operations.
+> >
+> > How can atomic operations through an exclusive reference be unsafe?
+> > You can't have a data race between two atomic operations, and an
+> > exclusive reference should anyway prevent any concurrency, right?
+>
+> The atomic operations take a &self (shared reference).
+>
+> The patch is missing the implementation of Sync for now. With that,
+> one would get concurrent write access through shared references.
+>
+> The "unsafe" here should serve as reminder to argue why it is ok to
+> not have any ordering guarantees.
+>
+> The last sentence is supposed to say: when you have a &mut bitmap, you
+> can reborrow it as &bitmap, and then happily call this atomic op.
+> Even though it is unnecessary.
 
-
-On 5/16/25 2:52 AM, Andy Shevchenko wrote:
-> The recent changes in the gpiolib-acpi.c need also updates in the Documentation
-> and MAINTAINERS. Do the necessary changes here.
-> 
-> Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.au
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  Documentation/driver-api/gpio/index.rst                    | 2 +-
->  Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
->  MAINTAINERS                                                | 2 +-
->  drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
-> index 34b57cee3391..43f6a3afe10b 100644
-> --- a/Documentation/driver-api/gpio/index.rst
-> +++ b/Documentation/driver-api/gpio/index.rst
-> @@ -27,7 +27,7 @@ Core
->  ACPI support
->  ============
->  
-> -.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
-> +.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
->     :export:
->  
->  Device tree support
-> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> index e4d54724a1b5..f64a69f771ca 100644
-> --- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> @@ -42,7 +42,7 @@ ACPI支持
->  
->  该API在以下内核代码中:
->  
-> -drivers/gpio/gpiolib-acpi.c
-> +drivers/gpio/gpiolib-acpi-core.c
->  
->  设备树支持
->  ==========
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96b827049501..d1290bbb6ac6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10105,7 +10105,7 @@ L:	linux-acpi@vger.kernel.org
->  S:	Supported
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
->  F:	Documentation/firmware-guide/acpi/gpio-properties.rst
-> -F:	drivers/gpio/gpiolib-acpi.c
-> +F:	drivers/gpio/gpiolib-acpi-*.c
->  F:	drivers/gpio/gpiolib-acpi.h
->  
->  GPIO AGGREGATOR
-> diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
-> index 3b48cd7a4075..b7b98343fdc6 100644
-> --- a/drivers/platform/x86/intel/int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel/int0002_vgpio.c
-> @@ -23,7 +23,7 @@
->   * ACPI mechanisms, this is not a real GPIO at all.
->   *
->   * This driver will bind to the INT0002 device, and register as a GPIO
-> - * controller, letting gpiolib-acpi.c call the _L02 handler as it would
-> + * controller, letting gpiolib-acpi call the _L02 handler as it would
->   * for a real GPIO controller.
->   */
->  
-
--- 
-~Randy
+But using an atomic op when you have a &mut reference is not a safety
+issue, right? You wrote a comment about behavior with exclusive
+references in the "# Safety" comment block. If that's not supposed to
+be a safety problem, this should probably not be in the "# Safety"
+section?
