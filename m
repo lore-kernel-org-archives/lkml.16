@@ -1,39 +1,72 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED7235946;
-	Mon, 19 May 2025 07:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D922D023;
+	Mon, 19 May 2025 07:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638149; cv=none; b=HmejmcoSf4eaZ/5fx+7Y+nQiGhNKRf47AbZKzNbbWpfDgxMg3kgKo+QFYGLcP/U9iVeQNJH/jrRO9eQ+Spo1tioVREf46FosLjtjCftDPPUZMI0ahm6sV3qI7Q+9brlt7AJrO4ODRm2/8CQCy5zF5lTbUF66tTRyB5Qa1yiT6H8=
+	t=1747638189; cv=none; b=tSdU1RS0Gn+pFMkXfJ7tvne6mrWkh7hLcv9BwOR7O0CFmerydHNeAoGf6CWBs7lCAAGUYz8HBtyCWR+HkL73bfFqKvIOEmM1h8PwXq4k4JD+O2+yGcXrxMwERmWQcvS0S5vF4io+24BUzQtslQljRGL8IJq0CvWeCowNIkZsRkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638149; c=relaxed/simple;
-	bh=vlILRjt+MJi4z7+U136HzfBSyDjykYmz510W5xUfFU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SQk75H6HmKV3ILpzA7AtzNPdRCfPLksX66Hd6VmUQWs2K56+VZk29YpVK3gD33vcRRzzRmg0eyjpvUTgQ6fK1FJ5VQrFz5wozEgEyy5iLqh+Qjm71UI8djmtmqtxLo48kAPe5uP79NxSjCfiLJu1WzyTw6MWyFh/1RJWpC7EVCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowABnpiho1ypoTZ1kAQ--.8218S2;
-	Mon, 19 May 2025 15:02:05 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
+	s=arc-20240116; t=1747638189; c=relaxed/simple;
+	bh=+QQIyZeptuE1kjagxs/WlRzY0nIq8xahaCDnJ9NuxCQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lW1qBPRvCo6OgCNH013L2mZRkcadanRHcpCkCMUUd4pjoZWUFZQ7oP1fFZK7sRwAwLOCbOOJsTIntaEKj7BKGY3ZoxjszLjXKmseFwno8rHee9+2TvSvu3nftmJw6OaIWNLDIYeDY+/rPxIrzZ48NMowxJkvB2U3hE58eD+WuHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiOp+wsw; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiOp+wsw"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ace94273f0dso697204166b.3;
+        Mon, 19 May 2025 00:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747638186; x=1748242986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
+        b=iiOp+wswHf50VTbivoi6KWimSRMd66cT3qGnhSQ+aeYEvf9pbxmjbrKkSE0lclaqjz
+         7v2RpiPsVdyAtvZ8n+ABWjUJqt+7JQ/avbbwIt82OxLVETnwqSHXR3y2XdQMFBygDPyr
+         VZXuix7F9s3TKKXsctxuDvy5F7gqMjfPJWH3+r+aABZFoZp9NgAtCt11yAp/+qlu8U0s
+         1K9N9+fdLKw9uF7weJacsWfmwwOVeDWya7mmofy3m5PIjFTCsNEibLVGcjj6T8eZE9IF
+         fkyeRWkSU5mz+A9WR2aLxD6hsNa5a87lO1Y2hOsomTed6QBeV2aoNxkT87YuwdE9yIvo
+         s5pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747638186; x=1748242986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
+        b=jjQCxKjLRuYCo4Lg4OsuvE5JDpBtheWcIvG9vhXcNlQ6IKJqEW21dND8hLvwmhNXu1
+         fUZLxiiQCfyX+80ULeQs26kZUWGeM4LqzmdSbad9z5hSFlsSSWDT40oY5CCtH7VHAxxG
+         PnSld3KGeQo9zH2Ylr+Q8o681OBrqyocVIOe/LG6ycjYW/B3rjGNRFPnxqpOaUwXvhJ1
+         oFVTszf3xgK38DKEMT+BYUbC4+8dIw1YNq9Z0YCCMX8EXhvIer2od6ALsx/XukI2A+8+
+         ZNbCVgme+3sXeVogMHSEX9cbisKNxYC9/folpyRJDH/V+3TacQKm3Zr5nWI1J5C0e1We
+         pwYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQlsCBk/fYEx2AExZZFCr6V3g/ghWeN7L8nqFjqdsA7ESrvFFuj6ISH6PCPiYKeMrV/uXpq2v16rNcrQwngP/bWe8c@vger.kernel.org, AJvYcCUwXU9ZNScGYxjjAnVAUwGFo2Wmxe26n4fgxkJvGzeT12oBZWmkgtUQmLf6xghBNMTpPfnYKtQlPrak4V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyphcxW+Vx3gbfMo/8Cb+fneEkWoETBVtdU+YkrBb8mGeCl4GHX
+	H2EMWpqVpzG3YOO7EvW01WusxCuXPIRKybKyKw5QaS7Tx7mgJ53OliHa
+X-Gm-Gg: ASbGncsgecjIDiekHOW5H40IhxgawG7QTPNtsa1O/A5eD28ZZvEixnUPNlN1VZgx7tS
+	aSHZ1BNasQIEuU/Bgbj+lcBlTCehu8KzVQv4wqxOc54pK2h7dIFeBMC15F4eaJYam1vsk053K+D
+	dQVfw2qtEekQBo9+SY/GWBfO8HejQrI4LxS8f32vLV2ATvM/D0xrTvC6QUb5DGZsgEPVlE/50bE
+	rX2fTx3E16/QbCpjQgKrkr0dJcLcrJIg/c5FoEg+FUzeHi7XqOuDRWcBIFJryWR+4KvKbgSD/nO
+	MTo1OsnI6shrEC0SHvJy6khsB1qxdCxAPmZDga0wT6aV9YifB0QpRw4Qmaw12Wd/ajhxaNsYP2u
+	b7hOPetwfWERZgBmeVEuEq+Zk23M51gYJk/MA4jl0yA==
+X-Google-Smtp-Source: AGHT+IFxEaxVZWJ++4Aj8pJPSQPmUS3xe7T18VyMANUL9xOorj1BIjynIQKF94bNWVBPWojKoEJBkw==
+X-Received: by 2002:a17:906:f74f:b0:ad5:557b:c369 with SMTP id a640c23a62f3a-ad5557be832mr484511966b.33.1747638186468;
+        Mon, 19 May 2025 00:03:06 -0700 (PDT)
+Received: from rafal-Predator-PHN16-71.NAT.wroclaw_krzyki_2.vectranet.pl ([89.151.25.111])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d277a1fsm543268866b.85.2025.05.19.00.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 00:03:06 -0700 (PDT)
+From: Rafal Bilkowski <rafalbilkowski@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] net: mlx5: vport: Add error handling in mlx5_query_nic_vport_node_guid()
-Date: Mon, 19 May 2025 15:01:14 +0800
-Message-ID: <20250519070114.1320-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	linux-trace-kernel@vger.kernel.org,
+	Rafal Bilkowski <rafalbilkowski@gmail.com>
+Subject: [PATCH] trace: Protect trace_iter_expand_format against overflow and ZERO_SIZE_PTR
+Date: Mon, 19 May 2025 09:02:40 +0200
+Message-ID: <20250519070240.256200-1-rafalbilkowski@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,71 +74,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABnpiho1ypoTZ1kAQ--.8218S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4ruF45tF1xJryktry7Jrb_yoW8AF17pF
-	47tr9rJrykJa48X34jkFWrZr9Yk3yvya1Uua47J343Xr4ktr4DAr45AF9FgrWUuFW8tFZY
-	yr4ay3ZxAFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAHA2gqs4h99gAAsv
 
-The function mlx5_query_nic_vport_node_guid() calls the functuion
-mlx5_query_nic_vport_context() but does not check its return value.
-A proper implementation can be found in mlx5_nic_vport_query_local_lb().
+Add a check in trace_iter_expand_format to prevent integer overflow when
+calculating the new format buffer size, and to handle the case where krealloc
+returns ZERO_SIZE_PTR. This improves robustness and prevents potential
+memory corruption or kernel crashes.
 
-Add error handling for mlx5_query_nic_vport_context(). If it fails, free
-the out buffer via kvfree() and return error code.
-
-Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
-Cc: stable@vger.kernel.org # v4.5
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/vport.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c        | 4 ++++
+ kernel/trace/trace_output.c | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-index 276b162ccf18..db45ad72ff43 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-@@ -464,20 +464,23 @@ int mlx5_query_nic_vport_sd_group(struct mlx5_core_dev *mdev, u8 *sd_group)
- int mlx5_query_nic_vport_node_guid(struct mlx5_core_dev *mdev, u64 *node_guid)
- {
- 	u32 *out;
--	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
-+	int ret, outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5b8db27fb6ef..637bd1ff9325 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3596,6 +3596,10 @@ char *trace_iter_expand_format(struct trace_iterator *iter)
+ 	if (!iter->tr || iter->fmt == static_fmt_buf)
+ 		return NULL;
  
- 	out = kvzalloc(outlen, GFP_KERNEL);
- 	if (!out)
- 		return -ENOMEM;
- 
--	mlx5_query_nic_vport_context(mdev, 0, out);
-+	ret = mlx5_query_nic_vport_context(mdev, 0, out);
-+	if (ret)
-+		goto err;
- 
- 	*node_guid = MLX5_GET64(query_nic_vport_context_out, out,
- 				nic_vport_context.node_guid);
--
-+	ret = 0;
-+err:
- 	kvfree(out);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_node_guid);
- 
++	/* Protection against overflow and ZERO_SIZE_PTR returned from krealloc */
++	if (check_add_overflow(iter->fmt_size, STATIC_FMT_BUF_SIZE, &iter->fmt_size))
++		return NULL;
++
+ 	tmp = krealloc(iter->fmt, iter->fmt_size + STATIC_FMT_BUF_SIZE,
+ 		       GFP_KERNEL);
+ 	if (tmp) {
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index b9ab06c99543..42560027001a 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -979,6 +979,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 							  iter->fmt_size);
+ 			if (ret < 0)
+ 				trace_seq_printf(&iter->seq, "(0x%px)", pos);
++			else if (ret == 0)
++				trace_seq_printf(&iter->seq, "(0x%px:<NULL>)", pos);
+ 			else
+ 				trace_seq_printf(&iter->seq, "(0x%px:%s)",
+ 						 pos, iter->fmt);
 -- 
-2.42.0.windows.2
+2.43.0
 
