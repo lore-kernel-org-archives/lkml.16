@@ -1,125 +1,156 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC12321170D;
-	Mon, 19 May 2025 20:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B008215F5C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687927; cv=none; b=GanLsN4KBQsn2XOsH/cbgXvHzD2i/NEGh7P9CaYvYec4bLvPv/nDHr+fn4F7jmHgzOgaW7BcOSBZIR35O4RRxv0eIiola1x3Zx1iunobRRalYb6k2c9z4BN1eo9CplsHzFs/xVigo54zH/G9jxhHH4YDynV1k25dMPFhc2iWyw4=
+	t=1747687939; cv=none; b=l2sZpEdqqzYFh+33iMPtHoPU4v8qApwzBABenCOGydJOKO08Pj5MlSoickgmadM/AwIOVoKqUbb3O5htMfHCmf+vk3vTzrdBlHpg4YGxv5qqYom+tZflcCiqAz3Gkunn4pYS7mNoJSTXwkoNavtKjdouJVIv3+r9fjkJ914gPrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687927; c=relaxed/simple;
-	bh=yeXQv+7gwkoDQHnYBen8Z0DUDkFqP6apoaoLd8IDDi4=;
+	s=arc-20240116; t=1747687939; c=relaxed/simple;
+	bh=gotcqngVU/LNJrmk3BD7vjAbx35qGYtgx6w9I0sm2iM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AKRoBDeQBwHB80tMJ8NH30U2GKzgkGNTH9eASbxY38I1vxdnAU3PDwA9KUeP+M2fW+qUyNUzIVp1fECJ4R1++Vi2z3hTQK6Nyl/kS//QZOmlFGGkAVk8W03aNPex2cI/IulQcNgRbIHs81yZCDm2/M7s62ia3gGexfbPpYilYFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RC1yFotM; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=M2EfMMGB1bfrSd1eVnhGfWdw6l8ZNqWJQ1ZliQb5PArqZuGkFrfnqYQ9agNv86vCYNU6YzABEqwTE0TiOvS3hcH7vFOM3th+b63NfxGIhW/1u3u29diVws1WYSWCQwYR9QrQ8BJ10+qyubPOhelhRnD5qhQrmBHcwkuU7Bw1UZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQSVDob+; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RC1yFotM"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4766631a6a4so51964601cf.2;
-        Mon, 19 May 2025 13:52:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQSVDob+"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231f37e114eso524155ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747687924; x=1748292724; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747687937; x=1748292737; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qIjWVDrb+AeHPrnU5wepYHaZFaqsE7VtLlqzlYhHa4Q=;
-        b=RC1yFotMKvQ+2snDBXe6K0fXUzqdbivm1Q6Yc7XQ9JUvHI1HE6f5MVPdjU8O8bUT76
-         U7wccBoncuy2QVIHo5g178pot9NHHyW6LzMfexbLlHA/b0Hh8nT6TT7X86m3HMCkJsXf
-         hpQezOZN2HRhGCyzu5kU52tJcpDfpkV8IApdgFbNDLv4h2930soXa+Tzcwc9aEjZGXTD
-         bnMRmTVuNEDaw9XWkgJFCDI/jy3diakKCrsZLgLyu/21NAmZRJv3wzca241IKMYTxf6h
-         WCzo8/4lBLp8hsIBwtyhkHYCQ9+RuvldBm4j+TwKLNNRQYHABxhsOZ0TjURC6wkLcXXb
-         1gPg==
+        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
+        b=JQSVDob+80I+UwecKk4nVlrMKhK/JY2SI6BE9gzqU46mGZ78YUIOStmJvHxwJIpAiy
+         dGTpZdI442S6LTyR/atNJR3zkKQX8R65OmwS+Y1deCiHGIivo95nMfJd3y3gOt9ESOow
+         GWwTaOu7/sjqiPN9G1Ni713v5OSP0BpLkeokjLA0zQ6L7dIMZmg7bwcrYEhpywU7YkgR
+         eschxmfoIOuDqeWdXEUrHZV4D5zYNKIS9QR9O6eniUUG5iTAxqI9BMUwCkNFXaYWnl0/
+         1SHQn3ho9cnrILVGuZgby/J0jNC1fH825MTvFOu5yGKLDyNJD5v6mtPtwh/fCcxvsMdw
+         w6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747687924; x=1748292724;
+        d=1e100.net; s=20230601; t=1747687937; x=1748292737;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qIjWVDrb+AeHPrnU5wepYHaZFaqsE7VtLlqzlYhHa4Q=;
-        b=RyQf0o2Cq5/x7gmonBk0JDiu8Jhg81bOzdVu1ItknUUjByeOud6qC/9ovm9uLMJn7V
-         VsivuTuW4U31z1rwh8+XIHJh43ejAdO4y6d8tJDaihbT7NeS3ao6YLEYSndi7zdAv9Cc
-         XD8eSCRini8kIHdycM/6QpSxoDgfldshGmfjVdTkevFbzCaiVyWpv7u02piUZXQOCxms
-         l49R0dCMu6o8aZvx2tWalJ6aWHD2Q2SgPYvW5pMOiKyu782gBSbsFm7WiztvOiBwfwZl
-         tYiPD3hQKRumrHcKcp9KjSvg2HGSZNLQWG5XTsFrs2Gih+aiGqeusyBlstZSodHfCMYN
-         7/KA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyC7hbeDRRicgtIuUg0+B3LA3BQprCTKd9bqcmAXgLGQAqqR1AHKEduyYgfbk/CRntajcTzt6VMfQeghk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxnqiw8RcW+qNWEKRrC9wIH00Wpi/hmukVVbzP53U8YcqHe0X4
-	m1uDvmHWVSK0O0FRR+cQwgKEy2WfCCPCt3rKmADhQXDWLv4RrcSr5IEDatWTeedlkjxg/oKllZo
-	Yq6PpwpZBR3VxgUGuxBECP8ubARxfY4mlKKfc
-X-Gm-Gg: ASbGnct7rJvYsXCCPw1eA7aAZFoDi9ypvTwatQf9aBxeeW+IJARL6VnlVsWnb4VIInM
-	xvSddAq6KhC6RD2EINhAiHVUQ9eE65mM+Yrjd18rLFP+gpt735jbhPE2Ey2aVlM1E2ucVmnFmt1
-	fUbOYSOGGbajeRBg4bWI3yRodYgijSJNLYaQ==
-X-Google-Smtp-Source: AGHT+IHtnzz5+3gvpn1QVH+OgYv1fIzGODhG3XmW5jjH/DA5MVKq5zRwylHhuirlITRWIBgQNv6iH82/OHFHzYH7Vtc=
-X-Received: by 2002:a05:622a:4008:b0:494:a2e6:2a6 with SMTP id
- d75a77b69052e-494ae400d5dmr271326361cf.35.1747687924484; Mon, 19 May 2025
- 13:52:04 -0700 (PDT)
+        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
+        b=iXSGsSLCc8SvjN7G7x6tcPQqAhb1O5I7Qze4QnGHRm7+s0v5Z8kiaOpPzOmreRYDER
+         XMdHG+3Sx8EyRhUQWpLVkOzY3nu3Z/dEUCG73d8v4mavib+vrT52a2eAvEYd6XSfLx3O
+         UiZg9+LLJsBmMTUKDL7SpoFyithHq7SlW7U27S1L0QUWh6hr8dWzpl7tBjOjsJTaCE1O
+         8cLBBHx2xKr8fERKdEyCmrRKLFJJwSU3HcCyzmvgXa9YO9cwEacmQ12fjnheSPbO3Vaf
+         AeWS7WycnNPVfuZdFpuGnHR73TY/fOQ7Aqqlfr/H0TV7Q3aD+W43WjV6dqN8+ArHd0wl
+         hEOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ4tioL6rhwLKSheWHWUAYbcjEJAMdlFzJYeWSgbkFBrmo0XCpXf08GManQsYxh2mijrg6NWzOxHgvpEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlJV7YUeyYZKUO3Z2FzOK//x30ym3XbPk4B0Wq/HAGK8s8SpGB
+	INYAIbLZd0njutfl+C3PY1Wj5eXMSPP3DAwl+2cMxPNhCnm3jN/9UQa35yfVLNGwkg08m2FWLcl
+	ZJZKHwjsrYVngPbBvRpdeM65xNJYRiXQcUWKub0Yc
+X-Gm-Gg: ASbGncsXds1BxbaE+BOiTzHhXrpD5nC8KRc90Nn3vs7QwTYEdbwJLToUDHcR1kEP/S/
+	1WCVuo6/EQAj9w4F0+FEE+elMELT8ihXkz6cmqWTrNpIf4dqKvh+QLhK5uT2Vs2TfTkMy6O9Lbi
+	82h1RAhr+hinAxE9HbSWVwIWvA81CW2EKX/bKi/7FpmXf7n9V1vo5qEb7+st0=
+X-Google-Smtp-Source: AGHT+IGxZCvW5ilyWe4G2aJ3s73rSdZKGMvO3ZakFJUNOl2mQD609UI/QNd6ant0eUVyMVuoIqykCtNvIgjuCK3LvWk=
+X-Received: by 2002:a17:902:eccb:b0:223:ff93:322f with SMTP id
+ d9443c01a7336-231ffd192c0mr5758425ad.2.1747687936496; Mon, 19 May 2025
+ 13:52:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517105045.70998-1-apparle@gmail.com> <naxnt42hmvorqkif3pu4x36tpo44ugo2oiblrbtlrauucm5di2@tr2yobgoywmm>
-In-Reply-To: <naxnt42hmvorqkif3pu4x36tpo44ugo2oiblrbtlrauucm5di2@tr2yobgoywmm>
-From: Apoorv Parle <apparle@gmail.com>
-Date: Mon, 19 May 2025 13:51:27 -0700
-X-Gm-Features: AX0GCFs_OYz5BVZrvn1RUPpUDGNKA2gAjvRYOj1MbujXpyNSsKs6ki4eHJCbaeA
-Message-ID: <CAB7A79zio-_vqCtQnnNUxYTJtTDmzdW9DbW1PoO8oa+vVPu_iA@mail.gmail.com>
-Subject: Re: [PATCH 0/1] Input: xpad - add disable_xboxone module parameter
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
+ <aCt23djKOzUiP9L4@yury> <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
+In-Reply-To: <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 19 May 2025 22:51:38 +0200
+X-Gm-Features: AX0GCFvywXFtRKxlB3xYrJMhJn5q7nT3YMayIgLVBsF9n18XEC45GTPOn8bRz1I
+Message-ID: <CAG48ez1NM7B8Vk7GOwhsitCipmfHi9eK6JNb3ve8aR4m8Cj0gA@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The goal is to not blacklist the xpad driver completely, because I
-still need that driver for other controllers (older Xbox 360
-controller or 3rd party controllers) when using multiple controllers
-(couch multiplayer) on the same machine.
-
-Today I'm forced to blacklist xpad altogether to get xone up because
-they conflict on the device IDs, and then I can only use 1 controller,
-not both.
-Or I have to create a copy of xpad with Xbox-One device IDs stripped
-out (i.e. xpad-noone) to keep both drivers active side-by-side, so my
-new XboxOne can use xone and my old Xbox 360 can use the xpad driver.
-This patch is trying to make that seamless. And it'll have the added
-benefit of making distro packaging easier as xpad can just stay
-upstream with no separate builds needed, and xone driver can be a
-non-free opt-in installation with this module param enabled.
-
-On Mon, May 19, 2025 at 9:32=E2=80=AFAM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Apoorv,
->
-> On Sat, May 17, 2025 at 03:50:44AM -0700, Apoorv Parle wrote:
-> > Hi,
+On Mon, May 19, 2025 at 10:42=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
+> On Mon, May 19, 2025 at 8:22=E2=80=AFPM Yury Norov <yury.norov@gmail.com>=
+ wrote:
+> > On Mon, May 19, 2025 at 04:17:03PM +0000, Burak Emir wrote:
+> > > +    /// Set bit with index `index`.
+> > > +    ///
+> > > +    /// ATTENTION: `set_bit` is non-atomic, which differs from the n=
+aming
+> > > +    /// convention in C code. The corresponding C function is `__set=
+_bit`.
+> > > +    ///
+> > > +    /// # Panics
+> > > +    ///
+> > > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > > +    #[inline]
+> > > +    pub fn set_bit(&mut self, index: usize) {
+> > > +        assert!(
+> > > +            index < self.nbits,
+> > > +            "Bit `index` must be < {}, was {}",
+> > > +            self.nbits,
+> > > +            index
+> > > +        );
 > >
-> > This patch adds a `disable_xboxone` module parameter to the xpad driver=
-,
-> > allowing users to prevent xpad from binding to Xbox One and Series X|S
-> > devices (XTYPE_XBOXONE). This is especially useful for users who wish t=
-o
-> > use the out-of-tree `xone` driver (https://github.com/dlundqvist/xone) =
-.
-> >
-> > Currently, there is no in-tree driver that supports Xbox wireless dongl=
-es;
-> > the only option is the out-of-tree `xone` project which implements the =
-GIP
-> > protocol. The `xone` project itself, or similar functionality  cannot b=
-e
-> > easily upstreamed due to the unclear legality of redistributing the
-> > required Microsoft firmware. This patch lets users avoid device conflic=
-ts
-> > and run both drivers side by side, without having to patch or fork xpad
-> > (eg: https://github.com/medusalix/xpad-noone) for each kernel update.
+> > Shouldn't this assertion be protected with hardening too? I already
+> > said that: panicking on  out-of-boundary access with hardening
+> > disabled is a wrong way to go.
 >
-> I believe this can be achieved from userspace by unbinding the original
-> xbox driver and binding the alternative driver via sysfs, no kernel
-> changes needed.
+> I considered it, but could not convince myself that __set_bit etc are
+> actually always safe.
+> For the methods that have the hardening assert, I was sure, but for
+> this one, not.
 >
-> Thanks.
+> Are all bit ops guaranteed to handle out-of-bounds gracefully?
 >
-> --
-> Dmitry
+> > Can you turn your bitmap_hardening_assert() to just bitmap_assert(),
+> > which panics only if hardening is enabled, and otherwise just prints
+> > error with pr_err()?
+>
+> If there is no risk of undefined behavior, then I agree that checking
+> bounds is hardening.
+> If a missing bounds check loses safety, we then we should not skip it.
+
+There are no bounds checks in these C APIs, and there can't be,
+because the C side does not store a length. bitmap_zalloc() just gives
+you a raw array of bits (represented in C as an array of unsigned
+longs), it's a very lightweight wrapper around kmalloc_array().
+
+And if you expand __set_bit(nr, addr), you'll see that it turns into:
+
+bitop(___set_bit, nr, addr)
+
+which turns into:
+
+((__builtin_constant_p(nr) &&
+  __builtin_constant_p((uintptr_t)(addr) !=3D (uintptr_t)NULL) &&
+  (uintptr_t)(addr) !=3D (uintptr_t)NULL &&
+  __builtin_constant_p(*(const unsigned long *)(addr))) ?
+const___set_bit(nr, addr) : ___set_bit(nr, addr))
+
+which (assuming a non-constant index) is:
+
+___set_bit(nr, addr)
+
+which is a debug-instrumented wrapper around
+
+arch___set_bit(nr, addr)
+
+which just leads to a raw assembly instruction (example from x86):
+
+static __always_inline void
+arch___set_bit(unsigned long nr, volatile unsigned long *addr)
+{
+    asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+}
