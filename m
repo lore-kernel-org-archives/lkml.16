@@ -1,165 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D861F4B1E5E;
-	Mon, 19 May 2025 23:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D734B1E5E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747698613; cv=none; b=jl9rR7qt3L2T3f3sSGz6aboTx+xc6EEvKBVii//CAqXpYX+aGtyCa/r0vFYr+r7zqHAr1tzIOXKyAZb+uu2JqZLOhr29VncA6UKd3vEAtU3qN19zzFQ29R65wdCuc9yEuc4K/+7FkzqFLbYNO5lvJQj7Zq+ngfpV+xwrVCVZU+8=
+	t=1747698670; cv=none; b=SveLgxQXa33nqPXKJ4AVj9Uf0LMiofZ1Fz/hCdNdVvLOQzrvA+N9XyW9hl26Kzfc89gCSdMdXsEKcTNWSXyUuO9OsQMWpe5IuiFlYceDg9jqGDpTTYyPE1yMxZq1qZFkFR38zLVvsHXyKOuEQdsxaNgN1d+LtQdO66tRjLBaHT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747698613; c=relaxed/simple;
-	bh=lZceSJXorFTEkulyn9ZEpocZ9KdHmanpjYWje8SpBZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jg/XVmBmF1cLLWND//ZrnHoncR+nPGJvtPIOdR4zJedwx8pKR3xsixpCRDDie/rpiR0r5PD3JVyN9b0+gOMEjup/sdcp++ZAASSw5apXIn19L+BWSXwFmGv8eazEFfgj0fIQ8bxgsOz9e2JaC3BzylBF9NDvLWFn3JCx2ahQdLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8+hR1Xu; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1747698670; c=relaxed/simple;
+	bh=tOI36sNRkWlX7FkhfvR7gFqOk79/5tauignh5GotD64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a+Iy7sI/8yvXoIQk6jdi3gTGTsMFwJVsvspgbPXDyCuVmgXvHRye9J0CKz30T7vkz4ZRIZRKRHCinL3DD8Ga1bBCTJ/3/lwLKqttdfsPEo8f+SddhZpCYfztR/Evut7os1Y0/bOIlr141IDyWIFZiXbSE0eOnUv2hZpFuiXetoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W92zn4Qo; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8+hR1Xu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W92zn4Qo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747698612; x=1779234612;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lZceSJXorFTEkulyn9ZEpocZ9KdHmanpjYWje8SpBZE=;
-  b=U8+hR1XuEHq5W7MzQ55Wyi7OAQp3Ju6potvVuHC9IYAh1w+92rP7AeYh
-   AbqdN+j/Vk6klYQVRl6KEQu2U4lNRs4nAOIuoFSI3uO4OJ9fzSWOA30Vr
-   lWkLd9YPKC052i1WAe5uhxo/TJF0YV5ZZbWd1X1r1LK8nXeCFJ7lrZwrF
-   RO2DcrtrVbIl6Xwz9y1ZxUwqJU+2xk/1lceLu5nTRtmDIzvZKhAbAKzes
-   Se0YA+3Xj01JZaNJdf4GTLY6myj9Jkit5TRKz8EdhwVl9ZHRhNT+43bdY
-   vi8q0Mast6VjECsF9RCHMgnFjQjjAjtCnhugB0E+pO5eBdIOTKwHG35rX
-   w==;
-X-CSE-ConnectionGUID: G163r4SLSVaGQsShCi9gGA==
-X-CSE-MsgGUID: cwN6R8WlR+yw0u/HmBpAlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49597529"
+  t=1747698669; x=1779234669;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tOI36sNRkWlX7FkhfvR7gFqOk79/5tauignh5GotD64=;
+  b=W92zn4QoQ1QMUlG/wp2nGF0DbJvzJyd5Sm2lqwib7HnzLWFYJpudRlKr
+   6p7Gx7VF2jEgL3c/vqhxYiflUEvs/PFDS5MaPp+mu34BhTi006WCru4lE
+   KBfFEBh+RuXwGRrol05+uECE+IfaE8hc53I5FA8X5EcAQK3T+1PFCLq1h
+   otwUnKiCuHRMf2iuH4wPTmw4KnetHKDwJo99CD1a9Orxl7yjsUwiXP+6f
+   FN7XynFNTr4WXO5mvnC1G+48a/YqviL7E2BxYmUunkrOjXhMMsE+wZCoK
+   4qX7QrrTOaVOSI2ojXOcwI1ZM9aFXvF69QuscfZImMu1GhWLSunSPPUYc
+   g==;
+X-CSE-ConnectionGUID: TdUhuXG/Rja635C/X5z8Zw==
+X-CSE-MsgGUID: T4At4rThTtatAfg0XZI5DQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48729478"
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49597529"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:50:11 -0700
-X-CSE-ConnectionGUID: BHWC+09MQHe2nNUF1Md6Uw==
-X-CSE-MsgGUID: iqvNMD7aRDOTuCwHgojYgQ==
+   d="scan'208";a="48729478"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:51:08 -0700
+X-CSE-ConnectionGUID: lfxGwa9/Qo6YNJtr2EuAIA==
+X-CSE-MsgGUID: rK37tPSzSdW67PeJIaiMEg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="162811471"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:50:09 -0700
-Message-ID: <ef2fec8c-2efa-44be-add7-480344d1c446@linux.intel.com>
-Date: Mon, 19 May 2025 16:50:09 -0700
+   d="scan'208";a="140527431"
+Received: from shikevix-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.20])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:51:08 -0700
+Date: Mon, 19 May 2025 16:51:01 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
+Message-ID: <20250519235101.2vm6sc5txyoykb2r@desk>
+References: <20250515134756.93274-1-david.kaplan@amd.com>
+ <20250515235210.ooq7ogymcdvbtakd@desk>
+ <LV3PR12MB92653811577802E84DEB6ACE9493A@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 07/16] PCI/AER: Initialize aer_err_info before using it
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-8-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-8-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB92653811577802E84DEB6ACE9493A@LV3PR12MB9265.namprd12.prod.outlook.com>
 
+On Fri, May 16, 2025 at 03:06:26PM +0000, Kaplan, David wrote:
+> > > +1261,19 @@ static void __init retbleed_update_mitigation(void)
+> > >       /*
+> > >        * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
+> > >        * then a different mitigation will be selected below.
+> > > +      *
+> > > +      * its=stuff will also attempt to enable stuffing.
+> > >        */
+> > > -     if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF) {
+> > > +     if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF ||
+> > > +         its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF) {
+> > >               if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
+> >
+> > SPECTRE_V2_EIBRS_RETPOLINE also enables retpoline.
+> >
+> > >                       pr_err("WARNING: retbleed=stuff depends on
+> > > spectre_v2=retpoline\n");
+> >
+> > This can be updated to:
+> >
+> >                         pr_err("WARNING: retbleed=stuff depends on retpoline\n");
+> >
+> 
+> Yeah, I noticed that too.  But the existing upstream code (before my
+> re-write) was also only checking spectre_v2_enabled == SPECTRE_V2_RETPOLINE
+> in retbleed_select_mitigation(). So it seems like CDT previously wasn't
+> supported with spectre_v2=eibrs,retpoline.
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Previously the struct aer_err_info "e_info" was allocated on the stack
-> without being initialized, so it contained junk except for the fields we
-> explicitly set later.
->
-> Initialize "e_info" at declaration with a designated initializer list,
-> which initializes the other members to zero.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+Thats because there was no need for CDT when eIBRS was enabled, until ITS.
+The current upstream ITS mitigation behavior is to allow CDT with eIBRS.
+This restructuring is changing that as ITS now relies on retbleed
+mitigation, but retbleed_update_mitigation() is refusing to enable CDT when
+eIBRS is enabled.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> If we want to change that, I suggest doing it in a separate patch.
+> > >       }
+> > >
+> > > -     if (cmd == ITS_CMD_RSB_STUFF &&
+> > > -         (!boot_cpu_has(X86_FEATURE_RETPOLINE) ||
+> > !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING))) {
+> > > +     if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
+> > > +         !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
+> > >               pr_err("RSB stuff mitigation not supported, using default\n");
+> > > -             cmd = ITS_CMD_ON;
+> > > +             its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
+> >
+> > This and ...
+> >
+> > >       }
+> > >
+> > > -     switch (cmd) {
+> > > -     case ITS_CMD_OFF:
+> > > +     if (its_mitigation == ITS_MITIGATION_VMEXIT_ONLY &&
+> > > +         !boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY))
+> > > +             its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
+> >
+> > ... this are essentially resetting the mitigation to default. This will be more clear if
+> > you could change the mitigation to ITS_MITIGATION_AUTO here, and at the end
+> > have:
+> >
+> >         if (its_mitigation == ITS_MITIGATION_AUTO)
+> >                 its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
+> 
+> The point of AUTO is really to say that no cmdline option was specified.
+> This is relevant for my attack vector patches because AUTO means "defer
+> to the enabled attack vectors".
+> 
+> In the attack vector series, AUTO is checked early in the select function
+> and the mitigation will be disabled if needed.  If it is needed, the
+> default mitigation is chosen.
 
->   drivers/pci/pcie/aer.c | 37 ++++++++++++++++---------------------
->   1 file changed, 16 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 95a4cab1d517..40f003eca1c5 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1281,7 +1281,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   		struct aer_err_source *e_src)
->   {
->   	struct pci_dev *pdev = rpc->rpd;
-> -	struct aer_err_info e_info;
-> +	u32 status = e_src->status;
->   
->   	pci_rootport_aer_stats_incr(pdev, e_src);
->   
-> @@ -1289,14 +1289,13 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   	 * There is a possibility that both correctable error and
->   	 * uncorrectable error being logged. Report correctable error first.
->   	 */
-> -	if (e_src->status & PCI_ERR_ROOT_COR_RCV) {
-> -		e_info.id = ERR_COR_ID(e_src->id);
-> -		e_info.severity = AER_CORRECTABLE;
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_MULTI_COR_RCV)
-> -			e_info.multi_error_valid = 1;
-> -		else
-> -			e_info.multi_error_valid = 0;
-> +	if (status & PCI_ERR_ROOT_COR_RCV) {
-> +		int multi = status & PCI_ERR_ROOT_MULTI_COR_RCV;
-> +		struct aer_err_info e_info = {
-> +			.id = ERR_COR_ID(e_src->id),
-> +			.severity = AER_CORRECTABLE,
-> +			.multi_error_valid = multi ? 1 : 0,
-> +		};
->   
->   		if (find_source_device(pdev, &e_info)) {
->   			aer_print_source(pdev, &e_info, "");
-> @@ -1304,18 +1303,14 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   		}
->   	}
->   
-> -	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> -		e_info.id = ERR_UNCOR_ID(e_src->id);
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
-> -			e_info.severity = AER_FATAL;
-> -		else
-> -			e_info.severity = AER_NONFATAL;
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_MULTI_UNCOR_RCV)
-> -			e_info.multi_error_valid = 1;
-> -		else
-> -			e_info.multi_error_valid = 0;
-> +	if (status & PCI_ERR_ROOT_UNCOR_RCV) {
-> +		int fatal = status & PCI_ERR_ROOT_FATAL_RCV;
-> +		int multi = status & PCI_ERR_ROOT_MULTI_UNCOR_RCV;
-> +		struct aer_err_info e_info = {
-> +			.id = ERR_UNCOR_ID(e_src->id),
-> +			.severity = fatal ? AER_FATAL : AER_NONFATAL,
-> +			.multi_error_valid = multi ? 1 : 0,
-> +		};
->   
->   		if (find_source_device(pdev, &e_info)) {
->   			aer_print_source(pdev, &e_info, "");
+Okay, I see your point. But it is debatable whether not selecting a
+mitigation (which is auto) is equivalent to selecting an invalid mitigation
+which then falls back to the default (also equivalent to auto).
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> In the current code without attack vectors, AUTO just always means pick
+> the default, but is really a preparatory thing for the attack vector
+> support.
+> 
+> The code you highlighted deals with cases where an explicit cmdline
+> option was specified asking for mitigation, but it can't be done.
+> Falling back to the default option is fine, but calling it AUTO I think
+> would be confusing because AUTO (in the next patch series) means "defer
+> to the attack vectors".  So I would prefer to leave the code as-is.
 
+In the other series can we make this subtlity more clear with:
+
+enum its_mitigation {
+        ITS_MITIGATION_OFF,
+        ITS_MITIGATION_AUTO,
+        ITS_MITIGATION_VECTOR_BASED = ITS_MITIGATION_AUTO,
+	...
+};
+
+> > > +
+> > > +}
+> > > +
+> > > +static void __init its_update_mitigation(void) {
+> > > +     if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off())
+> > > +             return;
+> > > +
+> > > +     switch (spectre_v2_enabled) {
+> > > +     case SPECTRE_V2_NONE:
+> > > +             pr_err("WARNING: Spectre-v2 mitigation is off, disabling
+> > > + ITS\n");
+> > >               its_mitigation = ITS_MITIGATION_OFF;
+> > >               break;
+> > > -     case ITS_CMD_VMEXIT:
+> > > -             if (boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY)) {
+> > > -                     its_mitigation = ITS_MITIGATION_VMEXIT_ONLY;
+> > > -                     goto out;
+> > > -             }
+> > > -             fallthrough;
+> > > -     case ITS_CMD_ON:
+> > > -             its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
+> > > -             if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
+> > > -                     setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
+> > > -             setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+> > > -             set_return_thunk(its_return_thunk);
+> > > +     case SPECTRE_V2_RETPOLINE:
+> >
+> > Also SPECTRE_V2_EIBRS_RETPOLINE.
+> 
+> See above.
+> 
+> >
+> > > +             /* Retpoline+CDT mitigates ITS */
+> > > +             if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF)
+> >
+> >
+> >
+> > > +                     its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
+> > >               break;
+> > > -     case ITS_CMD_RSB_STUFF:
+> > > -             its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
+> > > -             setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+> > > -             setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
+> > > -             set_return_thunk(call_depth_return_thunk);
+> > > -             if (retbleed_mitigation == RETBLEED_MITIGATION_NONE) {
+> > > -                     retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
+> > > -                     pr_info("Retbleed mitigation updated to stuffing\n");
+> > > -             }
+> > > +     case SPECTRE_V2_LFENCE:
+> > > +     case SPECTRE_V2_EIBRS_LFENCE:
+> > > +             pr_err("WARNING: ITS mitigation is not compatible with lfence
+> > mitigation\n");
+> > > +             its_mitigation = ITS_MITIGATION_OFF;
+> > > +             break;
+> > > +     default:
+> > >               break;
+> > >       }
+> > > -out:
+> > > +
+> > > +     /*
+> > > +      * retbleed_update_mitigation() will try to do stuffing if its=stuff.
+> > > +      * If it can't, such as if spectre_v2!=retpoline, then fall back to
+> > > +      * aligned thunks.
+> > > +      */
+> > > +     if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
+> > > +         retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
+> > > +             its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
+> >
+> > The =stuff mitigation depends on retpoline, not really on retbleed.
+> > Shouldn't this be handled in the switch (spectre_v2_enabled) above?
+> >
+> > >       pr_info("%s\n", its_strings[its_mitigation]);  }
+> > >
+> > > +static void __init its_apply_mitigation(void) {
+> > > +     /* its=stuff forces retbleed stuffing and is enabled there. */
+> >
+> > Oh, this is why you are depending on retbleed_mitigation above, this part is a bit
+> > confusing.
+> >
+> > Will think about it more later, trying to have a couple of days off.
+> 
+> It is a bit confusing, no argument there.  And why I spent most of the
+> commit log trying to explain it :)
+> 
+> I do prefer this way of handling it though compared to the existing code.
+> The existing code would *change* retbleed_mitigation in
+> its_select_mitigation() which I think is very confusing.  I believe the
+> rule for these functions should be that xxx_mitigation is only ever
+> modified in the xxx_select_mitigation() and xxx_update_mitigation()
+> functions.
+> 
+> If there's another idea though (or a place where a comment might help),
+> let me know.
+
+One way to handle intersection between two mitigations is via a common
+function that each mitigation can call. Something on the lines of
+set_return_thunk().
