@@ -1,99 +1,140 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27651DC997;
-	Mon, 19 May 2025 19:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C22116EE
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684385; cv=none; b=id0Plxwuifz9Qds4iAdKdMSz6T2NqJ2/DsLuQRVy0l1EXF8Va2bmxIeQlPODYHHky7Gnwns24JOsozacJjdN54TV2rCK4EPzDqgyjBEVpEgdp7Yjp+7chxN8CnX/8WDZvqd+vSCrr0k7Q7DlAxw7Y9YiygWg4GlTaiiaRrUxK1c=
+	t=1747684730; cv=none; b=GIGuxA+xvUc6yMGsRRL+7qAdpG47T8MRUEaKqnWfA1HpPSNfIQPFOleXbV5LWZqC88hDcUTonECwIKBg2ZinGQt0q4pjgck/vc6INRBxmypnMEU7DQpKgUS9QAVLzuiUgF9at5UWQFdFA4tFmLZxqGFEgIeievFVmW47kIyCf3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684385; c=relaxed/simple;
-	bh=GJjWCf/dE6EIwK2zl2af9t8fxnk0uK+2x2QGZAC2ias=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8553aBVXE448HC0RZgNFHxQ6XogRnvWuMvTZfb4n+S7D6iXFlR1PjiAnn1in99da01wwCYRCqBftm2ecUdCvFlY4b659P5KZjQ2emCdZ9zZ/4JODFTtoVjRqfyayxYz642F1EJRdaIekOxWkhZ5+23B190oGSkIqnLEGcHMD+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Skz5FWMK; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747684730; c=relaxed/simple;
+	bh=1ItMlTSBt/ShO1E43j0VuSmsnzkNYsBrJyS/xfbv5Ro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JT7amYK5EAOY5hoSM7bHJOONDfGv7+EtU+Mcg3E0u9uVLIVbYYmCyccXj8NuksYFXfk/GDoIIY4JSZCotACz09qtFxDXdmaNpJk5LgB8ofEcPHGqyAmLxxHyWU1+OOHQ3XKRK5gKMwDeVijinJ9OI6+X52fkMOB/NadcRkKleyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JCiTwCZy; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Skz5FWMK"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-232059c0b50so20257665ad.2;
-        Mon, 19 May 2025 12:53:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCiTwCZy"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so575945ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747684383; x=1748289183; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cfEl5gKVr3ig5EX/NUXc2HBqSWYk2BVTccrrysu9YwU=;
-        b=Skz5FWMKXA4VZ8tU05qIby5/pEJhh+SS4MDBTEv/M1bGgUu+Sd9EhEvVeU513WTuRo
-         WN5uRHvAg4s2UmV7R5YOq8KZ4u2LCqLbvSBBkln8X0G5UIxHda0OtV+wNIMitwCmSKuV
-         Q4C8qoPq3GsWEh/GdCDUd7dTMaOELvM7YP3jRf/WMEAIQMXs0G+RqfDC2oCSLW4j15in
-         j6gD7QNc0vDiRUYLabvrNUGYVYTwPQzcKD75WSw3bxBdPLfuzZWNR1vGYHLesxa36tAQ
-         6dcc+heZUqfiF4cIUSWiDC/wehAFWlEsY8z2FsPl/ncd9TbJX1zF5liKx+ccHFUQz0VY
-         ZUqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684383; x=1748289183;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747684728; x=1748289528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cfEl5gKVr3ig5EX/NUXc2HBqSWYk2BVTccrrysu9YwU=;
-        b=fn3y9lxqiiVOV0iebv7lYnnjVJrF3Bz0ZHNaLpoIFwzgUNFuSlOy8AE66MwbhksKRI
-         /T+JcZb6ofiTM1UxAP6yIBwmC2TPygg+6QxX2WUUk25dS8z9rJYCS31Bb0V93I3v9vMc
-         tIK11hOAAXOQzNGUv31aSNhlxZOnic5dy4q2c45d6ZJW7GoX3NccZrsx97I4wT3b9YZ/
-         tIpvle6XM0QEDGGOTQiE+HSvkDTVPlQ2RZKfsuSDpiCZ23npkn6V6/jzdxlNoPb+krly
-         C5DYnm2gnqv9ZUcaYt6BCrhxe9xqTOnojgregff4foY+PzUCMHTXftUqVf/xsgQiYZpm
-         G3KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJTb57B4m/qsY2JVArKZ9SUDL/pli8UwaOxyAJoKFzXJD/FPdLE0m+OiI8g2AX83COu8bnomCi@vger.kernel.org, AJvYcCXO3OIyuSbuxqNC2RSuurZC9AgscCEsT5cCJ08EXiTM76PYLz1cDWVjbtiwKMXAhZGWj81USGkY4Jsn+s8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0b3BvGzGj1/OcV0j+hXE0KkbRTXtwnajVk4IMUFfMVp65ZiTe
-	4ednTqL1OFXrK6HF8dSYPRn2G8y17jpHNzG1VatMu9XwZft2pZsmMcfD
-X-Gm-Gg: ASbGncscgXiBm6wcWdaMFtN72JMYK3z/1sYITNQbzSgK0fMGK7mbI4hTcVpemjXUiy4
-	6Or4Jps0DLEaqIvYktppXk8UGChtps1ifGF2tHcd7EiNvzlZE1CQZmgWWp0ijoNlzgx7Wvljr3n
-	5pR1i+Gf+DixuStuHhSXQBSfTArGJ5h1u4+WxKoML8UwAqXymuoZLyw/Op/aik3spVi2zdzkT2m
-	Wu5xhg+ZWybD7kfSqKT4EGizSQ3Hvh8jNEUY3ftDMU8D1l1ALFu+dhEn7lpEFVaLwpzErWBRYb3
-	oe3IehmLiMvLFs7gQU1USNUgYG0o3Gi4ea/8Iqmu219ior3mfWXavddbeKxSzA==
-X-Google-Smtp-Source: AGHT+IFC3Gu/VtV0c0rVVrNpv7I5JPBPT6pwWKUrXoeh1vBmhM8/LyUvP+4lJSuK2GS5VZmkFhsKsQ==
-X-Received: by 2002:a17:902:e742:b0:223:4341:a994 with SMTP id d9443c01a7336-231de2e6c97mr170926535ad.9.1747684382726;
-        Mon, 19 May 2025 12:53:02 -0700 (PDT)
-Received: from gmail.com ([98.97.32.68])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb749sm63836205ad.55.2025.05.19.12.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 12:53:02 -0700 (PDT)
-Date: Mon, 19 May 2025 12:52:57 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after
- free when sending
-Message-ID: <20250519195257.bscfvzw2td7uoccv@gmail.com>
-References: <20250516141713.291150-1-jiayuan.chen@linux.dev>
+        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
+        b=JCiTwCZykWGLgUMO/MoKN4W2k1Rp9vCcY+E322IvUubspclP1GWyi0qEaBLDBMqqi0
+         4/UMIezgygW5m3kUdHkCsZj3kp705sYHoIrOhdZFR6qulPGsbiUHoHNV9Rmqo+aRtmdK
+         WjvohUpLfTCRdapEdSZXPzGYe8iTCBx+4yvGfoO2NW3whkPJ3GoUTDJc45XkMxGGfDi2
+         i+gsOiRy+C6Si8ZHah1Q7hdcsPnerL4xJahuFeubViNlFf7HNLNyYIGsZyf6RxTs4M5O
+         KBPHHSJbtBZXK9I/oGlx5B6aFKqYfOyMcm2voBMZpnO19keYHo6rXuj7vcge3d0TzyKm
+         oD7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747684728; x=1748289528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
+        b=gETGUNRnggXApW6QVelkEIhWES5rxDY602a3ezaoJ6+3mNDYYnQjx84KOU6DDGE53B
+         T2u5JjJ0A8WQeTD29wAxq0ZIvMmDSSF0qjVX3FXpPEso1nW9XwfnHjGyxVnxg1CVKeZR
+         7vRS99wRUtaB+aXDMqgtCX/JQ5Swei7H1AimcGzPolGcIMHaRzSpy/Bq5IwE2+Ycps3E
+         rRRpCs8RfnlYuxe6bCkDaD5Cs/i9JHG+RWG+e0DXSucyBgwWXMHVSg3fQJw8VAVkEoju
+         jRSwdSzAeKCEfG1IHel2vfzfof0VSXydNdVdkdHOD1RLHkYYDNGSzfFlPSaIkCL/vni/
+         qvDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjVBMch01ZyWXQ1OXleGgA0luaNAQCgqhGaajggZHfgCftFz/2piIebBBh3ngHqfNjfBVdpk22XiDJSaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO604XVEqB3oH3RiJDExEmNqXw3AfHvknQ7ak1HZpvrbByrQdj
+	OmARGFimze+Y2YT2nbsYORia3G7VW/Xi4BPKoopEb+QV9lWswhtDCK+cJQ0dsw2yjaC21UtPA8k
+	ntZ8PvW+NaWZtQf14xXisNhgp9XcDRVeCziWvCI4r
+X-Gm-Gg: ASbGnct5SZdtL9TJehGurd2CFGshTXQebTbLtb688/aOv1BMdrJXJJ40iWSQX+IkAap
+	a36ZvRVN4bVLsImyqgrilw72SbS+dySQBa9AxonCZJ9TU6ZWHVpjeBVMNDzZzTwfllHMc3+ZbQF
+	EXeRyumR4qSKVPwhuFMrxfnD6IUddtkFqvbzzP+R5RmpfsItMxtjHbLFnjpHtgXQ90gxZa0hL1
+X-Google-Smtp-Source: AGHT+IF3NG4riWCj70W1ip8g722W/OSv9N5vCb4lgszsMb+3aFb9ORFS8jrS9y+V6o+naREGvwl20DU7tMCXOWpayuQ=
+X-Received: by 2002:a05:6e02:2184:b0:3db:8537:e450 with SMTP id
+ e9e14a558f8ab-3dc5d6164acmr7320835ab.20.1747684727399; Mon, 19 May 2025
+ 12:58:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516141713.291150-1-jiayuan.chen@linux.dev>
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+ <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
+ <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com> <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
+In-Reply-To: <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 19 May 2025 12:58:34 -0700
+X-Gm-Features: AX0GCFuEBhgUMS6lypmTs7xxRmttSCOq9w7q1VtwxoyFkY97QYVR1ycJy_Ib5vY
+Message-ID: <CAP-5=fWX7m-3j31pNAXqkNmtr0i3rxAHPC96h=sQ5q31WyNDLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-16 22:17:12, Jiayuan Chen wrote:
-> The sk->sk_socket is not locked or referenced in backlog thread, and
-> during the call to skb_send_sock(), there is a race condition with
-> the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
-> will be affected.
+On Mon, May 19, 2025 at 12:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
+ wrote:
+>
+> Hello Ian,
+>
+> On Mon, May 19, 2025 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+>
+> <SNIP>
+>
+> > ```
+> > --- start ---
+> > test child forked, pid 279547
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > Testing perf trace's buffer augmentation
+> > Testing perf trace's struct augmentation
+> > BTF struct augmentation test failed, output:
+> > sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+>
+> Thank you so much for testing it :)
+>
+> My bad, I have just realized this is because of the data in the
+> timespec, nothing to do with libbpf... The tv_nsec has a value of 1. I
+> think the 'sleep' on your machine has a different implementation. On
+> my machine, the second member has a value of 0, see below:
+> ~~~
+> $ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
+>      0.000 (1000.196 ms): sleep/54261 clock_nanosleep(rqtp: { .tv_sec:
+> 1, .tv_nsec: 0 }, rmtp: 0x7ffe13529550) =3D 0
+>
+> $ strace -e clock_nanosleep -- sleep 1
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D0}, 0x7fff85936=
+5a0) =3D 0
+> +++ exited with 0 +++
+> ~~~
+>
+> Can you please run any of the commands above and see what
+> happens(please change the perf executable path)? If you get 'rqtp: {
+> .tv_sec: 1, .tv_nsec: 1 }' then I will just make the regex less
+> strict, because it differs between different 'sleep' implementations
+> instead of having anything to do with perf itself.
 
-[...]
+Ack. Here is the output:
+```
+$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
+    0.000 (1000.208 ms): sleep/1710732 clock_nanosleep(rqtp: {
+.tv_sec: 1, .tv_nsec: 1 }, rmtp: 0x7ffc091f4090) =3D 0
+$ strace -e clock_nanosleep -- sleep 1
+clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D1}, 0x7ffe51f3cd0=
+0) =3D 0
++++ exited with 0 +++
+```
 
-> 
-> Reported-by: Michal Luczaj <mhal@rbox.co>
-> Fixes: 4b4647add7d3 ("sock_map: avoid race between sock_map_close and sk_psock_put")
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Thanks,
+Ian
 
-LGTM thanks for fixing the tag.
-
-Reviewed-by: John Fastabend <john.fastabend@gmail.com>
+>
+> Thanks,
+> Howard
