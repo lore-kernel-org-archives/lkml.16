@@ -1,77 +1,46 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCCC1552E0;
-	Mon, 19 May 2025 22:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800BC1552E0;
+	Mon, 19 May 2025 22:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747693930; cv=none; b=fdCi46trSGiBtSQ2XjD8BlfV5HVDc658e35NVroCXM/60sxsABbM/ubv2BVkTpCoDIt56EBS5ruWc/s2hEfw0dJu6RNkTmhcpJAUML3u0tgIifAOSO670PQ6WwPUSKEz1V7Y6Cop41l2sezNEhZ7Df5+HsIg+PuPFH61EGjbI+E=
+	t=1747693941; cv=none; b=H6XvxMAXkXaRg+bqPUdCvm885g6Pm3HxDTEIVwDN6/FuAlnk86O/nRY+DgRO9l4dzX2gwYkRKXQo0iQAiBOCWLAdUh9UszXukQ7oaX+h9z9KLTyUUI7MVIqWpabsaq/JUWNi0umU5fChZnmX/Wv2usWgIgfxjPy48boU3RgOntk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747693930; c=relaxed/simple;
-	bh=ypJXToy2vgtGqOOQIR3W3J1R+zAn3GN4eWGnrapbfb8=;
+	s=arc-20240116; t=1747693941; c=relaxed/simple;
+	bh=f+aDsi5nQxMjBuoSfVRq6tUp/DSW4cYb8aljWJ0ym6Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xf5AAb0gJqkUrrFLwMoFgNvRKafAEE7MymFQA2x6o373nZOcaUjd/qrMLjJJhPtw1Cij4Yobf7RpcUagdc6gIr8znxhhH2QxtulD+eL39jBDnItWNBx2JqV/56EWOqKEbutTpyzQYYxGCG0swrT0IhInL66pWn/IGU1wD7IEHhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ju3T1VgD; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=sC3aWVDeXmOXA4UBBDVTgBwEi+uV/6JJyZpO94zLPOcigYEkohVYcL1jTUn6jWtk7IuziPZE5q7eyW24CPqNo/4lPwiJpJQAOk8BqsRf8sQaWH9IsvWrjUQI0dA/3Zrya3GLAvXk3S1JAe6Fncm+e6nGJDOB2Moq8Dx9wdRf1j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcKwpDN5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju3T1VgD"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so6291553e87.1;
-        Mon, 19 May 2025 15:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747693927; x=1748298727; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kPgoGD4mfiKg7wSy3nd78LkGhoTM3C7+Sd8OwYTqByM=;
-        b=Ju3T1VgDBiX5PiBQiH4JUzri4TVHZPr5vCM3fXojoN9wApduCIW/rl/CdNh5E9NYoG
-         7n5YXYXOtHeJFE4PO1w0hVJL4kWHtMBXSbHjjmjLeQSGRxBIUAzhw7UWQbrVrLVqy2bo
-         HtzOXlCaWV4lUkTlXhVOWwyHHdKv4kDM9+GDd/ERCUxFgYi+Vam1UJzS/GXVh01RPk8M
-         hyzgleLAUy3m4Ff+6RRPRSu3sV/rWUnndP6B9a9G2TQ7LBKGpHeoGCUp7y1UxLtsGLGk
-         36TQM3zKRp7aHMvNO/W3OswDHFPOIH0ER7W8K6AIpINI4tz9ctKBwHTP2cR7fdMnBnWa
-         RL7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747693927; x=1748298727;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kPgoGD4mfiKg7wSy3nd78LkGhoTM3C7+Sd8OwYTqByM=;
-        b=DJ7I6HOIL/fTXCF7lfugQHy73kUpdKUHvqERbEokqSaE4GOW5a+M9LJQfliZZWPLyB
-         AQYABW4NhEFQrdOfa40FFmLFEQOhO6lokWWqxfb6fTH2080xjvz9UfXbLjMbaYUXejhW
-         ccjiDh9cq3XG9W780UB2Ndn01Ugfgyx4b7/Zl715U2ig4VbJjO8DZoc5wAY+iBUOvjmg
-         Ib+ES1MGHphdVZgXpkNxCOb37AI43YVfN+qgfTw2BtAcl1ZtKdhpElEWmApUrhTjeQIc
-         QajbWbNPscIoNaykiAkiMkXi0GdI2ma7Xd/IOOyb4aX4LpGE57Nms2QunhH4qFTeBG/t
-         jhyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYv4LPOQzjXnCMXYk2hkdWQ+KlC89liPSN8YDKPZ8psZPTOoWvy+dOvxKR/DGy28BPqT95fIDd@vger.kernel.org, AJvYcCVNX6P1j7+sN6vW1l3KmArnNVJFpUn5T8hcGI7XNfGl7ajcq9TzcTpaJCs6NNRyALPff7jwEko3NSwX@vger.kernel.org, AJvYcCX8E3fOYcEOqzlDWyY01dPjQqI2M4dkQxEiM1aT9pOP7R6MFDGvyzPGdTVjxUgCGMevzJpFGk0JgWi9wMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm7zxq1xLxpXqglhNUO6pYxeOSMVto4A55wg+baiP+S13imwn5
-	5GkRgPgLInx7WGWnSCtLWHeuqQiomwc+dFIjC1LEOnSIQlWs2VELcVKG
-X-Gm-Gg: ASbGncuT5iZPaIeobhnWORk+yFxa6L0BXpFFm/2dlpQgunsa5cgUUS0xkwV8ej70xKS
-	BaWHFWPAE4T0NovfmFfLulgyE9jcj2jjUuOq5a3rTlckomVE3w+qYhXIyU8viTz794seGnpH2Db
-	X7R7SAIKTz2aoborl/N42jgrGZZkwSNk7Bot7YO1jMV2DI1ZSNOosqprPFhQO4TpZ4lFIX+rAOp
-	l2DbpevY4aL8RAWcMBQcXWBSzPza2pPPIGNh33doL3HiV1G3L1wmsukGFe7VMBDiCXwFl5ihLKS
-	7d4yEKW+IdbdgOavup8p1E98/jKM3cLgyUBsd/ejI4+BXJDgtV2b7dmrRHVFDG78hUA0
-X-Google-Smtp-Source: AGHT+IH2nem1x0cfEiINMWoZp/EFEUq+NhlMhQkahCPgi58UyfE8meqY3ZTLVHKA6No2SKKepvX5ig==
-X-Received: by 2002:a05:6512:290f:b0:549:5b54:2c68 with SMTP id 2adb3069b0e04-550e71d0cd8mr4564560e87.22.1747693926765;
-        Mon, 19 May 2025 15:32:06 -0700 (PDT)
-Received: from foxbook (adqk186.neoplus.adsl.tpnet.pl. [79.185.144.186])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16363sm2044013e87.34.2025.05.19.15.32.05
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 19 May 2025 15:32:06 -0700 (PDT)
-Date: Tue, 20 May 2025 00:32:01 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Udipto Goswami <udipto.goswami@oss.qualcomm.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Roy Luo
- <royluo@google.com>, mathias.nyman@intel.com, quic_ugoswami@quicinc.com,
- Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v1] Revert "usb: xhci: Implement
- xhci_handshake_check_state() helper"
-Message-ID: <20250520003201.57f12dff@foxbook>
-In-Reply-To: <CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com>
-References: <20250517043942.372315-1-royluo@google.com>
-	<8f023425-3f9b-423c-9459-449d0835c608@linux.intel.com>
-	<CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcKwpDN5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B739C4CEE4;
+	Mon, 19 May 2025 22:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747693940;
+	bh=f+aDsi5nQxMjBuoSfVRq6tUp/DSW4cYb8aljWJ0ym6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HcKwpDN5pSqEpc1JDU5LgFD6dwjWy0jk5bhdvlRj0sj1KxWAJStKeEbYkVbQlDUHk
+	 kGDYQdplPstCVzRophZ2LrDUVCpK/p7qjugJeP7iNC0GvnVBAk88iZuztp9KeVxbP2
+	 4gHG1OXNvZ7U9SAXIgpkVL1+iJqrxWmh7JJa7ed9IhrVXkE/++lr+bkZInYyqnBflU
+	 nZ77oHiWE8o+HIkkY7jwYzChHGHa+Y3F1t9BE+LZcy947UWmgm2uU4QZhPbF34WdSm
+	 MzEfdTMyb0vPJsO+IFczgAO9iww8cJruzM9IXeyGWcLbMTdIWmU4wXGOpfymv+ip++
+	 EX6akFGAeLTpw==
+Date: Mon, 19 May 2025 15:32:18 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+ <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "horms@kernel.org"
+ <horms@kernel.org>, Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu
+ <larry.chiu@realtek.com>, Joe Damato <jdamato@fastly.com>
+Subject: Re: [PATCH net-next v2] rtase: Use min() instead of min_t()
+Message-ID: <20250519153218.0036db7f@kernel.org>
+In-Reply-To: <bb78d791abe34d9cbac30e75e7bec373@realtek.com>
+References: <20250425063429.29742-1-justinlai0215@realtek.com>
+	<bb78d791abe34d9cbac30e75e7bec373@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,51 +50,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 19 May 2025 23:43:21 +0530, Udipto Goswami wrote:
-> Hi Mathias,
-> 
-> From what I recall, we saw this issue coming up on our QCOM mobile
-> platforms but it was not consistent. It was only reported in long runs
-> i believe. The most recent instance when I pushed this patch was with
-> platform SM8650, it was a watchdog timeout issue where xhci_reset() ->
-> xhci_handshake() polling read timeout upon xhci remove.
+On Mon, 19 May 2025 12:16:11 +0000 Justin Lai wrote:
+> I apologize for the interruption, I would like to ask why this patch is
+> rejected on patchwork.
 
-Was it some system-wide watchdog, i.e. unrelated tasks were locking up?
-
-It looks similar to that command abort freeze: xhci_resume() calls
-xhci_reset() under xhci->lock, and xhci_handshake() spins for a few
-seconds with the spinlock held. Anything else (workers, IRQs) trying
-to grab the lock will also spin and delay unrelated things.
-
-Not sure why your commit message says "Use this helper in places where
-xhci_handshake is called unlocked and has a long timeout", because you
-end up calling it from two places where the lock is (incorrectly) held.
-That's why adding the early bailout helped, I guess.
-
-> Unfortunately I was not able to simulate the scenario for more
-> granular testing and had validated it with long hours stress testing.
-
-Looking at xhci_resume(), it will call xhci_reset() if the controller
-has known bugs (e.g. the RESET_ON_RESUME quirk) or it fails resuming.
-
-I guess you could simulate this case by forcing the quirk with a module
-parameter and adding some extra delay to xhci_handshake(), so you are
-not dependent on the hardware actually failing in any manner.
-
-> Full call stack on core6:
-> -000|readl([X19] addr = 0xFFFFFFC03CC08020)
-> -001|xhci_handshake(inline)
-> -001|xhci_reset([X19] xhci = 0xFFFFFF8942052250, [X20] timeout_us = 10000000)
-> -002|xhci_resume([X20] xhci = 0xFFFFFF8942052250, [?] hibernated = ?)
-> -003|xhci_plat_runtime_resume([locdesc] dev = ?)
-> -004|pm_generic_runtime_resume([locdesc] dev = ?)
-> -005|__rpm_callback([X23] cb = 0xFFFFFFE3F09307D8, [X22] dev =
-> 0xFFFFFF890F619C10)
-> -006|rpm_callback(inline)
-> -006|rpm_resume([X19] dev = 0xFFFFFF890F619C10,
-> [NSD:0xFFFFFFC041453AD4] rpmflags = 4)
-> -007|__pm_runtime_resume([X20] dev = 0xFFFFFF890F619C10, [X19] rpmflags = 4)
-> -008|pm_runtime_get_sync(inline)
-> -008|xhci_plat_remove([X20] dev = 0xFFFFFF890F619C00)
-> -009|platform_remove([X19] _dev = 0xFFFFFF890F619C10)
-> -010|device_remove(inline)
+Hm, unclear, sorry about that.
