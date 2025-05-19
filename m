@@ -1,108 +1,130 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84B267B9F;
-	Mon, 19 May 2025 08:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4E2267B9F;
+	Mon, 19 May 2025 08:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644171; cv=none; b=cEsxP4i8p/TItq+rEUnuQ8sbHP19J/lHgK+pOiFPJObvStRmeGJg6uZsfMMUMDsUNZwfBcVNZMnmOsettoxsJRKM22mzBrNwfj9lw9eSX8SRHFQQnDvSQgbvjpkPDzn54i5i4aEYDtSfMWIwB99fZEBomUkAPqFNSEfAgf+MDJY=
+	t=1747644211; cv=none; b=mXNRdLZ3eIRdVpJLdQySS6wKQdgJ+xdBnD8n/IjfSpj/yBGNZTh8+JADxG1aI5N76QllxnRPP1OUxUqrTlcTLeGE06cjYRE0Al7gDGJCoTevfwgpBJ1ixILGjBiLH28v1IPB6bAm9Dcef7l5riQ3Xvx62qCYri/5Imbk81fkyYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644171; c=relaxed/simple;
-	bh=GDrbtMczbadqW+M8hR3/h5c36OlbYcm8zQPsfTySveY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dCJfGx+fropC49hDV82nvkOnxglF5sLnGkfLD3KE31/vNSbhJHeGnM8BttyIBnPMV4ZpNJ3BjahDcsfzmUMCX3+95489Bsn5hnpwHfc9URHb9rNXQ6R5TL9xpQobHuUq6pidUPyYltRxMGvEjO+WPqSHDyTzQDwnBD4i7Yg9SfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAD3OSz_7ipoUmNrAQ--.11134S2;
-	Mon, 19 May 2025 16:42:41 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: ajay.kathat@microchip.com,
-	claudiu.beznea@tuxon.dev,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
-Date: Mon, 19 May 2025 16:42:11 +0800
-Message-ID: <20250519084211.1752-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747644211; c=relaxed/simple;
+	bh=ZOT0C0K0vPz9f06+lIVOOzuxP0Ka7pZHBD9bPzHiIx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iu0i4DtG7uYDGKpayRJ5CJo4RSYf7FwiK43OCYktoCOZjlOG0kBEZ9ewGIr419nYuMsL/ppyaeGE1R7O9N3naKN4UyI0XMK4m4G4PDw4FJoALrYkmSxxX4jotkgATl3C2CqXxwLnvBkxx86tfkVfaiTBV0yDHc/vlmdDMmrcoVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmRVvjCg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmRVvjCg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3A6C4CEE4;
+	Mon, 19 May 2025 08:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747644210;
+	bh=ZOT0C0K0vPz9f06+lIVOOzuxP0Ka7pZHBD9bPzHiIx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UmRVvjCgl5wYhy2TDehbZ/hmlXluy2bVk24nSycH7kLGPj39FqYMztARpvCnlRQIp
+	 /pWZI7pKYGPZ4qH6AG6hPG45IzKXVaT07tVG6z8GnzMJeLmDjcYbBo0c7OlCpD9ewa
+	 sddYOAVCDeDzsJBum3oIUX5l1PPyOT+nTWh/3BKInEyhGEry1W8/rkHnzLoMDIm7wP
+	 A1EQBElwa2FIQgTN0AKmNDVQUx3Qt+C+oeeJ0PhLtsJ6C0OJ33ByfOUS4WkRUiJtqp
+	 ikHmua/hlYQWDJ58eiZSaacjvLl6hx2qwxBkgRnx1eFRv2JRNg3cP0KVdhJws92wTc
+	 2RZBFEQzyr9dQ==
+Date: Mon, 19 May 2025 10:43:27 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org, 
+	Eric Auger <eric.auger@redhat.com>, David Airlie <airlied@redhat.com>, 
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Simona Vetter <simona@ffwll.ch>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux.dev>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+Message-ID: <20250519-crazy-wisteria-mule-ef8e28@houat>
+References: <20250507082821.2710706-1-kraxel@redhat.com>
+ <urpxto3fgvwoe4hob2aukggeop4bcsyb7m5wflgru4c3otd6rq@aktopqufgxom>
+ <iptz2uxajkl3l62piqu6tq5pembbmqho667otbaj7nneh5vk3r@sxdvm7e57nae>
+ <20250518175332-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAD3OSz_7ipoUmNrAQ--.11134S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXw48JryUtrb_yoW8Ar1UpF
-	Wxuw4jqwnIkrWrZw4xJF4kA3Z5tayvyrWUuFWxuw1fZr4kAw1S9r4fXFy5Xrn0q3W7Gw1x
-	X3Wvqr4YgFn2yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUU
-	UU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAHA2gqs4joywAAsH
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="owfohtpihfpfbao7"
+Content-Disposition: inline
+In-Reply-To: <20250518175332-mutt-send-email-mst@kernel.org>
 
-The wilc_sdio_read_size() calls wilc_sdio_cmd52() but does not check the
-return value. This could lead to execution with potentially invalid data
-if wilc_sdio_cmd52() fails. A proper implementation can be found in
-wilc_sdio_read_reg().
 
-Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
-log an error message via dev_err().
+--owfohtpihfpfbao7
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+MIME-Version: 1.0
 
-Fixes: ea5779b4fbc7 ("staging: wilc1000: wilc_sdio_cmd52: pass struct wilc")
-Cc: stable@vger.kernel.org # v4.5
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v3: Remove redundant error log. Fix code error. Fix fixes flag error.
-v2: Fix code error.
+On Sun, May 18, 2025 at 05:53:59PM -0400, Michael S. Tsirkin wrote:
+> On Tue, May 13, 2025 at 12:18:44PM +0200, Gerd Hoffmann wrote:
+> > > > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm=
+/virtio/virtgpu_drv.c
+> > > > index e32e680c7197..71c6ccad4b99 100644
+> > > > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_d=
+evice *vdev)
+> > > > =20
+> > > >  static void virtio_gpu_shutdown(struct virtio_device *vdev)
+> > > >  {
+> > > > -	/*
+> > > > -	 * drm does its own synchronization on shutdown.
+> > > > -	 * Do nothing here, opt out of device reset.
+> > > > -	 */
+> > > > +	struct drm_device *dev =3D vdev->priv;
+> > > > +
+> > > > +	/* stop talking to the device */
+> > > > +	drm_dev_unplug(dev);
+> > >=20
+> > > I'm not necessarily opposed to using drm_dev_unplug() here, but it's
+> > > still pretty surprising to me. It's typically used in remove, not
+> > > shutdown. The typical helper to use at shutdown is
+> > > drm_atomic_helper_shutdown.
+> > >=20
+> > > So if the latter isn't enough or wrong, we should at least document w=
+hy.
+> >=20
+> > The intention of this is to make sure the driver stops talking to the
+> > device (as the comment already says).
+> >=20
+> > There are checks in place in the virt queue functions which will make
+> > sure the driver will not try place new requests in the queues after
+> > drm_dev_unplug() has been called.  Which why I decided to implement it
+> > that way.
+> >=20
+> > drm_atomic_helper_shutdown() tears down all outputs according to the
+> > documentation.  Which is something different.  I don't think calling
+> > drm_atomic_helper_shutdown() will do what I need here.  Calling it in
+> > addition to drm_dev_unplug() might make sense, not sure.
+> >=20
+> > Suggestions are welcome.
+> >=20
+> > take care,
+> >   Gerd
+>=20
+>=20
+> I suggest adding comments in code explaining why it's approriate here.
+> Want to try?
 
- drivers/net/wireless/microchip/wilc1000/sdio.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Yes, that would be great
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 5262c8846c13..d77f88996250 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -771,6 +771,7 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
- {
- 	u32 tmp;
- 	struct sdio_cmd52 cmd;
-+	int ret;
- 
- 	/**
- 	 *      Read DMA count in words
-@@ -780,12 +781,16 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
- 	cmd.raw = 0;
- 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret)
-+		return ret;
- 	tmp = cmd.data;
- 
- 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
- 	cmd.data = 0;
--	wilc_sdio_cmd52(wilc, &cmd);
-+	ret = wilc_sdio_cmd52(wilc, &cmd);
-+	if (ret)
-+		return ret;
- 	tmp |= (cmd.data << 8);
- 
- 	*size = tmp;
--- 
-2.42.0.windows.2
+Maxime
 
+--owfohtpihfpfbao7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaCrvLwAKCRAnX84Zoj2+
+dgnnAX41YH5MdklVDoci3LCBdtMOwNXiHuO4oHPW3spALAh+ceP1tjWrDivp1KWs
+HIHscPgBgLrrA1SdGDzvZnHluVFSvh0V6BWTaFk5wrcnF3tCW2hOXdbJLnN3ocJI
+Jbo2yI9kOQ==
+=36F7
+-----END PGP SIGNATURE-----
+
+--owfohtpihfpfbao7--
