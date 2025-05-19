@@ -1,75 +1,75 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0959228750E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC84F28A1CC
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670698; cv=none; b=eobQ6hgOH9gojCJ4iaIlzlGQBoCwMxfTrdKq0zpxb737C4G1pVtxP4repLOfURjrSPLZCryJbLqGNESTChKS2XfMm1qCWJMxjuzUD7TJHWC+hjIKMyTL7bkfgC23kNYKiqJzd9yHSU+EM/Wnq2j7WuA5nUJCmmP9FGd+2ZyPlB0=
+	t=1747670693; cv=none; b=r5qzhbLrRkFlh3Nlc72kTxHJR8epbgyr+WHcHgCFOSTBx0/2mnmJheaFUV5MXlsRpGKsvWXxK76qkmRzBpem1PyL0uD9ePHkad+A/DPeU5FpW2J6OMy4iHE1E/J7rE6sTL/1NkJH2SlRQP6mzlYMdRvsM/xNS3MyQov55FqfBks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670698; c=relaxed/simple;
-	bh=5zJLok5PavBLhhgmYhocIuKYS1AkKRUjh4oU1Lh6QX0=;
+	s=arc-20240116; t=1747670693; c=relaxed/simple;
+	bh=uuPB6/t8uDetW/MZPE72jYfI/5vntYnHqBAiMqRcJNY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X5AsD2VdlXIoS9tfMlgIl71v/CmaWuYoUBNEzAXxoOpNq+Nv59UicLUG514NUUNgCo/axKiqJAjenzmFzD1qeAqVlGSdS8fExNur7nDwQCRwdGxoghnqdHPHJPHv5TX+cjIS/0HK3fpxsw4APo3Ok5D03G8MvjTntk273rXPrnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PlDhKBzp; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=DRgvlFhMu1Yzz7YfVf/KoNY2hfc6oAFLyM6+/4cYr8YbZVBTMSf1N6YXB6K7s4Wcb44usuwXOzqodDvUqdhQSToXJgN+UcPG3aYzcoa+9NkuDqM9CLErdf1NmbQ74vAETbibhf5p+wJ7qm+CCU+0Bm8G8JEIE8XYWKCGC5k9L/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HPD9Icu9; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PlDhKBzp"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J8dWk8002784
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:56 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HPD9Icu9"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JDhfbO028704
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fAN+CXJaj4W+6XYD3RlPlea/F3+2Xol5/tTlLQCHlCg=; b=PlDhKBzpDFFCnj9W
-	bpiId68bOz3bDLsIBKe0A1nruFnyN90VPRc386BBDTBw4cXplYKYelYA3UXRz2Km
-	l3rr59exy29AoDmnPZ8COsYXDMkFeMjtOI3OwaQd4fYXqncETNqfWKrTtLh2Lv4h
-	BprCiKsmniJniiKgO2tyG5eDGi0kOHltatJ5frhnF8QD+F1Qn4CqegpbsK2z4k3I
-	ilg/WFQMUrsWpymMJcQ9ZB74ItiJzubzBRw+DdWn1BhJDvkaW0qnBjSLcN7CYlJe
-	NBOVJH3L1dVfEzCHFput0PG+Pesr0knPkmv+r6c3rm8TSfrlUH3x7YIFY+KUn8uC
-	i04G7g==
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r1ath86u-1
+	nZxTF8x+3KE8EFnyZXSEOGRbpAvMMNHtRHdI6vjxCcM=; b=HPD9Icu9d+0jnZi4
+	2pm/BkYyOyOs+zZI/DEhIrzyjdjpQo0KHSs3QDKqFgCjzyle0xyYgcL7c9b3SFYl
+	qAXYsaSiyugdF2D31DTWx89ElqgCQ/iF02yjOQBSyMepAnUkBiwrvT3LxIItgbrW
+	z+uAeqdii66kVGnl1sioxMANeM6omIYhuJ+e/tMY2beksRMeKx7dC4/llEtD6upO
+	3H04qOuoC7yK3CwevKFGYVbQhbCB6zXAvpe+z9VCGiNpdIW9X2LYAKrVlO2KM4Ux
+	UGTt5LlRoOi5zg8nr2v4aHEGgmx7KZ25Fs2L1/eoWnq27Qqi9t/Bv+44t8Bti3uG
+	kun0hQ==
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7cvu8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:55 +0000 (GMT)
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-401c6c3a679so4156031b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:55 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:49 +0000 (GMT)
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3f75ab4d89eso4726462b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747670695; x=1748275495;
+        d=1e100.net; s=20230601; t=1747670688; x=1748275488;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fAN+CXJaj4W+6XYD3RlPlea/F3+2Xol5/tTlLQCHlCg=;
-        b=mwo0BcSaCr+uXVafXo5aCIu8TbgnZyVQfyFlqCvyGyimAP5QwIKusYNvT9a1Ekb/GZ
-         XgF+OtS07GSnAoJW5Y2ZeM5UWQ7pAg4Kw2Zhqal+dwjluKo5be7siNI/CLhqAsCsieAw
-         ZqylcGwdoi2xqP382t1r7WrdQvQqmsa32Svxa8l69LprimKy6ApeeoGZ1+CufxnIII8J
-         Fhq8HOThMVoGQf4sBvfjUFoVMpM1W6HZS/m0CBzYfHi0ZEWnUFsW/Lemji8NJZ2HPBAw
-         /m0GvVxTaIQdPSBOGLsmkY/2sYcVpYgqOItyjtfs6uRhSiUnsfb+cHJpCrmhe+e5yFwl
-         8URg==
-X-Forwarded-Encrypted: i=1; AJvYcCW69tQXfAItxJJZOHHlkUT5S3JwgTj6SMBvTVmwtqliP9YgPy+DOzImwt8fiBNsIEbqkPYpC7kKnD1uN5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypQjsnjaC7aMWle3lQt3dbS9QM+5MSZdSbswkdZQCgYpnhSxbl
-	9tJUzJRJ+PxRZq9IZ980eIEb7OTPN8k3DQtr796wrPPzIGrwSoPhQxbEYaH0V1VOUGfWCkm3dIg
-	VGL69rbUW7kc+MG8TarAf/aBWO2bAZKb2fM0KyZ2QiInfmWEvAff1Q4etV4tisPIMeY3aKZaqE8
-	w=
-X-Gm-Gg: ASbGnctKuMJ5oBTZ/ZH6+ULKTS9EIiPx0zdVrUis+9ADBqw+JPzPtcBoKrL3lXdFiVV
-	RQy0+K93uTre4zXfmBoz8oQgZxB28wI0f6N20Nd3sPCJb0qIg8W4yJkr8WyZ0hlRQhj+l1DbvGo
-	eR4tXrLf4GzWNCYe2/kkQbVNLrw8lM8si/n2ihI0nH1xfGLstKulVc5EkIVgbuAlwgnPHdQJHZf
-	exSQvrbU04AzLY8KFVlNVshIaLfI5nwUn2FW1fFXx8NtPTS14jQNOVXkeJMSt6iShOy6GD8HQ8g
-	uEUgKEEmRrnyEJkGpie/6YAvOMUVY0cDlGaXeX8RsfLW285acNjkDYzdOD+b0zCx+tTujTBZx28
-	h0fE/ScFjv8JrhbbxF7QOuqbC
-X-Received: by 2002:a05:6808:4448:b0:402:292:44a6 with SMTP id 5614622812f47-404d863c91dmr8270702b6e.3.1747670694614;
-        Mon, 19 May 2025 09:04:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkgtsBBcTR8xj6OAM2Th4T05Oo2dctpJbP/XhdL8GFbV2K/n1LRBDpQxZywqfLvBxFQAYgJw==
-X-Received: by 2002:a05:6808:4448:b0:402:292:44a6 with SMTP id 5614622812f47-404d863c91dmr8270652b6e.3.1747670694170;
-        Mon, 19 May 2025 09:04:54 -0700 (PDT)
+        bh=nZxTF8x+3KE8EFnyZXSEOGRbpAvMMNHtRHdI6vjxCcM=;
+        b=jgCSNRH2oEU1pf+vCwLpODDFh4YTGS8PSOVqmayISG8qViPZlAdfAwTGr2NM+s0ZBu
+         70RSU/6hAa3zreOiCgqEqB9x0udpflBF1ctx6JlCJgpGyuZCvPoGf+FTf7LDdERdsBMO
+         NkhMeoIpArpBG6iBinvbhSNP7o+4kxDJvz3Tq93nvgetoHiiDYfNHctgXtKqtLtev3vE
+         +XqgrvBz5km5QlzrxjVEQRnW42rTqVcdqQJtaLY7+gh3oCt0QZeJ2PGww1jfEVUA5fEb
+         +TM4qwUDS1PnDJPhd1ivr+nZuyyDXJhb/89AfkglN0AFf4vxNqk2N3VMsFD4DlaX3FD2
+         k0yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlhFg7MTTqOBSzChtJ6zU0q5rFURsY/5tg6X2iXgDjiz8CUXqh0r39b0kkqjKjPnc4vxFvJYMDFRS63jM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFdb4pPuTUm261OMZ6EQiryanTeIAhCFFovTentLhkdf7qIbyY
+	67CXk7zWN0ijPJQKhYBPBeVzgH5KP64wbxJYKJ+nfFHksydhJeCRHrwcLtMBbrtUKqg2BOTsRb7
+	F6NZp+E6g4aTLiXTFQJiNMb21VuVGosgc0vzrx4F+FG/rARH6F/of7tfWNTZc0yZfFrrhOwoPBe
+	E=
+X-Gm-Gg: ASbGnctCeMoq5h7T58koEx3p6XF1lhNwCb3d8j4sMD6BheVMJXdAUDxJfJW6tY+akBf
+	1GnAcRuRIA3GiY2JHXRwW/yVuipWkQE42sry0PKVAIELD0IY1nW0QBKPWN9BKu2NWBxnzdQT7/i
+	jm79bxdxeUXYw5FytGsVO6mk6Dwtcb86sD5lbxLXzCipHqs9+aswzI76KPPRzpgjS/nBez7qT68
+	pR7Jg1WY7pznHJLwemkvHCiJWaWWrt0yEtil38BD9WrhvzuNqc/KC+NUc5RHvPQSDiCtM1uU82a
+	vnVvziWGm7fCGQROqRNyOZ2cgPs+kjnISYoGPryy4Gn6LH8eNsFRy9ZmMX9787dhyGkis/iXzCP
+	eM4prWTL/UrHrUgLLh4uKWuE8
+X-Received: by 2002:a05:6808:3387:b0:403:37dd:e109 with SMTP id 5614622812f47-404d88788c2mr7319351b6e.27.1747670687086;
+        Mon, 19 May 2025 09:04:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGiOSK2IjJcxUCUzAuqHixsgMkHmIg33enVBCAuohdlOh11NyryBEP7WJAE/aYPWn2wtYQfLg==
+X-Received: by 2002:a05:6808:3387:b0:403:37dd:e109 with SMTP id 5614622812f47-404d88788c2mr7319305b6e.27.1747670686488;
+        Mon, 19 May 2025 09:04:46 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.51
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 09:04:53 -0700 (PDT)
+        Mon, 19 May 2025 09:04:44 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Mon, 19 May 2025 19:04:20 +0300
-Subject: [PATCH v4 18/30] drm/msm/dpu: get rid of DPU_MDP_VSYNC_SEL
+Date: Mon, 19 May 2025 19:04:17 +0300
+Subject: [PATCH v4 15/30] drm/msm/dpu: get rid of DPU_INTF_INPUT_CTRL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-dpu-drop-features-v4-18-6c5e88e31383@oss.qualcomm.com>
+Message-Id: <20250519-dpu-drop-features-v4-15-6c5e88e31383@oss.qualcomm.com>
 References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
 In-Reply-To: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -90,192 +90,835 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8101;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=33892;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=+WjsCRpQ3QCe/Ce1kvO60/iVL+5JGid0k0Ksq+2ENGA=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoK1Z86fQc+v66Hc/YT5TqWGoVK9TyJUgTPpwCv
- yADGvfHtIKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCtWfAAKCRCLPIo+Aiko
- 1frqB/0cG/LOLfA4Xr9FXr9voaSVWYeW+1tO8GXemyDW+OazjU8gXUNm05zOcuDkB6zMQc9hYEh
- 6UlGICDt7DK2PuuXP13PuNjm9gFmbmHNzo8cGCDh9NBhUG/L5dZSVssUibdsFKuPXAHXfKDlVJ/
- //m8QaI08aDXTsxc5CQHeG2Bv/88YbhdE24hWxwXqhtDGc9ykypaDVHm6NOkI61pg769InULWXC
- t0QwpCT0pVmZEEqTOOOP8Rsv9YQSn4owRMTqkzydzkGiXhlnm0nH8zn1mp1CHsb4CxXtir4+aB0
- PodRwSJ/kgJMZiSmojj9Q8hIWhbW1rjQWO71p8CzZDpOAXVl
+ bh=w162QubJ3pc8RO3B2LFfQHUW3UcZ9o3mlunbe6CwCZc=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoK1Z7e1S7TC6O65xEEBgJzw3TXYAQEIoxy5jir
+ KjAnSfcXI6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCtWewAKCRCLPIo+Aiko
+ 1X79CACn2meVi9P+QdHMATKIT1KYE1kqwsgmzRzRoIduerEJSBniIFYulHW1L+mbgMNcGoaAB1h
+ HBIb6elpxXtTms+stGFONbgX67jdndvPLC5VlCgmm6MvnhTnTMlzE71BnrHTNepwJ65EWeBqyIi
+ UQdXmB1RUbcNLOD0G6F3Gnx1uGF+0WpuPSp3dWWkZFboNFty3GKgBRod0J30m/NP/0i1sqhA9gy
+ HjYf+LgfgvUdjHtNag974rkT5baHffjd2FJnVjvSOTfBXb2oOOnbkzGsC5yi2mf/PA1lS9Wr+IM
+ ndeukUju6GU01nhCy1kB0t3Y9i0Fkd48Ehs0ZQZqAIf1NxDV
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Authority-Analysis: v=2.4 cv=OfqYDgTY c=1 sm=1 tr=0 ts=682b56a7 cx=c_pps
- a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=MP74wIc9YfZe_pNrw8AA:9
- a=QEXdDO2ut3YA:10 a=efpaJB4zofY2dbm2aIRb:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 6t27wsgvdXs1XhunzR-IkgUaPtfLmUVN
-X-Proofpoint-GUID: 6t27wsgvdXs1XhunzR-IkgUaPtfLmUVN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX1wG036kyzJGS
- U2WBaxD4Ub5IyZ0bNh3WLJifLhxcjJJCbJUbNdxNRql0ACWlh9qTwGFhs6hOKNKzkCQRdJISwus
- OAaxem/UU3ij7H/qOM62sWSo2YBT41ib22ZuXBkQn2LhZXBCcIEALOmo2UJykVWte4CoGog6SAl
- jKh+Y1QD4xVJDZGtcNG+gXs7LUfpzaBIr6OsP6JG3q8Pt7yc2l19fq97Wb9ahIPFddmSEtbqqY5
- Qx1TqLxU8mloOck0q3yA6iH2HGepG8H1R2K000k2EvNkb54eXd1fvxoig7oMT5XXsmIP3wBjFN/
- PMgFiIesK0TsBemTNGL29LdmqPmgWyx67Beereh00sfLhJG8MLCGFQeq4bYlCjtmU/xBkVzdpQX
- mbx9qdUUSJknxmGBIRxOFSetrApeiYtQHq6DTkwnSumByznrbBFp3uTpKYMiN4rXLENAylE6
+X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682b56a1 cx=c_pps
+ a=WJcna6AvsNCxL/DJwPP1KA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=1O7iqZxHH2NOC_bIgO8A:9
+ a=QEXdDO2ut3YA:10 a=_Y9Zt4tPzoBS9L09Snn2:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: kO8TuRx7XwmOYP0GXbuu2IviXJZ-PGAz
+X-Proofpoint-GUID: kO8TuRx7XwmOYP0GXbuu2IviXJZ-PGAz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX0xAWgsI0jJae
+ rH2h0xJ7dTMDf5fs8xwXjbRQ0W9axGwUMDCOmOjl1+JKlD4Dh5bLaqB6/kdBxq4oF7pERa/dMMu
+ X5xR+GmVkCAxP2NuLr6xKMAHpgAIFA9GoPb6Cf4VGOA4tgdLovc51LNrBTyD9G1qMbQhfjZOxv3
+ E4weJsxN3DCaaSgNPw/j3uf8PBbp3yEo91NEhYku2XZfeUyBQ1qzHOYgenU0iirTY7KHADItj5+
+ zQiMhjRPFHeJ0TjI+hx15We5p6H5W/x2qrdVDeesgw/f6uppcOuQtZqdLQQbgCPmDEaZdP7PPIa
+ cygteYUe7ySf7CdV+76YxuZdXhbrLLcUFS0+oGjDoIUCeT+r2Khak4uFkZBVotaDTUZrEM5xdek
+ E3TgwCIZV+y3gPje2ZXVv9IXNZ8BoZ4ZkNVS89kIovToQbHg0XBspQCww6oiiPaHSZ/iiCLz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=808
- clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190150
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190150
 
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 Continue migration to the MDSS-revision based checks and replace
-DPU_MDP_VSYNC_SEL feature bit with the core_major_ver < 5 check.
+DPU_INTF_INPUT_CTRL feature bit with the core_major_ver >= 5 check.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h   | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h   | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h   | 2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           | 3 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c               | 2 +-
- 10 files changed, 2 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h  |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h  |  6 ------
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h   |  3 ---
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h   |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h   |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h   |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h   |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h  |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h   |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h   |  3 ---
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h |  9 ---------
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h  |  8 --------
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h |  4 ----
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h |  9 ---------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c           |  3 ---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           | 11 -----------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c              |  2 +-
+ 23 files changed, 1 insertion(+), 94 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-index c0b4db94777c42efd941fdd52993b854ab54c694..29e0eba91930f96fb94c97c33b4490771c3a7c17 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-@@ -19,7 +19,6 @@ static const struct dpu_mdp_cfg msm8937_mdp[] = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
+index bbdb7e1668fee33cb7d99a7cb8ab001e58f079be..88582fc257dea342f05b93dae6afe986eb7f32d0 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
+@@ -364,7 +364,6 @@ static const struct dpu_intf_cfg sm8650_intf[] = {
  	{
- 		.name = "top_0",
- 		.base = 0x0, .len = 0x454,
--		.features = BIT(DPU_MDP_VSYNC_SEL),
- 		.clk_ctrls = {
- 			[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 			[DPU_CLK_CTRL_RGB0] = { .reg_off = 0x2ac, .bit_off = 4 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-index d3e4c48be306a04b457cc002910eb018a3f13154..cb1ee4b63f9fe8f0b069ad4a75b121d40e988d2b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-@@ -19,7 +19,6 @@ static const struct dpu_mdp_cfg msm8917_mdp[] = {
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -373,7 +372,6 @@ static const struct dpu_intf_cfg sm8650_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -383,7 +381,6 @@ static const struct dpu_intf_cfg sm8650_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -393,7 +390,6 @@ static const struct dpu_intf_cfg sm8650_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+index 6c8ef23099a8212f33780d27a76991e9955a9bc3..bcab869aafbe1e23e0267bbad377fc10d8c6256d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+@@ -301,7 +301,6 @@ static const struct dpu_intf_cfg sm8150_intf[] = {
  	{
- 		.name = "top_0",
- 		.base = 0x0, .len = 0x454,
--		.features = BIT(DPU_MDP_VSYNC_SEL),
- 		.clk_ctrls = {
- 			[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 			[DPU_CLK_CTRL_RGB0] = { .reg_off = 0x2ac, .bit_off = 4 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-index c488b88332d0e69cfb23bcf4e41a2e4f4be6844d..b44d02b48418f7bca50b04119540122fb861b971 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-@@ -19,7 +19,6 @@ static const struct dpu_mdp_cfg msm8953_mdp[] = {
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -310,7 +309,6 @@ static const struct dpu_intf_cfg sm8150_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -320,7 +318,6 @@ static const struct dpu_intf_cfg sm8150_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x6b000, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -330,7 +327,6 @@ static const struct dpu_intf_cfg sm8150_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x6b800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+index 37d18803af4b850c40ab855b1f13db96f3ee96ea..4b61bc7eb79f00a184c95b2319b737fcee6c4cbb 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+@@ -309,7 +309,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
  	{
- 		.name = "top_0",
- 		.base = 0x0, .len = 0x454,
--		.features = BIT(DPU_MDP_VSYNC_SEL),
- 		.clk_ctrls = {
- 			[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 			[DPU_CLK_CTRL_RGB0] = { .reg_off = 0x2ac, .bit_off = 4 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-index 0e8e71775f2c1c38af018353c85ffeb6ccddb42f..8af63db315b45a5a44836303c8ce92eeccc5b1f8 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-@@ -22,7 +22,6 @@ static const struct dpu_mdp_cfg msm8996_mdp[] = {
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -318,7 +317,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -328,7 +326,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x6b000, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -340,7 +337,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
  	{
- 		.name = "top_0",
- 		.base = 0x0, .len = 0x454,
--		.features = BIT(DPU_MDP_VSYNC_SEL),
- 		.clk_ctrls = {
- 			[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 			[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-index f2ec30837f9ccbff1041f0465d0123382a00355a..f91220496082bd101099c1817c41699215980d53 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-@@ -23,7 +23,6 @@ static const struct dpu_caps msm8998_dpu_caps = {
- static const struct dpu_mdp_cfg msm8998_mdp = {
- 	.name = "top_0",
- 	.base = 0x0, .len = 0x458,
--	.features = BIT(DPU_MDP_VSYNC_SEL),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-index 26f39acd82e07c71cbeaaa72c14d9b7e14d2dcc3..8f9a097147c02b538e720dd52f77e705f7ff1ca2 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-@@ -22,7 +22,6 @@ static const struct dpu_caps sdm660_dpu_caps = {
- static const struct dpu_mdp_cfg sdm660_mdp = {
- 	.name = "top_0",
- 	.base = 0x0, .len = 0x458,
--	.features = BIT(DPU_MDP_VSYNC_SEL),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-index 657f733c9ffff73f9eb5051ba55ed2e4e7bb496d..0ad18bd273ff8c080f001f0bee654393cf0c24cd 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-@@ -22,7 +22,6 @@ static const struct dpu_caps sdm630_dpu_caps = {
- static const struct dpu_mdp_cfg sdm630_mdp = {
- 	.name = "top_0",
- 	.base = 0x0, .len = 0x458,
--	.features = BIT(DPU_MDP_VSYNC_SEL),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 		[DPU_CLK_CTRL_DMA0] = { .reg_off = 0x2ac, .bit_off = 8 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-index 15da5ded19267711e6df8605d576539475fe634c..3e66feb3e18dcc1d9ed5403a42989d97f84a8edc 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-@@ -23,7 +23,7 @@ static const struct dpu_caps sdm845_dpu_caps = {
- static const struct dpu_mdp_cfg sdm845_mdp = {
- 	.name = "top_0",
- 	.base = 0x0, .len = 0x45c,
--	.features = BIT(DPU_MDP_AUDIO_SELECT) | BIT(DPU_MDP_VSYNC_SEL),
-+	.features = BIT(DPU_MDP_AUDIO_SELECT),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
- 		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x6b800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = 999,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -349,7 +345,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
+ 	}, {
+ 		.name = "intf_4", .id = INTF_4,
+ 		.base = 0x6c000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -358,7 +353,6 @@ static const struct dpu_intf_cfg sc8180x_intf[] = {
+ 	}, {
+ 		.name = "intf_5", .id = INTF_5,
+ 		.base = 0x6c800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_2,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+index 41b43fb258508f1a5f285c88a3c1dc2f5f271cd0..2e7ae68f7e922e9b71d79627806042f645cb4ad2 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+@@ -210,7 +210,6 @@ static const struct dpu_intf_cfg sm7150_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -219,7 +218,6 @@ static const struct dpu_intf_cfg sm7150_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -229,7 +227,6 @@ static const struct dpu_intf_cfg sm7150_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x6b000, .len = 0x2bc,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -239,7 +236,6 @@ static const struct dpu_intf_cfg sm7150_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x6b800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
+index d44db988a6e2f443803a422846f817779d382b2a..a99c99ca37703cc3a7d4403d3f026f234b693319 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
+@@ -175,7 +175,6 @@ static const struct dpu_intf_cfg sm6150_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -184,7 +183,6 @@ static const struct dpu_intf_cfg sm6150_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -194,7 +192,6 @@ static const struct dpu_intf_cfg sm6150_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x6b800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
+index 6e571480c4a44b4f4663574c31270657b9a06a7a..72f1328deda87ccc0b97f3f03d5840a77426b2b7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
+@@ -152,7 +152,6 @@ static const struct dpu_intf_cfg sm6125_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -161,7 +160,6 @@ static const struct dpu_intf_cfg sm6125_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = 0,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
+index 6f9dc261e667fca3e94ec24e00d45f9af46e401e..aee4adb3b73d2efb074abc58dff7d213a73207d9 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
+@@ -284,7 +284,6 @@ static const struct dpu_intf_cfg sm8250_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -293,7 +292,6 @@ static const struct dpu_intf_cfg sm8250_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -303,7 +301,6 @@ static const struct dpu_intf_cfg sm8250_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x6b000, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -313,7 +310,6 @@ static const struct dpu_intf_cfg sm8250_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x6b800, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
+index 373c7d605a04a1fc72f45e993ec176e8f5e015fe..05c0f81b263c4a9aab8adbfa487f6cd20ce94079 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
+@@ -129,7 +129,6 @@ static const struct dpu_intf_cfg sc7180_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -138,7 +137,6 @@ static const struct dpu_intf_cfg sc7180_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
+index 1cf9f99d0542cf7037d2a9672d51ca7c437c364e..b729a01e8ff8443721bf993726ae9ebe21e89440 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
+@@ -87,7 +87,6 @@ static const struct dpu_intf_cfg sm6115_intf[] = {
+ 	{
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
+index a3db71676f468526ea129c4b8465fb2c47885162..25f56c55f373ef5e57082448bc1a1d1d17968b06 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
+@@ -160,7 +160,6 @@ static const struct dpu_intf_cfg sm6350_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x6a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 35,
+@@ -169,7 +168,6 @@ static const struct dpu_intf_cfg sm6350_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 35,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
+index 719cfaa98ab9e735d9255d9a5f1a4275739b4b1d..20b12a68fb9dfe0291486ca827c6ca25a1711014 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
+@@ -87,7 +87,6 @@ static const struct dpu_intf_cfg qcm2290_intf[] = {
+ 	{
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
+index 04cdda85e6828a83e99d146ee9d9f809f1acc007..6935ff7da3162dd7b86f3786b0f604d113e51649 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
+@@ -97,7 +97,6 @@ static const struct dpu_intf_cfg sm6375_intf[] = {
+ 	{
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x6a800, .len = 0x2c0,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h
+index 3c6da0acdc3b81db65e2544f16d90322fe7e92a6..b6b1a4383efa72fc0bc8a6feac1c3adb7773ba42 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h
+@@ -308,7 +308,6 @@ static const struct dpu_intf_cfg sm8350_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -317,7 +316,6 @@ static const struct dpu_intf_cfg sm8350_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x2c4,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -327,7 +325,6 @@ static const struct dpu_intf_cfg sm8350_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x2c4,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -337,7 +334,6 @@ static const struct dpu_intf_cfg sm8350_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h
+index 2ee29c56224596b3786104090290b88cecf7b223..d1dd895acbf666ceab39f9c38ae11bda100b5953 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h
+@@ -178,7 +178,6 @@ static const struct dpu_intf_cfg sc7280_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -187,7 +186,6 @@ static const struct dpu_intf_cfg sc7280_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x2c4,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -197,7 +195,6 @@ static const struct dpu_intf_cfg sc7280_intf[] = {
+ 	}, {
+ 		.name = "intf_5", .id = INTF_5,
+ 		.base = 0x39000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
+index 2f20d0014a94e707a5f0548fc1c6bf0983b0cad0..481d36b80c4eddda53d2f9963392d9499f966792 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
+@@ -304,7 +304,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -313,7 +312,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -323,7 +321,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -333,7 +330,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -342,7 +338,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_4", .id = INTF_4,
+ 		.base = 0x38000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -351,7 +346,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_5", .id = INTF_5,
+ 		.base = 0x39000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_3,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -360,7 +354,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_6", .id = INTF_6,
+ 		.base = 0x3a000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_2,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -369,7 +362,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_7", .id = INTF_7,
+ 		.base = 0x3b000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_2,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -378,7 +370,6 @@ static const struct dpu_intf_cfg sc8280xp_intf[] = {
+ 	}, {
+ 		.name = "intf_8", .id = INTF_8,
+ 		.base = 0x3c000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
+index 314875e2dca96b3b5c40aae0d15fb80da8ebd42c..32649f25fdcbc1fe45d7028352dfd4c0daa11d84 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
+@@ -324,7 +324,6 @@ static const struct dpu_intf_cfg sm8450_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -333,7 +332,6 @@ static const struct dpu_intf_cfg sm8450_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -343,7 +341,6 @@ static const struct dpu_intf_cfg sm8450_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -353,7 +350,6 @@ static const struct dpu_intf_cfg sm8450_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
+index 36775f444af4b2654231cd9456ac4eea1f0f18e6..4679b7e47d50e21d5b6df69fd0479b804ac69979 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
+@@ -334,7 +334,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -343,7 +342,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -353,7 +351,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -363,7 +360,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_0,	/* pair with intf_0 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -372,7 +368,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_4", .id = INTF_4,
+ 		.base = 0x38000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -381,7 +376,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_6", .id = INTF_6,
+ 		.base = 0x3A000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_0,	/* pair with intf_0 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -390,7 +384,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_7", .id = INTF_7,
+ 		.base = 0x3b000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_0,	/* pair with intf_0 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -399,7 +392,6 @@ static const struct dpu_intf_cfg sa8775p_intf[] = {
+ 	}, {
+ 		.name = "intf_8", .id = INTF_8,
+ 		.base = 0x3c000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_1,	/* pair with intf_4 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
+index 624f24c8a33a182634d49058014fc3175f5ac9d3..def7c161d787d9cecd219b4db0482158d3e5bc12 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
+@@ -319,7 +319,6 @@ static const struct dpu_intf_cfg sm8550_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -328,7 +327,6 @@ static const struct dpu_intf_cfg sm8550_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -338,7 +336,6 @@ static const struct dpu_intf_cfg sm8550_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -348,7 +345,6 @@ static const struct dpu_intf_cfg sm8550_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
+index 857dc8465bf5571cd08cf3115fb96002873c004b..979a674517d8b270309a4ce92534face0f2ba855 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
+@@ -319,7 +319,6 @@ static const struct dpu_intf_cfg sar2130p_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -328,7 +327,6 @@ static const struct dpu_intf_cfg sar2130p_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -338,7 +336,6 @@ static const struct dpu_intf_cfg sar2130p_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -348,7 +345,6 @@ static const struct dpu_intf_cfg sar2130p_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
+index 05b0962c2d937f077d0b42fa8af6e2da40c7dcae..ffee0740ddb5c13dbbd2ca0d70855cba27f73ca6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
+@@ -320,7 +320,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	{
+ 		.name = "intf_0", .id = INTF_0,
+ 		.base = 0x34000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -329,7 +328,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_1", .id = INTF_1,
+ 		.base = 0x35000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_0,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -339,7 +337,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_2", .id = INTF_2,
+ 		.base = 0x36000, .len = 0x300,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DSI,
+ 		.controller_id = MSM_DSI_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -349,7 +346,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_3", .id = INTF_3,
+ 		.base = 0x37000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_0,	/* pair with intf_0 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -358,7 +354,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_4", .id = INTF_4,
+ 		.base = 0x38000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_1,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -367,7 +362,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_5", .id = INTF_5,
+ 		.base = 0x39000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_3,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -376,7 +370,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_6", .id = INTF_6,
+ 		.base = 0x3A000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_DP,
+ 		.controller_id = MSM_DP_CONTROLLER_2,
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -385,7 +378,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_7", .id = INTF_7,
+ 		.base = 0x3b000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_2,	/* pair with intf_6 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+@@ -394,7 +386,6 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+ 	}, {
+ 		.name = "intf_8", .id = INTF_8,
+ 		.base = 0x3c000, .len = 0x280,
+-		.features = INTF_SC7180_MASK,
+ 		.type = INTF_NONE,
+ 		.controller_id = MSM_DP_CONTROLLER_1,	/* pair with intf_4 for DP MST */
+ 		.prog_fetch_lines_worst_case = 24,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 4482f2fe6f04e58408b55994d885ea1c717c6a07..df1eeb9082f74ab734c235f0cd0baf8c0eda14b5 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -104,9 +104,6 @@
+ #define PINGPONG_SM8150_MASK \
+ 	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
+ 
+-#define INTF_SC7180_MASK \
+-	(BIT(DPU_INTF_INPUT_CTRL))
+-
+ #define WB_SDM845_MASK (BIT(DPU_WB_LINE_MODE) | \
+ 			 BIT(DPU_WB_UBWC) | \
+ 			 BIT(DPU_WB_YUV_CONFIG) | \
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index d48c26a7cb6b69961cebc19576e3f7fc3b8dd2c5..92dfbb5e7f916bf32afeffdb6b843f1da3f3fd44 100644
+index e1c6df3a3b72ffb5a816bd18266a35abe723fbd9..bc71ec9a5bc8b6e15d7af13c42ba5d4197729822 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -34,8 +34,6 @@
-  * @DPU_MDP_10BIT_SUPPORT, Chipset supports 10 bit pixel formats
-  * @DPU_MDP_PERIPH_0_REMOVED Indicates that access to periph top0 block results
-  *			   in a failure
-- * @DPU_MDP_VSYNC_SEL      Enables vsync source selection via MDP_VSYNC_SEL register
-- *                         (moved into INTF block since DPU 5.0.0)
-  * @DPU_MDP_MAX            Maximum value
- 
-  */
-@@ -44,7 +42,6 @@ enum {
- 	DPU_MDP_10BIT_SUPPORT,
- 	DPU_MDP_AUDIO_SELECT,
- 	DPU_MDP_PERIPH_0_REMOVED,
--	DPU_MDP_VSYNC_SEL,
- 	DPU_MDP_MAX
+@@ -139,17 +139,6 @@ enum {
+ 	DPU_CTL_MAX
  };
  
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-index 562a3f4c5238a3ad6c8c1fa4d285b9165ada3cfd..cebe7ce7b258fc178a687770906f7c4c20aa0d4c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-@@ -270,7 +270,7 @@ static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
- 	ops->setup_clk_force_ctrl = dpu_hw_setup_clk_force_ctrl;
- 	ops->get_danger_status = dpu_hw_get_danger_status;
+-/**
+- * INTF sub-blocks
+- * @DPU_INTF_INPUT_CTRL             Supports the setting of pp block from which
+- *                                  pixel data arrives to this INTF
+- * @DPU_INTF_MAX
+- */
+-enum {
+-	DPU_INTF_INPUT_CTRL = 0x1,
+-	DPU_INTF_MAX
+-};
+-
+ /**
+   * WB sub-blocks and features
+   * @DPU_WB_LINE_MODE        Writeback module supports line/linear mode
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+index 54c2e984ef0ce604e3eda49595d2816ea41bd7fd..a80ac82a96255da1d52e1f2fa7fc39388fc3782b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+@@ -588,7 +588,7 @@ struct dpu_hw_intf *dpu_hw_intf_init(struct drm_device *dev,
+ 	c->ops.setup_misr = dpu_hw_intf_setup_misr;
+ 	c->ops.collect_misr = dpu_hw_intf_collect_misr;
  
--	if (cap & BIT(DPU_MDP_VSYNC_SEL))
-+	if (mdss_rev->core_major_ver < 5)
- 		ops->setup_vsync_source = dpu_hw_setup_vsync_sel;
- 	else if (!(cap & BIT(DPU_MDP_PERIPH_0_REMOVED)))
- 		ops->setup_vsync_source = dpu_hw_setup_wd_timer;
+-	if (cfg->features & BIT(DPU_INTF_INPUT_CTRL))
++	if (mdss_rev->core_major_ver >= 5)
+ 		c->ops.bind_pingpong_blk = dpu_hw_intf_bind_pingpong_blk;
+ 
+ 	/* INTF TE is only for DSI interfaces */
 
 -- 
 2.39.5
