@@ -1,73 +1,161 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB6021770A;
-	Mon, 19 May 2025 20:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5437211A00
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687106; cv=none; b=pwndjmV4Q7PmlRH/7N613RJ/zsYgHcVKKYeL8+KMZoj0RQ2wqtEOJ4KpEkmXzawxfS0f3iNvojIlz2gTtyaaiK/Yw1IsgwPXgrOvd7/EQ+LFJr54Cm5Q/4xNOG6fRIsppVbo6xrjj404p+1gjng+UzIGRyYJDztSZIlO9+rcvAg=
+	t=1747687262; cv=none; b=KbKoPKtfdVK6lRw1KIcnsNbtLolHHrntKes64nW8f7vCMGF5q8Z47effibo86JAgvPV6j9J60sxMaJr+Q4smsRPJYhvw2GRJZXOmmqgYuPlFAHTnoUNEXnA3Z0rM1zWUgm+K5v/j3qJ+cVfUDwZ74LfQtWBrSjlFaKyhNY6RBoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687106; c=relaxed/simple;
-	bh=/U7LrkpfpUpFNeKeDpiSOEJ2XWoMvUPa4Ey+unUtmy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dKGOwashzafl9IXPPS7av3AqlmgQ1lcRKl2i6J9N0tP6ZpSHJJZeMbnpRv+bh9UX9Q/Zodcqsoae0ZDAi4QH2+agXiMU5zfYUv1Y3PcURrsJuIymPK1X+IPGkeNXTE6nMQIesZsnzNEXGIDiaz2I12anqwyEGTvfLn8smq2Lun4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GP0qDkXt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747687262; c=relaxed/simple;
+	bh=0cGSZuPlLsQ06kPzb5cAf+1buHk5lMRcLfepHFsSg3g=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sSmF1p/2JaUy2Avq6Ab6P55FjPDVY5tsjNlmG5RY0fXaal6GWVxxC13DS6YbeufSKnMO7n0b/s4V+NlCCC4WUg225XV27X1NXcYeeB7S1Keja3Jmy+Xrkx5V8QJZPCUBUk6QE3FKpD33ZyuCN7crYQWT/qmRVGvJynnWVVcKxBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EnMdbyED; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vqZZp9wJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rG9Z7i+q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OdGXE+I1; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GP0qDkXt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=O/0IcdVQE5Us1JeC/7Mie5tysbAZM3UKBVkJQ6942JA=; b=GP0qDkXtjwpwP4f1GOOTvWNQDw
-	MEnvFI+0pp6nHGYpcvjNmLUV2j4HbrlArpvjLp3VunvgL2GEYDmFpxnbdIcx9sKh4lyiSKCY0cCTK
-	pfmWqr1u4mtpz89N18QVW5tFQ3+tK/RFBduWyxlFtN192Ydmw1L86QUUfE5pbmopBKyQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uH7Fc-00D3Sq-9r; Mon, 19 May 2025 22:38:20 +0200
-Date: Mon, 19 May 2025 22:38:20 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH] net: dwmac-sun8i: Use parsed internal PHY address
- instead of 1
-Message-ID: <0ee2c181-1ab2-4d81-89f0-9d2992464a88@lunn.ch>
-References: <20250519164936.4172658-1-paulk@sys-base.io>
- <d89565fc-e338-4a58-b547-99f5ae87b559@lunn.ch>
- <aCuLwuSliICh86SP@collins>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EnMdbyED";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vqZZp9wJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rG9Z7i+q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OdGXE+I1"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D430F222E9;
+	Mon, 19 May 2025 20:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747687259; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMb9PBgoLwxRI3vqLA8OCLc76p2ye28dsa+DWT/q4BE=;
+	b=EnMdbyED6DP4umvmULBjNf9I9EdNVYqWaWYA9ry94EZh7qO20U24l9Ga9WHTKiYppS9QQ1
+	U1hi2OI82VGevDe7UQSVpkp2LfXqk8TyelYs+j1908j6h+J730pGgyM5YsFUfXXM+GBPu0
+	tBg96mKEwTgCxFn120tnlKoxUunBMqo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747687259;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMb9PBgoLwxRI3vqLA8OCLc76p2ye28dsa+DWT/q4BE=;
+	b=vqZZp9wJ2tktcNVCgoK4mlmwWxxPN/ZHP0v8P4dF3BbecZaK+2E/ZDVVLomPSZw9ZTPfLu
+	LiMzwnhThxiLQbBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747687258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMb9PBgoLwxRI3vqLA8OCLc76p2ye28dsa+DWT/q4BE=;
+	b=rG9Z7i+qvEgbQgiVmwFOSf68F7x5DtsoKea4GozJpxM5a5Pe6XZMnDzFLPcibC7gVZK2i3
+	QzCPCwQa3dC703ThwOuxFD+uw1CyJ8YMxxs+al+FDs924MCvonsEYKSnJ9or6o75vT2obj
+	31Ulp1OrPHq1W3I0eP/HkIAHDlaAKPI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747687258;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMb9PBgoLwxRI3vqLA8OCLc76p2ye28dsa+DWT/q4BE=;
+	b=OdGXE+I1bL5e8x9uL4/CElrymmKGHKYRFWslIXUye9FfXPsszekLFvV89Y+hTFXImvXy6T
+	f5q0R0wHes4LCrBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9E0B91372E;
+	Mon, 19 May 2025 20:40:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id N+6iJVqXK2j1GgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 19 May 2025 20:40:58 +0000
+Date: Mon, 19 May 2025 22:40:58 +0200
+Message-ID: <87cyc45o6d.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	guennadi.liakhovetski@linux.intel.com,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kw@linux.com
+Subject: Re: [PATCH v2 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+In-Reply-To: <20250519080855.16977-1-peter.ujfalusi@linux.intel.com>
+References: <20250519080855.16977-1-peter.ujfalusi@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCuLwuSliICh86SP@collins>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org,linux.intel.com,linux.dev,google.com,linux.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spam-Level: 
 
-> There's actually only two users of this (this code path for internal PHYs is
-> only used by two chips), which are platform dtsi files that have the address
-> already set to 1.
+On Mon, 19 May 2025 10:08:50 +0200,
+Peter Ujfalusi wrote:
 > 
-> I have actually tested both with hardware and they work fine.
+> Hi,
+> 
+> Changes since v1:
+> - The PCI ID patch commit subject and message updated
+> - Reviewed-by, Acked-by tags added to patches
+> 
+> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+> Panther Lake, the main difference is the number of DSP cores, memory
+> and clocking.
+> It is based on the same ACE3 architecture.
+> 
+> In SOF the PTL topologies can be re-used for WCL to reduce duplication
+> of code and topology files. 
+> 
+> Regards,
+> Peter
+> ---
+> 
+> 
+> Kai Vehmanen (1):
+>   ALSA: hda: add HDMI codec ID for Intel WCL
+> 
+> Peter Ujfalusi (4):
+>   PCI: Add Intel Wildcat Lake audio Device ID
+>   ASoC: SOF: Intel: add initial support for WCL
+>   ALSA: hda: intel-dsp-config: Add WCL support
+>   ALSA: hda: hda-intel: add Wildcat Lake support
 
-O.K.
+As Mark already gave his Ack, I merged all those now to sound git tree
+for-next branch.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-This is something to think about for patches in general. What
-questions are reviewers likely to ask, and can you answer them in the
-commit message?
+thanks,
 
-    Andrew
+Takashi
