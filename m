@@ -1,108 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6ED35957
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A78726F44C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649179; cv=none; b=AhaTc7n/ruj/D/WJNnaYN7m9hB8IXCyzbV51cN5LoFkttVr1a9pVsWT16dylQRnDK98XU6YxtPbz12Od502+IjbFyPlGNsyNN9RdVNnhyc1TPYPb6lHT7bjmU01dIYOkX5Tb8H82svCPygY1pgiQVrOSwxFwE8j45FKArJEnSGI=
+	t=1747649193; cv=none; b=cdkbjsdG9ZxFz4STp1guEIrSP/fGj60JMEMbZDPPdl/iVVGmO+2KYiJVKKcKZM2QTE9TBvX4MrLGxfqsg6icyakNwcRFfd5fVXYVi1brYQ0Ews5AgNTvs4sphYh1NH4/L77Z6P+rGehiJJ8G0MUh7foUl0PiBguRQaHGrP6/Urc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649179; c=relaxed/simple;
-	bh=WY4pVtTTZhYVG9r0kI5X0a3ASMeqcPFq3H1auY5Ce1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GA9kz+RCNs2x9T7RMxq3i8k/TnqqDG1e58hFewITRa4eJbqVeAf5W48q+oUMDwl4uuJERPrCAfpRcFkDC16pIDdL0LMpyzlCeYHBCMgfEO4eIPPhf1y2l6K7sFZWY4EmvXcKMeXd1wVJUFbP1iE6NeOqBwicnWaMAUpEQai2inc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Um+V1J9j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747649193; c=relaxed/simple;
+	bh=LXOL75HJcVW91LAW/oQlrCx83jkr4WoGgXP/PF+1LnY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U/tR8DEohqZ/A+0RbZjK0bn3XFOEvBvaXb4ehNdN53uP5gEWowb+ZmWQuluQdCMF7ne0Q7fYJ0MFH8SppHj8gO2nUC7Azlo3cupGJBI65eA/Z9SudpQb5/VEA9djrCS++hr7K1QYzjo9Sbkk8cbyTXIBGp2zq/I+1nCmCo3NeLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=hJIo0qZU; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Um+V1J9j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747649176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J8y8RvBhJowtfwrg+WUxnhDmoJuUc4fa/9tDJ52ajU4=;
-	b=Um+V1J9j5h1v4VsS/qHHEGH/VgxCkveZ25QdhPSPP6y2Bl8x9vouKAiRtwNwW1sjoco+Em
-	ISlqd9AR1y2IgGBgIV5jVejHcOTfoeC943G6NBScQb1fj88GcksmFow76RtFNXhKP4rfke
-	HzdJ4HvBgVzXD0/ab2L1pk+YKDqOYD0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-qVK8RXgdOuq2NyqG4Brs0Q-1; Mon,
- 19 May 2025 06:06:13 -0400
-X-MC-Unique: qVK8RXgdOuq2NyqG4Brs0Q-1
-X-Mimecast-MFC-AGG-ID: qVK8RXgdOuq2NyqG4Brs0Q_1747649172
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24F0F19560AF;
-	Mon, 19 May 2025 10:06:12 +0000 (UTC)
-Received: from redhat.com (unknown [10.44.34.97])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C9AD030001AB;
-	Mon, 19 May 2025 10:06:08 +0000 (UTC)
-Date: Mon, 19 May 2025 12:06:05 +0200
-From: Kevin Wolf <kwolf@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Martin Wilck <mwilck@suse.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev,
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCsCjVQa0pqWP6AT@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
- <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
- <aCW95f8RGpLJZwSA@redhat.com>
- <aCbUcdew393RZIkV@infradead.org>
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="hJIo0qZU"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7ba2583e10so612562276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1747649190; x=1748253990; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LXJkgQZKayvXnZ1xyIN8JI1rxZodq0P8Qo6H5Ts8U1A=;
+        b=hJIo0qZUgqzEzrYcq5t6Scv6aDfWKEG34N3C/+KcEuuafsfF7qZHuKIGtqyKeX9t9X
+         s8UC9crzXYaB6WD/GpDWPu4j16AR+yDivy3Cpk1K/I/fa0KQreq7uUq6xjtzeLtBbOhV
+         L/8xSQfx1/71LgE7i9xrrTFYtjssc/G5yIbaYTy34raqYgpe0+4YMSRG7PCp7J6UnCUP
+         hvhu9FSEehWQrYfAoYpSQRNV0uq44ZGAJOqjUDWz1pqJM7OSywBVAUvnuUHt89W9UZoi
+         wnC3l2dR01p7t8gNx6VKCCexRv7Xk5BDapnYnNqhe4q5Q4b+EShDhQq++gMAXfeQOc1C
+         hTfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747649190; x=1748253990;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LXJkgQZKayvXnZ1xyIN8JI1rxZodq0P8Qo6H5Ts8U1A=;
+        b=A/7oENm0CaO6BU38b5Vi7R1VdkWOXwxDlFL2G3As5K0ICmszMgh77YUwxyFcqTuntT
+         ktuAP2SL/BFG1lQR6UyV1OyEA96NWhEqhFvkyHKezvaDg9H6W0xINal2HQd7SlI9RPW3
+         phnKmKjIiRjNpIKkDYSiIb0FGfcQcRH8Qpjft37nDdIUbSO0fWfJjp+ZKYNHP6Uc7ACV
+         akFZPQCLVQ6whvj6RF5pk+GPnJW6vRqbb/Sl/r8PNuRb1FO4E+FgZQe6Wr8onuYfp2X4
+         CACtJ/1JTdd/STCcBJsJjDEjmYjaSzdM1ZCNe8pSREhRSezhsoWVdgpj8lkvZaWcbXa2
+         pNoA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5/ykWjqmTieX0O9VylriTS7vI2Al109thy+LkHB1bWOHd/MWb5tzqQJsTyXM9eQnaYlfsSKKAacZ62Zk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzowIp4+SGxzGHclfnRWFXDqEJizZSms4KvBzxK83YbLCxU+meW
+	XeeT78XGGMcEirvF3Tk8ABN8+rsJJEmo4PO1Vhv4Mm/x17FDXZzZqauq7gTbbKoTHug=
+X-Gm-Gg: ASbGnct2nHmDkeA2X05If4ajfWyIPB7H9EONNcNpxsIkKVxk4zxTp5XvXnPuZ8awxPg
+	y1V9npQHTzv74IXpomU0w6UL73RyLtUL/bHUcyRvUe/4UdxdkCaayyrG41y9ZiP909AzOEo2DGs
+	icHsz288u+FvHLkftubOl20cULRZRi6xLLoMizp8CNu/V6axw/atx2dsubORBvYUhMPgbbgEqwM
+	DTsnnyQ7Dqo9W7s69tOzwTSW9u6lm6Koq1EEZRH7XoGxPbFL9dqZeT7vq6x98JhGB9NmCNXw1/b
+	1RFxES7k4R9q2b6L759yt7nsZ6bPyuViUtFE7dR4PEh1r8aTSmHJl0QnWtpXbIy6iyEeMVBTjXL
+	I1yiD//sAZn/ENw82QZMh+b0a3wFdBA==
+X-Google-Smtp-Source: AGHT+IHk3NhST4ivdz/T+xe5V4VnGkGxuajgXMEkob/dZaZlEjOROKbrgHnuEaTAM+w53ttXkW+s3w==
+X-Received: by 2002:a05:6902:990:b0:e7b:30ef:fcb8 with SMTP id 3f1490d57ef6-e7b6b18d15amr14044040276.14.1747649189866;
+        Mon, 19 May 2025 03:06:29 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7b7b083448sm2329071276.29.2025.05.19.03.06.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 03:06:29 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e7ba2583e10so612552276.0;
+        Mon, 19 May 2025 03:06:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKydI0iOlXCSO9l+WllAbTXdZBD8pVNZVTUTuprJ8oqisYiat6MgdLheNKk//ugtRTksD6Ia/czcWX@vger.kernel.org, AJvYcCUqXjK0clcldzcFpHtuKl7tANiacVQr54Z0uEQ49jtIl+hpjFfMVneMkMyPDavZg8lwX4TFd6hJXoXNn7w=@vger.kernel.org, AJvYcCV/pOeWFpfW243p+l555XQgJ9q8CzKdgj9iht7I9+bEVnPTntEylA2qllbqNNRhC06/6qT+e31BU4kLeJCw@vger.kernel.org, AJvYcCVH6xHtQ1bRDAFsxQhgNnNqcuijO15kXpsomGVxdbSJE59XFW1Goi+ZC8sM3lAc05mGokIdu5AwZMNO@vger.kernel.org
+X-Received: by 2002:a05:6902:e12:b0:e78:f538:1c54 with SMTP id
+ 3f1490d57ef6-e7b4f7de9a7mr24227419276.4.1747649189461; Mon, 19 May 2025
+ 03:06:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCbUcdew393RZIkV@infradead.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-2-7051ac9225db@tomeuvizoso.net> <4bd79c88-7da5-4bf0-9300-cfdb296c8919@kernel.org>
+ <CAAObsKDsO=5uK3BEn6BOgatb+y73jc-Se6mmSbhwG9P_1nVtwg@mail.gmail.com> <f8cf2c4e-0ae2-4799-bda8-654b4f515846@kernel.org>
+In-Reply-To: <f8cf2c4e-0ae2-4799-bda8-654b4f515846@kernel.org>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Mon, 19 May 2025 12:06:18 +0200
+X-Gmail-Original-Message-ID: <CAAObsKD_KUA29-FFGkCDifYJjaNnAbh9uZn25pWmVETSm10CTQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuVYFfDeK4R2yep7GIQJ3UmyiYoSLOyKg2oKJC5rUcszB1QB3rVi5LfFuQ
+Message-ID: <CAAObsKD_KUA29-FFGkCDifYJjaNnAbh9uZn25pWmVETSm10CTQ@mail.gmail.com>
+Subject: Re: [PATCH v3 02/10] arm64: dts: rockchip: Add nodes for NPU and its
+ MMU to rk3588s
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 16.05.2025 um 08:00 hat Christoph Hellwig geschrieben:
-> On Thu, May 15, 2025 at 12:11:49PM +0200, Kevin Wolf wrote:
-> > If you're talking about SG_IO in dm-mpath, then PRIN/PROUT commands are
-> > actually the one thing that we don't need. libmpathpersist sends the
-> > commands to the individual path devices, so dm-mpath will never see
-> > those. It's mostly about getting the full results on the SCSI level for
-> > normal I/O commands.
-> > 
-> > There has actually been a patch series on qemu-devel last year (that I
-> > haven't found the time to review properly yet) that would add explicit
-> > persistent reservation operations to QEMU's block layer that could then
-> > be used with the emulated scsi-hd device. On the backend, it only
-> > implemented it for iscsi, but I suppose we could implement it for
-> > file-posix, too (using the same libmpathpersist code as for
-> > passthrough). If that works, maybe at least some users can move away
-> > from SCSI passthrough.
-> 
-> Please call into the kernel PR code instead of hacking up more of
-> this, which will just run into problems again.
+On Mon, May 19, 2025 at 10:47=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+>
+> On 19/05/2025 10:27, Tomeu Vizoso wrote:
+> > On Mon, May 19, 2025 at 8:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
+l.org> wrote:
+> >>
+> >> On 16/05/2025 18:53, Tomeu Vizoso wrote:
+> >>> See Chapter 36 "RKNN" from the RK3588 TRM (Part 1).
+> >>>
+> >>> This is a derivative of NVIDIA's NVDLA, but with its own front-end
+> >>> processor.
+> >>>
+> >>> The IP is divided in three cores, programmed independently. The first
+> >>> core though is special, requiring to be powered on before any of the
+> >>> others can be used.
+> >>>
+> >>> The IOMMU of the first core is also special in that it has two subuni=
+ts
+> >>> (read/write?) that need to be programmed in sync.
+> >>>
+> >>> v2:
+> >>> - Have one device for each NPU core (Sebastian Reichel)
+> >>> - Have one device for each IOMMU (Sebastian Reichel)
+> >>> - Correctly sort nodes (Diederik de Haas)
+> >>> - Add rockchip,iommu compatible to IOMMU nodes (Sebastian Reichel)
+> >>>
+> >>> v3:
+> >>> - Adapt to a split of the register block in the DT bindings (Nicolas
+> >>>   Frattaroli)
+> >>>
+> >>> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> >>> ---
+> >>>  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 85 +++++++++++++++++=
+++++++++++
+> >>>  1 file changed, 85 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm=
+64/boot/dts/rockchip/rk3588-base.dtsi
+> >>> index 1e18ad93ba0ebdad31642b88ff0f90ef4e8dc76f..7b961ab838212fad8e4a7=
+0390fdc917a828433a9 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> >>> @@ -1136,6 +1136,91 @@ power-domain@RK3588_PD_SDMMC {
+> >>>               };
+> >>>       };
+> >>>
+> >>> +     rknn_core_top: npu-core@fdab0000 {
+> >>
+> >> npu@
+> >>
+> >>> +             compatible =3D "rockchip,rk3588-rknn-core-top", "rockch=
+ip,rknn-core-top";
+> >>
+> >> You never tested this. Test before sending instead of relying on us or
+> >> after merging.
+> >
+> > Can you please extend on this? I have tested this series before
+> > sending and I don't understand what you mean here.
+>
+> I mean exactly that: it was not tested, because warnings are clearly
+> visible/expected. I also found now Rob's report which even shows you the
+> warnings, so how come you still claim this was tested?
 
-I agree that using kernel code is preferable to doing things behind the
-kernel's back.
+Ah yes, I'm working on those warnings. I understood you as saying that
+the code hadn't been run and tested that it works correctly (I do have
+a test suite that I run as part of my testing).
 
-However, libmpathpersist is the official interface for doing these
-things with multipath devices, so I think the necessary work to make
-this happen should primarily be done in the library (and possibly the
-kernel if the existing interfaces aren't good enough).
+Regards,
 
-QEMU could directly call the kernel when qemu-pr-helper isn't in use.
-I don't know enough about how libmpathpersist works internally to tell
-if running it this way would be a good idea for multipath devices. Can
-multipathd still do its job with reservations being made behind its
-back? (It would probably be good to allow this eventually, but is it the
-case today?)
-
-Kevin
-
+Tomeu
