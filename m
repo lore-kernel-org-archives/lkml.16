@@ -1,152 +1,206 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A80A4317D;
-	Mon, 19 May 2025 23:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747698987; cv=none; b=k2CkC6GpgpvT5shzanCGoJOdYlwgybLo3QpohGntbTVlBFauuofu+V3/gB7yz1F7Lkg3LMeco4jqfq3tT0hOZPX/siW83hulD/OXahvn2wBuIqb8fOXMPi5KlAWjZ//HDJV+/BiaWU+TREWeJz8eE9wlghot92+YqUrj43GD8VE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747698987; c=relaxed/simple;
-	bh=MRpEHT0Aj8NPgofmlBKIiaHmNmVlxyIY1DN5O55M6ow=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=duiyd2h699zVlJ0EfQC2BA6FeGlb/pxfLHe/H9RDaYPFk7fWigkH9XvtJ6bso9gV8ydG1fA1BC7pxXwI9X+OELu4Dh//9T+5olbmWi2+OWRohcSFk++m6fRnFLeGVe6NS/rp+jhzsQlAupowVIDBDZLgkKsv3ItaK/1pGvJ/bKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DF6vG/tR; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ABC23BD1D;
+	Mon, 19 May 2025 23:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747698991; cv=fail; b=UH6skwZ/i0lPCNzg5vuI8DkfNYauhvzsDsszNC2CGNF8cxEUY3GvmS2SOUF0BcfIzm5tFkHEeG84CF6g0cQIoP+gZPRMimv4qIPDIL0KH8OI/ay20wuOFt/USHYP9SG6Ji3QqQSRQwdLNGDhuEwf8dpxx3HYUMeDeAb4FWTZQss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747698991; c=relaxed/simple;
+	bh=Cm9fXa4PCntU/V4yolgUIAlCJUsVhnI6CbzhSzOZdek=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LlmLpFp2ZIjto3J6z06XXF/xufvnU3u0XyX4axEsYO9iy6hJS85ZvBrYhPFqcQzLGCjbhLcG0ZD4/+uLCwAK1JGQYfO+z49TzCgwbvpM4rmPLJs8AwjiOcdbOc4pID+V9yajlaJwEWfJKouPps0kSLtdW6wmxRQPLf2IW3wsC/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NXV+88WY; arc=fail smtp.client-ip=40.107.220.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DF6vG/tR"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ab588f32so75437681cf.2;
-        Mon, 19 May 2025 16:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747698985; x=1748303785; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=PH2VgzY/5BEaj0T/YAEp7MmgJEQhgRf5xUTgav8kQlY=;
-        b=DF6vG/tRfppbas+wogbaBcsYBB29I9EzS58iaU+YSUBkoNUoLHpysLYYS9bP6O53Sq
-         rs5XQzq1IRJjZh1v9GoNUTTUcXHjuSukdTY2ja3C5XsV12Yuev2rJvTc4At2QK3Vg+Pu
-         ZhXkp1gEfQAQ4wqx+pNW36yy9kw7LW1/M2vA30kayFDg8y7dZSU2hxRohO2oylLn7jfP
-         PUD2HPPSp9WCWE/v9V5732SXmA4JpU4q3fjUCF5Lcm2Xd3XZkZLDBA84WjlZQ838XdnE
-         FbjbTKXvbEZlZ2eLKXlWpP/WEMIy/yvfvgjlimfsiy7CtKBhp+lngZJBuezugdfrl8qX
-         24Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747698985; x=1748303785;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PH2VgzY/5BEaj0T/YAEp7MmgJEQhgRf5xUTgav8kQlY=;
-        b=GL5M6q5B0zWsX7nPPbEhvPVU5xph+DThZ3o3sSrZRMzaOK/bA5WDP5jLWGktMjFHOC
-         alX9Hea5fc4B1iS4LhQgSkvFIEHOCLk40lknITGNvffwjh0Za312BBQe8QL3rjsb3zOb
-         lKt/WEncfRdfARcFgVtxOxOeRdK5bDAcTuirUqNCEZwh3ymqctrVhZZYN17aUvi2p+DP
-         PM4J9OAtgUmYcgCh/hTUvsopQtLacveK6dEzKtjU/hPBeWFb3L1nlQzB95ppov8frERY
-         Jt8R2Ep22T5AA+aoASYp2b+LeynGoNmhJZ+2KnU2eE/5commdpyiOEcjVUkieuX1MPUU
-         xLWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQrkqSg/RXOYBFNYQ2KzapyE2HY+Or00EpNaZ639JJTS0ry2lJU5fL6fs+0htiSa9nca0w7DL7PrEVcYkyPTU=@vger.kernel.org, AJvYcCUoLgbhUeDWYED/1zAMdFtls8jspigFbhc8H/ATKTnOq/IGJQBV4Nq6GBKO3l5GCM2rK/BsjwX+cB4pc04K@vger.kernel.org, AJvYcCXeAoaIamWSq+2QLD5zlSWR/XKX7Bkidmx1LyaAwGYqHzDjVSfsV66Rs5z5CGs0Uiw4IdLQVVC5GQcCcWd5U64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdUnWlmxRzxGw5xjJ6xaRxztOybCVX7ujoBJJ9TTQJWgSx9afU
-	WAxljiUZhNszDJUHNzQg3/2uuVHEA5BF2AW+2mzVmV0xnuaYv65uXFNH
-X-Gm-Gg: ASbGnct/zdg7nwywWdZfEZIAFUBNb1blxJnJYmmrUuLLsQxNtkPadhhUkki+Jo0dXKq
-	fF+XpklKJriPJsjU+oGwdVxaAXVqTsud/Fx+Z792BleO7EE3YDBVc9jQHSTG1z//oWZcBZpjhbW
-	B1GkL5G01Pjcmu98InpV5SOCI0hyAuvDvywb1pCo8tY5GqmPy8lHvO343CjkV+NIX7sEjgTEJi1
-	qJk2tPc9AtvzETbDehwNrwE6rEMRlzzmozkfB+CZcROq5+RX9uo4OtbWewIUj6adtRCytR0RQv1
-	jMQoxJJG0WXMMtOfNfk4Nwle5RJsxoAySqtUSV71LvlFleaMZcYuwhKraz32HteSABHbKmJjz5L
-	YoTJeVYrgidpaMhoPyFreG4nzSqs4HDIbDwjPs/gdTQ==
-X-Google-Smtp-Source: AGHT+IGGQ22Fxhiq41h2TGXux2TQUhBaRyuMzu3p1dr6JWQqE6tPFG6VPGwZdjYis6/v1x4kVy5raA==
-X-Received: by 2002:a05:622a:5c96:b0:476:91f1:9e5 with SMTP id d75a77b69052e-494b096c63cmr301354431cf.50.1747698984812;
-        Mon, 19 May 2025 16:56:24 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae4fd7f0sm62122281cf.57.2025.05.19.16.56.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 16:56:24 -0700 (PDT)
-Message-ID: <682bc528.c80a0220.13f632.9ec0@mx.google.com>
-X-Google-Original-Message-ID: <aCvFJYt_Qg69nCVP@winterfell.>
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BC41B1200082;
-	Mon, 19 May 2025 19:56:23 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Mon, 19 May 2025 19:56:23 -0400
-X-ME-Sender: <xms:J8UraPEPv0ib_w1GxDKXaj91ipBMu9ByfOTZYsfT41KbZ0Vuv4CYvQ>
-    <xme:J8UraMVrzpl9OfKUybaWWZxbi5KrbqsPIfITS95XXuK4xgU9kByOAMRri5vTlUd72
-    niL6f_S8Uj81Xvsvg>
-X-ME-Received: <xmr:J8UraBI5sxjEDnOQLg4F7J7c9p1XMAu_8U8pSFNH-6lGTc-O3-2WxbDrZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddvjeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepjefhieekkeffjeeggeeuvefftdegfedu
-    teelgeejledvffetiefhleefhedvgeeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhq
-    uhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqud
-    ejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgv
-    rdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopehjrghnnhhhsehgohhoghhlvgdrtghomhdprhgtphhtthhopegsqhgvsehgohho
-    ghhlvgdrtghomhdprhgtphhtthhopeihuhhrhidrnhhorhhovhesghhmrghilhdrtghomh
-    dprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    giesrhgrshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvhhirhgvshhhrd
-    hkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvght
-X-ME-Proxy: <xmx:J8UraNHkEAenxCFwvnJnQqws4ekhqQ7EluIO7AGKc3KmTdc3mSzfSA>
-    <xmx:J8UraFX3tJp5ubAadnCutjYSd_PGTDPp3u33H4xi7R-HwgwB6kzH1A>
-    <xmx:J8UraINJhq7B9FoEiqnAni5AtZO4EiJ_lWpKjOd7iiXrSoAipIZfCA>
-    <xmx:J8UraE2QmsZtEIdU49t1NNrAosM98NM6--4pb6Lty945qMxNewz0bg>
-    <xmx:J8UraKVrIUOVBHj0_3pRXEkXN4Dmg6c42M8-hKEgejR1OiS-Ic7mpik6>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 19 May 2025 19:56:23 -0400 (EDT)
-Date: Mon, 19 May 2025 16:56:21 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Jann Horn <jannh@google.com>
-Cc: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
-References: <20250519161712.2609395-1-bqe@google.com>
- <20250519161712.2609395-6-bqe@google.com>
- <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NXV+88WY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pd0bD2PvuR4nfzZsaxp0t3DltPpZlyiem/RNXizDsgR7pgWGRkJo10T5n0pCKzjwJMGi7nEKo7r52+s+Rq4WXox+tHZrC3hndKUPcBkfFIZAUv4K129oPmInpsjzHMeAzsxMvsv9eM5ZAIRygM+Uy1z3EQ5jgGhA60poH0VpL7+zMNkI3A3/XcY+gCZnSSSHzEEFGl/+WLb8zkkkRIjidDPjW5eMzA/kYtNLs7Q08gTStQlSRZjJ8a8UJVObzxy+1Gc4hAX1KZLIjOLbWSRL7ek9eiUH6i7Z058Bc8NLLxUM+YebIcG9PKWUFfkNl0Lwjk5x/FV/AhrSpG41mDqHUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZE78U/HG3bSAuci3wUvkl10lpGE1hDJFvQSg9oC/wy8=;
+ b=KCGf2BwLE/NnHnOaF01BtT1HFFUk71sTpKmdPVUjrtkEx7YVotx/Dn3ACi8wAGABX8lVV2aJe3A2uPULSdDZWDE1AmWoYjsNWQWz6RlYfPDBFK99cz9ZWklHw6QNNGeSsCozLrzoiH6K6qL9QaJ1jdzsGP5Hl3GY7TPXg60/VJdBzmR9BmH2IJl23FGlkXdxUC9b5zFyZsPdXIO14Up4CQ2kQVlfZlkLa2NeerBYY7xBVMJ5KmDghdIAWBjxH0ba2cjUy2S143cRiYqQ5n6kS4Jct950B4dLodDolud7dOUMFRjYy7sIUcsjG2kKJl3ftgw9xRKgkWfxrFdsqXVLxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZE78U/HG3bSAuci3wUvkl10lpGE1hDJFvQSg9oC/wy8=;
+ b=NXV+88WYp2NTpPeVl94lHMx9F3KlZTOFM2ZmN3hJSC6SuPrOX0Ufz9CAkZIKdGcftsiWIolaIUZhL8PqZe/VGNq8mcg/aYoetgCDqxfYZIydDIk6yxcT1x80MZSYz1a23A+o/TIrBSvuubJRL6kg3cN6HAYT4AtpZKg7yJ73e8g=
+Received: from BYAPR06CA0017.namprd06.prod.outlook.com (2603:10b6:a03:d4::30)
+ by DS2PR12MB9710.namprd12.prod.outlook.com (2603:10b6:8:276::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
+ 2025 23:56:24 +0000
+Received: from SJ5PEPF000001F1.namprd05.prod.outlook.com
+ (2603:10b6:a03:d4:cafe::91) by BYAPR06CA0017.outlook.office365.com
+ (2603:10b6:a03:d4::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.26 via Frontend Transport; Mon,
+ 19 May 2025 23:56:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001F1.mail.protection.outlook.com (10.167.242.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Mon, 19 May 2025 23:56:24 +0000
+Received: from purico-ed09host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 19 May
+ 2025 18:56:21 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <herbert@gondor.apana.org.au>
+CC: <x86@kernel.org>, <john.allen@amd.com>, <davem@davemloft.net>,
+	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Subject: [PATCH v4 0/5] Add SEV-SNP CipherTextHiding feature support
+Date: Mon, 19 May 2025 23:56:12 +0000
+Message-ID: <cover.1747696092.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F1:EE_|DS2PR12MB9710:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f12acf4-0147-4165-b870-08dd9730c317
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?itmUvbmMyVvmzW7OwsuzErfPvAatreaeypa+ZAdquDeTmM5m2VJFnYfZb/Hz?=
+ =?us-ascii?Q?D4MLQmw7JsxBIEi3c7QIHSOSR8J8VdRQknG8rjxx3EgV+zTFE3ByXS4PuZN6?=
+ =?us-ascii?Q?bW1EJ1sNo97GHJuOExoeg4oh3vQ3AzrI3JctLhXgAggoi5GeVQFj51FjAg3u?=
+ =?us-ascii?Q?7FczVwSLeonJ6KKzqLWtzEUPu7eenwtd9Tl5W2zOFqkL/7vKulTgptYeD+SR?=
+ =?us-ascii?Q?VXsB4LuY9mlxR28ib3RmFYctQC4Q0oM4FV02IvVZ2Z9mTqC5AnmbBofJJCxQ?=
+ =?us-ascii?Q?JbyR7eUQx77T6ygSIjp3YiXmib72EdkdeHBELoYKCJM7aOMBCK1vIUQBBlLP?=
+ =?us-ascii?Q?AgM3XzE7RzSQ6Ns0kCf1e3vBIDd/Js4awP19IgPPxCXIWrBqZoJxFSm2uHy0?=
+ =?us-ascii?Q?Et+9BP+s5swC3LQGlh4wQrWMJ2fbL7lEKS4rZfeQH9QXwgguM8XGpQL8Wp7R?=
+ =?us-ascii?Q?jIv0GEKeEx5nUkz63sRfbTR60BgBFDxYLgJyD58di3wkzz3p//KmLE6RQT6g?=
+ =?us-ascii?Q?Nn8V0Xm9y40RvsWE/9KaVqe3aiPWusHFMYpdDhMQjHKoSdeGoV7rd88PmJHz?=
+ =?us-ascii?Q?Zjwg2F6f5HzFHpTBiPU8FIoEb2PCh4lxMZAZ93f3olvBJtGJ3D48PcOkF0CD?=
+ =?us-ascii?Q?zoeaKGPOQU+3cv56oUjB4dHV5obO1prpoI+SGWXr1WvZKH3WABOfsPstEEMh?=
+ =?us-ascii?Q?pAR4c2u3gRGiT571iUV7Yb6v1qLjwG/qA2Ffp9AUYzRJj1ERtr8bdKCljdIP?=
+ =?us-ascii?Q?KG1zkkf1QtOFCQoTwbz1scpeQYcUTo5XyKZLznhpg1PKkB9R+3nQkg/rMJku?=
+ =?us-ascii?Q?stIJyZyU+1XVX1C95AAAHBpoV4G+38eOYK80oEW6TsJuZUQUWPL95BUeCDxA?=
+ =?us-ascii?Q?956zY3hgV6L+dH4cY8KsZvfiHYU/rXciElY9dCEuYY2nZ7U2Cqr24YX4ZMz1?=
+ =?us-ascii?Q?ewcXEes4V7p7axTl28iXgsCso5BtYPpR0td0VEUM/ep24wwLWVsFqNjy/rfz?=
+ =?us-ascii?Q?GqeMlhShgZXv/h0p3aXymPmwYKXmxQ1Wi/7H2yZ2yXXit2dBR96NICeXfoFB?=
+ =?us-ascii?Q?CErDG1xCUZfBV5JFMMQv2SAz9h6ho3z2AoIpY1hMmm5sV4nRDlshu+L46koa?=
+ =?us-ascii?Q?000hWgb1r2Y38GmI+I6MaXr8zkZIsXn/O5SM1C7NEjk7Wh5U+wX0QJLl1vLT?=
+ =?us-ascii?Q?DPIhLCm9GI/PRJudBl3sh3XrVT7/bi3S5Qw/i3Uukcp2hXEpCb622l6fxBYU?=
+ =?us-ascii?Q?skbplmmUVFy9omjZXoZGEqOUu63teNO4ZZ8Gd3jEowERS8ciBNPrLImAoJ0x?=
+ =?us-ascii?Q?NCis3REC6k6BZW4NZSyFs9rBTldvB5e5f+133rvsOzlLpBwSfulbuMrlzpMF?=
+ =?us-ascii?Q?Fsrw865E0b+lVZQL+BcgpIOpDy2cy3wkKQ06FXm4yIzfQtGn0bnFom+IBojZ?=
+ =?us-ascii?Q?CzJzGS4CPF/GEL0VP06nB+XmnyAHvyS/F2o/D0N0U7Wq1+ihl3qzJhXuyqUo?=
+ =?us-ascii?Q?SbNoLz3bpMpJwHRQbW+/h09yXwQiyg00M+0K?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 23:56:24.2553
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f12acf4-0147-4165-b870-08dd9730c317
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9710
 
-On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
-> On Mon, May 19, 2025 at 6:20 PM Burak Emir <bqe@google.com> wrote:
-> > This is a port of the Binder data structure introduced in commit
-> > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-> > Rust.
-> 
-> Stupid high-level side comment:
-> 
-> That commit looks like it changed a simple linear rbtree scan (which
-> is O(n) with slow steps) into a bitmap thing. A more elegant option
-> might have been to use an augmented rbtree, reducing the O(n) rbtree
-> scan to an O(log n) rbtree lookup, just like how finding a free area
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-I think RBTree::cursor_lower_bound() [1] does exactly what you said
+Ciphertext hiding prevents host accesses from reading the ciphertext
+of SNP guest private memory. Instead of reading ciphertext, the host
+will see constant default values (0xff).
 
-[1]: https://rust.docs.kernel.org/kernel/rbtree/struct.RBTree.html#method.cursor_lower_bound
+The SEV ASID space is basically split into legacy SEV and SEV-ES+.
+CipherTextHiding further partitions the SEV-ES+ ASID space into SEV-ES
+and SEV-SNP.
 
-Regards,
-Boqun
+Add new module parameter to the KVM module to enable CipherTextHiding
+support and a user configurable system-wide maximum SNP ASID value. If
+the module parameter value is -1 then the ASID space is equally
+divided between SEV-SNP and SEV-ES guests.
 
-> used to work in MM code... That would let you drop that ID pool bitmap
-> entirely. But I guess actually wiring up an augmented rbtree into Rust
-> would be very annoying too.
+v4:
+- Fix buffer allocation for SNP_FEATURE_INFO command to correctly
+handle page boundary check requirements.
+- Return correct length for SNP_FEATURE_INFO command from
+sev_cmd_buffer_len().
+- Switch to using SNP platform status instead of SEV platform status if
+SNP is enabled and cache SNP platform status and feature information.
+Modify sev_get_api_version() accordingly.
+- Fix commit logs.
+- Expand the comments on why both the feature info and the platform
+status fields have to be checked for CipherTextHiding feature 
+detection and enablement.
+- Add new preperation patch for CipherTextHiding feature which
+introduces new {min,max}_{sev_es,snp}_asid variables along with
+existing {min,max}_sev_asid variable to simplify partitioning of the
+SEV and SEV-ES+ ASID space.
+- Switch to single KVM module parameter to enable CipherTextHiding
+feature and the maximum SNP ASID usable for SNP guests when 
+CipherTextHiding feature is enabled.
+
+v3:
+- rebase to linux-next.
+- rebase on top of support to move SEV-SNP initialization to
+KVM module from CCP driver.
+- Split CipherTextHiding support between CCP driver and KVM module
+with KVM module calling into CCP driver to initialize SNP with
+CipherTextHiding enabled and MAX ASID usable for SNP guest if
+KVM is enabling CipherTextHiding feature.
+- Move module parameters to enable CipherTextHiding feature and
+MAX ASID usable for SNP guests from CCP driver to KVM module
+which allows KVM to be responsible for enabling CipherTextHiding
+feature if end-user requests it.
+
+v2:
+- Fix and add more description to commit logs.
+- Rename sev_cache_snp_platform_status_and_discover_features() to 
+snp_get_platform_data().
+- Add check in snp_get_platform_data to guard against being called
+after SNP_INIT_EX.
+- Fix comments for new structure field definitions being added.
+- Fix naming for new structure being added.
+- Add new vm-type parameter to sev_asid_new().
+- Fix identation.
+- Rename CCP module parameters psp_cth_enabled to cipher_text_hiding and 
+psp_max_snp_asid to max_snp_asid.
+- Rename max_snp_asid to snp_max_snp_asid. 
+
+Ashish Kalra (5):
+  crypto: ccp: New bit-field definitions for SNP_PLATFORM_STATUS command
+  crypto: ccp: Add support for SNP_FEATURE_INFO command
+  crypto: ccp: Add support to enable CipherTextHiding on SNP_INIT_EX
+  KVM: SEV: Introduce new min,max sev_es and sev_snp asid variables
+  KVM: SEV: Add SEV-SNP CipherTextHiding support
+
+ .../admin-guide/kernel-parameters.txt         |  10 ++
+ arch/x86/kvm/svm/sev.c                        |  68 +++++++++--
+ drivers/crypto/ccp/sev-dev.c                  | 111 +++++++++++++++++-
+ drivers/crypto/ccp/sev-dev.h                  |   3 +
+ include/linux/psp-sev.h                       |  44 ++++++-
+ include/uapi/linux/psp-sev.h                  |  10 +-
+ 6 files changed, 231 insertions(+), 15 deletions(-)
+
+-- 
+2.34.1
+
