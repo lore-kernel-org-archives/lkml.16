@@ -1,115 +1,225 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE72A1E8322;
-	Mon, 19 May 2025 05:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F191F463E;
+	Mon, 19 May 2025 05:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747634308; cv=none; b=Bg4it2fc5rcUtfDV5FXdSJY5jzzoXVNrnBTBn82SKWbqA+w4klFEqtqPip3foQqf/43QjZNHD5l6M7w0Vdt3dc/mlSwGU1nj5cJqOpBGAUK4AbSs+tG1SdMvgcpP0nKTlOXvdZHroAWN4L65U2K741SlIQjRzsb3p/U/QqkMEOs=
+	t=1747634335; cv=none; b=kQkG5yW5BXpFM3kXDPpksXPxyzxMT+LLpUnW1vmxbd5SCqt1P23k9vBgR+l4wXziUcH7c4mJ0WEya0hmj/uiYsvSfp9/P/x1daoNJHrSojYguE6Mi5uZd09F7xkpEQ5MtzXFzaFEYdffhWV4kWiEP584U9vJNf3ZO/MfWaM+TPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747634308; c=relaxed/simple;
-	bh=6CcJLoiNBie8gIMenSv7I45HQX4gsy7svoa1ApM84V4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FFvBacTIN+h3D5RaUAoJ/1Js5cFjZ9lou0zpzoynecfemZ7Ix721/OKPZBRR/MsdvPXxWXNVbu55J4le8QeYecCLYQ6JYpulEMtBnFUY4og0dR7lp+3Ay1PiS9e04ymDafzwpABWPlJ2ZK1RYMelhNlFUOLVtIN2mah9dC6IbEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=iaQAU/ef; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1747634335; c=relaxed/simple;
+	bh=Jw6mXfv00dMuD2c25uxnyya946iEO7Hvz29jpU+3oL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Enez7zZUYZMC3AElB2fxrWxNtjpbocBjF6UW3fqevu1UgVzOivZyZLZZoeN6h4eKYxrLBxRZYWPKavD9A2eYhrlTnRpR1dGzgAdKg8xAh71k9rd0ye3DhBRgakqEx7MXNH0DmSdYtpvobtwIGZTXbYcCXYUGSwhkOVFdT3JE0/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkaGnUkL; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="iaQAU/ef"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1747634290;
-	bh=QbhOvH42YA0CW+6CFUcthXVUKo1LRCaG/L7a3rPi0uo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=iaQAU/efS5amPIavReKNChk6h4oGmVS7tTKMoU7ihs1GTOZtvWbI1oO3V9//KBna1
-	 VtltQd1UlGyddoWAdLtk5VBvUGmUqdBAyP9vps4gDmfI2bqRkd03PGVGcKa2gnmVRn
-	 J8BlcniExCu0I3co4U6b6edjEvaMLID0tYZrAO6s=
-X-QQ-mid: zesmtpgz9t1747634288tc84d8360
-X-QQ-Originating-IP: GglaMseZBGUc4WdCZ6/ysBBpSmdfmH2PDlL81GL2hTg=
-Received: from mail-yw1-f182.google.com ( [209.85.128.182])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 19 May 2025 13:58:06 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4176657921267320070
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70cb1e8263bso17387327b3.0;
-        Sun, 18 May 2025 22:58:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcaFkX/ynFmpA3bzRT/6/Hs4hkepJcxiy+pmX+YxpUnCx4ujWWOxI1ybsWTR999Ou93Lye5MbP65Zsgord6vhN@vger.kernel.org, AJvYcCX3k7eP000//SDDmyJASmyNbPTIHeM2Fk0toegE0gmKlY45nIRjMrjlrB+9Q3MIlZfbNfJpx+qj6A7DeGic@vger.kernel.org, AJvYcCXqx6H/h6RTKfcLQ/PhsBCduW/FUCuzJlTI3vy7jKFaB8Mx4Y4HEW/4kyPbE3Zrr6W3mCfmwBGswBI4rRFO@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq9gMI5WRtixwfMmPv4CiUNE7KlXkh5+WH3gSotuHWi6R8naWW
-	cCDtwDtmKGu0tGxZsuJ/p6dWSVmQ5GbEwraytxF1NV6FGXLQtZV7xYAHyrYKXnlNTgbW45be7IQ
-	UWoM2AvjdW/CTMBVc+vD3WQMAEDMPBHQ=
-X-Google-Smtp-Source: AGHT+IEKI1LyAmmWVFV0YxqBG6TDs6apO21h12HhCbqhVWRE/6mxH2FfFUF2tilAhlqEkTmSbJQ93kqYYE2y5dgkpV8=
-X-Received: by 2002:a05:690c:7409:b0:6fb:b2c0:71da with SMTP id
- 00721157ae682-70cab0e9404mr139629637b3.36.1747634285526; Sun, 18 May 2025
- 22:58:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkaGnUkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747634333; x=1779170333;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jw6mXfv00dMuD2c25uxnyya946iEO7Hvz29jpU+3oL8=;
+  b=lkaGnUkL6Q/TdJ4CVTBWBFLE9i3ZcKXqPRtIn3QFU8hFitLWiFiE8Brz
+   U/xn/WM79yaJTwwdHyeLNTMncgnM5+NZZtgZSDQ7D1qtcpBfoa8UD7lT6
+   Ueuq2OM/mYYGFEeDBFEEtaYqSJJgS3n+bKSE49oFbUp/qGMNA9FCfmoEG
+   AoF1mfc0LCzfUOhL5dbpPdf+gFA8bwAGxsK4MYz03xExvq2qbNAp5nqTY
+   6aAQm3/4/7ZhbEqd/qU+MCd4oLMOPFgVEADn7fDQkrZr8No/9coGrk81E
+   Cl+zsq5+S/wUHHy7eFmEdFfjT7S0l5CZj5s6EfjzjfRYapSMYAZGVwXK/
+   w==;
+X-CSE-ConnectionGUID: qpSJtAPyQem1KHIuQhOaAQ==
+X-CSE-MsgGUID: TSMTpPgKQbWX2Ilo42cU9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53336326"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="53336326"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:58:52 -0700
+X-CSE-ConnectionGUID: An3UK/4URmqvVNZz1hw2Yg==
+X-CSE-MsgGUID: kiA2wLPiT0iC3b1BcrBj7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139766798"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 18 May 2025 22:58:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGtWR-000LB5-0G;
+	Mon, 19 May 2025 05:58:47 +0000
+Date: Mon, 19 May 2025 13:58:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: oe-kbuild-all@lists.linux.dev, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Ethan Carter Edwards <ethan@ethancedwards.com>
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+Message-ID: <202505191321.ZwdQZhut-lkp@intel.com>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515073449.346774-2-chenlinxuan@uniontech.com> <CAOQ4uxja322ZuOaHm2rLU1mPsqHsuSbAe=0g5Rc_oh=DmBcn0Q@mail.gmail.com>
-In-Reply-To: <CAOQ4uxja322ZuOaHm2rLU1mPsqHsuSbAe=0g5Rc_oh=DmBcn0Q@mail.gmail.com>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Mon, 19 May 2025 13:57:54 +0800
-X-Gmail-Original-Message-ID: <65FB323E429AEE4D+CAC1kPDOyYyvvkJr3yX=j4JE3q-jQwUN7tdkOG55HFjy6wE+DeA@mail.gmail.com>
-X-Gm-Features: AX0GCFtX2YiTPTZOUdCLIIDiOzwoVPNZIqwxtNWDa4biFVS0eEgE20nXEdY6Cmk
-Message-ID: <CAC1kPDOyYyvvkJr3yX=j4JE3q-jQwUN7tdkOG55HFjy6wE+DeA@mail.gmail.com>
-Subject: Re: [PATCH] selftests: Add functional test for the abort file in fusectl
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, niecheng1@uniontech.com, 
-	wentao@uniontech.com, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: MkbhhZQIFFmG+dELmFObRLimNzc/3CqxCFotx6t6e/ZRwrozwOJQyHjH
-	5IjPxFC2hyWzuvj9HSa9CZ+4sOgWPwKLRF3dTezfPpueflKKTDG+Vo7gvIEaHz6xYUhQn5t
-	Zp6iFKhjzbUSSLRvkJC8IKqdYos6EbmhBB3QMwmVClRDQy2U+a314WmOw+Zb29qCjH7p/RV
-	r3+HcI1UZ3rOithGz3CuwyN3CWITLz9Ry2QY56s6hPEkkn2gJKXC6xDO5n60PmaUQ/1chUl
-	GxbsGjOZeV0oceHd7+5UfqNCM2Ogy+cAc4YgmkBC9W9hr/yYoYquRI+AX+bwW3SYDcA6zZ4
-	WDWP/AT9F3mCMJXtM16a7oFGnCQINVY9xFgSjXVzZ869AgCQhwCR8PR6sQ4YzTVRdhxl8S0
-	My3Wck36M1fCRhmmJkbYnX6Dt14mju13TydsxYG4h5T3DbmTUA+4btR9bPLVflHaG4O0d9Z
-	2bkkO0n2ScQlclF8etTfSFshyv7rWiahNbk3GEzLS0TSBHo0HelIfS7NSbUIPGTWoqR0pL/
-	DL5jhQEpYobsoRo9jlHKuh4fJysg0zHfNSwmY7Vz+SayYQxyCCOs9wGhs5mrPCMsPhbVkoe
-	kYzXGfvAJ2xNmmH/LjgQ5UtR4JiA0ronhFIS72/jkFEqOBaWX4K0oiElHyr/hwAjs0XotXW
-	SmSNM+34CuEot5Nf00QEQBID7Me7JtYbpvcYh3fHd6464jWhAdIa5+vdycFnCGju9a6ILF8
-	fBksCaE1Cci5cAiC42hjznR69lwsoitoJ2G3v1M1mDs0FzX302XuNzUpO0a08K7jwrIAT5M
-	tsRa63QEZKbiI8ZdKmEbum0z2XfeTRUHcGZUUkmNS1ldfOE4GSW++j+TXVAnuPklAAkqplm
-	4Nn7KBEAgHj9LXR9mN19luZv2zPuYy/8z5UjB3+6FRWdL+SziK9/LUWUMy1LRvnf6Eit5Hy
-	C9jAeufuiQTnNKX+UAkOn4Bgm7KDt2fYj7duHudaeKme84iNz6CVlkSmPRM4AzpYeBLNMeC
-	Sqc9S913OFavTXImPeSFaq9BL4H9z3hrqgBZsfxAtb3ClJihQdD9325yDWOzk33eZHHTh1N
-	TQFyPj8MEbg
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 
-On Thu, May 15, 2025 at 6:27=E2=80=AFPM Amir Goldstein <amir73il@gmail.com>=
- wrote:
->
-> On Thu, May 15, 2025 at 9:35=E2=80=AFAM Chen Linxuan <chenlinxuan@unionte=
-ch.com> wrote:
-> >
-> > +       ret =3D read(test_fd, path_buf, sizeof(path_buf));
-> > +       ASSERT_LT(ret, 0);
->
-> Nice!
-> I guess you could also verify errno =3D=3D ENOTCONN or whatever it is
-> in this case.
+Hi Ethan,
 
-I am currently facing two issues:
+kernel test robot noticed the following build warnings:
 
-1. I am not sure about the exact functions of max_background and
-congestion_threshold. I have prepared a patch that adds documentation
-for these two fields, which can be found here:
-https://lore.kernel.org/all/20250514061703.483505-2-chenlinxuan@uniontech.c=
-om/
+[auto build test WARNING on 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5]
 
-2. How should I test the "waiting" file? My current idea is to have my
-FUSE daemon stay in a state where it does not respond to requests, and
-then use some form of inter-process communication (maybe a Unix
-socket?) to make it resume working. I am not sure if there is a better
-approach.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ethan-Carter-Edwards/ext4-replace-strcpy-with-assignment/20250519-115601
+base:   5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
+patch link:    https://lore.kernel.org/r/20250518-ext4-strcpy-v2-1-80d316325046%40ethancedwards.com
+patch subject: [PATCH v2] ext4: replace strcpy() with '.' assignment
+config: csky-randconfig-001-20250519 (https://download.01.org/0day-ci/archive/20250519/202505191321.ZwdQZhut-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191321.ZwdQZhut-lkp@intel.com/reproduce)
 
-Thanks,
-Chen Linxuan.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505191321.ZwdQZhut-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   fs/ext4/inline.c: In function 'ext4_inlinedir_to_tree':
+>> fs/ext4/inline.c:1317:17: warning: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+    1317 |    fake.name[0] = ".";
+         |                 ^
+   fs/ext4/inline.c:1327:32: warning: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+    1327 |    fake.name[0] = fake.name[1] = ".";
+         |                                ^
+
+
+vim +1317 fs/ext4/inline.c
+
+  1259	
+  1260	/*
+  1261	 * This function fills a red-black tree with information from an
+  1262	 * inlined dir.  It returns the number directory entries loaded
+  1263	 * into the tree.  If there is an error it is returned in err.
+  1264	 */
+  1265	int ext4_inlinedir_to_tree(struct file *dir_file,
+  1266				   struct inode *dir, ext4_lblk_t block,
+  1267				   struct dx_hash_info *hinfo,
+  1268				   __u32 start_hash, __u32 start_minor_hash,
+  1269				   int *has_inline_data)
+  1270	{
+  1271		int err = 0, count = 0;
+  1272		unsigned int parent_ino;
+  1273		int pos;
+  1274		struct ext4_dir_entry_2 *de;
+  1275		struct inode *inode = file_inode(dir_file);
+  1276		int ret, inline_size = 0;
+  1277		struct ext4_iloc iloc;
+  1278		void *dir_buf = NULL;
+  1279		struct ext4_dir_entry_2 fake;
+  1280		struct fscrypt_str tmp_str;
+  1281	
+  1282		ret = ext4_get_inode_loc(inode, &iloc);
+  1283		if (ret)
+  1284			return ret;
+  1285	
+  1286		down_read(&EXT4_I(inode)->xattr_sem);
+  1287		if (!ext4_has_inline_data(inode)) {
+  1288			up_read(&EXT4_I(inode)->xattr_sem);
+  1289			*has_inline_data = 0;
+  1290			goto out;
+  1291		}
+  1292	
+  1293		inline_size = ext4_get_inline_size(inode);
+  1294		dir_buf = kmalloc(inline_size, GFP_NOFS);
+  1295		if (!dir_buf) {
+  1296			ret = -ENOMEM;
+  1297			up_read(&EXT4_I(inode)->xattr_sem);
+  1298			goto out;
+  1299		}
+  1300	
+  1301		ret = ext4_read_inline_data(inode, dir_buf, inline_size, &iloc);
+  1302		up_read(&EXT4_I(inode)->xattr_sem);
+  1303		if (ret < 0)
+  1304			goto out;
+  1305	
+  1306		pos = 0;
+  1307		parent_ino = le32_to_cpu(((struct ext4_dir_entry_2 *)dir_buf)->inode);
+  1308		while (pos < inline_size) {
+  1309			/*
+  1310			 * As inlined dir doesn't store any information about '.' and
+  1311			 * only the inode number of '..' is stored, we have to handle
+  1312			 * them differently.
+  1313			 */
+  1314			if (pos == 0) {
+  1315				fake.inode = cpu_to_le32(inode->i_ino);
+  1316				fake.name_len = 1;
+> 1317				fake.name[0] = ".";
+  1318				fake.rec_len = ext4_rec_len_to_disk(
+  1319						  ext4_dir_rec_len(fake.name_len, NULL),
+  1320						  inline_size);
+  1321				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
+  1322				de = &fake;
+  1323				pos = EXT4_INLINE_DOTDOT_OFFSET;
+  1324			} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
+  1325				fake.inode = cpu_to_le32(parent_ino);
+  1326				fake.name_len = 2;
+  1327				fake.name[0] = fake.name[1] = ".";
+  1328				fake.rec_len = ext4_rec_len_to_disk(
+  1329						  ext4_dir_rec_len(fake.name_len, NULL),
+  1330						  inline_size);
+  1331				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
+  1332				de = &fake;
+  1333				pos = EXT4_INLINE_DOTDOT_SIZE;
+  1334			} else {
+  1335				de = (struct ext4_dir_entry_2 *)(dir_buf + pos);
+  1336				pos += ext4_rec_len_from_disk(de->rec_len, inline_size);
+  1337				if (ext4_check_dir_entry(inode, dir_file, de,
+  1338						 iloc.bh, dir_buf,
+  1339						 inline_size, pos)) {
+  1340					ret = count;
+  1341					goto out;
+  1342				}
+  1343			}
+  1344	
+  1345			if (ext4_hash_in_dirent(dir)) {
+  1346				hinfo->hash = EXT4_DIRENT_HASH(de);
+  1347				hinfo->minor_hash = EXT4_DIRENT_MINOR_HASH(de);
+  1348			} else {
+  1349				err = ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
+  1350				if (err) {
+  1351					ret = err;
+  1352					goto out;
+  1353				}
+  1354			}
+  1355			if ((hinfo->hash < start_hash) ||
+  1356			    ((hinfo->hash == start_hash) &&
+  1357			     (hinfo->minor_hash < start_minor_hash)))
+  1358				continue;
+  1359			if (de->inode == 0)
+  1360				continue;
+  1361			tmp_str.name = de->name;
+  1362			tmp_str.len = de->name_len;
+  1363			err = ext4_htree_store_dirent(dir_file, hinfo->hash,
+  1364						      hinfo->minor_hash, de, &tmp_str);
+  1365			if (err) {
+  1366				ret = err;
+  1367				goto out;
+  1368			}
+  1369			count++;
+  1370		}
+  1371		ret = count;
+  1372	out:
+  1373		kfree(dir_buf);
+  1374		brelse(iloc.bh);
+  1375		return ret;
+  1376	}
+  1377	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
