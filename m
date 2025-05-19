@@ -1,138 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D912820C6;
-	Mon, 19 May 2025 15:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93703EA63;
+	Mon, 19 May 2025 15:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669470; cv=none; b=fTSnr74qZOvgdGVe149C7Bk08UIXwQW5PQ6OSsxoThj2HBSP3+TQPOwMjxNef46k0rTmZnjxfhD+4pZD4A5HGIzncViSltESc3uxefIgd2bxjh7cngYurzZlEC8DcS7CMokrtf8CvHwePvi48tTM8Vxv8F4tgm2XTUeFW1Xo4K4=
+	t=1747669656; cv=none; b=iaYju6aY2eJUE/hKHUnlocHPkPQchCwui21Jm6YxCX5DQ1pMVv3ASy/iyqnxYtUkMZ6bwXtlgpuHXkjxrNTW536NKgcpaycc+LxGtaPmHoyX9VlleJyufcHsVgQXDUFeVNHI3fhWz68C0J3r7nc0RrLXsmhZbohDEEf5wO7zFto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747669470; c=relaxed/simple;
-	bh=ucbRC+By9t6hiwEjSnTGEwM8Sp7zd3PXSGJLq749aGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qm92AmcR87mf6YgWqphb2IWpliXJ34Epejc8119Sq6cqpJcbaXX0pagIl+7WLlYnLx/dH9buWEVbWl5znbOm6Kop1FfR+RTfZF5oguHp6w8gR14h4i1R/IDYKraJq5GIicufo0QjBXbdCjNJuvYit0cepe/m5V+dYVzOtSwK0Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOMWIman; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747669656; c=relaxed/simple;
+	bh=2+V9IH+62eHNR7r2+4CrfZMQ6O8FGeivvEmO7ZCkLJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NyqgWVSHgpLQ4tc4925MXndYBYhDVLl0XLEx/WSc3pAoP9hFiX29ysA562UqZHfqmJMsJPLrZK+37ZcpPlFgrp6tLXOiREwyezdi5SyrMdyvlAWM5xfaeFifPeAKYt9DJ0oR8IE6ti+tU+QpILTLu5Eb0xj+eMnxAOJyOi5W+KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JnEbd1Yk; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOMWIman"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747669469; x=1779205469;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ucbRC+By9t6hiwEjSnTGEwM8Sp7zd3PXSGJLq749aGA=;
-  b=gOMWImanockod7A/QxMhBip60hxhwDqRMjfZuqjMPulix1cJgkOeSY9G
-   uVp4Yfeopxznj7KPDWdx8aDdTANeeh0rx/ejfIZCzjkxiti+WqL+PmzFf
-   o1nKoJkAzHClGxWTcgXkZnlKwp4AhiTlkj+901XhieoRlr1OeDhQ1GuCe
-   ztEM0zzEnZyGd/e813Xl1dy35NKQ6y1kG+fb5ugBZeRgcOZQ0s42OGZaB
-   h6DRoK8EOBiuZzWHD4AbfQO1MQw0rWE+a5DeGvFSD1A2mdz0gEuP4HjH3
-   3stFLGelmUzcOHA/rhR55DG/iKyxCkWH6ilFRwL5H5rubH2wuP/0bcbzZ
-   w==;
-X-CSE-ConnectionGUID: WKLKd6ubTY+f8O88tW3VcA==
-X-CSE-MsgGUID: /UA6LEhJRMWQmdgoLNy3YA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="60966638"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="60966638"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:44:28 -0700
-X-CSE-ConnectionGUID: D9nnBx4yRm2U9Gb6be0UuQ==
-X-CSE-MsgGUID: O7jOjWPERG2e6Txxz393/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="176513494"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:44:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uH2f0-000000034rN-2cA2;
-	Mon, 19 May 2025 18:44:14 +0300
-Date: Mon, 19 May 2025 18:44:14 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific data
-Message-ID: <aCtRzm6nPk61WtRj@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-24-herve.codina@bootlin.com>
- <aB0ERYKdRreDe7Wt@smile.fi.intel.com>
- <20250519170004.631d99af@bootlin.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JnEbd1Yk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8BE0C42E7E;
+	Mon, 19 May 2025 15:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747669652;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FpIHfuwXpeYEx8QkXgjwWqZInjNQyntE9cjhY6vEq3c=;
+	b=JnEbd1YkBHKCppq0wWtn4AXrDAPeC7XR/Bw/usI+H0c7GtFr+dPPciNz9WaQk+7mU80BAk
+	SrWIf+sOD14/IS1JjgReVPaJasBvK38hcdYppIYkK9DgMrSXwQZP/xiOTiATOsbT9vixBp
+	UU7pXNviayTOoDwSA8TLRw2lvltA9y3cviIXS0OEvFk03F/npjs5fDP9ZnaZIdOkdIiEOl
+	pjX3HzTuhtqkqhcfqGrWwOVFSs6JD44EnBVp28XAJMZ8/pHx3a2vyhvOGS/YRZT26O+0i1
+	B7t4LRwx662korGpXeSzWeh62Dz6HxjGhWkTjE4jjsen9gX5V24c5Llt8nYhGg==
+Date: Mon, 19 May 2025 17:47:29 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, Jingoo
+ Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, Tony Lindgren
+ <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Jean-Jacques Hiblot
+ <jjhiblot@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Saravana Kannan
+ <saravanak@google.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Daniel Thompson <daniel.thompson@linaro.org>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alexander Sverdlin
+ <alexander.sverdlin@gmail.com>
+Subject: Re: [PATCH v5] backlight: led-backlight: add devlink to supplier
+ LEDs
+Message-ID: <20250519174729.44fa1f7b@bootlin.com>
+In-Reply-To: <20250519-led-backlight-add-devlink-to-supplier-class-device-v5-1-76d6fd4aeb2f@bootlin.com>
+References: <20250519-led-backlight-add-devlink-to-supplier-class-device-v5-1-76d6fd4aeb2f@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519170004.631d99af@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddujeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghltheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhinhhgohhohhgrnhdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvlhhlvghrsehgmhigrdguvgdprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrt
+ ghomhdprhgtphhtthhopehprghvvghlsehutgifrdgtiidprhgtphhtthhopehjjhhhihgslhhothesthhirdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, May 19, 2025 at 05:00:04PM +0200, Herve Codina wrote:
-> On Thu, 8 May 2025 22:21:41 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
+Hi Luca,
+
+On Mon, 19 May 2025 17:16:39 +0200
+Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
 ...
 
-> > >  static struct pci_device_id lan966x_pci_ids[] = {
-> > > -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> > > +	{ PCI_VDEVICE(EFAR, 0x9660), (kernel_ulong_t)&evb_lan9662_nic_info },  
-> > 
-> > PCI_DEVICE_DATA() ?
+> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> index d2db157b2c290adc3a159023e9e2394fc877388c..8fe645b5b75447d009e1045dcf0c62d3bbc5425e 100644
+> --- a/drivers/video/backlight/led_bl.c
+> +++ b/drivers/video/backlight/led_bl.c
+> @@ -209,6 +209,19 @@ static int led_bl_probe(struct platform_device *pdev)
+>  		return PTR_ERR(priv->bl_dev);
+>  	}
+>  
+> +	for (i = 0; i < priv->nb_leds; i++) {
+> +		struct device_link *link;
+> +
+> +		link = device_link_add(&pdev->dev, priv->leds[0]->dev->parent,
+
+It should be priv->leds[i]->dev->parent instead of leds[0], shouldn't it?
+
+> +				       DL_FLAG_AUTOREMOVE_CONSUMER);
+> +		if (!link) {
+> +			dev_err(&pdev->dev, "Failed to add devlink (consumer %s, supplier %s)\n",
+> +				dev_name(&pdev->dev), dev_name(priv->leds[0]->dev->parent));
+
+ditto
+
+> +			backlight_device_unregister(priv->bl_dev);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+>  	for (i = 0; i < priv->nb_leds; i++) {
+>  		mutex_lock(&priv->leds[i]->led_access);
+>  		led_sysfs_disable(priv->leds[i]);
 > 
-> PCI_DEVICE_DATA() need the device ID defined using a #define in the form
-> PCI_DEVICE_ID_##vend##_##dev
-> 
-> PCI_VDEVICE() allows the device ID value passed as an integer in the same
-> way as for PCI_DEVICE().
-> 
-> Also, according to its kdoc, it allows the next field to follow as the
-> device private data.
-> 
-> IMHO, I think PCI_VDEVICE() use is correct here and I will keep it.
 
-It's correct, no doubts, but using PCI_DEVICE_DATA() makes sense when you need
-to supply driver_data. In particular it will take care of needed castings and
-also as you noticed asks users to apply the regular pattern for PCI ID
-definitions.
-
-Moreover, the 0x9660 is used in two drivers and it's a good candidate to be in
-pci_ids.h. (Note drivers/pci/quirks.c:6286)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+Hervé
