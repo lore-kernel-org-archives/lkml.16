@@ -1,237 +1,116 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64F914E2F2
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027C5286428
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667812; cv=none; b=TEsr3cQKBiX0ccryKBbsk+U9b6XhGvJhEcKf3I7Ai6yCKLXyJoh9l8FcDi3gCm6CsQHFLGwd/5IJDiDxr2KprP811spm0H1YGn0DrBDCxE+JV11QVxHwXhzurdbsSIKSYqKd1y9t27ogdW9madWkzJ/sdptpZfDUZ+uqqx4mQzk=
+	t=1747667815; cv=none; b=JXfRB1cGxQnh+zNaj+WbmdEJLJMv8osgjSd0X0NNL2mL7Eg/BSN9q6nQf2bS/e3DgHf9t7AwX2689PRFwnskD2dhJQlD/BOQLmNEj1AUCFzgHfLQtFoBk64az9CAzmCDOYOkOKdSjOAQOyLFIxiOHX7HLOvGWi/jWASYlQ+mY5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667812; c=relaxed/simple;
-	bh=IVFw3HrIbdHesxHxMYNqlJSil+s+BxmA9qKNLayR8hI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=gG3MNtP1FOoiRdU7ILk0eQ06CO6U0BJdVjxSD4fcKor4MtOV8iFZX7Q+IXSHPt8MIZW8zthzDoSjKhuaJ7KSvit/J0klQjdQCXleznv9IPg/hLK+kZ1g64YK1IjYdwkgenPVOAK1uOE6FYUXIICuQvXMVzkOiO1LEmt4dNjbx5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SRz1+job; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747667815; c=relaxed/simple;
+	bh=PDzZ1P1yWg+XkiFO2hZgTshq3CQ2YwSCHmY/IiLp4cw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UAKij5DeU5PlztgSUbwFxl09iTeiLduoCMYqNlWVCLoz+JTs4VE4POP/afRRNgeoHF7DJirLR/RtRp/lzu9lcUvIgUSrr9Z/tLlJgGMddX4YVGMSdZ9XtkI6Df5WvqlTz04CSpFdiXd9VOfydTzZyeIrrFVnvxw7dDNj70giHiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PZhlAbj9; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SRz1+job"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250519151648epoutp026f183f29ed7830de35712a36612da6af~A9pzWqTv41651516515epoutp020
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250519151648epoutp026f183f29ed7830de35712a36612da6af~A9pzWqTv41651516515epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747667808;
-	bh=m+GTmyVkYGq9Nxr5NyrU8UoWIkaYzR0afQVWl8NtESc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SRz1+jobZ10W2q4IRIn2pt+U3U8ZCErVbX6BLuAY+WuBapH3dp6rV4yh5ACnbN8xq
-	 NIj49QWMkm6EmLyr4tZqBHqcC/8kLa2Q7XZnucVB4OeNYLfDUa7uy0CaCHEuqZN+Fd
-	 6tTCwowT6Cb29uyQD22O2Vw2XrMgej+TwWIUrmMg=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250519151648epcas5p263c1ab9b30a8e5f9e41b9a017d6f395c~A9pymv0u52189221892epcas5p2w;
-	Mon, 19 May 2025 15:16:48 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4b1LrG2CLyz6B9m5; Mon, 19 May
-	2025 15:16:46 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb~-_pGmyIKJ2806928069epcas5p20;
-	Fri, 16 May 2025 10:18:03 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250516101803epsmtrp1c13d36dfe36a84efdd81f24e3bae2c7a~-_pGkqkwL0890008900epsmtrp12;
-	Fri, 16 May 2025 10:18:03 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-67-682710db95d0
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0A.2F.08766.BD017286; Fri, 16 May 2025 19:18:03 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250516101800epsmtip26c728f7627cedb6679a6c418f538f7e6~-_pDs_t_O2811128111epsmtip2R;
-	Fri, 16 May 2025 10:18:00 +0000 (GMT)
-From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org,
-	m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
-	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
-	selvarasu.g@samsung.com, pritam.sutar@samsung.com
-Subject: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
- ExynosAutov920
-Date: Fri, 16 May 2025 15:56:50 +0530
-Message-Id: <20250516102650.2144487-3-pritam.sutar@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PZhlAbj9"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-609e7f27c66so1422977eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747667813; x=1748272613; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ls1NLWaG7mKMxoaQ03EnBMu7MOLjXKiH9mRh6OqI8xk=;
+        b=PZhlAbj9XdlQ+ZWfNtuqw2nx4/z0pi3327NzV3X7SeU4/ZcA5volZ+kj6ZY4ih3igS
+         yPYgaguqZZ5q3yab6o+43O/AmKgmWc7IJRKe2vEemShmqpwxEwBqQJ2vBINeov+wQK9P
+         GO+sJuDZ9XykmnNxivADUAyLK/78myRvA1/xYbYI2/sPI22su1engcEKQ/uZegf9G4YK
+         hE9+mfDewgKfWSPo17vS1UYhR/wd9ihS+qMAUR5qMUK+b1+0vIVCUFXaLa7peXz4Jw36
+         q2JPiVVEXwfWlil3EMnd7kg0JU5IhCVh7Ftj64g/9xVapNsdZrAoF2knlIiWkLebsP8d
+         swLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747667813; x=1748272613;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ls1NLWaG7mKMxoaQ03EnBMu7MOLjXKiH9mRh6OqI8xk=;
+        b=O3y1QhCGUCwU2aeaODSrdjnjydlwcpiZqQWPMmD5Ef9sSmnHMOYbJracQ3c20QMJgi
+         YywrgPx9MxsWxlXBrNuGwqml2bTEEeozhH1AbWgk3QM7tZ9LndzDyJOcjgIzWK0ZXzxm
+         swXeboaPu2ANZ6C32MbfFyiCCkYoCiex1B8gg9/VrztSsgvKm+TGmhNQqbdS6lKzNBkH
+         mJ7Koj081U+0qEZInf94KlSy5zRH6tiNrrN9/kjfWQef/pEsyxLjawMsVDZIjpTls1yq
+         i1r+2fSx6Mj62ndFhC6Dhlc1NQcDX9rpsdD1enz+IV2mWJ2BAQpaL7wobjGnAvavyzjp
+         BuHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4ZpQ3/w/taKc/h4XYxOsWO8TYFiXKoWu/LeAg58Dm9nELxq1QF/gWkMZDzE2T7z84Fu+Oq9FWqEUW4d8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiOP9mAViHXgIQlHVJ9WLi74nMnOjUi/7ZrzRo2NpTtNYUeZ7o
+	QXNCSKgUNIpYxY9oI/+uFqOboC95NFdlpn7X7Weq/SzfWDcOSVxmIcf/x9ar2GfAz0k=
+X-Gm-Gg: ASbGncs/2W4MquZb+fxcKpajsMPqFg1Lj9FZQ7YvyGGjcis8fD7a7OrVYIbNa8Grqhd
+	87aVAtKm04BcgR/LCO2JxEigYp54bkKYoM1aneC7moevDvFRfmx5c73JWCH7a5GGymbXCc/9Jzj
+	dl4Fk6xkp4+8EWJR3SaE7avRDpdGo2vzpjX9NQhv+A2JuIutzME7D9J0Gxd31fR9ZIOW+xVtWiY
+	2JrQZWzg4HOQmozbTZiQFa2C7nC/b4CjVDe2EI+AaOiUznEnBsjDw30pRejRYhEhfI0TQ+hD1rG
+	zUPbANUN8pbULyBaGYi4+neREDooTZ0/bzl0g/BiqEjmSYaul7zDps0raBy/23MFa/yHCPUEGdI
+	u9+tZISC+NO+/KYE83ctMQNmxIrSzzjr/B6bq
+X-Google-Smtp-Source: AGHT+IGrr7JqsWk7yzixXETOAT3kkODRr/vioemwEunpOKJE8L7wTEMGjjVZ4Ec2n8rsdrQ80Lfp9A==
+X-Received: by 2002:a05:6871:d08a:b0:2d8:957a:5176 with SMTP id 586e51a60fabf-2e3c8186ff6mr7690014fac.5.1747667812956;
+        Mon, 19 May 2025 08:16:52 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5? ([2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c075bdfdsm1792167fac.25.2025.05.19.08.16.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 08:16:52 -0700 (PDT)
+Message-ID: <bd9dd280-0baa-4b03-b286-f16ae848a772@baylibre.com>
+Date: Mon, 19 May 2025 10:16:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSvO5tAfUMg8az+hYP5m1js9jyajOL
-	xZq955gs7u1Yxm4x/8g5VotrNxayW/z5d57N4mjrf2aLl7PusVlsenyN1eLyrjlsFhNWfWOx
-	mHF+H5PF2iN32S3Ov+hitdgw4x+LxbN7K9gs/u/ZwW7x5ecDZovDb9pZLY4s/8hksfPOCWYH
-	MY+T6zYzeWxa1cnmcefaHjaPzUvqPfq2rGL0+LxJLoAtissmJTUnsyy1SN8ugSvjxJ61bAXP
-	FCtaVrazNzBukuli5OSQEDCR+H5/P1sXIxeHkMBuRonlB3ayQCRkJB5N28gKYQtLrPz3nB2i
-	6C2jxOYJ/4ASHBxsAqYSE/ckgMRFBHqYJJ5e/QE2iVngNJPEho8z2EG6hQX8JBq/TgebxCKg
-	KnH06TtmEJtXwF6ief8vdogN8hL7D54Fi3MKOEhsXNPEBGILAdXs6vzEDlEvKHFy5hOw65iB
-	6pu3zmaewCgwC0lqFpLUAkamVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwXGnpbmD
-	cfuqD3qHGJk4GA8xSnAwK4nwXs9SzhDiTUmsrEotyo8vKs1JLT7EKM3BoiTOK/6iN0VIID2x
-	JDU7NbUgtQgmy8TBKdXAFOv8SoBfKYSrt/fvrAPcrU4lT89sL3r4IuTfMU7PxEf3+P1nJsw8
-	78Hy8ppa1MbdX9c2ZtjNW/dvVbd+aqyO9u8Ks7X2sWfk301X6r//2vapqu0t5k3n+5/92uBY
-	0bK9IbXu1/JM6y/l0/uWRX3ZkpHnyvL4wI/kN77cU1nab+1PzLl2du0OxnK7iavnd2lnv5nb
-	6Lzr9718vW/RvsElJpM59S/vjjrXpL4kSS4lYdLWLoF5UZvuXzm96dnfbbN2m70KZNZ/FFOe
-	fSLN9sTDV619pz4r2O/boeO8uCXFoPRo3c6DEknTP7tJibwulrtg3do6r6S9vljj/L3S4msP
-	z5qc2XW3e+biiZeK/aQ2/FFiKc5INNRiLipOBADyh79vKgMAAA==
-X-CMS-MailID: 20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb
-References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
-	<CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/6] dt-bindings: iio: adc: add ad7405
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
+ <20250519140220.81489-5-pop.ioan-daniel@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250519140220.81489-5-pop.ioan-daniel@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This SoC has a single USB 3.1 DRD combo phy and three USB2.0
-DRD HS phy controllers those only support the UTMI+ interface.
+On 5/19/25 9:02 AM, Pop Ioan Daniel wrote:
+> Add devicetree bindings for ad7405/adum770x family.
+> 
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
 
-Support only UTMI+ for this SoC which is very similar to what
-the existing Exynos850 supports.
+This patch got a Reviewed-by tag in v3, so that should have been picked
+up (or give an explanation why it wasn't if there was a reason for this).
 
-The combo phy supports both UTMI+ (HS) and PIPE3 (SS) and is
-out of scope of this commit.
+Also, Jonathan had some questions about the clock that didn't get answered.
 
-Add required change in phy driver to support HS phy for this SoC.
+> It's definitely wired to the ADC as a clock but it's also (I think) either
+> wired up to the IP we map to the backend (from software point of view)
+> or generated by that.
 
-Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 85 ++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+Yes, the clock is a standalone IP block that is connected to both the backend
+and the ADC. There are some diagrams in the link below.
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 634c4310c660..b440b56c6595 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -177,6 +177,9 @@
- #define HSPHYPLLTUNE_PLL_P_TUNE			GENMASK(3, 0)
- 
- /* Exynos850: USB DRD PHY registers */
-+#define EXYNOSAUTOv920_DRD_CTRL_VER		0x00
-+#define CTRL_VER_MAJOR_VERSION			GENMASK(31, 24)
-+
- #define EXYNOS850_DRD_LINKCTRL			0x04
- #define LINKCTRL_FORCE_RXELECIDLE		BIT(18)
- #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
-@@ -1772,6 +1775,10 @@ static const char * const exynos5_regulator_names[] = {
- 	"vbus", "vbus-boost",
- };
- 
-+static const char * const exynosautov920_clk_names[] = {
-+	"ext_xtal",
-+};
-+
- static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos5,
- 	.phy_ops		= &exynos5_usbdrd_phy_ops,
-@@ -1847,6 +1854,81 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
- 	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
- };
- 
-+static void exynosautov920_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
-+{
-+	u32 version;
-+
-+	version = readl(phy_drd->reg_phy + EXYNOSAUTOv920_DRD_CTRL_VER);
-+	dev_info(phy_drd->dev, "usbphy: version:0x%x\n", version);
-+
-+	if (FIELD_GET(CTRL_VER_MAJOR_VERSION, version) == 0x3)
-+		/* utmi init for exynosautov920 HS phy */
-+		exynos850_usbdrd_utmi_init(phy_drd);
-+}
-+
-+static int exynosautov920_usbdrd_phy_init(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	int ret = 0;
-+
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-+	if (ret)
-+		return ret;
-+
-+	/* UTMI or PIPE3 specific init */
-+	inst->phy_cfg->phy_init(phy_drd);
-+
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-+
-+	return 0;
-+}
-+
-+static void exynosautov920_v3p1_phy_dis(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	void __iomem *reg_phy = phy_drd->reg_phy;
-+	u32 version;
-+
-+	version = readl(reg_phy + EXYNOSAUTOv920_DRD_CTRL_VER);
-+
-+	if (FIELD_GET(CTRL_VER_MAJOR_VERSION, version) == 0x3)
-+		exynos850_usbdrd_phy_exit(phy);
-+}
-+
-+static int exynosautov920_usbdrd_phy_exit(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
-+		exynosautov920_v3p1_phy_dis(phy);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops exynosautov920_usbdrd_phy_ops = {
-+	.init		= exynosautov920_usbdrd_phy_init,
-+	.exit		= exynosautov920_usbdrd_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct exynos5_usbdrd_phy_config phy_cfg_exynosautov920[] = {
-+	{
-+		.id		= EXYNOS5_DRDPHY_UTMI,
-+		.phy_init	= exynosautov920_usbdrd_utmi_init,
-+	},
-+};
-+
-+static const struct exynos5_usbdrd_phy_drvdata exynosautov920_usb31drd_phy = {
-+	.phy_cfg		= phy_cfg_exynosautov920,
-+	.phy_ops		= &exynosautov920_usbdrd_phy_ops,
-+	.clk_names		= exynosautov920_clk_names,
-+	.n_clks			= ARRAY_SIZE(exynosautov920_clk_names),
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-+};
-+
- static const struct exynos5_usbdrd_phy_config phy_cfg_gs101[] = {
- 	{
- 		.id		= EXYNOS5_DRDPHY_UTMI,
-@@ -2047,6 +2129,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
- 	}, {
- 		.compatible = "samsung,exynos850-usbdrd-phy",
- 		.data = &exynos850_usbdrd_phy
-+	}, {
-+		.compatible = "samsung,exynosautov920-usb31drd-phy",
-+		.data = &exynosautov920_usb31drd_phy
- 	},
- 	{ },
- };
--- 
-2.34.1
-
+https://analogdevicesinc.github.io/hdl/projects/ad7405_fmc/index.html
