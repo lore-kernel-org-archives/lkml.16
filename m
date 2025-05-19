@@ -1,209 +1,220 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC392749FF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5F42749FB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657920; cv=none; b=bwaCCERINtn5p4/c8xH3mOiGUOuGy6EFAGlVZvXSF6CXt0VPpkuHhjz1J79Q1Iizc+Wy65hqndSGLfIjTiZ+T4P0LtwKjQzFSCXkxEyZlnzQu0JQ5G4zZeYYHPIBDvwUii9yTRuvdNSsgaJKfZH2DkMujPu3G+wDdBArfEUJCrg=
+	t=1747657933; cv=none; b=dVZKnB1VNyV2IaE87+o73+xVKX4bOEJzKS3gP20jxCHYHDV+SXXgXZNk+Wksne8tONdtIa9gvcZeS/WOhBBVQp5bsh3UKGi7Pu5/+2GZPnu9B/AxpCFxEtYxIyLirpU75GBlCsrjxAnxXR/YOj1ovUhyRUTQTqHLeLrycJMybgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657920; c=relaxed/simple;
-	bh=3r5j8ewUTdDD9cAVaQUvMIgt76uz3t6q02hyODKU56A=;
+	s=arc-20240116; t=1747657933; c=relaxed/simple;
+	bh=HOodb27u5TwtTAPSsy92wrZWNxC37y9Hm9lyvRSe3Ns=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MpPxBdQDRZPYklZaZX1K03O0kqyqa6JwO4fVqFrXnKzXyYfSMRAXPnZP82rDxx0AqPQN2B45QqBu0JabVseSzHYh5+d46IdEu3tmomVuMU3+P6kqmthycp444692w0/pyMS0X9jno3goiXrUst1AD/aPcSZFjVo4ig8slbH2omE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TAUBTEVP; arc=none smtp.client-ip=209.85.219.172
+	 To:Cc:Content-Type; b=XhqqjGfWluvjYoGhjxFneSEzpLx7YdE12+BX0+KelZggUB+WSX1rkTbAB7YxlY42eCJTqoD9HHeR9y5DxrNgd2J/YjYeuhkeSV/gmTMhxBUQJWHure6bC9SUnYYzcoDo7cSnvfR4dTUK1NcUieMR6wNKwVHKNjvIMxdOZzrs89I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zgLyFcFM; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TAUBTEVP"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7b943bcf0cso1241108276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:31:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zgLyFcFM"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7b85f1cbacso1947924276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:32:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747657918; x=1748262718; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747657931; x=1748262731; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K/Y4tapDB2lInfWCMbvdtqDDZUxcIGcJpTNFG1RgCRM=;
-        b=TAUBTEVPNAtUTnSocO9UXH8p7zkbiPqhzN1PXMbkEhTMWkNAgythz+VL0CTXcJhmbU
-         AlzJDSqWtzkgp3WQ9ge6OpyeaW+MChvEQ3mAbdH3wpFXqCbLlprcDtPNUaoUgCZHk2Oz
-         SufzhHIhd0dC2BrNjcW8Qme3T0Qzk0fTl/duFp/i5y0c0y9oeGHyCqFP9WZYpTDa3P8n
-         sn/vSAZ0kC3yOj6I4QA3Ns0tlOnbwlFcAfT7CfD32eqgbYu7Z9to8KVUdSIj5AACB5q/
-         2eeU6VkXA7JNPibFcbl26xBjHl5qdmv4isC6q3R2le3NeDVK/jeheJxW1UgOWrACh9yY
-         Dp9g==
+        bh=B7Zhmo/JpzcMaAMKKOwzh6ja2t6tkPpPMCDNoaM6o58=;
+        b=zgLyFcFMZHKUnYWGl/QEPMah+G87E2XxjK772KjH0ygnR9PKfWIbc/OC/CIL8M593Q
+         ZTLnEdc8K9sFZmfAMcpLi2U4orNwdNAv35ccx7H+BY6eCDea60vyl2c+W/vmMWaEgo/1
+         lICUVV4iLsKo8LUKRW45kc8PSYkfHztEjLl7zZ4v9odKEjRt5TnVb5dxvVa4CeDZ6aPt
+         jQMU7pAMmNQ4WBMqMxwFqrDHxA2tsY9qDSC8O0KCxJlvBnVyyhH3BGj8Gni0F6VWF5dw
+         Zz9GQ/rIOM4MRdMHBlBA0wgvbr0DlOMahLyiqIKzzzepICS+hX6v9jn8hnOPMmS/cbZD
+         T00Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747657918; x=1748262718;
+        d=1e100.net; s=20230601; t=1747657931; x=1748262731;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=K/Y4tapDB2lInfWCMbvdtqDDZUxcIGcJpTNFG1RgCRM=;
-        b=JMXFr0IIkZHaWxK02o4JPZDTlC+Uz8P5LvQ5XgTNPMSLyTjDgU6L/y7Cz9iIyjFGBr
-         Q3mayxE7IgldkHu7N9H1aybemKsjvyE3Bz0jsepm77CcZAVZQ71q53hNOE/lsl10iSVX
-         k5ye8OrGoWWvCZFHhMBCaSZA7P84GCSlEJcj7iA/tc6Wc8kU7aX71WCe2cid5lrOqH2m
-         PgeNterPo4dVl6ssWWQH/8mqflhU6eOvstx7xuYUCIj/gbbUgUFVGscVcD4SLi03xdWt
-         ezD8GEFBW7tswVuK9kzATj7cqd/tChFomQinS+zf/Ww7qM99Nw+PfCzf4Ux8joLG2ELB
-         H9qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWd8afDiHvxu9AY5myEHTMZmQg5J8UHjLYSvAUXeWwhW6/EGBiGZlSXscb4xkSxLgvK2USjzXKyabxkRm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn1Sknfw1tDD8MMF0hNIozRBQ2XKs8adDZser61bCf6v1Dgt4L
-	Jn5u54/NIQXtwedmoEBxRalc4OCx+afAaXIkb+A63OlqtvZZLQKBVY8ORg+g52RsTRhqYCQHdHu
-	GfYcF+RkEY5eEJulkEh50wWRp00b3y1c4kEjPT9exPA==
-X-Gm-Gg: ASbGnct6E/MysSloMeTpVbivILux2jghpIxs53pIURKJrpUz3KXn7pnIqnPsuu1mJ7u
-	JJLk++hTToXRJlOMbyclnbvWA2s6wfWmGEbvlvyVNwWmbrduQrj+e1rDoMqn3D/hzIXc+A9gXwL
-	Vq9asJ99PO9OViIfV3jpTuo89PAL/Q5si4Ug==
-X-Google-Smtp-Source: AGHT+IEmv/WGUjKBm+/A1/4GEydyk8TOzWy7/Tild6Q46xMQvO171ETGSmplGkezWXGMNntuDWyD2TLLNFfhysgWzEI=
-X-Received: by 2002:a05:6902:1547:b0:e7b:9763:6676 with SMTP id
- 3f1490d57ef6-e7b97636a60mr5784680276.17.1747657917592; Mon, 19 May 2025
- 05:31:57 -0700 (PDT)
+        bh=B7Zhmo/JpzcMaAMKKOwzh6ja2t6tkPpPMCDNoaM6o58=;
+        b=PdtzqRV7fOebRD0rFWtt+h6VLBMgb/UPmgt3rMVoNbGJarIxxTePBxtyn+tN7PZPLi
+         b0pBlyPL4mkcQkBIvVkhizKgQ+5mQe9lyRVmE6CRKpXxseQAo5buRjwIKc61evyDiUBs
+         1NGbimjmGE87q3Fpm9lKTQ1Ce1tMxeyS2ZMPfV4x4gbV/iG6Ybdsmgdtk91Vy92L0ys6
+         FkI9lPx+HXGpqQ1SxKP7PvIzYZoZ+gGfWAOXZtaKYy7XL0ZeBcbngfxMtQirhFNFt69r
+         u8kTSWjoEUV5rU72CZzKeQU3l/9/N9iEwrG83klmQSjxu+RXCwUUi+PQm+6YiOSqHFLE
+         ZsrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxatWCZJ7mlV+7kaboI/G6iWAi3yC8ORMzTcpm5JeomCtxcywqk/raieAA8jsOH3jvS32WpRiUbGxhqqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVPSYPJJhcKKd63oPl2g4NNWmb63M+XKKxHcHr73/RVa5kHNlP
+	Bl2KRYZuutlkea5p/7/X4e1w75D34GGBRecaszeN9A3dYRyyMx2lNIMbVUT6HK1n07WqAVKYTao
+	oFoSqblCBQP04bCp7dvwUvMWDJYpGaSDZHLdbQrMoyYelwBg20tdU+N4=
+X-Gm-Gg: ASbGncvmcyYWQFstSf5yCATawQLKxs5wIc45LVeUUbF5qiM4rBi6vChIFV5/Y8Hgt9B
+	AfZJlnI+KhMMljx7pSlegajTwyUjBvcaJgMldg5rcotb5POffNqs/dJv3BHfaGHKlqni4UGoe7+
+	HmrcgX9y6/VwnzVL18wm9lxhWvg7+oNwVMpA==
+X-Google-Smtp-Source: AGHT+IHMRf8bcz5aIkiyV4tAaS8tGQtUKO6bhUpbLyg9woenXTM/y8WVzmZJnfWYm+84x/Es23zMYwq7B9ivClzWPz0=
+X-Received: by 2002:a05:6902:1b03:b0:e7b:8524:3f5e with SMTP id
+ 3f1490d57ef6-e7b85243fb8mr12802970276.10.1747657930730; Mon, 19 May 2025
+ 05:32:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-mchp-sdhci-v1-0-ed29de05295a@gmail.com> <20250507-mchp-sdhci-v1-2-ed29de05295a@gmail.com>
-In-Reply-To: <20250507-mchp-sdhci-v1-2-ed29de05295a@gmail.com>
+References: <20250514094903.1771642-1-ziniu.wang_1@nxp.com>
+ <20250514094903.1771642-2-ziniu.wang_1@nxp.com> <0bda0bba-cfc6-403d-b36f-9c625e5bafb2@intel.com>
+In-Reply-To: <0bda0bba-cfc6-403d-b36f-9c625e5bafb2@intel.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 19 May 2025 14:31:21 +0200
-X-Gm-Features: AX0GCFuWDdcxOPuDxhAtLQnUgrmqueC7zHJtPdPiN6hagUd_-Xv9el2wmRphFWc
-Message-ID: <CAPDyKFqPhxOfzZOYuF_yG9TyUx0FQ7p=TE8krSdLkM7AjOmp_g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-binding: mmc: microchip,sdhci-pic32: convert text
- based binding to json schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Date: Mon, 19 May 2025 14:31:34 +0200
+X-Gm-Features: AX0GCFtU3S8coUHVXTKQU7bBOE0kHTmWJQ63OQyAYKI9Qe1enSPXNA1WeuzFizU
+Message-ID: <CAPDyKFp+ATxghU2g1XxVLB1Oy4TkFvUqj6SpyKCV_ro9bayXtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mmc: host: sdhci-esdhc-imx: refactor the system PM logic
+To: ziniu.wang_1@nxp.com, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, haibo.chen@nxp.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	imx@lists.linux.dev, s32@nxp.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 7 May 2025 at 08:32, Charan Pedumuru <charan.pedumuru@gmail.com> wrote:
+On Thu, 15 May 2025 at 14:53, Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> Update text binding to YAML.
-> Changes during conversion:
-> Add appropriate include statements for interrupts and clock-names
-> to resolve errors identified by `dt_binding_check` and `dtbs_check`.
+> On 14/05/2025 12:49, ziniu.wang_1@nxp.com wrote:
+> > From: Luke Wang <ziniu.wang_1@nxp.com>
+> >
+> > Current suspend/resume logic has one issue. In suspend, will config
+> > register when call sdhci_suspend_host(), but at this time, can't
+> > guarantee host in runtime resume state. If not, the per clock is gate
+> > off, access register will hang.
+> >
+> > In sdhci_esdhc_suspend/sdhci_esdhc_resume, remove sdhci_suspend_host()
+> > and sdhci_resume_host(), all are handled in runtime PM callbacks except
+> > the wakeup irq setting. For wakeup irq setting, use pm_runtime_get_sync()
+> > in sdhci_esdhc_suspend() to make sure clock gate on.
+> >
+> > Remove pinctrl_pm_select_default_state() in sdhci_esdhc_resume, because
+> > pm_runtime_force_resume() already config the pinctrl state according to
+> > ios timing, and here config the default pinctrl state again is wrong for
+> > SDIO3.0 device if it keep power in suspend.
+> >
+> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> > Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
 >
-> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+> Looks OK to me, at least, although Ulf may still have comments.
+> Otherwise, for both patches:
 
-Applied for next, thanks!
+Looks good to me too!
 
-Note that, I leave patch1 for SoC maintainers to pick up, thanks!
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+Both patches applied for next, thanks!
 
 Kind regards
 Uffe
 
 
-
-> ---
->  .../bindings/mmc/microchip,sdhci-pic32.txt         | 29 ----------
->  .../bindings/mmc/microchip,sdhci-pic32.yaml        | 66 ++++++++++++++++++++++
->  2 files changed, 66 insertions(+), 29 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-> deleted file mode 100644
-> index f064528effed31f30d1d1c6e0b49c02e215d99af..0000000000000000000000000000000000000000
-> --- a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -* Microchip PIC32 SDHCI Controller
-> -
-> -This file documents differences between the core properties in mmc.txt
-> -and the properties used by the sdhci-pic32 driver.
-> -
-> -Required properties:
-> -- compatible: Should be "microchip,pic32mzda-sdhci"
-> -- interrupts: Should contain interrupt
-> -- clock-names: Should be "base_clk", "sys_clk".
-> -               See: Documentation/devicetree/bindings/resource-names.txt
-> -- clocks: Phandle to the clock.
-> -          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -- pinctrl-names: A pinctrl state names "default" must be defined.
-> -- pinctrl-0: Phandle referencing pin configuration of the SDHCI controller.
-> -             See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> -
-> -Example:
-> -
-> -       sdhci@1f8ec000 {
-> -               compatible = "microchip,pic32mzda-sdhci";
-> -               reg = <0x1f8ec000 0x100>;
-> -               interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
-> -               clocks = <&rootclk REF4CLK>, <&rootclk PB5CLK>;
-> -               clock-names = "base_clk", "sys_clk";
-> -               bus-width = <4>;
-> -               cap-sd-highspeed;
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&pinctrl_sdhc1>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ca0ca7df9ee991d8402bc4c62b1235ef5db2e85f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/microchip,sdhci-pic32.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PIC32 SDHI Controller
-> +
-> +description:
-> +  The Microchip PIC32 family of microcontrollers (MCUs) includes models with
-> +  Secure Digital Host Controller Interface (SDHCI) controllers, allowing them
-> +  to interface with Secure Digital (SD) cards. This interface is used for reading,
-> +  writing, and managing data on SD cards, enabling storage and data transfer
-> +  capabilities in embedded systems.
-> +
-> +allOf:
-> +  - $ref: mmc-controller.yaml
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,pic32mzda-sdhci
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: base_clk
-> +      - const: sys_clk
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - pinctrl-names
-> +  - pinctrl-0
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/microchip,pic32-clock.h>
-> +    mmc@1f8ec000 {
-> +        compatible = "microchip,pic32mzda-sdhci";
-> +        reg = <0x1f8ec000 0x100>;
-> +        interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&rootclk REF4CLK>, <&rootclk PB5CLK>;
-> +        clock-names = "base_clk", "sys_clk";
-> +        bus-width = <4>;
-> +        cap-sd-highspeed;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_sdhc1>;
-> +    };
-> +...
->
-> --
-> 2.43.0
+> > ---
+> >  drivers/mmc/host/sdhci-esdhc-imx.c | 50 ++++++++++++++++++------------
+> >  1 file changed, 30 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> > index c0160c69a027..7611682f10c3 100644
+> > --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> > +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> > @@ -2009,11 +2009,14 @@ static int sdhci_esdhc_suspend(struct device *dev)
+> >       struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
+> >       int ret;
+> >
+> > -     if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> > -             ret = cqhci_suspend(host->mmc);
+> > -             if (ret)
+> > -                     return ret;
+> > -     }
+> > +     /*
+> > +      * Switch to runtime resume for two reasons:
+> > +      * 1, there is register access (e.g., wakeup control register), so
+> > +      *    need to make sure gate on ipg clock.
+> > +      * 2, make sure the pm_runtime_force_resume() in sdhci_esdhc_resume() really
+> > +      *    invoke its ->runtime_resume callback (needs_force_resume = 1).
+> > +      */
+> > +     pm_runtime_get_sync(dev);
+> >
+> >       if ((imx_data->socdata->flags & ESDHC_FLAG_STATE_LOST_IN_LPMODE) &&
+> >               (host->tuning_mode != SDHCI_TUNING_MODE_1)) {
+> > @@ -2021,9 +2024,6 @@ static int sdhci_esdhc_suspend(struct device *dev)
+> >               mmc_retune_needed(host->mmc);
+> >       }
+> >
+> > -     if (host->tuning_mode != SDHCI_TUNING_MODE_3)
+> > -             mmc_retune_needed(host->mmc);
+> > -
+> >       /*
+> >        * For the device need to keep power during system PM, need
+> >        * to save the tuning delay value just in case the usdhc
+> > @@ -2033,9 +2033,13 @@ static int sdhci_esdhc_suspend(struct device *dev)
+> >           esdhc_is_usdhc(imx_data))
+> >               sdhc_esdhc_tuning_save(host);
+> >
+> > -     ret = sdhci_suspend_host(host);
+> > -     if (ret)
+> > -             return ret;
+> > +     if (device_may_wakeup(dev)) {
+> > +             /* The irqs of imx are not shared. It is safe to disable */
+> > +             disable_irq(host->irq);
+> > +             ret = sdhci_enable_irq_wakeups(host);
+> > +             if (!ret)
+> > +                     dev_warn(dev, "Failed to enable irq wakeup\n");
+> > +     }
+> >
+> >       ret = pinctrl_pm_select_sleep_state(dev);
+> >       if (ret)
+> > @@ -2043,6 +2047,12 @@ static int sdhci_esdhc_suspend(struct device *dev)
+> >
+> >       ret = mmc_gpio_set_cd_wake(host->mmc, true);
+> >
+> > +     /*
+> > +      * Make sure invoke runtime_suspend to gate off clock.
+> > +      * uSDHC IP supports in-band SDIO wakeup even without clock.
+> > +      */
+> > +     pm_runtime_force_suspend(dev);
+> > +
+> >       return ret;
+> >  }
+> >
+> > @@ -2053,16 +2063,19 @@ static int sdhci_esdhc_resume(struct device *dev)
+> >       struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
+> >       int ret;
+> >
+> > -     ret = pinctrl_pm_select_default_state(dev);
+> > +     pm_runtime_force_resume(dev);
+> > +
+> > +     ret = mmc_gpio_set_cd_wake(host->mmc, false);
+> >       if (ret)
+> >               return ret;
+> >
+> >       /* re-initialize hw state in case it's lost in low power mode */
+> >       sdhci_esdhc_imx_hwinit(host);
+> >
+> > -     ret = sdhci_resume_host(host);
+> > -     if (ret)
+> > -             return ret;
+> > +     if (host->irq_wake_enabled) {
+> > +             sdhci_disable_irq_wakeups(host);
+> > +             enable_irq(host->irq);
+> > +     }
+> >
+> >       /*
+> >        * restore the saved tuning delay value for the device which keep
+> > @@ -2072,11 +2085,8 @@ static int sdhci_esdhc_resume(struct device *dev)
+> >           esdhc_is_usdhc(imx_data))
+> >               sdhc_esdhc_tuning_restore(host);
+> >
+> > -     if (host->mmc->caps2 & MMC_CAP2_CQE)
+> > -             ret = cqhci_resume(host->mmc);
+> > -
+> > -     if (!ret)
+> > -             ret = mmc_gpio_set_cd_wake(host->mmc, false);
+> > +     pm_runtime_mark_last_busy(dev);
+> > +     pm_runtime_put_autosuspend(dev);
+> >
+> >       return ret;
+> >  }
 >
