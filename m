@@ -1,135 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9003226B2D8;
-	Mon, 19 May 2025 08:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F93A210FB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644146; cv=none; b=HKdKxxV4UqFQgv4UJ1Y2GGSZi9Q5K42+J4tzl/f2GKhpKwoZ5WEEAX+HsxAZt6F/j3Zfm00HSLtC9EgK1KIxxPoUI3VsetFqVMlx4MOtdhquYr2eIFIRceIpEUZA5wmAhtAZm4cwDaDu/zrGFNmV9V66lXE9XPnFB7bKKflSVUk=
+	t=1747644160; cv=none; b=eg+kYfYGkI3q9gswCBJec/nE5FNRWLCHJr5V/j4a8ST+NSJ1GC9CmQxHxcveBXqWr5em7XyCb/TOIJS4bClC5TIa+8JWnQcYMH9CWnAsUTYZdq8p8iLUTR7r1vnKwIXMmBWD1//fLOv2OdBFkoDzdT3AsWu8v1jINqGCAwt04O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644146; c=relaxed/simple;
-	bh=/HRLDkt+Ui17Ewjay2IkB2Ip02Jr3M9xwlPXp7quBVw=;
+	s=arc-20240116; t=1747644160; c=relaxed/simple;
+	bh=+03kt9iwtLbG5099ncvcgBRXBcr3CMG+xuHJpXjVv8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tdk/4DmM0slBbgKAApSLzxk2ZlrTRhKvidk2NB1ixwfHc3rrCWicmbUWy/8KNyPJ7+aBod7dkhAe+Pqt6XG1Rj8aPEZzD3BpWfVTcLDcASs3AD4nfZo6+pLEeiw5M2CHRcM/Jaz60qfyKpzxt9S20qGkstn8m2u2FNqd9GVSD7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vyWqfl2e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aqomLv1G; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dnh35PbGlpm/GOUBM+Nh74y9Wq4z7pSs4AtWXRgPXWVlfDr3ggBpkpfgV2R2jf+8ocVyegUlOrLHUPe/Vv1IePq0o80WCEsy0xiyQTngS9PZOb4VLN31YW1a0L5QpIkgqscu57lwsVAa3nluqImoyKzvUQpB8Q2S7wCJAPuXhNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruo60tw3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vyWqfl2e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqomLv1G"
-Date: Mon, 19 May 2025 10:42:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747644142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QCQgi10UR992dlQaoDPJB7yxvwRcrEs7GWQVXJ/StA8=;
-	b=vyWqfl2e01zzIkoAlczlLbWUZsXt3dFksf2d0OsI9vjBOZEBCeWAuQ1aTB5Pwebs2dMShy
-	FfYUtKMWXG34vxokQ3xeeLsTXmiLT6C+pBh9K7gwuI7dkch6pnlG6E/ft0rlh3pH0g/h2J
-	3dE6gd4Wd5VNq28Sw0wShGkfZlfAaRPRfsWH1uSks/GOtojb7uCzqsDExH4le7p5nt/Sfw
-	5dwIRqNymrKZQX8mu6GsDQ+LZQVcXTN3p3mjBDOGUXZm3OFY31tkhdMlPwqQqvEr+p4RE+
-	ahYQWHklXVxaDveXunbVC3kZMmC/U5hpRrBKkf2UZNQ/jhWEKBPHkiq238Y6Tg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747644142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QCQgi10UR992dlQaoDPJB7yxvwRcrEs7GWQVXJ/StA8=;
-	b=aqomLv1Gmgp7tEXc8UIWNdjxYTH53YmENrIPEIM37jiONNWWjvTBMotaA7OwApJrXrwvUZ
-	mhuDNhOCakK05fCA==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 07/12] rv: Adapt the sco monitor to the new
- set_state
-Message-ID: <20250519084220.iProU-cg@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-8-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruo60tw3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE772C4CEE4;
+	Mon, 19 May 2025 08:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747644160;
+	bh=+03kt9iwtLbG5099ncvcgBRXBcr3CMG+xuHJpXjVv8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ruo60tw34zleKTt4jpUqfFIJ3YMcB6k/v+uuq3cOv/rMDR3RnaOVZyEtJ4734/L3E
+	 +EkCePqWJBJHrJQPrIlBrQtPFSyt9DGBzarHT4rYTGE06RNeUuufcGFHLYxV8p9Ecw
+	 Un2quvG4Yg/hYIB1CoTUlveWIZno3351Jfk0Qvi2PRhIyPFO1lcSsrk9VpOxnrCgjv
+	 QJ7F99dUA6Zphj32joniv6FSThYfSMeDX5Xl+myxNH1711W+EI9gQJ+h9Hr14wD5eB
+	 I7X0FyI0VfAIzJKW/CwMDSl9J2VAtx1mFE7aDhsnD2mWywA9WIGm49Uzfk7dHXHe8V
+	 cBYQ72jCr/LZw==
+Date: Mon, 19 May 2025 10:42:37 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
+ RGB/YUV420 mode
+Message-ID: <20250519-classy-millipede-of-competence-4bb6ad@houat>
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="itn5qs25mfwdt27d"
 Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-8-gmonaco@redhat.com>
-
-On Wed, May 14, 2025 at 10:43:09AM +0200, Gabriele Monaco wrote:
->  	.function = {
-> -		{     thread_context_sco, scheduling_context_sco,          INVALID_STATE },
-> -		{          INVALID_STATE,          INVALID_STATE,     thread_context_sco },
-> +		{     thread_context_sco,          INVALID_STATE, scheduling_context_sco,          INVALID_STATE },
-> +		{          INVALID_STATE, scheduling_context_sco,          INVALID_STATE,     thread_context_sco },
-
-This is over the 100 column limit.
-
-I know it is not your fault, this is generated. Back when I was playing
-with DA monitor, I made a patch to fix this. Maybe you could include it in
-your series?
-
-From b4fb648398a29a9c0d8e08bd12394978d3948a5e Mon Sep 17 00:00:00 2001
-From: Nam Cao <namcao@linutronix.de>
-Date: Fri, 15 Nov 2024 14:56:33 +0100
-Subject: [PATCH] tools/rv/dot2c: Fix generated files going over 100 column
- limit
-
-The dot2c.py script generates all states in a single line. This breaks the
-100 column limit when the state machines are non-trivial.
-
-Change dot2c.py to generate the states in separate lines.
-
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- tools/verification/rvgen/rvgen/dot2c.py | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index 6009caf568d9..abc0ee569b34 100644
---- a/tools/verification/rvgen/rvgen/dot2c.py
-+++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -152,29 +152,22 @@ class Dot2c(Automata):
-         max_state_name = max(self.states, key = len).__len__()
-         return max(max_state_name, self.invalid_state_str.__len__())
- 
--    def __get_state_string_length(self):
--        maxlen = self.__get_max_strlen_of_states() + self.enum_suffix.__len__()
--        return "%" + str(maxlen) + "s"
--
-     def get_aut_init_function(self):
-         nr_states = self.states.__len__()
-         nr_events = self.events.__len__()
-         buff = []
- 
--        strformat = self.__get_state_string_length()
--
-         for x in range(nr_states):
--            line = "\t\t{ "
-+            buff.append("\t\t{")
-             for y in range(nr_events):
-                 next_state = self.function[x][y]
-                 if next_state != self.invalid_state_str:
-                     next_state = self.function[x][y] + self.enum_suffix
- 
-                 if y != nr_events-1:
--                    line = line + strformat % next_state + ", "
-+                    buff.append(''.join(("\t\t\t", next_state, ",")))
-                 else:
--                    line = line + strformat % next_state + " },"
--            buff.append(line)
-+                    buff.append(''.join(("\t\t\t", next_state, "\n\t\t},")))
- 
-         return self.__buff_to_string(buff)
- 
--- 
-2.39.5
+In-Reply-To: <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
 
 
-Best regards,
-Nam
+--itn5qs25mfwdt27d
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
+ RGB/YUV420 mode
+MIME-Version: 1.0
+
+Hi,
+
+On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
+> Provide a test to verify that if both driver and screen support RGB and
+> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
+> when trying to set a mode unsupported by the display.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 ++++++++++++++++=
+++++++
+>  1 file changed, 66 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
+/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f446c4=
+995e7ee63dbc084 100644
+> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_fall=
+back_yuv420(struct kunit *test
+>  	drm_modeset_acquire_fini(&ctx);
+>  }
+> =20
+> +/*
+> + * Test that if a driver and screen supports RGB and YUV420 formats, but=
+ the
+> + * chosen mode cannot be supported by the screen, we end up with unsucce=
+ssful
+> + * fallback attempts.
+> + */
+> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(struc=
+t kunit *test)
+> +{
+> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
+> +	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_crtc_state *crtc_state;
+> +	struct drm_atomic_state *state;
+> +	struct drm_display_info *info;
+> +	struct drm_display_mode *preferred, *unsupported_mode;
+> +	struct drm_connector *conn;
+> +	struct drm_device *drm;
+> +	struct drm_crtc *crtc;
+> +	int ret;
+> +
+> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
+> +				BIT(HDMI_COLORSPACE_RGB) |
+> +				BIT(HDMI_COLORSPACE_YUV420),
+> +				10,
+> +				&dummy_connector_hdmi_funcs,
+> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
+> +	KUNIT_ASSERT_NOT_NULL(test, priv);
+> +
+> +	drm =3D &priv->drm;
+> +	crtc =3D priv->crtc;
+> +	conn =3D &priv->connector;
+> +	info =3D &conn->display_info;
+> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
+> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
+> +
+> +	preferred =3D find_preferred_mode(conn);
+> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
+> +
+> +	unsupported_mode =3D drm_kunit_display_mode_from_cea_vic(test, drm, 96);
+> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
+
+I'm not sure what this one is supposed to test. If the mode is
+unsupported by the screen, it will be for both YUV and RGB, right? So
+what are we testing here?
+
+Maxime
+
+--itn5qs25mfwdt27d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaCru/QAKCRAnX84Zoj2+
+dpkPAX9GdEFrGMnaPgHsQYafngD7rrP1g7XAmzcFOpgFYItZhI1qolmUM49ckdRB
+yBw98JEBfjSASo48jnLPA51hoO+zrUdLQpRH8EB3d50j+yyodfMb5jxLo1SqUfCF
+Y6qeLcFhyw==
+=4oAs
+-----END PGP SIGNATURE-----
+
+--itn5qs25mfwdt27d--
