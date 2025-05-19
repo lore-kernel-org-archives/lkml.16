@@ -1,258 +1,166 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3C02741DF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2726E274648
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649730; cv=none; b=L85jnNBAtsPel7Ftm3tj2Sh7UBWjiFsNJ7UEr4MQdrazZih5+uAaRxLCGq8bdE4p/kgyaKjeOhQxZa9H8AvX1707gQ8vZYqQjFOeXxY8IjQr9NBJ/hsrffp3yZT9B//6JpTdFRTTup73eUYZPniTOYx6fPWTXUG0qYP9PYy8ekw=
+	t=1747649734; cv=none; b=P0RFjslRmQDhrS+4jF4WFKhSJQjLJrO6VwZ3meUqe8RWRaDYRfy+WC0+w2kyddJOYu8bRHNC4TfB2+yRYuDmO3ZDObIxukFx3n5jtWpDp6UE6WGg4Y5kdLnNz83sJcVosGTZr1ZENbW6Xd4f1gNZ9PxZx4cSrIDcqF0GEQcS9zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649730; c=relaxed/simple;
-	bh=t2/fKhQwlLxBOrTHI6XMMF0jkkRQ4qJ2TF9uKD6hKSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=bVZBUrdci2KltLa/RhpvTTcNu+jCzOpZcjkGn4geO8RD/2BBfU91g8wqmro8f/2GCSAlmjhcnvZ75mOF0qz7GfM7CMxe/CHMtYoebTNuWKRXdRrGGf+pdmZ87GBjGOZtOR8xEzVPf444AfJ+Gy0YEaZBBguZbPZN3arHDhW/M94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=f5QEXu00; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1747649734; c=relaxed/simple;
+	bh=81wMAJHRIrHMCayqIPjQjUtl0Nj/1hvPvhfNOZtFLms=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OA3hvtVUV4cGjYqtlzJxadPLVd1gJ5qOfS/uFdf14nbN92WkfSHxUooaASdeCG/CwrLfXOCeZtE2tK6fMWkiJEHKC8zRSr5Neqwn85Zeu7sRfYK82oGKSNLSb7455w8Adqo3BRWXCEdb6qE2qy6xZoWwvQ1v81KaE9E17Zi6twA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CbAP2At6; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="f5QEXu00"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad5297704aaso632700866b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:15:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CbAP2At6"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a361b8a664so2815689f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 03:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1747649725; x=1748254525; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H8Pm/OPQZPnSJzvrFPS62tYBR4nzvc5QqMIJv/6pDWI=;
-        b=f5QEXu00/l3mNV/SUjuU1h/PoKnEUYhDAGNF9DeYGvFj2CNG/FW0nzuY5WQf0ckET/
-         9+RyfTdpfAFObEO9mCjF0m2lEE+9NIYqw8EvzSZ6OTyH7NsgifnjRC8BUf5u2Dh7A1Go
-         8fqBTmnv9qVItn+KNS7FXJjZ2QoYP/2ruWRoDd69tsoKWPBR8u/KbHSa0JWhuOo34CBw
-         r8OFgPsh67JqYKhMwZj/lCBy2/u2P+raQQvdDk5VQo7XH5heLCABx78BlQUQT3xRZxtA
-         aSVyk9+pXSuorKIJVwYkTeBy5jMgcDQudgBxj8fF2f4dJ9NBJKdFGphnC5soTzBMPxUV
-         ZQGQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747649730; x=1748254530; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bL6XRK5W1eljgJJLaQTj6SKuAJ6xYPHv6VkT5/28cuc=;
+        b=CbAP2At66Maba3Qlm9NjLzAczDQvLxshaFmeQEgqz7bf31E/7Txp6Oh5l8EL6KCSen
+         eQO0kRI7heNgUanCgk6BZxci/mVsPUb/pQFrKnROBapfkJk/de4nuJt0B8wY9gKEQ4ug
+         YBDj0FAvtYjCUn/Hw5ijrJkBOy7jMmAvoVInpuADenq0GMqfY0XIGplEC3kejwEO/+vr
+         tgseqmesOCGHZx12KDlnV64Vez+jXdbQLjGeEAnos8CKJPBad2+17KkGI3z3AZpS+ed5
+         VwbuJat/S096mTw536k6syj+MVvdexy3jkkTDXTWJSRjRB29nzHNLON2OSQdiCcayGa2
+         WhSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747649725; x=1748254525;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H8Pm/OPQZPnSJzvrFPS62tYBR4nzvc5QqMIJv/6pDWI=;
-        b=coduWeTlYpO9AMrho4fYcEyIKwwX/s8Pp2gaFd/z6Jkv0IpE5zkkA2HuT7Y4BAb5TD
-         vXx2uVzqsr/X/gH89bzyCJzdD4n+0bim9eh2XTWC+FkoV5gHaX5rmUFmiGQZBbsGYQ16
-         E3+5LbNaHs8FtrOldVLUKwGPWt1KcZf3BdhEVIG566UvR5XO55ib4B1wPzwSWYjWAl8X
-         gUjA0f5ycInEYjuEu+AiSLc3zhKrv85nHycqd30DvNySZa6lIxd3ME4bA7IHV5GRLPRA
-         OJ4MX7se06d8GxjhZu93t0w60Q82L0qX3CFH8aCEW/l9szwGSuC4cxYLloR14U51TMCw
-         ShVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDLN2w88FBB7Ma+UkVUX9X68N3v9LCBg3mTGSDrM9iQpEPRukhK4dM/u3EvFFs4/ac9NHC0KW7h00w3LM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx11kiNNiET4ZuArPyHG+pn5tBZVarXvf40WGTKBNdZHfvkuQZv
-	mteKwvmJS9oZ9h5jncL3lC4YUQNEExVvbNAqH5QmbNzK+dGPF/5qepPzY5lzoFzPvkOO/mg7kdE
-	rv5mdxUSIFHTc+dYXu5pa7nMsQJWopvjCmhtPU82zNw==
-X-Gm-Gg: ASbGncs8EYMoBf+a/1tzRM/YT+Arg1kwlsF2eKPxCbBTbD7c3oQBk1jO+h+YwHl2Il+
-	Vx1vR0U6sC7oXFgEJJSknD0dLwAjHGAoxhJ1r7fNga7/Z1sZt+ud5i01aUK+C+jysNPDI6ArAgc
-	T1LJzHcIx0X5zDazWYTcaSy9bulgBxZfogjTT4kdH21w4dwm3wEudeDhf3AcvzrA==
-X-Google-Smtp-Source: AGHT+IEBxoy70OLus6nLzIrd0jFiVYq2bn4bWSvgAaRhTp7gQlMAwgpB3doYR0OSFM1kgTYn1jpA4h1GHZFfXc5spX4=
-X-Received: by 2002:a17:907:7d89:b0:ad4:5346:2fec with SMTP id
- a640c23a62f3a-ad52d6307f4mr1096445666b.61.1747649724970; Mon, 19 May 2025
- 03:15:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747649730; x=1748254530;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bL6XRK5W1eljgJJLaQTj6SKuAJ6xYPHv6VkT5/28cuc=;
+        b=bSTpihzqx8yQgPkhReN2oTPILoPcx61zWwxy0RxLBTIEY4/iNDDw5iudLVS9Ad64tH
+         7ETyh1PNS/QmAEqz4Oy/O9J3qPY+vy7s3Ukw2Ktel0HI++F6EbZcMJ8dQuzo9SvmUA7R
+         WA4AQA3dTWeGSLZMc3/1Eb9GxS/EPQkI4mniAEVJxxKWP3z+oM1QodPCn2BZLrGN/6Xf
+         /37tNZ5wH0RzXBDFet5ME/LDOGXL+ug4mgugwAgFhpPst0AkgofzJpcCU0212kEb4MQT
+         iJBccSbULzHGRpgG3CNSvGD0EHvlxSE0kcbFkjxa1riwqH78Uls82i4YonO0zifm5F4m
+         lvIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXohXGXYQ4rY1sa9FUZybcZ9Q3CLdT2szQt74eX9l2Nm7yqx6KT31m0H/kl4No95BqLy1slH5anx0e6sPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj1ZdCFXpWr6MBcA19JcEGq6QvabZMdG8c2zQaXnakoFSrbhE7
+	Rll+PAH8M9LTv97672MvL8S/bgq8O7LY9tPM4OmS/QUnxHBNy+SCsoCD7TPPW5ks7ok=
+X-Gm-Gg: ASbGncvGVbmC65p2VaOtitxHvmmvgwUeSEhK/r6m3WFKPsoFcwyUJAEgkAQzv5oGtjI
+	3UGSKh1P3zA6VDvVtGSDldgabBQ6SLR5eQz0QYgoBlV1St0zcTgk3jqym/W/ggl1PjadIzkejjf
+	CjSgs1XvH+xsySWv8vDWwZa+fIr6M+4bvVjo5ugiqkxdNMCkqUIBuGfYEZgNMLuToPSXabgMWoj
+	venrwelfVG6IJxLUG0yOdljWlYPHMGFcFa4mm/9NgMti7xS+0RWr+JYpVY92fMHfkasOG2SLYQU
+	xo73J4FYcOtZBokifbRGDtFbhC2rR3MLyWnI8JkcEFjr7RGybg6JB2nzt3Ds2FYK2gfqOGHOxp6
+	0VRTsNws7H/uFuqNGRz41HxSlX6ABGa3+/iFKLsiGAw==
+X-Google-Smtp-Source: AGHT+IHMFdLeqsl1keutJvetsz/HQeuyO7zwQD9r8hsOkWyMELeJ+qBkrO9PQDT8yLNTYvW2Iak2rg==
+X-Received: by 2002:a05:6000:4308:b0:3a3:7435:9a32 with SMTP id ffacd0b85a97d-3a374359cc1mr1362043f8f.40.1747649730398;
+        Mon, 19 May 2025 03:15:30 -0700 (PDT)
+Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d105sm12499021f8f.11.2025.05.19.03.15.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 03:15:29 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v5 0/5] iio: adc: add ad7606 calibration support
+Date: Mon, 19 May 2025 12:13:37 +0200
+Message-Id: <20250519-wip-bl-ad7606-calibration-v5-0-4054fc7c9f3d@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206165014.165614-1-max.kellermann@ionos.com>
-In-Reply-To: <20241206165014.165614-1-max.kellermann@ionos.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Mon, 19 May 2025 12:15:14 +0200
-X-Gm-Features: AX0GCFtKZEpAY6CHKkFI2TZqbc-QDLmrBaRMzVTuM8EfqZVQmVG6kb0DruUucDo
-Message-ID: <CAKPOu+8eQfqJ9tVz-DzDzqKPEtQVCooxtxe1+OZanu5gi3oQzQ@mail.gmail.com>
-Subject: Re: [PATCH] fs/ceph/io: make ceph_start_io_*() killable
-To: xiubli@redhat.com, idryomov@gmail.com, amarkuze@redhat.com, 
-	ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFEEK2gC/43OQY7CMAwF0KugrAlynDRpWXEPNAu7dSES0CpFZ
+ RDq3SdlMwihiuW39Z/9UIOkKIParh4qyRiH2F1yKNYrVR/pchAdm5wVAhbgsNK32Gs+aWqCB69
+ rOkVOdM0tjUC28uTBFqhyv0/Sxt+nvf/J+RiHa5fuz1OjmaffqKPRoIVd40o0bALumO7zWjZ1d
+ 1YzPOI/VgAuYZgxExw3QC2Uhj9g9hXzS5jNmBcO7CWghfABc69YuYS5jFWGbIulDeLfP5um6Q+
+ oxUFdrAEAAA==
+X-Change-ID: 20250429-wip-bl-ad7606-calibration-20a396a60352
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2724;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=81wMAJHRIrHMCayqIPjQjUtl0Nj/1hvPvhfNOZtFLms=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYsjQZgle8X1+0EV+U5mgXSsnJCSf87vNLBGiucs60WVfE
+ uc31r0fO0pZGMS4GGTFFFnqEiNMQm+HSikvYJwNM4eVCWQIAxenAEyklouR4Xi3/3POd45tvscy
+ u+rkE+57VO7b6HhknkP7F7mp844JpDH8T3F4/lfPUN/Yo8vr6y3DdLkDVtPfLT52YR+ftPu0XZH
+ fWAE=
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-What happened to this patch submission? Similar patches were accepted
-in NFS and VFS core.
+Add gain, offset and phase (as a delay) calibration support, for
+ad7606b, ad7606c16 and ad7606c18.
 
-On Fri, Dec 6, 2024 at 5:50=E2=80=AFPM Max Kellermann <max.kellermann@ionos=
-.com> wrote:
->
-> This allows killing processes that wait for a lock when one process is
-> stuck waiting for the Ceph server.  This is similar to the NFS commit
-> 38a125b31504 ("fs/nfs/io: make nfs_start_io_*() killable").
->
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
->  fs/ceph/file.c | 22 +++++++++++++---------
->  fs/ceph/io.c   | 44 +++++++++++++++++++++++++++++++++-----------
->  fs/ceph/io.h   |  8 +++++---
->  3 files changed, 51 insertions(+), 23 deletions(-)
->
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index 4b8d59ebda00..d79c0774dc6e 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -2127,10 +2127,11 @@ static ssize_t ceph_read_iter(struct kiocb *iocb,=
- struct iov_iter *to)
->         if (ceph_inode_is_shutdown(inode))
->                 return -ESTALE;
->
-> -       if (direct_lock)
-> -               ceph_start_io_direct(inode);
-> -       else
-> -               ceph_start_io_read(inode);
-> +       ret =3D direct_lock
-> +               ? ceph_start_io_direct(inode)
-> +               : ceph_start_io_read(inode);
-> +       if (ret)
-> +               return ret;
->
->         if (!(fi->flags & CEPH_F_SYNC) && !direct_lock)
->                 want |=3D CEPH_CAP_FILE_CACHE;
-> @@ -2283,7 +2284,9 @@ static ssize_t ceph_splice_read(struct file *in, lo=
-ff_t *ppos,
->             (fi->flags & CEPH_F_SYNC))
->                 return copy_splice_read(in, ppos, pipe, len, flags);
->
-> -       ceph_start_io_read(inode);
-> +       ret =3D ceph_start_io_read(inode);
-> +       if (ret)
-> +               return ret;
->
->         want =3D CEPH_CAP_FILE_CACHE;
->         if (fi->fmode & CEPH_FILE_MODE_LAZY)
-> @@ -2362,10 +2365,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb=
-, struct iov_iter *from)
->                 direct_lock =3D true;
->
->  retry_snap:
-> -       if (direct_lock)
-> -               ceph_start_io_direct(inode);
-> -       else
-> -               ceph_start_io_write(inode);
-> +       err =3D direct_lock
-> +               ? ceph_start_io_direct(inode)
-> +               : ceph_start_io_write(inode);
-> +       if (err)
-> +               goto out_unlocked;
->
->         if (iocb->ki_flags & IOCB_APPEND) {
->                 err =3D ceph_do_getattr(inode, CEPH_STAT_CAP_SIZE, false)=
-;
-> diff --git a/fs/ceph/io.c b/fs/ceph/io.c
-> index c456509b31c3..2735503bc479 100644
-> --- a/fs/ceph/io.c
-> +++ b/fs/ceph/io.c
-> @@ -47,20 +47,30 @@ static void ceph_block_o_direct(struct ceph_inode_inf=
-o *ci, struct inode *inode)
->   * Note that buffered writes and truncates both take a write lock on
->   * inode->i_rwsem, meaning that those are serialised w.r.t. the reads.
->   */
-> -void
-> +int
->  ceph_start_io_read(struct inode *inode)
->  {
->         struct ceph_inode_info *ci =3D ceph_inode(inode);
-> +       int err;
->
->         /* Be an optimist! */
-> -       down_read(&inode->i_rwsem);
-> +       err =3D down_read_killable(&inode->i_rwsem);
-> +       if (err)
-> +               return err;
-> +
->         if (!(READ_ONCE(ci->i_ceph_flags) & CEPH_I_ODIRECT))
-> -               return;
-> +               return 0;
->         up_read(&inode->i_rwsem);
-> +
->         /* Slow path.... */
-> -       down_write(&inode->i_rwsem);
-> +       err =3D down_write_killable(&inode->i_rwsem);
-> +       if (err)
-> +               return err;
-> +
->         ceph_block_o_direct(ci, inode);
->         downgrade_write(&inode->i_rwsem);
-> +
-> +       return 0;
->  }
->
->  /**
-> @@ -83,11 +93,13 @@ ceph_end_io_read(struct inode *inode)
->   * Declare that a buffered write operation is about to start, and ensure
->   * that we block all direct I/O.
->   */
-> -void
-> +int
->  ceph_start_io_write(struct inode *inode)
->  {
-> -       down_write(&inode->i_rwsem);
-> -       ceph_block_o_direct(ceph_inode(inode), inode);
-> +       int err =3D down_write_killable(&inode->i_rwsem);
-> +       if (!err)
-> +               ceph_block_o_direct(ceph_inode(inode), inode);
-> +       return err;
->  }
->
->  /**
-> @@ -133,20 +145,30 @@ static void ceph_block_buffered(struct ceph_inode_i=
-nfo *ci, struct inode *inode)
->   * Note that buffered writes and truncates both take a write lock on
->   * inode->i_rwsem, meaning that those are serialised w.r.t. O_DIRECT.
->   */
-> -void
-> +int
->  ceph_start_io_direct(struct inode *inode)
->  {
->         struct ceph_inode_info *ci =3D ceph_inode(inode);
-> +       int err;
->
->         /* Be an optimist! */
-> -       down_read(&inode->i_rwsem);
-> +       err =3D down_read_killable(&inode->i_rwsem);
-> +       if (err)
-> +               return err;
-> +
->         if (READ_ONCE(ci->i_ceph_flags) & CEPH_I_ODIRECT)
-> -               return;
-> +               return 0;
->         up_read(&inode->i_rwsem);
-> +
->         /* Slow path.... */
-> -       down_write(&inode->i_rwsem);
-> +       err =3D down_write_killable(&inode->i_rwsem);
-> +       if (err)
-> +               return err;
-> +
->         ceph_block_buffered(ci, inode);
->         downgrade_write(&inode->i_rwsem);
-> +
-> +       return 0;
->  }
->
->  /**
-> diff --git a/fs/ceph/io.h b/fs/ceph/io.h
-> index fa594cd77348..08d58253f533 100644
-> --- a/fs/ceph/io.h
-> +++ b/fs/ceph/io.h
-> @@ -2,11 +2,13 @@
->  #ifndef _FS_CEPH_IO_H
->  #define _FS_CEPH_IO_H
->
-> -void ceph_start_io_read(struct inode *inode);
-> +#include <linux/compiler_attributes.h> // for __must_check
-> +
-> +__must_check int ceph_start_io_read(struct inode *inode);
->  void ceph_end_io_read(struct inode *inode);
-> -void ceph_start_io_write(struct inode *inode);
-> +__must_check int ceph_start_io_write(struct inode *inode);
->  void ceph_end_io_write(struct inode *inode);
-> -void ceph_start_io_direct(struct inode *inode);
-> +__must_check int ceph_start_io_direct(struct inode *inode);
->  void ceph_end_io_direct(struct inode *inode);
->
->  #endif /* FS_CEPH_IO_H */
-> --
-> 2.45.2
->
+Calibration is available for devices with software mode capability. 
+
+Offset and phase calibration is configurable by sysfs attributes, while
+gain calibration value in ohms must match the external RFilter value,
+when an external RFilter is available, so implemented through a specific
+devicetree "adi,rfilter-ohms" property.
+
+This patchset depends on:
+https://lore.kernel.org/linux-iio/20250505131544.0a7477a2@jic23-huawei/
+
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v5:
+- fix tab/spaces wrong formatting on ABI doc (1/5),
+- fix description in ABI doc (1/5),
+- fix code multiline alignments (3/5),
+- fix calibration offset calculation as oneliner expression (3/5), 
+- Link to v4: https://lore.kernel.org/r/20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com
+
+Changes in v4:
+- fix ad7606_chan_calib_gain_setup appropriately to be called once.
+- Link to v3: https://lore.kernel.org/r/20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com
+
+Changes in v3:
+- fix dt_bindings,
+- change sysfs calib_delay to convdelay,
+- fix sysfs documentation accordingly,
+- used u32 for reg and r_gain,
+- used DIV_ROUND_CLOSEST for setting r_gain,
+- minor syntax fixes,
+- Link to v2: https://lore.kernel.org/r/20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com
+
+Changes in v2:
+- change phase_delay to calib_delay,
+- fix dt_bindings,
+- fix gain calibarion fdt parsing,
+- fix ad7606c-18 calib offset range,
+- fix calib offset calculation,
+- fix calib gain range,
+- Link to v1: https://lore.kernel.org/r/20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com
+
+---
+Angelo Dureghello (5):
+      Documentation: ABI: IIO: add calibconv_delay documentation
+      iio: core: add ADC delay calibration definition
+      iio: adc: ad7606: add offset and phase calibration support
+      dt-bindings: iio: adc: adi,ad7606: add gain calibration support
+      iio: adc: ad7606: add gain calibration support
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  24 +++
+ .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |  29 +++
+ drivers/iio/adc/ad7606.c                           | 221 +++++++++++++++++++++
+ drivers/iio/adc/ad7606.h                           |  12 ++
+ drivers/iio/industrialio-core.c                    |   1 +
+ include/linux/iio/types.h                          |   1 +
+ 6 files changed, 288 insertions(+)
+---
+base-commit: 7ad2a2f59802461dd18f641482e5da808c32180b
+change-id: 20250429-wip-bl-ad7606-calibration-20a396a60352
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
