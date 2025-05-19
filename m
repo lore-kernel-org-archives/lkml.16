@@ -1,165 +1,241 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCB178F4E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC2202F7B
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647684; cv=none; b=nVoIHnRmMXI3cpNMj2oArW1sI7LiR4MDdxex0oM+IANPOVvehJVbZZJleqbhX9fMCD2fW5cNOl8+x59sCazy1g3ZiE7b/9I5uHOEIAt+zqAGFl4iKyYIQy/FXh9obAfJ60gSaXbiewlerM2ZBUjavCQyl2tOVeOxa/Q5MULG/Xk=
+	t=1747647754; cv=none; b=ZynmCRo50QKjSOsywVsJdyI4CQ2o4B/TuSLagzKdVkFdBZuTXVvESgaGReFkSnqoIAAle0aJjOuyPqxkTEgHoGfR/BEMtIIPYkMIm2807aH94/+fdB7wkwIZylMJ4zk62W7kcXAU/eEOU5LjSZNgYc3hUzJAes+bpazDSOVaNvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647684; c=relaxed/simple;
-	bh=1N8vBcWhIabGytynruQG56eLkX8CxqpQ09i3kQSPOCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XlX+BupooTZkcUZohbxXxSOfU8w3EYZFnzI6TsceP99S9jMDOC/lWFeSIuCu8AAG8jfeClFHyqpXDao0smD3CK6U5u0zUmlpRZZ45trQcOvTl4rycau/Qi5tQF6zZX5mImdHlA5mpgJiGn+N4Z9HDfmTz2dqsDebdLltEYBN/ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Dd1zGFWi; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747647754; c=relaxed/simple;
+	bh=E3NkA6uH614ySqMHBo8o678d+83U+3iUYauudgnzNVU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=b1jFFv2VlXsYKm3vtBKMJsyHjG2jXzBZLO8TNLv+JmDtdIkvY4HoLUtyxqw0rMzO5VV2Rpoy9SMheF+LOE10L42Gam2Mq8mhbrL8saPPR6WkY+LAyT0zVB3bSVZhiT06Gez6kPZBEbsReZHWaqE0IiK0djnRC56ADOQAr4GPmAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eu9CU4Pb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Dd1zGFWi"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a375e72473so178133f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747647681; x=1748252481; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9mkHsltLutO5Q2FogJQA4q6XiEXER0Twfd94ZZbKAnk=;
-        b=Dd1zGFWiUp042yecqm0TkK0hJHhMHo9ZgqHARUfeUVjvHoFdV/7zedVZCVwcJkuUpW
-         HSIhUyzc5xTYCEg39NWCKAzCNXc4Avb7p9aSavAIHT0o9RWWJG35tcYmpFW02XrGYaW0
-         kVlbnVYBW9LrbGFLEen0zh8sk8kwf+NWQFtl+uI1Ofmg0Pd48PoAUfKheaOR7SOmLOkb
-         pkXcqgJI4Xn8MGN8NWJTJ4JLcGBzHpHVNMDOU85x8onWlgMhezD4UqW1SxqPFZ3dFQvY
-         D0acDT9xz4ao/0dMmNEk/58bfwAHc6FPYwb8i/TMuJHnt6Aajed5n7E1qDXnMuZsnQ9V
-         bjWA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eu9CU4Pb"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J7GbnL023174
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:42:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=8Xdkk5ppMUCw7u+31/KTTq
+	mStofyaJ7T2kwr9altaWU=; b=eu9CU4PbEUXefPcWbAyWOs01/AyR95FGM1YrA8
+	dGkR4fizbmtGnQUy+L4n4d0UutUDOduIyFxuQMn+xcZX++YeLwYi0zQR35gYFsV5
+	OC8rVKFCiR3D/rkHZ4bvWySE6R5RxhYa04+fmtbBAbexyNoMzImcLMwIvCOyz1zB
+	wwq1vlES5R7eTveMADNzEMJvS+2LaHg0C3QmY9CaMW4y7+WIcv7V9TLSwrH5fHZD
+	DTFEK4a8ABRExlFIInDto75SgZmdLJqnNUOhSK4ADoY3cly4fH7pgqbup9lTEn+s
+	UQxwFYEr1iAIaFZIsTj1HJgeHmbAnniipriynh+xPDM4iOqA==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r041rdpq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:42:31 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-742c5f7a70bso1399279b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:42:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747647681; x=1748252481;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9mkHsltLutO5Q2FogJQA4q6XiEXER0Twfd94ZZbKAnk=;
-        b=l182ionkubpKDcy0U4iSCy4HSSzQv/NsnGrHKOblijfOY7XWQkZQ39FOwAO2rF7MP6
-         5gJO4rFmk+YeXI9AhGOFBP1dNnrluDe2qHPlN3X4xluWy0J1pCcYPiSrah4ff5frpj6/
-         bI2tunNdjZhF0uiOjqwwSbLGRnavlO/FCdqtSBIhZk/+xf9oNm//dgg4TosUe/eSUsAa
-         T1nliQ87pq64bm//ERBiCSZGCJ7rVOVEVsRMao844ASwTaVrP+zW5YnRCRTuw/AD+/Qj
-         Lg9vfjZddNPH61k2hZwvmfF+oki/LF+Z5n3r1P+aDjxpApES37zogL6nfwGG6qpd2hjx
-         4E6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV55GSLe5/+89enEfixiGlv9JsYT9+Cvf9wpGn3YssNHoM6PykMDVVcViZw8UVbiFmKUtbXS9GNAACQsv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEAbQvUCI5PloRJhY2SkGiw03Ce6RdJWE/cbMNe/ggr87TgPcY
-	avkRZ6AKaXA0at1hIvtE9OM/Ap9ZBJoXN2sA0Lc/ll5WopSXgZtyK1xT0KhbebYnOm8=
-X-Gm-Gg: ASbGnct9d0Itn3UPRrLhNKybNzhTRDQhF/u/EmZNpj6bnvGsDlY8eDkX+rEh6daD5HF
-	tTHLZa2+VA7xkqMOeZXvfd0avGzK7+C7AN8qqUPVfxWxJKBZ2B46gIqipu+SXRMssasf20R+AdM
-	90ERCVwDsLFsRD0xHKhS/nmPihjmQSGRXaZ829pQb9g13jyoqLHXLAnEHcRkj4Frm/EPhpEDk++
-	9cEBjXLLYzX/UzoH9N/tz7bYcMrk3+zP0YNYFHH8aLBl/nADhkdtw82upvtBH/woWYauO76JKo2
-	1HSRUYfd1VuPOH6PH78xWAVl+f/Zp+ZIcQch50ICl5v7jUz41qWw9zNQQdb4SjsSPtMIeZ4r5+A
-	AMXgrCgwpXULh44kLyyPBWqvRa1sL3F2Kv6pr
-X-Google-Smtp-Source: AGHT+IFbj+WYBa3qzJuAo96O0EsxKbMiAB2DsVMptXbWkzDD93S6xvquNDnxGoJkRMYfSk9pZVte6A==
-X-Received: by 2002:a5d:5888:0:b0:3a3:7351:6f0b with SMTP id ffacd0b85a97d-3a3735171ebmr1122593f8f.57.1747647680868;
-        Mon, 19 May 2025 02:41:20 -0700 (PDT)
-Received: from archlinux (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a04csm11974249f8f.23.2025.05.19.02.41.19
+        d=1e100.net; s=20230601; t=1747647750; x=1748252550;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8Xdkk5ppMUCw7u+31/KTTqmStofyaJ7T2kwr9altaWU=;
+        b=Wwxy9R8BM7YLC/LMHMrmwFTIhMo0S6ZypFDxDAJpgPxhxkYppXGNYo0pFOFiHGN/us
+         Jr8UMeoCJkTyM06DW5LXVrZyLeBIuFg7N6TSMczlJantbTY2FFik8EpR5RsgMbh/X6PT
+         MFlgFVZPeu4I+l7kC4+9Og9tHdg1MfVJy/5EgvIH6tecbFeJr7f/WbDJ7EGQdr174nM6
+         UeDxiHLPoV0Xfkg4Z+RR9VaDLsA0zrE221IiA5vgOUSGhTRyUSi/J4YLZq0CE1g/fi6q
+         UFrIMMG1oqvFCuUXZwjwT3/W6ytVCPEOjGlkCw5r38hEw1yYKNEG0fugg97cZNrc3Ycu
+         t19g==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Sq7I8kshkfDbDzoYnM7eMr52vQFlpaOHKsAoX4228MHxnYQ0sXbRsHK4YHo/Qx9X0Y38cMG8WVouFeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ5+EN3uW8FsX47OTaxTa7gqBJcG4gcPVYUUTelwgWHLuYurzF
+	Lj7FcCjlwEWEPdQNpcXi/OFGKCaXiyqlF1/X9nP77c0BtTqXiAPkdqdmrBAykhL3FKrUXYrNI9y
+	arhcpfGqzCL9WXe7R+u1VEHvHcH7PrEV4AAKAK756d3j//5zHj0rU4GrNjMWx+2sX5E4=
+X-Gm-Gg: ASbGncuAJl+QkT7zr5UiEaSnuHgPgk+EbIJy57QD/AO3ePlJ2OH3mAoqLbdGabLwyOu
+	a4EdfUT8lrEt6DDsGrXpapgf8rDgXeToMwu1FYIBEjnTYoBDmQbT42Nmxsn8FtjuLPVD0yQ88+z
+	jT8DMERs9wtcy2o4BrXa4u1jBT06tM3AjNmc3D3lg02TUFRPYMLgG/zQuox9CdxFk2Pe5vOvAUW
+	z7Th5SI3gFOonOiz+RopCqpxO5sd3gDTl99RZCrfp3uOxBhqvPGMq2SRZ6BqP0evk4ouK9o4uL6
+	pmZ3zbA9rKDCS9GQl9Ps/IF8djJyRipTfQitzcd8FLV+D4g=
+X-Received: by 2002:a05:6a00:a06:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-742acc8e94cmr16949365b3a.2.1747647750209;
+        Mon, 19 May 2025 02:42:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFoCNHIy8vm7UNK06bHoqEfkocfr01VDi6iYCVtGhO8fkUV8H34cgcNYNSP8u4+8ZFmO53vpQ==
+X-Received: by 2002:a05:6a00:a06:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-742acc8e94cmr16949320b3a.2.1747647749707;
+        Mon, 19 May 2025 02:42:29 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a97398f8sm5809092b3a.78.2025.05.19.02.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 02:41:20 -0700 (PDT)
-Date: Mon, 19 May 2025 11:40:09 +0200
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] iio: adc: ad7606: add gain calibration support
-Message-ID: <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
-References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
- <20250508-wip-bl-ad7606-calibration-v4-5-91a3f2837e6b@baylibre.com>
- <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
+        Mon, 19 May 2025 02:42:29 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v3 00/11] bus: mhi: host: Add support for mhi bus bw
+Date: Mon, 19 May 2025 15:12:13 +0530
+Message-Id: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPX8KmgC/23NzQ6CMAzA8VchPTuyD0Hx5HsYQzYY0kQYbjI1h
+ He3cNEDlyb/pvl1gmA92gCnZAJvIwZ0PYXaJVC1ur9ZhjU1SC4zLsWBdS2W5lWOA2uUUDzXWa6
+ EAbofvG3wvVqXK3WL4en8Z6WjWLZbShSMs8LoWti9NLURZxdC+hj1vXJdl9KABYvyB9Dff0ASc
+ MyLSiuSuWk2gHmev5ZAhGnqAAAA
+X-Change-ID: 20250217-mhi_bw_up-f31306a5631b
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Miaoqing Pan <quic_miaoqing@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747647743; l=5246;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=E3NkA6uH614ySqMHBo8o678d+83U+3iUYauudgnzNVU=;
+ b=/lyU+5ydxEoQf3CrCMazF+8+/lgCqzeWYYIHuE+LMKA5vLfcz15M/CGdyq92AMFU1qdQu3173
+ U7ZTed1Gw0lCrGIIKbJ6/caEFmvdkEmopnoewqoF5QA5DmGGkEhNYDX
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA5MSBTYWx0ZWRfXwbGmhgHTIH8H
+ 65gUj3RpR4r98Tkvhv2BnzRg/5U4hKCixWrHNClnxOexIXISbf8YP5EAesCdB1//yiCizYjqjex
+ HBYcVXWKfHC/addajUJSjvH1LvTzseUym7cHxhwTWCs61AOZdBiuyXFRm94AEG6BJWod+nlEvDk
+ oXnu/rHt3zgTWA/nVINkT94QgGFdewaV1wALHqWC8m5FLMCjs5BNZrYP3zNhxJr17I8K9w1RO+f
+ ew7+f4x9/bHQmEAc2o/TgY2wUu9lEINQupqrLzFC3HsWq6BTbguLuIXotfjqf/3EVrsBk6ihyRZ
+ jd0mIP285lmZXawg+0VCeLPqjKgOkUqixUFSrqa+gikAj0cF+onWWDx10q4KtZUe3o3IbHJ6OSM
+ Ng0DZlPYgW0FIDCnO2p8I2CA2RGz3uI2mx0okkHY3ldydD6XO8i88skq6BcwpciO6q7yctDd
+X-Proofpoint-ORIG-GUID: OVbPF84cD3fkg0TgoRlhd6wDKcV2SJyk
+X-Proofpoint-GUID: OVbPF84cD3fkg0TgoRlhd6wDKcV2SJyk
+X-Authority-Analysis: v=2.4 cv=HIjDFptv c=1 sm=1 tr=0 ts=682afd07 cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=a1UGM4vktcZ-V-6vu5QA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190091
 
-Hi Andy,
+As per MHI spec sec 14, MHI supports bandwidth scaling to reduce power
+consumption. MHI bandwidth scaling is advertised in devices that contain
+the bandwidth scaling capability registers. If enabled, the device
+aggregates bandwidth requirements and sends them to the host in the form
+of an event. After the host performs the bandwidth switch, it sends an
+acknowledgment by ringing a doorbell.
 
-On 08.05.2025 22:00, Andy Shevchenko wrote:
-> On Thu, May 08, 2025 at 12:06:09PM +0200, Angelo Dureghello wrote:
-> > From: Angelo Dureghello <adureghello@baylibre.com>
-> > 
-> > Add gain calibration support, using resistor values set on devicetree,
-> > values to be set accordingly with ADC external RFilter, as explained in
-> > the ad7606c-16 datasheet, rev0, page 37.
-> > 
-> > Usage example in the fdt yaml documentation.
-> 
-> ...
-> 
-> > +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
-> > +{
-> > +	struct ad7606_state *st = iio_priv(indio_dev);
-> > +	unsigned int num_channels = st->chip_info->num_adc_channels;
-> > +	struct device *dev = st->dev;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * This function is called once, and parses all the channel nodes,
-> > +	 * so continuing on next channel node on errors, informing of them.
-> > +	 */
-> > +	device_for_each_child_node_scoped(dev, child) {
-> > +		u32 reg, r_gain;
-> > +
-> > +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> > +		if (ret)
-> > +			continue;
-> 
-> > +		/* Chan reg is a 1-based index. */
-> > +		if (reg < 1 || reg > num_channels) {
-> > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
-> > +			continue;
-> > +		}
-> 
-> But this will allow to have a broken DT. This check basically diminishes the
-> effort of the DT schema validation. If there are limits one still would be able
-> to create a DT that passes the driver but doesn't pass the validation.
-> 
+if the host supports bandwidth scaling events, then it must set
+BW_CFG.ENABLED bit, set BW_CFG.DB_CHAN_ID to the channel ID to the
+doorbell that will be used by the host to communicate the bandwidth
+scaling status and BW_CFG.ER_INDEX to the index for the event ring
+to which the device should send bandwidth scaling request in the
+bandwidth scaling capability register.
 
-fixed all your points on other patches of this patch-set. Still your
-emails are going to google spam, just could catch them on friday. 
-Really not clear why.
+As part of mmio init check if the bw scale capability is present or not,
+if present advertise host supports bw scale by setting all the required
+fields.
 
-About the above, i understand, but the check is actually the same as
-in ad7606_get_chan_config(), a warning that fdt is not correct, 
-i dont see a blocking issue here now, so not going to change it
-in this next patchset.
+MHI layer will only forward the bw scaling request to the controller
+driver, it is responsibility of the controller driver to do actual bw
+scaling and then pass status to the MHI. MHI will response back to the
+device based up on the status of the bw scale received.
 
-Regards,
-angelo
+Add a new get_misc_doorbell() to get doorbell for misc capabilities to
+use the doorbell with mhi events like MHI BW scale etc.
 
-> > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-> > +					       &r_gain);
-> > +		if (ret)
-> > +			/* Keep the default register value. */
-> > +			continue;
-> > +
-> > +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
-> > +			dev_warn(dev, "wrong gain calibration value");
-> > +			continue;
-> > +		}
-> > +
-> > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-> > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
-> > +		if (ret) {
-> > +			dev_warn(dev, "error writing r_gain");
-> > +			continue;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Use workqueue & mutex for the bw scale events as the pci_set_target_speed()
+which will called by the mhi controller driver can sleep.
+
+If the driver want to move higher data rate/speed then the current data
+rate/speed then the controller driver may need to change certain votes
+so that link may come up in requested data rate/speed like QCOM PCIe
+controllers need to change their RPMh (Resource Power Manager-hardened)
+state. And also once link retraining is done controller drivers needs
+to adjust their votes based on the final data rate/speed.
+
+Some controllers also may need to update their bandwidth voting like
+ICC bw votings etc.
+
+So, add pre_scale_bus_bw() & post_scale_bus_bw() op to call before & after
+the link re-train. There is no explicit locking mechanisms as these are
+called by a single client endpoint driver
+
+In case of PCIe switch, if there is a request to change target speed for a
+downstream port then no need to call these function ops as these are
+outside the scope of the controller drivers.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v3:
+- Move update speed logic to pwrctrl driver (Mani)
+- Move pre_bus_bw & post_bus_bw to bridge as these are bridge driver specific ops,
+it feels to me we need to add these in the host bridge driver similar to recently
+added one reset_slot.
+- Remove dwc level wrapper (Mani)
+- Enable ASPM only if they are enabled already (Mani)
+- Change the name of mhi_get_capability_offset to mhi_find_capability() (Bjorn)
+- Fix comments in the code, subjects etc (Mani & Bjorn)
+- Link to v2: https://lore.kernel.org/r/20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com
+
+Changes in v2:
+- Update the comments.
+- Split the icc bw patch as sepertate one (Bjorn)
+- update the aspm disablement comment (Bjorn)
+- Use FIELD_GET & FIELD_PREP instead of hard macros and couple of nits
+  suggested by (Ilpo Järvinen)
+- Create a new function to change lnkcntrl2speed to enum pci_bus_speed (Jeff)
+- Link to v1: https://lore.kernel.org/r/20250217-mhi_bw_up-v1-0-9bad1e42bdb1@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (9):
+      PCI: Update current bus speed as part of pci_pwrctrl_notify()
+      PCI/bwctrl: Add support to scale bandwidth before & after link re-training
+      PCI/ASPM: Return enabled ASPM states as part of pcie_aspm_enabled()
+      PCI/ASPM: Clear aspm_disable as part of __pci_enable_link_state()
+      PCI: qcom: Extract core logic from qcom_pcie_icc_opp_update()
+      PCI: qcom: Add support for PCIe bus bw scaling
+      bus: mhi: host: Add support for Bandwidth scale
+      PCI: Export pci_set_target_speed()
+      PCI: Add function to convert lnkctl2speed to pci_bus_speed
+
+Miaoqing Pan (1):
+      wifi: ath11k: Add support for MHI bandwidth scaling
+
+Vivek Pernamitta (1):
+      bus: mhi: host: Add support to read MHI capabilities
+
+ drivers/bus/mhi/common.h               |  20 ++++++
+ drivers/bus/mhi/host/init.c            |  90 +++++++++++++++++++++++-
+ drivers/bus/mhi/host/internal.h        |   7 +-
+ drivers/bus/mhi/host/main.c            |  98 +++++++++++++++++++++++++-
+ drivers/bus/mhi/host/pm.c              |  10 ++-
+ drivers/net/wireless/ath/ath11k/mhi.c  |  41 +++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c | 124 ++++++++++++++++++++++++++-------
+ drivers/pci/pci.c                      |  12 ++++
+ drivers/pci/pcie/aspm.c                |   5 +-
+ drivers/pci/pcie/bwctrl.c              |  16 +++++
+ drivers/pci/pwrctrl/core.c             |   5 ++
+ include/linux/mhi.h                    |  13 ++++
+ include/linux/pci.h                    |  19 ++++-
+ 13 files changed, 425 insertions(+), 35 deletions(-)
+---
+base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+change-id: 20250217-mhi_bw_up-f31306a5631b
+
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
