@@ -1,175 +1,98 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F72286420
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A12927979D;
+	Mon, 19 May 2025 17:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675907; cv=none; b=H0TeAIXVPGVo3BA4tEQzVrOBFGJR4MLL870LdKvCVBn2+tCzwQsxvJPYOGM2qux6Jz3KcO8TgrQ4l86S0B+EzAbVp5nM2Cze3dUWIisdIJ+7MXEZ46M5zisvB+5bEUebCFP+EyEIhwQPI4fKATwPxvGv7mOcXiZtVH8Wbm00UXM=
+	t=1747675955; cv=none; b=spkGC3r1JMaO7Lt1Ch/mVhHxoe6t2RHfrIXfF4ANuaH7wzfilHEJ8qVwXFjwb3qpweYA1VPuuPN5VIzdrMNfaApQE2zbISEm6nTSufFCY+x2kZ614hE2HnEbqKC1pcO43wqNv+wNgIpgX6wckwfUfjjinxY0E5VA/a6/+WtxiwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675907; c=relaxed/simple;
-	bh=jLy2szwDWHqqJviMtbGQnTN3ULw2S8OhfWEULUU5naU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bz4x4Zlz/vZkmUl1wyAEz7pK9qQtPTrhZonzD4zyy0ulkNBeU7U0fL318CFBdoG2N/+tnsICpJoiKjeFT5KICjdjY18UtnoQyXX+23jUF2YYUEz91/K2+OplSQHnnQekvPxS2JurBE9fFfr+Fhxmiyx3zxg5lMhv9xpkPbWrdZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=arcfNm9d; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747675955; c=relaxed/simple;
+	bh=uxW/Y44LlHu7A4hcYct8su/An7A98gxV72NAtsVDtHI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=g3e3EfYoK4c76IjJZJJlRz/LxDY6wyXR873VmuK6Gj3KUWbRUDvyZN+i+uErGREayvOilICCCw+E4dQLRSGOOuoI/EMD0RcueiYYnm0Cx+YMrVa79CnfRBqxRZKFH7KTC8ebB/nn4LxBQRgijitLIULaayhjyrCg6TbGhRXSTKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZDzt0Mp0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="arcfNm9d"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-231f6c0b692so394255ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747675904; x=1748280704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jmvWuYAzDFR95No8NLEp3J02kOMT0LgXSZkJsXShgyI=;
-        b=arcfNm9dzdfLscpmlpVDEvs2TKM5Mi2Z0WnjOxp7rGYONICbU89yYSsQmFGLqcVAII
-         Nxg6tY2KSq/Q9ktudvd4ARVthPepxN31bytwyFggTJqYRomqziiueimd+urSo0E+7yod
-         4ugEKIMR+E5zSuniz//0HzZoBkiValRZwD7JgDOh5lwmx/ihw3uBG85IV6NyeD7yhdSw
-         CYnWmYU6niokcl0IWDXz6/mrL/0avUIhemJ2eo4M3FvCuDS+ru/sfGI0b2N3wlhgUo7y
-         7wiqts48lRx44UlZfrYuq0cPl9WN2vdQ3GPT7B7oRq4o1SNEGb0dQmw4BOK4VjzWwAyB
-         154A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747675904; x=1748280704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jmvWuYAzDFR95No8NLEp3J02kOMT0LgXSZkJsXShgyI=;
-        b=RZnM8x9tuiw9SwxpMqWBOkoBirNS2KSDZ88mjGodiRh6dB50izt181bBSmHKWnPd85
-         IY31ZKV4iwyuyGY7a+xUin6jwCmuzo848p3IBY7tdVTRsY+Uebn6g7U7tQV0vZeU/5jm
-         Do9nKlipKFQdR5iTr4eqlyODVqvTNR9so64QvOD7ZpwPGJ1GYMd8vYrgWUGjtBKE8xnB
-         kmFQkj8yHEvNJestHM8RpkLoKzkviRNj4H2bUoegnDIyCV6va46tn1Jge5acxPyNS1kS
-         5k5WHz4Tp5RlPkgbVLRbUZtrvH4CozOl96n/6Y6v98KeqxMWgUx2VBxkvdCnod8oY37A
-         Y7jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6kvotx1mx4HSVv3F3PizNI3dNOzt77KeFcpXnuS9NCX7kjAxeSUe9cowiHxGAq7+pvO94yLU3H6djHak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1kA8b3zm5jM5KodeDcaXyciU22yfHBPjup9c/MdFLgcfdYJ86
-	F6CNRhQiKnUACMWeEpx5MMBY+156PwJW0Km96Q/s0gH+7Bm4JaRJ0ePk0N+rv8jC2RPDM/y7kjF
-	5It6dtxQKvWAq24A26OgRng89GXXWl1pdYXhCssAN
-X-Gm-Gg: ASbGncteRSEMe1CSi6Z6JnU2QupxOsvGKtx1KDninuqwycb+9NQpyg0LmVVT8jR2NTF
-	fAQOejz+9v/JqIhd3Hby4qU9h/DF/80YbCgUgM/Mmi2LnKIH4OYZHwUmI2AnT2jC5z3QEcTCytg
-	AFCH+cOYWyAzE667zehdW+o3qcmYR84OLij44Jp76BKI3G
-X-Google-Smtp-Source: AGHT+IG+ExyKgE3ruV/gl5M9ZTWtLqmpbXPFt1mRf9GKepoZU4AoYFfOGioK8r7ghizA4noQkXhiVCYtew70Mv8tqF8=
-X-Received: by 2002:a17:903:290:b0:215:f0c6:4dbf with SMTP id
- d9443c01a7336-231ffd3192fmr4993165ad.14.1747675903859; Mon, 19 May 2025
- 10:31:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZDzt0Mp0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747675954; x=1779211954;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uxW/Y44LlHu7A4hcYct8su/An7A98gxV72NAtsVDtHI=;
+  b=ZDzt0Mp0cCUvG7oE6d0vLqPgb+RqTwXryg1nngDHInrtD6/pok2kgxNb
+   CN1ew9SfF3Ib6ExYu+TfcVfkh7Xz5NLY1IFRv/tdJ70oW0FCtYmY7wPsJ
+   71QOs0oEZzhSMBFiAoEwzfJnDTLqRZgDJuBO2pOSBgVe0dkTaSLP02aiP
+   i98D82+qXJ+azBdbPhkA7Q2qz2idnYIu9UxTj+X53giCzErdXMBcF+yap
+   fdA/fG8Jeo0/tpEe4j459cq/FytzqM06wAsJZZZJSZmHNol7Io1JdID1p
+   pwXHJ9APIobT4hZNW10q6fGXkkPJ7lZLz02bfJVZ4se05kF7nfpfiW9Jq
+   Q==;
+X-CSE-ConnectionGUID: 78w5aZdLTkmw8n0lDGiwiQ==
+X-CSE-MsgGUID: CaoZpYl7R3WG6GGUAhOlYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49739528"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="49739528"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:32:32 -0700
+X-CSE-ConnectionGUID: eDKgWOTfS8qudHCpi506WQ==
+X-CSE-MsgGUID: iJeyVBImTTC82hhFXVOT1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="176547197"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:32:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 20:32:25 +0300 (EEST)
+To: "Luck, Tony" <tony.luck@intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, srinivas.pandruvada@linux.intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    xi.pardee@linux.intel.com, "David E. Box" <david.e.box@linux.intel.com>
+Subject: Re: [PATCH 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+In-Reply-To: <aCtouJ7Lz80srgBa@agluck-desk3>
+Message-ID: <9b0a215f-1a42-6e23-6b00-f6a8531f14cc@linux.intel.com>
+References: <20250430212106.369208-1-david.e.box@linux.intel.com> <aCdaMel-zV8Qir69@agluck-desk3> <aCtouJ7Lz80srgBa@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519023517.4062941-1-almasrymina@google.com>
- <20250519023517.4062941-6-almasrymina@google.com> <aCtPEBmBFvM-bA_i@mini-arch>
-In-Reply-To: <aCtPEBmBFvM-bA_i@mini-arch>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 19 May 2025 10:31:30 -0700
-X-Gm-Features: AX0GCFs-Ut1FZDyYbbaHFHUXedO7i5T9SEf7r_1r-9FnEhuG-l96h6IGYWAaNwo
-Message-ID: <CAHS8izMjCX=PkU0bE6s46uXxrnHjP71G6LN0v6oQumNa2Mouzg@mail.gmail.com>
-Subject: Re: [PATCH net-next v1 5/9] net: devmem: ksft: add ipv4 support
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Neal Cardwell <ncardwell@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, David Ahern <dsahern@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, 
-	ap420073@gmail.com, praan@google.com, shivajikant@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, May 19, 2025 at 8:32=E2=80=AFAM Stanislav Fomichev <stfomichev@gmai=
-l.com> wrote:
->
-> On 05/19, Mina Almasry wrote:
-> > ncdevmem supports both ipv4 and ipv6, but the ksft is currently
-> > ipv6-only. Propagate the ipv4 support to the ksft, so that folks that
-> > are limited to these networks can also test.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >  .../selftests/drivers/net/hw/devmem.py        | 33 ++++++++++++-------
-> >  1 file changed, 22 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/t=
-esting/selftests/drivers/net/hw/devmem.py
-> > index f5d7809400ea..850381e14d9e 100755
-> > --- a/tools/testing/selftests/drivers/net/hw/devmem.py
-> > +++ b/tools/testing/selftests/drivers/net/hw/devmem.py
-> > @@ -18,30 +18,36 @@ def require_devmem(cfg):
-> >          raise KsftSkipEx("Test requires devmem support")
-> >
-> >
-> > -def check_rx(cfg) -> None:
-> > -    cfg.require_ipver("6")
-> > +def check_rx(cfg, ipver) -> None:
-> >      require_devmem(cfg)
-> >
-> > +    addr =3D cfg.addr_v[ipver]
-> > +    if ipver =3D=3D "6":
-> > +        addr =3D "[" + addr + "]"
->
-> I think you can add [] unconditionally, no need to special case v6.
->
+On Mon, 19 May 2025, Luck, Tony wrote:
+> On Fri, May 16, 2025 at 08:30:59AM -0700, Luck, Tony wrote:
+> > On Wed, Apr 30, 2025 at 02:20:49PM -0700, David E. Box wrote:
+> > > 4. Discovery Driver and API:  The core of the series is the addition of
+> > > the PMT Discovery driver. This driver not only implements discovery of
+> > > telemetry attributes and capability data (exposed via sysfs) but also
+> > > introduces an API to retrieve telemetry regions by feature, which is
+> > > essential for features like per-RMID telemetry counters.
+> > 
+> > This part of the series is the foundation for my telemetry/resctrl
+> > patches:
+> > 
+> > https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
+> > 
+> > That series includes a fake place holder for the discovery driver, but
+> > I've been using David's patches for all my testing on real hardware.
+> > 
+> > Tested-by: Tony Luck <tony.luck@intel.com>
+> 
+> Ilpo, Hans,
+> 
+> Linus released -rc7 as the likely final rc before opening merge window
+> next week.
+> 
+> Are David's patches in shape to be part of that merge? Or will I be
+> using them out of tree for another cycle?
 
-I'll double check, but IIRC the [] were v6-only.
+It's relatively large series so it isn't exactly a small task to go 
+through it. I've been hoping to find enough time still to review it in 
+this cycle and if nothing major comes up, it might make into this cycle.
 
-> > +
-> > +    socat =3D f"socat -u - TCP{ipver}:{addr}:{port}"
-> > +
-> >      port =3D rand_port()
-> >      listen_cmd =3D f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr_v=
-['6']} -p {port}"
-> >
-> > -    with bkg(listen_cmd) as socat:
-> > +    with bkg(listen_cmd) as ncdevmem:
-> >          wait_port_listen(port)
-> > -        cmd(f"echo -e \"hello\\nworld\"| socat -u - TCP6:[{cfg.addr_v[=
-'6']}]:{port}", host=3Dcfg.remote, shell=3DTrue)
-> > +        cmd(f"echo -e \"hello\\nworld\"| {socat}", host=3Dcfg.remote, =
-shell=3DTrue)
-> >
-> > -    ksft_eq(socat.stdout.strip(), "hello\nworld")
-> > +    ksft_eq(ncdevmem.stdout.strip(), "hello\nworld")
-> >
-> >
-> > -def check_tx(cfg) -> None:
-> > -    cfg.require_ipver("6")
-> > +def check_tx(cfg, ipver) -> None:
-> >      require_devmem(cfg)
-> >
-> >      port =3D rand_port()
-> > -    listen_cmd =3D f"socat -U - TCP6-LISTEN:{port}"
-> > +    listen_cmd =3D f"socat -U - TCP{ipver}-LISTEN:{port}"
-> >
-> > -    with bkg(listen_cmd, exit_wait=3DTrue) as socat:
-> > +    addr =3D cfg.addr_v[ipver]
-> > +
-> > +    with bkg(listen_cmd) as socat:
-> >          wait_port_listen(port)
-> > -        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifna=
-me} -s {cfg.addr_v['6']} -p {port}", host=3Dcfg.remote, shell=3DTrue)
-> > +        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifna=
-me} -s {addr} -p {port}", host=3Dcfg.remote, shell=3DTrue)
-> >
-> >      ksft_eq(socat.stdout.strip(), "hello\nworld")
-> >
-> > @@ -51,8 +57,13 @@ def main() -> None:
-> >          cfg.bin_local =3D path.abspath(path.dirname(__file__) + "/ncde=
-vmem")
-> >          cfg.bin_remote =3D cfg.remote.deploy(cfg.bin_local)
-> >
-> > +        if "4" in cfg.addr_v:
-> > +            ipver =3D "4"
-> > +        else:
-> > +            ipver =3D "6"
->
-> If we have both, we prefer v4, can we do the opposite?
+-- 
+ i.
 
-Sure, but why? Just curious.
-
---=20
-Thanks,
-Mina
