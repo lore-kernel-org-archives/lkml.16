@@ -1,45 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B47244699;
-	Mon, 19 May 2025 17:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19803265CA2;
+	Mon, 19 May 2025 17:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675317; cv=none; b=GyOw9p/Xdtc3TncwrS/5NLPNtTjTdZlMWQE3w1kE+mPzB6foOA4/Ly6a11C8k9ELa2dNn5pJSgA+Zk0BbXaBR3Ma1NCF5/UK8cqH2mxQqZJAAy4LQlm/qmbq8VYeT3zMnZuTGZRX2gJOjSr6xm/rj8xtyuMrelOOaJdR6qixJ54=
+	t=1747675325; cv=none; b=nGIMcGotnu3hgZLxNB+C/c+HgGWSSaCd7Moqbm5Mp9CO/mp0xv6DoRPlboRsxIsZmQlQY84gpMRQQOpWaIg5UgJhf2P0/BhWS2Gtra5Y1NHsWKIU4lOH71IsZgrRNMOP6tfquFwafVfzgSfHAueOIoYuJnW+pnJ9y5FaMN21HMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675317; c=relaxed/simple;
-	bh=3Kfs+8UoIc+Nl4DLIGOmtcSxf3HMGxNNUKXjDdKqLak=;
+	s=arc-20240116; t=1747675325; c=relaxed/simple;
+	bh=+Z6sHxva2Miz5i/8VjX3xdw2TldXnaCrPCnGrtk+uig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJrxIWYosLmfGfs+Udf1TVeVKQXO+Cdghyu2b3pQ8uQXKp7U9B8WwmKk6/1OdyOdKTSghz8uH7k2DdCnWwDRXGZWwaiDENBED1M0csbztVkYtbpWpXxigKYerXt/VwDvNvzHQzXOwPZ+Y3dEe3gr8nXI6JKLy02jIUS/oDN0SEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLoJZ6oe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OB9VTlw0MaBjECSQSK/It9lvR65tlpH/PubTs9ZlPQ4B9rPOk1pX2YyAGIXP4u28l7xVQC2X2CTLMfHg4x1O11XMz5sb6Dcm+JwZCbHm1TuLoncaClBDKU0OliuOQdFe3hpTwfEwB49D0Rs1cjEBNd2DALdZxiTjedl1uZob4hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjH0E98c; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLoJZ6oe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 945B2C4CEE9;
-	Mon, 19 May 2025 17:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747675317;
-	bh=3Kfs+8UoIc+Nl4DLIGOmtcSxf3HMGxNNUKXjDdKqLak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sLoJZ6oeZHx9FTtWRVsQPjvf/L4cRmjeJ2pmqJfuE47U5peYGpc67FKYy8Yu76veQ
-	 mdBMVlXHnTsrOIzYROdBeeuD2+uUyE4MRLmGDB2MkxkCNjtsHcfJqo3p/liMx0iJuC
-	 QcKGrCU2JnXQwIQ21WUykSI9LWFjIJ10SlpsPLTI26bdygGh15Lh0TlHSY7MFWFsNi
-	 /FEgRXfpN8W7BXUrzyquHdomQJiwT/uXWn98gtjgwdSN4MupPJZuS2D4pViZpeUKk+
-	 GhbEcvYZHvdS3HE+5DTRLtUJkHqgyojGcZykjV0qJVpACwMoOXPhnh3Hfm+WSUHOZf
-	 Ug6hblIsscA2g==
-Date: Mon, 19 May 2025 20:21:51 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Elena Reshetova <elena.reshetova@intel.com>
-Cc: dave.hansen@intel.com, seanjc@google.com, kai.huang@intel.com,
-	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, asit.k.mallick@intel.com,
-	vincent.r.scarlata@intel.com, chongc@google.com,
-	erdemaktas@google.com, vannapurve@google.com,
-	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
-Subject: Re: [PATCH v5 1/5] x86/sgx: Introduce a counter to count the
- sgx_(vepc_)open()
-Message-ID: <aCtor7AxyLAk3rlB@kernel.org>
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
- <20250519072603.328429-2-elena.reshetova@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjH0E98c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747675323; x=1779211323;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+Z6sHxva2Miz5i/8VjX3xdw2TldXnaCrPCnGrtk+uig=;
+  b=mjH0E98cxBbdNu7edCZASf4hRSJeOvmpXtgiHCnkyzawftxs292fY7lC
+   eZzH7u8jHmioieLphm8UAgCkh6QZzlu+5eewzfPB5K8kahhQKuh3083rd
+   3rCGRRpjXQgxCLmnR4+iD+q78pM1+CpkwUfo+1OyrlJeRSUDiaysWQSkS
+   nav3TbdnX6WsM+S2RWN6ewy5uH7Nev6sbL2LF9Ipt8g3FjFuIsXlt72Gp
+   NkOe83XJHOaUExyppE6hR5K+3s8Ms0X2r936SDCxYQIC7NXFTM8zYKEfd
+   MIHnXtyX8GJ0bXLq1zbIFo3sP+hgnh65c8gnMjYZJCPk/uF+uN4plZ8CK
+   A==;
+X-CSE-ConnectionGUID: 3+P9048BR0q8nf9zA/6Y1Q==
+X-CSE-MsgGUID: IXOVx8d4R6WRONoua65etg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="66998845"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="66998845"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:22:02 -0700
+X-CSE-ConnectionGUID: 9QVyv750Qei6+y2KQuQq7w==
+X-CSE-MsgGUID: r1TriyShTtae8MBQL1UFBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="139319397"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:22:02 -0700
+Date: Mon, 19 May 2025 10:22:00 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com, xi.pardee@linux.intel.com,
+	"David E. Box" <david.e.box@linux.intel.com>
+Subject: Re: [PATCH 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Message-ID: <aCtouJ7Lz80srgBa@agluck-desk3>
+References: <20250430212106.369208-1-david.e.box@linux.intel.com>
+ <aCdaMel-zV8Qir69@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,113 +62,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519072603.328429-2-elena.reshetova@intel.com>
+In-Reply-To: <aCdaMel-zV8Qir69@agluck-desk3>
 
-On Mon, May 19, 2025 at 10:24:27AM +0300, Elena Reshetova wrote:
-> Currently SGX does not have a global counter to count the
-> active users from userspace or hypervisor. Implement such a counter,
-> sgx_usage_count. It will be used by the driver when attempting
-> to call EUPDATESVN SGX instruction.
+On Fri, May 16, 2025 at 08:30:59AM -0700, Luck, Tony wrote:
+> On Wed, Apr 30, 2025 at 02:20:49PM -0700, David E. Box wrote:
+> > 4. Discovery Driver and API:  The core of the series is the addition of
+> > the PMT Discovery driver. This driver not only implements discovery of
+> > telemetry attributes and capability data (exposed via sysfs) but also
+> > introduces an API to retrieve telemetry regions by feature, which is
+> > essential for features like per-RMID telemetry counters.
 > 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
-> ---
->  arch/x86/kernel/cpu/sgx/driver.c |  1 +
->  arch/x86/kernel/cpu/sgx/encl.c   |  1 +
->  arch/x86/kernel/cpu/sgx/main.c   | 14 ++++++++++++++
->  arch/x86/kernel/cpu/sgx/sgx.h    |  3 +++
->  arch/x86/kernel/cpu/sgx/virt.c   |  2 ++
->  5 files changed, 21 insertions(+)
+> This part of the series is the foundation for my telemetry/resctrl
+> patches:
 > 
-> diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
-> index 7f8d1e11dbee..b5ffe104af4c 100644
-> --- a/arch/x86/kernel/cpu/sgx/driver.c
-> +++ b/arch/x86/kernel/cpu/sgx/driver.c
-> @@ -19,6 +19,7 @@ static int sgx_open(struct inode *inode, struct file *file)
->  	struct sgx_encl *encl;
->  	int ret;
->  
-> +	sgx_inc_usage_count();
->  	encl = kzalloc(sizeof(*encl), GFP_KERNEL);
->  	if (!encl)
->  		return -ENOMEM;
-> diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
-> index 279148e72459..3b54889ae4a4 100644
-> --- a/arch/x86/kernel/cpu/sgx/encl.c
-> +++ b/arch/x86/kernel/cpu/sgx/encl.c
-> @@ -765,6 +765,7 @@ void sgx_encl_release(struct kref *ref)
->  	WARN_ON_ONCE(encl->secs.epc_page);
->  
->  	kfree(encl);
-> +	sgx_dec_usage_count();
->  }
->  
->  /*
-> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-> index 8ce352fc72ac..80d565e6f2ad 100644
-> --- a/arch/x86/kernel/cpu/sgx/main.c
-> +++ b/arch/x86/kernel/cpu/sgx/main.c
-> @@ -914,6 +914,20 @@ int sgx_set_attribute(unsigned long *allowed_attributes,
->  }
->  EXPORT_SYMBOL_GPL(sgx_set_attribute);
->  
-> +/* Counter to count the active SGX users */
-> +static atomic64_t sgx_usage_count;
-> +
-> +int sgx_inc_usage_count(void)
-> +{
-> +	atomic64_inc(&sgx_usage_count);
-> +	return 0;
-> +}
-> +
-> +void sgx_dec_usage_count(void)
-> +{
-> +	atomic64_dec(&sgx_usage_count);
-> +}
-> +
->  static int __init sgx_init(void)
->  {
->  	int ret;
-> diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
-> index d2dad21259a8..f5940393d9bd 100644
-> --- a/arch/x86/kernel/cpu/sgx/sgx.h
-> +++ b/arch/x86/kernel/cpu/sgx/sgx.h
-> @@ -102,6 +102,9 @@ static inline int __init sgx_vepc_init(void)
->  }
->  #endif
->  
-> +int sgx_inc_usage_count(void);
-> +void sgx_dec_usage_count(void);
-> +
->  void sgx_update_lepubkeyhash(u64 *lepubkeyhash);
->  
->  #endif /* _X86_SGX_H */
-> diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
-> index 7aaa3652e31d..83de0907f32c 100644
-> --- a/arch/x86/kernel/cpu/sgx/virt.c
-> +++ b/arch/x86/kernel/cpu/sgx/virt.c
-> @@ -255,6 +255,7 @@ static int sgx_vepc_release(struct inode *inode, struct file *file)
->  	xa_destroy(&vepc->page_array);
->  	kfree(vepc);
->  
-> +	sgx_dec_usage_count();
->  	return 0;
->  }
->  
-> @@ -262,6 +263,7 @@ static int sgx_vepc_open(struct inode *inode, struct file *file)
->  {
->  	struct sgx_vepc *vepc;
->  
-> +	sgx_inc_usage_count();
->  	vepc = kzalloc(sizeof(struct sgx_vepc), GFP_KERNEL);
->  	if (!vepc)
->  		return -ENOMEM;
-> -- 
-> 2.45.2
+> https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
 > 
+> That series includes a fake place holder for the discovery driver, but
+> I've been using David's patches for all my testing on real hardware.
+> 
+> Tested-by: Tony Luck <tony.luck@intel.com>
 
-Maybe just use raw atomic_inc() and atomic_dec() at the sites?
+Ilpo, Hans,
 
-IMHO, it makes only sense to wrap, when it makes sense to wrap.
+Linus released -rc7 as the likely final rc before opening merge window
+next week.
 
-BR, Jarkko
+Are David's patches in shape to be part of that merge? Or will I be
+using them out of tree for another cycle?
+
+Thanks
+
+-Tony
