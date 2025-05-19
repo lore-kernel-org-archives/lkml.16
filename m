@@ -1,82 +1,82 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B4A28982C;
-	Mon, 19 May 2025 17:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420B828934B;
+	Mon, 19 May 2025 17:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677268; cv=none; b=k1AW0BvLqCv6ZJFCGCgmkFVWYlwuHxISVydAUr7zhXyjAM+ffxzPqP97VsvHNHUElw/BYqEodvDAgnXWqOXqSCwGfwiTuIukzhSYH6Q2ovj2mw+SOSV8BcE0pwGdAMhe6ntosT5jxcHt4xy/Yl6C4sRW7IUgYItoLeKCxAx+CY4=
+	t=1747677270; cv=none; b=JPT3aDE61HX2mfmGjF83jXWWU62MncIipmqNuPKiD1V6ioj8x22vQ/fy/bMTHNwQTNTBupSaQlugWM+NiDNaCLUuyGqNM3NRQwt5UFvP6sq/bAz7ex3KLfCHw9V5s02o8cYS3fBuNXQ+L02MpqTNc0JdJ3i7iQ8dIPc32KZePUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747677268; c=relaxed/simple;
-	bh=/jfmZZExg+Wzp+4EZ6rojxHF6RgLrIAptiF8m9AlQpM=;
+	s=arc-20240116; t=1747677270; c=relaxed/simple;
+	bh=hA0n3sJHSqtfCC0QQbm5Ra4aQsTlaYfz6FOXn+eApww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KK6At6OEMeW6cStsUyPuVFS83i5GW4heK+obxRU27boSt54LNAmTJwGWeUVwtKFtdd4zpPwoZs0arLJFQTbrHBxFVYHdmknZwx542DcG8cbH22FTHol8sSxubjkhPso/sRvFgyZf3oCzN+h7gcQbwoKbQM+nRMgM/33bO/Mf3UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxPsv+0K; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=fXfS/1gYlySJjFUGyhizZMz5Ssw30X996bzT4pajQlmvVBcnYnoGCZnGq6uoHFhfkL36HH1OC9iuyg91J+lFkRywy+9rowZBw6eOM+qaQPM6KMgmEoi8skkQOtM4pu9+mV5NgG0z9qUkuM6UbsQ//Xw+OCPcG7sXeFj4vOd8uus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJfIRbB8; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxPsv+0K"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2321c38a948so19505165ad.2;
-        Mon, 19 May 2025 10:54:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJfIRbB8"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231e8553248so26634405ad.1;
+        Mon, 19 May 2025 10:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747677265; x=1748282065; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747677268; x=1748282068; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kXQcDRAe4EWVXNL5yTAKMixST4qgC4DZfdrTRe+HbCQ=;
-        b=dxPsv+0Kjdz4woZEllfEaA4PU+mJQXUr1UMGceGRVwLKEKlpEKAKabFzJmxJ9DLmYz
-         RNYb/zqvqOd9Srh1JuJvlOciBcDm3X6nrXfnksmIyb6kLmrLc8vv+pAdCWCXR4oxCEDO
-         +lOQBiANVV50paN5NLc0AXR1yTFk+v2cSdxm1ok+FIqWBKMduEc7u1/Bl33fE0L2d/m7
-         G/o/7aeegQfb5k0SiRte6SR+h2Ts7yAXpClveZHZsZ8pLO8D4VNsIDz5isQLsTyhyYse
-         OCrNnRIm6R82McujNIpArc5O+3Uk3JlkmRpGcmQgeZ6XS0w0Mizptx2Xn3TF/uSHkOit
-         h+4w==
+        bh=P9wao8L9QpDXqghTRoSkoUr2w+hVzfvrL1RxfpMOf90=;
+        b=aJfIRbB8xHocHZmMthwvFr7t/55fri60bt427IcYnkUGRBewlZYeP3o3gxLNY/Kz6F
+         FLQTKYecbahXSbe3Lr9EczbdzglQ6x5XGFAn9XP+fc88KGwTCQxo+g0sy79iulL+ENZn
+         WSiADkBWSz9p0x238fp0r5OITQtEhqYz4z06Hlku5lewlz6Zz9lNGg9nXLAnYhPQvTT5
+         jHxLDI4orUROUW0OtEb+A30vsWFb4kW8FgI1QK6avSiuNQSxgQAL7DL2DnzlqyUa9bdz
+         Dz28MI2jTgl9Vz5TOvVscrfVN+241jSWXjqd9kMG9sYCMzQ5N41cuaONxXi2UYAfKqzE
+         i6xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747677265; x=1748282065;
+        d=1e100.net; s=20230601; t=1747677268; x=1748282068;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kXQcDRAe4EWVXNL5yTAKMixST4qgC4DZfdrTRe+HbCQ=;
-        b=b7Ii4WOFRqdmoHIOCUMPeb42COpIIRmMAYeycZsysoYlCDTEkkNPvqzqB+7DtQ7WDK
-         8jb7E5mEGXtIRxozTbO9eVVJnKUuccxLmMybevCONgvpMmMqoZusodOlewSSxxyodicv
-         93vkVfuQMdU3EUuxYtI0/AGlGCb9JSqZoO7/0D7zuevuxeQw5aq4Z33RsJ0Q7W4UfeRO
-         TxVhTBje49VtDxsrJ/NQPVQ3cBE0itPt2GuhNsgoT7DmSLoC6TCYNWIazKQbIspCVJjd
-         GN8y91DT5tp6LPvMGeYnEcgRKfTMca1SqWC3JMNG1GimQYOUn3TSYjc4MnZc2vqWfmN+
-         2Fdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtdziE8XAa/rZ6e2/lEkQAteOkhXZEwnmxFIDjhsCK699FOWyNX7EicTwVWtUl9CvzvEoP3X6x3oPV9J4a@vger.kernel.org, AJvYcCWHTLWrCoz+hTy92Yv+Ylfgwj5ntMvGN7I+fSEy6aWj+1ljx+XsdxHzeNZxhB8d273XrVio7fzcYFq4llNF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysh/aSt/YAN2jf0R6RgCjCzg1Yw3XlfCUxMPHbP7hLmlkkMzOO
-	aWPxD/wC8mL7vWEqg8VR0lq1Ohcr2lP5w7d/QdoSwGPs6kjhWAmf91bU
-X-Gm-Gg: ASbGncsDYXhns+QVmQhk6dazRHQxfpi5Nypnu6pZoiYGNtKYO4/K2Pe4YI/q3XAe440
-	03ppAh7fDQu56IZprvO3snKU5YtLVLttwZRqm6HRwUO4UECm2+Uj3Qz5AFP1NZoSn9HCwGiSTyK
-	sKaXuRTK5d7SIEK8GokBzgUGDApcM006qCuOB3WIgiJz3u2O7VaM2V5tCF2iAGD7FgrQ4YBtWwq
-	5gvVuXfHULC+kRllu0RWyU1GR6WQl+miqXCpv2iBI0n0MtPd2OvzoJLkdeNvDSBe5OjdlPbU9Iz
-	5F5Xup2lc2xOgPYC18QDiyVr48IkSyhHHOVIVoFt8FQwaQLoaki3rhS9EEypGISYV3xkvpDt9S4
-	FfpnY+Mhk0wMM7We0/2UWieTPFQ==
-X-Google-Smtp-Source: AGHT+IH9o+jDU8SCOf6p2dYQ3xG9pg+wpXFHI4AQ16YbWVrsnqHFvIYpaqIH85X0Xd/j1VubslNPjQ==
-X-Received: by 2002:a17:902:ea12:b0:231:c6d0:f784 with SMTP id d9443c01a7336-231de37623amr210055535ad.28.1747677264644;
-        Mon, 19 May 2025 10:54:24 -0700 (PDT)
+        bh=P9wao8L9QpDXqghTRoSkoUr2w+hVzfvrL1RxfpMOf90=;
+        b=ck4wcxfbTUFtjKLCxCloSrNJDS9GBXUtbmt5Toiaih/V/ESvI1AZz7gFaJCPBHzFCm
+         ycEguzu+g3VnrbRKQPRfxVAEWT0jeyuvLgfuhoe43fA1KV9VKNlgN073Tq2bNt6jLWkY
+         3iwAuUgMyfhVygpwFiSDQA2AfnAcfpaPBpFPdN2716qX4fKikwmquyxzIO43yGwLA9zi
+         Q/krlhe+4VSR1C5CYfF+euQnDVGC6GJVRVupOAJuVMD8/p0ku1nVOvLSWHU9lXHGXyq/
+         eWxLI1ONBJ/5UiirnDtRb+MAHCYT/3feeZV9U7O0Vj1ixd+DKHh+UmuIQ34Cwj6LFy3d
+         QZdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjee02xc1KAO5fIdt3D1URmHWPZ6KouSQpNYkyPsfUjp0Rvkq6HWAbCJq1Xgwlkj5+3rg6pTxuJG6+sv7P@vger.kernel.org, AJvYcCWGwJV4ILvAV7MmLq8i8gDJlQvf086PyuEvh99qnJqdAxN4fB+g3enEvMZ4kV5QyvDRRtLBIsiub12HqvLB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUv7QrEU3bQJ/lKE0xJaPFvCQoYj9AA8nnCpOwS+PZ4duMBydN
+	1Hihjb2YRYQh2vIFP4xgYg0mZPiJDp9ez3fwdeNCcDPw6wz07i77htEy
+X-Gm-Gg: ASbGncvPMUobWQOJpSLh+D9DbxD/5gP8kY9o0xjtKfLwoM9RTO1zoZMTHMEwQslBYv6
+	3cjUPXUzdGHeYbUTukPKH8sU9mVYsd2616k/BsQCFhwmSrKEC0P8YxfU17nLyCOf+MIBLvwqJ+I
+	/SHFIsEgzWT04RG9uDMzqMsw7YXrUAZ8DFg37t4jWyrVe8yBtAYTT23kx+t47tWKXPzo81zQ/Ir
+	eweolGFcGOI2Zt+i2SSMQpNydLa1bJHO1/ZUO/tQTSfAhePn0aVZd/KHxASs0yqwsB8qzlIdfCn
+	UzalhZLft0UvaeVoXAtSJNDdf+DRD+9QzN7KwFa+zFMXw/YDg12DW1Mi8cyhChCEik7okChgYDC
+	FDpLuwtQ8JL/QNj80oxwF6jDKaw==
+X-Google-Smtp-Source: AGHT+IHetx6JhjKJiiXTN6lkyo+n0uqidqeO6FYdb9monpI6GoV1ZNjHZwQtDbvkDnweEzmVsK67rQ==
+X-Received: by 2002:a17:903:11c6:b0:21f:7880:8472 with SMTP id d9443c01a7336-231de370156mr200750455ad.35.1747677268469;
+        Mon, 19 May 2025 10:54:28 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e9605csm62543565ad.123.2025.05.19.10.54.23
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e971cdsm62879295ad.134.2025.05.19.10.54.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 10:54:24 -0700 (PDT)
+        Mon, 19 May 2025 10:54:27 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
 	linux-arm-msm@vger.kernel.org,
 	Connor Abbott <cwabbott0@gmail.com>,
 	Rob Clark <robdclark@chromium.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-	iommu@lists.linux.dev (open list:IOMMU SUBSYSTEM),
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 05/40] iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
-Date: Mon, 19 May 2025 10:51:28 -0700
-Message-ID: <20250519175348.11924-6-robdclark@gmail.com>
+Subject: [PATCH v5 07/40] drm/msm: Improve msm_context comments
+Date: Mon, 19 May 2025 10:51:30 -0700
+Message-ID: <20250519175348.11924-8-robdclark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519175348.11924-1-robdclark@gmail.com>
 References: <20250519175348.11924-1-robdclark@gmail.com>
@@ -90,156 +90,120 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-In situations where mapping/unmapping sequence can be controlled by
-userspace, attempting to map over a region that has not yet been
-unmapped is an error.  But not something that should spam dmesg.
-
-Now that there is a quirk, we can also drop the selftest_running
-flag, and use the quirk instead for selftests.
+Just some tidying up.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 27 ++++++++++++++-------------
- include/linux/io-pgtable.h     |  8 ++++++++
- 2 files changed, 22 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/msm/msm_gpu.h | 44 +++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index f27965caf6a1..a535d88f8943 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -253,8 +253,6 @@ static inline bool arm_lpae_concat_mandatory(struct io_pgtable_cfg *cfg,
- 	       (data->start_level == 1) && (oas == 40);
- }
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 957d6fb3469d..c699ce0c557b 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -348,25 +348,39 @@ struct msm_gpu_perfcntr {
  
--static bool selftest_running = false;
--
- static dma_addr_t __arm_lpae_dma_addr(void *pages)
- {
- 	return (dma_addr_t)virt_to_phys(pages);
-@@ -373,7 +371,7 @@ static int arm_lpae_init_pte(struct arm_lpae_io_pgtable *data,
- 	for (i = 0; i < num_entries; i++)
- 		if (iopte_leaf(ptep[i], lvl, data->iop.fmt)) {
- 			/* We require an unmap first */
--			WARN_ON(!selftest_running);
-+			WARN_ON(!(data->iop.cfg.quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
- 			return -EEXIST;
- 		} else if (iopte_type(ptep[i]) == ARM_LPAE_PTE_TYPE_TABLE) {
- 			/*
-@@ -475,7 +473,7 @@ static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
- 		cptep = iopte_deref(pte, data);
- 	} else if (pte) {
- 		/* We require an unmap first */
--		WARN_ON(!selftest_running);
-+		WARN_ON(!(cfg->quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
- 		return -EEXIST;
- 	}
- 
-@@ -649,8 +647,10 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
- 	unmap_idx_start = ARM_LPAE_LVL_IDX(iova, lvl, data);
- 	ptep += unmap_idx_start;
- 	pte = READ_ONCE(*ptep);
--	if (WARN_ON(!pte))
--		return 0;
-+	if (!pte) {
-+		WARN_ON(!(data->iop.cfg.quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
-+		return -ENOENT;
-+	}
- 
- 	/* If the size matches this level, we're in the right place */
- 	if (size == ARM_LPAE_BLOCK_SIZE(lvl, data)) {
-@@ -660,8 +660,10 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
- 		/* Find and handle non-leaf entries */
- 		for (i = 0; i < num_entries; i++) {
- 			pte = READ_ONCE(ptep[i]);
--			if (WARN_ON(!pte))
-+			if (!pte) {
-+				WARN_ON(!(data->iop.cfg.quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
- 				break;
-+			}
- 
- 			if (!iopte_leaf(pte, lvl, iop->fmt)) {
- 				__arm_lpae_clear_pte(&ptep[i], &iop->cfg, 1);
-@@ -976,7 +978,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
- 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
- 			    IO_PGTABLE_QUIRK_ARM_TTBR1 |
- 			    IO_PGTABLE_QUIRK_ARM_OUTER_WBWA |
--			    IO_PGTABLE_QUIRK_ARM_HD))
-+			    IO_PGTABLE_QUIRK_ARM_HD |
-+			    IO_PGTABLE_QUIRK_NO_WARN_ON))
- 		return NULL;
- 
- 	data = arm_lpae_alloc_pgtable(cfg);
-@@ -1079,7 +1082,8 @@ arm_64_lpae_alloc_pgtable_s2(struct io_pgtable_cfg *cfg, void *cookie)
- 	struct arm_lpae_io_pgtable *data;
- 	typeof(&cfg->arm_lpae_s2_cfg.vtcr) vtcr = &cfg->arm_lpae_s2_cfg.vtcr;
- 
--	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_S2FWB))
-+	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_S2FWB |
-+			    IO_PGTABLE_QUIRK_NO_WARN_ON))
- 		return NULL;
- 
- 	data = arm_lpae_alloc_pgtable(cfg);
-@@ -1320,7 +1324,6 @@ static void __init arm_lpae_dump_ops(struct io_pgtable_ops *ops)
- #define __FAIL(ops, i)	({						\
- 		WARN(1, "selftest: test failed for fmt idx %d\n", (i));	\
- 		arm_lpae_dump_ops(ops);					\
--		selftest_running = false;				\
- 		-EFAULT;						\
- })
- 
-@@ -1336,8 +1339,6 @@ static int __init arm_lpae_run_tests(struct io_pgtable_cfg *cfg)
- 	size_t size, mapped;
- 	struct io_pgtable_ops *ops;
- 
--	selftest_running = true;
--
- 	for (i = 0; i < ARRAY_SIZE(fmts); ++i) {
- 		cfg_cookie = cfg;
- 		ops = alloc_io_pgtable_ops(fmts[i], cfg, cfg);
-@@ -1426,7 +1427,6 @@ static int __init arm_lpae_run_tests(struct io_pgtable_cfg *cfg)
- 		free_io_pgtable_ops(ops);
- 	}
- 
--	selftest_running = false;
- 	return 0;
- }
- 
-@@ -1448,6 +1448,7 @@ static int __init arm_lpae_do_selftests(void)
- 		.tlb = &dummy_tlb_ops,
- 		.coherent_walk = true,
- 		.iommu_dev = &dev,
-+		.quirks = IO_PGTABLE_QUIRK_NO_WARN_ON,
- 	};
- 
- 	/* __arm_lpae_alloc_pages() merely needs dev_to_node() to work */
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index bba2a51c87d2..639b8f4fb87d 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -88,6 +88,13 @@ struct io_pgtable_cfg {
- 	 *
- 	 * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pagetable.
- 	 * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttrs bits
+ /**
+  * struct msm_context - per-drm_file context
+- *
+- * @queuelock:    synchronizes access to submitqueues list
+- * @submitqueues: list of &msm_gpu_submitqueue created by userspace
+- * @queueid:      counter incremented each time a submitqueue is created,
+- *                used to assign &msm_gpu_submitqueue.id
+- * @aspace:       the per-process GPU address-space
+- * @ref:          reference count
+- * @seqno:        unique per process seqno
+  */
+ struct msm_context {
++	/** @queuelock: synchronizes access to submitqueues list */
+ 	rwlock_t queuelock;
++
++	/** @submitqueues: list of &msm_gpu_submitqueue created by userspace */
+ 	struct list_head submitqueues;
++
++	/**
++	 * @queueid:
 +	 *
-+	 * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
-+	 *	mappings, but silently return -EEXISTS.  Normally an attempt
-+	 *	to map over an existing mapping would indicate some sort of
-+	 *	kernel bug, which would justify the WARN_ON().  But for GPU
-+	 *	drivers, this could be under control of userspace.  Which
-+	 *	deserves an error return, but not to spam dmesg.
++	 * Counter incremented each time a submitqueue is created, used to
++	 * assign &msm_gpu_submitqueue.id
++	 */
+ 	int queueid;
++
++	/** @aspace: the per-process GPU address-space */
+ 	struct msm_gem_address_space *aspace;
++
++	/** @kref: the reference count */
+ 	struct kref ref;
++
++	/**
++	 * @seqno:
++	 *
++	 * A unique per-process sequence number.  Used to detect context
++	 * switches, without relying on keeping a, potentially dangling,
++	 * pointer to the previous context.
++	 */
+ 	int seqno;
+ 
+ 	/**
+-	 * sysprof:
++	 * @sysprof:
+ 	 *
+ 	 * The value of MSM_PARAM_SYSPROF set by userspace.  This is
+ 	 * intended to be used by system profiling tools like Mesa's
+@@ -384,21 +398,21 @@ struct msm_context {
+ 	int sysprof;
+ 
+ 	/**
+-	 * comm: Overridden task comm, see MSM_PARAM_COMM
++	 * @comm: Overridden task comm, see MSM_PARAM_COMM
+ 	 *
+ 	 * Accessed under msm_gpu::lock
  	 */
- 	#define IO_PGTABLE_QUIRK_ARM_NS			BIT(0)
- 	#define IO_PGTABLE_QUIRK_NO_PERMS		BIT(1)
-@@ -97,6 +104,7 @@ struct io_pgtable_cfg {
- 	#define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA		BIT(6)
- 	#define IO_PGTABLE_QUIRK_ARM_HD			BIT(7)
- 	#define IO_PGTABLE_QUIRK_ARM_S2FWB		BIT(8)
-+	#define IO_PGTABLE_QUIRK_NO_WARN_ON		BIT(9)
- 	unsigned long			quirks;
- 	unsigned long			pgsize_bitmap;
- 	unsigned int			ias;
+ 	char *comm;
+ 
+ 	/**
+-	 * cmdline: Overridden task cmdline, see MSM_PARAM_CMDLINE
++	 * @cmdline: Overridden task cmdline, see MSM_PARAM_CMDLINE
+ 	 *
+ 	 * Accessed under msm_gpu::lock
+ 	 */
+ 	char *cmdline;
+ 
+ 	/**
+-	 * elapsed:
++	 * @elapsed:
+ 	 *
+ 	 * The total (cumulative) elapsed time GPU was busy with rendering
+ 	 * from this context in ns.
+@@ -406,7 +420,7 @@ struct msm_context {
+ 	uint64_t elapsed_ns;
+ 
+ 	/**
+-	 * cycles:
++	 * @cycles:
+ 	 *
+ 	 * The total (cumulative) GPU cycles elapsed attributed to this
+ 	 * context.
+@@ -414,7 +428,7 @@ struct msm_context {
+ 	uint64_t cycles;
+ 
+ 	/**
+-	 * entities:
++	 * @entities:
+ 	 *
+ 	 * Table of per-priority-level sched entities used by submitqueues
+ 	 * associated with this &drm_file.  Because some userspace apps
+@@ -427,7 +441,7 @@ struct msm_context {
+ 	struct drm_sched_entity *entities[NR_SCHED_PRIORITIES * MSM_GPU_MAX_RINGS];
+ 
+ 	/**
+-	 * ctx_mem:
++	 * @ctx_mem:
+ 	 *
+ 	 * Total amount of memory of GEM buffers with handles attached for
+ 	 * this context.
 -- 
 2.49.0
 
