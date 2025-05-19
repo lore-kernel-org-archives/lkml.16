@@ -1,76 +1,161 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E7B26658F;
-	Mon, 19 May 2025 07:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EAB1EA7C8
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638589; cv=none; b=t3TZg5P8mif94dXvi7IiZrirdFWZMW0TjxbZoco5MB+uXoYHjYzH8p2duWMSXXOxDQ6WOMtCwr+lM8lIt/pyK96o4o0LnbqGKnWuRFWknlYA5FTbYaOwr1bO90UjjVq3bPeCwCjgTSq8u1cpiJd8KgEReUegFrN6NENiaj7UyNQ=
+	t=1747638748; cv=none; b=CTBpZ67nJzrhuIhaSZsyqM4RxXYDSmUVukbgF1FwPQ01qvjNg+MmTMb3ZpnMV0f0PGKn64ONLBqz7z+swntfsbEc/ENz8+RjdKM/AANje6c6tSR/r3wK9khxucTbumcpUDmjzbL7vz+9o4VQbAWlvszUoZ38VG0iGm0Z3GACnJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638589; c=relaxed/simple;
-	bh=BqaEOXA8aeltNjMxATYKo6Qrwtnb7mFiJst0GZK6Nic=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AqAFZB4M+tHGJ9JLO2V2cUEpM2wNP5yZXX8DoJQR5tFPtayuPgoe8dLWcB+i6TDeia8AUu79aAulcoyUIvFPkBOmfKVgQqKDr8SxXVEr+M2fZnztv0ClN1ONakAt4m1+X0dzVFxCuVJ944Pi5K6/5EFp/9rLZuRArc3r0IvyI84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4b18372qTWz27hm0;
-	Mon, 19 May 2025 15:10:27 +0800 (CST)
-Received: from kwepemk500012.china.huawei.com (unknown [7.202.194.97])
-	by mail.maildlp.com (Postfix) with ESMTPS id 27C69140258;
-	Mon, 19 May 2025 15:09:39 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemk500012.china.huawei.com (7.202.194.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 19 May 2025 15:09:38 +0800
-From: Bowen Yu <yubowen8@huawei.com>
-To: <rafael@kernel.org>, <viresh.kumar@linaro.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <zhanjie9@hisilicon.com>,
-	<jonathan.cameron@huawei.com>, <lihuisong@huawei.com>,
-	<zhenglifeng1@huawei.com>, <yubowen8@huawei.com>, <cenxinghai@h-partners.com>
-Subject: [PATCH] cpufreq: Update sscanf() to kstrtouint()
-Date: Mon, 19 May 2025 15:09:38 +0800
-Message-ID: <20250519070938.931396-1-yubowen8@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1747638748; c=relaxed/simple;
+	bh=berpNQksN4I5+X+UnGQ86pZZ6eKvZ+gP0gHo+g2EPzI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b7dn/In1HzuUhiaugIX0l4SoQlfW+9ykbLR2jEj2r1vKL8DEDWv47i6nS90Y11dpZLvPzcobU7gMT5/f508ulRj7QtlQq0XcvQJoZaNkLHE62ye2onjhyiYUmsqra4vT+zctG0mwY7viJcSmqEzZDvBzG0UP/emOo9bwa9NGOC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuiWXUBG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuiWXUBG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CADEC4CEE4;
+	Mon, 19 May 2025 07:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747638748;
+	bh=berpNQksN4I5+X+UnGQ86pZZ6eKvZ+gP0gHo+g2EPzI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TuiWXUBGZsSZbyblobntkQU4Wznr+TWCnb5Om/fbKKu4Wj/tkEJ8hkh/bVtxH/lBj
+	 hQOY0ES7+kWcdPF+KPPeWd27Y29lpI/p24NIJwwX9Url6vJX0ydoZovy0bEV5a3uVv
+	 GiOS5dCJycbaIk03zOBEgzTT2f/rkfaApk7IHg+r1Rwkp7fCLYrPQB0X+hhlmcA/0C
+	 MDYeb6+PzLD4iEv0kOcjjD6pk9DbwFBTpfqpAgfBeDTURvf/5bdboag/qM3obGDSiW
+	 f8jOtMzhVufYnX5IR+gFOeUDhA8urvnQoEaSEsTvirDgUU+VXI7qjPjvEHjMlPDIf+
+	 4uQtzMe1O6CTw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uGufh-00G8VH-PX;
+	Mon, 19 May 2025 08:12:25 +0100
+Date: Mon, 19 May 2025 08:12:24 +0100
+Message-ID: <86y0utdqg7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Youngmin Nam <youngmin.nam@samsung.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner
+	<tglx@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	junhosj.choi@samsung.com,
+	hajun.sung@samsung.com,
+	joonki.min@samsung.com,
+	d7271.choe@samsung.com,
+	jkkkkk.choi@samsung.com,
+	jt1217.kim@samsung.com,
+	qperret@google.com,
+	willdeacon@google.com,
+	dhyun.cha@samsung.com,
+	kn_hong.choi@samsung.com,
+	mankyum.kim@samsung.com
+Subject: Re: [QUESTION] arch_counter_register() restricts CNTPT access when booted in EL1, even if EL2 is supported
+In-Reply-To: <aCqM1Z2ApdvGYfb9@perf>
+References: <CGME20250516064924epcas2p24c8f3dc1860768b2b7bed30a41528770@epcas2p2.samsung.com>
+	<aCbhBttvi8mvsyGE@perf>
+	<86frh4gazr.wl-maz@kernel.org>
+	<aCqM1Z2ApdvGYfb9@perf>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk500012.china.huawei.com (7.202.194.97)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: youngmin.nam@samsung.com, daniel.lezcano@linaro.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, junhosj.choi@samsung.com, hajun.sung@samsung.com, joonki.min@samsung.com, d7271.choe@samsung.com, jkkkkk.choi@samsung.com, jt1217.kim@samsung.com, qperret@google.com, willdeacon@google.com, dhyun.cha@samsung.com, kn_hong.choi@samsung.com, mankyum.kim@samsung.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-In store_scaling_setspeed(), sscanf is still used to read to sysfs.
-Newer kstrtox provide more features including overflow protection,
-better errorhandling and allows for other systems of numeration. It
-is therefore better to update sscanf() to kstrtouint().
+On Mon, 19 May 2025 02:43:49 +0100,
+Youngmin Nam <youngmin.nam@samsung.com> wrote:
+>=20
+> [1  <text/plain; utf-8 (8bit)>]
+> On Fri, May 16, 2025 at 10:28:56AM +0100, Marc Zyngier wrote:
+> > On Fri, 16 May 2025 07:53:58 +0100,
+> > Youngmin Nam <youngmin.nam@samsung.com> wrote:
+> > >=20
+> > > [1  <text/plain; utf-8 (8bit)>]
+> > > Hi arm arch timer experts,
+> > >=20
+> > > While reviewing the arm_arch_timer code in Linux 6.12,
+> > > I noticed that the function arch_counter_register() restricts the
+> > > use of the physical counter (cntpct_el0) on systems where the kernel
+> > > is running in EL1, even if EL2 is supported and cntpct_el0 is
+> > > accessible.
+> > >=20
+> > > In our case:
+> > > - We are not using pKVM.
+> > > - The kernel is booted in EL1.
+> > > - We disabled VIRT_PPI and explicitly selected PHYS_NONSECURE_PPI for=
+ the timer refering to below code.
+> >=20
+> > That's not legal. The architecture guarantees that there is a virtual
+> > timer and a physical timer. No ifs, no buts.
+> >=20
+> > [...]
+> >=20
+> > > As I understand it, `is_hyp_mode_available()` checks whether the
+> > > kernel booted into EL2 =E2=80=94 not whether EL2 is *supported* by the
+> > > hardware.
+> > >=20
+> > > Therefore, even on systems where EL2 exists and `cntpct_el0` is
+> > > accessible from EL1, the kernel still forces the use of `cntvct_el0`
+> > > if the boot EL is EL1.
+> >=20
+> > Yes, because it isn't architecturally valid to not have a virtual
+> > timer. This isn't about EL2 being present of not. The switch to the
+> > physical timer is purely an optimisation for KVM so that it doesn't
+> > have to switch the virtual timer back and forth when running a guest,
+> > as the virtual timer is the most likely used timer.
+> >=20
+>=20
+> Thanks for the clarification.
+>=20
+> As a follow-up question:
+>=20
+> We are working on a system that uses a vendor-specific hypervisor instead=
+ of KVM.
+> In this setup, we also want to optimize timer virtualization overhead and=
+ are considering using
+> the physical timer (CNTPT) in the host context for performance reasons, j=
+ust like KVM does.
+>=20
+> Would it be acceptable (from the upstream kernel's perspective) to make a=
+ similar switch
+> to the physical timer in this case ?
 
-Signed-off-by: Bowen Yu <yubowen8@huawei.com>
----
- drivers/cpufreq/cpufreq.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+No. Your hypervisor already has *two* private timers it can freely
+make use of (virtual and physical EL2 timers), and doesn't need to
+encroach on something that a guest (be it Linux or any other guest)
+relies on.
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index be727da0be4d..0c842edd1a76 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -920,9 +920,9 @@ static ssize_t store_scaling_setspeed(struct cpufreq_policy *policy,
- 	if (!policy->governor || !policy->governor->store_setspeed)
- 		return -EINVAL;
- 
--	ret = sscanf(buf, "%u", &freq);
--	if (ret != 1)
--		return -EINVAL;
-+	ret = kstrtouint(buf, 0, &freq);
-+	if (ret)
-+		return ret;
- 
- 	policy->governor->store_setspeed(policy, freq);
- 
--- 
-2.33.0
+The alternative is to trap and emulate the EL1 timer for the guest so
+that it *appears* to be functional. But that's obviously bad from a
+performance perspective.
 
+> Or is this kind of optimization strictly tied to KVM's internal behavior
+> and not something the kernel is expected to support generically?
+
+It is purely Linux/KVM specific, and only works because we own both
+side of that equation, meaning we can enforce whatever is required to
+make the two work together. This obviously isn't possible with third
+party software. Look at it from a different point of view: how would
+you make this work with, say, Windows? or MacOS?
+
+On the bright side, the architecture already gives you everything you
+need to implement your hypervisor. Just use it correctly.
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
