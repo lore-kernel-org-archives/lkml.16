@@ -1,198 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3B97080E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0C37080E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747661336; cv=none; b=cMhsufOIECNq0glmU8dhcQoyWgm0z/RrI37Ki1fZFakZx7qcOgxrOl4TMVxqTNdHCcFlZcnUwnqmPKTHWjEGn9yVWbZBk7+fxsBZpfRYxzi8UuaLStnm1g3fkAIhV1twlpB67KAHzwudo5xcQcTEpnAJJuetH42CjVO5ULs0YoY=
+	t=1747661364; cv=none; b=olYEPESa5wbIAbckDEgUJkRFas/dElyrKMnWYMGkvHc7yZRn8fDM3kjRH5ru2M47FdAnRQPOg2mbRrBVFlCWOncvOyksxBEQNEzT5rCIPBrCEsVrpUq03F8RsjKj57gnbS2BV/U386QpnYX+vz2DXSJOiGs9mX495/QftpXTSBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747661336; c=relaxed/simple;
-	bh=gaErXZom/SXbS7oWY3Y26Q3auH/Bb0Nnh+BmJjpjXnQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T7cYABXgCooVzdu2DuutyIxbF01zV1UxODwDWlhNQ6pH9E1vO6x/qzMaISf3fNKlRpR8Y/P+rUM5IwP22rkb70VWcmA2k81NwGanfbdYVWRChVJVIO1VLLmir7Tm9gil+AgHaUA2tjbANlExPSL5B6/i5jZV6nWLxs7OAzM4PKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W036MQbW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747661364; c=relaxed/simple;
+	bh=E8Yk4YKzzGOL9dH3lsguXKGcmyCh5ke1/36ZV7fbMb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAQDpe4cwZ3qgaYm+BGg3yNmEbPp63RNel0ltg1PTpyaxGcYfeg1ktTxnqBPXq/8vmJkfN+tmqAoTAaLONGjPJFtQoot2s7SJqpMjiz0WzxWinEOE5emDDjKMS9GphreR3+dESeixwtvW3vhdTcqoRQUH2e1YUnc0U3j/CM0Gpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A37TzS4+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W036MQbW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747661332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LnZPk51OG5730zmFf6blk68sjraSbAgAbyfB3yfDnXw=;
-	b=W036MQbW64V5XDFs8KbfhNqlesDvLNDcxUzwCbAF7ns675TC/lH89TJZirCZxwJNdRQnc0
-	piV6Ge0S7haVXX4XMcKW5nCW0VdTdr9amOSUO4ones3ehuznv1FE4v7RCZr3EH9fBT3eL+
-	FniZW1CDxsvKXRBtRxhuxDy9hRzmV1A=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-172-a-0Vy7MtN9ew-OiSGKxRtQ-1; Mon, 19 May 2025 09:28:50 -0400
-X-MC-Unique: a-0Vy7MtN9ew-OiSGKxRtQ-1
-X-Mimecast-MFC-AGG-ID: a-0Vy7MtN9ew-OiSGKxRtQ_1747661330
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-44059976a1fso19529265e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:28:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="A37TzS4+"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JCNr6u014390
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:29:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=yCXrYhZQYmD6oU2A5edwO+kT
+	+iKltb67bwD0nDazFII=; b=A37TzS4+dhndbh7AeY9R61JWnmdiuCHd6GxsSiPH
+	XtXyIEJJMSiwm731FVKw279A4Rsl6Xg4QeGmkspitMKEBRQrpyv2aJ3j3BnOPlDG
+	HoaJmfoGAMvbOPkR2MuXaXheHpna1xTAbTDny6sux29CYJHHl2qQWWlVY/l2fH8n
+	xejI49ABh9sOzSqK7mbT2zcv2PHvTQ+PojrxPATg2iuonEsOFZun7+pBjLrZ8Ho9
+	A6q7upTaLmGNzE5kcEkBz0szmeu76F0DD+43Tqno3COzY7RSdnvcr4u4iVglv9Vw
+	YVJHzj3uNF9eMLl5sPx6AgXyArGwCOLYzDtkS9D/mxMJjQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qwenhhrn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 13:29:21 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8e1d900e5so3369446d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:29:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747661329; x=1748266129;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LnZPk51OG5730zmFf6blk68sjraSbAgAbyfB3yfDnXw=;
-        b=h6OPFTjhTuPG9W52sWAAtjZRPIJdGPFFC7wUBXOpG3IBC+B03GBQSUiUCMA2Ka+1qQ
-         LqNTzQY+lRRk/ZU1b4gPAHpKf1Tq1fH99Z0UZpmDwrxFq5YPyy4hRDvF1DoKUwnp+OPv
-         UNgFi2I825T3+xmdeBAvmEQLjTfDSNoVqY1JLGGQDRm+V0lpC6uDGNtXSt/3As/fxakV
-         nxxh6pI2jqoDM5h5VUaxFzzL/8gADdasrgJ4tpQdcNGcQO8JHvjPBvu/KamYqWYyFBDv
-         tAYtzX4vMhhYzi4kdVl/l8ObqmZub4f4HoR8fWsSmXB/L+z1klCYO/k9BaQIeUFRPxyf
-         8tDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWS2A1WM8xdSy0lLlfQihQ+OtyMSjldLRzk3plVtd7cM0o2UwZXY4CwD7oLl3jqiI8XnaIPhWvmIPhJIW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmTimI0kIi+YEnRGcMBVoraAtKf+CEBg/yZjud389oI3jPyF94
-	5bcMN3djzY2kHKdOuMFYEfSijYGUGyUfEWo7sbdCmMgVXy5KJMFJU7+NuCJcU9NpBMnjLlIthiT
-	bBohFlPCuHWuAMQtNsf3adEmEGPu11u47zGDzYyytVIHGw2mck/8MS1kVNcZBa0e6hg==
-X-Gm-Gg: ASbGncvV7E+YT/Bpfdu82MiA4X/K/+nudw465tEcRumOIKLn1Qitjs43C0wXnmnuaLw
-	/D/xlPmdPf2T322TYUfMuosExqXtn3vVN8ov4ikzhRg5Ev4psPnBo+S9fX9JzdXN/NMj5haMe4u
-	XJqYvsudyBa5+3134pkTHE169dmh/WPT1gDVdBRZkwu6TTXpbJ8el3ocIX4EcTi/jLJGZOTDL6/
-	m6G3YCbGU1id5gqaSzNqFTlU8K+ZCYAb3dL11bCJFGrhHptPjNSHHwe7ELkNOd2aEoFGflGfkaw
-	ygMj09xpz+l2BxMcKaQ3JOOfb4l1uF7/VdvUB75SCOc/1L+BAUmbDpg88Lzt5wKJ6l2eCxhElKS
-	0IF2cj1EPcsPh/9Kvz5yKnFIfpZKqu0hEdr/X8C0=
-X-Received: by 2002:a05:600c:c0da:b0:43d:ed:ad07 with SMTP id 5b1f17b1804b1-442fe667ec9mr98110445e9.29.1747661329563;
-        Mon, 19 May 2025 06:28:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGv/14e2S6T0zf4P7jwon6xq8VRpY0NANQiw20OZzdDZ81YY+TIomD54n5XNTVyMN7y1wWMJw==
-X-Received: by 2002:a05:600c:c0da:b0:43d:ed:ad07 with SMTP id 5b1f17b1804b1-442fe667ec9mr98110265e9.29.1747661329140;
-        Mon, 19 May 2025 06:28:49 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f3c:3a00:5662:26b3:3e5d:438e? (p200300d82f3c3a00566226b33e5d438e.dip0.t-ipconnect.de. [2003:d8:2f3c:3a00:5662:26b3:3e5d:438e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583f71sm136833005e9.27.2025.05.19.06.28.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 06:28:48 -0700 (PDT)
-Message-ID: <8131ce62-0cee-455f-9eeb-e2bbed244402@redhat.com>
-Date: Mon, 19 May 2025 15:28:47 +0200
+        d=1e100.net; s=20230601; t=1747661361; x=1748266161;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yCXrYhZQYmD6oU2A5edwO+kT+iKltb67bwD0nDazFII=;
+        b=cDHu1wle3n9IsiImAEUKWljTl+D8V9AdBzm5P2WDZihbQVrD9gPuD+LIDkHum8f0xl
+         0DcE9WQiEkDKEmUNCKgiRb8a23LETH6/oHxvsQMIFcsUNdUP1X5yjjVey0AagZrzGpPy
+         o610nQlkTR2+ELkJYMQGVCcTxpPFZcsUP9LQBJ+R0occnJejulKpgsi+3uJ635DhBMVF
+         aBLCAcamtEGItj6hsDH8x01d4q/3SPchkBjmkEpl6I1v/zJHy3dmRTiXYhrAbZQ7WfVP
+         3a1BD3C/xO1XTOEnlOcE72pWic8jSEBa+4xj93B0c8Yc5nHQjaUJGvKGsHX3b6NDc+CY
+         xQlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHDQezWmNYZsPJAdte340mXgI96XIPCuSOenjxGHOQogdG9NwhU7uH2BLkdYpR3Sb213ye/xeNapS2u9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn+YQ+SYh6HopsQU7a4shrLb4hnzXu8lKISmfw7p0sVKnsakNs
+	Zc2PmCeHy6647oKpO5rao32IHNWZ3lEFLm/3yYm691QyOqBuXsDFle/Up/u2AbcLOqSyct9FBHh
+	atWGHWcb1G4RGclR8Og/P2vkXM4VrH4eB+FQcW8rhZ9ASR0Xya/x7KxJhfu8ojgCrqMY=
+X-Gm-Gg: ASbGncvcKCrs9k+c9T8MyetEFStL/jGvvr7dM0VgM5bs1gWIVk5MI4hntnjvAOxNda0
+	Jm1fJMUp6j3DZlYnE5BoNuibzR9XWHpeYFB8/p60tktEdJH79IY5Nt6IGrDTpPQ2kNJmEUaFTYe
+	MXYxT/PPdhUt/Az7C2nAddKGMDboYQPO+TMyvF/5qDoYFX7wbPJET/csRxI0IG1RvEeWb70MZJG
+	BAejjuZ7hABDtHh39J9tSA04KtAHmxbJlNSJb3tQswuVtjrFu1D9IDWxJPOkd4c3xBLI2HcJF5A
+	STniQ09iND0QUxJNBqERoht5eLf4IjuURxUl9itv3HZJdI2DGIZVge9uJimjZdOAIOZ9SIHmdtY
+	=
+X-Received: by 2002:a05:6214:f0a:b0:6e6:6505:ceb2 with SMTP id 6a1803df08f44-6f8b09024a5mr232402146d6.36.1747661360972;
+        Mon, 19 May 2025 06:29:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3rI1V/ERgBIDo4kWBtOHyZPM0eXvcKh2xnWOKsYh+CbN/YsCOa2sGfsQeT+Uoo+59e9dIGg==
+X-Received: by 2002:a05:6214:f0a:b0:6e6:6505:ceb2 with SMTP id 6a1803df08f44-6f8b09024a5mr232401726d6.36.1747661360623;
+        Mon, 19 May 2025 06:29:20 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702c9d8sm1877106e87.181.2025.05.19.06.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 06:29:19 -0700 (PDT)
+Date: Mon, 19 May 2025 16:29:18 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+Cc: srinivas.kandagatla@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+        dri-devel@lists.freedesktop.org, arnd@arndb.de, stable@kernel.org
+Subject: Re: [PATCH v1 2/5] misc: fastrpc: Move all remote heap allocations
+ to a new list
+Message-ID: <tdae3jb7zbkbzvk546j5jnxnfkeux2bwrbz3i5gsehecj65n7v@2hseuptlk2a2>
+References: <20250513042825.2147985-1-ekansh.gupta@oss.qualcomm.com>
+ <20250513042825.2147985-3-ekansh.gupta@oss.qualcomm.com>
+ <sgfcaujjpbvirwx7cwebgj46uwlcvgr4cgcnav5fmwmjsf4uku@iytanuqqiwxo>
+ <71eb4b35-51a3-411c-838d-4af19631325a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
- <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
- <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
- <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
- <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
- <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
- <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71eb4b35-51a3-411c-838d-4af19631325a@oss.qualcomm.com>
+X-Proofpoint-GUID: -H-gr_ydH4K3c95hbutvM3ekdWUUR6c5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEyNSBTYWx0ZWRfX9UI2hqOs7b71
+ DYf5tBkrIdmA5xrzp2PkET9OWZ73TDexOU+lrI+eBYd5iQ6uJ3i+Mj0YjywORX1XmjfFLZqD5jZ
+ yMfc4GBZlXpCHXOzc+eqAjeMvxLily2iYR2SP9D0eDLg25qeg3n/caHGJLKb0Z1B8fxv6vX9u3s
+ c3nSDPApQqRAkLKzLGxE18zcjU/aLuwb3XYGwXhgRBV40UvS1gDioMtSaSNiAs5kBPkbfAYGPtO
+ FokMrh6STuoxKSuet3WA1OIuYlNhUuxOjbo+E3Jx/T/RO9SesrFTrKblwVrjsioCHnqWlDdAxEK
+ ictgNiJzaNjdgshTQ7n+bljIDY6S+ub3s6odqimvlIV1SsqZ+l6P4h74GYUm/7/wuTkkjUVcx9u
+ vjL1EWFM1FMfzpoicKTZog4oIQGoabXguzhLACe3+cxmo30Xoqe3NWhmAxdgnwscosl9baHk
+X-Authority-Analysis: v=2.4 cv=Wd8Ma1hX c=1 sm=1 tr=0 ts=682b3231 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=adbQxVoRvbMUv2LSGikA:9 a=CjuIK1q_8ugA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-ORIG-GUID: -H-gr_ydH4K3c95hbutvM3ekdWUUR6c5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190125
 
-On 16.05.25 20:07, Mark Brown wrote:
-> On Fri, May 16, 2025 at 04:12:08PM +0200, David Hildenbrand wrote:
->> On 16.05.25 15:09, Mark Brown wrote:
+On Mon, May 19, 2025 at 04:36:13PM +0530, Ekansh Gupta wrote:
 > 
->>>> I'm afraid we have other such tests that report duplicate conditions. cow.c
->>>> is likely another candidate (written by me ;) ).
 > 
->>> That one's not come up for me (this was one of four different patches
->>> for mm selftests I sent the other day cleaning up duplicate test names).
-> 
->> $ sudo ./cow
-> 
-> ...
-> 
->> 1..778
->> # [INFO] Anonymous memory tests in private mappings
->> # [RUN] Basic COW after fork() ... with base page
->> ok 1 No leak from parent into child
->> # [RUN] Basic COW after fork() ... with swapped out base page
->> ok 2 No leak from parent into child
-> 
->> Aren't the duplicate "No leak from parent into child" the problematic bits?
->> But maybe I am getting it wrong, what needs to be "unique" :)
-> 
-> Ah, yes - that's got the same issue.  I'm not running that program one
-> way or another, it's not immediately clear to me why not - I can't see
-> any sign of it being invoked by the runner script but I also can't see
-> anything that I'd expect to stop that happening.  I'll have to have a
-> poke at it, thanks for flagging that.
-> 
-> [Converting to kselftet_harness]
->>> That'd certainly work, though doing that is more surgery on the test
->>> than I personally have the time/enthusiasm for right now.
-> 
->> Same over here.
-> 
->> But probably if we touch it, we should just clean it up right away. Well,
->> if we decide that that is the right cleanup. (you mention something like that
->> in your patch description :)
-> 
-> OTOH there's something to be said for just making incremental
-> improvements in the tests where we can, they tend not to get huge
-> amounts of love in general which means perfect can very much be the
-> enemy of good.  If there's some immediate prospect of someone doing a
-> bigger refactoring then that'd be amazing, but if not then it seems
-> useful to make things play better with the automation for now.
+> On 5/19/2025 3:46 PM, Dmitry Baryshkov wrote:
+> > On Tue, May 13, 2025 at 09:58:22AM +0530, Ekansh Gupta wrote:
+> >> Remote heap allocations are not organized in a maintainable manner,
+> >> leading to potential issues with memory management. As the remote
+> > Which issues? I think I have been asking this question previously.
+> > Please expand the commit message here.
+> This is mostly related to the memory clean-up and the other patch where
+> unmap request was added, I'll try to pull more details about the issue
+> scenario.
 
-I would agree if it would be a handful of small changes.
+Thanks.
 
-But here we are already at
+> >
+> >> heap allocations are maintained in fl mmaps list, the allocations
+> >> will go away if the audio daemon process is killed but there are
+> > What is audio daemon process?
+> As audio PD on DSP is static, there is HLOS process(audio daemon) required to
+> attach to audio PD to fulfill it's memory and file operation requirements.
+> 
+> This daemon can be thought of to be somewhat similar to rootPD(adsprpcd) or
+> sensorsPD(sscrpcd) daemons. Although, there is a slight difference in case of audio
+> daemon as it is required to take additional information and resources to audio PD
+> while attaching.
 
-  1 file changed, 107 insertions(+), 56 deletions(-)
+I find it a little bit strange to see 'required' here, while we have
+working audio setup on all up platforms up to and including SM8750
+without any additional daemons. This is the primary reason for my
+question: what is it, why is it necessary, when is it necessary, etc.
 
 -- 
-Cheers,
-
-David / dhildenb
-
+With best wishes
+Dmitry
