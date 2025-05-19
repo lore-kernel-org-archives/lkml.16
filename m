@@ -1,111 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B46F1E0B86;
-	Mon, 19 May 2025 12:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9FA27874A;
+	Mon, 19 May 2025 12:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658822; cv=none; b=Tc/5Uu3NiGNIBpPmRlcHPhiviBA78FdzxCriCy+nmUCI8fhL3YR/gufeocyabDdztM/5AyTCUxp+YTHk+SkuMW6QQtVi2mu626OZdEmfqVTOPGyzNGFwFKyCOzZxy5/PcvZJVIRICGeaWKpmfVE5YqKhoiNuTgoQxBQrhH3Uy7M=
+	t=1747658829; cv=none; b=TQ0tkB1oGKC2CYaes3GzETYr7l/QLV7G1jAmVZTLzLJaMtpmmPzV3Oep7aGM2gHo1/Wnq+zSaUhJ1bjpMeZdtxpu0fr07f2+z7aep5pNamfz0a5fYs7LmYwA9m16zjfDVbhdRpwdoNVmhnuV8VTHb6XE8bK2wfwd1kCgLGL1w9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658822; c=relaxed/simple;
-	bh=COvNHhxfOFdcPkYswikn5zrTUNVBmHzZqGP2ItG+TfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/eFQQSqeLDI7lsBHbjhsBPZ0gOIQf5TtKrw+k+Iz9nbMP0Ivj3ogRgXRky6Io9Nm/QfrQX8PZQ/N0Cql5FmWLp3Ofguo+Y/gtKrSTPYxF25okmUrykivKwCbk4tuoNBpchk8MGbxcHLrUr3WPR9SuyDjtxra09Z7D/Nbu5k7xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn+PSvuf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn+PSvuf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE2BC4CEE4;
-	Mon, 19 May 2025 12:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747658821;
-	bh=COvNHhxfOFdcPkYswikn5zrTUNVBmHzZqGP2ItG+TfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fn+PSvufpLJ5jRCahyjS4VPPLIuMe1NFJox9OdV0SaTO15h6AHrRqACWfXAc1VpXa
-	 /evqVnMVE5qx/MVM51A4V3gqKhBSBh1LB50fR+oyeA9Yv96e25QXv1Jo7mNQujEVr9
-	 4rLvUWRDsKvp5Eeob9FwEZbcnVjOoxga+xnzPT5OLxxr2VK0olwf1WPtf5xDUpbAKi
-	 5Jf61le612jeDo7yL1NuOFygtrng1PJxAsdtkA/f4+lwiWGHR3b28dvz+Z3qnFPI3n
-	 lhRAvalWPcwyteS4XwSJjCsG3cmdoPMVeEU4sd1L928YNtlvNV+IK1CHuhheHzv+69
-	 e7qws5d5cPb/Q==
-Date: Mon, 19 May 2025 13:46:55 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <ca6ed5c1-5b39-4e22-8294-88380885bb65@sirena.org.uk>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
- <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
- <D9Z4XGQ2QHXA.2H5X1NZ5IZECC@nvidia.com>
- <aCnQo15SbhXZ9Fln@finisterre.sirena.org.uk>
- <D9ZCD8D6J5QW.14H6VM9LQ5R2Z@kernel.org>
- <a1a6b2f8-af42-4942-ab62-678e37381d08@sirena.org.uk>
- <DA03MG3VURVI.37CBV5WEEKJSH@kernel.org>
- <8229a161-52b8-4265-8296-8f1ac49bab62@sirena.org.uk>
- <DA04ZK6NFF1N.35LFZRY7O7SG8@kernel.org>
+	s=arc-20240116; t=1747658829; c=relaxed/simple;
+	bh=/Fh3uPi/g29wtWCYFK+7Cj3yvhrnp/P4VwAG7F8zZz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kwDn3urwxkiviRkdZvuao00f3DRlgwtj1XNCK2yUKCHLEuj+vWiRx3vhelniR5+fYloyu4Wmz5EFlBbvQHoL31QHsX72/iuixrgokiIizWBftn5ttG4Gr9ziAZMIszI9wHrs9SNZol7yUdvuF4yT06It2cEQHmhssOneC2yR1bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED211655;
+	Mon, 19 May 2025 05:46:52 -0700 (PDT)
+Received: from [10.57.95.69] (unknown [10.57.95.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93A2C3F5A1;
+	Mon, 19 May 2025 05:47:03 -0700 (PDT)
+Message-ID: <df7eb016-bea4-489d-aecb-1a47eb5e33b2@arm.com>
+Date: Mon, 19 May 2025 13:47:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k6GpUpGM6uoPrUAq"
-Content-Disposition: inline
-In-Reply-To: <DA04ZK6NFF1N.35LFZRY7O7SG8@kernel.org>
-X-Cookie: We have ears, earther...FOUR OF THEM!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: Restrict pagetable teardown to avoid false
+ warning
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, mark.rutland@arm.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+References: <20250518095445.31044-1-dev.jain@arm.com>
+ <5763d921-f8a8-4ca6-b5b5-ad96eb5cda11@arm.com>
+ <7680e775-d277-45ea-9b6c-1f16b8b55a3f@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <7680e775-d277-45ea-9b6c-1f16b8b55a3f@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 19/05/2025 13:16, David Hildenbrand wrote:
+> On 19.05.25 11:08, Ryan Roberts wrote:
+>> On 18/05/2025 10:54, Dev Jain wrote:
+>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>>
+>> nit: please use the standard format for describing commits: Commit 9c006972c3fe
+>> ("arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table()")
+>>
+>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+>>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+>>> a pmd_present() check in pud_free_pmd_page().
+>>>
+>>> This problem was found by code inspection.
+>>>
+>>> This patch is based on 6.15-rc6.
+>>
+>> nit: please remove this to below the "---", its not part of the commit log.
+>>
+>>>
+>>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from
+>>> pXd_free_pYd_table())
+>>>
+>>
+>> nit: remove empty line; the tags should all be in a single block with no empty
+>> lines.
+>>
+>>> Cc: <stable@vger.kernel.org>
+>>> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>> v1->v2:
+>>>   - Enforce check in caller
+>>>
+>>>   arch/arm64/mm/mmu.c | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index ea6695d53fb9..5b1f4cd238ca 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>>       next = addr;
+>>>       end = addr + PUD_SIZE;
+>>>       do {
+>>> -        pmd_free_pte_page(pmdp, next);
+>>> +        if (pmd_present(*pmdp))
+>>
+>> pmd_free_pte_page() is using READ_ONCE() to access the *pmdp to ensure it can't
+>> be torn. I suspect we don't technically need that in these functions because
+>> there can be no race with a writer.
+> 
+> Yeah, if there is no proper locking in place the function would already
+> seriously mess up (double freeing etc).
 
---k6GpUpGM6uoPrUAq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Indeed; there is no locking, but this portion of the vmalloc VA space has been
+allocated to us exclusively, so we know there can be no one else racing.
 
-On Mon, May 19, 2025 at 02:30:05PM +0200, Benno Lossin wrote:
-> On Mon May 19, 2025 at 1:46 PM CEST, Mark Brown wrote:
+> 
+>> But the arm64 arch code always uses
+>> READ_ONCE() for dereferencing pgtable entries for safely. Perhaps we should be
+>> consistent here?
+> 
+> mm/vmalloc.c:   if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
 
-> > If you don't disable the regulator you've just leaked a reference which
-> > is obviously a problem.
+Yes, I saw that. I know that we don't technically need READ_ONCE(). I'm just
+proposng that for arm64 code we should be consistent with what it already does.
+See Commit 20a004e7b017 ("arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing
+page tables")
 
-> For sure. But I'm trying to figure out if this is a safety-related issue
-> or not. Safety in Rust has a rather specific meaning that can be
-> summarized with "no UB". So since the C side does nothing if the user
-> screwed up the refcounts, it lets me to believe that we don't have any
-> safety related issues when forgetting to call `regulator_disable`.
+Thanks,
+Ryan
 
-> Of course we still should strive for an API that makes that impossible
-> or at least very hard, but we don't need to make the API `unsafe` or
-> have to take special care. (At least if I understood correctly)
+> 
+> 
+> :)
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
 
-Yes, it's relatively unlikely that it would lead to any undefined
-behaviour.  There is an API for crashing through the refcounts and
-disabling if we detect some emergency, but that's very extreme.
-
---k6GpUpGM6uoPrUAq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrKD4ACgkQJNaLcl1U
-h9DFtwf/YKX6XE2sVpe0n7HKco7rUCWFYlpVz27Vk1u89lmzUaDo1Xq1rgGmyAix
-jyGn5bZ5sqNbs1OZlGfPNq1XNBSbMfyu41BEg8jmhSfRn153yIDXtoB3At0GVkD/
-V+m3bH4sqc1WSdMaI50UmvQjOeuDRT/h7G6/S5gg63t5RmjCFOBo9EHsrZWZfLOF
-dr87DgiAoZeGL0BPZbUmUX1RRrMbXgZzyAvdm9bXasv2Nuue4dAFVXyF32Nl2l7U
-V/G1OVuN71x6cc9ASIZlTL0NBUeSi8I6dSgp1iGjwHm4iK0MdtJBenv7XHPO90NV
-wqQfZzgWEYnzekwOQW4uNqNK3HtEZw==
-=2l14
------END PGP SIGNATURE-----
-
---k6GpUpGM6uoPrUAq--
