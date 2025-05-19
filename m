@@ -1,84 +1,113 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3311FF61E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B651720FAB1;
+	Mon, 19 May 2025 11:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747655141; cv=none; b=qIVxjtBv5wKyaZ2Sn12R5Uof++Y8zSZ24MNEVl9hapoSylPWEDE/YsII1C7KwTJSrwwpwRydiO1Brc0kzVfokZE8xYWhwtjevVYdUWmq7eoBvHKCCLNXMnBrJy5ZXZwtZfzhbQ1Fwl2tc1VFRCw1QDvxtKoIEsL8PzgQKxhEiuc=
+	t=1747655214; cv=none; b=Bre41J3bkSbCp7u5RYhgkUKYVYd+SBPCfxlg0cyHzmDKsbdWRadypMgbCWympjYEPVtHjaxgBoY9S3GFii3bo9sJc2uTc8yDnlESWvC8eF5jqciMhxGOJ6rMkdkVKhNY8e9c2LMmzN78sl4NsN0Wb56q49lgdcVN63s9BrzaXLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747655141; c=relaxed/simple;
-	bh=u8N5N1DA0CTSmsJwACAxyQQSLp0iFoqBsk5Y9KDkeHQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uWsIEOe8JN+Zeov23vrdio0SOGCtoKi03CKCt2h5ZFRnAwEWPamWTGUXguVMJnL5U6NTccCPr8eyTHCyvaZokUURIYJenR3IVgaW6N7bFkj0IqjSE8hAQYVV/hcBWBWoI05HGb+G99lcxtIX1ElRKxGydIN7HBmvBIq4gzmmLYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Mon, 19 May
- 2025 14:44:22 +0300
-Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 19 May
- 2025 14:44:22 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: <syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] [usb?] KMSAN: uninit-value in usbnet_probe (3)
-Date: Mon, 19 May 2025 14:43:56 +0300
-Message-ID: <20250519114357.2290474-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <681f31c9.050a0220.f2294.0007.GAE@google.com>
-References:
+	s=arc-20240116; t=1747655214; c=relaxed/simple;
+	bh=nm3LGyLWXkhbDyn1AMc/CsG+dk7eWxFfEtG6Iw41JEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1awj4TsbJUTSfYUvIdUoV0qmTr8G4qYuoaWkyASErIS3YtXl+kzmbVL2G6UZliW0LscqlXMXzdr4UOJZhj75oh6rUX+PIWTWYxsCo+r6lyfZMkHbKm+R32cTUPJ+yedbb92Tvp30Sp9xiFDF9dFdx3CDXT36V92jOSt11zcehw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKfZD/ME; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKfZD/ME"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C2BC4CEE4;
+	Mon, 19 May 2025 11:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747655214;
+	bh=nm3LGyLWXkhbDyn1AMc/CsG+dk7eWxFfEtG6Iw41JEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RKfZD/MEIRGj1GsuB9XtVfAjscYwafEzajAL9B2eQW6b1Xx1pNw77ZH152otjyovi
+	 eFbYWglEUohrfwvbCVUgI8cl2admXBDn8cMY943b/Xjye/RfiVoyD3KGt4qFi27189
+	 U85hoo/qhAkYizhX05t9a7DMe/1yzm36wqAQJV+divrV3rp0jowK06+If4v/HPOLFq
+	 8j4+8KqiBOOwT8F/TrqUUjns1iD2uQ8/yTutN1pDK9RSHTDYfRiXng/ECcWXJO1LZW
+	 WZVIxoeoZuwyAz590YTJqLbtyb+K+OEc/u4RUOU1ePWoN/Kdf3e9rVjslBKJquP6Rc
+	 yHtNym1FAVNxA==
+Date: Mon, 19 May 2025 12:46:48 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+Message-ID: <8229a161-52b8-4265-8296-8f1ac49bab62@sirena.org.uk>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+ <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
+ <D9Z4XGQ2QHXA.2H5X1NZ5IZECC@nvidia.com>
+ <aCnQo15SbhXZ9Fln@finisterre.sirena.org.uk>
+ <D9ZCD8D6J5QW.14H6VM9LQ5R2Z@kernel.org>
+ <a1a6b2f8-af42-4942-ab62-678e37381d08@sirena.org.uk>
+ <DA03MG3VURVI.37CBV5WEEKJSH@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AJrHgbJohquwKjgK"
+Content-Disposition: inline
+In-Reply-To: <DA03MG3VURVI.37CBV5WEEKJSH@kernel.org>
+X-Cookie: We have ears, earther...FOUR OF THEM!
 
-#syz test
 
----
- drivers/net/usb/aqc111.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+--AJrHgbJohquwKjgK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/net/usb/aqc111.c b/drivers/net/usb/aqc111.c
-index ff5be2cbf17b..f647c4673256 100644
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -30,10 +30,13 @@ static int aqc111_read_cmd_nopm(struct usbnet *dev, u8 cmd, u16 value,
- 	ret = usbnet_read_cmd_nopm(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
- 				   USB_RECIP_DEVICE, value, index, data, size);
- 
--	if (unlikely(ret < 0))
-+	if (unlikely(ret < size)) {
-+		ret = ret < 0 ? ret: -ENODATA;
-+
- 		netdev_warn(dev->net,
- 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
- 			    cmd, index, ret);
-+	}
- 
- 	return ret;
- }
-@@ -46,10 +49,13 @@ static int aqc111_read_cmd(struct usbnet *dev, u8 cmd, u16 value,
- 	ret = usbnet_read_cmd(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
- 			      USB_RECIP_DEVICE, value, index, data, size);
- 
--	if (unlikely(ret < 0))
-+	if (unlikely(ret < size)) {
-+		ret = ret < 0 ? ret: -ENODATA;
-+
- 		netdev_warn(dev->net,
- 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
- 			    cmd, index, ret);
-+	}
- 
- 	return ret;
- }
+On Mon, May 19, 2025 at 01:25:56PM +0200, Benno Lossin wrote:
+> On Mon May 19, 2025 at 11:56 AM CEST, Mark Brown wrote:
+
+> > No.  You should not leak any refcount, the per consumer refcount
+> > duplicates what's being done for the regulator as a whole, one should
+> > never be incremented or decremented without the other (but there may be
+> > multiple consumers to choose from).
+
+> What stops the last `regulator_put` to also call `regulator_disable` a
+> correct number of times?
+
+We obviously could but the regulator API defaults to not doing anything
+unless explicitly told to since getting things wrong can physically
+damage the system.  We've no idea if just disabling the regulator would
+be safe at this point so we just don't touch anything and complain about
+it.
+
+> What are the kinds of problems that one could encounter when not calling
+> `regulator_disable` before `regulator_put` or if `regulator_enable` was
+> never called to begin with?
+
+If you don't disable the regulator you've just leaked a reference which
+is obviously a problem.
+
+--AJrHgbJohquwKjgK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrGicACgkQJNaLcl1U
+h9CAeQf/WC1/S9s8A8jbmFO+CtRWGyHJNcH0Rl6Rv+Of6S6Nvgo15YL4q+5X7uUX
+tGORWpDkcmlQK6Z1bVXsckg9RMpLEV0ZpbonPzrPu10trGvbIkn0Y4vTWMY3AxMN
+/sTndl4n71+oxgUz3axaBsyoXFCnQZNJZ7kQbFjfgXHEDyOaSZTi+6O3D5SpYAzl
+4ipc4gkY915zi3zPcgteORTn0urGiJt71mqRvBq5mPn2mjXbuscDDqa2DNdWD9yY
+ReqvzwMz7Aqf1uMKevMViuGJ5S3ZZTMJqAlCGKUIgDJFcN0vO83uehYqpUBcra0I
+2T3SvuLRPU9XU3/DkyE3iVIKlq834g==
+=nTet
+-----END PGP SIGNATURE-----
+
+--AJrHgbJohquwKjgK--
