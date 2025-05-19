@@ -1,152 +1,100 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D546513D52F;
-	Mon, 19 May 2025 12:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A6A201246;
+	Mon, 19 May 2025 12:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656090; cv=none; b=N7JKn7xpSDIuNXVq+l+ZFi0swQSD8hGV/5ZRBaVlOtPX/I5oc+f2PwQ7RArIFwiXDX7yuK9sA2xpvkjOLrhwv8hrOlol8jFh4bMw+UblXPiL6n6sQMKVZ8jQwGOIub0y0NiQk7OrvTm4clDf3RHwEopMRO7wnPAVqCbWEX3kwIE=
+	t=1747656116; cv=none; b=ZiQzqi4QEhX0o7Et5MDZva5HxWQRDQ6rBCjPcQvQAVAb3EYnf4wH1H0QvebFyOnpb/lC2Z0gCuQ/CdESPfPRIbfDsszOy0QsUJZD92RYSntxRO8Zn9gAKmTS0zVK3krGDCpa7N78hwRC0mKnfUrfuwbTkWgM5BHEBo45vCdLOAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656090; c=relaxed/simple;
-	bh=Oi2AsDVEz//MMAK2DEH0Sl+qm7MOIE7coxM6eIGolLU=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PRlCbV3lFwXHbtp20i3O1ylwYnxuDu/BFvnZNGifmWbdKyh+cYmR0tVQY78+NItBu+Ltb4u5sB5sg6IXLY9t/aWVYiobd5EJTfWUSPQkyUG2MH/LtI1PACA2pTM0SjEcJROi5NiMXG9tB0ElpXfzjC6OysV+VrcDth9vfH21KrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKwTHTol; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747656116; c=relaxed/simple;
+	bh=Zf9gz2Q4q1qJ6K136JlNwatN69nhNVbGzKy8s8ubJ+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9HEfqC0/qjUUJXqEYsf8jElaePkETDMpNuzZJOi6xqzGy/mPLxIwO7l2b0Fn9vU0YrAH9UdrSvGyAb7gx7dquFeNfj2OhhC1EetfdvupPWPDjPumS3j84EIhd1KlXI8Rbgk5Kvz1Gzze7mYueV4RLdKC8ne+w+oGbZj7WEbCmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzlAp7kz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKwTHTol"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c96af71dso1501725b3a.0;
-        Mon, 19 May 2025 05:01:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747656088; x=1748260888; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XTmZBlZhUVLhhjEjpTTIpHbOBPnV7i0+TYTlL3dGEFg=;
-        b=iKwTHTolgkJISlGRG0NxzXTuiedOD6xTElWMcPn5aVxSDWUmh3Lk7yLbxHVM8RkbqT
-         xX/OphskVGnjt83aGpgrVY6KLznvz2W6w7foUDBMQSJCIAhwa7lSb94jDjjtzJgNZYq1
-         5h7IeJLIAl6ZxhZWtxmn2tEqKbaWkOzfBEmnWkl1LQ6EYxMv3gEJPTJxh3IM84C20WHa
-         wRZLojL6JcPHH43rgbAU/DTFdHKGbd3h+Jx2LREOeRXhn7Og4R6dcJJhh6SKLoU0wX2o
-         U+PE5qCD64bNe+vnBaEBd+mArwxKb3WU7Neo9NoSgwLHWq4/uId0oNVUmN05JsXtI1fa
-         waFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747656088; x=1748260888;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XTmZBlZhUVLhhjEjpTTIpHbOBPnV7i0+TYTlL3dGEFg=;
-        b=IHTHvf9mDIxDXdzr2bnM6nq5WpvCOtF/Lyn95WAAhRvllcj8t6+BIzvrAYoDqhdMeS
-         jUcHAJeOahbR3RInZ2MMU/sZ+Fogrni6vMNiIEBWE+BSck57Yqr0QjpcTwL/Ap7lYCQr
-         oYWBB0kkbhPexd6cKyeBX/RRkw6NYmUaSg5d8ei9/5MdSOsqAfqnrMDh+YyY3o2xb858
-         GwK+uYjCpagwUMKSv2IvHwQH3NqK39e/hsngiT7kV7aiYSlbhEPzLtibtu5/3e5c2vVw
-         Bofr4GVvGTenjh1NJfVNNr+b+wAlqB3/CE0LTTurZY13uLFCW8pqRDPQ6k3rnOGYr4P0
-         NuWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUy4ftQ93fM9WKHDgbflsm3HiIVLGo9Skv8TuQDXFc6D/xV7baM8mrhyC6vKKgku/u0UyJGa+vklhqF@vger.kernel.org, AJvYcCVUf4ssKBicrZVmt9W5TPDAq4j1mOL0QyD8LAKxaNQ+O2tjZab5HnV0cZgaONe10mL1QKLg/fUxHBigr8Uf@vger.kernel.org, AJvYcCVjrHUOId3sAm7HL8rpUGP4x0XSwmFj4w+Brc1kMstEeY7z2/5RSK0B3XDKxy8rjR2SUIdVq+y1CHjPocs/pxM=@vger.kernel.org, AJvYcCXvy9xB3nkHUwRwkmbje2oCTwuKad3PzR6rY322YkUK/kKlpxhg+ZASBJ5fvJqLtAQ1AaA94tRj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxJB66SarHA+vNrGsilz64pJ9lMalJ3ofnnfZB2+5i1zcE4W/K
-	JaCzgjmzB5qtfEuy9Ygge+6zafw+Ny9v+Q7uOtS9pG97FcHlLreyzqjCXBDcqDhu
-X-Gm-Gg: ASbGncuGU5ljxpJMOj0zUaB71EoKO5y45E1aJKS0FD5T0AHdDR57aYwhBcFR9Yxkgl/
-	ZMwuWuAaOXuybagl8YeiRrt9nsrdnWcHoYTG4toyT2lXsElbQjU0TkNw97rVfc+Wk8zWfp610PQ
-	c10cVBkQ2+LJ+rwx9soWClccuJYQuUlI+nk/zuSZgExpI+Nxw69Gd8FnRD/POfxP/T+DmW8h3IW
-	JRmTvWDFOX8mo1bZ0TmQHfhrsRdX3iQdRYJIJUdaIkIBnft2Y2gkhZ/Z8f77qIhhyyq3rUFGlaF
-	vTMLUKhNvWMquw/rR0vvpNcEXS9E+ktzs6SNS1cGH4c3Me/jbbB8i3ebw8EqBcGkgh1TyctKdCs
-	asJoK0KVR4CK5jxigHrczr8dIZ+cxlnpeTQ==
-X-Google-Smtp-Source: AGHT+IFA5WtJ5T6gVjrQKrpyLmTmrTegeDbfrWJqzoylEFS0ZUr6GsuE/3DhnckmSjBrOGZeN1nV4g==
-X-Received: by 2002:a05:6a21:3289:b0:215:d25d:fd14 with SMTP id adf61e73a8af0-2162189f061mr17513907637.13.1747656077753;
-        Mon, 19 May 2025 05:01:17 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d9c3sm5972829b3a.121.2025.05.19.05.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 05:01:17 -0700 (PDT)
-Date: Mon, 19 May 2025 21:00:59 +0900 (JST)
-Message-Id: <20250519.210059.2097701450976383427.fujita.tomonori@gmail.com>
-To: lossin@kernel.org
-Cc: fujita.tomonori@gmail.com, ansuelsmth@gmail.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
- florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- kabel@kernel.org, andrei.botila@oss.nxp.com, tmgross@umich.edu,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@kernel.org, aliceryhl@google.com, dakr@kernel.org,
- sd@queasysnail.net, michael@fossekall.de, daniel@makrotopia.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
- match_phy_device C changes
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <D9YO3781UI2X.1CI7FG1EATN8G@kernel.org>
-References: <D9YA4FS5EX4S.217A1IK0WW4WR@kernel.org>
-	<20250517.221313.1252217275580085717.fujita.tomonori@gmail.com>
-	<D9YO3781UI2X.1CI7FG1EATN8G@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzlAp7kz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACF1C4CEE9;
+	Mon, 19 May 2025 12:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747656116;
+	bh=Zf9gz2Q4q1qJ6K136JlNwatN69nhNVbGzKy8s8ubJ+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lzlAp7kzkoeCPmb5UunEHlWgmAl6Q6kbrRzx4rW7AoTfmckiFONvJq29T9drSlON3
+	 0WTijnMEjM1LxWh1MJ44JOmw/AXLRzUlRgFCnnbHP6m7yRtJ5uA1ripR22NSvNB32r
+	 kQYSTDTBa/fEC2p2ucqCtrtoAIS3bBAI+ESwcnaGqho5wBp0a7ZAzceHbP86hbsSY4
+	 k81oLtVguNRmvh1Caq0PNj5V++HjyH59/IC98Gx97Tw1mK/MVG/IyXU0/5pJsPLVBV
+	 BDFHQ/+Xh7csYJSI92XW2xtTnditMy/PgO5HTb6vo8NGS+RYH0Yz7XE+64KhtcUlGO
+	 yV+mxK1yLpdaw==
+Date: Mon, 19 May 2025 13:01:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Han Gao <rabenda.cn@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
+	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: riscv: add Sophgo SG2042_EVB_V1.X
+ bindings
+Message-ID: <20250519-geek-slept-8cae4fc6d548@spud>
+References: <cover.1747231254.git.rabenda.cn@gmail.com>
+ <b538e2b24eab8b740091d80ca76b20ef6014a4e5.1747231254.git.rabenda.cn@gmail.com>
+ <20250514-showplace-yahoo-e3c306355288@spud>
+ <CAAT7Ki9Fw0+Ntv+oFqr2R=EHnFZrT6KmyTPN2MCDDGvSn-Wi8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-
-On Sat, 17 May 2025 21:02:51 +0200
-"Benno Lossin" <lossin@kernel.org> wrote:
-
->>> I think that's wrong, nothing stops me from implementing `Driver` for an
->>> empty enum and that can't be instantiated. The reason that one wants to
->>> have this in C is because the same `match` function is used for
->>> different drivers (or maybe devices? I'm not too familiar with the
->>> terminology). In Rust, you must implement the match function for a
->>> single PHY_DEVICE_ID only, so maybe we don't need to change the
->>> signature at all?
->>
->> I'm not sure I understand the last sentence. The Rust PHY abstraction
->> allows one module to support multiple drivers. So we can could the
->> similar trick that the second patch in this patchset does.
->>
->> fn match_device_id(dev: &mut phy::Device, drv: &phy::DriverVTable) -> bool {
->>     // do comparison workking for three drivers
->> }
-> 
-> I wouldn't do it like this in Rust, instead this would be a "rustier"
-> function signature:
-> 
->     fn match_device_id<T: Driver>(dev: &mut phy::Device) -> bool {
->         // do the comparison with T::PHY_DEVICE_ID
->         dev.id() == T::PHY_DEVICE_ID
->     }
-> 
-> And then in the impls for Phy{A,B,C,D} do this:
-> 
->     impl Driver for PhyA {
->         fn match_phy_device(dev: &mut phy::Device) -> bool {
->             match_device_id::<Self>(dev)
->         }
->     }
-
-Ah, yes, this works well.
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="p3QpKvf7RfTC567z"
+Content-Disposition: inline
+In-Reply-To: <CAAT7Ki9Fw0+Ntv+oFqr2R=EHnFZrT6KmyTPN2MCDDGvSn-Wi8A@mail.gmail.com>
 
 
->> The other use case, as mentioned above, is when using the generic helper
->> function inside match_phy_device() callback. For example, the 4th
->> patch in this patchset adds genphy_match_phy_device():
->>
->> int genphy_match_phy_device(struct phy_device *phydev,
->>                            const struct phy_driver *phydrv)
->>
->> We could add a wrapper for this function as phy::Device's method like
->>
->> impl Device {
->>     ...
->>     pub fn genphy_match_phy_device(&self, drv: &phy::DriverVTable) -> i32 
-> 
-> Not sure why this returns an `i32`, but we probably could have such a
+--p3QpKvf7RfTC567z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Maybe a bool would be more appropriate here because the C's comment
-says:
+On Sat, May 17, 2025 at 01:11:46AM +0800, Han Gao wrote:
+> On Thu, May 15, 2025 at 12:22=E2=80=AFAM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Wed, May 14, 2025 at 10:08:59PM +0800, Han Gao wrote:
+> > > Add DT binding documentation for the Sophgo SG2042_EVB_V1.X board [1].
+> >
+> > 1.x? Is the v1.0 something people can get their hands on, or just the
+> > v1.1?
+> > What differences do the boards have that are minimal enough that
+> > specific compatibles would not be required?
+> >
+>=20
+> First of all, v1.1 and v1.0 are compatible boards.
+> There is no difference between v1.1 and v1.0 from dts.
+>=20
+> Both v1.1 and v1.0 have been discontinued.
+> About 80 pieces of v1.1 are in the hands of community developers.
 
-Return: 1 if the PHY device matches the driver, 0 otherwise.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> function as well (though I wouldn't use the vtable for that).
+--p3QpKvf7RfTC567z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-What would you use instead?
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCsdrgAKCRB4tDGHoIJi
+0kd5AQCYs1Sq3GD4kaz3DoAtIrt6+FU4CPdjvAtv8vhTf1N5uwD9FTZzafSC58rf
+8spnL07wKGQMM9LFZN9yxZ8RvCxKagU=
+=ZRoH
+-----END PGP SIGNATURE-----
+
+--p3QpKvf7RfTC567z--
