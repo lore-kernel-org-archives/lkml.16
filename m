@@ -1,132 +1,86 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C111714B3;
-	Mon, 19 May 2025 12:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87EE1714B3
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657016; cv=none; b=e41IusY5QYYEagZ54SedyRn9+gvcjuzpf0xgenL2/i/NX4Fac/24Rhyg/vBJ5ZfT0kOj7hZSEElwddyXOMzvmx+v3goUf9FmmVFCHJT7tgKsOWwvzisQbczilY+ajLUJcKCr+C80+XmT0L5IVVrOMB5nsKPDDj/TqvIdFnwNVzA=
+	t=1747657022; cv=none; b=pHnt8ogEy0DU/oH6j58BJ+BtJk6hn+jDvBL2K0MsETWAFhSl9nMdL6RQcVEZeYX4Cf+N2W7uKjfWUid9iUPVY93QCpeGIusHgd0YT1ot0Gz+X9HiX5BrUf/YpBeAbnOa0yoV/SnJO9+tcVM/igIJPtVQoluPqKcV9IAVBIwjkhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657016; c=relaxed/simple;
-	bh=DOkKNp4l7AMqnBeiOcr0K3qq8IbXhMNaPz7rbisR8PA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=c2jI1fYe+U7DjT+3LZA2L8I6lG1EoIRj4EwVkUoGFZMSTDpKDCcJUeOyn9yPWAw+vKh/XhOXE1JcITIaLlBxKEmF9NiPbCXzCCAigwfJ8S2SCDl3mBvVLVqejtlaJExOGxBRNjIXVIuPybyIEWEDZNCTR5WlccVd3COjqg5UtIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=JAHkrCh1; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1747657022; c=relaxed/simple;
+	bh=BIOX9H4O6cTEWwlkrpWf5u+kicgtzztgCG71TnhgjQU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tzrStEHolUXpDl5Yd17JQJUg6KkbFgmDEMiuYqW+8E8q+zmBgND1Wjn9kdDbuX528+Z2vWREEU8RVZ9pnG2mNLhrfDp4F0VoNpzfq3lOLYPjYdiCWYeOVpT2RQ1EuBq4JjvRNFraE7eCng0YCRIONzcaUtPzC6td+BoinFafxdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MjjivDDY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WB/Q5r8E; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="JAHkrCh1"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54JCGH6b8937724, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1747656977; bh=DOkKNp4l7AMqnBeiOcr0K3qq8IbXhMNaPz7rbisR8PA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=JAHkrCh1B7t7YOkle2atNXaWGpNSth9zm/SRBlzZuGMwYJgusYPPyz86RJe+rligI
-	 Oyj58Wn2hoQF7J8G52tkLR1mnOZan0mAjyj0lSoZA+BRo4mHaXsN9hUssQsPg3jBMy
-	 mXYFoiq5JF9a/1nRjzKtgIBIr+h3J2KBYUzAXmPTeaH+SXtcpGO4ZAoKTFSzUPodua
-	 FTWb+iFyD/SLXet4XzhfB0T36veNAt3i0cpCY7b9BIlY4Y0nQhIx+NxAJ91q4kGwQm
-	 zbDCud5AIBz1YekqughpEHaZvrh8d2Lo5Nri5RcLvBKRCt86xxjxgGQOsmPKU/sJ5v
-	 NWIfr6xOzk1ag==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54JCGH6b8937724
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 20:16:17 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 19 May 2025 20:16:17 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 19 May 2025 20:16:11 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Mon, 19 May 2025 20:16:11 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: "kuba@kernel.org" <kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>, Joe Damato <jdamato@fastly.com>
-Subject: RE: [PATCH net-next v2] rtase: Use min() instead of min_t()
-Thread-Topic: [PATCH net-next v2] rtase: Use min() instead of min_t()
-Thread-Index: AQHbtawdSIC/HJstr0OxTEOUNg41/rPaAlkA
-Date: Mon, 19 May 2025 12:16:11 +0000
-Message-ID: <bb78d791abe34d9cbac30e75e7bec373@realtek.com>
-References: <20250425063429.29742-1-justinlai0215@realtek.com>
-In-Reply-To: <20250425063429.29742-1-justinlai0215@realtek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MjjivDDY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WB/Q5r8E"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747657018;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k27fO7henKnq4UPnDJ7hnHW2OVYLSMfn/J8w9qfUsF8=;
+	b=MjjivDDYyJR2hfCPEDkEYDfh2V6bEly/UssS0T63VB9O0C+TM8a5a6ZetMdVipO4btpgsp
+	69psghpmQ28ifE+yzLBrcOtMju+HtY9Mn9iXU8WLrLko61Ee2gxVBDn5urZxnRPkMAlOa0
+	i8oTOL34hK0uHCEtZRq6kN/xcJlP2FdB5pzQ/FOj1+KSr6hiDjKkUKkSZOPUtX8MnrM/CA
+	+esaRZgcHJ/lKAMZro0oyVZlCskiE+zR7W5RU32S5IZib7HO6ZT0AkJIK4AtCWlQx/Amy4
+	Pg8lnPrb061e1Gi1DdWyCUNYSTBIMhe1YtvLXo6fsx8n8IYToa6hjq40EgUKUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747657018;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k27fO7henKnq4UPnDJ7hnHW2OVYLSMfn/J8w9qfUsF8=;
+	b=WB/Q5r8EZiZ3SPP6wnORvG2F0zUMrX+ovCj1NeKg0YpcoPoen2Rud3xa2bKOqMiknxsge0
+	8Zg7ET7P2j+trJDQ==
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
+ <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 5/5] irqchip/gic-v3-its: Use allocation size from the
+ prepare call
+In-Reply-To: <86wmacewjr.wl-maz@kernel.org>
+References: <20250513163144.2215824-1-maz@kernel.org>
+ <20250513163144.2215824-6-maz@kernel.org> <8734d1iwcp.ffs@tglx>
+ <86wmacewjr.wl-maz@kernel.org>
+Date: Mon, 19 May 2025 14:16:58 +0200
+Message-ID: <87zff8hk1x.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-> -----Original Message-----
-> From: Justin Lai <justinlai0215@realtek.com>
-> Sent: Friday, April 25, 2025 2:34 PM
-> To: kuba@kernel.org
-> Cc: davem@davemloft.net; edumazet@google.com; pabeni@redhat.com;
-> andrew+netdev@lunn.ch; linux-kernel@vger.kernel.org;
-> netdev@vger.kernel.org; horms@kernel.org; Ping-Ke Shih
-> <pkshih@realtek.com>; Larry Chiu <larry.chiu@realtek.com>; Justin Lai
-> <justinlai0215@realtek.com>; Joe Damato <jdamato@fastly.com>
-> Subject: [PATCH net-next v2] rtase: Use min() instead of min_t()
->=20
-> Use min() instead of min_t() to avoid the possibility of casting to the
-> wrong type.
->=20
-> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> Reviewed-by: Joe Damato <jdamato@fastly.com>
-> ---
-> v1 -> v2:
-> - Remove the Fixes tag.
-> ---
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> index 6251548d50ff..8c902eaeb5ec 100644
-> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> @@ -1983,7 +1983,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
->  	u8 msb, time_count, time_unit;
->  	u16 int_miti;
->=20
-> -	time_us =3D min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> +	time_us =3D min(time_us, RTASE_MITI_MAX_TIME);
->=20
->  	msb =3D fls(time_us);
->  	if (msb >=3D RTASE_MITI_COUNT_BIT_NUM) {
-> @@ -2005,7 +2005,7 @@ static u16 rtase_calc_packet_num_mitigation(u16
-> pkt_num)
->  	u8 msb, pkt_num_count, pkt_num_unit;
->  	u16 int_miti;
->=20
-> -	pkt_num =3D min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> +	pkt_num =3D min(pkt_num, RTASE_MITI_MAX_PKT_NUM);
->=20
->  	if (pkt_num > 60) {
->  		pkt_num_unit =3D RTASE_MITI_MAX_PKT_NUM_IDX;
-> --
-> 2.34.1
+On Mon, May 19 2025 at 11:15, Marc Zyngier wrote:
+> On Sun, 18 May 2025 19:53:42 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> 
+>> On Tue, May 13 2025 at 17:31, Marc Zyngier wrote:
+>> 
+>> > Now that .msi_prepare() gets called at the right time and not
+>> > with semi-random parameters, remove the ugly hack that tried
+>> > to fix up the number of allocated vectors.
+>> >
+>> > It is now correct by construction.
+>> 
+>> FWIW, while looking at something related, it occured to me that with
+>> this change you can enable MSI_FLAG_PCI_MSIX_ALLOC_DYN now on GIC ITS.
+>
+> Maybe. It is rather unclear to me what this "dynamic allocation"
+> actually provides in terms of guarantees to the endpoint driver.
 
-Hi reviewers,
+It allows the driver to avoid allocating a gazillion of interrupts
+upfront during initialization. Instead it can allocate them on demand,
+when e.g. a queue is initialized. Of course that means that such an
+allocation can fail, but so can request_irq() and other things. I'm not
+sure what you mean with guarantees here.
 
-I apologize for the interruption, I would like to ask why this patch is
-rejected on patchwork.
+Thanks
 
-Justin
+        tglx
