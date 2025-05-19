@@ -1,62 +1,62 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51692192FC;
-	Mon, 19 May 2025 22:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A8321FF5A;
+	Mon, 19 May 2025 22:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747694035; cv=none; b=Aw7KtTTTF7UBbM03i9sILtnY4WUTARvZT5v/YmtbpaGWpr8TVW45H83xCbZ36qAZNBGXcc2O/VDqFWKZ0La11icjx7P72ZZ0BKhsn/DvR+O2Ii6bB8qtMTRbMFkPKPfU3H17uXRtDdAZ/MDF5QrthxiS1aQxo3myDJuwretJhhk=
+	t=1747694036; cv=none; b=I3DZh6xSVNfj0LNJ22YrSd1ELfYdZzjsY1EY3g81cQ4Zq5rRXIHv0wWHew5Dk39ecoJEo7VlosCAMO/1rpj0OlAzPgYiE+Ip9X0gqKzXq8Jbo991IBNbuESZWTiZ5c9VWZZuQw5kIOm7n8f/y4dgQ7xldMKGKXh3ICCb8pM+yqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747694035; c=relaxed/simple;
-	bh=6clWYkJ46bS6af6Y7ODPfkaW96D1yKbSRPHkJFhb7is=;
+	s=arc-20240116; t=1747694036; c=relaxed/simple;
+	bh=mdjyDN1GqLCpsZy/2bMMWG1/g7ATnYg6QL8zmUB4dEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gbWFMZF24BUkmdJcXonLHvGRhMXfkuw9si6AyUoujG2d8z0oqvB0UAZg7QLuqgtv51zOdAfzutuAY0Xm2XF7HQcWnIMlJLjQ5JbUYVyxP+S9wKfZsfHXnje9nAXD69HQ0tAForg17VA2uvMcTQ1oC7bjPjnAzmDgbCBquopS5HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eDxYH/pS; arc=none smtp.client-ip=209.85.160.174
+	 MIME-Version; b=qjF9wRpuinGQ83yGDhlLpEBJYTkaKgvQldOXr3zK9ZlDOluiLa3lxwiG1jADKIlb04EstEMLaYtE+yLKUU+Jwh4EJVR0xgY/IUN2PbQjas4jTqpjMSEV/IahNY3nToa1Qajm1WZ3ymjB6EiBvy6rkPCRDCWZ+Ykjwhrw+dXjLaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gc8zR7UE; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDxYH/pS"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476977848c4so54010711cf.1;
-        Mon, 19 May 2025 15:33:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc8zR7UE"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4766cb762b6so56129361cf.0;
+        Mon, 19 May 2025 15:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1747694033; x=1748298833; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GLL6/TM7VHHA7BD7VtemxaiF2BY2WlisCLQAtLpyNFE=;
-        b=eDxYH/pSemxNbUSqcFuW+xByZiYWi5GOBg4qjqgn7O/IvpS+V8a1V3y8B/dxsz/ObA
-         tfli25q2GP32H/YxE46YGrziGeW1ZUDLRC7pQ0IDPjwXKIL7jwXwS3+ezJUwiHcO7F1V
-         2d3WmyV1K3cw5JQoWiVindRWCfbK6xbN/K+KTjjkNvUceO71JLSGqg+Fcoc54VfIk511
-         JY80zS34QhM/Xd7stTpW30DIJeZwGzRbxZed3atQv+mASnXDsDLpl9woLtUpEVZ3Hm88
-         tyz6UieVV5lryVP+F7z8lhXbRKWGwUrqdq4oOy6kl1GHIhS1vFVfmvek+wHNlHDFGWZo
-         IF7A==
+        bh=QBedgeD+gExl3gWB2aOy4e3KdH1CGamnabmn5JJeaHM=;
+        b=Gc8zR7UE+5VjGeCNCY6rzh/3SoXhx3T2Ft9EOIaodPWSeYJwvnYt8w8uh+wHtjYXVY
+         GFQ8J5nEaXeAaDLGL4js11CsYAZHtU6cFJ8sOduIY9/ZodpA1dx2BPOa2JfDrzacnI7a
+         wjcRPGdIM1Q6Ft65YFM5QMyvSyS5L06YF1/11lGuWUibINzeypoW3D5YZ+FQCODX5cxy
+         1bsm8RtL94DBxoWhmXu0ajqKjuvtVgnju3QgDmN3iVEVaQ9ET9d9vId4D5xfKaBrpXwP
+         HGVj7CAhMyqqA2EpahONhOyJFSE5fCbQXpZ1/iPAxxORNFC8fveySKEBWEBKHr9QuBbo
+         5nXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1747694033; x=1748298833;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GLL6/TM7VHHA7BD7VtemxaiF2BY2WlisCLQAtLpyNFE=;
-        b=oz13oB1Q9lwYVe6GXOxHvQnRx7fRJELRSPGdQm2pF16fNf4lqYhJJllKyIedujDVzl
-         iGVraJ4NBj0sKB9lDKTyNWcRP/bXEze6YrDKiL4FHYJyPHO+cQNpB7ilAPT/w4Hx2no7
-         nH6i12NR9Mpbo1UxXxTUN92lOlNdaQA+Bdc80oFB94unMuhTcozdC2R07nN4D4BE0JOG
-         TwQElaPEjC5WxapNP8fDcal/JPHTphZaZa3mrHPGYFuPsWFUhaURs4V1rZ5fB0IES0Bn
-         7m+oaL+EUd0cvIrfvJPMkVVxwDSesfDnSMy1ey3viwCFFhhYQOJWJLgvfq7G+Q1WBaNt
-         FB2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmDoVtBdmxw2/q1gU5XKxSpsE+vzYG/H97kn4VUhF+wEZ5uul2l4avxcUQ9dTEVBtFyeraZnLvReI=@vger.kernel.org, AJvYcCXUXF1kuzN7+QTWlOD3cQfVYqfST38j9A377v3h6vcyU5cLHwnqO4UnL0ONrZ2Akan0NFPLeLBwLfskLk7R@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY7234vEbKhfQvDW2mKJZqc6/NYz/Yx7KbsE0nsUQN6CfZunLl
-	1Kh+LA257gVWISj75GIo6XZIw9VCAcssPMKF012yeCniI9SWaHj8rpSZ
-X-Gm-Gg: ASbGncsa6o5NoT2mj7GbV430Y+BI5l9Tht8WHCRWSoBpuT4AzMPEE+NllsuMQQhmWVO
-	ulv0G/iwPWy57+Q0nCW4Vsv8fC8bXFoseu9aAKPgvN/4JnJNOjjXHF3lLOoFYQA9A8iveTt6oi6
-	kH5pqNovU1DwyRSVBAgvA+F+t10bLctN6YevGIu0SMaZ/R6ZC83j2S0hAw1IiG3bCfmoRcQDKXH
-	LOWKuw8yI/EH2dYUGI0iQb5uX+XTdfBG2hE7bNzx5KehdsYLqlUIXzIilYinLvMpxWtJiVq5WOg
-	mf7g0dtMs24wCKVh6/vo3HS6g5REf7q94LHLEkVL+jJCF3qZ
-X-Google-Smtp-Source: AGHT+IF2bjSrNBKkDGo+548/O/GSqWphCFb2QYFAjC9c4/YfABn2yMXLMwEjhN7yIRg9vuRAbhk/TA==
-X-Received: by 2002:a05:622a:a1b:b0:476:a74d:f23b with SMTP id d75a77b69052e-494ae4ca3ffmr252876701cf.48.1747694032568;
-        Mon, 19 May 2025 15:33:52 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:1::])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae427fe5sm62947021cf.44.2025.05.19.15.33.51
+        bh=QBedgeD+gExl3gWB2aOy4e3KdH1CGamnabmn5JJeaHM=;
+        b=K8d4S2t2UiDrkU+em0fSGN6refVux4zawqkvzf/HgqzOcjgLvWt1C9D99oY0RNESBC
+         2uGN4DGNRUFZh1t0XPOe7qpdHcxwj+HBgmV+GKIPTKH0NKwpBM7sfAsfXkIn1sjzl3jq
+         m9AVNiuFRHO9Heh6cohI3IsBrYWbo6zXKRW5ad2bpxAUNRRkHbwcg1eCsfOIuFUo2EbD
+         i2Aot1gy4g/II87CUKb+5RC6kViBiFQPSmWQuOnUg+aplw93ERaXm9ktliEUDV/QsxHO
+         iJfNZDdhFaQm2QND0A7X4ZBICTgOB+Nm3QJaJq9HT7kspC++8ol3L/9tFRyd5s0sBcBx
+         5t/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUt22HHGdTmPN3tvOlhjuQrt1KTZVhYfdwp0WErj96P9bXbpXZVnZBvZQZslLVzOiwYkLW12Ubepb8=@vger.kernel.org, AJvYcCX0l2WGb/HnQhP/A3kw3aO2ZwpwXLPkQBbzZsTlcnvr0JptpL0Dyd/vcTF0fYhU7tf1D70C+FbggKNGZBOv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFB7PMw046ABuzTkbWFYR3wBFty2pCxHqiZ9k6JSzIH2jcBRXB
+	32ekhXUiUunnS33En4oLbRweB+mR2LUF1bqUoFFiAKHoEtr96JNEpEL2
+X-Gm-Gg: ASbGncv+nSMY5ER5Goz0sGA2y6L3n+NGCBPCvBUyEIDcKMGKqhBU4KPF8dA14PDj5yz
+	EHvo1KyQ9hD003hqaF+ouIkLqhzJuVkTSpcJfguCEglvFW9NPr1KjcZddO1piVkK7ZD7oRGnP4A
+	uT1cZDKBM6cTU54ZpDRz6dG8hR0aQE59UZG71HXdanehtLreEK9xlx78e/iyLvwVbctjHltKA+Q
+	m+2Efl5QTYN8329Ho5xcVxmld0Mg3dNRW+WVJMx0s/ZPVd+G50JBbZvQMBfk9txi3FkYzcR1+W8
+	Zjsqcz02lm+gR4dIVKY6aWOxeiWZ+J+S5Xayl3xMQ+aqa5Jd
+X-Google-Smtp-Source: AGHT+IHIMtoPpH0aTMNDuPw4CtAj8gWgNrBxIjYiHH9b7GKsL6dv3EnaDjorXwPudxtkzQKEOIFtfg==
+X-Received: by 2002:a05:622a:4d4f:b0:494:b8fd:b565 with SMTP id d75a77b69052e-494b8fdb73fmr226540651cf.17.1747694033571;
+        Mon, 19 May 2025 15:33:53 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:4::])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3ccfd5sm61080091cf.2.2025.05.19.15.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 15:33:52 -0700 (PDT)
+        Mon, 19 May 2025 15:33:53 -0700 (PDT)
 From: Usama Arif <usamaarif642@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	david@redhat.com,
@@ -78,9 +78,9 @@ Cc: hannes@cmpxchg.org,
 	linux-doc@vger.kernel.org,
 	kernel-team@meta.com,
 	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH v3 5/7] selftests: prctl: introduce tests for PR_DEFAULT_MADV_NOHUGEPAGE
-Date: Mon, 19 May 2025 23:29:57 +0100
-Message-ID: <20250519223307.3601786-6-usamaarif642@gmail.com>
+Subject: [PATCH v3 6/7] selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_HUGE
+Date: Mon, 19 May 2025 23:29:58 +0100
+Message-ID: <20250519223307.3601786-7-usamaarif642@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250519223307.3601786-1-usamaarif642@gmail.com>
 References: <20250519223307.3601786-1-usamaarif642@gmail.com>
@@ -93,185 +93,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 The test is limited to 2M PMD THPs. It does not modify the system
-settings in order to not disturb other process running in the system.
-It checks if the PMD size is 2M, if the 2M policy is set to inherit
-and if the system global THP policy is set to "always", so that
-the change in behaviour due to PR_DEFAULT_MADV_NOHUGEPAGE can
+settings in order to not disturb other process running in the
+system.
+It runs if the PMD size is 2M, if the 2M policy is set to inherit
+and if the system global THP policy is set to "madvise", so that
+the change in behaviour due to PR_THP_POLICY_DEFAULT_HUGE can
 be seen.
 
 This tests if:
 - the process can successfully set the policy
 - carry it over to the new process with fork
-- if no hugepage is gotten when the process doesn't MADV_HUGEPAGE
-- if hugepage is gotten when the process does MADV_HUGEPAGE
-- the process can successfully reset the policy to PR_DEFAULT_SYSTEM
-- if hugepage is gotten after the policy reset
+- if hugepage is gotten both with and without madvise
+- the process can successfully reset the policy to
+  PR_DEFAULT_SYSTEM
+- if hugepage is gotten after the policy reset only with MADV_HUGEPAGE
 
 Signed-off-by: Usama Arif <usamaarif642@gmail.com>
 ---
- tools/testing/selftests/prctl/Makefile     |   2 +-
- tools/testing/selftests/prctl/thp_policy.c | 214 +++++++++++++++++++++
- 2 files changed, 215 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/prctl/thp_policy.c
+ tools/testing/selftests/prctl/thp_policy.c | 74 +++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/prctl/Makefile b/tools/testing/selftests/prctl/Makefile
-index 01dc90fbb509..ee8c98e45b53 100644
---- a/tools/testing/selftests/prctl/Makefile
-+++ b/tools/testing/selftests/prctl/Makefile
-@@ -5,7 +5,7 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
- ifeq ($(ARCH),x86)
- TEST_PROGS := disable-tsc-ctxt-sw-stress-test disable-tsc-on-off-stress-test \
--		disable-tsc-test set-anon-vma-name-test set-process-name
-+		disable-tsc-test set-anon-vma-name-test set-process-name thp_policy
- all: $(TEST_PROGS)
- 
- include ../lib.mk
 diff --git a/tools/testing/selftests/prctl/thp_policy.c b/tools/testing/selftests/prctl/thp_policy.c
-new file mode 100644
-index 000000000000..7791d282f7c8
---- /dev/null
+index 7791d282f7c8..62cf1fa6fd28 100644
+--- a/tools/testing/selftests/prctl/thp_policy.c
 +++ b/tools/testing/selftests/prctl/thp_policy.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This test covers the PR_GET/SET_THP_POLICY functionality of prctl calls
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/mman.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+
-+#ifndef PR_SET_THP_POLICY
-+#define PR_SET_THP_POLICY		78
-+#define PR_GET_THP_POLICY		79
-+#define PR_DEFAULT_MADV_HUGEPAGE	0
-+#define PR_DEFAULT_MADV_NOHUGEPAGE	1
-+#define PR_DEFAULT_SYSTEM		2
-+#endif
-+
-+#define CONTENT_SIZE 256
-+#define BUF_SIZE (12 * 2 * 1024 * 1024) // 12 x 2MB pages
-+
-+enum system_policy {
-+	SYSTEM_POLICY_ALWAYS,
-+	SYSTEM_POLICY_MADVISE,
-+	SYSTEM_POLICY_NEVER,
-+};
-+
-+int system_thp_policy;
-+
-+/* check if the sysfs file contains the expected substring */
-+static int check_file_content(const char *file_path, const char *expected_substring)
-+{
-+	FILE *file = fopen(file_path, "r");
-+	char buffer[CONTENT_SIZE];
-+
-+	if (!file) {
-+		perror("Failed to open file");
-+		return -1;
-+	}
-+	if (fgets(buffer, CONTENT_SIZE, file) == NULL) {
-+		perror("Failed to read file");
-+		fclose(file);
-+		return -1;
-+	}
-+	fclose(file);
-+	// Remove newline character from the buffer
-+	buffer[strcspn(buffer, "\n")] = '\0';
-+	if (strstr(buffer, expected_substring))
-+		return 0;
-+	else
-+		return 1;
-+}
-+
-+/*
-+ * The test is designed for 2M hugepages only.
-+ * Check if hugepage size is 2M, if 2M size inherits from global
-+ * setting, and if the global setting is madvise or always.
-+ */
-+static int sysfs_check(void)
-+{
-+	int res = 0;
-+
-+	res = check_file_content("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", "2097152");
-+	if (res) {
-+		printf("hpage_pmd_size is not set to 2MB. Skipping test.\n");
-+		return -1;
-+	}
-+	res |= check_file_content("/sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled",
-+				  "[inherit]");
-+	if (res) {
-+		printf("hugepages-2048kB does not inherit global setting. Skipping test.\n");
-+		return -1;
-+	}
-+
-+	res = check_file_content("/sys/kernel/mm/transparent_hugepage/enabled", "[madvise]");
-+	if (!res) {
-+		system_thp_policy = SYSTEM_POLICY_MADVISE;
-+		return 0;
-+	}
-+	res = check_file_content("/sys/kernel/mm/transparent_hugepage/enabled", "[always]");
-+	if (!res) {
-+		system_thp_policy = SYSTEM_POLICY_ALWAYS;
-+		return 0;
-+	}
-+	printf("Global THP policy not set to madvise or always. Skipping test.\n");
-+	return -1;
-+}
-+
-+static int check_smaps_for_huge(void)
-+{
-+	FILE *file = fopen("/proc/self/smaps", "r");
-+	int is_anonhuge = 0;
-+	char line[256];
-+
-+	if (!file) {
-+		perror("fopen");
-+		return -1;
-+	}
-+
-+	while (fgets(line, sizeof(line), file)) {
-+		if (strstr(line, "AnonHugePages:") && strstr(line, "24576 kB")) {
-+			is_anonhuge = 1;
-+			break;
-+		}
-+	}
-+	fclose(file);
-+	return is_anonhuge;
-+}
-+
-+static int test_mmap_thp(int madvise_buffer)
-+{
-+	int is_anonhuge;
-+
-+	char *buffer = (char *)mmap(NULL, BUF_SIZE, PROT_READ | PROT_WRITE,
-+				    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (buffer == MAP_FAILED) {
-+		perror("mmap");
-+		return -1;
-+	}
-+	if (madvise_buffer)
-+		madvise(buffer, BUF_SIZE, MADV_HUGEPAGE);
-+
-+	// set memory to ensure it's allocated
-+	memset(buffer, 0, BUF_SIZE);
-+	is_anonhuge = check_smaps_for_huge();
-+	munmap(buffer, BUF_SIZE);
-+	return is_anonhuge;
-+}
-+
-+/* Global policy is always, process is changed to NOHUGE (process becomes madvise) */
-+static int test_global_always_process_nohuge(void)
+@@ -203,6 +203,77 @@ static int test_global_always_process_nohuge(void)
+ 		return -1;
+ }
+ 
++/* Global policy is madvise, process is changed to HUGE (process becomes always) */
++static int test_global_madvise_process_huge(void)
 +{
 +	int is_anonhuge = 0, res = 0, status = 0;
 +	pid_t pid;
 +
-+	if (prctl(PR_SET_THP_POLICY, PR_DEFAULT_MADV_NOHUGEPAGE, NULL, NULL, NULL) != 0) {
-+		perror("prctl failed to set policy to madvise");
++	if (prctl(PR_SET_THP_POLICY, PR_DEFAULT_MADV_HUGEPAGE, NULL, NULL, NULL) != 0) {
++		perror("prctl failed to set process policy to always");
 +		return -1;
 +	}
 +
@@ -283,23 +140,21 @@ index 000000000000..7791d282f7c8
 +	}
 +
 +	res = prctl(PR_GET_THP_POLICY, NULL, NULL, NULL, NULL);
-+	if (res != PR_DEFAULT_MADV_NOHUGEPAGE) {
++	if (res != PR_DEFAULT_MADV_HUGEPAGE) {
 +		printf("prctl PR_GET_THP_POLICY returned %d pid %d\n", res, pid);
 +		goto err_out;
 +	}
 +
-+	/* global = always, process = madvise, we shouldn't get HPs without madvise */
++	/* global = madvise, process = always, we should get HPs irrespective of MADV_HUGEPAGE */
 +	is_anonhuge = test_mmap_thp(0);
-+	if (is_anonhuge) {
-+		printf(
-+		"PR_DEFAULT_MADV_NOHUGEPAGE set but still got hugepages without MADV_HUGEPAGE\n");
++	if (!is_anonhuge) {
++		printf("PR_DEFAULT_MADV_HUGEPAGE set but didn't get hugepages\n");
 +		goto err_out;
 +	}
 +
 +	is_anonhuge = test_mmap_thp(1);
 +	if (!is_anonhuge) {
-+		printf(
-+		"PR_DEFAULT_MADV_NOHUGEPAGE set but did't get hugepages with MADV_HUGEPAGE\n");
++		printf("PR_DEFAULT_MADV_HUGEPAGE set but did't get hugepages\n");
 +		goto err_out;
 +	}
 +
@@ -310,14 +165,14 @@ index 000000000000..7791d282f7c8
 +	}
 +
 +	is_anonhuge = test_mmap_thp(0);
-+	if (!is_anonhuge) {
-+		printf("global policy is always but we still didn't get hugepages\n");
++	if (is_anonhuge) {
++		printf("global policy is madvise\n");
 +		goto err_out;
 +	}
 +
 +	is_anonhuge = test_mmap_thp(1);
 +	if (!is_anonhuge) {
-+		printf("global policy is always but we still didn't get hugepages\n");
++		printf("global policy is madvise\n");
 +		goto err_out;
 +	}
 +
@@ -330,7 +185,6 @@ index 000000000000..7791d282f7c8
 +		else
 +			return -1;
 +	}
-+
 +err_out:
 +	if (pid == 0)
 +		exit(EXIT_FAILURE);
@@ -338,15 +192,17 @@ index 000000000000..7791d282f7c8
 +		return -1;
 +}
 +
-+int main(void)
-+{
-+	if (sysfs_check())
-+		return 0;
-+
-+	if (system_thp_policy == SYSTEM_POLICY_ALWAYS)
-+		return test_global_always_process_nohuge();
-+
-+}
+ int main(void)
+ {
+ 	if (sysfs_check())
+@@ -210,5 +281,6 @@ int main(void)
+ 
+ 	if (system_thp_policy == SYSTEM_POLICY_ALWAYS)
+ 		return test_global_always_process_nohuge();
+-
++	else
++		return test_global_madvise_process_huge();
+ }
 -- 
 2.47.1
 
