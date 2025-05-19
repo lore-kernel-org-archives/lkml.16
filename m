@@ -1,103 +1,146 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA5E3D561;
-	Mon, 19 May 2025 10:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0EC3D561
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 10:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747651485; cv=none; b=IE4mVtuigSjR8rtMyTZUQ93Co3TxksQozvqWhuMoAcobvTMXUUZFpU13j+l9N9TZC0vS0KheHsavLiwJdVmaTiNVT3HyP0aZVyUtLAGPxoJwO6XncTbaGmuBHXkqRCfW/qd8EhsL2Z/fRKInpo9vLvQLyajD4I8PkMQVaLG6YZ4=
+	t=1747651497; cv=none; b=hhtx97Rfd16tHPdspHY4/X9NFaTJD1E4L49f7tsruyMNmDSxE16bphcp4eVJRxAJ4EJxmE20tY2X1SuA1s2RSBcpuS1AT3I8FvLeP1FcXYs2sPzpx6tlPvzshZwfNZ1ndsd3j40XQaNMEKbVjmnec/+MMDBeqs9YPhnDJ+ijC6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747651485; c=relaxed/simple;
-	bh=SMkiHxsh1hjlrQJB8Ce2+iTc+Qr5e8lBqFLqhdLuT8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jTLMp38DkHpN9WqKXt50qoYzOUoe/hoCvMw4C6WVk4H7hHKdGFzmAcAXV8CxLYaPCHvKBRtjcpzRlXl+RHETxl+P7+jo1rAMrrR/3VC8rj6DY9Nawu0m1VtL83XPw/hzSa2vbVnMY30PKc46j69T4ebD6QBrQV416wQyGM3PTYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YNbeAVZd; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747651497; c=relaxed/simple;
+	bh=gaeeg4AZ+lnFMTRX9LYEB5rgp1XvsIMBR3topG8ZD4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2L6spu6CqkrK78YtlmLOt1Rmbtlk22pym7NpJoCbEND8XqQwDQWOGKNABSuA4hYbSezUPReyqEdNeg5vsgVqbb0E1zdaJ0gzOL6bV1fPl9xBeYk3qw94ii0A6gmp+9VOrpBGIhkjyrDlgMNQORFrJ7xY7+pcurrUdwpLyFOIlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DLg+rtqU; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNbeAVZd"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad54e5389cdso285712566b.1;
-        Mon, 19 May 2025 03:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747651482; x=1748256282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gfAkTadwzg13sw1ZmkAqyKpxyROInMKiKTPvuvDC320=;
-        b=YNbeAVZdkR8+PLcyciKwWXvZfgyM2ZzyJS8z7Uw4Auw9ZKkz1BvfwCvJt2Isl2vXDG
-         /dlfKHvh9KjqlrCqih8/a7w+2IFY5abjs2xTDm8jn7JrQLyJFbKjPK7l+zM63LJjUR/n
-         Z4MzHjWWYECRnraE6dqJsp+b2OdOjaDrPg+fKjfzRyRlDve/TXdp7Aeqo8pNNhlfRO2+
-         YzDdWcDS4UEXhClbw6x40GSr58AUhEJEUTh0UAOjTrv9Y3pERlINJZSCB6c7rKYZ0/1G
-         zQDNRWJB6VUpWCCJDHvxwrg5s0e1oH+5qW73YDz0IleK3VynHN8oIbG5fA0UvhkcI4+n
-         ZjfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747651482; x=1748256282;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gfAkTadwzg13sw1ZmkAqyKpxyROInMKiKTPvuvDC320=;
-        b=bRIvr4TyiJuSE7etK54nCKUsm+hVEHvk4/qnoyYk6/A8GhZNyZ2bBTa3An/QLphK6q
-         k/pI+CvTb2nF9HhbEeLAsmyI+z/z0cccR1woK3gSiLTj1YIi+EKs3rzTYR1tUVpbeglJ
-         xmBOXjaiGZczman91UlqZMLS8jwBgwGBs0DcawJxtnRK+T129NzYkYCU1pXYBYFUfyjX
-         oa6bXd68EQ0DMm7o5FlDedePa+mdrRshEA1oFK33rtHWErPua8UUAAIR/TFLcXQjW2Mg
-         ZLXdPGsAz9Mlia/s+z5il0s3sh7dNeXAV6ILTPRgQ7ygnXmyogAmsqkWjYTXRqH869Ea
-         xLrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+KE2aACIdNeld0weAUzrlY49EGgfIPKgR0+tW2pDiXvIW7MUysHwS1tehTpH8WN8khtK3VIrl6XNgAfE=@vger.kernel.org, AJvYcCWrbS8nfACnFzkeDtGrVwtTi0etMAM8yv+DZC33HtuI9iLb/sQygVtXexCuafGAh0LC5sytNZql@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX6lN6Ym++We5tq7A8nLoxzqA8PWPJaKp9BMkAPG8E6C816x0N
-	2lnKJ9Ys7hyTJjILjDUKYiULbfkeQ2ERwba6fYBx5R+z5smqC5BkM1EL
-X-Gm-Gg: ASbGncteBmWBZXsJXSBoRjLLcw4wgEYHj75ILvQv26Oz7LzPgiVMmzU24iWriCP1np8
-	wu8omiwYxj+1bRl5tIe3nN13TqU92DrUqPiw/zg8dxHIVgms/VDjR/fx3YrDeeyYmtOF9i4k6JA
-	aZ44bcVPVfKOKLwjADr2FdGNv+gi7q6uttMgfNVfEdu5QGWqhuE2C0tL7ICbPdMuZl4VvMLlC0D
-	mkmvipT8U2ISmQ7zeO2ptl89iozKsKWj0Ubk2yvVxEiX5KqVgahNFHXudQyes+sfNN3U6SR8YQ2
-	5jRo7NU2+RILncXEtWxdjUdU+Ir94kclg+uY6l5iy0Rkutb7vztAjfOajL0pn6k=
-X-Google-Smtp-Source: AGHT+IG2vDGgzfhDZPbbGMuLd//mmeiIDYKo77Hk6zFqe48UC7gE/DidVeZ2l3E57ZyZvYyAmxLGqw==
-X-Received: by 2002:a17:906:c10f:b0:ad5:7a67:e507 with SMTP id a640c23a62f3a-ad57a67e667mr129755966b.47.1747651481980;
-        Mon, 19 May 2025 03:44:41 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::71? ([2620:10d:c092:600::1:75de])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d441fe5sm569059366b.111.2025.05.19.03.44.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 03:44:41 -0700 (PDT)
-Message-ID: <ab1959f9-1b94-4e7f-ba33-12453cb50027@gmail.com>
-Date: Mon, 19 May 2025 11:45:57 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DLg+rtqU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747651496; x=1779187496;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gaeeg4AZ+lnFMTRX9LYEB5rgp1XvsIMBR3topG8ZD4g=;
+  b=DLg+rtqUW6oWbcfz3neLPCqSPsAMcLYf//w/Zb2Fnd1vwdpPoMj3CThv
+   oeT88bRYJlzA4j0i6nuQw7VkJnLZ3BsJquffYWN2el+x6PQ72/XWjwqU3
+   HpQ8VDPtl0TnlI1H0z7nf/arESyq+RvFgtbDxhhItrDIDwBAo3Oyxeph9
+   ilRAKTqNsTOrB9VdF5q4wLt+oDQn47VwcmPs6GJEbwbpZ4u75Zg9wPzkw
+   LbES/B7Exy0U2A5hgoxanWCqJKgZG2h3RzXooZO0p1raPIKgmRpYd0wYu
+   uL1zAYioHH80KTm2cY3lfxXhQ3SiUUXvOmb3M8r0JR/L/IWgzSooPgHft
+   g==;
+X-CSE-ConnectionGUID: e/oOcomLTFqblZ753ZiiaQ==
+X-CSE-MsgGUID: B0/4Yf42S2OETX6hlVo2KQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="72052719"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="72052719"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:44:55 -0700
+X-CSE-ConnectionGUID: 93unAF41QoqD8Rv98q8pCQ==
+X-CSE-MsgGUID: zeaOZt91Suu/XqNIkeU2+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139177306"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:44:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uGxzG-00000002zP1-07li;
+	Mon, 19 May 2025 13:44:50 +0300
+Date: Mon, 19 May 2025 13:44:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org,
+	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
+ device resource management
+Message-ID: <aCsLoWtIdfR5a2YS@smile.fi.intel.com>
+References: <20250514122432.4019606-1-raag.jadav@intel.com>
+ <20250514122432.4019606-2-raag.jadav@intel.com>
+ <aCSOYRJXaiJpch6u@smile.fi.intel.com>
+ <aCXjltG40x9mJ25U@black.fi.intel.com>
+ <aCXm566Uyyh45MZD@smile.fi.intel.com>
+ <aCeP4l1VOVfhtQ09@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: devmem: drop iterator type check
-To: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, sagi@grimberg.me, willemb@google.com,
- almasrymina@google.com, kaiyuanz@google.com, linux-kernel@vger.kernel.org
-References: <20250516225441.527020-1-stfomichev@gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250516225441.527020-1-stfomichev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCeP4l1VOVfhtQ09@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/16/25 23:54, Stanislav Fomichev wrote:
-> sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
-> iovs becomes ITER_IOVEC. Instead of adjusting the check to include
-> ITER_UBUF, drop the check completely. The callers are guaranteed
-> to happen from system call side and we don't need to pay runtime
-> cost to verify it.
+On Fri, May 16, 2025 at 10:20:02PM +0300, Raag Jadav wrote:
+> On Thu, May 15, 2025 at 04:06:47PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 15, 2025 at 03:52:38PM +0300, Raag Jadav wrote:
+> > > On Wed, May 14, 2025 at 03:36:49PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
 
-I asked for this because io_uring can pass bvecs. Only sendzc can
-pass that with cmsg, so probably you won't be able to hit any
-real issue, but io_uring needs and soon will have bvec support for
-normal sends as well. One can argue we should care as it isn't
-merged yet, but there is something very very wrong if an unrelated
-and legal io_uring change is able to open a vulnerability in the
-devmem path.
+...
 
-On the bright side, checking UBUF on top doesn't add extra overhead
-as compilers can put it under the same test and generate sth like:
+> > > > > +int auxiliary_get_irq_optional(struct auxiliary_device *auxdev, unsigned int num)
+> > > > > +{
+> > > > > +	struct resource *r;
+> > > > > +	int ret = -ENXIO;
+> > > > > +
+> > > > > +	r = auxiliary_get_resource(auxdev, IORESOURCE_IRQ, num);
+> > > > > +	if (!r)
+> > > > > +		goto out;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * The resources may pass trigger flags to the irqs that need to be
+> > > > > +	 * set up. It so happens that the trigger flags for IORESOURCE_BITS
+> > > > > +	 * correspond 1-to-1 to the IRQF_TRIGGER* settings.
+> > > > > +	 */
+> > > > > +	if (r->flags & IORESOURCE_BITS) {
+> > > > > +		struct irq_data *irqd;
+> > > > > +
+> > > > > +		irqd = irq_get_irq_data(r->start);
+> > > > > +		if (!irqd)
+> > > > > +			goto out;
+> > > > > +		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = r->start;
+> > > > > +	if (WARN(!ret, "0 is an invalid IRQ number\n"))
+> > > > > +		ret = -EINVAL;
+> > > > > +out:
+> > > > > +	return ret;
+> > > > > +}
+> > > > 
+> > > > Please, do not inherit the issues that the respective platform device API has.
+> > > > And after all, why do you need this? What's wrong with plain fwnode_irq_get()?
+> > > 
+> > > Can you please elaborate? Are we expecting fwnode to be supported by auxiliary
+> > > device?
+> > 
+> > Platform IRQ getter is legacy for the board files, but it has support for fwnode.
+> > Why do you need to inherit all that legacy? What's the point?
+> 
+> This is just to abstract get_resource(IRQ) which has been carved up by the
+> parent device. And since this is an auxiliary child device, I'm not sure if
+> we have a firmware to work with.
 
-if (iter->type > ITER_IOVEC) /* fail */
+To make get_resource() work, someone has to add those resources to the list.
+The question is, why do we need this for AUX devices? Are you expecting
+several IRQs to be dedicated for several devices (no sharing)? If now, why
+is the fwnode version of IRQ getter not enough?
+
+> Please correct me if I've misunderstood your question.
+
+For the memory and port resources it might be indeed needed to have a split.
+But then, since it's a lot of the copy from platform code, I would expect
+the common library for both rather than reinventing the wheel. To achieve
+that one might need to abstract away from the certain device container when
+handling resources (no platform_device nor auxiliary_device). Would that
+approach work?
 
 -- 
-Pavel Begunkov
+With Best Regards,
+Andy Shevchenko
+
 
