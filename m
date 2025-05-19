@@ -1,77 +1,40 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC39826F45D
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AF27511E;
+	Mon, 19 May 2025 09:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647090; cv=none; b=MfzxYn6g6bgkIgwHJ7CxdZbx5lYU6iVqWjm2iX5uMpQBTFIrFf+zzABcc9icQHSWdONIVEwS/Qt2gpS6tp6UQ9ZwcGhpEG2GotxRp5OfUd/FNvepToO3tkrGd9WFMA17a/U6d4f0cIJa19VhAhNLIFonzc2Be7xGNEG/16eIG/s=
+	t=1747647091; cv=none; b=Fc0asa0dhpDOIE0MC1vWRSjjb292c3/f86fMSkbb/v3YLEG35TdB2kIWBA1y1FMWr8NmN0ICZr8Spltj17f66NNWyJVDl6LXb24dDbRh/KgeV/5yvdqoSeHa58UG6NDKwH1PcSK2AeTc5hNCEJcAlWjkO4ca0P7tPZ9Q1/i4b3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647090; c=relaxed/simple;
-	bh=c/wBlaYM4RSxl/erOHhMdSWmwIe8Uwd04Sjt8QeJ8/Q=;
+	s=arc-20240116; t=1747647091; c=relaxed/simple;
+	bh=FXdfPhdfLVoRwDBosojS9gg4O/gtTxeDHKm6qIIKGEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=La1kvfRMD0MDT76QHFPVD3iFngyMlCKp32QxVhfJhTzzeo46mU8PkJfPQNU9GjouIOgk2MAeskFjBXy3utqZHanhtc8A4dWKD9knjpUwq7whq/eD/lKSJnT3ypF9MVFza5vwKib9/yJAepViB7wLxnfHUYtN/7zuGhmP6dfrf4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UFpixuAd; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=brOIFx3m61vZBx7+J8ZpaPfi3BqnqduvGqQk7ep9x/Iim5V1esf1pxB5KfCBE5xf1zIinlls1ziz9WtiJkaSSpSQm0LaGdNRA+vicx2gUDXooQvvZgDtws38+06K0aR4DUgtzf1L4bDnkQp7IpepO47WJXqvNa06cda3uIvXkvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXhxJAlz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFpixuAd"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22fcf9cf3c2so34273055ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747647088; x=1748251888; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bvQ9YmGROOXrG/iLumMa04WB7ur/2tl9ZFhlSZDT+Cc=;
-        b=UFpixuAdc+84m/oLMFEg7ktPLRO266iv4r2R61QJuK55D4eoz1BmICqbBnY4w/iPIF
-         q5QcoIvX0Mef3IrqKvsvvxwx1VewXlyhpzKpbeWEVEUD7pqrygZ63rdvqR0XnWyLj1xC
-         UV69s49HaJnmqDLoU8wsDXiu2aG2Zfxg3Em/rUGKQ6GMfjrNk2ZaF7mTvfFMj0wTfcdK
-         brdUJerbFXyfT7pWp8uB9tWXlQwO/8XXCRTGc4l9+ClBBZLPUD+DEG8JSwRO2YlkIll5
-         2m4xkgjPvV/wSxN62rvaXEhAtyk7+5k+tQKxq2N2ClK/uK+iEpIpmbG4grlBq7N9iLL9
-         HswA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747647088; x=1748251888;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bvQ9YmGROOXrG/iLumMa04WB7ur/2tl9ZFhlSZDT+Cc=;
-        b=thUqpwQzO1BZys6dJQ5YClUwrOcszypgmbX/3JDVEoUaa/hCQHlkuMnxZukCoHrqjq
-         wI3nfXxd/iEB2BSajbXFnfKduNp7sgPw5wc/gMkQMTcbrVpLkNGe5aMylqBT0JVfgdzB
-         4Xqotiddehf47+vQbONsfdG95I9GLwnShmXC22YMkyPLtCuf5ddJZGE/psIXShdkYwLn
-         TKFTSvsH/vSB5uNgJIH8cJIWKxI+apWQfPt6yyVjeZr7DLthUzWsjwmWF4ydkE7Bh4di
-         82MtIuPq7dHXmIqDQyEP4n0H9b9xdlAvf3xfqbhHl8z/8jY+eDZqSaa6t+I4Tlfy5VUq
-         ZrZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKcovLr1zHJAaszSr46Q1eQ4My0N2KKmlovjhX0iqpP+LmXS4cEXFdxHeou4gI2OmazbAiwMm671bMp4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoXphjppcN0j06c9LJKGJwiKgZAW3vVk/acyhjfbKIgjYpzAXJ
-	2O+udEX39MHhBbZMl118UUbywkHxsTQy8hQiNxz26Pfwt4I2LwDDS/LPypv7WR+IStI=
-X-Gm-Gg: ASbGnctxGS+4hC/4QZQawXVc6PInUgcvDeGnU1mHokHwuGXE4zdPxy5VbLWIWBwj/k8
-	VoojQHJ148bjjTeipU+AeIU4M0nwjBCD7aTZWy0Sjm60DicxCVUM1L+HRBGSncdJLABoado61v9
-	cTkYk3beWJB16nxsPv6kvGVhZxgnaZDp7FcfdPhBGDOasKJxwN+tZsQl2O6KciGlN8HH6/1RNal
-	oQzYpfQbDmKicJFpZhdm/gbYfKd+SRhy4SDoF2BhaYyJj/ty/EyKb0j2MZ4zCltZQWWTtVmTDVr
-	tL5ja+v4v8DPgk1KJbiOPm3Gxr16pkQ+l78Ky1Gdf7JWJjQimnkC
-X-Google-Smtp-Source: AGHT+IHQejNmLqqvXox/EeoAuxX3X7m8LUs8KU1gDcylEBYdUF9gjHc0zecpPmtgBo7FvB8Kzn20/Q==
-X-Received: by 2002:a17:903:2f47:b0:224:376:7a21 with SMTP id d9443c01a7336-231d452d0bamr162849905ad.42.1747647088089;
-        Mon, 19 May 2025 02:31:28 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9567sm55776315ad.11.2025.05.19.02.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 02:31:27 -0700 (PDT)
-Date: Mon, 19 May 2025 15:01:25 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-Cc: rafael@kernel.org, pierre.gondois@arm.com, sumitg@nvidia.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linuxarm@huawei.com, mario.limonciello@amd.com,
-	yumpusamongus@gmail.com, srinivas.pandruvada@linux.intel.com,
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com,
-	lihuisong@huawei.com, cenxinghai@h-partners.com,
-	yubowen8@huawei.com, hepeng68@huawei.com
-Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in
- cppc_cpufreq
-Message-ID: <20250519093125.jn2naozcsrroahco@vireshk-i7>
-References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
- <20250519081850.7ycbcw56jzpiwkth@vireshk-i7>
- <4c4b0140-9126-4586-92f8-f7c9fd7a4a34@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXhxJAlz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62211C4CEED;
+	Mon, 19 May 2025 09:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747647090;
+	bh=FXdfPhdfLVoRwDBosojS9gg4O/gtTxeDHKm6qIIKGEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CXhxJAlzGJpMsG1OOb5FTHQQMMUBanDJTGOKz81MVpyJY7dDx2P19hv9QsB5+I61O
+	 lARLyHGnr+cyaMu4t46nnd7UKKq3HwR0LZBz+AgqsIJ0GzveHE6UPe5l9XO2ljfjve
+	 DaRrgoP1Zk7FnR25Po6imZPw1JY6oIeToNgOVbIRsqMeWPoW/WyKKWiXAtbgwd+i/G
+	 4BqfrsOyqbBG87GrgcbSI6xUWkyUkbCbFuhcQDfCMKws35SJiu0/srmPJUdnVBCZ0g
+	 udEmC1kL4Suoq2qEQnZEQK6jKwZT4S1A2vf45zfvm5F2rQwTC3WrjG8pLWFmO/kVtF
+	 2pLfBQ3bzvnHQ==
+Date: Mon, 19 May 2025 11:31:26 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Joj Loj3 <jojloj3@gmail.com>
+Cc: dlemoal@kernel.org, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [BUG] pata_jmicron - JMB368-based IDE to PCIe adapters capped at
+ extremely slow speeds
+Message-ID: <aCr6bm7xyBXiF8-G@ryzen>
+References: <CAOnE0bQBVS2hz9Mbv+HFLSYUiuTcJJ=A6UqVrhP8Sgf_muMaCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,19 +43,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c4b0140-9126-4586-92f8-f7c9fd7a4a34@huawei.com>
+In-Reply-To: <CAOnE0bQBVS2hz9Mbv+HFLSYUiuTcJJ=A6UqVrhP8Sgf_muMaCg@mail.gmail.com>
 
-On 19-05-25, 17:29, zhenglifeng (A) wrote:
-> cpufreq/policyN/ is linked to cpuX/cpufreq/, both paths correct.
+Hello Joj Loj3,
 
-Ahh, my bad.
+On Sat, May 17, 2025 at 02:18:33PM -0400, Joj Loj3 wrote:
+> Apologies for the previous email, which was not formatted as
+> plaintext. I have fixed this for this email.
+> 
+> Dear Maintainers,
+> 
+> Tested on several kernels, including the latest master at time of
+> testing ( 6.15.0-0.rc5.250509g9c69f8884904.47.fc43.x86_64 ),
+> JMB368-based IDE to PCIe adapters are capped at extremely slow speeds,
+> regardless of whether the device attached is capable of much higher
+> ones. This issue exists OOTB on Windows as well, but is fixed via
+> installing the proper drivers, see
+> http://forum.redump.org/topic/59287/fix-for-pex2ide-jmicron-36x-based-pci-adapters-on-windows-1011/
+> for more information. I have tested Windows on the same machine and
+> confirmed that the issue is fixed once I have installed the proper
+> drivers.
+> 
+> Please let me know what additional info is necessary. This is my first
+> time submitting a kernel bug, and I'm not sure what extra information
+> might be needed.
 
-> It means Continuous Performance Control, you can see that in ACPI 6.5,
-> s8.4.6.1 _CPC (Continuous Performance Control). Use "_CPC" might be better.
+I'm not sure what you want us to do with the information that you have
+provided.
 
-Okay.
+The performance with pata_jmicron is bad, on multiple kernel versions.
+(Which is the oldest kernel version you tested?)
 
-This looks fine to me then, let Sumit reply and then I can apply it.
+The fact that the default Windows driver has the same problem does not
+help us that much, unless you can figure out what the "good" driver is
+doing that the bad one is not.
 
--- 
-viresh
+You seem to have an ATAPI device using UDMA/66:
+[    3.315037] ata7.00: ATAPI: PLEXTOR DVDR   PX-716A, 1.11, max UDMA/66
+
+There have been some reports for other PATA drivers (e.g. pata_via) to
+force PIO for ATAPI devices:
+https://lore.kernel.org/linux-ide/20250519085508.1398701-1-tasos@tasossah.com/T/#u
+
+Have you tried forcing other transfer modes?
+e.g. by adding 'libata.dma=0' on the kernel command line.
+
+
+Kind regards,
+Niklas
+
+> 
+> Relevant output from dmesg:
+> [    3.155555] scsi host6: pata_jmicron
+> [    3.159374] scsi host7: pata_jmicron
+> [    3.159457] ata7: PATA max UDMA/100 cmd 0xd010 ctl 0xd020 bmdma
+> 0xd000 irq 28 lpm-pol 0
+> [    3.159461] ata8: PATA max UDMA/100 cmd 0xd018 ctl 0xd024 bmdma
+> 0xd008 irq 28 lpm-pol 0
+> [    3.204963] FDC 0 is a post-1991 82077
+> [    3.229154] usb-storage 1-3:1.0: USB Mass Storage device detected
+> [    3.230081] scsi host8: usb-storage 1-3:1.0
+> [    3.230253] usbcore: registered new interface driver usb-storage
+> [    3.234360] tg3 0000:01:00.0 eth0: Tigon3 [partno(BCM95754) rev
+> 5784100] (PCI Express) MAC address 2c:27:d7:2d:99:f4
+> [    3.234367] tg3 0000:01:00.0 eth0: attached PHY is 5784
+> (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[0])
+> [    3.234370] tg3 0000:01:00.0 eth0: RXcsums[1] LinkChgREG[0]
+> MIirq[0] ASF[0] TSOcap[1]
+> [    3.234373] tg3 0000:01:00.0 eth0: dma_rwctrl[76180000] dma_mask[64-bit]
+> [    3.315037] ata7.00: ATAPI: PLEXTOR DVDR   PX-716A, 1.11, max UDMA/66
+> [    3.319542] scsi 6:0:0:0: CD-ROM            PLEXTOR  DVDR   PX-716A
+>   1.11 PQ: 0 ANSI: 5
+> [    3.362459] sr 6:0:0:0: [sr1] scsi3-mmc drive: 40x/40x writer cd/rw
+> xa/form2 cdda tray
+> [    3.389254] sr 6:0:0:0: Attached scsi CD-ROM sr1
+> [    3.389402] sr 6:0:0:0: Attached scsi generic sg2 type 5
