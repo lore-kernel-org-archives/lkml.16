@@ -1,38 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6222690F4;
-	Mon, 19 May 2025 08:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913FC1DE4EF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 08:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643735; cv=none; b=Jr0m42k7YLLCuW6AINT3HRVglSuWjYdsjqOTd9UweKRDJajrbD05c9OPGHlN6DN9siwTc7RVIUd09m4stIe3qoJJnszWru/RtQJhH/r3JnScokMO/p8LJqMSlvL5+HnM2mtsKk4deHr/SZusnyjSJQyiJteLXjrTAY9OEm/53KI=
+	t=1747643758; cv=none; b=cMNP3DPYywpthTsmAetR1KPWy3A7BKqArgN8BEhnk9X5Exi2kcc9X6gTBhnjjImAox6z03Sl8gtsg4ureyLbj9AV8bZpd68yhzLzQKfFxz+Mcg7hI4xZRFMKTwqG6uOBgPOIbUjKFW+2vxEstMExvnDbGJf1+Efc14BNJ4GGemA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643735; c=relaxed/simple;
-	bh=YUoMEn93nAO88K9IbCoI8bOPO2Y4Oh7dNF5L0fwzwrU=;
+	s=arc-20240116; t=1747643758; c=relaxed/simple;
+	bh=z8lOPEJLkQ/XyN0ChDJR14uTpgdR3CL7aP0C4KvfHCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrDHzH9S9InYhvZc9j5/Z/HcqWylNIM8m306k5Z04xNsqHyoj09ipiS3UKSzvDU9r1nbBrMyJHAOpS6Q63XnNg0LBb02ZQlvsrFkqwOWey8VD7cCSCczmMSevT8HbzcJy8oLqT1vUcpeSs2NsbMHfBu9Nxjcf8So9Ty2EieypWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6D3F2403;
-	Mon, 19 May 2025 01:35:19 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E1283F5A1;
-	Mon, 19 May 2025 01:35:32 -0700 (PDT)
-Date: Mon, 19 May 2025 09:35:28 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Jakub Brnak <jbrnak@redhat.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test probe_vfs_getname: Correct probe line for
- updated kernel code
-Message-ID: <20250519083528.GJ412060@e132581.arm.com>
-References: <20250516090532.916743-1-leo.yan@arm.com>
- <aCeIz921q6ljJqmm@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=boQe3AQZeNklI7ThAu+mmO+WfKF6hzswogGGrSTHErnLQHN3CyjQoMbq7KlvdyOrQEvLk58vOonWkHsLM1oGeNFw0Es1B06slqhkzi9HegZkVxcx8QHqQY9iyfv//hqMnj6eiW0K0XiZ0aELeMyYwoPEObhVh3fyJtMv++PFHlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBCemz9u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBCemz9u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C7FC4CEE4;
+	Mon, 19 May 2025 08:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747643758;
+	bh=z8lOPEJLkQ/XyN0ChDJR14uTpgdR3CL7aP0C4KvfHCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IBCemz9uq5HvtVHtzvR9t/VEAUFeBY3oljoEebDhU8ptZNC5Pnt64dUUGBsFd54Ke
+	 EsDazvh0701diiCmKFQpJHcKzckIEgjDnBrxVJzHv3xjg7bSd0nBSO5iT0jxM9jix6
+	 +9oM+O1cYU0vPnZ02cgMIZ4uXztbObaxMABSOkcv98IOBjvg2GOQuw0BA6a/0qKcHr
+	 Ymg/HU4uGrevDaOnY1rrI1DxSH/YBrWiMq1uFUoacgoznjM64vdUBP4hhfkCl4BKnN
+	 TIJe9EgbJPBsYsqFnjGaIontP9WQ2xF0sZvl4R1WrEREVurDvHeqHUmCs2eIKq/lpQ
+	 HOFu0geA8oMyg==
+Date: Mon, 19 May 2025 10:35:53 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+Message-ID: <aCrtaQhArS7gSb04@gmail.com>
+References: <20250517091639.3807875-8-ardb+git@google.com>
+ <20250517091639.3807875-9-ardb+git@google.com>
+ <CAMj1kXE=-408evLMwPkH5SqK-=QPpONGSXCi4_YeZAgLt06Aqg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,45 +46,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCeIz921q6ljJqmm@x1>
+In-Reply-To: <CAMj1kXE=-408evLMwPkH5SqK-=QPpONGSXCi4_YeZAgLt06Aqg@mail.gmail.com>
 
-On Fri, May 16, 2025 at 03:49:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, May 16, 2025 at 10:05:32AM +0100, Leo Yan wrote:
 
-[...]
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-> Well, I'd say we should add, not update, i.e. a new perf should continue
-> to work on an older kernel, so please consider the following patch.
-
-The change is fine with me. I sent patch v2 based on the idea.
-
-Thanks a lot for suggestion!
-
-Leo
-
-> - Arnaldo
+> >, and add a
+> > new string la57_capable to indicate that the CPU feature is implemented
+> > by the hardware.
+> >
 > 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 89f72a4c818c712b..aa867e28eadc46bc 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -13,8 +13,17 @@ cleanup_probe_vfs_getname() {
->  add_probe_vfs_getname() {
->  	add_probe_verbose=$1
->  	if [ $had_vfs_getname -eq 1 ] ; then
-> -		result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> -		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		# Please keep the older regexps so that this will pass on older kernels as well
-> +		# as in the most recent one.
-> +
-> +		result_initname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname.*"
-> +		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_initname_re" | sed -r "s/$result_initname_re/\1/")
-> +
-> +		if [ -z "$line" ] ; then
-> +			result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> +			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		fi
-> +
->  		if [ -z "$line" ] ; then
->  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
->  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+> ^^^ forgot to drop this
+
+I've rewritten this paragraph to:
+
+    The 'la57' flag's behavior in /proc/cpuinfo remains unchanged.
+
+Thanks,
+
+	Ingo
