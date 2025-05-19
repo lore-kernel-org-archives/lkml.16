@@ -1,653 +1,207 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5A8286D79
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671445; cv=none; b=VE7LdVEpNYRldGponQlFX3u/YC1G2xMKtPMzFaKkWrmrdEGER/qFQ12zJDaSgi/81xC05FamsQXw/t4s8yEHHr1Oi2TdEtYsQx7xfdER0Itsi4MJ5NfZhKpdFEkLS8hTw00LotLxyhHfVaqyDmwLsocqNGgEey+XmqRL+02NmT4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671445; c=relaxed/simple;
-	bh=Grx/nxWS7DPAeTUM7skjp3Lvq/Xtt87P+m9AM4q8rKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KonVdGijkhCmKsrmeNfmyWFIYlppzir5Q/CAiVshWT/otUAgh8dXv0+pkmYVVeDpzo3Xl3+fmWgj18mZ62IuHoXRD9ikVlvjxQ0QrHu4+IBCZeMN1tU5jmQOBUJY0gsFotXzCerWBSvVSLdjK6kSHAs0kOUwKgReZBZm61TPC64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YmqO4Oa8; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5038A289356;
+	Mon, 19 May 2025 16:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747671452; cv=fail; b=kgPtYMIckd2GvKhznthHSQqwfKVjyrMqKvAYlFJSVPmONSUyVlKjsEtFuPQsS3ybzzaTqUMSByJXE1aAUJKarPzX2Jnk1FsJpFeSOP1i3+VfFOJ0Cfu86qoIStB2gwKEz+eFKwcgBY6rW2tUCgCzG+NabNDCDUcG9peGGFOhIwo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747671452; c=relaxed/simple;
+	bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qCLu/cnTzGNYUf8Yfa00+kuSe72o4t9dvHDv946WWWHI4q97VHRHov+Jml/lIpz3dOFDTQksNddKAoS9i3PttQySoq6MT0GKTIKkxGXTqeeUTRdEUyWpTeucsBv2iw7P3xb0EPd7Y4yz0mpxrQFut2LEe7rhvk0Lmg2Qxcjthhk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rz36PN7w; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YmqO4Oa8"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so455465ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747671443; x=1748276243; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rins45p9wqlcxhKua7Kw7fUdA0oz0U8sEewToOoywgw=;
-        b=YmqO4Oa87w+sXN+BFh9sMQlIE8Qa+yReio7EALeO0c0hXFrojXGNDmwLB6O9gMWcQy
-         wSnDWoA7Uo1caPTVvau+9j7Ci8t9vTKxS+4Tu5YvigR6CB8DH7E9Lk/PqzVWTuJxOVmR
-         EyIjFPmLKTs17Fd0FFOWjpbID2LcBmThKsgSOv5wCOQht+yPQyOcSSTBvQeXJzxQwi1e
-         fTRPjRb3r2dDNS+Dy/86OjKMzCjCgzj1in1EZ1yV2IaXOdMHR0jbmZlnnDltsk/AltKD
-         KST5dmlJWZMfJJzzsF6Cm5JJTVGpotgYyJvRO0BjSfzx6uPIJdBaXLf0/JRHIvjFaL8Q
-         Rupw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747671443; x=1748276243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rins45p9wqlcxhKua7Kw7fUdA0oz0U8sEewToOoywgw=;
-        b=TPMU4gXNsLGboYFz5G72zgRw5w7bhTebx4dV6ZUyp39949mWELYMtpjTWr4907s7kd
-         KUE/t2RoVT2FCC11m1qaNwjwktya806OwVopTg5MAqCpks+o92r+TAtXEkH+iPPE0gtQ
-         7eHb77l/99d/1zYNHTLAsFIuKEANdcQ28D9j9iMPkbX07NXdhXetpmaSGQ1ZfvVaGbsu
-         88Gl3yw6dDFTUrGWgaB/RbzJP6ewjzIZf51qrIJ5Hl+UPZod4Xaz4CB3WG4fOq1HGPoF
-         K8F5CoJ9JrabzbWhWlbMs4lm/8TYUx8bakoSzuxxYx/k0wJ3SlcF+6mw+ZU450uZbY+W
-         Ch2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrLR+E6K1BZ46Pa6PbTTUTIc25nb7HU+VD8UwIrlGVV1tu6dHHzpCW1narC/Ufxah8n49Cg4bdrvHH5Ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyBdvvNwdN9euH2SgK3Sz3cm36FD/KuQn/7rich0XwdtKvRMmZ
-	cr9RzlTfQoRrOvFEsSa4Xs6YM+CW7nGIBcUTjD3EyioQNWkcE3Pill75uDXqT0mTFlIT1RVDV6V
-	rWiEC13riLrNYiOIfJUneK+qO6j/GRKigE2ZPrW/w
-X-Gm-Gg: ASbGnctoB4aF83kpStQyV3DkWNTZoUKYFbG8s7NQBsHAuGbcDvSjUyIasIzgzbScX3X
-	DrJPmJAM/V8YF8RzUsgJAnt9kyYiH1JP/KbzQjm8FhzhWBChWHr7+FsgaMKs1mLY/6HJQhoeAt2
-	yJTCvNHLp5BW5TCC8XWdyk4ThKh7gJwCN5wBkA7wxfaa2jirL7vn275tK1cyTu/Q==
-X-Google-Smtp-Source: AGHT+IHfgu3bU5wgEqRylIasp6Gn3Vp9m3dEcqPHRlaCl3301MPDu9770XsmdX7g+hSJnKqrbj7c+3DrokG55MPdbBs=
-X-Received: by 2002:a05:6e02:180c:b0:3d9:36bd:8c59 with SMTP id
- e9e14a558f8ab-3dc5e6150e2mr5486965ab.9.1747671442120; Mon, 19 May 2025
- 09:17:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rz36PN7w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747671452; x=1779207452;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
+  b=Rz36PN7wi1Mrb+QARvkqnQTJ6d6PxISocYz6/mgWHGmK8sNuae+IKXWu
+   8yDSD7nAbO39WzbCM1ZcT4o7c9gMnvDJY2HC3iDs7VzUWlrnrXHxo6vaR
+   I9WMoJ3fR7Q0uM9x1ZP8gOTbYleL2fnOQXGhtONwBOugaFdpO6qysGf7L
+   QbCccU2SOAa1ooAWqnkbsCa69GzyA2Ww0Dl4OlWp2ET/zhlFWPc6R8Dkp
+   E2UyG+2PJ59+IIY1XoWMU61Z0wD19hYwZSO7yr5mSuNEe4y0MjIBinpkp
+   LRwPcUuc2y502sDg2LQaK4Qv1T3J7GLZeVRDbQ5gk05djmtsc81EwSCIH
+   g==;
+X-CSE-ConnectionGUID: QWPEAOHZSoiC+eL8y2bEcg==
+X-CSE-MsgGUID: 2cc3hDCnRTq+3KW7jrTi9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49453901"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="49453901"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:17:31 -0700
+X-CSE-ConnectionGUID: 2xFI47EqTRefXVX0hR/lyQ==
+X-CSE-MsgGUID: lDjJdEcsTSOo92ZXPxTlUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="139924863"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:17:31 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 19 May 2025 09:17:30 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 19 May 2025 09:17:30 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 19 May 2025 09:17:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GoFfsq8VZkeohT0P99INRcozIBS86RI302KiD7HJWJSa7PvOqow38KI5LNWxJrMZURfk2lPua9os50btcDUpQbRrve41a+mLfmB2TfB8aSNF1+xfoJWF3sJcK4EbCIaoh/mfbS5uNwk09Zc8rzWIfC4O0jH7Z0A6fwLARyO2ivi2Qc0u1kw+wvm8UvJ33rGVBp2D+pci9oHlvcqZqbjRsVUguGBW5McfKKX3gxGQsGe5KHUR+p3iZn3tEefqRRyOTnEnSPkY8ooeHP4vKg2lghOSq3AEZtAWuC4X1zIe7YZPwIfB8DiLZd7UqCYgDYWxkixvbv9ui0FR+41cAwcxLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5J4keNMgZo+O+MtEND8NjNDziBD2ZG5ErC6CFprkV1w=;
+ b=XEJsHFzakUTW8n3zGABYT9tD2zlJV5G26iOAtdlBoUQM8r5H+Wk5Q/mW4xhzM3CTJnBdMqz8vIR2a13CUips3PZdHLBOOInPJbEgOk89qFY+UCxokYDyUKNAfWiK4hqulNUWwghE4qusgcTbSqTYD0LNco0j/Jt8Yjt2G6UhSSbSSI7uXJuy6j+NSDSKFHWVWvMd3E5MHQhHhs4el6FiRqXWSCUJ/74BBHqKBBg/OB75Pc2xI40QQ0F/76CtbFJyq9PYEpHqfVQ/tl+XC0ur/j3ev8BB1TP/3nTBcEkVndaMgK5Ea7/XiF9cTiv9rIa0i3Ja12XuSNm0hpD1tgq47g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by DM4PR11MB5971.namprd11.prod.outlook.com (2603:10b6:8:5e::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.30; Mon, 19 May 2025 16:17:26 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%6]) with mapi id 15.20.8722.031; Mon, 19 May 2025
+ 16:17:25 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "seanjc@google.com" <seanjc@google.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Chatre, Reinette"
+	<reinette.chatre@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhao, Yan Y"
+	<yan.y.zhao@intel.com>
+Subject: Re: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for fault
+ retry on invalid slot
+Thread-Topic: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for
+ fault retry on invalid slot
+Thread-Index: AQHbyGdiXv6lSo2xSkiHY9GZD31B8bPZ9FUAgAAZ3wCAAASjgIAACKuAgAAGsQA=
+Date: Mon, 19 May 2025 16:17:25 +0000
+Message-ID: <ef5e4e27f482f573546c386321f07e150951ff83.camel@intel.com>
+References: <20250519023613.30329-1-yan.y.zhao@intel.com>
+	 <20250519023737.30360-1-yan.y.zhao@intel.com> <aCsy-m_esVjy8Pey@google.com>
+	 <8f9df54a-ada6-4887-9537-de2a51eff841@intel.com>
+	 <34609df5b649ca9f53dfe6f5a134445f1c17279a.camel@intel.com>
+	 <aCtT9zsGmPiH2S6L@google.com>
+In-Reply-To: <aCtT9zsGmPiH2S6L@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|DM4PR11MB5971:EE_
+x-ms-office365-filtering-correlation-id: 9b684f6b-ad49-42e3-792c-08dd96f0a4ce
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?SUw2SFdkTG40OFpPNnVycHJPZVpIRjMvWEVQYkx0ejBkdVFUTUphVWczUHVI?=
+ =?utf-8?B?aWZyVW0rN0dMTnI5TWdadFBEY0VDajNoSEpaQjViMW5peHhpVkdyWEduWFJs?=
+ =?utf-8?B?QkY5VFBRaGlKTWlubXAyZmtuTjBUcFBpbE9wVDRNNUdob0xOazdQL200dFNj?=
+ =?utf-8?B?VTF2Z2xCRmxoSmhxeWE3SldlWmh1ODVOZ05EUW4xTThVdVllRUcvTlBVMis1?=
+ =?utf-8?B?UjV6cVJYaXlZZUVYd2s1T0xRbWRMdTRHMklTdSs1cUdzZjRJczMwdWsrdTJD?=
+ =?utf-8?B?QmZDTkhBUkhmQ2pnbk50TGMwSTdld1lRWS9TcUtEZDhHWlhxb1JXbFNxdm1y?=
+ =?utf-8?B?Q1p1SXpSMUIrWWN2QTdJZkswYjRHV0JheU5UcmtwNzVXcG11NmtzVmhRVXJZ?=
+ =?utf-8?B?ejNrWmdmM2phT2oyZHA4SWVtdS94WFA0TndBL2diVzk2WllOM3NFVlRLc3pV?=
+ =?utf-8?B?OE5RNUxESWg4bHQwcUhZd0J5SWJGeFVqOGNMa1NuZzBKK2kxU3l2Rk5rTXJL?=
+ =?utf-8?B?QTRBaHZ0d1RLRjArVW9adUdHOERQY3hxNUo0NjJUMlBmT1dYaWVJSE0yUFFQ?=
+ =?utf-8?B?U2J2emVKd0hrNkd5Z1k1VTM1K1Q4N1RuTloyU2l1VTR1eVV0cUNPQkcwQmlk?=
+ =?utf-8?B?RmZSa2YreGtXYkZoZmplS0hPSXp3UVp5RnorR1M0ck1QeExDYkY1aklSQ0Rm?=
+ =?utf-8?B?dk1oOUFXYktLUzREM2NmdmU4MHZkN3NoMlpNNzhQdW9XcllpeUJuQ203WW12?=
+ =?utf-8?B?QjlFazgyWmxiYi93VXRlbTZFTUkxS2gvclBUWmpKdmordmExR2hUU283SlEv?=
+ =?utf-8?B?dFNIZFVWNFFvOVhpUGJ5Ni9TbnRTckxiYjlwSDN3RGR3c1lKUWVpNEhjRmtL?=
+ =?utf-8?B?UlhMQUk5MXlGVnkxcmMvVXpKMXN2NFZQY2E2ZmljZjdsRklWUGk0aDN6TDdR?=
+ =?utf-8?B?QkNSVUlQcVNxaHA4SExZZ2owZlRTWWVndWxEVGV1S2N3Z1BZTVRUV2ZVZDBP?=
+ =?utf-8?B?S1RuK0VWRXJ3Ky9XYXVQNlhwNkdxY2hwQXRuRmFXRTBpYWt5dk45WEw5THNS?=
+ =?utf-8?B?UmhRN3dNUXc1a1ljcmVyMGFrU1BwN2xoTTBLRGRwd1NjZ3lyYXVXMGdKMGNa?=
+ =?utf-8?B?THNncUVtdXZZaUROWXFtVzk2ZW95VUZNVTQ2N2R0TnhmdmgxSUIxSjdQajUv?=
+ =?utf-8?B?TXhyWmFjSnAySGNRTGFEK2N4aTViK0pvbUtibS9mcE0xVFQ1WFl4RE5Ta1BO?=
+ =?utf-8?B?aDJjZWNaZ1BQeU5sdUp0VUJFY21OVkVWMHJzeE15U0p2c0c5V3J2alhMbG9J?=
+ =?utf-8?B?cFcyclI2MUhMcGRnbjZhVG45a0E5Nk5HWm83dUtPWXp3cDZ5NnV0U3kwaEdr?=
+ =?utf-8?B?Zy8vd2cyUWJ4Um5hYittcU9OQmZYVHhBRlZIb0xoN3pIeWF6cFF0cUtxWFI3?=
+ =?utf-8?B?RFhVSHlub1o4MllFUExDNTdndGh5aXMveDZINmNyYVozZ0JvNys5Y0lDMUtT?=
+ =?utf-8?B?NTVkaXlVN0ttdXZHcW5wVHRLOHVVYy9iajF5UnNUc2JMQVRnMUNnbWxDRG1t?=
+ =?utf-8?B?WUp1a2w3M0V0MUtrOUw4RysrUWRnT3JMQjZXaklhNGduWDl5ZTNLc0NuNkNw?=
+ =?utf-8?B?bGpvRmt4VVhuVFdFeDdjYlFEME9YY2VMaWNwajNwUlNTYXFHc3dhbjNIVXZG?=
+ =?utf-8?B?cUY5YjN4VXhZMGhDbWhYSzNxdk16bVBEbSthT1Q2L1hNWVBEVWxKbDdsVGVF?=
+ =?utf-8?B?TnY3VXpKb0RPeGpmMUxPdUd0QjBqVXRCb1BVV2h3ZUVabXQzZlBsZk01NE9z?=
+ =?utf-8?B?Tm1QSDZsakFBQ3p4RVNoNUNLRUIrZysvcy9VQVhCZC8ySnYxd253UVIvVXJk?=
+ =?utf-8?B?K0xRelZpaWVGWmlPRVFWeFZrNTEvVlZ5WVpCZlUwZERsM0c1clpUUkVTZzR2?=
+ =?utf-8?B?VzczSS8zUWFPWERsOThOUDljbFo2N01BNGVHOUE5REF4dHR1Nk5YNHUxbkxX?=
+ =?utf-8?Q?oxqxtTiY5HG5LuggaKkIOogQXkI8WQ=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cVpLTTFCQU9qZjcwbEFIUW5tWmk4UmdYUVdoNWJyNzFNcFpFUmNMMlRhc1dY?=
+ =?utf-8?B?a2Q4R2loeWNSK1Mxd3pMK2tZL1UwbVJtY0FmZTU5ekU4QU5GZWFpbnFxSkMw?=
+ =?utf-8?B?TWpQUjl4ZzBQQ0pDQ3pUYzBvcy8xZGxTd3lVRUtPQXFmMXlvVTFyaUNjU3Z1?=
+ =?utf-8?B?Z1UrbjhxRWRYRTlFRWZrM05lSlZFb3FsbzN4eTRwUkwvWUR0dEVPNDBjZFVE?=
+ =?utf-8?B?Q3hWSnptaEYxUUtxYkRxaE5uU1JjSzhkbUR3Nm1uUU1YYnBjYmtQc2lDOVFF?=
+ =?utf-8?B?UUFnUHZTaEhUcnhWSDVSeEl3ekhZdmZ3d2JqcXN0VlVmYXlXQUNGd1Jlb0hU?=
+ =?utf-8?B?dFhCWFIwNmpPUUh1bEl6eEhGRzF5OUxhRDVOTXlLMVpZdXFYWnlhMVBnVHhN?=
+ =?utf-8?B?UytVKzVQZWhncW5ScmcxQTM5TUZCeWo4QTFhKzVvdVA5cExNK3ZXY3lkUE1m?=
+ =?utf-8?B?YS9KblZiMlJoTXNuSEhJUUNOcEQ5TFVvVHBsZkVJeFpSTUFhR3VKSGNHUzVq?=
+ =?utf-8?B?aTNIR29laE41T25yUmNUWXNVRjVpWWFsbUdYQzdkbFV4am1EMzRrbGZlTWdk?=
+ =?utf-8?B?NS9zZHE4MUtjWHhQMHNhWlcwTzhRWEpyamJFV3Y0MGdlTlBiV3J2dGxIM1Vo?=
+ =?utf-8?B?UkE2N05IT2xweHB1MUwzUTEzR3ZFN3VrWEFLdGwzNm1FYVZKT21Jd0RKbjVo?=
+ =?utf-8?B?WXYxNy9ZbFJ1MFpTY0UvUmttN2FrR0JmV3F4WGJIN2E5TWlqWDZYVGtBU0Z1?=
+ =?utf-8?B?ckFsTnA0SXBpWXhvT2k5K1ovQ1BIWTVMVjlDVjN3RnZKTVJVcXhaUWt4UjFB?=
+ =?utf-8?B?UmRraVo2RkxBaXdEMEUrRWI3U2xFT1BPYzJueWIxTzhheWttazZNT2x3MXdB?=
+ =?utf-8?B?RUhrVjkxN0djUWdQekprdXRSblNDSWFiR3FjTHJ2VHBBS0kxTU4wblRQanpq?=
+ =?utf-8?B?OHg1TlNFSGdBUy9rOEpoR1gxMjRGWTdNMHVwcnhOajRISGJmTnNaRGoyY001?=
+ =?utf-8?B?OHFKblpOWlhpOTdDQ1R3eno4c3JhcTkyYlFCRy92SHNZalJ6VTFKQnRqRFRp?=
+ =?utf-8?B?ZlFBYUEyVXZSZi9ZaTRYQlliR0NzaDNiOXJWNmdBSUZrQlpwRkZGUUx6SStF?=
+ =?utf-8?B?L0dnMFhiSFFSYTBVNWY2WUYwVStLVHpGSmYvTUZtM05zUHprUFpvMFVSazUv?=
+ =?utf-8?B?dXo4WUtuYXczTnVBbnBkdHo2MVhnNFhPN2N4QUVHWjY2US9GMkw2c1llazlG?=
+ =?utf-8?B?a0lWVnZpVy9wM1ZKVUlXWVBlbjBMMHo3aS9tUllXZUtMRk1oQWZHcFpSOG1y?=
+ =?utf-8?B?a2dDUG5SWjFXN3RZNmFvN1c5KzZXeW04Wk8zVEp3dERKT2R0Y004RVlUZ1dU?=
+ =?utf-8?B?clVQR2YvS3BiMFBCSFpzWXZBL1pES2dSL1YyUXlwZjh0djhNY2ZkN050SWZC?=
+ =?utf-8?B?S2FNaVk0Zm5LeUtjM3g3ays5QUt0RDNvYTFpSE1DdDYyRXIrYVZ3UEV4L0hx?=
+ =?utf-8?B?cEhoSysxNDJmanRqV2xJa2J3Y1FuR1FOYzRJei9QSitYMW1yNWIvQmVXMWcz?=
+ =?utf-8?B?bnZtN1R1SWN6ZEx0cmgvb255UllVQzRweW90UVlkZWl5VTRrZHRhQTJtZi9Q?=
+ =?utf-8?B?R2RWcDFRa2xGSUlsQXhLK0krZGl2RTUyaWlYVWFHcWlsbW5ITHUwTnRkZEFX?=
+ =?utf-8?B?eHdCNDlPRGV5eHR1c3R6TTd1bFhxTmxOM1phZWFwNzY2akpmWGQ4ME5sYlZp?=
+ =?utf-8?B?NHg3UENUZ1QxbmdDeVdBVVpocFU2QWtYSU1UOWRZdk81WmJ3ZXg4cm5BbzN2?=
+ =?utf-8?B?Y3g4NmcySHplOXo5VkJCY1JRT3lVN0RCdm9Hd0ZFR2YyMU9PcWpYaEhmSW5B?=
+ =?utf-8?B?cHdBK1VjSXl5TnZ6ckpwd1BFcXJMc1dqejRPMExlb293LzM2QWZkK0dMRWNp?=
+ =?utf-8?B?ajBHME5qQXlQV0tHYkpUcXhyb0Z2cFZGRVNwcUJMcVJVSzU4NS9Ub0pHcXlO?=
+ =?utf-8?B?bGZvZkM1bE9LRS9wZHRyODY3OElrbmtPdHZESW1UY3BZcFZCbzZtc2hIS2RS?=
+ =?utf-8?B?VE1Sak5lSDQ0Q0ZCNE1yTnoyekp4bUVLRnZUYkp4VW1DSjhZV1lFNkgvMVhJ?=
+ =?utf-8?B?VUJOR005aGIzV0w4bkszTEJvcWJaNlZUU3JKeTQxbU1nVjlyY0VlV0x6bHRs?=
+ =?utf-8?B?UGc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F57AC08D8208DA438D697E262277A16C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512210912.274362-1-thomas.falcon@intel.com>
- <CAP-5=fWqMzqtvxaqz21z53U0jDOyTuH-X2op4kgs6KLa7Pr7Jw@mail.gmail.com> <466021998b86b3a139f0003178fd47d98c7f2684.camel@intel.com>
-In-Reply-To: <466021998b86b3a139f0003178fd47d98c7f2684.camel@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 19 May 2025 09:17:10 -0700
-X-Gm-Features: AX0GCFsmieOcUL6adh4Ultb0ZpChHOuD5qQZEKoJVq43Xq67yyjNIQyZMMn5WvI
-Message-ID: <CAP-5=fVYsXqjbgoA_bxiWN1eX_ZwPEreSVFBLX-_0bwct9GThA@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Usability enhancement for Auto Counter Reload
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b684f6b-ad49-42e3-792c-08dd96f0a4ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2025 16:17:25.7442
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FvrUPm4bG9a0zGuKldgaRWHx0QCr8xU3m6g+P7TQ3/hsEhW4fsXTfspNz6XCqq0Cx119/Ov0/xVnCHfR5WMv7f+jcAUnPnEBhPvIIDbBYBI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5971
+X-OriginatorOrg: intel.com
 
-On Wed, May 14, 2025 at 11:05=E2=80=AFAM Falcon, Thomas <thomas.falcon@inte=
-l.com> wrote:
->
-> On Tue, 2025-05-13 at 08:31 -0700, Ian Rogers wrote:
-> > On Mon, May 12, 2025 at 2:09=E2=80=AFPM Thomas Falcon <thomas.falcon@in=
-tel.com> wrote:
-> > >
-> > > The Auto Counter Reload (ACR)[1] feature is used to track the
-> > > relative rates of two or more perf events, only sampling
-> > > when a given threshold is exceeded. This helps reduce overhead
-> > > and unnecessary samples. However, enabling this feature
-> > > currently requires setting two parameters:
-> > >
-> > >  -- Event sampling period ("period")
-> > >  -- acr_mask, which determines which events get reloaded
-> > >     when the sample period is reached.
-> > >
-> > > For example, in the following command:
-> > >
-> > > perf record -e "{cpu_atom/branch-misses,period=3D200000,\
-> > > acr_mask=3D0x2/ppu,cpu_atom/branch-instructions,period=3D1000000,\
-> > > acr_mask=3D0x3/u}" -- ./mispredict
-> > >
-> > > The goal is to limit event sampling to cases when the
-> > > branch miss rate exceeds 20%. If the branch instructions
-> > > sample period is exceeded first, both events are reloaded.
-> > > If branch misses exceed their threshold first, only the
-> > > second counter is reloaded, and a sample is taken.
-> > >
-> > > To simplify this, provide a new =E2=80=9Cratio-to-prev=E2=80=9D event=
- term
-> > > that works alongside the period event option or -c option.
-> > > This would allow users to specify the desired relative rate
-> > > between events as a ratio, making configuration more intuitive.
-> > >
-> > > With this enhancement, the equivalent command would be:
-> > >
-> > > perf record -e "{cpu_atom/branch-misses/ppu,\
-> > > cpu_atom/branch-instructions,period=3D1000000,ratio_to_prev=3D5/u}" \
-> > > -- ./mispredict
-> > >
-> > > or
-> > >
-> > > perf record -e "{cpu_atom/branch-misses/ppu,\
-> > > cpu_atom/branch-instructions,ratio-to-prev=3D5/u}" -c 1000000 \
-> > > -- ./mispredict
-> >
-> > Thanks Thomas. I'm wondering if ratio-to-prev should be a generic term
-> > such that periods can be set as a ratio of each on non-Intel?
-> >
-> > > [1] https://lore.kernel.org/lkml/20250327195217.2683619-1-kan.liang@l=
-inux.intel.com/
-> > >
-> > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > >
-> > > ---
-> > >  tools/perf/Documentation/intel-acr.txt |  45 +++++++++++
-> > >  tools/perf/Documentation/perf-list.txt |   2 +
-> > >  tools/perf/arch/x86/util/evsel.c       | 100 +++++++++++++++++++++++=
-+-
-> > >  tools/perf/util/evsel.c                |   2 +
-> > >  tools/perf/util/evsel_config.h         |   1 +
-> > >  tools/perf/util/parse-events.c         |  10 +++
-> > >  tools/perf/util/parse-events.h         |   3 +-
-> > >  tools/perf/util/parse-events.l         |   1 +
-> > >  tools/perf/util/pmu.c                  |   3 +-
-> > >  9 files changed, 164 insertions(+), 3 deletions(-)
-> > >  create mode 100644 tools/perf/Documentation/intel-acr.txt
-> > >
-> > > diff --git a/tools/perf/Documentation/intel-acr.txt b/tools/perf/Docu=
-mentation/intel-acr.txt
-> > > new file mode 100644
-> > > index 000000000000..db835c769e1c
-> > > --- /dev/null
-> > > +++ b/tools/perf/Documentation/intel-acr.txt
-> > > @@ -0,0 +1,45 @@
-> > > +Intel Auto Counter Reload Support
-> > > +---------------------------------
-> > > +Support for Intel Auto Counter Reload in perf tools
-> > > +
-> > > +Auto counter reload provides a means for software to specify to hard=
-ware
-> > > +that certain counters, if supported, should be automatically reloade=
-d
-> > > +upon overflow of chosen counters. By taking a sample only if the rat=
-e of
-> > > +one event exceeds some threshold relative to the rate of another eve=
-nt,
-> > > +this feature enables software to sample based on the relative rate o=
-f
-> > > +two or more events. To enable this, the user must provide a sample p=
-eriod
-> > > +term and a bitmask ("acr_mask") for each relevant event specifying t=
-he
-> > > +counters in an event group to reload if the event's specified sample
-> > > +period is exceeded.
-> > > +
-> > > +For example, if the user desires to measure a scenario when IPC > 2,
-> > > +the event group might look like the one below:
-> > > +
-> > > +       perf record -e {cpu_atom/instructions,period=3D200000,acr_mas=
-k=3D0x2/, \
-> > > +       cpu_atom/cycles,period=3D100000,acr_mask=3D0x3/} -- true
-> > > +
-> > > +In this case, if the "instructions" counter exceeds the sample perio=
-d of
-> > > +200000, the second counter, "cycles", will be reset and a sample wil=
-l be
-> > > +taken. If "cycles" is exceeded first, both counters in the group wil=
-l be
-> > > +reset. In this way, samples will only be taken for cases where IPC >=
- 2.
-> >
-> > Could this definition include the meaning of acr_mask? I can see that
-> > the 2 periods create an IPC of 2, but I can't see why the acr_mask
-> > needs to be 2 and 3.
->
-> Hi Ian, thanks for reviewing. I will include an explanation for the acr m=
-ask in a new version.
->
-> >
-> > > +
-> > > +ratio-to-prev Event Term
-> > > +------------------------
-> > > +To simplify this, an event term "ratio-to-prev" is provided which is=
- used
-> > > +alongside the sample period term n or the -c/--count option. This wo=
-uld
-> > > +allow users to specify the desired relative rate between events as a
-> > > +ratio.
-> >
-> > Should there be an opposite ratio-to-next?
-> >
-> > > +
-> > > +The command above would then become
-> > > +
-> > > +       perf record -e {cpu_atom/instructions/, \
-> > > +       cpu_atom/cycles,period=3D100000,ratio-to-prev=3D0.5/} -- true
-> > > +
-> > > +ratio-to-prev is the ratio of the event using the term relative
-> > > +to the previous event in the group, which will always be 1,
-> > > +for a 1:0.5 or 2:1 ratio.
-> > > +
-> > > +To sample for IPC < 2 for example, the events need to be reordered:
-> > > +
-> > > +       perf record -e {cpu_atom/cycles/, \
-> > > +       cpu_atom/instructions,period=3D200000,ratio-to-prev=3D2.0/} -=
-- true
-> >
-> > We allow "software" events in groups with hardware events. The current
-> > list of software events is in perf_pmu__is_software and contains a few
-> > surprises like "msr":
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n2134
-> > presumably ratio-to-prev should apply to the previous event in the
-> > list that is on the same PMU?
->
-> Yes, that's right.
->
-> >
-> > > diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Docu=
-mentation/perf-list.txt
-> > > index 8914f12d2b85..ba809fa1e8c6 100644
-> > > --- a/tools/perf/Documentation/perf-list.txt
-> > > +++ b/tools/perf/Documentation/perf-list.txt
-> > > @@ -376,6 +376,8 @@ Support raw format:
-> > >  . '--raw-dump [hw|sw|cache|tracepoint|pmu|event_glob]', shows the ra=
-w-dump of
-> > >    a certain kind of events.
-> > >
-> > > +include::intel-acr.txt[]
-> > > +
-> > >  SEE ALSO
-> > >  --------
-> > >  linkperf:perf-stat[1], linkperf:perf-top[1],
-> > > diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/u=
-til/evsel.c
-> > > index 3dd29ba2c23b..b93dbbed2c8e 100644
-> > > --- a/tools/perf/arch/x86/util/evsel.c
-> > > +++ b/tools/perf/arch/x86/util/evsel.c
-> > > @@ -1,7 +1,9 @@
-> > >  // SPDX-License-Identifier: GPL-2.0
-> > >  #include <stdio.h>
-> > >  #include <stdlib.h>
-> > > +#include "util/evlist.h"
-> > >  #include "util/evsel.h"
-> > > +#include "util/evsel_config.h"
-> > >  #include "util/env.h"
-> > >  #include "util/pmu.h"
-> > >  #include "util/pmus.h"
-> > > @@ -89,6 +91,97 @@ int arch_evsel__hw_name(struct evsel *evsel, char =
-*bf, size_t size)
-> > >                          event_name);
-> > >  }
-> > >
-> > > +static void evsel__apply_ratio_to_prev(struct evsel *evsel,
-> > > +                               struct perf_event_attr *attr,
-> > > +                               const char *buf)
-> > > +{
-> > > +       struct perf_event_attr *prev_attr =3D NULL;
-> > > +       struct evsel *evsel_prev =3D NULL;
-> > > +       struct evsel *leader =3D evsel__leader(evsel);
-> > > +       struct evsel *pos;
-> > > +       const char *name =3D "acr_mask";
-> > > +       int evsel_idx =3D 0;
-> > > +       __u64 ev_mask, pr_ev_mask;
-> > > +       double rtp;
-> > > +
-> > > +       rtp =3D strtod(buf, NULL);
-> > > +       if (rtp <=3D 0) {
-> > > +               pr_err("Invalid ratio-to-prev value %lf\n", rtp);
-> >
-> > It would be nice to fail this early during parsing so that we can
-> > identify the part of the parse string that is invalid. I'm guessing it
-> > is this way because the parse_events__term_val_type are either an
-> > integer or a string.
->
-> Thanks, that does sound better. I'll look into that for v2.
->
-> >
-> > > +               return;
-> > > +       }
-> > > +       if (evsel =3D=3D evsel__leader(evsel)) {
-> > > +               pr_err("Invalid use of ratio-to-prev term without pre=
-ceding element in group\n");
-> >
-> > I'm wondering how we can prevent this happening due to event
-> > reordering in parse_events__sort_events_and_fix_groups:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2095
-> >
->
-> Is there a way for a user to force a specific event order? Or avoid event=
- reordering?
-
-Sorry for the delay in replying to this, There isn't a way to avoid
-event reordering in part as it is a property of how the parsing works.
-I can give a bit of a back story on why there is event reordering.
-Initially events were reordered for uncore PMUs. On my alderlake I
-have uncore_imc_free_running_0 and uncore_imc_free_running_1 and they
-have the events data_read and data_write. If I grouped the events
-like:
-```
-$ perf stat -e '{data_read,data_write}' -a sleep 1
-```
-then at parse time the evlist will be
-{uncore_imc_0/data_read/,uncore_imc_1/data_read/,uncore_imc_0/data_write/,u=
-ncore_imc_1/data_write/}.
-It isn't allowed to have events for different PMUs within the same
-group, and we also want to group the uncore_imc_0/data_write/ event
-with the uncore_imc_0/data_read/ event (and similarly for
-uncore_imc_1). There was previous logic that I rewrote as
-parse_events__sort_events_and_fix_groups that fixed issues like
-software events, but I also used it to fix the perf metric events. The
-perf metric events on performance cores require the slots event to
-come first and to be in a group with it. For metrics we pretty much
-grab events in the order they are in the metric and then try to
-program them in a group. There were proposals to provide an event
-order with metrics so they could be programmed properly somehow, but
-then what about uncore, etc. What we have is messy, but the messiness
-comes about from perf metric events and uncore, it somewhat works well
-for metrics as they needn't worry at all about event order and
-grouping.
-
-Thanks,
-Ian
-
-> > > +               return;
-> > > +       }
-> > > +       if (!evsel->pmu->is_core) {
-> > > +               pr_err("Event using ratio-to-prev term must have a co=
-re PMU\n");
-> >
-> > Would a stronger test here be the same PMU?
->
-> The previous check should make sure that the events are in the same group=
-, which implies that they
-> are either from the same PMU or a SW event. This check then covers the SW=
- event and non-core PMU
-> case.
->
-> >
-> > > +               return;
-> > > +       }
-> > > +       if (!perf_pmu__has_format(evsel->pmu, name)) {
-> > > +               pr_err("'%s' does not have acr_mask format support\n"=
-, evsel->pmu->name);
-> > > +               return;
-> > > +       }
-> > > +       if (perf_pmu__format_type(evsel->pmu, name) !=3D
-> > > +                       PERF_PMU_FORMAT_VALUE_CONFIG2) {
-> > > +               pr_err("'%s' does not have acr_mask format support\n"=
-, evsel->pmu->name);
-> >
-> > I wonder if the acr_mask support could be in an
-> > arch_evsel__apply_ratio_to_prev and the non-acr_mask stuff be generic?
-> > If nothing else this would aid testing.
-> >
-> > > +               return;
-> > > +       }
-> > > +       if (attr->freq) {
-> > > +               pr_err("Event period term or count (-c) must be set w=
-hen using ratio-to-prev term.\n");
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       evsel_prev =3D evsel__prev(evsel);
-> > > +       if (!evsel_prev) {
-> > > +               pr_err("Previous event does not exist.\n");
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       prev_attr =3D &evsel_prev->core.attr;
-> > > +
-> > > +       prev_attr->sample_period =3D (__u64)(attr->sample_period / rt=
-p);
-> > > +       prev_attr->freq =3D 0;
-> > > +       evsel__reset_sample_bit(evsel_prev, PERIOD);
-> > > +
-> > > +       for_each_group_evsel(pos, leader) {
-> > > +               if (pos =3D=3D evsel)
-> > > +                       break;
-> > > +               evsel_idx++;
-> > > +       }
-> > > +
-> > > +       /*
-> > > +        * acr_mask (config2) is calculated using the event's index i=
-n
-> > > +        * the event group. The first event will use the index of the
-> > > +        * second event as its mask (e.g., 0x2), indicating that the
-> > > +        * second event counter will be reset and a sample taken for
-> > > +        * the first event if its counter overflows. The second event
-> > > +        * will use the mask consisting of the first and second bits
-> > > +        * (e.g., 0x3), meaning both counters will be reset if the
-> > > +        * second event counter overflows.
-> > > +        */
-> > > +
-> > > +       ev_mask =3D 1ull << evsel_idx;
-> > > +       pr_ev_mask =3D 1ull << (evsel_idx - 1);
-> > > +
-> > > +       prev_attr->config2 =3D ev_mask;
-> > > +       attr->config2 =3D ev_mask | pr_ev_mask;
-> > > +}
-> > > +
-> > > +static void intel__post_evsel_config(struct evsel *evsel,
-> > > +                             struct perf_event_attr *attr)
-> > > +{
-> > > +       struct evsel_config_term *term;
-> > > +       struct list_head *config_terms =3D &evsel->config_terms;
-> > > +       const char *rtp_buf =3D NULL;
-> > > +
-> > > +       list_for_each_entry(term, config_terms, list) {
-> > > +               if (term->type =3D=3D EVSEL__CONFIG_TERM_RATIO_TO_PRE=
-V) {
-> > > +                       rtp_buf =3D term->val.str;
-> > > +                       evsel__apply_ratio_to_prev(evsel, attr, rtp_b=
-uf);
-> > > +               }
-> > > +       }
-> > > +}
-> > > +
-> > >  static void ibs_l3miss_warn(void)
-> > >  {
-> > >         pr_warning(
-> > > @@ -101,7 +194,12 @@ void arch__post_evsel_config(struct evsel *evsel=
-, struct perf_event_attr *attr)
-> > >         struct perf_pmu *evsel_pmu, *ibs_fetch_pmu, *ibs_op_pmu;
-> > >         static int warned_once;
-> > >
-> > > -       if (warned_once || !x86__is_amd_cpu())
-> > > +       if (!x86__is_amd_cpu()) {
-> > > +               intel__post_evsel_config(evsel, attr);
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       if (warned_once)
-> > >                 return;
-> > >
-> > >         evsel_pmu =3D evsel__find_pmu(evsel);
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index b60461e16804..5028232afeb7 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -1189,6 +1189,8 @@ static void evsel__apply_config_terms(struct ev=
-sel *evsel,
-> > >                         break;
-> > >                 case EVSEL__CONFIG_TERM_CFG_CHG:
-> > >                         break;
-> > > +               case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
-> > > +                       break;
-> > >                 default:
-> > >                         break;
-> > >                 }
-> > > diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_c=
-onfig.h
-> > > index af52a1516d0b..26c69d9ce788 100644
-> > > --- a/tools/perf/util/evsel_config.h
-> > > +++ b/tools/perf/util/evsel_config.h
-> > > @@ -28,6 +28,7 @@ enum evsel_term_type {
-> > >         EVSEL__CONFIG_TERM_AUX_ACTION,
-> > >         EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
-> > >         EVSEL__CONFIG_TERM_CFG_CHG,
-> > > +       EVSEL__CONFIG_TERM_RATIO_TO_PREV,
-> > >  };
-> > >
-> > >  struct evsel_config_term {
-> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-e=
-vents.c
-> > > index 7297ca3a4eec..4ea8d4ffabdb 100644
-> > > --- a/tools/perf/util/parse-events.c
-> > > +++ b/tools/perf/util/parse-events.c
-> > > @@ -806,6 +806,7 @@ const char *parse_events__term_type_str(enum pars=
-e_events__term_type term_type)
-> > >                 [PARSE_EVENTS__TERM_TYPE_RAW]                   =3D "=
-raw",
-> > >                 [PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          =3D "=
-legacy-cache",
-> > >                 [PARSE_EVENTS__TERM_TYPE_HARDWARE]              =3D "=
-hardware",
-> > > +               [PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV]         =3D "=
-ratio-to-prev",
-> > >         };
-> > >         if ((unsigned int)term_type >=3D __PARSE_EVENTS__TERM_TYPE_NR=
-)
-> > >                 return "unknown term";
-> > > @@ -855,6 +856,7 @@ config_term_avail(enum parse_events__term_type te=
-rm_type, struct parse_events_er
-> > >         case PARSE_EVENTS__TERM_TYPE_RAW:
-> > >         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-> > >         case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-> > > +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> > >         default:
-> > >                 if (!err)
-> > >                         return false;
-> > > @@ -982,6 +984,9 @@ do {                                             =
-                              \
-> > >                         return -EINVAL;
-> > >                 }
-> > >                 break;
-> > > +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> > > +               CHECK_TYPE_VAL(STR);
-> > > +               break;
-> > >         case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
-> > >         case PARSE_EVENTS__TERM_TYPE_USER:
-> > >         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-> > > @@ -1109,6 +1114,7 @@ static int config_term_tracepoint(struct perf_e=
-vent_attr *attr,
-> > >         case PARSE_EVENTS__TERM_TYPE_RAW:
-> > >         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-> > >         case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-> > > +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> > >         default:
-> > >                 if (err) {
-> > >                         parse_events_error__handle(err, term->err_ter=
-m,
-> > > @@ -1233,6 +1239,9 @@ do {                                           =
-                   \
-> > >                         ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_samp=
-le_size,
-> > >                                             term->val.num, term->weak=
-);
-> > >                         break;
-> > > +               case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> > > +                       ADD_CONFIG_TERM_STR(RATIO_TO_PREV, term->val.=
-str, term->weak);
-> > > +                       break;
-> > >                 case PARSE_EVENTS__TERM_TYPE_USER:
-> > >                 case PARSE_EVENTS__TERM_TYPE_CONFIG:
-> > >                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
-> > > @@ -1297,6 +1306,7 @@ static int get_config_chgs(struct perf_pmu *pmu=
-, struct parse_events_terms *head
-> > >                 case PARSE_EVENTS__TERM_TYPE_RAW:
-> > >                 case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-> > >                 case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-> > > +               case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> > >                 default:
-> > >                         break;
-> > >                 }
-> > > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-e=
-vents.h
-> > > index e176a34ab088..a9de95dd337a 100644
-> > > --- a/tools/perf/util/parse-events.h
-> > > +++ b/tools/perf/util/parse-events.h
-> > > @@ -80,7 +80,8 @@ enum parse_events__term_type {
-> > >         PARSE_EVENTS__TERM_TYPE_RAW,
-> > >         PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
-> > >         PARSE_EVENTS__TERM_TYPE_HARDWARE,
-> > > -#define        __PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE=
-_HARDWARE + 1)
-> > > +       PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV,
-> > > +#define        __PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE=
-_RATIO_TO_PREV + 1)
-> > >  };
-> > >
-> > >  struct parse_events_term {
-> > > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-e=
-vents.l
-> > > index 7ed86e3e34e3..49fe1811fe68 100644
-> > > --- a/tools/perf/util/parse-events.l
-> > > +++ b/tools/perf/util/parse-events.l
-> > > @@ -335,6 +335,7 @@ aux-output          { return term(yyscanner, PARS=
-E_EVENTS__TERM_TYPE_AUX_OUTPUT); }
-> > >  aux-action             { return term(yyscanner, PARSE_EVENTS__TERM_T=
-YPE_AUX_ACTION); }
-> > >  aux-sample-size                { return term(yyscanner, PARSE_EVENTS=
-__TERM_TYPE_AUX_SAMPLE_SIZE); }
-> > >  metric-id              { return term(yyscanner, PARSE_EVENTS__TERM_T=
-YPE_METRIC_ID); }
-> > > +ratio-to-prev          { return term(yyscanner, PARSE_EVENTS__TERM_T=
-YPE_RATIO_TO_PREV); }
-> > >  cpu-cycles|cycles                              { return hw_term(yysc=
-anner, PERF_COUNT_HW_CPU_CYCLES); }
-> > >  stalled-cycles-frontend|idle-cycles-frontend   { return hw_term(yysc=
-anner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
-> > >  stalled-cycles-backend|idle-cycles-backend     { return hw_term(yysc=
-anner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > > index d08972aa461c..8b5b5a6adb29 100644
-> > > --- a/tools/perf/util/pmu.c
-> > > +++ b/tools/perf/util/pmu.c
-> > > @@ -1470,7 +1470,7 @@ static int pmu_config_term(const struct perf_pm=
-u *pmu,
-> > >                         break;
-> > >                 case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. =
-*/
-> > >                         return -EINVAL;
-> > > -               case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__T=
-ERM_TYPE_HARDWARE:
-> > > +               case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__T=
-ERM_TYPE_RATIO_TO_PREV:
-> > >                         /* Skip non-config terms. */
-> > >                         break;
-> > >                 default:
-> > > @@ -1852,6 +1852,7 @@ int perf_pmu__for_each_format(struct perf_pmu *=
-pmu, void *state, pmu_format_call
-> > >                 "aux-output",
-> > >                 "aux-action=3D(pause|resume|start-paused)",
-> > >                 "aux-sample-size=3Dnumber",
-> > > +               "ratio-to-prev=3Dstring",
-> > >         };
-> > >         struct perf_pmu_format *format;
-> > >         int ret;
-> >
-> > Some places I think testing can be added are:
-> > * The event parsing test:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/tests/parse-events.c?h=3Dperf-tools-next#n2143
-> > * The perf record test:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/tests/shell/record.sh?h=3Dperf-tools-next
-> >
->
-> Thanks, I'll look into adding more testing here.
->
-> > I wonder for if acr_mask is present (or ratio-to-prev) then
-> > arch_evsel__must_be_in_group should return true:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/arch/x86/util/evsel.c?h=3Dperf-tools-next#n63
-> > this is used to force topdown events into groups, so perhaps we can do
-> > similar forcing and make the use of the {} for the group optional (or
-> > fixed by the tool).
->
-> Thanks, this might be an answer to my previous question.
->
-> Thanks, Tom
-> >
-> > Thanks,
-> > Ian
-> >
-> > > --
-> > > 2.48.1
-> > >
->
+T24gTW9uLCAyMDI1LTA1LTE5IGF0IDA4OjUzIC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
+b3RlOg0KPiBZZWFoLCBhbmQgSSdkIHByZWZlciBub3QgdG8gYmxlZWQgdGhlc2UgZGV0YWlscyBp
+bnRvIHVzZXJzcGFjZSAob3IgaW50byBLVk0gaW4NCj4gZ2VuZXJhbCkNCj4gDQoNCk1ha2VzIHNl
+bnNlLiANCg0KPiAsIGhlbmNlIG15IHF1ZXN0aW9uIGFib3V0IHdoZXRoZXIgb3Igbm90IGEgInJl
+YWwiIFZNTSBoaXQgdGhpcy4NCg0KTm9uZSB0aGF0IEkga25vdyBvZi4NCg==
