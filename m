@@ -1,122 +1,110 @@
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [46.4.70.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2081854
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.70.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC443286896;
+	Mon, 19 May 2025 16:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670627; cv=none; b=ArWXbl+XiWmEoz/4/7DhBjbY7+CrD9+cjL7sp41MO/08GVcYXPXIsKjThlf1MtUOVc/qZv2fx+mOCVMpEDxtoPoYLsUFuhKbHgwVjrE+Y2I8eJsGz1gqzuLo1uMNDnIdilkwNz3cbwPiY/qbMx+XEnvxgb1j8qL1JWkG9Q0X6SQ=
+	t=1747670646; cv=none; b=n1+DSWXg7OhgF1mQnFsEaJNfRTpq27gkZ34V7MR4VYFwQm5JijurZnbaWIC4PIwkDVA+ls1xAeQ8HhGmu+2RvqTS3acLhWorseljH2qG+EARoaCMsqtho1KED2ate17nPztqQ10TPru8Gsd+auMagTqfzEfah8afYcFAckhEyRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670627; c=relaxed/simple;
-	bh=CU6youjXboITy+rJv4aeTedr301G8Zm6O3Ab5USqpZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Thqtki+2JX5cI0s5m+OfiWTAU1r7pkEPZLxPE8u1A30Ps9pKLrBNQz8YCQxYPRP5hU+Y95vMR3K9qDoV/Yq6MtC836he543dZuOUEV52DHY4MQuCayhzMW5LpwOh2/46SUI3n3jDzo07sl76Ol9J8isEvWQvonwNtZrYnI0N7FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de; spf=pass smtp.mailfrom=eworm.de; arc=none smtp.client-ip=46.4.70.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eworm.de
-Received: from leda.eworm.net (unknown [194.36.25.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 99265216F54;
-	Mon, 19 May 2025 17:56:41 +0200 (CEST)
-Authentication-Results: mx.mylinuxtime.de;
-	auth=pass smtp.auth=mail@eworm.de smtp.mailfrom=mail@eworm.de
-Date: Mon, 19 May 2025 17:56:40 +0200
-From: Christian Hesse <mail@eworm.de>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: <hch@infradead.org>, <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <ming.lei@redhat.com>,
- <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
- <syzkaller-bugs@googlegroups.com>, Christian Heusel <christian@heusel.eu>,
- Christian Hesse <mail@eworm.de>
-Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
-Message-ID: <20250519175640.2fcac001@leda.eworm.net>
-In-Reply-To: <20250428143626.3318717-1-lizhi.xu@windriver.com>
-References: <aA-QB7Iu6u9PdgHg@infradead.org>
-	<20250428143626.3318717-1-lizhi.xu@windriver.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
-X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
-Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
+	s=arc-20240116; t=1747670646; c=relaxed/simple;
+	bh=YiciytpzBKZU6jliaO65tJGGDGQootlSrvvGG35Ktdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jatNJ5DW432GUOsKJdQh/zedBxSoE2dd6s23+yzskJ7+Vw1uNyPUAaXTQXZIsdq6hjr4B1Camc64mOuOEDnYNiNB+oIKRUZdKEiNW499w/kCuTYIio/ZkTnmHkA/GwuYEme5HbZvMXAvb/OepYY3m/uhgGSXls6VdlX0yV9Uoec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnpeEQF9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnpeEQF9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1739C4CEE4;
+	Mon, 19 May 2025 16:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747670645;
+	bh=YiciytpzBKZU6jliaO65tJGGDGQootlSrvvGG35Ktdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KnpeEQF9AXAlhGeeYGGwNM4vuPj26g+dg4Nt2tEQBNl1/zoUhsV8N1BECbhcTHrLb
+	 d1dePDbkxEQTbZ7zgcDvRdOFdzyCu8xJogzBh7JYRBEy2W/+vY1D0/rIHP28LcXuZ/
+	 r6H87jLQl8kAo/VND+R6hsCxqLQAW9OdFt6eqtmDd+AYGwWhhzPYpBL0OFmP8jtxQp
+	 fP8NgT9rQGdTOPxyo2qfRfqDJzbzHhbe/fihZESj2dT2RLZh4Eybspg/KsLUHLQ2UP
+	 Pi0xJ+rE1RDQc4aqzslBxTEH6wppS3apYCaNuS5LSVrp7yf4KuwE+QUo1KyIIgmn6/
+	 CZQGHysnqEe7A==
+Date: Mon, 19 May 2025 17:04:00 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Haibo Chen <haibo.chen@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: vf610: add ngpios and
+ gpio-reserved-ranges
+Message-ID: <20250519-bucked-revolt-2b93a9a31422@spud>
+References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
+ <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/S90K33h=.7s9=MsdGtUcLlt";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Spamd-Bar: /
-X-Spamd-Result: default: False [0.00 / 15.00];
-	TAGGED_RCPT(0.00)[6af973a3b8dfd2faefdc]
-X-Rspamd-Server: mx
-X-Rspamd-Queue-Id: 99265216F54
-X-Stat-Signature: 36niebrzyqsewbgg3maz3zorfejfxxgk
-X-Rspamd-Action: no action
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2cAhBHrdr3ZQFzJw"
+Content-Disposition: inline
+In-Reply-To: <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
 
---Sig_/S90K33h=.7s9=MsdGtUcLlt
-Content-Type: text/plain; charset=US-ASCII
+
+--2cAhBHrdr3ZQFzJw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Lizhi Xu <lizhi.xu@windriver.com> on Mon, 2025/04/28 22:36:
-> Some file systems do not support read_iter/write_iter, such as selinuxfs
-> in this issue.
-> So before calling them, first confirm that the interface is supported and
-> then call it.
+On Mon, May 19, 2025 at 02:03:43PM +0800, Haibo Chen wrote:
+> Add optional ngpios and gpio-reserved-ranges property
 >=20
-> It is releavant in that vfs_iter_read/write have the check, and removal
-> of their used caused szybot to be able to hit this issue.
->=20
-> Fixes: f2fed441c69b ("loop: stop using vfs_iter__{read,write} for buffered
-> I/O") Reported-by: syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D6af973a3b8dfd2faefdc
-> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 > ---
-> V1 -> V2: move check to loop_configure and loop_change_fd
-> V2 -> V3: using helper for this check
-> V3 -> V4: remove input parameters change and mode
-> V4 -> V5: remove braces around !file->f_op->write_iter
+>  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Doc=
+umentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> index 4fb32e9aec0a341a50088f3e4352ed4d36f649d3..5b98228466c6414be681c4941=
+7bbdd82f2c45756 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> @@ -70,6 +70,12 @@ properties:
+>      minItems: 1
+>      maxItems: 4
+> =20
+> +  gpio-reserved-ranges: true
+> +
+> +  ngpios:
+> +    minimum: 1
+> +    maximum: 32
 
-This introduced a regression for Arch Linux, breaking boot media generated
-with archiso [0]. More specifically it's this call of losetup [1].
+Do these platforms have a default? I'd expect one to be added that
+contains the default value from what the driver does now.
 
-There's a squashfs inside iso9660. Mounting the iso9660 filesystem works
-fine, but losetup complains when setting up:
+> +
+>  patternProperties:
+>    "^.+-hog(-[0-9]+)?$":
+>      type: object
+>=20
+> --=20
+> 2.34.1
+>=20
 
-$ losetup --find --show --read-only -- /run/archiso/bootmnt/arch/x86_64/air=
-ootfs.sfs
-losetup: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs: failed to set up lo=
-op device: Invalid argument
-
-This has been bisected to commit d278164832618bf2775c6a89e6434e2633de1eed in
-mainline (and 9bd3feb324fce2e93e09d0a5b00887e81d337a8c for linux-6.14.y,
-184b147b9f7f07577567a80fcc9314f2bd0b0b00 for linux-6.12.y). Thanks to
-Christian Heusel for his work on this.
-
-As the call tries to setup in read-only mode the check for
-(file->f_op->read_iter) fails here, returning the -EINVAL we see.
-
-Reported-by: Christian Hesse <mail@eworm.de>
-Bisected-by: Christian Heusel <christian@heusel.eu>
-
-[0] https://gitlab.archlinux.org/archlinux/mkinitcpio/mkinitcpio-archiso
-[1] https://gitlab.archlinux.org/archlinux/mkinitcpio/mkinitcpio-archiso/-/=
-blob/master/hooks/archiso?ref_type=3Dheads#L88
---=20
-Mit freundlichen Gruessen
-Christian Hesse
-
---Sig_/S90K33h=.7s9=MsdGtUcLlt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--2cAhBHrdr3ZQFzJw
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSmOl3fryo2Nzt8CpJOj8ol/axIVQUCaCtUuQAKCRBOj8ol/axI
-VdcMAQD8COWGYPfVA+CfsDsvTILwTxEy6J9MDcznNJJI2OIyowEAjxoAj2hgBfwJ
-Fe6zgRknC3M/uJlHcO4mGZBhSVq/hAA=
-=ylBs
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtWcAAKCRB4tDGHoIJi
+0t2uAQC9WN2OYYXOrp610MPdWdT0m5i4i1tZeyTZdr3aD+wm0wD/fSCYfaimi/PV
+1bDpFQcFtXElQhb4Wvjp3cwIUlEZNQs=
+=IjWH
 -----END PGP SIGNATURE-----
 
---Sig_/S90K33h=.7s9=MsdGtUcLlt--
+--2cAhBHrdr3ZQFzJw--
