@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1189E2701D4;
-	Mon, 19 May 2025 08:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E05C27054E;
+	Mon, 19 May 2025 08:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643614; cv=none; b=N9FbtUN+QDUirGa0DQfiZHJ9lZc+6NnYte5RKrH3aHfNzkFmKRjjUxnnxdevrX4gDG2TGJ0zCaFynIEYkEYZ7nrDQUQqip7kVYCYeTdk9x+tFFGpa90wWjKLAi7sxZ6S6Uf9UMkuTL1+jDQQBZBWKf1nA/Y+jev4dfM3Ne1InZA=
+	t=1747643615; cv=none; b=AosxhD0xzFJzPLDZkRTLzSzRCgRsIwqUKlNSMDvuzck/bKoLXjDGwXsNWT0ZZI2DF+XcrGp627Dz6/ErZKQCB8zOizrk7bqKi8ouUI+iKuPAzuq5UorvBCmkGQN1iJ9cZq38JkAqRzRtTDz0VGfEfyoMBJ5npEYmwtpz0T3EYyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643614; c=relaxed/simple;
-	bh=FM9ELVeqz4TUsKpyJHGSgjwI5KFnezd+C6Mvdegl1pE=;
+	s=arc-20240116; t=1747643615; c=relaxed/simple;
+	bh=imEIHk/EPAtoQkxPLF4zSpQlLZtLGmQXx7lY6KkYsEY=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Mun/nXjYsMEsogU5jeBDuoakyA/nkbbN5+s1wy7eR0olfQU7vaLDhVzf1DB2r1zlM0BxRhm0Gm4xSLa0rwpJ0C0Jlz2ZtDqwrK6ULmSTnTumge8f7hBc5dWJmz8q/PH+o3NivNkRfT6lZ4BKrlmZGEowt3OwwWMzXm+JXmy234M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jToyYKZv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AISqXRdl; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=LKsO2tiBTmxQGYDzyVQmHmYd2608rtNeEMIJgOolb1+UIjIf75Sr5aDYKozsfifiRcv0e2nCa4V+ehFFvyjTglv0px+vT5IHDeHM+W2kf+e1cnCO84wbZW6Lv72zdn8CHHHbRJvJC1TVBtDDDk7w6c5mRYzo1eSJv6jqr9mzISk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wmV0e4Uh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dXYVZJ+b; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jToyYKZv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AISqXRdl"
-Message-ID: <20250519083026.411809421@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wmV0e4Uh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dXYVZJ+b"
+Message-ID: <20250519083026.533486349@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747643610;
+	s=2020; t=1747643612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=1v1pAT49VMlkOWBDIvngj4OT88UyCqJmnvYZ4oJqhv4=;
-	b=jToyYKZvwkC3JcQOhodrq7x/nVjuIB9mBdYySunQp0g1n5qX26/crAoA5zXYHEmdjwvUVn
-	eajKLGOK2pYbrlY0xr2ucM/MqO4EdznL9sRpNWLAIB1p8XzI2E4rLHgD/X6j2FQhmH2TlF
-	ZYXUxWTVSA3C4MpGMMAFw9FAmnXkQgsBB1lc6QMEGKLlFnLI2cWX9kWWf8Z2qmvS4M73R5
-	bRbaiY/EXL2kI5zjDSHYeLjCPRdU3P441Cm6TJcc/jKlczRrcftpA6W7WfClEb0Vj8YEif
-	WgSCtRg/flT0MFpAYXvgDvCGazEXQGo8e0mWrQrKYy3WSGMiG2a3357AlXRZrg==
+	 references:references; bh=rlC+rFNEoM7UPzOHkW+/tvvtNAKD9S1u+ELe68/TTuI=;
+	b=wmV0e4Uh9fdijt6SSytVnFzVYRLeMfY6fDOwVnB7OcGnt8BbF6yN8CC7EVB3OwiQG3F5xP
+	0AuZQbRCLJpq1rxIb2cxNXzsXnxTeyEiHq+KjZ1yWj/tfsi2kx9FUvm/88UtB6XJScxd4e
+	BRfcUTnMJVXbftXsCSuNGt+jHbCdgWQu3j5yYHzmKLgxu+HhkbR5ITriUzdckg4d3RhE3i
+	XuhabMW/aMZjSikfwvvohBPBc+xa6g3q0UT0jtdaB2ZsFZbwS+1siCcLI9ip8B9vazhWvp
+	43kf8z+KrCTKriOkLT/UMf2BSLZcWmfHF2ljbXMtTk5veD6+QPNqQMYsaUbYtA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747643610;
+	s=2020e; t=1747643612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=1v1pAT49VMlkOWBDIvngj4OT88UyCqJmnvYZ4oJqhv4=;
-	b=AISqXRdlhD/0o0O59uRlbj36ghoiLIyq+rL/YHfoLNNc8vjLsKt/NNssM2uLaPjWmNo5p8
-	ogWD7EKVf6DCt+CQ==
+	 references:references; bh=rlC+rFNEoM7UPzOHkW+/tvvtNAKD9S1u+ELe68/TTuI=;
+	b=dXYVZJ+bTydoz5XwCxVi2vZFt7ahUJig9uUd3rUe4XD/qFe6f8ZMjMNseeQv3Cz9QIwc1u
+	gPpHz3nlr6JWSWAw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Antoine Tenart <atenart@kernel.org>
-Subject: [patch V2 13/26] timekeeping: Provide ktime_get_ntp_seconds()
+Subject: [patch V2 15/26] timekeeping: Add AUX offset to struct timekeeper
 References: <20250519082042.742926976@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,44 +60,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 10:33:30 +0200 (CEST)
+Date: Mon, 19 May 2025 10:33:32 +0200 (CEST)
 
-ntp_adjtimex() requires access to the actual time keeper per timekeeper
-ID. Provide an interface.
+This offset will be used in the time getters of auxiliary clocks. It is
+added to the "monotonic" clock readout.
+
+As auxiliary clocks do not utilize the offset fields of the core time
+keeper, this is just an alias for offs_tai, so that the cache line layout
+stays the same.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- kernel/time/timekeeping.c          |    9 +++++++++
- kernel/time/timekeeping_internal.h |    3 +++
- 2 files changed, 12 insertions(+)
+ include/linux/timekeeper_internal.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 ---
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -2627,6 +2627,15 @@ int do_adjtimex(struct __kernel_timex *t
- 	return ret;
- }
+--- a/include/linux/timekeeper_internal.h
++++ b/include/linux/timekeeper_internal.h
+@@ -67,6 +67,7 @@ struct tk_read_base {
+  * @offs_real:			Offset clock monotonic -> clock realtime
+  * @offs_boot:			Offset clock monotonic -> clock boottime
+  * @offs_tai:			Offset clock monotonic -> clock tai
++ * @offs_aux:			Offset clock monotonic -> clock AUX
+  * @coarse_nsec:		The nanoseconds part for coarse time getters
+  * @id:				The timekeeper ID
+  * @tkr_raw:			The readout base structure for CLOCK_MONOTONIC_RAW
+@@ -139,7 +140,10 @@ struct timekeeper {
+ 	struct timespec64	wall_to_monotonic;
+ 	ktime_t			offs_real;
+ 	ktime_t			offs_boot;
+-	ktime_t			offs_tai;
++	union {
++		ktime_t		offs_tai;
++		ktime_t		offs_aux;
++	};
+ 	u32			coarse_nsec;
+ 	enum timekeeper_ids	id;
  
-+/*
-+ * Invoked from NTP with the time keeper lock held, so lockless access is
-+ * fine.
-+ */
-+long ktime_get_ntp_seconds(unsigned int id)
-+{
-+	return timekeeper_data[id].timekeeper.xtime_sec;
-+}
-+
- #ifdef CONFIG_NTP_PPS
- /**
-  * hardpps() - Accessor function to NTP __hardpps function
---- a/kernel/time/timekeeping_internal.h
-+++ b/kernel/time/timekeeping_internal.h
-@@ -45,4 +45,7 @@ static inline u64 clocksource_delta(u64
- unsigned long timekeeper_lock_irqsave(void);
- void timekeeper_unlock_irqrestore(unsigned long flags);
- 
-+/* NTP specific interface to access the current seconds value */
-+long ktime_get_ntp_seconds(unsigned int id);
-+
- #endif /* _TIMEKEEPING_INTERNAL_H */
 
