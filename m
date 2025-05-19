@@ -1,75 +1,75 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F70A28A703
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8503E28751A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670701; cv=none; b=Hq4hTrmJUw4PNdJ4FSavA0zsxfqYzTAdg7RF8GLVfecpx30w0/XBGbTVigsjXNJNdqmBLkOIiruuWQC4nCesajgagJ6eHvXLN4fOY9ULx3LHQ8tn/NMamevvzrYnfYY8qbL8y+XrAhYAoyQRpRMhYbNh4mesfHTOn8l+4wZVK+4=
+	t=1747670704; cv=none; b=cIZEJqq/H/hC2mJyZDRZuVgAOEbpmYneUQf709n3PD5Vv9nNE1hMPuSZYhXL5TtZbnol5yUZ7Hcg5gpPIZSC0ik2HJA5cGlh9KvVSNbaUgv1ioAUgdggy0sIglblGgvXBJNVTqrr2DizeZ0geIw0Mknt8xdMs/D77SrVfOPKy+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670701; c=relaxed/simple;
-	bh=rd3tosR7o8UrBrynvjvnVscarTHdCBIF6Zc9XKE18jM=;
+	s=arc-20240116; t=1747670704; c=relaxed/simple;
+	bh=14v85dIThTPtbuPmwrXTTaE8w99iVl3YRryi1ZqbAgc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DhrUOcW6U2EUWfAZ6jUS7mK3ccMe+CZKt1/4Y35LsUPJzS3XOwKLINrMlg34SbtAzlCZGbbB2ACrl5JFRLMNZB9aZ6o6ODS515ZebwwBaEQFhELaoQDMaEQmor2Ng1NL7mAix3iC6HM3xF62MEZEd5UjxEGntUQ89EcM6vlHy18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PqtiC6ij; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=UQtmbWsk/dnMXxiEHjTxco91vPmPcCfbgubF5DXI06UbIefbsEtk9qRexjbRSU5XsrCsPcREharEnK1Q+NMbwnGkqG57o2I2M5VDZUo+ATDBgZlNcherntfPB7vUCJazHS60GkXbMqIrGqopiuWG2Yu/Y7pBuWm8wh55fFNPrac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IMUY1qn3; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PqtiC6ij"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9HD27003280
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:59 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IMUY1qn3"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J8dsU1003036
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:05:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XP7YE0JSU8f0uxOvYV0daVueaiX1rp3UCYiNpzDK4gM=; b=PqtiC6ijL3na2eWs
-	CIf8SXo/EHmOvJwGbQHeuO0UGV24jFwAbAsxgx5cCjNebWakPPL+zHYS1aqYS385
-	7eUaiQCCzEDoi1QOnLsc919k3rT8M7Ey7aISDVyt/L1Llm5JBCYP07IngFr3MSA+
-	7xqwKeWbx5vS4MJSSomYjqp6/N7CPJ1Onm967HtCSzVuJBosnMh0zZeK7OcpsYNb
-	z9o7GDEw8uiYVkrbtZrXQoTfzFTVKVkEVUvF0Qpd+rUFGPi54R6saN627Siqshq3
-	TxGNr2wNSC2YuorQ/iJuoXj+JTk028Q+ZRqpSuKD3HVIpbMg8pGbNVzsY8hGE8yf
-	u3RAYQ==
+	EcC/gYHWoR+iu7KJJ2uXlU81DDxyQoGxWssx2fzUbdw=; b=IMUY1qn3awswp/IF
+	OmB0H/BYTlsH7TBnYhohJCpnDa0QfMgpdUmNcYkpFCzUJ5j6CKb4eBioBEMpoXfu
+	YjiOcF4Xjw0DiuWPu098C86szSruaQd5sSsitj8q2TnIEBCpm+RHjZUCcnXVOk1X
+	cUg6GGyccLv2GXRAcjrS5wJFsNZQHoxji7Si2jaCbuAXEBr01glCI58YN4ytWRpl
+	N+/IFNdVcEY0g1uERZWPmJ62hPZX5z+5IEN48OVEzk3jFy0N8nDdOUkcpyht45Tx
+	z3QeGlDuSbYXyv2+Ig6R6fdElIBcmR70aJvnVSLDAfqqUW2LxudRCYU/4NfAHEi9
+	sUv0mA==
 Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjkyn16h-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r1ath873-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:59 +0000 (GMT)
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-403317cd1ffso2131420b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:59 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:05:01 +0000 (GMT)
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3feb24cea56so3912831b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:05:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747670697; x=1748275497;
+        d=1e100.net; s=20230601; t=1747670700; x=1748275500;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XP7YE0JSU8f0uxOvYV0daVueaiX1rp3UCYiNpzDK4gM=;
-        b=QAOn2XdGIFQ2oURC0FBQMf6eDSPMRFKu05gqb+WYMl0F5WNRPJpbhSdXdLhxmCRKJK
-         3n/2PNK6UE7E1uxswf6P7txdpINXT8T1Orp0x5iHF+x8gJ9NEWOVNoAZ6zM+pKkfndkR
-         Hrkn5bcG+fatqzdR1P+0KoGinyJ/WnNhMjFQmU/zCP7pgDnixcsN11hxrnTZHkH79JmN
-         ieCqxTMGg9LhWn5qwDNZqCClAgy8ncaclcUTgBkUT1iDhF4ZawF0DGUYsRwoN4SrLRUq
-         k9waOBSjXGMnVUd1j1QERR6aNrGkui1fO+7B7jyGjfhDm5ENTK8FrYmmJzLi1/sYY2mr
-         VIvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgXCl30rgMMj7pfdHY4BRV91wRP8vLHTIew1PNlu66AIqb/9CYx6tInt+LqBi8R/DBoXSe27+v0Q8xAws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcLoKzlrA9NxenkJwJHeNoqMJzOdICZ6AJIEYnBTaM7UzbYQcq
-	PqpGWqpw6DYzr9dhHzod32Clbo8cPBhe9KSF/5g8fvzOQhjUqX8wUtI+4ASAjmhfnJG4UlJKM5+
-	3PHrUv6UYg+50ieRyO4DDSRWNtKm4Tn/HSXTd4nq04tDbYsftcTiT4uAYDTW6JQ5PJvRbjssk3K
-	w=
-X-Gm-Gg: ASbGnctYCWBgaE7nli8xMkN5c6WASxpTXEkjBICq2xc633zcJloNUt+eCaNSE1Y2Lti
-	3tiAsgu/kARjWDhZu1kwWYuDc4E+FNJRHxKUu41rWeOcx72XzgpMs5sDoQXAVQ/j2Uf0VFj1vvo
-	I+Yg24A3bnWTVqO98bktplvSNFNjesRtd+EjlGhF9PuT6bXiV/dFfDy9u5LTzvct0Kf/zGrebEz
-	Bch4xLHYOHW9SySlWG2FfVnvjv9jiLLD4l/3W8GEjEp4SXnc/TBOSVeViKX/b6gaeHoWOC/o9Le
-	pvJHA7jqrdUbWPJkf3XOAS1rLuxgPbapyZERVXFWZ08EyHr43STlV6WV23oCJwotVO9wtXYh+4o
-	vwDnGLrGPxSE1qu9L5qSws9Uh
-X-Received: by 2002:a05:6808:4490:b0:403:3660:4130 with SMTP id 5614622812f47-404d87b89fbmr8227779b6e.27.1747670697045;
-        Mon, 19 May 2025 09:04:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxcxGcyI6HMa3gAL8iMQo+Ieo2rYXZp/t7CC7b9uPDZTmw/1yIwewWlzbOfrbe7KY2Rpsavw==
-X-Received: by 2002:a05:6808:4490:b0:403:3660:4130 with SMTP id 5614622812f47-404d87b89fbmr8227740b6e.27.1747670696624;
-        Mon, 19 May 2025 09:04:56 -0700 (PDT)
+        bh=EcC/gYHWoR+iu7KJJ2uXlU81DDxyQoGxWssx2fzUbdw=;
+        b=HxF/0gyWzmwKBjjVDzPM5dYmOMFGPjHNQ5yPpyR5XReBvi4UI0k62fZlNdIwRSSggD
+         Wi+UlQiPU+UaSo7g+XP8cq+WycLSrR35At+gyShar86tfszZC/L8bkRpEceDqOgsybIB
+         H+POaDlC8hhrlVpVVqBCOETDAxv3pqKuD5V2Z4Hx8b7nn+Y17JzWsY8yDwF9zL3sorRg
+         K0Balvri7l7Yv6aPMZkA5nb51nq4+dkiUWOfLXQtYh07WEa1mSIkmU+N3Ka9shYeT3WD
+         BWo4J/Bg05suhsHxSuFb+Nfxesg/MuchZGvn+qgxcjMoUX0sUn67DVtsRwljVOSiROXv
+         96Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBEm+z23lGwoKpxGty6Wp6lWy18mqmOtXF/FMnWDqHCrrjtUpKg8HQtAVo0hVGB5q5ZtznHwb38qzqmJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFxWW1ulZdak/wGM/7IPxfdbbE7n8YKNV+BCxOTkVHlGvR1wI9
+	9k5kdbbS9iwu5sLMUSf/XBpI1pJ9buP+6MM/Vn1wZdfqq4E7Uy1qadc45lksN4/D7H3JoqrQ7c2
+	AFH8m8EWU5BAqfn8UilLRy5kJaU0fIY+/8iDCLCGk+dapXUaioVnwKrTHF7mDZA1aQ2m16zf0ma
+	Q=
+X-Gm-Gg: ASbGncsdKFKiRCkCYU8ZCjOpP0v0rf0y1gGVnxwi0irLxu8Rryo8UyTdR1j2iZIRW4/
+	O6QnomXdjIjKfwMvxU8UBDCVo9/MpO87OyUR/TRDWB76MfhymFAekehVq8bOYmhjzr4+KQuCOET
+	yzNgjsM8EnopEeHYqhhWcsHAWoLKLq8LNJQ8IK+OzVoSvEkxe6mtUEXhctZBfn5cQUAtxKL4tRe
+	Hf1qUDF14EO5F0BHqRGG5YsrQepPAiMRLtRwgqe7BMD6ejVhYD+ixA9v2tNLU/3UBKxX0n1H8If
+	ZjCAZslg6c1BH/O13fdoz9KTi2X+k0f0Y5/a+rnbjpiHdAWSVsDVJDFSl7fl3fPFjASS3i3Klm/
+	a60TzmTHJQA/oaODjN28DBrU2
+X-Received: by 2002:a05:6808:1649:b0:3fb:46cc:e08 with SMTP id 5614622812f47-404d88068fdmr8771223b6e.28.1747670700380;
+        Mon, 19 May 2025 09:05:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyzcW01pX71dS1sAOYRiLBWX0d/KLCmHb1i4QId1HV/+zFOfyPK66kJTMlnD6NrzfYSkV6jw==
+X-Received: by 2002:a05:6808:1649:b0:3fb:46cc:e08 with SMTP id 5614622812f47-404d88068fdmr8771140b6e.28.1747670699576;
+        Mon, 19 May 2025 09:04:59 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.54
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 09:04:55 -0700 (PDT)
+        Mon, 19 May 2025 09:04:57 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Mon, 19 May 2025 19:04:21 +0300
-Subject: [PATCH v4 19/30] drm/msm/dpu: get rid of DPU_MDP_PERIPH_0_REMOVED
+Date: Mon, 19 May 2025 19:04:22 +0300
+Subject: [PATCH v4 20/30] drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-dpu-drop-features-v4-19-6c5e88e31383@oss.qualcomm.com>
+Message-Id: <20250519-dpu-drop-features-v4-20-6c5e88e31383@oss.qualcomm.com>
 References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
 In-Reply-To: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -90,192 +90,145 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8015;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5361;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=s2aC7HPLYf/vUxsgZvsJxT9ztKXJePENnoIqxl1pB+U=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoK1Z8wdjdl9U5KycrUFao/7Etw8hngUMHFdd+K
- uhkazJ5xIyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCtWfAAKCRCLPIo+Aiko
- 1Y7MB/wKHH7M0YicVplHV9fu1v4ON5hoR01NaJUOECktPA/Qvul+AJxLqs2TAdextWiRgoJWyZj
- mUs+CIU4+Lq6DvLtNptaVjYFdNTbphtfeES0AbxOdfs2VNmmeuj4x0v4gGxAtC76ZK8WUqIuqbk
- kgCDtktJ20APEx2kXDLM+Jmif5+ixrtru23E9an0p0wFvCAhoTqUTtx0uY0yr7SGw7hMbpGGTL6
- qtJtSD9k+5AwLW1lQsggJ0S/wy1oN4YDgx/NghCQ/l9+lNoQJPVL7m75xmlMcd2w9LIkoQ5hwRh
- inxOGHg5wp1EDCOnMe4NHh9c9vj4n/IRbQP1G+bZ2ntx+ybO
+ bh=HAI8Ve+Cj2eUNr5mYSEgP72ltCdvLNDcdsj28COl2yk=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoK1Z8BmXJXf2u8JXfW1972eXfGG/4AEqY8ZPT/
+ 5He7tJ+Xn6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCtWfAAKCRCLPIo+Aiko
+ 1XpxCACGoDLLweKclOAJ4QyMyeZPo/7qE7AVlXTgbgg9yI9wyXpIxzC6BwY1D88meLjpxlkkRVz
+ NJ7dj0im+gGkFmLODBaYNCMgjPcAG1bFm351k5EjLGHnMBgzMpJEbo6H4YC6hGM6/Gm029g+yHm
+ I7vLpMIR52D3egf8p4BO807z5K1PJb3w35WwbSMeFQ0LnZ2YEuldoSuzAW0FAZEkYtP78nODjEc
+ 3ucO5EH5CNMbrciHEkUTf0iZTwW8/Bscir+Jwg/3UHrhTOgEYo2xerrLgcSbwHYMWB3VPsKwsNQ
+ LqV1Ga5nVNkqyqR1XbeF2Rx1V1lRsplCksa71Bw94/KRjv79
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: PTwAyhtANCM0XtRs5IOM7SnNe7rX_X6s
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX98EUgwskEpZR
- PaCQJzRh9qG/No4i2LuKWn5P3WOI8HCZ1HBgbtp1m2vkIijqlVoM0rlz6tDdM3owoWxZDYBbztG
- +YCornyMLhaZcc6opk86vUBEt1ePCR54jN4DWEzgpLEA4nSX/rF2uQ65m1waNyO9wXMcFQKVi3Q
- V6sus04Y6/rUdt/+YzVozpZrpIm8Juub0Mf9gQNVcp9vNIuty1qlk7R6JTZO+6eTuKlH0OgrDh3
- AILK8LcSV4J2KJuAKsF/XCH6jXgA5hGjedLbZVo4EdSdc6VovhzQE0ODf+uHP+h1pdVI/ImhEeZ
- gTVEuyCZlhqH+/u6TWoJ9f7rPAkPcjXWXw9IoyFui/TUtc9olbOGV54ru1tNI7d2K4vUyQPeJOy
- fOjU4VTk8kRxse7FQS+KCItrcdyXFXzmR7Y2cuZ65lFw8t5VoiX5XQAaYJ9e38sqUHmuPX2s
-X-Authority-Analysis: v=2.4 cv=H8Pbw/Yi c=1 sm=1 tr=0 ts=682b56ab cx=c_pps
+X-Authority-Analysis: v=2.4 cv=OfqYDgTY c=1 sm=1 tr=0 ts=682b56ad cx=c_pps
  a=AKZTfHrQPB8q3CcvmcIuDA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=mpK4J0can4W2gMZkP7IA:9
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=H1s5W502GRu5WLOynKcA:9
  a=QEXdDO2ut3YA:10 a=pF_qn-MSjDawc0seGVz6:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: PTwAyhtANCM0XtRs5IOM7SnNe7rX_X6s
+X-Proofpoint-ORIG-GUID: ekR5evN-G_1rhagqY7KvYgKcoIJQdEVN
+X-Proofpoint-GUID: ekR5evN-G_1rhagqY7KvYgKcoIJQdEVN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX6QAd5hpKnUrI
+ 178QqVSs73kkFoo+ZQ3tLKF6WojO82AMzb8wyPFnQlfjvhnSvF7+8woqnd2tbpUOR/S6xmcWO3p
+ oQDgpRmK0qpEKXJeP3r2YktSjzbs+gawrhDk+Ca61A8wdxRpkPWzqerMZtAcldnfXFbJR+Mg4LY
+ w3wmRIXwQmm8SbTe0h6r4olIyP+lPUtxEziLKd0IT1zwF5mEz4zQhoj3Qo3mr30KrUHKUGRs2rR
+ J2KR7omI7BrwCHXcNBfc7BzOpxgY/H18qO440juWC4FeDDG2v1Q3tyKogGDZMgJ4ZBJYreyyyrJ
+ k7chKfvZURx63ctEp8D85I6HuX21dgMicgbtMnyjrO5dUvTGQFp8NMogA8zcZVs8bkmakiWtQuY
+ 0PI5H05knH/rcrl/+S3mYjC8herw09WYVn2pJrOmDgksA2/JHgMexSvmtJ2llZWShAKrkQVa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
- impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
  definitions=main-2505190150
 
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 Continue migration to the MDSS-revision based checks and replace
-DPU_MDP_PERIPH_0_REMOVED feature bit with the core_major_ver >= 8 check.
+DPU_MDP_AUDIO_SELECT feature bit with the core_major_ver == 8 ||
+core_major_ver == 5 check.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h   | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           | 3 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c               | 2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c                  | 2 +-
- 10 files changed, 2 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h  | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h  | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h  | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h  | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 1 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c              | 3 ++-
+ 7 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
-index 37c88b393c12d8a04395b6e5dffb67211d2db9cd..ae66c338250664f9306a7d431cfa18ca07a916a5 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h
-@@ -21,7 +21,6 @@ static const struct dpu_caps sm8650_dpu_caps = {
- static const struct dpu_mdp_cfg sm8650_mdp = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
+index 3e66feb3e18dcc1d9ed5403a42989d97f84a8edc..72a7257b4d7ba5bfe89ec76bac19550e023a2b50 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
+@@ -23,7 +23,6 @@ static const struct dpu_caps sdm845_dpu_caps = {
+ static const struct dpu_mdp_cfg sdm845_mdp = {
  	.name = "top_0",
- 	.base = 0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_REG_DMA] = { .reg_off = 0x2bc, .bit_off = 20 },
- 	},
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-index 785ca2b2e60f073b0a2db0c0c4ed3b2722de033c..85778071bc1347008dbe4522aeb9ca4fd21aa097 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-@@ -21,7 +21,6 @@ static const struct dpu_caps sc8280xp_dpu_caps = {
- static const struct dpu_mdp_cfg sc8280xp_mdp = {
- 	.name = "top_0",
- 	.base = 0x0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
+ 	.base = 0x0, .len = 0x45c,
+-	.features = BIT(DPU_MDP_AUDIO_SELECT),
  	.clk_ctrls = {
  		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
  		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
-index 1401a84e0da5754fd2a3661d1421bb9b998271ca..f9676f804f9132296467bc751e11036696afa942 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h
-@@ -21,7 +21,6 @@ static const struct dpu_caps sm8450_dpu_caps = {
- static const struct dpu_mdp_cfg sm8450_mdp = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
+index 3a60432a758a942eb1541f143018bd466b2bdf20..ce169a610e195cbb6f0fee1362bcaaf05df777cb 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
+@@ -11,7 +11,6 @@
+ static const struct dpu_mdp_cfg sdm670_mdp = {
  	.name = "top_0",
- 	.base = 0x0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
+ 	.base = 0x0, .len = 0x45c,
+-	.features = BIT(DPU_MDP_AUDIO_SELECT),
  	.clk_ctrls = {
  		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
  		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
-index fbbdce36f0ad99d0b1d32d90627ff5b7f3fc2fc9..7462cfc4cf8de4a10326c83d3341dbee76e437e8 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h
-@@ -20,7 +20,6 @@ static const struct dpu_caps sa8775p_dpu_caps = {
- static const struct dpu_mdp_cfg sa8775p_mdp = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+index e07c2cc4188bb12e2253068ca8666ce9364c69c1..23a3a458dd5c260399a42e5f4d4361b3c4e82c4f 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+@@ -23,7 +23,6 @@ static const struct dpu_caps sm8150_dpu_caps = {
+ static const struct dpu_mdp_cfg sm8150_mdp = {
  	.name = "top_0",
- 	.base = 0x0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
+ 	.base = 0x0, .len = 0x45c,
+-	.features = BIT(DPU_MDP_AUDIO_SELECT),
  	.clk_ctrls = {
  		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
  		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-index cc4413432cfdc636e38a56011d39f18d7e94c23a..695ae7581a88b36fa1f28aa3cd0c9166090e940c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-@@ -21,7 +21,6 @@ static const struct dpu_caps sm8550_dpu_caps = {
- static const struct dpu_mdp_cfg sm8550_mdp = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+index b350dba28caed77e542d6a41ceac191a93e165a7..75f8f69123a4a6afe8234a9de21ce68b23c11605 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+@@ -23,7 +23,6 @@ static const struct dpu_caps sc8180x_dpu_caps = {
+ static const struct dpu_mdp_cfg sc8180x_mdp = {
  	.name = "top_0",
- 	.base = 0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
+ 	.base = 0x0, .len = 0x45c,
+-	.features = BIT(DPU_MDP_AUDIO_SELECT),
  	.clk_ctrls = {
- 		[DPU_CLK_CTRL_REG_DMA] = { .reg_off = 0x2bc, .bit_off = 20 },
- 	},
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
-index 32f88533154584dc98a515b1ddef27ab2005fecd..9a25113df5aec527baa514aaa61f2b47c2443d27 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
-@@ -21,7 +21,6 @@ static const struct dpu_caps sar2130p_dpu_caps = {
- static const struct dpu_mdp_cfg sar2130p_mdp = {
+ 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+ 		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+index 27c71a8a1f31921e5e1f4b6b15e0efc25fb63537..6b895eca2fac53505f7a1d857d30bb8a5d23d4c8 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+@@ -23,7 +23,6 @@ static const struct dpu_caps sm7150_dpu_caps = {
+ static const struct dpu_mdp_cfg sm7150_mdp = {
  	.name = "top_0",
- 	.base = 0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
+ 	.base = 0x0, .len = 0x45c,
+-	.features = BIT(DPU_MDP_AUDIO_SELECT),
  	.clk_ctrls = {
- 		[DPU_CLK_CTRL_REG_DMA] = { .reg_off = 0x2bc, .bit_off = 20 },
- 	},
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
-index e053324d76a2e5020e6a7477ddadc9f7d94fe57e..54815c613f087454aa7b4befc84462265d8dfc23 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
-@@ -20,7 +20,6 @@ static const struct dpu_caps x1e80100_dpu_caps = {
- static const struct dpu_mdp_cfg x1e80100_mdp = {
- 	.name = "top_0",
- 	.base = 0, .len = 0x494,
--	.features = BIT(DPU_MDP_PERIPH_0_REMOVED),
- 	.clk_ctrls = {
- 		[DPU_CLK_CTRL_REG_DMA] = { .reg_off = 0x2bc, .bit_off = 20 },
- 	},
+ 		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+ 		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 92dfbb5e7f916bf32afeffdb6b843f1da3f3fd44..d3a7f46488a21e81a24a9af5071a9a7f5f48cdac 100644
+index d3a7f46488a21e81a24a9af5071a9a7f5f48cdac..9ba9e273f81ab1966db1865b4ce28f8c18f750b8 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -32,8 +32,6 @@
-  * MDP TOP BLOCK features
-  * @DPU_MDP_PANIC_PER_PIPE Panic configuration needs to be done per pipe
-  * @DPU_MDP_10BIT_SUPPORT, Chipset supports 10 bit pixel formats
-- * @DPU_MDP_PERIPH_0_REMOVED Indicates that access to periph top0 block results
-- *			   in a failure
-  * @DPU_MDP_MAX            Maximum value
- 
-  */
-@@ -41,7 +39,6 @@ enum {
+@@ -38,7 +38,6 @@
+ enum {
  	DPU_MDP_PANIC_PER_PIPE = 0x1,
  	DPU_MDP_10BIT_SUPPORT,
- 	DPU_MDP_AUDIO_SELECT,
--	DPU_MDP_PERIPH_0_REMOVED,
+-	DPU_MDP_AUDIO_SELECT,
  	DPU_MDP_MAX
  };
  
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-index cebe7ce7b258fc178a687770906f7c4c20aa0d4c..c49a67da86b0d46d12c32466981be7f00519974c 100644
+index c49a67da86b0d46d12c32466981be7f00519974c..5c811f0142d5e2a012d7e9b3a918818f22ec11cf 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-@@ -272,7 +272,7 @@ static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
+@@ -280,7 +280,8 @@ static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
+ 	if (mdss_rev->core_major_ver >= 5)
+ 		ops->dp_phy_intf_sel = dpu_hw_dp_phy_intf_sel;
  
- 	if (mdss_rev->core_major_ver < 5)
- 		ops->setup_vsync_source = dpu_hw_setup_vsync_sel;
--	else if (!(cap & BIT(DPU_MDP_PERIPH_0_REMOVED)))
-+	else if (mdss_rev->core_major_ver < 8)
- 		ops->setup_vsync_source = dpu_hw_setup_wd_timer;
+-	if (cap & BIT(DPU_MDP_AUDIO_SELECT))
++	if (mdss_rev->core_major_ver == 4 ||
++	    mdss_rev->core_major_ver == 5)
+ 		ops->intf_audio_select = dpu_hw_intf_audio_select;
+ }
  
- 	ops->get_safe_status = dpu_hw_get_safe_status;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 1fd82b6747e9058ce11dc2620729921492d5ebdd..80ffd46cbfe69fc90afcdc1a144fc5de7bb6af42 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1022,7 +1022,7 @@ static void dpu_kms_mdp_snapshot(struct msm_disp_state *disp_state, struct msm_k
- 				dpu_kms->mmio + cat->wb[i].base, "%s",
- 				cat->wb[i].name);
- 
--	if (cat->mdp[0].features & BIT(DPU_MDP_PERIPH_0_REMOVED)) {
-+	if (dpu_kms->catalog->mdss_ver->core_major_ver >= 8) {
- 		msm_disp_snapshot_add_block(disp_state, MDP_PERIPH_TOP0,
- 				dpu_kms->mmio + cat->mdp[0].base, "top");
- 		msm_disp_snapshot_add_block(disp_state, cat->mdp[0].len - MDP_PERIPH_TOP0_END,
 
 -- 
 2.39.5
