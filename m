@@ -1,177 +1,157 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0800267386;
-	Mon, 19 May 2025 14:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5822C283158
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 14:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747664545; cv=none; b=g4iJlGvw4tWRjhN9jR7KGtLRpsh1Dsp6viSp+rF3y49b7PF7Z2umX7FMix0TzQtwqtILCPwh65MWI117Y8BQCeyVJqEbWKvVQgTWL5yRfhnbKu3y/DC1YcolGrFNOR5QJVIQeIo6GET0H2D2OX4qYI8p7CQPG1HOZEdQXrZnFkk=
+	t=1747664569; cv=none; b=mu2t0tUxa3KlZiAQtZm2irQv025GPpZrn0g/DB2nXTohuIsILq9eWrXsAmbCw1JcxrwmppfTq0L9qsTVW+MWNlHHmqoQIdTOoUMiVm6uS0q6STMc+Bb2C3YeIFD10qKa7gQxwflF9iW6Vo++YQRDAc8mPM9askB562oNhINM5+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747664545; c=relaxed/simple;
-	bh=WGvI9Sys8UB/5p7lpWZaoHuxDNCB9H661muuNo3jXoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pQkN6ylax88/SIBxP0K/OXqYIWdooTev5EVktbIsVGq7rx7W0mWeEjB/zgRO+ahljXUdtg46b1eXsKuVgwbEwVzB/GRuBySzhwWcis+52+JYZ66cU5EI1bsvuESRWl6eTMQB6sBxgYjX6gcwC4a0sQBdwvWhRM2LXgI53r68TJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FB3ziFub; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747664569; c=relaxed/simple;
+	bh=gGOOJfhDZ5SegqCN1QGtjb+q4IT91xtxsNde8Cw0vkQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jY5esgGXcH3jIUHOHiHaA2kRB+Gr6kXvfpvhD2EAmzprfY+6fc9uKucOZtWkBH0HqzE3zvRWw0bTpVCnQIYYd0S1I6LbFyWzbs2VR6Y2RGCc4eSvV6ZcBeu0q1PzaJaYM6mzuXcrn5iHnbldZARSeJZDdF6QvPajvTgU+rozcE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NogNvhQR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FB3ziFub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=Z2COa8w3JR4EYXhLeTUvFO6Inm7EKTyZBbRTLmDni7E=;
-	b=FB3ziFubphHMYU5LQ7efemNN3Zhxa04GyYK48muKgSmw0L5i954sxw3nM+7na6
-	Cqf+g1zHtLKic9/xHuI8HbzgejhoS1hGXipK9SdWnjdUGJAA4iJQwkDPM1FvSGNm
-	QVerCOcJLGqQZOiju88OsMr9IiPrmIZyBVzQMcRpS34JM=
-Received: from [192.168.71.93] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgCXq7VZPitoHf_MAw--.1861S2;
-	Mon, 19 May 2025 22:21:13 +0800 (CST)
-Message-ID: <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
-Date: Mon, 19 May 2025 22:21:12 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NogNvhQR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747664566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gGOOJfhDZ5SegqCN1QGtjb+q4IT91xtxsNde8Cw0vkQ=;
+	b=NogNvhQRymDymT1lpvG8ffXU58OXvr+OYixRAmDZs2ydYb9sdyTdzQtW8dqmES1eg/xg9u
+	E8Dtnmat18X/TI+YA+VK0lz9ORtZ4FJNnex6H/WRpprraJXdtsHlprQVvTM+fed1xheGoG
+	Z3iwAaMFgkkNuR3ebo6Bs326BXXnmM4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-672-bly8XJqJPwuwH0krk39WSA-1; Mon, 19 May 2025 10:22:44 -0400
+X-MC-Unique: bly8XJqJPwuwH0krk39WSA-1
+X-Mimecast-MFC-AGG-ID: bly8XJqJPwuwH0krk39WSA_1747664563
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so36041835e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:22:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747664563; x=1748269363;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gGOOJfhDZ5SegqCN1QGtjb+q4IT91xtxsNde8Cw0vkQ=;
+        b=wsVEQBim0tCLkApXFBuGtlKHIxEspYJo/OrGI/8jswVkA7bu3LlDKg0jfPmvTNaFbj
+         NPiGtJM+nq4rvBY7WgTXJ9MLn/M8Mjh8VL1o8JO7sOyjW8Gmeftr9WQd6bxH+DOW7cgI
+         UtK1yh1h/83OBMppA3fiSyTBbkRAPk7sf/VM6wPfdPqAzbH3GBkJVBNukwIezBGOD8fO
+         Fx3e8R/Nnrm0RfE+sKpNk3bN+a2Ir1A232ZUBId5mkoj/68SiCeyH91+gL32K7ZGWW7X
+         nPohoKmmDgmxQmA3i+8IOzE60Sb/RV21fC46BlsB5pPY4KRJAxyLIEXwDhacRFrR6qpZ
+         sQig==
+X-Forwarded-Encrypted: i=1; AJvYcCXVCwq/KIVkAAxl+PJjjGNTJiv8DDGxGYTXD6JmB2H/IcGbzx/aUaYniNe4bd82jwQJTaKbQTcLEU7gt3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTxwUrGVk3VBOrmJsTZMTXw+F10bbj7z/OfCaCPsalGKuO+KDe
+	1kVqlTuyc0oZI+dEPisO/65kestSjl62+PlXUK3Aa8OXy3cLpbezIIBU/Q3bk0j1M9j2jG3O66a
+	iW9KaktYU+HE17kvnVk7xeLr8G41Za97jK9jp5q9tMQ1qse7ttXnJlvt1kiCjRFEcpg==
+X-Gm-Gg: ASbGnct0s6FID/PxKLS+TTRAsIDGaxpXtRU2huUiOk9dTB8EWnkzQzlL+iUfm6GeUWY
+	0D0JjXMOfJH+Q3uzlhw9o2wOQBIV4CEoYsUIriHdOvokK90fP92MjoglAi5x470n+CN7yWO74In
+	IMPBXuWf72PGWfV/nPN4n79apQ3SXEFdYx7PtF2zJZgyKEFp8j99x5ZEShGLFVKJUbVKLR4un2g
+	V76x3G6sJr2KtVlPHKlxFdiTN1Z3WXcRe2uLhs/X4PoAGGnv7Hi5MN3eiBQNdTZvGpMsyLEm3C0
+	uncaSMrEP45mF4OkVvbUQOKGeZLILUN6dU6zswMIejbhAZEJtgyNFTBqxExCQaGTW6sdP6GU
+X-Received: by 2002:a05:6000:2907:b0:3a3:64b7:620b with SMTP id ffacd0b85a97d-3a364b7643cmr8161672f8f.20.1747664563249;
+        Mon, 19 May 2025 07:22:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhm3Ek1ek9W5ZPiXPoMxMaNS8+WO85TNPGle0guQyL6BxmyaWcHjQ9mb2dbC9GE6/77M42Eg==
+X-Received: by 2002:a05:6000:2907:b0:3a3:64b7:620b with SMTP id ffacd0b85a97d-3a364b7643cmr8161648f8f.20.1747664562806;
+        Mon, 19 May 2025 07:22:42 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a7d6sm13030988f8f.30.2025.05.19.07.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:22:42 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Florian Bezdeka
+ <florian.bezdeka@siemens.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Clark
+ Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org, Joe Damato
+ <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>, Jens Axboe
+ <axboe@kernel.dk>, Frederic Weisbecker <frederic@kernel.org>, Ben Segall
+ <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Peter
+ Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo
+ Molnar <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Xi Wang <xii@google.com>, Juri Lelli <juri.lelli@redhat.com>, Dietmar
+ Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Chuyi Zhou
+ <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>, Andreas
+ Ziegler <ziegler.andreas@siemens.com>
+Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
+In-Reply-To: <20250519094543.m4bNJP6X@linutronix.de>
+References: <20250519074016.3337326-1-namcao@linutronix.de>
+ <ae4985d3b157e31c667f532906cb6ff55633141b.camel@siemens.com>
+ <20250519094543.m4bNJP6X@linutronix.de>
+Date: Mon, 19 May 2025 16:22:40 +0200
+Message-ID: <xhsmhbjroade7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
- manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
-Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20250516165518.125495-1-18255117159@163.com>
- <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgCXq7VZPitoHf_MAw--.1861S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxurW3Ww1DXF1DXw1DuFWUCFg_yoWrKrWUpa
-	yrCan0krZ5GFyIk3Z2k3WxWryYyas3t345GrykG342qF1aqFyYqrWSvFWY9F9IgrZYga15
-	ZrW0va4UWF1DZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U15l8UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgZSo2grO5lKPAAAsa
+Content-Type: text/plain
 
+On 19/05/25 11:45, Nam Cao wrote:
+> On Mon, May 19, 2025 at 11:25:51AM +0200, Florian Bezdeka wrote:
+>> Hi all,
+>>
+>> sorry for top-posting, but I think it makes sense in this case as I'm
+>> trying to merge different workstreams, likely working on the same
+>> problem showing up in different colors.
+>>
+>> Main goal is to make everybody aware of the other stream / patch
+>> series.
+>>
+>> We have colleagues from Bytedance working on non-RT performance
+>> optimizations related to CONFIG_CFS_BANDWIDTH at [1].
+>>
+>> This series came to light while searching for a solution for a RT
+>> lockup, reported at [2].
+>>
+>> We heavily tested [1] during the last month on RT and can report
+>> success now. In our tests we saw read-lock holder preemption only
+>> within the epoll interface. It might be that [1] fixes more potential
+>> issues in this regard.
+>>
+>> Today [3] (= the patch I'm replying to, see below) got posted.
+>> Linutronix reworking the epoll infrastructure.
+>>
+>> I would love to learn how/if the combination, basically [1] and [3] fit
+>> together.
+>
+> [1] fixes stall problem involving rw semaphore which epoll uses, but it
+> doesn't fix the possible priority inversion with epoll
+>
+> [3] fixes priority inversion problem with epoll by stop using rw semaphore,
+> but it doesn't do anything about rw semaphore
+>
+> So I propose we keep both.
+>
 
+FWIW I'm thinking the same.
 
-On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
-> 
-> On 5/16/25 9:55 AM, Hans Zhang wrote:
->> The following series introduces a new kernel command-line option 
->> aer_panic
->> to enhance error handling for PCIe Advanced Error Reporting (AER) in
->> mission-critical environments. This feature ensures deterministic recover
->> from fatal PCIe errors by triggering a controlled kernel panic when 
->> device
->> recovery fails, avoiding indefinite system hangs.
-> 
-> Why would a device recovery failure lead to a system hang? Worst case
-> that device may not be accessible, right?  Any real use case?
-> 
+[1] fixes the CFS throttling circular dependency on RT but also improves
+tail latency when CFS throttling is in use (so not just for RT).
+[3] is specific to epoll but gets rid of the rwsem which is a win overall.
 
+I need to go get my reviewing hat back on and stare at both...
 
-Dear Sathyanarayanan,
-
-Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
-SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
-design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers 
-have designed it this way.)  For example, when many mobile phone SoCs of 
-Qualcomm handle AER interrupts and there is a link down, that is, a 
-fatal problem occurs in the current PCIe physical link, the system 
-cannot recover.  At this point, a system restart is needed to solve the 
-problem.
-
-And our company design of SOC: http://radxa.com/products/orion/o6/, it 
-has 5 road PCIe port.
-There is also the same problem.  If there is a problem with one of the 
-PCIe ports, it will cause the entire system to hang.  So I hope linux OS 
-can offer an option that enables SOC manufacturers to choose to restart 
-the system in case of fatal hardware errors occurring in PCIe.
-
-There are also products such as mobile phones and tablets.  We don't 
-want to wait until the battery is completely used up before restarting them.
-
-For the specific code of Qualcomm, please refer to the email I sent.
-
-Best regards,
-Hans
-
+> Best regards,
+> Nam
+>
+>> My understanding right now is, that [1] fixes a CFS issue, throttling
+>> while holding a lock is not ideal on !RT - but might cause a critical
+>> lockup on RT - while [3] is addressing a similar (RT) problem in epoll.
 >>
->> Problem Statement
->> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
->> traditional error recovery mechanisms may leave the system unresponsive
->> indefinitely. This is unacceptable for high-availability environment
->> requiring prompt recovery via reboot.
+>> Best regards,
+>> Florian
 >>
->> Solution
->> The aer_panic option forces a kernel panic on unrecoverable AER errors.
->> This bypasses prolonged recovery attempts and ensures immediate reboot.
->>
->> Patch Summary:
->> Documentation Update: Adds aer_panic to kernel-parameters.txt, explaining
->> its purpose and usage.
->>
->> Command-Line Handling: Implements pci=aer_panic parsing and state
->> management in PCI core.
->>
->> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
->> mode is active.
->>
->> Panic Trigger: Modifies recovery logic to panic the system when recovery
->> fails and aer_panic is enabled.
->>
->> Impact
->> Controlled Recovery: Reduces downtime by replacing hangs with immediate
->> reboots.
->>
->> Optional: Enabled via pci=aer_panic; no default behavior change.
->>
->> Dependency: Requires CONFIG_PCIEAER.
->>
->> For example, in mobile phones and tablets, when there is a problem with
->> the PCIe link and it cannot be restored, it is expected to provide an
->> alternative method to make the system panic without waiting for the
->> battery power to be completely exhausted before restarting the system.
->>
->> ---
->> For example, the sm8250 and sm8350 of qcom will panic and restart the
->> system when they are linked down.
->>
->> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
->>
->> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
->>
->>
->> Since the design schemes of each SOC manufacturer are different, the AXI
->> and other buses connected by PCIe do not have a design to prevent 
->> hanging.
->> Once a FATAL error occurs in the PCIe link and cannot be restored, the
->> system needs to be restarted.
->>
->>
->> Dear Mani,
->>
->> I wonder if you know how other SoCs of qcom handle FATAL errors that 
->> occur
->> in PCIe link.
->> ---
->>
->> Hans Zhang (4):
->>    pci: implement "pci=aer_panic"
->>    PCI/AER: Introduce aer_panic kernel command-line option
->>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
->>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
->>
->>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
->>   drivers/pci/pci.c                              |  2 ++
->>   drivers/pci/pci.h                              |  4 ++++
->>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
->>   drivers/pci/pcie/err.c                         |  8 ++++++--
->>   5 files changed, 37 insertions(+), 2 deletions(-)
->>
->>
->> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
->> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
->> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
-> 
+>> [1] https://lore.kernel.org/all/20250409120746.635476-1-ziqianlu@bytedance.com/
+>> [2] https://lore.kernel.org/linux-rt-users/xhsmhttqvnall.mognet@vschneid.remote.csb/
+>> [3] https://lore.kernel.org/linux-rt-users/20250519074016.3337326-1-namcao@linutronix.de/T/#u
 
