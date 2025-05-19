@@ -1,182 +1,161 @@
-Received: from sonic312-20.consmr.mail.sg3.yahoo.com (sonic312-20.consmr.mail.sg3.yahoo.com [106.10.244.210])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D889726AEC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.244.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B982206AA
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747697444; cv=none; b=LNSI7MqX+YecRblwyBBm24SPSd6CcHzZ0V08HBRtVr35s0BPy4j4gVIjg7cyjmcWkKl6JnUpAy4mY9fKn+mkAHnUDeFCoRCligg6Wnve5n/7JNn/rg7hGqv39b0M5AxZqXcChk01HqbmV8ZFnbAOe2YguCQ6aEBTHUSlOo9ijKY=
+	t=1747697527; cv=none; b=a1gw7GDv0zuBHCv7TTEZ2MDBjvC4q3eHDeaSwF0Ie3Qs0nVC7WVLY+pBpdv0U1jOp28kqRmcwxCaHXEk4bka3R9RDpK4E6Z2VESpEzHwpMCCTHLK4vKQhQweZbt8bQGYJbyEB+qD2qGiJMnMrII+kf5Z/lms7AegLAO6hZa0s0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747697444; c=relaxed/simple;
-	bh=VlAtTkui2OE/Rj3vmwWMNBwi/G2Hq8iTTDWWq8Dwb2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=b5EuCKPvBlOjSSjczeN7ctQFrxD8sdCy+rwm+mmqzCUtyokQJxPNxDf8DIsvpDPPJkAL41KyCbQldlWwbiONSs9gxOsUIDBPfeHg5FF3d2rAuGM+R02GLdq7vXb07HXkfHO2yfcBJ5dNXG6t8w3bDMTnemDFQJHyxdO6KqMakk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=KKSDb3uM; arc=none smtp.client-ip=106.10.244.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747697527; c=relaxed/simple;
+	bh=MuZecVDV8WFQM7jhq4WavtkULWOpjeUqMx1UI6H0F2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcNT1FW7b/V/nqekSF7RtaIHETMalYXc2loTl0yy4BKOFdmNCqF87nG97F2mcsmQCDvk3v7vFLeHpN9YPlpZKKm9VnI9794JQCLSVMwMgevvIaHCZM8ZtJMVSolpHu7I07zk4wyqwoqlx94X3IS7qVB1sopanPiAPkoOEYQBuG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QrnPNhRF; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="KKSDb3uM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747697440; bh=ooiFODwM/51nuWtn5tsBmkyc2AA1PeL5txGvUP6Gu3o=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=KKSDb3uMhTZTH+s4BN5gNxJlMH3FGsll8PgNWItL3ACoUW6F9aqIH3ICsBpH2Nwh2btu9pfn19nCgRviKLsaLvAEGeCohYekD8Y0AaZgJjETBQHSPmwLEt65dd7mI54bBnpZvlzbbB9czPxhWOb08YA7QMDmxf196ZmIezhwpxuvJhhFPujqLcyvtcw0zaIxSQVbf9ZkXB6xQY5KZExZCuWw5dsCtAAL2JCZ9hU6w4bzlEPtUGuYiWuvuxCkNOWvm4Wy8shc/sth15Uc8RodOFa8lr7DGebpXVssTunuK2qCleTkesMu5uuh10gbLMYjlHBT01dt7IUNwJK0HIhvCA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747697440; bh=G08dH/OBmA8rnLia7XfllFov07lC1RTspB6Xhvi0kct=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=WBC6LUHR7hOzPp+Rpr0l1J9IkkMOi1JGnLQZONnX+dvbDUfzc76vd2pKzAtDEVbvIxaCX5mcKmxyuk8KtquwfSWNMF8hmf2ehM73C26jmLdrUZM1E27tAFd7LW4QT5kTAV3cCLprIVXJoNlbYBIZ4lJqHu6h4SaN6T+8Mz5TN/rvB1tJnPoM601/ehHr/6ECDOP99u85zQy+z53oSbjpt0gODzIWpFbTMrOjvTAr7JKz+FMtMNnz81Dp6qzP2k8RZgS6TSkSlMS9w8fz5CRRWdSiRV2bI1GgZoZoTqLXSbUHSnGqb4GpEFo0wIr91HOUQ7j3xlysNquI6rmJ2x1vhQ==
-X-YMail-OSG: Qn7anEwVM1kweaSAtR_geLqGbJFoK6mc6.PXhM7qPHeqJF9kN_uV6rGe0LsaSMj
- JzBEHT.wMdOBmgLcR0gttuGYXFLeObkGT2A8sDYnkd9mHmoL81VofUTluMVr7Y_JW6UgxEfN3xdt
- 6Syj2Sp77S1opROe9T.P_RxjcmbUOxptFxM9rI1AwFR87KVTh1AQmJ7ZRsqaxuHdOl9X6FuENMlW
- XOMa1WfU0khdexx6Y37ESB8lW0f.yP9GS3OJ4C5TQUPfzHxQnCxvORPoqG.3xf5Dgy15HBT6aGgG
- 3.dEJoCK2KtY.7M5M8bjGApYwJyDPxOVQJlK23BcBNBrrxH01KG1J_a_OZkljc7UUHbXGNhb.2xj
- a0BeJtkEZJ8NuardCp7NYzStF9OFor7uNTVFrUJBRTBaF0bf1VdFALIvtyPPUfgI8WOd8Iv3y3HJ
- 8dr0QmhUuuJDsZh2frcD6OfDldfcpX243nAsn4axVfihLDwo.9hp5IQAJJY6zfvyQ9hv.eri0vOf
- 2MYBIGj6l.N7NGTybYBIvnOUegN.VIpCdaMLVxbR4bBwsXFEOfdWGRmjt94Yr8Yk8CdnNjZRa2VC
- uZNphIOVFRsEd.bDOV52H4CuTSBUZ_BNpDfZ5SfSIzqKPROyLCPzvHtnaZFnCF4WBpUWv41fOD3h
- AjtMQaOorWpxURA.wFCF96XPCOKeQhv2vvUsHD8NhFjlvJ_7uK4SlNub3M.t1llhdRYQq00A_.Ow
- UwGAyJoHkDjJxZ1HyBtbPQbltXZYtnnfpO8zNSP8wtvt963vw.pjEurtK.wzReOqQPShL3.ZTPWK
- L8ycPS59ji2QQLWP5Qm5I8CGuTopRMR42nH4It_dtq1LLFfJ5EiQCGBtG5HK4ayhqpkSkg1ILqca
- yAzfKJsaHrPqJqE0cB_.b__YJBTNIIZ.VQxLGMiQ10pnlM4Sdg2O0xipvaNxPdy0jqFJ9z9vf9mY
- W7NWgUjBGo7Nzp74lwFa_UmSr7wuUac.xHy2hCWgcxUnqR1pK5YG_lS68QLvU4PJS4.g4BY6kjNd
- CUE577Eqvt169gMaVrgxxRAi4cUCqKAF0k7DWzmfoeiK6hWeTBDtaDTE_hQJT27ysV5hbl8q.3Nf
- si.t2yZm_dcHAKLTEdYSEIicMpUr1mWztsM02eb2hwVXog34I1js8FAJAvY3Ojo8ddoMZ_gvtYtJ
- ezLXcSU1ia8eGe5hdzGHpIEkQN21uUDxZZeI2ZBlk2ZuEznwMcYH6L5bdqTK5Q0h3NNFsdA3ITEk
- N07nGbEeDzrCwTHKMnm4Q9ZSt92katE_JEEn1IITsi1zsxL4.ifLx9phap_OH1FBy3Fz.vyz7_vB
- FF9OeR9yI6dSYI5kFZOPWZbRMZHB3evgqHYQswxSnAGEnFiiqP4GtXKK1MmH2fLh_48.KwXWNmhB
- OmJdNNgm9Xbc6pGCEUKi9cBwG47_YRARPEZHeXutmfVn3tSuSZb5pxhJxGyHl1RN.puOX2zRVoBg
- zwwEdtdh6P56xL_52NB8AgNPYxepjBklNyrZi.fUIWFeb3cVOBPcJ8.2dY0fw1hEWxhh389e1hkc
- .N_s6Uo5LcVxedLvbkiru_kvb3679IWHLZ9RRiyjudQUXxCNAPKaLywB664AVkKsmxpYToUc5vEf
- DOvCIgHMACBRsiiF2b0gZrH3dLsJ6zX8gilJ_DEcjMWjWwtnDiFlwkJ1bUOZUiGTOAF03v5kxt6y
- jQ6UPoH8x4e0Rw_H.Rlhu6LuZEh7NTRL9kcuyOOinPpH4gKKQInan6OkeyzKssRNPL6MlNELtmMF
- jvFXUKoHUsv21K7kLvATMLSP.BcLl_rJh4vAn2LvzXZ00aIzOVg9u_heArLhH4CnyCP4az.tfyya
- Kkq1NRJVex2vla3YMn3oEJUdEXNIO8gc2TpJH3DsW2y3xz0rW8qajhdjiYvsFy_LiBJh0M5P_ix2
- xFyFmUUghxaND0.CqZrttkar0fuOzSG8p4Q81SPTPrw.4dTSGtH9NtzIKO5OhNrqzcKyVscyUEt9
- Bzu6e81h7dIoEnTr.tpjB3wcjAiEDUJkGvCVZXr95..0rGGmU_2SkNsuJiFxTERFecF_qhlCZE.T
- hbGHp29asvZYdyHlyqlVt5uaLzAASkFroFqJH8uir.7WXpgwii1fH1ckYpDVuXRY0sg1USzWVdif
- 1j0P0GnIN1wWQJitrfpXmxEMgDeY4gAkyNNv.VD2nMH9MMOmNN4iGtmQ.1BaCtd7gLwSUc6q6XBy
- 53si.hv8tAiaI9I7sREzZDdCmnF.vxkfFJ.RADhXsQfj6qU3.GM44pUgZdAPaS63MS_CPKSYb_CP
- OC_58HePXy2ofH3Z5LXRgP7zFAgHDapp7nYivzgDe4rTPaj4A
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: 083b1a3e-b95f-4ca0-acaf-a61f2683041d
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.sg3.yahoo.com with HTTP; Mon, 19 May 2025 23:30:40 +0000
-Received: by hermes--production-gq1-74d64bb7d7-r5xbr (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 2c9ebfc0963bf7e403e75da8c471023a;
-          Mon, 19 May 2025 23:20:29 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: cw00.choi@samsung.com,
-	krzk@kernel.org,
-	lee@kernel.org
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: maxim: Correct Samsung "Electronics" spelling in copyright headers
-Date: Mon, 19 May 2025 16:20:23 -0700
-Message-ID: <20250519232025.152769-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QrnPNhRF"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742c3d06de3so2470018b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747697525; x=1748302325; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QOyUGS8X8xHimjiVikyyoBlw5XuU3QFPDBQZu8PO5T8=;
+        b=QrnPNhRF2voJgX9mgJ3TxWdTCIXOY8ju90E8BZzIhPDNYpBtUY3ngn1rmYvM3GSGOC
+         rqA4oxWY3Bm8QEoWSROOtPPPMF0mRVcHYw8qM4aQPQ7foUKK/mfUmzm7OEJ8+wJW4hqA
+         HkWGsVn4ju/R7yBnk/jpjfZvT6Wv6tWWMjFrim+cYwKOcZl+w09/Pn9G46+o/XV9XaHt
+         LD9gsnz6kgAd8eY0f1MDo0lje/Itj5HZpmmPCZmiICitILHEwSLlf+mZd38s2KJxA4X4
+         SLUglUspZuC30STtgT0AK562Awlq+axbaZrZxF7jYtaO31xO8FSzDTJb/5n1oDH2AMNr
+         lCnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747697525; x=1748302325;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOyUGS8X8xHimjiVikyyoBlw5XuU3QFPDBQZu8PO5T8=;
+        b=vHKauMpzlpsIeNm37nKMJbMldKw3ZvMZc/04isHZMqfJw0afWnRoi9DXzdDp2GhTbc
+         w78ozsiLKbfbcvCW1cLwNR5zwHFHnkYLKngQ12cFJ5/Y/9DbR9kw1gvJPYp+hiXxQ8lp
+         tzs+sIzlDJn13Dc/HrCLL7Baios91LKs4D2qgtqI8KIsyKrJdbjvsWIO7yiWrFoPeSAJ
+         HHDc/8d+SZoy7VgKkmubC7+zsNpu90w0fK+nafTa3beLmGWdhZeetrhzIjKgoV459BkB
+         iBYaHjbC5PRxAsJYZ9GQ68MxkKqNlF/hlDVQxuIBEt3SMBN4zod2fVEQCWQJTCQzZclm
+         qtOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoHCVHqcobUi71jrO2nS738rhudnQ+Utgh7ZRcFMy4UqIqs/r8lsKdAbb7SrCgf8c+6Ju1So1B8SwyipY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcVzm2j0yE1pHL4IoAdtzzWWJk18gL+CyVXwV4SQAX0C0R/RXo
+	ZEgTtErgH/VSKdPoai9xbEfTo2VEdILXMFVvtp2ePgvecHj6FBB5EJSOpBSeoQ+rs/U=
+X-Gm-Gg: ASbGncskw2jlxNLqFlFI8zzzH3nokKf43qBD8p4qRyj2a9qO29HpaPWnARidn1FG2xy
+	29oWPqUgQHJ7YeW2C9rA+YQqVh7yuUNeily1jh/6sQNaVxayXpJSSNWatPHNie4jWChJEdCxcLP
+	HXWhwnv1LSzwG5B+ieZfPptkwSRuE0NUVA7/QhGZ6ZKH0MtxOr0ZeYBBaJjhg75WT8HfRWarVQO
+	ieiVsboFPEhDdnjWzoNveUgh/gYXvAQO+xtQjTKflr6+OvN2HE9rVQkwW8UxU7a6i54Y2cekG+B
+	Ss1Gfcp7+UTEg8/z9srUUn8bEKyZfNSb+O/QeicgBn2nn9o=
+X-Google-Smtp-Source: AGHT+IF/UpnfYd87Wg38QzExFJepdbUZBdK8n48P10QCBwcJgibQDw+FN+/Y6470diBydPdUYMEijg==
+X-Received: by 2002:a05:6a20:3d1c:b0:1ee:d418:f764 with SMTP id adf61e73a8af0-2170ce33ad3mr22022427637.38.1747697524568;
+        Mon, 19 May 2025 16:32:04 -0700 (PDT)
+Received: from ghost ([2601:647:6700:64d0:5f9c:a71e:a2da:158d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a9893sm6875885a12.72.2025.05.19.16.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 16:32:03 -0700 (PDT)
+Date: Mon, 19 May 2025 16:32:01 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCH v7 09/14] riscv: misaligned: move emulated access
+ uniformity check in a function
+Message-ID: <aCu_ce-kVQsyjrh5@ghost>
+References: <20250515082217.433227-1-cleger@rivosinc.com>
+ <20250515082217.433227-10-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-References: <20250519232025.152769-1-sumanth.gavini.ref@yahoo.com>
+In-Reply-To: <20250515082217.433227-10-cleger@rivosinc.com>
 
-Fix the misspelling of 'Electronics' in MFD driver copyright headers.
+On Thu, May 15, 2025 at 10:22:10AM +0200, Clément Léger wrote:
+> Split the code that check for the uniformity of misaligned accesses
+> performance on all cpus from check_unaligned_access_emulated_all_cpus()
+> to its own function which will be used for delegation check. No
+> functional changes intended.
+> 
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> ---
+>  arch/riscv/kernel/traps_misaligned.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+> index e551ba17f557..287ec37021c8 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -647,6 +647,18 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
+>  }
+>  #endif
+>  
+> +static bool all_cpus_unaligned_scalar_access_emulated(void)
+> +{
+> +	int cpu;
+> +
+> +	for_each_online_cpu(cpu)
+> +		if (per_cpu(misaligned_access_speed, cpu) !=
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- include/linux/mfd/max14577-private.h | 2 +-
- include/linux/mfd/max14577.h         | 2 +-
- include/linux/mfd/max77686-private.h | 2 +-
- include/linux/mfd/max77686.h         | 2 +-
- include/linux/mfd/max77693-private.h | 2 +-
- include/linux/mfd/max77693.h         | 2 +-
- include/linux/mfd/max8997.h          | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+misaligned_access_speed is only defined when
+CONFIG_RISCV_SCALAR_MISALIGNED. This function should return false when
+!CONFIG_RISCV_SCALAR_MISALIGNED and only use this logic otherwise.
 
-diff --git a/include/linux/mfd/max14577-private.h b/include/linux/mfd/max14577-private.h
-index a21374f8ad26..dd51a37fa37f 100644
---- a/include/linux/mfd/max14577-private.h
-+++ b/include/linux/mfd/max14577-private.h
-@@ -2,7 +2,7 @@
- /*
-  * max14577-private.h - Common API for the Maxim 14577/77836 internal sub chip
-  *
-- * Copyright (C) 2014 Samsung Electrnoics
-+ * Copyright (C) 2014 Samsung Electronics
-  * Chanwoo Choi <cw00.choi@samsung.com>
-  * Krzysztof Kozlowski <krzk@kernel.org>
-  */
-diff --git a/include/linux/mfd/max14577.h b/include/linux/mfd/max14577.h
-index 8b3ef891ba42..0fda5c2e745a 100644
---- a/include/linux/mfd/max14577.h
-+++ b/include/linux/mfd/max14577.h
-@@ -2,7 +2,7 @@
- /*
-  * max14577.h - Driver for the Maxim 14577/77836
-  *
-- * Copyright (C) 2014 Samsung Electrnoics
-+ * Copyright (C) 2014 Samsung Electronics
-  * Chanwoo Choi <cw00.choi@samsung.com>
-  * Krzysztof Kozlowski <krzk@kernel.org>
-  *
-diff --git a/include/linux/mfd/max77686-private.h b/include/linux/mfd/max77686-private.h
-index ea635d12a741..e6b8b4014dc0 100644
---- a/include/linux/mfd/max77686-private.h
-+++ b/include/linux/mfd/max77686-private.h
-@@ -2,7 +2,7 @@
- /*
-  * max77686-private.h - Voltage regulator driver for the Maxim 77686/802
-  *
-- *  Copyright (C) 2012 Samsung Electrnoics
-+ *  Copyright (C) 2012 Samsung Electronics
-  *  Chiwoong Byun <woong.byun@samsung.com>
-  */
- 
-diff --git a/include/linux/mfd/max77686.h b/include/linux/mfd/max77686.h
-index d0fb510875e6..7c4624acd1db 100644
---- a/include/linux/mfd/max77686.h
-+++ b/include/linux/mfd/max77686.h
-@@ -2,7 +2,7 @@
- /*
-  * max77686.h - Driver for the Maxim 77686/802
-  *
-- *  Copyright (C) 2012 Samsung Electrnoics
-+ *  Copyright (C) 2012 Samsung Electronics
-  *  Chiwoong Byun <woong.byun@samsung.com>
-  *
-  * This driver is based on max8997.h
-diff --git a/include/linux/mfd/max77693-private.h b/include/linux/mfd/max77693-private.h
-index c324d548619e..8e7c35b5ea1c 100644
---- a/include/linux/mfd/max77693-private.h
-+++ b/include/linux/mfd/max77693-private.h
-@@ -2,7 +2,7 @@
- /*
-  * max77693-private.h - Voltage regulator driver for the Maxim 77693
-  *
-- *  Copyright (C) 2012 Samsung Electrnoics
-+ *  Copyright (C) 2012 Samsung Electronics
-  *  SangYoung Son <hello.son@samsung.com>
-  *
-  * This program is not provided / owned by Maxim Integrated Products.
-diff --git a/include/linux/mfd/max77693.h b/include/linux/mfd/max77693.h
-index c67c16ba8649..8e77ebeb7cf1 100644
---- a/include/linux/mfd/max77693.h
-+++ b/include/linux/mfd/max77693.h
-@@ -2,7 +2,7 @@
- /*
-  * max77693.h - Driver for the Maxim 77693
-  *
-- *  Copyright (C) 2012 Samsung Electrnoics
-+ *  Copyright (C) 2012 Samsung Electronics
-  *  SangYoung Son <hello.son@samsung.com>
-  *
-  * This program is not provided / owned by Maxim Integrated Products.
-diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
-index 5c2cc1103437..fb36e1386069 100644
---- a/include/linux/mfd/max8997.h
-+++ b/include/linux/mfd/max8997.h
-@@ -2,7 +2,7 @@
- /*
-  * max8997.h - Driver for the Maxim 8997/8966
-  *
-- *  Copyright (C) 2009-2010 Samsung Electrnoics
-+ *  Copyright (C) 2009-2010 Samsung Electronics
-  *  MyungJoo Ham <myungjoo.ham@samsung.com>
-  *
-  * This driver is based on max8998.h
--- 
-2.43.0
+- Charlie
 
+> +		    RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
+> +			return false;
+> +
+> +	return true;
+> +}
+> +
+>  #ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+>  
+>  static bool unaligned_ctl __read_mostly;
+> @@ -685,8 +697,6 @@ static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
+>  
+>  bool __init check_unaligned_access_emulated_all_cpus(void)
+>  {
+> -	int cpu;
+> -
+>  	/*
+>  	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
+>  	 * accesses emulated since tasks requesting such control can run on any
+> @@ -694,10 +704,8 @@ bool __init check_unaligned_access_emulated_all_cpus(void)
+>  	 */
+>  	on_each_cpu(check_unaligned_access_emulated, NULL, 1);
+>  
+> -	for_each_online_cpu(cpu)
+> -		if (per_cpu(misaligned_access_speed, cpu)
+> -		    != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
+> -			return false;
+> +	if (!all_cpus_unaligned_scalar_access_emulated())
+> +		return false;
+>  
+>  	unaligned_ctl = true;
+>  	return true;
+> -- 
+> 2.49.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
