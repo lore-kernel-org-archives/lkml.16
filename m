@@ -1,121 +1,63 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCC91DA5F;
-	Mon, 19 May 2025 07:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CFB266EE7
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 07:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747639763; cv=none; b=Lo6Ya17hv7KJITuQZQvs+Uia9fuEYnnQjSZackDH6Y1aCp47JtBwd8vEyK2DgtQPRgCZWTvKpwJrEgzTebxxxuTmLRdlYnHUSeRMQT9dhA70DFIo0vYlIgGW4uKXvOXCBvKDE07/167xcjxQaImr82/ffb3Vfut1/k7DEAmRYU4=
+	t=1747639803; cv=none; b=OQ4wJ+TlnhSnOLrEc5jSeP4kGW/GB1e2nzwvKSVtyoKct2gc71N4VJfgTo7vSRo40hAvsgoFQvkTdbhbFp8kVl/sjlwJ8ytbpi/P+UBUOHXCI/0HYvv2uz6wQnPDop4KQuI1KUYOr7ooABoDPopQLl18vbcBVxGBiDnvdAE5SdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747639763; c=relaxed/simple;
-	bh=iH+nmmU4D2Q00jNKLdtiGfpOSOS2rVBXD5mlABm6pso=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=jrJ0g0feV1gJaJqSyV4qgq74gti/i3ig3gI4i0jCYNOvUc83D/1bhXnnNbpEwMMXZcxXadd/lImQZX60kYcVWvI3SqCbyohfe2bY2oYrbEKt/Lvs/yFO5Lr6eY3YpmNvVMTjgfvOhCRbMei1VDqHcZ73lxBAh0uCn9/Z2vi0aTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=aBNBTtc+; arc=none smtp.client-ip=207.54.90.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1747639803; c=relaxed/simple;
+	bh=qkdT8Cp5AKBfHPwo6RteW35DLD1bNOc5UzWP2dv3v5U=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=XJw3OtelbMIlEhPhJ5L/6KqMHrWNR1YYGZlFO1YmGtMLfuyzNV6j6wACYRewS5zmPF9+xZwApYrESWNQXlT4/FE9fXzxSZ1Z5Koa/KjdHqxla8YgXS3ufFaL+thR/dbAG2vxq4C/sVrStYr7GQuISN583w+8o+Qh/XEv2LLudmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8sHcEEU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="aBNBTtc+"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1747639762; x=1779175762;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iH+nmmU4D2Q00jNKLdtiGfpOSOS2rVBXD5mlABm6pso=;
-  b=aBNBTtc+MHiSTumhPcxLUiVBgU+E5KxLI09oXOiPdRilF8t2aAairZK7
-   4ndZsiXUY96NCHTirQkmnL7B7eWscuB3dT3q+XR/SnB1at3BRx1JLpcMz
-   +MbCS6FKXr4d6sbwk9QyKNIJDrsFMuHRn9OpgH8hp1cO/rtHGnbbBJsD1
-   Ca+ZqtYt0yMHJdif0ch1hLaPsnEZXf7Q1KMS1Jiz1TIm7zJsSf+YGzfLK
-   MJ9zzRH+y0VadaRAUsMkUYZWywmsbCHGC3f+avMtOXRWt0ndGI4BAUYay
-   wwoHkfcLP0Hk16fDIcCQnbcucT1fD/z0Qq0A2qoJsWltrACmDI4iIts+Y
-   w==;
-X-CSE-ConnectionGUID: cGY1z9TzRq+UqnqKSUyfEA==
-X-CSE-MsgGUID: 5wJRuWrdT7acLME9mSHw6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="199874952"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739804400"; 
-   d="scan'208";a="199874952"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:28:11 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 3AC98C2260;
-	Mon, 19 May 2025 16:28:08 +0900 (JST)
-Received: from oym-om4.fujitsu.com (oym-om4.o.css.fujitsu.com [10.85.58.164])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 0C513D88D0;
-	Mon, 19 May 2025 16:28:08 +0900 (JST)
-Received: from sm-arm-grace07.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
-	by oym-om4.fujitsu.com (Postfix) with ESMTP id B038A4005AE54;
-	Mon, 19 May 2025 16:28:07 +0900 (JST)
-From: Shinji Nomoto <fj5851bi@fujitsu.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shinji Nomoto <fj5851bi@fujitsu.com>
-Subject: [PATCH] doc: hwmon: acpi_power_meter: Add information about enabling the power capping feature.
-Date: Mon, 19 May 2025 16:27:44 +0900
-Message-ID: <20250519072756.1512244-1-fj5851bi@fujitsu.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8sHcEEU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194F4C4CEE4;
+	Mon, 19 May 2025 07:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747639802;
+	bh=qkdT8Cp5AKBfHPwo6RteW35DLD1bNOc5UzWP2dv3v5U=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=d8sHcEEUY17YxpnK+a47HTO7aNpbY+VR6WSbvkjZ7+QO8W3e55n94jR+QaFd7fm3A
+	 jd3IuWYcGp4fX+B4fABq8qWWV60DYZaNZgPFXIVtV39eWy/GO8V6ZBEOxZ9lRyrpQK
+	 Sz4//mMD4EWmJ6wp8ssO4qnPWKxgoTtHlS1rZMsXE26XDBtlhc/XJOPq4If4hj6xph
+	 7Tsr+g0m6O92YeGG+fNSoIgA0gjr0yNcW81O94gl4lKyxV8AHd1JJ/gxldrfGvwuyx
+	 pnd7aDSpJJr3N+hamDcSm/2I8QWCjJUKfi5ZKEfRoOYf30Dhw4Ju7y4JzU/UuIEMBx
+	 o1HMMGLybgz9A==
+Message-ID: <4a2a48aba8e080225659851c1cf4ee48@kernel.org>
+Date: Mon, 19 May 2025 07:29:59 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v6 03/10] drm/connector: add CEC-related fields
+In-Reply-To: <20250517-drm-hdmi-connector-cec-v6-3-35651db6f19b@oss.qualcomm.com>
+References: <20250517-drm-hdmi-connector-cec-v6-3-35651db6f19b@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "Andrzej
+ Hajda" <andrzej.hajda@intel.com>, "Dave Stevenson" <dave.stevenson@raspberrypi.com>, "David
+ Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <lumag@kernel.org>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, "Jonas Karlman" <jonas@kwiboo.se>, "Laurent
+ Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime
+ Ripard" <mripard@kernel.org>, =?utf-8?b?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, "Raspberry Pi Kernel Maintenance" <kernel-list@raspberrypi.com>, "Robert
+ Foss" <rfoss@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
+ Zimmermann" <tzimmermann@suse.de>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-To enable the power capping feature of the acpi_power_meter driver on
-systems other than IBM products, you must explicitly specify
-the force_cap_on module parameter.
+On Sat, 17 May 2025 04:59:39 +0300, Dmitry Baryshkov wrote:
+> As a preparation to adding HDMI CEC helper code, add CEC-related fields
+> to the struct drm_connector. The callbacks abstract CEC infrastructure
+> in order to support CEC adapters and CEC notifiers in a universal way.
+> 
+> CEC data is a void pointer as it allows us to make CEC data
+> 
+> [ ... ]
 
-Add information to the documentation about enabling the power capping
-feature with this driver, including the above, to improve user convenience.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Signed-off-by: Shinji Nomoto <fj5851bi@fujitsu.com>
----
- Documentation/hwmon/acpi_power_meter.rst | 25 +++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/hwmon/acpi_power_meter.rst b/Documentation/hwmon/acpi_power_meter.rst
-index 8628c1161015..334054afc498 100644
---- a/Documentation/hwmon/acpi_power_meter.rst
-+++ b/Documentation/hwmon/acpi_power_meter.rst
-@@ -37,9 +37,16 @@ arbitrary strings that ACPI provides with the meter.  The measures/ directory
- contains symlinks to the devices that this meter measures.
- 
- Some computers have the ability to enforce a power cap in hardware.  If this is
--the case, the `power[1-*]_cap` and related sysfs files will appear.  When the
--average power consumption exceeds the cap, an ACPI event will be broadcast on
--the netlink event socket and a poll notification will be sent to the
-+the case, the `power[1-*]_cap` and related sysfs files will appear.
-+For information on enabling the power cap feature, refer to the description
-+of the "force_on_cap" option in the "Module Parameters" chapter.
-+To use the power cap feature properly, you need to set appropriate value
-+(in microWatts) to the `power[1-*]_cap` sysfs files.
-+The value must be within the range between the minimum value at `power[1-]_cap_min`
-+and the maximum value at `power[1-]_cap_max (both in microWatts)`.
-+
-+When the average power consumption exceeds the cap, an ACPI event will be
-+broadcast on the netlink event socket and a poll notification will be sent to the
- appropriate `power[1-*]_alarm` file to indicate that capping has begun, and the
- hardware has taken action to reduce power consumption.  Most likely this will
- result in reduced performance.
-@@ -52,3 +59,15 @@ follows:
- `power[1-*]_cap` will be notified if the firmware changes the power cap.
- `power[1-*]_interval` will be notified if the firmware changes the averaging
- interval.
-+
-+Module Parameters
-+-----------------
-+
-+* force_cap_on: bool
-+                        Forcefully enable the power capping feature to specify
-+                        the upper limit of the system's power consumption.
-+
-+                        By default, the driver's power capping feature is only
-+                        enabled on IBM products.
-+                        Therefore, on other systems that support power capping,
-+                        you will need to use the option to enable it.
--- 
-2.43.0
-
+Thanks!
+Maxime
