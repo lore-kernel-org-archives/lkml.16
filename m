@@ -1,148 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550B126D4E3;
-	Mon, 19 May 2025 12:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9833D278E44
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658243; cv=none; b=NqnRsxuPBhoPKsiqPL4if+HYw4ePtA315gpgh1ezWzVfWZ089v2CG85j384tYPnvPxtiZtskYSZVD+d+WbMGWXfU/7/73OhQ+VS1cz495lapfsX2fVc4IQFh/xqEBlsjpWi3jkJp/hig+IpyoLkAsAOsC4Fj64qGzS2UI9ZYKQI=
+	t=1747658353; cv=none; b=U99Hn468ry7iHt+nmndY3CXbSHUVIlYgWQBKRSG20V4ND13o6eoRj5JVGBUAYxVBHXl5yxhEH5X+R103+xloCTKnLrdELLt2KgMQCtFMf6ByaAyVPm1wjo8JS1vAgdm2TapAnBkkzuiCyoKx68SG5j0Slwjc55S2LULtH430XdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658243; c=relaxed/simple;
-	bh=OPb24WSHEv+e9i6+TiE/kgAU14z58rgNG8YvtfGAmNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Twvzz3RrcEXHh2EJQUCMcpLNiATOqDimN6QGRmS1PKh3JcXR3xVCrrYXU713VCRbjO1zaEOudUx8aWESvwcEx6xZEWIpNKsxpQKMI7RQemFL+p3MEHnaTtyc8PV+d0tZMPDmuGUbIIGdqh2xlyO2LGYNsdUR6RcgtyW+2l6iUsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU7+x1Mi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747658353; c=relaxed/simple;
+	bh=wAgE1d1Nn9Gs3icpp4n2PghbKllsJSUIZKEeigydyr0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=bRklg4CJ8c+juI9HlUOYxBfD5/+fnM6CRO6/6IsfLIZT7v2W1MbBuuzCcSlubSdSj5ITxvn87RL6W+UEX1DmlDo33o87tfEO/3AN/josG//8eLcAG/XhYgHvAQYTsg1rwGyIalvbkDY6Y+xjSo+J0heXE7rOgufc3p25QmccE30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=c0asuxeh; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU7+x1Mi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966CEC4CEF0;
-	Mon, 19 May 2025 12:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747658243;
-	bh=OPb24WSHEv+e9i6+TiE/kgAU14z58rgNG8YvtfGAmNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nU7+x1MiVYMZ4adC2o5Djg/3jXiEFeTCWeX7Rn+txQz+GbF5B/UN/7zSXdV5R6gva
-	 jAriXBxj66W3nHTbhU2o5gpl4AjgznmNecIOy736OR52dlBfTScUwbeLPNu3LGfDgB
-	 Q3fjLLbSGh1z6hvOItfvN9ToITZkokb5cFpHyBrrOLF4+bAAUChcnqubGYJMnd1G6I
-	 kh2xODkRFCWkKWhF9WznwH8/POJu+QcxKXDAI6GLiFq2DG4pWkxJJ6WodUe9f2jsN9
-	 SR1v3HQEMnZGDh+CpEJ8Q6mLB25PjIrmFDzmAj9HeJYjmbVmOZhwrVrOZzNLAG4uVz
-	 XqWGPPE8DoBmg==
-Date: Mon, 19 May 2025 13:37:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alejandro Enrique <alejandroe1@geotab.com>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
-Message-ID: <20250519-dining-tumbling-ff005fcdae03@spud>
-References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
- <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
- <20250514-saggy-shifter-e4ac7152f823@spud>
- <CAN=L63qsjEAvfocgP0tGrpe-x6Rx1gvTAkPE9i99Ai2zJj6ssA@mail.gmail.com>
- <20250515-varying-swan-31ca63615b43@spud>
- <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
- <20250516-unfasten-submersed-e854fc9a0142@spud>
- <CAN=L63phSnssXs1p2HXhf08HMaHCE80EgMZQR0vPqhME2tknBQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="c0asuxeh"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so3475545e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1747658350; x=1748263150; darn=vger.kernel.org;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8TID/8Or9YAzKWADzCmDKYmYbQ3PtBl4rxavpksxXcw=;
+        b=c0asuxeh9zKDI4BFM+0+N/0QABL/hv9jgthEHTsCykJZ49PXAo5NS4AbsKwWngXmAP
+         XUSqAurvr+cBeuW9/QQotGhmFmgPGhn+d6Ja/1dA8PBwkUcBy8CC2B6VeGNshgTdK6Pw
+         tcaZU8hVqAxZaK4Ca5Nih6cf3qFBrNvw0fSbId0IPZZxi//uKN5+xqRuG2TtIfzxzYun
+         F2Pv86q84JNAlfLHK2+scX0atyD/IwnGhwqe9AlZlqwfGNiW3jScfqEuzgkvlPIvlu9s
+         LafrHDMlIQymbeapTyTmKUweUd38786lwxgaaJWyenB/0Z+5jDAYxkMK3BAs9NMI+z21
+         2hfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747658350; x=1748263150;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8TID/8Or9YAzKWADzCmDKYmYbQ3PtBl4rxavpksxXcw=;
+        b=cr2XgqR+5eCMzr/t1xnqmWMZSIHXCLJueiayovsJq3KEpBmg9SZH/JKuzqyCXgzyUN
+         PA667ZbswfIxGDhtPbbMas/PMrI5k6N0Z4imNixuT4xnq7am/HMitj1bMQc923rh0691
+         wF/3Q6ON/CaQoDkVYO08ISB8PDSXyC49LZhbQmb+X3My+DeCkSlO9qFoYupRTLPJetZs
+         ueQiCxmEkmnNW5hHHkalcwWINKDwWhASCU9X78TtJz1953VY0DZ4MrB7xpzV8x8BN3rQ
+         KttDX+y0ejlCuNEkq0sh2Qf2j4avuhz78jgQH/ubysOcADfWmrDQ/+4y3WOaLiy3QM8P
+         QtJg==
+X-Forwarded-Encrypted: i=1; AJvYcCViUVfsxtDU0u8xXXyx0lz4yFvQTbWfYZdNzdoNj+NrgpoUrc0A/H1F7FTjvs+rTjdB6oSVBYOm2uy8s5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB9mSu8zXbFdraf1qxL2oByf4CWl7iD+FfAxfQSBQYLEHvd6Mv
+	X3KF0WJchegO+ZjTljpN8aeLUDXDppl4j5yoo7qurkhrZ0KYIgxxX/Bv/FlOLpPTDE0=
+X-Gm-Gg: ASbGnctLNAFWGWhjBuUJptWwx4U4+4/V4vJ5mNUGLZNfaDcmtgqTYC9ph+wXplem9SD
+	/I/ERg+HAN2sMA0sV7/3ul0+0aMoWY5jrQaOiod5he0n9TEvlT5LfXxKxzz8jhT4p8BBxfAfuiT
+	MdAo2pe8sPj5dvbVPDWAjvGvZIkzEQaMhY5Ku/DQ1uRBux0TVD4RTJ7D3lXmvhiS6T7Ew1mTn6x
+	gjtZdl3DhibAGiJ01X98mNyZ1bTuE+trj/eWSYho5ofo4OOC9yMROFxpbmLYWWJmFZ+8F+bOKyB
+	WsbfXW0SktURdkyLNtSEGR73Z9QqDBGvJV4jHYdKsyifV4pFIlomexPHQLU=
+X-Google-Smtp-Source: AGHT+IFfWi9oi0Jcra9sXbpqrxyg3hOkHnBuCeesfYKMaPVxn3iQR7mctJDpcqzl/F4hYBE/NRWxrg==
+X-Received: by 2002:a05:600d:108:10b0:43b:c0fa:f9bf with SMTP id 5b1f17b1804b1-442fd7165b7mr23100365e9.3.1747658349729;
+        Mon, 19 May 2025 05:39:09 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:29b7:4911:a29c:2135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583f20sm136362615e9.28.2025.05.19.05.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 05:39:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1sJ959amROs/zspS"
-Content-Disposition: inline
-In-Reply-To: <CAN=L63phSnssXs1p2HXhf08HMaHCE80EgMZQR0vPqhME2tknBQ@mail.gmail.com>
-
-
---1sJ959amROs/zspS
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 May 2025 14:39:08 +0200
+Message-Id: <DA056HQ5G6S6.2B1OITOT8LLWS@ventanamicro.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
+ save/restore of CSR_SSP on trap entry/exit
+Cc: "Alexandre Ghiti" <alex@ghiti.fr>, "Thomas Gleixner"
+ <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
+ <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
+ <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
+ <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
+ <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
+ <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
+ <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
+ <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>
+References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
+ <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
+ <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
+ <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
+ <D9WLRSAB63M5.3DZD4ND3WVZ6F@ventanamicro.com>
+ <aCdbASlCyqhid82c@debug.ba.rivosinc.com>
+In-Reply-To: <aCdbASlCyqhid82c@debug.ba.rivosinc.com>
 
-On Fri, May 16, 2025 at 05:00:50PM +0200, Alejandro Enrique wrote:
-> On Fri, May 16, 2025 at 4:01=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Fri, May 16, 2025 at 12:23:35PM +0200, Alejandro Enrique wrote:
-> > > On Thu, May 15, 2025 at 5:02=E2=80=AFPM Conor Dooley <conor@kernel.or=
-g> wrote:
-> > > >
-> > > > On Wed, May 14, 2025 at 06:53:25PM +0200, Alejandro Enrique wrote:
-> > > > > On Wed, May 14, 2025 at 5:49=E2=80=AFPM Conor Dooley <conor@kerne=
-l.org> wrote:
-> > > > >
-> > > > > > On Wed, May 14, 2025 at 01:55:54PM +0200, Alejandro Enrique via=
- B4 Relay
-> > > > > > wrote:
-> > > > > > > From: Alejandro Enrique <alejandroe1@geotab.com>
-> > > > > > >
-> > > > > > > Add compatible for u-blox NEO-9M GPS module.
-> > > > > > >
-> > > > > > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> > > > > > > ---
-> > > > > > >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | =
-1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,ne=
-o-6m.yaml
-> > > > > > b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > > > > > > index
-> > > > > > 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8=
-156a72170965929bb7e
-> > > > > > 100644
-> > > > > > > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.ya=
-ml
-> > > > > > > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.ya=
-ml
-> > > > > > > @@ -22,6 +22,7 @@ properties:
-> > > > > > >        - u-blox,neo-6m
-> > > > > > >        - u-blox,neo-8
-> > > > > > >        - u-blox,neo-m8
-> > > > > > > +      - u-blox,neo-m9
-> > > > > >
-> > > > > > No match data in the driver, why is a fallback not sufficient?
-> > > > > >
-> > > > >
-> > > > > I added the match data in the driver in the PATCH 2/2 of this ser=
-ies
-> > > > > in the same fashion as previously supported modules.
-> > > >
-> > > > Did you? When I looked, there was just a compatible and no match da=
-ta.
-> > >
-> > > You are right. I just added a compatible string, no match data. Sorry,
-> > > I was not following.
-> > > I just added the neo-m9 compatible the same way the neo-6m was previo=
-usly
-> > > added.
-> > >
-> > > What do you mean by using a fallback? Using one of the existent
-> > > compatibles (none have match data) or adding a new fallback
-> > > compatible, something like just "u-blox,neo"?
-> >
-> > Falling back to one of the existing ones, like neo-m8.
->=20
-> That is perfectly possible. I added the new compatible string based
-> on what was previously done for the neo-6m one.
-> https://lore.kernel.org/lkml/20190401115616.21337-5-megous@megous.com/
->=20
-> If that is not a good approach I think this series can be discarded alrea=
-dy.
+2025-05-16T08:34:25-07:00, Deepak Gupta <debug@rivosinc.com>:
+> On Thu, May 15, 2025 at 10:48:35AM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
+te:
+>>2025-05-15T09:28:25+02:00, Alexandre Ghiti <alex@ghiti.fr>:
+>>> On 06/05/2025 12:10, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>>>> 2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>>>>> @@ -91,6 +91,32 @@
+>>>>> +.macro restore_userssp tmp
+>>>>> +	ALTERNATIVE("nops(2)",
+>>>>> +		__stringify(				\
+>>>>> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
+>>>>> +		csrw CSR_SSP, \tmp),
+>>>>> +		0,
+>>>>> +		RISCV_ISA_EXT_ZICFISS,
+>>>>> +		CONFIG_RISCV_USER_CFI)
+>>>>> +.endm
+>>>> Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
+>>>>
+>>>> (Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
+>>>
+>>> The alternatives are used to create a generic kernel that contains the
+>>> code for a large number of extensions and only enable it at runtime
+>>> depending on the platform capabilities. This way distros can ship a
+>>> single kernel that works on all platforms.
+>>
+>>Yup, and if a kernel is compiled without CONFIG_RISCV_USER_CFI, the nops
+>>will only enlarge the binary and potentially slow down execution.
+>>In other words, why we don't do something like this
+>>
+>> (!CONFIG_RISCV_USER_CFI ? "" :
+>>   (RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)"))
+>>
+>>instead of the current
+>>
+>> (CONFIG_RISCV_USER_CFI &&
+>>    RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)")
+>>
+>>It could be a new preprocessor macro in case we wanted to make it nice,
+>>but it's probably not a common case, so an ifdef could work as well.
+>>
+>>Do we just generally not care about such minor optimizations?
+>
+> On its own just for this series, I am not sure if I would call it even a
+> minor optimization.
 
-If you did use a fallback, you still need to modify the binding to
-permit it, so there'd be a different v2 rather than throwing it away.
+This patch uses ifdef in thread_info, but not here.
 
---1sJ959amROs/zspS
-Content-Type: application/pgp-signature; name="signature.asc"
+Both places minimize the runtime impact on kernels that don't have
+CONFIG_RISCV_USER_CFI, so I would like to understand the reasoning
+behind the decision to include one and not the other.
 
------BEGIN PGP SIGNATURE-----
+> But sure, it may (or may not) have noticeable effect if someone were
+> to go around and muck with ALTERNATIVES macro and emit `old_c` only
+> if config were selected. That should be a patch set on its own with
+> data providing benefits from it.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCsl/wAKCRB4tDGHoIJi
-0nhvAP4mRo7x0fJA+I3lYEavYP/JBhtUg/TLe3db/kEtTqrw8AEA7OVlgKjS0Zid
-urR1jOv2BUN9YCgHf5y9WSQJp4CNKgU=
-=jT3w
------END PGP SIGNATURE-----
+The difference is small and each build and implementation can behave
+differently, so code analysis seems the most appropriate tool here.
+We must still do a lot of subjective guesswork, because it is hard to
+predict the future development.
 
---1sJ959amROs/zspS--
+We should be moving on the pareto front and there are 3 roughly
+optimization parameters in this case: the C code, the binary code, and
+the work done by the programmer.
+The current patch is forgoing the binary quality (nops are strictly
+worse).
+The ifdef and the macro solutions prefer binary quality, and then differ
+if they consider work minimization (ifdef) or nice C (macro).
+
+Does the current patch represent the ideal compromise?
+(I can just recalibrate my values for future reviews...)
+
+Thanks.
