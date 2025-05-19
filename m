@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F101B28981B;
-	Mon, 19 May 2025 17:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74110289E29;
+	Mon, 19 May 2025 17:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747677119; cv=none; b=jPaLrEhiHfnEQZokU3T24xatAy0fgF/5rjqbY06g4i1Ecym5bT3Ks95b4t6KjLjRzMfKsA2DwdqgHI9qm+jOpMMtw56s6b/yH0TkL87VZAMGdssgDs8UfVxli2XAwfOeurdchd+19a22giwkDUsUm444jqAbTz1EZVxb9aFzZao=
+	t=1747677119; cv=none; b=D0ThWG52DktPbIR/wno7HwdPWcCk2+qf8YpqXgxA1wf5Zz4bWot3qHnMV6zpwnF8anMxpoe1kQaCzHyBHHwcsSZbX5A40jQPMK6reBHzY0bI9S41QxL4Y/gOODAXOhNkJfbk5fh5INizafCEjieONRX0THyTpliUE7fKJmNlMWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747677119; c=relaxed/simple;
-	bh=QEzyKZNR9hWHlDwB+VK93Xjz4V0tHxsun14G4o7oHVg=;
+	bh=Oo53xf+vPT0XtWshqsuhuWmUJl5Op5w9Tt26Wx4wMsw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N3nkBu0DR2cGJOoNTR4YFyM91gyzvgPYVva1sLBbj9bVX98SIw0tgaDsrKy6ECpfKuuMPpf1Y2vAo2XGtI54gnYAhI1e6Wt+XNEx4novkqFynuEwxxMe+NDfc1/0+F2tz23Gqe3dDRcz/AHHRyLEChDjh6iDlF9+hXAuBFWOPIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxsxIwb4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SIZkj2tBbth8SWRAgZ/GEyvJZ8fbyxdD8a4y5ALeK9MffmQLlVuH83EKYLcGj9kUvZsEM3PyuatDmFXvTBUljzHnjR6GQl/1+rrt3lYDa9pXtQrCHxNAS/JGBYbfdEQOxaC1Rb7OIpcJ/OghCDPWy02RZNoHwyFnc8mTaT+1TWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0fI/+ym; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxsxIwb4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D035C4CEF5;
-	Mon, 19 May 2025 17:51:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0fI/+ym"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1503EC4CEED;
+	Mon, 19 May 2025 17:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747677118;
-	bh=QEzyKZNR9hWHlDwB+VK93Xjz4V0tHxsun14G4o7oHVg=;
+	s=k20201202; t=1747677119;
+	bh=Oo53xf+vPT0XtWshqsuhuWmUJl5Op5w9Tt26Wx4wMsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cxsxIwb4LAiva1ctYTyPPgd7NXR/uYyeTelWi32wxcysl7WfQhp5EizqLbpHLCUUN
-	 xciri2xmBTGIy2ZB41A+Dt0jJAV0GDeKgudaztvEmhfoni7vBQZjdawtU87+4nRegy
-	 L8tYKVgC4MLoP1ad5ft/YlCJ5xNqtcYwmj+PhMfHTm7jYTwfW0qfVLL/8HGrsOfAfj
-	 xjlCeoDtGe919W5IFcvTotuafAgszX1zBtf2yzlRHeHhqskjdUkvQQWvhFbx1QPSfB
-	 3xVK+t3a0uy2pJTiBMSFClUR6kKtOD7Jl1Hy6czJBZ787QSdCB2I9bTK/ziCESuaOY
-	 oJfXzxczVvYBg==
+	b=S0fI/+ymiRyCNifQz3w6CL5IrooEnfvl2XmRIp3GzU7Uz8tECZaFU1C7/yjE2x3Rx
+	 mASFqRafI7kBpTNDdValHZy34XNWOpD0q3sotIZDeRlQDTNXCCeV4eqW8z0W6q0z+F
+	 SDZwVRBuBKNvMa+bbsxIGADFCF44JFhMEncbJGaHI0xKPFWTyKh1x89MqZNqMipAcp
+	 Qpe3UCxUO1Y1C2PnUYb1CjDycIIx8k1f80NKyxJEfIcwyv/7qEZYJsR4DndwJVxDd7
+	 bP+Kl7+W4R3CAIxaQB0LZpz7AMzodl6esgFeBDGYtcrhKTdggH3HQN2XJAHhyUJ9YA
+	 yCj6Pu/KIIdYQ==
 From: Eric Biggers <ebiggers@kernel.org>
 To: netdev@vger.kernel.org
 Cc: linux-nvme@lists.infradead.org,
@@ -36,9 +36,9 @@ Cc: linux-nvme@lists.infradead.org,
 	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2 05/10] sctp: use skb_crc32c() instead of __skb_checksum()
-Date: Mon, 19 May 2025 10:50:07 -0700
-Message-ID: <20250519175012.36581-6-ebiggers@kernel.org>
+Subject: [PATCH v2 07/10] lib/crc32: remove unused support for CRC32C combination
+Date: Mon, 19 May 2025 10:50:09 -0700
+Message-ID: <20250519175012.36581-8-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519175012.36581-1-ebiggers@kernel.org>
 References: <20250519175012.36581-1-ebiggers@kernel.org>
@@ -52,194 +52,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Make sctp_compute_cksum() just use the new function skb_crc32c(),
-instead of calling __skb_checksum() with a skb_checksum_ops struct that
-does CRC32C.  This is faster and simpler.
+crc32c_combine() and crc32c_shift() are no longer used (except by the
+KUnit test that tests them), and their current implementation is very
+slow.  Remove them.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- include/net/sctp/checksum.h | 29 +++--------------------------
- net/netfilter/Kconfig       |  4 ++--
- net/netfilter/ipvs/Kconfig  |  2 +-
- net/openvswitch/Kconfig     |  2 +-
- net/sched/Kconfig           |  2 +-
- net/sctp/Kconfig            |  1 -
- net/sctp/offload.c          |  1 -
- 7 files changed, 8 insertions(+), 33 deletions(-)
+ include/linux/crc32.h | 23 -----------------------
+ lib/crc32.c           |  6 ------
+ lib/tests/crc_kunit.c |  6 ------
+ 3 files changed, 35 deletions(-)
 
-diff --git a/include/net/sctp/checksum.h b/include/net/sctp/checksum.h
-index 291465c258102..654d37ec04029 100644
---- a/include/net/sctp/checksum.h
-+++ b/include/net/sctp/checksum.h
-@@ -13,51 +13,28 @@
-  *
-  * Written or modified by:
-  *    Dinakaran Joseph
-  *    Jon Grimm <jgrimm@us.ibm.com>
-  *    Sridhar Samudrala <sri@us.ibm.com>
-- *
-- * Rewritten to use libcrc32c by:
-  *    Vlad Yasevich <vladislav.yasevich@hp.com>
-  */
- 
- #ifndef __sctp_checksum_h__
- #define __sctp_checksum_h__
- 
- #include <linux/types.h>
- #include <linux/sctp.h>
--#include <linux/crc32c.h>
--#include <linux/crc32.h>
--
--static inline __wsum sctp_csum_update(const void *buff, int len, __wsum sum)
--{
--	return (__force __wsum)crc32c((__force __u32)sum, buff, len);
--}
--
--static inline __wsum sctp_csum_combine(__wsum csum, __wsum csum2,
--				       int offset, int len)
--{
--	return (__force __wsum)crc32c_combine((__force __u32)csum,
--					      (__force __u32)csum2, len);
--}
--
--static const struct skb_checksum_ops sctp_csum_ops = {
--	.update  = sctp_csum_update,
--	.combine = sctp_csum_combine,
--};
- 
- static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
- 					unsigned int offset)
+diff --git a/include/linux/crc32.h b/include/linux/crc32.h
+index 69c2e8bb37829..7f7d0be8a0acc 100644
+--- a/include/linux/crc32.h
++++ b/include/linux/crc32.h
+@@ -74,33 +74,10 @@ u32 crc32_le_shift(u32 crc, size_t len);
+ static inline u32 crc32_le_combine(u32 crc1, u32 crc2, size_t len2)
  {
- 	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
- 	__le32 old = sh->checksum;
--	__wsum new;
-+	u32 new;
- 
- 	sh->checksum = 0;
--	new = ~__skb_checksum(skb, offset, skb->len - offset, ~(__wsum)0,
--			      &sctp_csum_ops);
-+	new = ~skb_crc32c(skb, offset, skb->len - offset, ~0);
- 	sh->checksum = old;
--
--	return cpu_to_le32((__force __u32)new);
-+	return cpu_to_le32(new);
+ 	return crc32_le_shift(crc1, len2) ^ crc2;
  }
  
- #endif /* __sctp_checksum_h__ */
-diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
-index 3b2183fc7e563..2560416218d07 100644
---- a/net/netfilter/Kconfig
-+++ b/net/netfilter/Kconfig
-@@ -210,11 +210,11 @@ config NF_CT_PROTO_GRE
+-u32 crc32c_shift(u32 crc, size_t len);
+-
+-/**
+- * crc32c_combine - Combine two crc32c check values into one. For two sequences
+- *		    of bytes, seq1 and seq2 with lengths len1 and len2, crc32c()
+- *		    check values were calculated for each, crc1 and crc2.
+- *
+- * @crc1: crc32c of the first block
+- * @crc2: crc32c of the second block
+- * @len2: length of the second block
+- *
+- * Return: The crc32c() check value of seq1 and seq2 concatenated, requiring
+- *	   only crc1, crc2, and len2. Note: If seq_full denotes the concatenated
+- *	   memory area of seq1 with seq2, and crc_full the crc32c() value of
+- *	   seq_full, then crc_full == crc32c_combine(crc1, crc2, len2) when
+- *	   crc_full was seeded with the same initializer as crc1, and crc2 seed
+- *	   was 0. See also crc_combine_test().
+- */
+-static inline u32 crc32c_combine(u32 crc1, u32 crc2, size_t len2)
+-{
+-	return crc32c_shift(crc1, len2) ^ crc2;
+-}
+-
+ #define crc32(seed, data, length)  crc32_le(seed, (unsigned char const *)(data), length)
  
- config NF_CT_PROTO_SCTP
- 	bool 'SCTP protocol connection tracking support'
- 	depends on NETFILTER_ADVANCED
- 	default y
--	select CRC32
-+	select NET_CRC32C
- 	help
- 	  With this option enabled, the layer 3 independent connection
- 	  tracking code will be able to do state tracking on SCTP connections.
+ /*
+  * Helpers for hash table generation of ethernet nics:
+  *
+diff --git a/lib/crc32.c b/lib/crc32.c
+index fddd424ff2245..ade48bbb00834 100644
+--- a/lib/crc32.c
++++ b/lib/crc32.c
+@@ -117,16 +117,10 @@ u32 crc32_le_shift(u32 crc, size_t len)
+ {
+ 	return crc32_generic_shift(crc, len, CRC32_POLY_LE);
+ }
+ EXPORT_SYMBOL(crc32_le_shift);
  
- 	  If unsure, say Y.
-@@ -473,11 +473,11 @@ config NETFILTER_SYNPROXY
+-u32 crc32c_shift(u32 crc, size_t len)
+-{
+-	return crc32_generic_shift(crc, len, CRC32C_POLY_LE);
+-}
+-EXPORT_SYMBOL(crc32c_shift);
+-
+ u32 crc32_be_base(u32 crc, const u8 *p, size_t len)
+ {
+ 	while (len--)
+ 		crc = (crc << 8) ^ crc32table_be[(crc >> 24) ^ *p++];
+ 	return crc;
+diff --git a/lib/tests/crc_kunit.c b/lib/tests/crc_kunit.c
+index 585c48b65cefd..064c2d5815579 100644
+--- a/lib/tests/crc_kunit.c
++++ b/lib/tests/crc_kunit.c
+@@ -389,21 +389,15 @@ static void crc32_be_benchmark(struct kunit *test)
+ static u64 crc32c_wrapper(u64 crc, const u8 *p, size_t len)
+ {
+ 	return crc32c(crc, p, len);
+ }
  
- endif # NF_CONNTRACK
+-static u64 crc32c_combine_wrapper(u64 crc1, u64 crc2, size_t len2)
+-{
+-	return crc32c_combine(crc1, crc2, len2);
+-}
+-
+ static const struct crc_variant crc_variant_crc32c = {
+ 	.bits = 32,
+ 	.le = true,
+ 	.poly = 0x82f63b78,
+ 	.func = crc32c_wrapper,
+-	.combine_func = crc32c_combine_wrapper,
+ };
  
- config NF_TABLES
- 	select NETFILTER_NETLINK
--	select CRC32
-+	select NET_CRC32C
- 	tristate "Netfilter nf_tables support"
- 	help
- 	  nftables is the new packet classification framework that intends to
- 	  replace the existing {ip,ip6,arp,eb}_tables infrastructure. It
- 	  provides a pseudo-state machine with an extensible instruction-set
-diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
-index 8c5b1fe12d078..c203252e856d8 100644
---- a/net/netfilter/ipvs/Kconfig
-+++ b/net/netfilter/ipvs/Kconfig
-@@ -103,11 +103,11 @@ config	IP_VS_PROTO_AH
- 	  This option enables support for load balancing AH (Authentication
- 	  Header) transport protocol. Say Y if unsure.
- 
- config  IP_VS_PROTO_SCTP
- 	bool "SCTP load balancing support"
--	select CRC32
-+	select NET_CRC32C
- 	help
- 	  This option enables support for load balancing SCTP transport
- 	  protocol. Say Y if unsure.
- 
- comment "IPVS scheduler"
-diff --git a/net/openvswitch/Kconfig b/net/openvswitch/Kconfig
-index 5481bd561eb41..e6aaee92dba48 100644
---- a/net/openvswitch/Kconfig
-+++ b/net/openvswitch/Kconfig
-@@ -9,12 +9,12 @@ config OPENVSWITCH
- 	depends on !NF_CONNTRACK || \
- 		   (NF_CONNTRACK && ((!NF_DEFRAG_IPV6 || NF_DEFRAG_IPV6) && \
- 				     (!NF_NAT || NF_NAT) && \
- 				     (!NETFILTER_CONNCOUNT || NETFILTER_CONNCOUNT)))
- 	depends on PSAMPLE || !PSAMPLE
--	select CRC32
- 	select MPLS
-+	select NET_CRC32C
- 	select NET_MPLS_GSO
- 	select DST_CACHE
- 	select NET_NSH
- 	select NF_CONNTRACK_OVS if NF_CONNTRACK
- 	select NF_NAT_OVS if NF_NAT
-diff --git a/net/sched/Kconfig b/net/sched/Kconfig
-index 9f0b3f943fca8..ad914d2b2e221 100644
---- a/net/sched/Kconfig
-+++ b/net/sched/Kconfig
-@@ -794,11 +794,11 @@ config NET_ACT_SKBEDIT
- 	  module will be called act_skbedit.
- 
- config NET_ACT_CSUM
- 	tristate "Checksum Updating"
- 	depends on NET_CLS_ACT && INET
--	select CRC32
-+	select NET_CRC32C
- 	help
- 	  Say Y here to update some common checksum after some direct
- 	  packet alterations.
- 
- 	  To compile this code as a module, choose M here: the
-diff --git a/net/sctp/Kconfig b/net/sctp/Kconfig
-index 3669ba3518563..24d5a35ce894a 100644
---- a/net/sctp/Kconfig
-+++ b/net/sctp/Kconfig
-@@ -5,11 +5,10 @@
- 
- menuconfig IP_SCTP
- 	tristate "The SCTP Protocol"
- 	depends on INET
- 	depends on IPV6 || IPV6=n
--	select CRC32
- 	select CRYPTO
- 	select CRYPTO_HMAC
- 	select CRYPTO_SHA1
- 	select NET_CRC32C
- 	select NET_UDP_TUNNEL
-diff --git a/net/sctp/offload.c b/net/sctp/offload.c
-index 502095173d885..e6f863c031b4c 100644
---- a/net/sctp/offload.c
-+++ b/net/sctp/offload.c
-@@ -109,11 +109,10 @@ int __init sctp_offload_init(void)
- 
- 	ret = inet6_add_offload(&sctp6_offload, IPPROTO_SCTP);
- 	if (ret)
- 		goto ipv4;
- 
--	crc32c_csum_stub = &sctp_csum_ops;
- 	return ret;
- 
- ipv4:
- 	inet_del_offload(&sctp_offload, IPPROTO_SCTP);
- out:
+ static void crc32c_test(struct kunit *test)
+ {
+ 	crc_test(test, &crc_variant_crc32c);
 -- 
 2.49.0
 
