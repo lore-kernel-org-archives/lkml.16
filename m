@@ -1,79 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2F81DFFC;
-	Mon, 19 May 2025 11:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D765F1DFFC;
+	Mon, 19 May 2025 11:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747653593; cv=none; b=Pa8sTeueJcjRifGYy1Xx/+oMHnhvD5MAfvZCLmhhyzx4PAOklZK4exbfM2rlvKA+1ck0hR0Q4WAvUuXBqMrCJERYk+V4llAQ7TElC3WUsBsMuxcHOcPMQf9QJ2XPO6GpS5FV3T2t6Wx2/ib1UwdPkquaFcQIMI+Gz8IVmcXGreY=
+	t=1747653597; cv=none; b=mqi/YO4uC6RtqNQOx2d64rYf5cVaPU+AOBrQPeFgRxuMaWfls87yRacw3g3VdBb3XJs6Py1Wc2OOWW5AqWyfYtvhfKNtLeC4eVTGfB1EYLPmV/epGyi/cp3C1Kd3Qp+KquDEm4UdpLYl3TfVLvfo8Te0hxahb1GqjDeMvJvclgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747653593; c=relaxed/simple;
-	bh=+/1L7nBOago7zEMsBVJxrLA7VA41M3OJ93q2rhByYpA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qbnJRsjbiLOgEYTY+5x3viSvURtbAKTcttad0/KdYzPSEpE8zrVVpZLl1Dx7kWza6F85LBt7JDhVggpFFSBmFcqiIpVaJCF8IE7+cqS4nfskTUef9kuwC1ETgSC3vsD7d8lEoWqp9QD7uPOHWnKlGccwps/+5M/V+CnaBLMlZfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4wlDU0Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747653597; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=bItxB0ywQEu0Z1TKJlYg/liK+nLSuqbON+WOxL/JDajCw2SUDp2eQgACr6dYSZXzdnzWhYgXlxheZCPImlMw0WpZzLyJE3pgnOcqzE5nKG+l4pXyH0+M32Wdp8dD6qnyRlugN1cEuh+11W9Yl/UHuixr9VuGH97pK55EWfdwQE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqEK+6AK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4wlDU0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC88C4CEE4;
-	Mon, 19 May 2025 11:19:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqEK+6AK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5E7C4CEE4;
+	Mon, 19 May 2025 11:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747653592;
-	bh=+/1L7nBOago7zEMsBVJxrLA7VA41M3OJ93q2rhByYpA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S4wlDU0YDFP74dz9RumjIMEhJ1ueNcB6OCc1fjie04kwiceNVmxkGQcUGd9+2ap9K
-	 lrIwCtlgXYNsxtW42Nj7Y8FUT6vg8cL9XcCSBsHBMJ+xAlRJnQppG+yVFCuMB7a0/6
-	 aNF6mH5CHVgzzIF9itsF55XfhUIUlHNUoQATkDq7d343lhvxz83Uwk6L8ipmK5NMkZ
-	 wZAf6tkQ8Avoor1lcU6bzHdyv5AWeb0FcLwvv2a1oOTpmyZ3IEhW57FG9mUmoOQjps
-	 m8tlWXrFveoduIsN90pbSEG1ng8PFLe1K4aNlMAo5HbFoMMmnQqtPJag8byq1YDAKL
-	 38YMGkBJ5Pw1Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE5A380AA70;
-	Mon, 19 May 2025 11:20:29 +0000 (UTC)
+	s=k20201202; t=1747653596;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=OqEK+6AK2uKE5zFJ+ALrpE14Q1x4tmTRKdHQRiEIIeMXqx8lH+/s5jA6qvCHCFltt
+	 9nWavAaEmqZmIIcbH5j5cPrIo5bUj7KjPQwBE9+qYujQ085zEsh/wbjKUlAzpwdtDG
+	 +g/a7aGMFjqCbNbqV0HrondaxTr+NzieLf4nGbYCN4PUu5VivlxwMePgQqz73Jrw4s
+	 Q+FX3VSmtdiiTs3H1ZcUwkEwpMB9Yn19l+bLYYDC4E5zoJki3feFBcoQHjA/Uvo6Ei
+	 hgvITtxOfJzZnv9GzbsBA0saW/NIRVKO5E6AN5hWxHKq7CyzBqvsE+yXFQiJQrRXpE
+	 NhiwlGpI5Xvzw==
+Date: Mon, 19 May 2025 06:19:54 -0500
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] llc: fix data loss when reading from a socket in
- llc_ui_recvmsg()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174765362875.883795.7035367870465648507.git-patchwork-notify@kernel.org>
-Date: Mon, 19 May 2025 11:20:28 +0000
-References: <20250515122014.1475447-1-Ilia.Gavrilov@infotecs.ru>
-In-Reply-To: <20250515122014.1475447-1-Ilia.Gavrilov@infotecs.ru>
-To: Ilia Gavrilov <Ilia.Gavrilov@infotecs.ru>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, mhal@rbox.co, acme@mandriva.com,
- stephen@networkplumber.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
- stable@vger.kernel.org
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-ID: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250519111954.RIPjLzI28Fal8emd-30JtPebqCrOTaDEYxEy8gVtc6M@z>
 
-Hello:
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 15 May 2025 12:20:15 +0000 you wrote:
-> For SOCK_STREAM sockets, if user buffer size (len) is less
-> than skb size (skb->len), the remaining data from skb
-> will be lost after calling kfree_skb().
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
 > 
-> To fix this, move the statement for partial reading
-> above skb deletion.
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
 > 
-> [...]
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
 
-Here is the summary with links:
-  - [net] llc: fix data loss when reading from a socket in llc_ui_recvmsg()
-    https://git.kernel.org/netdev/net/c/239af1970bcb
+My bot found errors running 'make dt_binding_check' on your patch:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
