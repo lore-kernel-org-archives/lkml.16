@@ -1,87 +1,116 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E717F1A3142;
-	Mon, 19 May 2025 20:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D368217733
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747688262; cv=none; b=BEhrzjXp6Pdhvz9w2kEmHQGvrH9HeTegyhUaLR8aO84D1hAxi2x/T3aD5pjHadERBSoHC8FmebN5sGqOPcCDqR8NRwVPVpclMLCY3udlsrI3TdcJ2LCtiCKkmKuRTBOVyCGzDyAJb/ofSjleCPNM+qd7dxQ2aGr1oPaVoRN5JNQ=
+	t=1747688498; cv=none; b=UInketdS4Kj2RoKTITPmcApJYUkww0E3ZvidimQEiNMYfWPIHQo/x2jZqE+QICbX9R/tWwX2OsQi9g97tBbChfOUHsKjRuPSHHPjSQbISFOOMdw0yCAjulpXB2wJ6VK7+3SbD+dV3VzXCHcSwu5rQ/vpbtWHXF9slaiNllzWs2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747688262; c=relaxed/simple;
-	bh=ZGWrMzvU5zj2OJl0cQ+YUJDJ0rf2KWZdYa/+DN78Skg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BaXzJQQV8qZ2sr4Q9gZ+1xsGbLWq1mPa1AL9ykXDsTe5PdG0q//y62ARDAnl0IFdp2fnWasbrBAl27nvYGyXRGVkn29wCbErNZy/lV9Vo9XhQ2ovh/+RWGF0at+eOKK9KFyzIJ/7S0rziOXN6lTInt/mI8ABYV9wajPPzrWIiiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rpT8/Vlb; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747688498; c=relaxed/simple;
+	bh=XixqqRpjosG48i2+PvsQ5v+yrNqZcfiuvL820bhOgm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UbeomimG1ahfs5rof0jm/ebzPoG559lny+ph9YSaChMnyfe5bdpYjmAR1qIpLi+uYMG5Xjhwl9L+qv19yf3JCDfSsEbG8KGpEvWlzorZhuw3tV5NcxKSr3dwmxOKYMkImvsWYMxOTRZcvAMsXMpABK0yR9/n3p+apn54PR2MThc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njwescSh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rpT8/Vlb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=PsrBI3w2ZBwaYFa9maR6+A/7d1O7dN06m/BSAIgI5Yw=; b=rpT8/VlbLRN9BNi40bZL7bo19S
-	/nO/O8uvq0XG30xsEeQaSWp1zWO1AIje12qrdvXba9qgyugANCh2Qq9S9ameLahr2ZR4sCVBhM7bR
-	d+j6gZc3AxSPAA1KsElhEa4rRXcYLtz6eqew69OSwzvl6yAKgkTbWV0xg7AB9d8yrRVhO9xBrjvuT
-	GbQklxZAiF8cAFgIFWLxUVgzfLKmBxkSyTSi09TwL+RTUpIKdKzB9woJYTZ9tkHg/ULfNM7BihqRU
-	csvOJ6ZIaggM9VDwXC7fCuaHbXlunnL785MLRuXrnoz7h9xgqqJLpKytzvt1kZhS5ejOiGACjxafj
-	COJaJXLg==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH7YJ-0000000ASsi-3Pso;
-	Mon, 19 May 2025 20:57:39 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	bpf@vger.kernel.org
-Subject: [PATCH] bpf, docs: add indentation to make the bullet list work
-Date: Mon, 19 May 2025 13:57:39 -0700
-Message-ID: <20250519205739.180283-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njwescSh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0968C4CEE4;
+	Mon, 19 May 2025 21:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747688497;
+	bh=XixqqRpjosG48i2+PvsQ5v+yrNqZcfiuvL820bhOgm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=njwescShl3J8q+voT2CHdV71X8obbaNmulLvx+jpoIMAVzhVduIdS61UtgO3Heqar
+	 2gTyrxMewL3bijQ+Cp/GTD4g2ewjq7c2dSnKjujegZIHGMSxgpE+mtEN0y0gM2dsdG
+	 U3RNgjaKVBvvZ5NGqnRsWr8yLRIEq871USajKdCQBtTcAerB1QUEiUguLdXMpG+6u9
+	 mFu9zMgqOodoTmcn2Elji+/kDmz6FeWXZvdaR+9gOVb02T8ZtRn0KujPZU8q27FpnN
+	 fK6QSr1lqm8+6uF2vcAtjFR7fthuh1MBt6V+fQVE5bdPEhBx8iGXu28bTdtTGkUWap
+	 3NpTSyrAMHnAw==
+Date: Mon, 19 May 2025 23:01:27 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Jann Horn <jannh@google.com>
+Cc: Chen Ridong <chenridong@huaweicloud.com>, akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+	pfalcato@suse.de, bigeasy@linutronix.de, paulmck@kernel.org,
+	chenridong@huawei.com, roman.gushchin@linux.dev, brauner@kernel.org,
+	pmladek@suse.com, geert@linux-m68k.org, mingo@kernel.org,
+	rrangel@chromium.org, francesco@valla.it, kpsingh@kernel.org,
+	guoweikang.kernel@gmail.com, link@vivo.com, viro@zeniv.linux.org.uk,
+	neil@brown.name, nichen@iscas.ac.cn, tglx@linutronix.de,
+	frederic@kernel.org, peterz@infradead.org, oleg@redhat.com,
+	joel.granados@kernel.org, linux@weissschuh.net, avagin@google.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	lujialin4@huawei.com, "Serge E. Hallyn" <serge@hallyn.com>,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [RFC next v2 0/2] ucounts: turn the atomic rlimit to
+ percpu_counter
+Message-ID: <aCucJ9731YzaZI5b@example.org>
+References: <20250519131151.988900-1-chenridong@huaweicloud.com>
+ <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
 
-Fix a docs build warning and make the formatted output render
-correctly as a list.
+On Mon, May 19, 2025 at 09:32:17PM +0200, Jann Horn wrote:
+> On Mon, May 19, 2025 at 3:25 PM Chen Ridong <chenridong@huaweicloud.com> wrote:
+> > From: Chen Ridong <chenridong@huawei.com>
+> >
+> > The will-it-scale test case signal1 [1] has been observed. and the test
+> > results reveal that the signal sending system call lacks linearity.
+> > To further investigate this issue, we initiated a series of tests by
+> > launching varying numbers of dockers and closely monitored the throughput
+> > of each individual docker. The detailed test outcomes are presented as
+> > follows:
+> >
+> >         | Dockers     |1      |4      |8      |16     |32     |64     |
+> >         | Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
+> >
+> > The data clearly demonstrates a discernible trend: as the quantity of
+> > dockers increases, the throughput per container progressively declines.
+> 
+> But is that actually a problem? Do you have real workloads that
+> concurrently send so many signals, or create inotify watches so
+> quickly, that this is has an actual performance impact?
+> 
+> > In-depth analysis has identified the root cause of this performance
+> > degradation. The ucouts module conducts statistics on rlimit, which
+> > involves a significant number of atomic operations. These atomic
+> > operations, when acting on the same variable, trigger a substantial number
+> > of cache misses or remote accesses, ultimately resulting in a drop in
+> > performance.
+> 
+> You're probably running into the namespace-associated ucounts here? So
+> the issue is probably that Docker creates all your containers with the
+> same owner UID (EUID at namespace creation), causing them all to
+> account towards a single ucount, while normally outside of containers,
+> each RUID has its own ucount instance?
+> 
+> Sharing of rlimits between containers is probably normally undesirable
+> even without the cacheline bouncing, because it means that too much
+> resource usage in one container can cause resource allocations in
+> another container to fail... so I think the real problem here is at a
+> higher level, in the namespace setup code. Maybe root should be able
+> to create a namespace that doesn't inherit ucount limits of its owner
+> UID, or something like that...
 
-Documentation/bpf/bpf_iterators.rst:55: WARNING: Bullet list ends without a blank line; unexpected unindent. [docutils]
+If we allow rlimits not to be inherited in the userns being created, the
+user will be able to bypass their rlimits by running a fork bomb inside
+the new userns.
 
-Fixes: 7220eabff8cb ("bpf, docs: document open-coded BPF iterators")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: bpf@vger.kernel.org
----
- Documentation/bpf/bpf_iterators.rst |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Or I missed your point ?
 
---- linux-next-20250516.orig/Documentation/bpf/bpf_iterators.rst
-+++ linux-next-20250516/Documentation/bpf/bpf_iterators.rst
-@@ -52,14 +52,14 @@ a pointer to this `struct bpf_iter_<type
- 
- Additionally:
-   - Constructor, i.e., `bpf_iter_<type>_new()`, can have arbitrary extra
--  number of arguments. Return type is not enforced either.
-+    number of arguments. Return type is not enforced either.
-   - Next method, i.e., `bpf_iter_<type>_next()`, has to return a pointer
--  type and should have exactly one argument: `struct bpf_iter_<type> *`
--  (const/volatile/restrict and typedefs are ignored).
-+    type and should have exactly one argument: `struct bpf_iter_<type> *`
-+    (const/volatile/restrict and typedefs are ignored).
-   - Destructor, i.e., `bpf_iter_<type>_destroy()`, should return void and
--  should have exactly one argument, similar to the next method.
-+    should have exactly one argument, similar to the next method.
-   - `struct bpf_iter_<type>` size is enforced to be positive and
--  a multiple of 8 bytes (to fit stack slots correctly).
-+    a multiple of 8 bytes (to fit stack slots correctly).
- 
- Such strictness and consistency allows to build generic helpers abstracting
- important, but boilerplate, details to be able to use open-coded iterators
+In init_user_ns all rlimits that are bound to it are set to RLIM_INFINITY.
+So root can only reduce rlimits.
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/fork.c#n1091
+
+-- 
+Rgrds, legion
+
