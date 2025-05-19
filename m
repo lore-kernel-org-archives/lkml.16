@@ -1,146 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEDD28C2D3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4002728C5A6;
+	Mon, 19 May 2025 16:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670732; cv=none; b=b4xT/fOIbdL5KpGyOob3vizEpFWCRc5lMr/OoFncknr5m12NEcOBSVcMfLayGQnz6l5ebylYZ8jXqYJZI79KOWnuAvmjjLt8v0gJzOaRc5L+qdi4PzqssVqXlgk/E9HRUuKq8KFF21mF73gRINXKRlU6MD8pEwk+XlsmVQReeSg=
+	t=1747670733; cv=none; b=kiThrlYkN0Drm9INR509tGnV/solXDbTO5NulFeKD2elBcJb88nah25sVR0ZR7Ivr8VkYLFTZOuQ2m42nkyuvF3GM1YxQwZrSSujmDu0k0yh9xYA6W9r8ST230bR1XJgnhXArZSdZp9raimRb26Yw37zmSENary5ag4qRnDCfA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670732; c=relaxed/simple;
-	bh=AUke/NWSRLIRn7SoKvI956go9bNucVyPQKWPXFtUZeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbXYY6w0JURyI9qXwpKFC6yPfumQAyWl+3W6fCjBO3bvGtUViSiCVnVTzkds98b974aDDZ965F35knZQdVZNl4q1OrpnXGH2gXCANwN40MNXzrAUQhIfrvxHRD3yeBZZhLkmoHoO1uR9cKu+dtchQitFzJ8ENgRUDRaXIqN+3hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc3/adoR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747670733; c=relaxed/simple;
+	bh=noxDf8ZxNrVndhCt9us9NgISd7alcUElHnhr7+XT1yw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Bxp+kPy9RCuZ7yTdsfBOyG8/2pCi/F5H4IRKnRelbtlstU0OnNuAU3ikmUvKMSxCnnyQfnnCNwVdQXFwKWn13RKtj4oiPPp5PzhVb5Y8+BQswE4jbnpCQNNVumILUPjwpWnudUDBfDAiugYiR940s0Zw+5u47ISE9kN1KB0qHeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IuNvrJY+; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc3/adoR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35439C4CEE4;
-	Mon, 19 May 2025 16:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747670731;
-	bh=AUke/NWSRLIRn7SoKvI956go9bNucVyPQKWPXFtUZeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jc3/adoRxZirOIHN5H/K6ZNn0Yg5CAjsdamiscbNe77qxdu0FqWSQWERU3b+1dTtj
-	 pTl4QEPbKD0azl2uEt/zzqWMNG/3tPAhbrEdyBFoHwWl9B4BrwbFWaYjGBhYzo8oPH
-	 UOrSHi++ymFM2oxgSHiHoJy98rmC3JPJoy+5NZa3jlDqlTavFp22cilF/b/wwbOOK4
-	 zIeRRizmsOATFg8Qj6OAQzuwWNd9GDDOv5PHWnGQ13pLitCzHhUuCUrl4spd7mbyF0
-	 qWEuRBmaaljv2nE4ON8aEJbafg2zOT5OR6Nz/hcrSMNU62E7opaTcJ6eEJm8mCgUNr
-	 TNaAQbuNTCsAg==
-Date: Mon, 19 May 2025 18:05:28 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-Message-ID: <20250519-singing-silent-stingray-fe5c9b@houat>
-References: <87y0vkw8ll.fsf@intel.com>
- <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
- <87o6wfwcef.fsf@intel.com>
- <20250505-slim-bizarre-marten-a674ac@houat>
- <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
- <875xi3im1r.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IuNvrJY+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ay
+	UWXvS06kXSWZnFDAYmWnkUal2jYaVwirTfcPuo9Lk=; b=IuNvrJY+ylitbtsoPL
+	8BJIrKyfm0zzCfVmp0yke1AewPrb+wmXxrp6w8aLGmwkfw5lbYrz1OL4wLiOak+T
+	9PxEkq6HNTQorRD6bWeA5KfQaJ6QvdWNJsbKflgj0qgRQUYEdhlTfs7+4/uOzS/A
+	GPJzdywXcnGNRlcV1Op6B4Bsc=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHWSeiVitokozvCQ--.46206S4;
+	Tue, 20 May 2025 00:04:52 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	krzk+dt@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	conor+dt@kernel.org
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 2/3] dt-bindings: PCI: pci-ep: Extend max-link-speed to PCIe Gen5/Gen6
+Date: Tue, 20 May 2025 00:04:47 +0800
+Message-Id: <20250519160448.209461-3-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250519160448.209461-1-18255117159@163.com>
+References: <20250519160448.209461-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="44ortngatcuhoot2"
-Content-Disposition: inline
-In-Reply-To: <875xi3im1r.fsf@intel.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHWSeiVitokozvCQ--.46206S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruFWUCrWkCw13Jw18CryxuFg_yoWDKFc_uF
+	1xXa1qvr48JFyYgw4YyF4xt3W5Za12krs7Cw1kJF1qya40yrWq9F98t3s8Ar1fCay3ZF1a
+	9F93JrWDXrsrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRKa9aPUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwRSo2grUi5pvQABsE
 
+Update the PCI Endpoint (EP) device tree binding documentation to
+include PCIe Gen5 and Gen6 support for the `max-link-speed` property.
+Similar to the Host Controller binding, the original EP binding
+limited this value to 1~4 (Gen1~Gen4). With current SOCs requiring
+Gen5/Gen6 support (e.g., Synopsys/Cadence IP), this change aligns
+the EP binding with the kernel's PCIe 6.0 capabilities.
 
---44ortngatcuhoot2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-MIME-Version: 1.0
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ Documentation/devicetree/bindings/pci/pci-ep.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, May 14, 2025 at 12:22:40PM +0300, Jani Nikula wrote:
-> On Tue, 13 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
-> > Is it really surprising you get some pushback when you are using a
-> > design that is the complete opposite to what every user of it for the
-> > last decade has been doing?
->=20
-> The opposite is also true.
->=20
-> If you create a design that does not cleanly fit the model of the
-> biggest drivers in the subsystem, and expect massive refactors just for
-> the sake of conforming to the design to be able to use any of it, you'll
-> also get pushback.
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+index f75000e3093d..68aaad70b112 100644
+--- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+@@ -33,7 +33,7 @@ properties:
+ 
+   max-link-speed:
+     $ref: /schemas/types.yaml#/definitions/uint32
+-    enum: [ 1, 2, 3, 4 ]
++    enum: [ 1, 2, 3, 4, 5, 6]
+ 
+   num-lanes:
+     description: maximum number of lanes
+-- 
+2.25.1
 
-That's the thing though: i915 deviates pretty heavily from the helpers,
-in general. If it wants to consume them, then it must also be ready to
-make some adjustments. Or just roll its own thing like it has done in
-the past.
-
-Otherwise, where do we draw the line when anyone isn't happy with the
-helpers in general and ask for an exception because reworking the driver
-is too much work?
-
-We did this on pretty much every ARM platform, we did this for amdgpu,
-but somehow i915 should get a pass?
-
-On what ground? What should we tell the next driver that uses the same
-argument?
-
-> > This one is usable, but you rule out the way you could use it.
->=20
-> I think you're off-hand and completely dismissing the amount of work it
-> would be. And still I'm not even ruling it out, but there has to be a
-> way to start off in small incremental steps, and use the parts that
-> work. And it's not like we're averse to refactoring in the least,
-> everyone knows that.
-
-I'm not sure how pointing fingers at who has the right design,
-overlooked some hypothetical usages 10y down the line, or is being
-offhand helps the conversation in any way.
-
-I've been asking questions to understand what you could work with, and
-some are still left unanswered, and had to ask others multiple times to
-get an answer.
-
-And maybe I do indeed underestimate the amount of work it would take. I
-don't believe so, and I still believe that it wouldn't be too hard. But
-maybe you're right. You still haven't explained why it would take
-anything more than registering a dumb device at probe time though.
-
-> > I guess it's clear now that you won't consider anything else. I wonder
-> > why you started that discussion in the first place if you already have
-> > a clear mind on how to get things moving forward.
->=20
-> I pointed out what I think is a bug in drm_panel, with nothing but good
-> intentions, and everything snowballed from there.
->=20
-> There has to be a middle ground instead of absolutes. Otherwise we'll
-> just end up in deeper silos. And more arguments.
-
-I believe calling drm_panel_init would be a middle ground, if we add a
-bunch of warnings, checks here and there and move things around a bit.
-But to keep it, we do need a good reason for it, even more so if we
-don't have any in-tree users anymore.
-
-Maxime
-
---44ortngatcuhoot2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaCtWwwAKCRAnX84Zoj2+
-dhXaAX99/6tATvYQUSyz9hcmkMAlBSpKAc/PN6MlwYWkkWP+I/hjrTMVuAbhGWSd
-9IvD6+cBfi2/vkBdTeY/kaxzhyQR+gVabclTJ1Jq1RtAOVZVAKk0qXWTtCqbF/Id
-xM34KIQ2JA==
-=rS0I
------END PGP SIGNATURE-----
-
---44ortngatcuhoot2--
