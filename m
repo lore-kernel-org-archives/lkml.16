@@ -1,186 +1,179 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9833D278E44
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F671DFD84;
+	Mon, 19 May 2025 12:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658353; cv=none; b=U99Hn468ry7iHt+nmndY3CXbSHUVIlYgWQBKRSG20V4ND13o6eoRj5JVGBUAYxVBHXl5yxhEH5X+R103+xloCTKnLrdELLt2KgMQCtFMf6ByaAyVPm1wjo8JS1vAgdm2TapAnBkkzuiCyoKx68SG5j0Slwjc55S2LULtH430XdU=
+	t=1747658433; cv=none; b=L3N+T18CgO2qdDnQV5yzKLt2YDgGJQ0ySepicN9cBTy5nk1K+8db5rmABWkr7tiD846SZOq5ekZGI0RsKoUIdSrZUkGb+xthXI90sVhwxl8ibZ89BoBmBapWgyZlWJ2D+2VkNiBq4g2HqF4CY5KEGhGmhin6yRtTCH/Uaq8zuAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658353; c=relaxed/simple;
-	bh=wAgE1d1Nn9Gs3icpp4n2PghbKllsJSUIZKEeigydyr0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=bRklg4CJ8c+juI9HlUOYxBfD5/+fnM6CRO6/6IsfLIZT7v2W1MbBuuzCcSlubSdSj5ITxvn87RL6W+UEX1DmlDo33o87tfEO/3AN/josG//8eLcAG/XhYgHvAQYTsg1rwGyIalvbkDY6Y+xjSo+J0heXE7rOgufc3p25QmccE30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=c0asuxeh; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747658433; c=relaxed/simple;
+	bh=dG9OJXrzeBQcmp2ENNcvBN9tLfbZo5E+wUXYJrzdr6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OYiiOxfwwUp7cAh04NBekQUYqi5Cpky7Rfc/gBRdhGrQ5q3qnmHgM4gb7XAsVb6iyASxYWF29zyL25XaUU+pYxq1pgsPFMBci0wKcXqRCS+V+Bte/ha7E/yFucuwZCeMCNQpTRAkWFAw9fHe/iV4pDFHI7WkLvZ6wOdtLUsBVSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jKDFLM/c; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="c0asuxeh"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so3475545e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:39:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKDFLM/c"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60119cd50b6so4891546a12.0;
+        Mon, 19 May 2025 05:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747658350; x=1748263150; darn=vger.kernel.org;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8TID/8Or9YAzKWADzCmDKYmYbQ3PtBl4rxavpksxXcw=;
-        b=c0asuxeh9zKDI4BFM+0+N/0QABL/hv9jgthEHTsCykJZ49PXAo5NS4AbsKwWngXmAP
-         XUSqAurvr+cBeuW9/QQotGhmFmgPGhn+d6Ja/1dA8PBwkUcBy8CC2B6VeGNshgTdK6Pw
-         tcaZU8hVqAxZaK4Ca5Nih6cf3qFBrNvw0fSbId0IPZZxi//uKN5+xqRuG2TtIfzxzYun
-         F2Pv86q84JNAlfLHK2+scX0atyD/IwnGhwqe9AlZlqwfGNiW3jScfqEuzgkvlPIvlu9s
-         LafrHDMlIQymbeapTyTmKUweUd38786lwxgaaJWyenB/0Z+5jDAYxkMK3BAs9NMI+z21
-         2hfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747658350; x=1748263150;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+        d=gmail.com; s=20230601; t=1747658430; x=1748263230; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8TID/8Or9YAzKWADzCmDKYmYbQ3PtBl4rxavpksxXcw=;
-        b=cr2XgqR+5eCMzr/t1xnqmWMZSIHXCLJueiayovsJq3KEpBmg9SZH/JKuzqyCXgzyUN
-         PA667ZbswfIxGDhtPbbMas/PMrI5k6N0Z4imNixuT4xnq7am/HMitj1bMQc923rh0691
-         wF/3Q6ON/CaQoDkVYO08ISB8PDSXyC49LZhbQmb+X3My+DeCkSlO9qFoYupRTLPJetZs
-         ueQiCxmEkmnNW5hHHkalcwWINKDwWhASCU9X78TtJz1953VY0DZ4MrB7xpzV8x8BN3rQ
-         KttDX+y0ejlCuNEkq0sh2Qf2j4avuhz78jgQH/ubysOcADfWmrDQ/+4y3WOaLiy3QM8P
-         QtJg==
-X-Forwarded-Encrypted: i=1; AJvYcCViUVfsxtDU0u8xXXyx0lz4yFvQTbWfYZdNzdoNj+NrgpoUrc0A/H1F7FTjvs+rTjdB6oSVBYOm2uy8s5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB9mSu8zXbFdraf1qxL2oByf4CWl7iD+FfAxfQSBQYLEHvd6Mv
-	X3KF0WJchegO+ZjTljpN8aeLUDXDppl4j5yoo7qurkhrZ0KYIgxxX/Bv/FlOLpPTDE0=
-X-Gm-Gg: ASbGnctLNAFWGWhjBuUJptWwx4U4+4/V4vJ5mNUGLZNfaDcmtgqTYC9ph+wXplem9SD
-	/I/ERg+HAN2sMA0sV7/3ul0+0aMoWY5jrQaOiod5he0n9TEvlT5LfXxKxzz8jhT4p8BBxfAfuiT
-	MdAo2pe8sPj5dvbVPDWAjvGvZIkzEQaMhY5Ku/DQ1uRBux0TVD4RTJ7D3lXmvhiS6T7Ew1mTn6x
-	gjtZdl3DhibAGiJ01X98mNyZ1bTuE+trj/eWSYho5ofo4OOC9yMROFxpbmLYWWJmFZ+8F+bOKyB
-	WsbfXW0SktURdkyLNtSEGR73Z9QqDBGvJV4jHYdKsyifV4pFIlomexPHQLU=
-X-Google-Smtp-Source: AGHT+IFfWi9oi0Jcra9sXbpqrxyg3hOkHnBuCeesfYKMaPVxn3iQR7mctJDpcqzl/F4hYBE/NRWxrg==
-X-Received: by 2002:a05:600d:108:10b0:43b:c0fa:f9bf with SMTP id 5b1f17b1804b1-442fd7165b7mr23100365e9.3.1747658349729;
-        Mon, 19 May 2025 05:39:09 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:29b7:4911:a29c:2135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583f20sm136362615e9.28.2025.05.19.05.39.08
+        bh=9JSHeno+xJiiaDay6iz2yV2CTlTnkq+BUkMGKsqpt7M=;
+        b=jKDFLM/cIQ447pesn4BKFzyjoXTltOSPGm7flBxjQ33AUNQ9JeCtKwnBYBUhslqI5X
+         fpEgGxpBJfe0teAzYMBRBD9rLAHpkcknaRfzzb49izqnwu2QHHX9xCDGLnN/mqR+Wvy0
+         PO/5VlF1KIjcY/HWOW/KnknIYxil0ZLChgtnFRvraho/WDa0y88VGe38dDCoMv9BvMQO
+         k5O+96+mGIL14GIB29QhOY+bmeubOAcCQqQPcWABqfV1OA0SnOYfj4SzZzu/7afE7rM0
+         gZIYAvAJLk3jQuW+53XFSXLYpQntP9XMEsW/JKY5qfXlun7WSSsdwvKaFHFOrYwqI91X
+         rAUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747658430; x=1748263230;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9JSHeno+xJiiaDay6iz2yV2CTlTnkq+BUkMGKsqpt7M=;
+        b=YfwjJabZJBlz7so3BRS01KyMMUHBk8Y9B+JI2my0goF99dx36RVry1NnX1GDak5L7p
+         3ZL1gIgT+QCeyZwWrL6pGvrT3kbFbTZqlfqTGtsan6qaKk/rQDfpeYDXuqey3MxUgfyR
+         nkjfnPi55UBmOo1OxuW3jufFKUNnleZ5te8/pkWCHk3H/nQMBLWVJj0p7BM8fc0Di6VM
+         xEkOZpU6cLoPY9xGdiB/yPzlkRi6U5ql+ASaLuLCyoQFS1z7VJCQC3v53Wp3KGZR8RL9
+         RYBZpr3q11TKVkM0pGkmL/hGjufGXhjPhxbszg2ktdhlJiHoD1xHUFug1LFYO6kJ4kCS
+         vIAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnSckKwxNZoq3aoAyZZbXOeVKR2Qxf3TjWIhV2ZAkYz4ANcmfB8uj13Fzl6HU6gqzf6PGJi7i8v9RBLb6v@vger.kernel.org, AJvYcCVvYOblgDrs12nX0tfaCKX6XLdDQNpqeymOCai4Ec8ZZUkv9zwQvkKoRQrHwoEme4JP5o2tOn5Fb34TqA==@vger.kernel.org, AJvYcCXCQrFi3bfJf0I+MmvdcGo8NbbmR6q8AMJrRCHmObSe5a2AZzUGdYBZgL9xC/guYR2ExoNt/trhfbbx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPk+A/L3+xsHZROsAZbt95qAvC1TnnrI55CfFUOgd0V7z25TT3
+	nB4nUSaC/EZIEuxfvK+SyN5ZxNUY22iz4vzcLsOrcN4tarlrRI7/RWYg
+X-Gm-Gg: ASbGncu0PXy0qsRepOL2Cri1qKO4n/BQEiCTtVG3ehcwDECcpvLK+xTUqDVrq4ByoDx
+	zgHBHLgMTY9i3w+NGoqwaiAhiNsHF+SQkyqf6z5xcLSSRjgrLaQuyTUWvEUIXSwGQo8SsUvWcy0
+	pjjppVntCaVux+xLi5wo4U/Yducwk6HaC2qZUAPbN1INz5VEG9WS53AE0WZZ39hsJHd+T0PcYoF
+	MLEXvtjxy7MvyPwkgU3bGQ+/QVtLxaTjciD9F+PhUhVttYt6ISCKHTb1Z/R0ZCfcwbWaB1fV5QO
+	SoSNSYK0rqcptCDeXAGlSiWgdCYQ85SsgODDWoGS0NRc9XFg3fYI12xA6UTj
+X-Google-Smtp-Source: AGHT+IGvVkzIVWbfpQWFpqrdJS+tPeSk+0ZwUBS8L7f8oWG1HDIcHiEqiBPkSfBvh2zfXs+bntusQQ==
+X-Received: by 2002:a17:906:f5a4:b0:ad2:450b:f8da with SMTP id a640c23a62f3a-ad52d4ca492mr1133788966b.19.1747658430184;
+        Mon, 19 May 2025 05:40:30 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:604:5d00:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d49889asm590773066b.141.2025.05.19.05.40.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 05:39:09 -0700 (PDT)
+        Mon, 19 May 2025 05:40:29 -0700 (PDT)
+Date: Mon, 19 May 2025 14:40:28 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250519124028.GA423953@legfed1>
+References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+ <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 May 2025 14:39:08 +0200
-Message-Id: <DA056HQ5G6S6.2B1OITOT8LLWS@ventanamicro.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
- save/restore of CSR_SSP on trap entry/exit
-Cc: "Alexandre Ghiti" <alex@ghiti.fr>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
- <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
- <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
- <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
- <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>
-References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
- <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
- <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
- <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
- <D9WLRSAB63M5.3DZD4ND3WVZ6F@ventanamicro.com>
- <aCdbASlCyqhid82c@debug.ba.rivosinc.com>
-In-Reply-To: <aCdbASlCyqhid82c@debug.ba.rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
 
-2025-05-16T08:34:25-07:00, Deepak Gupta <debug@rivosinc.com>:
-> On Thu, May 15, 2025 at 10:48:35AM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
-te:
->>2025-05-15T09:28:25+02:00, Alexandre Ghiti <alex@ghiti.fr>:
->>> On 06/05/2025 12:10, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
->>>> 2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
->>>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->>>>> @@ -91,6 +91,32 @@
->>>>> +.macro restore_userssp tmp
->>>>> +	ALTERNATIVE("nops(2)",
->>>>> +		__stringify(				\
->>>>> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
->>>>> +		csrw CSR_SSP, \tmp),
->>>>> +		0,
->>>>> +		RISCV_ISA_EXT_ZICFISS,
->>>>> +		CONFIG_RISCV_USER_CFI)
->>>>> +.endm
->>>> Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
->>>>
->>>> (Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
->>>
->>> The alternatives are used to create a generic kernel that contains the
->>> code for a large number of extensions and only enable it at runtime
->>> depending on the platform capabilities. This way distros can ship a
->>> single kernel that works on all platforms.
->>
->>Yup, and if a kernel is compiled without CONFIG_RISCV_USER_CFI, the nops
->>will only enlarge the binary and potentially slow down execution.
->>In other words, why we don't do something like this
->>
->> (!CONFIG_RISCV_USER_CFI ? "" :
->>   (RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)"))
->>
->>instead of the current
->>
->> (CONFIG_RISCV_USER_CFI &&
->>    RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)")
->>
->>It could be a new preprocessor macro in case we wanted to make it nice,
->>but it's probably not a common case, so an ifdef could work as well.
->>
->>Do we just generally not care about such minor optimizations?
->
-> On its own just for this series, I am not sure if I would call it even a
-> minor optimization.
+Hi Uwe,
 
-This patch uses ifdef in thread_info, but not here.
+Am Fri, May 16, 2025 at 11:24:33AM +0200 schrieb Uwe Kleine-König:
+> Hello Dimitri,
+> 
+> On Thu, May 15, 2025 at 02:40:54PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > 
+> > The MC33XS2410 provides temperature sensors for the central die temperature
+> > and the four outputs. Additionally a common temperature warning threshold
+> > can be configured for the outputs. Add hwmon support for the sensors.
+> > 
+> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > ---
+> > Changes in v2:
+> > - Remove helper mc33xs2410_hwmon_read_out_status and report the last
+> >   latched status.
+> > - Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com
+> > ---
+> 
+> Mostly fine from my POV. I suggest to squash the following change into
+> your patch:
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index a0c077af9c98..d9bcd1e8413e 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -425,7 +425,6 @@ config PWM_LPSS_PLATFORM
+>  
+>  config PWM_MC33XS2410
+>  	tristate "MC33XS2410 PWM support"
+> -	depends on HWMON || HWMON=n
+>  	depends on OF
+>  	depends on SPI
+>  	help
+> diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+> index c1b99b114314..f5bba1a7bcc5 100644
+> --- a/drivers/pwm/pwm-mc33xs2410.c
+> +++ b/drivers/pwm/pwm-mc33xs2410.c
+> @@ -163,7 +163,6 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
+>  	return mc33xs2410_write_reg(spi, reg, tmp);
+>  }
+>  
+> -#if IS_ENABLED(CONFIG_HWMON)
+>  static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
+>  	HWMON_CHANNEL_INFO(temp,
+>  			   HWMON_T_LABEL | HWMON_T_INPUT,
+> @@ -286,21 +285,20 @@ static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
+>  static int mc33xs2410_hwmon_probe(struct spi_device *spi)
+>  {
+>  	struct device *dev = &spi->dev;
+> -	struct device *hwmon;
+>  
+> -	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
+> -						     &mc33xs2410_hwmon_chip_info,
+> -						     NULL);
+> +	if (IS_REACHABLE(CONFIG_HWMON)) {
+> +		struct device *hwmon;
+>  
+> -	return PTR_ERR_OR_ZERO(hwmon);
+> -}
+> +		hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
+> +							     &mc33xs2410_hwmon_chip_info,
+> +							     NULL);
+>  
+> -#else
+> -static int mc33xs2410_hwmon_probe(struct spi_device *spi)
+> -{
+> -	return 0;
+> +		return PTR_ERR_OR_ZERO(hwmon);
+> +	} else {
+> +		dev_dbg(dev, "Not registering hwmon sensors\n");
+> +		return 0;
+> +	}
+>  }
+> -#endif
+>  
+>  static u8 mc33xs2410_pwm_get_freq(u64 period)
+>  {
+> @@ -523,7 +521,11 @@ static int mc33xs2410_probe(struct spi_device *spi)
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
+>  
+> -	return mc33xs2410_hwmon_probe(spi);
+> +	ret = mc33xs2410_hwmon_probe(spi);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to register hwmon sensors\n");
+> +
+> +	return 0;
+>  }
+>  
+>  static const struct spi_device_id mc33xs2410_spi_id[] = {
 
-Both places minimize the runtime impact on kernels that don't have
-CONFIG_RISCV_USER_CFI, so I would like to understand the reasoning
-behind the decision to include one and not the other.
+Perfering IS_REACHABLE over IS_ENABLED is fine for me. Is there a reason
+why you just didn't replace IS_ENABLED with IS_REACHABLE ?
 
-> But sure, it may (or may not) have noticeable effect if someone were
-> to go around and muck with ALTERNATIVES macro and emit `old_c` only
-> if config were selected. That should be a patch set on its own with
-> data providing benefits from it.
+Best regards,
+Dimitri Fedrau
 
-The difference is small and each build and implementation can behave
-differently, so code analysis seems the most appropriate tool here.
-We must still do a lot of subjective guesswork, because it is hard to
-predict the future development.
-
-We should be moving on the pareto front and there are 3 roughly
-optimization parameters in this case: the C code, the binary code, and
-the work done by the programmer.
-The current patch is forgoing the binary quality (nops are strictly
-worse).
-The ifdef and the macro solutions prefer binary quality, and then differ
-if they consider work minimization (ifdef) or nice C (macro).
-
-Does the current patch represent the ideal compromise?
-(I can just recalibrate my values for future reviews...)
-
-Thanks.
