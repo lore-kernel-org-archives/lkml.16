@@ -1,143 +1,142 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9C12673BF;
-	Mon, 19 May 2025 07:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6195268C42;
+	Mon, 19 May 2025 07:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638810; cv=none; b=V3e/2z0BBOogZviZfrZTZxwG9MZWJXnoqFmPDxLI+gelETsJnQKxDUaByXIUzQSrpp5szVPUI5kGpwfnlcupHFo9ZRQuOaAAgdpW5i+5H2EdPg1RbIDM74cisn1pAYoYnRCVKQQ0yubGdkhuCJqdhtr3tPz8zzkswDb7iao1TZI=
+	t=1747638814; cv=none; b=TZS3nbmIPgjybP7uS2b3BjGOsjeHl3wwEEpFjCtEA28fH7B5lpW/nGggm7HOC5HPteiBj9kZPPWyS1APM5Nzv4ntpRRr8lkwVGZn1M/x589aPWPY88P4O/axVQeylr4ShFJo3zoYv5hOW5H+vVWhnJiKo/1yt4DAsHt7aq1T788=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638810; c=relaxed/simple;
-	bh=taaJ6DZBxavlk8sW98fnyAC/zF0N1R0WU9X1b1lZUgw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=CZjQ9DhNACJSSKRn194t9z3xmYGPHat0B2Je44amxL8vluOXV/PoLdblhiGx9O4tsiluVHHja+y2MqDgm3/aWmR1qoDScqa0xKtic1JaKDffu/Kfqxwon4KgMR7q1nl5ADx86hz8qeZRqr73M30LBgAXNtOtZ4KGVVFIZAD17EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fx9orPLA; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1747638814; c=relaxed/simple;
+	bh=ADIaQA4MX7T346Am8MwIuhqVQVd9hK35wgGMYFazN7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ihy0Mm6lRId1UNnfWBe1LG+qa5b69PxEr2hE2QCo9olpOEMAKxRFnyOjM8qo01W9MrhD+tj5DTm0jApc5vV+ImE5gz29nF0OTBXY+/r5DSHbLk1m7sSK46YEfWg6MmyIG/1Im16+7pI4ieyy6QI4QK13h6iisJKBHozI28/7zak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mtOSoylE; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fx9orPLA"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54INFXma020271;
-	Mon, 19 May 2025 07:13:25 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mtOSoylE"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J4F8L6014393;
+	Mon, 19 May 2025 07:13:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rcbUyRGvjcWhXGrMFrPlkh66cJTyG24s6VXDEa1do4k=; b=fx9orPLADY/FUl+N
-	Cg0W7ksagrhyUaSD+6Ph7uYbFf4vk/287UOiYvOWwuEUT9n7GdwqZulO76lt19sD
-	eqj0aLdX0FTF3dr521EFDYpT6t/R84ANt/JUs5plBdRfX7S3DR/UkdnVgY3D5DwZ
-	7GJcs74L9XZ8IIrZE0RY8q+XXc4RGERz+B+6TPPQU92wtJY3q/cZxCxjUoL/7FpP
-	M+jd/V+3tJBOFcEvE6SXY5AMtjBSysPyHp8P02dIEWi1Hl2shwVnBC88bbPYIRTc
-	XMzf0HSjWm82aKkS2W+YnKVk+J4V/EhmwRQ2Q0RtSbsxAgcShKNXNtqevMs9INwA
-	yyKNlg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9udka-1
+	lHkFEw6sVdTOUFXGZ67/iBXCfONE1WB0Bo1rp4ZCQy8=; b=mtOSoylEYEr1GYMX
+	EytlOJyOx4hPBIBKGoE+F2yeuITsV61ode5CP2X5B554tW53s+Lrtc0k4AAbgKzR
+	n2tiXI0pzMSCA7Riye+5h1XZ488ZSOntp0b6Cy2ApKHpJ/NjUVFlYZpHhy7DfDdW
+	cDioMWujMqpUdIJkvId25c4InhK/JXa9EOOQijg4PZdDTuYT36P85ocJcjP7mLej
+	/XqjD9jqmUWUUcYziwPI4jl2r1L4GNYttYzUuSUCOR16wvxsldywI6PV15LlcHDv
+	2F7un+QQFTHmQa5nEKoWZMu0ZnnIqqueFvU20NAbavCVQYlf4uABASipn7XBNz5Z
+	IcoOUQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46qwenggen-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 07:13:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54J7ChvI012064
+	Mon, 19 May 2025 07:13:28 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54J7Cmfd026683
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 07:12:43 GMT
-Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 19 May 2025 00:12:40 -0700
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Mon, 19 May 2025 12:42:21 +0530
-Subject: [PATCH v4 1/2] media: venus: Add a check for packet size after
- reading from shared memory
+	Mon, 19 May 2025 07:12:48 GMT
+Received: from [10.239.132.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 19 May
+ 2025 00:12:41 -0700
+Message-ID: <14091125-20f4-405d-8022-f02ac3c311b9@quicinc.com>
+Date: Mon, 19 May 2025 15:12:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250519-venus-fixes-v4-1-3ae91d81443d@quicinc.com>
-References: <20250519-venus-fixes-v4-0-3ae91d81443d@quicinc.com>
-In-Reply-To: <20250519-venus-fixes-v4-0-3ae91d81443d@quicinc.com>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Vedang Nagar <quic_vnagar@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747638757; l=1651;
- i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=BOFS5fY2FGoFdLOiqBeMjeN6ITuFXL8XEFIhc+6g0Qw=;
- b=zVVAxViKFk+cXoTkxgfe7CQxZXVkDKD5LSOdWzjrAqTVAnbpPfy6UFfPdKGq1WD2j8FtOBQWA
- hWNBXIaT/iDCdayRmKofY9p7Qf1yHL+KsHRcYujDpYBxY9fpUhquwDO
-X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
- pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] arm64: dts: qcom: qcs615: add ADSP and CDSP nodes
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, <kernel@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250516-add_qcs615_remoteproc_support-v3-0-ad12ceeafdd0@quicinc.com>
+ <20250516-add_qcs615_remoteproc_support-v3-5-ad12ceeafdd0@quicinc.com>
+ <thtk5vv2hpbnoapmt6j7nlgrcyedjzjbi3ntlyb3ll7atks46n@bp4isaoert67>
+ <73a689a1-e8a3-4417-b0e6-374ec9b091d5@oss.qualcomm.com>
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+In-Reply-To: <73a689a1-e8a3-4417-b0e6-374ec9b091d5@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+ nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kCq0ba9QWIbKsnsD5Fv3MRAqHs0Xoz7b
-X-Proofpoint-ORIG-GUID: kCq0ba9QWIbKsnsD5Fv3MRAqHs0Xoz7b
-X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=682ada12 cx=c_pps
+X-Proofpoint-GUID: 2_VoA_9Ie_kFe_t33v2Xz0-gQ4NOd36P
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA2NiBTYWx0ZWRfXwLNH/R3IrbFi
+ UinX3ozmGPLXUYm5/LJi32zU7cO5v94wHNuwsioP1uormqLNVi9XoyHIl5n9PsSthwm04hdXU/0
+ 3m/wwOeiXhLFIWoib7DXQWQVRPp5pbePHJ6JTVSVnN1ak9QeD6gsdKIphU6ZcADtmq7jKRgxPTf
+ H+Vi8CoOGwE4f3JkHfmDOjLNJJNh94vPOK3IDydVaoQ9IyEdjsRoyz3LVD6udZgY/JWcngYabmH
+ YmGUeUJhRfYtSNDf9hyg3pVWZSQQQBv1CtO4EIITSJkk4zuxedfbJdebRh4gRkNvlU9apz9DoRd
+ JMk72ccsjoBSJjmN3b2sGMFpFgS+N+Qlif5IcMEXbWcPwe+YPbkc6U/MdWd2G5r4yAThsHc14o8
+ yej8Z40HzuYJNAggs5c4dkvQZPnYwGgptuyTRWZlzCNqEuLoV9GVuisIl9lCPBdPTcg5iIlI
+X-Authority-Analysis: v=2.4 cv=Wd8Ma1hX c=1 sm=1 tr=0 ts=682ada18 cx=c_pps
  a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=D245qAF2djvHqEjldSYA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA2NiBTYWx0ZWRfXygNqLORhll23
- pAqwXDhRcWjzMQWRL+LesWftyB7Tst5azaS/+pHmIdWny4Tc1cxjtmNk5P18o1dfFtSVvOV7UwG
- v00ayCI9ym/KvuPwd8kBXC7rU16XaFmSqYG+v9qUpbfkhEVWZ/4uLSjlg/i663aJ0jWiUhaEl44
- +ppNEvp2G6VgcG+L9h0Y27Rorqz/Mj+H9k/ieRcU+aDw67CG/GxS+t9CHnvviPRdq+KrySq7l49
- nxKRTK39UJM/QgLzm1tu0gW9OYOxCSoQaQudTtWmv0PbaKNXEVHhtAQ4+9Z8CyUJ3xUsZludwEP
- dEg0BmxRiCwKThZrwLAbUGFip0pq3pprguTn6mepPp962ZGlyU20243DEb9CBqAoYcEQ50g6AGW
- 8ID+hhS09MLBqbTSlNxxB16m1P3gtTYM5s4amXNmLbmcmgaOR6SzmpU7EFT2kATBkU7f2h6O
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8
+ a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=TnUyPrpFTRFRPAhg5l4A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 2_VoA_9Ie_kFe_t33v2Xz0-gQ4NOd36P
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_02,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=788 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
+ phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=798 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505070000 definitions=main-2505190066
 
-From: Vedang Nagar <quic_vnagar@quicinc.com>
 
-Add a check to ensure that the packet size does not exceed the number of
-available words after reading the packet header from shared memory. This
-ensures that the size provided by the firmware is safe to process and
-prevent potential out-of-bounds memory access.
 
-Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
-Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
-Co-developed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
----
- drivers/media/platform/qcom/venus/hfi_venus.c | 4 ++++
- 1 file changed, 4 insertions(+)
+在 5/18/2025 12:59 AM, Konrad Dybcio 写道:
+> On 5/17/25 12:11 AM, Dmitry Baryshkov wrote:
+>> On Fri, May 16, 2025 at 11:27:06AM +0800, Lijuan Gao wrote:
+>>> Add nodes for remoteprocs: ADSP and CDSP for QCS615 SoC to enable proper
+>>> remoteproc functionality.
+>>>
+>>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/qcs615.dtsi | 86 ++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 86 insertions(+)
+>>
+>> Is the MPSS not present on the QCS615? It was a part of the SM6150
+>> design.
+> 
+> Hmm.. good point..
+> 
+> It's surely not there on QC*S*
+> 
+> it is there on SM6150 though, quite obviously
+> 
+> downstream ref:
+> 
+> https://github.com/ianmacd/gts6lwifi/blob/master/arch/arm64/boot/dts/qcom/sm6150.dtsi
+> 
+> Konrad
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index b5f2ea8799507f9b83f1529e70061ea89a9cc5c8..c982f4527bb0b9f9ef9715c6c1dc26729f0fc079 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -239,6 +239,7 @@ static int venus_write_queue(struct venus_hfi_device *hdev,
- static int venus_read_queue(struct venus_hfi_device *hdev,
- 			    struct iface_queue *queue, void *pkt, u32 *tx_req)
- {
-+	struct hfi_pkt_hdr *pkt_hdr = NULL;
- 	struct hfi_queue_header *qhdr;
- 	u32 dwords, new_rd_idx;
- 	u32 rd_idx, wr_idx, type, qsize;
-@@ -304,6 +305,9 @@ static int venus_read_queue(struct venus_hfi_device *hdev,
- 			memcpy(pkt, rd_ptr, len);
- 			memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
- 		}
-+		pkt_hdr = (struct hfi_pkt_hdr *)(pkt);
-+		if ((pkt_hdr->size >> 2) != dwords)
-+			return -EINVAL;
- 	} else {
- 		/* bad packet received, dropping */
- 		new_rd_idx = qhdr->write_idx;
+Hi Konrad and Dmitry,
+
+I have confirmed with the relavant folks, and this variant of the QCS615 
+does not support modem.
 
 -- 
-2.34.1
+Thx and BRs
+Lijuan Gao
 
