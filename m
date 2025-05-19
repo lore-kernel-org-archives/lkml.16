@@ -1,89 +1,109 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B60D245014
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3CE2D052
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 06:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747636311; cv=none; b=btRbIVYjXIftkknXT621hgpDh1jlZuTpJkCdZxmQHh+9XLKSqm6mf03RJNDXyzRH425qfzeuFS21tO97nudg9XWdfC8+uJaHLiU8g8er6BAHhJf81+gAKuLaaS+z9IOK/khmPQ8af0+ts36L5QwMgfLUSWFil8chg1xX1lH/qXk=
+	t=1747636323; cv=none; b=q0f4FxFEbOjrCK9Yl7z70safrfzj5+W/ImdrGngND8QJXKdHm9MzAHFVcJ2hraKtJb9qADhFa0dDtzECVRzbVknJN4GvORvF9KPGuVfhwhKqx+Onobi4AuOtM+0TQO/q17CIcgOOtVk9pR0OTnqfMqk5drxZCeiKC2DdipylWp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747636311; c=relaxed/simple;
-	bh=BF1ovdxwQHWY/86acyml+Ji0aewU5uxZv17FrAdL/Nc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HZ6US8dDqKaDB8CZUGryfHh0BbGayVTi47pd4bTeSfCPUWKccKjYb6wRMSNfn1/wJ8bettWUfPhtirHoUT64SEejrcn2BSZ8cGwcsoGHhBNXga669a72QXAjuUmUs3bH9wjSBw0RnRsG6cD+b/3RjOab5PaBbhsCDQ/oD8zGmrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HiEBHYHq; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747636323; c=relaxed/simple;
+	bh=b9joiAfq/KXTWJWvhP6k0Abjv8MXdGpexHQg8ErjGuQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AN4Mi7TEMLOtPjDN2uLqRYtYGIiR7IgNQy80vA6SI8lJYlNC5fXLPE5PDnXYh6W5yzvBU7rurHglTR87G8BDC3wbELOqoBwfT0eNLyfDqKR7FZyNgOyFZgt2FpzoAh+EST/vas3w/w1By+cY09WhHeHet74loKCu56MRx4vxVws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=obBozUuY; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiEBHYHq"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-601470b6e93so5225597a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 18 May 2025 23:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747636308; x=1748241108; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BF1ovdxwQHWY/86acyml+Ji0aewU5uxZv17FrAdL/Nc=;
-        b=HiEBHYHqf0fd/1kNwvdyg83/LlvIFn8na3R/Ifbr3cvkVRajB3C2h3qNHkqtpRtLUU
-         XrmoKEZeJUWGZ08dPEFSl2VYfIDJyrq6F2CaGf1S/kOEPF/9st2pLqtPzdziVR17ov5l
-         iQJIhn4AkwJ7VmhZPjFgSKHkilLIe/1rf2hP7NZUL7ELRs+wJrzvEGKpdKZeM4umZFnd
-         dsJ5bGPmLetT1WLVFDCLCvDIOQ8Gei2wOzg0mb4790sqNZW2vL0/aWKUqLY1azyZVu7i
-         QzXntN4rvtg25Ef3a18baG10CGCkPzoFcJEwUgFuvbnTPP8W4rT2kCfblZG2yVJuEo85
-         HBlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747636308; x=1748241108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BF1ovdxwQHWY/86acyml+Ji0aewU5uxZv17FrAdL/Nc=;
-        b=QCASpCQbjMy4noH6v+VWhy7xFlXzhqrd0mQSwb30OE0O/cThXmwYwxsOOifvZcqNWa
-         U/nC4nUg/5lSNJ33gzq9fR9ERMOys7tR/JpsrhsvMr7xe6c3ufT5PcqtLD2ap0vcYyt8
-         E9bk/WoOMOC8K4yuEXSwQ2jzkji1FemtgwBQafLis1K0JzhrrpujuCtnCHgwP9p55UB3
-         Kr4sxNnh3Hde/7aCR1EDRJmKpaPgTdeUydgYZx8i2zcLqgZgP4wyWYezxlSnMgFZ/GgQ
-         rFJOgqRJfgbZwfoEQzaypay5erc2KJmzC5v98xi+16WyluD5wL115SVoIEfbl4QVR+ao
-         EqKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWafk8fx7YUjqp8p/Bpiwx0qq6USBPHvwh0Vl3WkCWcY0zb947rMvhNoQNUOXd/10gJkeFgSMuueuQFWyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt/l3Pfa5eW+KkhM/ZsRlZDXY+h05P+lXdOObIVYgaVMh/ZLRC
-	Leh9dh0qiPZepz+EJsLR+I2Qp/M22fxaXogGWL5ziR35vwKldUWcgJHIcozWoUhSK8JA/MLiLlD
-	BqKQvBOMbru4ZVZyv4XY9bx45pcmDHCCFyZnF
-X-Gm-Gg: ASbGncs1VupRrwYaU7KZpjvNcP7oUgWYlYu3e3b+sLFg+0T0T/fs5zKV3l9HWM3I4zJ
-	2hITg0qAJWa/xc87R+a6Q8ysxyQoBtOjfN6ELxBdxouLjl/x8/uYXs2vQXLTQWZeqgxwTewiHrZ
-	pESP2Qzx71GH1+U5vQ83jvtbu0S0V0ZhfDhQ==
-X-Google-Smtp-Source: AGHT+IESRmn4RqUdcN4tMhYxA674kvZ/4Qlv/882CQtNwGmSIHeKn97znZffKYPCylyJNOLV+K7PjG8R0OFPcC/Fixc=
-X-Received: by 2002:a05:6402:348b:b0:601:834a:e678 with SMTP id
- 4fb4d7f45d1cf-601834ae764mr8593090a12.17.1747636307474; Sun, 18 May 2025
- 23:31:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="obBozUuY"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747636317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qhwfp4EBzg3RNOWbJvbUL8OkMdkVj45Lqv1H1O9YUck=;
+	b=obBozUuYgXdLhdigMtpTnfWbC/7w0awskie0wRvHeJkMInnYpWmeuUGZ+VZdXe8Negeb1V
+	zcVVgf+s6Pa/xxAC+r2hLVPQfy2IAHTzZQ6ecYLgHQC4KLxeqLPDfXiX4iMdzgnn1gxDyG
+	LuBYRBi7IhifT+NU73qxjSkfP3Clsh4=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tejun Heo <tj@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH v4 0/5] memcg: nmi-safe kmem charging
+Date: Sun, 18 May 2025 23:31:37 -0700
+Message-ID: <20250519063142.111219-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518225035.227880-1-siddarthsgml@gmail.com>
-In-Reply-To: <20250518225035.227880-1-siddarthsgml@gmail.com>
-From: Siddarth Gundu <siddarthsgml@gmail.com>
-Date: Mon, 19 May 2025 12:01:36 +0530
-X-Gm-Features: AX0GCFuZmeAJjIjy_nJmuf4nTuZgAv1N47LqwJBiIudfRuPaPnH59k5gJVtM8Nw
-Message-ID: <CAKWSiC6tYijmMtnmhRrq8OTivfRGu6D0y9vWbPd0g45x3yoA=w@mail.gmail.com>
-Subject: Re: [PATCH v2] rbd: replace strcpy() with strscpy()
-To: geert@linux-m68k.org
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
-	elder@ieee.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 19, 2025 at 4:20=E2=80=AFAM Siddarth Gundu <siddarthsgml@gmail.=
-com> wrote:
->
-> strcpy() is deprecated; use strscpy() instead.
->
-> Both the destination and source buffer are of fixed length
-> so strscpy with 2-arguments is used.
->
-> Introduce a typedef for cookie array to improve code clarity.
->
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+Users can attached their BPF programs at arbitrary execution points in
+the kernel and such BPF programs may run in nmi context. In addition,
+these programs can trigger memcg charged kernel allocations in the nmi
+context. However memcg charging infra for kernel memory is not equipped
+to handle nmi context for all architectures.
 
-Truly sorry for sending this to the wrong mailing list, apologies.
-Please Ignore this. Sorry for my mistake.
+This series removes the hurdles to enable kmem charging in the nmi
+context for most of the archs. For archs without CONFIG_HAVE_NMI, this
+series is a noop. For archs with NMI support and have
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS, the previous work to make memcg
+stats re-entrant is sufficient for allowing kmem charging in nmi
+context. For archs with NMI support but without
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and with
+ARCH_HAVE_NMI_SAFE_CMPXCHG, this series added infra to support kmem
+charging in nmi context. Lastly those archs with NMI support but without
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG,
+kmem charging in nmi context is not supported at all.
+
+Mostly used archs have support for CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+and this series should be almost a noop (other than making
+memcg_rstat_updated nmi safe) for such archs. 
+
+Changes since v3:
+- Use internal config symbols for nmi unsafe configs as suggested by
+  Johannes.
+
+Changes since v2:
+- Rearrange in_nmi() check as suggested by Vlastimil
+- Fix commit messag of patch 5 as suggested by Vlastimil
+
+Changes since v1:
+- The main change was to explicitly differentiate between archs which
+  have sane NMI support from others and make the series almost a noop
+  for such archs. (Suggested by Vlastimil)
+- This version very explicitly describes where kmem charging in nmi
+  context is supported and where it is not.
+
+Shakeel Butt (5):
+  memcg: disable kmem charging in nmi for unsupported arch
+  memcg: nmi safe memcg stats for specific archs
+  memcg: add nmi-safe update for MEMCG_KMEM
+  memcg: nmi-safe slab stats updates
+  memcg: make memcg_rstat_updated nmi safe
+
+ include/linux/memcontrol.h |  21 ++++++
+ mm/memcontrol.c            | 136 +++++++++++++++++++++++++++++++++----
+ 2 files changed, 145 insertions(+), 12 deletions(-)
+
+-- 
+2.47.1
+
