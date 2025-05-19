@@ -1,118 +1,117 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E74127817A;
-	Mon, 19 May 2025 13:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636CE26FA74;
+	Mon, 19 May 2025 13:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747660833; cv=none; b=hS6Ao+1pFkzw/E60byDJgL40FsRbLqT1jWv7PsKnlqvhtntkcry6YYGFf/j/QUDg41R19xnBX6KgdVBlPmusktm8rnxbcVvEPvsdwFxYQ92O2Mtgqwz5YcfY2VuJEhiwdgXOu8fZ8AmEzlltSJabhLZ9eLTKoxdi4U8wD2JhqQ8=
+	t=1747660904; cv=none; b=RQ5TgSpEmq2QE6cObSssf8KxIg/giT1AcMBWmB7WbL49jvGsL3BhqTzwqnNPzrbVK+gnm1yzQgiHIJ40nrQ7md7Bwun8HHS2ju/FRnc6RGyaoGledI36XVoudTEFTEwHuBFuwT6MR6LqO9j8OsyMkozbpD1c33IICLNfICEc+So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747660833; c=relaxed/simple;
-	bh=9iouOGh3QjslBE1M2A6Y6TE92/zQWmx9Bc23waFCt4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gMXCljz4SZnYWqfT5WBryTOsf1MQe1qQ2ztzQzaltu7sqvckabnUzrJ6zpHqqBYu7dmNhb+/EyhTfgevnsgPBM1BgwsctCpzOlMKqbDr8DETNc1gPxifg6zAQPnjF7pyHrPZALuOGPdeIBn4owjQd/lyn8Efala2v+YuGnIpt00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FffsN5Ae; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747660904; c=relaxed/simple;
+	bh=69JNpM5fMS+HBTIz2jvNUWelHCPlrISQpoxsagPaMK8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ELc2b7+5fefHflbRcxOq5zVukRZ0Ofu6EtV+SDe6twFF6LHfneT8EmfqAY3yzdMpuIu+IzaNgY46GfTxdTiW9eSWvOe3ri39Qbos1Qszx3g9Z0Chb2hpcWzxrhWQC23i/2cP6QrPjshcMIu2+NjE4fPPbQoDr0P3bYDTCDuLFlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mp1wwhuc; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FffsN5Ae"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mp1wwhuc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747660832; x=1779196832;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9iouOGh3QjslBE1M2A6Y6TE92/zQWmx9Bc23waFCt4U=;
-  b=FffsN5Aepn8mo8V4gsGX4alLw1wSzMIHntb9h8yNpLaOqFcgAsk0F/tq
-   +1Pw8d74tDtoYxf4yMoUMjzZOFZjFODZTP+iPAkU+GcJqo009zPhrZX4g
-   twAoqiMLQleB5qh2DevRjJl87Pw17Kyv/aoTR7VdFntWa8LWWzKgChLb+
-   8kRYlgOWBx3O9HdIVdXEHepGfp3c7aq9cceOcKOn7EWEpIYKeWrX0dYlv
-   oP6141/lq21tgXOhIJgy/BxNfCUc5oVI2PqbqFVKyB8x94ah6FwGQSW9y
-   oWSJiWI7nbLxwqC3lfxDk7le35IxdHkpsxyzS+2KGMaL6gnIs23TgUpza
+  t=1747660902; x=1779196902;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=69JNpM5fMS+HBTIz2jvNUWelHCPlrISQpoxsagPaMK8=;
+  b=mp1wwhucw2hWCe2W1qLf2wKTnfDrQRE9kf7N8sp8EHHn1NAuXRZgXcRi
+   i6uwK3FF4/2kyCPWjzErkwihW0Bq0wd/ncajjAWCv/7LeOKYTw/V6+3tL
+   BHeHFsfd4o0IT4ArtfHzevOUl2UMJTg0euweFR0RSEZdmpB9ZqOZwGRAv
+   L4aDzgqDSPcQJzWyfcbyTwLI94w3Ci91J0ZWALcIuJZh+A+4FHzduqkxX
+   8mF/pNf+cQUblXvo3CpenGWZoRWzXrATD/Qw36njOsYvzZvZsjsL9LqRG
+   62zQMKUJAQohwtsDeLBrhHSH3kfbGWjeFtcBZUXDw2ead5qy0AuCaNBtB
    A==;
-X-CSE-ConnectionGUID: hTCDBz2YQ0mbjDGSGUEs8w==
-X-CSE-MsgGUID: yYAOOEi2S9um35Hymji4TQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="52191871"
+X-CSE-ConnectionGUID: PdoVvpReTCWxDnkPw1dHhw==
+X-CSE-MsgGUID: ZMpsBLe/RXGKoItWYIOauQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="52191986"
 X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="52191871"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:20:31 -0700
-X-CSE-ConnectionGUID: w/erx1NHSqmJhMrNaGbHVQ==
-X-CSE-MsgGUID: DEZHvtGbTIe3bNhcttCyoQ==
+   d="scan'208";a="52191986"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:21:41 -0700
+X-CSE-ConnectionGUID: AV9u1qR6Q8m54A5siYqt8A==
+X-CSE-MsgGUID: UA7qCkRSR6y54OVukpdkBw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139268403"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 19 May 2025 06:20:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uH0Pp-000LWa-25;
-	Mon, 19 May 2025 13:20:25 +0000
-Date: Mon, 19 May 2025 21:19:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
-Message-ID: <202505192132.NsAm4haK-lkp@intel.com>
-References: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+   d="scan'208";a="139208350"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:21:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 16:21:32 +0300 (EEST)
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
+    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
+    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: Re: [PATCH v3 04/11] PCI/ASPM: Clear aspm_disable as part of
+ __pci_enable_link_state()
+In-Reply-To: <20250519-mhi_bw_up-v3-4-3acd4a17bbb5@oss.qualcomm.com>
+Message-ID: <649c2bb2-d9a3-66ce-8bc5-2735195aaa5e@linux.intel.com>
+References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com> <20250519-mhi_bw_up-v3-4-3acd4a17bbb5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Lorenzo,
+On Mon, 19 May 2025, Krishna Chaitanya Chundru wrote:
 
-kernel test robot noticed the following build errors:
+> If a driver wants to enable ASPM back after disabling ASPM for some
+> usecase, it is not being enabled properly because of the aspm_disable
+> flag is not getting cleared. This flag is being properly when aspm
+> is controlled by sysfs.
 
-[auto build test ERROR on akpm-mm/mm-everything]
+This sentence has broken grammar/is missing something?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Stoakes/mm-ksm-have-KSM-VMA-checks-not-require-a-VMA-pointer/20250519-165315
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes%40oracle.com
-patch subject: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
-config: x86_64-buildonly-randconfig-001-20250519 (https://download.01.org/0day-ci/archive/20250519/202505192132.NsAm4haK-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505192132.NsAm4haK-lkp@intel.com/reproduce)
+aspm -> ASPM
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505192132.NsAm4haK-lkp@intel.com/
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 94324fc0d3e650cd3ca2c0bb8c1895ca7e647b9d..0f858ef86111b43328bc7db01e6493ce67178458 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1453,6 +1453,7 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+>  		down_read(&pci_bus_sem);
+>  	mutex_lock(&aspm_lock);
+>  	link->aspm_default = pci_calc_aspm_enable_mask(state);
+> +	link->aspm_disable &= ~state;
+>  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+>  
+>  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
 
-All errors (new ones prefixed by >>):
+I disagree with this change.
 
->> mm/vma.c:2589:15: error: call to undeclared function 'ksm_vma_flags'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2589 |         map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
-         |                      ^
-   mm/vma.c:2761:10: error: call to undeclared function 'ksm_vma_flags'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2761 |         flags = ksm_vma_flags(mm, NULL, flags);
-         |                 ^
-   2 errors generated.
+The problem currently with ASPM driver is that pci_disable_link_state() 
+and pci_enable_link_state() are not symmetric pairs despite their 
+misleading names. pci_enable_link_state() should be renamed to 
+pci_set_default_link_state() and if the symmetric pair is needed for 
+pci_disable_link_state(), it would have to be added separately.
 
-
-vim +/ksm_vma_flags +2589 mm/vma.c
-
-  2586	
-  2587	static void update_ksm_flags(struct mmap_state *map)
-  2588	{
-> 2589		map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
-  2590	}
-  2591	
+I've some (rotting) patches which try to do that, in case you want to try 
+to solve this inconsistency in the ASPM driver (I can send them to you)?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ i.
+
