@@ -1,128 +1,105 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D7288C13;
-	Mon, 19 May 2025 17:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0967288522
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747674187; cv=none; b=bDrGblNmbUS7RTGudPacjqUzcVPVnQuuhymUklGvEuURywbL5HBcj2W6gQHXFiPD/dJXQyR7LIN9Uv96mkjq2ER4NRIN4JanqsSPW7P232mMqAHDoXQouPjXcsKwiVG00s+pd+on6kJh9ODGLMwRuZQxwfphpIP9FhT1HSEp9Vw=
+	t=1747674197; cv=none; b=n8mdo385H3J+2QW7MqctHfqdsMViUO54WCFn7giXxH62ihlm5JpRFuadta4ZSnb0/SRQIR0RcsIlvKK4QfL/oknaospPz1Rogs6G7DuNWngWk/S7TVdzp4jisx41YbP2wKkEzRqAlzA/HCE82rphQrOX6R6OKjsm47lMWvSSgvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747674187; c=relaxed/simple;
-	bh=id6sLlLT8e6OOCvWPFO2ag8J665oE4QuQbuDd62e+sA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z2I0rrmRhyg/X6yrBrEcwAcv6tTA5LCt4S20+987ZePD8FXtfCw29oliO7mDkZi6PI7OVXHAn+fdcxtY4I8z86RS3yJtMJwl39qV7iOYqYoNBeE215m/9qOjY1Qj814ylG+NlOIUYZLZ8TjCR+T21I8lLzElq2z52NNOYTqd9MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oNuqiAW1; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747674197; c=relaxed/simple;
+	bh=JYOLy1V8LnTKP6Ii4/TJACY1NDLLiuoT+YsL1UYreTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqBy5lgPuU26MKmH7G1uoGT+jWl7DptzoamFQ7Ho93TExeRkkEQLRD9UrwgtzecTJnBRVkdYAztRRFMHF5xTEK1dFDtpwLO58JNrngSG8wTScVzwCxa1yvmKjomAco7pKSnhzFx+4/rgbCzW+icfVtSVvkM+HP+HDtN7GQe6hmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=J3ct4x9S; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oNuqiAW1"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JENVIQ010263;
-	Mon, 19 May 2025 19:02:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=/GHcyFS0HynTNqpKjFvRFs
-	q5Oc2635v1fvZXhZzErh0=; b=oNuqiAW1ifBHjNyvHpFVETOZ0KvqqrmF6zMp4Y
-	8CVo/IWxBq/PvB/qyIW/QA2FP091vTAmFj9r0AazMhtMV7Q1gy27YsdfQFb3s3//
-	qmeOQZjmaAl+jZA/JtktB3FkcfkTvp5UTgbA4z4qK+PKB0LG6+0YVpsY+NJvQ+Be
-	+E/Ckl509SJvGeJW/DRlo6PQbj3cSMfdqY21Oqe3uxRu0k92+MFY9wg9nrXDQ5d+
-	cfMXfTQRw9OOLpyaiiez2elqEdfztHh0KYF5mqRqID9nFFPzwG+HZfTUlFrtGob6
-	raZADNeuPopF6ZcGaX8eYjCD+tz/aqs/TH0U33mnJa11dp4w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pfka13yw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 19:02:47 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A48D40052;
-	Mon, 19 May 2025 19:01:46 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5E64DAF7007;
-	Mon, 19 May 2025 19:01:17 +0200 (CEST)
-Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 19 May
- 2025 19:01:17 +0200
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Julius Werner <jwerner@chromium.org>, Evan Benn <evanbenn@chromium.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
-	<linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
-Date: Mon, 19 May 2025 19:00:55 +0200
-Message-ID: <20250519170055.205544-1-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="J3ct4x9S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=tosP
+	yPyOgyvRyFhM+9E8VMFTT2SJO0IgrpkZvR345OM=; b=J3ct4x9SlIVLdaBucsJI
+	d1VMAnBxqggeYDVxkfa0hzoQ8NzTsSkr/7VPh9xXMF2+U5BN01fzS1lNirZYCUut
+	yUWwdsn2s7tR6EhsJHc2eFcDs9uCjk3Ca+jhNfd0H8TDRXVZV/8htMh5sBbRB4eu
+	3NJqEEyotDDImG1BfAadVGfm+ysfJLa4mcjlj20f3s2Ux52oQ2DhzjLtckIs8N0K
+	yrQlHdNPBnZrhqIv8YfsaPZSEIJMdLYEOdmHh/1b7cbM33rM8PualCdIl9H90Ulv
+	nXYXxBHerAZzEu9XgaEHeueqGbRjY6du+TCIWK1E2LR3lwx8j1GErf2swnzv+prL
+	zQ==
+Received: (qmail 2572961 invoked from network); 19 May 2025 19:03:12 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 19:03:12 +0200
+X-UD-Smtp-Session: l3s3148p1@cM4CG4A1jpBZz6uL
+Date: Mon, 19 May 2025 19:03:04 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Jian Zhang <zhangjian.3032@bytedance.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: slave-eeprom: add latch mode
+Message-ID: <aCtkSBZfkc2k1jnb@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Jian Zhang <zhangjian.3032@bytedance.com>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241209060422.1021512-1-zhangjian.3032@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_07,2025-05-16_03,2025-03-28_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tyMNv7CWzo/9Mar1"
+Content-Disposition: inline
+In-Reply-To: <20241209060422.1021512-1-zhangjian.3032@bytedance.com>
 
-The optional SMCWD_GET_TIMELEFT command can be used to detect if
-the watchdog has already been started.
-See the implementation in OP-TEE secure OS [1].
 
-If CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set, at probe time check
-if the watchdog is already started and then set WDOG_HW_RUNNING in
-the watchdog status. This will cause the watchdog framework to
-ping the watchdog until a userspace watchdog daemon takes over the
-control.
+--tyMNv7CWzo/9Mar1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
+On Mon, Dec 09, 2024 at 02:04:21PM +0800, Jian Zhang wrote:
+> The read operation is locked by byte, while the write operation is
+> locked by block (or based on the amount of data written). If we need to
+> ensure the integrity of a "block" of data that the other end can read,
+> then we need a latch mode, lock the buffer when a read operation is
+> requested.
 
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- drivers/watchdog/arm_smc_wdt.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+I don't really understand what you want to fix here. Does this patch
+really fix your issue because...
 
-diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
-index 8f3d0c3a005fb..f1268f43327ea 100644
---- a/drivers/watchdog/arm_smc_wdt.c
-+++ b/drivers/watchdog/arm_smc_wdt.c
-@@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, enum smcwd_call call,
- 		return -ENODEV;
- 	if (res->a0 == PSCI_RET_INVALID_PARAMS)
- 		return -EINVAL;
-+	if (res->a0 == PSCI_RET_DISABLED)
-+		return -ENODATA;
- 	if (res->a0 != PSCI_RET_SUCCESS)
- 		return -EIO;
- 	return 0;
-@@ -131,10 +133,20 @@ static int smcwd_probe(struct platform_device *pdev)
- 
- 	wdd->info = &smcwd_info;
- 	/* get_timeleft is optional */
--	if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
--		wdd->ops = &smcwd_ops;
--	else
-+	err = smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
-+	switch (err) {
-+	case 0:
-+		if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED))
-+			set_bit(WDOG_HW_RUNNING, &wdd->status);
-+		fallthrough;
-+	case -ENODATA:
- 		wdd->ops = &smcwd_timeleft_ops;
-+		break;
-+	default:
-+		wdd->ops = &smcwd_ops;
-+		break;
-+	}
-+
- 	wdd->timeout = res.a2;
- 	wdd->max_timeout = res.a2;
- 	wdd->min_timeout = res.a1;
+>  	switch (event) {
+>  	case I2C_SLAVE_WRITE_RECEIVED:
+> +		if (eeprom->latch) {
+> +			spin_lock(&eeprom->buffer_lock);
+> +			memcpy(eeprom->buffer_latch, eeprom->buffer, eeprom->bin.size);
+> +			spin_unlock(&eeprom->buffer_lock);
+> +		}
 
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
--- 
-2.34.1
+... what advantage brings you this memcpy of the buffer to a latch after
+every single byte is received?
 
+> +	if (of_property_read_bool(client->adapter->dev.of_node, "use-latch")) {
+
+If there really is a problem, we don't need a binding for it but should
+use the fix in all cases.
+
+
+--tyMNv7CWzo/9Mar1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgrZEQACgkQFA3kzBSg
+KbapsA/7B0NXjBKo61utDIL4MDx8yXm2LrModlmuPjzmxkLcnLgpK8uSmUQNM2XC
+KJbxf5Klqy3PwwX0X6t+yqti997smRGALB5dFHAAZP4XjtJ4lnv+2X0CTHmNBrli
+r++c3Pc63x9ZMRPPnRsriT+wS4XRI8GUIkHDW/ViCXoprMxqS9YjvUXOauRj/8vF
+JWE1JvfaEQwC1tbKjhl8kyNiHzHWAy+rxT6YowbcNPup/DhUS+3BsV/yNH6hPfmk
+vm7Gkw61UU3U/kteNmNN8zh2mp2zVzGEFSmuZUv9+Gmp7jOKEI7p/A4QvKlFXjy7
+RwqPYnyXPNLcw4vEMI2apFHBPo9jNb5khkv4r3hiuvjXFsQwu/8r7/DhdNXICB35
+gTO8r1RIimAqdHBnVoCWnbDyQLWeK+WtKxYNYS3jiFayUnw5GhEZ+ASMgzd1prw7
+V9lKGV1hFsPr731vrOaqebf0lKPfy+vNF53Z347ZMMOhRVsQMPDiYEmwpz/9POB1
+soEdma9U+TjNjAEyWYLf/Hwo4jBfvs+iL9C1L9ZliBi++uomRQ4fwPpdXK4qyrig
+S+Y5iA8KWe35XCKFMPhC4C+cjoHkCDtxNl0E/QQgmEMBDShGmn3+cEpCeIuPtSW/
+HlQ16YrIVMxqYn/jWbqdbJtdOwopfQxlHf8wqFPakNcQFYsejzc=
+=CLRB
+-----END PGP SIGNATURE-----
+
+--tyMNv7CWzo/9Mar1--
