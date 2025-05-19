@@ -1,268 +1,111 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72DF3F9D2;
-	Mon, 19 May 2025 12:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B46F1E0B86;
+	Mon, 19 May 2025 12:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658779; cv=none; b=lgOOUBFq8MyXyoldZTB7jD1S1dIoOWC5H/6kevA6C8UVY0UTibDij3pdILbXvILIfhlHUAe/aj1p2+SgYD+VIZIBIy/IV9fju24jlZQ8OS80k3z6N+bqlGSREAN/x3z43h5sU3MJ5p4gBbWDGNJuMagfRa4dBzdwI1efsywy77M=
+	t=1747658822; cv=none; b=Tc/5Uu3NiGNIBpPmRlcHPhiviBA78FdzxCriCy+nmUCI8fhL3YR/gufeocyabDdztM/5AyTCUxp+YTHk+SkuMW6QQtVi2mu626OZdEmfqVTOPGyzNGFwFKyCOzZxy5/PcvZJVIRICGeaWKpmfVE5YqKhoiNuTgoQxBQrhH3Uy7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658779; c=relaxed/simple;
-	bh=zSLiK74+854AbjStgDFA1Lpx3mRIWseM8M2ZjwDK8fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M0cBQa5GxRqT/4y6NRDvR8tJncbL6bwrlPkdx02Hhxj1+qbdzro4gDBqpArIhDRa1E9D891NQoABBqy6Pqp3IFAFL1Hv5Dk77D54OCD+yTY9TfUrYyzzewiN7C65/M3R6PZow7tdqG7msg+lNfMkTjnweNKvNP+1Q/KN5hLoZbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ILHAtyQv; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747658822; c=relaxed/simple;
+	bh=COvNHhxfOFdcPkYswikn5zrTUNVBmHzZqGP2ItG+TfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S/eFQQSqeLDI7lsBHbjhsBPZ0gOIQf5TtKrw+k+Iz9nbMP0Ivj3ogRgXRky6Io9Nm/QfrQX8PZQ/N0Cql5FmWLp3Ofguo+Y/gtKrSTPYxF25okmUrykivKwCbk4tuoNBpchk8MGbxcHLrUr3WPR9SuyDjtxra09Z7D/Nbu5k7xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn+PSvuf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ILHAtyQv"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4F2CF43B16;
-	Mon, 19 May 2025 12:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747658768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftDhpzUCFCgv9VuWBrFfvAn7gkRBGVdQ8LoorzEtpsw=;
-	b=ILHAtyQvoP+l2aYzHP8Fne8YPi4v3LTOIJmtiweeGuqExqV7XVp/RAGwvlWo+2bozMnJxz
-	xvT2E0qMBoy/JD4wgc6RIcO0JDORVOwgN+JNpzL1Jh2kQ9iNH8Xp0BDG2RJ2h6CvUeVnHW
-	vzQNNTOebdoZy+NCYZ6DHctXLI07e0mzrWnLh5MnJ4sUL7vHKuUvljTnyHJnOMrjTvBAGD
-	pzOqJu4GyhIFiwLVotKe5XZ8jGxnwS6gzpXVsb3qlCYp/gJCXGvOD90J5VhE2H+5Xg2AFQ
-	/Ki2TGqtfWeo7+6iL1S2bR5R9EEHx8pr6jLf0w3i/oScnDNxEkwd0ylP3bzyyA==
-Date: Mon, 19 May 2025 14:46:02 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 05/26] bus: simple-pm-bus: Populate child nodes at
- probe
-Message-ID: <20250519144602.0399c9c5@bootlin.com>
-In-Reply-To: <CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-6-herve.codina@bootlin.com>
-	<CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn+PSvuf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE2BC4CEE4;
+	Mon, 19 May 2025 12:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747658821;
+	bh=COvNHhxfOFdcPkYswikn5zrTUNVBmHzZqGP2ItG+TfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fn+PSvufpLJ5jRCahyjS4VPPLIuMe1NFJox9OdV0SaTO15h6AHrRqACWfXAc1VpXa
+	 /evqVnMVE5qx/MVM51A4V3gqKhBSBh1LB50fR+oyeA9Yv96e25QXv1Jo7mNQujEVr9
+	 4rLvUWRDsKvp5Eeob9FwEZbcnVjOoxga+xnzPT5OLxxr2VK0olwf1WPtf5xDUpbAKi
+	 5Jf61le612jeDo7yL1NuOFygtrng1PJxAsdtkA/f4+lwiWGHR3b28dvz+Z3qnFPI3n
+	 lhRAvalWPcwyteS4XwSJjCsG3cmdoPMVeEU4sd1L928YNtlvNV+IK1CHuhheHzv+69
+	 e7qws5d5cPb/Q==
+Date: Mon, 19 May 2025 13:46:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+Message-ID: <ca6ed5c1-5b39-4e22-8294-88380885bb65@sirena.org.uk>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
+ <D9Z3R4EYAXV9.211IFNRTOPM6O@kernel.org>
+ <D9Z4XGQ2QHXA.2H5X1NZ5IZECC@nvidia.com>
+ <aCnQo15SbhXZ9Fln@finisterre.sirena.org.uk>
+ <D9ZCD8D6J5QW.14H6VM9LQ5R2Z@kernel.org>
+ <a1a6b2f8-af42-4942-ab62-678e37381d08@sirena.org.uk>
+ <DA03MG3VURVI.37CBV5WEEKJSH@kernel.org>
+ <8229a161-52b8-4265-8296-8f1ac49bab62@sirena.org.uk>
+ <DA04ZK6NFF1N.35LFZRY7O7SG8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddugedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefflefhieduteegffeifeeggfffvdeuvdeutddvfeduudeukeffleehheffkeetnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k6GpUpGM6uoPrUAq"
+Content-Disposition: inline
+In-Reply-To: <DA04ZK6NFF1N.35LFZRY7O7SG8@kernel.org>
+X-Cookie: We have ears, earther...FOUR OF THEM!
 
-Hi Rafael,
 
-On Fri, 16 May 2025 21:22:20 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+--k6GpUpGM6uoPrUAq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Wed, May 7, 2025 at 9:13 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > The simple-pm-bus drivers handles several simple bus. When it is used  
-> 
-> s/drivers/driver/ (I think)
-> s/simple bus/simple busses/
+On Mon, May 19, 2025 at 02:30:05PM +0200, Benno Lossin wrote:
+> On Mon May 19, 2025 at 1:46 PM CEST, Mark Brown wrote:
 
-Will be fixed.
+> > If you don't disable the regulator you've just leaked a reference which
+> > is obviously a problem.
 
-> 
-> > with busses other than a compatible "simple-pm-bus", it don't populate  
-> 
-> s/it don't/it doesn't/
+> For sure. But I'm trying to figure out if this is a safety-related issue
+> or not. Safety in Rust has a rather specific meaning that can be
+> summarized with "no UB". So since the C side does nothing if the user
+> screwed up the refcounts, it lets me to believe that we don't have any
+> safety related issues when forgetting to call `regulator_disable`.
 
-Will be fixed.
+> Of course we still should strive for an API that makes that impossible
+> or at least very hard, but we don't need to make the API `unsafe` or
+> have to take special care. (At least if I understood correctly)
 
-> 
-> > its child devices during its probe.
-> >
-> > This confuses fw_devlink and results in wrong or missing devlinks.  
-> 
-> Well, fair enough, but doesn't it do that for a reason?
+Yes, it's relatively unlikely that it would lead to any undefined
+behaviour.  There is an API for crashing through the refcounts and
+disabling if we detect some emergency, but that's very extreme.
 
-I think devlink is confused just because "simple-bus" or similar handled
-by this driver didn't follow the devlink rule: "Child nodes should be
-created during parent probe".
+--k6GpUpGM6uoPrUAq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Suppose the following:
-   foo@0 {
-	compatible = "vendor,foo"
+-----BEGIN PGP SIGNATURE-----
 
-	bar@0 {
-		compatible = "simple-bus";
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgrKD4ACgkQJNaLcl1U
+h9DFtwf/YKX6XE2sVpe0n7HKco7rUCWFYlpVz27Vk1u89lmzUaDo1Xq1rgGmyAix
+jyGn5bZ5sqNbs1OZlGfPNq1XNBSbMfyu41BEg8jmhSfRn153yIDXtoB3At0GVkD/
+V+m3bH4sqc1WSdMaI50UmvQjOeuDRT/h7G6/S5gg63t5RmjCFOBo9EHsrZWZfLOF
+dr87DgiAoZeGL0BPZbUmUX1RRrMbXgZzyAvdm9bXasv2Nuue4dAFVXyF32Nl2l7U
+V/G1OVuN71x6cc9ASIZlTL0NBUeSi8I6dSgp1iGjwHm4iK0MdtJBenv7XHPO90NV
+wqQfZzgWEYnzekwOQW4uNqNK3HtEZw==
+=2l14
+-----END PGP SIGNATURE-----
 
-		baz@100 {
-			compatible = "vendor,baz"
-		};
-	};
-   };
-
-The foo driver probe() calls from of_platform_default_populate() to create
-the bar device.
-
-The bar is create and thanks to its compatible string, the simple-bus
-probe() is called. Without my modification, the baz device was not created
-during the simple-bus probe().
-
-of_platform_default_populate() called from foo probe() creates the baz
-device thanks to the recursive of_platform_bus_create() call.
-
-This leads the baz device created outside the bar probe() call.
-This "out of bus probe()" device creation confuses devlink.
-
-> 
-> > Once a driver is bound to a device and the probe() has been called,
-> > device_links_driver_bound() is called.
-> >
-> > This function performs operation based on the following assumption:
-> >     If a child firmware node of the bound device is not added as a
-> >     device, it will never be added.
-> >
-> > Among operations done on fw_devlinks of those "never be added" devices,
-> > device_links_driver_bound() changes their supplier.
-> >
-> > With devices attached to a simple-bus compatible device, this change
-> > leads to wrong devlinks where supplier of devices points to the device
-> > parent (i.e. simple-bus compatible device) instead of the device itself
-> > (i.e. simple-bus child).
-> >
-> > When the device attached to the simple-bus is removed, because devlinks
-> > are not correct, its consumers are not removed first.
-> >
-> > In order to have correct devlinks created, make the simple-pm-bus driver
-> > compliant with the devlink assumption and create its child devices
-> > during its probe.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/bus/simple-pm-bus.c | 23 ++++++++++++++---------
-> >  1 file changed, 14 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> > index d8e029e7e53f..93c6ba605d7a 100644
-> > --- a/drivers/bus/simple-pm-bus.c
-> > +++ b/drivers/bus/simple-pm-bus.c
-> > @@ -42,14 +42,14 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
-> >         match = of_match_device(dev->driver->of_match_table, dev);
-> >         /*
-> >          * These are transparent bus devices (not simple-pm-bus matches) that
-> > -        * have their child nodes populated automatically.  So, don't need to
-> > -        * do anything more. We only match with the device if this driver is
-> > -        * the most specific match because we don't want to incorrectly bind to
-> > -        * a device that has a more specific driver.
-> > +        * have their child nodes populated automatically. So, don't need to
-> > +        * do anything more except populate child nodes.  
-> 
-> The above part of the comment has become hard to grasp after the
-> change.  In particular, why populate child notes if they are populated
-> automatically?
-
-What do you thing about:
-	/*
-	 * These are transparent bus devices (not simple-pm-bus matches) that
-	 * have their child nodes be populated automatically. So, don't need to
-	 * do anything more except populate child nodes. We only match with the
-	 * device if this driver is the most specific match because we don't
-	 * want to incorrectly bind to a device that has a more specific driver.
-	 */
-
-> 
-> > + We only match with the
-> > +        * device if this driver is the most specific match because we don't
-> > +        * want to incorrectly bind to a device that has a more specific driver.
-> >          */
-> >         if (match && match->data) {
-> >                 if (of_property_match_string(np, "compatible", match->compatible) == 0)
-> > -                       return 0;
-> > +                       goto populate;  
-> 
-> Doesn't this interfere with anything, like the automatic population of
-> child nodes mentioned in the comment?
-
-I don't think so.
-
-Device population is protected against multiple calls with OF_POPULATED_BUS
-flag:
-  https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/of/platform.c#L349
-
-> 
-> >                 else
-> >                         return -ENODEV;
-> >         }
-> > @@ -64,13 +64,14 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
-> >
-> >         dev_set_drvdata(&pdev->dev, bus);
-> >
-> > -       dev_dbg(&pdev->dev, "%s\n", __func__);
-> > -
-> >         pm_runtime_enable(&pdev->dev);
-> >
-> > +populate:
-> >         if (np)
-> >                 of_platform_populate(np, NULL, lookup, &pdev->dev);
-> >
-> > +       dev_dbg(&pdev->dev, "%s\n", __func__);  
-> 
-> So how to distinguish between devices that only have child nodes
-> populated and the ones that have drvdata set?
-
-Hum, I don't see your point.
-Can you clarify ?
-
-> 
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -78,12 +79,16 @@ static void simple_pm_bus_remove(struct platform_device *pdev)
-> >  {
-> >         const void *data = of_device_get_match_data(&pdev->dev);
-> >
-> > -       if (pdev->driver_override || data)
-> > +       if (pdev->driver_override)
-> >                 return;
-> >
-> >         dev_dbg(&pdev->dev, "%s\n", __func__);
-> >
-> > -       pm_runtime_disable(&pdev->dev);
-> > +       if (pdev->dev.of_node)
-> > +               of_platform_depopulate(&pdev->dev);
-> > +
-> > +       if (!data)
-> > +               pm_runtime_disable(&pdev->dev);
-> >  }
-> >
-> >  static int simple_pm_bus_runtime_suspend(struct device *dev)
-> > --  
-
-Thanks for your feedback.
-
-Best regards,
-Hervé
+--k6GpUpGM6uoPrUAq--
