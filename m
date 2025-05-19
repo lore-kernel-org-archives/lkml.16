@@ -1,112 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32029272E6A;
-	Mon, 19 May 2025 09:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC39826F45D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647069; cv=none; b=OUVAzufUO0qnTzaGiBz/b3CmuamAMZXqpSz0bHnd10ZKU6eJj0lgYoh4uj9tH3FCu5VhQ7ILP4M6C3pdJWisLR5gSDyCuIhFRpxLHiae4Vm3GnbPJsa7hEWsKs+rH3seifJM1SIytWwDKA2z5Ox8mkF9eza1P3nyN20+zOECC94=
+	t=1747647090; cv=none; b=MfzxYn6g6bgkIgwHJ7CxdZbx5lYU6iVqWjm2iX5uMpQBTFIrFf+zzABcc9icQHSWdONIVEwS/Qt2gpS6tp6UQ9ZwcGhpEG2GotxRp5OfUd/FNvepToO3tkrGd9WFMA17a/U6d4f0cIJa19VhAhNLIFonzc2Be7xGNEG/16eIG/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647069; c=relaxed/simple;
-	bh=0eMiHVabjIiN5pvOO8SCZgtZ6g98PmL/kA90czRvkU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ko6puj3qYzJ8aW1Ge4FR01CYUiOz/j4Tn7ze9BBBGAYOdtSgITdafaDWF1/dMbbihlWUpud5qYDFrQ0tQrYQejUnNvM+wX9Bgue607bZlyvFrQQEx+zxx8kOubvtFE2GWKDJcF7j98MRnVuYaVIV7kN/sjF5KoR70CtO3dD/xYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWoEfpqP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747647090; c=relaxed/simple;
+	bh=c/wBlaYM4RSxl/erOHhMdSWmwIe8Uwd04Sjt8QeJ8/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=La1kvfRMD0MDT76QHFPVD3iFngyMlCKp32QxVhfJhTzzeo46mU8PkJfPQNU9GjouIOgk2MAeskFjBXy3utqZHanhtc8A4dWKD9knjpUwq7whq/eD/lKSJnT3ypF9MVFza5vwKib9/yJAepViB7wLxnfHUYtN/7zuGhmP6dfrf4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UFpixuAd; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWoEfpqP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20991C4CEE4;
-	Mon, 19 May 2025 09:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747647068;
-	bh=0eMiHVabjIiN5pvOO8SCZgtZ6g98PmL/kA90czRvkU4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eWoEfpqPQY9jGgzx7LfIM7FIAH7Xl93mZbSr47HnFA12kd/3XeG61CT0lgy2FQwAG
-	 S9563jHhM3EIaqrJyszUIrkODeMKrenbdlzDz6NLlw9/IImV33iWsFi2J2EiS5Yqxb
-	 FS5Bp8U0KUYqSlkFmC1glX0Yoagnv/bkr337x08PhibMl6SpJDeO4PyE80v1ky9gOr
-	 8bi6QZqC70fcUMXLWq+BTPpQX9b9OCdw009xHmFnwduAYBsRHWmDxo9lS8bv6m8U0n
-	 cPqlblv/BSQv2Tv1RYzkaU3u7buM1B5zH67WxTqwcM5Jf8PNXBwSMhNN/PxxmaQMiE
-	 20lO8b90ZU1Dg==
-Message-ID: <9e6da234-1b47-48e9-b948-d9de73a88999@kernel.org>
-Date: Mon, 19 May 2025 11:31:03 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFpixuAd"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22fcf9cf3c2so34273055ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 02:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747647088; x=1748251888; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bvQ9YmGROOXrG/iLumMa04WB7ur/2tl9ZFhlSZDT+Cc=;
+        b=UFpixuAdc+84m/oLMFEg7ktPLRO266iv4r2R61QJuK55D4eoz1BmICqbBnY4w/iPIF
+         q5QcoIvX0Mef3IrqKvsvvxwx1VewXlyhpzKpbeWEVEUD7pqrygZ63rdvqR0XnWyLj1xC
+         UV69s49HaJnmqDLoU8wsDXiu2aG2Zfxg3Em/rUGKQ6GMfjrNk2ZaF7mTvfFMj0wTfcdK
+         brdUJerbFXyfT7pWp8uB9tWXlQwO/8XXCRTGc4l9+ClBBZLPUD+DEG8JSwRO2YlkIll5
+         2m4xkgjPvV/wSxN62rvaXEhAtyk7+5k+tQKxq2N2ClK/uK+iEpIpmbG4grlBq7N9iLL9
+         HswA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747647088; x=1748251888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bvQ9YmGROOXrG/iLumMa04WB7ur/2tl9ZFhlSZDT+Cc=;
+        b=thUqpwQzO1BZys6dJQ5YClUwrOcszypgmbX/3JDVEoUaa/hCQHlkuMnxZukCoHrqjq
+         wI3nfXxd/iEB2BSajbXFnfKduNp7sgPw5wc/gMkQMTcbrVpLkNGe5aMylqBT0JVfgdzB
+         4Xqotiddehf47+vQbONsfdG95I9GLwnShmXC22YMkyPLtCuf5ddJZGE/psIXShdkYwLn
+         TKFTSvsH/vSB5uNgJIH8cJIWKxI+apWQfPt6yyVjeZr7DLthUzWsjwmWF4ydkE7Bh4di
+         82MtIuPq7dHXmIqDQyEP4n0H9b9xdlAvf3xfqbhHl8z/8jY+eDZqSaa6t+I4Tlfy5VUq
+         ZrZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKcovLr1zHJAaszSr46Q1eQ4My0N2KKmlovjhX0iqpP+LmXS4cEXFdxHeou4gI2OmazbAiwMm671bMp4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoXphjppcN0j06c9LJKGJwiKgZAW3vVk/acyhjfbKIgjYpzAXJ
+	2O+udEX39MHhBbZMl118UUbywkHxsTQy8hQiNxz26Pfwt4I2LwDDS/LPypv7WR+IStI=
+X-Gm-Gg: ASbGnctxGS+4hC/4QZQawXVc6PInUgcvDeGnU1mHokHwuGXE4zdPxy5VbLWIWBwj/k8
+	VoojQHJ148bjjTeipU+AeIU4M0nwjBCD7aTZWy0Sjm60DicxCVUM1L+HRBGSncdJLABoado61v9
+	cTkYk3beWJB16nxsPv6kvGVhZxgnaZDp7FcfdPhBGDOasKJxwN+tZsQl2O6KciGlN8HH6/1RNal
+	oQzYpfQbDmKicJFpZhdm/gbYfKd+SRhy4SDoF2BhaYyJj/ty/EyKb0j2MZ4zCltZQWWTtVmTDVr
+	tL5ja+v4v8DPgk1KJbiOPm3Gxr16pkQ+l78Ky1Gdf7JWJjQimnkC
+X-Google-Smtp-Source: AGHT+IHQejNmLqqvXox/EeoAuxX3X7m8LUs8KU1gDcylEBYdUF9gjHc0zecpPmtgBo7FvB8Kzn20/Q==
+X-Received: by 2002:a17:903:2f47:b0:224:376:7a21 with SMTP id d9443c01a7336-231d452d0bamr162849905ad.42.1747647088089;
+        Mon, 19 May 2025 02:31:28 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9567sm55776315ad.11.2025.05.19.02.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 02:31:27 -0700 (PDT)
+Date: Mon, 19 May 2025 15:01:25 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, pierre.gondois@arm.com, sumitg@nvidia.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linuxarm@huawei.com, mario.limonciello@amd.com,
+	yumpusamongus@gmail.com, srinivas.pandruvada@linux.intel.com,
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com,
+	lihuisong@huawei.com, cenxinghai@h-partners.com,
+	yubowen8@huawei.com, hepeng68@huawei.com
+Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in
+ cppc_cpufreq
+Message-ID: <20250519093125.jn2naozcsrroahco@vireshk-i7>
+References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
+ <20250519081850.7ycbcw56jzpiwkth@vireshk-i7>
+ <4c4b0140-9126-4586-92f8-f7c9fd7a4a34@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: vendor-prefixes: Add SakuraPi prefix
-To: Hsun Lai <i@chainsx.cn>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org
-Cc: heiko@sntech.de, andrew@lunn.ch, inindev@gmail.com,
- quentin.schulz@cherry.de, jonas@kwiboo.se, sfr@canb.auug.org.au,
- nicolas.frattaroli@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- krzysztof.kozlowski@linaro.org, linux-rockchip@lists.infradead.org
-References: <20250519085614.2245892-1-i@chainsx.cn>
- <20250519085614.2245892-2-i@chainsx.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250519085614.2245892-2-i@chainsx.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c4b0140-9126-4586-92f8-f7c9fd7a4a34@huawei.com>
 
-On 19/05/2025 10:56, Hsun Lai wrote:
-> Add vendor prefix for SakuraPi.org, which produces
-> development boards like the SakuraPi-RK3308B.
-> 
-> Signed-off-by: Hsun Lai <i@chainsx.cn>
-> ---
-> 
-> (no changes since v1)
+On 19-05-25, 17:29, zhenglifeng (A) wrote:
+> cpufreq/policyN/ is linked to cpuX/cpufreq/, both paths correct.
 
+Ahh, my bad.
 
-You ignored comments twice. Repeating same mistake, even though it was
-pointed out, feels like we are wasting our time, so please avoid that.
-Go back and respond to comments, then implement them.
+> It means Continuous Performance Control, you can see that in ACPI 6.5,
+> s8.4.6.1 _CPC (Continuous Performance Control). Use "_CPC" might be better.
 
-Best regards,
-Krzysztof
+Okay.
+
+This looks fine to me then, let Sumit reply and then I can apply it.
+
+-- 
+viresh
