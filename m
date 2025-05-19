@@ -1,103 +1,129 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666BE24676D;
-	Mon, 19 May 2025 12:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B175D35961
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657042; cv=none; b=G29UKGWv2VHG5ORQDR020JxEtS4+nTJSmH11ATjcGg/Od8ApeqiW7zGreKYH3U9Q+svywjPVE3g8O52uN4xyzCx+1R5oyqnqgr0Q2dbnNHCnJBg0zCxkZPPigplQRIQ5ZqATbjexmzSyuCSDWCHshE4SHI6oZEZ3Z4pB60hT78M=
+	t=1747657110; cv=none; b=AnnPuSiY2y8aAXqnz/MUzBYC41T0GY1DqYnaKhcPuFh3XYCbzhbmIGMiPfSeNlj/+D5KiT0cE+gqLl0SvUJl9rYq2AX2AsuQQd0pYfJAnKLOoNqJ4hT9r7fKRdaGPNtX8O8i0LZ8Qcfw9jePHmULyMkSLE0ss9fN1CevsUfghXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657042; c=relaxed/simple;
-	bh=k0xV1VkDQ3B536csRC+jiMRyNVQ0qgRkWYlYUKKdAQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRyD67YMFgubzdNbm8rks87akBu2uzNdpCY20RupdbWjtAa3WU4LVTWulxWC5uol/8o/Bwe3LusWtR2FjKwTvk3cwa/w9xeKGVgehkVRIMtBE3T8wGM9P6IsL3QRA1tVN5qei71d6hEM+FdNexDvIZOLTUL3I9UI/m/MOspPrZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=o7TGT9Ky; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747657110; c=relaxed/simple;
+	bh=xSwsjJm5hVMQ3oyIZl9x6ghPg1fPa7a227nroYphjpQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UIvo1ypsJ6HgqWwpCBAOeRgztAC/HJ+tLzryAHStlPf0+CykwfFxiLD1vtLr3v7LSQfcYpNF1o/+nrSZl9FcdU4QkFDxiSlvZsQKp9RlfyGjRXzfwDPc6XzrfWGQEEcnSDdJD+oj0hEnPwxoo0eXF5m6W4ZONe434K0aHChzF8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZNWAR9y4; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="o7TGT9Ky"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=p3Jk7mrRxc72y5w6oSHqx0DIyvPhGZeH42P6iahSphU=; b=o7TGT9KyomAL0hZUq0KqSv+eZM
-	OIQ4RN+onf9BV2skg969AE7PhZONZXIkvkwQwjA/t6T//5OtR2Uz/fTiq7l0B7UvQeyBinybhui78
-	jCI9VhIJX88lQtOrPEjyP1FtZzbwUEDrtvnQsJ+lrzEUOQ6m4JrolTP110inEy85gwBg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uGzQX-00D19r-Ng; Mon, 19 May 2025 14:17:05 +0200
-Date: Mon, 19 May 2025 14:17:05 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] net: atlantic: Add error handling in
- set_raw_ingress_record()
-Message-ID: <9ce386ad-72f2-4a8e-8055-1fc7906dd916@lunn.ch>
-References: <20250519102132.2089-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZNWAR9y4"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3290ae9b011so16414711fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 05:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747657107; x=1748261907; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xSwsjJm5hVMQ3oyIZl9x6ghPg1fPa7a227nroYphjpQ=;
+        b=ZNWAR9y4VBBopfZNC+lE2HKdWrIQ+fM7DxtWvca3SQim+F6D6cQUOxyC3GYYEB5rRn
+         I3OJo33LOBFSQi9efKZEkOpuxveUho5D1v9c9HrbMKw8iDBSchtCgLDD2usd2AiWHTNR
+         psd+GLpdaCIDG83LTU7PTWnKPmYrY2Qmbbv5USuW7WCLuj585gb8ksdhGi3qnnk6At5U
+         JZIvUH7ZfvQO5YZM0518VfMJgJccJj2QB1kTXg/mUmr8yKrvFaa9tVUX8jdDZZjw54Vj
+         wDKfECuRiQbG7UQEqKKmSdhqJRGz3JkhEGQesF1VBSew/lfDjilt8ZMLAwBQcv5KOk1y
+         oM8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747657107; x=1748261907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xSwsjJm5hVMQ3oyIZl9x6ghPg1fPa7a227nroYphjpQ=;
+        b=D3TjFqr4JLnU6TePt8AJpM5G99qfQU+GoGNafKwylcszM3LLEvDXHi0VDbaVf+KxTS
+         h1/wnhWvLld+Jl+rwPbUjOM8z3IYYY3J2Cnyq+vOwZGJiI6VF9FkJKpshqfeRq6gKoF5
+         bIUUJ84+fCWEiWCp3iLHTiiONV0v3m3oqfzAbfJmKDl++2+fGaMXocEvBuRaKh/vhYjh
+         +BYklzcTWGPuCdoJOwBpvTePkkNohOIvKj71vvHqLWDA/+rc0fBS9rn7Dqjg3FfIgrk+
+         1b/QZIalK35+ZFu51I4k3D835MpD/MBvONaXynm66CWspF7wo6Sbp453NRD691Mn8G+0
+         7AzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUU6n7ztqi4AduaNiJJtQuTs74pux/pCd3fdKdIeffo+B/PL4bG8nAGe5oarhDNM7f3rvPfK5K90wEHY/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLYXh9Se/EDFgTP5aG+gkOWPjmxAjXqYyCE2czg4yWoNHlvvrs
+	gUMv3bhtJl4s3S/FAFQ+euORbZEbsso/+IzVgtTEChCXSqvK4t+dryX17K3VG40uFqfmCKjfUiJ
+	w7WaDWiYdr+iCiMyVbxY86YfhIh7ZqOfE88hVCT2CFQ==
+X-Gm-Gg: ASbGncso4UY6lFbPc/H+hg5FJhCwWtjfrL2x/y7oOE/mSzxrGQahVDRlZ0K6uldgqnH
+	HpvykI6RWgUBa14Nka/+J3Z/Au3ITDwRLacEWIwEIKaWEyusvbpu2+wVpehxC7nAsbZyTqzVbL1
+	155xw6rX5IjHQsyiF4VVSEW5nxp1uJKBzASx2vbMzLxX94ein679PQGn1nwIbm60c=
+X-Google-Smtp-Source: AGHT+IEfmcE19StFmDXmpOeCqjpKda6oUT9HRkJFDdD31nUNQnXxT/1wRO4xANSrSCAahsfNovBwxdt00YEcPDJ1D5Q=
+X-Received: by 2002:a2e:a546:0:b0:309:23ea:5919 with SMTP id
+ 38308e7fff4ca-3280974f135mr34269361fa.31.1747657106740; Mon, 19 May 2025
+ 05:18:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519102132.2089-1-vulab@iscas.ac.cn>
+References: <20250516104023.20561-1-brgl@bgdev.pl> <aCckl9cC8fCBhHQT@hovoldconsulting.com>
+ <CAMRc=Mf=xW6HFVYOOVS2W6GOGHS2tCRtDYAco0rz4wmEpMZhmA@mail.gmail.com> <aCdutI4J6r5kjCNs@hovoldconsulting.com>
+In-Reply-To: <aCdutI4J6r5kjCNs@hovoldconsulting.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 19 May 2025 14:18:15 +0200
+X-Gm-Features: AX0GCFsDF9ot7LyL_ZfgUEjkR0eZtCR3neOBlRtmFOBTQNOHogwDGbOPJ6M_0Y8
+Message-ID: <CAMRc=MdS0QG_ThYUhwTRaKidyGcj3h6x0=jmaW7UK8EBPhrYrw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sysfs: add missing mutex_destroy()
+To: Johan Hovold <johan@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 06:21:32PM +0800, Wentao Liang wrote:
-> The set_raw_ingress_record() calls aq_mss_mdio_write() but does not
-> check the return value. A proper implementation can be found in
-> get_raw_ingress_record().
-> 
-> Add error handling for aq_mss_mdio_write(). If the write fails,
-> return immediately.
-> 
-> Fixes: b8f8a0b7b5cb ("net: atlantic: MACSec ingress offload HW bindings")
-> Cc: stable@vger.kernel.org # v5.7
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  .../aquantia/atlantic/macsec/macsec_api.c         | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-> index 431924959520..5e87f8b749c5 100644
-> --- a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-> +++ b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-> @@ -62,6 +62,7 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
->  {
->  	struct mss_ingress_lut_addr_ctl_register lut_sel_reg;
->  	struct mss_ingress_lut_ctl_register lut_op_reg;
-> +	int ret;
->  
->  	unsigned int i;
->  
-> @@ -105,11 +106,15 @@ static int set_raw_ingress_record(struct aq_hw_s *hw, u16 *packed_record,
->  	lut_op_reg.bits_0.lut_read = 0;
->  	lut_op_reg.bits_0.lut_write = 1;
->  
-> -	aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
-> -			  MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
-> -			  lut_sel_reg.word_0);
-> -	aq_mss_mdio_write(hw, MDIO_MMD_VEND1, MSS_INGRESS_LUT_CTL_REGISTER_ADDR,
-> -			  lut_op_reg.word_0);
-> +	ret = aq_mss_mdio_write(hw, MDIO_MMD_VEND1,
-> +				MSS_INGRESS_LUT_ADDR_CTL_REGISTER_ADDR,
-> +				lut_sel_reg.word_0);
-> +	if (unlikely(ret))
-> +		return ret;
+On Fri, May 16, 2025 at 6:58=E2=80=AFPM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Fri, May 16, 2025 at 02:32:54PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, May 16, 2025 at 1:42=E2=80=AFPM Johan Hovold <johan@kernel.org>=
+ wrote:
+> > >
+> > > On Fri, May 16, 2025 at 12:40:23PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > We initialize the data->mutex in gpiod_export() but lack the
+> > > > corresponding mutex_destroy() in gpiod_unexport() causing a resourc=
+e
+> > > > leak with mutex debugging enabled. Add the call right before kfreei=
+ng
+> > > > the GPIO data.
+> > >
+> > > No, there's no resource leak and it's perfectly fine not to call
+> > > mutex_destroy().
+> >
+> > No, there's no leak but with lock debugging it still warns if the
+> > mutex is locked when it's being destroyed so the change still makes
+> > sense with a modified commit message.
+> >
+> > > You can't just make shit up and then pretend to fix it...
+> >
+> > There's no need for this kind of comment. You made your point clear in
+> > the first sentence.
+>
+> Your claim that there's "a resource leak with mutex debugging enabled"
+> is is quite specific. Now I had to go check that no one had changed
+> something in ways they shouldn't have recently. But mutex_destroy()
+> still works as it always has, which you should have verified yourself
+> before sending a "fix" tagged for stable backport based on a hunch.
+>
 
-What about the comment above:
+Yes, I admitted that the commit message was wrong. And yes, it
+sometimes happens that we get copied on crappy patches. However,
+unlike what your comment suggests, I don't go around the kernel,
+"making sh*t up" just to add a "Fixes: Johan's commit". I had this as
+part of a bigger rework I have in progress[1] (discussed previously
+here[2]) and figured that with the series growing in size, I'll at
+least get the fix upstream before v6.16-rc1.
 
-	/* NOTE: MSS registers must always be read/written as adjacent pairs.
-	 * For instance, to write either or both 1E.80A0 and 80A1, we have to:
-	 * 1. Write 1E.80A0 first
-	 * 2. Then write 1E.80A1
+I should have given the patch more than 10 seconds of thought for sure
+but your immediate hostility is uncalled for. Please try to assume
+good faith a bit more.
 
-If the first write where to fail, is it better to perform the second
-write anyway, just to keep to this rule?
+Bartosz
 
-	Andrew
+[1] https://github.com/brgl/linux/tree/b4/gpio-sysfs-chip-export
+[2] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu4iKQ=
+5npwXk6GXA@mail.gmail.com/
