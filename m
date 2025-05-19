@@ -1,149 +1,112 @@
-Received: from mail-m49243.qiye.163.com (mail-m49243.qiye.163.com [45.254.49.243])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC2E194098;
-	Mon, 19 May 2025 08:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF71EB5FC;
+	Mon, 19 May 2025 09:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747645184; cv=none; b=QYkfLu2+KAhloTtGirWPCwlH6WP/CKXV4X1QuNQA6WcpQIBER69QeMs70atoVJSrV1XRYGB2JodNjkB9xYzvC4i5KVC4CLcc5oAw5VxbgHC6BG7DjspU0nrTN1FrawixlukzEiTNFkrUyLJQ9mLx2KYwDP7Gp4LHoUo4hloXBL8=
+	t=1747645345; cv=none; b=UYAr6GoGK1HL0VPIy7fSZiI9Oq+ogcdZx5K7G4u9Qt1yufzVv6NXYO2sXRKwrTk8SWg2WWbaOTK4nesWsNZjTx9HdcvFI1CkcPAd5n0O7Qt7oPfVb95yS0XrBLfsUt5rwXyPWkfvShyLp29k5mUEla3Xt2RQTF7jAihOI6x6Y5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747645184; c=relaxed/simple;
-	bh=UEBlw8vboLiO7dN2wOjs6AQukQENUwMD9NDOlANOesQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNWZH3vtcqVYz2xpwpGyL+CRwj9/ZiimVW2C/Iq15UMNN5iHffvBihQirB6VmMxv6ZoBFOTHTCS1JagKTPBnSm6/rgpqgYSbSGQcfatrvBMKo041u3bHNDRSviddHItq1pMC7RHudGU31HyuN4Xp/6WVG5p8SSjbTxryTxkddtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ZPU7PwL+; arc=none smtp.client-ip=45.254.49.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ZPU7PwL+"
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 158ccae3f;
-	Mon, 19 May 2025 16:44:14 +0800 (GMT+08:00)
-Message-ID: <6dac10df-d410-4d52-8711-4c8046f90fbd@rock-chips.com>
-Date: Mon, 19 May 2025 16:43:48 +0800
+	s=arc-20240116; t=1747645345; c=relaxed/simple;
+	bh=srN6BUQ0VvPk4Z6SW0hcqEYtKWEqPnMzxwlMFbHRIO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gIaLmGqSemsh1amZ285o5IfacCf2t+4TmQLDyo9s6XP8cHHGhbZ3Je71fi7Wg5S8M1anPaAU17sqgdYE8bjJk+yU1eHTkdRMC47ptg3XcGrwwIkmOXa7Xr502iqSxqedyX7ljts4TBrVGXaOWNbgV2y9j9SyzxnrXNh7a4H0SKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACn4yWR8ypoWoNsAQ--.11038S2;
+	Mon, 19 May 2025 17:02:10 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] net: mlx5: vport: Add error handling in mlx5_query_nic_vport_qkey_viol_cntr()
+Date: Mon, 19 May 2025 17:01:47 +0800
+Message-ID: <20250519090147.1894-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] dt-bindings: display: rockchip: Convert
- cdn-dp-rockchip.txt to yaml
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Chaoyi Chen <kernel@airkyi.com>, Sandy Huang <hjc@rock-chips.com>,
- Heiko Stuebner <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250519012632.94-1-kernel@airkyi.com>
- <20250519012632.94-3-kernel@airkyi.com>
- <20a565da-296c-4920-b962-e9de9af464d9@kernel.org>
- <632f9f4d-ec0f-4512-a153-d2abfd9f6841@rock-chips.com>
- <20250519-tall-glistening-quokka-9ffa6f@kuoka>
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-In-Reply-To: <20250519-tall-glistening-quokka-9ffa6f@kuoka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkMeT1ZLThpIHxhJHkgdTUpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a96e7b7094a03aekunm158ccae3f
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6HSo5LjExDC0zLio4FRhI
-	STMwCS5VSlVKTE9MTU9PSU1KSEpDVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBT0pOTzcG
-DKIM-Signature:a=rsa-sha256;
-	b=ZPU7PwL+nAfueycpdY2yJue2tLZTRMoaiSKoIlGm+G9Xi5nboCuoO35Wc21TaIz7dmKHezIH5NNK7VX/AwNFNGs4VT9yz1RQ8ILaIY3w7ZNE2aSZPqay6utDnKSNSgECauwziW8cxvAKh6tB/lrJCpw5w5MseqaRQIiz8er641o=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=UN9mV4Ay8ghFsuFemLHGgtg/VXgBJG+F9kHs6DqrncA=;
-	h=date:mime-version:subject:message-id:from;
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACn4yWR8ypoWoNsAQ--.11038S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rJw13Cr4rXFyDAry3XFb_yoW8Ar45pF
+	47tr97XrykJa4Fv3WUuFWrZr4ru3ykCa409a4xt343Xr4qyr4DAr45AF9FgrWUurWUKrZa
+	yrsFy3ZxAFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8CJmUUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREHA2gqs4j-5wAAs9
 
-Hi Krzysztof,
+The function mlx5_query_nic_vport_qkey_viol_cntr() calls the function
+mlx5_query_nic_vport_context() but does not check its return value. This
+could lead to undefined behavior if the query fails. A proper
+implementation can be found in mlx5_nic_vport_query_local_lb().
 
-On 2025/5/19 16:23, Krzysztof Kozlowski wrote:
-> On Mon, May 19, 2025 at 02:56:03PM GMT, Chaoyi Chen wrote:
->> Hi Krzysztof,
->>
->> On 2025/5/19 14:16, Krzysztof Kozlowski wrote:
->>> On 19/05/2025 03:26, Chaoyi Chen wrote:
->>>> +maintainers:
->>>> +  - Andy Yan <andy.yan@rock-chip.com>
->>>> +  - Heiko Stuebner <heiko@sntech.de>
->>>> +  - Sandy Huang <hjc@rock-chips.com>
->>>> +
->>>> +allOf:
->>>> +  - $ref: /schemas/sound/dai-common.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    items:
->>>> +      - const: rockchip,rk3399-cdn-dp
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  clocks:
->>>> +    items:
->>>> +      - description: DP core work clock
->>>> +      - description: APB clock
->>>> +      - description: SPDIF interface clock
->>>> +      - description: GRF clock
->>>> +
->>>> +  clock-names:
->>>> +    items:
->>>> +      - const: core-clk
->>>> +      - const: pclk
->>>> +      - const: spdif
->>>> +      - const: grf
->>>> +
->>>> +  extcon:
->>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>>> +    items:
->>>> +      maxItems: 1
->>>> +    maxItems: 2
->>> Instead of this, list the items. Old binding said only "specifier", so
->>> this is technically a change, which should be explained in commit msg.
->> Will fix in v5.
->>
->>
->>>> +    description:
->>>> +      List of phandle to the extcon device providing the cable state for the DP PHY.
->>>> +
->>>> +  interrupts:
->>>> +    maxItems: 1
->>>> +
->>>> +  phys:
->>>> +    items:
->>>> +      maxItems: 1
->>>> +    maxItems: 2
->>>> +    description: |
->>>> +      List of phandle to the PHY device for DP output.
->>>> +      RK3399 have two DP-TPYEC PHY, specifying one PHY which want to use,
->>>> +      or specify two PHYs here to let the driver determine which PHY to use.
->>> You do not allow one phy, so your description is not accurate. OTOH,
->>> original binding did not allow two phandles, so that's another change in
->>> the binding. You need to document all changes done to the binding in the
->>> commit msg.
->> Oh, the original binding example use two phandles. I think only one PHY can
-> Example is not the binding, just an example.
->
->> also pass the dtb check here, or maybe I'm missing something else?
-> You think or you tested it? What is the minItems value? 2, so even if
-> this works it's rather a bug in dtschema.
+Add error handling for mlx5_query_nic_vport_context(). If it fails, free
+the out buffer via kvfree() and return error code.
 
-Yes I tested it. Both of "phys = <&tcphy0_dp>", "phys = <&tcphy0_dp>, 
-<&tcphy1_dp>" pass the dtb check.
+Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
+Cc: stable@vger.kernel.org # v4.5
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v2: Remove redundant reassignment. Fix RCT.
 
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
->
-> Also, inner maxItems:1 is not really correct. Why can't this work with
-> different phy providers?
-
-I'll see what other bindings do. Thanks for the clarification!
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+index 0d5f750faa45..ded086ffe8ac 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+@@ -519,19 +519,22 @@ int mlx5_query_nic_vport_qkey_viol_cntr(struct mlx5_core_dev *mdev,
+ {
+ 	u32 *out;
+ 	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
++	int ret;
+ 
+ 	out = kvzalloc(outlen, GFP_KERNEL);
+ 	if (!out)
+ 		return -ENOMEM;
+ 
+-	mlx5_query_nic_vport_context(mdev, 0, out);
++	ret = mlx5_query_nic_vport_context(mdev, 0, out);
++	if (ret)
++		goto out;
+ 
+ 	*qkey_viol_cntr = MLX5_GET(query_nic_vport_context_out, out,
+ 				   nic_vport_context.qkey_violation_counter);
+-
++out:
+ 	kvfree(out);
+ 
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_qkey_viol_cntr);
+ 
+-- 
+2.42.0.windows.2
 
