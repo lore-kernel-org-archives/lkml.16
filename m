@@ -1,197 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E3B28983E;
-	Mon, 19 May 2025 16:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA51A289E07
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670688; cv=none; b=VALHfgYcJHm2qBk6h2uLKjmHPJjqbwwxg5fEo5NkO/fpLnuGozyA8QqqUwJxCUgqcL4epxq/5mdlm3Y2EXXE9NFDaJQeLpJS8fh0IljQuCkfl0cGwrbTzNWcsbqEW1H2pH15FCEeSqsF6v/dmmTV30MtAfsqSkmCVPlZdHzx75I=
+	t=1747670688; cv=none; b=hLkptA0DrA43gf4voISUcCeOBv0Qfxiis67RZ5iqfvwS7JjprcQ1UFCr1ir6iKkg1kfcKEr1f19yeadCf4zRSG3SDxL3cqPsk20mOxEPR20YjSWfE4yFP+HlA5yXHYLB3zp3BHgBbdgyBvUC5QqmiT1kQaep3BI/EgAiKHJ3MWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747670688; c=relaxed/simple;
-	bh=4S9Gn4Qjmm6QpZEK/3GBryQ0ISYwhIwThl0Cq6l5WAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s2lMDAVHeoVwp4UJWKBsU84V01eFvNtJF8/DSUHiJq7Jj6VwFO8oxdg2iSiM9T8j+RBBr8gJ5Fomm5fjDwKrBlXjkPdziDIx+t0OOfWKAWWlb/Ay01pE8P3Q3mGJGkTjHWsdZh5HL7m8LrNz9uKOAAHJs7kl12A2mWcsCwPl8Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dXOuPcHB; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=LuuDGI9zKbFWm2nzJ6vDJ2HTvMxLeJP/RtVcyJId5rw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FbTyQ8j2YzTOq0sIBDUcUMZ53PKGO9/kGJcfBzC74OLNAlmC5xVa5Uiw0NlqSE24wfs28xGfTWTqKten/FS+bYF6pkDWmzM1icZK1Z8xOgK9beh2uSJT/pEOSVOLWWYEN+ggYr63gs51c491/LtsIV/GZOvufctpMLCoTmOpwzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OZojKrje; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dXOuPcHB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747670686; x=1779206686;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4S9Gn4Qjmm6QpZEK/3GBryQ0ISYwhIwThl0Cq6l5WAw=;
-  b=dXOuPcHBrdnpLHUgQKgnPc8oSgztjP3WoNqqY9kEfbEP1NjpFFpmNmy5
-   xiqEGscb6KYG33DGwrimGkL9B/nxB+8MfZBQZd3r+RgKCxYl+nKtNscXX
-   mCQ1Gqv1PK3pbWyq3aUDRP4FVL3dYhX8Uz/WYbKO71MeFKrkvgJXO/yEs
-   yquLI7crFr6SSJSvjY6MbUlaRqaFviiSmWX6BkRKpnigyJ7I7qjmQDJzf
-   d5uD6h7kFoSsTUISVeCM5UFMBl4tYrDwPsfhj2qAIeQz9AZ0NKbScUEoC
-   5OsjAHojzWCAftT+NsK7XBHOE8uVMpd8BuX9MmRPlASM7WOCaZTjrKCMT
-   A==;
-X-CSE-ConnectionGUID: bnUv2HMhQ/yY19a18W2Egw==
-X-CSE-MsgGUID: kG3JGCR3Sf6eAYyBDgrnCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="60968952"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="60968952"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:02:42 -0700
-X-CSE-ConnectionGUID: 2QWUtKXhRL2DoJ8b0pHvLw==
-X-CSE-MsgGUID: aZ8S5zeCTY+KOFBRfYukpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="139450870"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.70]) ([10.125.109.70])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:02:40 -0700
-Message-ID: <f5f1bfbf-8323-4bc6-aa79-f277c89b60a0@intel.com>
-Date: Mon, 19 May 2025 09:02:39 -0700
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OZojKrje"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9SPST022937
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gi+iisDpzgKdEiK0rcVeayKCWIAFmEEhg75ZFqke7ck=; b=OZojKrjeCW6QdIBP
+	t5TUT3fb0ATF+YrvpL6nZYqzhKc4daO/HWvLMTHgeCVxz3xDEXqQQYwha/JTdrRV
+	Y+uJcWMLngNk3ExavYhlRh5mQl4e9MIzYLHC4ETlHMBkh401fHbc8mT+HzD0nNPH
+	p19UovV87jcHWl3ASKCmVae71NGF2I0QAJaQJowueUnJP8U4aOuT7xzSWVmOt0OL
+	XB89CmqjOSjDs7tM3YQB/F9/RfK3YSFfmR8nPC8hhvqOM3M1Ld8GSQtnUR5XV2Fl
+	gcaUvotS+WPwTZ+dIiATfmTFwRTD2yiIhcvqJANGTwujynW9355AIQjmu8f7JYGE
+	xCQ0nA==
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7cvtw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:04:45 +0000 (GMT)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b1fa2cad5c9so2739313a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 09:04:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747670684; x=1748275484;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gi+iisDpzgKdEiK0rcVeayKCWIAFmEEhg75ZFqke7ck=;
+        b=AyA0rnSWB8ajFHjKofkKr65eMnbYSQC9kPVqOxeWar8SqhFI+TWTcl/hZlMBeXk82q
+         fAFMNkPzg945X5rjghIbDXkD2fPe2GttJ0y/SpsNEdnbQyEvb77EowZmkSTgU9IYTsF8
+         Bu/Kn4BRehqU9vFGlwtjlTIeDxIMmwPsbTkkTNJfVeDBhE6DZ2MA7FRX4uGpdXZsSXox
+         m61+/W2qI+6co9etXi3NugrHmp5yKlOZwxkfWRwIqiJTWM/iRdPHljpnjWRUngFLO4bF
+         mDNqwlYpo9wrSvpl/6eLbCPAkoOCplQ9vjIHuSw/jFOjpqgUhBGULOLPZP5v3MWidaKg
+         krnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf/IV1ltkFlk+QI80XsT5Cp7jdQGXo2sASu6WFXA4xS/JUL4klRoEChHLxqrMnDC/mjUSYI1Et6nwbjgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW9KsVZnoCfB4eqNVTGyMU8ERS0sAEKmz4dkqS5D989VB+sw8o
+	2k/Q1efRk4JBUzyBJKg51ILSHY3EMjxVAcnsRTid61hTU0fOQ00WQ9P5q8hyzrevH3KGttS1fVX
+	Z/rrOipcq10gkwsCTtwmx0YN/zkGTeuI9fSQtln+A9sDBvCALcReadf9RV2Bl9R0pPpUm/HnVfk
+	s=
+X-Gm-Gg: ASbGnctos/LiKmyp1sPr8mm66OpV/RcLe5kCTCY+8doY0o+HKJVdVpP4C2x/eAc15R4
+	ev8KEVCtEJN1kz29Zbgf8e/LrKBkbCKu4lUtguuFcGaI1hB0j0ZLR54N97kd0hXpIM+LRBy3Qtr
+	4RFBU+xqSPIhpgFiRz9mCIjOCg1/N26DTxWEO/79HsyA5CNPXVajk/ga1tKFAnQPGIsmfLv3D22
+	AqWb3NoXChwI3zjoM6YV/zKv1/kpg3r3psKTWT3vbt9wN5C1cglEsafv8hYAwz9fBjzS/1eJ5+x
+	+4Vglqw9hCBAk8EKgqx1jjGq25j1vRw/xDeyHFYHaVRuVMgTXJGAe60qI6BlDwbKrOGMDafY6z/
+	JiAHtNRZXRJDCErnHS+uZxC2x
+X-Received: by 2002:a05:6a20:6a28:b0:201:4061:bd94 with SMTP id adf61e73a8af0-2170ccaf4e4mr17466874637.19.1747670684377;
+        Mon, 19 May 2025 09:04:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgNDYZ32Sjzzk2gJJMfu5Ie78pJwNA3N3D0CKRForF+eN6xgFTl7z1ALHWpDNFHkhlcSwM3A==
+X-Received: by 2002:a05:6a20:6a28:b0:201:4061:bd94 with SMTP id adf61e73a8af0-2170ccaf4e4mr17466829637.19.1747670683896;
+        Mon, 19 May 2025 09:04:43 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6f1sm1919378e87.248.2025.05.19.09.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 09:04:42 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Mon, 19 May 2025 19:04:16 +0300
+Subject: [PATCH v4 14/30] drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] x86/sgx: Implement ENCLS[EUPDATESVN]
-To: Elena Reshetova <elena.reshetova@intel.com>
-Cc: jarkko@kernel.org, seanjc@google.com, kai.huang@intel.com,
- linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- asit.k.mallick@intel.com, vincent.r.scarlata@intel.com, chongc@google.com,
- erdemaktas@google.com, vannapurve@google.com, dionnaglaze@google.com,
- bondarn@google.com, scott.raynor@intel.com
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
- <20250519072603.328429-5-elena.reshetova@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250519072603.328429-5-elena.reshetova@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250519-dpu-drop-features-v4-14-6c5e88e31383@oss.qualcomm.com>
+References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
+In-Reply-To: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Vinod Koul <vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2528;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=/oHhBsr0/SzduUBt+SEifBVkpkZbpX33SiSBjgxdPbQ=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ4Z2WPX8vjhP754nU05dyRDPmccUXLRp5UrjKNM7k3QeR
+ ZZLFKt2MhqzMDByMciKKbL4FLRMjdmUHPZhx9R6mEGsTCBTGLg4BWAiT3Q4GHo9H95gDl+vpvfQ
+ rv37M2e53mcn9Vi/5c8/8VK31vpsiqVjlrFYc+Pk5c3b7/auajaeKj/T+PKcpI97v87nWnrTTm+
+ qPIvzuWajtmbRdIZbSayLr/aKvVbW/h+mP0XBS/deWOsNH+E5dZd1/0/69ftl0Mc5aYIBwoscjE
+ 9V7+Q5F5Oa8EjFob+3vKtkw90DpdasM51V4qYqPg12k3qWNv3k/uRSVsZp3idrplw59sYyNDXnT
+ t3OpZ2bY695au1OKo/n476aXcM5Zf8JzUl856zjnYIUHjj5VNcefhUSzf5szjvVKqfDv7ccbvga
+ 87L55t2gmTfc5VKjFZKKLvHWZTjptYpLSXvke9/3iIwGAA==
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682b569e cx=c_pps
+ a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=z6iiZyybfqEMMI01lysA:9
+ a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: JmOFBrInhh3f1uwnfxKi7S4Tulu6BlSu
+X-Proofpoint-GUID: JmOFBrInhh3f1uwnfxKi7S4Tulu6BlSu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE1MCBTYWx0ZWRfX/dhGVhQbQhnw
+ 54ea9B9eWasMUhS9cdW5J9lByy/7z6af16tz4bRdcGCLLrGDUpKEhIbp2w+R4O3dEjppdqYv24q
+ RpyuIq+EgdFPytiYl48aGSypvaGimtou7OFE9/byE89ymxlWA5tgelx+O2H6OWnSZrZ9VXkW+Ya
+ khBuBsYIBdSO/NgyYUUZx/mromSxk5x5GgFHZFa4k9QtIzVQ/Y9Vmdpvm/RuXxcS3DUz8+w7hy4
+ NqHwCN27n6zQgTcjzvQr/B7y02Y+hVjQNTicP6+fHWJyLQJaVgH5WQhkMssrdumjarqx9AL2x1k
+ vAAxh58NhwJXcwJxQ6HZN2vGdngeIlqek+rrlbKO8vlRl3MRfF97JXpP4/sOqluHszEAF3U669/
+ cqY8cOlcC3aZe86O/tKeJnS4wCMgQvITcZ2D0zuyMDe3uuXvOkCwE2RBAr9c/vgDxF8B6BUW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505190150
 
-On 5/19/25 00:24, Elena Reshetova wrote:
-> The SGX attestation architecture assumes a compromise
-> of all running enclaves and cryptographic assets
-> (like internal SGX encryption keys) whenever a microcode
-> update affects SGX. To mitigate the impact of this presumed
-> compromise, a new supervisor SGX instruction: ENCLS[EUPDATESVN],
-> is introduced to update SGX microcode version and generate
-> new cryptographic assets in runtime after SGX microcode update.
-> 
-> EUPDATESVN requires that SGX memory to be marked as "unused"
-> before it will succeed. This ensures that no compromised enclave
-> can survive the process and provides an opportunity to generate
-> new cryptographic assets.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-That's really bizarre text wrapping. You might want to have your editor
-give it another go.
+Continue migration to the MDSS-revision based checks and replace
+DPU_INTF_STATUS_SUPPORTED feature bit with the core_major_ver >= 5
+check.
 
-I also found this pretty hard to read, but a friendly AI chatbot helped
-me rewrite it:
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 3 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 2 --
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c    | 3 +--
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-All running enclaves and cryptographic assets (such as internal SGX
-encryption keys) are assumed to be compromised whenever an SGX-related
-microcode update occurs. To mitigate this assumed compromise the new
-supervisor SGX instruction ENCLS[EUPDATESVN] can generate fresh
-cryptographic assets.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 1244dd59648d11123c507a1369f28f952d047fd5..4482f2fe6f04e58408b55994d885ea1c717c6a07 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -105,8 +105,7 @@
+ 	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
+ 
+ #define INTF_SC7180_MASK \
+-	(BIT(DPU_INTF_INPUT_CTRL) | \
+-	 BIT(DPU_INTF_STATUS_SUPPORTED))
++	(BIT(DPU_INTF_INPUT_CTRL))
+ 
+ #define WB_SDM845_MASK (BIT(DPU_WB_LINE_MODE) | \
+ 			 BIT(DPU_WB_UBWC) | \
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index bf6b2392efb47fa8c3e3c5d17f1a72341872e18b..e1c6df3a3b72ffb5a816bd18266a35abe723fbd9 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -143,12 +143,10 @@ enum {
+  * INTF sub-blocks
+  * @DPU_INTF_INPUT_CTRL             Supports the setting of pp block from which
+  *                                  pixel data arrives to this INTF
+- * @DPU_INTF_STATUS_SUPPORTED       INTF block has INTF_STATUS register
+  * @DPU_INTF_MAX
+  */
+ enum {
+ 	DPU_INTF_INPUT_CTRL = 0x1,
+-	DPU_INTF_STATUS_SUPPORTED,
+ 	DPU_INTF_MAX
+ };
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+index 8f9733aad2dec3a9b5464d55b00f350348842911..54c2e984ef0ce604e3eda49595d2816ea41bd7fd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+@@ -308,9 +308,8 @@ static void dpu_hw_intf_get_status(
+ 		struct dpu_hw_intf_status *s)
+ {
+ 	struct dpu_hw_blk_reg_map *c = &intf->hw;
+-	unsigned long cap = intf->cap->features;
+ 
+-	if (cap & BIT(DPU_INTF_STATUS_SUPPORTED))
++	if (intf->mdss_ver->core_major_ver >= 5)
+ 		s->is_en = DPU_REG_READ(c, INTF_STATUS) & BIT(0);
+ 	else
+ 		s->is_en = DPU_REG_READ(c, INTF_TIMING_ENGINE_EN);
 
-Before executing EUPDATESVN, all SGX memory must be marked as unused.
-This requirement ensures that no potentially compromised enclave
-survives the update and allows the system to safely regenerate
-cryptographic assets.
-
-> @@ -917,6 +918,62 @@ EXPORT_SYMBOL_GPL(sgx_set_attribute);
->  /* Counter to count the active SGX users */
->  static atomic64_t sgx_usage_count;
->  
-> +/**
-> + * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN]
-> + * If EPC is empty, this instruction attempts to update CPUSVN to the
-> + * currently loaded microcode update SVN and generate new
-> + * cryptographic assets.sgx_updatesvn() Most of the time, there will
-
-				^ What happened here?
-
-> + * be no update and that's OK.
-> + *
-> + * Return:
-> + * 0: Success, not supported or run out of entropy
-> + */
-
-Good documentation will help folks know when they might call this. It
-sets clear expectations. When is it safe to call? What do I do if it fails?
-
-> +static int sgx_update_svn(void)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * If EUPDATESVN is not available, it is ok to
-> +	 * silently skip it to comply with legacy behavior.
-> +	 */
-> +	if (!X86_FEATURE_SGX_EUPDATESVN)
-> +		return 0;
-
-At this point, it's pretty obvious that this code hasn't been tested.
-This code would (I think) croak on any SGX users on non-EUPDATESVN
-hardware. I'm going to stop reviewing this now. You've gotten quite a
-bit of feedback on it and I think I'll wait for v6, which I'm sure will
-have a few more correctness passes on it before going out.
-
-> +
-> +	for (int i = 0; i < RDRAND_RETRY_LOOPS; i++) {
-> +		ret = __eupdatesvn();
-> +
-> +		/* Stop on success or unexpected errors: */
-> +		if (ret != SGX_INSUFFICIENT_ENTROPY)
-> +			break;
-> +	}
-> +
-> +	/*
-> +	 * SVN either was up-to-date or SVN update failed due
-> +	 * to lack of entropy. In both cases, we want to return
-> +	 * 0 in order not to break sgx_(vepc_)open. We dont expect
-
-Remember, no "we's". Use imperative voice.
+-- 
+2.39.5
 
