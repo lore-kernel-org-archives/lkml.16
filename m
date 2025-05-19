@@ -1,140 +1,87 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863E72459C7;
-	Mon, 19 May 2025 08:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D342698AF;
+	Mon, 19 May 2025 08:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644517; cv=none; b=O25y/Qg3qpRWvygHJLWVQkxgNxWjMPxS7TQIcEjIghXcfHMp6RWT1N1FyWsDRl9j+912iAF7J3IuRRtShSsKzloqpUinxkwlPDKa5U1bO7WTh6RObAkeoIGidAp9oss2hbIluaRZzfCeWADG06ssN5LtYZ6qM1HM1vCh1icMutg=
+	t=1747644618; cv=none; b=l1aW7va7Ia5m906u0IeeaSIxrvKK4VdajWqGdft5bnDqUwMmdadLHA6PRrRX8m/Sq9ua8EEzTmOLxlFDv0VQq3YQlH5oo+piCIr8kaL9SK58Q4QjAOaAjj70IiMVovmVlQgSgSBwBL5op/+9ZOao5641ek8lTzHyA7Ytj8AhLso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644517; c=relaxed/simple;
-	bh=Ih+8f3zUfjU505gQBNGKBoShCWVN0Yfmu67KdEg42mU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bAHOQKHVAYVqRMy2D2sBFTzXrRgHJLydUYFgVPZo5qAcotPdeOdwmXZOwlsg48FZjJ0c9uzFlZS38Xkv/VnFv88IybGXaoxKzEukGnDS3PNupNCbSsDk6QMq46ZYiRqFRm+zhp8dc+FuxYMaQOXPHor+qEBpm+lDNJljQpkDZuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52eea8111easo131042e0c.2;
-        Mon, 19 May 2025 01:48:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747644512; x=1748249312;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UUoGNODM3B5cNA6VCA3Yq2EkxGAcmEIZXesnTmnumTo=;
-        b=NtiFi+qERQn3YsxiHKRFGIxhVeaYCBSHH2ReGAdp7XYd/pWntF3GtbDf6wYNd3xfgt
-         xOSkBNRgUQkBfDIB7BnFSxFjwrJmuyXhpjWo3xYtAVGAR9LPbOe7fZYectIkbmIaP/oK
-         lm4y2xIMnS8mx4xoMCFtPO2g/8eac62VVK93B5pLWWA3wBykTfKha7FaFZ1dwHF4cdMH
-         TBP9E5C+/77EOlRw7f8EUTQlf408Hr1uGNd1BTICly/aZ5VC0iddy1pv3xjRW7FoZr5h
-         qgTsjUAdjtcBtEWg4kxbxjpKjMk/k73jf7xC8xfsIQyjbk4Xyw1H2eC0a9WPAXqt8zCP
-         aBNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUumJ+9MNgCHlPFPo8uLFvKwh5ToQ6K+XaL1FaD7GQEsXvXswhC+Sf4WxbSb+Kz05wOKzGK/g9r7Ko=@vger.kernel.org, AJvYcCVtznrOKKjXLu9KXkS2VigOCdanuIraI8zffekeQvjuWjHcC5mumv9uB2eWRQkkzLWBNJESm64UMVkLFRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynGAu1j7OYNxAtXqWrVSOryUYErYqZcUau5KQNz548Svt2aNzN
-	RtdigoGaqe9CvJEZadsqCiRtoeRhIoYJeDdgcUPIofr7qa2yfL/pK6hB3+9HjvG3
-X-Gm-Gg: ASbGncscIloULUd89iqM4bhfiv80YKTb2tJWfe0nwu8xsvAlqqTt+BwZB+7DlBXqmj0
-	sJBO7u5/H4sdbcLeqN/rWmRETRhTF4HO5xOaEAuiENQ/xkdp5YqXe0JQUTYFMKFpTKeH0mWtXYu
-	Hwe4pwBIOubhNXUaRdAfNqVqNstiHmtjPYIvCdFSYcXZtD946cq8QDrgQVK+9F6sZo7GYA3rOkT
-	AII0bOHuUwXm+8ABx0sv7most3oACElsQRgf0Yd/+Zx5/wKXiKSJVOq5h26KebVdmFY3sHb+Ln4
-	vIvfbcX3i32xlSV4nUirBa5WFbqbISvO21L82owC3xo6g4/aKEM/ATdtTQa69Uw/lB6G+jHRMrR
-	DqUoZRnzT8LY5Iw==
-X-Google-Smtp-Source: AGHT+IEHyltb1G0iJZhl3YfYVMe2vWgZlb7JXH2b0bwWqcQLNkl99jj0E8Oy5vP0M2oZkGu6dnpDkw==
-X-Received: by 2002:a05:6122:792:b0:525:9ddc:381a with SMTP id 71dfb90a1353d-52dbcda03a8mr9604714e0c.6.1747644512555;
-        Mon, 19 May 2025 01:48:32 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec1220b5sm5437499241.11.2025.05.19.01.48.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 01:48:32 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-877c48657f9so828701241.1;
-        Mon, 19 May 2025 01:48:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUwYJ9MeL6yZVQ3SiI9Ko7Fujsvic+6t1CUsWEEc2qsKg0qwY+sdMWvsNbDsUchbQTiSsvSObut3sNc3f0=@vger.kernel.org, AJvYcCV2WKQ9+WO9X6TlE9TLOz0XX9WLjO5IWXMerkK5zwNik+j2OBmvVAjbzgZPj9wa4gSSzYtDkBrMgyg=@vger.kernel.org
-X-Received: by 2002:a05:6102:330b:b0:4e2:9b58:ed70 with SMTP id
- ada2fe7eead31-4e29b58ef93mr397855137.9.1747644511992; Mon, 19 May 2025
- 01:48:31 -0700 (PDT)
+	s=arc-20240116; t=1747644618; c=relaxed/simple;
+	bh=3/aKAxEYGjMiRNH1CNkgSZ1LCzghaLEQ1Gs3l8ksbeM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=k9OjcXVtYWpZovBRukwxe73S69+xlJ667g7q+/2rfJESAcHh1BuMzTKFACbU+PXbxAiW2vRJv2Ny4LtuNgT78bWFxAGnWXWt548P9Q9XRz8Pw+3z4ixHp3u7w+CYDjnmfC8+YE0K9fyabyEdEIhbgK56P2IEVEIQWdhdYTAUOgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxGHHC8Cpo6uHxAA--.63S3;
+	Mon, 19 May 2025 16:50:10 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxesS+8Cpoa+LgAA--.57455S2;
+	Mon, 19 May 2025 16:50:08 +0800 (CST)
+Subject: Re: [PATCH v9 2/5] crypto: loongson - add Loongson RNG driver support
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
+ jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-3-zhaoqunqin@loongson.cn>
+ <aCrIL_ZXL-UtaLdJ@gondor.apana.org.au>
+ <96118a23-3e6c-c9d1-2135-bd7a22091f35@loongson.cn>
+ <aCrqPnwr7lMJNOnL@gondor.apana.org.au>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <9d70efaf-1d68-f8e5-d9a6-cd312fc99529@loongson.cn>
+Date: Mon, 19 May 2025 16:49:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517093048.1149919-1-rppt@kernel.org>
-In-Reply-To: <20250517093048.1149919-1-rppt@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 19 May 2025 10:48:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
-X-Gm-Features: AX0GCFtfNAumQMNNQi8KkHvE6Pqueqrc9COgImCZWxMhdTTFYMGbyiZ2UCS92FA
-Message-ID: <CAMuHMdURQWHY2hAe+_sA8cVh1ERD4EfvJqg=NZDA0iXW-sBX+A@mail.gmail.com>
-Subject: Re: [PATCH] sh: kprobes: remove unused variables in kprobe_exceptions_notify()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Mike Rapoport <rppt@gmail.com>, 
-	Rich Felker <dalias@libc.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <aCrqPnwr7lMJNOnL@gondor.apana.org.au>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxesS+8Cpoa+LgAA--.57455S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUm0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x02
+	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY
+	1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVW8ZV
+	WrXwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x07jOb18UUUUU=
 
-Hi Mike,
 
-On Sat, 17 May 2025 at 11:30, Mike Rapoport <rppt@kernel.org> wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+ÔÚ 2025/5/19 ÏÂÎç4:22, Herbert Xu Ð´µÀ:
+> On Mon, May 19, 2025 at 04:13:14PM +0800, Qunqin Zhao wrote:
+>> Then the HISI TRNG driver isn't a right demo?
+> Yes the hisi trng looks wrong too.
 >
-> kbuild reports the following warning:
+>> This can also avoid concurrent access to a device, otherwise i need to
+>>
+>> add mutex_lock/unlock in generate and seed callback.
+> Randomly failing the tfm allocation is not a solution to resource
+> control :)
+
+Is it fine waiting in init-callback until someone calls exit-callback?
+
+Thanks,
+
+Qunqin.
+
 >
->    arch/sh/kernel/kprobes.c: In function 'kprobe_exceptions_notify':
-> >> arch/sh/kernel/kprobes.c:412:24: warning: variable 'p' set but not used [-Wunused-but-set-variable]
->      412 |         struct kprobe *p = NULL;
->          |                        ^
->
-> The variable 'p' is indeed unused since the commit fa5a24b16f94
-> ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
->
-> Remove that variable along with 'kprobe_opcode_t *addr' which also
-> becomes unused after 'p' is removed.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505151341.EuRFR22l-lkp@intel.com/
-> Fixes: fa5a24b16f94 ("sh/kprobes: Don't call the ->break_handler() in SH kprobes code")
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Cheers,
 
-Thanks for your patch!
-
-"p" and "addr" are definitely unused (besides side-effects?), so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/arch/sh/kernel/kprobes.c
-> +++ b/arch/sh/kernel/kprobes.c
-> @@ -404,13 +404,10 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
->  int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
->                                        unsigned long val, void *data)
->  {
-> -       struct kprobe *p = NULL;
->         struct die_args *args = (struct die_args *)data;
->         int ret = NOTIFY_DONE;
-> -       kprobe_opcode_t *addr = NULL;
->         struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
->
-> -       addr = (kprobe_opcode_t *) (args->regs->pc);
->         if (val == DIE_TRAP &&
->             args->trapnr == (BREAKPOINT_INSTRUCTION & 0xff)) {
->                 if (!kprobe_running()) {
-> @@ -421,7 +418,6 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
->                                 ret = NOTIFY_DONE;
->                         }
->                 } else {
-> -                       p = get_kprobe(addr);
->                         if ((kcb->kprobe_status == KPROBE_HIT_SS) ||
->                             (kcb->kprobe_status == KPROBE_REENTER)) {
->                                 if (post_kprobe_handler(args->regs))
-
-I have no idea what this code is supposed to do, and if it actually
-works.  Red flags are that the assigned "p" was never used at all
-since the inception of this function.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
