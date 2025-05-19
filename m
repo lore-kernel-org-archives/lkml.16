@@ -1,86 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87EE1714B3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 12:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78DE1714B3;
+	Mon, 19 May 2025 12:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747657022; cv=none; b=pHnt8ogEy0DU/oH6j58BJ+BtJk6hn+jDvBL2K0MsETWAFhSl9nMdL6RQcVEZeYX4Cf+N2W7uKjfWUid9iUPVY93QCpeGIusHgd0YT1ot0Gz+X9HiX5BrUf/YpBeAbnOa0yoV/SnJO9+tcVM/igIJPtVQoluPqKcV9IAVBIwjkhA=
+	t=1747657028; cv=none; b=YCSgAu1vf9SL3Ya2aabe0A3QF3xSu9Ftyb/horupLKTFXbIexkcTUa2aNlRQARKCF8JFkozssQKajnl4ZB7iHoJ0rL+RZNa8ZuxK10q5DI9DoEwzn2INWgKBDKNVPEc5kM8KvgCieIOH/v5ZRX+8449RNcXH00fSFL7PXPcXjak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747657022; c=relaxed/simple;
-	bh=BIOX9H4O6cTEWwlkrpWf5u+kicgtzztgCG71TnhgjQU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tzrStEHolUXpDl5Yd17JQJUg6KkbFgmDEMiuYqW+8E8q+zmBgND1Wjn9kdDbuX528+Z2vWREEU8RVZ9pnG2mNLhrfDp4F0VoNpzfq3lOLYPjYdiCWYeOVpT2RQ1EuBq4JjvRNFraE7eCng0YCRIONzcaUtPzC6td+BoinFafxdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MjjivDDY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WB/Q5r8E; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MjjivDDY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WB/Q5r8E"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747657018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k27fO7henKnq4UPnDJ7hnHW2OVYLSMfn/J8w9qfUsF8=;
-	b=MjjivDDYyJR2hfCPEDkEYDfh2V6bEly/UssS0T63VB9O0C+TM8a5a6ZetMdVipO4btpgsp
-	69psghpmQ28ifE+yzLBrcOtMju+HtY9Mn9iXU8WLrLko61Ee2gxVBDn5urZxnRPkMAlOa0
-	i8oTOL34hK0uHCEtZRq6kN/xcJlP2FdB5pzQ/FOj1+KSr6hiDjKkUKkSZOPUtX8MnrM/CA
-	+esaRZgcHJ/lKAMZro0oyVZlCskiE+zR7W5RU32S5IZib7HO6ZT0AkJIK4AtCWlQx/Amy4
-	Pg8lnPrb061e1Gi1DdWyCUNYSTBIMhe1YtvLXo6fsx8n8IYToa6hjq40EgUKUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747657018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k27fO7henKnq4UPnDJ7hnHW2OVYLSMfn/J8w9qfUsF8=;
-	b=WB/Q5r8EZiZ3SPP6wnORvG2F0zUMrX+ovCj1NeKg0YpcoPoen2Rud3xa2bKOqMiknxsge0
-	8Zg7ET7P2j+trJDQ==
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
- <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH v2 5/5] irqchip/gic-v3-its: Use allocation size from the
- prepare call
-In-Reply-To: <86wmacewjr.wl-maz@kernel.org>
-References: <20250513163144.2215824-1-maz@kernel.org>
- <20250513163144.2215824-6-maz@kernel.org> <8734d1iwcp.ffs@tglx>
- <86wmacewjr.wl-maz@kernel.org>
-Date: Mon, 19 May 2025 14:16:58 +0200
-Message-ID: <87zff8hk1x.ffs@tglx>
+	s=arc-20240116; t=1747657028; c=relaxed/simple;
+	bh=II7Uh3XayjV3u8X4CGxA51vygQVXJFl7Ri4yS+3JM78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VpvYg7PXGjqlmbih3bdJmFun23keiMYGqHuyLuvxudAXppOSjjxTIr5GHFIi9gaHktiDfiSvn64MSMBwmJXaU33SIV9JAeJWxG9zdaCrOi3WMd6AaPCX0IOmpfSaX7FFa4WlHv0/J76ArtBKHbacnDzon7wMiNXkUtA7DgOJ1KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 8/ty2+JLRnC/zIsF7Y5l5Q==
+X-CSE-MsgGUID: rgzUCgEiQ/qLXVICs9TLJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="37171605"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="37171605"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:17:06 -0700
+X-CSE-ConnectionGUID: eBUO6ahkSvS6rDE3t3ffUg==
+X-CSE-MsgGUID: 321et6/9QRGM4gOomXMoow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="144235502"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 05:17:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uGzQS-000000031qj-3nJw;
+	Mon, 19 May 2025 15:17:00 +0300
+Date: Mon, 19 May 2025 15:17:00 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 10/12] iio: accel: adxl313: add inactivity sensing
+Message-ID: <aCshPOIHVqluhXYs@smile.fi.intel.com>
+References: <20250518111321.75226-1-l.rubusch@gmail.com>
+ <20250518111321.75226-11-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518111321.75226-11-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 19 2025 at 11:15, Marc Zyngier wrote:
-> On Sun, 18 May 2025 19:53:42 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> 
->> On Tue, May 13 2025 at 17:31, Marc Zyngier wrote:
->> 
->> > Now that .msi_prepare() gets called at the right time and not
->> > with semi-random parameters, remove the ugly hack that tried
->> > to fix up the number of allocated vectors.
->> >
->> > It is now correct by construction.
->> 
->> FWIW, while looking at something related, it occured to me that with
->> this change you can enable MSI_FLAG_PCI_MSIX_ALLOC_DYN now on GIC ITS.
->
-> Maybe. It is rather unclear to me what this "dynamic allocation"
-> actually provides in terms of guarantees to the endpoint driver.
+On Sun, May 18, 2025 at 11:13:19AM +0000, Lothar Rubusch wrote:
+> Extend the interrupt handler to process interrupts as inactivity events.
+> Add functions to set threshold and period registers for inactivity. Add
+> functions to enable / disable inactivity. Extend the fake iio channel to
+> deal with inactivity events on x, y and z combined with AND.
 
-It allows the driver to avoid allocating a gazillion of interrupts
-upfront during initialization. Instead it can allocate them on demand,
-when e.g. a queue is initialized. Of course that means that such an
-allocation can fail, but so can request_irq() and other things. I'm not
-sure what you mean with guarantees here.
+...
 
-Thanks
+>  	en = false;
 
-        tglx
+You see, now it becomes even useless code.
+
+> -	if (type == ADXL313_ACTIVITY)
+> +	if (type == ADXL313_ACTIVITY) {
+>  		en = cmd_en && threshold;
+> +	} else {
+> +		ret = regmap_read(data->regmap, ADXL313_REG_TIME_INACT, &inact_time_s);
+> +		if (ret)
+> +			return ret;
+> +
+> +		en = cmd_en && threshold && inact_time_s;
+> +	}
+
+...
+
+> +			case IIO_EV_DIR_FALLING:
+> +				ret = regmap_read(data->regmap,
+> +						  adxl313_act_thresh_reg[ADXL313_INACTIVITY],
+> +						  &inact_threshold);
+> +				if (ret)
+> +					return ret;
+> +				*val = inact_threshold * 15625;
+> +				*val2 = 1000000;
+
+MICRO ?
+
+> +				return IIO_VAL_FRACTIONAL;
+>  			default:
+>  				return -EINVAL;
+>  			}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
