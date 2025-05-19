@@ -1,94 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221934431;
-	Mon, 19 May 2025 23:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8594431
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747697141; cv=none; b=uDSgOn2gqw9J60hCJGIGIOWbHwxViZccJe6FOaEeIZHddOv9QgYIoGH7ov8myoqZ5kWahG4ecIJNFpZ30+NFxEukN7nNO/iJZbo49napuUUhVIB8ZmvI4gY+1T1fcWNpvJQhHH4nv/k9/hTowbi78aBtmvjy0Txvqhn+pJ6FhAg=
+	t=1747697297; cv=none; b=PZ5OfYKmzvv3dgFBbPmjlCcEPwi4ZwDEW7ZSajbbQ8XKbBFZbej1PRY256M8ZjVaGHLOUjWDOl9Iwn+OS2xMAm8ljCiR/vp/W73xMUT/GEKoqVKALIUd/CKgvP//rBTL7W34ft4SURXq7zyAoeLn5FnOm/hjzIcJE+O5Y1ymWy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747697141; c=relaxed/simple;
-	bh=jeM+0KCxVQu4BssWwcCM/gXTDYldLQzE6cH8hDbP7t4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rG7/8pjizV2tI1fN2bLI/7zNZwotDZD6jopSMvYHrRlbjVMKjOdkF6H2n+0yBaOkaBwh4cKfj/FRmyTNZReE6FkSZkdkaKqw8OSEvTmHixZqj2XW5FxrmdpCkqBO2XG+AwrU9tA42RgN0jTeFvu0KHtbfTVidVQFwCWX9gxVx7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7W9zS4v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747697297; c=relaxed/simple;
+	bh=ABYKT87hUcjZ47YhZTQDIPC9cAn/v+Sry3menbwd5+k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nOSaE5eJRUA8rxDnzVU5j87K9Eo2+QmsdS1qWPucZ+FxhLALbFIMGZZBe5adMq4nOKg8Y9VmLWoeu79BWKhJAN8xK2nW8hBMO3l/yRtmACTjT5rdfP+45NFyLr25lykL+exlPjSx1qyjCOe1hD9nzVfiSXewhiybPhwdhv+JZ1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wiyed438; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7W9zS4v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A778C4CEE4;
-	Mon, 19 May 2025 23:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747697140;
-	bh=jeM+0KCxVQu4BssWwcCM/gXTDYldLQzE6cH8hDbP7t4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=I7W9zS4v5Nxl0SZZHHJAMh8KvQBXK8Wdcn/ytlbbhwVMrTNYZr5QJTJS0EEhI/jKl
-	 /lYV3NUZcul7R5n2OkkvN2wIU1HgpDa3AK7nGLdEs5XHQWS7v+Ckz5SdI18S7O3LLn
-	 D+ErkHrPYXD0teLZq5oMGoeCFfPXYTpoxRz9KHIDAkDSPeC61QwIZ9Fh1oq0vnWNf3
-	 qgUsyrOf5IdNxSHuiumqEzmAIj9rJdIAY560xsPMuUT2cWsmMh+2m5udhjzzOj1VHj
-	 XPUCWGWcXkL+LZrkIHHQPomTAPICkeLT25dEa2Ns/vajof/fppO7Y2GYd9PUHX6ZTr
-	 +a5gJtmlpuNjw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH] perf trace: Increase syscall handler map size to 1024
-Date: Mon, 19 May 2025 16:25:39 -0700
-Message-ID: <20250519232539.831842-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wiyed438"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2323bd7f873so14499015ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 16:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747697295; x=1748302095; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eosjEUPXX9wu9dJnrDuC2wPHanGn2nAIE+9tvUyY9+Q=;
+        b=Wiyed4389z4h26irDZVQyqKmQJQLYSGNBG/lGr3Op5OElu3W4Rwye+5m5NBA8XBr1c
+         4BvI27fmSLsIOF42plID+uR+zGymLAU6Lpoz7/Nc9chD8eSjDrj/Xdpnm6E/qy/Sx6xI
+         6iGWmE6lJ+tvjXkNGC88/ib1uGzwS6Lodkq8Aev/TfJ9/tSlOyCelOx5EMK0He8/5VE8
+         Am8J5xJrTC0AzFmHBTsQhNfdHMNKun9K5adQJBjuGfEtzmvMxKuk0YxRLmlIAyFDF4lP
+         khSwuRSldFDHulHG5ubvo0Iq2lxhnW0uVSeD7gZd48A97qf8dfjt3f9SD+4vi/k/eIRc
+         9wfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747697295; x=1748302095;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eosjEUPXX9wu9dJnrDuC2wPHanGn2nAIE+9tvUyY9+Q=;
+        b=D+Vp0N92452prwKHCmxuMcwmbQcgbrAXc65xMrom4Ez+D/U804titglHsUGk8JXAxN
+         CGFiBGrI0cbDIko5Qo3zjfQP5zdTVZC83ZvV5EnjqvdL4i0YkCVag6EUfvJRspHuXwur
+         4WEc62UpPpf0DkxO3bsJqmR4q98OGO7HBfcggtB2DQDKWsdxnmdaPwZDp1kLVl7WK8LV
+         tVpseZWOlcRZG2uG5HWAQWD4ze8kRKmyuXoswY19xzTHr6HGxmExc7CJvQMPuZHCHG3M
+         8LeFBBzTXmR0TsK3tCYj6Ek+RDrQgy+PQit5DtEjWS3PXM0+GcSyQKwSTAYg/KDLt2QN
+         1uTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT68ZgHbp8qCwOxK2bJTY3404qVprJjL3W7XrP5yJKJgd/IscmNA+PRJA60IAE3yPI6ZmIHMLBuaSlcYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUMJIQgOuJpVWvQdBbGpsXeYgVEr0T+qJnji21YWqcmgH2+6ie
+	z/FhD5LlRQkB5NFB33l1Gs/kFZ9X2rX4wo+CvVJIMleaAWo6aCWzsz5gOp+ITFgVpA3cwzfHXgc
+	jlRmZ4A==
+X-Google-Smtp-Source: AGHT+IG78zcntgjKlrty4n74EQTp4yTRbBdkG1kjpn+sAJZJpv8icqYrL30aPlVyOesK1rcC7UWDb/BPFow=
+X-Received: from plki13.prod.google.com ([2002:a17:903:1a0d:b0:231:f3aa:e763])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f791:b0:223:501c:7576
+ with SMTP id d9443c01a7336-231d439b01dmr229344175ad.12.1747697294762; Mon, 19
+ May 2025 16:28:14 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon, 19 May 2025 16:27:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250519232808.2745331-1-seanjc@google.com>
+Subject: [PATCH 00/15] KVM: x86: Add I/O APIC kconfig, delete irq_comm.c
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
-max entries of 512.  Usually syscall numbers are smaller than this but
-x86 has x32 ABI where syscalls start from 512.
+This series is prep work for the big device posted IRQs overhaul[1], in which
+Paolo suggested getting rid of arch/x86/kvm/irq_comm.c[2].  As I started
+chipping away bits of irq_comm.c to make the final code movement to irq.c as
+small as possible, I realized that (a) a rather large amount of irq_comm.c was
+actually I/O APIC code and (b) this would be a perfect opportunity to further
+isolate the I/O APIC code.
 
-That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middle
-of the loop when it accesses those keys.  As the loop iteration is not
-ordered by syscall numbers anymore, the failure can affect non-x32
-syscalls.
+So, a bit of hacking later and voila, CONFIG_KVM_IOAPIC.  Similar to KVM's SMM
+and Xen Kconfigs, this is something we would enable in production straightaway,
+if we could magically fast-forwarded our kernel, as fully disabling I/O APIC
+emulation puts a decent chunk of guest-visible surface entirely out of reach.
 
-Let's increase the map size to 1024 so that it can handle those ABIs
-too.  While most systems won't need this, increasing the size will be
-safer for potential future changes.
+Side topic, Paolo's recollection that irq_comm.c was to hold common APIs between
+x86 and Itanium was spot on.  Though when I read Paolo's mail, I parsed "ia64"
+as x86-64.  I got quite a good laugh when I eventually realized that he really
+did mean ia64 :-)
 
-Cc: Howard Chu <howardchu95@gmail.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[1] https://lore.kernel.org/all/20250404193923.1413163-1-seanjc@google.com
+[2] https://lore.kernel.org/all/cf4d9b81-c1ab-40a6-8c8c-36ad36b9be63@redhat.com
 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index e4352881e3faa602..c814ab01f9c7800f 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -44,7 +44,7 @@ struct syscalls_sys_enter {
- 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
- 	__type(key, __u32);
- 	__type(value, __u32);
--	__uint(max_entries, 512);
-+	__uint(max_entries, 1024);
- } syscalls_sys_enter SEC(".maps");
- 
- /*
-@@ -56,7 +56,7 @@ struct syscalls_sys_exit {
- 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
- 	__type(key, __u32);
- 	__type(value, __u32);
--	__uint(max_entries, 512);
-+	__uint(max_entries, 1024);
- } syscalls_sys_exit SEC(".maps");
- 
- struct syscall_enter_args {
+Sean Christopherson (15):
+  KVM: x86: Trigger I/O APIC route rescan in
+    kvm_arch_irq_routing_update()
+  KVM: x86: Drop superfluous kvm_set_pic_irq() => kvm_pic_set_irq()
+    wrapper
+  KVM: x86: Drop superfluous kvm_set_ioapic_irq() =>
+    kvm_ioapic_set_irq() wrapper
+  KVM: x86: Drop superfluous kvm_hv_set_sint() => kvm_hv_synic_set_irq()
+    wrapper
+  KVM: x86: Fold kvm_setup_default_irq_routing() into kvm_ioapic_init()
+  KVM: x86: Move kvm_{request,free}_irq_source_id() to i8254.c (PIT)
+  KVM: x86: Hardcode the PIT IRQ source ID to '2'
+  KVM: x86: Don't clear PIT's IRQ line status when destroying PIT
+  KVM: x86: Explicitly check for in-kernel PIC when getting ExtINT
+  KVM: Move x86-only tracepoints to x86's trace.h
+  KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling in-kernel I/O APIC
+  KVM: Squash two CONFIG_HAVE_KVM_IRQCHIP #ifdefs into one
+  KVM: selftests: Fall back to split IRQ chip if full in-kernel chip is
+    unsupported
+  KVM: x86: Move IRQ mask notifier infrastructure to I/O APIC emulation
+  KVM: x86: Fold irq_comm.c into irq.c
+
+ arch/x86/include/asm/kvm_host.h            |  22 +-
+ arch/x86/kvm/Kconfig                       |  10 +
+ arch/x86/kvm/Makefile                      |   7 +-
+ arch/x86/kvm/hyperv.c                      |  10 +-
+ arch/x86/kvm/hyperv.h                      |   3 +-
+ arch/x86/kvm/i8254.c                       |  11 +-
+ arch/x86/kvm/i8254.h                       |   3 +-
+ arch/x86/kvm/i8259.c                       |  17 +-
+ arch/x86/kvm/ioapic.c                      |  87 +++-
+ arch/x86/kvm/ioapic.h                      |  22 +-
+ arch/x86/kvm/irq.c                         | 336 ++++++++++++++-
+ arch/x86/kvm/irq.h                         |   3 +-
+ arch/x86/kvm/irq_comm.c                    | 469 ---------------------
+ arch/x86/kvm/lapic.c                       |   7 +-
+ arch/x86/kvm/trace.h                       |  80 ++++
+ arch/x86/kvm/x86.c                         |  37 +-
+ include/linux/kvm_host.h                   |   9 +-
+ include/trace/events/kvm.h                 |  84 +---
+ tools/testing/selftests/kvm/lib/kvm_util.c |  13 +-
+ virt/kvm/irqchip.c                         |   2 -
+ 20 files changed, 577 insertions(+), 655 deletions(-)
+ delete mode 100644 arch/x86/kvm/irq_comm.c
+
+
+base-commit: 3f7b307757ecffc1c18ede9ee3cf9ce8101f3cc9
 -- 
 2.49.0.1101.gccaa498523-goog
 
