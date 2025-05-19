@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E01E98FB
-	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC06F1E8322
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 18:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747679713; cv=none; b=hpuXdeQLkMoLiG4ohMVsMx2+fI+NrVvL3Q0fcz/hiwX4nSdADbAeST7DiGWt+tDWW3IVf7Bgx1ZAxWiHzPKrWAFftjDYL+jr7jqW4NQPhTuUXOiMAKlif9sEUHFcAcM0PqbKl1YOvXu1i/xsNgoXR3qKm+ea24wPrn3AgZkqqEo=
+	t=1747679819; cv=none; b=g8wtYrfFFjYqDb7/81syKz6Ao+GeSYifP6KzkbeRpuH5rQD38n+iDjQAUAp7R84FUT9mbHGEilwaf4K8eynzyh71G0EVG19o1Wiz3vDfYpTjt4HKtI3IEcjtCKEAnZFBgMT+v1MUcfvkkVOWMXWfU7QNS68NFi/x7IJfD+pPdMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747679713; c=relaxed/simple;
-	bh=OEIVVvYUQQ0SkhL9cKdTkMG0NczKRgDR8EPz8IvVbhA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oqV+MmB2Cn2ABz4RJXoQitYsFJ+TWSHqKyqpiDmJKr2O7uHtQFGxVd6to4UE86k18E89qw+S8sti8DmgTLldd56c18vklzq0eu6raacxZtrBiDSyS4haJ08nobl8u7J1H4CrfTpnakw3cb36hRhfbtVtZapk+K70QaTCTIugyuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+UYrUgV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747679819; c=relaxed/simple;
+	bh=PwUZ5LmqAn+7io6KeIK0V0u6KpjUgDbS0rNpjEkByh8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=U/T/TVIQwpl7pXivdb4zQnluBV6yldh1MFT5uXBnccLzkl2YxrExxCaw50tV5cOVjxLQu94SvChJYCV0zogyUrV5tW0aGjaJn/yBWyJtYKA0TyfjTzpOuXUKfvoNedLMPHB0RtpLsbp2pAJ56t64NvexnAne3xIsMQ3cflJ1BrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yo+wln92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+UYrUgV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A35B6C4CEE4;
-	Mon, 19 May 2025 18:35:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yo+wln92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95665C4CEE4;
+	Mon, 19 May 2025 18:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747679713;
-	bh=OEIVVvYUQQ0SkhL9cKdTkMG0NczKRgDR8EPz8IvVbhA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C+UYrUgV7jswpaFqbXmc+WBmMBrX6cJp4Y8qxEcpxCu9mQaZPMLsi6RYdIHo8q1CH
-	 ozwf6s70Xd973yQ83qAb0VAEKATsMpd/zGsI7sjm018xZuX8758qwYd0LkLEd8eto3
-	 ZLNmZr8fDt0Hz7xe7zdoYBirTH7Id8R6Vcn6v+9qogjYORRYl2TS1MWC7U+cs/J+Lf
-	 2G4Hqc5UK+3Q42sAUEu4DsO4DM/0tf7fNFCrb14nd/lja82nit9XYv+K7/yJs18K8E
-	 Q9opTCCnEwLLSBM0bUFh5z9W/2ZXBi/HT8NiTPx7P74aFV75Sd+q2fcmudP2e2Sr4o
-	 A71sKNFp3Ab/A==
-Message-ID: <192d4c26-3733-4818-8dc1-43d736fdbf75@kernel.org>
-Date: Mon, 19 May 2025 20:35:09 +0200
+	s=k20201202; t=1747679819;
+	bh=PwUZ5LmqAn+7io6KeIK0V0u6KpjUgDbS0rNpjEkByh8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Yo+wln92bn4KxNeya1MR62K0tITMs8XrlAOr7if/Y+kF7GYG3V9ScU9fe+bcgInY6
+	 PABLE4OfffeIL+FCOxkFClRt6UCqRripLUXWx/qmVqebKRIpSGc3OHLWy9QjNnfl3e
+	 gXZRnma7kWDVGaDBevleauybdc+ADXec9IMuZHkkTkfWzo3G/zHvQ4W/RINvRL7H9o
+	 HZUjRrPNuBHBc8rWHFKhaC1M0Xzt0+kHg6J6wWytLIPTMduwkXLEA4uVkL9oONchV+
+	 uc3CPGo7NwJFw+WBvje8r6VqGK8LAi9Ikob+3c+EOvpc9+BRTjb20F3nlq1UIT0aTS
+	 L0jLl/dmesBIg==
+Message-ID: <020b9602-7411-44ad-889c-e8efaccac0a3@kernel.org>
+Date: Mon, 19 May 2025 20:36:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,6 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [V1 1/2] arm stm32mp131.dtsi: add "encoding_mode" nvmem
  definition
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Rodolfo Giometti <giometti@enneenne.com>, linux-kernel@vger.kernel.org
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
  Alexandre Torgue <alexandre.torgue@foss.st.com>,
@@ -44,7 +45,7 @@ Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
  Yann GAUTIER <yann.gautier@foss.st.com>
 References: <20250519130859.3389704-1-giometti@enneenne.com>
  <20250519130859.3389704-2-giometti@enneenne.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <192d4c26-3733-4818-8dc1-43d736fdbf75@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -89,61 +90,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250519130859.3389704-2-giometti@enneenne.com>
+In-Reply-To: <192d4c26-3733-4818-8dc1-43d736fdbf75@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/05/2025 15:08, Rodolfo Giometti wrote:
-> This patch adds the definition for the nvmem location "encoding_mode"
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-
-> related to the "cpu0" node.
+On 19/05/2025 20:35, Krzysztof Kozlowski wrote:
+> On 19/05/2025 15:08, Rodolfo Giometti wrote:
+>> This patch adds the definition for the nvmem location "encoding_mode"
 > 
-> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
-> ---
->  arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC (and consider --no-git-fallback argument, so you will
-not CC people just because they made one commit years ago). It might
-happen, that command when run on an older kernel, gives you outdated
-entries. Therefore please be sure you base your patches on recent Linux
-kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-
->  1 file changed, 7 insertions(+)
+> Please do not use "This commit/patch/change", but imperative mood. See
+> longer explanation here:
+> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 > 
-> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> index e555717c0048..52bf497e26bb 100644
-> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> @@ -24,6 +24,9 @@ cpu0: cpu@0 {
->  			clocks = <&scmi_perf 0>;
->  			clock-names = "cpu";
->  			#cooling-cells = <2>;
-> +
-> +			nvmem-cells = <&encoding_mode_otp>;
-> +			nvmem-cell-names = "encoding_mode";
-
-Are you sure this passes dtbs_check?
-
+... and please use standard email subjects, so with the PATCH keyword in
+the title. `git format-patch -vX` helps here to create proper versioned
+patches. Another useful tool is b4. Skipping the PATCH keyword makes
+filtering of emails more difficult thus making the review process less
+convenient.
 
 Best regards,
 Krzysztof
