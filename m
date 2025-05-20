@@ -1,203 +1,102 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED260182BC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CBF25E821;
+	Tue, 20 May 2025 21:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747777826; cv=none; b=JLnbMkYwl+BHHSb2RnKYR3nd+bbT89yvyIJbvhTN4CQ3MlP4y9yOuJhx7wX4YyrddbT+vC6wNJi37VasLZ7GsDUXTNYLT/jMDHSdPXc9UvsbRSU+lZi8erHkDes3NP+zkp5obMRRvRFubtG98IQXfmzabDJYp4k+SzFI5utd0RI=
+	t=1747777853; cv=none; b=Chpw3k8eCcuw3n54Lh+rhcwhr7DTzR72eOdTsp4yYBjvjUdNphGjCWlB9MzKHJip+Nm3jjx9+WZxt7b0CTaE0saIsMX3M5pWsZUmWc+3CS6kfB+8Lk3ZrXQoMN+S16JAOtUtB9GyscMtmOc7f7rVl8f7rlEmTyriUiAJ3tkFjlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747777826; c=relaxed/simple;
-	bh=E1i9fAUYuBEMsutoidvXvBRODjCHeqshmmDJiKpX3YI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uNqIxicZq5CAoi4H/r1BXnZHnYc8VYNBrMgEHxZv8AU+eW353+ShUlVvJrC2Iuet5jMlRFj42yuuHb7On6N3vol8fPhYy19tCbwJt2mKqmPLZf1+wTIoOICwcKNd0H4NDliDUvLpN1bJgnCQZtyCg9K4GfI1z6/Xa4RCFfKGyYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AHflEly1; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747777853; c=relaxed/simple;
+	bh=IPMbbOcFFDi3G9kSOU1LeCM9xJi4UaBswiex0tdbMIY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pFW/UeYSdgxNTKxA+CowZQmT06qm5DZLoJRVc1m4bFthYslAAikJ+hb0uzfPtpLBChKAFaEkdFcTMYLL2sEbNo0Kypb9jthy/pGcFvs7XXRXhtll38hzkC1IBsiJYgHYHAU9zFjEsAnIQBl9ZtnpLWnShdVibLfhfN+VmfhXhXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlHUMTGL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AHflEly1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747777818;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vhRek88RxGtXFL5GQiII5xcktGcNXGmD9RuiUnq2K54=;
-	b=AHflEly14n0X34gfVPvWZPWcEPssOk7pSxD1eGi4aIIFMZ66LMqftlPyti+BMBaFBiI31C
-	QL1kq3z9A5xbG3oJ0uZydTXV0Vj7HYI6GtQXTBQCIw3MVC0/eChQ5p+mfEUqMJHHIWuBmY
-	2xXSkJaVDmkihKQTr5EkFwwsat/0ceE=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Jann Horn <jannh@google.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>,
-	Hugh Dickins <hughd@google.com>,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v5] mmu_gather: move tlb flush for VM_PFNMAP/VM_MIXEDMAP vmas into free_pgtables()
-Date: Tue, 20 May 2025 21:48:13 +0000
-Message-ID: <20250520214813.3946964-1-roman.gushchin@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlHUMTGL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB0DC4CEF0;
+	Tue, 20 May 2025 21:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747777852;
+	bh=IPMbbOcFFDi3G9kSOU1LeCM9xJi4UaBswiex0tdbMIY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hlHUMTGLWmpM22fL61Vds0cpKCxjl3zGYlayGT6PKSn/Rpexo1WJs5gFt9PABLjUl
+	 d6B+v/zhU9oufqMfBlQhry88S71PfAKH7ErQmQ7WH8GaahjHUJX7PJbK4MmbaZdggP
+	 Lt9Pfxeev2ikn6wrWWuQxTOjDL1v9wUaGy++wa4V+pR03m+gug9Jw9J3fKYl5DJdnT
+	 Z26N/+lRxCNGS7rkSInhz4T78PjFX+jSb2NbkhiI//4vKvoJUW8vQOKEZLGAi29qXC
+	 an7FAU6tyOU+udoBYSMj87RtxRu8qbVvrnX4rmyTZ/wUpHTyVRD/S87bF7lZp00vFy
+	 EAbwhMLV908zw==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [PATCH v7 01/17] PCI/DPC: Initialize aer_err_info before using it
+Date: Tue, 20 May 2025 16:50:18 -0500
+Message-ID: <20250520215047.1350603-2-helgaas@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250520215047.1350603-1-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Commit b67fbebd4cf9 ("mmu_gather: Force tlb-flush VM_PFNMAP vmas")
-added a forced tlbflush to tlb_vma_end(), which is required to avoid a
-race between munmap() and unmap_mapping_range(). However it added some
-overhead to other paths where tlb_vma_end() is used, but vmas are not
-removed, e.g. madvise(MADV_DONTNEED).
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Fix this by moving the tlb flush out of tlb_end_vma() into new
-tlb_flush_vmas() called from free_pgtables(), somewhat similar to the
-stable version of the original commit:
-commit 895428ee124a ("mm: Force TLB flush for PFNMAP mappings before
-unlink_file_vma()").
+Previously the struct aer_err_info "info" was allocated on the stack
+without being initialized, so it contained junk except for the fields we
+explicitly set later.
 
-Note, that if tlb->fullmm is set, no flush is required, as the whole
-mm is about to be destroyed.
+Initialize "info" at declaration so it starts as all zeros.
 
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nick Piggin <npiggin@gmail.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm@kvack.org
-
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
-v5:
-  - tlb_free_vma() -> tlb_free_vmas() to avoid extra checks
+ drivers/pci/pcie/dpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v4:
-  - naming/comments update (by Peter Z.)
-  - check vma->vma->vm_flags in tlb_free_vma() (by Peter Z.)
-
-v3:
-  - added initialization of vma_pfn in __tlb_reset_range() (by Hugh D.)
-
-v2:
-  - moved vma_pfn flag handling into tlb.h (by Peter Z.)
-  - added comments (by Peter Z.)
-  - fixed the vma_pfn flag setting (by Hugh D.)
----
- include/asm-generic/tlb.h | 49 +++++++++++++++++++++++++++++++--------
- mm/memory.c               |  2 ++
- 2 files changed, 41 insertions(+), 10 deletions(-)
-
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 88a42973fa47..8a8b9535a930 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -58,6 +58,11 @@
-  *    Defaults to flushing at tlb_end_vma() to reset the range; helps when
-  *    there's large holes between the VMAs.
-  *
-+ *  - tlb_free_vmas()
-+ *
-+ *    tlb_free_vmas() marks the start of unlinking of one or more vmas
-+ *    and freeing page-tables.
-+ *
-  *  - tlb_remove_table()
-  *
-  *    tlb_remove_table() is the basic primitive to free page-table directories
-@@ -399,7 +404,10 @@ static inline void __tlb_reset_range(struct mmu_gather *tlb)
- 	 * Do not reset mmu_gather::vma_* fields here, we do not
- 	 * call into tlb_start_vma() again to set them if there is an
- 	 * intermediate flush.
-+	 *
-+	 * Except for vma_pfn, that only cares if there's pending TLBI.
- 	 */
-+	tlb->vma_pfn = 0;
- }
- 
- #ifdef CONFIG_MMU_GATHER_NO_RANGE
-@@ -464,7 +472,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma)
- 	 */
- 	tlb->vma_huge = is_vm_hugetlb_page(vma);
- 	tlb->vma_exec = !!(vma->vm_flags & VM_EXEC);
--	tlb->vma_pfn  = !!(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP));
-+
-+	/*
-+	 * Track if there's at least one VM_PFNMAP/VM_MIXEDMAP vma
-+	 * in the tracked range, see tlb_free_vmas().
-+	 */
-+	tlb->vma_pfn |= !!(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP));
- }
- 
- static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
-@@ -547,23 +560,39 @@ static inline void tlb_start_vma(struct mmu_gather *tlb, struct vm_area_struct *
- }
- 
- static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vma)
-+{
-+	if (tlb->fullmm || IS_ENABLED(CONFIG_MMU_GATHER_MERGE_VMAS))
-+		return;
-+
-+	/*
-+	 * Do a TLB flush and reset the range at VMA boundaries; this avoids
-+	 * the ranges growing with the unused space between consecutive VMAs,
-+	 * but also the mmu_gather::vma_* flags from tlb_start_vma() rely on
-+	 * this.
-+	 */
-+	tlb_flush_mmu_tlbonly(tlb);
-+}
-+
-+static inline void tlb_free_vmas(struct mmu_gather *tlb)
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index df42f15c9829..3daaf61c79c9 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+ void dpc_process_error(struct pci_dev *pdev)
  {
- 	if (tlb->fullmm)
- 		return;
+ 	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+-	struct aer_err_info info;
++	struct aer_err_info info = {};
  
- 	/*
- 	 * VM_PFNMAP is more fragile because the core mm will not track the
--	 * page mapcount -- there might not be page-frames for these PFNs after
--	 * all. Force flush TLBs for such ranges to avoid munmap() vs
--	 * unmap_mapping_range() races.
-+	 * page mapcount -- there might not be page-frames for these PFNs
-+	 * after all.
-+	 *
-+	 * Specifically() there is a race between munmap() and
-+	 * unmap_mapping_range(), where munmap() will unlink the VMA, such
-+	 * that unmap_mapping_range() will no longer observe the VMA and
-+	 * no-op, without observing the TLBI, returning prematurely.
-+	 *
-+	 * So if we're about to unlink such a VMA, and we have pending
-+	 * TLBI for such a vma, flush things now.
- 	 */
--	if (tlb->vma_pfn || !IS_ENABLED(CONFIG_MMU_GATHER_MERGE_VMAS)) {
--		/*
--		 * Do a TLB flush and reset the range at VMA boundaries; this avoids
--		 * the ranges growing with the unused space between consecutive VMAs.
--		 */
-+	if (tlb->vma_pfn)
- 		tlb_flush_mmu_tlbonly(tlb);
--	}
- }
- 
- /*
-diff --git a/mm/memory.c b/mm/memory.c
-index 5cb48f262ab0..6b71a66cc4fe 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -358,6 +358,8 @@ void free_pgtables(struct mmu_gather *tlb, struct ma_state *mas,
- {
- 	struct unlink_vma_file_batch vb;
- 
-+	tlb_free_vmas(tlb);
-+
- 	do {
- 		unsigned long addr = vma->vm_start;
- 		struct vm_area_struct *next;
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
 -- 
-2.49.0.1112.g889b7c5bd8-goog
+2.43.0
 
