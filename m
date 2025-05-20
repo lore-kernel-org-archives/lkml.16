@@ -1,132 +1,99 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1664424290D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ECA2475CD;
+	Tue, 20 May 2025 14:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750083; cv=none; b=ExTn2GBTyiVu/sC4Ea025kBMeI/rGBlBzp20+z3ib6IxRqR4RwMxkL9Is25f14Qs25x0Bq/d2/MAulVtyMwrYOoSYk+h2HGOLjKcGj7vpEEpTuJcAzC45Gv4hl5biLehFelkgmLZqeKjTpIB0FACnSCLsXaxhaJYriN+zTyezUA=
+	t=1747750114; cv=none; b=m61bbRHotu9WNavp2Fkql6XP/aTcLLU9lynGAyU2o2yYErcdqwu/zBLKdNpQNulz98ZOvic0IXbG1nbX6XO7rqxOcHDYJMPGWjMum/+gYs+NIFIPCHSBlgIFyjc4YpLT91rTPLeHtVn0cWRsvGBPlnUXCRsyJog+WlkM2kS8tZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750083; c=relaxed/simple;
-	bh=QFhvtj0Sl+BHz7ypHBHd0x1u03F5swOxR/cL+arqNGQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bwndl6RDeddZst1VXgfP56lQYvoxAx5nxpvJ4J8zFCxcp9r+LJrGRu73rHg+O5usI870z8fQPUeqsdauQTLnx8vs+Er8LHhb2B3JzHWuOzN0STQGdIMgd/HH1B8N9+twSDUFUqOX8OAA64q0yN4ul70eAqQu5x9tHYaSWHhIFv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UzJMLX4z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XmBgfwy2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UzJMLX4z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XmBgfwy2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747750114; c=relaxed/simple;
+	bh=ttAbpSM1hXQuNR/OMOYp8x1yy4Ma9fGMFXn0HWuoelg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O5PIZlLKH+VhQKSkD4ZgE47IYduU2r/4xvs/aL8SE4ZI3A2Kes8xDloxq8smT1pBomrX2L0orPdmgtgoIAyNtTA7lzfMcTs882uqGU5HcmvCxWnh+gJcpxdrckvwd8Zel9K2BRoa+54KGmRDmaarb+Dvi/eXwwRfQ9ZARhyb1YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMtZZJZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UzJMLX4z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XmBgfwy2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UzJMLX4z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XmBgfwy2"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 374B92072D;
-	Tue, 20 May 2025 14:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747750080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJjpF2oq306QxlLhy44UfPqUCNQZRZagd6kOASBJqIY=;
-	b=UzJMLX4zwu54N8ja3PVSALvOK4rAUgrVLVh2UP4MsyeXiqb1aCA4tvovLInErGMWsfNxhD
-	X2/ZxXrC52TEil9n0IMqs6xRLMissLfsxF5hnnDLFfF2oK3OknEra40HJ0Tr3GXfivh3kk
-	kGSLtRTSOy+fXbfucsuexuJIgBdwnaY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747750080;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJjpF2oq306QxlLhy44UfPqUCNQZRZagd6kOASBJqIY=;
-	b=XmBgfwy2bpIFGUcXzXCz4pp8BAPK4rZ/hl3VI/XnFRbU1nNZdGg89/yTTV+7gQdHcDzp7S
-	vwxYhHxA2FfxxeBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747750080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJjpF2oq306QxlLhy44UfPqUCNQZRZagd6kOASBJqIY=;
-	b=UzJMLX4zwu54N8ja3PVSALvOK4rAUgrVLVh2UP4MsyeXiqb1aCA4tvovLInErGMWsfNxhD
-	X2/ZxXrC52TEil9n0IMqs6xRLMissLfsxF5hnnDLFfF2oK3OknEra40HJ0Tr3GXfivh3kk
-	kGSLtRTSOy+fXbfucsuexuJIgBdwnaY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747750080;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJjpF2oq306QxlLhy44UfPqUCNQZRZagd6kOASBJqIY=;
-	b=XmBgfwy2bpIFGUcXzXCz4pp8BAPK4rZ/hl3VI/XnFRbU1nNZdGg89/yTTV+7gQdHcDzp7S
-	vwxYhHxA2FfxxeBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1E7C413A3E;
-	Tue, 20 May 2025 14:08:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NMSpBsCMLGieHwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 20 May 2025 14:08:00 +0000
-Date: Tue, 20 May 2025 16:07:44 +0200
-Message-ID: <87a577qssv.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Siddarth Gundu <siddarthsgml@gmail.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: amd7930: replace strcpy() with strscpy()
-In-Reply-To: <20250520113012.70270-1-siddarthsgml@gmail.com>
-References: <20250520113012.70270-1-siddarthsgml@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMtZZJZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A84CC4CEF1;
+	Tue, 20 May 2025 14:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747750113;
+	bh=ttAbpSM1hXQuNR/OMOYp8x1yy4Ma9fGMFXn0HWuoelg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=dMtZZJZyHdgW2RKC+xdk3FBoCiDoQdmAjq+EUAaBKQx3v58faXyCucAcDRauheXl/
+	 2kRjuabrUdWtUKouTQ9OIDdcqe46q5XtesFoUrDfB7ymTTB4vhOfjy3264oDOWq3Mq
+	 /UoKwpaEySrwnztJW47el/uvK97P8/oep/hJby1spoy62dhEVe6XHOhLEgLZtOywxM
+	 YWCF4b+AHnh5BkxU3rR5yn3owOEPZ9i2lFhzQECRQv2cOL3pr5dttrXPlqbStp1ynM
+	 42nH/0X67TeqgMAU+dC+0JMXs7g1oskePFEmbJab00+HoxhKyNmnqvU/vmL1x3+ETO
+	 i449+VP1kWkXg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADAEC3ABDD;
+	Tue, 20 May 2025 14:08:33 +0000 (UTC)
+From: Shashank Balaji via B4 Relay <devnull+shashank.mahadasyam.sony.com@kernel.org>
+Subject: [PATCH v2 0/3] cgroup, docs: cpu controller interaction with
+ various scheduling policies
+Date: Tue, 20 May 2025 23:07:44 +0900
+Message-Id: <20250520-rt-and-cpu-controller-doc-v2-0-70a2b6a1b703@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALGMLGgC/32NQQ6CMBBFr0Jm7ZhSLBBX3MOwqO1UmmBLpkgkh
+ Ltbce/yveS/v0Ei9pTgWmzAtPjkY8ggTwWYQYcHobeZQQqphJQ18ow6WDTTC00MM8dxJEYbDba
+ 61dqoRrqKIO8nJuffR/vWZx58miOvx9VSfu2vWgn1p7qUKLC517p2yrlLZbsUw3o28Qn9vu8f9
+ QYiscEAAAA=
+X-Change-ID: 20250226-rt-and-cpu-controller-doc-8a8aac572f3e
+To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+ =?utf-8?q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>, 
+ Shashank Balaji <shashank.mahadasyam@sony.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1257;
+ i=shashank.mahadasyam@sony.com; h=from:subject:message-id;
+ bh=ttAbpSM1hXQuNR/OMOYp8x1yy4Ma9fGMFXn0HWuoelg=;
+ b=owGbwMvMwCV2mPH4Ij++H1mMp9WSGDJ0eu6rPGPd+v97b+NxtpuqO+YKrd8TpLhUpG5b7ux9q
+ 7z751WrdpSyMIhxMciKKbK8k1l34aCVZdPX4wzfYOawMoEMYeDiFICJ5HExMqyZ1Pbk+N95RTsT
+ DEIN9jPeWCzKvvKf1I+16bM9ZnFF1T5m+O8+48/RVZemsCus8Jw/v38in/T1NUtZU65t/LR1SWH
+ KlvncAA==
+X-Developer-Key: i=shashank.mahadasyam@sony.com; a=openpgp;
+ fpr=EE1CAED0C13A3982F5C700F6C301C7A24E0EF86A
+X-Endpoint-Received: by B4 Relay for shashank.mahadasyam@sony.com/default
+ with auth_id=354
+X-Original-From: Shashank Balaji <shashank.mahadasyam@sony.com>
+Reply-To: shashank.mahadasyam@sony.com
 
-On Tue, 20 May 2025 13:30:12 +0200,
-Siddarth Gundu wrote:
-> 
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Both the destination and source buffer are of fixed length
-> so strscpy with 2-arguments is used.
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+The cgroup v2 cpu controller interface files interact with processes
+differently based on their scheduling policy and the underlying
+scheduler used (fair-class vs. BPF scheduler). This patchset
+documents these differences.
 
-Applied now.  Thanks.
+This is related to the previous patchset titled "cgroup, docs: Clarify
+interaction of RT processes with cgroup v2 cpu controller"
+(https://lore.kernel.org/all/20250305-rt-and-cpu-controller-doc-v1-0-7b6a6f5ff43d@sony.com/),
+which focused solely on RT processes. The current patchset incorporates
+the previous feedback and expands on the scope of scheduling policies.
+
+Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+---
+Shashank Balaji (3):
+      cgroup, docs: be specific about bandwidth control of rt processes
+      sched_ext, docs: add label
+      cgroup, docs: cpu controller interaction with various scheduling policies
+
+ Documentation/admin-guide/cgroup-v2.rst | 100 ++++++++++++++++++++++++--------
+ Documentation/scheduler/sched-ext.rst   |   2 +
+ 2 files changed, 78 insertions(+), 24 deletions(-)
+---
+base-commit: 036ee8a17bd046d7a350de0aae152307a061cc46
+change-id: 20250226-rt-and-cpu-controller-doc-8a8aac572f3e
+
+Best regards,
+-- 
+Shashank Balaji <shashank.mahadasyam@sony.com>
 
 
-Takashi
