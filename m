@@ -1,140 +1,186 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F611FAC23
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908222528FD;
+	Tue, 20 May 2025 21:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747776431; cv=none; b=eJjdLOKbR05p3WMzV/lBy2r8GnArpFVTc1pCmWr27Qv+derqK7HSmjstQRxkEYSPwOOpK92qNHpxC8DRrDqEbFsyCPR0VeI42cCacbgXZn+vxUVcYPhUvdIXRmsY4IelBBMonQ/WmgwkhU/iQayypCykoPsdz5ivUxww5sMxJ9A=
+	t=1747776484; cv=none; b=C0UlApwgTZndAoHvY3Cp/pF3n+oTf0MHIQVnk68pQAzmFilAGSOqUzHM0zea4DUEVjlGEbD4gwXzZqQPmHxzRHuzElr3dtGMGmEDwb3Kcfhs9sUt1V8ZRBExgKjGP8hT3cB5cQWyodfL2F69ykTB45FotQxE4VfY8V4uRJ7Jz3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747776431; c=relaxed/simple;
-	bh=Tlres75UciCPZpHtQqwkcdqZyqlwkclBJ7jmGOa+Q2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=im9VZ6IJg15ea8G95Y3b/Z8L66ZkEQUo1fH4nSFv7dy6PtHKswHO2vMl1mL4u3l+GNegJeGolawwR2rmKywhIWi9w3XBCwF8RSO10mDQhB+IbbmXM8r+/smFoNFQU5w5Oe7lYP7EBpz2LwZZnBDPYf7jV1IXG+zpkU2LNZShQoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Qau5RWUG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747776484; c=relaxed/simple;
+	bh=hMECzyE2xMkzkh1rfutM7c9DeLea6c7ftfsOEzSyz1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OPZlGgtZYB0CtHW/bMXg/zRfLqP/TU/ZjmrASw3fRhe8DPILTlFPdB6uC28+zCeclzuP1lzwwTZp0nz1j6g4Tz+Wkwr6DtkPZBxhXSJfozu5Wu3tU8iFSYr6GgI1496H979jLesSZYQvmofUHSeevMqwcxoV6X69CcYzQNdX5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQCqaKba; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Qau5RWUG"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGdnLv027939
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:27:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=tG/XW2Eqw3SoJlBkat+rQXZC
-	WBPW6ciZKTyIRU1D/7Y=; b=Qau5RWUGBWsuY1V0sLQ0UJo3+PA/1aZ2EOK1E2TD
-	80D/kMZWHeGddDhMa/GJTCC4JLehietYdJlEwMpS1A3RMNZMpR/IiA/l0SBdj5LG
-	3m8++4sooJcMdAaHlKlFzkKOsxOeWoojDouaclpuahjiBKlv6FgEkos3wlNvSUsG
-	7AgO/jRT3jJzPyG75hUckhKEAxFrk9DpCs8jdiHfJUWmb39am/dcznMSrO9NJ4NA
-	TGZ7aVLQrDkuCeugZ2DtV8eMQwjyli6PngXQ4xBekMVFnShanK69Jx3F6UfoFxqr
-	zaM/hOErf1arN8t6JcS139mbPOk6jA88DeALHQlkQWwKsQ==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf40pff-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:27:08 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8d4461e7bso30146256d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:27:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQCqaKba"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c46611b6so4183261b3a.1;
+        Tue, 20 May 2025 14:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747776482; x=1748381282; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lXLFRnZ8EdNmlVUpXbUp5NFz+FyLzBFlDfsPfisaiLE=;
+        b=WQCqaKbaVXeA8HJw8rTY61nA0UeDKJcGp9LNYMTRO6ZFM2H2moRf018MSfkmnCn63i
+         Obpu/paaFm7kT3XlbFETvOUxawEfByMD7wgSSOw/sA6y4rxvnRii8Xr/s/spPN4B1DXe
+         gIML6mKO7v6/edoeOiNs0uKxFn1cn3Gwi6zwr6ESHr7slnZi/LmwF6G8+9/sqwLz/L2d
+         6TAcMuqG9YrlXA6bB1mliatIpki/klRw9o+JvqPvYRwBSx/jB66rH38Nh5KICAfV2QZ0
+         YYSqgN1Q8Jp5CwuCv+e22MC2oWOi5RiEcI+n7nfEPcoo8A3pmYoQzxluG2zLx8+9TtMK
+         yDJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747776427; x=1748381227;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tG/XW2Eqw3SoJlBkat+rQXZCWBPW6ciZKTyIRU1D/7Y=;
-        b=Gtmh7GuuSGSGmMfumMjrpbaiSqBaMChp7njd7KjRF+Z2nTxsEYL/CUzrm+LwpgYolQ
-         DqwJtEcHiv+ADG3Xy88EPWU9jxhnSIbIeWnlgAHCTawdyaReulSd2AgxUuCkqw41gSwt
-         n5WSkdWwvBkSMIJckV6yz9izdbbjWVOqit+1h7ec3bkIuuGKLLKDKshzsyCmoJi0VfPe
-         1eTRLnzH55SwiXj5gAJNRcEdCLtGtelaxg+dvv2AgWz/Du3loBgtI9UNzw8QPm47Nj0e
-         B5Q7uhUTeUu0QWrDzJ/IfugyX64rU7Su+rTsLwG/j7hQ5TYbutaMAlC8I89iFj4w6fHY
-         NszA==
-X-Forwarded-Encrypted: i=1; AJvYcCXC+XVjnry2Gelcyg/4kMgSm4Q4hqHD/8c9qHxzFHVyYyAMdCIXyUI3V+C0X1iUMPEPW6/TeIs03ASg8w4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqNC3lySnFEh3doFVd5vnmojzUwUuie0xv0myijYj8iAFCxSzv
-	1DAGKq3trL7TjBOXBJEE0hfN9VRCFAQpyIE+3KkWfr4lZSvSMWMGcq6PqgRkHwnUINuU4HI2LCI
-	XBvSehNlARRs9nAuQsc0ivozd0cohu5xsGtehWnGVNnTQC4R1Id2VwEirtPZgVwyuikY=
-X-Gm-Gg: ASbGnctzm2fnWYHTP8sAZ6mu073wzizizzZFaS/ah/iBS7L2kkzxXpdVwQAdSMAuKfy
-	Za1XW6CZkmSp+80VzHJgwhBUD6w/D5vqjzDdFokzxkeRTWseuCbl7LnUZIp1psC4NDwCMWzmHCG
-	apdVWS7vu1U717UCpHtNViXCpYS5KgSsmt2TzhGYrrdyth3tycL8D/rhVtkqjhe6kVXhwyJ1YPD
-	99DZGMb258FVreQVmtA0rYXSoJJJyYc0eXkUz4FS2rwzlv3mdhabuqsnBwGtJc3ENKOMNYip3CB
-	XcTdi2M7K3xeCNwiYfD9EfTnW930SLBo7QmEonJbBljrUt//MbSb0QUyLXKWdyFMec+dYeRuq+0
-	=
-X-Received: by 2002:a05:6214:194c:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f8b096e039mr276434216d6.44.1747776427457;
-        Tue, 20 May 2025 14:27:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHXQvCXDN9w2FBtdGnI+rkan1fAQ9YM0ciJNl1Yj+gIlZexf465oAOPMwNVhIxArargpBSedw==
-X-Received: by 2002:a05:6214:194c:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f8b096e039mr276433866d6.44.1747776427125;
-        Tue, 20 May 2025 14:27:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551f8493043sm821758e87.210.2025.05.20.14.27.05
+        d=1e100.net; s=20230601; t=1747776482; x=1748381282;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lXLFRnZ8EdNmlVUpXbUp5NFz+FyLzBFlDfsPfisaiLE=;
+        b=ZPOmUUKbZjU95Tf63NqBuE+K1yhDzwJevFrAlHXZUVGslhNg+3u0hdE2AguH9DvGeH
+         43Utn0MJwfKNsSUmeT0QXmLFndZmEiV5FIWqnmj1sLCQJ82/6/PWMuu4jRsv6WDiHfdl
+         /Uo10CsdBnJ0mQFxT9CveuYf+w4fux5/oMGYkmCQhjVfrb+EAq5e0mjBishLc2IbiLiI
+         MVDrV6vgeo1CAzOTFR+UrERW+8VaMM6ZqTWUenpaI9EzsnLD2gFbnD+5jD5NnRrCRUxI
+         ycAxgapZsnJYbsHgWyzE32znhHn/6O2aCusTf3dKNuaBBN5Ar8dRCrvRyZP+VD3MhaBn
+         Pb9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHEJy8PE6Pzc4VWk410iJ6OJPXWf7QUFZP16psEPeiLzdJI+OxzQQdVEUmM+pBDCg5jCppcbkJDu0=@vger.kernel.org, AJvYcCWrnTIR5Y+UPzxRqQN6BLNHUKdIW7UwPcwroO3eXUsSaCx4IuR0DV/UtfJQ2DFUFpeJ9b8ibd4MZXAme7HL@vger.kernel.org, AJvYcCXZul4q7APTiUp0B15DTycgSDroe8T15tIJRy3fCx4ovwyRgfWeWjaE+lHh/czd+v3edfpyZo3MLzWrgFe7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKEAPL8K6VurbUgpUa1CisZvYYE82OE9eLsEmxkCMRojse81wE
+	YBIwmnrYidwdJy3QqrmokPmEFCbcGmn3IApicd+vvCgHeWVHBZrN0POaKBvXz6WlIQc=
+X-Gm-Gg: ASbGnctvZ4hKMb3kMJM1ZmCJpqmsrg80geAPc69aBhzm7aCF/gFIaJOWlk46v1YZi15
+	blGPNLE3x5Xj8PG+JzxO0MZypHJwaO7la3xWZw2iia0p8CDUKLXdGodWdQGC1VjvTJIxn9IvEZ4
+	ioK1lwbvpOMNrC9PHQdlIgICBGnlmzGQgUkyVhHjQmcOGrNisjqnsqtvWhobeAYvdjddTHBF5CJ
+	JaHPA1RWKAIVsxDAittqw8TdpDVmobWyCo2dhy6vas+fRJksZvDZUYPB9+2rdfgD49YRSdgkkRx
+	5XxycGMWZcYyv6k6ukyvKxORGoXXEatDV3VzfC6N3F2gP9Yy5DPaNG/WjiGlqcAWIuSZwXomexO
+	4GaZEJA==
+X-Google-Smtp-Source: AGHT+IHwaRH9Cq1paBmaGV59yIT8QGOA1/WD1PNfV7WGQAbaupIks8dC+RhoWq1GByHre7/jtTkFVw==
+X-Received: by 2002:a05:6a00:94a7:b0:740:91eb:c66 with SMTP id d2e1a72fcca58-742acc906b0mr25727847b3a.3.1747776481713;
+        Tue, 20 May 2025 14:28:01 -0700 (PDT)
+Received: from localhost.localdomain ([61.77.55.112])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-742a9829cddsm8702051b3a.97.2025.05.20.14.27.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 14:27:06 -0700 (PDT)
-Date: Wed, 21 May 2025 00:27:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: [PATCH v6] clk: qcom: dispcc-sm8750: Fix setting rate byte and
- pixel clocks
-Message-ID: <ipdt2r25de4zi7zovntb7vopah23on4dr7l2ui3ieevapzdveq@3dtvuhtrdlww>
-References: <20250520090741.45820-2-krzysztof.kozlowski@linaro.org>
+        Tue, 20 May 2025 14:28:01 -0700 (PDT)
+From: Taeyoung Kwon <xoduddk12345@gmail.com>
+X-Google-Original-From: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+To: Sebastian Reichel <sre@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+Subject: [PATCH v1] power: reset: qcom-pon: Rename variables to use generic naming
+Date: Tue, 20 May 2025 21:27:20 +0000
+Message-ID: <20250520212740.2729-1-Taeyoung.Kwon@telit.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520090741.45820-2-krzysztof.kozlowski@linaro.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE3MyBTYWx0ZWRfXyJv6fFCCxhAU
- VbqpzrOR2ArfQJd4x0bEv+4tohygAHcdCFTsFhNXrDJY7+tNqhh+LLt2jxUGnT1kM/yKYHSFvIh
- obLdd04NCJtKvwMf41YswT58CHXtNEkouzGNGjl8l5m+mhMI0Lb6x7icwf9UxJ4mtEsrlnglJ5t
- CJTGx1i9gLyLnFjjJbi08Zl15xqTwBaj8qYGBB5xHVJ+ZcV0DXxQjjEINjj3ZzhW+4xRsKENB1p
- /viStGvvuwzOsR3NV3FkKLkpqwUpvd+amcgQJFHrCzjQi2+QaUF2wqXgEFo/PGDfpqR2HCtsso8
- JIwP+6gN/QmBRMjuLGBUB8hG65btfkkgWoD1tHSflAN+TCptbil2TfLz0FuwP3raCnmyzSthYrC
- F9az2FgnnBu8TQH+xjDi/fkOHSwWlrxXT8ybuj9XUHslxkzyxl3fHMf8a0w+036VPJCQD7XP
-X-Proofpoint-GUID: 52jHN07lj30sdJWZeDlnIqQSJTnFoej0
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682cf3ac cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=ZhXjtQkuzpVzWrVPaUMA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 52jHN07lj30sdJWZeDlnIqQSJTnFoej0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_09,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=553 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505200173
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 11:07:42AM +0200, Krzysztof Kozlowski wrote:
-> On SM8750 the setting rate of pixel and byte clocks, while the parent
-> DSI PHY PLL, fails with:
-> 
->   disp_cc_mdss_byte0_clk_src: rcg didn't update its configuration.
-> 
-> DSI PHY PLL has to be unprepared and its "PLL Power Down" bits in
-> CMN_CTRL_0 asserted.
-> 
-> Mark these clocks with CLK_OPS_PARENT_ENABLE to ensure the parent is
-> enabled during rate changes.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: f1080d8dab0f ("clk: qcom: dispcc-sm8750: Add SM8750 Display clock controller")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes in v6:
-> 1. Add CLK_OPS_PARENT_ENABLE also to pclk1, pclk2 and byte1.
-> 2. Add Fixes tag and cc-stable
-> 
+The qcom-pon driver was originally implemented for the PM8916 PMIC, and
+as a result, several internal variable names still refer to 'pm8916'.
+However, the driver has since been extended to support other PMICs as
+well.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+This patch renames those variables to use more generic and consistent
+names, improving clarity and reducing confusion for non-PM8916 devices.
 
+Signed-off-by: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+---
+From: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+
+Changes in v1:
+- Moved explanation under the '---' line
+
+Since my company email automatically adds a footer signature,
+I’m sending this patch from my personal Gmail account.
+Is this acceptable, or should I resend the patch using
+an email that matches the Signed-off-by line?
+
+ drivers/power/reset/qcom-pon.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+index 1344b361a475..7e108982a582 100644
+--- a/drivers/power/reset/qcom-pon.c
++++ b/drivers/power/reset/qcom-pon.c
+@@ -19,7 +19,7 @@
+ 
+ #define NO_REASON_SHIFT			0
+ 
+-struct pm8916_pon {
++struct qcom_pon {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	u32 baseaddr;
+@@ -27,11 +27,11 @@ struct pm8916_pon {
+ 	long reason_shift;
+ };
+ 
+-static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
++static int qcom_pon_reboot_mode_write(struct reboot_mode_driver *reboot,
+ 				    unsigned int magic)
+ {
+-	struct pm8916_pon *pon = container_of
+-			(reboot, struct pm8916_pon, reboot_mode);
++	struct qcom_pon *pon = container_of
++			(reboot, struct qcom_pon, reboot_mode);
+ 	int ret;
+ 
+ 	ret = regmap_update_bits(pon->regmap,
+@@ -44,9 +44,9 @@ static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+ 	return ret;
+ }
+ 
+-static int pm8916_pon_probe(struct platform_device *pdev)
++static int qcom_pon_probe(struct platform_device *pdev)
+ {
+-	struct pm8916_pon *pon;
++	struct qcom_pon *pon;
+ 	long reason_shift;
+ 	int error;
+ 
+@@ -72,7 +72,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+ 	if (reason_shift != NO_REASON_SHIFT) {
+ 		pon->reboot_mode.dev = &pdev->dev;
+ 		pon->reason_shift = reason_shift;
+-		pon->reboot_mode.write = pm8916_reboot_mode_write;
++		pon->reboot_mode.write = qcom_pon_reboot_mode_write;
+ 		error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
+ 		if (error) {
+ 			dev_err(&pdev->dev, "can't register reboot mode\n");
+@@ -85,7 +85,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+ 	return devm_of_platform_populate(&pdev->dev);
+ }
+ 
+-static const struct of_device_id pm8916_pon_id_table[] = {
++static const struct of_device_id qcom_pon_id_table[] = {
+ 	{ .compatible = "qcom,pm8916-pon", .data = (void *)GEN1_REASON_SHIFT },
+ 	{ .compatible = "qcom,pm8941-pon", .data = (void *)NO_REASON_SHIFT },
+ 	{ .compatible = "qcom,pms405-pon", .data = (void *)GEN1_REASON_SHIFT },
+@@ -93,16 +93,16 @@ static const struct of_device_id pm8916_pon_id_table[] = {
+ 	{ .compatible = "qcom,pmk8350-pon", .data = (void *)GEN2_REASON_SHIFT },
+ 	{ }
+ };
+-MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
++MODULE_DEVICE_TABLE(of, qcom_pon_id_table);
+ 
+-static struct platform_driver pm8916_pon_driver = {
+-	.probe = pm8916_pon_probe,
++static struct platform_driver qcom_pon_driver = {
++	.probe = qcom_pon_probe,
+ 	.driver = {
+-		.name = "pm8916-pon",
+-		.of_match_table = pm8916_pon_id_table,
++		.name = "qcom-pon",
++		.of_match_table = qcom_pon_id_table,
+ 	},
+ };
+-module_platform_driver(pm8916_pon_driver);
++module_platform_driver(qcom_pon_driver);
+ 
+-MODULE_DESCRIPTION("pm8916 Power On driver");
++MODULE_DESCRIPTION("Qualcomm Power On driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-With best wishes
-Dmitry
+2.49.0
+
