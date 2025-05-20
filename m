@@ -1,198 +1,249 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5293A22D78D;
-	Tue, 20 May 2025 13:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13F122D4DE
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746489; cv=none; b=IkfciPF3awQiPJ1wp2svQXd6oEl97Ulijv2tKBhDQQH7hKQHgLuonGV9Oznsf555tYLSPGXA1vVS5RPuqafmuOyX/sDPXE+wS1SOMNRRR5k4l4DVIrRD/0hNgfPqoRA/UlKfFBIshrgoYNtHm9H1bJPtQOW/LQnra1XU23E9EFE=
+	t=1747746577; cv=none; b=PZltGnYqcz6pwLPmf1csT1N5G2IK5ifnRdEoSwzNKW1nA7z7BzFOcG7GbmeXXZaz0Zc1uZQiVM6B2C+lSLUHP0s9dG4IsUl0ulC5uNar26kBSbZuvpZPCzevYnLXwRnBXHnqLYRNL+E2WyoLchwm83mCHvUeBolOe0gmkVkMQsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746489; c=relaxed/simple;
-	bh=tEfLy6FVHZcie3IKvuRy6JFSYbRIvA56lw1COPPC9YE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYEKvHpimnFhtbLTqQomA9IDDC4kcfiKsTzI7FRnvdng1hGOejMR3iuEC5rJsAtYFDIxegVO4GkojW9hiGuHXMtMT0TmtTIKVwvdTwperOCPdhjh5XZpy7vm5QPgjhKQXnI5RY/vJRFl9EQAQ7SU1aYCtzEeNN+YjF5OaXuqwM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=NLU0gPOn; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="NLU0gPOn"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JNT7x3011159;
-	Tue, 20 May 2025 06:08:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=S
-	SLmtUS3te1snL6BRGN9tN+VKR2hhu6soJQA9DTvbOk=; b=NLU0gPOnOO8hKqZJa
-	d4tW09qj5zMJlGSGiVi07ED2ji4qNzCWD5BOEYndxutiwpFhfln0vno9BjDJH5Ns
-	wccJEWtyGV3Qg4CGUbJXt+FktuXmlOl6lWkq4uJ62ryLlNGe45k2MuMiJdKQ9M4/
-	lzDWp86P96Vxp9WjnWFuXJCTB1SB4pD2Uo2vlWQDLTiTEbQn4ER6eS5JbkvRL9LU
-	4vlygBGg17E9FcuBppwcRz1OxgEB6R58UPswlojSSCAWQIetCrPc8jNpG07Ku+Fp
-	gdynt6NkkHM9447M+X7mEYIgqZg47gXTYkpPTRXVVALCLiVqPkypI0e2pw60VHxJ
-	L3adg==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46rebt18km-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:08:01 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 20 May 2025 06:08:00 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 20 May 2025 06:08:00 -0700
-Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
-	by maili.marvell.com (Postfix) with ESMTP id 741103F7065;
-	Tue, 20 May 2025 06:07:56 -0700 (PDT)
-From: Bharat Bhushan <bbhushan2@marvell.com>
-To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
-        <bharatb.linux@gmail.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Bharat Bhushan <bbhushan2@marvell.com>, <stable@vger.kernel.org>
-Subject: [PATCH 4/4 v2] crypto: octeontx2: Fix address alignment on CN10KB and CN10KA-B0
-Date: Tue, 20 May 2025 18:37:37 +0530
-Message-ID: <20250520130737.4181994-5-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250520130737.4181994-1-bbhushan2@marvell.com>
-References: <20250520130737.4181994-1-bbhushan2@marvell.com>
+	s=arc-20240116; t=1747746577; c=relaxed/simple;
+	bh=yE2VMoyKDDvN1vIvHAeKgmt3IL1qfs8+Ctmhtbp1xwU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aoiX73StxtKjEGuWyUHGzVD2NZa3J0duNAEXa/1GVBPaAGC/N3j6q6lZDfIysRv6Opj7WXjC9joaw7+8P/jfRYoL4KL4zMJQwo9/SPUBMgmMWsk5Z0vVQRGdYTfeLXWhZ0CH/G7vZrfUROkRLEah1ZvVemah4pms3yvLynnXlFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b3888569bso529096339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:09:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747746574; x=1748351374;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zk05nQ0iOxmI8cXODP6xrixhTxgB12ZNkFvEosrJEiM=;
+        b=KV77Kz616HgGLPlwF+EkVngwSRJnVEAtnlfw0iwa9zP3lENoQbsJeLyG/P0Pdc3Fth
+         E6hCdQpZSg1Y4lbj75TOyHg7P7z3sJMZzw/3QVoVM5pFvHLoPRTOjH96/57rzMIXAnBV
+         zNgBcV8EidAw36Fdg7OIJ1h14KGqMuuKBbmcQjoac1Wk2jg9VH/SkXjIU3u2umixTawB
+         4VhzSuEzozDS/m/m8s3yTDEw86ktrXOTsOWoHmdXVIYHsX0kk1AjR++zDlG8s1K6rOPF
+         cvbxJGsBoc/dTJc6T+wCKKP14VDwu4oZeENASneKD8LMTUOxRzA8496bHG6k/2VVORCq
+         i8bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4DytXNymzUTKgUWHSQNWssaWuvgH+76ptPyyShNeFxGjIhVYjqwnitOzMoOzD8I8qtc0qMOkw56YK6FA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn+WiYCdQ5TKzK3w1vytVOeA04fYQF7sez0XutQ2AzGSj0SvtY
+	BfB7/8c8xXAhsNJSqVKexCJWoyyFXeyfOgZUcM0LQmCLPfm53l0QueBMnVmsYan72Jer6bcy1Ss
+	s8sWkmblmJqRBINZCXhDZbHp9d/kAr1jh6rHJvsPxa9ygTgp1DmDzv1Vn83s=
+X-Google-Smtp-Source: AGHT+IGZzEJRQn8wLrC+XkULIfOuIAK97foravFuUt8WHkY2mASB4wC8DBWA6k7SGZkeGocaA1sZ8yJ025SJAgbLcIM4KFhDNpBo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEwNSBTYWx0ZWRfX4Qele+icYLbn bGwFnBW59MWjNUb1iyVH+awXF9oMoVopckc4kilRcpAXlvXbsyQWFg3Mmq2rmVHYg0Gy54vmRqm MD9lFOz0AgphQxX/MG10FrrOtyHQRumEnR+JTgXh/kJaTMx91lKd4h8QhMAd7/9J/aA1nmV0WQy
- 0xOmxvFbrZkEHWVHZTJsncFdvm0/yuansFrIQH6bCj+XQzi8YK6nhoe0ujZpyUONKGECSV+D9VR GT14nyAtdFYNpSbz3DDYdZnhMV5T+xHkVLVWUFYVVKmnCehRiLAs/Y9v/loNVWnn67m79H10WcR 7qTlfRqGYTo6Nxufo4k8FI7MLD8YoDII4VMnhrMBlaqHfwir/wRkmUUKbUXCRnRpiPIzim8olZY
- n/6yNHf4jwOzrcrVSZUbB4Vqj/A1Ha7rfAfkBXUf/2NbTUNfZccY1tCyv3xyKlUh89BHmEFV
-X-Proofpoint-ORIG-GUID: NVCHJ3yVRSytzNs950JmBf8zBc1HMC8y
-X-Authority-Analysis: v=2.4 cv=BqCdwZX5 c=1 sm=1 tr=0 ts=682c7eb1 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=VwQbUJbxAAAA:8 a=BhrP5AWxFkdJNdVQK0QA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: NVCHJ3yVRSytzNs950JmBf8zBc1HMC8y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_05,2025-05-16_03,2025-03-28_01
+X-Received: by 2002:a05:6602:3a81:b0:867:973:f2cb with SMTP id
+ ca18e2360f4ac-86a23840913mr2338605039f.7.1747746573879; Tue, 20 May 2025
+ 06:09:33 -0700 (PDT)
+Date: Tue, 20 May 2025 06:09:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682c7f0d.a00a0220.29bc26.027d.GAE@google.com>
+Subject: [syzbot] [net?] BUG: sleeping function called from invalid context in team_change_rx_flags
+From: syzbot <syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, jiri@resnulli.us, kuba@kernel.org, kuniyu@amazon.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-octeontx2 crypto driver allocates memory using kmalloc/kzalloc,
-and uses this memory for dma (does dma_map_single()). It assumes
-that kmalloc/kzalloc will return 128-byte aligned address. But
-kmalloc/kzalloc returns 8-byte aligned address after below changes:
-  "9382bc44b5f5 arm64: allow kmalloc() caches aligned to the
-   smaller cache_line_size()
+Hello,
 
-Memory allocated are used for following purpose:
- - Input data or scatter list address - 8-Byte alignment
- - Output data or gather list address - 8-Byte alignment
- - Completion address - 32-Byte alignment.
+syzbot found the following issue on:
 
-This patch ensures all addresses are aligned as mentioned above.
+HEAD commit:    239af1970bcb llc: fix data loss when reading from a socket..
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1485bf68580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c3f0e807ec5d1268
+dashboard link: https://syzkaller.appspot.com/bug?extid=b191b5ccad8d7a986286
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1285bf68580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f752d4580000
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
-Cc: <stable@vger.kernel.org> #v6.8+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da0ff1b4efb0/disk-239af197.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/be3cf5250e1a/vmlinux-239af197.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/19abc9680c68/bzImage-239af197.xz
+
+The issue was bisected to:
+
+commit 6b1d3c5f675cc794a015138b115afff172fb4c58
+Author: Stanislav Fomichev <stfomichev@gmail.com>
+Date:   Wed May 14 22:03:19 2025 +0000
+
+    team: grab team lock during team_change_rx_flags
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1148de70580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1348de70580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1548de70580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Fixes: 6b1d3c5f675c ("team: grab team lock during team_change_rx_flags")
+
+team0: entered promiscuous mode
+team_slave_0: entered promiscuous mode
+team_slave_1: entered promiscuous mode
+team0 (unregistering): left promiscuous mode
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 5831, name: syz-executor316
+preempt_count: 0, expected: 0
+RCU nest depth: 1, expected: 0
+2 locks held by syz-executor316/5831:
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dellink+0x331/0x710 net/core/rtnetlink.c:3556
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: packet_notifier+0x78/0xa60 net/packet/af_packet.c:4240
+CPU: 0 UID: 0 PID: 5831 Comm: syz-executor316 Not tainted 6.15.0-rc6-syzkaller-00168-g239af1970bcb #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ __might_resched+0x495/0x610 kernel/sched/core.c:8818
+ __mutex_lock_common kernel/locking/mutex.c:578 [inline]
+ __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
+ team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+ dev_change_rx_flags net/core/dev.c:9145 [inline]
+ __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
+ netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
+ dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
+ packet_dev_mc net/packet/af_packet.c:3698 [inline]
+ packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
+ packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
+ notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
+ rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
+ rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
+ rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa537a5c859
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff93fbcb88 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa537a5c859
+RDX: 0000000000000000 RSI: 00002000000001c0 RDI: 0000000000000004
+RBP: 00007fa537aaa47d R08: 0000555500000000 R09: 0000555500000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa537aaa3e5
+R13: 0000000000000001 R14: 00007fff93fbcbd0 R15: 0000000000000003
+ </TASK>
+
+=============================
+[ BUG: Invalid wait context ]
+6.15.0-rc6-syzkaller-00168-g239af1970bcb #0 Tainted: G        W          
+-----------------------------
+syz-executor316/5831 is trying to lock:
+ffff888076094e00 (team->team_lock_key){+.+.}-{4:4}, at: team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+other info that might help us debug this:
+context-{5:5}
+2 locks held by syz-executor316/5831:
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+ #0: ffffffff8f2f7408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dellink+0x331/0x710 net/core/rtnetlink.c:3556
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #1: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: packet_notifier+0x78/0xa60 net/packet/af_packet.c:4240
+stack backtrace:
+CPU: 0 UID: 0 PID: 5831 Comm: syz-executor316 Tainted: G        W           6.15.0-rc6-syzkaller-00168-g239af1970bcb #0 PREEMPT(full) 
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_lock_invalid_wait_context kernel/locking/lockdep.c:4831 [inline]
+ check_wait_context kernel/locking/lockdep.c:4903 [inline]
+ __lock_acquire+0xbcf/0xd20 kernel/locking/lockdep.c:5185
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
+ team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+ dev_change_rx_flags net/core/dev.c:9145 [inline]
+ __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
+ netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
+ dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
+ packet_dev_mc net/packet/af_packet.c:3698 [inline]
+ packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
+ packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
+ notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
+ rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
+ rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
+ rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa537a5c859
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff93fbcb88 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa537a5c859
+RDX: 0000000000000000 RSI: 00002000000001c0 RDI: 0000000000000004
+RBP: 00007fa537aaa47d R08: 0000555500000000 R09: 0000555500000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa537aaa3e5
+R13: 0000000000000001 R14: 00007fff93fbcbd0 R15: 0000000000000003
+ </TASK>
+team_slave_0: left promiscuous mode
+team_slave_1: left promiscuous mode
+team0 (unregistering): Port device team_slave_0 removed
+team0 (unregistering): Port device team_slave_1 removed
+
+
 ---
-v1->v2:
- - Fixed memory padding size calculation as per review comment 
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- .../marvell/octeontx2/otx2_cpt_reqmgr.h       | 59 ++++++++++++++-----
- 1 file changed, 44 insertions(+), 15 deletions(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h b/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-index bb4e067ae826..766fa63fb075 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-@@ -350,22 +350,47 @@ static inline struct otx2_cpt_inst_info *
- cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 		       gfp_t gfp)
- {
--	u32 dlen = 0, g_len, sg_len, info_len;
--	int align = OTX2_CPT_DMA_MINALIGN;
-+	u32 dlen = 0, g_len, s_len, sg_len, info_len;
- 	struct otx2_cpt_inst_info *info;
--	u16 g_sz_bytes, s_sz_bytes;
- 	u32 total_mem_len;
- 	int i;
- 
--	g_sz_bytes = ((req->in_cnt + 2) / 3) *
--		      sizeof(struct cn10kb_cpt_sglist_component);
--	s_sz_bytes = ((req->out_cnt + 2) / 3) *
--		      sizeof(struct cn10kb_cpt_sglist_component);
-+	/* Allocate memory to meet below alignment requirement:
-+	 *  ----------------------------------
-+	 * |    struct otx2_cpt_inst_info     |
-+	 * |    (No alignment required)       |
-+	 * |     -----------------------------|
-+	 * |    | padding for 8B alignment    |
-+	 * |----------------------------------|
-+	 * |    SG List Gather/Input memory   |
-+	 * |    Length = multiple of 32Bytes  |
-+	 * |    Alignment = 8Byte             |
-+	 * |----------------------------------|
-+	 * |    SG List Scatter/Output memory |
-+	 * |    Length = multiple of 32Bytes  |
-+	 * |    Alignment = 8Byte             |
-+	 * |    (padding for below alignment) |
-+	 * |     -----------------------------|
-+	 * |    | padding for 32B alignment   |
-+	 * |----------------------------------|
-+	 * |    Result response memory        |
-+	 *  ----------------------------------
-+	 */
- 
--	g_len = ALIGN(g_sz_bytes, align);
--	sg_len = ALIGN(g_len + s_sz_bytes, align);
--	info_len = ALIGN(sizeof(*info), align);
--	total_mem_len = sg_len + info_len + sizeof(union otx2_cpt_res_s);
-+	info_len = sizeof(*info);
-+
-+	g_len = ((req->in_cnt + 2) / 3) *
-+		 sizeof(struct cn10kb_cpt_sglist_component);
-+	s_len = ((req->out_cnt + 2) / 3) *
-+		 sizeof(struct cn10kb_cpt_sglist_component);
-+	sg_len = g_len + s_len;
-+
-+	/* Allocate extra memory for SG and response address alignment */
-+	total_mem_len = ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN) + sg_len;
-+	total_mem_len = ALIGN(total_mem_len, OTX2_CPT_DPTR_RPTR_ALIGN);
-+	total_mem_len += (OTX2_CPT_RES_ADDR_ALIGN - 1) &
-+			  ~(OTX2_CPT_DPTR_RPTR_ALIGN - 1);
-+	total_mem_len += sizeof(union otx2_cpt_res_s);
- 
- 	info = kzalloc(total_mem_len, gfp);
- 	if (unlikely(!info))
-@@ -375,7 +400,9 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 		dlen += req->in[i].size;
- 
- 	info->dlen = dlen;
--	info->in_buffer = (u8 *)info + info_len;
-+	info->in_buffer = PTR_ALIGN((u8 *)info + info_len,
-+				    OTX2_CPT_DPTR_RPTR_ALIGN);
-+	info->out_buffer = info->in_buffer + g_len;
- 	info->gthr_sz = req->in_cnt;
- 	info->sctr_sz = req->out_cnt;
- 
-@@ -387,7 +414,7 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 	}
- 
- 	if (sgv2io_components_setup(pdev, req->out, req->out_cnt,
--				    &info->in_buffer[g_len])) {
-+				    info->out_buffer)) {
- 		dev_err(&pdev->dev, "Failed to setup scatter list\n");
- 		goto destroy_info;
- 	}
-@@ -404,8 +431,10 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 	 * Get buffer for union otx2_cpt_res_s response
- 	 * structure and its physical address
- 	 */
--	info->completion_addr = info->in_buffer + sg_len;
--	info->comp_baddr = info->dptr_baddr + sg_len;
-+	info->completion_addr = PTR_ALIGN((info->in_buffer + sg_len),
-+					  OTX2_CPT_RES_ADDR_ALIGN);
-+	info->comp_baddr = ALIGN((info->dptr_baddr + sg_len),
-+				 OTX2_CPT_RES_ADDR_ALIGN);
- 
- 	return info;
- 
--- 
-2.34.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
