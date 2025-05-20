@@ -1,188 +1,83 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DBCEEC8;
-	Tue, 20 May 2025 07:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66F325DAF0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727041; cv=none; b=KYu86dcYrMcsOnZqckU4+MDe7QfiJVQXGY5Tardm+H7K66q7GeEsPoVK3pNHq3Rzlgef9JlC5w7MH1js4TfdCBfugX3vnG3VldRxodN7Sl8ppFWlvclgc2oCKxD0UW87crXOZReu7bKqEJD7nJZLQ5/jsODX8HxmJX+/MHG2r/Y=
+	t=1747727075; cv=none; b=kWX7ODkUiJf5ATQVA3uaxq7rNsuWaW2NvAY9i6rWHC6LVk38oLD4HZ3fSAbzu6NK1zbduB84mng0alIpsnqezQ7/KANhDCcbK+5zygWps1MkD8EwShEy4Pgs3QWxDNAyqsKqkyZSvFsxaVPgTk7a78JkAVGtgCOO5yGbXsozkCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747727041; c=relaxed/simple;
-	bh=zIL2YBPH1fTre1k7ZCpC3okZ8sjc/bzzUxupO/yQ9jA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ABdsd7w7kmpYkDlSyEtoIv6gOrli5TST+e8hdkR1bfEB/yN7VZc8Hr8IogWI5mZ/TLjiYPdO75a/ZBv0ZeNWo9CgbFPqTHuuyVIsmDtID+niWIULnvaUyIg+02GnffRKpBKr1bkNgWsto7UW8gGLgv45E9blh/wiszFUHcwRtt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mO8c8ad3; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mO8c8ad3"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c46611b6so3178993b3a.1;
-        Tue, 20 May 2025 00:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747727039; x=1748331839; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9uo8wrvNhdGkpDaupALM2V4X4G0GERtYOC9S6Rbd7JE=;
-        b=mO8c8ad3TQkXvGNdx4kaZSrIM4zaUAN+RJUY3jv/XzJBUNQym7YOqpAsO0HGgHAzjb
-         1BryM9JvF2h5sVJ8NSNIbWmds/aa6W04EwMKE1TceIPM/Jt11Twe1e1l1j0qA418Y2w5
-         VUQ8DrXtFxKwfvA9Tsb4pDilvMsq+z2ioRTTmkKg+ZgIxZZ3bO0bpsLFYE6e1jIZcrB4
-         jA+EQST7BLyKE2VzfB9LMv75iikS4X/uUdwoUeIr5r5u7J+hgwO2O4yIurUfqWl/d9bf
-         zruCyKSwRnKxsh5s6aAA2sul6iRYDd5mbxTRUsiZ+WLFzMvSsQOiu+d1qGSFYF98rfl+
-         8EeA==
+	s=arc-20240116; t=1747727075; c=relaxed/simple;
+	bh=E4uACfTAz0MJuk2mr0l6hE64Eeu49Jl8qxtmdtaSits=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MwTecSrhczkAWlcqPOTYeC9KbGrdZIzWnooAnTW8exCGOjmcipEUcjq7sToRea5LeBFjPqINYKiIAzX9gRaMSQD/Pu0nBEIOU+I60pVJ2m/OiN24OrBi5/3XdG1AfBQTJHoARv5ejWFwvjUKbz5IAOyQuYP8CmFZesHCPiZZmNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86a3d964d9fso172599839f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:44:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747727039; x=1748331839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9uo8wrvNhdGkpDaupALM2V4X4G0GERtYOC9S6Rbd7JE=;
-        b=OM2oc2J7Gl6k4OY9BH2nigp1zWPlGsN9kAyUBogkYCF3ZuldU9DLN+lnJF1DRbG3Kq
-         iOjwD1DB9VA94b6BKDkvULPs0+F4fazg8wcRFKm5svluWL7X01fwBDfkSQ8v9wX6voJI
-         ZmrWkDBo3nGrheczSjhxj51srBYeoT9dpa5TieYLxbVwq3i6ZMVJ5W+0HoRhkHOhPk5+
-         Oyp8w9Cg/aWVgdnlhewPzv372oYMP5vPY/+agg63UmrsnzjZedCt3p5nlH0imIUX+NQA
-         MxUwmz+PUOA2o7hhplbs3uJw6O1QWMlprXuhkqJlVTrgnkC32KilfnXiApIJi+qvNQYK
-         lMUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJQG98KYU6Vrp5MUXn/GOjifIPL2wkeVB9KIU04477razE5VI3ty8x2VkpDa86teY7GZFWQU0NhRizvhHLU2gw@vger.kernel.org, AJvYcCVbaoj3Wz/tHxBCbC+2eEfYpCP7SpUgkoMNwvIx4QYRTnlhhNRizooAs3NycVNqEdwXeBoMZTKOu/I=@vger.kernel.org, AJvYcCVzYnmJ/AenULUd0KqcZ1HUjT/3BpnDccQ16I6VjCYPXTF0KJt6FknrzJkLR2kDnNhaqrxDzRpg1HenY+Ah@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCoCi9WBdL6B8iBDO0gVaQiu/oEHRs20zyriB4BdLXfar60Dsy
-	6S4FRmLyekTUJ6PbAdpazu8n6d4I1BMsYrDPp5wGrPRfXpJTc44eYr+0xPlpd25d6Az7KusVNQn
-	KlJrFUqOe66x4FXb1lP3Z2Y/KJqzVjxiQxfiFYM8=
-X-Gm-Gg: ASbGncvSlZuoEzr0oIwwfu/2/lWnIqj1XUyuVNIoUJhzouWkVaO0QSZHWCcX1nAepbI
-	wLY7OSyrDW4IdM+9Wv5OFrrgCC6zeHYJfZDStzV4xDKLa+ZlLpyeUDqRsxUIBoiXbIP8c0LYemG
-	tTdszUdIgDzEaDb3zVu1plqODxSwS3ezp2Og==
-X-Google-Smtp-Source: AGHT+IH2XeVratNvJ8FEJrrphJj/JDteq0tJv39Wdwj//5c4Z8WnAee6xYifV9WTkK9RBrjweCf0CdsRboWOvSrgV9Y=
-X-Received: by 2002:ad4:5caa:0:b0:6f8:9a8c:9d83 with SMTP id
- 6a1803df08f44-6f8b2d0d149mr244508426d6.35.1747727028940; Tue, 20 May 2025
- 00:43:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747727073; x=1748331873;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9etdKII+Xd7yjzPdX6DtY4eVU4vcKzOAV8VxGSqiZ8U=;
+        b=P7sKZ+NVD/NCmWzSbra63g7xfYIeQZssTQyic3DZm9mNaxiSdzHvP3m04gPjH1en5I
+         TObSOxFlbEq+vVqR6T6hb+9MCkUmwOQSE4NZVhqg1sN/X0D8mcX0rluN8SlDbwBJeJl2
+         xfz0F6tww5xP49oC9vElckiZoL7jOUSqDuFGwyyJNK5hihzMDRWOjtCnxdOmW8btk25y
+         K4JFdANSU8NFOaNj+SALln5u3z1NZOWbPLRbvfIqKL8H6DSMVl4c8yHKhpuFoNWKFr6K
+         +OGKAqUWWq8NWlGX2POw7JO7c5sW9jmwQCSMteXDGkVgkxj16cqFXbj+B+NiHCHI32l6
+         ZVNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUb6doWiHD1T+iG9v0mmH7h0+KXgIdROOC5rtvvaqfWd6sZRCe7dXBf2cwf+1r74ODB9HrA1FRDzZbBfj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/4I+D9++t9ceMTVRABeCITlxVzx1Myi3IXMdUFbUrp4aqP0Vm
+	iMYRbB7G8LhF8WW/cldw2c1D1fIiCibKZOwh/vNUfZ4q/gUrcZfU015LWrHyzHSwJVyXtRGNZIh
+	0AqTmQwlbLAd/X2a+23wtUqP1x+kBg5w7sbpejbstarCk60WOReyyihPwmls=
+X-Google-Smtp-Source: AGHT+IGlAn6KQq+4218UvUGgAPATNp0Gpb8ky9lQM+mV+haSuS/HwGgMKH5bQRTd9Tp8tk+hCPSKCY55Yfs3jNqkHsbE/U250y1a
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515033857.132535-1-npache@redhat.com> <20250515033857.132535-2-npache@redhat.com>
-In-Reply-To: <20250515033857.132535-2-npache@redhat.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 20 May 2025 15:43:12 +0800
-X-Gm-Features: AX0GCFvt6zLLvpZVET4ZwVYJYj9_BSwEJPuE1M1fe9g1tsw5I4FK7vP9A1HV5ug
-Message-ID: <CALOAHbCkhakdoD=HtM7=XwkHvsWu5BA6dLVofO7oFY_Os168uw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] mm: defer THP insertion to khugepaged
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	rientjes@google.com, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
-	rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com, 
-	zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org, 
-	jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
-	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
-	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
-	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
-	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
-	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
-	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	corbet@lwn.net, akpm@linux-foundation.org
+X-Received: by 2002:a6b:f40e:0:b0:85b:3ae9:da01 with SMTP id
+ ca18e2360f4ac-86a174c1798mr1581221839f.4.1747727072979; Tue, 20 May 2025
+ 00:44:32 -0700 (PDT)
+Date: Tue, 20 May 2025 00:44:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682c32e0.a00a0220.29bc26.0275.GAE@google.com>
+Subject: [syzbot] Monthly afs report (May 2025)
+From: syzbot <syzbot+lista6cca35c0d96ce88bf4c@syzkaller.appspotmail.com>
+To: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:39=E2=80=AFPM Nico Pache <npache@redhat.com> wro=
-te:
->
-> setting /transparent_hugepages/enabled=3Dalways allows applications
-> to benefit from THPs without having to madvise. However, the page fault
-> handler takes very few considerations to decide weather or not to actuall=
-y
-> use a THP. This can lead to a lot of wasted memory. khugepaged only
-> operates on memory that was either allocated with enabled=3Dalways or
-> MADV_HUGEPAGE.
->
-> Introduce the ability to set enabled=3Ddefer, which will prevent THPs fro=
-m
-> being allocated by the page fault handler unless madvise is set,
-> leaving it up to khugepaged to decide which allocations will collapse to =
-a
-> THP. This should allow applications to benefits from THPs, while curbing
-> some of the memory waste.
->
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Co-developed-by: Rafael Aquini <raquini@redhat.com>
-> Signed-off-by: Rafael Aquini <raquini@redhat.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  include/linux/huge_mm.h | 15 +++++++++++++--
->  mm/huge_memory.c        | 31 +++++++++++++++++++++++++++----
->  2 files changed, 40 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index e3d15c737008..02038e3db829 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -48,6 +48,7 @@ enum transparent_hugepage_flag {
->         TRANSPARENT_HUGEPAGE_UNSUPPORTED,
->         TRANSPARENT_HUGEPAGE_FLAG,
->         TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
-> +       TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
->         TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG,
->         TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG,
->         TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG,
-> @@ -186,6 +187,7 @@ static inline bool hugepage_global_enabled(void)
->  {
->         return transparent_hugepage_flags &
->                         ((1<<TRANSPARENT_HUGEPAGE_FLAG) |
-> +                       (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG) |
->                         (1<<TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG));
->  }
->
-> @@ -195,6 +197,12 @@ static inline bool hugepage_global_always(void)
->                         (1<<TRANSPARENT_HUGEPAGE_FLAG);
->  }
->
-> +static inline bool hugepage_global_defer(void)
-> +{
-> +       return transparent_hugepage_flags &
-> +                       (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG);
-> +}
-> +
->  static inline int highest_order(unsigned long orders)
->  {
->         return fls_long(orders) - 1;
-> @@ -291,13 +299,16 @@ unsigned long thp_vma_allowable_orders(struct vm_ar=
-ea_struct *vma,
->                                        unsigned long tva_flags,
->                                        unsigned long orders)
->  {
-> +       if ((tva_flags & TVA_IN_PF) && hugepage_global_defer() &&
-> +                       !(vm_flags & VM_HUGEPAGE))
-> +               return 0;
-> +
->         /* Optimization to check if required orders are enabled early. */
->         if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
->                 unsigned long mask =3D READ_ONCE(huge_anon_orders_always)=
-;
-> -
->                 if (vm_flags & VM_HUGEPAGE)
->                         mask |=3D READ_ONCE(huge_anon_orders_madvise);
-> -               if (hugepage_global_always() ||
-> +               if (hugepage_global_always() || hugepage_global_defer() |=
-|
->                     ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled(=
-)))
->                         mask |=3D READ_ONCE(huge_anon_orders_inherit);
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 700988a0d5cf..ce0ee74753af 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -297,12 +297,15 @@ static ssize_t enabled_show(struct kobject *kobj,
->         const char *output;
->
->         if (test_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_fla=
-gs))
-> -               output =3D "[always] madvise never";
-> +               output =3D "[always] madvise defer never";
+Hello afs maintainers/developers,
 
-a small nit: alphabetical ordering might improve readability here.
+This is a 31-day syzbot report for the afs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/afs
 
---=20
-Regards
-Yafang
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 9 issues are still open and 48 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 522     Yes   KASAN: slab-out-of-bounds Read in afs_proc_addr_prefs_write
+                  https://syzkaller.appspot.com/bug?extid=7741f872f3c53385a2e2
+<2> 25      Yes   INFO: task hung in afs_cell_purge (2)
+                  https://syzkaller.appspot.com/bug?extid=750f21d691e244b473b1
+<3> 9       Yes   WARNING: ODEBUG bug in delete_node (3)
+                  https://syzkaller.appspot.com/bug?extid=ab13429207fe1c8c92e8
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
