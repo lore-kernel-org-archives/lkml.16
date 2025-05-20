@@ -1,74 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C97028C866
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDEF283157;
+	Tue, 20 May 2025 20:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773380; cv=none; b=Be6pWRHwxz/jS8BUiaz9GqsiKEbxBdobg1j+8w/o3E9ksngWWLPAabSgQzv4o/qhIWmSlZtSmN3I+t30u9INte2HfLMHmU/2AyOYhSUhpTLqfNnc3S+Xtg7tRZuSKRydWvSSfFvb2zAm7bbq+iybDbIK+Tl2KTXXwOM5KwS/WO0=
+	t=1747773381; cv=none; b=bX28DWQoEwqvkDa6OQQctwDX4/xV1xqoGwxOBbALb5o54WeRzGfJAtbcRCKUbnutWFjB8ef3PenN+cFQQ8dLhH64lDi72r3BfVo2dAwDgbvBsYQmrw/kVUHvO94653ENTQm13WKgO2BurLrsLc2uGuj9Rnl360Wxt2N22SQ6w/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773380; c=relaxed/simple;
-	bh=HUjb5SSpguqf14obMWV1CoUWPK/z6RsGfZRYkDmaZrM=;
+	s=arc-20240116; t=1747773381; c=relaxed/simple;
+	bh=c2cggQALUIf/dfn5q+vkgGV3x9yZgrUpIWuuES4L2mE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H/a8p62a2aLhXqO5+IMQMMRwO8nqijUr5wh3JXIjZAHM5KDYVpSsF/ubKGQyM8k2LNM1qh+sV+qEvUky5RrYCGIoCfLqN6R3y9C4fDtp4egcQmghu9BLipN8fTYR3xmIV+L4DPS0RH6pjUkO5TRbEaf6rH6lbBNiYT3EmztfSQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FfIM6DhX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=t+RO/KjztyGdlGUrrmen2Of90lCXr5qT2FtiI6aMcAqQu6CE4sTJfEGo+LAZziFcz1DqKH87msoFt73LnT5//3451UXdhOwOTlYPUV5mevIcNoYu5GF/yFN5tx8Yk5AqLjCOX/dKJFv1VNEgEPxN48j6rcpKhx6COFudArLlgtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nEPMihI2; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FfIM6DhX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747773377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zv2cXxmOj4M7S+/j9A/0DMu053ZlpynGaWjv/seAW+I=;
-	b=FfIM6DhXCIo20Gguz0nFHyIMOETrHSidnc3BO43aslkiUgLqjZtARCotwbaMMEXFHyE0cD
-	oI+/JaBd5K4kSdr/00emH+Bva8LkP6JDyhNvAkfFBuB4m87jMKcJjlN+PFdeYeiSJSBlNk
-	cyzwINZ2mdxB/3wfxbEYUNYDO+cAj2A=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-UHluAkkyNamM6mrI0Li4HA-1; Tue,
- 20 May 2025 16:36:14 -0400
-X-MC-Unique: UHluAkkyNamM6mrI0Li4HA-1
-X-Mimecast-MFC-AGG-ID: UHluAkkyNamM6mrI0Li4HA_1747773371
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 787ED180034E;
-	Tue, 20 May 2025 20:36:11 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.64.128])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5817F19560AD;
-	Tue, 20 May 2025 20:36:07 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEPMihI2"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so4820695a91.3;
+        Tue, 20 May 2025 13:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747773377; x=1748378177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a5Y9lrCw7xR2ho0EkMK1AgoBE7OrT8n9eYd5ybPQld0=;
+        b=nEPMihI2CJLXoOg85w94bJPWy1dgF/C5RmvAv+qxSmYXVMEMEyPlYSq1o7s6IVFfaG
+         99Gnnr2rseZxxG3rSI9w+Re8di1q/6w/Xi8pJISIbHm9tJGGkFxpobQRBXN1GruPqhVZ
+         haqKn3/4SW8jJ7a4mQkNnpFQGhPu6JU57XeW+bWt44Wvd4lhRzKkbAK3jD4iZAtqPdC0
+         cgYG8LnJ7swq3WKWhxzUhqjhrmiEZEWfDklGZWYd+E9JWkSmWZswpX0x7YrdznPzQfYY
+         VAbnQ62G301YoZYhNVHQy4JtFbwCK17mgqTYNSQg6/j5/3hXuUZRzCc8cT6crDJCHOqe
+         a4Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747773377; x=1748378177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a5Y9lrCw7xR2ho0EkMK1AgoBE7OrT8n9eYd5ybPQld0=;
+        b=ed5wkPN3MsavUFOmR2/fy5eDl5Olu7coP/6uNdtgbDDP8GyRud/9LdCfw5+FDi1OfW
+         0pydoK0uO792Q2P91nqg/pmDHVzgrgUHjU4oNLkvHfHoixZhiPU0O9d34OVuQSqKhtLj
+         u5BGEIP0RcN2T7DNEf4IVTKWhefJncTP+lO4BIcM7jBMkQD6xGoahfLWe+ydfCHiPTMs
+         3K8RPVJ6PdsbpSOd2NwzTwSgEBbDihsvukM5EfrVoFzpgYUfQSn8QmBjmtlOEe4REBXL
+         s3zqvmYNHzqr0K+rGTPztPB8YZOgvM1HPiVJt0sPtC618oKnAHnsrX8ZkZEyY05nT53s
+         b8KA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXg7PDRrvlc+GexpGOTNq7KbYeFkGAvuI4Fq/OxUTzVTeGrT3jIBHsVCZalz9tRHFK7EidZVXy7kd+g==@vger.kernel.org, AJvYcCXPooGkYhAPi6j6zD66PTRTuVF1Tukup4ojgX2gDWpymIowJODUmdxzbQObB9rJIhP//WavHDj1ivhrVug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4FthFSZ6YYiV/Ti28oNR6h+C8i44FdGqEJ+fUtyTaYH0tgEqQ
+	diiKxtSRhMYeZMZzEsx60eW0P/zT2m613sZlWrFfjQuzjO+cbudW5rEz2trC
+X-Gm-Gg: ASbGncvDC1zQKc3c4d8SzdorPdmEIOMcJDLo3W+TnWFgCaNFiIaoSWYEqP9m35+xKtS
+	eIIAHuC/f5yj07uO4tcKh+GTuOomI/oqDp+oxDy6VR5i5/3AJGcGCQJhEEfbRv4EhS8kYEWkoRl
+	YHF1Q4cbn8ieO4JKNIyniXgAaT66EDfbhPpohnSYJBYH2pE2r6rgBi/RvCLG9bH/+8120+KNU8f
+	/XKKHSlsgwCS59KYxREvjM7FaB+Jpl6fMIMGfoi3gf/vJfjdckd/zEfM+0adLQFbt/uIHSZ0wH0
+	69ZJq39huO6s1LX1xmdXL0+CxLE9vJsAn8BACOrRhlQYWExktbPW8rDr2IBU2umD675JMIP6m6/
+	Yo6bxNMY91S8s
+X-Google-Smtp-Source: AGHT+IHWgke1DG8ChG5fslNyhSb3j/oJctAD2YHyTgUEC0y6COR53m/9wy1aosXnbUA1AqrRETKSPg==
+X-Received: by 2002:a17:90b:5105:b0:2ff:62f8:9a12 with SMTP id 98e67ed59e1d1-30e7d5b763emr25797392a91.23.1747773377342;
+        Tue, 20 May 2025 13:36:17 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30f36491d85sm2158936a91.29.2025.05.20.13.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 13:36:16 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	skalluru@marvell.com,
+	manishc@marvell.com,
+	andrew+netdev@lunn.ch,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	ajit.khaparde@broadcom.com,
+	sriharsha.basavapatna@broadcom.com,
+	somnath.kotur@broadcom.com,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	tariqt@nvidia.com,
+	saeedm@nvidia.com,
+	louis.peens@corigine.com,
+	shshaikh@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	ecree.xilinx@gmail.com,
+	horms@kernel.org,
+	dsahern@kernel.org,
+	ruanjinjie@huawei.com,
+	mheib@redhat.com,
+	stfomichev@gmail.com,
 	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Asahi Lina <lina@asahilina.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Subject: [PATCH v4 3/4] rust: drm: gem: Drop Object::SIZE
-Date: Tue, 20 May 2025 16:35:29 -0400
-Message-ID: <20250520203542.1391548-4-lyude@redhat.com>
-In-Reply-To: <20250520203542.1391548-1-lyude@redhat.com>
-References: <20250520203542.1391548-1-lyude@redhat.com>
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	oss-drivers@corigine.com,
+	linux-net-drivers@amd.com,
+	leon@kernel.org
+Subject: [PATCH net-next 1/3] net: ASSERT_RTNL remove netif_set_real_num_{rx,tx}_queues
+Date: Tue, 20 May 2025 13:36:12 -0700
+Message-ID: <20250520203614.2693870-2-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250520203614.2693870-1-stfomichev@gmail.com>
+References: <20250520203614.2693870-1-stfomichev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,40 +104,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Drive-by fix, it doesn't seem like anything actually uses this constant
-anymore.
+Existing netdev_ops_assert_locked takes care of asserting either
+netdev lock or RTNL.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+Cc: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
 ---
- rust/kernel/drm/gem/mod.rs | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ net/core/dev.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-index eb526d118cd40..c459829ce5a5d 100644
---- a/rust/kernel/drm/gem/mod.rs
-+++ b/rust/kernel/drm/gem/mod.rs
-@@ -12,7 +12,7 @@
-     prelude::*,
-     types::{ARef, AlwaysRefCounted, Opaque},
- };
--use core::{mem, ops::Deref, ptr::NonNull};
-+use core::{ops::Deref, ptr::NonNull};
+diff --git a/net/core/dev.c b/net/core/dev.c
+index fccf2167b235..5ea718036921 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3179,7 +3179,6 @@ int netif_set_real_num_tx_queues(struct net_device *dev, unsigned int txq)
  
- /// A type alias for retrieving a [`Driver`]s [`DriverFile`] implementation from its
- /// [`DriverObject`] implementation.
-@@ -197,9 +197,6 @@ pub struct Object<T: BaseDriverObject + Send + Sync> {
- }
+ 	if (dev->reg_state == NETREG_REGISTERED ||
+ 	    dev->reg_state == NETREG_UNREGISTERING) {
+-		ASSERT_RTNL();
+ 		netdev_ops_assert_locked(dev);
  
- impl<T: BaseDriverObject> Object<T> {
--    /// The size of this object's structure.
--    pub const SIZE: usize = mem::size_of::<Self>();
--
-     const OBJECT_FUNCS: bindings::drm_gem_object_funcs = bindings::drm_gem_object_funcs {
-         free: Some(Self::free_callback),
-         open: Some(open_callback::<T>),
+ 		rc = netdev_queue_update_kobjects(dev, dev->real_num_tx_queues,
+@@ -3229,7 +3228,6 @@ int netif_set_real_num_rx_queues(struct net_device *dev, unsigned int rxq)
+ 		return -EINVAL;
+ 
+ 	if (dev->reg_state == NETREG_REGISTERED) {
+-		ASSERT_RTNL();
+ 		netdev_ops_assert_locked(dev);
+ 
+ 		rc = net_rx_queue_update_kobjects(dev, dev->real_num_rx_queues,
 -- 
 2.49.0
 
