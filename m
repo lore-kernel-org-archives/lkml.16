@@ -1,52 +1,53 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD2826A1DA;
-	Tue, 20 May 2025 10:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577AE26F46D;
+	Tue, 20 May 2025 10:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747736858; cv=none; b=Dax+9zgw366kEZf6DRokvltYuEuAWv82XxgaQ+yBp9cJSUjGjF/OGsk6e1gmb7BwZRzqFY92UeBG03X3SjL3jpTYcS54km33wSBLmvvNme0o+kx9TNHKICXdj3/3EAHgs6nSl/lhUXQdgMYchfcjCAiTspGvtEWTjfJlDtbQEGk=
+	t=1747736863; cv=none; b=TOz89CN4Pg4IgNmx9Qfi4gq4Roy5D/aSIKkAxarrrgQBFk9ppIx6AKdwYE1sfAsXlATPApORwSFJnnPK9Qx7Xym21KXO/v9cBNM/lgrJNELKxBCuXuLKjElQTc+jWEuDZepohVgbRNUegquQqaVizFoMbt46JiIlXQo3i/03zLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747736858; c=relaxed/simple;
-	bh=06J+XXeHaVzOMtbGvtN8tErHX+tjjB3NqFTxWTuaRnc=;
+	s=arc-20240116; t=1747736863; c=relaxed/simple;
+	bh=vnL/JQTIzMrG7ymt1jV45qabuhdAHhFO8ifp0/6kr8g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cgz9cwiKJBrfhAaPZt237hom540NP+ZrRy9dMw0mbMSmYnC/+9HuadzaIN3nb+UtkvJhshfYmR4276+UpUjI9wWePH5Mh7pl/QWRt99OOyIRM7/7GZnNizOp2wAD9VnI1w9tIAE78/fNv4rcCMJ61OavvS729BaoryhFYQlQTlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=EwOm+7iFK2GOJbJ+M9jruCb7Wsyhn+4A853OBiYvzAgNFrnUGmhb9Vu2jnRcyTMh/iLJlX/atWrxaM3MGlDr+RJOnbKeZrzLV6WzhfwRPnrV6Uqhg/yBj40ABpdyp7RxYGYv2ZP4jS4rE/RGO0Th2P/uPZ58ajsxT+A6H5VvdXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so41278575e9.1;
-        Tue, 20 May 2025 03:27:35 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so60008355e9.2;
+        Tue, 20 May 2025 03:27:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747736854; x=1748341654;
+        d=1e100.net; s=20230601; t=1747736859; x=1748341659;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NH6sJQIhe/N21z+OoIEs6BTIMF+BQDmg2RbVYIUKnuM=;
-        b=DaZUy5U3b2zavsoaHDmhroaMe07sn8Zm4wszfdkeD1IHgHLt/It5wWvgokfDJgMudL
-         E98MQR2zCsrtuA7cTFSbe09ezQpcRKTQNMBl0l/AHIAi9Ld3TEj5FCsE8k+oMA057Tcm
-         PcVBtuPunus9rYTTzRFonc2QkElC26QI4Y3PzHSR9qXKbqxZfwtm6FbzzD9ubkivtZzx
-         DdZVRalY3B2GjturuME6Pf7gp2yDKyD7XGBQ2VcjuesrFUxpMS5FCbl4c87ms7cDO0YO
-         +IM2uNA02cWz8X72GnosmmzGbtXlJvkY/MD0PhFRRe3U5fKxD65pNa92/OCX540DLTr9
-         dkIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsOab/H4CyLageAWkaj16EGM20xoDfkC8sMcYOzA8QBHoS+xhB6ttpXtGTBraAxV87w95zhzBjAP7moTw=@vger.kernel.org, AJvYcCWI1vEu/2+A06RDujZtbuNHdGAwb1j/DcqFVEVGUxhUM+THhtvooXgVoaQ+GL1T6KSmhJ+m8eMPIXQ=@vger.kernel.org, AJvYcCWaMj85i6Y29R/ZHh8SdQnmGQiHIk6NrCmUnmKuq77Zlnq50s1mj7DsCU7N9wqqH++0rpjVL0QsRe7pZbyi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb7SFzJHBbfzeBdGoCZxmOrggt9dPuRpOUEzPPoTTZrAG1PTwB
-	ypYZCoDWReM8dkyfFBa1f/qdxnmBAtr/4rt7YbM9gzwOCSIyW7SpZt8bBkf1FgRS
-X-Gm-Gg: ASbGncvTtPbeLPYgl67azIk4nTmyXTt9n7G+JBUbR+7pfoLGF/vjoVUILiLJOkrNAPZ
-	GbxhxyUF7EeZWqjERmHZbGIyDRw58LVEtajZm0KQh+udyAgQ3ObymFQTCkRIl++IuGL0tmbngu/
-	EzcNa0PE9mJHnkdi0aCQ1/iIfwztil0NyxluC3MUEFkM6fKY3BdVaJaMpSrSyAULNUxRCiqjNtu
-	M69FkwIE0rWNADP4e1WaZUX8yih/VWQWBS4gTVj78vfV+2zfvLxR8vB0uDtXjKIUe273Qj+PHA0
-	Rl8DV3wKk4e+XXH3SZNdlLo73AgqAzCCLmriKGxhJICuDUrj8Ia8uwjpsaAGBHakXenSz+YFp66
-	s88bzKbhHCQ==
-X-Google-Smtp-Source: AGHT+IEnYx5cPR9He0+qELeiwYGUDpKELGreGj4dLXm4hRmTWS9Ey6M21NUefRs7Jii5Dq4JDq0+Xg==
-X-Received: by 2002:a05:600c:5012:b0:440:69f5:f179 with SMTP id 5b1f17b1804b1-442f84d5511mr190326515e9.7.1747736853866;
-        Tue, 20 May 2025 03:27:33 -0700 (PDT)
+        bh=Sno2TxM6nh2qfS6yS7wci8cH+EcvTWnBUgzpoh/6UDI=;
+        b=rlEDtbOtV0gjffU2/xcTANMDq5mV2dxuVePKo8Pcp2kMBAtd1egayF/xfCKQY1UDex
+         5JdbDkkiqomcZVQ2hSS4uEi0uC/IXmm+Znew6neg3b5kgZ589ZlBFORwvqyhgQKYWNYC
+         EIKLTlHu3H/ccrPv0ZE0HaQqmxX1yh3HtgtoKnDPTbuJOf8KvxzGfE4Ld+Yp4b/6MfJh
+         gNOpqAfve8j25t0oK8dG5grJZLWxKBEjtuslSJ3Vv9xy19k0JmE0VXax2jJvDbfEUSeL
+         TlPF4lPsOdLoXMycnHeM5+LtaQ+vUuf+vtnynO81EffR2jVEBpUxOrwAbsiHt9CvVKHH
+         hn2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHyNneOpZWCY/VELJKk/WOUjMBBIKID9W6Kgwwk0pPGKXGeLRzcwl9VM8IXA6OE1I8UXAgUkECXLQ=@vger.kernel.org, AJvYcCWFGehYXQckvt9TUKyd1KgaCC5Bw4LQYM7oV1wrvul0Hr9/j31RgnldU0eE9rhe8QZ5G7X6HtlvhGC1IfjF@vger.kernel.org, AJvYcCXTIzAs+Jf7p0k7u+c8427qSywPLrC+gZQjUeq0GPfuiLn46tM/xqVZV+kbxIa3QTwM31dlRdaW+5FzvqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwBRSZo8vAm4gTY63w2FELWh7CgYi+mcWYMipHurqEGcSY1+me
+	sRbasJW/WhGFInHAKYUSGPuXcMOz6KVJfoYja/4a2lyZgogpwrzHA0CbzUbxv9Ah
+X-Gm-Gg: ASbGncssnMVBy8VKYKMzhuUwWrn/N5vik9JIov655f3eN1VfLqddUm71zXeK/yhPJiP
+	p3kLu+fJyHE9lJvFA71F5oScA2dC7WLAI2up/9KwHBg3PDT38DS8MK2+Kglvdqb0r/t1xmXJWYg
+	px/ZZnK7SEoZS9nDRDuHwr9kqidUXti2aWOmNBQ918MvatRp6ANJXmP2yTJQapBxYjh37eGu1Pw
+	hJZTmTVIisaY2d0WuuXH3+9TU94r5pY8O1ZtM6sSR49e/Fe7corLJGgUOSnuTgbBjnmQ6HuQSAA
+	cME1KY9o9Fv7NGHFCGLc3VSf2tdfuliuYNNmy9m4cS7oCisZcEo6pYdalvVB+G0u8eeYu69U9+z
+	AewXaTHwx7w==
+X-Google-Smtp-Source: AGHT+IFVeV+SJDiHq/M1Mn0wviBi4rkXrBqwt1IdCIq93iABKAxWCW3N64g4uPR2N467hpXo1zwylQ==
+X-Received: by 2002:a05:600c:34d4:b0:442:e0e0:250 with SMTP id 5b1f17b1804b1-442fd67200emr148769165e9.29.1747736859396;
+        Tue, 20 May 2025 03:27:39 -0700 (PDT)
 Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3defsm24680025e9.18.2025.05.20.03.27.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3defsm24680025e9.18.2025.05.20.03.27.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 03:27:33 -0700 (PDT)
+        Tue, 20 May 2025 03:27:38 -0700 (PDT)
 From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Tue, 20 May 2025 12:26:58 +0200
-Subject: [PATCH v5 05/10] accel/rocket: Add a new driver for Rockchip's NPU
+Date: Tue, 20 May 2025 12:27:01 +0200
+Subject: [PATCH v5 08/10] accel/rocket: Add IOCTLs for synchronizing memory
+ accesses
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-6-10-rocket-v5-5-18c9ca0fcb3c@tomeuvizoso.net>
+Message-Id: <20250520-6-10-rocket-v5-8-18c9ca0fcb3c@tomeuvizoso.net>
 References: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net>
 In-Reply-To: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -76,699 +77,210 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Tomeu Vizoso <tomeu@tomeuvizoso.net>
 X-Mailer: b4 0.14.2
 
-This initial version supports the NPU as shipped in the RK3588 SoC and
-described in the first part of its TRM, in Chapter 36.
+The NPU cores have their own access to the memory bus, and this isn't
+cache coherent with the CPUs.
 
-This NPU contains 3 independent cores that the driver can submit jobs
-to.
+Add IOCTLs so userspace can mark when the caches need to be flushed, and
+also when a writer job needs to be waited for before the buffer can be
+accessed from the CPU.
 
-This commit adds just hardware initialization and power management.
+Initially based on the same IOCTLs from the Etnaviv driver.
 
 v2:
-- Split cores and IOMMUs as independent devices (Sebastian Reichel)
-- Add some documentation (Jeffrey Hugo)
-- Be more explicit in the Kconfig documentation (Jeffrey Hugo)
-- Remove resets, as these haven't been found useful so far (Zenghui Yu)
-- Repack structs (Jeffrey Hugo)
-- Use DEFINE_DRM_ACCEL_FOPS (Jeffrey Hugo)
-- Use devm_drm_dev_alloc (Jeffrey Hugo)
-- Use probe log helper (Jeffrey Hugo)
-- Introduce UABI header in a later patch (Jeffrey Hugo)
+- Don't break UABI by reordering the IOCTL IDs (Jeff Hugo)
 
 v3:
-- Adapt to a split of the register block in the DT bindings (Nicolas
-  Frattaroli)
-- Move registers header to its own commit (Thomas Zimmermann)
-- Misc. cleanups (Thomas Zimmermann and Jeff Hugo)
-- Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
-- PM improvements (Nicolas Frattaroli)
-
-v4:
-- Use bulk clk API (Krzysztof Kozlowski)
+- Check that padding fields in IOCTLs are zero (Jeff Hugo)
 
 Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 ---
- Documentation/accel/index.rst        |   1 +
- Documentation/accel/rocket/index.rst |  25 +++
- MAINTAINERS                          |  10 ++
- drivers/accel/Kconfig                |   1 +
- drivers/accel/Makefile               |   1 +
- drivers/accel/rocket/Kconfig         |  25 +++
- drivers/accel/rocket/Makefile        |   8 +
- drivers/accel/rocket/rocket_core.c   |  70 +++++++++
- drivers/accel/rocket/rocket_core.h   |  45 ++++++
- drivers/accel/rocket/rocket_device.c |  30 ++++
- drivers/accel/rocket/rocket_device.h |  27 ++++
- drivers/accel/rocket/rocket_drv.c    | 294 +++++++++++++++++++++++++++++++++++
- drivers/accel/rocket/rocket_drv.h    |  13 ++
- 13 files changed, 550 insertions(+)
+ drivers/accel/rocket/rocket_drv.c |  2 +
+ drivers/accel/rocket/rocket_gem.c | 80 +++++++++++++++++++++++++++++++++++++++
+ drivers/accel/rocket/rocket_gem.h |  5 +++
+ include/uapi/drm/rocket_accel.h   | 37 ++++++++++++++++++
+ 4 files changed, 124 insertions(+)
 
-diff --git a/Documentation/accel/index.rst b/Documentation/accel/index.rst
-index bc85f26533d88891dde482f91e26c99991b22869..d8fa332d60a890dbb617454d2a26d9b6f9b196aa 100644
---- a/Documentation/accel/index.rst
-+++ b/Documentation/accel/index.rst
-@@ -10,6 +10,7 @@ Compute Accelerators
-    introduction
-    amdxdna/index
-    qaic/index
-+   rocket/index
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/accel/rocket/index.rst b/Documentation/accel/rocket/index.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..a3389f9a284c0975bc201f6e09082c01970e08a3
---- /dev/null
-+++ b/Documentation/accel/rocket/index.rst
-@@ -0,0 +1,25 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=====================================
-+ accel/rocket Rockchip NPU driver
-+=====================================
-+
-+The accel/rocket driver supports the Neural Processing Units (NPUs) inside some
-+Rockchip SoCs such as the RK3588. Rockchip calls it RKNN and sometimes RKNPU.
-+
-+This NPU is closely based on the NVDLA IP released by NVIDIA as open hardware in
-+2018, along with open source kernel and userspace drivers.
-+
-+The frontend unit in Rockchip's NPU though is completely different from that in
-+the open source IP, so this kernel driver is specific to Rockchip's version.
-+
-+The hardware is described in chapter 36 in the RK3588 TRM.
-+
-+This driver just powers the hardware on and off, allocates and maps buffers to
-+the device and submits jobs to the frontend unit. Everything else is done in
-+userspace, as a Gallium driver (also called rocket) that is part of the Mesa3D
-+project.
-+
-+Hardware currently supported:
-+
-+* RK3588
-\ No newline at end of file
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b82704950184bd71623ff41fc4df31e4c7fe87..2d8833bf1f2db06ca624d703f19066adab2f9fde 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7263,6 +7263,16 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	drivers/accel/ivpu/
- F:	include/uapi/drm/ivpu_accel.h
- 
-+DRM ACCEL DRIVER FOR ROCKCHIP NPU
-+M:	Tomeu Vizoso <tomeu@tomeuvizoso.net>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Supported
-+T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-+F:	Documentation/accel/rocket/
-+F:	Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
-+F:	drivers/accel/rocket/
-+F:	include/uapi/drm/rocket_accel.h
-+
- DRM COMPUTE ACCELERATORS DRIVERS AND FRAMEWORK
- M:	Oded Gabbay <ogabbay@kernel.org>
- L:	dri-devel@lists.freedesktop.org
-diff --git a/drivers/accel/Kconfig b/drivers/accel/Kconfig
-index 5b9490367a39fd12d35a8d9021768aa186c09308..bb01cebc42bf16ebf02e938040f339ff94869e33 100644
---- a/drivers/accel/Kconfig
-+++ b/drivers/accel/Kconfig
-@@ -28,5 +28,6 @@ source "drivers/accel/amdxdna/Kconfig"
- source "drivers/accel/habanalabs/Kconfig"
- source "drivers/accel/ivpu/Kconfig"
- source "drivers/accel/qaic/Kconfig"
-+source "drivers/accel/rocket/Kconfig"
- 
- endif
-diff --git a/drivers/accel/Makefile b/drivers/accel/Makefile
-index a301fb6089d4c515430175c5e2ba9190f6dc9158..ffc3fa58866616d933184a7659573cd4d4780a8d 100644
---- a/drivers/accel/Makefile
-+++ b/drivers/accel/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_DRM_ACCEL_AMDXDNA)		+= amdxdna/
- obj-$(CONFIG_DRM_ACCEL_HABANALABS)	+= habanalabs/
- obj-$(CONFIG_DRM_ACCEL_IVPU)		+= ivpu/
- obj-$(CONFIG_DRM_ACCEL_QAIC)		+= qaic/
-+obj-$(CONFIG_DRM_ACCEL_ROCKET)		+= rocket/
-\ No newline at end of file
-diff --git a/drivers/accel/rocket/Kconfig b/drivers/accel/rocket/Kconfig
-new file mode 100644
-index 0000000000000000000000000000000000000000..9a59c6c61bf4d6460d8008b16331f001c97de67d
---- /dev/null
-+++ b/drivers/accel/rocket/Kconfig
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config DRM_ACCEL_ROCKET
-+       tristate "Rocket (support for Rockchip NPUs)"
-+       depends on DRM
-+       depends on ARM64 || COMPILE_TEST
-+       depends on MMU
-+       select DRM_SCHED
-+       select IOMMU_SUPPORT
-+       select IOMMU_IO_PGTABLE_LPAE
-+       select DRM_GEM_SHMEM_HELPER
-+       help
-+	  Choose this option if you have a Rockchip SoC that contains a
-+	  compatible Neural Processing Unit (NPU), such as the RK3588. Called by
-+	  Rockchip either RKNN or RKNPU, it accelerates inference of neural
-+	  networks.
-+
-+	  The interface exposed to userspace is described in
-+	  include/uapi/drm/rocket_accel.h and is used by the Rocket userspace
-+	  driver in Mesa3D.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called rocket.
-diff --git a/drivers/accel/rocket/Makefile b/drivers/accel/rocket/Makefile
-new file mode 100644
-index 0000000000000000000000000000000000000000..abdd75f2492eaecf8bf5e78a2ac150ea19ac3e96
---- /dev/null
-+++ b/drivers/accel/rocket/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_DRM_ACCEL_ROCKET) := rocket.o
-+
-+rocket-y := \
-+	rocket_core.o \
-+	rocket_device.o \
-+	rocket_drv.o
-diff --git a/drivers/accel/rocket/rocket_core.c b/drivers/accel/rocket/rocket_core.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..a852ad7874b9c161963b1aa5f0fc2720c84738a6
---- /dev/null
-+++ b/drivers/accel/rocket/rocket_core.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-+
-+#include <linux/clk.h>
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "rocket_core.h"
-+
-+int rocket_core_init(struct rocket_core *core)
-+{
-+	struct device *dev = core->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	u32 version;
-+	int err = 0;
-+
-+	err = devm_clk_bulk_get(dev, ARRAY_SIZE(core->clks), core->clks);
-+	if (err)
-+		return dev_err_probe(dev, err, "failed to get clocks for core %d\n", core->index);
-+
-+	core->pc_iomem = devm_platform_ioremap_resource_byname(pdev, "pc");
-+	if (IS_ERR(core->pc_iomem)) {
-+		dev_err(dev, "couldn't find PC registers %ld\n", PTR_ERR(core->pc_iomem));
-+		return PTR_ERR(core->pc_iomem);
-+	}
-+
-+	core->cna_iomem = devm_platform_ioremap_resource_byname(pdev, "cna");
-+	if (IS_ERR(core->cna_iomem)) {
-+		dev_err(dev, "couldn't find CNA registers %ld\n", PTR_ERR(core->cna_iomem));
-+		return PTR_ERR(core->cna_iomem);
-+	}
-+
-+	core->core_iomem = devm_platform_ioremap_resource_byname(pdev, "core");
-+	if (IS_ERR(core->core_iomem)) {
-+		dev_err(dev, "couldn't find CORE registers %ld\n", PTR_ERR(core->core_iomem));
-+		return PTR_ERR(core->core_iomem);
-+	}
-+
-+	pm_runtime_use_autosuspend(dev);
-+
-+	/*
-+	 * As this NPU will be most often used as part of a media pipeline that
-+	 * ends presenting in a display, choose 50 ms (~3 frames at 60Hz) as an
-+	 * autosuspend delay as that will keep the device powered up while the
-+	 * pipeline is running.
-+	 */
-+	pm_runtime_set_autosuspend_delay(dev, 50);
-+
-+	pm_runtime_enable(dev);
-+
-+	err = pm_runtime_get_sync(dev);
-+
-+	version = rocket_pc_read(core, VERSION);
-+	version += rocket_pc_read(core, VERSION_NUM) & 0xffff;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	dev_info(dev, "Rockchip NPU core %d version: %d\n", core->index, version);
-+
-+	return 0;
-+}
-+
-+void rocket_core_fini(struct rocket_core *core)
-+{
-+	pm_runtime_dont_use_autosuspend(core->dev);
-+	pm_runtime_disable(core->dev);
-+}
-diff --git a/drivers/accel/rocket/rocket_core.h b/drivers/accel/rocket/rocket_core.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..ec89b8b5641f9714f157fd777580c98e20b09ec5
---- /dev/null
-+++ b/drivers/accel/rocket/rocket_core.h
-@@ -0,0 +1,45 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-+
-+#ifndef __ROCKET_CORE_H__
-+#define __ROCKET_CORE_H__
-+
-+#include <drm/gpu_scheduler.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mutex_types.h>
-+
-+#include "rocket_registers.h"
-+
-+#define rocket_pc_readl(core, reg) \
-+	readl((core)->pc_iomem + (REG_PC_##reg))
-+#define rocket_pc_writel(core, reg, value) \
-+	writel(value, (core)->pc_iomem + (REG_PC_##reg))
-+
-+#define rocket_cna_readl(core, reg) \
-+	readl((core)->cna_iomem + (REG_CNA_##reg) - REG_CNA_S_STATUS)
-+#define rocket_cna_writel(core, reg, value) \
-+	writel(value, (core)->cna_iomem + (REG_CNA_##reg) - REG_CNA_S_STATUS)
-+
-+#define rocket_core_readl(core, reg) \
-+	readl((core)->core_iomem + (REG_CORE_##reg) - REG_CORE_S_STATUS)
-+#define rocket_core_writel(core, reg, value) \
-+	writel(value, (core)->core_iomem + (REG_CORE_##reg) - REG_CORE_S_STATUS)
-+
-+struct rocket_core {
-+	struct device *dev;
-+	struct rocket_device *rdev;
-+	struct device_link *link;
-+	unsigned int index;
-+
-+	int irq;
-+	void __iomem *pc_iomem;
-+	void __iomem *cna_iomem;
-+	void __iomem *core_iomem;
-+	struct clk_bulk_data clks[2];
-+};
-+
-+int rocket_core_init(struct rocket_core *core);
-+void rocket_core_fini(struct rocket_core *core);
-+
-+#endif
-diff --git a/drivers/accel/rocket/rocket_device.c b/drivers/accel/rocket/rocket_device.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..97e32d19a1b4a36177b8039b67b4892887daa880
---- /dev/null
-+++ b/drivers/accel/rocket/rocket_device.c
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-+
-+#include <linux/array_size.h>
-+#include <linux/clk.h>
-+#include <linux/dev_printk.h>
-+
-+#include "rocket_device.h"
-+
-+int rocket_device_init(struct rocket_device *rdev)
-+{
-+	struct device *dev = rdev->cores[0].dev;
-+	int err;
-+
-+	err = devm_clk_bulk_get(dev, ARRAY_SIZE(rdev->clks), rdev->clks);
-+	if (err)
-+		return dev_err_probe(dev, err, "failed to get device clocks\n");
-+
-+	/* Initialize core 0 (top) */
-+	err = rocket_core_init(&rdev->cores[0]);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+void rocket_device_fini(struct rocket_device *rdev)
-+{
-+	rocket_core_fini(&rdev->cores[0]);
-+}
-diff --git a/drivers/accel/rocket/rocket_device.h b/drivers/accel/rocket/rocket_device.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..55f4da252cfbd1f102c56e5009472deff59aaaec
---- /dev/null
-+++ b/drivers/accel/rocket/rocket_device.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-+
-+#ifndef __ROCKET_DEVICE_H__
-+#define __ROCKET_DEVICE_H__
-+
-+#include <drm/drm_device.h>
-+#include <linux/clk.h>
-+
-+#include "rocket_core.h"
-+
-+struct rocket_device {
-+	struct drm_device ddev;
-+
-+	struct clk_bulk_data clks[2];
-+
-+	struct rocket_core *cores;
-+	unsigned int num_cores;
-+};
-+
-+int rocket_device_init(struct rocket_device *rdev);
-+void rocket_device_fini(struct rocket_device *rdev);
-+
-+#define to_rocket_device(drm_dev) \
-+	((struct rocket_device *)container_of(drm_dev, struct rocket_device, ddev))
-+
-+#endif
 diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..d1a1be32760feed864db86963b9942f1e37b17eb
---- /dev/null
+index fef9b93372d3f65c41c1ac35a9bfa0c01ee721a5..c06e66939e6c39909fe08bef3c4f301b07bf8fbf 100644
+--- a/drivers/accel/rocket/rocket_drv.c
 +++ b/drivers/accel/rocket/rocket_drv.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
+@@ -59,6 +59,8 @@ static const struct drm_ioctl_desc rocket_drm_driver_ioctls[] = {
+ 
+ 	ROCKET_IOCTL(CREATE_BO, create_bo),
+ 	ROCKET_IOCTL(SUBMIT, submit),
++	ROCKET_IOCTL(PREP_BO, prep_bo),
++	ROCKET_IOCTL(FINI_BO, fini_bo),
+ };
+ 
+ DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
+diff --git a/drivers/accel/rocket/rocket_gem.c b/drivers/accel/rocket/rocket_gem.c
+index 8a8a7185daac4740081293aae6945c9b2bbeb2dd..cdc5238a93fa5978129dc1ac8ec8de955160dc18 100644
+--- a/drivers/accel/rocket/rocket_gem.c
++++ b/drivers/accel/rocket/rocket_gem.c
+@@ -129,3 +129,83 @@ int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *
+ 
+ 	return ret;
+ }
 +
-+#include <drm/drm_accel.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_gem.h>
-+#include <drm/drm_ioctl.h>
-+#include <drm/drm_of.h>
-+#include <linux/array_size.h>
-+#include <linux/clk.h>
-+#include <linux/component.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "rocket_drv.h"
-+
-+static int
-+rocket_open(struct drm_device *dev, struct drm_file *file)
++static inline enum dma_data_direction rocket_op_to_dma_dir(u32 op)
 +{
++	if (op & ROCKET_PREP_READ)
++		return DMA_FROM_DEVICE;
++	else if (op & ROCKET_PREP_WRITE)
++		return DMA_TO_DEVICE;
++	else
++		return DMA_BIDIRECTIONAL;
++}
++
++int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file)
++{
++	struct drm_rocket_prep_bo *args = data;
++	unsigned long timeout = drm_timeout_abs_to_jiffies(args->timeout_ns);
 +	struct rocket_device *rdev = to_rocket_device(dev);
-+	struct rocket_file_priv *rocket_priv;
++	struct drm_gem_object *gem_obj;
++	struct drm_gem_shmem_object *shmem_obj;
++	bool write = !!(args->op & ROCKET_PREP_WRITE);
++	long ret = 0;
 +
-+	rocket_priv = kzalloc(sizeof(*rocket_priv), GFP_KERNEL);
-+	if (!rocket_priv)
-+		return -ENOMEM;
++	if (args->op & ~(ROCKET_PREP_READ | ROCKET_PREP_WRITE))
++		return -EINVAL;
 +
-+	rocket_priv->rdev = rdev;
-+	file->driver_priv = rocket_priv;
++	gem_obj = drm_gem_object_lookup(file, args->handle);
++	if (!gem_obj)
++		return -ENOENT;
 +
-+	return 0;
-+}
++	ret = dma_resv_wait_timeout(gem_obj->resv, dma_resv_usage_rw(write),
++				    true, timeout);
++	if (!ret)
++		ret = timeout ? -ETIMEDOUT : -EBUSY;
 +
-+static void
-+rocket_postclose(struct drm_device *dev, struct drm_file *file)
-+{
-+	struct rocket_file_priv *rocket_priv = file->driver_priv;
-+
-+	kfree(rocket_priv);
-+}
-+
-+static const struct drm_ioctl_desc rocket_drm_driver_ioctls[] = {
-+#define ROCKET_IOCTL(n, func) \
-+	DRM_IOCTL_DEF_DRV(ROCKET_##n, rocket_ioctl_##func, 0)
-+};
-+
-+DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
-+
-+/*
-+ * Rocket driver version:
-+ * - 1.0 - initial interface
-+ */
-+static const struct drm_driver rocket_drm_driver = {
-+	.driver_features	= DRIVER_COMPUTE_ACCEL,
-+	.open			= rocket_open,
-+	.postclose		= rocket_postclose,
-+	.ioctls			= rocket_drm_driver_ioctls,
-+	.num_ioctls		= ARRAY_SIZE(rocket_drm_driver_ioctls),
-+	.fops			= &rocket_accel_driver_fops,
-+	.name			= "rocket",
-+	.desc			= "rocket DRM",
-+};
-+
-+static int rocket_drm_bind(struct device *dev)
-+{
-+	struct device_node *core_node;
-+	struct rocket_device *rdev;
-+	struct drm_device *ddev;
-+	unsigned int num_cores = 1;
-+	int err;
-+
-+	rdev = devm_drm_dev_alloc(dev, &rocket_drm_driver, struct rocket_device, ddev);
-+	if (IS_ERR(rdev))
-+		return PTR_ERR(rdev);
-+
-+	ddev = &rdev->ddev;
-+	dev_set_drvdata(dev, rdev);
-+
-+	for_each_compatible_node(core_node, NULL, "rockchip,rk3588-rknn-core")
-+		if (of_device_is_available(core_node))
-+			num_cores++;
-+
-+	rdev->cores = devm_kmalloc_array(dev, num_cores, sizeof(*rdev->cores),
-+					 GFP_KERNEL | __GFP_ZERO);
-+	if (IS_ERR(rdev->cores))
-+		return PTR_ERR(rdev->cores);
-+
-+	/* Add core 0, any other cores will be added later when they are bound */
-+	rdev->cores[0].rdev = rdev;
-+	rdev->cores[0].dev = dev;
-+	rdev->cores[0].index = 0;
-+	rdev->num_cores = 1;
-+
-+	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
-+	if (err)
-+		return err;
-+
-+	err = rocket_device_init(rdev);
-+	if (err) {
-+		dev_err_probe(dev, err, "Fatal error during NPU init\n");
-+		goto err_device_fini;
-+	}
-+
-+	err = component_bind_all(dev, rdev);
-+	if (err)
-+		goto err_device_fini;
-+
-+	err = drm_dev_register(ddev, 0);
-+	if (err < 0)
-+		goto err_unbind;
-+
-+	return 0;
-+
-+err_unbind:
-+	component_unbind_all(dev, rdev);
-+err_device_fini:
-+	rocket_device_fini(rdev);
-+	return err;
-+}
-+
-+static void rocket_drm_unbind(struct device *dev)
-+{
-+	struct rocket_device *rdev = dev_get_drvdata(dev);
-+	struct drm_device *ddev = &rdev->ddev;
-+
-+	drm_dev_unregister(ddev);
-+
-+	component_unbind_all(dev, rdev);
-+
-+	rocket_device_fini(rdev);
-+}
-+
-+const struct component_master_ops rocket_drm_ops = {
-+	.bind = rocket_drm_bind,
-+	.unbind = rocket_drm_unbind,
-+};
-+
-+static int rocket_core_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct rocket_device *rdev = data;
-+	unsigned int core = rdev->num_cores;
-+	int err;
-+
-+	dev_set_drvdata(dev, rdev);
-+
-+	rdev->cores[core].rdev = rdev;
-+	rdev->cores[core].dev = dev;
-+	rdev->cores[core].index = core;
-+	rdev->cores[core].link = device_link_add(dev, rdev->cores[0].dev,
-+						 DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
-+
-+	rdev->num_cores++;
-+
-+	err = rocket_core_init(&rdev->cores[core]);
-+	if (err) {
-+		rocket_device_fini(rdev);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rocket_core_unbind(struct device *dev, struct device *master, void *data)
-+{
-+	struct rocket_device *rdev = data;
++	shmem_obj = &to_rocket_bo(gem_obj)->base;
 +
 +	for (unsigned int core = 1; core < rdev->num_cores; core++) {
-+		if (rdev->cores[core].dev == dev) {
-+			rocket_core_fini(&rdev->cores[core]);
-+			device_link_del(rdev->cores[core].link);
-+			break;
-+		}
-+	}
-+}
-+
-+const struct component_ops rocket_core_ops = {
-+	.bind = rocket_core_bind,
-+	.unbind = rocket_core_unbind,
-+};
-+
-+static int rocket_probe(struct platform_device *pdev)
-+{
-+	struct component_match *match = NULL;
-+	struct device_node *core_node;
-+
-+	if (fwnode_device_is_compatible(pdev->dev.fwnode, "rockchip,rk3588-rknn-core"))
-+		return component_add(&pdev->dev, &rocket_core_ops);
-+
-+	for_each_compatible_node(core_node, NULL, "rockchip,rk3588-rknn-core") {
-+		if (!of_device_is_available(core_node))
-+			continue;
-+
-+		drm_of_component_match_add(&pdev->dev, &match,
-+					   component_compare_of, core_node);
++		dma_sync_sgtable_for_cpu(rdev->cores[core].dev, shmem_obj->sgt,
++					 rocket_op_to_dma_dir(args->op));
 +	}
 +
-+	return component_master_add_with_match(&pdev->dev, &rocket_drm_ops, match);
++	to_rocket_bo(gem_obj)->last_cpu_prep_op = args->op;
++
++	drm_gem_object_put(gem_obj);
++
++	return ret;
 +}
 +
-+static void rocket_remove(struct platform_device *pdev)
++int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file)
 +{
-+	if (fwnode_device_is_compatible(pdev->dev.fwnode, "rockchip,rk3588-rknn-core-top"))
-+		component_master_del(&pdev->dev, &rocket_drm_ops);
-+	else if (fwnode_device_is_compatible(pdev->dev.fwnode, "rockchip,rk3588-rknn-core"))
-+		component_del(&pdev->dev, &rocket_core_ops);
-+}
++	struct rocket_device *rdev = to_rocket_device(dev);
++	struct drm_rocket_fini_bo *args = data;
++	struct drm_gem_shmem_object *shmem_obj;
++	struct rocket_gem_object *rkt_obj;
++	struct drm_gem_object *gem_obj;
 +
-+static const struct of_device_id dt_match[] = {
-+	{ .compatible = "rockchip,rk3588-rknn-core-top" },
-+	{ .compatible = "rockchip,rk3588-rknn-core" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, dt_match);
-+
-+static int find_core_for_dev(struct device *dev)
-+{
-+	struct rocket_device *rdev = dev_get_drvdata(dev);
-+
-+	for (unsigned int core = 0; core < rdev->num_cores; core++) {
-+		if (dev == rdev->cores[core].dev)
-+			return core;
++	if (args->reserved != 0) {
++		drm_dbg(dev, "Reserved field in drm_rocket_fini_bo struct should be 0.\n");
++		return -EINVAL;
 +	}
 +
-+	return -1;
-+}
++	gem_obj = drm_gem_object_lookup(file, args->handle);
++	if (!gem_obj)
++		return -ENOENT;
 +
-+static int rocket_device_runtime_resume(struct device *dev)
-+{
-+	struct rocket_device *rdev = dev_get_drvdata(dev);
-+	int core = find_core_for_dev(dev);
-+	int err = 0;
++	rkt_obj = to_rocket_bo(gem_obj);
++	shmem_obj = &rkt_obj->base;
 +
-+	if (core < 0)
-+		return -ENODEV;
++	WARN_ON(rkt_obj->last_cpu_prep_op == 0);
 +
-+	if (core == 0) {
-+		err = clk_bulk_prepare_enable(ARRAY_SIZE(rdev->clks), rdev->clks);
-+		if (err) {
-+			dev_err(dev, "failed to enable (%d) device clocks\n", err);
-+			return err;
-+		}
++	for (unsigned int core = 1; core < rdev->num_cores; core++) {
++		dma_sync_sgtable_for_device(rdev->cores[core].dev, shmem_obj->sgt,
++					    rocket_op_to_dma_dir(rkt_obj->last_cpu_prep_op));
 +	}
 +
-+	err = clk_bulk_prepare_enable(ARRAY_SIZE(rdev->cores[core].clks), rdev->cores[core].clks);
-+	if (err) {
-+		dev_err(dev, "failed to enable (%d) clocks for core %d\n", err, core);
-+		goto error_dev_clocks;
-+	}
++	rkt_obj->last_cpu_prep_op = 0;
 +
-+	return 0;
-+
-+error_dev_clocks:
-+	if (core == 0)
-+		clk_bulk_disable_unprepare(ARRAY_SIZE(rdev->clks), rdev->clks);
-+
-+	return err;
-+}
-+
-+static int rocket_device_runtime_suspend(struct device *dev)
-+{
-+	struct rocket_device *rdev = dev_get_drvdata(dev);
-+	int core = find_core_for_dev(dev);
-+
-+	if (core < 0)
-+		return -ENODEV;
-+
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(rdev->cores[core].clks), rdev->cores[core].clks);
-+
-+	if (core == 0)
-+		clk_bulk_disable_unprepare(ARRAY_SIZE(rdev->clks), rdev->clks);
++	drm_gem_object_put(gem_obj);
 +
 +	return 0;
 +}
+diff --git a/drivers/accel/rocket/rocket_gem.h b/drivers/accel/rocket/rocket_gem.h
+index 41497554366961cfe18cf6c7e93ab1e4e5dc1886..2caa268f7f496f782996c6ad2c4eb851a225a86f 100644
+--- a/drivers/accel/rocket/rocket_gem.h
++++ b/drivers/accel/rocket/rocket_gem.h
+@@ -11,12 +11,17 @@ struct rocket_gem_object {
+ 
+ 	size_t size;
+ 	u32 offset;
++	u32 last_cpu_prep_op;
+ };
+ 
+ struct drm_gem_object *rocket_gem_create_object(struct drm_device *dev, size_t size);
+ 
+ int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file);
+ 
++int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file);
 +
-+EXPORT_GPL_DEV_PM_OPS(rocket_pm_ops) = {
-+	RUNTIME_PM_OPS(rocket_device_runtime_suspend, rocket_device_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
++int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file);
++
+ static inline
+ struct  rocket_gem_object *to_rocket_bo(struct drm_gem_object *obj)
+ {
+diff --git a/include/uapi/drm/rocket_accel.h b/include/uapi/drm/rocket_accel.h
+index cb1b5934c201160e7650aabd1b3a2b1c77b1fd7b..b5c80dd767be56e9720b51e4a82617a425a881a1 100644
+--- a/include/uapi/drm/rocket_accel.h
++++ b/include/uapi/drm/rocket_accel.h
+@@ -13,9 +13,13 @@ extern "C" {
+ 
+ #define DRM_ROCKET_CREATE_BO			0x00
+ #define DRM_ROCKET_SUBMIT			0x01
++#define DRM_ROCKET_PREP_BO			0x02
++#define DRM_ROCKET_FINI_BO			0x03
+ 
+ #define DRM_IOCTL_ROCKET_CREATE_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_ROCKET_CREATE_BO, struct drm_rocket_create_bo)
+ #define DRM_IOCTL_ROCKET_SUBMIT			DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_SUBMIT, struct drm_rocket_submit)
++#define DRM_IOCTL_ROCKET_PREP_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_PREP_BO, struct drm_rocket_prep_bo)
++#define DRM_IOCTL_ROCKET_FINI_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_FINI_BO, struct drm_rocket_fini_bo)
+ 
+ /**
+  * struct drm_rocket_create_bo - ioctl argument for creating Rocket BOs.
+@@ -39,6 +43,39 @@ struct drm_rocket_create_bo {
+ 	__u64 offset;
+ };
+ 
++#define ROCKET_PREP_READ        0x01
++#define ROCKET_PREP_WRITE       0x02
++
++/**
++ * struct drm_rocket_prep_bo - ioctl argument for starting CPU ownership of the BO.
++ *
++ * Takes care of waiting for any NPU jobs that might still use the NPU and performs cache
++ * synchronization.
++ */
++struct drm_rocket_prep_bo {
++	/** Input: GEM handle of the buffer object. */
++	__u32 handle;
++
++	/** Input: mask of ROCKET_PREP_x, direction of the access. */
++	__u32 op;
++
++	/** Input: Amount of time to wait for NPU jobs. */
++	__s64 timeout_ns;
 +};
 +
-+static struct platform_driver rocket_driver = {
-+	.probe = rocket_probe,
-+	.remove = rocket_remove,
-+	.driver	 = {
-+		.name = "rocket",
-+		.pm = pm_ptr(&rocket_pm_ops),
-+		.of_match_table = dt_match,
-+	},
-+};
-+module_platform_driver(rocket_driver);
++/**
++ * struct drm_rocket_fini_bo - ioctl argument for finishing CPU ownership of the BO.
++ *
++ * Synchronize caches for NPU access.
++ */
++struct drm_rocket_fini_bo {
++	/** Input: GEM handle of the buffer object. */
++	__u32 handle;
 +
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("DRM driver for the Rockchip NPU IP");
-+MODULE_AUTHOR("Tomeu Vizoso");
-diff --git a/drivers/accel/rocket/rocket_drv.h b/drivers/accel/rocket/rocket_drv.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..bd3a697ab7c8e378967ce638b04d7d86845b53c7
---- /dev/null
-+++ b/drivers/accel/rocket/rocket_drv.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-+
-+#ifndef __ROCKET_DRV_H__
-+#define __ROCKET_DRV_H__
-+
-+#include "rocket_device.h"
-+
-+struct rocket_file_priv {
-+	struct rocket_device *rdev;
++	/** Reserved, must be zero. */
++	__u32 reserved;
 +};
 +
-+#endif
+ /**
+  * struct drm_rocket_task - A task to be run on the NPU
+  *
 
 -- 
 2.49.0
