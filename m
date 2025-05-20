@@ -1,152 +1,126 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3482451C8;
-	Tue, 20 May 2025 14:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210262F37;
+	Tue, 20 May 2025 14:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749834; cv=none; b=mGQL4IztQz4AsbEN965klx30wbKoc9XkytLjl+XkvSov3IHYEiMJ5NOad/bWBygFf5QBWE5VU+U4a21FP9YRD2e/WL+5UL2n6+BeGrm71784xMDE2XHwqJ3N6AKVMUySj9JofORFp3/hP5Xhm+Bxoy6yEyQokM3z6lnYQ5LHetA=
+	t=1747749891; cv=none; b=agxjxtLW2HfJHEGDGdVrusKKyoUkg2ZD9tgs+MxAItSvRsClJcEwnRUMMaXIrZDXVNGaIkrjrvVc/p05hktm6JLQCyoQts8whlmg76u4XIcPLPzk+tfj8IlHGvjz/HPmYWhfYYUi435xuEd5wzWOtftticq8SQx/f4jzIdLknZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749834; c=relaxed/simple;
-	bh=IcCFDPG77OlZjEgIjjDB2bRXDlnHVq+Ldim/1iPjTPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pOoOMqE3KfUUYEI9iqMUPyseG7TQqa+NEx8UoFKUl/BBhskxL2uQNd3t52MM2mR8dsFl7kjHSXODsOT9pGWQUWd1l7/PoVa3Votu026r/VYDoHKasH+lYyt83bzzDKElPgy1qkbaDexO5QPgLVkrM11siGspb34P/zt/mFOZd3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wx45h8lm; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747749891; c=relaxed/simple;
+	bh=VgDUsWQh9mJ8cHhZPRAtRTcBXf6NeJtKdNxp+2kehWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciXDQ94kUZE1a8KW3CBaiUw1sL4/w1xUpqqagXQ38GiTuh+yGqxh4TKqeMyIPQTaOGxT1XCJB062UcLfcaX6l6sAoISot+T5qH78YpImztF4srCfRR0lXDSwiHDFC3h1LEih8QKSeUU3HKhcZd26cc31NGzjmYKwXIFrjMSn3rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTCtQwdy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wx45h8lm"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so975147866b.2;
-        Tue, 20 May 2025 07:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747749831; x=1748354631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pQ0rdBfXMUZ8U2eRjck/E3HjWX9UiG8rswZWTn9WFnY=;
-        b=Wx45h8lmMT64dr/ULJFL6/PR892zoercloTRP5X3RWw+mOvF7Rm90ZI2gKKikURgEd
-         lsQpnMfloBB3iXxBkxY8wsCvP7qnrseETZ40W3scv3JIg9KMpcXDHaoEeCyaedTHfmS/
-         494RHXSUKPYBvhGTTabrBLi3LtTgI6+1DMAug+tph8LRBtGvhDdmKsVXCGMohfd6irPR
-         xXAErVrGkeoyECxuv1xH1+7h7z8RtbmGBL6UplyCsgZWZKPz5/dPRQ2te0051YVt7q77
-         aIsrcCdxrtarDxnj1OTzbJnbILw2Q9AGZ+xFJMfQu/FV1+VVdk1e15h24SFFCykUDyBp
-         5kOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747749831; x=1748354631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pQ0rdBfXMUZ8U2eRjck/E3HjWX9UiG8rswZWTn9WFnY=;
-        b=J9AAIhl/07jTla5PhyQqKiXiUeQKquQcnGwi57SJ0/IezgM3oUlo8+yJiGKvzQap4P
-         jW6cIA6Ia+XoL0VooLb6c2Bs+lNx3U6aFoZ/dSr9QwPQ8saGyeWXVSDfeoZgidWjVBCy
-         4qI5HN/HW8K+G+KMRcUANwp8tONOifM66qpeq+oD1mU9HxdcgQyw+OF3uLapSWnCwU+7
-         uWo/8RHoWSkSTMFvRgNkAOyLFsTqexDD00EhBkqVzQxOslnZG05zmbXXFteEo7OGQTP9
-         Lzb/yLfl/ZiVVQR0qXqIP7y9XdKIuy3VsEThGzql4U5HSDRf45lViWdz1D5Awmb7zLL0
-         iRtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkVpo7PaFOeXZh9Xg3LeECWcwBbvOHW+2bP9nl7M83YcIm0UYkLu8TQEKodhixl2fQTYsQaZUe3qB8I/Ow@vger.kernel.org, AJvYcCUnAm2fytmNnP/MmJTcFWngln1bhR8r1Vj9A8wt3BI+Q82zyqxBYmaVccxnO+6jfR4inAIcQudOGbacE8ay/w==@vger.kernel.org, AJvYcCWdJvIYfqS29mUTsqPQ+EsYFPj1rgfwucplbQvcFAe2q/n+0GUgQbH2KPQ3NOiYSPnrn1kWsvBAQg9npRBvGQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc/iEopzhZj9D/LCC8Je2I7O60e/qbL7HpwOa177D8PVOpKA7X
-	nCEqQrTJaJTN5dQNY9g0VP3hgUBcbxPlFK5mOQpgl5x3TlPFhbUAZ8kJmJLYo1iy6H76c+ogtTf
-	KvveJ4F6T+91p6l+8CwuaHyfs2vz5m3oeBPFlO9c=
-X-Gm-Gg: ASbGncsEhKRbttMHReNkrRZoh42eqMXhCh/S/yji/vx6DP+tcijWkKSX5wBHdOqZliP
-	zwtWAhAoIpmlACkCvtKI1y7pKZoO7XWCxo6bJIQf/29WwBLll1gTqkmAf0Enzb4d1yDIp0rCnDQ
-	Cw82Sh6+DCrJ/ShXLDwhk7rgupOAj+XuAn
-X-Google-Smtp-Source: AGHT+IEdeyFHYW0SNMyWZuhCmindrwYHs5f/JSkPu7flNDXf2/ftSHPNpgz/O7amdZuTyXJECQImb26edR0KQfrsFDE=
-X-Received: by 2002:a17:907:1c0a:b0:ad5:2473:3ed5 with SMTP id
- a640c23a62f3a-ad52d45ad21mr1499049366b.11.1747749818897; Tue, 20 May 2025
- 07:03:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTCtQwdy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B247FC4CEEF;
+	Tue, 20 May 2025 14:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747749890;
+	bh=VgDUsWQh9mJ8cHhZPRAtRTcBXf6NeJtKdNxp+2kehWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JTCtQwdyidM6pLDCi79WvGZpz7jCqUd+nRz7nld6DZUJFUHc+zlC4bR6Hn9bsB1wX
+	 KaticX7V/hO2295lHp5hLHcDFDr+AABnFHPxvOzRrZhh2bICRZCzyzJ+uikiZcrTyh
+	 Ej4P9kmreibTSTLerjdGokH03Bf+zSdq0bK/7vq9ZmfNw9TqjZgKZlzlVeyosKpLKj
+	 tsJwF+5C700BfJCzL4Jj/YL8gaGJubGp+cSs+QAY3Dhf3cXilDqxZ91oecoB4BXxez
+	 qBcCk9WST7H9kWuRFkhogHGjGjoVrdgmoDcWGcfW8PjMffjyIp/tRLyMId8ypMPlOP
+	 RN5h9QlACoPhQ==
+Date: Tue, 20 May 2025 10:04:49 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org,
+	Jonathan Bell <jonathan@raspberrypi.org>,
+	Oliver Neukum <oneukum@suse.com>,
+	Mathias Nyman <mathias.nyman@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 08/15] usb: xhci: Don't trust the EP Context
+ cycle bit when moving HW dequeue
+Message-ID: <aCyMAdNzTPgS0urL@lappy>
+References: <20250512180352.437356-1-sashal@kernel.org>
+ <20250512180352.437356-8-sashal@kernel.org>
+ <20250512231628.7f91f435@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com> <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
-In-Reply-To: <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 20 May 2025 16:03:27 +0200
-X-Gm-Features: AX0GCFvCIMtRXENvsaBy40e6wywMcPFrLFIrdQybzyfeddMULbtr3wzqLrifaNo
-Message-ID: <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512231628.7f91f435@foxbook>
 
-On Tue, May 20, 2025 at 2:43=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
+On Mon, May 12, 2025 at 11:16:28PM +0200, Michał Pecio wrote:
+>On Mon, 12 May 2025 14:03:43 -0400, Sasha Levin wrote:
+>> From: Michal Pecio <michal.pecio@gmail.com>
+>>
+>> [ Upstream commit 6328bdc988d23201c700e1e7e04eb05a1149ac1e ]
+>>
+>> VIA VL805 doesn't bother updating the EP Context cycle bit when the
+>> endpoint halts. This is seen by patching xhci_move_dequeue_past_td()
+>> to print the cycle bits of the EP Context and the TRB at hw_dequeue
+>> and then disconnecting a flash drive while reading it. Actual cycle
+>> state is random as expected, but the EP Context bit is always 1.
+>>
+>> This means that the cycle state produced by this function is wrong
+>> half the time, and then the endpoint stops working.
+>>
+>> Work around it by looking at the cycle bit of TD's end_trb instead
+>> of believing the Endpoint or Stream Context. Specifically:
+>>
+>> - rename cycle_found to hw_dequeue_found to avoid confusion
+>> - initialize new_cycle from td->end_trb instead of hw_dequeue
+>> - switch new_cycle toggling to happen after end_trb is found
+>>
+>> Now a workload which regularly stalls the device works normally for
+>> a few hours and clearly demonstrates the HW bug - the EP Context bit
+>> is not updated in a new cycle until Set TR Dequeue overwrites it:
+>>
+>> [  +0,000298] sd 10:0:0:0: [sdc] Attached SCSI disk
+>> [  +0,011758] cycle bits: TRB 1 EP Ctx 1
+>> [  +5,947138] cycle bits: TRB 1 EP Ctx 1
+>> [  +0,065731] cycle bits: TRB 0 EP Ctx 1
+>> [  +0,064022] cycle bits: TRB 0 EP Ctx 0
+>> [  +0,063297] cycle bits: TRB 0 EP Ctx 0
+>> [  +0,069823] cycle bits: TRB 0 EP Ctx 0
+>> [  +0,063390] cycle bits: TRB 1 EP Ctx 0
+>> [  +0,063064] cycle bits: TRB 1 EP Ctx 1
+>> [  +0,062293] cycle bits: TRB 1 EP Ctx 1
+>> [  +0,066087] cycle bits: TRB 0 EP Ctx 1
+>> [  +0,063636] cycle bits: TRB 0 EP Ctx 0
+>> [  +0,066360] cycle bits: TRB 0 EP Ctx 0
+>>
+>> Also tested on the buggy ASM1042 which moves EP Context dequeue to
+>> the next TRB after errors, one problem case addressed by the rework
+>> that implemented this loop. In this case hw_dequeue can be enqueue,
+>> so simply picking the cycle bit of TRB at hw_dequeue wouldn't work.
+>>
+>> Commit 5255660b208a ("xhci: add quirk for host controllers that
+>> don't update endpoint DCS") tried to solve the stale cycle problem,
+>> but it was more complex and got reverted due to a reported issue.
+>>
+>> Cc: Jonathan Bell <jonathan@raspberrypi.org>
+>> Cc: Oliver Neukum <oneukum@suse.com>
+>> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+>> Link: https://lore.kernel.org/r/20250505125630.561699-2-mathias.nyman@linux.intel.com
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
 >
-> On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
-> > On Tue, May 20, 2025 at 2:25=E2=80=AFPM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
-> > > > On Tue, May 20, 2025 at 7:16=E2=80=AFAM Kent Overstreet
-> > > > <kent.overstreet@linux.dev> wrote:
-> > > > >
-> > > > > This series allows overlayfs and casefolding to safely be used on=
- the
-> > > > > same filesystem by providing exclusion to ensure that overlayfs n=
-ever
-> > > > > has to deal with casefolded directories.
-> > > > >
-> > > > > Currently, overlayfs can't be used _at all_ if a filesystem even
-> > > > > supports casefolding, which is really nasty for users.
-> > > > >
-> > > > > Components:
-> > > > >
-> > > > > - filesystem has to track, for each directory, "does any _descend=
-ent_
-> > > > >   have casefolding enabled"
-> > > > >
-> > > > > - new inode flag to pass this to VFS layer
-> > > > >
-> > > > > - new dcache methods for providing refs for overlayfs, and filesy=
-stem
-> > > > >   methods for safely clearing this flag
-> > > > >
-> > > > > - new superblock flag for indicating to overlayfs & dcache "files=
-ystem
-> > > > >   supports casefolding, it's safe to use provided new dcache meth=
-ods are
-> > > > >   used"
-> > > > >
-> > > >
-> > > > I don't think that this is really needed.
-> > > >
-> > > > Too bad you did not ask before going through the trouble of this im=
-plementation.
-> > > >
-> > > > I think it is enough for overlayfs to know the THIS directory has n=
-o
-> > > > casefolding.
-> > >
-> > > overlayfs works on trees, not directories...
-> >
-> > I know how overlayfs works...
-> >
-> > I've explained why I don't think that sanitizing the entire tree is nee=
-ded
-> > for creating overlayfs over a filesystem that may enable casefolding
-> > on some of its directories.
+>Hi,
 >
-> So, you want to move error checking from mount time, where we _just_
-> did a massive API rework so that we can return errors in a way that
-> users will actually see them - to open/lookup, where all we have are a
-> small fixed set of error codes?
+>This wasn't tagged for stable because the function may potentially
+>still be affected by some unforeseen HW bugs, and previous attempt
+>at fixing the issue ran into trouble and nobody truly knows why.
+>
+>The problem is very old and not critically severe, so I think this
+>can wait till 6.15. People don't like minor release regressions.
 
-That's one way of putting it.
+I'll drop it, thanks!
 
-Please explain the use case.
-
-When is overlayfs created over a subtree that is only partially case folded=
-?
-Is that really so common that a mount time error justifies all the vfs
-infrastructure involved?
-
+-- 
 Thanks,
-Amir.
+Sasha
