@@ -1,180 +1,79 @@
-Received: from mail-oi1-f208.google.com (mail-oi1-f208.google.com [209.85.167.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E89F21C9EA
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35DA21C9EA;
+	Tue, 20 May 2025 12:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747742978; cv=none; b=HP3Nh0sEmPGtF6zvUOFz2JBUbwsI1o+55N4Wuni5vpjKTcYbj/6S9H9VF1OLv3NKlqhaCkLhsf8T4ZJYqlGUAQyOZhdJKdVgW5grjwNCZdIBl27Lgow+cJp1o4TMdTiqJR53V+FyD114MDOArGJR0MF6t6/WdHlMjWsNK0Vwdkc=
+	t=1747742985; cv=none; b=ONRAoUmEA6CFoSsDEc85k9K8ZcLneKvF3hBiADi1ecKD0XTlHmsX0ddIa1MRlq63cgFmZHvWugnafo/brSM1zsPxFwYmWK5zq28lU7k42XOal1d3J1EFUp0sRD+tthnPP2V0kINFOglx+XRMoPZwrTO9PGV5eZt1Zqx+kemhx7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747742978; c=relaxed/simple;
-	bh=4s1MXYKS4c2lwdmXpuoBhJEfVxuBazYKQs8LqDeA9PA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=myyawIOiFkR0l/19qk45JcWZcOtCIMYu3rd88fd5Rpkkqw6IU3uqQoV4/JRW8knKp7pbjxXqK3T4uRvazWBwC97rfpLYjZubAr5TtxZJ4chuoFGkF+N4siGQ0iTnt01v++N7vtdZ0wr5/3VXhp8LeZA9oYwGj29ntpgZgR7iPfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f208.google.com with SMTP id 5614622812f47-402ebf9ac19so5981737b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:09:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747742974; x=1748347774;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xf6oI+HpUV0v8ri6idGeDRM5S4U5dFh/3If6EnGC8YA=;
-        b=UWCvBO/BBK1O5UZlBSF4S5txfJ/5q2khMQCM/F0CO7lfCSDT+YqmKIqhrRt2ilowbI
-         9VRvISlH5yyWhetNAic1P0JNWEgFH+Z5W0RaopTdqIsIfrsYIRl2rfMDi9VPbltvKUQR
-         70mDCJdCXicpX60PSMRDDX8ORRhaNrn1io9LcS0RbNMfUNb3AV6T6OCZa1ongGV0+vGV
-         4YmPrJcfE7G16cN1xt4L1V4bZhJKCOaL+B3yJ7Fs/aYObg2fxppAEHmcid+uWxv1XuhO
-         JALDkF7e3MKpdReZtoFbZGbcVDtCyXFEwTeZFk8InMEmEEjCYGqJiKUSZW034Ljp5NvP
-         mNRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEF48ElHXHFFr3QIV4K2DZwPvUbdZEsxbkXbVkOWnFvRk3vViKP72J1SjBbTG8SieOFyMzS463Eup38i4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7ZH8ypadjJfgNExz+0qMh7IDrNvAPm8lan/G7DdK4SIiclqpD
-	jxgkIqWQ+4f/caTVdP8o77VAxIIuIhEGeh0CUxdbrvpxw9YFkAzw18JWQ9mQAoTez8LqIHwySDw
-	er2XgFepxYE23gXZ5VeksbtRsXpWWbT1abjxRVj2Q2wJopm7N/a04sE4OiT0=
-X-Google-Smtp-Source: AGHT+IE8VLuOxtSktBxAWPe05KDrddF5+NgoTcwjcpJwHgXR/bx9yzCIOiAZxEErBcNP8YB1x/P3Ms0kEyXm7YLwGJ1oeEjF1xim
+	s=arc-20240116; t=1747742985; c=relaxed/simple;
+	bh=Ria7aw6NfTWp+nvL2GRgcVqJKUNYVVnsbJqHcEPrdW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZd7TmCukqXlam+oAp5pXZpfV1fSDTa42FryXaUmafrD51wBwCjhqu0APPYY11XfIBkN3YSAnyQTUN62xPQfHFgGewL7PAMKjXVFmgYJ5J6MJLD9SSCYBWTDgN9yb5D1gOa990zQaWxiVRa9SIAqPcaE1doZSSHNAweYJZ/tods=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id ADAAC2C01636;
+	Tue, 20 May 2025 14:09:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 89FFE1B8296; Tue, 20 May 2025 14:09:39 +0200 (CEST)
+Date: Tue, 20 May 2025 14:09:39 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+	peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aCxxA-4HEnZ-O2W0@wunner.de>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+ <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+ <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
+ <aCxdFm_BpgOTFFUv@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:388b:b0:85b:35b1:53b4 with SMTP id
- ca18e2360f4ac-86a24cd237cmr1915462439f.12.1747742964315; Tue, 20 May 2025
- 05:09:24 -0700 (PDT)
-Date: Tue, 20 May 2025 05:09:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682c70f4.050a0220.ade60.09ba.GAE@google.com>
-Subject: [syzbot] [net?] BUG: unable to handle kernel paging request in
- bond_rr_gen_slave_id (2)
-From: syzbot <syzbot+e224b9d5803638de57d9@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	jv@jvosburgh.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCxdFm_BpgOTFFUv@wunner.de>
 
-Hello,
+On Tue, May 20, 2025 at 12:44:38PM +0200, Lukas Wunner wrote:
+> Link speed changes and device plug/unplug events are orthogonal,
+> I don't think they should be mixed together in the same event.
+> 
+> A link speed event can be signaled simultaneously to a plug event
+> and then user space can decide in which type of event it's
+> interested in.
+> 
+> That also avoids the awkwardness of having N/A values for the
+> link speed on unplug.
 
-syzbot found the following issue on:
+After thinking about this some more:
 
-HEAD commit:    fee3e843b309 Merge tag 'bcachefs-2025-05-15' of git://evil..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f342d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=30181bfb60dbb0a9
-dashboard link: https://syzkaller.appspot.com/bug?extid=e224b9d5803638de57d9
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+A link speed event could contain a "reason" field
+which indicates why the link speed changed,
+e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+In other words, instead of mixing the infomation for hotplug
+and link speed events together in one event, a separate link
+speed event could point to hotplug as one possible reason for
+the new speed.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-fee3e843.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bad9badea84a/vmlinux-fee3e843.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9aae70a5a85a/bzImage-fee3e843.xz
+Thanks,
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e224b9d5803638de57d9@syzkaller.appspotmail.com
-
-BUG: unable to handle page fault for address: ffff8880d6bdf000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 1b001067 P4D 1b001067 PUD 0 
-Oops: Oops: 0002 [#1] SMP KASAN NOPTI
-CPU: 2 UID: 0 PID: 12899 Comm: syz.2.2035 Not tainted 6.15.0-rc6-syzkaller-00188-gfee3e843b309 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bond_rr_gen_slave_id+0x1df/0x260 drivers/net/bonding/bond_main.c:4996
-Code: bc 24 f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7a 49 8b 84 24 f0 00 00 00 bb 01 00 00 00 <65> 0f c1 18 e8 b8 af 53 fb 83 c3 01 89 d8 5b 5d 41 5c 41 5d 41 5e
-RSP: 0018:ffffc90003c5f650 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffc90007111000
-RDX: 1ffff110092e69ce RSI: ffffffff86679653 RDI: ffff888049734e70
-RBP: ffff888049734000 R08: 0000000000000005 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff888049734d80
-R13: 0000000000000000 R14: ffff888049734d80 R15: ffffc90003c5f9c0
-FS:  00007fd2ddf556c0(0000) GS:ffff8880d6bdf000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880d6bdf000 CR3: 000000004bfa9000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bond_xdp_xmit_roundrobin_slave_get drivers/net/bonding/bond_main.c:5083 [inline]
- bond_xdp_get_xmit_slave+0x2a9/0x6b0 drivers/net/bonding/bond_main.c:5622
- xdp_master_redirect+0x15e/0x330 net/core/filter.c:4349
- bpf_prog_run_xdp include/net/xdp.h:657 [inline]
- xdp_test_run_batch.constprop.0+0x18c8/0x1f10 net/bpf/test_run.c:318
- bpf_test_run_xdp_live+0x34d/0x500 net/bpf/test_run.c:390
- bpf_prog_test_run_xdp+0x824/0x1540 net/bpf/test_run.c:1316
- bpf_prog_test_run kernel/bpf/syscall.c:4427 [inline]
- __sys_bpf+0x1488/0x4d80 kernel/bpf/syscall.c:5852
- __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
- __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5939
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd2dd18e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fd2ddf55038 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007fd2dd3b5fa0 RCX: 00007fd2dd18e969
-RDX: 0000000000000048 RSI: 0000200000000600 RDI: 000000000000000a
-RBP: 00007fd2dd210ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fd2dd3b5fa0 R15: 00007ffc29f1f808
- </TASK>
-Modules linked in:
-CR2: ffff8880d6bdf000
----[ end trace 0000000000000000 ]---
-RIP: 0010:bond_rr_gen_slave_id+0x1df/0x260 drivers/net/bonding/bond_main.c:4996
-Code: bc 24 f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7a 49 8b 84 24 f0 00 00 00 bb 01 00 00 00 <65> 0f c1 18 e8 b8 af 53 fb 83 c3 01 89 d8 5b 5d 41 5c 41 5d 41 5e
-RSP: 0018:ffffc90003c5f650 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffc90007111000
-RDX: 1ffff110092e69ce RSI: ffffffff86679653 RDI: ffff888049734e70
-RBP: ffff888049734000 R08: 0000000000000005 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff888049734d80
-R13: 0000000000000000 R14: ffff888049734d80 R15: ffffc90003c5f9c0
-FS:  00007fd2ddf556c0(0000) GS:ffff8880d6bdf000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880d6bdf000 CR3: 000000004bfa9000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 4 bytes skipped:
-   0:	00 00                	add    %al,(%rax)
-   2:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-   9:	fc ff df
-   c:	48 89 fa             	mov    %rdi,%rdx
-   f:	48 c1 ea 03          	shr    $0x3,%rdx
-  13:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-  17:	75 7a                	jne    0x93
-  19:	49 8b 84 24 f0 00 00 	mov    0xf0(%r12),%rax
-  20:	00
-  21:	bb 01 00 00 00       	mov    $0x1,%ebx
-* 26:	65 0f c1 18          	xadd   %ebx,%gs:(%rax) <-- trapping instruction
-  2a:	e8 b8 af 53 fb       	call   0xfb53afe7
-  2f:	83 c3 01             	add    $0x1,%ebx
-  32:	89 d8                	mov    %ebx,%eax
-  34:	5b                   	pop    %rbx
-  35:	5d                   	pop    %rbp
-  36:	41 5c                	pop    %r12
-  38:	41 5d                	pop    %r13
-  3a:	41 5e                	pop    %r14
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Lukas
