@@ -1,635 +1,577 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012014.outbound.protection.outlook.com [52.101.126.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBAF25D1F9;
-	Tue, 20 May 2025 06:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722894; cv=none; b=bOB14ebyw3QiLnFoJsGzPLXG2pWsal9T1Jg4qjlJ/4OV/yWZy1hP38eqOccmhe1Ht0Y3j2eJ90geitZOV0h6xJuhODeGfxl/8Dwb+QrHfzyYVUbHERF1DplaK/X8S25FpCZ9YcO2b9X58Jt7Rtcqyf0QUG/RV9ZTag5GM/ET6/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722894; c=relaxed/simple;
-	bh=rJVkdIoVnVpAb5f51C9yj4rOqeNkKL7qTmrXho3Y0iw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HvCWW7J4XZVk+IrGQohl4iaxHicWZwrM8Lybxezy+tC2xjjeP26ttEM0rAUzg9bybJdhR5Beh2iW2iiSpaLgSSxvUNvoDAXhPWJgwsT6iQdsdTiTc6ji4m/K/ruNoqXIJ7FNTKfmrieNP32loVnp/pINMv4xL5kdIQFM2jSCaXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZL1pPaQ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD8825CC6A;
+	Tue, 20 May 2025 06:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747722930; cv=fail; b=KUCEPEiAz2xt7ajXRi+pAoFiJQqnCkvKVZKkCeK486ARpNt5URmp/vb2JU9clDq/UE1EIf1UYHmw7K/V0I9B8xaC443YWI1247+V+bGovFobY/Ojo/IQbzVpTpMTXGHVkeVpVhHksoXxo6ofeFK+LLiMVJiYOxolgVfiwU3ByS0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747722930; c=relaxed/simple;
+	bh=0Y3d/7ajv60W5cwM3MM4AbMYRssEcWFHw3IeD2Rs+yM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=now4SX8zQWF9+3uFbwqU9BePV3LnQTESFMpeuddsdtj2btvD1t6yzk/q8ayW6BvnhV+gxHsWRws6eWkKSaRSE1d1Ga4/bMzqdg8QpldPGQo5/VKnxnbobMjraYnRfUqevd7h4QRZsxIVFX8F7w6CuSfTUipQljg2fWlLOxJMZOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=DZGFwOvG; arc=fail smtp.client-ip=52.101.126.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZL1pPaQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F1140C116C6;
-	Tue, 20 May 2025 06:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747722894;
-	bh=rJVkdIoVnVpAb5f51C9yj4rOqeNkKL7qTmrXho3Y0iw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=jZL1pPaQ0vzIb20AzZP6qGE+gIb7MEgVWBI6W1Q9Pf/f8QpEDJTSJN/2THwux3h7t
-	 K1fmqMACvCz3Tb2mhXzFRcvtBPJsYHj4Mu1lccEEqCNQCNqg1LQobNrOLPf9C87ZCX
-	 83taJq4t9cIKZ8oyqWeQLFgXsFT6Q+tc5YpNwbtGq3SreMYUYB56nC2HXG8HFjMNWf
-	 BCgdtQdC4GX80eguq1uU068lWeHhFaajOc9948XrTIk6OFZvx7bRtnvL3jcv9K6Tyy
-	 SYAGfw3LzoKbKq+ssGQ08z5ZZ3Y2zzdPJ0vVupuy0ngiz7XCHqGjJyDrjso3jf4XgK
-	 l6dhXohoej4vg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F74C54756;
-	Tue, 20 May 2025 06:34:53 +0000 (UTC)
-From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Tue, 20 May 2025 08:34:55 +0200
-Subject: [PATCH v7 6/8] arm64: dts: freescale: Add the GOcontroll Moduline
- Display baseboard
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="DZGFwOvG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z+3Qs0CwcrBwC7LgQLgS7GY9Vouh1bG3ViSJgLw/eYSqbpqcuUmR9lCW777FRK9xKDtqlm9AhLyHax0k2h2594NnL13ML7TSbRNUagnAVZm/vyBF9ij8RCCpyhs1dyvsJn+J7QlXVnLOa8H63BfhIGMDuNG8N3URQvaJD/UsRZhPXgHdgjuWflFatIqwP9h3QEwHhJ3yzJ5u3v3IXtldPvu+q2ngJDz9bNpPWCqNT1czo21X/baOz7+VM1jNMwA/N6lVag17fFMLK9C9pWRFanDxU82Yq9a3yEFjgS06ZvXNn3mwXAbQCQRN+mEyQtOA/znoP2OeWu2Lj/6VOmDgLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h3f+ys59Ow3aMe8zm3KtE45AESRGfxc8xCiGYD/upeE=;
+ b=T2xSJRoDPVJEubwxu2cqFpiDnxk29ymDm1siFjNGzazMcDSduFWB714Hd+BAOAAv6StQLp7DKyrSKaQv8PSznotQT5EFNo55rYBeL66FRYGAdgXvLqKyMumaxUOqn9jDO6zqmyPimtmfEIf50sZqXRzOACdhFrU3LS8hlnDlYKsEPIatQSbw7yLMwI0Xesn0NfGT/9a5919YTQ9HPjcjYzjGhC85NuA7qfIM/1Gss793gpbceyWT5k2k+NqaJkPwP2Lb1zAOqVzqFDw/+VbafOSmlm0Ib0FE1gyKPIob+K5q77yyf4ogKQF2gEdhStIc5Ya00L5qFcfy/Uyp7S/TYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h3f+ys59Ow3aMe8zm3KtE45AESRGfxc8xCiGYD/upeE=;
+ b=DZGFwOvGDTsXsRaV1n1YPP2iHIU1WV6bqMUiMyPjYZuJKAxQI6atiHxI+l4bn+OBKamUUQcZS++Xrc0qHsb9hcOjQ9BcKpBLBW7pLBF3LDxdsrxikDf4SITO+jAeagRcjH7qdNBEheDXUXRHBauGN3S5hXelXFW+uVez+DKOKd/S6ewyixDYI/PLRxToDIuEK++aQjtUHSPslEreixAJQUay76hZEVM7/N21N0oxDOEAQHOKVI96aoFepdFnhbUcrgP/NrTcjnt/FWMnRpYkF4vrvk/pWH9f2dM+6rC8+SfnuB8Rw+xHyLOiBJtQs04MId7eUeeCHzOTQffcuS2MTw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR06MB6273.apcprd06.prod.outlook.com (2603:1096:820:ec::10)
+ by JH0PR06MB7352.apcprd06.prod.outlook.com (2603:1096:990:a3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
+ 2025 06:35:23 +0000
+Received: from KL1PR06MB6273.apcprd06.prod.outlook.com
+ ([fe80::9d21:d819:94e4:d09]) by KL1PR06MB6273.apcprd06.prod.outlook.com
+ ([fe80::9d21:d819:94e4:d09%7]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 06:35:23 +0000
+From: Huan Tang <tanghuan@vivo.com>
+To: alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	peter.wang@mediatek.com,
+	manivannan.sadhasivam@linaro.org,
+	quic_nguyenb@quicinc.com,
+	luhongfei@vivo.com,
+	tanghuan@vivo.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: opensource.kernel@vivo.com,
+	Wenxing Cheng <wenxing.cheng@vivo.com>
+Subject: [PATCH v4] ufs: core: Add HID support
+Date: Tue, 20 May 2025 14:35:12 +0800
+Message-Id: <20250520063512.213-1-tanghuan@vivo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0122.apcprd02.prod.outlook.com
+ (2603:1096:4:188::10) To KL1PR06MB6273.apcprd06.prod.outlook.com
+ (2603:1096:820:ec::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-initial_display-v7-6-a8f0195420aa@gocontroll.com>
-References: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
-In-Reply-To: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Maud Spierings <maudspierings@gocontroll.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747722892; l=15047;
- i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=0E1eIGloSR7NVIPoFmf8At5AG+DcxAIdQWCQZp5lmGo=;
- b=uxhTWifSQvRgOO2JogRH2md+IwuwJeUlcykkR/2HUxCkXudWtML98rC1ksRQ3/L4zaW8KfJAm
- eS17jRSmpkCC0Xet4VPU6H+2EHehoO0MGFDCowb+Z9rR3H7CJSyAyJ1
-X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
- pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
-X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
- with auth_id=341
-X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
-Reply-To: maudspierings@gocontroll.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6273:EE_|JH0PR06MB7352:EE_
+X-MS-Office365-Filtering-Correlation-Id: caffdf0f-ed20-4bb4-b016-08dd97687f5c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ovspKiO5XAg8s4sR6aF6JxTsEw6oaMMxnvIHTZmjXax9blHYqBJZWtGt0DFA?=
+ =?us-ascii?Q?B7x31DJ9XdWRTaa8bbI2+fgpM0dwILoIOXbiyjTJwGQLI2Hyf4gr/Wpc460R?=
+ =?us-ascii?Q?WL+Z7MeSN4LCHd/4Jh1blRi29xsD1KHyoV+lGaU5kMSCkCx0Xxnt1J/6MJ1Y?=
+ =?us-ascii?Q?L1gkdjZ3AS7hDOLuLhT6dxtFY7og8PAi6AR0oznqwaaxZyRaj4GnqbzVUXkJ?=
+ =?us-ascii?Q?vliBvOz9XIHAiGTDZN4FcRLVKE0/U/dD1D42uFzxEv8fIPVgEpBy0mRR+Ixw?=
+ =?us-ascii?Q?nIHUs9GjDGBDH37jyCjoYW1HB7tO56uZd3RP5bvo679cGj7J5ns15uJ8/1qH?=
+ =?us-ascii?Q?mru7xCnjsTD8PnBRFSRLLSLQPiUQncuLhXGV686nFvwhKIdEPd6VzWJHsjKl?=
+ =?us-ascii?Q?365NOh3wbVZzbri3imkRkeqRC8PGugnFdmrurbmhHi5bodQldPdKThpaAjcF?=
+ =?us-ascii?Q?JY4FOcDZKM2z8dRe9Beutt7V2uRZFir31DeS1a3bSq3E3wG52T+rCJabyvrh?=
+ =?us-ascii?Q?dN9LDQJD6rRlDQJRtLa4kFpotgneLkhdAA9azw7yQUrLPM7iXk7UMIZocLSB?=
+ =?us-ascii?Q?WHvSmBky+kp7iGAnizSjRa3Zy8IsHZpIWsJLgxXZB845c8Uc63Eszx3JjgiX?=
+ =?us-ascii?Q?UITseDapyu/4ZmwV/VEYAduffKJrOdFCBv2Zou8ogN3By5Jo/8nzuuFTNp7f?=
+ =?us-ascii?Q?vNjq7bvfjiC0sXQSVFmSgMXyYWWtKah/YbYCKgahv9WeyE2q+xLc3+eXogM2?=
+ =?us-ascii?Q?SXQqZnql0qAVSu6oyx9wgpXZNfrXl68tGyVkuR7MHDs2DFyepSXo9R+cHOSW?=
+ =?us-ascii?Q?IYaYfGm3TuGDOTErPL+p2+cnpTgFY4cwxFPwtrxkPfsqFfpiz2Ei9XkaQA5V?=
+ =?us-ascii?Q?N0jm23mz7hHdy6rQSMSVvxfVr0Ll3AgMphnRgfaY6bDGANupckpc9rjscKl/?=
+ =?us-ascii?Q?R2jjo3RaBhNV9UBqmV7O1fGcwwIaCfrW52kwlT9FaKy59RApFP8IaXunkU1e?=
+ =?us-ascii?Q?UAA09Z+nUH+AyBhsA7jWZnjZSIbtivgttrtKJ/PXB24PL/doWpH+KEzMMJOG?=
+ =?us-ascii?Q?sIQ0/WRPt4FKxk1E78GfeeD/CAGQ+mzG5RvgdCbQg/L+DlORgi/2kSCefAyM?=
+ =?us-ascii?Q?wPfayfoNuLvrca7CI8MsgE3wnHLQeW9EFE36YdYueyxkaA5v0OVcLJ7e11wq?=
+ =?us-ascii?Q?SFrP2MNZfubE/3g2DY4n8SGgqTlF3nzPjuezyPZFvFI0kv6rnMim/Nw2S9jo?=
+ =?us-ascii?Q?hoSAH5jvnS2vOCxBe8JiK8axHs6xE2v4o6LgPZ9/CoNIZXVmv9MHFTEzpr7N?=
+ =?us-ascii?Q?v2jsrOHwHiunKLCcGSSAw8sQI+fWgFSvjhI/vEThPUxcHaaEiFC0+IM/NCdK?=
+ =?us-ascii?Q?8SrLt7CPI+xZhxA70uHREoNYo3Qxh1ZFuVf22j7u1Yq1y+3pKtTypwsIVLE7?=
+ =?us-ascii?Q?ieBZwxCtcNsWjPrcQM5PBzBM8mCVJDacXP5tOJ7NwW/R+MUjTKu3oy5+Mu7z?=
+ =?us-ascii?Q?JWuKYsiFGjd0Q70=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6273.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AUemkOdQaDS5l9EFeML/LO7IO8NJr/rL4XKhLJ886eUfrq8Ldg2IZsDw5sz1?=
+ =?us-ascii?Q?CqARS0G4q54re5OdK14MiLFl4j4ZRNOx6yBGVDnAhQKUt06EvdvLwKGU2ESH?=
+ =?us-ascii?Q?WrWnhQMmLoulA1vxuabkyXF9IrrpUtIRomhe8mU6EomT90cSjL4PezsQXSuJ?=
+ =?us-ascii?Q?2nIYCuKnfW5ujTwwyslfxOs1vCo/yOZwoBZK+hF/XWG2w8MoBpsD0R45y0Rd?=
+ =?us-ascii?Q?s3rP2zr88bzflvUccg3We4CZF13AQDrdf2vTj2r5feltZaOAnyDNLycGu6Wq?=
+ =?us-ascii?Q?+eau+5iqAYD2yXLTHVb+B5wu1SRa7pz/T7DxiR3C2WSlqdweCuDF8jRQoCx4?=
+ =?us-ascii?Q?dCZORFaEEprU+y11td752hU+W/RHe9BKIT+qtbFOco9W+qiEmRZoVUq4p55h?=
+ =?us-ascii?Q?gNGzhj4EcLde+Lw3VMB7tltMl8gtuJzAFh4IV8VckHt8aKf28F50Gj92hMNk?=
+ =?us-ascii?Q?RLKu+fdACKbcSyQMZsbJJp78/8VbGL01958u4ek2OK+RCEHqPcOEMAK03tFc?=
+ =?us-ascii?Q?jyZcgbTpAIk5I+Znkr5YGr41/lh3ppkI9j488QRyIFTt7+Lt2/8uNuI8pMOr?=
+ =?us-ascii?Q?n0VSVYgMRrHS4Eo/rn52wW5LXXTj5tAHBojc6zPYnyb9bSYDpLtCSSpYS7rA?=
+ =?us-ascii?Q?bzG9LwjXSoT2AknTtaGLwACPk3Re1umTOz0/3+y96xJ/LqhkiPhoIqFd0G9J?=
+ =?us-ascii?Q?YNApQyzLVpJ+fAJNBDr4jW4tkJzaHBZfThjgVBogotxPpZz95rpF5/FuuXrS?=
+ =?us-ascii?Q?pa2twqmy8IneKHgFi4iY/FNfMRWf+svX5yMN1beXDttjB1WXqWNiM9j/FqA3?=
+ =?us-ascii?Q?9rjp9FEbNK+y7VjN1/uHl4AJ88diAQ4+LLfuCrGVJoi8dvMO1bZFoH0OIwPf?=
+ =?us-ascii?Q?AHTpjE3ttuihMUjycihlKHdPDJNe4o4nMIx4qriA4Ym0ZtTlmHd5W3vXmO/P?=
+ =?us-ascii?Q?0l+MXcVoaNiBtudtOosTP7Jz9TaEnjlr4s8kvsShAxV0W90aQyHj0+jrcyOF?=
+ =?us-ascii?Q?P8DZvnfyWfx4Q8+ydrhgqoI66pPxqIkIROq7AhTL5P0xGBKUi00uIlBtL0eB?=
+ =?us-ascii?Q?YnxExo4it792QRsC6GencjkSHlzDTe6lmfpLcj4r8gxzLZlUEiTqCDbFo1HX?=
+ =?us-ascii?Q?V+pw/1JP5ZqZnSNJXGmysTC/WtPoSu3+uVIsZvW7Itg9MvcRhWeHxyljdJnL?=
+ =?us-ascii?Q?WsiLsDxLEgyo0Oi5mqMZ6k6H+H//WDHl+J1ar0OMQYhVy4Cf+bdxZPEh2fy1?=
+ =?us-ascii?Q?GlfrREjxfsTLrY8afT8BDxyf+T2WjR/DjLLuDfty46lLszKCbDHYvAzkRn4W?=
+ =?us-ascii?Q?pwt9WXYZoS20R5AFIOe3RC5S3gaYALs/2TCXMbMnfz/t88VJ1wAoIRsUMhKS?=
+ =?us-ascii?Q?Ohv0JDFQCl2JfkHeX8aEXsyVAGPq0VZSpCR0IP9mv2bk0iW496Jld6SRW/3H?=
+ =?us-ascii?Q?DqsFHkq91fg2JqzLraUEeA/1EkJo0ggWitnfAEHmSlfDrHA1QqE5lNYZW8L3?=
+ =?us-ascii?Q?OyTR+sqG1j3TzIc0Z45ADD5RgzIvf+55gBquCzKddRdAZeVVCXYwo3WVGJoU?=
+ =?us-ascii?Q?6dAkDI9fAFaGbyu9tlo6Q5+zxO5oC92cbLNRO0d3?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caffdf0f-ed20-4bb4-b016-08dd97687f5c
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6273.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 06:35:22.9537
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pwsh3dyWEu+QUkz1bcigFl7Txz4t719YKkaSOI/8cDI6rnflL8Ht7ffCBeQUSo4ZTmySKZOdVpJe05JjE2MV0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7352
 
-From: Maud Spierings <maudspierings@gocontroll.com>
+Follow JESD220G, support HID(Host Initiated Defragmentation)
+through sysfs, the relevant sysfs nodes are as follows:
+	1.analysis_trigger
+	2.defrag_trigger
+	3.fragmented_size
+	4.defrag_size
+	5.progress_ratio
+	6.state
+The detailed definition	of the six nodes can be	found in the sysfs
+documentation.
 
-The Moduline Display platform is a part of the wider GOcontroll Moduline
-ecosystem. These are embedded controllers that focus on modularity with
-their swappable IO modules.
+HID's execution policy is given to user-space.
 
-The base Moduline Display board includes a board-to-board connector with
-various busses to enable adding new display types required by the
-application. It includes 2 Moduline IO module slots, a simple mono
-codec/amplifier, a four channel adc, 2 CAN busses, an RTC and optional
-wifi/bluetooth.
-
-busses to the display adapter include:
-- 4 lane LVDS
-- 4 lane MIPI-DSI
-- 4 lane MIPI-CSI
-- HDMI 2.0a
-- USB 2.0
-- I2S
-- I2C
-- SPI
-
-Also a couple of GPIO and PWM pins for controlling various ICs on the
-display adapter board.
-
-Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+Signed-off-by: Huan Tang <tanghuan@vivo.com>
+Signed-off-by: Wenxing Cheng <wenxing.cheng@vivo.com>
 ---
- .../imx8mp-tx8p-ml81-moduline-display-106.dts      | 527 +++++++++++++++++++++
- 1 file changed, 527 insertions(+)
+Changelog
+===
+v3 - > v4:
+	1.Move the changelog description under "---"
+v2 - > v3:
+	1.Remove the "ufs_" prefix from directory name
+	2.Remove the "hid_" prefix from node names
+	3.Make "ufs" appear only once in the HID group name
+	4.Add "is_visible" callback for "ufs_sysfs_hid_group"
+v1 - > v2:
+	1.Refactor the HID code according to Bart and Peter and
+	Arvi's suggestions
+v3
+	https://lore.kernel.org/all/20250519022912.292-1-tanghuan@vivo.com/
+v2
+	https://lore.kernel.org/all/20250512131519.138-1-tanghuan@vivo.com/
+v1
+	https://lore.kernel.org/all/20250417125008.123-1-tanghuan@vivo.com/
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dts b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..afd886dd590ff6f125d1d0e91aa71ae0063b5fd1
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dts
-@@ -0,0 +1,527 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2025 GOcontroll B.V.
-+ * Author: Maud Spierings <maudspierings@gocontroll.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8mp-tx8p-ml81.dtsi"
-+
-+/ {
-+	compatible = "gocontroll,moduline-display", "fsl,imx8mp";
-+	chassis-type = "embedded";
-+	hardware = "Moduline Display V1.06";
-+	model = "GOcontroll Moduline Display baseboard";
-+
-+	aliases {
-+		can0 = &flexcan1;
-+		can1 = &flexcan2;
-+		ethernet0 = &eqos;
-+		ethernet1 = &fec;
-+		mmc0 = &usdhc3;
-+		mmc1 = &usdhc2;
-+		rtc0 = &rtc_pcf; /* i2c rtc is the main rtc */
-+		rtc1 = &snvs_rtc;
-+		spi0 = &ecspi2; /* spidev number compatibility */
-+		spi1 = &ecspi1; /* spidev number compatibility */
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	external-sensor-supply {
-+		compatible = "regulator-output";
-+		vout-supply = <&reg_5v0_sensor>;
-+	};
-+
-+	reg_1v8_per: regulator-1v8-per {
-+		compatible = "regulator-fixed";
-+		pinctrl-0 = <&pinctrl_reg_1v8>;
-+		pinctrl-names = "default";
-+		power-supply = <&reg_3v3_per>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-name = "1v8-per";
-+		gpio = <&gpio3 25 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_3v3_per: regulator-3v3-per {
-+		compatible = "regulator-fixed";
-+		power-supply = <&reg_6v4>;
-+		regulator-always-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3v3-per";
-+	};
-+
-+	reg_5v0: regulator-5v0 {
-+		compatible = "regulator-fixed";
-+		power-supply = <&reg_6v4>;
-+		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "5v0";
-+	};
-+
-+	reg_5v0_sensor: regulator-5v0-sensor {
-+		compatible = "regulator-fixed";
-+		pinctrl-0 = <&pinctrl_reg_5v0_sensor>;
-+		pinctrl-names = "default";
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "5v0-supply-external-sensor";
-+		gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_6v4: regulator-6v4 {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-max-microvolt = <6400000>;
-+		regulator-min-microvolt = <6400000>;
-+		regulator-name = "6v4";
-+	};
-+
-+	reg_can1_stby: regulator-can1-stby {
-+		compatible = "regulator-fixed";
-+		pinctrl-0 = <&pinctrl_flexcan1_reg>;
-+		pinctrl-names = "default";
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "can1-stby";
-+		gpio = <&gpio4 3 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_can2_stby: regulator-can2-stby {
-+		compatible = "regulator-fixed";
-+		pinctrl-0 = <&pinctrl_flexcan2_reg>;
-+		pinctrl-names = "default";
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "can2-stby";
-+		gpio = <&gpio5 9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,bitclock-master = <&cpudai>;
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&cpudai>;
-+		simple-audio-card,name = "tas2505-audio";
-+		simple-audio-card,routing = "Speaker", "DAC";
-+		simple-audio-card,widgets = "Speaker", "Speaker External";
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&tas2505>;
-+		};
-+
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai = <&sai6>;
-+		};
-+	};
-+
-+	wifi_powerseq: wifi-powerseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-0 = <&pinctrl_wl_reg>;
-+		pinctrl-names = "default";
-+		post-power-on-delay-ms = <100>;
-+		power-off-delay-us = <500000>;
-+		reset-gpios = <&gpio2 19 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&ecspi1 {
-+	cs-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>,
-+		   <&gpio1 11 GPIO_ACTIVE_LOW>,
-+		   <&gpio1 10 GPIO_ACTIVE_LOW>;
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	connector@0 {
-+		compatible = "gocontroll,moduline-module-slot";
-+		reg = <0>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+		i2c-bus = <&i2c2>;
-+		reset-gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
-+		slot-number = <1>;
-+		spi-max-frequency = <54000000>;
-+		sync-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
-+		vddhpp-supply = <&reg_6v4>;
-+		vddp-supply = <&reg_5v0>;
-+		vdd-supply = <&reg_3v3_per>;
-+	};
-+
-+	connector@1 {
-+		compatible = "gocontroll,moduline-module-slot";
-+		reg = <1>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		i2c-bus = <&i2c2>;
-+		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+		slot-number = <2>;
-+		spi-max-frequency = <54000000>;
-+		sync-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
-+		vddhpp-supply = <&reg_6v4>;
-+		vddp-supply = <&reg_5v0>;
-+		vdd-supply = <&reg_3v3_per>;
-+	};
-+
-+	adc@2 {
-+		compatible = "microchip,mcp3004";
-+		reg = <2>;
-+		spi-max-frequency = <2300000>;
-+		vref-supply = <&reg_vdd_3v3>;
-+	};
-+};
-+
-+&flexcan1 {
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	pinctrl-names = "default";
-+	xceiver-supply = <&reg_can1_stby>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	pinctrl-names = "default";
-+	xceiver-supply = <&reg_can2_stby>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+	pinctrl-names = "default", "gpio";
-+	scl-gpios = <&gpio5 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	sda-gpios = <&gpio5 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	clock-frequency = <400000>;
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
-+	pinctrl-names = "default", "gpio";
-+	scl-gpios = <&gpio5 12 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	sda-gpios = <&gpio5 13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	status = "okay";
-+
-+	tas2505: audio-codec@18 {
-+		compatible = "ti,tas2505";
-+		reg = <0x18>;
-+		clocks = <&clk IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <0>;
-+		aic32x4-gpio-func = <0xff 0xff 0xff 0xff 0xff>;
-+		av-supply = <&reg_1v8_per>;
-+		dv-supply = <&reg_1v8_per>;
-+		iov-supply = <&reg_vdd_3v3>;
-+		pinctrl-0 = <&pinctrl_tas_reset>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	rtc_pcf: rtc@51 {
-+		compatible = "nxp,pcf85063a";
-+		reg = <0x51>;
-+		quartz-load-femtofarads = <7000>;
-+
-+		clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_bt: btgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14
-+				MX8MP_DSE_X1
-+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_GPIO1_IO15__GPIO1_IO15
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI1_MOSI__ECSPI1_MOSI
-+				MX8MP_DSE_X4
-+			MX8MP_IOMUXC_ECSPI1_MISO__ECSPI1_MISO
-+				(MX8MP_DSE_X4 | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_ECSPI1_SCLK__ECSPI1_SCLK
-+				MX8MP_DSE_X4
-+			MX8MP_IOMUXC_SD2_CD_B__GPIO2_IO12
-+				MX8MP_DSE_X1
-+			MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11
-+				MX8MP_DSE_X1
-+			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			 MX8MP_IOMUXC_SPDIF_RX__CAN1_RX
-+				 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			 MX8MP_IOMUXC_SPDIF_TX__CAN1_TX
-+				 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan1_reg: flexcan1reggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_RXD1__GPIO4_IO03
-+				(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_UART3_TXD__CAN2_RX
-+				(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_UART3_RXD__CAN2_TX
-+				(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan2_reg: flexcan2reggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI1_SS0__GPIO5_IO09
-+				(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL
-+				MX8MP_I2C_DEFAULT
-+			MX8MP_IOMUXC_I2C2_SDA__I2C2_SDA
-+				MX8MP_I2C_DEFAULT
-+		>;
-+	};
-+
-+	pinctrl_i2c2_gpio: i2c2-gpiogrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_I2C2_SCL__GPIO5_IO16
-+				MX8MP_I2C_DEFAULT
-+			MX8MP_IOMUXC_I2C2_SDA__GPIO5_IO17
-+				MX8MP_I2C_DEFAULT
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI2_MISO__I2C4_SCL
-+				MX8MP_I2C_DEFAULT
-+			MX8MP_IOMUXC_ECSPI2_SS0__I2C4_SDA
-+				MX8MP_I2C_DEFAULT
-+		>;
-+	};
-+
-+	pinctrl_i2c4_gpio: i2c4-gpiogrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI2_MISO__GPIO5_IO12
-+				MX8MP_I2C_DEFAULT
-+			MX8MP_IOMUXC_ECSPI2_SS0__GPIO5_IO13
-+				MX8MP_I2C_DEFAULT
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: pinctrlusdhc2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK
-+				(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD
-+				(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)
-+			MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0
-+				(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)
-+			MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1
-+				(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)
-+			MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2
-+				(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)
-+			MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3
-+				(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)
-+		>;
-+	};
-+
-+	pinctrl_reg_1v8: reg-1v8-grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI5_MCLK__GPIO3_IO25
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_reg_5v0_sensor: reg-5v0-sensorgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_RXD7__GPIO4_IO09
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_sai6: sai6grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_TXD6__AUDIOMIX_SAI6_TX_SYNC
-+				(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_RXD4__AUDIOMIX_SAI6_TX_BCLK
-+				(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_TXD5__AUDIOMIX_SAI6_TX_DATA00
-+				(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_TXD7__AUDIOMIX_SAI6_MCLK
-+				(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI6_RX_DATA00
-+				(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)
-+		>;
-+	};
-+
-+	pinctrl_tas_reset: tasresetgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI5_RXD3__GPIO3_IO24
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_UART1_RXD__UART1_DCE_RX
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_UART1_TXD__UART1_DCE_TX
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SAI3_RXD__UART2_DCE_RTS
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SAI3_RXC__UART2_DCE_CTS
-+				(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO02__WDOG1_WDOG_B
-+				(MX8MP_DSE_X6 | MX8MP_HYS_SCHMITT)
-+		>;
-+	};
-+
-+	pinctrl_wl_int: wlintgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13
-+				(MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_wl_reg: wlreggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19
-+				MX8MP_DSE_X1
-+		>;
-+	};
-+};
-+
-+&sai6 {
-+	assigned-clocks = <&clk IMX8MP_CLK_SAI6>;
-+	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <12288000>;
-+	pinctrl-0 = <&pinctrl_sai6>;
-+	pinctrl-names = "default";
-+	fsl,sai-mclk-direction-output;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "infineon,cyw43439-bt", "brcm,bcm4329-bt";
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-names = "host-wakeup";
-+		device-wakeup-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-+		max-speed = <921600>;
-+		pinctrl-0 = <&pinctrl_bt>;
-+		pinctrl-names = "default";
-+		shutdown-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-+		vbat-supply = <&reg_3v3_per>;
-+		vddio-supply = <&reg_3v3_per>;
-+	};
-+};
-+
-+&usb3_0 {
-+	status = "okay";
-+};
-+
-+&usb3_1 {
-+	status = "okay";
-+};
-+
-+&usb3_phy0 {
-+	status = "okay";
-+};
-+
-+&usb3_phy1 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_0 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usdhc2 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	assigned-clocks = <&clk IMX8MP_CLK_USDHC2>;
-+	assigned-clock-rates = <50000000>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	max-frequency = <50000000>;
-+	mmc-pwrseq = <&wifi_powerseq>;
-+	non-removable;
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-names = "default";
-+	sd-uhs-sdr25;
-+	vmmc-supply = <&reg_3v3_per>;
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "infineon,cyw43439-fmac", "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+		pinctrl-0 = <&pinctrl_wl_int>;
-+		pinctrl-names = "default";
-+		brcm,board-type = "GOcontroll,moduline";
-+	};
-+};
-+
-+&wdog1 {
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	pinctrl-names = "default";
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
+ Documentation/ABI/testing/sysfs-driver-ufs |  83 +++++++++
+ drivers/ufs/core/ufs-sysfs.c               | 192 +++++++++++++++++++++
+ drivers/ufs/core/ufshcd.c                  |   4 +
+ include/ufs/ufs.h                          |  25 +++
+ 4 files changed, 304 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-driver-ufs b/Documentation/ABI/testing/sysfs-driver-ufs
+index d4140dc6c5ba..490efdf1a0b4 100644
+--- a/Documentation/ABI/testing/sysfs-driver-ufs
++++ b/Documentation/ABI/testing/sysfs-driver-ufs
+@@ -1685,3 +1685,86 @@ Description:
+ 		================  ========================================
+ 
+ 		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/analysis_trigger
++What:		/sys/bus/platform/devices/*.ufs/hid/analysis_trigger
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		The host can enable or disable HID analysis operation.
++
++		=======  =========================================
++		disable   disable HID analysis operation
++		enable    enable HID analysis operation
++		=======  =========================================
++
++		The file is write only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/defrag_trigger
++What:		/sys/bus/platform/devices/*.ufs/hid/defrag_trigger
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		The host can enable or disable HID defragmentation operation.
++
++		=======  =========================================
++		disable   disable HID defragmentation operation
++		enable    enable HID defragmentation operation
++		=======  =========================================
++
++		The attribute is write only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/fragmented_size
++What:		/sys/bus/platform/devices/*.ufs/hid/fragmented_size
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		The total fragmented size in the device is reported through
++		this attribute.
++
++		The attribute is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/defrag_size
++What:		/sys/bus/platform/devices/*.ufs/hid/defrag_size
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		The host sets the size to be defragmented by an HID
++		defragmentation operation.
++
++		The attribute is read/write.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/progress_ratio
++What:		/sys/bus/platform/devices/*.ufs/hid/progress_ratio
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		Defragmentation progress is reported by this attribute,
++		indicateds the ratio of the completed defragmentation size
++		over the requested defragmentation size.
++
++		====  ============================================
++		1     1%
++		...
++		100   100%
++		====  ============================================
++
++		The attribute is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/hid/state
++What:		/sys/bus/platform/devices/*.ufs/hid/state
++Date:		May 2025
++Contact:	Huan Tang <tanghuan@vivo.com>
++Description:
++		The HID state is reported by this attribute.
++
++		====================   ===========================
++		idle			Idle(analysis required)
++		analysis_in_progress    Analysis in progress
++		defrag_required      	Defrag required
++		defrag_in_progress      Defrag in progress
++		defrag_completed      	Defrag completed
++		defrag_not_required     Defrag is not required
++		====================   ===========================
++
++		The attribute is read only.
+diff --git a/drivers/ufs/core/ufs-sysfs.c b/drivers/ufs/core/ufs-sysfs.c
+index de8b6acd4058..f162eb36f46b 100644
+--- a/drivers/ufs/core/ufs-sysfs.c
++++ b/drivers/ufs/core/ufs-sysfs.c
+@@ -87,6 +87,26 @@ static const char *ufs_wb_resize_status_to_string(enum wb_resize_status status)
+ 	}
+ }
+ 
++static const char *ufs_hid_state_to_string(enum ufs_hid_state state)
++{
++	switch (state) {
++	case HID_IDLE:
++		return "idle";
++	case ANALYSIS_IN_PROGRESS:
++		return "analysis_in_progress";
++	case DEFRAG_REQUIRED:
++		return "defrag_required";
++	case DEFRAG_IN_PROGRESS:
++		return "defrag_in_progress";
++	case DEFRAG_COMPLETED:
++		return "defrag_completed";
++	case DEFRAG_IS_NOT_REQUIRED:
++		return "defrag_not_required";
++	default:
++		return "unknown";
++	}
++}
++
+ static const char *ufshcd_uic_link_state_to_string(
+ 			enum uic_link_state state)
+ {
+@@ -1763,6 +1783,177 @@ static const struct attribute_group ufs_sysfs_attributes_group = {
+ 	.attrs = ufs_sysfs_attributes,
+ };
+ 
++static int hid_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
++			enum attr_idn idn, u32 *attr_val)
++{
++	int ret;
++
++	down(&hba->host_sem);
++	if (!ufshcd_is_user_access_allowed(hba)) {
++		up(&hba->host_sem);
++		return -EBUSY;
++	}
++
++	ufshcd_rpm_get_sync(hba);
++	ret = ufshcd_query_attr(hba, opcode, idn, 0, 0, attr_val);
++	ufshcd_rpm_put_sync(hba);
++
++	up(&hba->host_sem);
++	return ret;
++}
++
++static const char * const hid_trigger_mode[] = {"disable", "enable"};
++
++static ssize_t analysis_trigger_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	int mode;
++	int ret;
++
++	mode = sysfs_match_string(hid_trigger_mode, buf);
++	if (mode < 0)
++		return -EINVAL;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
++			QUERY_ATTR_IDN_HID_DEFRAG_OPERATION, &mode);
++
++	return ret < 0 ? ret : count;
++}
++
++static DEVICE_ATTR_WO(analysis_trigger);
++
++static ssize_t defrag_trigger_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	int mode;
++	int ret;
++
++	mode = sysfs_match_string(hid_trigger_mode, buf);
++	if (mode < 0)
++		return -EINVAL;
++
++	if (mode)
++		mode = HID_ANALYSIS_AND_DEFRAG_ENABLE;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
++			QUERY_ATTR_IDN_HID_DEFRAG_OPERATION, &mode);
++
++	return ret < 0 ? ret : count;
++}
++
++static DEVICE_ATTR_WO(defrag_trigger);
++
++static ssize_t fragmented_size_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	u32 value;
++	int ret;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_HID_AVAILABLE_SIZE, &value);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", value);
++}
++
++static DEVICE_ATTR_RO(fragmented_size);
++
++static ssize_t defrag_size_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	u32 value;
++	int ret;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_HID_SIZE, &value);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", value);
++}
++
++static ssize_t defrag_size_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	u32 value;
++	int ret;
++
++	if (kstrtou32(buf, 0, &value))
++		return -EINVAL;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
++			QUERY_ATTR_IDN_HID_SIZE, &value);
++
++	return ret < 0 ? ret : count;
++}
++
++static DEVICE_ATTR_RW(defrag_size);
++
++static ssize_t progress_ratio_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	u32 value;
++	int ret;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_HID_PROGRESS_RATIO, &value);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", value);
++}
++
++static DEVICE_ATTR_RO(progress_ratio);
++
++static ssize_t state_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	u32 value;
++	int ret;
++
++	ret = hid_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_HID_STATE, &value);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%s\n", ufs_hid_state_to_string(value));
++}
++
++static DEVICE_ATTR_RO(state);
++
++static struct attribute *ufs_sysfs_hid[] = {
++	&dev_attr_analysis_trigger.attr,
++	&dev_attr_defrag_trigger.attr,
++	&dev_attr_fragmented_size.attr,
++	&dev_attr_defrag_size.attr,
++	&dev_attr_progress_ratio.attr,
++	&dev_attr_state.attr,
++	NULL,
++};
++
++static umode_t  ufs_sysfs_hid_is_visible(struct kobject *kobj,
++		struct attribute *attr, int n)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++
++	return	hba->dev_info.hid_sup ? attr->mode : 0;
++}
++
++static const struct attribute_group ufs_sysfs_hid_group = {
++	.name = "hid",
++	.attrs = ufs_sysfs_hid,
++	.is_visible = ufs_sysfs_hid_is_visible,
++};
++
+ static const struct attribute_group *ufs_sysfs_groups[] = {
+ 	&ufs_sysfs_default_group,
+ 	&ufs_sysfs_capabilities_group,
+@@ -1777,6 +1968,7 @@ static const struct attribute_group *ufs_sysfs_groups[] = {
+ 	&ufs_sysfs_string_descriptors_group,
+ 	&ufs_sysfs_flags_group,
+ 	&ufs_sysfs_attributes_group,
++	&ufs_sysfs_hid_group,
+ 	NULL,
+ };
+ 
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 3e2097e65964..8ccd923a5761 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -8390,6 +8390,10 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ 
+ 	dev_info->rtt_cap = desc_buf[DEVICE_DESC_PARAM_RTT_CAP];
+ 
++	dev_info->hid_sup = get_unaligned_be32(desc_buf +
++				DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP) &
++				UFS_DEV_HID_SUPPORT;
++
+ 	model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
+ 
+ 	err = ufshcd_read_string_desc(hba, model_index,
+diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h
+index c0c59a8f7256..e61caa40f7cd 100644
+--- a/include/ufs/ufs.h
++++ b/include/ufs/ufs.h
+@@ -182,6 +182,11 @@ enum attr_idn {
+ 	QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE        = 0x1F,
+ 	QUERY_ATTR_IDN_TIMESTAMP		= 0x30,
+ 	QUERY_ATTR_IDN_DEV_LVL_EXCEPTION_ID     = 0x34,
++	QUERY_ATTR_IDN_HID_DEFRAG_OPERATION	= 0x35,
++	QUERY_ATTR_IDN_HID_AVAILABLE_SIZE	= 0x36,
++	QUERY_ATTR_IDN_HID_SIZE			= 0x37,
++	QUERY_ATTR_IDN_HID_PROGRESS_RATIO	= 0x38,
++	QUERY_ATTR_IDN_HID_STATE		= 0x39,
+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_HINT	= 0x3C,
+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_EN		= 0x3D,
+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_STATUS	= 0x3E,
+@@ -401,6 +406,7 @@ enum {
+ 	UFS_DEV_HPB_SUPPORT		= BIT(7),
+ 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+ 	UFS_DEV_LVL_EXCEPTION_SUP       = BIT(12),
++	UFS_DEV_HID_SUPPORT		= BIT(13),
+ };
+ #define UFS_DEV_HPB_SUPPORT_VERSION		0x310
+ 
+@@ -466,6 +472,23 @@ enum ufs_ref_clk_freq {
+ 	REF_CLK_FREQ_INVAL	= -1,
+ };
+ 
++/* bDefragOperation attribute values */
++enum ufs_hid_defrag_operation {
++	HID_ANALYSIS_AND_DEFRAG_DISABLE	= 0,
++	HID_ANALYSIS_ENABLE		= 1,
++	HID_ANALYSIS_AND_DEFRAG_ENABLE	= 2,
++};
++
++/* bHIDState attribute values */
++enum ufs_hid_state {
++	HID_IDLE		= 0,
++	ANALYSIS_IN_PROGRESS	= 1,
++	DEFRAG_REQUIRED		= 2,
++	DEFRAG_IN_PROGRESS	= 3,
++	DEFRAG_COMPLETED	= 4,
++	DEFRAG_IS_NOT_REQUIRED	= 5,
++};
++
+ /* bWriteBoosterBufferResizeEn attribute */
+ enum wb_resize_en {
+ 	WB_RESIZE_EN_IDLE	= 0,
+@@ -625,6 +648,8 @@ struct ufs_dev_info {
+ 	u32 rtc_update_period;
+ 
+ 	u8 rtt_cap; /* bDeviceRTTCap */
++
++	bool hid_sup;
+ };
+ 
+ /*
 -- 
-2.49.0
-
+2.48.1
 
