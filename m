@@ -1,113 +1,139 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1420E283125
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C558D2517A0;
+	Tue, 20 May 2025 20:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747772835; cv=none; b=tr+PbqPL11bPXMNRyrql4cLPJLvhBVzwUDg8nCvqaCVDj7mlZGLNs+EuPOHK01mREksd9Fu5UsBzP8FluGRWsZ0mB4YL/fnaMdsJDCqKirxkbkv2alx8CNZBk/lnU032dTX15N8VelA8xksc54nyu9xtA/RUoDG8F0hWeK1v9ew=
+	t=1747773049; cv=none; b=CfI0YZkqQXqLebb638mqwybPDU+lEtGxj0T1Rr3waPf0CNZ8x21OerELwaO28zSgfIpMFIxnQSH3LsIY36R70Ymw0uCRW+NW41bQEzIABh8uP+GrV8Q+ni8q8MDrtgUXHeXI7xS5G7JHp8vNNQH3PaUXrBaymgWblJa68sntDow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747772835; c=relaxed/simple;
-	bh=byTi+sAOTj0x56q0zXwI7gx6OBoBWQKhfumi6kPLa0Y=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=oQu7Rcx8f8oVkd5NsWTemDANr2WuiacE38hJ0Fj5JkRkpou0g4vFQa/i2BOHu9rocLdN69Nk+SjnVgyDlpZoiKs73AtEP+rFwqV5o/Xu4xk2IIgUdgOlUvN2Leb4btwZ6sqFn/fYoW9k50sp2tZLk065k9IWQS0NOGjH0rY72Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcDL+dyh; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1747773049; c=relaxed/simple;
+	bh=Dv9KHRHIkhlXXihA8tlvzOGYGP+ZrgFKTlpzZ0LcYYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u51l5xda636MOt+ZWwPLyplXdlAMrhy3xAHtlXti4cOJBtCTmwwtIoxdbEFbDVx/hh9j3/uaLIdjROSEOplDnqxLyfbL7u44PVpjLEfPNoPd4EyyFzsPEv8fZ31WPAPck5JiuBY6H74LGGptz5jpbtnrOVlMsja0s6iu7pzcSbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHEGuuh4; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcDL+dyh"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so67010945e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:27:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHEGuuh4"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2327aa24b25so14764525ad.3;
+        Tue, 20 May 2025 13:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747772830; x=1748377630; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=byTi+sAOTj0x56q0zXwI7gx6OBoBWQKhfumi6kPLa0Y=;
-        b=GcDL+dyhZTXvSaVAHeJG2hOdVpRveAUwTj+Crh4BkHSVCARQBMHhnkuc5e7ZZJirOP
-         80c22dB6mlPdC4HX+MMuXpwq2RSRJ/wsBNQ0vE8W0mO4TGnXVSVkxZ0G6/k+Qk91mR6x
-         zakUIlhIKSeYxbc+2PDqbysxEMQVQpMnXacVDQn1FfhzsQ7VAzs5vY593wQBSrAzErQf
-         GXjhWA1XT+dXxn6n9D7ZeuuQ/pSribUGxn4kC1Dvo/RGnZN8FV8MwSMpB9pKOaq2OlPE
-         JxPd0vbKxdNqYc/J+EoRp58N0TxDlwMcfazgRGSi6N+IWgsJvGhzD/Tyv9nKUQf0EFP2
-         slAQ==
+        d=gmail.com; s=20230601; t=1747773046; x=1748377846; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aUEqs6dZhNI3ovSU8UcexR0LzNfKYj8EYbPae4zKS+8=;
+        b=FHEGuuh47nKDpi42V1E9Z+GnSiE7hqFUn6rlo82yNNj0ZlVFgLpjx5zmwwqvsGvlfC
+         kQg9w3F15kVbh++0fkXKZefPIJnXSLQ9rag/lBnXoDC1zF4khj8e/6Ah4lX2UO300xN2
+         y9wmtcdDk39QLQz+RlkjlWlCjmNyOqCQMECWrTUlhrkLU0+to+age+R91kx7jXYj19QA
+         z2XEOGdLEl35lLorogdwnUAQRkR/b+lSPFJhBMdaXdfcTy9KiGpLz7GYR0VWqJfrav6r
+         AOu6DzcBosVc0i5Rews8yUFkrvUa9JP8kNuCgmmfxHwUDdoaDE68jhGhWNZwk1VkRXYB
+         JY8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747772830; x=1748377630;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=byTi+sAOTj0x56q0zXwI7gx6OBoBWQKhfumi6kPLa0Y=;
-        b=cpbcVRlb6UBGVCDdzAInyGC1l+ejy7Ta8/mBu9BVP6w563yOodDpQtEhB/8gTc4wLr
-         qvgRxLXSnI58Z8GOWIr90b2CE9mWxMkBxotvv7xTOE49MB4YoOm6PxriPuH4QgbIG4as
-         93Z7oaTfwAlIiPrp3442jvxWnYP3/dCclL0nmUghndCLCqoIvSTnxNj1bV1KWthJCabt
-         1gcKdh2ki5sHwkZ5OZsMG2Ep3yZ0Df7JPp0yTzHLJ12d2BXz3u80b5AAzYiaRLdshgvX
-         Quelb1SzaFZxJXoUt6ADBxlvs7No22ojWLMjkc2M9+42toJuJMf1suxzkX/8oetlvExf
-         qYxg==
-X-Gm-Message-State: AOJu0YznXRsHaxYlC70Nys1TkvFVd3FAszfqWB/mkgzRAUEgg2QHKgRO
-	QNl4Le3EiLndSHGNDvKiZbNdMf+wGO+fLpuBgXMi9KVAb9ZDJAK4dlzj
-X-Gm-Gg: ASbGncvBRCiAmEJ9HMG+BHhGANr8I4zBOKIebnJ5bkm0jRn17eZoEqme+E+zAaA2k1h
-	wn9poPeeLVLTFIJhzaZ4aygFbRXBzoK6DDEVQEnN8cEvvq6B/J4YnrLcwppPVoJjcKhFoBejPGx
-	bR/gmDirW4UOy9nMOHqtRdIGmA3HSlKPqxGDz48uvOv+8ERrTLu/wOBcuushSVcWBS6FWbVbNob
-	z9YH7iaRTWTiVHgTJ/zNbxJj8DFUk43i9GdOir+9AjNFTIWpBr7Tw3us/O7ufbzt84+ufdlA5Xd
-	1X+qRcOTJhQmbAJdkGMOLrPQuIUmrQuhkSXbb0w1MuOgUX0kTxTt4VMAY+IC07ZspMpDEldMX2x
-	p
-X-Google-Smtp-Source: AGHT+IGxPr0xo/HVPVanixrOZ+HQ5nEzm+pNPHc4gMNp7DrOfzd7JQexs0V8oLBvyq2q4bzYRs6nTg==
-X-Received: by 2002:a05:600c:4f42:b0:442:f4d4:522 with SMTP id 5b1f17b1804b1-442fd60a5bemr168457955e9.5.1747772830152;
-        Tue, 20 May 2025 13:27:10 -0700 (PDT)
-Received: from smtpclient.apple ([5.29.20.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f45a8434sm46613305e9.0.2025.05.20.13.27.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 May 2025 13:27:09 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1747773046; x=1748377846;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aUEqs6dZhNI3ovSU8UcexR0LzNfKYj8EYbPae4zKS+8=;
+        b=fGtyp2fyHczWYud/xTkhQ6cUyoCWYv+JkOQSOYRPIo8TYASEyieKfk5hD8lL5KmbcC
+         2Yy2vCg1tZFQHi3+StKiVs+lfyzmREzhTlkEH4z7oev8poV9RMA/Ex+f7OBDMb7j1HlE
+         Uiz7macju8jY5az5EYyl6TykY433Cb1wgO1RCGtQpY9LPhBOrfwizv5kGCAE3JvxtYiW
+         eEa0obUgAAD+8lcnGLYGGB4PysstIpxDIL71TxuH4SauV469e27nPc+KrsdyFk3ImqZo
+         7Ie8dAaBDZgnMRQbrvlDZ3Mue6CyJFYRTYrC9jwEDEPB8e/VPuOEOlh5lCNnhdMoRE5v
+         vHNA==
+X-Forwarded-Encrypted: i=1; AJvYcCW442J1EvMWzdz5t/Bp+PXzQ0cKYJSznixLCLKFMkvcwa1yL9UuoZk9/2Wvc4TTATOofqGN4gyl7yvBj0U=@vger.kernel.org, AJvYcCWlTY5HXX6oQaCuvSlBJp3kPwheEiIe/CtYKY4PNaMe/beEBYkZkbNjlPqoGzlggSviyO8crpncT23FXyiN+DUi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbNyzIYCKQcAmbMHfUBIP2k/LDeIPdrD94itnA2xgMe/7hQiKF
+	4VMQdxnJYvfqaFalhyRB49nQLi5MameP0ZngsM+9g6MAx/XYjcA6Q19wfc2K
+X-Gm-Gg: ASbGncukvlkvrUewq749Kz98bPm3yKv/voxXX27VPZ5+dk7RJRWqOf3klRiFuWpaLoZ
+	4UVke8hRZK6L81ozn9d3qLqAamceCQSxLfDWBIT9vZzwdyQDXjm3fhldKxmiEdNOYZoCGxBNZC1
+	k7J6YoRS1zqeL4pHdZ1mqzznaUxtrebkYyURZvUniTLO+Cis+anJ6r1N1feJkFstc9V2SF40q4N
+	wENE23xwbizxr41QQuVDDBgz8jZs/NPPRp3twkuMCCPdrm2ooe0DjSvDR/eALRcvyY9mCtHGbNC
+	CSiZPI3bPGxpZ/OMPicfVPjjQ2xk55kKz/RG2LNqsm6IHpYry5nfG+gTqevrUUZeBZkiM0JgAL4
+	8jIOPrmKYcSxJ
+X-Google-Smtp-Source: AGHT+IGT2lNEBwf8awb27u1brE1IBOcEYa4FzAFb6XP3Z7d3y7G/2OawqOjN+NLOvmB7v5Y2PxRwcw==
+X-Received: by 2002:a17:903:25ca:b0:231:f5a8:173a with SMTP id d9443c01a7336-231f5a81b85mr161086395ad.51.1747773046246;
+        Tue, 20 May 2025 13:30:46 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231f04e75bdsm70345625ad.216.2025.05.20.13.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 13:30:45 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	viro@zeniv.linux.org.uk,
+	horms@kernel.org,
+	andrew+netdev@lunn.ch,
+	shuah@kernel.org,
+	sagi@grimberg.me,
+	willemb@google.com,
+	asml.silence@gmail.com,
+	almasrymina@google.com,
+	stfomichev@gmail.com,
+	jdamato@fastly.com,
+	kaiyuanz@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH net-next 1/3] net: devmem: support single IOV with sendmsg
+Date: Tue, 20 May 2025 13:30:42 -0700
+Message-ID: <20250520203044.2689904-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [RFC v2 7/9] x86/mm: Introduce Remote Action Request
-From: Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <6a3290319031cd68a383e416f53aa7549bac9407.camel@surriel.com>
-Date: Tue, 20 May 2025 23:26:57 +0300
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
- the arch/x86 maintainers <x86@kernel.org>,
- kernel-team@meta.com,
- Dave Hansen <dave.hansen@linux.intel.com>,
- luto@kernel.org,
- peterz@infradead.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4009A0C6-CE5C-4197-9F48-3805059C214E@gmail.com>
-References: <20250520010350.1740223-1-riel@surriel.com>
- <20250520010350.1740223-8-riel@surriel.com>
- <4A879001-E213-4239-9D25-CDA8EC3E2CD9@gmail.com>
- <6a3290319031cd68a383e416f53aa7549bac9407.camel@surriel.com>
-To: Rik van Riel <riel@surriel.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
+iovs becomes ITER_IOVEC. iter_iov_len does not return correct
+value for UBUF, so teach to treat UBUF differently.
 
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Mina Almasry <almasrymina@google.com>
+Fixes: bd61848900bf ("net: devmem: Implement TX path")
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+ include/linux/uio.h | 8 +++++++-
+ net/core/datagram.c | 3 ++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-> On 20 May 2025, at 16:00, Rik van Riel <riel@surriel.com> wrote:
->=20
->> Putting aside the rest of the code, I see you don=E2=80=99t call
->> should_flush_tlb().
->> I think it is worth mentioning in commit log or comment the rationale
->> behind
->> it (and maybe benchmarks to justify it).
->>=20
->>=20
-> The long term plan here is to simply have the originating
-> CPU included in the cpumask, and have it send a RAR
-> request to itself.
-
-That=E2=80=99s unrelated. I was referring to considering supporting
-some sort of lazy TLB to eliminate sending RAR to cores that
-do not care about it. Is there a cost of RAR to more cores than
-needed? My guess is that there is one, and maybe in such cases
-you would want actual IPI and special handling.
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 49ece9e1888f..393d0622cc28 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -99,7 +99,13 @@ static inline const struct iovec *iter_iov(const struct iov_iter *iter)
+ }
+ 
+ #define iter_iov_addr(iter)	(iter_iov(iter)->iov_base + (iter)->iov_offset)
+-#define iter_iov_len(iter)	(iter_iov(iter)->iov_len - (iter)->iov_offset)
++
++static inline size_t iter_iov_len(const struct iov_iter *i)
++{
++	if (i->iter_type == ITER_UBUF)
++		return i->count;
++	return iter_iov(i)->iov_len - i->iov_offset;
++}
+ 
+ static inline enum iter_type iov_iter_type(const struct iov_iter *i)
+ {
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index 9ef5442536f5..c44f1d2b70a4 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -706,7 +706,8 @@ zerocopy_fill_skb_from_devmem(struct sk_buff *skb, struct iov_iter *from,
+ 	 * iov_addrs are interpreted as an offset in bytes into the dma-buf to
+ 	 * send from. We do not support other iter types.
+ 	 */
+-	if (iov_iter_type(from) != ITER_IOVEC)
++	if (iov_iter_type(from) != ITER_IOVEC &&
++	    iov_iter_type(from) != ITER_UBUF)
+ 		return -EFAULT;
+ 
+ 	while (length && iov_iter_count(from)) {
+-- 
+2.49.0
 
