@@ -1,206 +1,114 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846582566FE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9AC256C7D;
 	Tue, 20 May 2025 22:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781790; cv=none; b=hY+RY0c99tn52pXTynujuCHCvTLmITRWpsX/4jvU3eZK65jRhP0++zBgm53VZ2v+l4/Rqdsr1rQJe3LM/6wrQNAWWD333W+HPGIGdQdl2qaynBl97HK8sfU8hocEdA/F/shmnD+wUOcoNltdbHpbWChSjMJB7kCzMnNswkHdmPQ=
+	t=1747781791; cv=none; b=fJaO+K1kycKv6TYaItTCqfI7huiFqCFeVZf+tqI6IfFP4+vsYOKzpvuBolEWx4mVnb4Q3X6iTkZuBsfnW2egyOhdAmOG4k4rNgqUjpY/vSt3TWAgFBYcV/CarK5p6fpJsVl+I0/M5ifKup+lv2i/SnTNbfIZPIw0Gcyfv3F0NXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747781790; c=relaxed/simple;
-	bh=E5CCP2G2mbNbJvzbh7UCw14ea4N2zT5ir18+mCDw/ds=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nc+sCi+iAryjKMKZMvNWQ7r9GdOm+plE2UtCrJBhfSuJs+gFONeKMngW2kSS0RGJWgaPCil06sPJoexqHunglGzCgQdUgPjfomOjX8u7ypfV9OT6Wx4G1/Bnx3SCZhH5X4XKAt/IdZwpLu3LXnHI9n4IkAwFFyDkkXs7H0GxsyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MujjToa2; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747781791; c=relaxed/simple;
+	bh=Bisvp9WXtx0uaSzm4IId2G0NuCg21iZTRlMs7KZj3Zs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=i4kyjRzdjiTgGkzg94cBC1VEuzOrZ5bYnPTiL3mCT6tyR4aD6yF/+qoRxS1OcfN8/bnVPVWmGPKKcCLnAu85T7B47JCOb5qIJJZKz+xP3eF8qz/w9tf8wmk69045+Uvu8t5Sj3MoAQ1bZ4GPEUyqLGPbxV0qZqtTM4BY8Kb3iPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=EbqaShv5; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MujjToa2"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8647a81e683so153656239f.1;
-        Tue, 20 May 2025 15:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747781787; x=1748386587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xfbTmppHxOLXCmtZNJSatt4EkTAJlAlHVYpSJyOZFfg=;
-        b=MujjToa2TN+ReWgbfZkI1j4Uk88iFp9axdih/7hu13T9l1NwLtP+wH/KY207MKPydr
-         vwpJav64j1QZIhIeK2PMnaUk654TwRan3yQcOics0IRM7DA2x/nUXtmTxvcVmLBRIIiK
-         HvfgP8r2hPSw0F2VpIIbwu14gOy1hDinM7dU/oCRHxqAPVgfoJZiwhLbRe8UzDTLYLkF
-         g1+IgyFU2icuAahyKEzmbsDjPEEoYofGuTb6tDRZFb3NADnUrHjb3u5qhSN49rtY3nBH
-         ybCl99PVb9z9HD+XN4z4qv4jnW/p+RowXWapVWK1IawARYSGmob7+FMsHn87DMM4cXaw
-         PLrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747781787; x=1748386587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xfbTmppHxOLXCmtZNJSatt4EkTAJlAlHVYpSJyOZFfg=;
-        b=RP/hOyRFF823JRA2ol3Iu6J+8ZejlS3FUrptUcjNdxLGtM76AB43aOdVXU0a4wW10d
-         fpPL4teAg063ynI0LjWweqipvdkiLa5jHezEE9hse18sfFrWipdd8Mar7z+XiOW7fEX0
-         kB+ftY6JeJOoICJKSYyTa9NDJ28sdM/aObMSTQlohmIj3k5isQRbgjZZFuTKRF817tbz
-         RMrU03cXq/x0QuJQkG1LhrwW+r6Ae61sEtGaJbzNAthVZNxedjpgJdQ749Z8Z/p+ez5q
-         HRCKw2Svu99LCpDlMBC5MXhzEAzZXi9sq6QFcRbbMjGUG//n9FIY7ZcQdCWSUlKV2Rf7
-         HQng==
-X-Forwarded-Encrypted: i=1; AJvYcCURw+BQ5cHn96XwTqzoW8AjnIKfNKvOf1o7T9Fv+0ZTFbZR15nt9ByHVS11WycJ4R+c6ex3CiYxX9RBNVgx@vger.kernel.org, AJvYcCWQwXpUaJSeT7iI2irjT0tVjJ/ov5hqA3fXLCqZjijj9EjYd4q6nbGM/aCB2BApmp1IlDq2Or57/lwb5Ru8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQBvUPQ1lwm394lF0y0+HSQ1EY30xAQvcxZIUra8OtSuoCgq6i
-	bF4UV30VjVqXNfbwLblt/KyT8F9JIvhsLk/bX45pElR2mhqoK01UXHVFjoMcxVho78IK9KU6Lx4
-	xDrzaW4kGr3inI42dGHK4x9X0gJIp9og=
-X-Gm-Gg: ASbGnctseIEWnBpt3g+aTq5i4upO+vwirKAiPRRgrqtYjF9yP8yiMBDBO1VYTyd+Jo/
-	uwyX7N1tRrvUB8hZy+5Dcv7gQLXyoFWh4tYW3JdpsgnMDWgqy127yxjkfcs3nkAWScF7c0k5BfR
-	maZ1tYCLN6OFK0/dZ3RRj7rprJwJqc75Kd4q89pf/GzhiGmqnhizd55fnHti7AHK3Vx7xyZcL6d
-	3c=
-X-Google-Smtp-Source: AGHT+IGOPI/jkR0SE4Ah18tEgrGyD13jj9I35eWxSMfqfHBJtXz1Ptp5VDoU4Ml5gVYvLQqXk4RTcbwN8ZBaSDzk14Q=
-X-Received: by 2002:a05:6602:3e82:b0:867:6c90:4867 with SMTP id
- ca18e2360f4ac-86a23256cadmr2998450939f.14.1747781787455; Tue, 20 May 2025
- 15:56:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="EbqaShv5"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uHVsg-001X4u-TC; Wed, 21 May 2025 00:56:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=bJE5agG6suW5EMhVSS9xIoPl9te7wqkSo/E38GSN3wQ=; b=EbqaShv58TyWcztpNBCjVoxyeK
+	mLkk6jGtgmElvKvh5rmBeLXsR/cHk+9iT9ZSDpYanrpEEG1v3/eIz0ZM/19k41HArDYPBTEuCkwM2
+	mxk25tr5bAtCy+OtlHRUI8tFXZuhHH7WeElIkKGpqdMsNliC7f+cS+cbp9wmokN6blQ7HJFXgnjSI
+	g/ZV2kuUlWsZ6kK96Tpre3NE0BwP6xxjc77kAZLRBLMfrscYbAtl/w8SaoFhTcEhNIh208qbR1gQl
+	qQOP8AZi7KdB4GowGiX5P8uyz2YTXzA9ICkDSBDUpLPUkLc02XS3W1D2x54AOOMenqBhPVrGGZlty
+	J9qx78BQ==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uHVsf-0007mr-Ni; Wed, 21 May 2025 00:56:17 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uHVsW-00CxGf-QH; Wed, 21 May 2025 00:56:08 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Wed, 21 May 2025 00:55:19 +0200
+Subject: [PATCH net-next v5 1/5] vsock/virtio: Linger on unsent data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-2-robdclark@gmail.com>
- <aCWrwz2IF6VBUi4e@pollux> <aCWueFzx2QzF7LVg@pollux> <CAF6AEGu9MPxKnkHo45gSRxaCP+CTzqsKZjiLuy4Ne4GbrsStGA@mail.gmail.com>
- <aCYqlvp_T77LyuMa@pollux> <CAF6AEGsOTNedZhuBzipSQgNpG0SyVObaeq+g5U1hGUFfRYjw8w@mail.gmail.com>
- <aCb-72KH-NrzvGXy@pollux> <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
- <CAPM=9tzcvDVDOM88O8oqDHURR1nbR7KsFStavNnT1CN6C6kGgg@mail.gmail.com>
- <CAF6AEGuv3GXTBcU99sBjAa5gPOSNoxwY+eiPy=Q--cLYHVn+cw@mail.gmail.com> <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
-In-Reply-To: <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 20 May 2025 15:56:15 -0700
-X-Gm-Features: AX0GCFsoUmkG3s3L14GoLEL15C4sCyP3V1E3Uragg5_xADxJ_pxuus52D_2x7-E
-Message-ID: <CAF6AEGvr6-9af9ZyccYF-g56j5-4sHocH+9JPk=cKfgdMTAjLg@mail.gmail.com>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor path
-To: Dave Airlie <airlied@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250521-vsock-linger-v5-1-94827860d1d6@rbox.co>
+References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+In-Reply-To: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+To: Stefano Garzarella <sgarzare@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-On Tue, May 20, 2025 at 3:31=E2=80=AFPM Dave Airlie <airlied@gmail.com> wro=
-te:
->
-> On Wed, 21 May 2025 at 07:53, Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Tue, May 20, 2025 at 2:25=E2=80=AFPM Dave Airlie <airlied@gmail.com>=
- wrote:
-> > >
-> > > On Sat, 17 May 2025 at 02:20, Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > On Fri, May 16, 2025 at 2:01=E2=80=AFAM Danilo Krummrich <dakr@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Thu, May 15, 2025 at 02:57:46PM -0700, Rob Clark wrote:
-> > > > > > On Thu, May 15, 2025 at 10:55=E2=80=AFAM Danilo Krummrich <dakr=
-@kernel.org> wrote:
-> > > > > > > Anyways, I don't agree with that. Even if you can tweak your =
-driver to not run
-> > > > > > > into trouble with this, we can't introduce a mode that violat=
-es GOUVM's internal
-> > > > > > > lifetimes and subsequently fix it up with WARN_ON() or BUG_ON=
-().
-> > > > > > >
-> > > > > > > I still don't see a real technical reason why msm can't be re=
-worked to follow
-> > > > > > > those lifetime rules.
-> > > > > >
-> > > > > > The basic issue is that (a) it would be really awkward to have =
-two
-> > > > > > side-by-side VM/VMA management/tracking systems.  But in legacy=
- mode,
-> > > > > > we have the opposite direction of reference holding.  (But at t=
-he same
-> > > > > > time, don't need/use most of the features of gpuvm.)
-> > > > >
-> > > > > Ok, let's try to move this forward; I see three options (in order=
- of descending
-> > > > > preference):
-> > > > >
-> > > > >   1) Rework the legacy code to properly work with GPUVM.
-> > > > >   2) Don't use GPUVM for the legacy mode.
-> > > > >   .
-> > > > >   .
-> > > > >   .
-> > > > >   3) Get an ACK from Dave / Sima to implement those workarounds f=
-or MSM in
-> > > > >      GPUVM.
-> > > > >
-> > > > > If you go for 3), the code introduced by those two patches should=
- be guarded
-> > > > > with a flag that makes it very clear that this is a workaround sp=
-ecifically
-> > > > > for MSM legacy mode and does not give any guarantees in terms of =
-correctness
-> > > > > regarding lifetimes etc., e.g. DRM_GPUVM_MSM_LEGACY_QUIRK.
-> > > >
-> > > > I'm not even sure how #2 would work, other than just copy/pasta all=
- of
-> > > > drm_gpuvm into msm, which doesn't really seem great.
-> > > >
-> > > > As for #1, even if I could get it to work, it would still be a lot
-> > > > more mmu map/unmap (like on every pageflip, vs the current state th=
-at
-> > > > the vma is kept around until the object is freed).  For the
-> > > > non-VM_BIND world, there are advantages to the BO holding the ref t=
-o
-> > > > the VMA, rather than the other way around.  Even at just a modest
-> > > > single layer 1080p the map takes ~.2ms and unmap ~.3ms (plus the un=
-map
-> > > > costs a tlbinv).  So from that standpoint, #3 is the superior optio=
-n.
-> > > >
-> > >
-> > > Before we get to #3, I'll need a bit more info here on why you have t=
-o
-> > > map/unmap the VMA on every pageflip.
-> >
-> > Previously we'd keep the VMA hanging around until the GEM obj is
-> > freed.  But that can't work if the VMA (via the VM_BO) is holding a
-> > reference to the GEM obj.
-> >
-> > I was kinda thinking about keeping the VMA around until the handle is
-> > closed.. but that doesn't cover the dma-buf case (ie. when you
-> > re-import the dma-buf fd each frame.. I know android does this, unsure
-> > about other wsi's).
-> >
-> > > But actually I think 2 is the best option, I think in nouveau this is
-> > > where we ended up, we didn't modify the old submission paths at all
-> > > and kept the old bo/vm lifetimes.
-> > >
-> > > We just added completely new bind/exec ioctls and you can only use on=
-e
-> > > method once you've opened an fd.
-> >
-> > hmm, but that means tracking VMAs against a single BO differently..
-> > which.. at least seems ugly..
->
-> I don't think it is if you already have the code to do that, and just
-> add gpuvm support in parallel.
->
-> You also have to figure out that the world is moving towards Vulkan
-> for everything so any optimisations you've made for particular legacy
-> paths will need to be dealt with in the future picture anyways.
+Currently vsock's lingering effectively boils down to waiting (or timing
+out) until packets are consumed or dropped by the peer; be it by receiving
+the data, closing or shutting down the connection.
 
-fwiw, the case I'm more worried about is the kms vm for scanout, that
-won't be using vk
+To align with the semantics described in the SO_LINGER section of man
+socket(7) and to mimic AF_INET's behaviour more closely, change the logic
+of a lingering close(): instead of waiting for all data to be handled,
+block until data is considered sent from the vsock's transport point of
+view. That is until worker picks the packets for processing and decrements
+virtio_vsock_sock::bytes_unsent down to 0.
 
-BR,
--R
+Note that (some interpretation of) lingering was always limited to
+transports that called virtio_transport_wait_close() on transport release.
+This does not change, i.e. under Hyper-V and VMCI no lingering would be
+observed.
 
-> But I'd rather not hack gpuvm into being something it isn't, if there
-> is a meaningful commonality in legacy bo/vm bindings across drivers,
-> we could create something new, but the ref counting and handling is
-> pretty fundamental to gpuvm architecture.
->
-> There should only be two paths, legacy and gpuvm, and you shouldn't
-> ever be mixing them on a particular exec path, since you should only
-> have a vm per userspace fd, and can pick which way to use it the first
-> time someone calls it.
->
-> Dave.
-> Dave.
+The implementation does not adhere strictly to man page's interpretation of
+SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ net/vmw_vsock/virtio_transport_common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 6e7b727c781c88674c147b7b75f49f4f1c670d38..f2f1b166731b1bf2baa3db2854de19aa331128ea 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -1195,12 +1195,14 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
+ {
+ 	if (timeout) {
+ 		DEFINE_WAIT_FUNC(wait, woken_wake_function);
++		struct vsock_sock *vsk = vsock_sk(sk);
+ 
+ 		add_wait_queue(sk_sleep(sk), &wait);
+ 
+ 		do {
+ 			if (sk_wait_event(sk, &timeout,
+-					  sock_flag(sk, SOCK_DONE), &wait))
++					  virtio_transport_unsent_bytes(vsk) == 0,
++					  &wait))
+ 				break;
+ 		} while (!signal_pending(current) && timeout);
+ 
+
+-- 
+2.49.0
+
