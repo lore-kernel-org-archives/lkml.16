@@ -1,152 +1,122 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82A622DA1A;
-	Tue, 20 May 2025 13:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB32459F3;
+	Tue, 20 May 2025 13:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749137; cv=none; b=ZG+HgOBche/LC7rbHRtEHGS46cOwF6XHK6WpFXERdaAD8GG9ViGYXxoA56Ebg5us1j0DWvzMG4JDRIUwFIwd9tAgoPSlNzJbwHPp3SYaY3JQFbcDo4k56ooPMbCcJv06M+XyKCBAq/gtx8a6/RP6DX+kc5YbpAzTvH84iGCv9n0=
+	t=1747749152; cv=none; b=MHtIyDKMRYcmaXXr4ioQk5N6XUN89F9yX6dlcI2WpXBlxq7BTDgwfWM+cpA2znjTquG+oqNEigKhnRtz9Ap/AmVs2aHVU4w0vPs8w2xpELX+0B8CSD9+PMSgLGKtalnhHoO6/dartJgnxIxuz/OODeSLZ6UVo8t0zZ7yz4BNil8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749137; c=relaxed/simple;
-	bh=ZDjBBWFIQA5TZm7fBQOM+u77NmrDVlIPEV0NfNuXhVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hvZB4kSmo7zXT5x/a0tt/NpkQMkjOcfczYbZxliJghvkkQ+U3ekuW/rJRRmbNfaSOt365bun96j59vs8mNoibYVUqXDsoBYQTzagMLC7Gq8WhNklfL2ZVd6pKODsvEyHCXT2kMCMyTSJRtBscGFPMIQtCq0weI12qb+jDQuAwMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=X0dJXIpk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X0dJXIpk"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0B09774C;
-	Tue, 20 May 2025 15:51:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747749112;
-	bh=ZDjBBWFIQA5TZm7fBQOM+u77NmrDVlIPEV0NfNuXhVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X0dJXIpksjlZMPkvvk3a6hltmrXJXIaHgucfduWdCeBtOUPdv7HRJfdJCzfcC561y
-	 fHgGsks5LQJfsve1YpejJhm/lc8hcPxXvVUNxWJKkO6UZnno8OJflJAiHbb8QUTzvh
-	 3v+T+5s0jBmydcrScOAblH1sXeVTyvpMVKVMrR5A=
-Date: Tue, 20 May 2025 15:52:06 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 01/12] dt-bindings: display: renesas,rzg2l-du: Add
- support for RZ/V2H(P) SoC
-Message-ID: <20250520135206.GA13321@pendragon.ideasonboard.com>
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1747749152; c=relaxed/simple;
+	bh=aLsYG0iaVoeHfcR0MEX9HAh93TMFwi48LEpL4BnDOTI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U7yiaUojIeohIYBtyq0VQUb9n1EZ9nK27RSmqzm6oEjJaKW7BaLL5o7uoH9QWj+32QJDIYDuDEVCd1DI3DQdatkgdnR+yCypE4/U8r+AcWqHeEgNqiTnNTsOfWS2naAhQzaLdjCseSls81JMhlqOQuAGiSnVNgOfIS1hKa8MmVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 20 May
+ 2025 16:52:20 +0300
+Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 20 May
+ 2025 16:52:19 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com>,
+	<lvc-project@linuxtesting.org>, Alan Stern <stern@rowland.harvard.edu>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] media: dvb-usb-v2: disallow 0-length I2C reads
+Date: Tue, 20 May 2025 16:52:15 +0300
+Message-ID: <20250520135216.2509505-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250512182330.238259-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Hi Prabhakar,
+Syzkaller reported via syzbot a warning (see [1]) that occurs
+when the fuzzer manages to craft a I2C transfer with a 0-length read
+request. This in turn leads to an attempt at execution of a
+USB 0-length read (which is forbidden by USB protocol) leading to
+it being interpreted as a write.
 
-Thank you for the patch.
+Enable I2C_AQ_NO_ZERO_LEN_READ adapter quirk for all devices
+managed by dvb-usb-v2 thus forbidding 0-length read messages
+altogether.
 
-On Mon, May 12, 2025 at 07:23:19PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> The DU block on the RZ/V2H(P) SoC is identical to the one found on the
-> RZ/G2L SoC. However, it only supports the DSI interface, whereas the
-> RZ/G2L supports both DSI and DPI interfaces.
-> 
-> Due to this difference, a SoC-specific compatible string
-> 'renesas,r9a09g057-du' is added for the RZ/V2H(P) SoC.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+[1] Syzbot report
+usb 2-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
+WARNING: CPU: 0 PID: 5845 at drivers/usb/core/urb.c:413 usb_submit_urb+0x11dd/0x18c0 drivers/usb/core/urb.c:411
+...
+Call Trace:
+ <TASK>
+ usb_start_wait_urb+0x11a/0x530 drivers/usb/core/message.c:59
+ usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+ usb_control_msg+0x2b3/0x4c0 drivers/usb/core/message.c:154
+ gl861_ctrl_msg+0x332/0x6f0 drivers/media/usb/dvb-usb-v2/gl861.c:58
+ gl861_i2c_master_xfer+0x3b4/0x650 drivers/media/usb/dvb-usb-v2/gl861.c:144
+ __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
+ i2c_transfer+0x2c2/0x430 drivers/i2c/i2c-core-base.c:2315
+ i2cdev_ioctl_rdwr+0x488/0x780 drivers/i2c/i2c-dev.c:306
+ i2cdev_ioctl+0x78a/0xa20 drivers/i2c/i2c-dev.c:467
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+...
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reported-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=721071c10f3c7e4e5dcb
+Tested-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+Fixes: 776338e121b9 ("[PATCH] dvb: Add generalized dvb-usb driver")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+---
+v1 -> v2: fix description due to overly long lines.
 
-> ---
-> v4->v5:
-> - Added reviewed tag from Biju
-> 
-> v3->v4:
-> - No changes
-> 
-> v2->v3:
-> - Collected reviewed tag from Krzysztof
-> 
-> v1->v2:
-> - Kept the sort order for schema validation
-> - Added  `port@1: false` for RZ/V2H(P) SoC
-> ---
->  .../bindings/display/renesas,rzg2l-du.yaml    | 23 ++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> index 95e3d5e74b87..1e32d14b6edb 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> +++ b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> @@ -20,6 +20,7 @@ properties:
->        - enum:
->            - renesas,r9a07g043u-du # RZ/G2UL
->            - renesas,r9a07g044-du # RZ/G2{L,LC}
-> +          - renesas,r9a09g057-du # RZ/V2H(P)
->        - items:
->            - enum:
->                - renesas,r9a07g054-du    # RZ/V2L
-> @@ -101,7 +102,12 @@ allOf:
->  
->            required:
->              - port@0
-> -    else:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,r9a07g044-du
-> +    then:
->        properties:
->          ports:
->            properties:
-> @@ -113,6 +119,21 @@ allOf:
->            required:
->              - port@0
->              - port@1
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,r9a09g057-du
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DSI
-> +            port@1: false
-> +
-> +          required:
-> +            - port@0
->  
->  examples:
->    # RZ/G2L DU
+P.S. This issue is eerily similar to the one in dib0700
+driver, see [2]. Alan suggested a solution which hasn't been committed
+yet in [3]. Mine is essentialy a copy of his, only for dvb-usb-v2
+devices. As far as I know, no I2C core level protection against
+such issues has been implemented either.
+[2] https://syzkaller.appspot.com/bug?extid=c38e5e60d0041a99dbf5
+[3] https://lore.kernel.org/all/c7f67d3b-f1e6-4d68-99aa-e462fdcb315f@rowland.harvard.edu/
 
--- 
-Regards,
+P.P.S. While this driver seems to be orphaned, I decided to
+send a patch anyway, perhaps someone will deem it worthy...
 
-Laurent Pinchart
+ drivers/media/usb/dvb-usb-v2/dvb_usb_core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c b/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
+index f1c79f351ec8..5c76116fd565 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
++++ b/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
+@@ -19,6 +19,10 @@ module_param_named(force_pid_filter_usage, dvb_usb_force_pid_filter_usage,
+ MODULE_PARM_DESC(force_pid_filter_usage,
+ 		"force all DVB USB devices to use a PID filter, if any (default: 0)");
+ 
++static const struct i2c_adapter_quirks i2c_usb_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN_READ,
++};
++
+ static int dvb_usbv2_download_firmware(struct dvb_usb_device *d,
+ 		const char *name)
+ {
+@@ -63,6 +67,7 @@ static int dvb_usbv2_i2c_init(struct dvb_usb_device *d)
+ 
+ 	strscpy(d->i2c_adap.name, d->name, sizeof(d->i2c_adap.name));
+ 	d->i2c_adap.algo = d->props->i2c_algo;
++	d->i2c_adap.quirks = &i2c_usb_quirks;
+ 	d->i2c_adap.dev.parent = &d->udev->dev;
+ 	i2c_set_adapdata(&d->i2c_adap, d);
+ 
