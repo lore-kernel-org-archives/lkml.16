@@ -1,84 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DD8846F;
-	Tue, 20 May 2025 20:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FCC157487;
+	Tue, 20 May 2025 20:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747774078; cv=none; b=icSEfwmxoeFxt+MaA/iuH9KYyqBiu7TJEnnp2SXdR++YsvI/CBOzUkjVuM1dCAYn0HabjBBR8fpeBbZkoNOwMUH3IpMd8hz/BHMnUrv2nTS7GuTPtYHuV0UffTl81BiwGqT3zMAx1ZcJLgkjsnkqwbocfhk4SAGyZbFf/BDwiLc=
+	t=1747774157; cv=none; b=juAITO+VAS8V/ISPW5jBUj3cZNJzN99zMl+YKlqNVYm55WooX4FbFzciz6IMIsVaxF5YlS3wX5JyTHSUiugc3wz/QJnOCinfEic/jFAJfq7wFQCtj+Gjl4PvEBnyi/Sy0kzaf8m1tP1xDg2RTyGQcr48+sVLtlOa4VB8YhEH5A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747774078; c=relaxed/simple;
-	bh=esWcjAZHZm91HrjZ2YAinWKjPxhlP8DKozv2RUCL+0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8qZbbVCDnLMtgeh0eHNbLwSmbMTC6OSB57IiHSESYlRw31gh80jX7naxTxjtLPWlEx9SQJsQETxB+haf143WXHXb96hssKCHCCuUowMRWpgYOI4bBcXdppWsDIqE8stBpfoh8LdeB/JDptdiZSvVdosXvSdHczB7G1cB9ue89M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbfcUmJP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747774157; c=relaxed/simple;
+	bh=HdsgE3dVEvFD0Kza/FGL4PVyH2AyEt8jTw7NRdOU/NU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g5VKV+BeC4o2tODyP/A2RIvN/gcsIICNW49LshnSAXj/cXimTcR7XGHsoDhZH5qqrOfepASmYkQv2ZmdkACYvwmPXuIFLJlaZNpI0BSc9sF6vq+KjQ11RPsTSk+RVlONwO/Xwa3PEzNe3QwIpS9K29tm2QX4ga7ZsttNzFPNH6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=f24I04oa; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbfcUmJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20427C4CEE9;
-	Tue, 20 May 2025 20:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747774077;
-	bh=esWcjAZHZm91HrjZ2YAinWKjPxhlP8DKozv2RUCL+0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CbfcUmJPMQrsfX3EKSHmzTp9OZVvQ5CwvSYrWHOljY6cTl7uGUA0SXeQQSGA/AUb9
-	 R+etIbrOOKVBZPkwVVUjTU6wro0tCMDZtZgkV9zLSA6fY6VLF/epc12NRKpohjpybp
-	 Ao0JVfb7D9zrzN5ZBZqAjV+Rc++gzXMNQIG5rruwh25R6zx7suCeg7SQ3dnfDngBaj
-	 wYb/L5UWSB8/2oWPqlhff/VefHjRG8DUXfeOyjRM3p3qfMR0GR+KOeM9APOGVEGxWm
-	 elKNQNKkZuoVrlK3QwoGbWCumHk1Fpyes3gW2qbNPVHe07YhoXV5nKYVXnlDSYWiMz
-	 9NTXYYzKQcASw==
-Date: Tue, 20 May 2025 17:47:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: IBS perf test failures on 9950x3d
-Message-ID: <aCzqdn3AJji_yPpQ@x1>
-References: <aCfuGXUnNIbnYo_r@x1>
- <33e86415-c90d-420a-b7a8-6a360769aea4@amd.com>
- <aColYM3RqE4T5t5c@google.com>
- <aCt4akGLsuuC4aLP@x1>
- <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="f24I04oa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fyXXUndsFU1fi1/cHrhrRGj97R8gSsjU9AE57nmvn3s=; b=f24I04oaBlDBxUow8TjGfmH9+y
+	4Wz5r5AIV7+/o3E2jCggtxFXHtVmiLhYADxxBpB2osEMw6yhlTq2FlH7Pg2pXoVV6LO1jzexdLA3u
+	RBHCAyrQioZnUNxDk4SXoY5blOwu9YJT+6aljlvLK162sxahupMzAhz2b8xqM6gRwKZatlwA/U6gB
+	DK5S3oCtfs6TrywV3vtNqT4VmcEybraHicH7cJDmOVHg2IyMYiHb4qJMMaBqaYygJYDZV7ViOfAo1
+	kcisLCDjWcXhG4q4DIlD23s9shub124faPTnS8BlK3IU87KEqQzqMwVasAhurqMTFLloWqBNZtkXP
+	5c1EIn7g==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uHTtZ-00AsVE-Kb; Tue, 20 May 2025 22:49:05 +0200
+From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Date: Tue, 20 May 2025 17:48:34 -0300
+Subject: [PATCH v4 1/7] selftests/futex: Add ASSERT_ macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250520-tonyk-robust_futex-v4-1-1123093e59de@igalia.com>
+References: <20250520-tonyk-robust_futex-v4-0-1123093e59de@igalia.com>
+In-Reply-To: <20250520-tonyk-robust_futex-v4-0-1123093e59de@igalia.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+X-Mailer: b4 0.14.2
 
-On Tue, May 20, 2025 at 04:31:29PM +0530, Ravi Bangoria wrote:
-> > Telling that to the user and possibly skipping the test if viable using
-> > uname to get the version and if less than v6.15-rc1 print "Skip (needs
-> > v6.15-rc1 or newer)" may be an option.
+Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
+
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+ tools/testing/selftests/futex/include/logging.h | 38 +++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/tools/testing/selftests/futex/include/logging.h b/tools/testing/selftests/futex/include/logging.h
+index 874c69ce5cce9efa3a9d6de246f5972a75437dbf..a19755622a877932884570c8f58aaee7371d5f8f 100644
+--- a/tools/testing/selftests/futex/include/logging.h
++++ b/tools/testing/selftests/futex/include/logging.h
+@@ -23,6 +23,44 @@
+ #include <linux/futex.h>
+ #include "kselftest.h"
  
-> > Then if the bug somehow reappears, people running 'perf test' will flag
-> > it.
- 
-> Sure. Attaching a patch at the end.
++#define ASSERT_EQ(var, value)	\
++do {				\
++	if (var != value) {	\
++		ksft_test_result_fail("%s: expected %ld, but %s has %ld\n", \
++				      __func__, (long) value, #var, \
++				      (long) var); \
++		return;		\
++	}			\
++} while (0)
++
++#define ASSERT_NE(var, value)	\
++do {				\
++	if (var == value) {	\
++		ksft_test_result_fail("%s: expected not %ld, but %s has %ld\n", \
++				      __func__, (long) value, #var, \
++				      (long) var); \
++		return; \
++	}		\
++} while (0)
++
++#define ASSERT_TRUE(var)	\
++do {				\
++	if ((var) == 0) {	\
++		ksft_test_result_fail("%s: expected %s to be true\n", \
++				      __func__, #var); \
++		return;		\
++	}			\
++} while (0)
++
++#define ASSERT_FALSE(var)	\
++do {				\
++	if (var) {		\
++		ksft_test_result_fail("%s: expected %s to be false\n", \
++				      __func__, #var); \
++		return;		\
++	}			\
++} while (0)
++
+ /*
+  * Define PASS, ERROR, and FAIL strings with and without color escape
+  * sequences, default to no color.
 
-Thanks, I'm applying it.
+-- 
+2.49.0
 
-But now that I think about it, it may well be the case that, say, RHEL
-backports the fixes in v6.15 for an enterprise kernel that has an
-"older" version, so probably the best is for execute the test, if it
-fails, then do the version check to decide if it is an unexpected
-failure.
-
-But this can be done on top, lets make progress and apply your patch.
-
-> > And I think having it in 'perf test' as well may make the feature to be
-> > tested more widely, both by those who run selftests as well as by people
-> > trying just 'perf test'.
-> 
-> Yeah, that was precisely the reason I did it in 'perf test'.
-
-:-)
-
-- Arnaldo
