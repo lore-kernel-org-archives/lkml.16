@@ -1,125 +1,226 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B651522D78D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B931AAA1E;
+	Tue, 20 May 2025 21:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775341; cv=none; b=QIhbi9Xzk7x/L+5l0B6CvR61YWM9YREBWQ1LuY5Tvmqx2HLe/aC59NshZwxq1mQZMX4nvpHly43kXT34ZCGB3+4ov2sqZSaCmMR4aoUt1dZnHLq9iGPPgFz2BC3fKqzNZb7mpDr2gXEOIkuZKut0z02Bjfkbosni943xLITd2w0=
+	t=1747775361; cv=none; b=fS9Z7QGr0PWdJxRqPjtb3MLsvrFItyqkfncYdhymFu1GfuQ+DJazhcm8C6JlpnoAFykb0sxv4HC+Q9VQU0LhwdryW2kSl0Spxy4+WB3Ya72gldBmS9sWK1hOWVWPdrIaMnbL3MfdP2+kqKEYxUeBHG6zOjzDzD8BB3kUeV2W2oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775341; c=relaxed/simple;
-	bh=ihB+rwt5XDis//1sTiN024h8VjUw07QCmCpDrWYU5hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1fhLG/6uncehJyywz8cAZ0aqw+dAvi9HFyGrU3QuWf4vjT9r2FgwzpXaD1NMdk42JH/plNZgGNT1FCMEIVhHOEDJk8cYKQMoPDSgmBM24TiV7JaPb4lnLgJCVyjErvbWFzxu79Dnle8OmtD7xhfOMdojZGBZPcINr+jmPeNdbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=x6n74Akw; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1747775361; c=relaxed/simple;
+	bh=OWcc2arEbB067Tk7eH2Eiqaf+hoknQKiv98NlVpQseI=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=rfpGiXOxPK6+JMdzzDQdd7aQqebvuQ60SO7wnbrZfBeqz8y6jVsnQXc7pvW9PhmE16hR9pDR9uqTndWvsoavdIKRn3NhDiaajDf1r3XS7crCtcC0CXK0d6qnVB6qvQLyfmevLXMUY5GjqksKHBfkPUxA6THH0Q+yAVX0HSmRfyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVJ1McTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="x6n74Akw"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-742c5f3456fso2559291b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1747775339; x=1748380139; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihB+rwt5XDis//1sTiN024h8VjUw07QCmCpDrWYU5hw=;
-        b=x6n74AkwAFpbYkt7ERe96mP5gD8BqCUpitL4qEtoQNve/3Ky4A6OewY3JkZWBZz4GY
-         wL6fTPt2fUhtTmc9bhOumBSdbK1Z816ZRV0o+CiNq7TEmavE0RqiMZV0VrZINQGkceFY
-         B2vdA+vawHS/LnjfJJwxxHxzJPDTvKOzQSZywb0w/yQQeZK5uGbJAcMdszv5wSp3HGvq
-         XJufoQDFZQo+DbLZyVZLFEr+kcQHP0qo6J1wAAjlvRdNVO3z41JS46oub2UH2q49uPjC
-         RtucD6z83BzAY23u1DjeUnIbZxmG6lxv7RElvHtp07P1OxnAOcDdguMiFUg1ozDxP5TF
-         ttlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747775339; x=1748380139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ihB+rwt5XDis//1sTiN024h8VjUw07QCmCpDrWYU5hw=;
-        b=dB00LxM8/FC7N47yJQD5+IRUIDAv1yjM3mioUrLhYtemF94XFbSgR8HHukGyrCIyzL
-         eXbBsvcKgfarjRWbbNjOtV8PTd4G9AQ9MNLROMWH8u5SrwbmRibYsprEgLGb4QFx+d57
-         Vj0u/XkjW1Rp10zc7zqsu2B9OqxIX97uP7qZutgwSjinZe9HcUV4c+R//XVLK7AhrMVz
-         n9Lw92th8HknmOB1WI4DMRVCw8vwBmnMPbeRCLMlqLiEDJBNlfIdqgSD2NfuwjzOXrTl
-         Eo64Mtvd9LIHlXN/S7L+D1AF5DAElkoofvBkcEBd6wSa1E6JFNDpil/A6zWU5hX9kRQt
-         TkiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuN10tVYvr0h3B3/k4Wp/yjemj7twyvc/3RT7Gc6A9zvBD/AwlHVy9rUVMFfa1ftqa3vxffIho1DIhwLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT3uB+kiWL0Bco8XUZwhdpMyR/ylLEx6zpluRpK9DYOeYBT4ac
-	wRfmnwC3ZI3wdAOGwa5fgSQJk5dUKTb0hBvvNBHYeX5kXJ6HG7rxVLUvL0r7k3pQyZo=
-X-Gm-Gg: ASbGncvIPjVCVYjco5OC8a0aMvIcD9K+jN4D2azPLns8ylxuLnhcLvBzpE+FMDC+pCM
-	xwWUrf4eTBdHGCV2P3CDkLPZvIdydDmr+kPl87CiM5PmU9ZBQXmT3W67kekL5oMRAVAvrLlgUQ3
-	ONfzZXexN19piHQW7sARFFQBxKh6oO/KbrCpCVtyHQb8tMGdLb6qFe2+mauDgcnfbhLvaePWOw/
-	QjzAxvQrUbVl5xsYxRo58hZihSsE0RD28UsgQXtUqGip+N1A1/9ncu2cAKdcIXa7o2mcHUpGQLl
-	pDk7qcC2wlknNUHyOFufUZfqrKtK/IOrsob1U2pj+NTWTIrdEf7u4165GABBC0047litLUmWSg=
-	=
-X-Google-Smtp-Source: AGHT+IG0jhM90gGAp66mKqR5qQF6fDuQGVKEcTsZXkZTJKrN/agp03BwEkWo8NiFt8QodeRgqFhKrQ==
-X-Received: by 2002:a05:6a00:1414:b0:736:450c:fa54 with SMTP id d2e1a72fcca58-742a979528bmr23777834b3a.6.1747775338866;
-        Tue, 20 May 2025 14:08:58 -0700 (PDT)
-Received: from x1 (97-120-251-212.ptld.qwest.net. [97.120.251.212])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829bbesm8361472b3a.89.2025.05.20.14.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 14:08:58 -0700 (PDT)
-Date: Tue, 20 May 2025 14:08:56 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pmem: Convert binding to YAML
-Message-ID: <aCzvaPQ0Z3uunjHz@x1>
-References: <20250520021440.24324-1-drew@pdp7.com>
- <aCvnXW12cC97amX3@x1>
- <20250520-refract-fling-d064e11ddbdf@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVJ1McTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E33C4CEE9;
+	Tue, 20 May 2025 21:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747775360;
+	bh=OWcc2arEbB067Tk7eH2Eiqaf+hoknQKiv98NlVpQseI=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=fVJ1McTkYAPT1Xe0cstZe9DAgDkaVtUKU+prWGBDQEoo7jyYAY48WTvKj+4dRebMj
+	 Jmohpltkmnf1p+WsAK6Vy0nFsktXtb2+smOoFsTF6aZTNEFVFt7T3jh463V+TIVPT0
+	 RKrXQgHi6Ltb7Ag/rptCLTToTR7xkUFobkbciLPmfbKTr4Yb8HNyl0ryGGSMVDMGxA
+	 mLYLfaxoxUGoEpGur1kbayBOoPYynDxOMEBvfHPH76hBc4WESKqWXjOfYs7sx7hMu8
+	 dGEeJawB/0fu2BXoL1qUgr+qn36YtxWWB+uFo5v2T4hbYLuK9NTfYRFjbLrHZAbLpT
+	 9gBS0oC2oF7Jw==
+Date: Tue, 20 May 2025 16:09:18 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OZWMYPezFAgPwp6M"
-Content-Disposition: inline
-In-Reply-To: <20250520-refract-fling-d064e11ddbdf@spud>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ phone-devel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ Todor Tomov <todor.too@gmail.com>, linux-arm-msm@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konradybcio@kernel.org>, Robert Foss <rfoss@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+To: Vincent Knecht <vincent.knecht@mailoo.org>
+In-Reply-To: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
+References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
+Message-Id: <174777533549.1435097.13369376352035895463.robh@kernel.org>
+Subject: Re: [PATCH 0/4] CAMSS support for MSM8939
 
 
---OZWMYPezFAgPwp6M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 20 May 2025 20:39:05 +0200, Vincent Knecht wrote:
+> This series adds CAMSS support for MSM8939.
+> It's mostly identical to MSM8916, except for some clocks
+> and an additional CSI.
+> 
+> To fix black stripes across sensor output, and garbage in
+> CSID TPG output, 2 VFE VBIF register settings are needed.
+> So the 1st patch adds helper functions to do just that.
+> 
+> Patch 1: adds helper for VFE VBIF settings
+> Patch 2: adds CAMSS_8x39 version in CAMSS driver
+> Patch 3: documents qcom,msm8939-camss DT bindings
+> Patch 4: adds camss and cci in msm8939.dtsi
+> 
+> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> ---
+> Vincent Knecht (4):
+>       media: qcom: camss: vfe: Add VBIF setting support
+>       media: qcom: camss: Add support for MSM8939
+>       media: dt-bindings: Add qcom,msm8939-camss
+>       arm64: dts: qcom: msm8939: Add camss and cci
+> 
+>  .../bindings/media/qcom,msm8939-camss.yaml         | 269 +++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/msm8939-pm8916.dtsi       |   4 +
+>  arch/arm64/boot/dts/qcom/msm8939.dtsi              | 152 ++++++++++++
+>  drivers/media/platform/qcom/camss/Makefile         |   1 +
+>  drivers/media/platform/qcom/camss/camss-csiphy.c   |   1 +
+>  drivers/media/platform/qcom/camss/camss-ispif.c    |   8 +-
+>  drivers/media/platform/qcom/camss/camss-vfe-4-1.c  |  11 +
+>  drivers/media/platform/qcom/camss/camss-vfe-vbif.c |  37 +++
+>  drivers/media/platform/qcom/camss/camss-vfe-vbif.h |  19 ++
+>  drivers/media/platform/qcom/camss/camss-vfe.c      |  10 +
+>  drivers/media/platform/qcom/camss/camss-vfe.h      |   3 +
+>  drivers/media/platform/qcom/camss/camss.c          | 157 ++++++++++++
+>  drivers/media/platform/qcom/camss/camss.h          |   1 +
+>  13 files changed, 671 insertions(+), 2 deletions(-)
+> ---
+> base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+> change-id: 20250517-camss-8x39-vbif-975ff5819198
+> 
+> Best regards,
+> --
+> Vincent Knecht <vincent.knecht@mailoo.org>
+> 
+> 
+> 
 
-On Tue, May 20, 2025 at 04:51:42PM +0100, Conor Dooley wrote:
-> On Mon, May 19, 2025 at 07:22:21PM -0700, Drew Fustini wrote:
-> > On Mon, May 19, 2025 at 07:14:40PM -0700, Drew Fustini wrote:
-> > > Convert the PMEM device tree binding from text to YAML. This will all=
-ow
-> > > device trees with pmem-region nodes to pass dtbs_check.
-> > >=20
-> > > Signed-off-by: Drew Fustini <drew@pdp7.com>
-> > > ---
-> > > v2: remove the txt file to make the conversion complete
-> >=20
-> > Krzysztof/Rob: my apologies, I forgot to add v2 to the Subject. Please
-> > let me know if I should resend.
->=20
-> I see how it is Drew...
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks for the Ack and sorry about that :)
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Is it now just a matter of Rb from Oliver O'Halloran and this patch
-going through the nvdimm tree?
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Thanks,
-Drew
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
---OZWMYPezFAgPwp6M
-Content-Type: application/pgp-signature; name="signature.asc"
+  pip3 install dtschema --upgrade
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQSy8G7QpEpV9aCf6Lbb7CzD2SixDAUCaCzvUQAKCRDb7CzD2Six
-DCUOAP9sDOAZPBBh/QTUuTF1j14KmqDTeNB0fB4FKon6h0DjcAD/ZUEtPbEC3x1+
-kIv4K/IlzKAkFPw7HYaorSXa3OynQw8=
-=TyR2
------END PGP SIGNATURE-----
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 8566fc3b96539e3235909d6bdda198e1282beaed
 
---OZWMYPezFAgPwp6M--
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org:
+
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/apq8039-t2.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-sony-xperia-kanuti-tulip.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8929-wingtech-wt82918hd.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:0: 'camss_top_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:1: 'cci_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:2: 'cci' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names:3: 'camss_ahb' was expected
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clock-names: ['ispif_ahb', 'camss_top_ahb', 'cci_ahb', 'cci', 'camss_ahb'] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dtb: cci@1b0c000 (qcom,msm8916-cci): clocks: [[31, 86], [31, 96], [31, 71], [31, 72], [31, 95]] is too long
+	from schema $id: http://devicetree.org/schemas/i2c/qcom,i2c-cci.yaml#
+
+
+
+
+
