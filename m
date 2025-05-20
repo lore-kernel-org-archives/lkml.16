@@ -1,141 +1,108 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B77825A334;
-	Tue, 20 May 2025 06:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FFC25B1D2;
+	Tue, 20 May 2025 06:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747721645; cv=none; b=CJitSo6o56Tf4nadOo1reCKiPxDvMVP0eK/wSH9Ih8KP++ifcKrIzM9wF1muVIotIX1U7PQGQbeTX2jPlHxWFFXobxlXqzl1j4tOUVimb7eMkUYEtwcmyt0XhyyyMRKwJ6yla6kldZgrE/OReCMOJgVqCcCxtHATMOLWKwc/tCE=
+	t=1747721664; cv=none; b=A41fOU3ZA1jNGks+RVKs1aqC0J6t4mjdRdYfxl6rUSQM7+cwrADQ1FDPWfd3i43Wa8QniOx3zBMTVbgRbtgk4bWZgMTP9VRSPQQkCxsf7ImcQ6yUgiabQvxLozfGRBbNOTlTgjGpnD34sTR0kiFuwXpMYUJ3SDInBSgSdmDCnDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747721645; c=relaxed/simple;
-	bh=sfOGzBxbmYxrpTmsmk9iA7kI+4GcUiAg7Ev+d64vRxA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UstwmppSmTF0q2myh9EN/kTRoSfGfXdEcYqN7OIaAg9m3VfCGSd9GXLP2swUPPa0Huc6V7LFvlzPbx1WEP80hbqLQxiCKJvK2C4a+Q7KIB4L6xjUZAnYCqWOM4BvceJO4itVWT2keQeXGQljkFZMlSFF+2pouW5Xqr2dW25ty3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=UK1dKBGl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kXV3Z0ps; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
+	s=arc-20240116; t=1747721664; c=relaxed/simple;
+	bh=GjK6KCDRvwmZFOi3zazPKZde1fTZF4GSJtSxDNaBoWs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cTQ+ADb8zU58eNGIOSY8ddz4PrXhcO0rl8SfaMQVAvlQqQB3WBW9WQ4kGLBbspqKCKZXlWeUVYTTIc3wtkYF8Yf1UtMn0ayVwihEjvl0m+3cAj3NMCismeYmB1xyN+KR07HgLPLZqa1J2GFdgwsCcGeIPttdB+7sp13vO670+uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l89EImAP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="UK1dKBGl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kXV3Z0ps"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 6119F2540156;
-	Tue, 20 May 2025 02:14:00 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 20 May 2025 02:14:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1747721640;
-	 x=1747808040; bh=ebCCwKl+ctIjs3xdVcCquO8ccEzo9gT00bMAJW9tR3k=; b=
-	UK1dKBGlOE/nPbSFz2w4NVz0qzvvRxtPLIANPfir872v6f8QPbeybw8fzi0JeWj4
-	vnalmJl4JpaBJSrU3Z2FkdoQyOephsDTEdjqhfkX8Vb8tMta+dcg7LhphfWbhf7a
-	akyJcLx5Ehiq6iXJIEeOtQUnM1hm8V3GsHdS4mZKqJlFlKeYqhycgERZpMRCwwiy
-	zI0iHMLipA4FCU5uJc7ER6HPVfylazaud6VKL7eLLsvS4szv4V9+/aRpb5XzJMky
-	XAGTJjplkAKqCVkVpWheHRepDybx53LwpLxYKjuHlni+OAymlLhxZ63aeYf54OO+
-	RtyyzPdKSTSO7ItH29fL9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747721640; x=
-	1747808040; bh=ebCCwKl+ctIjs3xdVcCquO8ccEzo9gT00bMAJW9tR3k=; b=k
-	XV3Z0ps9QdyShz3WgtdZTFTNx4ZS/RgqjBNiy8fn05lQc2cyOiqvTR7QxmGDCtaR
-	e167ALUh3QZg2+lJUz1Tjykr9PcflQK0S/bz1gnQBWbfUfwLIzGYgoDQBdb++iL7
-	LK1rIM/qpRVRO/kxvMTJkNdswhrWfIOO3NL9KlAklw9zinyzdvRjRBhmoBBN9fNK
-	0ge2wA5diNZtojP2miy8fSnwY7SjHBjebJVzG83b0+zz1aXYVeB9/RNqvQuyftGI
-	ei+Z4LUZAYNPNjd/s40uTGFzdQNPUXU3AHYWSeLA6pbejnK0XU5IIyoqTCPmXktR
-	dNA1ffpfGnsdmLM99D0sw==
-X-ME-Sender: <xms:px0saFY933IyeKEWYu3XuDcC-SGiR6bNl4iLz_M7NuHdPfvXkjllOQ>
-    <xme:px0saMZ9ZuGp5gd440aUHBHelMRvH5_nWuDdlHln6mDWgYxZ0oLQlKhRejnK0tbX2
-    z0FaoDXmVVF2IoGz38>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdefheduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehnihhsshgvucetshhtihgvrhdfuceorghnihhsshgvsegrsh
-    htihgvrhdrvghuqeenucggtffrrghtthgvrhhnpeekvedutdeghfevfeevjefhvdfhtdeh
-    teetfedvgfdvffefveeufeduueethfegfeenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrnhhishhsvgesrghsthhivghrrdgvuhdpnhgspghr
-    tghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigse
-    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepmhhtuhhrqhhuvghtthgvsegs
-    rgihlhhisghrvgdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvth
-    dprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthht
-    oheprghnughrvgifjhgsrghllhgrnhgtvgesghhmrghilhdrtghomhdprhgtphhtthhope
-    gsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehmihhguhgvlhdr
-    ohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghpthhtohephihurh
-    ihrdhnohhrohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhes
-    ghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:px0saH_Ji6vuSbgAkP2LDvb94v-U3vk5LgRfgazc5HYIcqfC-vpOMA>
-    <xmx:px0saDpRhMm_Nx09JgSroPL-Ur1A8wMHKD2-6mLWZMjOv-38Pdxqpw>
-    <xmx:px0saAp2DBjw2SBZMd8AmMDJB34Elb9ERuvq7RqLGbtGWH-yQMuOQQ>
-    <xmx:px0saJTaeW3h9Vhf5t5KvcchACqLnVj3EhG2N4j48qFuWAFl1aTvJg>
-    <xmx:qB0saEPbiwR3t4qKp0RzcC6tYAfavsmtt2bjyqVbRFtLP3L5rEOWCj73>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4EE4B700060; Tue, 20 May 2025 02:13:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l89EImAP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B1CC4CEE9;
+	Tue, 20 May 2025 06:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747721663;
+	bh=GjK6KCDRvwmZFOi3zazPKZde1fTZF4GSJtSxDNaBoWs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=l89EImAPLxMnMCZWnDFoePo6clGnpmzPikXJygneptBfHRt+cm8mI68Au1hZorKNa
+	 FB2tXI/bKtLSMuiFVPR28Qzxxh6xt5Z69a3C9aVl/cBrzASWwxXpBzmNTxRR0gxmIk
+	 7bsVSOtdWlw/tBz05O8WwjFvXX+RxywIOHLufth51xrqVpiRffxEt38At41qVYeccx
+	 1LXz3hQ59TQ3oJ9qZiDaXBzfnVZl1tBIN/LGj4NG6lVCncj2reGcYFt03CP+MlbXGc
+	 iZsnlvC3fIGJ6kuvez6gABHnBXA0px6NZCHwQoXC3TUqz8cApPST/4czi2P3d/F865
+	 nvQqPzn7zubgQ==
+Message-ID: <74d24ca3-db40-4788-952b-316b1c101b85@kernel.org>
+Date: Tue, 20 May 2025 08:14:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc582061166103edd
-Date: Tue, 20 May 2025 08:13:09 +0200
-From: "Anisse Astier" <anisse@astier.eu>
-To: "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, linux-pm@vger.kernel.org,
- "Vincent Guittot" <vincent.guittot@linaro.org>,
- "Stephen Boyd" <sboyd@kernel.org>, "Nishanth Menon" <nm@ti.com>,
- rust-for-linux@vger.kernel.org,
- "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- "Joakim Bech" <joakim.bech@linaro.org>, "Rob Herring" <robh@kernel.org>,
- "Yury Norov" <yury.norov@gmail.com>, "Burak Emir" <bqe@google.com>,
- "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
- "Russell King" <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
- "Michael Turquette" <mturquette@baylibre.com>,
- "Andrew Ballance" <andrewjballance@gmail.com>,
- linux-kernel@vger.kernel.org
-Message-Id: <e8a404b2-4ec6-4e1d-a973-15684676e870@app.fastmail.com>
-In-Reply-To: <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
-References: <cover.1747634382.git.viresh.kumar@linaro.org>
- <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
- <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
- <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
-Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module names
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ath-next v2 1/5] dt-bindings: net: wireless: add ath12k
+ wifi device IPQ5424
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ath12k@lists.infradead.org
+References: <20250518-ath12k-ipq5424-v2-0-ef81b833dc97@quicinc.com>
+ <20250518-ath12k-ipq5424-v2-1-ef81b833dc97@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250518-ath12k-ipq5424-v2-1-ef81b833dc97@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 18/05/2025 20:22, Raj Kumar Bhagat wrote:
+> Add the device-tree bindings for the ATH12K AHB wifi device IPQ5424.
+> 
+> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/net/wireless/qcom,ipq5332-wifi.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Mar 20 mai 2025, =C3=A0 06:33, Viresh Kumar a =C3=A9crit=E2=80=AF:
-> On 19-05-25, 16:15, Miguel Ojeda wrote:
->> On Mon, May 19, 2025 at 9:08=E2=80=AFAM Viresh Kumar <viresh.kumar@li=
-naro.org> wrote:
->> >
->> > +    /* Rust does not allow hyphens in identifiers, use underscore =
-instead */
->>=20
->> (In case you see this before you apply)
->>=20
->> Nit: `//` for comments, also please end with a period.
->
-> Done.
-
-Thank you Viresh for iterating on this and picking up review comments. D=
-o not hesitate to add your Co-developed-by.
-
-Kind regards,
-
-Anisse
+Best regards,
+Krzysztof
