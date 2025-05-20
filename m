@@ -1,99 +1,92 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD0C2620E5;
-	Tue, 20 May 2025 19:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CBD48CFC;
+	Tue, 20 May 2025 19:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769046; cv=none; b=Gh0sOderWc2GYafJpI9w6qCzvC+s3Zpjm7DP0sF4W013sR7qELhIiGVqBZsryhNH77tSPHFEt+siWMJriFwUw3lfVQ0key1D4JOmAImVgwhIiYiBvpSP9aNUksQGrmtCEQ8WEKZ5p7lBiTdaT1A3W/hp5fiN+THbmOzl5qqEGxk=
+	t=1747769105; cv=none; b=g0aYWdXlo6nfQoCz4VQf5mqkp71lDVEoUmQ97cgHRo5/lHDIT795IfrBB1Dd7TLd6Yitr75mR+xAgDt02VoJC1ej5Bc8f+EejsEvUn6xcj2g1tNkg9FGotbPPrkCoYWCDrQMmcNkMoDfA2ozoAdiZf9ElBF0zZP9LX6hxbV2eKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769046; c=relaxed/simple;
-	bh=L1J2+f/o6ewoklc+hKFnSACjTFC2/ANmUYvlgy5NJjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ep55eN6lYHUr8OkrANfiYLroZCltICU3R0ChsP8HAi8l5suLUkcJfgAYnKrfoRgC7tivS/3v5+7Bog6Xr/VtIB0LHl2NLpNV1OdHpot58mPnLy5rDAWyn5I9uJlA5qFnttCcFswAFCDbChdd2HsSzcg9/z9hbec7q87i8CqTuiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pr3EAfpi; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747769105; c=relaxed/simple;
+	bh=/YQuD/zXoYuchGtOXAaMXzL86e5ZTR1Z9Yg6aUdHmaE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=TI0LkBWs6eWS0S/GEDNueTtvRp9rgrsLyzK1TUORureeO4311swlhU7OBUt47mXqUL9mgi8nbTNuX6WaOa+0GwFqFaKXmKMmVZPIcNdsAn8Ss/hDXUEKPtYgfcQxCszU/RX7fbJcpbxSoMdtU56ljyhzgSoDsMSpf1gUnN/WYg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pm03hirf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pr3EAfpi"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-551fb4d153dso1678605e87.3;
-        Tue, 20 May 2025 12:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747769043; x=1748373843; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d6XdgS84YDQPuRuy9Jq0oBvxTqOH5n4daq0yM54SeO0=;
-        b=Pr3EAfpi8tHBNGmpt/zsfP4Jp/nLFdeUgN+g7T24egdkp4CG0/NAMvD+tLnA2pcHR2
-         ad0iyLoSCZGNOzJ7dEZ4C+bbJNav9SadzBev6kWVzmS/VqTivtBRG9OC1KmM6Ub64iyR
-         ySp45jhrfiK1C2YXV+Qi6J/I7YJNoQTWW3icYKYtmNdEcq/NZQxlqE46Va6ibZF0gFa3
-         dnfFfq5tLEm7VQgV1v5J9x6wu1FejEWL+h29wrBLuqqLRRFMFsre/nYMttST5i1bXKoR
-         CwjeO65JEEDUk1ocjRlDR/PZfU3KjMuesoRdpLW7At6/LbpU7T3bIfe+dttSISIr0ukE
-         LIpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747769043; x=1748373843;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d6XdgS84YDQPuRuy9Jq0oBvxTqOH5n4daq0yM54SeO0=;
-        b=EbBKZNenOFt8Q5AEFBWVYR4s8YglwXRiBs6lg0Cpt993MZ1swP64PkSDLkoWcBXbzQ
-         PeSZsG089MTeFArS6OJd6J7tioHmEC/xDVnaADAEScdS+BLy6Cg+96dE/ce1VDWnwJX6
-         VqDP0xh59Fzx992/lgNb9u2W7neb7HpoLMM9CtKJmhX8B5o7S32iiuZye4EAHd1PMuBU
-         z4JZGyjcIuudixJ76udNFMSIVuMDeWUeXdHp8cxJ/JLziIEl3occzwolulQVEyDXT6rS
-         VfFRGsESto3e9lBSiDkfmE6lcL7F3Gt5SWpKmVs6GphYvXhpp4LxXR5141MGUzOk4HxD
-         jFGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1C0Gs8JhbfFlCJBEWbtVhDChxyGV6lvP7XAHdTjW+qGar7R/qobw3ln7yrUy2APlF7+tIzpkYonEUUJE=@vger.kernel.org, AJvYcCWBKHo1usWL3S7OsR6vseNiQGmWW7eEk4pdoj8UQOng7FfT2a71eHlxwX7QXA70lORzwOLx0u/iBpjpVs5bMFQ=@vger.kernel.org, AJvYcCWyBUa88Nz6cJKfX8jvKtvWQJqIixRf2O3Yt0JDQNlMIC+p36Coyc4wbDgv1ndaNOtqaubXBFId@vger.kernel.org, AJvYcCXXZ5CVcuq46OXCbsCVqe05IavjWjsxw2b2CEHn0H5nWbKAxYMWwSIEut9SI+20HZnbVk64jVLVCvdhmO7W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9y0OW+DJdNXobUup0LLDal2yE6kks2iNtJHts1qwUiqn7vOTA
-	NgfZqRFGtfGKjuho9NgKjtYskscwLCcpuPfMrIc2J87N/D0mOIC5ArsX4NRW6IYtbUSAyvUlaM/
-	mCFeicwJMs2tkkybGqiaPdM+VpzR/uL4=
-X-Gm-Gg: ASbGncupfMLgjLO34ARpfAzXR70aFbI8HKE29KACRKvQEUzttqDFSySRQl5el4tSi2L
-	KGdX589Y9NxieYROntirT8dms4ELJ9Db8N5d+anEH+ZxR9lxDi+38Chaktvwl/SFqq6XY1CN/ne
-	ZI8iT5iQ8geqsn87U437s64hiImb7Kw7AdBcBw1rmNLJ70YiM8HGDova03ShjMEMObl9NM+xMCI
-	Ee4
-X-Google-Smtp-Source: AGHT+IFz3JlmJoyJ1wap0ojoWn4Wrko8mlIC7Ep/pg5OlmQk3tTzNnmLB3I17P8W6HKbwMRLn0gUghgOlCmTVzkS+jg=
-X-Received: by 2002:a05:6512:3e17:b0:54d:6dd3:614f with SMTP id
- 2adb3069b0e04-550e97cbca5mr5277052e87.21.1747769042589; Tue, 20 May 2025
- 12:24:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pm03hirf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCD4C4CEE9;
+	Tue, 20 May 2025 19:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747769105;
+	bh=/YQuD/zXoYuchGtOXAaMXzL86e5ZTR1Z9Yg6aUdHmaE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Pm03hirfXqvWbK011PvyDZTeKD4xh9DP40C0ABh/Ysw6K4+tq4abcOoIoCf0F1gGc
+	 82Fb5HnxBy+bQUH3IAzfuz7EN9Eawm4UUWq11H8MUAh9KZiAY5m8NovoXz4SzLnNK1
+	 wpxVLlCHpD9kfgNJOyrsuhqRgJipU4kGxs+WJxB/8/ZeA31BTTxj3ICMMZgXuUUXrF
+	 Adh5Gst1HVJ3QHntXwLLmU0CdobimUXECalSIWjuUQxydJ9lr7Nkcmc207/6o6AQgk
+	 K8Vp1fJwqpaY+pGsUqiWunkC3ZR6CajLGe+VGkn02DtTXzO9niJ0MdzAePbONXYh2F
+	 WLiAll5knHuOw==
+Date: Tue, 20 May 2025 14:25:03 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520192034.889415-1-ojeda@kernel.org>
-In-Reply-To: <20250520192034.889415-1-ojeda@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 20 May 2025 15:23:26 -0400
-X-Gm-Features: AX0GCFuaLSbZQ1hVvU1lb2VxUKLxVWKNlDMNxG3qmRXP7Db0x4G0ZVJV-F0CVHo
-Message-ID: <CAJ-ks9=4DJdbUBiy_45wWPviOs48NEK1DmeqWnDaFSpkoda_GQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: kbuild: rebuild if `.clippy.toml` changes
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-gpio@vger.kernel.org, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+To: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+In-Reply-To: <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
+References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
+ <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
+Message-Id: <174776907517.1215979.15639504513287893325.robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: stm32: Introduce HDP
 
-On Tue, May 20, 2025 at 3:20=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> We rarely modify `.clippy.toml`, but currently we do not rebuild if that
-> happens, thus it is easy to miss possible changes in lints.
->
-> Thus rebuild in case of changes.
->
-> Cc: stable@vger.kernel.org
-> Reported-by: Tamir Duberstein <tamird@gmail.com>
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1151
-> Fixes: 7d56786edcbd ("rust: introduce `.clippy.toml`")
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+
+On Tue, 20 May 2025 17:02:28 +0200, Clément Le Goffic wrote:
+> 'HDP' stands for Hardware Debug Port, it is an hardware block in
+> STMicrolectronics' MPUs that let the user decide which internal SoC's
+> signal to observe.
+> It provides 8 ports and for each port there is up to 16 different
+> signals that can be output.
+> Signals are different for each MPU.
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->  rust/Makefile | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 188 +++++++++++++++++++++
+>  1 file changed, 188 insertions(+)
+> 
 
-It is possible to do this only if CLIPPY=3D1?
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.example.dtb: /example-0/pinctrl@54090000: failed to match any schema with compatible: ['st,stm32mp15-hdp']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
