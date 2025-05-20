@@ -1,318 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B3C2F37
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19ECBA45;
+	Tue, 20 May 2025 13:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748394; cv=none; b=IumabyHD9Csu3NzYNN4LxjvgSSjNAm9+eDtbc9OolIYWy/Z0vHmhmOnpEcXbuMZmz2z5uHiGu3KJqnEy5h+AlGIa4S/A8f7VoquMmxnQiOxAcg1m/inLc0QWC/XyLFcY0Feh5/cfSLHADkI6nUS6ODQi79d96m3gmmDMpeYRRRc=
+	t=1747748499; cv=none; b=ULBQvn0Wic0VgXmgstY0osGnH/7PCBfsmJVDSKDCj3rEtXSudAJaXNEGuJAqf2fbDu4V23vKUjUv1go4kUvKu0pabAKOOF3qbgJSNoB7BN5zsCbdN2mujXQN5Zw/XnS7uAfWmIIsNXQDVKmSSnqoBdMHnaPsZwCQ1snkaYsE/FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748394; c=relaxed/simple;
-	bh=1iRcJwWAfFpPUoQqIflZ2HudlOnmmrJs4o0O3dmUXkk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YP6AEq8iVGQtrvClNQZaXrMX+V513HNXmq0mA4gQrrbuB2nruOiKjucNMNAslDHA1v2iz5THLzr4x9U9lZcR6v9Yhmd5+6smfi86Zihd+AyXAxL/PC8ju/c1RNAN84jUpL5KzXsUtYVn9Zm7PPTeK53a3MzH1LaaBKBZJDisAHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VdxkrFeL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VdxkrFeL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747748391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4y6ogTj1oVC2owmi8NZRMSK17ALEGUDrSSspJ9SQWjg=;
-	b=VdxkrFeLhN2icgP6LOnGTM4RTgxglmrbawivB6CJCvcZkDozAHTUMji0fnnFhIAbARzG/r
-	by8hCEvlziByF1UpJxDZYm4F6Nn8THNCilzp4mYI8biac8R45p/sUQ/JoHIa6r3daAY3z6
-	JWpGnKmaQJjzCrndFFz2XskN6VHBLB0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-264-w86lbIRgPFSlo8K-smOwkg-1; Tue, 20 May 2025 09:39:49 -0400
-X-MC-Unique: w86lbIRgPFSlo8K-smOwkg-1
-X-Mimecast-MFC-AGG-ID: w86lbIRgPFSlo8K-smOwkg_1747748388
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a3696a0ce6so1238913f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:39:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747748388; x=1748353188;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4y6ogTj1oVC2owmi8NZRMSK17ALEGUDrSSspJ9SQWjg=;
-        b=P27DZMvfz/MXGavr7T6rnGYDOrrspzkoPw1RRCq6faFqs3TSp78yfv17Mic7ygE2Qi
-         VLtxhnuq/1CZ1FIyBW9SFuWnKKGZ1Nh/JDhjSmxHVflky333CL/29odPW3RFBcj7hV5b
-         m78MXrk6ZfuSHUiBeTMRsLxD0jP4YWoJdogWmLSs5WZ3smb26KT5jPFpND9k7HS6GYqV
-         d9BzIKxjgHtRZcb/X73VzPgcVCaJMYIkSde64SmlXlMRWrPOwzQuHekEsB8E3l24E+4B
-         crVISYUzqVF5Xy/ijx/a2pfWMKSeL31yPJBey0y4wQIWueL8b+NKgTL68J7gmJfGT3WP
-         Yxdw==
-X-Gm-Message-State: AOJu0YwzxNMFqGCFlAIO8l4ufBzIQ2sHmV5KHOjA/WliksDBGOn70W8N
-	FrmTRJ+FJeTPbaSFRwz3fYB8BKN2wPKC8Q4O0dY3jPNYGo7CUSjCT0f30NtoLvlLMqurGZX8p7B
-	8ZhBjrQLtU97t6dmJ7nb7M1J2+zZoYD9aqYCxQlbnGOkVF2Bm2Y5dIhB/N0vtVMNd8Q==
-X-Gm-Gg: ASbGnct/8SuLOddRtIUPk7rb41aZNHRC8VQjjoLASs8mLzYekMA0kL7HpJyS58s8GXV
-	grV5LoeSj8tqyiUvC4V/NknE74IdHremGNgTZrZsWYjcjJTUSL1AauCotGfEp9jnNMQByb7PK2U
-	4WlxjTeOQXDFrLl3HynQGjPehpUS5NufaE5s4UExgjov4neqQhfYMT7iZDROvX1IZN8u8gkCwV7
-	dtzp/ndYS1V196yBhC60NqWV1EseN96vcg2tfs+cBOF4itOh559FIYvN4vAcA82chd9bjH5mO+Y
-	YA9/cYjHArxVijkjHfzXafYwbCz0GCO6UqcdQA==
-X-Received: by 2002:a5d:64e8:0:b0:3a3:76f5:3b0d with SMTP id ffacd0b85a97d-3a376f53b87mr4605113f8f.57.1747748388418;
-        Tue, 20 May 2025 06:39:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGiUiAS8D4gjNDyD1o4n2YlEkmljK0ljJJnyxXBXYghEiyCa69YESuX4lig0cihpuHpPI/OMw==
-X-Received: by 2002:a5d:64e8:0:b0:3a3:76f5:3b0d with SMTP id ffacd0b85a97d-3a376f53b87mr4605086f8f.57.1747748387908;
-        Tue, 20 May 2025 06:39:47 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca88978sm16776382f8f.65.2025.05.20.06.39.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 06:39:47 -0700 (PDT)
-Message-ID: <df3ea0c02afb98a8dfc06f29d5ff56bbe8588dd8.camel@redhat.com>
-Subject: Re: [PATCH v5 5/6] cgroup/cpuset: Fail if isolated and nohz_full
- don't leave any housekeeping
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Waiman Long <longman@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-  Thomas Gleixner <tglx@linutronix.de>
-Date: Tue, 20 May 2025 15:39:45 +0200
-In-Reply-To: <20250508145319.97794-13-gmonaco@redhat.com>
-References: <20250508145319.97794-8-gmonaco@redhat.com>
-		 <20250508145319.97794-13-gmonaco@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	s=arc-20240116; t=1747748499; c=relaxed/simple;
+	bh=Pl97RPJA65yK6wsBR+Mdo3QzFLJwyLoN2KOV3HaMVWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=khqCIRD3J1ryb6x0ZZFErmnAi/VGfcfY0ixcq69DFDUgzJe/0w1YEByJLG7DM7+EPDR/3sDN4vD5wX4RIEXli+IDEGpnwg75/V7fdAth8ZziMDG0rzVqbUsQ6P83eaB01+2yANRNXHm58aXOQb/ETJ+oKaEvzzAE9Mv6v1JmXKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b1wgW1yr4z4f3k5c;
+	Tue, 20 May 2025 21:41:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 18A5E1A0359;
+	Tue, 20 May 2025 21:41:31 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgDnSl+IhixoqLbsMw--.53088S3;
+	Tue, 20 May 2025 21:41:29 +0800 (CST)
+Message-ID: <1988ee26-c250-41c3-a5eb-aa3af70828a2@huaweicloud.com>
+Date: Tue, 20 May 2025 21:41:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/8] ext4: enable large folio for regular files
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
+ adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com,
+ libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+ <aCxbeamCS5r2ivy5@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <aCxbeamCS5r2ivy5@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgDnSl+IhixoqLbsMw--.53088S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtr4fKFWDJF4fAw4rtr13Jwb_yoW7WrW8p3
+	4a9F43Kr4Sg34UC397Ar1YqrW0ya1UJr4rAa4xW340vryUAr17uw1Igr4F93srAryxCr1S
+	yrWUAryxuF1YyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Thu, 2025-05-08 at 16:53 +0200, Gabriele Monaco wrote:
-> Currently the user can set up isolated cpus via cpuset and nohz_full
-> in
-> such a way that leaves no housekeeping CPU (i.e. no CPU that is
-> neither
-> domain isolated nor nohz full). This can be a problem for other
-> subsystems (e.g. the timer wheel imgration).
->=20
-> Prevent this configuration by blocking any assignation that would
-> cause
-> the union of domain isolated cpus and nohz_full to covers all CPUs.
->=20
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
+On 2025/5/20 18:37, Ojaswin Mujoo wrote:
+> On Mon, May 12, 2025 at 02:33:11PM +0800, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> Changes since v1:
+>>  - Rebase codes on 6.15-rc6.
+>>  - Drop the modifications in block_read_full_folio() which has supported
+>>    by commit b72e591f74de ("fs/buffer: remove batching from async
+>>    read").
+>>  - Fine-tuning patch 6 without modifying the logic.
+>>
+>> v1: https://lore.kernel.org/linux-ext4/20241125114419.903270-1-yi.zhang@huaweicloud.com/
+>>
+>> Original Description:
+>>
+>> Since almost all of the code paths in ext4 have already been converted
+>> to use folios, there isn't much additional work required to support
+>> large folios. This series completes the remaining work and enables large
+>> folios for regular files on ext4, with the exception of fsverity,
+>> fscrypt, and data=journal mode.
+>>
+>> Unlike my other series[1], which enables large folios by converting the
+>> buffered I/O path from the classic buffer_head to iomap, this solution
+>> is based on the original buffer_head, it primarily modifies the block
+>> offset and length calculations within a single folio in the buffer
+>> write, buffer read, zero range, writeback, and move extents paths to
+>> support large folios, doesn't do further code refactoring and
+>> optimization.
+>>
+>> This series have passed kvm-xfstests in auto mode several times, every
+>> thing looks fine, any comments are welcome.
+>>
+>> About performance:
+>>
+>> I used the same test script from my iomap series (need to drop the mount
+>> opts parameter MOUNT_OPT) [2], run fio tests on the same machine with
+>> Intel Xeon Gold 6240 CPU with 400GB system ram, 200GB ramdisk and 4TB
+>> nvme ssd disk. Both compared with the base and the IOMAP + large folio
+>> changes.
+>>
+>>  == buffer read ==
+>>
+>>                 base          iomap+large folio base+large folio
+>>  type     bs    IOPS  BW(M/s) IOPS  BW(M/s)     IOPS   BW(M/s)
+>>  ----------------------------------------------------------------
+>>  hole     4K  | 576k  2253  | 762k  2975(+32%) | 747k  2918(+29%)
+>>  hole     64K | 48.7k 3043  | 77.8k 4860(+60%) | 76.3k 4767(+57%)
+>>  hole     1M  | 2960  2960  | 4942  4942(+67%) | 4737  4738(+60%)
+>>  ramdisk  4K  | 443k  1732  | 530k  2069(+19%) | 494k  1930(+11%)
+>>  ramdisk  64K | 34.5k 2156  | 45.6k 2850(+32%) | 41.3k 2584(+20%)
+>>  ramdisk  1M  | 2093  2093  | 2841  2841(+36%) | 2585  2586(+24%)
+>>  nvme     4K  | 339k  1323  | 364k  1425(+8%)  | 344k  1341(+1%)
+>>  nvme     64K | 23.6k 1471  | 25.2k 1574(+7%)  | 25.4k 1586(+8%)
+>>  nvme     1M  | 2012  2012  | 2153  2153(+7%)  | 2122  2122(+5%)
+>>
+>>
+>>  == buffer write ==
+>>
+>>  O: Overwrite; S: Sync; W: Writeback
+>>
+>>                      base         iomap+large folio    base+large folio
+>>  type    O S W bs    IOPS  BW     IOPS  BW(M/s)        IOPS  BW(M/s)
+>>  ----------------------------------------------------------------------
+>>  cache   N N N 4K  | 417k  1631 | 440k  1719 (+5%)   | 423k  1655 (+2%)
+>>  cache   N N N 64K | 33.4k 2088 | 81.5k 5092 (+144%) | 59.1k 3690 (+77%)
+>>  cache   N N N 1M  | 2143  2143 | 5716  5716 (+167%) | 3901  3901 (+82%)
+>>  cache   Y N N 4K  | 449k  1755 | 469k  1834 (+5%)   | 452k  1767 (+1%)
+>>  cache   Y N N 64K | 36.6k 2290 | 82.3k 5142 (+125%) | 67.2k 4200 (+83%)
+>>  cache   Y N N 1M  | 2352  2352 | 5577  5577 (+137%  | 4275  4276 (+82%)
+>>  ramdisk N N Y 4K  | 365k  1424 | 354k  1384 (-3%)   | 372k  1449 (+2%)
+>>  ramdisk N N Y 64K | 31.2k 1950 | 74.2k 4640 (+138%) | 56.4k 3528 (+81%)
+>>  ramdisk N N Y 1M  | 1968  1968 | 5201  5201 (+164%) | 3814  3814 (+94%)
+>>  ramdisk N Y N 4K  | 9984  39   | 12.9k 51   (+29%)  | 9871  39   (-1%)
+>>  ramdisk N Y N 64K | 5936  371  | 8960  560  (+51%)  | 6320  395  (+6%)
+>>  ramdisk N Y N 1M  | 1050  1050 | 1835  1835 (+75%)  | 1656  1657 (+58%)
+>>  ramdisk Y N Y 4K  | 411k  1609 | 443k  1731 (+8%)   | 441k  1723 (+7%)
+>>  ramdisk Y N Y 64K | 34.1k 2134 | 77.5k 4844 (+127%) | 66.4k 4151 (+95%)
+>>  ramdisk Y N Y 1M  | 2248  2248 | 5372  5372 (+139%) | 4209  4210 (+87%)
+>>  ramdisk Y Y N 4K  | 182k  711  | 186k  730  (+3%)   | 182k  711  (0%)
+>>  ramdisk Y Y N 64K | 18.7k 1170 | 34.7k 2171 (+86%)  | 31.5k 1969 (+68%)
+>>  ramdisk Y Y N 1M  | 1229  1229 | 2269  2269 (+85%)  | 1943  1944 (+58%)
+>>  nvme    N N Y 4K  | 373k  1458 | 387k  1512 (+4%)   | 399k  1559 (+7%)
+>>  nvme    N N Y 64K | 29.2k 1827 | 70.9k 4431 (+143%) | 54.3k 3390 (+86%)
+>>  nvme    N N Y 1M  | 1835  1835 | 4919  4919 (+168%) | 3658  3658 (+99%)
+>>  nvme    N Y N 4K  | 11.7k 46   | 11.7k 46   (0%)    | 11.5k 45   (-1%)
+>>  nvme    N Y N 64K | 6453  403  | 8661  541  (+34%)  | 7520  470  (+17%)
+>>  nvme    N Y N 1M  | 649   649  | 1351  1351 (+108%) | 885   886  (+37%)
+>>  nvme    Y N Y 4K  | 372k  1456 | 433k  1693 (+16%)  | 419k  1637 (+12%)
+>>  nvme    Y N Y 64K | 33.0k 2064 | 74.7k 4669 (+126%) | 64.1k 4010 (+94%)
+>>  nvme    Y N Y 1M  | 2131  2131 | 5273  5273 (+147%) | 4259  4260 (+100%)
+>>  nvme    Y Y N 4K  | 56.7k 222  | 56.4k 220  (-1%)   | 59.4k 232  (+5%)
+>>  nvme    Y Y N 64K | 13.4k 840  | 19.4k 1214 (+45%)  | 18.5k 1156 (+38%)
+>>  nvme    Y Y N 1M  | 714   714  | 1504  1504 (+111%) | 1319  1320 (+85%)
+>>
+>> [1] https://lore.kernel.org/linux-ext4/20241022111059.2566137-1-yi.zhang@huaweicloud.com/
+>> [2] https://lore.kernel.org/linux-ext4/3c01efe6-007a-4422-ad79-0bad3af281b1@huaweicloud.com/
+>>
+>> Thanks,
+>> Yi.
+> 
+> Hi Yi,
+> 
+> I don't see any obvious functional regressions on PowerPC with 64k
+> pagesize. I know Ted has picked this up, but feel free to add:
+> 
+> Tested-by: Ojaswin Mujoo <ojaswin@linux.ibm.com> # on powerpc ps > bs
+> 
+> I'll give my RVBs individually, since I'm still not sure about some of
+> the patches.
+> 
 
-Waiman, while testing this patch I got a few doubts how errors should
-be reported in cpusets and the general behaviour when cpuset is
-combined with boot-time isolation.
+Thank you very much for the test and review.
 
-This is the behaviour introduced by the current patch:
-* Assume we boot a 16 cores machine with nohz_full=3D8-15
-* We configure an isolated cgroup with 0-9 exclusive CPUs
-* the partition file complains with:
-  isolated invalid (partition config conflicts with housekeeping setup)
-  nproc: 16 (ok)
-* we now set the same cgroup with 0-6 isolated CPUs
-  the partition is marked as isolated (expected)
-  nproc: 9 (ok)
-* we set back the CPUs as 0-9
-  I'd expect an error somewhere but partition is still isolated
-  nproc: 9 (ok?)
+Best Regards,
+Yi.
 
-Checking with nproc shows 7-9 are not isolated (but this is not visible
-in the effective exclusive CPUs which shows still 0-9).
 
-Now this behaviour seems incorrect to me, but is consistent with the
-other flavour of PERR_HKEEPING (already upstream):
-* set isolcpus=3D8-15
-  nproc: 8
-* set 5-9 as isolated
-  isolated invalid (as above)
-  nproc: 8
-* set 5-7
-  isolated
-  nproc: 13 (?!)
-* set back 5-9
-  still isolated
-  nproc: 16 (?!)
-
-Here nproc reports isolcpus as no longer isolated, which I find even
-more confusing.
-
-Now my questions: is it alright not to report errors when we fail to
-isolate some CPUs but can allocate them as exclusive in the cpuset?
-Can cpuset really undo some effects of isolcpus or is that a glitch?
-
-Thanks,
-Gabriele
-
-> =C2=A0kernel/cgroup/cpuset.c | 67
-> ++++++++++++++++++++++++++++++++++++++++--
-> =C2=A01 file changed, 65 insertions(+), 2 deletions(-)
->=20
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 95316d39c282..2f1df6f5b988 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -80,6 +80,12 @@ static cpumask_var_t subpartitions_cpus;
-> =C2=A0 */
-> =C2=A0static cpumask_var_t isolated_cpus;
-> =C2=A0
-> +/*
-> + * Housekeeping CPUs for both HK_TYPE_DOMAIN and
-> HK_TYPE_KERNEL_NOISE
-> + */
-> +static cpumask_var_t full_hk_cpus;
-> +static bool have_boot_nohz_full;
-> +
-> =C2=A0/*
-> =C2=A0 * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
-> =C2=A0 */
-> @@ -1253,10 +1259,26 @@ static void reset_partition_data(struct
-> cpuset *cs)
-> =C2=A0static void isolated_cpus_update(int old_prs, int new_prs, struct
-> cpumask *xcpus)
-> =C2=A0{
-> =C2=A0 WARN_ON_ONCE(old_prs =3D=3D new_prs);
-> - if (new_prs =3D=3D PRS_ISOLATED)
-> + if (new_prs =3D=3D PRS_ISOLATED) {
-> =C2=A0 cpumask_or(isolated_cpus, isolated_cpus, xcpus);
-> - else
-> + cpumask_andnot(full_hk_cpus, full_hk_cpus, xcpus);
-> + } else {
-> =C2=A0 cpumask_andnot(isolated_cpus, isolated_cpus, xcpus);
-> + cpumask_or(full_hk_cpus, full_hk_cpus, xcpus);
-> + }
-> +}
-> +
-> +/*
-> + * isolated_cpus_should_update - Returns if the isolated_cpus mask
-> needs update
-> + * @prs: new or old partition_root_state
-> + * @parent: parent cpuset
-> + * Return: true if isolated_cpus needs modification, false otherwise
-> + */
-> +static bool isolated_cpus_should_update(int prs, struct cpuset
-> *parent)
-> +{
-> + if (!parent)
-> + parent =3D &top_cpuset;
-> + return prs !=3D parent->partition_root_state;
-> =C2=A0}
-> =C2=A0
-> =C2=A0/*
-> @@ -1323,6 +1345,25 @@ static bool partition_xcpus_del(int old_prs,
-> struct cpuset *parent,
-> =C2=A0 return isolcpus_updated;
-> =C2=A0}
-> =C2=A0
-> +/*
-> + * isolcpus_nohz_conflict - check for isolated & nohz_full conflicts
-> + * @new_cpus: cpu mask
-> + * Return: true if there is conflict, false otherwise
-> + *
-> + * If nohz_full is enabled and we have isolated CPUs, their
-> combination must
-> + * still leave housekeeping CPUs.
-> + */
-> +static bool isolcpus_nohz_conflict(struct cpumask *new_cpus)
-> +{
-> + if (!have_boot_nohz_full)
-> + return false;
-> +
-> + if (!cpumask_weight_andnot(full_hk_cpus, new_cpus))
-> + return true;
-> +
-> + return false;
-> +}
-> +
-> =C2=A0static void update_exclusion_cpumasks(bool isolcpus_updated)
-> =C2=A0{
-> =C2=A0 int ret;
-> @@ -1448,6 +1489,9 @@ static int remote_partition_enable(struct
-> cpuset *cs, int new_prs,
-> =C2=A0 =C2=A0=C2=A0=C2=A0 cpumask_intersects(tmp->new_cpus, subpartitions=
-_cpus) ||
-> =C2=A0 =C2=A0=C2=A0=C2=A0 cpumask_subset(top_cpuset.effective_cpus, tmp->=
-new_cpus))
-> =C2=A0 return PERR_INVCPUS;
-> + if (isolated_cpus_should_update(new_prs, NULL) &&
-> + =C2=A0=C2=A0=C2=A0 isolcpus_nohz_conflict(tmp->new_cpus))
-> + return PERR_HKEEPING;
-> =C2=A0
-> =C2=A0 spin_lock_irq(&callback_lock);
-> =C2=A0 isolcpus_updated =3D partition_xcpus_add(new_prs, NULL, tmp-
-> >new_cpus);
-> @@ -1546,6 +1590,9 @@ static void remote_cpus_update(struct cpuset
-> *cs, struct cpumask *xcpus,
-> =C2=A0 else if (cpumask_intersects(tmp->addmask, subpartitions_cpus) ||
-> =C2=A0 cpumask_subset(top_cpuset.effective_cpus, tmp->addmask))
-> =C2=A0 cs->prs_err =3D PERR_NOCPUS;
-> + else if (isolated_cpus_should_update(prs, NULL) &&
-> + isolcpus_nohz_conflict(tmp->addmask))
-> + cs->prs_err =3D PERR_HKEEPING;
-> =C2=A0 if (cs->prs_err)
-> =C2=A0 goto invalidate;
-> =C2=A0 }
-> @@ -1877,6 +1924,12 @@ static int
-> update_parent_effective_cpumask(struct cpuset *cs, int cmd,
-> =C2=A0 return err;
-> =C2=A0 }
-> =C2=A0
-> + if (deleting && isolated_cpus_should_update(new_prs, parent) &&
-> + =C2=A0=C2=A0=C2=A0 isolcpus_nohz_conflict(tmp->delmask)) {
-> + cs->prs_err =3D PERR_HKEEPING;
-> + return PERR_HKEEPING;
-> + }
-> +
-> =C2=A0 /*
-> =C2=A0 * Change the parent's effective_cpus & effective_xcpus (top cpuset
-> =C2=A0 * only).
-> @@ -2897,6 +2950,8 @@ static int update_prstate(struct cpuset *cs,
-> int new_prs)
-> =C2=A0 * Need to update isolated_cpus.
-> =C2=A0 */
-> =C2=A0 isolcpus_updated =3D true;
-> + if (isolcpus_nohz_conflict(cs->effective_xcpus))
-> + err =3D PERR_HKEEPING;
-> =C2=A0 } else {
-> =C2=A0 /*
-> =C2=A0 * Switching back to member is always allowed even if it
-> @@ -3715,6 +3770,7 @@ int __init cpuset_init(void)
-> =C2=A0 BUG_ON(!alloc_cpumask_var(&top_cpuset.exclusive_cpus, GFP_KERNEL))=
-;
-> =C2=A0 BUG_ON(!zalloc_cpumask_var(&subpartitions_cpus, GFP_KERNEL));
-> =C2=A0 BUG_ON(!zalloc_cpumask_var(&isolated_cpus, GFP_KERNEL));
-> + BUG_ON(!alloc_cpumask_var(&full_hk_cpus, GFP_KERNEL));
-> =C2=A0
-> =C2=A0 cpumask_setall(top_cpuset.cpus_allowed);
-> =C2=A0 nodes_setall(top_cpuset.mems_allowed);
-> @@ -3722,17 +3778,24 @@ int __init cpuset_init(void)
-> =C2=A0 cpumask_setall(top_cpuset.effective_xcpus);
-> =C2=A0 cpumask_setall(top_cpuset.exclusive_cpus);
-> =C2=A0 nodes_setall(top_cpuset.effective_mems);
-> + cpumask_copy(full_hk_cpus, cpu_present_mask);
-> =C2=A0
-> =C2=A0 fmeter_init(&top_cpuset.fmeter);
-> =C2=A0 INIT_LIST_HEAD(&remote_children);
-> =C2=A0
-> =C2=A0 BUG_ON(!alloc_cpumask_var(&cpus_attach, GFP_KERNEL));
-> =C2=A0
-> + have_boot_nohz_full =3D housekeeping_enabled(HK_TYPE_KERNEL_NOISE);
-> + if (have_boot_nohz_full)
-> + cpumask_and(full_hk_cpus, cpu_possible_mask,
-> + =C2=A0=C2=A0=C2=A0 housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
-> +
-> =C2=A0 have_boot_isolcpus =3D housekeeping_enabled(HK_TYPE_DOMAIN);
-> =C2=A0 if (have_boot_isolcpus) {
-> =C2=A0 BUG_ON(!alloc_cpumask_var(&boot_hk_cpus, GFP_KERNEL));
-> =C2=A0 cpumask_copy(boot_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
-> =C2=A0 cpumask_andnot(isolated_cpus, cpu_possible_mask, boot_hk_cpus);
-> + cpumask_and(full_hk_cpus, full_hk_cpus, boot_hk_cpus);
-> =C2=A0 }
-> =C2=A0
-> =C2=A0 return 0;
 
