@@ -1,118 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250A425D1F5;
-	Tue, 20 May 2025 08:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E06277102;
+	Tue, 20 May 2025 08:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728405; cv=none; b=DJLquYY8mpWDXwhchOoDADKONMXZm5NBNa5c6uKGn7hMXZjfu+Rc5sebeP1a4glmSwTXSUixTfJgn7o0qCveD5QA+swP4gqQV9Zwf47XR7DhukmHtN3hNw3Aqvyrz8oH2NDQSt8BKDe6o4fn06zgWz2VpAK3Vh/Cs3PAyZTP6rM=
+	t=1747728430; cv=none; b=tXrjDmBhyCu5wZUITcbN3hJYeLtk06bl7hgDc7uk9Jje6W68DIcNLruy7VLlKT+ra55HzWyz8ncJE3Vsr8pJF3Zjw1YYfUtSBQ0sP59txg6N543U99OHfOIp2ASRLBFqXgyME75upGmD+OQFKz20BEMgD5odK0nRJDScQe7ZyDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728405; c=relaxed/simple;
-	bh=4M0Wi4/rDNAqAc2ojTcRtkCg6Ys4WEmngIzOvggZSro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tABM5XfjzY6q4t5XXOx4oYX7zQsTKmFgNLN0QPyK4lwbClAGfwqgIyx8w4qw2qS58CZLyoRYjdL7q6iNe82dyy9RBO7FPg4vLyWfpL5lnStY/kOMESYZ/3nMXKTXeOZUFAsiKinOsNg60wju3o3f1NAhmdaEb9RBIF4aY3Dpllw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuyomNKA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747728430; c=relaxed/simple;
+	bh=D0OYHWZOSrzkqmr4CoGzl8bVmgydg3QT4qWndKfE0rE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fEd1zaQ16oW84v7WBIt+JO8OAX9lwn56Zb+Mq5OfppSWgAcQRCpo3AlQY3vOHmBfZm+lzSpcSuQV0MsLMuMC1rvFkApFF+WnkaBXOtLCuTvOSKmSU+hfkMumMk4oas/8hm46JgB8DrHnGEIrAwtn1HTzk1AMSVfl/3Zi17reWnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPfKI2pi; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuyomNKA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82479C4CEE9;
-	Tue, 20 May 2025 08:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747728404;
-	bh=4M0Wi4/rDNAqAc2ojTcRtkCg6Ys4WEmngIzOvggZSro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IuyomNKA7cMDwiaQ2dkXWTkhV66p/cDqE8Noh7B1tcDLMfTllYYp4BijkpHM66g2c
-	 3RPStAgo9ktIu5krmFVcmGaeF6KfyvWjP1zzfQD0iJXgfQ+QrJ8/9ZglDwg0HLBGHs
-	 mz6GIO1BE21p/Tl1PNRBQjCYHaEyDUo0fB2hzGKTmANWi+wuuHHa33xVRGXKCOYoMg
-	 Gk5x7ofLGlehl5ssT8M9e7L16/hHIb2J5RLNfLDfd6s6ZWMWKPY8GLQKz7+JYue9Ls
-	 tvLainUR86mt5o9LUfZuKJMHag+je1TeK8mYvMqwDbjdQfZLVTy9bF+X+4GvFH+1D/
-	 ozaPQ7+QyOOWA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uHHzk-000000001ZQ-2U7N;
-	Tue, 20 May 2025 10:06:40 +0200
-Date: Tue, 20 May 2025 10:06:40 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Christopher Obbard <christopher.obbard@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v6] drm/dp: clamp PWM bit count to advertised MIN and MAX
- capabilities
-Message-ID: <aCw4EK_8C1KLb6MD@hovoldconsulting.com>
-References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v6-1-84ad1cd1078a@linaro.org>
- <Z-pTcB0L33bozxjl@hovoldconsulting.com>
- <CACr-zFAiKRTHyRAF5HkM2drCMD7Q_Z3ZUFAsSnevy38yD8XMwg@mail.gmail.com>
- <Z--eRHaYw_vbgK2f@hovoldconsulting.com>
- <CACr-zFA77ogDSNEOGd32Rdh3geqkL25T0BKtNdKzUdjrL0+9RA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPfKI2pi"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so1435375f8f.2;
+        Tue, 20 May 2025 01:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747728427; x=1748333227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZpHRU034TQkb5cjOdrpKQYdzGgIm3GbrQjUM4K94oQI=;
+        b=gPfKI2pi7sK+SHfShhXu60VN6Dm+vixB1h8KToPUWCnPpa0kP7lL/i4b4doTHdufCa
+         dHUCMd+yPHSYmKnIQ9+8PzLfJjhHviqZjIAR61oqqkCaY5pHiFpocOgMMC9mIiisP5V8
+         v8BYY6sIalj3WlYtnk/2dKujKaJwWTTam7x0JL0150PFsOjpmFSGD8YvEUIcE9UTaF6I
+         C4v7HlWU0DGcf4E5IGSDsLhGX/aRR76N27kHcbkxdQ90FIxI993S5g2K4acGeEft7b2S
+         jV6K6g6goWZiRXeT2YcKw+QKO1nyFWVinjy+DifhPOdqKm/8lvSv/F4PkmX8vlnDlJOl
+         OUIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747728427; x=1748333227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZpHRU034TQkb5cjOdrpKQYdzGgIm3GbrQjUM4K94oQI=;
+        b=sBE4O4jA5lk8cpF/L8q7Y8gg8jy1DQfm+NSTRJUvsIYh4JXrUJIoZ2CuREWvBT4+pf
+         03bzG7Lj8ZBTTIYv404PsOjx1qhT8KZ/fOj7nTVt+Ysj8WKmdk48648PE5OWE2InaaGD
+         UP8cgykxCpl6L8kZ9rlcpBTqn/HPpRmxpuUS7MbgMIDua83Nkr0oAgC1GonnqYAxVYCh
+         slT+GCV/5NwojOvAcnj5iOASHBA2vN/AsEFvrJb+qpOhEqeymqtijfeqbvrUZ/E4KMkU
+         PjYJUuSbMksBV6NIiYbtvLpw24klG2XtKpjkYQIWBKvju+4C1h8CJq/ZlNStdtORvkGB
+         6Szg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpBgUS58t3JWj9T2YhdyRnh3THsTQsWVzuiErhWcnCBIrMhjeY+g2Zir7Oz1S87GOtLIyfr7DZFMcmKXM=@vger.kernel.org, AJvYcCVqPXGjmCFjzaFyCY0wmQh06Nop6FYXeMGXyyudj4bL7kcSNhhVXgzI7/LmzgFsXPXOhVlqvurPebvBXv6wzx11@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznf+RcL8MgTlzAvdSnO3KIL3sJQsaiGptXCC85A8BifZswFJqN
+	6Tt8DnF5HadHebTS+iRyT2cx7Xuv/anmbgHac+6kgYemz7fHDzVuxlMs5h4Pu2g7T+8=
+X-Gm-Gg: ASbGnctdEAjd8+BwA8TXoStgcqmjplj25abbCGNFn6jVVJOkDKSMD4oo7v0ej68IpyU
+	3tqXYZUBZVZ9WQuI5tje0vNGJ7aqewz8dv/WiYBdR5Y+4MCzgPK8NQjX0BYHdCO6jOEhjQNXcHv
+	PH+yqCJ3Asg0YnCPebRqDukWnjiY3FnpjYkW9zESm8i6nPBZylvAywd6k6mROzSdXM2fi0OiUOS
+	9fOjQg4la7TRMVu6PkZnsR8PFzJaIKvjiFiDiOK9tRmfT4F1wyp8qsoGUngAGT1pNPvSPJNsroq
+	EcqVw+68FS8/3T4qzyUgfJM+IqSMdreYV2yCilIv+ZEFtaZmBLYUcnQOIKtJ
+X-Google-Smtp-Source: AGHT+IEZ7lcvAfHdwaoGw0Hd9SkgRJNTKmilJ5RpAOMDo+EDUFFvKvZhoDQePz24CUemumYdt/bp8g==
+X-Received: by 2002:a05:6000:2210:b0:3a3:7bbc:d959 with SMTP id ffacd0b85a97d-3a37bbcdac1mr758115f8f.18.1747728427231;
+        Tue, 20 May 2025 01:07:07 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca88899sm15280174f8f.80.2025.05.20.01.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 01:07:06 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] selftests/futex: Fix spelling mistake "unitiliazed" -> "uninitialized"
+Date: Tue, 20 May 2025 09:06:57 +0100
+Message-ID: <20250520080657.30726-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACr-zFA77ogDSNEOGd32Rdh3geqkL25T0BKtNdKzUdjrL0+9RA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Chris,
+There is a spelling mistake in a fail error message. Fix it.
 
-On Fri, Apr 04, 2025 at 02:24:32PM +0100, Christopher Obbard wrote:
-> On Fri, 4 Apr 2025 at 09:54, Johan Hovold <johan@kernel.org> wrote:
-> > On Fri, Apr 04, 2025 at 08:54:29AM +0100, Christopher Obbard wrote:
-> > > On Mon, 31 Mar 2025 at 09:33, Johan Hovold <johan@kernel.org> wrote:
-> > > > > @@ -4035,6 +4036,32 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
-> > > > >       }
-> > > > >
-> > > > >       pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> > > > > +
-> > > > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
-> > > > > +     if (ret < 0) {
-> > > > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
-> > > > > +                         aux->name, ret);
-> > > > > +             return -ENODEV;
-> > > > > +     }
-> > > > > +     pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> > > > > +
-> > > > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
-> > > > > +     if (ret < 0) {
-> > > > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
-> > > > > +                         aux->name, ret);
-> > > > > +             return -ENODEV;
-> > > > > +     }
-> > > > > +     pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Per VESA eDP Spec v1.4b, section 3.3.10.2:
-> > > > > +      * If DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
-> > > > > +      * the sink must use the MIN value as the effective PWM bit count.
-> > > > > +      * Clamp the reported value to the [MIN, MAX] capability range to ensure
-> > > > > +      * correct brightness scaling on compliant eDP panels.
-> > > > > +      */
-> > > > > +     pn = clamp(pn, pn_min, pn_max);
-> > > >
-> > > > You never make sure that pn_min <= pn_max so you could end up with
-> > > > pn < pn_min on broken hardware here. Not sure if it's something you need
-> > > > to worry about at this point.
-> > >
-> > > I am honestly not sure. I would hope that devices follow the spec and
-> > > there is no need to be too paranoid, but then again we do live in the
-> > > real world where things are... not so simple ;-).
-> > > I will wait for further feedback from someone who has more experience
-> > > with eDP panels than I have.
-> >
-> > There's always going to be buggy devices and input should always be
-> > sanitised so I suggest adding that check before calling clamp() (which
-> > expects min <= max) so that the result here is well-defined.
-> 
-> Makes sense, I will do so in the next revision.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/testing/selftests/futex/functional/futex_numa_mpol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It seems you never got around to respinning this one so sending a
-reminder.
+diff --git a/tools/testing/selftests/futex/functional/futex_numa_mpol.c b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
+index dd70532f293e..8864c610f165 100644
+--- a/tools/testing/selftests/futex/functional/futex_numa_mpol.c
++++ b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
+@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
+ 	test_futex(futex_ptr, 0);
+ 
+ 	if (futex_numa->numa == FUTEX_NO_NODE) {
+-		fail("NUMA node is left unitiliazed\n");
++		fail("NUMA node is left uninitialized\n");
+ 		return 1;
+ 	}
+ 
+-- 
+2.49.0
 
-Johan
