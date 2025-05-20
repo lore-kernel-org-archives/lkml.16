@@ -1,139 +1,144 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D17F20E000;
-	Tue, 20 May 2025 08:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A5025D201;
+	Tue, 20 May 2025 08:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728447; cv=none; b=r7wuL3TlgqrxsSyhRmLYCKcUwfipKigwyGSDcU3F0RXfN93mlREhSUgxOCVeNx8VpahAz9+HiA7t6QFRXqtNDg1QNCPTbrE/3q4EhZ5xdsMUAlViwXW9Jk+yyyLHni27NBD5OGJtBbgcOs+RrpvZUqDAw/aoZHWefdNAZPDChxo=
+	t=1747728594; cv=none; b=UC5WOZdcVrBw+5AA70eLmjpBz+P4h7Gm5EIjQnlQ5b+03VfNYxTGYne4xaMB8ythsu8Wk5x3+ssUHItTXhgbIKWZRCXPT+0sghKP5C8YQXx/TS/TEZPLfDrPnby5rbdhRzCs+meHqVPIq7e+hRKv0yfQuAEk777xvQxQAXqFeyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728447; c=relaxed/simple;
-	bh=z6Dd/oQkZ4aRbbBXNGpctfnYVE9o7qSP6wR0gQ51tcQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UJauNQ2AbJ3MEblJPOVdEAiV/8YBxL1T3l9U2rvvcGRs5XUZnFag9joa1UcJa2pvEt/atXkqnQN4g1qrO4YUZ0Syb7NKP/j2ynn/PAJrSIaE+Ehlvf7x9d9LI0lUghqW0cQyNtKrekjM8xfzzgCl5qBO93K2VBehoSHjiVb9XDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87beb9976e5so728506241.3;
-        Tue, 20 May 2025 01:07:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747728444; x=1748333244;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w0OkeJ2UmcoGftyF2J9m/ldgYQ4lKUralL2MdRmggQY=;
-        b=NoeI48/TMq0ror4E07PdlRxS+Zz8RwtG/zyGHLDRATO9sWq+hJHVffWwuUIP/+a/8U
-         XE6DowyiIFrXTzsOt1WRM/IZatxo16dIvO9UIQOvztHT3x/Koh9Mwtyjptg7coq5wJ57
-         PaVzgAeYWlO5H3cqIU+XVRPvKROQ5jaw8S/0vG/Rr6oLqu+1CR8f9EkGRcVNrfgxzrf5
-         hw2Z/TWNkjeqOLmQGbyBFLxIA3mQ2rJWA7kW76IDYyVKUfRuqEaA4eZgylFo9tXNZIR3
-         9sogE5NNFgfzG45XlfyqoZj8BeDgnIKDzoRi3KhXg1IjQCoe4gi1EtiJcNYog1FiaaQH
-         IcuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUorovM5C0TuxoePzgrpLQL7YGPu46oI5EUWpvroacwzhkXnXTIta5Xz0XxJ+lwLB3bCmDtRzZRUI2iUA==@vger.kernel.org, AJvYcCXLHuYsorZPQ1n1S32O3sS/pqo4cTne5IBsHqrdecArV4SqE8dj+KdxoQF9LfKwDPAXMReMsCgcVn66bVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6+hGkQHbN5VMArwoKig8mlnWF9aV46F5UfjGX9gVxnpH5Noos
-	RvV0qS5wJUVX9LRk50NI9HZQDbiM1ixo/53FsIiCmoCOllY8d50ssvwBSPi+h5Ci
-X-Gm-Gg: ASbGncspJEST5yQZpEoJLrIsJMYafDDh8kBfXIXT48LoDSQy5LgkcdcXWKkTEILiWo6
-	0JxILktGP1PJWi4gbUVx+mtXgflxdI2S2wyQnkKYuOac69h/opUsdswNvYCRRw7MipVxzk3iBRW
-	QFaxhs3Rk+q9fUXBC0rfD4TNmQn8VIC1tfxzzofxdWo0DusPUR9299RyDkFyu+GRFmoG/HSPUN4
-	AeQFpzVr7oO4USoeCTjPqdA4ABugiAl5czy/oakiOJqiuuPntv2IJ3yvGomIUwIGexiQyHJpybp
-	F6ukhzRkc80Y0RVE35QQO08b8Z5El+HWyJ4aCjywkFOiuxP3T3tRgCToyKxgPtoHs7pzE55szDW
-	1yIvSXIL6pvPfZA==
-X-Google-Smtp-Source: AGHT+IHQHUj0yjL1Zbp8ovdifIdJ+D2wDKQ5BIgzJg6+GigkmUYl63WQ8pS4m0IoRGpA3Ry35J7SIA==
-X-Received: by 2002:a05:6102:c0e:b0:4af:c519:4e7f with SMTP id ada2fe7eead31-4dfa6c07ef6mr14659862137.18.1747728443813;
-        Tue, 20 May 2025 01:07:23 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec10c550sm7105521241.6.2025.05.20.01.07.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:07:22 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so996082241.1;
-        Tue, 20 May 2025 01:07:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfoTEE06IBg4UYZzp13nIVTB1HkpcxAv71HVyqv3vTcUVN6mUvUzDv++KFLb/UL/N1hWp6TLkvCzykrQ==@vger.kernel.org, AJvYcCXFZXnmdvinJ86A6rUudNdMzXVRJJrCOpB/i9mbYsnUl2U7SQ7Qr1Q7S0Vxl6j9ZizR8eCb4OjqSFuYU/U=@vger.kernel.org
-X-Received: by 2002:a05:6102:370a:b0:4c2:ffc8:93d9 with SMTP id
- ada2fe7eead31-4dfa6b64a38mr15053682137.9.1747728442387; Tue, 20 May 2025
- 01:07:22 -0700 (PDT)
+	s=arc-20240116; t=1747728594; c=relaxed/simple;
+	bh=/54CT6zkTCVN/5mCNRbwulyzB3iEQhKjFz7+J7/E/v8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cPVc6wpD5UdwmYIDThHcBijHSTtFHdoUTkuwxHVskJjixp6PdzaH9CBggSdxSmCEM6mHnRVCyDyV0ponZ75uCuKNpSQ1g2qP1n4Ya5o1J911tKd8RBa2B2RGA3I2mie9A4M/xb5RHMG0aj1/06XrQ5IiUhig19MBwMngXfvvgPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWuRlo2l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWuRlo2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6052C4CEE9;
+	Tue, 20 May 2025 08:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747728593;
+	bh=/54CT6zkTCVN/5mCNRbwulyzB3iEQhKjFz7+J7/E/v8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aWuRlo2lJxThlcAkvJRdrOvwZOdeqhwx41057l4cJ86XzaeAfxW8mBal41DxK5HWv
+	 69JH0ontodIXhKbc3DixM3ArBZyXW7j8LXOzfcxMKBjE/DDpggu4Rrba3iZpyQHcYH
+	 RGzVnDJkOjRkSkpM5KpW1JkxAFmGL1cHmz8tw8YzEGens+6rzQSbPMLrVdruic0kV5
+	 bS2AnI0oIyrpHUZiEqCqbB5PlB6OIXCEqEsQbYuIpHQONPM+MgAEcg5Ws9lfOPAgG3
+	 4Nr/mlMVfnmYDq3MzHz7QqlAPbIzPnkFSQh87WbVgnWLOIwVo7Q58chgrhQk/f0WLC
+	 iyhLA+rDOASQw==
+Message-ID: <8aa09712-5543-4bda-bf9e-a29c61656445@kernel.org>
+Date: Tue, 20 May 2025 10:09:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515171420.7c6a4e4b@canb.auug.org.au>
-In-Reply-To: <20250515171420.7c6a4e4b@canb.auug.org.au>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 20 May 2025 10:07:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVMf3+Q2N5yXgf23LPSQPuogA3R66_W0WGWVgJRRh-ZcA@mail.gmail.com>
-X-Gm-Features: AX0GCFvt2cAU7h6bhFQUSrCPrc6NmFxPnx3s6kvdiG4YzCcTzDjIuor00aU5-y4
-Message-ID: <CAMuHMdVMf3+Q2N5yXgf23LPSQPuogA3R66_W0WGWVgJRRh-ZcA@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the phy-next tree with the phy tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Algea Cao <algea.cao@rock-chips.com>, 
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM
+ property
+To: Pavan Kondeti <pavan.kondeti@oss.qualcomm.com>,
+ Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+ krzk+dt@kernel.org, robh@kernel.org, mani@kernel.org, conor+dt@kernel.org,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ beanhuo@micron.com, peter.wang@mediatek.com, linux-arm-msm@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
+ <20250506163705.31518-2-quic_nitirawa@quicinc.com>
+ <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
+ <9974cf1d-6929-4c7f-8472-fd19c7a40b12@quicinc.com>
+ <8ebe4439-eab8-456a-ac91-b53956eab633@quicinc.com>
+ <852e3d10-5bf8-4b2e-9447-fe15c1aaf3ba@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <852e3d10-5bf8-4b2e-9447-fe15c1aaf3ba@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Stephen,
+On 12/05/2025 09:41, Pavan Kondeti wrote:
+> On Mon, May 12, 2025 at 09:45:49AM +0530, Nitin Rawat wrote:
+>>
+>>
+>> On 5/7/2025 8:34 PM, Nitin Rawat wrote:
+>>>
+>>>
+>>> On 5/6/2025 11:46 PM, Krzysztof Kozlowski wrote:
+>>>> On 06/05/2025 18:37, Nitin Rawat wrote:
+>>>>> Disable UFS low power mode on emulation FPGA platforms or other
+>>>>> platforms
+>>>>
+>>>> Why wouldn't you like to test LPM also on FPGA designs? I do not see
+>>>> here correlation.
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> Since the FPGA platform doesn't support UFS Low Power Modes (such as the
+>>> AutoHibern8 feature specified in the UFS specification), I have included
+>>> this information in the hardware description (i.e dts).
+>>
+>>
+>> Hi Krzysztof,
+>>
+>> Could you please share your thoughts on my above comment? If you still see
+>> concerns, I may need to consider other options like modparam.
+>>
+> 
+> I understand why you are inclining towards the module param here. Before
+> we take that route,
+> 
+> Is it possible to use a different compatible (for ex: qcom,sm8650-emu-ufshc) for UFS controller
+> on the emulation platform and apply the quirk in the driver based on the device_get_match_data()
+> based detection?
 
-On Thu, 15 May 2025 at 09:23, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Today's linux-next merge of the phy-next tree got a conflict in:
->
->   drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->
-> between commit:
->
->   f9475055b11c ("phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error")
->
-> from the phy tree and commit:
->
->   0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion overhead")
->
-> from the phy-next tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-> --
-> Cheers,
-> Stephen Rothwell
->
-> diff --cc drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> index 77236f012a1f,bb49d69a6f17..000000000000
-> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> @@@ -444,47 -412,45 +412,47 @@@ struct rk_hdptx_phy
->   };
->
->   static const struct ropll_config ropll_tmds_cfg[] = {
+I do not get what are the benefits of upstreaming such patches. It feels
+like you have some internal product, which will never be released, no
+one will ever use it and eventually will be obsolete even internally. We
+don't want patches for every broken feature or every broken hardware.
 
-[...]
-
->           1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-> -       { 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
-> +       { 65000000ULL, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
->           1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-> -       { 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
-> ++      { 50250000Ull, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
-
-Note that all other entries are using all-caps ULL.
-
->  +        4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-> -       { 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
-> +       { 33750000ULL, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
->           1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-
-[...]
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
