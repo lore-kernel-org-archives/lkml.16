@@ -1,206 +1,136 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42D422D4DF;
-	Tue, 20 May 2025 13:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B5B11187;
+	Tue, 20 May 2025 13:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746579; cv=none; b=oBkOu7Fse3W/0hk2MqZ+dT422Awajuwn/4+06hy2igV5iu+TjV8TYNEOu87RlgnBMI5kpG7Z69I/3wdf4qKn3zhiWuiulxecQwJcYzn3e3Iy5sQxBrdE376SKWq2uZjSfrJcfUrB2iIH5rHa2gTTXkw20WUNAMbp9neRrMaUb4o=
+	t=1747746598; cv=none; b=eOkDJijcOKHEJuLH/z6jaQrmOf3rT6YtRU+Me4gcBNWOJjWxUEihUkNwqkvXnzEgnjloRmOYQBpVWQkm8OStln0lvDOIv+DDYTNSkNbK2gNMiKIq79ANUtP0FVHcCQCXRQ8o+UX37GinfewPimThF7rBUhAuLjlBaQoIortNAnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746579; c=relaxed/simple;
-	bh=VFNsbdVe5zZ2mY7Llzl2JOjX/FQfthqpYZy39qlDyJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N/4YhteIfi8b0hWiw+PB7DN1dCBXp/rrQ8hFdydwQRdrGSYLEmF6PKwVOz7y01ZzCt3mA3VNqkcDhccIKy/vHROZ2i2vxvzVthZBsL9eHgB1krgZc/Z7TMAaJw2jOOlqCzvVTCaOZH+UagvPeC/fcS1In06eN9YHlK0RmDCpvN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4b1vyV0WTzz4f3jd9;
-	Tue, 20 May 2025 21:09:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1295A1A0359;
-	Tue, 20 May 2025 21:09:31 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgD3Wl8IfyxodHfqMw--.47827S3;
-	Tue, 20 May 2025 21:09:29 +0800 (CST)
-Message-ID: <dbc0ace4-49c4-4a75-9532-1c0774331a54@huaweicloud.com>
-Date: Tue, 20 May 2025 21:09:28 +0800
+	s=arc-20240116; t=1747746598; c=relaxed/simple;
+	bh=uUqa+t+RcBnaEC87LjZa0OB0xX9x5zOn6U+ny8ar9Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uiWlFsz0vlKaeSW7+ZCI+EPL7Fba5tgDox0NNb0rA2EJjwveOScPNcCz87wyJ7OBZVn/yON/YOYpfU428wWo3JkuA/VyMUUNj74Or5yiCEiKG3czBIxN1hmos0F5ymv7d8SfiSCLgUYfE8zTEkV7PIwhj3O9SCUpTFqccnsT78E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDRrB4dL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDRrB4dL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EF9C4CEF2;
+	Tue, 20 May 2025 13:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747746597;
+	bh=uUqa+t+RcBnaEC87LjZa0OB0xX9x5zOn6U+ny8ar9Vw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dDRrB4dLsMAO7S1sG2n4EIyWVARMsKlMYdN0cjte/U+HmBIQVMHVXTELFV4Rwbwa4
+	 lX8Dpc9wBEDX6KzFdLGb+jvtRB0Ix71qFM5akYLM+w1QokgcYf7nCNLG/gw9LZy9vQ
+	 Qc/inX0NGi6kPSk/onvhj0umkjMgWBvNYAqrLkiae2FG8aMi9uok+nL5luTeAkN9xH
+	 zFltxQA06VIIYK/sFlxvfZawQYKHtlhKwpcQ3LjnJIN0oqqGIrFI9NJJ88GAM64W+m
+	 mnXV1OnWDI0oucIrThVFajmCCOBAN7PjY5ARdogdf4UbiSLyG+spuZ43aphwSzxwwQ
+	 Pc7tihuhV4oSw==
+Date: Tue, 20 May 2025 15:09:51 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Nicolas Schier
+ <nicolas.schier@linux.dev>
+Cc: Akira Yokosawa <akiyks@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
+Message-ID: <20250520150940.7d1cffec@sal.lan>
+In-Reply-To: <20250520213906.6ec263d8@canb.auug.org.au>
+References: <cover.1747719873.git.mchehab+huawei@kernel.org>
+	<6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
+	<7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+	<20250520095037.3dc39685@sal.lan>
+	<590981da-4d37-464f-a52e-ba163d3ecbc5@gmail.com>
+	<20250520111956.1db9db88@sal.lan>
+	<20250520213906.6ec263d8@canb.auug.org.au>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] ext4: enable large folio for regular files
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
- adilger.kernel@dilger.ca, yi.zhang@huawei.com, libaokun1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <jm6ncwmhhv35ebmqgkfizz2mrzcaapbpcpgsqo5joxvkmx5xfu@rgyukfmyer7d>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <jm6ncwmhhv35ebmqgkfizz2mrzcaapbpcpgsqo5joxvkmx5xfu@rgyukfmyer7d>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3Wl8IfyxodHfqMw--.47827S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxtr4fKFWDJF4fAw4rtr13Jwb_yoWxJrWfpr
-	yakF43Kr4fW347CwsxCr1YqrWYya18Gr48Xa4fXw10qFyUZF1I9wn7KF4F9a4UArW7Cryx
-	JFW7Ar1xWF1YyrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
-	mii3UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025/5/20 4:33, Jan Kara wrote:
-> On Mon 12-05-25 14:33:11, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> Changes since v1:
->>  - Rebase codes on 6.15-rc6.
->>  - Drop the modifications in block_read_full_folio() which has supported
->>    by commit b72e591f74de ("fs/buffer: remove batching from async
->>    read").
->>  - Fine-tuning patch 6 without modifying the logic.
->>
->> v1: https://lore.kernel.org/linux-ext4/20241125114419.903270-1-yi.zhang@huaweicloud.com/
->>
->> Original Description:
->>
->> Since almost all of the code paths in ext4 have already been converted
->> to use folios, there isn't much additional work required to support
->> large folios. This series completes the remaining work and enables large
->> folios for regular files on ext4, with the exception of fsverity,
->> fscrypt, and data=journal mode.
->>
->> Unlike my other series[1], which enables large folios by converting the
->> buffered I/O path from the classic buffer_head to iomap, this solution
->> is based on the original buffer_head, it primarily modifies the block
->> offset and length calculations within a single folio in the buffer
->> write, buffer read, zero range, writeback, and move extents paths to
->> support large folios, doesn't do further code refactoring and
->> optimization.
->>
->> This series have passed kvm-xfstests in auto mode several times, every
->> thing looks fine, any comments are welcome.
->>
->> About performance:
->>
->> I used the same test script from my iomap series (need to drop the mount
->> opts parameter MOUNT_OPT) [2], run fio tests on the same machine with
->> Intel Xeon Gold 6240 CPU with 400GB system ram, 200GB ramdisk and 4TB
->> nvme ssd disk. Both compared with the base and the IOMAP + large folio
->> changes.
->>
->>  == buffer read ==
->>
->>                 base          iomap+large folio base+large folio
->>  type     bs    IOPS  BW(M/s) IOPS  BW(M/s)     IOPS   BW(M/s)
->>  ----------------------------------------------------------------
->>  hole     4K  | 576k  2253  | 762k  2975(+32%) | 747k  2918(+29%)
->>  hole     64K | 48.7k 3043  | 77.8k 4860(+60%) | 76.3k 4767(+57%)
->>  hole     1M  | 2960  2960  | 4942  4942(+67%) | 4737  4738(+60%)
->>  ramdisk  4K  | 443k  1732  | 530k  2069(+19%) | 494k  1930(+11%)
->>  ramdisk  64K | 34.5k 2156  | 45.6k 2850(+32%) | 41.3k 2584(+20%)
->>  ramdisk  1M  | 2093  2093  | 2841  2841(+36%) | 2585  2586(+24%)
->>  nvme     4K  | 339k  1323  | 364k  1425(+8%)  | 344k  1341(+1%)
->>  nvme     64K | 23.6k 1471  | 25.2k 1574(+7%)  | 25.4k 1586(+8%)
->>  nvme     1M  | 2012  2012  | 2153  2153(+7%)  | 2122  2122(+5%)
->>
->>
->>  == buffer write ==
->>
->>  O: Overwrite; S: Sync; W: Writeback
->>
->>                      base         iomap+large folio    base+large folio
->>  type    O S W bs    IOPS  BW     IOPS  BW(M/s)        IOPS  BW(M/s)
->>  ----------------------------------------------------------------------
->>  cache   N N N 4K  | 417k  1631 | 440k  1719 (+5%)   | 423k  1655 (+2%)
->>  cache   N N N 64K | 33.4k 2088 | 81.5k 5092 (+144%) | 59.1k 3690 (+77%)
->>  cache   N N N 1M  | 2143  2143 | 5716  5716 (+167%) | 3901  3901 (+82%)
->>  cache   Y N N 4K  | 449k  1755 | 469k  1834 (+5%)   | 452k  1767 (+1%)
->>  cache   Y N N 64K | 36.6k 2290 | 82.3k 5142 (+125%) | 67.2k 4200 (+83%)
->>  cache   Y N N 1M  | 2352  2352 | 5577  5577 (+137%  | 4275  4276 (+82%)
->>  ramdisk N N Y 4K  | 365k  1424 | 354k  1384 (-3%)   | 372k  1449 (+2%)
->>  ramdisk N N Y 64K | 31.2k 1950 | 74.2k 4640 (+138%) | 56.4k 3528 (+81%)
->>  ramdisk N N Y 1M  | 1968  1968 | 5201  5201 (+164%) | 3814  3814 (+94%)
->>  ramdisk N Y N 4K  | 9984  39   | 12.9k 51   (+29%)  | 9871  39   (-1%)
->>  ramdisk N Y N 64K | 5936  371  | 8960  560  (+51%)  | 6320  395  (+6%)
->>  ramdisk N Y N 1M  | 1050  1050 | 1835  1835 (+75%)  | 1656  1657 (+58%)
->>  ramdisk Y N Y 4K  | 411k  1609 | 443k  1731 (+8%)   | 441k  1723 (+7%)
->>  ramdisk Y N Y 64K | 34.1k 2134 | 77.5k 4844 (+127%) | 66.4k 4151 (+95%)
->>  ramdisk Y N Y 1M  | 2248  2248 | 5372  5372 (+139%) | 4209  4210 (+87%)
->>  ramdisk Y Y N 4K  | 182k  711  | 186k  730  (+3%)   | 182k  711  (0%)
->>  ramdisk Y Y N 64K | 18.7k 1170 | 34.7k 2171 (+86%)  | 31.5k 1969 (+68%)
->>  ramdisk Y Y N 1M  | 1229  1229 | 2269  2269 (+85%)  | 1943  1944 (+58%)
->>  nvme    N N Y 4K  | 373k  1458 | 387k  1512 (+4%)   | 399k  1559 (+7%)
->>  nvme    N N Y 64K | 29.2k 1827 | 70.9k 4431 (+143%) | 54.3k 3390 (+86%)
->>  nvme    N N Y 1M  | 1835  1835 | 4919  4919 (+168%) | 3658  3658 (+99%)
->>  nvme    N Y N 4K  | 11.7k 46   | 11.7k 46   (0%)    | 11.5k 45   (-1%)
->>  nvme    N Y N 64K | 6453  403  | 8661  541  (+34%)  | 7520  470  (+17%)
->>  nvme    N Y N 1M  | 649   649  | 1351  1351 (+108%) | 885   886  (+37%)
->>  nvme    Y N Y 4K  | 372k  1456 | 433k  1693 (+16%)  | 419k  1637 (+12%)
->>  nvme    Y N Y 64K | 33.0k 2064 | 74.7k 4669 (+126%) | 64.1k 4010 (+94%)
->>  nvme    Y N Y 1M  | 2131  2131 | 5273  5273 (+147%) | 4259  4260 (+100%)
->>  nvme    Y Y N 4K  | 56.7k 222  | 56.4k 220  (-1%)   | 59.4k 232  (+5%)
->>  nvme    Y Y N 64K | 13.4k 840  | 19.4k 1214 (+45%)  | 18.5k 1156 (+38%)
->>  nvme    Y Y N 1M  | 714   714  | 1504  1504 (+111%) | 1319  1320 (+85%)
->>
->> [1] https://lore.kernel.org/linux-ext4/20241022111059.2566137-1-yi.zhang@huaweicloud.com/
->> [2] https://lore.kernel.org/linux-ext4/3c01efe6-007a-4422-ad79-0bad3af281b1@huaweicloud.com/
->>
->> Thanks,
->> Yi.
+Em Tue, 20 May 2025 21:39:06 +1000
+Stephen Rothwell <sfr@canb.auug.org.au> escreveu:
+
+> Hi Mauro,
 > 
-> The patches look good to me besides that one issue with journal credits. I
-> can see Ted has already picked up the patches so this is probably moot but
-> still:
+> I do appreciate your work on the document system.  Particularly you
+> have made the process much faster.  However, see below.
+
+Hi Stephen,
+
+> On Tue, 20 May 2025 11:19:56 +0200 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> >
+> > If by "innocent typo" you mean removing/renaming/moving a file from
+> > the Kernel tree without updating Makefiles, or adding them with wrong
+> > names, then yes: I do think this should be fatal for the affected "make" 
+> > targets. The quickest such build issues are caught, the best for everyone.  
 > 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-
-Thanks for your review and comments. 😉
-
-Yi.
-
+> They are found if you leave them as warnings and just continue on.  I
+> have been finding them by when the current python version just crashes
+> (without any useful message before your current change) I rerun the
+> htmldocs using the perl version to get the name of the missing file and
+> then report it so it can be fixed.  But the perl version continues on
+> and produces all the other warnings so I can compare with the previous
+> and only report new errors/warnigs.  Sometime these reports are not
+> foxed for days or weeks (or months).
 > 
-> 								Honza
->>
->> Zhang Yi (8):
->>   ext4: make ext4_mpage_readpages() support large folios
->>   ext4: make regular file's buffered write path support large folios
->>   ext4: make __ext4_block_zero_page_range() support large folio
->>   ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large
->>     folio
->>   ext4: correct the journal credits calculations of allocating blocks
->>   ext4: make the writeback path support large folios
->>   ext4: make online defragmentation support large folios
->>   ext4: enable large folio for regular file
->>
->>  fs/ext4/ext4.h        |  1 +
->>  fs/ext4/ext4_jbd2.c   |  3 +-
->>  fs/ext4/ext4_jbd2.h   |  4 +--
->>  fs/ext4/extents.c     |  5 +--
->>  fs/ext4/ialloc.c      |  3 ++
->>  fs/ext4/inode.c       | 72 ++++++++++++++++++++++++++++++-------------
->>  fs/ext4/move_extent.c | 11 +++----
->>  fs/ext4/readpage.c    | 28 ++++++++++-------
->>  fs/jbd2/journal.c     |  7 +++--
->>  include/linux/jbd2.h  |  2 +-
->>  10 files changed, 88 insertions(+), 48 deletions(-)
->>
->> -- 
->> 2.46.1
->>
 
+The issues we're seeing weren't due to the conversion from perl to
+python, but, instead, to the new logic that calls the Python methods
+directly, instead of opening a shell to call kernel-doc.
+
+Those caused some unintended changes, due to the way Sphinx works:
+
+1. Sphinx has an overlay over the Python logger class. Such overlay
+   has some logic to output colored messages, which is interesting.
+   However, it also has a filtering logic which is affected by the
+   flags passed when sphinx-build is called. That was actually
+   suppressing not only verbose level logs, but also warnings and
+   errors. The fix is a single-line change:
+
+   -	kfiles = KernelFiles(out_style=out_style, logger=logger)
+   +	kfiles = KernelFiles(out_style=out_style)
+
+   The patch is at:
+	https://lore.kernel.org/linux-doc/6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org/
+
+2. Now that we're not opening a shell anymore, if kernel-doc.py
+   dies, it could cause a fatal error on Sphinx. I sent today
+   two patches fixing it:
+
+   2.1 Don't stop Documentation/sphinx/kerneldoc.py if a crash
+       happens:
+
+	https://lore.kernel.org/linux-doc/064bac2f462c13f56154891d8f3fb788db94f325.1747730982.git.mchehab+huawei@kernel.org/
+
+   2.2 Don't crash trying to retrieve kernel-doc messages from
+       a file that doesn't exist. This is patch 1/2 on this
+       series:
+	https://lore.kernel.org/lkml/d97e86c7176f671405b4c15d75cb951349022a23.1747730982.git.mchehab+huawei@kernel.org/
+
+> So, please, now that you are producing more warnings, make a missing
+> file just a warning (or at least continue on).  I have enough to do
+> every day without having to run "make htmldocs" more than once.
+
+OK. As I said, the crash was unintended. The idea was to preserve
+the old behavior as much as possible. Yet, it could probably be a
+good idea to have a way in the future to control the docs behavior
+for the cases where non-existing files are detected, allowing it to
+stop quickly on such cases, instead of taking several minutes to
+generate an html ouptut, as this could be useful for CI automation.
+
+In order to simplify for Jon, I'll send those tree altogether(*).
+
+(*) I'll add a 4th patch, adding scripts/lib/kdoc to linux-doc
+content. Without that, Lore doesn't store kernel-doc changes as
+part of docs. See: 
+	https://lore.kernel.org/linux-doc/d97e86c7176f671405b4c15d75cb951349022a23.1747730982.git.mchehab+huawei@kernel.org/
+
+Regards,
+Mauro
