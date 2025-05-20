@@ -1,174 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98D726C382;
-	Tue, 20 May 2025 10:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C001A26F440;
+	Tue, 20 May 2025 10:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737558; cv=none; b=oiff6OMxLe7SggGmKlxa6YvFZJQwJ9J2Ike4cb8XtCwQo4wwKyYRJIJ1+BC0M72M1ZbK+edCWfbpWQSxTZEP0LLU6gy6pzzPlHh6qYQ0oeZZ4tssp795pmwSOt3Yi7K6vRYipITetAtEH2GoT2Nco5Bux9UTGFho8vfUa9vLqxQ=
+	t=1747737607; cv=none; b=fu5/HKiLhSHDMWbXUatX7QWwsrfy1OgqiLdyhkqZ4gS6uqyzuba6MnS4pvvVP4hGLd+zuuZgLoHQ56jQEmkopvvdUoDS2lMeXYI/CTSoNWxSprAGVTs6S90OQbyHKgnoe9fJ5tyXOiM3Tkj7aw3zgG2ash9vnEgc2VTpp5vjTFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737558; c=relaxed/simple;
-	bh=mYMylA2w4ZhvLJgkA2XzwHktV/OQfBpbjS+UEenJWx8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qq+FC2bTWErzS3/4C2Oalhsqd7fwrEa7uGMBc/SmXvNiFb5hC1GVNZPZ3rpClra+V3JhizI+Mw6usuTQUbuWqNi467qYuhs/FttJmZKLTUlM/Ye1UYlURW2FY8x7AnyS9xCQme/XaDscN0v5/n/Ir9GU7S77ppJqnKgJ+i/h2ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/YdffTD; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747737607; c=relaxed/simple;
+	bh=xPgJ4tNfE+/UiMc2JDLo21l4Y02XmFl7AKqYYhbRpvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZyrwl73HBQAnD4SM21zylmmZvxW8sDUMpaFHOHaAAgHhql9e5NE4v6YcNRRg160wB+BVm7ztW7Vj7SQ/hvn1hN/dDXSUcGJ4CFQllCUkiZuO4/pZu1EdKaZjMc448joQtxOwgiKGIwGQm4XpZKoKtB8FSHBxFa/SzqwN5AoaHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Soa8IlZG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MKSTb+y2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/YdffTD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747737557; x=1779273557;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mYMylA2w4ZhvLJgkA2XzwHktV/OQfBpbjS+UEenJWx8=;
-  b=i/YdffTD1+EIqdqBwOuTx2bx8AqUdX2n2o3F9i4R7GAt80ckrCmG2wVb
-   6VZ2mxGR7NTW2ziPxxjuEHN4cz5jlmu8wDmTq7YDdKO4+sU39nfEeMCvc
-   zkWle35lVKlwtV7LfNN9c9S/xI+3fBfnYNZa8EoJYS1SpYCHbGE/4lMvR
-   UxGIduGvgoO5RDqdWm/kqhkz0eGNNvR171Wf1CV3pEM+Yp4Vu/kL/iK23
-   WxHXyp8MCVuZ/5JCsf+7KbAUwxsrIlPBfU4FSvOXr6puqfL9Kjlev8xYD
-   gJ4++w5CS9BLesb4/8sBZRNedmqrmUPYe+lwOGhR5ojYroH9+X1R5ADBX
-   A==;
-X-CSE-ConnectionGUID: TmNMDVlRS9CsEzqgMTcF7w==
-X-CSE-MsgGUID: Zk8Opqj0TZaYJ0TCOe/rMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49819620"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49819620"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:39:16 -0700
-X-CSE-ConnectionGUID: hll6pHgZRW2X/dz6jsfCFw==
-X-CSE-MsgGUID: LFjoowSZTkSd1cwn0aN9tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140659956"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:39:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 13:39:06 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 07/16] PCI/AER: Initialize aer_err_info before using
- it
-In-Reply-To: <20250519213603.1257897-8-helgaas@kernel.org>
-Message-ID: <0d429918-b42c-5714-ef40-ce2a9e129a6b@linux.intel.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-8-helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Soa8IlZG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MKSTb+y2"
+Date: Tue, 20 May 2025 12:40:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747737603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3YCYCyQORdQQ6yPdRXIvakdUOuzyMzvVjOJzjGAbDm8=;
+	b=Soa8IlZGIp1MohezIQOaVZFdPdo2uW+k38fSMXSK7Vk3yUF0SAdxWY1084UM5bkjPGg9QO
+	J0s4cVXHubNazLvQOqlDikbkCcJFh3MYjj7LfY5nNG4b7cUXRabgV6c6QgieuWP6511tjA
+	JA34Y286g0it35pnb0tRG8oaqOOB5A5ABV7WmbOBUFi1QylIltsYxPHqaK0+aCWgUkrOn9
+	5mFTO7PnJJS79MLrhZLcNR0stJplUgGONOpZij0dLDGjL4OVAXCRYN6ULMyHD5GmUX02DY
+	ol0N95Z/YSoASOSPZLn+PpwiVWCYVUbnaTVXzl5tmTegOq2lm10KS69XP8uDSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747737603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3YCYCyQORdQQ6yPdRXIvakdUOuzyMzvVjOJzjGAbDm8=;
+	b=MKSTb+y2OupFDalKub76G4tgosb3WU8kxylF8RjTB5JbAn1gsA1A8EmUdnyWZRLTL1210S
+	Ry2OxLE+C8/j4DDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH] prctl: Add documentation for PR_FUTEX_HASH
+Message-ID: <20250520104002.UVH8Rg0B@linutronix.de>
+References: <20250516161422.BqmdlxlF@linutronix.de>
+ <fuudjpar7kv7liwj4aucekktkzuhkalzkhsz5gv3mxzletlstk@tzokaret52cv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-824981395-1747737546=:936"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <fuudjpar7kv7liwj4aucekktkzuhkalzkhsz5gv3mxzletlstk@tzokaret52cv>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 2025-05-17 15:41:26 [+0200], Alejandro Colomar wrote:
+> Hi Sebastian,
+Hi Alejandro,
 
---8323328-824981395-1747737546=:936
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 19 May 2025, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> > diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTE=
+X_HASH.2const
+> > new file mode 100644
+> > index 0000000000000..c6a6396729770
+> > --- /dev/null
+> > +++ b/man/man2const/PR_FUTEX_HASH.2const
+> > @@ -0,0 +1,112 @@
+=E2=80=A6
+> > +Configure the attributes for the underlying hash used by the
+> > +.BR futex (2)
+> > +family of operations. The Linux kernel uses a hash to distributes the
 >=20
-> Previously the struct aer_err_info "e_info" was allocated on the stack
-> without being initialized, so it contained junk except for the fields we
-> explicitly set later.
+> Please use semantic newlines.  See man-pages(7):
 >=20
-> Initialize "e_info" at declaration with a designated initializer list,
-> which initializes the other members to zero.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pcie/aer.c | 37 ++++++++++++++++---------------------
->  1 file changed, 16 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 95a4cab1d517..40f003eca1c5 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1281,7 +1281,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  =09=09struct aer_err_source *e_src)
-
-Unrelated to this change, these would fit on a single line.
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
->  {
->  =09struct pci_dev *pdev =3D rpc->rpd;
-> -=09struct aer_err_info e_info;
-> +=09u32 status =3D e_src->status;
-> =20
->  =09pci_rootport_aer_stats_incr(pdev, e_src);
-> =20
-> @@ -1289,14 +1289,13 @@ static void aer_isr_one_error(struct aer_rpc *rpc=
-,
->  =09 * There is a possibility that both correctable error and
->  =09 * uncorrectable error being logged. Report correctable error first.
->  =09 */
-> -=09if (e_src->status & PCI_ERR_ROOT_COR_RCV) {
-> -=09=09e_info.id =3D ERR_COR_ID(e_src->id);
-> -=09=09e_info.severity =3D AER_CORRECTABLE;
-> -
-> -=09=09if (e_src->status & PCI_ERR_ROOT_MULTI_COR_RCV)
-> -=09=09=09e_info.multi_error_valid =3D 1;
-> -=09=09else
-> -=09=09=09e_info.multi_error_valid =3D 0;
-> +=09if (status & PCI_ERR_ROOT_COR_RCV) {
-> +=09=09int multi =3D status & PCI_ERR_ROOT_MULTI_COR_RCV;
-> +=09=09struct aer_err_info e_info =3D {
-> +=09=09=09.id =3D ERR_COR_ID(e_src->id),
-> +=09=09=09.severity =3D AER_CORRECTABLE,
-> +=09=09=09.multi_error_valid =3D multi ? 1 : 0,
-> +=09=09};
-> =20
->  =09=09if (find_source_device(pdev, &e_info)) {
->  =09=09=09aer_print_source(pdev, &e_info, "");
-> @@ -1304,18 +1303,14 @@ static void aer_isr_one_error(struct aer_rpc *rpc=
-,
->  =09=09}
->  =09}
-> =20
-> -=09if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> -=09=09e_info.id =3D ERR_UNCOR_ID(e_src->id);
-> -
-> -=09=09if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
-> -=09=09=09e_info.severity =3D AER_FATAL;
-> -=09=09else
-> -=09=09=09e_info.severity =3D AER_NONFATAL;
-> -
-> -=09=09if (e_src->status & PCI_ERR_ROOT_MULTI_UNCOR_RCV)
-> -=09=09=09e_info.multi_error_valid =3D 1;
-> -=09=09else
-> -=09=09=09e_info.multi_error_valid =3D 0;
-> +=09if (status & PCI_ERR_ROOT_UNCOR_RCV) {
-> +=09=09int fatal =3D status & PCI_ERR_ROOT_FATAL_RCV;
-> +=09=09int multi =3D status & PCI_ERR_ROOT_MULTI_UNCOR_RCV;
-> +=09=09struct aer_err_info e_info =3D {
-> +=09=09=09.id =3D ERR_UNCOR_ID(e_src->id),
-> +=09=09=09.severity =3D fatal ? AER_FATAL : AER_NONFATAL,
-> +=09=09=09.multi_error_valid =3D multi ? 1 : 0,
-> +=09=09};
-> =20
->  =09=09if (find_source_device(pdev, &e_info)) {
->  =09=09=09aer_print_source(pdev, &e_info, "");
+> $ MANWIDTH=3D72 man man-pages | sed -n '/Use semantic newlines/,/^$/p'
+>    Use semantic newlines
+>        In the source of a manual page, new sentences should be  started
+>        on  new  lines,  long  sentences  should  be split into lines at
+>        clause breaks (commas, semicolons, colons, and so on), and  long
+>        clauses  should be split at phrase boundaries.  This convention,
+>        sometimes known as "semantic newlines", makes it easier  to  see
+>        the effect of patches, which often operate at the level of indi=E2=
+=80=90
+>        vidual sentences, clauses, or phrases.
 >=20
 
---=20
- i.
+Understood.
 
---8323328-824981395-1747737546=:936--
+> Also, thanks to semantic newlines, we don't need to think about the
+> amount of spaces after a '.'.  However, for *roff, you need to use two
+> spaces in the source code after a period that ends a sentence; else it
+> is interpreted as not ending a sentence, and the resulting document is
+> clearly bad.  I recommend reading this:
+>=20
+> $ cat CONTRIBUTING.d/patches/description | sed -n '/inter-sentence/,/^$/p'
+> 	The correct inter-sentence space amount is two.  See some
+> 	history about this:
+> 	<https://web.archive.org/web/20171217060354/http://www.heracliteanriver.=
+com/?p=3D324>
+
+Okay. In the source code. Otherwise new line.
+
+=E2=80=A6
+> > +problematic on a PREEMPT_RT system since random tasks can share in-ker=
+nel locks
+>=20
+> References to PREEMPT_RT in existing pages use CONFIG_PREEMPT_RT.
+> Should we do the same?
+
+After looking through it, I switched to "real-time".
+
+> 	$ grep -rn PREEMPT_RT man/
+> 	man/man7/sched.7:969:.B CONFIG_PREEMPT_RT
+> 	man/man2/futex.2:1326:.\" PREEMPT_RT-enabled Linux systems.
+
+but looking here, it could be updated that the major piece of the
+patches has been merged and the mentioned config option is available.
+
+> > +and it is not deterministic which tasks will be involved.
+> > +.P
+> > +Linux v6.16 implements a process wide private hash which is used by all
+> > +.BR futex (2)
+> > +operations which specify the
+> > +.B FUTEX_PRIVATE_FLAG
+> > +as part of the operation.
+> > +Without any configuration the kernel will allocate 16 hash slots once =
+the first
+> > +thread has been created. If the process continues to create threads, t=
+he kernel
+> > +will try to resize the private hash based on the number of threads and
+> > +available CPUs in the system. The kernel will only increase the size a=
+nd will
+> > +make sure it does not exceed the size of the global hash.
+> > +.P
+> > +The user can configure the size of the private hash which will also di=
+sable the
+> > +automatic resize provided by the kernel.
+> > +.P
+> > +The following values for
+> > +.I op
+> > +can be specified:
+> > +.TP
+> > +.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, " hash_size ", =
+" hash_flags ");
+>=20
+> What's the type of hash_size and hash_flags?
+
+it is unsigned long as per prctl() prototype. I added it here.
+
+Sebastian
