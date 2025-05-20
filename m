@@ -1,96 +1,92 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5198B24EAAA
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B90F2571C4
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778267; cv=none; b=n+4GOJxlr+hRuFHxNcTrZ4cY1VyAuEShpJbK4jH9AWnmDl8XN8XM8uG35MfWtJF7NpbjdDDai6ClvmGNrwSIHWL8qiqET2FOE5H8e9+xcd2Q7qrhuMmvJUMn1JqBhU/8gqNSGuqKLCZxSu+K48/syhk6sOroEHc+uWzUeLzWQoI=
+	t=1747778382; cv=none; b=uQaxdA/821/NqJE9tv1jHtdRR7bMc4ChBfZ/7TxregxbeJlmp7wZmzgpq0EIKNX68V9HfTkV+QcFadLmDDRFyiM8WZNCSJdrQDS09blye92N3xnn4sPVpl1Kh/LqtavQCtrQ/MpO2786J+/X13lh1k6Xt3oBxv8En2ANlVRVWW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778267; c=relaxed/simple;
-	bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
+	s=arc-20240116; t=1747778382; c=relaxed/simple;
+	bh=Au849YRg0UNQ2jFTEcsVof5ccrqnHtmMmWVENNxHxOA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dIQHvB39Spja3CdxhGK1u66iUBJzl9kPef9WDIUUyq+IgVt07TWNQKRLYyuv6stDaFBuVKIXLQ6nhth00IC1Y6ho13ArUxNSYhMlH2WEsGnDpznlIv7hccUNq4uh/y42o/31t1WRu8j1gu0HPvzUHgh/iajNMNL0dZtJ1JSFKzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XKTORxvI; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=tRv1Iqe+35B6P0lrbehw49P3TcWO6K1qZ8PkqXi1H9w1p+optheVFGaZdGpu5Rfm2uLPKiwhiWdkqZ2tZcntaVT96+q3vROYkMZLbFsAdxPbs9fy7xIKauoPgFrCpNPBUIy4ogk7SBYBxcgm/XyyIBSWEdmjX5Nual2I+HQQYdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PMklSYU+; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XKTORxvI"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32805a565e6so60124121fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:57:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PMklSYU+"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a071so70892531fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747778263; x=1748383063; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747778378; x=1748383178; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
-        b=XKTORxvIwDcLLfX+7R94X7uuTL8r+zFux/DwH7e2SdzbFWzRiZmRdbfCF7COc0o1jv
-         tRISnZLImzoSKiHxBbvW40hryXpw4sjys7uHLHYrWqN/pQHhJZ746mE4c1h4B8GH8oml
-         tWQGGbVC3gHKR+nCoBVx2z6on8DIn1KOMfwyMlyMD6+nZCmW41Ek3Vff/+YakYOxDwBD
-         v/4B20LaTSY0mp+UBAR1xiObjIHTdwcnxL4rrkFtNrU4ADsPAKk8p7O8ORpNMcNFQmca
-         FiCbuLnxTJjjszaI9S9szY392c12uUCI3ROtfaUXg7A3oCabI/Nrpj4x6dr9BUGWtm4t
-         Klmg==
+        bh=Au849YRg0UNQ2jFTEcsVof5ccrqnHtmMmWVENNxHxOA=;
+        b=PMklSYU+SdpefuYScwvk0mkH+kq8I+hrR122L7eiOKgfx3pMfYwEnqMYFdRguOv1j0
+         DQYjpqtqIzYfAhWBdud4VmIo/03lPVxjCEFPmC0gyCIlFx9WzkTkDD6XYmo77zKFrIYd
+         t1P8uyfNxpggkwNxwr1J96KTbYdyTrCX8zsGKgXhdL1m3I14+ZS2cQa6CF1PX6BQ4CjK
+         MmcByXmfuHe/P+wuQiitDVmQp+kItbscfyCbWrgLnkoAWYI1BobNFPIV/4UuLyFVyxaY
+         HSlO3tQhUXWWNTJA5eeyEbxasekevDgVbmWtqQmo13ysraY6yw1F0zgR77N20luE4gf+
+         F6ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747778263; x=1748383063;
+        d=1e100.net; s=20230601; t=1747778378; x=1748383178;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
-        b=cmCOpL3vYoCtuSVB4GfWLq5trykJyTgOYavLPmOtDswjTxd2eLlZSj442w5cAcKMkp
-         3utRraJIR0GQWROKhlFR/LiQL7o1YQ0dKMeoINO96gzsDW8RWoRNjrzytCEZLWfbE8xk
-         gMUThzn4uBtOvYkU0x+3cszolqYZtP23c32A4nOFnx7jxaA231y2BpV4AQJA96n1TYSa
-         8fU6S8EIF9mg67mlRhAM2ptQb0df+lztLcScAoioRup1haM71k4aMno+Md/cHVd9B2Fi
-         zszDROmsDh6aK++H2YmkMPVUnQjPicNopjoC3vcxbU00mfCuHrtpyBJelaPtQIHftJkR
-         YASA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWsyNrrIRLZTgC8ry8BPR1fbXL4T8sa2LA3Qf/f1z0wZEiBZWJMPw2FtBRRvqNrTev7XE82BIBrKSpSo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2W4Tvd0hExvmTzb9l3nOH3UVVFHUh/qCtCycfFHJxjycLgxkF
-	4duSMub25AnQK+QDc0RF1YReMMXwXIOzGxG4CdJUiP4BcK8t2c3spIwHpPlp16JguIEnCHEtK4P
-	FKsgBsE8GLHCaj0ZwRtQAyZjfXkhkyegUtvgEDgUecQ==
-X-Gm-Gg: ASbGncv5AfSjMflnSdl6FVJ/PxH3rCvyckL+FrtQJfql9JxdAnAvtY3XkMqd0InR2pM
-	o8S7KK6If4FuMVZry1z7rLEfnbSG+tMh77wX81oxwKV8nyv8zkZy0wk3bgkB9uwnxw3XVEDoPUp
-	J6RWI6yFJSj3uE/xOaJgHVLK6yUTjosz3+
-X-Google-Smtp-Source: AGHT+IFzz0NXs8cF08Snmi4Ha7S7U5h0KKvjptJb+slPp5Gi4FWC7Nsw049EmovcMdDEvihhptYlSs6FgkwmCbzFvc0=
-X-Received: by 2002:a05:651c:54b:b0:329:1550:1446 with SMTP id
- 38308e7fff4ca-329155015ccmr33138651fa.0.1747778263381; Tue, 20 May 2025
- 14:57:43 -0700 (PDT)
+        bh=Au849YRg0UNQ2jFTEcsVof5ccrqnHtmMmWVENNxHxOA=;
+        b=vF+N974uIxgVYmk/34AebKsbCQHemkuIwH/ucHmm0AKBnnUL5ZF6Oi1eyeZtlEyD9B
+         pnX6DEBU2FEBbLTeHV7itp2GNlp0CdJ+oiMV7ZC2Z11A89P9XspIqTbDdcqtS7XoEzpM
+         Uj6+SHYgvZl/VuE89HafnW3cvcESCelUVldBp3mZiyBrKaeRHCdBk+EA0I2NaBZSBkE0
+         93EUnar/KndOMnxn/rEd7r40fUh5ZjWq1vgAtPtz4wWy/DGk574gIh4HgsuyKOd8YXbx
+         RYkVCFfaRYA3gGcqeepzNDeSL0Qgoma24dZRA8R+1dH/VgFIgnJoF7Kx0waOVbkb7yyb
+         801Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUOCGMKU0ynehMmdGeRHlS3bRJtUnj3rM6LYdMZhp5h6RTJPj5w5GRZLF+WtnrV5qMXvSxwMeIJq63VbWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZym3hwcvtmQNSwZQXQP0hpo53cNTKp+hW3MwKZFRCR+/IXdo6
+	YqRvlpwFvbkWThqFrqsfmj8FHk8n3NGLjX03HgHfU9AVbFIbSsbUeBcjJrF6yrfdGA0cQ8PEuTk
+	wAlu1STU1ct1Ht1FfMD2oS1U5qMZde6op6TUt4N7URxiwtgGLIn9R
+X-Gm-Gg: ASbGncuaVZ2+1/5QYoXbtZC5Skihnsm2OOpIx2o0zsBaO9Wlp3YUEq6IwSwjNDt9oLc
+	NVMT7T2y+7gnPPpcL1wlLbIdWYrf22ltBvEUv4TJJyj2YVBA+HV8lOUNXFiL5TalqmGFVm6n785
+	abqd1Rtw2hU7wd2hygbXla/uSHShsYdBh3
+X-Google-Smtp-Source: AGHT+IFGXmpd1II9RIoiTiuwNTr9SMDNaNasXEYSEeoFi+itIQs1c9py8jq9kh9xbrkCL4KgUzEy+knAlJTnnihOYdM=
+X-Received: by 2002:a05:651c:550:b0:329:168e:1c95 with SMTP id
+ 38308e7fff4ca-329169d611fmr43691811fa.33.1747778378199; Tue, 20 May 2025
+ 14:59:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
-In-Reply-To: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
+References: <20250519-gpio-irq-kconfig-fixes-v1-0-fe6ba1c6116d@linaro.org> <20250519-gpio-irq-kconfig-fixes-v1-1-fe6ba1c6116d@linaro.org>
+In-Reply-To: <20250519-gpio-irq-kconfig-fixes-v1-1-fe6ba1c6116d@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 20 May 2025 23:57:32 +0200
-X-Gm-Features: AX0GCFvwSq-oMiFu75DMDv5s_mCNJqSxwG-LnpvLIXP8m8Y6ivyc6Hrx1bC20zQ
-Message-ID: <CACRpkdb4OeD_yaUsGJ9Ugz3LZTCMdz1hbH-cX__ixEPr3Snd_w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Add 'ngpios' and 'gpio-reserved-ranges' for
- vf610-gpio driver
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+Date: Tue, 20 May 2025 23:59:27 +0200
+X-Gm-Features: AX0GCFtNM9CIgVAC4sc2ZtRZc7sbjM3GrbDrSYWYg3sk65dU3IzkaI8NC4Q0PFc
+Message-ID: <CACRpkdbwU0NvwfQTm0+pbsreF0FBk4ubbwnyeYmZxxpfBpGyNg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: pxa: select GPIOLIB_IRQCHIP
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 8:01=E2=80=AFAM Haibo Chen <haibo.chen@nxp.com> wro=
-te:
+On Mon, May 19, 2025 at 1:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-> Not all GPIO ports have 32 pads, so add 'ngpios' property to specify
-> the number. This can save some memory when alloc bitmap for GPIO,
-> besides GPIO tools like gpioinfo will show the correct information.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Some GPIO ports even more special, e.g. GPIO7 on imx94, it only support
-> IO0~IO9 and IO16~IO27, so add 'gpio-reserved-ranges' property.
+> This driver uses gpiochip_irq_reqres() and gpiochip_irq_relres() which
+> are only built with GPIOLIB_IRQCHIP=3Dy. Add the missing Kconfig select.
 >
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Fixes: 20117cf426b6 ("gpio: pxa: Make irq_chip immutable")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505181429.mzyIatOU-lkp@i=
+ntel.com/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The series:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
