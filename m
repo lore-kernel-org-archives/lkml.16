@@ -1,92 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA781AE875;
-	Tue, 20 May 2025 23:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46BAA1AE875;
+	Tue, 20 May 2025 23:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747783044; cv=none; b=BbGnWwmm+p4ACgM65mzjSUDtizIOEBsTCD/4n0bfRXMHDL8ArdULZvD3AHfvd+odsS3sZ4tXSBcm7JSG1qenWY0Fl+/gXxJlWO44CNFZPNESbzfR7z0PGSYo0BbXJ7KvHk9HUuwksA0ZSRkhT7UYkxPmiEsjlm6+1FKtP4h3Mck=
+	t=1747783212; cv=none; b=P4DQyi9v2qk/JYgLa6awtwSjNTZIrNSv8SNoUoX/BOplJJbf3OR5fv3jfO1TrLjUUJztRH/z3EMt+/9VMbmueCNQApFQ9bjg57kBRwSggmSRWzMaDmwi0YZle0/UFt3E3heauY+fUzEj8asS+GaGCMspvUK9d9hq8EwJO7WCjeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747783044; c=relaxed/simple;
-	bh=OLpprT4B3y/fOlPuThMEFMFgQ6AyOwL8XDRCThzZ/Hg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nIy/XdkU8kDwG2CMeLS4b3NX8iyGU8SvtLzDIYkBPtXHCdOyxVMF/ped17k9j8WSPDKRTSnkoqp44qetWX8ewK23GM6Wf4jko0pCe/arFP5XEwfs95kQXEd+mewlfD8lGjU286x1Q8otEJsY4tGav8/Xr8KrqNwLYNQA3m8T2v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBIgW6i1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747783212; c=relaxed/simple;
+	bh=b47Sid/Tzj1Q6uJ947FsPwJJqZpc02OLBHi2OAxo3bM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hSxAqd8oHdS8Dd6kWJQMDyn9tM6nk2uqQkGJL8anjtkW6tmZ3nc0rprG+MiR/OKx5TYWNQfOj6ezCYP5NdHLPaX3zQ9aVmqZKjW4pWfp2odPOSpLNS08ygn+8j7ARWdgAC09KjftQf/LQdsn4gneTkCsLrlZmgeww5HriIdeTB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UiKemof4; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBIgW6i1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48449C4CEE9;
-	Tue, 20 May 2025 23:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747783043;
-	bh=OLpprT4B3y/fOlPuThMEFMFgQ6AyOwL8XDRCThzZ/Hg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RBIgW6i1K3c1FdJtmZllKzNnVbuHxGvJDyo+eBY+jRulc7Xqcx9GFeKBfI39Drqcc
-	 3/o+RJE0uqyj+ZbdWY1yRGAbH6I60p9BO6UmiiBwi2Vfw/tnggbYDuUQuZEyFb2cZO
-	 Vvo61GDHFpedAuDXaXxWP8eW1jMgMLJEZThyNC4DjNLy9YdVD18OPiqNH34cVSx29c
-	 j5vRBR26eg2LeYrZls1sMGl7YhArhu3cfr3QhKoYFBdErvFdgW3WiuF/OK8aY1/qBp
-	 SyT0BoEz+vrd5mV9Vf3TxXYJ2F7uOwDGPhMctQEgT/aGmrxVot0vnHuzz/JPdJ4W7f
-	 KMigoXPqyNTtg==
-From: Benno Lossin <lossin@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Lyude Paul <lyude@redhat.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: Benno Lossin <lossin@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rust: sync: fix safety comment for `static_lock_class`
-Date: Wed, 21 May 2025 01:17:13 +0200
-Message-ID: <20250520231714.323931-1-lossin@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UiKemof4"
+Received: from [100.93.0.51] (unknown [40.118.131.60])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BB4F420277CF;
+	Tue, 20 May 2025 16:20:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BB4F420277CF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747783210;
+	bh=48UOZJdi6UD0dTmbUI5+OhczKXq3m/qlzK9e/Ymb7lc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UiKemof4NVC12FTSwoVFwZop9oUSLkxoYN/VD+Vc8mty/dp/V66dBh0zh+mkJ0nXg
+	 CuBX4s6pPstRl1QKEkyldcTJKa1AFmYWOBnzzwD6hx8zfG/spgcXmTUprqT/kp4Uws
+	 /9RN1w/yCKHtlqQF59PfNYs3nJpAKAPOhPlVgbu0=
+Message-ID: <e9fb39c6-6678-4369-9184-a7308627714f@linux.microsoft.com>
+Date: Tue, 20 May 2025 16:20:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drivers/edac: Add L1 and L2 error detection for A72
+To: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, James Morse <james.morse@arm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter
+ <rric@kernel.org>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Tyler Hicks <code@tyhicks.com>, Marc Zyngier <maz@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, devicetree@vger.kernel.org
+References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
+ <1747353973-4749-2-git-send-email-vijayb@linux.microsoft.com>
+ <20250519085130.GFaCrxEnZvaoETKrao@fat_crate.local>
+ <ea19ad06-142c-4d7e-83ba-00b9b7e3cdaf@linux.microsoft.com>
+ <4630a9fc-0980-485f-9b70-01558ab418db@linux.microsoft.com>
+ <20250520200448.GRaCzgYFnfIjKAgAg2@fat_crate.local>
+Content-Language: en-US
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+In-Reply-To: <20250520200448.GRaCzgYFnfIjKAgAg2@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The safety comment mentions lockdep -- which from a Rust perspective
-isn't important -- and doesn't mention the real reason for why it's
-sound to create `LockClassKey` as uninitialized memory.
+On 5/20/2025 1:04 PM, Borislav Petkov wrote:
+> On Tue, May 20, 2025 at 12:54:32PM -0700, Vijay Balakrishna wrote:
+>> On 5/20/2025 9:09 AM, Vijay Balakrishna wrote:
+>>> On 5/19/2025 1:51 AM, Borislav Petkov wrote:
+>>>> I'd venture a guess you need to protect here against CPU hotplug...
+>>>>
+>>>>> +    for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
+>>>>> +        smp_call_function_single(cpu, read_errors, &merrsr, true);
+>>>>> +        report_errors(edac_ctl, cpu, &merrsr);
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>
+>>> Hi Boris,
+>>>
+>>> I appreciate you highlighting the CPU hotplug issue. Upon further review
+>>> of surrounding code, I realized we must ensure that the data passed to
+>>> read_errors() is per-CPU.
+>>
+>> Actually, per-CPU data not needed as we are passing true -- wait until
+>> function has completed on other CPUs.
+> 
+> What happens if @cpu above gets offlined right before you do
+> smp_call_function_single() ?
 
-Signed-off-by: Benno Lossin <lossin@kernel.org>
----
+We can see inconsistent behavior or kernel crash/hang. You are correct, 
+we need to protect against CPU hotplug. I will add 
+cpus_read_lock()/cpus_read_unlock().
 
-I don't think we need to backport this.
+Thanks,
+Vijay
 
----
- rust/kernel/sync.rs | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index 36a719015583..a10c812d8777 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -93,8 +93,11 @@ fn drop(self: Pin<&mut Self>) {
- macro_rules! static_lock_class {
-     () => {{
-         static CLASS: $crate::sync::LockClassKey =
--            // SAFETY: lockdep expects uninitialized memory when it's handed a statically allocated
--            // lock_class_key
-+            // Lockdep expects uninitialized memory when it's handed a statically allocated `struct
-+            // lock_class_key`.
-+            //
-+            // SAFETY: `LockClassKey` transparently wraps `Opaque` which permits uninitialized
-+            // memory.
-             unsafe { ::core::mem::MaybeUninit::uninit().assume_init() };
-         $crate::prelude::Pin::static_ref(&CLASS)
-     }};
-
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
--- 
-2.49.0
 
