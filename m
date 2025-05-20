@@ -1,105 +1,139 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E06277102;
-	Tue, 20 May 2025 08:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D17F20E000;
+	Tue, 20 May 2025 08:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728430; cv=none; b=tXrjDmBhyCu5wZUITcbN3hJYeLtk06bl7hgDc7uk9Jje6W68DIcNLruy7VLlKT+ra55HzWyz8ncJE3Vsr8pJF3Zjw1YYfUtSBQ0sP59txg6N543U99OHfOIp2ASRLBFqXgyME75upGmD+OQFKz20BEMgD5odK0nRJDScQe7ZyDw=
+	t=1747728447; cv=none; b=r7wuL3TlgqrxsSyhRmLYCKcUwfipKigwyGSDcU3F0RXfN93mlREhSUgxOCVeNx8VpahAz9+HiA7t6QFRXqtNDg1QNCPTbrE/3q4EhZ5xdsMUAlViwXW9Jk+yyyLHni27NBD5OGJtBbgcOs+RrpvZUqDAw/aoZHWefdNAZPDChxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728430; c=relaxed/simple;
-	bh=D0OYHWZOSrzkqmr4CoGzl8bVmgydg3QT4qWndKfE0rE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fEd1zaQ16oW84v7WBIt+JO8OAX9lwn56Zb+Mq5OfppSWgAcQRCpo3AlQY3vOHmBfZm+lzSpcSuQV0MsLMuMC1rvFkApFF+WnkaBXOtLCuTvOSKmSU+hfkMumMk4oas/8hm46JgB8DrHnGEIrAwtn1HTzk1AMSVfl/3Zi17reWnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPfKI2pi; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1747728447; c=relaxed/simple;
+	bh=z6Dd/oQkZ4aRbbBXNGpctfnYVE9o7qSP6wR0gQ51tcQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UJauNQ2AbJ3MEblJPOVdEAiV/8YBxL1T3l9U2rvvcGRs5XUZnFag9joa1UcJa2pvEt/atXkqnQN4g1qrO4YUZ0Syb7NKP/j2ynn/PAJrSIaE+Ehlvf7x9d9LI0lUghqW0cQyNtKrekjM8xfzzgCl5qBO93K2VBehoSHjiVb9XDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPfKI2pi"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so1435375f8f.2;
-        Tue, 20 May 2025 01:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747728427; x=1748333227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpHRU034TQkb5cjOdrpKQYdzGgIm3GbrQjUM4K94oQI=;
-        b=gPfKI2pi7sK+SHfShhXu60VN6Dm+vixB1h8KToPUWCnPpa0kP7lL/i4b4doTHdufCa
-         dHUCMd+yPHSYmKnIQ9+8PzLfJjhHviqZjIAR61oqqkCaY5pHiFpocOgMMC9mIiisP5V8
-         v8BYY6sIalj3WlYtnk/2dKujKaJwWTTam7x0JL0150PFsOjpmFSGD8YvEUIcE9UTaF6I
-         C4v7HlWU0DGcf4E5IGSDsLhGX/aRR76N27kHcbkxdQ90FIxI993S5g2K4acGeEft7b2S
-         jV6K6g6goWZiRXeT2YcKw+QKO1nyFWVinjy+DifhPOdqKm/8lvSv/F4PkmX8vlnDlJOl
-         OUIQ==
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87beb9976e5so728506241.3;
+        Tue, 20 May 2025 01:07:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747728427; x=1748333227;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747728444; x=1748333244;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZpHRU034TQkb5cjOdrpKQYdzGgIm3GbrQjUM4K94oQI=;
-        b=sBE4O4jA5lk8cpF/L8q7Y8gg8jy1DQfm+NSTRJUvsIYh4JXrUJIoZ2CuREWvBT4+pf
-         03bzG7Lj8ZBTTIYv404PsOjx1qhT8KZ/fOj7nTVt+Ysj8WKmdk48648PE5OWE2InaaGD
-         UP8cgykxCpl6L8kZ9rlcpBTqn/HPpRmxpuUS7MbgMIDua83Nkr0oAgC1GonnqYAxVYCh
-         slT+GCV/5NwojOvAcnj5iOASHBA2vN/AsEFvrJb+qpOhEqeymqtijfeqbvrUZ/E4KMkU
-         PjYJUuSbMksBV6NIiYbtvLpw24klG2XtKpjkYQIWBKvju+4C1h8CJq/ZlNStdtORvkGB
-         6Szg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpBgUS58t3JWj9T2YhdyRnh3THsTQsWVzuiErhWcnCBIrMhjeY+g2Zir7Oz1S87GOtLIyfr7DZFMcmKXM=@vger.kernel.org, AJvYcCVqPXGjmCFjzaFyCY0wmQh06Nop6FYXeMGXyyudj4bL7kcSNhhVXgzI7/LmzgFsXPXOhVlqvurPebvBXv6wzx11@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznf+RcL8MgTlzAvdSnO3KIL3sJQsaiGptXCC85A8BifZswFJqN
-	6Tt8DnF5HadHebTS+iRyT2cx7Xuv/anmbgHac+6kgYemz7fHDzVuxlMs5h4Pu2g7T+8=
-X-Gm-Gg: ASbGnctdEAjd8+BwA8TXoStgcqmjplj25abbCGNFn6jVVJOkDKSMD4oo7v0ej68IpyU
-	3tqXYZUBZVZ9WQuI5tje0vNGJ7aqewz8dv/WiYBdR5Y+4MCzgPK8NQjX0BYHdCO6jOEhjQNXcHv
-	PH+yqCJ3Asg0YnCPebRqDukWnjiY3FnpjYkW9zESm8i6nPBZylvAywd6k6mROzSdXM2fi0OiUOS
-	9fOjQg4la7TRMVu6PkZnsR8PFzJaIKvjiFiDiOK9tRmfT4F1wyp8qsoGUngAGT1pNPvSPJNsroq
-	EcqVw+68FS8/3T4qzyUgfJM+IqSMdreYV2yCilIv+ZEFtaZmBLYUcnQOIKtJ
-X-Google-Smtp-Source: AGHT+IEZ7lcvAfHdwaoGw0Hd9SkgRJNTKmilJ5RpAOMDo+EDUFFvKvZhoDQePz24CUemumYdt/bp8g==
-X-Received: by 2002:a05:6000:2210:b0:3a3:7bbc:d959 with SMTP id ffacd0b85a97d-3a37bbcdac1mr758115f8f.18.1747728427231;
-        Tue, 20 May 2025 01:07:07 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca88899sm15280174f8f.80.2025.05.20.01.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 01:07:06 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] selftests/futex: Fix spelling mistake "unitiliazed" -> "uninitialized"
-Date: Tue, 20 May 2025 09:06:57 +0100
-Message-ID: <20250520080657.30726-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        bh=w0OkeJ2UmcoGftyF2J9m/ldgYQ4lKUralL2MdRmggQY=;
+        b=NoeI48/TMq0ror4E07PdlRxS+Zz8RwtG/zyGHLDRATO9sWq+hJHVffWwuUIP/+a/8U
+         XE6DowyiIFrXTzsOt1WRM/IZatxo16dIvO9UIQOvztHT3x/Koh9Mwtyjptg7coq5wJ57
+         PaVzgAeYWlO5H3cqIU+XVRPvKROQ5jaw8S/0vG/Rr6oLqu+1CR8f9EkGRcVNrfgxzrf5
+         hw2Z/TWNkjeqOLmQGbyBFLxIA3mQ2rJWA7kW76IDYyVKUfRuqEaA4eZgylFo9tXNZIR3
+         9sogE5NNFgfzG45XlfyqoZj8BeDgnIKDzoRi3KhXg1IjQCoe4gi1EtiJcNYog1FiaaQH
+         IcuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUorovM5C0TuxoePzgrpLQL7YGPu46oI5EUWpvroacwzhkXnXTIta5Xz0XxJ+lwLB3bCmDtRzZRUI2iUA==@vger.kernel.org, AJvYcCXLHuYsorZPQ1n1S32O3sS/pqo4cTne5IBsHqrdecArV4SqE8dj+KdxoQF9LfKwDPAXMReMsCgcVn66bVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6+hGkQHbN5VMArwoKig8mlnWF9aV46F5UfjGX9gVxnpH5Noos
+	RvV0qS5wJUVX9LRk50NI9HZQDbiM1ixo/53FsIiCmoCOllY8d50ssvwBSPi+h5Ci
+X-Gm-Gg: ASbGncspJEST5yQZpEoJLrIsJMYafDDh8kBfXIXT48LoDSQy5LgkcdcXWKkTEILiWo6
+	0JxILktGP1PJWi4gbUVx+mtXgflxdI2S2wyQnkKYuOac69h/opUsdswNvYCRRw7MipVxzk3iBRW
+	QFaxhs3Rk+q9fUXBC0rfD4TNmQn8VIC1tfxzzofxdWo0DusPUR9299RyDkFyu+GRFmoG/HSPUN4
+	AeQFpzVr7oO4USoeCTjPqdA4ABugiAl5czy/oakiOJqiuuPntv2IJ3yvGomIUwIGexiQyHJpybp
+	F6ukhzRkc80Y0RVE35QQO08b8Z5El+HWyJ4aCjywkFOiuxP3T3tRgCToyKxgPtoHs7pzE55szDW
+	1yIvSXIL6pvPfZA==
+X-Google-Smtp-Source: AGHT+IHQHUj0yjL1Zbp8ovdifIdJ+D2wDKQ5BIgzJg6+GigkmUYl63WQ8pS4m0IoRGpA3Ry35J7SIA==
+X-Received: by 2002:a05:6102:c0e:b0:4af:c519:4e7f with SMTP id ada2fe7eead31-4dfa6c07ef6mr14659862137.18.1747728443813;
+        Tue, 20 May 2025 01:07:23 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec10c550sm7105521241.6.2025.05.20.01.07.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 01:07:22 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so996082241.1;
+        Tue, 20 May 2025 01:07:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfoTEE06IBg4UYZzp13nIVTB1HkpcxAv71HVyqv3vTcUVN6mUvUzDv++KFLb/UL/N1hWp6TLkvCzykrQ==@vger.kernel.org, AJvYcCXFZXnmdvinJ86A6rUudNdMzXVRJJrCOpB/i9mbYsnUl2U7SQ7Qr1Q7S0Vxl6j9ZizR8eCb4OjqSFuYU/U=@vger.kernel.org
+X-Received: by 2002:a05:6102:370a:b0:4c2:ffc8:93d9 with SMTP id
+ ada2fe7eead31-4dfa6b64a38mr15053682137.9.1747728442387; Tue, 20 May 2025
+ 01:07:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250515171420.7c6a4e4b@canb.auug.org.au>
+In-Reply-To: <20250515171420.7c6a4e4b@canb.auug.org.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 20 May 2025 10:07:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVMf3+Q2N5yXgf23LPSQPuogA3R66_W0WGWVgJRRh-ZcA@mail.gmail.com>
+X-Gm-Features: AX0GCFvt2cAU7h6bhFQUSrCPrc6NmFxPnx3s6kvdiG4YzCcTzDjIuor00aU5-y4
+Message-ID: <CAMuHMdVMf3+Q2N5yXgf23LPSQPuogA3R66_W0WGWVgJRRh-ZcA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the phy-next tree with the phy tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Algea Cao <algea.cao@rock-chips.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-There is a spelling mistake in a fail error message. Fix it.
+Hi Stephen,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/futex/functional/futex_numa_mpol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 15 May 2025 at 09:23, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Today's linux-next merge of the phy-next tree got a conflict in:
+>
+>   drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+>
+> between commit:
+>
+>   f9475055b11c ("phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error")
+>
+> from the phy tree and commit:
+>
+>   0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion overhead")
+>
+> from the phy-next tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+> index 77236f012a1f,bb49d69a6f17..000000000000
+> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+> @@@ -444,47 -412,45 +412,47 @@@ struct rk_hdptx_phy
+>   };
+>
+>   static const struct ropll_config ropll_tmds_cfg[] = {
 
-diff --git a/tools/testing/selftests/futex/functional/futex_numa_mpol.c b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-index dd70532f293e..8864c610f165 100644
---- a/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-+++ b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
- 	test_futex(futex_ptr, 0);
- 
- 	if (futex_numa->numa == FUTEX_NO_NODE) {
--		fail("NUMA node is left unitiliazed\n");
-+		fail("NUMA node is left uninitialized\n");
- 		return 1;
- 	}
- 
+[...]
+
+>           1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+> -       { 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
+> +       { 65000000ULL, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
+>           1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+> -       { 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
+> ++      { 50250000Ull, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
+
+Note that all other entries are using all-caps ULL.
+
+>  +        4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+> -       { 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
+> +       { 33750000ULL, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
+>           1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+
+[...]
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
