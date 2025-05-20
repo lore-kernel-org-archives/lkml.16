@@ -1,166 +1,181 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B6524C06A;
-	Tue, 20 May 2025 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2AB4A06
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754033; cv=none; b=K7EOhYg+JGszFMYKk7reMeKaneQwkbjpt7YqRCcupOBkJe/PONe18N5PAMzU2MGhFMhpiGsHOrapN0JZ7rrIb/TIdo1nEVr3aW5XOkp+zj6hgKt8ORlzZFLTljEPU8sYLggwbecprd5hi50IRwp4GP8M59Gf8hhMSb/3kuy6TmM=
+	t=1747754089; cv=none; b=ljaJVYulVgIm5P9hSpu1Yga1+QHj7Jxa6FyWAiM9WYtr/l/VMitDJknNYt3oiKni8p4cCQpiNC6hBW4ah6O/lZaos23unW8rCnedSmjvx0AKgekcI65Ovoe/u9yPRug0Gt3m1aP81dtlj753rIpkhiT5TzUCVlhy69zSXnn0/Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754033; c=relaxed/simple;
-	bh=r+3Yg8OTnXieQ3ZcgC5Xn6TWot3V0vt7EhVQGkfTru8=;
+	s=arc-20240116; t=1747754089; c=relaxed/simple;
+	bh=ooCehnBkTa1RFyfkUYai5NV0wxtK9/ROqQRNoy35jZc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GoAEqERsVSRJJb2dcngyuiU85Ov/T6vYyWmhmrbZiE7Yk3nCW3csAzaREoa68T7Dt8R3m7TfR+eQrrbjZsxsoani3aKWiMDCkWKw8Aetj86aukvYoHd3gjCqlLe9mr4vL47xQMQ3MKExxCgabD35THhJg4QeSckBgNQR4zGgF6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZ8EfIRL; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=XAd+c6OhG42U24OzB4gd0a1LGlLP7gAB3QLJYSPGvyQo8X8JDv44rkKAacC94XnLKX3VnAQD0WWbT+oDVYySN/hbaTqd805YjfIzSzfNvxMdOzKKkt6AlWOjj1ltXKD4cqYZFppsDuwMU3g5+ytvSoYSOYI2awM2sPB365B7Xvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sbzn4h2F; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZ8EfIRL"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so915065766b.0;
-        Tue, 20 May 2025 08:13:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sbzn4h2F"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4774611d40bso856991cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747754030; x=1748358830; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747754087; x=1748358887; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r+3Yg8OTnXieQ3ZcgC5Xn6TWot3V0vt7EhVQGkfTru8=;
-        b=IZ8EfIRLJvipR8c19pzbLTreP5dK55+CBFN4HdjrjaYubD2U+Y2nNsNOuJyL0ve6qz
-         srgQpA2PyHb83kA2qr9tTlZkGvpOy2aFdcz04VznTeFd4WgiyrLM/SKghG2gxHp4F40g
-         BuOClCaEewITTWrO6iU7GkPPMMDMdrNrXaYbT7xOgLXfZDg5VwV5jARPwioLvVqAeYDD
-         ZjIKd50n5UgyPd0/IHRnTe3RjtLVijlkvaIhAD0Z+MJD/mMbwn0p1ruwTFs82eJEbrtR
-         oWhGAs3lgwULo1moA3IEzEVYMMqfLvgVmGBbWD0zjFcbIKLnGYfuqmlnV01vFfI3+7Xj
-         76mQ==
+        bh=iSrpfL8xaFpRULZ/wjVaUfdkfzWgu438uQCRPW9kiS8=;
+        b=Sbzn4h2Faz2FzXR+pEulo7J0J9d9TIb3T+7AChWuwI63Hu56hMeLZQU2YKDqSomNys
+         hxx3/IULHHiSZpy0vjB02AjNWEIFWJrwTsUeUR6We+CD2TnjIJv0G8IyA8iP7TPgnImA
+         OJY9T48NtuLx/vR4YfrR0Z0qC0egOat+7nQ44BzywdjWEHeFfx5umV6U5boefxEPFGnO
+         WZTvWJwbl7h4oLE13zBZucMtvTz1QgmK1dmUdpId8ULY5IfE7vYeQf43tz+/RHxI/JKM
+         pgP9mS3iz/qrdzBxf1BXQihRNblQQKakP4JqCGusVONKfLuOq5LVmCSEHIql8WfVLn0W
+         h6yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747754030; x=1748358830;
+        d=1e100.net; s=20230601; t=1747754087; x=1748358887;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r+3Yg8OTnXieQ3ZcgC5Xn6TWot3V0vt7EhVQGkfTru8=;
-        b=VNlMFl2JG2A8pWKvJ+z49xybVRl0G2iAcPqiJ42i9hnPDpoXH2ZlqopVhy9aCQDUfc
-         02rAvCSyRXuME0u6vmDHHH3/PUfGcnQnKXKu1DZmY6YCI80tu3rFoMeGnPdj+TCZ8BNe
-         MFQlb4v4lclreVFYFKl4n28e4CkVwgcHpMxSmomqIWsrdiQDkHkYd6xOufU39WU+9gey
-         2D4YvszMKv7MhLMUfPzntV+msC6bPpqAIsjMQWWcY5ifObvIz0x4lKbEj1bPbjGYcC/j
-         wPKvtkqSJshWJNwszlxbK7J9xqjHh2LNmV+7ecFEVyc8NvEXpRO71BS5fycTn1QckMky
-         fFhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUR8azdpn8rn66DoOfzHlxQ1B5IEnHJEjGxza27iMwMOsb0Bm4ModHlJxlQE4I8edR/UWYusjljkymEKbjycg==@vger.kernel.org, AJvYcCX5O7qPi9sK916j3zhjK+4MgVsu9PmJ5BL4JEgLaW3lUVwxDtdCAx/53iEn//X4lLYfwYj4YPQYCP175VWGNQ==@vger.kernel.org, AJvYcCXCWnOE5/wY37UzQEI4rHx0KUeN+7T2m8Jp9snPVTJOCbXwCMMbvSTxkz28TErZFhJpAbg5gTWDB83199Tk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmBlpJ1UCG6q/8qswmk49RRTPobae+smXlhFZRTHCvSlUA/SPX
-	S1j2/VPzZNtGg1ibq9NKfChNn9XTSKpsWGsz38bD5kYmmjW1+rB5IExpi/1qN9qsJSHUlRCBdmA
-	ALz/yRkRWw+DVCQarj5mz4Kb7m7+6qUI=
-X-Gm-Gg: ASbGnctx11MTdcgAVuRWViLUXtmVsAdW1QAw3LqYW+tVWrzLEmQXEV7fv8QKYHyRyqm
-	+qUPhw68FXp5bYpgDdRXbKaEpqpbabmQFLbR0S+yYHmDGGbF+XTCYa1rV74Rdq4js6aMkjLXtxP
-	PVJp4H0uM0uqoqRSko+BWhNFYBjOkwS0Ri
-X-Google-Smtp-Source: AGHT+IHhOo1I8dYhhoZqyuwMlTXOucNkuF8QBy8bK9otG1RNbGcQbpYA34dRtZv6u+hi2lp02lJ5UZiCzRcsggPSD4o=
-X-Received: by 2002:a17:906:f58d:b0:ad5:4a49:4d56 with SMTP id
- a640c23a62f3a-ad54a495acdmr1424502066b.3.1747754029586; Tue, 20 May 2025
- 08:13:49 -0700 (PDT)
+        bh=iSrpfL8xaFpRULZ/wjVaUfdkfzWgu438uQCRPW9kiS8=;
+        b=erN3Rw1+KuY7JHJ4ZvbkjFUu50tPBwTBFe2hUJ9nMNs/bOH094wtI+MDLsZVPPCSoi
+         Ji4peevAOVDaiE6K2FHWJ6LZ4CHoyRCLVnwE9CvxRd+lfl2XXU+uJhaY+7BRQYjDLYgO
+         cfmeYIpwpupqPI44Ami+TNDPopOTHtk5MsDFJt4AnJsoC1L9DoWTfD1srfwtRgCv+hIV
+         AoLg5nGSEYMSID3olAjRiMPv/tjkWeaIVH6TTDv4Aec8NbCzk5NbCleBLwuE+66EkJvp
+         0YfGa+jRCubErl1j3YYButjTXKs4opQ5aP9cpFgFfwV6uy3WJueVjtYAqDmO8WcQVrc3
+         8c8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWnKJuipuqklTXvJEi7x4OgMNq2YTU36mjRAe/ABQNofOlKPiqWalhqzfEpXb8Bj179AH+ha0N0q6FQE/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw4IsKCP2xmYL+04SP4enw4xeRbMbD7eNb23/2g+plcdvzuVUP
+	e/P4PN8yvhJvFK65otGKJ7dtBiR56SjDe+ltzFCA18h7gNJyaU9ib3VDqUb/99VBZNATzqquoWo
+	8IvOYXfyQjIc5rWbPDYeBxVN74v395n80bK5dCHDB
+X-Gm-Gg: ASbGncsqYZjJpzBlG3VBvoqOsUwQpKuMusENkVUTiogeRWm4ftkcC97An07bdLJ2/Vz
+	mTu2c+wBxHx+twmFOnp9Mxho9NDqbGLWwr+Qq4dGfrScubI7gQUzzRERRVDUet7Xsot7EFi3QkW
+	KVd5li6pQ1ypFFqQrEQFDTVX7SNQMc8UnyACeBZRvYWaLC1yrwXvk2yqnoH0ZibtpHT/5JGlPx
+X-Google-Smtp-Source: AGHT+IHqxMAqm9ksZ9pdmifguaGcuAgwy595ArLVy7NQeSIbtyAJtcB0AxKMULhl/n7xN7BfZzI9P4AZwv9k2z3819E=
+X-Received: by 2002:ac8:5a8e:0:b0:494:9777:4bd with SMTP id
+ d75a77b69052e-495ff6d39d7mr10177501cf.3.1747754086275; Tue, 20 May 2025
+ 08:14:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com> <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
-In-Reply-To: <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 20 May 2025 17:13:37 +0200
-X-Gm-Features: AX0GCFuWrzLa3iJcrg3IUMQV1OgW5T9Qo2L2W9N-xtFO3-OeSaQClitTOnNYF8s
-Message-ID: <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
+ <20250520122547.1317050-2-usamaarif642@gmail.com> <aCyEyxHEXQ7DU9I1@harry>
+ <cf17cfde-cd1a-4217-a09a-1aa86347f830@gmail.com> <h7mwe4tr4r233zewdqaoehmmoktaljslgcxvr2qybon2vnxhrz@pbwpt253olkd>
+In-Reply-To: <h7mwe4tr4r233zewdqaoehmmoktaljslgcxvr2qybon2vnxhrz@pbwpt253olkd>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 20 May 2025 08:14:35 -0700
+X-Gm-Features: AX0GCFuD9buhC-dU4FNw-ogmprw-VWLbagGLuSevZ4KRV2INpyupQsgxAdo-Jk8
+Message-ID: <CAJuCfpF4dar7p+wMucP8uWn23U5kzDCdSw48nZX=a=ei9ZSZOQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: slub: only warn once when allocating slab obj
+ extensions fails
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Usama Arif <usamaarif642@gmail.com>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, hannes@cmpxchg.org, vlad.wing@gmail.com, 
+	linux-mm@kvack.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, vbabka@suse.cz, cl@gentwo.org, rientjes@google.com, 
+	roman.gushchin@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 4:44=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
+On Tue, May 20, 2025 at 7:18=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.de=
+v> wrote:
 >
-> On Tue, May 20, 2025 at 04:33:14PM +0200, Amir Goldstein wrote:
-> > On Tue, May 20, 2025 at 4:12=E2=80=AFPM Kent Overstreet
-> > > Amir, you've got two widely used filesystem features that conflict an=
-d
-> > > can't be used on the same filesystem.
+> On Tue, May 20, 2025 at 02:42:09PM +0100, Usama Arif wrote:
+> >
+> >
+> > On 20/05/2025 14:34, Harry Yoo wrote:
+> > > On Tue, May 20, 2025 at 01:25:47PM +0100, Usama Arif wrote:
+> > >> In memory bound systems, a large number of warnings for failing this
+> > >> allocation repeatedly may mask any real issues in the system
+> > >> during memory pressure being reported in dmesg. Change this to
+> > >> WARN_ONCE.
+> > >>
+> > >> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> > >> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+> > >> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b7595150=
+8f0a@gmail.com/
+> > >> ---
 > > >
-> > > That's _broken_.
+> > > Hi,
+> > >
+> > > Please Cc SLAB ALLOCATOR folks in MAINTAINERS on patches that touch
+> > > slab code ;)
+> > >
 > >
-> > Correct.
+> > Thanks for adding them to CC! I was just thinking of this as a memory
+> > allocation profiling issue and added the maintainers for it,
+> > but should have added slab maintainers as well.
 > >
-> > I am saying that IMO a smaller impact (and less user friendly) fix is m=
-ore
-> > appropriate way to deal with this problem.
->
-> Less user friendly is an understatement.
->
-> Obscure errors that only get reported via overloaded standard error
-> codes is a massive problem today, for _developers_ - have you never had
-> a day of swearing over trying to track down where in a massive subsystem
-> an -EINVAL is coming from?
->
-> It's even worse for end users that don't know to check the dmesg log.
->
-> And I support my code, so these would turn into bug reports coming
-> across my desk - no thanks; I already get enough weird shit from other
-> subsystems that I have to look at and at least triage.
->
-> > > Users hate partitioning just for separate /boot and /home, having to
-> > > partition for different applications is horrible. And since overlay f=
+> >
+> > >>  mm/slub.c | 2 +-
+> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/mm/slub.c b/mm/slub.c
+> > >> index bf43c403ead2..97cb3d9e8d00 100644
+> > >> --- a/mm/slub.c
+> > >> +++ b/mm/slub.c
+> > >> @@ -2102,7 +2102,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *=
+s, gfp_t flags, void *p)
+> > >>
+> > >>    slab =3D virt_to_slab(p);
+> > >>    if (!slab_obj_exts(slab) &&
+> > >> -      WARN(alloc_slab_obj_exts(slab, s, flags, false),
+> > >> +      WARN_ONCE(alloc_slab_obj_exts(slab, s, flags, false),
+> > >>             "%s, %s: Failed to create slab extension vector!\n",
+> > >>             __func__, s->name))
+> > >
+> > > I think this should be pr_warn_once()?
+> > > I'm not sure why this was WARN() in the first place.
+> > >
+> >
+> > Isn't WARN_ONCE the same as pr_warn_once but with needing the condition
+> > of the first arg to be true? We only want to warn if alloc_slab_obj_ext=
 s
-> > > is used under the hood by docker, and casefolding is used under the h=
-ood
-> > > for running Windows applications, this isn't something people can
-> > > predict in advance.
+> > returns non-zero. So WARN_ONCE should be ok?
 > >
-> > Right, I am not expecting users to partition by application,
-> > but my question was this:
+>
+> The difference is the impact on panic_on_warn users which are mostly
+> testing bots.
+
+Another difference is that pr_warn() does not spit out the call stack.
+
+> This warning is not actionable, so I agree with Harry to
+> covert this to pr_warn_once().
+
+Makes sense.
+
+
+>
+> > > The coding style guide explicitly states that:
+> > >> Do not WARN lightly
+> > >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >>
+> > >> WARN*() is intended for unexpected, this-should-never-happen situati=
+ons.
+> > >> WARN*() macros are not to be used for anything that is expected to h=
+appen
+> > >> during normal operation. These are not pre- or post-condition assert=
+s,
+> > >> for example. Again: WARN*() must not be used for a condition that is
+> > >> expected to trigger easily, for example, by user space actions.
+> > >> pr_warn_once() is a possible alternative, if you need to notify the =
+user
+> > >> of a problem.
+> > >
+> > > And failing to allocate the extension vector can happen during normal
+> > > operations.
+> > >
+> > > panic_on_warn users will be unhappy if they notice their kernel panic=
+ked
+> > > just because their kernel failed to allocate slab extension vectors, =
+which is
+> > > a totally normal situtation.
+> > >
+> > >>            return NULL;
+> > >> --
+> > >> 2.47.1
+> > >>
+> > >>
+> > >
 > >
-> > When is overlayfs created over a subtree that is only partially case-fo=
-lded?
-> >
-> > Obviously, docker would create overlayfs on parts of the fs
-> > and smbd/cygwin could create a case folder subtree on another
-> > part of the fs.
-> > I just don't see a common use case when these sections overlap.
->
-> Today, you cannot user docker and casefolding on _different parts of_
-> the same filesystem.
->
-> So yees, today users do have to partition by application, or only use
-> one feature or the other.
->
-
-Didn't say there was no problem.
-
-Argued that your fix is a big gun and not worth the added complexity.
-
-Let's see what Miklos thinks.
-
-> This isn't about allowing casefolding and overlayfs to fix on the same
-> subtree, that would be a bigger project.
->
-> > Perhaps I am wrong (please present real world use cases),
-> > but my claim is that this case is not common enough and therefore,
-> > a suboptimal EIO error from lookup is good enough to prevert crossing
-> > over into the case folded zone by mistake, just as EIO on lookup is
-> > enough to deal with the unsupported use case of modifying
-> > overlayfs underlying layers with overlay is mounted.
-> >
-> > BTW, it is not enough to claim that there is no case folding for the
-> > entire subtree to allow the mount.
-> > For overlayfs to allow d_hash()/d_compare() fs must claim that
-> > these implementations are the default implementation in all subtree
-> > or at least that all layers share the same implementation.
->
-
-Nevermind. Misread patch 6.
-
-Thanks,
-Amir.
