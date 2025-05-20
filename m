@@ -1,236 +1,223 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8792676F8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89ED426A1D0;
+	Tue, 20 May 2025 10:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737698; cv=none; b=YresYvu3j+D7U++yBD065KDTMORMH8SqiI2PMTITykS7QUadiovjdhGu2fLkrOXSlA8wpf1UHCyBxmaDz+SLDt8IJxU+x0Wg0SpHjjgD+Jc2f9RbzvqvzZO/R+t9Dl2Uiu0soB5OMAytML1y50oqsT3f+HK9A2FeLkxH9MSnEhQ=
+	t=1747737699; cv=none; b=e9hrKtHbIK0427/iCCU0S53Go1NM51aSj1Bo7/Rq9O6jyoJJIISsebtVTGq6iMmNXEfIGihbLOYUK3Zw+iWCy7maD834/jbkqUAYtX6hOBkWi1ObrARMz8Zz+22ma+u9Zyc0Tr7K39rxRIuj1KloyKVWIKeetA36WGfdMsKpe8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737698; c=relaxed/simple;
-	bh=wmegZmCS2zJdY9h3Q8MKIjr5AB4aPghqEWSkRAuct68=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hf7L6naP3UlcyCX3/pyF59O2NYz6DF8brrp1kYS/Rx9nmJLqFViVKrzTurTc88L0Gf/ufssXOfV2EHRTFzHqi4vjtTi+4KhO7McVNo8qnKiL7Z4InsmhN/8teJy+Vv8xed6y3sR22Ppehm4KAsYxxTRxDWHU3xE7UXhILmEQ5Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fhdkhJ/1; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747737699; c=relaxed/simple;
+	bh=n4h2V5SmzC1ZUjo2G15VA0dTRIrQmh9K6r8Km3mbPFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U0aw3q5girSyyMgR4kSn3oqWvLfB4Ai+9n2tw6BVQTju2+Qbo7kAxpdyhWx0ZBmW3ickbq+41Ln+IR4HUseryiAvumhcuZ28BK6bemQSDmcNWih0f0CVwpwfZJAQqJ8I4aEyl+lpvzl6L0SAsujNHHHx0jDlvf5WhR5fJKH6I0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=APsi/QlC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fhdkhJ/1"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30e8feb1830so3270629a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747737694; x=1748342494; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y6CKT/Dm8kcmMWsbmIzaRY7XtHghcI5SKEa5YSlLziw=;
-        b=fhdkhJ/14/tAWqi0NyVNw1xWH+iHMCMr1snTlNsm29FF3olNeF3cvKR9RWHBRfqaeQ
-         5stQYf+dI9JbZNmhsuPQI5kLEMGq2W+zdYw7x6ac5tgj5yc/VFK11fIsegwYHZF3/Lo2
-         Uy1m8LlpB+FVu+J5C29VQctoey3hROVsYgfTt6vzn5hQfzyUBsjTnwN74CT3TqzKuys9
-         +YJqjhhDwQFaZraumQcOdkOnpUc1GlmOu3p+82i4fUsUwmvUdBNpX3q29aY0q8ujeZcV
-         1HmVHi6qg9Um/hGhPjOQURD83yJtBb3sbl9Ue2SGMFOjqG8neoHTMQ09UhYHYqneHnt8
-         foJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747737694; x=1748342494;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y6CKT/Dm8kcmMWsbmIzaRY7XtHghcI5SKEa5YSlLziw=;
-        b=A+UuJq2sOfVdnVQh8Hx+BXF2acE0dW1OrLHCEkbFdBkbhZVM1AN0sUJ5qnsetPQmok
-         F/irBMPW9CqnD/qwGqtWGZ7frrRabliu9d9QWW0byhAmgkT098J+mtae63yV6Ejy7vBe
-         k7L6iPEkDzkeP85npFPvnpzDOWA4Wu8j0yf/r/Pvo0725pIFlR/D6bgwe+FMQBWr6PLH
-         M3oryrgTicjUcvKPOifot+ihAlZXirvQ9+GWqfP50tl7LBDgHGaHidNnv/pft2ERp1mq
-         yry0+/VKhOEpFtezTuGH+EVH9Ml1DdlGNDBFbN3AfPbSLJQZEAzSu6QVQl72K6CpuPm1
-         SPyQ==
-X-Gm-Message-State: AOJu0YyA4hiZeDW7EdTzu+H7knoqXaDzUw9PGjcLBc6xm7enddWGMuI4
-	RLl1h3wj2dc1NT1zPSZ3R6xMq8EEiawiy1tjNzkBxJQV9g2u4ewPw47FAiiONsfVZg==
-X-Gm-Gg: ASbGncucI9iv3nFFHOFKU3JXaEKFD+SCwuWZzqcP5nDN+xJD6BA8XAJA+mRCoaxjgJ6
-	5kBmWIKch8pSZPSHmJWQEWTwGLulWqGFdT1JdSHJF7izvn//L8TbLcTwTEvNDXNxe3abjGy3gvr
-	N0sXgBTC9sW/dGcrD6ayJ6YT9UYHC0mHicr80Y/9WnoHu4dhJJd5zi5NoWO76ghXfMggNVcshRX
-	euTbrRWaYWk90fs4fOYarJtNs41TdGYy5FCrBzMikJpTCPnuJjtaK6eSuprFOVCXghHmxO3iaPR
-	H1CAZ/Q7voYPq7h4vJe5QknfWpp57NwSB0JBmeHkPCvkMn1niadXUGy/aB3uffuBQAA=
-X-Google-Smtp-Source: AGHT+IGaCRq4f3tUEDeD7iS6PlcLemMWcIU/uF6PwtobYHZoHCFBDfXo9Dgt6pi0jIadcOobBavpjA==
-X-Received: by 2002:a17:90a:d604:b0:303:75a7:26a4 with SMTP id 98e67ed59e1d1-30e7d4fea75mr26468632a91.7.1747737694314;
-        Tue, 20 May 2025 03:41:34 -0700 (PDT)
-Received: from n37-107-136.byted.org ([115.190.40.14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5d31sm1359431a91.38.2025.05.20.03.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 03:41:33 -0700 (PDT)
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: [PATCH 0/7] Defer throttle when task exits to user
-Date: Tue, 20 May 2025 18:41:03 +0800
-Message-Id: <20250520104110.3673059-1-ziqianlu@bytedance.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="APsi/QlC"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K66oeT012174;
+	Tue, 20 May 2025 10:41:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=6z3YaGeUGXxa1hAtSSbZLPaCRXs+zn
+	8KwizU32tRIQM=; b=APsi/QlCTU4l4q0gPgrTX8S46FwT92o43UUjRl/p8tutsK
+	5fnbcZiY+vy3u5IiN5QV2eZRAaWWY5RdxL/d8djhXEwJWpuhlc/jYhVh5P3Z/KuZ
+	C2ZrEbATf6wJFL6OY3DkjOYCT+mougcWjtXoCLrE0KmhS4VMa98Mcak+3BwgBldm
+	HcR4FWmyufEDaLebe0LSTmPeK3QWbmfcFq4bMGRfO8plEKctu9dhZ+KI2GXnDzaH
+	5mpXy7Q00Tu9QZ+vWF/M3Lm1XdaYqIM7qsYNQUobBHFNq3YaZv8ELXr0i8EJVYoD
+	LHNaF8bzAAoBA+mQWB5Qb4niZtwgB2TUTxr+G2jg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rab73gua-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 10:41:18 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54K9mCSu013843;
+	Tue, 20 May 2025 10:41:18 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q4stbmak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 10:41:18 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KAfGZb56230184
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 10:41:16 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 711242008C;
+	Tue, 20 May 2025 10:41:16 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8DCF820082;
+	Tue, 20 May 2025 10:41:13 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.28.45])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 20 May 2025 10:41:13 +0000 (GMT)
+Date: Tue, 20 May 2025 16:11:11 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com,
+        libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 1/8] ext4: make ext4_mpage_readpages() support large
+ folios
+Message-ID: <aCxcRwFnmd4uspB0@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+ <20250512063319.3539411-2-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512063319.3539411-2-yi.zhang@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=682c5c4f cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=VnNF1IyMAAAA:8 a=SBqxFbGtptZprEQTPsgA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: 5FYHLFZHSHYO_S6Zx8kpGKpu0PkVlUc-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA4NyBTYWx0ZWRfXwga7VT/JcKBI +3Y8W6jejft/1F2EGPMNV/YlwLLV+j2LcJhNeBb8csgT7k1FOKyyBq4L4bmmx635K3vFVSdwSEN qUivof6L3o0KGYzG56nog243QsFDiTqwDmx2wKGFtxXWkxJgLM92Qy/Hiq5prsIveZ98hd1/ka1
+ pnzcJjPWVQOxSshkICeg2TssQ1JoZFMdev8a8wX82I7jSVU1Lm7mCQpW8n6FSWO5efUcUr0IGLR JqJCPRy70w6Fp2Leu2pNBdugGheK7Em3iQ8JQV9qaukLy4YaD7P83KVXUFM4tzoQgBTyyYxmJLd aX0bhKrPr3daPXyeoRflPv8Z2wQqOHFK6NAxXawh83LJgpI8GSNaKJdm4IhC//2RrLgqWCNPj8m
+ R9c3oAHfxKEDRR+3rRpd+0UJCnV3kPXpbRLsF0lM489IGHEJWXYdkkNJ6gLyC9XiUgSTyR8k
+X-Proofpoint-GUID: 5FYHLFZHSHYO_S6Zx8kpGKpu0PkVlUc-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=948
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200087
 
-This is a continuous work based on Valentin Schneider's posting here:
-Subject: [RFC PATCH v3 00/10] sched/fair: Defer CFS throttle to user entry
-https://lore.kernel.org/lkml/20240711130004.2157737-1-vschneid@redhat.com/
+On Mon, May 12, 2025 at 02:33:12PM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> ext4_mpage_readpages() currently assumes that each folio is the size of
+> PAGE_SIZE. Modify it to atomically calculate the number of blocks per
+> folio and iterate through the blocks in each folio, which would allow
+> for support of larger folios.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-Valentin has described the problem very well in the above link and I
-quote:
-"
-CFS tasks can end up throttled while holding locks that other,
-non-throttled tasks are blocking on.
+Going through this path is pretty confusing. I'm not sure why we keep
+falling back to full folio read in case of mixed or non continuous mappings.
+Seems like there's some read amplification here. 
 
-For !PREEMPT_RT, this can be a source of latency due to the throttling
-causing a resource acquisition denial.
+Regardless, the changes here look okay to me.
 
-For PREEMPT_RT, this is worse and can lead to a deadlock:
-o A CFS task p0 gets throttled while holding read_lock(&lock)
-o A task p1 blocks on write_lock(&lock), making further readers enter
-the slowpath
-o A ktimers or ksoftirqd task blocks on read_lock(&lock)
+Feel free to add:
 
-If the cfs_bandwidth.period_timer to replenish p0's runtime is enqueued
-on the same CPU as one where ktimers/ksoftirqd is blocked on
-read_lock(&lock), this creates a circular dependency.
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 
-This has been observed to happen with:
-o fs/eventpoll.c::ep->lock
-o net/netlink/af_netlink.c::nl_table_lock (after hand-fixing the above)
-but can trigger with any rwlock that can be acquired in both process and
-softirq contexts.
-
-The linux-rt tree has had
-  1ea50f9636f0 ("softirq: Use a dedicated thread for timer wakeups.")
-which helped this scenario for non-rwlock locks by ensuring the throttled
-task would get PI'd to FIFO1 (ktimers' default priority). Unfortunately,
-rwlocks cannot sanely do PI as they allow multiple readers.
-"
-
-Jan Kiszka has posted an reproducer regarding this PREEMPT_RT problem :
-https://lore.kernel.org/r/7483d3ae-5846-4067-b9f7-390a614ba408@siemens.com/
-and K Prateek Nayak has an detailed analysis of how deadlock happened:
-https://lore.kernel.org/r/e65a32af-271b-4de6-937a-1a1049bbf511@amd.com/
-
-To fix this issue for PREEMPT_RT and improve latency situation for
-!PREEMPT_RT, change the throttle model to task based, i.e. when a cfs_rq
-is throttled, mark its throttled status but do not remove it from cpu's
-rq. Instead, for tasks that belong to this cfs_rq, when they get picked,
-add a task work to them so that when they return to user, they can be
-dequeued. In this way, tasks throttled will not hold any kernel resources.
-When cfs_rq gets unthrottled, enqueue back those throttled tasks.
-
-There are consequences because of this new throttle model, e.g. for a
-cfs_rq that has 3 tasks attached, when 2 tasks are throttled on their
-return2user path, one task still running in kernel mode, this cfs_rq is
-in a partial throttled state:
-- Should its pelt clock be frozen?
-- Should this state be accounted into throttled_time?
-
-For pelt clock, I chose to keep the current behavior to freeze it on
-cfs_rq's throttle time. The assumption is that tasks running in kernel
-mode should not last too long, freezing the cfs_rq's pelt clock can keep
-its load and its corresponding sched_entity's weight. Hopefully, this can
-result in a stable situation for the remaining running tasks to quickly
-finish their jobs in kernel mode.
-
-For throttle time accounting, according to RFC v2's feedback, rework
-throttle time accounting for a cfs_rq as follows:
-- start accounting when the first task gets throttled in its
-  hierarchy;
-- stop accounting on unthrottle.
-
-There is also the concern of increased duration of (un)throttle operations
-in RFC v1. I've done some tests and with a 2000 cgroups/20K runnable tasks
-setup on a 2sockets/384cpus AMD server, the longest duration of
-distribute_cfs_runtime() is in the 2ms-4ms range. For details, please see:
-https://lore.kernel.org/lkml/20250324085822.GA732629@bytedance/
-For throttle path, with Chengming's suggestion to move "task work setup"
-from throttle time to pick time, it's not an issue anymore.
-
-Changes since RFC v2:
-- drop RFC tag;
-- Change throttle time accounting as suggested by Chenming. Prateek
-  helped simplify the implementation;
-- Re-organize patchset to avoid breaking bisect as suggested by Prateek.
-
-Patches:
-To avoid breaking bisect for CFS bandwidth functionality related issue,
-the patchset is reorganized. The previous patch2-3 is divided into
-patch2-3 and patch5. Patch2 and 3 mostly did previous thing, except it
-retained existing throttle functionality till patch5 which switched the
-throttle model to task based. The end result should be: before patch5,
-existing throttle model should still work correctly and since patch5,
-task based throttle model takes over.
-
-Details about each patch:
-
-Patch1 is preparation work;
-
-Patch2 prepares throttle path for task based throttle: when a cfs_rq is
-to be throttled, mark throttled status for this cfs_rq and when tasks in
-throttled hierarchy gets picked, add a task work to them so that when
-those tasks return to user, the task work can throttle it by dequeuing
-the task and remember this by adding the task to its cfs_rq's limbo list.
-To avoid breaking bisect, patch2 retained existing throttle behaviour in
-that throttled hierarchy is still removed from runqueue, the actual
-behaviour change is done in patch5;
-
-Patch3 prepares unthrottle path for task based throttle: when a cfs_rq is
-unthrottled, enqueue back those tasks in limbo list. It didn't take effect
-though since no tasks are placed on that limbo list yet in patch2;
-
-Patch4 deals with the dequeue path when task changes group, sched class
-etc. Task that is throttled is dequeued in fair, but task->on_rq is
-still set so when it changes task group or sched class or has affinity
-setting change, core will firstly dequeue it. But since this task is
-already dequeued in fair class, this patch handle this situation.
-
-Patch5 implements the actual throttle model change.
-
-Patch6 implements throttle time accounting for this new task based
-throttle model.
-
-Patch7 is a cleanup after throttle model changed to task based.
-
-All change logs are written by me and if they read bad, it's my fault.
-
-Comments are welcome.
-
-Base: tip/sched/core commit 676e8cf70cb0("sched,livepatch: Untangle
-cond_resched() and live-patching")
-
-Aaron Lu (3):
-  sched/fair: Take care of group/affinity/sched_class change for
-    throttled task
-  sched/fair: task based throttle time accounting
-  sched/fair: get rid of throttled_lb_pair()
-
-Valentin Schneider (4):
-  sched/fair: Add related data structure for task based throttle
-  sched/fair: prepare throttle path for task based throttle
-  sched/fair: prepare unthrottle path for task based throttle
-  sched/fair: switch to task based throttle model
-
- include/linux/sched.h |   4 +
- kernel/sched/core.c   |   3 +
- kernel/sched/fair.c   | 403 ++++++++++++++++++++----------------------
- kernel/sched/sched.h  |   4 +
- 4 files changed, 199 insertions(+), 215 deletions(-)
-
--- 
-2.39.5
-
+Thanks,
+ojaswin
+> ---
+>  fs/ext4/readpage.c | 28 +++++++++++++++++-----------
+>  1 file changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+> index 5d3a9dc9a32d..f329daf6e5c7 100644
+> --- a/fs/ext4/readpage.c
+> +++ b/fs/ext4/readpage.c
+> @@ -227,24 +227,30 @@ int ext4_mpage_readpages(struct inode *inode,
+>  	int length;
+>  	unsigned relative_block = 0;
+>  	struct ext4_map_blocks map;
+> -	unsigned int nr_pages = rac ? readahead_count(rac) : 1;
+> +	unsigned int nr_pages, folio_pages;
+>  
+>  	map.m_pblk = 0;
+>  	map.m_lblk = 0;
+>  	map.m_len = 0;
+>  	map.m_flags = 0;
+>  
+> -	for (; nr_pages; nr_pages--) {
+> +	nr_pages = rac ? readahead_count(rac) : folio_nr_pages(folio);
+> +	for (; nr_pages; nr_pages -= folio_pages) {
+>  		int fully_mapped = 1;
+> -		unsigned first_hole = blocks_per_page;
+> +		unsigned int first_hole;
+> +		unsigned int blocks_per_folio;
+>  
+>  		if (rac)
+>  			folio = readahead_folio(rac);
+> +
+> +		folio_pages = folio_nr_pages(folio);
+>  		prefetchw(&folio->flags);
+>  
+>  		if (folio_buffers(folio))
+>  			goto confused;
+>  
+> +		blocks_per_folio = folio_size(folio) >> blkbits;
+> +		first_hole = blocks_per_folio;
+>  		block_in_file = next_block =
+>  			(sector_t)folio->index << (PAGE_SHIFT - blkbits);
+>  		last_block = block_in_file + nr_pages * blocks_per_page;
+> @@ -270,7 +276,7 @@ int ext4_mpage_readpages(struct inode *inode,
+>  					map.m_flags &= ~EXT4_MAP_MAPPED;
+>  					break;
+>  				}
+> -				if (page_block == blocks_per_page)
+> +				if (page_block == blocks_per_folio)
+>  					break;
+>  				page_block++;
+>  				block_in_file++;
+> @@ -281,7 +287,7 @@ int ext4_mpage_readpages(struct inode *inode,
+>  		 * Then do more ext4_map_blocks() calls until we are
+>  		 * done with this folio.
+>  		 */
+> -		while (page_block < blocks_per_page) {
+> +		while (page_block < blocks_per_folio) {
+>  			if (block_in_file < last_block) {
+>  				map.m_lblk = block_in_file;
+>  				map.m_len = last_block - block_in_file;
+> @@ -296,13 +302,13 @@ int ext4_mpage_readpages(struct inode *inode,
+>  			}
+>  			if ((map.m_flags & EXT4_MAP_MAPPED) == 0) {
+>  				fully_mapped = 0;
+> -				if (first_hole == blocks_per_page)
+> +				if (first_hole == blocks_per_folio)
+>  					first_hole = page_block;
+>  				page_block++;
+>  				block_in_file++;
+>  				continue;
+>  			}
+> -			if (first_hole != blocks_per_page)
+> +			if (first_hole != blocks_per_folio)
+>  				goto confused;		/* hole -> non-hole */
+>  
+>  			/* Contiguous blocks? */
+> @@ -315,13 +321,13 @@ int ext4_mpage_readpages(struct inode *inode,
+>  					/* needed? */
+>  					map.m_flags &= ~EXT4_MAP_MAPPED;
+>  					break;
+> -				} else if (page_block == blocks_per_page)
+> +				} else if (page_block == blocks_per_folio)
+>  					break;
+>  				page_block++;
+>  				block_in_file++;
+>  			}
+>  		}
+> -		if (first_hole != blocks_per_page) {
+> +		if (first_hole != blocks_per_folio) {
+>  			folio_zero_segment(folio, first_hole << blkbits,
+>  					  folio_size(folio));
+>  			if (first_hole == 0) {
+> @@ -367,11 +373,11 @@ int ext4_mpage_readpages(struct inode *inode,
+>  
+>  		if (((map.m_flags & EXT4_MAP_BOUNDARY) &&
+>  		     (relative_block == map.m_len)) ||
+> -		    (first_hole != blocks_per_page)) {
+> +		    (first_hole != blocks_per_folio)) {
+>  			submit_bio(bio);
+>  			bio = NULL;
+>  		} else
+> -			last_block_in_bio = first_block + blocks_per_page - 1;
+> +			last_block_in_bio = first_block + blocks_per_folio - 1;
+>  		continue;
+>  	confused:
+>  		if (bio) {
+> -- 
+> 2.46.1
+> 
