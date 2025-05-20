@@ -1,66 +1,66 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A082926D4E3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABA4280010
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747763024; cv=none; b=QjMMfxCPPMJcF4bvFRBg2iyvzPnaGcA5KBRwPqBPB0fG8MGzF19XGUrbwPnSDw3s0w/4bNR4W2w9MvAAz87tDtu/ielkUc1Odh/Gqx/QB1FL+9XjSY+Ctfmj7S/yS0H6i5q2W9jCZAHJKAytnyOcCW+ArqeGKiLyxQ6LluUgsWk=
+	t=1747763027; cv=none; b=ATxQk/PfkSZB7m/+gTMwe8XDcTpzwZzQPEOKzfOKqffBXwjcbru6thataUh78kDdx6J/oq3G+o6UdvkndH58E/+4xaTLvw80c9oeAXb6ApQwXP81DOm/J8CBf/QM1qR01l2KPvWwJcwIitvJRf6W+4rp8WfX9Q6ZMrHXiXuvxpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747763024; c=relaxed/simple;
-	bh=yeqxdYgDP/mwIyxs/1rcj9YB1LowK4KlQZ4Zwsqf0Q8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NMSNVCWrrdkoVqNhoNstLHZ5eKhiNeUC+8okt0eT9TzepiNJEbzJzfiA1hnWuYImyfXdGJ4krSw7GXKfx5hjsTH2sBZLbDj4emOE2ncsfhtteiQRRsTOMVHkLXa4st0Y1jD91MYJdm7hGW9F9tW1v4oBUJ5CUGvrNrUbK0TdAOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=ChzYwes/; arc=none smtp.client-ip=209.85.160.178
+	s=arc-20240116; t=1747763027; c=relaxed/simple;
+	bh=sl+FbGCFgUh0cLIIGBUbbIXxFtqMeN2ESuE9qcu6VlQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JfxjHGTUfQDX0mt4WkT7rloAGnda/0xVOjB5lx0hscoAqeth40RlHnvyxU642RqOtqxmsQd5NmiQ7hA2vqnj7hru/XEP0l8An3UquGFrcApi7ZYHiJYytCXuccS8P5CUcxhbxiyVrojHggPBHppRFdPpMuFOSMLKoZZ6ajlBdX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=dyCJvgSO; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="ChzYwes/"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47692b9d059so82495761cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:43:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="dyCJvgSO"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7cadc92771dso585324885a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:43:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1747763021; x=1748367821; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uEVyBoAEqxAn/2eLRcFtZIXRt97TuO35d71JLM0GfEs=;
-        b=ChzYwes/t5fTXjSq43Th165DDGy4vPOJ5K1jml3D2ioY3TsbQ5WlYyt/udSqBdVBK0
-         sKSBOto2u9fz0TR9p/po3ZEMlLp7QEy2Knn8+SIjAYYVa/ywT4/2qB2ZxH8ZCrfwBST7
-         VWcrwB58vGmt8cpiRmyI75Duz7jjVK6ShIyjbeSPiouiFrIdoielPYEoVOZmOZUBYCM1
-         Bj2nGimpH1zTEMgf/KrgnjUqGTn+J6ysmeBIFNiHAcEmsxrP88iX6ikowEWHnPPJ8iVc
-         1rBTlulI+3VxAgumYL/h7uViFpzUF7gn0wrccbNqXmehLhembeIo9Pl8f4yjM6SazzYY
-         09lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747763021; x=1748367821;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=criticallink.com; s=google; t=1747763025; x=1748367825; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uEVyBoAEqxAn/2eLRcFtZIXRt97TuO35d71JLM0GfEs=;
-        b=S5qzrWKIFxfa+VCLSJZrsgJbWPrwswIujjDrQz//23uDNqaVvDlzRcKPgGJdLbzBCF
-         +7fZ6cvSimklp6W1O5aeYI2PG9HpwOsgRRQgmlT0GEmVloTWzGFjNKXff1614/UHng61
-         nGG/eyQmznixbyg0GzPpzsj2dd1YVimNBV6kdiaGckHc32EDBmscBuAAf7sRXjORR8AA
-         VsSA/JZwPeTIsRAoXsicu0gMRqnHGPvElmVc7YwtsTv3AwH5bOQkMz9H3ZMsgBo/QCLA
-         2rlMoSOle/ZrVpg9RFwXNWw8ULlj6wQo/fe3pEWwBiv4gHy/3+D4jZZgfZdS8/1FbrOv
-         CnzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXD5Buajp/NEycuwukAbi2baBLizCY0KLSTU1aPeS6lwWiXQmZTjpfutc67cfZjWNhAjT507gelm2vPH8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+VtDZX6NUUtmsjlP5GIaoOfy+v5JkkJc/6B5eYcTVCZwsd+DP
-	GlR+Q/G7D0FwyqN3nYpo/gwI/Ak3GaHlc5A78b83B7nWkTk1f7+wfTCqaB9roB0PQA==
-X-Gm-Gg: ASbGncts/ZOUjBH5CAcUnw5a8kDxPA1DebGjI74Zi1KJjwWUJ2suTQeYIP9uHlI3Kux
-	AhTFm5+YwPDqdqMVv3ng1AJzk8Am+/fpVv0aq0N8V1DPwAQBV2q3fvXmYvI4phc5T7KJ9XmY1F4
-	zhNVY1yTjObmTbqv2cDqM6UEdgNiWRTLlTLqXYzmRIv1VD/if0Ld0cGY/HTf31lO/tBPx5yxyl5
-	UQFRr5eMTGwYGuVqBXlnjZNgXYmmKzB4T6PC+qIyu6mzUQg9clG4UsYI8XOICWMFUKo/zQBm1N7
-	KublnmShG7mX41ECgc/wJJyWqteH024EhxTWXldOG/2pV4vX3R7M9mwcz06E1DYezORb13jfgPW
-	cvn5kd/k1nJjXSu1XOT9mR7EQwQ==
-X-Google-Smtp-Source: AGHT+IFXZ7YXoRgCP1iWcGdKBbqM9UFlgIi18ryOD2ALUlsiaRsaFpTB9VFjJh8xZMUDnOmM2EYDLw==
-X-Received: by 2002:a05:622a:5c96:b0:476:91f1:9e5 with SMTP id d75a77b69052e-494b096c63cmr355564001cf.50.1747763021408;
-        Tue, 20 May 2025 10:43:41 -0700 (PDT)
+        bh=//GTCbOPuXsQxIKhsrLq0DkXd+60Fx6SU5NzAGZER7U=;
+        b=dyCJvgSOvNabDeVSA/cpiUrziq6h5fESIZFVI2oTEdcXeVEfASXEozlR/I5bTkKxBS
+         uqIYuYsPBYSrNKlaGEm2PpITItY6PJduKTaTYsq/ONXPJxf9gz7fAqhYoQkVi0+TAI6R
+         eGC5g0u+Z0DLHwUOezotwVa5smbFI3Q2JPMh3SJ2zu8mb9HOQ3l0mOOudDV9/BQX0JXh
+         kcfR/8R9PNLmVIo1ieNVvjnMFI+vEBfAZkM+dWIC5v/1wUdAHSCMrpL292mRH8AfNkfj
+         81GAsYImcI2+jejRXe9NEeApCan5xq8TPy8uMEjuRev7eQzN0kMViX2H2MQaO40PXyKh
+         u60w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747763025; x=1748367825;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=//GTCbOPuXsQxIKhsrLq0DkXd+60Fx6SU5NzAGZER7U=;
+        b=JQVDnRjtFDNVAnoRyJox2gwBH2vvxbyvBuUU0/pqQ6QDyUbt6+AdPT65JZoSHtdW/n
+         AKBmA2HkyedQEOgH/58WQFH/2kzWNSs2agrt8Xo/PO5io0jLDxkgXaFbC3Dvpva/cUi1
+         fJIVBeHVwFKjkz62/QKC4BpW2BTEPolo5hT9B8RIy39FFI3BeFZ8/2mBreLEIxltl7d1
+         xzmJiHPnKv0O19gpJCP7GirsAlxWvt/p0zwerd2Fx1aJiWTW5ifpByqJG5t0E1lPAosD
+         Ek/XwoowNrVtdT68RrrwPh7Ay8PQBqF1+uIXTj5wFg+QuwJRToL4nWbFeGANBz5TYJb7
+         y2Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyO0UNIKrLgsjw7mg04cvEbvRxDqEHsd1j4CFBGxlhmNRZKC1YqRTmS9ZfU8l1068AYVzAACQSMRR9qoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAuBTKMdMbeh68iCgzCWaW0qbngbP8TRPyN101ffxZFj52eCog
+	aycihLA994wj3hXc6wCtm2v+1mv1Ye+Nqos5rDBXUhVIpsoNgUSCzDzVXvVAo5CYWQ==
+X-Gm-Gg: ASbGncvLHgYXdUkHloyoFiiLzGjC2V7eE43gM/k7RTULC30PD4yZXskxXIXHybjJ1XQ
+	TAMuiP/u9PjO6Doijrfv645I4iOc8cw/XYs6YYkIy5RT0T90V6FDKGmYXXZZ2rjTCX50kbW+B5M
+	Is6cfZYbsUTPJv+XwN7SwzMja2zQuM6E0aOIhnMiQDxdZ0MtOf1W5sq3i3fY8adXyytu4sgYOFj
+	q+LF7KL6XORsMRmOXZv02yflJP/Le4YPjWFMfsVGn5Taz+Yr2I6dT06mRuCdC2Rm4QBQd7t4rft
+	TDAWvkc6E6XryPL17ICUEuWXD1zneP4oyOBoUL5JOqALUOuTYA0jG0O+IuYeHQp2hQX0o2MV9SK
+	rrKM+b0bdiJr8y0/qkcBQCVxQXg==
+X-Google-Smtp-Source: AGHT+IE36N4uKMHVtNBPowo41ka8uj65GwK1GS5fqiXZBuL6KOO85LIE4flCa2HGG7jSc88SE3U9hA==
+X-Received: by 2002:a05:620a:459f:b0:7ca:f349:4265 with SMTP id af79cd13be357-7cd4670aa2emr2553493585a.4.1747763024810;
+        Tue, 20 May 2025 10:43:44 -0700 (PDT)
 Received: from [127.0.1.1] (static-72-90-70-109.syrcny.fios.verizon.net. [72.90.70.109])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae528553sm72660101cf.68.2025.05.20.10.43.40
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae528553sm72660101cf.68.2025.05.20.10.43.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 10:43:40 -0700 (PDT)
+        Tue, 20 May 2025 10:43:44 -0700 (PDT)
 From: Job Sava <jsava@criticallink.com>
-Subject: [PATCH 0/3] Powerbutton driver and powerdown request for TPS65224
- PMIC
-Date: Tue, 20 May 2025 13:43:35 -0400
-Message-Id: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+Date: Tue, 20 May 2025 13:43:38 -0400
+Subject: [PATCH 3/3] mfd: tps6594: Adds support for powering off the PMIC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +68,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEe/LGgC/x3NTQqEMAxA4atI1hPoqC3oVYZZtDVqQGpp6g+Id
- 7e4/DbvXSCUmAT66oJEOwuvoeD7qcDPNkyEPBRDrWqtWtXgwmE7UbJ1C2GOYnTXYjyS23JeA5L
- SZvDeG0caSiQmGvl8B7//fT9p5Db+cAAAAA==
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250520-linux-stable-tps6594-pwrbutton-v1-3-0cc5c6e0415c@criticallink.com>
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+In-Reply-To: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>, 
@@ -80,54 +80,82 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-input@vger.kernel.org, jcormier@criticallink.com, 
  Job Sava <jsava@criticallink.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747763020; l=2045;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747763020; l=2125;
  i=jsava@criticallink.com; s=20250404; h=from:subject:message-id;
- bh=yeqxdYgDP/mwIyxs/1rcj9YB1LowK4KlQZ4Zwsqf0Q8=;
- b=0mQyiMtS10+eQAOXVRfVhl1B94z6lzdx7XMoe/eb62Plu5J5y2Oi8RlHZ0ZeBrgdC9Wy03jPq
- FvUpzzVYBLaBVr+qVAqWI4a1d8RN8Hr4QGgkRlwRejow0fh7il0FPtn
+ bh=sl+FbGCFgUh0cLIIGBUbbIXxFtqMeN2ESuE9qcu6VlQ=;
+ b=t9jR0ycbMi8aS67LKhkQypLvnJEh1eq1pSrZmuqhqR5yEv0sWC7On47ka8pQvbhOZbIfdEHhv
+ i8mimht0nRfCFTDPiYI9/CSsHw8SJwGMPoMoLRk6RWyTZ95uOeiLpIP
 X-Developer-Key: i=jsava@criticallink.com; a=ed25519;
  pk=DPPriJ+pziqtCZ0EIomf/hKU23s5T1u4WOQaT8BpQSw=
 
-Hello all,
+When the FSM_I2C_TRIGGER register's bit 0 is set it triggers TRIGGER_I2C_0
+and the PMIC is transitioned to the STANDBY state
+(table 6-18: SLVSGG7 – DECEMBER 2023).
 
-The following patches were created to get the tps65224 PMIC powerbutton driver and power off request working on the MitySOM-AM62PX. The patches are as follows:
-
-1-Powerbutton:
-Full implementation
-TPS659224 pmic push and release interrupts are now handled by the powerbutton driver. These events now issue a power off request that puts the PMIC into STANDBY mode. tps6594-pwrbutton.c is modeled off the tps65219-pwrbutton.c driver.
-
-2-OFF-request:
-The PMIC will now respond to a power off request. This is done by sending the PMIC a command to enter STANDBY mode. The PMIC will then turn off the power to the system.
-
-3-Device tree bindings:
-The device tree binding for the TPS65224 PMIC has been updated to include a proper description of the power button functionality.
-
-4-Impact:
-Button presses will now be detected reliably by the newly added powerbutton driver. The `tps6594-pfsm.c` file will no longer handle push and release pushbutton interrupts. This is because the powerbutton driver now manages these interrupts, as intended, which ensures the powerbutton functionality operates independently and correctly.
-
-Regards,
-Job Sava
-jsava@criticallink.com
-Critical Link LLC
+An ON request is required to transition from STANDBY to ACTIVE.
 
 Signed-off-by: Job Sava <jsava@criticallink.com>
 ---
-Job Sava (3):
-      dt-bindings: mfd: Add power-button option for TI TPS6594 PMIC
-      mfd: tps6594-pwrbutton: Add powerbutton functionality
-      mfd: tps6594: Adds support for powering off the PMIC
+ drivers/mfd/tps6594-core.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
- .../devicetree/bindings/mfd/ti,tps6594.yaml        |  15 +++
- drivers/input/misc/Kconfig                         |  10 ++
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/tps6594-pwrbutton.c             | 126 +++++++++++++++++++++
- drivers/mfd/tps6594-core.c                         |  49 +++++++-
- 5 files changed, 199 insertions(+), 2 deletions(-)
----
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-change-id: 20250403-linux-stable-tps6594-pwrbutton-e056dccc6be5
+diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
+index 1b0b3d1bf6c4..f4c434c0d87a 100644
+--- a/drivers/mfd/tps6594-core.c
++++ b/drivers/mfd/tps6594-core.c
+@@ -10,6 +10,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/reboot.h>
+ 
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/tps6594.h>
+@@ -615,6 +616,19 @@ static int tps6594_enable_crc(struct tps6594 *tps)
+ 	return ret;
+ }
+ 
++static int tps6594_soft_shutdown(struct tps6594 *tps)
++{
++	return regmap_update_bits(tps->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
++				TPS6594_BIT_TRIGGER_I2C(0),
++				TPS6594_BIT_TRIGGER_I2C(0));
++}
++
++static int tps6594_power_off_handler(struct sys_off_data *data)
++{
++	tps6594_soft_shutdown(data->cb_data);
++	return NOTIFY_DONE;
++}
++
+ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ {
+ 	struct device *dev = tps->dev;
+@@ -623,6 +637,7 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ 	const struct mfd_cell *cells;
+ 	int n_cells;
+ 	bool pwr_button;
++	bool system_power_controller;
+ 
+ 	if (enable_crc) {
+ 		ret = tps6594_enable_crc(tps);
+@@ -681,6 +696,15 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ 			return dev_err_probe(dev, ret, "Failed to add RTC child device\n");
+ 	}
+ 
++	system_power_controller = of_property_read_bool(dev->of_node, "system-power-controller");
++	if (system_power_controller) {
++		ret = devm_register_power_off_handler(tps->dev,
++								tps6594_power_off_handler,
++								tps);
++		if (ret)
++			return dev_err_probe(dev, ret, "Failed to register power-off handler\n");
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tps6594_device_init);
 
-Best regards,
 -- 
-Job Sava <jsava@criticallink.com>
+2.43.0
 
