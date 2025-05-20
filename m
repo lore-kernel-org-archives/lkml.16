@@ -1,112 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3570241CB7;
-	Tue, 20 May 2025 13:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12F4241CBA;
+	Tue, 20 May 2025 13:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747545; cv=none; b=anehZ2DH9dDae8/AEZqThQGWiRFLzaZTZdDLUfizZURkTkQikagXwelIfjSUxRITmPtLxsDvt7UzJzOKESUZADmQe13EfVSWk35C4t5L1VnYXPZdL1XOFFRZCN1/WXRsbwIptFWPG1qCHkG/lrWTFUhRhrPeaYl1NDai29uY064=
+	t=1747747624; cv=none; b=Hq7HuFhl1RYLDQhL/3By2iZuglnkdMk7dt+7aS3geNBtHNMbVd5N7+WwM07/QJx1Q7J0Ej913nBgR7Qt19DlaJZW8UI5rM5BS/x6nNZ/bVoTaTdfRuMU9E1rA2XDp7DhXXsz4rNoYlIm056/XxXo3EBMdY5ZbaiSYpj36ca4gM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747747545; c=relaxed/simple;
-	bh=Vlg+ksR4kbGxDH5TVycRqZ2M05YaHWKfcCfoLOKIauc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BS9IqSi7sM1o09dw3M8Uxr7UlVqLFWSIk9/Ud/XUdKexNnMeEaP7z0g8VwMCoUZMdQ0x4RxdvTBgNwl+f1i7f1eRO7ye+LVvVto5J3dOQ2IMSEq6eh82eGFiKgV/v/+L3DpzxbnZ+jOPnL+YVFhWXGYnX16ayMTQxld1w4rqZ1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bjbayfgG; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bjbayfgG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747747544; x=1779283544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vlg+ksR4kbGxDH5TVycRqZ2M05YaHWKfcCfoLOKIauc=;
-  b=bjbayfgGbf8gIZOs+0pAg3nNiIXlksCLZcxN0J/ZUkQmvaU4fR9CUCOK
-   oOCDZBnD0oy9aE48nLbg8EV2nK1+Rv/yhDKnp4GHmiLC0JBkM0T4hBEv6
-   D3FmVPJ0t4KwsjDVR3jbgIKviQF4EqEY4WYeQnY0qZPWjLMPeuefI7YFe
-   czfkCOAUS9DaWQuqoI8xACN6PEiG3nrppbJJzrl0tBAArLMweSGAgq+99
-   MMP5VUOpUJsNbT4g5uOdVo+2SVvPJ20+iBGH1FyXniyp5mjjGzyjS7Qzn
-   t2zwAniYXiwG4M67Ha18X5pZEonBtKlfbwRjxL96/ZkWwegonpo+0S2JW
-   g==;
-X-CSE-ConnectionGUID: L4vEb65tSeeYu45Q/UW7cQ==
-X-CSE-MsgGUID: IAtS7ls7QJC7sLs+kpKWWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="72195739"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="72195739"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 06:25:42 -0700
-X-CSE-ConnectionGUID: dA8v2aV8SI+BI/ngkGniiw==
-X-CSE-MsgGUID: /YkhpMmGTLKtZuUTsXFTog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="170704890"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 20 May 2025 06:25:39 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHMyO-000McE-2O;
-	Tue, 20 May 2025 13:25:36 +0000
-Date: Tue, 20 May 2025 21:25:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>,
-	Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-imx@nxp.com,
-	linux-input@vger.kernel.org, Abel Vesa <abelvesa@linux.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v2 5/9] mfd: pf1550: add core mfd driver
-Message-ID: <202505202005.snxGxund-lkp@intel.com>
-References: <85004e02a5177aef6334fc30494bb3924a58f1de.1747409892.git.samuel.kayode@savoirfairelinux.com>
+	s=arc-20240116; t=1747747624; c=relaxed/simple;
+	bh=vykBg8ejrA86ORynX2aNEi6P3gRBY+QDembUBCdgmWE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BRQbOZ3CN4uhk6rW+JyZugboLUtbrNGQWqlrdKKEozTwivoHqrgX43Ceu78UgXwkeWEMAw5RyYxChZBlcHC21N5s0GA59YokKgIEuwohDnYze1GNgU31WAmAV2lMin+qr9sho2bUIi5/32+16+ecyY5OlANZI0bfJNDvkPHUPLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+	by ni.piap.pl (Postfix) with ESMTPS id B0B1EC405A46;
+	Tue, 20 May 2025 15:26:58 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl B0B1EC405A46
+From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To: Paul Elder <paul.elder@ideasonboard.com>
+Cc: Dafna Hirschfeld <dafna@fastmail.com>,  Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>,  Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Heiko Stuebner <heiko@sntech.de>,
+  linux-media@vger.kernel.org,  linux-rockchip@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  Jacopo Mondi <jacopo.mondi@ideasonboard.com>,  Ondrej Jirman
+ <megi@xff.cz>,  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+  stefan.klug@ideasonboard.com
+Subject: Re: [PATCH] RKISP1: correct histogram window size
+In-Reply-To: <aB31Eg6oRpcHHEsb@pyrite.rasen.tech> (Paul Elder's message of
+	"Fri, 9 May 2025 14:29:06 +0200")
+References: <m3tt5u9q7h.fsf@t19.piap.pl> <aB31Eg6oRpcHHEsb@pyrite.rasen.tech>
+Sender: khalasa@piap.pl
+Date: Tue, 20 May 2025 15:26:58 +0200
+Message-ID: <m3jz6b8lb1.fsf@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85004e02a5177aef6334fc30494bb3924a58f1de.1747409892.git.samuel.kayode@savoirfairelinux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Samuel,
+Hi Paul,
 
-kernel test robot noticed the following build warnings:
+I'm sorry it took that long.
 
-[auto build test WARNING on b1d8766052eb0534b27edda8af1865d53621bd6a]
+Paul Elder <paul.elder@ideasonboard.com> writes:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Samuel-Kayode/dt-bindings-power-supply-add-pf1550/20250517-030259
-base:   b1d8766052eb0534b27edda8af1865d53621bd6a
-patch link:    https://lore.kernel.org/r/85004e02a5177aef6334fc30494bb3924a58f1de.1747409892.git.samuel.kayode%40savoirfairelinux.com
-patch subject: [PATCH v2 5/9] mfd: pf1550: add core mfd driver
-config: i386-randconfig-r072-20250520 (https://download.01.org/0day-ci/archive/20250520/202505202005.snxGxund-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505202005.snxGxund-lkp@intel.com/reproduce)
+>> Without the patch (i.MX8MP, all-white RGGB-12 full HD input from
+>> the sensor, YUV NV12 output from ISP, full range, histogram Y mode).
+>> HIST_STEPSIZE =3D 3 (lowest permitted):
+>
+> According to the datasheet, the histogram bins are 16-bit integer with a
+> 4-bit fractional part. To prevent overflowing the 16-bit integer
+> counter, the step size should be 10.
+>
+> Do you have any other information on this? Is it known that it's stable
+> and consistent to use all 20 bits anyway?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505202005.snxGxund-lkp@intel.com/
+Interesting. I only have those mrv_*.h files which come with
+isp-imx-4.2.2.* package(s). Here we have (among others):
 
-All warnings (new ones prefixed by >>):
+/*! Register: isp_hist_prop: Histogram properties (0x00000000)*/
+/*! Slice: stepsize:*/
+/*! histogram predivider, process every (stepsize)th pixel, all other pixel=
+s are skipped */
+/* 0,1,2: not allowed */
+/* 3: process every third input pixel */
+/* 4: process every fourth input pixel */
+/* ...*/
+/* 7FH: process every 127th pixel */
+#define MRV_HIST_STEPSIZE_MASK 0x000003F8
+#define MRV_HIST_STEPSIZE_SHIFT 3
 
->> drivers/mfd/pf1550.c:234:34: warning: 'pf1550_dt_match' defined but not used [-Wunused-const-variable=]
-     234 | static const struct of_device_id pf1550_dt_match[] = {
-         |                                  ^~~~~~~~~~~~~~~
+In case of my IMX290 1920x1080 sensor, 1 doesn't work well (it stops
+counting before reaching $((1920x1080)) in each bin, and even if no bin
+reaches this magic value, the total count may be invalid (not equal to
+the number of pixels). IIRC, 2 worked well. Maybe with higher
+resolutions, I don't know.
 
+I'm currently using "3" per the .h file:
+isp_hist_prop:
+32E12400: 1Dh
+histogram_measurement_result:
+32E12414: 0 0 1 1004 569 476 633 1197 2373 2212 1923 2945 3632 3025 5821 20=
+4589
+which sums to 518400 =3D 1920*1080/9.
 
-vim +/pf1550_dt_match +234 drivers/mfd/pf1550.c
+Setting "2", the same input scene:
+32E12400: 15h
+32E12414: 0 0 0 2194 1263 1096 1406 2528 5228 5052 4291 6354 8322 6943 1320=
+1 460522
+which sums to 518400 =3D 1920*1080/4.
 
-   233	
- > 234	static const struct of_device_id pf1550_dt_match[] = {
-   235		{ .compatible = "fsl,pf1550" },
-   236		{ /* sentinel */ }
-   237	};
-   238	MODULE_DEVICE_TABLE(of, pf1550_dt_match);
-   239	
+Setting "1", the same input scene:
+32E12400: Dh
+32E12414: 0 0 25 9046 4924 4317 5435 10655 20781 18965 16051 24716 32681 28=
+368 54301 1048559
+which sums to 1278824 which is rather less than 2073600.
+The last number (1048559) is the magic one, no bin can go higher. Less ligh=
+ts and:
+32E12400: Dh
+32E12414: 0 0 0 0 0 0 184 3059 11970 75298 114898 211444 429772 439922 4003=
+58 386695
+total =3D 2073600. But don't rely on it too much, the "1" has problems.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+In short, those are integer values. One may use them as fractionals with
+some clever step size, I guess.
+
+>> isp_hist_h_size: 383 (=3D 1920 / 5 - 1)
+>> isp_hist_v_size: 215 (=3D 1080 / 5 - 1)
+>> histogram_measurement_result[16]: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 229401
+>>
+>> Apparently the histogram is missing the last column (3-pixel wide,
+>> though only single pixels count) and the last (same idea) row
+>> of the input image: 1917 * 1077 / 3 / 3 =3D 229401
+>
+> I don't quite understand this. With a sub-window width of
+> 1920 / 5 - 1 =3D 383, shouldn't the resulting total window width be
+> 383 * 5 =3D 1915? Same idea for the height.
+
+It would, but the stepsize =3D 3 makes it ignore only the last one
+- i.e., normally the counted ones are 0, 3, ... 1914, 1917 (which makes
+1920/3) and with 383, it ends at 1914, thus only 3 pixels (1 really,
+instead of 2) are missing from calculations (not 5). I guess the same
+vertically, 1080 divides / 3 and 1075 doesn't.
+
+> The fix looks fine though. Although, I'm wondering if there's a reason
+> why there was a -1 in the first place. Does anybody know?
+
+There is slight chance it's different on some other SoC, but I would be
+surprised.
+--=20
+Krzysztof "Chris" Ha=C5=82asa
+
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
