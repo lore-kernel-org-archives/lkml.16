@@ -1,156 +1,119 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C5E747F;
-	Tue, 20 May 2025 12:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D6212B63
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747743487; cv=none; b=DFMF5XbMXpijiPrtfhrqLKpxGqoVU49CAO4y4j5X42CTcDhlyv/662KcoLVOv7TfumsrAlV0gK01m4rz+t1ozxzSeNWv6g5MX6u3OlRttWTAonOdVQxT49M0oFuBclRqtzyJ7eBMiB9Zz9I2UQnBKbtIAi7DERGC5N/yX/Xa37g=
+	t=1747743577; cv=none; b=NOWi0NZZ73VJW5m7KUfzlgnJZZQOWvQMxZLhQCHTptfndECB/dfihoQ+bXL9V93d1l1qfJcN71s4kop8AUuOsTgYuOX+z8hm0a1SpIKfQB+n58o9xiD9SxPoG8tX30AIagbVnPgJyzeSodj10dQnO0ph0YvyjwrxKRPcREiVzDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747743487; c=relaxed/simple;
-	bh=uVxldG9OPVd84HQjya122tQ1Rkexc5kkav/s+xo6zd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JkWk6AUEqZpURd3xRfJbUrYLD5ACL2qyWVWlOCtZaDS9mMp03g5WaujQr0C/GFPEk6pQloUM+D8S7nHaomKoGdOeuChyhUz5CiYWfOJ7mNJJvoV2EaTB9xw6WQgXvV8Vm8VR0kb3jL8KYlZvUa2xMxtiU5wOqDeOfrT+bzNSu/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RgdIkFrn; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747743577; c=relaxed/simple;
+	bh=yN2oz4RGfjWsr3L/yxfEwmYkVPvraUmd8R28Gu6B0Yc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fcQRe18pHaYKiRdyDpxiMBFOct0ILyOi7rWhUbnDigneCp7t1AQ5SdZ37eAtcP2hsCQMIHetqeYm8fmW4SeNJW90eWZMXDDPTNXgGzC2O7OrUOlvomF82UMqVpgHy1g66xHzisTy11YwzgFC3AgV5eswVphmS7qzE1HuJWstTDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cvJUbteA; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RgdIkFrn"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54KCHf0E801340
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 07:17:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747743462;
-	bh=v/HR03qjcCV/m67Su6/Fy1LtZqxTVoT+wx6cgo/l9Xk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=RgdIkFrn+9oWD4KB7PRQpIafbBXyXBhiwEcLARSMptCsi8nH+Uqop9TIqN06XAhvN
-	 LM4kBGZhyFi89GIF4mtEZgcGDucZ9AK35xebIaQXnB/AM24hzUEnT+JkIE3Vknpxn0
-	 XbAOCnhe2EtYRwnL9r/poS1L31/R3dDs0S9GADoI=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54KCHfKQ042331
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 20 May 2025 07:17:41 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 20
- May 2025 07:17:41 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 20 May 2025 07:17:41 -0500
-Received: from [10.249.48.175] ([10.249.48.175])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54KCHe2Y091414;
-	Tue, 20 May 2025 07:17:41 -0500
-Message-ID: <d8837685-5262-a66a-4b0c-2a4ed73f6c76@ti.com>
-Date: Tue, 20 May 2025 07:17:40 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cvJUbteA"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-550ed4a6374so479574e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747743574; x=1748348374; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LGxzwmCx0aVZaskSD1cvnXeY9ifmH8LA11mbYYh9vMI=;
+        b=cvJUbteAf8Xw1WV0DNcfrB6Gq7qu3YaAU2jIeoXNxuwobYZJaM9B92l7zNJOqQ7tGE
+         stjLqXPn001yaYEfc53tGjDzdqAGecNhLq19p8afw4UyVsNZWuGFpv2QdL90Q5KFqoj0
+         KpXJRO10E0uhPM94iUjgwPzYjGhGHjYHOa9XNYDme7MzhPg+aM/Ek4Za3RBGg6dUeNSl
+         yp3S02zp6aioPjUmWbytHsQOtJp/gSgFtFEo3oKcr36DW6woZ3VGCpZ6yk9+yTRDgnxt
+         a09+1o9CkJubWKQWFqg8TUOZhOjbBr6RgKCD2SUO4HwMiEma8QiIYfTaxfi6pbImVEnz
+         Z6Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747743574; x=1748348374;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGxzwmCx0aVZaskSD1cvnXeY9ifmH8LA11mbYYh9vMI=;
+        b=hkJgqIINXAIEQwUcUIO7PZsv0uA32UpOEYCcCBMM6jsU2MYmNHbSrJBsskQkw5u7ZV
+         ZvPdIMzPFh9tZg6+chz5/p2U+Et7hUhZ+LT2O5+Z31tZoT+LQfaUSs9bkNQkDiLXT20g
+         Z/LUt6QU3Hl0hSWgjkWzivKbHWJn1cKKhMnbInz59MAH/lWucQq1u71jAoTaI+dMMYhX
+         0p3PQEFnLRY5Q/eNWhTgTVQ9FTEVRDV+Pbuh2IUFYAc+acrMNQquYH9ZoTU7HVc83iyV
+         ML2QjE2Vn+iHOJ2HdgQZpC9zd4uPHbuFKDexhkFV7XArHjr/bTgYqXaCeRGyvm2tVMjt
+         Xxmg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5w7G2z2ShLFRjwVAOAPL9DDZQ36FyuIbRSyJSNi7NxucL7R076rpqoxV3OrZ4r0OK1oDD2hZ0eHikrds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGqz2Hy1zZBYqMbfHXVS9Im20xoMjJCXcopv8YMHxxKlKT8scf
+	84O/9KzLk5wyZzNphNXsUgaQ57I7iF9ac5qRbg0kwr/9XL61r1XGcqfJoOB4n1IW0iw=
+X-Gm-Gg: ASbGncvqCFMWNYypZRTx8SNuYzI4+DXDY3Ehh1U8PcK7eQ5KWpYDrbiUDGhVb/oL9Y7
+	RZufNqd5pp84zFrlz1lSHP/5kPm5YGs3ALtk1jf1+2dP++p+jPLSegVZ8WmnXjFUK2clRn4L/eZ
+	+rNYKbUdYuNWEwHdRCbXzqY4H/Gc1Ej7bBTmMzXvQ4cGVsKvrfPkt/8xeanWdPCzPA6zsEYAiwe
+	4h5P2b4DYOLMQkloqBZDClXz3jfROgddN/jC2QNu3OIWbW/J/nHgTdOoyFp90lHwO2YoLZXIAFE
+	bpWjNQwuwekafGIdg5Htru1Yw00Trx2A5lkJB7VGtmKMQZ1jghYVYpxLiscZ67alwjSlCVRPh2C
+	a5CsSxfDebjd4nlg3XypVQE55ZtzWZQ==
+X-Google-Smtp-Source: AGHT+IFHmFbjhmDs8JEJN8j6pzPYHRP0s5f+jZkbENRKCNk16g6eKwVvixfcndrmuMQxR0FYU+h/Iw==
+X-Received: by 2002:a05:6512:2909:b0:550:ed9e:1b32 with SMTP id 2adb3069b0e04-550ed9e1fbfmr1194001e87.1.1747743573823;
+        Tue, 20 May 2025 05:19:33 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f2fcb3sm2327121e87.86.2025.05.20.05.19.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 05:19:33 -0700 (PDT)
+Message-ID: <748f96f7-d690-4823-845f-67642db97a06@linaro.org>
+Date: Tue, 20 May 2025 15:19:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v12 04/36] remoteproc: k3-m4: Don't assert reset in detach
- routine
-Content-Language: en-US
-To: Beleswar Prasad Padhi <b-padhi@ti.com>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>
-CC: <andersson@kernel.org>, <afd@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <martyn.welch@collabora.com>
-References: <20250513054510.3439842-1-b-padhi@ti.com>
- <20250513054510.3439842-5-b-padhi@ti.com> <aCddoCUIpIV1ZxEW@p14s>
- <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com> <aCtCEvGlqIIDYtcn@p14s>
- <f480253a-225d-4941-af81-32e1a02bf793@ti.com>
-From: Hari Nagalla <hnagalla@ti.com>
-In-Reply-To: <f480253a-225d-4941-af81-32e1a02bf793@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
+ qcs615-adp-air
+Content-Language: ru-RU
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, bryan.odonoghue@linaro.org, todor.too@gmail.com,
+ rfoss@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
+ <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/20/25 00:06, Beleswar Prasad Padhi wrote:
-> Hi Mathieu,
-> 
-> On 19/05/25 20:07, Mathieu Poirier wrote:
->> On Sat, May 17, 2025 at 06:53:29PM +0530, Beleswar Prasad Padhi wrote:
->>> On 5/16/2025 9:15 PM, Mathieu Poirier wrote:
->>>> On Tue, May 13, 2025 at 11:14:38AM +0530, Beleswar Padhi wrote:
->>>>> The rproc_detach() function invokes __rproc_detach() before
->>>>> rproc_unprepare_device(). The __rproc_detach() function sets the
->>>>> rproc->state to "RPROC_DETACHED".
->>>>>
->>>>> However, the TI K3 M4 driver erroneously looks for "RPROC_ATTACHED"
->>>>> state in its .unprepare ops to identify IPC-only mode; which leads to
->>>>> resetting the rproc in detach routine.
->>>>>
->>>>> Therefore, correct the IPC-only mode detection logic to look for
->>>>> "RPROC_DETACHED" in k3_m4_rproc_unprepare() function.
->>>>>
->>>> This driver has been upstream for 9 whole months, it is hard for me to believe
->>>> this but was just noticed.  Martyn from Collabora should be CC'ed on this, and I
->>>> will also need the required R-b/T-b tags.
->>>
->>> Cc: Martyn Welch martyn.welch@collabora.com
->>>
->>> Requesting Andrew/Judith for review and test too.
->>>
->>>> Typically bug fixes are not part of refactoring exercises.
->>>
->>> Typically, yes. But the refactor depends on this fix. This
->>> k3_m4_rproc_unprepare() function is entirely refactored to common driver in
->>> [PATCH v12 26/36].
->>>
->>> So, If the refactor is picked without this patch fix, the mainline M4 driver
->>> would be fixed, but the older stable kernels would always have this bug. Let
->>> me know what you think.
->>>
->> I suggest you send this patch on its own and then the series (without this
->> patch) with a note in the cover letter that it depends on the fix.  That way we
->> get the best of both worlds.
-> 
-> 
-> Sure. If I get any comments/reviews on this version, I will re-spin this patch separately than the series.
-> 
-> Thanks,
-> Beleswar
-> 
-Reviewed-by: Hari Nagalla <hnagalla@ti.com>
->>
->>> Thanks,
->>> Beleswar
->>>
->>>>    I suggest to apply
->>>> this set without this patch - you can then work on fixing this bug.
->>>>
->>>> Thanks,
->>>> Mathieu
->>>>
->>>>> Fixes: ebcf9008a895 ("remoteproc: k3-m4: Add a remoteproc driver for M4F subsystem")
->>>>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
->>>>> ---
->>>>> v12: Changelog:
->>>>> 1. New patch. Fixup a state detection logic.
->>>>>
->>>>>    drivers/remoteproc/ti_k3_m4_remoteproc.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
->>>>> index a16fb165fcedd..6cd50b16a8e82 100644
->>>>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
->>>>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
->>>>> @@ -228,7 +228,7 @@ static int k3_m4_rproc_unprepare(struct rproc *rproc)
->>>>>    	int ret;
->>>>>    	/* If the core is going to be detached do not assert the module reset */
->>>>> -	if (rproc->state == RPROC_ATTACHED)
->>>>> +	if (rproc->state == RPROC_DETACHED)
->>>>>    		return 0;
->>>>>    	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
->>>>> -- 
->>>>> 2.34.1
->>>>>
+Hello Wenmeng,
 
+On 5/20/25 11:56, Wenmeng Liu wrote:
+> This change enables camera driver for QCS615 ADP AIR board.
+
+what is the rationale of enabling CAMSS on the board without giving any
+description of any sensors connected to the SoC?
+
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> index 2b5aa3c66867676bda59ff82b902b6e4974126f8..be8b829ec508d7de7a4cd6be6d1d4e83b09734bb 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> @@ -211,6 +211,13 @@ vreg_l17a: ldo17 {
+>   	};
+>   };
+>   
+> +&camss {
+> +	vdda-phy-supply = <&vreg_l5a>;
+> +	vdda-pll-supply = <&vreg_l12a>;
+> +
+> +	status = "ok";
+> +};
+> +
+
+--
+Best wishes,
+Vladimir
