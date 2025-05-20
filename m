@@ -1,39 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C0824110F;
-	Tue, 20 May 2025 13:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8461B0416;
+	Tue, 20 May 2025 13:28:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747734; cv=none; b=PhnF37F0+mmZarHUR3Y2UsOY6CndWN2DWZn4YerNxR32K2KM629eysxTqRYOVUMXAQyshureB/ZaRG7tIOn/2eYsx6yU9MzZ60Fhs37dVRGOGF/FVzKf9gtFzJWR2O73b6cmsgi1Gw0RD3PpBUqp/W1Kzk0Qj7tiO+6AT8JCmVU=
+	t=1747747734; cv=none; b=YTCB7i3NzCyl+rOTo2GxCci+sZzEn+VI5Bwdv3xKBY6/hbn+2SMAfRhW6e26lT5q28/Ceq7nEJHR3EW6M5vDJZuz1nu5QHNDeVoZ6rFHxJyV9phVnDbXBaffLDJRw5O/VDIUzQQkpD2vmceRjP5VNipKYs8lxwmup+P+kn+tsDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747747734; c=relaxed/simple;
-	bh=Zi4kUK8V8exQ/jYlGTZpiqNPDV/K0PVGeQF8lZgoC1c=;
+	bh=9p5VEAWQkfwywpmBg9IDC9TQj0kvjCLywIL8M76Ov3I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K7lU5F/v60av/t7cp+YECdm2LCtBJ5Rr9YHNWOoyKSBFjvEulmZkfE9ZKpOM4W8rRHsn6bv9WcBef5dqSu6uqotT1r8BzKi9hxAhPrUWRSmInsAwiAUDEy+mIkVkPNi18T7/CrRw7v4s2W8VnX5o29sbBCs6qDg49PIeZb+hnLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DgrGoV9x; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=RRzIOJB2M6/w9Nudz+3rOtWN/MlZtXO3Ps6Bvbrthmbgng+Ofxyi+Rr21eS0sA26ALMJ5mFy608qEo9ZL8HoXN2re1/yuFxR97clTEF4iIRBEzKzs1eI/egff0YJKNHfRmnZUeT8f4AmhHR1Zm/EHbM7dKcrtKr1XZMleLzkgTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SmWPxigA; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DgrGoV9x"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A3EBB43B3D;
-	Tue, 20 May 2025 13:28:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SmWPxigA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4190443AFF;
+	Tue, 20 May 2025 13:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747747725;
+	t=1747747728;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QXkFTZPAhN5Z4nXJ2+2nFSRY5GnUn0Nq/yGjDLyOt5Q=;
-	b=DgrGoV9xVt8JfeurDowIKf6nsF32spDyApQmerRy0Dmwji/+aCrKLwVbX1ONGLeaHoRUUh
-	DzDJpy9QncKeE2iHOJ79fJlxzy7Md3L0Ii3eYkY/Y5IQRm0Q8SCGa5AJcKiadQ4TcRqQTK
-	D106cJHWZUcnB1I9oE/yZ1CQJIpGQalmPG6CYEgR8FJ5ouH6eANLGL9D89vjR6OFXVoN4i
-	gQGc/1JDXRtP737sLGAv+V8k9HbTBZu+XWOSiv9lOkzHH41tsp9wbJOE7STWTlTWxA0oT0
-	TVT7NQWNsYeeFU69pV5OcYx1nr74y+N4Pch8IotDZrXNy5mmiuxdVK+fg3Z6jw==
+	bh=5otib++E4IxknJBIv3NHnT8HhEs9VNGnqpDbaG5W40k=;
+	b=SmWPxigAfucFrsS7U1XpMbU5Zlc0zV2YzqKuRK1fi1WHqJk9uYwomMBSzgdGlGQfMJVjy8
+	A1DIJMZfNwk4JB6Mp1WAI+AnOVHYisuiFrIr0Mo+rNPQF1DqbOTIturwjnEw1eN4YLiXOQ
+	Eg2hltlNiglLdJRGZ/Wb7F+3/CSUfHKWbOzR0wCOvRT6LCaBnTEyljlPPZ/kRSmsSrMQcI
+	h+/q5Ay3GDQpSFJiNBAyQupztSXN+6YxWGNDYOJKGiLQdMl/4V8pT9aT/kcXuXHMr0XAVD
+	eSpTSOHu2wdcvYqOiepPFzrPl2UUgOn8M7jM9IDNmFVr+4sIt9oHSNkSx6wqGw==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 20 May 2025 15:28:27 +0200
-Subject: [PATCH v6 03/12] pinctrl: core: add
- devm_pinctrl_register_mappings()
+Date: Tue, 20 May 2025 15:28:32 +0200
+Subject: [PATCH v6 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-3-dcb3756be3c6@bootlin.com>
+Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-8-dcb3756be3c6@bootlin.com>
 References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -61,91 +61,300 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodf
  ghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefirghrhighrghnghesrggrvghonhdrtghomhdrthifpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Using devm_pinctrl_register_mappings(), the core can automatically
-unregister pinctrl mappings.
+Export all symbols and create header file for the GPIO forwarder library.
+It will be used in the next changes.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/pinctrl/core.c          | 29 +++++++++++++++++++++++++++++
- include/linux/pinctrl/machine.h | 11 +++++++++++
- 2 files changed, 40 insertions(+)
+ drivers/gpio/gpio-aggregator.c | 201 +++++++++++++++++++++++++++++++++++++++--
+ include/linux/gpio/forwarder.h |  37 ++++++++
+ 2 files changed, 232 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 4bdbf6bb26e2..9046292d1360 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1530,6 +1530,35 @@ void pinctrl_unregister_mappings(const struct pinctrl_map *map)
- }
- EXPORT_SYMBOL_GPL(pinctrl_unregister_mappings);
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 88b6565620f1..1c21dd409a25 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -25,6 +25,7 @@
  
-+static void devm_pinctrl_unregister_mappings(void *maps)
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
++#include <linux/gpio/forwarder.h>
+ #include <linux/gpio/machine.h>
+ 
+ #define AGGREGATOR_MAX_GPIOS 512
+@@ -498,8 +499,180 @@ static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
+ }
+ #endif	/* !CONFIG_OF_GPIO */
+ 
+-static struct gpiochip_fwd *
+-devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
++/**
++ * gpiochip_fwd_get_gpiochip - Get the GPIO chip for the GPIO forwarder
++ * @fwd: GPIO forwarder
++ *
++ * Returns: The GPIO chip for the GPIO forwarder
++ */
++struct gpio_chip *gpiochip_fwd_get_gpiochip(struct gpiochip_fwd *fwd)
 +{
-+	pinctrl_unregister_mappings(maps);
++	return &fwd->chip;
 +}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_gpiochip, "GPIO_FORWARDER");
 +
 +/**
-+ * devm_pinctrl_register_mappings() - Resource managed pinctrl_register_mappings()
-+ * @dev: device for which mappings are registered
-+ * @maps: the pincontrol mappings table to register. Note the pinctrl-core
-+ *	keeps a reference to the passed in maps, so they should _not_ be
-+ *	marked with __initdata.
-+ * @num_maps: the number of maps in the mapping table
++ * gpiochip_fwd_gpio_get_direction - Return the current direction of a GPIO forwarder line
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ *
++ * Returns: 0 for output, 1 for input, or an error code in case of error.
++ */
++int gpiochip_fwd_gpio_get_direction(struct gpiochip_fwd *fwd, unsigned int offset)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_get_direction(gc, offset);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_get_direction, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_direction_output - Set a GPIO forwarder line direction to
++ * output
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ * @value: value to set
 + *
 + * Returns: 0 on success, or negative errno on failure.
 + */
-+int devm_pinctrl_register_mappings(struct device *dev,
-+				   const struct pinctrl_map *maps,
-+				   unsigned int num_maps)
++int gpiochip_fwd_gpio_direction_output(struct gpiochip_fwd *fwd, unsigned int offset,
++				       int value)
 +{
-+	int ret;
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
 +
-+	ret = pinctrl_register_mappings(maps, num_maps);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_pinctrl_unregister_mappings, (void *)maps);
++	return gpio_fwd_direction_output(gc, offset, value);
 +}
-+EXPORT_SYMBOL_GPL(devm_pinctrl_register_mappings);
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_direction_output, "GPIO_FORWARDER");
 +
- /**
-  * pinctrl_force_sleep() - turn a given controller device into sleep state
-  * @pctldev: pin controller device
-diff --git a/include/linux/pinctrl/machine.h b/include/linux/pinctrl/machine.h
-index 0940fabb154d..25620229b1d6 100644
---- a/include/linux/pinctrl/machine.h
-+++ b/include/linux/pinctrl/machine.h
-@@ -149,12 +149,16 @@ struct pinctrl_map {
- #define PIN_MAP_CONFIGS_GROUP_HOG_DEFAULT(dev, grp, cfgs)		\
- 	PIN_MAP_CONFIGS_GROUP(dev, PINCTRL_STATE_DEFAULT, dev, grp, cfgs)
++/**
++ * gpiochip_fwd_gpio_direction_input - Set a GPIO forwarder line direction to input
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_gpio_direction_input(struct gpiochip_fwd *fwd, unsigned int offset)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_direction_input(gc, offset);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_direction_input, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_get - Return a GPIO forwarder line's value
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ *
++ * Returns: The GPIO's logical value, i.e. taking the ACTIVE_LOW status into
++ * account, or negative errno on failure.
++ */
++int gpiochip_fwd_gpio_get(struct gpiochip_fwd *fwd, unsigned int offset)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_get(gc, offset);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_get, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_get_multiple - Get values for multiple GPIO forwarder lines
++ * @fwd: GPIO forwarder
++ * @mask: bit mask array; one bit per line; BITS_PER_LONG bits per word defines
++ *        which lines are to be read
++ * @bits: bit value array; one bit per line; BITS_PER_LONG bits per word will
++ *        contains the read values for the lines specified by mask
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_gpio_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
++				   unsigned long *bits)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_get_multiple_locked(gc, mask, bits);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_get_multiple, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_set - Assign value to a GPIO forwarder line.
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ * @value: value to set
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_gpio_set(struct gpiochip_fwd *fwd, unsigned int offset, int value)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_set(gc, offset, value);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_set, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_set_multiple - Assign values to multiple GPIO forwarder lines
++ * @fwd: GPIO forwarder
++ * @mask: bit mask array; one bit per output; BITS_PER_LONG bits per word
++ *        defines which outputs are to be changed
++ * @bits: bit value array; one bit per output; BITS_PER_LONG bits per word
++ *        defines the values the outputs specified by mask are to be set to
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_gpio_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
++				   unsigned long *bits)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_set_multiple_locked(gc, mask, bits);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_set_multiple, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_set_config - Set @config for a GPIO forwarder line
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ * @config: Same packed config format as generic pinconf
++ *
++ * Returns: 0 on success, %-ENOTSUPP if the controller doesn't support setting
++ * the configuration.
++ */
++int gpiochip_fwd_gpio_set_config(struct gpiochip_fwd *fwd, unsigned int offset,
++				 unsigned long config)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_set_config(gc, offset, config);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_set_config, "GPIO_FORWARDER");
++
++/**
++ * gpiochip_fwd_gpio_to_irq - Return the IRQ corresponding to a GPIO forwarder line
++ * @fwd: GPIO forwarder
++ * @offset: the offset of the line
++ *
++ * Returns: The Linux IRQ corresponding to the passed line, or an error code in
++ * case of error.
++ */
++int gpiochip_fwd_gpio_to_irq(struct gpiochip_fwd *fwd, unsigned int offset)
++{
++	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
++
++	return gpio_fwd_to_irq(gc, offset);
++}
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_gpio_to_irq, "GPIO_FORWARDER");
++
++/**
++ * devm_gpiochip_fwd_alloc - Allocate and initialize a new GPIO forwarder
++ * @dev: Parent device pointer
++ * @ngpios: Number of GPIOs in the forwarder
++ *
++ * Returns: An opaque object pointer, or an ERR_PTR()-encoded negative error
++ * code on failure.
++ */
++struct gpiochip_fwd *devm_gpiochip_fwd_alloc(struct device *dev,
++					     unsigned int ngpios)
+ {
+ 	struct gpiochip_fwd *fwd;
+ 	struct gpio_chip *chip;
+@@ -530,10 +703,18 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
  
-+struct device;
- struct pinctrl_map;
+ 	return fwd;
+ }
++EXPORT_SYMBOL_NS_GPL(devm_gpiochip_fwd_alloc, "GPIO_FORWARDER");
  
- #ifdef CONFIG_PINCTRL
+-static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
+-				 struct gpio_desc *desc,
+-				 unsigned int offset)
++/**
++ * gpiochip_fwd_desc_add - Add a GPIO desc in the forwarder
++ * @fwd: GPIO forwarder
++ * @desc: GPIO descriptor to register
++ * @offset: offset for the GPIO in the forwarder
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
++			  unsigned int offset)
+ {
+ 	struct gpio_chip *parent = gpiod_to_chip(desc);
+ 	struct gpio_chip *chip = &fwd->chip;
+@@ -560,8 +741,15 @@ static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
  
- int pinctrl_register_mappings(const struct pinctrl_map *map,
- 			      unsigned int num_maps);
-+int devm_pinctrl_register_mappings(struct device *dev,
-+				   const struct pinctrl_map *map,
-+				   unsigned int num_maps);
- void pinctrl_unregister_mappings(const struct pinctrl_map *map);
- void pinctrl_provide_dummies(void);
- #else
-@@ -165,6 +169,13 @@ static inline int pinctrl_register_mappings(const struct pinctrl_map *map,
  	return 0;
  }
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_desc_add, "GPIO_FORWARDER");
  
-+static inline int devm_pinctrl_register_mappings(struct device *dev,
-+						 const struct pinctrl_map *map,
-+						 unsigned int num_maps)
-+{
-+	return 0;
-+}
-+
- static inline void pinctrl_unregister_mappings(const struct pinctrl_map *map)
+-static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
++/**
++ * gpiochip_fwd_register - Register a GPIO forwarder
++ * @fwd: GPIO forwarder
++ *
++ * Returns: 0 on success, or negative errno on failure.
++ */
++int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
  {
+ 	struct gpio_chip *chip = &fwd->chip;
+ 
+@@ -572,6 +760,7 @@ static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
+ 
+ 	return devm_gpiochip_add_data(chip->parent, chip, fwd);
  }
++EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_register, "GPIO_FORWARDER");
+ 
+ /**
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+diff --git a/include/linux/gpio/forwarder.h b/include/linux/gpio/forwarder.h
+new file mode 100644
+index 000000000000..e21a1b7b1905
+--- /dev/null
++++ b/include/linux/gpio/forwarder.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_GPIO_FORWARDER_H
++#define __LINUX_GPIO_FORWARDER_H
++
++struct gpio_desc;
++struct gpio_chip;
++struct gpiochip_fwd;
++
++struct gpiochip_fwd *devm_gpiochip_fwd_alloc(struct device *dev,
++					     unsigned int ngpios);
++int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
++			  struct gpio_desc *desc, unsigned int offset);
++int gpiochip_fwd_register(struct gpiochip_fwd *fwd);
++
++struct gpio_chip *gpiochip_fwd_get_gpiochip(struct gpiochip_fwd *fwd);
++
++int gpiochip_fwd_gpio_get_direction(struct gpiochip_fwd *fwd,
++				    unsigned int offset);
++int gpiochip_fwd_gpio_direction_input(struct gpiochip_fwd *fwd,
++				      unsigned int offset);
++int gpiochip_fwd_gpio_direction_output(struct gpiochip_fwd *fwd,
++				       unsigned int offset,
++				       int value);
++int gpiochip_fwd_gpio_get(struct gpiochip_fwd *fwd, unsigned int offset);
++int gpiochip_fwd_gpio_get_multiple(struct gpiochip_fwd *fwd,
++				   unsigned long *mask,
++				   unsigned long *bits);
++int gpiochip_fwd_gpio_set(struct gpiochip_fwd *fwd, unsigned int offset,
++			  int value);
++int gpiochip_fwd_gpio_set_multiple(struct gpiochip_fwd *fwd,
++				   unsigned long *mask,
++				   unsigned long *bits);
++int gpiochip_fwd_gpio_set_config(struct gpiochip_fwd *fwd, unsigned int offset,
++				 unsigned long config);
++int gpiochip_fwd_gpio_to_irq(struct gpiochip_fwd *fwd, unsigned int offset);
++
++#endif
 
 -- 
 2.39.5
