@@ -1,190 +1,196 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6780268FCD;
-	Tue, 20 May 2025 09:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735044; cv=none; b=F0kWhZdJFYbWYdaL/ivZKxNDrm1u+cJJsNMU5VyAOX6eQ4iYDxDaMXtbu4pD99cBQJHpdsDU5HVK61wQ69ZS/G0Gb1B0q2LabZx4pLtmMIml7ZdRd4TV+pDN9iFD1bder///yoYkwaC/MYhSgbyH/lW8Byla0hj1/NNqM0kXVvk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735044; c=relaxed/simple;
-	bh=cGTbb8zYo4jNTEl4DG1sLHPnv7wBHL8GpAMkGHoXRPg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=XuKl61meD7ixNncoJGSe+B4C+wdFY/iHUy2KG6XA/spPg2LsH8rfyl1RKGuk0GaK/XM/BPyYYUV8pWFDoK+htCV3GBTsWSnLNbe+5rrDy9z+JOCZLefNq45ZCkhXNAwHRbs9pntdeRHuZ6lUr1qpWWo9vEdl1n3NAM26QqE6dNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cD9ilwKX; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C5C25DCE2;
+	Tue, 20 May 2025 09:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747735084; cv=fail; b=cvO+Zi5guKbqX7FhLEcbLPdJ6aG0kPyEgCb+O1tfRJRqOMoI2qJFFzJ/yxjmtVuFwPcK6FVoEh4vLunQcCd5emY64Afpl6dzuaWddVjPPaY+nfo3qeDzs9gt06CQuaiXWmooapHgyjxVx6axs3sAhv1s2FDPgU6ZR46VCEamx0M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747735084; c=relaxed/simple;
+	bh=yVibuAs9fcji/3UCkU1HM2c0EiXyUWXIxbqbhmSEhrk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GijnZwX8bKyciYAQ6Ncfa3DqqdW6ThCCHSJpHXK93pfENzD9aL9+lmza6lw5v/54KKa2KV5B5izjTAXBcVd4HdP+4bSevg8WNemuPNMFscQobzpVKHfgHm6065QCLHyAdLdKZYyjel2rIMVivqEY1G+bVCyIBFrQw4oNT9owDXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PHyBAdYM; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cD9ilwKX"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K6IRgR016899;
-	Tue, 20 May 2025 09:57:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=NitEnJ
-	Uoeyoa+VaOs45abY8c8SLSUkKx4WtWVPdhmoQ=; b=cD9ilwKXywkGysfz18vIKh
-	E1V9CJU/4nwoa/aMwhtyaTft7xXtE9Opv9Xh8cDZEmn0qvbgyIMEzcMl8EwQ+Ghm
-	sL1vzGwTXXBmzxXSPywT3Ca0BKek+I/gMHGJKzX0bidScnO0DbrL6C7AN3NfSu2r
-	Z39M/dBa4O0MpOr8hqQQgsY5BJ2NmBT772oMauYayNR+gPxWAENPuKGMR5akKea6
-	33cT4K9XxJ8CxDlfO6MZsXsuyRJWVI2tmu/Drz45tBjtehQC6xx8UjltdwLc4nmx
-	u2dNSAUPJzFY6mIQSmbaCtGqQdulmp1aDRNiYa8K2DudMCd+NEHnGpDxKR/9rA0A
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rmbss0gt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 09:57:04 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54K87Gjw015958;
-	Tue, 20 May 2025 09:57:03 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g2axfd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 09:57:03 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54K9v2uu41091422
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 09:57:02 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65A1058053;
-	Tue, 20 May 2025 09:57:02 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD9F858043;
-	Tue, 20 May 2025 09:57:01 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 May 2025 09:57:01 +0000 (GMT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PHyBAdYM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xdHsL4Z7GuV+7hOysn1brHYWUCnvsbYoVbHDSPvMmmbZrzElXY7NIkaI3wZBZpAlh6lJPICMO0WUfEzpTVnrS20p8NgU90zuMkalGN143eDhcU+qDlHrEzRESX8bAIqIJUbTNJypekZcr1aAK/f6Gj6Z3dg5ZfR6Bft35Tm2eAgwl9pmFvt5oyk88eH+YNV48L8WSTAhoS4bAy6SNEHJieGoNAi1CTr9DN/O67vBXbnZT7kntYbXxFqSgXr25x2gpFIDkDJIUeYepKtkTizMRbXXDbA7Lq4fE4qEHDpDuZvdvX/tgoafQVjagos++E2zy02CFuMkzz7jQnBpLzse8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wIicbMBBQpp9qmi5Xi145yRmv7eOFJFKV8DeQpIhouA=;
+ b=n9STPRCcaiwKiSeqA9lP90vWYo3OIZYGDbi8jWWgMG7OwR3pZArXjulwRQlbm+pZhIf3T+uUeE1B9Rpi97YmaIYX0JssFWBM5X84PoA2uUnn0qUFMbTOm1xBi38I7uRRGskHQ5OlKMR3xrjvAQEMuxoZJF8tvuyPpaztmMfabsxev9clezOEpM0KRDWeDjL9A2sT7RVqlMEat17Gt5SH35lPFVuLVRYNWZWuUL4TbtkXscT9Gfk0Gpk5e8VF8ebGzFKD6++wuNJ5tkYQc2p+mA06LLvKTLiu3n6kJoIGlREgg79hZ8HV/r5vXyRhVbjn9P/72d68ltF2izOefzGGPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wIicbMBBQpp9qmi5Xi145yRmv7eOFJFKV8DeQpIhouA=;
+ b=PHyBAdYM1UBhescL5XureLRtLp/AYQzwFQWjCN0Add1tLMjZ4DtfjtlIdUuRUjuh1zaM8IXFX0hNUZLYx2D3Qkpea/vpGWLqrAioqYkNJjhHp9Iepd9ntYTgBimjS2A2TYtdn2/3thIsRzR1kdVJxfBAqyeQHme3DjsAJ984Rhk9JZVc95Y6sT9LDwOMqT3WfKMxCilaeCOr5WzEN71DOiUfkMDuiJLvd4h1khTjP7Ewi2LGVA72JA5VnhZYeiCGehnRSM6uxOyksqoHpbdDm1nudUK1tQaCsXDWWg0vmGHsePK8DiV3umsFKzwaK5RAkmPTvrZAHWkJ/ElYrUyQDQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by SJ2PR12MB7920.namprd12.prod.outlook.com (2603:10b6:a03:4c6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Tue, 20 May
+ 2025 09:57:59 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 09:57:58 +0000
+Message-ID: <9a15ea89-5e33-48e7-8c75-b041f6832bc1@nvidia.com>
+Date: Tue, 20 May 2025 10:57:52 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Aaron Kling <webgeek1234@gmail.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-tegra@vger.kernel.org
+References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
+ <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com>
+ <cd801698-d7cf-4e9e-aa01-5525f8687ab0@nvidia.com>
+ <CALHNRZ_9tMi5iihyTsEuU4T72=oTQM6-rVhqozzLf9DiB_TpcA@mail.gmail.com>
+ <CALHNRZ-pu9HUzVyR3-U=XZKFFZPnn5-DNLWPqPx6CSoW0dHMrA@mail.gmail.com>
+ <bc0a4c75-df5b-4b4d-9c9e-a2c99d3f4f6e@nvidia.com>
+ <20250519103749.falgd64ikkwkfpg7@vireshk-i7>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250519103749.falgd64ikkwkfpg7@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0318.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:390::17) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 20 May 2025 10:57:01 +0100
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Ihor Solodrai <ihor.solodrai@linux.dev>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [bug?] s390: kernel panic on specification exception: 0006
-In-Reply-To: <20250520094705.7932Bc3-hca@linux.ibm.com>
-References: <4f3768be36e0298be4ceebd4fdd3e96dd4fbdc04@linux.dev>
- <20250520094705.7932Bc3-hca@linux.ibm.com>
-Message-ID: <c2436d8ae2cb94b6f029e8f0291e22be@linux.ibm.com>
-X-Sender: iii@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA3OSBTYWx0ZWRfX+wg1TM7zN/T5 tw7aLRmqWd8sucPaWMgXHvXaUDC+FzuSfpjscKeei33raYG3Un8T9Qvye7pk9KuEEEnuDV7ZX4Z uKtJwhGGjpqh/RBF+s26CpbZyxR2F8+4pd8LfE6dnqa97N6uBumGaKZHJhjk2Km5wxwJY1XT+jc
- kfiiklRcX390a0x6tWQY0Yp0F0CCWbS/3iJn2EVF247/y5wnp6UYxYr1QLHDwGmXzGjpRfWa8uB VhktVF3TH9ZsvbKEC0r528HVWNt1ZHyJgbOyVGRvPcPEhOTc/7Dy/sKIpt9tMkiOQhnjLDlMDwz 5r2AJ26QgbHUR15W+JjsM5jw9jHJl0Rn2GYLp6lHbhgIaNzk2FSpjray+ZOD6sqjnAqf7vFT5hD
- UrDoE+t0wQuec/WZf8tYO6QmzUKeO6aKSt8POWGcuTNoT7+RsVWFgge0iWUTeXzdU7xqGiw4
-X-Proofpoint-ORIG-GUID: oX9Kwx6vNtn619nhthTwPsGAJ4Hh2yng
-X-Proofpoint-GUID: oX9Kwx6vNtn619nhthTwPsGAJ4Hh2yng
-X-Authority-Analysis: v=2.4 cv=DsxW+H/+ c=1 sm=1 tr=0 ts=682c51f0 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8 a=O6du97unDwFHqXYQvgYA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200079
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|SJ2PR12MB7920:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e05eeaa-a9df-448e-b496-08dd9784cc5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R3V5ZmRLbk00aWJrS3BlWWV6a2FvaklwdjZNa0ZtaVp0VnhuSlNPbTMyK2ha?=
+ =?utf-8?B?SlpKazVjRHhSMzMxMkZsdnIwMnlJWUF4YVlqT08raW02NWpXN0hmWVVaVFpO?=
+ =?utf-8?B?RXhLSkZtYUVKYzJxclJ4ekJYMC9KSnF0Q1gwRlVSb2dEeXFIT1lVblFTcG9S?=
+ =?utf-8?B?SGNCNmY4V3c5bHY4UHlFNitKOGU1WndRVGhjVlVaWGlZdnh1SFlacG1KV2RS?=
+ =?utf-8?B?MUwwUmFvY3RRdURTMVhHU2FEMmdJU1JLZlJwUkMzRjhsbXZqUGZEbmVUbzJt?=
+ =?utf-8?B?Qk5PaHdXeW5DYnd4WHJtOXQ2ek1oL1Jja3FpWnBhbCtKQWsxZjZjMlU5VS90?=
+ =?utf-8?B?NUtRbGJLc0FMdkNUTUpNWFE0eUNsNzVETUsyVURQbEFOSEFodkxPVEFmcGc0?=
+ =?utf-8?B?SjdxSjZ1WHBqNlFtamxZUGUycGl3bWJuU1hHZ3FiV0NSY3Y0WWpDY1pkTTFK?=
+ =?utf-8?B?cnFNZkpTM2FTajhsT0p2SW5ySS9xZmNDcjRSQzVRRUtKMTZiaVVKb1l6K0Q0?=
+ =?utf-8?B?VmpUYXViTnM1cE9IcGpTcE5RMS8yS1pwL0Nrd09icDVtR2hvTzQraU1XZjhU?=
+ =?utf-8?B?dUZYbUp4RUxVTlVwNDdLSUsvYU05S3VhYkpwSGJTcnJLZXcwb3h5RmR4Yll6?=
+ =?utf-8?B?QWtyM1IvQnlKbUZKYlJkcHlaT2d5Sk9qMkNMclVrbVZmVmdTdXQyWVM3MzNy?=
+ =?utf-8?B?MEcybU9Vcmlvb0RJQTJBRjhXRHRsME1PdmhkQ04vSGZKMmJKVFRZODhSWW1m?=
+ =?utf-8?B?Wld6Wk1GaFpRd3BMekt6RGMrQ3JKUWZreGI5L0xlbERWTUxwNVBzbU9rQ3JU?=
+ =?utf-8?B?UUdybjFONmo0b2ZrbXNDSFd5elRwUEVLSWFlTGxwdDVEaWxLUkgweGpaemtX?=
+ =?utf-8?B?STN5R1ZkejBVNk5vdUw1SVNKSGRVdGlYc0NadVFIVGhWd25WalY2b003TlFl?=
+ =?utf-8?B?RjdBYnlJUWhRNHdYY0Nrb3NtNllGdFFlTGFCcEF1VFpJUXk0a3N5N1BjUTRl?=
+ =?utf-8?B?M3puSThCN01xWW1hTlFxVnlZcklEZXBTQkxRYWJudHlnMzZTNUdzYVp0aHMr?=
+ =?utf-8?B?VDBKZ1VKN1JNVEdZd0lZdHNKb2ZVdTJsU0krVHM3NkNTZTNCM0EzY2pxQUI1?=
+ =?utf-8?B?QTZqOHNJNDF5WmJMTExiUVVHZFl5NHN4ck1yNEdmYzRjQjA2NUh6eWoxUk8z?=
+ =?utf-8?B?T2Iva20xTjFzVjFRRWtFTFRKZTJkTnVTTzhwQ3JpVUlKamM4NWZnR3RKVy9p?=
+ =?utf-8?B?eE1sUTBBVWUxelM0WUZ0SlZFa1ZBaGZLYXlqZTFIRGg4dUNvdThPU0ZDQmNJ?=
+ =?utf-8?B?Vm0wSDNQSS9jU3BITEx4YzByLzQ4blBTTzF1bnhsb1ZJWER3TUJzTDh0cVpX?=
+ =?utf-8?B?THhnQitISWJERXlSY2k0VWxpZ1prOW40VTF0RFlFVmxyOUs5NEl0bC9mWE9r?=
+ =?utf-8?B?UHB3SldjSEtuTFAweG1SS0VERHE1ZmRibFVNZTVwNzg2Z1JQMmJlSi9LeDRW?=
+ =?utf-8?B?U2JGYy95RFgyc2tGWjBOKzl6UFV4ZlBTOWp5RThpdFVWLzVvVEVSSDhVTmRF?=
+ =?utf-8?B?eWxMcUwycTU0ZUdKQStNd0xzNXNqcVN0Y2xMUXphVWZpMWFNOE0vQ0E0bzU1?=
+ =?utf-8?B?OTZWRWtEYkg4Nnh0MzJDVnFsT0pyVUxLT09hTnA3cytBZG1sK2RiNFhYdDRS?=
+ =?utf-8?B?M0xzR3VobFIyYlQ0eWlwcDQzT0dxazdpU0lSd2dPeDlMOEF4Z0hhcUExb3Nl?=
+ =?utf-8?B?Z0MraC9rcFJIbUhkc3pZblRmY2JuQ2RSYzc3MWNrekdqbTl4ZkFWRmtPZjBW?=
+ =?utf-8?B?a1hpcDlvd3RnWC9md2JvMkpwR3hiMlpTdUdVRVBjWXZCVHBlbVdSc2JicHRi?=
+ =?utf-8?B?a3BCUzh6THFwa0pMb0tuL0x6L0RXT0hxRzVhaVNjRmhmdVFVb28zY212MjVJ?=
+ =?utf-8?Q?bBtu+tvLjMI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d0EwbWxod0ZJRDNZVXZyQk9wZ1RBblR3TGxPaVA2VENXdDVDWkRDNW1wcTBn?=
+ =?utf-8?B?N1JMSDAwWjJxL2doRy9iMS9zZkhuSDlMdVNZSTBMR1BaMWN0WldmVjlWNnhl?=
+ =?utf-8?B?TU8rN01WQS8wbUFWWGxzUjJ2Z1NYcG8rdjhSQzg1YmttcWFUMUdEQUJJakpQ?=
+ =?utf-8?B?SDJDRjdUZXpzdVk1bjhwMDIyWnRvcldFZEF5SGRyUGw1ZGJCalZIYTRtdllL?=
+ =?utf-8?B?QW9lMDN1UDRxdzJmdzZ6ZGJ0Z3hmcVRHRzdTVUxURFpLVmJueHlBcExxa0pp?=
+ =?utf-8?B?dTV4SXpwSDU4RGgyR2QrZmsvQmo5MnpLTCtQRzRTZFdMNm0rMmhNc0FXZDRz?=
+ =?utf-8?B?OWhUN2JCWDgzWWgvdjBJVFZVWmZwNjgxSzh5V1MzYXhoWTFjT2lSV2FJQ0s5?=
+ =?utf-8?B?TjYrd2Z2d3gyRTExWHQzOUhVLytra2FHMkpoSzJXU1FiVHpydWZWYitEenR0?=
+ =?utf-8?B?cUdSRXlHa0t3TDZtS0ZrdThFQS91ZDdIMXVEZ1UyR1VmbVZyZVRWWEk3R09K?=
+ =?utf-8?B?SXdSTUhMRGhHVkhQYTZpVWVFZEx4YzJGSG9zdjVIeXJuTFJyWTloQS9iVGxy?=
+ =?utf-8?B?UFhEcHVmNWc4ZEVKZVdjbkgrNVd0K0NUeXVpVlFjZVVFRGlTUXBRODg5RTBP?=
+ =?utf-8?B?b0lXNGFhMWNQUDU1QW40M1lOb2dhYTNMUUJiWUpDNXFuWGp4d3VWNHI0V2FY?=
+ =?utf-8?B?Y3o4bFRjWHZNTmw1KzY3NTM0bGNxTE56L3MzeTZTdERUMWh5aXo2Z0hmWTR6?=
+ =?utf-8?B?ZmJNL1FhaENxYzFERWx1bldmRkZSWmNOQkRFbDZ5UUJMUmVueHBHUFB6MXE2?=
+ =?utf-8?B?WmFlMEJUQmpSTmpyRFFTL0NRVkk2bExuOGN6NllpTzFjRUJCekJSOHhGc0xD?=
+ =?utf-8?B?bXhTYzN0TDRrKzN0dlM0aWpzeVUwdWsyR2ZXOVNBRTArditLcTVJOUZtcjJi?=
+ =?utf-8?B?VkJxWkpSMmFUVEg4bHpzMURvL0F2Nnk5RzJaZ0tCR2x5bXdYejFUU1U1NEh1?=
+ =?utf-8?B?K2NzTS91dXJ5TUd2ZTRqOHFxdWdFTVpGL0t5akg0SUNOVmZFRFNYbFNiK3NR?=
+ =?utf-8?B?bUIwVUprYzdhRjVURW9sMmRKSVZHa3h0bTVVdGFoYVM0cWxVMVIxTHc4Tm5W?=
+ =?utf-8?B?ZU9DbTlzeE1NWks4ejZMa0xwQS9abU96OG5lUFlISEJuQWpNL3BRZENDZWl2?=
+ =?utf-8?B?VG4vSDU5WUgrRGNqUFRBd1BVZ0ptTVMrMFlNYTViUHF4SUFlUVNQWWU2c0hp?=
+ =?utf-8?B?VHVmdW02QXBQcXN3aWJhM1hub1hTMWFKa1hNZ2h6YW10L2NVeXJ3SjJGMFJ4?=
+ =?utf-8?B?bG5qclVsanJGNDZMblE5MWhZRkNndVRuekhBaHJSeENSc1Znd0huMHRwbU8v?=
+ =?utf-8?B?VjBKN1lXOXIzanNsWlQyMjJwMmYrQ1orOGxwMGMzL1NMcG1aN2lFd2hxQXZx?=
+ =?utf-8?B?OG1JQ2hCSzdTdWZHUVNCdGZSRlNPbHBSVGk0SFhFRmMvZWQyZGVsQ2lEOWRB?=
+ =?utf-8?B?bGdRcWVVVitucEFIMW4zcll4RWNhQmoxS29pZ0FEYXFUblZBU25lUCt5TUFH?=
+ =?utf-8?B?MHBHVnVJcGZVMnpQUGp2dll1OHNBRCtXM1Y4U3ZDTVRqRnk1RGhVTERrdlRG?=
+ =?utf-8?B?RDUzem5KUjRCSUdpM0NRNHZTWXFIYTIzM0dLRUFoQkcxZXN3Nm5CVytldURp?=
+ =?utf-8?B?SlZndzN4dlZoUm82eVBtdGdLQzFmVi96bnJtWVNlenZYU2ZrTXFFWVdQdFl0?=
+ =?utf-8?B?KzExTVRpN0l2UlRkSlE3T2hhWXNyWXdVTzRyd2l5ZWZjSStyQ2hiK2tBRWh3?=
+ =?utf-8?B?QWR4dUdVZkI3bnNhL2F4bTBvTUt5TXNwK0xNQ01XNVE3L1NUQ1J1dkxwYUpH?=
+ =?utf-8?B?TzBxOW9KdFBNOWlGZ2s4ZmhXNS9WYi9odGRHUGRzbGtCSElHTGs0ZFE0R1BF?=
+ =?utf-8?B?dnVoQTVhdW5ORU84TlRDN0xFMGxtclBoUld0TGhnQWJzTGRvOHJIMzN0Y1dO?=
+ =?utf-8?B?b0JzVnU1SnB5Y2xIQ2U3MCsxdTltdk8weXJtLysxMFpGdlRoK01ZbFB1cm8v?=
+ =?utf-8?B?UHBpeEhrMnA5YVBDdlczeWltOG9CWmJUVnZUeFhlVHc1ZW1VTjA3R0ljdnlF?=
+ =?utf-8?B?WE1pRkFoYWdtNzZURVQ1SVZsL2tYdVdzeTZhVWxiVTMvR2JKemtzL3BDblpk?=
+ =?utf-8?B?UWlqTHhjcDJXTGUrek9PdkhwVldaOEhqMUErd3V4N3pYT3g4U1lTM21MTEpK?=
+ =?utf-8?B?K0E5M0Mxa0tNbzVMczNoWDlSR2V3PT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e05eeaa-a9df-448e-b496-08dd9784cc5e
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 09:57:57.9375
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bZrvyBOuP4JH/Ayozcz+vdtSc16AQSk0flqikgIyXUvSY+rcWR+ttjP/7lHcME2ylt6ugAB4bXiCRAWFJgncAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7920
 
-On 2025-05-20 10:47, Heiko Carstens wrote:
-> [full quote, and adding Ilya]
+
+On 19/05/2025 11:37, Viresh Kumar wrote:
+> On 15-05-25, 07:41, Jon Hunter wrote:
+>> Yes and that is understood. I see a few drivers calling ...
+>>
+>>   platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+>>
+>> One option, and I don't know if this would be acceptable, would be to add a
+>> new wrapper function in the cpufreq-dt driver for the above that other
+>> drivers could call and that would create the dependency you need.
 > 
-> On Thu, May 15, 2025 at 07:04:20PM +0000, Ihor Solodrai wrote:
->> Hi everyone.
->> 
->> Stumbled on the following while testing unrelated changes to BPF CI 
->> scripts:
->> 
->>     #353     select_reuseport:OK
->>     specification exception: 0006 ilc:2 [#1]SMP
->>     Modules linked in: bpf_testmod(OE) [last unloaded: 
->> bpf_test_modorder_x(OE)]
->>     CPU: 0 UID: 0 PID: 108 Comm: new_name Tainted: G           OE      
->>  6.15.0-rc4-g169491540638-dirty #1 NONE
->>     Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
->>     Hardware name: IBM 8561 LT1 400 (KVM/Linux)
->>     Krnl PSW : 0404e00180000000 000001e43ac595e4 
->> (hrtimer_interrupt+0x4/0x2a0)
->>                R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 
->> EA:3
->>     Krnl GPRS: 7fffffffffffffff 000001e43ac595e0 00000000fff8f200 
->> 000001e43c52a0c0
->>                00000164c50740d8 0000000000000000 0000000000000000 
->> 0000000000000000
->>                0000000000000000 0000000000000000 000001643afabe00 
->> 0000000000000000
->>                000003ff9fbadf98 000001e43b747550 000001e43ab12774 
->> 00000000fffdfe68
->>     Krnl Code:#000001e43ac595e0: 67756573		mxd	%f7,1395(%r5,%r6)
->>               >000001e43ac595e4: 743d696e		unknown
->>                000001e43ac595e8: 73303031		unknown
->>                000001e43ac595ec: 61652c64		unknown
->>                000001e43ac595f0: 65627567		unknown
->>                000001e43ac595f4: 2d74		ddr	%f7,%f4
->>                000001e43ac595f6: 68726561		ld	%f7,1377(%r2,%r6)
->>                000001e43ac595fa: 64733d6f		unknown
->>     Call Trace:
->>      [<000001e43ac595e4>] hrtimer_interrupt+0x4/0x2a0
->>      [<000001e43ab128ca>] do_irq_async+0x5a/0x78
->>      [<000001e43b65f694>] do_ext_irq+0xac/0x168
->>      [<000001e43b66ae90>] ext_int_handler+0xc8/0xf8
->>     Last Breaking-Event-Address:
->>      [<000001e43ab08a9e>] clock_comparator_work+0x2e/0x30
->>     Kernel panic - not syncing: Fatal exception in interrupt
->> 
->> This is on the current tip of bpf-next (9325d53fe9ad).
->> 
->> Job: 
->> https://github.com/kernel-patches/vmtest/actions/runs/15051985809/job/42309244372
->> You can download full logs from there.
->> 
->> It only happened once so far, didn't repeat on restart.
-> 
-> Looks like the text section, which contains the hrtimer_interrupt
-> function, got corrupted, and an ASCII string was written there.
-> The hexdump above with the corrupted code translates to the following
-> ASCII text: "guest=ins001ae,debug-threads=o".
-> 
-> Does that ring a bell?
+> Doing that won't be a problem, but I doubt if that is a better than
+> adding a soft dependency here. I personally felt that the soft
+> dependency may be the right way here. The cpufreq-dt file presents a
+> driver, a device can be added from any file and that doesn't require
+> the driver file to be inserted first. If the platform wants to
+> simplify and create a dependency, a soft dependency looks okay.
 
-This looks like a part of the following QEMU config:
+The only downside of a soft dependency is that this driver could load 
+but if the cpufreq-dt driver is missing for whatever reason, it might 
+not be obvious. Ideally it is better if this driver does not load at all 
+if the cpufreq-dt is not present.
 
-static QemuOptsList qemu_name_opts = {
-     .name = "name",
-     .implied_opt_name = "guest",
-     .merge_lists = true,
-     .head = QTAILQ_HEAD_INITIALIZER(qemu_name_opts.head),
-     .desc = {
-         {
-             .name = "guest",
-             .type = QEMU_OPT_STRING,
-             .help = "Sets the name of the guest.\n"
-                     "This name will be displayed in the SDL window 
-caption.\n"
-                     "The name will also be used for the VNC server",
-         }, {
-             .name = "process",
-             .type = QEMU_OPT_STRING,
-             .help = "Sets the name of the QEMU process, as shown in top 
-etc",
-         }, {
-             .name = "debug-threads",
-             .type = QEMU_OPT_BOOL,
-             .help = "When enabled, name the individual threads; defaults 
-off.\n"
-                     "NOTE: The thread names are for debugging and not 
-a\n"
-                     "stable API.",
-         },
-         { /* End of list */ }
-     },
-};
+Jon
 
-Can it be that the hypervisor has corrupted guest memory?
-But I'm not sure what exactly in the CI software stack can specify these 
-values.
-I checked vmtest, and it doesn't seem to use debug-threads.
+-- 
+nvpublic
+
