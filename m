@@ -1,75 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC18B1FFC54
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8639A1DB356;
+	Tue, 20 May 2025 17:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760632; cv=none; b=Z7Nq4mCRDF8b2lKCf/0L/z2jwAjh6ClSW6c5BPXPfq8UMMJzKqaogcs/UM2ZwfqINBdnr6rqbptMeIRI1u9JgFOWl4KPdk7E46l98Fh2lFuFPmyhpynkVMc4nB0p1Bho2DpDOKJawds0pEllvHOKHPdqgtiQE93nB1nOEUdDU84=
+	t=1747760705; cv=none; b=pBbvhr8g/P3Ttkk1C5KALVhOukfJkq6dLYvPyb9FsiE4fYHSmRU2w1DFKA/v5XloK/xj+e1Zt5cbIx1d3YoX9ioaZbB9wXBd8zDkyPr86mFk4csPRuktuHFJKqOk2Tyy8TQeOLnhYlf9oKuSYLKxytNWdnt0lrhydpVpyn+eRnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760632; c=relaxed/simple;
-	bh=3Ps9im7Hc9N5HbH/qseV6thcNGxd6rNY7p0Daho1VC0=;
+	s=arc-20240116; t=1747760705; c=relaxed/simple;
+	bh=vFLiIsSNJ+9LKlajAAEpNZdNi9SUrHki3vkFk8ViS1Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tlTmQDNo/29mbUgZAScir4tUjtWIguGxm2PYWxerfyVacVDXprVYNaB5+LBOytdtTVIpo2j6NslBt17tCoYIub1Dsids0RIqok5UnX2aMPl5no7ZGj6spcUm+poXhJ8PUBYRCJyo0MEOW89dnlNk/zS+XAJx7IkNBTVVa6/Fqdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1Xh32BF; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=FS+fnhxLfcrl6WpJeFJJ9fGsOP2e6KN9JWfOmEIZGemwAQ0a50ceHqJYFyteT+9YqLl5WPJeapmn0e4VBJnwSdzV3gG3Pwlj8rPpsfpJcvE4s2C6ys35EgNbUATB9D8icJaqYA5ERYZa/DKKgummCIyumCagF/u+jrE0vJ8JEkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgMzRogV; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1Xh32BF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A88C4CEF1
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747760631;
-	bh=3Ps9im7Hc9N5HbH/qseV6thcNGxd6rNY7p0Daho1VC0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=X1Xh32BFMl/zbfaMT5/OG50JK462JRjVGUhvKzziaJ5UO6MNiX+iq+/yfhAK+zrZh
-	 Zg1godPMMJoGwE5qyRhPPbMY7S0TG3NJ/x4zh/jy92bKaGiT7YFQ71ZjKDypqBer6c
-	 0kgHfKcCDx4FGhusEzPOFlpXKH0r6YN9WW5KVFy7gsFscbw6sdWYUWu9dFu1HCtVTw
-	 VuMmBfsZaZAuw6gHsgJ/zFwNbayiwD+k6fz8WtkbIhIfdj0foGLtHQ/VL63n+6dPrp
-	 yVnn9mTdb3NVmfAJVnvsN9dDtiZC1a9moY60XrieSLkLEOVrxsX6DXnuzoiQSz5MSk
-	 N36huZa5piV8w==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso54229861fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:03:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUeEhEQE2/EbOyBqBzefhmzj2Ni4ESgzmIwGUyAXVS7LYVBQzQ+YdcccbL3pBATTyeRQz4H3fYfay/W/qg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5iAG2LF1YMkCgaKFgdUiBK1iqUwx4Ealk6CKv5sMcKS0QKM7+
-	0fNdQr4aZ/ku7zG/oj+8Cg/WExhttFtCYsnbe703nwCZt5MTyjEVof4xf0ZU0OuRtYl7h9n0k51
-	DBE47RIpni1CtjAvi03qMC1c4g8+XTnU=
-X-Google-Smtp-Source: AGHT+IH9edSBCBx5n6YJL5VZjNTH9UOxOovmE8e4gtRTAvmx8o9L4VKBfYBqPwwFLT2iyBhQq/JW9eTENmXtt+8tAZM=
-X-Received: by 2002:a05:651c:111a:b0:31a:3744:6ebd with SMTP id
- 38308e7fff4ca-328076e89femr45422431fa.5.1747760629590; Tue, 20 May 2025
- 10:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgMzRogV"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a363d15c64so2614289f8f.3;
+        Tue, 20 May 2025 10:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747760702; x=1748365502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aqfARpqDXwP7K8PtF8oJFF7SVaV8Ol18I4Q0qiBvla0=;
+        b=dgMzRogVkdSqrzUfFVhaKOjpnjUn03S+p3KU9ktSLH2gr9j3WvwH8AlHxj8fkWkTJP
+         /yASvEFQaXtVqWe5GmdtZlPKK596Z5u3zUIc1ZrWLP69PHPEBOemecMYsr8Myjx5KZ9F
+         QLO0R3GVxpRSkh8IgaZO7cjdDvOp0y1Qf0uWYDkznzyhhDnh7QAS9ozs56trYMBf3jJ6
+         gDhaplQ4hHEBQ87zP59EDo6GUyBtiiBt1LGZznu5/9jcuB+5ZcBtY3Xd8PGCVME0mwD5
+         DItjiAjLF6cJlY0ZesqgCQXLhPxPJEK4FcIKnBG1hkG/5Ws4rFNOnOTEeTarHFhAaWB7
+         vS2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747760702; x=1748365502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aqfARpqDXwP7K8PtF8oJFF7SVaV8Ol18I4Q0qiBvla0=;
+        b=ptFnBCBCFe1qOtOzg6U8zPE6Xxrxmo1sneXThX9cZk3586c65CODgXXzNh4LjZa3G1
+         y1TWp+yUXsjBo1tmv0uH39nam74G9sK3eBfQE8cxalIwXZ6rVFJoGJE8i7tcgJnhLTHk
+         IzH/EYKid8dYL9TTnaMPdfWrwOuPfCYjASOT8smZ+1wLNit8nLK0T+TB8YG0v0XprhmJ
+         D2XuFiUqDfo3u7fVSNuPbkWyiwi9JSwHYwsyD0Usq3o+a0DtSGS1Gi8P1KgqyEpaUDAZ
+         Z+GquQp1jk++Ft+KNcwcKbcm0EGoJRbEFTEsv7HXTMv/dNQNk/RA/t5KE5M1eyoKbjJu
+         HJvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS4gycfSkMqkvs/SxO/atcrYrGWCDF18hp+gA3ISf/nCyC9jWGRiHc0DlWNKoS/med6hBUG2AUC2DF6Y5B@vger.kernel.org, AJvYcCVcrBID5cIeYYsfUit3PD2y7vQ8lV3A0EQYUA0XzOBgou2/6RsA/v5KUZVBaXBUr+moPryurWkAACwSddqqsg==@vger.kernel.org, AJvYcCVphUN+T+Pn5S49LFyniN+mFgDwsErUzRF3Qz9YYzpZPn8gHbIAIdeQzFWMzTf2yrWQU5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzkhO5UYqM18z/bGg42xVm67HalToIGlqwjZ78V2AByA8IyJNS
+	iOgGVcyo6aiE2RiQ/CvoRRpudcF7V3UqwNypK/WdOVGYj0K8k8xFaTTcAunAzfLuCg5GwlbnJX5
+	webrUdcJ/5ND+bElG8Pdy1zL022g88SE=
+X-Gm-Gg: ASbGncsBB8Rur02Gdzd6vGiGiJKWPsExJZil8Js2U/YJ1dQxuF05TkTxH3+cSEo0ilp
+	W7nKBthKeh+f/YSf4Ovfdgjf8neIQjbVHSg1JUtizxhly+bY6MpZIh3X0Z0TTfXukCsOKawVjTL
+	WUJAtpgF0qYFRnlCaoBdPgwahgZ8Mw6g7dQR+LMEk7QGEC960H
+X-Google-Smtp-Source: AGHT+IGoHLX8QBms8mFGB0R5FHXi2uOVwvd1emWDAK8vRyQoBWvaR0hqtnNxbsErK6XMC7RZZfSN4YoOe9vSv2a/T88=
+X-Received: by 2002:a5d:5f8d:0:b0:3a3:5b90:5f38 with SMTP id
+ ffacd0b85a97d-3a35c7dd76emr15608680f8f.0.1747760701511; Tue, 20 May 2025
+ 10:05:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com> <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
-In-Reply-To: <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 May 2025 19:03:37 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
-X-Gm-Features: AX0GCFt3N3voX1hVAf_deOVxGGWrKF66m70N9HJp_lPOsw0-jUebL67H2rMD1Gs
-Message-ID: <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
- record pgdir_shift
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn> <20250520082258.GC2023217@ZenIV>
+In-Reply-To: <20250520082258.GC2023217@ZenIV>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 20 May 2025 10:04:49 -0700
+X-Gm-Features: AX0GCFv2NKgzITaEikgjd3zpHj5FtmD5LjKgXj0aULr_MuBKSBnhhz5OfeXNA34
+Message-ID: <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 at 16:35, Borislav Petkov <bp@alien8.de> wrote:
+On Tue, May 20, 2025 at 1:23=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
 >
-> On Tue, May 20, 2025 at 01:28:52PM +0200, Ard Biesheuvel wrote:
-> > Are you saying we shouldn't optimize prematurely? You must be new here :-)
+> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+> > When executing the bcc script, there exists the following error
+> > on LoongArch and x86_64:
 >
-> Right, but do you see __pgdir_shift on a seriously hot path to warrant this?
+> NOTABUG.  You can't require array sizes to contain no arithmetics,
+> including sizeof().  Well, you can, but don't expect your requests
+> to be satisfied.
 >
+> > How to reproduce:
+> >
+> > git clone https://github.com/iovisor/bcc.git
+> > mkdir bcc/build; cd bcc/build
+> > cmake ..
+> > make
+> > sudo make install
+> > sudo /usr/share/bcc/tools/filetop
+>
+> So fix the script.  Or report it to whoever wrote it, if it's
+> not yours.
 
-No. But if you had read the next couple of patches, you would have
-noticed that PGDIR_SHIFT, PTRS_PER_P4D and pgtable_l5_enabled() will
-all be derived from this variable, and the latter currently uses code
-patching (in cpu_feature_enabled())
++1
 
-This is also explained in the cover letter btw
+> I'm sorry, but we are NOT going to accomodate random parsers
+> poking inside the kernel-internal headers and failing to
+> actually parse the language they are written in.
+>
+> If you want to exfiltrate a constant, do what e.g. asm-offsets is
+> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+> and check what ends up in include/generated/asm-offsets.h - the
+> latter is entirely produced out of the former.
+>
+> The trick is to have inline asm that would spew a recognizable
+> line when compiled into assembler, with the value(s) you want
+> substituted into it.  See include/linux/kbuild.h for the macros.
+>
+> Then you pick these lines out of generated your_file.s - no need
+> to use python, sed(1) will do just fine.  See filechk_offsets in
+> scripts/Makefile.lib for that part.
+
+None of it is necessary.
+
+Tiezhu,
+
+bcc's tools/filetop.py is really old and obsolete.
+It's not worth fixing. I'd delete it.
+Use bcc's libbpf-tools/filetop instead.
