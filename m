@@ -1,125 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543E21CD3F;
-	Tue, 20 May 2025 14:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1632505D8
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750588; cv=none; b=Su0uihqpjSodvvRLaxtm0E5kTCbC3DbRuHEYHAxzlisgpv8ZdWGUG1grWadvaR5Inug40KNxsC6LaOMJ7b0KaQ0GDdl53fYYwKeHeDxGg0CSGf2wP1SBXwg1cM2lwg/S9g8VloBkc+gQ+EXo6DyUXOjUD0nmxDXN3Udi0CTcapY=
+	t=1747750595; cv=none; b=VrW2rzdXYjZXfnCAlYIWR2jKkraFcGiGugRuhKGoDG0TBY29mkq2h33bE09Xo90G4AWCE6723rAYnwc4S/WH7QWiu2VeVSeIu9eKd+s0G8iWL+AMBczaq0iCkVG7XxT7T+6TyCuj+rJ92GPTtdMI+vwuB9ZX0Tu27aCMABmwzww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750588; c=relaxed/simple;
-	bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q32bKFhjpxtrrD51tT2SuTkjeeyMJFXuxIk9GWA2+S8U4GAiI4iU+zmm902UDAAmFPu80AGHV4w8Pm45K2Dossd8QMOUBWSDs1xttitnOJLBZRHAF7CEHqRD5IDyjfbTxbLw/iYoQgauGy3J//OfZL7mJmofDsXx/qx70swFveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lyYAp8jJ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747750595; c=relaxed/simple;
+	bh=SoMXZh2D0KD4V8N0v5ERJAEktD/6QD/dGnWO0/MEBqg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HqPKYbL2oCtvbfMBb76kjhmt+lq2Y3AwjUNnPZ7D/J9dRTwEQ+JaRH7bbIUH8ndpq8TDPG35RAINOmn5zKvRv8y/cACvcBPoGDCt6W/VVGbbIrgmQjGYS/oEfHEMKLFEUOztP13isbXN25/E6LEX5PwDYDf8Mt+ZuU4DuxAwwxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=duUtg9kT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lyYAp8jJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747750587; x=1779286587;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
-  b=lyYAp8jJVidKUZeWiI41W9RfMbilNP/8tpv6D0V/x2etZgQuTtOjnEGl
-   6U4Ldjx3xh0/cLulqplM0x3rYAAiCYWZP+D35EQT7N450jGo2jRR+HiRZ
-   sqOHT1mc+tRh09EPYB+/+0uYWN6x5IDUA7l3wF4/nRoZYWAuXSvEpityz
-   phy4zA8PSFakGkp9BUF5BNveXPvIZY/gk0T3iBsjUCFBaAEFFKuYuRaKk
-   0U1h/zlnZcgif8U3nPP1gu+Zix91CpdzKRxwIEChH/s+ZrRE/ULgy9Wyp
-   XOCQkN0wX905R3o3vKaNQLRbI3i0Un7xCcngJ9+TTcO3kF4PqyR/P4iEi
-   A==;
-X-CSE-ConnectionGUID: dd5bAoCpSx+ewWW8snwHvQ==
-X-CSE-MsgGUID: eOnwi1VTRG6BooAT05+2tA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67242443"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="67242443"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:26 -0700
-X-CSE-ConnectionGUID: eShhJpjKR3GhdSefT9W/rA==
-X-CSE-MsgGUID: o7UqvB0eTWy8cjRnjx5FIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="170720126"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:24 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D22CC20B5736;
-	Tue, 20 May 2025 07:16:22 -0700 (PDT)
-Message-ID: <1e380367-aaad-4c02-bc10-b85b25dd2274@linux.intel.com>
-Date: Tue, 20 May 2025 10:16:21 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duUtg9kT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747750593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=61iPeRzvAixq/R6SwHKeq0ei0vc55YLY4T4B2HYFAlE=;
+	b=duUtg9kT+GZ/BbU8euQIK48OKF3qIBXJBMJ7TP9d/uMhw7pW9/GwX/gvt3MyRBC082ytcx
+	8mavr2CfZaYgnUBEm+RrLA4J4yaX71u9TyfeaUQCM6GHR4g4JvupDEKsEkzvOuCuPyEGYJ
+	QRpVJ8iEQD0AFNsJ0d/jj9ZBV37SRIg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-203-sHURQEXWO4O4hsaO_LR3UA-1; Tue, 20 May 2025 10:16:30 -0400
+X-MC-Unique: sHURQEXWO4O4hsaO_LR3UA-1
+X-Mimecast-MFC-AGG-ID: sHURQEXWO4O4hsaO_LR3UA_1747750590
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a362939f61so2051651f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:16:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747750589; x=1748355389;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=61iPeRzvAixq/R6SwHKeq0ei0vc55YLY4T4B2HYFAlE=;
+        b=Dw0ygsB4Um92NDoJZfPeDCLckhKkTko8vy1g7nk+uaMj2g0KX4Nw38G6fFKvtylIKs
+         rnBqqoheK1EpKoJJHjtKMvI/bv4BHbUSeWnmCzg145/y+OETB6GEEQTRdxdKHAY35p2V
+         I261h/WcP4mMnsqmTaVuT8MZnLYB/5RRxixLw5osqZCMhgm4QzmU6PAarJjrGEo4dqqJ
+         hiARItgs4FQyRLYBuZgavl+19uxeIJBpA4IpWnjPlXfZaTAn6dFgRvpEXAQZz8LALE0j
+         9e0ozK/uJqVBWvIlta8MbP7985ydAsfpXGRtNBhJjO0/Qu+UH6mMDkhRfPEaWreo6pqR
+         +IyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKWZ6f+JXVTKv7zDJ1FBanvPn4F3zr2C7YfJ1YJTMxssWDwjZvP0tzer7VqSWdx5IweN4+0v7sr7fvRi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlQfDYOY5TJSoB7to88Ag9J7HGHV6wdpHtD95G9zMDi6e9iu3n
+	/vh+KYXih1Gvym8Yc7Yowt/HnvNue2PTXkzHdxvw50w/TTNzCZkr/kf0T61g8uLHVYnpTm/NFMr
+	UuJBcWbaPu1+2/SkNgI6nTUXfjoTaSQhgS6u2AuZYskmiXyv67OpqX308BPPon8gVTQ==
+X-Gm-Gg: ASbGncsWpSAkvcdcAj5m7P7L8ACmXCJRnn/16eFWBLVkMfC8YT4q8utAdB+gNphctS+
+	+5m4zycXEnCqOEIgSASSTXj5l4CFAwp0CWzPDim9JOLcMbceLL5+b9rql2OFGDLgp4SHK0SPfZ1
+	D4F5jmcR1wfLqq5iJDinqSu0pyEPXX0yxRPSdKgnerWHckN2En5AGD1EmRhNkdeHWVSSZytVm1A
+	hBaydOtDYOtKm2K4FOmICSNUeW36KwnEl9lrUG3K4RZsYH1pztuYf+7U5qOz8acSW/sgWTywQmi
+	0rOuTbg2A1I8yII5nXnW98GjhsGpcOb3ovBQ96QQ/dlpEPGw9vo07bQ1CjZ57gP4GQWrzQ==
+X-Received: by 2002:a05:6000:430d:b0:3a1:fed3:7108 with SMTP id ffacd0b85a97d-3a3600da40fmr14525830f8f.40.1747750589614;
+        Tue, 20 May 2025 07:16:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrGDGNPueP8M5oY1rssyDAAoA7kWAMi94I273UUlkBQWltVoKwRePTOwwFy/ypnlP9yt8vbw==
+X-Received: by 2002:a05:6000:430d:b0:3a1:fed3:7108 with SMTP id ffacd0b85a97d-3a3600da40fmr14525794f8f.40.1747750589210;
+        Tue, 20 May 2025 07:16:29 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca6254bsm16931304f8f.52.2025.05.20.07.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 07:16:28 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Geert Uytterhoeven
+ <geert@linux-m68k.org>
+Cc: Marcus Folkesson <marcus.folkesson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
+In-Reply-To: <990c04a5-6477-42c0-986d-9b63a30ac90b@suse.de>
+References: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
+ <07088966-73f4-4b5d-898d-b596dede53e4@suse.de>
+ <CAMuHMdU6XD_tqXaf4-h9KeC58XDOodUWa0d-Wmp6zcr2BHTA1w@mail.gmail.com>
+ <990c04a5-6477-42c0-986d-9b63a30ac90b@suse.de>
+Date: Tue, 20 May 2025 16:16:27 +0200
+Message-ID: <87plg3nz9g.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
-To: Ingo Molnar <mingo@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, leo.yan@arm.com
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
- <20250516182853.2610284-3-kan.liang@linux.intel.com>
- <aChHXShBhoDBgPX7@gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aChHXShBhoDBgPX7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
+> Hi
+>
+> Am 20.05.25 um 15:09 schrieb Geert Uytterhoeven:
+>> Hi Thomas,
+>>
+>> On Tue, 20 May 2025 at 15:04, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>> Am 20.05.25 um 14:40 schrieb Geert Uytterhoeven:
+>>>> When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
+>>>> the old symbols were kept, aiming to provide a seamless migration path
+>>>> when running "make olddefconfig" or "make oldconfig".
+>>>>
+>>>> However, the old compatibility symbols are not visible.  Hence unless
+>>>> they are selected by another symbol (which they are not), they can never
+>>>> be enabled, and no backwards compatibility is provided.
+>>>>
+>>>> Fix this by making them visible, and inverting the selection logic.
+>>>> Add comments to make it clear why there are two symbols with the same
+>>>> description.
+>>> These symbols were only meant for variants of 'make oldconfig' to pick
+>>> up th enew symbols. They where never for being selected manually.
+>> But that pick-up does not work, unfortunately...
+>> (I know, I had one of them enabled in one of my configs ;-)
+>
+> I see.
+>
+>>
+>> The alternative is to just drop the old symbols, and ignore current users.
+>> Which is not that uncommon...
+>
+> If there's no easy fix for the current setup, I'd prefer removing the 
+> old symbols.
+>
 
-On 2025-05-17 4:22 a.m., Ingo Molnar wrote:
-> 
-> * kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
-> 
->> The throttle only happens when an event is overflowed. Stop the entire
->> group when any event in the group triggers the throttle.
->> The MAX_INTERRUPTS is set to all throttle events.
-> 
-> Since this is a relatively long series with a healthy dose of 
-> breakage-risk, I'm wondering about bisectability:
-> 
->  - patch #2 auto-throttles groups, ie. stops the PMU
-> 
->  - patches #3-#16 removes explicit PMU-stop calls.
-> 
-> In the interim commits, will the double PMU-stop in drivers not updated 
-> yet do anything noticeable, such as generate warnings, etc?
-> 
+I agree. When this was discussed, I argued that we should just remove the
+old symbols and let kernel packagers to deal with it. As Geert said, it's
+not uncommon for Kconfig symbols names to change over time...
 
-The short answer is no.
+-- 
+Best regards,
 
-Here are the details for different ARCHs.
-
-There is a active_mask to track the active counter/event in X86. The
-current implementation checks the corresponding bit first. If it is
-already cleared, do nothing. It avoids the double PMU-stop. I've tested
-on my machine.
-AMD and Zhaoxin shares the same x86_pmu_stop() as Intel. They are OK as
-well.
-
-powerpc, S390, ARC, sparc and xtensa utilize the PERF_HES_STOPPED flag
-instead. If the flag has been set, do nothing. It can also avoids the
-double PMU-stop.
-
-ARM, apple m1, csky, loongarch and mips invoke the disable_event, rather
-than PMU stop. The disable_event unconditionally disables the counter
-register. It doesn't check if the register is already disabled. But I
-don't think double writing a register can trigger any issue.
-
-Alpha utilizes the PERF_HES_STOPPED flag. But it seems still writes the
-counter register even it's already disabled. Because the cpuc->enabled
-is used to check whether to write to the register. It's not updated in
-the alpha_pmu_stop(). But again, I don't think double writing a register
-can trigger any issue.
-
-Thanks,
-Kan
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
