@@ -1,192 +1,194 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB3A265CAF;
-	Tue, 20 May 2025 08:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731225; cv=fail; b=i02KukC3AkRKD5IpkAc+YWmN4YQj9CWVaNyzoUu0FCqitVnx/ZnVZB1fYLnSJaLFPuqs0r5stgLj9q6nMd0wRtclSpK1MiOSKKtE/QZPmfBa0AsC5uI7CxoY67Fd8RFWPcozz7hHuhYWas18CXYLJMrUH6A5kO15MCG4Z4gOxzM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731225; c=relaxed/simple;
-	bh=RtRTHTvEew2KUgPvM+NEamm2LkGjK5YwvcZiG3/zyec=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FfcxC0gzZIiqYN7AYFFlqyNpSxglrZwVE2dEVWGYJ3Jt9HBCLkwv7q9VNpfkKLJvWYZB9kTyHCyQK5I9MAtgCU2hXWPA2EQkSe0dPWnUNYgcBLczxzluCh3fgXEpRssduHEXqtvX/hMoxZnAwNhJ/2CJNHxeZj5aXTPExR2tEio=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=La8RD5Bo; arc=fail smtp.client-ip=40.107.237.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61125E46A
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747731288; cv=none; b=lkJlCTwB/NCcnP9zgrQvjaCbW3+vZ9EWC/1Wn8JJmvdjt+If7+Hl6hYutdX+jmSCGLV2uERc2mHQHmBixGyCOCT6Hc9Cug1sJG7wudCRrZ/y34LmVeMcYy0fXtrpaK+qWgIEFD8O9vnEp4llQX5MOjRqj4CfgYRAezFgAbQo2tk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747731288; c=relaxed/simple;
+	bh=EW8+ltB5RD/cj4k61+Elnw7V9Vm0GX9HYQV8/qmM9fY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DjT2RLePNWYQosEpeXoU99uCBQ/tmikGkkhUbXgzwigkb4lWpK4CPK9RJsBck5RJjIVy3SXxZSvYfx78uFjbL43PcZIMT26jOst8jbBj346hb5gSF8Pr6sxPS2GtV/CuAbOd4Mr8jJf88PDeDlC33yFX4xGv8/etLoZUxJIWDQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrIrwnOF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="La8RD5Bo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VwGHzGyFa0KLmUjU2d2lwO/btXNKo2iwuk+9rP3IASAHnXt2yqbqBTF2715bXXIXjkVisEuI6NZXryCYeI9sb+uxbY2+W5C/N+t8vfhQH+Y6spLDmbBcWSwbKSfcB9mnyq6MJOhpF3lQDsRaXINdSsdHrCzfFHnYuPtqm2mzOfh1XNGUHRJ66vIAuwA2gbCQu21OOVu/OaGPTj7l4G3l8yi9poeSNjRkO35aVp6MzR8Da7DtWJgAlv8xnXC+y4gPDcC4ZbPmJJ2vreDuSiUrnBYZ/FBXWsGoJ/1wRaoMzQOcYGepX5brITrj5rYj+0Cu7Mw4R80QeL++lxt8uaGrMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WwGRw3kvOcpMy0PL7yoY1NuveNRK4RYGaMZL1qwxLiQ=;
- b=fMXLen+Vs0Pd7/frGxB3PKvDQTNxPwE4ILo2rfGA13LB7cq1h9tgEEzsqKiaGAPZ4aJOq8IC5XawIu9+c+qvc4lJ+VqDGiCCWLlzd9Vf2j4PfZQVqhPQkZbPoIU7I0bUF1PELjD63y/8OT8ZkTO0e9afW/WOBNu4fjisuXShkAX90NFFAC6PTf2rpVp6oxHFOXpLgH8CfoYcTXh1+UXcP/J6BNHZof5uakCJJS+pq1dKLREtCrgzuWwjJ1ALTd6OmTSx/sZqdJwyuI3VSsUBl1Qobh0a98wtkQvx/j1kfPx7h/Gk2SUvKTxh6VMdp3YZ02CKBeREVdKbiQs+8A78UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WwGRw3kvOcpMy0PL7yoY1NuveNRK4RYGaMZL1qwxLiQ=;
- b=La8RD5BonvoTyXpFo3GQ777OdsG65AyykZZAe+VpLlgeRzv94jOTv3mAcvfEjiRFMjAuqIivdGk2VjG+ts8p3yz3m4V+ooNMKfubmW/g+K/b7HO7NIlbB01Ofwnrgh4aTafUbalsRo/E1eXje32c7iyLnBoNgGfc/e9/yI9WsC4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- PH0PR12MB8100.namprd12.prod.outlook.com (2603:10b6:510:29b::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.31; Tue, 20 May 2025 08:53:39 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%4]) with mapi id 15.20.8746.030; Tue, 20 May 2025
- 08:53:39 +0000
-Message-ID: <ae0c9a42-5898-4bc6-b104-aab90ddbc751@amd.com>
-Date: Tue, 20 May 2025 14:23:31 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 rc] iommu: Skip PASID validation for devices without
- PASID capability
-To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
- yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
-References: <20250520011937.3230557-1-tdave@nvidia.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <20250520011937.3230557-1-tdave@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0044.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:98::21) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrIrwnOF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747731285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K84RlwjKxdVMrP8H1/lSZbVNtNLQI+5UHNrYUWsQ7to=;
+	b=ZrIrwnOFEuqLWNPfXWVdj5GnZ9sinNb4i+fTjtkI1q4GTVomC/LHWPfArrOwEqA/HLrHLM
+	3TBfDjoiHkfgLKlDUTg8Gfmc9npmfyizgiu3fs51sceQNE8rMrVhxT8XLZ5WJFrEkrZhHi
+	CEMMXRK1Gg4TMsgEComHckS/XOS7Xt8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-483-1FF-yMmbMFigLQkRpem40Q-1; Tue, 20 May 2025 04:54:43 -0400
+X-MC-Unique: 1FF-yMmbMFigLQkRpem40Q-1
+X-Mimecast-MFC-AGG-ID: 1FF-yMmbMFigLQkRpem40Q_1747731282
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad55e9a80acso166565966b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:54:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747731282; x=1748336082;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K84RlwjKxdVMrP8H1/lSZbVNtNLQI+5UHNrYUWsQ7to=;
+        b=D1sp1lMzvxMmno9nOTSJaqUNTVxxng42t4IFjYGoRnAkONwFMnNMkaL8G3YOy8PLPE
+         IyvJN+HekRw/ETeMEZt0jXI4k5IHcXAZX04IpdX39AHRspzGYD0lpCCyDCclhIh2iTB6
+         Io7B5GT1ajmAoP7SZ/Nv4DCTEbcyCeXUXrprACJ+6Sz3NxRkt7emyptZI5x0AKUto3SJ
+         3FPonxCpL4X5FDM6NFMW1YaDLTTedGhrUve28vEdsfeSAtcgA5j1O12vzpRdX8WO8MJ/
+         uUE8Pg5lz+XvdGkHQK5Bmj6Lh5zWNF5HhX3Mp9OCaGWWpKCgCH2B/1VvZVJ2pZPcwkIS
+         P4dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZdGtgZv7SV7PgAfPkzXt7fiIVNQz2XSoiWnJL6MtYZ0ldIJVqTBkHLjki+reLSsIQFpmQr91CRJanl60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxbRYQvg5QYZjf4OcLj2y/FUz1tvLrzos6EGMY+A1ZpWG4UZEs
+	DSGa4zXmDbbGWwB8+ZUIiO1ibRvML/4IDdeeW7H/LKaTNde8s4znwaddTfFf6eLgydjRX2wn6Ts
+	gfmIat/ilEOyIuWiapW79U4vEjdKKqDrwOlF0rWO4VuQhqoXWfBtco6nF8qoYqG1U+A==
+X-Gm-Gg: ASbGncuuL8PQ4jax8JuRbS5TD88WWh8c76xGtv8jai84bzKwhWzHZ94rFM2wRKpqvvB
+	Ofz33H1AGHR0hf3pnqYIjpXwrkYDiw5zFecoEYMmMle5Y1SHW+SX19g37bZ4EuwIAYJmUw2xHF6
+	Qn8c9N441r+qreO3bh1dl6toC0o3ySoxTdKsa3O8v+NMl5hjZiFIWXjeaEtTsJU68lBFUNMm7Vj
+	W9F9O3i+Zq12JLrgpm8T16LXH6l1elDVjfQG1xN6OryFfPjycNCECbm0PpQdiAk+pHVZXXYblrN
+	26hzC01uT2wj1354FSAsluPajbnWVL30C/nIysRes8Sp1a9QTTTsjiTMBEfw
+X-Received: by 2002:a17:907:7e87:b0:acb:5c83:25b with SMTP id a640c23a62f3a-ad52d42bf0cmr1554049866b.7.1747731282102;
+        Tue, 20 May 2025 01:54:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1u3cs6wd8rFHSzcQTyYA8XLXVHbvNEiRktGHBow2x1xCtVqQdufsC3hsDqcyuuMCDDTKafQ==
+X-Received: by 2002:a17:907:7e87:b0:acb:5c83:25b with SMTP id a640c23a62f3a-ad52d42bf0cmr1554045766b.7.1747731281366;
+        Tue, 20 May 2025 01:54:41 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278282sm689962766b.80.2025.05.20.01.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 01:54:40 -0700 (PDT)
+Date: Tue, 20 May 2025 10:54:33 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
+ close() does not misbehave
+Message-ID: <37c5ymzjhr3pivvx6sygsdqmrr72solzqltwhcsiyvvc3iagiy@3vc3rbxrbcab>
+References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
+ <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co>
+ <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
+ <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com>
+ <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co>
+ <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
+ <720f6986-8b32-4d00-b309-66a6f0c1ca40@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|PH0PR12MB8100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e3030eb-da67-4832-00f5-08dd977bd045
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RkRRQlpRVU5CRVY1WHJMc25aNW5SR1JKYnd5cUZlYURybk1IdkNzY3JwMmRV?=
- =?utf-8?B?VHhvdkRjVERVYXZqWG1ONWVOMmxTdGswbU9LQlROelNzUDlWeHRLZXR3S2ZB?=
- =?utf-8?B?TlRFcEtGQVY4VUtWKzgzZXRWOERmV29XRDA3eDdtbm4rSE80L1krK2NKVU5t?=
- =?utf-8?B?dVZlb0YxclRLK29OU3BsRHlTc2JOVlRhNE1tbElya3dOOFhJTzZzeUxCTHZR?=
- =?utf-8?B?K1I5M0tOOWRHdzlJa0xGMzhZQjJHejk3ajBrajlGc1ZuYzZzdzNTVWZCaEhC?=
- =?utf-8?B?N0VISUhtc3B1ZUpvdVdZMmFySDY5SzlnRU8xeVZEcGdXS1pYVUlKUHp5d0F1?=
- =?utf-8?B?Q2puVmRWTTlZY2ttK2pFR1M5aTNhZnUyQ1hQNFpEK25EQmgyaEFxcXpuUStE?=
- =?utf-8?B?VG1Vdjk4U2hoRjRJTGo0Mmp2cE9zUmZ6OEpIV1dBM29OcytwZ3E0RVFsaTlJ?=
- =?utf-8?B?TDF4UXlONjFweGVHVUhlb293c2dOL1ppWTRqdnM1R1JPOXhodk1hT2kzcEdI?=
- =?utf-8?B?QU0rdFl5a004TGh2Z0NsUURSS2tEV0lYUXJHYkYrVU1aWU1sYy9yZ2cxWEhk?=
- =?utf-8?B?Njd4UjNBbG9FZUFDbzVCTThDTk1hdlBDUWdhUjh0OG01alJWWTVmazYzTUdk?=
- =?utf-8?B?bDZLK2RPZDVnaTczeWpTMXJybmhSS25RVHZqbmlrcU9WTWk2T0Y2Tk9EWDRC?=
- =?utf-8?B?blNlWEpMMmw0NzRqYlNVQUpkcDFpc0RKaHVIdDFBTnlEQTF5K3hlTytwaWcr?=
- =?utf-8?B?WC9WZnhCbjJJZnRqdE4vR1psa1VHU1c2WkhidVRHUmNBUi9JSkJsUnViU1F4?=
- =?utf-8?B?dXNmMGQ1TmNSOGNlUWVzbGQ5ckZINEJmU0FRV3BUd01VQ0p3N1c2WUlBTXov?=
- =?utf-8?B?TCtNR2RiblpZL2tLckxMdFNtN0U0bW02WFR0OG5XOTNYbUx4MG9Hd2VnRVkv?=
- =?utf-8?B?VmEybWdQYzJ0cDlKRThxanIvbW9vRkpMMjdkZlIyNEpiQTNZZmRjMjdqTTVk?=
- =?utf-8?B?d1cxUFJndCsvRkphWXkxYTVkdXVRZFlqb1gzY21Ia2gyd2NmVFJoTEVkSnJz?=
- =?utf-8?B?azFidEJjbGE1Qm5vR05pdEw5MXNMbUhyMXNjc241N1YzcUUrNU1GVTA3aGdX?=
- =?utf-8?B?OVRvVWVmVENOUzQvRWt0OWxZeHE0R1FHMFRJS0NtOHZhLzZvTkx0UkozY0V2?=
- =?utf-8?B?RTYvSWVDUEZOamNtSE9LMXhLUmMweWFidGFUUXlsZU0xTFZtRXFZWm90aVBL?=
- =?utf-8?B?dWZEaXNibVUwc3phb2x1K3RqODVBdXc0bUMzaDEyRE16MHdHR1ZlTUg1b0RH?=
- =?utf-8?B?Q2d3eE5NYVlvQnRGcFFpV1VFYUNyUWYvdWNwTzhvY2JDb2V0N0xJa0ZaS3Bl?=
- =?utf-8?B?LzdrNVAvT3A2MTMrenRtK0Rqc2RudWlwekRobVp0ZG1tc0daakVseVhUbFIw?=
- =?utf-8?B?Q3lqVjNRY0ZVaGlBTE95RmFsenI1V2FoYjBzaG9WU01sSTdtQ0hPY3ZmaXl1?=
- =?utf-8?B?WTFmYTZGb3BXRUE4Z211NDE1ZnBGMjZyR1BsdHJSdmNWSW9nSnNPN094Y3gv?=
- =?utf-8?B?SlFJaFV2WU5jdzFyOUEybzIxek9yRUpHYXoxUHlRNVlTNVBlY1BnVjBEV3cy?=
- =?utf-8?B?aHJBT3JCZEtKcyt5L3g3cTh2YlV2Sng2VUZZMHo1RjdRNnBqdWZVL1JDcDlx?=
- =?utf-8?B?R2NYWWpCTDRZb0VSMEtDRkJRdlNLYUVZQVFZVUgybTB3YTdMMlVXRE0xTXhu?=
- =?utf-8?B?QVhWSXZxdStleGhKc0dXMDZ0SXpTV24wcWh4c0VUcDRLaHlOT1ViOG5WUVZq?=
- =?utf-8?B?ZkIrZlpqdW51SDVpR1JrSllpeCtiOGp3eUF2ZzArcTQyNVU4eU55UTFGdWhT?=
- =?utf-8?B?Z3Flakh2ZEdTQ3poUkRNcEN0YkFuamlVTGFlV0FBdmRKTTBvemhQNVdYM0Zt?=
- =?utf-8?Q?QYd0eSqiTHQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bitENDlidW40ZnNiaEwwNFhYQUQ0cFBqeXBGallSNjJYV29PRGt6dlFKYWRp?=
- =?utf-8?B?VDRRTUptUEZuZ2dsTmRSTUp1eGFhOGJxdjNDMCtFeUwzRy8zcnpjT3Qyb3Vt?=
- =?utf-8?B?VFU5Yk9aVjJNQmFCKzNlL3ZvZHFJUTNXcFZ1L2VDbG5XbFJGbFh0bGE1eHo0?=
- =?utf-8?B?b09PTUo2VTJqcFB5b2NRd2VpVDNBeVI3VHhnVGJFWTJMekdJRldIcG9Mcmt0?=
- =?utf-8?B?a1Y2MnllRjBsdTFPdnE0VVFYZHF1cGRuMUVjTGVRd0tBOHF4ejkzY2dzNUpa?=
- =?utf-8?B?MWRWeTRxVGRwanljOWFQR3U0QVVjRXBlQTNKVHBoeFdZNXFDMHZGcWJwWFNZ?=
- =?utf-8?B?R1pocHdpOTBzMnRsVGs4UEdhYUluTjh3emFCT2JBZEVqNVN1eVNWVUQwcHVj?=
- =?utf-8?B?ZFY4Ui9ERGFSRCt2VlUxZHpRQVNPeW42cStQaWxUNXo2QzNXeml6ME02WWF2?=
- =?utf-8?B?TzZwUGhWYVBsSEMwQkVza3BYV2FTc0h0WmlOcWNZQ2RwbjVXZEkzblA0Umw0?=
- =?utf-8?B?Q2JGcnZQOUt6Y0NIRndCSE9CT2N6bVBhOTFPbW5nKytObDYyaUdDZWg5dzBv?=
- =?utf-8?B?ZzFDb1JSMmYrTWNwbjZZcTJzSWlnWUVwWktvZlMrS252OURiUUhZNTRzTzRM?=
- =?utf-8?B?Y1B3Q3FDckVrekhndjdBYjZTbEN0R0k4ZXp3QVFzOVl0UG1Qem5yNERnQVda?=
- =?utf-8?B?ZkY0endBdlljVjBMZmJCMytqdXR3clRwNXMyQmFPaWo4RmprS1lKYTFVbUZD?=
- =?utf-8?B?R04wRHZveEhhU0lidEoyUjdtQ0lVWkp3amFaMFBNL1hhYkxpc3VYN3lQYXRi?=
- =?utf-8?B?djMrU3Z0UENiYU8rRHBMSUcvK0Z5Q2UvcEh0M20xRVlPRmtzbVIyRGdsWnhT?=
- =?utf-8?B?N3dyRG5ZU0VEY0h1MVJKS2l3alBQK0dkWms1SXZxeWFJemw0TXNJQlE5R1F5?=
- =?utf-8?B?bkZEcis1NmJ1NVNMT25qQWc3c0RWeWVnVHFoYmdTeVlQQWpyNHJlQnlvUE83?=
- =?utf-8?B?elo3azZkVC90WXRwb2sxZTBlb0ZjQWg5WGdRc2VRU2FDZkJ6RjVIbWlpcFZH?=
- =?utf-8?B?a2Z3RHZ6dDBtSXJuWnRhb2U1YVNuaHJ3Y2F6cm80ZVFkMUhrZFYzNnVINjFj?=
- =?utf-8?B?djZzVVplTlVFVk1JZm5ueEF2Mm1GenFsZ1F3NlRnTit1OVJ5b2N2eVhjWng1?=
- =?utf-8?B?N3U5S0s3alRnRkhaY1cxclhpWG1ia3N2RHRrb3R2UkFzeDRaaUZoZ1R2YkNw?=
- =?utf-8?B?cnRoZEhySklSOWd1ZDhEZTYwZTV6QjVpZjFwSmxLOGNkUXVrRmVab0JRSWxF?=
- =?utf-8?B?Q2V1dGlVU2FadGNoeGZ4b0NvdFVmcFF5RndHck16dS9NMHJGRUF4Zkczakxa?=
- =?utf-8?B?cVFYODBvRzhSWXIwM2VyMDdWRVcvcHZJQ0NZRjRYWTlnSmczaXdwRldlZWl6?=
- =?utf-8?B?VU1wZncza3BFYWRqdFM0NmNEbVhrZmp1U1pxM2Q0WGlCTmdNMGl4bnMxdEMy?=
- =?utf-8?B?bVllVnR3WmVEb2s1Y2pRMUZWdk5MdUZzblpZYmR3ak9yaWNydVRpNk03VHBO?=
- =?utf-8?B?SFdqVXIwd0ZvaHZJbElVQnZNZzNIcUMvY1pvTkpLVmJRQXYzbkhZNHNWTW1w?=
- =?utf-8?B?SWtmMFZDeE91NzJZYzlnVmEvc0M1UEVhSjY1bG14OVg5bkpMVzhZbEg0SnU3?=
- =?utf-8?B?dlBrcXA2alFtdGV2YkxzMUtVTlcxeXRreUwwS21XYWlialRnZ3VkbURHY2tV?=
- =?utf-8?B?MERqMC95YllEdG9qTG5DRGxGUVVJWjgxdFJISDZuTHA2dmtkT0wzSkxDQnhI?=
- =?utf-8?B?UkpScVhhZVp3QXBpY2I3TGdDUmsyekY0aWQrcnkwTThyQllGeGJjNDJQOE04?=
- =?utf-8?B?M2I2cm9qbWkwcmxlWXdUVU1wbURIWmE1YzNCbnAwY2RwZjJYazVmMUo5am1Z?=
- =?utf-8?B?OXEvUXZTM0ZJdS9vTXhQR1haSDcveVJmZTlnOVBDKzVFVDVRMnMvQU5BQWJp?=
- =?utf-8?B?U1F4cDFGWEJGN1ZYajZ2YnUvYVdVVFJENndWeDB5WEZubjRDNzZvRElIbVpW?=
- =?utf-8?B?NWpxSWNxdlllWXd0ek4vdWdBenJCaDJ4akZTMmxUQjc1eFZ3cDlkMHFkOCs4?=
- =?utf-8?Q?onTZp5t3ohuv462NEHl7H/vzq?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e3030eb-da67-4832-00f5-08dd977bd045
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 08:53:39.1919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JAWMYH9F7OWlirTs2dzAWzM5f0Wdgh+IIO3xteXCpHfqwqZd+y9aMz+yPPcAvfSIAYqrtqxV1znfhpL0vBFUDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8100
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <720f6986-8b32-4d00-b309-66a6f0c1ca40@rbox.co>
 
-On 5/20/2025 6:49 AM, Tushar Dave wrote:
-> Generally PASID support requires ACS settings that usually create
-> single device groups, but there are some niche cases where we can get
-> multi-device groups and still have working PASID support. The primary
-> issue is that PCI switches are not required to treat PASID tagged TLPs
-> specially so appropriate ACS settings are required to route all TLPs to
-> the host bridge if PASID is going to work properly.
-> 
-> pci_enable_pasid() does check that each device that will use PASID has
-> the proper ACS settings to achieve this routing.
-> 
-> However, no-PASID devices can be combined with PASID capable devices
-> within the same topology using non-uniform ACS settings. In this case
-> the no-PASID devices may not have strict route to host ACS flags and
-> end up being grouped with the PASID devices.
-> 
-> This configuration fails to allow use of the PASID within the iommu
-> core code which wrongly checks if the no-PASID device supports PASID.
-> 
-> Fix this by ignoring no-PASID devices during the PASID validation. They
-> will never issue a PASID TLP anyhow so they can be ignored.
-> 
-> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tushar Dave <tdave@nvidia.com>
+On Mon, May 12, 2025 at 02:23:12PM +0200, Michal Luczaj wrote:
+>On 5/7/25 10:26, Stefano Garzarella wrote:
+>> On Wed, 7 May 2025 at 00:47, Michal Luczaj <mhal@rbox.co> wrote:
+>>>
+>>> On 5/6/25 11:46, Stefano Garzarella wrote:
+>>>> On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>>>>>
+>>>>> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
+>>>>>> There was an issue with SO_LINGER: instead of blocking until all queued
+>>>>>> messages for the socket have been successfully sent (or the linger timeout
+>>>>>> has been reached), close() would block until packets were handled by the
+>>>>>> peer.
+>>>>>
+>>>>> This is a new behaviour that only new kernels will follow, so I think
+>>>>> it is better to add a new test instead of extending a pre-existing test
+>>>>> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
+>>>>>
+>>>>> The old test should continue to check the null-ptr-deref also for old
+>>>>> kernels, while the new test will check the new behaviour, so we can skip
+>>>>> the new test while testing an old kernel.
+>>>
+>>> Right, I'll split it.
+>>>
+>>>> I also saw that we don't have any test to verify that actually the
+>>>> lingering is working, should we add it since we are touching it?
+>>>
+>>> Yeah, I agree we should. Do you have any suggestion how this could be done
+>>> reliably?
+>>
+>> Can we play with SO_VM_SOCKETS_BUFFER_SIZE like in credit-update tests?
+>>
+>> One peer can set it (e.g. to 1k), accept the connection, but without
+>> read anything. The other peer can set the linger timeout, send more
+>> bytes than the buffer size set by the receiver.
+>> At this point the extra bytes should stay on the sender socket buffer,
+>> so we can do the close() and it should time out, and we can check if
+>> it happens.
+>>
+>> WDYT?
+>
+>Haven't we discussed this approach in [1]? I've reported that I can't make
 
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Sorry, I forgot. What was the conclusion? Why this can't work?
 
--Vasant
+>it work. But maybe I'm misunderstanding something, please see the code 
+>below.
 
+What I should check in the code below?
 
+Thanks,
+Stefano
 
+>
+>[1]:
+>https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
+>
+>import termios, time
+>from socket import *
+>
+>SIOCOUTQ = termios.TIOCOUTQ
+>VMADDR_CID_LOCAL = 1
+>SZ = 1024
+>
+>def set_linger(s, timeout):
+>	optval = (timeout << 32) | 1
+>	s.setsockopt(SOL_SOCKET, SO_LINGER, optval)
+>	assert s.getsockopt(SOL_SOCKET, SO_LINGER) == optval
+>
+>def set_bufsz(s, size):
+>	s.setsockopt(AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE, size)
+>	assert s.getsockopt(AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE) == size
+>
+>def check_lingering(addr):
+>	lis = socket(AF_VSOCK, SOCK_STREAM)
+>	lis.bind(addr)
+>	lis.listen()
+>	set_bufsz(lis, SZ)
+>
+>	s = socket(AF_VSOCK, SOCK_STREAM)
+>	set_linger(s, 5)
+>	s.connect(lis.getsockname())
+>
+>	p, _ = lis.accept()
+>
+>	s.send(b'x')
+>	p.recv(1)
+>
+>	print("sending...")
+>	s.send(b'x' * (SZ+1)) # blocks
+>	print("sent")
+>
+>	print("closing...")
+>	ts = time.time()
+>	s.close()
+>	print("done in %ds" % (time.time() - ts))
+>
+>check_lingering((VMADDR_CID_LOCAL, 1234))
+>
 
