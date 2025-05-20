@@ -1,124 +1,107 @@
-Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8918719E966;
-	Tue, 20 May 2025 12:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0941463CB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744524; cv=none; b=psAJov8QiGJ2znpBmeDvR7fRvVMLJ4CZeYHnBq4qgcfH4Ofj3GNEKatwRtR9LYla5K9sPC7TFg2lu5MiEBh3kOGsmKYL16DJ7yXI/J6VWNlw6bEgJ/DxdL1LbzA0tmdG0zcAKFRjJbeBMpdrmhTVgLyn5r+mcDR+0fi6YOgl5o4=
+	t=1747744562; cv=none; b=a2g6eVxEso0yAvA3wtPi5tiVRniz6ElLNJez9O9cWJKHxOp7BUi7QTlMeWGPiZVRTXsWOuHVHWPAD5ICfOGlCABvFkEsoTSh5kvMZ2iiFrTqXuEEHBQ8HbRr0Ld+HgvPnhWHIptoonbYmCze2JvBnDMPWANejvPynu+iP44v4UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744524; c=relaxed/simple;
-	bh=4yYh+52kFZWGuy7sYSIaRe8+zSWmoKcHoy3cEoyEaXQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=V7Bh8d78YwAOxy1jjFf/W13lykQnJRsGCmZoX1vn4Wf/xBrDkHzZjYNrC28uNHhjk3P+ZdAjr8cc3D+56yAOg+h7ucdy+H5FL2WUqTzrfDi3oL4U3YU9zHedfdnJNJ0cbhP83ONIsTiU7c9uLK2xHyj5PiQxG0odlGDnszjdPQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-	by ni.piap.pl (Postfix) with ESMTPS id A255FC405A49;
-	Tue, 20 May 2025 14:35:18 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl A255FC405A49
-From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rui Miguel Silva <rmfrfs@gmail.com>,  Martin Kepplinger
- <martink@posteo.de>,  Purism Kernel Team <kernel@puri.sm>,  Mauro Carvalho
- Chehab <mchehab@kernel.org>,  Shawn Guo <shawnguo@kernel.org>,  Sascha
- Hauer <s.hauer@pengutronix.de>,  Pengutronix Kernel Team
- <kernel@pengutronix.de>,  Fabio Estevam <festevam@gmail.com>,
-  linux-media@vger.kernel.org,  imx@lists.linux.dev,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-In-Reply-To: <20250509103733.GE28896@pendragon.ideasonboard.com> (Laurent
-	Pinchart's message of "Fri, 9 May 2025 12:37:33 +0200")
-References: <m3h61u9jy2.fsf@t19.piap.pl>
-	<20250509103733.GE28896@pendragon.ideasonboard.com>
-Sender: khalasa@piap.pl
-Date: Tue, 20 May 2025 14:35:18 +0200
-Message-ID: <m3o6vn8np5.fsf@t19.piap.pl>
+	s=arc-20240116; t=1747744562; c=relaxed/simple;
+	bh=673XBPRyzebnsJJ6ivPQwMAs0N/F83vVBY0oWEkZ3nI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=vFH+ldwpb3QqCPOnnOvjiP+8DrF3r5IA5152wbkAndS8zBEWxyDbUOxMCulGA63FMGYJGNWsfl/nYa0MUbhocwu048QpZTFYNB0ZEObNhy8DhSvCw5RV3N9wRxRxMExeTlDtB/Re6f1CHOZkDPHnuF7LBdDeVULTvD6Yp/Agfmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KFPXYsLY; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KFPXYsLY"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30e93626065so3321496a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747744560; x=1748349360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFqkyuEgS2DYkSpYETdQW6012El1Bu2/BFMTj3Lxalc=;
+        b=KFPXYsLYrodHMp/5DgMiSf9ZpiOSba8JSBxJEP+oP/fBh1NHbPIBS9bv2kc34CyCji
+         u2ZyFyy/W7EyLsw1OALMeM5y7wPNikqQ8tHrghL0bIuygGkqTkWpOeAvZsqT/OFiAHsU
+         RxjIc53fmBqp+qV3D2v8Ogk30CYF2ceGHNEso=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747744560; x=1748349360;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jFqkyuEgS2DYkSpYETdQW6012El1Bu2/BFMTj3Lxalc=;
+        b=Oo/XTvLue4yZCMaKE2wa2L0o4lx25X6KwNAT983xyonTYCVeTIK1LkNKgwek1eB42S
+         ZSQB8ZA/qxXNyuXL+73+KFTETV+WWz10RetMBWJxa8uBzZGYiUcYWIziqt74d+L/Hf8D
+         BGNYqmK0vPATv9DyIUu3ZZak8HalCliuvC1YQ/64tZs92NC9ygMJsreMxLzZSN5T6Ylf
+         oUUHotDzZgOD2sXuN8eSmC5xd2WQikcCNvX+h0mBLsA6uJHv+5WbQA7aURShJjz9av6o
+         GxIpGb1hqPTohk6cnj8JCxYOJLFMsVGQAcmCqxsZFH8x/YlF8QOSil7P3aOP7Pb7MP1s
+         y4kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXINeRZDo7dvgAJ3jUOBfWZtwDbH3iV3g0wK1eThIAEX698lt32WFy0+fLQkoJARWu1m2t89Fdj5NljPbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaTeg3/gxheOdqx7U4NISeSrCSdkMn1qtVLg9geUE1/ztqWlVc
+	ggpe9usDtx4FdjTA3+o1cCrumwfB72+HOCQgdkIrYEj2jZDCTznuwpnTRwb3qAk3EQ==
+X-Gm-Gg: ASbGncsl/ZWL9UwCBg+eY3OisQMwxsMqCOs02Gq/fhcB35UKkRgJH6FhtCO8IzQu/nH
+	amMSUdaLpoihchnuFEWz+rTVFRuo74ZKl8yi5d0UNH5D49LkNzSU4xss4n46BRvjJeh6wh3sc4Q
+	A04a58tc8Okz+psW6CKxksDHq6AkPgzx7jqlsMxm78l8VvV9B8ekJAmp07/poEGak3k5gduGzmh
+	AmCvE/8u2rcCkZ91dOYbRw/t+O2+C+DZn0KQ91a56Myl81xV4pUQKslzn7d+zSrdwbOBQ3OG5eZ
+	bfUyH61yqmSxGpjt//aL3PZOGS67MQNKtCP3QobaeGAqrvZHza/yqfoO4Wdm/ZoocTrnAB7EZzl
+	tlQ==
+X-Google-Smtp-Source: AGHT+IGpncCXk5KCz55zccTXitwVoPNGD+eQUN+YfywndV0MF1z25HxMj+U4Tr7S90HyyHj9gOFxpw==
+X-Received: by 2002:a17:90b:2b45:b0:308:7a70:489a with SMTP id 98e67ed59e1d1-30e83228dcfmr23999528a91.30.1747744560161;
+        Tue, 20 May 2025 05:36:00 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:cdd3:ba65:b6f2:d55e])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d6f95sm1573989a91.30.2025.05.20.05.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 05:35:59 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Jan Kara <jack@suse.cz>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Matthew Bobrowski <repnop@google.com>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [RFC PATCH] fanotify: wake-up all waiters on release
+Date: Tue, 20 May 2025 21:35:12 +0900
+Message-ID: <20250520123544.4087208-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+In-Reply-To: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
+References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
+Once reply response is set for all outstanding requests
+wake_up_all() of the ->access_waitq waiters so that they
+can finish user-wait.  Otherwise fsnotify_destroy_group()
+can wait forever for ->user_waits to reach 0 (which it
+never will.)
 
->> +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
->> @@ -654,8 +654,7 @@ static void mipi_csis_set_params(struct mipi_csis_de=
-vice *csis,
->>       val =3D mipi_csis_read(csis, MIPI_CSIS_CMN_CTRL);
->>       val &=3D ~MIPI_CSIS_CMN_CTRL_LANE_NR_MASK;
->>       val |=3D (lanes - 1) << MIPI_CSIS_CMN_CTRL_LANE_NR_OFFSET;
->> -     if (csis->info->version =3D=3D MIPI_CSIS_V3_3)
->> -             val |=3D MIPI_CSIS_CMN_CTRL_INTER_MODE;
->> +     val |=3D MIPI_CSIS_CMN_CTRL_INTER_MODE; /* enable filtering by DT =
-*/
->
-> The condition was added because the CSIS in the i.MX8MM doesn't
-> implement the INTERLEAVE_MODE field. We can't remove it unconditionally.
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ fs/notify/fanotify/fanotify_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Is this confirmed (and not just an incidental omission from the docs)?
-Same version (3.6.3), and even earlier version (3.3) has it... It would
-mean MM can't work with those sensors producing extra packets.
+diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+index 87f861e9004f..95a3b843cbbf 100644
+--- a/fs/notify/fanotify/fanotify_user.c
++++ b/fs/notify/fanotify/fanotify_user.c
+@@ -1046,8 +1046,8 @@ static int fanotify_release(struct inode *ignored, struct file *file)
+ 	}
+ 	spin_unlock(&group->notification_lock);
+ 
+-	/* Response for all permission events it set, wakeup waiters */
+-	wake_up(&group->fanotify_data.access_waitq);
++	/* Response for all permission events is set, wakeup waiters */
++	wake_up_all(&group->fanotify_data.access_waitq);
+ 
+ 	/* matches the fanotify_init->fsnotify_alloc_group */
+ 	fsnotify_destroy_group(group);
+-- 
+2.49.0.1101.gccaa498523-goog
 
-I wonder what version is shown in the #0 register on 8MM (8MP shows
-3060301).
-
-> You mentioned i.MX8MP, that's a platform where I'd like to see proper
-> support for *capturing* embedded data, not just dropping it. Have you
-> looked at how this could be implemented ?
-
-I had a brief look at it, but a) the embedded data is not very
-interesting in case of my IMX290, b) I don't want to interleave it with
-my image data (DMA buffers and what not) and I don't see a way to store
-it independently.
-
-If you want to store it along the image, the currect code does that -
-more or less correctly. This is the problem.
-
-The RM says "13.5.2.6.6 Null and Blanking Data
-For both the null and blanking data types CSIS V3.6.3 ignore the content
-of the packet payload data." which is half-truth, e.g. it needs the
-MIPI_CSIS_CMN_CTRL_INTER_MODE to do that, otherwise it messes it up.
-
-Several CSIC registers are named XXXXXn, suggesting more than one
-register, but the docs say only #0 exists. Nevertheless, the actual
-hardware seems to contain 3 packs of registers (the 4th one is weirder):
-
-32E40000:  3060301     4705    F0000 DEADCAFE
-32E40010: FFFFFFFF        0        0        0
-32E40020:       F0  900001F DEADCAFE DEADCAFE
-32E40030:      1F4        0        0        0
-32E40040:       B0  4380780        0 DEADCAFE <<< ISP_CONFIG0
-32E40050:      8FD 80008000        0 DEADCAFE <<< ISP_CONFIG1
-32E40060:      8FE 80008000        0 DEADCAFE <<< ISP_CONFIG2
-32E40070:      8FF 80008000        0 DEADCAFE ???
-32E40080:       B0  4380780        0 DEADCAFE <<< SHADOW_CONFIG0
-32E40090:      8FD 80008000        0 DEADCAFE <<< SHADOW_CONFIG1
-32E400A0:      8FE 80008000        0 DEADCAFE <<< SHADOW_CONFIG2
-32E400B0:        0        0        0 DEADCAFE
-32E400C0:        0 7FFFFFFF        0       E4
-32E400D0:        0        0        0 DEADCAFE
-32E400E0: DEADCAFE DEADCAFE DEADCAFE DEADCAFE
-32E400F0: DEADCAFE DEADCAFE DEADCAFE DEADCAFE
-32E40100:     22E1     22E1     22E1        0 <<< FRAME_COUNTER*
-32E40110:        0        0        0        0 <<< LINE_INTERRUPT_RATIO*
-32E40120:        0 DEADCAFE DEADCAFE DEADCAFE
-
-This is the first CSI. The 3 frame counters are visibly active as well.
-
-The manual states (MIPI_CSIx_ISP_CONFIGn) "NOTE: Not described types are
-ignored" and even if not, I can't see what could we do with this extra
-data.
-
-Perhaps the CSIC internally has 3 output ports, but only the first one
-is connected to ISI and ISP?
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
