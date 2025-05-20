@@ -1,113 +1,121 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D451E5B6F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074DA1D90C8;
+	Tue, 20 May 2025 04:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747715640; cv=none; b=tkwkaaev2iP8Y6oxyJlQC/q1+3WrszWmmlW1obf/ASmQT0ta43E1Jwxcflgs5dYWOkvEsSZBoYAd7hrIBwDp6+ANh0tN+So4CF3Qr8Mh9f3jVKy3at4vDml9FNZfQ4QsL7ND0/PH/nNlPm56n5eYhaqkMYX+D13sirTjZgTYl9E=
+	t=1747715676; cv=none; b=A6lR05RWfBB9N7qF4CQiiuTqz83oLt8CgavrjV5z8T6Re6xGx7NzQsU1qS2zw2fwvMBXhvoAAmAAGReNPEOp2DvFje0IGB3mN2nMZXpnh0pIUehs4ss0r1APQvlIQcWPTl4JS2XTwSGRQqk/JtNuH8fOBYgU+E7e3Ezw0mtDd4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747715640; c=relaxed/simple;
-	bh=TM7YWc2HanxUC5uSa/mx8mHwCfO/Qpz2hocXunXzOnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AceYfpA3k1GG7pnAL7DoAxmLV3Ty3u8tupdpFIs48PuCc9+qSPlPIjgIDCqLmnRCsbtu6zGPpiVLzLu5d0dzjZQhlZiAwU+1h64O3GsEV4zeLBqtauN/SYuP0mnzznn4YHsje1s27SHbQPfTpsHEw6l0fc4uuUSQ2h1YQW+QWM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DTEtPKVx; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747715676; c=relaxed/simple;
+	bh=yeGc+XD0k3LZ9UJmhqDSts9L4n+Fozk4dj67vHp5imw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AIf3G8WhWmaOD5TO6rqZb/z/19uAkYCRgrInI1fFoaLeANVnY1YhkoCF3vmS8CPRhDHs4FAhGaQXR4xF3XnY92f1hNlwaFNfmW8233vBSB+IklbhgM/GW3UpRtLeX0Cp6WpH6E+pgoBHl7WaH3bVAymNzWxHmH3Iz/uuBKOdJRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAfjpNUA; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DTEtPKVx"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30ea7f78337so2470750a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:33:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAfjpNUA"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e75668006b9so5370830276.3;
+        Mon, 19 May 2025 21:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747715638; x=1748320438; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vmXtbFG7YZNNbJEDh1fYDcGa0WLHVZ/52LrX9t09NXg=;
-        b=DTEtPKVxPh29thGGyvRwymyu6QWa5HrLLK1TOwWteGJkisDMVF5VfmI9KQDARigvz6
-         9eeSDnSsK6REQDVEmaeBX/v2tqPUAKIrEwogrzS4cLIF1kfJaRSyZWRy4GCQbT1uMLIy
-         /DzvcOhOzF9KeGmt8fPXmATyQUT5D8htprY8ePsYCksh7rsWjvzaSV/5tzPRL+f8PUki
-         NxPoDEPc1rhdESWvJDeFvd/tQZ5vnqhrgR3D01vuP2nkzW9lX3KCqyosAWy//aCqtaIv
-         Z2mHGXpbzi8NFMHDX4F+583rdVhQ7C2RjRG3BsOEAVw4CtNTPo/D/+Kqt1zGRsFLZQoB
-         bLIQ==
+        d=gmail.com; s=20230601; t=1747715673; x=1748320473; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KLdIEO3JhzFK3+pAV0v9OMiBG9saZVl50Zc3M7eZWJs=;
+        b=GAfjpNUA4VlvtaABDYx7D+bhiFosaXy3CWuMtv1O3coE2UNNb2ik74OIj0fN8+HngO
+         DgmjS36LwO/Cv+urjx8djQWuiOHa/Cd3NA8COyTaih62C9X0TEE7YxueThzLnOqAhEsv
+         XuPEttmuwsL6tKr8MCXSPpHkrirQtD40GGZy3SHYJSAly1nyBDQjaDFrhiqM/OtfWLDl
+         oXuFDkQ2o3j5e5q0hg2o2HLDjuPJe7Hco8OWOIHnf5/uowbEPTs6OqNOBXchXbxrMwNA
+         asrDAqaj18LeS5r29dfF5Baxu/1d4JETszqixOY2t+9FBMCXUXBA0gbL1UwuDc1xQ9iJ
+         ZVWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747715638; x=1748320438;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vmXtbFG7YZNNbJEDh1fYDcGa0WLHVZ/52LrX9t09NXg=;
-        b=dqjQK/QpT5rxg0FGL4Ak8YbtOIlH3OsWa3zo3hSxnjWDZyTmTw+sYvmn1sms0jc3hR
-         kigYJtLCvQA3nrMmW1W9rMQ8uQqiOSeyRUG4aNjlgZ2gLpFb0NrZHdjjAFD+N5K2LMLz
-         or6NNrj3UfOavYgqqT0JznNFIIJvgNzvHp9YUkgucnR/Yp8or18Xf2LG0J6AZcGeOeWe
-         9J8PBjIcN5NJI4nWgmGXMcT0tA3YlMxS9S61tBOPDFaRACZ0RqmJUugZs7lAye6YiYmV
-         YaBpeB7/34blbIASC+6Lp+ZYbV1hZINA8cEndo1a4OPvM60LQ42Iv/YGEMA4Z8n9D8Jb
-         jqvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYBEUdm1JKJ2tG1pwOy4xslVj1jZtZoWAfCBNhDQOisvm0Fe1Et12V3xETo0/n/dErwweXcCK71GAGEEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBpFlj9AXhzeMsr/9+URoaStgsh8Afl/aBi5Q34TNzbFT0fFix
-	MltdNUQcLZyVVNQidGiacODAaxVPwlSYODpL0d9z5mlqz2iAQC5P+s0IfXZMJ8lqqv0=
-X-Gm-Gg: ASbGncvulIsXUPdbRlBZWOlWK4xavocIt7JK06IxsshoYpKo16VseiOdeOh5txeySpV
-	OWF279TEffoQKTEt97Y7fuMO/cZHbtzuH9nL/Q/4iyAIdTLGfhUhMOzmhEcaxDh/PV5z2KhYGhd
-	ASanDY71cVy1DVKgpbGEoe+/1KYKM2zFAAzZvamNj6ZFds+XO58w/oqPTWJpfFbNgiEJWtktfxw
-	3SCLdl18DjMsyM/nta63f8JPFXiXJNU2DPl8aRaZFHhFEjMOfx2z/KdTDtSAegC/9wC0jau9uMM
-	SYeSSu5UNtMBqDSrIVczwLREliC4Xf3KSecbYNTjB4fU+7YaAKy6
-X-Google-Smtp-Source: AGHT+IEv6gz69p3L0tnkjs4WbboIMeCV0Y6PseXGe/lkFOQuL+7jOhnn31ID8Drzpd2DcrW3kToDNw==
-X-Received: by 2002:a17:90b:1a91:b0:2ee:e113:815d with SMTP id 98e67ed59e1d1-30e830ebc99mr22665162a91.8.1747715638413;
-        Mon, 19 May 2025 21:33:58 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36491611sm643232a91.26.2025.05.19.21.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 21:33:57 -0700 (PDT)
-Date: Tue, 20 May 2025 10:03:55 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Andrew Ballance <andrewjballance@gmail.com>,
-	Anisse Astier <anisse@astier.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module
- names
-Message-ID: <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
-References: <cover.1747634382.git.viresh.kumar@linaro.org>
- <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
- <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1747715673; x=1748320473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KLdIEO3JhzFK3+pAV0v9OMiBG9saZVl50Zc3M7eZWJs=;
+        b=ra6Hdx2zqxLz4XULf1xjNlXFbeDcg7sBa99bDUkf7139SCD0IMvi4hVqKgqnFkD+s3
+         0aXgQ8M1brR7SKZavh6WORzT1QmNl5hsm+fsi10lNkwXCz/9gQCXlwyThMJg0h3YuDl2
+         bC/20Q/+73MUT88/b+FAPOszOgSBKs+5wYQZ9Vju4AMG8UIlxyUp3Vd56/QHPhw+ur1f
+         zkB17xrsfFS25jd/bo6fA6CdXH4SBAJLPARO+GG19ThH8YpuLnYvbCUjszXbwyxcU6El
+         82La4iRR1QJ7FqN4ZH9MAjmZtOfqJbHQHHPdKdG3Pgb6XTzTQHu9n2bxiyTVm8pM98a8
+         Gb+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUTPOn772RCoABF4LURdhswz7PoUbpQVqs0ASuQHe507S/17jCNlhIPy9R1bPsNjPyRLX94jwKUPsmFR34M@vger.kernel.org, AJvYcCWTr2Zn5EoyCRNq1CbCklaS3Ye8VfD3uq9397wnhFwItmAT79/O+7U66nNhgaUVFmG+OqZXYrGVcjd3D/w=@vger.kernel.org, AJvYcCXY0dvTSo/ZgjvDCi5PdGjMHc2/3WqTFbqHac9UqAlnU1jJhz9fR2SSzeNQA/NzBHVHSV+WRVaB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQpLnzvK/dzEvzhc4J5qOXHBnE9XN1e8oywqw5zkoA3hYXiJyN
+	iXHwaAwBfpKYrW7+Z+WJ7cdDQ7RUtTtr1N3oviP75WrSv/ZOoAv0NTIhQWa/HH0H6VAFAXtWP6d
+	mA6MfX/8BYn+E7MCtgRqO0TQIoxzGBzYLEA==
+X-Gm-Gg: ASbGncvmY79vqogWbNcJvKsHQvRX5C53NeNahKSJ7pRZj4R/Z8pxIkbQP5RBVLqQXlf
+	AVDtwK6yc0K/9ifnZTBYa3V7gYhDzpYtVHgeCjpjS3R0wi6u8mseJnL9/wUTretM07QjKHEwJF3
+	U28FAKo5R2+1PlkE0WtnrbOgqg6+W8ecgX
+X-Google-Smtp-Source: AGHT+IEx2HdcWVTUVwOuMeLPDKj8IZNpw5yYGNZx9DYx4yEeiOH/kPUiA83A02WG77XaxTg5xkdkMHTDx7HxMU2ZtyE=
+X-Received: by 2002:a05:6902:478e:b0:e7b:8add:805d with SMTP id
+ 3f1490d57ef6-e7b8add8192mr13175077276.46.1747715672859; Mon, 19 May 2025
+ 21:34:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
+References: <20250514051043.3178659-1-bbhushan2@marvell.com>
+ <20250514051043.3178659-4-bbhushan2@marvell.com> <aCqzAQH06FAoYpYO@gondor.apana.org.au>
+ <CAAeCc_=QShbySa8x9zU+QnDqn1SLK3JLXMD8RYNoax+gh3NVEQ@mail.gmail.com> <aCrfNdnRzlQSr6sy@gondor.apana.org.au>
+In-Reply-To: <aCrfNdnRzlQSr6sy@gondor.apana.org.au>
+From: Bharat Bhushan <bharatb.linux@gmail.com>
+Date: Tue, 20 May 2025 10:04:21 +0530
+X-Gm-Features: AX0GCFs8BgWCUV4foeRy_615K0bqYt6Ee4N9DJIR-VtGMkL2q1NFBzBtrDbDkDI
+Message-ID: <CAAeCc_mKDq2jSM+yZ816nx_BPsFSWiCjEswfuu9HBzXrv+V+WQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4 RESEND] crypto: octeontx2: Fix address alignment on
+ CN10K A0/A1 and OcteonTX2
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Bharat Bhushan <bbhushan2@marvell.com>, bbrezillon@kernel.org, arno@natisbad.org, 
+	schalla@marvell.com, davem@davemloft.net, giovanni.cabiddu@intel.com, 
+	linux@treblig.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19-05-25, 16:15, Miguel Ojeda wrote:
-> On Mon, May 19, 2025 at 9:08 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Mon, May 19, 2025 at 1:05=E2=80=AFPM Herbert Xu <herbert@gondor.apana.or=
+g.au> wrote:
+>
+> On Mon, May 19, 2025 at 11:47:18AM +0530, Bharat Bhushan wrote:
 > >
-> > +    /* Rust does not allow hyphens in identifiers, use underscore instead */
-> 
-> (In case you see this before you apply)
-> 
-> Nit: `//` for comments, also please end with a period.
+> > > > +     /* Allocate extra memory for SG and response address alignmen=
+t */
+> > > > +     total_mem_len =3D ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN) +=
+ dlen;
+> >
+> > This add extra memory for 8-byte (OTX2_CPT_DPTR_RPTR_ALIGN) alignment
+> >
+> > > > +     total_mem_len =3D ALIGN(total_mem_len, OTX2_CPT_RES_ADDR_ALIG=
+N) +
+> > > > +                      sizeof(union otx2_cpt_res_s);
+> >
+> > This add extra memory for 32-byte (OTX2_CPT_RES_ADDR_ALIGN))
+> > In case not observed,  OTX2_CPT_RES_ADDR_ALIGN is not the same as
+> > OTX2_CPT_DPTR_RPTR_ALIGN.
+>
+> But it doesn't do that.  Look, assume that total_mem_len is 64,
+> then ALIGN(64, 32) will still be 64.  You're not adding any extra
+> space for the alignment padding.
+>
+> OTOH, kmalloc can return something that has a page offset of 8,
+> and you will need 24 extra bytes in your structure to make it
+> align at 32.
+>
+> Now of course if you're very lucky, and total_mem_len starts out
+> at 8, then it would work but that's purely by chance.
 
-Done.
+Thanks for explaining, will change in the next version.
 
--- 
-viresh
+Thanks
+-Bharat
+
+>
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
