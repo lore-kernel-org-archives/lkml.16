@@ -1,162 +1,101 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145001854
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FC41854;
+	Tue, 20 May 2025 23:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747784916; cv=none; b=U3p9Q+ir4CQMlgi5yXAFSuPdzWLD9wGtebcyX0lYJ7QnEnI3QHJJYv3IcSWyNvX8FnznLI1afHS1ksnb/BzI9uVPP++5ELCCSy9wBNBgVYPWCovlUnwwBUVnTihGsqa714QcxL7/T0bjLyFF01gZ6R5hpuH4widHZ4xi+Yrm2Oo=
+	t=1747784928; cv=none; b=rLidNnOcFlGB+exFjAiyi0nKNFFeMOfxzDDY2yVmZ2z4XBoB4SmG2TD4n8yRjzbC0+vxu0rnow7r3e63+rM2GqC3xMqvhhIX1rTUyHbCXpsuPEPopwFYnPElJVbFPZb86BYs0w671mUOav6MKulBlDml5ALOIfzR1YvLxYNhH2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747784916; c=relaxed/simple;
-	bh=3dJwkMR78ygGJ26kpq3/8NRE5gL7ZDEd09irCsxSHsw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZkCkNUVAxFRJclwjBXbBrqecn/REB1zJnzfqa9BLUWb8DMT9mqWGwQGY6WnShSy+cOwddPqf2NbbIVPJ1OpSNCZt/Dh4Kq0foQ7Xs0qT3YW5bfn3yvBR7QY4zaQM6nSgORYG/rDWvcgPPCY9GBqAzl6TjkhezZmwmme7BoTCsZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Q+PD2b1t; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1747784928; c=relaxed/simple;
+	bh=PTpqCh1tVVJeodfv0Lj4AEJdR9WQMGpprko3meu0ti8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EDAIXWZL234A+BXSq3JrNkTmATtDC02y/5qwEsXunfJFL6jrGS2zSV2EWf8iQTYJPV21srBYAd+eAYBGoyq9UvUnoPWyiMdKKQOsOhMIPualSjimNJ/oLTjxCcMFLXfr8wONufE/RbjEPORRlVuQxKTs1f6q9R+5JoC02C1R50k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cEu+EbGS; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Q+PD2b1t"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-232776f0ffcso2121915ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1747784914; x=1748389714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gmpPIOGdXeTJJ62xMcZcuRvAyBH/dJfC/scejZBoQNw=;
-        b=Q+PD2b1tSk0dbQAdCrdHTg7LL1wH6SN+oTswZe/NV4z2lwzGhcz9EZ0SdTJRyGFNDk
-         PqoMRHpuHWba/rrZzMnW8OVSKiQ+U3CnJnTl9P5qaeOzP6TEH1swZVg75qK+unepXmjj
-         Wlj/X0AaOje0gEtZo8y1HEfCSdQXPKo6NVkcX6KvZ1tNha7TlJNeQkKQjYTB/CvjRCV2
-         fKTiiDIjSiX1ceMk+JafGvU9gfLEGrcRXLJ+zPiPfiNdrbT46ucaKbDY+pKePr9Z2X3k
-         VdEzX+IhHHKKxMLtymGJHksvV4mXAEFRoenkmENW2kMTw75NKmxZ+VJKS9iS9pKdU6nI
-         f9+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747784914; x=1748389714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gmpPIOGdXeTJJ62xMcZcuRvAyBH/dJfC/scejZBoQNw=;
-        b=VKBiUdFX3qqKs4HGpVLN3bhINyvB+xdB0UeeaKUsLnqVmZCbWWHdMd7QaZLi5lOS3k
-         NtKvhNC3EMCMTVJIkAfOIk7jbeSSkNeH6fNkelTvJ+dx6BFmQSl7123iT8Xmdp9CCgzR
-         crFTPOITs/DTQUVDo6e5sJy3TLFGu3D0lR7NmARiYiCXYq1+QI0TF+J0MQ4YSnZ21tMZ
-         7B4KXtK2Iy3JjncW8BjfFrLeB2m77x8eJt4Huw27G4uiiWW8QbpNvHUSWHLMrCr3f6an
-         nsmyoCbF2GMdKE+x7bl4zwcNJHrzhx9yUfvVpYICK2glTY2sXdCr7ay417RqKCqgCM7t
-         vRXA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9IJC/TSdH/hRsDeIKbbSslnONsP38qh6R+8+efXWJDee0jIYVgQvkt8PCsCoF6JSS6zd+kfZH7+LFyyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/LYCTDEKFYdUTY68QLZvVStzXU1XvxTq9IKvKwfDNhujDP9kQ
-	8IMH4DSWehxJo//JTrcnCyPrlvA9TcQkWpuOLeR6ajrAwVRHEzEAp/Bz9OeR6fHd232LcXK3SF9
-	kwdv8lxDH/4FiRSV51AGSM7BdbjnaExvqMszdIEdYow==
-X-Gm-Gg: ASbGncvzsTkSwk5duwwFu00FTDC+FOugo5O2yJA1UY4hQw0nT3vp+/JcqcTWX3Dx58P
-	SBL0TJ40eHg250EvriF7NcoiFhT4nJB8oBrn44SUIEb0xX7eEYsx7JbBe3FpcdAcXX3cL5cTf5T
-	B+Rv90ag14M7sU2JhV2yuA8O7exsMuxe8E
-X-Google-Smtp-Source: AGHT+IGnevNpj9MhG/oplR3edPx4N1vkZ8r3DvX/Pt/hh1ZLYZjWA4tQx71kE9lTxzjC6FvCFNltEPHGjgkNsHUuIoE=
-X-Received: by 2002:a17:902:ea0a:b0:224:c46:d164 with SMTP id
- d9443c01a7336-231d43891f9mr87560745ad.2.1747784914214; Tue, 20 May 2025
- 16:48:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cEu+EbGS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747784921;
+	bh=Yv0r0mT1JKHm9eDNjQhV13UnSHIC2CokXEz/Ftu3i6I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cEu+EbGSFP+POBGU5MolttJRAM4Vj9DUQ2smHtpdyazUhNGlaTLYS++BBgA5XDsPI
+	 QZ1g235uWV4AAuct4m22Z3dyHXJEOxuMGCET+42j0SS1Xd6ZiQQayKu2agsE6Bmqa5
+	 Moav3WdUuy3L94UZAtdsG2/jRls308T+G/dNB0CaWnMxVvQBIT4I549wqvGQCecGY+
+	 MSQHCq6mSJBKnD6WSMn5IIIuGsOjd5vRTYA4ofeGktWgLunDJ2lWabhP6+yFvLv7Bl
+	 zOk2P2rLwEgoE15pj4IC1SoriqnlGiucAz0RKFQvd9BMxJ4zcD9f0hEW+uIBTmyMTT
+	 Hxox4UnwoPD0Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2B8T3hbGz4x8Y;
+	Wed, 21 May 2025 09:48:41 +1000 (AEST)
+Date: Wed, 21 May 2025 09:48:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>, Miklos Szeredi
+ <miklos@szeredi.hu>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the vfs-brauner tree
+Message-ID: <20250521094840.6a5bb989@canb.auug.org.au>
+In-Reply-To: <20250521094551.5c26dab0@canb.auug.org.au>
+References: <20250521094551.5c26dab0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517000739.5930-1-surenb@google.com> <20250520231620.15259-1-cachen@purestorage.com>
- <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
-In-Reply-To: <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
-From: Casey Chen <cachen@purestorage.com>
-Date: Tue, 20 May 2025 16:48:23 -0700
-X-Gm-Features: AX0GCFvk7QHDVRdeo5JApsfMv5EqqQlf5IszkCZmZujS6DHh02jCluKF1iE26XI
-Message-ID: <CALCePG1uoNN4vB3HguOi+ZYjwUcTPHmtp4RCZey0r6qCUJMLCg@mail.gmail.com>
-Subject: Re: comments on patch "alloc_tag: allocate percpu counters for module
- tags dynamically"
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: 00107082@163.com, akpm@linux-foundation.org, cl@gentwo.org, 
-	dennis@kernel.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, pasha.tatashin@soleen.com, tj@kernel.org, 
-	yzhong@purestorage.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/1_K33pf5o9n2+ErBjawb.HQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/1_K33pf5o9n2+ErBjawb.HQ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 4:26=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Tue, May 20, 2025 at 4:16=E2=80=AFPM Casey Chen <cachen@purestorage.co=
-m> wrote:
-> >
-> > Hi Suren,
->
-> Hi Casey,
->
-> >
-> > I have two questions on this patch.
-> > 1. If load_module() fails to allocate memory for percpu counters, shoul=
-d we call codetag_free_module_sections() to clean up module tags memory ?
->
-> Does this address your question:
-> https://lore.kernel.org/all/20250518101212.19930-1-00107082@163.com/
->
+Hi all,
 
-module_deallocate() is called in error handling of load_module(). And
-codetag_load_module() is at the very end of load_module(). If counter
-allocation fails, it doesn't go to the error path to clean up module
-tag memory.
+On Wed, 21 May 2025 09:45:51 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> The following commit is also in the fuse tree as a different commit
+> (but the same patch):
+>=20
+>   8d9117009dd6 ("fuse: don't allow signals to interrupt getdents copying")
 
-My code base is at a5806cd506af ("Linux 6.15-rc7")
-3250 /*
-3251  * Allocate and load the module: note that size of section 0 is always
-3252  * zero, and we rely on this for optional sections.
-3253  */
-3254 static int load_module(struct load_info *info, const char __user *uarg=
-s,
-3255                        int flags)
-3256 {
-...
-3403
-3404         codetag_load_module(mod);
-3405
-3406         /* Done! */
-3407         trace_module_load(mod);
-3408
-3409         return do_init_module(mod);
-...
-3445  free_module:
-3446         mod_stat_bump_invalid(info, flags);
-3447         /* Free lock-classes; relies on the preceding sync_rcu() */
-3448         for_class_mod_mem_type(type, core_data) {
-3449                 lockdep_free_key_range(mod->mem[type].base,
-3450                                        mod->mem[type].size);
-3451         }
-3452
-3453         module_memory_restore_rox(mod);
-3454         module_deallocate(mod, info);
+also
+  e0410e956b97 ("readdir: supply dir_context.count as readdir buffer size h=
+int")
 
+> This is commit
+>=20
+>   376464b93692 ("fuse: don't allow signals to interrupt getdents copying")
 
-> > 2. How about moving percpu counters allocation to move_module() where c=
-odetag_alloc_module_section() is called ? So they can be cleaned up togethe=
-r.
->
-> That would not work because tag->counters are initialized with NULL
-> after move_module() executes, so if we allocate there our allocations
-> will be overridden. We have to do that at the end of load_module()
-> where codetag_load_module() is.
+  3bd894a88be0 ("readdir: supply dir_context.count as readdir buffer size h=
+int")
 
-codetag_alloc_module_section() is called in move_module() to allocate
-module tag memory. I mean we can also allocate memory for percpu
-counters inside move_module().
-We have implemented such a thing in our code base and it works fine.
-Just do it right after copying ELF sections to memory. If it fails it
-goes to the error path and calls codetag_free_module_sections() to
-clean up.
+> in the fuse tree.
 
-2650                 if (codetag_needs_module_section(mod, sname,
-shdr->sh_size)) {
-2651                         dest =3D codetag_alloc_module_section(mod,
-sname, shdr->sh_size,
-2652
-arch_mod_section_prepend(mod, i), shdr->sh_addralign);
+--=20
+Cheers,
+Stephen Rothwell
 
-> Thanks,
-> Suren.
->
-> >
-> > Thanks,
-> > Casey
+--Sig_/1_K33pf5o9n2+ErBjawb.HQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtFNgACgkQAVBC80lX
+0Gyz+wf/evAh8+7HV/jx/fDPKnRyEvLuB2G/HIWIgcCv6fyBV29RquTZ0kYoVMzk
+Us9NUdlXcX+Suja59RmEzQUc0UGsj41y0tFD6jczMZvf6u+c9CmyEApej5+uAggq
+dTIX4ps0sWMAj/Gqxe7yhMPsizkE7PJNkJKI70of2FEdPLMw5gOR+j9GvFY5TXTd
+4zMDjawkQuH+IVb+dGW/eNhDsxk89zorsPFNN6Xkqv/het5jrj/c1tEqCgxJxjUN
+5sTG4Vr6+86NgN/6/xiWYxsMgxEESVtjPVWyhSbkVm3c6NdusWxogwCVH3+Dhy2i
+AFG/gip/wB3r08OrXMGLu73075TeQw==
+=+Yjy
+-----END PGP SIGNATURE-----
+
+--Sig_/1_K33pf5o9n2+ErBjawb.HQ--
