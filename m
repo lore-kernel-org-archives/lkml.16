@@ -1,73 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA42267B74
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0344265CAC
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732153; cv=none; b=SpsfmIbaOAvo8xrNLaiplFHBmZ0PCyxcFGQxuMuBbfnikRokLB+UZe+MTMUcEIoBdw/O6pogrw+zRtpJ8tr6NfgCnHJ/sAcPHf41RUtYZ0TCzahx5jVfpHBpfrXDwxe8SyzHsNV46z72uNlEI+jp5S9RVvVAXyCLTUFfjtlHLJk=
+	t=1747732211; cv=none; b=uKj1Wz42g5P/I2ehNM9wVVSGusqVveDR5GGRDGmXZXhmylyWjKuQdWTUhJWc+vaBBdiVdB7iYmdzNqY+MmqYAZcp6bllAfSf3z2ydf+4e/i5A7EJyQo+yL9RxCWGNa2mzpp2o1pbUaXp5uZeCiPUpx5zpUKnnjpQAdNrt8+GTIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732153; c=relaxed/simple;
-	bh=i189y3JicnOaB/mVZ8D5BCO5Hqn0YOHD+KDV+ksF/Ws=;
+	s=arc-20240116; t=1747732211; c=relaxed/simple;
+	bh=QRmAV0gSmSUP0f7c6LscqVGt+B1LZxtU9Yvv7ylAOYw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s7OTukEFnHb2+DsY9XkqTKJ/ws7wseF7zaRcGD9W8WE1fXwkzTcmIFJrdLwCtgrQyo75DbVmLf3m06NwEf16slmn05pUB6qx6whsglnvLC4rppKztFP91fkOFv9M4cdbugZqi/xncSyPq4ui9WjtdxoFCAqS1yUkz8oTN6NB9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/Azni7m; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=tEa4VSXPV8voiBT1PCKrs3SIsYUq0JC4e/Le6wmEn4DiHwSMz6/SpFRDHFl6MJNnUtWIzxQ49+/0rPtQF77QrwCJiD6cE/Kl1282HB3Giu4rbVEBS7Ulmx3p5uEl4s8487MeWrsINdgJdMADpN2I/M7NynHKMy+DN8tZ22NJUi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iFS60y68; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/Azni7m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFS60y68"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747732150;
+	s=mimecast20190719; t=1747732208;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fy68e5jAh3724JC4rcZ3X5I4NSu8tckhblr3+hmPAsA=;
-	b=W/Azni7mm1PMs+cm03fP0tgyNyT4fasqKPchcCnWYRcTKBTTcCSMn6d03gqhj2ol3CIorv
-	nqHvW/Uh6o3zhAa/W/Vo9imrTtIsrcGP72mC/1cFhjvjvtJ/A6cVvXXKo7YHfxkQfy2Dyl
-	4uHIlaz6eKqGkMOm/QmzAonLd9YTbMU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=PSR1/u0V+jGJxOjEFN3NNH+g3uaL+3CXLAVsxo/mjXA=;
+	b=iFS60y68GT4M+9gWLvpuOHNQG/W+/UXWaO9Iprtr5RKirX5PV1Ih2V4FXfG2H8PEnhMquc
+	VVY5he5My9LgFvLWASfJoBj7vCZnVVTvWnj4mP0WCajRycBm417Ld4xNbSdRJNjmEfa5Ut
+	cUwWS3hqQlRx9x//kHNLxbCUcHGzdg0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-166-S7oonq3UN4OrkNoL7Svc7w-1; Tue, 20 May 2025 05:09:08 -0400
-X-MC-Unique: S7oonq3UN4OrkNoL7Svc7w-1
-X-Mimecast-MFC-AGG-ID: S7oonq3UN4OrkNoL7Svc7w_1747732147
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so28926615e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:09:08 -0700 (PDT)
+ us-mta-393-xKiuuq7WNwSSR1EGAO8FAQ-1; Tue, 20 May 2025 05:10:07 -0400
+X-MC-Unique: xKiuuq7WNwSSR1EGAO8FAQ-1
+X-Mimecast-MFC-AGG-ID: xKiuuq7WNwSSR1EGAO8FAQ_1747732206
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so28445715e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:10:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747732147; x=1748336947;
+        d=1e100.net; s=20230601; t=1747732206; x=1748337006;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=fy68e5jAh3724JC4rcZ3X5I4NSu8tckhblr3+hmPAsA=;
-        b=I48t31eoCa2psAvY4TC+AfHfMInpc4NPDPOHJB2BUehnyykMV2vAPv/4chVYi3GhAp
-         1aeBWt8y1hfE0Xqt1yx+ZKXehuI0bXMUZtgNz6NXvB06kqbdh6pKfczZxkm8zCXecVIB
-         sTBp2ls5JI4+7ys71xF1HB399SRoR/roTD+QVPawxVGER7y3RO5X9r54cOxbG8GRc8yQ
-         dCUDHFvvKVMp6GAIiNmNYicAzYchUbUCX38EpoYoPYwzA5EFNrcb2mX61eEEg3j4Gic1
-         5k3FUSOKCFqS2lhcGZF4ooVyzOpXQgbi/MaxgZbu7ZrhrVDcla2tzUHhYfD4PK+euSq6
-         qMuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS6keHUVNuUOGyuHye7DoM9nZC/grSfO1RJHrmOd6ANHee/tg8aYkB5XboIXUziTyjh1I1/7nRyTUFc/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+LASg95BccrG1tgo+FLW+t726XqIgqUhLAdOvRDcYHdBOcnla
-	Ol7TyNwqGwPxWpQQiupSs4inu1P//eK43+mlybebAqNJr5qw7T8sTk56uzkPTHBs6TwRNwm2nV+
-	WeHPS74YKlSL7LGymSquCO+zr9bEhKeXZCap6U17EYndIwb/1Nh/O0ZCK8vce997q2Q==
-X-Gm-Gg: ASbGncs04PxEYzJ1MkrgkgyOpfR0VCH4RDT37OYg5q7bC+KX+bPuHHvnj8MXw64GzSP
-	DSR209Dlj/+ue4yLQOTGzJc8Xs38o3YbcDHJWvYUPgZnVbFRkLaW47cPVKdADWGlSHdXgWCFBBo
-	moFUuGBZQ205wL/d9HDargo6UMjf/5Oj1VBoFO84vQQBhjjvA0pp9U8UVljtFFvLETd3zDOnFyS
-	E/PFvVN/J1QzlGWCj1Qvl4Rfqdzb7cYqEwpku73fdSn9igSkXsH1tJ73YUPZNrnJns5G7qUajX5
-	UAc3x5a/XQcKu9N8fIETfIEjshQ5hh5Z/tt2QQqExZNQcCPTaenTBPQHzFovAarQm+ggmrggyga
-	NK+Ut0lNy7xEOr0gf5psglly/KiV1A2lnGsgmLDg=
-X-Received: by 2002:a05:6000:401f:b0:391:4ca:490 with SMTP id ffacd0b85a97d-3a35fe951d1mr14214005f8f.29.1747732147344;
-        Tue, 20 May 2025 02:09:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF4UwqKv/S4hpb4W/UurGSAAjxCwB6mQ/y5lcCLudd2V8P5i6xAWnw8jxB/XZ53zEoEBGBjZQ==
-X-Received: by 2002:a05:6000:401f:b0:391:4ca:490 with SMTP id ffacd0b85a97d-3a35fe951d1mr14213961f8f.29.1747732146964;
-        Tue, 20 May 2025 02:09:06 -0700 (PDT)
+        bh=PSR1/u0V+jGJxOjEFN3NNH+g3uaL+3CXLAVsxo/mjXA=;
+        b=m89u33mJ1oMo0vo3xBxdJ/fvHVop2N0Luwc/+x05KKnAateVCIfOmBtaeajKw8Bbua
+         YIP+9b3YxzsvAvytw3ksSu7L5FRy9bqrgqabgK7okrQ4kALVT5UF9G08vPu84tb8DPYc
+         5u4QwOv6hgVImXgawbWMoBHcaCFBtP5Bm8QqGdxBcmY3VrD+m/sWwltyUMxbEB67t7xG
+         tPnChSYqXycpXFesENBXHIJlP9uUqapw919jhZdcRAiHSdeHlztmxUivPzPzNCqUJWqL
+         MkSy105JJ0QFhSS+2oECuv92BKzz+zmkCWVMUAacsVJKxXgyNw3JfyU7ShyNTULgnsJb
+         7EHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxeuCw4h/lwe+SLqDtV9536/8eyN3XY4UPYIbEDgyeJvY83alsHWaBRtVNyI0GpXQ6KaGXuqY5JF5KQHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg5DpCaSWridf2sRcb9g0AQqHo2mINqqXuWMVNzT5YPUHz382U
+	Syi8/ZhN9hhj5ly/ovuVh4tbMTzpJnyH7QwRdxAKGBDw9UF/gY9fs9avKp78l57fkUwRVT+eTXa
+	fqkXzIqJ2ZK61aPdGFWQkxet+mqpr28hxwrLXcmjjVXDZ7+ILLaqIU6b1bxm2WpTJORDzTkvvoy
+	7O
+X-Gm-Gg: ASbGnctsUsxmb3NPGMr6rqQ1qH5M3w+bUg8wlwtz3si1hDcvGcdE87meu/0omIxPjWm
+	Uz+arQn8WMEkM87En7K+ZBVsE+/AueHKgqx7BdhMShUl9sxDBqQ4/mewrusSULyoF5c9NpwvgFK
+	LkOhyNWwpcp9SlK4CK2Lg5FQ2TFn1Sre5Wlp/SBIzITZiT1GMmBmZ3m8nJexyV3FqkullhSWFHv
+	mGv+OXkXqDltBoays7UkN3yBI5yTR8LoR+OBT+LP8WkB+KtLHpYFKBipLT/WAjq/ko2Jw987jFR
+	QgqDVzO+cp8UHfgRpUg9hXDU8QP81qRU160bsu8dqWxWzw6QxNVOy8CH30qiA6d5wt2aJyx+c9Y
+	VUk/TryhEv96T3L1sDPxBDqv30zSlazWUMYWtAV8=
+X-Received: by 2002:a05:600c:5008:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-442fd622da0mr155950815e9.8.1747732206183;
+        Tue, 20 May 2025 02:10:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFg+fp/L4WVymGk9SPSBtpbctVG+Z2wbaOjNHfL4pL3y/IW6svbACJGKerPgXy0imMXlFDQmw==
+X-Received: by 2002:a05:600c:5008:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-442fd622da0mr155950525e9.8.1747732205777;
+        Tue, 20 May 2025 02:10:05 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f16:e400:525a:df91:1f90:a6a8? (p200300d82f16e400525adf911f90a6a8.dip0.t-ipconnect.de. [2003:d8:2f16:e400:525a:df91:1f90:a6a8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62204sm15406514f8f.42.2025.05.20.02.09.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1825457sm24064175e9.1.2025.05.20.02.10.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 02:09:06 -0700 (PDT)
-Message-ID: <6e27e97c-db1a-437e-93ac-f7c1329b0e00@redhat.com>
-Date: Tue, 20 May 2025 11:09:05 +0200
+        Tue, 20 May 2025 02:10:05 -0700 (PDT)
+Message-ID: <021dfe38-f786-46d0-a43f-769aff07b3f0@redhat.com>
+Date: Tue, 20 May 2025 11:10:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,20 +76,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] prctl: introduce PR_DEFAULT_MADV_HUGEPAGE for the
- process
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jann Horn <jannh@google.com>
-Cc: Usama Arif <usamaarif642@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- vbabka@suse.cz, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250519223307.3601786-1-usamaarif642@gmail.com>
- <20250519223307.3601786-3-usamaarif642@gmail.com>
- <CAG48ez2y_PP7Uba8uq_Y+auKRUHPcJ19Nnn15GAaVS=M4DC73g@mail.gmail.com>
- <13d618ed-2cdb-4a5b-9dd4-189f65244a60@lucifer.local>
+Subject: Re: [PATCH v2] arm64: Restrict pagetable teardown to avoid false
+ warning
+To: Dev Jain <dev.jain@arm.com>, ryan.roberts@arm.com
+Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mark.rutland@arm.com, stable@vger.kernel.org, will@kernel.org,
+ yang@os.amperecomputing.com
+References: <df7eb016-bea4-489d-aecb-1a47eb5e33b2@arm.com>
+ <20250520090501.27273-1-dev.jain@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -136,54 +132,86 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <13d618ed-2cdb-4a5b-9dd4-189f65244a60@lucifer.local>
+In-Reply-To: <20250520090501.27273-1-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 20.05.25 07:23, Lorenzo Stoakes wrote:
-> On Tue, May 20, 2025 at 01:01:38AM +0200, Jann Horn wrote:
->> On Tue, May 20, 2025 at 12:33 AM Usama Arif <usamaarif642@gmail.com> wrote:
->>> This is set via the new PR_SET_THP_POLICY prctl. It has 2 affects:
->>> - It sets VM_HUGEPAGE and clears VM_NOHUGEPAGE on the default VMA flags
->>>    (def_flags). This means that every new VMA will be considered for
->>>    hugepage.
->>> - Iterate through every VMA in the process and call hugepage_madvise
->>>    on it, with MADV_HUGEPAGE policy.
->>> The policy is inherited during fork+exec.
+On 20.05.25 11:05, Dev Jain wrote:
+> On 19/05/2025 13:16, David Hildenbrand wrote:
+>> On 19.05.25 11:08, Ryan Roberts wrote:
+>>> On 18/05/2025 10:54, Dev Jain wrote:
+>>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>>>
+>>> nit: please use the standard format for describing commits: Commit 9c006972c3fe
+>>> ("arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table()")
+>>>
+>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>>>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+>>>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+>>>> a pmd_present() check in pud_free_pmd_page().
+>>>>
+>>>> This problem was found by code inspection.
+>>>>
+>>>> This patch is based on 6.15-rc6.
+>>>
+>>> nit: please remove this to below the "---", its not part of the commit log.
+>>>
+>>>>
+>>>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from
+>>>> pXd_free_pYd_table())
+>>>>
+>>>
+>>> nit: remove empty line; the tags should all be in a single block with no empty
+>>> lines.
+>>>
+>>>> Cc: <stable@vger.kernel.org>
+>>>> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>>> ---
+>>>> v1->v2:
+>>>>    - Enforce check in caller
+>>>>
+>>>>    arch/arm64/mm/mmu.c | 3 ++-
+>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>>> index ea6695d53fb9..5b1f4cd238ca 100644
+>>>> --- a/arch/arm64/mm/mmu.c
+>>>> +++ b/arch/arm64/mm/mmu.c
+>>>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>>>        next = addr;
+>>>>        end = addr + PUD_SIZE;
+>>>>        do {
+>>>> -        pmd_free_pte_page(pmdp, next);
+>>>> +        if (pmd_present(*pmdp))
+>>>
+>>> pmd_free_pte_page() is using READ_ONCE() to access the *pmdp to ensure it can't
+>>> be torn. I suspect we don't technically need that in these functions because
+>>> there can be no race with a writer.
 >>
->> As I replied to Lorenzo's series
->> (https://lore.kernel.org/all/CAG48ez3-7EnBVEjpdoW7z5K0hX41nLQN5Wb65Vg-1p8DdXRnjg@mail.gmail.com/),
->> it would be nice if you could avoid introducing new flags that have
->> the combination of all the following properties:
+>> Yeah, if there is no proper locking in place the function would already
+>> seriously mess up (double freeing etc).
+> 
+> Indeed; there is no locking, but this portion of the vmalloc VA space has been
+> allocated to us exclusively, so we know there can be no one else racing.
+> 
 >>
->> 1. persists across exec
->> 2. not cleared on secureexec execution
->> 3. settable without ns_capable(CAP_SYS_ADMIN)
->> 4. settable without NO_NEW_PRIVS
+>>> But the arm64 arch code always uses
+>>> READ_ONCE() for dereferencing pgtable entries for safely. Perhaps we should be
+>>> consistent here?
 >>
->> Flags that have all of these properties need to be reviewed extra
->> carefully to see if there is any way they could impact the security of
->> setuid binaries, for example by changing mmap() behavior in a way that
->> makes addresses significantly more predictable.
+>> mm/vmalloc.c:   if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
 > 
-> Indeed, this series was meant to be as RFC as mine while we still figured this
-> out :) grr. Well, with the NACK it is - in effect - now an RFC.
+> Yes, I saw that. I know that we don't technically need READ_ONCE(). I'm just
+> proposng that for arm64 code we should be consistent with what it already does.
+> See Commit 20a004e7b017 ("arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing
+> page tables")
 > 
-> Yes having something persistent like this is not great, the idea of
-> introducing this in my series was to provide an alternative generic version
-> of this approach that can be better controlled and isn't just a 'tacked on'
-> change specific to one company's needs but rather a more general idea of
-> 'madvise() by default'.
-> 
-> I do wonder in this case, whether we need be so cautious however given the
-> _relatively_ safe nature of these flags?
+> So I'll just use pmdp_get()?
 
-Yes. Changing VM_HUGEPAGE / VM_NOHUGEPAGE defaults should have little 
-impact, but we better be careful.
-
-setuid execution is certainly an interesting point. Maybe the general 
-rule should be, that it is not inherited over secureexec unless 
-CAP_SYS_ADMIN?
+Maybe that's the cleanest approach. Likely also common code should use 
+that at some point @Ryan?
 
 -- 
 Cheers,
