@@ -1,41 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0347022E41D;
-	Tue, 20 May 2025 13:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40236233158;
+	Tue, 20 May 2025 13:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746915; cv=none; b=E5+6FV09oKFiF5aAVXWJMhCHh3AaBAKGxCqnZKvky27HF6EoabQHcCREXN1dHiqL31Z595XnzVLUVEh9UnU2Qr9J+X3XH2OVmtoVT0kMqww9s+n5erVht4ocTyaaK6tjJtJINFJ8KWkO1gQWyw0Y85FGBYI/5qxJSenvGv0NKM8=
+	t=1747746934; cv=none; b=mF98z6MT3plRcASAgiPQe2EsR4rVAbhJzFtQ7yE3Qk6HJjp7m31OM9hnTPlFEhjXhKSpRAhGHzSSoqjswe0KKAcJVbf279h2WjljTP5+fHLFSCoDjarAjN74TLzSTLdhG6G3JmiID7qqIIfpVJWdrn5LB7nHAhT7EY+QWlUX+RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746915; c=relaxed/simple;
-	bh=9tj76eu3sKrF8PVmXoXkqtJ9c6WRvLo3PI0Ap5SxH08=;
+	s=arc-20240116; t=1747746934; c=relaxed/simple;
+	bh=eGBVGsNUyL/zdctIeW6YFnpPx4Mvwnhao4BWU/2HB74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsxW+ayWWnpHKRxeIadFDnPPVk6oTEWfk8q1zn97fW0du6AWW1Jck4VGVQHBq/b6YXlr6MkaloJs01sR/Z0mCLR26SKlQovLnbo7zkzmYOAmRarIVTHuNhfUhmXKlWFvzMJUY1HJ50IwADkUctIRQK/IDm6DUlokbcAAXEfyPDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzKdsfOC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Adqz6Ghphqf/8fBOfUIHnaqVuWXZkgX7qVnOitP2OrU6AT1tHIvAXyv6y0FexFNakvWMCMpJH+8s1IzXcYFZu/iGVRmEeNai6ALzTiwgt1YUOeAlu4II45jxIHMktHspPUlZSb9zlP8UEZD4Nr1Mt3wjRj4uF8cJGdRDYUldubg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G73Rzmqv; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzKdsfOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03600C4CEE9;
-	Tue, 20 May 2025 13:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747746914;
-	bh=9tj76eu3sKrF8PVmXoXkqtJ9c6WRvLo3PI0Ap5SxH08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hzKdsfOC7xVkJ6zwsMcExFPc25JypJphrY1RWcicJlVNezG4cvu6YEJVZ0ybcVHMh
-	 bPZuxUh9IK7WT5zdMgzZTidjXF02n5MDaQVWKVgbovarWJSqHl/iTz3Mp1icYlvQ8z
-	 jUlPSsZJOqZNw/Ca3bUaG8cDlxHyPvqoraUyp889vHxNCC4a8zdze9DD7yfcRdqs/Y
-	 8aRRxiAXyfDqc6vA/2KOihPglbw7QQlXnBF2H1FKl8SuKkzJIViXP0BacUEo0nNm6s
-	 TZPjLrFUygXv+ka+2hspO8vLRC3GujDFShcl6JZiFlajBd1DoZzBEc/S2mEPA/MUc7
-	 YwE/Fx5hrOYYw==
-Date: Tue, 20 May 2025 16:15:10 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Wentao Liang <vulab@iscas.ac.cn>, mustafa.ismail@intel.com,
-	tatyana.e.nikolova@intel.com
-Cc: jgg@ziepe.ca, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] RDMA/irdma: puda: Clear entries after allocation to
- ensure clean state
-Message-ID: <20250520131510.GG7435@unreal>
-References: <20250518144942.714-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G73Rzmqv"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so2960579a91.3;
+        Tue, 20 May 2025 06:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747746932; x=1748351732; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2slTZBYuy532hRPOCHbFViHDs6iyGn7xyCftK4p+0VQ=;
+        b=G73Rzmqv5vTOnsiBovWPhekc6sIfC8kJjn53YjqeLt+iMEXDI5zuf4QV5EeMl1Vxtt
+         EwG4BxZwI8irAZef4lCO6ijfZNngizGGo4F0ORkkkWsJxEfADZ7ygFgf0QGx1SClW5Fn
+         CKwckY76KiHHH0wbWtuCbQ7WCdg5YnaKHYHueerqd5oeHqVDw5gjbrlHqlpJGqNsccT7
+         U7lPzQWWsChcsgYWdo2qPA3knu92wytZObG2M+LMkkZa9lfRQL70vF54jw4RECR+y0OF
+         3ZZsIfXuMkE9Mgnu6ELyGjM+jMBnxZ0lFQakYrLdKGxaWJ9qtEsuWJCv426weNkZZh3i
+         nrSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747746932; x=1748351732;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2slTZBYuy532hRPOCHbFViHDs6iyGn7xyCftK4p+0VQ=;
+        b=SSaKhMbVAFLq2jLc2z7wFljYT/GR7x907pS3Q+TPt+RcxSNXUUDFms7yb3G1aCgSEU
+         5UKiMCkVsAUq4Sh0ENMw/kh7YnJ0jodlsWSjX0eoPQfcy94GmZqXoVSaIByv3EJ7Xidg
+         HCcfyMcYpoJTsnY5jYPJPxRhczktYmn2kd7nW7BV9eOQIx2EVmlOdGmBjtKr27XUjleS
+         /YIF8V+pGtzhqheQ7moO+hwgWClgRL8M8sVfz/ErzJ7nh8B2pJb5DskMyb+DkY74kBCT
+         KS8Dpks9Ms4dnHRaW+87Y/6l1cYOb9lyQHcQUsahqVcsyc9k6wVWObnYGoYGcgf7RELr
+         rrwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXP6ziOk0KtUwytefoL2oF1/4TluzXq3xHNVuwK7xzHCE584vUNxudDypSMkraLUOHZFhIvi4+X@vger.kernel.org, AJvYcCXyciNA9rulv33jFCZNShFJPR/CKWDyC51GC8u6VEfPwvhvEdaBuuhqcwjbJoS/7zRiXj2r3dtPOIaHX3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygZ38dBv0+cnkM4KlaqNLExZCFs3sLi9JX2l5W5Aggx25Fd/Ar
+	tSa2719cJtWFUqpWtENu2Q5+X0tQzcbG5xfaDiUrhmSC0t1VwrT1t08e
+X-Gm-Gg: ASbGncuUA9OhtEi5sYZI/3tskwI4SEMciEB+nKeHC8GOTkuVbhb1zJJHXNAMDx5AiG6
+	LZfnUYpdIbCveVc5t1gaejvC/IOqynVlgJC71KAjXRFxq5rKsTlhOQFA5oG8mAnL65/chCAHunh
+	JR1pmBpKJy+1nWkRdO3k35CZ7bLD8N8ru8xSprg1iC7gd3v3ihik1X4C2cImxK+rYiIKrvzb8Kc
+	9V/ZBDfhNdCx1J8eXS2aYBgXdk4XLld2DX4QMiIfcMIkDAmyegr4XfNdAU/oBbCCsnpA52PRzsz
+	1uuq1zK2FqdNer+LaWa6wVXDztEjz26fXFgGYp/yqhTAbXLBMK2a7Pg0Z9xYbRr9N7sIGyc=
+X-Google-Smtp-Source: AGHT+IEJtNiwcn3oWwFHyZWV7+40ijEV4xe+dL0OmaEu4W0lh00EsRAe8w98Fc2a3NU9eTRdHK1liA==
+X-Received: by 2002:a17:90b:17cb:b0:30e:9349:2da3 with SMTP id 98e67ed59e1d1-30e93493205mr19147311a91.3.1747746932238;
+        Tue, 20 May 2025 06:15:32 -0700 (PDT)
+Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365c4f84sm1759071a91.14.2025.05.20.06.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 06:15:31 -0700 (PDT)
+Date: Tue, 20 May 2025 06:15:29 -0700
+From: Richard Cochran <richardcochran@gmail.com>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+	pabeni@redhat.com, yangbo.lu@nxp.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ptp: remove ptp->n_vclocks check logic in
+ ptp_vclock_in_use()
+Message-ID: <aCyAcbNqKRlPnadx@hoboy.vegasvil.org>
+References: <20250519153735.66940-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,25 +74,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250518144942.714-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250519153735.66940-1-aha310510@gmail.com>
 
-On Sun, May 18, 2025 at 10:49:42PM +0800, Wentao Liang wrote:
-> The irdma_puda_send() calls the irdma_puda_get_next_send_wqe() to get
-> entries, but does not clear the entries after the function call. A proper
-> implementation can be found in irdma_uk_send().
-> 
-> Add the irdma_clr_wqes() after irdma_puda_get_next_send_wqe(). Add the
-> headfile of the irdma_clr_wqes().
-> 
-> Fixes: a3a06db504d3 ("RDMA/irdma: Add privileged UDA queue implementation")
-> Cc: stable@vger.kernel.org # v5.14
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
-> v2: Fix code error and remove improper description.
-> 
->  drivers/infiniband/hw/irdma/puda.c | 3 +++
->  1 file changed, 3 insertions(+)
+On Tue, May 20, 2025 at 12:37:35AM +0900, Jeongjun Park wrote:
 
-I need Ack from irdma maintainers.
+> diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+> index 35a5994bf64f..0ae9f074fc52 100644
+> --- a/drivers/ptp/ptp_clock.c
+> +++ b/drivers/ptp/ptp_clock.c
+> @@ -412,9 +412,8 @@ static int unregister_vclock(struct device *dev, void *data)
+>  
+>  int ptp_clock_unregister(struct ptp_clock *ptp)
+>  {
+> -	if (ptp_vclock_in_use(ptp)) {
+> +	if (ptp_vclock_in_use(ptp))
+>  		device_for_each_child(&ptp->dev, NULL, unregister_vclock);
+> -	}
+>  
+>  	ptp->defunct = 1;
+>  	wake_up_interruptible(&ptp->tsev_wq);
 
-Thanks
+This hunk is not related to the subject of the patch.  Please remove it.
+
+Thanks,
+Richard
+
