@@ -1,219 +1,202 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA74374D1
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E8420E6;
+	Tue, 20 May 2025 07:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724437; cv=none; b=gQPk6JovifppV0O4Hrof7PMMdSdFeNmvwXV6pnEgMT9VilHV8QrzXf+cP60nMk/VPxGoui6g8ndVW4LbhYFmJSzzGT3pjYTmlLg22tJtWbMIZqOVe7KbsikfLH3UYrznRa3GCXJ3IuzdaubhvaH5dczXHY8UUvZO4AkQRUSmWYI=
+	t=1747724473; cv=none; b=Jv9ukZUpAtIX/UNrfbRczstoYnONSQcO6AJtoPjqVuutxzIWbRCYmcvfzJEJQsU3cbBk5WEtiDMFcJbhc0TKHEPusfP0Ts55QAHAOQnAOz3xc+HfT8ezPAOt7zG/Ey0wceyy7TDtpv7Wn2BuRVPqvUn7w3ryWrucD4zYUE1EwR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747724437; c=relaxed/simple;
-	bh=7NxhdigZ82QnVowEcqj++dSX/lzsiiQrLwTIFBW5fE0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVOaaQPDUHL4tn3PKQCJKca/gPiXPKHyy15vzmz5PU3A/hlvIEhc7W+SFjZN7VXkn2ncNHwvMcIRjIKpqbfZrDRyxOHCn1RcomeSJpyQC/VYseDwiz3KLXi51psGK+N1K9G8NCzjDzksVTI0ddFuddI1IRnHiUgyF+Z8fELvswA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dGTVK3LK; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747724473; c=relaxed/simple;
+	bh=a/SfpzBwYB7MErbeYtg9cL5pgsnu/DA6Ti0CGB09MTI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eN9EU8EkCcdf4YmxOQWAO/Aay7ZB0/Kpv2pG08I80zTLyRfpP1cHQwZkvBfqJSyKV8qhHOJNtgpa0xNyNOUmXZ0q5DkwIKqrG9J4sElAKmZ5TSqumOJlc7rOOwOUoaI9bNcXQoe73G/9bemeAw0gYVyENRnHWmDzek4RSsDkvZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c/K02XIc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dGTVK3LK"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742b614581dso3814309b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747724435; x=1748329235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ff9F/0DQJXXOaC1XJzAjuzNhvSsUDESXc6O/jTJ6rOQ=;
-        b=dGTVK3LKrXIw7306sE7sbcHpd/wTL6vrqNDUjGQiDW8L/clLylm7RgfWxgssc36zTY
-         MTePwao5dOclrWqYrQoZe0IpCxmM8DtpNpmsRSos9VQ0HpVjy6/Ha4ea9LSviy2dWzGv
-         nUWiQQCIGP1uBlF08raghpdfcT9lt9bd/TzKBbsaxwg97sDbO6bCK5goQOBIwsVVbYZE
-         vhQZC4rzL2OKjGzoXwrqzktAOG7VUYnNWUYo9cHszwFHmQo34jXBJsrXk9nckuYiOZA5
-         wFuXlLEYEzEpsvr451HCdgM4RtarF5N4thJxLmQWezfAprg80OPAVvYmzCfuM+fiHBG5
-         mszA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747724435; x=1748329235;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ff9F/0DQJXXOaC1XJzAjuzNhvSsUDESXc6O/jTJ6rOQ=;
-        b=mu0G6/bW9fxyrRX8zfvO5Fx2yAcwjjduWi8etlHngu+QCZ45h7ua+W2rUszHvKQ8CP
-         92Z/IOc4VAHtheacX2jdQLlq3Qa31E/nC4NyTsyXeryuuk4FJxEQ5aqdSx7E6CFwDtlI
-         JGviANfdwthnNOswEpBrLxihTeyakrVu9gMFkjYKrTy1i5eRIRl9TB81t4Mft5oaBfGD
-         6yBB17K+UJ+c7jLnZUNHVyjkeIQHk6typws6l4ap3DjvC2QSdVjJLploSaPDxrmqw1CD
-         tbRh7k52yKPTLYjUjdYmEzz+WdxwkW+DpeIjf5QGgwMpZGkfu0xNew4heb1sxSHHO0M5
-         HSag==
-X-Forwarded-Encrypted: i=1; AJvYcCWSzqrdI5qs0CNXXUWSWPwlWHk7r2ka0rn9yEMZyEx84VfD775keRBdpiUv+99swvumjNudLokxe3/0558=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBD8sEPXEdemfZ1aCFO4U/+ExOZ7vQpu9js5yBU0Km9SBe51Ih
-	phsOTvlI5DqN52/P/xC5dpSY5xCdJ4B48nitWphx3CYPQrVZGco17ALbHyyz/VpNAok=
-X-Gm-Gg: ASbGncuUtXWYw0xKQog0hXYydWqmqEb4TsbpjXNtyISxMJwfC/crl8sQidZ+fx4vA+j
-	cUgUQjqfIhzf92WpALu7XZWkMkk3GtEpGR9qw8v6Pzu1qcMEkf7ST5UDFPvXUr0NjSpB+X1mN4O
-	XBaSMxPoQvh7AEGQ0hQURThqTa7LdELrIDAphpTfbGidlz2rzrxtkS4Bi1+foPD98FXTLiAGpo9
-	Vm1z9L2zuQpvn/1+dXfBWomoGs01tfC78C27o1tkdw5z4rkGArrTCyX0Qjf2lxSeA8BWivVbGvx
-	iTPrg5YKt6uDeokKHFTcjJYcQ186gJU9ZAiS+G7Ik6V2jQ23iya8ZPbXksQm3ILS2050S6rlByp
-	fCw==
-X-Google-Smtp-Source: AGHT+IE2UUD5R4s/WvPiXuoKLU/Iu/dG3zcz5OVyolIzRJsK9e7kKmhBl42IJ6kwx4IBjwk0q4Rmeg==
-X-Received: by 2002:a05:6a21:1089:b0:1f5:6b36:f56c with SMTP id adf61e73a8af0-2170ce39a55mr20972295637.39.1747724434707;
-        Tue, 20 May 2025 00:00:34 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf5a441sm7325968a12.8.2025.05.20.00.00.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 20 May 2025 00:00:34 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev
-Subject: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge folio
-Date: Tue, 20 May 2025 15:00:20 +0800
-Message-ID: <20250520070020.6181-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c/K02XIc"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKaRD9027386;
+	Tue, 20 May 2025 07:01:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9fWlnVTfRyW4RCCDFTAJQbk5AZguUtzmzGG/w1VqTP0=; b=c/K02XIcnqkiSFGf
+	5K2PrlI0ZyPWTfVCuqWOMMVlU+1grP77td27u6qgbZKxhj6wHpg1tyuJeButnGuO
+	byHchohv2w/ACxtC6j1A6MtGAzP/q2w+2nUFj3A8rmL9AjiZQz9WSjZBBplQLjNZ
+	MPkVG7U1DWJh58KeQfJVdytb1aKCDU5u9PooK43MHO62NMqkZ1+opvqV7qSImvV7
+	r4DRYA/NFnRz2VuP+xtyzWZS3C+p+kWqG9ua8WMO5ZNuMYEnFUPP/WdoBDUWjImW
+	LSaoMUIjZTmoD/5o/t/XBRH/VUpU9Yd0qtBdNjFCxcb71h3VMdjo7wfQQwlPLUfA
+	FMTkhQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsxr0s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 07:01:05 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K713FD020573
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 07:01:04 GMT
+Received: from [10.218.0.120] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
+ 2025 00:00:51 -0700
+Message-ID: <3d867490-0738-4baf-9fd0-e522aa8d2677@quicinc.com>
+Date: Tue, 20 May 2025 12:30:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Enable tuning for SDR50 mode for
+ SD card
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bhupesh Sharma
+	<bhupesh.sharma@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
+        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_sachgupt@quicinc.com>, <quic_bhaskarv@quicinc.com>,
+        <quic_narepall@quicinc.com>, <kernel@quicinc.com>
+References: <20241107080505.29244-1-quic_sartgarg@quicinc.com>
+ <20241107080505.29244-3-quic_sartgarg@quicinc.com>
+ <4e4870b5-4491-4f65-9a41-1a5e9e1bdf68@intel.com>
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+In-Reply-To: <4e4870b5-4491-4f65-9a41-1a5e9e1bdf68@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 37qx-J20nTHUsPh0m709gGf2T0dyfiIX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1NiBTYWx0ZWRfX0U/EKY/m/vMB
+ vVj87rvMt2ZQ6+2PtlY7/HF+JxmAn/8z0hDIVQ2VtbRsHddmW/HJM2SrmM6VNTNLTWtqz927Fk7
+ OoUbvEuQ+Nl3FZ1j3629KJloYvy/rxw+NIX7r4d1cxx2ny2ikFXxPOtwraHbffTVgdbGHghinIV
+ ctOlGxPZr2bV5S+n6lAkLBVTgWGTw+1oTs1GZam+E5XoPFMXefT59ikD5t59wIePFXkdFhCzf+7
+ DP+PROMhVUcQuKyIlLgikERYgp7VLSS7JiLXTnb0axprMC+dRbiQ48uTaUymEBGR0DTs8DW6eTD
+ EwojAV9TWPxGD2y66dhsJnnVMqY3RVbtZoq7Lu9ENqAfRhJ5BNeGqEorzpfA38UHm+MrciKElzN
+ es++NoDH1iBOtpLm/1+YrkAMJDdNKAB7RUZD7SiV3wFIZBs1CVNmziD/2saQB2DCCJ83IfU8
+X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682c28b1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=05cVhv9CEcOWwgLMNlEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 37qx-J20nTHUsPh0m709gGf2T0dyfiIX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ clxscore=1011 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200056
 
-From: Li Zhe <lizhe.67@bytedance.com>
 
-When vfio_pin_pages_remote() is called with a range of addresses that
-includes huge folios, the function currently performs individual
-statistics counting operations for each page. This can lead to significant
-performance overheads, especially when dealing with large ranges of pages.
 
-This patch optimize this process by batching the statistics counting
-operations.
+On 11/11/2024 2:21 PM, Adrian Hunter wrote:
+> On 7/11/24 10:05, Sarthak Garg wrote:
+>> For Qualcomm SoCs which needs level shifter for SD card, extra delay is
+>> seen on receiver data path.
+>>
+>> To compensate this delay enable tuning for SDR50 mode for targets which
+>> has level shifter.
+>>
+>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>> ---
+>>   drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index e00208535bd1..16325c21de52 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -81,6 +81,7 @@
+>>   #define CORE_IO_PAD_PWR_SWITCH_EN	BIT(15)
+>>   #define CORE_IO_PAD_PWR_SWITCH	BIT(16)
+>>   #define CORE_HC_SELECT_IN_EN	BIT(18)
+>> +#define CORE_HC_SELECT_IN_SDR50	(4 << 19)
+>>   #define CORE_HC_SELECT_IN_HS400	(6 << 19)
+>>   #define CORE_HC_SELECT_IN_MASK	(7 << 19)
+>>   
+>> @@ -1124,6 +1125,10 @@ static bool sdhci_msm_is_tuning_needed(struct sdhci_host *host)
+>>   {
+>>   	struct mmc_ios *ios = &host->mmc->ios;
+>>   
+>> +	if (ios->timing == MMC_TIMING_UHS_SDR50 &&
+>> +			host->flags & SDHCI_SDR50_NEEDS_TUNING)
+> 
+> Please do line up code as suggested by checkpatch:
+> 
+> CHECK: Alignment should match open parenthesis
+> #35: FILE: drivers/mmc/host/sdhci-msm.c:1129:
+> +       if (ios->timing == MMC_TIMING_UHS_SDR50 &&
+> +                       host->flags & SDHCI_SDR50_NEEDS_TUNING)
+> 
+> CHECK: Alignment should match open parenthesis
+> #55: FILE: drivers/mmc/host/sdhci-msm.c:1219:
+> +       if (ios.timing == MMC_TIMING_UHS_SDR50 &&
+> +                       host->flags & SDHCI_SDR50_NEEDS_TUNING) {
+> 
+> total: 0 errors, 0 warnings, 2 checks, 40 lines checked
+> 
+> 
 
-The performance test results for completing the 8G VFIO IOMMU DMA mapping,
-obtained through trace-cmd, are as follows. In this case, the 8G virtual
-address space has been mapped to physical memory using hugetlbfs with
-pagesize=2M.
+Sure will update in V2.
 
-Before this patch:
-funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+>> +		return true;
+>> +
+>>   	/*
+>>   	 * Tuning is required for SDR104, HS200 and HS400 cards and
+>>   	 * if clock frequency is greater than 100MHz in these modes.
+>> @@ -1192,6 +1197,8 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>>   	struct mmc_ios ios = host->mmc->ios;
+>>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>   	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
+>> +	u32 config;
+>>   
+>>   	if (!sdhci_msm_is_tuning_needed(host)) {
+>>   		msm_host->use_cdr = false;
+>> @@ -1208,6 +1215,15 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>>   	 */
+>>   	msm_host->tuning_done = 0;
+>>   
+>> +	if (ios.timing == MMC_TIMING_UHS_SDR50 &&
+>> +			host->flags & SDHCI_SDR50_NEEDS_TUNING) {
+> 
+> Ditto alignment
+> 
 
-After this patch:
-funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
+Sure will update in V2.
 
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
-Changelogs:
+>> +		config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
+>> +		config |= CORE_HC_SELECT_IN_EN;
+>> +		config &= ~CORE_HC_SELECT_IN_MASK;
+>> +		config |= CORE_HC_SELECT_IN_SDR50;
+> 
+> Perhaps clear bits first, then set bits e.g.
+> 
+> 		config &= ~CORE_HC_SELECT_IN_MASK;
+> 		config |= CORE_HC_SELECT_IN_EN | CORE_HC_SELECT_IN_SDR50;
+> 
 
-v2->v3:
-- Code simplification.
-- Fix some issues in comments.
+Sure will update in V2.
 
-v1->v2:
-- Fix some issues in comments and formatting.
-- Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
-- Move the processing logic for huge folio into the while(true) loop
-  and use a variable with a default value of 1 to indicate the number
-  of consecutive pages.
-
-v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
-v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
-
- drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
- 1 file changed, 37 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 0ac56072af9f..48f06ce0e290 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
- /*
-  * Helper Functions for host iova-pfn list
-  */
--static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-+
-+/*
-+ * Find the first vfio_pfn that overlapping the range
-+ * [iova, iova + PAGE_SIZE * npage) in rb tree.
-+ */
-+static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
-+		dma_addr_t iova, unsigned long npage)
- {
- 	struct vfio_pfn *vpfn;
- 	struct rb_node *node = dma->pfn_list.rb_node;
-+	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
- 
- 	while (node) {
- 		vpfn = rb_entry(node, struct vfio_pfn, node);
- 
--		if (iova < vpfn->iova)
-+		if (end_iova <= vpfn->iova)
- 			node = node->rb_left;
- 		else if (iova > vpfn->iova)
- 			node = node->rb_right;
-@@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
- 	return NULL;
- }
- 
-+static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-+{
-+	return vfio_find_vpfn_range(dma, iova, 1);
-+}
-+
- static void vfio_link_pfn(struct vfio_dma *dma,
- 			  struct vfio_pfn *new)
- {
-@@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 		 * and rsvd here, and therefore continues to use the batch.
- 		 */
- 		while (true) {
-+			struct folio *folio = page_folio(batch->pages[batch->offset]);
-+			long nr_pages;
-+
- 			if (pfn != *pfn_base + pinned ||
- 			    rsvd != is_invalid_reserved_pfn(pfn))
- 				goto out;
- 
-+			/*
-+			 * Note: The current nr_pages does not achieve the optimal
-+			 * performance in scenarios where folio_nr_pages() exceeds
-+			 * batch->capacity. It is anticipated that future enhancements
-+			 * will address this limitation.
-+			 */
-+			nr_pages = min((long)batch->size, folio_nr_pages(folio) -
-+						folio_page_idx(folio, batch->pages[batch->offset]));
-+			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
-+				nr_pages = 1;
-+
- 			/*
- 			 * Reserved pages aren't counted against the user,
- 			 * externally pinned pages are already counted against
- 			 * the user.
- 			 */
--			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
-+			if (!rsvd && (nr_pages > 1 || !vfio_find_vpfn(dma, iova))) {
- 				if (!dma->lock_cap &&
--				    mm->locked_vm + lock_acct + 1 > limit) {
-+				    mm->locked_vm + lock_acct + nr_pages > limit) {
- 					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
- 						__func__, limit << PAGE_SHIFT);
- 					ret = -ENOMEM;
- 					goto unpin_out;
- 				}
--				lock_acct++;
-+				lock_acct += nr_pages;
- 			}
- 
--			pinned++;
--			npage--;
--			vaddr += PAGE_SIZE;
--			iova += PAGE_SIZE;
--			batch->offset++;
--			batch->size--;
-+			pinned += nr_pages;
-+			npage -= nr_pages;
-+			vaddr += PAGE_SIZE * nr_pages;
-+			iova += PAGE_SIZE * nr_pages;
-+			batch->offset += nr_pages;
-+			batch->size -= nr_pages;
- 
- 			if (!batch->size)
- 				break;
--- 
-2.20.1
-
+>> +		writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
+>> +	}
+>> +
+>>   	/*
+>>   	 * For HS400 tuning in HS200 timing requires:
+>>   	 * - select MCLK/2 in VENDOR_SPEC
+> 
