@@ -1,164 +1,123 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7F2741CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243192750FD
 	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737721; cv=none; b=r7X2CC+AzRZdwM22bjAGEES/kHjzhEsx+7Ve98sNpPJmmosJ3W5kYtWAu29g0zka36thguGW7z88hZ0f7Hl/PieMT/05nS8+nrBuMGEOOXSkDqf+rEnxZdNWe8Qp91jxNM1Yq5xpjvmsqW1ElL0Tk4rYHnGrHpT1rRrzn2qCJmc=
+	t=1747737721; cv=none; b=RnHrKp48p9rT2v80IFCXWEsQPrin2U8/76gS8eLpp2upWBr26sm8zpDh3pTjHK8UN9Enuwr6I+MYCuq9kAM4nLKOT1PY9HBiG7anD7j7APsoVC/9JecjjtgiE1IQOThKu1sdqd55a4GTGmIqVv9ySdgDMUkXANC76yCY+2efqaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747737721; c=relaxed/simple;
-	bh=mUWTXN9HHfTlRXKGpPk+mQJc0KnWojsAPguAI+nOV+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fL8w3M40/eEqj0qEjTGPXkRO6BdJM2SS+j+p8MzFauNv3hE9UVQOXP0Wd5H7rPu/JorkTrGspemH0k1i17Bd0egRAebeFdAq2ooWymouo29HKw7rpGQxRAZ2EM6YHTDWnLXWlGMcHOe+7yXd8dDBfQWDOKnFIQukQYqWqTonjZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=U5qMx1CD; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	bh=vbW4J15gT0Anek7l1UlLR4VB3Z3pNTgkHhKTuT6ywMY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N2polUxDSF9WsjWkllRQTMkrFsCMW1NLms5nqq4tW5NY1wTDoZwM6Z6QE1vdhOrVsUon58x25BwXn7TcSV6nD3nJxkWpHJxYr82YeOMbVug/2MirP7KFoJvTlHbdG9OxQvVixzKEWRZOGYwgsLd5bJsdPy+LYiME6PZB6Ku1jzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WOAIdj3j; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="U5qMx1CD"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4193583a12.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WOAIdj3j"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso11127985e9.0
         for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747737718; x=1748342518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o/EhzKMaxIvvDCcy/f4feKI9fqwkuL11s7nWdOGRixo=;
-        b=U5qMx1CDhFxQ2AbPAyPfVLaEQQOIMtN5iSLgBUaZTEMy49KWN+0ZiNJyiGwiDVkbbY
-         KTyLDiRC5oAfn4n2sG6OxBHCSvYISwl97l35paU7KwqxiEJvsNDu4p4RSWjjwkCCUw2v
-         L6nzp50qRyhkso9a27CzU2MnsMg1FwUposHld9loTQl/dSCg59QFqxKE7F/rfb/uM0ad
-         0mHVSOghIUTbgJMo8kcmr+YwopSyvpcSB4nS1lf+BUcE+L2mh3y3GGbpjpcRyDdPXOnt
-         t7oJ9cKDRFTqdZgDcMdTN/pvU8UavNHjxPsTEcbN0LPAT3qhcVTJdsaj6EBYdqjZF55y
-         3XQw==
+        d=google.com; s=20230601; t=1747737718; x=1748342518; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2i089Y2WwQ9qQU2NJo6zV7zkt8mG6d9ipwjqGuYXJek=;
+        b=WOAIdj3j3nQceSYc6ecI4eOZCw+cCA68+Pesnwlr2A0hMWpm8ivfhZFWplC+p2/L/8
+         Lh8yBZAGRrY4s0Mp4em0+lh6hJx/N1Dknom4joAnkNzJLRd5bk+eS0vrpVmx8hKCvWnk
+         K/kPXfXUJs4uBiuBdhVh+RgiJnqvfUEm6Vt52JXu95sdtjUXjXnXwxENnMGIKC6/FXtL
+         y2VAGNMRbYl7YLOFfJwRTMW1LdUYNBa+6Jw5uP62UWH8r0nx7Pk8RQF6Zq4F2pl6vonE
+         nB4HY+6XF2Bmefh3OHGLMM9OELIPzCBoO0PfjJpr56T2nJFYw4sTCNYTrdfaSQEzqoxx
+         bpKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1747737718; x=1748342518;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o/EhzKMaxIvvDCcy/f4feKI9fqwkuL11s7nWdOGRixo=;
-        b=XKDtgPWgjlsuMKbK4Lbkt4acJkohSgtN8DK5H2nR/ws23BWBTneiWFAoPjWQkYdIjq
-         6H64lYMrMCFPQtVQDTEE8EceZLpPbuRSth9TNimNvYGNNmOzlKM4L6Mt+/Ej2qs/LtDX
-         D6Hnq+18uaiOrfVnpouLln1n23ZN4xYcydZmyNR2WvtNfU5rAO0i7mTJtCSngKQhSnGd
-         K2PwaBTpHUeY38kW6XussB0hR/DrQgTvtp67Loq0PnLBrW6avw/ghJ2Vt23u3LqjnSz9
-         X/HZZwngEND3bkXuzmH4VvmrlD6cuzkuQ00AyOPqky3AJ5dSKLdi9/QAWMQBEatqdlR7
-         zM9w==
-X-Gm-Message-State: AOJu0YxiIYYt+7e6Z3slSyAcR2KGInRbiWRDjw9HAQw07b8FYHas+e3b
-	rIlWOc5U3ujfbdtLHjr4fV5+AEwnX+qxdk6khtALXSVfUvdJ6/1fTYht3DuJhAzXVQ==
-X-Gm-Gg: ASbGnctQR5tIZAw5I59Ch1ED3GIg0JFr19CDLHu2r3OA7u15Lf/8SWG8/MtynUFz1OP
-	XvIrHX79CxxbnZBI6e2vXQXjlYI0GeOBG9cK2GoEPwpnXOdTeyodrSJdQ2OYPnlR2PwhTVk7PWA
-	3JlzlBEfeQjcT30r6f/vXQpVzb+BgSIolZTW2HYts7E2Z6IGXn2MLMOaymxr3l8IwR3fJobBFDK
-	EXNgDEQAnTVP+HWnDKybmJ7Q8vmfJoKloxp+x0gDD5imhHrdEmOLxwKDebMGBKopeLvg8XD7ksW
-	yfAdzOpN0fYX+10UKA7e2rYx9K6izKiJeY2eWtpQ+ns0bwIlroyfyGNRuMjFZ6GNuQnro1vgmAw
-	ryw==
-X-Google-Smtp-Source: AGHT+IHKvJUSPKPdHp3qQ5+Ubc2geQwAfPn/IejVahVN8wD99rI82HgnXp5cQMlWsXUPZMovKC/fmQ==
-X-Received: by 2002:a17:90a:e706:b0:30e:5c7f:5d26 with SMTP id 98e67ed59e1d1-30e7d5aca67mr25983405a91.24.1747737718476;
-        Tue, 20 May 2025 03:41:58 -0700 (PDT)
-Received: from n37-107-136.byted.org ([115.190.40.14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5d31sm1359431a91.38.2025.05.20.03.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 03:41:58 -0700 (PDT)
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class change for throttled task
-Date: Tue, 20 May 2025 18:41:07 +0800
-Message-Id: <20250520104110.3673059-5-ziqianlu@bytedance.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250520104110.3673059-1-ziqianlu@bytedance.com>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2i089Y2WwQ9qQU2NJo6zV7zkt8mG6d9ipwjqGuYXJek=;
+        b=U36NwFZRmWJbMD4reglhyl59W6k52j0tXhwShRgbIvaD7KdLqk3g+Zkz24tXLa4NVF
+         3iCJQftwxhDRH1YBOnSrQ8nb4pdc124MptZyacOuiFKglTeV+U2gkP8G6QSbQnt+ot22
+         Q/67wId7hcrY+AhAdmAXVxuAuHjtE9f58pSprBh4CGOdZej2DUfyeohTKpAEuFUjxH+3
+         lmI6W3f4//b2q4VMRCD/bKVlAefsPUM3M+aIMS3qHRtj2jmLoK4eA9DJOt9UjP6X9T5A
+         IWXqCNvi1/IGLM4UbE+yHqROSQg/vO9kW9bqqGjNEFl3npo4oe8vinI3JmUdszDrBeeg
+         0dFg==
+X-Gm-Message-State: AOJu0Yx/tQoThHv/rJUSiahuo0SugFglE+xhc12mUeGKP888nb8Ahf0k
+	r7UGD8V4EBihnrd+6RELn5yfbxwG6FlBlMGvxDx8kJ1ReznuuBJ3l08Eoc2ejmf/Ry21MqIVVli
+	/GLvsh3Qes7qBneWuUm855Q/PluMCVKtDy4IioXJXXSuE0o3Vc2pKtZSO+VxTDVviEm3511qSoF
+	UBRILCh2YM4RDwNNQNYWR4lVl0uRKgMw6KLQ==
+X-Google-Smtp-Source: AGHT+IFBU8TCAwpTPuGWuckj9SBjBaf7waNzV9OC3co6AKbdhaL4TZkNRZwAWSi7F8QhIX62Kn75NxdT
+X-Received: from wmbfm26.prod.google.com ([2002:a05:600c:c1a:b0:442:f8e9:a2ac])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4706:b0:43c:f629:66f3
+ with SMTP id 5b1f17b1804b1-442fd63b22cmr140816855e9.18.1747737718459; Tue, 20
+ May 2025 03:41:58 -0700 (PDT)
+Date: Tue, 20 May 2025 12:41:40 +0200
+In-Reply-To: <20250520104138.2734372-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250520104138.2734372-9-ardb+git@google.com>
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1605; i=ardb@kernel.org;
+ h=from:subject; bh=gDhtt2gsfPR+q9p6uoVx2wiSpQ+yOS3VasjQVtcD7TY=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMnJjX9SePeX/u85N9le6jy7bg/6UjMvek6854f7tprn
+ 1/5S4ejo5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEwkpIrhf6T7o+2qxTPMc34s
+ /H8mevdUscnWWc96NIs3bzx27tbpHQIM/502GM4q+LSJe6qh16eUO28e7zXo12Jl2XvwefFb3vb cdBYA
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250520104138.2734372-10-ardb+git@google.com>
+Subject: [PATCH v5 1/7] x86/mm: Decouple MAX_PHYSMEM_BITS from LA57 state
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, 
+	"Kirill A. Shutemov" <kirill@shutemov.name>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
-core will dequeue it and then requeued it.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-The throttled task is still considered as queued by core because p->on_rq
-is still set so core will dequeue it, but since the task is already
-dequeued on throttle in fair, handle this case properly.
+As the Intel SDM states, MAXPHYADDR is up to 52 bits when running in
+long mode, and this is independent from the number of levels of paging.
+I.e., it is permitted for a 4-level hierarchy to use 52-bit output
+addresses in the descriptors, both for next-level tables and for the
+mappings themselves.
 
-Affinity and sched class change is similar.
+So set MAX_PHYSMEM_BITS to 52 in all cases for x86_64, and drop the
+MAX_POSSIBLE_PHYSMEM_BITS definition, which becomes redundant as a
+result.
 
-Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- kernel/sched/fair.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/include/asm/pgtable_64_types.h | 2 --
+ arch/x86/include/asm/sparsemem.h        | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 74bc320cbc238..4c66fd8d24389 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
- 		update_rq_clock(rq);
- 		WARN_ON_ONCE(!list_empty(&p->throttle_node));
- 		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-+		/*
-+		 * Must not add it to limbo list before dequeue or dequeue will
-+		 * mistakenly regard this task as an already throttled one.
-+		 */
- 		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
- 		resched_curr(rq);
- 	}
-@@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
- 	INIT_LIST_HEAD(&p->throttle_node);
- }
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 4604f924d8b8..1481b234465a 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -56,8 +56,6 @@ extern unsigned int ptrs_per_p4d;
+ #define P4D_SIZE		(_AC(1, UL) << P4D_SHIFT)
+ #define P4D_MASK		(~(P4D_SIZE - 1))
  
-+static void dequeue_throttled_task(struct task_struct *p, int flags)
-+{
-+	/*
-+	 * Task is throttled and someone wants to dequeue it again:
-+	 * it must be sched/core when core needs to do things like
-+	 * task affinity change, task group change, task sched class
-+	 * change etc.
-+	 */
-+	WARN_ON_ONCE(p->se.on_rq);
-+	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
-+
-+	list_del_init(&p->throttle_node);
-+}
-+
- static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
- static int tg_unthrottle_up(struct task_group *tg, void *data)
- {
-@@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
- static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
- static void task_throttle_setup_work(struct task_struct *p) {}
- static bool task_is_throttled(struct task_struct *p) { return false; }
-+static void dequeue_throttled_task(struct task_struct *p, int flags) {}
- 
- static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
- {
-@@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+-#define MAX_POSSIBLE_PHYSMEM_BITS	52
+-
+ /*
+  * 3rd level page
   */
- static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
-+	if (unlikely(task_is_throttled(p))) {
-+		dequeue_throttled_task(p, flags);
-+		return true;
-+	}
-+
- 	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
- 		util_est_dequeue(&rq->cfs, p);
+diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+index 3918c7a434f5..550b6d73ae22 100644
+--- a/arch/x86/include/asm/sparsemem.h
++++ b/arch/x86/include/asm/sparsemem.h
+@@ -26,7 +26,7 @@
+ # endif
+ #else /* CONFIG_X86_32 */
+ # define SECTION_SIZE_BITS	27 /* matt - 128 is convenient right now */
+-# define MAX_PHYSMEM_BITS	(pgtable_l5_enabled() ? 52 : 46)
++# define MAX_PHYSMEM_BITS	52
+ #endif
  
+ #endif /* CONFIG_SPARSEMEM */
 -- 
-2.39.5
+2.49.0.1101.gccaa498523-goog
 
