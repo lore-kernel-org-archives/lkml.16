@@ -1,235 +1,138 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEB0176ADB
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89944C7C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747707440; cv=none; b=SzxhRvjLhvlJHL4jmfgr6mEBp/xw+1u1jcpxY9FsTfxGOOWq/2SutD4kMhLiS2OatKoH8mcCr/L44zXhiaevLek+m8n13FvHkvgP/9mkODfKVoQetfhgevtGX77p3B5Uw6j0zpzcoatoIiy/uRqie+yPIm+oWJWyAF9XzyLiTl8=
+	t=1747707680; cv=none; b=W9oeJs9Vcw/pECmVxbp8h0ycdtSkSjG/RZS6Ri8WMyKWqe9V83Svp6Ao/ZdoOwN10csUmCmoTqadyjcdlRLFzG7LEX6zSwMrsLUU6FX//QTVx7qdfXt0YR/qqO/+qlSKvnp4Yac6cQW2NPhGGu/inctqbFWOLgTMApBotx9bB1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747707440; c=relaxed/simple;
-	bh=0ELGpuT6X196vDWFxZcQyQLTCIT3NcPHZVI0ad0L2tU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gIPalb5KWTvC7nJY2lFau72vpGpG3CYBkM6wb67gs5hy5ygzdWPpm8hJmcoPnCiJJWLQGjZjvf/puC1/smYoz0m9V5Mw5yxzZAbQ3bcTh1r/FhQlCGpVmlAp8LeRkpcKzLPKYYhAQI+su0ttwiV4sghAy/p38qqGjrq9lTAbKO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=blEKiG6S; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1747707680; c=relaxed/simple;
+	bh=rnIyZOZwXwyBX4MC9AQ4KpcUOppBZVf56gLBfOF8aaE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=C/rgsnzjr/6mCYpUWrDloBesnFIXiCec2QwvoT6kUgqHBQIlOR5zFbyHAKRCURlOfmGVeFIEU07AqPBEo+c8xvOj+z95VR4X9/OIAcqWCLfA/JoIkyxXO7wBTLGT+ARtqjiGZCREOmxNnAUIP0inHOgKDsNTyEBnz8bB8htDSzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zxrvWix1; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="blEKiG6S"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b27015122c4so1600830a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:17:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zxrvWix1"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f8b10b807fso53906136d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1747707437; x=1748312237; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qgc1WWyAa4IDJXeZMlquPom4mmmQ18LfyHJ9MogW4mM=;
-        b=blEKiG6SpqCLBtjghxT5NAgvhZhieKpNdlgX5smT8ZbUcTaROo8ghLIw5txeIQLPpV
-         pjGtgGpPmRCQsNq1+Aw5sdontUtUswGqkOP/rC5aoGanD08hD9SlBhoRJlsWQZXiWVFm
-         qitIw0GVUpNGsy51d/z/LiKr+VwbZoUhZhBvnEMoweVwDhGnu6qcrXcFMo5LTrBtCo8m
-         fdu9tVsa32QOuwo0in4i6BXWsn31lvrzrV7sTzs7Ej1XplqCzK1lRTEglX4pE94r2gR/
-         jES+e4EIq2XQKEDV+C+A8Y3/RC7PQGc25zJi3+nmIcfZbAguYCwJFixX/+TR4vLGq/ys
-         GjDQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747707676; x=1748312476; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mv9NR1w+gxIpIc3S5gfdhi3JSLdkpRz142CJ5qGcBC8=;
+        b=zxrvWix12fXobaHp1fUkF0AKEvDN1P8oYXB+JjxtxEcpviqD0l1+UIkzAtd5vaNpA1
+         WGYrGHZFS7Mp+yQDD2+RhSwUCkbPfBH3BRe2sOygbqBPO1iPIRzylZY7XB3AUQ/iI63M
+         k4vcVi8C8lsvv5CJ+4IOqeTCcHRqwqmeYuDFmthtjWjZMBS8dc7AaDQ7WWNHdn+pOa1M
+         L4x2iWFqdIM86wC08tpcQEBNn7mODIYfojfQ0po554SiAWcBT/DyleiPl6HRoQGuUbF6
+         wz32eGcxbQi01irLvlvupoMYHIIdfQ+gkoemhKf1FmByPJMXrshlJq4qi8R4k85dYDU7
+         n4qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747707437; x=1748312237;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qgc1WWyAa4IDJXeZMlquPom4mmmQ18LfyHJ9MogW4mM=;
-        b=KNKmeiQeFs4hAP+Qy6Fkz1aIvL1J8EamQsobs+BHd6VLs2hQ3sGoxZhUv/ARpoxqOq
-         I9SqUecXIDwXCX1Yd5tWa7DDfYPwAe23NLWjt0ohH/hIRpKB8Kwp5h60ywOfqxxGf2Lp
-         /Rqg7wFD4VKzp8gq2udFM1JfNOOkZtNO9nN9HIkz93oR8m79RdnHsxAi2A8hmbzWtfSn
-         VSzpYrjW6WYplO3Dt+pjTO1ZN0xjcel8GHfUb2cS7C/hsqaLESBHKnHAXm0w4u/aXnEA
-         pjP0Kn8GP18PmFPqcocYP+SnUFT7eAF0+Qhxwj23cZXXY6BtV80RadywMFEeDVacFFXo
-         du4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUdE5QTEWH+DFbH9/IEljyagt7gjoKSAS1bK4Vzz8fgAURaXxRNqKU62tcpwE+PqPgBAE7xsPCaPzqkFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0VxC7D9pPBbTXs7zFlOGOVCr/RB+28/1bxe38TDZ+ibh3xcPq
-	aFn0746cSNNRTW2PLxU/Z73cmt6uctLSYRO1gOHH6k0E5UBOeVaEF0JK6xsvL/RAzQI=
-X-Gm-Gg: ASbGncuQas7bm+Mu9hdu8+DoLUB5R6Uqm0kcBnTVaRxNSJlIyQfopSd359Zhsj03V14
-	qQqptPUQIEHHxhctw+JbnKlHMpY88GUGsV/oj28wEn7BdeiA9wOoLw15/XFzQwFI8hP1K3lf5SG
-	etByvwl63jCAYpcPi9m24iPWXJshw32MM4TRtsYvCA2fT9EesQID+CK5wGfoSsJ9l/n13rGEZor
-	0mEdGUPHqpPf7beD3GkxWxFF0kZOSxzu/jZW2B/xvxF3jtadfyNSkrFuuQyBvBXF/VuKYnsDRrj
-	2F8s6RWmK2Oz4DmXFOgZ9q0fLVZyusQMk84L0tg7ZjA4Z7QiBoRKYV5q0ptBrZ0nftlHkVgus5Y
-	FB5urk1FWhw==
-X-Google-Smtp-Source: AGHT+IGIdIH2mqsPlYNb8bZRO78i8ULrukpluljyciVMskkMfers0XHXo5DCyjiVjVUdhAJ/Ropdmw==
-X-Received: by 2002:a17:903:18d:b0:220:c4e8:3b9d with SMTP id d9443c01a7336-231d4596b26mr191179295ad.37.1747707437566;
-        Mon, 19 May 2025 19:17:17 -0700 (PDT)
-Received: from x1.tailc1103.ts.net (97-120-251-212.ptld.qwest.net. [97.120.251.212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebaf5esm66904945ad.194.2025.05.19.19.17.16
+        d=1e100.net; s=20230601; t=1747707676; x=1748312476;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mv9NR1w+gxIpIc3S5gfdhi3JSLdkpRz142CJ5qGcBC8=;
+        b=vcezz8uYCeWARrcTOq/KFv3QC2JGL891T/32epKu9N7IgY/vfxLgrAXEnKudSo926H
+         iAkn2fTvDzT2BWq6j87dkgBhY+3YO4frQo1el8iKWrONrqhKYMAanjwEAlj8GuR3P4zO
+         VEajaOVUSbbxELxbP+adovOj1KWqut8q16W9UJ9DMaYjLqecbT4FZwNhVfeqGQXy9aT+
+         6O3daPouNEFViYCBBYpYzL8m6kVPn/Pl/w5NT7BLtE7IMMqTVxvj1l7l5n2X82ffZqZa
+         yr+0/ebpJoEMG/+0FggPLmZbxteIDzBRkONPkC0/pS95ZwBSlywwGB1dM0T8sWfYvxS5
+         9kLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnAYOPGMpo/X7KmX+Rf5RBeTiU/g23RW/Bvady0VvOurOS9ML7XJ1ifCccDzAbCNbjvLLF460pbjtiV04=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzha5C7upSbUzgGogLeuEotD06i4QUcrgtvhNDyhcNnoWGQkamN
+	bo+GyOEKupKo/Csm6UPRep1h7km21bZQi/ATPxA/HKxFbTqwAlZlD5jP4fuWiQHVNzQ=
+X-Gm-Gg: ASbGncu+ztXYxXmE60fZNF28eMfwLvoJdnLT90Ih3K0c6tKL7rycWl4nVjYR3O/cYiB
+	E81Fy2ZT2lWzKKv/ZU2yOwtasxH8pT5g4Ch6o4GwBLNRAS+gCiSKLdtIZt3NVi8Kr01nett0cBB
+	oc+wIA5mTPBKlOzZvLJEdWoYiARX6mU1gRGd+lx5f6y2seFOZHot3uBFVwJIyufjseIOkabPsZQ
+	Rt+7SvL7CCH/XwUMd4WBZ597Fql3gJyEpi2BEWk74BaQ/UGCCHMiUJ5Bwmo5vjwRoU6+TPe86+e
+	MJ46c/j8oK7GpaxlDBqvzOR6uROfuHytd20Y8dPyxG4Z0BxzuVOPN9ce9R0DoH+G37AVXbNmgzK
+	z0goz1WCp3PnYhA==
+X-Google-Smtp-Source: AGHT+IEpKUyEwjXQJkL2YdrPEoyKd44y5EfV4NhY69IIUsVTf/AREwIFgVYdjQXub8D3/wgtOUncQA==
+X-Received: by 2002:a05:6214:2ac:b0:6f8:c621:5a0d with SMTP id 6a1803df08f44-6f8c6215d4cmr147988086d6.19.1747707676346;
+        Mon, 19 May 2025 19:21:16 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b097a3dbsm65039696d6.101.2025.05.19.19.21.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 19:17:17 -0700 (PDT)
-From: Drew Fustini <drew@pdp7.com>
-To: Oliver O'Halloran <oohall@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	nvdimm@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Drew Fustini <drew@pdp7.com>
-Subject: [PATCH] dt-bindings: pmem: Convert binding to YAML
-Date: Mon, 19 May 2025 19:14:40 -0700
-Message-Id: <20250520021440.24324-1-drew@pdp7.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 19 May 2025 19:21:15 -0700 (PDT)
+Date: Mon, 19 May 2025 22:21:15 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2 next 2/4] lib: mul_u64_u64_div_u64() Use BUG_ON() for
+ divide by zero
+In-Reply-To: <20250518133848.5811-3-david.laight.linux@gmail.com>
+Message-ID: <pr79o4o1-5345-popr-r206-8qo76523657s@onlyvoer.pbz>
+References: <20250518133848.5811-1-david.laight.linux@gmail.com> <20250518133848.5811-3-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Convert the PMEM device tree binding from text to YAML. This will allow
-device trees with pmem-region nodes to pass dtbs_check.
+On Sun, 18 May 2025, David Laight wrote:
 
-Signed-off-by: Drew Fustini <drew@pdp7.com>
----
-v2: remove the txt file to make the conversion complete
+> Do an explicit BUG_ON(!divisor) instead of hoping the 'undefined
+> behaviour' the compiler generated for a compile-time 1/0 is in any
+> way useful.
+> 
+> It may be better to define the function to return ~(u64)0 for
+> divide by zero.
+> 
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> ---
+> 
+> A new change for v2 of the patchset.
+> Whereas gcc inserts (IIRC) 'ud2' clang is likely to let the code
+> continue and generate 'random' results for any 'undefined bahaviour'.
 
- .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
- .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 50 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
- create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
+clang does exactly the same as gcc.
 
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-deleted file mode 100644
-index cd79975e85ec..000000000000
---- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Device-tree bindings for persistent memory regions
-------------------------------------------------------
--
--Persistent memory refers to a class of memory devices that are:
--
--	a) Usable as main system memory (i.e. cacheable), and
--	b) Retain their contents across power failure.
--
--Given b) it is best to think of persistent memory as a kind of memory mapped
--storage device. To ensure data integrity the operating system needs to manage
--persistent regions separately to the normal memory pool. To aid with that this
--binding provides a standardised interface for discovering where persistent
--memory regions exist inside the physical address space.
--
--Bindings for the region nodes:
-------------------------------
--
--Required properties:
--	- compatible = "pmem-region"
--
--	- reg = <base, size>;
--		The reg property should specify an address range that is
--		translatable to a system physical address range. This address
--		range should be mappable as normal system memory would be
--		(i.e cacheable).
--
--		If the reg property contains multiple address ranges
--		each address range will be treated as though it was specified
--		in a separate device node. Having multiple address ranges in a
--		node implies no special relationship between the two ranges.
--
--Optional properties:
--	- Any relevant NUMA associativity properties for the target platform.
--
--	- volatile; This property indicates that this region is actually
--	  backed by non-persistent memory. This lets the OS know that it
--	  may skip the cache flushes required to ensure data is made
--	  persistent after a write.
--
--	  If this property is absent then the OS must assume that the region
--	  is backed by non-volatile memory.
--
--Examples:
----------------------
--
--	/*
--	 * This node specifies one 4KB region spanning from
--	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
--	 */
--	pmem@5000 {
--		compatible = "pmem-region";
--		reg = <0x00005000 0x00001000>;
--	};
--
--	/*
--	 * This node specifies two 4KB regions that are backed by
--	 * volatile (normal) memory.
--	 */
--	pmem@6000 {
--		compatible = "pmem-region";
--		reg = < 0x00006000 0x00001000
--			0x00008000 0x00001000 >;
--		volatile;
--	};
--
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-new file mode 100644
-index 000000000000..a4aa4ce3318b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pmem-region.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+maintainers:
-+  - Bjorn Helgaas <bhelgaas@google.com>
-+  - Oliver O'Halloran <oohall@gmail.com>
-+
-+title: Persistent Memory Regions
-+
-+description: |
-+  Persistent memory refers to a class of memory devices that are:
-+
-+    a) Usable as main system memory (i.e. cacheable), and
-+    b) Retain their contents across power failure.
-+
-+  Given b) it is best to think of persistent memory as a kind of memory mapped
-+  storage device. To ensure data integrity the operating system needs to manage
-+  persistent regions separately to the normal memory pool. To aid with that this
-+  binding provides a standardised interface for discovering where persistent
-+  memory regions exist inside the physical address space.
-+
-+properties:
-+  compatible:
-+    const: pmem-region
-+
-+  reg:
-+    maxItems: 1
-+
-+  volatile:
-+    description: |
-+      Indicates the region is volatile (non-persistent) and the OS can skip
-+      cache flushes for writes
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pmem@5000 {
-+        compatible = "pmem-region";
-+        reg = <0x00005000 0x00001000>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..68012219f3f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13564,7 +13564,7 @@ M:	Oliver O'Halloran <oohall@gmail.com>
- L:	nvdimm@lists.linux.dev
- S:	Supported
- Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
--F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
-+F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
- F:	drivers/nvdimm/of_pmem.c
- 
- LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
--- 
-2.34.1
+As mentioned earlier, this is a soft NAK from me.
 
+The above explanation is more speculation than fact. And here we really
+want to duplicate the behavior a regular runtime 32-bit by 32-bit x/0
+would produce, or in other words behave just like div64_u64() for that
+matter.
+
+>  lib/math/div64.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/math/div64.c b/lib/math/div64.c
+> index a5c966a36836..c426fa0660bc 100644
+> --- a/lib/math/div64.c
+> +++ b/lib/math/div64.c
+> @@ -186,6 +186,9 @@ EXPORT_SYMBOL(iter_div_u64_rem);
+>  #ifndef mul_u64_u64_div_u64
+>  u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+>  {
+> +	/* Trigger exception if divisor is zero */
+> +	BUG_ON(!d);
+> +
+>  	if (ilog2(a) + ilog2(b) <= 62)
+>  		return div64_u64(a * b, d);
+>  
+> @@ -212,13 +215,6 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+>  
+>  #endif
+>  
+> -	/* make sure d is not zero, trigger exception otherwise */
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
+> -	if (unlikely(d == 0))
+> -		return 1/0;
+> -#pragma GCC diagnostic pop
+> -
+>  	int shift = __builtin_ctzll(d);
+>  
+>  	/* try reducing the fraction in case the dividend becomes <= 64 bits */
+> -- 
+> 2.39.5
+> 
+> 
