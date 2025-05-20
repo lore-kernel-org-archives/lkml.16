@@ -1,108 +1,163 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439041D90C8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C24110785;
+	Tue, 20 May 2025 03:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711184; cv=none; b=LBtgj+GCp6s0CQOCYF3rrNRWJb0w1rjEWdV7RWXBr+wuBirwk6oRh9ervYoBWvlNkLa1BLnxm8fjSJ2WbUW+1QSYQqJb/bCyd3+GqLjgPGCxpce8HHetGcCV2xo6QguGdwCoD9JlbnHYdEVTa/j1VHfQ6bpRuleNEwOc3Xix7A8=
+	t=1747711184; cv=none; b=jH9i6bHnhqfuGf5KCAItu4/5SOlb+RoMuCc30xcHDL37Iz1BwMFHyeNPDR65tBF7L2DSM5YwSfXG25o+6eBsvb9SI6CwSVN3N0GhUYTsPIh6JOWdJ01fxWlcH+tZAJGknTp13Dz16s0d/tiloNlo2F2jwq75d4QSvyynJBb6OlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747711184; c=relaxed/simple;
-	bh=NDPpV1xvpyuZxHMe0p10Oi9N+7ASFh/SDwtJ1hhLYeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O7S77HOX7v8iDbMCPVWf2eyjMdLuTm/36Iyfed9zq3lKOjrUWG/oZvUPN9k9rpMesiUpvltC5UVjupcDxbOztr8EnhgWyHqhLth3PlKIsDGPyqRW4lo13xsIVGZU8JGnSkKKMv2x/U1yobGE0iHCo4zYashyX0Ww8Fx7QLMDl1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g0NoqhUn; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=czHNSIMkm8xL288YfdfsqxegRNhPr8Myc6LqlktHaWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VpyjgLjUXltQdSLZvzDtIXyj1w9bxF2Ov7Rm1cbVfJAsjSJotwbE/UcFo21cA4T/wL6oPyE9FFRfQ5zNVDtnlEjs3gjArSmnqDP0D3UrEsUvYxJ+plRjVEmp1DHpszf6PwCb9xeUiGWt8zb0hsP5W18NYeQqWmBfH4EKw+UURDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CACJp3Z5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g0NoqhUn"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-48b7747f881so851061cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:19:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747711182; x=1748315982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1VGauyFOCMgAWhV/W7j3JC1R4Th1f9X6u3MqqBt70+s=;
-        b=g0NoqhUngdTRiiAkwnilhGRVAx7Phi/Qv9OFhhOMhuHuOlcHGX2jrJGwOYrt7P421U
-         kyVm1AZGYkqwqyZk6iGVgdkPPS69GVVp8FviB+P56P5LgtLxsfpicVi65Xskai2Z6ort
-         agYFotIuWamY5E56wGEBAtZw61osv1JpOHMxkxHRSh/2NvsZT53TR5i9zJuPki1B66hq
-         LpxDSRqamNdpl/bhKD5uluEEeS8XoESF4wGm+Pca7kEZDqXjhtTTgn27cP/P7GKHidbp
-         a+zEg2dRyI5I0RRawx96HrrxgQgY37YVq9zvN5Ex2p2A73jhql/bHlnEN+Khhz0lJNbn
-         AfbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747711182; x=1748315982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1VGauyFOCMgAWhV/W7j3JC1R4Th1f9X6u3MqqBt70+s=;
-        b=XD4d+nkd8qjz1whht1z5bCJmQafsPgiUe/nTWmCLnA7FTrz5jOlSyR5t8j0XiPRvX+
-         KyG+z/1UwTwcHiAHPcgvQUteF1OsCaSasmO5M9DBO9uE/glaEmzZv8VSreZ6SmPt67ww
-         TNXcCThep+B3tAMOjZBbJqHJuKeziMh6lg0uJgZN/WadIeQEke7put5HVuFxSNT1x/LT
-         1WlhhSLf2IKP+g9uSivcc2eme811VLVjPY3z/P1QlnWG715PHd2R5KDtZ/ImK8nsTG1j
-         iUbd3JpZCszjf5Rl3yqGNywEVdX9dY2t2udXNpeapk4rMeRu+/2UE5N/f76hipewfbDc
-         HuoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAzE9bCCnniquQnvmom6rmCYQ0UZz80OcTfQvrUbglcETsAo7xSGRXdxJAdG/2MNUWyGOUye4GL+ZFRb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuVBKlEcUQDKROxGR3t3Eg7u0p3pgdgUWApGgIrLCH7IpWrpre
-	hNo8ch5hdnHcIprRhfg6i8N35v6I7ZWYNORqxGHPj+lFl34LNesevm0K+7JuhaTwgbHjsYCBN2W
-	B30Rj3fxCPKCxiO/yvBboj6u29sFnQIsx1b4SoKHc
-X-Gm-Gg: ASbGnctd9VrJDroo3Pu0f1KXB1WnPCsFBE2qPNHFYkgPf22Zjzlvn+06Y6Ua6MMJQ10
-	MRTnhSDxt8f+hYOFfmOHPekXVXditYHDzOI6zKv15k8go7CKbJQQxUzuPVH5mLiT43hFU0qguD7
-	PdAWq3umeEWUMgUDxqyj3XkhHM/U7bJDcV/sBBZ4FwNQ==
-X-Google-Smtp-Source: AGHT+IELLH4JpHLhpKxY3tQYC8FVfzVS2kqKQfXnDSC7er1tvpq61D5fA6upHVA64U8+LafOJgYYdmIlh11hFLGBGC8=
-X-Received: by 2002:ac8:5a08:0:b0:47d:4e8a:97f0 with SMTP id
- d75a77b69052e-4960136a0a5mr8641821cf.29.1747711181704; Mon, 19 May 2025
- 20:19:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CACJp3Z5"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JIoIxV013642;
+	Tue, 20 May 2025 03:19:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:to; s=pp1; bh=m2gIUYyBgS95RQQMEUcdY
+	sXFWdcdNysYXDQqt/Nv5io=; b=CACJp3Z5Y0fiO7Go3tsxcty5zwhM28b7C1Wzs
+	Fgot7rSQ16RLhP/EG9M7P3TZOigY6R5oZWeDeI2peDNH8GK3hOGGIfpk4fEcbOAN
+	iiOEYfvaN3d/BR5bjZIJ1pbyyDtqL1Ozc4woAoL/gUAOT0px9f1RHhB6IfZuMbrm
+	UiATARsuIiEuE7z44Z++9AdNMLuB87ozmT8PqgnYL7eSyV3xF85qdSiltVxAmU1+
+	hiaS3tPEUUmYIWhvUbkZBJ99vvQ9lzZ04XlmsHM1jiD6b5ZQz3JKesNJ50trt0qz
+	NAEL6WROp8snwfYoDtm6ggPe6dgfh5wLYw3QZqVO22XhDp1YA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99hq9v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 03:19:08 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54K3J73Y019225;
+	Tue, 20 May 2025 03:19:07 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99hq9t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 03:19:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54JN6uRm007225;
+	Tue, 20 May 2025 03:19:06 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q70k9k2w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 03:19:06 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54K3J4wt34341582
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 03:19:04 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D04C620040;
+	Tue, 20 May 2025 03:19:04 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4899D20043;
+	Tue, 20 May 2025 03:19:00 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.124.218.163])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 20 May 2025 03:19:00 +0000 (GMT)
+Date: Tue, 20 May 2025 08:48:57 +0530
+From: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+To: Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org, "Oliver O'Halloran" <oohall@gmail.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+        Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
+        Olivier Moysan <olivier.moysan@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-iio@vger.kernel.org, Markus Burri <markus.burri@bbv.ch>
+Subject: Re: [PATCH v4 6/6] powerpc/eeh-powernv: fix potential OoB
+Message-ID: <3wfa4z2uozeg4bhu47uipn7mqjuaspxxvjsb7gfpwxbgjfivat@lr6lh5gpht7m>
+Reply-To: mahesh@linux.ibm.com
+References: <20250508130612.82270-1-markus.burri@mt.com>
+ <20250508130612.82270-7-markus.burri@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517000739.5930-1-surenb@google.com> <20250519155145.8378a397a755c1cc5a3e2d4e@linux-foundation.org>
- <CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com> <20250519172132.c46b910bc10857c706866357@linux-foundation.org>
-In-Reply-To: <20250519172132.c46b910bc10857c706866357@linux-foundation.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 19 May 2025 20:19:30 -0700
-X-Gm-Features: AX0GCFuqHoqawVHSUaBVZiij8BVnGoTTfac-et9p6bCnpwkiQGBflm_UZad3Dk0
-Message-ID: <CAJuCfpGAVwRxCA-fdmH_MxD47CPdBD5iFGgEhHpqLAcfLMUX1A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] alloc_tag: allocate percpu counters for module tags dynamically
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kent.overstreet@linux.dev, 00107082@163.com, dennis@kernel.org, 
-	tj@kernel.org, cl@gentwo.org, pasha.tatashin@soleen.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508130612.82270-7-markus.burri@mt.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=J/mq7BnS c=1 sm=1 tr=0 ts=682bf4ac cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=02EIq6OHAAAA:8 a=VnNF1IyMAAAA:8 a=uC_ZhKPKdcj-b1_MkeYA:9 a=CjuIK1q_8ugA:10
+ a=vbqWBO59iwVkzqU4rnh-:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDAyNCBTYWx0ZWRfX+JFPH1t1qErO yq1THqtaDHBTugOHb5q8YHF3TI7HXvDNNqKKBtHRsgq3oqIyZpyB3MVeFusPJ/JeV2USGFok5jl a+r8UyHCAqx9AKwKeKigFVL5xjuNonDdak9cl7T3TjKm38Sn3afEMQT07+lGkuzf0nd+BWmANDq
+ 9hK6qUxgOqjMnJzLhUfL8AI7AObqoljSL2w77nNZfUNUZJlxvuPgn/iPeV7LYjdCGK6rxqQ4+H2 iC3HK4pSSsrd67bg+d4pxbFe81nMv8BJr6DY+/lXx+QiZvpRqTROqkTIXo1u8UdXFfjFie9QUKx HtbPrngZHtAbkCSYnz/yXH9B0xToyhBGOh6qtwrPYfa7L4FD1IF9ksKzqjd6xaDggmHw0DtfX2r
+ /D8pdTl5dEvvwMHH2l6fk8tvUToL5idCNlLRpS2wZJ4yfXeV5DP1eZAjWBnSavQXUdJBpk5g
+X-Proofpoint-ORIG-GUID: lPEI4Yq43fuJeUhtFgRjRhA4gLGAQBSA
+X-Proofpoint-GUID: Udv_LAj6XDkTY2t_olBZEJaLHOagX977
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_02,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200024
 
-On Mon, May 19, 2025 at 5:21=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Mon, 19 May 2025 16:13:28 -0700 Suren Baghdasaryan <surenb@google.com>=
- wrote:
->
-> > > > Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate con=
-tiguous memory")
-> > > > Reported-by: David Wang <00107082@163.com>
-> > > > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@=
-163.com/
-> > > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > > > ---
-> > > >  include/linux/alloc_tag.h | 12 ++++++
-> > > >  include/linux/codetag.h   |  8 ++--
-> > > >  include/linux/percpu.h    |  4 --
-> > > >  lib/alloc_tag.c           | 87 +++++++++++++++++++++++++++++++----=
-----
-> > > >  lib/codetag.c             |  5 ++-
-> > > >  5 files changed, 88 insertions(+), 28 deletions(-)
-> > >
-> > > Should we backport this fix into -stable kernels?  I'm thinking yes.
-> >
-> > Yes, I should have CC'ed stable. The patch this one is fixing was
-> > first introduced in 6.13. I just tried and it applies cleanly to
-> > stable linux-6.13.y and linux-6.14.y.
-> > Should I forward this email to stable or send a separate patch to them?
->
-> I added cc:stable to the mm.git copy so all is OK.  That's the usual
-> workflow.
+On 2025-05-08 15:06:12 Thu, Markus Burri wrote:
+> The buffer is set to 50 characters. If a caller write more characters,
+> count is truncated to the max available space in "simple_write_to_buffer".
+> To protect from OoB access, check that the input size fit into buffer and
+> add a zero terminator after copy to the end of the copied data.
+> 
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
 
-Perfect. Thanks!
+Looks perfect to me.
+
+Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+
+Thanks,
+-Mahesh.
+
+> ---
+>  arch/powerpc/platforms/powernv/eeh-powernv.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> index db3370d1673c..3abee21fdd05 100644
+> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> @@ -73,14 +73,19 @@ static ssize_t pnv_eeh_ei_write(struct file *filp,
+>  	char buf[50];
+>  	int ret;
+>  
+> +	if (count >= sizeof(buf))
+> +		return -EINVAL;
+> +
+>  	if (!eeh_ops || !eeh_ops->err_inject)
+>  		return -ENXIO;
+>  
+>  	/* Copy over argument buffer */
+> -	ret = simple_write_to_buffer(buf, sizeof(buf), ppos, user_buf, count);
+> +	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
+>  	if (!ret)
+>  		return -EFAULT;
+>  
+> +	buf[ret] = '\0';
+> +
+>  	/* Retrieve parameters */
+>  	ret = sscanf(buf, "%x:%x:%x:%lx:%lx",
+>  		     &pe_no, &type, &func, &addr, &mask);
+> -- 
+> 2.39.5
+> 
+> 
+
+-- 
+Mahesh J Salgaonkar
