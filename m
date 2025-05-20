@@ -1,576 +1,143 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CBC28315E;
-	Tue, 20 May 2025 18:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8524E4C4;
+	Tue, 20 May 2025 18:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765616; cv=none; b=edzOtB8dFDmkbarLLMn52Pcbyk61oXTSY+gzq+UcJnIMVF66Nx53toxkd05ggN7RvQK4W1oSDhFAgwPgwDCIVT9ZFmCnnL1Px2jLXzohqowbunMQVZRoG0xxmidpYA3MaeuCUvKjULyZdhLGRQ65h5lbNNB+MYbBCasdGc4DqS4=
+	t=1747765689; cv=none; b=GTX+y92OVWjwwqKxVFsmZ7dHtvHEibbpvCY6O9aYYeFTIY7NwHvPn8rOBrC3XKIYYn45A/QW2eS+7yo4AbujOwCaZqU0ltEvL/L/HkSDjtWSzJsNgmrFCN3AGlFoxG/X1iqFHJcivwLppsBGPewd667T5UAAxyvAyYgjeObL8PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765616; c=relaxed/simple;
-	bh=ceCbAxTndFQbfADC2Iobc+O2IHhjTNIbgd53PQFR+0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ap44prFeNyBedDGxGt1AqHNCVRhjiPmrk3SzkyTpQ6/kwUoQvtCgs+I6V2GXYOGzfWxprIFzLbx5V29tmXcNQYeMQh4hxZSwnkf6CBUnKQ8ZPLnJQcvM8Vd08ffpTSfE/Jm/24+ii8Ye/yLmkguWuYGretpVc68NpKp4gvAol/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tDQMKJAr; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747765689; c=relaxed/simple;
+	bh=rCJXx8gGWF7Y/yykzx37aKd3ZjPKtf4V2UOvUxBbtsI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EqEXCKqQdIMRIneDwKAv4stm1Mp9Cdj8maQc1L9n2lWneGcMah3Gz+GDJeRXy8jh8rmt1xsZNmvOjZDkksbC/4R5vQchYs3VJd6JyQpWJOW/BKmLMmCzHLVo15xyDw8CUNFR8Td9lGMwkjpagAjwYH7f5QBuxOiXyf7mOajorZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeBWhHii; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tDQMKJAr"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KH6q86024971;
-	Tue, 20 May 2025 18:26:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=axiYlgTPCEr8yGoxe
-	bF6esHkXpqCnfakea6mtby/RWc=; b=tDQMKJArRV+OEICQu7f3vlkAmWHZErcxZ
-	YSzBugMHzMVXEMb0LH38EQtKV0p2YfX1j3LFJNPidRfUQmFbOvql0+2Sc4cFdCtS
-	/lfbdOTv/7yCS8AMIbH0yG6877cNnvLNBbSlL/dXEExEy4Pjv17F8QzBWe3geKD1
-	FeYfOAW6sd9yU6CVmD2+FIapebWRdRDExqqcDNAVjrThu3esQyINMrPci+HxClSa
-	O8CFJ8QV3KifscUkrFqKAdZyrDHpg+eNV8MB8F3O7taKBjxy/goC6UKDdtRrO+W5
-	jmBgydqNUhr1aL8y6CZER76uZJTMpizqLkcE+G5po1uKyWfhutFWg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rwusrc91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 18:26:46 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGrg3t032091;
-	Tue, 20 May 2025 18:26:45 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnm8d0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 18:26:45 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KIQfOs46137670
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 18:26:41 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B2E4C20040;
-	Tue, 20 May 2025 18:26:41 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A9B52004B;
-	Tue, 20 May 2025 18:26:41 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 May 2025 18:26:41 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
-        agordeev@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        schlameuss@linux.ibm.com
-Subject: [PATCH v2 4/5] KVM: s390: refactor and split some gmap helpers
-Date: Tue, 20 May 2025 20:26:38 +0200
-Message-ID: <20250520182639.80013-5-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520182639.80013-1-imbrenda@linux.ibm.com>
-References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeBWhHii"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231fc83a33aso33680325ad.0;
+        Tue, 20 May 2025 11:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747765687; x=1748370487; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=HYInFiFPI9ndfR/4cO64UxKvCIOi5HU+gdUwzbowEbw=;
+        b=UeBWhHiizri+zU3J3Gydos+r+6C1mNppVFZI8YYV0wW2yWp+LtOcq9GN61RB51vh40
+         3ErKm2wHO0rd7iBC5I0qyX3UkYmI1j0CUY/uXVuDh8X0QzuTPEHC+00GhZMJ5o3LRC0x
+         f9wfrlnCDGIMSfUEAZS6bJGhZ8U5p43Zkix6veigWBJMvuDteCV2pxzSjK8dJgiqENPy
+         ArnhLTym+Shp/a6R2F5rQH/FAL/Pzlh2hS+mn5zOWicEZhmSgs0dOvySXY1qHMBhl8CA
+         MmQPcQwgvKcZIvAtUxWvWyCahxYXiii2eiOkUmF1vPB9byYSFgb2rtdy7XLIf6dwcdku
+         ZhKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747765687; x=1748370487;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HYInFiFPI9ndfR/4cO64UxKvCIOi5HU+gdUwzbowEbw=;
+        b=HcCX3U1F1i3ECsB2/CCw4unpHK0fYgMt12rh4lnlCoWizpgbnw5MfyDZjLIb5CITwy
+         GdvP/dONMeCglHNoVwW4KY2wkAq9hEIt4HKi0GZbocbaid2GzzXsZxWR2z+YdbFY1Npw
+         N83lj7DoADeeiRxbn9r9ocNU8MrB+R56szdRvBie5f2fMemXUbcB1KvPkZFkzehUZyDq
+         eU4oprdJemW2Ckb6a788JH21fzUPTQ5uHSMLDNG+Rh4pHjE9SDQVk2yIzqYy5LHmqMhG
+         W9HoUKZ37Afsc/PBYNRLPs1MkrfvHBEPWinm4jy6ZSlv2elBmjZzV4dKU+1YJovq78qj
+         enuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmKiQx3KipuHM2sv+xJCq2QT+a5j1fzF7zX4ZIFXGowg8CL1TDBcLghqS/BQp+yHhVFJOl8jo8zGkczv4=@vger.kernel.org, AJvYcCVM3wylb2NdCHoaP+37s9uqSFV50zRJ404/n95LxTE6L528JzkETegqKnvuOpgzHUvLMti/Vauq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW+JQ8BIdaGAZuZcguCZupxDV1mPIQ23ga6nXZxPgWxIdfnfB1
+	6tw8tC5ZoZWSmsXgm1mgBadwHWBzHzG/JDG704z0C5rAM0FJ29KB8QMB
+X-Gm-Gg: ASbGncuNf8MrlNPTZ4XpgLVDanFYaBV5GOoKOPvOEyNLvEhSFOz7Lk+mr0cR0yvkbra
+	+qFzfzeNqD0d1+wWuJHk3xcp4uW5HyGSLA4n2Gktwc842Ta6+WUOFiEWMsnhZIcAHnX66EQDXtz
+	Da4MTaQZwxeLbCIymRsId5ru4j7AOWqfPlZQK808VE1+ZuIM/c1qtGKwFheTNCZtvLJGya5e86F
+	ETJZGyBdeql9O64HCoy9z53GuYPx2+yubxhFTfv7aRflB1SBeRrBMibZ62Aptm7CTmgcZOrVZ7P
+	Fo45vqp0OATRwJMHnvd4+4GhIf0t/3el2ritgY3aBVuJSlgQzuaKH/0UHxYDxzE1AGenU/brisg
+	q1uc=
+X-Google-Smtp-Source: AGHT+IESgy/nLH7exbpBEzHU43OET4g19jrvnZakgXDIKVS9FFM9QSYBQYvYluFSIMlc73WVOzRMtw==
+X-Received: by 2002:a17:902:ce8f:b0:223:fdac:2e4 with SMTP id d9443c01a7336-231de3515a6mr222440185ad.1.1747765687367;
+        Tue, 20 May 2025 11:28:07 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4b04a52sm79864825ad.91.2025.05.20.11.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 11:28:06 -0700 (PDT)
+Message-ID: <ce477b83-57b8-49a3-b924-73b644832b06@gmail.com>
+Date: Tue, 20 May 2025 11:28:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vh5JBsJOcymzGB8dSeRV-S9bOSPD_dJS
-X-Proofpoint-GUID: vh5JBsJOcymzGB8dSeRV-S9bOSPD_dJS
-X-Authority-Analysis: v=2.4 cv=Lr+Symdc c=1 sm=1 tr=0 ts=682cc966 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=A87OFeSnFmpXKl82Tx8A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE1MCBTYWx0ZWRfX2WXSSskRoShT pdeZGrOQlEFiwxEvpEK/ZoGKCAn3zbFViF10iHhPIdEyAyXg7ftwA9D+up6oiQcEVkobW2PLu6b 7X0BsUIc/fkQkyzs0ejnduEHdbGw5vOTE2xYUCSiGbeqOXpTTVwUBBTZKnD7Hbv/ldxoHf4hHff
- NLX/ziaQUGjZcF9C3v58KoS5/Akj6qIt6nKCxPXME3RJQ25wb+EoTQ5ERIPJ9TfON3WkCuAJhZg 97USqQo79/g2WNTkL0Ust6iONToMHCDfNEtmPd2V9iZBi+BBKMPjW7fWXNbx4+aj83BhvnkZNPm CmXJr7XUQc8VyZIe4XLd4npgliCMxi64kmQ/SAbE7Uxi5gbuRZn71nsgSkxVsw9CeN1uUH6drYv
- 0paPgi0CMvc+oCnffo7k5KWdv7Nk02ruWJUv/3elyZmd5Ie05kEiYcGc5S4nrptt9AoPS/dn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_08,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 malwarescore=0
- spamscore=0 adultscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505200150
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125800.653047540@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Refactor some gmap functions; move the implementation into a separate
-file with only helper functions. The new helper functions work on vm
-addresses, leaving all gmap logic in the gmap functions, which mostly
-become just wrappers.
+On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.140 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.140-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-The whole gmap handling is going to be moved inside KVM soon, but the
-helper functions need to touch core mm functions, and thus need to
-stay in the core of kernel.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- MAINTAINERS                          |   2 +
- arch/s390/include/asm/gmap_helpers.h |  18 ++
- arch/s390/kvm/diag.c                 |  11 +-
- arch/s390/kvm/kvm-s390.c             |   5 +-
- arch/s390/mm/Makefile                |   2 +
- arch/s390/mm/gmap.c                  |  46 ++---
- arch/s390/mm/gmap_helpers.c          | 259 +++++++++++++++++++++++++++
- 7 files changed, 302 insertions(+), 41 deletions(-)
- create mode 100644 arch/s390/include/asm/gmap_helpers.h
- create mode 100644 arch/s390/mm/gmap_helpers.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f21f1dabb5fe..b0a8fb5a254c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13093,12 +13093,14 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git
- F:	Documentation/virt/kvm/s390*
- F:	arch/s390/include/asm/gmap.h
-+F:	arch/s390/include/asm/gmap_helpers.h
- F:	arch/s390/include/asm/kvm*
- F:	arch/s390/include/uapi/asm/kvm*
- F:	arch/s390/include/uapi/asm/uvdevice.h
- F:	arch/s390/kernel/uv.c
- F:	arch/s390/kvm/
- F:	arch/s390/mm/gmap.c
-+F:	arch/s390/mm/gmap_helpers.c
- F:	drivers/s390/char/uvdevice.c
- F:	tools/testing/selftests/drivers/s390x/uvdevice/
- F:	tools/testing/selftests/kvm/*/s390/
-diff --git a/arch/s390/include/asm/gmap_helpers.h b/arch/s390/include/asm/gmap_helpers.h
-new file mode 100644
-index 000000000000..1854fe6a8c33
---- /dev/null
-+++ b/arch/s390/include/asm/gmap_helpers.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Helper functions for KVM guest address space mapping code
-+ *
-+ *    Copyright IBM Corp. 2007, 2025
-+ *    Author(s): Claudio Imbrenda <imbrenda@linux.ibm.com>
-+ */
-+
-+#ifndef _ASM_S390_GMAP_HELPERS_H
-+#define _ASM_S390_GMAP_HELPERS_H
-+
-+void __gmap_helper_zap_one(struct mm_struct *mm, unsigned long vmaddr);
-+void __gmap_helper_discard(struct mm_struct *mm, unsigned long vmaddr, unsigned long end);
-+void gmap_helper_discard(struct mm_struct *mm, unsigned long vmaddr, unsigned long end);
-+void __gmap_helper_set_unused(struct mm_struct *mm, unsigned long vmaddr);
-+int gmap_helper_disable_cow_sharing(void);
-+
-+#endif /* _ASM_S390_GMAP_HELPERS_H */
-diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
-index 74f73141f9b9..ce8b2f8125c4 100644
---- a/arch/s390/kvm/diag.c
-+++ b/arch/s390/kvm/diag.c
-@@ -11,6 +11,7 @@
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <asm/gmap.h>
-+#include <asm/gmap_helpers.h>
- #include <asm/virtio-ccw.h>
- #include "kvm-s390.h"
- #include "trace.h"
-@@ -37,7 +38,7 @@ static int diag_release_pages(struct kvm_vcpu *vcpu)
- 	 * fast path (no prefix swap page involved)
- 	 */
- 	if (end <= prefix || start >= prefix + 2 * PAGE_SIZE) {
--		gmap_discard(vcpu->arch.gmap, start, end);
-+		gmap_helper_discard(vcpu->kvm->mm, start, end);
- 	} else {
- 		/*
- 		 * This is slow path.  gmap_discard will check for start
-@@ -45,12 +46,12 @@ static int diag_release_pages(struct kvm_vcpu *vcpu)
- 		 * prefix and let gmap_discard make some of these calls
- 		 * NOPs.
- 		 */
--		gmap_discard(vcpu->arch.gmap, start, prefix);
-+		gmap_helper_discard(vcpu->kvm->mm, start, prefix);
- 		if (start <= prefix)
--			gmap_discard(vcpu->arch.gmap, 0, PAGE_SIZE);
-+			gmap_helper_discard(vcpu->kvm->mm, 0, PAGE_SIZE);
- 		if (end > prefix + PAGE_SIZE)
--			gmap_discard(vcpu->arch.gmap, PAGE_SIZE, 2 * PAGE_SIZE);
--		gmap_discard(vcpu->arch.gmap, prefix + 2 * PAGE_SIZE, end);
-+			gmap_helper_discard(vcpu->kvm->mm, PAGE_SIZE, 2 * PAGE_SIZE);
-+		gmap_helper_discard(vcpu->kvm->mm, prefix + 2 * PAGE_SIZE, end);
- 	}
- 	return 0;
- }
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 3f3175193fd7..10cfc047525d 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -40,6 +40,7 @@
- #include <asm/machine.h>
- #include <asm/stp.h>
- #include <asm/gmap.h>
-+#include <asm/gmap_helpers.h>
- #include <asm/nmi.h>
- #include <asm/isc.h>
- #include <asm/sclp.h>
-@@ -2674,7 +2675,9 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
- 		if (r)
- 			break;
- 
--		r = s390_disable_cow_sharing();
-+		mmap_write_lock(kvm->mm);
-+		r = gmap_helper_disable_cow_sharing();
-+		mmap_write_unlock(kvm->mm);
- 		if (r)
- 			break;
- 
-diff --git a/arch/s390/mm/Makefile b/arch/s390/mm/Makefile
-index 9726b91fe7e4..bd0401cc7ca5 100644
---- a/arch/s390/mm/Makefile
-+++ b/arch/s390/mm/Makefile
-@@ -12,3 +12,5 @@ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_PTDUMP)		+= dump_pagetables.o
- obj-$(CONFIG_PGSTE)		+= gmap.o
- obj-$(CONFIG_PFAULT)		+= pfault.o
-+
-+obj-$(subst m,y,$(CONFIG_KVM))	+= gmap_helpers.o
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 4869555ff403..17a2a57de3a2 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -22,6 +22,7 @@
- #include <asm/page-states.h>
- #include <asm/pgalloc.h>
- #include <asm/machine.h>
-+#include <asm/gmap_helpers.h>
- #include <asm/gmap.h>
- #include <asm/page.h>
- 
-@@ -619,58 +620,33 @@ EXPORT_SYMBOL(__gmap_link);
-  */
- void __gmap_zap(struct gmap *gmap, unsigned long gaddr)
- {
--	struct vm_area_struct *vma;
- 	unsigned long vmaddr;
--	spinlock_t *ptl;
--	pte_t *ptep;
-+
-+	mmap_assert_locked(gmap->mm);
- 
- 	/* Find the vm address for the guest address */
- 	vmaddr = (unsigned long) radix_tree_lookup(&gmap->guest_to_host,
- 						   gaddr >> PMD_SHIFT);
- 	if (vmaddr) {
- 		vmaddr |= gaddr & ~PMD_MASK;
--
--		vma = vma_lookup(gmap->mm, vmaddr);
--		if (!vma || is_vm_hugetlb_page(vma))
--			return;
--
--		/* Get pointer to the page table entry */
--		ptep = get_locked_pte(gmap->mm, vmaddr, &ptl);
--		if (likely(ptep)) {
--			ptep_zap_unused(gmap->mm, vmaddr, ptep, 0);
--			pte_unmap_unlock(ptep, ptl);
--		}
-+		__gmap_helper_zap_one(gmap->mm, vmaddr);
- 	}
- }
- EXPORT_SYMBOL_GPL(__gmap_zap);
- 
- void gmap_discard(struct gmap *gmap, unsigned long from, unsigned long to)
- {
--	unsigned long gaddr, vmaddr, size;
--	struct vm_area_struct *vma;
-+	unsigned long vmaddr, next, start, end;
- 
- 	mmap_read_lock(gmap->mm);
--	for (gaddr = from; gaddr < to;
--	     gaddr = (gaddr + PMD_SIZE) & PMD_MASK) {
--		/* Find the vm address for the guest address */
--		vmaddr = (unsigned long)
--			radix_tree_lookup(&gmap->guest_to_host,
--					  gaddr >> PMD_SHIFT);
-+	for ( ; from < to; from = next) {
-+		next = ALIGN(from + 1, PMD_SIZE);
-+		vmaddr = (unsigned long)radix_tree_lookup(&gmap->guest_to_host, from >> PMD_SHIFT);
- 		if (!vmaddr)
- 			continue;
--		vmaddr |= gaddr & ~PMD_MASK;
--		/* Find vma in the parent mm */
--		vma = find_vma(gmap->mm, vmaddr);
--		if (!vma)
--			continue;
--		/*
--		 * We do not discard pages that are backed by
--		 * hugetlbfs, so we don't have to refault them.
--		 */
--		if (is_vm_hugetlb_page(vma))
--			continue;
--		size = min(to - gaddr, PMD_SIZE - (gaddr & ~PMD_MASK));
--		zap_page_range_single(vma, vmaddr, size, NULL);
-+		start = vmaddr | (from & ~PMD_MASK);
-+		end = (vmaddr | (min(to - 1, next - 1) & ~PMD_MASK)) + 1;
-+		__gmap_helper_discard(gmap->mm, start, end);
- 	}
- 	mmap_read_unlock(gmap->mm);
- }
-diff --git a/arch/s390/mm/gmap_helpers.c b/arch/s390/mm/gmap_helpers.c
-new file mode 100644
-index 000000000000..4b70bc9cb5e3
---- /dev/null
-+++ b/arch/s390/mm/gmap_helpers.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Helper functions for KVM guest address space mapping code
-+ *
-+ *    Copyright IBM Corp. 2007, 2025
-+ *    Author(s): Claudio Imbrenda <imbrenda@linux.ibm.com>
-+ *               Martin Schwidefsky <schwidefsky@de.ibm.com>
-+ *               David Hildenbrand <david@redhat.com>
-+ *               Janosch Frank <frankja@linux.vnet.ibm.com>
-+ */
-+#include <linux/mm_types.h>
-+#include <linux/mmap_lock.h>
-+#include <linux/mm.h>
-+#include <linux/hugetlb.h>
-+#include <linux/pagewalk.h>
-+#include <linux/ksm.h>
-+#include <asm/gmap_helpers.h>
-+
-+static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
-+{
-+	if (!non_swap_entry(entry))
-+		dec_mm_counter(mm, MM_SWAPENTS);
-+	else if (is_migration_entry(entry))
-+		dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-+	free_swap_and_cache(entry);
-+}
-+
-+void __gmap_helper_zap_one(struct mm_struct *mm, unsigned long vmaddr)
-+{
-+	struct vm_area_struct *vma;
-+	spinlock_t *ptl;
-+	pte_t *ptep;
-+
-+	mmap_assert_locked(mm);
-+
-+	/* Find the vm address for the guest address */
-+	vma = vma_lookup(mm, vmaddr);
-+	if (!vma || is_vm_hugetlb_page(vma))
-+		return;
-+
-+	/* Get pointer to the page table entry */
-+	ptep = get_locked_pte(mm, vmaddr, &ptl);
-+	if (!likely(ptep))
-+		return;
-+	if (pte_swap(*ptep))
-+		ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-+	pte_unmap_unlock(ptep, ptl);
-+}
-+EXPORT_SYMBOL_GPL(__gmap_helper_zap_one);
-+
-+void __gmap_helper_discard(struct mm_struct *mm, unsigned long vmaddr, unsigned long end)
-+{
-+	struct vm_area_struct *vma;
-+	unsigned long next;
-+
-+	mmap_assert_locked(mm);
-+
-+	while (vmaddr < end) {
-+		vma = find_vma_intersection(mm, vmaddr, end);
-+		if (!vma)
-+			break;
-+		vmaddr = max(vmaddr, vma->vm_start);
-+		next = min(end, vma->vm_end);
-+		if (!is_vm_hugetlb_page(vma))
-+			zap_page_range_single(vma, vmaddr, next - vmaddr, NULL);
-+		vmaddr = next;
-+	}
-+}
-+
-+void gmap_helper_discard(struct mm_struct *mm, unsigned long vmaddr, unsigned long end)
-+{
-+	mmap_read_lock(mm);
-+	__gmap_helper_discard(mm, vmaddr, end);
-+	mmap_read_unlock(mm);
-+}
-+EXPORT_SYMBOL_GPL(gmap_helper_discard);
-+
-+static int pmd_lookup(struct mm_struct *mm, unsigned long addr, pmd_t **pmdp)
-+{
-+	struct vm_area_struct *vma;
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+
-+	/* We need a valid VMA, otherwise this is clearly a fault. */
-+	vma = vma_lookup(mm, addr);
-+	if (!vma)
-+		return -EFAULT;
-+
-+	pgd = pgd_offset(mm, addr);
-+	if (!pgd_present(*pgd))
-+		return -ENOENT;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	if (!p4d_present(*p4d))
-+		return -ENOENT;
-+
-+	pud = pud_offset(p4d, addr);
-+	if (!pud_present(*pud))
-+		return -ENOENT;
-+
-+	/* Large PUDs are not supported yet. */
-+	if (pud_leaf(*pud))
-+		return -EFAULT;
-+
-+	*pmdp = pmd_offset(pud, addr);
-+	return 0;
-+}
-+
-+void __gmap_helper_set_unused(struct mm_struct *mm, unsigned long vmaddr)
-+{
-+	spinlock_t *ptl;
-+	pmd_t *pmdp;
-+	pte_t *ptep;
-+
-+	mmap_assert_locked(mm);
-+
-+	if (pmd_lookup(mm, vmaddr, &pmdp))
-+		return;
-+	ptl = pmd_lock(mm, pmdp);
-+	if (!pmd_present(*pmdp) || pmd_leaf(*pmdp)) {
-+		spin_unlock(ptl);
-+		return;
-+	}
-+	spin_unlock(ptl);
-+
-+	ptep = pte_offset_map_lock(mm, pmdp, vmaddr, &ptl);
-+	if (!ptep)
-+		return;
-+	/* The last byte of a pte can be changed freely without ipte */
-+	__atomic64_or(_PAGE_UNUSED, (long *)ptep);
-+	pte_unmap_unlock(ptep, ptl);
-+}
-+EXPORT_SYMBOL_GPL(__gmap_helper_set_unused);
-+
-+static int find_zeropage_pte_entry(pte_t *pte, unsigned long addr,
-+				   unsigned long end, struct mm_walk *walk)
-+{
-+	unsigned long *found_addr = walk->private;
-+
-+	/* Return 1 of the page is a zeropage. */
-+	if (is_zero_pfn(pte_pfn(*pte))) {
-+		/*
-+		 * Shared zeropage in e.g., a FS DAX mapping? We cannot do the
-+		 * right thing and likely don't care: FAULT_FLAG_UNSHARE
-+		 * currently only works in COW mappings, which is also where
-+		 * mm_forbids_zeropage() is checked.
-+		 */
-+		if (!is_cow_mapping(walk->vma->vm_flags))
-+			return -EFAULT;
-+
-+		*found_addr = addr;
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+static const struct mm_walk_ops find_zeropage_ops = {
-+	.pte_entry      = find_zeropage_pte_entry,
-+	.walk_lock      = PGWALK_WRLOCK,
-+};
-+
-+/*
-+ * Unshare all shared zeropages, replacing them by anonymous pages. Note that
-+ * we cannot simply zap all shared zeropages, because this could later
-+ * trigger unexpected userfaultfd missing events.
-+ *
-+ * This must be called after mm->context.allow_cow_sharing was
-+ * set to 0, to avoid future mappings of shared zeropages.
-+ *
-+ * mm contracts with s390, that even if mm were to remove a page table,
-+ * and racing with walk_page_range_vma() calling pte_offset_map_lock()
-+ * would fail, it will never insert a page table containing empty zero
-+ * pages once mm_forbids_zeropage(mm) i.e.
-+ * mm->context.allow_cow_sharing is set to 0.
-+ */
-+static int __gmap_helper_unshare_zeropages(struct mm_struct *mm)
-+{
-+	struct vm_area_struct *vma;
-+	VMA_ITERATOR(vmi, mm, 0);
-+	unsigned long addr;
-+	vm_fault_t fault;
-+	int rc;
-+
-+	for_each_vma(vmi, vma) {
-+		/*
-+		 * We could only look at COW mappings, but it's more future
-+		 * proof to catch unexpected zeropages in other mappings and
-+		 * fail.
-+		 */
-+		if ((vma->vm_flags & VM_PFNMAP) || is_vm_hugetlb_page(vma))
-+			continue;
-+		addr = vma->vm_start;
-+
-+retry:
-+		rc = walk_page_range_vma(vma, addr, vma->vm_end,
-+					 &find_zeropage_ops, &addr);
-+		if (rc < 0)
-+			return rc;
-+		else if (!rc)
-+			continue;
-+
-+		/* addr was updated by find_zeropage_pte_entry() */
-+		fault = handle_mm_fault(vma, addr,
-+					FAULT_FLAG_UNSHARE | FAULT_FLAG_REMOTE,
-+					NULL);
-+		if (fault & VM_FAULT_OOM)
-+			return -ENOMEM;
-+		/*
-+		 * See break_ksm(): even after handle_mm_fault() returned 0, we
-+		 * must start the lookup from the current address, because
-+		 * handle_mm_fault() may back out if there's any difficulty.
-+		 *
-+		 * VM_FAULT_SIGBUS and VM_FAULT_SIGSEGV are unexpected but
-+		 * maybe they could trigger in the future on concurrent
-+		 * truncation. In that case, the shared zeropage would be gone
-+		 * and we can simply retry and make progress.
-+		 */
-+		cond_resched();
-+		goto retry;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Disable most COW-sharing of memory pages for the whole process:
-+ * (1) Disable KSM and unmerge/unshare any KSM pages.
-+ * (2) Disallow shared zeropages and unshare any zerpages that are mapped.
-+ *
-+ * Not that we currently don't bother with COW-shared pages that are shared
-+ * with parent/child processes due to fork().
-+ */
-+int gmap_helper_disable_cow_sharing(void)
-+{
-+	struct mm_struct *mm = current->mm;
-+	int rc;
-+
-+	mmap_assert_write_locked(mm);
-+
-+	if (!mm->context.allow_cow_sharing)
-+		return 0;
-+
-+	mm->context.allow_cow_sharing = 0;
-+
-+	/* Replace all shared zeropages by anonymous pages. */
-+	rc = __gmap_helper_unshare_zeropages(mm);
-+	/*
-+	 * Make sure to disable KSM (if enabled for the whole process or
-+	 * individual VMAs). Note that nothing currently hinders user space
-+	 * from re-enabling it.
-+	 */
-+	if (!rc)
-+		rc = ksm_disable(mm);
-+	if (rc)
-+		mm->context.allow_cow_sharing = 1;
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(gmap_helper_disable_cow_sharing);
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.49.0
-
+Florian
