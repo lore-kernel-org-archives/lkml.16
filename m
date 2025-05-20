@@ -1,213 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564E9258CFD
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B632690FA;
+	Tue, 20 May 2025 10:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747736806; cv=none; b=Gvyvggdnryv0sLfWDhveahDeBCm6QZvjXkihxOWQKfBYHPzRLOMObSE/ZZXwFAiCIT/WCj3t41n5WHw7RvBFFFqXhqrO2TA8vqpVnlkCz/9YgClNwUbavwPSiMj+tSnqdGDY1n6DkaaLtJtv8XofkwBQuB+zdq0szqADDa/yioY=
+	t=1747736849; cv=none; b=Sf5qPGeAhBri/WXPFwVPY0nHVZGs4qMdUA2JjAfdk3kmzX0JAMRPBQPd+OBeFq84OTTT8AlbMe/mv5H5Q7d/RKKjjCFd8a2Osg15EH2ufzMUSNmUy4cQIHTSNZWQg6OdTOCmkg9PFBvkAjhgIi/+NWZEXtXcnYmzSRIlOlK6MbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747736806; c=relaxed/simple;
-	bh=/wyLl3MzGwpIia6GnldaUAzJSC/xUnZ5QzZuYaexti4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1e7IzuC5Ci6l3cTIG0dkoeQ9ik7wGCQ/BqExSEE7wNAmXR0yeVX5fnGTYIbPBNYHs3frPdw84mcDR4XrDXypYmvy+RqueobWMOqZwEydkyPdk4ZtESpRzlOrUrSez6kfA4z6QQ/yJ6gr1H2vPQFDnKpyl6ujrz1bYOqc7iMzqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lq1Stw2P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lq1Stw2P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747736803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GCFR+2IOaYMz7I7uTm6e4DOxsS9UqKnqFGqvlDmS3/Q=;
-	b=Lq1Stw2PcZRFzj+j6am0Hu73EbVoqR+PNoy0oiZTf6st/+M8g1vaRFU7K8o0WyXBDLqU4j
-	csmYVjWIlN8TTXmKt0Nz07q/TD94JmhsSsUrvW2z3FYOkJDq59z4qM00byoUdQf5eRbVxb
-	B5mEDhTm/3N3raiI0zWuDfxwJeyia4A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-5Ym3rdjmMwOoYAUdwBUaMQ-1; Tue, 20 May 2025 06:26:42 -0400
-X-MC-Unique: 5Ym3rdjmMwOoYAUdwBUaMQ-1
-X-Mimecast-MFC-AGG-ID: 5Ym3rdjmMwOoYAUdwBUaMQ_1747736801
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43f251dc364so8097085e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:26:41 -0700 (PDT)
+	s=arc-20240116; t=1747736849; c=relaxed/simple;
+	bh=OAYwGvEWo5oe4fMHjy+qHLBlwJPN9jWuTWM4Fktkb8c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YX8XWeb08IGlzL4imYc+/0yIxBUkG/Qp8cILAAy+Kq+NAKVD/gN73Hb+A5k9YQC99VrDyYgKTGNstcEalaCZaq2rkWc78eTAU18UJeJI+oCCfeqkhDqhMphOtbInpQiKkOi0uaMzGOE2f07Mzal83shGhywVcsQa9jZfJ8PLztw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so56763955e9.1;
+        Tue, 20 May 2025 03:27:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747736801; x=1748341601;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GCFR+2IOaYMz7I7uTm6e4DOxsS9UqKnqFGqvlDmS3/Q=;
-        b=hNX+dqjaUDO4x1hTremd/4eBN2uWzVmyLUEAGAZvca7ECRewmTgiGjrXSPPJnylhKm
-         lOY3+T9KoewrStkI7zjOEKC0h3ewFG3+RF6Pu1A+vZ53dpnqCCFFAXeGZSpgqtgpu51+
-         qWkKcxLBE2fEvsioXBSCWI+yiYl6NTmmFdfVCwdR1AWRnlfrT5d2C87XkW58nX25v4r+
-         k3F/nktyZ1RJZnOdT7ngbDI6RdCNIl9bfZYHD9198pIcWrqtGiHW4RQVvUs5daPSRAa+
-         A1OUAQ+k46D8LlWRQK35hXR+C2+zWoAn6+SpPhZes0i8HZRaYiWK5TW/Cb0GRgDfvrVW
-         qeEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6rxQypv6jiBA1Vyfx7nSUoXFF80/jJxn+sl4X8VHijQYui1Rrr81NH1+PtTai0YWz/HIF2xTVO8YDrEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybcfh6YCnl5rmdBjgDRfxerwSAI2tU7c3S5RVNqY9jYmoCl6Xh
-	n7Nd9gbwZL1qkvVCWIJgizaVyL8oH+zNvllndtOOT4VKoDLRhKDR1XTnShVNQEtmlzSp6n94GQ4
-	uzLYjGcLLeCgfWl8Mp7ZHUIf1FqUqBMl0liaNw+XvoL6IoUCRwSwXLUwzfvyzvhh+Og==
-X-Gm-Gg: ASbGncvsCYa7eVVlEnb78n5VG9N3jvb1XcYcyCaOQ0y6U9Ch1m3BBY8aVcsvPX/YT/e
-	BJMlpNx1o0Wr8p/DntwuGBLkefo3MT7389KyQL65vwXq2nYtFeZB3vP2Y7xoyU+uziQST89gWSS
-	LUdjTtRIc50y8z2WidXjaLhk+vs9Nh+itn9n5F7ab2IOfTdDssKH5lmzkwsKBa1ab89Z551meTT
-	M+1/TcKuGmCKwxurzbfyuRQnLunI2NSvjsu9b78D1LAaWj9A7ThIPm4jqZ2I9LKCmBfdkBN3g0V
-	ozrZh6vuZ2EOJfrMid6rq/24umqlpNVe9RR++lCsLJeTSYhFnq1nqCAwWMLfevb06rwNj+PpiFn
-	0VUfwSWkwCJV0B4AAf08ZzNSapHAF+KmOsRZrlVc=
-X-Received: by 2002:a05:600c:c092:b0:440:66a4:8d1a with SMTP id 5b1f17b1804b1-442fd950b76mr131042045e9.7.1747736800793;
-        Tue, 20 May 2025 03:26:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxPGKn7AVCUL0cy0p49Srip28I7sBiH2GKeOmFMx8ShY/b1Dr43a5OBZKQDNIDwhCa2OdVRw==
-X-Received: by 2002:a05:600c:c092:b0:440:66a4:8d1a with SMTP id 5b1f17b1804b1-442fd950b76mr131041705e9.7.1747736800412;
-        Tue, 20 May 2025 03:26:40 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84? (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f38142aasm24891285e9.27.2025.05.20.03.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 03:26:39 -0700 (PDT)
-Message-ID: <13f8e557-da9d-4ccf-9372-6acdc865586a@redhat.com>
-Date: Tue, 20 May 2025 12:26:37 +0200
+        d=1e100.net; s=20230601; t=1747736845; x=1748341645;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oTqGUV4ksLYBe+HeSSbW60q/1vjC74ZoYzWhywmrigI=;
+        b=m9PcBuGP88DxAGQ5if+ZMpVWc1M9T96yVI1UjxvhSVFfHPCSrdSDxlC4+bVdHquNls
+         aRlVdVZZQjrqnTalsni44f4Fr2bl7o8tJJZceYHQ4TeakjEvShIpQKjDT5AdXmEmEO1A
+         Gafv3cDEkdA/S4iiCDExSiNIDazKcI3iSnzoasABKpo6I/jGZdYZ+16NNE5M2+ZtmJrY
+         l0LpxG6BtWCWvo/ILrUwwcbJ63rToUCFWwMfEOEOe6ZQL7ib/EQ4C4iY9yyCaGrpX3xS
+         /i/dh2+q41crPyU1MAp1NBNK12zH7cOqCLEmy02MIcljA9D1i/z9LYYQqGr8UfXCu2mO
+         vWgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU39YR7fjqaVLiPJ2/8hr4N8KlfofwpxNULBGFBzt+w1HTbA4nJ8+ubOKjGRxFkgI8SCbPHuZ4BskROv+k=@vger.kernel.org, AJvYcCUyFKbmi8sTtc3GWaQ4epxriSElSGrW/nR39swnMDNiyVSY8asB3qSXT2/qgGmfpYdThVwWaPoWyBk=@vger.kernel.org, AJvYcCWun4dFYRBaDg0D0cygV3THRHY12ZdwFHVXuMR5trsqZbypK0nYcFA08Ji9O/2rW8xIxRzSb/d0lsYS4hiU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLaB4reIwvO6E8I3Z/4iy31AHB8ulUXCaX/mcI3WkvzQ4lb1KD
+	dWDt0BSIawn/6dpDi9CqzjS/kvGqNEFFh2yrlmU+N0y79Reyo+roKIQFNuAzL494
+X-Gm-Gg: ASbGncv+M/eTVmf9fj5a/pSeswSuKz/DP7F5DTMJvbienWkQDOKFlKaWRPmHH2l5ekC
+	uIMDoZ5p14kxOw6bwFjml+BsiZ2/HSaxDjqG7YY46jaeLnxYCAZGl72uSwtHDfgXpDk/uUMFr4C
+	jKitpo9uwigCuSH2fgo56FdxJFJOpNLj7vMPlhinyM5BQZlyEWUZ/4hqzkhdYOqj7M+dsy58nUr
+	Vag1QML0XbfaXXm1iiSHnzrGQ41rMdWTuIn0U89xW2gao6dOWrRLw2hkwuwAJOWfskhERrcOPmW
+	Dt25UxNwpA/okfzyJ3Mwszwrr73iF8ju9kMmDXsOZSY8GBZFVWK4G5gGmWlzr5Sv3n9VNyKre0e
+	yLMBVTyVY0g==
+X-Google-Smtp-Source: AGHT+IGQIlUJcRyY3tl7EezqGJ1tIgqTCFM3lHfZujGm8AzrqDj+5VJitvVUKwA4G018r4RFcqgl6Q==
+X-Received: by 2002:a05:600c:6748:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442fd671befmr186270545e9.30.1747736845139;
+        Tue, 20 May 2025 03:27:25 -0700 (PDT)
+Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3defsm24680025e9.18.2025.05.20.03.27.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 03:27:24 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: [PATCH v5 00/10] New DRM accel driver for Rockchip's RKNN NPU
+Date: Tue, 20 May 2025 12:26:53 +0200
+Message-Id: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-7-npache@redhat.com>
- <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
- <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
- <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO5YLGgC/23O0QrCIBgF4FcJrzN+nVrrqveILpz+lkQzdEk19
+ u65IGq0y3PgfJyeJIweE9kuehIx++RDW4JcLog56faI1NuSCQcuQDFOFWVAYzBn7GhdMWXRGSb
+ MmpTFNaLz97e2P5R88qkL8fHGMxvbeSczChQUoNggai5h14UL3rJ/hhRWLXZk1DL/CBI4l1OBF
+ 8EK2xinxz9sXqi+gmRqKlRFWJdam7rotpkXxK9QTwUxflDWOdUIAxr/hWEYXhZ3XKNyAQAA
+X-Change-ID: 20240612-6-10-rocket-9316defc14c7
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+X-Mailer: b4 0.14.2
 
-On 20.05.25 12:09, Baolin Wang wrote:
-> Sorry for late reply.
-> 
-> On 2025/5/17 14:47, Nico Pache wrote:
->> On Thu, May 15, 2025 at 9:20 PM Baolin Wang
->> <baolin.wang@linux.alibaba.com> wrote:
->>>
->>>
->>>
->>> On 2025/5/15 11:22, Nico Pache wrote:
->>>> khugepaged scans anons PMD ranges for potential collapse to a hugepage.
->>>> To add mTHP support we use this scan to instead record chunks of utilized
->>>> sections of the PMD.
->>>>
->>>> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
->>>> that represents chunks of utilized regions. We can then determine what
->>>> mTHP size fits best and in the following patch, we set this bitmap while
->>>> scanning the anon PMD. A minimum collapse order of 2 is used as this is
->>>> the lowest order supported by anon memory.
->>>>
->>>> max_ptes_none is used as a scale to determine how "full" an order must
->>>> be before being considered for collapse.
->>>>
->>>> When attempting to collapse an order that has its order set to "always"
->>>> lets always collapse to that order in a greedy manner without
->>>> considering the number of bits set.
->>>>
->>>> Signed-off-by: Nico Pache <npache@redhat.com>
->>>
->>> Sigh. You still haven't addressed or explained the issues I previously
->>> raised [1], so I don't know how to review this patch again...
->> Can you still reproduce this issue?
-> 
-> Yes, I can still reproduce this issue with today's (5/20) mm-new branch.
-> 
-> I've disabled PMD-sized THP in my system:
-> [root]# cat /sys/kernel/mm/transparent_hugepage/enabled
-> always madvise [never]
-> [root]# cat /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
-> always inherit madvise [never]
+This series adds a new driver for the NPU that Rockchip includes in its
+newer SoCs, developed by them on the NVDLA base.
 
-Thanks for the easy reproducer, Baolin! It's certainly something that 
-must be fixed.
+In its current form, it supports the specific NPU in the RK3588 SoC.
 
-> 
-> And I tried calling madvise() with MADV_COLLAPSE for anonymous memory,
-> and I can still see it collapsing to a PMD-sized THP.
+The userspace driver is part of Mesa and an initial draft can be found at:
 
-This almost sounds like it could be converted into an easy selftest.
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
 
-Baolin, do you have other ideas for easy selftests? It might be good to 
-include some in the next version.
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+Changes in v5:
+- Use bulk clk API
+- Rename bindings file
+- Syntax improvement to bindings
+- Link to v4: https://lore.kernel.org/r/20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net
 
-I can think of: enable only a single size, then MADV_COLLAPSE X times 
-and see if it worked. etc.
+Changes in v4:
+- Several fixes to DT bindings.
+- Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net
 
+Changes in v3:
+- Reference in the device tree only the register blocks that are
+  actually used.
+- Several style and robustness fixes suggested in the mailing list.
+- Added patches from Nicolas Frattaroli that add support to the NPU for
+  the Rock 5B board.
+- Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net
+
+Changes in v2:
+- Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian Reichel)
+- Drop patch adding support for multiple power domains to rockchip-iommu (Sebastian Reichel)
+- Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net
+
+---
+Nicolas Frattaroli (2):
+      arm64: dts: rockchip: add pd_npu label for RK3588 power domains
+      arm64: dts: rockchip: enable NPU on ROCK 5B
+
+Tomeu Vizoso (8):
+      dt-bindings: npu: rockchip,rknn: Add bindings
+      arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588s
+      arm64: dts: rockchip: Enable the NPU on quartzpro64
+      accel/rocket: Add registers header
+      accel/rocket: Add a new driver for Rockchip's NPU
+      accel/rocket: Add IOCTL for BO creation
+      accel/rocket: Add job submission IOCTL
+      accel/rocket: Add IOCTLs for synchronizing memory accesses
+
+ Documentation/accel/index.rst                      |    1 +
+ Documentation/accel/rocket/index.rst               |   25 +
+ .../bindings/npu/rockchip,rk3588-rknn-core.yaml    |  147 +
+ MAINTAINERS                                        |   10 +
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi      |   87 +-
+ .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts |   30 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |   56 +
+ drivers/accel/Kconfig                              |    1 +
+ drivers/accel/Makefile                             |    1 +
+ drivers/accel/rocket/Kconfig                       |   25 +
+ drivers/accel/rocket/Makefile                      |   10 +
+ drivers/accel/rocket/rocket_core.c                 |   80 +
+ drivers/accel/rocket/rocket_core.h                 |   59 +
+ drivers/accel/rocket/rocket_device.c               |   36 +
+ drivers/accel/rocket/rocket_device.h               |   31 +
+ drivers/accel/rocket/rocket_drv.c                  |  316 ++
+ drivers/accel/rocket/rocket_drv.h                  |   17 +
+ drivers/accel/rocket/rocket_gem.c                  |  211 +
+ drivers/accel/rocket/rocket_gem.h                  |   31 +
+ drivers/accel/rocket/rocket_job.c                  |  723 ++++
+ drivers/accel/rocket/rocket_job.h                  |   50 +
+ drivers/accel/rocket/rocket_registers.h            | 4425 ++++++++++++++++++++
+ include/uapi/drm/rocket_accel.h                    |  145 +
+ 23 files changed, 6516 insertions(+), 1 deletion(-)
+---
+base-commit: a6d708809579ed3d902465785666085ff07a1d7c
+change-id: 20240612-6-10-rocket-9316defc14c7
+
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Tomeu Vizoso <tomeu@tomeuvizoso.net>
 
