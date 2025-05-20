@@ -1,56 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE611157487;
-	Tue, 20 May 2025 19:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB32157487;
+	Tue, 20 May 2025 19:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770523; cv=none; b=MBzkwFcCvODdaAFRdh6Lv73KTVfXZKJnRnubXfA7IZdk9jjE6DdRDCLDHz4zFmrFlGX0I+L1AHzOu6+34fxYIgL2/YFqjXY65xVbZtgrbPv4VUlhdzH/2FDmzfAPumwsIxmZn5rr4zXyl2bPorks7+6Ap42i8gQ82q3FGEyIt1k=
+	t=1747770555; cv=none; b=ZHRUHy0Mu7rmgVXuhfY+KM1OS83TFe2A1FMqkpq98Xem0Emddw12SSZCpArEI2gMSVkFGwqnfJ1LduXoNRg/DNwLVzndpKo8SbQIy3yMxS9+S7z5iP8g5ZGkHcnAO39xblF3JlZnyH7+VgwrtrOQm3aNKdrP7mLN0NLSkh2f+6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770523; c=relaxed/simple;
-	bh=rJ1NiSRfc8gpNdAqLlhzaGL9WlXqzxBGZtEhkpBNqWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Mi7ajJjz4Y2reS3R/wb7+Pan5d3QGixWmAmRJE7VM8QM1cCI9VYvzBtAdV7uobYqMGknA5GYYBVoEqRD/GLFTdgRU/N8o+see/Dxb0Xzd0gxeEKI50rbNFehPf7E2/z+pyUwhBpr7AngnGudeDkO/Q+OHX0cE0RU/tKqD05rXz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJeCd7ed; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJeCd7ed"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12F9BC4CEEF;
-	Tue, 20 May 2025 19:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747770523;
-	bh=rJ1NiSRfc8gpNdAqLlhzaGL9WlXqzxBGZtEhkpBNqWo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=vJeCd7ed0I5OQT/nS2fBITuRrAGtfXaxPS/EEjWf5+++YkUUyHEUnd5QyhRwccQoJ
-	 cHSsMu18hMq3i+PlKGWx4XKZo4KUcxqztv1/L+w7bEPHrGFpVeCJjS8xESkhBVH2w3
-	 PlZs6mxDe8tRcyDXDdCdaz9kJeHftHaUQh7O7m72pGJuJJxJ9BPssncTR8B26gTDZ8
-	 JTt0/aQPbhIa8mCfxxsjwK+OICMFJONwprmU/lYq4bhtpUXJzAxBq/EAuQUlLULnOT
-	 QhARHJa7o73VRZeaNEalCseBqxtE8T8I8chDLtShaCgkJPNlrhhncTIxrT0eI/Q+en
-	 Qm/orCRlfQpHQ==
-Date: Tue, 20 May 2025 14:48:41 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 15/16] PCI/AER: Add ratelimits to PCI AER Documentation
-Message-ID: <20250520194841.GA1322094@bhelgaas>
+	s=arc-20240116; t=1747770555; c=relaxed/simple;
+	bh=1tzGZcKwkoir6NZZhVk7qpPRhCTL48Sf9Au3BYNZfwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMVsvSwrB8Z20sxVmhcnxwtMB534oH8kShknUp2+nqLiTr9xh5ZiTVAtVd0GNfJ3sJEeeU9xdh8Eoy6sNwCwycVMH3z84MvnDFUz0GM/pRQROmN6kTrcnjDDtPdxb8Duv+T3izNZDlRbOeIcZAlEXAkoRyRU3dWPoazUaKFu7pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: adkY8KTMSkmO5r+KlmWN8Q==
+X-CSE-MsgGUID: iCEvoSlXQ/GAtivKiL748Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="75124751"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="75124751"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 12:49:12 -0700
+X-CSE-ConnectionGUID: 8W+OoyMcSwCgH8u2jRwtJA==
+X-CSE-MsgGUID: hxgK8sU9T0iuFbTG92XQMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="140319501"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 12:49:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uHSxW-00000003Pa8-2YdM;
+	Tue, 20 May 2025 22:49:06 +0300
+Date: Tue, 20 May 2025 22:49:06 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 06/12] iio: accel: adxl313: prepare interrupt handling
+Message-ID: <aCzcskqKEXpM2jui@smile.fi.intel.com>
+References: <CAFXKEHYe_LBV=95Rm75UXF97oUU5CTYzDdwXJZ=cr+4fGOf80g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,29 +50,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <75a3749b-36d9-467c-80a7-7e4a42e2f9b1@linux.intel.com>
+In-Reply-To: <CAFXKEHYe_LBV=95Rm75UXF97oUU5CTYzDdwXJZ=cr+4fGOf80g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 19, 2025 at 10:01:09PM -0700, Sathyanarayanan Kuppuswamy wrote:
+On Tue, May 20, 2025 at 09:32:18PM +0200, Lothar Rubusch wrote:
+> Hi Andy, I forgot to put my mail addresses as well. I copied your answer
+> now from the mailing list archive. Hence, sorry for the bad formatting
+> of this mail.
 > 
-> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Add ratelimits section for rationale and defaults.
-
-> > +AER Ratelimits
-> > +--------------
-> > +
-> > +Since error messages can be generated for each transaction, we may see
-> > +large volumes of errors reported. To prevent spammy devices from flooding
-> > +the console/stalling execution, messages are throttled by device and error
-> > +type (correctable vs. uncorrectable).
+> One question / remark down below.
 > 
-> Can we list exceptions like DPC and FATAL errors (if added) ?
+> > On Sun, May 18, 2025 at 11:13:15AM +0000, Lothar Rubusch wrote:
+> > > Evaluate the devicetree property for an optional interrupt line, and
+> > > configure the interrupt mapping accordingly. When no interrupt line
+> > > is defined in the devicetree, keep the FIFO in bypass mode as before.
 
-Like this?
+...
 
-  +... messages are throttled by device and error
-  +type (correctable vs. non-fatal uncorrectable).  Fatal errors, including
-  +DPC errors, are not ratelimited.
+> > > +        ret = regmap_write(data->regmap, ADXL313_REG_INT_MAP, regval);
+> >
+> > Don't you want to use regmap_assign_bits() or something like this to have
+> > the above ternary be included?
+> 
+> Thank you so much. I guess this is a function I was looking for quite
+> a while and I know several places where to use it.
+> 
+> Anyway, I saw, my hardware test setup still runs on an older kernel
+> w/o regmap_assign_bits().
 
-DPC is currently only triggered for fatal errors.
+You are going to upstream the driver, right? So, we don't care about old
+kernels as there was no such code at all, and since it's not a fix for
+backporting I see no impediments to use the modern APIs.
+
+> So, I kindly liked to ask if you have any objections against leaving
+> regmap_write() for now? Actually I'd prefer first to see the
+> activity/inactivity stuff in, in case this will need some more
+> modifications and I need to verify them on hardware. I think, leaving
+> regmap_write() here would make that easier for this patch set. Please,
+> let me know?
+
+Ask maintainers. I will not object if they agree on your justification.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
