@@ -1,40 +1,48 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB551D63FC;
-	Tue, 20 May 2025 09:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8E4261596;
+	Tue, 20 May 2025 09:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732520; cv=none; b=KTL45qUossgdZkkN/jZSxf68jRpsBMzpWEtq+ZWQeIboHryohveGsafiBQauzB698RdyELqUznI88AsszV6X/yiTPqVetiE46EwYEAt+I5WuJhAeQexsHG1bXpRAdiEYILwfkghnOX7aLnl3GTWcqCI0moyum/cDfULUPeF1ZSg=
+	t=1747732533; cv=none; b=HQY7GmpGCvKIjUZHPXoK93kffZKragLu6xYW1lYH+PRJjuhpABCFY7NVMnbYbOf7BzCTCet5cvtE5KZYZCNvHJP1wcWSk6iJKj/e6yXLieewVKJx/YlVXcGXVQXoby2rXaFyVzA8KE5PiSOhSoP/sq7IORf7ADrAypNcr1pvWt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732520; c=relaxed/simple;
-	bh=YOACIVFpfOzkfuJOEv7U1awZi32i31XSCqitokq/3Js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ORpB9LeC6a6UexaUslZZWLbearh1qru5gJgYQUOF63a2Vk024jscImru8tLR+JTdJfuF99Ik9RUr2xXGDRUr1r+AvGHV4GKPII4uokdpzZFgvcOI6dLAVyZaZN8SLzFYUi+rmdpQz9t/wYegKGl6eeOvFeUbEVlbwULofJjqZHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SVPwpdjE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747732533; c=relaxed/simple;
+	bh=cZCPsc0axY6vwzg6GVxYmN7cC4sJ0+7gHL+hQv9JZn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Gb3blejcP/ogYyed+3ZSbSYiJBLCxWk5+AsayWrCl6mUa1HaaxC7UjzOMEivwq5NbIYIJ8COWFN7LViuDTZ7ft7r8eCPcH9HhhOsaHsPZ/3XgVYyMI6kZYmBDrfdQogtiReTbhHcYcTwc/r7tFfIpCqF0zqHQahHDd1btuOxJ9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZE0YVX5E; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SVPwpdjE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747732514;
-	bh=YOACIVFpfOzkfuJOEv7U1awZi32i31XSCqitokq/3Js=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SVPwpdjEA4jgrbChMjQZi+PNrzVL35YcfMnLrMjiiLRzz7thakSS8XAQUS8hVRZrG
-	 +qmGZzYz3i8n2LnIjyh2jIkgiahW2HHL8nMzU6/4EIMqOqvs48qLsy15Z+Iz4wn+zB
-	 gV1OoGVNojLGrKA1ycn6U/p1ep07r813PaZLwtLzDNOKScPC7umFGbcfnG/6tyg33k
-	 JKFkQ7XeUpo6bINTAfJLOid22gMX/KiOFDOndwL+8NxxG2fDO1FExzNo1MYmp4XNo7
-	 hwh/9koFpwGA3drEI/cFy8bjX7+hpf+gCWVF0nznxJbi+zxSiA99OYJ7G43ls3lEei
-	 8aLwtdkvWxyHw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C4E5617E0E89;
-	Tue, 20 May 2025 11:15:13 +0200 (CEST)
-Message-ID: <2f7dffb0-cddd-44c5-a205-30dbc13f9891@collabora.com>
-Date: Tue, 20 May 2025 11:15:13 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZE0YVX5E"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K80lD6027736;
+	Tue, 20 May 2025 09:15:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Csf3v73qcTg/6a2zKpEnV119AkhPy4Kn1isOqUWbZAQ=; b=ZE0YVX5EolMHSJGM
+	q5jJ3uYYP/KL+FTCVRXv7UkXS2Cvap8vin4eYRbqAqiUKFdf0w3qoE7fvVagEunF
+	kaN06u3s/moAzcHk+rLbMAgMpKlhT5yCoSncepFgEfk5cDDQGZ+EGaJCISctuAGu
+	CKu+IprmMLbF8MFH/Q777l02z+tYAoNVwwwHDcuoQn1ADytIO8DGe1XpzCQtjn12
+	7P3lVTliY+w4VTZxyapOHFMdbNkYwOJWR7iawVrACXIyk/mcMlFXGtQZ4Ia66Vgy
+	ZbzM4EKmzsivQMGEYfqM2+B+mOgz2hkUljWtFoRwuEUmzldS002Z+44FhjbRq4Ap
+	1x6V2Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4y971-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:15:27 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K9FQm1025996
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:15:26 GMT
+Received: from [10.218.0.120] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
+ 2025 02:15:17 -0700
+Message-ID: <478e86ca-4638-4b90-9a36-ed411b547f7a@quicinc.com>
+Date: Tue, 20 May 2025 14:45:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,100 +50,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: mediatek: eint: Fix invalid pointer dereference
- for v1 platforms
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Hao Chang <ot_chhao.chang@mediatek.com>,
- Qingliang Li <qingliang.li@mediatek.com>
-Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Chen-Yu Tsai <wenst@chromium.org>
-References: <20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH V1 1/3] dt-bindings: mmc: qcom: Document level shifter
+ flag for SD card
 Content-Language: en-US
-In-Reply-To: <20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bhupesh Sharma
+	<bhupesh.sharma@linaro.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
+        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_sachgupt@quicinc.com>, <quic_bhaskarv@quicinc.com>,
+        <quic_narepall@quicinc.com>, <kernel@quicinc.com>
+References: <20241107080505.29244-1-quic_sartgarg@quicinc.com>
+ <20241107080505.29244-2-quic_sartgarg@quicinc.com>
+ <qffggh2ld2cw7d3eqwaerzicerhvdqojwsasherx7dgoda42b7@bigsjxr6vtao>
+ <ba49151a-e32d-438d-8a2a-50840368a87c@quicinc.com>
+ <8c6d37bb-8e07-4e44-bef1-f4376b54b853@kernel.org>
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+In-Reply-To: <8c6d37bb-8e07-4e44-bef1-f4376b54b853@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=682c482f cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=VhTX7d0uqKoKWHOLC50A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: pHuSY4N49Epo46v-eH-X7Ozbh5dpumRz
+X-Proofpoint-GUID: pHuSY4N49Epo46v-eH-X7Ozbh5dpumRz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA3NSBTYWx0ZWRfXwhXGJ8iLtsSd
+ kgoRwa1JFmJAK2hfyTjWS92gZeBcBH7Kcesz8r03V0nAABDuECsAAWJj/40wob328X7eQc3cN5a
+ TOYl5pRmmwfmTs/f3KatvN+dwC2GgIw4QCmlo4C7BmLHjR+PNJfN3PQhK3Z6//cj2zahNMsd6ae
+ r6imi1ZC0p1GllxM5QYHmNRla15OuKNNu7hQ4xWQMBoRDFPW7SB8ICjXieXy+lsj30pJ6ublGN5
+ P6qpHxLPYpokjR1RnRt2z5sT9DzWRUOLEfVVQc1vn0QaQOvoPvxB1TTJSr8/eiAOCnPT+6CzCYG
+ pKxLF3tfKdHEEz6/ZABJuk2TAD63Rb2FHSV/ZZFFa1yZMGyGGptmqfVsj7gDbmM44nKmKiy7inu
+ Lw7olSzRaieDoIOl5u2n1KuKk5hL9MsJFNuNxwIh7joGHo3q7XIQVr6PsDKPJExG2kRWa3A2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=897 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200075
 
-Il 19/05/25 21:38, Nícolas F. R. A. Prado ha scritto:
-> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
-> addresses") introduced an access to the 'soc' field of struct
-> mtk_pinctrl in mtk_eint_do_init() and for that an include of
-> pinctrl-mtk-common-v2.h.
+
+
+On 5/20/2025 12:48 PM, Krzysztof Kozlowski wrote:
+> On 20/05/2025 08:58, Sarthak Garg wrote:
+>>
+>>
+>> On 11/7/2024 3:29 PM, Krzysztof Kozlowski wrote:
+>>> On Thu, Nov 07, 2024 at 01:35:03PM +0530, Sarthak Garg wrote:
+>>>> Introduce a flag to indicate if the Qualcomm platform has a level
+>>>> shifter for SD cards. With level shifter addition some extra delay is
+>>>> seen on RX data path leading to CRC errors. To compensate these delays
+>>>> and avoid CRC errors below things needs to be done:
+>>>>
+>>>> 1) Enable tuning for SDR50 mode
+>>>> 2) Limit HS mode frequency to 37.5MHz from 50MHz
+>>>>
+>>>> Add this flag for all targets with a level shifter to handle these
+>>>> issues for SD card.
+>>>>
+>>>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 3 +++
+>>>>    1 file changed, 3 insertions(+)
+>>>>
+>>>
+>>> This wasn't tested, so just short review - platform means SoC usually,
+>>> so this looks SoC specific, thus implied by compatible.
+>>>   > Best regards,
+>>> Krzysztof
+>>>
+>>
+>> Sure will redesign this logic and use compatible in patch V2.
 > 
-> However, pinctrl drivers relying on the v1 common driver include
-> pinctrl-mtk-common.h instead, which provides another definition of
-> struct mtk_pinctrl that does not contain an 'soc' field.
+> Hi, I hope you are well and that was just some mishap, but I cannot help
+> but notice that you received review within two hours after posting
+> patch, but now you responded to my review after 6 months.
 > 
-> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
-> will now try to dereference an invalid pointer when called on v1
-> platforms. This has been observed on Genio 350 EVK (MT8365), which
-> crashes very early in boot (the kernel trace can only be seen with
-> earlycon).
-> 
-> In order to fix this, given that this if code block is only relevant for
-> platforms with multiple EINT bases, and the previous if block already
-> handles the single base case, add an else statement so this if condition
-> will never even be evaluated on platforms with a single EINT base, which
-> covers all v1 platforms following commit fe412e3a6c97 ("pinctrl:
-> mediatek: common-v1: Fix EINT breakage on older controllers").
-> 
-> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
-I say that this is going to backfire next time.
-
-I would rather propose, instead....
-
-int mtk_eint_do_init(struct mtk_eint *eint, const struct mtk_eint_pin *eint_pin)
-{
-	...
-
-	[if (or) else if] (eint_pin) {
-		eint->pins = eint_pin;
-		... etc
-	}
-}
-
-...so that we avoid having this issue about referencing two different structures
-called with the same name (which is bad from the principle anyway), and no more
-mistakes around that in the future.
-
-This also means that we can remove the inclusion of pinctrl-mtk-common-v2.h from
-the mtk-eint.c file, as that's the right thing to do: eint should be standalone
-and should not depend on ambiguous definitions from pinctrl-mtk-common(-v2).h.
-
-Cheers,
-Angelo
-
-> ---
->   drivers/pinctrl/mediatek/mtk-eint.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..9114e0cd9def1bc65558c67317abe67ba63ef1f6 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -531,9 +531,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->   			eint->pins[i].index = i;
->   			eint->pins[i].debounce = (i < eint->hw->db_cnt) ? 1 : 0;
->   		}
-> -	}
-> -
-> -	if (hw && hw->soc && hw->soc->eint_pin) {
-> +	} else if (hw && hw->soc && hw->soc->eint_pin) {
->   		eint->pins = hw->soc->eint_pin;
->   		for (i = 0; i < eint->hw->ap_num; i++) {
->   			inst = eint->pins[i].instance;
-> 
-> ---
-> base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-> change-id: 20250519-genio-350-eint-null-ptr-deref-fix-1a163aa9ad84
+> Sometimes I really consider reviewing at the end of 2 weeks - the usual
+> maximum time frame.
 > 
 > Best regards,
+> Krzysztof
 
-
+Sorry I was on a break.
+My apologies that I couldn't give a heads up for this in advance.
+I have started this activity again and will be actively working now.
