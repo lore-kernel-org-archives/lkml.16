@@ -1,105 +1,147 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DF825393B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833AD1E5702;
+	Tue, 20 May 2025 23:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747783602; cv=none; b=Nl+0xbespG83ZhyGyKDADrH5iLtoSq3ZgnPovcziLq8t6b6uT0/MJ+cgBJre3SX9LSlHfCUiUKr5yP4vwZvaJUdP6w4il6o05EOBnDeksyHpEkFQHSu1rCVAKC2geTdJVEzkeNCYErFAzJw10cXOIX35r/s96wSG8oJxx8Lh8sI=
+	t=1747783633; cv=none; b=UqLYCOPGVFK1/qwI5BAnzYK6jlxN30VnQqpeceCcDgBwPcv8WcTOr8U3cdTVrA1LpCB3yQeq1E0/bsOaCtp72VShRB19BMJ6gHXKQU5xBClFzR+lcgusw9+rIVJ6IIijsvpkGYS86Fk7ExzhBCG1gG1OseIIhQFJWqsqn41c/lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747783602; c=relaxed/simple;
-	bh=4HHtawmhPaENN0DEAVnLAXYRZmmNd4h+JyE33PQj454=;
+	s=arc-20240116; t=1747783633; c=relaxed/simple;
+	bh=L2E9RD+pq7S1M0YUk5YQcJW9SRR95r2qnL390cImzeo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FuUqI4AxoMQhXa7Usf19is9vqsdHVNFdoYuMA4KlzBkWC9M8PxMLZPjksdC54Duo9YI9r1L9Uyz/dUiOVKKlKMe3HgXzWe5K9CPOJ1lSJ65lAyhe5zobuleU4GCMGjpVeNo87I78VhxROUlLp7iblSOGMxVao4gUgkpjp0T30kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JwTLGPkP; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Y6pN8L2zuI8Aw7rGQv4SrA6Z5+m5OeikD7/A+RCuNLj3TE9y3Y5Dkm2jp3bfaGnMccCR/PTyWbv0SO3OFuno8W2w0KsxBvUBlH+qZdmTEhD6Ux8GnJZh7vQS9gHJmDd8Z9Rck+uK49KF+yFRTrySCihxcRyxmewzeDuZlEo/fIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y7gK6RJF; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JwTLGPkP"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4774611d40bso991061cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:26:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7gK6RJF"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-73712952e1cso5845137b3a.1;
+        Tue, 20 May 2025 16:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747783600; x=1748388400; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747783630; x=1748388430; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4HHtawmhPaENN0DEAVnLAXYRZmmNd4h+JyE33PQj454=;
-        b=JwTLGPkPpvkNFf0zWjGWQNs5V9jf7sA1HpRwcjk7vliEe1ML49n/kAAZX/q0OvyhXc
-         0GCcMIDcK2f9+1UTYCiQxOuqfvU4eqdR3RhV6mqr7bmPBjoBU0TsT/XVM/bB9oQKzLmX
-         r8q+AiPyeyauBTwz4eV6pdqwcggLI5UDndeE3a7mj6aCkO+EdSjAhvGRnaxK/JfHg9SF
-         iUmPDDfy3+fy7cv5vuf4tSJgxeZ4wxLUj96v4MfWqwtnNNn9PoN4HE4NP2UQbiIZoH8p
-         vz25OIU2vSYR+Li+ZTdJYVgxyzs855bg7cViR6TLmkUP/du+U9xmhid8/VVrXdgTIJc8
-         xZ6A==
+        bh=KUOFlpMrFmoGg2W22Wnb/50CaD/8+Zpw2eXYbFsNGa4=;
+        b=Y7gK6RJF9627aph+JEbx5tpGASMzeQCtrNA84LTV/KoR8c0n3JuxgN2OpXYJHMfpa0
+         JWDGBsASedKCW2Fd1G5q2BN0kf2rftUV9VM9qBcbrkiwYzzqVUrlkIExN3otwtCkzc2e
+         2PatKBx+wUaUAJnsYfYhT4nzeXAQWsk9CG1gHJzdJAeF/27R2tud7uu6DhJkGE89Js4Y
+         zLXn5DYHm656Qj/I9SBzFY0efVOySCo6DvQcFrORfg6FmHF8vO4zGv7J31Fu3QiuJPuG
+         JWgtvZC8gpoFj0GJhXqgVlf9gY1ggeRp2JBfbzG27N5J/0fFK2CLumFw54WL1SLuFna1
+         TL3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747783600; x=1748388400;
+        d=1e100.net; s=20230601; t=1747783630; x=1748388430;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4HHtawmhPaENN0DEAVnLAXYRZmmNd4h+JyE33PQj454=;
-        b=oTbJ0TGlAfNBLmqtDyEDyC7vLsfe+NRYPTfnwaWodHvvqVM/fHdiEcgkYGWl/veSMp
-         GS7yj+cl+zk6Kmb1yiEOXLCq8/LExKPplINR0Rwf9YxYEM+/vOF+XfrDd6sdj30U0MT5
-         NgYKClCc0exbj2WrM0RYn9oQHAWKUHbt6rGJAkvjHJPPPUHZO8fgrqvqnPR5p0bAvFrg
-         2t9Pn0d4A26qJsgAT3YHMHZzJU9iV9bHX+VPmtYL9WCLGcePiDGMUKfVe6w9UZ/9TK6i
-         ywBVTHeQbKgsuNmykYT4GXtCGfSe9hrVFSYzvL08F732SMimajon/bm8RiAHAQP9rK1M
-         iZDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlfBySQbEpaCleiOmHX4ti6AYRFh1MAGHj3OLHvKG6lj1fAbj5sEbU2KQEI1QW9VNiPJlusLVvhRl3YZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP4Q73YBcHZEvCfJOo8K+fzOfErFGP32R6rNKuqlb39Y9cXuC0
-	Or+YzP5AbX7IULVTzgKFiLGa51hVhXVfYFglOEa+B9SfMT0zRaIECMfLkHuGx0U2oDsUxrGAEuO
-	F16IPqmqY82oUjST4u4yj6sZ0V2MyM3CsiXrP3SHo
-X-Gm-Gg: ASbGncuwS5YWpI73yOl9PxoaPvRVvhAzJP9L8qbPzVQN0lXJt/h4fs8WmYxvyE3gmZc
-	66j5OBlM3CSj/8U3igKpxa7eEEfeOp3J/UvEfjZJ0jmSXohp65osvv1l/z7KA9LNUyPILr8crwq
-	/TkDaQralybpedJAz1rPB2suxl+KJKnNk3hp+cK9pLo979bJK3FgKY
-X-Google-Smtp-Source: AGHT+IG6f/1+5EDykJHVQFWvj7ab2qAzshRhYmuFVlegdyB2FPxNKVWoB/pR1RBhAppiBlV1eNq+vPG3iRDtLh+90po=
-X-Received: by 2002:a05:622a:3c7:b0:47d:c9f0:da47 with SMTP id
- d75a77b69052e-49601173654mr12820621cf.19.1747783599516; Tue, 20 May 2025
- 16:26:39 -0700 (PDT)
+        bh=KUOFlpMrFmoGg2W22Wnb/50CaD/8+Zpw2eXYbFsNGa4=;
+        b=RneaIOYd1ukGL06il3iIQ6LVUtLUhRqM0w/RrKrEfhQ1y/3rzXXz8jiBJaxfIZnHyD
+         DCBiH5FPG5ul6mFq55PU590Duze2E7CCU6dy0+dsFpYXzlkIfeT6AfdUBIcEblO01U2j
+         yzvzClNyIKd9QlbIjC6EElwpwrT5A9g/eff0Y6UCGVVW4VZ71R1AWSBHpriuz/oZTRjk
+         GqGxAAPXFGe5AtS+0tVwhYpc8t7pa0+iFmJEy4otFqwX6ZWnN35FGTJWfKANTgbTWs0A
+         U9K4ZV9TM6Xr/iBS3yqYyKoRZs7Snm5qaCmTNgIxpOi1ZJ/vZsu11ORUrD/FJDIpbH5+
+         jtjA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4eznEKuSSXPxfqTt5OElKhjuWS4DGjGKBmSfqOv4LTX667XPpmtgpNP1Dk2x5RvgybPU=@vger.kernel.org, AJvYcCUa2WbJ5VqXgeurKNKcv0If0BipkANWTye/Z/iamfIuSqQoPkucEQI2uZ1p6CskffnJhd/6knlz8rqDid1A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7EK/K6ZaE4CLsVJfWYiC9y3csZqEMJEYELIVI7W1VDBlkiVLP
+	Gxj0iJFwJ8UCRnI94DocICUf3dG0PlNn53iozqUy5ZhKgetcLNsM6dMZLfL9wq7OLsuBUyXVyPv
+	T9cfVuCMFN5dux+BNYukMLea1MZ404GI=
+X-Gm-Gg: ASbGncuMRylKkALqA64HJ079B3fMYbOOiEI/qA1Cz0oSl1g2uJBe3B4kidw4VmocMZO
+	jIdosFe3+9UV6rRX/nDU06HSrrYLr9Tqhsaa9n8WtuysQVBlf64rMwrSXUSbKxgoy+/+jEpRi6S
+	SODIhAguk2EGo9gSUe+/ZS4Aleq2SucsFUkApGvUP4IwzPhzDa
+X-Google-Smtp-Source: AGHT+IEufFXJiKtzl5TuIOFWpCrPNbmFm84xA7Ldij7ZC3EK8FFiaL73RK08VKixI2im3Hf3sTnTT3s8zSLxJpilwHc=
+X-Received: by 2002:a17:90b:5410:b0:30e:823f:ef22 with SMTP id
+ 98e67ed59e1d1-30e83215898mr26986321a91.24.1747783629658; Tue, 20 May 2025
+ 16:27:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517000739.5930-1-surenb@google.com> <20250520231620.15259-1-cachen@purestorage.com>
-In-Reply-To: <20250520231620.15259-1-cachen@purestorage.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 20 May 2025 16:26:28 -0700
-X-Gm-Features: AX0GCFs5vr76oHaRPnZcZCmedwZcMQVKloWyYdWtBs1obCTSjTQJMrTZ0D0EEjg
-Message-ID: <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
-Subject: Re: comments on patch "alloc_tag: allocate percpu counters for module
- tags dynamically"
-To: Casey Chen <cachen@purestorage.com>
-Cc: 00107082@163.com, akpm@linux-foundation.org, cl@gentwo.org, 
-	dennis@kernel.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, pasha.tatashin@soleen.com, tj@kernel.org, 
-	yzhong@purestorage.com
+References: <20250515064800.2201498-1-senozhatsky@chromium.org>
+In-Reply-To: <20250515064800.2201498-1-senozhatsky@chromium.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 20 May 2025 16:26:55 -0700
+X-Gm-Features: AX0GCFtw-8QwaBPYdz6XMNoCpPhg6cWRy_wFLDfS2jeLs5bM_xrcux7WvxV2OUc
+Message-ID: <CAEf4BzYTiPuOUbQgkNvT2haAupeep79q0pVu=fcD5fEgnAjR_A@mail.gmail.com>
+Subject: Re: [PATCHv2] bpf: add bpf_msleep_interruptible() kfunc
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 4:16=E2=80=AFPM Casey Chen <cachen@purestorage.com>=
- wrote:
+On Wed, May 14, 2025 at 11:48=E2=80=AFPM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
 >
-> Hi Suren,
-
-Hi Casey,
-
+> bpf_msleep_interruptible() puts a calling context into an
+> interruptible sleep.  This function is expected to be used
+> for testing only (perhaps in conjunction with fault-injection)
+> to simulate various execution delays or timeouts.
 >
-> I have two questions on this patch.
-> 1. If load_module() fails to allocate memory for percpu counters, should =
-we call codetag_free_module_sections() to clean up module tags memory ?
-
-Does this address your question:
-https://lore.kernel.org/all/20250518101212.19930-1-00107082@163.com/
-
-> 2. How about moving percpu counters allocation to move_module() where cod=
-etag_alloc_module_section() is called ? So they can be cleaned up together.
-
-That would not work because tag->counters are initialized with NULL
-after move_module() executes, so if we allocate there our allocations
-will be overridden. We have to do that at the end of load_module()
-where codetag_load_module() is.
-Thanks,
-Suren.
-
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
 >
-> Thanks,
-> Casey
+> v2:
+> -- switched to kfunc (Matt)
+>
+>  kernel/bpf/helpers.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> index fed53da75025..a7404ab3b0b8 100644
+> --- a/kernel/bpf/helpers.c
+> +++ b/kernel/bpf/helpers.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/bpf_mem_alloc.h>
+>  #include <linux/kasan.h>
+>  #include <linux/bpf_verifier.h>
+> +#include <linux/delay.h>
+>
+>  #include "../../lib/kstrtox.h"
+>
+> @@ -3283,6 +3284,11 @@ __bpf_kfunc void bpf_local_irq_restore(unsigned lo=
+ng *flags__irq_flag)
+>         local_irq_restore(*flags__irq_flag);
+>  }
+>
+> +__bpf_kfunc unsigned long bpf_msleep_interruptible(unsigned int msecs)
+> +{
+> +       return msleep_interruptible(msecs);
+> +}
+> +
+
+What happened to the trying out custom kernel module for
+fuzzing/testing use case you have?
+
+I'll repeat my concerns. BPF maps and progs are all interdependent
+between each other by global RCU Tasks Trace "domain". Delay one RCU
+tasks trace grace period through the use of msleep() will delay
+everything BPF-related in the entire kernel.
+
+Until we have some way to give some of BPF programs and its isolated
+BPF maps its own RCU domain, I don't think we should allow arbitrary
+sleeps inside BPF programs.
+
+pw-bot: cr
+
+>  __bpf_kfunc_end_defs();
+>
+>  BTF_KFUNCS_START(generic_btf_ids)
+> @@ -3388,6 +3394,7 @@ BTF_ID_FLAGS(func, bpf_iter_kmem_cache_next, KF_ITE=
+R_NEXT | KF_RET_NULL | KF_SLE
+>  BTF_ID_FLAGS(func, bpf_iter_kmem_cache_destroy, KF_ITER_DESTROY | KF_SLE=
+EPABLE)
+>  BTF_ID_FLAGS(func, bpf_local_irq_save)
+>  BTF_ID_FLAGS(func, bpf_local_irq_restore)
+> +BTF_ID_FLAGS(func, bpf_msleep_interruptible, KF_SLEEPABLE)
+>  BTF_KFUNCS_END(common_btf_ids)
+>
+>  static const struct btf_kfunc_id_set common_kfunc_set =3D {
+> --
+> 2.49.0.1101.gccaa498523-goog
+>
