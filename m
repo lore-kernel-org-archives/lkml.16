@@ -1,49 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC082580F7;
-	Tue, 20 May 2025 15:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FAE25FA11
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754504; cv=none; b=HJJmV/fpjzgn1Epgyqo3N1RwFK78A60MfcY2V8qSTPLy9pN9lv30gJ+BmeKMfoALXi5rRAcQ5ha5yiUYvgMnm4XAjzHbfOkyVnB/xew90WAZxrikYLSAh3WxLwsEg+q38d9AryIprBwDGeaWhL0AbRgK6MsdNk2cq5WiBRFfSXg=
+	t=1747754509; cv=none; b=bt0s8rZAUXWYI54QR3NXoriE+5+WMsJ3+CLebVMeIDYG2SO8Z/B0cwarmPznAbJznZ8COKbGk5a0ZV7hYf+UhTawN7x9cACHodx5WejYZJB8wOhvHi8agLWnk1DwKNQ0ZVAwLqL5FmICj0vxcJaFWV8dVtf/g9lKAEowS5RDgnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754504; c=relaxed/simple;
-	bh=2I2RLcNJVt/tlKlu1Lp5Cs9pa3vOTjYe6mYV0vz+MNc=;
+	s=arc-20240116; t=1747754509; c=relaxed/simple;
+	bh=7OCZHxgMoJZyWqUhO+LWO9/SK6u4vZjyPe4ldhYTx50=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tBsUiaRpfyJcnECStgvmnygppF2AzDZZYmntYkFo1pfArT7wKdXb9PUCZb531S3sY5xWhONMW0tWq1jQEiwAFidpeQW5kWCKfaUNxGBeN/9Sk9vgFmcGgVV8KzjB7JFlG9eMoo0N28kOG7kjXPuip/SovFvoLidrL4+x4iE81+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCM8v5H/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tFAeq2oF/fi2R/j+Oirjj5wCwhCn3NYXTo9KNAnT3xvM/RUkxLe0tZ6VnOwiEAhFd3e5jMC4n3Y2o1NRb1zFhUEVgBWmZRcq1RdA6CAdhgCO/s/MS852jc7C97gTnfs0bxLVmIk16bWW6lGxu7F1xlk4lnAe4s9kaHkKO/qW4YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uqCvZKEO; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCM8v5H/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F08EC4CEEA;
-	Tue, 20 May 2025 15:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747754502;
-	bh=2I2RLcNJVt/tlKlu1Lp5Cs9pa3vOTjYe6mYV0vz+MNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eCM8v5H/xpVdc2gVJZlOwPG+UMmK+4RJnJxxC34EGCueMramyU65Fyrzi0aEUGRlK
-	 3EgKIf8lYiDo7exi9dWoDkpeTsbQbKwgWL01yRvMv9vOHoXpv0s065EPa2kTgKEK2w
-	 u/YjO+nOJUNr1xaUjQOOfuUVN3cFPL1v7F/EwxnbQ+HvFNkQ+zBA7Do4Ip/anjkqW6
-	 /1IzPhnxCZMIrOcq1FN7m8Lmq3c4TTkGS8aJfTMDABODrsgKBpfaiIoWHJzlT2XlyA
-	 NRL3B7FLW4vO9Cfxq9Q4F200jKL+CSSu1ltjUB8B4Q3gxX8MBaCOOjw6YVxWmf3C7l
-	 2hmPhx2oStpGw==
-Date: Tue, 20 May 2025 17:21:37 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 01/40] drm/gpuvm: Don't require obj lock in destructor
- path
-Message-ID: <aCyeAb0vnQqPVbiz@cassiopeiae>
-References: <20250519175348.11924-1-robdclark@gmail.com>
- <20250519175348.11924-2-robdclark@gmail.com>
- <aCwt20O7SH1zQLlV@pollux>
- <CAF6AEGvhxeCAz41F72hq=V3aD38jm+aUQqX3GwaOR4uzZGn6hg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uqCvZKEO"
+Date: Tue, 20 May 2025 11:21:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747754494;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8A+4/WHQPGtTkhCxwLscoAmpmTmaNbybMHYotBWdP2A=;
+	b=uqCvZKEOgLQo6BEl1w2WBr/iTYWGhrTLCXX/YdRIiVzEWHD7gojgAgQ6YwB55iDzMomDpX
+	kpyAZWUCrzRPp2h/QT4F698F9SkkSZDeoTux2L/Jd7AGsJhreFnkL91gXRw9QJNjRDnEBG
+	N4IO8CKTo0hikMtMxPM1oWgp4FcE43w=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+Message-ID: <ztuodbbng5rgwft2wtmrbugwo3v5zgrseykhlv5w4aqysgnd6b@ef56vn7iwamn>
+References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
+ <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
+ <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+ <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+ <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
+ <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
+ <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
+ <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
+ <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,56 +55,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGvhxeCAz41F72hq=V3aD38jm+aUQqX3GwaOR4uzZGn6hg@mail.gmail.com>
+In-Reply-To: <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 20, 2025 at 07:57:36AM -0700, Rob Clark wrote:
-> On Tue, May 20, 2025 at 12:23 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > On Mon, May 19, 2025 at 10:51:24AM -0700, Rob Clark wrote:
-> > > diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-> > > index f9eb56f24bef..1e89a98caad4 100644
-> > > --- a/drivers/gpu/drm/drm_gpuvm.c
-> > > +++ b/drivers/gpu/drm/drm_gpuvm.c
-> > > @@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
-> > >       drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
-> > >       drm_gpuvm_bo_list_del(vm_bo, evict, lock);
-> > >
-> > > -     drm_gem_gpuva_assert_lock_held(obj);
-> > > +     if (kref_read(&obj->refcount) > 0)
-> > > +             drm_gem_gpuva_assert_lock_held(obj);
+On Tue, May 20, 2025 at 05:13:37PM +0200, Amir Goldstein wrote:
+> On Tue, May 20, 2025 at 4:44 PM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
 > >
-> > Again, this is broken. What if the reference count drops to zero right after
-> > the kref_read() check, but before drm_gem_gpuva_assert_lock_held() is called?
+> > On Tue, May 20, 2025 at 04:33:14PM +0200, Amir Goldstein wrote:
+> > > On Tue, May 20, 2025 at 4:12 PM Kent Overstreet
+> > > > Amir, you've got two widely used filesystem features that conflict and
+> > > > can't be used on the same filesystem.
+> > > >
+> > > > That's _broken_.
+> > >
+> > > Correct.
+> > >
+> > > I am saying that IMO a smaller impact (and less user friendly) fix is more
+> > > appropriate way to deal with this problem.
+> >
+> > Less user friendly is an understatement.
+> >
+> > Obscure errors that only get reported via overloaded standard error
+> > codes is a massive problem today, for _developers_ - have you never had
+> > a day of swearing over trying to track down where in a massive subsystem
+> > an -EINVAL is coming from?
+> >
+> > It's even worse for end users that don't know to check the dmesg log.
+> >
+> > And I support my code, so these would turn into bug reports coming
+> > across my desk - no thanks; I already get enough weird shit from other
+> > subsystems that I have to look at and at least triage.
+> >
+> > > > Users hate partitioning just for separate /boot and /home, having to
+> > > > partition for different applications is horrible. And since overlay fs
+> > > > is used under the hood by docker, and casefolding is used under the hood
+> > > > for running Windows applications, this isn't something people can
+> > > > predict in advance.
+> > >
+> > > Right, I am not expecting users to partition by application,
+> > > but my question was this:
+> > >
+> > > When is overlayfs created over a subtree that is only partially case-folded?
+> > >
+> > > Obviously, docker would create overlayfs on parts of the fs
+> > > and smbd/cygwin could create a case folder subtree on another
+> > > part of the fs.
+> > > I just don't see a common use case when these sections overlap.
+> >
+> > Today, you cannot user docker and casefolding on _different parts of_
+> > the same filesystem.
+> >
+> > So yees, today users do have to partition by application, or only use
+> > one feature or the other.
+> >
 > 
-> No, it is not.  If you find yourself having this race condition, then
-> you already have bigger problems.  There are only two valid cases when
-> drm_gpuvm_bo_destroy() is called.  Either:
+> Didn't say there was no problem.
 > 
-> 1) You somehow hold a reference to the GEM object, in which case the
-> refcount will be a positive integer.  Maybe you race but on either
-> side of the race you have a value that is greater than zero.
-> 2) Or, you are calling this in the GEM object destructor path, in
-> which case no one else should have a reference to the object, so it
-> isn't possible to race
+> Argued that your fix is a big gun and not worth the added complexity.
+> 
+> Let's see what Miklos thinks.
+> 
+> > This isn't about allowing casefolding and overlayfs to fix on the same
+> > subtree, that would be a bigger project.
+> >
+> > > Perhaps I am wrong (please present real world use cases),
+> > > but my claim is that this case is not common enough and therefore,
+> > > a suboptimal EIO error from lookup is good enough to prevert crossing
+> > > over into the case folded zone by mistake, just as EIO on lookup is
+> > > enough to deal with the unsupported use case of modifying
+> > > overlayfs underlying layers with overlay is mounted.
+> > >
+> > > BTW, it is not enough to claim that there is no case folding for the
+> > > entire subtree to allow the mount.
+> > > For overlayfs to allow d_hash()/d_compare() fs must claim that
+> > > these implementations are the default implementation in all subtree
+> > > or at least that all layers share the same implementation.
+> >
+> 
+> Nevermind. Misread patch 6.
 
-What about:
+Since you were asking for use cases - docker & related are pretty widely
+used for deploying things that are "unwieldy" within the normal packgae
+manager ecosystem - and wine is case study #1 in that, where these days
+people want to ship a specific version of wine with applications being
+emulated (that's been tested with that application).
 
-3) You destroy the VM_BO, because the VM is destroyed, but someone else (e.g.
-   another VM) holds a reference of this BO, which is dropped concurrently?
+But wine wants casefolding, so - hapless user deploys docker image where
+casefolding is enabled _but only on the subdir that holds Windows data_,
+not the whole image.
 
-Please don't tell me "but MSM doesn't do that". This is generic infrastructure,
-it is perfectly valid for drivers to do that.
+Docker mounts the image, but then everything explodes when you try to
+use it with what look to the user like impenetrable IO errors.
 
-> If the refcount drops to zero after the check, you are about to blow
-> up regardless.
-
-Exactly, that's why the whole approach of removing the reference count a VM_BO
-has on the BO, i.e. the proposed DRM_GPUVM_VA_WEAK_REF is broken.
-
-As mentioned, make it DRM_GPUVM_MSM_LEGACY_QUIRK and get an approval from Dave /
-Sima for it.
-
-You can't make DRM_GPUVM_VA_WEAK_REF work as a generic thing without breaking
-the whole design and lifetimes of GPUVM.
-
-We'd just end up with tons of traps for drivers with lots of WARN_ON() paths and
-footguns like the one above if a driver works slightly different than MSM.
+That's a bad day for someone, or more likely a lot of someones.
