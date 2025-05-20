@@ -1,165 +1,96 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7F022D787;
-	Tue, 20 May 2025 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7045C242D92
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751054; cv=none; b=GQ5zQioE+yL9dcykPgEd2HBoOie2u3nXa4FvLjt/TB9ksYTtDB+Vws2tn4XNLhOx5RzbfXgjY3TZ4old4SSCGA7E1Qk2wEJTyYaVwfF3IfLIjh1N2pDOqoWnX1yufCcilj4DSZYpSFTw/8aPvg/I4cNcv/Xhiix8D8XGlynxFUc=
+	t=1747751089; cv=none; b=jTbEjOrUaw5ZG8VlRmrcudfKKgMK9CU0ADazeCUciwHxhxl2dDznCKLmL6eDkECg4JwFOWQTDW0bEO3qMGHn0TqQLVVegV6a6m6MKHRaF41SmGoEyOuHOV3t5uMf9zf/2nqQUR2WQPgk2zxcRtkaeLj1BLXkysoTe9S7tuxKY9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751054; c=relaxed/simple;
-	bh=QTLMqr2zIE+uYbBUUKKtEg0SYp8ygrhoH+/kgbyNgeo=;
+	s=arc-20240116; t=1747751089; c=relaxed/simple;
+	bh=Yvxx6Bu2YYTpjWbmu0Eo4W+cis8fHaGJTUi5npOCmyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfyeAeJOFt7lWxVcbVP58sRnGDOk95ANfEnqfjCw33+1sAbwoxOzXsCW6Hzq7u1haYQYzl2KxmfnYkasNzkfhZE9QmUuR+bdC8dntw5aW+LBJvZuPUXbgf72kF/lIS2TTzw9LQVtp1j6B7zmdrcjpQd4V4wwQnDUWGCNorHIqsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iMnFyB8K; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QzLB3PiP0HzTFbuFuRJDPrgBqz49V9FkQaDUXtkyRSDB9uaH+9+c7G05CljQssK1JWXfosOJMorYkbmeBhOLlRNdsSRXmokpL1qN6njaQm6sDco2yjFL/mOsMWqvPj7dBG56ZAHKpUxF0CTTE/iq0fVgpJ0Dqh1iMuSDIQPbkj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ifq71GuU; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iMnFyB8K"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 01D8B2EC;
-	Tue, 20 May 2025 16:23:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747751031;
-	bh=QTLMqr2zIE+uYbBUUKKtEg0SYp8ygrhoH+/kgbyNgeo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iMnFyB8K85swvPdyZroStTnuTT7U4Q71ieqt9tdGvY2q6gZKDOqHrldCf5weMh3wP
-	 4vi4me9No4YB84u+8XZ/gpIvofpAgdGCHoXSzETCFpR8MAU6rygk/lFP+2XPIxAk/T
-	 YcA/w4oR5A5uQzDp8NJA/PF4QjlM927R5QSrs73o=
-Date: Tue, 20 May 2025 16:24:05 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v5 08/12] drm: renesas: rz-du: mipi_dsi: Use mHz for
- D-PHY frequency calculations
-Message-ID: <20250520142405.GG13321@pendragon.ideasonboard.com>
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ifq71GuU"
+Date: Tue, 20 May 2025 07:24:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747751085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C9ImqvqQLUX0kdsxLhKUAbg/uyYeCd3CXJPyocJ5Gfw=;
+	b=Ifq71GuUaygpKgGDTzad7K32V5dz5GZMkG2WGSFMZ25+2hMaPMiz3dujQ+9TvfHyxv7R4X
+	FDXSa9PdaUuZP1QNEt8DyUcpZPdldi2SDLNjHe4zuNQGII99bGbS764tfYohY3hEzYJ3mb
+	gcpzW7HM51sMnwBo0A2o4MKT28QZrVg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Usama Arif <usamaarif642@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, surenb@google.com, hannes@cmpxchg.org, vlad.wing@gmail.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
+ non-contiguously
+Message-ID: <ewn4u5ssskqzad4sjerg6zkxjhvuik6cs4st4jarpizztq4fca@p4wwfavollhm>
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
+ <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
+ <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com>
+ <22oihuvcrh5sg3urocw6wbop2v5yni7zinuhywbz7glsee4yoa@gzi5v5fcggdl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512182330.238259-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <22oihuvcrh5sg3urocw6wbop2v5yni7zinuhywbz7glsee4yoa@gzi5v5fcggdl>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Prabhakar,
-
-Thank you for the patch.
-
-On Mon, May 12, 2025 at 07:23:26PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, May 20, 2025 at 10:01:27AM -0400, Kent Overstreet wrote:
+> On Tue, May 20, 2025 at 02:46:14PM +0100, Usama Arif wrote:
+> > 
+> > 
+> > On 20/05/2025 14:44, Kent Overstreet wrote:
+> > > On Tue, May 20, 2025 at 01:25:46PM +0100, Usama Arif wrote:
+> > >> When memory allocation profiling is running on memory bound services,
+> > >> allocations greater than order 0 for slab object extensions can fail,
+> > >> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 bytes
+> > >> per slabobj_ext (order 1 allocation). Use kvcalloc to improve chances
+> > >> of the allocation being successful.
+> > >>
+> > >> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> > >> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+> > >> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+> > >> ---
+> > >>  mm/slub.c | 2 +-
+> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/mm/slub.c b/mm/slub.c
+> > >> index dc9e729e1d26..bf43c403ead2 100644
+> > >> --- a/mm/slub.c
+> > >> +++ b/mm/slub.c
+> > >> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+> > >>  	gfp &= ~OBJCGS_CLEAR_MASK;
+> > >>  	/* Prevent recursive extension vector allocation */
+> > >>  	gfp |= __GFP_NO_OBJ_EXT;
+> > >> -	vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
+> > >> +	vec = kvcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
+> > >>  			   slab_nid(slab));
+> > > 
+> > > And what's the latency going to be on a vmalloc() allocation when we're
+> > > low on memory?
+> > 
+> > Would it not be better to get the allocation slighly slower than to not get
+> > it at all?
 > 
-> Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
-> precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
-> high accuracy.
+> Our behaviour when thrashing sucks, we don't want to do anything to make
+> that worse.
+> 
+> There's also the fact that vmalloc doesn't correctly respect gfp flags,
+> so until that gets fixed this doesn't work at all.
 
-I have a hard time imagining the need for milliHz accuracy. Could you
-please explain why that is needed on V2H ?
-
-> These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
-> 
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v4->v5:
-> - Added Reviewed tag from Biju
-> 
-> v3->v4:
-> - Used MILLI instead of KILO
-> - Made use of mul_u32_u32() for multiplication
-> 
-> v2->v3:
-> - Replaced `unsigned long long` with `u64`
-> - Replaced *_mhz with *_millihz` in functions
-> 
-> v1->v2:
-> - No changes
-> ---
->  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> index 5fc607be0c46..f93519613662 100644
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -31,7 +31,7 @@
->  struct rzg2l_mipi_dsi;
->  
->  struct rzg2l_mipi_dsi_hw_info {
-> -	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long hsfreq);
-> +	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, u64 hsfreq_millihz);
->  	void (*dphy_exit)(struct rzg2l_mipi_dsi *dsi);
->  	u32 phy_reg_offset;
->  	u32 link_reg_offset;
-> @@ -200,8 +200,9 @@ static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
->   */
->  
->  static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
-> -				    unsigned long hsfreq)
-> +				    u64 hsfreq_millihz)
->  {
-> +	unsigned long hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
->  	const struct rzg2l_mipi_dsi_timings *dphy_timings;
->  	unsigned int i;
->  	u32 dphyctrl0;
-> @@ -274,6 +275,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->  				  const struct drm_display_mode *mode)
->  {
->  	unsigned long hsfreq, vclk_rate;
-> +	u64 hsfreq_millihz;
->  	unsigned int bpp;
->  	u32 txsetr;
->  	u32 clstptsetr;
-> @@ -305,9 +307,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->  	if (vclk_rate != mode->clock * MILLI)
->  		dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu mismatch\n",
->  			 mode->clock * MILLI, vclk_rate);
-> -	hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
-> +	hsfreq_millihz = DIV_ROUND_CLOSEST_ULL(mul_u32_u32(vclk_rate, bpp * MILLI), dsi->lanes);
->  
-> -	ret = dsi->info->dphy_init(dsi, hsfreq);
-> +	ret = dsi->info->dphy_init(dsi, hsfreq_millihz);
->  	if (ret < 0)
->  		goto err_phy;
->  
-> @@ -315,6 +317,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->  	txsetr = TXSETR_DLEN | TXSETR_NUMLANEUSE(dsi->lanes - 1) | TXSETR_CLEN;
->  	rzg2l_mipi_dsi_link_write(dsi, TXSETR, txsetr);
->  
-> +	hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
->  	/*
->  	 * Global timings characteristic depends on high speed Clock Frequency
->  	 * Currently MIPI DSI-IF just supports maximum FHD@60 with:
-> @@ -776,7 +779,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
->  	 * mode->clock and format are not available. So initialize DPHY with
->  	 * timing parameters for 80Mbps.
->  	 */
-> -	ret = dsi->info->dphy_init(dsi, 80000000);
-> +	ret = dsi->info->dphy_init(dsi, 80000000ULL * MILLI);
->  	if (ret < 0)
->  		goto err_phy;
->  
-
--- 
-Regards,
-
-Laurent Pinchart
+Which gfp flags vmalloc is not respecting today?
