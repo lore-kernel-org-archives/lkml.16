@@ -1,80 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB621FFC54
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC9124BC14;
+	Tue, 20 May 2025 15:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755597; cv=none; b=QjPBagUqQB614PXuwTnCrgHLwm7o1b4bn6lVUOf16oFAAxvNpmaSku8ty93AVhYjw6bv5LOYEpKZtkLu6EfHF6fILgj9i++d7NH/UgGG8OBGxV3fEz50UZmxTtX/StfKQJtuhFTTzPra6bMt/d4eg8jUDuUovE0PDs3+ndSIJMo=
+	t=1747755642; cv=none; b=iJlKkUSCsInpVpEMO/E04MZw8SzsYAmZCFR9xQR6x+v+Ku+4EHf51CRweIW/crefO3GkFMdV4yGbGeGMjpNHEF2pDS2l1jEPh9F3A26rNRcDVB1FQaprVNk6vmkwQlMnL1Q1FIB3I+8YKuI+Us6fXppySIg3JUB2yYI21M6wNY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755597; c=relaxed/simple;
-	bh=Gp2hypGim6KPCTrYggCBys1rov6/WLmvezT/1tOHcoI=;
+	s=arc-20240116; t=1747755642; c=relaxed/simple;
+	bh=cjlil9G8JByys0gJ+2GwXu4Q4GO7unka4kGteTA7xdc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y3X38Rmlz3lrtCXnm3J9WQyFsG4lJHz9Z+JdBmcZ1Zrbz4vBEaoH9m3afS/7+V52soxWhcsEe8S71CKB0PE/5m2hLkHnT8TKPqlsnMdD/TihgaQ/cLD/pTK1vdgUhZUTNL0lUHTqG9LKwEKsZdSLtnuoKU7/4AixA5lwdaVe4ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rde3Ghgo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=G8EeezTv9l2ecIKnm1ZiYCwrWp/A/GzHf906OJbI1VYVP1FYQftMe4RqAQfk43Y3HYuQc2ozSTNc7HVEDGEG5bYYj7ku1EXBbT4ipU3Hh+uFRhMxs+RG2upDOePgUNMKSUOgRuQqwyuKOvrLPVTGh5GWYdSK6xUdDehfkWZUus0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDMTw39n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rde3Ghgo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747755593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qgw858aBfnJTsWLcya2ZIZLM65pgyUp/UWTU3v5tX6E=;
-	b=Rde3Ghgo0iWe1ePZs0X/WJLS2wRQxw/N+G2reHsFqITVV25KLgeK/JO/xPwsKhUIfKwVZN
-	l0eLg6nlbnQkXb9ksNdMsWuU6z0eW5wUpNA0iDmlM4aXxuz4saRn7S8Joyj5nbYg6KAZrX
-	fZeNwsL7O6fE/rEAGo5XwkC37lDBssQ=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-472-fP7_FCLFPM-Ho9X_LMFWUQ-1; Tue, 20 May 2025 11:39:51 -0400
-X-MC-Unique: fP7_FCLFPM-Ho9X_LMFWUQ-1
-X-Mimecast-MFC-AGG-ID: fP7_FCLFPM-Ho9X_LMFWUQ_1747755591
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b5ea50d28so90725539f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747755591; x=1748360391;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qgw858aBfnJTsWLcya2ZIZLM65pgyUp/UWTU3v5tX6E=;
-        b=iRJW2o3SUTeFrkoCaLpJPumJ1ZzaRBWVi7aKjEAX/ObzWXc0+8srbN3GIVKC1517vb
-         zLZw/I5sB30AvkhG1wKKvM77jGG4HOEI/urTlqQ1Jl5Y108wZJpTj9f//b20fwWRrlEa
-         CpQYVrw1DVFZ8ltMhiFZSzou2nkEkpiNg85bgTe3tjkJY0Xf6WxM+m4GvQ0abA6NYyV6
-         C8GNkowYu2n2D3yaTnd4tEr/3GyhbT+fNn7qG9P0Qa0p4z4Ek8NPJ8BZ6MtYzqNDPjGe
-         mLOuk8nzlmqy7W58uaqZnR6TWFpxQ3h3uKTS38y1jpKsKfn1yysKb6zDKHlj9jC4yEk9
-         e0xA==
-X-Forwarded-Encrypted: i=1; AJvYcCXI+UadTweC+Yo4oHGtpoJF895iOcD0vcDcWDGSMuWtB1c8LsaXHnYSTRT2D8DyTa9kU8wR/RdzOuQ8Dm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZTtZTCPeACQYQeGCZOVgBrUqKSYQJtuu3XyZXvJwcOD4HVQOM
-	F35sdMJOxhuNQfcdj1txKEXUbtaogZsNte4IxDF47ZDmYJDhSxIuf1XXWFKPiro9yME/AzTgkbU
-	3tMNU5+vXspfsVLw+9mWsyzKfgB+BHLp+tAaJNu5EginweITCQ3LkX3TMpOt+P8XFYg==
-X-Gm-Gg: ASbGncssAYNv8owmViTeRysulpEY7q/wfDPFv/dCkHAPoEBg9lAvmMWcB27ChOhnR5F
-	em0UBFIHWNl0XaJuvFM8+ikPB9+4ACokUdjMPHm9Wio0+cEw0DHzqtmixaIqu8KM0w7SPl5K2/1
-	TJjDHKSuRiZ8Zc22x3ieCgZpo3ZBjzQWkboWIakwYm24hJBMsQ3QsiJ8lmZJT6sfv3yRWPQUrEC
-	5/GZxPo3sF2smLQOe1nFrYRd3MYBCndcL3tQ8NEfBvkrxq9cXPAxa4X7nOECDAL65OvPzoXlt6p
-	HUF9UIQPpM7/BiY=
-X-Received: by 2002:a05:6e02:3810:b0:3dc:787f:2bce with SMTP id e9e14a558f8ab-3dc787f2eb9mr15376435ab.2.1747755591083;
-        Tue, 20 May 2025 08:39:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFwOHbonV8qiSQBLnfXYbx9Prhpc3EL9LanZ3fzLOv7nzBzsY/s+c9jTUwTOnix05087SeCPw==
-X-Received: by 2002:a05:6e02:3810:b0:3dc:787f:2bce with SMTP id e9e14a558f8ab-3dc787f2eb9mr15376255ab.2.1747755590555;
-        Tue, 20 May 2025 08:39:50 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3b19aasm2276374173.52.2025.05.20.08.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 08:39:49 -0700 (PDT)
-Date: Tue, 20 May 2025 09:39:48 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Longfang Liu <liulongfang@huawei.com>
-Cc: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
- <jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
-Subject: Re: [PATCH v8 0/6] bugfix some driver issues
-Message-ID: <20250520093948.7885dbe0.alex.williamson@redhat.com>
-In-Reply-To: <20250510081155.55840-1-liulongfang@huawei.com>
-References: <20250510081155.55840-1-liulongfang@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDMTw39n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80BA5C4CEE9;
+	Tue, 20 May 2025 15:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747755642;
+	bh=cjlil9G8JByys0gJ+2GwXu4Q4GO7unka4kGteTA7xdc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tDMTw39nrPOPNILCsmUbXg9K+21z/s0dt+uExMsXy6Zm33Cf33SpFolaLr0qtexZR
+	 NGS5ll/ioml+RM8PIRCDaskg1GDcqibmUB/d19XPRfwnN18WDssc7Qy8KEBuKQWNME
+	 cjYdj4ZP9wr8YN+gUhhlVOuydFVCTJ/L4UbkdW/zV/RRc8/7kjv58U2jy5GxC2P+U0
+	 eql6zkdQVbGVjljI7JV+zzLLDaIdwHUNEOtaJ+ci3MPkOu9nwXc94lhpp+3ePEsINp
+	 MNIyvJkQUyn8U13BXejspOLv1Mta1+/5JeU1c2igSLpRMn0wJUt64c+F6YTkDPvqte
+	 AdUdh8oYhg7Rw==
+Date: Tue, 20 May 2025 17:40:35 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Randy Dunlap
+ <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Kees Cook
+ <kees@kernel.org>, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] docs: kerneldoc.py: add try/except blocks for
+ kernel-doc class errors
+Message-ID: <20250520174035.5f193ec3@sal.lan>
+In-Reply-To: <20250520165024.7447a107@sal.lan>
+References: <cover.1747747695.git.mchehab+huawei@kernel.org>
+	<064bac2f462c13f56154891d8f3fb788db94f325.1747747695.git.mchehab+huawei@kernel.org>
+	<aCyQIwBnSiPLPrDo@smile.fi.intel.com>
+	<20250520165024.7447a107@sal.lan>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,50 +52,248 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 10 May 2025 16:11:49 +0800
-Longfang Liu <liulongfang@huawei.com> wrote:
+Em Tue, 20 May 2025 16:50:24 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-> As the test scenarios for the live migration function become
-> more and more extensive. Some previously undiscovered driver
-> issues were found.
-> Update and fix through this patchset.
+> Em Tue, 20 May 2025 17:22:27 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> escreveu:
 > 
-> Change v7 -> v8
-> 	Handle the return value of sub-functions.
+> > On Tue, May 20, 2025 at 03:33:08PM +0200, Mauro Carvalho Chehab wrote:
+> > > Replicate the same behavior as what's done with kernel-doc.pl:
+> > > continue building docs even when there are exceptions.  
+> > 
+> > ...
+> > 
+> > > +            logger.warning("kernel-doc '%s' processing failed with: %s" %
+> > > +                           (cmd_str(cmd), str(e)))  
+> > 
+> > > +                logger.warning("kernel-doc '%s' processing failed with: %s" %
+> > > +                               (cmd_str(cmd), str(e)))  
+> > 
+> > The prefix of the message is the same for different (semantically) places.
+> > Is it okay? (I would expect them to slightly differ, but I dunno if
+> > cmd here is the same, perhaps that's enough for distinguishing the two.)
 > 
-> Change v6 -> v7
-> 	Update function return values.
-> 
-> Change v5 -> v6
-> 	Remove redundant vf_qm_state status checks.
-> 
-> Change v4 -> v5
-> 	Update version matching strategy
-> 
-> Change v3 -> v4
-> 	Modify version matching scheme
-> 
-> Change v2 -> v3
-> 	Modify the magic digital field segment
-> 
-> Change v1 -> v2
-> 	Add fixes line for patch comment
-> 
-> Longfang Liu (6):
->   hisi_acc_vfio_pci: fix XQE dma address error
->   hisi_acc_vfio_pci: add eq and aeq interruption restore
->   hisi_acc_vfio_pci: bugfix cache write-back issue
->   hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
->   hisi_acc_vfio_pci: bugfix live migration function without VF device
->     driver
->   hisi_acc_vfio_pci: update function return values.
-> 
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 121 +++++++++++++-----
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  14 +-
->  2 files changed, 101 insertions(+), 34 deletions(-)
-> 
+> I guess it should be OK, as the "%s" variables are the ones that will
+> actually help to provide a hint about the issue. See, in practice, if
+> one wants to check what crashed, the procedure would likely be to run 
+> the command line, given by "cmd_str(cmd)" and see what output was produced.
 
-Applied to vfio next branch for v6.16.  Thanks,
+On a second thought, the try/except logic there is too complex. We
+need just one to cover all cases. Also, "str(e)" is not the best,
+as it doesn't really show the error. "pformat(e)" works a lot better:
 
-Alex
+	$ make htmldocs
+	Using alabaster theme
+	Using Python kernel-doc
+	Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	WARNING: kernel-doc './scripts/kernel-doc.py -rst -enable-lineno -export ./drivers/gpio/gpiolib-acpi.c' processing failed with: KeyError('./drivers/gpio/gpiolib-acpi.c')
+	Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree
+
+See enclosed patch (to be applied after this series).
+
+Regards,
+Mauro
+
+---
+
+[PATCH] docs: kerneldoc.py: simplify exception handling logic
+
+Instead of having try/except everywhere, place them on a common
+place.
+
+While here, get rid of some bogus logs.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index 833cb0285afc..3f9754b84566 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -40,6 +40,7 @@ from docutils.parsers.rst import directives, Directive
+ import sphinx
+ from sphinx.util.docutils import switch_source_input
+ from sphinx.util import logging
++from pprint import pformat
+ 
+ srctree = os.path.abspath(os.environ["srctree"])
+ sys.path.insert(0, os.path.join(srctree, "scripts/lib/kdoc"))
+@@ -49,7 +50,7 @@ from kdoc_output import RestFormat
+ 
+ __version__  = '1.0'
+ kfiles = None
+-logger = logging.getLogger('kerneldoc')
++logger = logging.getLogger(__name__)
+ 
+ def cmd_str(cmd):
+     """
+@@ -190,46 +191,35 @@ class KernelDocDirective(Directive):
+ 
+         return cmd
+ 
+-    def run_cmd(self):
++    def run_cmd(self, cmd):
+         """
+         Execute an external kernel-doc command.
+         """
+ 
+         env = self.state.document.settings.env
+-        cmd = self.handle_args()
+ 
+         if self.verbose >= 1:
+-            print(cmd_str(cmd))
++            logger.info(cmd_str(cmd))
+ 
+         node = nodes.section()
+ 
+-        try:
+-            logger.verbose("calling kernel-doc '%s'" % (" ".join(cmd)))
+-
+-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+-            out, err = p.communicate()
+-
+-            out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
++        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++        out, err = p.communicate()
+ 
+-            if p.returncode != 0:
+-                sys.stderr.write(err)
++        out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
+ 
+-                logger.warning("kernel-doc '%s' failed with return code %d"
+-                                    % (" ".join(cmd), p.returncode))
+-                return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
+-            elif env.config.kerneldoc_verbosity > 0:
+-                sys.stderr.write(err)
++        if p.returncode != 0:
++            sys.stderr.write(err)
+ 
+-        except Exception as e:  # pylint: disable=W0703
+-            logger.warning("kernel-doc '%s' processing failed with: %s" %
+-                                (" ".join(cmd), str(e)))
++            logger.warning("kernel-doc '%s' failed with return code %d"
++                                % (" ".join(cmd), p.returncode))
+             return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
++        elif env.config.kerneldoc_verbosity > 0:
++            sys.stderr.write(err)
+ 
+         filenames = self.parse_args["file_list"]
+         for filename in filenames:
+-            ret = self.parse_msg(filename, node, out, cmd)
+-            if ret:
+-                return ret
++            self.parse_msg(filename, node, out, cmd)
+ 
+         return node.children
+ 
+@@ -240,71 +230,62 @@ class KernelDocDirective(Directive):
+ 
+         env = self.state.document.settings.env
+ 
+-        try:
+-            lines = statemachine.string2lines(out, self.tab_width,
+-                                              convert_whitespace=True)
+-            result = ViewList()
+-
+-            lineoffset = 0;
+-            line_regex = re.compile(r"^\.\. LINENO ([0-9]+)$")
+-            for line in lines:
+-                match = line_regex.search(line)
+-                if match:
+-                    # sphinx counts lines from 0
+-                    lineoffset = int(match.group(1)) - 1
+-                    # we must eat our comments since the upset the markup
+-                else:
+-                    doc = str(env.srcdir) + "/" + env.docname + ":" + str(self.lineno)
+-                    result.append(line, doc + ": " + filename, lineoffset)
+-                    lineoffset += 1
+-
+-            self.do_parse(result, node)
+-
+-        except Exception as e:  # pylint: disable=W0703
+-            logger.warning("kernel-doc '%s' processing failed with: %s" %
+-                                (cmd_str(cmd), str(e)))
+-            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
++        lines = statemachine.string2lines(out, self.tab_width,
++                                            convert_whitespace=True)
++        result = ViewList()
++
++        lineoffset = 0;
++        line_regex = re.compile(r"^\.\. LINENO ([0-9]+)$")
++        for line in lines:
++            match = line_regex.search(line)
++            if match:
++                # sphinx counts lines from 0
++                lineoffset = int(match.group(1)) - 1
++                # we must eat our comments since the upset the markup
++            else:
++                doc = str(env.srcdir) + "/" + env.docname + ":" + str(self.lineno)
++                result.append(line, doc + ": " + filename, lineoffset)
++                lineoffset += 1
+ 
+-        return None
++        self.do_parse(result, node)
+ 
+-    def run_kdoc(self, kfiles):
++    def run_kdoc(self, cmd, kfiles):
+         """
+         Execute kernel-doc classes directly instead of running as a separate
+         command.
+         """
+ 
+-        cmd = self.handle_args()
+         env = self.state.document.settings.env
+ 
+         node = nodes.section()
+ 
+-        try:
+-            kfiles.parse(**self.parse_args)
+-            filenames = self.parse_args["file_list"]
+-
+-            msgs = kfiles.msg(**self.msg_args, filenames=filenames)
+-            for filename, out in msgs:
+-                if self.verbose >= 1:
+-                    print(cmd_str(cmd))
++        kfiles.parse(**self.parse_args)
++        filenames = self.parse_args["file_list"]
+ 
+-                ret = self.parse_msg(filename, node, out, cmd)
+-                if ret:
+-                    return ret
++        msgs = kfiles.msg(**self.msg_args, filenames=filenames)
++        for filename, out in msgs:
++            if self.verbose >= 1:
++                print(cmd_str(cmd))
+ 
+-        except Exception as e:  # pylint: disable=W0703
+-            logger.warning("kernel-doc '%s' processing failed with: %s" %
+-                            (cmd_str(cmd), str(e)))
+-            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
++            self.parse_msg(filename, node, out, cmd)
+ 
+         return node.children
+ 
+     def run(self):
+         global kfiles
+ 
+-        if kfiles:
+-            return self.run_kdoc(kfiles)
+-        else:
+-            return self.run_cmd()
++        cmd = self.handle_args()
++
++        try:
++            if kfiles:
++                return self.run_kdoc(cmd, kfiles)
++            else:
++                return self.run_cmd(cmd)
++
++        except Exception as e:  # pylint: disable=W0703
++            logger.warning("kernel-doc '%s' processing failed with: %s" %
++                           (cmd_str(cmd), pformat(e)))
++            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
+ 
+     def do_parse(self, result, node):
+         with switch_source_input(self.state, result):
 
