@@ -1,172 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648931B6CE3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A082926D4E3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747762886; cv=none; b=FCi/bCDGCr8mAlg5199sGE4DcRxUu+i+FSric3rbswQNNIdTWQLdpaZleHUSD1KhTz9302wjq0gAiZJRby2ftyPw6ir9mVOyhfRJpPrh/y3hp9SQR4zpN1apMffJOJaknZCufIGBTWDyXdllB8ssS64dpin5AyWh4AQDNejZXQk=
+	t=1747763024; cv=none; b=QjMMfxCPPMJcF4bvFRBg2iyvzPnaGcA5KBRwPqBPB0fG8MGzF19XGUrbwPnSDw3s0w/4bNR4W2w9MvAAz87tDtu/ielkUc1Odh/Gqx/QB1FL+9XjSY+Ctfmj7S/yS0H6i5q2W9jCZAHJKAytnyOcCW+ArqeGKiLyxQ6LluUgsWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747762886; c=relaxed/simple;
-	bh=37YGEwIZyc38aYygcTWPR7M6+MYC8cK3Os1zr9tPoBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SU/eiDnNHkPWtOQGdigef5H86BShSJ7cf/EcFnJ6vK8FQfAaEVkxXzrBZP3dOU8Z1kwpyruDyJDzzQd8QHns/tgCF64PHiWdVcD8QTniV9LLDpk4CQINWgaeMOHczEi0nCzlBm1NqpCQaHoDC9EEH5cIdkyWhw9CXx8CvoWUzOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e2V3gB8Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747763024; c=relaxed/simple;
+	bh=yeqxdYgDP/mwIyxs/1rcj9YB1LowK4KlQZ4Zwsqf0Q8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NMSNVCWrrdkoVqNhoNstLHZ5eKhiNeUC+8okt0eT9TzepiNJEbzJzfiA1hnWuYImyfXdGJ4krSw7GXKfx5hjsTH2sBZLbDj4emOE2ncsfhtteiQRRsTOMVHkLXa4st0Y1jD91MYJdm7hGW9F9tW1v4oBUJ5CUGvrNrUbK0TdAOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=ChzYwes/; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e2V3gB8Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747762883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ysy5nbN//FN9RtI8JoLcFahaJUzYzYV0wTw0kNVJLOQ=;
-	b=e2V3gB8QOLI0mIF2//KMTmNAlU/VzAuQ7b6WQqbrsa76AnHzY6ndmMEpVrnbIKUHdRl+4N
-	rBaaIZ+eW9h4Uszg2IzdcSomcfaSp0PG9zZ7nUy2sSULCUexRc3FyMbsCWgCwy8bgEA2M2
-	mzaJv6VJ4tir6e+g7Kkf7a78JYTzaG0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-YgPX1rwYP2uMBS-SwTnq7g-1; Tue, 20 May 2025 13:41:21 -0400
-X-MC-Unique: YgPX1rwYP2uMBS-SwTnq7g-1
-X-Mimecast-MFC-AGG-ID: YgPX1rwYP2uMBS-SwTnq7g_1747762881
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf446681cso36099475e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:41:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="ChzYwes/"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47692b9d059so82495761cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=criticallink.com; s=google; t=1747763021; x=1748367821; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uEVyBoAEqxAn/2eLRcFtZIXRt97TuO35d71JLM0GfEs=;
+        b=ChzYwes/t5fTXjSq43Th165DDGy4vPOJ5K1jml3D2ioY3TsbQ5WlYyt/udSqBdVBK0
+         sKSBOto2u9fz0TR9p/po3ZEMlLp7QEy2Knn8+SIjAYYVa/ywT4/2qB2ZxH8ZCrfwBST7
+         VWcrwB58vGmt8cpiRmyI75Duz7jjVK6ShIyjbeSPiouiFrIdoielPYEoVOZmOZUBYCM1
+         Bj2nGimpH1zTEMgf/KrgnjUqGTn+J6ysmeBIFNiHAcEmsxrP88iX6ikowEWHnPPJ8iVc
+         1rBTlulI+3VxAgumYL/h7uViFpzUF7gn0wrccbNqXmehLhembeIo9Pl8f4yjM6SazzYY
+         09lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747762880; x=1748367680;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ysy5nbN//FN9RtI8JoLcFahaJUzYzYV0wTw0kNVJLOQ=;
-        b=nfXCZRa6L8zKrNBUneCyX4IzghtlHiDSDmBqf5DU3jwylaAQ6DTzJa+bv8O19i1SO1
-         2DfiTGQXyYQ3eIsrfdydtz4bAbVgkSyVN3TaS+DVhGx2KtcuRKeGtle+Y3I1/NxMJk6C
-         8fRR4bE3LNqCsOCz4H/YOeu+MTASIb4sM8aXp4TYim70aoFE/QgiRc+ZVwmqWmDh4/rh
-         9EbAOrNLFOnmGwTpUeNNagID3TD6vH+GoBQbMKVaKQT+UM4AWYvRUytic4x/VpnX3zx2
-         RIXfS4TU/lvoTF3WpVD64ET8QqdJKtP/etPbxQLiygVB/7tIZPeEsuvybKpdi8kA2h1s
-         C88A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUghkYNRypUqjat+fWko7ygYNLQ5BAsOPhyc7Auyk1zRSRj4T1nD+N2weIgq4jTIKEdG/GSy6MBcuEzkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyONE6gSE3CNcgdIHuDgHeA6dWH7MBTtGc11b3NKaZ49yBM/FU0
-	NDchK4RfUHsLXEl7FanZDZlCubCT4G/iMy178GdVsyZbyDyXrW/+QKPDDFPYVWKk9UlauM6mUkP
-	swNPZyHO2ZT6IpL/M56N313jEDNS/sRla5pcOsJgshsAkj2XT5xjwU0dwglQKzrGuMw==
-X-Gm-Gg: ASbGncsYO+1MVI7s/Yxw5Rsqox3IvXVod6Xj1mH3HAyhFdCYRM5xmgXo1VYadeCQ1Zu
-	EnqPFKBjmPdABb4zzkzUqBIwZQbB/+Z1K+4O3vKvcVptJDVy9IVheUb5taa5FFcLJ6I8EEhc2yv
-	eNfkmK6QPN9Q6aOvqCXQ+KCaOo0rzF7v7b6j9JC/kDq/EthAcEwjA9UhE760udeTWCjx1ESIDem
-	oNpnS8H5jexkg2oSnAXabP4/NUH0t+BmI+PRaqyUl/WAZVPXGmVIJoV1ZBDaCM/O9PkuCuWUH/I
-	Z+jKGWQp1yGZ7a5+VgBTei5xqiXQafD/4qgBtGnkUsTLtL8p+nIIB8ADFhhjS42dsIYpSQOSdoA
-	uO2QeVDWpb6S1OmGq5++E0QYk6un4Lcx68vsxYbI=
-X-Received: by 2002:a5d:474b:0:b0:3a0:ac96:bd41 with SMTP id ffacd0b85a97d-3a35c84419bmr14536159f8f.27.1747762880575;
-        Tue, 20 May 2025 10:41:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGVar67bZRVSD8PpsU3J5LEAXnwScDfWp/oGgnm9nxCe1Kzs6/m3GZ6q4TndPdxjWM7t3oflw==
-X-Received: by 2002:a5d:474b:0:b0:3a0:ac96:bd41 with SMTP id ffacd0b85a97d-3a35c84419bmr14536148f8f.27.1747762880240;
-        Tue, 20 May 2025 10:41:20 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84? (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d0fasm17260164f8f.8.2025.05.20.10.41.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 10:41:19 -0700 (PDT)
-Message-ID: <8bd88c21-4164-4e10-8605-d6a8483d0aeb@redhat.com>
-Date: Tue, 20 May 2025 19:41:19 +0200
+        d=1e100.net; s=20230601; t=1747763021; x=1748367821;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uEVyBoAEqxAn/2eLRcFtZIXRt97TuO35d71JLM0GfEs=;
+        b=S5qzrWKIFxfa+VCLSJZrsgJbWPrwswIujjDrQz//23uDNqaVvDlzRcKPgGJdLbzBCF
+         +7fZ6cvSimklp6W1O5aeYI2PG9HpwOsgRRQgmlT0GEmVloTWzGFjNKXff1614/UHng61
+         nGG/eyQmznixbyg0GzPpzsj2dd1YVimNBV6kdiaGckHc32EDBmscBuAAf7sRXjORR8AA
+         VsSA/JZwPeTIsRAoXsicu0gMRqnHGPvElmVc7YwtsTv3AwH5bOQkMz9H3ZMsgBo/QCLA
+         2rlMoSOle/ZrVpg9RFwXNWw8ULlj6wQo/fe3pEWwBiv4gHy/3+D4jZZgfZdS8/1FbrOv
+         CnzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXD5Buajp/NEycuwukAbi2baBLizCY0KLSTU1aPeS6lwWiXQmZTjpfutc67cfZjWNhAjT507gelm2vPH8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+VtDZX6NUUtmsjlP5GIaoOfy+v5JkkJc/6B5eYcTVCZwsd+DP
+	GlR+Q/G7D0FwyqN3nYpo/gwI/Ak3GaHlc5A78b83B7nWkTk1f7+wfTCqaB9roB0PQA==
+X-Gm-Gg: ASbGncts/ZOUjBH5CAcUnw5a8kDxPA1DebGjI74Zi1KJjwWUJ2suTQeYIP9uHlI3Kux
+	AhTFm5+YwPDqdqMVv3ng1AJzk8Am+/fpVv0aq0N8V1DPwAQBV2q3fvXmYvI4phc5T7KJ9XmY1F4
+	zhNVY1yTjObmTbqv2cDqM6UEdgNiWRTLlTLqXYzmRIv1VD/if0Ld0cGY/HTf31lO/tBPx5yxyl5
+	UQFRr5eMTGwYGuVqBXlnjZNgXYmmKzB4T6PC+qIyu6mzUQg9clG4UsYI8XOICWMFUKo/zQBm1N7
+	KublnmShG7mX41ECgc/wJJyWqteH024EhxTWXldOG/2pV4vX3R7M9mwcz06E1DYezORb13jfgPW
+	cvn5kd/k1nJjXSu1XOT9mR7EQwQ==
+X-Google-Smtp-Source: AGHT+IFXZ7YXoRgCP1iWcGdKBbqM9UFlgIi18ryOD2ALUlsiaRsaFpTB9VFjJh8xZMUDnOmM2EYDLw==
+X-Received: by 2002:a05:622a:5c96:b0:476:91f1:9e5 with SMTP id d75a77b69052e-494b096c63cmr355564001cf.50.1747763021408;
+        Tue, 20 May 2025 10:43:41 -0700 (PDT)
+Received: from [127.0.1.1] (static-72-90-70-109.syrcny.fios.verizon.net. [72.90.70.109])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae528553sm72660101cf.68.2025.05.20.10.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 10:43:40 -0700 (PDT)
+From: Job Sava <jsava@criticallink.com>
+Subject: [PATCH 0/3] Powerbutton driver and powerdown request for TPS65224
+ PMIC
+Date: Tue, 20 May 2025 13:43:35 -0400
+Message-Id: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge
- folio
-To: Peter Xu <peterx@redhat.com>, Alex Williamson <alex.williamson@redhat.com>
-Cc: lizhe.67@bytedance.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, muchun.song@linux.dev
-References: <20250520070020.6181-1-lizhe.67@bytedance.com>
- <20250520080719.2862017e.alex.williamson@redhat.com>
- <aCy1AzYFyo4Ma1Z1@x1.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aCy1AzYFyo4Ma1Z1@x1.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEe/LGgC/x3NTQqEMAxA4atI1hPoqC3oVYZZtDVqQGpp6g+Id
+ 7e4/DbvXSCUmAT66oJEOwuvoeD7qcDPNkyEPBRDrWqtWtXgwmE7UbJ1C2GOYnTXYjyS23JeA5L
+ SZvDeG0caSiQmGvl8B7//fT9p5Db+cAAAAA==
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-input@vger.kernel.org, jcormier@criticallink.com, 
+ Job Sava <jsava@criticallink.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747763020; l=2045;
+ i=jsava@criticallink.com; s=20250404; h=from:subject:message-id;
+ bh=yeqxdYgDP/mwIyxs/1rcj9YB1LowK4KlQZ4Zwsqf0Q8=;
+ b=0mQyiMtS10+eQAOXVRfVhl1B94z6lzdx7XMoe/eb62Plu5J5y2Oi8RlHZ0ZeBrgdC9Wy03jPq
+ FvUpzzVYBLaBVr+qVAqWI4a1d8RN8Hr4QGgkRlwRejow0fh7il0FPtn
+X-Developer-Key: i=jsava@criticallink.com; a=ed25519;
+ pk=DPPriJ+pziqtCZ0EIomf/hKU23s5T1u4WOQaT8BpQSw=
 
-On 20.05.25 18:59, Peter Xu wrote:
-> Hi, Alex,
-> 
-> On Tue, May 20, 2025 at 08:07:19AM -0600, Alex Williamson wrote:
->> Peter, David, if you wouldn't mind double checking the folio usage
->> here, I'd appreciate it.  The underlying assumption used here is that
->> folios always have physically contiguous pages, so we can increment at
->> the remainder of the folio_nr_pages() rather than iterate each page.
-> 
-> Yes I think so.  E.g., there's comment above folio definition too:
+Hello all,
 
-It has consecutive PFNs, yes (i.e., pfn++). The "struct page" might not 
-be consecutive (i.e., page++ does not work for larger folios).
+The following patches were created to get the tps65224 PMIC powerbutton driver and power off request working on the MitySOM-AM62PX. The patches are as follows:
 
-> 
-> /**
->   * struct folio - Represents a contiguous set of bytes.
->   * ...
->   * A folio is a physically, virtually and logically contiguous set
->   * of bytes...
->   */
-> 
-> For 1G, I wonder if in the future vfio can also use memfd_pin_folios()
-> internally when possible, e.g. after stumbled on top of a hugetlb folio
-> when filling the batch.
+1-Powerbutton:
+Full implementation
+TPS659224 pmic push and release interrupts are now handled by the powerbutton driver. These events now issue a power off request that puts the PMIC into STANDBY mode. tps6594-pwrbutton.c is modeled off the tps65219-pwrbutton.c driver.
 
-Yeah, or have a better GUP interface that gives us folio ranges instead 
-of individual pages.
+2-OFF-request:
+The PMIC will now respond to a power off request. This is done by sending the PMIC a command to enter STANDBY mode. The PMIC will then turn off the power to the system.
 
-Using memfd directly is obviously better where possible.
+3-Device tree bindings:
+The device tree binding for the TPS65224 PMIC has been updated to include a proper description of the power button functionality.
 
+4-Impact:
+Button presses will now be detected reliably by the newly added powerbutton driver. The `tps6594-pfsm.c` file will no longer handle push and release pushbutton interrupts. This is because the powerbutton driver now manages these interrupts, as intended, which ensures the powerbutton functionality operates independently and correctly.
+
+Regards,
+Job Sava
+jsava@criticallink.com
+Critical Link LLC
+
+Signed-off-by: Job Sava <jsava@criticallink.com>
+---
+Job Sava (3):
+      dt-bindings: mfd: Add power-button option for TI TPS6594 PMIC
+      mfd: tps6594-pwrbutton: Add powerbutton functionality
+      mfd: tps6594: Adds support for powering off the PMIC
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml        |  15 +++
+ drivers/input/misc/Kconfig                         |  10 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/tps6594-pwrbutton.c             | 126 +++++++++++++++++++++
+ drivers/mfd/tps6594-core.c                         |  49 +++++++-
+ 5 files changed, 199 insertions(+), 2 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250403-linux-stable-tps6594-pwrbutton-e056dccc6be5
+
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Job Sava <jsava@criticallink.com>
 
