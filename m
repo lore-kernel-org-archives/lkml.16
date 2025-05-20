@@ -1,283 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EB28E589
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5822128C5C0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773387; cv=none; b=il0BiE6BltKX8oPPc+o2YI25iFUjnMzYAWpKrXcUzA/fQ9+OeyiWEdw3dub6k2V3UPtjSbgyJRiY6vysxf7vf13FA6RyQgdtAauzdD9j8QV8hJERxZ4vzi6iqvfUdV3bz+7aaKOfkTAwZb2MmA3lPgJ8jFhoGrqf43fxCmUTLNA=
+	t=1747773393; cv=none; b=jDG+ZsDCFMYxI/hyqyendalveYau1zFCcPdhKVi5F4nfj9ScoAAW2x0elCf0X+jCqrjERKLPfshw9qyF/ONT4+5mEzn9/uV9Jerj6eOIwF0gynK/OnFJkZvXM8i/+Y2q3YOk2tnkYAbpkG61eT/npzaKTfeG2wlsQQjydesA1rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773387; c=relaxed/simple;
-	bh=KjdYEOEajHA7LELVRkRgK7y2TfZ0pdc/8gj4sas3Y70=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BncnIKmE/kvdNa1s/7GX0KSKH5VXeG4xIiNxhxRtpcjxm/Jt3ikqgjnL0xGGzM1tDsT4QiVqELVdvtRS6tj9pska/fTOMopdbgTzlL26b8DAWkpfSgvflyoRRyFr08arsXt+jTcZgg4pI5QfJd2IXHguwos8zUeUEwkX2cinwuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QTUNENAe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747773393; c=relaxed/simple;
+	bh=ZKfsnzKjHWRvUGjeYrgiENx6pawfGlJOEUf65hQxSqs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vrf+mtznQVTyherxJ2QbT4KPdSXm1Y2QYePyrrlOyGAwF0iGh8YQjn9CVGKnAv/RUI6vzejGu4rzygw+f0NupoxNAXAyOZ+7So3gzItTO3UspJFLoIrbZFormv43nR/vk6hTQ9iy/BdXLuO2agbQc+39eG2LOm8537hKcA0Ns00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eJ0BMXIo; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QTUNENAe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747773384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/FiP53qIGqK3kQ8uYRbm+tkR4/PouMqDuk4sdgE46BE=;
-	b=QTUNENAeUxwCjR02T4ZzwXQTPYFLeODY32Vl9atEcQ82nUcw5iU8jW62IYmaI0DPHINE+k
-	TwgJFn8sOawbGO2P3jgPI6LCHm5fpy7d9kT/rICnGrRQU7g7UyvWbRvNcaT2XEizRLFXjk
-	iUgVXgUztKf5EDeaGb2DvheFrRMl1nI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-ewVPIDvDNzC8IdKgTSlCag-1; Tue,
- 20 May 2025 16:36:22 -0400
-X-MC-Unique: ewVPIDvDNzC8IdKgTSlCag-1
-X-Mimecast-MFC-AGG-ID: ewVPIDvDNzC8IdKgTSlCag_1747773379
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DD591800366;
-	Tue, 20 May 2025 20:36:19 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.64.128])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AC4CD19560AD;
-	Tue, 20 May 2025 20:36:14 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Asahi Lina <lina@asahilina.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GPUS [RUST])
-Subject: [PATCH v4 4/4] rust: drm: gem: Support driver-private GEM object types
-Date: Tue, 20 May 2025 16:35:30 -0400
-Message-ID: <20250520203542.1391548-5-lyude@redhat.com>
-In-Reply-To: <20250520203542.1391548-1-lyude@redhat.com>
-References: <20250520203542.1391548-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJ0BMXIo"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2371b50cabso6298008a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747773390; x=1748378190; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NikUqd8YUJYJZVQ9NNWuumuHYhTthKmVTkOJEDEId4g=;
+        b=eJ0BMXIoRkkjyt9enk90GhZdOAd60XB7FknBFhErmP28/fKyBCrdsP3V0HvRDZL+6P
+         W+eYep8StJ51XP6xLNekeht8MSkDqd3L4z0SEzHqgddIkAgQiR0kRgt+ERRbVsHfTH+R
+         KfhCWrhEuTygkJ+LmC/q+pPby/jxNs1PRd6cDbNjJEcettnNb7CmrxbJODi9p9XBK8lZ
+         aXWcBKRoaz32gQm4MCIS3jjZWMhI66Sj/ItL2/xG3ErUDyRhF/OE8Ih79R4njhgnmYKG
+         M2e6V3xKVXUMMOPnFiBLLuEQ4/uEsMM1+JIMSqBxwjx0RZrwXb7u6J9Nf79A91OJuGwU
+         uQ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747773390; x=1748378190;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NikUqd8YUJYJZVQ9NNWuumuHYhTthKmVTkOJEDEId4g=;
+        b=Dqjaqz1QC3+JKpWvbyfT5BtoV833LBzoRncTsuAvsII2dzDp8OLqhQtp9FnlT4N4k4
+         r+fS2BhsurjkQ5eYb3W1II8yO4I4u1+BUUMDRFoc5TiU1JyLabTbmqp9uDGybd9G7cOt
+         w1qKGYTSSUxrzxQNp6hCjEqAq9zyUPouyvUaop1Kf+ZdvYM5ixE+zbDu/mXy5rnUOi7P
+         hLNYtf2iqN3jnfI+ldT2CfEu9EEKmx6zID0XYS5zYpSiTMug6jFCajXHGDbx6KDfHP1S
+         tRbK8OMZEz4o6V9Xdjf79Lm/5Lsz9aQ63EE/NFLAqy2Ixzsj9LXwMEJ9sbdFy//WjlTt
+         aPNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuUPBhvDn1j1gAfZmo4dKUSwz0+TqPdCY3oPz4klRl9La/iJu9DIEZfU0yy4eLIyCQx9RcJWHGHbNKT2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqKPGR+AJ8IlKoXaI1LNyR/yvc7ZMNd0+A92Ht6rlpjdMDIlbH
+	deqrszz8ymxfXuYYLBrjurm27dHe9Mztyy3Yr0gRg4FPcpoV42J5ErXd2l1+ZV4Q1jLGFjWGPa3
+	l372DOA==
+X-Google-Smtp-Source: AGHT+IHP6rysVOKSkISEgr29agj9TpppemjJvlT6UOUwgsn7uAspuzrIU/dBu0EIRPFTBgRjNvR+rZRe+h0=
+X-Received: from pjbph15.prod.google.com ([2002:a17:90b:3bcf:b0:2f9:dc36:b11])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d44:b0:30e:7d09:2a7
+ with SMTP id 98e67ed59e1d1-30e83107ed7mr28064460a91.14.1747773390587; Tue, 20
+ May 2025 13:36:30 -0700 (PDT)
+Date: Tue, 20 May 2025 13:36:29 -0700
+In-Reply-To: <d270ff32-7763-40d5-a4dc-3970383571dc@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-31-seanjc@google.com>
+ <d270ff32-7763-40d5-a4dc-3970383571dc@redhat.com>
+Message-ID: <aCznzZ-SN4Pf_htE@google.com>
+Subject: Re: [PATCH 30/67] KVM: VMX: Stop walking list of routing table
+ entries when updating IRTE
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-One of the original intents with the gem bindings was that drivers could
-specify additional gem implementations, in order to enable for driver
-private gem objects. This wasn't really possible however, as up until now
-our GEM bindings have always assumed that the only GEM object we would run
-into was driver::Driver::Object - meaning that implementing another GEM
-object type would result in all of the BaseDriverObject callbacks assuming
-the wrong type.
+On Tue, Apr 08, 2025, Paolo Bonzini wrote:
+> On 4/4/25 21:38, Sean Christopherson wrote:
+> > Now that KVM provides the to-be-updated routing entry, stop walking the
+> > routing table to find that entry.  KVM, via setup_routing_entry() and
+> > sanity checked by kvm_get_msi_route(), disallows having a GSI configured
+> > to trigger multiple MSIs, i.e. the for-loop can only process one entry.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >   arch/x86/kvm/vmx/posted_intr.c | 100 +++++++++++----------------------
+> >   1 file changed, 33 insertions(+), 67 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
+> > index 00818ca30ee0..786912cee3f8 100644
+> > --- a/arch/x86/kvm/vmx/posted_intr.c
+> > +++ b/arch/x86/kvm/vmx/posted_intr.c
+> > @@ -268,78 +268,44 @@ int vmx_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+> >   		       unsigned int host_irq, uint32_t guest_irq,
+> >   		       struct kvm_kernel_irq_routing_entry *new)
+> >   {
+> > -	struct kvm_kernel_irq_routing_entry *e;
+> > -	struct kvm_irq_routing_table *irq_rt;
+> > -	bool enable_remapped_mode = true;
+> >   	struct kvm_lapic_irq irq;
+> >   	struct kvm_vcpu *vcpu;
+> >   	struct vcpu_data vcpu_info;
+> > -	bool set = !!new;
+> > -	int idx, ret = 0;
+> >   	if (!vmx_can_use_vtd_pi(kvm))
+> >   		return 0;
+> > -	idx = srcu_read_lock(&kvm->irq_srcu);
+> > -	irq_rt = srcu_dereference(kvm->irq_routing, &kvm->irq_srcu);
+> > -	if (guest_irq >= irq_rt->nr_rt_entries ||
+> > -	    hlist_empty(&irq_rt->map[guest_irq])) {
+> > -		pr_warn_once("no route for guest_irq %u/%u (broken user space?)\n",
+> > -			     guest_irq, irq_rt->nr_rt_entries);
+> > -		goto out;
+> > -	}
+> > -
+> > -	hlist_for_each_entry(e, &irq_rt->map[guest_irq], link) {
+> > -		if (e->type != KVM_IRQ_ROUTING_MSI)
+> > -			continue;
+> > -
+> > -		WARN_ON_ONCE(new && memcmp(e, new, sizeof(*new)));
+> 
+> Alternatively, if you want to keep patches 28/29 separate, you could add
+> this WARN_ON_ONCE to avic.c in the exact same place after checking e->type
+> -- not so much for asserting purposes, but more to document what's going on
+> for the reviewer.
 
-This is a pretty easy fix though, all we need to do is specify a
-BaseDriverObject in driver::Driver instead of an AllocImpl, and then add an
-associated type for AllocImpl in BaseDriverObject. That way each
-BaseDriverObject has its own AllocImpl allowing it to know which type to
-provide in BaseDriverObject callbacks, and driver::Driver can simply go
-through the BaseDriverObject to its AllocImpl type in order to get access
-to ALLOC_OPS.
+FWIW, AVIC already has the same WARN, they were both added by "KVM: x86: Pass new
+routing entries and irqfd when updating IRTEs".
 
-So, let's do this and update Nova for these changes.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-
----
-V4:
-* Update trait bounds. This looks gnarlier then it is:
-
-    Self: AllocImpl<Driver = D>, <-- Get the driver for this GEM object
-    D: drm::Driver<Object = O, File = F>, <-- Get the driver's Object, File
-                                              impl
-    F: drm::file::DriverFile,
-    O: BaseDriverObject<Object = Self>, <-- Make sure we're the driver's
-                                            main GEM object impl.
-  (don't worry, the compiler can always figure out what D, F, O are)
-* Also, rename the commit. I realized I should be clearer about what this
-  does so people can stop me if this isn't what was meant by private gem
-  object implementations :).
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nova/driver.rs |  4 ++--
- drivers/gpu/drm/nova/gem.rs    |  1 +
- rust/kernel/drm/device.rs      | 17 ++++++++++-------
- rust/kernel/drm/driver.rs      |  2 +-
- rust/kernel/drm/gem/mod.rs     | 21 +++++++++++++--------
- 5 files changed, 27 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/gpu/drm/nova/driver.rs b/drivers/gpu/drm/nova/driver.rs
-index b28b2e05cc156..58e534cf3ed39 100644
---- a/drivers/gpu/drm/nova/driver.rs
-+++ b/drivers/gpu/drm/nova/driver.rs
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--use kernel::{auxiliary, c_str, device::Core, drm, drm::gem, drm::ioctl, prelude::*, types::ARef};
-+use kernel::{auxiliary, c_str, device::Core, drm, drm::ioctl, prelude::*, types::ARef};
- 
- use crate::file::File;
- use crate::gem::NovaObject;
-@@ -57,7 +57,7 @@ fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBo
- impl drm::Driver for NovaDriver {
-     type Data = NovaData;
-     type File = File;
--    type Object = gem::Object<NovaObject>;
-+    type Object = NovaObject;
- 
-     const INFO: drm::DriverInfo = INFO;
- 
-diff --git a/drivers/gpu/drm/nova/gem.rs b/drivers/gpu/drm/nova/gem.rs
-index 68f93c9675611..a3024922f0d90 100644
---- a/drivers/gpu/drm/nova/gem.rs
-+++ b/drivers/gpu/drm/nova/gem.rs
-@@ -18,6 +18,7 @@ pub(crate) struct NovaObject {}
- 
- impl gem::BaseDriverObject for NovaObject {
-     type Driver = NovaDriver;
-+    type Object = gem::Object<Self>;
- 
-     fn new(_dev: &NovaDevice, _size: usize) -> impl PinInit<Self, Error> {
-         try_pin_init!(NovaObject {})
-diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
-index 74c9a3dd719e3..6fc6995be637d 100644
---- a/rust/kernel/drm/device.rs
-+++ b/rust/kernel/drm/device.rs
-@@ -60,6 +60,9 @@ pub struct Device<T: drm::Driver> {
-     data: T::Data,
- }
- 
-+/// A type alias for referring to the [`AllocImpl`] implementation for a DRM driver.
-+type DriverAllocImpl<T> = <<T as drm::Driver>::Object as drm::gem::BaseDriverObject>::Object;
-+
- impl<T: drm::Driver> Device<T> {
-     const VTABLE: bindings::drm_driver = drm_legacy_fields! {
-         load: None,
-@@ -70,13 +73,13 @@ impl<T: drm::Driver> Device<T> {
-         master_set: None,
-         master_drop: None,
-         debugfs_init: None,
--        gem_create_object: T::Object::ALLOC_OPS.gem_create_object,
--        prime_handle_to_fd: T::Object::ALLOC_OPS.prime_handle_to_fd,
--        prime_fd_to_handle: T::Object::ALLOC_OPS.prime_fd_to_handle,
--        gem_prime_import: T::Object::ALLOC_OPS.gem_prime_import,
--        gem_prime_import_sg_table: T::Object::ALLOC_OPS.gem_prime_import_sg_table,
--        dumb_create: T::Object::ALLOC_OPS.dumb_create,
--        dumb_map_offset: T::Object::ALLOC_OPS.dumb_map_offset,
-+        gem_create_object: DriverAllocImpl::<T>::ALLOC_OPS.gem_create_object,
-+        prime_handle_to_fd: DriverAllocImpl::<T>::ALLOC_OPS.prime_handle_to_fd,
-+        prime_fd_to_handle: DriverAllocImpl::<T>::ALLOC_OPS.prime_fd_to_handle,
-+        gem_prime_import: DriverAllocImpl::<T>::ALLOC_OPS.gem_prime_import,
-+        gem_prime_import_sg_table: DriverAllocImpl::<T>::ALLOC_OPS.gem_prime_import_sg_table,
-+        dumb_create: DriverAllocImpl::<T>::ALLOC_OPS.dumb_create,
-+        dumb_map_offset: DriverAllocImpl::<T>::ALLOC_OPS.dumb_map_offset,
-         show_fdinfo: None,
-         fbdev_probe: None,
- 
-diff --git a/rust/kernel/drm/driver.rs b/rust/kernel/drm/driver.rs
-index 2be2a2d318e03..a77747edac80e 100644
---- a/rust/kernel/drm/driver.rs
-+++ b/rust/kernel/drm/driver.rs
-@@ -106,7 +106,7 @@ pub trait Driver {
-     type Data: Sync + Send;
- 
-     /// The type used to manage memory for this driver.
--    type Object: AllocImpl;
-+    type Object: drm::gem::BaseDriverObject;
- 
-     /// The type used to represent a DRM File (client)
-     type File: drm::file::DriverFile;
-diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-index c459829ce5a5d..992e098d0a3e2 100644
---- a/rust/kernel/drm/gem/mod.rs
-+++ b/rust/kernel/drm/gem/mod.rs
-@@ -26,16 +26,19 @@ pub trait BaseDriverObject: Sync + Send + Sized {
-     /// Parent `Driver` for this object.
-     type Driver: drm::Driver;
- 
-+    /// The GEM object type that will be passed to various callbacks.
-+    type Object: AllocImpl;
-+
-     /// Create a new driver data object for a GEM object of a given size.
-     fn new(dev: &drm::Device<Self::Driver>, size: usize) -> impl PinInit<Self, Error>;
- 
-     /// Open a new handle to an existing object, associated with a File.
--    fn open(_obj: &<Self::Driver as drm::Driver>::Object, _file: &DriverFile<Self>) -> Result {
-+    fn open(_obj: &Self::Object, _file: &DriverFile<Self>) -> Result {
-         Ok(())
-     }
- 
-     /// Close a handle to an existing object, associated with a File.
--    fn close(_obj: &<Self::Driver as drm::Driver>::Object, _file: &DriverFile<Self>) {}
-+    fn close(_obj: &Self::Object, _file: &DriverFile<Self>) {}
- }
- 
- /// Trait that represents a GEM object subtype
-@@ -83,7 +86,7 @@ extern "C" fn open_callback<T: BaseDriverObject>(
- 
-     // SAFETY: `open_callback` is specified in the AllocOps structure for `DriverObject<T>`,
-     // ensuring that `raw_obj` is contained within a `DriverObject<T>`
--    let obj = unsafe { <<T::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj) };
-+    let obj = unsafe { T::Object::as_ref(raw_obj) };
- 
-     match T::open(obj, file) {
-         Err(e) => e.to_errno(),
-@@ -100,7 +103,7 @@ extern "C" fn close_callback<T: BaseDriverObject>(
- 
-     // SAFETY: `close_callback` is specified in the AllocOps structure for `Object<T>`, ensuring
-     // that `raw_obj` is indeed contained within a `Object<T>`.
--    let obj = unsafe { <<T::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj) };
-+    let obj = unsafe { T::Object::as_ref(raw_obj) };
- 
-     T::close(obj, file);
- }
-@@ -127,11 +130,12 @@ fn size(&self) -> usize {
- 
-     /// Creates a new handle for the object associated with a given `File`
-     /// (or returns an existing one).
--    fn create_handle<D, F>(&self, file: &drm::File<F>) -> Result<u32>
-+    fn create_handle<D, F, O>(&self, file: &drm::File<F>) -> Result<u32>
-     where
-         Self: AllocImpl<Driver = D>,
--        D: drm::Driver<Object = Self, File = F>,
-+        D: drm::Driver<Object = O, File = F>,
-         F: drm::file::DriverFile,
-+        O: BaseDriverObject<Object = Self>,
-     {
-         let mut handle: u32 = 0;
-         // SAFETY: The arguments are all valid per the type invariants.
-@@ -142,11 +146,12 @@ fn create_handle<D, F>(&self, file: &drm::File<F>) -> Result<u32>
-     }
- 
-     /// Looks up an object by its handle for a given `File`.
--    fn lookup_handle<D, F>(file: &drm::File<F>, handle: u32) -> Result<ARef<Self>>
-+    fn lookup_handle<D, F, O>(file: &drm::File<F>, handle: u32) -> Result<ARef<Self>>
-     where
-         Self: AllocImpl<Driver = D>,
--        D: drm::Driver<Object = Self, File = F>,
-+        D: drm::Driver<Object = O, File = F>,
-         F: drm::file::DriverFile,
-+        O: BaseDriverObject<Object = Self>,
-     {
-         // SAFETY: The arguments are all valid per the type invariants.
-         let ptr = unsafe { bindings::drm_gem_object_lookup(file.as_raw().cast(), handle) };
--- 
-2.49.0
-
+That said, I agree that squashing 28/29 is the way to go, especially since I didn't
+isolate the changes for VMX (I've no idea why I did for SVM but not VMX).
