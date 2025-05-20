@@ -1,61 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E11D5CFE
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D85726B2CC;
+	Tue, 20 May 2025 14:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750612; cv=none; b=juE5wENesjZx34Vfrcaq+2XhTBliQsxTl2bZ0ID9WnE01dLIeDZorVWKqzXwEt/C26DFIHHg/Nqon4XIjbQuxnZAnT8b1C5+KBZhodrilHl2MYrrrB4X8pfRrlximppaAcJGCtLTXicNSQ4LqweNHvRzNUwgpLVI+tCiB6BuWhQ=
+	t=1747750614; cv=none; b=LV3yBZYl8F+kGuwoxrfYVGjMNZRpMZtDm8P8Qa/oM9LJRlg+WBBsIelcsFAzr3NEGoJaHWWo4i8ZDqY7OCWmUGoh8ZfbsxHu8HCk1UKunWIgwilwzhDPQRsi4bO32Tt4R1ebvjNlk6m2ugHAYH9rYfay9c3jNKlsEU5bXolCmXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750612; c=relaxed/simple;
-	bh=M0pNFlay5hgmHd4G9vpxXMlNbzz6ICDKPmbFCUwPiPg=;
+	s=arc-20240116; t=1747750614; c=relaxed/simple;
+	bh=gkT4V1A9YIzLoquF17ziKdUbQs45WRMfVuzK5FJTRPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VHb9a2oDsIFORN69J+yWkqusSwG4XWlS8xOCCKlfZ6qdunSId1wlLmtYBlBDkj0DEq0Rk9J/CIp5qUy6chgOH0RV1gv0lkG9y2YE2uTfNIO/LfZAk6D6f7vv2C1jEQbASW3alrdOLCD5F7+0KxwiMv+ZL1DzbEw2UZb8v/6OVTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d+8IDAm5; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2Ko3RaIJmE5JU4ojY69IODnb6jv5PxtE7w6deefx+sj7lXpxxYqZxRDegG3N3YBphU0QNgiyLPE/8KPoM4cKmV57sEfIrxTRINlvbBNZtRk1bdQQ2vdsgwmPGSDb39ZndpP0ppuJp0CMT+PSd/YgDpzi8pvy9cmzWd0UEDsO2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XiSHIfOB; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d+8IDAm5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747750610; x=1779286610;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=M0pNFlay5hgmHd4G9vpxXMlNbzz6ICDKPmbFCUwPiPg=;
-  b=d+8IDAm5vcrZU/HEo7w0bCKGnLGrtmPdAFyJbDsL4KpL1C1k9SoqxMSy
-   4zfJfhnNrcK9/7cZrP+16syXPqy8LALBIPmtm2Nq0mcTpN1ffwqGWakvd
-   zBGREPLOh1gaqTyN8xjdcYCE3hICxXuxubOyVTuoTShH+KKAaz/TegvH+
-   EDCwH+k2KeDhT3zg31z3+bPuhg2eTMxA1AzBLAPWw+FZOH91aKhhRmsLc
-   tWBwKeU3h2yLhCIkVQHzCdmHAgRK8dl8HfkCCj594hk+KrJVq8Jj5e+Oo
-   pL3jIMo5YisaPl8/m/X6kLN12kwmxPyEXu3doU88hVbZ5eV7Z1DT281OK
-   A==;
-X-CSE-ConnectionGUID: 2fpOgYppQHSyy/O/8bk15g==
-X-CSE-MsgGUID: KPbU2GXWTqmXuoJjn00gyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="75089328"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="75089328"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:50 -0700
-X-CSE-ConnectionGUID: sOk0Q7p1SKG5aaq8NPm2bg==
-X-CSE-MsgGUID: QXhUWdU4REGANJ270QQr7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139418130"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHNlu-00000003LNg-0aVT;
-	Tue, 20 May 2025 17:16:46 +0300
-Date: Tue, 20 May 2025 17:16:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] container_of: Document container_of() is not to be
- used in new code
-Message-ID: <aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
-References: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XiSHIfOB"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 270AF2EC;
+	Tue, 20 May 2025 16:16:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747750590;
+	bh=gkT4V1A9YIzLoquF17ziKdUbQs45WRMfVuzK5FJTRPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XiSHIfOBd0ZZ7snWo+U0XvacrEZtosU6cHhiXHV+0l4j2Hx1G+IWahP4Qf6Qbt0My
+	 H8uXsO7Rzya0Z7HQCu6TRnNmB9oy7RbIuoXQKbXhXPkUeRMecW/LgrSuOP6bbx2KH6
+	 hY75ZMWkXf+6FQhx2Rjch9li0k+z1JGYmzhJMUw8=
+Date: Tue, 20 May 2025 16:16:45 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v5 05/12] drm: renesas: rz-du: mipi_dsi: Use VCLK for
+ HSFREQ calculation
+Message-ID: <20250520141645.GE13321@pendragon.ideasonboard.com>
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,56 +57,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, May 20, 2025 at 01:34:37PM +0300, Sakari Ailus wrote:
-> There is a warning in the kerneldoc documentation of container_of() that
-> constness of its ptr argument is lost. While this is a faible suggestion
-> container_of_const() should be used instead, the vast majority of new code
-> still uses container_of():
+Hi Prabhakar,
+
+On Mon, May 12, 2025 at 07:23:23PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> $ git diff v6.13 v6.14|grep container_of\(|wc -l
-> 646
-> $ git diff v6.13 v6.14|grep container_of_const|wc -l
-> 9
+> Update the RZ/G2L MIPI DSI driver to calculate HSFREQ using the actual
+> VCLK rate instead of the mode clock. The relationship between HSCLK and
+> VCLK is:
 > 
-> Make an explicit recommendation to use container_of_const().
+>     vclk * bpp <= hsclk * 8 * lanes
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Retrieve the VCLK rate using `clk_get_rate(dsi->vclk)`, ensuring that
+> HSFREQ accurately reflects the clock rate set in hardware, leading to
+> better precision in data transmission.
+> 
+> Additionally, use `DIV_ROUND_CLOSEST_ULL` for a more precise division
+> when computing `hsfreq`. Also, update unit conversions to use correct
+> scaling factors for better clarity and correctness.
+> 
+> Since `clk_get_rate()` returns the clock rate in Hz, update the HSFREQ
+> threshold comparisons to use Hz instead of kHz to ensure correct behavior.
+> 
+> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 > ---
-> Hi Greg, Andy,
+> v4->v5:
+> - Added dev_info() to print the VCLK rate if it doesn't match the
+>   requested rate.
+> - Added Reviewed-by tag from Biju
 > 
-> I guess we generally agree the additional constness check in
-> container_of_const() is useful, but adding the same check to
-> container_of() generates warnings -- there are some errors, too -- such as
-> this one currently:
+> v3->v4:
+> - Used MILLI instead of KILO
 > 
-> In file included from /home/sailus/src/linux/include/linux/bcma/bcma.h:14,
->                  from /home/sailus/src/linux/arch/x86/kernel/early-quirks.c:17:
-> /home/sailus/src/linux/include/linux/ssb/ssb.h: In function ‘dev_to_ssb_dev’:
-> /home/sailus/src/linux/include/linux/ssb/ssb.h:291:14: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->   291 |         wrap = container_of(dev, struct __ssb_dev_wrapper, dev);
->       |              ^
+> v2->v3:
+> - No changes
 > 
-> As noted above, 646 new missing constness checks were introduced through
-> container_of() macro use during the 6.14 cycle alone. Most of these are
-> likely harmless, but with so many new users some are bound to be ignoring
-> constness.
+> v1->v2:
+> - No changes
+> ---
+>  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 30 +++++++++++--------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 > 
-> Once the warnings from bad container_of() use are worked out in a way or
-> another, the constness check could be added to the container_of() macro
-> and the current container_of_const() be dropped altogether.
-> 
-> If this patch is accepted, I'll see how to add a warning on container_of()
-> to checkpatch.pl.
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> index c5f698cd74f1..3f6988303e63 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/math.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_graph.h>
+> @@ -15,6 +16,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/slab.h>
+> +#include <linux/units.h>
+>  
+>  #include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+> @@ -199,7 +201,7 @@ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
+>  	/* All DSI global operation timings are set with recommended setting */
+>  	for (i = 0; i < ARRAY_SIZE(rzg2l_mipi_dsi_global_timings); ++i) {
+>  		dphy_timings = &rzg2l_mipi_dsi_global_timings[i];
+> -		if (hsfreq <= dphy_timings->hsfreq_max)
+> +		if (hsfreq <= (dphy_timings->hsfreq_max * MILLI))
 
-Hmm... Wouldn't be better to fix non-const cases and add the const check, etc
-to the container_of() instead of doing these comments?
+No need for the inner parentheses.
+
+>  			break;
+>  	}
+>  
+> @@ -258,7 +260,7 @@ static void rzg2l_mipi_dsi_dphy_exit(struct rzg2l_mipi_dsi *dsi)
+>  static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>  				  const struct drm_display_mode *mode)
+>  {
+> -	unsigned long hsfreq;
+> +	unsigned long hsfreq, vclk_rate;
+>  	unsigned int bpp;
+>  	u32 txsetr;
+>  	u32 clstptsetr;
+> @@ -269,6 +271,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>  	u32 golpbkt;
+>  	int ret;
+>  
+> +	ret = pm_runtime_resume_and_get(dsi->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	clk_set_rate(dsi->vclk, mode->clock * MILLI);
+> +
+>  	/*
+>  	 * Relationship between hsclk and vclk must follow
+>  	 * vclk * bpp = hsclk * 8 * lanes
+> @@ -280,13 +288,11 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>  	 * hsclk(bit) = hsclk(byte) * 8 = hsfreq
+>  	 */
+>  	bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> -	hsfreq = (mode->clock * bpp) / dsi->lanes;
+> -
+> -	ret = pm_runtime_resume_and_get(dsi->dev);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	clk_set_rate(dsi->vclk, mode->clock * 1000);
+> +	vclk_rate = clk_get_rate(dsi->vclk);
+> +	if (vclk_rate != mode->clock * MILLI)
+> +		dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu mismatch\n",
+> +			 mode->clock * MILLI, vclk_rate);
+
+There's a high risk that the requested rate won't be achieved exactly.
+Do we really want to print a non-debug message to the kernel log every
+time ?
+
+> +	hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
+
+I doubt DIV_ROUND_CLOSEST_ULL() will make any difference in practice
+given that you can't have more than 4 lanes, but that's fine.
+
+>  
+>  	ret = rzg2l_mipi_dsi_dphy_init(dsi, hsfreq);
+>  	if (ret < 0)
+> @@ -304,12 +310,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>  	 * - data lanes: maximum 4 lanes
+>  	 * Therefore maximum hsclk will be 891 Mbps.
+>  	 */
+> -	if (hsfreq > 445500) {
+> +	if (hsfreq > 445500000) {
+>  		clkkpt = 12;
+>  		clkbfht = 15;
+>  		clkstpt = 48;
+>  		golpbkt = 75;
+> -	} else if (hsfreq > 250000) {
+> +	} else if (hsfreq > 250000000) {
+>  		clkkpt = 7;
+>  		clkbfht = 8;
+>  		clkstpt = 27;
+> @@ -753,7 +759,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
+>  	 * mode->clock and format are not available. So initialize DPHY with
+>  	 * timing parameters for 80Mbps.
+>  	 */
+> -	ret = rzg2l_mipi_dsi_dphy_init(dsi, 80000);
+> +	ret = rzg2l_mipi_dsi_dphy_init(dsi, 80000000);
+>  	if (ret < 0)
+>  		goto err_phy;
+>  
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Laurent Pinchart
