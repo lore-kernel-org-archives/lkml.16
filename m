@@ -1,89 +1,384 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758C02676DF;
-	Tue, 20 May 2025 09:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6641262807
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732833; cv=none; b=lS7m/lR0hUGvXvJ9nqH2X0w9+mTNkXPhN1oAT27stvgKOj+xbq7ZUAIFW+uoi87Arpx9I93LwLcAHLmFQB8Jorw/92K5CR0o9KaAoMEuW8Cx+Xg3ya7SnzZRdgT1L4GzWs66FJJjmB5AGETgXnizHC4oYBmVz1Z3Uqqe45W76PM=
+	t=1747732910; cv=none; b=Ab7NhUyWWXiE3Bl5PlWz6NYDLcw/+X8FmZyYet/XHPEEsAm1Xtej3kY6fx4/ieYYG/L5076crVX6naeV4sBwPoy4coTOPBkk1ITleLJNzWp/N9bI1dTw8nYpbb1Ho+HWbUEv++BBaZV1jZR5cMEUFfDr4o8bCy8CBLjKq1Ptnmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732833; c=relaxed/simple;
-	bh=drmLNZREsEi2qwurO6x9+d7a7DiG6SJbsdoEHUKB2oQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CG2sc5VYkEz1LIui/7YMTBDI6f6k9teoxnw5NKzwgjkZQDNvMGBkKLwNymhhkptpJ4tnJMLV0y3VwMJPnGBQ6lbO/Jp8+QsNWNNmd8/R6h8U9KDr1O1hOFbuhnvzevvETr9FJAWOVoBWPf+smYw1cfQX8Zm1IWeRfxOYJTg5fdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4C1b21z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4C1b21z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BF7C4CEE9;
-	Tue, 20 May 2025 09:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747732833;
-	bh=drmLNZREsEi2qwurO6x9+d7a7DiG6SJbsdoEHUKB2oQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=U4C1b21zU3uzpfHHnbaMqpSOiiIiTNkSuUcm6CRIhplDoB4c+Yk5tCkg7Sgo9b73Y
-	 mI/Y/enOhxwT8WjiRg2ahQdK1J3KL3GPraHKqsUala59dOqUhEGVpsCoRd/iqPfkyp
-	 6Akp6WoIMvFrwjJqeBpFJlnp9YKm+//Oj3u8aEU5LGFnOEpeL0t6VWPVw7tNt4EsX2
-	 p6Huu5iTP5vRgw3cKlzad0hvT7anwzMvRrmcNhF8nlYGM/ZbJsx4qfLQXudby9zT01
-	 xeT48yVR66tADMN+pLKYbzBCSEzQNp8zX35OubBEO+ouUyBuorcP1F0X5pxXuSWOAy
-	 9bmJGif+nFvyA==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org
-In-Reply-To: <ef2a4b6df61e19470ddf6cbd1f3ca1ce88a3c1a0.1747570556.git.christophe.jaillet@wanadoo.fr>
-References: <ef2a4b6df61e19470ddf6cbd1f3ca1ce88a3c1a0.1747570556.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH] regulator: qcom_spmi: Constify struct
- spmi_voltage_range
-Message-Id: <174773283210.19657.11607687696086405986.b4-ty@kernel.org>
-Date: Tue, 20 May 2025 10:20:32 +0100
+	s=arc-20240116; t=1747732910; c=relaxed/simple;
+	bh=5LearHUE//FO6554JRsvDiIOyclElROM2x/Io+yLjos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dDu3a2UvomXVXXOWSU3UxJzfYuRNU6PxNmCW9dQAag90RAI2vkWdG5m62dtsquZmF9hTmQD65kBIkGeuw2GXP3221X9UXsNQbU/n7JVb0A+Zbd+am7MuSaO/G4SWlkOv3Hyy0o7aqX3oJ+p0kPXGyn1+JOrpklEa4/rD6PBUpJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BC1150C;
+	Tue, 20 May 2025 02:21:34 -0700 (PDT)
+Received: from [10.164.18.48] (unknown [10.164.18.48])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 568403F5A1;
+	Tue, 20 May 2025 02:21:42 -0700 (PDT)
+Message-ID: <712f21ea-e2e6-4a56-8bdb-6ad071b6972e@arm.com>
+Date: Tue, 20 May 2025 14:51:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+ yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
+ hughd@google.com
+References: <20250507060256.78278-1-dev.jain@arm.com>
+ <20250507060256.78278-3-dev.jain@arm.com>
+ <fdb76016-396a-4ee4-9c9d-beb18c86cfdb@lucifer.local>
+ <c038b7cf-3b72-403f-b988-bf3009287502@arm.com>
+ <55cc1cef-1ece-48c3-af17-22ece8df5ed3@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <55cc1cef-1ece-48c3-af17-22ece8df5ed3@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, 18 May 2025 14:16:21 +0200, Christophe JAILLET wrote:
-> 'struct spmi_voltage_range' are only modified at runtime to compile a
-> field, n_voltages, that could be computed at compile time.
+
+
+On 19/05/25 2:34 pm, Lorenzo Stoakes wrote:
+> On Sun, May 18, 2025 at 01:47:35PM +0530, Dev Jain wrote:
+>>
+>>
+>> On 08/05/25 3:34 pm, Lorenzo Stoakes wrote:
+>>> Before getting into the review, just to say thanks for refactoring as per
+>>> my (and of course other's) comments, much appreciated and big improvement!
+>>> :)
+>>>
+>>> We're getting there...
+>>>
+>>> On Wed, May 07, 2025 at 11:32:56AM +0530, Dev Jain wrote:
+>>>> To use PTE batching, we want to determine whether the folio mapped by
+>>>> the PTE is large, thus requiring the use of vm_normal_folio(). We want
+>>>> to avoid the cost of vm_normal_folio() if the code path doesn't already
+>>>> require the folio. For arm64, pte_batch_hint() does the job. To generalize
+>>>> this hint, add a helper which will determine whether two consecutive PTEs
+>>>> point to consecutive PFNs, in which case there is a high probability that
+>>>> the underlying folio is large.
+>>>> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+>>>> are painted with the contig bit, then ptep_get() will iterate through all 16
+>>>> entries to collect a/d bits. Hence this optimization will result in a 16x
+>>>> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+>>>> will eventually call contpte_try_unfold() on every contig block, thus
+>>>> flushing the TLB for the complete large folio range. Instead, use
+>>>> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
+>>>> do them on the starting and ending contig block.
+>>>>
+>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>>> ---
+>>>>    include/linux/pgtable.h | 29 +++++++++++++++++++++++++++++
+>>>>    mm/mremap.c             | 37 ++++++++++++++++++++++++++++++-------
+>>>>    2 files changed, 59 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>> index b50447ef1c92..38dab1f562ed 100644
+>>>> --- a/include/linux/pgtable.h
+>>>> +++ b/include/linux/pgtable.h
+>>>> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
+>>>>    }
+>>>>    #endif
+>>>>
+>>>> +/**
+>>>> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
+>>>> + * to a large folio.
+>>>> + * @ptep: Pointer to the page table entry.
+>>>> + * @pte: The page table entry.
+>>>> + *
+>>>> + * This helper is invoked when the caller wants to batch over a set of ptes
+>>>> + * mapping a large folio, but the concerned code path does not already have
+>>>> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
+>>>> + * the underlying folio was small; i.e keep the small folio case as fast as
+>>>> + * possible.
+>>>> + *
+>>>> + * The caller must ensure that ptep + 1 exists.
+>>>> + */
+>>>> +static inline bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
+>>>> +{
+>>>> +	pte_t *next_ptep, next_pte;
+>>>> +
+>>>> +	if (pte_batch_hint(ptep, pte) != 1)
+>>>> +		return true;
+>>>> +
+>>>> +	next_ptep = ptep + 1;
+>>>> +	next_pte = ptep_get(next_ptep);
+>>>> +	if (!pte_present(next_pte))
+>>>> +		return false;
+>>>> +
+>>>> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == 1);
+>>>
+>>> Let's not do unlikely()'s unless we have data for them... it shouldn't mean
+>>> 'what the programmer believes' :)
+>>>
+>>>> +}
+>>>
+>>> Yeah I'm with Andrew and Anshuman, I mean this is kind of a nasty interface
+>>> (I mean _perhaps_ unavoidably) and we've done the relevant check in
+>>> mremap_folio_pte_batch(), so let's just move it there with comments, as this
+>>>
+>>>> +
+>>>>    #ifndef __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
+>>>>    static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
+>>>>    					    unsigned long address,
+>>>> diff --git a/mm/mremap.c b/mm/mremap.c
+>>>> index 0163e02e5aa8..9c88a276bec4 100644
+>>>> --- a/mm/mremap.c
+>>>> +++ b/mm/mremap.c
+>>>> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+>>>>    	return pte;
+>>>>    }
+>>>>
+>>>> +/* mremap a batch of PTEs mapping the same large folio */
+>>>> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
+>>>> +		pte_t *ptep, pte_t pte, int max_nr)
+>>>> +{
+>>>> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>> +	struct folio *folio;
+>>>> +	int nr = 1;
+>>>> +
+>>>> +	if ((max_nr != 1) && maybe_contiguous_pte_pfns(ptep, pte)) {
+>>>> +		folio = vm_normal_folio(vma, addr, pte);
+>>>> +		if (folio && folio_test_large(folio))
+>>>> +			nr = folio_pte_batch(folio, addr, ptep, pte, max_nr,
+>>>> +					     flags, NULL, NULL, NULL);
+>>>> +	}
+>>>
+>>> This needs some refactoring, avoid nesting at all costs :)
+>>>
+>>> We'll want to move the maybe_contiguous_pte_pfns() function over here, so
+>>> that'll change things, but in general let's use a guard clause.
+>>>
+>>> So an if block like:
+>>>
+>>> if (foo) {
+>>> 	... bunch of logic ...
+>>> }
+>>>
+>>> Is better replaced with a guard clause so you have:
+>>>
+>>> if (!foo)
+>>> 	return ...;
+>>>
+>>> ... bunch of logic ...
+>>>
+>>> Here we could really expand things out to make things SUPER clear like:
+>>>
+>>> static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
+>>> 		pte_t *ptep, pte_t pte, int max_nr)
+>>> {
+>>> 	const fpb_t flags;
+>>> 	struct folio *folio;
+>>>
+>>> 	if (max_nr == 1)
+>>> 		return 1;
+>>> 	if (!maybe_contiguous_pte_pfns(ptep, pte)) // obviously replace with open code...
+>>> 		return 1;
+>>>
+>>> 	folio = vm_normal_folio(vma, addr, pte);
+>>> 	if (!folio)
+>>> 		return 1;
+>>> 	if (!folio_test_large(folio))
+>>> 		return 1;
+>>>
+>>> 	flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>> 	return folio_pte_batch(folio, addr, ptep, pte, max_nr,
+>>> 		flags, NULL, NULL, NULL);
+>>> }
+>>>
+>>> I mean you could argue assign nr would be neater here, but you get the point!
+>>>
+>>> David mentioned a point about this code over in v1 discussion (see
+>>> [0]). Trying to bring converastion here to avoid it being split across
+>>> old/new series. There he said:
+>>>
+>>> David H:
+>>>> (2) Do we really need "must be part of the same folio", or could be just batch over present
+>>>> ptes that map consecutive PFNs? In that case, a helper that avoids folio_pte_batch() completely
+>>>> might be better.
+>>>
+>>> Hm, if we didn't do the batch test, can we batch a split large folio here ok?
+>>> I'm guessing we can in which case this check is actually limiting...
+>>>
+>>> Are we _explicitly_ only considering the cont pte case and ignoring the
+>>> split THP case?
+>>>
+>>> [0]: https://lore.kernel.org/all/887fb371-409e-4dad-b4ff-38b85bfddf95@redhat.com/
+>>>
+>>> And in what circumstances will the hint be set, with a present subsequent
+>>> PTE but !folio_test_large()?
+>>>
+>>> I guess the hint might not be taken? But then isn't the valid check just
+>>> folio_test_large() and we don't need this batched check at all?
+>>>
+>>> Is it only to avoid the split THP case?
+>>>
+>>> We definitely need some clarity here, and a comment in the code explaining
+>>> what's going on as this is subtle stuff.
+>>
+>> I am focussed only on batching large folios. Split THPs won't be batched;
+>> you can use pte_batch() (from David's refactoring) and
+>> figure the split THP batch out, but then get_and_clear_full_ptes()
+>> will be gathering a/d bits and smearing them across the batch, which will be
+>> incorrect. Even if we introduce a new version of get_and_clear_full_ptes()
+>> which does not gather a/d bits, then if the pte_batch actually belongs to a
+>> folio, then we will *not* be smearing a/d bits, which is again wrong. So in
+>> any case we must know what the underlying folio looks like :) So my agenda
+>> for v3 is,
 > 
-> So, simplify spmi_calculate_num_voltages() and compute n_voltages at
-> compile time within the SPMI_VOLTAGE_RANGE macro.
+> Right, ack, there being a large folio per se doesn't mean A/D collection is
+> appropriate in THP case.
 > 
-> Constifying these structures moves some data to a read-only section, so
-> increase overall security.
+> I guess then this is really _only_ about the mTHP case, where essentially
+> the other PTEs are to be disregarded going forwards?
+
+Yes.
+
 > 
-> [...]
+>>
+>> - Incorporate your refactoring comments
+>> - Remove maybe_contiguous_pte_pfns and just use vm_normal_folio +
+>> folio_test_large
+>> - Fix indentation
+>>
+>> Sounds good?
+> 
+> Sure, but can we hold off until the mprotect() stuff is done first please?
+> I mean obviously you're free to do things as you like, but this will help
+> workload-wise on my side :>)
+> 
+> Thanks!
 
-Applied to
+No problem, thanks for reviewing!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-
-Thanks!
-
-[1/1] regulator: qcom_spmi: Constify struct spmi_voltage_range
-      commit: e9be77134469df4a11da898bec2bfc137700a9f3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+>>
+>>>
+>>>> +	return nr;
+>>>> +}
+>>>> +
+>>>>    static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+>>>>    {
+>>>> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>>>>    	struct mm_struct *mm = vma->vm_mm;
+>>>>    	pte_t *old_ptep, *new_ptep;
+>>>> -	pte_t pte;
+>>>> +	pte_t old_pte, pte;
+>>>>    	pmd_t dummy_pmdval;
+>>>>    	spinlock_t *old_ptl, *new_ptl;
+>>>>    	bool force_flush = false;
+>>>> @@ -186,6 +203,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    	unsigned long old_end = old_addr + extent;
+>>>>    	unsigned long len = old_end - old_addr;
+>>>>    	int err = 0;
+>>>> +	int max_nr;
+>>>>
+>>>>    	/*
+>>>>    	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
+>>>> @@ -236,12 +254,13 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    	flush_tlb_batched_pending(vma->vm_mm);
+>>>>    	arch_enter_lazy_mmu_mode();
+>>>>
+>>>> -	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+>>>> -				   new_ptep++, new_addr += PAGE_SIZE) {
+>>>> -		if (pte_none(ptep_get(old_ptep)))
+>>>> +	for (int nr = 1; old_addr < old_end; old_ptep += nr, old_addr += nr * PAGE_SIZE,
+>>>> +				   new_ptep += nr, new_addr += nr * PAGE_SIZE) {
+>>>
+>>> Really nitty thing here but the indentation is all messed up here, I mean
+>>> nothing is going to be nice but maybe indent by two tabs below 'for'.
+>>>
+>>> I'm not a fan of this declaration of nr, typically in a for loop a declaration
+>>> here would be the counter, so this is just confusing.
+>>>
+>>> In the old implementation, declaring nr in the for loop would make sense,
+>>> but in the newly refactored one you should just declare it at the top.
+>>>
+>>> Also as per Anshuman review, I think nr_ptes, max_nr_ptes would be better.
+>>>
+>>> I don't think 'nr' needs to be initialised either, since the conditional is
+>>> 'old_addr < old_end' and you _should_ only perform the
+>>>
+>>>> +		max_nr = (old_end - old_addr) >> PAGE_SHIFT;
+>>>> +		old_pte = ptep_get(old_ptep);
+>>>> +		if (pte_none(old_pte))
+>>>
+>>> This seems broken.
+>>>
+>>> You're missing a nr assignment here, so you'll happen to offset by the
+>>> number of pages of the last folio you encountered?
+>>>
+>>> Should be:
+>>>
+>>> 	if (pte_none(old_pte)) {
+>>> 		nr_ptes = 1;
+>>> 		continue;
+>>> 	}
+>>>
+>>> Or, alternatively, you can reset nr_ptes to 1 at the start of each loop.
+>>>
+>>>
+>>>>    			continue;
+>>>>
+>>>> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>>>
+>>>>    		/*
+>>>>    		 * If we are remapping a valid PTE, make sure
+>>>>    		 * to flush TLB before we drop the PTL for the
+>>>> @@ -253,8 +272,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    		 * the TLB entry for the old mapping has been
+>>>>    		 * flushed.
+>>>>    		 */
+>>>> -		if (pte_present(pte))
+>>>> +		if (pte_present(old_pte)) {
+>>>> +			nr = mremap_folio_pte_batch(vma, old_addr, old_ptep,
+>>>> +						    old_pte, max_nr);
+>>>>    			force_flush = true;
+>>>> +		}
+>>>
+>>> Thanks this is much clearer compared to v1
+>>>
+>>>> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
+>>>
+>>> Nit but...
+>>>
+>>> Can we have a comment indicating what the last parameter refers to? I think
+>>> David maybe doens't like this so obviously if he prefers not that fine, but
+>>> I'm thinking something like:
+>>>
+>>> pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, /*full=*/false);
+>>>
+>>> I think we are good to just use 'false' here right? As it's only an int for
+>>> historical purposes...
+>>>
+>>>>    		pte = move_pte(pte, old_addr, new_addr);
+>>>>    		pte = move_soft_dirty_pte(pte);
+>>>>
+>>>> @@ -267,7 +290,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>    				else if (is_swap_pte(pte))
+>>>>    					pte = pte_swp_clear_uffd_wp(pte);
+>>>>    			}
+>>>> -			set_pte_at(mm, new_addr, new_ptep, pte);
+>>>> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
+>>>>    		}
+>>>>    	}
+>>>>
+>>>> --
+>>>> 2.30.2
+>>>>
+>>
 
