@@ -1,360 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE11123BCF1;
-	Tue, 20 May 2025 00:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEED182BC;
+	Tue, 20 May 2025 00:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747699225; cv=none; b=sifPsNjNNt/k0ebVqD7MFbEb/xP8RcElKZiTNI0xa8Bk+W//j6afxfsPQdkLGSpdzujH6O6P4/5zvSp3LHuoIbjwERj3vRBNsOv9ciyuUCKuRJUntK9A2rSz6RojY+vQtaEDbaGCq74DRkD1Q1Gv1MD034r/Xrj/ywdt5jNi2Ow=
+	t=1747699352; cv=none; b=uOTURrOJkCBkLal83FB7lnKuyTgDdRrgHzlqMgnG6pg0PdHoz6T8hNuG5QkH2LUJqvYStvZKBC/S+FqMf7+hVBvtp1VuLXrWI2aaXRlWcRQyaMTaaiOCS9X9QqV0w0EHQNgbUa1LZ2IfVrll4dAoD6He6m8fu/Kq7tOyup5Q5wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747699225; c=relaxed/simple;
-	bh=ythN4EqeR/m3lDqbXnH98FrFSKfi8HtQUD5sYXtpJxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8fEz9OoMnemgGBd9ECPOdO4ZIXlVhvq8Bio46j+RTGSFbeF7yfj8CHNMmWZXAssUX9MPhK9euRjgayJ/746mqv9+xlt+a6ZdApZmN3+sPKmGll7ytd+9PTEAGg1S2dOAh/gsEm3vu8yhIGZC9Nfzrnr6msRFECrdGnSPJca1Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzZTNka6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747699352; c=relaxed/simple;
+	bh=J43x42J+4FoAQ0Tp7uilc32NtEm5R2XUDI1KVaIDlTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EyGnAEwoScHWdFi0XpkyjkSAt12pfc2zQ0Sphd1j/J8//9MjXyxR6ncZEo8AYtrko2/Kx8NvK0UcgUzMlhZEI2FpYXw23xYcq2pngNEWEdQFrX6J6rsZ8/J2lLv+REE0Zv/CKriKZgarHpoqcJy9ViX/L/Ump9ECPvcDotwyDcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IE5G3rTy; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzZTNka6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2309C4CEED;
-	Tue, 20 May 2025 00:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747699225;
-	bh=ythN4EqeR/m3lDqbXnH98FrFSKfi8HtQUD5sYXtpJxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DzZTNka66QJL2Zs18Xmo7NMndycoft7pcjbjyR4/bodtpt3HmzkJ0lsyAXd3pZUWG
-	 qrifg/KQ//lGIJqf9Ko9tcsrrbTUukmim8IheLM75iVjOa4VacbLmqTaK7rwxZELeB
-	 maLzl2ibDJ2h50L67TO7FgP69i1nQx8H4NgxWEyZDlAAwofdDl8ENFmqAUtDyiyiK8
-	 hHWMSFB5xJipvncqN4aap5zp1mbTZbcDHKChvqRyuuiDrjdIAzvFWUMTqt408mCf1i
-	 Hd6a4HngAwOIM5xfb/ZjupAa8dyUTHfZcpr9BVoBxNY2pqoyP+z1wCkyLtSmdNTYSw
-	 4XVfeRLc3LjWg==
-Date: Mon, 19 May 2025 17:00:23 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, acme@kernel.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: Re: [PATCH v2] perf ftrace: Use process/session specific trace
- settings
-Message-ID: <aCvGF547Y3eteLRK@google.com>
-References: <20250519145235.56006-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IE5G3rTy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747699350; x=1779235350;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=J43x42J+4FoAQ0Tp7uilc32NtEm5R2XUDI1KVaIDlTY=;
+  b=IE5G3rTyfmmk3nDyj2DF2LhwTVvJBjTWR6qrsVtlwbVAmDUb7BBxW8F+
+   F4HaK1XxaDEE+1lxWCJ8mmn5pqVHIXT642Uw76o4Vnb2nvDQdS8E/q2MY
+   tPjDGkpAyf/8lTd8KUcpb3tVyjdk3sK7OHfA9jN60Y/e8j2jMvAoyIWqE
+   Wd1J1chfMhIJq0UGSzi2pDJwxoD8y60o8hD4iVhYCvwoEMmb2aQOwrw4U
+   vJkeLCbbKpjrQDc3zFlF4dghnzdrRr49ZJGJozu2WrWxz9kymIK78d4if
+   JDXmEay8LDr9A/AigUuUhYzWGKmNJFY5jlIolH8pBRbr3lSuBYkBAb5VM
+   A==;
+X-CSE-ConnectionGUID: FxT3Yq2ISFKLa6zs6ua9vQ==
+X-CSE-MsgGUID: RH/L7UYzQt2Q+Oywpj/kdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61008285"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="61008285"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 17:02:29 -0700
+X-CSE-ConnectionGUID: h7nQP4WzT+uoVKSWgwtLbA==
+X-CSE-MsgGUID: vwaPAcRVRp+ujxE6ObiciA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139423280"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 17:02:28 -0700
+Message-ID: <89d93eb8-ad95-4ac4-b0dc-44b37c458d91@linux.intel.com>
+Date: Mon, 19 May 2025 17:02:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250519145235.56006-1-tmricht@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/16] PCI/AER: Simplify pci_print_aer()
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-9-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-9-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Mon, May 19, 2025 at 04:52:35PM +0200, Thomas Richter wrote:
-> V1 --> V2: Add Suggestion from Arnaldo Cavalho de Melo confirmed by
->            Steven Rostedt. Use rmdir(../tracing/instances/dir) to stop
-> 	   process/session specific tracing and delete all 
-> 	   process/session specific setings.
-> 
-> Executing perf ftrace commands ftrace, profile and latency
-> leave tracing disabled as can seen in this output:
-> 
->  # echo 1 > /sys/kernel/debug/tracing/tracing_on
->  # cat /sys/kernel/debug/tracing/tracing_on
->  1
->  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
->  # cat /sys/kernel/debug/tracing/tracing_on
->  0
->  #
-> 
-> The tracing_on file is not restored to its value before the command.
-> Fix this behavior and restore the trace setting to what
-> is was before the invocation of the command.
-> On Fedora 41 and 42 tracing is turned on by default.
-> 
-> This patch use the .../tracing/instances/XXX subdirectory feature.
-> Each perf ftrace invocation creates its own session/process
-> specific subdirectory and does not change the global state
-> in the .../tracing directory itself.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Simplify pci_print_aer() by initializing the struct aer_err_info "info"
+> with a designated initializer list (it was previously initialized with
+> memset()) and using pci_name().
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  tools/perf/builtin-ftrace.c | 105 +++++++++++++++++++++++++++++++-----
->  1 file changed, 91 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 7caa18d5ffc3..3faf96e7185e 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -38,6 +38,8 @@
->  #include "util/units.h"
->  #include "util/parse-sublevel-options.h"
->  
-> +#include <sys/stat.h>
+>   drivers/pci/pcie/aer.c | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 40f003eca1c5..73d618354f6a 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -765,7 +765,10 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   {
+>   	int layer, agent, tlp_header_valid = 0;
+>   	u32 status, mask;
+> -	struct aer_err_info info;
 
-The standard header files are placed in the above.  Let's put it there.
+You have cleaned up other stack allocations of struct aer_err_info to zero
+initialization in your previous patches. Why not follow the same format
+here? I don't think this function resets all fields of aer_err_info, right?
 
+> +	struct aer_err_info info = {
+> +		.severity = aer_severity,
+> +		.first_error = PCI_ERR_CAP_FEP(aer->cap_control),
+> +	};
+>   
+>   	if (aer_severity == AER_CORRECTABLE) {
+>   		status = aer->cor_status;
+> @@ -776,14 +779,11 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+>   	}
+>   
+> -	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> -	agent = AER_GET_AGENT(aer_severity, status);
+> -
+> -	memset(&info, 0, sizeof(info));
+> -	info.severity = aer_severity;
+>   	info.status = status;
+>   	info.mask = mask;
+> -	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
 > +
->  #define DEFAULT_TRACER  "function_graph"
->  
->  static volatile sig_atomic_t workload_exec_errno;
-> @@ -45,6 +47,8 @@ static volatile sig_atomic_t done;
->  
->  static struct stats latency_stats;  /* for tracepoints */
->  
-> +static char tracing_instance[PATH_MAX];	/* Trace instance directory */
-> +
->  static void sig_handler(int sig __maybe_unused)
->  {
->  	done = true;
-> @@ -100,6 +104,34 @@ static bool is_ftrace_supported(void)
->  	return supported;
->  }
->  
-> +/*
-> + * Wrapper to test if a file in directory .../tracing/instances/XXX
-> + * exists. If so return the .../tracing/instances/XXX file for use.
-> + * Otherwise the file exists only in directory .../tracing and
-> + * is applicable to all instances, for example file available_filter_functions.
-> + * Return that file name in this case.
+> +	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> +	agent = AER_GET_AGENT(aer_severity, status);
+>   
+>   	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>   	__aer_print_error(dev, &info);
+> @@ -797,7 +797,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	if (tlp_header_valid)
+>   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>   
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> +	trace_aer_event(pci_name(dev), (status & ~mask),
+>   			aer_severity, tlp_header_valid, &aer->header_log);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
 
-Not sure if it's needed.  Can we call get_tracing_file() directly for
-the global files?
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-> + *
-> + * This functions works similar to get_tracing_file() and expects its caller
-> + * to free the returned file name.
-> + *
-> + * The global variable tracing_instance is set in init_tracing_instance()
-> + * called a the  beginning to a process specific tracing subdirectory.
-
-s/called a /called at / ?
-
-> + */
-> +static char *get_tracing_instance_file(const char *name)
-> +{
-> +	char *file;
-> +
-> +	if (asprintf(&file, "%s/%s", tracing_instance, name) < 0)
-> +		return NULL;
-> +
-> +	if (!access(file, F_OK))
-> +		return file;
-> +
-> +	put_tracing_file(file);
-
-This didn't use the get_tracing_file() API.  Just call free().
-
-
-> +	file = get_tracing_file(name);
-> +	return file;
-> +}
-> +
->  static int __write_tracing_file(const char *name, const char *val, bool append)
->  {
->  	char *file;
-> @@ -109,7 +141,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
->  	char errbuf[512];
->  	char *val_copy;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -167,7 +199,7 @@ static int read_tracing_file_to_stdout(const char *name)
->  	int fd;
->  	int ret = -1;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -209,7 +241,7 @@ static int read_tracing_file_by_line(const char *name,
->  	char *file;
->  	FILE *fp;
->  
-> -	file = get_tracing_file(name);
-> +	file = get_tracing_instance_file(name);
->  	if (!file) {
->  		pr_debug("cannot get tracing file: %s\n", name);
->  		return -1;
-> @@ -299,6 +331,36 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
->  	return 0;
->  }
->  
-> +/* Remove .../tracing/instances/XXX subdirectory created with
-> + * init_tracing_instance().
-> + */
-> +static void exit_tracing_instance(void)
-> +{
-> +	rmdir(tracing_instance);
-
-Can we check the return value and print a message if failed?  I think
-it'd succeed mostly but let's prepare for errors.
-
-> +}
-> +
-> +/* Create subdirectory within .../tracing/instances/XXX to have session
-> + * or process specific setup. To delete this setup, simply remove the
-> + * subdirectory.
-> + */
-> +static int init_tracing_instance(void)
-> +{
-> +	char dirname[] = "instances/perf-ftrace-XXXXXX";
-> +	char *path;
-> +
-> +	path = get_tracing_file(dirname);
-> +	if (!path)
-> +		return -1;
-> +	strcpy(tracing_instance, path);
-
-strncpy() instead?
-
-
-> +	put_tracing_file(path);
-> +	path = mkdtemp(tracing_instance);
-> +	if (!path) {
-> +		pr_err("failed to create tracing/instances directory\n");
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int set_tracing_pid(struct perf_ftrace *ftrace)
->  {
->  	int i;
-> @@ -629,14 +691,19 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  
->  	select_tracer(ftrace);
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-
-Duplicated error message.
-
-
-> +		goto out;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
-> -		goto out;
-> +		goto out_reset;
->  	}
->  
->  	/* reset ftrace buffer */
->  	if (write_tracing_file("trace", "0") < 0)
-> -		goto out;
-> +		goto out_reset;
->  
->  	if (set_tracing_options(ftrace) < 0)
->  		goto out_reset;
-> @@ -648,7 +715,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  
->  	setup_pager();
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		goto out_reset;
-> @@ -723,7 +790,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  out_close_fd:
->  	close(trace_fd);
->  out_reset:
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  out:
->  	return (done && !workload_exec_errno) ? 0 : -1;
->  }
-> @@ -924,6 +991,11 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  	if (ftrace->target.use_bpf)
->  		return perf_ftrace__latency_prepare_bpf(ftrace);
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-
-Ditto.
-
-
-> +		return -1;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
->  		return -1;
-> @@ -942,7 +1014,7 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  		return -1;
->  	}
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		return -1;
-> @@ -993,7 +1065,7 @@ static int cleanup_func_latency(struct perf_ftrace *ftrace)
->  	if (ftrace->target.use_bpf)
->  		return perf_ftrace__latency_cleanup_bpf(ftrace);
->  
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  	return 0;
->  }
->  
-> @@ -1304,17 +1376,22 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  		goto out;
->  	}
->  
-> +	if (init_tracing_instance() < 0) {
-> +		pr_err("failed to create tracing/instances\n");
-
-Ditto.
-
-Thanks,
-Namhyung
-
-
-> +		goto out;
-> +	}
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
-> -		goto out;
-> +		goto out_reset;
->  	}
->  
->  	/* reset ftrace buffer */
->  	if (write_tracing_file("trace", "0") < 0)
-> -		goto out;
-> +		goto out_reset;
->  
->  	if (set_tracing_options(ftrace) < 0)
-> -		return -1;
-> +		goto out_reset;
->  
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
-> @@ -1323,7 +1400,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  
->  	setup_pager();
->  
-> -	trace_file = get_tracing_file("trace_pipe");
-> +	trace_file = get_tracing_instance_file("trace_pipe");
->  	if (!trace_file) {
->  		pr_err("failed to open trace_pipe\n");
->  		goto out_reset;
-> @@ -1385,7 +1462,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
->  out_close_fd:
->  	close(trace_fd);
->  out_reset:
-> -	reset_tracing_files(ftrace);
-> +	exit_tracing_instance();
->  out:
->  	return (done && !workload_exec_errno) ? 0 : -1;
->  }
-> -- 
-> 2.49.0
-> 
