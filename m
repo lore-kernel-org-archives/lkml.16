@@ -1,61 +1,63 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E7425F963
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C29265CB5
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754685; cv=none; b=PBwFrk31iiwOKrOTH0cLeiY6boP1K6REDPH8PuxDyd6pVnp7Rs/ODfiwcy38KnbKDMqDsES+pEK3OxPob52r1dqWuk7KSzKufsubuHWFRXpAHX+6IBiVo2m1DjQ5AabiJLxGKrWvdc0UOq0WhvtLolp6LRhv8fkrZPE71MrY7Jg=
+	t=1747754689; cv=none; b=mIo3E15pmLxF7BdvgjjMXf1e96ftzYDB6z+2WXUBaK9i7Rf/JBHC8ZvJiMoVvld76QMukgY0zlQCy0p7MlSKs5RpzIvfe4RWUQt9jeLzETnwlnjrRJ2LNv60ZbICOAE10eeqd2LIcQl82l9cUkyzAiPjnEcusHpou5O2qHl7800=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754685; c=relaxed/simple;
-	bh=T61w/yq/fD1LJCOzhaYFRZvu8ZRpJ0D5hL3C9dgYukU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrRbLUhrCzq3Q2IEtDqvt4f5+gu4JD1Xy3/CE9/Vy9JiMYouNuMjuLjS4/Jb4kroXRdZAZSO9+ZJiKDANto/BJVpQaX4ad4grgQ3aWdSnLQ/VTpA7Z9mPHNo/m+6qY9wZXKmQbPe6wrbTQEYU3CbEH0mzqfizF5NzPZRgRD4jnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W/9AcKjs; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1747754689; c=relaxed/simple;
+	bh=UxN93SvSHVTP+m+eEEKFbkfsohK3RhjYDOa6gbczcdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dP6vRzoMm6PGXNcPVY7lFTKt4Fwo4w8vLbd/w7fnky9b1MgBLAMiAamL3ilwyOTuoNrA+LHSQpJi0QfkHWhglz/TH9QhG54Lr2tetiSSXubgehGvxs41gEANvYx4EAEgT4NBajIFZIVWnrQrZYMy41QgkBJnWqzFaW0rLti6I9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GLT/u2yA; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W/9AcKjs"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad52d9be53cso673709966b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:24:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLT/u2yA"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb39c45b4eso805705366b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747754681; x=1748359481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Gx+0GKtuZ3GYJAvYOnfIUtCau4b3x5OyuIdeQR0KSM=;
-        b=W/9AcKjsVn/oaigQpH1ODyKhvPWcZ+GBC6ua32bXITGKVwcZsx9K4hpAUK0tX+F0EC
-         S0Np1M/weVxOlkZz/oZ9W22uwPnMpnab9zZvmvpsvXzhxLsWHQ0FnZ6TVy+XrawYQTZI
-         2qT4K26jUiDgnMyF5U9EC6izhHPOnWGy5JaZbD83GMRv4s00HUrBD3UHzARlaJgDEnVb
-         9KEPCgDPkPwmhr9LIRUMj2+bMLD5TxZH3l5ueBoeuoPqihYsZkmXU/0ZBVWVrAepvKoI
-         wbMJlZw6cdO0mVoJM4JXYNHn5Our02lTZlfWNbJ5m53HpSfPU5YnJLEjMAxkgC5SwVX1
-         1Y5Q==
+        d=linaro.org; s=google; t=1747754684; x=1748359484; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+mAUVqOxIXjZijXnkHFZmAFDQtFJ4Kh5PO6PLUJhLU=;
+        b=GLT/u2yAQTo/Ui8guh77KTHRiumuBadbJgCGyBqpWXbduuTGoOGH/QDB8UmRLOFAj2
+         5L1QQQ1yFxZWNJDwDyoaYkbBEQp8tbFrBTtQVxZcHhunYrUIZ+N7DZ0LwBVr5lbtra1a
+         gfdC9h9sGF3i1BVXn0KaAvGSkHmnMF4yfIwa8VvGPBPvzCHTkScxuBrIFwa9x+Oq3K+P
+         mYbKTmcj++umzLhBtCyLeaBN80m7kf5AmTjft7UXgktOdPwQDqAyJCMjyhuJ9zP395/d
+         bAQzM4R0+RvY1JuXb2B32/3UP9Wh6xou/GiwCd2H6pXmv4kYsOJdwMacY8rII3lhhd6f
+         lZfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747754681; x=1748359481;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Gx+0GKtuZ3GYJAvYOnfIUtCau4b3x5OyuIdeQR0KSM=;
-        b=d/qKq/O8OsY/738WU/5kNXPxs358xMltrfav1PC+1MsNutAetNMx5s84qpErAVLItB
-         2P5E/G1iaoZp43rxWgL1L0RoQb5/UNiflPIFxbSskc/by5HYY2YRGDgfLUgZM0MUvsKk
-         hPoTAVU21pVu58qKa6+DkCRdtGx8A4yUWEsHBbeITZZEjXhqJPULGz1FW4S/l+8nlfxx
-         +Jy8rTxqAiaJS4Qi7BxY11ThSNzvcZbqB9Dkp6GqwGdPUExbcN3gCHbYbfgjfPf+bb7Q
-         GnXAZ6X1a00JWBv8zKoIOXk5KuqyJTd5p7UzogAghGkyEqhrmbQDQQd3JaWzVEzsxi56
-         Takw==
-X-Gm-Message-State: AOJu0Yx7p2jExuWPKS5MAsotUCQlcEQ0Ah7ZoDONiY3bSejlphkhEyaH
-	wd5cBrKru1jP43p/Z9q6/ZeGMCp9JAjoMeAR3ct/XhaNx1Mtcq6+JSeGBn9Kp+Tax0qKoKIBdTz
-	v5c6o
-X-Gm-Gg: ASbGncuzlthmuyfmoNwybdBwQi9MLwnWn2jUSmhYxXrFQX/G0ADCDLHqHtnqruZSq1z
-	+MAfDmPbrelZ0j9XoGE2wQQuRGur/EE0UvnOzrqN42WWO/6STvivpxo3a56feseLF3nxeXhJxOe
-	o1jNZApn975ykr0xUhrNXqtqMMHm5a6dN9bN/TqT26Wb5Qw++bGokFuJTxh4nu/DR/pgtudwPf0
-	D1fAjYc2mlY/XpSCBhJ+d4h7XIJaezOxnEenQURRSnFifROMHwA0zGtORRk5m3uNinYK3KgCnpk
-	DVWhM/vqMWhMUCeCH8hQFd8qltWqYK6Bbuz49bsZwkZ20LmZYZQrKdeOYoN0zjEtAhmqlyaunI3
-	4IR/+9X71VQ3sN657GD2kGWDtEHST
-X-Google-Smtp-Source: AGHT+IGiBtB/yBrwdOUmv7Ytg8eiZmw9nJDvhkMV2QRZvjED6NikmzozZ3tfcWJyGNkfRcLUty/3Kg==
-X-Received: by 2002:a17:907:3fa1:b0:ad5:5198:b2ae with SMTP id a640c23a62f3a-ad55198bc5emr1017407066b.52.1747754680675;
-        Tue, 20 May 2025 08:24:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747754684; x=1748359484;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+mAUVqOxIXjZijXnkHFZmAFDQtFJ4Kh5PO6PLUJhLU=;
+        b=Gogpk8hr5Hdv1zsiCKJ+/424j8cpKsQm5ZuyvElXNq72I4kthDF7+Jaoq2AsqyyniG
+         PYqq9Oet9Ho8UiCmgu2qZJPeWtgzDwVyxyp8Xiynx7QrkBAM5BI93WM1c7XbKdcAKiPv
+         oqxMJjxH/7sq/SYJGKbbVbH3vjLjqpgw9LubhHGsr4Yhe0pMeWjUofSGyhpPrHqDPw03
+         bVLzryKIdDK9sOM1c5K3XlULsgpUu257fC882gGQe+DGxfQXFpKnizUuOsCKRXEfaNka
+         9lbjJf9AzMyeKuSVKCK0GxNSuEL89t/pSvAsvpyZjk/zD41qJdjlPgwkKa9UFkCmGDKz
+         vjtA==
+X-Gm-Message-State: AOJu0YzfyIXVyWZlCZp1Xl34sw7IOrzNCGc7Ldm9C7N3HI6IPatEsvUl
+	0z+JxffD7AxjE6XcAdaxurn2iGL7adRAz7sDbh+aYmsq+laa67+KDz/4YRxrABCWjdClVae3pvk
+	UvH24
+X-Gm-Gg: ASbGncuz7a/slKkME1/2T9w/jO5R/4sn1k1J6pySMeybeFr0+CMvHQpsrJxHQQWGuKi
+	MgyAEoUnNyses+ZGMucbyFz4BRCOGPDCmdokfwl6J+4BzChFF4xFfFdmDdgJGPu4aJK9I8XXmQv
+	c2vs6dSwEUS7Yz2UdApRUP857/lFczCyma+kgeKROikvdKvD/4bjGvAc3bBDFmmuW0cDT4wMJH/
+	ZmRRwS5MqN9+ep6AKZkwzsb2rEtEEYNpYtyrOxOB17oj6cF6a49OqvGdNVMT9Dgq9yyn2/xOF8m
+	cB12OMt09CVDr34mQgHe12onc/+1C6zq0vCGK7xuBFBIk1WpY5wcCFz1LlsAE5+x2me8f8dIHdj
+	6CCH9ZNLW49lrc9wxRiXdjFoaIMhG
+X-Google-Smtp-Source: AGHT+IHJnNS8PsiFV8EVtrc16G9fq8ki6tRPk/s/IIABC/OTj/P3BcTFh9xpStaXrxgzCYdbyyVt2g==
+X-Received: by 2002:a17:906:22d1:b0:ad5:3055:784d with SMTP id a640c23a62f3a-ad53055f81cmr1041003666b.34.1747754684274;
+        Tue, 20 May 2025 08:24:44 -0700 (PDT)
 Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278257sm742608766b.82.2025.05.20.08.24.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278257sm742608766b.82.2025.05.20.08.24.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 08:24:40 -0700 (PDT)
+        Tue, 20 May 2025 08:24:43 -0700 (PDT)
 From: Jens Wiklander <jens.wiklander@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
@@ -80,10 +82,12 @@ Cc: Olivier Masse <olivier.masse@nxp.com>,
 	Daniel Stone <daniel@fooishbar.org>,
 	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
 	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v9 0/9] TEE subsystem for protected dma-buf allocations
-Date: Tue, 20 May 2025 17:16:43 +0200
-Message-ID: <20250520152436.474778-1-jens.wiklander@linaro.org>
+Subject: [PATCH v9 2/9] dma-buf: dma-heap: export declared functions
+Date: Tue, 20 May 2025 17:16:45 +0200
+Message-ID: <20250520152436.474778-3-jens.wiklander@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250520152436.474778-1-jens.wiklander@linaro.org>
+References: <20250520152436.474778-1-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,221 +96,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Export the dma-buf heap functions declared in <linux/dma-heap.h>.
 
-This patch set allocates the protected DMA-bufs from a DMA-heap
-instantiated from the TEE subsystem.
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+---
+ drivers/dma-buf/dma-heap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The TEE subsystem handles the DMA-buf allocations since it is the TEE
-(OP-TEE, AMD-TEE, TS-TEE, or perhaps a future QTEE) which sets up the
-protection for the memory used for the DMA-bufs.
-
-The DMA-heap uses a protected memory pool provided by the backend TEE
-driver, allowing it to choose how to allocate the protected physical
-memory.
-
-The allocated DMA-bufs must be imported with a new TEE_IOC_SHM_REGISTER_FD
-before they can be passed as arguments when requesting services from the
-secure world.
-
-Three use-cases (Secure Video Playback, Trusted UI, and Secure Video
-Recording) have been identified so far to serve as examples of what can be
-expected. The use-cases have predefined DMA-heap names,
-"protected,secure-video", "protected,trusted-ui", and
-"protected,secure-video-record". The backend driver registers protected
-memory pools for the use-cases it supports.
-
-Each use-case has its own protected memory pool since different use-cases
-require isolation from different parts of the system. A protected memory
-pool can be based on a static carveout instantiated while probing the TEE
-backend driver, or dynamically allocated from CMA (dma_alloc_pages()) and
-made protected as needed by the TEE.
-
-This can be tested on a RockPi 4B+ with the following steps:
-repo init -u https://github.com/jenswi-linaro/manifest.git -m rockpi4.xml \
-        -b prototype/sdp-v9
-repo sync -j8
-cd build
-make toolchains -j$(nproc)
-make all -j$(nproc)
-# Copy ../out/rockpi4.img to an SD card and boot the RockPi from that
-# Connect a monitor to the RockPi
-# login and at the prompt:
-gst-launch-1.0 videotestsrc ! \
-        aesenc key=1f9423681beb9a79215820f6bda73d0f \
-                iv=e9aa8e834d8d70b7e0d254ff670dd718 serialize-iv=true ! \
-        aesdec key=1f9423681beb9a79215820f6bda73d0f ! \
-        kmssink
-
-The aesdec module has been hacked to use an OP-TEE TA to decrypt the stream
-into protected DMA-bufs which are consumed by the kmssink.
-
-The primitive QEMU tests from previous patch sets can be tested on RockPi
-in the same way using:
-xtest --sdp-basic
-
-The primitive tests are tested on QEMU with the following steps:
-repo init -u https://github.com/jenswi-linaro/manifest.git -m qemu_v8.xml \
-        -b prototype/sdp-v9
-repo sync -j8
-cd build
-make toolchains -j$(nproc)
-make SPMC_AT_EL=1 all -j$(nproc)
-make SPMC_AT_EL=1 run-only
-# login and at the prompt:
-xtest --sdp-basic
-
-The SPMC_AT_EL=1 parameter configures the build with FF-A and an SPMC at
-S-EL1 inside OP-TEE. The parameter can be changed to SPMC_AT_EL=n to test
-without FF-A using the original SMC ABI instead. Please remember to do
-%make arm-tf-clean
-for TF-A to be rebuilt properly using the new configuration.
-
-https://optee.readthedocs.io/en/latest/building/prerequisites.html
-list dependencies required to build the above.
-
-The primitive tests are pretty basic, mostly checking that a Trusted
-Application in the secure world can access and manipulate the memory. There
-are also some negative tests for out of bounds buffers, etc.
-
-Thanks,
-Jens
-
-Changes since V8:
-* Using dma_alloc_pages() instead of cma_alloc() so the direct dependency on
-  CMA can be removed together with the patches
-  "cma: export cma_alloc() and cma_release()" and
-  "dma-contiguous: export dma_contiguous_default_area". The patch
-* Renaming the patch "tee: add tee_shm_alloc_cma_phys_mem()" to
-  "tee: add tee_shm_alloc_dma_mem()"
-* Setting DMA mask for the OP-TEE TEE device based on input from the secure
-  world instead of relying on the parent device so following patches are
-  removed: "tee: tee_device_alloc(): copy dma_mask from parent device" and
-  "optee: pass parent device to tee_device_alloc()".
-* Adding Sumit Garg's R-B to "tee: refactor params_from_user()"
-* In the patch "tee: implement protected DMA-heap", map the physical memory
-  passed to tee_protmem_static_pool_alloc().
-
-Changes since V7:
-* Adding "dma-buf: dma-heap: export declared functions",
-  "cma: export cma_alloc() and cma_release()", and
-  "dma-contiguous: export dma_contiguous_default_area" to export the symbols
-  needed to keep the TEE subsystem as a load module.
-* Removing CONFIG_TEE_DMABUF_HEAP and CONFIG_TEE_CMA since they aren't
-  needed any longer.
-* Addressing review comments in "optee: sync secure world ABI headers"
-* Better align protected memory pool initialization between the smc-abi and
-  ffa-abi parts of the optee driver.
-* Removing the patch "optee: account for direction while converting parameters"
-
-Changes since V6:
-* Restricted memory is now known as protected memory since to use the same
-  term as https://docs.vulkan.org/guide/latest/protected.html. Update all
-  patches to consistently use protected memory.
-* In "tee: implement protected DMA-heap" add the hidden config option
-  TEE_DMABUF_HEAP to tell if the DMABUF_HEAPS functions are available
-  for the TEE subsystem
-* Adding "tee: refactor params_from_user()", broken out from the patch
-  "tee: new ioctl to a register tee_shm from a dmabuf file descriptor"
-* For "tee: new ioctl to a register tee_shm from a dmabuf file descriptor":
-  - Update commit message to mention protected memory
-  - Remove and open code tee_shm_get_parent_shm() in param_from_user_memref()
-* In "tee: add tee_shm_alloc_cma_phys_mem" add the hidden config option
-  TEE_CMA to tell if the CMA functions are available for the TEE subsystem
-* For "tee: tee_device_alloc(): copy dma_mask from parent device" and
-  "optee: pass parent device to tee_device_alloc", added
-  Reviewed-by: Sumit Garg <sumit.garg@kernel.org>
-
-Changes since V5:
-* Removing "tee: add restricted memory allocation" and
-  "tee: add TEE_IOC_RSTMEM_FD_INFO"
-* Adding "tee: implement restricted DMA-heap",
-  "tee: new ioctl to a register tee_shm from a dmabuf file descriptor",
-  "tee: add tee_shm_alloc_cma_phys_mem()",
-  "optee: pass parent device to tee_device_alloc()", and
-  "tee: tee_device_alloc(): copy dma_mask from parent device"
-* The two TEE driver OPs "rstmem_alloc()" and "rstmem_free()" are replaced
-  with a struct tee_rstmem_pool abstraction.
-* Replaced the the TEE_IOC_RSTMEM_ALLOC user space API with the DMA-heap API
-
-Changes since V4:
-* Adding the patch "tee: add TEE_IOC_RSTMEM_FD_INFO" needed by the
-  GStreamer demo
-* Removing the dummy CPU access and mmap functions from the dma_buf_ops
-* Fixing a compile error in "optee: FF-A: dynamic restricted memory allocation"
-  reported by kernel test robot <lkp@intel.com>
-
-Changes since V3:
-* Make the use_case and flags field in struct tee_shm u32's instead of
-  u16's
-* Add more description for TEE_IOC_RSTMEM_ALLOC in the header file
-* Import namespace DMA_BUF in module tee, reported by lkp@intel.com
-* Added a note in the commit message for "optee: account for direction
-  while converting parameters" why it's needed
-* Factor out dynamic restricted memory allocation from
-  "optee: support restricted memory allocation" into two new commits
-  "optee: FF-A: dynamic restricted memory allocation" and
-  "optee: smc abi: dynamic restricted memory allocation"
-* Guard CMA usage with #ifdef CONFIG_CMA, effectively disabling dynamic
-  restricted memory allocate if CMA isn't configured
-
-Changes since the V2 RFC:
-* Based on v6.12
-* Replaced the flags for SVP and Trusted UID memory with a u32 field with
-  unique id for each use case
-* Added dynamic allocation of restricted memory pools
-* Added OP-TEE ABI both with and without FF-A for dynamic restricted memory
-* Added support for FF-A with FFA_LEND
-
-Changes since the V1 RFC:
-* Based on v6.11
-* Complete rewrite, replacing the restricted heap with TEE_IOC_RSTMEM_ALLOC
-
-Changes since Olivier's post [2]:
-* Based on Yong Wu's post [1] where much of dma-buf handling is done in
-  the generic restricted heap
-* Simplifications and cleanup
-* New commit message for "dma-buf: heaps: add Linaro restricted dmabuf heap
-  support"
-* Replaced the word "secure" with "restricted" where applicable
-
-Etienne Carriere (1):
-  tee: new ioctl to a register tee_shm from a dmabuf file descriptor
-
-Jens Wiklander (8):
-  optee: sync secure world ABI headers
-  dma-buf: dma-heap: export declared functions
-  tee: implement protected DMA-heap
-  tee: refactor params_from_user()
-  tee: add tee_shm_alloc_dma_mem()
-  optee: support protected memory allocation
-  optee: FF-A: dynamic protected memory allocation
-  optee: smc abi: dynamic protected memory allocation
-
- drivers/dma-buf/dma-heap.c        |   3 +
- drivers/tee/Makefile              |   1 +
- drivers/tee/optee/Makefile        |   1 +
- drivers/tee/optee/core.c          |  10 +
- drivers/tee/optee/ffa_abi.c       | 147 ++++++++-
- drivers/tee/optee/optee_ffa.h     |  27 +-
- drivers/tee/optee/optee_msg.h     |  84 +++++-
- drivers/tee/optee/optee_private.h |  15 +-
- drivers/tee/optee/optee_smc.h     |  37 ++-
- drivers/tee/optee/protmem.c       | 332 ++++++++++++++++++++
- drivers/tee/optee/smc_abi.c       | 113 ++++++-
- drivers/tee/tee_core.c            | 155 +++++++---
- drivers/tee/tee_heap.c            | 487 ++++++++++++++++++++++++++++++
- drivers/tee/tee_private.h         |  16 +
- drivers/tee/tee_shm.c             | 183 ++++++++++-
- include/linux/tee_core.h          |  71 +++++
- include/linux/tee_drv.h           |  10 +
- include/uapi/linux/tee.h          |  31 ++
- 18 files changed, 1655 insertions(+), 68 deletions(-)
- create mode 100644 drivers/tee/optee/protmem.c
- create mode 100644 drivers/tee/tee_heap.c
-
-
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index 3cbe87d4a464..cdddf0e24dce 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -202,6 +202,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+ {
+ 	return heap->priv;
+ }
++EXPORT_SYMBOL(dma_heap_get_drvdata);
+ 
+ /**
+  * dma_heap_get_name - get heap name
+@@ -214,6 +215,7 @@ const char *dma_heap_get_name(struct dma_heap *heap)
+ {
+ 	return heap->name;
+ }
++EXPORT_SYMBOL(dma_heap_get_name);
+ 
+ /**
+  * dma_heap_add - adds a heap to dmabuf heaps
+@@ -303,6 +305,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ 	kfree(heap);
+ 	return err_ret;
+ }
++EXPORT_SYMBOL(dma_heap_add);
+ 
+ static char *dma_heap_devnode(const struct device *dev, umode_t *mode)
+ {
 -- 
 2.43.0
 
