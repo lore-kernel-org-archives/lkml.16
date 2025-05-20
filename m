@@ -1,124 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EFB21ADA9
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747763208; cv=none; b=kkk6MR3fbP9wKXReLTAwblK5tB9X4dro2jdqzS2bI4/fa7yoQGB5vQuHAX4sc0BNAw+bb/mU96lUuNYLtXiFxXcLO009VGSbCvmoGM7RuTIGdGpGRn52yfdAAOTqUOI/ysR5rLUVWAMaq8BHvSwmp7S7z42liVH+cBw+GLoUzYU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747763208; c=relaxed/simple;
-	bh=HDKfUDddWTn11QWGvG9CU20Wtn/YaSVZa2GiKY6r+Fg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L/f7dJqoDWZfjpkdRZCjy7hhBXcG25y/UY5/qGbEXgfz8YrUcXekNwYzU+PJqtntQn37SaV3n+k8LRECklsRtnyBjbuhDhcrtznvFr3cae9L7MvbeubAoYDYA9Lt7OD9VjjoP+VcBQ0XoIieeaJkuBMe+Nk7PneV2Nh/IoGEBss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAJGDd+g; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A7C1E50B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747763243; cv=pass; b=aoOTMTOzIBqW8+D3dadoRUaYCXOVx7d4Omu9aBE2uG1t0qdsAiLFJwy8XmQMgyekb+NJOph00H7hEk8Q7tIrnNUZt3XT5NFGjf0/QC/0ZQkQ42Kfoj958F1sf3qt1r4yx1FmeoUGN95EjVfLpr+4PZExopqaMDgXsVHrw74Yf+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747763243; c=relaxed/simple;
+	bh=7jb5P1TkIiuGMORBVcqbS+9IpmHDED1+cmSvydiMJCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FNBj5SZsphQUR+bYwWCtTCiQSBc5dAinR0DcTzPbcK9dOOzTKiF46OoAj8FskOcNUVKDKsYbesuwUGi6eOa+L/mlS1K9jeykmZtkpV87AfOgGmgf/iliuDaxwZpe2eTV6hBByleKbWGJtG7OJmWv6CqRAESdeKcTIJnpNqvyu+M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=X/76UiXD; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAJGDd+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A421C4AF09
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747763207;
-	bh=HDKfUDddWTn11QWGvG9CU20Wtn/YaSVZa2GiKY6r+Fg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hAJGDd+gWoRqOJ1gkPAfKs35VRrUMmFoGd8P2qgtFg3TIq6v+btUgmmqflSHR4xAn
-	 L4PomGU9eZENZKtOtWgwm4y4aMy98ND3JOWxLXCE5CzUFnOrnVD+ROaU6MjYfTEVxT
-	 YIfb9uX2Ghp//s6Oa9Zr5o5OP+ZofWyYLS/xbSgx5mDy55hhA1zCFbUuLyVGHt3Wmm
-	 qwjtibOnmoZ5HdMUnlj+OMUlzbGQFOY9uJyEWvdMnBrpm+ScYrnn+iJDl5LX3mdQrY
-	 10TiFbbEbQ19h1oApiN+v4NXat/EXp7VyYor/1Yg7kmWM1GSXYE77pZoupNMwEqvBO
-	 kuF8eUEq+L3cg==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a071so68204011fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:46:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXRRPqM3J8QGoRJc+7cL/Kd1Ba+nI8B1fWLGqCI2HdVBQSPbIrSuy4WvSTltE8IGPbNxGMlXZaD0I92Ut8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7pD4hr9TIsjrD2o+/amx+Vm3vmvcN/jmmTHFRgpGtGJQ4obEb
-	gJTHuKwMOQptS1UD2kSrbTUG3GYo14d56O2podIfg4mM5w8kQ97vBYq11QXHEWN9JWex8BfB/1Q
-	aVq5u3RU+OSYussJfB7yo4zBIq3GnGEM=
-X-Google-Smtp-Source: AGHT+IGj9ifGIBawraTK6AuaBKL+1X0Q0baWl9ygrTwQ9RHE/vzGKHRHRk2L02rTGU9LqBnRgAk7FJlDXsFog54RZdU=
-X-Received: by 2002:a2e:ab0d:0:b0:30c:50ff:1a4e with SMTP id
- 38308e7fff4ca-328096f24fbmr56915931fa.18.1747763205903; Tue, 20 May 2025
- 10:46:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="X/76UiXD"
+ARC-Seal: i=1; a=rsa-sha256; t=1747763231; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=g2ZgPRe4cmwfprE1HFXQDwWM8b4dswdWxsh4WHpAc0CJRtEvE491IC1hHfOaXUdIpoRos0ev5r0oRShCAZqmBkXLRxQD62Hv5pPG7XL937NCWVmDFz5rM5B67IZiD8WrJ2+f88HY4S2QJmMAZnAJp+k5gL4QIvGj9PcSCEE8yDw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747763231; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=aDQ6SrXga+RCXednZeIiLfUktB4Ek6GiCF/l39MvB0s=; 
+	b=hVo+c2BpqyBR5Mo3SdYfFm1miWFHzIt8oKM4fT3VrA9Z1QJ2+HXcAlLeiAH5qXHX68cPwuZdV4BPT3MQ0wX8XIbDxpNo00DbNEfdKqpy6xT4WpPo1hgYw3j8EbmG/aLUrBcc5QaOPsm095d6xWnDjSlYTasRjC093STaZ7N4/W8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747763231;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=aDQ6SrXga+RCXednZeIiLfUktB4Ek6GiCF/l39MvB0s=;
+	b=X/76UiXDYv1i0WAvYAixIIAeq+Wk5j3M8Lr0nbmSjpDFH/SnWFYnbW7DfrkvrwlB
+	TkHNjTeDS1Z4und6Kk2zi6zjPT2Ex7cCgj5B7PhwGWmE5vI0CcnoW2drddZHYBPo0Qv
+	8S3g8S5SwmxAf9D3gvL5GQ6lLaO66yMgOuB8Slp4=
+Received: by mx.zohomail.com with SMTPS id 1747763230355850.4262977073449;
+	Tue, 20 May 2025 10:47:10 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Subject: [PATCH v3 0/5] Panfrost BO tagging and GEMS debug display
+Date: Tue, 20 May 2025 18:43:57 +0100
+Message-ID: <20250520174634.353267-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
- <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local> <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
- <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local>
-In-Reply-To: <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 May 2025 19:46:33 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
-X-Gm-Features: AX0GCFvAiT_BavmPJuSazn0khgHmCbDAGHYUCOeUL4yJ4iHcsbkg2gpMl1_RczU
-Message-ID: <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
- record pgdir_shift
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 20 May 2025 at 19:38, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, May 20, 2025 at 07:03:37PM +0200, Ard Biesheuvel wrote:
-> > No. But if you had read the next couple of patches, you would have
-> > noticed that PGDIR_SHIFT, PTRS_PER_P4D and pgtable_l5_enabled() will
-> > all be derived from this variable, and the latter currently uses code
-> > patching (in cpu_feature_enabled())
-> >
-> > This is also explained in the cover letter btw
->
-> Yes, I saw that.
->
-> The question remains: are the *users* - PGDIR_SHIFT, etc - on some hot path
-> which I'm not seeing?
->
-> For example pgd_index() is called in a bunch of places and I guess that adds
-> up. But without measuring that, we won't know for sure.
->
+This patch series is a Panfrost port of the already merged patches
+previously discussed at [1].
 
-Look at pgtable_l5_enabled() please, that is the important one.
+The differences are minimal. In this latest revision, the notion of internal BOs, akin to
+that of Panthor kernel-only BO's has been introduced, so that the perfcnt sample buffer and
+imported PRIME objects can be given a tag.
 
-> Looking at an example:
->
-> # ./arch/x86/include/asm/pgtable_64_types.h:32:         return this_cpu_read_stable(__pgdir_shift);
-> #APP
-> # 32 "./arch/x86/include/asm/pgtable_64_types.h" 1
->         movb %gs:__pgdir_shift(%rip), %cl       #, pfo_val__
-> # 0 "" 2
->
-> ...
->
->         movq    40(%rdi), %rax  # ppd_20(D)->vaddr, tmp128
->         shrq    %cl, %rax       # pfo_val__, tmp128
-> # arch/x86/boot/startup/sme.c:105:      pgd_p = ppd->pgd + pgd_index(ppd->vaddr);
->         movq    8(%rdi), %rcx   # ppd_20(D)->pgd, ppd_20(D)->pgd
-> # arch/x86/boot/startup/sme.c:105:      pgd_p = ppd->pgd + pgd_index(ppd->vaddr);
->         andl    $511, %eax      #, tmp130
-> # arch/x86/boot/startup/sme.c:105:      pgd_p = ppd->pgd + pgd_index(ppd->vaddr);
->         leaq    (%rcx,%rax,8), %rsi     #, pgd_p
->
-> that looks like two insns to me: the RIP-relative mov to %cl and then the
-> shift.
->
-> If you use a "normal" variable, that would be also two insns, no?
->
-> Or am I way off?
->
-> Because if not, the percpu thing doesn't buy you anything...
->
+The under-discussion Mesa MR that would allow one to test these changes can be found at [2].
 
-The variable access is identical in terms of instructions, the only
-difference is the %gs offset being applied, and the fact that using
-cache hot data is guaranteed not to increase the number of cachelines
-covering the working set of any existing workload (the region is
-bounded to a fixed number of cachelines)
+The way BO flags is printed is also slightly different.
 
-Happy to keep this as a simple __ro_after_init variable if there is
-consensus between the tip maintainers that we don't need this perf
-advantage, or we can use some kind of code patching that is not CPU
-feature based or ternary alternative based to short circuit these
-things (and pgtable_l5_enabled() in particular) after boot.
+Changelog:
+
+v3:
+ - Fixed spelling of Panfrost device pointer variable names
+ - Fixed invalid memory access bug when freeing Panfrost GEM objects for PRIME imported buffers
+ - Added function for internally tagging BOs (mainly for the perfcnt sample buffer)
+ - Added new commit for fixing Panfrost Device variable spelling mistakes.
+v2:
+ - Introduced u64_to_user_ptr() for casting user pointers
+ - Refined documentation for uAPI bo labelling struct fields
+ - Moved panfrost device debugfs struct fields into a single debugfs struct
+ - Add BO to debugfs GEMs list right before creating its handle to avoid unnecessary initialised field.
+
+[1] https://lore.kernel.org/dri-devel/20250507160713.1363985-1-adrian.larumbe@collabora.com/
+[2] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
+
+Adrián Larumbe (5):
+  drm/panfrost: Add BO labelling to Panfrost
+  drm/panfrost: Internally label some BOs
+  drm/panfrost: Add driver IOCTL for setting BO labels
+  drm/panfrost: show device-wide list of DRM GEM objects over DebugFS
+  drm/panfrost: Fix panfrost device variable name in devfreq
+
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c |   4 +-
+ drivers/gpu/drm/panfrost/panfrost_device.c  |   5 +
+ drivers/gpu/drm/panfrost/panfrost_device.h  |  15 ++
+ drivers/gpu/drm/panfrost/panfrost_drv.c     |  79 ++++++++-
+ drivers/gpu/drm/panfrost/panfrost_gem.c     | 186 ++++++++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_gem.h     |  66 +++++++
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c |   2 +
+ include/uapi/drm/panfrost_drm.h             |  21 +++
+ 8 files changed, 375 insertions(+), 3 deletions(-)
+
+
+base-commit: 9ff4fdf4f44b69237c0afc1d3a8dac916ce66f3e
+--
+2.48.1
