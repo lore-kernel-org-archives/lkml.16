@@ -1,126 +1,121 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481B2DDAB;
-	Tue, 20 May 2025 12:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E6FDDAB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744822; cv=none; b=jB6f7PiPktb0XRSAOtAO9diTL4MD10AnnXU81j4K4LqMekHjr0T5jeBabkDPBaWzo70ZUyUMzcJNKEMKBiZKLkYOd5Ek10AmmdcH7pc3nQSo3R7BvvqCIvrKx5qTHvK7f68x3KSapaVfCFpVGcXxPBlFhQqrlnOOkS7O1Tk+qN8=
+	t=1747744834; cv=none; b=XBfp8mM5Df5DqMcFX5C/+aWkShXcVsMxuSwEGcuOYp0ZrKfPgLqilcbtZ/yUP9q/6LV/2yUDY/X1YPEQDJeqDW/lPtU25ImAUxwOvvFWdeCLpaWCz4nzL22KqATPMNVdRXO02+Vcd6ORCgn5h78TtgYw0eOiWMltQuz4DiMnmlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744822; c=relaxed/simple;
-	bh=ATYacQzOSN+D3qKstMSJ9/0jNFcPqEoH9o4IEJcPRjE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ta6JVosucHNO6NwTPaNSK4aqupNGAlX9liGx0Pw/n0Q0ih2AVzMTQCr2gn8nhiWFepH7Nwrbm4Jm9uNkif/np77JQSWOtg+XOplYthyn2Pq559l9JmOAVCnNqdheYtyHcvpGT9Fo5z3xFE2vBmk7Nmo2SNSUqnFy5rY+aIjvWWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4nCJbdO; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4nCJbdO"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad572ba1347so269487066b.1;
-        Tue, 20 May 2025 05:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747744819; x=1748349619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/jl+c2q+Ung+HT/OYN3z/VcGpR80c0US6Yin5H+E6eI=;
-        b=L4nCJbdOsRcn/7KQPVzMAq3Cn/eq2CcTmZOyCguLrL+jvg+Vm3OddiRFT+c/9RdEWB
-         zDwm9T/qBxq49m3RcuXBuuKi/p8uQ+UmLnYY0oS45D7yP6CZ9BXvTzEkV0ozq3zkVoVy
-         GyfA2K3Ya5EXffR6riIvvf6uPiKd9xoUbc8BBw4O7pPwzxcaWX/OgXoGZlja4XXAUNP5
-         37svqpDQy3IUreTdyTOaVciRp06jgWnNXwhMYlxU/0HWAGdgSADqukRSxHPRbtpKTEyj
-         f6WSWNT5+XALyzlVeP0J1Bi90iZiPz9ER3qra2d4Fr+USVVTHB+KndZilQfxlH2QMmYb
-         E+sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747744819; x=1748349619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/jl+c2q+Ung+HT/OYN3z/VcGpR80c0US6Yin5H+E6eI=;
-        b=pO+sYHtkUIfBJAYHNtJ23eSZJQ9aM2JbRvHjnhr7Ph+ra8n4+lzzyf0Ngc6xm9NrVp
-         84LRbENX6fUuEl2KBjc+caq3TIr2uoOeDUn5hsU4cx7BxThYmdgthNt4yaW4/TmgCG4V
-         QH5G0TTF0iMCBinukZhcxgjKQeodIhNKm+a0veZ0WRQe3RXAPwWOgml3lTEMCyNscPU0
-         2ecwCbuBHIvf5jAPeaup18WGDOmPEFpyMrxQu9V1WhebX7tslnKlH+3kP0EVnYGSUOE8
-         r/XDoAsRFiwLzJuuQY0fM05wkXiNuQCgSyCQ2QviTAolCqOU4PLed7yD5/Oe6R/RdS2W
-         U8Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTzHKy/90tqw3RBeBVoRUDNjWndtZtllW3rqqbujCT1nTVBesJZeCLU+LmdHLFJdnces6ZH8EO0voD6RUXJg==@vger.kernel.org, AJvYcCXNculZJ+6NMNgTM50QTEsOudknd7WAPqy0KitrN0gWsx+L2vze+2RTjkf9oQPFF7i1P8aPdR8tsUutu7Va@vger.kernel.org, AJvYcCXVdScY+19jmAXCxVrVtTsVtbC2EOq/tDHgfeDiKvnJq7tcUsx4jtMhAm4JrbxGjz4MCM3cZHpeoSZ1v/17YQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCPEgcOKopVkYW7KWth0ioUYJlLvIKrpGloL7EahTPJjG+eQTg
-	uY5uLapX1xZRZCENS9D8EA4tjr1Bz5cj4ZLmbhjc8jlMGJgui0foo8Kp51/nEe47j/cAl39mCuz
-	/Dp8HokGDRsHfj/HtV04ohwBwFzrvwRw=
-X-Gm-Gg: ASbGnctbQZxO0B+Q2J547l7Hb3x9FyHViz4MqiFfKmVRo5EHXGwjhKrT2JhzfPNcZ74
-	br2FMsU5vxfed2NWH9yK2n6W5/CRuXBx3nal+sDtCNy7KfFPLpo5FolYP1VUfrfXjn0l3FvW2E1
-	fyrX91YrLfGRJ+A0W/nqVl4hDUUDcMJoVW
-X-Google-Smtp-Source: AGHT+IH5bUvnBxRxXybMjRDoEeYe3bPA/LSHsUGIEwJlRwCiBFI36+/QdNM/UouWlg6Q+ELdsoDk7HXXHta80d4O7yI=
-X-Received: by 2002:a17:907:e915:b0:ad5:1e70:7150 with SMTP id
- a640c23a62f3a-ad52d443a03mr1516742866b.2.1747744818984; Tue, 20 May 2025
- 05:40:18 -0700 (PDT)
+	s=arc-20240116; t=1747744834; c=relaxed/simple;
+	bh=SPEPZrzQkNSoq4fcbmSQ+umxM6urkRvQ52y2PdGX1dU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VZFijWtMI8NHRBmV1UsWBDmuQBZHrM1KclMvGOd+U/+TDZcdV7wtrwzZ0sT05CgRRCSE31Yaub3OKlTXvGkH2PTdgcub1UI2OcK3uiyA3evCNUJBIQjN1l95tn0BlsBYk6yDTxegnjF62zkHyPCMWHyMyYA2Gz9km2A1Yu7mLww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9a55:e9b9:b3a5:760c])
+	by michel.telenet-ops.be with cmsmtp
+	id rQgP2E00H09zvkf06QgPXW; Tue, 20 May 2025 14:40:24 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uHMGR-00000002Xmu-0Onv;
+	Tue, 20 May 2025 14:40:23 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uHMGd-00000001Kbv-2IxB;
+	Tue, 20 May 2025 14:40:23 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
+Date: Tue, 20 May 2025 14:40:19 +0200
+Message-ID: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com> <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
-In-Reply-To: <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 20 May 2025 14:40:07 +0200
-X-Gm-Features: AX0GCFuJIxA9Wv-He4w9A6tRHOYc4zkEtD6DXI93Cz2XPfD5o9cWDaYraN4RDjc
-Message-ID: <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 2:25=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
-> > On Tue, May 20, 2025 at 7:16=E2=80=AFAM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > This series allows overlayfs and casefolding to safely be used on the
-> > > same filesystem by providing exclusion to ensure that overlayfs never
-> > > has to deal with casefolded directories.
-> > >
-> > > Currently, overlayfs can't be used _at all_ if a filesystem even
-> > > supports casefolding, which is really nasty for users.
-> > >
-> > > Components:
-> > >
-> > > - filesystem has to track, for each directory, "does any _descendent_
-> > >   have casefolding enabled"
-> > >
-> > > - new inode flag to pass this to VFS layer
-> > >
-> > > - new dcache methods for providing refs for overlayfs, and filesystem
-> > >   methods for safely clearing this flag
-> > >
-> > > - new superblock flag for indicating to overlayfs & dcache "filesyste=
-m
-> > >   supports casefolding, it's safe to use provided new dcache methods =
-are
-> > >   used"
-> > >
-> >
-> > I don't think that this is really needed.
-> >
-> > Too bad you did not ask before going through the trouble of this implem=
-entation.
-> >
-> > I think it is enough for overlayfs to know the THIS directory has no
-> > casefolding.
->
-> overlayfs works on trees, not directories...
+When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
+the old symbols were kept, aiming to provide a seamless migration path
+when running "make olddefconfig" or "make oldconfig".
 
-I know how overlayfs works...
+However, the old compatibility symbols are not visible.  Hence unless
+they are selected by another symbol (which they are not), they can never
+be enabled, and no backwards compatibility is provided.
 
-I've explained why I don't think that sanitizing the entire tree is needed
-for creating overlayfs over a filesystem that may enable casefolding
-on some of its directories.
+Fix this by making them visible, and inverting the selection logic.
+Add comments to make it clear why there are two symbols with the same
+description.
 
-Thanks,
-Amir.
+Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+arch/arm/configs/davinci_all_defconfig must be updated after this has
+hit upstream.
+---
+ drivers/gpu/drm/sitronix/Kconfig | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
+index c069d0d417753bcf..8b3565b8eca3918e 100644
+--- a/drivers/gpu/drm/sitronix/Kconfig
++++ b/drivers/gpu/drm/sitronix/Kconfig
+@@ -10,9 +10,11 @@ config DRM_ST7571_I2C
+ 
+ 	  if M is selected the module will be called st7571-i2c.
+ 
++# To be removed once all users have updated their (def)configs
+ config TINYDRM_ST7586
+-	tristate
+-	default n
++	tristate "DRM support for Sitronix ST7586 display panels"
++	depends on DRM && SPI
++	select DRM_ST7586
+ 
+ config DRM_ST7586
+ 	tristate "DRM support for Sitronix ST7586 display panels"
+@@ -21,16 +23,17 @@ config DRM_ST7586
+ 	select DRM_KMS_HELPER
+ 	select DRM_GEM_DMA_HELPER
+ 	select DRM_MIPI_DBI
+-	default TINYDRM_ST7586
+ 	help
+ 	  DRM driver for the following Sitronix ST7586 panels:
+ 	  * LEGO MINDSTORMS EV3
+ 
+ 	  If M is selected the module will be called st7586.
+ 
++# To be removed once all users have updated their (def)configs
+ config TINYDRM_ST7735R
+-	tristate
+-	default n
++	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
++	depends on DRM && SPI
++	select DRM_ST7735R
+ 
+ config DRM_ST7735R
+ 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+@@ -40,7 +43,6 @@ config DRM_ST7735R
+ 	select DRM_GEM_DMA_HELPER
+ 	select DRM_MIPI_DBI
+ 	select BACKLIGHT_CLASS_DEVICE
+-	default TINYDRM_ST7735R
+ 	help
+ 	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
+ 	  LCDs:
+-- 
+2.43.0
+
