@@ -1,141 +1,133 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2288717CA17
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0B47DA8C;
+	Tue, 20 May 2025 03:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747710078; cv=none; b=OGm5lIzY7s4XDIxDytPE4y+HTrziS50F4jYtyUACdwqqlryN0mwS8exfmjoHCYG/UNWTa1s/Dt37ys/TX6upBXIFLKx5HXJtqu8R6K/4ynf3cqHWK1TBmCWWSEbSG4EO0YCTs8jvD087wh3MOFmM+b7OzGOSmWaAqdnKucbKC6g=
+	t=1747710087; cv=none; b=XSZEeHWRXAwAKLqxVivKE813i/5KCAlEpzKWgW4MjgX/MZw0NPgo8TujM7b4nQmb8Cx7HFwzDHw4OnzjdCteVoebjjue74oBxeuojY26uZRXfTaT1Z0eRczOz/xfLyg2RlCCyRgSSecpKcs0yTWNevL4cz1SPvU8aQM56yozEaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747710078; c=relaxed/simple;
-	bh=By7Yn2yxmnGDxuLuH0yfWAebcHTANMntBcq9/doce34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=jU/+lJ30wA+Tpm3bP0YpUOsOzn8JCx8EyT5NbAcl0Hhi5uluMfHyoBccVtHULmLAseYbrYGPL5S8/C+WaLL+2K//8WWIbH1SNJEq/NW0cAL7hDeUvLI3f8WL1dMK3Kc7VFdoYn5JkJ/TjkSesOwdgFxCtUtgIK5SQ2SXEDyy5qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZlPAvG5h; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZlPAvG5h"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so2629705b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747710075; x=1748314875; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2FFTLhKAyAIq2pgDDlazli0BqEh5hG63gGYiklCQl28=;
-        b=ZlPAvG5hZ23wBcRwSUcE36w6ZHf3XELMovDuuBbjxN0DgUVB2JKow/D0zjSsGToXLc
-         dgbiM7RH1ZVe70A7OhD+R5Vx9c4yMHTpyrvIZ8F+/ihm2xpkAol2+ScmHj9OCGhjs2nc
-         E5XAlymSQQVbNLJpyDzLx1OKC3iVTMT9YZaNfGhGho28Lu1SQHhkhQgH4V0VYIuT9tpM
-         HOdqB7DLsrOzR0Wk1NhgKxg++/hTE0QPEyN4WIg5+6Uhc+oBkJMrCO2/MNMEvuWjKhUy
-         UL8aIwpZadQcN/RJWn5IZmy1+jm+UDfPJLMHFuwwbvez8X78yfz4EczFfYGoiPkyyGzD
-         uALg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747710075; x=1748314875;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2FFTLhKAyAIq2pgDDlazli0BqEh5hG63gGYiklCQl28=;
-        b=UrgxojYfhPekvwfrmhu2G5hQhlNNOoHKd8UEuEbqG35Puct7wjqlvAjMR6paOY3Cky
-         khmyAge5jcwr1n90WG6TOpMsaaIdwSCksL04oq/S6qCyTqdmYPoqP58avazKXfu+LfNn
-         dbzZeNoXRyl3sy6UsiVz0pxJLgzklS3H+M2RYxcMmUFGWI421BgdR2LTPTsD03mM+Ued
-         T0+SmMLMhy0fNypTWVtbRYVuv+qQHUN69bs+jNR56feNVAt8XVk+5X+Ff20vfTXK7KS2
-         gx4XfWDUP4aOFc/Et+jos+9WbcO4MQQPldv5DsYDW3xRJZhsZKB+s2YnKDTcnYd2r4z2
-         XlVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpGH3YAEa6DOV8Kz4E/5cIfE3lT1GxUR0QJ8B+RraPxR9PrCayqsNtHdUWV+yOQhrs4ybf0D8B8v1qEPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtgtKUyLmqi1pemdW7pyUGZqBPnQm+JV5/hwSVlIQSG7qRRMR0
-	RucTckUGGmL6Xc4oZ7wZkbkJp1/yB4i8KU7HxaG7UJY4yAnKIBVhNNIIx5nz9QEBPBF7HolBaPA
-	ZnNaT4XuNm/6IcVPRm/RTgEsZVvauw+P8f3/XOBQ6MaujxFHD4qOapeNFzg==
-X-Gm-Gg: ASbGncsHnV0KbpXfmRMjvO4qDMxYu8eCojIX8Py0uqRMGemknRNTCXlkhZ9DhPb03xf
-	Wl0UFKyvyQJh8tGvW/hSxMD6JTP22TmVsyO+0yH0lLSNpCt8rmKuU8yFv2jGYwm1mLMGBE6EmNA
-	KVPufA0So2I/1DnBNgBwXJVkq1oE5SHrP0P2xR0ZnH0QRofQ==
-X-Google-Smtp-Source: AGHT+IGS+FekNktlVr2qoc5OQy9shoeTYsQUWA6b8sjkat088gtQG8oPZo0iUGir4U53OxZWqwQBEFwmJzO8EgsVoUc=
-X-Received: by 2002:a05:6a00:6f57:b0:73d:b1ff:c758 with SMTP id
- d2e1a72fcca58-742a98abbecmr20097888b3a.18.1747710075339; Mon, 19 May 2025
- 20:01:15 -0700 (PDT)
+	s=arc-20240116; t=1747710087; c=relaxed/simple;
+	bh=lRUh6dRJtQiZa+8t4FTFdMMIqt30kv8ivVGHDv0gA9E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O3C2jKsTHY8eABKrNjoYIkVTVbD2wF0EKd39kO/eL8Bb7mF52P2+ltTWG9MkCrXiCI1ukHp4aFmjkNru+C5D++G0zdIpvqcdDgOHt1ykojCpr4D3J91pt5UpRFNAxZgosEf2qdw7aoKihD6fa9xg5E65AnaHzFeu0iQ6TZ880t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K0v2JT030894;
+	Mon, 19 May 2025 20:01:01 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46psykjcdn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 19 May 2025 20:01:01 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 19 May 2025 20:00:45 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 19 May 2025 20:00:38 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <mail@eworm.de>
+CC: <axboe@kernel.dk>, <christian@heusel.eu>, <hch@infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lizhi.xu@windriver.com>, <ming.lei@redhat.com>,
+        <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
+Date: Tue, 20 May 2025 11:00:51 +0800
+Message-ID: <20250520030051.177205-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250519175640.2fcac001@leda.eworm.net>
+References: <20250519175640.2fcac001@leda.eworm.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241209060422.1021512-1-zhangjian.3032@bytedance.com> <aCtkSBZfkc2k1jnb@shikoro>
-In-Reply-To: <aCtkSBZfkc2k1jnb@shikoro>
-From: Zhang Jian <zhangjian.3032@bytedance.com>
-Date: Tue, 20 May 2025 11:01:04 +0800
-X-Gm-Features: AX0GCFss8Ye3lgycBlu2I0Xeul8aS9tVUxjI2p9D-d5f_PAKqa10XuO8-j7pvfM
-Message-ID: <CA+J-oUvJ39Sz6Yt-8N33vJU=W0K8nN1oBwGwEDyHbhh+=BZpRQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] i2c: slave-eeprom: add latch mode
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Jian Zhang <zhangjian.3032@bytedance.com>, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=a8kw9VSF c=1 sm=1 tr=0 ts=682bf06d cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=fxJcL_dCAAAA:8 a=pyFgNqfGdhKnyIgsGAYA:9
+X-Proofpoint-GUID: XAUBDte_tKDZX_vfTPkcByugzcBwCj1t
+X-Proofpoint-ORIG-GUID: XAUBDte_tKDZX_vfTPkcByugzcBwCj1t
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDAyMyBTYWx0ZWRfX/laEmSf+5Z0d e1vgqhSVMBnDR9uj8XUIbc7RG+srhKEI5xOPLrZDsh8BVp4JplCYajtaMyDZxrttNdls/o2d1zO NP2kl4FeRxa75WWT1DW+qnvxawdoaHitwz4rXLfMH7dZUl9/uKzcnKweQccaVgUyCVbZ1PCCxKq
+ hUFaEAvBpicTerFpZEPfa9RGIe2/+EkjIq4h2IFZvmfJcdY7gFeHIhhdCgXruhBa43528Xrs+ZR CWbc/jyh6MVx5eg34ux+cVt7jvEZz0q9ZbKRzKQF17Y4//WYdWa9ydZGIZUlxezhMMxFcOEXF6t dUIO5tQIP7r96HrLJkpMaQaP9+OKx4gpShUMwRIT4LzFCH1aPo1/7ixNLlAzDj/znHSxmYLrWc9
+ TUyN43AuXpb4p+urHYxumWb+cV+39LPCwuQwYb1dhgsvhKC8ib999HY59rRmXhAyNLGA2XVP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_02,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 mlxlogscore=935 mlxscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505070000
+ definitions=main-2505200023
 
-On Tue, May 20, 2025 at 1:03=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> On Mon, Dec 09, 2024 at 02:04:21PM +0800, Jian Zhang wrote:
-> > The read operation is locked by byte, while the write operation is
-> > locked by block (or based on the amount of data written). If we need to
-> > ensure the integrity of a "block" of data that the other end can read,
-> > then we need a latch mode, lock the buffer when a read operation is
-> > requested.
->
-> I don't really understand what you want to fix here. Does this patch
-> really fix your issue because...
+On Mon, 19 May 2025 17:56:40 +0200, Christian Hesse wrote:
+> $ losetup --find --show --read-only -- /run/archiso/bootmnt/arch/x86_64/airootfs.sfs
+> losetup: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs: failed to set up loop device: Invalid argument
+I tried to reproduce the problem you mentioned using the kernel containing
+"commit:f5c84eff", but failed to reproduce it.
+The complete reproduction steps are as follows:
 
-The scenario I=E2=80=99m dealing with:
-* I=E2=80=99m using this driver to simulate an EEPROM device.
-* One byte of the EEPROM content contains the CRC of the preceding data.
-* Each time I update the EEPROM data, I use i2c_slave_eeprom_bin_write
-to write the entire buffer, so the data in memory is always
-consistent.
-* I expect the I2C master (peer) to be able to perform a block read
-and get the full, correct data including a valid CRC.
+sudo apt install squashfs-tools debootstrap
+sudo debootstrap --arch=amd64 focal rootfs http://archive.ubuntu.com/ubuntu/
+sudo mksquashfs rootfs rootfs.sfs -comp xz -e boot
+root@intel-x86-64:~# losetup --find --show --read-only -- rootfs.sfs
+[   79.676267][ T9551] loop0: detected capacity change from 0 to 272400
+/dev/loop0
+root@intel-x86-64:~# uname -a
+Linux intel-x86-64 6.15.0-rc7 #108 SMP PREEMPT_DYNAMIC Mon May 19 09:20:25 CST 2025 x86_64 x86_64 x86_64 GNU/Linux
+root@intel-x86-64:~# df -Th
+Filesystem     Type      Size  Used Avail Use% Mounted on
+/dev/root      ext4      3.8G  738M  2.9G  21% /
+devtmpfs       devtmpfs  1.5G     0  1.5G   0% /dev
+tmpfs          tmpfs     1.5G     0  1.5G   0% /dev/shm
+tmpfs          tmpfs     585M   13M  572M   3% /run
+tmpfs          tmpfs     4.0M     0  4.0M   0% /sys/fs/cgroup
+tmpfs          tmpfs     1.5G     0  1.5G   0% /tmp
+tmpfs          tmpfs     1.5G  904K  1.5G   1% /var/volatile
+tmpfs          tmpfs     293M     0  293M   0% /run/user/0
+root@intel-x86-64:~# ls -lath /dev/loop0
+brw-rw---- 1 root disk 7, 0 May 20 02:43 /dev/loop0
+root@intel-x86-64:~# mkdir sfs
+root@intel-x86-64:~# mount /dev/loop0 sfs
+mount: /root/sfs: WARNING: source write-protected, mounted read-only.
+root@intel-x86-64:~# df -Th
+Filesystem     Type      Size  Used Avail Use% Mounted on
+/dev/root      ext4      3.8G  738M  2.9G  21% /
+devtmpfs       devtmpfs  1.5G     0  1.5G   0% /dev
+tmpfs          tmpfs     1.5G     0  1.5G   0% /dev/shm
+tmpfs          tmpfs     585M   13M  572M   3% /run
+tmpfs          tmpfs     4.0M     0  4.0M   0% /sys/fs/cgroup
+tmpfs          tmpfs     1.5G     0  1.5G   0% /tmp
+tmpfs          tmpfs     1.5G  904K  1.5G   1% /var/volatile
+tmpfs          tmpfs     293M     0  293M   0% /run/user/0
+/dev/loop0     squashfs  134M  134M     0 100% /root/sfs
+root@intel-x86-64:~# ls -alt sfs
+total 3
+drwx------ 21 root root 3072 May 20 02:49 ..
+drwxr-xr-x 16 root root  284 May 20 02:20 .
+drwxrwxrwt  2 root root    3 May 20 02:20 tmp
+drwxr-xr-x 59 root root 2073 May 20 02:20 etc
+drwxr-xr-x  8 root root  124 May 20 02:20 run
+drwxr-xr-x  2 root root    3 May 20 02:19 media
+drwxr-xr-x  2 root root    3 May 20 02:19 mnt
+drwxr-xr-x  2 root root    3 May 20 02:19 opt
+drwx------  2 root root   46 May 20 02:19 root
+drwxr-xr-x  2 root root    3 May 20 02:19 srv
+drwxr-xr-x 13 root root  178 May 20 02:19 usr
+drwxr-xr-x 11 root root  172 May 20 02:19 var
+drwxr-xr-x  4 root root  191 May 20 02:19 dev
+lrwxrwxrwx  1 root root    7 May 20 02:19 bin -> usr/bin
+lrwxrwxrwx  1 root root    7 May 20 02:19 lib -> usr/lib
+lrwxrwxrwx  1 root root    9 May 20 02:19 lib32 -> usr/lib32
+lrwxrwxrwx  1 root root    9 May 20 02:19 lib64 -> usr/lib64
+lrwxrwxrwx  1 root root   10 May 20 02:19 libx32 -> usr/libx32
+lrwxrwxrwx  1 root root    8 May 20 02:19 sbin -> usr/sbin
+drwxr-xr-x  2 root root    3 Apr 15  2020 home
+drwxr-xr-x  2 root root    3 Apr 15  2020 proc
+drwxr-xr-x  2 root root    3 Apr 15  2020 sys
 
-The problem I=E2=80=99ve encountered:
-* In i2c_slave_eeprom_slave_cb, a block read from the master triggers
-multiple callbacks, each returning one byte.
- This results in a sequence like:
- 1. Master sends a write
- 2. Master reads the first byte.
- 3. The EEPROM buffer is updated.
- 4, Master reads the second byte.
-
-This may lead to a mismatch during a single block read,
-where the master receives data that is partially from the,
- old buffer and partially from the new one=E2=80=94causing
-CRC validation to fail.
-
->
-> >       switch (event) {
-> >       case I2C_SLAVE_WRITE_RECEIVED:
-> > +             if (eeprom->latch) {
-> > +                     spin_lock(&eeprom->buffer_lock);
-> > +                     memcpy(eeprom->buffer_latch, eeprom->buffer, eepr=
-om->bin.size);
-> > +                     spin_unlock(&eeprom->buffer_lock);
-> > +             }
->
-> ... what advantage brings you this memcpy of the buffer to a latch after
-> every single byte is received?
-
-If you agree that the scenario I described earlier is a valid case
-worth considering,
-I make a copy of the buffer at the beginning of a write operation,
-and then use this latched buffer for all subsequent reads until the
-STOP condition.
-
-Sorry, I think I placed the copy logic in the wrong spot earlier.
-Perhaps it would be more appropriate to do it in the
-I2C_SLAVE_WRITE_REQUESTED callback.
-
->
-> > +     if (of_property_read_bool(client->adapter->dev.of_node, "use-latc=
-h")) {
->
-> If there really is a problem, we don't need a binding for it but should
-> use the fix in all cases.
->
-i got it, thanks.
