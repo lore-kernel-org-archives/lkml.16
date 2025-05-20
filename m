@@ -1,194 +1,131 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F38D22C33A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88E521C9F5;
+	Tue, 20 May 2025 13:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746142; cv=none; b=UXJ6SDnn31+FmIHEph0T0j2ci71oPQaI9/St9MBLVDH8q6SizqFC3byJ2Qx/JFKhhufHw59uVuUYNZPwF6JKRXNTZjAyRUmS4f0BgcCcIRyaQeeRjxPLC7dIcG70qssQNwQc17S96J66sgoqR7alRuqP+s7FV0OYW8EqttRNTak=
+	t=1747746270; cv=none; b=ZOfSK08XKZK4LnRwoDIr8ach8HGwXpm8aMhU5Sardlq+D39Vf+y92Nmf2aS8dzqGqZxopRU2OxMIA+UdMeWOl4COhVLEKZAf3d0C3DSO8TEnXw7sEcH9p6drOWCrR14ORdsjqOxlcX/aL282QZm7tNtwORRkRigO2knedOOkWo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746142; c=relaxed/simple;
-	bh=Szc2Bu+IbxSEL3yt3pLQjE2rd6R91vDAuTQXabgWV/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZlNbd2l5Ec88PalTkbMNRFfJbG4Mesxn2MrKdFDnO/Y86znY3TAUFXV+BX0VB+GCY4r6m4mDjbFOij3Rm6ViwmscKCQa0tAIWjGDa6wJ8fgBiE0as3jxD0jqvemkCnIIfBLPkGfRPpaylkaQCiQZKh7MX3VbpaP+hfMTDQTtySU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jGX3rd49; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747746270; c=relaxed/simple;
+	bh=carVAhumIBG2XCpl+hWPctcxIzy4Q55YiGWX9bTJQfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HWgI1RhulJI9EbDmwhkrHmBEW/47pE3DJCT3qkWamiyIYW9QGgV0vW7MDZYwIfjbAS3xKvNXLpoJrcAdU6bYG4VuaLgQVJl2RYUila5+HEcE2j80t13G+lDHr2gOG4BLFIP6AlbrmvTf661Y2wS5ND2LHwHJA5fN9rQvJDIEKxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=a87PczHp; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jGX3rd49"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-231ba6da557so523565ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747746140; x=1748350940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G51NjueMtgwdkSkAq4nxlm82fg57frn9bjK0YUuFTbY=;
-        b=jGX3rd49MakNMRNT2ylEsZ/AepcUOTcHmlTBBFkey7JQW3EegFn4PMDBrxTdOqTuJi
-         U7etRMPG4Ab3zyk9IaysBCh+wfknbro7fvEa896ZTTlLTEF8n2+X6oIf/IgmjVDgD0fC
-         BDPvlCoMnfnZZedfzRjlYN0paYYU5i8cChilf8LtU7bqUvU/A9f0g1RfAYzbyaPFzCM5
-         bVA6M7v1c4KdwsoQtgTWMy35Deb9SZu3Sw2gVleH6my2BfOpSZlsnzIx6e4kdh/8o7bi
-         K0hl7KuD3KTKYtbrp5PqtVSBAqA98XY65vMJR+BX92dYoOlIMpw2IEK1zp/R2xHc3MJe
-         5caA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747746140; x=1748350940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G51NjueMtgwdkSkAq4nxlm82fg57frn9bjK0YUuFTbY=;
-        b=Uj3V1BEuKUH+VtRzE/EOt9oG/jQSvnCtISaj+4FU8q88LFs/m+16gBU6nJZ/4mz1El
-         LVi73tAvE3rE2n3HYlzXQ/5aF0liFqoJjXP59OZJmghh2VZkqtP3d3bu5Np+1aHqlAuH
-         9/uzMyqxjWTAkP9Bx3Ta9BGuc6U/7IkPnIJU1k0X7Q6uNTIEU8etreCozRBtQe7v+Ae/
-         Yrzu6Qrn3qdm1VzB+Uv5vqWasDqZNzgSk4DTnYHDuTgY4W11C2jV+E2Bygrs+z7WEK1J
-         DxqJA5/ETHFokbIgb11tl4uMwnM0sc8yynZ0zkJsyX/pfSfGzPw1cmg0e9Wf4yG4lX8W
-         PHHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUImU0qeXvrH+sg5VIT/gZ0lIR80GtpY8RocmySJ1kkqjNmW1UbBubf9bhQMgwcASR2PfZECHOv4wy8ko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUDYCLuVnDfLQWSugh+gQZdXIxdCdvsMLklyRPbw9IC1m9XsaB
-	XnxOFFwduUnMJOEQ/z9/XCAxp9itw5EwF4UESAFmhUEDV8Ymk+4u1ROsN0gK8ZUKwl3nVp10SzZ
-	nH+oJz7q//izqMLxUfMixDYXZ8rQk/dcdLLEVijiU
-X-Gm-Gg: ASbGncsuhKKXtx8hT5CFsbMm59gst6sTDtHyI0shgXnxzvSlEqF+a3JII8jf1VnxtOz
-	GIKkpBw+bn8EngqzxLJpMhTemBoo5EfmlRdDmnXtFnB0FN1+G84IjVn4AxDEeaSkF0ee+fqLi+X
-	VyFatS5i5Z/ftEFZLaoaww892U9K3GPDx8ylcbssAfPLaFh8Py/6fWUKyNzXTaxf1YzA5Y0qZC/
-	oln
-X-Google-Smtp-Source: AGHT+IENsMjdA7e7SkDhYjjQmP6hDXAt2xKgihGIflXdn8EzSlt5WSL+7YEji7uYL6DeVUvbwnXXwaz9JyzL1XUjkKA=
-X-Received: by 2002:a17:902:cecd:b0:231:d7cf:cf18 with SMTP id
- d9443c01a7336-23203eee503mr7578955ad.1.1747746139014; Tue, 20 May 2025
- 06:02:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="a87PczHp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=gNSBAq32hdbFYRJbB0m60tJ7sQQnB7sJQkTEYNeP4ZA=; b=a8
+	7PczHph3oG3H9MgQswqUZHb8PQ88CXvloqzqtPS84IJRHWgkTlJSiFUp3yqQZOnkfWrSYSnN2od4F
+	x6qL1aJm0M7RSVr0wCISBT3N9nwnYatEU/nF0oix+UESyoA/25X/gYa9iOivEiYTVAHc/B1/VaeUk
+	NmuaptLxDItuRlk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uHMdk-00D7jz-DO; Tue, 20 May 2025 15:04:16 +0200
+Date: Tue, 20 May 2025 15:04:16 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Silicon Labs Kernel Team <linux-devel@silabs.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org
+Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
+Message-ID: <5bc03f50-498e-42c8-9a14-ca15243213bd@lunn.ch>
+References: <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
+ <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
+ <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
+ <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
+ <2025051551-rinsing-accurate-1852@gregkh>
+ <D9WTONSVOPJS.1DNQ703ATXIN1@silabs.com>
+ <2025051612-stained-wasting-26d3@gregkh>
+ <D9XQ42C56TUG.2VXDA4CVURNAM@silabs.com>
+ <cbfc9422-9ba8-475b-9c8d-e6ab0e53856e@lunn.ch>
+ <DA0LEHFCVRDC.2NXIZKLBP7QCJ@silabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
-In-Reply-To: <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Tue, 20 May 2025 06:02:06 -0700
-X-Gm-Features: AX0GCFsldswygKR-GoZQ5DpCzbCzOo98e7cVAofAkIc30PsIDhwcqCcCF6oRMqo
-Message-ID: <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Fuad Tabba <tabba@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DA0LEHFCVRDC.2NXIZKLBP7QCJ@silabs.com>
 
-On Tue, May 20, 2025 at 2:23=E2=80=AFAM Fuad Tabba <tabba@google.com> wrote=
-:
->
-> Hi Ackerley,
->
-> On Thu, 15 May 2025 at 00:43, Ackerley Tng <ackerleytng@google.com> wrote=
-:
+On Mon, May 19, 2025 at 09:21:52PM -0400, Damien Riégel wrote:
+> On Sun May 18, 2025 at 11:23 AM EDT, Andrew Lunn wrote:
+> > This also comes back to my point of there being at least four vendors
+> > of devices like yours. Linux does not want four or more
+> > implementations of this, each 90% the same, just a different way of
+> > converting this structure of operations into messages over a transport
+> > bus.
 > >
-> > The two new guest_memfd ioctls KVM_GMEM_CONVERT_SHARED and
-> > KVM_GMEM_CONVERT_PRIVATE convert the requested memory ranges to shared
-> > and private respectively.
->
-> I have a high level question about this particular patch and this
-> approach for conversion: why do we need IOCTLs to manage conversion
-> between private and shared?
->
-> In the presentations I gave at LPC [1, 2], and in my latest patch
-> series that performs in-place conversion [3] and the associated (by
-> now outdated) state diagram [4], I didn't see the need to have a
-> userspace-facing interface to manage that. KVM has all the information
-> it needs to handle conversions, which are triggered by the guest. To
-> me this seems like it adds additional complexity, as well as a user
-> facing interface that we would need to maintain.
->
-> There are various ways we could handle conversion without explicit
-> interference from userspace. What I had in mind is the following (as
-> an example, details can vary according to VM type). I will use use the
-> case of conversion from shared to private because that is the more
-> complicated (interesting) case:
->
-> - Guest issues a hypercall to request that a shared folio become private.
->
-> - The hypervisor receives the call, and passes it to KVM.
->
-> - KVM unmaps the folio from the guest stage-2 (EPT I think in x86
-> parlance), and unmaps it from the host. The host however, could still
-> have references (e.g., GUP).
->
-> - KVM exits to the host (hypervisor call exit), with the information
-> that the folio has been unshared from it.
->
-> - A well behaving host would now get rid of all of its references
-> (e.g., release GUPs), perform a VCPU run, and the guest continues
-> running as normal. I expect this to be the common case.
->
-> But to handle the more interesting situation, let's say that the host
-> doesn't do it immediately, and for some reason it holds on to some
-> references to that folio.
->
-> - Even if that's the case, the guest can still run *. If the guest
-> tries to access the folio, KVM detects that access when it tries to
-> fault it into the guest, sees that the host still has references to
-> that folio, and exits back to the host with a memory fault exit. At
-> this point, the VCPU that has tried to fault in that particular folio
-> cannot continue running as long as it cannot fault in that folio.
+> > You have to define the protocol. Mainline needs that so when the next
+> > vendor comes along, we can point at your protocol and say that is how
+> > it has to be implemented in Mainline. Make your firmware on the SoC
+> > understand it.  You have the advantage that you are here first, you
+> > get to define that protocol, but you do need to clearly define it.
+> 
+> I understand that this is the preferred way and I'll push internally for
+> going that direction. That being said, Greybus seems to offer the
+> capability to have a custom driver for a given PID/VID, if a module
+> doesn't implement a Greybus-standardized protocol. Would a custom
+> Greybus driver for, just as an example, our Wifi stack be an acceptable
+> option?
 
-Are you talking about the following scheme?
-1) guest_memfd checks shareability on each get pfn and if there is a
-mismatch exit to the host.
-2) host user space has to guess whether it's a pending refcount or
-whether it's an actual mismatch.
-3) guest_memfd will maintain a third state
-"pending_private_conversion" or equivalent which will transition to
-private upon the last refcount drop of each page.
+It is not clear to me why a custom driver would be needed. You need to
+implement a Linux WiFi driver. That API is well defined, although you
+might only need a subset. What do you need in addition to that?
 
-If conversion is triggered by userspace (in case of pKVM, it will be
-triggered from within the KVM (?)):
-* Conversion will just fail if there are extra refcounts and userspace
-can try to get rid of extra refcounts on the range while it has enough
-context without hitting any ambiguity with memory fault exit.
-* guest_memfd will not have to deal with this extra state from 3 above
-and overall guest_memfd conversion handling becomes relatively
-simpler.
+> > So long as you are doing your memory management correctly, i don't see
+> > why you cannot implement double buffering in the transport driver.
+> >
+> > I also don't see why you cannot extend the Greybus upper API and add a
+> > true gb_operation_unidirectional_async() call.
+> 
+> Just because touching a well established subsystem is scary, but I
+> understand that we're allowed to make changes that make sense.
 
-Note that for x86 CoCo cases, memory conversion is already triggered
-by userspace using KVM ioctl, this series is proposing to use
-guest_memfd ioctl to do the same.
- - Allows not having to keep track of separate shared/private range
-information in KVM.
- - Simpler handling of the conversion process done per guest_memfd
-rather than for full range.
-     - Userspace can handle the rollback as needed, simplifying error
-handling in guest_memfd.
- - guest_memfd is single source of truth and notifies the users of
-shareability change.
-     - e.g. IOMMU, userspace, KVM MMU all can be registered for
-getting notifications from guest_memfd directly and will get notified
-for invalidation upon shareability attribute updates.
+There are developers here to help review such changes. And extending
+existing Linux subsystems is how Linux has become the dominant OS. You
+are getting it for free, building on the work of others, so it is not
+too unreasonable to contribute a little bit back by making it even
+better.
+
+> 
+> > You also said that lots of small transfers are inefficient, and you
+> > wanted to combine small high level messages into one big transport
+> > layer message. This is something you frequently see with USB Ethernet
+> > dongles. The Ethernet driver puts a number of small Ethernet packets
+> > into one USB URB. The USB layer itself has no idea this is going on. I
+> > don't see why the same cannot be done here, greybus itself does not
+> > need to be aware of the packet consolidation.
+> 
+> Yeah, so in this design, CPC would really be limited to the transport
+> bus (SPI for now), to do packet consolidation and managing RCP available
+> buffers. I think at this point, the next step is to come up with a proof
+> of concept of Greybus over CPC and see if that works or not.
+
+You need to keep the lower level generic. I would not expect anything
+Silabs specific in how you transport Greybus over SPI or SDIO. As part
+of gb_operation_unidirectional_async() you need to think about flow
+control, you need some generic mechanism to indicate receive buffer
+availability in the device, and when to pause a while to let the
+device catch up, but there is no reason TI, Microchip, Nordic, etc
+should not be able to use the same encapsulation scheme.
+
+	Andrew
