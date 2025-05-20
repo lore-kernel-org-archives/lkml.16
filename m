@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9890E25D1FD;
-	Tue, 20 May 2025 06:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F725D201
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723316; cv=none; b=lUfEQcTHKkeb6D4lKxC5mhwc/t8Yh4ogqJxEGK1Y1d2SCMoOpTFRA0WI1qgQo+Zh9tI4oFl/zbNswtxw/kK9+UTrsiCAi6Nc19stLBPe3Al2s8r++KAXnK9zGLx8fQBOX2mHTrk5+7mLQbWGBKNbcuaIvfaNRY0e97L/iy9T1zA=
+	t=1747723316; cv=none; b=i08R2mf4ev0VtNlUdmirMvl8pR/mX/wA54Df14qxCKx8FVbOi47++Aaf430t9i+COnPpCxstAbZUuK7ZJNry2Ui2eITjLW6whqSiZCRbEzEGFfmXpQfM+HR2ZVKPvZPT46a+3cDdS5ZOffhDL4j1gehEBS9twUcNrBklTVHacTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747723316; c=relaxed/simple;
-	bh=VEbPj3SbeTd3iX9UTiIVEwPYpnuBVqVj3poaUrdMWTw=;
+	bh=QSQ8I+MJuHnMxD/IL7FRa/YTRRnQ0jt7QVJt7qURdjg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l/whRDK+EaJ+0JsAl/MsOH7J06E6HrSryhQVfPI4ecQ/2gNkCM8Ehie3iXyBSe5wdwt5oT1i11jGgTtD2OUNHJgDKHjSkBCLQoOMy42SfrJpg4B7/3GSFIJmUQhb/CN+o/xhgqFzq+szF3uBoehW4Si4VCjyI4KzQjhQ61ZNsyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eX2un05U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CXFb1QAGERIkxPJ1lTdzh9owLa6bbXAkqTgbtZU5RRuVZfiU90qlLrHGXmETfGh79rZHGxt9HmdavOqdkEcRwSc7HaTkk9l9dA8uMGcFuerFccNRsZb3CG10N94GVtxZ8gzFHQfI7OpN3gjCA7+qs7SHVmN2kQ1wZT4I3rv8oDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZM2qaQM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eX2un05U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0957C4CEF2;
-	Tue, 20 May 2025 06:41:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZM2qaQM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0179BC4CEF8;
+	Tue, 20 May 2025 06:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747723316;
-	bh=VEbPj3SbeTd3iX9UTiIVEwPYpnuBVqVj3poaUrdMWTw=;
+	bh=QSQ8I+MJuHnMxD/IL7FRa/YTRRnQ0jt7QVJt7qURdjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eX2un05UOGpwco/IrSqeVAtEIkekR62rn5Q3LH4f0ReVucmLbiFOhgivWIifqMX/T
-	 d45LXc8pOhC96nO8uYz4/yd0hYLrLvpAQ5FGiMitKStBrv6YSswei6VaAdnkmOeP++
-	 Ml5Y7uFy8lXXwbkNkZmKpeojAP+6eNjzvyiVngK/Vbe2Jk9xAyLUvKn88J676cKlhi
-	 Us6YlnRcdX89SmtEHJJcqDTOk6V4PXbcJJTmUtT3Srw2TgNwmfsItH8qKAI6jhVWm3
-	 VROPSfmimjiXSshiVtK4B++7VcpHNhjzNiy0NaYCRqzw8qVieEutG/BaLt1UoKz+0n
-	 o3syluaakU71A==
+	b=rZM2qaQMGODAUmPpuc3ektafnwpE5bhY+Ch2Wljb1Ph2yH7zy03WTnav6KRU5Zc8s
+	 Ex3hrrlJoSfHaAIJxAVa+QmxFttLLSgAkUAtro7QNYjHhNXG4WNKuwwm3Fg6z8hG2C
+	 U6SUlHo0rtNYRNBLtspfF3nDiHGQvfljuGSrH+2B6bFlBWxyK4+lOPTvgnQ1dzFLnJ
+	 1DWCRaAOEBneS+nnJPZ6SIWIFYIF2yaXNaydEjKtR9MYzGdXcAhaUJXyL5jJj/3/nP
+	 wAzARALvRGZd/DcsgHIbG1wTt+0GpeqeLkJYwTVfUvljPKAHWDitEGFN0qSntBaHA3
+	 GRJyC3DmHYO9g==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uHGfh-00000005qtY-3kQF;
-	Tue, 20 May 2025 08:41:53 +0200
+	id 1uHGfi-00000005qu8-0bIr;
+	Tue, 20 May 2025 08:41:54 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
 	"Michael S . Tsirkin" <mst@redhat.com>
@@ -39,15 +39,10 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Ani Sinha <anisinha@redhat.com>,
-	Dongjiu Geng <gengdongjiu1@gmail.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Shannon Zhao <shannon.zhaosl@gmail.com>,
-	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 09/20] acpi/ghes: don't hard-code the number of sources for HEST table
-Date: Tue, 20 May 2025 08:41:28 +0200
-Message-ID: <9404b305e0fefdb14dce4839c3d96ccedf0533e0.1747722973.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v9 18/20] tests/acpi: virt: update HEST and DSDT tables
+Date: Tue, 20 May 2025 08:41:37 +0200
+Message-ID: <87f6dbb922b082a18c4a313df48b01a10db4e2ed.1747722973.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1747722973.git.mchehab+huawei@kernel.org>
 References: <cover.1747722973.git.mchehab+huawei@kernel.org>
@@ -60,221 +55,279 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The current code is actually dependent on having just one error
-structure with a single source, as any change there would cause
-migration issues.
+@@ -1,39 +1,39 @@
+ /*
+  * Intel ACPI Component Architecture
+  * AML/ASL+ Disassembler version 20240322 (64-bit version)
+  * Copyright (c) 2000 - 2023 Intel Corporation
+  *
+- * Disassembly of tests/data/acpi/aarch64/virt/HEST
++ * Disassembly of /tmp/aml-DMPE22
+  *
+  * ACPI Data Table [HEST]
+  *
+  * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue (in hex)
+  */
 
-As the number of sources should be arch-dependent, as it will depend on
-what kind of notifications will exist, and how many errors can be
-reported at the same time, change the logic to be more flexible,
-allowing the number of sources to be defined when building the
-HEST table by the caller.
+ [000h 0000 004h]                   Signature : "HEST"    [Hardware Error Source Table]
+-[004h 0004 004h]                Table Length : 00000084
++[004h 0004 004h]                Table Length : 000000E0
+ [008h 0008 001h]                    Revision : 01
+-[009h 0009 001h]                    Checksum : E2
++[009h 0009 001h]                    Checksum : 6C
+ [00Ah 0010 006h]                      Oem ID : "BOCHS "
+ [010h 0016 008h]                Oem Table ID : "BXPC    "
+ [018h 0024 004h]                Oem Revision : 00000001
+ [01Ch 0028 004h]             Asl Compiler ID : "BXPC"
+ [020h 0032 004h]       Asl Compiler Revision : 00000001
+
+-[024h 0036 004h]          Error Source Count : 00000001
++[024h 0036 004h]          Error Source Count : 00000002
+
+ [028h 0040 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
+ [02Ah 0042 002h]                   Source Id : 0000
+ [02Ch 0044 002h]           Related Source Id : FFFF
+ [02Eh 0046 001h]                    Reserved : 00
+ [02Fh 0047 001h]                     Enabled : 01
+ [030h 0048 004h]      Records To Preallocate : 00000001
+ [034h 0052 004h]     Max Sections Per Record : 00000001
+ [038h 0056 004h]         Max Raw Data Length : 00000400
+
+ [03Ch 0060 00Ch]        Error Status Address : [Generic Address Structure]
+ [03Ch 0060 001h]                    Space ID : 00 [SystemMemory]
+ [03Dh 0061 001h]                   Bit Width : 40
+ [03Eh 0062 001h]                  Bit Offset : 00
+ [03Fh 0063 001h]        Encoded Access Width : 04 [QWord Access:64]
+ [040h 0064 008h]                     Address : 0000000043DA0000
+@@ -42,32 +42,75 @@
+ [048h 0072 001h]                 Notify Type : 08 [SEA]
+ [049h 0073 001h]               Notify Length : 1C
+ [04Ah 0074 002h]  Configuration Write Enable : 0000
+ [04Ch 0076 004h]                PollInterval : 00000000
+ [050h 0080 004h]                      Vector : 00000000
+ [054h 0084 004h]     Polling Threshold Value : 00000000
+ [058h 0088 004h]    Polling Threshold Window : 00000000
+ [05Ch 0092 004h]       Error Threshold Value : 00000000
+ [060h 0096 004h]      Error Threshold Window : 00000000
+
+ [064h 0100 004h]   Error Status Block Length : 00000400
+ [068h 0104 00Ch]           Read Ack Register : [Generic Address Structure]
+ [068h 0104 001h]                    Space ID : 00 [SystemMemory]
+ [069h 0105 001h]                   Bit Width : 40
+ [06Ah 0106 001h]                  Bit Offset : 00
+ [06Bh 0107 001h]        Encoded Access Width : 04 [QWord Access:64]
+-[06Ch 0108 008h]                     Address : 0000000043DA0008
++[06Ch 0108 008h]                     Address : 0000000043DA0010
+
+ [074h 0116 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
+ [07Ch 0124 008h]              Read Ack Write : 0000000000000001
+
+-Raw Table Data: Length 132 (0x84)
++[084h 0132 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
++[086h 0134 002h]                   Source Id : 0001
++[088h 0136 002h]           Related Source Id : FFFF
++[08Ah 0138 001h]                    Reserved : 00
++[08Bh 0139 001h]                     Enabled : 01
++[08Ch 0140 004h]      Records To Preallocate : 00000001
++[090h 0144 004h]     Max Sections Per Record : 00000001
++[094h 0148 004h]         Max Raw Data Length : 00000400
++
++[098h 0152 00Ch]        Error Status Address : [Generic Address Structure]
++[098h 0152 001h]                    Space ID : 00 [SystemMemory]
++[099h 0153 001h]                   Bit Width : 40
++[09Ah 0154 001h]                  Bit Offset : 00
++[09Bh 0155 001h]        Encoded Access Width : 04 [QWord Access:64]
++[09Ch 0156 008h]                     Address : 0000000043DA0008
++
++[0A4h 0164 01Ch]                      Notify : [Hardware Error Notification Structure]
++[0A4h 0164 001h]                 Notify Type : 07 [GPIO]
++[0A5h 0165 001h]               Notify Length : 1C
++[0A6h 0166 002h]  Configuration Write Enable : 0000
++[0A8h 0168 004h]                PollInterval : 00000000
++[0ACh 0172 004h]                      Vector : 00000000
++[0B0h 0176 004h]     Polling Threshold Value : 00000000
++[0B4h 0180 004h]    Polling Threshold Window : 00000000
++[0B8h 0184 004h]       Error Threshold Value : 00000000
++[0BCh 0188 004h]      Error Threshold Window : 00000000
++
++[0C0h 0192 004h]   Error Status Block Length : 00000400
++[0C4h 0196 00Ch]           Read Ack Register : [Generic Address Structure]
++[0C4h 0196 001h]                    Space ID : 00 [SystemMemory]
++[0C5h 0197 001h]                   Bit Width : 40
++[0C6h 0198 001h]                  Bit Offset : 00
++[0C7h 0199 001h]        Encoded Access Width : 04 [QWord Access:64]
++[0C8h 0200 008h]                     Address : 0000000043DA0018
+
+-    0000: 48 45 53 54 84 00 00 00 01 E2 42 4F 43 48 53 20  // HEST......BOCHS
++[0D0h 0208 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
++[0D8h 0216 008h]              Read Ack Write : 0000000000000001
++
++Raw Table Data: Length 224 (0xE0)
++
+
+@@ -1,30 +1,30 @@
+ /*
+  * Intel ACPI Component Architecture
+  * AML/ASL+ Disassembler version 20240322 (64-bit version)
+  * Copyright (c) 2000 - 2023 Intel Corporation
+  *
+  * Disassembling to symbolic ASL+ operators
+  *
+- * Disassembly of tests/data/acpi/aarch64/virt/DSDT
++ * Disassembly of /tmp/aml-TNQ912
+  *
+  * Original Table Header:
+  *     Signature        "DSDT"
+- *     Length           0x0000144C (5196)
++ *     Length           0x00001478 (5240)
+  *     Revision         0x02
+- *     Checksum         0x1B
++ *     Checksum         0x04
+  *     OEM ID           "BOCHS "
+  *     OEM Table ID     "BXPC    "
+  *     OEM Revision     0x00000001 (1)
+  *     Compiler ID      "BXPC"
+  *     Compiler Version 0x00000001 (1)
+  */
+ DefinitionBlock ("", "DSDT", 2, "BOCHS ", "BXPC    ", 0x00000001)
+ {
+     Scope (\_SB)
+     {
+         Device (C000)
+         {
+             Name (_HID, "ACPI0007" /* Processor Device */)  // _HID: Hardware ID
+             Name (_UID, Zero)  // _UID: Unique ID
+         }
+
+@@ -1876,27 +1876,38 @@
+                     0x00000029,
+                 }
+             })
+             OperationRegion (EREG, SystemMemory, 0x09080000, 0x04)
+             Field (EREG, DWordAcc, NoLock, WriteAsZeros)
+             {
+                 ESEL,   32
+             }
+
+             Method (_EVT, 1, Serialized)  // _EVT: Event
+             {
+                 Local0 = ESEL /* \_SB_.GED_.ESEL */
+                 If (((Local0 & 0x02) == 0x02))
+                 {
+                     Notify (PWRB, 0x80) // Status Change
+                 }
++
++                If (((Local0 & 0x10) == 0x10))
++                {
++                    Notify (GEDD, 0x80) // Status Change
++                }
+             }
+         }
+
+         Device (PWRB)
+         {
+             Name (_HID, "PNP0C0C" /* Power Button Device */)  // _HID: Hardware ID
+             Name (_UID, Zero)  // _UID: Unique ID
+         }
++
++        Device (GEDD)
++        {
++            Name (_HID, "PNP0C33" /* Error Device */)  // _HID: Hardware ID
++            Name (_UID, Zero)  // _UID: Unique ID
++        }
+     }
+ }
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+Acked-by: Igor Mammedov <imammedo@redhat.com>
 ---
- hw/acpi/ghes.c           | 39 +++++++++++++++++++++------------------
- hw/arm/virt-acpi-build.c |  8 +++++++-
- include/hw/acpi/ghes.h   | 17 ++++++++++++-----
- target/arm/kvm.c         |  2 +-
- 4 files changed, 41 insertions(+), 25 deletions(-)
+ tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
+ .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
+ tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
+ tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
+ tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
+ tests/data/acpi/aarch64/virt/HEST             | Bin 132 -> 224 bytes
+ tests/qtest/bios-tables-test-allowed-diff.h   |   6 ------
+ 7 files changed, 6 deletions(-)
 
-diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-index 668ca72587c7..f49d0d628fc4 100644
---- a/hw/acpi/ghes.c
-+++ b/hw/acpi/ghes.c
-@@ -238,17 +238,17 @@ ghes_gen_err_data_uncorrectable_recoverable(GArray *block,
-  * See docs/specs/acpi_hest_ghes.rst for blobs format.
-  */
- static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
--                                   BIOSLinker *linker)
-+                                   BIOSLinker *linker, int num_sources)
- {
-     int i, error_status_block_offset;
- 
-     /* Build error_block_address */
--    for (i = 0; i < ACPI_GHES_ERROR_SOURCE_COUNT; i++) {
-+    for (i = 0; i < num_sources; i++) {
-         build_append_int_noprefix(hardware_errors, 0, sizeof(uint64_t));
-     }
- 
-     /* Build read_ack_register */
--    for (i = 0; i < ACPI_GHES_ERROR_SOURCE_COUNT; i++) {
-+    for (i = 0; i < num_sources; i++) {
-         /*
-          * Initialize the value of read_ack_register to 1, so GHES can be
-          * writable after (re)boot.
-@@ -263,13 +263,13 @@ static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
- 
-     /* Reserve space for Error Status Data Block */
-     acpi_data_push(hardware_errors,
--        ACPI_GHES_MAX_RAW_DATA_LENGTH * ACPI_GHES_ERROR_SOURCE_COUNT);
-+        ACPI_GHES_MAX_RAW_DATA_LENGTH * num_sources);
- 
-     /* Tell guest firmware to place hardware_errors blob into RAM */
-     bios_linker_loader_alloc(linker, ACPI_HW_ERROR_FW_CFG_FILE,
-                              hardware_errors, sizeof(uint64_t), false);
- 
--    for (i = 0; i < ACPI_GHES_ERROR_SOURCE_COUNT; i++) {
-+    for (i = 0; i < num_sources; i++) {
-         /*
-          * Tell firmware to patch error_block_address entries to point to
-          * corresponding "Generic Error Status Block"
-@@ -295,12 +295,14 @@ static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
- }
- 
- /* Build Generic Hardware Error Source version 2 (GHESv2) */
--static void build_ghes_v2(GArray *table_data,
--                          BIOSLinker *linker,
--                          enum AcpiGhesNotifyType notify,
--                          uint16_t source_id)
-+static void build_ghes_v2_entry(GArray *table_data,
-+                                BIOSLinker *linker,
-+                                const AcpiNotificationSourceId *notif_src,
-+                                uint16_t index, int num_sources)
- {
-     uint64_t address_offset;
-+    const uint16_t notify = notif_src->notify;
-+    const uint16_t source_id = notif_src->source_id;
- 
-     /*
-      * Type:
-@@ -331,7 +333,7 @@ static void build_ghes_v2(GArray *table_data,
-                                    address_offset + GAS_ADDR_OFFSET,
-                                    sizeof(uint64_t),
-                                    ACPI_HW_ERROR_FW_CFG_FILE,
--                                   source_id * sizeof(uint64_t));
-+                                   index * sizeof(uint64_t));
- 
-     /* Notification Structure */
-     build_ghes_hw_error_notification(table_data, notify);
-@@ -351,8 +353,7 @@ static void build_ghes_v2(GArray *table_data,
-                                    address_offset + GAS_ADDR_OFFSET,
-                                    sizeof(uint64_t),
-                                    ACPI_HW_ERROR_FW_CFG_FILE,
--                                   (ACPI_GHES_ERROR_SOURCE_COUNT + source_id)
--                                   * sizeof(uint64_t));
-+                                   (num_sources + index) * sizeof(uint64_t));
- 
-     /*
-      * Read Ack Preserve field
-@@ -368,22 +369,26 @@ static void build_ghes_v2(GArray *table_data,
- void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
-                      GArray *hardware_errors,
-                      BIOSLinker *linker,
-+                     const AcpiNotificationSourceId *notif_source,
-+                     int num_sources,
-                      const char *oem_id, const char *oem_table_id)
- {
-     AcpiTable table = { .sig = "HEST", .rev = 1,
-                         .oem_id = oem_id, .oem_table_id = oem_table_id };
-     uint32_t hest_offset;
-+    int i;
- 
-     hest_offset = table_data->len;
- 
--    build_ghes_error_table(ags, hardware_errors, linker);
-+    build_ghes_error_table(ags, hardware_errors, linker, num_sources);
- 
-     acpi_table_begin(&table, table_data);
- 
-     /* Error Source Count */
--    build_append_int_noprefix(table_data, ACPI_GHES_ERROR_SOURCE_COUNT, 4);
--    build_ghes_v2(table_data, linker,
--                  ACPI_GHES_NOTIFY_SEA, ACPI_HEST_SRC_ID_SEA);
-+    build_append_int_noprefix(table_data, num_sources, 4);
-+    for (i = 0; i < num_sources; i++) {
-+        build_ghes_v2_entry(table_data, linker, &notif_source[i], i, num_sources);
-+    }
- 
-     acpi_table_end(linker, &table);
- 
-@@ -515,8 +520,6 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
-         return;
-     }
- 
--    assert(ACPI_GHES_ERROR_SOURCE_COUNT == 1);
--
-     if (!ags->use_hest_addr) {
-         get_hw_error_offsets(le64_to_cpu(ags->hw_error_le),
-                              &cper_addr, &read_ack_register_addr);
-diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-index b57f1256c30f..da3ebf403ef9 100644
---- a/hw/arm/virt-acpi-build.c
-+++ b/hw/arm/virt-acpi-build.c
-@@ -889,6 +889,10 @@ static void acpi_align_size(GArray *blob, unsigned align)
-     g_array_set_size(blob, ROUND_UP(acpi_data_len(blob), align));
- }
- 
-+static const AcpiNotificationSourceId hest_ghes_notify[] = {
-+    { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
-+};
-+
- static
- void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
- {
-@@ -950,7 +954,9 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
-         if (ags) {
-             acpi_add_table(table_offsets, tables_blob);
-             acpi_build_hest(ags, tables_blob, tables->hardware_errors,
--                            tables->linker, vms->oem_id, vms->oem_table_id);
-+                            tables->linker, hest_ghes_notify,
-+                            ARRAY_SIZE(hest_ghes_notify),
-+                            vms->oem_id, vms->oem_table_id);
-         }
-     }
- 
-diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-index 5265102ba51f..8c4b08433760 100644
---- a/include/hw/acpi/ghes.h
-+++ b/include/hw/acpi/ghes.h
-@@ -57,13 +57,18 @@ enum AcpiGhesNotifyType {
-     ACPI_GHES_NOTIFY_RESERVED = 12
- };
- 
--enum {
--    ACPI_HEST_SRC_ID_SEA = 0,
--    /* future ids go here */
--
--    ACPI_GHES_ERROR_SOURCE_COUNT
-+/*
-+ * ID numbers used to fill HEST source ID field
-+ */
-+enum AcpiGhesSourceID {
-+    ACPI_HEST_SRC_ID_SYNC,
- };
- 
-+typedef struct AcpiNotificationSourceId {
-+    enum AcpiGhesSourceID source_id;
-+    enum AcpiGhesNotifyType notify;
-+} AcpiNotificationSourceId;
-+
- /*
-  * AcpiGhesState stores GPA values that will be used to fill HEST entries.
-  *
-@@ -84,6 +89,8 @@ typedef struct AcpiGhesState {
- void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
-                      GArray *hardware_errors,
-                      BIOSLinker *linker,
-+                     const AcpiNotificationSourceId * const notif_source,
-+                     int num_sources,
-                      const char *oem_id, const char *oem_table_id);
- void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
-                           GArray *hardware_errors);
-diff --git a/target/arm/kvm.c b/target/arm/kvm.c
-index a256f9d817cd..a1492bcaeb8d 100644
---- a/target/arm/kvm.c
-+++ b/target/arm/kvm.c
-@@ -2360,7 +2360,7 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
-              */
-             if (code == BUS_MCEERR_AR) {
-                 kvm_cpu_synchronize_state(c);
--                if (!acpi_ghes_memory_errors(ags, ACPI_HEST_SRC_ID_SEA,
-+                if (!acpi_ghes_memory_errors(ags, ACPI_HEST_SRC_ID_SYNC,
-                                              paddr)) {
-                     kvm_inject_arm_sea(c);
-                 } else {
+diff --git a/tests/data/acpi/aarch64/virt/DSDT b/tests/data/acpi/aarch64/virt/DSDT
+index 36d3e5d5a5e47359b6dcb3706f98b4f225677591..a182bd9d7182dccdf63c650d048c58f18505d001 100644
+GIT binary patch
+delta 109
+zcmX@3@k4{lCD<jTLWF^ViDe>}G*h$dM)euOOwJsW4+;nC=*7E+g>V+Q2D|zsED)Gn
+zoxsJ!z{S)S5FX^j)c_F?VBivHb9Z%dnXE4&D;?b=31V}^dw9C=2KWUSI2#)?aKwjt
+Hx-b9$X;vI^
+
+delta 64
+zcmeyNaYlp7CD<jzM}&caNqQoeG*i3NM)euOOit{R4+;lM%f`Egg>V+Q2D|zsED)Gn
+UoxsJ!z{S)S5FX?-*+E1W06%jPR{#J2
+
+diff --git a/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt b/tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt
+index e6154d0355f84fdcc51387b4db8f9ee63acae4e9..af1f2b0eb0b77a80c5bd74f201d24f71e486627f 100644
+GIT binary patch
+delta 110
+zcmZ3ac}|ndCD<k8oCpI0)4_>c(oCIR8`a+lGdXii78eO-)SH|wBICY5U~+W=mjDBo
+yK%2X(iwjpnbdzL2c#soEyoaX?Z-8HbfwO@#14n$Qrwc=LlO#wDl9aJAR0;r(tsHj%
+
+delta 66
+zcmX@7xk!`CCD<iokq83=(~XH-(oDVX8`a+lGdZzO78eO-l%1R{A|oB$BpDDM<irv0
+W;pxH~;1^)vY~akm5g+R5!T<noi4jWx
+
+diff --git a/tests/data/acpi/aarch64/virt/DSDT.memhp b/tests/data/acpi/aarch64/virt/DSDT.memhp
+index 33f011d6b635035a04c0b39ce9b4e219f7ae74b7..10436ec87c4859fb84b3ecb7bba5788f38112e59 100644
+GIT binary patch
+delta 88
+zcmbPheA1Z9CD<k8q$C3algUIbX{MH08`WnBGdXcjJ}4Z_<jXo)OvH<SfxzVI1TFyv
+qE`c_8R~MJfaU%At($P(lAPz^oho=i~fM0-tv#~J)M|`NK3j+W#;TF9B
+
+delta 44
+zcmX?UJlB}ZCD<iot|S8klg&gfX{L_p8`WnBGdXfiJ}4Z_<ij#qOvGz*p@=Oj039?8
+AE&u=k
+
+diff --git a/tests/data/acpi/aarch64/virt/DSDT.pxb b/tests/data/acpi/aarch64/virt/DSDT.pxb
+index c0fdc6e9c1396cc2259dc4bc665ba023adcf4c9b..0524b3cbe00bfe552de824dd1090bd00a208c527 100644
+GIT binary patch
+delta 110
+zcmexwz1oJ$CD<iITaJN&sbC_PG*jDyjq2XAOwJsWOJsu?^(LQ?m2qDnFu6K`OMrn(
+ypv~RY#f7UOx=Au1JjjV7-ow*{H^48zz}di=fg?WD(}f|rNfM+6Ny^w5Dg^+WYaFrw
+
+delta 66
+zcmZ2&^WU1wCD<k8zbpd-Q^!OuX{N5b8`ZsKnVi@sm&gV)%1%BZD<d7<BpDDM<irv0
+W;pxH~;1^)vY~akm5g+R5!T<oNArgiF
+
+diff --git a/tests/data/acpi/aarch64/virt/DSDT.topology b/tests/data/acpi/aarch64/virt/DSDT.topology
+index 029d03eecc4efddc001e5377e85ac8e831294362..8c0423fe62d6950f9098983d86bfee256d7d003a 100644
+GIT binary patch
+delta 86
+zcmbQHbx4cLCD<jzNtA(s>E%Q&X{O%5jp|7vOwJsWyG4Q-^(NmJk>Ot;Fu6K`OMrn(
+opv~RY#bxqO5n1WzCP@&RBi_T)g*U)2z`)tqn1Lfc)YF9l01l28<p2Nx
+
+delta 42
+ycmX@4HBF1lCD<iIOq79viGL!OG*hGhM)f2SCMWjE-6Fw^vXk$N$V}!Dl?DLb(h64q
+
+diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
+index 4c5d8c5b5da5b3241f93cd0839e94272bf6b1486..674272922db7d48f7821aa7c83ec76bb3b556d2a 100644
+GIT binary patch
+delta 68
+zcmZo+e89-%;TjzBfPsO5F=rx|6eH6_Rd+^#iMisuTnvm1|Nk>EGJ@nLCJHmL%S;Ru
+WnV7)J#lXPAz`)?Zz#=g*R~!HcF%5eF
+
+delta 29
+lcmaFB*uu!=;Tjy$!oa}5_-G=R6eHtARriT=I3|_|004Ge2nqlI
+
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index 0a1a26543ba2..dfb8523c8bf4 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1,7 +1 @@
+ /* List of comma-separated changed AML files to ignore */
+-"tests/data/acpi/aarch64/virt/HEST",
+-"tests/data/acpi/aarch64/virt/DSDT",
+-"tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt",
+-"tests/data/acpi/aarch64/virt/DSDT.memhp",
+-"tests/data/acpi/aarch64/virt/DSDT.pxb",
+-"tests/data/acpi/aarch64/virt/DSDT.topology",
 -- 
 2.49.0
 
