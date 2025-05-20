@@ -1,72 +1,74 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B39826B96C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD00F28C841
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773895; cv=none; b=urkZvdfJgvz9hR21nw8RCRnn6h3qFJi9AcT5lDoYKPfbwGWHeuka4jHSTRUQlX6A9ZfOELmplbG/HuMrnPH1SML3ptVe/kZPnU1JHJD9Af3U9vyt88SQ2HJl9td2QK2HQ2rRkNTxt2V1b8vU4P8yCOCKei0b4tpt1xKaFqdr+rM=
+	t=1747773900; cv=none; b=fmoq4PUsx3oTiyVyEkClx2vya2K983dB/fLZ6g9uIJmYU9UeRSj8u+3o2JxFRmRtSewLyVhbJRjoc1HPL7ZIEL0XvLWggbg7sHrib+TUfG0D7kuLGLDzgnz/f0KnrRYS5gG5/ZHSedn17B6aM1DFOux5ujSmhkSQ+0tr2Halgfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773895; c=relaxed/simple;
-	bh=PA+tCKwTo1nH+Lso+Uwg7CdiMtEk2emhO7vsfJ9adLI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mcMdAGXH8wgk3BXW0hVVSjxSDruUlFQZ69VsTTYecruWHGTZK7m2qGqUrhCr8+sM2nXbCKCHXsdfwBs9Cn4CG4RaoxrcaxOqf264B6N4f37Lcm7q1lcp7Lv2N1dTy7RsY6RlV13Uub3Ys/+QtVrc3HXk4lGqjTfy7vkgcIlvyoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ludPCjVp; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1747773900; c=relaxed/simple;
+	bh=fX3LnzT2rmBafYy+QSdGUQeHRA967rMH44ZJQ5KxcQo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AgMkxtaXC/CcRhHv6sJIXeJJnhFLzPxNUKfkPzukqwRA+S7SydxxhULRYjRjAk4nM3Lxel9ljojxQGjKCCrEyI62XIjAqhwndp7pM1dHawQX7igp/7TlQ6KCAcmP1dxq9SUbHVCf4uWV246XuEjQHL5DEsANcFjl+9Vi/nfbqI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bqeIfzI6; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ludPCjVp"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGe0aD000727
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:53 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bqeIfzI6"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGdb4A031948
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=CnhEAhcJpQDgCGDvh46RTj
-	Mj70tEmGh9F2KinGlWxFc=; b=ludPCjVpTFJkbjufdT8J1F5lvW9Xegoi+XLqb7
-	CV10DQlYvLak/aB54M3Xx4I/38nSwr79c6um/ULPMTgVAbAyEqorClVstrXC58lD
-	2pSoT6aSt5jbt8niKXpxSjWIbyuTlvqGftylKQO+6Ytae/vcYxpPF0N7oZeaJwW5
-	v06dQdkYBcEy6JtrwI7jQYmNGxcSRdG253VOpab85aghNjttOpZ+bvT4vkOG4WeE
-	T9lRx4uzMCPN+9nfio3ToGS5Oz4X19egzL/kkd8R55LA1Ahmi6bVrNK6UeDRQmYv
-	2ghM2FQ/nsTPJo/mur7GmuKSe8qst7eY1f6XGfXafCNsX0Fg==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4rjfy-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ykPlUua1WYJOj8gRH4+W8xOqCf2Wt8uktxwJQmda3VQ=; b=bqeIfzI6O775RuX9
+	XEgANszm+qJzkfQrZA3KYborl8uhrcVVj7Eg/e4CGQ9prJkt+SjWbhrrBrwCLGuW
+	/p7FkazLnkV5ThJYB4slpamVeZF/RIxhAVbmbW492wt34VyrPi/jh8dUL1kA6HYc
+	DXmx3mwqFIyhbxCkwYb/KeeHS1mnt1/ibX2JsumDUXgzvYoD42Q0XFfoNssuEJdA
+	yn4K5nxeESVgo8zQqBMiy9VQqrkjpkjhynxrHFB4gDgwF63uaetFniueJekZ5OTj
+	ZdPul4yoexnADtMLaS7A8A/rsNTFOyXkE6Vncq8eeME/A87MWQZPWz6YiDzUygMb
+	sDdbAA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf18kq3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:52 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8aaba2f62so113452796d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:44:52 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:44:57 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8c2ad9cf2so71160156d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:44:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747773892; x=1748378692;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CnhEAhcJpQDgCGDvh46RTjMj70tEmGh9F2KinGlWxFc=;
-        b=FWdKDDMTCY79xeplSUWfd96VOuQFBUqgZIekeX2iN4AxhB/ZCb5sR7pyyD7MQm8P4Z
-         22Cp6WLfZKusUs37ad445HBCBZQ64PWQw5Pfkga44A2KW13H3OhzVNEBB7ojfcupxWO5
-         TmuqJPx57j1yz5BL/HZCm6pAeBAFjQ26CrJiEvS6g3Lc6Y/EKWdbvN33ywE/EqysnLgY
-         agZMNMb4aXN8wyhYlUL/FPdo+m73w3U+2OAE+iKCj/WgNJl/2/wHFLv6AU7yJKjpFnBi
-         b4Ynb2sMpa2cy3jrT86Io5dqfHWey3l+/uIeJm4ByPtt5wjg53to/d5eJP4O57R7ApMu
-         Aadg==
-X-Gm-Message-State: AOJu0Yy+V0EHqfjto5uvkl7BjSUXAOm6c6cuwLQD15dWEGF4ZiP01ixY
-	PoaXNScVOxCPhX+JRH/+YQwKDeCI3XcmOhQPjlHoDk2WQBvuDVmkxg10hvHURUpRoD3ckkuEyf+
-	08JTWrbbbZjwJuXMx/ZnV4aTV5L4MjlFMYCbbCWXmv6kQbMn7NTfgSgf3zHv3jn6jFSA=
-X-Gm-Gg: ASbGncsIvWSZIsSGaFBBkW/Nue+S8LIgtrFKbAsnuNP3KJwkyaDQOcWVie4HCHpM1Jb
-	z0idQvPSbTkU0cNf1slQxaSmhTGJ4+X4woEGnQ1e5+/jZ5Xt4SEoTMGyNPiQw64eqpyLlwVhd/6
-	lHYbIq749fccn6UYz2b0+Ct5AKqyi85fcLRJ8ZWwxvHyICtH5AYSUt6Y1lMg13g7wavErr2oCZy
-	6qK+1pdcGIgJKxIVFbS/vTFug0qB6JOrmxxFroNba04Ybq+O9t5q7kpbh/tcgbr0UaftML4uIGc
-	Y0E5u0q427Vy0biAy3EleDYlWsrBQOXvmuqYMF8dbi6/Z+nX2Mg6cGQbehzFimA2zNijADkzktZ
-	Fk5CwI4smMGVv5K/JEzGZHsFr
-X-Received: by 2002:ad4:5c49:0:b0:6f8:d920:6962 with SMTP id 6a1803df08f44-6f8d9206bd4mr119468196d6.14.1747773891732;
-        Tue, 20 May 2025 13:44:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGfp+ypX9kSBxgzbkN+MgSu5aIfQQmM0ZkghxJplqrv3tEo+2xeiuUHFeyxXpUk9ezuAwdhA==
-X-Received: by 2002:ad4:5c49:0:b0:6f8:d920:6962 with SMTP id 6a1803df08f44-6f8d9206bd4mr119467926d6.14.1747773891241;
-        Tue, 20 May 2025 13:44:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747773896; x=1748378696;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ykPlUua1WYJOj8gRH4+W8xOqCf2Wt8uktxwJQmda3VQ=;
+        b=hvRlgnBCdYMba4YmdrUWV4n3U4ERZvijefuCe9ukJhVxCc8f0FfIge1puQjIORI/DS
+         1akogmHJQNd08rqI7EW1Rv6YR9sVeci63MfefAi7myauflEuE/+3NOKCOKEqvYlQs/Hu
+         ui/B3wA/g+BBe4v5EAbsjoY6mugLA2jtCWUFqokWIxsST1P56387sRT1LcgORaJi0Zl4
+         G77QVzAGW83a8YLWWgM95OhvHtsy8KuU42BAuFdQfumaaIHECWv1vjTXn4XfCgcXYd++
+         LGC2ffKaMKlFtGAIQMSnzjJxJosj+vibUc5/Zr1Uf3EoEb7CKT9+pHJMfHYAGCJyzoSO
+         z0GA==
+X-Gm-Message-State: AOJu0Yw3WdCDSQpq3DWKa0kMPfsZ4dwI3I5R2X0F/P2JtGk6kD0H4/rf
+	R3DLMQB2O+8xcXiBgTv+wU9jL5M58oEBYl1x9wg3yOSa2C80Gr8RpXedM4a0WuVaBRSZEL0pJD1
+	MCKNN4+z+g0Lp6IMPzE13fk7UTrInZSyZzqEx6tnZbFcDoD2cL5tgd6ytiSSErSTJwGg=
+X-Gm-Gg: ASbGnct1RZQ67lXixhMbyc4NQeM0+fqQExNF7sayhAEhxFNtwZjBx2EGhKtn64xg20l
+	Xz7YW0GV70yIfuof9gZ1C+DYGs819vtk0H/oXECTJCWBKRaxDmasHIvxnyNtFz9JHIpqw/0djUy
+	XjIHwKbKHBx2cctfwBLzs+ZitMif0j5q1SC3De1s/rW0Kbhpk9FMbhWVJYRDEjN4vRWSILhmWJM
+	kcGZK8RpTJEdLibav1CPPPFMtjWlWru0F0Dg+giPPvZPILk3u8i+rixSnkQXP1iX7ngeno1GkQq
+	fLSIzVxI+yId2D+VYFg+QeIY2M0YF92uDLTh20WgbrFbvo7P3CStEVgbXxKc5/SgQ9hZcafqonk
+	/ZBtDDojtJdr0qxklEoOxpg+/
+X-Received: by 2002:a05:6214:1cce:b0:6e8:f4e2:26ef with SMTP id 6a1803df08f44-6f8b2d853a5mr303605746d6.31.1747773896228;
+        Tue, 20 May 2025 13:44:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExse+TXH1VriLP4f0U2rBvd0pIcWTRd0DsJ4Y79tLbGTK08qfgjRloMVmoV33Gc93nL2+Brw==
+X-Received: by 2002:a05:6214:1cce:b0:6e8:f4e2:26ef with SMTP id 6a1803df08f44-6f8b2d853a5mr303605316d6.31.1747773895791;
+        Tue, 20 May 2025 13:44:55 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f163ccsm2497950e87.39.2025.05.20.13.44.49
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f163ccsm2497950e87.39.2025.05.20.13.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 13:44:49 -0700 (PDT)
+        Tue, 20 May 2025 13:44:54 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v4 0/5] drm/msm/hdmi & phy: use generic PHY framework
-Date: Tue, 20 May 2025 23:44:42 +0300
-Message-Id: <20250520-fd-hdmi-phy-v4-0-fcbaa652ad75@oss.qualcomm.com>
+Date: Tue, 20 May 2025 23:44:44 +0300
+Subject: [PATCH v4 2/5] phy: qcom: apq8064-sata: extract UNI PLL register
+ defines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,11 +77,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALrpLGgC/zXMQQqDMBBA0avIrDuSiaGarnqP0kWiiQmtRiYiF
- fHuDYUu3+L/A7Lj6DLcqgPYbTHHNBeoSwV9MPPoMA7FIIVUgoRGP2AYpohL2FEp2zWkve37Fkq
- xsPPx87s9nsWe04RrYGf+j0Zo2RHRtRE1SWoVaSQsv5X32hrec3il7f6Os+FUJx7hPL/eOzUUp
- AAAAA==
-X-Change-ID: 20240109-fd-hdmi-phy-44b8319fbcc7
+Message-Id: <20250520-fd-hdmi-phy-v4-2-fcbaa652ad75@oss.qualcomm.com>
+References: <20250520-fd-hdmi-phy-v4-0-fcbaa652ad75@oss.qualcomm.com>
+In-Reply-To: <20250520-fd-hdmi-phy-v4-0-fcbaa652ad75@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
         Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
@@ -91,112 +91,126 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-phy@lists.infradead.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3665;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3088;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=PA+tCKwTo1nH+Lso+Uwg7CdiMtEk2emhO7vsfJ9adLI=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoLOnABXk81kaZokLdiRD1RUNWGemqA1YFMLllF
- 8hqIxr9ewCJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCzpwAAKCRCLPIo+Aiko
- 1XGYB/9dPRhf86STXfF/uE1qb1TGI/f4ZSLGsiECHc/89fO5BSSm418umoc5AOiIwXGAm3B6JjO
- mOZvsLU1z7MspwYTdtlCgg5TILBd8hjF9c/gXk88g4U458MGK0DeKV16vwmp03DrehbbmQd4qpe
- BMJ4d+AMsSm2q7iAbSi5pllmP4dpciCdUalImp2CsoOsDRcI2WQ8oC5fDK/YLPZMn3dn4QXGY0M
- nj/elZWzy8TZq7iqunmFG0oeOVPvDmhxHCNmPImrcobEXvWetj7qdNPqUwjk29WEi1sFmc2shBY
- nLtLpx8bcdlN5XTSymqHtEW6JSeWIUBLGDp2nJoZihXt75UA
+ bh=2R5NhT4/9vDNb/+f8UkhB7hzE5bEH/Asz87X2bNQLwQ=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoLOnAdDwo49oDYbS1+t5ukVG1d9uFbRIxpBN+H
+ Tz8Z0JgZ+iJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCzpwAAKCRCLPIo+Aiko
+ 1XhcCACv+if9OWNeFEos1mVk7rlmiEnK1NhPAIrFf8t3Q2zI+I/VveqtxklSEp1Q8Iq0ggj3NFw
+ junUhBnk6cLbZa06b6uxSaIwKd9GbYwSX1ysiZjwHunNJy3T3mW4YXRPF1HLVYirwIgJNGhumoN
+ Gm1pWzwUWCVhYUEGkxtbJMQeQERwFdmvMBSa1gfgqNjWrVNHGio+VS7egsjwgC3QJiyqZkTA9tU
+ yVA3DWtsoEhmOuU4AiBK295kU1jCA47DWuKhSwU3EO612CPAsAhtM6C3qT1xK59vNtPrbYoxN8X
+ ZTEF4T5Y3rAJ4VY90TbNdqxK2m1mY59Ar+P5ymM2uzFl7+wu
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: eK7UNd1MfxRVnjWdrDa1__pVOqpddHup
-X-Proofpoint-ORIG-GUID: eK7UNd1MfxRVnjWdrDa1__pVOqpddHup
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE2NyBTYWx0ZWRfX4ESo5TIsEp+8
- qkN+izONoNXpkNpVw77SBLlpxbqU46FwWPF7ll3x0T0MQBH4CPZ9NFT1YIpLLKEkGoFEHwzSfO4
- vAP3vPwG+ak4esgC3ZO6wBHyIEVnhEIkS3Y1oh4vWT4xJb/WOVNrZmKj5JqV8ojBQPogZ3qFYH7
- wC2lv80awnaQZAvTQyr1Ku109q15Gek44rBUho/oeqlLBqSJQZIEiWSfaAaGrtvJbV+xYxEo8e/
- dAHyMgcU3vP35j/n1mbCO70zwqWr6fgSlFn0OmwxG3xxqns6K+DPPJwxQhTPhMu2tLt8/DawtGg
- MZJkfBsBllx+507/CAa5V/xSl1zHnEkx8hULXkgPElxZcL9cpsPU8/J2MsUtTO/v+hpeRb1MnYA
- 1Q2av5I5x4rXPUBoUq2zBgFm4QIwbOJNI+RilnkVKolNZz1Ijo5TbfIfsjSxHyVXvXJf9LXR
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682ce9c4 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=I5G884IeurQlcsuiieMA:9 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-GUID: CbVe9G9piSFayTHr1QjejqswxqAfIzyb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE2OCBTYWx0ZWRfX5s7Q3n1lwAGv
+ biN1pDR3owN0suDoSKmHt0dDsVlWC3k7lAax7y0CqD/ts5SJXhB3UOcvQ2tYa3m3fPNRSm5+5x8
+ xxhS/xYRg3z4XpOV/BRrxTK7IUGpR26NwPqf1WAjzNJwY/6ZETjRj9jo/Kr707g71k+XDhxdRl0
+ EhjwLRbT7tUljnAQ/JebE+6cK7BaAH2CzRLvXFhxYXwq5fJ1+dMfPKpZkvDdjQEMf8+5+neG/jA
+ J/EVerYc90RL5LWWVniwdzA8ylOFlFMPSEUSSoTtlkRRuqv9N21U0T/5d/TybWoAPNmpNX7uu1/
+ qxNxYZaHXcm7zFn3Y4cp+8qy+LNJIU7e2Yu94TLW9Pjj3VjavtsX+HSB4XuDrmC9eTsboqVT84U
+ oM1ftXU1JiMdfv2SLI1mCoG0HTSFtDbbhPDIhlxnxX2cocl/BiXDvl0BdPtHXjJ8VRfM1ZR9
+X-Authority-Analysis: v=2.4 cv=F6JXdrhN c=1 sm=1 tr=0 ts=682ce9c9 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=O3Nj34nO-tYaQW5E_hgA:9
+ a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: CbVe9G9piSFayTHr1QjejqswxqAfIzyb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-20_09,2025-05-20_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505200167
+ impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 phishscore=0 bulkscore=0
+ clxscore=1015 adultscore=0 mlxlogscore=806 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505200168
 
-The MSM HDMI PHYs have been using the ad-hoc approach / API instead of
-using the generic API framework. Move MSM HDMI PHY drivers to
-drivers/phy/qualcomm and rework them to use generic PHY framework. This
-way all the QMP-related code is kept at the same place.
-Also MSM8974 HDMI PHY, 28nm DSI PHY and apq8964 SATA PHY now can use
-common helpers for the UNI PLL.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-This also causes some design changes. Currently on MSM8996 the HDMI PLL
-implements clock's set_rate(), while other HDMI PHY drivers used the
-ad-hoc PHY API for setting the PLL rate (this includes in-tree MSM8960
-driver and posted, but not merged, MSM8974 driver). This might result in
-the PLL being set to one rate, while the rest of the PHY being tuned to
-work at another rate. Adopt the latter idea and always use
-phy_configure() to tune the PHY and set the PLL rate.
+The "uni" PLL is shared between several PHYS: APQ8064's SATA,
+MSM8974/APQ8084 HDMI, MSM8916 DSI, MSM8974/APQ8084 DSI.
 
-Merge strategy: cross-tree merge via the immutable tag.
-
-Changes since v2:
-- Rebased on top of linux-next, solving conflicts
-- Squashed add-and-remove patches into a single git mv patch
-- Dropped HDMI PHY header patch (merged upstream)
-
-Changes since v1:
-- Changed msm8960 / apq8064 to calculate register data instead of using
-  fixed tables. This extends the list of supported modes.
-  (Implementation is based on mdss-hdmi-pll-28lpm.c from msm-4.14).
-
-- Fixed the reprogramming of PLL rate on apq8064.
-
-- Merged all non-QMP HDMI PHY drivers into a common PHY_QCOM_HDMI
-  driver (suggested by Rob Clark)
-
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
-Dmitry Baryshkov (5):
-      drm/msm/hdmi: switch to generic PHY subsystem
-      phy: qcom: apq8064-sata: extract UNI PLL register defines
-      phy: qcom-uniphy: add more registers from display PHYs
-      phy: qualcomm: add MSM8974 HDMI PHY support
-      drm/msm/registers: drop HDMI PHY register definitions
+ drivers/phy/qualcomm/phy-qcom-apq8064-sata.c | 23 +-------------------
+ drivers/phy/qualcomm/phy-qcom-uniphy.h       | 32 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 22 deletions(-)
 
- drivers/gpu/drm/msm/Makefile                     |   7 -
- drivers/gpu/drm/msm/hdmi/hdmi.c                  |  58 +-
- drivers/gpu/drm/msm/hdmi/hdmi.h                  |  80 +--
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c           |  32 +-
- drivers/gpu/drm/msm/hdmi/hdmi_phy.c              | 225 -------
- drivers/gpu/drm/msm/hdmi/hdmi_phy_8960.c         |  51 --
- drivers/gpu/drm/msm/hdmi/hdmi_phy_8996.c         | 765 ----------------------
- drivers/gpu/drm/msm/hdmi/hdmi_phy_8998.c         | 769 -----------------------
- drivers/gpu/drm/msm/hdmi/hdmi_phy_8x60.c         | 141 -----
- drivers/gpu/drm/msm/hdmi/hdmi_phy_8x74.c         |  44 --
- drivers/gpu/drm/msm/hdmi/hdmi_pll_8960.c         | 458 --------------
- drivers/gpu/drm/msm/registers/display/hdmi.xml   | 537 ----------------
- drivers/phy/qualcomm/Kconfig                     |  21 +
- drivers/phy/qualcomm/Makefile                    |  14 +
- drivers/phy/qualcomm/phy-qcom-apq8064-sata.c     |  23 +-
- drivers/phy/qualcomm/phy-qcom-hdmi-28hpm.c       | 330 ++++++++++
- drivers/phy/qualcomm/phy-qcom-hdmi-28lpm.c       | 441 +++++++++++++
- drivers/phy/qualcomm/phy-qcom-hdmi-45nm.c        | 186 ++++++
- drivers/phy/qualcomm/phy-qcom-hdmi-preqmp.c      | 212 +++++++
- drivers/phy/qualcomm/phy-qcom-hdmi-preqmp.h      |  81 +++
- drivers/phy/qualcomm/phy-qcom-qmp-hdmi-base.c    | 185 ++++++
- drivers/phy/qualcomm/phy-qcom-qmp-hdmi-msm8996.c | 442 +++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp-hdmi-msm8998.c | 495 +++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp-hdmi.h         |  77 +++
- drivers/phy/qualcomm/phy-qcom-uniphy.h           |  65 ++
- 25 files changed, 2584 insertions(+), 3155 deletions(-)
----
-base-commit: a0fd124020ae02815905d4c6808261bfd262ac08
-change-id: 20240109-fd-hdmi-phy-44b8319fbcc7
+diff --git a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
+index cae290a6e19fcb7fd68fe6cd0229b9b00d47131c..dd9929429f9a0e2f265180e8d3f390451d91adde 100644
+--- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
++++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
+@@ -15,28 +15,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+ 
+-/* PHY registers */
+-#define UNIPHY_PLL_REFCLK_CFG		0x000
+-#define UNIPHY_PLL_PWRGEN_CFG		0x014
+-#define UNIPHY_PLL_GLB_CFG		0x020
+-#define UNIPHY_PLL_SDM_CFG0		0x038
+-#define UNIPHY_PLL_SDM_CFG1		0x03C
+-#define UNIPHY_PLL_SDM_CFG2		0x040
+-#define UNIPHY_PLL_SDM_CFG3		0x044
+-#define UNIPHY_PLL_SDM_CFG4		0x048
+-#define UNIPHY_PLL_SSC_CFG0		0x04C
+-#define UNIPHY_PLL_SSC_CFG1		0x050
+-#define UNIPHY_PLL_SSC_CFG2		0x054
+-#define UNIPHY_PLL_SSC_CFG3		0x058
+-#define UNIPHY_PLL_LKDET_CFG0		0x05C
+-#define UNIPHY_PLL_LKDET_CFG1		0x060
+-#define UNIPHY_PLL_LKDET_CFG2		0x064
+-#define UNIPHY_PLL_CAL_CFG0		0x06C
+-#define UNIPHY_PLL_CAL_CFG8		0x08C
+-#define UNIPHY_PLL_CAL_CFG9		0x090
+-#define UNIPHY_PLL_CAL_CFG10		0x094
+-#define UNIPHY_PLL_CAL_CFG11		0x098
+-#define UNIPHY_PLL_STATUS		0x0C0
++#include "phy-qcom-uniphy.h"
+ 
+ #define SATA_PHY_SER_CTRL		0x100
+ #define SATA_PHY_TX_DRIV_CTRL0		0x104
+diff --git a/drivers/phy/qualcomm/phy-qcom-uniphy.h b/drivers/phy/qualcomm/phy-qcom-uniphy.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..e5b79a4dc270f25d8979f51bf4acd6c76998032e
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-uniphy.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef PHY_QCOM_UNIPHY_H
++#define PHY_QCOM_UNIPHY_H
++
++/* PHY registers */
++#define UNIPHY_PLL_REFCLK_CFG		0x000
++#define UNIPHY_PLL_PWRGEN_CFG		0x014
++#define UNIPHY_PLL_GLB_CFG		0x020
++#define UNIPHY_PLL_SDM_CFG0		0x038
++#define UNIPHY_PLL_SDM_CFG1		0x03c
++#define UNIPHY_PLL_SDM_CFG2		0x040
++#define UNIPHY_PLL_SDM_CFG3		0x044
++#define UNIPHY_PLL_SDM_CFG4		0x048
++#define UNIPHY_PLL_SSC_CFG0		0x04c
++#define UNIPHY_PLL_SSC_CFG1		0x050
++#define UNIPHY_PLL_SSC_CFG2		0x054
++#define UNIPHY_PLL_SSC_CFG3		0x058
++#define UNIPHY_PLL_LKDET_CFG0		0x05c
++#define UNIPHY_PLL_LKDET_CFG1		0x060
++#define UNIPHY_PLL_LKDET_CFG2		0x064
++#define UNIPHY_PLL_CAL_CFG0		0x06c
++#define UNIPHY_PLL_CAL_CFG8		0x08c
++#define UNIPHY_PLL_CAL_CFG9		0x090
++#define UNIPHY_PLL_CAL_CFG10		0x094
++#define UNIPHY_PLL_CAL_CFG11		0x098
++#define UNIPHY_PLL_STATUS		0x0c0
++
++#endif
 
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+2.39.5
 
