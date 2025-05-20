@@ -1,66 +1,66 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABA4280010
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D8627FD72
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747763027; cv=none; b=ATxQk/PfkSZB7m/+gTMwe8XDcTpzwZzQPEOKzfOKqffBXwjcbru6thataUh78kDdx6J/oq3G+o6UdvkndH58E/+4xaTLvw80c9oeAXb6ApQwXP81DOm/J8CBf/QM1qR01l2KPvWwJcwIitvJRf6W+4rp8WfX9Q6ZMrHXiXuvxpk=
+	t=1747763026; cv=none; b=qOE+9ztKw0rp8GuVNF1XBl5SjcEIgc9N+UT4bd5mTbQVZbhHde2OQslz0eMts0ThZATdqgQHAHCchf24Bms0KTyPi+6t/LKTc1Yjd2V5GFY+WmEPtb0kKtus47Q5GEEXYtJC/IbJ/Jlj4fYQKYeCjRzV0sqs3UcXldGQbo2D88s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747763027; c=relaxed/simple;
-	bh=sl+FbGCFgUh0cLIIGBUbbIXxFtqMeN2ESuE9qcu6VlQ=;
+	s=arc-20240116; t=1747763026; c=relaxed/simple;
+	bh=wNhKm4W5M+JmUYNjTT+7alHV0L0pr8QKUE4muBLtvjs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JfxjHGTUfQDX0mt4WkT7rloAGnda/0xVOjB5lx0hscoAqeth40RlHnvyxU642RqOtqxmsQd5NmiQ7hA2vqnj7hru/XEP0l8An3UquGFrcApi7ZYHiJYytCXuccS8P5CUcxhbxiyVrojHggPBHppRFdPpMuFOSMLKoZZ6ajlBdX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=dyCJvgSO; arc=none smtp.client-ip=209.85.222.179
+	 In-Reply-To:To:Cc; b=hM3964OW/AEPdAlKjD7cg2wzSnxmoAX4nVCo9yWC8L/ZQyW5iV6SOp1sNGjRI4HnPnteb38xiujbt9zgMamBQBm+mDZCgZmDsz2QZrxJ0BsxSqrO+35+dSIsLKwC9mAuWixQD/1MQTPJjQkYjAqS/YOD8vC1H7IcxogdYBzk/CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=HetsOMGz; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="dyCJvgSO"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7cadc92771dso585324885a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:43:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="HetsOMGz"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47663aeff1bso56122211cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1747763025; x=1748367825; darn=vger.kernel.org;
+        d=criticallink.com; s=google; t=1747763024; x=1748367824; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=//GTCbOPuXsQxIKhsrLq0DkXd+60Fx6SU5NzAGZER7U=;
-        b=dyCJvgSOvNabDeVSA/cpiUrziq6h5fESIZFVI2oTEdcXeVEfASXEozlR/I5bTkKxBS
-         uqIYuYsPBYSrNKlaGEm2PpITItY6PJduKTaTYsq/ONXPJxf9gz7fAqhYoQkVi0+TAI6R
-         eGC5g0u+Z0DLHwUOezotwVa5smbFI3Q2JPMh3SJ2zu8mb9HOQ3l0mOOudDV9/BQX0JXh
-         kcfR/8R9PNLmVIo1ieNVvjnMFI+vEBfAZkM+dWIC5v/1wUdAHSCMrpL292mRH8AfNkfj
-         81GAsYImcI2+jejRXe9NEeApCan5xq8TPy8uMEjuRev7eQzN0kMViX2H2MQaO40PXyKh
-         u60w==
+        bh=zwZKLa7Cn8pt42MTBPU0jrlClxmn3KKi3w3zHRh0YFI=;
+        b=HetsOMGzbiamxWgsNWZDKl+6bonelM2+kDDa90w8cum3o+Q5bG6iyBGzdohSRMupo4
+         QDYinpQeHCrOcsk50oDhw7TZ28KibUNysZRWNucn0EL6PdGDaNOZIw/fsEIZbRWP+0o1
+         ZQBpNeJ1qnHge4AekYgNBa/DLh761Cg2Itt1OHj1rRLveDtZefxDocr/wWsWXoWd1Fd/
+         yC/koVf3s58cuszi63vGtBmQDC8O9gHf5zxJJ2yzRzRgXp1nivGk1bPYFuKI3Srve3fK
+         Gcm4JvHsTS6grqhmd/nhqOfUAkhs1lNbR19dbp6VM3CGkyYyUtJE9nwKni2zi42XDG0/
+         Ifzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747763025; x=1748367825;
+        d=1e100.net; s=20230601; t=1747763024; x=1748367824;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=//GTCbOPuXsQxIKhsrLq0DkXd+60Fx6SU5NzAGZER7U=;
-        b=JQVDnRjtFDNVAnoRyJox2gwBH2vvxbyvBuUU0/pqQ6QDyUbt6+AdPT65JZoSHtdW/n
-         AKBmA2HkyedQEOgH/58WQFH/2kzWNSs2agrt8Xo/PO5io0jLDxkgXaFbC3Dvpva/cUi1
-         fJIVBeHVwFKjkz62/QKC4BpW2BTEPolo5hT9B8RIy39FFI3BeFZ8/2mBreLEIxltl7d1
-         xzmJiHPnKv0O19gpJCP7GirsAlxWvt/p0zwerd2Fx1aJiWTW5ifpByqJG5t0E1lPAosD
-         Ek/XwoowNrVtdT68RrrwPh7Ay8PQBqF1+uIXTj5wFg+QuwJRToL4nWbFeGANBz5TYJb7
-         y2Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyO0UNIKrLgsjw7mg04cvEbvRxDqEHsd1j4CFBGxlhmNRZKC1YqRTmS9ZfU8l1068AYVzAACQSMRR9qoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAuBTKMdMbeh68iCgzCWaW0qbngbP8TRPyN101ffxZFj52eCog
-	aycihLA994wj3hXc6wCtm2v+1mv1Ye+Nqos5rDBXUhVIpsoNgUSCzDzVXvVAo5CYWQ==
-X-Gm-Gg: ASbGncvLHgYXdUkHloyoFiiLzGjC2V7eE43gM/k7RTULC30PD4yZXskxXIXHybjJ1XQ
-	TAMuiP/u9PjO6Doijrfv645I4iOc8cw/XYs6YYkIy5RT0T90V6FDKGmYXXZZ2rjTCX50kbW+B5M
-	Is6cfZYbsUTPJv+XwN7SwzMja2zQuM6E0aOIhnMiQDxdZ0MtOf1W5sq3i3fY8adXyytu4sgYOFj
-	q+LF7KL6XORsMRmOXZv02yflJP/Le4YPjWFMfsVGn5Taz+Yr2I6dT06mRuCdC2Rm4QBQd7t4rft
-	TDAWvkc6E6XryPL17ICUEuWXD1zneP4oyOBoUL5JOqALUOuTYA0jG0O+IuYeHQp2hQX0o2MV9SK
-	rrKM+b0bdiJr8y0/qkcBQCVxQXg==
-X-Google-Smtp-Source: AGHT+IE36N4uKMHVtNBPowo41ka8uj65GwK1GS5fqiXZBuL6KOO85LIE4flCa2HGG7jSc88SE3U9hA==
-X-Received: by 2002:a05:620a:459f:b0:7ca:f349:4265 with SMTP id af79cd13be357-7cd4670aa2emr2553493585a.4.1747763024810;
-        Tue, 20 May 2025 10:43:44 -0700 (PDT)
+        bh=zwZKLa7Cn8pt42MTBPU0jrlClxmn3KKi3w3zHRh0YFI=;
+        b=nGNwF8YQcAHcUZptyfPmQRcA2qP9MUBMpIVHh9ux0ZfNSLQYilQnoDV5dNAQ1GvB9U
+         aeHjIpD7chvUL70DpNABF3Rz4Nrex5HnN0vMY+SVpf8akwg+FzSf6oC7G5RzBSF3mXWF
+         Wsc+/94BO3V9aTGLYxyWltwijWo4fL20tp1q3hseDwODapzF93Ms6TPd6hWEssVRvbu0
+         raLIXtklnKCV5FkoIQYisiUGCiHeUBNX1m4ag28Wgxfiq+mJp7FsMDu9uBY5gLfPYm9c
+         VdlZ8zmK9i4IjOYZuKIY910uLJWNnKMBikop4LPDqd1follxmmNhqb0BrgThMEMfLeHn
+         ajuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqNPVgrV/8IXhg/n0bSk+2IUot/wMjCO1B43Lo/sCBxT2kgc28Dg3h4EMjyXabHVS26NUhwyRG5WjPMWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5g1UeQSsK/11NVxoSU0Gpqi3dL7NLWHdoTmaDzBHFG2xYURhN
+	WH76TnUJeecX3yzul2vBvkmitvFGulqNhYITa5akrf5uBRo7eEzdvjog0oU38NX1Pw==
+X-Gm-Gg: ASbGncsmk8IyEBFsWu2JVPKRdJDxubE3wzBwbzgtLDFXsJEnPeYBlz7CMBUXdPT9gFp
+	MHW9pzyveJIQUw67jKAcWmsZdUloQv0ep5PJEUoMX8xr25k7dpjPVSyDKB5qguIrCPmjIZUSGxA
+	rzg+ann+MrceUE7m2hH9pIK7aVZ3n8XeULdUu447w5Llg70GnF0ZxxN8h0blZIfzosfZAVPI6Vh
+	jEJP3dw1kZqN1KerSKQmP8mSbdKU5QMK8ztBXcviPKKl09G7BKZuGH8TJErt30V4jP0fAdydXYa
+	AK4YugyvyZDtTGJUI6FeRsBAubi0o6pNAfxuZoOqJd/8fO3zVsEj3EdQJrG8KaGRvL0N3gCzyig
+	8zvsuegk6RehxMXTN4yTG315c2Q==
+X-Google-Smtp-Source: AGHT+IE9Jb12x2zN2FRaCf90f9bD48Wr+Dw2Dwu1oSmR+0h4NtZtNnMj09Ms1/YksM7cwDdb0r5iFg==
+X-Received: by 2002:a05:622a:428a:b0:477:5c21:2e1f with SMTP id d75a77b69052e-494ae407744mr332517941cf.34.1747763023667;
+        Tue, 20 May 2025 10:43:43 -0700 (PDT)
 Received: from [127.0.1.1] (static-72-90-70-109.syrcny.fios.verizon.net. [72.90.70.109])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae528553sm72660101cf.68.2025.05.20.10.43.43
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae528553sm72660101cf.68.2025.05.20.10.43.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 10:43:44 -0700 (PDT)
+        Tue, 20 May 2025 10:43:43 -0700 (PDT)
 From: Job Sava <jsava@criticallink.com>
-Date: Tue, 20 May 2025 13:43:38 -0400
-Subject: [PATCH 3/3] mfd: tps6594: Adds support for powering off the PMIC
+Date: Tue, 20 May 2025 13:43:37 -0400
+Subject: [PATCH 2/3] mfd: tps6594-pwrbutton: Add powerbutton functionality
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,8 +68,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250520-linux-stable-tps6594-pwrbutton-v1-3-0cc5c6e0415c@criticallink.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250520-linux-stable-tps6594-pwrbutton-v1-2-0cc5c6e0415c@criticallink.com>
 References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
 In-Reply-To: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -80,81 +80,257 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-input@vger.kernel.org, jcormier@criticallink.com, 
  Job Sava <jsava@criticallink.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747763020; l=2125;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747763020; l=8292;
  i=jsava@criticallink.com; s=20250404; h=from:subject:message-id;
- bh=sl+FbGCFgUh0cLIIGBUbbIXxFtqMeN2ESuE9qcu6VlQ=;
- b=t9jR0ycbMi8aS67LKhkQypLvnJEh1eq1pSrZmuqhqR5yEv0sWC7On47ka8pQvbhOZbIfdEHhv
- i8mimht0nRfCFTDPiYI9/CSsHw8SJwGMPoMoLRk6RWyTZ95uOeiLpIP
+ bh=wNhKm4W5M+JmUYNjTT+7alHV0L0pr8QKUE4muBLtvjs=;
+ b=pUIuW6TA3O0yo+O59wK4nZAkBUgqKG12vbgIC93zonhkYUIefJoYbWh3AtfEcytnhVyq6slmf
+ f0vmZpWZ2FWCO0LBv/J1XehALLGg9/W/1PKX896enfl7VfOj9+MYG5z
 X-Developer-Key: i=jsava@criticallink.com; a=ed25519;
  pk=DPPriJ+pziqtCZ0EIomf/hKU23s5T1u4WOQaT8BpQSw=
 
-When the FSM_I2C_TRIGGER register's bit 0 is set it triggers TRIGGER_I2C_0
-and the PMIC is transitioned to the STANDBY state
-(table 6-18: SLVSGG7 – DECEMBER 2023).
+TPS6594 defines two interrupts for the powerbutton one for push and
+one for release.
 
-An ON request is required to transition from STANDBY to ACTIVE.
+This driver is very simple in that it maps the push interrupt to a key
+input and the release interrupt to a key release.
 
 Signed-off-by: Job Sava <jsava@criticallink.com>
 ---
- drivers/mfd/tps6594-core.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/input/misc/Kconfig             |  10 +++
+ drivers/input/misc/Makefile            |   1 +
+ drivers/input/misc/tps6594-pwrbutton.c | 126 +++++++++++++++++++++++++++++++++
+ drivers/mfd/tps6594-core.c             |  25 ++++++-
+ 4 files changed, 160 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index f5496ca0c0d2..20776651caf3 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -506,6 +506,16 @@ config INPUT_TPS65219_PWRBUTTON
+ 	  To compile this driver as a module, choose M here. The module will
+ 	  be called tps65219-pwrbutton.
+ 
++config INPUT_TPS6594_PWRBUTTON
++	tristate "TPS6594 Power button driver"
++	depends on MFD_TPS6594
++	help
++	  Say Y here if you want to enable power button reporting for
++	  TPS6594 Power Management IC devices.
++
++	  To compile this driver as a module, choose M here. The module will
++	  be called tps6594-pwrbutton.
++
+ config INPUT_AXP20X_PEK
+ 	tristate "X-Powers AXP20X power button driver"
+ 	depends on MFD_AXP20X
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 6d91804d0a6f..a065b8889ccd 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -84,6 +84,7 @@ obj-$(CONFIG_INPUT_SPARCSPKR)		+= sparcspkr.o
+ obj-$(CONFIG_INPUT_STPMIC1_ONKEY)  	+= stpmic1_onkey.o
+ obj-$(CONFIG_INPUT_TPS65218_PWRBUTTON)	+= tps65218-pwrbutton.o
+ obj-$(CONFIG_INPUT_TPS65219_PWRBUTTON)	+= tps65219-pwrbutton.o
++obj-$(CONFIG_INPUT_TPS6594_PWRBUTTON)	+= tps6594-pwrbutton.o
+ obj-$(CONFIG_INPUT_TWL4030_PWRBUTTON)	+= twl4030-pwrbutton.o
+ obj-$(CONFIG_INPUT_TWL4030_VIBRA)	+= twl4030-vibra.o
+ obj-$(CONFIG_INPUT_TWL6040_VIBRA)	+= twl6040-vibra.o
+diff --git a/drivers/input/misc/tps6594-pwrbutton.c b/drivers/input/misc/tps6594-pwrbutton.c
+new file mode 100644
+index 000000000000..cd039b3866dc
+--- /dev/null
++++ b/drivers/input/misc/tps6594-pwrbutton.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * power button driver for TI TPS6594 PMICs
++ *
++ * Copyright (C) 2025 Critical Link LLC - https://www.criticallink.com/
++ */
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/tps6594.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++struct tps6594_pwrbutton {
++	struct device *dev;
++	struct input_dev *idev;
++	char phys[32];
++};
++
++static irqreturn_t tps6594_pb_push_irq(int irq, void *_pwr)
++{
++	struct tps6594_pwrbutton *pwr = _pwr;
++
++	input_report_key(pwr->idev, KEY_POWER, 1);
++	pm_wakeup_event(pwr->dev, 0);
++	input_sync(pwr->idev);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t tps6594_pb_release_irq(int irq, void *_pwr)
++{
++	struct tps6594_pwrbutton *pwr = _pwr;
++
++	input_report_key(pwr->idev, KEY_POWER, 0);
++	input_sync(pwr->idev);
++
++	return IRQ_HANDLED;
++}
++
++static int tps6594_pb_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct tps6594_pwrbutton *pwr;
++	struct input_dev *idev;
++	int error;
++	int push_irq;
++	int release_irq;
++
++	pwr = devm_kzalloc(dev, sizeof(*pwr), GFP_KERNEL);
++	if (!pwr)
++		return -ENOMEM;
++
++	idev = devm_input_allocate_device(dev);
++	if (!idev)
++		return -ENOMEM;
++
++	idev->name = pdev->name;
++	snprintf(pwr->phys, sizeof(pwr->phys), "%s/input0",
++		 pdev->name);
++	idev->phys = pwr->phys;
++	idev->id.bustype = BUS_I2C;
++
++	input_set_capability(idev, EV_KEY, KEY_POWER);
++
++	pwr->dev = dev;
++	pwr->idev = idev;
++	device_init_wakeup(dev, true);
++
++	push_irq = platform_get_irq(pdev, 0);
++	if (push_irq < 0)
++		return -EINVAL;
++
++	release_irq = platform_get_irq(pdev, 1);
++	if (release_irq < 0)
++		return -EINVAL;
++
++	error = devm_request_threaded_irq(dev, push_irq, NULL,
++					  tps6594_pb_push_irq,
++					  IRQF_ONESHOT,
++					  pdev->resource[0].name, pwr);
++	if (error) {
++		dev_err(dev, "failed to request push IRQ #%d: %d\n", push_irq,
++			error);
++		return error;
++	}
++
++	error = devm_request_threaded_irq(dev, release_irq, NULL,
++					  tps6594_pb_release_irq,
++					  IRQF_ONESHOT,
++					  pdev->resource[1].name, pwr);
++	if (error) {
++		dev_err(dev, "failed to request release IRQ #%d: %d\n",
++			release_irq, error);
++		return error;
++	}
++
++	error = input_register_device(idev);
++	if (error) {
++		dev_err(dev, "Can't register power button: %d\n", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id tps6594_pwrbtn_id_table[] = {
++	{ "tps6594-pwrbutton", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, tps6594_pwrbtn_id_table);
++
++static struct platform_driver tps6594_pb_driver = {
++	.probe = tps6594_pb_probe,
++	.driver = {
++		.name = "tps6594_pwrbutton",
++	},
++	.id_table = tps6594_pwrbtn_id_table,
++};
++module_platform_driver(tps6594_pb_driver);
++
++MODULE_DESCRIPTION("TPS6594 Power Button");
++MODULE_LICENSE("GPL");
 diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
-index 1b0b3d1bf6c4..f4c434c0d87a 100644
+index a7223e873cd1..1b0b3d1bf6c4 100644
 --- a/drivers/mfd/tps6594-core.c
 +++ b/drivers/mfd/tps6594-core.c
-@@ -10,6 +10,7 @@
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/reboot.h>
+@@ -123,6 +123,13 @@ static const struct resource tps6594_rtc_resources[] = {
+ 	DEFINE_RES_IRQ_NAMED(TPS6594_IRQ_POWER_UP, TPS6594_IRQ_NAME_POWERUP),
+ };
  
- #include <linux/mfd/core.h>
- #include <linux/mfd/tps6594.h>
-@@ -615,6 +616,19 @@ static int tps6594_enable_crc(struct tps6594 *tps)
- 	return ret;
- }
++
++static const struct resource tps6594_pwrbutton_resources[] = {
++	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_FALL, TPS65224_IRQ_NAME_PB_FALL),
++	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_RISE, TPS65224_IRQ_NAME_PB_RISE),
++	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_SHORT, TPS65224_IRQ_NAME_PB_SHORT),
++};
++
+ static const struct mfd_cell tps6594_common_cells[] = {
+ 	MFD_CELL_RES("tps6594-regulator", tps6594_regulator_resources),
+ 	MFD_CELL_RES("tps6594-pinctrl", tps6594_pinctrl_resources),
+@@ -313,8 +320,6 @@ static const struct resource tps65224_pfsm_resources[] = {
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_REG_UNLOCK, TPS65224_IRQ_NAME_REG_UNLOCK),
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_TWARN, TPS65224_IRQ_NAME_TWARN),
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_LONG, TPS65224_IRQ_NAME_PB_LONG),
+-	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_FALL, TPS65224_IRQ_NAME_PB_FALL),
+-	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_RISE, TPS65224_IRQ_NAME_PB_RISE),
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_TSD_ORD, TPS65224_IRQ_NAME_TSD_ORD),
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BIST_FAIL, TPS65224_IRQ_NAME_BIST_FAIL),
+ 	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_REG_CRC_ERR, TPS65224_IRQ_NAME_REG_CRC_ERR),
+@@ -342,6 +347,12 @@ static const struct mfd_cell tps65224_common_cells[] = {
+ 	MFD_CELL_RES("tps6594-regulator", tps65224_regulator_resources),
+ };
  
-+static int tps6594_soft_shutdown(struct tps6594 *tps)
-+{
-+	return regmap_update_bits(tps->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
-+				TPS6594_BIT_TRIGGER_I2C(0),
-+				TPS6594_BIT_TRIGGER_I2C(0));
-+}
++static const struct mfd_cell tps6594_pwrbutton_cell = {
++	.name = "tps6594-pwrbutton",
++	.resources = tps6594_pwrbutton_resources,
++	.num_resources = ARRAY_SIZE(tps6594_pwrbutton_resources),
++};
 +
-+static int tps6594_power_off_handler(struct sys_off_data *data)
-+{
-+	tps6594_soft_shutdown(data->cb_data);
-+	return NOTIFY_DONE;
-+}
-+
- int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
- {
- 	struct device *dev = tps->dev;
-@@ -623,6 +637,7 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ static const struct regmap_irq tps65224_irqs[] = {
+ 	/* INT_BUCK register */
+ 	REGMAP_IRQ_REG(TPS65224_IRQ_BUCK1_UVOV, 0, TPS65224_BIT_BUCK1_UVOV_INT),
+@@ -611,6 +622,7 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ 	struct regmap_irq_chip *irq_chip;
  	const struct mfd_cell *cells;
  	int n_cells;
- 	bool pwr_button;
-+	bool system_power_controller;
++	bool pwr_button;
  
  	if (enable_crc) {
  		ret = tps6594_enable_crc(tps);
-@@ -681,6 +696,15 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
- 			return dev_err_probe(dev, ret, "Failed to add RTC child device\n");
- 	}
+@@ -651,6 +663,15 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to add common child devices\n");
  
-+	system_power_controller = of_property_read_bool(dev->of_node, "system-power-controller");
-+	if (system_power_controller) {
-+		ret = devm_register_power_off_handler(tps->dev,
-+								tps6594_power_off_handler,
-+								tps);
++	pwr_button = of_property_read_bool(dev->of_node, "ti,power-button");
++	if (pwr_button) {
++		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
++						&tps6594_pwrbutton_cell, 1, NULL, 0,
++						regmap_irq_get_domain(tps->irq_data));
 +		if (ret)
-+			return dev_err_probe(dev, ret, "Failed to register power-off handler\n");
++			return dev_err_probe(dev, ret, "Failed to add power-button: %d\n", ret);
 +	}
 +
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(tps6594_device_init);
+ 	/* No RTC for LP8764 and TPS65224 */
+ 	if (tps->chip_id != LP8764 && tps->chip_id != TPS65224) {
+ 		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, tps6594_rtc_cells,
 
 -- 
 2.43.0
