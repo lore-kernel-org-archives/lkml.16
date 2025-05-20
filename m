@@ -1,202 +1,232 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E8420E6;
-	Tue, 20 May 2025 07:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BD4255250
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724473; cv=none; b=Jv9ukZUpAtIX/UNrfbRczstoYnONSQcO6AJtoPjqVuutxzIWbRCYmcvfzJEJQsU3cbBk5WEtiDMFcJbhc0TKHEPusfP0Ts55QAHAOQnAOz3xc+HfT8ezPAOt7zG/Ey0wceyy7TDtpv7Wn2BuRVPqvUn7w3ryWrucD4zYUE1EwR8=
+	t=1747724515; cv=none; b=Db6Sfio3sk6HHSu1Y8UJ7QA/ZEHFF3Zj+9JdV6mXbXtWwBtMl7slY2KJS3Eg3DN/Hu/af1DQHYXAhCi8WyQcXTxCvVqKoQun7VS05JmInGa4XvxUyTZ9Zrh3Fs4UHqw1A1X6NabwPvLLBcCCVuQM4zJpJsRxQ9zd71aHwa8G4xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747724473; c=relaxed/simple;
-	bh=a/SfpzBwYB7MErbeYtg9cL5pgsnu/DA6Ti0CGB09MTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eN9EU8EkCcdf4YmxOQWAO/Aay7ZB0/Kpv2pG08I80zTLyRfpP1cHQwZkvBfqJSyKV8qhHOJNtgpa0xNyNOUmXZ0q5DkwIKqrG9J4sElAKmZ5TSqumOJlc7rOOwOUoaI9bNcXQoe73G/9bemeAw0gYVyENRnHWmDzek4RSsDkvZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c/K02XIc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747724515; c=relaxed/simple;
+	bh=YJQouvoFwkbY/fOp2JD1wYmXX/okQ9EKMNpr2jY70WA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p8lcefW1Zi2seyoMA6Y92fjVQco0dXewUbvPbgSJgdV8z5E/6OYSupItKcTA4+LoSg9ErO9IC/B+BuTOytWfrvvANbOiqX6UBT1J3gZd1f1hKV0S1qAhuWDU97XvPs2W2VvnXhH+jv3Pb5X6eP2BW/CiKuh6rCL+a4nt0AI16Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LUPBYq9j; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c/K02XIc"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKaRD9027386;
-	Tue, 20 May 2025 07:01:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9fWlnVTfRyW4RCCDFTAJQbk5AZguUtzmzGG/w1VqTP0=; b=c/K02XIcnqkiSFGf
-	5K2PrlI0ZyPWTfVCuqWOMMVlU+1grP77td27u6qgbZKxhj6wHpg1tyuJeButnGuO
-	byHchohv2w/ACxtC6j1A6MtGAzP/q2w+2nUFj3A8rmL9AjiZQz9WSjZBBplQLjNZ
-	MPkVG7U1DWJh58KeQfJVdytb1aKCDU5u9PooK43MHO62NMqkZ1+opvqV7qSImvV7
-	r4DRYA/NFnRz2VuP+xtyzWZS3C+p+kWqG9ua8WMO5ZNuMYEnFUPP/WdoBDUWjImW
-	LSaoMUIjZTmoD/5o/t/XBRH/VUpU9Yd0qtBdNjFCxcb71h3VMdjo7wfQQwlPLUfA
-	FMTkhQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsxr0s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:01:05 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K713FD020573
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:01:04 GMT
-Received: from [10.218.0.120] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
- 2025 00:00:51 -0700
-Message-ID: <3d867490-0738-4baf-9fd0-e522aa8d2677@quicinc.com>
-Date: Tue, 20 May 2025 12:30:51 +0530
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LUPBYq9j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=MS
+	evaegFQzBWfa3FzRcJhjO3v80wKbxaXbg9gIgT2c4=; b=LUPBYq9jBxRMmJfNYi
+	PCqG1CMAt6bxU23EME7J4m8lNRxwAZS9bstyVak7pXItaKn9khk+2roif72aGJtq
+	L0ZVhmkz4o1B59lfEw2Otp9gAjsMRYxtm7UoiUkgYxIMULGO33CWVUKiDWo4HaXG
+	RwW2WHItTMV8QuSLWip3l4nac=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wAHjbyoKCxoPgjwCg--.9174S2;
+	Tue, 20 May 2025 15:00:57 +0800 (CST)
+From: oushixiong1025@163.com
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH] drm/arm/komeda: Register sysfs groups through driver core
+Date: Tue, 20 May 2025 15:00:46 +0800
+Message-Id: <20250520070046.340122-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Enable tuning for SDR50 mode for
- SD card
-Content-Language: en-US
-To: Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bhupesh Sharma
-	<bhupesh.sharma@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_sachgupt@quicinc.com>, <quic_bhaskarv@quicinc.com>,
-        <quic_narepall@quicinc.com>, <kernel@quicinc.com>
-References: <20241107080505.29244-1-quic_sartgarg@quicinc.com>
- <20241107080505.29244-3-quic_sartgarg@quicinc.com>
- <4e4870b5-4491-4f65-9a41-1a5e9e1bdf68@intel.com>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <4e4870b5-4491-4f65-9a41-1a5e9e1bdf68@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 37qx-J20nTHUsPh0m709gGf2T0dyfiIX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1NiBTYWx0ZWRfX0U/EKY/m/vMB
- vVj87rvMt2ZQ6+2PtlY7/HF+JxmAn/8z0hDIVQ2VtbRsHddmW/HJM2SrmM6VNTNLTWtqz927Fk7
- OoUbvEuQ+Nl3FZ1j3629KJloYvy/rxw+NIX7r4d1cxx2ny2ikFXxPOtwraHbffTVgdbGHghinIV
- ctOlGxPZr2bV5S+n6lAkLBVTgWGTw+1oTs1GZam+E5XoPFMXefT59ikD5t59wIePFXkdFhCzf+7
- DP+PROMhVUcQuKyIlLgikERYgp7VLSS7JiLXTnb0axprMC+dRbiQ48uTaUymEBGR0DTs8DW6eTD
- EwojAV9TWPxGD2y66dhsJnnVMqY3RVbtZoq7Lu9ENqAfRhJ5BNeGqEorzpfA38UHm+MrciKElzN
- es++NoDH1iBOtpLm/1+YrkAMJDdNKAB7RUZD7SiV3wFIZBs1CVNmziD/2saQB2DCCJ83IfU8
-X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682c28b1 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=05cVhv9CEcOWwgLMNlEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 37qx-J20nTHUsPh0m709gGf2T0dyfiIX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- clxscore=1011 malwarescore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505200056
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHjbyoKCxoPgjwCg--.9174S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JF4DZFy3Jw1DuF13KFy7Awb_yoW7urW8pF
+	4xJa4UWrWUGF13C3yUCa18WF90kwn3K3yfJrW8uw1Ska42ya4ktFykZ34qyrWUJFZ5Cr17
+	JFs0qFWj9rZakr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnVyxUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYxtTD2gsIzaDNwAAsB
 
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
+[WHY] If the call to sysfs_create_group() fails, there is no need to
+      call function sysfs_remove_group().
+      But if calling sysfs_create_group() fails, it will go to label
+      'err_cleanup:' in komeda_dev_create(), and it will call
+      komeda_dev_destroy() laterly.
 
-On 11/11/2024 2:21 PM, Adrian Hunter wrote:
-> On 7/11/24 10:05, Sarthak Garg wrote:
->> For Qualcomm SoCs which needs level shifter for SD card, extra delay is
->> seen on receiver data path.
->>
->> To compensate this delay enable tuning for SDR50 mode for targets which
->> has level shifter.
->>
->> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index e00208535bd1..16325c21de52 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -81,6 +81,7 @@
->>   #define CORE_IO_PAD_PWR_SWITCH_EN	BIT(15)
->>   #define CORE_IO_PAD_PWR_SWITCH	BIT(16)
->>   #define CORE_HC_SELECT_IN_EN	BIT(18)
->> +#define CORE_HC_SELECT_IN_SDR50	(4 << 19)
->>   #define CORE_HC_SELECT_IN_HS400	(6 << 19)
->>   #define CORE_HC_SELECT_IN_MASK	(7 << 19)
->>   
->> @@ -1124,6 +1125,10 @@ static bool sdhci_msm_is_tuning_needed(struct sdhci_host *host)
->>   {
->>   	struct mmc_ios *ios = &host->mmc->ios;
->>   
->> +	if (ios->timing == MMC_TIMING_UHS_SDR50 &&
->> +			host->flags & SDHCI_SDR50_NEEDS_TUNING)
-> 
-> Please do line up code as suggested by checkpatch:
-> 
-> CHECK: Alignment should match open parenthesis
-> #35: FILE: drivers/mmc/host/sdhci-msm.c:1129:
-> +       if (ios->timing == MMC_TIMING_UHS_SDR50 &&
-> +                       host->flags & SDHCI_SDR50_NEEDS_TUNING)
-> 
-> CHECK: Alignment should match open parenthesis
-> #55: FILE: drivers/mmc/host/sdhci-msm.c:1219:
-> +       if (ios.timing == MMC_TIMING_UHS_SDR50 &&
-> +                       host->flags & SDHCI_SDR50_NEEDS_TUNING) {
-> 
-> total: 0 errors, 0 warnings, 2 checks, 40 lines checked
-> 
-> 
+[HOW] Register sysfs groups through driver core.
 
-Sure will update in V2.
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+ .../gpu/drm/arm/display/komeda/komeda_dev.c   | 60 -------------------
+ .../gpu/drm/arm/display/komeda/komeda_drv.c   | 51 ++++++++++++++++
+ 2 files changed, 51 insertions(+), 60 deletions(-)
 
->> +		return true;
->> +
->>   	/*
->>   	 * Tuning is required for SDR104, HS200 and HS400 cards and
->>   	 * if clock frequency is greater than 100MHz in these modes.
->> @@ -1192,6 +1197,8 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>   	struct mmc_ios ios = host->mmc->ios;
->>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>   	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
->> +	u32 config;
->>   
->>   	if (!sdhci_msm_is_tuning_needed(host)) {
->>   		msm_host->use_cdr = false;
->> @@ -1208,6 +1215,15 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>   	 */
->>   	msm_host->tuning_done = 0;
->>   
->> +	if (ios.timing == MMC_TIMING_UHS_SDR50 &&
->> +			host->flags & SDHCI_SDR50_NEEDS_TUNING) {
-> 
-> Ditto alignment
-> 
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+index 5ba62e637a61..a285fec3be23 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@ -53,58 +53,6 @@ static void komeda_debugfs_init(struct komeda_dev *mdev)
+ 			   &mdev->err_verbosity);
+ }
+ 
+-static ssize_t
+-core_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct komeda_dev *mdev = dev_to_mdev(dev);
+-
+-	return sysfs_emit(buf, "0x%08x\n", mdev->chip.core_id);
+-}
+-static DEVICE_ATTR_RO(core_id);
+-
+-static ssize_t
+-config_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct komeda_dev *mdev = dev_to_mdev(dev);
+-	struct komeda_pipeline *pipe = mdev->pipelines[0];
+-	union komeda_config_id config_id;
+-	int i;
+-
+-	memset(&config_id, 0, sizeof(config_id));
+-
+-	config_id.max_line_sz = pipe->layers[0]->hsize_in.end;
+-	config_id.n_pipelines = mdev->n_pipelines;
+-	config_id.n_scalers = pipe->n_scalers;
+-	config_id.n_layers = pipe->n_layers;
+-	config_id.n_richs = 0;
+-	for (i = 0; i < pipe->n_layers; i++) {
+-		if (pipe->layers[i]->layer_type == KOMEDA_FMT_RICH_LAYER)
+-			config_id.n_richs++;
+-	}
+-	return sysfs_emit(buf, "0x%08x\n", config_id.value);
+-}
+-static DEVICE_ATTR_RO(config_id);
+-
+-static ssize_t
+-aclk_hz_show(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct komeda_dev *mdev = dev_to_mdev(dev);
+-
+-	return sysfs_emit(buf, "%lu\n", clk_get_rate(mdev->aclk));
+-}
+-static DEVICE_ATTR_RO(aclk_hz);
+-
+-static struct attribute *komeda_sysfs_entries[] = {
+-	&dev_attr_core_id.attr,
+-	&dev_attr_config_id.attr,
+-	&dev_attr_aclk_hz.attr,
+-	NULL,
+-};
+-
+-static struct attribute_group komeda_sysfs_attr_group = {
+-	.attrs = komeda_sysfs_entries,
+-};
+-
+ static int komeda_parse_pipe_dt(struct komeda_pipeline *pipe)
+ {
+ 	struct device_node *np = pipe->of_node;
+@@ -253,12 +201,6 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
+ 
+ 	clk_disable_unprepare(mdev->aclk);
+ 
+-	err = sysfs_create_group(&dev->kobj, &komeda_sysfs_attr_group);
+-	if (err) {
+-		DRM_ERROR("create sysfs group failed.\n");
+-		goto err_cleanup;
+-	}
+-
+ 	mdev->err_verbosity = KOMEDA_DEV_PRINT_ERR_EVENTS;
+ 
+ 	komeda_debugfs_init(mdev);
+@@ -278,8 +220,6 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
+ 	const struct komeda_dev_funcs *funcs = mdev->funcs;
+ 	int i;
+ 
+-	sysfs_remove_group(&dev->kobj, &komeda_sysfs_attr_group);
+-
+ 	debugfs_remove_recursive(mdev->debugfs_root);
+ 
+ 	if (mdev->aclk)
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+index 358c1512b087..598d2f985dad 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+@@ -4,6 +4,7 @@
+  * Author: James.Qian.Wang <james.qian.wang@arm.com>
+  *
+  */
++#include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+@@ -20,6 +21,55 @@ struct komeda_drv {
+ 	struct komeda_kms_dev *kms;
+ };
+ 
++static ssize_t
++aclk_hz_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct komeda_dev *mdev = dev_to_mdev(dev);
++
++	return sysfs_emit(buf, "%lu\n", clk_get_rate(mdev->aclk));
++}
++static DEVICE_ATTR_RO(aclk_hz);
++
++static ssize_t
++config_id_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct komeda_dev *mdev = dev_to_mdev(dev);
++	struct komeda_pipeline *pipe = mdev->pipelines[0];
++	union komeda_config_id config_id;
++	int i;
++
++	memset(&config_id, 0, sizeof(config_id));
++
++	config_id.max_line_sz = pipe->layers[0]->hsize_in.end;
++	config_id.n_pipelines = mdev->n_pipelines;
++	config_id.n_scalers = pipe->n_scalers;
++	config_id.n_layers = pipe->n_layers;
++	config_id.n_richs = 0;
++	for (i = 0; i < pipe->n_layers; i++) {
++		if (pipe->layers[i]->layer_type == KOMEDA_FMT_RICH_LAYER)
++			config_id.n_richs++;
++	}
++	return sysfs_emit(buf, "0x%08x\n", config_id.value);
++}
++static DEVICE_ATTR_RO(config_id);
++
++static ssize_t
++core_id_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct komeda_dev *mdev = dev_to_mdev(dev);
++
++	return sysfs_emit(buf, "0x%08x\n", mdev->chip.core_id);
++}
++static DEVICE_ATTR_RO(core_id);
++
++static struct attribute *komeda_sysfs_attrs[] = {
++	&dev_attr_aclk_hz.attr,
++	&dev_attr_config_id.attr,
++	&dev_attr_core_id.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(komeda_sysfs);
++
+ struct komeda_dev *dev_to_mdev(struct device *dev)
+ {
+ 	struct komeda_drv *mdrv = dev_get_drvdata(dev);
+@@ -158,6 +208,7 @@ static struct platform_driver komeda_platform_driver = {
+ 	.driver	= {
+ 		.name = "komeda",
+ 		.of_match_table	= komeda_of_match,
++		.dev_groups	= komeda_sysfs_groups,
+ 		.pm = &komeda_pm_ops,
+ 	},
+ };
+-- 
+2.17.1
 
-Sure will update in V2.
-
->> +		config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
->> +		config |= CORE_HC_SELECT_IN_EN;
->> +		config &= ~CORE_HC_SELECT_IN_MASK;
->> +		config |= CORE_HC_SELECT_IN_SDR50;
-> 
-> Perhaps clear bits first, then set bits e.g.
-> 
-> 		config &= ~CORE_HC_SELECT_IN_MASK;
-> 		config |= CORE_HC_SELECT_IN_EN | CORE_HC_SELECT_IN_SDR50;
-> 
-
-Sure will update in V2.
-
->> +		writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
->> +	}
->> +
->>   	/*
->>   	 * For HS400 tuning in HS200 timing requires:
->>   	 * - select MCLK/2 in VENDOR_SPEC
-> 
