@@ -1,100 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B751D554;
-	Tue, 20 May 2025 12:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5786FB9
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747743957; cv=none; b=fJasJqMcLwrtMTAe35eQdAPoRd5J7ucym9fcBZqqdSMS+LIdug8Swv226OsVMsNQMM167mqSrjheRQTIRfjQvb2XvqxWKNqp5EZzQJ3EW9jIjczxqAUNq+H9+jWMmPH7E39mzXbgJt1R+ktODRfsh+vwtN/HTE1vhIHCudJFFoc=
+	t=1747743967; cv=none; b=LOUhklQiTvmWc94gYUdDZOHIIbLO+D8TybOPxgkyq2Cu1mQ/R4pW8cl/Od2TiCPEpmvdPD3GxOtn9WJdkH8dpIQoSkU3ePOZgq9khwG4TskBlMZUTJlYYRGSMZW7+vv2EtC+i+fzWsSAeBLA4DTDJFW0Ky9Al9po2viST6ISkzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747743957; c=relaxed/simple;
-	bh=Y6CaI2q2RPnBtH0aFQYa1UfbCr7K8MmVtvr+f/2NXeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYI9eTcPfzSumGwlYAqDsVIYi9BVuyCAvSkkKhiuDUgWPgkYB3tifYktUDnfbjchT05P/o8l6bzYzcvLmN3/n+mUH0QEJnKQXOK88NUGfMXJf1op08loagoUV7juyWxNeb0LAmTltZxLsVS7agGU7Et8b5v3yaOZNBvi3qSrIDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=na/fp7+E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=owAcx9aw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747743967; c=relaxed/simple;
+	bh=1tSmgo31Bx7UDpP9BHHjNA3tVzPHAGbuYhBzkbEnNGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JmhviCxWC1lwIFYKZpEydaLz/i8oMrLAR6oSxbaofeGZo8mLytSuXrG312IAn0yVvI0jWpIxPPbYp/kQyTo5tamWb9/Vqvyp46OzoMPocIc3ovPdMo2xcs43B6iq+tTFAIkt1tGfazIaEOeG6owSQPYaMwHwcubsu16m6NDRJkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iz6KOHto; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="na/fp7+E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="owAcx9aw"
-Date: Tue, 20 May 2025 14:25:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747743953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUjRkJXP7J4Xa8+xLBblWyMlboCDcuea5nf6Fk3YYEU=;
-	b=na/fp7+EL7fi0Gx8gkAbP3CnXTBJrb0NdTin6LhExr7vPTMKqZxed7SL7e1qPbxtMqlNaF
-	e1uRhBCoBELWYJZtbRSZs475oOEcOzgqUCFs3eqDUrmXEdwps4g5Dub8Z6cITy9iPOdCRz
-	LTQHrBYUeiZlcuDn2vQD4YTbGI5PQ5EdU34seaUKybcHbADSR3B95ZJJQpbtkYOkUs7tOE
-	KFBY/J1VwFNhjZZzh+LGhsBr0KOLKnu/zdS+Aka++2V1GkBNyWWidpw0aI91LPrPBfaxLY
-	sjZyn8laciBBcR1qTYIP5HAer9yb351PJEkY7Czh0jU3C4G7qvEdWYq7/GX3gA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747743953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IUjRkJXP7J4Xa8+xLBblWyMlboCDcuea5nf6Fk3YYEU=;
-	b=owAcx9awdFFz1d81x33l6VUVWMl7LqJIFmZbfh3RQVJqXYSdoqZiWQeQwVWcPaAe/8UzeM
-	ofs0KFl6bR62dRDA==
-From: Nam Cao <namcao@linutronix.de>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 17/22] arm64: mm: Add page fault trace points
-Message-ID: <20250520122548.lkvaylSB@linutronix.de>
-References: <cover.1747046848.git.namcao@linutronix.de>
- <f5fccde2326a896e5c568ef06a4dbd9aa7465f6a.1747046848.git.namcao@linutronix.de>
- <aCtE-RvyN6XJQjTo@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iz6KOHto"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5a88b34a6so590045385a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747743964; x=1748348764; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OR26QMf30kWt//XYhDELT/MMI/WjsN8uqjV/8nFgOk8=;
+        b=iz6KOHtoHiZD0/rBtpFWwVk4LNLgIQoR7ahxAVKh2mBb2qSY/jsAQVJvzZc/mWqSAJ
+         G45Fnm2qD+/bqRbE3bhcJpOpgdajX8sbwbGTFfDYhZEuaH7L7jimXU52Z1+4cCBNj6IC
+         cRbQ09NEzVtDWrja/B37NeYpsbhMA5WSDHsiuMgtF1kuX0LyGQLaoLWsA7T4sVz21Hcu
+         CA7GQk4H1CXRHMIBAgIrJomSFW+0eP7XfihCI3FTAqTksgiwNN6IkX6SsigkLEKJ91eK
+         NWb2ESv/Bc4VQ5H93Uvj2ChG0/mdln3Y3SQnmSwgEsei+R5lXhBxupuvMJ3VyGg5HGcx
+         HnqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747743964; x=1748348764;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OR26QMf30kWt//XYhDELT/MMI/WjsN8uqjV/8nFgOk8=;
+        b=IqGASXysfE2/ptEvaj2Wq7MGWz3Sq4yphDC4GtxQ1ZQ2e9XmkIsRh+3lMh55Ahpzif
+         qRIJENKHQtzsX5VsqrqNKy65PqP89QjBINlTg6pANi+FjGPorlC0AtTt6yPeM5DicjsZ
+         uIif9+4uN9cYYlhu4fX4mVD2GQ43vqJbrJ8DlwRs/ngkpw5D64zEeb1XY2TRlNNqKcPZ
+         fzCFn8PpCTRNC1SPNozwOwTnPHAfZ/xwr3hfIsUBv+z7XTFeniz8bTpI6ADGezlRVXEa
+         YkbEyqRGo5xZKMIXiZJOMcgHSWU/HMrmHTW0NFYHSNRVOKo7YWASNR+7yeVdgyCIWHA5
+         5JVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX798J/XCvtdSc6MhFG6e8vCCfK39ppBLUUAg6usEkt9MIE/iNygI4OQtKH3uBEAVI/fk554cwNyouqAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFc62neRkzmwm/YJVRLPE4TW+7uaGkfMrkTYLMF5C5LS/C3alZ
+	1m5ydJTXyS2uuJ65GED5lhMbQCQVv/rSd5OeS+RJecCVMLJzp9Cn8yfc
+X-Gm-Gg: ASbGncuXWpr/tv3fjqNmeo4064wlj24sgOqyjOGFNonH7SopLzWS1R8SKpZ6GOnbr2d
+	q2dq5Jm0dWqdgkHR4ezdUvVxXGOXA9fNDCRgqg1+QQusg2oM9EsCX0SQoSzek//AVf3KJ7lb/Ul
+	IwgVOvOR6XNzItI1xk6nro8LwId3YPXx1EcCld2AwOadCmqGul3OEL6O3evmODPv5azpd9ReGc+
+	5LPJOf080i0oZdkJnatl1MT4jWBClHn15Ch9YBUu9y4P9HTYVbWi210EhB369/t1Hkjm4Q+voyb
+	RS9D/qbQfr0eB47oSQTbcD9Y0/7+Odn16Th+ipqTXVPbX1B6
+X-Google-Smtp-Source: AGHT+IFmyKsIt0OHKvSQp2VtnsGzKp1f4GZ+CsWOw1isKJyxRNeVj125WrDIiRzRuXMREaoak7aWxA==
+X-Received: by 2002:ad4:5caa:0:b0:6e4:4194:df35 with SMTP id 6a1803df08f44-6f8b2cc77c4mr270991566d6.9.1747743964301;
+        Tue, 20 May 2025 05:26:04 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:8::])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0883f45sm71384006d6.23.2025.05.20.05.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 05:26:03 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	surenb@google.com
+Cc: hannes@cmpxchg.org,
+	shakeel.butt@linux.dev,
+	vlad.wing@gmail.com,
+	linux-mm@kvack.org,
+	kent.overstreet@linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH 2/2] mm: slub: only warn once when allocating slab obj extensions fails
+Date: Tue, 20 May 2025 13:25:47 +0100
+Message-ID: <20250520122547.1317050-2-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250520122547.1317050-1-usamaarif642@gmail.com>
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCtE-RvyN6XJQjTo@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 03:49:29PM +0100, Catalin Marinas wrote:
-> On Mon, May 12, 2025 at 12:51:00PM +0200, Nam Cao wrote:
-> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > index ec0a337891dd..55094030e377 100644
-> > --- a/arch/arm64/mm/fault.c
-> > +++ b/arch/arm64/mm/fault.c
-> > @@ -44,6 +44,9 @@
-> >  #include <asm/tlbflush.h>
-> >  #include <asm/traps.h>
-> >  
-> > +#define CREATE_TRACE_POINTS
-> > +#include <trace/events/exceptions.h>
-> > +
-> >  struct fault_info {
-> >  	int	(*fn)(unsigned long far, unsigned long esr,
-> >  		      struct pt_regs *regs);
-> > @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
-> >  	if (kprobe_page_fault(regs, esr))
-> >  		return 0;
-> >  
-> > +	if (user_mode(regs))
-> > +		trace_page_fault_user(addr, regs, esr);
-> > +	else
-> > +		trace_page_fault_kernel(addr, regs, esr);
-> 
-> What are the semantics for these tracepoints? When are they supposed to
-> be called? In the RV context context I guess you only care about the
-> benign, recoverable faults that would affect timing. These tracepoints
-> were generalised from the x86 code but I don't know enough about it to
-> tell when they would be invoked.
-> 
-> For arm64, we also have the do_translation_fault() path for example that
-> may or may not need to log such trace events.
+In memory bound systems, a large number of warnings for failing this
+allocation repeatedly may mask any real issues in the system
+during memory pressure being reported in dmesg. Change this to
+WARN_ONCE.
 
-These tracepoints are invoked for x86 page fault exceptions. Are arm64's
-translation faults considered equivalent to x86 page faults?
+Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+---
+ mm/slub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Nam
+diff --git a/mm/slub.c b/mm/slub.c
+index bf43c403ead2..97cb3d9e8d00 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2102,7 +2102,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+ 
+ 	slab = virt_to_slab(p);
+ 	if (!slab_obj_exts(slab) &&
+-	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
++	    WARN_ONCE(alloc_slab_obj_exts(slab, s, flags, false),
+ 		 "%s, %s: Failed to create slab extension vector!\n",
+ 		 __func__, s->name))
+ 		return NULL;
+-- 
+2.47.1
+
