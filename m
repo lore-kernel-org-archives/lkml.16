@@ -1,121 +1,113 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC6126A1CC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9250117E4;
+	Tue, 20 May 2025 11:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747738796; cv=none; b=eeVlksVRjI+JdgzDS6eUbd62BUD88rXfLb9rGxB8j72ZyovM/THASH/9tCNLhMZ8sWRzMPqs7MDhcYofU7fOu2+slQLlvQhAt/EWc4W/IJ2pIqfqXyfZGQREqxFvOoIpkSmELbgLsEFJmEAqdWWwB/h+xN9MHS26r9xQPcwN3kY=
+	t=1747738881; cv=none; b=cwnU3Kdt86uF67GzpYVSOFMADzB29yURp0fk29QaCeJxlQbefJqE9YYh+hIygJHbL1TkoRsHpfDYPNSlsfT4W6q1eoPLiVP9yHvVHvlXGrxXk9wH2DtGzpWWm516+w1qwYUMU2lGJJ0gLnLpJ9SotPvswcIwcAAu715mvnxqE8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747738796; c=relaxed/simple;
-	bh=X62kn2V/O4Hz1j1YlCNkrxKHotw7w0NdnUAxWEl4lvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UPmO1MZLTEFIEJOstX6Fi1vm1mUHaYDOjRSjg4BC0botT2/8iJFWTsQ4kxn7COoEWnrWhV23V/dUOWo0ApNAM9CdM1ezKMHef1sBsDyF9zU2T6wU2ejt9nUzracJtqkIbPwzILut02Y9XPgDE+VYASbov0RQV6HJfH7RQY8KV54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=omcGBZUI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m0dj33bT; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1747738881; c=relaxed/simple;
+	bh=aKM7z7V9vZD94uOUrlMczwM0qDHt504xNFxDKQFxpXo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aS7URMXm22IacumTXnaJWA/bx8oiJGADHsaXctnb9zeE3K5+bUFmBvqRjEkHuINuwFwa4slIEtzsiwRmlfTi5Ckxf6ZCO1M64FBK3W7D5w3QNbx26fArrKybpFLqTk2anEG+e1nCTXWHWy+i4a02iQKfl6a8j3xiyyIShL9ieHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ch7aMp1t; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="omcGBZUI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m0dj33bT"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id C37B11380472;
-	Tue, 20 May 2025 06:59:52 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Tue, 20 May 2025 06:59:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1747738792; x=
-	1747825192; bh=ygNhWVe5vIXCf/URS8Fkfj75f7gA1QG3R5DG52s29XY=; b=o
-	mcGBZUIinX6eGmERS4p/IEq/KDvkoaCzZ1Y8jZqnUTOYF87k8mloR+pweMMrZV9i
-	5dCTBWdUb0zT0MdvXNLWavrhYWub5Fwy3hyfs7PM4/lZM546JrlUJvfEDx6lMeZY
-	s09zqmvyQiLpSdzTXehQ/1MB70fLl5+vUkkSQStVBF2S5CB7Y5yhofDkPFCR66qg
-	EuS3gHib+cAeDPoye1idciSMsfIrRLE3AQ3yRZqpPFzTCr3OCkVuxMbXWKlEEu45
-	G/VqK4EiyXmyOcarAS5D+lSnZy1Is/0QtdB08pD3nHs9pvvc5E+WsFb182dLpQZZ
-	COR+pOtZtK+TElrbR6cAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1747738792; x=1747825192; bh=ygNhWVe5vIXCf/URS8Fkfj75f7gA1QG3R5D
-	G52s29XY=; b=m0dj33bTiiJcK0GVWPpu9TMFa+Q83pNeM9nynxt0N6ltRSo/8XE
-	ilLIYoYrnxUyf/TiusN+thCRNeRfvG17wGV8IYya7FU9OQFoJx3jOLGAmaOJ13Wx
-	guwcTDKfAs6erekJZv1UrngO3W53+DL3fUmsUH7blpS+h9Ag11FTEQY4egZ/iS7W
-	owhLimAEnwLe/EkKo9EWnZk1zKiwBzDYtem+ZLiwLNNghoW+LZ82AOrljuVVYitp
-	jSYKsHlAI6funrcszQX4iTuMuLStXduEabQnZUU16GnnE5Bueh9G+SJRCik4IG9i
-	J0dYqXhfd7xrn/f+sXQhq7s+Ot7crO76Wtw==
-X-ME-Sender: <xms:qGAsaKMIAsdy2XvB3f9M08eQ8FOcCKAO98jLo8V0YQaACIvzHnq-Cg>
-    <xme:qGAsaI872ifpO4czFhn45JLi3MgiiOw11k0VJwj52cvEqpPz3NHRYKEFBZBcF1192
-    f1v6FMTv5yLR4kBgqQ>
-X-ME-Received: <xmr:qGAsaBQuouqLJb6TqG5SBN6QFRYLTS8nkUWVKRfwEF5-pzOu56zBFx6wmNTQDXOxd3BwFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddtgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddttddvnecu
-    hfhrohhmpedfmfhirhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhessh
-    hhuhhtvghmohhvrdhnrghmvgeqnecuggftrfgrthhtvghrnhepffdvveeuteduhffhffev
-    lefhteefveevkeelveejudduvedvuddvleetudevhfeknecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdr
-    nhgrmhgvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopegrrhgusgdoghhithesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidq
-    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgiekieeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlh
-    gusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepsghrghgv
-    rhhsthesghhmrghilhdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-X-ME-Proxy: <xmx:qGAsaKsCx7ONccZNXm_jDvOYuehuzT3V-DxrPPibKqjf_AnpkN62SQ>
-    <xmx:qGAsaCeJCVR0sYoS7coJhbQd44VwdLsRdZCztNPSWZs_gisL7bFbaA>
-    <xmx:qGAsaO0LIxxB8sNwrp1DWe9Hdbogs_altjJPE0fuVfwe7tP2K4_a-A>
-    <xmx:qGAsaG-TvG7ZOJirsSUQHhloyw9huUiUUszBc8-DtEHFyHJ_6axM-A>
-    <xmx:qGAsaE16A3v_rt6SSAwE170AusvWzNhbP8Xz7KMJBRwtW0ImV68T5gCU>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 20 May 2025 06:59:49 -0400 (EDT)
-Date: Tue, 20 May 2025 13:59:45 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 1/7] x86/mm: Decouple MAX_PHYSMEM_BITS from LA57 state
-Message-ID: <sjsxy65qkdikr6ppdyce2mu7exbnlvxdjbf3ypfqbpspf566rh@cc4atj6vn2pa>
-References: <20250520104138.2734372-9-ardb+git@google.com>
- <20250520104138.2734372-10-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ch7aMp1t"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7BQSG012776;
+	Tue, 20 May 2025 07:01:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=irH1CvHHCc3AEbhxP0+D/coQHo/
+	SwCW+R4fTXfR5LLc=; b=ch7aMp1tblR0Q2qFMGMFoCwG1WcIMDYPOZpQRKIiegT
+	JLSpS0c9xYYVYooFefAYCpvG0sk3INXkzN2rtOLcQZ9UwLuixREM1ZJCyS4CAVlT
+	BqGMgbafITyyfXPL5GsNepNGChmnjrMmnQSrW99Se+p9PjBTHu/+RmistLbNyejK
+	dKit7cERHCxRiMIcjE6YCeiZMGn1hZH6BnTDy2T1xvh7VmB9UIW1BQxhT4CfI81h
+	2HUIxmZLAXssISf0pfR7opu9A55tTkQZS6I0rPGpGYZ7nCljYxeyrzJYzOuc4RIo
+	E0o5g/+OP8G4RecNIJRtOxAChT6igXxpZBD5Y8rMnFg==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46psvevje7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 07:01:16 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54KB1F7W050313
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 20 May 2025 07:01:15 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 20 May
+ 2025 07:01:14 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 20 May 2025 07:01:14 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.168])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54KB1715022189;
+	Tue, 20 May 2025 07:01:09 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH 1/2] iio: adc: ad4080: use lowercase device name
+Date: Tue, 20 May 2025 14:01:00 +0300
+Message-ID: <20250520110101.29478-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520104138.2734372-10-ardb+git@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: qfLX2xrVCwALkOT3_3PFNKnK7_MHdWFe
+X-Proofpoint-ORIG-GUID: qfLX2xrVCwALkOT3_3PFNKnK7_MHdWFe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA5MSBTYWx0ZWRfXw0BkIOPYycDQ
+ 8+6hwjUWrfSvbLBKavbMxGoPhaTlUKmhl2rcConakrt4xwSCcdzGUX20ebg4gEiOWW6a5FAbqgA
+ wZgw4ZkT+L77IcML0IDn7S2giWNPc+T/dIicqZFFNCnuNjEtJjSAKitMv3Ien9HCY4j4i9FlPHF
+ t8MRQLGh+bxGP608rsjFdUgjvayTEwZFVEE+xiQxptRm6bawayysZLk+OyyTbXmC2tH4C33bA/d
+ zcToIvnWaFa62Pxshq6K6pGvUHQmmlnzPggeFvF/oEm30ZyZuDjjBVh5ukaTrG13Q8B1huifcSK
+ Znw5jg77m0x1F482DE2LNYpOv5egHILU43AWmTzUUOvLhdaVwYZX6DqdLjbKKd4510jo6y6Yh6m
+ H2U7wSznDfodUcNDzmkQC77gjHjseFYF23+2RNVtBHPmH4ypzVJeTVCeQp+t5Ysu51HRp8qu
+X-Authority-Analysis: v=2.4 cv=PqSTbxM3 c=1 sm=1 tr=0 ts=682c60fc cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=DGHZmdoWxMtMbgdTRaoA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ mlxlogscore=916 suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0
+ bulkscore=0 spamscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200091
 
-On Tue, May 20, 2025 at 12:41:40PM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> As the Intel SDM states, MAXPHYADDR is up to 52 bits when running in
-> long mode, and this is independent from the number of levels of paging.
-> I.e., it is permitted for a 4-level hierarchy to use 52-bit output
-> addresses in the descriptors, both for next-level tables and for the
-> mappings themselves.
-> 
-> So set MAX_PHYSMEM_BITS to 52 in all cases for x86_64, and drop the
-> MAX_POSSIBLE_PHYSMEM_BITS definition, which becomes redundant as a
-> result.
+Update the .name field in the ad4080_chip_info struct
+from "AD4080" to "ad4080" to follow the common convention
+in IIO drivers of using lowercase names for device identifiers.
 
-I think it will backfire.
+No functional changes are introduced.
 
-We only have a 46-bit window in memory layout if 4-level paging is
-enabled. Currently, we truncate PA to whatever fits into 46 bits.
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+ drivers/iio/adc/ad4080.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I expect to see weird failures if you try to boot with this patch in
-4-level paging mode on machine with > 64 TiB of memory.
-
-If we want to go this path, it might be useful to refuse to boot
-altogether in 4-level paging mode if there's anything in memory map above
-46-bit.
-
+diff --git a/drivers/iio/adc/ad4080.c b/drivers/iio/adc/ad4080.c
+index e8b2e5e7a68a..c36eb41d738a 100644
+--- a/drivers/iio/adc/ad4080.c
++++ b/drivers/iio/adc/ad4080.c
+@@ -433,7 +433,7 @@ static const struct iio_chan_spec ad4080_channel = {
+ };
+ 
+ static const struct ad4080_chip_info ad4080_chip_info = {
+-	.name = "AD4080",
++	.name = "ad4080",
+ 	.product_id = AD4080_CHIP_ID,
+ 	.scale_table = ad4080_scale_table,
+ 	.num_scales = ARRAY_SIZE(ad4080_scale_table),
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.49.0
+
