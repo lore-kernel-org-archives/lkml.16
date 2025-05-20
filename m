@@ -1,103 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFAA2116E0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E015E23BD0E;
+	Tue, 20 May 2025 07:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727951; cv=none; b=UO6u+w9bNKpHphB3m6dQSBac7k1R8UV56ynX7ZjhpzFUFGh/wXIlXOOUdooLdfc8drAd9KYP+Q00qnLI56rxVV6QyEXEnWZh9Tsd4h+1uqFb+kyFWz9pmk4QHqwx1zLN1epjrQIxUNiGIATkA6/JrPAoUKk8z0lkXwnDkBTZmqQ=
+	t=1747727951; cv=none; b=oYt3jfc+zc6IOxATZf/RFV3xF7nUE0RbtqOS39RFFn7i6WJ9A9M8Y1GiwOloKyKUCf92MyrjowsBy2aZ2V/Nk93GQOueIdC+c/zhZ2PNllPxRITVaAEKykdYyhT7Hc6QmtSgKTuP1VTjlLj+DrxuR2MpWZM5PmBR6MXM2Ck9jC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747727951; c=relaxed/simple;
-	bh=Ln8Xsvd3N5Hw4TUt2qHdWEqSjFP3Z+J968tVF6I37Jc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SU2cXp+p/WsTe9G91H8lxgSNTJssN3gLnyuZxKEkG/gESsINQPre75Oh5bylqedcjpyon28ri+hVszuDeeo7FsffK4bcGePGmeK5L/mReePoNyLk/taP2qGAd+F/8L8HTtNSj3Ts5m8DPtRdsnyf4I6EmeKzDJ4Lt8yMrjpN12U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XItTF/Eb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=jYrYqaKl21++6skX4iYnX944r1VNKDYn1WmEWfB+E74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aX9a02QX2bbiBUNpUQjuHPt+4h6FppGQLEC6fUDx2/QfVdQjPkukTHd/ct23qmZfLuEZp6fKpB1isGaH1n4DUFOIo/p/XS4rfzmY2aYedaq0zEJQjKpuUpM7cbhjhgzqaqrACil+F345y13L9C0XmjjTS8X6usDbgxEI4db/nwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=olWP9vbg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ebenGUcc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XItTF/Eb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747727948;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="olWP9vbg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ebenGUcc"
+Date: Tue, 20 May 2025 09:59:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747727947;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xu6VvED+PoElv/mNcoKB85P9VgSxTAqocoeIrFfvu/o=;
-	b=XItTF/Eb7Mlzv3wJyXD1v85C4OFZ0y4eRZGrzOTbepkrb7aQUFjz852ak7L0HHWO02keAj
-	ZAepk8Kcew7JfnRlgD1HNSP/x80YrcoVr/79sKsTf137Mj0L/qn02guEZaof0RerlBZEw0
-	g3bF2h1NZFVS/SAJ+3affTnySX213Jw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-543-UsFJuh_UOFWZelNu-e-L9A-1; Tue, 20 May 2025 03:59:06 -0400
-X-MC-Unique: UsFJuh_UOFWZelNu-e-L9A-1
-X-Mimecast-MFC-AGG-ID: UsFJuh_UOFWZelNu-e-L9A_1747727945
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a36a4c70b4so890080f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747727945; x=1748332745;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xu6VvED+PoElv/mNcoKB85P9VgSxTAqocoeIrFfvu/o=;
-        b=d1ZJQM1E1JNTSpvsKnY3Uw0r8NftcV7yAU47hL0yAYXLi2LLNjkxsOvT3++APBLmY8
-         VHF9xpH1kyBYKeAquhuIgjzHoVlLI0YHIGUkUPb9GwRh3295y14wyIL3SKYt1qogp8wM
-         10K/tRecQU+VuJZUjK+9e3VL7nRVysXewULZrdb0xSOPUlUZl6FlwxBuy0GOB+Oa6mBe
-         mx1LGnaJOyB8JMj+JAm5W9FjC/jDKccQaN9SQ0kM4huCFXxZI25HNpdseYjkyyc8QK8y
-         H4mD/PlRDFjwxdj7VDSwEfMRfY0gyN8rlWUnIGnKWvlaRxU8DQuwZKMHwoRzzIFq9npp
-         ilWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWaMd97IHf7UI0lBs0PnJY4J0kXTYz7xix4leFZXr3a3SeCABDxNPWSqVTmqOKtybeQQXNtk7J3qzW2pmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQBamtrgxfb66HujIWwURmUFKV8d0gXlR/epPsh+tnn3gQMWYc
-	oyHRT7Qrg4GlNM/VITlT8uCEnCZgzsn9V9efunl100MyM2WMSotAVKh7HUhQrGV3jENRptFULt7
-	JrtOVSgCSvOyMGjk6TikOQayI7OcGAO61+MX0sbHHPXtthakbqtRw/3KtZ+wgDkPzYQ==
-X-Gm-Gg: ASbGnctI2aHC8VZhfDracsloGaVemJMKC6XWSAbDqEp3/uIcuqQPZy+IYh3wERdP+v3
-	IS+Pov5W8c7ItNryfGnY+665fFDDze+xP1NccgKNPCYOcG3BulwagX2R7Ztz+7uBd+pihDesJnN
-	rpvZI35Rh9Ec/TAZ68CSnTqJqq0pVpW84J3P3kK+LMDUk4bIOlCwc8SzSac26oOeAN/c24eob63
-	MoDpVUQRLBenEuca73Iz1yyonOHDwbNbB8krp+0d00VhrSlKnX4I31IslmWyoOujGfZYi8Lw+wH
-	I9kHJjFx7kD5wLGHmUPPbGl0faZK+ngIobO/EkQTGAzxCpQHcNbnhlyxF3g=
-X-Received: by 2002:a05:6000:2908:b0:3a3:6c9e:1691 with SMTP id ffacd0b85a97d-3a36c9e17ffmr6618033f8f.53.1747727945381;
-        Tue, 20 May 2025 00:59:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHc5/i5xy+aD6gy/JpszOV8ylA+VdUGvB4VOQl1RBojQXejgZiG2fyh3K00wLwDiPqS0pH1Mg==
-X-Received: by 2002:a05:6000:2908:b0:3a3:6c9e:1691 with SMTP id ffacd0b85a97d-3a36c9e17ffmr6618016f8f.53.1747727945006;
-        Tue, 20 May 2025 00:59:05 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:244f:5710:ef42:9a8d:40c2:f2db? ([2a0d:3344:244f:5710:ef42:9a8d:40c2:f2db])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a8c4sm15274792f8f.27.2025.05.20.00.59.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 00:59:04 -0700 (PDT)
-Message-ID: <a202f5ff-2ead-457d-8f1a-9f7ab5cc9243@redhat.com>
-Date: Tue, 20 May 2025 09:59:03 +0200
+	bh=mUv/8Bn/22WNgI1YYTIXWnAwhT3qoMvfxwXeAeLU0vk=;
+	b=olWP9vbgp81/ORXemHVdPQUcFcD3rtRNdNAU8FZOialNAdRszZ9+XJXOQNTKVWuZ/LmQkE
+	JPRLb0t/yThNQiHcbnLWL9wqFq68PMIWhWcZvl1TnkhNyyOVLv1w7r8xYxRKLZQ87n0sEH
+	EaAR4Pg+3mjM0mzW9vLI1Tv/IXM1cVp1juw5dwgthm4nbRt+e4HeWH0b/k5rT25/cmzPMv
+	Ph8s6hvLAHOwxyODodwd8fA45JDkFvRN3Ip7XJM/egI14HeQZ/0BVsyE3yglv8kMxJNCtm
+	m7mGH2Z4C0EbngYB71xsMNQAxkgdfHwQ2Avc2a6ne4Kx67cICqV2wFNVBtrPIw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747727947;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mUv/8Bn/22WNgI1YYTIXWnAwhT3qoMvfxwXeAeLU0vk=;
+	b=ebenGUccGjakKX9mH3jy6uy12iiR2rjE1ea4xNkbx6Q1hpnlAGv6cwljHrwAqUBLL5qSo0
+	LbegxoJoUCSqVlCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for May 16 (futex kernel-doc)
+Message-ID: <20250520075906.dGs8ZI_F@linutronix.de>
+References: <20250516202417.31b13d13@canb.auug.org.au>
+ <7b32e541-16c9-4691-8545-e124337cc25e@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: net: Convert socfpga-dwmac bindings to yaml
-To: Matthew Gerlach <matthew.gerlach@altera.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
- richardcochran@gmail.com, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mun Yew Tham <mun.yew.tham@altera.com>
-References: <20250513152237.21541-1-matthew.gerlach@altera.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250513152237.21541-1-matthew.gerlach@altera.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7b32e541-16c9-4691-8545-e124337cc25e@infradead.org>
 
-On 5/13/25 5:22 PM, Matthew Gerlach wrote:
-> From: Mun Yew Tham <mun.yew.tham@altera.com>
+On 2025-05-19 14:02:57 [-0700], Randy Dunlap wrote:
 > 
-> Convert the bindings for socfpga-dwmac to yaml.
 > 
-> Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> On 5/16/25 3:24 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20250515:
+> > 
+> 
+> $ make htmldocs
+> 
+> WARNING: ../kernel/futex/futex.h:207 struct member 'drop_hb_ref' not described in 'futex_q'
+> b04b8f3032aae (Sebastian Andrzej Siewior)
 
-Rob, Krzysztof, Conor: looks good?
+I see this warning as of next-20250516.
+I don't see it in tip/master which will be pulled into the next -next
+tree.
 
-Thanks,
-
-Paolo
-
+Sebastian
