@@ -1,135 +1,143 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B6710E4
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F6925D207
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747725599; cv=none; b=BatckzjWFAmCp/+6QGtpEGykCfSZBvAyVD7tsgvGXgrSm1+MNQ3FdgfSpnp2S+sXRDWyT+T370sah6wXyXzwkYYXu58vfc/ueE291yCrGOIrmPT+VsRgZyPzWooLXGQlz6k3zuvyp+wCBLmKPhHVmlivGU1Zu4iS2eIRFehDZy4=
+	t=1747725618; cv=none; b=hKUEL8chix7v8dNNfc/xswdJoqEvvr5AO1m9QyoZP/2TK6F4++cXGtfrIDHxRWXMQWVRTPxhhvm31AH1Q58W4XZZUKN1PrqVuWY16mFufL1aN95zK99A+9WNulmrr8Ok4KYvAPKmE1sSFhP8SDuQA83jSjZAFW4Z4QS1N3vQjj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747725599; c=relaxed/simple;
-	bh=DVbludbWsr7DL5dR+0RMWG4gZxCOZqp/ijZj7TVbvxI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=L/pgwlnoZCwsmQqb0qwJB60GhiVdVGnkc4FPKa2EbDaWCaBizWwM0NHieFjAVwp+aa38QUqJ9y6bI1SalPNl+v8Hw1ilgOVN+nmof6rwK1kU+a8KVLzqLwYrdnMQ5UfaTbZSaVagvGSVdg0zWMn68p5jJiBQi4A1hfbBzd8bjD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ioE13PFW; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747725618; c=relaxed/simple;
+	bh=cP7Qsu978JdO14VIy+ZgrNiEsOq8tQhEus1xNAKU9xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XB/VF3XbOqOXA5pS5PCmfUjXJO5lXZeuzd8NllYa7KgPbWJBVQVed7CDwQ/eFA2+MnrtdYXSSPBJ/A7AwVLzjNncUDGcPlcq2u6DD5lENVz3dkXOXZCzvx/q4ZB31Gvfcp9KlpA9Lkgql6DSYQGDCfntndsXGw0S/WNw7Cmf2oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N9Eddo7I; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ioE13PFW"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so57888135e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747725595; x=1748330395; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KrzFoxLHFMtpD5f0JYG/xNNGE+0bd6VyS7moHsbEFaQ=;
-        b=ioE13PFWH53RDH8ywdKqCOSWoni5vMxSQZ6E0JPLMOEKzoSeHu9YuftolxXD9FtUGx
-         E3Yv1eg+E4SXbACm/XeijXxXuGnJ55w8tMpXLUJjDsd3uzQqGQpCbJ3uVLBFkdpLMMJH
-         LAvoIgA0ah8X69aKP8P/KZcHvjO0LNkXjTDXl6lSL42wQBDxbHu8dnx5jc62VI2yfbKg
-         xX5rVP4B1p3LofiA+I5NVnVA0+gb6xdJ7G0e+QdbU0lOs6rxXGtoMDE3S9anGqKYYNs3
-         5duM8Rw5Ur+xeOjkBUKdxiAkwqnR2QZJSSjFkxduJpCzyI99Bi1ss06xomILRovTfglY
-         om+g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9Eddo7I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747725615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
+	b=N9Eddo7I/cGoqOPVB3cxF4W9Opnmq4ih8S1BbtHcA2UW5W4f6Eu6WE0ACn3rsQN5VhWrW8
+	qaaG6CfZ6GYR+Nx8v/hs/2wAI0sNyyOSCWZhBs8P5EkEXRQ9Bm/ar6CtwESsWPB+e9OlS4
+	n8oHpGjR9W4Rf0AY7GsqGTKzcWaEb+Y=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-606-iiudzvIYPUOysECUoRiTeQ-1; Tue, 20 May 2025 03:20:12 -0400
+X-MC-Unique: iiudzvIYPUOysECUoRiTeQ-1
+X-Mimecast-MFC-AGG-ID: iiudzvIYPUOysECUoRiTeQ_1747725611
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a364394fa8so1560964f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:20:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747725595; x=1748330395;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KrzFoxLHFMtpD5f0JYG/xNNGE+0bd6VyS7moHsbEFaQ=;
-        b=f3SncSmkbOpgaZ/BoKu30UM2eh5aXweydzdB7eHGT0d20P+UOyfAba0YnjD2bodaSa
-         w8yanKETgdNSyZt8I8BcoSvlvSyiqIvd6bVqVIXJLXZRhSe55k8UXqokAB2bdXB86gsA
-         nnKcHjuc5CnrkV1zcvW1fqv4yMtYp3LpsldAuqqWEPddhLj6R++LfRrSFjWCqZY10Iog
-         YaH2/rq99ZLBuphNU/scbY9eN32T/y/2shOTXlnXuJbMYBPk1OxbFps9ZfbvCrwbksiT
-         FSj99pc7ZWXjzO7IJvyUeRu75LIJ13djXltAdQ1zufSMknYAhWwqSm8a+GHSuwcTOJ23
-         iF5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWX46V636zO6iraJOLnTGcQnPpxBG12oxAZvVvvRl17FnOAQW+XPZU+2n0Etn1FDIjLQDgEgWMIr9EgLW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYh2kiCRxiJAiY/qhGSf8cHQKARmYlK7uUmyShwlowMTCHYwJT
-	D7bzDgknmzJX/WqCiE69O2pUPaTiHs5seXwwZdVUFCOPENekaDiftLVlZFkhHcDeAGA=
-X-Gm-Gg: ASbGncv/z3P36cmxyD4ogAGRgZ15HSkNCMhnt1J85fWEA0XVW8T/bCuisJBLabp99x4
-	kDwUpLWbIWVVGdogzWplLjueLLIh3qLly5eKqySnelmT0TdcSnLWXecFax50tUzHnQCEgls4Okf
-	/sVwexshJFqFmQADvwNSjj2bFfzes577T2Ffx+JwGhrttGETON40tjXEylJarNesjMCNXGUmzL9
-	G0i2vQLorKZTiC+Z1uto8BQQFKT1x8XKwvkhcCmt+9soY1o0KRlFNtJH5OUZEQimaT0wh8Rzd4M
-	u9UfI8X1PFwtvOB00v25Mx6fls2T7/Gba7A8LMBh0aJtyD+nOqm2tN5pnNiLU7oGo0CJ4yQGmCH
-	Xhe++SLPVy8naEVwcDtzq6XKuGZyT
-X-Google-Smtp-Source: AGHT+IHiApHaQJ4HFVBUIlA5T8VIa8bCmFRMDdvIVfP4Qk5/4i3Sipi25obZe09eKCMes1lvmIHC3Q==
-X-Received: by 2002:a05:600c:5026:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-442fd60a4eemr135516505e9.6.1747725595393;
-        Tue, 20 May 2025 00:19:55 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ffaa75cfsm91300275e9.1.2025.05.20.00.19.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 00:19:55 -0700 (PDT)
-Message-ID: <228f4064-6e6b-487b-b599-e8f65e3d8506@linaro.org>
-Date: Tue, 20 May 2025 09:19:54 +0200
+        d=1e100.net; s=20230601; t=1747725611; x=1748330411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
+        b=Z/Ealtk99IQ7ptnHf/B45mROEqA8JD7GoIIoKhaynYnoH8UNv15BO/lFGkDu50ekK5
+         0LckbKuL9MVdlrJlRXbniUE2yfl8eDyfyOQDnCQNFIZRXlDVZ2Cuw36oXL6jh/Ba2o7k
+         dXBEg9xTi5IHljWS2Y5nqdCyAc27TsKgBqKfayiZhqEkmHADym8w4e7PPYGtqek1QLm/
+         zJcGOBbN0+EdsqSYUxTRr+YJKpSGv6csd2kMugoHv1vfqpgcXehZuoFqX87SonTwVc+o
+         W7A6weG8oo7KZkqp+uA1X5i+a6Pt4xg2CIOCGnEXCXLg+nI5zYjo9yrn1nRQo/l2WwTb
+         3tFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWa9kKCNw5tm8h/DyX7C4aRaW6JDpaTP976mYGOWYCho/ASlQ+8b3zmBZPYlJLbWqT36NY/0BHuaOSOq70=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5l24PAGHyxbewC6SknuFxl3lxizAigRo7ynL3VOSRUwOK2SJ5
+	cdQ9DUlk3RqEHuH05NPC6Memh+ipq8ShR80aPXloCjydyxaafvRB7Fzvqe4LJoa8KfrcdeO5Xe2
+	RjN8QEzXrWeZ82AepD69dHSEaRQ6AReCUcT2L0zfZpMsykeA7UqbOkrfGjsoTiW3t5Q==
+X-Gm-Gg: ASbGnculgdZIjFFThwMh0si+d2wdvKcEpOCT6Tt/ypWYdlIy+YtQk6G9PQj2BEdrkRj
+	WNVzmlXCpqAgaqs6/FEXwRyALyOrmrB0EzH6SSNnXiXrtC5u0g3CzI2YxYxoaZHuAEDE6WvDAhl
+	JzJcDn+k4paDtsWd85bW6L4AAoyNjBR6+SMMrmXG2mQN7nTPs9F/DM9yIudnPQjBfYbDXkI/3Q6
+	VjAD/yhVYQafDGVl7vcP5XFTGsJfWV8SABygjT7zr86nuxsT4WZ/dD9klow3Ov16BLH/ZPJF2ty
+	qd/NFOVkNNh9NF43NFVEfjJG/fCLOwVSHpI/kslmVLIAbyN144rtpJci22CO
+X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701763f8f.0.1747725611060;
+        Tue, 20 May 2025 00:20:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMxpZctuxlPRTxO/eDif5ZtBRMhbiuIwkMb+0+eYZU8wMz06n9FB1hYZCoVHkP5hJIZwrLuA==
+X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701718f8f.0.1747725610479;
+        Tue, 20 May 2025 00:20:10 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm19228605e9.10.2025.05.20.00.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 00:20:09 -0700 (PDT)
+Date: Tue, 20 May 2025 09:20:04 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH 1/7] tools include UAPI: Sync linux/vhost.h with the
+ kernel sources
+Message-ID: <cek234mjuzbh3w4jvwhpx2oundb23tmxjaa2q35ul7bu7todum@hqkjcbnf3fzf>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <20250519214126.1652491-2-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v1 1/1] drm/panel: ili9341: Remove unused member from
- struct ili9341
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Abhishek Tamboli <abhishektamboli9@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250519133345.257138-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250519133345.257138-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250519214126.1652491-2-acme@kernel.org>
 
-On 19/05/2025 15:33, Andy Shevchenko wrote:
-> struct device *dev from struct ili9341 is not used anywhere, remove it.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
-> index ff39f5dd4097..2b5bd83933e3 100644
-> --- a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
-> +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
-> @@ -173,7 +173,6 @@ struct ili9341_config {
->   };
->   
->   struct ili9341 {
-> -	struct device *dev;
->   	const struct ili9341_config *conf;
->   	struct drm_panel panel;
->   	struct gpio_desc *reset_gpio;
+On Mon, May 19, 2025 at 06:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
+>From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+>To get the changes in:
+>
+>  a940e0a685575424 ("vhost: fix VHOST_*_OWNER documentation")
+>
+>That just changed lines in comments
+>
+>This addresses this perf build warning:
+>
+>  Warning: Kernel ABI header differences:
+>    diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
+>
+>Please see tools/include/uapi/README for further details.
+>
+>Cc: Adrian Hunter <adrian.hunter@intel.com>
+>Cc: Ian Rogers <irogers@google.com>
+>Cc: James Clark <james.clark@linaro.org>
+>Cc: Jiri Olsa <jolsa@kernel.org>
+>Cc: Kan Liang <kan.liang@linux.intel.com>
+>Cc: Michael S. Tsirkin <mst@redhat.com>
+>Cc: Namhyung Kim <namhyung@kernel.org>
+>Cc: Stefano Garzarella <sgarzare@redhat.com>
+>Link: https://lore.kernel.org/r/
+>Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>---
+> tools/perf/trace/beauty/include/uapi/linux/vhost.h | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+
+>
+>diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>index b95dd84eef2db231..d4b3e2ae1314d1fc 100644
+>--- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>+++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>@@ -28,10 +28,10 @@
+>
+> /* Set current process as the (exclusive) owner of this file descriptor.  This
+>  * must be called before any other vhost command.  Further calls to
+>- * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
+>+ * VHOST_SET_OWNER fail until VHOST_RESET_OWNER is called. */
+> #define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
+> /* Give up ownership, and reset the device to default values.
+>- * Allows subsequent call to VHOST_OWNER_SET to succeed. */
+>+ * Allows subsequent call to VHOST_SET_OWNER to succeed. */
+> #define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
+>
+> /* Set up/modify memory layout */
+>-- 
+>2.49.0
+>
+
