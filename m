@@ -1,71 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4565125B676;
-	Tue, 20 May 2025 06:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7C925CC69
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723301; cv=none; b=cY8vtXJEDzNzu2CVKBVY5iBE22pALCWicwLjb3ijin5uRkqzKl2V2XP6UWILQ2SeacdXSLPUtlj67K3+y/cU6lEx0RQlYaZyEgCFy1hms8erUnrPZ9vcFT+nZHSoQsv1lFGbk2/ihRTNTxKThjNis9ktDU/0nugN2v7bv2+3vaE=
+	t=1747723316; cv=none; b=a3u5wJmOUK+BihH8cYkLMCK9Gz0vdIcgozoo1I38sIcXbzSGb3fg0jVYZcmp2nGGbkXc0auBdMnFb+6WFbCNxlqFM1krVACm7QlGxaxNb7/hHQ5XGA6NYYuUVJO4dMkh+8bZAhJPgSrybV4OAJuV6FpKZ1CVgNJ6XOZayqoFIDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747723301; c=relaxed/simple;
-	bh=/+NmpADkpF28JD+36C3Yf9JbclVHgqFpN3rsbxacxKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTTugkVwPF4KaGGY/5hY6tpxeKSCszuqgHmS65gk4dCHnhN/bJP2UcAg91Z+psMmCqlAhHAVFm2myQ3P60fyQA6HMpkk3/BENICt6iL5efMGjTWZ0dOsU251Cs9wOUXq0iv73ULogmt05MSj3CEwDNnRmArM0ZgKlEj/Rqhb9yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/EF+EBc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747723316; c=relaxed/simple;
+	bh=5800+9pcKbpwq9CBW/e+YLPVT84qYs9jAiAX5nQsi/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p9YEkMwAm0ZV7d7Bv4uhiQp3nKF/mMBp++pncC1hLgioaxb/fAGGPt7FqjDZoyZF+fb1PuD0r+ESUAStt2o8Cx3L3WWfoq+3OMp+gdre1Y76JE+AJvOMi6dVkVPUIUi1moOfuQ6gr2O+MaOfVaML8W5bYMLxZZb9QBAgY/7R5iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvpQZvo9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/EF+EBc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17991C4CEE9;
-	Tue, 20 May 2025 06:41:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvpQZvo9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B8AC4CEEF;
+	Tue, 20 May 2025 06:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747723300;
-	bh=/+NmpADkpF28JD+36C3Yf9JbclVHgqFpN3rsbxacxKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/EF+EBc/zb4Z6w+u2Rf9Feuw/oLYntUWhq62CLbjKFajcvseQEQfJsvG5ZIQkyK4
-	 MpFAHtYg12VMs3sJiWRL40ZPjsBEEgCvwllLw9Ow6GVfYdMHmtx5+iI1q758exi5fJ
-	 7Xpz7qRR/wOMvUEL9XRVSAzugm1CpK2euYAdE8GxNc7M66yzk3MdSD/GvCqWFAB2fu
-	 hx/t6b3LuNqUIGyihLwxZgKrQxh7nCejdT6JMVOkqCdar14ZRHUscfSht5HLp9Pn/y
-	 kJHNfvEC66bTE1OGFRqml0lyIpOOCMI3odglaa7I3vT5L4K7jhB/xKOo6UboJaRNGX
-	 g1GUYjVFY9b5A==
-Date: Tue, 20 May 2025 08:41:38 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, Dragos Bogdan <dragos.bogdan@analog.com>, 
-	Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan <olivier.moysan@foss.st.com>, 
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Tobias Sperling <tobias.sperling@softing.com>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
-	Alisa-Dariana Roman <alisadariana@gmail.com>, Ramona Alexandra Nechita <ramona.nechita@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] dt-bindings: iio: adc: add ad7405
-Message-ID: <20250520-marvellous-taipan-of-agility-c8a7f6@kuoka>
-References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
- <20250519140220.81489-5-pop.ioan-daniel@analog.com>
+	s=k20201202; t=1747723315;
+	bh=5800+9pcKbpwq9CBW/e+YLPVT84qYs9jAiAX5nQsi/M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uvpQZvo9EPb1u7NTzIgzcgU6azMIAEeH0HkmaMSL4vjhWM5Gl07e/SkXyjP42xcNE
+	 55IMlT9HHJe75l7jSL+BA5mdZ6wyopH4uvgu0Wb2EDcAwWC0s/Xioqoeg+70052Xmw
+	 Rv16B8nDEo16mOYBFPCM5r+BT2U3//9M3L3g2jB2r5bOYg0AaiKYPettWgyOM89MqH
+	 djRlvN390SUwMUMBllh6fWE9fmQoKogmKi/DmFu4tOly9bPZNTXMcl+OXSuITy0KbK
+	 sf30Cvxy+vc3yEGJgNVqwOD1YKk4RYPAeyikKPd/OzBpGWSdd+CPz0xS5j+gGtpqUu
+	 fp8jz1LwCXAwA==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uHGfi-00000005qts-084I;
+	Tue, 20 May 2025 08:41:54 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	qemu-arm@nongnu.org,
+	qemu-devel@nongnu.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Ani Sinha <anisinha@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 14/20] tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+Date: Tue, 20 May 2025 08:41:33 +0200
+Message-ID: <0c9eb582c0b0a9c8f74e901384416ab39d01a3d3.1747722973.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1747722973.git.mchehab+huawei@kernel.org>
+References: <cover.1747722973.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250519140220.81489-5-pop.ioan-daniel@analog.com>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Mon, May 19, 2025 at 05:02:12PM GMT, Pop Ioan Daniel wrote:
-> Add devicetree bindings for ad7405/adum770x family.
-> 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
-> no changes in v4.
+We'll be adding a new GED device for HEST GPIO notification and
+increasing the number of entries at the HEST table.
 
-And v3, v2, v1?
+Blocklist testing HEST and DSDT tables until such changes
+are completed.
 
-What about tag? Can you start using b4, so such problems won't repeat
-plus you will have appropriate cover letter with changelog and links?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Igor Mammedov <imammedo@redhat.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ tests/qtest/bios-tables-test-allowed-diff.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8bf4..0a1a26543ba2 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,7 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/aarch64/virt/HEST",
++"tests/data/acpi/aarch64/virt/DSDT",
++"tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt",
++"tests/data/acpi/aarch64/virt/DSDT.memhp",
++"tests/data/acpi/aarch64/virt/DSDT.pxb",
++"tests/data/acpi/aarch64/virt/DSDT.topology",
+-- 
+2.49.0
 
