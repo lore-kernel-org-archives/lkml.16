@@ -1,141 +1,182 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D93819F137
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBCA2459FE;
+	Tue, 20 May 2025 14:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749714; cv=none; b=ODHbm7NdW1bmG5AxFDAUw6rx6aY/uPrXWfe+PcxiTNjyH/cRXt/rlDw0xKF0wrmgmOPX7pylUB114mBbHktqGOjZSXkyDMQ8QWoQBEe957sIZwL72kqH7EQIe4tChzU2Q1ryN/FMZcmrMHASE5LStTRTsyubJDhFpaYSZyDtg/M=
+	t=1747749717; cv=none; b=cvRIt3TGVQZ1/QSjae+B5FRt8IV/h39ynEgxzXLZb9nU0pI5yghfvjwAoyDRb55Zz2Y8RRIffMQ1EprB30ROtCdBSmEgBcIS+OIsN0aHeRbxI+/VqfVzkgsNUyGB8Ha3cB1Cytuju8yylm0LURwq9YUcoOhuhQWp474itVXvKbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749714; c=relaxed/simple;
-	bh=Uq2OjYZIAwXGcKxfVxUqOz+LEZTbzNoiTVuTAioXdMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QyiWHJJfx4vwKJb+iOIWGPYYBhZ9Haj1WxwSpLI2vrJGr12zv+Lyb3HfJjVneo+/u0SKi+u4Biq+djJEO+jDrNh/JE7JWB6z5SlMqOLZ5Z2q7LRGA3ZIxrz7/AbkgXjffn75rFZlfyCh0gxOc1WD7GBPw9qLWP2/tdnf/py8hmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJEaKcSX; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747749717; c=relaxed/simple;
+	bh=8fVp9ZnpofKSq7wKkEZNR4N3yHYTktEXV+Uq6k2gtYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ShkIwTW6oc1UFYZTmyAfvx+EjkmRQ72CxhHj+/VLtqDZJqx6hM0zRzylY0k2945w6J1WfC1jMqEPJP6sEC+dtw2CWG1hZ5BprXGfk9nX9GxEgpo9rBDeIlJVCV3ZomRaOC1IILkszXjrVeRX4qLtFuIFP2JgQmXL6DEvtgOSphU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TVVFUmzA; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJEaKcSX"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad51ef2424bso824282566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747749711; x=1748354511; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PV1FL/a31fFF87tKpEa3eS5r97RWRD8TAOaHpu3NmaI=;
-        b=JJEaKcSXp6e+hbOViQ19n+lM5VdDdoyaYu8+xGpSvCHj0nJVB1TVcRSc4u+FBLEa+J
-         w85Me7FPYorSGK8zhwzAetdBUXlm4VDlWHJs9uQtKzZXSOo9jJWl4B4Gm124ehI2AhFq
-         VA+7XKJ/9flv7KIZ9eW+EECo83RpuquqcHpFHY8SDVDkVvk6sYrx3WeVC9UmHUORLZKu
-         B/V2M4YCkg07luu+oDivRtwwCKgeN4d8v89SiFD1vD0SprxG1SPYd6ErpAZaZ5vjWluo
-         5a46r6i/I5t2dehPlnLB0MMpmreKtzqXkEJPOtsRIupAVG10LxVCrJ9iN4PJmkN7bOoo
-         NCHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747749711; x=1748354511;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PV1FL/a31fFF87tKpEa3eS5r97RWRD8TAOaHpu3NmaI=;
-        b=t9K4tmUnaY+LIB5hpTBXznr+vOrLB/PSqwIUjdTsbAFJotXt61Ixe5yKBprGjdiDAO
-         vCOC8bXeI/vSra2dvIALOqQRPItv4YBq/2Iafi6IndtikwkjIOZYDcyBy4hf32UuW/Cq
-         ar7TknOpvy5lZDsS9QXYHn7srhQQmqAfauSCtAsYkrO7y18PMC4CIwJZAYX2lcvbdbC/
-         T0BlOstN6yPwIRFrDwNWPBWGXd+JcBCe2aUEhXvDdq/BK2K7qReR+2douVQSFewHvcON
-         GaIC6nD9LhD97A6X3Jm5MEFQ/7UcRsdtOVnV3hZCY3QIhSRx3+qfnbg4h3MZ6flVD3Yv
-         6xWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXseM6tnMY3Ps2X3hXsr1+hOzDn2/JE8oui/ychEwnIrqDfkb0I87Ny3reQ4K/f69Js2dFKzolUjzC38jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAv1rTHq7Cy/nG8kkW1OPF+3nc315zfrrfTN5RzidqTpna/m5a
-	2i3Idd5njq9E+aCzBcrU6yZKyoXAJ0AdgZjzUyz6Rd25P+GwVrzKWZ7m
-X-Gm-Gg: ASbGncvBp2s9ftRKx0ZfoQGoGHM0BJAk1kad0sLXRBatJK5Tda9bo3RNTAAbvPwsJH5
-	dzEVptlrvgQjLH8y3mvIECez8lkOSoBpfYy27AQxhVEz39QgxQ81JsZqt6rJGXcd8enee7/VZri
-	5jjfZc/Kj0IBqwBwKZ9/RInshGy3GO3lDS8hHHhj5TpbG/TZ2MEAPBRvn5RMMF4HPv9kAtbdZIX
-	idn9Dez1i0oAttQ/bUnoUzaqr+jYCDyHBYXgSgKvXBW7m3cfvnZLXiz/LHanZM6BZ+cQUFatpeW
-	jXxasNcgB+PBOW8oZ1UMzK7DaDcfCiwVg9qtUh0qhF+eKs7wuE3e5rkHSKmgpC3DA2YERjXdjKT
-	TB0+GXjagA5EvuXtBiLBASjq2
-X-Google-Smtp-Source: AGHT+IHYDfOBB6XOAPFWgeSvqBqbLUR4EmvrA6HlSBGcoEyDnSyMz9RMu73gKqe3sYbMbufPdTMBXQ==
-X-Received: by 2002:a17:907:3e82:b0:ad4:f5ee:3c0 with SMTP id a640c23a62f3a-ad52d49b412mr1830301766b.16.1747749710121;
-        Tue, 20 May 2025 07:01:50 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:1c0a:f3ac:4087:51c8? ([2620:10d:c092:500::7:66a9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06bc66sm731573466b.46.2025.05.20.07.01.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 07:01:49 -0700 (PDT)
-Message-ID: <89553e3b-48a2-4867-a082-5a530620c427@gmail.com>
-Date: Tue, 20 May 2025 15:01:48 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TVVFUmzA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747749716; x=1779285716;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=8fVp9ZnpofKSq7wKkEZNR4N3yHYTktEXV+Uq6k2gtYc=;
+  b=TVVFUmzAMtGu2IORiE8GCNGtY9xYkjgitz9wLOev8vY2myVR7TPavRX2
+   86RTleV4qJixkV/HfkjKjwlsJ17WmD9RC5kBkvxzKlEiuCGijNwRYHZtA
+   zyLCyDtnMEVArFWcw2SeTRSC7ngU6nScbSsQEnCkc8PFzlnwdIucQFuKP
+   Dsal/AkDbj11UF86s+hxdKezWSUNQCU/zKL8/0lvqXdXjZWTbP3cSMbmY
+   /K2ow2SFtXI0haUX13hg3g5suDF1ps1cA991qwlgxoe/fbXw29qj8En2V
+   nXwPSv539dYalH1SIdxlAVJwBNbblDBLUjG2na87SUs174XXnV23wATcI
+   Q==;
+X-CSE-ConnectionGUID: kY2qDnNjR0WF04IGbDRfEg==
+X-CSE-MsgGUID: 9byoEXaJS/KziDvoktRJrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49839245"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49839245"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:01:56 -0700
+X-CSE-ConnectionGUID: Jkg5BZR2SMWPVKvc5tOZ/w==
+X-CSE-MsgGUID: 1nvea+dxRkuB4oEzywm6HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="140218929"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 20 May 2025 07:01:53 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3D3BF368; Tue, 20 May 2025 17:01:51 +0300 (EEST)
+Date: Tue, 20 May 2025 17:01:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-security-module@vger.kernel.org,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
+Subject: Re: linux-next: Tree for May 16 (security/landlock/ruleset.c)
+Message-ID: <aCyLT2qr_7iJJHm6@black.fi.intel.com>
+References: <20250516202417.31b13d13@canb.auug.org.au>
+ <e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org>
+ <20250519.jiveise8Rau8@digikod.net>
+ <202505191117.C094A90F88@keescook>
+ <20250519.ba8eoZu3XaeJ@digikod.net>
+ <202505191212.61EE1AE80@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
- non-contiguously
-To: Andrew Morton <akpm@linux-foundation.org>, surenb@google.com
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com,
- linux-mm@kvack.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org,
- kernel-team@meta.com
-References: <20250520122547.1317050-1-usamaarif642@gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20250520122547.1317050-1-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202505191212.61EE1AE80@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Mon, May 19, 2025 at 12:15:30PM -0700, Kees Cook wrote:
+> On Mon, May 19, 2025 at 08:41:17PM +0200, Mickaël Salaün wrote:
 
+...
 
-On 20/05/2025 13:25, Usama Arif wrote:
-> When memory allocation profiling is running on memory bound services,
-> allocations greater than order 0 for slab object extensions can fail,
-> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 bytes
-> per slabobj_ext (order 1 allocation). Use kvcalloc to improve chances
-> of the allocation being successful.
+> >From 6fbf66fdfd0a7dac809b77faafdd72c60112bb8d Mon Sep 17 00:00:00 2001
+> From: Kees Cook <kees@kernel.org>
+> Date: Mon, 19 May 2025 11:52:06 -0700
+> Subject: [PATCH] string.h: Provide basic sanity checks for fallback memcpy()
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
 > 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+> Instead of defining memcpy() in terms of __builtin_memcpy() deep
+> in arch/x86/include/asm/string_32.h, notice that it is needed up in
+> the general string.h, as done with other common C String APIs. This
+> allows us to add basic sanity checking for pathological "size"
+> arguments to memcpy(). Besides the run-time checking benefit, this
+> avoids GCC trying to be very smart about value range tracking[1] when
+> CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
+> 
+> Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  mm/slub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: <x86@kernel.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Uros Bizjak <ubizjak@gmail.com>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
+>  arch/x86/include/asm/string_32.h |  6 ------
+>  include/linux/string.h           | 13 +++++++++++++
+>  2 files changed, 13 insertions(+), 6 deletions(-)
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index dc9e729e1d26..bf43c403ead2 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
->  	gfp &= ~OBJCGS_CLEAR_MASK;
->  	/* Prevent recursive extension vector allocation */
->  	gfp |= __GFP_NO_OBJ_EXT;
-> -	vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
-> +	vec = kvcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
->  			   slab_nid(slab));
->  	if (!vec) {
->  		/* Mark vectors which failed to allocate */
+> diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+> index e9cce169bb4c..74397c95fa37 100644
+> --- a/arch/x86/include/asm/string_32.h
+> +++ b/arch/x86/include/asm/string_32.h
+> @@ -145,12 +145,6 @@ static __always_inline void *__constant_memcpy(void *to, const void *from,
+>  #define __HAVE_ARCH_MEMCPY
+>  extern void *memcpy(void *, const void *, size_t);
+>  
+> -#ifndef CONFIG_FORTIFY_SOURCE
+> -
+> -#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> -
+> -#endif /* !CONFIG_FORTIFY_SOURCE */
+> -
+>  #define __HAVE_ARCH_MEMMOVE
+>  void *memmove(void *dest, const void *src, size_t n);
+>  
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 01621ad0f598..ffcee31a14f9 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_STRING_H_
+>  
+>  #include <linux/args.h>
+> +#include <linux/bug.h>
 
-I forgot the freeing part, This will need the below fixlet as well.
-I will add it to the next revision if there is another one,
-otherwise it can be folded into this one. Thanks!
+In case you are go with this change, please keep the headers in order.
 
+>  #include <linux/array_size.h>
 
-commit fa48eab7faddfdb94faa80a1575ac1840919071e (HEAD -> prctl_huge_v3)
-Author: Usama Arif <usamaarif642@gmail.com>
-Date:   Tue May 20 14:58:10 2025 +0100
+(should be located here)
 
-    mm: slub: change slab_obj_exts freeing to kvfree
-    
-    This is to match the kvmalloc.
-    
-    Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+>  #include <linux/cleanup.h>	/* for DEFINE_FREE() */
+>  #include <linux/compiler.h>	/* for inline */
+> @@ -390,7 +391,19 @@ static inline const char *kbasename(const char *path)
+>  
+>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+>  #include <linux/fortify-string.h>
+> +#else
+> +/* Basic sanity checking even without FORTIFY_SOURCE */
+> +# ifndef __HAVE_ARCH_MEMCPY
+> +#  define memcpy(t, f, n)					\
+> +	do {							\
+> +		typeof(n) __n = (n);				\
+> +		/* Skip impossible sizes. */			\
+> +		if (!WARN_ON(__n < 0 || __n == SIZE_MAX))	\
+> +			__builtin_memcpy(t, f, __n);		\
+> +	} while (0)
+> +# endif
+>  #endif
+> +
+>  #ifndef unsafe_memcpy
+>  #define unsafe_memcpy(dst, src, bytes, justification)		\
+>  	memcpy(dst, src, bytes)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 97cb3d9e8d00..2245e8d8fffb 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2045,7 +2045,7 @@ static noinline void free_slab_obj_exts(struct slab *slab)
-         * the extension for obj_exts is expected to be NULL.
-         */
-        mark_objexts_empty(obj_exts);
--       kfree(obj_exts);
-+       kvfree(obj_exts);
-        slab->obj_exts = 0;
- }
- 
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
