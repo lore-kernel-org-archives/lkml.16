@@ -1,415 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2062.outbound.protection.outlook.com [40.107.243.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01AE2627E9;
-	Tue, 20 May 2025 18:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747766354; cv=none; b=F9Lo9sFco5G9OUaC/k8GSVsQVhjNVGKFycM+XgVYuLd8pet3qbMcit+v/2NHKD4t9t81p/HUC1Byt7W5s3gr4Lucr0fPycCGLnKClCf5WeiSwDMOTf6BIr1ay1kLngs+fVs4fUJhp9qsEurG9sfFAHVY1WNWgbJX8kObjuXRUIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747766354; c=relaxed/simple;
-	bh=okwzvcBBaIuUM8MqC+ZOoDS4mpO05wJjKuzrBOuxHbQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LIa1/2i3KvuHAO4811FIjAekZQM29nCH0K+C9YYOM1IAUlflhKpovD272N0gSvczli7qCgRmC1wOGzBt5bh1Xw0PXVMatSwLFiJ4rMKbPIj0CP4EfgnxaxYky0Mgyns7g+sTLj/ZbW++xnw8RqcY3Z9HjtEVDNiMPsrTvywDzDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh+IoiKQ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36EA2627E9;
+	Tue, 20 May 2025 18:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747766378; cv=fail; b=N+NfVlJNRk45vAcfuk/ksWVUBGnl0X2nWEMf3QXcyOiPQRd2sdbUSZNSPnDibPpWeq5phAE0iV4x4hgww7rbHjl9HJSEvN+L+hLgwmHElbRAkiTmeihcxAYECvjMqb8W674WLaAoJpCdsP0zVbzI5ytgE4ec1OiahKbF5HSeCQY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747766378; c=relaxed/simple;
+	bh=oWmQibJk/KR7o27nJ/82FMpIKYNQEI8XRmJ51x1IWKA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ewJU1LqvdsgY52Y4P4xzL0HYAk/GrjfBur4sMOADvyxwHwbBwU9eujtue7COKHVKXiiEdFB2OVivytnWg3plnOIAMgVaXRUtKbzqstm/2rR27Zkv5DPOO7AgqmhLJMnYSbRWC/Ti7Yi7AiJ/aW0aOwui7Wl5kbjub3XHTLOMePM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NBLcvbhN; arc=fail smtp.client-ip=40.107.243.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh+IoiKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 53A87C4AF0B;
-	Tue, 20 May 2025 18:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747766353;
-	bh=okwzvcBBaIuUM8MqC+ZOoDS4mpO05wJjKuzrBOuxHbQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Gh+IoiKQ2YIW3h0/SixPiEx79fSlH9WSSsT5edmy7riNcPcDYCLKDrC8dE2YF/e70
-	 euH/HjzekzfszVOD8r8SzjVymANUS+5hxnsVtwaMF2yIieQ0GaKop+p0UgmbBWIR2N
-	 hLNFTj+hrmw7EvRGOybk1aUl05R/hCpey/C9jRqbGjjEz35j89qOYTu82JrFXNpaEA
-	 CgAk5leonvFLN+n7Et6iWdUNDPnyroXnYmePRgxmeDB7SKRkT0L33D07q/5ZCByyjc
-	 r5nncbZn3G3wKIiw14gFtDdbCQ+j3dCMYuL0HltT/FmlEuDAiQ5247P4wKWOjkKQuI
-	 bXyayg8hS7DGA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447FC54E92;
-	Tue, 20 May 2025 18:39:13 +0000 (UTC)
-From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
-Date: Tue, 20 May 2025 20:39:07 +0200
-Subject: [PATCH 2/4] media: qcom: camss: Add support for MSM8939
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NBLcvbhN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eGwTu8YaDpmyEXBAohguJSNTR9KAPoQn1wxrRQctHbiHd1YLVS8dHPHJLbQsGuVTgVLm9YiFgiAc0AhdIyAH1hJUzFHRxWigpxhlFgwwd8accZ4IldCLqyMsncMh1HbNqD4bjRSoZCfxG9J87M/oZDbEqtXCdNF2/R85yxNj7W+z/oSyv60F8GhrAYqh6Lhx6ybIra2B8WeQyyNFxz3mzul0X6I8HvdaQsL/+kaTwWV0XYhPuWjth0ZGfvW8YYghaTulr3eCFril3nyvrcelDMnj6vmYWbw76pJtvgG4ontieqGxk4uGYEuHZc73njU5pGVbrh+QWVrEenqFmE3Dtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S08MoZoETre68c6k1VgZZpEet407UhUzcHdX7CsqzSc=;
+ b=j555MsQE+/u4JNoRIvkD9mFOhvQ+fOEjDY9NdkUnWYOzLO2T8065dVbV5otHefakUsOcqPbkjrpL+p8XGEeT7p+alYtnTf3xJ2Q8YvH+aJfIbbeMtwRQ77WYdJBJQlsKGkgBsjldSpUW5GFBCC0LKPMfLnEuyM5A/Y9tSP+jhdq1EMYYyvP1IJmczwk95hveHL30/EEASdwZVc49orAwG1fMKBKBip+AaU59ADWOkPq006iL1UoYfNi8GLU7icxc9Ytm7amtjRpXO2X24JWywOwBexwjK0kZKLRss3B4rXMCF8T0mf7JL4izyr2nlJ92QrN1SeQgFrEJY/AsXFu5Bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S08MoZoETre68c6k1VgZZpEet407UhUzcHdX7CsqzSc=;
+ b=NBLcvbhNmg9FgzJmHxUiAdQD03lxKWWonFgqrE7nal4bNyjzR1AnciQoLxfSJUKKnmhVXmjoE7PvMGYAsh3aw9IsswCBjRBOn7Ur1GK5BW8vVQsPXTN35Z+fOB+lrwpT0y2NsczbfWt/o9i2XToBSb5PrCfdjhp1gC0WMwq+qCyxKZXwa+6FCYwByBvNP7s/ZPuHBQruERx/CamK5EodrqLJzb/6VW+xOhp9akyqukBVftv+ik1omgY2aJOS6gePu3+cmp6ZjnFS2dtGWlaJ6Q2KRS5E0LzPUUXHwTJlammOZnP582RZ58BJ2+QVL5abUxa/Ru2QDsR8dkZ3lXZtqg==
+Received: from CH3P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1e8::16)
+ by MN0PR12MB6269.namprd12.prod.outlook.com (2603:10b6:208:3c3::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
+ 2025 18:39:31 +0000
+Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
+ (2603:10b6:610:1e8:cafe::62) by CH3P220CA0014.outlook.office365.com
+ (2603:10b6:610:1e8::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Tue,
+ 20 May 2025 18:39:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Tue, 20 May 2025 18:39:30 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 20 May
+ 2025 11:39:18 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 20 May
+ 2025 11:39:18 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Tue, 20
+ May 2025 11:39:12 -0700
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Jiri Pirko <jiri@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
+ Romanovsky" <leonro@nvidia.com>, Donald Hunter <donald.hunter@gmail.com>,
+	"Jiri Pirko" <jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>, Saeed
+ Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq Toukan
+	<tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, "Moshe
+ Shemesh" <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Carolina Jubran
+	<cjubran@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: [PATCH net-next V10 0/6] Support rate management on traffic classes in devlink and mlx5
+Date: Tue, 20 May 2025 21:38:01 +0300
+Message-ID: <1747766287-950144-1-git-send-email-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-camss-8x39-vbif-v1-2-a12cd6006af9@mailoo.org>
-References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
-In-Reply-To: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
-To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Vincent Knecht <vincent.knecht@mailoo.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747766350; l=12031;
- i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
- bh=c8RPV60kKAokRYJVztYUW1kJIxUIGHKIxhZjUn8I1uI=;
- b=VERZMFo3RXB22zj1OR+txIGMiLPM0YQVzyvIV3QfnSZw1b/gXZHgGfD++ZycFcv8zrw4KJVuV
- nKoOXgiIvPXBU3zniCx1835g8EFEwVVaoKSy1R+bDVzq5Ki9sMDoy3f
-X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
- pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
-X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
- with auth_id=377
-X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
-Reply-To: vincent.knecht@mailoo.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|MN0PR12MB6269:EE_
+X-MS-Office365-Filtering-Correlation-Id: 067bbb0f-2dee-4a42-0a27-08dd97cda8ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ky83YU52ME9EZDlLcTZuM3FxUE5lUnlyNzRZNytId3YyaU5nUHQrZHUyWW5j?=
+ =?utf-8?B?NFJ1SjZkdmo4ZlJNV3RwSVJCSklSYXBlcGd1RmZVNHVmaG0vTWhLQjNFRXZh?=
+ =?utf-8?B?TDB5bWtxOUZndUJCTXJYWUtYMjU4aUp3c1ZZWTdvZmxWeWU1REdydDlKUmoz?=
+ =?utf-8?B?V0kzZkNlMU5TNkh4THFLMzhnYVJzNnBWSUFyb3NnbGVMdGJPbWJjOENodC96?=
+ =?utf-8?B?bUJJNDJPOFg1Z0dVWFF0aW5Ed04zRC9vMFRDK3Y5ckk5MlVSdlk4dWZwbTZk?=
+ =?utf-8?B?VHV6MzNORE84cnl5T0N2YVNkdkNmQ0JPa3pHTmtHbk1ibXdaelZXYVRoM2hz?=
+ =?utf-8?B?QWJ0YndrZTB5TnczMVNuVHoxWjJlOWRUZWg5a3NHWWFidElXQ2VTZHlya1BK?=
+ =?utf-8?B?bjl5S2FueERtdG9rT3F3RnNrMnorQVROUmx6a05GSHJXajNxOFRQUWNHSkY1?=
+ =?utf-8?B?ckdybXB6aFFDN3lpZXR1dWdmMUNvVzJVcnZSN2o4ZE9Yc0F2REg4czFMTjJy?=
+ =?utf-8?B?MG5DUTQ5cGZsNWI0ZXhuYkg4NStmVnRVZkgxMks0cTNxR3VCcEU1Q0Y5UXp1?=
+ =?utf-8?B?YnB4NnlscE5FZG83SDBaM2ZnYVFka0IxVTBOUnJQa3J0MUdvWlNuKzJ0b0tP?=
+ =?utf-8?B?YU5uTENpdDNNTVhpdU5QZUFqL1lWQUpXRzdHeDJ0WWJJZ1pxcllWaUsySzdy?=
+ =?utf-8?B?NVdXM2t0TmxBY1ZST2NacllRbkhKcXdHRWxOcENYSkhrcUpvL3loam5vMlRO?=
+ =?utf-8?B?WFRIcEIxNHRidXpTVDhVZ05DUEQyRU9MYWVtbHhQNkIrVDF5c01RRElWR2Rl?=
+ =?utf-8?B?ZXMvMVhOYUgzTi93YlI2M3dGWU9ZZkY5K0lJMnVWS2Z6WW5ES3JFS2pod0R0?=
+ =?utf-8?B?Qzh0SXVZZkZtZjVDNWsxcTUxcURhajFyc0Z3ZnE2Wmsrc3l0NUVkdnM3cXV5?=
+ =?utf-8?B?cFNtcWRDRkR1Tk9LUlJZOG13aytPcFdTMm8xZzEwV0VRN0tOYXlNOTJod3oz?=
+ =?utf-8?B?TU9JWDdTS2FRWG4xcnFFRWlwMVZBWFp1TkphK3kzc3lGd2M0VWZCUDRxeVVx?=
+ =?utf-8?B?bFdCZmFZZVVyWWliQkZBWGhnNGxqZytFbXIzSmU0czJLK0hJOXhRQ0ltYXB4?=
+ =?utf-8?B?UXhLaGRNN3lCbnByQ1djcFJsbFZ3RVArWmxwWGhVbXNxSGlZRjlCYVMybU5o?=
+ =?utf-8?B?WjdYTXdUZmNBVEE0MWJ4Yms5cmdwVktJdG93Z0thZjVGbHV4bU9rZk5qN0x0?=
+ =?utf-8?B?YWxDODY5Ni9qVkFGNFd5OXNORXQzRnRXbDZhN2MxZnNaR3pWK0luU05nNmNX?=
+ =?utf-8?B?YjRnRUc2Q25mZ3h0OVo2dzlDQlZ1YzZTbklsRDNobEdLRG5CN09pNmRJd21L?=
+ =?utf-8?B?ZUdEZU5leHQ1WnlvNjhKOXpzMENVUlo0Q1p2KytaKzFWK3N1Um9CL3RBTEFj?=
+ =?utf-8?B?WHUva3JKSWowaVdLREdLRVZ0WlpJVHE3czdveGlTRzgyMmZubzFqZFM4T05v?=
+ =?utf-8?B?eHNXbG9vZ2NUR3ZCYmZkTTB1RTBIWnJpQkxIQml0eXNCQnFrdTVFVFhiRDZN?=
+ =?utf-8?B?UEk5MTNBcVg4NTVtclhmMVZRblYwS0NFYWg0TUpRVFF6R0c5N2o1VFQzRXVI?=
+ =?utf-8?B?T3JpZDBKUEFiMGh1cU5ISzVjVTNYOEpMSEFxeWF1LzdFRXpPa1BWd0JUQkNm?=
+ =?utf-8?B?Tm92eE92ZWZIdjFYMGgweURONTB6MWJ1TUVPWDFHbi96ZVE2MlY2N2V4QkRS?=
+ =?utf-8?B?RHMzaFpxZTJRN3NUdTVLS0FvZCs1OEtnc09zc0dRQ0tKdDZRN3orSEs3YWZP?=
+ =?utf-8?B?ZnVuYk8vVXdaVHlEVDMyVTM0elQzYXJ0N1IySFN4cWcyOTZqemxYVW9xVVA0?=
+ =?utf-8?B?dERCaHVkWU04OU44bEo1NzlLNFQ4ZDVpNzc4VDdCK3V6OUpBWmVLMFZSeTRT?=
+ =?utf-8?B?VUJVTDJqbCtyVjdVOEVOY2hoU1c5MUV4VllWZEtiSDhFL2xkdThCblprZWJS?=
+ =?utf-8?B?TWNGR09rekFHdFFuYTlSY3E3bGZZTjhUblc2bW9xQXkyR01BMHhCcDJWMnZT?=
+ =?utf-8?B?ZGl0eUFQbEsyWkI3MlVNVlJpV3p3R2c3cjM3UT09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 18:39:30.9426
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 067bbb0f-2dee-4a42-0a27-08dd97cda8ae
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000014A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6269
 
-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Hi,
 
-The camera subsystem for the MSM8939 is the same as MSM8916 except with
-3 CSID instead of 2, and some higher clock rates.
+This patch series by Carolina is V10 of the feature that adds rate
+management support on traffic classes in devlink and mlx5, see full
+description by Carolina below [0].
 
-As a quirk, this SoC needs writing values to 2 VFE VBIF registers
-(see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
-This fixes black stripes across sensor and garbage in CSID TPG outputs.
+V10:
+- Added netdevsim selftest for tc-bw ops.
+- Dropped header: field as it’s unnecessary for local constants in
+  devlink.yaml.
 
-Add support for the MSM8939 camera subsystem.
+Regards,
+Tariq
 
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
----
- drivers/media/platform/qcom/camss/camss-csiphy.c   |   1 +
- drivers/media/platform/qcom/camss/camss-ispif.c    |   8 +-
- drivers/media/platform/qcom/camss/camss-vfe-4-1.c  |  11 ++
- drivers/media/platform/qcom/camss/camss-vfe-vbif.c |   7 +
- drivers/media/platform/qcom/camss/camss-vfe.c      |   1 +
- drivers/media/platform/qcom/camss/camss.c          | 157 +++++++++++++++++++++
- drivers/media/platform/qcom/camss/camss.h          |   1 +
- 7 files changed, 184 insertions(+), 2 deletions(-)
+[0]
+This patch series extends the devlink-rate API to support traffic class
+(TC) bandwidth management, enabling more granular control over traffic
+shaping and rate limiting across multiple TCs. The API now allows users
+to specify bandwidth proportions for different traffic classes in a
+single command. This is particularly useful for managing Enhanced
+Transmission Selection (ETS) for groups of Virtual Functions (VFs),
+allowing precise bandwidth allocation across traffic classes.
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
-index c622efcc92ff3781d7fc3ace0253c2d64c91e847..6311fc2975aa1345e430a477c8a6476f1d7e5663 100644
---- a/drivers/media/platform/qcom/camss/camss-csiphy.c
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
-@@ -605,6 +605,7 @@ int msm_csiphy_subdev_init(struct camss *camss,
- 		return PTR_ERR(csiphy->base);
- 
- 	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39 ||
- 	    camss->res->version == CAMSS_8x53 ||
- 	    camss->res->version == CAMSS_8x96) {
- 		csiphy->base_clk_mux =
-diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/media/platform/qcom/camss/camss-ispif.c
-index 2dc585c6123dd248a5bacd9c7a88cb5375644311..aaf3caa42d33dcb641651e7f5bc0c2a564d85bfa 100644
---- a/drivers/media/platform/qcom/camss/camss-ispif.c
-+++ b/drivers/media/platform/qcom/camss/camss-ispif.c
-@@ -1112,6 +1112,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 	/* Number of ISPIF lines - same as number of CSID hardware modules */
- 	if (camss->res->version == CAMSS_8x16)
- 		ispif->line_num = 2;
-+	else if (camss->res->version == CAMSS_8x39)
-+		ispif->line_num = 3;
- 	else if (camss->res->version == CAMSS_8x96 ||
- 		 camss->res->version == CAMSS_8x53 ||
- 		 camss->res->version == CAMSS_660)
-@@ -1128,7 +1130,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 		ispif->line[i].ispif = ispif;
- 		ispif->line[i].id = i;
- 
--		if (camss->res->version == CAMSS_8x16) {
-+		if (camss->res->version == CAMSS_8x16 ||
-+		    camss->res->version == CAMSS_8x39) {
- 			ispif->line[i].formats = ispif_formats_8x16;
- 			ispif->line[i].nformats =
- 					ARRAY_SIZE(ispif_formats_8x16);
-@@ -1162,7 +1165,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 	ispif->irq = ret;
- 	snprintf(ispif->irq_name, sizeof(ispif->irq_name), "%s_%s",
- 		 dev_name(dev), MSM_ISPIF_NAME);
--	if (camss->res->version == CAMSS_8x16)
-+	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39)
- 		ret = devm_request_irq(dev, ispif->irq, ispif_isr_8x16,
- 			       IRQF_TRIGGER_RISING, ispif->irq_name, ispif);
- 	else if (camss->res->version == CAMSS_8x96 ||
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-index 901677293d971cf761944a660ef719af38203f22..520bc16f2a05e34f457a828ecdb1f9502a0470c1 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-@@ -15,6 +15,7 @@
- #include "camss.h"
- #include "camss-vfe.h"
- #include "camss-vfe-gen1.h"
-+#include "camss-vfe-vbif.h"
- 
- #define VFE_0_HW_VERSION		0x000
- 
-@@ -733,6 +734,7 @@ static void vfe_set_qos(struct vfe_device *vfe)
- {
- 	u32 val = VFE_0_BUS_BDG_QOS_CFG_0_CFG;
- 	u32 val7 = VFE_0_BUS_BDG_QOS_CFG_7_CFG;
-+	int ret;
- 
- 	writel_relaxed(val, vfe->base + VFE_0_BUS_BDG_QOS_CFG_0);
- 	writel_relaxed(val, vfe->base + VFE_0_BUS_BDG_QOS_CFG_1);
-@@ -742,6 +744,15 @@ static void vfe_set_qos(struct vfe_device *vfe)
- 	writel_relaxed(val, vfe->base + VFE_0_BUS_BDG_QOS_CFG_5);
- 	writel_relaxed(val, vfe->base + VFE_0_BUS_BDG_QOS_CFG_6);
- 	writel_relaxed(val7, vfe->base + VFE_0_BUS_BDG_QOS_CFG_7);
-+
-+	/* SoC-specific VBIF settings */
-+	if (vfe->res->has_vbif) {
-+		ret = vfe_vbif_apply_settings(vfe);
-+		if (ret < 0)
-+			dev_err_ratelimited(vfe->camss->dev,
-+					    "VFE: VBIF error %d\n",
-+					    ret);
-+	}
- }
- 
- static void vfe_set_ds(struct vfe_device *vfe)
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-vbif.c b/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-index 2ae61b7baa148f0ad63fe3b8751aeb7b8fc12d81..d461880e5379c21746b5b191910becdbab36d3f5 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-@@ -14,6 +14,9 @@
- #include "camss-vfe.h"
- #include "camss-vfe-vbif.h"
- 
-+#define VBIF_FIXED_SORT_EN	0x30
-+#define VBIF_FIXED_SORT_SEL0	0x34
-+
- void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val)
- {
- 	writel_relaxed(val, vfe->vbif_base + reg);
-@@ -22,6 +25,10 @@ void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val)
- int vfe_vbif_apply_settings(struct vfe_device *vfe)
- {
- 	switch (vfe->camss->res->version) {
-+	case CAMSS_8x39:
-+		vfe_vbif_reg_write(vfe, VBIF_FIXED_SORT_EN, 0xfff);
-+		vfe_vbif_reg_write(vfe, VBIF_FIXED_SORT_SEL0, 0x555000);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index ffd0bd3be6dd831e0b5257ca6152d13301f80b35..389f89c804e4d35e4a9b66665403e3f9706ad6d7 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.c
-@@ -290,6 +290,7 @@ static u32 vfe_src_pad_code(struct vfe_line *line, u32 sink_code,
- 
- 	switch (vfe->camss->res->version) {
- 	case CAMSS_8x16:
-+	case CAMSS_8x39:
- 	case CAMSS_8x53:
- 		switch (sink_code) {
- 		case MEDIA_BUS_FMT_YUYV8_1X16:
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 06f42875702f02f9d8d83d06ddaa972eacb593f8..6dee9360689b99a015332bdc092d92fffcb599e0 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -154,6 +154,149 @@ static const struct camss_subdev_resources vfe_res_8x16[] = {
- 	}
- };
- 
-+static const struct camss_subdev_resources csiphy_res_8x39[] = {
-+	/* CSIPHY0 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 100000000, 200000000 } },
-+		.reg = { "csiphy0", "csiphy0_clk_mux" },
-+		.interrupt = { "csiphy0" },
-+		.csiphy = {
-+			.id = 0,
-+			.hw_ops = &csiphy_ops_2ph_1_0,
-+			.formats = &csiphy_formats_8x16
-+		}
-+	},
-+
-+	/* CSIPHY1 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 100000000, 200000000 } },
-+		.reg = { "csiphy1", "csiphy1_clk_mux" },
-+		.interrupt = { "csiphy1" },
-+		.csiphy = {
-+			.id = 1,
-+			.hw_ops = &csiphy_ops_2ph_1_0,
-+			.formats = &csiphy_formats_8x16
-+		}
-+	}
-+};
-+
-+static const struct camss_subdev_resources csid_res_8x39[] = {
-+	/* CSID0 */
-+	{
-+		.regulators = { "vdda" },
-+		.clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
-+			   "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid0" },
-+		.interrupt = { "csid0" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+
-+	/* CSID1 */
-+	{
-+		.regulators = { "vdda" },
-+		.clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
-+			   "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid1" },
-+		.interrupt = { "csid1" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+
-+	/* CSID2 */
-+	{
-+		.regulators = { "vdda" },
-+		.clock = { "top_ahb", "ispif_ahb", "csi2_ahb", "ahb",
-+			   "csi2", "csi2_phy", "csi2_pix", "csi2_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid2" },
-+		.interrupt = { "csid2" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+};
-+
-+static const struct camss_subdev_resources ispif_res_8x39 = {
-+	/* ISPIF */
-+	.clock = { "top_ahb", "ispif_ahb", "ahb",
-+		   "csi0", "csi0_pix", "csi0_rdi",
-+		   "csi1", "csi1_pix", "csi1_rdi",
-+		   "csi2", "csi2_pix", "csi2_rdi" },
-+	.clock_for_reset = { "vfe0", "csi_vfe0" },
-+	.reg = { "ispif", "csi_clk_mux" },
-+	.interrupt = { "ispif" },
-+};
-+
-+static const struct camss_subdev_resources vfe_res_8x39[] = {
-+	/* VFE0 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "vfe0", "csi_vfe0",
-+			   "vfe_ahb", "vfe_axi", "ahb" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 50000000, 80000000, 100000000, 160000000,
-+				  177780000, 200000000, 266670000, 320000000,
-+				  400000000, 465000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "vfe0" },
-+		.interrupt = { "vfe0" },
-+		.vfe = {
-+			.line_num = 3,
-+			.has_vbif = true,
-+			.vbif_name = "vfe0_vbif",
-+			.hw_ops = &vfe_ops_4_1,
-+			.formats_rdi = &vfe_formats_rdi_8x16,
-+			.formats_pix = &vfe_formats_pix_8x16
-+		}
-+	}
-+};
-+
- static const struct camss_subdev_resources csid_res_8x53[] = {
- 	/* CSID0 */
- 	{
-@@ -3585,6 +3728,7 @@ static int camss_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39 ||
- 	    camss->res->version == CAMSS_8x53 ||
- 	    camss->res->version == CAMSS_8x96) {
- 		camss->ispif = devm_kcalloc(dev, 1, sizeof(*camss->ispif), GFP_KERNEL);
-@@ -3727,6 +3871,18 @@ static const struct camss_resources msm8916_resources = {
- 	.link_entities = camss_link_entities
- };
- 
-+static const struct camss_resources msm8939_resources = {
-+	.version = CAMSS_8x39,
-+	.csiphy_res = csiphy_res_8x39,
-+	.csid_res = csid_res_8x39,
-+	.ispif_res = &ispif_res_8x39,
-+	.vfe_res = vfe_res_8x39,
-+	.csiphy_num = ARRAY_SIZE(csiphy_res_8x39),
-+	.csid_num = ARRAY_SIZE(csid_res_8x39),
-+	.vfe_num = ARRAY_SIZE(vfe_res_8x39),
-+	.link_entities = camss_link_entities
-+};
-+
- static const struct camss_resources msm8953_resources = {
- 	.version = CAMSS_8x53,
- 	.icc_res = icc_res_8x53,
-@@ -3863,6 +4019,7 @@ static const struct camss_resources x1e80100_resources = {
- 
- static const struct of_device_id camss_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-camss", .data = &msm8916_resources },
-+	{ .compatible = "qcom,msm8939-camss", .data = &msm8939_resources },
- 	{ .compatible = "qcom,msm8953-camss", .data = &msm8953_resources },
- 	{ .compatible = "qcom,msm8996-camss", .data = &msm8996_resources },
- 	{ .compatible = "qcom,sc7280-camss", .data = &sc7280_resources },
-diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
-index 63c0afee154a02194820016ccf554620d6521c8b..be11cf3af478627fa48827e70d5f0673939e1e63 100644
---- a/drivers/media/platform/qcom/camss/camss.h
-+++ b/drivers/media/platform/qcom/camss/camss.h
-@@ -80,6 +80,7 @@ enum camss_version {
- 	CAMSS_660,
- 	CAMSS_7280,
- 	CAMSS_8x16,
-+	CAMSS_8x39,
- 	CAMSS_8x53,
- 	CAMSS_8x96,
- 	CAMSS_8250,
+Additionally the series refines the QoS handling in net/mlx5 to support
+TC arbitration and bandwidth management on vports and rate nodes.
 
+Discussions on traffic class shaping in net-shapers began in V5 [1],
+where we discussed with maintainers whether net-shapers should support
+traffic classes and how this could be implemented.
+
+Later, after further conversations with Paolo Abeni and Simon Horman,
+Cosmin provided an update [2], confirming that net-shapers' tree-based
+hierarchy aligns well with traffic classes when treated as distinct
+subsets of netdev queues. Since mlx5 enforces a 1:1 mapping between TX
+queues and traffic classes, this approach seems feasible, though some
+open questions remain regarding queue reconfiguration and certain mlx5
+scheduling behaviors.
+
+Building on that discussion, Cosmin has now shared a concrete
+implementation plan on the netdev mailing list [3]. The plan, developed
+in collaboration with Paolo and Simon, outlines how net-shapers can be
+extended to support the same use cases currently covered by
+devlink-rate, with the eventual goal of aligning both and simplifying
+the shaping infrastructure in the kernel.
+
+This work was presented at Netdev 0x19 in Zagreb [4].
+There we presented how TC scheduling is enforced in mlx5 hardware,
+which led to discussions on the mailing list.
+
+A summary of how things work:
+
+Classification means labeling a packet with a traffic class based on the
+packet's DSCP or VLAN PCP field, then treating packets with different
+traffic classes differently during transmit processing.
+
+In a virtualized setup, VFs are untrusted and do not control
+classification or shaping.  Classification is done by the hardware using
+a prio-to-TC mapping set by the hypervisor. VFs only select which send
+queue to use and are expected to respect the classification logic by
+sending each traffic class on its dedicated queue. As stated in the
+net-shapers plan [3], each transmit queue should carry only a single
+traffic class. Mixing classes in a single queue can lead to HOL
+blocking.
+
+In the mlx5 implementation, if the queue used does not match the
+classified traffic class, the hardware moves the queue to the correct TC
+scheduler. This movement is not a reclassification; it’s a necessary
+enforcement step to ensure traffic class isolation is maintained.
+
+Extend devlink-rate API to support rate management on TCs:
+- devlink: Extend the devlink rate API to support traffic class
+  bandwidth management
+
+Introduce a no-op implementation:
+- net/mlx5: Add no-op implementation for setting tc-bw on rate objects
+
+Add support for enabling and disabling TC QoS on vports and nodes:
+- net/mlx5: Add support for setting tc-bw on nodes
+- net/mlx5: Add traffic class scheduling support for vport QoS
+
+Support for setting tc-bw on rate objects:
+- net/mlx5: Manage TC arbiter nodes and implement full support for
+  tc-bw
+
+[1]
+https://lore.kernel.org/netdev/20241204220931.254964-1-tariqt@nvidia.com/
+[2]
+https://lore.kernel.org/netdev/67df1a562614b553dcab043f347a0d7c5393ff83.camel@nvidia.com/
+[3]
+https://lore.kernel.org/netdev/d9831d0c940a7b77419abe7c7330e822bbfd1cfb.camel@nvidia.com/T/
+[4]
+https://netdevconf.info/0x19/sessions/talk/optimizing-bandwidth-allocation-with-ets-and-traffic-classes.html
+
+Carolina Jubran (6):
+  devlink: Extend devlink rate API with traffic classes bandwidth
+    management
+  selftest: netdevsim: Add devlink rate tc-bw test
+  net/mlx5: Add no-op implementation for setting tc-bw on rate objects
+  net/mlx5: Add support for setting tc-bw on nodes
+  net/mlx5: Add traffic class scheduling support for vport QoS
+  net/mlx5: Manage TC arbiter nodes and implement full support for tc-bw
+
+ Documentation/netlink/specs/devlink.yaml      |   35 +-
+ .../networking/devlink/devlink-port.rst       |    7 +
+ .../net/ethernet/mellanox/mlx5/core/devlink.c |    2 +
+ .../net/ethernet/mellanox/mlx5/core/esw/qos.c | 1007 ++++++++++++++++-
+ .../net/ethernet/mellanox/mlx5/core/esw/qos.h |    8 +
+ .../net/ethernet/mellanox/mlx5/core/eswitch.h |   14 +-
+ drivers/net/netdevsim/dev.c                   |   43 +
+ drivers/net/netdevsim/netdevsim.h             |    1 +
+ include/net/devlink.h                         |    6 +
+ include/uapi/linux/devlink.h                  |    9 +
+ net/devlink/netlink_gen.c                     |   15 +-
+ net/devlink/netlink_gen.h                     |    1 +
+ net/devlink/rate.c                            |  127 +++
+ .../drivers/net/netdevsim/devlink.sh          |   51 +
+ 14 files changed, 1289 insertions(+), 37 deletions(-)
+
+
+base-commit: f685204c57e87d2a88b159c7525426d70ee745c9
 -- 
-2.49.0
-
+2.31.1
 
