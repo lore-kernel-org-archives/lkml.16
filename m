@@ -1,240 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10F1E5701
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201642609DF;
+	Tue, 20 May 2025 08:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731071; cv=none; b=dUp67V9fy2qSuQozgtr0BarwCn0rrb/ffTZVQGN3nJi6WrfHrENBnWZyFF6LhpoNaLdedAnKwbCjNAN8cJHo8BNwm8WkrAa80ihpXYxP2j+xD6i13UXylu7FcdCK4CQ7oSJrIZsjkgV8LQAlL6LGK7X+LXaRE68Gr/nUQKPFAHk=
+	t=1747731073; cv=none; b=tV9xOrqcYv7LCuekh21WohOBKZ756vHSeRavULRKDBHt6295ChA73wj56e78YDAzfBOFLZWRwvuttHXrTbgnZS8n5BeEcyhGVpQJ6tXGZqRcQoBEmm4u5b9NTdpx8J3GO+x8Bg5LsOeoUu4iceLTQZ6xWOz6tZfsCQ9zU2CQcj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731071; c=relaxed/simple;
-	bh=zotR65AwVsN1R6gTerMNJvK5LH8OmDOyCFKEesqrLiU=;
+	s=arc-20240116; t=1747731073; c=relaxed/simple;
+	bh=j7k9kuOSIr4GMcGXb1NEvatg55OF6bXsyRSdV1THpdU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYzZSpeTtmNd/EjQpqK5rxidMabmgkt9KSZWjGHiBKr56l/4M21MN8cNHPLRNkSDwex+uiJnk1f+bkoGsE6qjcNeLT0YbOncd2EwUbaqcH6+DqKtcTILQjkNNNMdoOUxv8JpQ3fPJBjPGFsf8FR8pIlgiEyrO8Ult8gALQ50DS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EZgVEijk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7654L12IiW1SCNr+NPcIriNXk+1zGADefXpo2urQKQv03M3kfPtg362HiiRNANJVY1pR4OGwCpULUbwL9KBIuDFuZlfHTlsOeRJ3ez7qhpwdXOk0D1rpn6mDgDcP5lPQPgTx6CsjJ0Ho6uMUaU3xfGtRD+2XvN51RNPfOMabak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FrbMJrWV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lkpzu8bg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EZgVEijk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747731068;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FrbMJrWV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lkpzu8bg"
+Date: Tue, 20 May 2025 10:51:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747731068;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EOR3BGvukeRG/xgG5qyMBebhNmPVVYRJCDBQXWKeXAs=;
-	b=EZgVEijkHj1Gxj0g1XUbVHli5jjLlEJiDsf/tevNaSuBinEM8rPD5kII+Z6lMmmv6JWDlZ
-	5fxUDFgFayx+RPydXGpH2Tf4enhf0X/TmpiXDCOQ4NorIRtTbTWaTLKdd4q65Gq1N3ttC1
-	1uIsgk3u+t9RkCmVnoNP8/O8V+EdkWc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-442-SDRGFenBMsGtlMevuYGd5A-1; Tue, 20 May 2025 04:51:06 -0400
-X-MC-Unique: SDRGFenBMsGtlMevuYGd5A-1
-X-Mimecast-MFC-AGG-ID: SDRGFenBMsGtlMevuYGd5A_1747731066
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ad56222a1easo197894066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:51:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747731066; x=1748335866;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EOR3BGvukeRG/xgG5qyMBebhNmPVVYRJCDBQXWKeXAs=;
-        b=FL+cUsoNz4OTOya/HbfZ05hlCll5NhIw183mhpkTkHtaqnWmWIG2sWnzq4L83Ma4Ef
-         Y2A/nMwy/IlJUO7Nd7TDSkL+6JhOzz5eo9DTaZYnVBOALhQCefdyuX8xTbXs2aamCuwH
-         EBaxJYQdVp4E+RNBjIp9cLa8pXEXctLJHqeqRXY5v1/qAHGzpe8eAccbVJ+8uBi6w0Ma
-         4UBdNPhvZAXuPG9tlaFqf6ENqEqR88b7MlvLuX3Qve5airVgofHaO2IqfFcDScYyVdh5
-         CGOr0ozW2Jd0H0HIViUiqgOW4vIsGysWpVm3bB/Nz46Po6/3iBIQyAAWnh+q08RIdA4F
-         HPBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVp8gbH9IR1dK9bfFswCJfA9ioPIe9brdv214jRn/4ObpI4C4vdDdTlg4LjCpIR+ecH37gJVxeyvWavHdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1vUh6GbrnIDf9ut0GTlBZ+Doy9OBDBly7sdSqoL3GrRMOacw6
-	c6RmB+WV0dHCUmBT5CxlgQMLJlYQEfr7mtSPTxuif7snqU1e+MNHSTActwBFZJj0paSJpWYVltx
-	J7FVLXxcHHcU45Ovx7DpphHSvCHV+ZPBcseq0wYlROFDmnMJAdXORXCY9ShXNpsmE7Q==
-X-Gm-Gg: ASbGncs89rhGVUdfRrFIbjO17HHyB76xypXp2dZMCPODopT4Uuj9WFyBe/XNakoBaDb
-	EFGmhnfGHfCHJYIGyql6T/hlh3WPBmTCHcumiRw4VoD+18ppWUft7kvUYPC601Wlou2EROGhGv2
-	Jjo6p8UKGxyT7VhsML06ujDRF3Dek7Dg+DBHFegK4CE7STMrgpqjULCVB3oiOu6tlqyR/wK/OhP
-	8V8hmWW8pmunGmqvBciQSIeydS/FjAiG6jVDKq+T1AYasgbdC3ge6kIExmEQVhiATn4wZBueo2I
-	7ac423oVCZpdAWk9NtnkuBaakRBou46QvoN7DvMgtS0jnKSF6eYAkJzi1FGW
-X-Received: by 2002:a17:907:2682:b0:ad5:2b4e:bb7b with SMTP id a640c23a62f3a-ad52d49e2ddmr1403355866b.15.1747731065641;
-        Tue, 20 May 2025 01:51:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGaI2ZCuVLkAOsu1YOAu/YmFtpemfCLgNGxHNGFSR/RD5XYMAMIGPJvHO7fGqKwrsdrpyBvDA==
-X-Received: by 2002:a17:907:2682:b0:ad5:2b4e:bb7b with SMTP id a640c23a62f3a-ad52d49e2ddmr1403353566b.15.1747731065012;
-        Tue, 20 May 2025 01:51:05 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06e098sm708890366b.59.2025.05.20.01.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 01:51:04 -0700 (PDT)
-Date: Tue, 20 May 2025 10:51:00 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: mst@redhat.com, fupan.lfp@antgroup.com, pabeni@redhat.com, 
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, davem@davemloft.net, 
-	stefanha@redhat.com, virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Subject: Re: [PATCH 3/3] test/vsock: Add ioctl SIOCINQ tests
-Message-ID: <66nlxrh4spcyhp666gqhovnevnnarq2a56fxgkffijnwiartrt@622gumoesmde>
-References: <20250519070649.3063874-1-niuxuewei.nxw@antgroup.com>
- <20250519070649.3063874-4-niuxuewei.nxw@antgroup.com>
+	bh=sAXUtQcpZUdkmC1TyAO0R3zmLqg2lXnELKr3jI8UqTo=;
+	b=FrbMJrWVtwaZ4FM8NVOo4EQFlSWaTo6S34mh5xeiqcv3gtjfXunzlDksn74PR99PW81JQp
+	ZBUbOLDBTEdX1JUIQeWsqecpGJ4IdjM+N9j5QBMYAvWYvc8tyNJlAOhlMCFpAn/KZe1JLp
+	DFQEORGKaDcPWlKn5XN8AsKMRETQMNTzDhAXbQ/RLLlNLTm7OaBM8Rfv7tsNNvXhdz9lqs
+	Pk2Q33XPVJpwbIHTFyeh6kdFRjZ1OLVPYmFUpWd3XzHSNhDEc5nIfeHytt1iiSj/m32b93
+	vbK8CxEg0UC1kDdFBggENZb67rGC3WQe+BROcl6+fRNOw6dYJtOoZANQ+6ZSEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747731068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sAXUtQcpZUdkmC1TyAO0R3zmLqg2lXnELKr3jI8UqTo=;
+	b=lkpzu8bgx5D+G8io7SmMkkgzirR81Q8VcCw9KHkpokD7vixoQTI4qRzDNenN+8wUI6Vrby
+	dgrOXb2Pwia7hUAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] selftests/futex: Fix spelling mistake
+ "unitiliazed" -> "uninitialized"
+Message-ID: <20250520085106.-gdQ0Hnd@linutronix.de>
+References: <20250520080657.30726-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250519070649.3063874-4-niuxuewei.nxw@antgroup.com>
+In-Reply-To: <20250520080657.30726-1-colin.i.king@gmail.com>
 
-On Mon, May 19, 2025 at 03:06:49PM +0800, Xuewei Niu wrote:
->This patch adds two tests for ioctl SIOCINQ for SOCK_STREAM and
->SOCK_SEQPACKET. The client waits for the server to send data, and checks if
->the return value of the SIOCINQ is the size of the data. Then, consumes the
->data and checks if the value is 0.
+On 2025-05-20 09:06:57 [+0100], Colin Ian King wrote:
+> There is a spelling mistake in a fail error message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-We recently fixed the SIOCOUTQ test, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7fd7ad6f36af36f30a06d165eff3780cb139fa79
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Should we do the same here?
-
->
->Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->---
-> tools/testing/vsock/vsock_test.c | 102 +++++++++++++++++++++++++++++++
-> 1 file changed, 102 insertions(+)
->
->diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
->index d0f6d253ac72..8b3fb88e2877 100644
->--- a/tools/testing/vsock/vsock_test.c
->+++ b/tools/testing/vsock/vsock_test.c
->@@ -1282,6 +1282,78 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
-> 	close(fd);
-> }
->
->+static void test_unread_bytes_server(const struct test_opts *opts, int type)
->+{
->+	unsigned char buf[MSG_BUF_IOCTL_LEN];
->+	int client_fd;
->+
->+	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
->+	if (client_fd < 0) {
->+		perror("accept");
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	for (int i = 0; i < sizeof(buf); i++)
->+		buf[i] = rand() & 0xFF;
->+
->+	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
->+	control_writeln("SENT");
->+	control_expectln("RECEIVED");
->+
->+	close(client_fd);
->+}
->+
->+static void test_unread_bytes_client(const struct test_opts *opts, int type)
->+{
->+	unsigned char buf[MSG_BUF_IOCTL_LEN];
->+	int ret, fd;
->+	int sock_bytes_unread;
->+
->+	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
->+	if (fd < 0) {
->+		perror("connect");
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	control_expectln("SENT");
->+	// The data have come in but is not read, the expected value is
->+	// MSG_BUF_IOCTL_LEN.
->+	ret = ioctl(fd, SIOCINQ, &sock_bytes_unread);
->+	if (ret < 0) {
->+		if (errno == EOPNOTSUPP) {
->+			fprintf(stderr,
->+				"Test skipped, SIOCINQ not supported.\n");
->+			goto out;
->+		} else {
->+			perror("ioctl");
->+			exit(EXIT_FAILURE);
->+		}
->+	} else if (ret == 0 && sock_bytes_unread != MSG_BUF_IOCTL_LEN) {
->+		fprintf(stderr,
->+			"Unexpected 'SIOCOUTQ' value, expected %d, got %i\n",
->+			MSG_BUF_IOCTL_LEN, sock_bytes_unread);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
->+	// The data is consumed, so the expected is 0.
->+	ret = ioctl(fd, SIOCINQ, &sock_bytes_unread);
->+	if (ret < 0) {
->+		// Don't ignore EOPNOTSUPP since we have already checked it!
->+		perror("ioctl");
->+		exit(EXIT_FAILURE);
->+	} else if (ret == 0 && sock_bytes_unread != 0) {
->+		fprintf(stderr,
->+			"Unexpected 'SIOCOUTQ' value, expected 0, got %i\n",
->+			sock_bytes_unread);
->+		exit(EXIT_FAILURE);
->+	}
->+	control_writeln("RECEIVED");
->+
->+out:
->+	close(fd);
->+}
->+
-> static void test_stream_unsent_bytes_client(const struct test_opts *opts)
-> {
-> 	test_unsent_bytes_client(opts, SOCK_STREAM);
->@@ -1302,6 +1374,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
-> 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
-> }
->
->+static void test_stream_unread_bytes_client(const struct test_opts *opts)
->+{
->+	test_unread_bytes_client(opts, SOCK_STREAM);
->+}
->+
->+static void test_stream_unread_bytes_server(const struct test_opts *opts)
->+{
->+	test_unread_bytes_server(opts, SOCK_STREAM);
->+}
->+
->+static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
->+{
->+	test_unread_bytes_client(opts, SOCK_SEQPACKET);
->+}
->+
->+static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
->+{
->+	test_unread_bytes_server(opts, SOCK_SEQPACKET);
->+}
->+
-> #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
-> /* This define is the same as in 'include/linux/virtio_vsock.h':
->  * it is used to decide when to send credit update message during
->@@ -1954,6 +2046,16 @@ static struct test_case test_cases[] = {
-> 		.run_client = test_seqpacket_unsent_bytes_client,
-> 		.run_server = test_seqpacket_unsent_bytes_server,
-> 	},
->+	{
->+		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
->+		.run_client = test_stream_unread_bytes_client,
->+		.run_server = test_stream_unread_bytes_server,
->+	},
->+	{
->+		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
->+		.run_client = test_seqpacket_unread_bytes_client,
->+		.run_server = test_seqpacket_unread_bytes_server,
->+	},
-
-Please, append new test at the end, so we will not change test IDs.
-
-Thanks,
-Stefano
-
-> 	{
-> 		.name = "SOCK_STREAM leak accept queue",
-> 		.run_client = test_stream_leak_acceptq_client,
->-- 
->2.34.1
->
-
+Sebastian
