@@ -1,114 +1,562 @@
-Received: from sxb1plsmtpa01-14.prod.sxb1.secureserver.net (sxb1plsmtpa01-14.prod.sxb1.secureserver.net [92.204.81.240])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C191E1DB124
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.204.81.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833981DFD84;
+	Tue, 20 May 2025 23:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747782326; cv=none; b=pSVQbyiKbaxT/vEYEIiATeG6iOhKVICnv9Ito2dB35gkcDQfGgIrR4kuKE05p18WyebS/cNtw6E13PfL7pQS6TkqY9ja0iP69pRBlq28cahsfkS5hfLr4BaPQRawCzRiCmwVwujjYsB0Q1gM565iDKjM411ZDVRXLCleTg+y5fE=
+	t=1747782483; cv=none; b=siuilcau/dMwaJ9Ex3k7Mf5/imrMNQwIV9z3dhNCmmQWXv6T8VUjrwJYKtitPCDIauOVtMTAKLwSlSBz3+Vl68lQLdd1WyUrpfwhd+yAK4rl01vjSS/pYNRcTATdpxsSaGndBU9yUtNWD1gagdovZfCzEBTjxwp/YWkymrqrWsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747782326; c=relaxed/simple;
-	bh=BRuhdr5tVsHYPVxgsgfcnDBAArK6CdrX6ja85k5r5PE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VTxNsI5F2Kxa0pxNXjx+6FK/awg1RgF4tgWVwoeg/OIlhWMlFOMKCupaoIMZLwpHe4moFzDUxcC6vnQ+Ttzw2NSfzIShlA94gfMfTtCBfuWk0eZHaiWu2XW1eZE1aX+E32HlPzk13gut1/W+AZgLiKTY6YzmXJatVWNPZackb/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=92.204.81.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from [192.168.178.95] ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPSA
-	id HVisu1fVOc0xeHViuumg1S; Tue, 20 May 2025 15:46:13 -0700
-X-CMAE-Analysis: v=2.4 cv=EdjIQOmC c=1 sm=1 tr=0 ts=682d0636
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=IkcTkHD0fZMA:10 a=57SyGIRnAAAA:8 a=F8v1yU81VWNR6WkcbFIA:9 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-Message-ID: <cc8a035e-f4ad-49ba-9d00-4635e319bc83@squashfs.org.uk>
-Date: Tue, 20 May 2025 23:45:00 +0100
+	s=arc-20240116; t=1747782483; c=relaxed/simple;
+	bh=vgxi+U83dG2yMvwjJ+Dtit2QWaexktPHwN2yVtyIhlQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cgWQV09vDnhptgRBzENwXkzLJP+PuhK2mVQGiZeZgh33s6u+8f3qIPnaWctfiJ++fpqsX7u76rLR/ErMsnfbDYAP/nKRyYwbq9NXDEwoaVuWV+FWbQXLXGzkbXzvX2NWV80xbqjAihoWORhQl7jYLrTi334UhIjy425p2GAy68o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Yq7bFhd3; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Yq7bFhd3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747782482; x=1779318482;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vgxi+U83dG2yMvwjJ+Dtit2QWaexktPHwN2yVtyIhlQ=;
+  b=Yq7bFhd3PhnfjLIYv74c/ZtyJrw9H6cLN3I2SY/zRJt0xo6j+u224fve
+   1pnTdbkDU2AZwTrtPCZ81JTlCGo1jgBCDhzWUIwBxOH4xfBqd65ENuHZ0
+   e7c8WX235IFKQLAoUDSo4CPrzmbW5IXCzYruRLgO7NwRhfzfDkYQrg1TG
+   nEuVMqHFgkaP5DG6q8tGaeQMhw8v11cVsAr3vcgVvcPUEIAli5ViFQ9Wr
+   9uH3uUA5MZsnVT2K8LFxMWgjfDvQP29iUCNmv1JOnS3EqS6wvI2iivWV4
+   wUqvjlZpOSnN6E3JyVMSIIXN4pz3uVxtR4vdc0k+WBBKH5naYxlJknsGc
+   g==;
+X-CSE-ConnectionGUID: YjXhzVLbQz+WCBiz8JZUDQ==
+X-CSE-MsgGUID: LKqa3f4TTeeHpyneUti8cA==
+X-IronPort-AV: E=Sophos;i="6.15,303,1739862000"; 
+   d="scan'208";a="41876370"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2025 16:08:01 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 20 May 2025 16:07:20 -0700
+Received: from pop-os.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Tue, 20 May 2025 16:07:20 -0700
+From: <Tristram.Ha@microchip.com>
+To: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+	Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>
+CC: ALOK TIWARI <alok.a.tiwari@oracle.com>, Heiner Kallweit
+	<hkallweit1@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Tristram Ha <tristram.ha@microchip.com>
+Subject: [PATCH net-next v5] net: dsa: microchip: Add SGMII port support to KSZ9477 switch
+Date: Tue, 20 May 2025 16:07:20 -0700
+Message-ID: <20250520230720.23425-1-Tristram.Ha@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] squashfs: Add optional full compressed block caching
-To: Chanho Min <chanho.min@lge.com>
-Cc: linux-kernel@vger.kernel.org, gunho.lee@lge.com
-References: <20250502081947.44034-1-chanho.min@lge.com>
-Content-Language: en-US
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <20250502081947.44034-1-chanho.min@lge.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfDRQNSwqLeESSCq8nzo+Ev+TRVx9I2RtSxhbk+O9/bfbENW3azpBM/RRthT0W7vC0lQoUzVaz77FcWiF2DlyhOqTstFxz4OA9GE4r2/cUSxXLgM7exLb
- 3vK0n+2FnAkYseAjcSjcGHhEsOFCgpLjQynCQh9eIBwC8gQ4agR8otJoSdmQupKQ4Y3E2RS3KWeHT9HqZ6tYzMC4F3vWQEZji+Nehm6gflkxoebOtze1X8Dw
- SsrCHnGh9ApD8ZnIr40ia6ffykYUPtT0VderiD8zcwc=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 02/05/2025 09:19, Chanho Min wrote:
-> The commit 93e72b3c612adcaca1("squashfs: migrate from ll_rw_block usage to BIO")
-> removed caching of compressed blocks in SquashFS, causing fio performance
-> regression in workloads with repeated file reads. Without caching, every read
+From: Tristram Ha <tristram.ha@microchip.com>
 
-Please run scripts/checkpatch.pl on your patch.  It complains that the above
-line is over 75 characters in length.
+The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
+port.  However there are some hardware bugs in the KSZ9477 SGMII
+module so workarounds are needed.  There was a proposal to update the
+XPCS driver to accommodate KSZ9477, but the new code is not generic
+enough to be used by other vendors.  It is better to do all these
+workarounds inside the KSZ9477 driver instead of modifying the XPCS
+driver.
 
-It also complains of DOS line endings.
+There are 3 hardware issues.  The first is the MII_ADVERTISE register
+needs to be write once after reset for the correct code word to be
+sent.  The XPCS driver disables auto-negotiation first before
+configuring the SGMII/1000BASE-X mode and then enables it back.  The
+KSZ9477 driver then writes the MII_ADVERTISE register before enabling
+auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
+be set, so KSZ9477 driver does not need to write it.
 
-> triggers disk I/O, severely impacting performance in tools like fio.
-> 
-> This patch introduces a new CONFIG_SQUASHFS_COMP_CACHE_FULL Kconfig option to
-> enable caching of all compressed blocks, restoring performance to pre-BIO
-> migration levels. When enabled, all pages in a BIO are cached in the page
-> cache, reducing disk I/O for repeated reads. The fio test results with this
-> patch confirm the performance restoration:
-> 
-> For example, fio tests (iodepth=1, numjobs=1, 
-> ioengine=psync) show a notable performance restoration:
-> 
-> Disable CONFIG_SQUASHFS_COMP_CACHE_FULL:
->    IOPS=815, BW=102MiB/s (107MB/s)(6113MiB/60001msec)
-> Enable CONFIG_SQUASHFS_COMP_CACHE_FULL:
->    IOPS=2223, BW=278MiB/s (291MB/s)(16.3GiB/59999msec)
-> 
-> The trade-off is increased memory usage due to caching all compressed blocks.
-> The CONFIG_SQUASHFS_COMP_CACHE_FULL option allows users to enable this feature
-> selectively, balancing performance and memory usage for workloads with frequent
-> repeated reads.
-> 
-> Signed-off-by: Chanho Min <chanho.min@lge.com>
-> ---
->   fs/squashfs/Kconfig | 21 +++++++++++++++++++++
->   fs/squashfs/block.c | 28 ++++++++++++++++++++++++++++
->   2 files changed, 49 insertions(+)
-> 
-> diff --git a/fs/squashfs/Kconfig b/fs/squashfs/Kconfig
-> index 60fc98bdf421..cc5e4be58afa 100644
-> --- a/fs/squashfs/Kconfig
-> +++ b/fs/squashfs/Kconfig
-> @@ -149,6 +149,27 @@ config SQUASHFS_XATTR
->   
->   	  If unsure, say N.
->   
-> +config SQUASHFS_COMP_CACHE_FULL
-> +	bool "Enable full caching of compressed blocks"
-> +	depends on SQUASHFS
-> +	default n
-> +	help
-> +	  This option enables caching of all compressed blocks, Without caching,
-> +	  repeated reads of the same files trigger excessive disk I/O, significantly
-> +	  reducinng performance in workloads like fio-based benchmarks.
-> +
-> +	  For example, fio tests (iodepth=1, numjobs=1, ioengine=psync) show:
-> +	   Without caching: IOPS=2223, BW=278MiB/s (291MB/s)
-> +	   With caching:    IOPS=815, BW=102MiB/s (107MB/s)
-> +
+The second issue is the MII_BMCR register needs to set the exact speed
+and duplex mode when running in SGMII mode.  During link polling the
+KSZ9477 will check the speed and duplex mode are different from
+previous ones and update the MII_BMCR register accordingly.
 
-I think the figures for caching and without caching are transposed above.
+The last issue is 1000BASE-X mode does not work with auto-negotiation
+on.  The cause is the local port hardware does not know the link is up
+and so network traffic is not forwarded.  The workaround is to write 2
+additional bits when 1000BASE-X mode is configured.
 
-Apart from that the patch looks good.
+Note the SGMII interrupt in the port cannot be masked.  As that
+interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
+will not be set even when the XPCS driver sets it.
 
-Please send a V2 fixing the above.
+Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+v5
+ - Add Maxime's review
+ - Update with Alok's recommendations
 
-Thanks
+v4
+ - update for last ksz_common.c merge
 
-Phillip
+v3
+ - rebase with latest commit
+
+v2
+ - add Kconfig for required XPCS driver build
+
+ drivers/net/dsa/microchip/Kconfig      |   1 +
+ drivers/net/dsa/microchip/ksz9477.c    | 194 ++++++++++++++++++++++++-
+ drivers/net/dsa/microchip/ksz9477.h    |   4 +-
+ drivers/net/dsa/microchip/ksz_common.c |  37 ++++-
+ drivers/net/dsa/microchip/ksz_common.h |  23 ++-
+ 5 files changed, 252 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+index 12a86585a77f..c71d3fd5dfeb 100644
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -6,6 +6,7 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
+ 	select NET_DSA_TAG_NONE
+ 	select NET_IEEE8021Q_HELPERS
+ 	select DCB
++	select PCS_XPCS
+ 	help
+ 	  This driver adds support for Microchip KSZ8, KSZ9 and
+ 	  LAN937X series switch chips, being KSZ8863/8873,
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 29fe79ea74cd..d747ea1c41a7 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip KSZ9477 switch driver main logic
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #include <linux/kernel.h>
+@@ -161,6 +161,190 @@ static int ksz9477_wait_alu_sta_ready(struct ksz_device *dev)
+ 					10, 1000);
+ }
+ 
++static void port_sgmii_s(struct ksz_device *dev, uint port, u16 devid, u16 reg)
++{
++	u32 data;
++
++	data = (devid & MII_MMD_CTRL_DEVAD_MASK) << 16;
++	data |= reg;
++	ksz_pwrite32(dev, port, REG_PORT_SGMII_ADDR__4, data);
++}
++
++static void port_sgmii_r(struct ksz_device *dev, uint port, u16 devid, u16 reg,
++			 u16 *buf)
++{
++	port_sgmii_s(dev, port, devid, reg);
++	ksz_pread16(dev, port, REG_PORT_SGMII_DATA__4 + 2, buf);
++}
++
++static void port_sgmii_w(struct ksz_device *dev, uint port, u16 devid, u16 reg,
++			 u16 buf)
++{
++	port_sgmii_s(dev, port, devid, reg);
++	ksz_pwrite32(dev, port, REG_PORT_SGMII_DATA__4, buf);
++}
++
++static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
++{
++	struct ksz_device *dev = bus->priv;
++	int port = ksz_get_sgmii_port(dev);
++	u16 val;
++
++	port_sgmii_r(dev, port, mmd, reg, &val);
++
++	/* Simulate a value to activate special code in the XPCS driver if
++	 * supported.
++	 */
++	if (mmd == MDIO_MMD_PMAPMD) {
++		if (reg == MDIO_DEVID1)
++			val = 0x9477;
++		else if (reg == MDIO_DEVID2)
++			val = 0x22 << 10;
++	} else if (mmd == MDIO_MMD_VEND2) {
++		struct ksz_port *p = &dev->ports[port];
++
++		/* Need to update MII_BMCR register with the exact speed and
++		 * duplex mode when running in SGMII mode and this register is
++		 * used to detect connected speed in that mode.
++		 */
++		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
++			int duplex, speed;
++
++			if (val & SR_MII_STAT_LINK_UP) {
++				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
++				if (speed == SR_MII_STAT_1000_MBPS)
++					speed = SPEED_1000;
++				else if (speed == SR_MII_STAT_100_MBPS)
++					speed = SPEED_100;
++				else
++					speed = SPEED_10;
++
++				if (val & SR_MII_STAT_FULL_DUPLEX)
++					duplex = DUPLEX_FULL;
++				else
++					duplex = DUPLEX_HALF;
++
++				if (!p->phydev.link ||
++				    p->phydev.speed != speed ||
++				    p->phydev.duplex != duplex) {
++					u16 ctrl;
++
++					p->phydev.link = 1;
++					p->phydev.speed = speed;
++					p->phydev.duplex = duplex;
++					port_sgmii_r(dev, port, mmd, MII_BMCR,
++						     &ctrl);
++					ctrl &= BMCR_ANENABLE;
++					ctrl |= mii_bmcr_encode_fixed(speed,
++								      duplex);
++					port_sgmii_w(dev, port, mmd, MII_BMCR,
++						     ctrl);
++				}
++			} else {
++				p->phydev.link = 0;
++			}
++		} else if (reg == MII_BMSR) {
++			p->phydev.link = (val & BMSR_LSTATUS);
++		}
++	}
++
++	return val;
++}
++
++static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
++			     u16 val)
++{
++	struct ksz_device *dev = bus->priv;
++	int port = ksz_get_sgmii_port(dev);
++
++	if (mmd == MDIO_MMD_VEND2) {
++		struct ksz_port *p = &dev->ports[port];
++
++		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
++			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
++
++			/* Need these bits for 1000BASE-X mode to work with
++			 * AN on.
++			 */
++			if (!(val & sgmii_mode))
++				val |= SR_MII_SGMII_LINK_UP |
++				       SR_MII_TX_CFG_PHY_MASTER;
++
++			/* SGMII interrupt in the port cannot be masked, so
++			 * make sure interrupt is not enabled as it is not
++			 * handled.
++			 */
++			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
++		} else if (reg == MII_BMCR) {
++			/* The MII_ADVERTISE register needs to write once
++			 * before doing auto-negotiation for the correct
++			 * config_word to be sent out after reset.
++			 */
++			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
++				u16 adv;
++
++				/* The SGMII port cannot disable flow control
++				 * so it is better to just advertise symmetric
++				 * pause.
++				 */
++				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
++					     &adv);
++				adv |= ADVERTISE_1000XPAUSE;
++				adv &= ~ADVERTISE_1000XPSE_ASYM;
++				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
++					     adv);
++				p->sgmii_adv_write = 1;
++			} else if (val & BMCR_RESET) {
++				p->sgmii_adv_write = 0;
++			}
++		} else if (reg == MII_ADVERTISE) {
++			/* XPCS driver writes to this register so there is no
++			 * need to update it for the errata.
++			 */
++			p->sgmii_adv_write = 1;
++		}
++	}
++	port_sgmii_w(dev, port, mmd, reg, val);
++
++	return 0;
++}
++
++int ksz9477_pcs_create(struct ksz_device *dev)
++{
++	/* This chip has a SGMII port. */
++	if (ksz_has_sgmii_port(dev)) {
++		int port = ksz_get_sgmii_port(dev);
++		struct ksz_port *p = &dev->ports[port];
++		struct phylink_pcs *pcs;
++		struct mii_bus *bus;
++		int ret;
++
++		bus = devm_mdiobus_alloc(dev->dev);
++		if (!bus)
++			return -ENOMEM;
++
++		bus->name = "ksz_pcs_mdio_bus";
++		snprintf(bus->id, MII_BUS_ID_SIZE, "%s-pcs",
++			 dev_name(dev->dev));
++		bus->read_c45 = &ksz9477_pcs_read;
++		bus->write_c45 = &ksz9477_pcs_write;
++		bus->parent = dev->dev;
++		bus->phy_mask = ~0;
++		bus->priv = dev;
++
++		ret = devm_mdiobus_register(dev->dev, bus);
++		if (ret)
++			return ret;
++
++		pcs = xpcs_create_pcs_mdiodev(bus, 0);
++		if (IS_ERR(pcs))
++			return PTR_ERR(pcs);
++		p->pcs = pcs;
++	}
++
++	return 0;
++}
++
+ int ksz9477_reset_switch(struct ksz_device *dev)
+ {
+ 	u8 data8;
+@@ -978,6 +1162,14 @@ void ksz9477_get_caps(struct ksz_device *dev, int port,
+ 
+ 	if (dev->info->gbit_capable[port])
+ 		config->mac_capabilities |= MAC_1000FD;
++
++	if (ksz_is_sgmii_port(dev, port)) {
++		struct ksz_port *p = &dev->ports[port];
++
++		phy_interface_or(config->supported_interfaces,
++				 config->supported_interfaces,
++				 p->pcs->supported_interfaces);
++	}
+ }
+ 
+ int ksz9477_set_ageing_time(struct ksz_device *dev, unsigned int msecs)
+diff --git a/drivers/net/dsa/microchip/ksz9477.h b/drivers/net/dsa/microchip/ksz9477.h
+index d2166b0d881e..0d1a6dfda23e 100644
+--- a/drivers/net/dsa/microchip/ksz9477.h
++++ b/drivers/net/dsa/microchip/ksz9477.h
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip KSZ9477 series Header file
+  *
+- * Copyright (C) 2017-2022 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #ifndef __KSZ9477_H
+@@ -97,4 +97,6 @@ void ksz9477_acl_match_process_l2(struct ksz_device *dev, int port,
+ 				  u16 ethtype, u8 *src_mac, u8 *dst_mac,
+ 				  unsigned long cookie, u32 prio);
+ 
++int ksz9477_pcs_create(struct ksz_device *dev);
++
+ #endif
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index f492fa9f6dd4..f424b3d10781 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip switch driver main logic
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #include <linux/delay.h>
+@@ -408,12 +408,29 @@ static void ksz9477_phylink_mac_link_up(struct phylink_config *config,
+ 					int speed, int duplex, bool tx_pause,
+ 					bool rx_pause);
+ 
++static struct phylink_pcs *
++ksz_phylink_mac_select_pcs(struct phylink_config *config,
++			   phy_interface_t interface)
++{
++	struct dsa_port *dp = dsa_phylink_to_port(config);
++	struct ksz_device *dev = dp->ds->priv;
++	struct ksz_port *p = &dev->ports[dp->index];
++
++	if (ksz_is_sgmii_port(dev, dp->index) &&
++	    (interface == PHY_INTERFACE_MODE_SGMII ||
++	    interface == PHY_INTERFACE_MODE_1000BASEX))
++		return p->pcs;
++
++	return NULL;
++}
++
+ static const struct phylink_mac_ops ksz9477_phylink_mac_ops = {
+ 	.mac_config	= ksz_phylink_mac_config,
+ 	.mac_link_down	= ksz_phylink_mac_link_down,
+ 	.mac_link_up	= ksz9477_phylink_mac_link_up,
+ 	.mac_disable_tx_lpi = ksz_phylink_mac_disable_tx_lpi,
+ 	.mac_enable_tx_lpi = ksz_phylink_mac_enable_tx_lpi,
++	.mac_select_pcs	= ksz_phylink_mac_select_pcs,
+ };
+ 
+ static const struct ksz_dev_ops ksz9477_dev_ops = {
+@@ -451,6 +468,7 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
+ 	.reset = ksz9477_reset_switch,
+ 	.init = ksz9477_switch_init,
+ 	.exit = ksz9477_switch_exit,
++	.pcs_create = ksz9477_pcs_create,
+ };
+ 
+ static const struct phylink_mac_ops lan937x_phylink_mac_ops = {
+@@ -1093,8 +1111,7 @@ static const struct regmap_range ksz9477_valid_regs[] = {
+ 	regmap_reg_range(0x701b, 0x701b),
+ 	regmap_reg_range(0x701f, 0x7020),
+ 	regmap_reg_range(0x7030, 0x7030),
+-	regmap_reg_range(0x7200, 0x7203),
+-	regmap_reg_range(0x7206, 0x7207),
++	regmap_reg_range(0x7200, 0x7207),
+ 	regmap_reg_range(0x7300, 0x7301),
+ 	regmap_reg_range(0x7400, 0x7401),
+ 	regmap_reg_range(0x7403, 0x7403),
+@@ -1610,6 +1627,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 				   true, false, false},
+ 		.gbit_capable	= {true, true, true, true, true, true, true},
+ 		.ptp_capable = true,
++		.sgmii_port = 7,
+ 		.wr_table = &ksz9477_register_set,
+ 		.rd_table = &ksz9477_register_set,
+ 	},
+@@ -2002,6 +2020,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.internal_phy	= {true, true, true, true,
+ 				   true, false, false},
+ 		.gbit_capable	= {true, true, true, true, true, true, true},
++		.sgmii_port = 7,
+ 		.wr_table = &ksz9477_register_set,
+ 		.rd_table = &ksz9477_register_set,
+ 	},
+@@ -2137,7 +2156,7 @@ void ksz_r_mib_stats64(struct ksz_device *dev, int port)
+ 
+ 	spin_unlock(&mib->stats64_lock);
+ 
+-	if (dev->info->phy_errata_9477) {
++	if (dev->info->phy_errata_9477 && !ksz_is_sgmii_port(dev, port)) {
+ 		ret = ksz9477_errata_monitor(dev, port, raw->tx_late_col);
+ 		if (ret)
+ 			dev_err(dev->dev, "Failed to monitor transmission halt\n");
+@@ -2845,6 +2864,12 @@ static int ksz_setup(struct dsa_switch *ds)
+ 	if (ret)
+ 		return ret;
+ 
++	if (ksz_has_sgmii_port(dev) && dev->dev_ops->pcs_create) {
++		ret = dev->dev_ops->pcs_create(dev);
++		if (ret)
++			return ret;
++	}
++
+ 	/* set broadcast storm protection 10% rate */
+ 	regmap_update_bits(ksz_regmap_16(dev), regs[S_BROADCAST_CTRL],
+ 			   BROADCAST_STORM_RATE,
+@@ -3692,6 +3717,10 @@ static void ksz_phylink_mac_config(struct phylink_config *config,
+ 	if (dev->info->internal_phy[port])
+ 		return;
+ 
++	/* No need to configure XMII control register when using SGMII. */
++	if (ksz_is_sgmii_port(dev, port))
++		return;
++
+ 	if (phylink_autoneg_inband(mode)) {
+ 		dev_err(dev->dev, "In-band AN not supported!\n");
+ 		return;
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index a034017568cd..a08417df2ca4 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Microchip switch driver common header
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #ifndef __KSZ_COMMON_H
+@@ -10,6 +10,7 @@
+ #include <linux/etherdevice.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
++#include <linux/pcs/pcs-xpcs.h>
+ #include <linux/phy.h>
+ #include <linux/regmap.h>
+ #include <net/dsa.h>
+@@ -93,6 +94,7 @@ struct ksz_chip_data {
+ 	bool internal_phy[KSZ_MAX_NUM_PORTS];
+ 	bool gbit_capable[KSZ_MAX_NUM_PORTS];
+ 	bool ptp_capable;
++	u8 sgmii_port;
+ 	const struct regmap_access_table *wr_table;
+ 	const struct regmap_access_table *rd_table;
+ };
+@@ -132,6 +134,7 @@ struct ksz_port {
+ 	u32 force:1;
+ 	u32 read:1;			/* read MIB counters in background */
+ 	u32 freeze:1;			/* MIB counter freeze is enabled */
++	u32 sgmii_adv_write:1;
+ 
+ 	struct ksz_port_mib mib;
+ 	phy_interface_t interface;
+@@ -141,6 +144,7 @@ struct ksz_port {
+ 	void *acl_priv;
+ 	struct ksz_irq pirq;
+ 	u8 num;
++	struct phylink_pcs *pcs;
+ #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
+ 	struct kernel_hwtstamp_config tstamp_config;
+ 	bool hwts_tx_en;
+@@ -440,6 +444,8 @@ struct ksz_dev_ops {
+ 	int (*reset)(struct ksz_device *dev);
+ 	int (*init)(struct ksz_device *dev);
+ 	void (*exit)(struct ksz_device *dev);
++
++	int (*pcs_create)(struct ksz_device *dev);
+ };
+ 
+ struct ksz_device *ksz_switch_alloc(struct device *base, void *priv);
+@@ -731,6 +737,21 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
+ 		dev->chip_id == LAN9372_CHIP_ID) && port == KSZ_PORT_4;
+ }
+ 
++static inline int ksz_get_sgmii_port(struct ksz_device *dev)
++{
++	return dev->info->sgmii_port - 1;
++}
++
++static inline bool ksz_has_sgmii_port(struct ksz_device *dev)
++{
++	return dev->info->sgmii_port > 0;
++}
++
++static inline bool ksz_is_sgmii_port(struct ksz_device *dev, int port)
++{
++	return dev->info->sgmii_port == port + 1;
++}
++
+ /* STP State Defines */
+ #define PORT_TX_ENABLE			BIT(2)
+ #define PORT_RX_ENABLE			BIT(1)
+-- 
+2.34.1
 
