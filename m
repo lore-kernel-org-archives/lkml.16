@@ -1,119 +1,147 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D9F2750FD
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2ED35893;
+	Tue, 20 May 2025 17:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747761814; cv=none; b=ZioVkU84o0dG792OZKRCyCZZWYqD0AgoypPpdp+Upz5p2iuchsEgcfTdDqBy5uKW4EZWEKcZRQqHo/c596lJSNFYGIPPjEZw6dTXsB95aqJT4ebOMarqbWTT6cTlMPfKud+S5tzMUaQ+xBSuMM7dNksKh6XHP0t+PlV37osDZck=
+	t=1747761830; cv=none; b=sJyMFXQUTpFrk3X/nMd2TIw/sFl4evy2imy0vMbnQGcgPOD0rEFnZGwo5cx6u5uXyGYgoPW9hHCs4pS97Ia+XaQAt3NFDjlx4jBqduiv58DMLxOaKndbAHozZjL//xzQvcJUKqoiufqThFMIXh3VDFta8RGqmI/gT5exubtLkok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747761814; c=relaxed/simple;
-	bh=NRca4Y6qu8nkewkPpvHf2xhhqHItqPfzv6QrsEkL/MU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QsctdBqV7SP2EhPtAQnt/7KhBpwYS6pFl1XQesna2zqUVk0GxrD0bmWsJ+rXxxN4fnq3ktCejeuexuSvLKvCUi6riWFg23bp+b/5U2J9QCdyOROp3NufB3ijJjUC+QgcwBnXRVqlFvzLEzKC7SaHkM1xFeR62T8nrG6ec3CDx9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pY4/4ioT; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747761830; c=relaxed/simple;
+	bh=REkgX6AMTfbAAEpXD/CF7amF5JogpdJTqNLBYpeJ7vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRmch6x0mmEcvD9eHeDF8m8pZ2PWw+4/2Pd4K/S7kO2HK2V2gTy2ggqXggLbAGhb2eOTnzOsajTWH1eNc0yN+aPMky5bQ6Gd3ODf7Z9XZdr+S0GjN/1jBkBYoiWfV87IlWGodqC0avy8XNBz3TOocMusm5/FsOyaF5nePwvcfH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHqxceZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pY4/4ioT"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a3798794d3so916740f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747761810; x=1748366610; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f/sRfxl2+2t5SPJHNc4iAAcwkRcbLLz8+Z7hZmgE/IE=;
-        b=pY4/4ioTyYfgvso78Rx5Wd3sIt93kiHeTvngs+e/X8o0nJ6zc4lUrHgyw3lTkWc8wf
-         ppcRp51srN+adNYLMiXFx8ts07fzQP6BpSnv+1CwL+YIXJvp1/TZnAhitJQrVgoZrvsC
-         ABTkGFp3oY8AtiSPN3LuGk0Gb9Q9mSzzpFGPfVV051zX67aJryT6Ah2paRqzG9G+R34z
-         YDfFSNlgcuAxOAQkHz/2jSRzz72FQuUGPLtGGv8y2HkiWbrgo403/B8SqpDAp/bvIYRI
-         c3j26fhMlXH2a6PoyVtBMNSKP7jPOYJh/Lj0am7w6KFO0rs80tDaQmOa0iGopmCG4yJt
-         86Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747761810; x=1748366610;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/sRfxl2+2t5SPJHNc4iAAcwkRcbLLz8+Z7hZmgE/IE=;
-        b=J/X7EWYrFuEyR8frkyFh90rSm9/XTPB8NtqRfZAYZyRKhQjdbi0k8FgRLtVEVcRLe3
-         BUcH9iAluhorYWUrSBDZAKPjInSfrn0XCR0xyAbwHcRd8aC6y+MS9byZOW7X1Rip6qZw
-         Uh6g3aKzcMSqR55mCoxlB6iKuD01mwYID8RmZhOMrs8goUWeceiXq6cLeh+yj7L4Y8R5
-         ExVk2qii25yxS8CCP0cwfrQDEAnUmC10MChhpGTU9W9W3XYgBYh4/NHOlyVsBdIv3jPE
-         pPsvDM1tTRtq8s1pBWS9UbAx4RGwIba1svFTQ5RKqqyusEp0KQCytDCr1Tmv96gLWrhe
-         SAtQ==
-X-Gm-Message-State: AOJu0Yy91g2od95zdxXsYoc8S8azy7DyWJT+XGE9P7PDDcqm1wZj17Sk
-	Be6scdVVUK2YjLkdPlaobRZoFmMLTcZvcs/lSiZdG84iXyiEKnVJTqEbJWsx8SD16YQ=
-X-Gm-Gg: ASbGncuzqB+kM6PsoBEi/QAxkEJgHmKSt/afU2V9mIF+o+YNfw6RJsI3Cple3BTDduM
-	5soK9IULE7T+U7h0LtIr+nl/oyUwIN326rOpc7+DZfxt/OyXT0vWW8o8TSLxxGl2M0IVSgGf8z1
-	XLgE8jOl7PeWa23vEjtxUCC2o0uFufsbYY9G6JhFqZGtTKC7lO9t327TddllPBaMuwUaZXVSIR1
-	RPTI0P/GMkiQ0mlzP5Nph65ULTxbXdrJ6AMNybGG9IQycfW8h3a5Nz8c1sfPnVI5oAPKtVDZ2UC
-	wlMBIae/N+eQ+U7fDh9OaWjGd07X3ICI9f0pyUtMltdOdgg9nipltjlom0kqiLjyT9twFrFL7NB
-	gBTq7EBsoiSI2a3sz7giN/XnWnw==
-X-Google-Smtp-Source: AGHT+IGwCCZ8Sg9DBlCN84G63Xe7YsdRmlSqvWxSOiYJVHsSz0HNbKBDVzoRJjBywJlpUwr+vVAOYw==
-X-Received: by 2002:a05:6000:18a7:b0:3a3:6af1:cc92 with SMTP id ffacd0b85a97d-3a36af1cdafmr10489267f8f.7.1747761809843;
-        Tue, 20 May 2025 10:23:29 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca62b10sm16831581f8f.45.2025.05.20.10.23.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 10:23:29 -0700 (PDT)
-Message-ID: <3f2c15b3-1daa-4386-a6a1-1d05c33d58d8@linaro.org>
-Date: Tue, 20 May 2025 19:23:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHqxceZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0309C4CEEF;
+	Tue, 20 May 2025 17:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747761829;
+	bh=REkgX6AMTfbAAEpXD/CF7amF5JogpdJTqNLBYpeJ7vo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VHqxceZXmsrIqOtiXeno96rJBh6Nx1bGurv78HEB7qXvXCN4vuGQiKB49wN+Nwes9
+	 tDin58bpVIjNBaPGvwESdf3Te7XGVEraKMGaLyiBdp7xwYAq14AMggM9dyhIr22FTK
+	 twCGmnxiiQny3Z1Z6oRQlfyfICjrGtnh+gH1SxnrJVfcU5hEfcSLiak4zXCv/XlvXO
+	 XY1Db1Ymp0nTYZ8pk7ziEmFm4BN4QaWyWkva3Qr2COOiC9NGwN2RNd0KXqONCzOQA7
+	 +1BAiNA2yqIepG0y71BLt7xrkyhUdktRfSgIGyhQBxpEZvn6xyWjZP535F0GeATxSr
+	 uY61wIFiRTErQ==
+Date: Tue, 20 May 2025 10:23:46 -0700
+From: Kees Cook <kees@kernel.org>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	linux-wireless@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Daniel Gabay <daniel.gabay@intel.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: iwlwifi: mld: Work around Clang loop unrolling
+ bug
+Message-ID: <202505201023.FC6D334C5F@keescook>
+References: <20250425184418.it.308-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: error trying to fetch the clockevents tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250429082047.4af75695@canb.auug.org.au>
- <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
- <ba3ff719-ce60-4c0f-a215-fa332b614b82@linaro.org>
- <20250515221042.7471ffc9@canb.auug.org.au>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250515221042.7471ffc9@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425184418.it.308-kees@kernel.org>
 
-
-Hi Stephen,
-
-On 15/05/2025 14:10, Stephen Rothwell wrote:
-> Hi Daniel,
+On Fri, Apr 25, 2025 at 11:44:22AM -0700, Kees Cook wrote:
+> The nested loop in iwl_mld_send_proto_offload() confuses Clang into
+> thinking there could be final loop iteration past the end of the "nsc"
+> array (which is only 4 entries). The FORTIFY checking in memcmp()
+> (via ipv6_addr_cmp()) notices this (due to the available bytes in the
+> out-of-bounds position of &nsc[4] being 0), and errors out, failing
+> the build. For some reason (likely due to architectural loop unrolling
+> configurations), this is only exposed on ARM builds currently. Due to
+> Clang's lack of inline tracking[1], the warning is not very helpful:
 > 
-> On Thu, 15 May 2025 11:20:01 +0200 Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>
->> I had no time yet to migrate the git tree to kernel.org but the
->> servers seem to work correctly now.
->>
->> Is it possible to enable back the tree so its content gets some round
->> in linux-next before the PR ?
+> include/linux/fortify-string.h:719:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
+>   719 |                         __read_overflow();
+>       |                         ^
+> 1 error generated.
 > 
-> Restored from tomorrow.
+> But this was tracked down to iwl_mld_send_proto_offload()'s
+> ipv6_addr_cmp() call.
 > 
-> Just to make sure - this is still
+> An upstream Clang bug has been filed[2] to track this, but for now.
+> Fix the build by explicitly bounding the inner loop by "n_nsc", which is
+> what "c" is already limited to. Additionally do not repeat the ns_config
+> and targ_addrs array sizes with their open-coded names since they can
+> be determined at compile-time with ARRAY_SIZE().
 > 
-> https://git.linaro.org/people/daniel.lezcano/linux.git#timers/drivers/next
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2076
+> Link: https://github.com/llvm/llvm-project/pull/73552 [1]
+> Link: https://github.com/llvm/llvm-project/issues/136603 [2]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-I migrated the repo to kernel.org:
+Ping on this -- can someone pick this up? I can carry it if needed?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/daniel.lezcano/linux.git#imers/drivers/next
+-Kees
 
-Is it possible to update?
-
-Thanks in advance
-
-   -- Daniel
-
+> ---
+>  v2:
+>   - move "j < n_nsc" forward to stabilize loop bounds (Nathan)
+>   - use ARRAY_SIZE() for robustness
+>  v1: https://lore.kernel.org/all/20250421204153.work.935-kees@kernel.org/
+> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> Cc: Avraham Stern <avraham.stern@intel.com>
+> Cc: <linux-wireless@vger.kernel.org>
+> ---
+>  drivers/net/wireless/intel/iwlwifi/mld/d3.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mld/d3.c b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> index dc736fdc176d..c51a6596617d 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> @@ -1728,17 +1728,13 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+>  #if IS_ENABLED(CONFIG_IPV6)
+>  	struct iwl_mld_vif *mld_vif = iwl_mld_vif_from_mac80211(vif);
+>  	struct iwl_mld_wowlan_data *wowlan_data = &mld_vif->wowlan_data;
+> -	struct iwl_ns_config *nsc;
+> -	struct iwl_targ_addr *addrs;
+> -	int n_nsc, n_addrs;
+> +	const int n_addrs = ARRAY_SIZE(cmd->targ_addrs);
+> +	struct iwl_targ_addr *addrs = cmd->targ_addrs;
+> +	const int n_nsc = ARRAY_SIZE(cmd->ns_config);
+> +	struct iwl_ns_config *nsc = cmd->ns_config;
+>  	int i, c;
+>  	int num_skipped = 0;
+>  
+> -	nsc = cmd->ns_config;
+> -	n_nsc = IWL_PROTO_OFFLOAD_NUM_NS_CONFIG_V3L;
+> -	addrs = cmd->targ_addrs;
+> -	n_addrs = IWL_PROTO_OFFLOAD_NUM_IPV6_ADDRS_V3L;
+> -
+>  	/* For each address we have (and that will fit) fill a target
+>  	 * address struct and combine for NS offload structs with the
+>  	 * solicited node addresses.
+> @@ -1759,7 +1755,7 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+>  
+>  		addrconf_addr_solict_mult(&wowlan_data->target_ipv6_addrs[i],
+>  					  &solicited_addr);
+> -		for (j = 0; j < c; j++)
+> +		for (j = 0; j < n_nsc && j < c; j++)
+>  			if (ipv6_addr_cmp(&nsc[j].dest_ipv6_addr,
+>  					  &solicited_addr) == 0)
+>  				break;
+> -- 
+> 2.34.1
+> 
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Kees Cook
