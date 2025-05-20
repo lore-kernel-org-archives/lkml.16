@@ -1,173 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6B81E5702;
-	Tue, 20 May 2025 04:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17CC1E5702
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747715873; cv=none; b=ZznKS+5TIh3faxqBN1MQT+HP5rUOyHSQ8PXhHrWY1FCukISutUGBYB+0jxVMAC9ZNAcHf24xCfadGNAUFRLHSmrrF8AfvL/6CwjsOW++OzAJC3nNsTiWmqFV2XN/rPKcjrF2Gv3LzqT7C9yuo1BMyB6sjcgK8Dy7eGMw5dpRLLI=
+	t=1747715944; cv=none; b=TqqcaPW7qBSTioTUOTMvhmAI6RHd3Kz/h2utHswq8NvabLQVF4sg7q4tmLzeTKP+2HDDRgBUlNMe3cXgIpNraTcyS06JT13/eJYHUfTIvAgJie3a6yuHBgaPyT3LaeXfnfn8H1Dw9t0lC5LMr68m1ViwF5yZ7dZ5tTwt/APSLm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747715873; c=relaxed/simple;
-	bh=/HWugewSwF3nvEChZSyWKJu4IdZ646uM+bCDPZacNpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kH/5SXg24bjPvdqh9DGswV47PsJ8k/m5HZdtKS2YE2vYWBQomi2mWXBfTrUCM+Lq2pFy/SchafutmoqpxSKbVfPlR7q/zBEMObZkRE7BfSUsvrqj1bp1lTKNMMnaybjcJ1yvZSUZLtHGmwOalbx/RzGXaAuarpvtsrbLsKS47TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FlXT5LkE; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FlXT5LkE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747715872; x=1779251872;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/HWugewSwF3nvEChZSyWKJu4IdZ646uM+bCDPZacNpw=;
-  b=FlXT5LkEHUgPqDmyGJLqI2tnL2Cj0A4I7D4N0FDKQSsEc/5/StApyRD2
-   qUb189u+uccWcFf/dye4D5FteiNUV9pEtcb1IWDGGDBdch9aEP/UzRqaq
-   KWYGdVcsh6hAsVmw5iTBtEhCEZrV3BkBKMgMgjNOtC6xxyrHasGDzKmrT
-   4yqoq3Oet9e0MvM9w9dkHjrflXxZbKIC/4onIZCGfoyQHUiZYPTrXEydj
-   Qx9y9klCR2evgh503T0Hh7MNSf+o7ocsqIsUV0CgMz07wcQAyxCTJQhus
-   1fABQLXg9Be1d3pdz41/QZ6AwXCnBTgF9FkZZfzErsPDpvjUlb8oCtaiQ
-   g==;
-X-CSE-ConnectionGUID: LG0g4XarSK+gpMlZmSZkEg==
-X-CSE-MsgGUID: Y6iMh+M0RA+uR1WPfvedOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49615549"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49615549"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 21:37:52 -0700
-X-CSE-ConnectionGUID: /shfJDbpQOOib6SfJMhTpw==
-X-CSE-MsgGUID: CdGruJYmTL2xxLLcWAqHPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144324829"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 19 May 2025 21:37:49 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHEja-000MA4-1X;
-	Tue, 20 May 2025 04:37:46 +0000
-Date: Tue, 20 May 2025 12:37:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, sgoutham@marvell.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: Re: [PATCH] net: cavium: thunder: Add log for verification fail in
- bgx_poll_for_link()
-Message-ID: <202505201239.5YN7PGlt-lkp@intel.com>
-References: <20250519152348.2839-1-vulab@iscas.ac.cn>
+	s=arc-20240116; t=1747715944; c=relaxed/simple;
+	bh=UIF1grcf8IULtVJLlStXNZk9oAFBg2K6h+TyjYU2MRo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BMYJQDr58KqpdicAijPy6ao7KpoleA4JqWIa6KotJ5lOFtLmPeBlECde9lnszw0jqOdDRddGxmWm+wdZvN0gwBcH0LGU3fkJV4hGVe/LDf4Pf/+YuWfKZJTF8WFaNbh4O+Rlrza3DY6HBXl1/ZCqjtuTp/ONH5YAFousm+V3/NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b41b906b3so462863539f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:39:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747715942; x=1748320742;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RdtmkfnZ2JMj0C7OqH1FutMtf/3tuL9wLni8AUX6TL0=;
+        b=DPzVWy+x5CbnrJDUPlT+nGRU5UG+d9kmftkpiQMYFwWXyHOf8LaKwJ6601z2jbtrhs
+         pKHhYMTmKP4ivkkjcdp1nT9jA0jZCDnbaAFwPtYGc0OgIEDibhmz2/3HFuIx9CgfuJ8D
+         8YT3m10XFWsJSbfek9VfrmJ6t8LX76hg5OdJhED4jDnEE7VEFGi9Wmk+gQC3yDDEnCwj
+         ci6MUBoDmI462GQe1T57UmeBmxd1F4Ik6LmDhFbzhepjK8LJ+B6DlK2+/bFxMdZElbRE
+         FJ2AG5xzdIzR9rxU0BQ0VTYjMo0Br1gp3R9aXOvIU3jbSNVCoSZkykJtF+zDNUrEKdP5
+         TpjA==
+X-Gm-Message-State: AOJu0YxO8cMhrZWzI4XgTJpYiIxI0qEUcNqoMVxILSUc4eSsJR3p6Nve
+	w2z6JlZ9oyJCw9n+A3y0wd5p8M+Wk9iU5be7pSDwPXpMmhDSGs93PRAuNGih/MM7+8CaAsKwZCx
+	fqADSgkJF0rplZBPKTCOqD1CYfHG38Y5va7q87hp6Wwt4uvRb9xlaT2kf8+w=
+X-Google-Smtp-Source: AGHT+IHnfoKl/bDT2poNddsyIcUQpSxj1fbiOAkHSUplAtS+ZGNfHxP0I0FfKW6t4DxDGQ3dZgdnDZsHtHTuf1YtQXOSZTTlq/Xu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519152348.2839-1-vulab@iscas.ac.cn>
+X-Received: by 2002:a05:6602:6a8c:b0:867:40d9:bf7e with SMTP id
+ ca18e2360f4ac-86a24c8b6admr1810043439f.9.1747715941842; Mon, 19 May 2025
+ 21:39:01 -0700 (PDT)
+Date: Mon, 19 May 2025 21:39:01 -0700
+In-Reply-To: <381968B8-D95A-4925-AFB1-8B947683AFD0@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682c0765.a00a0220.7a43a.0083.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in __bch2_fsck_err (2)
+From: syzbot <syzbot+2c3ef91c9523c3d1a25c@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Wentao,
+Hello,
 
-kernel test robot noticed the following build errors:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in __init_work
 
-[auto build test ERROR on net-next/main]
-[also build test ERROR on net/main linus/master v6.15-rc7 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ODEBUG: object 000000002b138723 is on stack 00000000dac59cbe, but NOT annotated.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 __debug_object_init+0x364/0x40c lib/debugobjects.c:743
+Modules linked in:
+CPU: 0 UID: 0 PID: 7170 Comm: bch-copygc/loop Not tainted 6.15.0-rc4-syzkaller-00229-gd27565abe66b #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+pc : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+pc : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
+lr : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+lr : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+lr : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
+sp : ffff80009bef7700
+x29: ffff80009bef7700 x28: 0000000000000000 x27: dfff800000000000
+x26: ffff80009729c000 x25: ffff0000e8709ea0 x24: 0000000000000000
+x23: ffff0000dd671460 x22: 0000000000000000 x21: ffff80009715dcc0
+x20: ffff80008ae5d7c0 x19: ffff80009bef7bb0 x18: 00000000ffffffff
+x17: ffff800092f28000 x16: ffff80008adb72d4 x15: 0000000000000001
+x14: 1ffff000137dee4c x13: 0000000000000000 x12: 0000000000000000
+x11: ffff7000137dee4d x10: 0000000000ff0100 x9 : 47869bb3fecc8f00
+x8 : 47869bb3fecc8f00 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff80009bef7098 x4 : ffff80008f404fc0 x3 : ffff800082fbada4
+x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000050
+Call trace:
+ debug_object_is_on_stack lib/debugobjects.c:-1 [inline] (P)
+ lookup_object_or_alloc lib/debugobjects.c:688 [inline] (P)
+ __debug_object_init+0x364/0x40c lib/debugobjects.c:743 (P)
+ debug_object_init+0x20/0x2c lib/debugobjects.c:779
+ __init_work+0x58/0x68 kernel/workqueue.c:677
+ rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
+ bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:355
+ kthread+0x5fc/0x75c kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+irq event stamp: 22
+hardirqs last  enabled at (21): [<ffff800083df1134>] get_random_u32+0x2d4/0x540 drivers/char/random.c:553
+hardirqs last disabled at (22): [<ffff80008add7b2c>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
+hardirqs last disabled at (22): [<ffff80008add7b2c>] _raw_spin_lock_irqsave+0x2c/0x7c kernel/locking/spinlock.c:162
+softirqs last  enabled at (0): [<ffff8000803a4fb0>] copy_process+0x112c/0x318c kernel/fork.c:2374
+softirqs last disabled at (0): [<0000000000000000>] 0x0
+---[ end trace 0000000000000000 ]---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/net-cavium-thunder-Add-log-for-verification-fail-in-bgx_poll_for_link/20250519-232542
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250519152348.2839-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] net: cavium: thunder: Add log for verification fail in bgx_poll_for_link()
-config: sparc-randconfig-002-20250520 (https://download.01.org/0day-ci/archive/20250520/202505201239.5YN7PGlt-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201239.5YN7PGlt-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505201239.5YN7PGlt-lkp@intel.com/
+Tested on:
 
-All errors (new ones prefixed by >>):
+commit:         d27565ab bcachefs: Fix possible console lock involved ..
+git tree:       https://github.com/alanskind/bcachefs
+console output: https://syzkaller.appspot.com/x/log.txt?x=162861f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1358066360ea77fb
+dashboard link: https://syzkaller.appspot.com/bug?extid=2c3ef91c9523c3d1a25c
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+userspace arch: arm64
 
-   In file included from include/linux/device.h:15,
-                    from include/linux/acpi.h:14,
-                    from drivers/net/ethernet/cavium/thunder/thunder_bgx.c:6:
-   drivers/net/ethernet/cavium/thunder/thunder_bgx.c: In function 'bgx_poll_for_link':
->> drivers/net/ethernet/cavium/thunder/thunder_bgx.c:1012:40: error: incompatible type for argument 1 of '_dev_err'
-    1012 |                 dev_err(lmac->bgx->pdev->dev, "BXG verification fail with time out.\n");
-         |                         ~~~~~~~~~~~~~~~^~~~~
-         |                                        |
-         |                                        struct device
-   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                         ^~~
-   drivers/net/ethernet/cavium/thunder/thunder_bgx.c:1012:17: note: in expansion of macro 'dev_err'
-    1012 |                 dev_err(lmac->bgx->pdev->dev, "BXG verification fail with time out.\n");
-         |                 ^~~~~~~
-   include/linux/dev_printk.h:50:36: note: expected 'const struct device *' but argument is of type 'struct device'
-      50 | void _dev_err(const struct device *dev, const char *fmt, ...);
-         |               ~~~~~~~~~~~~~~~~~~~~~^~~
-
-
-vim +/_dev_err +1012 drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-
-   995	
-   996	static void bgx_poll_for_link(struct work_struct *work)
-   997	{
-   998		struct lmac *lmac;
-   999		u64 spu_link, smu_link;
-  1000	
-  1001		lmac = container_of(work, struct lmac, dwork.work);
-  1002		if (lmac->is_sgmii) {
-  1003			bgx_poll_for_sgmii_link(lmac);
-  1004			return;
-  1005		}
-  1006	
-  1007		/* Receive link is latching low. Force it high and verify it */
-  1008		bgx_reg_modify(lmac->bgx, lmac->lmacid,
-  1009			       BGX_SPUX_STATUS1, SPU_STATUS1_RCV_LNK);
-  1010		if (bgx_poll_reg(lmac->bgx, lmac->lmacid, BGX_SPUX_STATUS1,
-  1011				 SPU_STATUS1_RCV_LNK, false))
-> 1012			dev_err(lmac->bgx->pdev->dev, "BXG verification fail with time out.\n");
-  1013	
-  1014		spu_link = bgx_reg_read(lmac->bgx, lmac->lmacid, BGX_SPUX_STATUS1);
-  1015		smu_link = bgx_reg_read(lmac->bgx, lmac->lmacid, BGX_SMUX_RX_CTL);
-  1016	
-  1017		if ((spu_link & SPU_STATUS1_RCV_LNK) &&
-  1018		    !(smu_link & SMU_RX_CTL_STATUS)) {
-  1019			lmac->link_up = true;
-  1020			if (lmac->lmac_type == BGX_MODE_XLAUI)
-  1021				lmac->last_speed = SPEED_40000;
-  1022			else
-  1023				lmac->last_speed = SPEED_10000;
-  1024			lmac->last_duplex = DUPLEX_FULL;
-  1025		} else {
-  1026			lmac->link_up = false;
-  1027			lmac->last_speed = SPEED_UNKNOWN;
-  1028			lmac->last_duplex = DUPLEX_UNKNOWN;
-  1029		}
-  1030	
-  1031		if (lmac->last_link != lmac->link_up) {
-  1032			if (lmac->link_up) {
-  1033				if (bgx_xaui_check_link(lmac)) {
-  1034					/* Errors, clear link_up state */
-  1035					lmac->link_up = false;
-  1036					lmac->last_speed = SPEED_UNKNOWN;
-  1037					lmac->last_duplex = DUPLEX_UNKNOWN;
-  1038				}
-  1039			}
-  1040			lmac->last_link = lmac->link_up;
-  1041		}
-  1042	
-  1043		queue_delayed_work(lmac->check_link, &lmac->dwork, HZ * 2);
-  1044	}
-  1045	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Note: no patches were applied.
