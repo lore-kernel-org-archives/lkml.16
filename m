@@ -1,87 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f202.google.com (mail-qk1-f202.google.com [209.85.222.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8BC211710;
-	Tue, 20 May 2025 19:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62A220101D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770290; cv=none; b=FhxkI1FSHSMsBHBKJ7Rlt4FO/Db1GpszzSAGH/AjuKoTHmkKHCoSWFL3Urj8sRYsZk2dxHa6acp+TiVZZbDLsbp+rxpYxy3ZJWJsrICVDX0XekPLStaZPymOeze9QdToZOWZDPBfZTuy8y6IwIjTEUsWSwrjuTlKkzYBJS40kqc=
+	t=1747770440; cv=none; b=hUui/qYtZdMbrHaF2AmA0FBlXiO/bpIIE0198BS/t/YgFOWW7VW/ISUG+bRwcvfEVILU06WIFvbysDvWpjOzuQPTwdtMEP5iHCPZWnG9iVl+NHzBxp+tp8VG9+E09nHzhTJVKSAcyp+ZSCTFCJYHrnq9QlzVlo/3OoJKFnSJcag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770290; c=relaxed/simple;
-	bh=tyB8bM25Lx88UIlFfLPvpzsA6oH222+P3KY3XVdZCD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BwCMH+N5o0P1JYWtoR/iyGqG95DBsFpvZx2VbhXLKXlyLugFmecruGagBT2FIxdvgLT7C+5zotAIstR6lCRrhMeBCc+wERgQuCBEQlV//wjZ3V1gFgoVqc4mR5Kq7wIGilwAmh2sfKYYUdECtEdJ66hutrSGvA6snn0NJC6K2ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQ+s0uJw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747770440; c=relaxed/simple;
+	bh=amxOjkQ68jSiXOIMKfSrhfbi7f+ELcaOtAJf4MVQ/EM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ECmWUZmVrr7FS266tuA2PbrjdPMViMy5GoSRAgsEYCzjaVB7ecVbGJGVWL0znwEY3iYztgrUbQ0zdZi1CyFQfPg2yiVa5BKeBZX4QBdQnB3CfqGiT0uAzsk8JF9MFB6cGVdQdEN1enEJbSXW5H5az2NJnd+rUGsVxDWHzHGFngY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h8JvuXed; arc=none smtp.client-ip=209.85.222.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQ+s0uJw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3841FC4CEE9;
-	Tue, 20 May 2025 19:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747770289;
-	bh=tyB8bM25Lx88UIlFfLPvpzsA6oH222+P3KY3XVdZCD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EQ+s0uJw+DAGmRPrd44KxUoDRsHE10cfsTm2/lPwWlO/EN4fqu7gbS98tFMx7RmYp
-	 Pj0b+nlPE8D9pYbVRy5Erhg+Xpks/Gz6yxqADe5xxS4K0SzspbASqUitxZRuD+Zk9l
-	 pd3/z9eiDgE56TCMo/SG/fYD6akLTr1pYybCoNdm7y/CzgCi1K1yKJKLD/1yum13dI
-	 qdIBTCWXizphNAB2/4o0THYVC/JCvZ2bgx34R9TSu8H4RkF9DeF8NPcOVsPAFWzWDT
-	 ACizlv1KsOOtYiOC/KaoY+L1KwsKdkvEEC6QI4MnB0sj/9E0SZf7l04nQ5V9R2kNdG
-	 W2//7OlXAKN5Q==
-Date: Tue, 20 May 2025 14:44:47 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	David Airlie <airlied@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, devicetree@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>, Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: display: bridge: renesas,dsi: allow
- properties from dsi-controller
-Message-ID: <174777028582.1243201.5153635156225821461.robh@kernel.org>
-References: <20250520151112.3278569-1-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8JvuXed"
+Received: by mail-qk1-f202.google.com with SMTP id af79cd13be357-7caef20a528so1576511485a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747770438; x=1748375238; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rqsLb4Go615Rv3sDkm4gh0pD3pm2JY3mUNmzalqtLZc=;
+        b=h8JvuXedIGkbAuCu+BVFxJbiEIWm2qqPMB0t+LKdUdsGn3HBXGLzF1U04jEfwbKay+
+         celAPNS2opoSatTM6nYeIb5Ou51yZUKPPTYd5KAtOmkj6gBxq3VQFpOBIHVPLF9zDIoO
+         TfTkEjqY8lxELX5wllMSEFKTzd27e3i2vDJqZQpmWllD8UNVuETVs7WI1bPpztoYejng
+         nOtI7jQ9mJWbYJTW+UgSyFAw1XnCPrL1W4LRErncUmtXwL1RFBkMsPTkyniojfwpLY7/
+         oE+LaCuAebfAkyYq7bXQltPZABVs3avg0xcdU4t7WjJgia9vIq4Ct71HsYA7RP9x2y0q
+         nbmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770438; x=1748375238;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rqsLb4Go615Rv3sDkm4gh0pD3pm2JY3mUNmzalqtLZc=;
+        b=E1ZI08Ny8Zg7sgkpOXXE8GZw9NTAlDt6rSlJBFTTKPn6JW18C0LCe+Lep27Ny9u5Sx
+         3fCN72njb3qyE9NEDPu9rX8Q+cVsg+LzLE8OeFTcGE9JqGe82h8dhizPRCGrpE/iVe2h
+         3mpVprqjRj43dTmgQ32lccWKR8/0F/ch/4Mby7rmAeuWnfiLhbs30FZ6wLmg3bxlFYV1
+         Pm+hFsRUKNxyzeMK7SDzgA36f6PEMIx9JK6EUc2a6Y4Fg07wrJWtfNLpHm7J8c/KfftN
+         KUwzHmoM35a1T/6FAujcAW6GwrxRRYzyiJzvmHx4+YM3pfgs4rCjwziP/nCzTxlh/oW5
+         Becw==
+X-Forwarded-Encrypted: i=1; AJvYcCUU2a/dXbHDm/phZIgk4yldQCi5YumT/ms9E9Rp39tqtAGkJcFHsCzbzy2/JpD1dVV08r8c0ksayMppgLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw4pH0eBsDqrJZDDvHp/mz4e8GSslDsrBoF+r7zJ172P6N2zyy
+	pLppz6qw6QI+lJtBanFFeSLQMoIiHE9x5I/+aMCv+5m/V2zwzMNMCtp9ALor79uPnmDoixzBYK+
+	w9g==
+X-Google-Smtp-Source: AGHT+IEk8HRf1tMAAyBDk6ioHYYDZ8p2tDUMaT/WbcTGVmXyjZj8eY/n+8d58IEwmqQwx1gmDZmsdtEWzw==
+X-Received: from qkam16.prod.google.com ([2002:ae9:e710:0:b0:7ce:c22d:6a49])
+ (user=rmoar job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:4443:b0:7ca:f021:4d3a
+ with SMTP id af79cd13be357-7cd47fb274emr2106144085a.39.1747770437675; Tue, 20
+ May 2025 12:47:17 -0700 (PDT)
+Date: Tue, 20 May 2025 19:47:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520151112.3278569-1-hugo@hugovil.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+Message-ID: <20250520194713.2233351-1-rmoar@google.com>
+Subject: [PATCH v2] kunit: tool: add test counts to JSON output
+From: Rae Moar <rmoar@google.com>
+To: davidgow@google.com, brendan.higgins@linux.dev, skhan@linuxfoundation.org
+Cc: dlatypov@google.com, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Add the test counts to the JSON output from kunit.py. For example:
 
-On Tue, 20 May 2025 11:11:12 -0400, Hugo Villeneuve wrote:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> 
-> Allow to inherit valid properties from the dsi-controller. This fixes the
-> following warning when adding a panel property:
-> 
-> rzg2lc.dtb: dsi@10850000: '#address-cells', '#size-cells', 'panel@0' do not
->     match any of the regexes: 'pinctrl-[0-9]+'
->     from schema $id:
->         http://devicetree.org/schemas/display/bridge/renesas,dsi.yaml#
-> 
-> Also add a panel property to the example.
-> 
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
-> V1 -> V2: add separate example
-> ---
->  .../bindings/display/bridge/renesas,dsi.yaml  | 67 ++++++++++++++++++-
->  1 file changed, 66 insertions(+), 1 deletion(-)
-> 
+...
+"git_branch": "kselftest",
+"misc":
+{
+    "tests": 2,
+    "passed": 1.
+    "failed": 1,
+    "crashed": 0,
+    "skipped": 0,
+    "errors": 0,
+}
+...
 
-Applied, thanks!
+To output the JSON using the following command:
+./tools/testing/kunit/kunit.py run example --json
+
+This has been requested by KUnit users. The counts are in a "misc"
+field because the JSON output needs to be compliant with the KCIDB
+submission guide. There are no counts fields but there is a "misc" field
+in the guide.
+
+Reviewed-by: David Gow <davidgow@google.com>
+Signed-off-by: Rae Moar <rmoar@google.com>
+---
+ tools/testing/kunit/kunit_json.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/testing/kunit/kunit_json.py b/tools/testing/kunit/kunit_json.py
+index 10ff65689dd8..c1463e6819b6 100644
+--- a/tools/testing/kunit/kunit_json.py
++++ b/tools/testing/kunit/kunit_json.py
+@@ -39,10 +39,20 @@ def _get_group_json(test: Test, common_fields: JsonObj) -> JsonObj:
+ 		status = _status_map.get(subtest.status, "FAIL")
+ 		test_cases.append({"name": subtest.name, "status": status})
+ 
++	test_counts = test.counts
++	counts_json = {
++		"tests": test_counts.total(),
++		"passed": test_counts.passed,
++		"failed": test_counts.failed,
++		"crashed": test_counts.crashed,
++		"skipped": test_counts.skipped,
++		"errors": test_counts.errors,
++	}
+ 	test_group = {
+ 		"name": test.name,
+ 		"sub_groups": sub_groups,
+ 		"test_cases": test_cases,
++		"misc": counts_json,
+ 	}
+ 	test_group.update(common_fields)
+ 	return test_group
+
+base-commit: c2493384e8110d5a4792fff4b9d46e47b78ea10a
+-- 
+2.49.0.1112.g889b7c5bd8-goog
 
