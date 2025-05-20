@@ -1,160 +1,156 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2267819F135;
-	Tue, 20 May 2025 12:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747745612; cv=none; b=OIcjmBHuIUYTN6gKjFdXE6MDQTH0Lgz9pu8cwI62T1dJ/1PAmKy5ItJnAD+n0RsaJ6j1WWxOFUo86muaRsuWhNCjEZWSl2Iwz3YEIwR+4m8mVqF7BuGBpGARQQGaraZlLwQsKvmqwz9Ub7u6idEny4FU8iFcmxzdPgTKT1f34Q0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747745612; c=relaxed/simple;
-	bh=BSAzjNgFwqBT3dlEfWzgPj4d5DkvOqbJJ/Agsv1uQHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=utZbM88AObcdv70tFxZSh7sVvWtyZyjz0mOEvr4mnDziWH1sr9l2kMCXQr6cVS+KWVW3Jt4MX5VhbMTkxCd1+2RPA3eJ3Rf4UoGdCFYIzzuVGxaey+YifPXaVqZ7PEMGUoJbagnfWrwHAYs9Ci3g9EvcVecGFP4XDCoNwEk0pgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b1vcT0nC5zKHMfW;
-	Tue, 20 May 2025 20:53:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9D75E1A07BB;
-	Tue, 20 May 2025 20:53:27 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBHrGBGeyxorFXpMw--.65335S3;
-	Tue, 20 May 2025 20:53:27 +0800 (CST)
-Message-ID: <25d93183-35ac-4b58-9bd2-2c9179735601@huaweicloud.com>
-Date: Tue, 20 May 2025 20:53:26 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0B7E573;
+	Tue, 20 May 2025 12:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747745655; cv=pass; b=J7fsz0VU3qqZGU328fT0bT0UiU4wokBs29TKIpSL4Lmu7VQvRTbQa5uFceeTUftmBiwXVATPx8nQXy4KhrIvG19cb693WmgkMW8yhB9Thy6ZTWgod7nklr74wqwWaqnXknpMrK4T/zdOchVtocOgEsRytsq+XkFLSH+SLK+pc34=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747745655; c=relaxed/simple;
+	bh=VyDRu5okBNYh0PPU8c6EFcuLKrl934GUxOrmkcF81Wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YZQFdL7w3GpQbcaisfUQbPr8ZkVlrIaW8bknOQJhNePQItar4aQNEHqUdQOAOZ3GFvP4RS1wCd0XPRmGYIl7NGpoDc9KnVns/Mfc7Q+QK5GQOteHCXQGbSCmW/b7dKNXCYNqqzj5+xM/NEM3xB0X/4EwMLPek8tDF0/Oj/w36ZU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=g3yvTSms; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="g3yvTSms"
+ARC-Seal: i=1; a=rsa-sha256; t=1747745619; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PtbyDuG+Xx8o4Fo82q7gnzgQXzDhkhuOwgpsBwhKqs1kN+veFb597R7SmL0acmpVblQKhP5T2//K2bvT3qGHZg8JX9PxK8Ukp3DMFEbXsXzYA2xWO8yeajGClzl6MaCP8H7HPytGyk6h7JQZuK0vVbYD85a2EDdZuhP7w/WoNRE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747745619; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xpT1I6OsQDTs/OF6TNihbbaghdO2wEfulzUIutllrog=; 
+	b=N/Vb1ix5HrbvV5ZA1XrkeBdi4W4mfR9AKiBeYZmGYvJPpeHpWoX0DiF0s4hSDw7zH1iLzyGg3NUBVPmHhDLei83LokqjKKsaxYN+8H/K2My/+tNmTwGe0b/D4G/nRr3kHqlPNKuZpFeq/ySiaQpKXsnKIhOuliGBXisUbZCHf3w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747745619;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=xpT1I6OsQDTs/OF6TNihbbaghdO2wEfulzUIutllrog=;
+	b=g3yvTSmsy65qXoWGb8uBaN+T4q/WMuNwAKSrRiKs8IJaXx9Gb62wGqL/XB0tPwZR
+	ZSBdWYFuEZAH+oHbqIMvyJ2BrPF5O1MM2wzxsCG506MnSTUCZygE2n+O3Fjd+b1coDP
+	+UhQicfjZXhr6yXQndXN/37rC1cLFkcyJUgp6Yh0=
+Received: by mx.zohomail.com with SMTPS id 1747745619348731.4739743284113;
+	Tue, 20 May 2025 05:53:39 -0700 (PDT)
+Date: Tue, 20 May 2025 13:53:33 +0100
+From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Daniel Stone <daniel@fooishbar.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com, Rob Herring <robh@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>
+Subject: Re: [PATCH v2 3/3] drm/panfrost: show device-wide list of DRM GEM
+ objects over DebugFS
+Message-ID: <3ufktxc3qkp6nimqkll2kju2iraopvy3cdfkrabqdoct2j5xkg@dv6xalz7jlvy>
+References: <20250507160713.1363985-1-adrian.larumbe@collabora.com>
+ <20250507160713.1363985-4-adrian.larumbe@collabora.com>
+ <9c0b95c8-bf2d-4689-ac1f-ccacba826060@arm.com>
+ <CAPj87rOiEa1bTOPqyauYhoVoXEtNeDjE+DkLbzeGVJ1tW9fJcQ@mail.gmail.com>
+ <6a00017f-89dd-47b9-a4db-ceedd63f456f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] ext4: correct the journal credits calculations of
- allocating blocks
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
- adilger.kernel@dilger.ca, yi.zhang@huawei.com, libaokun1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
- <nhxfuu53wyacsrq7xqgxvgzcggyscu2tbabginahcygvmc45hy@t4fvmyeky33e>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <nhxfuu53wyacsrq7xqgxvgzcggyscu2tbabginahcygvmc45hy@t4fvmyeky33e>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBHrGBGeyxorFXpMw--.65335S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFy7Zw13CFy3WF45XFyrZwb_yoW5Zr15pF
-	n7AF4rJF48Xw1UurWIqa1jvr48Wa18GF47uF43Jr45XF98Aa4fGrn0va4rCFy5tr4fAw1q
-	vF4Fk347G3W3JFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
-	mii3UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a00017f-89dd-47b9-a4db-ceedd63f456f@arm.com>
 
-On 2025/5/20 4:24, Jan Kara wrote:
-> On Mon 12-05-25 14:33:16, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> The journal credits calculation in ext4_ext_index_trans_blocks() is
->> currently inadequate. It only multiplies the depth of the extents tree
->> and doesn't account for the blocks that may be required for adding the
->> leaf extents themselves.
->>
->> After enabling large folios, we can easily run out of handle credits,
->> triggering a warning in jbd2_journal_dirty_metadata() on filesystems
->> with a 1KB block size. This occurs because we may need more extents when
->> iterating through each large folio in
->> ext4_do_writepages()->mpage_map_and_submit_extent(). Therefore, we
->> should modify ext4_ext_index_trans_blocks() to include a count of the
->> leaf extents in the worst case as well.
->>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> 
-> One comment below
-> 
->> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
->> index c616a16a9f36..e759941bd262 100644
->> --- a/fs/ext4/extents.c
->> +++ b/fs/ext4/extents.c
->> @@ -2405,9 +2405,10 @@ int ext4_ext_index_trans_blocks(struct inode *inode, int extents)
->>  	depth = ext_depth(inode);
->>  
->>  	if (extents <= 1)
->> -		index = depth * 2;
->> +		index = depth * 2 + extents;
->>  	else
->> -		index = depth * 3;
->> +		index = depth * 3 +
->> +			DIV_ROUND_UP(extents, ext4_ext_space_block(inode, 0));
->>  
->>  	return index;
->>  }
->> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->> index ffbf444b56d4..3e962a760d71 100644
->> --- a/fs/ext4/inode.c
->> +++ b/fs/ext4/inode.c
->> @@ -5792,18 +5792,16 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->>  	int ret;
->>  
->>  	/*
->> -	 * How many index blocks need to touch to map @lblocks logical blocks
->> -	 * to @pextents physical extents?
->> +	 * How many index and lead blocks need to touch to map @lblocks
->> +	 * logical blocks to @pextents physical extents?
->>  	 */
->>  	idxblocks = ext4_index_trans_blocks(inode, lblocks, pextents);
->>  
->> -	ret = idxblocks;
->> -
->>  	/*
->>  	 * Now let's see how many group bitmaps and group descriptors need
->>  	 * to account
->>  	 */
->> -	groups = idxblocks + pextents;
->> +	groups = idxblocks;
-> 
-> I don't think you can drop 'pextents' from this computation... Yes, you now
-> account possible number of modified extent tree leaf blocks in
-> ext4_index_trans_blocks() but additionally, each extent separately may be
-> allocated from a different group and thus need to update different bitmap
-> and group descriptor block. That is separate from the computation you do in
-> ext4_index_trans_blocks() AFAICT...
-> 
+Hi Steven,
 
-Yes, that's right! Sorry for my mistake. I will fix this.
+Thanks for the fix, I've tested it and it fixes the outstanding issue.
 
-Thanks,
-Yi.
+However, including the perfcnt sample buffer in the DebugFS GEMs file raises the question of what
+to do with its labelling, because it isn't exposed to UM through a handle, so my previous assumption
+about not needing to handle static labels when tagging BO's within the driver no longer holds.
 
-> 
->>  	gdpblocks = groups;
->>  	if (groups > ngroups)
->>  		groups = ngroups;
->> @@ -5811,7 +5809,7 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->>  		gdpblocks = EXT4_SB(inode->i_sb)->s_gdb_count;
->>  
->>  	/* bitmaps and block group descriptor blocks */
->> -	ret += groups + gdpblocks;
->> +	ret = idxblocks + groups + gdpblocks;
->>  
->>  	/* Blocks for super block, inode, quota and xattr blocks */
->>  	ret += EXT4_META_TRANS_BLOCKS(inode->i_sb);
->> -- 
->> 2.46.1
->>
+This might require some quick rewrite so that the sample BO can be displayed with a fitting name.
 
+On 19.05.2025 17:02, Steven Price wrote:
+> On 15/05/2025 19:04, Daniel Stone wrote:
+> > Hi Steven,
+> >
+> > On Thu, 8 May 2025 at 11:42, Steven Price <steven.price@arm.com> wrote:
+> >> I'm also seeing a splat when running this, see below. I haven't got my
+> >> head around how this is happening, but I see it when glmark quits at the
+> >> end of the test.
+> >>
+> >> [  399.505066] Unable to handle kernel NULL pointer dereference at virtual address 00000004 when write
+> >> [...]
+> >> [  399.882216] Call trace:
+> >> [  399.882222]  panfrost_gem_free_object [panfrost] from drm_gem_handle_delete+0x84/0xb0
+> >> [  399.893813]  drm_gem_handle_delete from drm_ioctl+0x2b8/0x4f4
+> >> [  399.900237]  drm_ioctl from sys_ioctl+0x428/0xe30
+> >> [  399.905496]  sys_ioctl from ret_fast_syscall+0x0/0x1c
+> >
+> > Soooo. Let's assume it has to actually occur in
+> > panfrost_gem_debugfs_bo_rm(), since that's all that's changed here.
+> >
+> > I don't think pfdev can be NULL here, because we've already
+> > dereferenced ptdev and written to a structure member earlier in
+> > panfrost_gem_free_object(). I don't think it can be the debugfs mutex,
+> > because a) that's initialised with the device, and b) wouldn't be
+> > offset 0x4.
+> >
+> > I'm looking then at list_del_init(&bo->debugfs.node), which would
+> > effectively execute bo->debugfs.node->next->prev =
+> > bo->debugfs.node->prev. So if bo->debugfs.node->next was NULL, that
+> > would explain a write to 0x4 on 32-bit systems.
+>
+> So I finally got some time to do some debugging on this. And you are
+> absolutely correct on where the fault is triggered.
+>
+> The cause of it is that panfrost_gem_debugfs_bo_add() is called from
+> panfrost_gem_create(), but that isn't the only place that Panfrost GEM
+> objects are created - it turns out panfrost_perfcnt_enable_locked() also
+> calls drm_gem_shmem_create(). And in that case the list next/prev
+> pointers are left set to NULL, causing things to blow up when the GEM
+> object is freed.
+>
+> The below patch gets things working, or alternatively just init the list
+> in panfrost_gem_create_object() if we don't want to include the perfcnt
+> buffer in the list.
+
+> Steve
+>
+> ---8<--
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> index fe2cdbe8baf0..51da13cd81f0 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -297,13 +297,14 @@ struct drm_gem_object
+> *panfrost_gem_create_object(struct drm_device *dev, size_t
+>         obj->base.map_wc = !pfdev->coherent;
+>         mutex_init(&obj->label.lock);
+>
+> +       panfrost_gem_debugfs_bo_add(pfdev, obj);
+> +
+>         return &obj->base.base;
+>  }
+>
+>  struct panfrost_gem_object *
+>  panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
+>  {
+> -       struct panfrost_device *pfdev = dev->dev_private;
+>         struct drm_gem_shmem_object *shmem;
+>         struct panfrost_gem_object *bo;
+>
+> @@ -319,8 +320,6 @@ panfrost_gem_create(struct drm_device *dev, size_t
+> size, u32 flags)
+>         bo->noexec = !!(flags & PANFROST_BO_NOEXEC);
+>         bo->is_heap = !!(flags & PANFROST_BO_HEAP);
+>
+> -       panfrost_gem_debugfs_bo_add(pfdev, bo);
+> -
+>         return bo;
+>  }
