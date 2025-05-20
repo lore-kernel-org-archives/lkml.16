@@ -1,143 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88461211497;
-	Tue, 20 May 2025 16:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BDA21D3F3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759663; cv=none; b=dLiJPOhYJ9xPwL2dTwqdCS4/8JINAaMq6Iz+6b9MBUOqvdRL9rssZ0EtjwLpqeeb98uUqNDn0Nk6idEN7AAgt6FtQ+FemieAGumQTS4vzmLpjieEQQDjcrWqYL7GXPSdiXz4IhKayPu3A2r23gY6ElykuSnbotIc+WTpx/KoPBM=
+	t=1747759698; cv=none; b=bQWEpD2m2KhSJ3BC0CK55Dpo4lEZcnExXNi2WIB/L6DA+wxNujKpayMb1pHImo2PtYhgLJDbEzB7Jfhwh9e+/vAB7iMRnoBwMl1AbMWtFeSxYzQFzZqszWb8MeJr1sCvGX7NF4SOfxxPi2U/i12MDXk2/yhiW54TdBMGljJYMU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759663; c=relaxed/simple;
-	bh=Axihyr7398qJC9RwLmYp5/r6di4dlvly/GLdLRtqlU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZ+BSMptyx5tAGCjTnyu7rchYEzXCuvLPismr3pOdBDRt6EdpeRBcXQoRQXSywsKVlVjIoc42QhlMrDEbA/sU/SZqdDpT9tQO1gkDi6gBpfDkfuPf3mts3+KE0vGX5+0QUDWvmn/o6+q82WYBMvfX5SW8q4tzWmGxrRU0W2EP6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCuvvuqa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747759698; c=relaxed/simple;
+	bh=vaG1AyiwufvK/q6V0BdgNfGV5ktSt1kaK+/KaMzgyxU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fnDli9eZ+T1Pstq5Cu9z/vgasIgmFuv9vUC903liOoy+ngP8gURV0Ccwx2q3BRK9Vqaa3nROGcg2hj4pxmHQkeU8aF5tdCmpb42PmcAWyAATohjGnjN3h4MdnelPjafGGEM5A7WwPC9aLUFFYPQjths6tbOAZD4WLcYpRt0PJNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ucbEUtwH; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCuvvuqa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11428C4CEE9;
-	Tue, 20 May 2025 16:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747759663;
-	bh=Axihyr7398qJC9RwLmYp5/r6di4dlvly/GLdLRtqlU4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bCuvvuqapQz8wD3YmbuiGIaIhFV/qE2/rzrctpKMqUT3/85sx1phf199drMZ6vd68
-	 03j6/3Z1RnTtUMBSofERWU+vvpph+vtyw6u6QZaXp0hmWXUSH7ZpiB6d2WHJacxZni
-	 ZnHO0ZaAn5uxa4ZUnL7/Iw/mptR54MX3vtqUVgxlt7kfKNhKONlYJYdQNKao9z9l8z
-	 zfazmU2qHq7OgXNgg2d4H//lnb+q4qtTHwbDtiyc1wBw6R2gRiyXyTSTzP6KzqNSs9
-	 hOHHu717m1hVIBkmkfEzqykCjEa5ZJ1tF4neVA4GU599F5wTOVExAOQPG2x9BLDBEJ
-	 Uov/l3VO9/UBw==
-Date: Tue, 20 May 2025 09:47:39 -0700
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-security-module@vger.kernel.org,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
-Subject: Re: linux-next: Tree for May 16 (security/landlock/ruleset.c)
-Message-ID: <202505200947.5D9CE9EBE1@keescook>
-References: <20250516202417.31b13d13@canb.auug.org.au>
- <e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org>
- <20250519.jiveise8Rau8@digikod.net>
- <202505191117.C094A90F88@keescook>
- <20250519.ba8eoZu3XaeJ@digikod.net>
- <202505191212.61EE1AE80@keescook>
- <aCyLT2qr_7iJJHm6@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ucbEUtwH"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9b2e7a34so2944692a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747759696; x=1748364496; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K8+YuUSYlYqZjaqVi8KvARVNCx6CmbgvfMwxteqHVYw=;
+        b=ucbEUtwHFUacrbqMXKkYJF2KNj/F986Jokx3womWSvJLzsdyzIQJhJUAD+xhCIRI6W
+         4pKylJcAkMPcmS5Iji65Vh0ayO2CFCStC4PRwj5vHemWxoB3+i9Dyn84I3rwnytJoQxd
+         W3rzIy1wbIYwjJwihtfDSCkQSAyMQyc8w4dRLeXj3T6P4lvhfunfbmAaJeGl9ybCJmTI
+         8IMyR/s1XradFshsuKwp7Hy97yInB0E6WPONbl9W6wXmCgRZ/JB2fUoSHzazOAakAKJt
+         XPBbsMentzSHMUuJU88Pu/D9/+5nIylmrex3U2UME5znsJYTU2GE9YosuQesyVt2w6Dr
+         RxhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747759696; x=1748364496;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K8+YuUSYlYqZjaqVi8KvARVNCx6CmbgvfMwxteqHVYw=;
+        b=pTE0vrjz+mQme/Dq6syQuKFld9jEKfFSg/isJocO52qNbHUnS4GbDBuUMyua+tmQM8
+         UYJ3iKIKwEkejaj5rheaZpbwzIg8sJ0rqH0q9/FKtZ9TDrIoB2T4dTjawvKX9WFnBXfv
+         /UTKfnjNogWTDLq5yH22qDgLmKBI5HZ3FEeo/993b4Go60BClcpfLkl2a4McwZvOALm5
+         NMOEcZ2wmi4s7Q4j/x3+QPnb72VKbJraepALGRCRwsJaY0BUrid0Qt0L45ZXhydEosSF
+         luIjzSQSBFlU0hmuX9XTnEzjwkQFFck24rPBb59ksIFy/scgAZcit7H5RMn7bTmSz6nh
+         sr8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVHQIxp5DRGonPfUt+QkTFqSoLEsPk6XbvSKhXSrhn+VcshIgHiosmIhFck0OmyFnsPSk/zFetw7Fx2bWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywej6sPYGuq38F1CkTdNdFhzMz9qDr2NcmMfsH1DxfCZkGfsj3F
+	ViTaTozBwZyrFeOrAEjCB5aq23j5wGtNuhS0TZHqIIjk7v4OTapKu6Bp1Ph6JsBb1r4G3nmTyXs
+	j/gMOBA==
+X-Google-Smtp-Source: AGHT+IEu/JMVZpzEiP5lovevj2HceA3rlhx10tlMh6Wzo0F+yguDjIYER5h4LnHBtzjgdiGXgmK1YFTBLWk=
+X-Received: from pjbqj14.prod.google.com ([2002:a17:90b:28ce:b0:308:7499:3dfc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2644:b0:309:e195:59d4
+ with SMTP id 98e67ed59e1d1-30e7d52b166mr34112928a91.12.1747759695854; Tue, 20
+ May 2025 09:48:15 -0700 (PDT)
+Date: Tue, 20 May 2025 09:48:04 -0700
+In-Reply-To: <20250331182703.725214-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCyLT2qr_7iJJHm6@black.fi.intel.com>
+Mime-Version: 1.0
+References: <20250331182703.725214-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <174774841895.2752531.5751818794863605913.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Use kvm_x86_call() instead of manual static_call()
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 20, 2025 at 05:01:51PM +0300, Andy Shevchenko wrote:
-> On Mon, May 19, 2025 at 12:15:30PM -0700, Kees Cook wrote:
-> > On Mon, May 19, 2025 at 08:41:17PM +0200, Mickaël Salaün wrote:
+On Mon, 31 Mar 2025 11:27:03 -0700, Sean Christopherson wrote:
+> Use KVM's preferred kvm_x86_call() wrapper to invoke static calls related
+> to mirror page tables.
 > 
-> ...
-> 
-> > >From 6fbf66fdfd0a7dac809b77faafdd72c60112bb8d Mon Sep 17 00:00:00 2001
-> > From: Kees Cook <kees@kernel.org>
-> > Date: Mon, 19 May 2025 11:52:06 -0700
-> > Subject: [PATCH] string.h: Provide basic sanity checks for fallback memcpy()
-> > MIME-Version: 1.0
-> > Content-Type: text/plain; charset=UTF-8
-> > Content-Transfer-Encoding: 8bit
-> > 
-> > Instead of defining memcpy() in terms of __builtin_memcpy() deep
-> > in arch/x86/include/asm/string_32.h, notice that it is needed up in
-> > the general string.h, as done with other common C String APIs. This
-> > allows us to add basic sanity checking for pathological "size"
-> > arguments to memcpy(). Besides the run-time checking benefit, this
-> > avoids GCC trying to be very smart about value range tracking[1] when
-> > CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
-> > 
-> > Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: "Mickaël Salaün" <mic@digikod.net>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: <x86@kernel.org>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: Andy Shevchenko <andy@kernel.org>
-> > Cc: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: <linux-hardening@vger.kernel.org>
-> > ---
-> >  arch/x86/include/asm/string_32.h |  6 ------
-> >  include/linux/string.h           | 13 +++++++++++++
-> >  2 files changed, 13 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
-> > index e9cce169bb4c..74397c95fa37 100644
-> > --- a/arch/x86/include/asm/string_32.h
-> > +++ b/arch/x86/include/asm/string_32.h
-> > @@ -145,12 +145,6 @@ static __always_inline void *__constant_memcpy(void *to, const void *from,
-> >  #define __HAVE_ARCH_MEMCPY
-> >  extern void *memcpy(void *, const void *, size_t);
-> >  
-> > -#ifndef CONFIG_FORTIFY_SOURCE
-> > -
-> > -#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
-> > -
-> > -#endif /* !CONFIG_FORTIFY_SOURCE */
-> > -
-> >  #define __HAVE_ARCH_MEMMOVE
-> >  void *memmove(void *dest, const void *src, size_t n);
-> >  
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index 01621ad0f598..ffcee31a14f9 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -3,6 +3,7 @@
-> >  #define _LINUX_STRING_H_
-> >  
-> >  #include <linux/args.h>
-> > +#include <linux/bug.h>
-> 
-> In case you are go with this change, please keep the headers in order.
-> 
-> >  #include <linux/array_size.h>
-> 
-> (should be located here)
+> No functional change intended.
 
-Oops, yes, that was my intent but I typoed my insert, it seems. Fixed
-now; thanks!
+Applied to kvm-x86 mmu.
 
--Kees
+[1/1] KVM: x86/mmu: Use kvm_x86_call() instead of manual static_call()
+      https://github.com/kvm-x86/linux/commit/6a3d704959bd
 
--- 
-Kees Cook
+--
+https://github.com/kvm-x86/linux/tree/next
