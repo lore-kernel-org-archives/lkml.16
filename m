@@ -1,192 +1,201 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688C250C18;
-	Tue, 20 May 2025 15:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9121AA7BF;
+	Tue, 20 May 2025 15:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753771; cv=none; b=ja1mv0IE5FuYKuf0HkK2myiEswJ0ER3zGKup7QHDqY+c1ZikaRX3BDnT9lLa6JDsge1vzLc+1Wfex7t4zl68GnIuXEWUsEkDu7QPIXu1SWIpmsFnJtBZFE0H0wZaixjKjj/632M6pwUq29u+9Pl/tNBcCL6OFePE5tYoVodXO+s=
+	t=1747753837; cv=none; b=tvZRIsb3qUF+KFRD9hXcltNJxqt4w0b3e2rUIctnMlLY198vJyQRnEerba8zZabMBYeCHt5F8k/uibV8ynrWUTzWcHiQS9jrUQ4YUh60Pev4QJbOt8naTk8J+I6Nb11g49frKDTgTEagOt+kkCrB6TOfLdYKrshgvnG9lXv4C40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753771; c=relaxed/simple;
-	bh=LxISO3z6KWXiemomrWzTw2ALScLyGRqLuUgSVlA0vWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBtSmBxB9/zkYiV4ktFvP0+jsYTnsm0R1LGYqr97yfLzWtu9MA9J0lDdA+ZJRGPde1Q02LMHNVPRiwjoANd2XXdmPdw8e1HqdqV+wkgPZk0KGbIKO596N14x26MSBO41b8I6nWAjbNY/ZPFIO+WzRsvCrVBzwgc7bETv4Kq9K3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JD2jMFIC; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747753837; c=relaxed/simple;
+	bh=8pBcx7C+wGMsAM4YE9AHNpnruMuSJOh7Nq/Sv0KEcEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QSa1JzsmwaqGmCa9EO3GSwEh/XOfMHQe8JUdoMcVJLgytPqlHW5eK1nuNtJVWKCEmlvcPuk36J20SLTygvez3Spado4vN2g38mDF4E7y6faVByuutFSANxTBwEeKj0MwDjKmZYoXRhrQmeTw1FYZXGUVfWnunp34XDMdhkAryjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nyRxdM4G; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JD2jMFIC"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad574992fcaso396149566b.1;
-        Tue, 20 May 2025 08:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747753765; x=1748358565; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K4fg7CBjj81Y+lIyXwgfxY20nHUQb0kdLesg6+u2b6k=;
-        b=JD2jMFICf9U0zXaOo09Kp3hB9E5oQ3RE26q2mRTF0Yd4HzdP05HQ0abpdg9ZcudPYM
-         gMPim2t/DIgACqLHdeukSPUY9aibTfVG8FEngv1/1Owd07B334QUJpyFEYkOcPkAINp5
-         XadJAduV/yk4YF4FZY4gyOavwqYcgu3Pwz/jJmVq5s9hxNWILZaNYb0WHsu+nKdZh1vQ
-         ZeDmLFkCJ7AAgBdnejUFbuVjVE74KVgVr0pAvl6AxjvgMA1qyiGoHDVBMOn6HjGSoyQ5
-         etFNOMDjHY/2MQ7ISFlfd2ujFyMHztp1kMotljbjp0bPyESkDLL8UUR6Egn0eJwPdNSh
-         s2Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747753765; x=1748358565;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4fg7CBjj81Y+lIyXwgfxY20nHUQb0kdLesg6+u2b6k=;
-        b=RzcwhJwX9JeV9dOnWsFvszkJRqPHD+Y1Tf96UY4cNigJuCoan0WEBcXQBuu3HadZBH
-         AljGyH+lioZpeVAYs5B2tEYtmwOdD1H+H8tKm9XXOnBXCe58CZ95VTHeY9M5ZFY/3OKv
-         6RQMNzvSW4+dW1+JNzQ4LHfPdCqlEZMiXXas7AtyZGCObQPtADepgkWy2a3iR7FwiB0d
-         29fTB5tLkqkX7zXSMlc/EW3fWRTDflhqNHQQE9a/PZeoXaHDs8YfM1fC8jGolYSrMlNP
-         6GUhK4qJpkWiEOZ24pNXlMQjmUB0ngdx0+IGx4dDroA0H+Q13vmT9FKygFsJ2O7++sip
-         RokQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9m5UmdAOw6ajaTHlzuS6ZxtKnw6tiPs77wAuFgMeU7JBmRQUWaLUtXVchfgvA8iNk+SNXD2JAhW8e2aQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7+pho7F/GD/hLoRkoWJ/Gc+rCSDhopKj4iwC7DbquO7YL4j30
-	zJAfiqQBL6HeyCISbc35tSO8DPtS5vCTXtxDKHzbIeb1JqHy1rz9yU7H
-X-Gm-Gg: ASbGncuMsUAE7u4PcHdBfjmtCj++wAlANjOp3/0Jjkaxh25UEfD0of362uVuKzRGrsX
-	VgfKSb8X2mx9Gyn7hI6xhxgyisD/txcDv6IyVERQtKfxYTZY4eAC05TGUhtHF1eSG1QPCauqfGQ
-	4gvDNlZqX73SRcYJStTO5SFMbjn5oTGOQjfy1SEk+OOgMORMq5d3F6rA11UoEUg1BttGof0rg0V
-	G+GTxJHur+XQ0yAaWL8nnw+M9CCGd/tC/Fh0bqW4aNF5ffg0o2g7JEEYkng6SVB6Ih0qzE0Bk2w
-	laXaIzpI3Qsr43csy3LNIm8TDueYegT5x80lrK3qYsck9ytfHy/jrm3wDzaY5MXuiBcI4w22Bhx
-	HaNTrHCk=
-X-Google-Smtp-Source: AGHT+IHnJC0l+gbDs00pwG1808MP+xOdj+5geC/SnK90Q7YfSO2tawHe9nZ1kBJXaAyfhzoTYpFF1A==
-X-Received: by 2002:a17:907:d716:b0:ad4:f5ed:42db with SMTP id a640c23a62f3a-ad52d4b3699mr1761549666b.17.1747753764479;
-        Tue, 20 May 2025 08:09:24 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:e7c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d08058bsm750241866b.68.2025.05.20.08.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 08:09:23 -0700 (PDT)
-Message-ID: <7f06216e-1e66-433e-a247-2445dac22498@gmail.com>
-Date: Tue, 20 May 2025 16:10:42 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nyRxdM4G"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7iMUm013649;
+	Tue, 20 May 2025 15:10:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ImJYlZ
+	5KVwozGboNulihlvH73RO/Xx8tW7cXQE7ByHk=; b=nyRxdM4GeKJxhIMiaN8DDY
+	OdePpXv6SKOB1Uq9zqBnSbPFXF2ab6uFheECxzGBYsoOQlUYtM89Bf4dl/LeACCt
+	NvYJ8yd5UHC4cMy9plevG4+keuNKZ8GQV7UbLshbWnNQhgMhRD7sI8wUSRZW7X74
+	HD5OaTnu/dtKOEvsE13oT9yJgP93LEI9BsZ13p/V7ArHLAd6stJX8jl4DqC9D9kj
+	qjTUislDibA0LaUi5KCYuP36JTsqNCTulkupGyioD17MEYli2iVMOa1vRhAosWwo
+	70uU9P52ev8XLdNC3JoaqLia6UMg2p2sLRm15FBt8mdQPyiAZHhPzDOWM1pzesCg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99n25r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 15:10:17 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54KF1luQ024544;
+	Tue, 20 May 2025 15:10:17 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99n25g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 15:10:17 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KBebPD007347;
+	Tue, 20 May 2025 15:10:16 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q70kcb81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 15:10:16 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KFAC2v49545622
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 15:10:12 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53AFF2004F;
+	Tue, 20 May 2025 15:10:12 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD4BE20040;
+	Tue, 20 May 2025 15:10:11 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 20 May 2025 15:10:11 +0000 (GMT)
+Date: Tue, 20 May 2025 17:10:09 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        James Houghton
+ <jthoughton@google.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
+        Yang Shi
+ <yang@os.amperecomputing.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Liam
+ R . Howlett" <Liam.Howlett@oracle.com>,
+        Matthew Wilcox
+ <willy@infradead.org>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
+Message-ID: <20250520171009.49b2bd1b@p-imbrenda>
+In-Reply-To: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
+References: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
- sendmsg
-To: Stanislav Fomichev <stfomichev@gmail.com>,
- Al Viro <viro@zeniv.linux.org.uk>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, willemb@google.com,
- sagi@grimberg.me, almasrymina@google.com, kaiyuanz@google.com,
- linux-kernel@vger.kernel.org
-References: <20250517000431.558180-1-stfomichev@gmail.com>
- <20250517000907.GW2023217@ZenIV> <aCflM0LZ23d2j2FF@mini-arch>
- <20250517020653.GX2023217@ZenIV> <aCfxs5CiHYMJPOsy@mini-arch>
- <20250517033951.GY2023217@ZenIV> <aCgIJSgv-yQzaHLl@mini-arch>
- <20250517040530.GZ2023217@ZenIV> <aCgQwfyQqkD2AUSs@mini-arch>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <aCgQwfyQqkD2AUSs@mini-arch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=J/mq7BnS c=1 sm=1 tr=0 ts=682c9b59 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=TAZUD9gdAAAA:8 a=VnNF1IyMAAAA:8
+ a=vzhER2c_AAAA:8 a=20KFwNOVAAAA:8 a=TdoRMgLQO9YfxZhadQYA:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 a=0YTRHmU2iG2pZC6F1fw2:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyMyBTYWx0ZWRfX6ETF0aPitQjf tBavV1oG8+qlAYCVttmWmV9C699wqmr9mBJ7ugqpYea2/7AUQm4szrF3BjtoL9Vjiu89sIh4WEM v9gj4kS7rrh+nIrYIF8k8OJH8Lr1wLf+0DLLwOG5rXx+1dncZrB3gt1IBs//nmlzibf2W+p9ZXw
+ dpsgbWgZSKCi8cXok6DHwjoPH6gr5uP5ucIhMEtCKCjL8ZMPO4eYkgbci5RXlnA/LhEK3JPbDHK lBKGmAQ5rqnEgDfbHNdlYNXkxeQfACqZhGZurgC7mVrOMISoBOy168Dgtn6HOZ6EDZp3TKfmNgG WYbnvlI2F4OYmZJFcWtso4J4bMuzK57obsynuXKlBAhs/NOlqaaZUrBTeQubwBgSxw7xwKqydv1
+ vF48ry92+MzxPcfLmH35nu0N/bNJp8Xcn0+1Y6nCR8QZjV1Gsk530291vFQoHDENPYHZxapw
+X-Proofpoint-ORIG-GUID: fJP2X6P0Z10eyLO_i1XNVfQ-lXAlgR7H
+X-Proofpoint-GUID: je_od0NDs4Y-fTVlpKSl16OI1JQ3pQxb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1011 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200123
 
-On 5/17/25 05:29, Stanislav Fomichev wrote:
-> On 05/17, Al Viro wrote:
->> On Fri, May 16, 2025 at 08:53:09PM -0700, Stanislav Fomichev wrote:
->>> On 05/17, Al Viro wrote:
->>>> On Fri, May 16, 2025 at 07:17:23PM -0700, Stanislav Fomichev wrote:
->>>>>> Wait, in the same commit there's
->>>>>> +       if (iov_iter_type(from) != ITER_IOVEC)
->>>>>> +               return -EFAULT;
->>>>>>
->>>>>> shortly prior to the loop iter_iov_{addr,len}() are used.  What am I missing now?
->>>>>
->>>>> Yeah, I want to remove that part as well:
->>>>>
->>>>> https://lore.kernel.org/netdev/20250516225441.527020-1-stfomichev@gmail.com/T/#u
->>>>>
->>>>> Otherwise, sendmsg() with a single IOV is not accepted, which makes not
->>>>> sense.
->>>>
->>>> Wait a minute.  What's there to prevent a call with two ranges far from each other?
->>>
->>> It is perfectly possible to have a call with two disjoint ranges,
->>> net_devmem_get_niov_at should correctly resolve it to the IOVA in the
->>> dmabuf. Not sure I understand why it's an issue, can you pls clarify?
->>
->> Er...  OK, the following is given an from with two iovecs.
->>
->> 	while (length && iov_iter_count(from)) {
->> 		if (i == MAX_SKB_FRAGS)
->> 			return -EMSGSIZE;
->>
->> 		virt_addr = (size_t)iter_iov_addr(from);
->>
->> OK, that's iov_base of the first one.
->>
->> 		niov = net_devmem_get_niov_at(binding, virt_addr, &off, &size);
->> 		if (!niov)
->> 			return -EFAULT;
->> Whatever it does, it does *NOT* see iov_len of the first iovec.  Looks like
->> it tries to set something up, storing the length of what it had set up
->> into size
->>
->> 		size = min_t(size_t, size, length);
->> ... no more than length, OK.  Suppose length is considerably more than iov_len
->> of the first iovec.
->>
->> 		size = min_t(size_t, size, iter_iov_len(from));
->> ... now trim it down to iov_len of that sucker.  That's what you want to remove,
->> right?  What happens if iov_len is shorter than what we have in size?
->>
->> 		get_netmem(net_iov_to_netmem(niov));
->> 		skb_add_rx_frag_netmem(skb, i, net_iov_to_netmem(niov), off,
->> 				      size, PAGE_SIZE);
->> Still not looking at that iov_len...
->>
->> 		iov_iter_advance(from, size);
->> ... and now that you've removed the second min_t, size happens to be greater
->> than that iovec[0].iov_len.  So we advance into the second iovec, skipping
->> size - iovec[0].iov_len bytes after iovev[1].iov_base.
->> 		length -= size;
->> 		i++;
->> 	}
->> ... and proceed into the second iteration.
->>
->> Would you agree that behaviour ought to depend upon the iovec[0].iov_len?
->> If nothing else, it affects which data do you want to be sent, and I don't
->> see where would anything even look at that value with your change...
-> 
-> Yes, I think you have a point. I was thinking that net_devmem_get_niov_at
-> will expose max size of the chunk, but I agree that the iov might have
-> requested smaller part and it will bug out in case of multiple chunks...
-> 
-> Are you open to making iter_iov_len more ubuf friendly? Something like
-> the following:
-> 
-> static inline size_t iter_iov_len(const struct iov_iter *i)
-> {
-> 	if (iter->iter_type == ITER_UBUF)
-> 		return ni->count;
-> 	return iter_iov(i)->iov_len - i->iov_offset;
-> }
-> 
-> Or should I handle the iter_type here?
-> 
-> if (iter->iter_type == ITER_IOVEC)
-> 	size = min_t(size_t, size, iter_iov_len(from));
-> /* else
-> 	I don think I need to clamp to iov_iter_count() because length
-> 	should take care of it */
+On Mon, 19 May 2025 15:56:57 +0100
+Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-FWIW, since it's not devmem specific, I looked through the callers:
-io_uring handles ubuf separately, read_write.c and madvise.c advance
-strictly by iov_iter_count() and hence always consume ubuf iters in
-one go. So the only one with a real problem is devmem tx, which and
-hasn't been released yet.
+> The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
+> unfortunate identifier within it - PROT_NONE.
+> 
+> This clashes with the protection bit define from the uapi for mmap()
+> declared in include/uapi/asm-generic/mman-common.h, which is indeed what
+> those casually reading this code would assume this to refer to.
+> 
+> This means that any changes which subsequently alter headers in any way
+> which results in the uapi header being imported here will cause build
+> errors.
+> 
+> Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
+> Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Acked-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> Acked-by: Yang Shi <yang@os.amperecomputing.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-With that said, it feels error prone, and IMO we should either make the
-helper work with ubuf well as Stan suggested, or force _all_ users to
-check if it's ubuf. Also, I can't say for madvise, but it's not in
-any hot / important path of neither io_uring nor rw, so we likely
-don't care about this extra check.
+if you had put me in CC, you would have gotten this yesterday already:
 
--- 
-Pavel Begunkov
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+
+> ---
+> Separated out from [0] as problem found in other patch in series.
+> 
+> [0]: https://lore.kernel.org/all/cover.1747338438.git.lorenzo.stoakes@oracle.com/
+> 
+>  arch/s390/kvm/gaccess.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+> index f6fded15633a..4e5654ad1604 100644
+> --- a/arch/s390/kvm/gaccess.c
+> +++ b/arch/s390/kvm/gaccess.c
+> @@ -318,7 +318,7 @@ enum prot_type {
+>  	PROT_TYPE_DAT  = 3,
+>  	PROT_TYPE_IEP  = 4,
+>  	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
+> -	PROT_NONE,
+> +	PROT_TYPE_DUMMY,
+>  };
+> 
+>  static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
+> @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+>  	switch (code) {
+>  	case PGM_PROTECTION:
+>  		switch (prot) {
+> -		case PROT_NONE:
+> +		case PROT_TYPE_DUMMY:
+>  			/* We should never get here, acts like termination */
+>  			WARN_ON_ONCE(1);
+>  			break;
+> @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+>  			gpa = kvm_s390_real_to_abs(vcpu, ga);
+>  			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
+>  				rc = PGM_ADDRESSING;
+> -				prot = PROT_NONE;
+> +				prot = PROT_TYPE_DUMMY;
+>  			}
+>  		}
+>  		if (rc)
+> @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+>  		if (rc == PGM_PROTECTION)
+>  			prot = PROT_TYPE_KEYC;
+>  		else
+> -			prot = PROT_NONE;
+> +			prot = PROT_TYPE_DUMMY;
+>  		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
+>  	}
+>  out_unlock:
+> --
+> 2.49.0
+> 
 
