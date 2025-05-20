@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FA7265CAC;
-	Tue, 20 May 2025 09:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758C02676DF;
+	Tue, 20 May 2025 09:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732824; cv=none; b=f0QU/OLrPvnt83enJ4lblt/JEG67CZ5xy6TM5v6uTRUrqehkmGlSeRYxZT45h+bWjLelyqO+12SxF4gCbh0I1iS6V4hijExb2GXtY4D7IqnKM1zAO3gNBIE1X4r4ziAO50ZxGDzHIa6HFpOHveorOPf4ulQzX11N4GE8/Gjpxqg=
+	t=1747732833; cv=none; b=lS7m/lR0hUGvXvJ9nqH2X0w9+mTNkXPhN1oAT27stvgKOj+xbq7ZUAIFW+uoi87Arpx9I93LwLcAHLmFQB8Jorw/92K5CR0o9KaAoMEuW8Cx+Xg3ya7SnzZRdgT1L4GzWs66FJJjmB5AGETgXnizHC4oYBmVz1Z3Uqqe45W76PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732824; c=relaxed/simple;
-	bh=SNpZ0nD62F58LE46Cw++PygB8HxkClFtFSbYN05F36M=;
+	s=arc-20240116; t=1747732833; c=relaxed/simple;
+	bh=drmLNZREsEi2qwurO6x9+d7a7DiG6SJbsdoEHUKB2oQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pZyRZTjwhwvA+EQXQYuF1tR2KUdjKPgAZSxVfsDHoPBi5Eqjmy/G4TMWt2oXg83hFGXbnLr0h4F6leJOqeDYeoplDb/nUDvTTnlHBTzjyNKbo8lMg3Z3BHb4UX2pANHt4lce7K5W/Ae/4JHnxSOH1eOebRSpoeBWiENupvzUeTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIe8sXPu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CG2sc5VYkEz1LIui/7YMTBDI6f6k9teoxnw5NKzwgjkZQDNvMGBkKLwNymhhkptpJ4tnJMLV0y3VwMJPnGBQ6lbO/Jp8+QsNWNNmd8/R6h8U9KDr1O1hOFbuhnvzevvETr9FJAWOVoBWPf+smYw1cfQX8Zm1IWeRfxOYJTg5fdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4C1b21z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIe8sXPu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FE7C4CEE9;
-	Tue, 20 May 2025 09:20:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4C1b21z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BF7C4CEE9;
+	Tue, 20 May 2025 09:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747732823;
-	bh=SNpZ0nD62F58LE46Cw++PygB8HxkClFtFSbYN05F36M=;
+	s=k20201202; t=1747732833;
+	bh=drmLNZREsEi2qwurO6x9+d7a7DiG6SJbsdoEHUKB2oQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cIe8sXPuhZt4/+jYn7jU2VGTf10bWJr2rFfLPjvBDiBLkyOi9le2fXDznJCaNEo5D
-	 cS5LofCSGy2qWaDA8BQAg9ZQCgmZpc+m5W6wYGVTJC4XxAttP4CewPa+xm5ZfTT8ZP
-	 L7ZAWbjuJSe8a/TqWJBLvm8eThUhKrvn+W64/rPZ29CBn28HidtSzERN/eiFR6/EFw
-	 PJpQ76gNyIzceKi0Nm//oy4oSjdbzm4khg47XK1nc9Gem4uZXEs9ALb/6fQOUHnSoH
-	 tZj5vjIvjYsZXM4b96/5/OpIiR/Pw3xqr3M6zFUsMW59MzdKux2d5bmBopvsxMWRGg
-	 p1dTyZEDPuf9g==
+	b=U4C1b21zU3uzpfHHnbaMqpSOiiIiTNkSuUcm6CRIhplDoB4c+Yk5tCkg7Sgo9b73Y
+	 mI/Y/enOhxwT8WjiRg2ahQdK1J3KL3GPraHKqsUala59dOqUhEGVpsCoRd/iqPfkyp
+	 6Akp6WoIMvFrwjJqeBpFJlnp9YKm+//Oj3u8aEU5LGFnOEpeL0t6VWPVw7tNt4EsX2
+	 p6Huu5iTP5vRgw3cKlzad0hvT7anwzMvRrmcNhF8nlYGM/ZbJsx4qfLQXudby9zT01
+	 xeT48yVR66tADMN+pLKYbzBCSEzQNp8zX35OubBEO+ouUyBuorcP1F0X5pxXuSWOAy
+	 9bmJGif+nFvyA==
 From: Mark Brown <broonie@kernel.org>
-To: =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, James Calligeros <jcalligeros99@gmail.com>
-Cc: asahi@lists.linux.dev, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-In-Reply-To: <20250518-mca-fixes-v1-0-ee1015a695f6@gmail.com>
-References: <20250518-mca-fixes-v1-0-ee1015a695f6@gmail.com>
-Subject: Re: (subset) [PATCH 0/9] ASoC: apple: mca: support simultaneous
- I2S capture on the frontend
-Message-Id: <174773282111.19497.1387647125513356824.b4-ty@kernel.org>
-Date: Tue, 20 May 2025 10:20:21 +0100
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org
+In-Reply-To: <ef2a4b6df61e19470ddf6cbd1f3ca1ce88a3c1a0.1747570556.git.christophe.jaillet@wanadoo.fr>
+References: <ef2a4b6df61e19470ddf6cbd1f3ca1ce88a3c1a0.1747570556.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] regulator: qcom_spmi: Constify struct
+ spmi_voltage_range
+Message-Id: <174773283210.19657.11607687696086405986.b4-ty@kernel.org>
+Date: Tue, 20 May 2025 10:20:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,43 +47,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, 18 May 2025 20:50:45 +1000, James Calligeros wrote:
-> This series introduces a number of changes to the ASoC driver
-> for the Apple MCA peripheral to enable support for bidirectional
-> I2S. This is achieved by allowing frontends to act as clock consumers
-> and logically ORing data input lines when multiple backends are linked
-> to a frontend.
+On Sun, 18 May 2025 14:16:21 +0200, Christophe JAILLET wrote:
+> 'struct spmi_voltage_range' are only modified at runtime to compile a
+> field, n_voltages, that could be computed at compile time.
 > 
-> This allows the Texas Instruments speaker amps used on Apple Silicon Macs
-> (Apple-specific revisions of TAS2764 and TAS2770) to send their IVSENSE
-> data back to the SoC. Since these amps do not have any sort of integrated
-> speaker protection logic, we must use the IVSENSE data and the Thiele/Small
-> Parameters of the attached speaker(s) to implement our own in software.
+> So, simplify spmi_calculate_num_voltages() and compute n_voltages at
+> compile time within the SPMI_VOLTAGE_RANGE macro.
+> 
+> Constifying these structures moves some data to a read-only section, so
+> increase overall security.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/9] ASoC: apple: mca: Constrain channels according to TDM mask
-      commit: e717c661e2d1a660e96c40b0fe9933e23a1d7747
-[2/9] ASoC: apple: mca: use readx_poll_timeout to check for cluster reset
-      (no commit info)
-[4/9] ASoC: apple: mca: Separate data & clock port setup
-      (no commit info)
-[5/9] ASoC: apple: mca: Factor out mca_be_get_fe
-      (no commit info)
-[6/9] ASoC: apple: mca: Support FEs being clock consumers
-      (no commit info)
-[7/9] ASoC: apple: mca: Support capture on multiples BEs
-      (no commit info)
-[8/9] ASoC: apple: mca: Do not mark clocks in use for non-providers
-      (no commit info)
-[9/9] ASoC: apple: mca: Add delay after configuring clock
-      (no commit info)
+[1/1] regulator: qcom_spmi: Constify struct spmi_voltage_range
+      commit: e9be77134469df4a11da898bec2bfc137700a9f3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
