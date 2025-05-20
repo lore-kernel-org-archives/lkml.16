@@ -1,124 +1,184 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3721CC51;
-	Tue, 20 May 2025 08:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAA725FA2E
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729789; cv=none; b=J5Knul8ZRuDCrHZS280qkzHNhco4WCXCi3hUS4TwB3Qs5xNJbHnjIQVZCZi4VA+Xb1BwqjQOiCMH+wlugkadjTIt/Wvjn+tdSDEFT+dHJC+o/8eH7K22PSmL24uPZZUmVqJlsItkurlMxpdTqau5vfG8mjHwJmCeiFVL3iscXE8=
+	t=1747729822; cv=none; b=PCsXQ766IdsbbFpiTHw9z42TT7Q2gxH/ayCEKGkzkhDksPCVEE5Kmh4L110SFr4IVEWTzRiRg8fVw3x57JeoDrAl+Vt5ju9vBqj0S89NVVlZesYPveLEjkEQqR/tOqLvImG+9/TCOM0nvXNY2IFHXmhY7xoTYsbXh/HHjlHbjk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729789; c=relaxed/simple;
-	bh=POiTATqg05LVeisM3BzKZGvxLNPea9Z+h0WRmR+dEnM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oz9OfCe/Kt7pQH7U9ZBXzr8/dDhL9yvA516erXy6KBrtHdrjUMqO5JS3VuIIG7k76+wgLmXP67w0vZw1ToUEsRsgi6EHcL6cmQzIqkI4je5UGYSFf8TQE3aO7LYZ/AADjTzdHvs608T4yS4sQGnwGYzy5QYZwi/XOxBmOESPHmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K596md015733;
-	Tue, 20 May 2025 01:29:36 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46pnr3jtnx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 20 May 2025 01:29:36 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 20 May 2025 01:29:19 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 20 May 2025 01:29:15 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <atenart@kernel.org>, <kareemem@amazon.com>, <netdev@vger.kernel.org>
-Subject: [PATCH 6.1.y] net: decrease cached dst counters in dst_release
-Date: Tue, 20 May 2025 16:29:31 +0800
-Message-ID: <20250520082931.1956136-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747729822; c=relaxed/simple;
+	bh=FBtZF9jVH1cLvcUutv6TgRxOQZAdeUAu1xny1x9NmUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C1OHAEXKEPteu9RnBOiByVczA6to6qZ6DbBbYTARCoNBWpOsmPoCZK+HYY4jR9M0HIMG9euLYyA2+A34vc/B7tj0B+QFQH/swHg57ziHJpKEt3Q6c+mmIDxPlshrwtZp2SUhv8rtncTPUmnF6KGP0lx9v8m9oZiYHtdfkYBDe9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GR4JVh7u; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GR4JVh7u"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-600454d4798so780667a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747729819; x=1748334619; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbNeWxcAASYs4L2Op/2GYcpTSnZoXJiFN9U9PyXqbjU=;
+        b=GR4JVh7u2N/7BNFX7EjbV4zpp3duAxLadd4lVhAwHTw5f93LXwYtV3eWjYaRaONjp/
+         ihltobN85pSY7siHyovFcxaAmwEg87Gw05xUPiMT4hbFyT1R0naR/2aZOZWos48BKyZp
+         obaymYfguVzE0f3MRwSIVZjhICE2qzAEXuu9K6Ws7oSUn4GkquHnM8+8sCWfwwxt1BSn
+         xcj9QTOzgs/6kehH3p0gw/1kY1gTtY/pdBNvlCRfQyrj5zfwe8mssE6NjxkkRdqC4BhV
+         j6z+IXCs++UzH5IRChj/qqDsTVy/yCKrhjB4Ol2p8CqSwAhPRgFtXqKCa57i5dT+pWSZ
+         iuJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747729819; x=1748334619;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EbNeWxcAASYs4L2Op/2GYcpTSnZoXJiFN9U9PyXqbjU=;
+        b=rpRaK/ubZWfXUBGcKwswz3c7RXHgrDsvR9tJqG8ADWneKzKcnrH7pvrbA1Lg56zFvU
+         kSzH+ia7DCKg5nKFp8nPCYFF8V7q3AUFd0K5nklUdILDIDf/9E2RQcjDsrQaaD0j//rR
+         Bv5Z8lnH5TPy3kwJuBv759+W3Bu6K/dzWhcZSmI7bxUfdWTZLs9jke7nTb6P+3E451Go
+         u3ZMsY9DVRNmhOiNl4KNx0lbEcA8i8EZl9Ck+92Dy3AaQm42blZNmcP9jLOaoZdF7E3Q
+         rX/nlAatyMdGYw9Z/ak4hLPczWfD/jUseNOu/z5d9doLV/N6YK34myje3Mqlq8+PSt/p
+         gR4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXCoVQ1YiP8zeYutZKNfZmABK/65bijg0ufYzeIfgyi3sCTK6Bl6Bw+vpw746eE2bNIv2muvkPzHQ+AWyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIUBqleKbbhnsYTFAsii3NGMUEmeHQfGB+v0u9hlmjXF0XVdMo
+	OkfbLigqpGZGEWWzEInjSt4wLzK/zCYSL2YKoiW0drG1i7U3+8Az2DIi/6/8XMKx/hM=
+X-Gm-Gg: ASbGncu7c/tz039M/X+KJTrbBf7/EjJ+WZut/jp7Ng4totqU5gZrQNYJt6h0CjZBcda
+	Ug3Wd/LzqxvzktkxjeGOAy2YNk92ZlCf8DJW1Q+NtcnA5I4Nq7WBqpVkyDgR3BHmJ4BqEyWNpdH
+	YNwQVcQksdPkZdLgHEFjarQLSdeFQoKUP5i4jpY9cvE2QYWMtNpdUF9YtvVjQPOJ9PHxQgjlKhx
+	J6g4jEbFIC/PjlfDMjzpXWD9BiENRGTMx2eiTVjjdv5E9NwnEJR31cDbnvxBi8k60hmyniGpe2W
+	KbuXlvCgkFnG60S4odAVWWw6nyHWXCTd2ts9HSyAejnVKD690IWQTonWnJ4UlU+Jehi3mpQ=
+X-Google-Smtp-Source: AGHT+IGbTTAyNzM8t/l4OfMQpoZarteMKfq/B2ggr/f8oWCk3Z06e4bleQoHdLjJ70VB+ZvqZrxhtw==
+X-Received: by 2002:a17:907:2713:b0:ad2:292d:6b9b with SMTP id a640c23a62f3a-ad52d50f06fmr496326966b.9.1747729818882;
+        Tue, 20 May 2025 01:30:18 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06b497sm690272366b.42.2025.05.20.01.30.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 01:30:18 -0700 (PDT)
+Message-ID: <8a2f2269-d07f-42b2-ab6c-dcff30a1f431@linaro.org>
+Date: Tue, 20 May 2025 10:30:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA2OCBTYWx0ZWRfX7GxItn7y2WNl 1nESQBDIFku7/ujVd2tyVMldMS2fp5dLUk9armUR84/G6sqviVpNPL2/FRwGoO1XAZ8sQ1FcMDD lum8NdhET4skwqskzoW0z+uPKQ5Op2W9XVxBlv35jG9bzXZndsSs+5glgPSvDu8DlqqF346GgGL
- 6N8qXhNLveogGuE2SiEMelkfnixcuiHxz74MWtoy0xZRd+Zp/yHy9vMqcMYXtVv0KafnRk1UxDy BFjkwSRLfNV3dlXb+1xJKAGQ/2Qbf9sWY4ReebbxI9xDKv4DY+Sw32YZwarv0EXqZGt5g89h/8s fvoLz4VxsLMvSafUKVUyy/hFLusHuweZGaTRv1b98ZN4Scja7iQxGKs0CexiGYQtnayRER9RlBt
- not5aV3+Ww/TJlrGz0nhNo3JcD/rSMA2nlpAEwZ/towoZtW3EiyutOktVd4sh4MhUhw7fjl/
-X-Authority-Analysis: v=2.4 cv=Z8XsHGRA c=1 sm=1 tr=0 ts=682c3d70 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=bC-a23v3AAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=t7CeM3EgAAAA:8 a=RSTy8_7DnOH_di7dvoIA:9
- a=-FEs8UIgK8oA:10 a=FO4_E8m0qiDe52t0p3_H:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: dNukir9HOYc7GMkEcLq8JVK2yJgTaYqz
-X-Proofpoint-GUID: dNukir9HOYc7GMkEcLq8JVK2yJgTaYqz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 spamscore=0 suspectscore=0 phishscore=0 clxscore=1011
- adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505070000
- definitions=main-2505200068
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
+ version
+To: Johan Hovold <johan@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+ <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+ <3e34ce09-1207-4dba-bff8-38c01cad9b78@linaro.org>
+ <4d942a6c-cbff-41ac-af8b-12a1ff5181aa@linaro.org>
+ <883eb54a-fcaf-443c-a4d7-e1278fd43f5a@linaro.org>
+ <ea9f570c-b135-4a98-91ea-ceeb2f48a0e5@linaro.org>
+ <aCw09Vci12txhYj-@hovoldconsulting.com>
+ <190100e7-8a59-4cf3-8434-bcb6292cacb2@linaro.org>
+ <aCw78CRda6VS6ost@hovoldconsulting.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <aCw78CRda6VS6ost@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Antoine Tenart <atenart@kernel.org>
+On 20/05/2025 10:23, Johan Hovold wrote:
+> On Tue, May 20, 2025 at 10:02:32AM +0200, Krzysztof Kozlowski wrote:
+>> On 20/05/2025 09:53, Johan Hovold wrote:
+> 
+>>> Spamming the logs as the driver currently does is clearly broken and
+>>> should be fixed. Keeping a hw version dev_dbg() is generally perfectly
+>>> fine, though.
+> 
+>> My main argument, expressed in the commit msg to which no one objected,
+>> is that this debug is 100% useless: deducible from the compatible,
+>> always known upfront, always the same.
+> 
+> To me that deduction does not seem straightforward, at least not without
+> access to internal qualcomm docs, for example:
+> 
+> 	compatible = "qcom,sc8280xp-camss";
+> 
+>         qcom-camss ac5a000.camss: VFE:0 HW Version = 1.2.2
+> 	qcom-camss ac5a000.camss: VFE:1 HW Version = 1.2.2
+>         qcom-camss ac5a000.camss: VFE:2 HW Version = 1.2.2
+>         qcom-camss ac5a000.camss: VFE:3 HW Version = 1.2.2
+>         qcom-camss ac5a000.camss: VFE:4 HW Version = 1.3.0
+>         qcom-camss ac5a000.camss: VFE:5 HW Version = 1.3.0
+>         qcom-camss ac5a000.camss: VFE:6 HW Version = 1.3.0
+>         qcom-camss ac5a000.camss: VFE:7 HW Version = 1.3.0
+> 
 
-[ Upstream commit 3a0a3ff6593d670af2451ec363ccb7b18aec0c0a ]
+I understand that deduction is not straightforward, but it is also a
+fixed one, meaning it will be always sc8280xp -> (vFOO, vBAR), thus the
+only usefulness of above is to map each compatible to pair of two HW
+versions. This can be done via debugfs interface once and stored in
+public docs. No need to do that mapping every time driver probes and my
+patches drop nice chunk of code, including indirect function calls.
 
-Upstream fix ac888d58869b ("net: do not delay dst_entries_add() in
-dst_release()") moved decrementing the dst count from dst_destroy to
-dst_release to avoid accessing already freed data in case of netns
-dismantle. However in case CONFIG_DST_CACHE is enabled and OvS+tunnels
-are used, this fix is incomplete as the same issue will be seen for
-cached dsts:
+At least so far no one objected that same compatible maps to same pairs
+of HW versions.
 
-  Unable to handle kernel paging request at virtual address ffff5aabf6b5c000
-  Call trace:
-   percpu_counter_add_batch+0x3c/0x160 (P)
-   dst_release+0xec/0x108
-   dst_cache_destroy+0x68/0xd8
-   dst_destroy+0x13c/0x168
-   dst_destroy_rcu+0x1c/0xb0
-   rcu_do_batch+0x18c/0x7d0
-   rcu_core+0x174/0x378
-   rcu_core_si+0x18/0x30
+> Whether the hw version is actually useful to anyone debugging this
+> driver I can't say, but keeping it printed *once* seems perfectly
+> alright if someone wants to keep it (e.g. as we have a long history of
+> working around hw bugs based on revision information like this).
 
-Fix this by invalidating the cache, and thus decrementing cached dst
-counters, in dst_release too.
+Now if you claim that one needs access to qcom docs to deduce it, I
+claim this version would be useful only to qcom people (or
+qcom-NDA-access-to-HPG) folks.
 
-Fixes: d71785ffc7e7 ("net: add dst_cache to ovs vxlan lwtunnel")
-Signed-off-by: Antoine Tenart <atenart@kernel.org>
-Link: https://patch.msgid.link/20250326173634.31096-1-atenart@kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- net/core/dst.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/net/core/dst.c b/net/core/dst.c
-index 8db87258d145..1c16821581c8 100644
---- a/net/core/dst.c
-+++ b/net/core/dst.c
-@@ -173,6 +173,14 @@ void dst_release(struct dst_entry *dst)
- 			net_warn_ratelimited("%s: dst:%p refcnt:%d\n",
- 					     __func__, dst, newrefcnt);
- 		if (!newrefcnt){
-+#ifdef CONFIG_DST_CACHE
-+			if (dst->flags & DST_METADATA) {
-+				struct metadata_dst *md_dst = (struct metadata_dst *)dst;
-+
-+				if (md_dst->type == METADATA_IP_TUNNEL)
-+					dst_cache_reset_now(&md_dst->u.tun_info.dst_cache);
-+			}
-+#endif
- 			dst_count_dec(dst);
- 			call_rcu(&dst->rcu_head, dst_destroy_rcu);
- 		}
--- 
-2.34.1
-
+Best regards,
+Krzysztof
