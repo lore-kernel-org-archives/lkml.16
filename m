@@ -1,136 +1,125 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D356F25228B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B902580E4
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758727; cv=none; b=ekBskw8SJJo70J7dzSNAj43+7L3j/ARK3HWtGjUwivFh2CuvWhS6wE/nShdhOenI2NN3dxXqk+D4qXS+D3YhlLJdS8SBKkzQPobMzrSVFd0B7J9kAubrKNHp3OtTRaN+a6gB6Z/VjFIPCT706AFlXEJUIJRCUVEt08h6zZQf7tM=
+	t=1747758753; cv=none; b=p8RgNwF7qXBgiZyLx1P9Kwq7J9RINg8ZAzblyIaekWnOreieQChBmRVN75fvdypOUvhSqffXXWC9VZEMdjG0Od81aRHNPHo6FseuXXjGiY5t1ZD9LQ5YhoguLwizyyxmV+8V6Uuk1V8JhoGGeq1Hc7iZDOARMMAkLzwQtLpltLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758727; c=relaxed/simple;
-	bh=POmbrIHo60gDWrhh/e54NXyzo1C9QXa4uEQ3RXx3osc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=dwZ/vtpoTTUQqOeBqbf/jrIqBAIz94NQDNhyL3+1UEYvFEcvZALFnWW5RTQUCde18fMpFZnyFbXJvSNE+fOZMm9PtFCSmqErLgwEer8N7itH+g2qSLppeF3b4qfhrA1Pkxs1NbuZ7yiofSImBKX2ksRrvnASzJ/mjmAWkX56p4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nPDeI+8d; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747758753; c=relaxed/simple;
+	bh=NE1lbQoX3Y6rrhD5RK6HSkfUgRGFG4LfnQSLgHP+z5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYCy0qC3KpeukBtZPixnNNnll1ofNfQYwBjMF+JP0u/uetWkdui0Jmlru3JOb29Es80ZWGGxeJcSlAZckY97d61uWO/uo+Oerw83nxjn+VrPDxmH5h6ZeQr3z9oGjLaCXj9WlZoYXnK0yItq1GQNlvf0h9IXNc4VcqXgJbP0BHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=evLjZHay; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nPDeI+8d"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KEk9RU024592;
-	Tue, 20 May 2025 18:32:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	WLtDt6YanhmPfaOmDE+0nd7iiaBZS7FD9MJadgVpl0c=; b=nPDeI+8dm9CPaejc
-	Q0ud6zvn0FTXf8V0HOukof9Nyx6XE7pG7hhP1R8AVQCRQ+aOwkUl1UdpJp4T5uMo
-	HMFWkMJxF/0djHZO8q8QrM6GmL4pqk2qnVvXjmnPDVUMZCvLCHtw2MZ/Nb/sgQvG
-	9rAO16C+RmI/8cIMgvrCPAmIN8XW0KQazsRsAH3yIG6CORMz+39trn9VT1CgrEyb
-	yAn+dYv5ewgQW3d9OAssi8PY/fzgR0knsWWCRBfCbS5aYtvv+orefp6qVkp28RQ/
-	41Ai9ry1o46/dSFmKH0/0+k8BrGORrrLAJktIgkBZazll5P1uEclk/ZFF6/ht05A
-	dCx+cQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgnvc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 18:32:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AF92A4004F;
-	Tue, 20 May 2025 18:31:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D2C93B190B2;
-	Tue, 20 May 2025 18:29:44 +0200 (CEST)
-Received: from [10.252.30.65] (10.252.30.65) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
- 2025 18:29:44 +0200
-Message-ID: <25eec2f8-8883-489e-a68b-3f80056bdc76@foss.st.com>
-Date: Tue, 20 May 2025 18:29:43 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="evLjZHay"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747758751; x=1779294751;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NE1lbQoX3Y6rrhD5RK6HSkfUgRGFG4LfnQSLgHP+z5U=;
+  b=evLjZHay649z4rDgKG63GZvjxX/A62bE1YW2PYWFJN4rE+I2nR3fewOg
+   APDByuazUxozncvYAegbypx4S8NzSdY5J9uVFZjY/T+7t9D8K3c+zR7Z1
+   mpkVdeBnseJK4wMRTnGa1vZ5y7q9feV4O/xP/htriqzjWG3f5wE3vK7xL
+   nhr0oVmVGEVPxSk5OAJIv8y709bMoxcPzBooCbr1gec2HQMnaVCPQdrvR
+   VBUrIse9h+hi0MgToMd8CYOSqDZ/KQxI4ArA8vxHm8c2MwvrMqPf4pky+
+   WoPa8o7vo8Ri0fD6Mg1mVKQ/0BnqzGFk2N4JhRVRZgpsxEyFDTd7J7zAi
+   g==;
+X-CSE-ConnectionGUID: mKK4XTgZTde8se060qywwQ==
+X-CSE-MsgGUID: 7YQNauUpTQ6qjiHVNHCKYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49634765"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49634765"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:32:31 -0700
+X-CSE-ConnectionGUID: P8NPDRkARqiK2iMhHMuCfw==
+X-CSE-MsgGUID: Gd/ORA//SRyNqlaUM9XX1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139625018"
+Received: from bruceprx-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.21])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:32:30 -0700
+Date: Tue, 20 May 2025 09:32:21 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/bugs: Restructure ITS mitigation
+Message-ID: <20250520163221.ndezdfrhoav43sxi@desk>
+References: <20250515134756.93274-1-david.kaplan@amd.com>
+ <20250516193212.128782-1-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [V1 1/2] arm stm32mp131.dtsi: add "encoding_mode" nvmem
- definition
-From: Yann Gautier <yann.gautier@foss.st.com>
-To: Rodolfo Giometti <giometti@enneenne.com>, <linux-kernel@vger.kernel.org>
-CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Eric Fourmont <eric.fourmont-ext@st.com>
-References: <20250519130859.3389704-1-giometti@enneenne.com>
- <20250519130859.3389704-2-giometti@enneenne.com>
- <f1ffb147-459a-4b3b-b109-9b07b25c99ac@foss.st.com>
-Content-Language: en-US
-In-Reply-To: <f1ffb147-459a-4b3b-b109-9b07b25c99ac@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-20_03,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516193212.128782-1-david.kaplan@amd.com>
 
-On 5/20/25 10:26, Yann Gautier wrote:
-> On 5/19/25 15:08, Rodolfo Giometti wrote:
->> This patch adds the definition for the nvmem location "encoding_mode"
->> related to the "cpu0" node.
->>
->> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
->> ---
->>   arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi 
->> b/arch/arm/boot/dts/st/stm32mp131.dtsi
->> index e555717c0048..52bf497e26bb 100644
->> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
->> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
->> @@ -24,6 +24,9 @@ cpu0: cpu@0 {
->>               clocks = <&scmi_perf 0>;
->>               clock-names = "cpu";
->>               #cooling-cells = <2>;
->> +
->> +            nvmem-cells = <&encoding_mode_otp>;
->> +            nvmem-cell-names = "encoding_mode";
->>           };
->>       };
->> @@ -1167,6 +1170,10 @@ part_number_otp: part-number-otp@4 {
->>                   reg = <0x4 0x2>;
->>                   bits = <0 12>;
->>               };
->> +            encoding_mode_otp: encoding-mode-otp@4 {
+On Fri, May 16, 2025 at 02:32:11PM -0500, David Kaplan wrote:
+> Restructure the ITS mitigation to use select/update/apply functions like
+> the other mitigations.
 > 
-> This node should end with @0 instead of 4.
-> It should also be placed before part-number-otp node.
+> There is a particularly complex interaction between ITS and Retbleed as CDT
+> (Call Depth Tracking) is a mitigation for both, and either its=stuff or
+> retbleed=stuff will attempt to enable CDT.
+> 
+> retbleed_update_mitigation() runs first and will check the necessary
+> pre-conditions for CDT if either ITS or Retbleed stuffing is selected.  If
+> checks pass and ITS stuffing is selected, it will select stuffing for
+> Retbleed as well.
+> 
+> its_update_mitigation() runs after and will either select stuffing if
+> retbleed stuffing was enabled, or fall back to the default (aligned thunks)
+> if stuffing could not be enabled.
+> 
+> Enablement of CDT is done exclusively in retbleed_apply_mitigation().
+> its_apply_mitigation() is only used to enable aligned thunks.
+> 
+> Changes since v1:
+>    - Moved ITS enum definition before retbleed logic
+> 
+> Signed-off-by: David Kaplan <david.kaplan@amd.com>
+> ---
+>  arch/x86/kernel/cpu/bugs.c | 167 ++++++++++++++++++++-----------------
+...
+> @@ -1338,20 +1365,6 @@ static void __init retbleed_apply_mitigation(void)
+>  #undef pr_fmt
+>  #define pr_fmt(fmt)     "ITS: " fmt
+>  
+> -enum its_mitigation_cmd {
+> -	ITS_CMD_OFF,
+> -	ITS_CMD_ON,
+> -	ITS_CMD_VMEXIT,
+> -	ITS_CMD_RSB_STUFF,
+> -};
+> -
+> -enum its_mitigation {
+> -	ITS_MITIGATION_OFF,
+> -	ITS_MITIGATION_VMEXIT_ONLY,
+> -	ITS_MITIGATION_ALIGNED_THUNKS,
+> -	ITS_MITIGATION_RETPOLINE_STUFF,
+> -};
+> -
+>  static const char * const its_strings[] = {
+>  	[ITS_MITIGATION_OFF]			= "Vulnerable",
 
-I forgot that this node already was in TF-A, with a different name.
-This is better to align it here, the the node would become:
+Index 1 (which is now ITS_MITIGATION_AUTO) is missing. I understand AUTO is
+a temporary state, and it may not be necessary to define a string for it.
+But, assigning an empty string, or an error message would make this obvious
+for a future reader.
 
-			cfg0_otp: cfg0-otp@0 {
-				reg = <0x0 0x2>;
-				bits = <0 9>;
-			};
-
-Best regards,
-Yann
-
-> 
->> +                reg = <0x0 0x1>;
-> 
-> If I'm not mistaken, this should be:
->      reg = <0x0 0x2>;
-> 
-> 
-> Best regards,
-> Yann
-> 
->> +                bits = <0 9>;
->> +            };
->>               vrefint: vrefin-cal@52 {
->>                   reg = <0x52 0x2>;
->>               };
-> 
-
+>  	[ITS_MITIGATION_VMEXIT_ONLY]		= "Mitigation: Vulnerable, KVM: Not affected",
+> @@ -1359,11 +1372,6 @@ static const char * const its_strings[] = {
+>  	[ITS_MITIGATION_RETPOLINE_STUFF]	= "Mitigation: Retpolines, Stuffing RSB",
+>  };
