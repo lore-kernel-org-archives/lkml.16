@@ -1,122 +1,60 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEEB22D4EF
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A0F22D4EF;
+	Tue, 20 May 2025 14:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752290; cv=none; b=n1ApbMFM5Ndsa7vsbNXQCuQvALYfKrUYMfbLR6Z3n/1xy+0Q+/wWudMm8knZpMNyylyjnxz0FqLxIscvcf4OOUxpvzz790Ow5Ysbu2j0LWEgi+w4OLqMy9Jm0gLuCIZ1RD5F1jg7Ic8kd4FhaURBuyYIGATgJ1i1eyG9lJuKcTk=
+	t=1747752298; cv=none; b=QCkbyFyZyGrZoZdq3RlJLaI3PfBgZ5pPrWvs4bEO6OOQVoBO3NsKX8x/7hxvy32wq4rdRlREX2M9b/DvlaB5zmL1Oq06jzyExClCr5wLx/+aeIvbVIm3tcOCBc8egU/2AQB6HSypHp3ayYVP+O/wqtzqrrSbfejx0HgyvapyAt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752290; c=relaxed/simple;
-	bh=p+jrXroPVL6qpOsR5dFITAXCzZegx2eFAm+w0V1CNtk=;
+	s=arc-20240116; t=1747752298; c=relaxed/simple;
+	bh=bCqjLkWpMiwgQti/Pl18SKEvQadAmmDXATN9v9huzmc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATsd2G4M5Sli54cydv2ZgMNkxiecZNFHRWxH0D0pt0Mf5+3X9+OVCNEoGVna8YtPuFCDRpwbn8AxooqvBY3O9h9EL/e/SQhjtHb4Z4RUM3BBgONNwqvEuxGgje8nMDkY2NRoCoPqKR0fjs0zuKU+lOk0Ei63GOa2o+PTnQk4ius=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DzdjM/0K; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZD3FYoTegUew7HWhdtJH51ZWbBxOVexA/AIt+fgbrbqMiHh8uQkDW4X5MimvqRscFGXh38HpqKbn9qF1Ikg2x1V+YI6/9F1rL/JinUC7OnIK1fb5t47FkkQ1CO7B/05qEd8HaXWwrAHLP3gVcOPggi3ssw0SyZ5DBqQvUJzsrDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S33aeYEk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DzdjM/0K"
-Date: Tue, 20 May 2025 10:44:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747752275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWzatSjly2i44jJi/D2beFghePppjurv+w7saIoXdt0=;
-	b=DzdjM/0KpELm9TEMex+3PTMOk9YPNySt/PFQvilqmb61LoFnmWn3UkfKZtAKhVCt/dUVT9
-	axMwhx2RsyXALqpdDzxerqYpuMheuaTk+bsaYI+zGp6QTXG1BZy2wh9a+o4+W9/ev/gWSW
-	k9MlSF4NPo3WnHn6dISnah8ZzN3uFe4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-Message-ID: <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S33aeYEk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32FD1C4CEE9;
+	Tue, 20 May 2025 14:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747752297;
+	bh=bCqjLkWpMiwgQti/Pl18SKEvQadAmmDXATN9v9huzmc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S33aeYEksfvg534co7C9RS9iJi8QdjDcztvVXwF4BQNx4FxOS/B1LfbE4mnkzn0pq
+	 Z2rId56EEcxd6CiT74k5cHhkZK27cTZoHv5vj6EOU49Fm5le0e/jvtmRlbFELPt/tP
+	 8JgX0RjY6mFkF70S7YZZuXqib9JquQkm7dwrmeN8QH3oomTLvZ/WbXsOGczuLSZ8JF
+	 +WAz+QZqNe7ZWwaUcIrL0jsuQM60CQc/XFOyQD/ii1M84tTQK7n+YNZklFTbEf+ei/
+	 l//QPw8569M1Acgpijh7z0sSinMQeGr04jRbKWwu15CSK5NRwI9839ywLb5I+AxOCo
+	 ngaStGprNjI+Q==
+Date: Tue, 20 May 2025 15:44:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pkshih@realtek.com, larry.chiu@realtek.com,
+	Joe Damato <jdamato@fastly.com>
+Subject: Re: [PATCH net-next v3] rtase: Use min() instead of min_t()
+Message-ID: <20250520144453.GY365796@horms.kernel.org>
+References: <20250520042031.9297-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250520042031.9297-1-justinlai0215@realtek.com>
 
-On Tue, May 20, 2025 at 04:33:14PM +0200, Amir Goldstein wrote:
-> On Tue, May 20, 2025 at 4:12 PM Kent Overstreet
-> > Amir, you've got two widely used filesystem features that conflict and
-> > can't be used on the same filesystem.
-> >
-> > That's _broken_.
+On Tue, May 20, 2025 at 12:20:31PM +0800, Justin Lai wrote:
+> Use min() instead of min_t() to avoid the possibility of casting to the
+> wrong type.
 > 
-> Correct.
-> 
-> I am saying that IMO a smaller impact (and less user friendly) fix is more
-> appropriate way to deal with this problem.
+> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+> Reviewed-by: Joe Damato <jdamato@fastly.com>
 
-Less user friendly is an understatement.
+Thanks for following-up on this.
 
-Obscure errors that only get reported via overloaded standard error
-codes is a massive problem today, for _developers_ - have you never had
-a day of swearing over trying to track down where in a massive subsystem
-an -EINVAL is coming from?
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-It's even worse for end users that don't know to check the dmesg log.
-
-And I support my code, so these would turn into bug reports coming
-across my desk - no thanks; I already get enough weird shit from other
-subsystems that I have to look at and at least triage.
-
-> > Users hate partitioning just for separate /boot and /home, having to
-> > partition for different applications is horrible. And since overlay fs
-> > is used under the hood by docker, and casefolding is used under the hood
-> > for running Windows applications, this isn't something people can
-> > predict in advance.
-> 
-> Right, I am not expecting users to partition by application,
-> but my question was this:
-> 
-> When is overlayfs created over a subtree that is only partially case-folded?
-> 
-> Obviously, docker would create overlayfs on parts of the fs
-> and smbd/cygwin could create a case folder subtree on another
-> part of the fs.
-> I just don't see a common use case when these sections overlap.
-
-Today, you cannot user docker and casefolding on _different parts of_
-the same filesystem.
-
-So yees, today users do have to partition by application, or only use
-one feature or the other.
-
-This isn't about allowing casefolding and overlayfs to fix on the same
-subtree, that would be a bigger project.
-
-> Perhaps I am wrong (please present real world use cases),
-> but my claim is that this case is not common enough and therefore,
-> a suboptimal EIO error from lookup is good enough to prevert crossing
-> over into the case folded zone by mistake, just as EIO on lookup is
-> enough to deal with the unsupported use case of modifying
-> overlayfs underlying layers with overlay is mounted.
-> 
-> BTW, it is not enough to claim that there is no case folding for the
-> entire subtree to allow the mount.
-> For overlayfs to allow d_hash()/d_compare() fs must claim that
-> these implementations are the default implementation in all subtree
-> or at least that all layers share the same implementation.
-
-I honestly don't know what you're claiming here.
