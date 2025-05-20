@@ -1,65 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2D7B1A8F6D;
-	Tue, 20 May 2025 12:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D2D33DB;
+	Tue, 20 May 2025 12:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747745436; cv=none; b=mkVDqam9jZT3KxxV61KuPrQW9dftSrwKxliTjjZSEojy4CYhcHVHaEkI6qSafbe1VUfarES58w4zF+C6jAtD0FKpscA105cxsO/dyHzSJCVV7fluIoNlGS8e47FXYNSZ6SEDB3rgxgR43nDUwNJJpzi+izBIQEMvCDe2bEKIfRU=
+	t=1747745501; cv=none; b=c9jFNPUpJzrXbHW6poRL0oFi+rPqNGXv4Ymms0kEXXig+yBS1fFE7zs4kHCzuePty1pdqbF9bvJL4HFikNpx09v7/x2GSY/iKgUZGh+Nwz/GaCQfdmXQDyhzDSzIQV6IGrSoHLtaIZZCN7oSvNnfYjhEg7x227v8RmFqjq4WUUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747745436; c=relaxed/simple;
-	bh=by1pqkERQFJkQ/qYm8eJb4kDVaODxlwfBojf6AMYC/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TyQWLJhmX4wN51+kGVF9kma8/YgtZOntbgLwLbm+JhhixVsEqumocz7wlzw87LihjXaLFQ1PhDAeDrfDsa56MnN2uCG954njRIY3q6Q89l2Wa4KpJl9/N58S+NMLgxdgqGsxP+7iT11wfEVEZ0TdH8El9bjUgdBFg2IbZwj9DxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9A151516;
-	Tue, 20 May 2025 05:50:20 -0700 (PDT)
-Received: from [10.1.36.74] (Suzukis-MBP.cambridge.arm.com [10.1.36.74])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BFAD73F5A1;
-	Tue, 20 May 2025 05:50:30 -0700 (PDT)
-Message-ID: <5cf972df-c589-4f5d-82a5-74dd49676687@arm.com>
-Date: Tue, 20 May 2025 13:50:29 +0100
+	s=arc-20240116; t=1747745501; c=relaxed/simple;
+	bh=zumAJWDYQnat4fWlVZatfH+lvx8bhMaBs8mkDL2dsO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Q94ZwTdjhrh/ETIQLk+8lESW572sxxfcPMw0TxwzG/W1+NzJFTOhCAR9PCXE0CLupo1zkJR5lTlQGklV4axLR6bw45/7w9x6CIP+YxUEvH76S8jvScrAWcNfEVcMePDSHXG9WwEkbm6PfgpgGYeFaxdYLVaYLLXarvAjpr+Cd3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ToVooSWT; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ToVooSWT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747745497;
+	bh=CgmhPoW2ZqWVTc1tVVoXjvFrm0yS5Z2k+W8bO0bU1P4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ToVooSWTG4j8ETG8sKglnSmtuDMHl9qp2HEdXUoSRS0dB9Db3YRSS72UQMts+yHVQ
+	 0W0jL/sXdGKXepxUPckHelNgNUqJFP4/3AfI+WxBl+JOCZJY3Z4drvCobmG9FT5tWD
+	 szkK9CC4iFiUgwmLSKPdE4YHbs27N2lUbT6Y+Nf4344BsRTF+GtULGVU8ZQofCOaLa
+	 FbIv6tpq5iVZaiWYB9uOhA/UOh56nbTSm7tbqsIoJyRczDVjLrZR2E8hxa6gTaewAT
+	 d+wMvNcv1bbJkKMTKbg+leWSfpO4U4DExrUBqe72e7CkyJY/yNTRiIMRqPkCNjl58q
+	 m6luJpm/HYNtA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b1vZK3hfnz4wcg;
+	Tue, 20 May 2025 22:51:37 +1000 (AEST)
+Date: Tue, 20 May 2025 22:51:36 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the bitmap tree
+Message-ID: <20250520225136.026acdd6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 37/43] arm64: RME: Propagate max SVE vector length from
- RMM
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-38-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250416134208.383984-38-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/RTnanEaF2re=MxWFOc_c_FD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 16/04/2025 14:41, Steven Price wrote:
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> 
-> RMM provides the maximum vector length it supports for a guest in its
-> feature register. Make it visible to the rest of KVM and to userspace
-> via KVM_REG_ARM64_SVE_VLS.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Steven Price <steven.price@arm.com>
+--Sig_/RTnanEaF2re=MxWFOc_c_FD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Hi all,
 
+Commit
+
+  abdf5cc6dabd ("net: mana: explain irq_setup() algoritm")
+
+is missing a Signed-off-by from its author and committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/RTnanEaF2re=MxWFOc_c_FD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgsetgACgkQAVBC80lX
+0GxczQf+LdX7XoVkCO0l+uvGYnoQNOAKo8SR94Ar7gUe8q7Lj0SpY+g0/STjdo5X
+bzYWU1VT75tqFdS2QCQjPjWsjqAupFzbt3RnrVy46ouKg+OLoC+Jtn96dR0It64B
+U/paCZl6luabeH9BBDUpgINRaPnGGmNLhmwkEkcYSEgE3Pb2BmGZ8ALKeK7emBan
+oMsxpug5VIxO9GvRgpwU6WIqYwryYacC8X/Hr2u3o6yI3wblCBXUqHXEZsZCty5I
+wWLFpPWixzWqIaPpzGxziWjNi9NyZ5mw7WbxL7pkh4gBNEq0Q7PxfgB6TfHoW1Y8
+mwMaRpI/P9TBOgDFfshPmh/H5jDh1g==
+=1sGF
+-----END PGP SIGNATURE-----
+
+--Sig_/RTnanEaF2re=MxWFOc_c_FD--
