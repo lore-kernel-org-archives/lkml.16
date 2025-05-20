@@ -1,63 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38F2B2517AC;
-	Tue, 20 May 2025 15:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26FF25A2D7
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754326; cv=none; b=Lwe0SDurUPj6YxIqAotWkpAMDzvKaQK8WqJNnIoBFBacOP0iwRU8xtjmXRS6dm5wlauSjUDqneYBaThvM5W0y/RkfA8II5YImwCkg9LUpSYOhiFmKi3TbqfM8pwZA/rMQSfteXMuMtaPNeTycRHZd+1uP4r4MPIo1/nqjv72bYo=
+	t=1747754344; cv=none; b=WG4Kd+8kQnLjo9oGs217FFq/1jcTrG3Ne55Q4YMuvbtRL0aJZwWmXcUK4y28E67ZcYdHjZBug5HpnmJXe4iA97SkpoqeSjvrEOQhw1P1OJGyn9Ip7txR+S9R8Bt2JEvjPAVXdHlx4OzV9nawA01TitbK1qrdxUVdybUcaBh11/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754326; c=relaxed/simple;
-	bh=mklZJMtczF/1cTQTLPSTUCQ7tAy+D/rWEQd/aPffxIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sH+VUj0sry9DaIZS9OFUYwY6sSVGNJFuHDOVBwCNQH+Xl5p9kMDXaptdTzymA7lrCSoebikEjOvYueabflEiLoiPgOc38Kz8eYq/j8vxknqhZjue8BqjOUL2l7tGN/ddhC0tUsFcwhBkxeDzduazGnFYsJxU+IHvZx/LagbK6jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D3DA1516;
-	Tue, 20 May 2025 08:18:29 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1D4F63F6A8;
-	Tue, 20 May 2025 08:18:41 -0700 (PDT)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Yabin Cui <yabinc@google.com>,
-	Mao Jinlong <quic_jinlmao@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Subject: Re: [PATCH v2] coresight: tmc: fix failure to disable/enable ETF after reading
-Date: Tue, 20 May 2025 16:18:29 +0100
-Message-ID: <174775429686.297706.16091978841139084085.b4-ty@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250507063716.1945213-1-quic_jinlmao@quicinc.com>
-References: <20250507063716.1945213-1-quic_jinlmao@quicinc.com>
+	s=arc-20240116; t=1747754344; c=relaxed/simple;
+	bh=70BAyOFeZfWM41kAHLRdIU92GSfnWFH99n9UrsgwNlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RirvANTOEiRD/lAjhiVSDxHxZkG2e2cgp93ToPS9tkrEMAdYwUqbJHZfwoHJPApi3IZvc4uNOIzjl4Q2dJk/3wwU2fwqJhXGbapZcCJSgdiyguQlHzIyZqQ020BDOXq6oSxvJGm9nB0OTyi7Wmg+8TySdngN9wLMk/flZcIGHOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=WJIBO6F4; arc=none smtp.client-ip=45.157.188.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="WJIBO6F4"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b1yrL67zmz64G;
+	Tue, 20 May 2025 17:18:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1747754338;
+	bh=fpcq+IBeWj32z7gPBx92ypw/9OpgG/CmMTsCvhDLbdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WJIBO6F4WWZKdj3YhVkk5wXJ/gzj3dr968LNvBwTBESVBEio3Vd7IWUNJcUaXA92y
+	 gU0iLGCGQmKXsRqqLFvvDyq4ZBD0aHlg1hrNG9jia1+sIitx77VFoic86WTH8h88Lq
+	 ILu9RMl3lFFDQLLqHcYQnrxtOXXYlXYfIoDrXfJE=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b1yrJ5lpWzGb7;
+	Tue, 20 May 2025 17:18:56 +0200 (CEST)
+Date: Tue, 20 May 2025 17:18:56 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
+	WangYuli <wangyuli@uniontech.com>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Bill Wendling <morbo@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Justin Stitt <justinstitt@google.com>, Petr Mladek <pmladek@suse.com>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Tamir Duberstein <tamird@gmail.com>, 
+	Diego Vieira <diego.daniel.professional@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 0/3] randstruct: gcc-plugin: Remove bogus void member
+Message-ID: <20250520.Riene6ceesha@digikod.net>
+References: <20250427013604.work.926-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250427013604.work.926-kees@kernel.org>
+X-Infomaniak-Routing: alpha
 
+On Sat, Apr 26, 2025 at 06:38:32PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> Okay, I've tracked down the problem with the randstruct GCC plugin,
+> and written a KUnit test to validate behaviors. This lets us add
+> it back the COMPILE_TEST builds.
+> 
+> No need for https://lore.kernel.org/all/20250421000854.work.572-kees@kernel.org/
 
-On Tue, 06 May 2025 23:37:16 -0700, Mao Jinlong wrote:
-> ETF may fail to re-enable after reading, and driver->reading will
-> not be set to false, this will cause failure to enable/disable to ETF.
-> This change set driver->reading to false even if re-enabling fail.
+Hi,
+
+What is the status of this patch series?  Do you plan to send it for
+v6.15?
+
+> 
+> -Kees
+> 
+> Kees Cook (3):
+>   randstruct: gcc-plugin: Remove bogus void member
+>   lib/tests: Add randstruct KUnit test
+>   Revert "hardening: Disable GCC randstruct for COMPILE_TEST"
+> 
+>  MAINTAINERS                                   |   1 +
+>  lib/Kconfig.debug                             |   8 +
+>  lib/tests/Makefile                            |   1 +
+>  lib/tests/randstruct_kunit.c                  | 283 ++++++++++++++++++
+>  scripts/gcc-plugins/randomize_layout_plugin.c |  18 +-
+>  security/Kconfig.hardening                    |   2 +-
+>  6 files changed, 295 insertions(+), 18 deletions(-)
+>  create mode 100644 lib/tests/randstruct_kunit.c
+> 
+> -- 
+> 2.34.1
 > 
 > 
-
-Applied, thanks!
-
-[1/1] coresight: tmc: fix failure to disable/enable ETF after reading
-      https://git.kernel.org/coresight/c/d23bc38e
-
-Best regards,
--- 
-Suzuki K Poulose <suzuki.poulose@arm.com>
