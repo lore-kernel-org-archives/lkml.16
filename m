@@ -1,136 +1,190 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C425E44C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8D925EF92
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727234; cv=none; b=FVyLt7IiSMZiIqdpqiPoF2ocoIRdVcmGCRs9pw069Zj9s2lxR/gBMaihW6GneTtYYvbJUMkd9uHTQlFsOwZCyHCBBPULt/OioPYZgw5UL+YQ5W+LfQVaAfOfL2yNV9VXMfpOsYIXiyS1pyoGiZjcXeRw8if2514w4axD8GD5uGs=
+	t=1747727241; cv=none; b=J16yOyZc9/fd5X832+iqX+CvALozXsUffuoLEtb2bCHb4Ne2ZXv3a3zy0YfdjciqdPGv9Y3ojNKSp8eNGEOGReEWPNUfXLY6Yqf0D8oRz19XRiqxLthZxdwgpzP5sy8vw8sBqouYXcTyPTKQOriRMLA6G00WSn4EWfwhvIcVC44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747727234; c=relaxed/simple;
-	bh=CQKXTh+yOMIZtQUJ/0Y2SeTA3aVkmSKk5cNZ9ONeNcE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=SHcfjM14iyM23tqpiL2d6Z96A0fxOvZj0I63XtEShrZcb8z5dB5n5DGdNqdyUSlTZRr40wvD0Tf9GL1MEzdLgv4Xxgo8rEW/HOH5XVQk0Ad/Vqavqz07nTvwQ+WrQK2pAC3NaFVhjzRKB1DQ97TRkfJvUbUWCKYQPk3NlCXrYH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yS+pi9es; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747727241; c=relaxed/simple;
+	bh=Kpm9h0rvihffqis4R4vZ2mYBLP/Gag8NA4K5sznq4l8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qVbQeeKTY5CsAVBA9O1qGP4xqAA6Ec9iTQKaNWklAT9PMqLCFxAwgAmlERQG3xGS4tl+WgeCyiqZ2yEG1I1TzMRJmw1kL2ok1+6z+ZfePIDUTx3LGQZju/zyu9DMtRXHzzFJjKunLDjhT/i5mT/aWGAIOFUpw0M0VRuxNs+dR3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=W7HNr4q4; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yS+pi9es"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442fda876a6so34621665e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:47:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="W7HNr4q4"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a064a3e143so2851770f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:47:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747727231; x=1748332031; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vhQUwhnYU7FI75x6CtVnKEX/XR74SbbKqPe6yi9d5HE=;
-        b=yS+pi9esHPzn9P8cnOK0HW60xsUX6K6tzLe8q0f3h37mVMk1RnkJ090KPSSiy2RLK/
-         CDFgoxrs4K0hqcjSsY5d1p3WwaRgZiFsMV88Ae4OK4amOsSmaif6iPbDNsLvJpzOXrPJ
-         CpVIUgL0pmsqW5KMjHjx5v91//4ov5zOVIweUvY7jov1lohcDzhaxiN9DoSwV+7p+ze7
-         xQFDqKNUQkqFvS6HLFWOLCJL94bCIH2uNqWUf3bC0PXF+PceY7No7OxUktmb9FjlY3yJ
-         8TC+7ifxs6i1CMpaoHJcvAbB03jEdh8Ubk6Y6ZYuTvtO0bJJinMSy6snbUnod4S8W7Gc
-         YouQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747727235; x=1748332035; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IPt0o2K+oGzEB06+9C4F+pNiGIiK4IzFmR46KIgZKE8=;
+        b=W7HNr4q4u1vLqC3/80M0P2/DgpRcSPrDP/VxtHm9dB3j4Jj7bEHCranvlGGxORM0eg
+         FJTpzogmspxoNrZXbLh2iFLGX0kwpv3dYWreiBsj6/CefYwu1SK+O8oNTlABgEf9GCqI
+         KrNn/qRKU74u+c/QYDDi5b2PpbICNs6kLenaukHn6/HI7CFclpMRQjy/Y5XEem/t8nMW
+         vY456zYfqQGi2JPyL+JzV4p+WTtgUmarRywoo7oHf1Lsnf2Fa9cE4KysWZlxhRU3ReXw
+         O8qRIUuE0kY6NUGUxdnRTAQkS/8NaLymW8kZFQkhaept98eQbCXkI8v6V2w6nSRk5bJY
+         yaWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747727231; x=1748332031;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vhQUwhnYU7FI75x6CtVnKEX/XR74SbbKqPe6yi9d5HE=;
-        b=MpAtWPERFZxIKFLRwz1VjCjhy33M0EZMlVqOc7h/C/U6myNE0w0ri1gctGEYtjAT9/
-         VHsACNBX90Ro6WORjklAw2sSmgU0apdi4QI+p/rHrdl+p4y9nVJ9b4rWEG3sfbWp3c4f
-         jBV6pu/V0eviduMYnYAx8FmZekLAPx/GeCBl4bfDZujOvegls4E+Rk13gKPaCOLvkXuD
-         xsbaX1lZQ/PeHGhIeKWT0xs89Nz16J/eRdG1dQiC5WOAgNgujVOIwqlOmOKRasQBlia5
-         cmCGW/rg0UyikmGQV6qWrGTCEf7yIMRmudeTSHfH+1Jf5JxDK0b1tfsGgFZEM+nT4XiH
-         KR7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVC1L+mYhEpbgHpuJ01Mp1PCUHk6Sax/vIQJFrhZfZBLdkTSU+6+GVwtL7PJcoilckJv1ggtpg3spjPtvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynLR2BCwNJZV1HZAkh0a1TTp47981XEKYqfe3pT8FKbMaVFlgk
-	s+QlkAn+UrzfTSigcNM12uTk+BWEAAaEYn0iXh3zefsHYXmmnRmZQXkUMQBkmJfPZjg=
-X-Gm-Gg: ASbGnctdKgO99vBbG4n9eXIv8HoJ3UnTKAGDCXQL+2a4lRY7d58hYq8eyThTvD7eIzh
-	1LfQ0Fr6ZTUBh4RLNR9Q3PakMwYUc2dvyDisIzVycT2pweSlDTLo3HFCcUefii7HPmJwyHA6bqp
-	B7ORwVKV+mAubHI/27R8Kc0TI5YDQtlSW+S9iaPoFsCXRxeCTueFhGzch2z2vHnkjlfKSGgoJSA
-	urCkxAbGpxZIEgE3llgJSWwJWjsfnjNpSER1qTRqD6NLB8kCOp4QoBwUFnFqWTcfGE1Vf+L9tCQ
-	FJc1gU7/b+dmNwAddR9N9OpARrmLdctH2W3ZQl17rCmkacPv2UdPvOljnqY+jICNgm0rPDPXkXZ
-	O7GY3WOjhEtyeBzutuUAAA+pdVJbi
-X-Google-Smtp-Source: AGHT+IFvrNxWWONN6fA7Izq7hKuoATdvJpsXif6rxp8mTFRfU9yuDA1SyNE9rZHKlxR6ynqs0C9K/A==
-X-Received: by 2002:a05:600c:3e88:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-442fd6724bbmr165087985e9.30.1747727230609;
-        Tue, 20 May 2025 00:47:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8874bsm15599930f8f.67.2025.05.20.00.47.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 00:47:10 -0700 (PDT)
-Message-ID: <0c88d9e3-a6d4-4a28-a96f-d09da34b78d2@linaro.org>
-Date: Tue, 20 May 2025 09:47:09 +0200
+        d=1e100.net; s=20230601; t=1747727235; x=1748332035;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IPt0o2K+oGzEB06+9C4F+pNiGIiK4IzFmR46KIgZKE8=;
+        b=wrYCUWw8aKmsEsOd+hvV8yc9Izt97EiGMZeC2QCGSr4jNWosAKwYTPRUmtg4Hbpumh
+         Gu47htTGKs9KLHXF4SIdwiwL4PI2t8PdRwkcoKvdcjTRGQ6d23s0M57OkUiE3jBfgNsn
+         ydQlNq/odWvsNjWS18LnlVPm3Tm9b/AqAJSGS/pSu6hObgdDjdaxEdhiH8A9YQVIbzNj
+         tL8dOgMUeMu3DNQT19HucslunajhEwRapgqULq5u9bwmYL+wNRY5hrY5d3MbXcei97Hg
+         N2vLzYtyonmaT7QAtcPCKH2PiVEeFnRhpMP5nuQW0x2V97kJ7UJPoBlJhTa+Ib/+XVcR
+         DQKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmzHhTZ1S/FnCkxVgNWGE/HIUj17QKqR9KhguOXWh5UgJp1hy/+BoUht7EnhASYRuMQfn6k5o2KAi8d7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLu0A/gVOE7U/srgv5Eo2vAHMZPnw22+NQqF3alhnVFsVYXcGQ
+	4PjQQwETOFjuuREveurDQRbEWZwA2Z/2YcADSnI07RdjccxOG18cMEKFQbviSenUw+g=
+X-Gm-Gg: ASbGnctIHTYGqTpBWUGAQsRYzvs3wsgtzO8KkaV/gPP5wlsaRsua8kctq6pZgb7FvCZ
+	urXPy4AO0WA4Xp29yZpVpR3R+lYN+PdpGorHOq8t2QL4QAHxjxZZBbI+SIpGaQEkvsU05h6pea4
+	FfWAxFRG5TJEybeA/HgnGV3Pjwr1t9W8Jka5nAVs4ELFeR+HKgCq7hQ01Mew1Cb6ZZzXJrS9LkS
+	QiTNZ9jG8KfjtJwW4ztuCzQBu7AnVTO8AhKsWSfTBrQSikj2TG/LyBTGaSlePJgqAYzNTGA0qB0
+	AG1e2a328+KIvnWVs1Ji5jGdqVCTm0oxSZIIEZWFa5Rsq0zK9xg=
+X-Google-Smtp-Source: AGHT+IEb01nulIXG8TDu/HvYRGPeBja6SuFSoReBd0lMj3lS0DdvyZ5S4ftHcPw+KDy6kEhj4gctzA==
+X-Received: by 2002:a05:6000:186d:b0:3a3:6b0c:a8a3 with SMTP id ffacd0b85a97d-3a36b0ca9b1mr6702803f8f.17.1747727235544;
+        Tue, 20 May 2025 00:47:15 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:f683:3887:7e7c:b492])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca4d105sm15702162f8f.11.2025.05.20.00.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 00:47:15 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jon Mason <jdmason@kudzu.us>,  Dave Jiang <dave.jiang@intel.com>,  Allen
+ Hubbe <allenbh@gmail.com>,  Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,
+  Kishon Vijay Abraham I <kishon@kernel.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  ntb@lists.linux.dev,  linux-pci@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI: endpoint: pci-epf-vntb: align mw naming with
+ config names
+In-Reply-To: <aCugvDoKTflV9+P0@lizhi-Precision-Tower-5810> (Frank Li's message
+	of "Mon, 19 May 2025 17:21:00 -0400")
+References: <20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com>
+	<20250505-pci-vntb-bar-mapping-v1-2-0e0d12b2fa71@baylibre.com>
+	<aCugvDoKTflV9+P0@lizhi-Precision-Tower-5810>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 20 May 2025 09:47:14 +0200
+Message-ID: <1jecwjn2pp.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v2 1/3] media: qcom: camss: vfe: Stop spamming logs with
- version
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520060310.7543-4-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250520060310.7543-4-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 20/05/2025 08:03, Krzysztof Kozlowski wrote:
-> Camss drivers spam kernel dmesg with 64 useless messages during boot:
-> 
->    qcom-camss acb7000.isp: VFE:1 HW Version = 3.0.2
->    qcom-camss acb7000.isp: VFE:2 HW Version = 2.4.0
-> 
-> All of these messages are the same, so it makes no sense to print same
-> information 32 times.
-> 
-> The driver does not use read version at all, so if it was needed for any
-> real debugging purpose it would be provided via debugfs interface.
-> However even then printing this is pointless, because version of
-> hardware block is deducible from the compatible.  Fix the code to adhere
-> to Linux kernel coding style: being silent on success.  For the same
-> reasons this should not be even dbg message (see driver development
-> debug guide: "In almost all cases the debug statements shouldn't be
-> upstreamed").
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-<snip>
+On Mon 19 May 2025 at 17:21, Frank Li <Frank.li@nxp.com> wrote:
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> On Mon, May 05, 2025 at 07:41:48PM +0200, Jerome Brunet wrote:
+>
+> PCI tree require keep consistent at subject
+> git log --oneline drivers/pci/endpoint/functions/pci-epf-vntb.c
+>
+> require first char is UP case.
+
+Noted
+
+>
+> Align memory window naming with configfs names.
+>
+>> The config file related to the memory windows start the numbering of
+>
+>                                  memory windows (MW)
+>  then you can use MW later.
+
+Sure
+
+>
+>> the MW from 1. The other NTB function does the same, yet the enumeration
+>> defining the BARs of the vNTB function starts numbering the MW from 0.
+>>
+>> Both numbering are fine I suppose but mixing the two is a bit confusing.
+>> The configfs file being the interface with userspace, lets keep that stable
+>> and consistently start the numbering of the MW from 1.
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> index 35fa0a21fc91100a5539bff775e7ebc25e1fb9c1..f9f4a8bb65f364962dbf1e9011ab0e4479c61034 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> @@ -70,9 +70,10 @@ static struct workqueue_struct *kpcintb_workqueue;
+>>  enum epf_ntb_bar {
+>>  	BAR_CONFIG,
+>>  	BAR_DB,
+>> -	BAR_MW0,
+>>  	BAR_MW1,
+>>  	BAR_MW2,
+>> +	BAR_MW3,
+>> +	BAR_MW4,
+>
+> where use BAR_MW3 and BAR_MW4?
+
+This is aligned with the file available in configfs and what is possible
+in theory with the function, same as the NTB function and NTB host driver.
+
+Stopping at MW1 because it is only one used in the driver would be weird
+and the number later introduced would be wrong.
+
+
+>
+> Frank
+>>  };
+>>
+>>  /*
+>> @@ -576,7 +577,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+>>
+>>  	for (i = 0; i < ntb->num_mws; i++) {
+>>  		size = ntb->mws_size[i];
+>> -		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
+>> +		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
+>>
+>>  		ntb->epf->bar[barno].barno = barno;
+>>  		ntb->epf->bar[barno].size = size;
+>> @@ -629,7 +630,7 @@ static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
+>>  	int i;
+>>
+>>  	for (i = 0; i < num_mws; i++) {
+>> -		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
+>> +		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
+>>  		pci_epc_clear_bar(ntb->epf->epc,
+>>  				  ntb->epf->func_no,
+>>  				  ntb->epf->vfunc_no,
+>> @@ -676,7 +677,7 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
+>>  	epc_features = pci_epc_get_features(ntb->epf->epc, ntb->epf->func_no, ntb->epf->vfunc_no);
+>>
+>>  	/* These are required BARs which are mandatory for NTB functionality */
+>> -	for (bar = BAR_CONFIG; bar <= BAR_MW0; bar++, barno++) {
+>> +	for (bar = BAR_CONFIG; bar <= BAR_MW1; bar++, barno++) {
+>>  		barno = pci_epc_get_next_free_bar(epc_features, barno);
+>>  		if (barno < 0) {
+>>  			dev_err(dev, "Fail to get NTB function BAR\n");
+>> @@ -1048,7 +1049,7 @@ static int vntb_epf_mw_set_trans(struct ntb_dev *ndev, int pidx, int idx,
+>>  	struct device *dev;
+>>
+>>  	dev = &ntb->ntb.dev;
+>> -	barno = ntb->epf_ntb_bar[BAR_MW0 + idx];
+>> +	barno = ntb->epf_ntb_bar[BAR_MW1 + idx];
+>>  	epf_bar = &ntb->epf->bar[barno];
+>>  	epf_bar->phys_addr = addr;
+>>  	epf_bar->barno = barno;
+>>
+>> --
+>> 2.47.2
+>>
+
+-- 
+Jerome
