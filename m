@@ -1,185 +1,87 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A34263C72
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4604025F994;
+	Tue, 20 May 2025 08:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729193; cv=none; b=cA8ZpN90i8rDm/6iCgDrtBfNYhiar1rTSUdZMGmOannInNGqQeR+aRt801BZkZK02OvxdeBxifqphAdiAJGcZKNpsykRj5tjWswEQhRGMtFS79e6qGNxTJEPVE9voW4c+JT0KrOJ6B9guCANbdlzoJ5LsoWjfyeHtlzvD5w2H48=
+	t=1747729384; cv=none; b=Tmid1apHxWZ7/23KSvvN8sTDkspRzT//R/hm0Uc3tcGvSHEef0iedGIwsd02zIcPuTRkOe6+rS9NiVPyfZ7+0Va1ZNJWc8xFSLCx3YPxkRdjtJE0Q/uq48hnJXT/SyLtponEK4DhZjxFRVoC04yjEeoiUlb7ggIPBE7Fq/QufGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729193; c=relaxed/simple;
-	bh=oIeZDvZ06+adGEcc2PTcN9SlCbujZpBAp1mCH9C1Smw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S/eziF4GhPnROzyd21GnH4xYsSgZJlUHiLktLqy+84smwPSPgEqUN2K7yecXwqvUXLUCDdsatrtKeYwaCjXnzpTvevIi/OFGKWzKPsa4lMZiCiweO27XFCb6JXFb3CH6GQ5pDhxKPSlxHo196ZZfsfH7TxqqD8nAIj0DXIYLZ2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=YbITwSei; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1747729384; c=relaxed/simple;
+	bh=CbpYojFOx9hi6fdWZji6aYnRHJDIhGVyI2NkMIQwV6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/7oiNib0+bRyBipmNu2kvZ5I9Nus3VB+4RR157uR1w9vvDWas16RkcREQCllbUpG+VfvCDWizjRBRISxoWfxaEnG0ALQBn7OwbKLWlCiGuzP9vlycZNi4Q/C5gC4x487lPon74Wfd/dT1a6PHe2Nh9xr5eBHBjON6GJEvKHeKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jUr8jGEJ; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="YbITwSei"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441c99459e9so33821675e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747729189; x=1748333989; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rg4dqqae5QAhm/jj8YkR21SQpKcd2PY6mEVX2p2RC/E=;
-        b=YbITwSeizmZTb4FHUBv2km9ODeH/W1bdvnX3RZw7o9fw9gKd1vD/PCqLqBCUA2ZL/o
-         DRhenXVr+2QzKz+XoR+inJOiWl4wJ6BuF44WjLxK0i/ShYKsWIYzs2hKT4JLSKHuHQXt
-         jrYxtzKtyyailtF+p6D5LjeUyOz1IRUmbpdZdeHScPW/vNlvX1d8gjboPjO2Pf/xwz32
-         8HytyKBdAcdsBu0/nUZUjEXmu6sChpxKt8TXWr5hDt3Itz1fAx9qFTAxF7S3eO7Gl8KN
-         TH0ekSCbegqfTEl9Bs+M4BPtfh183BXHpIGCalPKSH+4GlRjy6ziYtEr1JYVld0eIoS6
-         Tu6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747729189; x=1748333989;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rg4dqqae5QAhm/jj8YkR21SQpKcd2PY6mEVX2p2RC/E=;
-        b=jgVBggTl2RMO3tIbM9SewNC6ICYQoeXkM6qd9SfznArDhXLE231TtbddytvIBxl52r
-         zhriDa1M5Yu0Qn48LTDpsotECthMrDF2DvoeZNtE4yKUQJJNCCVBJQjq3YE8aXCKJgwf
-         pkTKAueN1mC9hBaXtGLQTlRcOPucVPPejO3rGw/b1u0+JxJYrcd8Ln4/2wRooJJbWy9N
-         pLmELWnA81/ocXuSFoemtA5MyMPCaKzs4nkfkHTlYwTP59luMhlUy6T0h6NxfPUHIV2g
-         VzJv7zuZ63TP2nTpQs49xgI5FlLJ+v7RsQ0F7R9JU7SJLBX24PIWa49zBzN4yW82wT43
-         0y9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWkC4TnPRd678wkr591mhwYlUw0tQnWxdQgAtQCFRiLEd49uFjfgXlqu1MCpnJT9yJy1ojCDUYWoc8pjWs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ5E0WR93gEnaZOE0WHmwk0rP7bil/q4jqaWAL2CUoN7N4qase
-	hkN4wrWKboX5l5lhqUBjM6YKf5IcvwZfM8E8F8+p1uvNrhuSxhHnEny75YiH/ECBYow=
-X-Gm-Gg: ASbGncurNNbX301YpN2Kd1+fqmkl5I4Q9SWVDWoWegAJn9FyGrby9St6TAb5GwJyivH
-	THX9vGUn8DW7V1WkklHxsnjq0PQi28c7lUh3y8ePcSSftvdm8xl6Dh2uhAgavgkIQF+FjP++kYu
-	3mezWY9JH0rrvnIhW84/Oa18Hx1zxcFDW7SChTx+NsQPnLaD8e2Lzp1coCF/Apa1wQ8Umr8ojhJ
-	/mzKoB/cskkbjNjNyUXgirKYQFXWYsHivLA2xxGLgVbfRUl2yHOLJfUAh2MpthszdEL9fCnQz1o
-	q5rxHGG5wMw81zeZJGjHDBrPKyiKDrL/pJuqxkaSMPp2TyCbIS5jm6fgQuja7JaY5zDrHzGGCSP
-	nekifq4YplfNFaIprs3l7
-X-Google-Smtp-Source: AGHT+IEnBNI1O6DOXTrHnPp911hPTHbpDnBVZzrdBEbI+pdS0MKdIeQtQ/je5/atfqHW1EnEtC8JdA==
-X-Received: by 2002:a05:600c:1c03:b0:43d:2313:7b49 with SMTP id 5b1f17b1804b1-442fd627744mr144511695e9.12.1747729189050;
-        Tue, 20 May 2025 01:19:49 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aea59sm21045525e9.25.2025.05.20.01.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:19:48 -0700 (PDT)
-Message-ID: <126762fc-17ca-4e9d-94d0-3aed1ae321ff@rivosinc.com>
-Date: Tue, 20 May 2025 10:19:47 +0200
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jUr8jGEJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BwzWdX9UlxauyFitnj8K7HxgnGbZaQA6IrXxNXDLqjA=; b=jUr8jGEJ/jjaGU4sdJ49zJc1my
+	9YDku1GJGK1m+i+kdpEoy2TKpaM6cry7J8cWiCJq6/hRYq9V+VaJ3Ak7d0SR0Y8dKCPvx3pHvhYsb
+	yIAkI30B0XVGhcLEY830vHZ2K+rntaGKoFHM2IcyOCMMeQFyaUC2ymlDnKp7qKx1Ch7MoL0hp4quU
+	MIo0esmeu37Hl6Vk8/JQMBvR+1feNt2Whnbs25l8W5yRJyXOka8JxNrTaLEBeCYCVikaDNZICXLQq
+	uQvRh+svheAUforKZiL/OmwZZDr5LhRsrZrEZGsFAFFgOI8e5JpGm8jK3iCl3ojpl3m/WntnBUjZR
+	Y4VyYKpw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHIFW-0000000GDin-0OIq;
+	Tue, 20 May 2025 08:22:58 +0000
+Date: Tue, 20 May 2025 09:22:58 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+Message-ID: <20250520082258.GC2023217@ZenIV>
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 09/14] riscv: misaligned: move emulated access
- uniformity check in a function
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
-References: <20250515082217.433227-1-cleger@rivosinc.com>
- <20250515082217.433227-10-cleger@rivosinc.com> <aCu_ce-kVQsyjrh5@ghost>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <aCu_ce-kVQsyjrh5@ghost>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
+On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+> When executing the bcc script, there exists the following error
+> on LoongArch and x86_64:
 
+NOTABUG.  You can't require array sizes to contain no arithmetics,
+including sizeof().  Well, you can, but don't expect your requests
+to be satisfied.
 
-On 20/05/2025 01:32, Charlie Jenkins wrote:
-> On Thu, May 15, 2025 at 10:22:10AM +0200, Clément Léger wrote:
->> Split the code that check for the uniformity of misaligned accesses
->> performance on all cpus from check_unaligned_access_emulated_all_cpus()
->> to its own function which will be used for delegation check. No
->> functional changes intended.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> ---
->>  arch/riscv/kernel/traps_misaligned.c | 20 ++++++++++++++------
->>  1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
->> index e551ba17f557..287ec37021c8 100644
->> --- a/arch/riscv/kernel/traps_misaligned.c
->> +++ b/arch/riscv/kernel/traps_misaligned.c
->> @@ -647,6 +647,18 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
->>  }
->>  #endif
->>  
->> +static bool all_cpus_unaligned_scalar_access_emulated(void)
->> +{
->> +	int cpu;
->> +
->> +	for_each_online_cpu(cpu)
->> +		if (per_cpu(misaligned_access_speed, cpu) !=
+> How to reproduce:
 > 
-> misaligned_access_speed is only defined when
-> CONFIG_RISCV_SCALAR_MISALIGNED. This function should return false when
-> !CONFIG_RISCV_SCALAR_MISALIGNED and only use this logic otherwise.
+> git clone https://github.com/iovisor/bcc.git
+> mkdir bcc/build; cd bcc/build
+> cmake ..
+> make
+> sudo make install
+> sudo /usr/share/bcc/tools/filetop
 
-Hi Charlie,
+So fix the script.  Or report it to whoever wrote it, if it's
+not yours.
 
-misaligned_access_speed is defined in unaligned_access_speed.c which is
-compiled based on CONFIG_RISCV_MISALIGNED (ditto for trap_misaligned.c)
+I'm sorry, but we are NOT going to accomodate random parsers
+poking inside the kernel-internal headers and failing to
+actually parse the language they are written in.
 
-obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
+If you want to exfiltrate a constant, do what e.g. asm-offsets is
+doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+and check what ends up in include/generated/asm-offsets.h - the
+latter is entirely produced out of the former.
 
-However, the declaration for it in the header cpu-feature.h however is
-under a CONFIG_RISCV_SCALAR_MISALIGNED ifdef. So either the declaration
-or the definition is wrong but the ifdefery soup makes it quite
-difficult to understand what's going on.
+The trick is to have inline asm that would spew a recognizable
+line when compiled into assembler, with the value(s) you want
+substituted into it.  See include/linux/kbuild.h for the macros.
 
-I would suggest to move the DECLARE_PER_CPU under
-CONFIG_RISCV_MISALIGNED so that it reduces ifdef in traps_misaligned as
-well.
-
-Thanks,
-
-Clément
-
-> 
-> - Charlie
-> 
->> +		    RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
->> +			return false;
->> +
->> +	return true;
->> +}
->> +
->>  #ifdef CONFIG_RISCV_SCALAR_MISALIGNED
->>  
->>  static bool unaligned_ctl __read_mostly;
->> @@ -685,8 +697,6 @@ static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
->>  
->>  bool __init check_unaligned_access_emulated_all_cpus(void)
->>  {
->> -	int cpu;
->> -
->>  	/*
->>  	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
->>  	 * accesses emulated since tasks requesting such control can run on any
->> @@ -694,10 +704,8 @@ bool __init check_unaligned_access_emulated_all_cpus(void)
->>  	 */
->>  	on_each_cpu(check_unaligned_access_emulated, NULL, 1);
->>  
->> -	for_each_online_cpu(cpu)
->> -		if (per_cpu(misaligned_access_speed, cpu)
->> -		    != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
->> -			return false;
->> +	if (!all_cpus_unaligned_scalar_access_emulated())
->> +		return false;
->>  
->>  	unaligned_ctl = true;
->>  	return true;
->> -- 
->> 2.49.0
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
+Then you pick these lines out of generated your_file.s - no need
+to use python, sed(1) will do just fine.  See filechk_offsets in
+scripts/Makefile.lib for that part.
