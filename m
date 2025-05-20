@@ -1,180 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D331A5B9D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDF21922ED
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744112; cv=none; b=nB90VZ1ioDJUNtO0FR7pQDKtmzGid8tK8gJpWdE5Fu7JKdBoOqQ+G4ul3ycvEDGsPjyYwAuMBL2d/s8fD5shrvJH/FwnBz4yOwGIaCHEoYGuAfwFGb42GUbxle1VwWCndYK3dI4aIF5zrqYfDdcYYHiZNeThknOfurwhUBrlnL8=
+	t=1747744261; cv=none; b=gcgYXKWtBK4CNYM069EJMqxjaG6oKoTdDlnRrylBNr7KyhQXVXzUqYlD2cYoiX9uxwuP9KWeHnBA8YLxDIJ2o9+isxQZthxwWTKtWg/95gT7qv0ME9TJlDoFv9tHwrcBrT60v2fUdLm2tvMYimOlUWOv/AYIFNrq+UpT/8Z+AE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744112; c=relaxed/simple;
-	bh=1w99zC5ZUIQPq1ZgWC4AK8q+MslsDz+45iZdr52x4Ro=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qObvuo20GjGzfuXjBVSMfNKDVLL8OW0XqWHtxUfTDmQHlrV68hvHR4OVdsbwKGJbwlSTbolLTemZSyrZTSI/ufeVILHR3KqOaEX2gCP+mbQKhKGY38LctpPIrbfw42igi5/H+BHUj+1CHIRR5GzBQ5xeuKG+NNT+F9+2QXD1vrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/r4CUd2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747744261; c=relaxed/simple;
+	bh=06+bqTZRg6ptyJRvbT7uUPZ5sbC90XpRGa1TPKHK3ak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qz5NwdNG+G4epwQkLxCoeeDmsJaHdNeDoesrkei6s1U7Ki2cUnwyDHwOSCBUpEE6PPiLbYbVfsgfnntQUuPML3tvRRIZi8/y39w9k7F4YUc9jojiMwY9Pc7qYjx/PYfAFXzlnkVN5yXsYW9M2ye8YIZQZVSpu4SROIs8dveXM6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EJS4Cv0g; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/r4CUd2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747744109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5b8DwmjJyWtIWKCLaPFDNUFZFc5vK3ljotcJ3QRFsxo=;
-	b=c/r4CUd2toBIQladA+NcijLStWr5C0OCmodgSHNjW4fe8uei8djz1P7yX7J5wxBpv8/T4f
-	7RAx+3A99wNZduWl+m8k8PjvJEue37eAUAT4OOBCTC9/eofNpOwcavp0m+6oIvHNz1FHeE
-	YN4d5CXk676L4zY1ckQpOiNaYx+/Cww=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-8OLyftD7Ney1YL1AQLVFbg-1; Tue, 20 May 2025 08:28:28 -0400
-X-MC-Unique: 8OLyftD7Ney1YL1AQLVFbg-1
-X-Mimecast-MFC-AGG-ID: 8OLyftD7Ney1YL1AQLVFbg_1747744107
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so440774f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EJS4Cv0g"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K4tuP5023299
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:30:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rXBDW4Zj2qm1riop642/edycQKRUKMuQeCUhQ63b6q8=; b=EJS4Cv0giDcYWB+q
+	tydSuaxk5wnXQffmNjNIqrEXlhg4UMyIH2J9ITJ66l5kwZrK0FUugWh52w8KoLAp
+	z/pbxDaNE4dGHzfyJ4k3w8/nQ3YAkUz1fXUkAi8734kFcaDugo2GLEer42LimKx8
+	JXKdFWp1TgbiFT9/3QULIoOGJIkkoov9b4+J8J3sW0aWCoYmI0VR1DimBMPHzXOF
+	mvzuzdhFoKmivrbfcyYI5X6uB5syuzxNIerJikZmjNgJeLOQxef7OJqNovaxPaJF
+	XSDYEAhq6CLsx2wNr3TWRcM3iwMD9IQkIq1ShleA33w/ElYmOso+kA/y5qQjDoj8
+	SbzBhQ==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r041v9ns-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:30:57 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-30a29af28d1so4535117a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:30:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747744107; x=1748348907;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5b8DwmjJyWtIWKCLaPFDNUFZFc5vK3ljotcJ3QRFsxo=;
-        b=KPXdOid+g844rVpHXHSxtz/M55mT5rSv0J+spQ8WkA+2nrW3d5IzeZukcaTmqP3KJE
-         K4NftLz594wn7E5TNlFrqxvj+TkZkMmjhy0Jhe0t42dKPmdNKXciNcOAf7GmASLqzAYl
-         KJ/omCr/BS85Ga9zdadU/1CJ1FcOe6UTHZx1D8fHNhdyxzR/vDF9N5ZtTvYFIi+lURTO
-         R8W0UQOltBaa1ZI8o1pMMx5tB/VUTYoi3kLNnbHENlz8Y9OXBPwjyPNvmYc3HQUf71jG
-         3BDsRQpr55eL9vnqITgynjhM3xkak6qNjdcmJ4/X4TJMTu2n2f4Yde5A5os7vtgjX4Jt
-         P2Fw==
-X-Gm-Message-State: AOJu0YzEN7eMgC8CIXqDMGqRZsmMvrPkTOqFyixNiwMfI6VjOxccpL/y
-	Myv7tGHxNR3O4tjDJI+s16mIlS3rLw8pAKmM9W/vFP+vSj79pBIVOeh9E94FlRjP11KAteVDNkR
-	eRmyq7aqMfm9xHop59NcWOVoMNdwm8tTINkafYvqnTbJlp87XYWTvkwYceLL+3PaV8g==
-X-Gm-Gg: ASbGncuqxYOi4xcbfJbGtVEZq2zEJ+8RmTQN++VvfTegCYTsdpQucehr75F0vaEzuQT
-	fYSgLqNk4CPb6adgOQcYQnNKot1zkN+7jReJU3A1g618C4ZRmgQcvm6ltHe+LT6GuiGKVpQCzsJ
-	dtfsqFFgDjaMtOjIv0bpIpyyAIKEEA79YkO9FDkqSDmvUqSQIj5aY243HyKbmmmpCgxQ1N//Yz/
-	c120l9/2iZ0Nb8kkUXIcmIT5MnSqR8/T5Ep1eA56tSc5FThZ8mGOarpWQJ/d98NBKhbKJB7MyjI
-	DVlRUrFNRARQoemcmD11OX4sRVyfQ890wy3CNg==
-X-Received: by 2002:a05:6000:2012:b0:3a0:b58c:dd8 with SMTP id ffacd0b85a97d-3a35c82fa3bmr12951135f8f.30.1747744106808;
-        Tue, 20 May 2025 05:28:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE08pFhTtIs4KPEaviYrIQse9rZTjPMnj74Ezvbe/ZZWj5AOJUJmvZKZFBoGQFPg5C6yij2fg==
-X-Received: by 2002:a05:6000:2012:b0:3a0:b58c:dd8 with SMTP id ffacd0b85a97d-3a35c82fa3bmr12951123f8f.30.1747744106416;
-        Tue, 20 May 2025 05:28:26 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36835ef41sm12046155f8f.94.2025.05.20.05.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 05:28:25 -0700 (PDT)
-Message-ID: <7e6f50e5ffc31c512ca5e57c36ecfd733fdccf63.camel@redhat.com>
-Subject: Re: [PATCH v5 4/6] sched/isolation: Force housekeeping if isolcpus
- and nohz_full don't leave any
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
- Waiman Long <longman@redhat.com>
-Date: Tue, 20 May 2025 14:28:24 +0200
-In-Reply-To: <aCxvQxSS31PcHsDR@localhost.localdomain>
-References: <20250508145319.97794-8-gmonaco@redhat.com>
-	 <20250508145319.97794-12-gmonaco@redhat.com>
-	 <aCxvQxSS31PcHsDR@localhost.localdomain>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+        d=1e100.net; s=20230601; t=1747744257; x=1748349057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rXBDW4Zj2qm1riop642/edycQKRUKMuQeCUhQ63b6q8=;
+        b=LCOfZcQu6pRKrJ09o1TOamLxlls3UoyRdK1gc9E1jQyg4mRmfjhfXYGUlHaQrEcP5K
+         lKQDaqwSRKVvk2jfCWxodZdXd+jfQC7heHsQMaisPUk4Gfwu10N1dNG+qU4THJLS4RHO
+         RfMbXfTKL4P1jNSzaYglNM8rpBQoJtQqTJHVes9uW+oEoMzq4/NKa4saLNFW9MF6j/Fj
+         tWvovXlpsdRnTMKWTTw0dLlZ69fAe8iVOLHs+iEZYZvBzW36U+x75icZdcJjk1wEBJoy
+         AU80eHc4BsJNA0V6+mN3tsHMfguSHPsPYrLaRtyIfHE9iGwnKqByHk60WVQoKe8z80Ab
+         a6bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq/CpCfTn1oGw/3oBqzYPh0ErhKc0VqT0jnnya/KSii7ng/ADswgcXjbkn48q/rdioU1b6YmAhVhlWKII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyci4CWQvgGFRqkB/DnolULoCXZRZHyXuYn7bCQttGUvllqiUtD
+	fIabJdMIOLtWxwDZvjW7JybB3Uxb9NX73KyMtXEqIXWm2XL5pTXqpM8gxX2K59+O6YTQyLm1V7T
+	24OkJFLbP9Hpv8W/QPOJGm2ySyZecFWE+fZ8RM3SAefdXdIoKcNFA5q8EpDFX0Pp5Hkn2vV3V/K
+	IrY/SUIcJZfB+166qOE4ad+9k7xX+9ktTU9jCeBVf4Gw==
+X-Gm-Gg: ASbGnctCF7DdwGRlEDUlZm0qbpXQnqfyLPvzUBAqrbqIw/9PpTWdTpt6Gcs/FzONxDg
+	qVn1nP7A37QVb/LGrJNLiquvlNr0mMc+bV5Mg8zw0xVe1v2MMpIs5274GBOlof1mgNvxGBA==
+X-Received: by 2002:a17:90b:5251:b0:308:5273:4dee with SMTP id 98e67ed59e1d1-30e7d542b40mr25042996a91.15.1747744256978;
+        Tue, 20 May 2025 05:30:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7LERFtBGK7AEaAksZZ5SwMMPuSxqQKo8q2KlrpzNtpoBMKejcFG+jY35m4O/WHIROL/D8IyAak0xNsIBjlSM=
+X-Received: by 2002:a17:90b:5251:b0:308:5273:4dee with SMTP id
+ 98e67ed59e1d1-30e7d542b40mr25042930a91.15.1747744256579; Tue, 20 May 2025
+ 05:30:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250517043942.372315-1-royluo@google.com> <8f023425-3f9b-423c-9459-449d0835c608@linux.intel.com>
+ <CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com> <20250520003201.57f12dff@foxbook>
+In-Reply-To: <20250520003201.57f12dff@foxbook>
+From: Udipto Goswami <udipto.goswami@oss.qualcomm.com>
+Date: Tue, 20 May 2025 18:00:44 +0530
+X-Gm-Features: AX0GCFv2SiJ3q2jRbyIfdSpQtz2ju4Vl5p2bc-eQmtKh68-w0TJPHdu1d6PX364
+Message-ID: <CAMTwNXBkAVjwaERAu-UHEHmH-BNe7T3iRfntLw+076g1OWgrPA@mail.gmail.com>
+Subject: Re: [PATCH v1] Revert "usb: xhci: Implement xhci_handshake_check_state()
+ helper"
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Roy Luo <royluo@google.com>,
+        mathias.nyman@intel.com, quic_ugoswami@quicinc.com,
+        Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEwMCBTYWx0ZWRfXyDZ0x43vblty
+ BqyqNdgEOZZcPVpdrd+ZHGL3y4saM9DwLwlbs7Y66r291NyppL0u3fGBemMSdebjRsT0THWiMxL
+ Uudx7xPXjJjj02MvRXrFuTNblNQdWeExHMK5BgUaKgqhvjMkrl5LOIyYCRiViKV/r/YtH6jXTvU
+ cmB4xa+kaGQsxm2zIJLRCUrX7QALL5JiDtWGA2WhMzxpWfYU8qysW+72ePfBXjQKmjcH9KmWuu1
+ ivD2BWMTfa5bg8mpDxWuVk3fIyONqA4GqfJu+RC1JSZx82xfDp7xG3Tn/FcDJN36IaqG0tKobts
+ LXP/RmnFt3LRdQrClWWTAA+0pmxwLxuZPNeThaphfLNe2Dx0de7YERNIX4xY3ivXnRWjRBDMNya
+ rP75UhB3Kk2upixGSld1IYTdCJTO3QoOBCa5fGJY/bJ4hTNVqEreYYS8lUZNtUo/Cnn5ZJYW
+X-Proofpoint-ORIG-GUID: PqaCwqDmaQJcQQpME6XGSovwW9xT27sm
+X-Proofpoint-GUID: PqaCwqDmaQJcQQpME6XGSovwW9xT27sm
+X-Authority-Analysis: v=2.4 cv=HIjDFptv c=1 sm=1 tr=0 ts=682c7602 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=pGLkceISAAAA:8 a=TLaf8UyukAPKd0nM82IA:9
+ a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200100
+
+On Tue, May 20, 2025 at 4:02=E2=80=AFAM Micha=C5=82 Pecio <michal.pecio@gma=
+il.com> wrote:
+>
+> On Mon, 19 May 2025 23:43:21 +0530, Udipto Goswami wrote:
+> > Hi Mathias,
+> >
+> > From what I recall, we saw this issue coming up on our QCOM mobile
+> > platforms but it was not consistent. It was only reported in long runs
+> > i believe. The most recent instance when I pushed this patch was with
+> > platform SM8650, it was a watchdog timeout issue where xhci_reset() ->
+> > xhci_handshake() polling read timeout upon xhci remove.
+>
+> Was it some system-wide watchdog, i.e. unrelated tasks were locking up?
+Hi Michal,
+Not exactly, I could see the other tasks were not stuck, only the
+readl which we do as part of xhci_handshake with a 10 sec timer.
+Our watchdog barks out at 10 sec and we saw in that timeframe it
+didn't respond i.e the readl_poll_timeout_atomic  was still polling.
+Since the timer is exactly aligned to the Watchdog timer here
+therefore it crashed.
 
 
+> It looks similar to that command abort freeze: xhci_resume() calls
+> xhci_reset() under xhci->lock, and xhci_handshake() spins for a few
+> seconds with the spinlock held. Anything else (workers, IRQs) trying
+> to grab the lock will also spin and delay unrelated things.
+>
+> Not sure why your commit message says "Use this helper in places where
+> xhci_handshake is called unlocked and has a long timeout", because you
+> end up calling it from two places where the lock is (incorrectly) held.
+> That's why adding the early bailout helped, I guess.
+>
+I think we had re-worded the patch a little, this was my original commit:
 
-On Tue, 2025-05-20 at 14:02 +0200, Frederic Weisbecker wrote:
-> Le Thu, May 08, 2025 at 04:53:24PM +0200, Gabriele Monaco a =C3=A9crit :
-> > Currently the user can set up isolcpus and nohz_full in such a way
-> > that
-> > leaves no housekeeping CPU (i.e. no CPU that is neither domain
-> > isolated
-> > nor nohz full). This can be a problem for other subsystems (e.g.
-> > the
-> > timer wheel imgration).
-> >=20
-> > Prevent this configuration by setting the boot CPU as housekeeping
-> > if
-> > the union of isolcpus and nohz_full covers all CPUs. In a similar
-> > fashion as it already happens if either of them covers all CPUs.
-> >=20
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> > ---
-> > =C2=A0include/linux/tick.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
-> > =C2=A0kernel/sched/isolation.c | 20 ++++++++++++++++++++
-> > =C2=A0kernel/time/tick-sched.c |=C2=A0 7 +++++++
-> > =C2=A03 files changed, 29 insertions(+)
-> >=20
-> > diff --git a/include/linux/tick.h b/include/linux/tick.h
-> > index b8ddc8e631a3..0b32c0bd3512 100644
-> > --- a/include/linux/tick.h
-> > +++ b/include/linux/tick.h
-> > @@ -278,6 +278,7 @@ static inline void tick_dep_clear_signal(struct
-> > signal_struct *signal,
-> > =C2=A0extern void tick_nohz_full_kick_cpu(int cpu);
-> > =C2=A0extern void __tick_nohz_task_switch(void);
-> > =C2=A0extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
-> > +extern void __init tick_nohz_full_clear_cpu(unsigned int cpu);
-> > =C2=A0#else
-> > =C2=A0static inline bool tick_nohz_full_enabled(void) { return false; }
-> > =C2=A0static inline bool tick_nohz_full_cpu(int cpu) { return false; }
-> > @@ -304,6 +305,7 @@ static inline void tick_dep_clear_signal(struct
-> > signal_struct *signal,
-> > =C2=A0static inline void tick_nohz_full_kick_cpu(int cpu) { }
-> > =C2=A0static inline void __tick_nohz_task_switch(void) { }
-> > =C2=A0static inline void tick_nohz_full_setup(cpumask_var_t cpumask) { =
-}
-> > +static inline void tick_nohz_full_clear_cpu(unsigned int cpu) { }
-> > =C2=A0#endif
-> > =C2=A0
-> > =C2=A0static inline void tick_nohz_task_switch(void)
-> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> > index 81bc8b329ef1..27b65b401534 100644
-> > --- a/kernel/sched/isolation.c
-> > +++ b/kernel/sched/isolation.c
-> > @@ -165,6 +165,26 @@ static int __init housekeeping_setup(char
-> > *str, unsigned long flags)
-> > =C2=A0			}
-> > =C2=A0		}
-> > =C2=A0
-> > +		/* Check in combination with the previously set
-> > cpumask */
-> > +		type =3D find_first_bit(&housekeeping.flags,
-> > HK_TYPE_MAX);
-> > +		first_cpu =3D
-> > cpumask_first_and_and(cpu_present_mask,
-> > +						=C2=A0
-> > housekeeping_staging,
-> > +						=C2=A0
-> > housekeeping.cpumasks[type]);
-> > +		if (first_cpu >=3D nr_cpu_ids || first_cpu >=3D
-> > setup_max_cpus) {
-> > +			pr_warn("Housekeeping: must include one
-> > present CPU neither "
-> > +				"in nohz_full=3D nor in isolcpus=3D,
-> > using boot CPU:%d\n",
-> > +				smp_processor_id());
->=20
-> I wouldn't even bother recovering:
->=20
-> pr_warn("Housekeeping: must include one present CPU neither in
-> nohz_full=3D nor in
-> isolcpus=3D\n ignoring setting %lx", flags);
->=20
-> goto free_housekeeping_staging;
+"In some situations where xhci removal happens parallel to
+xhci_handshake, we enoughter a scenario where the xhci_handshake will
+fails because the status does not change the entire duration of
+polling. This causes the xhci_handshake to timeout resulting in long
+wait which might lead to watchdog timeout." The API  handles command
+timeout which may happen upon XHCI stack removal. Check for xhci state
+and exit the handshake if xhci is removed.
+https://lore.kernel.org/all/20230919085847.8210-1-quic_ugoswami@quicinc.com=
+/
 
-Yeah good point, that would simplify things with the tick CPU.
+But yeah the main motive was to bail out handshake to get around this.
+
+So you could say my main problem was that the CMD_RESET was stuck for
+a long time.
+In other cases the reset passes in very short amount of time. It was
+unusual for this case.
+
+> > Unfortunately I was not able to simulate the scenario for more
+> > granular testing and had validated it with long hours stress testing.
+>
+> Looking at xhci_resume(), it will call xhci_reset() if the controller
+> has known bugs (e.g. the RESET_ON_RESUME quirk) or it fails resuming.
+>
+> I guess you could simulate this case by forcing the quirk with a module
+> parameter and adding some extra delay to xhci_handshake(), so you are
+> not dependent on the hardware actually failing in any manner.
+
+This would definitely bark, but like I mentioned my case was that the
+CMD_RESET didn't exit the poll in the 10 sec.
+I'm not sure if that points to the controller stuck at processing
+something else?
+Please correct me if i'm wrong here.
 
 Thanks,
-Gabriele
-
+-Udipto
