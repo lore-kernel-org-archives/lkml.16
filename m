@@ -1,60 +1,124 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0B7E573;
-	Tue, 20 May 2025 12:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747745655; cv=pass; b=J7fsz0VU3qqZGU328fT0bT0UiU4wokBs29TKIpSL4Lmu7VQvRTbQa5uFceeTUftmBiwXVATPx8nQXy4KhrIvG19cb693WmgkMW8yhB9Thy6ZTWgod7nklr74wqwWaqnXknpMrK4T/zdOchVtocOgEsRytsq+XkFLSH+SLK+pc34=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747745655; c=relaxed/simple;
-	bh=VyDRu5okBNYh0PPU8c6EFcuLKrl934GUxOrmkcF81Wc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862D79461;
+	Tue, 20 May 2025 12:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747745779; cv=none; b=aAs9t+uE06SJhnYbfz0z544EiTt8ym13MhjkU2J0eMRCMgzlEc0Ik+cGp+kH3LCo6cTQzFua0UfdZJct0aIgv6iWUeuDEZk3GWJjrheLBzPagTsNDTxj631JSjrFzJiABMemYG55fnVLRqvGbDtkme4f6Ww4b3M165pSp7XcuqM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747745779; c=relaxed/simple;
+	bh=4S8ZauXkXCneFSHnIt8yPad/b3zcMosS2XT+O7zzntI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZQFdL7w3GpQbcaisfUQbPr8ZkVlrIaW8bknOQJhNePQItar4aQNEHqUdQOAOZ3GFvP4RS1wCd0XPRmGYIl7NGpoDc9KnVns/Mfc7Q+QK5GQOteHCXQGbSCmW/b7dKNXCYNqqzj5+xM/NEM3xB0X/4EwMLPek8tDF0/Oj/w36ZU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=g3yvTSms; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KF2D/y5zX0xJoYP9BO4x/dMCsipskV7mEI9XrNDcPMWFplnpgGohnvDIFT6XXqk8J/tC+OqZz6KDwGZqoH0zueF6qIS/qHqnkDPcUmEBTt75t3h9mDHHzXFasRjE6mSNzdHICsPN9npnbBWDjjNj3uC/MMPjvJTWxN3I5F3A+vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDppxmN0; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="g3yvTSms"
-ARC-Seal: i=1; a=rsa-sha256; t=1747745619; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PtbyDuG+Xx8o4Fo82q7gnzgQXzDhkhuOwgpsBwhKqs1kN+veFb597R7SmL0acmpVblQKhP5T2//K2bvT3qGHZg8JX9PxK8Ukp3DMFEbXsXzYA2xWO8yeajGClzl6MaCP8H7HPytGyk6h7JQZuK0vVbYD85a2EDdZuhP7w/WoNRE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747745619; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xpT1I6OsQDTs/OF6TNihbbaghdO2wEfulzUIutllrog=; 
-	b=N/Vb1ix5HrbvV5ZA1XrkeBdi4W4mfR9AKiBeYZmGYvJPpeHpWoX0DiF0s4hSDw7zH1iLzyGg3NUBVPmHhDLei83LokqjKKsaxYN+8H/K2My/+tNmTwGe0b/D4G/nRr3kHqlPNKuZpFeq/ySiaQpKXsnKIhOuliGBXisUbZCHf3w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747745619;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=xpT1I6OsQDTs/OF6TNihbbaghdO2wEfulzUIutllrog=;
-	b=g3yvTSmsy65qXoWGb8uBaN+T4q/WMuNwAKSrRiKs8IJaXx9Gb62wGqL/XB0tPwZR
-	ZSBdWYFuEZAH+oHbqIMvyJ2BrPF5O1MM2wzxsCG506MnSTUCZygE2n+O3Fjd+b1coDP
-	+UhQicfjZXhr6yXQndXN/37rC1cLFkcyJUgp6Yh0=
-Received: by mx.zohomail.com with SMTPS id 1747745619348731.4739743284113;
-	Tue, 20 May 2025 05:53:39 -0700 (PDT)
-Date: Tue, 20 May 2025 13:53:33 +0100
-From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-To: Steven Price <steven.price@arm.com>
-Cc: Daniel Stone <daniel@fooishbar.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com, Rob Herring <robh@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, 
-	"moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>
-Subject: Re: [PATCH v2 3/3] drm/panfrost: show device-wide list of DRM GEM
- objects over DebugFS
-Message-ID: <3ufktxc3qkp6nimqkll2kju2iraopvy3cdfkrabqdoct2j5xkg@dv6xalz7jlvy>
-References: <20250507160713.1363985-1-adrian.larumbe@collabora.com>
- <20250507160713.1363985-4-adrian.larumbe@collabora.com>
- <9c0b95c8-bf2d-4689-ac1f-ccacba826060@arm.com>
- <CAPj87rOiEa1bTOPqyauYhoVoXEtNeDjE+DkLbzeGVJ1tW9fJcQ@mail.gmail.com>
- <6a00017f-89dd-47b9-a4db-ceedd63f456f@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDppxmN0"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-47698757053so73075611cf.0;
+        Tue, 20 May 2025 05:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747745776; x=1748350576; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FeiADSmz4HK3l7V7PhgpHIgI1M3PHWKk6zyjdcQyvN4=;
+        b=IDppxmN0wyn+tUqnHZgjM3pKhVv2aIdF+T18DUerwO+DDjx/iZwQTmV271dzod0FSa
+         WmR/2id9b6zFz6LGrJmTtI4oQCQ9gA0cVg4bp6jd0HiZfvPGldQ1fSgylK0OWRrpQKHL
+         wG0P2+fvr/jxgceQfDRl6JyG/P8MkVg82FmbVOxEte9zSMZ05SLxRHAeUeUNikl8XCMM
+         ZpSkpGpvA77UmTREq+X9TaexjxirZgoqYy52h820Sfolb4enM1yp/+IONmCeZyL0yGgh
+         P63raMkUQ9kqVgZhabBKWn5h+1gAWJmibUvae1214W73lOF6R+b+mEPw4wuQdyrFChH4
+         P/9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747745776; x=1748350576;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FeiADSmz4HK3l7V7PhgpHIgI1M3PHWKk6zyjdcQyvN4=;
+        b=n1NGknAOHHV+XJ5ROI7+d7IQhLzHn1KOlsagkU7vCIsDmbkU2BJ2It5sOZTsJmWjbV
+         futasx9hLWRIIO4UEhFoVYxD6d5jFxIBAru3XBhk93pm54omouey2QbvtPCAEz8V4BaN
+         y0TH3W/IHnbS44p1JKqRRFIWARF56BNwMif4ws6rq/dnShjb7X5ocDu9XaHF3cUkZ7Ky
+         gMGVa0kQecdyIQTgivwxxdPuxWbq7UscY1dpnULSLb4U8OSBCcY2iKB1oGrUUkp6ubXJ
+         zc3xaYaO7JOlReckp0yab3o3frXDrG6WYIH+NvcUkYyY9SY2EAPByHSH/Lr3vKz/oxCX
+         wrXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXgqUj/isCebbBnh2dBqrpNqiMN9k5QDm8r9AML2xTw0PSa4LVT6hNiMMfBXs4eBRwA9SjaR5aYj62dAgs@vger.kernel.org, AJvYcCWKvm0EGCp/A2z9KvUPyyiHh2NO+a/UtxtryMYV98s08+I/KW3Z+AvYZ9CwI7d3q4j2H+DqhT3LenoXv9a3Bw0=@vger.kernel.org, AJvYcCWzEWhe9LfhSZ893pQZuwwAzlvwuosaFIFZ2ZHVxnWwDMwQm4amHjZ9yyEgq9C/bRMOfQOoLIpNuROTnW5Tsgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoqRTuJ31XfamRwKAnf/197ri5gC0tVCSsSnnJRWwqtVTnb70r
+	Uyo1sumb256ulFw1XFPF+skI+i3TgKLq3cAS+XSNb3yQKL/f8RqqRp/j
+X-Gm-Gg: ASbGncurHUUGo4+l1k8V9FY8tW/DZ3YZ2DOSRqylBTTraazC1Fp/zeG1GAWVScQPkxe
+	H763NK/RzvzWUB9YmqTmdyLpTHPEl/D7QzxVsLseUy54Jvc9tb81pHxz6SzFh7xU9g4Du73QFYl
+	pLvIRXw2zlIm+pqXF6mQXkif4Te+0cl4H/lVX/IXgrJjhauJiTAtKwQeT9UrGwNZl4Z/kAkpALP
+	vZmsWfQTj6TSji/0a+10HZArZI/WW6LHLQuxYfA/YR8NM3eaFtRntRv4HS3P4MARFH3pXCntaQc
+	hUntAOhxpx3WQy8mZ//ARb0Kv4N0jfj8TDcRduKZ/lVnZOtoKCcohsNuyYj6WA/6Hptp7Gbw8xe
+	mFZIMhDZt/9vHMclJ34nFYCN4rpG4phtOW9pvSo5EbQ==
+X-Google-Smtp-Source: AGHT+IEL3+h3BCUV6mXDOV6MS77SPTtdgt0hkDPfNmEKaPC4GDYuj04L6rKR/KRb8XZgyrIXCGEygQ==
+X-Received: by 2002:a05:622a:2605:b0:494:9fc0:de3 with SMTP id d75a77b69052e-494ae4662cemr344326741cf.32.1747745776311;
+        Tue, 20 May 2025 05:56:16 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae528f08sm69365631cf.72.2025.05.20.05.56.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 05:56:15 -0700 (PDT)
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 41DA81200069;
+	Tue, 20 May 2025 08:56:15 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Tue, 20 May 2025 08:56:15 -0400
+X-ME-Sender: <xms:7nssaLWvxRXQBwUxDE5ZJ-nC1iUCfTTgcxPfb-gaChQanIUN74BxLg>
+    <xme:7nssaDmK2hkj2Q8bfWiUx7yT8CdBWeoPdaURNeQBp6zHsA1vTMLH05Bg6FEeqAeVA
+    maE5hYquVyG3bravw>
+X-ME-Received: <xmr:7nssaHZoKCwh0Op4dZk2QLElTksO0Yd6CCIKFjDHfkv-qmDouo_BoZHd>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddviecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeen
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledthffg
+    heegkeekiefgudekhffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
+    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
+    grihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehjrghnnhhhsehgohhoghhlvgdrtghomhdprhgtphhtthhopegs
+    qhgvsehgohhoghhlvgdrtghomhdprhgtphhtthhopeihuhhrhidrnhhorhhovhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugiesrhgrshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvh
+    hirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggr
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
+    hlrdgtohhm
+X-ME-Proxy: <xmx:73ssaGXquQALZ7jhoyENrGBsa9cE9sle6x67j2_XC5_tAlTIEf2l3w>
+    <xmx:73ssaFlPHz-5oAT9ramwuYajOZkAA6Nr9j5iOLXfyFJ0A14GIH8ldw>
+    <xmx:73ssaDdbkdYntKtpIx8s9_NfENXtPxnhHI84sATjvIMiiLjadwOyXQ>
+    <xmx:73ssaPHRKC_SI5tVToofsZId8IL5rY4VpyHsyq2CRBhWs_8egavUPA>
+    <xmx:73ssaHm23FG2_I0MNE9FRwj_QR1njJLBZQS8kGtioyD99AMbeiCjnxcw>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 May 2025 08:56:14 -0400 (EDT)
+Date: Tue, 20 May 2025 05:56:13 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Jann Horn <jannh@google.com>, Burak Emir <bqe@google.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+Message-ID: <aCx77cCum_b-IR4H@Mac.home>
+References: <20250519161712.2609395-1-bqe@google.com>
+ <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com>
+ <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
+ <aCwRZlkBWekRmDg7@Mac.home>
+ <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,94 +127,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6a00017f-89dd-47b9-a4db-ceedd63f456f@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
 
-Hi Steven,
-
-Thanks for the fix, I've tested it and it fixes the outstanding issue.
-
-However, including the perfcnt sample buffer in the DebugFS GEMs file raises the question of what
-to do with its labelling, because it isn't exposed to UM through a handle, so my previous assumption
-about not needing to handle static labels when tagging BO's within the driver no longer holds.
-
-This might require some quick rewrite so that the sample BO can be displayed with a fitting name.
-
-On 19.05.2025 17:02, Steven Price wrote:
-> On 15/05/2025 19:04, Daniel Stone wrote:
-> > Hi Steven,
+On Tue, May 20, 2025 at 05:42:51AM -0700, Alice Ryhl wrote:
+> On Mon, May 19, 2025 at 10:21 PM Boqun Feng <boqun.feng@gmail.com> wrote:
 > >
-> > On Thu, 8 May 2025 at 11:42, Steven Price <steven.price@arm.com> wrote:
-> >> I'm also seeing a splat when running this, see below. I haven't got my
-> >> head around how this is happening, but I see it when glmark quits at the
-> >> end of the test.
-> >>
-> >> [  399.505066] Unable to handle kernel NULL pointer dereference at virtual address 00000004 when write
-> >> [...]
-> >> [  399.882216] Call trace:
-> >> [  399.882222]  panfrost_gem_free_object [panfrost] from drm_gem_handle_delete+0x84/0xb0
-> >> [  399.893813]  drm_gem_handle_delete from drm_ioctl+0x2b8/0x4f4
-> >> [  399.900237]  drm_ioctl from sys_ioctl+0x428/0xe30
-> >> [  399.905496]  sys_ioctl from ret_fast_syscall+0x0/0x1c
+> > On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
+> > > On Mon, May 19, 2025 at 4:56 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > >
+> > > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
+> > > > > On Mon, May 19, 2025 at 6:20 PM Burak Emir <bqe@google.com> wrote:
+> > > > > > This is a port of the Binder data structure introduced in commit
+> > > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
+> > > > > > Rust.
+> > > > >
+> > > > > Stupid high-level side comment:
+> > > > >
+> > > > > That commit looks like it changed a simple linear rbtree scan (which
+> > > > > is O(n) with slow steps) into a bitmap thing. A more elegant option
+> > > > > might have been to use an augmented rbtree, reducing the O(n) rbtree
+> > > > > scan to an O(log n) rbtree lookup, just like how finding a free area
+> > > >
+> > > > I think RBTree::cursor_lower_bound() [1] does exactly what you said
+> > >
+> > > We need the smallest ID without a value, not the smallest ID in use.
+> > >
 > >
-> > Soooo. Let's assume it has to actually occur in
-> > panfrost_gem_debugfs_bo_rm(), since that's all that's changed here.
-> >
-> > I don't think pfdev can be NULL here, because we've already
-> > dereferenced ptdev and written to a structure member earlier in
-> > panfrost_gem_free_object(). I don't think it can be the debugfs mutex,
-> > because a) that's initialised with the device, and b) wouldn't be
-> > offset 0x4.
-> >
-> > I'm looking then at list_del_init(&bo->debugfs.node), which would
-> > effectively execute bo->debugfs.node->next->prev =
-> > bo->debugfs.node->prev. So if bo->debugfs.node->next was NULL, that
-> > would explain a write to 0x4 on 32-bit systems.
->
-> So I finally got some time to do some debugging on this. And you are
-> absolutely correct on where the fault is triggered.
->
-> The cause of it is that panfrost_gem_debugfs_bo_add() is called from
-> panfrost_gem_create(), but that isn't the only place that Panfrost GEM
-> objects are created - it turns out panfrost_perfcnt_enable_locked() also
-> calls drm_gem_shmem_create(). And in that case the list next/prev
-> pointers are left set to NULL, causing things to blow up when the GEM
-> object is freed.
->
-> The below patch gets things working, or alternatively just init the list
-> in panfrost_gem_create_object() if we don't want to include the perfcnt
-> buffer in the list.
+> > Ok, but it shouldn't be hard to write a Rust function that search that,
+> > right? My point was mostly the Rust rbtree binding can do O(log n)
+> > search. I have no idea about "even so, should we try something like Jann
+> > suggested". And I think your other reply basically says no.
+> 
+> We would need to store additional data in the r/b tree to know whether
+> to go left or right, so it would be somewhat tricky. We don't have an
 
-> Steve
->
-> ---8<--
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> index fe2cdbe8baf0..51da13cd81f0 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> @@ -297,13 +297,14 @@ struct drm_gem_object
-> *panfrost_gem_create_object(struct drm_device *dev, size_t
->         obj->base.map_wc = !pfdev->coherent;
->         mutex_init(&obj->label.lock);
->
-> +       panfrost_gem_debugfs_bo_add(pfdev, obj);
-> +
->         return &obj->base.base;
->  }
->
->  struct panfrost_gem_object *
->  panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
->  {
-> -       struct panfrost_device *pfdev = dev->dev_private;
->         struct drm_gem_shmem_object *shmem;
->         struct panfrost_gem_object *bo;
->
-> @@ -319,8 +320,6 @@ panfrost_gem_create(struct drm_device *dev, size_t
-> size, u32 flags)
->         bo->noexec = !!(flags & PANFROST_BO_NOEXEC);
->         bo->is_heap = !!(flags & PANFROST_BO_HEAP);
->
-> -       panfrost_gem_debugfs_bo_add(pfdev, bo);
-> -
->         return bo;
->  }
+Hmm... I'm confused, I thought you can implement a search like that by
+doing what RBTree::raw_entry() does except that when Ordering::Equal you
+always go left or right (depending on whether you want to get an unused
+ID less or greater than a key value), i.e. you always search until you
+get an Vacant entry. Why do you need store additional data for that?
+Maybe I'm missing something here?
+
+Regards,
+Boqun
+
+> implementation of that in Rust.
+> 
+> Alice
