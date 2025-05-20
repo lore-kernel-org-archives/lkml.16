@@ -1,186 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA3C252287;
-	Tue, 20 May 2025 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4A5283141
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757745; cv=none; b=JRPAy8lRGtd4y0ByjnFrq+bloJx7+EMneApRIeCjjkzndsSkboB044bIa+rMCQHNH3ogDTEQA0XwCKYg+s1fuxUkx7phxZ7LkG4k8VGhwYI2A927crs0+qkGJFBr8Aon/0k0USqh5iBVTkCtsWfw980nyebhlI4gJ869nRdBM3Y=
+	t=1747757750; cv=none; b=FpgNe2NNX08buo3a/pIpR45M4/UtcpNcZw+5luyuHkeb5iBuy+iQMsaG30EdxyG0q63BWRm4FDoj9jXzN3oa96rQBSZc9c319se/uBuTpCRDuPXUGH5Ek6dJJhtuxTdhILytID61G/hRj/GsDjjIxAdqGgPXnahWD20iSM9KSEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757745; c=relaxed/simple;
-	bh=BPT15T5+vOCGnLdF240pZNL9NjPwhTkJWj2EJZTK5xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7PpLgHuXSrGmFaZSqJqWRmDRCOs1CJVySigWKq/yTRQ0yrtMomAgdDrIhw2SP7evGwD0yhtMaIShVU2IsR2bB1yoyhejoyBK+QSoCixI0HlD+yvea2p/shBUKnMuFyZqOFSL8cv6kFATYJowka1DxRylBjay66Gc2aIL8zRdE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTgrPvgb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747757750; c=relaxed/simple;
+	bh=+Vcw99hArJNg96u9C+1xlSH1x7gl3AusJncKN9s2FM8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=p/gkglPIUEoVbNyP3ez9zFh5q0nWktGrvKcyu7wAFIx5HtZkfmjm1VrqD6FuhgbmIu7psqWIZrb/fddmkuWloyOAmPGYMcSxyugC0KghW3uTSHxRxUl2LLx0ShyFcXxXZBKp71jSuXuC93qOr7XipIWPJQp50ruisVjPt9ys04o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jLQZTfnu; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTgrPvgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA33C4CEEA;
-	Tue, 20 May 2025 16:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747757743;
-	bh=BPT15T5+vOCGnLdF240pZNL9NjPwhTkJWj2EJZTK5xc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RTgrPvgb81CGKTu1/Gj/w+fG7eSQz1u9s12G4x3rgmA9reCjMVtnjmP28j4faZecz
-	 FgVnhLoxO9IRgpJXK8JlZ5zoKFbQrOt0j1uGN7k2HZmq+W/oUEf5bJPrssbmP1otNV
-	 cCuszpGluGoANDH7TSJ4deu7GmS+Ea/eSZDhTCxg4PbFYDiF1BTx9f+ByC+84tmzxI
-	 q4IHrWJF+Ivhv2h2GT2/goZFVsgRnFQ9gHRTY4xTNsO7AFzT5o6/j3gsLBrtGb7xPi
-	 UKjbuAuiVNM/7IEMZA61iOb+Mo9DN0otPIjD9uB32LTD4b9em0oBNtgZwQKezit4gb
-	 ntHEqvWejprig==
-Date: Tue, 20 May 2025 09:15:40 -0700
-From: Kees Cook <kees@kernel.org>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-security-module@vger.kernel.org,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
-Subject: Re: linux-next: Tree for May 16 (security/landlock/ruleset.c)
-Message-ID: <202505200914.086A9D4@keescook>
-References: <20250516202417.31b13d13@canb.auug.org.au>
- <e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org>
- <20250519.jiveise8Rau8@digikod.net>
- <202505191117.C094A90F88@keescook>
- <20250519.ba8eoZu3XaeJ@digikod.net>
- <202505191212.61EE1AE80@keescook>
- <20250520.uof4li6vac3I@digikod.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jLQZTfnu"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e8baf5754so3082805a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747757748; x=1748362548; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bZGR3h8ZXjmEa2GSMvAS+bskJuHQ62fc+lc2T3EMCe8=;
+        b=jLQZTfnuHDUJ8TIB5y/9OFJwvlV5qOS7cXrKOcTIIE/hC4UAaRHBvEzPrgCCOHCz/L
+         pmb3vv8ujSdYolXXXKckOFTHji7lYbpkWOa4Hf8GrR35d7YSaWgNJhDvG+YzNZyLeQc0
+         D+2jXn5MaDXCjpZX3hcUloEGj+cVQozqxBcw0+GR9Gzv4OlZfzzokILHRvDSovVhc//E
+         6jsBxqOnnzxQxKNkWkECnIbNW2QbXRQUEcQhGyfwt3acaI1O8Ff/ihBMwwONkrzUus/7
+         VLX0YypBFm76/R5TklOGWsR2gVpXeHRoUk+Kd+0dHxnRFj5F7w+SVgkJvy45UG+t87Ge
+         OZPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747757748; x=1748362548;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZGR3h8ZXjmEa2GSMvAS+bskJuHQ62fc+lc2T3EMCe8=;
+        b=I+b3CYCK5+DK+ZG6g2XpJ/85BQA1Y3DDwitEWI1r6S+u469RnK95Q8MHPrBC+Jny55
+         h3ORbAe4WBlRcBiYHcTCCCbgJHUEaNmCGAXvC09YTU4bPXQonWg63Bswz1AiIAwegF52
+         zvOU69MHtoKoqrUGnjO2grS1So2MUWPFa9V30IEZShEg6+KJ5eheBniBO9ENWstWhmU5
+         /UOyrRE707D2GqcmS2UcqSZy1dIMUxj/roI7VAGWEDx+hfSfxtvmTFnIz+hQjhoswSAc
+         KqlEdIaaGjjbNO3EGqaglUFknKE2SK5Ke1NoBWzhSoByrA+4UYYDpXqOCt/F/IKZ2D1B
+         J0Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrX3NiWY5Arnq6bddZccI/JvwuaNGzjOmMREnW85fyD7SD227cc7UPGZOfis3SH/Ep1LSPsVDSRXFLfNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygSZiv68zaezxwstt0gpjGHXlZu7wePHiMMQiJ0rt3NUG3Zddc
+	z13RRuYbipHwa6+j0mxpXwI8lIjPzRsqCd4faUQuKuFLmWqAePlTnySoVT0d47fHkEEbCpRgOwz
+	wk/sU+Q==
+X-Google-Smtp-Source: AGHT+IEOGvM3znTeHBFpGt+G8+/5jz10loCWHUqdckQa0FPVp/EK8lWGYjsG7vLyd1Y+UJ5BtLugpTJwv5E=
+X-Received: from pjp15.prod.google.com ([2002:a17:90b:55cf:b0:2ea:5084:5297])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:dfcd:b0:2fa:13d9:39c
+ with SMTP id 98e67ed59e1d1-30e83121243mr27086604a91.14.1747757748369; Tue, 20
+ May 2025 09:15:48 -0700 (PDT)
+Date: Tue, 20 May 2025 09:15:47 -0700
+In-Reply-To: <20250516215422.2550669-3-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250520.uof4li6vac3I@digikod.net>
+Mime-Version: 1.0
+References: <20250516215422.2550669-1-seanjc@google.com> <20250516215422.2550669-3-seanjc@google.com>
+Message-ID: <aCyqs4VdPsw4mA_F@google.com>
+Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vipin Sharma <vipinsh@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, May 20, 2025 at 04:45:19PM +0200, Mickaël Salaün wrote:
-> On Mon, May 19, 2025 at 12:15:30PM -0700, Kees Cook wrote:
-> > On Mon, May 19, 2025 at 08:41:17PM +0200, Mickaël Salaün wrote:
-> > > On Mon, May 19, 2025 at 11:19:53AM -0700, Kees Cook wrote:
-> > > > On Mon, May 19, 2025 at 05:29:30PM +0200, Mickaël Salaün wrote:
-> > > > > On Fri, May 16, 2025 at 07:54:14PM -0700, Randy Dunlap wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 5/16/25 3:24 AM, Stephen Rothwell wrote:
-> > > > > > > Hi all,
-> > > > > > > 
-> > > > > > > Changes since 20250515:
-> > > > > 
-> > > > > Thanks for the report.
-> > > > > 
-> > > > > It is the same warning as reported here:
-> > > > > https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
-> > > > > 
-> > > > > I don't know what the actual issue is though.
-> > > > > 
-> > > > > > 
-> > > > > > on i386:
-> > > > > > 
-> > > > > > In file included from ../arch/x86/include/asm/string.h:3,
-> > > > > >                  from ../include/linux/string.h:65,
-> > > > > >                  from ../include/linux/bitmap.h:13,
-> > > > > >                  from ../include/linux/cpumask.h:12,
-> > > > > >                  from ../include/linux/smp.h:13,
-> > > > > >                  from ../include/linux/lockdep.h:14,
-> > > > > >                  from ../security/landlock/ruleset.c:16:
-> > > > > > ../security/landlock/ruleset.c: In function 'create_rule':
-> > > > > > ../arch/x86/include/asm/string_32.h:150:25: warning: '__builtin_memcpy' accessing 4294967295 bytes at offsets 20 and 0 overlaps 6442450943 bytes at offset -2147483648 [-Wrestrict]
-> > > > > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
-> > > > > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
-> > > > > >   137 |         memcpy(new_rule->layers, layers,
-> > > > > >       |         ^~~~~~
-> > > > > > 
-> > > > > > 
-> > > > > > Full randconfig file is attached.
-> > > > 
-> > > > The trigger appears to be CONFIG_PROFILE_ALL_BRANCHES, and GCC getting
-> > > > tricked into thinking check_mul_overflow() returns true:
-> > > > 
-> > > > In file included from ../arch/x86/include/asm/string.h:3,
-> > > >                  from ../include/linux/string.h:65,
-> > > >                  from ../include/linux/bitmap.h:13,
-> > > >                  from ../include/linux/cpumask.h:12,
-> > > >                  from ../include/linux/smp.h:13,
-> > > >                  from ../include/linux/lockdep.h:14,
-> > > >                  from ../security/landlock/ruleset.c:16:
-> > > > ../security/landlock/ruleset.c: In function 'create_rule':
-> > > > ../arch/x86/include/asm/string_32.h:150:25: warning: '__builtin_memcpy' accessing 4294967295 bytes at offsets 0 and 0 overlaps 6442450943 bytes at offset -2147483648 [-Wrestrict]
-> > > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
-> > > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
-> > > >   137 |         memcpy(new_rule->layers, layers,
-> > > >       |         ^~~~~~
-> > > >   'create_rule': event 1
-> > > > ../include/linux/compiler.h:69:46:
-> > > >    68 |         (cond) ?                                        \
-> > > >       |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > >    69 |                 (__if_trace.miss_hit[1]++,1) :          \
-> > > >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-> > > >       |                                              |
-> > > >       |                                              (1) when the condition is evaluated to true
-> > > >    70 |                 (__if_trace.miss_hit[0]++,0);           \
-> > > >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-> > > > ../include/linux/compiler.h:57:69: note: in expansion of macro '__trace_if_value'
-> > > >    57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-> > > >       |                                                                     ^~~~~~~~~~~~~~~~
-> > > > ../include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
-> > > >    55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-> > > >       |                            ^~~~~~~~~~~~~~
-> > > > ../include/linux/overflow.h:270:9: note: in expansion of macro 'if'
-> > > >   270 |         if (check_mul_overflow(factor1, factor2, &bytes))
-> > > >       |         ^~
-> > > >   'create_rule': event 2
-> > > > ../arch/x86/include/asm/string_32.h:150:25:
-> > > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
-> > > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > >       |                         |
-> > > >       |                         (2) out of array bounds here
-> > > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
-> > > >   137 |         memcpy(new_rule->layers, layers,
-> > > >       |         ^~~~~~
-> > > > make[1]: Leaving directory '/srv/code/gcc-bug'
-> > > 
-> > > That's interesting...
-> > > 
-> > > > 
-> > > > 
-> > > > I'll take a look at ways to make either the overflow macros or memcpy
-> > > > robust against this kind of weirdness...
-> > > 
-> > > Thanks!
-> > 
-> > I'm doing some build testing, but the below patch makes GCC happy.
-> > Alternatively we could make CONFIG_PROFILE_ALL_BRANCHES=y depend on
-> > CONFIG_FORTIFY_SOURCE=y ...
-> > 
-> > 
-> > From 6fbf66fdfd0a7dac809b77faafdd72c60112bb8d Mon Sep 17 00:00:00 2001
-> > From: Kees Cook <kees@kernel.org>
-> > Date: Mon, 19 May 2025 11:52:06 -0700
-> > Subject: [PATCH] string.h: Provide basic sanity checks for fallback memcpy()
-> > MIME-Version: 1.0
-> > Content-Type: text/plain; charset=UTF-8
-> > Content-Transfer-Encoding: 8bit
-> > 
-> > Instead of defining memcpy() in terms of __builtin_memcpy() deep
-> > in arch/x86/include/asm/string_32.h, notice that it is needed up in
-> > the general string.h, as done with other common C String APIs. This
-> > allows us to add basic sanity checking for pathological "size"
-> > arguments to memcpy(). Besides the run-time checking benefit, this
-> > avoids GCC trying to be very smart about value range tracking[1] when
-> > CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
+On Fri, May 16, 2025, Sean Christopherson wrote:
+> +/*
+> + * Assert that "struct kvm_{svm,vmx,tdx}" is an order-0 or order-1 allocation.
+> + * Spilling over to an order-2 allocation isn't fundamentally problematic, but
+> + * isn't expected to happen in the foreseeable future (O(years)).  Assert that
+> + * the size is an order-0 allocation when ignoring the memslot hash tables, to
+> + * help detect and debug unexpected size increases.
+> + */
+> +#define KVM_SANITY_CHECK_VM_STRUCT_SIZE(x)						\
+> +do {											\
+> +	BUILD_BUG_ON(get_order(sizeof(struct x) - SIZE_OF_MEMSLOTS_HASHTABLE) &&	\
+> +		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
+> +	BUILD_BUG_ON(get_order(sizeof(struct x)) < 2 &&					\
+
+Ugh, I jinxed myself.  My severe ineptitude and inability to test persists.  I
+inverted this check, it should be:
+
+		     get_order(sizeof(struct x)) >= 2
+
+> +		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
+> +} while (0)
+> +
+>  #define KVM_NESTED_VMENTER_CONSISTENCY_CHECK(consistency_check)		\
+>  ({									\
+>  	bool failed = (consistency_check);				\
+> -- 
+> 2.49.0.1112.g889b7c5bd8-goog
 > 
-> It works for me but I couldn't reproduce the issue.  I tried with
-> CONFIG_PROFILE_ALL_BRANCHES=y and CONFIG_FORTIFY_SOURCE=n but it always
-> works without a warning.  I'm using GCC 15.  Is it specific to a version
-> of GCC?
-
-It must be more than just those options -- I reproduced it with Randy's
-randconfig under GCC 15.
-
--- 
-Kees Cook
