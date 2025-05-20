@@ -1,135 +1,111 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272925745F;
-	Tue, 20 May 2025 19:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B471B7F4;
+	Tue, 20 May 2025 19:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767609; cv=none; b=Ap3eSr+TMz4IYEbnB0Oq7Qs6xiANSZ06DOejMESccNqBL/f6pd6yjLzWXJKpMhKcZlthBD6Pqb467gJcDXF5XvretIf1tN5B1bn1YC0vJW2GqTm7DEVf3TesLNbv/t8gzo/FKOJeUAVT29d0DDuUqwhETGrpHOvza4qYffTGTXc=
+	t=1747767681; cv=none; b=m+Wwd14TTZgoYjOeEwWVIZI6v+ewtlBM7A84a+AgmW7W7Mh8w4T/oBdqpyYiJFrZnVJnDMMeWFtc5nLEGaVzZXdXYQkgT7awHzUQ8bqJ0Svb10DU6mdxDTs62+2/kUL8obBNPvhZ5HZdCq1V2o30WulxSooaPw9hU5q1JHOua0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767609; c=relaxed/simple;
-	bh=HZcbWAnDrzpvnH9G0Q9jaOv82qQp+Qmcrd0rTVFy8i4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YS6ZxpCXWUhzwdX6DZDD3w+yzhR0CI+1eRO0e0j0S5uyQj3juiPj93o+DeQDncuD1fifTmANAdwb/bis4SdFHlud5ZcrGYnZ9dHOuFLAj6JesgtLlRCErc9k7MMWC+9zjsUWEl1b/7jkKrjQGkgx12jlXcwDv4cuh5OpBVgy0lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzJ7L1ia; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747767681; c=relaxed/simple;
+	bh=UEQmc7EnoeLkbu0X5ucd8/eCgxM//FTbeTHiH6u8VfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=roSO2U8hcZahf/8hzr8OMLKnIXXbSR40irama12WiNz1Q8SGYvWS7zQthOhfeGgHaBQHilxneDpx2fKBAaHcrT9LYxhMh2rMDk3RJ6yV6Ktm/wcYg65zAyJHGWcGddeh6+CYNwX1VODTm6uJ9koh5OKUWDlsGhh0tWNfKjg7dQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=QEHIyRUn; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzJ7L1ia"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7086dcab64bso56051857b3.1;
-        Tue, 20 May 2025 12:00:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="QEHIyRUn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747767607; x=1748372407; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nir6kkeRUNYnE5nlG8GRhALN4HusH3tor7I7uLCCtVE=;
-        b=hzJ7L1iaY41hO+AdkpY1P5TkExG55ZofZhNMAdHxOzI6ATNwkd1ijJH+7K5HukilFm
-         30A8lPyYRDRsslqIVrLnvJAPLPZ4pIC9gLm2f0Jc3VBbnK6IsIVdAGSpmuI0BKiLu5UF
-         QjJu2EMqRryFVkTGN+0T67nV96slxUYiGKWZgOcBhSQgUP07O950hmFOiHI1lhfgYm3l
-         wC2CZSH1c+kHMWCwk+eFahdcRYDwvKDAWsvSGMar4ZZMN061PYF8AaaZrRwY271e8w+o
-         N/qzd9K+TNfrZLdW1DfZCpcFhaOVWEVzEQe+WADbkxxE1iKk55X3MfQ7k+BFK7cD4Uq5
-         AW/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747767607; x=1748372407;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nir6kkeRUNYnE5nlG8GRhALN4HusH3tor7I7uLCCtVE=;
-        b=LUsp7vHnTcsO2b76v+jEkJGdiXObLH/+bEHmj4XQ3G9UA4cS355tLNWVqv5M5+Dl1d
-         sinPmIpo9WsWb4J5PxflJFd9X3P65rRME0ev/jM29HqZRVLxsiwQs7g/85bp4BHvdfne
-         EbH3iK/5TUj4zVF3o1WIqQTmgjSfidd2srVBMelh25KLYIosmqBS+ariin/68EJjF3Wd
-         jgDS1PwntklFFssl+puKoiqNbJL24f13Nx/J1HlkOQuLc83RUEMh+kS3+2M2Rzwz9/iP
-         GjRKng3tLYRUIepLcOQuT1qEJs5J8a49ZpiCs+iVVnWWs+p+MTbvs8U/g67SJLNVyzzw
-         babg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNTVAam2cdMisaN0E+Gb5sexOl/Ela8eRAj+xqRL++Su1B9chvGEkKAEWTW134QMLbAsuRCeFQ7O6D@vger.kernel.org, AJvYcCVTthWLecnc5kuAkMtbIXTw+yzFDTefWG8jvpJyR6g1OQWvEHm6Ftvqmho+Gjh3ysPfSpLF3shB9vRlXee6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVCHC9/LuJpjYzUlsRkQebeFzgQJ4IgXadY9AUrP2gDO+wqtgk
-	5sWcGyneWoWDZ3xYtJ/2S/gsiVAAzUQolJ6w/YYfVfBnlWaJQqv3nbyY
-X-Gm-Gg: ASbGnctUMz2moJ0XBqw+tyZxCHW8oonjN8SC9qYG+Kfz5q2SnrcFb55G+YFxiLyUIez
-	JFs0yGCkReNm/ZiimypDC1hy/Ab4WkzftO9pEH/+n7QT8ZxNde9Us9fmJZAmRsgadhHjC6qV0qY
-	vqXMC6m4KigLkzzrIfK3oituS0a/BUXt1vh4xHHns6bXpvGgHriQ8GAya3lJD/G9tPO8NZY0tsb
-	oAOOhPdxrbxHUij15zvTQb8e/4e0THzQlU1ubEw4a6JCa1k4I8qzC9Kv2WhFjfqyn/Nu9sl0eG5
-	3OYveruGKJizbXBx+EYpFUxWkLtZKVkxCGove788pSNroR5ccJ8=
-X-Google-Smtp-Source: AGHT+IHxf+Oh/vGp6cBjqEcIC0Qws0kB/8+qRetQYgkKEknE0CQAtz1R6fSe3QJttyS8pBn/KKYwBg==
-X-Received: by 2002:a05:690c:9a0a:b0:70d:ecdd:9bd3 with SMTP id 00721157ae682-70decdda059mr27302927b3.27.1747767606598;
-        Tue, 20 May 2025 12:00:06 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:70::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70ca852db7esm23412547b3.101.2025.05.20.12.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 12:00:06 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: gourry@gourry.net,
-	harry.yoo@oracle.com,
-	ying.huang@linux.alibaba.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rakie.kim@sk.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Tue, 20 May 2025 12:00:03 -0700
-Message-ID: <20250520190004.274765-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250520113713.9b28c705b421c8bd3a51ac45@linux-foundation.org>
-References: 
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1747767655; x=1748372455;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=UEQmc7EnoeLkbu0X5ucd8/eCgxM//FTbeTHiH6u8VfM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=QEHIyRUnFAUhZugVNxbw3wCD6N3dbQ0jVvVzElsVBgP2voRKBV20DkrBPUb3xu5b
+	 y6fZGM49agxjmR4AsahG9PeZ4Zhx8VFZSYalsdbmoucvPtFcjK05k+FzLlwV19W4E
+	 pcqqRE64ZNIfPKXog+gjlzy1W+mymAyt7wSk6TnSewph8rV+aLNwvfy1rKK5f/i0I
+	 FP56YkmaVpASkwFoxBgcZzhfNIwgns4zLemoBBMRgeS1l4N2CuHxMcnPOX0aN3ivp
+	 BFAUMH8tyRzoNwulntfqtR8FUr2vRDzn4kiL20nK2bv1Y6ex0IwRwHRFyJQGwM2Vl
+	 VC7w3M4egFVxpA5snQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.174] ([91.64.235.193]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1McpW8-1ur4Cr0LwY-00eXiL; Tue, 20 May 2025 21:00:55 +0200
+Message-ID: <41bc969f-395a-4d35-ad9f-61a99a44d1a5@oldschoolsolutions.biz>
+Date: Tue, 20 May 2025 21:00:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] arm64: dts: qcom: x1p42100: Fix thermal sensor
+ configuration
+To: Konrad Dybcio <konradybcio@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250520-topic-x1p4_tsens-v1-1-bdadd91b7024@oss.qualcomm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <20250520-topic-x1p4_tsens-v1-1-bdadd91b7024@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:djOzc8VKPHmKtJXvutj61VS093nWHIlfze9RmSWcNrMnZ4eE8RO
+ Jrb7dE0XoIIJgCtO2GCtQaKsY1fiDjSpQSaJyMhb4j0H/dgEhmXVpZ4+JVCkFJcUoMr23/L
+ t/QolmKMCb60yHZPZAePOYrlYfsYtg9oPvi4nzxgsOHiWOaVJvwcJD7aC3dHR//kXGkO/o7
+ HYKBDBqw1yXCSU8OYyF/w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aE/KgntSojU=;6NYQ6qupjuc/i/j+Oz0XhOL96m4
+ gLVoK39hNDfxtUFMB2GwuHNiILkifZPbozlxOgF+Mr1GV5l0ktD8+9LsCdWHK6dSxzuhzeiOI
+ AnuOfo5AA/a4YsINFgG76+qmRs7xadsN8IARGrgVisOvshjWknpOrj4uwcSLk9USQJy8cojec
+ 42RmQWjs5LQvPHpuXpub7syreuapKN5LwWipl0fDnuQ1bUsoXzHR/0EAyjSENhTTMdVPdW8U0
+ jbkZJuFyrykoHYryY6iwra60lo5cA9cx9Oi3JcJoZ/fYIT+AhiC0jPFX5Kdr0ovh5jX6dzI6v
+ yzKPT3mXykfT2TipX3Fuh7eCIMSkZQnOdNkbloJakug4WYF+cdGV69ynQhSqVrzrtmLAkUmdA
+ CZnTZlA9iafXjhFiozfcVPHUTSQEuC0Mwqy18Lfbqp5azn/M/zMAPxGNJ7932VTQ1/2fu9Vvp
+ CZMuUPykOiohNWvVI/Pl+T1OHweUfsEXwLfT+KpnCiOV0idIntuEkVBjWiz7m6UQq9YKc4sMV
+ RRhysDYp+SePkxUAeg2jJBndkoPFITF3A2BQ40Alfd0/6k4z21Rg2sUtiHbgGAGPrill0ZbRs
+ 0dUbjkkitokS9Wjn3j+GJ3XJp11vMtQpoH7WZONsw4PbReSLtZ4fE7WJt3GGTBNiPCiWkz9o7
+ VRC1mIHJRYBNr4ZvOzdskvVkaz/saJDyLGrYpFRnNvtEThz3tiZBP5b9lKB1kCwV+NqMXei41
+ a6tJVg7Me5MXgtJtuaIsVG3rqmY7mzu11HDuRILvP4YUhKri59nU5zdaWRyeGDCwQtyrm25TM
+ kvcSonuziOHuRVRW09F4dXqiTNFkTLhBexP/RvIwZjiPfSusnr/ED2sADXAkxHJslxDHEwd5I
+ Go0kLDwN/3OG7wayECg4k/wtRMBh+l6pOTrOrnq+gbJlUBrbK2y6vKcjTOF0/v2YrWU7XsftB
+ k2waRfF9pNMV17/qVhKvXrGefGXWDRtqc9h344QRz/hPxqXHgMIwSlQhzyE6Kt/cISHSs3dVB
+ ydvbOUUFx8JGQtNd4ZZzpYLV7jqWsVpXG5jFtFQyWK7Q5H7JTvRe6gsodcrFXyuEU/nyKg8vt
+ 00lvL2z/WeFYxIggzrJsLX0BxHneRPcjOZWJkn0IB8xidEaEzxHNjs6xal7ufySN/KuxTXVzf
+ 4Mkm+f+pbMSH+zDReAfDKmJpWMkEPfOFhQLix4hSkZbg9dJfjLZ81TATTlu89EG4s+osCquBY
+ HNJddBZR0Ab2fjeS1GCFVlAVoFB+pVAgdW4Zy3NwOJYKye7W4wH3q9o3pZ33tZf18viVbGJPm
+ a2xq54G5Kngts3zOGM/yrsgLPLoCMx7lv1e51Duwjb7m0ZzFKAQzm1/c6UlAye1Pv8UYlsRVe
+ +oOFOygTM6vaI9iefkC9oTLoE3xX3UF13uOkSVljEsWq9d4yJ9Vq7+vRjm
 
-On Tue, 20 May 2025 11:37:13 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi Konrad,
 
-> On Tue, 20 May 2025 11:11:24 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
-> 
-> > > Honggyu's Reviewed-by is the only change I'm seeing between v8 and v9,
-> > > which is unexpected?
-> > > 
-> > 
-> > Hello Andrew,
-> > 
-> > The code cleanups & wordsmithing were part of the fixlets that I submitted,
-> > so if you are diffing against the version of v8 with the fixlets already in,
-> > all you should see as diffs are Honggyu's review and test tag, as well as
-> > Ying's review tag.
-> > 
-> > I was not very familiar with the fixlet process, so I imagined that I needed
-> > so submit a new fixlet to add the 3 tags. If that is not the case (and you
-> > can just change the tags without adding a new fixlet) perhaps we can keep
-> > v8, just with the additional tags so we can keep the patch in the unstable
-> > branch?
-> 
-> Yes, while the patch is in mm-unstable I frequently update changelogs as
-> acks come in, as people provide testing results etc etc.
+On 20.05.25 18:42, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>
+> The 8-core SKUs of the X1 family have a different sensor configuration.
+> Override it to expose what the sensors really measure.
+>
+> Fixes: f08edb529916 ("arm64: dts: qcom: Add X1P42100 SoC and CRD")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Compile-tested only
 
-Ah I see, sorry for the confusion in that case. Then I think all that should
-change is to add Honggyu's review / tested-by tags to the changelog:
+nice, thank you for the patch. Applied, compiled and booted on the=20
+Lenovo Thinkbook 16 G7 QOY. No adverse effects, the thermal zones can be=
+=20
+read via lm-sensors.
 
- Co-developed-by: Gregory Price <gourry@gourry.net>
- Signed-off-by: Gregory Price <gourry@gourry.net>
- Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
- Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
- Suggested-by: Oscar Salvador <osalvador@suse.de>
- Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
- Suggested-by: Harry Yoo <harry.yoo@oracle.com>
- Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
- Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
-+Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
-+Tested-by: Honggyu Kim <honggyu.kim@sk.com>
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Thank you for your help as always, have a great day!
-Joshua
+with best regards
+
+Jens
+
