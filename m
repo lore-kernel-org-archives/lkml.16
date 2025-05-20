@@ -1,114 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C392571C6;
-	Tue, 20 May 2025 10:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC6126A1CC
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747738768; cv=none; b=ohl0WaCXqXq6PRXjCnzxUn9ILMpdwB2/dcwAaog+fCmeLvzhKceJEVC1u1waoGPy3ZFY2IpBenJHkV4WWEuZrhl6pvmL1I7cMW/TyAnwzlZ+YoyuICmQgVPSU/WJ/awsUPgSUhK4LaIfzDBynOoo6rmS5i5ZsaOlTX4D8PSi34o=
+	t=1747738796; cv=none; b=eeVlksVRjI+JdgzDS6eUbd62BUD88rXfLb9rGxB8j72ZyovM/THASH/9tCNLhMZ8sWRzMPqs7MDhcYofU7fOu2+slQLlvQhAt/EWc4W/IJ2pIqfqXyfZGQREqxFvOoIpkSmELbgLsEFJmEAqdWWwB/h+xN9MHS26r9xQPcwN3kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747738768; c=relaxed/simple;
-	bh=l4iEXYcV8csXHHOj1KNHmvhvqNAfPwRVS8lQzLyZEss=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tFvicMll/Ao4GsJYcHAWeUFkL8qx/P8hHbxlUrNae0zQDmf0YRBfU4NiuGU0Y/IFWoQ43Rb1nguhpWDiUC3r4butgLtABupZb/KT14w9hDBomIsFM3lMKoo2dGb/9zhMqm16Vn62iVx4MqzrmUEByWjSItIIZZcOSASn5joEycs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DNj9CCko; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747738796; c=relaxed/simple;
+	bh=X62kn2V/O4Hz1j1YlCNkrxKHotw7w0NdnUAxWEl4lvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UPmO1MZLTEFIEJOstX6Fi1vm1mUHaYDOjRSjg4BC0botT2/8iJFWTsQ4kxn7COoEWnrWhV23V/dUOWo0ApNAM9CdM1ezKMHef1sBsDyF9zU2T6wU2ejt9nUzracJtqkIbPwzILut02Y9XPgDE+VYASbov0RQV6HJfH7RQY8KV54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=omcGBZUI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m0dj33bT; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DNj9CCko"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747738767; x=1779274767;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=l4iEXYcV8csXHHOj1KNHmvhvqNAfPwRVS8lQzLyZEss=;
-  b=DNj9CCkoEToC++GXIxMtiPzCqVhjcaAUgWxoADXswGopvsyNtnb4IMUI
-   419Momycxd93TlzBp8cxsR0upGJjvsV7kNfnAKmS697dfcZdSk3pGVJuj
-   JcH5pu4UiXIehff60klC3Xddv5IRKiZWksOGAsRMDjGCGPCL1N0KEVnss
-   uRSM0ER98EJFSSvOFHrnf72JG+j36sfRAh9ri5Dql4GMEX9pzD8Y6idpM
-   CGBBFjQDIQy5tub3ksH+7K849P9p2CV+nhdZqdVGlXLfR79z3cIJ++bPn
-   BXHiwXc3x0d9gLstu3WdJALvp5VQFu5OdPKGzS2WmPLaq5nlzt8QCL4wg
-   g==;
-X-CSE-ConnectionGUID: ODNJ/k/4Rpq/Rs8oSUfQaA==
-X-CSE-MsgGUID: YOoNKrYTR2SFeOVNsx7Dcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="75067870"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="75067870"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:59:26 -0700
-X-CSE-ConnectionGUID: 75p56i/uQLygPkRJ9zIKag==
-X-CSE-MsgGUID: Bz8y70cdTEOwmBZJo11Zog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140167898"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:59:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 13:59:17 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>, Shuai Xue <xueshuai@linux.alibaba.com>
-cc: rostedt@goodmis.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, 
-    bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, 
-    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com, 
-    naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com, 
-    mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-In-Reply-To: <aCxdFm_BpgOTFFUv@wunner.de>
-Message-ID: <15e8e19d-d471-69da-b928-afc20ee9a584@linux.intel.com>
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com> <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com> <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com> <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
- <aCxdFm_BpgOTFFUv@wunner.de>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="omcGBZUI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m0dj33bT"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id C37B11380472;
+	Tue, 20 May 2025 06:59:52 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Tue, 20 May 2025 06:59:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1747738792; x=
+	1747825192; bh=ygNhWVe5vIXCf/URS8Fkfj75f7gA1QG3R5DG52s29XY=; b=o
+	mcGBZUIinX6eGmERS4p/IEq/KDvkoaCzZ1Y8jZqnUTOYF87k8mloR+pweMMrZV9i
+	5dCTBWdUb0zT0MdvXNLWavrhYWub5Fwy3hyfs7PM4/lZM546JrlUJvfEDx6lMeZY
+	s09zqmvyQiLpSdzTXehQ/1MB70fLl5+vUkkSQStVBF2S5CB7Y5yhofDkPFCR66qg
+	EuS3gHib+cAeDPoye1idciSMsfIrRLE3AQ3yRZqpPFzTCr3OCkVuxMbXWKlEEu45
+	G/VqK4EiyXmyOcarAS5D+lSnZy1Is/0QtdB08pD3nHs9pvvc5E+WsFb182dLpQZZ
+	COR+pOtZtK+TElrbR6cAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747738792; x=1747825192; bh=ygNhWVe5vIXCf/URS8Fkfj75f7gA1QG3R5D
+	G52s29XY=; b=m0dj33bTiiJcK0GVWPpu9TMFa+Q83pNeM9nynxt0N6ltRSo/8XE
+	ilLIYoYrnxUyf/TiusN+thCRNeRfvG17wGV8IYya7FU9OQFoJx3jOLGAmaOJ13Wx
+	guwcTDKfAs6erekJZv1UrngO3W53+DL3fUmsUH7blpS+h9Ag11FTEQY4egZ/iS7W
+	owhLimAEnwLe/EkKo9EWnZk1zKiwBzDYtem+ZLiwLNNghoW+LZ82AOrljuVVYitp
+	jSYKsHlAI6funrcszQX4iTuMuLStXduEabQnZUU16GnnE5Bueh9G+SJRCik4IG9i
+	J0dYqXhfd7xrn/f+sXQhq7s+Ot7crO76Wtw==
+X-ME-Sender: <xms:qGAsaKMIAsdy2XvB3f9M08eQ8FOcCKAO98jLo8V0YQaACIvzHnq-Cg>
+    <xme:qGAsaI872ifpO4czFhn45JLi3MgiiOw11k0VJwj52cvEqpPz3NHRYKEFBZBcF1192
+    f1v6FMTv5yLR4kBgqQ>
+X-ME-Received: <xmr:qGAsaBQuouqLJb6TqG5SBN6QFRYLTS8nkUWVKRfwEF5-pzOu56zBFx6wmNTQDXOxd3BwFw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddttddvnecu
+    hfhrohhmpedfmfhirhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhessh
+    hhuhhtvghmohhvrdhnrghmvgeqnecuggftrfgrthhtvghrnhepffdvveeuteduhffhffev
+    lefhteefveevkeelveejudduvedvuddvleetudevhfeknecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtth
+    hopegrrhgusgdoghhithesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgiekieeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlh
+    gusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepsghrghgv
+    rhhsthesghhmrghilhdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+X-ME-Proxy: <xmx:qGAsaKsCx7ONccZNXm_jDvOYuehuzT3V-DxrPPibKqjf_AnpkN62SQ>
+    <xmx:qGAsaCeJCVR0sYoS7coJhbQd44VwdLsRdZCztNPSWZs_gisL7bFbaA>
+    <xmx:qGAsaO0LIxxB8sNwrp1DWe9Hdbogs_altjJPE0fuVfwe7tP2K4_a-A>
+    <xmx:qGAsaG-TvG7ZOJirsSUQHhloyw9huUiUUszBc8-DtEHFyHJ_6axM-A>
+    <xmx:qGAsaE16A3v_rt6SSAwE170AusvWzNhbP8Xz7KMJBRwtW0ImV68T5gCU>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 May 2025 06:59:49 -0400 (EDT)
+Date: Tue, 20 May 2025 13:59:45 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 1/7] x86/mm: Decouple MAX_PHYSMEM_BITS from LA57 state
+Message-ID: <sjsxy65qkdikr6ppdyce2mu7exbnlvxdjbf3ypfqbpspf566rh@cc4atj6vn2pa>
+References: <20250520104138.2734372-9-ardb+git@google.com>
+ <20250520104138.2734372-10-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-557717680-1747738757=:936"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520104138.2734372-10-ardb+git@google.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, May 20, 2025 at 12:41:40PM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> As the Intel SDM states, MAXPHYADDR is up to 52 bits when running in
+> long mode, and this is independent from the number of levels of paging.
+> I.e., it is permitted for a 4-level hierarchy to use 52-bit output
+> addresses in the descriptors, both for next-level tables and for the
+> mappings themselves.
+> 
+> So set MAX_PHYSMEM_BITS to 52 in all cases for x86_64, and drop the
+> MAX_POSSIBLE_PHYSMEM_BITS definition, which becomes redundant as a
+> result.
 
---8323328-557717680-1747738757=:936
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I think it will backfire.
 
-On Tue, 20 May 2025, Lukas Wunner wrote:
+We only have a 46-bit window in memory layout if 4-level paging is
+enabled. Currently, we truncate PA to whatever fits into 46 bits.
 
-> On Tue, May 20, 2025 at 01:07:28PM +0300, Ilpo J=E4rvinen wrote:
-> > On Tue, 20 May 2025, Shuai Xue wrote:
-> > > , and the format of "Link Speed changed" is a bit different from=20
-> > > "pci_hp_event".
-> >=20
-> > The difference is only because when the Link is down, there's no Link
-> > Speed (obviously). Whenever a new device is hotplugged and it comes up,=
-=20
-> > there's also Link Speed for it which can be included into the trace eve=
-nt.=20
-> >=20
-> > I think the trace event should have some special value for the fields t=
-hat=20
-> > are N/A due to Link being off. While it would be possible to create=20
-> > separate events for speed changes and hotplug, I don't see any pros in=
-=20
-> > that approach over just having the N/A fields marked as such when the L=
-ink=20
-> > is Down.
->=20
-> Link speed changes and device plug/unplug events are orthogonal,
-> I don't think they should be mixed together in the same event.
->=20
-> A link speed event can be signaled simultaneously to a plug event
-> and then user space can decide in which type of event it's
-> interested in.
->=20
-> That also avoids the awkwardness of having N/A values for the
-> link speed on unplug.
+I expect to see weird failures if you try to boot with this patch in
+4-level paging mode on machine with > 64 TiB of memory.
 
-Fair enough.
+If we want to go this path, it might be useful to refuse to boot
+altogether in 4-level paging mode if there's anything in memory map above
+46-bit.
 
---=20
- i.
-
---8323328-557717680-1747738757=:936--
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
