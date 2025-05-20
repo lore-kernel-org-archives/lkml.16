@@ -1,108 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EC821019C;
-	Tue, 20 May 2025 10:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B67821019C;
+	Tue, 20 May 2025 10:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735259; cv=none; b=WgtKA4x9SF7qQ31sMsTDW2OJTcCtCRBtS61rGBvhuTCQl7cKzeeXujzqRiSL1LdUFE1ciIszP4xPbiXOdqhQqNVWNyphljtl4r/5F//BjBst9YMzgmTVeBJfJ5amzhLZdKaSmD9dP436QWr7ORm2CB/Ff5FRwBx6iJVV95+35EY=
+	t=1747735275; cv=none; b=FIXUR9FHbFa+g4DtIKuu4iBa9cHaQ/TT1S70yXVhkGyw3u7Z7ccyH0ZAdI+qoCarKdGn+RQSX1+x1CDUFYVLf9NyUDRtuv0fMbtdTX2Y/+K0ZgaTUw6C8PC0g9e0miN0FX05EMvLtfF5MAjhmidDlkAnHBfOpmGcz10nCRq/MW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735259; c=relaxed/simple;
-	bh=VtvyvJBr+xABbz7Z/Y+DSfzvO6xe8ZmQbFMl50W4Adg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Nffd+I00/Gbyys5e5QgzUQi2U4uirlWzGIGum2Wiv3qodxaS6TCSTf6yrypCp+FlisXfkX4wpJ2nElHYRCktSHDbsfoXnncZJAOdwSrLQ6faNTTeT4Bs7tSsV50/2sgGhzZWlAeC3hHfZU9s6FRiREzEHxaAaJXOKSZPllsuvTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JO+mWJwv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JO+mWJwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 760E2C4CEE9;
-	Tue, 20 May 2025 10:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747735258;
-	bh=VtvyvJBr+xABbz7Z/Y+DSfzvO6xe8ZmQbFMl50W4Adg=;
-	h=From:Date:Subject:To:Cc:From;
-	b=JO+mWJwvZgebav7s6IIkQQVajz5Ge2lf2xdMS8+oBzHJAuNCNko1ml50feRmIYcFI
-	 QwgZBahA6ywZWArWlTWEm6nZB/7CIVFtF4s6HXfpDo+pVW6O1snVx/y2siukRT5dMr
-	 SPSVqb6bMl8w29K6mx9l1p/4EZGm7w/Jv755v0YLniNRfYegH4sdqsDxX2WE1MAANh
-	 o9GCJeXo4uWFQdt+HzU4W2MfMEs7n24gEf2z3J0fIj++BsLnWRRDaP0FHSVt5ilcTS
-	 BRGizJ3OF34h/Qi77xMYbHtYjpm9/VGIFLAvqS59B4NUUKqi5HOrr8RIPG8HieI4lB
-	 bSPh57dhwneWg==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 20 May 2025 12:00:53 +0200
-Subject: [PATCH] Documentation: dma-buf: heaps: Add naming guidelines
+	s=arc-20240116; t=1747735275; c=relaxed/simple;
+	bh=qwWtrkr0pTOBqF1O/BqATUeT0uLxSUCQeZuJS7FTQbE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j9dUIdkDoSS99KWO/G6zuSBFEXFA6hWYVoG+8i6tyATffZnoI37WZUu3jnTnccX2fPS8kwqosq3pXDIwZKmHRyhl32mZ5g128bu29ecHR5qw8+gDV4ni6qMut/G+lDoPsyNQD1dcR5FdXwVwckWECUFVX/+xw1l5aVxSGZ9LExg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c04:7a30:290:8105:3706:5628])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 15b895911;
+	Tue, 20 May 2025 18:01:08 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Yao Zi <ziyao@disroot.org>,
+	Rob Herring <robh@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: [PATCH 1/2] spi: dt-bindings: Add rk3528-spi compatible
+Date: Tue, 20 May 2025 18:01:01 +0800
+Message-Id: <20250520100102.1226725-2-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250520100102.1226725-1-amadeus@jmu.edu.cn>
+References: <20250520100102.1226725-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org>
-X-B4-Tracking: v=1; b=H4sIANRSLGgC/x3MQQqAIBBA0avIrBtQoxZdJVpMOtYsMlGKILx70
- vIt/n+hcBYuMKkXMt9S5IwNplPgdoobo/hmsNoOerAa/UG4XgF3poSRDi7oT4e9saMh0i7wCC1
- OmYM8/3heav0A9+Bmw2gAAAA=
-X-Change-ID: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
-To: Sumit Semwal <sumit.semwal@linaro.org>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
- "T.J. Mercier" <tjmercier@google.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1869; i=mripard@kernel.org;
- h=from:subject:message-id; bh=VtvyvJBr+xABbz7Z/Y+DSfzvO6xe8ZmQbFMl50W4Adg=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBk6QdfNUwoC2mY7pIvHTVs8LUzhR8fqpk8ldpqXXYO+O
- L6P7ovrmMrCIMzJICumyPJEJuz08vbFVQ72K3/AzGFlAhnCwMUpABPRncbYMNGk4Iwsd2V1e+ps
- 3XsTpqmfUFMKzhEQbT7z/vnN71oLWd43tjx9LOK9OMr45ZwALfM9jA2npgk1H3Pw2nPqeQ5TlOY
- Egfsssh+6FB8yV/ZemSf31+Q6o/MSDc63D7dYN0/+7+ixShwA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTR5OVkofGEIaSENCGUtITFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtPQUwaSEtBSUJLQUNKS05BSExLTUFOTUlDWVdZFhoPEh
+	UdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQktLWQY+
+X-HM-Tid: 0a96ed23c87403a2kunm0a9e35a49fab4
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PRQ6Pyo6QjErDBpKPQgwNioQ
+	GjAKCQxVSlVKTE9MTEhOSU1CSUJCVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS09BTBpIS0FJQktBQ0pLTkFITEtNQU5NSUNZV1kIAVlBSkxOSzcG
 
-We've discussed a number of times of how some heap names are bad, but
-not really what makes a good heap name.
+This adds a compatible string for the SPI controller on RK3528.
 
-Let's document what we expect the heap names to look like.
-
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- Documentation/userspace-api/dma-buf-heaps.rst | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
-index 535f49047ce6450796bf4380c989e109355efc05..b24618e360a9a9ba0bd85135d8c1760776f1a37f 100644
---- a/Documentation/userspace-api/dma-buf-heaps.rst
-+++ b/Documentation/userspace-api/dma-buf-heaps.rst
-@@ -21,5 +21,24 @@ following heaps:
-    usually created either through the kernel commandline through the
-    `cma` parameter, a memory region Device-Tree node with the
-    `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
-    `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
-    might be called ``reserved``, ``linux,cma``, or ``default-pool``.
-+
-+Naming Convention
-+=================
-+
-+A good heap name is a name that:
-+
-+- Is stable, and won't change from one version to the other;
-+
-+- Describes the memory region the heap will allocate from, and will
-+  uniquely identify it in a given platform;
-+
-+- Doesn't use implementation details, such as the allocator;
-+
-+- Can describe intended usage.
-+
-+For example, assuming a platform with a reserved memory region located
-+at the RAM address 0x42000000, intended to allocate video framebuffers,
-+and backed by the CMA kernel allocator. Good names would be
-+`memory@42000000` or `video@42000000`, but `cma-video` wouldn't.
-
----
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-change-id: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
-
-Best regards,
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+index 104f5ffdd04e..748faf7f7081 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+@@ -34,6 +34,7 @@ properties:
+               - rockchip,rk3328-spi
+               - rockchip,rk3368-spi
+               - rockchip,rk3399-spi
++              - rockchip,rk3528-spi
+               - rockchip,rk3562-spi
+               - rockchip,rk3568-spi
+               - rockchip,rk3576-spi
 -- 
-Maxime Ripard <mripard@kernel.org>
+2.25.1
 
