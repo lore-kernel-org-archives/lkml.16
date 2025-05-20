@@ -1,74 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4CF21D3E3;
-	Tue, 20 May 2025 07:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3833B21CC48;
+	Tue, 20 May 2025 07:33:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747726428; cv=none; b=H+2afjprLDzXCcUNRJuVleXTY/CqmSs8x1b4CW0gkEMGiws+5l4ig2YtfIIcq6J8nkD0/Njs3OmXOBVthEFK756zKhB1Cg4+SYo34vifHrl2I/xyAg8lPrXhHZyhS9ZdRV4+e86dy6QpcaneHeR2igh2wALEpcfEm1iZwBpp5zg=
+	t=1747726437; cv=none; b=HgGp1QclXMBjO7fD3ZcMiwSbwAI7/Ewp4EW5gAh3gpW3AMaZrQQyxYfHFRL6PKcICscyvfWPDRUJjpu1eJ4eQVJtgfcFUv8/74ZpkTnVa6xfO9+KlHbCCM33LppRXYpCKK95xuNKwHYgqQBMOHp0mcYp9Fe+aLmCNje5VCv1zwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747726428; c=relaxed/simple;
-	bh=gIddd68yKD3hSD8EAb+fAkO130By412LSxY7KY+hbeI=;
+	s=arc-20240116; t=1747726437; c=relaxed/simple;
+	bh=IxJDbHhoIBlRsEC8dNmFDP5+Wyd+qkC2iRVS4ulVwEw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TN6apXoBQCMlvB35j2ubPmXfS0ZB1mzwIobAEsnrZC37KaRG2/bf+wHoDl5ujPujtBzhdv8+aaAUtKVYM5ccN2dTVQDTxapiv6FOPcFeDErQFK39BFSYJJtP5Ln+YWzDx3PUYSaVM8IESoyexluRacottT41kHu8AJblgpwp858=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTBeUELR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f1RN7i3tUUvdaTR3A8XYyBuXZxD5QZxefLZauDAQvmX+YbZCN+GrpIK72zt4m7anMDkblrf18MG7s8b01XFYNeLzZsT4jufWYTCxj1y6LXAN1Y+KB9bXsBK/zdoGh7xFh9zfOPI4UMc5F/7h3/bUSuYgtPxRSiEfm2NpvMx3Khc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3/DTfV+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTBeUELR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185FAC4CEE9;
-	Tue, 20 May 2025 07:33:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3/DTfV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17977C4CEE9;
+	Tue, 20 May 2025 07:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747726428;
-	bh=gIddd68yKD3hSD8EAb+fAkO130By412LSxY7KY+hbeI=;
+	s=k20201202; t=1747726436;
+	bh=IxJDbHhoIBlRsEC8dNmFDP5+Wyd+qkC2iRVS4ulVwEw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HTBeUELRcsbsKwo9mBgFbVfLy92O54E8lhv0Ibe6UXf4lzVv/oNrzhgWRVlcpUzss
-	 Qtn/9DAXXK/MgtF2BOTQQibOShED5+AzKn1m0dQplxG9j1EHAyJEpWASDInlGFrotL
-	 Gj1oSdjQ0tOi7PQ+cPyAUkre7AOdTyXbKIJ00Ma/ctVKimN2i0BKbH4QnzTf/ICAG1
-	 PubYoo/a/te1WRU9DXls9RI1LqEfWg4SkCvvNz6zRODevp8U9h2oD/558gAnlwcwbB
-	 P5qusXeLIdt5Nip550KJQAX0qr/7Bm6SkxEf2FFYxI+zjyIMHx4EurTsYIovDZDhIo
-	 265Y2yTetKfHg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uHHTr-000000000xI-1Mds;
-	Tue, 20 May 2025 09:33:44 +0200
-Date: Tue, 20 May 2025 09:33:43 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Sebastian Reichel <sre@kernel.org>, linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] rtc: drop unused module alias
-Message-ID: <aCwwVw8LyTD-D059@hovoldconsulting.com>
-References: <20250423130318.31244-1-johan+linaro@kernel.org>
+	b=c3/DTfV+WGGKr8thDEznVcCK6Zt+adMAj/Cp+a9oYEBzujm0rNmpnQvHujGxblbzi
+	 cPh3hPmAPQ+Ds/hoPqR3FXN0l6Krw+/cXqSSq0OGKZfAT+PKGA5pHB91ODH4rF2ef+
+	 OcVj5zo4rUd7pOzBJWdv0jpI41xu75b4hsVLuDATYt8piVeUv3/p4RhV/IAZtAogxd
+	 gvxlAINrqfxUu/KVKoTmVFOwjfPpYkoIVxI+CuFf/HEK6l75v+66vi6nt/n89dDcwW
+	 ANzssYus/nb/5ItchaWbUuPm8l7t9JrbwU8qo1yTqYDbXcv/ToHcTGXa1ggFbQ3a7p
+	 uTCz7CLBHQcAg==
+Date: Tue, 20 May 2025 09:33:54 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v4 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+Message-ID: <20250520-hypnotic-pink-lori-dece51@kuoka>
+References: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
+ <20250519-6-10-rocket-v4-1-d6dff6b4c0ae@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250423130318.31244-1-johan+linaro@kernel.org>
+In-Reply-To: <20250519-6-10-rocket-v4-1-d6dff6b4c0ae@tomeuvizoso.net>
 
-Hi Alexandre,
+On Mon, May 19, 2025 at 03:43:33PM GMT, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> v4:
+> - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowski)
+> - Remove unneeded items: (Krzysztof Kozlowski)
+> - Fix use of minItems/maxItems (Krzysztof Kozlowski)
+> - Add reg-names to list of required properties (Krzysztof Kozlowski)
+> - Fix example (Krzysztof Kozlowski)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-On Wed, Apr 23, 2025 at 03:03:11PM +0200, Johan Hovold wrote:
-> When working on the pm8xxx driver I noticed that it had a platform
-> module alias while only supporting OF probe. This series drops it along
-> with unused aliases in the other RTC drivers.
+This order of SoB is still odd. You as person sending it should be the
+last signing person. Are you sure you are using b4 for managing
+trailers? I would expect it to re-order these on every update and this
+is already v4.
 
-> Johan Hovold (7):
->   rtc: at91rm9200: drop unused module alias
->   rtc: cpcap: drop unused module alias
->   rtc: da9063: drop unused module alias
->   rtc: jz4740: drop unused module alias
->   rtc: pm8xxx: drop unused module alias
->   rtc: s3c: drop unused module alias
->   rtc: stm32: drop unused module alias
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 149 +++++++++++++++++++++
 
-With the merge window around corner, could you pick these up for 6.16?
+Filename matching compatible, so rockchip,rk3588-rknn-core.yaml
 
-Johan
+>  1 file changed, 149 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fafd0b01da215c7396262012988e364ef07ea137
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
+> @@ -0,0 +1,149 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Neural Processing Unit IP from Rockchip
+> +
+> +maintainers:
+> +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> +
+> +description:
+> +  Rockchip IP for accelerating inference of neural networks, based on NVIDIA's
+> +  open source NVDLA IP.
+> +
+> +  There is to be a node per each core in the NPU. In Rockchip's design there
+> +  will be one core that is special and needs to be powered on before any of the
+> +  other cores can be used. This special core is called the top core and should
+> +  have the compatible string that corresponds to top cores.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^npu@[a-f0-9]+$'
+> +
+> +  compatible:
+> +    oneOf:
+
+Drop... if you followed my advice you would notice it is not necessary.
+
+> +      - enum:
+> +          - rockchip,rk3588-rknn-core-top
+> +      - enum:
+> +          - rockchip,rk3588-rknn-core
+
+My comments were only partially implemented. This syntax is really not
+readable and not necessary and I asked to make it part of previous enum.
+This is just one enum:
+
+compatible:
+  enum:
+    - foo
+    - bar
+
+Best regards,
+Krzysztof
+
