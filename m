@@ -1,62 +1,62 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AC32571D8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAC825C807
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747721004; cv=none; b=XRs/BPtvKBnCXOFbBF8APuNj9TIdL55Afe/jVBj0NxAGL9jnwpblXopW2ye3ufeQ1KPLbzz+LFWGN6rZgNNkkmZ9mwgtni24cmV5hfrFt8F21HLVnSVo94hQ9VF7NEy6lZgB334wNn3nvbfSCKj704YIVB9oy7oxMktMfH12XDk=
+	t=1747721006; cv=none; b=KXcxLHjhWEenZ3xyrsVyMKEYVZgsLPdjV4tjRdsA0c3ELFPDcLThPM26ZEmEYbE1GstyWdXxwrc3dqF7Ej6CaFfP//g6GlO7EdJtbhjoq7Wr0xL/cj/X5ELQl+tEhJRXWsWkX/j/XTx8D5W2I/btMRtYAgFEecdDo2wjw+vKUCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747721004; c=relaxed/simple;
-	bh=DZbQskVeons0NorsuwZ0YqSabJYXDDW8Ct+WnN0IZD0=;
+	s=arc-20240116; t=1747721006; c=relaxed/simple;
+	bh=s5ZFlWa2MpdvYNmAn19sW48vqvwbzszHzHufPZ8IlvE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VgQ+gKKP8qGG4PfX2MLweduYQsL6VzuKQ0plWswpp2VYSPQy8hfjY7mT+89CnuyufGc9hTDuyu/0cEcFqen9qv015bDpbsbH0KOZ0Cvus+nhfpOJsPgGC8hqEW/4gsFcYqN92wyEIIvK98W42Rs6c6Ki6PVHPbNjzZ5B9Fmrl4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UGKfhYR6; arc=none smtp.client-ip=209.85.208.50
+	 MIME-Version; b=KeXdK2I2SZ6po/jknem0doNoM3AVt/924KDAlo/rCv34ylUp2drv+4g4DOK6sPW/6JHu2kud7gUm+vkQp6cua8GSl+v29EKtv3nEtu2pjwiOMluhQPNrgPuyNSJqmz4gdjmoRdmQ4uPSGnnxHKpMfj86ye3gB4GLVK2Qupf3lAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y9je46LL; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGKfhYR6"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6006cf5000aso711261a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:03:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9je46LL"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-601df382301so332636a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747721001; x=1748325801; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747721003; x=1748325803; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5HrDJUB5JJwJAoxIbZ/HoqYoHpcv1RHV6h9tUt7sC9w=;
-        b=UGKfhYR6+AEsXpULIh4pbzxFj6SSd5aqNbM+JLAxi/aGHSkK2jo1i4n5p7O/3h12ZF
-         LwbOh7BfS2RPD6YQ2EsOrKEumEZbOZAadbAAvMVQ7Qk0KlAp7riGHN3lzwG/mxqwZRdJ
-         mbGiB5xIGpy8D1xNgnyGnh5ENyiQTKQbETKPxaDxhH7JxZSAJD5ZfBReafd9oYSw8kDT
-         fSgo6ib0MCG0g7IKRULeOJpz5LjKvGhyoA1jv4C9hW9ulqkvkM9Vu2NgelIr0dkq522s
-         BTmP9jKuk57w+ADF/krQnmYR12nb+9fLcTIgz3fnDUmmKzdecd56pNBv9uogz17GpP+P
-         ivKA==
+        bh=GunpgoETVGf3K3HF59YPy781/KUyyc4hFczZi9N9xRw=;
+        b=Y9je46LLNnQXdbG7GCBaSwOXxuGl6ZS/bymKriIOQL3TflNf0zT73JntNhOoc8Qgo5
+         3GTGG8MIppdiPWRDTEFdE/Bbe9RINQZFywUu6ZDGSuoyWGNwPoep+nKZQLd6qfr4N8eT
+         TONcy13rfRk9QobZNqZtndAB8vupBiNnsTJoXTBxcuO5oDuKnwQRKFTlZzq67hIPsgN2
+         FxoMSaGswDEwJLV4eWycEzcOMDNYJf354UJ3FEf73LJCbjerD5FvENo+mW/9sj13C0TR
+         k0kPpKY0RGR6Qnti9bh/nu4PrQLrPXnq/vUaOQSzn0YTetNDkuyJ0iwDvIOKTTP3olQW
+         C1Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747721001; x=1748325801;
+        d=1e100.net; s=20230601; t=1747721003; x=1748325803;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5HrDJUB5JJwJAoxIbZ/HoqYoHpcv1RHV6h9tUt7sC9w=;
-        b=WRhy6txyulMln4fU05UdaSeskv7A2d7LdBcyqMI08VP+voPso7COEMJkkwkCiSWZcl
-         a5a2KRtlrQJZtjImAG2q+PyAWPUWcp15IpKCvCIJSTbdlTa2pBzRHez1hVQw+wkbZ+rv
-         qU78bzls+wCk5zRmoDB6ZpeSJQzbQ9nYJU/M9AofOSButcXOszqf8arTSmI9ZbGZbY7T
-         69iJxiDEkrOgalcT+J3bamrs1T4Rv13qaU0+kIDfAQ5evEwl8K38ujDsBt9ani6PPMfG
-         BYqs8dKHTLuI9jnZ4Gjovxf/ZIf9uFRubpgGd7WgqpAws1fOnV5gOvkwRMnJrT1zPiOj
-         CqOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkcQHsPocKXTYacPAgY6/GQ5dLKP0MDXP8h7JU03DAaezW6W1iIPMeaADNa/lI8Ct8Kz05mJHiesZOJYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRug4vBcFVhBO01X9mxl3h2w/TzAsW74F4NmgxFXZKjcV99bM6
-	AJzEHPJL0U9nLnlMMKPFTGAW63djnXpAXHvmLTHGmdm2sBlFsJMTGpQrm/IpNKNtxG4=
-X-Gm-Gg: ASbGncsk5DzEK4k0RKqKlG+SGy9DJEZ71m44wvTp82IS7gSS8qruH+qLbUnkzKo2BY9
-	k3NEXnWlRXsvRCg6G+d3ExamJ1UGBgV2lUXnRkWel2xfUD3IPHHon/WBe7UM9UeGZmYG4Js3NFI
-	3SgtMMqm333RhAUeJLg0nQxEjA0aK1Y0XRE1uWRdY+OmM4YPnKCdY4nK/OmckLsXHE6AlMSHIh1
-	TsTo1Ih+jNp7/QqspnvVAU0EzDZ7/7L+lnKHQX4YetkWiVTuk2+DytxkpoU0OKTB6bnrJ/561ql
-	6V5zIR0JDwVl2wdEGtWSt/SiLCt8ft5YPD+BgTjpP/0Dva7StoOMiZkg9gyiLg==
-X-Google-Smtp-Source: AGHT+IF8OzqBM3xVT4nkPx2ZTvbLkjSAuLNSKizhNcCPOIftNNp2xbVDSEk1ozogfoVDaP654m79JQ==
-X-Received: by 2002:aa7:d1ce:0:b0:600:afe5:8e7 with SMTP id 4fb4d7f45d1cf-600afe509e4mr4344075a12.3.1747721001153;
-        Mon, 19 May 2025 23:03:21 -0700 (PDT)
+        bh=GunpgoETVGf3K3HF59YPy781/KUyyc4hFczZi9N9xRw=;
+        b=lTOoFhUeQbpn4ockk9jCettU8Saur6SPWrZjMZZYoO1CaN0zVuX3FZjsQrTcj2kNWF
+         v2lC9fk6UQff7rmqboo/iz1a7YGhNn87AxFwirk2gCkEuIxx81Q/aQH/zjfDma7RMwcy
+         RSCUioU93lk521E480aOaXsc6KhJJlQEhm2cuEDryyRtJ7/AkxmCAl/oHA4s7BkL9BY1
+         xpZOiYqaOIhCSUL1GLINDXpt88UiDTO3sJnMX4ZUKowCIK4M88YjfAEbHBCUlRTqdm75
+         CXZFnOzoUKYgzaa95wqe6BxGYaMfRiHa8otqklQQtNSNA7mlxl/BGUpx6yDB+Te1X5Kw
+         C2qg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjkEA1e5dhTOHLY/umBo4qaJ/2uTPVDPQ3OosxCsXlGtTtfOFj3SDaHCWUKnwKcEQwU2h4EA25QOOZyXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNYzoV6rlBx/Pgq7ljfi9YbUhcfD7QNRYoxsB/Rji/kVhnKzeZ
+	Ra06P0HdYGU5Dp0EdJ2P6jSuCuosz27h6Wg4zA4Mim/spnqk6Aw8S2HtA1kH+HqXyWE=
+X-Gm-Gg: ASbGnctgruwWYT2Ygeu8mQADeWnC7uxai/XiFex8mbscVLnu4/RZ9JT7sNvP2fofEet
+	Yea7aJwjsGoQhiBB0YA6EmjcLdyxAcyBhmPnlHoSNXHTUdhwvpUetj7FYlLhEJfAhNkuAqXQUi5
+	SUf3QGlurtXavTe5uYKAeaYGL5wfygL2t48QRXbmraT1jIMkBWPYk2nMScKAetiIF+v67i7RTf0
+	LqHtiVN0Pt9Tpze8MeJs3AaaFNtYZbsdAOp4oWk3+5g410cM+6IajDIn54ajC8s06JdVoAZAteX
+	sEjTE2Bua+sPUVXsyosU9O9U0DWri1EQo8q2ldNGgREcKFlXPMFvbP93QrdRyA==
+X-Google-Smtp-Source: AGHT+IHxcxUmDMY6HrZgZSsQpx9fvPtvfK/+uzfpHOMfp00cUxC0UaWFC598+1/y+YpvBHLB6GAKmA==
+X-Received: by 2002:a05:6402:254b:b0:5fe:c344:5ed1 with SMTP id 4fb4d7f45d1cf-6008a3a25aemr5183705a12.1.1747721002546;
+        Mon, 19 May 2025 23:03:22 -0700 (PDT)
 Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac33a88sm6698710a12.51.2025.05.19.23.03.19
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac33a88sm6698710a12.51.2025.05.19.23.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 23:03:20 -0700 (PDT)
+        Mon, 19 May 2025 23:03:21 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Robert Foss <rfoss@kernel.org>,
 	Todor Tomov <todor.too@gmail.com>,
@@ -66,9 +66,9 @@ To: Robert Foss <rfoss@kernel.org>,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/3] media: qcom: camss: csid: Stop spamming logs with version
-Date: Tue, 20 May 2025 08:03:12 +0200
-Message-ID: <20250520060310.7543-5-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 3/3] media: qcom: camss: csiphy: Stop spamming logs with version
+Date: Tue, 20 May 2025 08:03:13 +0200
+Message-ID: <20250520060310.7543-6-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250520060310.7543-4-krzysztof.kozlowski@linaro.org>
 References: <20250520060310.7543-4-krzysztof.kozlowski@linaro.org>
@@ -78,19 +78,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6952; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=DZbQskVeons0NorsuwZ0YqSabJYXDDW8Ct+WnN0IZD0=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoLBsixr5xFy0uT8RCUNmqNwiZvW2jp6Tp4fPio
- ZdSKDuPxHuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCwbIgAKCRDBN2bmhouD
- 12tbD/9pyx+GApx7tNOyvfkkotuNrGZgDuhplsCuDDlotbXRR/rZ5l8Z5xHqxTTH6dduOYhbOdB
- UPGP0At0cVCljEuClnm9ifobWLO1EkIlHTF8iKpJ36WO+lVTEfOzxUs1RIo9RUji+wtkvnKspdy
- YfQryYCmuRiKimQPeGTDwo5IgrA3xHf5q26wIDv3nePv0mZHpSw6sdt9SAueGUPc/+T1bWd86xG
- 48NrT6srCR4LzL1jKLKTIU/oeZ5cYHtAC0vgehPZX85yGhcxRdPHk4fWT+HXr8kBIl3LHYABLnF
- 5Fa5CLhLnrFOpBd+tCdT98gtgaKaK81O0SXBOpMG2vbzzqpMjc7d/lMQ+xDqS6yJu9ApmI8aEw6
- E7mw6raImgDAvtYkRts8xo7wCF+Qw+xFqxntsU8XErcr13tjwM1irLBlppi+3RFnZ0K0NAiP6bF
- LUu7hzbFnMiaoipdEsrJHt76qEUZswKw58a5ojwSNAFcIi2o7JSi9AZu9t4G5+zkfNkm4tWDzjB
- /ojtO29AVlORWT20F9vUFg/aWc/WLYMZQ3oPpYOJbZaJ95apEgAjcJ1LmdIsQZxuBTXEZTashft
- 5HE6ri+8NmlHOUHz7VGFe2sGqd6KA9CLroi0yWDNQ1dJeCb2kjD8wL0sRSYG1VsGfbFjrdcc8OT pEFJYPHcZ7eb7OA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4539; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=s5ZFlWa2MpdvYNmAn19sW48vqvwbzszHzHufPZ8IlvE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoLBsjSlBwNYTLmWtVGQ9R3zgaEbN1PnfIYX9vt
+ xKiK0S8372JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCwbIwAKCRDBN2bmhouD
+ 1wnSD/92zfJ7ofRfnAh3nDOWREUebPj6OL6stRO4TTMWC+ve0bwjvTL2xJclxfPP/vSNOweYBJR
+ Qj4tn/LR1At9cViTF5wlCsYntFeAA0GK3CkTUDjhiR8BEgXX2W69+4kk0zyHvpaczvgfSh0+XJd
+ K6s3c3e++0Lhvxl09Z/uW44CSY6i43yxsr5UKeESV99YBMR431H0ejF1C9PeVtFflUFMI7M1H09
+ TJ3KvM5A58DCLAAyvVNcJDewWD8SNG1kOJYwJFJl/LfZ6O+JtYLPjZJ1qPqUm+a61XBot0YyvU1
+ BpmPRdQqqZytWC8vU2aqzHApJmvgO6L8S9Ei8J84ClZiZiUF9SNW8ksCCRMGJhMrry9dmUXGU1s
+ hVawP8+q6gngjmuvvSXo7kjdozH76XnDS4uiMPvmo0c6roBywe4YhGTZZgxjnEbHY6te93tyuCl
+ dD3tMa/1w8V6mYlkOSjfgXgMhVlwmkkJKRH6Dc9cJGpGBpCnJ0+PRWUC+OStUN7tkE8ocHlsFmZ
+ w9fN10FvAjaVLlLe8cYvJYSZ03u+knWXhZj1mVYw+0/yP5hu3hY5rdRI1DV1HmfJDaubNUtUh0P
+ LLPdYFpdXCgnYdc8eJ02wZb8/mCOWHQwaRIMJAVuxqZ9Dl2pPJra3sMnjaB1jNsmSna9XM5eTHL 1xpRnqEA9GityVQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
@@ -119,150 +119,92 @@ Changes in v2:
 1. Extend commit msg, because apparently coding style and debug guide
    has to be reminded in commit msg, otherwise rules don't apply.
 ---
- .../platform/qcom/camss/camss-csid-4-1.c      |  1 -
- .../platform/qcom/camss/camss-csid-4-7.c      |  1 -
- .../platform/qcom/camss/camss-csid-680.c      |  1 -
- .../platform/qcom/camss/camss-csid-780.c      |  1 -
- .../platform/qcom/camss/camss-csid-gen2.c     |  1 -
- .../media/platform/qcom/camss/camss-csid.c    | 25 -------------------
- .../media/platform/qcom/camss/camss-csid.h    | 14 -----------
- 7 files changed, 44 deletions(-)
+ .../qcom/camss/camss-csiphy-2ph-1-0.c         | 10 ---------
+ .../qcom/camss/camss-csiphy-3ph-1-0.c         | 22 -------------------
+ .../media/platform/qcom/camss/camss-csiphy.c  |  2 --
+ 3 files changed, 34 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-4-1.c b/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-index 6998e1c52895..8771e20d2a44 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-@@ -179,7 +179,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_4_1 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-4-7.c b/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-index 66054d4872e6..80135e63c595 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-@@ -204,7 +204,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_4_7 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-680.c b/drivers/media/platform/qcom/camss/camss-csid-680.c
-index 3ad3a174bcfb..6eb9a5efa96a 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-680.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-680.c
-@@ -413,7 +413,6 @@ static void csid_subdev_init(struct csid_device *csid) {}
- const struct csid_hw_ops csid_ops_680 = {
- 	.configure_testgen_pattern = NULL,
- 	.configure_stream = csid_configure_stream,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-780.c b/drivers/media/platform/qcom/camss/camss-csid-780.c
-index 4c720d177731..8a8999747905 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-780.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-780.c
-@@ -328,7 +328,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_780 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen2.c b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-index 2a1746dcc1c5..9607ebd7fa3c 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-@@ -424,7 +424,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_gen2 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
-index 5284b5857368..2f5058b681dc 100644
---- a/drivers/media/platform/qcom/camss/camss-csid.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid.c
-@@ -596,29 +596,6 @@ static int csid_set_clock_rates(struct csid_device *csid)
- 	return 0;
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
+index 9d67e7fa6366..09d3b21e222f 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
+@@ -40,15 +40,6 @@ static u8 csiphy_get_lane_mask(struct csiphy_lanes_cfg *lane_cfg)
+ 	return lane_mask;
  }
  
--/*
-- * csid_hw_version - CSID hardware version query
-- * @csid: CSID device
-- *
-- * Return HW version or error
-- */
--u32 csid_hw_version(struct csid_device *csid)
+-static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+-				   struct device *dev)
 -{
--	u32 hw_version;
--	u32 hw_gen;
--	u32 hw_rev;
--	u32 hw_step;
+-	u8 hw_version = readl_relaxed(csiphy->base +
+-				      CAMSS_CSI_PHY_HW_VERSION);
 -
--	hw_version = readl_relaxed(csid->base + CSID_HW_VERSION);
--	hw_gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
--	hw_rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
--	hw_step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
--	dev_dbg(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
--		csid->id, hw_gen, hw_rev, hw_step);
--
--	return hw_version;
+-	dev_dbg(dev, "CSIPHY HW Version = 0x%02x\n", hw_version);
 -}
 -
  /*
-  * csid_src_pad_code - Pick an output/src format based on the input/sink format
-  * @csid: CSID device
-@@ -732,8 +709,6 @@ static int csid_set_power(struct v4l2_subdev *sd, int on)
- 			pm_runtime_put_sync(dev);
- 			return ret;
- 		}
--
--		csid->res->hw_ops->hw_version(csid);
- 	} else {
- 		disable_irq(csid->irq);
- 		camss_disable_clocks(csid->nclocks, csid->clock);
-diff --git a/drivers/media/platform/qcom/camss/camss-csid.h b/drivers/media/platform/qcom/camss/camss-csid.h
-index 9dc826d8c8f6..4b003ec1519c 100644
---- a/drivers/media/platform/qcom/camss/camss-csid.h
-+++ b/drivers/media/platform/qcom/camss/camss-csid.h
-@@ -88,12 +88,6 @@ struct csid_hw_ops {
- 	 */
- 	int (*configure_testgen_pattern)(struct csid_device *csid, s32 val);
+  * csiphy_reset - Perform software reset on CSIPHY module
+  * @csiphy: CSIPHY device
+@@ -187,7 +178,6 @@ static int csiphy_init(struct csiphy_device *csiphy)
  
--	/*
--	 * hw_version - Read hardware version register from hardware
--	 * @csid: CSID device
--	 */
--	u32 (*hw_version)(struct csid_device *csid);
--
- 	/*
- 	 * isr - CSID module interrupt service routine
- 	 * @irq: Interrupt line
-@@ -225,14 +219,6 @@ extern const struct csid_hw_ops csid_ops_780;
-  */
- bool csid_is_lite(struct csid_device *csid);
+ const struct csiphy_hw_ops csiphy_ops_2ph_1_0 = {
+ 	.get_lane_mask = csiphy_get_lane_mask,
+-	.hw_version_read = csiphy_hw_version_read,
+ 	.reset = csiphy_reset,
+ 	.lanes_enable = csiphy_lanes_enable,
+ 	.lanes_disable = csiphy_lanes_disable,
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+index f732a76de93e..bc605931278b 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+@@ -541,27 +541,6 @@ csiphy_lane_regs lane_regs_x1e80100[] = {
+ 	{0x0C64, 0x7F, 0x00, CSIPHY_SKEW_CAL},
+ };
  
--/*
-- * csid_hw_version - CSID hardware version query
-- * @csid: CSID device
-- *
-- * Return HW version or error
-- */
--u32 csid_hw_version(struct csid_device *csid);
+-static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+-				   struct device *dev)
+-{
+-	struct csiphy_device_regs *regs = csiphy->regs;
+-	u32 hw_version;
+-
+-	writel(CSIPHY_3PH_CMN_CSI_COMMON_CTRL6_SHOW_REV_ID, csiphy->base +
+-	       CSIPHY_3PH_CMN_CSI_COMMON_CTRLn(regs->offset, 6));
+-
+-	hw_version = readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 12));
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 13)) << 8;
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 14)) << 16;
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 15)) << 24;
+-
+-	dev_dbg(dev, "CSIPHY 3PH HW Version = 0x%08x\n", hw_version);
+-}
 -
  /*
-  * csid_src_pad_code - Pick an output/src format based on the input/sink format
-  * @csid: CSID device
+  * csiphy_reset - Perform software reset on CSIPHY module
+  * @csiphy: CSIPHY device
+@@ -858,7 +837,6 @@ static int csiphy_init(struct csiphy_device *csiphy)
+ 
+ const struct csiphy_hw_ops csiphy_ops_3ph_1_0 = {
+ 	.get_lane_mask = csiphy_get_lane_mask,
+-	.hw_version_read = csiphy_hw_version_read,
+ 	.reset = csiphy_reset,
+ 	.lanes_enable = csiphy_lanes_enable,
+ 	.lanes_disable = csiphy_lanes_disable,
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
+index c622efcc92ff..111c3a52a6d1 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
+@@ -243,8 +243,6 @@ static int csiphy_set_power(struct v4l2_subdev *sd, int on)
+ 		enable_irq(csiphy->irq);
+ 
+ 		csiphy->res->hw_ops->reset(csiphy);
+-
+-		csiphy->res->hw_ops->hw_version_read(csiphy, dev);
+ 	} else {
+ 		disable_irq(csiphy->irq);
+ 
 -- 
 2.45.2
 
