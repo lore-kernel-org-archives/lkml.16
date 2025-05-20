@@ -1,187 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3C1158545;
-	Tue, 20 May 2025 15:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C6F247290
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755419; cv=none; b=ZOgmMmjQor6upitfEhn6y5v/N6aShaHzffHoOMgX9EVGcS3rmEg8Mw5WYaoNxjMGLxOWIlRkFdQf86k33vv2LfV2kvUzEstDmsEDMdW/cBmvV2oKObnDCQyvfTvMKm6QC3ziW3y+e2Zc5ej4ZAYO92ddoI/fpsYWYwdGCmxaMR0=
+	t=1747755436; cv=none; b=CpAeNzWzbBeOWZ3Ns1QjGLFEIb7atWkmMt5vLnMOiJk2sCFn31pDiQ+41CYZvxfQtfXrun1cGu8ABfjVivxQOfopYaVHu/WVFrrQ7IUZa3a1U9NbWbElA9kJvWrDgd0jke28pbc2MnA7cyOy0YtZTbfHAH1b5lZVKTKNDm0rqio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755419; c=relaxed/simple;
-	bh=sfLD6pz/hgOykoSuAIvLsAQl1i68ILiyfvdiHoUOzY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WoWh8jow0Rs1PzMWDt1YF7IwsNILK/2EketlvpzP96bZ7OIsPhqmghoBffS/EzpTdfxyaTZYyxdiBQD38TZpEHSRwyoyftIhV9muGog2zKCljNs3IGXrvCmR/tH2gSKfeGhFEI4nPKHulv1XjufQfLNWr7y8GZDrHLpu3JANOfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHAMTePx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747755436; c=relaxed/simple;
+	bh=ELBPuQq50T/PZTUbYhxSitilB0Te7fVHk6fN2KTVz+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ff+ysdDw3/ASuoSiWVfEntsmfNF50DtY2d63faDYPT3zlvVaj7iDmgDuGoJAKfbIxTNFW4Yk0pvAYsNyflJYzXsJkMf1xJY7oJ43kdMrIEoHBG9xiW2bpqUWGNLE+6acFMLPBAB6d2KKLrMBGCe6TG4B+oO3P3Y2fXXDL678d7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cEhVCghx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHAMTePx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96CC0C4CEE9;
-	Tue, 20 May 2025 15:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747755418;
-	bh=sfLD6pz/hgOykoSuAIvLsAQl1i68ILiyfvdiHoUOzY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WHAMTePx+VNs9+XHL7M+pKyOf7aHJYN/Kt52QHUVcEhUyofo1k4h8eVx6Egn2MA2P
-	 5iv9QWjj7oFEEmkf1VZPnwO3GdbYnSbQJtMHCv4voN7sokTl2klVbZ9xE4ODOauTKn
-	 i3oAfp1Rmub/EvJzv8aCO2lRG+jcezoyAFMBSVYouQNnKr2RDBjuBGAdJZNWfby6Dg
-	 jb2Xa1OzIE3jgZ3vYoA7lK+LC/La0Cjm+5G+ZkkNCi+Idpn6YSn9Y8ELKnWoxF6RoU
-	 tQ5BTnhfFbRKLRrIh5jNoB/x+sHv52d/LJrXE+L1MQys6ellI7rYN9AC/Bt/6Trpgk
-	 6fvWCdFGSGDxw==
-Date: Tue, 20 May 2025 17:36:50 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Shirish Baskaran <sbaskaran@nvidia.com>
-Subject: Re: [PATCH v3 16/19] nova-core: Add support for VBIOS ucode
- extraction for boot
-Message-ID: <aCyhkiBTXV86P_GF@cassiopeiae>
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com>
- <aCN_PIYEEzs73AqT@pollux>
- <4fee85be-a8c5-4a99-8397-c93e79d72d15@nvidia.com>
- <aCxLyxcERNHKzfvI@cassiopeiae>
- <3cfb7a8c-467e-44d0-9874-361f719748b8@nvidia.com>
- <aCyZPUaPSks_DhTn@cassiopeiae>
- <bdb290d4-b369-4b8e-b78d-8c8d3cc07057@nvidia.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cEhVCghx"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7uN8W011101
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:37:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZhEAo2ohpYy+s9p58ERnvB+5oPpd7tVavgY4j/ZM8Ck=; b=cEhVCghx7L+QW5Dr
+	I9grPLQylJ9mG9uNLscznPh9dAnY6EeJLSuLtnzVCuSWQCbvSnvyGbJJGWSSP1td
+	dHCWQRe1R2F5Y42lY/CHooNo1LF6sZqjL9IHMroEZu7gSNUSZOAmvEM5vQ5+VUUG
+	eJoj738U1E/3Uq2HLi+sLqif6pBGC3pYl7gAfQICQihMsn7k7RJgAW6LC62ClAMi
+	wrSPE7HRN8XW3L32KNfG31pzuY2LoFTbbtu/DWZxqkfyjqtEeTXfVDNHhWOr0IVI
+	/yARk/gZMWf6hBuE2QP4e/cJAX26xGHxnDImu+SkXp/7cdAQGnC/XSlL/n8fBIYi
+	Y793nQ==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rbt22p5q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:37:14 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f0c76e490cso14770246d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:37:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747755433; x=1748360233;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZhEAo2ohpYy+s9p58ERnvB+5oPpd7tVavgY4j/ZM8Ck=;
+        b=k4zF1LbwhbcEzkGfjZmdMnvO8PpMkdB1OYikVxp7K4kTKJvqM/s565YhR2ThzCo2K2
+         UiKfXhAgqn8VDIgkM7Yj7gyUqENAVDJOClYMC5E+fVXYl10UvSqwuTMFhrWY7dPECBD3
+         J88r4MMLOWVye6/+NNfSo2kys6dh+vtEpWqdmNOFwXB5qxFh4BBowF4QFTgVNkCg5jdp
+         Il+9/yNULXsCe9rYef8IoqjarbMdPrYFAuzuqo5xYYqlTOKdwRgVzRbnPMoFO5X+FXwj
+         M/B7PHpIiDQTDe6uMZD192Q+aJpJdt8HjuopLxpIEV+HQ+X/UBJp3iWdBZRB94T3f9Hj
+         bMNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDNTSvEg71JZnpBcOxYhEqgGgECRkaziKYdXn0WouFkDTXTkP9VO5UJUbNeum7i4mP2jWHt/UYk3r4giA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGVSieXATqMqSl6PwXdczSrzk+G0vgE79X2KtQBU7OFkkNQTsr
+	NYJtSeqDJuhQI9zYWDx5yRtwp7v82BaaAYjFWwgIfsTp9YFcOqXTU2268Y9Frx03wnmSc5AwDaN
+	AkRgqoP3GNOYL5/qQLZeIti/N7fgKpUZwbzIxtfbr9N6nhOf+cYhxGI+UQDDdMsnqhbc=
+X-Gm-Gg: ASbGncus3TRGmu1qSzCZBlg2qe3WVZ/Q5cDLLMEScXsd8ayqITxoSlou8i6CTkBx4zt
+	dXMHCjAVzcX2Sg2crqblCsDCmqIxtEySL9hZuezv5vrmUdwHYwwvfalZ9dGRCCwKJNjlQHeCmwi
+	qyXzGz2EgYuI+Q3lsanBUvWyQUhl/o116q/3jP9DEFif0AciE+JMa0yCFRCjOl/O1O+ItEDybzp
+	w+cXfOIyzeJLM6zkvnoy+2p//Yc3eR2S9eZbq8A8Z4sOzM1iBSmnmALnaN/fGFfS4SH3clZZD21
+	ilpR83rqzZ0kIbyLDpV0CPqdW90r6qnV2eBCDA+zDtHel2rOZ6jFJatx6A0wPlrXZQ==
+X-Received: by 2002:ac8:5359:0:b0:494:b641:486d with SMTP id d75a77b69052e-494b6414bc9mr69651311cf.12.1747755432668;
+        Tue, 20 May 2025 08:37:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IET1f9uwcNCHTx/i/nFsTl8x+YLo02Ldn6Gbz+flNBJJyuFT6UR2fkNYRpveilNC0PD34sd+A==
+X-Received: by 2002:ac8:5359:0:b0:494:b641:486d with SMTP id d75a77b69052e-494b6414bc9mr69651171cf.12.1747755432336;
+        Tue, 20 May 2025 08:37:12 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d501f7asm7319908a12.19.2025.05.20.08.37.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 08:37:11 -0700 (PDT)
+Message-ID: <1cecd74a-2711-4c29-ba39-b4cd1d4d70bb@oss.qualcomm.com>
+Date: Tue, 20 May 2025 17:37:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdb290d4-b369-4b8e-b78d-8c8d3cc07057@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] arm64: dts: qcom: qcs6490-audioreach: Add gpr node
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250520062618.2765109-1-quic_pkumpatl@quicinc.com>
+ <20250520062618.2765109-2-quic_pkumpatl@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250520062618.2765109-2-quic_pkumpatl@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyNyBTYWx0ZWRfX9iFwNdl/Wkha
+ vcs0kCBeAeiMQLOfXg6Qwd4fOLbXw6UeScPuCTsES+QOHijWbkPdUdhymKVwKMD0PD/Wn/dPL4N
+ HDZVF566IOTBLA2swBzbyswcKXgDa4NhSjqTkM2+rnMYTZjz93D6MdrSJAIifV4jBA7UrT6xVt8
+ jpqMn8jO5hEFLs0zMDG8Pt6owqcONXYTjfPtLiDP1hPpRIfRQVUt47xuTH9zkBWRlzhQvuLN6Dh
+ R1E5fyhnJdGdhZ4RJYGUMi+4RAMBwDMfGPCpCm+5/VDFyzEYHEEHrim8Dbd6c0p9Urp8iZZIr6C
+ A6UFNArBCIsdeRgJHhcXuEhkNRw/Lz4IPX1uia2JNVp70u2Q1V1ZIrvLhmHW4fFNC+oTZfCQ+Zn
+ 7F6jnkEKWnicdSZQeJBZ8pxCN0Mhaccg0lM072GVJNssU+FjEylnAvE0CyxFjoSEWvCcGMJH
+X-Proofpoint-GUID: 7m05fmMOgr7O5lKEAzjPMrt07RlSBNtL
+X-Proofpoint-ORIG-GUID: 7m05fmMOgr7O5lKEAzjPMrt07RlSBNtL
+X-Authority-Analysis: v=2.4 cv=dISmmPZb c=1 sm=1 tr=0 ts=682ca1aa cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=ftiIbRw9aD-W0CiJHUEA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 bulkscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=801
+ lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200127
 
-On Tue, May 20, 2025 at 11:11:12AM -0400, Joel Fernandes wrote:
-> On 5/20/2025 11:01 AM, Danilo Krummrich wrote:
+On 5/20/25 8:26 AM, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 > 
-> I made this change and it LGTM. Thanks! I did not do the '.0' though since I
-> want to keep the readability, lets see in the next revision if that looks good.
-
-I think readability, is just as good with `.0`, but I'm fine with either.
-
-> >>> In general, I feel like a lot of those Option come from a programming pattern
-> >>> that is very common in C, i.e. allocate a structure (stack or heap) and then
-> >>> initialize its fields.
-> >>>
-> >>> In Rust you should aim to initialize all the fields of a structure when you
-> >>> create the instance. Option as a return type of a function is common, but it's
-> >>> always a bit suspicious when there is an Option field in a struct.
-> >>
-> >> I looked into it, I could not git rid of those ones because we need to
-> >> initialize in the "impl TryFrom<BiosImageBase> for BiosImage {"
-> >>
-> >>             0xE0 => Ok(BiosImage::FwSec(FwSecBiosImage {
-> >>                 base,
-> >>                 falcon_data_offset: None,
-> >>                 pmu_lookup_table: None,
-> >>                 falcon_ucode_offset: None,
-> >>             })),
-> >>
-> >> And these fields will not be determined until much later, because as is the case
-> >> with the earlier example, these fields cannot be determined until all the images
-> >> are parsed.
-> > 
-> > You should not use TryFrom, but instead use a normal constructor, such as
-> > 
-> > 	BiosImage::new(base_bios_image)
-> > 
-> > and do the parsing within this constructor.
-> > 
-> > If you want a helper type with Options while parsing that's totally fine, but
-> > the final result can clearly be without Options. For instance:
-> > 
-> > 	struct Data {
-> > 	   image: KVec<u8>,
-> > 	}
-> > 
-> > 	impl Data {
-> > 	   fn new() -> Result<Self> {
-> > 	      let parser = DataParser::new();
-> > 
-> > 	      Self { image: parser.parse()? }
-> > 	   }
-> > 
-> > 	   fn load_image(&self) {
-> > 	      ...
-> > 	   }
-> > 	}
-> > 
-> > 	struct DataParser {
-> > 	   // Only some images have a checksum.
-> > 	   checksum: Option<u64>,
-> > 	   // Some images have an extra offset.
-> > 	   offset: Option<u64>,
-> > 	   // Some images need to be patched.
-> > 	   patch: Option<KVec<u8>>,
-> > 	   image: KVec<u8>,
-> > 	}
-> > 
-> > 	impl DataParser {
-> > 	   fn new() -> Self {
-> > 	      Self {
-> > 	         checksum: None,
-> > 	         offset: None,
-> > 	         patch: None,
-> > 	         bytes: KVec::new(),
-> > 	      }
-> > 	   }
-> > 
-> > 	   fn parse(self) -> Result<KVec<u8>> {
-> > 	      // Fetch all the required data.
-> > 	      self.fetch_checksum()?;
-> > 	      self.fetch_offset()?;
-> > 	      self.fetch_patch()?;
-> > 	      self.fetch_byes()?;
-> > 
-> > 	      // Doesn't do anything if `checksum == None`.
-> > 	      self.validate_checksum()?;
-> > 
-> > 	      // Doesn't do anything if `offset == None`.
-> > 	      self.apply_offset()?;
-> > 
-> > 	      // Doesn't do anything if `patch == None`.
-> > 	      self.apply_patch()?;
-> > 
-> > 	      // Return the final image.
-> > 	      self.image
-> > 	   }
-> > 	}
-> > 
-> > I think the pattern here is the same, but in this example you keep working with
-> > the DataParser, instead of a new instance of Data.
+> Add GPR(Generic Pack router) node along with
+> APM(Audio Process Manager) and PRM(Proxy resource
+> Manager) audio services.
 > 
-> I think this would be a fundamental rewrite of the patch. I am Ok with looking
-> into it as a future item, but right now I am not sure if it justifies not using
-> Option for these few. There's a lot of immediate work we have to do for boot,
-> lets please not block the patch on just this if that's Ok with you. If you want,
-> I could add a TODO here.
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> ---
 
-Honestly, I don't think it'd be too bad to fix this up. It's "just" a bit of
-juggling fields and moving code around. The actual code should not change much.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Having Option<T> where the corresponding value T isn't actually optional is
-extremely confusing and makes it hard for everyone, but especially new
-contributors, to understand the code and can easily trick people into taking
-wrong assumptions.
-
-Making the code reasonably accessible for (new) contributors is one of the
-objectives of nova and one of the learnings from nouveau.
-
-Hence, let's get this right from the get-go please.
+Konrad
