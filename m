@@ -1,109 +1,85 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6425B1C5
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7A35893
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760175; cv=none; b=ntJI3pFpEYr1HuImXItCKwdDjiVVviLOceEDAqNWBD1XFoMIbW0WVRGWrVCd62tgGO8Bqc1KbG0N8UaFFcZiTOEfk9bEW+dSROyLGAn+kweCQG3OOLQh/dwX44DJsZln+//KUGIpdHPgpJi9cTKVmrv56ZJNOp2waoTKbgPbB1M=
+	t=1747760251; cv=none; b=Dy3IRnu4uPhTJs/xIIkrv7TTQuSM5n5O4cbIq4tOgaXFISa6VZWnouN7lCoKY/8tsCCzQIYRV9tRADXS79yAcXTtKKz9zcM3s0udGXmzaBKDrit7V3+xSigMb17XXaalP/ILnh/wmdyQ5ON+8rghUR7tq81CZ2ExEwwTW2sHQyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760175; c=relaxed/simple;
-	bh=wb9jveR8gfrm/HLOmEI3ZVUiaVgfP80NHuLXY6U2rvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=t1Vwouo74j7UWyozrs3JxNpqU8hChEPV6PpYzbtXTwfFjXsOCI38osfngI0bZp7E2X7Xe+ZcC3AFZSQP6xExJSO4zafiIi0Q+HuFl7EB+kbwKyzbnbAWaVLASwSIBYUOhpHU5w4ls/wdjlq859TudFmrgC/JQzHNnbRpSvt2qi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=UQ8MXIB4; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747760251; c=relaxed/simple;
+	bh=aNxL1aTVHEMzz5FK9fboIZ2vhWlwMFBKj8NyPo07GHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PWIoVEgWsX6DGu9Vvy1FufavwwwTQDvRZBXm1u+26TnyR09zuTKk566H8gIW56XErkYK3hKTGo7TPT1q350X3Wc7afUjTn9lJsxYqAqTu5/lsbwyWb9TD3WLn8R7NyagbPNavn6wSMRln4tN6mblsl4Itvh4mgZTb//Ej6C9v9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROvd9qDI; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="UQ8MXIB4"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3da73998419so16713865ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747760170; x=1748364970; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9+I4gTPT9Nr19IG2h0bYwR+TaspSdeGh5uzYNeV/gxE=;
-        b=UQ8MXIB4zpYUk3VPcQfuuIS+NoTEux8yivljyuzPVnqf6JFkd3ckEmgKgF4KWQWNH7
-         icZffsJpuMtgrCPymTT+TuTUNPdYUh6WPUe6WQQUMYyv4dOvtm5pYrVMXWA/FNRtkyNq
-         7nVS128jCoIchq+3auu5wAFRY1E8fxyWrnsp5xwvQiC9hhAJWyniF4r8z/CErreE84XA
-         ifrI3NNfqpHWL1Bufd+uEaTfZ0cA4bHWbb40dOphGOm1FscwxUECRYLNm49B903nEjQf
-         kLQks2zMsgp8fRdTHw8usAZQ5zvBzVfXhpsm1/N6JvbppVJX/MYrfSaekue4lYUKCKT2
-         JvtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747760170; x=1748364970;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+I4gTPT9Nr19IG2h0bYwR+TaspSdeGh5uzYNeV/gxE=;
-        b=QlYt9qCQJ/01Fx80EdJVrNoNwMH4J5OsVY3ClROrtaAkhZB+KlCw0apZiNVUiJwKKo
-         uuKzdS66OcfZGDcF62VwoBbP6NytVayDPpPh3yn8ivpjYpKkFEnQGGmiCtXMf8FT7Lvc
-         F70R8a1Lo343/FYW4zstRrxrR6wLTbVGCUca4m8cEOJn9bdAXXj2pYM3DMWLiN7LYIQ0
-         DepZJr9fNQtUxiWmJO1SLu5ouUHYvMugh30DxjIVSQthoMAD+xdit1Q/l7rtqsBeCB9b
-         kt6cTElhSwiupCsE19Scw9okn/do/BBQnick9XdX/2nf7fcfKDT7qgam7DQuG+M73Tup
-         9Hpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhrqz4Olc6IUOubPbqbcEuaax+cmjq9wbFzIo39L77v/Cuj20YMty/kDf85RAymxhqwPV0b+/m/7I2Dy0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1DwUCDuoIn/NxTKpnle0DP2yFIZGQ/pmTQrPBtRVW3XPYl2hn
-	rnXql/RupEQS/bG2ard4aNs4Fgp7Famds5ui0elnrTq65CCiTroWXXmf3wOxbVJC5fQ=
-X-Gm-Gg: ASbGncsYcwClbLwehOxpq0PACvPIrzsslb6HL0EhA1NlLV4SkY7jl7BTKKzQcU4PQIa
-	QxoP7oe6bS2AX3NA4c+TpxNQpyCH/tVFzHtg8uPJ0yuRmn6aydBzncr8Zp8HRDU/BeZmBfNzY/i
-	MSQNoXD15r/D79U/SgVoX436+pEg6+7Q6hrcYEazAv4LD0V+iQvrcefZo7KcQTzEqx5lEiR07WJ
-	o1g3NADcT1vfL72L7ny2GRaNUK6+CkTsYH71Gts0BUJOxCcE5uiYtZir3iVolPSlY7Bs65tYFyG
-	7g9aZq6bzl7tHM+gjnSojGFzzPH7OXVbCwS2gbQIoImRcOE=
-X-Google-Smtp-Source: AGHT+IFGEk6WV38wfO2fNFtvLWC8v+J/V3qGJaKnt61cz/eASxvGslO2+1tn3+3paF9Jj9ay2Bch9Q==
-X-Received: by 2002:a05:6e02:1909:b0:3dc:76ad:7990 with SMTP id e9e14a558f8ab-3dc76ad7baamr61593435ab.15.1747760170063;
-        Tue, 20 May 2025 09:56:10 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3b1c90sm2302153173.56.2025.05.20.09.56.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 09:56:09 -0700 (PDT)
-Message-ID: <7708ccbe-f967-4910-8a73-bb66bbca214e@kernel.dk>
-Date: Tue, 20 May 2025 10:56:08 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROvd9qDI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747760249; x=1779296249;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aNxL1aTVHEMzz5FK9fboIZ2vhWlwMFBKj8NyPo07GHQ=;
+  b=ROvd9qDIxVy4ryIFK+AkoowYGJjHttbh0n1+kmhdJ+umgyyRe1y1MxKP
+   QaldHVQX4O9StyO17FGrMcHiLGKTUWGsrABkCTkjpWs86kcaYud5h0ttJ
+   eul92ISb3KTP3Wlm1FrXeGxdh53DdE1UXE4YHaJw5SVuIS3LfwbWC+NOf
+   x1jfk/jrP6Ye7H5iITJvLlkY3bY6/Fa5cl0A3hg4P9vF+pGoGGM2B5aVN
+   r14ST70IXKlOGH05hai5ZePSd5jBRUIZHzWlMKJRiBLEfIhnCCWAtEFmB
+   I9e+Hn7SY2ztzn4iYyedRaMbxc7jYA7EbEBeAD6PxZndxEgQUyEbq0aZo
+   Q==;
+X-CSE-ConnectionGUID: XKY1g9TvS2SBegf2lLL0mw==
+X-CSE-MsgGUID: QNco3JPbTgKsbVo9rITwzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="48824446"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="48824446"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:57:29 -0700
+X-CSE-ConnectionGUID: HLWAKE3MR7+rj/dAWF4xgg==
+X-CSE-MsgGUID: IDACnwiPSE2EFwVcXAPxzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="140281869"
+Received: from bruceprx-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.21])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:57:28 -0700
+Date: Tue, 20 May 2025 09:57:24 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: David Kaplan <david.kaplan@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/bugs: Restructure ITS mitigation
+Message-ID: <20250520165716.5rfmxe7gqizy55zh@desk>
+References: <20250515134756.93274-1-david.kaplan@amd.com>
+ <20250516193212.128782-1-david.kaplan@amd.com>
+ <20250520163221.ndezdfrhoav43sxi@desk>
+ <20250520164826.GMaCyyWodIiRMuBtw3@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rbd: replace strcpy() with strscpy()
-To: Alex Elder <elder@ieee.org>, Siddarth Gundu <siddarthsgml@gmail.com>,
- idryomov@gmail.com, dongsheng.yang@easystack.cn, ceph-devel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250519063840.6743-1-siddarthsgml@gmail.com>
- <f92ddea4-edf1-42f9-a738-51233ce3d45e@ieee.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <f92ddea4-edf1-42f9-a738-51233ce3d45e@ieee.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520164826.GMaCyyWodIiRMuBtw3@fat_crate.local>
 
-On 5/20/25 10:44 AM, Alex Elder wrote:
-> On 5/19/25 1:38 AM, Siddarth Gundu wrote:
->> strcpy() is deprecated; use strscpy() instead.
->>
->> Both the destination and source buffer are of fixed length
->> so strscpy with 2-arguments is used.
->>
->> Introduce a typedef for cookie array to improve code clarity.
->>
->> Link: https://github.com/KSPP/linux/issues/88
->> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
->> ---
->> changes since v1
->> - added a typedef for cookie arrays
->>
->> About the typedef: I was a bit hesitant to add it since the kernel
->> style guide is against adding new typedef but I wanted to follow
->> the review feedback for this.
+On Tue, May 20, 2025 at 06:48:26PM +0200, Borislav Petkov wrote:
+> On Tue, May 20, 2025 at 09:32:21AM -0700, Pawan Gupta wrote:
+> > Index 1 (which is now ITS_MITIGATION_AUTO) is missing. I understand AUTO is
+> > a temporary state, and it may not be necessary to define a string for it.
+> > But, assigning an empty string, or an error message would make this obvious
+> > for a future reader.
 > 
-> I personally think the typedef here is the appropriate.  But
-> it's really up to Ilya whether he likes this approach.  Get
-> his input before you do more.
+> Yeah, this AUTO gets overwritten and the other AUTOs don't have strings too.
+> 
+> We can fix that after the MW if you think it is important but from what
+> I looked, all the AUTO settings get overwritten as AUTO means, user didn't
+> make any decision here so it is left to the kernel to make it.
 
-In any case, this should be 2 patches at that point, not collapsed
-into one patch.
-
--- 
-Jens Axboe
-
+As long as AUTO setting is overwritten it is fine.
