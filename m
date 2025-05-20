@@ -1,55 +1,55 @@
 Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C2E27CCE3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7CD27F171
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737732; cv=none; b=NNiaUxZPjT61nTRhfl+QVJ0+7waco+pN/sP7VS24T/psRAMJhNaz0KsCeb4StMsLD4HcvrABVn9DxFeWi2DY/C9iviSMr55vceuKfIGrfl90dcWdx/6KNludlDggGSZN7PcsqVChHF0klCqx8sd021XN52BFRuJSxnKvuNYSWrE=
+	t=1747737733; cv=none; b=rrC92EsC6wBZqsmFmoivYRVaDG/DDKNuyijTW3ccsa5i9sNBPwsmQ7PWitkaBZCTg8ziWy6e/nqxNAuKGCoWl6apSRCxbvwWBnBM5cU4zMP92T4EH0urtMUJyTzrKQfF3D6uEmEdS4iDvu5J4KQcvU6MbQlCsxek2WJgvGwJqhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737732; c=relaxed/simple;
-	bh=smcEn5xuoSoyzet+/jPXo0e2FShvYyfWm91gjV2aYQ8=;
+	s=arc-20240116; t=1747737733; c=relaxed/simple;
+	bh=lIqPmrEeIkfT9o5Hp9bUhpJ6ilLaftkaOD4ciQyICAM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mEfs5/YNppvrFg0vDYWd/ZATDHMvHNO8XOYtLsiewpesC/eprqtSqMC4vdXSzCsviwhikwiFF6KwxFNFYJ6Ssni/BGNSvgDVOfSXWolcQaq7HB9UWk7W3ZQlVyy+28IqRp8DdCVmJWZb/HI6END13J7jnhUWP1NDen6FNdgzC2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1lKOooIa; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=ZW/zF/tJDFhuvkkGEEYjXGGtHO39K9451csMW658o43N0yUrMUQbXysF3BHFo5BFsXu9KKzLOGFGgAtUMMLzMLDRZUCuJWhXaaiRqD+1py05o1YyokuxGJN48q7AdpqRlWJlswxQbpAw4VaCC6e8gWGw5yHeXNd5G9/z9gSfwOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d7PM6UIT; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1lKOooIa"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a36e6b7404so1420511f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d7PM6UIT"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a3683aa00eso1449784f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747737728; x=1748342528; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747737730; x=1748342530; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ahzczk0+naUyrZTVIcCeBV1wVjE8c2wdirB75pAPflg=;
-        b=1lKOooIa+F+428vJLAF2LOEvGtpPPayECPhvqjclNh/aRiMkvn3INmDe24jmeSdUCr
-         0MulQ0tA/caw92B1shQYrvLdUwJzhNWtJ5TyYtdmeuQjnY6serv+cT3HrnB/9c06pqdU
-         gKLIrTkuCsDUGWkKoR4E5W/RaJqiGgdIxWLAVGSo42YBQbnxzvFUtHcCcb/D3W3Hv1x2
-         1GN4AaqMl7gxsgB3rEo6Bljg1bxrkLl2wmT10n+xuobOPKARgHsgQBWkUvaudeumxoXj
-         HOumdpWiEq1NeDobApGC4PSVSef50MgG5AdSBAickKopdp00nIzzFxTWEyQztfAoeeky
-         GEjw==
+        bh=48HSNwYzS4MdW1GYfppk4qhPWkku6mpAaebKvT0s29I=;
+        b=d7PM6UITinggEHOkDN9s4+aVPAaUo2/vAnTeNUMtLWukVRfzG+Ady1ceWN25h0pjcE
+         BGGtjWjxTax76PN+26n2Zj7evSqttO4ldkUXuOI6y2CjdXXkrs7m+jBlF8P3DHSJhg95
+         doLbp2I95FcWISUDOzsiFLFR+YaSZamepLNHelBYrC8tDyYw5IvbDf26dIiOCeiDZsXh
+         BZh3/KQM0KPa/ygCXRDmZfy8yA2oRCG7LMONjiE6ngx6MDp+hFKsuiRP52BPbXaRUCbf
+         6YLzbrLbFHS42Y3Cp9t+jxmRkgV2zPo4sXYWQUZbGyx0k/4b2wg8FBxSde8dTU44CjuG
+         JoCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747737728; x=1748342528;
+        d=1e100.net; s=20230601; t=1747737730; x=1748342530;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ahzczk0+naUyrZTVIcCeBV1wVjE8c2wdirB75pAPflg=;
-        b=KmutzYgmZbnSvRPDV7mxCOAhZVGf4/h94sMWEhCHu6xy8r9P2HgzL2hxoDNtjJ99RN
-         z+KhPI89BWvS82cwUgoatVHlZLINgUlIjwE8iPdFPXboAWLnaqGJpQg8dtDoXKSF8jjJ
-         L9l6365CD6qZUM4mRPsKgczFVCtGYhZ33gD9OAqYSFFOKDPGj6/kdMi46Mn7I3QrFPzF
-         p6V0QW0J/p4ElPkFJQ2s3ToAzJlSXUgFA5AZsTf2hNtdN336/Un60e8atHohhYzKdTBY
-         867Yzur3RpynOMKmIjuRoTefmSg7F6mFjH2FWGRZDz7ni1k6OeIvmgSmXPgLZRlpeXzH
-         j2Vg==
-X-Gm-Message-State: AOJu0Yxaw+Dny3ZBU8Vbovb/aiw0jt7/qsBMRGsV9d1ybwzRLG6R7oBz
-	zqOjpVGH3otRDCMSTO7PWK+DpDu2DTOaXIJo3uJBzcZcJGWasC2eoMb0zqFhvCzCrRG4CxuPxDo
-	lFQ8AVVaoirLn3NmAZDcjFUhlyh7xX76bj/lj7DmHP+AcrOeenmDSbECfd2Lm71mKFhv7tA0d7G
-	YPxcqcAi1mogteXBVDSzK6tcrD9INNfhv+Tw==
-X-Google-Smtp-Source: AGHT+IFf3Tl0mziMJzrvVu3v7W+x4TcXzDK5XfPPwOZpt3YclGoVMb0E1M3KDk0vyqCgQ+WbgLaGP5uu
-X-Received: from wmbbd17.prod.google.com ([2002:a05:600c:1f11:b0:442:ddf8:99dc])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:40dd:b0:3a3:77d7:a669
- with SMTP id ffacd0b85a97d-3a377d7a688mr2969030f8f.52.1747737728564; Tue, 20
- May 2025 03:42:08 -0700 (PDT)
-Date: Tue, 20 May 2025 12:41:45 +0200
+        bh=48HSNwYzS4MdW1GYfppk4qhPWkku6mpAaebKvT0s29I=;
+        b=KOC/iFf8OYMXdxhjdMqSK1SFRWCEnwaBn38HttOusRqvgLkpwKFBBPQ4gTgwfmHHn6
+         MTWURDdTFu7dsvjuncArRLnwB3FCuoUJtkpag5YZcVEfwhQmoeroHnScuu7RmIheauGA
+         PiK+w+1JGWraE2D2L2OyQxc0eCDKQ/Ki1y5aeUmPEd6H3NIaKFfuROLh9B2hzQa4L/bl
+         bMEvSSqXe6mmcU2OcKW11QeQcoaW5u3ky6b3JJADYoPiyoLVNZIKfEvHOHuBEOxtDYvU
+         XvX4ZXU3Cy+ZVJRzb+nwD9f+WoWP6jt02hXzmE98oKkI+iCydqYseaPU5a3IbNN1704G
+         lv5g==
+X-Gm-Message-State: AOJu0YxqV7oSHVyL4rpXHEsoUAVGkK8ZCg3Let+Puyv1S6ekdArLcXeX
+	rCWCXwil9jT55V7CCTkIi9HG1ULDEbn4b29COT/Zww2CBCQweBRHhWwm5+yxOyGBvovQg8xiXJ2
+	havmD0C1Mn2+VHHnb6IBZim30Z2P+nyYk4LwYzSr27tkjsMIArxSaaRgUwo2E9NHdaNpx++F4SW
+	W2cCNMhXejPsW0bDuhY+m7ruTilnN1ld3Mjg==
+X-Google-Smtp-Source: AGHT+IG8GElBuy5Mhy+BcBGRYqfJGH91mMqquZF7EvcN/D8+2f3OWAPnmPAptHQtfdOM5e85CYQd4IH8
+X-Received: from wmsp16.prod.google.com ([2002:a05:600c:1d90:b0:442:e9e9:c2a7])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:420d:b0:3a3:760c:81a4
+ with SMTP id ffacd0b85a97d-3a3760c835fmr4336240f8f.24.1747737730457; Tue, 20
+ May 2025 03:42:10 -0700 (PDT)
+Date: Tue, 20 May 2025 12:41:46 +0200
 In-Reply-To: <20250520104138.2734372-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250520104138.2734372-9-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4047; i=ardb@kernel.org;
- h=from:subject; bh=AeoaX0bk1REUaKBmW4W6OvWZS0AahPeIlF2xjdvR5c8=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMnJi/h8fSewhcBrV7bRcodfty/qG1cafTK9054Vz5je
- 2vPqXsdpSwMYhwMsmKKLAKz/77beXqiVK3zLFmYOaxMIEMYuDgFYCIcexn+l7MJlrk1lq3a+luW
- X7aX93nqdFOZBJd0ufsPWjSCTj44yPDPJizk+V9+Ps/dumdaDwa5K14wYKlWe8MuUP6r1EKsgIU DAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1426; i=ardb@kernel.org;
+ h=from:subject; bh=vLh1RD9b/M3vr5yS8QTbENrmgs8a7pup/j6J3eE/P2c=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMnpsDS4ZWR8J5mV+P2ckcLPqdchxfPk948q07ZIXSjK
+ PWLqHRHKQuDGAeDrJgii8Dsv+92np4oVes8SxZmDisTyBAGLk4BmIj+DUaG1k2rrYRf8XxZnRYT
+ NVU+xJvzrXj/sjqPsqtMaT/VPF6UMPzPCnK1O1aoYZ0v2SE6fe/W+hzJazI7u1VPZ0xYa8ata8o AAA==
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250520104138.2734372-15-ardb+git@google.com>
-Subject: [PATCH v5 6/7] x86/boot: Drop 5-level paging related global variable
+Message-ID: <20250520104138.2734372-16-ardb+git@google.com>
+Subject: [PATCH v5 7/7] x86/boot: Remove KASAN workaround for 4/5 level paging switch
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
@@ -76,114 +76,45 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-The variable __pgtable_l5_enabled is no longer used so it can be
-dropped.
+pgtable_l5_enabled() is no longer based on a CPU feature bit that might
+change values and confuse KASAN, so we no longer need to disable it
+temporarily.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/misc.h         |  1 -
- arch/x86/boot/compressed/pgtable_64.c   |  6 ------
- arch/x86/boot/startup/map_kernel.c      | 16 +---------------
- arch/x86/include/asm/pgtable_64_types.h |  2 --
- arch/x86/kernel/head64.c                |  2 --
- 5 files changed, 1 insertion(+), 26 deletions(-)
+ arch/x86/kernel/alternative.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 7f79c426f542..d6860b50afaf 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -190,7 +190,6 @@ static inline int count_immovable_mem_regions(void) { return 0; }
- #endif
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index f3c68b586a95..e39823d8d1ae 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -589,16 +589,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
  
- /* ident_map_64.c */
--extern unsigned int __pgtable_l5_enabled;
- extern void kernel_add_identity_map(unsigned long start, unsigned long end);
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
  
- /* Used by PAGE_KERN* macros: */
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 965fca150e68..4772919411a9 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -10,9 +10,6 @@
- #define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
- #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
- 
--/* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
--unsigned int __section(".data") __pgtable_l5_enabled;
--
- /* Buffer to preserve trampoline memory */
- static char trampoline_save[TRAMPOLINE_32BIT_SIZE];
- 
-@@ -118,9 +115,6 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
- 	if (!cmdline_find_option_bool("no5lvl") &&
- 	    native_cpuid_eax(0) >= 7 && (native_cpuid_ecx(7) & BIT(16))) {
- 		l5_required = true;
--
--		/* Initialize variables for 5-level paging */
--		__pgtable_l5_enabled = 1;
- 	}
- 
- 	/*
-diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-index 5d3c6108f1c3..328a343bc355 100644
---- a/arch/x86/boot/startup/map_kernel.c
-+++ b/arch/x86/boot/startup/map_kernel.c
-@@ -14,20 +14,6 @@
- extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
- extern unsigned int next_early_pgt;
- 
--static inline bool check_la57_support(void)
--{
 -	/*
--	 * 5-level paging is detected and enabled at kernel decompression
--	 * stage. Only check if it has been enabled there.
+-	 * KASAN_SHADOW_START is defined using
+-	 * cpu_feature_enabled(X86_FEATURE_LA57) and is therefore patched here.
+-	 * During the process, KASAN becomes confused seeing partial LA57
+-	 * conversion and triggers a false-positive out-of-bound report.
+-	 *
+-	 * Disable KASAN until the patching is complete.
 -	 */
--	if (!(native_read_cr4() & X86_CR4_LA57))
--		return false;
+-	kasan_disable_current();
 -
--	__pgtable_l5_enabled	= 1;
+ 	/*
+ 	 * The scan order should be from start to end. A later scanned
+ 	 * alternative code can overwrite previously scanned alternative code.
+@@ -666,8 +656,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 
+ 		text_poke_early(instr, insn_buff, insn_buff_sz);
+ 	}
 -
--	return true;
--}
--
- static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
- 						    pmdval_t *pmd,
- 						    unsigned long p2v_offset)
-@@ -97,7 +83,7 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
- 	bool la57;
- 	int i;
+-	kasan_enable_current();
+ }
  
--	la57 = check_la57_support();
-+	la57 = pgtable_l5_enabled();
- 
- 	/* Is the address too large? */
- 	if (physaddr >> MAX_PHYSMEM_BITS)
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index ed847a90cf4f..3c56b98b87b0 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -22,8 +22,6 @@ typedef unsigned long	pgprotval_t;
- typedef struct { pteval_t pte; } pte_t;
- typedef struct { pmdval_t pmd; } pmd_t;
- 
--extern unsigned int __pgtable_l5_enabled;
--
- #ifndef pgdir_shift
- DECLARE_PER_CPU_CACHE_HOT(u8, __pgdir_shift);
- 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 5e5da6574a83..137c93498601 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -48,8 +48,6 @@ unsigned int __initdata next_early_pgt;
- SYM_PIC_ALIAS(next_early_pgt);
- pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
- 
--unsigned int __pgtable_l5_enabled __ro_after_init;
--
- unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
- EXPORT_SYMBOL(page_offset_base);
- unsigned long vmalloc_base __ro_after_init = __VMALLOC_BASE_L4;
+ static inline bool is_jcc32(struct insn *insn)
 -- 
 2.49.0.1101.gccaa498523-goog
 
