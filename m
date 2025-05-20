@@ -1,207 +1,190 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB971C69D;
-	Tue, 20 May 2025 15:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756584; cv=fail; b=qm0eF+teJqsTc3T1d+gjpQiELNZgWwWPHYTSAF5Lg6v3n3Oeu0dnpVv17ssvXtVbXreTBQolM5BdV8/tL0SHwb4M88ujYo5hoJ/35X9M4VaRh3KOvdBfpGsFYQUfIRgQPoDFBtUGi5RL6WtgqIc1fhLhulR+xw0eptIJ0Ffh3M0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756584; c=relaxed/simple;
-	bh=uXE4SbzJg2JLPOktN4+V77tNsVzBce2E3KmpEgdrKho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=da3TMYWqyhYAgGAbMrfu3OQ00YVvncFm8u/3kifPrkxnZ4CdEaqG95oOyLvU4NWVXnp10GTYxMUALL4PdLsLqgUw6yz1xPrpfE4dZlDX0p1Enfh5mvE/ET+Mq2YyYPluHgHwgKj3Ta3GQt7Eyr0l7ihU3c+GOmfKNHE+8DIy5tw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=VEbTDzZ7; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=XRRLTghb; arc=fail smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3B02638A2
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747756589; cv=none; b=CN4MmX2W7dJpNiw/4bjirKbL/+dDJPpj+bE8Z9pMutnjyTRmi9S89IeoJgPZKHpzgT6o9ZK23nfgVM6k9MFK+IdYGzew+S68MwnU5VL2CphzfQ5D96BbQymUPaUlDUwbImmxI+Ep7euQyaVRM9RJGDcH7MZ6iJ32NB1PXVfvzoY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747756589; c=relaxed/simple;
+	bh=ER3NJ5O3PAzpO1IEIeCsXoWaX/vAGysVFXgbd71q+b4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H5BrsS3Ps5T2IgJXBQYfZaQE2QmM02nCmezU5lEix2bQs2mlUY193DrUWzHyMOpZrvdji2BsVJLcMoX+Gmj8Hgu761edr1N4FHZCkz3R4F2IPkEUViTMJgAdZCKMHx1DL2cCXeDo9p2q0saNz8+HOZRZhccO+PRN9lyA80EXp5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TWop25BO; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VEbTDzZ7";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="XRRLTghb"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K5je4r005734;
-	Tue, 20 May 2025 10:56:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=ctSt+W12RqaOhOC0E0LuD0kXHlUJ1dPLbQ7nzeHo5AU=; b=
-	VEbTDzZ7wNNJHjfy4DcRnnHk/rsuS4WbFa+CoLZITHhHgLi3hPie1z+Mjcq0ZUXO
-	76cHVMoVAvAScV2aD1jNaPn7Rp03FbE8oEd8FVaxM8Msf0OGrB816yKS4qltyj79
-	cbusXxVxC86muM3JA/AsfSyiMVarT/GfbfF5uJZ6igKvvq9WWiEv/jumFhQc+eRq
-	1vy2kkEVENFVdMufnmw5ZW8t4tnezYcHLNX89JF4+QzgIo7iQcqDLrmeafXxWwuk
-	qOLl9iKPfznEiJm62BSJ5dmTcPO2rYZNTOTim5kI4AhHpuJlR3X9FeF5R/Ywjv5I
-	uuE4VKNprAyZUoovtQOtEQ==
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2044.outbound.protection.outlook.com [104.47.51.44])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 46qcrwbgmx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 10:56:05 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ExZnvYTWOODBKZN+U4p6SqdHCofBMrQDmkJcAlZq+IkJoKt8WIcJNVFyv/bNO1sLOx6KlJvICmNVwtLmTJBrpSm1hv/dln0IOqfmrVN9CPLlC2Vha9TAVVcg0GBCmXApRLvDL7+7IpTvpNewdds5a7NBkJkDMpE2IZBumcVNWhOIFc4q0FShySAf50CFBnYQ1cYuE+G3cUgFGJRkYuZ0sQIIzU6RUr5qv/q7BUacJPmd5te+1fWZ+GrJUUWT4tb9BA+LER/3s8VBBoCEs4HAk1w8IRYyk0PpWX5w30hhBS0z6UXSpmfL87zQzsjU4fZlX7GQNdltORO0n3NUh+Tykw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ctSt+W12RqaOhOC0E0LuD0kXHlUJ1dPLbQ7nzeHo5AU=;
- b=k21si+9pA1rqG/kPXqX++SLpXyIQPVyWHR4xfOWTyz9uR+dpn/t3GPmrLiCrkVW0yQbXjhsHEWhSglYNi0Qa2t3QNcp9cKAbVWGu/8BroVY27l4UX88I/QiZbS7ah6WWvJpBfHXXoN99Ty5ybqUl2umQQ2k/+OCqZaXiSiq8N4E5Jq7xXlewP7KQf3GrsnQE7GkQualWSSymz0kGWqKqvahFaMi6OibR1TJL7h4TLBFnzkOeXILUcgEHmpFbMpN+zJvwBDng7YUHAZ9LgKKg9YKrJnrLwgAFK5vPY8Q83ebjTw9efvQU5vBpwBrioUzN05K2PL8JTPSDseowzst9Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=arndb.de smtp.mailfrom=opensource.cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWop25BO"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231f61dc510so782285ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ctSt+W12RqaOhOC0E0LuD0kXHlUJ1dPLbQ7nzeHo5AU=;
- b=XRRLTghb9TMB3hAvKDW3/KGmKkufH3HDnvgltEs5gqNvMLs8A+QHfDWeIQxfhd/SPKsXsGkrsqvYcBErGOr+Q9iR9nTwP3Mm2suOO4u0OkCZxCEz4m/o29+cj85/dDtWK2Ysinqy7vagpEfALZcuhb6fENhjl12RwJDS0fSlHVw=
-Received: from BY5PR20CA0011.namprd20.prod.outlook.com (2603:10b6:a03:1f4::24)
- by DS7PR19MB6231.namprd19.prod.outlook.com (2603:10b6:8:99::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.30; Tue, 20 May 2025 15:56:02 +0000
-Received: from SJ1PEPF00002310.namprd03.prod.outlook.com
- (2603:10b6:a03:1f4:cafe::1b) by BY5PR20CA0011.outlook.office365.com
- (2603:10b6:a03:1f4::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Tue,
- 20 May 2025 15:56:02 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SJ1PEPF00002310.mail.protection.outlook.com (10.167.242.164) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
- via Frontend Transport; Tue, 20 May 2025 15:56:01 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id D9E0A406540;
-	Tue, 20 May 2025 15:55:59 +0000 (UTC)
-Received: from [198.90.208.24] (ediswws06.ad.cirrus.com [198.90.208.24])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CB09982026C;
-	Tue, 20 May 2025 15:55:59 +0000 (UTC)
-Message-ID: <6611093a-5add-41ef-8604-f3b8343d663e@opensource.cirrus.com>
-Date: Tue, 20 May 2025 16:55:59 +0100
+        d=google.com; s=20230601; t=1747756587; x=1748361387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ER3NJ5O3PAzpO1IEIeCsXoWaX/vAGysVFXgbd71q+b4=;
+        b=TWop25BOFRU5dDKeS9QPoeYFABHBraSn+G7kag80qs/4iEXRJpEPfcnJuTCiGwAeIR
+         Qm6+HnqesJaDiS/0z9LMmaE3H0BO+9fKzpqR7kXxoNLw1rRdKhQyPLmiB0UNN1AtvZC1
+         kyFfkxRS8mVT1AQQOtaLk7hDnuGKfzhCHC3oNHwGAeaPsYCPW25QHNa9DaV9O7W9zCKz
+         YVNaFDlEYva5qIBlB1PpbXlbmcmVBkRk5BpGkZRso+5vQhuCalGQzFL80rrvk6UZ9yJa
+         eTYz2D8eVa68gJEGyDanmY3s/ASkBRbM6t8GHb0qCTmbW59jZCIXMTkwXp/GZYQIQCur
+         KLCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747756587; x=1748361387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ER3NJ5O3PAzpO1IEIeCsXoWaX/vAGysVFXgbd71q+b4=;
+        b=YRxaiYp817mo0La17ROWz4gOXAQFImDrJgP4kuZcSYIUnqcQ9uAXBRBnpy/rjUWMQR
+         DBQE0YVG7S8ue+yp8d1kr+kGWqPwa1o9xeCOQq0of6/WcXMbMbs8Sq4Lz9qlKvu3/dLb
+         9cRucIJQk5JhpaoZcbgYVcWspsMT9MKF0/NDA9y2piL2RImeebzSVntSZJNBuxUSjDK4
+         hw2cerjUbab2Xo4fw5EHPbJ5UmhRQ2PydHp7ehUxDqGoDExedxqS1od4P4+egRSfkavc
+         PTQ9354o3gcBNMkoqLZrIZhtwQFLgxc8SV4xxFF0Yg4E9zWbtWf31BSrimMWrdqs8Axt
+         h+aw==
+X-Forwarded-Encrypted: i=1; AJvYcCX76AYOopMBfA2dN8BfmKuV1Ca2YeWgYFT1xrysYN+8F94PN5zIKypQjYrdY9PXbNxNEA/pdO2MY4z/5n4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhD+uAiKGlzbcPfIR9gtGq+tZJ1SjrFxILltpPgEpEbzTZQJZ8
+	QdzjWuOZFyey1eaIzKJylIzJEUYAqROXaMHxL5sdsmfQs64GEabnuzgQSG2DRfNUAO/zyQQEJK6
+	Ekqvt41wSRRiJTwRoAtIEIOIx9VYwJAM9kaHq59gD
+X-Gm-Gg: ASbGnct7x8j0qGIpifxUmq3mPlDb1PzP6PpMbfP8iiHKfWVoRUw2SbRw7+UjUNCefxM
+	4zljp2GnEfpyjK+367ddShp8sSHBdMzWt0slOKo15LxzcYaTrjN1tZVu4JG8JR0ea5iOJNHSsN9
+	rWxFry69nDF9iIo6/Ci33sT6PDWqoPAAQL+ta/fw841WLDEnlo1kQ5mHRK2dj4n/lPS27NVg==
+X-Google-Smtp-Source: AGHT+IE3UoafRXp4fFTWsfLrSpxZrXhZFQX6aCH6gZeuLrfBVPCauhB9DuTu6AnjgBWc6z7HnULlUjYmKw4eAcPInfc=
+X-Received: by 2002:a17:903:11c8:b0:21d:dca4:21ac with SMTP id
+ d9443c01a7336-231ffd0e31cmr8019275ad.6.1747756586623; Tue, 20 May 2025
+ 08:56:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: hda/cs35l56: select FW_CS_DSP
-To: Arnd Bergmann <arnd@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-sound@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250520152702.1976221-1-arnd@kernel.org>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <20250520152702.1976221-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002310:EE_|DS7PR19MB6231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4bd18758-7ef4-4582-04d2-08dd97b6d1d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|61400799027|36860700013|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Sjcxa0J2T3RCYVNudmtpNnd0SFI0M0dYRUtUa0c5Zmp0NlhwQ3lNRU9XUjFS?=
- =?utf-8?B?MGFYL2d5dDd1UlpaN0R3eXVNaXpydnpsN2VpSE43SnhtcUZ6NlFxTCtCa0p2?=
- =?utf-8?B?ak4rTThGTWxKQVp4R2VvL1N6cnJjS24zWENibVhFU1NVZlZkaitQSXpNNERx?=
- =?utf-8?B?aWJ2bXJyZHlycC9XN0R5SHFkZkdyalVXdFhzQXdHSXV5R2w2c2hVaUxPVTcv?=
- =?utf-8?B?bk9lMy8xRGlUOHFqNU9odEUxNUt3S2ZOc0J5ME5zaEk1dmpaZ1ZLVmZZQ0tG?=
- =?utf-8?B?N25JSDZSWkhLZnFZWVVBOGdGMkRaY1RWSWN6OXB6YVpKcE02ZVlBbXRUeGVs?=
- =?utf-8?B?MnZDTHFWSUZhQUZjcm12NFM3am1udC9Ka2U2dmJLdmgxNjRubzlpWlFSRERJ?=
- =?utf-8?B?czVkZFNJYjZvaGhXR1AyOWlIUkpINVdha3RrQ2Rrb0t0dndLa2hGSUlZemtM?=
- =?utf-8?B?TjNvWTZ6T2V2azJrQ1JSbk1Hck4zcDBIN0tsU1FKT2hUaHpnZm0zcmEvNCsr?=
- =?utf-8?B?NHFHUW1ESm5rNk9rcWJwVUFUeWtQNC9sbVhqVzVKRURwZ0NOY2lVdnh4OHZs?=
- =?utf-8?B?UDNxTUkwUzhFWnFmREl0d0pnZlNsSStqaGVsMjJIVWN2UmRLK2x4ajF6V3l2?=
- =?utf-8?B?VGdLeHV4ZkhYeVZaU1dkOFA0WGRtZzEyZU5LWjRMcnFIRzcrMmRxcnU2eWdv?=
- =?utf-8?B?Y1FSVnNGano5bDJXS0VCNFJkMVdhd2g5VXZuSFUxZGVCTFZ3cHZCZDlreUVK?=
- =?utf-8?B?ZG1hc2lrS0VucXNpTkJCbDdUM09oUGh2QVpiZnI2YVFmZHg5M1p5U2o3cXpG?=
- =?utf-8?B?Zzl3ejlkc0VaektsOExTM0l0ZHNENVlmT0s4T05LbXVSczRja24yUzlFYVFI?=
- =?utf-8?B?Vnp0TkswYVN0K213Wi92cHhtNlRyUlBKUVFoNGdzRmdOT2JpUUF4Y3VVSzFt?=
- =?utf-8?B?ZXdZeWVQYmh1a2VsVllITHhYQlA5ckwrTkJmUGpYTmMxck9hNkVhczZXTDBX?=
- =?utf-8?B?Z2RKTXVFb3h3T2s2VXVNYzJIV1diYUptMmxVd0Ftcnk1MHArcFRaQWEvTjgx?=
- =?utf-8?B?RHlRK0lYOWhpVjBKNllNM3RCUm5ZZjBiYXJjTjhzZ0NsdlBlY2RvWXpsSmtm?=
- =?utf-8?B?RmRacGJ5a0N6N3JnVjdiQkVTQmpUV09qZm81UHYzOGs4bWJKUWd1Q1p2bE5F?=
- =?utf-8?B?eFc5NWdoSUc0WlEwOFN2U3pJMVRzVFMzQlZmZ2FTYk5hZTlobkJUZjFMcE1i?=
- =?utf-8?B?SmJNRG1wbVJEUGRpSkxmcWtoTUF3R0d3dW9YV2VnZzJ3a3FIWjVpTlQvNGYv?=
- =?utf-8?B?cktxb25nYk1xczRKdXpzUysxZHM2bGhIVzFRSUVhc2tlQzViTnhyZUtWVmxk?=
- =?utf-8?B?czNLK2Zsb1VWYkg5MTU4aVUwR1RUWm8zUUFaN2ZRN2xWRytXWkNrMG9xYUlU?=
- =?utf-8?B?VEhCQTFEamFRTmNQS0xSUndLMElDWTBTYUJBUTRWazl0K2FVaGRuUlpTZXJC?=
- =?utf-8?B?OEZ0bXN3WlMvVTNmdnNpYmJsUWVIN3psTmFOcDQ1OWNSVjZJemtpWG9Qb2Z6?=
- =?utf-8?B?dEdtVmVmQnlSblF0cWI3TzNyNVl5cnRzb3VvL0FSNzZtVEhtZ3JMeGhmZElm?=
- =?utf-8?B?Y25lNE1VQjl1V0d4MlBGUEd0TU1Kd0U4b1FrYzhwT2lYVkZIdTRtaGZ3dDI0?=
- =?utf-8?B?TzRqZVpjeFhGS2xEaTlCUUlpS0ExTW5TaHF2VmpXNW9lK0g0ZDVVc2VzeGFx?=
- =?utf-8?B?Vms3OW5EamxEVXZSbFJrNkhER0YvWmRZQWpCZ2NNWk16UzJGemhjdjU4SDVT?=
- =?utf-8?B?NFZ4WS9xMGRhS2dpMFF4RGM1SWR6eGlYc3FHUzRTS2N6bWR1aVIrU3JQRzFI?=
- =?utf-8?B?Q3dQZlVkemtTYW55Rzl0OTdOZEMrcmMwTE1TaVpPVm9nNWlDNjMvYzBEQjUy?=
- =?utf-8?B?NWJhRUZ1dEZncXBoNkJVRXNmV3JsOUExYnFYMFpPN1RqWGJieHlFWXdXUVVU?=
- =?utf-8?B?cmRTTWhJTEJtdXJ2dUVBNXQzRjUrNzJCSm90cGttUGdzeWhXNU9BMWpKNWNS?=
- =?utf-8?Q?L8tyto?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(61400799027)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 15:56:01.3501
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bd18758-7ef4-4582-04d2-08dd97b6d1d7
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002310.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR19MB6231
-X-Authority-Analysis: v=2.4 cv=dd+A3WXe c=1 sm=1 tr=0 ts=682ca615 cx=c_pps a=E4Q64eWPmlOcdHW0GAz4hQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=ucUoLKqCerDSODSh53UA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEzMCBTYWx0ZWRfX1OE4WORMmbb/ ccqII9lqloDoLP8hIQmVJuf6htWXaC3rXecL1FjLZxTmLorucvBDBOrEvGlSIjVPKJhYGKfcxxL K7cyf0OL5b7W2FS/wVL0S3g7Cs6G+ItGKnw9agSMIbLK/OA06MiFn1uzL0EAhNT5EA8IpwG7Ux+
- TJRuhtuz22R6vHR/QNTaKBa1fT6rUF42wYxyslYXCZYgtsx3vGQo9Zmk2cQw16wwmVkD1nlGZP+ xEQ0SXWKVcgQ0gm5QlUfieDE+7pg7F/spdG4EhDoX63qiiu8/PLkRzw6UAkq0NFTKuADtSwqbrd /dIZ/liUgSZMcQrcVsoWIKEJHWBelop7R4fVGbnE9PGRVTI19uGi6Q4GDEHMLD14XoNoT9tizu4
- raqXoL++oYhqgHxrVIEUM8SLlew/THMHhTNOz8Xe0vL6wHUi46QwQMsV4E4BWUuF3sNUAt9c
-X-Proofpoint-GUID: zUruPF5gT3wT_6Ep6zTUsiaCejbIcb5h
-X-Proofpoint-ORIG-GUID: zUruPF5gT3wT_6Ep6zTUsiaCejbIcb5h
-X-Proofpoint-Spam-Reason: safe
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com> <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
+ <aCwRZlkBWekRmDg7@Mac.home> <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
+ <aCx77cCum_b-IR4H@Mac.home> <CAH5fLgjqj7binVaLDh7Pc7SVKDM-XrYDEDj7GYBX_MnjHgufFg@mail.gmail.com>
+ <aCyB4z23VP-3Hmor@Mac.home>
+In-Reply-To: <aCyB4z23VP-3Hmor@Mac.home>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 20 May 2025 17:55:47 +0200
+X-Gm-Features: AX0GCFs0RrSQrNlKygeYsUjA_mLlWNKtB4CI8gjUfxmH7vR_28jbNDCMVUE1uVM
+Message-ID: <CAG48ez32gxwdmQ63XWB8Dz4b5seH7tOhY0yREC=34ubTHZ5VOg@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Burak Emir <bqe@google.com>, 
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/05/2025 4:26 pm, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When compile-testing this driver, the missing FW_CS_DSP module
-> causes a link failure:
-> 
-> aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_shutdown_dsp':
-> cs35l41_hda.c:(.text+0x7e4): undefined reference to `cs_dsp_stop'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x7ec): undefined reference to `cs_dsp_power_down'
-> aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_hda_remove':
-> cs35l41_hda.c:(.text+0x14b4): undefined reference to `cs_dsp_remove'
-> aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_smart_amp.isra.0':
-> cs35l41_hda.c:(.text+0x189c): undefined reference to `cs_dsp_halo_init'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1bd4): undefined reference to `cs_dsp_power_up'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c38): undefined reference to `cs_dsp_run'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c80): undefined reference to `cs_dsp_get_ctl'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c90): undefined reference to `cs_dsp_coeff_read_ctrl'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1cd4): undefined reference to `cs_dsp_get_ctl'
-> aarch64-linux-ld: cs35l41_hda.c:(.text+0x1ce4): undefined reference to `cs_dsp_coeff_read_ctrl'
-> 
-> Fixes: 849c83fe4991 ("ALSA: hda/cs35l56: Remove dependency on COMPILE_TEST")
+On Tue, May 20, 2025 at 3:21=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+> On Tue, May 20, 2025 at 06:05:52AM -0700, Alice Ryhl wrote:
+> > On Tue, May 20, 2025 at 5:56=E2=80=AFAM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Tue, May 20, 2025 at 05:42:51AM -0700, Alice Ryhl wrote:
+> > > > On Mon, May 19, 2025 at 10:21=E2=80=AFPM Boqun Feng <boqun.feng@gma=
+il.com> wrote:
+> > > > >
+> > > > > On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
+> > > > > > On Mon, May 19, 2025 at 4:56=E2=80=AFPM Boqun Feng <boqun.feng@=
+gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
+> > > > > > > > On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@goo=
+gle.com> wrote:
+> > > > > > > > > This is a port of the Binder data structure introduced in=
+ commit
+> > > > > > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor l=
+ookup") to
+> > > > > > > > > Rust.
+> > > > > > > >
+> > > > > > > > Stupid high-level side comment:
+> > > > > > > >
+> > > > > > > > That commit looks like it changed a simple linear rbtree sc=
+an (which
+> > > > > > > > is O(n) with slow steps) into a bitmap thing. A more elegan=
+t option
+> > > > > > > > might have been to use an augmented rbtree, reducing the O(=
+n) rbtree
+> > > > > > > > scan to an O(log n) rbtree lookup, just like how finding a =
+free area
+> > > > > > >
+> > > > > > > I think RBTree::cursor_lower_bound() [1] does exactly what yo=
+u said
+> > > > > >
+> > > > > > We need the smallest ID without a value, not the smallest ID in=
+ use.
+> > > > > >
+> > > > >
+> > > > > Ok, but it shouldn't be hard to write a Rust function that search=
+ that,
+> > > > > right? My point was mostly the Rust rbtree binding can do O(log n=
+)
+> > > > > search. I have no idea about "even so, should we try something li=
+ke Jann
+> > > > > suggested". And I think your other reply basically says no.
+> > > >
+> > > > We would need to store additional data in the r/b tree to know whet=
+her
+> > > > to go left or right, so it would be somewhat tricky. We don't have =
+an
+> > >
+> > > Hmm... I'm confused, I thought you can implement a search like that b=
+y
+> > > doing what RBTree::raw_entry() does except that when Ordering::Equal =
+you
+> > > always go left or right (depending on whether you want to get an unus=
+ed
+> > > ID less or greater than a key value), i.e. you always search until yo=
+u
+> > > get an Vacant entry. Why do you need store additional data for that?
+> > > Maybe I'm missing something here?
+> >
+> > Let's say you're at the root node of an r/b tree, and you see that the
+> > root node has id 17, the left node has id 8, and the right node has id
+> > 25. Do you go left or right?
+> >
+>
+> I went to check what commit 15d9da3f818c actually did and I understand
+> what you mean now ;-) In your case, the rbtree cannot have nodes with
+> the same key. If Jann can provide the O(log n) search that could help in
+> this case, I'm happy to learn about it ;-)
 
-But the error messages above and the change below are for CS35L41
+Linux has the concept of an "augmented rbtree", where you can stuff
+extra information into the rbtree to keep track of things like "how
+big is the biggest gap between objects in this subtree". This is how
+the MM subsystem used to find free space in the virtual address space
+before the maple tree refactor, a complicated example is here:
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   sound/pci/hda/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
-> index 339c80d2cce5..3d4badc3f0e0 100644
-> --- a/sound/pci/hda/Kconfig
-> +++ b/sound/pci/hda/Kconfig
-> @@ -109,6 +109,7 @@ config SND_HDA_SCODEC_CS35L41
->   	tristate
->   	select SND_HDA_GENERIC
->   	select REGMAP_IRQ
-> +	select FW_CS_DSP
->   
->   config SND_HDA_SCODEC_COMPONENT
->   	tristate
+finding a free region (by looking at vm_area_struct::rb_subtree_gap to
+decide whether to go left or right; this is made complicated here
+because they have more search constraints):
+https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L1841
 
+But that requires an "augmented rbtree" where the rbtree code calls
+back into callbacks for updating the subtree gap; the MM code has its
+gap update here:
+https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L261
+
+And associates that with VMA trees through this macro magic that would
+probably be a terrible fit for Rust code:
+https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L400
+
+As Alice said, this is probably not a great fit for Rust code. As she
+said, an xarray or maple tree would have this kind of gap search
+built-in, which would be nicer here. But if you're trying to do
+insertions while holding your own outer spinlocks, I think they would
+be hard (or impossible?) to use.
+
+If you managed to avoid broad use of spinlocks, that might make it
+much easier to use xarrays or maple trees (and that would also allow
+you to make the bitmap API much simpler).
