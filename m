@@ -1,102 +1,87 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601D25EF98
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DE426158B;
+	Tue, 20 May 2025 21:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778025; cv=none; b=QkDTMrA6UCiL+GtRKkLIh34jnwYQ5tdt0X1FWyBm7Dbs9vVeqIW5IZWEbYaEQQhjT4S2HMcr0sFMqJDpfbcLiNSoWnJDb3HAwngUko0cs0JgDsJ9hSH7PfoGyRQBHUZ/cQCWjAKbZ+CmxiZCNsMg+5DWzglGS8Jqln3NcX/635A=
+	t=1747778047; cv=none; b=hinHlCb5SfHSV70d3IiMaZRsq3IlpMJHnK6zLW2QNxsfPOys4KpxWczYL6uGffHmnkOBHg9oD6kbsLLLE/VtteCjuMpJ82pn1bm05vrjLnKQYlsdv/7wBL1nskaC5l7UItNmilTxB9eepacPJM4q1qlH08nk1CJdwnkn4mIASl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778025; c=relaxed/simple;
-	bh=BuzhlNqyJc6n1p51Wy6w2ws8ML+CaNuBHjlDaIn4jws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tEYNGlc5gWxuLyewYh9PRWkO6YPz4yrKdPXAwVmX5BkeJ9UKkCDYVLwOUNM+/lHCjRuKXhh0K/pm0l0r6wjaEvIBvNwTkkJY7dcJEFMpSzA1j4p4NNf20g24t9iQNRqzPJgPnavtEh7QdW4m9Ug8CJEJzQ25F+eCZfGOijSe46U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nutWqD7g; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747778047; c=relaxed/simple;
+	bh=QP4lIBNgw4FCYxusambi2zRPgHYLNLdmxTeQdFGYpFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=glul+nO/UNPTTHQRfHmMTOLh0Bno5f7racOv4UoPWMfOEUXtV7vtIiOZrv3L5kGGk1AlyKdOywmxYGNtWQQ/kSBPQ7MMtNQNH8Ed/V85KRjj04yeBBt9zf35Bp39JFKU0qTOAZHXAFYzmoT+DZzycc9bKSU4xehu3n66bB19NvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=aJVAAuwd; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nutWqD7g"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e7967cf67so7041119e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747778022; x=1748382822; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BuzhlNqyJc6n1p51Wy6w2ws8ML+CaNuBHjlDaIn4jws=;
-        b=nutWqD7glZEgkaSZ/RoQGFc/OqvDGl1RAgADhvC3VXtdMFoCPkxzEjWH296NLtl1sf
-         +kMZns6iB7XOCdGlfhvAdbNZKvFZVf8WHY7B2FdKTK+xOMei5ZOveRub8lnEha/NSWMc
-         em460iPvguqfAdXkdEf7TuRuIQd92UhgaiuQmorKOiWpOWUymlLtikACQqJHOrHLsT/N
-         Xll8UmAw3MunwXCe1HId099MhFhvUqjpoQZZhjROnVDB7i3/GBM7txz7Sf1MCpc0Xfqu
-         yLKgdU5mlKUP15NL/scDj0xakDheW90qZ05H+xY2t+0vALlQCMK7qxYAqZxl4uTwr79K
-         /6uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747778022; x=1748382822;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BuzhlNqyJc6n1p51Wy6w2ws8ML+CaNuBHjlDaIn4jws=;
-        b=NdrWbPzu+23QOrDC4FZyOoDtZqE54xmHzRHVmiM6Cs8T0wrDxLN5q0Q/Ns2ANeyLGP
-         iXPIZe9r0scd/E0hvdOuxUkYjVdkZtZdHzUkP6UyAdCsi8sH3sVW6gd8Ch9sw2coNmRd
-         XHpfJdomMOQaNL/9fAwOp7zxg7XxywZR3qcs3lMIy821/noVxoGP2FW8WvrApSo2JHq6
-         vi/96TWyT3UgwUMWRa2J5iMm6p5T35zCEtDj6cRX71grhcKaNDfwPsqNkxvaVKh6Z86e
-         oyojmWw8paoKGBz2hx/s+aiXSYMc3WOF6rHFIUKxG2PoZYGzrSeT9gKaKyXk+i95foAC
-         K+eA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9y1YHvrkK0/a7h7vSocJHpa9aClhIekXPeDOBJ1mMI9XXl5XHnXDbYISDIYOQENki3T2SKmAlHBnfRu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHB4JlmXtNa483Ycg9olHaiB8+tGznmh/qCc8FRT1Reb9Fcd8p
-	p1JnZIXEtCTzxrkV9Bk3l7kf2Q+66g9tW2amJ7aLYcfI5opb88pwlZlgaD/To5LEBHVxVe5VOsA
-	hMKShcoZdNGL3+AIxgO+sPqEpsrY45MylGM3HC9fwVA==
-X-Gm-Gg: ASbGnct9VsW7PA7IvaRU+VdXJo35XYZSvVpTRlkLWhJWmUF9BhebbeQs4V01MNgW7Lv
-	1azPXXlAcNb9Ywzste5QfIcOtJ/TCZWFzN5s++WvoQTykEdG2rIiKrkn0RYL5o5tTnisOEnFo/P
-	ilh441aGH7kWNiVuVzOh5jbSWZLloFPsc/
-X-Google-Smtp-Source: AGHT+IFDmcGo1axArvFCz2dx6uFyFqkML6kJ22pcoHKMMAfAxgp0/2ysMJ6m5JO5I5AyQlwSQbgeg4ij02FeQU7FSkQ=
-X-Received: by 2002:a05:6512:6317:b0:540:2fd2:6c87 with SMTP id
- 2adb3069b0e04-550e71b4e43mr5955773e87.16.1747778021614; Tue, 20 May 2025
- 14:53:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aJVAAuwd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747778039;
+	bh=p20V7rjuqfmmTQsbb0mo3u/KPx4CbrQEvuN5liEFahA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aJVAAuwdpyFaDCjJmE/ehjIp1Jb+W4vQSKGMgMnpSDJaRmg8x4U7rg+rOgGc8gE95
+	 B4KQG8XNmtgw59qqO6z+iFX27JEIRkVez9rPYvR7Z8fPp9IWAxQRQuUVum4jTy8lij
+	 hZQ6bdn8+yC8+NV06jbFJ3u2nOBXGE5sFHhYd5m7lJSiFp6bKL6rjcmo2oJJ+YXWo5
+	 AdnBYrEAZcxKfmCppl4s4H8G/Qf/Q7VW07OGEnwsgFK0jdXeHrbsz/d1nN9fytIu7K
+	 kBIZN3EK3ZujOREofuWo7s9gTZuTYXargUzK1jlx6p6CPcVtme5s+Jjd9s4I5lvACU
+	 pEp7vl8Jj/CyQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b27c73Qbjz4x9D;
+	Wed, 21 May 2025 07:53:59 +1000 (AEST)
+Date: Wed, 21 May 2025 07:53:57 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mike Marshall <hubcap@omnibond.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the orangefs tree
+Message-ID: <20250521075357.0e34ded8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516-gpio-dts-v1-1-a9c3505f54c5@nxp.com>
-In-Reply-To: <20250516-gpio-dts-v1-1-a9c3505f54c5@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 20 May 2025 23:53:30 +0200
-X-Gm-Features: AX0GCFsoSIZvC7lGTFU51O8wPs6RsCUHG2kDfSqZhe8h4hkLrUFi0bw--0irOtg
-Message-ID: <CACRpkdZRdFLyGJrgAf32V8snnYW1gPvbtxSPQaSBFSMkt+y08w@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: add ngpios for vf610 compatible gpio controllers
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/hOX+GBqf4=AEmff.L+x4wfD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/hOX+GBqf4=AEmff.L+x4wfD
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Haibo,
+Hi all,
 
-On Fri, May 16, 2025 at 12:57=E2=80=AFPM Haibo Chen <haibo.chen@nxp.com> wr=
-ote:
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-> After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"), vf610
-> gpio driver no more use the static number 32 for gc->ngpio, user has a
-> chance to config it through device tree for each port.
->
-> And some gpio controllers did have less pads. So add 'ngpios' here,
-> this can save some memory when request bitmap, and also show user
-> more accurate information when use gpio tools.
->
-> Besides, some gpio controllers have hole in the gpio ranges, so use
-> 'gpio-reserved-ranges' to cover that, then the gpioinfo tool show the
-> correct result.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+  ddaa7202a930 ("orangefs: adjust counting code to recover from 665575cf")
 
-the patch looks (very) good, but it seems the .yaml DT bindings need
-to be updated with ngpios as well.
+This is commit
 
-Yours,
-Linus Walleij
+  219bf6edd7ef ("orangefs: adjust counting code to recover from 665575cf")
+
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hOX+GBqf4=AEmff.L+x4wfD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgs+fYACgkQAVBC80lX
+0GybIwf/Yipzc8EuPCXPsTKEk38IHEMhM1rvOQ83q7ercVUBhHdtaBC5+ToduvFu
++71ZnELTlp2FCIkbjHaAb9E/QIBIIU1ex2IAM1PgpA0pdRhFL8oIFy3kN8yeGFYF
+z0M4z4Z7eJayLLZlXMibvuE5oT5O/lv6AO/6s9WE4ZeKXeI/oWwN4DmOopAQafu+
+7iIX9nHZr7K9uecVbJ3Yd9O0o0ceUvAejINxtYOaVxwot7dxDLlMhcNsmzG31QK/
+I1Qcqpx/NwnxqqdU1/pmVJkpE8eAOs8cbli0sEpUmWprWyuczzzsPcX91M2PfkBC
+fvGOXJvhaBLgOljMz5LHQq0pVuNZeQ==
+=/SHT
+-----END PGP SIGNATURE-----
+
+--Sig_/hOX+GBqf4=AEmff.L+x4wfD--
