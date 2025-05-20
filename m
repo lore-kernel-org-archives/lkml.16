@@ -1,97 +1,180 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533AE24677A;
-	Tue, 20 May 2025 19:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50E01E50B;
+	Tue, 20 May 2025 19:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770973; cv=none; b=HBTWv8Ws+pYhJOiE6m4ByBvwgK2tePxUMQ2vfDYGzdKZ5JJh+lK+ut8GGEWpkRjwWDf88RcQqw0Rqrc819JQDSYcfMD2eQa+fq5N5REjcEj2zFyBg/1QA6K42qCRsKbDPVzG0Os92d8sqlVYfitO0/SWtPlsrw/1VGX3jbDQieE=
+	t=1747771043; cv=none; b=MykexRCRjI790f0cJboajHdDS232aUiCMuKm9LIq9KI3/WBwg3wgPMBVFrfH0lN0DlN+DLxn62Hl+QYZk9g6leVEH4b67gZUt6p2rzKXOw3n0wri4HoSQw+4JwdrbyWEvJWJDbuXJTaMRPBid/zcPdMRBZuSHTISSMRtM7BWzQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770973; c=relaxed/simple;
-	bh=5rxbJNyob37QGi62KumFHH2u1FmRDF19BAX10oWgC7g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AC6zKf2vNE6shVf+US1E/s14V0DWR1rW8Dsle5IOb53bvpKNBWIRdr14Gk0zhE7SLzWpMTOES7oDne8V6vanZD2Jiqm9gbDqgpognhEyZx8QGfqdGgWtp4MQWqru8rhrFEYc4aZ64PecEXbpp+woRCJFahoNGpoXF6pnFUYMeZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZuDv6bt/; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747771043; c=relaxed/simple;
+	bh=9NAwuPJidDyhslNqwWUSFdEId/9pFB/ji/HVTk0Xu4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UF9+Cva5WodUNkUdldY8FkUk08H19w2fWO8joLqZaCDGzFcXyPcAmKm21G8XQjCGiusxvC89kUCvgojzE8Shoe0biZdPmf2d1EO65ZCUjeMK6yWMGB0M1jRDvNwXoqCnjiBaGkndhIqLtWQspVQN53Ju/tGkeE8nyUSh5vQmqow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsQzqIU2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZuDv6bt/"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b078bb16607so420543a12.2;
-        Tue, 20 May 2025 12:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747770971; x=1748375771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRXK3+jUaFquyfrpafb1v4VMZEAhC0R7dGXYOJ0ETTQ=;
-        b=ZuDv6bt/ZjeKvmGJNY4EGSMtQGGiD6waD7zaRH2t8CCL/2U35U4kxEM3NEeydK5kDG
-         CI202NFOu64Xn4YhTYPX7fT9uqdnZTt2tZma6Gre+gdLIgsvLnFvDKXO9gtFYRfGIcvP
-         DbtDWEkpsbUdH9w3ECXWs18YxcljNZ8g5/qxHu4aLusvUuR3CkiU9Mlbpe00yBWoM5vN
-         ju+fCJDbnNXeg26wNQzIptJcZ9YZbblDoK4dk9QX2wrOpm+9nHSpkJ3VubSEgNaqcOCT
-         b2kSJoKJlM5qfB3tXS1jAIlXBgqDDQq87oD/LmWEqeR/uH02SeOeyVgLmzfT4gK4B0pE
-         lRYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747770971; x=1748375771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yRXK3+jUaFquyfrpafb1v4VMZEAhC0R7dGXYOJ0ETTQ=;
-        b=D9Xop5oMnMY6N3Eriw01uEacw6GUgbLFG3jXNG5YJne1QzHz5vWr80S7eU7wxoXjoS
-         ERsjaDjc7lU2qewv5HOsZnlwGZcPWYDKFP6qbV0lBGFZnIY1RxZTWxfeJetUkguLDmip
-         AvvxbntjKMuxyesVla00dVTqSXSUIa6A75EMShjn2LGUDg2e1JIcAFlwvpms7gz6rccI
-         RL9biOzvfYHdBsW55jELS/bOnw+GrPL9n7dqqMtpU+TiIJkO/T68rOofZ9l0PJ6R6ErV
-         rWidOOf31DuYmPYhQCZTuEHgaTUuqoh5HZ5g6EWFiHU76/e4bBMab4kUnHH6Cs+zbSVO
-         BD0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCPy9N5xf5ieVQ5amPnlu9Yif4hOWz/4/uwJJktYHrttlu9/IG5PBY6Z4U1DF8EF4k41UBccN+@vger.kernel.org, AJvYcCURxsE/wJrgq23U4xkKp33rooRQZxnv2tXrw7eK3d/BGG//tMAoyjN7yZQknlCq8WXaRwRRjNP9xexWWgZUOJY=@vger.kernel.org, AJvYcCW5Mteu0RLFZg8LdcHGgJMhViA+xs2mCL7nAeIvr8qG8yDCngzQ5gYPFQr6TjxPGnR4efrDehBEcj9Jq9Y=@vger.kernel.org, AJvYcCWmRMgkaGh9WG4mgFLAj15Xk9sY7++UUukUY2f+VO3tu41uKrpBVx3WWV6BGrl50A+Tccc//am/0BmezwUq@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEvpg+ORJKv3NM2AmHOztiJ0g+Z48S34cOYwUthyw28SmeJ5vi
-	lp3xFW9b/q7QQdEQZn1PJqLwBvDDahCQ0glYIqt8S1mbtuBbBblkTUtHEzTEY2iV+JrX5rjZtJq
-	q5vLOj7pRur02CjAa499Nq0xn9ptMDEI=
-X-Gm-Gg: ASbGnctkM7kvnYIdP3ET/Zwb7BBzzAofIE/xMxwJORowK2xRElbDoL1IMvGK5VLaGw5
-	YYBibicSDPWS0H4Rg7BW1EUJex8sdCo1+1KYaS1o3a23iNeLrOzFcbhn23BebvmEsvMH8NoXsdQ
-	oXR59tvxccK8ZuZst6GyvN149Xsm2Pv8gc
-X-Google-Smtp-Source: AGHT+IHMBgCvJ0ltoJP8XtyEBtuP89NjkLllHvz/zazFd2sBhpBWXHheguiDfnpgLDlesaU0sRxIYGwKHYkjm3yfw88=
-X-Received: by 2002:a17:902:ea0d:b0:224:1579:b347 with SMTP id
- d9443c01a7336-231d43c6220mr96308575ad.7.1747770971470; Tue, 20 May 2025
- 12:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsQzqIU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE23EC4CEE9;
+	Tue, 20 May 2025 19:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747771043;
+	bh=9NAwuPJidDyhslNqwWUSFdEId/9pFB/ji/HVTk0Xu4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZsQzqIU2DMvYHmk5qyGiUZ3IxfDYJJ1Cbof48RrjYHAYe3PY3Bt0ZFqYr+B3WJ5rQ
+	 ClDsFcYRDvFmUeietTmgn/zjq0/vARD/yzvJdhN7gNwQG/laMITdsZeK7vPHHF5dKR
+	 eXqE/+zzim8GzRd8jx3c1EeFSjYkx1eLcnGabNIl0OsD6qzWvsKVLLdHSOMC7t7b3R
+	 QtvFKIGfoMgnyZ2hNkmTXCYdImip3XpXKUyW7lFDqNWPWxSBAw/mX1qRe6yv0xbyIG
+	 9eIrqEzeTjOWeJbVEqwyCtA7a3Fk0ARVqrpocuQc9wY8tIsj3Pt4eXIhxDnSygYNgb
+	 QaHjSNaJgDZMw==
+Date: Tue, 20 May 2025 22:57:19 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>
+Subject: Re: [PATCH v5 4/5] x86/sgx: Implement ENCLS[EUPDATESVN]
+Message-ID: <aCzen_zuw41a4qAK@kernel.org>
+References: <20250519072603.328429-1-elena.reshetova@intel.com>
+ <20250519072603.328429-5-elena.reshetova@intel.com>
+ <aCt3XZ0m40wuA9bU@kernel.org>
+ <DM8PR11MB57509295C87F7FB54B773107E79FA@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520195345.905374-1-ojeda@kernel.org>
-In-Reply-To: <20250520195345.905374-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 20 May 2025 21:55:58 +0200
-X-Gm-Features: AX0GCFslC1rHS0JBz-WpDnFZ7XYTlMemOVnCBI8Wl1ZLSvxJ1ZydC6LVz9_6R4g
-Message-ID: <CANiq72krCWthBMDe8XEJP6knDS9dHn3jSkTBhF-CPBUgmL4oDQ@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: kbuild: rebuild if `.clippy.toml` changes
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
-	Tamir Duberstein <tamird@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB57509295C87F7FB54B773107E79FA@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-On Tue, May 20, 2025 at 9:53=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> +ifeq ($(KBUILD_CLIPPY),1)
-> +       clippy_toml :=3D $(srctree)/.clippy.toml
-> +endif
+On Tue, May 20, 2025 at 06:31:46AM +0000, Reshetova, Elena wrote:
 
-Not sure if this is worth it (see v1), but I think it works, at least
-from light testing.
+BTW, please keep the line which tells who responded.
 
-More testing for v2 is welcome (v1 is "obviously correct").
+>  > +/**
+> > > + * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN]
+> > > + * If EPC is empty, this instruction attempts to update CPUSVN to the
+> > > + * currently loaded microcode update SVN and generate new
+> > > + * cryptographic assets.sgx_updatesvn() Most of the time, there will
+> > 
+> > Is there something wrong here in the text? It looks malformed.
+> 
+> Yes, sorry, looks like copy-paste error I missed in the comment. 
+> Will fix. 
+> 
+> > 
+> > > + * be no update and that's OK.
+> > > + *
+> > > + * Return:
+> > > + * 0: Success, not supported or run out of entropy
+> > > + */
+> > > +static int sgx_update_svn(void)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	/*
+> > > +	 * If EUPDATESVN is not available, it is ok to
+> > > +	 * silently skip it to comply with legacy behavior.
+> > > +	 */
+> > > +	if (!X86_FEATURE_SGX_EUPDATESVN)
+> > > +		return 0;
+> > > +
+> > > +	for (int i = 0; i < RDRAND_RETRY_LOOPS; i++) {
+> > > +		ret = __eupdatesvn();
+> > > +
+> > > +		/* Stop on success or unexpected errors: */
+> > > +		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> > > +			break;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * SVN either was up-to-date or SVN update failed due
+> > > +	 * to lack of entropy. In both cases, we want to return
+> > > +	 * 0 in order not to break sgx_(vepc_)open. We dont expect
+> > > +	 * SGX_INSUFFICIENT_ENTROPY error unless underlying RDSEED
+> > > +	 * is under heavy pressure.
+> > > +	 */
+> > > +	if ((ret == SGX_NO_UPDATE) || (ret == SGX_INSUFFICIENT_ENTROPY))
+> > 
+> > 	if (ret == SGX_NO_UPDATE || ret == SGX_INSUFFICIENT_ENTROPY)
+> 
+> Ok, but I will have to change this anyhow since we seems to trend that we want
+> to return -EBUSY when SGX_INSUFFICIENT_ENTROPY and do not
+> proceed with open() call. 
+> 
+> > 
+> > > +		return 0;
+> > > +
+> > > +	if (!ret) {
+> > > +		/*
+> > > +		 * SVN successfully updated.
+> > > +		 * Let users know when the update was successful.
+> > > +		 */
+> > 
+> > This comment is like as useless as an inline comment can ever possibly
+> > be. Please, remove it.
+> 
+> It is actually not quite so useless because this is the rare case we know
+> the EUPDATESVN actually executed and hence the pr_info also below.
+> Without this, there will be no way for sysadmin to trace whenever CPU
+> SVN was upgraded or not (Sean mentioned that this is already pretty
+> opaque to users). 
+> 
+> > 
+> > > +		pr_info("SVN updated successfully\n");
+> > 
+> > Let's not add this either in the scope of this patch set.
+> 
+> See above. 
+> 
+> > 
+> > > +		return 0;
+> > > +	}
+> > 
+> > Since you parse error codes already, I don't understand why deal with
+> > the success case in the middle of doing that.
+> > 
+> > More consistent would be (not also the use of unlikely()):
+> > 
+> > 	if (ret == SGX_NO_UPDATE || ret == SGX_INSUFFICIENT_ENTROPY)
+> > 		return 0;
+> > 
+> > 	/*
+> > 	 * EUPDATESVN was called when EPC is empty, all other error
+> > 	 * codes are unexpected.
+> > 	 */
+> > 	if (unlikely(ret)) {
+> > 		ENCLS_WARN(ret, "EUPDATESVN");
+> > 		return ret;
+> > 	}
+> > 
+> > 	return 0;
+> > }
+> > 
+> > This is how I would rewrite the tail of this function.
+> 
+> I think everyone already re-wrote this function at least once and no one is
+> happy with the version from previous person )) 
+> Let me try another version again, taking into account changes in return codes
+> discussed in this thread also. 
 
-Thanks!
+unlikely() is both (minor) optimization and documents that it is not expected
+branch so it obviously makes sense here.
 
-Cheers,
-Miguel
+> 
+> Best Regards,
+> Elena.
+
+BR, Jarkko
