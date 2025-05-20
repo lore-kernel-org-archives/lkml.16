@@ -1,210 +1,142 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481D25A65C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79C92571CA;
+	Tue, 20 May 2025 07:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747725437; cv=none; b=UEgJFS2Y3dtEZt9YvTrMqQ3jPpxM7D4oK37YLVWjYoNLIH3ffgS1ITybZKeWg5pWKAmcrgPV7UDU5p7TBSFZDx5VdjkN+jL8/nhQKruU+UhDG6eCaTu92wWqnZzCoeJgOj7jepayUoQCFePA/c3xIlsxW2YJffXTP6/bCxCMREs=
+	t=1747725533; cv=none; b=PTVnPZEflMHE67969jVuj+1EqIi9nDGMy7ds6CifsJIZmwziG1bsS1wmWIuoBg+dKEXUJPur7bq73cs1SWdqXJwH9edCpA4Nv+Dr8NCgBDm0LbchPpjFmq6ZG/6kaB7nhW9QBdgdIovjOBwX1W+CG99hh6UzubY3LK+j1Y+d/8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747725437; c=relaxed/simple;
-	bh=lRagZQmgUvdghHg7ZtAe29OmSbKWbRuyjyXrV4X+phg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V1P5LCdKS9IhwGPPpi0+JDF/Lz+HYrO+o9yWDBAKXxgeHpcrpHihn5JLLrvnlTAkwPxjN/9N5up26N6llaKDYrGHNVwjQBTUbUpYph2tXsO7Xr3jMaKAgWuuDBSVRqxUIPoA4M1Z74z8q8NE+EasMYULxe/NzZvRJXlxuIcuIaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jRpCNbQs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/DK7HFP3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C2b2MQ/I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xH+q0fbC; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747725533; c=relaxed/simple;
+	bh=0dgpHM6X5ylXIfc/EcEGibieH0olYU53fdjUR+UZzG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKzHGZG1mxXcZ8Uo8/63uaLrPlufSkDWxUElaHK3lfykZ7NcA+emQxVuoLsBOPGxOxX7MmMRs6nnPrKlpIG7Iqrj1AlmrxIFwyUzwi/71LpplTsRUSWMPH1MjwlYOeBLZE+aDbEIxeB/Me0MFiNDtBdyKrMbkgL23q8+0A/yzws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIHV3IEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jRpCNbQs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/DK7HFP3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C2b2MQ/I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xH+q0fbC"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DC0EC2228E;
-	Tue, 20 May 2025 07:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747725434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/X6S6/bCWZmUJrcNoSW9IqCVsbt0BrJkVECymPGZju8=;
-	b=jRpCNbQsrwGdsG50l8Udeh2QvYb4xWBl/o/SJCo3WynhJnJ4Rs1e3NT/ygTf1iA9LcnO+r
-	VzZjIfG58YENBkCxJ3+3Rid2IhfmBnBow+P6GMPGfKd2yuyJ+K/oRu1atREvteO67TB5pf
-	AFAy9/AL8PJZ1AoDRct1axLO2gt+J9U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747725434;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/X6S6/bCWZmUJrcNoSW9IqCVsbt0BrJkVECymPGZju8=;
-	b=/DK7HFP3+0AHHaPZi5YBYCDDbOvM0xqNv4CLPFhkw59jsEQiYFCrSqZHSlCTNJfPRB46Xs
-	5Cdfj0I0M5bqG9Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="C2b2MQ/I";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xH+q0fbC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747725433; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/X6S6/bCWZmUJrcNoSW9IqCVsbt0BrJkVECymPGZju8=;
-	b=C2b2MQ/In3XsmTEFFJ7lntxxxda6LA6WpjzPTk3xx60Y4uwwUaxp2GTpc/Yd9tNTobBLaw
-	+cDS3epecrrAfN/TNy30JWnOH2Vrjn7GTaFwlLEk3QPDQEPyIhIWZboWgg4Pwi/8VbNXmM
-	+MmEW2U7MM+elUgVMMjZeE+NP17k6a0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747725433;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/X6S6/bCWZmUJrcNoSW9IqCVsbt0BrJkVECymPGZju8=;
-	b=xH+q0fbCEaEG5O6J80vd6HE4OPU4VHMUGfmrL+vjdUamWBeyYFlrz0n5daKzmQuoMHLRDx
-	LczI73giHgTuQeAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8358913A3E;
-	Tue, 20 May 2025 07:17:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gSpMHnksLGiZNgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 20 May 2025 07:17:13 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: gregkh@linuxfoundation.org,
-	hdegoede@redhat.com,
-	arvidjaar@gmail.com,
-	tiwai@suse.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] dummycon: Trigger redraw when switching consoles with deferred takeover
-Date: Tue, 20 May 2025 09:14:00 +0200
-Message-ID: <20250520071418.8462-1-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIHV3IEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742FAC4CEE9;
+	Tue, 20 May 2025 07:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747725532;
+	bh=0dgpHM6X5ylXIfc/EcEGibieH0olYU53fdjUR+UZzG0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VIHV3IEnVoIZr59y520JyK1rDWYem9zcOuYv+W7yr2vZpklL0JQkgvherUZwr6v7n
+	 nHX1oOIpkaJg0eoTOKvrl0PRY486zrZjrtFAV430NT5ktpAjmqAAVVteq7DyZr8iq+
+	 dsLSbYA39nxk18DwCaiPAZUqmPbK2hTJPa7eE5Ia3dkcdB86Alg93Ck79evVkyPgMV
+	 zxCCId2RDQ0vz60xAe/D/Wcabw19XCk7w5dV5YUjbbVZ8BRBiC/fZsFGd9mZV34NO+
+	 f5TYhWfRiRz3MMPziD5jg+RyZGFc28jmY7Z63QxECAN8q5M0jL2wPu4Wk7Aham9TFE
+	 iLzrccnjGcicg==
+Message-ID: <8c6d37bb-8e07-4e44-bef1-f4376b54b853@kernel.org>
+Date: Tue, 20 May 2025 09:18:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Bar: /
-X-Spam-Flag: NO
-X-Spam-Score: -0.01
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: DC0EC2228E
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.01 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	URIBL_BLOCKED(0.00)[suse.com:url,suse.de:email,suse.de:mid,suse.de:dkim,lists.freedesktop.org:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[linuxfoundation.org,redhat.com,gmail.com,suse.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,lists.freedesktop.org:email,suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 1/3] dt-bindings: mmc: qcom: Document level shifter
+ flag for SD card
+To: Sarthak Garg <quic_sartgarg@quicinc.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Bhupesh Sharma <bhupesh.sharma@linaro.org>, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, quic_cang@quicinc.com,
+ quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
+ quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
+ quic_nitirawa@quicinc.com, quic_sachgupt@quicinc.com,
+ quic_bhaskarv@quicinc.com, quic_narepall@quicinc.com, kernel@quicinc.com
+References: <20241107080505.29244-1-quic_sartgarg@quicinc.com>
+ <20241107080505.29244-2-quic_sartgarg@quicinc.com>
+ <qffggh2ld2cw7d3eqwaerzicerhvdqojwsasherx7dgoda42b7@bigsjxr6vtao>
+ <ba49151a-e32d-438d-8a2a-50840368a87c@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <ba49151a-e32d-438d-8a2a-50840368a87c@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Signal vt subsystem to redraw console when switching to dummycon
-with deferred takeover enabled. Makes the console switch to fbcon
-and displays the available output.
+On 20/05/2025 08:58, Sarthak Garg wrote:
+> 
+> 
+> On 11/7/2024 3:29 PM, Krzysztof Kozlowski wrote:
+>> On Thu, Nov 07, 2024 at 01:35:03PM +0530, Sarthak Garg wrote:
+>>> Introduce a flag to indicate if the Qualcomm platform has a level
+>>> shifter for SD cards. With level shifter addition some extra delay is
+>>> seen on RX data path leading to CRC errors. To compensate these delays
+>>> and avoid CRC errors below things needs to be done:
+>>>
+>>> 1) Enable tuning for SDR50 mode
+>>> 2) Limit HS mode frequency to 37.5MHz from 50MHz
+>>>
+>>> Add this flag for all targets with a level shifter to handle these
+>>> issues for SD card.
+>>>
+>>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>
+>> This wasn't tested, so just short review - platform means SoC usually,
+>> so this looks SoC specific, thus implied by compatible.
+>>  > Best regards,
+>> Krzysztof
+>>
+> 
+> Sure will redesign this logic and use compatible in patch V2.
 
-With deferred takeover enabled, dummycon acts as the placeholder
-until the first output to the console happens. At that point, fbcon
-takes over. If the output happens while dummycon is not active, it
-cannot inform fbcon. This is the case if the vt subsystem runs in
-graphics mode.
+Hi, I hope you are well and that was just some mishap, but I cannot help
+but notice that you received review within two hours after posting
+patch, but now you responded to my review after 6 months.
 
-A typical graphical boot starts plymouth, a display manager and a
-compositor; all while leaving out dummycon. Switching to a text-mode
-console leaves the console with dummycon even if a getty terminal
-has been started.
+Sometimes I really consider reviewing at the end of 2 weeks - the usual
+maximum time frame.
 
-Returning true from dummycon's con_switch helper signals the vt
-subsystem to redraw the screen. If there's output available dummycon's
-con_putc{s} helpers trigger deferred takeover of fbcon, which sets a
-display mode and displays the output. If no output is available,
-dummycon remains active.
-
-v2:
-- make the comment slightly more verbose (Javier)
-
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reported-by: Andrei Borzenkov <arvidjaar@gmail.com>
-Closes: https://bugzilla.suse.com/show_bug.cgi?id=1242191
-Tested-by: Andrei Borzenkov <arvidjaar@gmail.com>
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
-Fixes: 83d83bebf401 ("console/fbcon: Add support for deferred console takeover")
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: linux-fbdev@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: <stable@vger.kernel.org> # v4.19+
----
- drivers/video/console/dummycon.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
-index 139049368fdc..7d02470f19b9 100644
---- a/drivers/video/console/dummycon.c
-+++ b/drivers/video/console/dummycon.c
-@@ -85,6 +85,15 @@ static bool dummycon_blank(struct vc_data *vc, enum vesa_blank_mode blank,
- 	/* Redraw, so that we get putc(s) for output done while blanked */
- 	return true;
- }
-+
-+static bool dummycon_switch(struct vc_data *vc)
-+{
-+	/*
-+	 * Redraw, so that we get putc(s) for output done while switched
-+	 * away. Informs deferred consoles to take over the display.
-+	 */
-+	return true;
-+}
- #else
- static void dummycon_putc(struct vc_data *vc, u16 c, unsigned int y,
- 			  unsigned int x) { }
-@@ -95,6 +104,10 @@ static bool dummycon_blank(struct vc_data *vc, enum vesa_blank_mode blank,
- {
- 	return false;
- }
-+static bool dummycon_switch(struct vc_data *vc)
-+{
-+	return false;
-+}
- #endif
- 
- static const char *dummycon_startup(void)
-@@ -124,11 +137,6 @@ static bool dummycon_scroll(struct vc_data *vc, unsigned int top,
- 	return false;
- }
- 
--static bool dummycon_switch(struct vc_data *vc)
--{
--	return false;
--}
--
- /*
-  *  The console `switch' structure for the dummy console
-  *
--- 
-2.49.0
-
+Best regards,
+Krzysztof
