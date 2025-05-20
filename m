@@ -1,172 +1,270 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFCD2571D2;
-	Tue, 20 May 2025 03:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAFA2566F4;
+	Tue, 20 May 2025 03:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711571; cv=none; b=B0MsF6W77Uc9/5iFq9Ba2igjpnbK93WvN5o/W94r+X8qQBMmDlnYdhP0l9ncIDOFxmUWBigchyURIDQxdwlQ4p+V8xV+B53Y6pptwsJmq9h/6VzbBrHEQlI78lqUrv1xfUhLhJKLfaEvP/h4NYzN3EXLmYTy8sOMzoXRt9CpKgc=
+	t=1747711813; cv=none; b=NoTXqemNyJn4L9FGxLRHCmgQObGR8Z/ZbpMzOYByTw9KRsinAVJxGVMj4qvT63OBP8DxQyQlP1t5eamx01cmJxEgVrid1wSrGnPhky5HXrKL8ytJ4PoGJTSTiYkZRXQZc5fs8bC4nl4x/aUancM2K4VduiicSD0OMlH6e+RYSP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747711571; c=relaxed/simple;
-	bh=O5WlLJx2+c4wwI4hD4aEpExVS165ZV3Rb0A7jWj6nqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uPRQZpT3c3Yk/uvfRvJxnEuXSQ7zV2LZWNytVuWTcIlqPWFhLor59Sc9D2+/JTmC6P3OCJoiH0IgnqHlMYllJYgZOYGLxs7iVYL/ze/DHWU0V+hsMUaYkeZVSysm047llfeIxTzlV/dweZSxmIwTFCwDz1sGVSYUcuidBW35x+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 23f5f7fc352a11f0b29709d653e92f7d-20250520
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:37b74419-d921-4320-accf-1d236675eb27,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:1597e8b14a6d409660efa3b5747038bb,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 23f5f7fc352a11f0b29709d653e92f7d-20250520
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1874766652; Tue, 20 May 2025 11:25:55 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 79925E003505;
-	Tue, 20 May 2025 11:25:55 +0800 (CST)
-X-ns-mid: postfix-682BF643-334541295
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 57878E006100;
-	Tue, 20 May 2025 11:25:54 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	tzungbi@kernel.org,
-	a.fatoum@pengutronix.de,
-	jani.nikula@intel.com,
-	joel.granados@kernel.org,
-	paulmck@kernel.org,
-	zhangguopeng@kylinos.cn,
-	linux@weissschuh.net,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH 1/3] PM / Sleep: Replace mutex_[un]lock(&system_transition_mutex) with [un]lock_system_sleep()
-Date: Tue, 20 May 2025 11:25:43 +0800
-Message-Id: <20250520032545.29558-2-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250520032545.29558-1-zhangzihuan@kylinos.cn>
-References: <20250520032545.29558-1-zhangzihuan@kylinos.cn>
+	s=arc-20240116; t=1747711813; c=relaxed/simple;
+	bh=3958qdAkC/Zcg7qE7Q02GOb5R+VsY2tzmB31N1eLkro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HzNkLXBNPICxtOhr0Lh9VKASgtDFrLeWWRFVI2UA/TgAGK+QV5FSEn7xwkhbiHkVPvNggY39kr42peRdmlvlpG8t07f7EVI33xmcwBoVCQpaJ+aM0Yz3wjsjHA1SLmzOlnoGxsNdPIwWGMwQUqLlhGqjQZlCgwlv/Cp8W7o3lzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KHQkosmD; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KHQkosmD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747711812; x=1779247812;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3958qdAkC/Zcg7qE7Q02GOb5R+VsY2tzmB31N1eLkro=;
+  b=KHQkosmDr5SSFnHfhrFsRkohbnBVJJx2+PVbXTTobOaYaJ5LFUamnj1G
+   xTt4tW47pL2L0M0MecEdNG2yjluaQS7t5JioK408+ZTC9LTLnzGORHqEy
+   jc98aHz58uqOtEAEscUmieksybZ5bTlO/Yj0P1iO6DlE7i5V/efTNG6vh
+   Gqj0ixwCutSof1gtDnAnYWOBrVX6/28PEtIrT/ivCP1OH/Tou0HEEr6Ou
+   w8eqbgKIpE5SnOKkrrcG9CTQwRbx4XD85rW6UUb797xYb/1AEqHbCWF9i
+   iibaHbeST6taSIF6cxv67VnXm//6JHM0VnF1zWmC6HeVFUP4N+oQNRoGx
+   A==;
+X-CSE-ConnectionGUID: mTAOpC7ZTUCFu82CJeK4Uw==
+X-CSE-MsgGUID: twyHk0LBSXiLuH+8wb4hKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="53429070"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="53429070"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:30:11 -0700
+X-CSE-ConnectionGUID: ro3lLGvqSvWFml5zYkmBVg==
+X-CSE-MsgGUID: r19yAhXvSweqMW1EK5YEuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139974763"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:30:10 -0700
+Message-ID: <8624dd16-83a3-4fd3-a5d9-a79c50236e58@linux.intel.com>
+Date: Mon, 19 May 2025 20:30:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 13/16] PCI/AER: Rename struct aer_stats to aer_report
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-14-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-14-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-These function currently calls mutex_lock(&system_transition_mutex) and
-mutex_unlock() directly to protect the resume-from-disk operation from
-concurrent suspend/resume transitions.
 
-However, this is inconsistent with the rest of the power management
-code, where lock_system_sleep() and unlock_system_sleep() are used to
-wrap suspend/hibernate transitions. These wrapper functions not only
-acquire system_transition_mutex, but also set PF_NOFREEZE for the
-calling thread, ensuring that it is not subject to freezing during
-suspend.
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>
+> Update name to reflect the broader definition of structs/variables that are
+> stored (e.g. ratelimits). This is a preparatory patch for adding rate limit
+> support.
+>
+> Link: https://lore.kernel.org/r/20250321015806.954866-6-pandoh@google.com
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-This change replaces the raw mutex_lock()/unlock() with the standard
-lock_system_sleep()/unlock_system_sleep() wrapper pair, bringing it in
-line with the locking pattern used by hibernate(), pm_suspend(), and
-other similar entry points.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Benefits of this change:
+>   drivers/pci/pcie/aer.c | 50 +++++++++++++++++++++---------------------
+>   include/linux/pci.h    |  2 +-
+>   2 files changed, 26 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 06a7dda20846..da62032bf024 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -54,11 +54,11 @@ struct aer_rpc {
+>   	DECLARE_KFIFO(aer_fifo, struct aer_err_source, AER_ERROR_SOURCES_MAX);
+>   };
+>   
+> -/* AER stats for the device */
+> -struct aer_stats {
+> +/* AER report for the device */
+> +struct aer_report {
 
- - Ensures the thread performing software resume is marked PF_NOFREEZE,
-   which is important during early resume paths where freezing is
-active.
- - Improves code clarity by making the locking intent more explicit.
- - Unifies suspend/hibernate locking style across the kernel power
-   subsystem.
- - Reduces the risk of future maintenance issues due to inconsistent
-   locking.
+For me aer_report also sounds like stats like struct. I prefer aer_info, but
+it is up to you.
 
-No functional change is expected at runtime, since the lock order and
-coverage remain the same. This is a straightforward cleanup and
-consistency fix.
+>   
+>   	/*
+> -	 * Fields for all AER capable devices. They indicate the errors
+> +	 * Stats for all AER capable devices. They indicate the errors
+>   	 * "as seen by this device". Note that this may mean that if an
+>   	 * Endpoint is causing problems, the AER counters may increment
+>   	 * at its link partner (e.g. Root Port) because the errors will be
+> @@ -80,7 +80,7 @@ struct aer_stats {
+>   	u64 dev_total_nonfatal_errs;
+>   
+>   	/*
+> -	 * Fields for Root Ports & Root Complex Event Collectors only; these
+> +	 * Stats for Root Ports & Root Complex Event Collectors only; these
+>   	 * indicate the total number of ERR_COR, ERR_FATAL, and ERR_NONFATAL
+>   	 * messages received by the Root Port / Event Collector, INCLUDING the
+>   	 * ones that are generated internally (by the Root Port itself)
+> @@ -377,7 +377,7 @@ void pci_aer_init(struct pci_dev *dev)
+>   	if (!dev->aer_cap)
+>   		return;
+>   
+> -	dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+> +	dev->aer_report = kzalloc(sizeof(*dev->aer_report), GFP_KERNEL);
+>   
+>   	/*
+>   	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+> @@ -398,8 +398,8 @@ void pci_aer_init(struct pci_dev *dev)
+>   
+>   void pci_aer_exit(struct pci_dev *dev)
+>   {
+> -	kfree(dev->aer_stats);
+> -	dev->aer_stats = NULL;
+> +	kfree(dev->aer_report);
+> +	dev->aer_report = NULL;
+>   }
+>   
+>   #define AER_AGENT_RECEIVER		0
+> @@ -537,10 +537,10 @@ static const char *aer_agent_string[] = {
+>   {									\
+>   	unsigned int i;							\
+>   	struct pci_dev *pdev = to_pci_dev(dev);				\
+> -	u64 *stats = pdev->aer_stats->stats_array;			\
+> +	u64 *stats = pdev->aer_report->stats_array;			\
+>   	size_t len = 0;							\
+>   									\
+> -	for (i = 0; i < ARRAY_SIZE(pdev->aer_stats->stats_array); i++) {\
+> +	for (i = 0; i < ARRAY_SIZE(pdev->aer_report->stats_array); i++) {\
+>   		if (strings_array[i])					\
+>   			len += sysfs_emit_at(buf, len, "%s %llu\n",	\
+>   					     strings_array[i],		\
+> @@ -551,7 +551,7 @@ static const char *aer_agent_string[] = {
+>   					     i, stats[i]);		\
+>   	}								\
+>   	len += sysfs_emit_at(buf, len, "TOTAL_%s %llu\n", total_string,	\
+> -			     pdev->aer_stats->total_field);		\
+> +			     pdev->aer_report->total_field);		\
+>   	return len;							\
+>   }									\
+>   static DEVICE_ATTR_RO(name)
+> @@ -572,7 +572,7 @@ aer_stats_dev_attr(aer_dev_nonfatal, dev_nonfatal_errs,
+>   		     char *buf)						\
+>   {									\
+>   	struct pci_dev *pdev = to_pci_dev(dev);				\
+> -	return sysfs_emit(buf, "%llu\n", pdev->aer_stats->field);	\
+> +	return sysfs_emit(buf, "%llu\n", pdev->aer_report->field);	\
+>   }									\
+>   static DEVICE_ATTR_RO(name)
+>   
+> @@ -599,7 +599,7 @@ static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct pci_dev *pdev = to_pci_dev(dev);
+>   
+> -	if (!pdev->aer_stats)
+> +	if (!pdev->aer_report)
+>   		return 0;
+>   
+>   	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
+> @@ -623,28 +623,28 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+>   	unsigned long status = info->status & ~info->mask;
+>   	int i, max = -1;
+>   	u64 *counter = NULL;
+> -	struct aer_stats *aer_stats = pdev->aer_stats;
+> +	struct aer_report *aer_report = pdev->aer_report;
+>   
+>   	trace_aer_event(pci_name(pdev), (info->status & ~info->mask),
+>   			info->severity, info->tlp_header_valid, &info->tlp);
+>   
+> -	if (!aer_stats)
+> +	if (!aer_report)
+>   		return;
+>   
+>   	switch (info->severity) {
+>   	case AER_CORRECTABLE:
+> -		aer_stats->dev_total_cor_errs++;
+> -		counter = &aer_stats->dev_cor_errs[0];
+> +		aer_report->dev_total_cor_errs++;
+> +		counter = &aer_report->dev_cor_errs[0];
+>   		max = AER_MAX_TYPEOF_COR_ERRS;
+>   		break;
+>   	case AER_NONFATAL:
+> -		aer_stats->dev_total_nonfatal_errs++;
+> -		counter = &aer_stats->dev_nonfatal_errs[0];
+> +		aer_report->dev_total_nonfatal_errs++;
+> +		counter = &aer_report->dev_nonfatal_errs[0];
+>   		max = AER_MAX_TYPEOF_UNCOR_ERRS;
+>   		break;
+>   	case AER_FATAL:
+> -		aer_stats->dev_total_fatal_errs++;
+> -		counter = &aer_stats->dev_fatal_errs[0];
+> +		aer_report->dev_total_fatal_errs++;
+> +		counter = &aer_report->dev_fatal_errs[0];
+>   		max = AER_MAX_TYPEOF_UNCOR_ERRS;
+>   		break;
+>   	}
+> @@ -656,19 +656,19 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+>   static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   				 struct aer_err_source *e_src)
+>   {
+> -	struct aer_stats *aer_stats = pdev->aer_stats;
+> +	struct aer_report *aer_report = pdev->aer_report;
+>   
+> -	if (!aer_stats)
+> +	if (!aer_report)
+>   		return;
+>   
+>   	if (e_src->status & PCI_ERR_ROOT_COR_RCV)
+> -		aer_stats->rootport_total_cor_errs++;
+> +		aer_report->rootport_total_cor_errs++;
+>   
+>   	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+>   		if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
+> -			aer_stats->rootport_total_fatal_errs++;
+> +			aer_report->rootport_total_fatal_errs++;
+>   		else
+> -			aer_stats->rootport_total_nonfatal_errs++;
+> +			aer_report->rootport_total_nonfatal_errs++;
+>   	}
+>   }
+>   
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77e96..4b11a90107cb 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -346,7 +346,7 @@ struct pci_dev {
+>   	u8		hdr_type;	/* PCI header type (`multi' flag masked out) */
+>   #ifdef CONFIG_PCIEAER
+>   	u16		aer_cap;	/* AER capability offset */
+> -	struct aer_stats *aer_stats;	/* AER stats for this device */
+> +	struct aer_report *aer_report;	/* AER report for this device */
+>   #endif
+>   #ifdef CONFIG_PCIEPORTBUS
+>   	struct rcec_ea	*rcec_ea;	/* RCEC cached endpoint association */
 
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
----
- kernel/power/hibernate.c | 5 +++--
- kernel/reboot.c          | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 23c0f4e6cb2f..cfaa92f24857 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -988,6 +988,7 @@ static int __init find_resume_device(void)
-=20
- static int software_resume(void)
- {
-+	unsigned int sleep_flags;
- 	int error;
-=20
- 	pm_pr_dbg("Hibernation image partition %d:%d present\n",
-@@ -995,7 +996,7 @@ static int software_resume(void)
-=20
- 	pm_pr_dbg("Looking for hibernation image.\n");
-=20
--	mutex_lock(&system_transition_mutex);
-+	sleep_flags =3D lock_system_sleep();
- 	error =3D swsusp_check(true);
- 	if (error)
- 		goto Unlock;
-@@ -1050,7 +1051,7 @@ static int software_resume(void)
- 	hibernate_release();
- 	/* For success case, the suspend path will release the lock */
-  Unlock:
--	mutex_unlock(&system_transition_mutex);
-+	unlock_system_sleep(sleep_flags);
- 	pm_pr_dbg("Hibernation image not present or could not be loaded.\n");
- 	return error;
-  Close_Finish:
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index ec087827c85c..68ac7e377efb 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -729,6 +729,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		void __user *, arg)
- {
- 	struct pid_namespace *pid_ns =3D task_active_pid_ns(current);
-+	unsigned int sleep_flags;
- 	char buffer[256];
- 	int ret =3D 0;
-=20
-@@ -761,7 +762,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		cmd =3D LINUX_REBOOT_CMD_HALT;
- 	}
-=20
--	mutex_lock(&system_transition_mutex);
-+	sleep_flags =3D lock_system_sleep();
- 	switch (cmd) {
- 	case LINUX_REBOOT_CMD_RESTART:
- 		kernel_restart(NULL);
-@@ -811,7 +812,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		ret =3D -EINVAL;
- 		break;
- 	}
--	mutex_unlock(&system_transition_mutex);
-+	unlock_system_sleep(sleep_flags);
- 	return ret;
- }
-=20
---=20
-2.25.1
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
