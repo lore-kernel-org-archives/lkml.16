@@ -1,116 +1,238 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDBF251780
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A89F251780;
+	Tue, 20 May 2025 15:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753551; cv=none; b=g/7hD0ICN6zL2YmvEMq+27+2PWNPpJ6R4Y3BKiLpgGVBwunsXMMfOVH2eQnw4Sgo9a337DBOFAdUXBt0YtpkxMKYjCa27K8znoJSTyrYWs043c9C76Nri30blLfO/09G3qPy/pP+/pORRJ18YmupNLTWtsNAQtLi8lTMuZkRouM=
+	t=1747753560; cv=none; b=sBZHZS3bhthwnA+nd2L/bgsQOUokzx+8xN0W9jFjvf5h0WxEZHJkrzvW79YXHjJxQ6KtzIDAc5CnyvGNA/UoH85R3R0rO9wE0pnhcrvlWwQnh6pZarS8RW5+kM3G8NUAiqxQRm5MRWB+piWy5FKwVNFoQhcQA/BXWkaDZc2CPiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753551; c=relaxed/simple;
-	bh=W1Ywpvi+v/a7g4kdwj6pb+fMIlj0AIEcfL2WdrFRUrA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M9af6JtQbpXa0I3okzM+LmBZ77kkTNRvt9zCIPAdEMUd7BzOcDawLXXMbYL7tboIVgd8ZF1FbgJ8g5PE59fRL1mgHJUI4kSH3efeXtKkU0m8xMnRehwiI14tGCVlIPOjs6Dy7yXyVhkF+CDJrnYudpwAUbRTWY1vY+rEIhN6kK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLmtnMVI; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747753560; c=relaxed/simple;
+	bh=PYMltNyB/s1ZLI9HtiPI7l83cEbGBKz9U4TzsmiVfZc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GpnuMFIZPLfY5FQ30B1FD4hpwuElkmzr5KEsV6/5v2T7CreU119qb0JnEtKWe3X28hFxlsAUt/jr3Pj/VK7hfTN1zr8HYC48lI+ADDvszKygQd17UojSAd5zxqBbGd6RAcug4kwJ15y9N+RnLI/4YNIcg/W7mt3fgSZbFNmhVv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBSs0r3x; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLmtnMVI"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so760425ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747753549; x=1748358349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ibUebolwEMjE+Z6pNyKEAzbDAGWgUPaEEHNdhnwyUZI=;
-        b=qLmtnMVICpNbCcvqeayzfllQ7lJ6wDA6OMRaO1oKAIEbU8NgVl19mp4kbLe8yzJoj8
-         KWnaSLAIV65nIZvPIeWfeXZmDUDRnBfPKdO/5fscq2vauabmRsdTk0qL65L5hl0Af7oE
-         LCUKXjhIT6eDmk5pekSHtTp6R1flXEevUh3wiv5bU/WgSJLCRb0FNvmGn/zSpImUgCLA
-         NsOfJAqF78QAlelmZiAte+zG8weF5tCA/wxzLi2lHyUvc9xL00ixzfk5/83m+n4PEnVo
-         JIQdXal73QyyC3MLJ7ANip3eAFZHoN0c4PSP7wIpx+ntz2iZg0AGuijq8s08wkTGkZN5
-         m1vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747753549; x=1748358349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ibUebolwEMjE+Z6pNyKEAzbDAGWgUPaEEHNdhnwyUZI=;
-        b=B3cP7pGUFcCYrsh6AyCQtfxw5AMlu0EcNkMbPJrrWoRwI3e/0EnCVWv/71QkmBKxhu
-         RojZIPhL8luhdfhl4NxrzkJfPEzY2eEROvQf0zfX2RtG9U+0/mYbm1OduMMbWunWPFXi
-         eEv64/mBwHXloLLZbyXYzptwHyqJGKcoHvsn/8J6prY4auieex8i4pNse0WU+dX/9YIP
-         oDQGC9rl9za6IwDRMuDQcJu4Jbhsi96nzFvULaEhNH55FOwPiNHbXVfle75UU69TN+uf
-         fojRehIePdPGtgvkuqUvgjNCCijgubPaBl6/s0BQdz9HE58kKpQpOi4/TEDfhNhBRBW6
-         4axg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7+cn/WrfFLevU2RNzrqr9aFtexDs24tHuEGM4cxjFiUtktTDN0zl3xjH5jFx92E+Z5zTHMY1WvbwPJeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz58F0yYueizeDJjqd1CewLJPW1Z4iHE/apN5muNsuhvP4dvdq9
-	Sv09IWgw6Y0pXtJ7WUhD7KzuMjLTE8DBwHFyT4Q5VMIFWjm0aw76X28EtWKzOwJiitMw16tAG3e
-	L5wi/LHU/NnCfcxzvfvY/ypS8LuQD9YBr+p9UndhA
-X-Gm-Gg: ASbGncvc57dsns6OPCKLDmQBFHw13tl57n9hvqpMmzGXfr44tGbplwyCa6NZZB4tRhx
-	rMMmjH72e3+11XliNxfN8A04v5aL6x4EQn1ATnwZCKPXmXCKURxJWaKQ3Yju2BrSa65F42+mhOz
-	08/HEu3Qz0E7N3D+o2WV7yHs9iEHraLz6X93OaZ7Amh6Q/Vc/QxaWRA/hv7EdNQySRnt4397aHD
-	dl5Ry83tK8=
-X-Google-Smtp-Source: AGHT+IHxc+QAaZDsoEVzK7lyUBIQFVHn9l84Ub1SvqyC4el96AVxFd/31UdI3Oyx/y0B+oiTrMcQitooDGBhR0ZsUBI=
-X-Received: by 2002:a05:6e02:12c5:b0:3d8:18f8:fb02 with SMTP id
- e9e14a558f8ab-3dc5e611675mr9307455ab.17.1747753548588; Tue, 20 May 2025
- 08:05:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBSs0r3x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747753558; x=1779289558;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PYMltNyB/s1ZLI9HtiPI7l83cEbGBKz9U4TzsmiVfZc=;
+  b=ZBSs0r3xkkt4cIyzj0I6+J0PwLnTdhH0azdKgy3GPWunA4BlME6XNSjT
+   vCvIxNDj169nhf5ECC64UC/lncNk3vAXcjwWe+mtD7X7lHtkqs75qNK8k
+   N1EbuiP55c2GU7/yhqVcL4OgVkx0XlN2zWxQo5wyQApYo/lihcB+g7c7N
+   ill8KRilM9KU3IpsRTny75XjPnNr+V1higIhZjESdKU+O63Mvl+ppKmcy
+   DTlMFamunF4f8nAu6qCtc4JAtAYvDPVfg6RZfvNOFd9l+C+jLbMtQPEDk
+   htng3zXvWaEDetuD4oQymGk6Uy6cxoF/mjI+iO3VFMwy2GQuZ6F2S0FOl
+   w==;
+X-CSE-ConnectionGUID: efqYR3IeRuS+clHEQ12A5Q==
+X-CSE-MsgGUID: k2HXHWK4QZKsRb+6hoKVYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49565986"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49565986"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 08:05:58 -0700
+X-CSE-ConnectionGUID: v+zaXnDrReWzbCESIFs49A==
+X-CSE-MsgGUID: dMzI1H8HShm8S17zQVkk2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="143713635"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 08:05:54 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 18:05:50 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    srinivas.pandruvada@linux.intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
+    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 14/15] platform/x86/intel/pmt/telemetry: Add API to
+ retrieve telemetry regions by feature
+In-Reply-To: <20250430212106.369208-15-david.e.box@linux.intel.com>
+Message-ID: <8433cbaf-253b-cc7f-77d4-fa48142aa603@linux.intel.com>
+References: <20250430212106.369208-1-david.e.box@linux.intel.com> <20250430212106.369208-15-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519232539.831842-1-namhyung@kernel.org> <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
-In-Reply-To: <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 May 2025 08:05:37 -0700
-X-Gm-Features: AX0GCFvJjeIxiP_mev0L_EZph5roMRRNCNBjF5sRRQXzYAlUWj18t9TZo-lt6m8
-Message-ID: <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Increase syscall handler map size to 1024
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, May 19, 2025 at 4:36=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> Hello Namhyung,
->
-> On Mon, May 19, 2025 at 4:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
-> > max entries of 512.  Usually syscall numbers are smaller than this but
-> > x86 has x32 ABI where syscalls start from 512.
-> >
-> > That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middl=
-e
-> > of the loop when it accesses those keys.  As the loop iteration is not
-> > ordered by syscall numbers anymore, the failure can affect non-x32
-> > syscalls.
-> >
-> > Let's increase the map size to 1024 so that it can handle those ABIs
-> > too.  While most systems won't need this, increasing the size will be
-> > safer for potential future changes.
+On Wed, 30 Apr 2025, David E. Box wrote:
 
-Do we need to worry about MIPS where syscalls can be offset by 1000s?
-https://lore.kernel.org/lkml/8ed7dfb2-1e4d-4aa4-a04b-0397a89365d1@app.fastm=
-ail.com/
-We could do with a map that combines BPF_MAP_TYPE_HASH with the tails
-calls of BPF_MAP_TYPE_PROG_ARRAY.
+> Introduce a new API, intel_pmt_get_regions_by_feature(), that gathers
+> telemetry regions based on a provided capability flag. This API enables
+> retrieval of regions with various capabilities (for example, RMID-based
+> telemetry) and provides a unified interface for accessing them. Resource
+> management is handled via reference counting using
+> intel_pmt_put_feature_group().
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmt/telemetry.c | 89 +++++++++++++++++++++-
+>  include/linux/intel_vsec.h                 | 15 ++++
+>  2 files changed, 103 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+> index 58d06749e417..d071dca4a689 100644
+> --- a/drivers/platform/x86/intel/pmt/telemetry.c
+> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
+> @@ -9,16 +9,20 @@
+>   */
+>  
+>  #include <linux/auxiliary_bus.h>
+> +#include <linux/bitops.h>
+> +#include <linux/err.h>
+>  #include <linux/intel_pmt_features.h>
+>  #include <linux/intel_vsec.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kref.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/overflow.h>
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> -#include <linux/overflow.h>
+> +#include <linux/xarray.h>
+>  
+>  #include "class.h"
+>  
+> @@ -209,6 +213,88 @@ int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pmt_telem_get_endpoint_info, "INTEL_PMT_TELEMETRY");
+>  
+> +static int pmt_copy_region(struct telemetry_region *region,
+> +			   struct intel_pmt_entry *entry)
+> +{
+> +
+> +	struct oobmsm_plat_info *plat_info;
+> +
+> +	plat_info = intel_vsec_get_mapping(entry->ep->pcidev);
+> +	if (IS_ERR(plat_info))
+> +		return PTR_ERR(plat_info);
+> +
+> +	region->plat_info = *plat_info;
+> +	region->guid = entry->guid;
+> +	region->addr = entry->ep->base;
+> +	region->size = entry->size;
+> +	region->num_rmids = entry->num_rmids;
+> +
+> +	return 0;
+> +}
+> +
+> +static void pmt_feature_group_release(struct kref *kref)
+> +{
+> +	struct pmt_feature_group *feature_group;
+> +
+> +	feature_group = container_of(kref, struct pmt_feature_group, kref);
+> +	kfree(feature_group);
+> +}
+> +
+> +struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
+> +{
+> +	struct pmt_feature_group *feature_group;
+> +	struct telemetry_region *region;
+> +	struct intel_pmt_entry *entry;
+> +	unsigned long idx;
+> +	int count = 0;
+> +	size_t size;
+> +
+> +	if (!pmt_feature_id_is_valid(id))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	guard(mutex)(&ep_lock);
+> +	xa_for_each(&telem_array, idx, entry) {
+> +		if (entry->feature_flags & BIT(id))
+> +			count++;
+> +	}
+> +
+> +	if (!count)
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	size = struct_size(feature_group, regions, count);
+> +	feature_group = kzalloc(size, GFP_KERNEL);
+> +	if (!feature_group)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	feature_group->count = count;
+> +
+> +	region = feature_group->regions;
+> +	xa_for_each(&telem_array, idx, entry) {
+> +		int ret;
+> +
+> +		if (!(entry->feature_flags & BIT(id)))
+> +			continue;
+> +
+> +		ret = pmt_copy_region(region, entry);
+> +		if (ret) {
+> +			kfree(feature_group);
 
-Thanks,
-Ian
+Use __free() instead.
 
-> > Cc: Howard Chu <howardchu95@gmail.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
->
-> Thanks,
-> Howard
+> +			return ERR_PTR(ret);
+> +		}
+> +		region++;
+> +	}
+> +
+> +	kref_init(&feature_group->kref);
+> +
+> +	return feature_group;
+> +}
+> +EXPORT_SYMBOL(intel_pmt_get_regions_by_feature);
+> +
+> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
+> +{
+> +	kref_put(&feature_group->kref, pmt_feature_group_release);
+> +}
+> +EXPORT_SYMBOL(intel_pmt_put_feature_group);
+> +
+>  int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
+>  {
+>  	u32 offset, size;
+> @@ -353,3 +439,4 @@ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
+>  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS("INTEL_PMT");
+> +MODULE_IMPORT_NS("INTEL_VSEC");
+> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> index f63e67398a8e..f41d2ec974fd 100644
+> --- a/include/linux/intel_vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -220,4 +220,19 @@ static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pd
+>  	return ERR_PTR(-ENODEV);
+>  }
+>  #endif
+> +
+> +#if IS_ENABLED(CONFIG_INTEL_PMT_TELEMETRY)
+> +struct pmt_feature_group *
+> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
+> +
+> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
+> +#else
+> +static inline struct pmt_feature_group *
+> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
+> +{ return ERR_PTR(-ENODEV); }
+
+Please add include for ERR_PTR().
+
+Change this to follow the normal function coding style even if it takes
+2 lines more that way. :-)
+
+> +
+> +static inline void
+> +intel_pmt_put_feature_group(struct pmt_feature_group *feature_group) {}
+> +#endif
+> +
+>  #endif
+> 
+
+-- 
+ i.
+
