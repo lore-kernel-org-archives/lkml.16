@@ -1,177 +1,94 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12AC2505AA;
-	Tue, 20 May 2025 15:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903AB25CC6C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754553; cv=none; b=GSsTNfJ/vNkQ2FlSC/xFU50mj5KK5Qxk8L2B+LOOGZzOGEXs01T78tNA5nZ8dyK9o9CwR7YpWbYPjphP+fr4iY43GawjhUzqex/P3YX3z9C2nUytKTExgySX/5TOBjttOuyZ4xmk7/JpUS9XpTgvIp/rCOIw+ajtemdWnZNYr2M=
+	t=1747754586; cv=none; b=E0HkTT2WtBvptqrP4quY1TvTp0ptVWoCyQfPpJYyoTYFNlNBgvBGEg0bJlCUqbbpJcNiINXg2z0xppySvdu/C5sWx4tJTbBap7g7szF8CfurfhRsPay0f1XOJ3fdHIdSG4OpcfpoFWcrnaFi6l/a1gUmSHN/tRnQt+6KL2P41Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754553; c=relaxed/simple;
-	bh=TOckte/RXxhhtZxgfzD8giJmyAbKzFbnveOMKN1CJ7E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=fY3kAU3NBa5xHigSz/FxLASIjoeezMxIcwBdtmZz/FUEl9yo2gupS0uGebtpioAGEyrRwjaaQANWb1YF5ehpvv5+KZhMLcA0sIjGDOxBfYRugv69/yqcJjo49OR9CDNaWDh5dEtIyJK6XKe+PeaKRxcDX2xnWpSkjz2WjnEPXCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PN/xGAA4; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1747754586; c=relaxed/simple;
+	bh=vEbcuXQwEDRa0vNR50YOWWWtdFUeo4T8qpaWJJxDqHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NonZNREV+9pqinoGBWYyePtCltTon6p9ZUEE8LuNzyw9qPBA4q7RFF7QlCs0pYe69Tke0cmBM4ps+qT9YAp38bwhFAJ5evmUg6jwdZTLYPhsVz/jphL+RT/vhd8GM+hDT/uPOElReZWo/mjAxgLRmXI+khVf+LX68/EXm2uCRVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=m9dxw+Aq; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PN/xGAA4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747754552; x=1779290552;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=TOckte/RXxhhtZxgfzD8giJmyAbKzFbnveOMKN1CJ7E=;
-  b=PN/xGAA4KKeLsK7pR0JI9c69pIm9J7kvuDSKhpN15i/DdnviJWl/cx4F
-   eiGJ6DsTFQkJarmZrT8BNBvQI2dmv8zTJY/DrYVFj2hR0nTbZe2RbW0IU
-   SR6Dj7eJPLauHViiMHd3DGTLpUlWogT2AgILMxlmJwzM8G0T/+xBuQs3o
-   yFzixkmYbXQAzEbDaI/ZWzAgay3sUS6qqOw4MVugCb+/FTBdAjuPanylu
-   h7LzsXEknTpZ6adF7JcbZHPNV2IObUTuY9e5fnAAtjgUP5lyjHpkchDIG
-   V1BlxH9wITbAos6IfRTsRfIOoi7cu8aC3Z4bTsr59Z7MlZCHqCn6WWJpG
-   g==;
-X-CSE-ConnectionGUID: Mv3k4QTqSfuckgJwL9Kybw==
-X-CSE-MsgGUID: R5ra95CaR2KdyZQCHjO6ng==
-X-IronPort-AV: E=Sophos;i="6.15,302,1739862000"; 
-   d="scan'208";a="41853373"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2025 08:22:26 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 20 May 2025 08:21:52 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 20 May 2025 08:21:48 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Tue, 20 May 2025 20:51:46 +0530
-Subject: [PATCH v3] counter: microchip-tcb-capture: Add watch validation
- support
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="m9dxw+Aq"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3db87b9605bso37622675ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747754583; x=1748359383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=psPdOjdWIgtZdlDW5hj2GFX8fZ81Dk7SDN2MaI3x7nw=;
+        b=m9dxw+AqDQ+1rWgodAGFWnhuFaKSCIgi5ZydGaW52KKeWbLHBVKN5J79xHekkhN5uO
+         WJei/NE5ldeBweYaP+bnT5llbDOj7a+pQPJTi+IgEbQ5Od+1/K2Dkmhm9dLz+HI/G7d2
+         rkH/Fhzb/48Sh/2r5tFFoJo63I7Y9fV5z/y6gRXClhC1VZj4dLYYc96o9jduLxDM0D4c
+         ZjxXt8Ty/oei0KrLVfQHFSEuZljFE7vrHD6gwkPc23UyLRZ9MWk9Vac67r7oQIn+x121
+         TUi9xpLdBihCEhB2r3RJyfsQzO7U3wAw9EGRijgGbbnG5M6IYD5TOz53jUUymEflYwNu
+         9nYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747754583; x=1748359383;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=psPdOjdWIgtZdlDW5hj2GFX8fZ81Dk7SDN2MaI3x7nw=;
+        b=kwvPLTQrMkOeKw58opn1J6BQzxVH0svM/M3P/7RrLelJhenj0DfLhCXnAS3DOzPs3h
+         bshqPXiYZHP4/XbmE8QaA3H5O1+65OPstWSOmv5c12w1w6QCrY4yOl+VxM35E2BCBps0
+         hzJztPN3333xXSOqIDj7GvePRVfFlLsoWI4+hXHPtv27O4p68POu7d+zL4hBs99QYgXs
+         geSjbZnXML+5X4eqdJv2il1PC5fNJ51ZCkTmySB1DrSJ+nqKKflg3bAzrQsiuPqdWI2S
+         +LOaN5SaDdKiUgFl+xqfU6x8NLUl6yAAtNGKTOGF9AAe7b1imnJCf6strbiDmsGzOYNi
+         x+5g==
+X-Forwarded-Encrypted: i=1; AJvYcCX7nXk/DFClAzsiDVegA3dxpmvs5I6krJYCOgRN98wsJj3HPbuwmYm2ipmHGtyPzVt383jY9PDvzbkoVaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuDdfYGMAorH/MsjWMurnH8Owk2YhazL++YmmzFYLDfymRiXjI
+	tfJtVbNuO2XQqEYS8g0eXieMqUWb+1Ytdxv4GQcbHXNm1YxAObekE0TkHTC+SIjqxnU=
+X-Gm-Gg: ASbGncuUoFooAu3y/nOFo/+/LWeOtBL5Jbj9Cc6AZGSH0A0Pts+CH8e/uToAb/laT6U
+	1A8rt6AOuYdKANanA7xs4tJHwanW5w6hTVqPn6yphiKBBturyV1X/WXdfxPt6XJpjykdFm8BpWf
+	q8xasJFwjrN/PT45uDvyxyW5Gr7RC//WzoZEvwXsDI5NSFpCCiZTGPdYFLMKypDksc+b7eEQGC9
+	j2MfTXaLDPz7elGEsGoovv8ME/yYvcQVLAkZS5rFqnQkFfav+4nZN7JZHLHyKGUHYZA5D7El57x
+	9ii13xtkcs/wpuxjyA0TLSeNc2cxg9qArxkE3Hc9nHuimP7KArwSdc1ttw==
+X-Google-Smtp-Source: AGHT+IH5FiH5hdeBYNYfGJRWZ52DOo6I2S1qMZg7FuTAuJBXr6A1ts8mPNDcFL0CI9GiyXU3YCIgRA==
+X-Received: by 2002:a05:6e02:12cf:b0:3da:7cb7:79c with SMTP id e9e14a558f8ab-3db842dea53mr165651365ab.13.1747754583546;
+        Tue, 20 May 2025 08:23:03 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a556sm2268664173.3.2025.05.20.08.23.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 08:23:02 -0700 (PDT)
+Message-ID: <72139ccf-892d-40e3-8870-2dff0e30ecd9@kernel.dk>
+Date: Tue, 20 May 2025 09:23:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [6.12.y regression] loosetup: failed to set up loop device:
+ Invalid argument after 184b147b9f7f ("loop: Add sanity check for
+ read/write_iter")
+To: Salvatore Bonaccorso <carnil@debian.org>,
+ Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
+ Christoph Hellwig <hch@lst.de>
+Cc: 1106070@bugs.debian.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
+ <aCwZy6leWNvr7EMd@eldamar.lan>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <aCwZy6leWNvr7EMd@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250520-counter-tcb-v3-1-4631e2aff7ed@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAAmeLGgC/23MQQ6CMBCF4auQrq3pjBTUlfcwLko7yCygpMVGQ
- 7i7hZUal+8l3z+LSIEpinMxi0CJI/shj8OuELYzw50ku7wFKtRKg5bWP4aJgpxsI5vKEJxKjaA
- akcUYqOXnVrve8u44Tj68tniC9f3fSSBBki5rVQG5o2ovPdvgbcfj3vperK2EHx7Vt8fsTca1Q
- 4eozK9fluUN+ewv8eoAAAA=
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
-	<wbg@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747754508; l=3596;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=TOckte/RXxhhtZxgfzD8giJmyAbKzFbnveOMKN1CJ7E=;
- b=wn+a9fjoolTdBjvBYyQB/3JM0obFki/MI9r7lVs8n3lHFMJpxKAAUmnoQ89tYB26zcm++sFos
- M6I/YoN6YhtA7bxDVWGwabKlXvljmGicckGjlWxC9NJ18nbTWqufY3z
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-The Timer Counter Block (TCB) exposes several kinds of events to the
-Counter framework, but not every event is meaningful on every hardware
-channel. Add a `watch_validate()` callback so userspace may register only
-the combinations actually supported:
+Fixed here:
 
-* Channel 0 (COUNTER_MCHP_EVCHN_CV, COUNTER_MCHP_EVCHN_RA)
-   - COUNTER_EVENT_CAPTURE
-   - COUNTER_EVENT_CHANGE_OF_STATE
-   - COUNTER_EVENT_OVERFLOW
+https://git.kernel.dk/cgit/linux/commit/?h=block-6.15&id=355341e4359b2d5edf0ed5e117f7e9e7a0a5dac0
 
-* Channel 1 (COUNTER_MCHP_EVCHN_RB)
-   - COUNTER_EVENT_CAPTURE
+and will land upstream this week.
 
-* Channel 2 (COUNTER_MCHP_EVCHN_RC)
-   - COUNTER_EVENT_THRESHOLD
-
-Any other request is rejected with `-EINVAL`.
-
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
-Tested the code on target (sam9x60_curiosity) using the following commands
-
-valid ones:
-./counter_watch_events -d -wevt_change_of_state,chan=0
-./counter_watch_events -d -wevt_ovf,chan=0
-./counter_watch_events -d -wevt_capture,chan=0
-./counter_watch_events -d -wevt_capture,chan=1
-./counter_watch_events -d -wevt_threshold,chan=2
-
-invalid ones:
-./counter_watch_events -d -wevt_threshold,chan=0
-./counter_watch_events -d -wevt_threshold,chan=1
-Error adding watches[0]: Invalid argument
----
-Changes in v3:
-- Update commit description to not mention undefined behaviour as that is
-  not the case.
-- Use the early returns to avoid the else statements and code consistent with
-  linux style.
-- Link to v2: https://lore.kernel.org/r/20250520-counter-tcb-v2-1-a0617d2d220a@microchip.com
-
-Changes in v2:
-- Include COUNTER_MCHP_EVCHN_CV as well for the sake of completeness.
-- Adjust the code to ensure channel limitations.
-- Drop sorting in this patch, will be taken care seperately.
-- Link to v1: https://lore.kernel.org/r/20250515-counter-tcb-v1-1-e547061ed80f@microchip.com
----
- drivers/counter/microchip-tcb-capture.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 1de3c50b9804..1a299d1f350b 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -337,6 +337,28 @@ static struct counter_comp mchp_tc_count_ext[] = {
- 	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_write),
- };
- 
-+static int mchp_tc_watch_validate(struct counter_device *counter,
-+				  const struct counter_watch *watch)
-+{
-+	if (watch->channel == COUNTER_MCHP_EVCHN_CV || watch->channel == COUNTER_MCHP_EVCHN_RA)
-+		switch (watch->event) {
-+		case COUNTER_EVENT_CHANGE_OF_STATE:
-+		case COUNTER_EVENT_OVERFLOW:
-+		case COUNTER_EVENT_CAPTURE:
-+			return 0;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	if (watch->channel == COUNTER_MCHP_EVCHN_RB && watch->event == COUNTER_EVENT_CAPTURE)
-+		return 0;
-+
-+	if (watch->channel == COUNTER_MCHP_EVCHN_RC && watch->event == COUNTER_EVENT_THRESHOLD)
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -356,7 +378,8 @@ static const struct counter_ops mchp_tc_ops = {
- 	.function_read  = mchp_tc_count_function_read,
- 	.function_write = mchp_tc_count_function_write,
- 	.action_read    = mchp_tc_count_action_read,
--	.action_write   = mchp_tc_count_action_write
-+	.action_write   = mchp_tc_count_action_write,
-+	.watch_validate = mchp_tc_watch_validate,
- };
- 
- static const struct atmel_tcb_config tcb_rm9200_config = {
-
----
-base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-change-id: 20250515-counter-tcb-b6ae1945210b
-
-Best regards,
 -- 
-Dharma Balasubiramani <dharma.b@microchip.com>
+Jens Axboe
 
