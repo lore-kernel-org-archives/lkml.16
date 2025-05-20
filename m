@@ -1,210 +1,159 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC37025F78D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397DC25FA2A
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747730290; cv=none; b=jOrn+d29o5qjvcrvZVN5dciKsZ2jtDHQ4DHJR24oC11/wYkhKhHZrFWvmYkZyNjQQxXX0jRWii+0qhvgGi/lpSGRFiBMYkdZ25REa9mWARhug+FkgUYB8EULIPf0Mp7shViNrmbsfg9LXXYggbXO41GPBOxCYklyqqYbvbVQTks=
+	t=1747730340; cv=none; b=uYWHtwkNbnO+67uX6A/6gKPICSBJl2mXDMwDJWXv8XxjGia0EPCEGNJyMWx8F6TxJiL7VnRDqT/QIwjdGZmnmW5NlBui+sc12Vvfw4elNmhEqSYxb9+H0853ikQhOhu3VcGFplMx8RVuBcg24/t7Ng1OQArtFr5HmxOv4nVis3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747730290; c=relaxed/simple;
-	bh=pVbgUeB8xmrs2YpmoqucOE/VkNmaw9qf9ROyXBuU11Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=uSYZCpxX/OdwVr2Sb7S2nzRORaZNZLeM01+LITMO+Js1wuWeSwi2NWurzts8c0WIUqObVigtBPwzl3IEfMfOP13w/Z2TsqznQgVpc9wsSeL+eceOc0d7DqDNTD0f8R2PXLHB+pamy6P27BmyT/xzdiH/8qCbizvMUbLAZReLkCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=JmuUJ8y9; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1747730340; c=relaxed/simple;
+	bh=4TGT2BxXcw1kl67CHogoMdBdlhYQOvV8UOgFydhSV9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnYK0LdfoSIaIWnnkCsm1d8aDaBqe9BcHJFjVaDbJNi4xJnAdZzY+h/0URdx0WWYbkFcuNN73qcpfHlYmqSz80moSFW4atratPPOG3NrYY+y6lBN3gD9NI7VS2HaRsJmHQ7wHNSDurjJEr+qvwoHcI5kbpvDwJzYCdyYLMDmE0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=S5Wkh7oL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=znplM6+X; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CJFHxz9D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0GGXyUr6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="JmuUJ8y9"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S5Wkh7oL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="znplM6+X";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CJFHxz9D";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0GGXyUr6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D9B702065E;
+	Tue, 20 May 2025 08:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747730337; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OVYlKjN4zUbpXRhJAkTH7z/CxKiGHqQXzuN/0SLxarg=;
+	b=S5Wkh7oLEB79AG9GvXwtSeuvm1Zs6tw/Rh+C9aqjEEb/dDcZ45tFzmUpU1nfBRv0qR/VBm
+	tijgRsBh8ni8KgUswuHV937a5wDKtEBxdAMayoAEnBQdyy1mTzKqIlJH8kqZIk2oOKw9jZ
+	zO+7jbg0I8rj1d4QPyC9FlVEd+atdzw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747730337;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OVYlKjN4zUbpXRhJAkTH7z/CxKiGHqQXzuN/0SLxarg=;
+	b=znplM6+XJeTxQbRmMiKHe4Y+wEj7An18tt3bokMp6AeIJCr0afJsY5s7K/2CB5SBoxh31m
+	WbQ5ayBn9Rjx9BAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CJFHxz9D;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0GGXyUr6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747730335; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OVYlKjN4zUbpXRhJAkTH7z/CxKiGHqQXzuN/0SLxarg=;
+	b=CJFHxz9DD7J4lxijpdZiCPXYbXis1d0zyu8wHB3c6HHFWtu346uEZybT+Rlj5tC/ATOMHG
+	2P+B/otJj9iHw1jmBHWsdtU5u931OHlwRcwFsegRKfNubDHoWPmWhdGirG9hYq5qM8dk0L
+	eCps+KPLwGzP1BaSK7fBc47f2JPZex8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747730335;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OVYlKjN4zUbpXRhJAkTH7z/CxKiGHqQXzuN/0SLxarg=;
+	b=0GGXyUr69SQbPvt64kne5uiuZbabsAkZKrhFd1y3PuhTKXAsGwofLTz81P+D6YePb3BkQ8
+	WnxzOMdg84Bt2GAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CA5A13888;
+	Tue, 20 May 2025 08:38:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GCUiJZ8/LGj9TAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Tue, 20 May 2025 08:38:55 +0000
+Date: Tue, 20 May 2025 09:38:50 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>, 
+	Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [RFC PATCH 4/5] mm/madvise: add PMADV_SET_FORK_EXEC_DEFAULT
+ process_madvise() flag
+Message-ID: <czd62f2vzwv6fow4ikvzlkjdj5odhc3nhtc72onwip52baobg5@yc5pjiqoqnh4>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1747730283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xc5l2VvmMIPW9ABFDgM9NqgcmqQKSbvHQtPi+59terM=;
-	b=JmuUJ8y9vURKx87iMyEdKsjJXePbVbMMOAfU+oMzchxCPpTbTITlMDnWyH8FRjNaHmW//B
-	CRMwMWqbix8UCvufAaKEWRei7bODiHr7k9PW/FXoDVp04tkbf0COSXyC9zytB4p5sXYlZR
-	TJ9T8RxOpKaPUoPKNO4goIav5Z5xZnTi9y+AU1gCC1XnflktTpsW5f/U5ypNzakbqVqfVT
-	kpVsIxSg7lz3s/FGACch7PDm5t/WxHU1N0OVQiVpxNoNVCW6QYELLb+PXQDM/Xn19Y4uKn
-	B+NXxxQi3ReFnYllv2+8qwUQRYlwCPrHwa/vQAHoMrl4FKHajgKQQcKAppS3+g==
-Content-Type: multipart/signed;
- boundary=2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Tue, 20 May 2025 10:37:38 +0200
-Message-Id: <DA0UO4TYFWAU.DOE3O1UBNN6U@cknow.org>
-Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/5] phy: rockchip: naneng-combphy: Add SoC prefix to
- register definitions
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Yao Zi" <ziyao@disroot.org>, "Vinod Koul" <vkoul@kernel.org>, "Kishon
- Vijay Abraham I" <kishon@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Frank Wang"
- <frank.wang@rock-chips.com>, "Andy Yan" <andy.yan@rock-chips.com>,
- "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>, "Detlev Casanova"
- <detlev.casanova@collabora.com>, "Shresth Prasad"
- <shresthprasad7@gmail.com>, "Chukun Pan" <amadeus@jmu.edu.cn>, "Jonas
- Karlman" <jonas@kwiboo.se>
-References: <20250519161612.14261-1-ziyao@disroot.org>
- <20250519161612.14261-4-ziyao@disroot.org>
- <DA0DU2P8UWSV.3U07EFFLKBPXQ@cknow.org> <aCv8vRu8gjrvK8wr@pie.lan>
-In-Reply-To: <aCv8vRu8gjrvK8wr@pie.lan>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Rspamd-Queue-Id: D9B702065E
+X-Spam-Score: -1.01
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.01 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,redhat.com,suse.cz,google.com,arndb.de,kernel.org,kvack.org,vger.kernel.org,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
 
---2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Mon, May 19, 2025 at 09:52:41PM +0100, Lorenzo Stoakes wrote:
+> It's useful in certain cases to be able to default-enable an madvise() flag
+> for all newly mapped VMAs, and for that to survive fork/exec.
+> 
+> The natural place to specify something like this is in an madvise()
+> invocation, and thus providing this functionality as a flag to
+> process_madvise() makes sense.
+> 
+> We intentionally limit this only to flags that we know should function
+> correctly without issue, and to be conservative about this, so we initially
+> limit ourselves only to MADV_HUGEPAGE, MADV_NOHUGEPAGE, that is - setting
+> the VM_HUGEPAGE, VM_NOHUGEPAGE VMA flags.
+> 
+> We implement this functionality by using the mm_struct->def_flags field.
 
-On Tue May 20, 2025 at 5:53 AM CEST, Yao Zi wrote:
-> On Mon, May 19, 2025 at 09:26:05PM +0200, Diederik de Haas wrote:
->> On Mon May 19, 2025 at 6:16 PM CEST, Yao Zi wrote:
->> > All supported variants of naneng-combphy follow a register layout
->> > similar to the RK3568 variant with some exceptions of SoC-specific
->> > registers.
->> >
->> > Add RK3568 prefix for the common set of registers and the correspondin=
-g
->> > SoC prefix for SoC-specific registers, making usage of definitions cle=
-ar
->> > and preparing for future COMBPHY variants with a different register
->> > layout.
->> >
->> > Signed-off-by: Yao Zi <ziyao@disroot.org>
->> > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
->> > ---
->> >  .../rockchip/phy-rockchip-naneng-combphy.c    | 560 +++++++++--------=
--
->> >  1 file changed, 288 insertions(+), 272 deletions(-)
->> >
->> > diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/driv=
-ers/phy/rockchip/phy-rockchip-naneng-combphy.c
->> > index ce91fb1d5167..1d1c7723584b 100644
->> > --- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
->> > +++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
->> > @@ -21,78 +21,80 @@
->> >  #define REF_CLOCK_100MHz		(100 * HZ_PER_MHZ)
->> > =20
->> >  /* COMBO PHY REG */
->> > <snip>
->> > -#define PHYREG33_PLL_KVCO_VALUE_RK3576	4
->> > +#define RK3568_PHYREG6				0x14
->> > +#define RK3568_PHYREG6_PLL_DIV_MASK		GENMASK(7, 6)
->> > +#define RK3568_PHYREG6_PLL_DIV_SHIFT		6
->> > +#define RK3568_PHYREG6_PLL_DIV_2		1
->> > +
->> > +#define RK3568_PHYREG7				0x18
->> > +#define RK3568_PHYREG7_TX_RTERM_MASK		GENMASK(7, 4)
->> > +#define RK3568_PHYREG7_TX_RTERM_SHIFT		4
->> > +#define RK3568_PHYREG7_TX_RTERM_50OHM		8
->> > +#define RK3568_PHYREG7_RX_RTERM_MASK		GENMASK(3, 0)
->> > +#define RK3568_PHYREG7_RX_RTERM_SHIFT		0
->> > +#define RK3568_PHYREG7_RX_RTERM_44OHM		15
->> > +
->> > +#define RK3568_PHYREG8				0x1C
->> > +#define RK3568_PHYREG8_SSC_EN			BIT(4)
->> > +
->> > +#define RK3568_PHYREG11				0x28
->> > +#define RK3568_PHYREG11_SU_TRIM_0_7		0xF0
->> > +
->> > +#define RK3568_PHYREG12				0x2C
->> > +#define RK3568_PHYREG12_PLL_LPF_ADJ_VALUE	4
->> > +
->> > +#define RK3568_PHYREG13				0x30
->> > +#define RK3568_PHYREG13_RESISTER_MASK		GENMASK(5, 4)
->> > +#define RK3568_PHYREG13_RESISTER_SHIFT		0x4
->> > +#define RK3568_PHYREG13_RESISTER_HIGH_Z		3
->> > +#define RK3568_PHYREG13_CKRCV_AMP0		BIT(7)
->> > +
->> > +#define RK3568_PHYREG14				0x34
->> > +#define RK3568_PHYREG14_CKRCV_AMP1		BIT(0)
->> > +
->> > +#define RK3568_PHYREG15				0x38
->> > +#define RK3568_PHYREG15_CTLE_EN			BIT(0)
->> > +#define RK3568_PHYREG15_SSC_CNT_MASK		GENMASK(7, 6)
->> > +#define RK3568_PHYREG15_SSC_CNT_SHIFT		6
->> > +#define RK3568_PHYREG15_SSC_CNT_VALUE		1
->> > +
->> > +#define RK3568_PHYREG16				0x3C
->> > +#define RK3568_PHYREG16_SSC_CNT_VALUE		0x5f
->> > +
->> > +#define RK3568_PHYREG18				0x44
->> > +#define RK3568_PHYREG18_PLL_LOOP		0x32
->> > +
->> > +#define RK3568_PHYREG32				0x7C
->> > +#define RK3568_PHYREG32_SSC_MASK		GENMASK(7, 4)
->> > +#define RK3568_PHYREG32_SSC_DIR_MASK		GENMASK(5, 4)
->> > +#define RK3568_PHYREG32_SSC_DIR_SHIFT		4
->> > +#define RK3568_PHYREG32_SSC_UPWARD		0
->> > +#define RK3568_PHYREG32_SSC_DOWNWARD		1
->> > +#define RK3568_PHYREG32_SSC_OFFSET_MASK	GENMASK(7, 6)
->> > +#define RK3568_PHYREG32_SSC_OFFSET_SHIFT	6
->> > +#define RK3568_PHYREG32_SSC_OFFSET_500PPM	1
->> > +
->> > +#define RK3568_PHYREG33				0x80
->> > +#define RK3568_PHYREG33_PLL_KVCO_MASK		GENMASK(4, 2)
->> > +#define RK3568_PHYREG33_PLL_KVCO_SHIFT		2
->> > +#define RK3568_PHYREG33_PLL_KVCO_VALUE		2
->> > +#define RK3576_PHYREG33_PLL_KVCO_VALUE		4
->> > +
->> > +/* RK3588 COMBO PHY registers */
->> > +#define RK3588_PHYREG27				0x6C
->> > +#define RK3588_PHYREG27_RX_TRIM			0x4C
->>=20
->> Would it be better if RK3588_PHYREG* comes after RK3576_PHYREG*?
->>=20
->
-> It's intended to keep RK3576 definitions below RK3588 ones. The RK3576
-> driver makes use of a register introduced for RK3588 variant
-> (RK3588_PHYREG27). Since similar reusing doesn't happen reversely, I
-> consider the design of RK3576 a superset of the RK3588 one, and put
-> RK3576 definitions later in the file.
+This seems super specific. How about this:
 
-I understand that logic, but OTOH in patch 4 you put the defines for
-RK3528 before RK3568. And RK3568 is not a superset of RK3528 AFAIK.
-It's just different? That's why I think/thought sorting them (all)
-alphabetically would make more sense.
+- PMADV_FUTURE (mirrors MCL_FUTURE). This only applies the flag to future VMAs in the current process.
+- PMADV_INHERIT_FORK. This makes it so the flag is propagated to child processes (does not imply PMADV_FUTURE)
+- PMADV_INHERIT_EXEC. This makes it so the flag is propagated through the execve boundary
+  (and this is where we'd filter for 'safe' flags, at least through the secureexec boundary). Does not imply
+  FUTURE nor INHERIT_FORK.
 
-My 0.02
+and, while we're at it, rename PMADV_ENTIRE_ADDRESS_SPACE to PMADV_CURRENT, to align it with MCL_CURRENT.
 
->> > +
->> > +/* RK3576 COMBO PHY registers */
->> > +#define RK3576_PHYREG10				0x24
->> > +#define RK3576_PHYREG10_SSC_PCM_MASK		GENMASK(3, 0)
->> > +#define RK3576_PHYREG10_SSC_PCM_3500PPM		7
->> > +
->> > +#define RK3576_PHYREG17				0x40
->> > +
->> > +#define RK3576_PHYREG21				0x50
->> > +#define RK3576_PHYREG21_RX_SQUELCH_VAL		0x0D
->> > +
->> > +#define RK3576_PHYREG30				0x74
->> > =20
->> >  struct rockchip_combphy_priv;
->> > <snip>
->
->
-> Thanks,
-> Yao Zi
+Thoughts?
 
-
---2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaCw/YgAKCRDXblvOeH7b
-btjKAP9j4L97yDM5TuPnM79GFXom5tqq+k4QLX4sjJJaNaHyGgD/W1GQwoE0qrXy
-fn0SRC1sVChHn22biqVDwNqUinN+rw0=
-=yOD8
------END PGP SIGNATURE-----
-
---2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b--
+-- 
+Pedro
