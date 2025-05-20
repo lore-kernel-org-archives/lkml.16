@@ -1,239 +1,150 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095851EB1BC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2721254852;
+	Tue, 20 May 2025 22:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781312; cv=none; b=sFUWr7fBG0uBAb1UIydTsLvr3Xxy0Q7a9RNsIuBtMaCZlhpGqrKIOxk31t+ieXdgIAwGEH/wGu+5e+XcYjXmsRCDNGwpETALBm4ry6Nc7O+3eeolqcch6XSvJBTQ44TNARh6wF+A7uzn6Wz6fFj8ZFjZ5mhhxjEzX4ct3MqtnI4=
+	t=1747781322; cv=none; b=NUSGPdwblaiS8hiQRkS8YBpLmups9P9Z94W8YKA/8Z15J6AVmtAS0Qx7rQBMvDVUYZcsjQ+f/dx+5trnjXeyLCBAZg0+yAAlVyCEVFsroq7OLCWNbhYOfy/sMk2nxqqrGO6r6MFEjbOl/CyK3CYt7XuDmPb3mB1WTZvg2Oax9+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747781312; c=relaxed/simple;
-	bh=nsBsHgVZIn7v53pEHJNwcniuElU0WFLKLfRQY/VPFR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K0hwVV9TUoF9CL1ECSV9zLeASNav76mHVHxVFynWGDZtddD4j+o2470ySVn/cLLYFOQjhvsWofRxh9iI5tZSQqxKLKl0XomtGe/thhWjETwrrHWVQFWblJZ4N/Q1w01ic+MIgIMvISlhM6By0hfTFhJJ2HAMa7jf5wr9sUqw6mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Dg2rs5Hk; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1747781322; c=relaxed/simple;
+	bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qor3dWdCw22AtNa0Znc6PANxMk5D6hkmJJzdztkrqSfzPj8u3lmU5Xyvogo1gjsRcZt54GcgnQuKTrTuKX7WqoZ0cYZMVsOjvka9eC/DAu7gbDYhzoblG1vTRH/9MVUK/K/qVpFN7e3d46tlPzaNjVRzGMOj3Gy4ybNE6RYPsGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mjH/qZTX; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Dg2rs5Hk"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id HVVtuuOTCiuzSHVl2uzAyc; Tue, 20 May 2025 22:48:24 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id HVl1u4yw6Z3eAHVl1u42hw; Tue, 20 May 2025 22:48:23 +0000
-X-Authority-Analysis: v=2.4 cv=PKoJ++qC c=1 sm=1 tr=0 ts=682d06b7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8 a=Ikd4Dj_1AAAA:8
- a=vggBfdFIAAAA:8 a=DJTdb95cQ3q3fOx0NTQA:9 a=QEXdDO2ut3YA:10
- a=y1Q9-5lHfBjTkpIzbSAN:22 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=sQ1KdJsLeNFUGVUFftkX6bJiPEcnX1VunVFKPkYeT8w=; b=Dg2rs5HkQrM8cFMSQZir7ibl2U
-	r5MJYf81XgVpvLxj8m1pVUZqk7lCt9GSHaLZ+INTR9ZihlXQyi/EyPjA+pr7zZntKW9rFIYCIgl8p
-	QZ5bwrUY4I/bUQucRupRcXHboiCC0OfM2oSzAnrloBmVLy549XLcLJn52gOSknTpemZ0RcHiDWQC9
-	QPpsw6cqmuToNqJPYEMq+208VDKgI8A74qVKhdtfKdKfqTBpXsIDx4w4b0ZjolrLLQW8Jc51rCOU7
-	mBY3St5V168Y9AXi88vYgRCgkRj9Nmds/3rAH+lSb1HOP6PZNz5EgPnrzK3/kAbyM3roxKpc/3DVK
-	Kfr8N0Fw==;
-Received: from [177.238.17.151] (port=48738 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uHVku-000000011s1-0VVi;
-	Tue, 20 May 2025 17:48:16 -0500
-Message-ID: <c57bd8e0-75b7-4f17-9326-d8d0d7a2301c@embeddedor.com>
-Date: Tue, 20 May 2025 16:47:33 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjH/qZTX"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c277331eso6296924b3a.1;
+        Tue, 20 May 2025 15:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747781320; x=1748386120; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
+        b=mjH/qZTXn7oifFq7fPaJbsMbWqEjyssiCvR2Od7jbSwZWdD6iLSjRPDmAha/oaPZtA
+         5NVxzkCFHV5UfAcGknG+/veHP/ehCw7TsMBvOjXW3bULWZbOmIAOW46WWc4QePvl7rwV
+         aGHwRPwkZMGpjgKhn0+yyh1dUQWHWInImjoy1zXH/e6nabOrFOHX9BXfyqcvNvYAZ4ts
+         NuVxrTfPWmpq85FFQq8pmGIDlw7H8Ax8jfiT7+Su6GSr0PLInl2BZoCRIKkcA3DJSj3B
+         TaX4yMj4EFau6t9sRaKvPYm1DquHRoV1JLR/heVlpOFlZ0BYGxx6kstpgdkW7jsbXlvF
+         lhrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747781320; x=1748386120;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
+        b=dp3yLIQKhmJDclF/XCT/kCFm6cS6GYuf31gL3nzYta8JqQDshNGHuJAk5XIXuKQEbM
+         0+NlDxY5JAM8YwRVFL49zcUvg6e1uIHNpTCDYRwolErOBaAY6yxVhft8VNJHLzcI7xbR
+         sY/ICX9qzwKSGWQtQCAS8Ky5GyLfIHi0+7b5QS/5G19wWrAtuw9reZrqoytZ05pPWDHp
+         vddjmC+j+6XoTlr+0KY3ynFWDpR99sAAP4Uygj/q9rmmqUH+uRMFM7RjN3V9RdhW9Vs2
+         jdewGNUTVWy3oIBjgEqVZ7brvnLrPlb43L5c8CXtBHBWMbJXhU5+CQYatIPPOjoE3q29
+         cJfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR4/k5Em9755FIm1Lk7HXzVDAZ8ZPNHiY943n7g5g+/gdj63ib/VhBl64xQpBtUDyNQ3MuQaRB/kgSlpM=@vger.kernel.org, AJvYcCWOFZzxxKBi2qvEDpn3T2jZg1lFnK6/z5H3l2hEF+ajR1bbapnQtNAC+UbSDGAZ2KqDxuOonOTyekD62Eup+MM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DVAbVGN8ITNQ7bixA2NjidqoVqNXjvMHcmaZaVik31Kx79X3
+	Muc+xFqRHBnnXft4OGuPBqJW3XXDVRlHuyhfuTyXNKOQSb8vMy6i+Ta20N1ju1c3
+X-Gm-Gg: ASbGncvma2ccbzLVw4ktb36blc7avT/kWZ+aDHoCP1VT1P08x3qDLuUaWYGVwoXkaAN
+	vVFpPScISe5cjmFrMMNk5oVSaFEm/uYnmjKyYcYBMUgVSRBCPGPodXSQs0u88nayFncQI6PdKuj
+	SfqCY5tDLxrfc9HqfuJ7C1Ac2sUiSVmfIt7+7gwIQThaywUjwQXNKnVMb9P4Z+2ZdmpbWPLsmeP
+	dm85sn2u5ZhR6nIrgtNEKPs+BfNFnbqX1E/F6/6lSPzNm2RfWwHfy3CPnsi1nt3a6fNjVSZfbhL
+	eol2hjjgvmifd+3kyvyvya60izzW7BbyoSEflona7hRbEPBkTnth
+X-Google-Smtp-Source: AGHT+IG2X0pomsnFUCQa19hCElWt5qNsJlHFQAhMvQ4eYIPhael32C2ELAIMHyvCUOkhzqa8EkvDjA==
+X-Received: by 2002:a05:6a21:3942:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2165f84b77fmr28235687637.16.1747781319816;
+        Tue, 20 May 2025 15:48:39 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:644:8500:5dd0:565f:91c6:a34c:f6d2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c86asm8739999b3a.57.2025.05.20.15.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 15:48:39 -0700 (PDT)
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Tue, 20 May 2025 15:48:37 -0700
+Subject: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] net: core: Switch netif_set_mac_address() to struct
- sockaddr_storage
-To: Kees Cook <kees@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Stanislav Fomichev <sdf@fomichev.me>,
- Cosmin Ratiu <cratiu@nvidia.com>, Lei Yang <leiyang@redhat.com>,
- Ido Schimmel <idosch@nvidia.com>, netdev@vger.kernel.org,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Mike Christie <michael.christie@oracle.com>,
- Max Gurtovoy <mgurtovoy@nvidia.com>, Maurizio Lombardi
- <mlombard@redhat.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
- Mingzhe Zou <mingzhe.zou@easystack.cn>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Samuel Mendoza-Jonas <sam@mendozajonas.com>,
- Paul Fertser <fercerpav@gmail.com>, Alexander Aring <alex.aring@gmail.com>,
- Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, Hayes Wang
- <hayeswang@realtek.com>, Douglas Anderson <dianders@chromium.org>,
- Grant Grundler <grundler@chromium.org>, Jay Vosburgh <jv@jvosburgh.net>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Jiri Pirko <jiri@resnulli.us>,
- Eric Biggers <ebiggers@google.com>, Milan Broz <gmazyland@gmail.com>,
- Philipp Hahn <phahn-oss@avm.de>, Ard Biesheuvel <ardb@kernel.org>,
- Al Viro <viro@zeniv.linux.org.uk>, Ahmed Zaki <ahmed.zaki@intel.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Xiao Liang <shaw.leon@gmail.com>, linux-kernel@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250520222452.work.063-kees@kernel.org>
- <20250520223108.2672023-2-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250520223108.2672023-2-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1uHVku-000000011s1-0VVi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [177.238.17.151]:48738
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCZQ58dlph78nuoeao0bDzAKsmvegmR32YCxL7mKq5aRvq5BsQK5S7voKlxKqxWN57nmvRkS4xAv7Kj7MJGV6/2ZuKKvpKh8Vug/vycEVJbSwSmZjwnZ
- qZIvw5nRtcWhrrjoLIKHxgYPqW9xNEXq9vzxf55MfydLtVuY7vb0hfCX6MZ4mdK5yM5nBJV7hcY7HCHI6HGJWHYIb9phJ0yfDUgDbCWd6+nStnYLW48Y8yej
+Message-Id: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMQGLWgC/x2MQQqAIBAAvxJ7bsEsofpKdLBaaw9arBVB+Pek4
+ wzMvBBJmCL0xQtCN0feQ4aqLGDebFgJeckMWmmjjFYoVzzRhx3dcvCMVjw6frBrlDXt5LqmriH
+ Hh1DW/3gYU/oAqSl0WGgAAAA=
+X-Change-ID: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
+To: torvalds@linux-foundation.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Naresh Kamboju <naresh.kamboju@linaro.org>, 
+ Christian Schrrefl <chrisi.schrefl@gmail.com>, 
+ Russell King <rmk+kernel@armlinux.org.uk>, 
+ Rudraksha Gupta <guptarud@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org, 
+ laura.nao@collabora.com, lkft-triage@lists.linaro.org, 
+ regressions@lists.linux.dev, Nick Clifton <nickc@redhat.com>, 
+ Richard Earnshaw <richard.earnshaw@arm.com>, 
+ Ramana Radhakrishnan <ramanara@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Linux Kernel Functional Testing <lkft@linaro.org>
+X-Mailer: b4 0.15-dev-8865a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747781317; l=1766;
+ i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
+ bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
+ b=dD0YMCC8TsOC7IFCio+JlJzS+fFX1g0IwQRGhA9s2diSjuMpAGIPX3Ee2hG9VahQMcIbrK2cl
+ bN54N5hVbo7AGgCE/g84rx9JmJkY+x9eoHA3sVDBMeJ7VKlSVi2Ujca
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
+Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+disables a GCC feature that we don't want for kernel builds, so let's
+skip it.
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
 
-On 20/05/25 16:31, Kees Cook wrote:
-> In order to avoid passing around struct sockaddr that has a size the
-> compiler cannot reason about (nor track at runtime), convert
-> netif_set_mac_address() to take struct sockaddr_storage. This is just a
-> cast conversion, so there is are no binary changes. Following patches
-> will make actual allocation changes.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-Thanks!
--Gustavo
+Tested-by: Rudraksha Gupta <guptarud@gmail.com>
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+---
+Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+disables a GCC feature that we don't want for kernel builds, so let's
+skip it.
 
-> ---
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Simon Horman <horms@kernel.org>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: Stanislav Fomichev <sdf@fomichev.me>
-> Cc: Cosmin Ratiu <cratiu@nvidia.com>
-> Cc: Lei Yang <leiyang@redhat.com>
-> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-> Cc: Ido Schimmel <idosch@nvidia.com>
-> Cc: <netdev@vger.kernel.org>
-> ---
->   include/linux/netdevice.h |  2 +-
->   net/core/dev.c            | 10 +++++-----
->   net/core/dev_api.c        |  4 ++--
->   net/core/rtnetlink.c      |  2 +-
->   4 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index ea9d335de130..47200a394a02 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -4212,7 +4212,7 @@ int netif_set_mtu(struct net_device *dev, int new_mtu);
->   int dev_set_mtu(struct net_device *, int);
->   int dev_pre_changeaddr_notify(struct net_device *dev, const char *addr,
->   			      struct netlink_ext_ack *extack);
-> -int netif_set_mac_address(struct net_device *dev, struct sockaddr *sa,
-> +int netif_set_mac_address(struct net_device *dev, struct sockaddr_storage *ss,
->   			  struct netlink_ext_ack *extack);
->   int dev_set_mac_address(struct net_device *dev, struct sockaddr *sa,
->   			struct netlink_ext_ack *extack);
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index fccf2167b235..f8c8aad7df2e 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -9655,7 +9655,7 @@ int dev_pre_changeaddr_notify(struct net_device *dev, const char *addr,
->   }
->   EXPORT_SYMBOL(dev_pre_changeaddr_notify);
->   
-> -int netif_set_mac_address(struct net_device *dev, struct sockaddr *sa,
-> +int netif_set_mac_address(struct net_device *dev, struct sockaddr_storage *ss,
->   			  struct netlink_ext_ack *extack)
->   {
->   	const struct net_device_ops *ops = dev->netdev_ops;
-> @@ -9663,15 +9663,15 @@ int netif_set_mac_address(struct net_device *dev, struct sockaddr *sa,
->   
->   	if (!ops->ndo_set_mac_address)
->   		return -EOPNOTSUPP;
-> -	if (sa->sa_family != dev->type)
-> +	if (ss->ss_family != dev->type)
->   		return -EINVAL;
->   	if (!netif_device_present(dev))
->   		return -ENODEV;
-> -	err = dev_pre_changeaddr_notify(dev, sa->sa_data, extack);
-> +	err = dev_pre_changeaddr_notify(dev, ss->__data, extack);
->   	if (err)
->   		return err;
-> -	if (memcmp(dev->dev_addr, sa->sa_data, dev->addr_len)) {
-> -		err = ops->ndo_set_mac_address(dev, sa);
-> +	if (memcmp(dev->dev_addr, ss->__data, dev->addr_len)) {
-> +		err = ops->ndo_set_mac_address(dev, ss);
->   		if (err)
->   			return err;
->   	}
-> diff --git a/net/core/dev_api.c b/net/core/dev_api.c
-> index f9a160ab596f..b5f293e637d9 100644
-> --- a/net/core/dev_api.c
-> +++ b/net/core/dev_api.c
-> @@ -91,7 +91,7 @@ int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
->   
->   	down_write(&dev_addr_sem);
->   	netdev_lock_ops(dev);
-> -	ret = netif_set_mac_address(dev, sa, extack);
-> +	ret = netif_set_mac_address(dev, (struct sockaddr_storage *)sa, extack);
->   	netdev_unlock_ops(dev);
->   	up_write(&dev_addr_sem);
->   
-> @@ -332,7 +332,7 @@ int dev_set_mac_address(struct net_device *dev, struct sockaddr *sa,
->   	int ret;
->   
->   	netdev_lock_ops(dev);
-> -	ret = netif_set_mac_address(dev, sa, extack);
-> +	ret = netif_set_mac_address(dev, (struct sockaddr_storage *)sa, extack);
->   	netdev_unlock_ops(dev);
->   
->   	return ret;
-> diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> index 8a914b37ef6e..9743f1c2ae3c 100644
-> --- a/net/core/rtnetlink.c
-> +++ b/net/core/rtnetlink.c
-> @@ -3100,7 +3100,7 @@ static int do_setlink(const struct sk_buff *skb, struct net_device *dev,
->   
->   		memcpy(sa->sa_data, nla_data(tb[IFLA_ADDRESS]),
->   		       dev->addr_len);
-> -		err = netif_set_mac_address(dev, sa, extack);
-> +		err = netif_set_mac_address(dev, (struct sockaddr_storage *)sa, extack);
->   		kfree(sa);
->   		if (err) {
->   			up_write(&dev_addr_sem);
+It seems like this bug went through the cracks, so I went ahead and sent
+it. Hopefully nobody minds.
+
+Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
+---
+ rust/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..f207ba0ed466 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+ 	-fzero-call-used-regs=% -fno-stack-clash-protection \
+ 	-fno-inline-functions-called-once -fsanitize=bounds-strict \
+ 	-fstrict-flex-arrays=% -fmin-function-alignment=% \
+-	-fzero-init-padding-bits=% \
++	-fzero-init-padding-bits=% -mno-fdpic \
+ 	--param=% --param asan-%
+ 
+ # Derived from `scripts/Makefile.clang`.
+
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
+
+Best regards,
+-- 
+Rudraksha Gupta <guptarud@gmail.com>
 
