@@ -1,112 +1,90 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6234C26738B;
-	Tue, 20 May 2025 11:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746DB267F41
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741155; cv=none; b=GkUIH0leZmy5qvyWZmVjFgmFKrtJYVtuemRltM2FxS9J3aU6ePu8rEySlpoXhCwoPMXTVBwJ7Jh6SluUmPkJzH6LSVmFEse2FIfG8BD747gl/VRCc15al787QL1oUHZmB5hg5j0vbaJ33Z2SlbSddaIFipCrMmdC5ay8ZvyL5E0=
+	t=1747741187; cv=none; b=YMWCJ2zTWxxjY0AHGXu5ptmSSwJKG0fNzK4bK2df8/Jwf65jkWSlDndf4fgx0jupeTy9Ix8P5+ta118EyYnEti69JDMrz0/ChG2W29cyhv5yxnjBFfEv5eMnIBwKQ30Emn5FldZh/bZm/5ouyknrThpE/YpfWSpxOHNPaw6LzWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741155; c=relaxed/simple;
-	bh=0ckXESPmy56qefBczM+kDRhj+1MO6ts6V2d771eEkCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RRawKF2dPN22ixTThDARFIHCQZ6irCzaGms+n6qAox70FbWvRXjzAQCERWpInUZw8LBULirHBWsP8yfS66NPWJ+FGV/ajq18rAXgdM3jaSK7GXmurxZfurfFNdoW5Nta43WHbpQuq3tUk1egxVu2AcHIN8KG+9zTkfsVgGYUOQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pZ1Dj1H4; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747741187; c=relaxed/simple;
+	bh=waB6HNUkUzfJ+Fu3JOScZGyMKNkxAfv5Ek+p59SiRSI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=q2qocamRKG1nm5ZwF+DtANaIXoo5+XgGHdzczO4FAU3dxZMbUNf95YmkDIlCC5a1tteVcIQhIYTfWl55TM2WIIzkbcgVUXouFQqN7ylgw6yiVB+wrADKrOKzPfYlUZkpXKwIE5j6R26dbdr5K+rXCdunzgukPkSHdvzCZcsRzsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=AoqykRfG; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pZ1Dj1H4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747741148;
-	bh=isXZU+uZtSED1OfnliPgQkBj45lD0diwEJrlIXtWn7k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pZ1Dj1H4ulNQ7kGt5wvwxN0bP5VTtRc5PKewajYxbJ/WaSgj4ces2etZJNAPYZdj3
-	 COvyYXhqwJegHRs2op6KmiTx5WhOz5PjiLHOosuW3evJSnDQwb2ntvroRtepo+cpCv
-	 3pchQQ8xJLv16CNLyt7Pn4dV07SPaLYmA6xKBxliUjTrfsyxC9XVAkQOhkXKNRyPPm
-	 1EgvJmiYq/2bx3lbPuZhB+aEXwtM/IwbNWEXLW6dsYU0YkilMdq/ug+hJLDky3mEgK
-	 M8I+yg7usAgqUa9Bj4VvC8eD5Gqc+mLgyGZExNMQ+XuttnHxsrtTIvWLSRvR5n9ID2
-	 dFKcP9I8XGkKg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b1syg26XMz4xQ0;
-	Tue, 20 May 2025 21:39:07 +1000 (AEST)
-Date: Tue, 20 May 2025 21:39:06 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Akira Yokosawa <akiyks@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
- Jonathan Corbet <corbet@lwn.net>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Nicolas Schier
- <nicolas.schier@linux.dev>, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
-Message-ID: <20250520213906.6ec263d8@canb.auug.org.au>
-In-Reply-To: <20250520111956.1db9db88@sal.lan>
-References: <cover.1747719873.git.mchehab+huawei@kernel.org>
-	<6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
-	<7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
-	<20250520095037.3dc39685@sal.lan>
-	<590981da-4d37-464f-a52e-ba163d3ecbc5@gmail.com>
-	<20250520111956.1db9db88@sal.lan>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="AoqykRfG"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6D2avqjLhsiENX9knPfToA9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1747741170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IHQQ72WR0uJaCYKSMFe0s4zfbhTKw+KEo8c67zUoozQ=;
+	b=AoqykRfGY0eNCQZe3pCtucLUbH68xSCZYcf3tGww1k2ClaBe+2D684FSiAgrlzUvmz3tgV
+	Uw+YIrjBvbQwnjaJEd8lo43Jajl75GPwqBu3ud+WKe0VdbC8GWvKOgTypBKOvJ0Tzjg36f
+	/dJ9+8ZMtGBXieBs3wpobQ7kyz23IaCZzhpnOlCDfrTdsbR3Lxilt/Kwqmed94GObnEn14
+	8TSDFjBuH3AnyoM4AdRbQeFZNMB7RbklFaE1CycjsIBnDSe1b4HpZ1Y5igJT2tDSk1FJ92
+	iOuwkmr2RjIvNhGoARaTAc8k4IYIv1q9dUcWrKkCMd/41P11jN2BmOqi1KndUQ==
+Content-Type: multipart/signed;
+ boundary=d0bc349ebc3c06724e8275064f50ac7acc361a9610a706c47518c54416fd;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Tue, 20 May 2025 13:39:18 +0200
+Message-Id: <DA0YJ89890ND.3NKPS3RWC012P@cknow.org>
+Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/5] phy: rockchip: naneng-combphy: Add SoC prefix to
+ register definitions
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Yao Zi" <ziyao@disroot.org>, "Vinod Koul" <vkoul@kernel.org>, "Kishon
+ Vijay Abraham I" <kishon@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Frank Wang"
+ <frank.wang@rock-chips.com>, "Andy Yan" <andy.yan@rock-chips.com>,
+ "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>, "Detlev Casanova"
+ <detlev.casanova@collabora.com>, "Shresth Prasad"
+ <shresthprasad7@gmail.com>, "Chukun Pan" <amadeus@jmu.edu.cn>, "Jonas
+ Karlman" <jonas@kwiboo.se>
+References: <20250519161612.14261-1-ziyao@disroot.org>
+ <20250519161612.14261-4-ziyao@disroot.org>
+ <DA0DU2P8UWSV.3U07EFFLKBPXQ@cknow.org> <aCv8vRu8gjrvK8wr@pie.lan>
+ <DA0UO4TYFWAU.DOE3O1UBNN6U@cknow.org> <aCxjqDr3VivDCrBx@pie.lan>
+In-Reply-To: <aCxjqDr3VivDCrBx@pie.lan>
+X-Migadu-Flow: FLOW_OUT
 
---Sig_/6D2avqjLhsiENX9knPfToA9
-Content-Type: text/plain; charset=US-ASCII
+--d0bc349ebc3c06724e8275064f50ac7acc361a9610a706c47518c54416fd
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Hi Mauro,
+On Tue May 20, 2025 at 1:12 PM CEST, Yao Zi wrote:
+> If putting RK3528 at first really confuses you, I'd like to add some
+> extra comments to explicitly split these two kinds of register layouts
+> apart and claim they aren't compatible. Although to me it's somehow
+> obvious, as most definitions are prefixed with either RK3528 or RK3568.
 
-I do appreciate your work on the document system.  Particularly you
-have made the process much faster.  However, see below.
+No need. This is just another PEBKAC issue.
 
-On Tue, 20 May 2025 11:19:56 +0200 Mauro Carvalho Chehab <mchehab+huawei@ke=
-rnel.org> wrote:
->
-> If by "innocent typo" you mean removing/renaming/moving a file from
-> the Kernel tree without updating Makefiles, or adding them with wrong
-> names, then yes: I do think this should be fatal for the affected "make"=
-=20
-> targets. The quickest such build issues are caught, the best for everyone.
-
-They are found if you leave them as warnings and just continue on.  I
-have been finding them by when the current python version just crashes
-(without any useful message before your current change) I rerun the
-htmldocs using the perl version to get the name of the missing file and
-then report it so it can be fixed.  But the perl version continues on
-and produces all the other warnings so I can compare with the previous
-and only report new errors/warnigs.  Sometime these reports are not
-foxed for days or weeks (or months).
-
-So, please, now that you are producing more warnings, make a missing
-file just a warning (or at least continue on).  I have enough to do
-every day without having to run "make htmldocs" more than once.
-
---=20
 Cheers,
-Stephen Rothwell
+  Diederik
 
---Sig_/6D2avqjLhsiENX9knPfToA9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--d0bc349ebc3c06724e8275064f50ac7acc361a9610a706c47518c54416fd
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgsadoACgkQAVBC80lX
-0GzHewf7BV0JJMGCOQmObOrtJSh/grehBjDOzcfMC9XJQyfkvhdrdsgqx1TNh6cp
-ZEl+HR0GKkaJljAhN+59QzVhNkLivGEGhSF7F30ZTo7Wy+FMtH+NJcmOVr6BIVUW
-Lp6HcSB/yqObkxH0uFo8OCaE6pF6fXt/Qd5s8NBTMv1cjhh9m4qMR2wBVWuSl0T1
-XPO0DVyBFKZhaLWCUbDhFBuLWl1rzHol/mp2y1VMS6Pn2eZWVQvGgGIVYQWBPIkh
-d5qY+hbrLyiOpNFiPbMZZeAOIVSSng8navSKXJcrAJSaiG/E2d2xU8xPbui+AdTM
-YcRyOmnSfBRUSBCquyTtyON+v4L6hQ==
-=HPCw
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaCxp6wAKCRDXblvOeH7b
+boWnAQC5MIhxImiAlK1tUu+xrN+HsDpoKbj77BWe5c4WxhafxwD/Ulo4r6l68aWF
+xF7+bQnpCwX2RacAOaELrsdy8/Z02Qo=
+=ZrQ3
 -----END PGP SIGNATURE-----
 
---Sig_/6D2avqjLhsiENX9knPfToA9--
+--d0bc349ebc3c06724e8275064f50ac7acc361a9610a706c47518c54416fd--
