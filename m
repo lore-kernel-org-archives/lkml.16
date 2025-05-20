@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E34B1D5ADE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3ED1DC9B1
 	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747703058; cv=none; b=H5WBibpDPpCXoFW+etIL5WntJUmOjHcDbt52A51XN3xKpcrSi2VVGmn5JW9gXs4kbOA5Z8LKj6LbkTqDiVjxlbwjSJhnUKpGis1EuJrICNFFAXmsDw8rHsjnyBOjRQjlaXo99wapSPIvlqzN4BYDBUHh5Vt87nyc+qCsADzTAes=
+	t=1747703058; cv=none; b=j4KiS5LIzdB9Aldbg+1LpHQQQmXPmM0H7f/1W/uKrxraDZ4evLWM9aKlJ9cMNAPUP3oCHieKv/IltiRj36R+TXAU7a/RzvJe2W5Ehsm3HaMngxTR7x0SM4Yb4cAWg3MkunnQhZzN75yu3p2lVlcc5VLXLl8RQDQ+2VFCcoOb1N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747703058; c=relaxed/simple;
-	bh=GYOrWHOgXKndKAS+zujXkprS9J2OU3xFf/JcbdsGsUA=;
+	bh=X8dh9hO3CCUq3DhRKU19kb/HWl+KRx3RIQxdqsZIzzA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qikK9UWqQdYuLMlYPzLEw5G0NNsP3s5SMnq7DY2YCHZY8OJAmRSOCeTQfE3SirQGKnRm1ztL4bQy6KfBIUTLfuGaPuZ9MQpQ9q9wKrSv5rjK3JFP5brlDyHkbltjuZSBsCx/xKHyrCKCcXEV0dpUNfW0WM288omKn3Bn8NFNuZo=
+	 MIME-Version; b=XjzegOGQaofVkhyZSfdka6Yq9OrbPqXZLPDGJRCxTDkodO6/QO6iSwVp6QbXirqnyqfzxUILcBWgMciFJoGcO6mizNSWQZIESXF5HoOMh00goX3ENVIoZ34eFRfWogELpUbWgVfRMnjTrPdauPWNE9KFXbQZvRflAE4AiRPBnIw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,8 +18,8 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1uHBOc-000000000aB-42pv;
-	Mon, 19 May 2025 21:03:54 -0400
+	id 1uHBOd-000000000aB-02i9;
+	Mon, 19 May 2025 21:03:55 -0400
 From: Rik van Riel <riel@surriel.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -33,11 +33,12 @@ Cc: linux-mm@kvack.org,
 	bp@alien8.de,
 	hpa@zytor.com,
 	nadav.amit@gmail.com,
+	Rik van Riel <riel@fb.com>,
 	Yu-cheng Yu <yu-cheng.yu@intel.com>,
 	Rik van Riel <riel@surriel.com>
-Subject: [RFC v2 2/9] x86/mm: Introduce Remote Action Request MSRs
-Date: Mon, 19 May 2025 21:02:27 -0400
-Message-ID: <20250520010350.1740223-3-riel@surriel.com>
+Subject: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
+Date: Mon, 19 May 2025 21:02:29 -0400
+Message-ID: <20250520010350.1740223-5-riel@surriel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250520010350.1740223-1-riel@surriel.com>
 References: <20250520010350.1740223-1-riel@surriel.com>
@@ -50,47 +51,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-From: Yu-cheng Yu <yu-cheng.yu@intel.com>
+From: Rik van Riel <riel@fb.com>
 
-Remote Action Request (RAR) is a TLB flushing broadcast facility.
-This patch introduces RAR MSRs.  RAR is introduced in later patches.
+Introduce X86_FEATURE_RAR and enumeration of the feature.
 
-There are five RAR MSRs:
-
-  MSR_CORE_CAPABILITIES
-  MSR_IA32_RAR_CTRL
-  MSR_IA32_RAR_ACT_VEC
-  MSR_IA32_RAR_PAYLOAD_BASE
-  MSR_IA32_RAR_INFO
+[riel: moved initialization to intel.c and disabling to Kconfig.cpufeatures]
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- arch/x86/include/asm/msr-index.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/Kconfig.cpufeatures       |  4 ++++
+ arch/x86/include/asm/cpufeatures.h |  2 +-
+ arch/x86/kernel/cpu/common.c       | 13 +++++++++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index c848dd4bfceb..adff8f0dc7bb 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -122,6 +122,17 @@
- #define SNB_C3_AUTO_UNDEMOTE		(1UL << 27)
- #define SNB_C1_AUTO_UNDEMOTE		(1UL << 28)
- 
-+/*
-+ * Remote Action Requests (RAR) MSRs
-+ */
-+#define MSR_IA32_RAR_CTRL		0x000000ed
-+#define MSR_IA32_RAR_ACT_VEC		0x000000ee
-+#define MSR_IA32_RAR_PAYLOAD_BASE	0x000000ef
-+#define MSR_IA32_RAR_INFO		0x000000f0
+diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+index 250c10627ab3..7d459b5f47f7 100644
+--- a/arch/x86/Kconfig.cpufeatures
++++ b/arch/x86/Kconfig.cpufeatures
+@@ -195,3 +195,7 @@ config X86_DISABLED_FEATURE_SEV_SNP
+ config X86_DISABLED_FEATURE_INVLPGB
+ 	def_bool y
+ 	depends on !BROADCAST_TLB_FLUSH
 +
-+#define RAR_CTRL_ENABLE			BIT(31)
-+#define RAR_CTRL_IGNORE_IF		BIT(30)
-+
- #define MSR_MTRRcap			0x000000fe
++config X86_DISABLED_FEATURE_RAR
++	def_bool y
++	depends on !BROADCAST_TLB_FLUSH
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 5b50e0e35129..0729c2d54109 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -76,7 +76,7 @@
+ #define X86_FEATURE_K8			( 3*32+ 4) /* Opteron, Athlon64 */
+ #define X86_FEATURE_ZEN5		( 3*32+ 5) /* CPU based on Zen5 microarchitecture */
+ #define X86_FEATURE_ZEN6		( 3*32+ 6) /* CPU based on Zen6 microarchitecture */
+-/* Free                                 ( 3*32+ 7) */
++#define X86_FEATURE_RAR			( 3*32+ 7) /* Intel Remote Action Request */
+ #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* "constant_tsc" TSC ticks at a constant rate */
+ #define X86_FEATURE_UP			( 3*32+ 9) /* "up" SMP kernel running on UP */
+ #define X86_FEATURE_ART			( 3*32+10) /* "art" Always running timer (ART) */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8feb8fd2957a..dd662c42f510 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1545,6 +1545,18 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+ 	setup_force_cpu_bug(X86_BUG_L1TF);
+ }
  
- #define MSR_IA32_ARCH_CAPABILITIES	0x0000010a
++static void __init detect_rar(struct cpuinfo_x86 *c)
++{
++	u64 msr;
++
++	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
++		rdmsrl(MSR_IA32_CORE_CAPABILITIES, msr);
++
++		if (msr & CORE_CAP_RAR)
++			setup_force_cpu_cap(X86_FEATURE_RAR);
++	}
++}
++
+ /*
+  * The NOPL instruction is supposed to exist on all CPUs of family >= 6;
+  * unfortunately, that's not true in practice because of early VIA
+@@ -1771,6 +1783,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 		setup_clear_cpu_cap(X86_FEATURE_LA57);
+ 
+ 	detect_nopl();
++	detect_rar(c);
+ }
+ 
+ void __init init_cpu_devs(void)
 -- 
 2.49.0
 
