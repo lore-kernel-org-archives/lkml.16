@@ -1,91 +1,275 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDE524C692;
-	Tue, 20 May 2025 19:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5800D28151E;
+	Tue, 20 May 2025 19:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769833; cv=none; b=eScNpyA0l19oUbscCs6MKSQBvRgqvGcLQRMTDlI98OcHovphUuPr5Q8l3Xos092mtXsxxbsBl0Tb6Tsax079CPglgdi32e1KW9ZYhX+Pq/L1+0LOm8+zobtB+2/E8NMWzr8ykJ0kaOevgEgZaf0hz0QZM6HeBS5LAQy1qCU1rLM=
+	t=1747769834; cv=none; b=eUhApBHGG54RWpqGE3fOzcpObGTvSWfQtr59VhoKMxlv+V+Bc3JL0IgEM/LYFhjliiSuoYZkxOW5Qonb5/MdzwIxpsHcyP2BexdG84ZN+gSi0a780u0UfvBcyajGUw5XEl2nsRjXnt4xDGY51AfdDJHuVOcjcgeiXLsAEWCiofg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769833; c=relaxed/simple;
-	bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhleKY+cyiWnMKUft1dpJv/XbKIT8PgOPwVKpdRn452kjCsl7LkBpxefyaVM6Z/1URVl1zddIyj4Ta6b6r2FzeY5o5tIe5xZzoQ+m1WvtfnOif13HTYQIeHiYi9087C45chphCXUkyrhFlDr36NnkPwAKBNST4CWq+X/+VvKevQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=con0xA/k; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747769834; c=relaxed/simple;
+	bh=aywi1GPz22dLfETlq+3Qb24G7PwlbMvJ4MbfKzQwohs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cMTzQO7WdVsfrmjYu9KeHiSUazvC8Ow30sNX/UGPLymtFHT34t+LXtJ0qJS1oc+FsZjatbcKC0TO9IwHFdYW6VJbtlSmVp5e7V42UioBIclzhuRH8bydb8vlHGd2/2gYgjMu3hSR/Mu86htk0Om2/ci5z+XzOlvAtEmkJKHRlLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYPYMk2w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="con0xA/k"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231c88cc984so6544105ad.1;
-        Tue, 20 May 2025 12:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747769831; x=1748374631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
-        b=con0xA/kWTW/xK0tg040qkLzknxgv8KC85yzKgZ0hvHhaKduUPmF86SOjae/CE3RR8
-         psKpvvSsE8Zy5BKQBzy5TpbEeYOLcFk58s+HThhsq31t5KffC2wmMeSSkNl7IUNtMjLh
-         puvUk6YDDg4CeWT8fD4u/63aZ1OIH2naYvTVnzXYYK2ReNArm2VPqhfVUkG5N8VquhHG
-         Gwz7bJKif0lUhz1puLougTi8d2xYTT2GlhZ9MbSYf/rW95T24vM+j+DP4L8wp002Rdxx
-         AhVWCUhoZx0GLr+uwAsEryLCRjGtyz2ReIl/G7jWH5DxZm9CsiaqE2UHV5IBnkezYw7f
-         7NUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747769831; x=1748374631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
-        b=oowsOODQP+8zKYXMJh/LViE8MORdKTvWh+trT52xO65YhII/P0OO1G8mehSnZ/3QvC
-         8rydxQfzeBuUyrnlZVLZVMPYU6P8dlQmE+c0oXNTHrjaAl73A+K/oVV9NhW8LdNeRkio
-         60bsRaaTGcdgBKN21lsPkwRDkXav06phcs3C55eRAQJDo5eUPf5kHqXRDT6GQxgTiZlA
-         HJuAsltBZTLCjKp4+B9ALRseCIbYMohBYUxv5ChxKkSR+8FvPZL2fQ4q89sodgtLtsRA
-         0sPr8I9LXq3a6zWmYRcU+Xmo0R6kvkUim6/BRrLZotQg+foF1fe6eXxPh9I5ZzqKAWA1
-         ru8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1H0gc+KIyb/h0cIjM9R6U/MGJqkPvikQkaQO0BedM9Jk0DC4neY2RRy1SZQYn8GgA9DR8/8Jfq90ybXX3@vger.kernel.org, AJvYcCU3nUpYi0Ynk5H4NRexqZDFPP5WYXnzv1xse3wTuTA7UTK3C3ZXaV6XCH4aG1l9NIr3sAuSh+PDJUEXKn4=@vger.kernel.org, AJvYcCV/wpMYiUWdGkSSKTkufQJI94KSbJ9/hIU/wnH54s9iywr87EoX8zRUK201GRREI50vnJdbY0AU2qWhifrf3wY=@vger.kernel.org, AJvYcCV1tyAPx7O1a/+5n9s2lb+WYUh2dqaQ47gbcvrJoN4ix63Ms0tD/Ne9fLeT8pg+IiB1oPQJEHjt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfNT85DJds+GEFNWXSi4vH0KoqjDucVlj69BXBX1CQ0v6c1TzI
-	RizhYGLgWjbWAEsueQSD1cI0XNzmIuyK49TJ4RvDBaSCTE6bunpiwCvUQiWN0WP0lntgC7mlKIJ
-	JME3k02z8Bbo8whDBUYYuuRXYsfeA9Qw=
-X-Gm-Gg: ASbGncsEvV+7BG0idjRWjVr1MZTbgsqCn4JMT1qtyPLDkcsx+iAtWz9VM+ikWmuDJ4I
-	bnfqZP4fcaOipDobIqMW0Iu2vPx0wdu36sd3JiHLCIKUAVMsjIkDmqAq5Du/YqfCiWIgLkZzYOp
-	tW+bVQrKYak/twFvyJiVCiHb7LB4l+Hbav
-X-Google-Smtp-Source: AGHT+IHRYWQO+o6MeHbMj6f06qEP8DvM7w1Xe2r2Fhyflg1I5VaCbhW3BSNMk/qJJgj1bw9CC+AcMMksSMpaZZLrGkA=
-X-Received: by 2002:a17:903:1aa7:b0:224:1212:7da1 with SMTP id
- d9443c01a7336-231d454c962mr86733025ad.13.1747769831293; Tue, 20 May 2025
- 12:37:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYPYMk2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 703F6C4CEE9;
+	Tue, 20 May 2025 19:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747769833;
+	bh=aywi1GPz22dLfETlq+3Qb24G7PwlbMvJ4MbfKzQwohs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dYPYMk2wGXRYJymk1VSxI1xOCQcDM9i0qRRWNne2/ztSJoJkS7INaq2tyk6kQO4yY
+	 6Sia2yuauftOr3NdXcXI3WqFc7OR1u2AU7TWbta8gu7li208fZC7A5nMF/hSWHvMUB
+	 J4zVlZn4eevkU962iGENtOmHJFqR9uWhXnYGBWmsGyf86/mMf48UAkCOr6S2Ehbi4B
+	 D3LYwNWlo5WCxOjglCJ1krYa6WLU3E1K+5itiBd4f3fUA3cUcGMKNcLJcAWv1M5PGH
+	 jKMr6PpHLnouZTvSyzuLZiCUx11+n4kCpl6tBDUgUAVynikrdfapwIXLJiDjhuB3X8
+	 Os7t6KnqQHpsg==
+Date: Tue, 20 May 2025 14:37:11 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: stm32: Introduce HDP
+Message-ID: <20250520193711.GA1227434-robh@kernel.org>
+References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
+ <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520192034.889415-1-ojeda@kernel.org> <CAJ-ks9=4DJdbUBiy_45wWPviOs48NEK1DmeqWnDaFSpkoda_GQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=4DJdbUBiy_45wWPviOs48NEK1DmeqWnDaFSpkoda_GQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 20 May 2025 21:36:57 +0200
-X-Gm-Features: AX0GCFv7GwY_uuzeDx4i5uB4OAE_8m-4VXTRgK6xXtbANDNefPefyVLnTkVFpw0
-Message-ID: <CANiq72mZafMsLOnLHGTsn_2yfYy4xf=OrTVHR68EqAx+6OBdww@mail.gmail.com>
-Subject: Re: [PATCH] rust: kbuild: rebuild if `.clippy.toml` changes
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
 
-On Tue, May 20, 2025 at 9:24=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> It is possible to do this only if CLIPPY=3D1?
+On Tue, May 20, 2025 at 05:02:28PM +0200, Clément Le Goffic wrote:
+> 'HDP' stands for Hardware Debug Port, it is an hardware block in
+> STMicrolectronics' MPUs that let the user decide which internal SoC's
+> signal to observe.
+> It provides 8 ports and for each port there is up to 16 different
+> signals that can be output.
+> Signals are different for each MPU.
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 188 +++++++++++++++++++++
+>  1 file changed, 188 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
+> new file mode 100644
+> index 000000000000..6251e9c16ced
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
+> @@ -0,0 +1,188 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) STMicroelectronics 2025.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl-hdp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STM32 Hardware Debug Port Mux/Config
+> +
+> +maintainers:
+> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
+> +
+> +description:
+> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
+> +  It allows to output internal signals on SoC's GPIO.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32mp131-hdp
+> +      - st,stm32mp151-hdp
+> +      - st,stm32mp251-hdp
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^hdp[0-7]-pins$":
+> +    type: object
+> +    $ref: pinmux-node.yaml#
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      pins:
+> +        enum: [ HDP0, HDP1, HDP2, HDP3, HDP4, HDP5, HDP6, HDP7 ]
 
-I kept it simple on purpose, since we will not save much (changing
-`.clippy.toml` is quite rare to begin with), but I can add a
-conditional (likely in a variable). Not sure if it is worth it.
+This can be:
 
-Cheers,
-Miguel
+pattern: '^HDP[0-7]$'
+
+
+> +
+> +      function:
+> +        maxItems: 1
+
+This is always 1 item, so just 'function: true' here.
+
+> +
+> +    required:
+> +      - function
+> +      - pins
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,stm32mp131-hdp
+> +    then:
+> +      patternProperties:
+> +        "^hdp[0-7]-pins$":
+> +          properties:
+> +            function:
+> +              enum: [ pwr_pwrwake_sys, pwr_stop_forbidden, pwr_stdby_wakeup, pwr_encomp_vddcore,
+> +                      bsec_out_sec_niden, aiec_sys_wakeup, none, ddrctrl_lp_req,
+> +                      pwr_ddr_ret_enable_n, dts_clk_ptat, sram3ctrl_tamp_erase_act, gpoval0,
+> +                      pwr_sel_vth_vddcpu, pwr_mpu_ram_lowspeed, ca7_naxierrirq, pwr_okin_mr,
+> +                      bsec_out_sec_dbgen, aiec_c1_wakeup, rcc_pwrds_mpu, ddrctrl_dfi_ctrlupd_req,
+> +                      ddrctrl_cactive_ddrc_asr, sram3ctrl_hw_erase_act, nic400_s0_bready, gpoval1,
+> +                      pwr_pwrwake_mpu, pwr_mpu_clock_disable_ack, ca7_ndbgreset_i,
+> +                      bsec_in_rstcore_n, bsec_out_sec_bsc_dis, ddrctrl_dfi_init_complete,
+> +                      ddrctrl_perf_op_is_refresh, ddrctrl_gskp_dfi_lp_req, sram3ctrl_sw_erase_act,
+> +                      nic400_s0_bvalid, gpoval2, pwr_sel_vth_vddcore, pwr_mpu_clock_disable_req,
+> +                      ca7_npmuirq0, ca7_nfiqout0, bsec_out_sec_dftlock, bsec_out_sec_jtag_dis,
+> +                      rcc_pwrds_sys, sram3ctrl_tamp_erase_req, ddrctrl_stat_ddrc_reg_selfref_type0,
+> +                      dts_valobus1_0, dts_valobus2_0, tamp_potential_tamp_erfcfg, nic400_s0_wready,
+> +                      nic400_s0_rready, gpoval3, pwr_stop2_active, ca7_nl2reset_i,
+> +                      ca7_npreset_varm_i, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
+> +                      eth1_out_pmt_intr_o, eth2_out_pmt_intr_o, ddrctrl_stat_ddrc_reg_selfref_type1,
+> +                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, tamp_nreset_sram_ercfg,
+> +                      nic400_s0_wlast, nic400_s0_rlast, gpoval4, ca7_standbywfil2,
+> +                      pwr_vth_vddcore_ack, ca7_ncorereset_i, ca7_nirqout0, bsec_in_pwrok,
+> +                      bsec_out_sec_deviceen, eth1_out_lpi_intr_o, eth2_out_lpi_intr_o,
+> +                      ddrctrl_cactive_ddrc, ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2,
+> +                      pka_pka_itamp_out, nic400_s0_wvalid, nic400_s0_rvalid, gpoval5,
+> +                      ca7_standbywfe0, pwr_vth_vddcpu_ack, ca7_evento, bsec_in_tamper_det,
+> +                      bsec_out_sec_spniden, eth1_out_mac_speed_o1, eth2_out_mac_speed_o1,
+> +                      ddrctrl_csysack_ddrc, ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3,
+> +                      saes_tamper_out, nic400_s0_awready, nic400_s0_arready, gpoval6,
+> +                      ca7_standbywfi0, pwr_rcc_vcpu_rdy, ca7_eventi, ca7_dbgack0, bsec_out_fuse_ok,
+> +                      bsec_out_sec_spiden, eth1_out_mac_speed_o0, eth2_out_mac_speed_o0,
+> +                      ddrctrl_csysreq_ddrc, ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4,
+> +                      rng_tamper_out, nic400_s0_awavalid, nic400_s0_aravalid, gpoval7 ]
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,stm32mp151-hdp
+> +    then:
+> +      patternProperties:
+> +        "^hdp[0-7]-pins$":
+> +          properties:
+> +            function:
+> +              enum: [ pwr_pwrwake_sys, cm4_sleepdeep, pwr_stdby_wkup, pwr_encomp_vddcore,
+> +                      bsec_out_sec_niden, none, rcc_cm4_sleepdeep, gpu_dbg7, ddrctrl_lp_req,
+> +                      pwr_ddr_ret_enable_n, dts_clk_ptat, gpoval0, pwr_pwrwake_mcu, cm4_halted,
+> +                      ca7_naxierrirq, pwr_okin_mr, bsec_out_sec_dbgen, exti_sys_wakeup,
+> +                      rcc_pwrds_mpu, gpu_dbg6, ddrctrl_dfi_ctrlupd_req, ddrctrl_cactive_ddrc_asr,
+> +                      gpoval1, pwr_pwrwake_mpu, cm4_rxev, ca7_npmuirq1, ca7_nfiqout1,
+> +                      bsec_in_rstcore_n, exti_c2_wakeup, rcc_pwrds_mcu, gpu_dbg5,
+> +                      ddrctrl_dfi_init_complete, ddrctrl_perf_op_is_refresh,
+> +                      ddrctrl_gskp_dfi_lp_req, gpoval2, pwr_sel_vth_vddcore, cm4_txev, ca7_npmuirq0,
+> +                      ca7_nfiqout0, bsec_out_sec_dftlock, exti_c1_wakeup, rcc_pwrds_sys, gpu_dbg4,
+> +                      ddrctrl_stat_ddrc_reg_selfref_type0, ddrctrl_cactive_1, dts_valobus1_0,
+> +                      dts_valobus2_0, gpoval3, pwr_mpu_pdds_not_cstbydis, cm4_sleeping, ca7_nreset1,
+> +                      ca7_nirqout1, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
+> +                      eth_out_pmt_intr_o, gpu_dbg3, ddrctrl_stat_ddrc_reg_selfref_type1,
+> +                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, gpoval4, ca7_standbywfil2,
+> +                      pwr_vth_vddcore_ack, ca7_nreset0, ca7_nirqout0, bsec_in_pwrok,
+> +                      bsec_out_sec_deviceen, eth_out_lpi_intr_o, gpu_dbg2, ddrctrl_cactive_ddrc,
+> +                      ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2, gpoval5,
+> +                      ca7_standbywfi1, ca7_standbywfe1, ca7_evento, ca7_dbgack1,
+> +                      bsec_out_sec_spniden, eth_out_mac_speed_o1, gpu_dbg1, ddrctrl_csysack_ddrc,
+> +                      ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3, gpoval6,
+> +                      ca7_standbywfi0, ca7_standbywfe0, ca7_dbgack0, bsec_out_fuse_ok,
+> +                      bsec_out_sec_spiden, eth_out_mac_speed_o0, gpu_dbg0, ddrctrl_csysreq_ddrc,
+> +                      ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4, gpoval7 ]
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,stm32mp251-hdp
+> +    then:
+> +      patternProperties:
+> +        "^hdp[0-7]-pins$":
+> +          properties:
+> +            function:
+> +              enum: [ pwr_pwrwake_sys, cpu2_sleep_deep, bsec_out_tst_sdr_unlock_or_disable_scan,
+> +                      bsec_out_nidenm, bsec_out_nidena, cpu2_state_0, rcc_pwrds_sys, gpu_dbg7,
+> +                      ddrss_csysreq_ddrc, ddrss_dfi_phyupd_req, cpu3_sleep_deep,
+> +                      d2_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_0,
+> +                      pcie_usb_cxpl_debug_info_ei_8, d3_state_0, gpoval0, pwr_pwrwake_cpu2,
+> +                      cpu2_halted, cpu2_state_1, bsec_out_dbgenm, bsec_out_dbgena, exti1_sys_wakeup,
+> +                      rcc_pwrds_cpu2, gpu_dbg6, ddrss_csysack_ddrc, ddrss_dfi_phymstr_req,
+> +                      cpu3_halted, d2_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_1,
+> +                      pcie_usb_cxpl_debug_info_ei_9, d3_state_1, gpoval1, pwr_pwrwake_cpu1,
+> +                      cpu2_rxev, cpu1_npumirq1, cpu1_nfiqout1, bsec_out_shdbgen, exti1_cpu2_wakeup,
+> +                      rcc_pwrds_cpu1, gpu_dbg5, ddrss_cactive_ddrc, ddrss_dfi_lp_req, cpu3_rxev,
+> +                      hpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_2,
+> +                      pcie_usb_cxpl_debug_info_ei_10, d3_state_2, gpoval2, pwr_sel_vth_vddcpu,
+> +                      cpu2_txev, cpu1_npumirq0, cpu1_nfiqout0, bsec_out_ddbgen, exti1_cpu1_wakeup,
+> +                      cpu3_state_0, gpu_dbg4, ddrss_mcdcg_en, ddrss_dfi_freq_0, cpu3_txev,
+> +                      hpdma2_clk_bus_req, pcie_usb_cxpl_debug_info_ei_3,
+> +                      pcie_usb_cxpl_debug_info_ei_11, d1_state_0, gpoval3, pwr_sel_vth_vddcore,
+> +                      cpu2_sleeping, cpu1_evento, cpu1_nirqout1, bsec_out_spnidena, exti2_d3_wakeup,
+> +                      eth1_out_pmt_intr_o, gpu_dbg3, ddrss_dphycg_en, ddrss_obsp0, cpu3_sleeping,
+> +                      hpdma3_clk_bus_req, pcie_usb_cxpl_debug_info_ei_4,
+> +                      pcie_usb_cxpl_debug_info_ei_12, d1_state_1, gpoval4, cpu1_standby_wfil2,
+> +                      none, cpu1_nirqout0, bsec_out_spidena, exti2_cpu3_wakeup, eth1_out_lpi_intr_o,
+> +                      gpu_dbg2, ddrctrl_dfi_init_start, ddrss_obsp1, cpu3_state_1,
+> +                      d3_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_5,
+> +                      pcie_usb_cxpl_debug_info_ei_13, d1_state_2, gpoval5, cpu1_standby_wfi1,
+> +                      cpu1_standby_wfe1, cpu1_halted1, cpu1_naxierrirq, bsec_out_spnidenm,
+> +                      exti2_cpu2_wakeup, eth2_out_pmt_intr_o, gpu_dbg1, ddrss_dfi_init_complete,
+> +                      ddrss_obsp2, d2_state_0, d3_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_6,
+> +                      pcie_usb_cxpl_debug_info_ei_14, cpu1_state_0, gpoval6, cpu1_standby_wfi0,
+> +                      cpu1_standby_wfe0, cpu1_halted0, bsec_out_spidenm, exti2_cpu1__wakeup,
+> +                      eth2_out_lpi_intr_o, gpu_dbg0, ddrss_dfi_ctrlupd_req, ddrss_obsp3, d2_state_1,
+> +                      lpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_7,
+> +                      pcie_usb_cxpl_debug_info_ei_15, cpu1_state_1, gpoval7 ]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +
+> +    pinctrl@54090000 {
+> +      compatible = "st,stm32mp15-hdp";
+> +      reg = <0x54090000 0x400>;
+> +      clocks = <&rcc HDP>;
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&hdp2_gpo>;
+> +      hdp2_gpo: hdp2-pins {
+> +        function = "gpoval2";
+> +        pins = "HDP2";
+> +      };
+> +    };
+> 
+> -- 
+> 2.43.0
+> 
