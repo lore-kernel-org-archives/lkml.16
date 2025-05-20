@@ -1,73 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8560E10E4
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993202701AA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747740575; cv=none; b=m8+vznD5DbXdRg6oKKtpKNyrjcSyvrv1vM7I4+qtrxnl6YQIRcw1JYVppJqaxe+vYpy9bpog/IEX5I+50OMy+Ngo5OqAfx0TzLdUuuBVXdeyjAvdk1Kerr+IPBXKt5/AxQynYRRtj+08ANlAvqyB8+A4/f8yhASdoaVJLG54buY=
+	t=1747740603; cv=none; b=aZSzq8/vlFzdMdVvopVJ5eGtzfjNH9Mk8pewCU1qS36j5h7psNjOkWliAnM6MRKpvh3pJzlx4KJ1cHuyUDK8mDJxAN8B+YfkFfssPx/y9+BxVtT3mflmM/SFH2RdYrrRO8cPUxBrgWLggRpHwkTO0coxd4mLZIH92qtcB17EBsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747740575; c=relaxed/simple;
-	bh=SDchw3DaHYCHIIrzcYnqUBgMGG9Jx2vsq8pyNQkjnfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=navakZNgpBivrpKJwBvb1HbTdlDBHlozlrEnEq5jMWg3SJB6PhMBEWMHd/+G1FtrGFI++XjREYGKbjTuEjbPPZmQCC8rSy3mt9kUUwbFH7pHPlH90tRkAanMtaPQhSWlnrwSx8g+aZZ2cWxM4jv+MysDn6KLQhTk4e3lnnFgylU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s98XdcwP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747740603; c=relaxed/simple;
+	bh=jFnYWDnEGjQwDd2gLR9uDiOWEyDyzknYhlUitzuDj/0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LXV6c/FH7vg3m9heGVp7VZ50QFDc0vrUUyT6HKnBAB56PC4q5JMfXOkPEVzouvHCMLFBFqminyc5AP871vVpIeJN3TBLrGNUccZ/XuRECrU0BY/UItJHkepBuLcHY++Fb9WTCsEBhtIEsJ7wuXWxuYl4xoXJ7PlrODCoLNWqsh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtpUo+JX; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s98XdcwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1CCCC4CEF2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747740574;
-	bh=SDchw3DaHYCHIIrzcYnqUBgMGG9Jx2vsq8pyNQkjnfI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s98XdcwPsdW5VE5N8MQjqf3pJt/++cv9vdU45XzakH0TUAt4jKIGe0Pw8Ld2qGtxm
-	 tKBW2ltrlYUXj9cU+opnx7B83ADhvvK2+abDHPsAhexcdWIiajL/cNvPJ8s87Dmq/J
-	 uEIv3wQGes7SVCrVXePsvj2aM2pqp3kNnrmnsiDkY+qAaba1u3a3D3CxXuJgRATeb7
-	 SvmCCFV9wkYxGwatVIjeoDUFy6A8xffytUQAoR5vxB/6O7D6bhUXUABto1P0O/37wV
-	 yGJsIh5pQVFEzKXmL5x9IzEoGObRvDjtlGxrcAybKNkDOymEoU4ee6jTDpDn6JtwZv
-	 9Z2WhdFz1o9Og==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3292aad800aso5373641fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:29:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWtUXzyfxu+TGlwOA0PAEuODfowiR+HQG/LPxXLSQvJBL/zbyfTp/l1C+v5sJR8Pt2gf+veTEkrvT+g3Hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO29Kx03ouVuc3ZBmdhqcoXyZgU89vOlhuLVlJrsu5EY7JdQa4
-	MPXTnDe9UAUf7BTHiDkt/hUdE79MdPCk8PDVfQNdqKRWxlBjPPrGtcuTnzeyvfA6VkUa6Dx2vrd
-	BydPg591ecBj7N4MOFRlkyg81Ocn+sWg=
-X-Google-Smtp-Source: AGHT+IEqIQksb+9Dgr6SWr38ps3c4LFnIjGjO2kyZm8miqYUh/Hwqsc8+aN0+C+uH0XYaY0to422FKdobVPTolDn1PM=
-X-Received: by 2002:a2e:be14:0:b0:30b:e73e:e472 with SMTP id
- 38308e7fff4ca-327f84f67d9mr68948031fa.14.1747740572387; Tue, 20 May 2025
- 04:29:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtpUo+JX"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-601ed5e97e9so3400117a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747740600; x=1748345400; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iNSWdVp0pCGv6zZlGqB2G5Ypt6F8CERWSTLAliUg2NE=;
+        b=PtpUo+JXmKMgvTGkgzwZvWY6aJFPYOQw/ciYFUuvUmQK5FITDVJjZPWWs9vF7Uh0qb
+         j3i7lJtijieZxLXGQ/oooZSKnHpZWlT1TvXzHc2cH5TJs0P4LVvpGKf5e2EfqPXlC1my
+         ZvtbXf9RQyUrGtj0XrdVuf/ACLxonU9OCBxAd9DexX1kG/iH8vlBHTBYImEGZFEb6rDA
+         /x3dg+Sc1VZ2onIhTT5T7PWBXmy1ImHuQhd62eL49xTPzEeE/c7HvsKCo+apTOza9DVw
+         QPYZioTY/31nkWeuvJuIHa4QCUIjGjYS/62M4YJUjN02OjUb3JlFjBHIqz/VyekDWePz
+         HVyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747740600; x=1748345400;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iNSWdVp0pCGv6zZlGqB2G5Ypt6F8CERWSTLAliUg2NE=;
+        b=TCoTugdPdVbeOEajuvON6LZOws6ENyuyhCpJU5WfKe6LxNn16mamQAzv6KNUZLWb6H
+         p30Kkty+5hEETmjJUWxHRTPENHjRan4ABN8uFr2n8rDmHFCyXf8dlO0wTtzsDEH2lb7J
+         bkYQL3SKno6Y8ts+qosOSKwe+YNANc2pFMoUP5/iwACPyfca8pHUzjTBcnLmi6OfzzYP
+         bdDiBkfxXqAAeYVtuIli7/cifZdF4f0TP4hhgIvleScBD3zokotOUVtaPr7j2JVNpHSc
+         pe2e0loFXRmuP0XhEgxqO+VkJEa7RO06b4pjpxdj40OaAgP0UXWfZ0wv9nwZPjQnZ03f
+         KJ9g==
+X-Gm-Message-State: AOJu0YwTMhW5c1/0j7VNaw/Lbkkxj0rSA2+eVPTmwmwG2KrpGzdZC97r
+	wdtAUVV3SutF7jMChNozHnXypAZ5GXSVb+IfFJVGlL53OwrwJc0SgvfJ
+X-Gm-Gg: ASbGnct/zQvsoJAoSwIPqmXyws5vVUUAkM4RwsSnCiW4yMAUAWrAmeKXiDVHdDfmvQC
+	fsUQRrjdrnV6ZBdN0qlAd0xHNwlsmlNslPD6VoNukdEJrQwBHJ3YIQ6RxSgJZfvedWih2UfnlqH
+	qJCM3iRxy+QxaFEUoD9CU+WXFSpBLIMVPcrPFZzmjMarsR5dxInAv6BNOGxsoQ0m1wAjZO0Y+gm
+	B47MmuYK83BGuBVAs7nZ9Dnnz3XDM+jCpcf+z6Ws3ALnadoN3Ipkai9CUJdkZmV1o754AwgXHqa
+	V6hzQ++WTj47ie9AJ90polgHTRRP5fM8pExaqbXAMfNFNjoFN9R7OR09NPgfsGXm4GivL8uAUvm
+	6P0A=
+X-Google-Smtp-Source: AGHT+IFHkJS1TgytAIFMsB6vO1Cu5EW569Xn4PZHR3u4t0a3HsI/YxGapJU2ZnEmP8JJG2H20JPt0A==
+X-Received: by 2002:a17:907:7da2:b0:ace:5461:81dd with SMTP id a640c23a62f3a-ad536b5a0cfmr1500424866b.3.1747740599535;
+        Tue, 20 May 2025 04:29:59 -0700 (PDT)
+Received: from smtpclient.apple ([64.176.163.79])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e816sm708660766b.23.2025.05.20.04.29.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 May 2025 04:29:58 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-12-ardb+git@google.com>
- <nlkjrtpuohrsg3u2gqhia7ns7ogrik7ztmks5q5bdhn3y4kfhi@k7yxsyc7j4fe>
-In-Reply-To: <nlkjrtpuohrsg3u2gqhia7ns7ogrik7ztmks5q5bdhn3y4kfhi@k7yxsyc7j4fe>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 May 2025 13:29:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH2vD4VWMNroScbf1KpnODR4TW5MryTYOXchmso0yjimw@mail.gmail.com>
-X-Gm-Features: AX0GCFsPTVHuo6mfgELJ7ZpE5QwaMYjnN2-9WYEkbEtVbWNq6V1OWtJxatdLAZM
-Message-ID: <CAMj1kXH2vD4VWMNroScbf1KpnODR4TW5MryTYOXchmso0yjimw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/7] x86/mm: Define PTRS_PER_P4D in terms of pgdir_shift()
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [RFC v2 7/9] x86/mm: Introduce Remote Action Request
+From: Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <20250520010350.1740223-8-riel@surriel.com>
+Date: Tue, 20 May 2025 14:29:44 +0300
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ kernel-team@meta.com,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ luto@kernel.org,
+ peterz@infradead.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Yu-cheng Yu <yu-cheng.yu@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4A879001-E213-4239-9D25-CDA8EC3E2CD9@gmail.com>
+References: <20250520010350.1740223-1-riel@surriel.com>
+ <20250520010350.1740223-8-riel@surriel.com>
+To: Rik van Riel <riel@surriel.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
 
-On Tue, 20 May 2025 at 13:08, Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> On Tue, May 20, 2025 at 12:41:42PM +0200, Ard Biesheuvel wrote:
-> > @@ -61,7 +59,7 @@ extern unsigned int ptrs_per_p4d;
-> >   */
-> >  #define P4D_SHIFT            39
-> >  #define MAX_PTRS_PER_P4D     512
-> > -#define PTRS_PER_P4D         ptrs_per_p4d
-> > +#define PTRS_PER_P4D         (pgdir_shift() & 1 ?: MAX_PTRS_PER_P4D)
->
-> "& 1" is a hack and at least deserves a comment.
->
+Not a full review, but..
 
-Fair enough.
+> On 20 May 2025, at 4:02, Rik van Riel <riel@surriel.com> wrote:
+>=20
+> +/*
+> + * This is a modified version of smp_call_function_many() of =
+kernel/smp.c,
+
+The updated function names is smp_call_function_many_cond() and it is
+not aligned with smp_call_rar_many. I think the new version is =
+(suprisingly)
+better, so it=E2=80=99d be beneficial to bring smp_call_rar_many() to be =
+like the
+updated one in smp.c.
+
+> + * without a function pointer, because the RAR handler is the ucode.
+> + */
+> +void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
+> +		       unsigned long start, unsigned long end)
+> +{
+> +	unsigned long pages =3D (end - start + PAGE_SIZE) / PAGE_SIZE;
+> +	int cpu, next_cpu, this_cpu =3D smp_processor_id();
+> +	cpumask_t *dest_mask;
+> +	unsigned long idx;
+> +
+> +	if (pages > RAR_INVLPG_MAX_PAGES || end =3D=3D TLB_FLUSH_ALL)
+> +		pages =3D RAR_INVLPG_MAX_PAGES;
+> +
+> +	/*
+> +	 * Can deadlock when called with interrupts disabled.
+> +	 * We allow cpu's that are not yet online though, as no one else =
+can
+> +	 * send smp call function interrupt to this cpu and as such =
+deadlocks
+> +	 * can't happen.
+> +	 */
+> +	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
+> +		     && !oops_in_progress && !early_boot_irqs_disabled);
+
+I thought you agreed to change it to make it use lockdep instead (so it =
+will
+be compiled out without LOCKDEP), like done in =
+smp_call_function_many_cond()
+
+> +
+> +	/* Try to fastpath.  So, what's a CPU they want?  Ignoring this =
+one. */
+> +	cpu =3D cpumask_first_and(mask, cpu_online_mask);
+> +	if (cpu =3D=3D this_cpu)
+> +		cpu =3D cpumask_next_and(cpu, mask, cpu_online_mask);
+> +
+
+Putting aside the rest of the code, I see you don=E2=80=99t call =
+should_flush_tlb().
+I think it is worth mentioning in commit log or comment the rationale =
+behind
+it (and maybe benchmarks to justify it).
+
