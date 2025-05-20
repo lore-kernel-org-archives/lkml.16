@@ -1,101 +1,108 @@
-Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D90276054;
-	Tue, 20 May 2025 16:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F3E26B085;
+	Tue, 20 May 2025 16:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757523; cv=none; b=rarZ2hQfIZool7de6AyDLFRQJRdCt0mKGY+TSWiWPSiYt5+9jk6JBpkmO7VKpm1kb/tjDoPkkD48RSk4NManvNLSMmpOOiQKGW9T0d28c1UaiasIjbkytIj1QLEka+VYGoV8ngGWWP/stH5CfhY9GQP43bAq/jq4Wwu/qbOyTFk=
+	t=1747757546; cv=none; b=UkuwkYm0A5uO/kK11Wf+uOgHmA0LN+F2fq9eB6GbOXYFkLokSa3UyDC3I+7LocIcFX2/aCZFdZpPsdBU2mzsQwIKIBWtgwJfZMMqwfmy2Zu0VuzpRxi7QfDHBZxQLF+aaZje+T1rKAJUX/i43FQl2obvVWTZ0SV1G2LZdNqW0YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757523; c=relaxed/simple;
-	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqAIM6Hw5W/O9sgBvOsHO2Awj5Pa6Fa68R6lxxrMOK9O5rniPYwpoNmFMWnXLpiESdVaxBgUD14GLd9pDQFDtQ/kHA8h3A5YobWBGJa1lQBo73j9QltOFpPYFjtjKoyZLNrYURORhLl1Kte8hR+UIQNLDE9V78339yK/jx2wZYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dMMaR+AF; arc=none smtp.client-ip=193.252.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1747757546; c=relaxed/simple;
+	bh=H0wdVOSbUkt1lm7oK4U/1cODmEgFmaDK31ojwjNSrDc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QHNeZ7jSFxQZVykWsgRWo6D8utBV6q330K6NNAIHKZJXRwR+cybgefqmiRJNsrfsG7+Dyi3C+wuFnnNWwYeebunAxDyG2oxG3JM+8dDo/0UrDRnoHQv4GR4a2jpbrA9t6/kp6MiI0GrTJiIKjBIWDrYJyvhk7N9rWePS+T9xexY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPrnBUlS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dMMaR+AF"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id HPQYu9zeCFfBZHPQfuCi6a; Tue, 20 May 2025 18:03:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1747756989;
-	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=dMMaR+AFCHRDRqO/p9iL5eji6THqnlwGIZf0pOLqdvEGZ76W4qhMTn+EiagUzdWxQ
-	 CPytae6VjbfmGmLazR6+oB1RU1rhqxBt1Z7DKF4xxVCUDXmf1cpRc6UvyrT6rwNAbZ
-	 n9H2RMmZaDVOECX0m/P5L7y9wBPZZvgiL993jini4zAjlyKJjscVr9e3XnujHeOyxj
-	 PPJU1TFkfamk71h0rw3hVUKHM2ITkdhzgDXEIMvbi9pXjqE8acGw8o6b2jfI0Qw1oN
-	 1LMgj7K/GD1Gapjq6CGwjHJE3SCvoujZuArtvIQ260vmRZuCWJaFE3kpl2UWI6fe+O
-	 Vse/wByRNa1Mg==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 20 May 2025 18:03:09 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
-Date: Wed, 21 May 2025 01:02:49 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPrnBUlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07871C4CEE9;
+	Tue, 20 May 2025 16:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747757545;
+	bh=H0wdVOSbUkt1lm7oK4U/1cODmEgFmaDK31ojwjNSrDc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uPrnBUlS6G38zQL9J1d0mEtD3d6wnS3FaUkDi741pR6lEo71M/GmN7s7zJoU3Z5+P
+	 kJiVqXDfbIQvZujeqZnfreCz9rrIj/0emBGveYgh7ZS2NfC5aKBMJKXoEtkBTQEuKB
+	 k0CF4InZYB/lEpqQRHZ0nKUjYsK6oYR8bxGorwFXY1ZhqF6DGVBmZEuz8ZzRN1/AEl
+	 Wx2L1bu/zXPySD8gNI1GSg0/xWaqj0Fj6SXhJOGLLv0l/njfI4mD9LEfMNkQiP/1VS
+	 o0tkt12LtgzbtZaVZ/qA0E1mMJOFt3H4tyCohfB/ATK9JTxKXM2xVXFfawM4HA1Hga
+	 EOoxt/4atys7A==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	imx@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: enetc: fix NTMP build dependency
+Date: Tue, 20 May 2025 18:12:09 +0200
+Message-Id: <20250520161218.3581272-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
- sources
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- I Hsin Cheng <richard120310@gmail.com>, "Michael S . Tsirkin"
- <mst@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Peng Jiang <jiang.peng9@zte.com.cn>, Stefano Garzarella
- <sgarzare@redhat.com>, Yazen Ghannam <yazen.ghannam@amd.com>,
- Yury Norov <yury.norov@gmail.com>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
- <aCylQUlY3W7rbZAs@x1>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <aCylQUlY3W7rbZAs@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
-> On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
->> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-(...)
+When the new library driver is in a loadable module, but the enetc
+core driver is built-in, the kernel fails to link:
 
-> I think there is value in doing it now, as it clears up the build
-> warnings and solves already one prep work that syncing would entail,
-> namely the inclusion of const_true() in the tools compiler.h file.
+aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in function `enetc4_teardown_cbdr':
+enetc_cbdr.c:(.text+0x70): undefined reference to `ntmp_free_cbdr'
+aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in function `enetc4_get_rss_table':
+enetc_cbdr.c:(.text+0x98): undefined reference to `ntmp_rsst_query_entry'
+aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in function `enetc4_set_rss_table':
+enetc_cbdr.c:(.text+0xb8): undefined reference to `ntmp_rsst_update_entry'
+aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in function `enetc4_setup_cbdr':
+enetc_cbdr.c:(.text+0x438): undefined reference to `ntmp_init_cbdr'
 
-Ack.
+Move the ntmp code into the core module itself to avoid this link error.
 
-> I think I can take your "I am not objecting to this series in any way."
-> as an Acked-by?
+Fixes: 4701073c3deb ("net: enetc: add initial netc-lib driver to support NTMP")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/freescale/enetc/Kconfig  | 2 +-
+ drivers/net/ethernet/freescale/enetc/Makefile | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
-CC). I did not have a look at the other ones (and do not plan to do so).
-
-
-Yours sincerely,
-Vincent Mailhol
+diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
+index e917132d3714..90aa6f6dfd63 100644
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -16,7 +16,7 @@ config NXP_ENETC_PF_COMMON
+ 	  If compiled as module (M), the module name is nxp-enetc-pf-common.
+ 
+ config NXP_NETC_LIB
+-	tristate
++	bool
+ 	help
+ 	  This module provides common functionalities for both ENETC and NETC
+ 	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
+index f1c5ad45fd76..0af59f97b7e7 100644
+--- a/drivers/net/ethernet/freescale/enetc/Makefile
++++ b/drivers/net/ethernet/freescale/enetc/Makefile
+@@ -6,8 +6,7 @@ fsl-enetc-core-y := enetc.o enetc_cbdr.o enetc_ethtool.o
+ obj-$(CONFIG_NXP_ENETC_PF_COMMON) += nxp-enetc-pf-common.o
+ nxp-enetc-pf-common-y := enetc_pf_common.o
+ 
+-obj-$(CONFIG_NXP_NETC_LIB) += nxp-netc-lib.o
+-nxp-netc-lib-y := ntmp.o
++fsl-enetc-core-$(CONFIG_NXP_NETC_LIB) += ntmp.o
+ 
+ obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
+ fsl-enetc-y := enetc_pf.o
+-- 
+2.39.5
 
