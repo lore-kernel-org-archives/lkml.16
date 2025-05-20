@@ -1,131 +1,236 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88E521C9F5;
-	Tue, 20 May 2025 13:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCCD21C9F5
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746270; cv=none; b=ZOfSK08XKZK4LnRwoDIr8ach8HGwXpm8aMhU5Sardlq+D39Vf+y92Nmf2aS8dzqGqZxopRU2OxMIA+UdMeWOl4COhVLEKZAf3d0C3DSO8TEnXw7sEcH9p6drOWCrR14ORdsjqOxlcX/aL282QZm7tNtwORRkRigO2knedOOkWo8=
+	t=1747746281; cv=none; b=egp+EGZUa60PJBNEYcCpFLfEuZLZSeUywcxIIAshmEvuIDHYyTEVPZKN1ryw2T85dKkeWA1qEokWTj098QgU2wpQPCZcmlc7QTMSHbYL/RjgiqfH6+LocRd6vKSJ8JotehjAJDLbelDa3m+uHaOtq7xgqIbXsV7HcheIX8nTnhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746270; c=relaxed/simple;
-	bh=carVAhumIBG2XCpl+hWPctcxIzy4Q55YiGWX9bTJQfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HWgI1RhulJI9EbDmwhkrHmBEW/47pE3DJCT3qkWamiyIYW9QGgV0vW7MDZYwIfjbAS3xKvNXLpoJrcAdU6bYG4VuaLgQVJl2RYUila5+HEcE2j80t13G+lDHr2gOG4BLFIP6AlbrmvTf661Y2wS5ND2LHwHJA5fN9rQvJDIEKxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=a87PczHp; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747746281; c=relaxed/simple;
+	bh=+vxvhzh+k3BZDimCeg/82qap63W/OWSrrCYXa4kCIW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=phf/3sGFYewQiTwlUeHHDsumjVI+vtRrs1s6H/9pRh9/J9H0LvHBO5w2jymqDT31O06TKkg1jYIdy/NZjugrj1TqW61y4/BbpqbbPV36NjJdIylV0Kyg4dAX6dx0HsZdL9HvfIEmPHTccFuhNwiljm+YC08/2O1tg0X4ThZWH10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ic323Jp9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uvwfVruy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ic323Jp9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uvwfVruy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="a87PczHp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=gNSBAq32hdbFYRJbB0m60tJ7sQQnB7sJQkTEYNeP4ZA=; b=a8
-	7PczHph3oG3H9MgQswqUZHb8PQ88CXvloqzqtPS84IJRHWgkTlJSiFUp3yqQZOnkfWrSYSnN2od4F
-	x6qL1aJm0M7RSVr0wCISBT3N9nwnYatEU/nF0oix+UESyoA/25X/gYa9iOivEiYTVAHc/B1/VaeUk
-	NmuaptLxDItuRlk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uHMdk-00D7jz-DO; Tue, 20 May 2025 15:04:16 +0200
-Date: Tue, 20 May 2025 15:04:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Silicon Labs Kernel Team <linux-devel@silabs.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org
-Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
-Message-ID: <5bc03f50-498e-42c8-9a14-ca15243213bd@lunn.ch>
-References: <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
- <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
- <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
- <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
- <2025051551-rinsing-accurate-1852@gregkh>
- <D9WTONSVOPJS.1DNQ703ATXIN1@silabs.com>
- <2025051612-stained-wasting-26d3@gregkh>
- <D9XQ42C56TUG.2VXDA4CVURNAM@silabs.com>
- <cbfc9422-9ba8-475b-9c8d-e6ab0e53856e@lunn.ch>
- <DA0LEHFCVRDC.2NXIZKLBP7QCJ@silabs.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ic323Jp9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uvwfVruy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ic323Jp9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uvwfVruy"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F8DD206EB;
+	Tue, 20 May 2025 13:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747746277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aoa4owdDkMNuo4sf7rn6DI1L1+1vIZIYWS2/SXMMrrU=;
+	b=Ic323Jp9mhAVGO24Fpr0vCQAW1CK0CWnveqcipDPNKwMUlmLdrkFQ480fHtT927xmBB4EG
+	64Xoqh5yp9MdecK5bG1flV1a2DnWtssO34UnF+xbvtrR38Wl3WXDHt1kfPT3W1AjBjviJa
+	JZmBgRSGPD7n0MPsco5tZRDxbbksyh0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747746277;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aoa4owdDkMNuo4sf7rn6DI1L1+1vIZIYWS2/SXMMrrU=;
+	b=uvwfVruyBiInWdtkhXSgZ8q41G8W9uFWlH+CxYO7Wl02owCIvFYlaOnc0zGmoERKKAZTfq
+	p8Tc0VmGJ+C3kYCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747746277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aoa4owdDkMNuo4sf7rn6DI1L1+1vIZIYWS2/SXMMrrU=;
+	b=Ic323Jp9mhAVGO24Fpr0vCQAW1CK0CWnveqcipDPNKwMUlmLdrkFQ480fHtT927xmBB4EG
+	64Xoqh5yp9MdecK5bG1flV1a2DnWtssO34UnF+xbvtrR38Wl3WXDHt1kfPT3W1AjBjviJa
+	JZmBgRSGPD7n0MPsco5tZRDxbbksyh0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747746277;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aoa4owdDkMNuo4sf7rn6DI1L1+1vIZIYWS2/SXMMrrU=;
+	b=uvwfVruyBiInWdtkhXSgZ8q41G8W9uFWlH+CxYO7Wl02owCIvFYlaOnc0zGmoERKKAZTfq
+	p8Tc0VmGJ+C3kYCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB38D13888;
+	Tue, 20 May 2025 13:04:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UPErNOR9LGiIEAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 20 May 2025 13:04:36 +0000
+Message-ID: <07088966-73f4-4b5d-898d-b596dede53e4@suse.de>
+Date: Tue, 20 May 2025 15:04:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DA0LEHFCVRDC.2NXIZKLBP7QCJ@silabs.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Marcus Folkesson <marcus.folkesson@gmail.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.20
+X-Spamd-Result: default: False [0.20 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[renesas];
+	FREEMAIL_TO(0.00)[glider.be,gmail.com,redhat.com,linux.intel.com,kernel.org,ffwll.ch];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
 
-On Mon, May 19, 2025 at 09:21:52PM -0400, Damien Riégel wrote:
-> On Sun May 18, 2025 at 11:23 AM EDT, Andrew Lunn wrote:
-> > This also comes back to my point of there being at least four vendors
-> > of devices like yours. Linux does not want four or more
-> > implementations of this, each 90% the same, just a different way of
-> > converting this structure of operations into messages over a transport
-> > bus.
-> >
-> > You have to define the protocol. Mainline needs that so when the next
-> > vendor comes along, we can point at your protocol and say that is how
-> > it has to be implemented in Mainline. Make your firmware on the SoC
-> > understand it.  You have the advantage that you are here first, you
-> > get to define that protocol, but you do need to clearly define it.
-> 
-> I understand that this is the preferred way and I'll push internally for
-> going that direction. That being said, Greybus seems to offer the
-> capability to have a custom driver for a given PID/VID, if a module
-> doesn't implement a Greybus-standardized protocol. Would a custom
-> Greybus driver for, just as an example, our Wifi stack be an acceptable
-> option?
+Hi
 
-It is not clear to me why a custom driver would be needed. You need to
-implement a Linux WiFi driver. That API is well defined, although you
-might only need a subset. What do you need in addition to that?
+Am 20.05.25 um 14:40 schrieb Geert Uytterhoeven:
+> When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
+> the old symbols were kept, aiming to provide a seamless migration path
+> when running "make olddefconfig" or "make oldconfig".
+>
+> However, the old compatibility symbols are not visible.  Hence unless
+> they are selected by another symbol (which they are not), they can never
+> be enabled, and no backwards compatibility is provided.
+>
+> Fix this by making them visible, and inverting the selection logic.
+> Add comments to make it clear why there are two symbols with the same
+> description.
 
-> > So long as you are doing your memory management correctly, i don't see
-> > why you cannot implement double buffering in the transport driver.
-> >
-> > I also don't see why you cannot extend the Greybus upper API and add a
-> > true gb_operation_unidirectional_async() call.
-> 
-> Just because touching a well established subsystem is scary, but I
-> understand that we're allowed to make changes that make sense.
+These symbols were only meant for variants of 'make oldconfig' to pick 
+up th enew symbols. They where never for being selected manually.
 
-There are developers here to help review such changes. And extending
-existing Linux subsystems is how Linux has become the dominant OS. You
-are getting it for free, building on the work of others, so it is not
-too unreasonable to contribute a little bit back by making it even
-better.
+Best regards
+Thomas
 
-> 
-> > You also said that lots of small transfers are inefficient, and you
-> > wanted to combine small high level messages into one big transport
-> > layer message. This is something you frequently see with USB Ethernet
-> > dongles. The Ethernet driver puts a number of small Ethernet packets
-> > into one USB URB. The USB layer itself has no idea this is going on. I
-> > don't see why the same cannot be done here, greybus itself does not
-> > need to be aware of the packet consolidation.
-> 
-> Yeah, so in this design, CPC would really be limited to the transport
-> bus (SPI for now), to do packet consolidation and managing RCP available
-> buffers. I think at this point, the next step is to come up with a proof
-> of concept of Greybus over CPC and see if that works or not.
+>
+> Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> arch/arm/configs/davinci_all_defconfig must be updated after this has
+> hit upstream.
+> ---
+>   drivers/gpu/drm/sitronix/Kconfig | 14 ++++++++------
+>   1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
+> index c069d0d417753bcf..8b3565b8eca3918e 100644
+> --- a/drivers/gpu/drm/sitronix/Kconfig
+> +++ b/drivers/gpu/drm/sitronix/Kconfig
+> @@ -10,9 +10,11 @@ config DRM_ST7571_I2C
+>   
+>   	  if M is selected the module will be called st7571-i2c.
+>   
+> +# To be removed once all users have updated their (def)configs
+>   config TINYDRM_ST7586
+> -	tristate
+> -	default n
+> +	tristate "DRM support for Sitronix ST7586 display panels"
+> +	depends on DRM && SPI
+> +	select DRM_ST7586
+>   
+>   config DRM_ST7586
+>   	tristate "DRM support for Sitronix ST7586 display panels"
+> @@ -21,16 +23,17 @@ config DRM_ST7586
+>   	select DRM_KMS_HELPER
+>   	select DRM_GEM_DMA_HELPER
+>   	select DRM_MIPI_DBI
+> -	default TINYDRM_ST7586
+>   	help
+>   	  DRM driver for the following Sitronix ST7586 panels:
+>   	  * LEGO MINDSTORMS EV3
+>   
+>   	  If M is selected the module will be called st7586.
+>   
+> +# To be removed once all users have updated their (def)configs
+>   config TINYDRM_ST7735R
+> -	tristate
+> -	default n
+> +	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+> +	depends on DRM && SPI
+> +	select DRM_ST7735R
+>   
+>   config DRM_ST7735R
+>   	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+> @@ -40,7 +43,6 @@ config DRM_ST7735R
+>   	select DRM_GEM_DMA_HELPER
+>   	select DRM_MIPI_DBI
+>   	select BACKLIGHT_CLASS_DEVICE
+> -	default TINYDRM_ST7735R
+>   	help
+>   	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
+>   	  LCDs:
 
-You need to keep the lower level generic. I would not expect anything
-Silabs specific in how you transport Greybus over SPI or SDIO. As part
-of gb_operation_unidirectional_async() you need to think about flow
-control, you need some generic mechanism to indicate receive buffer
-availability in the device, and when to pause a while to let the
-device catch up, but there is no reason TI, Microchip, Nordic, etc
-should not be able to use the same encapsulation scheme.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-	Andrew
