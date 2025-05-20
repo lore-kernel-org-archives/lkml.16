@@ -1,96 +1,65 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4AB1AF4C1;
-	Tue, 20 May 2025 12:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828F72AF11;
+	Tue, 20 May 2025 12:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747745352; cv=none; b=nvKthv1RMIZj05VzPA4oF9BMViKkTHCnv9a7nraG6HyIIfJvD2y1aHjYyvSZ9c/yfb4LtuKRcgdaIqlAyCEot3LTTSrxRVd7rOWTbFPXTCTkXkGo5+w0/6VYUyU/jo3dMN0qjX6Y+7g6MfB45t/q7iuX+DydPbnK5/+jD/xWhH4=
+	t=1747745362; cv=none; b=a09jAZHXnRAedrFMoB/Y7360ZNJ7UXm3pbr/FrltnRmVE0upG04lPilHT5EDdHDgICB5j0he8Z1Rl86dsZFZ/mTdQ+2p9Oeo/7Nf1iu7G/D4HU/eUfdYWAYwDK3/GFTu2muVFLVWLN7YIQL8riBoFiXirMIabJHmNoIwMAB+Kk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747745352; c=relaxed/simple;
-	bh=8EsmjkZoPHETsmoj/Rl7M3pI3KCf9Jrk5I362guI2cU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LfH0L2AuhB2AMx3GsO6dr7ULdQCq+OPTw1midT3CJ5QZZtnehWeV37sI4p2OEmLDbpCxLDvghI8Qk8QDtUGORZ6e6u3y78e/MfdLbEI1VzVhXbPc9cbVeFjRNMuFMu7S4SmMXGrA5FkWS6fiVXZ4F4jHi/v1n9pn5Fvvnp6XwAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qz5qnNBD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qz5qnNBD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747745347;
-	bh=UYdQ1sUCNaAHqlog/H5/0CsnNbdmP7KKu2x9T/TLTNQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qz5qnNBDxKKL3vwkMkT5UCn0YH1eD+CPzuKg7wk28e6g8L9WnKdmK82htIelMFB8+
-	 6o+BYie1VoXiSYu5t+kfS3UXP2frnH10omDJhzNKsoRbzMSdjs2Gv6qkkn3J5n+Iu4
-	 IeVe5pFg81RIfQiBRpjRHMgusybld7Ugl4PCQS4mJJSRn5gFxx2gufZb2PuGfbss5F
-	 wdGQLAN+0dQrgnZUkB1dMBN1kXH+uXf+62WOFFYfblwBKp4JhckOWhErEZdId+59v0
-	 xa01v+kxCnOuu23POwTW6ApvGPlx3y//vGtfiQ2GMVlaf5Qy0j6pTtcV9yZQDGsaYw
-	 +H5qEboZBeBsA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b1vWQ6Bgxz4x21;
-	Tue, 20 May 2025 22:49:06 +1000 (AEST)
-Date: Tue, 20 May 2025 22:49:06 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the tip tree
-Message-ID: <20250520224906.61135dd4@canb.auug.org.au>
+	s=arc-20240116; t=1747745362; c=relaxed/simple;
+	bh=75f9wRs1iL9D8Fnit1X9ciaXzworIdXxzPMCe2OFVns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rdgpOdoE6pFiSm95WLYaI94Q9C8V2U63bhwtJSV9zVoRAjXbRv2OOzE7qToX6VrEzsKquki43/XX+8PdnuXGaelLxpkUn/GBohWbr0ISe1HVWhCVRTiCsfxFoSgZtXfhHYcf3/8pGVeLQkVz6PM4bLcrUn4K+ZQuVkN0ArOcdGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CF721516;
+	Tue, 20 May 2025 05:49:07 -0700 (PDT)
+Received: from [10.1.36.74] (Suzukis-MBP.cambridge.arm.com [10.1.36.74])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 67AAF3F5A1;
+	Tue, 20 May 2025 05:49:17 -0700 (PDT)
+Message-ID: <f6b70545-94c7-4e54-ad5a-b146778e9541@arm.com>
+Date: Tue, 20 May 2025 13:49:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nAh23AS40sxVl0WInM8XSjh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 36/43] arm64: RME: Initialize PMCR.N with number
+ counter supported by RMM
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-37-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250416134208.383984-37-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/nAh23AS40sxVl0WInM8XSjh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 16/04/2025 14:41, Steven Price wrote:
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> 
+> Provide an accurate number of available PMU counters to userspace when
+> setting up a Realm.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-Hi all,
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-In commit
 
-  54c2c688cd93 ("x86/xen/msr: Fix uninitialized variable 'err'")
-
-Fixes tag
-
-  Fixes: d815da84fdd0 ("x86/msr: Change the function type of native_read_ms=
-r_safe()"
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 502ad6e5a619 ("x86/msr: Change the function type of native_read_msr_=
-safe()")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/nAh23AS40sxVl0WInM8XSjh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgsekIACgkQAVBC80lX
-0Gz2Kwf/Vn8cxuubOPplyv0I1L/vGmVFxXiCFruJtYYN543PoaA3HBQ2p0jeAnuB
-yCTQdb0szndyqrh+Ve7fid0qlnN1nhMnf39qkbcJQHOrKsdkTU+QCsl+gnAdPIgY
-h4qXyqgUuS/ehtT2XcUgGUHXbR0PPNGw4bpzMTOz0WVtnNORAZUyUpZjbQK04Aa9
-OusAvw71ojPyfcnie8Tcsj2sjGN+nsxpuHQqwJShbHN7iDPyXe4gciZttLL2sQwb
-AkfZ9F4mmpenu+bOjBh43DGt+4bdpHqOC0dfv0laP1X8ZRo73Sgww29ldo7ldCd9
-+pH7u2RBllHQ/W84wlGOT+ZYGTmhNA==
-=C4nZ
------END PGP SIGNATURE-----
-
---Sig_/nAh23AS40sxVl0WInM8XSjh--
