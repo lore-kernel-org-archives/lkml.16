@@ -1,130 +1,112 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECA81DE2A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6234C26738B;
 	Tue, 20 May 2025 11:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741153; cv=none; b=LD0GvAGuCKATf+drAFIbLfIzgzvk9H0hd0AzS9MHYJvddpLFx54Z2eRDCvTXoGaBgP52jBDSS5cLhxk58xSvTBJ0CT846LwPuaWYeCNBjBXPmoT/qZPh+tEPPPHjSLa6Nq2ldcG6hSUX+BO3IQbJFBjuDt5IOwOWOzMpMYZkFgg=
+	t=1747741155; cv=none; b=GkUIH0leZmy5qvyWZmVjFgmFKrtJYVtuemRltM2FxS9J3aU6ePu8rEySlpoXhCwoPMXTVBwJ7Jh6SluUmPkJzH6LSVmFEse2FIfG8BD747gl/VRCc15al787QL1oUHZmB5hg5j0vbaJ33Z2SlbSddaIFipCrMmdC5ay8ZvyL5E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741153; c=relaxed/simple;
-	bh=oYh8G4JIVxhFwKyKSysp9R5AdOvLFZhl6hLYBOyr3G4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9d88+uBm1GSvUBAl+GgRdahpJzzBybzxbCR+FdFF/SoamgKfN6dOZa9KRi9mBUMUsZug8h1F50KBexmNnQpZHUQnE5xH510koLcGF5/qxLhLda2ZJWTYgy6r7gPa6WcIbUKghK9p5aYMYJQZQAQv7kSTa7O6KZy7YxyXgSBFbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f9ie6QQL; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747741155; c=relaxed/simple;
+	bh=0ckXESPmy56qefBczM+kDRhj+1MO6ts6V2d771eEkCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RRawKF2dPN22ixTThDARFIHCQZ6irCzaGms+n6qAox70FbWvRXjzAQCERWpInUZw8LBULirHBWsP8yfS66NPWJ+FGV/ajq18rAXgdM3jaSK7GXmurxZfurfFNdoW5Nta43WHbpQuq3tUk1egxVu2AcHIN8KG+9zTkfsVgGYUOQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pZ1Dj1H4; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f9ie6QQL"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 61ED140E016A;
-	Tue, 20 May 2025 11:39:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6UkYHkhvtnbd; Tue, 20 May 2025 11:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747741144; bh=dokcQ2YdP6ZzHV0g9+3ZFOSsJK6WqTO7QD8DX7AVhpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f9ie6QQLACdJlOTTl1fC0oiaMlDvDQgTHOhdLJk9MFbc2hdPadKHFCcn2KFHGfgI1
-	 ne0+YvNyzVJgplkUy6CgL3dI57KzLDjvLCGPO/Ly3zRLqcrvBVtxsImS09q8Vm+7CC
-	 PL2rAkHStFXi1OZ/tmXUmRIGYlmA5cD10UIRG/4Gau/nYTW0mXNFrmEz2YE2wu2One
-	 ZiKT5rZVxjofzzzu3laPgvHw0yrn7P28E3yUOfntMq/WeRChGy23B/8uzZtXeuBMSN
-	 ORfsPtOHrx15OWj69xz/aP8zudIGC261BET4tUPzf+67iniPQ2awq11VQzzaykfr/W
-	 ERThxzfsLtUTu9Hk85nvRNo1pn2StcNx4n+IlC9lkHyctN3vT8HZd/YKCb7A9tXdgf
-	 nm4L6p3srlfoYQptGTrYpDdnQU9Z3wfO2rjv+GfMiAJQlv7RTsYTMV8xsEHXtN9t79
-	 zKJ32G7J7qyXpBltRwHYC5s2otcCJtrNP0LzHMvgs/AWt6rcyObuGo2oX7Yf5vb4R4
-	 9qSPjKo8aJQem1ZL84LydcZGoOLr2vYHgNV6vdOoM7YJD0MgKkPOFsERMV3RqyIJEf
-	 jhwHZyumT9MHkXWlPBbfTegElBFzqnHjWqtPl+oubta2DWBl2IcFr1DLjUCYNWqhK8
-	 cMzN1MaXunrY8SGHpyWgaGb8=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pZ1Dj1H4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747741148;
+	bh=isXZU+uZtSED1OfnliPgQkBj45lD0diwEJrlIXtWn7k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pZ1Dj1H4ulNQ7kGt5wvwxN0bP5VTtRc5PKewajYxbJ/WaSgj4ces2etZJNAPYZdj3
+	 COvyYXhqwJegHRs2op6KmiTx5WhOz5PjiLHOosuW3evJSnDQwb2ntvroRtepo+cpCv
+	 3pchQQ8xJLv16CNLyt7Pn4dV07SPaLYmA6xKBxliUjTrfsyxC9XVAkQOhkXKNRyPPm
+	 1EgvJmiYq/2bx3lbPuZhB+aEXwtM/IwbNWEXLW6dsYU0YkilMdq/ug+hJLDky3mEgK
+	 M8I+yg7usAgqUa9Bj4VvC8eD5Gqc+mLgyGZExNMQ+XuttnHxsrtTIvWLSRvR5n9ID2
+	 dFKcP9I8XGkKg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C78440E0238;
-	Tue, 20 May 2025 11:38:55 +0000 (UTC)
-Date: Tue, 20 May 2025 13:38:49 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 05/21] x86/sev: Move GHCB page based HV
- communication out of startup code
-Message-ID: <20250520113849.GKaCxpyVy-7N6bih-r@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-28-ardb+git@google.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b1syg26XMz4xQ0;
+	Tue, 20 May 2025 21:39:07 +1000 (AEST)
+Date: Tue, 20 May 2025 21:39:06 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Akira Yokosawa <akiyks@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Nicolas Schier
+ <nicolas.schier@linux.dev>, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
+Message-ID: <20250520213906.6ec263d8@canb.auug.org.au>
+In-Reply-To: <20250520111956.1db9db88@sal.lan>
+References: <cover.1747719873.git.mchehab+huawei@kernel.org>
+	<6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
+	<7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+	<20250520095037.3dc39685@sal.lan>
+	<590981da-4d37-464f-a52e-ba163d3ecbc5@gmail.com>
+	<20250520111956.1db9db88@sal.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250512190834.332684-28-ardb+git@google.com>
+Content-Type: multipart/signed; boundary="Sig_/6D2avqjLhsiENX9knPfToA9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, May 12, 2025 at 09:08:40PM +0200, Ard Biesheuvel wrote:
-> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-> index f50a606be4f1..07081bb85331 100644
-> --- a/arch/x86/include/asm/sev.h
-> +++ b/arch/x86/include/asm/sev.h
-> @@ -485,6 +485,7 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
->  struct snp_guest_request_ioctl;
->  
->  void setup_ghcb(void);
-> +void snp_register_ghcb_early(unsigned long paddr);
->  void early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
->  				  unsigned long npages);
->  void early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-> @@ -521,8 +522,6 @@ static __always_inline void vc_ghcb_invalidate(struct ghcb *ghcb)
->  	__builtin_memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
->  }
->  
-> -void vc_forward_exception(struct es_em_ctxt *ctxt);
-> -
->  /* I/O parameters for CPUID-related helpers */
->  struct cpuid_leaf {
->  	u32 fn;
-> @@ -533,15 +532,71 @@ struct cpuid_leaf {
->  	u32 edx;
->  };
->  
-> +int svsm_perform_msr_protocol(struct svsm_call *call);
->  int snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
->  	      void *ctx, struct cpuid_leaf *leaf);
->  
-> +/*
-> + * Issue a VMGEXIT to call the SVSM:
-> + *   - Load the SVSM register state (RAX, RCX, RDX, R8 and R9)
-> + *   - Set the CA call pending field to 1
-> + *   - Issue VMGEXIT
-> + *   - Save the SVSM return register state (RAX, RCX, RDX, R8 and R9)
-> + *   - Perform atomic exchange of the CA call pending field
-> + *
-> + *   - See the "Secure VM Service Module for SEV-SNP Guests" specification for
-> + *     details on the calling convention.
-> + *     - The calling convention loosely follows the Microsoft X64 calling
-> + *       convention by putting arguments in RCX, RDX, R8 and R9.
-> + *     - RAX specifies the SVSM protocol/callid as input and the return code
-> + *       as output.
-> + */
-> +static __always_inline void svsm_issue_call(struct svsm_call *call, u8 *pending)
+--Sig_/6D2avqjLhsiENX9knPfToA9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Why in a header?
+Hi Mauro,
 
-At least in sev-internal.h or so.
+I do appreciate your work on the document system.  Particularly you
+have made the process much faster.  However, see below.
 
-I'd prefer for this to be in a .c file, though.
+On Tue, 20 May 2025 11:19:56 +0200 Mauro Carvalho Chehab <mchehab+huawei@ke=
+rnel.org> wrote:
+>
+> If by "innocent typo" you mean removing/renaming/moving a file from
+> the Kernel tree without updating Makefiles, or adding them with wrong
+> names, then yes: I do think this should be fatal for the affected "make"=
+=20
+> targets. The quickest such build issues are caught, the best for everyone.
 
-Thx.
+They are found if you leave them as warnings and just continue on.  I
+have been finding them by when the current python version just crashes
+(without any useful message before your current change) I rerun the
+htmldocs using the perl version to get the name of the missing file and
+then report it so it can be fixed.  But the perl version continues on
+and produces all the other warnings so I can compare with the previous
+and only report new errors/warnigs.  Sometime these reports are not
+foxed for days or weeks (or months).
 
--- 
-Regards/Gruss,
-    Boris.
+So, please, now that you are producing more warnings, make a missing
+file just a warning (or at least continue on).  I have enough to do
+every day without having to run "make htmldocs" more than once.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6D2avqjLhsiENX9knPfToA9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgsadoACgkQAVBC80lX
+0GzHewf7BV0JJMGCOQmObOrtJSh/grehBjDOzcfMC9XJQyfkvhdrdsgqx1TNh6cp
+ZEl+HR0GKkaJljAhN+59QzVhNkLivGEGhSF7F30ZTo7Wy+FMtH+NJcmOVr6BIVUW
+Lp6HcSB/yqObkxH0uFo8OCaE6pF6fXt/Qd5s8NBTMv1cjhh9m4qMR2wBVWuSl0T1
+XPO0DVyBFKZhaLWCUbDhFBuLWl1rzHol/mp2y1VMS6Pn2eZWVQvGgGIVYQWBPIkh
+d5qY+hbrLyiOpNFiPbMZZeAOIVSSng8navSKXJcrAJSaiG/E2d2xU8xPbui+AdTM
+YcRyOmnSfBRUSBCquyTtyON+v4L6hQ==
+=HPCw
+-----END PGP SIGNATURE-----
+
+--Sig_/6D2avqjLhsiENX9knPfToA9--
