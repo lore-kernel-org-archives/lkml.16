@@ -1,146 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF22F2192E3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE2C154C17
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732554; cv=none; b=JWg5OBCoquvKYvKNTfBtTY3xg5Ak39biuzRDNVjgaewusCd+NmGtLXdCe3BOcM9X7werMrfTo/dBcx0xmlZTs3rGKyG+gOmSRQAeXRmM/ybyfRs+mSbpAjuj3ZMpPgkpbpyVfHxfkb8Fdqgi6UHrpLj+Rr4vY4UG7DWv7eQbrg8=
+	t=1747732602; cv=none; b=jVmwKdcmhb3wIyMvCq4vVhKIn2k0I+iiJ4WmTdYO/ZqCCIK/sOVUxVuSpsS7ByJ/NKHkb7Z7964XMs0PHlYqlLWh2oRj8f2JVA4T9V8icSe2kQ3/4sLfYWetEwhp5bafFPZd8V9NaZ6XT08RD3dcUyN8TVmjYM4aZc3G8i4InmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732554; c=relaxed/simple;
-	bh=hAxmmjzsAYVT1sNDVLnxaei5u2Ja1JhgSPN81JIqWV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CDMoNqeDQ46j5x8boyd2IG+2sFQ7VN5q+c3whXVp0e+78rwojBTu6+jh+jht4vLXlR/ALIoRO3uFbiDb3LZTuswu18qtHWppJy7Vd50fTKS3RyAqh1VXhxzBUl3SFM/92bXW2N5QHTwpKpvR+/m/qwFeWOKaa0xbZq3ZiDZ7YKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZvvjKpOW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747732602; c=relaxed/simple;
+	bh=OWQyDxf4pdV7NXqRsTreru/4sz7j9p7kNz2GE6Dg1I8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N0BF4lThhgc/VNuEgJgPoQ676bit0hI3OPH/ijqqYbQHkQS7eDav34wazWkUnBpH0EBGKk7TEJ348iuuezOx136swvEhiTWK5kRh3XHMbbAODcbI0z+zorL34yAxoFO21YNRDK3tCQ8j338LqwtQlKU+tObOBfRm4g2gEHE3+JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QhiYxGE2; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZvvjKpOW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747732551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KhESp3G/SIa6HPbqoYw8chTa3J1tACi3fMTgeUE9g64=;
-	b=ZvvjKpOW+LUfi3W2Eg1VIvsiZoYXQ6KaA+NRfNTB7PLsjneGvgWxHbozH/hINiADCa5SII
-	OugWLx7GCxKPWUrx6J4grYIqLcg0yTzqKLtvjWBHdXDgEyeQlspR2LMDPthBvF60mxbXx2
-	nj4FQU4MgdBdiAFAuqgqFz/3x2b4dno=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-14-u2iH8ojFNf2rkB5P_rNygw-1; Tue, 20 May 2025 05:15:49 -0400
-X-MC-Unique: u2iH8ojFNf2rkB5P_rNygw-1
-X-Mimecast-MFC-AGG-ID: u2iH8ojFNf2rkB5P_rNygw_1747732549
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-30ec5cc994eso2188910a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:15:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QhiYxGE2"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a364802ec5so857750f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747732599; x=1748337399; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M49HFsU6Pb6WX2e+1aRCio5ocQDP8AMxA4CCf+KlIDA=;
+        b=QhiYxGE26zhiImTnnMAbPz4st08W93XnQWfNntnVo5TBdBBgQ+boyaCSXXjZ1v+Imi
+         D5MYlJq8jzf6YObw6KSH5U23+S433icLOl4fDZhOLUKM4SXBGcLwr5BMteWR7DTBgVN8
+         63bDVQj8awdvvx1Qn/HPeL+rj4Rxo9zezoOja+m6gbPfqQiuXAqxwLQ8VG9BvH4+5pn0
+         T/gxrxr/Osp9JDzMG3rTxJ4SVIBOpPmlBzt6ky1ZTugKwNg0jhN3q2FztiAgbjMiy1mI
+         ssyv0p4Pisab6rLn3F2Sy4VyV/F4l1/bkUHVuUQ4+SG2GgY4AtoZvu8g/cQadGoq6q4S
+         afAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747732549; x=1748337349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KhESp3G/SIa6HPbqoYw8chTa3J1tACi3fMTgeUE9g64=;
-        b=BsHBR6PHwP+/Zwu974VhC9/SPnRC5UXeEm/TRyTNqjht92Gi+zC2NRhoiMn4PF29Vo
-         2Vnxr9fSHTD7iEw5coI6uGtnc22MweRHg4iMvSOwLpTdO/0t9CjD/PS8guiKNx8h7SPv
-         VY+/O/JvKMPDu2G8kiXPB2eP/lymrJSWvfhO5DLad1vvTjbboJo6HQ6OicGP8QF6DPjy
-         nHng8M6ggsIMv0yDLQ6RrJEhKLJikYlbNL22aAEzRKxojcXQsR4aDFecxjel1YOV6PD8
-         JNKmQZbx1aTm9Kn6TN1zX2k5wm4T804wWzja5/2cDWxjifFfU2vgV5q4djyz4MBEp0JS
-         LsHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbCI9OmydPmpT+oRBsUG/S/jvepZiYNoq9hHKfNuJAqTiW6PXY7MixBgtIQZ6pzZ5Ej7nOqPk3Pc2krng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ+YW96RQv547rPy8fqThgTl19d5UTsYr/qe9HgckN5lk6y3x8
-	SKnTDN4bvzV61L05W9ALhGhNB83rA3bqgZAa91OOIGFNssqeSbmx935uZEiMf8ywjhbK25Otjoh
-	DEDPJQwUp+UHUBjcMOC0s/D0tSQbTxwKKBVTS50vzr/gphz5Glz1yjSMxocXn1mYs6g==
-X-Gm-Gg: ASbGncu5jzcUaEgtL4J3m/LwD4EEVYG2y6AnfeWfLIDCnQd+HoQx/PNis81u+31SqCq
-	0eBhvyowaaeMMJEoKn9e943iV48sZrpeGOl8pXcdwi5q5GsV1CbIaiZaMuN9Uz5c49m5joCqf5E
-	73SOL5ipTBd8CIFm47f9WIzKusGq3KcpOWDtvcFTer/epE939JSwMXxNpGtqGEImZAqwrkM7Ir8
-	RzIEp3hQJz8KWiuoh9/6t7lQ3cCnbjYayA1rzU6pNKIdEM7BT3IW3atceiuJ+fgq6s3UPyNNG6v
-	rBg=
-X-Received: by 2002:a17:90b:2e42:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-30e7d5aca5cmr21330346a91.22.1747732548829;
-        Tue, 20 May 2025 02:15:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxay4p7pv52Vodnk4Tfn2ozXI0HmKtyE04pWaZsFVCaSe4/2BLoC7rn0Est1OtxnsGuBJXMg==
-X-Received: by 2002:a17:90b:2e42:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-30e7d5aca5cmr21330307a91.22.1747732548461;
-        Tue, 20 May 2025 02:15:48 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36368bb0sm1213053a91.10.2025.05.20.02.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 02:15:48 -0700 (PDT)
-Date: Tue, 20 May 2025 17:13:28 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Kees Cook <kees@kernel.org>, Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	fuqiang wang <fuqiang.wang@easystack.cn>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <gxysezp2tc6qtb3o3wpdsk7k4aijxontf3ozfnhn76giobkefe@v2vkfov2tcck>
-References: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
- <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
- <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
- <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
- <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
- <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
- <202505161616.F4C1BCCF6A@keescook>
- <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
- <202505190716.B21F11984@keescook>
- <aCtBf2LqRqlWXaUp@MiWiFi-R3L-srv>
+        d=1e100.net; s=20230601; t=1747732599; x=1748337399;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M49HFsU6Pb6WX2e+1aRCio5ocQDP8AMxA4CCf+KlIDA=;
+        b=bvqG6B2ALrL42Lvd3BoG7JE9Bn+IZFRFH8VlCnB4MvQOvUpdFcdFW4iSPLssjc0aRM
+         7IFrDx6tTVEfAUj/Xm+Z2lWSlmYjrAAxs24GMd3miWUcp3wFeW20AmVMmV4I6EeU47KH
+         lnEhohNlwpkNFNCkW0MnFJTaCuQsqKBoYhjY1w9Mf5cGhMobEPegU8rSXK19cVvkPMJC
+         67xFBG1Fq/FgcrY+yOor2v5FmoiTglVyxtUMwBUwdC5bHV78Ct2zwvnqIYjb7nE7yRL5
+         u/mHjtON3mE2ekiNHCjSdFmBix243cHYIEBuUvychwgq7galKBb+mgRknN8L9NfBZCAK
+         5gkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjQtbvZ4tcZn76/CO0ONDVgvpmCkUeyD2LAHIZ4zlMm5baiyxnLEQFapvg40Dn6R6T6S68gVvtgrUGvhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6z8htaDTBoIj/6tDwghJpNdUMTg/rAuRfikHUMSqDIDdXpZYE
+	0rJBWTyTAlr405fEPy5DRc5fWgOHF/wEvBmjNbowF736Q5nuTJCIf7s93QwzUbig1ztcxci76gT
+	FcRxIV9nffgrbUg==
+X-Google-Smtp-Source: AGHT+IEdEysW4HTaGc37Upjr0n86XOGgGu3Xq2zEH7pHo0DLNR5gZ2MKL5FFJktJtfla8a1/c+K0w9OcvR4I+g==
+X-Received: from wmbfl25.prod.google.com ([2002:a05:600c:b99:b0:442:f8cb:d12a])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2012:b0:3a0:830a:3d63 with SMTP id ffacd0b85a97d-3a35c821bc7mr14418992f8f.9.1747732599206;
+ Tue, 20 May 2025 02:16:39 -0700 (PDT)
+Date: Tue, 20 May 2025 09:16:37 +0000
+In-Reply-To: <CALkFLLLfxT1pQ_ySB1NU4KXOEGLd2wB8pbhpBG2HfK3_mLOYAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aCtBf2LqRqlWXaUp@MiWiFi-R3L-srv>
+Mime-Version: 1.0
+References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250510160335.1898-1-ujwal.kundur@gmail.com>
+ <D9V0UTL5BCLM.1WHR6F4UN14QQ@google.com> <CALkFLLLfxT1pQ_ySB1NU4KXOEGLd2wB8pbhpBG2HfK3_mLOYAQ@mail.gmail.com>
+X-Mailer: aerc 0.20.0
+Message-ID: <DA0VHZ6KE96B.XOYNEFMGWD58@google.com>
+Subject: Re: [PATCH v3 1/1] selftests/mm/uffd: Refactor non-composite global
+ vars into struct
+From: Brendan Jackman <jackmanb@google.com>
+To: Ujwal Kundur <ujwal.kundur@gmail.com>
+Cc: <akpm@linux-foundation.org>, <peterx@redhat.com>, <shuah@kernel.org>, 
+	<linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 19, 2025 at 10:34:39PM +0800, Baoquan He wrote:
->On 05/19/25 at 07:19am, Kees Cook wrote:
->> On Mon, May 19, 2025 at 09:22:30AM +0800, Baoquan He wrote:
-[...]
->> > > I went back through the thread and the referenced threads and I can't
->> > > find any details on the USBAN splat. Can that please get reproduced in a
->> > > commit log? That would help understand if it's a false positive or not.
->> >
->> >
->> > The original patch is trying to fix a potential issue in which a memory
->> > range is split, while the sub-range split out is always on top of the
->> > entire memory range, hence no risk.
->> >
->> > Later, we encountered a UBSAN warning around the above memory range
->> > splitting code several times. We found this patch can mute the warning.
->> >
->> > Please see below UBSAN splat trace report from Coiby:
->> > https://lore.kernel.org/all/4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at/T/#u
+On Mon May 19, 2025 at 1:50 PM UTC, Ujwal Kundur wrote:
+> Thanks for the review and testing!
+>
+>>> -static void retry_copy_page(int ufd, struct uffdio_copy *uffdio_copy,
+>>> -                         unsigned long offset)
+>>> +static void retry_copy_page(uffd_global_test_opts_t *gopts, struct uffdio_copy *uffdio_copy,
+>>> +                                                     unsigned long offset)
+>>>  {
+>>> -     uffd_test_ops->alias_mapping(&uffdio_copy->dst,
+>>> -                                  uffdio_copy->len,
+>>> -                                  offset);
+>>> -     if (ioctl(ufd, UFFDIO_COPY, uffdio_copy)) {
+>>> +     uffd_test_ops->alias_mapping(gopts,
+>>> +                                                             &uffdio_copy->dst,
+>>> +                                                             uffdio_copy->len,
+>>> +                                                             offset);
+>
+>> Looks like your editor got a bit excited here :D
 >>
->> Ah-ha! Thanks for the link.
->>
->> > Later, Coiby got the root cause from investigation, please see:
->> > https://lore.kernel.org/all/2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei/T/#u
->>
->> Looking at https://lore.kernel.org/all/aBxfflkkQXTetmbq@MiWiFi-R3L-srv/
->> it seems like this actually turned out to be a legitimate overflow
->> detection? I.e. the fix isn't silencing a false positive, but rather
->> allocating enough space?
+>> There are a few other places where this happened too, e.g. the
+>> are_count() declaration and there's a pthread_create_call() that's quite
+>> messed up.
+>
+> I use vim with `:set list` turned on to display control characters and
+> it looked fine to me when I submitted the patch :(
+> Here's the output of $ cat -A uffd-common.c | grep -A 15 retry_copy_page:
+> (where ^I represents a tab equivalent to 4 spaces)
 
-The words "out of bounds" in the patch subject are kind of misleading
-because the patch is outdated. A later merged commit 6dff31597264
-("crash_core: fix and simplify the logic of crash_exclude_mem_range()")
-has actually fixed out-of-bound access issue as illustrated in
-https://lore.kernel.org/kexec/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/ 
-Current crash_exclude_mem_range simply returns -ENOMEM when there is no
-enough space to hold split ranges (I'll post a patch to prove the
-correctness of crash_exclude_mem_range by reasoning about the code and
-including a thorough unit tests). So I'll change the subject to "fix
-potential cmem->ranges out of memory" in the upcoming patch.
+Sounds like that's your issue - for the kernel, tab is supposed to be
+as wide as 8 spaces, not 4.
+
+>> Unfortunately I don't know of any tool that can find/fix these issues
+>> automatically without also messing up the whole file. Could you just
+>> do a visual skim and fix what you can spot?
+>
+> Yeah, I ran clang-format and it's playing by its own rules -- do we
+> have a standard .clang-format file?
+> Please let me know if there's a better way to find/fix whitespace
+> formatting issues, I found a few inconsistencies which I will fix.
+
+There is a .clang-format in the tree. The issue is that (AFAIK) there's
+no way to retrofit clang-format really, it has to be applied to the
+entire source file so if there are pre-existing deviations from its
+configuration then it will "fix" those too, creating a bunch of diff
+noise.
+
+I think we just have to do it manually. checkpatch.pl can help with some
+formatting issues (and it is diff-aware) but I don't think it knows
+anything about this kind of hanging indentation stuff.
 
 >
->This v5 is on top of below patch which Andrew has picked to his mm tree.
->In there, it happened to get the ubsan warning fixed. But the hunk
->doesn't reflect it in the v5 patch.
+>>  static void sigalrm(int sig)
+>>  {
+>>       if (sig != SIGALRM)
+>>               abort();
+>> -     test_uffdio_copy_eexist = true;
+>> +     // TODO: Set this without access to global vars
+>> +     // gopts->test_uffdio_copy_eexist = true;
+>>
+>> Did you mean to leave this like that?
 >
->[PATCH v9 7/8] x86/crash: pass dm crypt keys to kdump kernel
->https://lore.kernel.org/all/20250502011246.99238-8-coxu@redhat.com/T/#u
->
+> Nice catch! I was hoping someone would suggest a better way to handle
+> this. As far as I can tell, this was written the way it was as a
+> consequence of using global variables.
+> I think this sets up retries for copies in a racy way using alarm(2) /
+> signal(2), not sure how effective that has proven to be. I believe the
+> only way to keep this functionality would be to introduce some async
+> action (libev, libuv, etc.), but is that required?
 
--- 
-Best regards,
-Coiby
+I'm afraid I'm too ignorant of this code to be able to suggest something
+good here. But, can we just remove the comment and plumb the gopts
+through to uffd_poll_thread()->uffd_handle_page_fault()->__copy_page()?
 
+This is not pretty but it lets us remove the global vars which is
+clearly a step in the right direciton.
