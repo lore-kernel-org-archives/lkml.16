@@ -1,586 +1,318 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6134024467C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2B6211710;
+	Tue, 20 May 2025 19:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770043; cv=none; b=anYVWF4F4JdScs/pzcdVGMn9OwrKVWvxxB2eVTqj4hQQtJuYob3Aa0emZM8CL/EHX0sMbQSs3vDPVtSjdBVPGnRmLVSnYJyAU/sDEWdh9PuKST+y/9zvXWfPybtfsH/FoMXGF6bsLftwVL8ic6w+YeAAlVFKZLUXl2m3U59zEfk=
+	t=1747770177; cv=none; b=uW/2V4NjqcZxggQQ8B+62zgcz+csy8SV4DIsK6ryqdGX0GJYfEriAHWXqJfQEow0i0MlmoP5X2VRGStWBuXiqgZtve/P1zzXlszW6U48nxF/QR4Lc97/gW/aetxJJ5zs42HM1umUeuvp2TJQ59U/qUl13IqlfANpwg+F7jHbsxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770043; c=relaxed/simple;
-	bh=fm+502XADc2G9nNO2APQpwxYeviPs9VHoh+nNJsZHt0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MyU+QVFqducEuSX+EmsFyRdBrVU/9VtvBRBpcIt2Cl3IbLtAyYgc20Kp+zWPcKZafAQNJDkb5YqJ0QjBm0ukAaU/PVpr6AQgzxW/+waVOHWOWb8vyfE7ZsbHVPMha2bDGkl4i4lhpzznmQLUKMlHUCbf22idc3B+dN+TGJhXd5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3x0tyuv; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747770177; c=relaxed/simple;
+	bh=rSaHqlEa0/9KBk7nQwllsDEbh4ekAwKhim2xZa3MMtM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EusUL2sW2IzKykg08WVv3sTbHaFNI+QiPAFAkziTG8YeerPyBT3dbYDfbQ2adUZAw+t1E/qJNeFZzT8OMcvFaccFZWUOU3SujzPHCR97mtAQYAa6SPwH72sdk3dpYxcnqwacf1+eNOW6kZT9JIvw/7e3aN1+glhWnLuPuMARiEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NL7l4Ypt; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3x0tyuv"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742c00c9044so2472061b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:40:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NL7l4Ypt"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a3798794d3so1012591f8f.1;
+        Tue, 20 May 2025 12:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747770040; x=1748374840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iA4tiCdrSOL4EHJEWVD9nbZEVH0SDu5YlSIWNe/VkgI=;
-        b=y3x0tyuvyxXXOwhwIodoAUNvltiuMXljgA7TQCbnVdg/KoW1RYMuHgXA2VMBGnmVLE
-         OKciVus0CNuHdxy+qMkC4Xh9Z8z69fIdFYLcz9vkSNF1Zp4xct+avLZsXmQY0qyMJQ5g
-         CzytUF9aP69gIltj6VepZ4hSDbAXjx412DqoDP8hTfGiQiUDBFzi/4Zl6uQ6JO69b6MV
-         2pLZ9bq/adXXDkKTVVqQRigfXHkjwep/MKcpCvGOD07bSBbcAoxLYmCpQWRcdy0MlPte
-         LN4I0GdtEWMYYFiRBKdsYYFl/SCkB/HlZ8xcHXaZUeM96naj24QHSXJ4NkCraW0+LIJp
-         a6uQ==
+        d=gmail.com; s=20230601; t=1747770173; x=1748374973; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L8/ebf0A9j6CCoFjBYvrihW4UNty1QDXWjnaJPkkgD4=;
+        b=NL7l4YptOdQUHmDca3WBoadFCjAh32CcZ6JS72lIVs6umQ4BOHW8tALwSx2fSLOBCK
+         hUZh9pn52Yb99PR9vikpYSNx/ljg7IFZ317gBxx2Ur4+xOWmJ2UxcduLAD5OUQpyrg3g
+         azR2CAYQcB2bnvZ40K8SobRA7riQk9AADuvEaQs3JXMCbpYg/BtooGy108iCVNPZGUZI
+         M2MlH5Se7TuBHdP6UoqMUT2Z8vMhNMQ0dhBDYVco5kwdOW6ats/2+/ZI7MBzpe5y6AMH
+         yMoSo9xGg8IWjmO+NxkJb/6ke8GFy/BL+mxwjy/9GOvlMcWBXeQWfyne2vcz51zt7a2m
+         hjnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747770040; x=1748374840;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iA4tiCdrSOL4EHJEWVD9nbZEVH0SDu5YlSIWNe/VkgI=;
-        b=WSIZ7C3Qd9IJev33cZ7mEQqI10HD4s7FQGMZS59U97zKhXq9tGMhgAiAeFK1pdeD0n
-         AvJl1CIkfbyRqaLvUu3AtH3rJg+FUFvhoMDSbsIksdzGFiz8XhKvn78mKlweHOPJlT4m
-         M/ulHlxlkcWl0fUZOVlCExVljRBjcVApfPlMtorswWI1P6PWwg5ncngrkn7N3O4zZIOq
-         BVnmULSZs/8NI+vRpTBvc0bG9YLIZxThjwry2NP7I5IyFHqoNVezoPf/PeuzOZlCSUCs
-         bSWkCuTKEkYBO+jN831JSeHgx8i8h4zCl7IaaCQy/OwY1Qo1LEe+EHcQRNcJfjL0+HJw
-         nKVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpryQVI6B9ZzZQFvL170140njsTC/rfkVFqpWZ1gYz5xEUTK7u/ef00lrCiCmJs0So+08Fw5TDOK3u0z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzH7l8P8tBRqtjgWDKzmowGS/bsjK1iiRY9By7+1qZPUxDL+Cb
-	c+FE9MyxCEfokWH4NjLmlhSfvEpWhT8ec73vMQHtE4D3jUTSRFJUrh0zJAL3WAZRcXF5mH/USx5
-	p8ZM67LmxYZoHH9wwPY7UOsgdPg==
-X-Google-Smtp-Source: AGHT+IH6YYNKkDpHJYVNEQ5xKgCYEMiinbQ21xBPWMVlsfcl+0SsrbzzEJh9BSPuaHYUz+vKJx4qQDH8jk+v7sFYOQ==
-X-Received: from pfgt17.prod.google.com ([2002:a05:6a00:1391:b0:73e:780:270e])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:a88f:b0:736:33fd:f57d with SMTP id d2e1a72fcca58-742a98a32e1mr18985282b3a.17.1747770040431;
- Tue, 20 May 2025 12:40:40 -0700 (PDT)
-Date: Tue, 20 May 2025 12:40:38 -0700
-In-Reply-To: <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1747770173; x=1748374973;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L8/ebf0A9j6CCoFjBYvrihW4UNty1QDXWjnaJPkkgD4=;
+        b=ar2anc7FdcQtnI5a7febudlWWKN6U93wCodL3+ffNyGzJx4jm78pws24OryvbQNvXu
+         2KEOllxBHpAm+85GfQe3kfgV1VAHJ0Eef2tzJQ0PgOV43ART4eTAaelDEhJbBi/Lzhu5
+         LlIIl7Tr7QtpCFR2PEYUI2n8Ee73C4vLf1TiRebJEwWFTPMHNpL/7QPsXuacFXJTAALQ
+         iygU5lPYuzIWw84RYx1/XqCgbSq2l9bkar+5IZBzFuNjiwYdulmGQxcLq3FIiixjCjnD
+         6wGJ7I4Wf05vKfbdPqBdz91+bMlCIuCwJHPKAnyOHsfdZfv9IdZuVyTMsnmjSOp5CphQ
+         2Kbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKTIh/HDPKkm5Gm7HKpsr99v4uCPNX0i69Ju6GlpjRpJuoHCc0Ythxi2JX2FNq1dIa9GndKhBV8Pbs@vger.kernel.org, AJvYcCX7/tvXBehbxYDWwTZEt00g1mr5sdI4m/OkP6/wRcRb/rRG7K4fI3zgSqHZqnmQETYJ7P4oyF1JX6J0t8Qs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQf69nTLYTYH2kGcqRj28wQm+s49Ykvqp6MPLHJabdCoNYu8Rv
+	681BrYLXpZfYAeBeXuxfd1T8MyuloPZB1bdUO1yhWB9a2Ml0/BsbLFE7
+X-Gm-Gg: ASbGncty7gJNY/y2X/eu5W0+38aTUvnbYfKi6X0wLteiCa9eku94YKIpgBm2uwkpJ/E
+	LCgPsfjKHKQptGTyT3+vCupWUQBwXkac4oW2IxBVeL6hMhZ0Uvqs5AKNUm3NCdWyShIXgtuyspf
+	1ykjwCrk0MeM1DUy7Im7TGlnZ3Vu7NQsghRiX1cEoWn+Y1vBPTo3lZZTTVy6v0xN3iu94Ic3/RD
+	hme8ShUUUYkjb8tjouPCs4VdHCsXgrgPJtV94SSz+IlY3+JCdJ6S68h1jpGhmB76kEHVuV7kiTV
+	r7KQnsmh10WfPJHY3uf2TnBFXs2H34QBaUFM4VzDhF6sZWXAFsKnoVY1l/62graoG8cKrXptvsT
+	vQkxrvggLYsYl9r2XESN+2CqBAu4kk/UMS6eaWJ3AXyx+Ez8=
+X-Google-Smtp-Source: AGHT+IHwub0ANp1PAyWu1WETxaMWydTvoEugbVklserPnEC3aohGFhjp77Ajn7kVv2Vzm4zrO2KNbw==
+X-Received: by 2002:a05:6000:2509:b0:3a3:7bbc:d957 with SMTP id ffacd0b85a97d-3a37bbcdaa6mr2895761f8f.33.1747770173020;
+        Tue, 20 May 2025 12:42:53 -0700 (PDT)
+Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36749f622sm13545142f8f.93.2025.05.20.12.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 12:42:51 -0700 (PDT)
+Message-ID: <b45657a7-27e2-45a1-8f4d-0941216482cf@gmail.com>
+Date: Tue, 20 May 2025 20:42:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
- <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com> <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
-Message-ID: <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-From: Ackerley Tng <ackerleytng@google.com>
-To: Fuad Tabba <tabba@google.com>, Vishal Annapurve <vannapurve@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-Fuad Tabba <tabba@google.com> writes:
-
-Let me try to bridge the gap here beginning with the flow we were
-counting on for a shared to private conversion, for TDX:
-
-1. Guest sends unshare hypercall to the hypervisor
-
-2. (For x86 IIUC hypervisor is the same as KVM) KVM forwards the request
-   to userspace via a KVM_EXIT_HYPERCALL, with KVM_HC_MAP_GPA_RANGE as
-   the hypercall number.
-
-   KVM also records that the guest wanted a shared to private
-   conversion, the gpa and size of the request (no change from now, KVM
-   already records that information in struct kvm_run) [1]
-
-3. Userspace will do necessary coordination in userspace, then call the
-   conversion ioctl, passing the parameters along to the ioctl.
-
-4. Ioctl goes to guest_memfd, guest_memfd unmaps the pages, checks
-   refcounts. If there's anything unexpected, error out to userspace. If
-   all is well, flip shareability, exit to userspace with success.
-
-5. Userspace calls vcpu_run() again, the handler for
-   KVM_HC_MAP_GPA_RANGE will tell the guest that userspace was able to
-   fulfill guest request with hypercall.ret set to 0 and then the guest
-   will continue.
-
-6. On the next fault guest_memfd will allow the private fault from the
-   guest.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
+ linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Zi Yan <ziy@nvidia.com>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <dd062c92-faa9-46a6-99a8-bcc46209e102@redhat.com>
+ <c54d2c5b-e061-4e77-ac10-3c29d5ccf419@lucifer.local>
+ <ae53fa82-d8de-4c02-95f7-7650a03ea8e7@gmail.com>
+ <8417a42c-102c-4f35-8461-842343d7df23@lucifer.local>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <8417a42c-102c-4f35-8461-842343d7df23@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-The flow you're proposing works too, with some changes, but it's
-probably okay for x86 to have a slightly different flow anyway: (I
-refactored the steps you outlined)
 
-> 1. Guest sends unshare hypercall to the hypervisor
-
-Same
-
-> 2. Hypervisor forwards request to KVM (gmem) (having done due diligence)
-
-For x86 IIUC hypervisor is the same as KVM, so there's no forwarding to KVM=
-.
-
-> 3. KVM (gmem) performs an unmap_folio(), exits to userspace with
->    KVM_EXIT_UNSHARE and all the information about the folio being unshare=
-d
-
-The KVM_EXIT_UNSHARE here would correspond to x86's
-KVM_HC_MAP_GPA_RANGE.
-
-Unmapping before exiting with KVM_EXIT_UNSHARE here might be a little
-premature since userspace may have to do some stuff before permitting
-the conversion. For example, the memory may be mapped into another
-userspace driver process, which needs to first be stopped.
-
-But no issue though, as long as we don't flip shareability, if the host
-uses the memory, the kvm_gmem_fault_shared() will just happen again,
-nullifying the unmapping.
-
-We could just shift the unmapping till after vcpu_run() is called
-again.
-
-> 4. Userspace will do necessary coordination in userspace, then do
->    vcpu_run()
-
-There's another layer here, at least for x86, as to whether the
-coordination was successful. For x86's KVM_HC_MAP_GPA_RANGE, userspace
-can indicate a non-zero hypercall.ret for error.
-
-For unsuccessful coordinations, userspace sets hypercall.ret to error
-and the vcpu_run() handler doesn't try the conversion. Guest is informed
-of hypercall error and guest will figure it out.
-
-> 5. Successful coordination, case 1: vcpu_run() knows the last exit was
->    KVM_EXIT_UNSHARE and will set state to PRIVATE
-
-For case 1, userspace will set hypercall.ret =3D=3D 0, guest_memfd will do
-the conversion, basically calling the same function that the ioctl calls
-within guest_memfd.
-
-> 5. Successful coordination, case 2, alternative 1: vcpu_run() knows
->    the last exit was KVM_EXIT_UNSHARE
-
-Exit to userspace with KVM_EXIT_MEMORY_FAULT.
-
-> 5. Successful coordination, case 2, alternative 2: vcpu_run() knows
->    the last exit was KVM_EXIT_UNSHARE
-
-Forward hypercall.ret =3D=3D 0 to the guest. Since the conversion was not
-performed, the next fault will be mismatched and there will be a
-KVM_EXIT_MEMORY_FAULT.
-
-> Hi Vishal,
->
-> On Tue, 20 May 2025 at 17:03, Vishal Annapurve <vannapurve@google.com> wr=
-ote:
+On 20/05/2025 20:21, Lorenzo Stoakes wrote:
+> On Tue, May 20, 2025 at 07:24:04PM +0100, Usama Arif wrote:
 >>
->> On Tue, May 20, 2025 at 7:34=E2=80=AFAM Fuad Tabba <tabba@google.com> wr=
-ote:
->> >
->> > Hi Vishal,
->> >
->> > On Tue, 20 May 2025 at 15:11, Vishal Annapurve <vannapurve@google.com>=
- wrote:
->> > >
->> > > On Tue, May 20, 2025 at 6:44=E2=80=AFAM Fuad Tabba <tabba@google.com=
-> wrote:
->> > > >
->> > > > Hi Vishal,
->> > > >
->> > > > On Tue, 20 May 2025 at 14:02, Vishal Annapurve <vannapurve@google.=
-com> wrote:
->> > > > >
->> > > > > On Tue, May 20, 2025 at 2:23=E2=80=AFAM Fuad Tabba <tabba@google=
-.com> wrote:
->> > > > > >
->> > > > > > Hi Ackerley,
->> > > > > >
->> > > > > > On Thu, 15 May 2025 at 00:43, Ackerley Tng <ackerleytng@google=
-.com> wrote:
->> > > > > > >
->> > > > > > > The two new guest_memfd ioctls KVM_GMEM_CONVERT_SHARED and
->> > > > > > > KVM_GMEM_CONVERT_PRIVATE convert the requested memory ranges=
- to shared
->> > > > > > > and private respectively.
->> > > > > >
->> > > > > > I have a high level question about this particular patch and t=
-his
->> > > > > > approach for conversion: why do we need IOCTLs to manage conve=
-rsion
->> > > > > > between private and shared?
->> > > > > >
->> > > > > > In the presentations I gave at LPC [1, 2], and in my latest pa=
-tch
->> > > > > > series that performs in-place conversion [3] and the associate=
-d (by
->> > > > > > now outdated) state diagram [4], I didn't see the need to have=
- a
->> > > > > > userspace-facing interface to manage that. KVM has all the inf=
-ormation
->> > > > > > it needs to handle conversions, which are triggered by the gue=
-st. To
->> > > > > > me this seems like it adds additional complexity, as well as a=
- user
->> > > > > > facing interface that we would need to maintain.
->> > > > > >
->> > > > > > There are various ways we could handle conversion without expl=
-icit
->> > > > > > interference from userspace. What I had in mind is the followi=
-ng (as
->> > > > > > an example, details can vary according to VM type). I will use=
- use the
->> > > > > > case of conversion from shared to private because that is the =
-more
->> > > > > > complicated (interesting) case:
->> > > > > >
->> > > > > > - Guest issues a hypercall to request that a shared folio beco=
-me private.
->> > > > > >
->> > > > > > - The hypervisor receives the call, and passes it to KVM.
->> > > > > >
->> > > > > > - KVM unmaps the folio from the guest stage-2 (EPT I think in =
-x86
->> > > > > > parlance), and unmaps it from the host. The host however, coul=
-d still
->> > > > > > have references (e.g., GUP).
->> > > > > >
->> > > > > > - KVM exits to the host (hypervisor call exit), with the infor=
-mation
->> > > > > > that the folio has been unshared from it.
->> > > > > >
->> > > > > > - A well behaving host would now get rid of all of its referen=
-ces
->> > > > > > (e.g., release GUPs), perform a VCPU run, and the guest contin=
-ues
->> > > > > > running as normal. I expect this to be the common case.
->> > > > > >
->> > > > > > But to handle the more interesting situation, let's say that t=
-he host
->> > > > > > doesn't do it immediately, and for some reason it holds on to =
-some
->> > > > > > references to that folio.
->> > > > > >
->> > > > > > - Even if that's the case, the guest can still run *. If the g=
-uest
->> > > > > > tries to access the folio, KVM detects that access when it tri=
-es to
->> > > > > > fault it into the guest, sees that the host still has referenc=
-es to
->> > > > > > that folio, and exits back to the host with a memory fault exi=
-t. At
->> > > > > > this point, the VCPU that has tried to fault in that particula=
-r folio
->> > > > > > cannot continue running as long as it cannot fault in that fol=
-io.
->> > > > >
->> > > > > Are you talking about the following scheme?
->> > > > > 1) guest_memfd checks shareability on each get pfn and if there =
-is a
->> > > > > mismatch exit to the host.
->> > > >
->> > > > I think we are not really on the same page here (no pun intended :=
-) ).
->> > > > I'll try to answer your questions anyway...
->> > > >
->> > > > Which get_pfn? Are you referring to get_pfn when faulting the page
->> > > > into the guest or into the host?
->> > >
->> > > I am referring to guest fault handling in KVM.
->> > >
->> > > >
->> > > > > 2) host user space has to guess whether it's a pending refcount =
-or
->> > > > > whether it's an actual mismatch.
->> > > >
->> > > > No need to guess. VCPU run will let it know exactly why it's exiti=
-ng.
->> > > >
->> > > > > 3) guest_memfd will maintain a third state
->> > > > > "pending_private_conversion" or equivalent which will transition=
- to
->> > > > > private upon the last refcount drop of each page.
->> > > > >
->> > > > > If conversion is triggered by userspace (in case of pKVM, it wil=
-l be
->> > > > > triggered from within the KVM (?)):
->> > > >
->> > > > Why would conversion be triggered by userspace? As far as I know, =
-it's
->> > > > the guest that triggers the conversion.
->> > > >
->> > > > > * Conversion will just fail if there are extra refcounts and use=
-rspace
->> > > > > can try to get rid of extra refcounts on the range while it has =
-enough
->> > > > > context without hitting any ambiguity with memory fault exit.
->> > > > > * guest_memfd will not have to deal with this extra state from 3=
- above
->> > > > > and overall guest_memfd conversion handling becomes relatively
->> > > > > simpler.
->> > > >
->> > > > That's not really related. The extra state isn't necessary any mor=
-e
->> > > > once we agreed in the previous discussion that we will retry inste=
-ad.
->> > >
->> > > Who is *we* here? Which entity will retry conversion?
->> >
->> > Userspace will re-attempt the VCPU run.
 >>
->> Then KVM will have to keep track of the ranges that need conversion
->> across exits. I think it's cleaner to let userspace make the decision
->> and invoke conversion without carrying additional state in KVM about
->> guest request.
->
-> I disagree. I think it's cleaner not to introduce a user interface,
-> and just to track the reason for the last exit, along with the
-> required additional data. KVM is responsible already for handling the
-> workflow, why delegate this last part to the VMM?
->
-
-I believe Fuad's concern is the complexity of adding and maintaining
-another ioctl, as opposed to having vcpu_run() do the conversions.
-
-I think the two options are basically the same in that both are actually
-adding some form of user contract, just in different places.
-
-For the ioctl approach, in this RFCv2 I added a error_offset field so
-that userspace has a hint of where the conversion had an issue. the
-ioctl also returns errors to indicate what went wrong, like -EINVAL or
--ENOMEM if perhaps splitting the page required memory and there wasn't
-any, or the kernel ran out of memory trying to update mappability.
-
-If we want to provide the same level of error information for the
-vcpu_run() approach, we should probably add error_offset to
-KVM_EXIT_MEMORY_FAULT so that on a conversion failure we could re-exit
-to userspace with more information about the error_offset.
-
-
-So what we're really comparing is two ways to perform the conversion (1)
-via a direct ioctl and (2) via vcpu_run().
-
-I think having a direct ioctl is cleaner because it doesn't involve
-vCPUs for a memory operation.
-
-Conceptually, the conversion is a memory operation belonging to memory
-in the guest_memfd. Hence, the conversion operation is better addressed
-directly to the memory via a direct ioctl.
-
-For this same reason, we didn't want to do the conversion via the
-KVM_SET_MEMORY_ATTRIBUTES ioctl. KVM_SET_MEMORY_ATTRIBUTES is an
-operation for KVM's view of guest_memfd, which is linked to but not
-directly the same as a memory operation.
-
-By having a direct ioctl over using KVM_SET_MEMORY_ATTRIBUTES, we avoid
-having a dependency where memslots must first be bound to guest_memfd
-for the conversion to work.
-
-When rebooting, the memslots may not yet be bound to the guest_memfd,
-but we want to reset the guest_memfd's to private. If we use
-KVM_SET_MEMORY_ATTRIBUTES to convert, we'd be forced to first bind, then
-convert. If we had a direct ioctl, we don't have this restriction.
-
-If we do the conversion via vcpu_run() we would be forced to handle
-conversions only with a vcpu_run() and only the guest can initiate a
-conversion.
-
-On a guest boot for TDX, the memory is assumed to be private. If the we
-gave it memory set as shared, we'd just have a bunch of
-KVM_EXIT_MEMORY_FAULTs that slow down boot. Hence on a guest reboot, we
-will want to reset the guest memory to private.
-
-We could say the firmware should reset memory to private on guest
-reboot, but we can't force all guests to update firmware.
-
->> >
->> > > >
->> > > > > Note that for x86 CoCo cases, memory conversion is already trigg=
-ered
->> > > > > by userspace using KVM ioctl, this series is proposing to use
->> > > > > guest_memfd ioctl to do the same.
->> > > >
->> > > > The reason why for x86 CoCo cases conversion is already triggered =
-by
->> > > > userspace using KVM ioctl is that it has to, since shared memory a=
-nd
->> > > > private memory are two separate pages, and userspace needs to mana=
-ge
->> > > > that. Sharing memory in place removes the need for that.
->> > >
->> > > Userspace still needs to clean up memory usage before conversion is
->> > > successful. e.g. remove IOMMU mappings for shared to private
->> > > conversion. I would think that memory conversion should not succeed
->> > > before all existing users let go of the guest_memfd pages for the
->> > > range being converted.
->> >
->> > Yes. Userspace will know that it needs to do that on the VCPU exit,
->> > which informs it of the guest's hypervisor request to unshare (convert
->> > from shared to private) the page.
->> >
->> > > In x86 CoCo usecases, userspace can also decide to not allow
->> > > conversion for scenarios where ranges are still under active use by
->> > > the host and guest is erroneously trying to take away memory. Both
->> > > SNP/TDX spec allow failure of conversion due to in use memory.
->> >
->> > How can the guest erroneously try to take away memory? If the guest
->> > sends a hypervisor request asking for a conversion of memory that
->> > doesn't belong to it, then I would expect the hypervisor to prevent
->> > that.
+>> On 20/05/2025 18:47, Lorenzo Stoakes wrote:
+>>> On Tue, May 20, 2025 at 05:28:35PM +0200, David Hildenbrand wrote:
+>>>> On 19.05.25 22:52, Lorenzo Stoakes wrote:
+>>>>> REVIEWERS NOTES:
+>>>>> ================
+>>>>>
+>>>>> This is a VERY EARLY version of the idea, it's relatively untested, and I'm
+>>>>> 'putting it out there' for feedback. Any serious version of this will add a
+>>>>> bunch of self-tests to assert correct behaviour and I will more carefully
+>>>>> confirm everything's working.
+>>>>>
+>>>>> This is based on discussion arising from Usama's series [0], SJ's input on
+>>>>> the thread around process_madvise() behaviour [1] (and a subsequent
+>>>>> response by me [2]) and prior discussion about a new madvise() interface
+>>>>> [3].
+>>>>>
+>>>>> [0]: https://lore.kernel.org/linux-mm/20250515133519.2779639-1-usamaarif642@gmail.com/
+>>>>> [1]: https://lore.kernel.org/linux-mm/20250517162048.36347-1-sj@kernel.org/
+>>>>> [2]: https://lore.kernel.org/linux-mm/e3ba284c-3cb1-42c1-a0ba-9c59374d0541@lucifer.local/
+>>>>> [3]: https://lore.kernel.org/linux-mm/c390dd7e-0770-4d29-bb0e-f410ff6678e3@lucifer.local/
+>>>>>
+>>>>> ================
+>>>>>
+>>>>> Currently, we are rather restricted in how madvise() operations
+>>>>> proceed. While effort has been put in to expanding what process_madvise()
+>>>>> can do (that is - unrestricted application of advice to the local process
+>>>>> alongside recent improvements on the efficiency of TLB operations over
+>>>>> these batvches), we are still constrained by existing madvise() limitations
+>>>>> and default behaviours.
+>>>>>
+>>>>> This series makes use of the currently unused flags field in
+>>>>> process_madvise() to provide more flexiblity.
+>>>>>
+>>>>
+>>>> In general, sounds like an interesting approach.
+>>>
+>>> Thanks!
+>>>
+>>> If you agree this is workable, then I'll go ahead and put some more effort
+>>> into writing tests etc. on the next respin.
+>>>
 >>
->> Making a range as private is effectively disallowing host from
->> accessing those ranges -> so taking away memory.
->
-> You said "erroneously" earlier. My question is, how can the guest
-> *erroneously* try to take away memory? This is the normal flow of
-> guest/host relations. The memory is the guest's: it decides when to
-> share it with the host, and it can take it away.
->
-
-See above, it's not really erroneous as long as we
-kvm_gmem_fault_shared() can still happen, since after unmapping, any
-host access will just fault the page again.
-
->> >
->> > I don't see how having an IOCTL to trigger the conversion is needed to
->> > allow conversion failure. How is that different from userspace
->> > ignoring or delaying releasing all references it has for the
->> > conversion request?
->> >
->> > > >
->> > > > This series isn't using the same ioctl, it's introducing new ones =
-to
->> > > > perform a task that as far as I can tell so far, KVM can handle by
->> > > > itself.
->> > >
->> > > I would like to understand this better. How will KVM handle the
->> > > conversion process for guest_memfd pages? Can you help walk an examp=
-le
->> > > sequence for shared to private conversion specifically around
->> > > guest_memfd offset states?
->> >
->> > To make sure that we are discussing the same scenario: can you do the
->> > same as well please --- walk me through an example sequence for shared
->> > to private conversion specifically around guest_memfd offset states
->> > With the IOCTLs involved?
->> >
->> > Here is an example that I have implemented and tested with pKVM. Note
->> > that there are alternatives, the flow below is architecture or even
->> > vm-type dependent. None of this code is code KVM code and the
->> > behaviour could vary.
->> >
->> >
->> > Assuming the folio is shared with the host:
->> >
->> > Guest sends unshare hypercall to the hypervisor
->> > Hypervisor forwards request to KVM (gmem) (having done due diligence)
->> > KVM (gmem) performs an unmap_folio(), exits to userspace with
+>> So the prctl and process_madvise patches both are trying to accomplish a
+>> similar end goal.
 >>
->> For x86 CoCo VM usecases I was talking about, userspace would like to
->> avoid unmap_mapping_range() on the range before it's safe to unshare
->> the range.
->
-> Why? There is no harm in userspace unmapping before the memory isn't
-> shared. I don't see the problem with that.
->
+>> Would it make sense to discuss what would be the best way forward before we
+>> continue developing the solutions? If we are not at that stage and a clear
+>> picture has not formed yet, happy to continue refining the solutions.
+>> But just thought I would check.
+> 
+> As stated in the thread (I went out of my way to link everything above),
+> and stated with you cc'd in every discussion (I think!), this idea arose as
+> a concept that came out of my brainstorming whether we could better align
+> this concept with madvise().
+> 
+> This arose because of discussions had in-thread where we agreed it made
+> most sense to have this feature in effect perform a 'default madvise()'.
+> 
+> At this point, we are essentially _duplicating what madvise does_ in the
+> prctl() with your approach, only now all of the code that does that is
+> bitrotting in kernel/sys.c.
+> 
+> This approach was an attempt to avoid that.
+> 
+> It started as a 'crazy idea' I was throwing out there, as an RFC. The idea
+> was we could compare and contrast with the prctl() RFC.
+> 
+> Obviously this is gaining some traction now as a concept and your respin
+> was a little rushed out so needs rework.
+> 
+> So, apologies if it seems this is an attempt to supercede your series or
+> such, it truly wasn't intended that way, rather I have been working 12 hour
+> days trying to find the best way possible to _make what you want happen_
+> while also doing what's best for mm and madvise (among many other tasks of
+> course :)
 
-Yes, no harm done, just possible remapping after unmapping.
+Please don't burn out spending 12 hour days on this! Your feedback is very
+amazing! (Thanks again!) It will take time to come up with a solution right
+for the kernel!
 
-> You still haven't responded to my question from the previous email:
-> can you please return the favor and walk me through an example
-> sequence for shared to private conversion specifically around
-> guest_memfd offset states with the IOCTLs involved? :D
->
+> 
+> So the idea is we can:
+> 
+> a. solve long-standing problems with madvise() that prevent it being used
+>    for certain things (e.g. the error on gaps which breaks
+>    process_madvise() and hides real errors)
+> 
+> b. Also provide this functionality in a way that the absolute most minimal
+>    delta from existing logic...
+> 
+> c. ...While keeping all this logic in mm and avoiding bitrot in
+>    kernel/sys.c.
+> 
+> So obviously my view is that this approach is superior to the prctl() one.
+> 
+> However the intent was that you would probably take a little longer in
+> spinning up an RFC, and then we could compare the two approaches, if people
+> didn't reject my 'crazy idea' :)
+> 
+> Obviously you respan your (kinda ;) RFC way quicker than expected, and then
+> there were a ton of bugs, which added workload and made it perhaps a little
+> more pressing as to deciding which should be pursued.
+> 
 
-Right at the top :)
+I feel like a ton (i.e. a thousand) sounds like a lot, there are a couple of bugs
+in a series I meant to send as an RFC (mistakes happen :)). I will wait a couple
+of days to see how things develop and send a prctl RFC (will remember the tag this
+time) and we can have a better comparison of what this would look like.
 
-> Thanks!
-> /fuad
->
->
->> > KVM_EXIT_UNSHARE and all the information about the folio being
->> > unshared
->> >
->> > Case 1:
->> > Userspace removes any remaining references (GUPs, IOMMU Mappings etc..=
-.)
->> > Userspace calls vcpu_run(): KVM (gmem) sees that there aren't any
->> > references, sets state to PRIVATE
->> >
->> > Case 2 (alternative 1):
->> > Userspace doesn't release its references
->> > Userspace calls vcpu_run(): KVM (gmem) sees that there are still
->> > references, exits back to userspace with KVM_EXIT_UNSHARE
->> >
->> > Case 2 (alternative 2):
->> > Userspace doesn't release its references
->> > Userspace calls vcpu_run(): KVM (gmem) sees that there are still
->> > references, unmaps folio from guest, but allows it to run (until it
->> > tries to fault in the folio)
->> > Guest tries to fault in folio that still has reference, KVM does not
->> > allow that (it sees that the folio is shared, and it doesn't fault in
->> > shared folios to confidential guests)
->> > KVM exits back to userspace with KVM_EXIT_UNSHARE
->> >
->> > As I mentioned, the alternatives above are _not_ set in core KVM code.
->> > They can vary by architecture of VM type, depending on the policy,
->> > support, etc..
->> >
->> > Now for your example please on how this would work with IOCTLs :)
->> >
->> > Thanks,
->> > /fuad
->> >
->> > > >
->> > > > >  - Allows not having to keep track of separate shared/private ra=
-nge
->> > > > > information in KVM.
->> > > >
->> > > > This patch series is already tracking shared/private range informa=
-tion in KVM.
->> > > >
->> > > > >  - Simpler handling of the conversion process done per guest_mem=
-fd
->> > > > > rather than for full range.
->> > > > >      - Userspace can handle the rollback as needed, simplifying =
-error
->> > > > > handling in guest_memfd.
->> > > > >  - guest_memfd is single source of truth and notifies the users =
-of
->> > > > > shareability change.
->> > > > >      - e.g. IOMMU, userspace, KVM MMU all can be registered for
->> > > > > getting notifications from guest_memfd directly and will get not=
-ified
->> > > > > for invalidation upon shareability attribute updates.
->> > > >
->> > > > All of these can still be done without introducing a new ioctl.
->> > > >
->> > > > Cheers,
->> > > > /fuad
+> I would suggest holding off on your series until we see whether this one
+> works on this basis. But obviously this is simply my point of view.
+> 
+> To be clear however, this was not a planned series of events...
+> 
+> I mean equally, we are seeing several other series from Yafang, Nico and
+> Dev in relation to [m]THP and even a obliquely-related series from Barry,
+> so it seems we are in contention across many planes here :)
+> 
+>>
+>> I feel like changing process_madvise which was designed to work on an array
+>> of iovec structures to have flags to skip errors and ignore the iovec
+>> makes it function similar to a prctl call is not the right approach.
+>> IMHO, prctl is a more direct solution to this.
+> 
+> I don't know what you mean by 'function similar to a prctl call', or what
+> you mean by it being a more direct solution.
+
+So I thought I was going a bit crazy, but I am glad someone else raised this as well.
+
+If we look at the man page for prctl it says it manipulates various aspects
+of the behavior of the calling thread or process.
+
+If we look at the man page for prcocess_madvise, it was for providing advice for the
+address ranges described by iovec and n
+
+What I mean (and I assume Shakeel meant as well) is this is changing what
+process_madvise was designed for into changing  the behaviour of a process (i.e. prctl).
+This is what I mean by 'function similar to a prctl call'.
+
+
+> 
+> The problem with prctl() is there is no pattern, it's a dumping ground for
+> arbitrary stuff and a prime place for bitrot. It also means we give up
+> maintainership of mm-specific code.
+> 
+> It encourages misalignment with other interfaces and APIs.
+> 
+> What is being discussed here is an effort to _better align what you want
+> with an existing interface_ - if we treat this as a 'default madvise()'
+> plus having additional madvise functionality (apply to all, ignoring errors
+> e.g.) - and put all this code _alongside existing madvise code_ - this
+> makes this vastly more maintainable, futureproof and robust.
+> 
+> And keep in mind the proposed flags are _flags_ not default behaviours,
+> ones which we will carefully restrict to known flags, starting with the
+> flags you guys need.
+> 
+>>
+>> I know that Lonenzo doesn't like prctl and wants to unify this in process_madvise.
+>> But if in the end, we want to have a THP auto way which is truly transparent,
+>> would it not be better to just have this as prctl and not change the madvise
+>> structure? Maybe in a few years we wont need any of this, and it will be lost
+>> in prctl and madvise wouldn't have changed for this?
+> 
+> This really sounds a lot like your colleague Shakeel's objection, so I
+> don't want to duplicate my response too much, but as I said to him, at this
+> stage we would set THP mode to 'auto', but still have to support
+> MADV_[NO]HUGEPAGE.
+> 
+> We may then wish to set these as no-ops in auto mode right? But they'd
+> still have to exist for uAPI reasons.
+> 
+> So would it be better to do this in mm/madvise.c alongside literally all
+> other madvise() code and the existing handling for MADV_[NO]HUGEPAGE, or
+> would it be better to throw it in kernel/sys.c and hope people remember to
+> update it?
+> 
+> I think it's pretty clear what the answer to that is.
+> 
+>>
+>> Again, this is just to have a discussion (and not an aggressive argument :)),
+>> and would love to get feedback from everyone in the community.
+>> If its too early to have this discussion, its completely fine and we can
+>> still keep developing the RFCs :)
+> 
+> I try hard never to be aggressive, I am firm when I feel it is appropriate
+> to be so (it's important to push back when necessarily I feel), but I
+> always try to maintain civility as well as I can.
+> 
+> Of course I am imperfect, so apologies if it comes across any other way, I
+> really do try very hard to maintain a high standard of professionalism
+> on-list.
+> 
+> Again as I said, I really did not intend to supercede or interfere with
+> your series, this was just unfortunate timing and throwing out ideas to
+> reach the best solution.
+> 
+> My objection to prctl() is due to bit-rot, mm code in inappropriate places,
+> the fact it by nature lends itself to violating conventions and practices
+> that exist in other mm APIs, not some subjective sense of evil.
+> 
+> It is historically a place where 'things that people don't really care
+> about but don't quite want to NACK' go also, and to me suggests that the
+> problem hasn't necessarily been thought through to see how it might be
+> implemented by extending existing APIs or finding ways to achieve the same
+> thing that better align with existing intefaces.
+> 
+> To be clear - this concept is _all_ ultimately a product of your series and
+> your ideas leading the discussion within the community to this point where
+> a potential alternative has arisen - without which this would not have
+> occurred.
+> 
+> So the idea here is to simply explore what the best solution is that aligns
+> with what best serves the community.
+> 
+>>
+>> Thanks!
+>> Usama
+> 
+> Thanks, Lorenzo
+
