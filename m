@@ -1,165 +1,300 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3415F25D1F5
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6EA256C7D;
+	Tue, 20 May 2025 23:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747784356; cv=none; b=gSZaTgB+TYARnhLv837QRsu5IKJtZ/RhtmHi0IIdbfIZsUX88wDbRrAktsQqenYiyh6klDeHuXPuTcMOxPBRcj3LZmlaoefdPIiTFEdvtZzymy8DTNBTBHkNYr0bw3Mq/e9o2KarEo8dBADHitSJaZEgfyB8XS5PARFle5NBJTo=
+	t=1747784418; cv=none; b=lsGDvL8vJtlx+7a6Kx0aaO72lBycMWwuzyoa6pJJUjT5zhep/9E6v+fKpbbiqeGEixfqczB5AyGvNW/DHa+0hp+T4RAvIMc4CUgDgvJJCPB9DGC4JTB+rlP82fZl+zBdu+LD1Cl1MMRpD3L5V4XS8IIeynhCihG2Ya6vsiN5rF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747784356; c=relaxed/simple;
-	bh=qNW0arWXlRmhF4tOVFZz0ZKha2LDMSjtrVhlYdBNed8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BTioAKS+E8Kk4K2HLfoLaGA5mfOiP2GILl2h8YcHtRre9HvKkxLb0AjkMbxbFS14DN1kbP1Wez8NMVsWf8bcT4CzPhocXmdbm4JvMvz9jcUqvA1LtdDbOcro9sI2t3CjV4UbalvKuMxD2MHQ20WFIOn05Na4W8JpOBTAuuD4j8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=phYVTxvS; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747784418; c=relaxed/simple;
+	bh=uo97Itpe0mNDnC3ijEL3Thw7mfsDeq5JTh+5f74sqXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lm63gjEP1B3+A3Wa728YADspwoLJPj2u1GeEHtl3wq5Z5TOM+Nv+WCNIo3GPw82eZSwWylC4dWmdUGtQHc082WF5cFDMgNe2N/9BA7JjNZ6l1veCksaU0XNVWeYias38GyOs8ynFCIstgPZXdSMpM0c1mrBveqjTJtqmsTJ++iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dPwddyOP; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phYVTxvS"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-443d4bff5dfso222925e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747784352; x=1748389152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cRuU/m5dc5FtJi/f3Rrw2anhfRohi0i8yf3iq1OlqJ0=;
-        b=phYVTxvSAmpqz/M4n0Rk87yvA4M6W32UAkrZOlT+psyUIysRvKkFuoqSDcX7S/opnV
-         KL1GpAF6jpi8WvDGCdm6/uPZxx04PV/Ec/eimFSmmQcEzU6QlJxack6+QC0ZKphw0QNU
-         icmO0QZFLgXcvOmizZm0nzwJsg/F+tqJIMNq/yOLB83J6WD9Updphm1gva09AyIA6iq7
-         JqZLYj4gII8JO+I/V5Oo0z8XvJJ94Vatwwg9cOVD6VB9kW2jaixtyNHNVR+l6Ejc1/iY
-         tzpeGbsD9iIixVs7zVpE11lv45+lShP3mgpinP4pnyN2SFXJnc5rbdRAF2Ql2Chd/18E
-         vwPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747784352; x=1748389152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cRuU/m5dc5FtJi/f3Rrw2anhfRohi0i8yf3iq1OlqJ0=;
-        b=InZCzMxEP4nKTECgciFB0RMQpXszFK+yx7ri/In/U65sQNWmu82RcfjsqiYmCxR8sq
-         +SCUO7QJCt1Le57zziZKS0/WzCBVwC+EWrvcmnr4Fu+SGygjLgfrf131VJmjU8AYAE4U
-         iA5+xsP4u5yQ9kmCD92NYVpJzWgyMr24XdZSEDExvAEdJ5oxCyY0itEa82h2YCHJJ1K0
-         HsnB2+V2rRD7YX/9mj+Upspw19s8XoHANgMRonqK6MfFfThG9RnuDwmxHpavaLUtmSvg
-         9Dj92oJHSu4QIHEbxzLyPegnHTse4rKSrY0NIfVHHDpWtcAClJIC8+8muTwEnXiclN/i
-         z+rA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPEpPp5DupcNZIhQtIITRoFJBS/LbSt382aakxZ806BwHvZcOXxI8GreOa2+GVUobJsIrtrXBc1z67hl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZZN4FVbqpYHuwssaxYSYQ32SAtH7/Co2heUjK/XRRv/r29jzN
-	SlxTCmvG9UPHl+coullm7W6tQlY2rl9X7eWQ23NUEbpG+pKN6wOWBkSZTLZwWGw9s/EJdlBGe0B
-	2OOUyyjCACCksq1lDqu4mSSemQ5ZmZ9vC5PHpAo02
-X-Gm-Gg: ASbGnctCNlAk5s6JMirmBtPLrTVeCpv5H/z2/tzWtTsOvo4cmMSE1ilm9GhWB3Qt7HA
-	+iAE2HFDbXtC2fVS1wESpo7xZtWHLdUxwmz9AGl4rEPy7iimJp43MDrzMRym7b4x/sNPInnMK/b
-	megYaq2L7Xe4C9Jb5q93yXZjl21S1Xu0DT6/PnLW/Jw/OBVNKtDkisKzor1NaICT0ZixOij/UV
-X-Google-Smtp-Source: AGHT+IEmTo+oS9URXfIuKouUY0B0Y62o5TMKaVmZC8slqtUcsFC1AZMBLwucs8WQvvTTsv5lG6xeERtZDgSchwhBuX8=
-X-Received: by 2002:a05:600c:2e49:b0:439:961d:fc7d with SMTP id
- 5b1f17b1804b1-443ae3dbdfdmr4250875e9.6.1747784352208; Tue, 20 May 2025
- 16:39:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dPwddyOP"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id HUaVuFynqAfjwHWZDugTbY; Tue, 20 May 2025 23:40:15 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id HWZCupuIaDd4SHWZCu6XE4; Tue, 20 May 2025 23:40:15 +0000
+X-Authority-Analysis: v=2.4 cv=CZUO5qrl c=1 sm=1 tr=0 ts=682d12df
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8 a=n9Sqmae0AAAA:8
+ a=cm27Pg_UAAAA:8 a=Qgl8qZTgVK1AUjxnc7MA:9 a=QEXdDO2ut3YA:10
+ a=y1Q9-5lHfBjTkpIzbSAN:22 a=UmAUUZEt6-oIqEbegvw9:22 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=R8bUBxbfLPBwXJ+JkrMkShoBfyt0h/bJ2GrUyKjOTmQ=; b=dPwddyOPfHAls/PSm85fnGvuo3
+	qVD4xNbHvebzIhLndrd8gl7LN9baxSB72kgQP5yXK+VoHbS8yKQANP2FAsufZyeHQlgfEzQCowrOA
+	npKcx5veLr5v4egqZ0/30CEHYctPXSTdGi8kGLvyxYNMeAKXscso1hHVtb7durDr0YulzAkOmJbhG
+	8EyFXPB/1mUuYdSEby0yKvcvyQTQLBWzyZcI2N8qvjhs3D5RPcSVdRiVlBJ6wyuo+UZ7x7vRoXwEk
+	3J1OLZULaMvp6A7A4ifYJPp2ETj0RFlRMqhNR3jYfEPXyAJCTNtiLkSx4W73cx3SZi+HXB39W7tKA
+	QtgUJ9AQ==;
+Received: from [177.238.17.151] (port=37062 helo=[192.168.0.27])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uHVmk-000000014bO-1zvp;
+	Tue, 20 May 2025 17:50:11 -0500
+Message-ID: <5e54efbb-a7e5-43e3-b30a-0fdd920de016@embeddedor.com>
+Date: Tue, 20 May 2025 16:49:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505161412.1926643-1-jiaqiyan@google.com> <20250505161412.1926643-3-jiaqiyan@google.com>
- <86zffcefk9.wl-maz@kernel.org>
-In-Reply-To: <86zffcefk9.wl-maz@kernel.org>
-From: Jiaqi Yan <jiaqiyan@google.com>
-Date: Tue, 20 May 2025 16:39:00 -0700
-X-Gm-Features: AX0GCFtfiDim2rVM9--MtRE7iY2zI_cJEhnOXz73-OdjqCpU57FjKEAM9M0zDCo
-Message-ID: <CACw3F52v_WSR=HkmeW7be+YRFkUzA-n-=mVHHw4wvJK7ongkYQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] KVM: arm64: Set FnV for VCPU when FAR_EL2 is invalid
-To: Marc Zyngier <maz@kernel.org>
-Cc: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, 
-	pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, duenwen@google.com, rananta@google.com, 
-	jthoughton@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] net: usb: r8152: Convert to use struct
+ sockaddr_storage internally
+To: Kees Cook <kees@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Hayes Wang <hayeswang@realtek.com>, Douglas Anderson
+ <dianders@chromium.org>, Grant Grundler <grundler@chromium.org>,
+ linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ Max Gurtovoy <mgurtovoy@nvidia.com>, Maurizio Lombardi
+ <mlombard@redhat.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
+ Mingzhe Zou <mingzhe.zou@easystack.cn>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Simon Horman <horms@kernel.org>, "Dr. David Alan Gilbert"
+ <linux@treblig.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Cosmin Ratiu <cratiu@nvidia.com>, Lei Yang <leiyang@redhat.com>,
+ Ido Schimmel <idosch@nvidia.com>, Samuel Mendoza-Jonas
+ <sam@mendozajonas.com>, Paul Fertser <fercerpav@gmail.com>,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, Jay Vosburgh <jv@jvosburgh.net>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Jiri Pirko <jiri@resnulli.us>,
+ Eric Biggers <ebiggers@google.com>, Milan Broz <gmazyland@gmail.com>,
+ Philipp Hahn <phahn-oss@avm.de>, Ard Biesheuvel <ardb@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Ahmed Zaki <ahmed.zaki@intel.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Xiao Liang <shaw.leon@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250520222452.work.063-kees@kernel.org>
+ <20250520223108.2672023-5-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250520223108.2672023-5-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uHVmk-000000014bO-1zvp
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.27]) [177.238.17.151]:37062
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGNq0FCnKMsX9hKUGsQOQ9T1+CSoQRyurcIqoU3Y9NZ+WZg7Kb7WcIj+/HHXFyjkAfEI82XSznewpj2cqVVtA/ewOv96EqAfRqXgpeSZwWW9o+zjFXjl
+ OW3+nc7XR7yzuUHKkLuiEvHUV53cioRStwv9iHpMNGyOlLY0s/vAHsJAF/Br1dKgDQ83csXbJMsxGiBeFEIj4tLvbc8en9xjdaVYETI/B0MFajyA/f3XWYwM
+ uRivfnORM9BsCQUqEgoVJ107+lSm4cvJPMEAMOu51SpNfvs8oHETHC6X+08hDxGk/cnAbZehYh9MkT3RlW+1XG5tQzBbnMS4w8/PiTmK2X8645v8V0LMmBkP
+ V6DTZUnhZ83U3abhETpiUA9BOgp1Do8wJQJDMtsdTCr2Dco7JWqdelveaqMak6djltBMowcQCjncCpOBPJ+bLwt7vvVDMgBjyxB7dtQ++CrDzik/kLAD6gJ1
+ MeouGx7HU/ZcyUXUIRGDzH1IAnhUH4UxFz7pOA==
 
-On Fri, May 16, 2025 at 8:33=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrote=
-:
->
-> On Mon, 05 May 2025 17:14:08 +0100,
-> Jiaqi Yan <jiaqiyan@google.com> wrote:
-> >
-> > Certain microarchitectures (e.g. Neoverse V2) do not keep track of
-> > the faulting address for a memory load that consumes poisoned data
-> > and results in a synchronous external abort (SEA). This means the
-> > faulting guest physical address is unavailable when KVM handles such
-
-Actually this is not relevant to the code, I think it is just
-sufficient to say "This means that FAR_EL2 holds a garbage value and
-therefore kvm_vcpu_get_hfar holds a garbage value too".
-
-> > SEA in EL2, and FAR_EL2 just holds a garbage value.
->
-> I don't understand. FAR_ELx holds a *virtual* address, and never a
-> physical address (that'd be PFAR_ELx).
-
-Sorry my writing is misleading. If you are still interested, the
-scenario I meant to describe is
-1. There is a SEA taken by KVM when memory load from the guest
-consumes poisoned data.
-2. The guest physical address (or IPA) of the poisoned data will not
-be available in HPFAR_EL2 per architecture register documentation [1].
-3. Although HPFAR_EL2 is unusable, KVM can still attempt address
-translation with the guest virtual address in FAR_EL2 to get the
-poisoned IPA.
-4. However, FAR_EL2 is not valid on certain microarchitectures (e.g.
-Neoverse V2), so in the end it is just impossible for KVM to know the
-poisoned IPA.
-
-Does this clarify things? But again, it is confusing and will be removed.
-
-[1] https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registe=
-rs/HPFAR-EL2--Hypervisor-IPA-Fault-Address-Register?lang=3Den
 
 
->
-> >
-> > In case VMM later asks KVM to synchronously inject a SEA into the
-> > guest, KVM should set FnV bit
-> > - in VCPU's ESR_EL1 to let guest kernel know that FAR_EL1 is invalid
-> >   and holds garbage value
-> > - in VCPU's ESR_EL2 to let nested virtualization know that FAR_EL2
-> >   is invalid and holds garbage value
-> >
-> > Signed-off-by: Jiaqi Yan <jiaqiyan@google.com>
-> > ---
-> >  arch/arm64/kvm/inject_fault.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/kvm/inject_fault.c b/arch/arm64/kvm/inject_faul=
-t.c
-> > index a640e839848e6..b4f9a09952ead 100644
-> > --- a/arch/arm64/kvm/inject_fault.c
-> > +++ b/arch/arm64/kvm/inject_fault.c
-> > @@ -81,6 +81,9 @@ static void inject_abt64(struct kvm_vcpu *vcpu, bool =
-is_iabt, unsigned long addr
-> >       if (!is_iabt)
-> >               esr |=3D ESR_ELx_EC_DABT_LOW << ESR_ELx_EC_SHIFT;
-> >
-> > +     if (!kvm_vcpu_sea_far_valid(vcpu))
-> > +             esr |=3D ESR_ELx_FnV;
-> > +
->
-> I don't understand what this has anything to do with the uarch details
-> you talk about in the commit message. If the VMM inject an exception,
-> surely it has populated the exception context itself. I don't even see
-> how we'd end-up here (__kvm_arm_vcpu_set_events? seems unlikely).
->
+On 20/05/25 16:31, Kees Cook wrote:
+> To support coming API type changes, switch to sockaddr_storage usage
+> internally.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-KVM_SET_VCPU_EVENTS is indeed the case this commit wants to fix.
-Instead of populating the exception registers itself, VMM can use
-KVM_SET_VCPU_EVENTS to let KVM do that per existing KVM doc [2], e.g.
-when VMM handles the KVM_EXIT_ARM_SEA introduced in the previous
-commit. The intent is to tell guest, for example, to not use FAR_EL1.
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[2] https://www.kernel.org/doc/html/v5.10/virt/kvm/api.html#id3
+Thanks!
+-Gustavo
 
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
+> ---
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Hayes Wang <hayeswang@realtek.com>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Grant Grundler <grundler@chromium.org>
+> Cc: <linux-usb@vger.kernel.org>
+> Cc: <netdev@vger.kernel.org>
+> ---
+>   drivers/net/usb/r8152.c | 52 +++++++++++++++++++++--------------------
+>   1 file changed, 27 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 67f5d30ffcba..b18dee1b1bb3 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -1665,14 +1665,14 @@ static int
+>   rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+>   		  u32 advertising);
+>   
+> -static int __rtl8152_set_mac_address(struct net_device *netdev, void *p,
+> +static int __rtl8152_set_mac_address(struct net_device *netdev,
+> +				     struct sockaddr_storage *addr,
+>   				     bool in_resume)
+>   {
+>   	struct r8152 *tp = netdev_priv(netdev);
+> -	struct sockaddr *addr = p;
+>   	int ret = -EADDRNOTAVAIL;
+>   
+> -	if (!is_valid_ether_addr(addr->sa_data))
+> +	if (!is_valid_ether_addr(addr->__data))
+>   		goto out1;
+>   
+>   	if (!in_resume) {
+> @@ -1683,10 +1683,10 @@ static int __rtl8152_set_mac_address(struct net_device *netdev, void *p,
+>   
+>   	mutex_lock(&tp->control);
+>   
+> -	eth_hw_addr_set(netdev, addr->sa_data);
+> +	eth_hw_addr_set(netdev, addr->__data);
+>   
+>   	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CRWECR, CRWECR_CONFIG);
+> -	pla_ocp_write(tp, PLA_IDR, BYTE_EN_SIX_BYTES, 8, addr->sa_data);
+> +	pla_ocp_write(tp, PLA_IDR, BYTE_EN_SIX_BYTES, 8, addr->__data);
+>   	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CRWECR, CRWECR_NORAML);
+>   
+>   	mutex_unlock(&tp->control);
+> @@ -1706,7 +1706,8 @@ static int rtl8152_set_mac_address(struct net_device *netdev, void *p)
+>    * host system provided MAC address.
+>    * Examples of this are Dell TB15 and Dell WD15 docks
+>    */
+> -static int vendor_mac_passthru_addr_read(struct r8152 *tp, struct sockaddr *sa)
+> +static int vendor_mac_passthru_addr_read(struct r8152 *tp,
+> +					 struct sockaddr_storage *ss)
+>   {
+>   	acpi_status status;
+>   	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> @@ -1774,47 +1775,48 @@ static int vendor_mac_passthru_addr_read(struct r8152 *tp, struct sockaddr *sa)
+>   		ret = -EINVAL;
+>   		goto amacout;
+>   	}
+> -	memcpy(sa->sa_data, buf, 6);
+> +	memcpy(ss->__data, buf, 6);
+>   	tp->netdev->addr_assign_type = NET_ADDR_STOLEN;
+>   	netif_info(tp, probe, tp->netdev,
+> -		   "Using pass-thru MAC addr %pM\n", sa->sa_data);
+> +		   "Using pass-thru MAC addr %pM\n", ss->__data);
+>   
+>   amacout:
+>   	kfree(obj);
+>   	return ret;
+>   }
+>   
+> -static int determine_ethernet_addr(struct r8152 *tp, struct sockaddr *sa)
+> +static int determine_ethernet_addr(struct r8152 *tp,
+> +				   struct sockaddr_storage *ss)
+>   {
+>   	struct net_device *dev = tp->netdev;
+>   	int ret;
+>   
+> -	sa->sa_family = dev->type;
+> +	ss->ss_family = dev->type;
+>   
+> -	ret = eth_platform_get_mac_address(&tp->udev->dev, sa->sa_data);
+> +	ret = eth_platform_get_mac_address(&tp->udev->dev, ss->__data);
+>   	if (ret < 0) {
+>   		if (tp->version == RTL_VER_01) {
+> -			ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
+> +			ret = pla_ocp_read(tp, PLA_IDR, 8, ss->__data);
+>   		} else {
+>   			/* if device doesn't support MAC pass through this will
+>   			 * be expected to be non-zero
+>   			 */
+> -			ret = vendor_mac_passthru_addr_read(tp, sa);
+> +			ret = vendor_mac_passthru_addr_read(tp, ss);
+>   			if (ret < 0)
+>   				ret = pla_ocp_read(tp, PLA_BACKUP, 8,
+> -						   sa->sa_data);
+> +						   ss->__data);
+>   		}
+>   	}
+>   
+>   	if (ret < 0) {
+>   		netif_err(tp, probe, dev, "Get ether addr fail\n");
+> -	} else if (!is_valid_ether_addr(sa->sa_data)) {
+> +	} else if (!is_valid_ether_addr(ss->__data)) {
+>   		netif_err(tp, probe, dev, "Invalid ether addr %pM\n",
+> -			  sa->sa_data);
+> +			  ss->__data);
+>   		eth_hw_addr_random(dev);
+> -		ether_addr_copy(sa->sa_data, dev->dev_addr);
+> +		ether_addr_copy(ss->__data, dev->dev_addr);
+>   		netif_info(tp, probe, dev, "Random ether addr %pM\n",
+> -			   sa->sa_data);
+> +			   ss->__data);
+>   		return 0;
+>   	}
+>   
+> @@ -1824,17 +1826,17 @@ static int determine_ethernet_addr(struct r8152 *tp, struct sockaddr *sa)
+>   static int set_ethernet_addr(struct r8152 *tp, bool in_resume)
+>   {
+>   	struct net_device *dev = tp->netdev;
+> -	struct sockaddr sa;
+> +	struct sockaddr_storage ss;
+>   	int ret;
+>   
+> -	ret = determine_ethernet_addr(tp, &sa);
+> +	ret = determine_ethernet_addr(tp, &ss);
+>   	if (ret < 0)
+>   		return ret;
+>   
+>   	if (tp->version == RTL_VER_01)
+> -		eth_hw_addr_set(dev, sa.sa_data);
+> +		eth_hw_addr_set(dev, ss.__data);
+>   	else
+> -		ret = __rtl8152_set_mac_address(dev, &sa, in_resume);
+> +		ret = __rtl8152_set_mac_address(dev, &ss, in_resume);
+>   
+>   	return ret;
+>   }
+> @@ -8421,7 +8423,7 @@ static int rtl8152_post_reset(struct usb_interface *intf)
+>   {
+>   	struct r8152 *tp = usb_get_intfdata(intf);
+>   	struct net_device *netdev;
+> -	struct sockaddr sa;
+> +	struct sockaddr_storage ss;
+>   
+>   	if (!tp || !test_bit(PROBED_WITH_NO_ERRORS, &tp->flags))
+>   		goto exit;
+> @@ -8429,8 +8431,8 @@ static int rtl8152_post_reset(struct usb_interface *intf)
+>   	rtl_set_accessible(tp);
+>   
+>   	/* reset the MAC address in case of policy change */
+> -	if (determine_ethernet_addr(tp, &sa) >= 0)
+> -		dev_set_mac_address (tp->netdev, &sa, NULL);
+> +	if (determine_ethernet_addr(tp, &ss) >= 0)
+> +		dev_set_mac_address(tp->netdev, (struct sockaddr *)&ss, NULL);
+>   
+>   	netdev = tp->netdev;
+>   	if (!netif_running(netdev))
+
