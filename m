@@ -1,57 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FFA22083;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CED26F467;
 	Tue, 20 May 2025 16:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760078; cv=none; b=IfPQggtFNEeuWNPdTh7vkEUceCqLLOU9zlVIZ+wkmSdxHm1Cao03SY4bA9zGwAtxQsTbRGwjlIDnsCiS6FY74hHS5olCA/GWwq7ZI0mLMa95grSemY+pvuV0gLjpTs+lK/kQ/yy2C3oVf4+W/IsZLv2a1Do0IFSvtAsccwxP2K4=
+	t=1747760080; cv=none; b=VXv+HDyZrs+Aig/ganuJU9wTGdAdDiHGhZz3V4wWczdc7dAFJSZQm1SqhggV5JFIYFVNc5W3V08mJ9VCg6cnI8AGQiWKp6I1mWaAsJTR0EMFjCCr6WjYvt2L/LSE7MoCnrmbpqwXnpsar7zg8hklyhPtZg+wgU4i2/iuwSEHvo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760078; c=relaxed/simple;
-	bh=AgPyKTUIDuQsDQnW4AKRQwM1++hGLJl4xtmOoexecE4=;
+	s=arc-20240116; t=1747760080; c=relaxed/simple;
+	bh=M3HY+zNWDynah4tI2QSkRa1Jooa51OHDyTdwzMLHbEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZHtOKJKPy5/AoRsjSsad6WxVqIckol1TR7f00kvIPwiVwgq9J7NXj5Qwv+bydHeGS/ympDFRXTPBIqmeYtx3ZrI3MbiefaLW7qFjRCtfTFF58WXIp08N5z+v3gl2jE8syD6CroyRYlX1nng+enM1FhBENiVmNp9zwe3Ti8W9t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Slj6PXmg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gsdhPlHGUzLIHGpfqqdSzooWPpibHLfbmeVmzekk6vfEF8AEn2j0hoTSIa7Qdfs0CspmMCNGVjC9IQIqmNWvgIKGEu1LzWS2pNHl46Jza5BzLLnNKtdjjGaWm72hLjW/1HUAD4RGVUX/HcoJNk9gbg/rHaxOMbbjYKWSslH7J7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUZbZK5g; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Slj6PXmg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D82C4CEE9;
-	Tue, 20 May 2025 16:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747760078;
-	bh=AgPyKTUIDuQsDQnW4AKRQwM1++hGLJl4xtmOoexecE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Slj6PXmgELBMEgspF7nxXwNY7G/+TwoSIPPWQDRm1Dttzp2u5IZucLVSnTm2PsKr+
-	 qk8s3dvppe6G6U3tTuIp6SUaamN369d/+mstmRzCWWeLMO/elg0aaQSQPW+9yPXLHX
-	 ln52GP/xau4kRnD2kwpzO8Twv9Ls8F8LmRA1Ob/x3wDpdVycK2yEeP19a7anbxTzN3
-	 9ijZy/5zaTOALNXBFTmFg09GJ7Vf728+4rmwp4IJFtxGIl7u7tjYd3aaJWGqG4cDMq
-	 NvIRI8qRvhBiP7sSuSGNVcjuxHmlTRvzAGcVu1KLR6H7vfQ/ain1Ys3sTgJBmeDbTm
-	 GJ6xgxBuDYfBw==
-Date: Tue, 20 May 2025 18:54:32 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
-	phasta@kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-Message-ID: <aCyzyAPbQ1SYbo4q@pollux>
-References: <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
- <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
- <aCYkk4Y7feltfp79@pollux>
- <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
- <aCY42rgJC4sQ4tp4@pollux>
- <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
- <aCwqAGLLCC2ZLSBK@pollux>
- <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUZbZK5g"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4769b16d4fbso33035181cf.2;
+        Tue, 20 May 2025 09:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747760078; x=1748364878; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=B+0IFrW2TaHLKfnUj0NSz4bCh09+7jR+H80Edcxixow=;
+        b=EUZbZK5gjZL5UR59rlGm52JBQQrqhrQhMt36VLW2NJ1gOjsYaZSmEtYvO/WkN1gh/B
+         Ay6MrdHab0IzmMu7/IFdJzY9jLx05LdDgtMqs5Jvddtclblq0Zf6QYL8jx2Gu4P65+iv
+         cDbUw16CUYCC/VKVubfYcS5Y5JFWPKoybHUTdiYhltAxVgDVIJP+5Zz8gVTYvdrZX+Y+
+         CSuuXVGtJdfeUnXZn1jTJEYQFxD5tdDXjW3JFWLdK3eor7FgYgH3sMS7ILnrBPr9cFHQ
+         dsVT5+enAMgNMWoWJ+zHBLGHB26+3S3rYvlNAVvajfwFe3tL7sV1x72cgcxdCrjmKBj7
+         v/9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747760078; x=1748364878;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B+0IFrW2TaHLKfnUj0NSz4bCh09+7jR+H80Edcxixow=;
+        b=Wt6KviVVBfu1qeKcqlHPi5WbKjLx3uKseowlh4THiyjJA6jUX+43KhzhJBXp/PUyaK
+         RE0ydaAlry+e3T02fBPGle8bqIiflRpg2iEthyoB2Uu6ZUeC7thngTHuEY/07cZTl4ZC
+         G0PXAqgFj90WZyWDVGz6RPQX3Qn/Wt0+tQHLZOybQ00lGBFPbxFYEXL4dbz3s58fCuZh
+         B84dMsGl5gYfkUxvOk0rqMzHOX9DZOeM7t9JWqBS9HyjV0tJ/tJEDXJv9nTS1BXzk4zt
+         H4DQqMs3+3DwHs1/zwbXb3JazCQr3+pve6/ep9oazL3VfOh147l5+/pd6eeaToj9QGcl
+         SZaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUwLmf4Ouvo4jWw4sAGcW3Qes4+qH9OCA8gUJi8/Z/rgxYHlCMWi4p1l1L01qJb52RmAyyIKtpVPmA0nKyS2U=@vger.kernel.org, AJvYcCWBSjCHW1kAHAM4ht3tg4YQK9FVEgMj4OPe1Rh3B5gOUP2eIfrtKwaDMqZi78wGgY/rex5Z+L4oEi3D98NkmE8=@vger.kernel.org, AJvYcCXd0yVV6PZWj2C48oi+LSXhWxMU6yjtQqZqnV0hJibsSn56LIBdE98OLPRPZIYzg3/m3hZFeyy9tczmFBG5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNkFWtpo1/tojRzWdgmlItGyKbSHM6NSQm0bdVzVXZaQagcciJ
+	aX0gJTUMQ5sQjGNWFTzxce1P4UdlgVjQIKS0TlJuOKJJcnfcDEJ6GP4M
+X-Gm-Gg: ASbGnctNdLW1grlRyndxxEicakdXn5V7XNI78R1IIoI+e/7mnreBmPFEPKusNexcEEJ
+	rKxTy1KzaIXJ3mL4iud9flRvjlkdNPe2wYvdjXGh/+c85tZih9Nbap7X4HadktU3tRVVmnlX87l
+	2IX/KnHVZc36knzJyCkwuwN3LP6TgQeUQ85nVyO0BEwKeWGYqux6uaksS8NpAFFnn9X1HhhoG8e
+	QMykI96Qicc4DJ7oEka+GR/YjhGGfDkb68yOXZ5Dr+0fIlKPF3ocWGcx+dhZcb9IS7SYEv9WOw9
+	VY4DAdr99IwJN4Fu7V25wjwykfSNZKxDbpfA3FR6c0cedJwPne+H6T6P1EGw/ERQfLryjJopKPC
+	cE+hVg9L9QepisJMa0oUgD3vzduKVKtUHlqRVi1Os7Q==
+X-Google-Smtp-Source: AGHT+IE3/R7uBhgGgs72BU0Nb0I6mQ1Pqz+HJQVtJWBnKoXI4/6Lk7IwQRlB39FmuJjIJ7cxcTOOig==
+X-Received: by 2002:a05:622a:4105:b0:494:a4c2:57fd with SMTP id d75a77b69052e-494ae34b716mr271435681cf.9.1747760077698;
+        Tue, 20 May 2025 09:54:37 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0988e08sm73788126d6.125.2025.05.20.09.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 09:54:37 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B1FCE1200068;
+	Tue, 20 May 2025 12:54:36 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Tue, 20 May 2025 12:54:36 -0400
+X-ME-Sender: <xms:zLMsaCDDP1sjagN7Bv2LsfplGoy175g2u7ACYNNM54x92LIP31Qu1Q>
+    <xme:zLMsaMjw6gwA6gtiILRWojJv76bBYLZQBDSmHjbgeMYFyYorBKYAmnEhvm2THbCb9
+    d07zOSExjOJzts-nQ>
+X-ME-Received: <xmr:zLMsaFmNHPS4rIh7aLpiVoo1JuR5kGImDStbJXzdXjA6L7Yt4eItR3c5>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdejheculddtuddrgeefvddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghn
+    shhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtne
+    cusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggt
+    ugfgjgesthekrodttddtjeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunh
+    drfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeekiedujeefvddu
+    veekteevudffgfeuueellefgjeeuvdetteekvdegleegteetfeenucffohhmrghinhepsg
+    hoohhtlhhinhdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehjrghnnhhhsehgohhoghhlvgdrtghomhdprhgtphht
+    thhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopegsqhgvse
+    hgohhoghhlvgdrtghomhdprhgtphhtthhopeihuhhrhidrnhhorhhovhesghhmrghilhdr
+    tghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugiesrhgrshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvhhirhgv
+    shhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggrsehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgt
+    ohhm
+X-ME-Proxy: <xmx:zLMsaAyRFVikYgt91fCMFih8TJ6lG6V-uL3MyaPQ4_I5ySCBFsJIzA>
+    <xmx:zLMsaHRO0zyfF17cAwq3mXqrXOpeYjiF4nxgYEKSc0jMRfOwh9aJRg>
+    <xmx:zLMsaLY7Syqq7XnV5aRe_ANjG1YG_xG3DeY4r7Ey7977DJLiMIsgJw>
+    <xmx:zLMsaASCE-zyDX80lWsSooVJ7IMyu0l5sRyPhJQyB0cRG8WICuf8yw>
+    <xmx:zLMsaJDAfmfoc161jmtnvQQAVcwEXVVKF6bET2NMGwhWj276Jnwy5fz2>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 May 2025 12:54:35 -0400 (EDT)
+Date: Tue, 20 May 2025 09:54:33 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Jann Horn <jannh@google.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Burak Emir <bqe@google.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+Message-ID: <aCyzySveBPZCnpZI@Mac.home>
+References: <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com>
+ <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
+ <aCwRZlkBWekRmDg7@Mac.home>
+ <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
+ <aCx77cCum_b-IR4H@Mac.home>
+ <CAH5fLgjqj7binVaLDh7Pc7SVKDM-XrYDEDj7GYBX_MnjHgufFg@mail.gmail.com>
+ <aCyB4z23VP-3Hmor@Mac.home>
+ <CAG48ez32gxwdmQ63XWB8Dz4b5seH7tOhY0yREC=34ubTHZ5VOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,114 +132,143 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+In-Reply-To: <CAG48ez32gxwdmQ63XWB8Dz4b5seH7tOhY0yREC=34ubTHZ5VOg@mail.gmail.com>
 
-On Tue, May 20, 2025 at 09:07:05AM -0700, Rob Clark wrote:
-> On Tue, May 20, 2025 at 12:06 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Thu, May 15, 2025 at 12:56:38PM -0700, Rob Clark wrote:
-> > > On Thu, May 15, 2025 at 11:56 AM Danilo Krummrich <dakr@kernel.org> wrote:
+On Tue, May 20, 2025 at 05:55:47PM +0200, Jann Horn wrote:
+> On Tue, May 20, 2025 at 3:21 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > On Tue, May 20, 2025 at 06:05:52AM -0700, Alice Ryhl wrote:
+> > > On Tue, May 20, 2025 at 5:56 AM Boqun Feng <boqun.feng@gmail.com> wrote:
 > > > >
-> > > > On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
-> > > > > On Thu, May 15, 2025 at 10:30 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > > On Tue, May 20, 2025 at 05:42:51AM -0700, Alice Ryhl wrote:
+> > > > > On Mon, May 19, 2025 at 10:21 PM Boqun Feng <boqun.feng@gmail.com> wrote:
 > > > > > >
-> > > > > > (Cc: Boris)
+> > > > > > On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
+> > > > > > > On Mon, May 19, 2025 at 4:56 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
+> > > > > > > > > On Mon, May 19, 2025 at 6:20 PM Burak Emir <bqe@google.com> wrote:
+> > > > > > > > > > This is a port of the Binder data structure introduced in commit
+> > > > > > > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
+> > > > > > > > > > Rust.
+> > > > > > > > >
+> > > > > > > > > Stupid high-level side comment:
+> > > > > > > > >
+> > > > > > > > > That commit looks like it changed a simple linear rbtree scan (which
+> > > > > > > > > is O(n) with slow steps) into a bitmap thing. A more elegant option
+> > > > > > > > > might have been to use an augmented rbtree, reducing the O(n) rbtree
+> > > > > > > > > scan to an O(log n) rbtree lookup, just like how finding a free area
+> > > > > > > >
+> > > > > > > > I think RBTree::cursor_lower_bound() [1] does exactly what you said
+> > > > > > >
+> > > > > > > We need the smallest ID without a value, not the smallest ID in use.
+> > > > > > >
 > > > > > >
-> > > > > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
-> > > > > > > For some context, other drivers have the concept of a "synchronous"
-> > > > > > > VM_BIND ioctl which completes immediately, and drivers implement it by
-> > > > > > > waiting for the whole thing to finish before returning.
-> > > > > >
-> > > > > > Nouveau implements sync by issuing a normal async VM_BIND and subsequently
-> > > > > > waits for the out-fence synchronously.
+> > > > > > Ok, but it shouldn't be hard to write a Rust function that search that,
+> > > > > > right? My point was mostly the Rust rbtree binding can do O(log n)
+> > > > > > search. I have no idea about "even so, should we try something like Jann
+> > > > > > suggested". And I think your other reply basically says no.
 > > > > >
-> > > > > As Connor mentioned, we'd prefer it to be async rather than blocking,
-> > > > > in normal cases, otherwise with drm native context for using native
-> > > > > UMD in guest VM, you'd be blocking the single host/VMM virglrender
-> > > > > thread.
-> > > > >
-> > > > > The key is we want to keep it async in the normal cases, and not have
-> > > > > weird edge case CTS tests blow up from being _too_ async ;-)
+> > > > > We would need to store additional data in the r/b tree to know whether
+> > > > > to go left or right, so it would be somewhat tricky. We don't have an
 > > > >
-> > > > I really wonder why they don't blow up in Nouveau, which also support full
-> > > > asynchronous VM_BIND. Mind sharing which tests blow up? :)
+> > > > Hmm... I'm confused, I thought you can implement a search like that by
+> > > > doing what RBTree::raw_entry() does except that when Ordering::Equal you
+> > > > always go left or right (depending on whether you want to get an unused
+> > > > ID less or greater than a key value), i.e. you always search until you
+> > > > get an Vacant entry. Why do you need store additional data for that?
+> > > > Maybe I'm missing something here?
 > > >
-> > > Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buffer_size_2_24,
+> > > Let's say you're at the root node of an r/b tree, and you see that the
+> > > root node has id 17, the left node has id 8, and the right node has id
+> > > 25. Do you go left or right?
+> > >
 > >
-> > The test above is part of the smoke testing I do for nouveau, but I haven't seen
-> > such issues yet for nouveau.
+> > I went to check what commit 15d9da3f818c actually did and I understand
+> > what you mean now ;-) In your case, the rbtree cannot have nodes with
+> > the same key. If Jann can provide the O(log n) search that could help in
+> > this case, I'm happy to learn about it ;-)
 > 
-> nouveau is probably not using async binds for everything?  Or maybe
-> I'm just pointing to the wrong test.
-
-Let me double check later on.
-
-> > > but I might be mixing that up, I'd have to back out this patch and see
-> > > where things blow up, which would take many hours.
-> >
-> > Well, you said that you never had this issue with "real" workloads, but only
-> > with VK CTS, so I really think we should know what we are trying to fix here.
-> >
-> > We can't just add new generic infrastructure without reasonable and *well
-> > understood* justification.
+> Linux has the concept of an "augmented rbtree", where you can stuff
+> extra information into the rbtree to keep track of things like "how
+> big is the biggest gap between objects in this subtree". This is how
+> the MM subsystem used to find free space in the virtual address space
+> before the maple tree refactor, a complicated example is here:
 > 
-> What is not well understood about this?  We need to pre-allocate
-> memory that we likely don't need for pagetables.
+> finding a free region (by looking at vm_area_struct::rb_subtree_gap to
+> decide whether to go left or right; this is made complicated here
+> because they have more search constraints):
+> https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L1841
 > 
-> In the worst case, a large # of async PAGE_SIZE binds, you end up
-> needing to pre-allocate 3 pgtable pages (4 lvl pgtable) per one page
-> of mapping.  Queue up enough of those and you can explode your memory
-> usage.
-
-Well, the general principle how this can OOM is well understood, sure. What's
-not well understood is how we run in this case. I think we should also
-understand what test causes the issue and why other drivers are not affected
-(yet).
-
-> > > There definitely was one where I was seeing >5k VM_BIND jobs pile up,
-> > > so absolutely throttling like this is needed.
-> >
-> > I still don't understand why the kernel must throttle this? If userspace uses
-> > async VM_BIND, it obviously can't spam the kernel infinitely without running
-> > into an OOM case.
+> But that requires an "augmented rbtree" where the rbtree code calls
+> back into callbacks for updating the subtree gap; the MM code has its
+> gap update here:
+> https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L261
 > 
-> It is a valid question about whether the kernel or userspace should be
-> the one to do the throttling.
+
+I see. I was missing this part.
+
+> And associates that with VMA trees through this macro magic that would
+> probably be a terrible fit for Rust code:
+> https://elixir.bootlin.com/linux/v4.19.325/source/mm/mmap.c#L400
 > 
-> I went for doing it in the kernel because the kernel has better
-> knowledge of how much it needs to pre-allocate.
+
+Well, not sure that's true implementation-wise, I mean it's just
+function callbacks while you insert or erase nodes from rbtree, which
+could probably be described by a trait like:
+
+    pub trait RBTreeAugmented<K, V> {
+        fn compute(node: &Node<K, V, Self>) -> Self;
+    }
+
+    impl<K, V> RBTreeAugmented<K, V> for () {
+        fn compute(_node: &Node<K, V, Self>) -> Self {
+	    ()
+	}
+    }
+and we change the Node type into:
+
+    pub struct Node<K, V, A: RBTreeAugmented<K, V> = ()> 
+    {
+        links: bindings::rb_node,
+        key: K,
+        value: V,
+	augmented: A
+    }
+
+and _propagate() can be something like:
+
+   unsafe fn augmented_propagate<K, V, A: RBTreeAugmented<K, V>>(
+       mut node: *mut rb_node, stop: *mut rb_node
+   ) {
+       	while !ptr::eq(node, stop) {
+            let rbnode = unsafe { container_of!(node, Node<K, V, A>, links) }.cast_mut();
+	    let rbnode: &mut Node<K,V,A> = unsafe { &mut *rbnode };
+
+	    let new_augmented = A::compute(rbnode);
+
+	    if rbnode.aurmented == new_augmented {
+	        break;
+	    }
+		if (node->rbaugmented == augmented)			\
+			break;						\
+	    rbnode.augmented = augmented;				\
+
+	    node = rb_parent(node);
+	}
+   }
+
+probably works? However I guess we don't need to do that right now given
+Alice's point on xarray or maple tree.
+
+Regards,
+Boqun
+
+> As Alice said, this is probably not a great fit for Rust code. As she
+> said, an xarray or maple tree would have this kind of gap search
+> built-in, which would be nicer here. But if you're trying to do
+> insertions while holding your own outer spinlocks, I think they would
+> be hard (or impossible?) to use.
 > 
-> (There is also the side point, that this pre-allocated memory is not
-> charged to the calling process from a PoV of memory accounting.  So
-> with that in mind it seems like a good idea for the kernel to throttle
-> memory usage.)
-
-That's a very valid point, maybe we should investigate in the direction of
-addressing this, rather than trying to work around it in the scheduler, where we
-can only set an arbitrary credit limit.
-
-> > But let's assume we agree that we want to avoid that userspace can ever OOM itself
-> > through async VM_BIND, then the proposed solution seems wrong:
-> >
-> > Do we really want the driver developer to set an arbitrary boundary of a number
-> > of jobs that can be submitted before *async* VM_BIND blocks and becomes
-> > semi-sync?
-> >
-> > How do we choose this number of jobs? A very small number to be safe, which
-> > scales badly on powerful machines? A large number that scales well on powerful
-> > machines, but OOMs on weaker ones?
-> 
-> The way I am using it in msm, the credit amount and limit are in units
-> of pre-allocated pages in-flight.  I set the enqueue_credit_limit to
-> 1024 pages, once there are jobs queued up exceeding that limit, they
-> start blocking.
-> 
-> The number of _jobs_ is irrelevant, it is # of pre-alloc'd pages in flight.
-
-That doesn't make a difference for my question. How do you know 1024 pages is a
-good value? How do we scale for different machines with different capabilities?
-
-If you have a powerful machine with lots of memory, we might throttle userspace
-for no reason, no?
-
-If the machine has very limited resources, it might already be too much?
+> If you managed to avoid broad use of spinlocks, that might make it
+> much easier to use xarrays or maple trees (and that would also allow
+> you to make the bitmap API much simpler).
