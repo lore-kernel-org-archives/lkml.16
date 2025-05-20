@@ -1,127 +1,95 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C37248F46
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B67248F46;
+	Tue, 20 May 2025 16:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759481; cv=none; b=KKnp03u85TlG7o8p0vXOn5WfvLF7MKL9BWlSPQ5HgYs1Q4wB6sY4faoRN6K640f8XDVBY7jxEDUQwdKubo3eEYaKyC+kFT98lOMHrIAIyMKLaEw18dOvHUD/QX6nXjDYdNizpSZJf5ygH1SJiy3aM2MwTfHIL6UG2snbbYW5SSQ=
+	t=1747759492; cv=none; b=itZdPzwqVDKwZBXTty81f1ztG9JbixOWhhquf9lu3/optSlZ0EEn7pFBFAF+TGgri0XVtts+wk94g5eQYzYqF95N4sx3bXleZZpR7XWwntD2oh6ic7DFLLOJWWLVPR+IeB2bwme1ETPp66nwbHbsAkYX3TT6ADUoYdpwhGjUJNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759481; c=relaxed/simple;
-	bh=I842f8QC/KMfYaWpLg9cY6lpFSAzcGFG5grlUZY7DNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ceUVPct/PESKs788o/j5OoXiMnwCGErCCzFVJfkJCtsiznZ3kqcMHKnBrW1It3NSLRlBaghUpw8TjaMcCLQiu2XH7SLB+gZ6LyPEUHXg9W5ASAMlHTldUfex8OLMp6SrqqFhB4/bUv8nr1MMRFIkSGf4NQNmscT/sqeNAs84UAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KiEKW9Dm; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747759492; c=relaxed/simple;
+	bh=xWCsQzdrdiPokZKnGHhLi0nzidYVTPQvwDy4E6Ruzrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZCtfsk019pY7irAg9u/dOezRm+l/lO24rUISapwXhxb+JNBUfIEuSmsW9+s2tLuEQbrmGxRAskRWf+ao+dkD6/rKLWrWUK4z+SFTmitQpaIWXlZra2RfPlMxynS8ZI9LoH0P5ZCssmcGeZHdXyWkS07Rfd74PiQn+oxLBBcjMbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/FHzbIR; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KiEKW9Dm"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGeDsf018394
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c2Cr0Q3aujptwyPPP/18wEcr3RB2aPvaUVraUjgKeIo=; b=KiEKW9DmkbNJnmvr
-	vMjxlDtRo8r5fXRGGWzTBX04jtarGLosI/E+U2UD5kTdezwZwdfC6SeVORsmKP0X
-	suf+Xf6LM4UoZYqwNZ7n5/WKCS9wlQuYRQGAkKCCTc66pqOjPCaEBt+8jLCsIB1+
-	M1O9P1WnWhahyt/4WqEbjhFXwW65SRRCiogj47qj5vFid5XwMKc/nlM9wm4dVcT7
-	EEm1w/pQ94qv/gWowM+LfF97uuQD1mVWeBZi1BG8U7kufy887DNIUA6L9reb9FfE
-	BF/XJO2fEb2CAbXbsAhP/qAhoe0nDnTh0bMQAHa8Z2LkO6UlO4pJydCKu0x1kcXp
-	r8Cmnw==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9r0dm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8a8883437so7569196d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:44:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/FHzbIR"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-233b1e4376fso789215ad.0;
+        Tue, 20 May 2025 09:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747759490; x=1748364290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=raaMPey0rkHKajk8tyVYlWOb4mxfJ4ZQ+4vrv9/8SeA=;
+        b=B/FHzbIRlmLqUfp0Wgm7eYyKx0xWOtTNo0KaQxRKucEi499VEYvzDCD4AhHd+JfV9y
+         APOqpp/g/DiofdzI546kBqRcSs9DDGcHE22aybZmYbLjPz3ndGbndr9vbBqTaUmIu46X
+         z54LNcYWn3cJ+eFhVtdFb41/t9Rge5PcKOqc9dMs7G5vNBXDcUrG0tmeE3Tfir+/bG4W
+         +KHhvc44AfbTDimw1NsXc3+o3QzKUUyp312zQOLZMes94etIvBzlzDN2BJu4Asp3cUhR
+         /x8rauEdJ3YIcpDytcBeWkBRBISYMzs0FBBJ82JY+zHbDsHdFqAiT6fAY1uNc1LO/HmY
+         jI+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747759478; x=1748364278;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2Cr0Q3aujptwyPPP/18wEcr3RB2aPvaUVraUjgKeIo=;
-        b=jqBiSQovbs9tmSJkPvgmLAFzHq6edCvr8r9dJbJhJjhWwg/dQyeoujCEs1jGfg7cYJ
-         qeIKmgiioeZomyfsVzphdzsPMPg14/n5uovbmUVle999t1GQsGH/9CKn4gNj0X4/RPSx
-         Wt57DBRTvGpIwHPOd6eq2c5TUFVNP3cjeA3EqRF1v3ZNYvby/hl11U1OIA93s6nUK0+w
-         QyvHgrreb5N8EpII6M2Z/0sM5XnBNk+84gGI2IcimEugEsFkQVxNSO/CioUPUqfped3p
-         hUfhqTtVZZVgYD1HL2USph7PF0orYNRE9LXCY5rGgtpQvg2M6yzxZnkuRCsigL171/MK
-         L+cA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyLj5ZZWtCq4bhRH0g73THr/WarG71j5bbeGZ3Cnq5Ey0LzDSX1s6Cf6cv0y1+XR3VQqaLqo9Eokt5ZAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkUYE55sw7lDJg+jzll2pHuoOt4QA66W6lLB4g5B/wrCl8tTN6
-	Vqviu4J7mkahIoQPuMNsM2o4cMh2m9othvIftcMDQPb4d6s7m51ALkEhzcyZUfGQPHsP8vA6k2h
-	GgTY2mo7JXnhN9CWbyIQ8RQgRNChRwfczqJLO/YNbNSO+UDrzZ3/kBLAFPgLmU82hKrA=
-X-Gm-Gg: ASbGnctKojOyRicFUXqeGb7hA3T+amSo9bezxP4+HuJlGlZpsWoqpqnEZdCMOkXm51L
-	aqURtX13mB3JCqxYI8RoJYfM2zBdnmf91KtWUbT02Y0EKJPCpneV9UM00N0zUMeFnvV6bVO4eCv
-	FTRDuGNz/4uAxbtxF5EQLQaAT4KkgPxcSPcyWcisqRekzja3nrshu3YuZfYUlNWvHIryPyICMtj
-	aiWtFlkSyRVBP4tk/+rnFzGOihGuT+jMD9WAFTE0UlLKfbcXQjbuduLc+t9i+DWCrKdDQ3afjrK
-	+k6Y8wdG9Ppthn6NTVseObOQpzdYq/9zhP6boz2DS+IsWv346nK5o+OUr/U+ekJ8DQ==
-X-Received: by 2002:a05:6214:18f2:b0:6f8:b104:4186 with SMTP id 6a1803df08f44-6f8b10441bdmr82991726d6.2.1747759477861;
-        Tue, 20 May 2025 09:44:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE4a0OdI4aLpuBYrJMMu6xHS4MmAbVCMTTGLWKZDGXZ+g4jOZbXkvgeQMFRDEnmvpFkP5lQcw==
-X-Received: by 2002:a05:6214:18f2:b0:6f8:b104:4186 with SMTP id 6a1803df08f44-6f8b10441bdmr82991556d6.2.1747759477341;
-        Tue, 20 May 2025 09:44:37 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d442069sm762552866b.103.2025.05.20.09.44.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 09:44:36 -0700 (PDT)
-Message-ID: <6f12b7e6-5743-45ba-a425-029655096f5b@oss.qualcomm.com>
-Date: Tue, 20 May 2025 18:44:34 +0200
+        d=1e100.net; s=20230601; t=1747759490; x=1748364290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=raaMPey0rkHKajk8tyVYlWOb4mxfJ4ZQ+4vrv9/8SeA=;
+        b=WSACu6KnFUyBFAUgsAobWrLL3aEeQrfMGsqUIGdssTrAs7/uNYgRZXGCy50Ou6Ivrt
+         CkrVdmJR35p7OgVWwvYcjLQoHvSe1+wloh6B+8/aQejvhTSCS7EkylcOdQ0aT2xhGbww
+         Y+A5JLwe2xfETpiH2bDRsoS/Rs4Xk5hg+qzXSF3L4oalQLsMo1dk2tP50XUhw28IHWGA
+         O3i0jfLHaKTJkUwry4FcIeDihGQdGd2pVXWhTIrq6MU5RzU3JzzkMYG6hDM8Ysze+5Tx
+         +4KeLTTjLb9AfT0YlW4HIf0IKj5jHwfsFVrNL+YYWGEKIVoo7A7JhPetfUHPXjOVGmkf
+         nB3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWmQVtuoMlHjxB9vtlwW8oF9npLC2BLXywW3OIaZv1N8RzBx+JzxaCgAwmMbHwdJ4PVI7gqfQ+7izT1iCB6@vger.kernel.org, AJvYcCXOBemq+7inQYZl/ioBjq//EefoFvgQwQTlbtVpY8FV3pAkNgIl+upf4Ff+an3pfN+4WAJNKQ6HM0s6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlEamF15Yl9dymDKfrrdmCohf3rBu0v1pXPwINkzn+UIdMK+qr
+	fr4yLf0R67HvNugi5hA1AeZESW2yl62VbF8+62X3MAeVk9hEqedZejKQ
+X-Gm-Gg: ASbGncvhlFvVatsde4a3zZ1UgvWPnJNyxER4Qcvtj40hIOFndH8bgshfLYR1P79Kna8
+	tCTtNFc92neA5rSJuhdtvk9wxNQfrE3KqwE3B3sHZr1ksLiBdPGAr81GmsI9MUEcjVrN2ZDL7+5
+	Gbh2UYuly37fUDfbPKgONQtjB21wZ+YZxh7fY4pY9dYCSHn8dG06fXoTt5VAeorHvCxz4+4AXbx
+	LsRS3rFcJKJzLHgwj0UYCfZI3uuKT+6J69yDjnU7rAZxj6mKoPbZdd4fKXdbAC5ppPXvXzX/+Vj
+	80843b/GsJO1ylbJiRmEcVtTHYkGHC++vV889i0ihZF4NZ48Aw==
+X-Google-Smtp-Source: AGHT+IHNEJ2zAnt6MeP+t81APpuG8oTNngDxsuW7MvC7FQ43V9hR2igZnzg4OfilzwLB4OwAIV00xw==
+X-Received: by 2002:a17:902:e803:b0:22e:50f6:b95b with SMTP id d9443c01a7336-231d438b517mr258326255ad.11.1747759490279;
+        Tue, 20 May 2025 09:44:50 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-233abb99a06sm3548205ad.254.2025.05.20.09.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 09:44:49 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH 0/2] arm64: dts: qcom: Introduce Oneplus Pad Pro
+Date: Wed, 21 May 2025 00:42:06 +0800
+Message-ID: <20250520164208.516675-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
- headset codec, dmics)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250519-sm8750-audio-part-2-v2-0-5ac5afdf4ee2@linaro.org>
- <20250519-sm8750-audio-part-2-v2-2-5ac5afdf4ee2@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250519-sm8750-audio-part-2-v2-2-5ac5afdf4ee2@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: RidV3FKm5dZsbBRT7toC6E_NK6OhwU8X
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEzOSBTYWx0ZWRfX1fPJchTFqPuI
- j1eaKeLl7MyYKBtiikPHssegc1ZBIj++ySfeMmOQHXYsdTbTLbHvCjk1Ntw2NhwPCfaeYni+/su
- LUFpbWBRkebKskom+Rwt1CVT9mkJZcLjxfV41PxfSEnzkCZfeDLuxCsBNW47AXuskQTrRf2ZWb9
- 3EWzlpHues6Qa14wfz8Bq9hYtG0Ic4uyLFaHYtHGhv36gw7ZiyAebHBopAEDyZ5V9E4XwLvMwlm
- UE9cGpLci5WWBY0ACZK6/350K9Vkz3zzMspjlDwQbUjugLEuUX8kGMC3PZ+dk4HwGDikvxowuMY
- VqdQ+HZzwFxXkJFV06SAU9rSa5zuzKRNmnK+6vsK1RpLNduTgBrqinEXAvtuSw=
-X-Proofpoint-GUID: RidV3FKm5dZsbBRT7toC6E_NK6OhwU8X
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682cb177 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=er6kI1bek27KySCzKVEA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
- a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=910 bulkscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- phishscore=0 suspectscore=0 adultscore=0 malwarescore=0 classifier=spam
- authscore=0 authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505200139
+Content-Transfer-Encoding: 8bit
 
-On 5/19/25 11:54 AM, Krzysztof Kozlowski wrote:
-> Add device nodes for most of the sound support - WSA883x smart speakers,
-> WCD9395 audio codec (headset) and sound card - which allows sound
-> playback via speakers and recording via DMIC microphones.  Changes bring
-> necessary foundation for headset playback/recording via USB, but that
-> part is not yet ready.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
+platform. Its device codename is "caihong". These patches adds an
+initial devicetree for basic functionality.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Pengyu Luo (2):
+  dt-bindings: arm: qcom: Add Oneplus Pad Pro (caihong)
+  arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
 
-Konrad
+ .../devicetree/bindings/arm/qcom.yaml         |   1 +
+ .../boot/dts/qcom/sm8650-oneplus-caihong.dts  | 960 ++++++++++++++++++
+ 2 files changed, 961 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
+
+-- 
+2.49.0
+
