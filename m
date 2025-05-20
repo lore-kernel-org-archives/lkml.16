@@ -1,201 +1,315 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57B627F16F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F01267F41;
+	Tue, 20 May 2025 12:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747743015; cv=none; b=TiWPykISX/859JSuy2XlqemDG8Ce3HFgZZylGP/A1oygd+7MEQ55vQ3ME5XPofRyvXi5MBch64uBRaayK+KHZNuUWL1ex/YdmaW2Yh/gDJJ00SmucGMkPVZpEBRQH/SRsSyPKx67vQf/Bp4UoqINi/eb3cMrXhoWqakY673bIMA=
+	t=1747743097; cv=none; b=puiOWp0poBjr59yngriDnfSmBMfaIxpoayPdPUC7CH5TvGQjC0GLih7MNU28x452Mn5CGl4cMiFEkqwqPM3bt84r8+BqrKo3SDTBZgYw8cW6WnW1GJxL1pdoCuT14I0TrGUpKZ0Syx2bTt8JmvQ4BxgohX+YWkvd6UibTE+Q86A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747743015; c=relaxed/simple;
-	bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BOAAgckq/uMjsipBqPq+tfTlmnmF45SL9ukkJ0NxFzi70iuqy+zLaBD3ZNjFDDQ3mkJ3PIAzSHFEUabq+zP59jRnatqL0RfiKPQ4LSniswmhNh6KbWClcjqeN8dVDf7k1MMKjwTEy29swYSUh1DHvgpVCDtMbNl5OZ4hkGj8lbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IOM/kXfm; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747743097; c=relaxed/simple;
+	bh=EHSvRNvgm+GaXbq1NtOZOkHkxxBeWpFGycrSmffCy+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dF9Wre/FIiyPKuz4YEcVo51Ad7zMu8smdazwJ+5+8GBreS0b9QFBV4cpcaVgwO2z/Fm7V7XQH5N4N7s/0o/VzYpIppa4fFOvm6vNwx1fil1kKaI/Y0Artcoe5KQOjXqU7P82RYkvGBXgnjKd2IqEI1Mf5GJ9YWdNMiQg4fqibhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ccpco1co; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IOM/kXfm"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e73e9e18556so5347011276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747743013; x=1748347813; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
-        b=IOM/kXfmW4pkn61r9H8loQfT2CbPDiAAD/ujHC3zQ7OdBoj4iptjgvsqvHiR2/7YEg
-         x8PWrA2R8Jt9zezDCB55191cZ5fjajr89DfvAtPInXFc78rkbJSjQdJ8I+5ONwvzIFrT
-         VCph7SVpRHxxYNFY886U2MQXA+EFet+5VWYxsaZSfIK3KjCoftRf1KOYztMGP46V1ilS
-         KeMUXg6btkhZ3vslCloTY/JlwFEu3606tVNA1f8Klq+9zGb926sdyZDlJoOkyz3OjLH2
-         AnK+NNN/7L62PtCHgK2cZmb5QXxa4baIAdBdvTGRUaNA9h5uSqhqdoAfAYJhI87JHO6u
-         O0BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747743013; x=1748347813;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
-        b=ndqlnmPGvHBFcio4IpbsGgaej+VQbkayEQFjUiKF+JbvO9X4OIraOZAIO3h0jRNhbm
-         n6FWUasnM4Dz30gwHXlSqOvvW/cJmS7hw6JYx4aOerpMUPlGqY201lskn51wWQczKFX9
-         h4D2BYtcIxuuvqU5x2R8OThjfFa6wokJHAJ7lARaLv5EQjh5gLVMpY7AwxLQvymmoj2w
-         M0J670FZKPRR+TWSsERujDnkUtEMH3VW6RjVJvdmn55tyBOcfwrLsAm0GZNratZCluqy
-         +IvPKUuqe6hgQGq8SEMRVL2uMqBNtEDDo5aAiiH97ZoEFhmHcBO9Z6BMzZ6K2Lo2VdxC
-         hd2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUbn7frkMBDBTyIba09r9DUl8Cr96kJ/C5k2AiPsamewLKM9Z9u0ijV/A9HcGHDM+Dp5111SufPwcuIdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvSZXJm8KEd7ve9Wu5BUd7GNhEvR9z3nVpJs3GJMHJN/U8W6BG
-	fyP6WhtuQfe4y3OPSZTcGeyEMFTwJ1haE33SFEkR3qaAd5HvGQYSYB1Q4NKKygJyzAe994kaRVC
-	HK0mUo6xmpaOOIhgYSZ4T/w6nW1z3XnqmzRxhGHRBzA==
-X-Gm-Gg: ASbGncs31ViwmrTaVfRjDRzgte42hpOGIdF8I08ZZ1Mcd6qezCfw3JV8VRuS6V37SVi
-	QLa4BSQnI4bqKWhOvq0lbriqMeSniB4zP8YIng2OABV4x5Nq6kp269o+dnH1fFN/fQGspJruMUa
-	PdjhxvsE67Vp2N40FyQnCgwPY4l1QVLA7hSQ==
-X-Google-Smtp-Source: AGHT+IEb2zwt9aalfZhKo4S79q1t9OvpKzt7oCToAtr/TuLcXSK8xWk48UxIJViQ+sFnBt6vJsguUpP0RMjJ0GKqQgA=
-X-Received: by 2002:a05:6902:c02:b0:e7a:3d4f:6355 with SMTP id
- 3f1490d57ef6-e7b4f87732emr26855350276.19.1747743012777; Tue, 20 May 2025
- 05:10:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ccpco1co"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747743095; x=1779279095;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EHSvRNvgm+GaXbq1NtOZOkHkxxBeWpFGycrSmffCy+g=;
+  b=Ccpco1co7VwyRno66kxjwIntJhemTnOM1B5J7V8/vNEsO720ydOegrsr
+   AFPZ9mp5ok/AmIIyxVKPsWPcsb0zXLmRY5cEFAh8WlDeUNniZYFfQdgMZ
+   +RvEUQcDyDp3mQdtZaEZEjHxrAx6QLlEcBh5PLRxMbPNHS7xECcvfM569
+   jASe1R+S0+DpJTO9sJplZHm91Q/9IZr8W4hGFl6e2maK/aVekXcl4NcTX
+   7sIeU7r9GKZAOJxHpy5nJ7e7wKvYPhdLFVt7TlmxFQQXxO023Toq8hH3+
+   SquLmWgKAox5CGnTbyj6VxY3I4hp6eTRNg5uKW2CuvznVyfnB0RN+T87v
+   A==;
+X-CSE-ConnectionGUID: OKcrrkIYSw2m1m22+TgB6A==
+X-CSE-MsgGUID: 4tfQjVklQSmIANOrYOP0zg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="75075187"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="75075187"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 05:11:34 -0700
+X-CSE-ConnectionGUID: lf+5YtciTJapDKPzB3o74w==
+X-CSE-MsgGUID: 6ODpm6GhQSiKKHgA6g363Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="162976147"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 20 May 2025 05:11:32 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHLog-000MYa-06;
+	Tue, 20 May 2025 12:11:30 +0000
+Date: Tue, 20 May 2025 20:10:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kassey Li <quic_yingangl@quicinc.com>, rostedt@goodmis.org,
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	quic_yingangl@quicinc.com
+Subject: Re: [PATCH v3] scsi: trace: change the rtn log in string
+Message-ID: <202505201948.7kMKhg6W-lkp@intel.com>
+References: <20250520010405.3844511-1-quic_yingangl@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
- <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
- <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev> <20250330163129.02f24afb@jic23-huawei>
- <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev> <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
- <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
- <c3a2950a-17ff-444a-bee7-af5e7e10e2bf@tuxon.dev> <CAPDyKFozR4qDq4mzcZBK-LcoPf=fGyuJTXwdt=Ey+_DcQOAp0g@mail.gmail.com>
- <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
-In-Reply-To: <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 20 May 2025 14:09:36 +0200
-X-Gm-Features: AX0GCFtcVErlvFZx1FIEgTgFELOf8mwizDWzHsBg11TTKOgl1oY6699W9dYY-yo
-Message-ID: <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
-Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
- probe resources
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jonathan Cameron <jic23@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, bhelgaas@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520010405.3844511-1-quic_yingangl@quicinc.com>
 
-[...]
+Hi Kassey,
 
-> > > >>>>>
-> > > >>>>
-> > > >>>> Rafael,
-> > > >>>>
-> > > >>>> Greg suggested we ask for your input on the right option:
-> > > >>>>
-> > > >>>> https://lore.kernel.org/all/2025032703-genre-excitable-9473@gregkh/
-> > > >>>> (that thread has the other option).
-> > > >>>
-> > > >>> Can you please let us know your opinion on this?
-> > > >> Can you please let us know if you have any suggestions for this?
-> > > >
-> > > > It's been a while since I looked at this. Although as I understand it,
-> > > > the main issue comes from using devm_pm_runtime_enable().
-> > >
-> > > Yes, it comes from the usage of devm_pm_runtime_enable() in drivers and the
-> > > dev_pm_domain_detach() call in platform_remove() right after calling
-> > > driver's remove function.
-> >
-> > Okay.
->
-> This is not the root of the problem though. There is nothing really
-> special about power domain and runtime power management. The root of the
-> problem is that current code violates the order of releasing resources
-> by mixing devm- and normal resource management together. Usually it is
-> individual driver's fault, but in this case it is bus code that uses the
-> manual release (dev_om_domain_detach) that violates the "release in
-> opposite order to acquisition" rule.
+kernel test robot noticed the following build warnings:
 
-As I said before, runtime PM is not a regular resource, but a
-behaviour that we turn on/off for a device. Enabling and disabling
-runtime PM needs to be managed more carefully in my opinion.
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on jejb-scsi/for-next mkp-scsi/for-next linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-For example, even if the order is made correctly, suppose a driver's
-->remove() callback completes by turning off the resources for its
-device and leaves runtime PM enabled, as it relies on devres to do it
-some point later. Beyond this point, nothing would prevent userspace
-for runtime resuming/suspending the device via sysfs. I would be quite
-worried if that happens as it certainly would lead to undefined
-behaviour.
+url:    https://github.com/intel-lab-lkp/linux/commits/Kassey-Li/scsi-trace-change-the-rtn-log-in-string/20250520-090745
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250520010405.3844511-1-quic_yingangl%40quicinc.com
+patch subject: [PATCH v3] scsi: trace: change the rtn log in string
+config: riscv-randconfig-002-20250520 (https://download.01.org/0day-ci/archive/20250520/202505201948.7kMKhg6W-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201948.7kMKhg6W-lkp@intel.com/reproduce)
 
->
-> >
-> > >
-> > > On the platform I experienced issues with, the dev_pm_domain_detach() drops
-> > > the clocks from the device power domain and any subsequent PM runtime
-> > > resume calls (that may happen in the devres cleanup phase) have no effect
-> > > on enabling the clocks. If driver has functions registered (e.g. through
-> > > devm_add_action_or_reset()), or driver specific runtime PM functions that
-> > > access directly registers in the devres cleanup phase this leads to system
-> > > aborts.
-> >
-> > So if you move away from using devm_pm_runtime_enable() things would
-> > be easier to manage and there is no additional new devres-management
-> > needed.
->
-> How exactly will it improve the situation? You still need to make sure
-> that you are not disabling things out of the order. You simply moving
-> the complexity to the driver, essentially forbidding it (and any other
-> driver on platform bus) from using any devm APIs.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505201948.7kMKhg6W-lkp@intel.com/
 
-The driver can still use the devres APIs to "get" all resources and
-then rely on devres to "put" them. There is nothing that prevents
-that, right?
+All warnings (new ones prefixed by >>):
 
-Or maybe I didn't understand the problem correctly?
+   In file included from drivers/scsi/scsi.c:73:
+   In file included from include/trace/events/scsi.h:358:
+   In file included from include/trace/define_trace.h:132:
+   In file included from include/trace/trace_events.h:256:
+   include/trace/events/scsi.h:256:5: error: call to undeclared function 'show_rtn_type'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     256 |                   show_rtn_type(__entry->rtn)
+         |                   ^
+>> include/trace/events/scsi.h:256:5: warning: format specifies type 'char *' but the argument has type 'int' [-Wformat]
+     209 |                 __entry->prot_op        = scsi_get_prot_op(cmd);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     210 |                 memcpy(__get_dynamic_array(cmnd), cmd->cmnd, cmd->cmd_len);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     211 |         ),
+         |         ~~
+     212 | 
+     213 |         TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     214 |                   " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     215 |                   " rtn=%s",
+         |                   ~~~~~~~~~~
+         |                         %d
+     216 |                   __entry->host_no, __entry->channel, __entry->id,
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     217 |                   __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     218 |                   show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     219 |                   __entry->scheduler_tag, show_opcode_name(__entry->opcode),
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     220 |                   __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     221 |                   __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
+         |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     222 |                   show_rtn_type(__entry->rtn)
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+     223 |           )
+         |           ~
+     224 | );
+         | ~
+   include/trace/stages/stage3_trace_output.h:9:43: note: expanded from macro 'TP_printk'
+       9 | #define TP_printk(fmt, args...) fmt "\n", args
+         |                                 ~~~       ^
+   include/trace/trace_events.h:45:16: note: expanded from macro 'TRACE_EVENT'
+      40 |         DECLARE_EVENT_CLASS(name,                              \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      41 |                              PARAMS(proto),                    \
+         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      42 |                              PARAMS(args),                     \
+         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      43 |                              PARAMS(tstruct),                  \
+         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      44 |                              PARAMS(assign),                   \
+         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      45 |                              PARAMS(print));                   \
+         |                              ~~~~~~~^~~~~~~
+   include/linux/tracepoint.h:139:25: note: expanded from macro 'PARAMS'
+     139 | #define PARAMS(args...) args
+         |                         ^~~~
+   include/trace/trace_events.h:219:27: note: expanded from macro 'DECLARE_EVENT_CLASS'
+     219 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   1 warning and 1 error generated.
 
->
-> >
-> > >
-> > >
-> > > >
-> > > > As I have tried to argue before, I think devm_pm_runtime_enable()
-> > > > should *not* be used. Not here, not at all. Runtime PM isn't like any
-> > > > other resources that we fetch/release. Instead, it's a behaviour that
-> > > > you turn on and off, which needs to be managed more carefully, rather
-> > > > than relying on fetch/release ordering from devres.
->
-> I disagree. It is a resource that you turn on and off, same as clocks,
-> regulators, interrupts, etc. We manage those during lifetime of the
-> device, disable them when going into low power mode/suspend, reenable
-> them upon resume, may disable and reenable them for other reasons.
->
-> PM is not any more special here. As long as you keep the proper order of
-> operations it works as well.
 
-How would you solve the issue I pointed out above?
+vim +256 include/trace/events/scsi.h
 
->
-> > > >
-> > > > That said, I would convert the driver to use pm_runtime_enable() and
-> > > > pm_runtime_disable() instead.
-> > >
-> > > I've tried this approach previously but it resulted in more complicated
-> > > code and thus, Jonathan wasn't happy with it [1].
-> >
-> > I understand that you have been trying to move forward to address
-> > people's opinions. It's not always easy to keep everybody happy. :-)
-> >
-> > That said, I still think this is the most viable option as it's how
-> > the vast majority of drivers do it today. A few lines of additional
-> > code shouldn't really be a big problem in my opinion.
->
-> Have you tried making such change? Again, you will need to abandon use
-> of most other devm APIs so that you keep the order of releasing
-> resources. The only devm that you can still use is devm_k*alloc(), the
-> rest has to be converted into unmanaged.
+   210	
+   211		TP_PROTO(struct scsi_cmnd *cmd, int rtn),
+   212	
+   213		TP_ARGS(cmd, rtn),
+   214	
+   215		TP_STRUCT__entry(
+   216			__field( unsigned int,	host_no	)
+   217			__field( unsigned int,	channel	)
+   218			__field( unsigned int,	id	)
+   219			__field( unsigned int,	lun	)
+   220			__field( int,		rtn	)
+   221			__field( unsigned int,	opcode	)
+   222			__field( unsigned int,	cmd_len )
+   223			__field( int,	driver_tag)
+   224			__field( int,	scheduler_tag)
+   225			__field( unsigned int,	data_sglen )
+   226			__field( unsigned int,	prot_sglen )
+   227			__field( unsigned char,	prot_op )
+   228			__dynamic_array(unsigned char,	cmnd, cmd->cmd_len)
+   229		),
+   230	
+   231		TP_fast_assign(
+   232			__entry->host_no	= cmd->device->host->host_no;
+   233			__entry->channel	= cmd->device->channel;
+   234			__entry->id		= cmd->device->id;
+   235			__entry->lun		= cmd->device->lun;
+   236			__entry->rtn		= rtn;
+   237			__entry->opcode		= cmd->cmnd[0];
+   238			__entry->cmd_len	= cmd->cmd_len;
+   239			__entry->driver_tag	= scsi_cmd_to_rq(cmd)->tag;
+   240			__entry->scheduler_tag	= scsi_cmd_to_rq(cmd)->internal_tag;
+   241			__entry->data_sglen	= scsi_sg_count(cmd);
+   242			__entry->prot_sglen	= scsi_prot_sg_count(cmd);
+   243			__entry->prot_op	= scsi_get_prot_op(cmd);
+   244			memcpy(__get_dynamic_array(cmnd), cmd->cmnd, cmd->cmd_len);
+   245		),
+   246	
+   247		TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
+   248			  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
+   249			  " rtn=%s",
+   250			  __entry->host_no, __entry->channel, __entry->id,
+   251			  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+   252			  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+   253			  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
+   254			  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
+   255			  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
+ > 256			  show_rtn_type(__entry->rtn)
+   257		  )
+   258	);
+   259	
+   260	DECLARE_EVENT_CLASS(scsi_cmd_done_timeout_template,
+   261	
+   262		TP_PROTO(struct scsi_cmnd *cmd),
+   263	
+   264		TP_ARGS(cmd),
+   265	
+   266		TP_STRUCT__entry(
+   267			__field( unsigned int,	host_no	)
+   268			__field( unsigned int,	channel	)
+   269			__field( unsigned int,	id	)
+   270			__field( unsigned int,	lun	)
+   271			__field( int,		result	)
+   272			__field( unsigned int,	opcode	)
+   273			__field( unsigned int,	cmd_len )
+   274			__field( int,	driver_tag)
+   275			__field( int,	scheduler_tag)
+   276			__field( unsigned int,	data_sglen )
+   277			__field( unsigned int,	prot_sglen )
+   278			__field( unsigned char,	prot_op )
+   279			__dynamic_array(unsigned char,	cmnd, cmd->cmd_len)
+   280			__field( u8, sense_key )
+   281			__field( u8, asc )
+   282			__field( u8, ascq )
+   283		),
+   284	
+   285		TP_fast_assign(
+   286			struct scsi_sense_hdr sshdr;
+   287	
+   288			__entry->host_no	= cmd->device->host->host_no;
+   289			__entry->channel	= cmd->device->channel;
+   290			__entry->id		= cmd->device->id;
+   291			__entry->lun		= cmd->device->lun;
+   292			__entry->result		= cmd->result;
+   293			__entry->opcode		= cmd->cmnd[0];
+   294			__entry->cmd_len	= cmd->cmd_len;
+   295			__entry->driver_tag	= scsi_cmd_to_rq(cmd)->tag;
+   296			__entry->scheduler_tag	= scsi_cmd_to_rq(cmd)->internal_tag;
+   297			__entry->data_sglen	= scsi_sg_count(cmd);
+   298			__entry->prot_sglen	= scsi_prot_sg_count(cmd);
+   299			__entry->prot_op	= scsi_get_prot_op(cmd);
+   300			memcpy(__get_dynamic_array(cmnd), cmd->cmnd, cmd->cmd_len);
+   301			if (cmd->sense_buffer && SCSI_SENSE_VALID(cmd) &&
+   302			    scsi_command_normalize_sense(cmd, &sshdr)) {
+   303				__entry->sense_key = sshdr.sense_key;
+   304				__entry->asc = sshdr.asc;
+   305				__entry->ascq = sshdr.ascq;
+   306			} else {
+   307				__entry->sense_key = 0;
+   308				__entry->asc = 0;
+   309				__entry->ascq = 0;
+   310			}
+   311		),
+   312	
+   313		TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u " \
+   314			  "prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s) " \
+   315			  "result=(driver=%s host=%s message=%s status=%s) "
+   316			  "sense=(key=%#x asc=%#x ascq=%#x)",
+   317			  __entry->host_no, __entry->channel, __entry->id,
+   318			  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+   319			  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+   320			  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
+   321			  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
+   322			  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
+   323			  "DRIVER_OK",
+   324			  show_hostbyte_name(((__entry->result) >> 16) & 0xff),
+   325			  "COMMAND_COMPLETE",
+   326			  show_statusbyte_name(__entry->result & 0xff),
+   327			  __entry->sense_key, __entry->asc, __entry->ascq)
+   328	);
+   329	
+   330	DEFINE_EVENT(scsi_cmd_done_timeout_template, scsi_dispatch_cmd_done,
+   331		     TP_PROTO(struct scsi_cmnd *cmd),
+   332		     TP_ARGS(cmd));
+   333	
+   334	DEFINE_EVENT(scsi_cmd_done_timeout_template, scsi_dispatch_cmd_timeout,
+   335		     TP_PROTO(struct scsi_cmnd *cmd),
+   336		     TP_ARGS(cmd));
+   337	
+   338	TRACE_EVENT(scsi_eh_wakeup,
+   339	
+   340		TP_PROTO(struct Scsi_Host *shost),
+   341	
+   342		TP_ARGS(shost),
+   343	
+   344		TP_STRUCT__entry(
+   345			__field( unsigned int,	host_no	)
+   346		),
+   347	
+   348		TP_fast_assign(
+   349			__entry->host_no	= shost->host_no;
+   350		),
+   351	
+   352		TP_printk("host_no=%u", __entry->host_no)
+   353	);
+   354	
+   355	#endif /*  _TRACE_SCSI_H */
+   356	
+   357	/* This part must be outside protection */
+ > 358	#include <trace/define_trace.h>
 
-I guess I need to take a stab at this particular use case.
-
-Looking closer, could it be that it's really the combination of
-turning on/off resources using devres (not just get/put if them) like
-clocks - and using devm_pm_runtime_enable()?
-
-Kind regards
-Uffe
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
