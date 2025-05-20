@@ -1,69 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1592C1D5151;
-	Tue, 20 May 2025 21:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5198B24EAAA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778242; cv=none; b=bap9x2omxU4/3l5iaUI/xJEdMLFjBN8OerSsU7UOs2TVxQYMxAeBU3Z1PlO1pAPwwXKHbvZyfIy9hZOHEnAv66UHfSg34R/YHitRvS8/R6m/rts7jUz5zQTeI2nSGFBzLlXlSybY7fwKAoTSI8HZW/Cl6GpURbM3PxRPWGoXXlc=
+	t=1747778267; cv=none; b=n+4GOJxlr+hRuFHxNcTrZ4cY1VyAuEShpJbK4jH9AWnmDl8XN8XM8uG35MfWtJF7NpbjdDDai6ClvmGNrwSIHWL8qiqET2FOE5H8e9+xcd2Q7qrhuMmvJUMn1JqBhU/8gqNSGuqKLCZxSu+K48/syhk6sOroEHc+uWzUeLzWQoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778242; c=relaxed/simple;
-	bh=YM7zg5B1XkibEJYwUKSvC0tGcTbyjppvYX0Ml+H0CKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=px4vmRsGFKdnzhgq5ERgCzOXBQaRC5ftHru/eb2OcT9z4NOXDtNmLHvJYyOIul51V1vztaCNgZexxWiTILLVmY4hwm0cFnrjV0tgf0dsS2Ae6hwBhP1UkTSiCn/enfZxESSKauBQ7tdfObi3zwdqKyb/mf+8LXNuhXDfro+ch7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RB/SZUt/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747778267; c=relaxed/simple;
+	bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dIQHvB39Spja3CdxhGK1u66iUBJzl9kPef9WDIUUyq+IgVt07TWNQKRLYyuv6stDaFBuVKIXLQ6nhth00IC1Y6ho13ArUxNSYhMlH2WEsGnDpznlIv7hccUNq4uh/y42o/31t1WRu8j1gu0HPvzUHgh/iajNMNL0dZtJ1JSFKzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XKTORxvI; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RB/SZUt/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F82C4CEE9;
-	Tue, 20 May 2025 21:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747778238;
-	bh=YM7zg5B1XkibEJYwUKSvC0tGcTbyjppvYX0Ml+H0CKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RB/SZUt/mF4diWCFB2CONiTeGaJGaG/Tewd3Hm+t/tVETrZ/cfFnYjPnG+a3RqNM+
-	 q85efoYCQdlQXMNFcTMMpCombnOF3xkCHIOFWua7WUUDzwZF0y3a4LdktflgCYhYKv
-	 pv56BHQDF8DzlkB07j55tUH1jIZCGWj/AB3b6xDOLV2hQMhloCKYCdcadZZAMcFsxq
-	 Us118u19BIYcpOqrSS9q31afRLwRtFojgJRiHdH1ONm04lAiID9ND1Ser/q9G0kXtd
-	 4dBgXM5BOEqTiQEpE7bGag9D5CRM2R0nW0EEeTlgfejrNFNIkBU3Guv0mAs9ztM0M+
-	 +1BV3o478amTA==
-Date: Tue, 20 May 2025 23:57:13 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Khalil Blaiech <kblaiech@nvidia.com>, Asmaa Mnebhi <asmaa@nvidia.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: mlxbf: avoid 64-bit division
-Message-ID: <amrhua2siuph5y3hsxe7domnypcdjfjah5zkmrzcxig5dbmquv@lghx7oo33bo3>
-References: <20250520152600.1975628-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XKTORxvI"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32805a565e6so60124121fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747778263; x=1748383063; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
+        b=XKTORxvIwDcLLfX+7R94X7uuTL8r+zFux/DwH7e2SdzbFWzRiZmRdbfCF7COc0o1jv
+         tRISnZLImzoSKiHxBbvW40hryXpw4sjys7uHLHYrWqN/pQHhJZ746mE4c1h4B8GH8oml
+         tWQGGbVC3gHKR+nCoBVx2z6on8DIn1KOMfwyMlyMD6+nZCmW41Ek3Vff/+YakYOxDwBD
+         v/4B20LaTSY0mp+UBAR1xiObjIHTdwcnxL4rrkFtNrU4ADsPAKk8p7O8ORpNMcNFQmca
+         FiCbuLnxTJjjszaI9S9szY392c12uUCI3ROtfaUXg7A3oCabI/Nrpj4x6dr9BUGWtm4t
+         Klmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747778263; x=1748383063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bHvnk6eJiZC4DTGMLSqijxExjKpOHRj4wKmfj14AumI=;
+        b=cmCOpL3vYoCtuSVB4GfWLq5trykJyTgOYavLPmOtDswjTxd2eLlZSj442w5cAcKMkp
+         3utRraJIR0GQWROKhlFR/LiQL7o1YQ0dKMeoINO96gzsDW8RWoRNjrzytCEZLWfbE8xk
+         gMUThzn4uBtOvYkU0x+3cszolqYZtP23c32A4nOFnx7jxaA231y2BpV4AQJA96n1TYSa
+         8fU6S8EIF9mg67mlRhAM2ptQb0df+lztLcScAoioRup1haM71k4aMno+Md/cHVd9B2Fi
+         zszDROmsDh6aK++H2YmkMPVUnQjPicNopjoC3vcxbU00mfCuHrtpyBJelaPtQIHftJkR
+         YASA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWsyNrrIRLZTgC8ry8BPR1fbXL4T8sa2LA3Qf/f1z0wZEiBZWJMPw2FtBRRvqNrTev7XE82BIBrKSpSo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2W4Tvd0hExvmTzb9l3nOH3UVVFHUh/qCtCycfFHJxjycLgxkF
+	4duSMub25AnQK+QDc0RF1YReMMXwXIOzGxG4CdJUiP4BcK8t2c3spIwHpPlp16JguIEnCHEtK4P
+	FKsgBsE8GLHCaj0ZwRtQAyZjfXkhkyegUtvgEDgUecQ==
+X-Gm-Gg: ASbGncv5AfSjMflnSdl6FVJ/PxH3rCvyckL+FrtQJfql9JxdAnAvtY3XkMqd0InR2pM
+	o8S7KK6If4FuMVZry1z7rLEfnbSG+tMh77wX81oxwKV8nyv8zkZy0wk3bgkB9uwnxw3XVEDoPUp
+	J6RWI6yFJSj3uE/xOaJgHVLK6yUTjosz3+
+X-Google-Smtp-Source: AGHT+IFzz0NXs8cF08Snmi4Ha7S7U5h0KKvjptJb+slPp5Gi4FWC7Nsw049EmovcMdDEvihhptYlSs6FgkwmCbzFvc0=
+X-Received: by 2002:a05:651c:54b:b0:329:1550:1446 with SMTP id
+ 38308e7fff4ca-329155015ccmr33138651fa.0.1747778263381; Tue, 20 May 2025
+ 14:57:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520152600.1975628-1-arnd@kernel.org>
+References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
+In-Reply-To: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 20 May 2025 23:57:32 +0200
+X-Gm-Features: AX0GCFvwSq-oMiFu75DMDv5s_mCNJqSxwG-LnpvLIXP8m8Y6ivyc6Hrx1bC20zQ
+Message-ID: <CACRpkdb4OeD_yaUsGJ9Ugz3LZTCMdz1hbH-cX__ixEPr3Snd_w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add 'ngpios' and 'gpio-reserved-ranges' for
+ vf610-gpio driver
+To: Haibo Chen <haibo.chen@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd,
+On Mon, May 19, 2025 at 8:01=E2=80=AFAM Haibo Chen <haibo.chen@nxp.com> wro=
+te:
 
-On Tue, May 20, 2025 at 05:25:45PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The 64-bit division in mlxbf_i2c_get_ticks() causes link failures
-> when compile-testing on 32-bit machines:
-> 
-> ERROR: modpost: "__udivdi3" [drivers/i2c/busses/i2c-mlxbf.ko] undefined!
-> 
-> Change this to a div_u64(), which should replace the constant division
-> with a a multiply/shift combination in the mlxbf_i2c_get_ticks().
-> 
-> The frequency calculation functions require a slow library call but
-> should be used much rarer.
-> 
-> Fixes: 9c6c6fa671f9 ("i2c: mlxbf: Allow build with COMPILE_TEST")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Not all GPIO ports have 32 pads, so add 'ngpios' property to specify
+> the number. This can save some memory when alloc bitmap for GPIO,
+> besides GPIO tools like gpioinfo will show the correct information.
+>
+> Some GPIO ports even more special, e.g. GPIO7 on imx94, it only support
+> IO0~IO9 and IO16~IO27, so add 'gpio-reserved-ranges' property.
+>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-merged to i2c/i2c-host.
+The series:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks,
-Andi
+Yours,
+Linus Walleij
