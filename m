@@ -1,190 +1,281 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721CB25F7B4;
-	Tue, 20 May 2025 22:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51D71FDE02
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747780307; cv=none; b=dRV8Fg57x2GnHPWEmEIUWH1J3WH63dzr3al/K40asOppmsR2hjRZntSRDAdDYAwPhQBRjDYxvtGVioyCPsoynur9pno5aG+4hU7hvwlHAosKESEfGpTMW2ou+s5D5Uqmko3J9zmT11L3zGtkladw5P4p4Xp/XCQN1jVQ3VtXyL0=
+	t=1747780430; cv=none; b=X8Su6G1p9Osxn6khQ8qwWSRlTyhgibVspMirPQFSIfb4guAG1WfXbomoqE6165+y39i29VnbqeUSBSobS/qyX44phRmuXnN8jkK08zgOXLe5LUmdcEdIV5zEtV1lGXqEgI1AxZgnmEhWBTm4rrH8/I6t3mvxkX7zpw3g/7MDedI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747780307; c=relaxed/simple;
-	bh=4M2YWpO1US5cekurRighr1N0tBMWxvV+4CgHP8/lknk=;
+	s=arc-20240116; t=1747780430; c=relaxed/simple;
+	bh=gXVaSL6GGIy2fOds4Afx+/UYBW/wJ5R6ZupRPmys638=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gIgxnl2WtuG3CW9Bt2sMhBEPUlHgTK+zlmka52e/aoXCdvU0E/gJ3SiMuNP1pRUiqiEMdNd3NFMLMgRCdBa0ZiY82zBaIO+z+ZEO1Oo4BZe8NuIXiMhjnEX2qheOQ/XDwlRsEShTqkvm1MCYQLPw+tqwjtm93Eog3YTmlkwJzpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCrUKpsi; arc=none smtp.client-ip=209.85.208.51
+	 To:Cc:Content-Type; b=ngVi+u6RYEt3G+osgaA2ZIhwc7pGvv6OOC5bS6aOYerI5dH9P4WFgIL/c0w/FVm32/XfSWMNNEzn0iuuZVjypJmWE3fTnraw5/rprOczM5fLq7wqLRc7SstATmTgLWhLY3AktlX29pnRc4pDAcHvC2LwEi/ufELF3dSg2UUA+bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTFmP/oR; arc=none smtp.client-ip=209.85.221.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCrUKpsi"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-601ab204085so5618208a12.1;
-        Tue, 20 May 2025 15:31:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTFmP/oR"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-52934f4fb23so4167485e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747780304; x=1748385104; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747780427; x=1748385227; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VfViJTkocBFZaKtNJGCb8qOEo9ZbscCCsSMtkpHUjAw=;
-        b=mCrUKpsi5cE+GC8z72L99cKzA8DsQoIfdzVKRextIyj4UG2fn9fTkydowjpocRtxMY
-         l6wnt1P/6lZ+Gdlrhrav4ag9YOk8qm6/VZxZneXf9rX6wVkyrW37QSiPZfyAlUhBsQbl
-         vPxykVXrGdbZhkMzW7+D4QJGVHoUVqQBzlTeQ+Iul8q4Zbg68Yd+WsDCXtH+0yf3kHXR
-         2ahJG1d2F6pLfmj5k59h4d13oTjts7i9SsVCoQi37XkgwYEe6iDDFWkHRWPXyw3fWs3B
-         /K24g29yuf8F+0kc75+w8zrn0qNcynqmC6EPKwEPNRmHgoLf0TOmIGyPKwyjloPVMO7N
-         X5+Q==
+        bh=BEQ4yHTgYt/W3yyenrM8/GZviNPETELo+EsMJcdNHok=;
+        b=CTFmP/oRHg93petkrJQQl6kSoOiM6rNsrAr+/TPTRw7aQs/8vlLPiobZSH+Fw5aIeQ
+         afopkkSsunCbBKMcthIu+nJ7RMBhbo3rM/TzXJt7RFfd/mpTbPY8xMFpN8hOl+PuFtQL
+         FVa/x1qEWLX/tWIDvI8bpW0JvEJA0pqbr3ZCx3i/YNkAX/7+YiEGhuiaR5e5FiJyAN+c
+         GRN2j7DnSflftWhLr/r+YOgeC5geTTy7Ks1n3xzjx0XeKtdOpMtT1x21237HR3h/zi69
+         1JzdCgSM4a1EavqtlZ9UFy1nV5QKQAhhhSCiJokZgiT0y6+bgpzfWPY7CdQI+yc9vpPS
+         2E2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747780304; x=1748385104;
+        d=1e100.net; s=20230601; t=1747780427; x=1748385227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VfViJTkocBFZaKtNJGCb8qOEo9ZbscCCsSMtkpHUjAw=;
-        b=eg8AzZfhg40W5zbQzM3rHsYAATQ7KlUQuCSDRQcaKyTZFS11/tLX2jZWsCMa7RdXQS
-         1J1w3Y6xC/mKwIv8AGrFnSZ1sBxdaE+RhRZlAGrAJKSRE/105Sjcxf0wShKP5MZwTnEo
-         pnte1EJaHnVaMgZ2Ao7fGU1lPLeqR7wXCZkYlJQP8h3BOMHEVKMWCf3BX8MnEeGYCefP
-         zWGsyYTvXzmEItUVNDtYvYc1KINkpJ3ALmFs80TYUdG5tT9Yg6TKXmYapbe3ULPlLhGj
-         re+6nV1HkBd+ekiA7ijbHOK1lprQCBEiLxDeJODWhcJs4kYquiy7NJMLvevhdJvFNZPB
-         +dlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWe9w7+hZRAI8yLhyMJa86iFO+wdl0TA77S0Xb1FEvIKK3zLCSeZ8RRwInCUkcPlYdJ8yETV/sCeoTukjHa@vger.kernel.org, AJvYcCXaXNGwuc30ULketBpaUoByiTDUcaK3Lbf6k7AEGnrJdeSS0tpUTOtU9/WqWQ1dtLf+JBTVKHgHsc6bFUrX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9GnA8BzX8Hs2i4EZvKlO/LnkQWHnz9osV3TGy6s5Zx78bkIWW
-	zZ4j5iKehw1/LmQNWysLmaDDkGBw1ycwYRUsQ3BCBOa0QvBaBIwU4icECtGmcV2hBIjZ1+fitsu
-	5B8HtTPleuzOif7ddRBnLXg+UusP3sBg=
-X-Gm-Gg: ASbGncukDq1h+egy8J/lJoNwsjQ6ZH8j175m5II6E4TWJWSV0VjW8/kpMR3awuHoqQ2
-	UdEMMOKYhhiUuzjXd0B66OkYQiiBCi8gubR6XwWCdHIg5eDs/keh6dG2svDygQ+T50o4UkSyntW
-	KvoIHiuc5RTP0abRjmaN8QIRie14ysXSwkJLIa3AyiHQ==
-X-Google-Smtp-Source: AGHT+IHy1qy9Y9Iw/2PjuoPWfqMC/gE8vuaoRZoeD3b3kOntxxhSfTFnxCi25EtDFYsyoHHlawo3lUz4LJtHhfQlWCs=
-X-Received: by 2002:a17:907:7d86:b0:ad5:6258:996f with SMTP id
- a640c23a62f3a-ad56258a94fmr1093719966b.19.1747780303506; Tue, 20 May 2025
- 15:31:43 -0700 (PDT)
+        bh=BEQ4yHTgYt/W3yyenrM8/GZviNPETELo+EsMJcdNHok=;
+        b=KrPSEha2mMsTWR3rru04c+d2gLrKRQBiga0vJQWmSbQ92Jfar0ZFxDGPZ17F+YnApO
+         xRUJBhjTn1RDje3XcjdMLlB9v5m8j9rAx19RT6xDDAOzhG7yXfJ2v2E8YL0fUnm5zA0S
+         fVVGqUauW1YQ6cEbjV579C4C9B2snSOxxPVZn5+L2T55SApUwR2xFmljKwGMJYvpZHby
+         ikJwaDrYltJX4Cj7sFwKDk60SrL5bMArjCtbXwdYLUMTLbG78u+lZ3Dq/0/97d7/Gz5j
+         ii3FdEtIvF2HludeJk7stu50BxJmtqtPkifdYIekVAW9+GigVzInHYJa6NhYPYkpN17F
+         QXRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCAjDh54GZ1i3bUj0vwoqHA2jAeYRleRMIyJRkeh8bPC0mgr2b3CARjAVJppHXxZ157/x1pw3RYb6uSFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzWUD3kajTCZl3FRVQYKcksBR9qcPuA5yWBYz5SgXlJaxIPuIr
+	m75Wi1raNwxMP7qlIKDWA1WACyG1ZXAQLihDL9qFNRzUUI64rxs0oH9nMktuwB/o77FOcwlrSXt
+	/4cGmlzMobEcoyhN+xsKdjzfVBjYyfZY=
+X-Gm-Gg: ASbGncuv8jgCvyjopigZM38YK65ih3ou+iYMAQaRk09vumpGmRK9AvPVl2VjG2KTlVL
+	SyjGwaTcQDfyEj2kFklUr5Ac+0oESv7xiVV99mr7GIdGWQLfSA+6RrtL4SWveO/tphyS/zIYWAp
+	owFCSp8tk/Y8DcZ7LUJMapMyjfnrWX6mYVoQ==
+X-Google-Smtp-Source: AGHT+IGPHoXac3jI35IfwhzrJ/gzoXPwDZc5MasnWyMo8kgUrXT0nFms4usEO1kkGt4/hMnTUQvvQ/ePeTnoSom82J8=
+X-Received: by 2002:a05:6122:8c0f:b0:520:62ce:98ed with SMTP id
+ 71dfb90a1353d-52dba8d0941mr19344098e0c.6.1747780427377; Tue, 20 May 2025
+ 15:33:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-2-robdclark@gmail.com>
- <aCWrwz2IF6VBUi4e@pollux> <aCWueFzx2QzF7LVg@pollux> <CAF6AEGu9MPxKnkHo45gSRxaCP+CTzqsKZjiLuy4Ne4GbrsStGA@mail.gmail.com>
- <aCYqlvp_T77LyuMa@pollux> <CAF6AEGsOTNedZhuBzipSQgNpG0SyVObaeq+g5U1hGUFfRYjw8w@mail.gmail.com>
- <aCb-72KH-NrzvGXy@pollux> <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
- <CAPM=9tzcvDVDOM88O8oqDHURR1nbR7KsFStavNnT1CN6C6kGgg@mail.gmail.com> <CAF6AEGuv3GXTBcU99sBjAa5gPOSNoxwY+eiPy=Q--cLYHVn+cw@mail.gmail.com>
-In-Reply-To: <CAF6AEGuv3GXTBcU99sBjAa5gPOSNoxwY+eiPy=Q--cLYHVn+cw@mail.gmail.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Wed, 21 May 2025 08:31:31 +1000
-X-Gm-Features: AX0GCFsKkEmiEjqukzoqKCLeCFvPEzUImMvmitaMXLQCSIsFSJxiY59ID8GzQYM
-Message-ID: <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor path
-To: Rob Clark <robdclark@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
+References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
+ <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
+ <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com> <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
+In-Reply-To: <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 21 May 2025 10:33:36 +1200
+X-Gm-Features: AX0GCFtlyzmN6MFJ-bl0pt3pOnCjq_9R5kTXKBIQWYVW7LIPaaKshpndYqyFqVI
+Message-ID: <CAGsJ_4z1cJfOCcpZDt4EuHK7+SON1r0ptRJNv1h=cDv+eOcdSQ@mail.gmail.com>
+Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
+To: Kairui Song <ryncsn@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, bhe@redhat.com, 
+	chrisl@kernel.org, david@redhat.com, hannes@cmpxchg.org, hughd@google.com, 
+	kaleshsingh@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	nphamcs@gmail.com, ryan.roberts@arm.com, shikemeng@huaweicloud.com, 
+	tim.c.chen@linux.intel.com, willy@infradead.org, ying.huang@linux.alibaba.com, 
+	yosryahmed@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 21 May 2025 at 07:53, Rob Clark <robdclark@gmail.com> wrote:
+On Wed, May 21, 2025 at 7:10=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
+e:
 >
-> On Tue, May 20, 2025 at 2:25=E2=80=AFPM Dave Airlie <airlied@gmail.com> w=
+> On Tue, May 20, 2025 at 12:41=E2=80=AFPM Barry Song <21cnbao@gmail.com> w=
 rote:
 > >
-> > On Sat, 17 May 2025 at 02:20, Rob Clark <robdclark@gmail.com> wrote:
+> > On Tue, May 20, 2025 at 3:31=E2=80=AFPM Kairui Song <ryncsn@gmail.com> =
+wrote:
 > > >
-> > > On Fri, May 16, 2025 at 2:01=E2=80=AFAM Danilo Krummrich <dakr@kernel=
-.org> wrote:
+> > > On Mon, May 19, 2025 at 12:38=E2=80=AFPM Barry Song <21cnbao@gmail.co=
+m> wrote:
 > > > >
-> > > > On Thu, May 15, 2025 at 02:57:46PM -0700, Rob Clark wrote:
-> > > > > On Thu, May 15, 2025 at 10:55=E2=80=AFAM Danilo Krummrich <dakr@k=
-ernel.org> wrote:
-> > > > > > Anyways, I don't agree with that. Even if you can tweak your dr=
-iver to not run
-> > > > > > into trouble with this, we can't introduce a mode that violates=
- GOUVM's internal
-> > > > > > lifetimes and subsequently fix it up with WARN_ON() or BUG_ON()=
-.
-> > > > > >
-> > > > > > I still don't see a real technical reason why msm can't be rewo=
-rked to follow
-> > > > > > those lifetime rules.
+> > > > > From: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > > > index e5a0db7f3331..5b4f01aecf35 100644
+> > > > > --- a/mm/userfaultfd.c
+> > > > > +++ b/mm/userfaultfd.c
+> > > > > @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct mm_struct=
+ *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+> > > > >                               goto retry;
+> > > > >                       }
+> > > > >               }
+> > > > > +             if (!folio_swap_contains(src_folio, entry)) {
+> > > > > +                     err =3D -EBUSY;
+> > > > > +                     goto out;
+> > > > > +             }
+> > > >
+> > > > It seems we don't need this. In move_swap_pte(), we have been check=
+ing pte pages
+> > > > are stable:
+> > > >
+> > > >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, or=
+ig_src_pte,
+> > > >                                  dst_pmd, dst_pmdval)) {
+> > > >                 double_pt_unlock(dst_ptl, src_ptl);
+> > > >                 return -EAGAIN;
+> > > >         }
+> > >
+> > > The tricky part is when swap_cache_get_folio returns the folio, both
+> > > folio and ptes are unlocked. So is it possible that someone else
+> > > swapped in the entries, then swapped them out again using the same
+> > > entries?
+> > >
+> > > The folio will be different here but PTEs are still the same value to
+> > > they will pass the is_pte_pages_stable check, we previously saw
+> > > similar races with anon fault or shmem. I think more strict checking
+> > > won't hurt here.
+> >
+> > This doesn't seem to be the same case as the one you fixed in
+> > do_swap_page(). Here, we're hitting the swap cache, whereas in that
+> > case, there was no one hitting the swap cache, and you used
+> > swap_prepare() to set up the cache to fix the issue.
+> >
+> > By the way, if we're not hitting the swap cache, src_folio will be
+> > NULL. Also, it seems that folio_swap_contains(src_folio, entry) does
+> > not guard against that case either.
+>
+> Ah, that's true, it should be moved inside the if (folio) {...} block
+> above. Thanks for catching this!
+>
+> > But I suspect we won't have a problem, since we're not swapping in =E2=
+=80=94
+> > we didn't read any stale data, right? Swap-in will only occur after we
+> > move the PTEs.
+>
+> My concern is that a parallel swapin / swapout could result in the
+> folio to be a completely irrelevant or invalid folio.
+>
+> It's not about the dst, but in the move src side, something like:
+>
+> CPU1                             CPU2
+> move_pages_pte
+>   folio =3D swap_cache_get_folio(...)
+>     | Got folio A here
+>   move_swap_pte
+>                                  <swapin src_pte, using folio A>
+>                                  <swapout src_pte, put folio A>
+>                                    | Now folio A is no longer valid.
+>                                    | It's very unlikely but here SWAP
+>                                    | could reuse the same entry as above.
+
+
+swap_cache_get_folio() does increment the folio's refcount, but it seems th=
+is
+doesn't prevent do_swap_page() from freeing the swap entry after swapping
+in src_pte with folio A, if it's a read fault.
+for write fault, folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(folio))
+will be false:
+
+static inline bool should_try_to_free_swap(struct folio *folio,
+                                           struct vm_area_struct *vma,
+                                           unsigned int fault_flags)
+{
+       ...
+
+        /*
+         * If we want to map a page that's in the swapcache writable, we
+         * have to detect via the refcount if we're really the exclusive
+         * user. Try freeing the swapcache to get rid of the swapcache
+         * reference only in case it's likely that we'll be the exlusive us=
+er.
+         */
+        return (fault_flags & FAULT_FLAG_WRITE) && !folio_test_ksm(folio) &=
+&
+                folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(folio));
+}
+
+and for swapout, __removing_mapping does check refcount as well:
+
+static int __remove_mapping(struct address_space *mapping, struct folio *fo=
+lio,
+                            bool reclaimed, struct mem_cgroup *target_memcg=
+)
+{
+        refcount =3D 1 + folio_nr_pages(folio);
+        if (!folio_ref_freeze(folio, refcount))
+                goto cannot_free;
+
+}
+
+However, since __remove_mapping() occurs after pageout(), it seems
+this also doesn't prevent swapout from allocating a new swap entry to
+fill src_pte.
+
+It seems your concern is valid=E2=80=94unless I'm missing something.
+Do you have a reproducer? If so, this will likely need a separate fix
+patch rather than being hidden in this patchset.
+
+>     double_pt_lock
+>     is_pte_pages_stable
+>       | Passed because of entry reuse.
+>     folio_move_anon_rmap(...)
+>       | Moved invalid folio A.
+>
+> And could it be possible that the swap_cache_get_folio returns NULL
+> here, but later right before the double_pt_lock, a folio is added to
+> swap cache? Maybe we better check the swap cache after clear and
+> releasing dst lock, but before releasing src lock?
+
+It seems you're suggesting that a parallel swap-in allocates and adds
+a folio to the swap cache, but the PTE has not yet been updated from
+a swap entry to a present mapping?
+
+As long as do_swap_page() adds the folio to the swap cache
+before updating the PTE to present, this scenario seems possible.
+
+It seems we need to double-check:
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index bc473ad21202..976053bd2bf1 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1102,8 +1102,14 @@ static int move_swap_pte(struct mm_struct *mm,
+struct vm_area_struct *dst_vma,
+        if (src_folio) {
+                folio_move_anon_rmap(src_folio, dst_vma);
+                src_folio->index =3D linear_page_index(dst_vma, dst_addr);
++       } else {
++               struct folio *folio =3D
+filemap_get_folio(swap_address_space(entry),
++                                       swap_cache_index(entry));
++               if (!IS_ERR_OR_NULL(folio)) {
++                       double_pt_unlock(dst_ptl, src_ptl);
++                       return -EAGAIN;
++               }
+        }
+-
+        orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+        orig_src_pte =3D pte_swp_mksoft_dirty(orig_src_pte);
+
+Let me run test case [1] to check whether this ever happens. I guess I need=
+ to
+hack kernel a bit to always add folio to swapcache even for SYNC IO.
+
+[1] https://lore.kernel.org/linux-mm/20250219112519.92853-1-21cnbao@gmail.c=
+om/
+
+>
+>
+> >
+> > >
+> > > >
+> > > > Also, -EBUSY is somehow incorrect error code.
+> > >
+> > > Yes, thanks, I'll use EAGAIN here just like move_swap_pte.
+> > >
+> > >
+> > > >
+> > > > >               err =3D move_swap_pte(mm, dst_vma, dst_addr, src_ad=
+dr, dst_pte, src_pte,
+> > > > >                               orig_dst_pte, orig_src_pte, dst_pmd=
+, dst_pmdval,
+> > > > >                               dst_ptl, src_ptl, src_folio);
 > > > > >
-> > > > > The basic issue is that (a) it would be really awkward to have tw=
-o
-> > > > > side-by-side VM/VMA management/tracking systems.  But in legacy m=
-ode,
-> > > > > we have the opposite direction of reference holding.  (But at the=
- same
-> > > > > time, don't need/use most of the features of gpuvm.)
 > > > >
-> > > > Ok, let's try to move this forward; I see three options (in order o=
-f descending
-> > > > preference):
-> > > >
-> > > >   1) Rework the legacy code to properly work with GPUVM.
-> > > >   2) Don't use GPUVM for the legacy mode.
-> > > >   .
-> > > >   .
-> > > >   .
-> > > >   3) Get an ACK from Dave / Sima to implement those workarounds for=
- MSM in
-> > > >      GPUVM.
-> > > >
-> > > > If you go for 3), the code introduced by those two patches should b=
-e guarded
-> > > > with a flag that makes it very clear that this is a workaround spec=
-ifically
-> > > > for MSM legacy mode and does not give any guarantees in terms of co=
-rrectness
-> > > > regarding lifetimes etc., e.g. DRM_GPUVM_MSM_LEGACY_QUIRK.
-> > >
-> > > I'm not even sure how #2 would work, other than just copy/pasta all o=
-f
-> > > drm_gpuvm into msm, which doesn't really seem great.
-> > >
-> > > As for #1, even if I could get it to work, it would still be a lot
-> > > more mmu map/unmap (like on every pageflip, vs the current state that
-> > > the vma is kept around until the object is freed).  For the
-> > > non-VM_BIND world, there are advantages to the BO holding the ref to
-> > > the VMA, rather than the other way around.  Even at just a modest
-> > > single layer 1080p the map takes ~.2ms and unmap ~.3ms (plus the unma=
-p
-> > > costs a tlbinv).  So from that standpoint, #3 is the superior option.
-> > >
 > >
-> > Before we get to #3, I'll need a bit more info here on why you have to
-> > map/unmap the VMA on every pageflip.
->
-> Previously we'd keep the VMA hanging around until the GEM obj is
-> freed.  But that can't work if the VMA (via the VM_BO) is holding a
-> reference to the GEM obj.
->
-> I was kinda thinking about keeping the VMA around until the handle is
-> closed.. but that doesn't cover the dma-buf case (ie. when you
-> re-import the dma-buf fd each frame.. I know android does this, unsure
-> about other wsi's).
->
-> > But actually I think 2 is the best option, I think in nouveau this is
-> > where we ended up, we didn't modify the old submission paths at all
-> > and kept the old bo/vm lifetimes.
-> >
-> > We just added completely new bind/exec ioctls and you can only use one
-> > method once you've opened an fd.
->
-> hmm, but that means tracking VMAs against a single BO differently..
-> which.. at least seems ugly..
 
-I don't think it is if you already have the code to do that, and just
-add gpuvm support in parallel.
-
-You also have to figure out that the world is moving towards Vulkan
-for everything so any optimisations you've made for particular legacy
-paths will need to be dealt with in the future picture anyways.
-
-But I'd rather not hack gpuvm into being something it isn't, if there
-is a meaningful commonality in legacy bo/vm bindings across drivers,
-we could create something new, but the ref counting and handling is
-pretty fundamental to gpuvm architecture.
-
-There should only be two paths, legacy and gpuvm, and you shouldn't
-ever be mixing them on a particular exec path, since you should only
-have a vm per userspace fd, and can pick which way to use it the first
-time someone calls it.
-
-Dave.
-Dave.
+Thanks
+Barry
