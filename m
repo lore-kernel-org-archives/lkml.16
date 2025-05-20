@@ -1,133 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77157256C60;
-	Tue, 20 May 2025 03:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E9313C3CD;
+	Tue, 20 May 2025 03:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711401; cv=none; b=TAYTZmnQmmNC5EBW4EXGVgfe3UDFiSNbW6YFN5HF1y4kNJrZn9QKak5JkTY1vBXzeyBb0Xz4Iuu7n9Jt5chRF7PHTGvDMKdOwK4jgaevMXYuko/Lny3JlAVELCrXMS5ZdxSKTdrNMY0hbkKeviBMVKF8JAYo/txElHZv6y+AVOU=
+	t=1747711569; cv=none; b=ceQPupb9k6jYO2w73I6uB+33utqyae08rfXQiVUN2dDOOp/axXSosIJL42yZ5iQ6Glg4utRl9DMUVGYVaNC4JLUyIQ0sqhCZaagtgnAirG+uaLfWg5fB+sbu3xqSRjozcAGVcjOu1/hEnmXmEWkt3HUehK2MO3XTPpwNv3N5alI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747711401; c=relaxed/simple;
-	bh=085HP7XPilFAqMffUta5x9Z+kE/97G6V4mggr3IBiuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VS2ZcYYG5bVMsg5OUGd6d4soyxsprfibI6/pBUbfhMFUkHI8+i1DqGWzSCsXIObv3G7qxUnbONA8oztlreNQQINPZb6JIOv28UTyYuyvJC3FWg3We2JzTm/A7MWZLmgnd5dJDmjZyyvrSQm2zTWEAy5RKWZhqCOZc9xSVwICGzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bL1jQTW2; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bL1jQTW2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747711400; x=1779247400;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=085HP7XPilFAqMffUta5x9Z+kE/97G6V4mggr3IBiuE=;
-  b=bL1jQTW2vhUE2HKlb2xdFajj3IPsog84DX27urgr/agM7T0BENhezVOV
-   Ox+l6+8HPUYEtajj71DX/+HcuCZImmRrMAr7VO0K8u5fpZPbPLyB24JVg
-   N/DczRZXtqFGcj5woaCuQgMBLIJkUWia0+fOKFDkDJgoL3Rk+QpAG4kk5
-   m3hlnmPEK8SkXmEefsLYlM9XgRcUP0AyYtN4+FKgFTCpH9FIiyQbehv9R
-   l6AP44xrheh5H8Rp0E4nBChAVCBjfm0j/zJXaZnLAUtDrBNwqdzfmMbvV
-   Kkl8dpOw531I9orqKNCw3KXKmS76UHF5zGKZmiMaUJqdSw1iuLcoqmbLi
-   g==;
-X-CSE-ConnectionGUID: efESiNA4RXiwhkluJ2gB1g==
-X-CSE-MsgGUID: DUNidpCcSkqHdfVczSmbxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49765905"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49765905"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:23:17 -0700
-X-CSE-ConnectionGUID: 4BCxmwICTFGDp8jqz2FZ8w==
-X-CSE-MsgGUID: 0tKkvGx6SbOIwqDZv62iGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139289141"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:23:15 -0700
-Message-ID: <bcc3f629-7ada-4ec0-bcb1-92760583c9c1@linux.intel.com>
-Date: Mon, 19 May 2025 20:23:13 -0700
+	s=arc-20240116; t=1747711569; c=relaxed/simple;
+	bh=Ce1stjmKd1SeeDt5rAy+aPPT0UwVSQP0hncyimk6dFw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N6Njwq3JQyhFe7e+dahVkmIsAuhA17xHafh/6Wdcfk8EV0gC8Zj6SqDADFQ/ISba5nFWQI9Fgr9lMcRdGaGNJUbeandEWriunLo4Y3kTiPBkrmPNlWFZYj+xo5aND4t2Pg/dBQ7ucafMC2DjgmKBt51ihday/kzGrxQbrwSRW3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2256a87e352a11f0b29709d653e92f7d-20250520
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:5cf46822-bcc4-4ae1-a95a-bc11dd089c0c,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:3d2dc94f2c8adf2d4324e835b2217efb,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 2256a87e352a11f0b29709d653e92f7d-20250520
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 106061420; Tue, 20 May 2025 11:25:52 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id B4B38E003505;
+	Tue, 20 May 2025 11:25:52 +0800 (CST)
+X-ns-mid: postfix-682BF640-597826294
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 22024E006100;
+	Tue, 20 May 2025 11:25:48 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	tzungbi@kernel.org,
+	a.fatoum@pengutronix.de,
+	jani.nikula@intel.com,
+	joel.granados@kernel.org,
+	paulmck@kernel.org,
+	zhangguopeng@kylinos.cn,
+	linux@weissschuh.net,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH 0/3] PM / Sleep: Introduce and use system sleep lock helpers 
+Date: Tue, 20 May 2025 11:25:42 +0800
+Message-Id: <20250520032545.29558-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 12/16] PCI/AER: Make all pci_print_aer() log levels
- depend on error type
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-13-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-13-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+This patch series introduces wrapper functions for locking
+system_transition_mutex used in system sleep (suspend/hibernate) code,
+and refactors the existing usage in kernel/power to improve maintainabili=
+ty,
+readability, and future extensibility.
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Karolina Stolarek <karolina.stolarek@oracle.com>
->
-> Some existing logs in pci_print_aer() log with error severity by default.
-> Convert them to depend on error type (consistent with rest of AER logging).
->
-> Link: https://lore.kernel.org/r/20250321015806.954866-3-pandoh@google.com
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+Currently, mutex_lock/unlock(&system_transition_mutex) is used directly
+in multiple places in the suspend and hibernation paths. This results in
+boilerplate repetition and makes it harder to change the locking mechanis=
+m
+later if needed (e.g., for debugging, tracing, or replacing the mutex
+with another primitive).
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Summary:
 
->   drivers/pci/pcie/aer.c | 16 +++++++++++-----
->   1 file changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 73b03a195b14..06a7dda20846 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -788,15 +788,21 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->   	layer = AER_GET_LAYER_ERROR(aer_severity, status);
->   	agent = AER_GET_AGENT(aer_severity, status);
->   
-> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> +	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
-> +		   status, mask);
->   	__aer_print_error(dev, &info);
-> -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
-> -		aer_error_layer[layer], aer_agent_string[agent]);
-> +	aer_printk(info.level, dev, "aer_layer=%s, aer_agent=%s\n",
-> +		   aer_error_layer[layer], aer_agent_string[agent]);
->   
->   	if (aer_severity != AER_CORRECTABLE)
-> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> -			aer->uncor_severity);
-> +		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
-> +			   aer->uncor_severity);
->   
-> +	/*
-> +	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
-> +	 * tlp_header_valid is set, and info.level is always KERN_ERR in
-> +	 * that case.
-> +	 */
->   	if (tlp_header_valid)
->   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
->   }
+- Patch 1 replaces mutex_lock with lock_system_sleep.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+- Patch 2 adds a non-blocking `try_lock_system_sleep()` for code paths th=
+at
+  should proceed only if the lock is immediately available.
+
+- Patch 3 replaces remaining uses of `system_transition_mutex` in
+  `kernel/power/` with the new helper functions.
+
+This change brings all system sleep transition locking behind well-named
+abstractions, preparing the code for future evolution while simplifying
+reasoning and avoiding repeated direct mutex usage.
+
+ include/linux/suspend.h  |  2 ++
+ kernel/power/hibernate.c | 11 +++++++----
+ kernel/power/main.c      | 12 ++++++++++++
+ kernel/power/suspend.c   |  7 +++++--
+ kernel/power/user.c      |  6 ++++--
+ kernel/reboot.c          |  5 +++--
+ 6 files changed, 33 insertions(+), 10 deletions(-)
+
+--=20
+2.25.1
 
