@@ -1,91 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6D024679C;
-	Tue, 20 May 2025 14:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644A025DAF0;
+	Tue, 20 May 2025 14:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750506; cv=none; b=dvAfHWX+6wSo7ESM7B6VapBk+TTJ3jKZIajcC5TUq6hraR45ggrUr00wz3nYx07Lq54qKNaVm41DmoFZxqx/jwrP5+EQuD2jYXQtpUDhbdp8bUxruPfqIARiY+9vx8q5SGGDe7OYEHLMSHrN4zczhzNnRGmdUJkdRZ9KkcYJiUU=
+	t=1747750511; cv=none; b=DdnQRvO9YWagy6Qgsx9YFGX+Jk677QB8R/icb0NLuBtZnA/MTjBT8BYeaC9MhbPK5b/B0WfrVVXEn1y3WWVCsno/bCu7gnG/XFW2Oxe5OAdIb5tthkpZesxjfchivOZR9LTKTcMuqldYrh6RvqaDazABrwXVQufqQgJQCfO4xqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750506; c=relaxed/simple;
-	bh=LFQufN+AWf8VXZCCvIGwfEDPP4LEHOeX0XvuqmXIuHE=;
+	s=arc-20240116; t=1747750511; c=relaxed/simple;
+	bh=RjBf74JuRzmh1pvAQ/y+H/wsm5WmpnJ1p4e7jMoz8hY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdhLZ5zn6XC3h96cIcfvL75F0tlUCwQwSdk9mtvCaPJuWhVOUiIJrMU9OF1dTmhSgrYQnyA8xDOLQZhRVHEZWJns3YZDj7zdSUbjIsdLRWyE9oFTlee6wGElmYut8El6HwPw0DzNBSOK4dvkmSsrDXSks0cCXjoonhrCceoqqCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991D0C4CEEF;
-	Tue, 20 May 2025 14:15:04 +0000 (UTC)
-Date: Tue, 20 May 2025 15:15:01 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 17/22] arm64: mm: Add page fault trace points
-Message-ID: <aCyOZVVioijWpEPY@arm.com>
-References: <cover.1747046848.git.namcao@linutronix.de>
- <f5fccde2326a896e5c568ef06a4dbd9aa7465f6a.1747046848.git.namcao@linutronix.de>
- <aCtE-RvyN6XJQjTo@arm.com>
- <20250520122548.lkvaylSB@linutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=d80++cIc6JnskkEUedepFFgr4SThXsbcRLX7vZ/PhQUz5CPCAEm4f9MJ3TfWZE1VSkIViac/q3VxdvZ4nHu1y2a9P6M87gRFDFuOEsthFIjejZSS1dEsfhJyvPLJBf6mA9qLWSSVeatwIg2DSz59ApChilEVBAoMj63co9e89KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2gaaa6G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2gaaa6G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3DDAC4CEE9;
+	Tue, 20 May 2025 14:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747750511;
+	bh=RjBf74JuRzmh1pvAQ/y+H/wsm5WmpnJ1p4e7jMoz8hY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f2gaaa6Gmzie0JsgT11a1WE0a8YsnE2AYWnSL37T5yn/q+7P0u1Aq2yKhMA93IIMj
+	 4oumb+ltnKQU/EhaFAXMC5eFtpI+qZ3FUKK3wz3P48OQdeenpCx3DYyW7zn/2HJCnI
+	 MTA1jfrA3NHm/cC2H5Di5lBhKPlBARbGF7uT2l/8enq87LzltjZriOzYVmpSDAqGur
+	 CiB5jCUZZ6QirXUVvN+sTv0mAKnrsk6VQFgRiCSnR54fmST6qPjbe6c6WDI/7CFiQo
+	 ++/d0ziIpH6VTQJb2yfzt6swZLVugUehT9DjOhaaND6q2inCSN+KFY+UtHN26ffXyP
+	 dN0gnPVgbpjEA==
+Date: Tue, 20 May 2025 10:15:09 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: David Sterba <dsterba@suse.cz>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>, clm@fb.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 099/642] btrfs: prevent inline data extents
+ read from touching blocks beyond its range
+Message-ID: <aCyObd3OCtX9K-Jd@lappy>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-99-sashal@kernel.org>
+ <20250506131913.GD9140@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250520122548.lkvaylSB@linutronix.de>
+In-Reply-To: <20250506131913.GD9140@twin.jikos.cz>
 
-On Tue, May 20, 2025 at 02:25:48PM +0200, Nam Cao wrote:
-> On Mon, May 19, 2025 at 03:49:29PM +0100, Catalin Marinas wrote:
-> > On Mon, May 12, 2025 at 12:51:00PM +0200, Nam Cao wrote:
-> > > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > > index ec0a337891dd..55094030e377 100644
-> > > --- a/arch/arm64/mm/fault.c
-> > > +++ b/arch/arm64/mm/fault.c
-> > > @@ -44,6 +44,9 @@
-> > >  #include <asm/tlbflush.h>
-> > >  #include <asm/traps.h>
-> > >  
-> > > +#define CREATE_TRACE_POINTS
-> > > +#include <trace/events/exceptions.h>
-> > > +
-> > >  struct fault_info {
-> > >  	int	(*fn)(unsigned long far, unsigned long esr,
-> > >  		      struct pt_regs *regs);
-> > > @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
-> > >  	if (kprobe_page_fault(regs, esr))
-> > >  		return 0;
-> > >  
-> > > +	if (user_mode(regs))
-> > > +		trace_page_fault_user(addr, regs, esr);
-> > > +	else
-> > > +		trace_page_fault_kernel(addr, regs, esr);
-> > 
-> > What are the semantics for these tracepoints? When are they supposed to
-> > be called? In the RV context context I guess you only care about the
-> > benign, recoverable faults that would affect timing. These tracepoints
-> > were generalised from the x86 code but I don't know enough about it to
-> > tell when they would be invoked.
-> > 
-> > For arm64, we also have the do_translation_fault() path for example that
-> > may or may not need to log such trace events.
-> 
-> These tracepoints are invoked for x86 page fault exceptions. Are arm64's
-> translation faults considered equivalent to x86 page faults?
+On Tue, May 06, 2025 at 03:19:13PM +0200, David Sterba wrote:
+>On Mon, May 05, 2025 at 06:05:15PM -0400, Sasha Levin wrote:
+>> From: Qu Wenruo <wqu@suse.com>
+>>
+>> [ Upstream commit 1a5b5668d711d3d1ef447446beab920826decec3 ]
+>>
+>> Currently reading an inline data extent will zero out the remaining
+>> range in the page.
+>>
+>> This is not yet causing problems even for block size < page size
+>> (subpage) cases because:
+>>
+>> 1) An inline data extent always starts at file offset 0
+>>    Meaning at page read, we always read the inline extent first, before
+>>    any other blocks in the page. Then later blocks are properly read out
+>>    and re-fill the zeroed out ranges.
+>>
+>> 2) Currently btrfs will read out the whole page if a buffered write is
+>>    not page aligned
+>>    So a page is either fully uptodate at buffered write time (covers the
+>>    whole page), or we will read out the whole page first.
+>>    Meaning there is nothing to lose for such an inline extent read.
+>>
+>> But it's still not ideal:
+>>
+>> - We're zeroing out the page twice
+>>   Once done by read_inline_extent()/uncompress_inline(), once done by
+>>   btrfs_do_readpage() for ranges beyond i_size.
+>>
+>> - We're touching blocks that don't belong to the inline extent
+>>   In the incoming patches, we can have a partial uptodate folio, of
+>>   which some dirty blocks can exist while the page is not fully uptodate:
+>>
+>>   The page size is 16K and block size is 4K:
+>>
+>>   0         4K        8K        12K        16K
+>>   |         |         |/////////|          |
+>>
+>>   And range [8K, 12K) is dirtied by a buffered write, the remaining
+>>   blocks are not uptodate.
+>>
+>>   If range [0, 4K) contains an inline data extent, and we try to read
+>>   the whole page, the current behavior will overwrite range [8K, 12K)
+>>   with zero and cause data loss.
+>>
+>> So to make the behavior more consistent and in preparation for future
+>> changes, limit the inline data extents read to only zero out the range
+>> inside the first block, not the whole page.
+>>
+>> Reviewed-by: Filipe Manana <fdmanana@suse.com>
+>> Signed-off-by: Qu Wenruo <wqu@suse.com>
+>> Signed-off-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This is not a stable dependency and the patch is not fixing anything
+>but a preparation so this does not make much sense for stable backports,
+>please drop it. Thanks.
 
-Probably. We route permission or access flag faults via do_page_fault()
-directly while missing page table entries via do_translation_fault().
-The latter end up in do_page_fault() only if the faulting address is in
-the user address range.
-
-My point was that we may not always invoke the trace callbacks if, for
-example, the user tries to access the kernel space (and results in a
-SIGSEGV). While that's fine for RV, I wanted to know what is expected of
-these trace points in general. Do we need to log such SIGSEGV-generating
-events? We do log them if there's a permission fault.
+Will do, thanks!
 
 -- 
-Catalin
+Thanks,
+Sasha
