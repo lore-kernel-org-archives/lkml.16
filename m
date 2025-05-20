@@ -1,38 +1,39 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244C926A09A;
-	Tue, 20 May 2025 16:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF814288D6;
+	Tue, 20 May 2025 16:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757485; cv=none; b=jW/NGH9CnqvQ6oWIZSAQfWPhPSjlOM2VvLg9J52d9y8Y9j+t2YoKbRCDlMy9xx0KsbkVWqCkp/mVcNvh/ha1VBkU/u8Y3we6oIOnr54QJdmgnE0/TDXh445vzQcJ6C8jXsIaqSLERNSnKc7ZGCyafa9UJGb0GwKb+U/fFEAq6cQ=
+	t=1747757487; cv=none; b=acJAfUExfHT3cpYYGg4G8YbXmJApPX1DrHR4sSOfBXxpa4LOH8Y8Ys2IgvBhHul5D1Fmj0EbxNFbe0JRjXnwpNCFq+xyI1jeBKkRsvDCs0nDu2EijqO9J2eE09jtCoAvQ25e3h94rcqfznki69AC8JkvMDN0QPof+xugxl6Ch5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757485; c=relaxed/simple;
-	bh=ItgPovM3Y7A5XOaYSzve8j3VgXB0xe/AssBOw8wCBq0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uZtaFdxtYfjHAeFYi7GtGVaDt/YbUtAnRH8Xpbts5DaSrRTl5NtDpRMmtCZAQN5J9t7DCpJaMYCffU2TIZnXThH1Okly+IYMlBWL0B8M8CuCD1WqRnFeaztxRwhv2sDBUDhKKBHj+ie5AoTz5ZTTYSbWIH2bmBx+wl5l2cj5Tos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mhMpnoTW; arc=none smtp.client-ip=217.70.183.199
+	s=arc-20240116; t=1747757487; c=relaxed/simple;
+	bh=1muVdkoM/2HuQKClJ5devkeiKqlyta2QlQe8eFjt4so=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=o85g/KXtlrlgShaEWfJb0Sofoy9IoGu2SkHnmImcmSG7bV6Z2AWgbHEotZUGdYEjvjZ0KPwbeFh6qx2Sj5BcCOeWVu8KXi1Q74Ru+OSWhfQPCrGzexqIa7H89hUUhCYn+1rQmLMGgDSAcjvRQiN/wsdf93KytLXAabyN3e3FBLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mdw2Sy5p; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mhMpnoTW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F00214396F;
-	Tue, 20 May 2025 16:11:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mdw2Sy5p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AE63E43280;
+	Tue, 20 May 2025 16:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747757479;
+	t=1747757483;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hIucEu0A71TE5Oowgp9KH5/ku8Mpdhs2rnCSfCf+tcM=;
-	b=mhMpnoTWz9+yemycfYr69U7vDCg+ijcyhYGC6RzDDF4vuiKwg8u7emwarCRRWEGh5MjNEW
-	YbufoL2OPMrshywUfUUrcaZwc/ZSW8iIA2r10OVHarK4UiERRKFNGVnfarM6UXtJWwG7rj
-	SfbSawEYKbMHUNH4qKrpuxRaAaDJev+LMl7E3upof4WMyO3x5MW2AZrX8rd8c4vnyb0bKS
-	FrZm90EcQbp8MvWYuxoO/rrVEdWWJtY1OXcKzfYKjGQ+tJx9Ym10Pi2UssFL8yLIlJqgHf
-	0fRZBt7owDHAaxSWN/iFeY0rNBH00QwQ6N4ym0iLyB88n3iVaQ1o1N7N1feBjw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=thtFi5nMH9oNC1P1mg9X1w4ch9jJUuh8N7CHyxrwyZs=;
+	b=Mdw2Sy5pddtdvKKxzPJei05bKY/VVMjoqH0Sz+vfsKMrDcY7k4YukIpdTOk/SKxsdODj9k
+	Zmd6JZEUiSirx4mPC+HEgaK3wKS7qWijx4iKvI3Lt3iSmKBzmbiIq1i+frTmjFtVi/i9HF
+	VNXM9/s+6wggr4PQOaCVK2HD5x0lE400vzNTp9yOUYJ3z2UZhTiss5NuVqk970GXZLzIbZ
+	40NwC8TdumzngeTSY5+9uFAK8bNcAwQ6wnYs2YJA37Bn+AFFpRUYmzWZK489FB1EwQ+FP8
+	gXR9r3xCdk/KYw+EZ/C9D5ZzQeugpwDv2pXa7W33O42pTKzHmNh/FjUA6ooNlA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net-next v11 00/13] Add support for PSE budget evaluation
- strategy
-Date: Tue, 20 May 2025 18:11:02 +0200
-Message-Id: <20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com>
+Date: Tue, 20 May 2025 18:11:05 +0200
+Subject: [PATCH net-next v11 03/13] net: pse-pd: tps23881: Add support for
+ PSE events and interrupts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,13 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJapLGgC/3XRzU7EIBAH8FfZcLZmhm88+R7GbBAGl0TLpq3Nm
- s2+u7SJ6ZrKgQNM+PGf4cpGGjKN7OlwZQPNecylrxvEhwMLJ9+/U5djPWAcuASHokvkp6+Bjue
- yrGE6nodcOq/QUzRCcAqs3j0PlPJlhV9YT1PX02Vir7VyyuNUhu/1xRnX+mIjAG/YM3bQGWtAy
- WQkRfX8Vsr0kfvHUD5Xc+Z3joCWw6vjlHKacyJp/N4Rm4McW46ojhXcueS10ybsHfnrKKiBWo6
- sTgwOvQgQ0Jq9ozaHo205qjoiemk1qRS13DtmcyQ0HbPMJ6kUHNXuQtw79s5B3XJsdaTUQbgYh
- BF277g7hzf/3S0OmhQAjDL8nzwIG6SgGQihSkpp4+qQnErur3S73X4AC32qggkDAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250520-feature_poe_port_prio-v11-3-bbaf447e1b28@bootlin.com>
+References: <20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com>
+In-Reply-To: <20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -62,168 +60,282 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
  Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
  Maxime Chevallier <maxime.chevallier@bootlin.com>, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeiheculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfhveduteffgfekvdfhveehgeehtdelgefhffduiefffedvheefgeeiiedvkeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigr
- dguvgdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeiheculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgp
+ dhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
 X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This series brings support for budget evaluation strategy in the PSE
-subsystem. PSE controllers can set priorities to decide which ports should
-be turned off in case of special events like over-current.
-
-This patch series adds support for two budget evaluation strategy.
-1. Static Method:
-
-   This method involves distributing power based on PD classification.
-   It’s straightforward and stable, the PSE core keeping track of the
-   budget and subtracting the power requested by each PD’s class.
-
-   Advantages: Every PD gets its promised power at any time, which
-   guarantees reliability.
-
-   Disadvantages: PD classification steps are large, meaning devices
-   request much more power than they actually need. As a result, the power
-   supply may only operate at, say, 50% capacity, which is inefficient and
-   wastes money.
-
-2. Dynamic Method:
-
-   To address the inefficiencies of the static method, vendors like
-   Microchip have introduced dynamic power budgeting, as seen in the
-   PD692x0 firmware. This method monitors the current consumption per port
-   and subtracts it from the available power budget. When the budget is
-   exceeded, lower-priority ports are shut down.
-
-   Advantages: This method optimizes resource utilization, saving costs.
-
-   Disadvantages: Low-priority devices may experience instability.
-
-The UAPI allows adding support for software port priority mode managed from
-userspace later if needed.
-
-Patches 1-2: Add support for interrupt event report in PSE core, ethtool
-	     and ethtool specs.
-Patch 3: Adds support for interrupt and event report in TPS23881 driver.
-Patches 4,5: Add support for PSE power domain in PSE core and ethtool.
-Patches 6-8: Add support for budget evaluation strategy in PSE core,
-	     ethtool and ethtool specs.
-Patches 9-11: Add support for port priority and power supplies in PD692x0
-	      drivers.
-Patches 12,13: Add support for port priority in TPS23881 drivers.
+Add support for PSE event reporting through interrupts. Set up the newly
+introduced devm_pse_irq_helper helper to register the interrupt. Events are
+reported for over-current and over-temperature conditions.
 
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-Changes in v11:
-- Move the PSE events enum description fully in the ethtool spec.
-- Remove the first patch which was useless as not used.
-- Split the second patch to separate the attached_phydev introduction to
-  the PSE interrupt support.
-- Link to v10: https://lore.kernel.org/r/20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com
+Change in v11:
+- Remove a potential infinite loop spotted by llm in tps23881_irq_handler.
 
-Changes in v10:
-- Change patch 2 and 7 due to possible used after free scenario or
-  deadlock scenario. Move the PSE notification send management to a
-  workqueue to protect it from the deadlock scenario.
-- Link to v9: https://lore.kernel.org/r/20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com
+Change in v7:
+- Add a max irq retry limit to avoid infinite loop in the interrupt
+  handler.
 
-Changes in v9:
-- Add a missing check after skb creation.
-- Link to v8: https://lore.kernel.org/r/20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com
+Change in v4:
+- Small rename of a function.
 
-Changes in v8:
-- Rename a few functions for better clarity.
-- Add missing kref_init in PSE power domain support and a wrong error
-  check condition.
-- Link to v7: https://lore.kernel.org/r/20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com
+Change in v3:
+- Loop over interruption register to be sure the interruption pin is
+  freed before exiting the interrupt handler function.
+- Add exist variable to not report event for undescribed PIs.
+- Used helpers to convert the chan number to the PI port number.
 
-Changes in v7:
-- Add reference count and mutex lock for PSE power domain.
-- Add support to retry enabling port that failed to be powered in case of
-  port disconnection or priority change.
-- Use flags definition for pse events in ethtool specs.
-- Small changes in the TPS23881 driver.
-- Link to v6: https://lore.kernel.org/r/20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com
-
-Changes in v6:
-- Few typos.
-- Use uint instead of bitset for PSE_EVENT.
-- Remove report of budget evaluation strategy in the uAPI.
-- Link to v5: https://lore.kernel.org/r/20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com
-
-Changes in v5:
-- Remove the first part of the patch series which tackled PSE
-  improvement and already gets merged:
-  https://lore.kernel.org/netdev/20250110-b4-feature_poe_arrange-v3-0-142279aedb94@bootlin.com/
-- Remove the PSE index support which is useless for now. The PSE power
-  domain ID is sufficient.
-- Add support for PD692x0 power supplies other than Vmain which was already
-  in the patch series.
-- Few other small fixes.
-- Link to v4: https://lore.kernel.org/r/20250103-feature_poe_port_prio-v4-0-dc91a3c0c187@bootlin.com
-
-Changes in v4:
-- Remove disconnection policy.
-- Rename port priority mode to budget evaluation strategy.
-- Add cosmetic changes in PSE core.
-- Add support for port priority in PD692x0 driver.
-- Link to v3: https://lore.kernel.org/r/20241121-feature_poe_port_prio-v3-0-83299fa6967c@bootlin.com
-
-Changes in v3:
-- Move power budget to regulator core.
-- Add disconnection policies with PIs using the same priority.
-- Several fixes on the TPS23881 drivers.
-- Several new cosmetic patches.
-- Link to v2: https://lore.kernel.org/r/20241030-feature_poe_port_prio-v2-0-9559622ee47a@bootlin.com
-
-Changes in v2:
-- Rethink the port priority management.
-- Add PSE id.
-- Add support for PSE power domains.
-- Add get power budget regulator constraint.
-- Link to v1: https://lore.kernel.org/r/20241002-feature_poe_port_prio-v1-0-787054f74ed5@bootlin.com
-
+Change in v2:
+- Remove support for OSS pin and TPC23881 specific port priority management
 ---
-Kory Maincent (13):
-      net: pse-pd: Introduce attached_phydev to pse control
-      net: pse-pd: Add support for reporting events
-      net: pse-pd: tps23881: Add support for PSE events and interrupts
-      net: pse-pd: Add support for PSE power domains
-      net: ethtool: Add support for new power domains index description
-      net: pse-pd: Add helper to report hardware enable status of the PI
-      net: pse-pd: Add support for budget evaluation strategies
-      net: ethtool: Add PSE port priority support feature
-      net: pse-pd: pd692x0: Add support for PSE PI priority feature
-      net: pse-pd: pd692x0: Add support for controller and manager power supplies
-      dt-bindings: net: pse-pd: microchip,pd692x0: Add manager regulator supply
-      net: pse-pd: tps23881: Add support for static port priority feature
-      dt-bindings: net: pse-pd: ti,tps23881: Add interrupt description
+ drivers/net/pse-pd/tps23881.c | 189 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 187 insertions(+), 2 deletions(-)
 
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     |   22 +-
- .../bindings/net/pse-pd/ti,tps23881.yaml           |    8 +
- Documentation/netlink/specs/ethtool.yaml           |   76 ++
- Documentation/networking/ethtool-netlink.rst       |   49 +
- drivers/net/mdio/fwnode_mdio.c                     |   26 +-
- drivers/net/pse-pd/pd692x0.c                       |  225 +++++
- drivers/net/pse-pd/pse_core.c                      | 1068 +++++++++++++++++++-
- drivers/net/pse-pd/tps23881.c                      |  403 +++++++-
- include/linux/ethtool_netlink.h                    |    9 +
- include/linux/pse-pd/pse.h                         |  108 +-
- include/uapi/linux/ethtool_netlink_generated.h     |   40 +
- net/ethtool/pse-pd.c                               |   63 ++
- 12 files changed, 2043 insertions(+), 54 deletions(-)
----
-base-commit: a1653b3374857a5055887475e66d0c2e3c560fb9
-change-id: 20240913-feature_poe_port_prio-a51aed7332ec
+diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
+index 5e9dda2c0eac..7a9a5dbe0cb1 100644
+--- a/drivers/net/pse-pd/tps23881.c
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -16,7 +16,15 @@
+ #include <linux/pse-pd/pse.h>
+ 
+ #define TPS23881_MAX_CHANS 8
+-
++#define TPS23881_MAX_IRQ_RETRIES 10
++
++#define TPS23881_REG_IT		0x0
++#define TPS23881_REG_IT_MASK	0x1
++#define TPS23881_REG_IT_IFAULT	BIT(5)
++#define TPS23881_REG_IT_SUPF	BIT(7)
++#define TPS23881_REG_FAULT	0x7
++#define TPS23881_REG_SUPF_EVENT	0xb
++#define TPS23881_REG_TSD	BIT(7)
+ #define TPS23881_REG_PW_STATUS	0x10
+ #define TPS23881_REG_OP_MODE	0x12
+ #define TPS23881_OP_MODE_SEMIAUTO	0xaaaa
+@@ -24,6 +32,7 @@
+ #define TPS23881_REG_DET_CLA_EN	0x14
+ #define TPS23881_REG_GEN_MASK	0x17
+ #define TPS23881_REG_NBITACC	BIT(5)
++#define TPS23881_REG_INTEN	BIT(7)
+ #define TPS23881_REG_PW_EN	0x19
+ #define TPS23881_REG_2PAIR_POL1	0x1e
+ #define TPS23881_REG_PORT_MAP	0x26
+@@ -51,6 +60,7 @@ struct tps23881_port_desc {
+ 	u8 chan[2];
+ 	bool is_4p;
+ 	int pw_pol;
++	bool exist;
+ };
+ 
+ struct tps23881_priv {
+@@ -782,8 +792,10 @@ tps23881_write_port_matrix(struct tps23881_priv *priv,
+ 		hw_chan = port_matrix[i].hw_chan[0] % 4;
+ 
+ 		/* Set software port matrix for existing ports */
+-		if (port_matrix[i].exist)
++		if (port_matrix[i].exist) {
+ 			priv->port[pi_id].chan[0] = lgcl_chan;
++			priv->port[pi_id].exist = true;
++		}
+ 
+ 		/* Initialize power policy internal value */
+ 		priv->port[pi_id].pw_pol = -1;
+@@ -1017,6 +1029,173 @@ static int tps23881_flash_sram_fw(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++/* Convert interrupt events to 0xff to be aligned with the chan
++ * number.
++ */
++static u8 tps23881_irq_export_chans_helper(u16 reg_val, u8 field_offset)
++{
++	u8 val;
++
++	val = (reg_val >> (4 + field_offset) & 0xf0) |
++	      (reg_val >> field_offset & 0x0f);
++
++	return val;
++}
++
++/* Convert chan number to port number */
++static void tps23881_set_notifs_helper(struct tps23881_priv *priv,
++				       u8 chans,
++				       unsigned long *notifs,
++				       unsigned long *notifs_mask,
++				       enum ethtool_pse_event event)
++{
++	u8 chan;
++	int i;
++
++	if (!chans)
++		return;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!priv->port[i].exist)
++			continue;
++		/* No need to look at the 2nd channel in case of PoE4 as
++		 * both registers are set.
++		 */
++		chan = priv->port[i].chan[0];
++
++		if (BIT(chan) & chans) {
++			*notifs_mask |= BIT(i);
++			notifs[i] |= event;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_temp(struct tps23881_priv *priv,
++					 u16 reg_val,
++					 unsigned long *notifs,
++					 unsigned long *notifs_mask)
++{
++	int i;
++
++	if (reg_val & TPS23881_REG_TSD) {
++		for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++			if (!priv->port[i].exist)
++				continue;
++
++			*notifs_mask |= BIT(i);
++			notifs[i] |= ETHTOOL_PSE_EVENT_OVER_TEMP;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_current(struct tps23881_priv *priv,
++					    u16 reg_val,
++					    unsigned long *notifs,
++					    unsigned long *notifs_mask)
++{
++	u8 chans;
++
++	chans = tps23881_irq_export_chans_helper(reg_val, 0);
++	if (chans)
++		tps23881_set_notifs_helper(priv, chans, notifs, notifs_mask,
++					   ETHTOOL_PSE_EVENT_OVER_CURRENT);
++}
++
++static int tps23881_irq_event_handler(struct tps23881_priv *priv, u16 reg,
++				      unsigned long *notifs,
++				      unsigned long *notifs_mask)
++{
++	struct i2c_client *client = priv->client;
++	int ret;
++
++	/* The Supply event bit is repeated twice so we only need to read
++	 * the one from the first byte.
++	 */
++	if (reg & TPS23881_REG_IT_SUPF) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_SUPF_EVENT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_temp(priv, ret, notifs, notifs_mask);
++	}
++
++	if (reg & (TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_IFAULT << 8)) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_FAULT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_current(priv, ret, notifs, notifs_mask);
++	}
++
++	return 0;
++}
++
++static int tps23881_irq_handler(int irq, struct pse_controller_dev *pcdev,
++				unsigned long *notifs,
++				unsigned long *notifs_mask)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	int ret, it_mask, retry;
++
++	/* Get interruption mask */
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT_MASK);
++	if (ret < 0)
++		return ret;
++	it_mask = ret;
++
++	/* Read interrupt register until it frees the interruption pin. */
++	retry = 0;
++	while (true) {
++		if (retry > TPS23881_MAX_IRQ_RETRIES) {
++			dev_err(&client->dev, "interrupt never freed");
++			return -ETIMEDOUT;
++		}
++
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT);
++		if (ret < 0)
++			return ret;
++
++		/* No more relevant interruption */
++		if (!(ret & it_mask))
++			return 0;
++
++		ret = tps23881_irq_event_handler(priv, (u16)ret, notifs,
++						 notifs_mask);
++		if (ret)
++			return ret;
++
++		retry++;
++	}
++	return 0;
++}
++
++static int tps23881_setup_irq(struct tps23881_priv *priv, int irq)
++{
++	struct i2c_client *client = priv->client;
++	struct pse_irq_desc irq_desc = {
++		.name = "tps23881-irq",
++		.map_event = tps23881_irq_handler,
++	};
++	int ret;
++	u16 val;
++
++	val = TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_SUPF;
++	val |= val << 8;
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_IT_MASK, val);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_GEN_MASK);
++	if (ret < 0)
++		return ret;
++
++	val = (u16)(ret | TPS23881_REG_INTEN | TPS23881_REG_INTEN << 8);
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_GEN_MASK, val);
++	if (ret < 0)
++		return ret;
++
++	return devm_pse_irq_helper(&priv->pcdev, irq, 0, &irq_desc);
++}
++
+ static int tps23881_i2c_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -1097,6 +1276,12 @@ static int tps23881_i2c_probe(struct i2c_client *client)
+ 				     "failed to register PSE controller\n");
+ 	}
+ 
++	if (client->irq) {
++		ret = tps23881_setup_irq(priv, client->irq);
++		if (ret)
++			return ret;
++	}
++
+ 	return ret;
+ }
+ 
 
-Best regards,
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.34.1
 
