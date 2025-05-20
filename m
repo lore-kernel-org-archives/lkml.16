@@ -1,48 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54051D5CEA;
-	Tue, 20 May 2025 07:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7475A25B1F7;
+	Tue, 20 May 2025 07:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724560; cv=none; b=H9uCFh67/DYHNKL2HEdhjqkNhwhRgznAt733EQ+5nBdyKRPLvwuO85JehWuiZPP9JPKyDoiHOV4tH3qfEi8xMm/0wIOXv3WzR+8wX3zod6z2rUa7CdBDmrLtMPJ8hjNVYeXpi5ChXdF78SBPiy0lpfkVEUjPaTg0C0/MXXH9dFs=
+	t=1747724663; cv=none; b=FDJiRiniIRYUJJsPYdjB4YUqXnCBWpdDHlaPGehh4ITSLY1SLAd/VEwxk3Qc1J8iLQwr3NdpadUL4TPXRnTOttD+2TLSgLemJUCN0372q8gON3KabMRaYDzF+w3QynsNNNhGapWeNbHqOF24URsLulRA3B4IWB31OEhGRAfpZyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747724560; c=relaxed/simple;
-	bh=GjF/1qi/aA+qb8e+Gm4togAvh4CMeT/zQwBPU0nkros=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ewm4KPlcMbrh8t+YaQGN7oJ9qdAUosjd/h01xkX14N2F3GcnkMPurJXIjPxrXq4AQxRKVt8PnFPx3HWmxJXPE3d+BnM4GezGMLALJcYuGhBhARzVgR0aR/qX4FTSivGO17PqHQgGNCoFsoX+meGKZ3ND5kWKFJJakFohVdkGua4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LmBq0jDS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747724663; c=relaxed/simple;
+	bh=XgeePASKZy5NM3YiantFtATBi40OqDNYHU6kW598rUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnp4rrOXhslJLw/ahFgXtNyATb5gwe4/K+OZAAbypAwWP1hcWfmBUMA78lqJZHtKrJocsFZrtTEvJvb232nQlpCG7P+7pH/NRDQIRRQ9RucumKAfYvOwLp+p0eW/HHI0o89AT4h6m99ugeGjCdPfsy4GlWm+mmOMYoZ+cIJ5KL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QNt5u9Pp; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LmBq0jDS"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K70Fdi003036;
-	Tue, 20 May 2025 07:02:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5m5D9RAHx8tqb+LmoKZpi+P0zGli3IPIo/DZsFZCeE4=; b=LmBq0jDSY4UpAAwK
-	I6cnL9+dr91RlO/ufx+c2ERANdQKRk0QZzf6NytGH0s9dY2fXZSkMJncFhYtRSSC
-	ZttZpJxThOIGnsUq0nSVU4+sKzLVARiV7nX9LnLwTM7UyQ4JoyMS+7X+UO56A7Wl
-	eg6baC4mAbSNUMSZuxa/dnbMbXMzUQsBVJln0K8c2bqYQP3G+82cMTLU7evC/Zk6
-	ASoLsLTp9k995bUrLQU43gDW51xd8cUSpVhXshZc9AtAGwJ9VsCh6s3pcpg60Ih2
-	oWuh+ClTRmcD1CbXzUsMTSDFQy7Fsbu6NiB0BZirHu9RZU3W6C+gvwuD0vYsQqtW
-	uHGmYg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r1atk522-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:02:33 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K72WO6013585
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:02:32 GMT
-Received: from [10.218.0.120] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
- 2025 00:02:24 -0700
-Message-ID: <09b3f318-0599-445b-8587-ee8ab9d42cbd@quicinc.com>
-Date: Tue, 20 May 2025 12:32:24 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QNt5u9Pp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747724661; x=1779260661;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XgeePASKZy5NM3YiantFtATBi40OqDNYHU6kW598rUg=;
+  b=QNt5u9PpJbK/xCU0VP9q8nBZ+px0sAbAC2E+18IR4ZcjBNqPg1A3wVa9
+   wxnMWTpLE0kaJZx2l1JgYOpcUzwL3r1hhkKSLv+nYuXS6l6+4K33nhp7+
+   y8gi8OICi/EwEe0ZvM8ey2Oqo/LT9HMviaZYOi68SlaNq+jh14JQpn4w5
+   y5EFPJrLV4iqfyOMmmHSaEE/IR0qRxXtKX7qh60SNCbFuJo9OFn6KPUmo
+   V7bOHFl0x3tYvo+xJzAwgdg7I+1OSQgqgbthF6KfeWZoByG8ykSbUAco/
+   guOwuoIRds0BkzDP1baSvGgQWxpuvpH8+t3kW9BSDJtp6e+e6Zg6RfMc1
+   A==;
+X-CSE-ConnectionGUID: 7cXhX09+TVyIjEah0o5shQ==
+X-CSE-MsgGUID: bWGKdl+NTnyGDLz2arPs/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48895126"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="48895126"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 00:04:20 -0700
+X-CSE-ConnectionGUID: 2PbQKEJbT6ygsXbzf7VF8g==
+X-CSE-MsgGUID: WSfGdTslS/2tqgszM99LOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="170620114"
+Received: from unknown (HELO [10.238.12.207]) ([10.238.12.207])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 00:04:18 -0700
+Message-ID: <0edbcc4a-4cf6-4836-a573-dadec93f6f66@linux.intel.com>
+Date: Tue, 20 May 2025 15:04:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,133 +52,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 3/3] mmc: sdhci-msm: Limit HS mode frequency to 37.5MHz
+Subject: Re: [PATCH v3 6/6] KVM: Assert that slots_lock is held when resetting
+ per-vCPU dirty rings
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>,
+ James Houghton <jthoughton@google.com>, Pankaj Gupta <pankaj.gupta@amd.com>
+References: <20250516213540.2546077-1-seanjc@google.com>
+ <20250516213540.2546077-7-seanjc@google.com>
 Content-Language: en-US
-To: Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bhupesh Sharma
-	<bhupesh.sharma@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_sachgupt@quicinc.com>, <quic_bhaskarv@quicinc.com>,
-        <quic_narepall@quicinc.com>, <kernel@quicinc.com>
-References: <20241107080505.29244-1-quic_sartgarg@quicinc.com>
- <20241107080505.29244-4-quic_sartgarg@quicinc.com>
- <8b415442-283a-4fc8-ad0d-fbd8892d2ba2@intel.com>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <8b415442-283a-4fc8-ad0d-fbd8892d2ba2@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250516213540.2546077-7-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=OfqYDgTY c=1 sm=1 tr=0 ts=682c2909 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=qYZ75QzxO1GUA97RLtUA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: HFMMDUcySGRzdloWm-j4NAEsXPrFh1p2
-X-Proofpoint-GUID: HFMMDUcySGRzdloWm-j4NAEsXPrFh1p2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1NiBTYWx0ZWRfX0miuvcUe9rBw
- 07+sQzWMSflWb41Kk7t2P01KN9gXOlBpMGrZxKaW+u4xmt2mL82dxhl5jVkPLxDZ9JIpe5XDZ6D
- 06xYHrfeZy+VedTM9MU/uNjoU1HuFUzNWrdDwDQEej/ab4+1T8ibtsn5V37oBxW4Ah9vWuvsO0H
- 6WTpNK2rzMDtgg0oYuNbbX3+IO7LUAMzS2X5zjMXKdu1ml9TtZA/okQfvlih8r/hb6aeW98e13y
- 0SkFYoyuUJuJsbaam+uHj7KLfJ3zCiV0KlDpZGP8wyUXveFiGbWLkxlbSDxTXkexx4EbZoNzaV0
- WxFI7K1Mc2ndwr9iGm9EsbIuf8Kt3ej0ymmQeCszTzJIwqrRlo4zYJoFs7+Ir7U5RmL9ZG8/s5F
- prFSVx770VUEdiWhznrhWzlbpg+X9lovUXOzoPTOnBQoiHhakdhS/M5iMSLzdEL9rDbz5Egj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200056
 
 
 
-On 11/11/2024 2:28 PM, Adrian Hunter wrote:
-> On 7/11/24 10:05, Sarthak Garg wrote:
->> For Qualcomm SoCs with level shifter delays are seen on receivers data
->> path due to latency added by level shifter.
->>
->> To bring these delays in normal range and avoid CMD CRC errors
->> reduce frequency for HS mode SD cards to 37.5MHz for targets which has
->> level shifter.
->>
->> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index 16325c21de52..5e1dc06c4707 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -138,6 +138,8 @@
->>   /* Max load for eMMC Vdd-io supply */
->>   #define MMC_VQMMC_MAX_LOAD_UA	325000
->>   
->> +#define LEVEL_SHIFTER_HIGH_SPEED_FREQ	37500000
->> +
->>   #define msm_host_readl(msm_host, host, offset) \
->>   	msm_host->var_ops->msm_readl_relaxed(host, offset)
->>   
->> @@ -287,6 +289,7 @@ struct sdhci_msm_host {
->>   	bool use_cdr;
->>   	u32 transfer_mode;
->>   	bool updated_ddr_cfg;
->> +	bool uses_level_shifter;
->>   	bool uses_tassadar_dll;
->>   	u32 dll_config;
->>   	u32 ddr_config;
->> @@ -366,6 +369,11 @@ static void msm_set_clock_rate_for_bus_mode(struct sdhci_host *host,
->>   
->>   	mult = msm_get_clock_mult_for_bus_mode(host);
->>   	desired_rate = clock * mult;
->> +
->> +	if (curr_ios.timing == MMC_TIMING_SD_HS && desired_rate == 50000000
-> 
-> Wouldn't desired_rate > LEVEL_SHIFTER_HIGH_SPEED_FREQ make more sense?
-> 
+On 5/17/2025 5:35 AM, Sean Christopherson wrote:
+> Assert that slots_lock is held in kvm_dirty_ring_reset() and add a comment
+> to explain _why_ slots needs to be held for the duration of the reset.
+>
+> Link: https://lore.kernel.org/all/aCSns6Q5oTkdXUEe@google.com
+> Suggested-by: James Houghton <jthoughton@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   virt/kvm/dirty_ring.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
+> index 54734025658a..1ba02a06378c 100644
+> --- a/virt/kvm/dirty_ring.c
+> +++ b/virt/kvm/dirty_ring.c
+> @@ -122,6 +122,14 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+>   	unsigned long mask = 0;
+>   	struct kvm_dirty_gfn *entry;
+>   
+> +	/*
+> +	 * Ensure concurrent calls to KVM_RESET_DIRTY_RINGS are serialized,
+> +	 * e.g. so that KVM fully resets all entries processed by a given call
+It seems that "e.g." is not needed?
 
-Sure will update in V2.
+> +	 * before returning to userspace.  Holding slots_lock also protects
+> +	 * the various memslot accesses.
+> +	 */
+> +	lockdep_assert_held(&kvm->slots_lock);
+> +
+>   	while (likely((*nr_entries_reset) < INT_MAX)) {
+>   		if (signal_pending(current))
+>   			return -EINTR;
 
->> +		&& msm_host->uses_level_shifter)
->> +		desired_rate = LEVEL_SHIFTER_HIGH_SPEED_FREQ;
-> 
-> As checkpatch says:
-> 
-> CHECK: Logical continuations should be on the previous line
-> #46: FILE: drivers/mmc/host/sdhci-msm.c:374:
-> +       if (curr_ios.timing == MMC_TIMING_SD_HS && desired_rate == 50000000
-> +               && msm_host->uses_level_shifter)
-> 
-> total: 0 errors, 0 warnings, 1 checks, 34 lines checked
-> 
-> 
-
-Sure will fix this in V2.
-
->> +
->>   	rc = dev_pm_opp_set_rate(mmc_dev(host->mmc), desired_rate);
->>   	if (rc) {
->>   		pr_err("%s: Failed to set clock at rate %u at timing %d\n",
->> @@ -2372,6 +2380,8 @@ static inline void sdhci_msm_get_of_property(struct platform_device *pdev,
->>   
->>   	of_property_read_u32(node, "qcom,dll-config", &msm_host->dll_config);
->>   
->> +	msm_host->uses_level_shifter = of_property_read_bool(node, "qcom,use-level-shifter");
->> +
->>   	if (of_device_is_compatible(node, "qcom,msm8916-sdhci"))
->>   		host->quirks2 |= SDHCI_QUIRK2_BROKEN_64_BIT_DMA;
->>   }
-> 
