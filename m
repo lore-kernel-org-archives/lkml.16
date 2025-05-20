@@ -1,59 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC4518C31;
-	Tue, 20 May 2025 09:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CA421C9EE
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747733459; cv=none; b=Xcrx9PHM9wFryrlj63PwHvs0yDB5+UgGA/T5l+DJGP5lIO3UbMwBzXQrBVd8zLkkAFEVaENOg5y9FgYuFIka5gPImAYzw7ObtTapi00v9+ujqQ9Z1TtyxL0CdzNdfHFh6Yj2kRURex5XosFbtTKmta1NiEebvYyXcP9Hpg7YPC0=
+	t=1747733495; cv=none; b=jPdnBbnNz2yZhcXW5ROPAz1chA9tiZqw3SjIUce/At75Y+qPpmFToGzqIlImjGpnJNc9ZJT2VN3yIhsirMTS9lxDV3q1n4lVrv4AbFhHXe2llN9CZTa0du/+YLOUgfo1ToYtBhErwVNyR/jCiO/hPq3F3yrMer6Akr3MnVWgzpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747733459; c=relaxed/simple;
-	bh=jcb4aPAbKPsWRg6KidM3qub1Bb9HpbBNOe12kNEXwSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CSLnC2xBwZ/HlTTwO31no6UUStFZg/u29YjNK2npLhsTlYiYxlmP2PaiOihSjpTvArK7bXGlBLVuoceU1aFyc0qVcUKxYVaHf29awhF4GoKNa2VDC6tJeaC3GDO3rEedpdDg3LJNbA/YFI/U7nm0FMFMykf0gasfglZIC4YI7J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXBc2pGq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747733495; c=relaxed/simple;
+	bh=/kmXi86AjWcoQH0fy7Ig4oBVuguid/ijFy9kzC28OeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GzZaFPbpJHsmyRtbWYsZze06Ok14f661JHtnIH+PQNjWUMqori6OfFsiugpOugbOPM4EKMCjLnTrUNLehb3G/TOvgQpc2F2IspkM8/VCrIbdlZLNpk8iJ2xXTpSDGtjAzwt9yPHEnnhQi1XQKFwMNEahsIncd+Hz3zMS+T7n5Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UN9PAt6b; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXBc2pGq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E36C4CEE9;
-	Tue, 20 May 2025 09:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747733459;
-	bh=jcb4aPAbKPsWRg6KidM3qub1Bb9HpbBNOe12kNEXwSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IXBc2pGqp+VVik11Y7jfvML+CkrotItGRoxjZZGTMo5og35cO210IyMChrOKrfY7c
-	 dysWNOqI39ZDurXZ9RHWc/LOhAm3EQIcmorx05+Z6zWEDRKFwFMiK7xRvH8kCgDwJU
-	 X9x/X4UVhK9JqYuFF1ed3w4IAtuMM+T9wwNcKCIFkg5UcK/qsYlBkDLUBnoCKHaFj6
-	 FGxxEPzdpyH2O4HYQXhq/Fn5b50S297R9OaR7SkYtCeEpdio2q16uw3/ooM1QLkAVi
-	 ONhWUU9/6Lnup0BcTlsA4fIbqCTRj4QQZQSxFVA+8itV+AZbiTGzB47zWPXnk7qLMh
-	 UwdOgr9LG2HeA==
-Date: Tue, 20 May 2025 11:30:51 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Shirish Baskaran <sbaskaran@nvidia.com>
-Subject: Re: [PATCH v3 16/19] nova-core: Add support for VBIOS ucode
- extraction for boot
-Message-ID: <aCxLyxcERNHKzfvI@cassiopeiae>
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com>
- <aCN_PIYEEzs73AqT@pollux>
- <4fee85be-a8c5-4a99-8397-c93e79d72d15@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UN9PAt6b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747733494; x=1779269494;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=/kmXi86AjWcoQH0fy7Ig4oBVuguid/ijFy9kzC28OeE=;
+  b=UN9PAt6bRM7djY4crHwHX/mCF/d0lffZq166KanbwDn+8pdzUxjVp0cL
+   9fDQiW21u/mylgXALt/4sRhHNqWpT4/HFO4QtPNSV7GLWSNzf9eNL+Vui
+   oHeyOA+jEHSy12KCGAnFMLtS1peMrPenrmjY0dRgXKVQT7AE0vYeXsyLl
+   Olw2Ht5bPN+QoPBpgb8djIDU3q6drq8KIcQUwtq1vhzjUTqtRLluW8f+k
+   JWtMPMfzr8YeWvBoItBqpusc6gSLC8kcBPTgjk9hzA3/bmwaJs8JcEb5+
+   jIQJOJKqFcrjZDLOrt6nZSd2lwDcr48zRBFX7YqK/VnjOzLUNjl6YRUGY
+   Q==;
+X-CSE-ConnectionGUID: LJ3Q98K/TXC2yEIJeOo4eQ==
+X-CSE-MsgGUID: 2ysTZq0WRm6n66uzUPIM8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49793538"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49793538"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:31:33 -0700
+X-CSE-ConnectionGUID: QIQO1ewlRD6YuIi6n9deDQ==
+X-CSE-MsgGUID: GmJqCW7ZTuCER/L8hZ/9UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144886471"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 20 May 2025 02:31:15 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHJJZ-000MOW-1I;
+	Tue, 20 May 2025 09:31:13 +0000
+Date: Tue, 20 May 2025 17:31:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Luis Chamberlain <mcgrof@kernel.org>
+Subject: include/linux/rbtree.h:74:9: sparse: sparse: incompatible types in
+ comparison expression (different address spaces):
+Message-ID: <202505201742.5rpaA9Qr-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,263 +62,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4fee85be-a8c5-4a99-8397-c93e79d72d15@nvidia.com>
 
-On Tue, May 20, 2025 at 03:55:06AM -0400, Joel Fernandes wrote:
-> On 5/13/2025 1:19 PM, Danilo Krummrich wrote:
-> > On Wed, May 07, 2025 at 10:52:43PM +0900, Alexandre Courbot wrote:
-> >> @@ -238,6 +239,8 @@ pub(crate) fn new(
-> >>  
-> >>          let _sec2_falcon = Falcon::<Sec2>::new(pdev.as_ref(), spec.chipset, bar, true)?;
-> >>  
-> >> +        let _bios = Vbios::new(pdev, bar)?;
-> > 
-> > Please add a comment why, even though unused, it is important to create this
-> > instance.
-> > 
-> > Also, please use `_` if it's not intended to ever be used.
-> 
-> If I add a comment, it will simply be removed by the next patch. I can add that
-> though so it makes it more clear.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a5806cd506af5a7c19bcd596e4708b5c464bfd21
+commit: 2c9e5d4a008293407836d29d35dfd4353615bd2f bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
+date:   1 year ago
+config: powerpc64-randconfig-r121-20250520 (https://download.01.org/0day-ci/archive/20250520/202505201742.5rpaA9Qr-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 7.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250520/202505201742.5rpaA9Qr-lkp@intel.com/reproduce)
 
-I recommend to add such comments, because then reviewers don't stumble over it.
-:-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505201742.5rpaA9Qr-lkp@intel.com/
 
-> >> +impl Vbios {
-> >> +    /// Probe for VBIOS extraction
-> >> +    /// Once the VBIOS object is built, bar0 is not read for vbios purposes anymore.
-> >> +    pub(crate) fn new(pdev: &pci::Device, bar0: &Bar0) -> Result<Vbios> {
-> >> +        // Images to extract from iteration
-> >> +        let mut pci_at_image: Option<PciAtBiosImage> = None;
-> >> +        let mut first_fwsec_image: Option<FwSecBiosImage> = None;
-> >> +        let mut second_fwsec_image: Option<FwSecBiosImage> = None;
-> >> +
-> >> +        // Parse all VBIOS images in the ROM
-> >> +        for image_result in VbiosIterator::new(pdev, bar0)? {
-> >> +            let full_image = image_result?;
-> >> +
-> >> +            dev_info!(
-> > 
-> > Let's use dev_dbg!() instaed.
-> 
-> Done.
-> 
-> > 
-> >> +                pdev.as_ref(),
-> >> +                "Found BIOS image: size: {:#x}, type: {}, last: {}\n",
-> >> +                full_image.image_size_bytes()?,
-> >> +                full_image.image_type_str(),
-> >> +                full_image.is_last()
-> >> +            );
-> >> +
-> >> +            // Get references to images we will need after the loop, in order to
-> >> +            // setup the falcon data offset.
-> >> +            match full_image {
-> >> +                BiosImage::PciAt(image) => {
-> >> +                    pci_at_image = Some(image);
-> >> +                }
-> >> +                BiosImage::FwSec(image) => {
-> >> +                    if first_fwsec_image.is_none() {
-> >> +                        first_fwsec_image = Some(image);
-> >> +                    } else {
-> >> +                        second_fwsec_image = Some(image);
-> >> +                    }
-> >> +                }
-> >> +                // For now we don't need to handle these
-> >> +                BiosImage::Efi(_image) => {}
-> >> +                BiosImage::Nbsi(_image) => {}
-> >> +            }
-> >> +        }
-> >> +
-> >> +        // Using all the images, setup the falcon data pointer in Fwsec.
-> >> +        // We need mutable access here, so we handle the Option manually.
-> >> +        let final_fwsec_image = {
-> >> +            let mut second = second_fwsec_image; // Take ownership of the option
-> >> +
-> >> +            if let (Some(second), Some(first), Some(pci_at)) =
-> >> +                (second.as_mut(), first_fwsec_image, pci_at_image)
-> >> +            {
-> >> +                second
-> >> +                    .setup_falcon_data(pdev, &pci_at, &first)
-> >> +                    .inspect_err(|e| {
-> >> +                        dev_err!(pdev.as_ref(), "Falcon data setup failed: {:?}\n", e)
-> >> +                    })?;
-> >> +            } else {
-> >> +                dev_err!(
-> >> +                    pdev.as_ref(),
-> >> +                    "Missing required images for falcon data setup, skipping\n"
-> >> +                );
-> >> +                return Err(EINVAL);
-> > 
-> > This means that if second == None we fail, which makes sense, so why store an
-> > Option in Vbios? All methods of Vbios fail if fwsec_image == None.
-> > 
-> 
-> Well, if first and pci_at are None, we will fail as well. Not just second. But
-> we don't know until we finish parsing all the images in the prior loop, if we
-> found all the images. So we store it as Option during the prior loop, and check
-> it later. Right?
+sparse warnings: (new ones prefixed by >>)
+   kernel/bpf/core.c:241:49: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:1997:43: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:2002:48: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:2268:77: sparse: sparse: subtraction of functions? Share your drugs
+   kernel/bpf/core.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/xdp.h, ...):
+   include/trace/events/xdp.h:321:1: sparse: sparse: Using plain integer as NULL pointer
+   include/trace/events/xdp.h:348:1: sparse: sparse: Using plain integer as NULL pointer
+   include/trace/events/xdp.h:382:1: sparse: sparse: Using plain integer as NULL pointer
+   kernel/bpf/core.c: note: in included file (through include/linux/rbtree_latch.h, include/linux/bpf.h, include/linux/filter.h):
+>> include/linux/rbtree.h:74:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   include/linux/rbtree.h:74:9: sparse:    struct rb_node [noderef] __rcu *
+   include/linux/rbtree.h:74:9: sparse:    struct rb_node *
+>> include/linux/rbtree.h:74:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   include/linux/rbtree.h:74:9: sparse:    struct rb_node [noderef] __rcu *
+   include/linux/rbtree.h:74:9: sparse:    struct rb_node *
 
-My point is not that second is an option within this function -- that's fine. I
-don't want the Vbios type to store an Option, because that doesn't make sense.
-I.e. it should be
+vim +74 include/linux/rbtree.h
 
-	struct Vbios {
-	   fwsec_image: FwSecBiosImage,
-	}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  67  
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  68  static inline void rb_link_node_rcu(struct rb_node *node, struct rb_node *parent,
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  69  				    struct rb_node **rb_link)
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  70  {
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  71  	node->__rb_parent_color = (unsigned long)parent;
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  72  	node->rb_left = node->rb_right = NULL;
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  73  
+d72da4a4d973d8 Peter Zijlstra 2015-05-27 @74  	rcu_assign_pointer(*rb_link, node);
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  75  }
+d72da4a4d973d8 Peter Zijlstra 2015-05-27  76  
 
-or just
+:::::: The code at line 74 was first introduced by commit
+:::::: d72da4a4d973d8a0a0d3c97e7cdebf287fbe3a99 rbtree: Make lockless searches non-fatal
 
-	struct Vbios(FwSecBiosImage);
+:::::: TO: Peter Zijlstra <peterz@infradead.org>
+:::::: CC: Rusty Russell <rusty@rustcorp.com.au>
 
-which is the same, rather than
-
-	struct Vbios {
-	   fwsec_image: Option<FwSecBiosImage>,
-	}
-
-because Vbios::new() fails anyways if any of the images is None, i.e.
-vbios.fwsec_image can't ever be None.
-
-The code below does that for you, i.e. it returns an instance of Vbios without
-the inner Option.
-
-> >> +            }
-> >> +            second
-> >> +        };
-> > 
-> > I think this should be:
-> > 
-> > 	let mut second = second_fwsec_image;
-> > 	
-> > 	if let (Some(second), Some(first), Some(pci_at)) =
-> > 	    (second.as_mut(), first_fwsec_image, pci_at_image)
-> > 	{
-> > 	    second
-> > 	        .setup_falcon_data(pdev, &pci_at, &first)
-> > 	        .inspect_err(|e| {
-> > 	            dev_err!(pdev.as_ref(), "Falcon data setup failed: {:?}\n", e)
-> > 	        })?;
-> > 	
-> > 	    Ok(Vbios(second)
-> > 	} else {
-> > 	    dev_err!(
-> > 	        pdev.as_ref(),
-> > 	        "Missing required images for falcon data setup, skipping\n"
-> > 	    );
-> > 	
-> > 	    Err(EINVAL)
-> > 	}
-> > 
-> > where Vbios can just be
-> > 
-> > 	pub(crate) struct Vbios(FwSecBiosImage);
-> 
-> But your suggestion here still considers second as an Option? That's why you
-> wrote 'Some(second)' ?
-
-Yes, that's fine, see above. The difference is that the code returns you an
-instance of
-
-	struct Vbios(FwSecBiosImage);
-
-rather than
-
-	struct Vbios {
-	   fwsec_image: Option<FwSecBiosImage>,
-	}
-
-which is unnecessary.
-
-> 
-> > 
-> >> +
-> >> +        Ok(Vbios {
-> >> +            fwsec_image: final_fwsec_image,
-> >> +        })
-> >> +    }
-> >> +
-> >> +    pub(crate) fn fwsec_header(&self, pdev: &device::Device) -> Result<&FalconUCodeDescV3> {
-> >> +        let image = self.fwsec_image.as_ref().ok_or(EINVAL)?;
-> >> +        image.fwsec_header(pdev)
-> >> +    }
-> >> +
-> >> +    pub(crate) fn fwsec_ucode(&self, pdev: &device::Device) -> Result<&[u8]> {
-> >> +        let image = self.fwsec_image.as_ref().ok_or(EINVAL)?;
-> >> +        image.fwsec_ucode(pdev, image.fwsec_header(pdev)?)
-> >> +    }
-> >> +
-> >> +    pub(crate) fn fwsec_sigs(&self, pdev: &device::Device) -> Result<&[u8]> {
-> >> +        let image = self.fwsec_image.as_ref().ok_or(EINVAL)?;
-> >> +        image.fwsec_sigs(pdev, image.fwsec_header(pdev)?)
-> >> +    }
-> > 
-> > Those then become infallible, e.g.
-> > 
-> > 	pub(crate) fn fwsec_sigs(&self, pdev: &device::Device) -> &[u8] {
-> > 	    self.0.fwsec_sigs(pdev, self.fwsec_header(pdev))
-> > 	}
-> > 
-> 
-> Nope, I think you are wrong there. fwsec_sigs() of the underlying .0 returns a
-> Result.
-
-That's true, I confused self.fwsec_sigs() with self.0.fwsec_sigs(). It seems
-that you may want to implement Deref for Vbios.
-
-Also, can you please double check the Options in FwSecBiosImage (in case we
-didn't talk about them yet)? They look quite suspicious too.
-
-In general, I feel like a lot of those Option come from a programming pattern
-that is very common in C, i.e. allocate a structure (stack or heap) and then
-initialize its fields.
-
-In Rust you should aim to initialize all the fields of a structure when you
-create the instance. Option as a return type of a function is common, but it's
-always a bit suspicious when there is an Option field in a struct.
-
-I understand that there are cases where we can't omit it, and for obvious
-reasons the Vbios code is probably a perfect example for that.
-
-However, I recommend looking at this from top to bottom: Do the "final"
-structures that we expose to the driver from the Vbios module have fields that
-are *really* optional? Or is the Option type just a result from the parsing
-process?
-
-If it's the latter, we should get rid of it and work with a different type
-during the parsing process and then create the final instance that is exposed to
-the driver at the end.
-
-For instance FwSecBiosImage is defined as:
-
-	pub(crate) struct FwSecBiosImage {
-	    base: BiosImageBase,
-	    falcon_data_offset: Option<usize>,
-	    pmu_lookup_table: Option<PmuLookupTable>,
-	    falcon_ucode_offset: Option<usize>,
-	}
-
-Do only *some* FwSecBiosImage instances have a falcon_ucode_offset?
-
-If the answer is 'no' then it shouldn't be an Option. If the answer is 'yes',
-then this indicates that FwSecBiosImage is probably too generic and should be
-split into more specific types of a FwSecBiosImage which instead share a common
-trait in order to treat the different types generically.
-
-> Also in Vbios::new(), I extract the Option when returning:
-> 
->         Ok(Vbios {
->             fwsec_image: final_fwsec_image.ok_or(EINVAL)?,
->         })
-
-Maybe you do so in your tree? v3 of the patch series has:
-
-	pub(crate) struct Vbios {
-	   pub fwsec_image: Option<FwSecBiosImage>,
-	}
-
-and
-
-	Ok(Vbios {
-	   fwsec_image: final_fwsec_image,
-	})
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
