@@ -1,209 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f201.google.com (mail-qk1-f201.google.com [209.85.222.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AC02820CC;
-	Tue, 20 May 2025 19:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3361628467A
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770777; cv=none; b=ph/3Xdb6o7pKet51Hc8S35Ie/CVDOeSmP2tH86w+TALFU7PJE+Q3UicN4bf3dr7gMPOHtsxx3kwuaDtG9Z5Ck8wd90O6KQunlP8GZe3ebZ/uNKQJCTlIr1JbpvMTqBmbiwr8IhYTC1EOoSfC25lKWYOeNQm4VuXrmnGuPmS50Js=
+	t=1747770781; cv=none; b=sy5/t88b6tVfj+gz5xee26Lp0RMCPRHVIp9rBKKQ4/hTuKGD9eL5NpIh0NKfbt5zaGun6DC9732fiX+PPFoM8lyDgU93+VNAsOVgG0RG2HlHpweMNBy24du40207M/TiY0xJyLuSC1k+ssPYFoMAbrd7UQOTOVq8R7Apj4pfyrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770777; c=relaxed/simple;
-	bh=sVuIV87vGQNNhBH1C+IifHHMly6qW45dro2WlmwqoKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFuHdpghk3X/Qc4GYyzakjlUIwzrv94Nj3EqblvWvZCDYQgynzOulWbLgZeZeMIhuznvB78nRgcYt1UK+iDAy63JTY9BNcXh07kD+0IqbJPDVNx2LUGT0dcO00mJHa12F0M90/l+2dhps77KxHgRPd4RIzMbrD7FG4YlMlg9u5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTCCX8XV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747770781; c=relaxed/simple;
+	bh=2JkxPTkRCF2ZFpW2d9Eif34bSfjAooXPglJI4C8IIgg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=juoNDyP/p8f0UVArepCCiZVemxkR/dLbvdSmbIWuqci5YqxOf91vQIyYyO6DfbRsFwsnw4QQvts1WO/etU0xbTCTD+AF/RY5wd0AbQBCRPOCvujd/fpbbg4EWccpJX/yG1qeyldBISha+uYFLY+aomboxHryn+UmkGr4CoAkK8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eymqlKOO; arc=none smtp.client-ip=209.85.222.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTCCX8XV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FCDC4CEE9;
-	Tue, 20 May 2025 19:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747770776;
-	bh=sVuIV87vGQNNhBH1C+IifHHMly6qW45dro2WlmwqoKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pTCCX8XVM9CEiOBZ79VhWuUwWU6FGvo2W901AQ4LYk4O44bVdXPD+YcX2kmgyjLTi
-	 1+LgeF8JMlSIvH5ORHHLppC0LhPgisAd7j6rUtJjbnzyaocoljL7ga8x3l5MpXgwvv
-	 cQ0Oq8LN6prykF704uEZjAHRpdLmYqqOm68GjPaZJNhaAXvEM4x1esIYkFZwsYc4pP
-	 QopYcvL3vU8OnP1iDQI6WUY+n8EDsWXgTeZxc395GqVkr4fumvmRTBI1ucbDqObCCg
-	 OHMZhAneCp7TFzKEcFdGySTnVre2k5G2siQs4gTpPRPU7cKCLcoe8q1W6wlqT2bfuB
-	 r5JD92U70lgeQ==
-Date: Tue, 20 May 2025 14:52:54 -0500
-From: Rob Herring <robh@kernel.org>
-To: Matthew Gerlach <matthew.gerlach@altera.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mturquette@baylibre.com,
-	richardcochran@gmail.com, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mun Yew Tham <mun.yew.tham@altera.com>
-Subject: Re: [PATCH] dt-bindings: net: Convert socfpga-dwmac bindings to yaml
-Message-ID: <20250520195254.GA1247930-robh@kernel.org>
-References: <20250513152237.21541-1-matthew.gerlach@altera.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eymqlKOO"
+Received: by mail-qk1-f201.google.com with SMTP id af79cd13be357-7c54e7922a1so1327797885a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747770778; x=1748375578; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SXpn/WaKau4zA3cRgecqqkvTjBRhcHkLh1EPrEXBv6w=;
+        b=eymqlKOO+siVXXvklcmDD0ZVGl92JDJn4oYVPfitIsURCXv0VpD25caCPZsqoZdy72
+         Vl33zNkbPnsMmyU+wonEFV1jfddBKZ2QwbkkK4s8vN2qDAnxg7pbaImMivfdO1aOt9KH
+         mfqtKPEX+2XbvFsQFdzIMS03YVYv6sZlMO9HnVHrGgitNoBhXRA5L96kTfDNcXJesjdr
+         uiC/lW4Aetq+xWuHz8Ji//uPJ7prQLYJjKgnvRZFNBNf6xtXTIA+GgBR3aOkXcanPzBz
+         4neLltEND29ZlhHESOyDh870/7cKzNdhAtLnj88tcEFlwlUuRRkXc5yYA89C6599i+Pn
+         8tpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770778; x=1748375578;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SXpn/WaKau4zA3cRgecqqkvTjBRhcHkLh1EPrEXBv6w=;
+        b=MYAfo+ViJ7KUkGN1+AbjK/RG0Uwgsjoyil3ZpCdp+JpdG0REQSMidd0bPE63+bljWC
+         xLPdCBxj4o7HrwJBU/KQ2Z2cnl471hH/ZPXaGoxy+6HnU2xda29d34H7djIg5Pem5GYy
+         c32ZoPUn7En01ZAFGCo6j7ehxlx5QpeceQTHkqhzBlhf+ejyThuyg4109LZ10236wBKO
+         4Ce5sO3Jx8cBDQdx/HcRS9bfIcZ7konCBELZNMuNX2Vjf9JRrwGFRFb5wplGKin3yA9y
+         f/WlIamiHxVLlcRFpTMNPrsKmKyuZxwcB3jdHQxCj/MUX9SlFSwLmFK0Slk1uf0UeSSO
+         YsWA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7DEzAgRR4ApR25Wib4zHNPEhbK01P0gLRdDGzu0ia0YLe7wMdfRmA1t+Xn4op4RZ0urHXXj6ZPXdpZMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcC1G+OsoX0uiBMC7QO6JZpGjXEf7cTq2pf1X5x8fFUCAYAZ83
+	B9aVM1wZUYI+6sn9xXA8fm/ar4ScV1SUguDXlOrM6CKn85QL0tM4vhN6t1lNNLOatAh0mSjduQv
+	kog==
+X-Google-Smtp-Source: AGHT+IGMDiv33WBWbSNW1H6Xv/IdXq/dfRT9Dy0t/jTHyqfUZS7qemkc9kBCYcIkb4w/Wkju9zwFy4xIsA==
+X-Received: from qkpn19.prod.google.com ([2002:a05:620a:2953:b0:7ce:becb:f27d])
+ (user=rmoar job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:372b:b0:7c5:a2f8:e6e4
+ with SMTP id af79cd13be357-7cd47f46587mr2375350485a.29.1747770778122; Tue, 20
+ May 2025 12:52:58 -0700 (PDT)
+Date: Tue, 20 May 2025 19:52:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513152237.21541-1-matthew.gerlach@altera.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+Message-ID: <20250520195252.2235050-1-rmoar@google.com>
+Subject: [PATCH v2] Documentation: kunit: improve example on testing static functions
+From: Rae Moar <rmoar@google.com>
+To: davidgow@google.com, brendan.higgins@linux.dev, skhan@linuxfoundation.org
+Cc: dlatypov@google.com, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 13, 2025 at 08:22:37AM -0700, Matthew Gerlach wrote:
-> From: Mun Yew Tham <mun.yew.tham@altera.com>
-> 
-> Convert the bindings for socfpga-dwmac to yaml.
-> 
-> Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> ---
->  .../bindings/net/socfpga,dwmac.yaml           | 109 ++++++++++++++++++
->  .../devicetree/bindings/net/socfpga-dwmac.txt |  57 ---------
->  2 files changed, 109 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
->  delete mode 100644 Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml b/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
-> new file mode 100644
-> index 000000000000..68ad580dc2da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/socfpga,dwmac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Altera SOCFPGA SoC DWMAC controller
-> +
-> +maintainers:
-> +  - Matthew Gerlach <matthew.gerlach@altera.com>
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - altr,socfpga-stmmac
-> +          - altr,socfpga-stmmac-a10-s10
-> +  required:
-> +    - altr,sysmgr-syscon
+The documentation on testing static functions using the KUnit macros
+VISIBLE_IF_KUNIT and EXPORT_SYMBOL_IF_KUNIT is lacking clarity and
+missing key steps in the example. This has caused bugs and confusion
+among developers.
 
-Should be 'compatible' here.
+Improve wording of description and add missing steps to the example.
+This entails adding the "#include <kunit/visibility.h>" line and the
+"MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");" line. Both of which
+were missing from the original example and key to exposing static
+functions.
 
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: altr,socfpga-stmmac
-> +          - const: snps,dwmac-3.70a
-> +          - const: snps,dwmac
-> +      - items:
-> +          - const: altr,socfpga-stmmac-a10-s10
-> +          - const: snps,dwmac-3.74a
-> +          - const: snps,dwmac
-> +      - items:
-> +          - const: altr,socfpga-stmmac-a10-s10
-> +          - const: snps,dwmac-3.72a
-> +          - const: snps,dwmac
+Reviewed-by: David Gow <davidgow@google.com>
+Signed-off-by: Rae Moar <rmoar@google.com>
+---
+Changes from v1 to v2:
+- Add quotes around EXPORTED_FOR_KUNIT_TESTING to change it to be a
+  string
 
-The last 2 lists can be combined.
+ Documentation/dev-tools/kunit/usage.rst | 38 +++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index 22955d56b379..066ecda1dd98 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -670,28 +670,50 @@ with ``kunit_remove_action``.
+ Testing Static Functions
+ ------------------------
+ 
+-If we do not want to expose functions or variables for testing, one option is to
+-conditionally export the used symbol. For example:
++If you want to test static functions without exposing those functions outside of
++testing, one option is conditionally export the symbol. When KUnit is enabled,
++the symbol is exposed but remains static otherwise. To use this method, follow
++the template below.
+ 
+ .. code-block:: c
+ 
+-	/* In my_file.c */
++	/* In the file containing functions to test "my_file.c" */
+ 
+-	VISIBLE_IF_KUNIT int do_interesting_thing();
++	#include <kunit/visibility.h>
++	#include <my_file.h>
++	...
++	VISIBLE_IF_KUNIT int do_interesting_thing()
++	{
++	...
++	}
+ 	EXPORT_SYMBOL_IF_KUNIT(do_interesting_thing);
+ 
+-	/* In my_file.h */
++	/* In the header file "my_file.h" */
+ 
+ 	#if IS_ENABLED(CONFIG_KUNIT)
+ 		int do_interesting_thing(void);
+ 	#endif
+ 
+-Alternatively, you could conditionally ``#include`` the test file at the end of
+-your .c file. For example:
++	/* In the KUnit test file "my_file_test.c" */
++
++	#include <kunit/visibility.h>
++	#include <my_file.h>
++	...
++	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++	...
++	// Use do_interesting_thing() in tests
++
++For a full example, see this `patch <https://lore.kernel.org/all/20221207014024.340230-3-rmoar@google.com/>`_
++where a test is modified to conditionally expose static functions for testing
++using the macros above.
++
++As an **alternative** to the method above, you could conditionally ``#include``
++the test file at the end of your .c file. This is not recommended but works
++if needed. For example:
+ 
+ .. code-block:: c
+ 
+-	/* In my_file.c */
++	/* In "my_file.c" */
+ 
+ 	static int do_interesting_thing();
+ 
 
-You need to define what each entry is.
+base-commit: c2493384e8110d5a4792fff4b9d46e47b78ea10a
+-- 
+2.49.0.1112.g889b7c5bd8-goog
 
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 4
-
-And the name for each entry.
-
-> +
-> +  phy-mode:
-> +    enum:
-> +      - rgmii
-> +      - sgmii
-> +      - gmii
-> +
-> +  altr,emac-splitter:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Should be the phandle to the emac splitter soft IP node if DWMAC
-> +      controller is connected an emac splitter.
-> +
-> +  altr,f2h_ptp_ref_clk:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to Precision Time Protocol reference clock. This clock is
-> +      common to gmac instances and defaults to osc1.
-> +
-> +  altr,gmii-to-sgmii-converter:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Should be the phandle to the gmii to sgmii converter soft IP.
-> +
-> +  altr,sysmgr-syscon:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      Should be the phandle to the system manager node that encompass
-> +      the glue register, the register offset, and the register shift.
-> +      On Cyclone5/Arria5, the register shift represents the PHY mode
-> +      bits, while on the Arria10/Stratix10/Agilex platforms, the
-> +      register shift represents bit for each emac to enable/disable
-> +      signals from the FPGA fabric to the EMAC modules.
-> +    minItems: 1
-> +    items:
-> +      - description: phandle to the system manager node
-> +      - description: offset of the control register
-> +      - description: shift within the control register
-
-items:
-  - items:
-      - description: phandle to the system manager node
-      - ...
-      - ...
-
-And drop minItems.
-
-> +
-> +allOf:
-> +  - $ref: snps,dwmac.yaml#
-> +
-> +additionalProperties: true
-
-unevaluatedProperties: false
-
-> +
-> +examples:
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    soc {
-> +            #address-cells = <1>;
-
-Use 4 space indent.
-
-> +            #size-cells = <1>;
-> +            gmac0: ethernet@ff700000 {
-
-Drop the label.
-
-> +                    compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a",
-> +                    "snps,dwmac";
-> +                    altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-> +                    reg = <0xff700000 0x2000>;
-> +                    interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "macirq";
-> +                    mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
-> +                    clocks = <&emac_0_clk>;
-> +                    clock-names = "stmmaceth";
-> +                    phy-mode = "sgmii";
-> +            };
-> +    };
