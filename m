@@ -1,144 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B43D259CB4;
-	Tue, 20 May 2025 21:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5E32517B9
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775363; cv=none; b=gs1mtzZMqgifcX5vYS5mhcGDmi3z3+gXFh1BMQdGyUedFdgsllbaM+hFgEQtqN+iu0nHrBSIH/UBfkzN66FybES/0hKiQ0H6AJeE9q6W+QnT0i4oxEjRyw10NINMCdkeTCjn/V6O2AaVivwMrxQacRV6OSj4o8C2/+SM2ePrkbs=
+	t=1747775389; cv=none; b=dx8cqi266TgCYCY0E8Z6HUSNf90ecBwaO4qS/SwITgPcZRnc47NGFb4WhmbghCQkJZlerIYoybzwdbZe/vaLoAAB/Tk7M/ZNsoZ0y2fY1lrhpYuV5WmrQDTD0c4ioeFsDLKbEoG0pAmpMCRmOCDgs1rb63hbqcxlmV/wNjDfUD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775363; c=relaxed/simple;
-	bh=8MZhlSQAe5gVmxQtnmmdZj0u/4gjdgG9U3iIB+4i5AY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=OTVFTh7O18JbfmGWKgSnO8zHZA6Kd7JXW/9bfxaoz40yd9Im07oGgtjszlLz5tlG+Kh7rXEdmUc8jmtcmHkFeTi6hmmflCvN50boT6furjTln0Lzb4CcqVnCa++FNZQ5s7idz7HBYj1ybZjvzM4QeHuDcXp/o+UcjkMY+O3UPBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sU6jClWs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747775389; c=relaxed/simple;
+	bh=+5SNG3Yvej6lGoDZ1n37aC4gcnvTVOUVfNd8IuytXYs=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=ZryOm/y5ILaxKP5mOXiSabSA9LdkSpVqigGbVhjtG66UaCM6k+GaQHvX2r+NU4nSfjiKq0hwPEOz0V5MPwK5gH+aOBcCwnpBGSoTaV2/wkBANfZcYEG9PbA9QDjNU/TSqtB5tzQ2YlAmKPzxzWxNHRb6TH7ZSHQiX+MSiJi+v3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=KwJYoC0Q; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sU6jClWs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987ABC4CEE9;
-	Tue, 20 May 2025 21:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747775362;
-	bh=8MZhlSQAe5gVmxQtnmmdZj0u/4gjdgG9U3iIB+4i5AY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=sU6jClWspgkpv2dehzi1TrbuWk3Z9mDZtkT1GNFzifWrFSUMf775w5kIeQdWv3O26
-	 0j5mkuNjXj6Br5yBZljjQ/3P+cLTxJXwdhvyGfJBiJi4B7QH/oufhOp666kFFdvnsc
-	 KDzBkhySlkCzuCR6c5bW0yIA4gdy8+GvT3NYhREQcEn+LUcyq5M1PbNon+XjbDmKuf
-	 vH6zLcvz29455odjaMmXY4QsjRkd6UNUyzW+RaGTHhxlP4GfHEoZswQrXrWqzTunE9
-	 p0dsr2b/xKeJtjzrGBTwcY+my4rMDuCPGQxsocarwR5WA2sGML3RwohLCB3B4NBJdb
-	 TKA7SCG5dOFpw==
-Date: Tue, 20 May 2025 16:09:20 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="KwJYoC0Q"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-476ab588f32so88920071cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1747775386; x=1748380186; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LdHU9NAnIZSNyB1gPfdJ7lBAFUVsOw0YgwN3CBHTzFg=;
+        b=KwJYoC0Qcj3mGkQ9jHRuvwuOavDRjpARYpIT0h5Sp//QrMeAbhGWz6omlKWdrcNNGu
+         YhplWO8S6iw1JHFAtymWlkLEJz87DAE5r5q8K7OlhC9QH9J1kltkKvVsnQF85QI8i7Y8
+         aqc6vCsAWDvYLFbb+vnjPmTvxcQ/LA9a5I1KLjXC10DvSYqFvshvr+cOVNc3g19Z1DqN
+         XMrFfpbj+mumsgBgRNbbODQVe7zXRn7scRo9dPao4gL6eB4rezmbQ0qcKjmTX5UCJHWg
+         Yd1h2m3NvO2iuRU7/d0O6QBCY8NrgzjqAr2haVe1/Vb7qGvF6hxgE4+d/Fyb1GAF9Bn2
+         rVSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747775386; x=1748380186;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LdHU9NAnIZSNyB1gPfdJ7lBAFUVsOw0YgwN3CBHTzFg=;
+        b=n1bYRarOvcKCMQhSkgAyfwJMgeOzUuDtONNyy0L9R43HhEL3hfLIkkwEDttyllp74c
+         KrpeS3yMysEYzSg9hp6DQC5aXBxskyz1tXsImYWcuQizEp3vYC7zUVUWGFiot7ZcTxCS
+         OmsejGlBbxJ5ZSvHOiSfSSRqPYINpTRZ0Jh5Mcm9wVcE+FPgr4uiOJBMvUnu4jCeSAjK
+         QzNLVJF7ued83Tap/bl0Z8ikSSAfTSWZfXz8r4QIL/IrXzVKV+7OYLyZpqP0X8ynDvbN
+         uAmeuM3/PW3skEWdz+k02tsQu8flry9kDN7AosRqoiHJdnGif0r1QbHgf4riiqVJ2h06
+         woGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWjO8MMPcQIET3gRrDV7osNC1XHVSR1BTP1KY0I/dYsHYGADhj3uAPGBERzzLDG2y51q1KyijE/Y4XzOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzVQAGuTKUhpa7etVfm1DH2NGU12Rh1g2YXvr5xBWA3iyYsayR
+	LRohHpDWJLgbTpuJf1cVre9TDYCMioJfZCqWtV+MHANhkKm2aBW0IKAUPnfeZuJpIA==
+X-Gm-Gg: ASbGncugcz7IZgvBU/XbUBuMsHT3WmcFrIgVtrWd+ywox3YUvP7JF7cHrQa89y/D3UC
+	OrFHdNHoTRFhV1fOEt4U5Pyh8keCX6udQ94q6yw3+A+A53Fk7ExLB4wvWTYVCN4dhJgWEdhEXVL
+	kY1SqDztvYwdetO5Pzpi+g0+4T1PdrQEixWkVlNi51GGOQePEIfokGQZaOLTHrCMkTeivNREHVa
+	WjvrbWsicoW3RPt6zi8XdkfcDlq/kAGIEOPZgXdB6ff/0R/45KnqoayhdYpOPtH+2VRyNqfehuw
+	L5r/LliHEvpfo7KjPh6FPG4XqCWZh7ttsuNmjD7KLfC+9s9x0WDOabRg348PZ8OZZ2rbrF8fXGi
+	zIiAbf0k+/SsxQFweq2m1
+X-Google-Smtp-Source: AGHT+IEPCw01sIbuF5SmngYqGtpHeiqojHH7hAJQaj8XDvszrqolVTvZ5tPwSh7SKcyuBpsl/vgcbQ==
+X-Received: by 2002:a05:622a:1891:b0:49b:464a:3f6 with SMTP id d75a77b69052e-49b464a0469mr32816631cf.4.1747775386599;
+        Tue, 20 May 2025 14:09:46 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-494ae40023asm75509301cf.32.2025.05.20.14.09.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 14:09:46 -0700 (PDT)
+Date: Tue, 20 May 2025 17:09:45 -0400
+Message-ID: <81d0fd707b7c7811411a9dc1caa42516@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-To: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-In-Reply-To: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
-Message-Id: <174777533581.1435243.228426835513916964.robh@kernel.org>
-Subject: Re: [PATCH v2 0/8] Introduce HDP support for STM32MP platforms
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250520_1533/pstg-lib:20250520_1521/pstg-pwork:20250520_1533
+From: Paul Moore <paul@paul-moore.com>
+To: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>, =?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>, Casey Schaufler <casey@schaufler-ca.com>, GUO Zihua <guozihua@huawei.com>, Canfeng Guo <guocanfeng@uniontech.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 4/6] selinux: improve network lookup failure warnings
+References: <20250318083422.21489-3-cgoettsche@seltendoof.de>
+In-Reply-To: <20250318083422.21489-3-cgoettsche@seltendoof.de>
 
-
-On Tue, 20 May 2025 17:02:27 +0200, Clément Le Goffic wrote:
-> This patch series introduces the Hardware Debug Port (HDP) support for
-> STM32MP platforms.
+On Mar 18, 2025 =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de> wrote:
 > 
-> It includes the addition of device tree bindings, the HDP driver,
-> and updates to the device tree files for STM32MP13, STM32MP15,
-> and STM32MP25 SoCs.
-> The series also updates the MAINTAINERS file to include myself as the
-> maintainer for the STM32 HDP driver and adds the necessary
-> pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
+> Rate limit the warnings and include additional available information.
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
 > ---
-> Changes in v2:
-> - Remove bindings header files with function name as #define
-> - Add match_data with function name for three compatible:
->   "st,stm32mp131-hdp", "st,stm32mp151-hdp" and "st,stm32mp251-hdp".
-> - Rework a bit the driver to use match_data.
-> - Remove the use of `dev_err_probe(` in the resume ops.
-> - Remove `MODULE_ALIAS(`.
-> - Remove the vertical bar in bindings description paragraph.
-> - Fix an error in the `pinctrl-0` parameter of the binding example, it
->   was refering a node that wasn't existing.
-> - Use uppercase pin names.
-> - Link to v1: https://lore.kernel.org/r/20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com
-> 
-> ---
-> Clément Le Goffic (8):
->       dt-bindings: pinctrl: stm32: Introduce HDP
->       pinctrl: stm32: Introduce HDP driver
->       MAINTAINERS: Add Clément Le Goffic as STM32 HDP maintainer
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
->       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinctrl node
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 board
-> 
->  .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 188 ++++++
->  MAINTAINERS                                        |   6 +
->  arch/arm/boot/dts/st/stm32mp131.dtsi               |   6 +
->  arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi        |  25 +
->  arch/arm/boot/dts/st/stm32mp151.dtsi               |   7 +
->  arch/arm/boot/dts/st/stm32mp157c-dk2.dts           |   6 +
->  arch/arm64/boot/dts/st/stm32mp251.dtsi             |   7 +
->  drivers/pinctrl/stm32/Kconfig                      |  14 +
->  drivers/pinctrl/stm32/Makefile                     |   1 +
->  drivers/pinctrl/stm32/pinctrl-stm32-hdp.c          | 736 +++++++++++++++++++++
->  10 files changed, 996 insertions(+)
-> ---
-> base-commit: 09fac5c576bbff764dddf2baca0038b359376fd8
-> change-id: 20250224-hdp-upstream-622e5da14a9f
-> 
-> Best regards,
-> --
-> Clément Le Goffic <clement.legoffic@foss.st.com>
-> 
-> 
-> 
+>  security/selinux/netif.c   | 8 ++++----
+>  security/selinux/netnode.c | 4 ++--
+>  security/selinux/netport.c | 4 ++--
+>  3 files changed, 8 insertions(+), 8 deletions(-)
 
+My apologies that it took so long to get back to this, comments below ...
+ 
+> diff --git a/security/selinux/netnode.c b/security/selinux/netnode.c
+> index 8bb456d80dd5..76cf531af110 100644
+> --- a/security/selinux/netnode.c
+> +++ b/security/selinux/netnode.c
+> @@ -228,8 +228,8 @@ static int sel_netnode_sid_slow(const void *addr, u16 family, u32 *sid)
+>  
+>  	spin_unlock_bh(&sel_netnode_lock);
+>  	if (unlikely(ret))
+> -		pr_warn("SELinux: failure in %s(), unable to determine network node label\n",
+> -			__func__);
+> +		pr_warn_ratelimited("SELinux: failure in %s(), unable to determine network node label (%d):  %d\n",
+> +				    __func__, family, ret);
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Let's leave the message as it is currently written.  I don't believe the
+address family is going to be very helpful, and @ret will likely always
+be -EINVAL in the error case.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+If you wanted to add something to the error message, you could consider
+displaying the offending IP address, so long as we can use the pI4/pI6
+printk format specifiers to do it; I don't want to have to have a lot of
+code in the error path simply to properly format IP addresses.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+>  	return ret;
+>  }
+>  
+> diff --git a/security/selinux/netport.c b/security/selinux/netport.c
+> index 7d2207384d40..dadf14984fb4 100644
+> --- a/security/selinux/netport.c
+> +++ b/security/selinux/netport.c
+> @@ -162,8 +162,8 @@ static int sel_netport_sid_slow(u8 protocol, u16 pnum, u32 *sid)
+>  out:
+>  	spin_unlock_bh(&sel_netport_lock);
+>  	if (unlikely(ret))
+> -		pr_warn("SELinux: failure in %s(), unable to determine network port label\n",
+> -			__func__);
+> +		pr_warn_ratelimited("SELinux: failure in %s(), unable to determine network port label (%d:%d):  %d\n",
+> +				    __func__, protocol, pnum, ret);
 
-  pip3 install dtschema --upgrade
+Let's drop @ret from here too as really the only thing an admin can do is
+ensure the policy has a definition for the port, the reason for the
+lookup failure likely isn't very helpful (and looks to be mostly
+transient, e.g. ENOMEM and similar).
 
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 09fac5c576bbff764dddf2baca0038b359376fd8
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/st/' for 20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com:
-
-arch/arm/boot/dts/st/ste-snowball.dtb: / (calaosystems,snowball-a9500): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 536870912]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm/boot/dts/st/ste-ux500-samsung-kyle.dtb: /soc/gpio@8000e100: failed to match any schema with compatible: ['stericsson,db8500-gpio', 'st,nomadik-gpio']
-
-
-
-
-
+--
+paul-moore.com
