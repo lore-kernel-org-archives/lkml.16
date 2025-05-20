@@ -1,203 +1,579 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6318A219EB;
-	Tue, 20 May 2025 05:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49D125B676
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747720543; cv=none; b=jF+PndSNRM2S9W3ZhNqJ0L7t7zo48trFzrV6sRdvZ9tB4c3Dhz4E4nx2OY+QAZUbDOKdBAAnvviv31cGN8fb9p1Srp3qEGzBsAkYAJBfu/Apix8tP00EygGSAZkttbQsax8M5KdcWfSEKy58ctZbMX0kbJdzJAGulkIplBo7l/Q=
+	t=1747720754; cv=none; b=q+yOcvziwLu+/O308NDnSTUnQMIABiO4NDDjk+KN+/U2vULL04wf6IeM6gcA4YWx+WUlPH0X0MWyk1zBeRUc/xlPnu9dZxwLcHPE3Bc69W6dyBP6fYGTCW3MKSVYHlbOmKolHSU2+qU1ncul5TVhfaZTkQOZmpuQ3a5TQeYVpCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747720543; c=relaxed/simple;
-	bh=3muCC4E7LtauJGp0GuU5sADeKiTqSk6vogl0HiydJiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AW1xQfcrs+vadqTygJP6BpgHMwBLSurAcTmCF4Z3M/zw4RJ36M2fkYZyxmzWJnhz/f7bZvxFNECCv24z6TN1vkCPb2t830ivPPLdbITYmvKIva+A0N1DvAJmrhNbop2eaSWDPSOiAm9DLCBxPAWxthD/7A2FFAD2U6TiXwAn/bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQ6WMedy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747720754; c=relaxed/simple;
+	bh=WgQt/NdOhSIU1xi7Jn4ra48ZfyEjelVObububfQoscE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EIq/vx59Lr3xr7n8JIeYxjRsFH0gpGfpTwp7ORBSYEACCJPuWvhrMQ8uf2Bjo3A6v+APoOzo+XIS7A3fxz4GLs/4QJ63lqdewJtP3cZucMMnWzfx0ZyQkiDg7zNWI5V1ckg3PJNkszYX0tpHQgL3vH+efnFnSESiHBOeoyZP7Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KGRoEPig; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQ6WMedy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFB8C4CEE9;
-	Tue, 20 May 2025 05:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747720542;
-	bh=3muCC4E7LtauJGp0GuU5sADeKiTqSk6vogl0HiydJiI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OQ6WMedyGLB1x2K6UyJgoOyw/S19yUboB1np/LU7UXVswU6/ohA2x/WWe/nw8obPz
-	 z1zTs8RbKk9dbk4SALMWVPEnVw5e9FM2GLNcWIub3Qu9sXsijhGJsam99hYz/0v/Gr
-	 PADsRmeLXr/0RCncGeeuJqlYpg3UpDLgLlfZpPxwtNAa+p9HNIY/T2ydGL7v0cBDp1
-	 /ftvGwrMaviKweG1/gZ+wy9bt4RfQjEbeA8yLh8Ca5O91rmabQgkGyX7d5VFdDvQyX
-	 nL4AH5SjR7r3+qRdvM0CVJ1uJ6ukcEzNJA3Sz4O/ez4p/5BCu9P21Y2RyDSY6ZG+OE
-	 PCobTfidlZW5w==
-Date: Tue, 20 May 2025 07:55:38 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Akira Yokosawa <akiyks@gmail.com>, Stephen Rothwell
- <sfr@canb.auug.org.au>, corbet@lwn.net, linux-kernel@vger.kernel.org,
- linux-next@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
- linux-doc@vger.kernel.org
-Subject: Re: linux-next: build failure after merge all the trees
-Message-ID: <20250520075538.57a12325@foz.lan>
-In-Reply-To: <20250520071802.5700d42f@foz.lan>
-References: <20250508184839.656af8f6@canb.auug.org.au>
-	<3b35840a-7b87-44fc-8580-219ac78ad112@gmail.com>
-	<20250508222531.0e7fab9c@canb.auug.org.au>
-	<20250508143911.5d7a77d4@foz.lan>
-	<879b49f5-7350-48e8-a84e-2c580a5b0ca8@gmail.com>
-	<0a6cbe7b-814b-407c-ac1c-96ab7b787d88@infradead.org>
-	<20250520071802.5700d42f@foz.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KGRoEPig"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22e09f57ed4so63659545ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747720750; x=1748325550; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xGDN7RsU0AmhoEMuH3z6yWpAuea8qIhTa8D9PCAxouU=;
+        b=KGRoEPigmidA2kw64BPNRTsfXWdVyJNK2iNBL02Nqh8vL/B5IjzTcuU4/1NYrKST6Z
+         AMl8jd9pya0UrAA8oLidxup7cXaELy3zLNVBGcGvKiJ7+mFEphN0p3uSXryK/4AszYpi
+         IDW2L8pvvKtHoM+/2T2CgBgI/TiOtveFMrPV0SoVJe007qC5pUB+EBkl5/asV6PWvEUU
+         aVaoct9WsTktu7poqGJZ9aIw3jOiay6Hxz5Q4CC3zoXhbQM2AxEq3zdXtdny8zAVbekv
+         Qdum8zsETqKveoMHSTMR0D25K/dJIys51Z2tRxbNLtiDl8PrvCU2ay6T2VV4ADnIsDVw
+         CNbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747720750; x=1748325550;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xGDN7RsU0AmhoEMuH3z6yWpAuea8qIhTa8D9PCAxouU=;
+        b=wwGceQKu9hM0dBPHHVCL9ndxGQPYG4teoiTT0v5+kvpPLGkB1P6BkO7EU+Combywho
+         hwwUjtpOLfcVJoqdC22f8eB6VfiRjcqjJt03SQz68D7Me48Tjkmfv2X7SLPaQd3AVdfc
+         wq7b+morhUmagF2dA5IOi5UXhInWT5nYolEPszMa2NsbGYOaoUQKd0HZaX3h2BmJgzyy
+         l0RfmoorZCAbzlTtsB6C/JUpq9FzNBP3HW74H8qbYsUCuuKk7m6MtCMmZZApt7EaY9vP
+         KzCWM/36sukgGwtWRm6gTQA/lsmOevuWCy0EqDj/LFCY7uGEbE2CXahbq1h8l4+K/WXH
+         GOhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0p6Uz7PyknDSpnzuvLIsmrtNcjM/zqZBp/AdMtZgFqUp6RuipSB1PnU7XOcZigr5Sxkijifm11OibBq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyON5wEBduoGSG0Rd/4Cw3ijwpIKz/H9ULgxPcRmhAcJYqZKJV3
+	Xnf781+5sb1yOiaqrllIXTQC/nyrukRKI/6cZ30M2Mz/fSU4ikTSrE7y7ZUGrBi+pcE=
+X-Gm-Gg: ASbGncs9JQs5lV4tokwKj99wJ0YONXXbJ+mz3e0CkbEFQgf/QkX9QCiykXZTp9IqOJW
+	GEudWL6lANVt+4DypqZo3sMFozBb35P9dLtDyNHzYBTpLgNSPsuyKITkHNf/qUhM4vOia0yv4j6
+	8q4uKAC5DV/flK8WgW66Q7CBFiUui+jY5VNnAcg9OBBouMcMWiYY79rP7dRMmS2suWk8xkZkE6m
+	QW6Af97tZDpSY0RCW3Uk6b9KXTsx8tYsIF2fRvCGBrOUj2pmjxGRJ6NpC88dITiXfP1KtIq44E9
+	i0L/1SswwQieq31t6teN+oH33jOUWPTNkB9lT6EEWDzc54XwwJBO+/ubpconeuw=
+X-Google-Smtp-Source: AGHT+IFiV7Fe9GVj0sSXj3s9kdHd15yQlXWOmLw4nLqvS3v/wHyIG1QFKAgoblC6foD/Y6gSUtdV2A==
+X-Received: by 2002:a17:902:ce90:b0:232:5d3:aa73 with SMTP id d9443c01a7336-23205d3ae44mr167529595ad.13.1747720749649;
+        Mon, 19 May 2025 22:59:09 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231f304a55fsm58639815ad.93.2025.05.19.22.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 22:59:09 -0700 (PDT)
+Date: Tue, 20 May 2025 11:29:06 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Andrew Ballance <andrewjballance@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V12 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+Message-ID: <20250520055906.fxdbow2646gpyax2@vireshk-i7>
+References: <cover.1747634382.git.viresh.kumar@linaro.org>
+ <68906d67109c3b323b54469fb1ee44e10c1c5b1e.1747634382.git.viresh.kumar@linaro.org>
+ <aCsQylyW7R5rC15m@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCsQylyW7R5rC15m@pollux>
 
-Em Tue, 20 May 2025 07:18:02 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On 19-05-25, 13:06, Danilo Krummrich wrote:
+> Sorry, I didn't catch the above in my previous review -- fine for me if you do
+> those improvements in a subsequent patch.
 
-> Em Mon, 19 May 2025 12:33:03 -0700
-> Randy Dunlap <rdunlap@infradead.org> escreveu:
-> 
-> > On 5/14/25 7:33 PM, Akira Yokosawa wrote:  
-> > > [+CC linux-doc]
-> > > 
-> > > Hi,
-> > > 
-> > > On Thu, 8 May 2025 14:39:11 +0200, Mauro Carvalho Chehab wrote:    
-> > >> Em Thu, 8 May 2025 22:25:31 +1000
-> > >> Stephen Rothwell <sfr@canb.auug.org.au> escreveu:    
-> > > [...]
-> > >     
-> > >>>
-> > >>> So, I used "KERNELDOC=$(pwd)/scripts/kernel-doc.pl" and tried again.
-> > >>>
-> > >>> I got these (new) messages:
-> > >>>
-> > >>> Error: Cannot open file drivers/virt/coco/tsm-mr.c
-> > >>> Error: Cannot open file drivers/virt/coco/tsm-mr.c
-> > >>> WARNING: kernel-doc 'scripts/kernel-doc.pl -rst -enable-lineno -export drivers/virt/coco/tsm-mr.c' failed with return code 2
-> > >>>
-> > >>> (and a few other innocuous ones)
-> > >>>
-> > >>> So your guess is good.
-> > >>>
-> > >>> It would be nice to have the Python kernel-doc fixed as well as the
-> > >>> devsec-tsm tree.    
-> > >>
-> > >> With regards to kernel-doc, failing to build if a file is missing
-> > >> is the right thing to do.    
-> > > 
-> > > Mauro, I don't agree here.
-> > > 
-> > > With the perl version of kernel-doc, a typo in a file path doesn't cause
-> > > a fatal error of docs build.
-> > > 
-> > > kernel-doc as python class libs ends up in a fatal error.
-> > > 
-> > > Here is a log of such a fatal error (on top of current docs-next with
-> > > intentional typo made in a pathname in one of .. kernel-doc::
-> > > 
-> > > -----------------------------------------------------------------
-> > > Sphinx parallel build error!
-> > > 
-> > > Versions
-> > > ========
-> > > 
-> > > * Platform:         linux; (Linux-6.8.0-59-generic-x86_64-with-glibc2.39)
-> > > * Python version:   3.12.3 (CPython)
-> > > * Sphinx version:   8.2.3
-> > > * Docutils version: 0.21.2
-> > > * Jinja2 version:   3.1.6
-> > > * Pygments version: 2.19.1
-> > > 
-> > > Last Messages
-> > > =============
-> > > 
-> > >     userspace-api/gpio/gpio-get-chipinfo-ioctl .. userspace-api/media/dvb/dmx-fclose
-> > > 
-> > > 
-> > >     reading sources... [ 90%]
-> > >     userspace-api/media/dvb/dmx-fopen .. userspace-api/media/mediactl/media-controller-model
-> > > 
-> > > 
-> > >     reading sources... [ 92%]
-> > >     userspace-api/media/mediactl/media-func-close .. userspace-api/media/v4l/diff-v4l
-> > > 
-> > > Loaded Extensions
-> > > =================
-> > > 
-> > > * sphinx.ext.mathjax (8.2.3)
-> > > * alabaster (1.0.0)
-> > > * sphinxcontrib.applehelp (2.0.0)
-> > > * sphinxcontrib.devhelp (2.0.0)
-> > > * sphinxcontrib.htmlhelp (2.1.0)
-> > > * sphinxcontrib.serializinghtml (2.0.0)
-> > > * sphinxcontrib.qthelp (2.0.0)
-> > > * kerneldoc (1.0)
-> > > * rstFlatTable (1.0)
-> > > * kernel_include (1.0)
-> > > * kfigure (1.0.0)
-> > > * sphinx.ext.ifconfig (8.2.3)
-> > > * automarkup (unknown version)
-> > > * maintainers_include (1.0)
-> > > * sphinx.ext.autosectionlabel (8.2.3)
-> > > * kernel_abi (1.0)
-> > > * kernel_feat (1.0)
-> > > * translations (unknown version)
-> > > * sphinx.ext.imgmath (8.2.3)
-> > > 
-> > > Traceback
-> > > =========
-> > > 
-> > >       File "/<...>/sphinx-8.2.3/lib/python3.12/site-packages/sphinx/util/parallel.py", line 137, in _join_one
-> > >         raise SphinxParallelError(*result)
-> > >     sphinx.errors.SphinxParallelError: KeyError: '/<...>/lib/bitmap-bad.c'
-> > > 
-> > > 
-> > > The full traceback has been saved in:
-> > > /tmp/sphinx-err-8jzxndsr.log
-> > > 
-> > > To report this error to the developers, please open an issue at <https://github.com/sphinx-doc/sphinx/issues/>. Thanks!
-> > > Please also report this if it was a user error, so that a better error message can be provided next time.
-> > > make[3]: *** [/<...>/Documentation/Makefile:123: htmldocs] Error 2
-> > > make[2]: *** [/<...>/Makefile:1806: htmldocs] Error 2
-> > > make[1]: *** [/<...>/Makefile:248: __sub-make] Error 2
-> > > make[1]: Leaving directory '/<...>/my-output'
-> > > make: *** [Makefile:248: __sub-make] Error 2
-> > > 
-> > > -----------------------------------------------------------------
-> > > 
-> > > This would surprise innocent devs who are kindly willing to test docs build.
-> > > 
-> > > I think you need to tame its behavior and make it emit a proper warning and
-> > > continue building docs in case of such predictable user errors.    
-> > 
-> > Totally agree.  
-> 
-> I also agree. 
-> 
-> The main difference between calling kernel-doc via a shell script or
-> via a Python class is that now errors flow via Sphinx logger class,
-> so they are subject to Sphinx filtering rules.
-> 
-> I double-checked: the logs are produced, and you can see them with "V=1",
-> but Sphinx is hiding them, perhaps because of some options passed through
-> sphinx-build call, or because they require them to have certain types.
-> 
-> A quick workaround would be to not use Sphinx logger anymore (see
-> enclosed). It has a side effect, though: we lose control of setting
-> it via V= variable, which is not good.
+That's fine. Thanks a lot for reviewing the series.
 
-Heh, V=1 is not actually affected by not using Sphinx logger inside
-the class. So, I can't see a side effect of letting the kernel-doc
-use directly Python logger instead of the Sphinx variant.
+-- 
+viresh
 
-So, I submitted the fix at:
-	https://lore.kernel.org/linux-doc/cover.1747719873.git.mchehab+huawei@kernel.org/T/#t
-
-As we may want to revisit it later in the future, in case Sphinx makes
-something more fancy there, I added a comment at the patch.
-
-Thanks,
-Mauro
+diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
+index d0e60b7db81f..94ed81644fe1 100644
+--- a/drivers/cpufreq/rcpufreq_dt.rs
++++ b/drivers/cpufreq/rcpufreq_dt.rs
+@@ -152,30 +152,30 @@ fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
+         )?)
+     }
+ 
+-    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
++    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result {
+         Ok(())
+     }
+ 
+-    fn online(_policy: &mut cpufreq::Policy) -> Result<()> {
++    fn online(_policy: &mut cpufreq::Policy) -> Result {
+         // We did light-weight tear down earlier, nothing to do here.
+         Ok(())
+     }
+ 
+-    fn offline(_policy: &mut cpufreq::Policy) -> Result<()> {
++    fn offline(_policy: &mut cpufreq::Policy) -> Result {
+         // Preserve policy->data and don't free resources on light-weight
+         // tear down.
+         Ok(())
+     }
+ 
+-    fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
++    fn suspend(policy: &mut cpufreq::Policy) -> Result {
+         policy.generic_suspend()
+     }
+ 
+-    fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
++    fn verify(data: &mut cpufreq::PolicyData) -> Result {
+         data.generic_verify()
+     }
+ 
+-    fn target_index(policy: &mut cpufreq::Policy, index: cpufreq::TableIndex) -> Result<()> {
++    fn target_index(policy: &mut cpufreq::Policy, index: cpufreq::TableIndex) -> Result {
+         let Some(data) = policy.data::<Self::PData>() else {
+             return Err(ENOENT);
+         };
+@@ -188,7 +188,7 @@ fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
+         policy.generic_get()
+     }
+ 
+-    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result<()> {
++    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result {
+         Ok(())
+     }
+ 
+@@ -213,10 +213,7 @@ fn probe(
+         _id_info: Option<&Self::IdInfo>,
+     ) -> Result<Pin<KBox<Self>>> {
+         cpufreq::Registration::<CPUFreqDTDriver>::new_foreign_owned(pdev.as_ref())?;
+-
+-        let drvdata = KBox::new(Self {}, GFP_KERNEL)?;
+-
+-        Ok(drvdata.into())
++        Ok(KBox::new(Self {}, GFP_KERNEL)?.into())
+     }
+ }
+ 
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 826710c4f4b0..09b856bb297b 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -154,7 +154,7 @@ pub fn as_raw(&self) -> *mut bindings::cpufreq_policy_data {
+ 
+     /// Wrapper for `cpufreq_generic_frequency_table_verify`.
+     #[inline]
+-    pub fn generic_verify(&self) -> Result<()> {
++    pub fn generic_verify(&self) -> Result {
+         // SAFETY: By the type invariant, the pointer stored in `self` is valid.
+         to_result(unsafe { bindings::cpufreq_generic_frequency_table_verify(self.as_raw()) })
+     }
+@@ -208,15 +208,16 @@ fn from(index: TableIndex) -> Self {
+ /// ```
+ /// use kernel::cpufreq::{Policy, TableIndex};
+ ///
+-/// fn show_freq(policy: &Policy) {
+-///     let table = policy.freq_table().unwrap();
++/// fn show_freq(policy: &Policy) -> Result {
++///     let table = policy.freq_table()?;
+ ///
+ ///     // SAFETY: Index is a valid entry in the table.
+ ///     let index = unsafe { TableIndex::new(0) };
+ ///
+-///     pr_info!("The frequency at index 0 is: {:?}\n", table.freq(index).unwrap());
++///     pr_info!("The frequency at index 0 is: {:?}\n", table.freq(index)?);
+ ///     pr_info!("The flags at index 0 is: {}\n", table.flags(index));
+ ///     pr_info!("The data at index 0 is: {}\n", table.data(index));
++///     Ok(())
+ /// }
+ /// ```
+ #[repr(transparent)]
+@@ -361,7 +362,7 @@ pub fn new() -> Self {
+     }
+ 
+     /// Adds a new entry to the table.
+-    pub fn add(&mut self, freq: Hertz, flags: u32, driver_data: u32) -> Result<()> {
++    pub fn add(&mut self, freq: Hertz, flags: u32, driver_data: u32) -> Result {
+         // Adds the new entry at the end of the vector.
+         Ok(self.entries.push(
+             bindings::cpufreq_frequency_table {
+@@ -515,7 +516,7 @@ pub fn set_suspend_freq(&mut self, freq: Hertz) -> &mut Self {
+ 
+     /// Provides a wrapper to the generic suspend routine.
+     #[inline]
+-    pub fn generic_suspend(&mut self) -> Result<()> {
++    pub fn generic_suspend(&mut self) -> Result {
+         // SAFETY: By the type invariant, the pointer stored in `self` is valid.
+         to_result(unsafe { bindings::cpufreq_generic_suspend(self.as_mut_ref()) })
+     }
+@@ -643,7 +644,7 @@ pub fn data<T: ForeignOwnable>(&mut self) -> Option<<T>::Borrowed<'_>> {
+     /// # Errors
+     ///
+     /// Returns `EBUSY` if private data is already set.
+-    fn set_data<T: ForeignOwnable>(&mut self, data: T) -> Result<()> {
++    fn set_data<T: ForeignOwnable>(&mut self, data: T) -> Result {
+         if self.as_ref().driver_data.is_null() {
+             // Transfer the ownership of the data to the foreign interface.
+             self.as_mut_ref().driver_data = <T as ForeignOwnable>::into_foreign(data) as _;
+@@ -736,27 +737,27 @@ pub trait Driver {
+     fn init(policy: &mut Policy) -> Result<Self::PData>;
+ 
+     /// Driver's `exit` callback.
+-    fn exit(_policy: &mut Policy, _data: Option<Self::PData>) -> Result<()> {
++    fn exit(_policy: &mut Policy, _data: Option<Self::PData>) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `online` callback.
+-    fn online(_policy: &mut Policy) -> Result<()> {
++    fn online(_policy: &mut Policy) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `offline` callback.
+-    fn offline(_policy: &mut Policy) -> Result<()> {
++    fn offline(_policy: &mut Policy) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `suspend` callback.
+-    fn suspend(_policy: &mut Policy) -> Result<()> {
++    fn suspend(_policy: &mut Policy) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `resume` callback.
+-    fn resume(_policy: &mut Policy) -> Result<()> {
++    fn resume(_policy: &mut Policy) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+@@ -766,20 +767,20 @@ fn ready(_policy: &mut Policy) {
+     }
+ 
+     /// Driver's `verify` callback.
+-    fn verify(data: &mut PolicyData) -> Result<()>;
++    fn verify(data: &mut PolicyData) -> Result;
+ 
+     /// Driver's `setpolicy` callback.
+-    fn setpolicy(_policy: &mut Policy) -> Result<()> {
++    fn setpolicy(_policy: &mut Policy) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `target` callback.
+-    fn target(_policy: &mut Policy, _target_freq: u32, _relation: Relation) -> Result<()> {
++    fn target(_policy: &mut Policy, _target_freq: u32, _relation: Relation) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `target_index` callback.
+-    fn target_index(_policy: &mut Policy, _index: TableIndex) -> Result<()> {
++    fn target_index(_policy: &mut Policy, _index: TableIndex) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+@@ -799,7 +800,7 @@ fn get_intermediate(_policy: &mut Policy, _index: TableIndex) -> u32 {
+     }
+ 
+     /// Driver's `target_intermediate` callback.
+-    fn target_intermediate(_policy: &mut Policy, _index: TableIndex) -> Result<()> {
++    fn target_intermediate(_policy: &mut Policy, _index: TableIndex) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+@@ -814,12 +815,12 @@ fn update_limits(_policy: &mut Policy) {
+     }
+ 
+     /// Driver's `bios_limit` callback.
+-    fn bios_limit(_policy: &mut Policy, _limit: &mut u32) -> Result<()> {
++    fn bios_limit(_policy: &mut Policy, _limit: &mut u32) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+     /// Driver's `set_boost` callback.
+-    fn set_boost(_policy: &mut Policy, _state: i32) -> Result<()> {
++    fn set_boost(_policy: &mut Policy, _state: i32) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+@@ -837,43 +838,44 @@ fn register_em(_policy: &mut Policy) {
+ ///
+ /// ```
+ /// use kernel::{
+-///     cpu, cpufreq,
++///     cpufreq,
+ ///     c_str,
+-///     device::{Bound, Device},
++///     device::{Core, Device},
+ ///     macros::vtable,
++///     of, platform,
+ ///     sync::Arc,
+ /// };
+-/// struct FooDevice;
++/// struct SampleDevice;
+ ///
+ /// #[derive(Default)]
+-/// struct FooDriver;
++/// struct SampleDriver;
+ ///
+ /// #[vtable]
+-/// impl cpufreq::Driver for FooDriver {
+-///     const NAME: &'static CStr = c_str!("cpufreq-foo");
++/// impl cpufreq::Driver for SampleDriver {
++///     const NAME: &'static CStr = c_str!("cpufreq-sample");
+ ///     const FLAGS: u16 = cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV;
+ ///     const BOOST_ENABLED: bool = true;
+ ///
+-///     type PData = Arc<FooDevice>;
++///     type PData = Arc<SampleDevice>;
+ ///
+ ///     fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
+ ///         // Initialize here
+-///         Ok(Arc::new(FooDevice, GFP_KERNEL)?)
++///         Ok(Arc::new(SampleDevice, GFP_KERNEL)?)
+ ///     }
+ ///
+-///     fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
++///     fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result {
+ ///         Ok(())
+ ///     }
+ ///
+-///     fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
++///     fn suspend(policy: &mut cpufreq::Policy) -> Result {
+ ///         policy.generic_suspend()
+ ///     }
+ ///
+-///     fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
++///     fn verify(data: &mut cpufreq::PolicyData) -> Result {
+ ///         data.generic_verify()
+ ///     }
+ ///
+-///     fn target_index(policy: &mut cpufreq::Policy, index: cpufreq::TableIndex) -> Result<()> {
++///     fn target_index(policy: &mut cpufreq::Policy, index: cpufreq::TableIndex) -> Result {
+ ///         // Update CPU frequency
+ ///         Ok(())
+ ///     }
+@@ -883,8 +885,17 @@ fn register_em(_policy: &mut Policy) {
+ ///     }
+ /// }
+ ///
+-/// fn foo_probe(dev: &Device<Bound>) {
+-///     cpufreq::Registration::<FooDriver>::new_foreign_owned(dev).unwrap();
++/// impl platform::Driver for SampleDriver {
++///     type IdInfo = ();
++///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
++///
++///     fn probe(
++///         pdev: &platform::Device<Core>,
++///         _id_info: Option<&Self::IdInfo>,
++///     ) -> Result<Pin<KBox<Self>>> {
++///         cpufreq::Registration::<SampleDriver>::new_foreign_owned(pdev.as_ref())?;
++///         Ok(KBox::new(Self {}, GFP_KERNEL)?.into())
++///     }
+ /// }
+ /// ```
+ #[repr(transparent)]
+@@ -1035,7 +1046,7 @@ pub fn new() -> Result<Self> {
+     ///
+     /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
+     /// device is detached.
+-    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result<()> {
++    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
+         Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
+     }
+ }
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index 1e5fd9887b3a..212555dacd45 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -292,7 +292,7 @@ pub enum SearchType {
+ pub trait ConfigOps {
+     /// This is typically used to scale clocks when transitioning between OPPs.
+     #[inline]
+-    fn config_clks(_dev: &Device, _table: &Table, _opp: &OPP, _scaling_down: bool) -> Result<()> {
++    fn config_clks(_dev: &Device, _table: &Table, _opp: &OPP, _scaling_down: bool) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ 
+@@ -304,7 +304,7 @@ fn config_regulators(
+         _opp_new: &OPP,
+         _data: *mut *mut bindings::regulator,
+         _count: u32,
+-    ) -> Result<()> {
++    ) -> Result {
+         build_error!(VTABLE_DEFAULT_ERROR)
+     }
+ }
+@@ -753,7 +753,7 @@ pub fn suspend_freq(&self) -> Hertz {
+ 
+     /// Synchronizes regulators used by the [`Table`].
+     #[inline]
+-    pub fn sync_regulators(&self) -> Result<()> {
++    pub fn sync_regulators(&self) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_sync_regulators(self.dev.as_raw()) })
+@@ -761,14 +761,14 @@ pub fn sync_regulators(&self) -> Result<()> {
+ 
+     /// Gets sharing CPUs.
+     #[inline]
+-    pub fn sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result<()> {
++    pub fn sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_get_sharing_cpus(dev.as_raw(), cpumask.as_raw()) })
+     }
+ 
+     /// Sets sharing CPUs.
+-    pub fn set_sharing_cpus(&mut self, cpumask: &mut Cpumask) -> Result<()> {
++    pub fn set_sharing_cpus(&mut self, cpumask: &mut Cpumask) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe {
+@@ -786,7 +786,7 @@ pub fn set_sharing_cpus(&mut self, cpumask: &mut Cpumask) -> Result<()> {
+     /// Gets sharing CPUs from device tree.
+     #[cfg(CONFIG_OF)]
+     #[inline]
+-    pub fn of_sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result<()> {
++    pub fn of_sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe {
+@@ -802,7 +802,7 @@ pub fn adjust_voltage(
+         volt: MicroVolt,
+         volt_min: MicroVolt,
+         volt_max: MicroVolt,
+-    ) -> Result<()> {
++    ) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe {
+@@ -825,7 +825,7 @@ pub fn cpufreq_table(&mut self) -> Result<FreqTable> {
+ 
+     /// Configures device with [`OPP`] matching the frequency value.
+     #[inline]
+-    pub fn set_rate(&self, freq: Hertz) -> Result<()> {
++    pub fn set_rate(&self, freq: Hertz) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_set_rate(self.dev.as_raw(), freq.into()) })
+@@ -833,7 +833,7 @@ pub fn set_rate(&self, freq: Hertz) -> Result<()> {
+ 
+     /// Configures device with [`OPP`].
+     #[inline]
+-    pub fn set_opp(&self, opp: &OPP) -> Result<()> {
++    pub fn set_opp(&self, opp: &OPP) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_set_opp(self.dev.as_raw(), opp.as_raw()) })
+@@ -937,7 +937,7 @@ pub fn opp_from_bw(&self, mut bw: u32, index: i32, stype: SearchType) -> Result<
+ 
+     /// Enables the [`OPP`].
+     #[inline]
+-    pub fn enable_opp(&self, freq: Hertz) -> Result<()> {
++    pub fn enable_opp(&self, freq: Hertz) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_enable(self.dev.as_raw(), freq.into()) })
+@@ -945,7 +945,7 @@ pub fn enable_opp(&self, freq: Hertz) -> Result<()> {
+ 
+     /// Disables the [`OPP`].
+     #[inline]
+-    pub fn disable_opp(&self, freq: Hertz) -> Result<()> {
++    pub fn disable_opp(&self, freq: Hertz) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe { bindings::dev_pm_opp_disable(self.dev.as_raw(), freq.into()) })
+@@ -953,7 +953,7 @@ pub fn disable_opp(&self, freq: Hertz) -> Result<()> {
+ 
+     /// Registers with the Energy model.
+     #[cfg(CONFIG_OF)]
+-    pub fn of_register_em(&mut self, cpumask: &mut Cpumask) -> Result<()> {
++    pub fn of_register_em(&mut self, cpumask: &mut Cpumask) -> Result {
+         // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+         // requirements.
+         to_result(unsafe {
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index 27cc72d474f0..6ff34096d7ee 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -185,9 +185,9 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
+ 
+     let info = ModuleInfo::parse(&mut it);
+ 
+-    /* Rust does not allow hyphens in identifiers, use underscore instead */
+-    let name_identifier = info.name.replace('-', "_");
+-    let mut modinfo = ModInfoBuilder::new(name_identifier.as_ref());
++    // Rust does not allow hyphens in identifiers, use underscore instead.
++    let ident = info.name.replace('-', "_");
++    let mut modinfo = ModInfoBuilder::new(ident.as_ref());
+     if let Some(author) = info.author {
+         modinfo.emit("author", &author);
+     }
+@@ -312,15 +312,15 @@ mod __module_init {{
+                     #[doc(hidden)]
+                     #[link_section = \"{initcall_section}\"]
+                     #[used]
+-                    pub static __{name_identifier}_initcall: extern \"C\" fn() ->
+-                        kernel::ffi::c_int = __{name_identifier}_init;
++                    pub static __{ident}_initcall: extern \"C\" fn() ->
++                        kernel::ffi::c_int = __{ident}_init;
+ 
+                     #[cfg(not(MODULE))]
+                     #[cfg(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)]
+                     core::arch::global_asm!(
+                         r#\".section \"{initcall_section}\", \"a\"
+-                        __{name_identifier}_initcall:
+-                            .long   __{name_identifier}_init - .
++                        __{ident}_initcall:
++                            .long   __{ident}_init - .
+                             .previous
+                         \"#
+                     );
+@@ -328,7 +328,7 @@ mod __module_init {{
+                     #[cfg(not(MODULE))]
+                     #[doc(hidden)]
+                     #[no_mangle]
+-                    pub extern \"C\" fn __{name_identifier}_init() -> kernel::ffi::c_int {{
++                    pub extern \"C\" fn __{ident}_init() -> kernel::ffi::c_int {{
+                         // SAFETY: This function is inaccessible to the outside due to the double
+                         // module wrapping it. It is called exactly once by the C side via its
+                         // placement above in the initcall section.
+@@ -338,12 +338,12 @@ mod __module_init {{
+                     #[cfg(not(MODULE))]
+                     #[doc(hidden)]
+                     #[no_mangle]
+-                    pub extern \"C\" fn __{name_identifier}_exit() {{
++                    pub extern \"C\" fn __{ident}_exit() {{
+                         // SAFETY:
+                         // - This function is inaccessible to the outside due to the double
+                         //   module wrapping it. It is called exactly once by the C side via its
+                         //   unique name,
+-                        // - furthermore it is only called after `__{name_identifier}_init` has
++                        // - furthermore it is only called after `__{ident}_init` has
+                         //   returned `0` (which delegates to `__init`).
+                         unsafe {{ __exit() }}
+                     }}
+@@ -384,7 +384,7 @@ unsafe fn __exit() {{
+         ",
+         type_ = info.type_,
+         name = info.name,
+-        name_identifier = name_identifier,
++        ident = ident,
+         modinfo = modinfo.buffer,
+         initcall_section = ".initcall6.init"
+     )
