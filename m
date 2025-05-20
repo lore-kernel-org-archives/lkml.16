@@ -1,134 +1,125 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C5925B682
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83B325C701;
+	Tue, 20 May 2025 06:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747720789; cv=none; b=ohhoTgzDRwd+0zGNNUpzIxIkzMLuqhjrIk7nSU46IEFO2MeGUjl6sq989p/qto5WsQl/evip2Cyp6bpUYQvPee+xS86PxgRSBiTpI/HLrBJq5VapaV2CQIWAozwUgcrNCsXzDjljmB2XyiXMQPX+vkbnFpH+F0/g+ifuYZ/KrpY=
+	t=1747720807; cv=none; b=DghKTPMdlJ3ky/rQSGyTQ0eVn1YtPHMvTWGgVXZODRC8Q6RiqL+PbFhCzmL+XzYF9LOQ1t5G1sT58omrxZVrapy5PSuBTBbeOVclliaa4CTzJy4hMPMLbJGrYfkI5YMB1iIJKydi1JwaCGgI6qbgYhfAryhFqwB/Br2biTYcUCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747720789; c=relaxed/simple;
-	bh=HtZ3r2Fkj3SIQiBaksw/po6bDy3r2DetEvEulkhJ2Qg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dmFtOzu/7olGxgcBMS+Xwm518dLPNLfc0LmRhFVzQk7W5Hy4tIEerMGrof9Fhxp6HnEw8+XJrFlZdk8Xra0wjGmKpCBJyh28XL08ohi/BRhDCPNr6ar7BWJSPgfqkT1y3ZLMgPnoPNsD9OCUjDUjkDP/TAPFQvkzQds7QkL0j/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izkB1OJ+; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747720807; c=relaxed/simple;
+	bh=dMgMAG9XNL5bV4MfmNIisiKf+nZMmc8QZRDWJohNcMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E66lqnCGNkIAHtpfHS901puGzMatMQjzzuOBa12ve/iETw/rgMpenzsE53fmt9n+KN6aRJz7G9mx4JjmY7kN1LfYefr72lQlAnYZYt92qa7N5Hn0eKNAD3HP9JsX7by7sKQ5v8knjgnacfZRkNfSweTLUEXcGljtRrb3pl4X5i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MrNDBxoX; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izkB1OJ+"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6f2b04a6169so60836226d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 22:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747720787; x=1748325587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wbPvbtnOrmQE+1U2utP3GVC8XV93atGkPO7YSOID2TE=;
-        b=izkB1OJ+Rgzsn87q2BGWFPGRFLfRD+l3hC1ZV/p8b3z2rPLn7eYxckC2qby8brmUyv
-         jQvVaDhrg5V5oljn6CR3Tl7MHaFKRrdHYjPzcD1pc3mOvC2uFQoBjqqgjNcCagupi9sL
-         0YZYSLPaRz2XBrKtkFUns/Oa8nme7R2jDrskuFhNWEWUuw1IsSuYCVJiK61EwW5ejnzB
-         6URWgjMlHH35QFDoRXKTXzYUBuVdTEouPIutPSIr7ydxRpAAj7RDejThYgNPiYdBQqJa
-         Nk4cOF1y52xEqAgpNfc532ct+UQilR47yN7w21LRYBIXNwiFfEgq9f3j8dmS+IOzJ0Me
-         7ZdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747720787; x=1748325587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wbPvbtnOrmQE+1U2utP3GVC8XV93atGkPO7YSOID2TE=;
-        b=HeHNQdeKPSft+FEbJwxqXnNbQHZA5Irsr+RfnSK0vTP61acOBSh/lD8/nug+PD/OWg
-         hnJzekVMea6psL2PaagSfFgEdUxZtpL1AVSA2qyeV/mdLzLvJYsJ0OR9GTYgTuwY0Cz5
-         LFT/0kc2ByLv0xnk6UTm2bHSIBNdxlRNzT9Lw77bvFnjHLNFre1q0ZvpL4mq89SX1Vae
-         ySNmeaSvDfPu+6h3oCLkuKlhqvR0+Dmd6imLbu37S8o9kYPrxF0OR4bkdlo21NjgF/G0
-         zsI+dks9R+3pusHtO1asUM6qFrQoFn49fvzkCpyq8t9oep6Absc7Dx2spYAWn1dxdi8S
-         RZZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFpT3LVbuRc55AIeUbQQRs03Q4gsF1AEgnJYztQWdl8Kt8XsGDFCF+nxWNyJPmQ8rEIvDSWNPBMgErLeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6WLSySBONgOFluo3eNUw3MqAAP8SGIfFckBQYu4HU0FeSISWY
-	SPs7oLN9dxjmb/qjkcqNsNFo8qi21uR2TIqBY6f6+jjk24YT8v4MnVCYifdEVD+TlWs4qLDZvu1
-	0MRtkryF9gFnP6S6UattRZ9Go1UxY+3U=
-X-Gm-Gg: ASbGncvebugOYKBdfuWZr9Vmivc35F9w7jcPyBbbDABSNw9cK9qwsmqX8MgOiKturrs
-	4w+5GtB73FmaEWrAD7aog1exdwB3Hw2JIaGIxP/omrLruiXsT2n6/kP3LCXakGJJavHLYsAZmc9
-	qMs0Gz9n1KrjFhF/Krq9/SCVLWNwthkS+/4en2/6DM73ce
-X-Google-Smtp-Source: AGHT+IF66zV1pqgN2aIRpxtBq0k2LIK+BnL60q836qda3s8pLIoPl4F6+KD3l+xh+yzzMDQPHqydEt4QyNx6dnGdqio=
-X-Received: by 2002:a05:6214:27e2:b0:6f5:4055:83d9 with SMTP id
- 6a1803df08f44-6f8b2c32c7bmr247622576d6.6.1747720786785; Mon, 19 May 2025
- 22:59:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MrNDBxoX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747720805; x=1779256805;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dMgMAG9XNL5bV4MfmNIisiKf+nZMmc8QZRDWJohNcMw=;
+  b=MrNDBxoXUZjf+2WBklhv9tpSqdRTcPZU2P2U6No0GJkrcI6ru5Euc8rn
+   0DdAemL+efa2QhP2xYeSASStFQooYXYCytQf8A5ka7uoxz6z4gWiAty5O
+   aMwr6I1p+l+f7Mx8Of58N84GnT31w6ha/BH768jx/5AgMuoGSpFYV6AZW
+   vi0ReD+cd1CdBJ8ieUoG6dTnhxAhX2wZean0YBzHHk+RN1Dz+wt7JcJCx
+   56v0N5JDreLUqzXXIhF6MMcAgMgQD4WJ+NTydaHVuM5ZH3U19Td2nMj9x
+   jaHRI+QerLrqB4n47o6Xb8ItZNBLGOoAon8tOEAyYV24ue5AxNosDjKFj
+   g==;
+X-CSE-ConnectionGUID: rzzfhikNQhyNJ2oECw+9CA==
+X-CSE-MsgGUID: ZNq+v3DrRHWxcvuaDNTC1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="75040140"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="75040140"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:59:59 -0700
+X-CSE-ConnectionGUID: V6IWy+CVSQKKPzFwODsdSw==
+X-CSE-MsgGUID: gWNRCweFRyOb2wsc97k3Xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139472155"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 19 May 2025 22:59:55 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHG12-000MCm-2W;
+	Tue, 20 May 2025 05:59:52 +0000
+Date: Tue, 20 May 2025 13:59:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <kees@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+Message-ID: <202505201339.bUfYKFye-lkp@intel.com>
+References: <20250519161712.2609395-4-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417043457.10632-1-xuewen.yan@unisoc.com> <77de8033-4364-44a5-b21b-ffe511b8f5d3@arm.com>
-In-Reply-To: <77de8033-4364-44a5-b21b-ffe511b8f5d3@arm.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Tue, 20 May 2025 13:59:36 +0800
-X-Gm-Features: AX0GCFuXp-0Jt8EaoVHmOVp6krqXu0HiBP6JiLmDKhIlVKYOhJutpRNS05h6Ab4
-Message-ID: <CAB8ipk9bLmnVYnjggw-Ymp6sZiO9SHJ-XZBNRj0Bv3taYSRM2w@mail.gmail.com>
-Subject: Re: [PATCH V3 0/2] sched: Align uclamp and util_est
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	hongyan.xia2@arm.com, linux-kernel@vger.kernel.org, ke.wang@unisoc.com, 
-	di.shen@unisoc.com, kprateek.nayak@amd.com, kuyo.chang@mediatek.com, 
-	juju.sung@mediatek.com, qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519161712.2609395-4-bqe@google.com>
 
-Gentle ping if forgotten.
+Hi Burak,
 
-Sorry to ask, but may I know if this patch can be merged into the mainline?
+kernel test robot noticed the following build errors:
 
-Thanks!
+[auto build test ERROR on rust/rust-next]
+[also build test ERROR on akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp linus/master v6.15-rc7]
+[cannot apply to next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-On Tue, Apr 22, 2025 at 11:27=E2=80=AFPM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 17/04/2025 06:34, Xuewen Yan wrote:
-> > Now, both uclamp and util_est have been adapted for DELAYED_DEQUEUE,
-> > and the double enqueue/dequeue issue no longer exists.
-> > However, there is still room for optimization in both uclamp and util_e=
-st.
-> > Previous discussions as following:
-> > https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW=
--iWTQKiA@mail.gmail.com/
-> > https://lore.kernel.org/all/84441660bef0a5e67fd09dc3787178d0276dad31.17=
-40664400.git.hongyan.xia2@arm.com/T/#u
-> > https://lore.kernel.org/all/CAB8ipk9LpbiUDnbcV6+59+Sa=3DAi7tFzO=3D=3D=
-=3DmpLD3obNdV4=3DJ-A@mail.gmail.com/T/#u
-> > https://lore.kernel.org/all/aa8baf67-a8ec-4ad8-a6a8-afdcd7036771@arm.co=
-m/
-> > https://lore.kernel.org/all/20250325014733.18405-1-xuewen.yan@unisoc.co=
-m/
-> >
-> > patch[1]: Simply the condition for util_est_dequeue/enqueue;
-> > patch[2] aligns uclamp and util_est and call before freq update to impr=
-ove
-> > the performance and power.
-> >
-> > Xuewen Yan (2):
-> >   sched/util_est: Simply the condition for util_est_dequeue/enqueue
-> >   sched/uclamp: Align uclamp and util_est and call before freq update
-> >
-> >  kernel/sched/core.c | 17 ++++++++++-------
-> >  kernel/sched/fair.c |  4 ++--
-> >  2 files changed, 12 insertions(+), 9 deletions(-)
-> >
-> > ---
-> > v3:
-> > - split previous patch in 2 patches.
-> >
-> > v2:
-> > - simply the util-est's en/dequeue check;
-> > ---
->
-> LGTM.
->
-> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->
-> I assume you can add Hongyan's test tag from:
-> https://lkml.kernel.org/r/be0cace9-d173-4de3-959e-861876ad77fc@arm.com
-> as well.
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Burak-Emir/rust-add-bindings-for-bitmap-h/20250520-002216
+base:   https://github.com/Rust-for-Linux/linux rust-next
+patch link:    https://lore.kernel.org/r/20250519161712.2609395-4-bqe%40google.com
+patch subject: [PATCH v8 3/5] rust: add bitmap API.
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250520/202505201339.bUfYKFye-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201339.bUfYKFye-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505201339.bUfYKFye-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error[E0061]: this method takes 0 arguments but 1 argument was supplied
+   --> rust/kernel/bitmap.rs:396:28
+   |
+   396 |         assert_eq!(None, b.last_bit(2048));
+   |                            ^^^^^^^^ ----
+   |                                     |
+   |                                     unexpected argument of type `{integer}`
+   |                                     help: remove the extra argument
+   |
+   note: method defined here
+   --> rust/kernel/bitmap.rs:301:12
+   |
+   301 |     pub fn last_bit(&self) -> Option<usize> {
+   |            ^^^^^^^^
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
