@@ -1,187 +1,211 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1845528643F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747771832; cv=none; b=Zk/JlPnbNXqaAf9L3PWWWZdGWF6WQYs82F8fNXYt9BksX9hnaTUB9Vf8h5Dk7lWghnBVFGr+wpiBdCiQxGoeJuloA9AAbztNNkwHI68M1yleM4RYPXkgE0U3UMkv16qRwjlQTgTvulYjeahJgaG4UjNZcA2B0kIucIxGlaEKGHA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747771832; c=relaxed/simple;
-	bh=17Oo7t3drcmTUprT7YAGKDrd3hI3NBO5nbodblx74cU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N6U1vPHAn0DE1lbkSjF6yDl3mAHywslZ3KV47JIUWUe5WwUjNYRa/GCA4+GgzLHGkd7jbQi+n/xdeUU0t3KhqwbOmKaerhIGYirbvZ3AanxLIN9gMntnYlk52u/7Hqcfkqyl7iTFqLE394pU8E+JxcKUEPaP6XxoOOwDWYgDxxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P7RnoFCy; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4EC28852A;
+	Tue, 20 May 2025 20:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747771857; cv=fail; b=gbOREUHmWh3X2sTHF/3T5mDrUXudb2L4DAYIdZngIGClogyAVgJSkJ+cgXeg4wT0p54jCineIivV0hSG4iGhE1kQOy1MTdDMv4eQEtEAv6ZM5GnJzsvhCFYNG2Sl1qQ5LNdoTLkVjySX+QkyxuWJ20y6iWmAwEt0EW0IsJCVEB4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747771857; c=relaxed/simple;
+	bh=H3uNiNVH4G8ixJeGHpxyoUSLgVpBWHw5chpxhe1mUXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=X7GwQ5M1yFy1fsLf8qhGNb3R3Q2wdnZKzz+T7VMePwQ5BFszIrQQRba27VqrFs1PmHrXh789YsPLcPVfDEZ0BxoBBgLekYQIWfln9aYa13yiI9v4K9uRzA1ipxKWmwj4L/aAZ8HuFCDBrpUk62XJU6WNVAfCiOixwEELY0ysOH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fXe2/tv6; arc=fail smtp.client-ip=40.107.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P7RnoFCy"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231e331baceso44818275ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747771828; x=1748376628; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3+KhD19TGWdJCr6+1OZ/eYxZVtdk3nOv6YbmASHwaj4=;
-        b=P7RnoFCy5D17T6Ielpfz02tldjKtnHtSe6A3fkzMNRNzcP/jH8v2/shtvgeAOJrr25
-         kYwJ5gta8ZjVQ0aajeFw5efi7r1jrdHDwsx5RIguG0TFNPCykxFw7ZlW9FHEZWQ0iNZ8
-         3XHPk8I/LT4s1UoTpwcqHPIPpUv19L0cuYjV1QsxSA/6i61iZkWXRysbrsDjBMSwZOUP
-         0RF/S/oLg0+VE5CDTwla9OImFzIj8sOXm7usUzDvPom7sEmsWuY7DEBTHQzWVnN2f0Q2
-         EbRMXb8cIPoeF4J8JxuCILZ3E4vzNMoe8g+eGhBHn6GlTbrFxj3vGJ9E5e+fZlGhDmdc
-         iEEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747771828; x=1748376628;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+KhD19TGWdJCr6+1OZ/eYxZVtdk3nOv6YbmASHwaj4=;
-        b=b+8n2MccBNnonx0VJbzZNG6lQtnOG4Ww9aRZBD3ET7jVD2LC8V83U7Xl8ekaMHBknZ
-         5fZPCAvGrwXqA3/4XDIHAplX/ExlsJ2bsnYFEFx7Ke3qvvDpmjNBNqnCmDr7XVGk/Rfv
-         ANb5tuhoj5LEmpynM49rTGfsitCXEBLv8i3HpsOxW7KqZeiI8qxKrkkGiM3nmAMbOtnn
-         shcIVZcSKoUxxabq31AfeR/+lCAiBm+lQRG9rYgN2o/LbEKyFZx6q6ctM3wiw6CbzQMw
-         G1uNMrOwApnRtK/Ew3lPQHF7hbZSsr9omrbaTC/7LcWCe1ZQx7wq+QQrQU+BCQa76+b0
-         N3TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYZ68Bp/ep3e8f/T8Fd7+VVPzurF3xiO+riaxwdN6KhWw4bD5aR5CYUa+zf57NxzMMJmbwzaJSr7okQ1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/I8gQPQa/2piCv+sPHmc8ad+vuN2C91qUTazF1/oHqlMRtgjJ
-	pc18knibwuXwSXrdzKaDaMEtaZyKQCxhkhysszHoYvYFbYGnCo7Hb+DxShDI8b2Otg==
-X-Gm-Gg: ASbGnctTfaZap7QRpBQjcskAy8htI9kUQN8nT1R7pII5K2s2aEuk9K0pp9NlgCli784
-	/4kmDgmzpwds67/rz2yAE3+9WmL4mbDdy5yOLun6nryDe+xOVenDFl03sbgDs2297B99tkCePrm
-	At0esSQvcSPraZIm1sETA8K+pb4n/0fAns7MvtiaRDzfdRlLqHDZo6YHBN5Ncjke7EFp5FwL7lr
-	0naU7SEAsEmkbA3NC4nt1MbYSdO526nPOOs2eYWya9Ok49fV8qMxcWjG09RW7WZS1S6SSuvLsDs
-	YrwJIYBS05C95KG2GfbPGwJaEa4cGV3VCXSE+iaOcrLZssW/yXi13raaMVLfh8NL4mMZ1pNyCmP
-	pR8Tj1nqkdjt1RG3qKUiajtVLMkdGWYBYdV7C+8hOYd2ExccnPznGyVAjbQ==
-X-Google-Smtp-Source: AGHT+IE/aaJHqzivD7gsDmjX9hv8lRsiGnVJAxn/l+ejoBOCUQrJanyH91/M2gPTmHWZeXIyOLokeQ==
-X-Received: by 2002:a17:903:32cf:b0:22e:40d7:3718 with SMTP id d9443c01a7336-231d45ab9e9mr232041875ad.47.1747771827986;
-        Tue, 20 May 2025 13:10:27 -0700 (PDT)
-Received: from ?IPV6:2a00:79e0:2e14:8:658c:7a8:df68:611d? ([2a00:79e0:2e14:8:658c:7a8:df68:611d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9530sm80833475ad.48.2025.05.20.13.10.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 13:10:27 -0700 (PDT)
-Message-ID: <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
-Date: Tue, 20 May 2025 13:10:25 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fXe2/tv6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H/vwzSSI049x425e0xwFBVKu1eruGl3qHgswOpNgmPrtFBHuBEBGID+y6ibyv6rh+EABFHRlX5kt1SyvY5v6ByH2XPzdbzJwLFPX9V8RdzqyExvWYO6ov/7fNNoQEU0pV9Jo05g6Ps1IRxGP9X8BkvPJBiuvzKGdUHhccC4fzhGaB4UMUKkhBxXYGPTmCmjXi+VxWQFNQ1POCFyRjSDdo4IcLh4N7I4hS7M05vXu+BflsSejZUnROTzasBp45EFrQXYrarheWO05qpy+cu7YVENKAq/NbVpMfVpmIxXRDae5xUe+dqoM0h2BaH2d2zH8Xqih6lsTsQhxvQIJdmPzHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TnorzDaYndn/gYmHd6dHKYT3tOYVS/WnBik9MAmAB7s=;
+ b=aVvk41i6FHj4PITAfLVr6OItoamttXSRVvMdRRylc+7lm7OZHgmkCILsyCMgaLvb0Ers7hWir7doevpsazLfgn82yEMsRm+qdQzcwN6nz6/OCczfmUXlQFtucRSCKk32iMpeMT9/ExdtFSpJOHg/9kj9brbZRva52DPjjAnmdh37ROT59sCHGajLGWP4/rLtto02CAWaGhrxieKnz23AHwdlYy3zv+pZiHnSoPmCuwgOGP1DczeyiQrNaZ4j46FPCxHnlCy3+yezyrV0BzD2RuGUL9X/J2J4weqwMmEiAZT5b2dWDc7OLUvwMBHZiETCJMKDcgKCI0dLOJ0sPR2Nxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TnorzDaYndn/gYmHd6dHKYT3tOYVS/WnBik9MAmAB7s=;
+ b=fXe2/tv6KQeQ0AcMNLSgtL4p4wK0EjESKJitsSl4hb7YLl5H1PytzmqYfPpRrh4F9Dh+6/Qh82W8rcKNYrbKlZLW8UxzRlOd1r+OsVj4jiFOsxugmhyVxCMvIoFxF2vpPYsHbPYRgdVb0bsTPLieYySbK5Cew7rnJBPTCvQ6ZyMc1MQQZV43MddmUPVeUCX5J77cQiCJ046ybRsLM9B1WenibENMqAnOcdTRl8RAWMTAuiwnMtszDnVFG8RIRKAwQ8vB6j0s2YHpNJUJ9YYufiXAeqCSg2rRKWt9yGqylXNw9sGACZAsg5l7TpOqV+XbP5K22xEv+CcyqSPkDG1+UA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SJ2PR12MB9242.namprd12.prod.outlook.com (2603:10b6:a03:56f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 20 May
+ 2025 20:10:50 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 20:10:50 +0000
+Date: Tue, 20 May 2025 16:10:48 -0400
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Kane York <kanepyork@gmail.com>
+Subject: Re: [PATCH] objtool/rust: relax slice condition to cover more
+ `noreturn` Rust functions
+Message-ID: <20250520201048.GA3979982@joelnvbox>
+References: <20250520185555.825242-1-ojeda@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520185555.825242-1-ojeda@kernel.org>
+X-ClientProxiedBy: MN0PR05CA0006.namprd05.prod.outlook.com
+ (2603:10b6:208:52c::31) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
- model power connections
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Badhri Jagan Sridharan <badhri@google.com>,
- Sebastian Reichel <sre@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
- <20250514194249.GA2881453-robh@kernel.org>
-From: Amit Sunil Dhamne <amitsd@google.com>
-Content-Language: en-US
-In-Reply-To: <20250514194249.GA2881453-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ2PR12MB9242:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a09c0de-c221-4470-ba0f-08dd97da6ab8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2kP1B6OGE5ErxS1qrFATHKw+o1onsI5YVxRgMWD5giManb0JMZ9KJdERzh52?=
+ =?us-ascii?Q?465cQeYkpxBOlS4ZOkFBfbY/l+y8X051Ivz7S2iK4IhCgbBCBehysDkOg1Xf?=
+ =?us-ascii?Q?WkZ6n15rVoFQuKL6mYQ1Bk2y8dY/86Ekvu6d+UQO2ZoZO/qDSNUyVTpRouRl?=
+ =?us-ascii?Q?3ypX2PE+VWWrMLh/ETjpphbYAcaLZHDwrikUNxV27uof7j7eRfezOfG5KSKv?=
+ =?us-ascii?Q?E/bUPrU/53DKEZY/oVkX2/MLIJLMyURJAnDRorlXgw2+u40j3h678QTP+EjU?=
+ =?us-ascii?Q?j55vGPKg5r873TL2BzbwUweudFDjr9/FQBWKTV9hNIFuNjgJgNTQ63UDSizZ?=
+ =?us-ascii?Q?EP+YIQN8YGZESRnddg4SXnHwqlIl1uX6WV/5VFjTCg6zwGKfdga8MV2vn0Zd?=
+ =?us-ascii?Q?hAB4Ei4tsVBexjFZs0CsWS7Enelth2OV7t6NAKh2IzNRnRsqrLEAMNH2cKi6?=
+ =?us-ascii?Q?97+elqlFjxb6zXaJprpy4HjWshAs7ad77QDCO6JOv8JK4fL4Fv/oO6E9EhMU?=
+ =?us-ascii?Q?BTTg1HKpNxLFMCLYy4prmi+rcKuOR+etaC5eFq3B3EsT7cbEhNtiJIhHTwf4?=
+ =?us-ascii?Q?LrrCoJQED2N2JvfJA9ndbtRnkWjfATsD52p1raFpzRfzZqG9g/Z1UX1VbAXA?=
+ =?us-ascii?Q?WkbFifMrMAn8oxhmaq+Y5hMyyDAQEcLcas/p9yq7DUVzNXcR6hLOALc1S2Xv?=
+ =?us-ascii?Q?qfJrJSC+D9bNPYDFn07nN9QwOtcNRukSjS4paoUAvdqgYsqAYPT4f6m230Tc?=
+ =?us-ascii?Q?YROLC7EGP3q9YMOgNWvlPy7e6zye8b726tA17cWOW69NpeiWr5F+VhuvPDL7?=
+ =?us-ascii?Q?pKq9wK3DKk7iQllUXe5J3aPjP0St2VC2r/yEq3SndthfE1nMF7WFXLIXZivl?=
+ =?us-ascii?Q?7S+GCzPATpq7s0o6BKJHJnD1E0HTJFnRmN6eSv/EJTsVMy57ogs1cSnZ4cMf?=
+ =?us-ascii?Q?LZBpTGSPN+iwv2f5JkP2Gn6mx3FDtW1T/WXUmOkf+X+dbV9ZJVJUE60gHDAo?=
+ =?us-ascii?Q?njndgrOHVoLAAe9Cjy4sHiJOYFM+YHDjox6ewthQYOi+aLXAJXYkjNSALDBX?=
+ =?us-ascii?Q?T02yb9rt0vep6PEt3izC6cQAWeEv5MKGGQfMsZLpB6JBGThQLzWZdjyE5EWE?=
+ =?us-ascii?Q?OedizZyfUVyI9dw687/d9e81kbFPJOABMRwARWrcaiTlCK2KT6sMoU0FwmWQ?=
+ =?us-ascii?Q?Da6CckqJCx8S9gmydnuQnDTnf8SS5HOEFfc1wDbVGhPzdI56vdAStaYd1tQ3?=
+ =?us-ascii?Q?70mSNLqGvMXiWgjsl/mJ215GIYFDxlBuNUVZeHdVSpkIJP07I3pqiqrJmAgi?=
+ =?us-ascii?Q?aTodo486siTssqW7gDz1A5kFJ9D5AA9kAlzTBzK6XXr6USXgtuHrl3tAr3M7?=
+ =?us-ascii?Q?KClKpvkVhY9WRwtdZLbBJm9kYLDjPnTs7BdeaDSilmW9EYtez/SLKDz1lSCu?=
+ =?us-ascii?Q?uTkf5Ouku1I=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aL8kHYXKYgWXzsJTWW++RATXPDjYRYpPgiVJgDqMWsb21dmWwUhvgBnh4jMF?=
+ =?us-ascii?Q?ngBY4kN5agKWpuzJY8LAesLmvby+GgaCvvV1e7NUca/WRoSIJc2mG0usIVj9?=
+ =?us-ascii?Q?jYj5Ir4m1uspHFetB/x6dAonDrzyY0h+FAHq3yeUXjXHNKyrHvxR6RakArzs?=
+ =?us-ascii?Q?leepM/78mFxm2/71RsBRSDHfa3xOIIUOxDtYIOHdk+s2zH8SV/vslQz+efKD?=
+ =?us-ascii?Q?c0DA21rEaHgSBr+XHZlTZTWB86WqEpkcfCwzrQPVwPX4kw2JqlHtM9Kklp05?=
+ =?us-ascii?Q?lY548uNdV/tnclrQJQRbZTmIuESa4OJ1AyzforFRKjLQKR7FG9OTZcd74b5c?=
+ =?us-ascii?Q?8ZGf7UtOzS7HocFidGq0kcGLz4+DQ5WRh8tADX8gHeK4yfT5HjVPHuCakCyl?=
+ =?us-ascii?Q?7YvB8OrRJpnFtG4ut+A7d1wJaHDRHt2+VVhjcfoUhh20cA2DuCRdBrhQZ/Yh?=
+ =?us-ascii?Q?73+6FbziSlFTBx/MeXSpy34IoOJkXIZ4YVXbNPuC6gCL9bJ9rF0HXTVQzOKZ?=
+ =?us-ascii?Q?EcxphsseMrvuPUX4OtgvS6Y9UdsW7Krq8NIM4rpivoLmP/PG07AujaLvmDBW?=
+ =?us-ascii?Q?GNA7+r5TV6E5A40IO4df3uIzF3j/Xtl8Qzs8bEbCT2NHtwd1Fekx84I5X/+/?=
+ =?us-ascii?Q?ZHWRMfNV6hA/JoRx8Lhh5bZCifBqDMoW/zhJTDlwqKq78TNx7oNEJ07omQpK?=
+ =?us-ascii?Q?WMGUJ5N+AkvBdgKMU+xc6oNFTpTfIbxodKJ6zbx6uzX6ei8vnAOmTNLYzsvM?=
+ =?us-ascii?Q?wgzzAVHy53boqopAm89Qno5jVFR21Zbn6vJ+q7M3VYWOnYkLSHF2Tk0X8Ffm?=
+ =?us-ascii?Q?W/lUv2cb3NeIXgpqukjuom2bQS++9kaoAhwSDdp2+5pih3s3/Fw19Pmv3aQl?=
+ =?us-ascii?Q?VveNIpl5BxqbCrKQx10ZskRbZ9Z8Ny7ZlyUQtk6U+m4vkj0FIlsp5L9ebpua?=
+ =?us-ascii?Q?31MQozpU4chou9UDFQvTw8iOSwyyyuwICJQL1+cUdhx1WZTAvod2O0EBvuq5?=
+ =?us-ascii?Q?/UayHPqPyXWiQVU5t6Yh0RsDe/auheGJW0lbGpEGFWxbc2FNB7FU32yMhW3q?=
+ =?us-ascii?Q?eJIXEMRN+NFXDfrvofkAVaW294JzC9pqI5lOBSTdmPrPOChCSrCAV6+j1lay?=
+ =?us-ascii?Q?x2zEPqhL0LEYgnKKlaPc5xAS90S99f4zUwSWnE+1Xwptud6giGoW+eUd/tTn?=
+ =?us-ascii?Q?MaCZO6GrXe/xx2pyzTcyJo8z6IXQjs+9p4nmGmPq3FlQVDOQ8ryfrZ4mC1f5?=
+ =?us-ascii?Q?w4EXr3KLmf7pF0UVsxcXgecT2reeH+77IgaBGe4W9aflwzMXMw55HGOZg5wb?=
+ =?us-ascii?Q?lkotv2wRFqCjM8FKAW5UbfcpLhSM/SEhua6AArqx03ku9OF/DcQTSgjgZXQU?=
+ =?us-ascii?Q?Y/HyoZ+mcCsWUpinebLqaWBTU00wSkm5+1A8gMvPhj5Wdf2XrRIISQ7BBow7?=
+ =?us-ascii?Q?YC66F3SUA66d+oZfit2P4w+QTqjpZMEYYsQBfzRF+aocjwUkZFLhdlQJe0z6?=
+ =?us-ascii?Q?Bb4LqdZlVXiojZjbAr0xF18KBxaa+SObyw19t8XDZt0UWETzHvqc6AhmK6SQ?=
+ =?us-ascii?Q?+a2PMQxGdeqflr6C4Ryv1V2yNzWV8nZuprHnjG1P?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a09c0de-c221-4470-ba0f-08dd97da6ab8
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 20:10:50.7143
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +GSZkzA4cdhpGdtboT1wOImHaAEgzojY91X0DElScH4a8LMPdYoyMFoDg/rBacF8RlHfcwmrGDhg+YxFY7tqsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9242
 
-Hi Rob,
+On Tue, May 20, 2025 at 08:55:55PM +0200, Miguel Ojeda wrote:
+> Developers are indeed hitting other of the `noreturn` slice symbols in
+> Nova [1], thus relax the last check in the list so that we catch all of
+> them, i.e.
+> 
+>     *_4core5slice5index22slice_index_order_fail
+>     *_4core5slice5index24slice_end_index_len_fail
+>     *_4core5slice5index26slice_start_index_len_fail
+>     *_4core5slice5index29slice_end_index_overflow_fail
+>     *_4core5slice5index31slice_start_index_overflow_fail
+> 
+> These all exist since at least Rust 1.78.0, thus backport it too.
+> 
+> See commit 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
+> for more details.
+> 
+> Cc: stable@vger.kernel.org # Needed in 6.12.y and later.
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Timur Tabi <ttabi@nvidia.com>
+> Cc: Kane York <kanepyork@gmail.com>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: Joel Fernandes <joelagnelf@nvidia.com>
 
-Thanks for your response!
+Fixes our nova-core warnings.
 
-On 5/14/25 12:42 PM, Rob Herring wrote:
-> On Wed, May 07, 2025 at 06:00:22PM -0700, Amit Sunil Dhamne wrote:
->> Extend ports property to model power lines going between connector to
->> charger or battery/batteries. As an example, connector VBUS can supply
->> power in & out of the battery for a DRP.
->>
->> Additionally, add ports property to maxim,max33359 controller example.
->>
->> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
->> ---
->>  .../bindings/connector/usb-connector.yaml          | 20 +++++++++++------
->>  .../devicetree/bindings/usb/maxim,max33359.yaml    | 25 ++++++++++++++++++++++
->>  2 files changed, 38 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> index 11e40d225b9f3a0d0aeea7bf764f1c00a719d615..706094f890026d324e6ece8b0c1e831d04d51eb7 100644
->> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> @@ -181,16 +181,16 @@ properties:
->>  
->>    port:
->>      $ref: /schemas/graph.yaml#/properties/port
->> -    description: OF graph bindings modeling a data bus to the connector, e.g.
->> -      there is a single High Speed (HS) port present in this connector. If there
->> -      is more than one bus (several port, with 'reg' property), they can be grouped
->> -      under 'ports'.
->> +    description: OF graph binding to model a logical connection between a device
->> +      and connector. This connection may represent a data bus or power line. For
->> +      e.g. a High Speed (HS) data port present in this connector or VBUS line.
->> +      If there is more than one connection (several port, with 'reg' property),
->> +      they can be grouped under 'ports'.
-> 'port' and 'port@0' are equivalent. So you can't be changing its 
-> definition.
+Tested-by: Joel Fernandes <joelagnelf@nvidia.com>
 
-Noted!
+thanks,
 
-
-> I'm not sure showing a power connection with the graph is the right 
-> approach.
-
-I want to provide some more context and rationale behind using this design.
-
-From a hardware perspective:
-
-The max77759/max33359 IC has Type-C port controller, charger, fuel gauge
-(FG) ICs. The Vbus from the connector goes to/from the TCPC and connects
-with the charger IP via circuitry & from there on to the battery. The FG
-is connected to the battery in parallel. As it can be seen that while
-these IPs are interconnected, there's no direct connection of the fuel
-gauge & the connector.
-
-For this feature, I am interested in getting the reference to the FG. As
-per graph description: "...These common bindings do not contain any
-information about the direction or type of the connections, they just
-map their existence." This works for my case because I just want the
-connector to be aware of the Fuel gauge device without imposing a
-specific directionality in terms of power supplier/supplied. This is
-also the reason why I didn't use
-"/schemas/power/supply/power-supply.yaml#power-supplies" binding.
-
-> We have a binding for that already with the regulator binding.
-
-I haven't explored the option of using regulator bindings. But in my
-case I am interested in fuel gauge and unfortunately, they're modeled as
-power_supply devices.
-
-
->  
-> Perhaps the connector needs to be a supply. It's already using that 
-> binding in the supplying power to the connector case.
-
-Want to clarify, in this case you mean
-/schemas/regulator/regulator.yaml#*-supply$ right?
-
-Adding to my response above, the reason I don't want to impose a
-directionality in terms of supplier/supplied is that in case of USB Dual
-Role Port they're dynamic i.e., when USB is source, the power is
-supplied out of the battery (battery/FG will be supplier) and in case
-USB is sink, battery is supplied power. Whether the connector port is in
-source or sink role is determined on a connection to connection basis.
-Also, the knowledge of the supply direction is of no consequence for
-this feature.
+ - Joel
 
 
-Please let me know what you think.
-
-Thanks,
-
-Amit
-
-
-> Rob
+> Link: https://lore.kernel.org/rust-for-linux/20250513180757.GA1295002@joelnvbox/ [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> ---
+> I tested it with the Timur's `alex` branch, but a Tested-by is appreciated.
+> Thanks!
+> 
+>  tools/objtool/check.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index b21b12ec88d9..f23bdda737aa 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -230,7 +230,8 @@ static bool is_rust_noreturn(const struct symbol *func)
+>  	       str_ends_with(func->name, "_7___rustc17rust_begin_unwind")				||
+>  	       strstr(func->name, "_4core9panicking13assert_failed")					||
+>  	       strstr(func->name, "_4core9panicking11panic_const24panic_const_")			||
+> -	       (strstr(func->name, "_4core5slice5index24slice_") &&
+> +	       (strstr(func->name, "_4core5slice5index") &&
+> +		strstr(func->name, "slice_") &&
+>  		str_ends_with(func->name, "_fail"));
+>  }
+> 
+> 
+> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+> --
+> 2.49.0
