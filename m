@@ -1,250 +1,130 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20245256C71
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEE525F78E;
+	Tue, 20 May 2025 22:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781829; cv=none; b=tiQ7SBalmAwWd+tAHD6Kc7U0B+D63IMMdBkLlV0wZq1FoOt93Vu0I0b6R1lGsbUko3+rs6pJ4ygcLiWrh/9ZEvogL1YrQgrIDU/zhp1+J20Bg0V0W/LN0iSRcEnTKRS6ShJdMTaOdv8OWTTcEIzYW2vedcNPoQyB/s986wsRzws=
+	t=1747781835; cv=none; b=lZHZ8GghnPVPutZ8ukzZp17/atrUF7CzO+VUNzlWETpENN4fNfFSQlqC3t1deMk7GO6y+UYvTWqNsRKxDYTSi/Tvk/x28loUm8mKpOcnbn+mxal5Nr5nH4OAjfD3twjtaA2Na8/g+oJJoDfCwY2RKmfmJKB08JQ/zxdr143QXtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747781829; c=relaxed/simple;
-	bh=rdA6H3VgwQOCh8S8IexGiiGwtEMnVDcfDttQOjM2xbQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BE8nI0oBz/pkvcLupIdAOI2aBH2WDxFXVYXzp5/XAIe0bQXAZyeH1+RR+gDOhh7HKwod+6U6lggtR66TXe82ThF3puHN1rOqC5J+s7dz1ArfYzxXhT5n5mRfq7a6mTx+N9clHnxloO+4ZFaoOYK7wnWvt47NFC9Qw34hKsSbImc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fVqBH8Vv; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747781835; c=relaxed/simple;
+	bh=w8GxA9mms68Z49RxaIeHNMPUMPu7EXQ7106AefyZaNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sBlJ9WrFRzFiUmQn6lA7oRuZdJJ9u6YrXSihI6DfF9Pp//X89yuESTQyhWWcD5QSWBv7G/4ZSZ2birLGnwDHtMaDuMynPxZ4FMq7vntLH7oSsR3glFXdWzGK04mZy3cIycgm0uXOewMaH+UtFRk5QNbIWaXPOYp90IfVpoK42JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JX15bpMj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fVqBH8Vv"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9659a391so3629230a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747781827; x=1748386627; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yKW/q7vhix09E264PiuMuzRJMsgSqosjtJ6IDxGY5A=;
-        b=fVqBH8Vvb707psRBTNWpMcUffsSgv6j1iPvpuFiNF5K3MTpvWNEEbNTgVGak6L+7xX
-         bdbp6+oatcZi5PJZOnar0/J7tHmXbcA5nQ5ywkIgxbmIi+3R/ooRvD54uIp5IkSLwaIz
-         bWLIG1fOWt7+goJujdqobNwxSGqyuZKEUerxeruLzolKwrL4xaEIpudt+6ZNQqySCrgv
-         Y6Mhax7cD4HvRWb49aj1AXUjHqVDcl26Z8jOn7DtMUA6NUoTxBuCoBdg9Kpwt2DTXDXG
-         FkNl4HPISKAZOgjBbM2XB8GDfKCi/ZIju/KMSDrr4pa3HPLUN73Alj+vLhGQQB1xX1e7
-         MqDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747781827; x=1748386627;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yKW/q7vhix09E264PiuMuzRJMsgSqosjtJ6IDxGY5A=;
-        b=EXS5YGO9t6+zefJsBbn5JJ+2CPh3uG6yRZSBc+mv5r0WWwOVgYK86C9B2zNpE3Q1Wz
-         lP9whj34ZT1UrqfNfh/0F6MzBVofkFrHA1sHddiDF/bRgfgv2VNCFkb+YUTCjBYtQXlz
-         g0SYwzmiEx3wCKSgoObgXGSMwVhaqZcZP/1Izq0OVNN5VglidO4gxip54P3c95JrfaqB
-         0DR3pklgHMnhPUQGcblKw8V2qJOTL3chIOLQ/hd1SR3gst7JFyVLhHRjCUuqJK9n9XBA
-         D2bIlDW+JYNdbR2MXfXlG30+Vwu911cRbU51ZDLAmbYwdo34T9IPgeO4JMvnc3tF7L4f
-         nyYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEha/YHuanCrxLn9+9hA2uYefkzsHNImX0SVxfnoMXgx35/tVInURVpdB8u4Mnv2wvfe9b8aqJQ7AWfeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCTDTAV1nDvwsfcB0PVMW8pQYZ/fTcJBPykpwHxbwfEgvlLh76
-	guAm3ZCEfLVf9HT8BLHdes6Ogg3cVvai0tx2xH9K2CVNKU3iKyDjIw0jjg1uyRMToA0xviNMDAq
-	zM7WOcA==
-X-Google-Smtp-Source: AGHT+IHZMVljwetvzNG3QUgRgAPbKeHu60JLPsRcUNj6g9cQyY08V1CGpDmRnHFioMM/wBEXLCKeZRJAv+c=
-X-Received: from pjbdy5.prod.google.com ([2002:a17:90b:6c5:b0:2ff:6e58:89f7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:dfc7:b0:30c:5479:c92e
- with SMTP id 98e67ed59e1d1-30e830c7988mr28117531a91.4.1747781827386; Tue, 20
- May 2025 15:57:07 -0700 (PDT)
-Date: Tue, 20 May 2025 15:57:05 -0700
-In-Reply-To: <20250515005353.952707-5-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JX15bpMj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=m2ty3ZMobrv68g+KtzsQH9YOTVlPU+hBtjxQI/infzo=; b=JX15bpMjFwDpmFs+sC/0OIchaQ
+	pkdhMppf4dcEgLttxfJKDZscwroPjf+GF4y0dcoAm2rI/rx6WokwRcmHVQrs/ZCcc9IbPXSuP6293
+	mTxdhCIt+klFXYOusHSJIRhTzkCjJ579BUcVLcFQPQa7c6MVk1M2oYnlJlg6DYencgZVRel530yCj
+	AmxJ+kJYwNpS1zx8hb7H1hy51iZ3G+cprgwY6+Gnn2Gub7navDP4Fq4HrjieHBKx7yRFxjVlnS7Ut
+	0cndfaW4KGkRgc0sdfnwyuHKXxlCljFfZG00/ghLHdyyEdL0cE5ldubZ3HCixw18zBCqku9mXLOqe
+	hdI1GXXQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uHVtV-00000000qJG-2lXu;
+	Tue, 20 May 2025 22:57:10 +0000
+Message-ID: <8cc4c232-c7cd-4dec-97c8-3573b5e471c2@infradead.org>
+Date: Tue, 20 May 2025 15:57:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250515005353.952707-1-mlevitsk@redhat.com> <20250515005353.952707-5-mlevitsk@redhat.com>
-Message-ID: <aC0IwYfNvuo_vUDU@google.com>
-Subject: Re: [PATCH v4 4/4] x86: KVM: VMX: preserve DEBUGCTLMSR_FREEZE_IN_SMM
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	x86@kernel.org, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: add sk_requests_wifi_status()
+To: Bert Karwatzki <spasswolf@web.de>, linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+ Johannes Berg <johannes.berg@intel.com>,
+ Jason Xing <kerneljasonxing@gmail.com>
+References: <20250520223430.6875-1-spasswolf@web.de>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250520223430.6875-1-spasswolf@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-KVM: VMX:
+Hi--
 
-On Wed, May 14, 2025, Maxim Levitsky wrote:
-> Pass through the host's DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM to the guest
-> GUEST_IA32_DEBUGCTL without the guest seeing this value.
+On 5/20/25 3:34 PM, Bert Karwatzki wrote:
+> Checking the SOCK_WIFI_STATUS flag bit in sk_flags, may give a wrong result
+> since sk_flags are part of a union and the union is used otherwise. Add
+> a sk_requests_wifi_status() which checks if sk is non-NULL, sk is a full socket
+> and checks the flag bit.
 > 
-> Since the value of the host DEBUGCTL can in theory change between VM runs,
-> check if has changed, and if yes, then reload the GUEST_IA32_DEBUGCTL with
-> the new value.
+> Fixes: 76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
+> Idea-by: Johannes Berg <johannes.berg@intel.com>
 
-Please split this into two patches.  Add vmx_guest_debugctl_{read,write}(), then
-land the FREEZE_IN_SMM change on top.  Adding the helpers should be a nop and
-thus trivial to review, and similarly the DEBUGCTLMSR_FREEZE_IN_SMM change is
-actually pretty small.  But combined, this patch is annoying to review because
-there's a lot of uninteresting diff to wade through to get at the FREEZE_IN_SMM
-logic.
+That is usually spelled
+Suggested-by:
 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
 > ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/vmx/nested.c       |  4 ++--
->  arch/x86/kvm/vmx/vmx.c          | 22 +++++++++++++++++++---
->  arch/x86/kvm/vmx/vmx.h          |  2 ++
->  arch/x86/kvm/x86.c              |  7 +++++--
->  5 files changed, 29 insertions(+), 7 deletions(-)
+>  drivers/net/wireless/ath/wil6210/txrx.h     | 3 +--
+>  drivers/net/wireless/marvell/mwifiex/main.c | 3 +--
+>  include/net/sock.h                          | 7 +++++++
+>  net/mac80211/mesh.c                         | 2 +-
+>  net/mac80211/tx.c                           | 6 +++---
+>  5 files changed, 13 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index d2ad31a1628e..2e7e4a8b392e 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1673,6 +1673,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
->  enum kvm_x86_run_flags {
->  	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
->  	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
-> +	KVM_RUN_LOAD_DEBUGCTL		= BIT(2),
->  };
+> diff --git a/drivers/net/wireless/ath/wil6210/txrx.h b/drivers/net/wireless/ath/wil6210/txrx.h
+> index 33ccd0b248d4..fff8b7f8abc5 100644
+> --- a/drivers/net/wireless/ath/wil6210/txrx.h
+> +++ b/drivers/net/wireless/ath/wil6210/txrx.h
+> @@ -617,8 +617,7 @@ static inline bool wil_need_txstat(struct sk_buff *skb)
+>  {
+>  	const u8 *da = wil_skb_get_da(skb);
 >  
->  struct kvm_x86_ops {
-
-...
-
-> @@ -7368,6 +7381,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
->  	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
->  		set_debugreg(vcpu->arch.dr6, 6);
+> -	return is_unicast_ether_addr(da) && skb->sk &&
+> -	       sock_flag(skb->sk, SOCK_WIFI_STATUS);
+> +	return is_unicast_ether_addr(da) && sk_requests_wifi_status(skb->sk);
+>  }
 >  
-> +	if (run_flags & KVM_RUN_LOAD_DEBUGCTL)
-> +		vmx_guest_debugctl_write(vcpu, vmx_guest_debugctl_read());
+>  static inline void wil_consume_skb(struct sk_buff *skb, bool acked)
+> diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+> index 1485f949ad4e..7b50a88a18e5 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/main.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/main.c
+> @@ -913,8 +913,7 @@ mwifiex_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>  
+>  	multicast = is_multicast_ether_addr(skb->data);
+>  
+> -	if (unlikely(!multicast && skb->sk &&
+> -		     sock_flag(skb->sk, SOCK_WIFI_STATUS) &&
+> +	if (unlikely(!multicast && sk_requests_wifi_status(skb->sk) &&
+>  		     priv->adapter->fw_api_ver == MWIFIEX_FW_V15))
+>  		skb = mwifiex_clone_skb_for_tx_status(priv,
+>  						      skb,
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 3e15d7105ad2..2da289ec4c17 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -2822,6 +2822,13 @@ sk_is_refcounted(struct sock *sk)
+>  	return !sk_fullsock(sk) || !sock_flag(sk, SOCK_RCU_FREE);
+>  }
+>  
+> +static inline bool
+> +sk_requests_wifi_status(struct sock *sk)
+> +{
+> +	return sk && sk_fullsock(sk) && sock_flag(sk,
+> +SOCK_WIFI_STATUS);
+
+Missing indentation on the line above.
+
+> +}
 > +
->  	/*
->  	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
->  	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 1b80479505d3..5ddedf73392b 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -416,6 +416,8 @@ static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
->  
->  void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vcpu);
->  u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated);
-> +void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val);
-> +u64 vmx_guest_debugctl_read(void);
+>  /* Checks if this SKB belongs to an HW offloaded socket
+>   * and whether any SW fallbacks are required based on dev.
+>   * Check decrypted mark in case skb_orphan() cleared socket.
 
-I vote to make these static inlines, I don't see any reason to bury them in vmx.c
 
->  /*
->   * Note, early Intel manuals have the write-low and read-high bitmap offsets
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 684b8047e0f2..a85078dfa36d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10752,7 +10752,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  		dm_request_for_irq_injection(vcpu) &&
->  		kvm_cpu_accept_dm_intr(vcpu);
->  	fastpath_t exit_fastpath;
-> -	u64 run_flags;
-> +	u64 run_flags, host_debug_ctl;
->  
->  	bool req_immediate_exit = false;
->  
-> @@ -11024,7 +11024,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  		set_debugreg(0, 7);
->  	}
->  
-> -	vcpu->arch.host_debugctl = get_debugctlmsr();
-> +	host_debug_ctl = get_debugctlmsr();
+-- 
+~Randy
 
-This can probably just be debug_ctl to shorten the lines, I don't see a strong
-need to clarify it's the host's value since all accesses are clustered together.
-
-> +	if (host_debug_ctl != vcpu->arch.host_debugctl)
-> +		run_flags |= KVM_RUN_LOAD_DEBUGCTL;
-> +	vcpu->arch.host_debugctl = host_debug_ctl;
-
-Argh, the TDX series didn't get refreshed (or maybe it got poorly rebased), and
-now there's a redundant and confusing "host_debugctlmsr" field in vcpu_vt.  Can
-you slot in the below?  It's not urgent enough to warrant posting separately,
-and handling TDX in this series would get a bit wonky if TDX uses a different
-snapshot.
-
-The reason I say that TDX will get wonky is also why I think the "are bits
-changing?" check in x86.c needs to be precise.  KVM_RUN_LOAD_DEBUGCTL should
-*never* be set for TDX and SVM, and so they should WARN instead of silently
-doing nothing.  But to do that without generating false positives, the common
-check needs to be precise.
-
-I was going to say we could throw a mask in kvm_x86_ops, but TDX throws a wrench
-in that idea.  Aha!  Actually, we can still use kvm_x86_ops.  TDX can be exempted
-via guest_state_protected.  E.g. in common x86:
-
-	debug_ctl = get_debugctlmsr();
-	if (((debug_ctl ^ vcpu->arch.host_debugctl) & kvm_x86_ops.HOST_DEBUGCTL_MASK) &&
-	    !vcpu->arch.guest_state_protected)
-		run_flags |= KVM_RUN_LOAD_DEBUGCTL;
-	vcpu->arch.host_debugctl = debug_ctl;
-
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Tue, 20 May 2025 15:37:41 -0700
-Subject: [PATCH] KVM: TDX: Use kvm_arch_vcpu.host_debugctl to restore the
- host's DEBUGCTL
-
-Use the kvm_arch_vcpu.host_debugctl snapshot to restore DEBUGCTL after
-running a TD vCPU.  The final TDX series rebase was mishandled, likely due
-to commit fb71c7959356 ("KVM: x86: Snapshot the host's DEBUGCTL in common
-x86") deleting the same line of code from vmx.h, i.e. creating a semantic
-conflict of sorts, but no syntactic conflict.
-
-Using the version in kvm_vcpu_arch picks up the ulong => u64 fix (which
-isn't relevant to TDX) as well as the IRQ fix from commit 189ecdb3e112
-("KVM: x86: Snapshot the host's DEBUGCTL after disabling IRQs").
-
-Link: https://lore.kernel.org/all/20250307212053.2948340-10-pbonzini@redhat.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: 8af099037527 ("KVM: TDX: Save and restore IA32_DEBUGCTL")
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/vmx/common.h | 2 --
- arch/x86/kvm/vmx/tdx.c    | 6 ++----
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
-index 8f46a06e2c44..66454bead202 100644
---- a/arch/x86/kvm/vmx/common.h
-+++ b/arch/x86/kvm/vmx/common.h
-@@ -53,8 +53,6 @@ struct vcpu_vt {
- #ifdef CONFIG_X86_64
- 	u64		msr_host_kernel_gs_base;
- #endif
--
--	unsigned long	host_debugctlmsr;
- };
- 
- #ifdef CONFIG_KVM_INTEL_TDX
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 7dbfad28debc..84b2922b8119 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -778,8 +778,6 @@ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- 	else
- 		vt->msr_host_kernel_gs_base = read_msr(MSR_KERNEL_GS_BASE);
- 
--	vt->host_debugctlmsr = get_debugctlmsr();
--
- 	vt->guest_state_loaded = true;
- }
- 
-@@ -1056,8 +1054,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 
- 	tdx_vcpu_enter_exit(vcpu);
- 
--	if (vt->host_debugctlmsr & ~TDX_DEBUGCTL_PRESERVED)
--		update_debugctlmsr(vt->host_debugctlmsr);
-+	if (vcpu->arch.host_debugctl & ~TDX_DEBUGCTL_PRESERVED)
-+		update_debugctlmsr(vcpu->arch.host_debugctl);
- 
- 	tdx_load_host_xsave_state(vcpu);
- 	tdx->guest_entered = true;
-
-base-commit: 475a02020ac2de6b10e85de75e79833139b556e0
---
