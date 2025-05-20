@@ -1,201 +1,203 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53E9280019;
-	Tue, 20 May 2025 18:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767053; cv=pass; b=fb/Ggxl41Ij1TYu3kdCERCb2Gka3f5IjYfR+K0u+bDofqbDGAEKqiFxesSQr2MsemnzQ0OA3dxJN0iyBTi2WQ3HbqqkWSgtY3IgHar0B6brc//Te5YYOJHCpb9+gzYkGoZ20UGbzOM2Qxbm0SYcsCkEJC45RwHHhUvZ7qEf+46Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767053; c=relaxed/simple;
-	bh=YV1yofmzk6BRPg7IlpbgT7OEW0ivlDiHh07HmOBrTF8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JwePjRq2OIONRYCFv7uODzzQ49rJvzIc+l2yR+C9P8z4oPyuwyLwH3MQLvNSt6tZOj3PF7tejeHVeOTKUN17MJ1SJEgXRUAwIMTrkmJ6aSQ7DyGC11sWSh0xhiy09oGXqmHrx6f/Vj85ST99SOgfpV6GCDrLCg2I2+uyoGmecMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=GvjYfsx+; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B302627E9;
+	Tue, 20 May 2025 18:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747767353; cv=none; b=ATHJi09OS8+inAk0TCRP/4jCClU1G6XMSYpU69R+og/ho6OxzBaUeUat7qTR9a+ud96M27dejZxaea/hcsjX9QcDjVVVEAPQ2oETJK7w9e8u9txyOPnkBg/xisLYJ07wUDOOOBA+hozGALUQzBMltQSlMHYkoYtPB4AlFy9b/kc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747767353; c=relaxed/simple;
+	bh=JO3/PFMj7GaFtU0wAdne8S+wB1wMnfPJJ06xM5LKk7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pq8aBdfOBjQORiZttelqeRlIkS0mVIxtQre3IWjrIQUo5RmCEa7u+9aqsdSlzRRMpG9mXGrf0uSIf0fihh7ExjYwCqPGBiKMsLzcZqNVav6zTgWSfm/CnxXN6U9utwD5dWqAGMx+Fqi/iWV6iarnjnBDh1b5RvqugaON9bq2lKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RkF1JE4k; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="GvjYfsx+"
-ARC-Seal: i=1; a=rsa-sha256; t=1747767038; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RGUw8ODNuHBjEdFA8J69cfIu7ncEa5ht6r/4SOWdZUv6DlbInBKy4gvWpKJh11CddyyuZzrwB9bUq7J/qbmUbicik/mTLlWALIza2VexASRetGnfrudGhRAMHk2oHSxNghAqci2alKUcl/okp4FcFlP+jAbZZCUFLqr67MIRuek=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747767038; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=9NVX9DGWtltArDSsIhCoLb3HU2s5EyD0+aa+l4lHxvk=; 
-	b=JOEy2iXkUISax9rLv4VVTpIofaYNQHZ7d6YqpbGUcDDOPajsGmLLBypb3oSphenGdHeuShguPXU74Sj2qTGlOlLLOfwqHyIL82cBUQlyd4+ocCWJ7fQk0oFSfCBZWYSunnKf5nroIZfEH7OJqS/fmwwRhbHvjhjqpl6BvJ5jeZ8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747767038;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=9NVX9DGWtltArDSsIhCoLb3HU2s5EyD0+aa+l4lHxvk=;
-	b=GvjYfsx+VpE4F/7noSi3CG2q9YkBwTtkhxIvWN9vFHeKaUW79edGpOL88ge1y0RE
-	Wcf7xWEAHOEQTpFjFN1bXuqZ6h7eebTMvvapVX7QKPZSnTufiH+vHLFdgVBjaOqNxkD
-	no/PBrg1Emos0IuNVneESzlEhWQQ8ZgRmjPzvk4Y=
-Received: by mx.zohomail.com with SMTPS id 1747767037706798.1912513861447;
-	Tue, 20 May 2025 11:50:37 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Tue, 20 May 2025 20:50:11 +0200
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: add ROCK 5T device tree
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RkF1JE4k"
+Received: from skinsburskii. (unknown [20.236.11.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D5C6C201DB29;
+	Tue, 20 May 2025 11:55:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5C6C201DB29
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747767351;
+	bh=rnzuHWLBs6fMHhLe9DNedat8OC9NDm47VDb4X1fbsu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RkF1JE4k6zHDa7y0B69rbUrNktJv9csOFMAL5qCTK3fehwWmrE0X7RmvpcF84I0Er
+	 +tc+nlyim/BVCP+gUwmjOx8EdATJx9jjgyxFYIV3wFF9y/wRfuuI681zdk4ayYtKUK
+	 hQsGEXcuolmZI/P7+Xp1OaAV2vKCR4h99s9J2XBw=
+Date: Tue, 20 May 2025 11:55:46 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Roman Kisel <romank@linux.microsoft.com>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
+Message-ID: <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+References: <20250519045642.50609-1-namjain@linux.microsoft.com>
+ <20250519045642.50609-3-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-add-rock5t-v2-4-1f1971850a20@collabora.com>
-References: <20250520-add-rock5t-v2-0-1f1971850a20@collabora.com>
-In-Reply-To: <20250520-add-rock5t-v2-0-1f1971850a20@collabora.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519045642.50609-3-namjain@linux.microsoft.com>
 
-The RADXA ROCK 5T is a single board computer quite similar to the ROCK
-5B+, except it has one more PCIe-to-Ethernet controller (at the expense
-of a USB3 port) and a barrel jack for power input instead. Some pins are
-shuffled around as well.
+On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
+> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+> Expose devices and support IOCTLs for features like VTL creation,
+> VTL0 memory management, context switch, making hypercalls,
+> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+> messages and channel events in VTL2 etc.
+> 
+> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
+>  drivers/hv/Kconfig          |   20 +
+>  drivers/hv/Makefile         |    7 +-
+>  drivers/hv/mshv_vtl.h       |   52 +
+>  drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+>  include/hyperv/hvgdk_mini.h |   81 ++
+>  include/hyperv/hvhdk.h      |    1 +
+>  include/uapi/linux/mshv.h   |   82 ++
+>  7 files changed, 2025 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/hv/mshv_vtl.h
+>  create mode 100644 drivers/hv/mshv_vtl_main.c
+> 
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index eefa0b559b73..21cee5564d70 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -72,4 +72,24 @@ config MSHV_ROOT
+>  
+>  	  If unsure, say N.
+>  
+> +config MSHV_VTL
+> +	tristate "Microsoft Hyper-V VTL driver"
+> +	depends on HYPERV && X86_64
+> +	depends on TRANSPARENT_HUGEPAGE
 
-Add a device tree for it.
+Why does it depend on TRANSPARENT_HUGEPAGE?
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- arch/arm64/boot/dts/rockchip/Makefile           |   1 +
- arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts | 105 ++++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
+<snip>
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 4bf84622db473696f64b157ba94560f476d4f52f..3ae12aad3e56db155dd0754dfcc7e6441d5071b4 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -174,6 +174,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-srns.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-plus.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5t.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-tiger-haikou.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-tiger-haikou-video-demo.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-toybrick-x0.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..258c7400301d7f77517197ab433946bbfa39cf63
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include "rk3588-rock-5b-5bp-5t.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK 5T";
-+	compatible = "radxa,rock-5t", "rockchip,rk3588";
-+
-+	analog-sound {
-+		compatible = "audio-graph-card";
-+		label = "rk3588-es8316";
-+
-+		widgets = "Microphone", "Mic Jack",
-+		"Headphone", "Headphones";
-+
-+		routing = "MIC2", "Mic Jack",
-+		"Headphones", "HPOL",
-+		"Headphones", "HPOR";
-+
-+		dais = <&i2s0_8ch_p0>;
-+		hp-det-gpios = <&gpio4 RK_PC3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hp_detect>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_rgb_b>;
-+
-+		led_rgb_b {
-+			function = LED_FUNCTION_STATUS;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	rfkill {
-+		compatible = "rfkill-gpio";
-+		label = "rfkill-m2-wlan";
-+		radio-type = "wlan";
-+		shutdown-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	vcc3v3_pcie2x1l1: regulator-vcc3v3-pcie2x1l2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_pcie2x1l1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <5000>;
-+		vin-supply = <&vcc_3v3_s3>;
-+	};
-+};
-+
-+&hdmi_receiver {
-+	hpd-gpios = <&gpio2 RK_PB7 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie2x1l1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie2_1_rst>;
-+	reset-gpios = <&gpio4 RK_PA2 GPIO_ACTIVE_HIGH>;
-+	vpcie3v3-supply = <&vcc3v3_pcie2x1l1>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	hdmirx {
-+		hdmirx_hpd: hdmirx-5v-detection {
-+			rockchip,pins = <2 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	leds {
-+		led_rgb_b: led-rgb-b {
-+			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pcie2 {
-+		pcie2_1_rst: pcie2-1-rst {
-+			rockchip,pins = <4 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		pcie2_0_vcc3v3_en: pcie2-0-vcc-en {
-+			rockchip,pins = <2 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sound {
-+		hp_detect: hp-detect {
-+			rockchip,pins = <4 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&vcc3v3_pcie2x1l0 {
-+	gpios = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie2_0_vcc3v3_en>;
-+	status = "okay";
-+};
+> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> index 1be7f6a02304..cc11000e39f4 100644
+> --- a/include/hyperv/hvgdk_mini.h
+> +++ b/include/hyperv/hvgdk_mini.h
+> @@ -882,6 +882,23 @@ struct hv_get_vp_from_apic_id_in {
+>  	u32 apic_ids[];
+>  } __packed;
+>  
+> +union hv_register_vsm_partition_config {
+> +	__u64 as_u64;
 
--- 
-2.49.0
+Please, follow the file pattern: as_u64 -> as_uint64
 
+> +	struct {
+> +		__u64 enable_vtl_protection : 1;
+
+Ditto: __u64 -> u64
+
+> +		__u64 default_vtl_protection_mask : 4;
+> +		__u64 zero_memory_on_reset : 1;
+> +		__u64 deny_lower_vtl_startup : 1;
+> +		__u64 intercept_acceptance : 1;
+> +		__u64 intercept_enable_vtl_protection : 1;
+> +		__u64 intercept_vp_startup : 1;
+> +		__u64 intercept_cpuid_unimplemented : 1;
+> +		__u64 intercept_unrecoverable_exception : 1;
+> +		__u64 intercept_page : 1;
+> +		__u64 mbz : 51;
+> +	};
+> +};
+> +
+  
+>  /*
+> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+> index b4067ada02cf..9b890126e8e8 100644
+> --- a/include/hyperv/hvhdk.h
+> +++ b/include/hyperv/hvhdk.h
+> @@ -479,6 +479,7 @@ struct hv_connection_info {
+>  #define HV_EVENT_FLAGS_COUNT		(256 * 8)
+>  #define HV_EVENT_FLAGS_BYTE_COUNT	(256)
+>  #define HV_EVENT_FLAGS32_COUNT		(256 / sizeof(u32))
+> +#define HV_EVENT_FLAGS_LONG_COUNT	(HV_EVENT_FLAGS_BYTE_COUNT / sizeof(__u64))
+
+Ditto
+
+>  
+>  /* linux side we create long version of flags to use long bit ops on flags */
+>  #define HV_EVENT_FLAGS_UL_COUNT		(256 / sizeof(ulong))
+> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+> index 876bfe4e4227..a8c39b08b39a 100644
+> --- a/include/uapi/linux/mshv.h
+> +++ b/include/uapi/linux/mshv.h
+> @@ -288,4 +288,86 @@ struct mshv_get_set_vp_state {
+>   * #define MSHV_ROOT_HVCALL			_IOWR(MSHV_IOCTL, 0x07, struct mshv_root_hvcall)
+>   */
+>  
+> +/* Structure definitions, macros and IOCTLs for mshv_vtl */
+> +
+> +#define MSHV_CAP_CORE_API_STABLE        0x0
+> +#define MSHV_CAP_REGISTER_PAGE          0x1
+> +#define MSHV_CAP_VTL_RETURN_ACTION      0x2
+> +#define MSHV_CAP_DR6_SHARED             0x3
+> +#define MSHV_MAX_RUN_MSG_SIZE                256
+> +
+> +#define MSHV_VP_MAX_REGISTERS   128
+> +
+> +struct mshv_vp_registers {
+> +	__u32 count;	/* at most MSHV_VP_MAX_REGISTERS */
+
+Same here: __u{32,64} -> u{32,64}.
+
+Please, address everywhere.
+
+<snip>
+
+> +
+> +/* vtl device */
+> +#define MSHV_CREATE_VTL			_IOR(MSHV_IOCTL, 0x1D, char)
+> +#define MSHV_VTL_ADD_VTL0_MEMORY	_IOW(MSHV_IOCTL, 0x21, struct mshv_vtl_ram_disposition)
+> +#define MSHV_VTL_SET_POLL_FILE		_IOW(MSHV_IOCTL, 0x25, struct mshv_vtl_set_poll_file)
+> +#define MSHV_VTL_RETURN_TO_LOWER_VTL	_IO(MSHV_IOCTL, 0x27)
+> +#define MSHV_GET_VP_REGISTERS		_IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
+> +#define MSHV_SET_VP_REGISTERS		_IOW(MSHV_IOCTL, 0x06, struct mshv_vp_registers)
+> +
+> +/* VMBus device IOCTLs */
+> +#define MSHV_SINT_SIGNAL_EVENT    _IOW(MSHV_IOCTL, 0x22, struct mshv_vtl_signal_event)
+> +#define MSHV_SINT_POST_MESSAGE    _IOW(MSHV_IOCTL, 0x23, struct mshv_vtl_sint_post_msg)
+> +#define MSHV_SINT_SET_EVENTFD     _IOW(MSHV_IOCTL, 0x24, struct mshv_vtl_set_eventfd)
+> +#define MSHV_SINT_PAUSE_MESSAGE_STREAM     _IOW(MSHV_IOCTL, 0x25, struct mshv_sint_mask)
+> +
+> +/* hv_hvcall device */
+> +#define MSHV_HVCALL_SETUP        _IOW(MSHV_IOCTL, 0x1E, struct mshv_vtl_hvcall_setup)
+> +#define MSHV_HVCALL              _IOWR(MSHV_IOCTL, 0x1F, struct mshv_vtl_hvcall)
+
+How many of these ioctls are actually used by the mshv root driver?
+Should those which are VTl-specific be named as such (like MSHV_VTL_SET_POLL_FILE)?
+Another option would be to keep all the names generic.
+
+Thanks,
+Stanislav
+
+>  #endif
+> -- 
+> 2.34.1
+> 
