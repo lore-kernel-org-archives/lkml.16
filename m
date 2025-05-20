@@ -1,865 +1,586 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBDE27815B;
-	Tue, 20 May 2025 19:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6134024467C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770041; cv=none; b=Ld/T8opFOBrQ23yNIybcWeNKwwlC58W4Xb6UP4h9HLGE23OZY688zU3mMHKaGNTG6Fr2qch1wD5P4inFzlbUvZjXP+YgcwbL4kiO1WuCCC1y9wUAnPd6eBWjSUR+Hhp3D+JaLEGvLADXn8k9TVqA8BQBzv/2T8giMDHIn4H+JmY=
+	t=1747770043; cv=none; b=anYVWF4F4JdScs/pzcdVGMn9OwrKVWvxxB2eVTqj4hQQtJuYob3Aa0emZM8CL/EHX0sMbQSs3vDPVtSjdBVPGnRmLVSnYJyAU/sDEWdh9PuKST+y/9zvXWfPybtfsH/FoMXGF6bsLftwVL8ic6w+YeAAlVFKZLUXl2m3U59zEfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770041; c=relaxed/simple;
-	bh=Imb73cYJK3ODswOYBElnxR8bnj4AMrVXuzu6Syth8PQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oppgd4emMf4OxgSFU7tUvvo1YHWwyJpcoyn4x+xxkDuXg8XG9D4A7hV1v/1BpCg2JrkFYJ7JhmsPjgAkq+pRMswFqSraVQMtfRX7g0y5SErwH3y9Lz0SpfsY9zvslq2Zelyw/sf3u0Q6baDwHgHsINOHtlk/OIBfMpR5gU51zZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGAM46WX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747770043; c=relaxed/simple;
+	bh=fm+502XADc2G9nNO2APQpwxYeviPs9VHoh+nNJsZHt0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MyU+QVFqducEuSX+EmsFyRdBrVU/9VtvBRBpcIt2Cl3IbLtAyYgc20Kp+zWPcKZafAQNJDkb5YqJ0QjBm0ukAaU/PVpr6AQgzxW/+waVOHWOWb8vyfE7ZsbHVPMha2bDGkl4i4lhpzznmQLUKMlHUCbf22idc3B+dN+TGJhXd5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3x0tyuv; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGAM46WX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429EAC4CEE9;
-	Tue, 20 May 2025 19:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747770039;
-	bh=Imb73cYJK3ODswOYBElnxR8bnj4AMrVXuzu6Syth8PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YGAM46WXLrnZtO43LEG3cGMCimorKhIfWnYCHs+OcyJtggmIkCGZ/vSJzVD9Zz1H7
-	 u5zjiViCpLUGPgCbnzu1SPmJfQxorTl6d435hYN3MMKRYraL/hN5i1B5bUnmXXMVHm
-	 jhL409qdMdA7UqCzQcT4Y7gRAQJwP2oT+h8BMwLOU8hk0SZ1DDGrsiVRBeIfXex2Hf
-	 tXk+ab8YN74LP1wo9qubNQRnMNDNgwA/QkDU7+5YSNDR4UdtpPtPPvtHqBDTIujw7T
-	 ocvA9neKvD+ctX6NY8a+H/6v3PpmKHTf3o1IFK0eKA5qMY+BM2pCx13XE4J5vGN0RK
-	 tckBTn8ZJth3Q==
-Date: Tue, 20 May 2025 14:40:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Nicolas Le Bayon <nicolas.le.bayon@foss.st.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: stm32: add STM32MP21 clocks and
- reset bindings
-Message-ID: <20250520194037.GA1231789-robh@kernel.org>
-References: <20250520-upstream_rcc_mp21-v2-0-3c776a6e5862@foss.st.com>
- <20250520-upstream_rcc_mp21-v2-1-3c776a6e5862@foss.st.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3x0tyuv"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742c00c9044so2472061b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747770040; x=1748374840; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iA4tiCdrSOL4EHJEWVD9nbZEVH0SDu5YlSIWNe/VkgI=;
+        b=y3x0tyuvyxXXOwhwIodoAUNvltiuMXljgA7TQCbnVdg/KoW1RYMuHgXA2VMBGnmVLE
+         OKciVus0CNuHdxy+qMkC4Xh9Z8z69fIdFYLcz9vkSNF1Zp4xct+avLZsXmQY0qyMJQ5g
+         CzytUF9aP69gIltj6VepZ4hSDbAXjx412DqoDP8hTfGiQiUDBFzi/4Zl6uQ6JO69b6MV
+         2pLZ9bq/adXXDkKTVVqQRigfXHkjwep/MKcpCvGOD07bSBbcAoxLYmCpQWRcdy0MlPte
+         LN4I0GdtEWMYYFiRBKdsYYFl/SCkB/HlZ8xcHXaZUeM96naj24QHSXJ4NkCraW0+LIJp
+         a6uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770040; x=1748374840;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iA4tiCdrSOL4EHJEWVD9nbZEVH0SDu5YlSIWNe/VkgI=;
+        b=WSIZ7C3Qd9IJev33cZ7mEQqI10HD4s7FQGMZS59U97zKhXq9tGMhgAiAeFK1pdeD0n
+         AvJl1CIkfbyRqaLvUu3AtH3rJg+FUFvhoMDSbsIksdzGFiz8XhKvn78mKlweHOPJlT4m
+         M/ulHlxlkcWl0fUZOVlCExVljRBjcVApfPlMtorswWI1P6PWwg5ncngrkn7N3O4zZIOq
+         BVnmULSZs/8NI+vRpTBvc0bG9YLIZxThjwry2NP7I5IyFHqoNVezoPf/PeuzOZlCSUCs
+         bSWkCuTKEkYBO+jN831JSeHgx8i8h4zCl7IaaCQy/OwY1Qo1LEe+EHcQRNcJfjL0+HJw
+         nKVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpryQVI6B9ZzZQFvL170140njsTC/rfkVFqpWZ1gYz5xEUTK7u/ef00lrCiCmJs0So+08Fw5TDOK3u0z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzH7l8P8tBRqtjgWDKzmowGS/bsjK1iiRY9By7+1qZPUxDL+Cb
+	c+FE9MyxCEfokWH4NjLmlhSfvEpWhT8ec73vMQHtE4D3jUTSRFJUrh0zJAL3WAZRcXF5mH/USx5
+	p8ZM67LmxYZoHH9wwPY7UOsgdPg==
+X-Google-Smtp-Source: AGHT+IH6YYNKkDpHJYVNEQ5xKgCYEMiinbQ21xBPWMVlsfcl+0SsrbzzEJh9BSPuaHYUz+vKJx4qQDH8jk+v7sFYOQ==
+X-Received: from pfgt17.prod.google.com ([2002:a05:6a00:1391:b0:73e:780:270e])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:a88f:b0:736:33fd:f57d with SMTP id d2e1a72fcca58-742a98a32e1mr18985282b3a.17.1747770040431;
+ Tue, 20 May 2025 12:40:40 -0700 (PDT)
+Date: Tue, 20 May 2025 12:40:38 -0700
+In-Reply-To: <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520-upstream_rcc_mp21-v2-1-3c776a6e5862@foss.st.com>
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
+ <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com> <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
+Message-ID: <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+From: Ackerley Tng <ackerleytng@google.com>
+To: Fuad Tabba <tabba@google.com>, Vishal Annapurve <vannapurve@google.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 05:28:37PM +0200, Gabriel Fernandez wrote:
-> Adds clock and reset binding entries for STM32MP21 SoC family.
-> 
-> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@foss.st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-> ---
->  .../bindings/clock/st,stm32mp21-rcc.yaml           | 204 ++++++++++
->  include/dt-bindings/clock/st,stm32mp21-rcc.h       | 426 +++++++++++++++++++++
->  include/dt-bindings/reset/st,stm32mp21-rcc.h       | 138 +++++++
->  3 files changed, 768 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..78f534227a3469b31efd5b96c81f607e5c9db117
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/st,stm32mp21-rcc.yaml
-> @@ -0,0 +1,204 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/st,stm32mp21-rcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STM32MP21 Reset Clock Controller
-> +
-> +maintainers:
-> +  - Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-> +
-> +description: |
-> +  The RCC hardware block is both a reset and a clock controller.
-> +  RCC makes also power management (resume/suspend).
-> +
-> +  See also::
+Fuad Tabba <tabba@google.com> writes:
 
-No need for double '::', this isn't rSt. Bonus points if you fix what 
-you copied this from (and anywhere else).
+Let me try to bridge the gap here beginning with the flow we were
+counting on for a shared to private conversion, for TDX:
 
-> +    include/dt-bindings/clock/st,stm32mp21-rcc.h
-> +    include/dt-bindings/reset/st,stm32mp21-rcc.h
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32mp21-rcc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
-> +      - description: CK_SCMI_HSI High Speed Internal oscillator (~ 64 MHz)
-> +      - description: CK_SCMI_MSI Low Power Internal oscillator (~ 4 MHz or ~ 16 MHz)
-> +      - description: CK_SCMI_LSE Low Speed External oscillator (32 KHz)
-> +      - description: CK_SCMI_LSI Low Speed Internal oscillator (~ 32 KHz)
-> +      - description: CK_SCMI_HSE_DIV2 CK_SCMI_HSE divided by 2 (could be gated)
-> +      - description: CK_SCMI_ICN_HS_MCU High Speed interconnect bus clock
-> +      - description: CK_SCMI_ICN_LS_MCU Low Speed interconnect bus clock
-> +      - description: CK_SCMI_ICN_SDMMC SDMMC interconnect bus clock
-> +      - description: CK_SCMI_ICN_DDR DDR interconnect bus clock
-> +      - description: CK_SCMI_ICN_DISPLAY Display interconnect bus clock
-> +      - description: CK_SCMI_ICN_HSL HSL interconnect bus clock
-> +      - description: CK_SCMI_ICN_NIC NIC interconnect bus clock
-> +      - description: CK_SCMI_FLEXGEN_07 flexgen clock 7
-> +      - description: CK_SCMI_FLEXGEN_08 flexgen clock 8
-> +      - description: CK_SCMI_FLEXGEN_09 flexgen clock 9
-> +      - description: CK_SCMI_FLEXGEN_10 flexgen clock 10
-> +      - description: CK_SCMI_FLEXGEN_11 flexgen clock 11
-> +      - description: CK_SCMI_FLEXGEN_12 flexgen clock 12
-> +      - description: CK_SCMI_FLEXGEN_13 flexgen clock 13
-> +      - description: CK_SCMI_FLEXGEN_14 flexgen clock 14
-> +      - description: CK_SCMI_FLEXGEN_16 flexgen clock 16
-> +      - description: CK_SCMI_FLEXGEN_17 flexgen clock 17
-> +      - description: CK_SCMI_FLEXGEN_18 flexgen clock 18
-> +      - description: CK_SCMI_FLEXGEN_19 flexgen clock 19
-> +      - description: CK_SCMI_FLEXGEN_20 flexgen clock 20
-> +      - description: CK_SCMI_FLEXGEN_21 flexgen clock 21
-> +      - description: CK_SCMI_FLEXGEN_22 flexgen clock 22
-> +      - description: CK_SCMI_FLEXGEN_23 flexgen clock 23
-> +      - description: CK_SCMI_FLEXGEN_24 flexgen clock 24
-> +      - description: CK_SCMI_FLEXGEN_25 flexgen clock 25
-> +      - description: CK_SCMI_FLEXGEN_26 flexgen clock 26
-> +      - description: CK_SCMI_FLEXGEN_27 flexgen clock 27
-> +      - description: CK_SCMI_FLEXGEN_29 flexgen clock 29
-> +      - description: CK_SCMI_FLEXGEN_30 flexgen clock 30
-> +      - description: CK_SCMI_FLEXGEN_31 flexgen clock 31
-> +      - description: CK_SCMI_FLEXGEN_33 flexgen clock 33
-> +      - description: CK_SCMI_FLEXGEN_36 flexgen clock 36
-> +      - description: CK_SCMI_FLEXGEN_37 flexgen clock 37
-> +      - description: CK_SCMI_FLEXGEN_38 flexgen clock 38
-> +      - description: CK_SCMI_FLEXGEN_39 flexgen clock 39
-> +      - description: CK_SCMI_FLEXGEN_40 flexgen clock 40
-> +      - description: CK_SCMI_FLEXGEN_41 flexgen clock 41
-> +      - description: CK_SCMI_FLEXGEN_42 flexgen clock 42
-> +      - description: CK_SCMI_FLEXGEN_43 flexgen clock 43
-> +      - description: CK_SCMI_FLEXGEN_44 flexgen clock 44
-> +      - description: CK_SCMI_FLEXGEN_45 flexgen clock 45
-> +      - description: CK_SCMI_FLEXGEN_46 flexgen clock 46
-> +      - description: CK_SCMI_FLEXGEN_47 flexgen clock 47
-> +      - description: CK_SCMI_FLEXGEN_48 flexgen clock 48
-> +      - description: CK_SCMI_FLEXGEN_50 flexgen clock 50
-> +      - description: CK_SCMI_FLEXGEN_51 flexgen clock 51
-> +      - description: CK_SCMI_FLEXGEN_52 flexgen clock 52
-> +      - description: CK_SCMI_FLEXGEN_53 flexgen clock 53
-> +      - description: CK_SCMI_FLEXGEN_54 flexgen clock 54
-> +      - description: CK_SCMI_FLEXGEN_55 flexgen clock 55
-> +      - description: CK_SCMI_FLEXGEN_56 flexgen clock 56
-> +      - description: CK_SCMI_FLEXGEN_57 flexgen clock 57
-> +      - description: CK_SCMI_FLEXGEN_58 flexgen clock 58
-> +      - description: CK_SCMI_FLEXGEN_61 flexgen clock 61
-> +      - description: CK_SCMI_FLEXGEN_62 flexgen clock 62
-> +      - description: CK_SCMI_FLEXGEN_63 flexgen clock 63
-> +      - description: CK_SCMI_ICN_APB1 Peripheral bridge 1
-> +      - description: CK_SCMI_ICN_APB2 Peripheral bridge 2
-> +      - description: CK_SCMI_ICN_APB3 Peripheral bridge 3
-> +      - description: CK_SCMI_ICN_APB4 Peripheral bridge 4
-> +      - description: CK_SCMI_ICN_APB5 Peripheral bridge 5
-> +      - description: CK_SCMI_ICN_APBDBG Peripheral bridge for debug
-> +      - description: CK_SCMI_TIMG1 Peripheral bridge for timer1
-> +      - description: CK_SCMI_TIMG2 Peripheral bridge for timer2
-> +
-> +  access-controllers:
-> +    description: phandle to the rifsc device to check access right.
-> +    items:
-> +      - description: phandle to access controller
-> +
-> +    minItems: 1
-> +    maxItems: 1
+1. Guest sends unshare hypercall to the hypervisor
 
-Drop everything but 'maxItems: 1'
+2. (For x86 IIUC hypervisor is the same as KVM) KVM forwards the request
+   to userspace via a KVM_EXIT_HYPERCALL, with KVM_HC_MAP_GPA_RANGE as
+   the hypercall number.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +  - '#reset-cells'
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/st,stm32mp21-rcc.h>
-> +
-> +    rcc: clock-controller@44200000 {
-> +        compatible = "st,stm32mp21-rcc";
-> +        reg = <0x44200000 0x10000>;
-> +        #clock-cells = <1>;
-> +        #reset-cells = <1>;
-> +        clocks =  <&scmi_clk CK_SCMI_HSE>,
-> +                  <&scmi_clk CK_SCMI_HSI>,
-> +                  <&scmi_clk CK_SCMI_MSI>,
-> +                  <&scmi_clk CK_SCMI_LSE>,
-> +                  <&scmi_clk CK_SCMI_LSI>,
-> +                  <&scmi_clk CK_SCMI_HSE_DIV2>,
-> +                  <&scmi_clk CK_SCMI_ICN_HS_MCU>,
-> +                  <&scmi_clk CK_SCMI_ICN_LS_MCU>,
-> +                  <&scmi_clk CK_SCMI_ICN_SDMMC>,
-> +                  <&scmi_clk CK_SCMI_ICN_DDR>,
-> +                  <&scmi_clk CK_SCMI_ICN_DISPLAY>,
-> +                  <&scmi_clk CK_SCMI_ICN_HSL>,
-> +                  <&scmi_clk CK_SCMI_ICN_NIC>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_07>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_08>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_09>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_10>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_11>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_12>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_13>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_14>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_16>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_17>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_18>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_19>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_20>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_21>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_22>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_23>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_24>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_25>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_26>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_27>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_29>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_30>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_31>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_33>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_36>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_37>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_38>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_39>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_40>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_41>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_42>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_43>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_44>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_45>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_46>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_47>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_48>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_50>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_51>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_52>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_53>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_54>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_55>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_56>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_57>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_58>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_61>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_62>,
-> +                  <&scmi_clk CK_SCMI_FLEXGEN_63>,
-> +                  <&scmi_clk CK_SCMI_ICN_APB1>,
-> +                  <&scmi_clk CK_SCMI_ICN_APB2>,
-> +                  <&scmi_clk CK_SCMI_ICN_APB3>,
-> +                  <&scmi_clk CK_SCMI_ICN_APB4>,
-> +                  <&scmi_clk CK_SCMI_ICN_APB5>,
-> +                  <&scmi_clk CK_SCMI_ICN_APBDBG>,
-> +                  <&scmi_clk CK_SCMI_TIMG1>,
-> +                  <&scmi_clk CK_SCMI_TIMG2>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/st,stm32mp21-rcc.h b/include/dt-bindings/clock/st,stm32mp21-rcc.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..054b785f2796a8f774e445f7340a6759c067c460
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/st,stm32mp21-rcc.h
-> @@ -0,0 +1,426 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_STM32MP21_CLKS_H_
-> +#define _DT_BINDINGS_STM32MP21_CLKS_H_
-> +
-> +/* INTERNAL/EXTERNAL OSCILLATORS */
-> +#define HSI_CK			0
-> +#define HSE_CK			1
-> +#define MSI_CK			2
-> +#define LSI_CK			3
-> +#define LSE_CK			4
-> +#define I2S_CK			5
-> +#define RTC_CK			6
-> +#define SPDIF_CK_SYMB		7
-> +
-> +/* PLL CLOCKS */
-> +#define PLL1_CK			8
-> +#define PLL2_CK			9
-> +#define PLL4_CK			10
-> +#define PLL5_CK			11
-> +#define PLL6_CK			12
-> +#define PLL7_CK			13
-> +#define PLL8_CK			14
-> +
-> +#define CK_CPU1			15
-> +
-> +/* APB DIV CLOCKS */
-> +#define CK_ICN_APB1		16
-> +#define CK_ICN_APB2		17
-> +#define CK_ICN_APB3		18
-> +#define CK_ICN_APB4		19
-> +#define CK_ICN_APB5		20
-> +#define CK_ICN_APBDBG		21
-> +
-> +/* GLOBAL TIMER */
-> +#define TIMG1_CK		22
-> +#define TIMG2_CK		23
-> +
-> +/* FLEXGEN CLOCKS */
-> +#define CK_ICN_HS_MCU		24
-> +#define CK_ICN_SDMMC		25
-> +#define CK_ICN_DDR		26
-> +#define CK_ICN_DISPLAY		27
-> +#define CK_ICN_HSL		28
-> +#define CK_ICN_NIC		29
-> +#define CK_ICN_VID		30
-> +#define CK_FLEXGEN_07		31
-> +#define CK_FLEXGEN_08		32
-> +#define CK_FLEXGEN_09		33
-> +#define CK_FLEXGEN_10		34
-> +#define CK_FLEXGEN_11		35
-> +#define CK_FLEXGEN_12		36
-> +#define CK_FLEXGEN_13		37
-> +#define CK_FLEXGEN_14		38
-> +#define CK_FLEXGEN_15		39
-> +#define CK_FLEXGEN_16		40
-> +#define CK_FLEXGEN_17		41
-> +#define CK_FLEXGEN_18		42
-> +#define CK_FLEXGEN_19		43
-> +#define CK_FLEXGEN_20		44
-> +#define CK_FLEXGEN_21		45
-> +#define CK_FLEXGEN_22		46
-> +#define CK_FLEXGEN_23		47
-> +#define CK_FLEXGEN_24		48
-> +#define CK_FLEXGEN_25		49
-> +#define CK_FLEXGEN_26		50
-> +#define CK_FLEXGEN_27		51
-> +#define CK_FLEXGEN_28		52
-> +#define CK_FLEXGEN_29		53
-> +#define CK_FLEXGEN_30		54
-> +#define CK_FLEXGEN_31		55
-> +#define CK_FLEXGEN_32		56
-> +#define CK_FLEXGEN_33		57
-> +#define CK_FLEXGEN_34		58
-> +#define CK_FLEXGEN_35		59
-> +#define CK_FLEXGEN_36		60
-> +#define CK_FLEXGEN_37		61
-> +#define CK_FLEXGEN_38		62
-> +#define CK_FLEXGEN_39		63
-> +#define CK_FLEXGEN_40		64
-> +#define CK_FLEXGEN_41		65
-> +#define CK_FLEXGEN_42		66
-> +#define CK_FLEXGEN_43		67
-> +#define CK_FLEXGEN_44		68
-> +#define CK_FLEXGEN_45		69
-> +#define CK_FLEXGEN_46		70
-> +#define CK_FLEXGEN_47		71
-> +#define CK_FLEXGEN_48		72
-> +#define CK_FLEXGEN_49		73
-> +#define CK_FLEXGEN_50		74
-> +#define CK_FLEXGEN_51		75
-> +#define CK_FLEXGEN_52		76
-> +#define CK_FLEXGEN_53		77
-> +#define CK_FLEXGEN_54		78
-> +#define CK_FLEXGEN_55		79
-> +#define CK_FLEXGEN_56		80
-> +#define CK_FLEXGEN_57		81
-> +#define CK_FLEXGEN_58		82
-> +#define CK_FLEXGEN_59		83
-> +#define CK_FLEXGEN_60		84
-> +#define CK_FLEXGEN_61		85
-> +#define CK_FLEXGEN_62		86
-> +#define CK_FLEXGEN_63		87
-> +
-> +/* LOW SPEED MCU CLOCK */
-> +#define CK_ICN_LS_MCU		88
-> +
-> +#define CK_BUS_STM		89
-> +#define CK_BUS_FMC		90
-> +#define CK_BUS_ETH1		91
-> +#define CK_BUS_ETH2		92
-> +#define CK_BUS_DDRPHYC		93
-> +#define CK_BUS_SYSCPU1		94
-> +#define CK_BUS_HPDMA1		95
-> +#define CK_BUS_HPDMA2		96
-> +#define CK_BUS_HPDMA3		97
-> +#define CK_BUS_ADC1		98
-> +#define CK_BUS_ADC2		99
-> +#define CK_BUS_IPCC1		100
-> +#define CK_BUS_DCMIPSSI		101
-> +#define CK_BUS_CRC		102
-> +#define CK_BUS_MDF1		103
-> +#define CK_BUS_BKPSRAM		104
-> +#define CK_BUS_HASH1		105
-> +#define CK_BUS_HASH2		106
-> +#define CK_BUS_RNG1		107
-> +#define CK_BUS_RNG2		108
-> +#define CK_BUS_CRYP1		109
-> +#define CK_BUS_CRYP2		110
-> +#define CK_BUS_SAES		111
-> +#define CK_BUS_PKA		112
-> +#define CK_BUS_GPIOA		113
-> +#define CK_BUS_GPIOB		114
-> +#define CK_BUS_GPIOC		115
-> +#define CK_BUS_GPIOD		116
-> +#define CK_BUS_GPIOE		117
-> +#define CK_BUS_GPIOF		118
-> +#define CK_BUS_GPIOG		119
-> +#define CK_BUS_GPIOH		120
-> +#define CK_BUS_GPIOI		121
-> +#define CK_BUS_GPIOZ		122
-> +#define CK_BUS_RTC		124
-> +#define CK_BUS_LPUART1		125
-> +#define CK_BUS_LPTIM3		126
-> +#define CK_BUS_LPTIM4		127
-> +#define CK_BUS_LPTIM5		128
-> +#define CK_BUS_TIM2		129
-> +#define CK_BUS_TIM3		130
-> +#define CK_BUS_TIM4		131
-> +#define CK_BUS_TIM5		132
-> +#define CK_BUS_TIM6		133
-> +#define CK_BUS_TIM7		134
-> +#define CK_BUS_TIM10		135
-> +#define CK_BUS_TIM11		136
-> +#define CK_BUS_TIM12		137
-> +#define CK_BUS_TIM13		138
-> +#define CK_BUS_TIM14		139
-> +#define CK_BUS_LPTIM1		140
-> +#define CK_BUS_LPTIM2		141
-> +#define CK_BUS_SPI2		142
-> +#define CK_BUS_SPI3		143
-> +#define CK_BUS_SPDIFRX		144
-> +#define CK_BUS_USART2		145
-> +#define CK_BUS_USART3		146
-> +#define CK_BUS_UART4		147
-> +#define CK_BUS_UART5		148
-> +#define CK_BUS_I2C1		149
-> +#define CK_BUS_I2C2		150
-> +#define CK_BUS_I2C3		151
-> +#define CK_BUS_I3C1		152
-> +#define CK_BUS_I3C2		153
-> +#define CK_BUS_I3C3		154
-> +#define CK_BUS_TIM1		155
-> +#define CK_BUS_TIM8		156
-> +#define CK_BUS_TIM15		157
-> +#define CK_BUS_TIM16		158
-> +#define CK_BUS_TIM17		159
-> +#define CK_BUS_SAI1		160
-> +#define CK_BUS_SAI2		161
-> +#define CK_BUS_SAI3		162
-> +#define CK_BUS_SAI4		163
-> +#define CK_BUS_USART1		164
-> +#define CK_BUS_USART6		165
-> +#define CK_BUS_UART7		166
-> +#define CK_BUS_FDCAN		167
-> +#define CK_BUS_SPI1		168
-> +#define CK_BUS_SPI4		169
-> +#define CK_BUS_SPI5		170
-> +#define CK_BUS_SPI6		171
-> +#define CK_BUS_BSEC		172
-> +#define CK_BUS_IWDG1		173
-> +#define CK_BUS_IWDG2		174
-> +#define CK_BUS_IWDG3		175
-> +#define CK_BUS_IWDG4		176
-> +#define CK_BUS_WWDG1		177
-> +#define CK_BUS_VREF		178
-> +#define CK_BUS_DTS		179
-> +#define CK_BUS_SERC		180
-> +#define CK_BUS_HDP		181
-> +#define CK_BUS_DDRPERFM		182
-> +#define CK_BUS_OTG		183
-> +#define CK_BUS_LTDC		184
-> +#define CK_BUS_CSI		185
-> +#define CK_BUS_DCMIPP		186
-> +#define CK_BUS_DDRC		187
-> +#define CK_BUS_DDRCFG		188
-> +#define CK_BUS_STGEN		189
-> +#define CK_SYSDBG		190
-> +#define CK_KER_TIM2		191
-> +#define CK_KER_TIM3		192
-> +#define CK_KER_TIM4		193
-> +#define CK_KER_TIM5		194
-> +#define CK_KER_TIM6		195
-> +#define CK_KER_TIM7		196
-> +#define CK_KER_TIM10		197
-> +#define CK_KER_TIM11		198
-> +#define CK_KER_TIM12		199
-> +#define CK_KER_TIM13		200
-> +#define CK_KER_TIM14		201
-> +#define CK_KER_TIM1		202
-> +#define CK_KER_TIM8		203
-> +#define CK_KER_TIM15		204
-> +#define CK_KER_TIM16		205
-> +#define CK_KER_TIM17		206
-> +#define CK_BUS_SYSRAM		207
-> +#define CK_BUS_RETRAM		208
-> +#define CK_BUS_OSPI1		209
-> +#define CK_BUS_OTFD1		210
-> +#define CK_BUS_SRAM1		211
-> +#define CK_BUS_SDMMC1		212
-> +#define CK_BUS_SDMMC2		213
-> +#define CK_BUS_SDMMC3		214
-> +#define CK_BUS_DDR		215
-> +#define CK_BUS_RISAF4		216
-> +#define CK_BUS_USBHOHCI		217
-> +#define CK_BUS_USBHEHCI		218
-> +#define CK_KER_LPTIM1		219
-> +#define CK_KER_LPTIM2		220
-> +#define CK_KER_USART2		221
-> +#define CK_KER_UART4		222
-> +#define CK_KER_USART3		223
-> +#define CK_KER_UART5		224
-> +#define CK_KER_SPI2		225
-> +#define CK_KER_SPI3		226
-> +#define CK_KER_SPDIFRX		227
-> +#define CK_KER_I2C1		228
-> +#define CK_KER_I2C2		229
-> +#define CK_KER_I3C1		230
-> +#define CK_KER_I3C2		231
-> +#define CK_KER_I2C3		232
-> +#define CK_KER_I3C3		233
-> +#define CK_KER_SPI1		234
-> +#define CK_KER_SPI4		235
-> +#define CK_KER_SPI5		236
-> +#define CK_KER_SPI6		237
-> +#define CK_KER_USART1		238
-> +#define CK_KER_USART6		239
-> +#define CK_KER_UART7		240
-> +#define CK_KER_MDF1		241
-> +#define CK_KER_SAI1		242
-> +#define CK_KER_SAI2		243
-> +#define CK_KER_SAI3		244
-> +#define CK_KER_SAI4		245
-> +#define CK_KER_FDCAN		246
-> +#define CK_KER_CSI		247
-> +#define CK_KER_CSITXESC		248
-> +#define CK_KER_CSIPHY		249
-> +#define CK_KER_STGEN		250
-> +#define CK_KER_USB2PHY2EN	251
-> +#define CK_KER_LPUART1		252
-> +#define CK_KER_LPTIM3		253
-> +#define CK_KER_LPTIM4		254
-> +#define CK_KER_LPTIM5		255
-> +#define CK_KER_TSDBG		256
-> +#define CK_KER_TPIU		257
-> +#define CK_BUS_ETR		258
-> +#define CK_BUS_SYSATB		259
-> +#define CK_KER_ADC1		260
-> +#define CK_KER_ADC2		261
-> +#define CK_KER_OSPI1		262
-> +#define CK_KER_FMC		263
-> +#define CK_KER_SDMMC1		264
-> +#define CK_KER_SDMMC2		265
-> +#define CK_KER_SDMMC3		266
-> +#define CK_KER_ETH1		267
-> +#define CK_KER_ETH2		268
-> +#define CK_KER_ETH1PTP		269
-> +#define CK_KER_ETH2PTP		270
-> +#define CK_KER_USB2PHY1		271
-> +#define CK_KER_USB2PHY2		272
-> +#define CK_MCO1			273
-> +#define CK_MCO2			274
-> +#define CK_KER_DTS		275
-> +#define CK_ETH1_RX		276
-> +#define CK_ETH1_TX		277
-> +#define CK_ETH1_MAC		278
-> +#define CK_ETH2_RX		279
-> +#define CK_ETH2_TX		280
-> +#define CK_ETH2_MAC		281
-> +#define CK_ETH1_STP		282
-> +#define CK_ETH2_STP		283
-> +#define CK_KER_LTDC		284
-> +#define HSE_DIV2_CK		285
-> +#define CK_DBGMCU		286
-> +#define CK_DAP			287
-> +#define CK_KER_ETR		288
-> +#define CK_KER_STM		289
-> +
-> +#define CK_SCMI_ICN_HS_MCU	0
-> +#define CK_SCMI_ICN_SDMMC	1
-> +#define CK_SCMI_ICN_DDR		2
-> +#define CK_SCMI_ICN_DISPLAY	3
-> +#define CK_SCMI_ICN_HSL		4
-> +#define CK_SCMI_ICN_NIC		5
-> +#define CK_SCMI_FLEXGEN_07	7
-> +#define CK_SCMI_FLEXGEN_08	8
-> +#define CK_SCMI_FLEXGEN_09	9
-> +#define CK_SCMI_FLEXGEN_10	10
-> +#define CK_SCMI_FLEXGEN_11	11
-> +#define CK_SCMI_FLEXGEN_12	12
-> +#define CK_SCMI_FLEXGEN_13	13
-> +#define CK_SCMI_FLEXGEN_14	14
-> +#define CK_SCMI_FLEXGEN_15	15
-> +#define CK_SCMI_FLEXGEN_16	16
-> +#define CK_SCMI_FLEXGEN_17	17
-> +#define CK_SCMI_FLEXGEN_18	18
-> +#define CK_SCMI_FLEXGEN_19	19
-> +#define CK_SCMI_FLEXGEN_20	20
-> +#define CK_SCMI_FLEXGEN_21	21
-> +#define CK_SCMI_FLEXGEN_22	22
-> +#define CK_SCMI_FLEXGEN_23	23
-> +#define CK_SCMI_FLEXGEN_24	24
-> +#define CK_SCMI_FLEXGEN_25	25
-> +#define CK_SCMI_FLEXGEN_26	26
-> +#define CK_SCMI_FLEXGEN_27	27
-> +#define CK_SCMI_FLEXGEN_28	28
-> +#define CK_SCMI_FLEXGEN_29	29
-> +#define CK_SCMI_FLEXGEN_30	30
-> +#define CK_SCMI_FLEXGEN_31	31
-> +#define CK_SCMI_FLEXGEN_32	32
-> +#define CK_SCMI_FLEXGEN_33	33
-> +#define CK_SCMI_FLEXGEN_34	34
-> +#define CK_SCMI_FLEXGEN_35	35
-> +#define CK_SCMI_FLEXGEN_36	36
-> +#define CK_SCMI_FLEXGEN_37	37
-> +#define CK_SCMI_FLEXGEN_38	38
-> +#define CK_SCMI_FLEXGEN_39	39
-> +#define CK_SCMI_FLEXGEN_40	40
-> +#define CK_SCMI_FLEXGEN_41	41
-> +#define CK_SCMI_FLEXGEN_42	42
-> +#define CK_SCMI_FLEXGEN_43	43
-> +#define CK_SCMI_FLEXGEN_44	44
-> +#define CK_SCMI_FLEXGEN_45	45
-> +#define CK_SCMI_FLEXGEN_46	46
-> +#define CK_SCMI_FLEXGEN_47	47
-> +#define CK_SCMI_FLEXGEN_48	48
-> +#define CK_SCMI_FLEXGEN_49	49
-> +#define CK_SCMI_FLEXGEN_50	50
-> +#define CK_SCMI_FLEXGEN_51	51
-> +#define CK_SCMI_FLEXGEN_52	52
-> +#define CK_SCMI_FLEXGEN_53	53
-> +#define CK_SCMI_FLEXGEN_54	54
-> +#define CK_SCMI_FLEXGEN_55	55
-> +#define CK_SCMI_FLEXGEN_56	56
-> +#define CK_SCMI_FLEXGEN_57	57
-> +#define CK_SCMI_FLEXGEN_58	58
-> +#define CK_SCMI_FLEXGEN_59	59
-> +#define CK_SCMI_FLEXGEN_60	60
-> +#define CK_SCMI_FLEXGEN_61	61
-> +#define CK_SCMI_FLEXGEN_62	62
-> +#define CK_SCMI_FLEXGEN_63	63
-> +#define CK_SCMI_ICN_LS_MCU	64
-> +#define CK_SCMI_HSE		65
-> +#define CK_SCMI_LSE		66
-> +#define CK_SCMI_HSI		67
-> +#define CK_SCMI_LSI		68
-> +#define CK_SCMI_MSI		69
-> +#define CK_SCMI_HSE_DIV2	70
-> +#define CK_SCMI_CPU1		71
-> +#define CK_SCMI_SYSCPU1		72
-> +#define CK_SCMI_PLL2		73
-> +#define CK_SCMI_RTC		74
-> +#define CK_SCMI_RTCCK		75
-> +#define CK_SCMI_ICN_APB1	76
-> +#define CK_SCMI_ICN_APB2	77
-> +#define CK_SCMI_ICN_APB3	78
-> +#define CK_SCMI_ICN_APB4	79
-> +#define CK_SCMI_ICN_APB5	80
-> +#define CK_SCMI_ICN_APBDBG	81
-> +#define CK_SCMI_TIMG1		82
-> +#define CK_SCMI_TIMG2		83
-> +#define CK_SCMI_BKPSRAM		84
-> +#define CK_SCMI_BSEC		85
-> +#define CK_SCMI_BUS_ETR		86
-> +#define CK_SCMI_FMC		87
-> +#define CK_SCMI_GPIOA		88
-> +#define CK_SCMI_GPIOB		89
-> +#define CK_SCMI_GPIOC		90
-> +#define CK_SCMI_GPIOD		91
-> +#define CK_SCMI_GPIOE		92
-> +#define CK_SCMI_GPIOF		93
-> +#define CK_SCMI_GPIOG		94
-> +#define CK_SCMI_GPIOH		95
-> +#define CK_SCMI_GPIOI		96
-> +#define CK_SCMI_GPIOZ		97
-> +#define CK_SCMI_HPDMA1		98
-> +#define CK_SCMI_HPDMA2		99
-> +#define CK_SCMI_HPDMA3		100
-> +#define CK_SCMI_IPCC1		101
-> +#define CK_SCMI_RETRAM		102
-> +#define CK_SCMI_SRAM1		103
-> +#define CK_SCMI_SYSRAM		104
-> +#define CK_SCMI_OSPI1		105
-> +#define CK_SCMI_TPIU		106
-> +#define CK_SCMI_SYSDBG		107
-> +#define CK_SCMI_SYSATB		108
-> +#define CK_SCMI_TSDBG		109
-> +#define CK_SCMI_BUS_STM		110
-> +#define CK_SCMI_KER_STM		111
-> +#define CK_SCMI_KER_ETR		112
-> +
-> +#endif /* _DT_BINDINGS_STM32MP21_CLKS_H_ */
-> diff --git a/include/dt-bindings/reset/st,stm32mp21-rcc.h b/include/dt-bindings/reset/st,stm32mp21-rcc.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..6463bd73d02540474c35a956ffb4872ab2c08ae0
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/st,stm32mp21-rcc.h
-> @@ -0,0 +1,138 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_STM32MP21_RESET_H_
-> +#define _DT_BINDINGS_STM32MP21_RESET_H_
-> +
-> +#define TIM1_R		0
-> +#define TIM2_R		1
-> +#define TIM3_R		2
-> +#define TIM4_R		3
-> +#define TIM5_R		4
-> +#define TIM6_R		5
-> +#define TIM7_R		6
-> +#define TIM8_R		7
-> +#define TIM10_R		8
-> +#define TIM11_R		9
-> +#define TIM12_R		10
-> +#define TIM13_R		11
-> +#define TIM14_R		12
-> +#define TIM15_R		13
-> +#define TIM16_R		14
-> +#define TIM17_R		15
-> +#define LPTIM1_R	16
-> +#define LPTIM2_R	17
-> +#define LPTIM3_R	18
-> +#define LPTIM4_R	19
-> +#define LPTIM5_R	20
-> +#define SPI1_R		21
-> +#define SPI2_R		22
-> +#define SPI3_R		23
-> +#define SPI4_R		24
-> +#define SPI5_R		25
-> +#define SPI6_R		26
-> +#define SPDIFRX_R	27
-> +#define USART1_R	28
-> +#define USART2_R	29
-> +#define USART3_R	30
-> +#define UART4_R		31
-> +#define UART5_R		32
-> +#define USART6_R	33
-> +#define UART7_R		34
-> +#define LPUART1_R	35
-> +#define I2C1_R		36
-> +#define I2C2_R		37
-> +#define I2C3_R		38
-> +#define SAI1_R		39
-> +#define SAI2_R		40
-> +#define SAI3_R		41
-> +#define SAI4_R		42
-> +#define MDF1_R		43
-> +#define FDCAN_R		44
-> +#define HDP_R		45
-> +#define ADC1_R		46
-> +#define ADC2_R		47
-> +#define ETH1_R		48
-> +#define ETH2_R		49
-> +#define USBH_R		50
-> +#define USB2PHY1_R	51
-> +#define USB2PHY2_R	52
-> +#define SDMMC1_R	53
-> +#define SDMMC1DLL_R	54
-> +#define SDMMC2_R	55
-> +#define SDMMC2DLL_R	56
-> +#define SDMMC3_R	57
-> +#define SDMMC3DLL_R	58
-> +#define LTDC_R		59
-> +#define CSI_R		60
-> +#define DCMIPP_R	61
-> +#define DCMIPSSI_R	62
-> +#define WWDG1_R		63
-> +#define VREF_R		64
-> +#define DTS_R		65
-> +#define CRC_R		66
-> +#define SERC_R		67
-> +#define I3C1_R		68
-> +#define I3C2_R		69
-> +#define I3C3_R		70
-> +#define IWDG2_KER_R	71
-> +#define IWDG4_KER_R	72
-> +#define RNG1_R		73
-> +#define RNG2_R		74
-> +#define PKA_R		75
-> +#define SAES_R		76
-> +#define HASH1_R		77
-> +#define HASH2_R		78
-> +#define CRYP1_R		79
-> +#define CRYP2_R		80
-> +#define OSPI1_R		81
-> +#define OSPI1DLL_R	82
-> +#define OTG_R		83
-> +#define FMC_R		84
-> +#define DBG_R		85
-> +#define GPIOA_R		86
-> +#define GPIOB_R		87
-> +#define GPIOC_R		88
-> +#define GPIOD_R		89
-> +#define GPIOE_R		90
-> +#define GPIOF_R		91
-> +#define GPIOG_R		92
-> +#define GPIOH_R		93
-> +#define GPIOI_R		94
-> +#define GPIOZ_R		95
-> +#define HPDMA1_R	96
-> +#define HPDMA2_R	97
-> +#define HPDMA3_R	98
-> +#define IPCC1_R		99
-> +#define C2_HOLDBOOT_R	100
-> +#define C1_HOLDBOOT_R	101
-> +#define C1_R		102
-> +#define C1P1POR_R	103
-> +#define C1P1_R		104
-> +#define C2_R		105
-> +#define SYS_R		106
-> +#define VSW_R		107
-> +#define C1MS_R		108
-> +#define DDRCP_R		109
-> +#define DDRCAPB_R	110
-> +#define DDRPHYCAPB_R	111
-> +#define DDRCFG_R	112
-> +#define DDR_R		113
-> +#define DDRPERFM_R	114
-> +#define IWDG1_SYS_R	116
-> +#define IWDG2_SYS_R	117
-> +#define IWDG3_SYS_R	118
-> +#define IWDG4_SYS_R	119
-> +
-> +#define RST_SCMI_C1_R		0
-> +#define RST_SCMI_C2_R		1
-> +#define RST_SCMI_C1_HOLDBOOT_R	2
-> +#define RST_SCMI_C2_HOLDBOOT_R	3
-> +#define RST_SCMI_FMC		4
-> +#define RST_SCMI_OSPI1		5
-> +#define RST_SCMI_OSPI1DLL	6
-> +
-> +#endif /* _DT_BINDINGS_STM32MP21_RESET_H_ */
-> 
-> -- 
-> 2.25.1
-> 
+   KVM also records that the guest wanted a shared to private
+   conversion, the gpa and size of the request (no change from now, KVM
+   already records that information in struct kvm_run) [1]
+
+3. Userspace will do necessary coordination in userspace, then call the
+   conversion ioctl, passing the parameters along to the ioctl.
+
+4. Ioctl goes to guest_memfd, guest_memfd unmaps the pages, checks
+   refcounts. If there's anything unexpected, error out to userspace. If
+   all is well, flip shareability, exit to userspace with success.
+
+5. Userspace calls vcpu_run() again, the handler for
+   KVM_HC_MAP_GPA_RANGE will tell the guest that userspace was able to
+   fulfill guest request with hypercall.ret set to 0 and then the guest
+   will continue.
+
+6. On the next fault guest_memfd will allow the private fault from the
+   guest.
+
+
+The flow you're proposing works too, with some changes, but it's
+probably okay for x86 to have a slightly different flow anyway: (I
+refactored the steps you outlined)
+
+> 1. Guest sends unshare hypercall to the hypervisor
+
+Same
+
+> 2. Hypervisor forwards request to KVM (gmem) (having done due diligence)
+
+For x86 IIUC hypervisor is the same as KVM, so there's no forwarding to KVM=
+.
+
+> 3. KVM (gmem) performs an unmap_folio(), exits to userspace with
+>    KVM_EXIT_UNSHARE and all the information about the folio being unshare=
+d
+
+The KVM_EXIT_UNSHARE here would correspond to x86's
+KVM_HC_MAP_GPA_RANGE.
+
+Unmapping before exiting with KVM_EXIT_UNSHARE here might be a little
+premature since userspace may have to do some stuff before permitting
+the conversion. For example, the memory may be mapped into another
+userspace driver process, which needs to first be stopped.
+
+But no issue though, as long as we don't flip shareability, if the host
+uses the memory, the kvm_gmem_fault_shared() will just happen again,
+nullifying the unmapping.
+
+We could just shift the unmapping till after vcpu_run() is called
+again.
+
+> 4. Userspace will do necessary coordination in userspace, then do
+>    vcpu_run()
+
+There's another layer here, at least for x86, as to whether the
+coordination was successful. For x86's KVM_HC_MAP_GPA_RANGE, userspace
+can indicate a non-zero hypercall.ret for error.
+
+For unsuccessful coordinations, userspace sets hypercall.ret to error
+and the vcpu_run() handler doesn't try the conversion. Guest is informed
+of hypercall error and guest will figure it out.
+
+> 5. Successful coordination, case 1: vcpu_run() knows the last exit was
+>    KVM_EXIT_UNSHARE and will set state to PRIVATE
+
+For case 1, userspace will set hypercall.ret =3D=3D 0, guest_memfd will do
+the conversion, basically calling the same function that the ioctl calls
+within guest_memfd.
+
+> 5. Successful coordination, case 2, alternative 1: vcpu_run() knows
+>    the last exit was KVM_EXIT_UNSHARE
+
+Exit to userspace with KVM_EXIT_MEMORY_FAULT.
+
+> 5. Successful coordination, case 2, alternative 2: vcpu_run() knows
+>    the last exit was KVM_EXIT_UNSHARE
+
+Forward hypercall.ret =3D=3D 0 to the guest. Since the conversion was not
+performed, the next fault will be mismatched and there will be a
+KVM_EXIT_MEMORY_FAULT.
+
+> Hi Vishal,
+>
+> On Tue, 20 May 2025 at 17:03, Vishal Annapurve <vannapurve@google.com> wr=
+ote:
+>>
+>> On Tue, May 20, 2025 at 7:34=E2=80=AFAM Fuad Tabba <tabba@google.com> wr=
+ote:
+>> >
+>> > Hi Vishal,
+>> >
+>> > On Tue, 20 May 2025 at 15:11, Vishal Annapurve <vannapurve@google.com>=
+ wrote:
+>> > >
+>> > > On Tue, May 20, 2025 at 6:44=E2=80=AFAM Fuad Tabba <tabba@google.com=
+> wrote:
+>> > > >
+>> > > > Hi Vishal,
+>> > > >
+>> > > > On Tue, 20 May 2025 at 14:02, Vishal Annapurve <vannapurve@google.=
+com> wrote:
+>> > > > >
+>> > > > > On Tue, May 20, 2025 at 2:23=E2=80=AFAM Fuad Tabba <tabba@google=
+.com> wrote:
+>> > > > > >
+>> > > > > > Hi Ackerley,
+>> > > > > >
+>> > > > > > On Thu, 15 May 2025 at 00:43, Ackerley Tng <ackerleytng@google=
+.com> wrote:
+>> > > > > > >
+>> > > > > > > The two new guest_memfd ioctls KVM_GMEM_CONVERT_SHARED and
+>> > > > > > > KVM_GMEM_CONVERT_PRIVATE convert the requested memory ranges=
+ to shared
+>> > > > > > > and private respectively.
+>> > > > > >
+>> > > > > > I have a high level question about this particular patch and t=
+his
+>> > > > > > approach for conversion: why do we need IOCTLs to manage conve=
+rsion
+>> > > > > > between private and shared?
+>> > > > > >
+>> > > > > > In the presentations I gave at LPC [1, 2], and in my latest pa=
+tch
+>> > > > > > series that performs in-place conversion [3] and the associate=
+d (by
+>> > > > > > now outdated) state diagram [4], I didn't see the need to have=
+ a
+>> > > > > > userspace-facing interface to manage that. KVM has all the inf=
+ormation
+>> > > > > > it needs to handle conversions, which are triggered by the gue=
+st. To
+>> > > > > > me this seems like it adds additional complexity, as well as a=
+ user
+>> > > > > > facing interface that we would need to maintain.
+>> > > > > >
+>> > > > > > There are various ways we could handle conversion without expl=
+icit
+>> > > > > > interference from userspace. What I had in mind is the followi=
+ng (as
+>> > > > > > an example, details can vary according to VM type). I will use=
+ use the
+>> > > > > > case of conversion from shared to private because that is the =
+more
+>> > > > > > complicated (interesting) case:
+>> > > > > >
+>> > > > > > - Guest issues a hypercall to request that a shared folio beco=
+me private.
+>> > > > > >
+>> > > > > > - The hypervisor receives the call, and passes it to KVM.
+>> > > > > >
+>> > > > > > - KVM unmaps the folio from the guest stage-2 (EPT I think in =
+x86
+>> > > > > > parlance), and unmaps it from the host. The host however, coul=
+d still
+>> > > > > > have references (e.g., GUP).
+>> > > > > >
+>> > > > > > - KVM exits to the host (hypervisor call exit), with the infor=
+mation
+>> > > > > > that the folio has been unshared from it.
+>> > > > > >
+>> > > > > > - A well behaving host would now get rid of all of its referen=
+ces
+>> > > > > > (e.g., release GUPs), perform a VCPU run, and the guest contin=
+ues
+>> > > > > > running as normal. I expect this to be the common case.
+>> > > > > >
+>> > > > > > But to handle the more interesting situation, let's say that t=
+he host
+>> > > > > > doesn't do it immediately, and for some reason it holds on to =
+some
+>> > > > > > references to that folio.
+>> > > > > >
+>> > > > > > - Even if that's the case, the guest can still run *. If the g=
+uest
+>> > > > > > tries to access the folio, KVM detects that access when it tri=
+es to
+>> > > > > > fault it into the guest, sees that the host still has referenc=
+es to
+>> > > > > > that folio, and exits back to the host with a memory fault exi=
+t. At
+>> > > > > > this point, the VCPU that has tried to fault in that particula=
+r folio
+>> > > > > > cannot continue running as long as it cannot fault in that fol=
+io.
+>> > > > >
+>> > > > > Are you talking about the following scheme?
+>> > > > > 1) guest_memfd checks shareability on each get pfn and if there =
+is a
+>> > > > > mismatch exit to the host.
+>> > > >
+>> > > > I think we are not really on the same page here (no pun intended :=
+) ).
+>> > > > I'll try to answer your questions anyway...
+>> > > >
+>> > > > Which get_pfn? Are you referring to get_pfn when faulting the page
+>> > > > into the guest or into the host?
+>> > >
+>> > > I am referring to guest fault handling in KVM.
+>> > >
+>> > > >
+>> > > > > 2) host user space has to guess whether it's a pending refcount =
+or
+>> > > > > whether it's an actual mismatch.
+>> > > >
+>> > > > No need to guess. VCPU run will let it know exactly why it's exiti=
+ng.
+>> > > >
+>> > > > > 3) guest_memfd will maintain a third state
+>> > > > > "pending_private_conversion" or equivalent which will transition=
+ to
+>> > > > > private upon the last refcount drop of each page.
+>> > > > >
+>> > > > > If conversion is triggered by userspace (in case of pKVM, it wil=
+l be
+>> > > > > triggered from within the KVM (?)):
+>> > > >
+>> > > > Why would conversion be triggered by userspace? As far as I know, =
+it's
+>> > > > the guest that triggers the conversion.
+>> > > >
+>> > > > > * Conversion will just fail if there are extra refcounts and use=
+rspace
+>> > > > > can try to get rid of extra refcounts on the range while it has =
+enough
+>> > > > > context without hitting any ambiguity with memory fault exit.
+>> > > > > * guest_memfd will not have to deal with this extra state from 3=
+ above
+>> > > > > and overall guest_memfd conversion handling becomes relatively
+>> > > > > simpler.
+>> > > >
+>> > > > That's not really related. The extra state isn't necessary any mor=
+e
+>> > > > once we agreed in the previous discussion that we will retry inste=
+ad.
+>> > >
+>> > > Who is *we* here? Which entity will retry conversion?
+>> >
+>> > Userspace will re-attempt the VCPU run.
+>>
+>> Then KVM will have to keep track of the ranges that need conversion
+>> across exits. I think it's cleaner to let userspace make the decision
+>> and invoke conversion without carrying additional state in KVM about
+>> guest request.
+>
+> I disagree. I think it's cleaner not to introduce a user interface,
+> and just to track the reason for the last exit, along with the
+> required additional data. KVM is responsible already for handling the
+> workflow, why delegate this last part to the VMM?
+>
+
+I believe Fuad's concern is the complexity of adding and maintaining
+another ioctl, as opposed to having vcpu_run() do the conversions.
+
+I think the two options are basically the same in that both are actually
+adding some form of user contract, just in different places.
+
+For the ioctl approach, in this RFCv2 I added a error_offset field so
+that userspace has a hint of where the conversion had an issue. the
+ioctl also returns errors to indicate what went wrong, like -EINVAL or
+-ENOMEM if perhaps splitting the page required memory and there wasn't
+any, or the kernel ran out of memory trying to update mappability.
+
+If we want to provide the same level of error information for the
+vcpu_run() approach, we should probably add error_offset to
+KVM_EXIT_MEMORY_FAULT so that on a conversion failure we could re-exit
+to userspace with more information about the error_offset.
+
+
+So what we're really comparing is two ways to perform the conversion (1)
+via a direct ioctl and (2) via vcpu_run().
+
+I think having a direct ioctl is cleaner because it doesn't involve
+vCPUs for a memory operation.
+
+Conceptually, the conversion is a memory operation belonging to memory
+in the guest_memfd. Hence, the conversion operation is better addressed
+directly to the memory via a direct ioctl.
+
+For this same reason, we didn't want to do the conversion via the
+KVM_SET_MEMORY_ATTRIBUTES ioctl. KVM_SET_MEMORY_ATTRIBUTES is an
+operation for KVM's view of guest_memfd, which is linked to but not
+directly the same as a memory operation.
+
+By having a direct ioctl over using KVM_SET_MEMORY_ATTRIBUTES, we avoid
+having a dependency where memslots must first be bound to guest_memfd
+for the conversion to work.
+
+When rebooting, the memslots may not yet be bound to the guest_memfd,
+but we want to reset the guest_memfd's to private. If we use
+KVM_SET_MEMORY_ATTRIBUTES to convert, we'd be forced to first bind, then
+convert. If we had a direct ioctl, we don't have this restriction.
+
+If we do the conversion via vcpu_run() we would be forced to handle
+conversions only with a vcpu_run() and only the guest can initiate a
+conversion.
+
+On a guest boot for TDX, the memory is assumed to be private. If the we
+gave it memory set as shared, we'd just have a bunch of
+KVM_EXIT_MEMORY_FAULTs that slow down boot. Hence on a guest reboot, we
+will want to reset the guest memory to private.
+
+We could say the firmware should reset memory to private on guest
+reboot, but we can't force all guests to update firmware.
+
+>> >
+>> > > >
+>> > > > > Note that for x86 CoCo cases, memory conversion is already trigg=
+ered
+>> > > > > by userspace using KVM ioctl, this series is proposing to use
+>> > > > > guest_memfd ioctl to do the same.
+>> > > >
+>> > > > The reason why for x86 CoCo cases conversion is already triggered =
+by
+>> > > > userspace using KVM ioctl is that it has to, since shared memory a=
+nd
+>> > > > private memory are two separate pages, and userspace needs to mana=
+ge
+>> > > > that. Sharing memory in place removes the need for that.
+>> > >
+>> > > Userspace still needs to clean up memory usage before conversion is
+>> > > successful. e.g. remove IOMMU mappings for shared to private
+>> > > conversion. I would think that memory conversion should not succeed
+>> > > before all existing users let go of the guest_memfd pages for the
+>> > > range being converted.
+>> >
+>> > Yes. Userspace will know that it needs to do that on the VCPU exit,
+>> > which informs it of the guest's hypervisor request to unshare (convert
+>> > from shared to private) the page.
+>> >
+>> > > In x86 CoCo usecases, userspace can also decide to not allow
+>> > > conversion for scenarios where ranges are still under active use by
+>> > > the host and guest is erroneously trying to take away memory. Both
+>> > > SNP/TDX spec allow failure of conversion due to in use memory.
+>> >
+>> > How can the guest erroneously try to take away memory? If the guest
+>> > sends a hypervisor request asking for a conversion of memory that
+>> > doesn't belong to it, then I would expect the hypervisor to prevent
+>> > that.
+>>
+>> Making a range as private is effectively disallowing host from
+>> accessing those ranges -> so taking away memory.
+>
+> You said "erroneously" earlier. My question is, how can the guest
+> *erroneously* try to take away memory? This is the normal flow of
+> guest/host relations. The memory is the guest's: it decides when to
+> share it with the host, and it can take it away.
+>
+
+See above, it's not really erroneous as long as we
+kvm_gmem_fault_shared() can still happen, since after unmapping, any
+host access will just fault the page again.
+
+>> >
+>> > I don't see how having an IOCTL to trigger the conversion is needed to
+>> > allow conversion failure. How is that different from userspace
+>> > ignoring or delaying releasing all references it has for the
+>> > conversion request?
+>> >
+>> > > >
+>> > > > This series isn't using the same ioctl, it's introducing new ones =
+to
+>> > > > perform a task that as far as I can tell so far, KVM can handle by
+>> > > > itself.
+>> > >
+>> > > I would like to understand this better. How will KVM handle the
+>> > > conversion process for guest_memfd pages? Can you help walk an examp=
+le
+>> > > sequence for shared to private conversion specifically around
+>> > > guest_memfd offset states?
+>> >
+>> > To make sure that we are discussing the same scenario: can you do the
+>> > same as well please --- walk me through an example sequence for shared
+>> > to private conversion specifically around guest_memfd offset states
+>> > With the IOCTLs involved?
+>> >
+>> > Here is an example that I have implemented and tested with pKVM. Note
+>> > that there are alternatives, the flow below is architecture or even
+>> > vm-type dependent. None of this code is code KVM code and the
+>> > behaviour could vary.
+>> >
+>> >
+>> > Assuming the folio is shared with the host:
+>> >
+>> > Guest sends unshare hypercall to the hypervisor
+>> > Hypervisor forwards request to KVM (gmem) (having done due diligence)
+>> > KVM (gmem) performs an unmap_folio(), exits to userspace with
+>>
+>> For x86 CoCo VM usecases I was talking about, userspace would like to
+>> avoid unmap_mapping_range() on the range before it's safe to unshare
+>> the range.
+>
+> Why? There is no harm in userspace unmapping before the memory isn't
+> shared. I don't see the problem with that.
+>
+
+Yes, no harm done, just possible remapping after unmapping.
+
+> You still haven't responded to my question from the previous email:
+> can you please return the favor and walk me through an example
+> sequence for shared to private conversion specifically around
+> guest_memfd offset states with the IOCTLs involved? :D
+>
+
+Right at the top :)
+
+> Thanks!
+> /fuad
+>
+>
+>> > KVM_EXIT_UNSHARE and all the information about the folio being
+>> > unshared
+>> >
+>> > Case 1:
+>> > Userspace removes any remaining references (GUPs, IOMMU Mappings etc..=
+.)
+>> > Userspace calls vcpu_run(): KVM (gmem) sees that there aren't any
+>> > references, sets state to PRIVATE
+>> >
+>> > Case 2 (alternative 1):
+>> > Userspace doesn't release its references
+>> > Userspace calls vcpu_run(): KVM (gmem) sees that there are still
+>> > references, exits back to userspace with KVM_EXIT_UNSHARE
+>> >
+>> > Case 2 (alternative 2):
+>> > Userspace doesn't release its references
+>> > Userspace calls vcpu_run(): KVM (gmem) sees that there are still
+>> > references, unmaps folio from guest, but allows it to run (until it
+>> > tries to fault in the folio)
+>> > Guest tries to fault in folio that still has reference, KVM does not
+>> > allow that (it sees that the folio is shared, and it doesn't fault in
+>> > shared folios to confidential guests)
+>> > KVM exits back to userspace with KVM_EXIT_UNSHARE
+>> >
+>> > As I mentioned, the alternatives above are _not_ set in core KVM code.
+>> > They can vary by architecture of VM type, depending on the policy,
+>> > support, etc..
+>> >
+>> > Now for your example please on how this would work with IOCTLs :)
+>> >
+>> > Thanks,
+>> > /fuad
+>> >
+>> > > >
+>> > > > >  - Allows not having to keep track of separate shared/private ra=
+nge
+>> > > > > information in KVM.
+>> > > >
+>> > > > This patch series is already tracking shared/private range informa=
+tion in KVM.
+>> > > >
+>> > > > >  - Simpler handling of the conversion process done per guest_mem=
+fd
+>> > > > > rather than for full range.
+>> > > > >      - Userspace can handle the rollback as needed, simplifying =
+error
+>> > > > > handling in guest_memfd.
+>> > > > >  - guest_memfd is single source of truth and notifies the users =
+of
+>> > > > > shareability change.
+>> > > > >      - e.g. IOMMU, userspace, KVM MMU all can be registered for
+>> > > > > getting notifications from guest_memfd directly and will get not=
+ified
+>> > > > > for invalidation upon shareability attribute updates.
+>> > > >
+>> > > > All of these can still be done without introducing a new ioctl.
+>> > > >
+>> > > > Cheers,
+>> > > > /fuad
