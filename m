@@ -1,133 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AFA1E50B;
-	Tue, 20 May 2025 20:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927012857C5;
+	Tue, 20 May 2025 20:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747771251; cv=none; b=MatwsCU2iHxiSZZ08aonD1GCNVejKrbjCWVKQ4RZlM2tXaW6GMktJTgroE45AJCr3Olp3kUpzZyiNXAhi1rTu1ufdK0C6kJhFZO0IR6+zSil14faLrgU4SEtiuem1ii8ng4oZ/h1oLCNeiFiPwmi/h2XwY/VkvbhyUc6B9365To=
+	t=1747771255; cv=none; b=Rtkgvkj0lL4zhIkrf27SE8KTgCoaeK6PjaUvsZva07gRAZKsk/Ldp0btrP5yW4IOcjFBH7QZJnAkieau8+U+/w8HiB9BN3zQzDAg6p7UajDdQCos8iOLbrVqK41O02mQ7lKp4EE4RDzdhlYGrtNEvMRPbTpx5dNYEkvWJC2dplU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747771251; c=relaxed/simple;
-	bh=Ywfds20ZsCD8LZi4yLy7VWEUxWoGfgDsw6kn4m2bPPE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M9HhxU2dDQyLr5oQQUX4QFLJPMimAMpjHgT8JELtMjn/Ir+bZryiDwHbPuPiSkhVaSDhDfJ7pNsgppp8VoPmYMMJy70AkHWOfakiwBOA2wXAh+uNcuyWV8lxP8MqeJtq6C6CaZDy70MXRm5nqgP3Kvbw48Z48xUoXA9FbN44MlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjmvATRg; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjmvATRg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747771250; x=1779307250;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ywfds20ZsCD8LZi4yLy7VWEUxWoGfgDsw6kn4m2bPPE=;
-  b=TjmvATRgQG+9v7xnRQSOZxG60cIXYYisCP5Z61ut17IS2Z48vW8LY1rh
-   EwyhIMlA2sLMxnTyh0zMYeqeamxNuDrf128b+JEyKF+D7hZNlpTdxF2d7
-   ORXVnub8N4msoWdMXUGtM3tqzWP1MjMTiydiZSidhHkmPEzQYHnDaUNqz
-   bnJYSoAT8/6aZjlcQV15eU0K+aUGnwcgMmMxyg5FV9SbopjDn4nk6q6pj
-   P56w7u0itTss6DDplCK7n2RcyRCQG+nvTfRxk6cFziRQI+L7ZU00iyUGL
-   Pc5/LnC68nHEPkTYP8H04b1N8snqVkgdzFz+KDrKPm5xdEbWJtmuBO9Bq
-   Q==;
-X-CSE-ConnectionGUID: p0alyKIfQmyeD4kx69bdXg==
-X-CSE-MsgGUID: ET3c5CtKSU60DlzUFkSW0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="60363200"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="60363200"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 13:00:48 -0700
-X-CSE-ConnectionGUID: QRgEh7JbS+y2RAkRf5icIQ==
-X-CSE-MsgGUID: ehriDG4wRzmsQpQ1Gmus1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="143792309"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.109.86]) ([10.125.109.86])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 13:00:47 -0700
-Message-ID: <34d265f5-75d9-441b-9404-beb4c2dedf1b@intel.com>
-Date: Tue, 20 May 2025 13:00:47 -0700
+	s=arc-20240116; t=1747771255; c=relaxed/simple;
+	bh=0S/MUYKQJU8YSYNVsLtPXJ8m11oU8Z8u0aaLt8sJjD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rkFsI9XBQoyIpzesZOdSsqG2Elo5Vv3K0RESoWCWqvHPY4ghXjf7g5M2e7M8OhXXsntVD1ZceJ5MOcG2Ag964B68lUoJ2nMcHp94jnQMV188LOZWiAsqt1u2UBakDj8wn/0phlU4hIfBzuA2v9bxnlpGXg0s0MV7ZGofVnM5acE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4b255Y5xQ9z9sGf;
+	Tue, 20 May 2025 22:00:49 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v5 3/9] rust: device: Add property_present() to FwNode
+Date: Tue, 20 May 2025 22:00:18 +0200
+Message-ID: <20250520200024.268655-4-remo@buenzli.dev>
+In-Reply-To: <20250520200024.268655-1-remo@buenzli.dev>
+References: <20250520200024.268655-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] x86/sgx: Implement ENCLS[EUPDATESVN]
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "seanjc@google.com" <seanjc@google.com>, "Huang, Kai"
- <kai.huang@intel.com>, "linux-sgx@vger.kernel.org"
- <linux-sgx@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "Mallick, Asit K"
- <asit.k.mallick@intel.com>,
- "Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
- "Cai, Chong" <chongc@google.com>, "Aktas, Erdem" <erdemaktas@google.com>,
- "Annapurve, Vishal" <vannapurve@google.com>,
- "dionnaglaze@google.com" <dionnaglaze@google.com>,
- "bondarn@google.com" <bondarn@google.com>,
- "Raynor, Scott" <scott.raynor@intel.com>
-References: <20250519072603.328429-1-elena.reshetova@intel.com>
- <20250519072603.328429-5-elena.reshetova@intel.com>
- <aCt3XZ0m40wuA9bU@kernel.org>
- <DM8PR11MB57509295C87F7FB54B773107E79FA@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aCzen_zuw41a4qAK@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aCzen_zuw41a4qAK@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4b255Y5xQ9z9sGf
 
-On 5/20/25 12:57, Jarkko Sakkinen wrote:
-> unlikely() is both (minor) optimization and documents that it is not expected
-> branch so it obviously makes sense here.
+The new FwNode abstraction will be used for accessing all device
+properties, so it must have the property_present method.
 
-I'm not a big fan of unlikely() being thrown in without specific
-reasons. I don't think we need an annotation to tell us that the path
-that spits out a warning is not the common path. I'm also pretty sure
-the compiler doesn't need any help.
+It's possible to duplicate the methods on the device itself, but since
+some of the methods on Device would have different type sigatures as
+the ones on FwNode, this would only lead to inconsistency and confusion.
+So, in the future, property_perent will be removed from Device. However,
+there's a user about to be merged, so the method is left to make merging
+easier.
 
-In this case, it is pure noise.
+Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+---
+ rust/kernel/device/property.rs | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index e75d55f5856cf..70593343bd811 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -6,7 +6,7 @@
+ 
+ use core::ptr;
+ 
+-use crate::{bindings, types::Opaque};
++use crate::{bindings, str::CStr, types::Opaque};
+ 
+ /// A reference-counted fwnode_handle.
+ ///
+@@ -31,6 +31,12 @@ impl FwNode {
+     pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+         self.0.get()
+     }
++
++    /// Checks if property is present or not.
++    pub fn property_present(&self, name: &CStr) -> bool {
++        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
++        unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
++    }
+ }
+ 
+ // SAFETY: Instances of `FwNode` are always reference-counted.
+-- 
+2.49.0
+
