@@ -1,71 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9B51DE4FB;
-	Tue, 20 May 2025 09:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5651121C9F5;
+	Tue, 20 May 2025 09:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747733604; cv=none; b=i6SMcdqlctfsIaP00r3Nqt5pYI4x/JqfiAOWjAuPYoA4CajxOluHwy9F2oQbqG0w6JJNO/oYggO2u652chpONrYNSPyQY5VndfTmUDtgfpLIXfiAzjWGj2e5gsveC10P7AwE26vtsD+MZyiSOWfbhesl0Mh1yo4rc5V2Ka0KWlQ=
+	t=1747733647; cv=none; b=DlOiQkcam5hHTBXw/0AIhW0OGiSFyCmHY3NFXRJySROQf2ehQi15yJaIW0oTBjx4z3ayvwhKNVghA8INa2RMN56T5P4lpVGXeCPJZPc77x2i08/12gBAZDXgJiAQ/w7HcOCu6w52OZ5WQDbXV3cW6AcnshRuiehX/hGo7q2P49c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747733604; c=relaxed/simple;
-	bh=y2sAie8SMNxXSJerFLLYI36mv/9e3bmUKs1y+Iv8YFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sDhUO2eh2/YDM0AlQ9qrXb9T1lmJwlBz+bLyEmVIiAhCSvXlJhngf2ge3E4KrERkoNc/pselU1Arwct5Ff3OOPQ38AZ25qY0w71975Stha1Kj9ow5j5XB6+N1kSbpsInH0H55iXyVOxN7q9kODbTKgIbxhLeT142/WIGkh+CKh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCP0vsga; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCP0vsga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19645C4CEE9;
-	Tue, 20 May 2025 09:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747733603;
-	bh=y2sAie8SMNxXSJerFLLYI36mv/9e3bmUKs1y+Iv8YFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rCP0vsga3zMpbh4C8N4Xh0qWxmkoySavkRLrZKi3PNgicTCU+iSiV0V0pYzsk1zaf
-	 mPIgfptr64u//15s62akX5F9hRpto5jy7qxPHnrfQc20c+HkN8CbMZ7VkgVgbRqOio
-	 n6I7Rb9eEJi7M2wK4uXlIdnX9LEDLnnfZuLuDqOrUcTJqq0T/kXg58rU8oVrjlOEbG
-	 /GD7rJwhqvU9JuRodAilzwYdnyV+tjqwhEKChPD+WFPW+EOwWupsBmYg+cUVrRVma2
-	 7Do56D4e5hEOs2TA8uTbYBVt3Ak33/QjZAVjDkkwcLICgByMUqGLLe8RpDIe+YWj3z
-	 tDh/W3VykpXPA==
-Date: Tue, 20 May 2025 11:33:18 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ayush Jain <Ayush.Jain3@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] x86/fpu: Fix irq_fpu_usable() to return false during CPU
- onlining
-Message-ID: <aCxMXqQmHGU06l-O@gmail.com>
-References: <20250518193212.1822-1-ebiggers@kernel.org>
- <aCrrMEN01O7FWY6V@gmail.com>
- <aCrsiPd3u1-tEVd0@gmail.com>
- <20250519170425.GA1243@sol>
+	s=arc-20240116; t=1747733647; c=relaxed/simple;
+	bh=dVHCcdZBjEhRo7MHU8YBvfIU2nlbHhQKdCAkPePq5J4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g3blaVFOS2yK1zochao9rnpILDtYgbpHJwRpMV2lJ4CgWYwuGAVVUJj3WxLcPY/j/u8YFzeZyDUDUFEgl4X2F3tKBWJ7rJIdQS/0OZN9vlRIJLlidqOEkO+DB7UpehcrDTiolAKmP9PZDedOmXS1rM9STDDJaHIGmopoiCD/A/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 20 May
+ 2025 17:28:48 +0800
+Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 20 May 2025 17:28:48 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@codeconstruct.com.au>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+	<p.zabel@pengutronix.de>, <BMC-SW@aspeedtech.com>
+Subject: [net 0/4] net: ftgmac100: Add SoC reset support for RMII mode
+Date: Tue, 20 May 2025 17:28:44 +0800
+Message-ID: <20250520092848.531070-1-jacky_chou@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519170425.GA1243@sol>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+This patch series adds support for an optional reset line to the
+ftgmac100 ethernet controller, as used on Aspeed SoCs. On these SoCs,
+the internal MAC reset is not sufficient to reset the RMII interface.
+By providing a SoC-level reset via the device tree "resets" property,
+the driver can properly reset both the MAC and RMII logic, ensuring
+correct operation in RMII mode.
 
-* Eric Biggers <ebiggers@kernel.org> wrote:
+The series includes:
+- Device tree binding update to document the new "resets" property.
+- Addition of MAC1 and MAC2 reset definitions for AST2600.
+- Device tree changes for AST2600 to use the new reset properties.
+- Driver changes to assert/deassert the reset line as needed.
 
-> Or we could use DEFINE_PER_CPU() = true in patch 1, then revert that 
-> in patch 2 and replace it with the line in fpu__init_cpu().  But 
-> again I think the split would be more likely to create problems than 
-> solve them.
+This improves reliability and initialization of the MAC in RMII mode
+on Aspeed platforms.
 
-Well, my request would be for the first patch to simply mimic current 
-(and buggy) behavior as much as reasonably possible (obviously the 
-effects of BSS zeroing shouldn't be mimiced 100%) - and the second 
-patch to fix the initialization-ordering bug.
+Jacky Chou (4):
+  dt-bindings: net: ftgmac100: Add resets property
+  dt-bindings: clock: ast2600: Add reset definitions for MAC1 and MAC2
+  ARM: dts: aspeed-g6: Add resets property for MAC controllers
+  net: ftgmac100: Add optional reset control for RMII mode on Aspeed
+    SoCs
 
-Thanks,
+ .../bindings/net/faraday,ftgmac100.yaml       |  5 ++++
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |  4 +++
+ drivers/net/ethernet/faraday/ftgmac100.c      | 26 +++++++++++++++++++
+ include/dt-bindings/clock/ast2600-clock.h     |  2 ++
+ 4 files changed, 37 insertions(+)
 
-	Ingo
+-- 
+2.34.1
+
