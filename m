@@ -1,128 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A910921A45A;
-	Tue, 20 May 2025 11:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD8D21A45A;
+	Tue, 20 May 2025 11:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747740713; cv=none; b=Cfdwxxacv/CLNVilKFiB41XmN+xEF0agT3Jed8+k0f+KNQcAtjlLZkhPTHZ4HYySheL8oBk1tk99dvZ70bduHWNB0BTE8lTG28t3mxvvfIi05k+/P96Y+vUpbkfZLiUm4U57kMu92eC6phs/qDimr1bgvK4FKVEiI5Q+vkQSH50=
+	t=1747740782; cv=none; b=F3OJ+kpOJS3QS7XCUX52OlL58thNkbFgHeUvbLuW7VurxrRwh3A5YWNSKHyHloAuccB7jwtYhao+f/VHMBgTXLaYGIe6Qv4INXUVItW1hLxAkJTh9NFl5SE4LJlWS8HgpQFnr84/1pzCScZ32GOpouo4oVA3wDQpFaQhlVKUFAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747740713; c=relaxed/simple;
-	bh=CvDybhlQLGgsaauWyvnvy0fUfy35kQUTWzKrr9rQm+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2hszaevYOhM4uDxGs6iYWT5FSAAL29yh2PQ9RSBjTms3S4RfyGytIP+NNnO3NvyslD5GRKxpnxbxfU9ffjiQMPf3voJfiF/BVtXpCyq6Pp31YRpP0DwAHgaVW8gWj+FKqF0XGrMoXCe78VEe/K3ffqr5pgEiOzLpeQI4EEIPMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofdYLbVw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofdYLbVw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9268CC4CEEB;
-	Tue, 20 May 2025 11:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747740713;
-	bh=CvDybhlQLGgsaauWyvnvy0fUfy35kQUTWzKrr9rQm+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ofdYLbVw9naWOMB+EzGo9kBZvwW4kLEAFulhRj7U1+SNOP7XzubmjaDjq3xXD81HE
-	 asVMbkGWrhZ02beHdrEgtHSSE9HSvsdrEJbtnnivmJKg77MuwnIMOFtxW0CgeSVNmf
-	 EqKNtxziB0IwrCIK/8elCyKsALdB9DCl+ciWml5O6Uh2Dm1ucCGNJVn2++eMOpAQLr
-	 yJeOi8layAs/ZP0wKWsmnlJiJS9PTXienZtRWaYPw2Whbu1eOKsSbLKLE69kPDiTZi
-	 DBZexSPA57nr7OzlVuH3WE/qc0XzVc3H6bg35HEBDqxL3dGvQ+qZhssW/A47l2JlYh
-	 DhtXNITYVLfkw==
-Date: Tue, 20 May 2025 12:31:47 +0100
-From: Will Deacon <will@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Nicolin Chen <nicolinc@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>,
-	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 05/40] iommu/io-pgtable-arm: Add quirk to quiet
- WARN_ON()
-Message-ID: <20250520113146.GA18435@willie-the-truck>
-References: <20250514175527.42488-1-robdclark@gmail.com>
- <20250514175527.42488-6-robdclark@gmail.com>
- <20250515143309.GA12165@willie-the-truck>
- <CAF6AEGsnOD8fZmTXAEZZNrdK-NXdUJF51s51EhYQ6Ed7dCFM0A@mail.gmail.com>
+	s=arc-20240116; t=1747740782; c=relaxed/simple;
+	bh=k1fG5ajRDy2nag7Bj63UX37XmQ7V6ulqT0aGln+oI1w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iJ6TZn3+8FP2Cu9s+qCfYlP5vCqCOTh8OcnjivHQbKbhAh2REQKL/LfcRjd6iX4oJFgzZ6YLv0Y7/eRpZKNKL8qu7u2yq1PB3oDGWFl0ZxTKDmqQ82vnRwXsQuKpUX7rk3pnPbSl/J2jPMSem0RdJkGwfNcNKM+bnBxdIAVHk5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 20 May
+ 2025 14:32:53 +0300
+Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 20 May
+ 2025 14:32:53 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet read calls
+Date: Tue, 20 May 2025 14:32:39 +0300
+Message-ID: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGsnOD8fZmTXAEZZNrdK-NXdUJF51s51EhYQ6Ed7dCFM0A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-On Thu, May 15, 2025 at 07:48:39AM -0700, Rob Clark wrote:
-> On Thu, May 15, 2025 at 7:33 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Wed, May 14, 2025 at 10:53:19AM -0700, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > In situations where mapping/unmapping sequence can be controlled by
-> > > userspace, attempting to map over a region that has not yet been
-> > > unmapped is an error.  But not something that should spam dmesg.
-> > >
-> > > Now that there is a quirk, we can also drop the selftest_running
-> > > flag, and use the quirk instead for selftests.
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > Acked-by: Robin Murphy <robin.murphy@arm.com>
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/iommu/io-pgtable-arm.c | 27 ++++++++++++++-------------
-> > >  include/linux/io-pgtable.h     |  8 ++++++++
-> > >  2 files changed, 22 insertions(+), 13 deletions(-)
-> >
-> > [...]
-> >
-> > > diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-> > > index bba2a51c87d2..639b8f4fb87d 100644
-> > > --- a/include/linux/io-pgtable.h
-> > > +++ b/include/linux/io-pgtable.h
-> > > @@ -88,6 +88,13 @@ struct io_pgtable_cfg {
-> > >        *
-> > >        * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pagetable.
-> > >        * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttrs bits
-> > > +      *
-> > > +      * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
-> > > +      *      mappings, but silently return -EEXISTS.  Normally an attempt
-> > > +      *      to map over an existing mapping would indicate some sort of
-> > > +      *      kernel bug, which would justify the WARN_ON().  But for GPU
-> > > +      *      drivers, this could be under control of userspace.  Which
-> > > +      *      deserves an error return, but not to spam dmesg.
-> > >        */
-> > >       #define IO_PGTABLE_QUIRK_ARM_NS                 BIT(0)
-> > >       #define IO_PGTABLE_QUIRK_NO_PERMS               BIT(1)
-> > > @@ -97,6 +104,7 @@ struct io_pgtable_cfg {
-> > >       #define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA         BIT(6)
-> > >       #define IO_PGTABLE_QUIRK_ARM_HD                 BIT(7)
-> > >       #define IO_PGTABLE_QUIRK_ARM_S2FWB              BIT(8)
-> > > +     #define IO_PGTABLE_QUIRK_NO_WARN_ON             BIT(9)
-> >
-> > This feels a bit fragile to me:
-> >   * IOMMU-API users of io-pgtable shouldn't be passing this quirk
-> >     but might end up doing so to paper over driver bugs.
-> >
-> >   * Low-level users of io-pgtable who expose page-table operations to
-> >     userspace need to pass the quirk, but might well not bother because
-> >     well-behaved userspace doesn't trigger the warning.
-> >
-> > So overall, it's all a bit unsatisfactory. Is there a way we could have
-> > the warnings only when invoked via the IOMMU API?
-> 
-> iommu drivers _not_ setting this flag seems like a good way to achieve that ;-)
-> 
-> The alternative is to move the warns to the iommu driver... but they
-> could just as easily remove the WARN_ON()s as they could set the
-> NO_WARN_ON quirk, so :shrug:?
+Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
+aqc111 driver, caused by incomplete sanitation of usb read calls'
+results. This problem is quite similar to the one fixed in commit
+920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
 
-Bah, I also don't have a good idea to improve this, so I guess I'll take
-what you have for now.
+For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
+even if the caller expected the full amount, and aqc111_read_cmd()
+will not check its result properly. As [1] shows, this may lead
+to MAC address in aqc111_bind() being only partly initialized,
+triggering KMSAN warnings.
 
-Will
+Fix the issue by verifying that the number of bytes read is
+as expected and not less.
+
+[1] Partial syzbot report:
+BUG: KMSAN: uninit-value in is_valid_ether_addr include/linux/etherdevice.h:208 [inline]
+BUG: KMSAN: uninit-value in usbnet_probe+0x2e57/0x4390 drivers/net/usb/usbnet.c:1830
+ is_valid_ether_addr include/linux/etherdevice.h:208 [inline]
+ usbnet_probe+0x2e57/0x4390 drivers/net/usb/usbnet.c:1830
+ usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:658
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:800
+...
+
+Uninit was stored to memory at:
+ dev_addr_mod+0xb0/0x550 net/core/dev_addr_lists.c:582
+ __dev_addr_set include/linux/netdevice.h:4874 [inline]
+ eth_hw_addr_set include/linux/etherdevice.h:325 [inline]
+ aqc111_bind+0x35f/0x1150 drivers/net/usb/aqc111.c:717
+ usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
+ usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
+...
+
+Uninit was stored to memory at:
+ ether_addr_copy include/linux/etherdevice.h:305 [inline]
+ aqc111_read_perm_mac drivers/net/usb/aqc111.c:663 [inline]
+ aqc111_bind+0x794/0x1150 drivers/net/usb/aqc111.c:713
+ usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
+ usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+...
+
+Local variable buf.i created at:
+ aqc111_read_perm_mac drivers/net/usb/aqc111.c:656 [inline]
+ aqc111_bind+0x221/0x1150 drivers/net/usb/aqc111.c:713
+ usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
+
+Reported-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=3b6b9ff7b80430020c7b
+Tested-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
+Fixes: df2d59a2ab6c ("net: usb: aqc111: Add support for getting and setting of MAC address")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+---
+P.S. In aqc111 there are many calls to aqc111_read_cmd[_nopm]
+functions in other parts of the driver and most of them are not
+checked at all. I've chosen to forego error handling of them, as
+it seems it's missing deliberately. Correct me if I am wrong.
+
+ drivers/net/usb/aqc111.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/usb/aqc111.c b/drivers/net/usb/aqc111.c
+index ff5be2cbf17b..453a2cf82753 100644
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -30,10 +30,13 @@ static int aqc111_read_cmd_nopm(struct usbnet *dev, u8 cmd, u16 value,
+ 	ret = usbnet_read_cmd_nopm(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
+ 				   USB_RECIP_DEVICE, value, index, data, size);
+ 
+-	if (unlikely(ret < 0))
++	if (unlikely(ret < size)) {
++		ret = ret < 0 ? ret : -ENODATA;
++
+ 		netdev_warn(dev->net,
+ 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
+ 			    cmd, index, ret);
++	}
+ 
+ 	return ret;
+ }
+@@ -46,10 +49,13 @@ static int aqc111_read_cmd(struct usbnet *dev, u8 cmd, u16 value,
+ 	ret = usbnet_read_cmd(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
+ 			      USB_RECIP_DEVICE, value, index, data, size);
+ 
+-	if (unlikely(ret < 0))
++	if (unlikely(ret < size)) {
++		ret = ret < 0 ? ret : -ENODATA;
++
+ 		netdev_warn(dev->net,
+ 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
+ 			    cmd, index, ret);
++	}
+ 
+ 	return ret;
+ }
