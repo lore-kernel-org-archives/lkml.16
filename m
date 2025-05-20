@@ -1,90 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DA326982E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3921C9E4;
+	Tue, 20 May 2025 11:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741775; cv=none; b=V6kmimUbOJ9XRxOG+XIZZIFXYTloVtqSN6zUH8SRlY5rj4CekgiE/VcvD8dgnc5ywtohYjFJF+a3fIKiVdOK1PBWs8apERD5aNz8zjjw/kZBfRazCbM4uKUY0lX60J+gftVznvTjFBjHNCPVg/OpnOar5Zoy9kJkIGIt3p72RQw=
+	t=1747741788; cv=none; b=A1+mAAqqVU1YcgcGjuEIi4BJuaKX6i6ohtSekFduRynmw12Ge4nJm83scTTodA/pHXRLVN6pBCChDSGOhvmBSb77/BQd32jOm1tTlkMFFJaE6/o3ORtRyHKcRZNNLRzocjB04aAdRl4OPostkwVU6Im8n0hOpXwUR0gASJ4WUSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741775; c=relaxed/simple;
-	bh=gcctEmOMB8/xZBo8QUAoV/HqxB1i417zp88odP8f5i4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=awFd0cwy8+kW65GC1sYP4/EXGowqAR32joNIfCROvTdLDGO6U+tNBzzyEEaKSS18rPZhL1F3jZ9dyIESgVgF0wWHmIp80aBSmxI7bTIy57PEUsCI6znYP1TzeKz0nrvKPbGhkhiHfH0gudpY31d8yifgp3Aa9l2YgTESahmE1es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NfxihqkF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747741788; c=relaxed/simple;
+	bh=ZgFU4Qt2UDoHBOGb5llT6tHaK06H5LnMXA3bUnhfAMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NuQsCZILpqmnR82XJVCwBSS4yEbszAGNSV20L5KAwiEUSVig5Plv0h7CR7nXJr0uixazJCAgnrT0obSw1u/pUeFk2a6TNqRMSae3FySud34zbGWc/qF+CqXnP9dWRqziZSlQKndexEI9JVt7/LmLfF/Tmj8pMoF+ugGYcPvRHOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2TVqSAK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NfxihqkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747741773; x=1779277773;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=gcctEmOMB8/xZBo8QUAoV/HqxB1i417zp88odP8f5i4=;
-  b=NfxihqkFJrYD2kCSX5YPojZcgx3yxA/kOJOXKxLg9cfDd0pYR+GKy86I
-   +Lm9MHbUAiGMipK9ckc+pkbrWcncA+sUX0PxDfhSipsr1w3+6jVYiIEsX
-   ZjLKNIdLNBz7Jj6csU7XRyvFicT74Fzeq7NH/k26tLvOA4aA5upezaPWO
-   VnskyzxEuAhOIA/8bJsKaP5qQ6hzdg7jd8ly3EEemGMLTd/lIndi8XoLo
-   9VWIDMwU189rbr2wUUGlzYXdwf8PLuZW4jAgWru2/S7P91eJldnKL9+ys
-   //0TD1YPy/TQ7QZ/8plJGdVy+Ew1X4tLoc6qHsHytrwCWR7ND1kviAL3z
-   w==;
-X-CSE-ConnectionGUID: R2qHDyDWR2Wn6G1c/6KucA==
-X-CSE-MsgGUID: LbrLb1XnSdmUlqnbmNxGuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48925059"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="48925059"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:49:32 -0700
-X-CSE-ConnectionGUID: ild0xZquRDmVIYTMaAQuNg==
-X-CSE-MsgGUID: 7XSw+vJMSbaDJe3Y88dBJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="143668111"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 20 May 2025 04:49:30 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHLTL-000MXG-2p;
-	Tue, 20 May 2025 11:49:27 +0000
-Date: Tue, 20 May 2025 19:49:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: kismet: WARNING: unmet direct dependencies detected for
- DRM_DISPLAY_DSC_HELPER when selected by DRM_PANEL_SAMSUNG_S6E3HA8
-Message-ID: <202505201924.nRldyjej-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2TVqSAK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE94C4CEF1;
+	Tue, 20 May 2025 11:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747741788;
+	bh=ZgFU4Qt2UDoHBOGb5llT6tHaK06H5LnMXA3bUnhfAMQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Y2TVqSAKWfYmyKTk91EgBWAMRarlTTBp3/Od54KL2D+DgO0ZOcs6FK4LF/pNSmbyk
+	 3EyigzdEhz1T1qgBKquW26rt3TphLcqw8M2z9TlwAjr1RXvFPm4Qe8hLi5UevxAqSG
+	 lBYcWadBZ9R76fKA1KRNHi4kD9i8rh3abYijvse8UbVncGJ+QfAFPJGclOzGg6cElF
+	 yGOlsRI2fgmni65JhyDD7nG4PAqRA3YogX1OGsuve4U24dkc/NuLwmle1u1qSOPXYf
+	 dzu8gkDl5uKyU9zJWjBG+QscisUGgUNNOAQ9WYMTORsNwsKWNTHAE8JCm667yDCDpY
+	 i4PU9F50mSd6w==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-550edba125bso3954446e87.3;
+        Tue, 20 May 2025 04:49:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWESlic6HCm42CPxTeeymN1nkld4NoWPV9pVpMKsWi/feR3ZaEBJ3jKE/Uub2qu4M47Vc3aUnzgglo=@vger.kernel.org, AJvYcCWwdPxUa1fR7YT9AafOfqx1pG3Czjb939Qx914YobpT5s11mWo55i8dIuEnHCZ+VSf8bBXKgO49n/pus3bH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYY5kJje0sVhWlfmaMVZnGu83EKeLMvNAuey5ZKfwCr87Sio2P
+	CXhDn+0LrkM/GQo1aOAk3kxZ9mvE1+PeoPrsUJi8s/bB7tgqVBOVZgakgBMPBGz1sAg9/cPbKp9
+	Egn1RwC1SijCx22TU+ESaTRhbg7+a+YU=
+X-Google-Smtp-Source: AGHT+IFBawAVA3NVYikKol17lgUtc1H2DK1FfveJ74ZjBkgr6eVTbJd9Z/zsPNSSnbqpu63MnnnBzHkbeShgld3YmyE=
+X-Received: by 2002:a05:651c:150e:b0:326:c36a:bd63 with SMTP id
+ 38308e7fff4ca-328077c4059mr70554841fa.29.1747741786458; Tue, 20 May 2025
+ 04:49:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-28-ardb+git@google.com>
+ <20250520113849.GKaCxpyVy-7N6bih-r@fat_crate.local>
+In-Reply-To: <20250520113849.GKaCxpyVy-7N6bih-r@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 20 May 2025 13:49:35 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEikRCP4TyNWWQh7wKErr9YKAe3cCbPw8XMuXLVkr2S_g@mail.gmail.com>
+X-Gm-Features: AX0GCFu0doI1mXu2WMuGlzjLSY2ZR1cGel9drSVWgh4p6J2HLP1_ocvagLXPPSw
+Message-ID: <CAMj1kXEikRCP4TyNWWQh7wKErr9YKAe3cCbPw8XMuXLVkr2S_g@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 05/21] x86/sev: Move GHCB page based HV
+ communication out of startup code
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a5806cd506af5a7c19bcd596e4708b5c464bfd21
-commit: fd3b2c5f40a1e028bc813284260d430257444334 drm/panel: s6e3ha8: select CONFIG_DRM_DISPLAY_DSC_HELPER
-date:   7 months ago
-config: m68k-kismet-CONFIG_DRM_DISPLAY_DSC_HELPER-CONFIG_DRM_PANEL_SAMSUNG_S6E3HA8-0-0 (https://download.01.org/0day-ci/archive/20250520/202505201924.nRldyjej-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250520/202505201924.nRldyjej-lkp@intel.com/reproduce)
+On Tue, 20 May 2025 at 13:39, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, May 12, 2025 at 09:08:40PM +0200, Ard Biesheuvel wrote:
+> > diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> > index f50a606be4f1..07081bb85331 100644
+> > --- a/arch/x86/include/asm/sev.h
+> > +++ b/arch/x86/include/asm/sev.h
+> > @@ -485,6 +485,7 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+> >  struct snp_guest_request_ioctl;
+> >
+> >  void setup_ghcb(void);
+> > +void snp_register_ghcb_early(unsigned long paddr);
+> >  void early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
+> >                                 unsigned long npages);
+> >  void early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+> > @@ -521,8 +522,6 @@ static __always_inline void vc_ghcb_invalidate(struct ghcb *ghcb)
+> >       __builtin_memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
+> >  }
+> >
+> > -void vc_forward_exception(struct es_em_ctxt *ctxt);
+> > -
+> >  /* I/O parameters for CPUID-related helpers */
+> >  struct cpuid_leaf {
+> >       u32 fn;
+> > @@ -533,15 +532,71 @@ struct cpuid_leaf {
+> >       u32 edx;
+> >  };
+> >
+> > +int svsm_perform_msr_protocol(struct svsm_call *call);
+> >  int snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+> >             void *ctx, struct cpuid_leaf *leaf);
+> >
+> > +/*
+> > + * Issue a VMGEXIT to call the SVSM:
+> > + *   - Load the SVSM register state (RAX, RCX, RDX, R8 and R9)
+> > + *   - Set the CA call pending field to 1
+> > + *   - Issue VMGEXIT
+> > + *   - Save the SVSM return register state (RAX, RCX, RDX, R8 and R9)
+> > + *   - Perform atomic exchange of the CA call pending field
+> > + *
+> > + *   - See the "Secure VM Service Module for SEV-SNP Guests" specification for
+> > + *     details on the calling convention.
+> > + *     - The calling convention loosely follows the Microsoft X64 calling
+> > + *       convention by putting arguments in RCX, RDX, R8 and R9.
+> > + *     - RAX specifies the SVSM protocol/callid as input and the return code
+> > + *       as output.
+> > + */
+> > +static __always_inline void svsm_issue_call(struct svsm_call *call, u8 *pending)
+>
+> Why in a header?
+>
+> At least in sev-internal.h or so.
+>
+> I'd prefer for this to be in a .c file, though.
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505201924.nRldyjej-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for DRM_DISPLAY_DSC_HELPER when selected by DRM_PANEL_SAMSUNG_S6E3HA8
-   WARNING: unmet direct dependencies detected for DRM_DISPLAY_DSC_HELPER
-     Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && DRM_DISPLAY_HELPER [=n]
-     Selected by [y]:
-     - DRM_PANEL_SAMSUNG_S6E3HA8 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_PANEL [=y] && OF [=y] && DRM_MIPI_DSI [=y] && BACKLIGHT_CLASS_DEVICE [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+OK. In that case, it will be implemented in the startup code then, and
+exported to the rest of the core kernel via a PIC alias.
