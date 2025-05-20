@@ -1,221 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4572609C7;
-	Tue, 20 May 2025 15:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4EBCA5A;
+	Tue, 20 May 2025 15:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755060; cv=none; b=lGLVy6yCFNaduCNn7PD5kyspwG7B+o5bJsFcWcjHHIhIJ6gT55jty4Nr40K4lqFZaAcyy9D9JXoygz4/cJHuVDIHN+o6xLgwW9oQ5dNOelFggbgeJcvPx39aw76g4uQkpf+66kxLkV5Ct0SSu/U1jdyMjjyC0RwQ4835WuRTVzI=
+	t=1747755069; cv=none; b=Au+mng4zE4psOliJKhZAuktJS3oNLm1BwvCLxdLkz+3cjBmbpNcn2CczDwbTOh0Hddf+QAi1RFsNX7pGG0fEdK9BZC8Fx/XdE8YkvIDVOpHFLuyOFRfgUktuPr35Rl/C0hOH00BFEUQlFcoFRuYyvzDj7hUBjB5b2CqmWd/MyEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755060; c=relaxed/simple;
-	bh=XQsq4hGuKRkw0QINTm7AApAlm0Cid+MeHiqHowoBvFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qtFuTo5BeRJoNF97pCecF/x6rFX5S8rYa9gQAn/XcCq/X+U7mKruLYPJmUZcII8+4ipnfuQ2h15+/j609pVTlJZfKMdKEg0RVuF2sFqqgTz9ajBqQC6me7oEojqyxHBUTComG3EhD1jTnvlQk7MMdOlSpzHU7y3wrXz07F4hExs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZmj2lo8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747755069; c=relaxed/simple;
+	bh=GrbZGLItfP6Nd2xeSeZXNEfkQXPcthdv00SmcvOiYQE=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=PWDwMl5D9cCjbTYxmdcvAJ/nleFTCNOjmlsEZdax12GKckYwvV3W/Azwi1VsV61KNJINZ5x9dB+DeqNdRyD1V7yades9+Pc3XsZxA/q+KLq53PONRpAfUEfr6v230MIsxVd7nE0ar0YvQB6dmYg79v8WcgQQH2Ck75wd9sTuL5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rGXxvaOm; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZmj2lo8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAA7C4CEF1;
-	Tue, 20 May 2025 15:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747755059;
-	bh=XQsq4hGuKRkw0QINTm7AApAlm0Cid+MeHiqHowoBvFc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FZmj2lo8+qNzJ18KSCICTULkSs4CS+bXOrKQ9oBbCuspT25llTfTzhNNXiY2rZNSj
-	 73hfkY0OylMVIR9pYcJleMEIdpIoisI65MPMo+8Z3Pw7qoeX9pLyUiuEzaYqPebUzL
-	 BH9s8/+QRXMR6glxsceQqfwA/oAskuux/GOJkHDYX1cK88cLLn7mqqOH6fGGmmUP0W
-	 2GnUMd7Jlq/nnGfwWTj1hg+GYRR5YKmFA5/EDQsNEzusSt6JgpCMGH2JmWJCmRf6RY
-	 Xk0vXCvFxxVqOuVGDGE9E9jFp+WxEJoVfYyU7w/6iAkj/IayCKP2cgvF99Z+cfVYSd
-	 Yror0ZCYogBig==
-From: Eric Biggers <ebiggers@kernel.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ayush Jain <Ayush.Jain3@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v3 2/2] x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining
-Date: Tue, 20 May 2025 08:29:38 -0700
-Message-ID: <20250520152938.21881-3-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520152938.21881-1-ebiggers@kernel.org>
-References: <20250520152938.21881-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rGXxvaOm"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KFMZ9h014091;
+	Tue, 20 May 2025 17:30:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=lk7D3+J+dO4N7nuT17NijQ
+	wiCNmJdFyl56IfBFqF/xU=; b=rGXxvaOmKPW1GVxiuQOJhoM9eawEJGXYy7DL5y
+	YrIkMQEaN0lHTPvIO00NJkS7B+UtAYqrNLwar4UOjhwFX32Q0LSNRpgsFK0tcOXu
+	xMdoKf8yt0Uty1Bbe3M4noqBdNL1Ua2h2VqUunKQ5E9c9AHSWFTJYH76h/ArIMRu
+	ovsRrUvA4KkTXgPb68KGlj1Gl64c7vWmUHjqCNPoVkHf28A9vVvMLHdMebATxVl4
+	KqznOGAyJOCZhaAF+kJfvrQkb/HNk33TiCYJnJa48bzM5ZpgeLkT7TqYiWUMMzIt
+	RWLD5VZUBb9Sxs6T/54bOYCoBJwaxw2qj40iPFtdkQcSUNfA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgnnk1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 17:30:54 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1585F40047;
+	Tue, 20 May 2025 17:29:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A3FD8B23C3F;
+	Tue, 20 May 2025 17:28:54 +0200 (CEST)
+Received: from localhost (10.48.87.146) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
+ 2025 17:28:54 +0200
+From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Subject: [PATCH v2 0/2] Introduce Clock and Reset Driver for STM32MP21
+ Platform
+Date: Tue, 20 May 2025 17:28:36 +0200
+Message-ID: <20250520-upstream_rcc_mp21-v2-0-3c776a6e5862@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKSfLGgC/x3MTQqAIBBA4avErBNsIPu5SoSITjWLSsaKILp70
+ vJbvPdAImFK0BcPCF2ceN8ysCzAL26bSXHIBtRY6xq1OmM6hNxqxXu7RqxU0K1BaoJvTAe5i0I
+ T3/9zGN/3A8Snj0hjAAAA
+X-Change-ID: 20250520-upstream_rcc_mp21-d0862e7dc769
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+        Nicolas Le Bayon
+	<nicolas.le.bayon@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
 
-From: Eric Biggers <ebiggers@google.com>
+This patchset implements a new driver to manage clock and reset functionalities
+for the STM32MP21 platform.
 
-irq_fpu_usable() incorrectly returned true before the FPU is
-initialized.  The x86 CPU onlining code can call sha256() to checksum
-AMD microcode images, before the FPU is initialized.  Since sha256()
-recently gained a kernel-mode FPU optimized code path, a crash occurred
-in kernel_fpu_begin_mask() during hotplug CPU onlining.
+Changes in v2:
+  - add list item for access-controlers and fix maxItems value from bindings
+  - drop STM32MP21_LAST_CLK and STM32MP21_LAST_RESET defines from bindings
+  - typo fixes from ALOK TIWARI
+  
 
-(The crash did not occur during boot-time CPU onlining, since the
-optimized sha256() code is not enabled until subsys_initcalls run.)
-
-Fix this by making irq_fpu_usable() return false before fpu__init_cpu()
-has run.  To do this without adding any additional overhead to
-irq_fpu_usable(), replace the existing per-CPU bool in_kernel_fpu with
-kernel_fpu_allowed which tracks both initialization and usage rather
-than just usage.  The initial state is false; FPU initialization sets it
-to true; kernel-mode FPU sections toggle it to false and then back to
-true; and CPU offlining restores it to the initial state of false.
-
-Fixes: 11d7956d526f ("crypto: x86/sha256 - implement library instead of shash")
-Reported-by: Ayush Jain <Ayush.Jain3@amd.com>
-Closes: https://lore.kernel.org/r/20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local
-Tested-by: Ayush Jain <Ayush.Jain3@amd.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 ---
- arch/x86/include/asm/fpu/api.h |  1 +
- arch/x86/kernel/fpu/core.c     | 24 +++++++++++++++---------
- arch/x86/kernel/fpu/init.c     | 13 +++++++++++++
- arch/x86/kernel/fpu/internal.h |  2 ++
- arch/x86/kernel/smpboot.c      |  6 ++++++
- 5 files changed, 37 insertions(+), 9 deletions(-)
+Gabriel Fernandez (2):
+      dt-bindings: stm32: add STM32MP21 clocks and reset bindings
+      clk: stm32: introduce clocks for STM32MP21 platform
 
-diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
-index 8e6848f55dcdb..2983acd95f5de 100644
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -116,10 +116,11 @@ extern void fpu_reset_from_exception_fixup(void);
- /* Boot, hotplug and resume */
- extern void fpu__init_cpu(void);
- extern void fpu__init_system(void);
- extern void fpu__init_check_bugs(void);
- extern void fpu__resume_cpu(void);
-+extern void fpu__disable_cpu(void);
- 
- #ifdef CONFIG_MATH_EMULATION
- extern void fpstate_init_soft(struct swregs_state *soft);
- #else
- static inline void fpstate_init_soft(struct swregs_state *soft) {}
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 6495259a23962..ea138583dd92a 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -42,12 +42,15 @@ struct fpu_state_config fpu_user_cfg __ro_after_init;
-  * Represents the initial FPU state. It's mostly (but not completely) zeroes,
-  * depending on the FPU hardware format:
-  */
- struct fpstate init_fpstate __ro_after_init;
- 
--/* Track in-kernel FPU usage */
--static DEFINE_PER_CPU(bool, kernel_fpu_allowed) = true;
-+/*
-+ * Track FPU initialization and kernel-mode usage. 'true' means the FPU is
-+ * initialized and is not currently being used by the kernel:
-+ */
-+DEFINE_PER_CPU(bool, kernel_fpu_allowed);
- 
- /*
-  * Track which context is using the FPU on the CPU:
-  */
- DEFINE_PER_CPU(struct fpu *, fpu_fpregs_owner_ctx);
-@@ -70,19 +73,22 @@ bool irq_fpu_usable(void)
- {
- 	if (WARN_ON_ONCE(in_nmi()))
- 		return false;
- 
- 	/*
--	 * In kernel FPU usage already active?  This detects any explicitly
--	 * nested usage in task or softirq context, which is unsupported.  It
--	 * also detects attempted usage in a hardirq that has interrupted a
--	 * kernel-mode FPU section.
-+	 * Return false in the following cases:
-+	 *
-+	 * - FPU is not yet initialized. This can happen only when the call is
-+	 *   coming from CPU onlining, for example for microcode checksumming.
-+	 * - The kernel is already using the FPU, either because of explicit
-+	 *   nesting (which should never be done), or because of implicit
-+	 *   nesting when a hardirq interrupted a kernel-mode FPU section.
-+	 *
-+	 * The single boolean check below handles both cases:
- 	 */
--	if (!this_cpu_read(kernel_fpu_allowed)) {
--		WARN_ON_FPU(!in_hardirq());
-+	if (!this_cpu_read(kernel_fpu_allowed))
- 		return false;
--	}
- 
- 	/*
- 	 * When not in NMI or hard interrupt context, FPU can be used in:
- 	 *
- 	 * - Task context except from within fpregs_lock()'ed critical
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 6bb3e35c40e24..c581a3e452dfd 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -49,10 +49,23 @@ static void fpu__init_cpu_generic(void)
-  */
- void fpu__init_cpu(void)
- {
- 	fpu__init_cpu_generic();
- 	fpu__init_cpu_xstate();
-+
-+	/* Start allowing kernel-mode FPU: */
-+	WARN_ON_FPU(this_cpu_read(kernel_fpu_allowed));
-+	this_cpu_write(kernel_fpu_allowed, true);
-+}
-+
-+/*
-+ * Stop allowing kernel-mode FPU. Called when a CPU is brought offline:
-+ */
-+void fpu__disable_cpu(void)
-+{
-+	WARN_ON_FPU(!this_cpu_read(kernel_fpu_allowed));
-+	this_cpu_write(kernel_fpu_allowed, false);
- }
- 
- static bool __init fpu__probe_without_cpuid(void)
- {
- 	unsigned long cr0;
-diff --git a/arch/x86/kernel/fpu/internal.h b/arch/x86/kernel/fpu/internal.h
-index 975de070c9c98..9782152d609c7 100644
---- a/arch/x86/kernel/fpu/internal.h
-+++ b/arch/x86/kernel/fpu/internal.h
-@@ -2,10 +2,12 @@
- #ifndef __X86_KERNEL_FPU_INTERNAL_H
- #define __X86_KERNEL_FPU_INTERNAL_H
- 
- extern struct fpstate init_fpstate;
- 
-+DECLARE_PER_CPU(bool, kernel_fpu_allowed);
-+
- /* CPU feature check wrappers */
- static __always_inline __pure bool use_xsave(void)
- {
- 	return cpu_feature_enabled(X86_FEATURE_XSAVE);
- }
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index d7d61b3de2bf6..cf42a7632dd49 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1186,10 +1186,16 @@ void cpu_disable_common(void)
- {
- 	int cpu = smp_processor_id();
- 
- 	remove_siblinginfo(cpu);
- 
-+	/*
-+	 * Stop allowing kernel-mode FPU. This is needed so that if the CPU is
-+	 * brought online again, the initial state is not allowed:
-+	 */
-+	fpu__disable_cpu();
-+
- 	/* It's now safe to remove this processor from the online map */
- 	lock_vector_lock();
- 	remove_cpu_from_maps(cpu);
- 	unlock_vector_lock();
- 	fixup_irqs();
+ .../bindings/clock/st,stm32mp21-rcc.yaml           |  204 +++
+ drivers/clk/stm32/Kconfig                          |    7 +
+ drivers/clk/stm32/Makefile                         |    1 +
+ drivers/clk/stm32/clk-stm32mp21.c                  | 1586 ++++++++++++++++++++
+ drivers/clk/stm32/stm32mp21_rcc.h                  |  651 ++++++++
+ include/dt-bindings/clock/st,stm32mp21-rcc.h       |  426 ++++++
+ include/dt-bindings/reset/st,stm32mp21-rcc.h       |  138 ++
+ 7 files changed, 3013 insertions(+)
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250520-upstream_rcc_mp21-d0862e7dc769
+
+Best regards,
 -- 
-2.49.0
+Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
