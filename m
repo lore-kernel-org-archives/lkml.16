@@ -1,33 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D13E219EB;
-	Tue, 20 May 2025 05:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CFE219EB;
+	Tue, 20 May 2025 05:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747720398; cv=none; b=Mbf5qlDJAjKdow5FcLN+wV+Ezk38UKOdoK7akZApAkTQYgXp24xZzJYxujaZ+GGzAQjOgesFq2KuZYD8SMlndmhaUVVT+IzGcOO50sW/F8TWtDVaXqsBrS5y6Y/lq/D+KzfOzHgdt7V+Nl39+1Uig/jqsJdYCVAhEMfKYOX7bvY=
+	t=1747720527; cv=none; b=WRE61v0napP5ablh+HilTnfufdZUaMKQZcY7lR93f7jLXQIKV4Kz0F9wA6iKW2/Ge6dR0rrUYUWYuYmCf6aBlYnb4KqTp6ju7E3jSiT7bwR5qj/7zNQBMGSP/SGgQHtUOqlIQ41EFTtDR3DYQlofjf52YpX6mPYJ9SdOxw1Olbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747720398; c=relaxed/simple;
-	bh=ZqqKUB2MHGu20+fnBKcMePaJ4BIWkTxQW8WgURvProI=;
+	s=arc-20240116; t=1747720527; c=relaxed/simple;
+	bh=cGIn3qHXnle+3jgkZIqozPePbjDhxWkDmHZAEgmF2ts=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kSzN86xZBlIqK00s1pM/HELMgF6OWdQZBrZBABWFVVEO5EMT/XMh2yg6dxJkVJf7svS20CByu7vp9Z6LEYqv3vT5/MEySCLD3CYqlyYV/QOn0bwcAZgs8bqboVakrnSvRE5V5rOLPCqtSWNrosC0iKtgR41EGLHZexv0M9i0hqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4855GGO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rsawCJKTAiuJsMkwOeXTCGHN9sCfv+fdaneQmj5jILo9+L7tddJNgNuMEUnvm2c2Mp2A8dZTIS6YfOz/c4oNH/vZh6hnN+RGR0PB/+IOwNcUiywfm7KKPH6ti9hdFPO1Au4VBfXuJ2y6CVGJWBAq1TMO92r3XOkWdoUIomcCuzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=THsUVFOp; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4855GGO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56C7C4CEE9;
-	Tue, 20 May 2025 05:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747720397;
-	bh=ZqqKUB2MHGu20+fnBKcMePaJ4BIWkTxQW8WgURvProI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T4855GGO7RWxDN0Ci+fVFmDn+kPReyPrXUH1qrGNd0FOqOGYYnsccfybZamxIKt38
-	 46BnOQcyWbgZivjc1Vqt83WP8wIduMeiX2jPwqJsiBNp2Gh+zJ2PGMMU2QN+b0gcey
-	 wkBroq71LaucL0ugWATqgAQWOVO7jZ5Pq9so445KK2bq2M6WehnDuIoRByMdGHSlAF
-	 pgf95+k18yWWz2aT7pccq2jiiuMbmDEWzAz/UxIoH0PZbXLno+ynE3v3WDM0MVyW0A
-	 PSzs1i3GLgwjs83GEsNlGlN6j336WGekB1Lf2E1W9j9jk/A+d6vdiqetISDmh8Q+OU
-	 UnizqAY7jcV+g==
-Message-ID: <906c36f9-f8af-49a3-a2d7-b146a793f1bc@kernel.org>
-Date: Tue, 20 May 2025 07:53:14 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="THsUVFOp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=hccT3TY5UMXEmSUaxvLn9gYt/Wr/YPcFRSlv30rNAdU=; b=THsUVFOp8fycCIJ6Yj6g6nXsWv
+	oWvl+/8alSDG06uRlnZFR3a5ARFG13o3OupoArZcBsbGCJbGJH3rhEEa29on1hRokRfHXR5Ugrlo3
+	8eNPG+ztb/VnyM0dJc1E1dmn38nHhOOnreH9dN/S18CZDdXWS8AfkYnAITABy2X8wY96THkV7/FUc
+	fSWL2nOCAqol4MjqYg3dssVXowDs1cQZWIWxWLaEjDw4u/Hd8mcTfXXbMdzaXM9qaQ7RmNdE4Olk0
+	VJDIwJ3JebVz2GOHFwhxjjvHDX7UI7jXx/3/NBBzcwr/9J7nPimnqKUis1twjDZG03ShfDJRpksCp
+	c2oN01Iw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHFwV-00000002t88-13OC;
+	Tue, 20 May 2025 05:55:11 +0000
+Message-ID: <7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+Date: Mon, 19 May 2025 22:55:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,93 +39,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfc: Correct Samsung "Electronics" spelling in copyright
- headers
-To: Sumanth Gavini <sumanth.gavini@yahoo.com>, bongsu.jeon@samsung.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250519230915.150675-1-sumanth.gavini.ref@yahoo.com>
- <20250519230915.150675-1-sumanth.gavini@yahoo.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Akira Yokosawa <akiyks@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1747719873.git.mchehab+huawei@kernel.org>
+ <6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250519230915.150675-1-sumanth.gavini@yahoo.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/05/2025 01:09, Sumanth Gavini wrote:
-> Fix the misspelling of "Electronics" in copyright headers across:
-> - s3fwrn5 driver
-> - virtual_ncidev driver
+
+
+On 5/19/25 10:47 PM, Mauro Carvalho Chehab wrote:
+> Unfortunately, currently Sphinx logger is suppressing too much, not
+> allowing warnings to be displayed. Disable it.
 > 
-> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Please version your patches correctly, this is a v2, and provide
-changelog under ---.
+On linux-next-20250516, this gives me:
 
+Cannot find file ../drivers/gpio/gpiolib-acpi.c
+Cannot find file ../drivers/gpio/gpiolib-acpi.c
+...
+Sphinx parallel build error!
 
+Versions
+========
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+* Platform:         linux; (Linux-6.14.4-1-default-x86_64-with-glibc2.41)
+* Python version:   3.13.3 (CPython)
+* Sphinx version:   8.2.3
+* Docutils version: 0.21.2
+* Jinja2 version:   3.1.6
+* Pygments version: 2.19.1
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
+Last Messages
+=============
 
 
-Best regards,
-Krzysztof
+    reading sources... [ 75%]
+    translations/it_IT/subsystem-apis .. translations/zh_CN/admin-guide/mm/damon/reclaim
+
+    reading sources... [ 77%]
+    translations/zh_CN/admin-guide/mm/damon/start .. translations/zh_CN/core-api/symbol-namespaces
+
+    reading sources... [ 79%]
+    translations/zh_CN/core-api/this_cpu_ops .. translations/zh_CN/kernel-hacking/index
+
+Loaded Extensions
+=================
+
+* sphinx.ext.mathjax (8.2.3)
+* alabaster (1.0.0)
+* sphinxcontrib.applehelp (2.0.0)
+* sphinxcontrib.devhelp (1.0.6)
+* sphinxcontrib.htmlhelp (2.1.0)
+* sphinxcontrib.serializinghtml (1.1.10)
+* sphinxcontrib.qthelp (2.0.0)
+* kerneldoc (1.0)
+* rstFlatTable (1.0)
+* kernel_include (1.0)
+* kfigure (1.0.0)
+* sphinx.ext.ifconfig (8.2.3)
+* automarkup (unknown version)
+* maintainers_include (1.0)
+* sphinx.ext.autosectionlabel (8.2.3)
+* kernel_abi (1.0)
+* kernel_feat (1.0)
+* translations (unknown version)
+
+Traceback
+=========
+
+      File "/usr/lib/python3.13/site-packages/sphinx/util/parallel.py", line 137, in _join_one
+        raise SphinxParallelError(*result)
+    sphinx.errors.SphinxParallelError: KeyError: '../drivers/gpio/gpiolib-acpi.c'
+
+and then it's finished (not a normal finish).
+So IMHO this patch is not sufficient.
+
+
+> ---
+>  Documentation/sphinx/kerneldoc.py | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+> index b713a2c4a615..314479718a01 100644
+> --- a/Documentation/sphinx/kerneldoc.py
+> +++ b/Documentation/sphinx/kerneldoc.py
+> @@ -311,7 +311,11 @@ def setup_kfiles(app):
+>      if kerneldoc_bin and kerneldoc_bin.endswith("kernel-doc.py"):
+>          print("Using Python kernel-doc")
+>          out_style = RestFormat()
+> -        kfiles = KernelFiles(out_style=out_style, logger=logger)
+> +
+> +        # Ideally, we should be using Sphinx logger here, but its filtering
+> +        # rules ending filtering out warnings and errors. So, let's use
+> +        # Python default logger instead.
+> +        kfiles = KernelFiles(out_style=out_style)
+>      else:
+>          print(f"Using {kerneldoc_bin}")
+>  
+
+-- 
+~Randy
+
