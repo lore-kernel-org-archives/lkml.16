@@ -1,312 +1,295 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F722571A0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0EE6BFC0;
+	Tue, 20 May 2025 23:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747782901; cv=none; b=L/3aBRr1cviJVs4yECO7HdB6JalIRbTX4fbwjPB17ZeSnYxggCcYM4fJ9F6uel3RO8hDvu2m9Y7u6EuzS/VGD/Fv5bPSTrzjUNTN6dr9ePcqSSXXHU+cvlODlvPOwnVrJpcul8PpgtP1Yi9lz5M6n2kcSOTkvqFHenWd7hBK2X0=
+	t=1747782943; cv=none; b=Wopo0j5C+N4j/q9dMhne3+MIH1DNb/HKpgwLNZpZql+YRlw04X3uYncBA22ZiPUmW+5MsohbZbuSVGutuWbie7AvglbDubDqpcaMc77rR18/8q2Kwx92cnv1bJo71WfRWQA8Q+z3V7ah2kQCssI3bdaKUJwc7PhT9l1ajWJqDMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747782901; c=relaxed/simple;
-	bh=xfjC1o2pS7aW7rvcrv9IY/LblXEmUSjGu4qe52Gb+uQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VX9kPkXqrI89IQRtvE55SxOYxVcHcLmAHTuCG2aYT5RUvc06YtP1zHKpwVGreZV9bvRRqR/Vlul7C7eZJy+kUDZaiTL232ZJ/Zu6A5Or9/Ly/bk9TTKr1BqEPmlRHntd28E6sbfWvZ0HiSreXlmhSIOzSKUmoOrPj4sMy/WCflc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0YL+uYQX; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747782943; c=relaxed/simple;
+	bh=+JlRij6vueEihPjC8kzDeY8OjjsXsL2ybJiaPffg5IY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMYlBXjjSkdjOE+DUVDMPWqJ6jsKoA1o+Xwkk7ebYDcOAH+evdSj9Ln7hHS7rVJf9oEBhCfS44o/ZQsL2z0Y5jjhTZWfuTcv/BGfysUvnxiWXDz2QUk5qn2uj9+54kwjrSc9pE3yUSJd1Bt7rydM0gKVcQrX059oCD9B1Mt88W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BArmfC/8; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0YL+uYQX"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47666573242so1233371cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:14:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BArmfC/8"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso7054030b3a.2;
+        Tue, 20 May 2025 16:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747782898; x=1748387698; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VwKDYk+LUh/66D5vXsuMYGfvDobJ3NQ267JBjwa/l8M=;
-        b=0YL+uYQXk3fAZPNNx3hYngvD5InMjyo78eiqi0FKAlbdkmLR4tgxxyPo5uqyfUqSUN
-         LoCMxBHiko9sWDPJ9lN8CoEpPYKzJuIot2df3Dts/yQS/FJ1gfwWK8JR/Gn9fX43MWmj
-         rWv4Ejkd1mCvJVPhaHLu5Dr0eTzUQ/x0BptPEI04yagWbT8ATEWSNs4qGKGuzzPVEi3q
-         WH+6ApwG2Y0XmTjCNG+x73I+rxXj+DTSj7YODwFO3aYXT7kh9yPZkyEJgLjARwwTH/km
-         BiEqKYlcqm0C5rRCZWVvxLTiBsc9F2QEZQwoy9eqlXP3W8CVAe7+LDq5hEgD1vbz5+Ug
-         XBvA==
+        d=gmail.com; s=20230601; t=1747782939; x=1748387739; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=eGgbUcozpMnnCGXKgq4MevBgPfTSqhIwy1A/fiUTw0E=;
+        b=BArmfC/8i5Wwm5u3zF9R+xOkTvMkwXAfQGcnc3LPzEix23ejtoefDdMPYOElImhFj4
+         3swYJqu6DPKu5ISGGn/5fOhcLO9pOPkXV1n4FjbzzUi1MtArWbSat0dk21tcsb0LGcNs
+         D9n72megxc+W+CwurftzQx34fmbs+DpINq/nzzo6GLKScJ4mITSWjEjK2zKcAY7eIpdr
+         3IAEYdKQn+WhjTd4mAhslAHL74PV3Us/+sTwVQSTEf2BJmq9WWDngsAl2/+X/1mB66S/
+         IapqMevGRtB5lvSeEg6Q9e1jf94H44N27dQPSxM7Pzn14v+l12fvJhvTy+RhDMZ65D/R
+         4jvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747782898; x=1748387698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VwKDYk+LUh/66D5vXsuMYGfvDobJ3NQ267JBjwa/l8M=;
-        b=quEzR4k0yyU7nRaAc/6Mm/OhM9B0Y5Ue3SvZsq7sNo+r5HpNwxzDh7RfBIMYqu4z7Q
-         bbmbHu/XY7Wg5jCoEHbEsds4RmugrDwWpTM9TRU8wawdQFVIup9tFQ44DH2WXTv6Ra1n
-         MUPZY4NmH3izQWIqmJMlJrWGDOqzMNwzBV+uVbjSHLfwtP4yizF8HwS8JUfqMUsgI6cS
-         srWdn88/p5Byx7rfwPccu7yEWSLk8ndfcTHsbqS5m7obXbHzntxQcQSER13a0+lhLKkM
-         XAw5BDdNy5+ojP+mfmKr6kGPuFfanRzvV79mSN5Rm3tEfoRoKAOvXtU6xdosnFuu7bnP
-         H0fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUP8vWnI8ySBDjPiNX+J/9W2AI87dxx7MB0t5ZNJcu5n8s7vHvyjg0W5id9k3lCrGoSxHjV8j7uM6rmI2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlivWUUF6WJxaDd09TcrIPb5N82RzJznSgUqeSODggF0ZCb896
-	Y4BmemhAQdcEGS5D6i7MRhNB3uswEu91yycSL18l6grte2o0vegqw++YUI3aOC7/7FqUSP3pX2g
-	OroI8/YAW6+dDnL96OXsSzCGggWNc+geCLgf+/4aZ
-X-Gm-Gg: ASbGnct6Tyi66Lq8QNKfCxM8IeoPLz5UNozuEMjg+OX5Tj+2ofhIPHY/ToYetMTJJY5
-	dZqspEgKI1yAJJaCfTCqLgEl/2z8kuj9gv16YY8g5um2nnNyGVukibEoREA8BnOOcKKSjMEhLpd
-	YyUzzjt1/I7XzLks7fc6lA8oLhoPOqsf7V66+grwrD1sSIrQKr1E81FAWFtYVglQwElq8tOKP8
-X-Google-Smtp-Source: AGHT+IGaU9BQ83k0ZRoBuYykShd6kgLdiRzG5qNoS7Gd2LDAPwLl0KN6KvyLD/qSbh0UhKFqfBYB3h34mTYWTrXD3s8=
-X-Received: by 2002:ac8:5a8e:0:b0:477:8686:901d with SMTP id
- d75a77b69052e-495ff6d3f0dmr12920411cf.1.1747782897668; Tue, 20 May 2025
- 16:14:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747782939; x=1748387739;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eGgbUcozpMnnCGXKgq4MevBgPfTSqhIwy1A/fiUTw0E=;
+        b=lQ8ru/6W1BvDimm+pIB8HCRGtj8gmX9KhTdxJTsL7k3ZJOkisgP64YCJlwFpxCb8MS
+         q+6XUAJV9FTtBsBomI/cAuKCYkWRttTheUiq9ZhyXfoWOChe0oUmVsvc8UyMM2cuf6Ej
+         Bi3cv+Jm9dpNB/koX0soVm4FDppBlh7eHzV9Dj1xgIhdsGvjgZdUbsUkm7xmx8vhN7k0
+         hv8bqS4aXQGhy/8HD/YhRibMqRh57pymu6EDE3VA+BRkVVYLzv9/y05ZSKanRcKU5AsN
+         qO+yH4jFKD8l1C0Hxs0t0l1+QfkdCsfMjDhiL2se+P0etMdEcLC3GAdaJgF2vOMZJiHu
+         XI9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVggcnZM9GHIlc954HCwiK46mGTUNKyB4awOfZ5wmi1ilEhCNy558XNC5KHgnrw5Xl1Rf1SkyjhQjREk4+Y+Qk=@vger.kernel.org, AJvYcCVtckbozk1brhGTN7MR4ByXa0c4mtTiA4pFuYazhogJi0BYFo/8hgZaixDgg5AklSGBJzgngWCtRok9Bdsi@vger.kernel.org, AJvYcCX5+FfnUJ0a49DsN1e+fpUhPy+wjSOsEenfo+jowXZLpJZ+zM1m42IuaBly1jjN8V1EVFeXFuiF9dGl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2yA34cIP/2ijKj8dUuGEyOyW27/iJr1fk/RjtlS05Ue6TMepD
+	rOq8G/fpJ+ybhOKJAb82e16dtakQ4fSvBPmts1MewOmi8jraDoyQQ9O1
+X-Gm-Gg: ASbGncudF4jxiGrZb319wwG0MB4ecRSh50ZeJua7EBamzXLwlwkGvmubGke4uTJNiUW
+	f8I769BTvKXf3J1lquYJAy5BgrFUjPg9Hu7jJn3LT9/qzWtC/nwHkbW2424Vr+wBlozR1/xDOQy
+	B5z8OSMYtVjFU9tg36PtO1WRiSrHjYvs1Xnj7jvDesUTFFi8p8y4mSmS+YQhyGvEjyl13mE9MMt
+	IhrTIdAsZEPLVp+bgRk7b9Qk2WnnVuDoFQLjJux+FwT+PGxmbDgYIB7JfbDBaLDlzlHztsspKlm
+	nWFIhlVrZX0p6G6/59HCpHsWoSSKxfKee7l+TLFYoJkMfcxyh6Eb1QwO6OSVpr4SIFY5R/QEfOZ
+	zKaRqMTehHUH91NtHAxD+t0Rx
+X-Google-Smtp-Source: AGHT+IFFfjMW95S1fQqT1aVdr3O+6ku3KDFh6OD/9Qk0mclsqEMvk+gYedKyn3GL46IouMJTMope9g==
+X-Received: by 2002:a05:6a20:12c3:b0:216:1476:f54 with SMTP id adf61e73a8af0-216219ee254mr29948687637.38.1747782939219;
+        Tue, 20 May 2025 16:15:39 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf5c6bbsm8559327a12.6.2025.05.20.16.15.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 16:15:38 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
+Date: Tue, 20 May 2025 16:15:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510010338.3978696-1-jyescas@google.com> <8E999CBA-6F55-4DCA-8BE3-569B1C537802@nvidia.com>
-In-Reply-To: <8E999CBA-6F55-4DCA-8BE3-569B1C537802@nvidia.com>
-From: Juan Yescas <jyescas@google.com>
-Date: Tue, 20 May 2025 16:14:46 -0700
-X-Gm-Features: AX0GCFtC-z_Cx3cMi0nT69lR5itEQxl7k2LfSNYQdr27xoRVSQ0DmIhnpcZUc7M
-Message-ID: <CAJDx_rgmKi4_=zOrJEgux=dZ-Hf6MJevNZD6GHRJc6AkNqi_DA@mail.gmail.com>
-Subject: Re: [PATCH v4] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, tjmercier@google.com, isaacmanjarres@google.com, 
-	surenb@google.com, kaleshsingh@google.com, Vlastimil Babka <vbabka@suse.cz>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] watchdog: Add support for VIA/WonderMedia SoC
+ watchdog functionality
+To: Alexey Charkov <alchark@gmail.com>, Krzysztof Kozlowski
+ <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250521-vt8500-timer-updates-v4-0-2d4306a16ae4@gmail.com>
+ <20250521-vt8500-timer-updates-v4-4-2d4306a16ae4@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20250521-vt8500-timer-updates-v4-4-2d4306a16ae4@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 17, 2025 at 11:51=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 9 May 2025, at 21:02, Juan Yescas wrote:
->
-> > Problem: On large page size configurations (16KiB, 64KiB), the CMA
-> > alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
-> > and this causes the CMA reservations to be larger than necessary.
-> > This means that system will have less available MIGRATE_UNMOVABLE and
-> > MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to the=
-m.
-> >
-> > The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
-> > MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
-> > ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
-> >
-> > For example, in ARM, the CMA alignment requirement when:
-> >
-> > - CONFIG_ARCH_FORCE_MAX_ORDER default value is used
-> > - CONFIG_TRANSPARENT_HUGEPAGE is set:
-> >
-> > PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
-> > -----------------------------------------------------------------------
-> >    4KiB   |      10        |      10         |  4KiB * (2 ^ 10)  =3D  4=
-MiB
-> >   16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =3D  32=
-MiB
-> >   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) =3D 512=
-MiB
-> >
-> > There are some extreme cases for the CMA alignment requirement when:
-> >
-> > - CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
-> > - CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
-> > - CONFIG_HUGETLB_PAGE is NOT set
-> >
-> > PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
-> > -----------------------------------------------------------------------=
--
-> >    4KiB   |      15        |      15         |  4KiB * (2 ^ 15) =3D 128=
-MiB
-> >   16Kib   |      13        |      13         | 16KiB * (2 ^ 13) =3D 128=
-MiB
-> >   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) =3D 512=
-MiB
-> >
-> > This affects the CMA reservations for the drivers. If a driver in a
-> > 4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
-> > reservation has to be 32MiB due to the alignment requirements:
-> >
-> > reserved-memory {
-> >     ...
-> >     cma_test_reserve: cma_test_reserve {
-> >         compatible =3D "shared-dma-pool";
-> >         size =3D <0x0 0x400000>; /* 4 MiB */
-> >         ...
-> >     };
-> > };
-> >
-> > reserved-memory {
-> >     ...
-> >     cma_test_reserve: cma_test_reserve {
-> >         compatible =3D "shared-dma-pool";
-> >         size =3D <0x0 0x2000000>; /* 32 MiB */
-> >         ...
-> >     };
-> > };
-> >
-> > Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
-> > allows to set the page block order in all the architectures.
-> > The maximum page block order will be given by
-> > ARCH_FORCE_MAX_ORDER.
-> >
-> > By default, CONFIG_PAGE_BLOCK_ORDER will have the same
-> > value that ARCH_FORCE_MAX_ORDER. This will make sure that
-> > current kernel configurations won't be affected by this
-> > change. It is a opt-in change.
-> >
-> > This patch will allow to have the same CMA alignment
-> > requirements for large page sizes (16KiB, 64KiB) as that
-> > in 4kb kernels by setting a lower pageblock_order.
-> >
-> > Tests:
-> >
-> > - Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
-> > on 4k and 16k kernels.
-> >
-> > - Verified that Transparent Huge Pages work when pageblock_order
-> > is 1, 7, 10 on 4k and 16k kernels.
-> >
-> > - Verified that dma-buf heaps allocations work when pageblock_order
-> > is 1, 7, 10 on 4k and 16k kernels.
-> >
-> > Benchmarks:
-> >
-> > The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
-> > reason for the pageblock_order 7 is because this value makes the min
-> > CMA alignment requirement the same as that in 4kb kernels (2MB).
-> >
-> > - Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
-> > SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
-> > (https://developer.android.com/ndk/guides/simpleperf) to measure
-> > the # of instructions and page-faults on 16k kernels.
-> > The benchmark was executed 10 times. The averages are below:
-> >
-> >            # instructions         |     #page-faults
-> >     order 10     |  order 7       | order 10 | order 7
-> > --------------------------------------------------------
-> >  13,891,765,770        | 11,425,777,314 |    220   |   217
-> >  14,456,293,487        | 12,660,819,302 |    224   |   219
-> >  13,924,261,018        | 13,243,970,736 |    217   |   221
-> >  13,910,886,504        | 13,845,519,630 |    217   |   221
-> >  14,388,071,190        | 13,498,583,098 |    223   |   224
-> >  13,656,442,167        | 12,915,831,681 |    216   |   218
-> >  13,300,268,343        | 12,930,484,776 |    222   |   218
-> >  13,625,470,223        | 14,234,092,777 |    219   |   218
-> >  13,508,964,965        | 13,432,689,094 |    225   |   219
-> >  13,368,950,667        | 13,683,587,37  |    219   |   225
-> > -------------------------------------------------------------------
-> >  13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
-> >
-> > There were 4.85% #instructions when order was 7, in comparison
-> > with order 10.
-> >
-> >      13,803,137,433 - 13,131,974,268 =3D -671,163,166 (-4.86%)
-> >
-> > The number of page faults in order 7 and 10 were the same.
-> >
-> > These results didn't show any significant regression when the
-> > pageblock_order is set to 7 on 16kb kernels.
-> >
-> > - Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 time=
-s
-> >  on the 16k kernels with pageblock_order 7 and 10.
-> >
-> > order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
-> > -------------------------------------------------------------------
-> >   15.8         |  16.4    |         0.6        |     3.80%
-> >   16.4         |  16.2    |        -0.2        |    -1.22%
-> >   16.6         |  16.3    |        -0.3        |    -1.81%
-> >   16.8         |  16.3    |        -0.5        |    -2.98%
-> >   16.6         |  16.8    |         0.2        |     1.20%
-> > -------------------------------------------------------------------
-> >   16.44     16.4            -0.04               -0.24%   Averages
-> >
-> > The results didn't show any significant regression when the
-> > pageblock_order is set to 7 on 16kb kernels.
-> >
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > Cc: David Hildenbrand <david@redhat.com>
-> > CC: Mike Rapoport <rppt@kernel.org>
-> > Cc: Zi Yan <ziy@nvidia.com>
-> > Cc: Suren Baghdasaryan <surenb@google.com>
-> > Cc: Minchan Kim <minchan@kernel.org>
-> > Signed-off-by: Juan Yescas <jyescas@google.com>
-> > Acked-by: Zi Yan <ziy@nvidia.com>
-> > ---
-> > Changes in v4:
-> >   - Set PAGE_BLOCK_ORDER in incluxe/linux/mmzone.h to
-> >     validate that MAX_PAGE_ORDER >=3D PAGE_BLOCK_ORDER at
-> >     compile time.
-> >   - This change fixes the warning in:
-> >    https://lore.kernel.org/oe-kbuild-all/202505091548.FuKO4b4v-lkp@inte=
-l.com/
-> >
-> > Changes in v3:
-> >   - Rename ARCH_FORCE_PAGE_BLOCK_ORDER to PAGE_BLOCK_ORDER
-> >     as per Matthew's suggestion.
-> >   - Update comments in pageblock-flags.h for pageblock_order
-> >     value when THP or HugeTLB are not used.
-> >
-> > Changes in v2:
-> >   - Add Zi's Acked-by tag.
-> >   - Move ARCH_FORCE_PAGE_BLOCK_ORDER config to mm/Kconfig as
-> >     per Zi and Matthew suggestion so it is available to
-> >     all the architectures.
-> >   - Set ARCH_FORCE_PAGE_BLOCK_ORDER to 10 by default when
-> >     ARCH_FORCE_MAX_ORDER is not available.
-> >
-> >
-> >  include/linux/mmzone.h          | 16 ++++++++++++++++
-> >  include/linux/pageblock-flags.h |  8 ++++----
-> >  mm/Kconfig                      | 31 +++++++++++++++++++++++++++++++
-> >  3 files changed, 51 insertions(+), 4 deletions(-)
->
-> Hi Juan,
->
-> The patch below on top of your v4 fixed powerpc build issue, as I tested
-> it locally.
->
-> From 5c2ae4dfca135e99da45302e4f5d96a315a99603 Mon Sep 17 00:00:00 2001
-> From: Zi Yan <ziy@nvidia.com>
-> Date: Sat, 17 May 2025 14:49:39 -0400
-> Subject: [PATCH] fix CONFIG_PAGE_BLOCK_ORDER
->
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
+On 5/20/25 13:01, Alexey Charkov wrote:
+> VIA/WonderMedia SoCs can use their system timer's first channel as a
+> watchdog device which will reset the system if the clocksource counter
+> matches the value given in its match register 0 and if the watchdog
+> function is enabled.
+> 
+> Since the watchdog function is tightly coupled to the timer itself, it
+> is implemented as an auxiliary device of the timer device
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
 > ---
->  mm/Kconfig | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 79237842f7e2..af0dd42e3506 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1016,10 +1016,10 @@ config ARCH_FORCE_MAX_ORDER
->  # as per include/linux/mmzone.h.
->  config PAGE_BLOCK_ORDER
->         int "Page Block Order"
-> -       range 1 10 if !ARCH_FORCE_MAX_ORDER
-> -       default 10 if !ARCH_FORCE_MAX_ORDER
-> -       range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
-> -       default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
-> +       range 1 10 if ARCH_FORCE_MAX_ORDER =3D 0
-> +       default 10 if ARCH_FORCE_MAX_ORDER =3D 0
-> +       range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER !=3D 0
-> +       default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER !=3D 0
->
->         help
->           The page block order refers to the power of two number of pages=
- that
-> --
-> 2.47.2
->
-Thanks Zi, the changes were applied in v6
+>   MAINTAINERS                   |  1 +
+>   drivers/watchdog/Kconfig      | 15 ++++++++
+>   drivers/watchdog/Makefile     |  1 +
+>   drivers/watchdog/vt8500-wdt.c | 80 +++++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 97 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5362095240627f613638197fda275db6edc16cf7..97d1842625dbdf7fdca3556260662dab469ed091 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3447,6 +3447,7 @@ F:	drivers/tty/serial/vt8500_serial.c
+>   F:	drivers/video/fbdev/vt8500lcdfb.*
+>   F:	drivers/video/fbdev/wm8505fb*
+>   F:	drivers/video/fbdev/wmt_ge_rops.*
+> +F:	drivers/watchdog/vt8500-wdt.c
+>   F:	include/linux/vt8500-timer.h
+>   
+>   ARM/ZYNQ ARCHITECTURE
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 0d8d37f712e8cfb4bf8156853baa13c23a57d6d9..8049ae630301a98123f97f6e3ee868bd3bf1534a 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -2003,6 +2003,21 @@ config PIC32_DMT
+>   	  To compile this driver as a loadable module, choose M here.
+>   	  The module will be called pic32-dmt.
+>   
+> +config VT8500_WATCHDOG
+> +	tristate "VIA/WonderMedia VT8500 watchdog support"
+> +	depends on ARCH_VT8500 || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	select AUXILIARY_BUS
+> +	help
+> +	  VIA/WonderMedia SoCs can use their system timer as a hardware
+> +	  watchdog, as long as the first timer channel is free from other
+> +	  uses and respective function is enabled in its registers. To
+> +	  make use of it, say Y here and ensure that the device tree
+> +	  lists at least two interrupts for the VT8500 timer device.
+> +
+> +	  To compile this driver as a module, choose M here.
+> +	  The module will be called vt8500-wdt.
+> +
+>   # PARISC Architecture
+>   
+>   # POWERPC Architecture
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index c9482904bf870a085c7fce2a439ac5089b6e6fee..3072786bf226c357102be3734fe6e701f753d45b 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -101,6 +101,7 @@ obj-$(CONFIG_MSC313E_WATCHDOG) += msc313e_wdt.o
+>   obj-$(CONFIG_APPLE_WATCHDOG) += apple_wdt.o
+>   obj-$(CONFIG_SUNPLUS_WATCHDOG) += sunplus_wdt.o
+>   obj-$(CONFIG_MARVELL_GTI_WDT) += marvell_gti_wdt.o
+> +obj-$(CONFIG_VT8500_WATCHDOG) += vt8500-wdt.o
+>   
+>   # X86 (i386 + ia64 + x86_64) Architecture
+>   obj-$(CONFIG_ACQUIRE_WDT) += acquirewdt.o
+> diff --git a/drivers/watchdog/vt8500-wdt.c b/drivers/watchdog/vt8500-wdt.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..54fe5ad7695de36f6b3c1d28e955f00bef00e9db
+> --- /dev/null
+> +++ b/drivers/watchdog/vt8500-wdt.c
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2025 Alexey Charkov <alchark@gmail.com */
+> +
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/container_of.h>
+> +#include <linux/io.h>
+> +#include <linux/limits.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <linux/watchdog.h>
+> +#include <linux/vt8500-timer.h>
+> +
+> +static int vt8500_watchdog_start(struct watchdog_device *wdd)
+> +{
+> +	struct vt8500_wdt_info *info = watchdog_get_drvdata(wdd);
+> +	u64 deadline = info->timer_next(wdd->timeout * VT8500_TIMER_HZ);
+> +
 
-https://lore.kernel.org/all/20250520225945.991229-1-jyescas@google.com/
+wdd->timeout is the soft timeout, which may be larger
+than the maximum hardware timeout. That means you'll need
+to use something like "min(wdd->timeout, U32_MAX / VT8500_TIMER_HZ)
+* VT8500_TIMER_HZ" as parameter to the timer_next call.
 
->
->
->
-> --
-> Best Regards,
-> Yan, Zi
+> +	writel((u32)deadline, info->wdt_match);
+
+Can deadline overflow ?
+
+> +	writel(TIMER_WD_EN, info->wdt_en);
+> +	return 0;
+> +}
+> +
+> +static int vt8500_watchdog_stop(struct watchdog_device *wdd)
+> +{
+> +	struct vt8500_wdt_info *info = watchdog_get_drvdata(wdd);
+> +
+> +	writel(0, info->wdt_en);
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_ops vt8500_watchdog_ops = {
+> +	.start			= vt8500_watchdog_start,
+> +	.stop			= vt8500_watchdog_stop,
+> +};
+> +
+> +static const struct watchdog_info vt8500_watchdog_info = {
+> +	.identity		= "VIA VT8500 watchdog",
+> +	.options		= WDIOF_MAGICCLOSE |
+> +				  WDIOF_KEEPALIVEPING |
+> +				  WDIOF_SETTIMEOUT,
+> +};
+> +
+> +static int vt8500_wdt_probe(struct auxiliary_device *auxdev,
+> +			    const struct auxiliary_device_id *id)
+> +{
+> +	struct vt8500_wdt_info *info;
+> +	struct watchdog_device *wdd;
+> +
+> +	wdd = devm_kzalloc(&auxdev->dev, sizeof(*wdd), GFP_KERNEL);
+> +	if (!wdd)
+> +		return -ENOMEM;
+> +
+> +	wdd->info = &vt8500_watchdog_info;
+> +	wdd->ops = &vt8500_watchdog_ops;
+> +	wdd->max_hw_heartbeat_ms = U32_MAX / (VT8500_TIMER_HZ / 1000);
+> +	wdd->parent = &auxdev->dev;
+> +
+> +	info = container_of(auxdev, struct vt8500_wdt_info, auxdev);
+> +	watchdog_set_drvdata(wdd, info);
+> +
+> +	return devm_watchdog_register_device(&auxdev->dev, wdd);
+> +}
+> +
+> +static const struct auxiliary_device_id vt8500_wdt_ids[] = {
+> +	{ .name = "timer_vt8500.vt8500-wdt" },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(auxiliary, my_auxiliary_id_table);
+> +
+> +static struct auxiliary_driver vt8500_wdt_driver = {
+> +	.name =	"vt8500-wdt",
+> +	.probe = vt8500_wdt_probe,
+> +	.id_table = vt8500_wdt_ids,
+> +};
+> +module_auxiliary_driver(vt8500_wdt_driver);
+> +
+> +MODULE_AUTHOR("Alexey Charkov <alchark@gmail.com>");
+> +MODULE_DESCRIPTION("Driver for the VIA VT8500 watchdog timer");
+> +MODULE_LICENSE("GPL");
+> 
+
