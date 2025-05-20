@@ -1,86 +1,97 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464C1C8603;
-	Tue, 20 May 2025 16:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD8626FA7D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759246; cv=none; b=IvcS/Sw1B3mBTB8SK4LU7oScH1DZ+b0bX8mHROkO48arfjk6a3WXFsEovxsNNrS3XKM2JcwdkbRvl6e99TVjV3rkO905DffN7T1rs+6NXZsZrTQtoijJ6F2Ukln6vYDuZFG71pEJJHRwgb86h62IwbDnAGuDcEmflfM4GflnLl4=
+	t=1747759249; cv=none; b=s0l176/xU7889Xf3Asu8C7lGaa/wFhPs8Ofu9Rj8QXZicChDYXrS7LJcyVgXZi7mwjFPnIQENDXPnIzHNs/QO00W+lwmeIjj0/brYSzriQ3szUhz1Idz/gXdmzrNNYFbXp6SML4eDbm0SBdYMRhj4xS21YAiqYapNVwB4r1WLAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759246; c=relaxed/simple;
-	bh=Tl8lzKHXNXn/Zu/o9Z3avkPg6ghJNWjZjo1V6t1gsiM=;
-	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=gma5izvqMLJ1UqE4I9+W66VWc0NUqovyI83EtZdBG4c8b1Kd4NmVM55TaL2UFNEvjnQbQ/u5W9FrS94VOaLrL3nCIsvH3sjmnRmPra1qeMF1B5pBktGIztXHsUVeeLZ4/gW2pVr44MVKn94mU51iNQJRUW4xERKczl7MYKlEUvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=lQgFj9Ud; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1747759249; c=relaxed/simple;
+	bh=Fe3SQr1Tgdxaicu5cMlLYaBvQLQauJdBDwx6I3UeaTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FI4hXDeh9+d12h/rXUozn02Y9WeG/LSViX1Fj9Rf828A6ybrgPiBeAhFyc+Tk7JXXUUrhYm9X54+4tfDe+TbJ9wvPiZ47zu90uZ3BHKtzhsh4jQ2WD+SSbtHgs/h8XLb2iNryrJUndyRQBp+P1sCqnBTcu/VQbBxTnZVWgu8Y84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=NPIHoEP8; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="lQgFj9Ud"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
-	:From:subject:date:message-id:reply-to;
-	bh=sP2rVu5jnwxUO72jmL6eSd4CMirYzTBwpx/d+gSHvDY=; b=lQgFj9Ud336mdN2YdkQiAbXomX
-	j+UkugqROqKTXD7steKhTMXk1RF7D1wS+bRH6yJq9FGOvkVnWh0eKPsqE9PFgnn3X7okq3Hvu8yBF
-	jja3KVKMU2NTjeA3iTmcFmQvUK66ffJYB6Ve6tNe/ylsqkALYq1yQEMTtpy1HbKjBaB4=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:50854 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1uHQ16-0006BF-8o; Tue, 20 May 2025 12:40:36 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: biju.das.jz@bp.renesas.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hugo@hugovil.com,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Date: Tue, 20 May 2025 12:40:32 -0400
-Message-Id: <20250520164034.3453315-1-hugo@hugovil.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="NPIHoEP8"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47664364628so67169621cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1747759246; x=1748364046; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fe3SQr1Tgdxaicu5cMlLYaBvQLQauJdBDwx6I3UeaTA=;
+        b=NPIHoEP8I0v4jVfOFQgeBnsfO2dMGrxStkdVOCjql1tFy997FZrjPtZb5Yel48sVqW
+         WbtjdNXvtydcwO7tXDbARo4XUWmNMiEqBytQjx62bN5eP5aRkreHA4kNMWqQQY2d+1E9
+         n4uNwrcI1sbC/jf++m+/Q8oQJ+LsYKRWJWEqk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747759246; x=1748364046;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fe3SQr1Tgdxaicu5cMlLYaBvQLQauJdBDwx6I3UeaTA=;
+        b=JGQvBDnAIb6nmDLXZB0rjp5ukgopMtCp2sLDL0XBoRayfi9Eug3uTUz1Iu0xM4txh3
+         opL46BuU6mBxCcvFY+VueXu0KUt9I4x2/cgQWQUf8YDMtidWauDUyxzZJTzG3TBHK/fB
+         kFIH3tJ1pj4fcx8/lSIaAGK0eGYUzzyYM8onhpB4i3EE8aM/Cm39nvCBw7FBPkTa9rJJ
+         pIX13P/+iJALNCeLzMKmuja6Y0RDXBbtRBew1EskSwclxcCwAwSOMhp4EDuFqCKYWY5d
+         E/PnLk6sityTMKqMrFCYav46JOIibL7i0ohbiBbUK83iltGJ+PTOGGlf1yyuJkDsVJa1
+         Ry6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2pbs6m5YIGhmE1HnldGMTJKwRdSyS99igxm2mJcSiVbkdS4sxv5sRominpnPewF6trl2CVHlMOXb0pag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3Swh5UcxKkYi/zhldE1BVCaOPfjSnMymS2+RQI34jvIyhGmlT
+	hL2gey/tWQKXncSCzyNxxf+JzwVRiQy+lLUbGk6nSvim8vU3aky1ET1yW3E77L3h1GtoB+CEfHz
+	UQwf1aF2sqAijkSNXx8cTifPjnbkkjUurX5eQ2kW4IA==
+X-Gm-Gg: ASbGncvK8enY+qo7MRWtuJUY8d/LSgGIdj7Jmc/NPtHkhS3K+YAmZpEjYY4ujhclHHj
+	1m4rh6FuH8KF2a5ZuTDgmXYBtp/XYp9igQE8R3T0yDXnFhtiu4Zo9uQI99aD87Uq6baHsJqxYbs
+	qhUXdFdFbGFkVK2xbwS5i0RoYogNAx6+d67d2iiVHZm5kv4A==
+X-Google-Smtp-Source: AGHT+IGTCe96EYzLfgh7qgkaiolx8qzDK1c7n7H14UCJuDGekDjcM0Kg4qSMxoWF61rkkDgWe1ioI2e3TjQwy9nHcEs=
+X-Received: by 2002:a05:622a:6118:b0:494:a7b8:d63c with SMTP id
+ d75a77b69052e-494ae314548mr330690061cf.0.1747759246134; Tue, 20 May 2025
+ 09:40:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-Subject: [PATCH 0/2] drm: rcar-du: rzg2l_mipi_dsi: add MIPI DSI command support
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
+ <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
+ <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+ <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+ <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
+ <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
+ <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
+ <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
+ <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com> <ztuodbbng5rgwft2wtmrbugwo3v5zgrseykhlv5w4aqysgnd6b@ef56vn7iwamn>
+In-Reply-To: <ztuodbbng5rgwft2wtmrbugwo3v5zgrseykhlv5w4aqysgnd6b@ef56vn7iwamn>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 20 May 2025 18:40:35 +0200
+X-Gm-Features: AX0GCFtCQXc8dfOCmu22fg-gXqXE1YObKOZAbGs4WfDGBDzTD5kto0juBR50CeE
+Message-ID: <CAJfpegs1AVJuh1U97cpTx14KcnQeO2XmtvrOwbyoZ8wvqfgqPA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Tue, 20 May 2025 at 17:21, Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-Hello,
-this patch series add support for sending MIPI DSI command packets to the
-Renesas RZ/G2L MIPI DSI driver.
+> Docker mounts the image, but then everything explodes when you try to
+> use it with what look to the user like impenetrable IO errors.
+>
+> That's a bad day for someone, or more likely a lot of someones.
 
-Tested on a custom board with a SolidRun RZ/G2L SOM, with two different LCD
-panels using the jd9365da and st7703 drivers.
+Wouldn't it be docker's responsibility to know that that won't work
+with overlayfs?
 
-Tested short and long writes.
+Any error, whether at startup or during operation is not something the
+user will like.
 
-Tested read of 1 byte, 2 bytes and long reads.
+What am I missing?
 
-Thank you.
-
-Hugo Villeneuve (2):
-  drm: rcar-du: rzg2l_mipi_dsi: Implement host transfers
-  drm: rcar-du: rzg2l_mipi_dsi: Set DCS maximum return packet size
-
- .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 184 ++++++++++++++++++
- .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  60 ++++++
- 2 files changed, 244 insertions(+)
-
-
-base-commit: 7c1a9408ce5f34ded5a85db81cf80e0975901685
--- 
-2.39.5
-
+Thanks,
+Miklos
