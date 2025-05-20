@@ -1,71 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EED21E0A2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCEB1C8605;
+	Tue, 20 May 2025 00:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747700494; cv=none; b=L7n0DBzeF+TAl6LJqL9YmGazbMv3xTGwytcT4odcoizzi+tWnmgH8oaImFYyrp88zv9X/UI2zB8Y1rgdo2IqeiTb1fRw+hZM/HwMxrcIbi3Xu9HJa22xbZqGJnRbdxSTWfBSzsXs6r8m3GbTI+yrwS3KkO7+4D4TOJuFSHf7Qno=
+	t=1747700632; cv=none; b=IVqAosGTzjHD1qHwSJVCPSRI81z2ZSRQpjc544aM79M0BCeQlct9ek7reuirFCJivEVK7SxvPwLBpyCAyXox/G9XaQuqIOpNHiO3AfXVCNq5B+br6+RnH6hkgBw/k8EoOlW8HduBTmJccddm/g4UQaMbajZbz27kzRhnkYCRrRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747700494; c=relaxed/simple;
-	bh=h8xahNqcwqcK2Vll16ny2anHesIxJ0V+5Fdlg3phe34=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LDAQfrCsdhw/yQ8NkzMZu+VU0y5Pbg2cY7S+OjyRgzl6JoJZeL7DOhigxxt5F11w8O7UizdIaFzEFGhQFBIutC+TYKxk+pqhj/wwfyxCywyr3t62G5IKtm+C3t6Crkrok/mY5xhvAwM+vB7GjFoh5ycST4FAdugm5Si1wJlNa/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EmkMpA0B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747700632; c=relaxed/simple;
+	bh=jVbDrHX4p3eETAYYbC8E/B38AzMWjZPxZbviRuREGuw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=i/KjeS99OPSi4Y7yYrg9J7UFGb+BIvddBL7eYjnpNS22pfULDBqQ6DuX7W6MwyhQdnUQ8ieQx24yg+aH2M6cXUTZXPj3UEUewtx5FW5ct7rqu+wPPA3PH7hg+86eiCmaoinXNZQNyy+SlywpZfIaoK+ryta+nEB+GiGApi+gIj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=HA7AscUC; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EmkMpA0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0623C4CEE4;
-	Tue, 20 May 2025 00:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747700493;
-	bh=h8xahNqcwqcK2Vll16ny2anHesIxJ0V+5Fdlg3phe34=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EmkMpA0Bhgrx4p/OGAPNLEnphHy1/QfuFwRUsMGDElV3cmnBAWb09S2O4NQvgKih2
-	 jF9BExVDPITXIeSWOOA0igSj4XWu0svzvI8rVkVlBVXhKSj/vAGhDwPxXqcroyoOst
-	 MEXsPO+fXdfGQPpYIlqSmdJYNJLACF392o2phvSg=
-Date: Mon, 19 May 2025 17:21:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: kent.overstreet@linux.dev, 00107082@163.com, dennis@kernel.org,
- tj@kernel.org, cl@gentwo.org, pasha.tatashin@soleen.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] alloc_tag: allocate percpu counters for module tags
- dynamically
-Message-Id: <20250519172132.c46b910bc10857c706866357@linux-foundation.org>
-In-Reply-To: <CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com>
-References: <20250517000739.5930-1-surenb@google.com>
-	<20250519155145.8378a397a755c1cc5a3e2d4e@linux-foundation.org>
-	<CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="HA7AscUC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1747700627;
+	bh=jVbDrHX4p3eETAYYbC8E/B38AzMWjZPxZbviRuREGuw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=HA7AscUCU63hu4pNCk7Z8VKwggRSY1X/g/VPH5PfBXPSY/ysZ6+TnYOGje7OE88wH
+	 jIy20LQ6Gb6hzjna2EODuadUcLPwDYdpKPOM9EDz+dXCvoN2sy98vGNnxSlnbXHQjp
+	 w+FSvaUEbpeVomXLiupz0jt4lRtSL9sgFtL2pdiJQzJ7j5VwBjW1BaR9b/5dy4lp8K
+	 BjH+DM8fBKGKw5qPdTjHNuYZavHiiGBfmvjRL9GOJ5PO4aKQFNrdr/SHVoXHg+F8yR
+	 rQNZuvPlpre4LzYKQWnIR320KkLwsmwodYltopC+jqqHA0jGMVpuY1OfXTLD/9xGQ/
+	 PEFyd/Wuo0gEA==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1291A640A1;
+	Tue, 20 May 2025 08:23:45 +0800 (AWST)
+Message-ID: <ac008c13719e2c91d7d377cd7a6151393934d854.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2] arm: dts: aspeed: yosemite4: add gpio name for uart
+ mux sel
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Marshall Zhan <marshall.zhan.wiwynn@gmail.com>, Delphine CC Chiu
+	 <delphine_cc_chiu@wiwynn.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, patrick@stwcx.xyz, Rob Herring
+ <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
+Date: Tue, 20 May 2025 09:53:44 +0930
+In-Reply-To: <7a5f60e9-376c-440e-a369-5c8d5e10c72a@kernel.org>
+References: <20250519024850.2894895-1-delphine_cc_chiu@wiwynn.com>
+	 <7a5f60e9-376c-440e-a369-5c8d5e10c72a@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-On Mon, 19 May 2025 16:13:28 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+Hi Marshall,
 
-> > > Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate contiguous memory")
-> > > Reported-by: David Wang <00107082@163.com>
-> > > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.com/
-> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > > ---
-> > >  include/linux/alloc_tag.h | 12 ++++++
-> > >  include/linux/codetag.h   |  8 ++--
-> > >  include/linux/percpu.h    |  4 --
-> > >  lib/alloc_tag.c           | 87 +++++++++++++++++++++++++++++++--------
-> > >  lib/codetag.c             |  5 ++-
-> > >  5 files changed, 88 insertions(+), 28 deletions(-)
-> >
-> > Should we backport this fix into -stable kernels?  I'm thinking yes.
-> 
-> Yes, I should have CC'ed stable. The patch this one is fixing was
-> first introduced in 6.13. I just tried and it applies cleanly to
-> stable linux-6.13.y and linux-6.14.y.
-> Should I forward this email to stable or send a separate patch to them?
+On Mon, 2025-05-19 at 08:10 +0200, Krzysztof Kozlowski wrote:
+> On 19/05/2025 04:48, Delphine CC Chiu wrote:
+> > WIWYNN PROPRIETARY
+> > This email (and any attachments) contains proprietary or confidential i=
+nformation and is for the sole use of its intended recipient. Any unauthori=
+zed review, use, copying or distribution of this email or the content of th=
+is email is strictly prohibited. If you are not the intended recipient, ple=
+ase notify the sender and delete this email immediately.
+>=20
+>=20
+> We cannot test proprietary patches. Start working with the community in
+> the open.
 
-I added cc:stable to the mm.git copy so all is OK.  That's the usual
-workflow.
+The kernel.org mailing list docs elaborate a little on Krzysztof's
+point:
+
+https://subspace.kernel.org/etiquette.html#do-not-include-confidentiality-d=
+isclaimers
+
+(It's worth reading the rest of the page too).
+
+Cheers,
+
+Andrew
