@@ -1,155 +1,188 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C427D25CC69;
-	Tue, 20 May 2025 06:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B32625B66D;
+	Tue, 20 May 2025 06:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724214; cv=none; b=K1d05LhW42BoWopj7HNnCdPtTtE6aU89uiE/neQlzkNsg4JHWp1Sh6xC2COWr3t9BPDYmNp0DqHx3iUrOtxYyzyjNkAjWJprsDfjenPUv/Z90uJwM3TH/oW8TarW8vC0jFTcx1zQ/eeSLligG766iDy+x7SOosIFKMNnmTs9nto=
+	t=1747724306; cv=none; b=gSgMzZUpHh3t7blGm+IXyBptkHBteNKAV5zynosTsUhlJHjSjt7QgTT1SLl2YockoDEmYpMgX9zdVXTgYOt2kJ65rHF/qua6jbpoXfjuQ4RaWTYT/Tmleo5u/blqMitCuW/4G2/qbBe43pDl19S0ep8mGBeZpiA8UAMM3EN5oes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747724214; c=relaxed/simple;
-	bh=Y14PCFj43DbhJGJ4iFsgQIVQHaLzrwZZci/lnH1yV4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmeKCppJMy9fcbCb89FepxAUi2cM8gyz+AUCTWmq226q3ZUbQuym3zdK4ZZ1WytbxqxJYTQoDT4tUNHbdTqNJTPcaTDpuTomnvf9cFrHp+gLiUpFXVBAq3FYJke18VIcxhVv20lUTtLX+d7RkK9Rt+/ZpQW7yATD8K11/PTjrmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1uHGu1-0006iN-00; Tue, 20 May 2025 08:56:41 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 35693C00EF; Tue, 20 May 2025 08:49:30 +0200 (CEST)
-Date: Tue, 20 May 2025 08:49:30 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Caleb James DeLisle <cjd@cjdns.fr>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, daniel.lezcano@linaro.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 0/7] Add EcoNet EN751221 MIPS platform support
-Message-ID: <aCwl-nAMxjqjxRM6@alpha.franken.de>
-References: <20250507134500.390547-1-cjd@cjdns.fr>
+	s=arc-20240116; t=1747724306; c=relaxed/simple;
+	bh=+vubKsK5fmHWvfumZJYG6jLuWYHad54TMxsihaAmT/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j5FH0+/ARAfLqKMdSKQysVaiidxYwh0SsavOeLtxGLxLxA2L8M+UUJ9dJ899VMFj0nH01KiXZy2y3W0RuZO2YkvJdirFZsLKtvIMoZI9hJ3ddOh1KdJ4QTArCR9m6H74/3QLH4aNID/90F6zcNqvgtDMpx/myMCy0dg0e4L6zgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrwgkV6q; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrwgkV6q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747724305; x=1779260305;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+vubKsK5fmHWvfumZJYG6jLuWYHad54TMxsihaAmT/o=;
+  b=HrwgkV6qqDVoEks2Y6B8SuwQe32gC3fo1pVDjyVMxpUfeCulH4E+p4Xt
+   T0iyoBNyACK9cpFywy3KZfJEF5CpDKEPiYafzCjf+nVmaG6wHgdp5IRNt
+   MvF+kNWE+l1CHH3Bvf1Yi5dD2hORvXUWtro8sAD5OmWVOGU8J/qCPV71G
+   7bQazFG3f6Ae/eybZc7J6rb11FzGr48FZH/E0vvn4mAC8xFtE++HH2RGJ
+   unWnX3t6Nt2EAqWk7+AIIS7387CijjcvUZKQGHGFKz9sTyh6trL/u932X
+   Ed4KARIhyK19zZPSIuJw/3YW66gOQxCe0rAWlST0Jfd/JURFCE/XO6E7W
+   A==;
+X-CSE-ConnectionGUID: DSvLeXbFRUOddPMR/2Hrzw==
+X-CSE-MsgGUID: Qeymneb+Sy+HP1TiGdcU0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49707987"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49707987"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 23:58:24 -0700
+X-CSE-ConnectionGUID: VpnDFTqQTBqFfcLhhdztFQ==
+X-CSE-MsgGUID: EBEzK/iLQACTvlR0MxWoyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144349981"
+Received: from unknown (HELO [10.238.12.207]) ([10.238.12.207])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 23:58:21 -0700
+Message-ID: <68077bb9-834b-455a-9b95-6a2c29e418b0@linux.intel.com>
+Date: Tue, 20 May 2025 14:58:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507134500.390547-1-cjd@cjdns.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] KVM: Use mask of harvested dirty ring entries to
+ coalesce dirty ring resets
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>,
+ James Houghton <jthoughton@google.com>, Pankaj Gupta <pankaj.gupta@amd.com>
+References: <20250516213540.2546077-1-seanjc@google.com>
+ <20250516213540.2546077-6-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250516213540.2546077-6-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 01:44:53PM +0000, Caleb James DeLisle wrote:
-> EcoNet MIPS SoCs are big endian machines based on 34Kc and 1004Kc
-> processors. They are found in xDSL and xPON modems, and contain PCM
-> (VoIP), Ethernet, USB, GPIO, I2C, SPI (Flash), UART, and PCIe.
-> 
-> The EcoNet MIPS SoCs are divided broadly into two families, the
-> EN751221 family based on the 34Kc, and the EN751627 family based on
-> the 1004Kc. Individual SoCs within a family are very similar, only
-> with different peripherals.
-> 
-> This patchset adds basic "boots to a console" support for the EN751221
-> family and adds SmartFiber XP8421-B, a low cost commercially available
-> board that is useful for testing and development.
-> 
-> Note that Airoha (AN7523, AN7581) is similar to EcoNet in terms of
-> peripherals, and for historical reasons Airoha chips are sometimes
-> referred to with the EN75xx prefix. However this is a different
-> platform because Airoha chips are ARM based.
-> 
-> This patchset is against mips-next.
-> 
-> v4 -> v5
-> * 2/7 clocksource/drivers: Add EcoNet Timer HPT driver:
->   * Improve explanation of HPT timer in changelog
->   * Move pr_info to pr_debug per recommendation
->   * Remove pointless debug on spurious interrupt
->   * Small code-style change
-> 
-> v3 -> v4
-> * Rebase to 3b3704261e851e25983860e4c352f1f73786f4ab
-> * Omit already accepted patches (thanks guys!):
->   - https://patchwork.kernel.org/project/linux-mips/patch/20250330170306.2584136-2-cjd@cjdns.fr/
->   - https://patchwork.kernel.org/project/linux-mips/patch/20250330170306.2584136-3-cjd@cjdns.fr/
->   - https://patchwork.kernel.org/project/linux-mips/patch/20250330170306.2584136-4-cjd@cjdns.fr/
-> 
-> v2 -> v3
-> * econet,en751221-timer.yaml -> Improve code style
-> * vendor-prefixes.yaml -> Correct alphabetic order
-> * en751221.dtsi
->   - interrupt-controller code style
->   - serial: Explain reason for clock-frequency = <1843200>
-> * v3->v3 diff provided for reference
->   - https://gist.github.com/cjdelisle/21c9f0cd225f499bdff3c574c7f185f2
-> * CC: linux-mediatek@lists.infradead.org who may be interested.
-> 
-> v1 -> v2
-> * Codestyle
->   - Apply codestyle from "The tip tree handbook" and recommendations
->   - Remove "_rai" and "_m" symbol suffixes which are not standard
-> * irq-econet-en751221.c
->   - Use cleanup.h _guard() and _free()
->   - Separate irq_domain_ops from irq_chip, eliminating econet_intc struct
->   - Remove irqsave in econet_wreg, irqs are already disabled in mask/unmask
->   - Add explainatory comments
->   - Refactor shadow logic for clarity, e.g. INTC_NO_SHADOW -> NOT_PERCPU
->   - Improve error handling in case of invalid DTS
-> * econet,timer-hpt.yaml
->   - Rename to econet,timer-en751221.yaml
->   - Impose rule: "reg" must have 1 item on EN751221 and 2 on EN751627
-> * timer-econet-hpt.c
->   - Rename to timer-econet-en751221.c to follow naming scheme from DT
-> * econet,en751221-intc.yaml
->   - Fix validation error from required: interrupt-parent
->   - shadow-interrupts -> switch to uint32-matrix for list of pairs
-> * MAINTAINERS -> Fixed accidental F: MAINTAINERS
-> * Replace "test image" with device SmartFiber-XP8421-B
-> * Restructure arch/mips/econet/Kconfig per arch/mips/ralink example
-> * v1->v2 diff is offered for reference:
->   - https://gist.github.com/cjdelisle/bb3acab78b5f70dcdfe5dd6338293efe
-> 
-> 
-> Caleb James DeLisle (7):
->   dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU Timer
->   clocksource/drivers: Add EcoNet Timer HPT driver
->   dt-bindings: mips: Add EcoNet platform binding
->   mips: Add EcoNet MIPS platform support
->   dt-bindings: vendor-prefixes: Add SmartFiber
->   mips: dts: Add EcoNet DTS with EN751221 and SmartFiber XP8421-B board
->   MAINTAINERS: Add entry for newly added EcoNet platform.
-> 
->  .../devicetree/bindings/mips/econet.yaml      |  26 +++
->  .../bindings/timer/econet,en751221-timer.yaml |  80 +++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  MAINTAINERS                                   |  12 +
->  arch/mips/Kbuild.platforms                    |   1 +
->  arch/mips/Kconfig                             |  25 ++
->  arch/mips/boot/compressed/uart-16550.c        |   5 +
->  arch/mips/boot/dts/Makefile                   |   1 +
->  arch/mips/boot/dts/econet/Makefile            |   2 +
->  arch/mips/boot/dts/econet/en751221.dtsi       |  67 ++++++
->  .../econet/en751221_smartfiber_xp8421-b.dts   |  19 ++
->  arch/mips/econet/Kconfig                      |  48 ++++
->  arch/mips/econet/Makefile                     |   2 +
->  arch/mips/econet/Platform                     |   5 +
->  arch/mips/econet/init.c                       |  78 +++++++
->  drivers/clocksource/Kconfig                   |   8 +
->  drivers/clocksource/Makefile                  |   1 +
->  drivers/clocksource/timer-econet-en751221.c   | 216 ++++++++++++++++++
->  18 files changed, 598 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/econet.yaml
->  create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
->  create mode 100644 arch/mips/boot/dts/econet/Makefile
->  create mode 100644 arch/mips/boot/dts/econet/en751221.dtsi
->  create mode 100644 arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts
->  create mode 100644 arch/mips/econet/Kconfig
->  create mode 100644 arch/mips/econet/Makefile
->  create mode 100644 arch/mips/econet/Platform
->  create mode 100644 arch/mips/econet/init.c
->  create mode 100644 drivers/clocksource/timer-econet-en751221.c
 
-applied patches 3-7 to mips-next
 
-Thomas.
+On 5/17/2025 5:35 AM, Sean Christopherson wrote:
+> Use "mask" instead of a dedicated boolean to track whether or not there
+> is at least one to-be-reset entry for the current slot+offset.  In the
+> body of the loop, mask is zero only on the first iteration, i.e. !mask is
+> equivalent to first_round.
+>
+> Opportunistically combine the adjacent "if (mask)" statements into a single
+> if-statement.
+>
+> No functional change intended.
+>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+> Reviewed-by: James Houghton <jthoughton@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+
+> ---
+>   virt/kvm/dirty_ring.c | 60 +++++++++++++++++++++----------------------
+>   1 file changed, 29 insertions(+), 31 deletions(-)
+>
+> diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
+> index 84c75483a089..54734025658a 100644
+> --- a/virt/kvm/dirty_ring.c
+> +++ b/virt/kvm/dirty_ring.c
+> @@ -121,7 +121,6 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+>   	u64 cur_offset, next_offset;
+>   	unsigned long mask = 0;
+>   	struct kvm_dirty_gfn *entry;
+> -	bool first_round = true;
+>   
+>   	while (likely((*nr_entries_reset) < INT_MAX)) {
+>   		if (signal_pending(current))
+> @@ -141,42 +140,42 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+>   		ring->reset_index++;
+>   		(*nr_entries_reset)++;
+>   
+> -		/*
+> -		 * While the size of each ring is fixed, it's possible for the
+> -		 * ring to be constantly re-dirtied/harvested while the reset
+> -		 * is in-progress (the hard limit exists only to guard against
+> -		 * wrapping the count into negative space).
+> -		 */
+> -		if (!first_round)
+> +		if (mask) {
+> +			/*
+> +			 * While the size of each ring is fixed, it's possible
+> +			 * for the ring to be constantly re-dirtied/harvested
+> +			 * while the reset is in-progress (the hard limit exists
+> +			 * only to guard against the count becoming negative).
+> +			 */
+>   			cond_resched();
+>   
+> -		/*
+> -		 * Try to coalesce the reset operations when the guest is
+> -		 * scanning pages in the same slot.
+> -		 */
+> -		if (!first_round && next_slot == cur_slot) {
+> -			s64 delta = next_offset - cur_offset;
+> +			/*
+> +			 * Try to coalesce the reset operations when the guest
+> +			 * is scanning pages in the same slot.
+> +			 */
+> +			if (next_slot == cur_slot) {
+> +				s64 delta = next_offset - cur_offset;
+>   
+> -			if (delta >= 0 && delta < BITS_PER_LONG) {
+> -				mask |= 1ull << delta;
+> -				continue;
+> -			}
+> +				if (delta >= 0 && delta < BITS_PER_LONG) {
+> +					mask |= 1ull << delta;
+> +					continue;
+> +				}
+>   
+> -			/* Backwards visit, careful about overflows!  */
+> -			if (delta > -BITS_PER_LONG && delta < 0 &&
+> -			    (mask << -delta >> -delta) == mask) {
+> -				cur_offset = next_offset;
+> -				mask = (mask << -delta) | 1;
+> -				continue;
+> +				/* Backwards visit, careful about overflows! */
+> +				if (delta > -BITS_PER_LONG && delta < 0 &&
+> +				(mask << -delta >> -delta) == mask) {
+> +					cur_offset = next_offset;
+> +					mask = (mask << -delta) | 1;
+> +					continue;
+> +				}
+>   			}
+> -		}
+>   
+> -		/*
+> -		 * Reset the slot for all the harvested entries that have been
+> -		 * gathered, but not yet fully processed.
+> -		 */
+> -		if (mask)
+> +			/*
+> +			 * Reset the slot for all the harvested entries that
+> +			 * have been gathered, but not yet fully processed.
+> +			 */
+>   			kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+> +		}
+>   
+>   		/*
+>   		 * The current slot was reset or this is the first harvested
+> @@ -185,7 +184,6 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+>   		cur_slot = next_slot;
+>   		cur_offset = next_offset;
+>   		mask = 1;
+> -		first_round = false;
+>   	}
+>   
+>   	/*
+
