@@ -1,381 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04135263C8F;
-	Tue, 20 May 2025 22:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781451; cv=fail; b=nUkz8og1/VbtxBkxf2do8YpgW55ohg62ZSiBwkLmMQVjoV2vx9LuoJRIDubjw8B8XQbwgIZ/cQMGBQg4ds15flAHa8kLjGHLUC0CeoSCZJPoaElHld/krr37Zlh7ce+No2/pYN7BzFiX23QRP8YK6MYqIC+Q508XLr0Hg9A7BXo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747781451; c=relaxed/simple;
-	bh=okfOlSwXmV6W7ykkWsehglhE2Oeb+2AuGDCotWD+NsY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=afK/7oE98G3c7zW9w0thPh9FOmdSVNMgmgMo/1/ex+r4wlb7DUz9T6gc3K5ZEZcr33GzlLVcsBT2AgjgLAZ8i6i0wVGn6hXSvD6quseZPsnsgQgrW3n6uOfWzZa0miLLddbI2cBuxaT2/LXXvnrh/3x7aGgAAm4bZDp3xHt01Kk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJYpNBW2; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A752673BF;
+	Tue, 20 May 2025 22:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747781454; cv=none; b=bpT5sN3Qgq9FnG5tD9qYz8GQf3MAGkEv5EHnnlfT5jomjBCX6ZRzEVLeUezoS2vqI83bGd1W3CE0eiCabXRqTdtKFBtiM3yXZS4OYqTU7Fg2GHm8fVhMRgx0DRhVygafy94MSG5+o3VXGS9ysE3z11+gUUSR+p4du4zxM37lrT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747781454; c=relaxed/simple;
+	bh=h8H53WstQAHtKB7BqisUydwF30h1NlWHqWKS0j9d0QU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=trwxpYIOeLAm4zmDW7w3RcHQM2eeogvWbReiycSmdJvdAeL2P4m9SUesouiiTIRKzOu9JFKW+Km5S0xxxpnol0jWZRyWLvuVnbm8qn3m10ObH4CJVx9u11v6XVywNkwnUJKt7zpDGPhD4nEj2QWrdynZKV1VCbYHRHatKRQ4DdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6UJslnb; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJYpNBW2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747781449; x=1779317449;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=okfOlSwXmV6W7ykkWsehglhE2Oeb+2AuGDCotWD+NsY=;
-  b=MJYpNBW2dp5M3pcyXaDn1BZ6T117E5JpOPX7bT9hsS4WnNEt635fVXYJ
-   c6/K/gvwJk6R7TlyApwhGTCQBJunn1CN6JyRKhVvx3q3EzXGyshrdAdVZ
-   jMdw8qi2RC4GGQ7C7Y3zxU/UPWP8Yu/XGXCcF6LDzjuBggeUmYUaM5vk4
-   TOykYIV6G++BNxSAWglscyLqa2JAYvBzJ15fbnUf/Pszp4JUUeKoTQY6b
-   ysRPqry/2IuXHrUd/PJoTbGDF1+lZ8LlaWkGR8IA3CFYEFcjF2JhC+WWV
-   CcPFiKaXVITxEFKd36IX9BmVGbLr3Xh5zoJwniK6ZTEGLsLZBw4UgutCA
-   g==;
-X-CSE-ConnectionGUID: Xp1tXSyNSdChEn/FFH/q6Q==
-X-CSE-MsgGUID: HRzteA5gTc2LJxGcG9vs/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="61136482"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="61136482"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:49:52 -0700
-X-CSE-ConnectionGUID: ljoxo2UzTEq63Z0XXNycyA==
-X-CSE-MsgGUID: Sw3F1EknRdeT7BvXavQDVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="139702690"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:49:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 20 May 2025 15:49:51 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 20 May 2025 15:49:51 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.173)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 20 May 2025 15:49:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AzW+8oBAv3w7yd3vSdHVHTNMUiwB6Az2YOL2k3s9BVNvqxdKdkF5iXAH0ZPV9tBK7OwgoabXFHzlJTf9B9JMizeLUkSQM+/emoleAG1436VqDsSZcrH92yeAfDu3bsqoYpmS59ReqBfNdI7+6jphlsESOA8iA/R64nsPRP0GOBVCA/PFYC4bA9O2CZYuiavRnxJBue8OhreYqqvvBCfff4iOVeCSwOayYEd7yI5Ke076OeMPZE/0yQ533/cS+YMdG1YZt5CFAiBoB0bT002THap6QusQPCvn7rT4tstRbwNvNJZoNImCUHaXRQJGXRwmXCWM89WAJzbhPsygQwgojQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=okfOlSwXmV6W7ykkWsehglhE2Oeb+2AuGDCotWD+NsY=;
- b=pK1XU/Od0k5FflNGi4et81SMXqxcSi/uw3NWGcyOXxBmoMYyiDFrUyGW0TVHlHr7XNDwulJQMsoD+xt7W76urIjmtI15g9nkK6NFximWofAE2NiIZbNUGrSdWwaqDPE0dytukKQdWcH1lQaFPetemaiF9gGXCHzzSp4POjn6skwB0OgzWA/R99YIBRAhU8tVsnjM97WVOke3b4UpFc6/yj2Nqapt+yQm+wRTJO3aN9olTQmp8vJeCB0nJYuoda+a97cglFF3bfKDcckztjOlGykdMJjG4W1tLGSTe7EGElMn2IYBfVQoaHOgHO8Lw70JudnIiwUKHhcpiPr5vva6pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
- by PH3PPF25FF87461.namprd11.prod.outlook.com (2603:10b6:518:1::d10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
- 2025 22:49:49 +0000
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66%4]) with mapi id 15.20.8746.031; Tue, 20 May 2025
- 22:49:48 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "vipinsh@google.com"
-	<vipinsh@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
-Thread-Topic: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
-Thread-Index: AQHbxq0+OB9mwly9vEqEwiQpLwdhbLPWwyGAgANXzYCAAgqsAA==
-Date: Tue, 20 May 2025 22:49:48 +0000
-Message-ID: <dca247173aace1269ce8512ae2d3797289bb1718.camel@intel.com>
-References: <20250516215422.2550669-1-seanjc@google.com>
-	 <20250516215422.2550669-3-seanjc@google.com>
-	 <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com>
-	 <aCtQlanun-Kaq4NY@google.com>
-In-Reply-To: <aCtQlanun-Kaq4NY@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.1 (3.56.1-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|PH3PPF25FF87461:EE_
-x-ms-office365-filtering-correlation-id: fe3b7f3f-bb2d-4974-3bd5-08dd97f09fff
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?eFRUcXZuVGlCV081MStKTUxtRldPOXR3c3I2QWNWV2t6S2NOSW10VlZWL1Zm?=
- =?utf-8?B?YW9ON3BIdnUzbjV4ZkdYTVdCOHp4N1RBa3FzOFBMUTFiUERSa2pxOXVGUUJO?=
- =?utf-8?B?Tm9xSVV3dTRNUlBuVHZCUk9FY0kvNUMzbnlWdFErcmtNNU9NanB4Ym44NEJB?=
- =?utf-8?B?RFppc3k4NFFsSGZGL0xmMDc5MjBIM0dreHkxUmc0WVFmY21xYkhONHNlOGkw?=
- =?utf-8?B?cGxncnRVR2ZoSzd6dzJVSGIwR095akx1eDFPNzY3eEhPRThqNHdxSE5RakpV?=
- =?utf-8?B?eTduUTIwRGRvaWRROGVoN3FTNloxNm5WZHpRUFF1NVU3NXhBNlVsdTFvdlRH?=
- =?utf-8?B?K25GRnAwWEVsdWJVODRwcFNUazAvS2JtNzdHTXF0elI1RTZjKzBwVUlZblRm?=
- =?utf-8?B?RlpveU5FN1o5WEpucjJsMGRWekQ2QzlDU291bkhUbXdrYS9oK0ZSTTFpWEo4?=
- =?utf-8?B?QUI1QVRPYUQ5RXcxUVhiVzZNUlVmK1F0ZzJ0RnByK1V2RCtZNmowWjBFV2l0?=
- =?utf-8?B?U0VYWGdCalFiZi84aUxFOHk4WG1DaEJJVEFEOG5xZ2pYbGR4amlxa05OSTVF?=
- =?utf-8?B?ZjRFTFo4aFZKeXc1dWd0TTkxcThTbkZyN2R0Mlo4NTEwU1RQSjcrd0RBbWtY?=
- =?utf-8?B?dXIxRWpsVzFZNEthVm05YTl5bDZVSHM1a2JIQzJFNkJ1bVJDeC9LRlc0ZVZx?=
- =?utf-8?B?NEQwbGwzeTFDUWZUMElIbXgwZ0pKcUc2N1kyUWp6b3kxK1E5OGFCU1pmbW1L?=
- =?utf-8?B?ZzdRak1tWE1rdXRWcU5hcE9pc0c1VXpqbTkraTRtcTNoMXB6TVovSGtrTk12?=
- =?utf-8?B?bWw5Y3VuTWRtaTZzSEpWdE55cEpnbWx5SGEyTnd6bldJNjFsdnFaL0RrOFpP?=
- =?utf-8?B?Q2E0UkdYYUp3SlRjUGRSYnBqRWJQZnVOMUxxT0JVL0d0WUloclNKTFI5TXpI?=
- =?utf-8?B?U1NxU1pibWpiWVNZVzhHRk1hakZORjkyeFU1MUhHdmpnbVBVa3VzZzN2Q3Fh?=
- =?utf-8?B?S2tweWpod1N5WERqZnFrUGNGQkNDczRERGc0OFBXajlkZEwxamJVcmIzeU5Q?=
- =?utf-8?B?ak0wYkg5dU9tdnM3a2JZalEvYjE2WUhOOWNhempWaDhVMHJHZGhYYmd4RSs3?=
- =?utf-8?B?QmFPZzRjeTJ0cUs0cXQ4d1oyNmVrSDRRTU9hOU5YcXpqMEFBVElnekNSNDBx?=
- =?utf-8?B?Q3IwSWd0NjVEQTJnbnBQU2N1SlB1SWluWDhiWUJEWnU1clFXOUxEU2kwbkty?=
- =?utf-8?B?SHlwVElEZXBXZVNXOFZYVTJXeWZvTW1SaEZKWURrMVhLM1lhUGxBSWdnVHNJ?=
- =?utf-8?B?TUNNWnJNTGkxcUhMT25JUGxNR1JoaG5PY3ZtUmo5eVM2a3hYNVNSTERXN2py?=
- =?utf-8?B?RndTc3Z0SEVPdGw3WTBDblpjUjRUN2tiKzBMT0dYdjlZeFNWVklMeWowb00w?=
- =?utf-8?B?cmNXMzhDendBU2pJK1VUZ0w3TGd0bk5ya25taHlVRWorRzM1NEE2T21DcGZ1?=
- =?utf-8?B?N3hJa2hJb3RXbk9LZWZVSE1vVGNOR2c1ckt0OEVnM3dXbGVEOUdFVFo5TW9u?=
- =?utf-8?B?ZG1oREtIZGZkSzBZNTNpeUprbHRocmNWRnRCcXBuS0cxekc3Z1htVWc2bzJF?=
- =?utf-8?B?L2dyQU9vZzZxU3dwQlN4MGVJZ1VNb2ZUSFlWUFpLbGcyWUhyKzRnMytra2E4?=
- =?utf-8?B?VGxXaWVJT0ZvNDd5THdONEJJZStNQUFoczd5OXNlZHo1TjJNaHExaUdYS04x?=
- =?utf-8?B?UTZDZlAyVGpRV1VWWGREZ3NHeG5tTzluMjNFbkVTWEU2ZTRsdWxwNm1aM3I3?=
- =?utf-8?B?UHY1R3l5Y01NcGxZNk5WZ0ZuMTV5NG1HSnNKNnhiajlxUmo3SlBTMXZRRlJl?=
- =?utf-8?B?bHVMRVFOanVUeVJwRmFURHBRNS9zSHV2UWhHSDlXbEp6bG1tWVdDc2tETHdt?=
- =?utf-8?B?emk4SFJSemlFaXpvUkRwWlRUdVdKNlJIRGxZcjAyeHA5TnNGS3drdUFkZzM5?=
- =?utf-8?B?NVRZNThhbVdBPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d2JHN0pSZmY1cGJaYWZCTjUrSDEvMlhOS0trNHVCNHBsdnpjV3RmQTVSNlR2?=
- =?utf-8?B?L1BPZFBqYlR0ZHhNNHdoSnQxK3NUY1I0Ujl6RXN2c2hESjJPTGNUSmtqM2pB?=
- =?utf-8?B?bXFsejZRWjVBS0JmYURtUHhsUWJzbkU3TGRBeEc4WXYrRktyZTlnTmFvdXFl?=
- =?utf-8?B?NXBBZWRrNWdndGI5VUwweEhxUjJ2MlRwRnRGQmRFckJSMDNJU3M3TVQrcDdk?=
- =?utf-8?B?RHZMVE1tU2lZRlp6cTgwTnhrWkhuOG5XdWRqSkFHM0NaaEpoSFY4THVyYlkz?=
- =?utf-8?B?bGl4UVp0Yzh3L1hETk84MDVLZ3VjZk5iVGtXSG9tS1RUMlAxUzBOSE1UTkMx?=
- =?utf-8?B?TEI0US9sMnFFWGlONTIrYlg1eUFvb2EyRjhTbWFFeVhUNy9pWGZ4b0tRaW1E?=
- =?utf-8?B?RjZPK2luNDV4bDFIMGNERmtJRkhXd2FhMkprSHJ0WlA1cmthemNuWi92VmQv?=
- =?utf-8?B?b0JodkFJbTlJT2YrVkFSdnYzZWtpUWtZVW9kOGJUUkpNMWtvZkIveXJHY2xS?=
- =?utf-8?B?VmEzR3hnTlRLdVdEZUI5SU5OWTBWYzZiViszdU9jNVJ2VEZla3dXaXYvcE8y?=
- =?utf-8?B?MVc1K3BWUTV2eDl6OUowWmNLaWxaR1NwYWYwcEVIc1JSZTJaYVdFYThCWGdM?=
- =?utf-8?B?SVhKeHZmcFFCdTZ5VEdpZStHbU5keTNLUjlSdUZKcUNJQmJoTk80RHVKTWFF?=
- =?utf-8?B?STQ0SGExaW84TW9UNkV5eGtucTVGL3JOZnNQSmp0eHRnNkdYeHF0NFRXWjgx?=
- =?utf-8?B?OVJkdldXMk9QMUJ5bFhKVmkzaUsrdmNCUGpMVjVEb0ZTMzdiVWJtbm8yNWds?=
- =?utf-8?B?a044Qnh3VHNvaGc0RW84Y2NQM2YyQllkdVo1MW16UWtQM2Nhb0xvU3BNL2RX?=
- =?utf-8?B?N0F2bTNMUmxrUGVvMG84ZWhIZTd2ZXhoeWN5cE5oV05EQUNYUjU4N2M5Q1FQ?=
- =?utf-8?B?M3M5cXE4SXB1eU1pdGdoVTRscjJCaHJRaDRHaGl2Y1lJeEhYMkw5dUdYbWhR?=
- =?utf-8?B?d1dVSFhOUXlxcklGN3dxTzBlUE5GMFJ3WFM1aGNZcGlhWGRuNzBBWk5HRzdR?=
- =?utf-8?B?OWNXN1dMWjQ0VWtWYUZvQjh6d0lEczZZU3JwMWd4Q2Z2dmtVWDJreGFUdmk3?=
- =?utf-8?B?bjQvbmRmTHVoL25lc0Voazd6bmFwcTZ1bC9QemF4ZWg1UFozbDJ1VndJY2dn?=
- =?utf-8?B?NHhBeXcrd3o1YXRlb2xaQjlHeGtGZyt1cGg2dXU2ZVRVQ3hMbTJqVHkyTHNZ?=
- =?utf-8?B?eFEzNHpWdU44azhYODdvc1lDa0dWbjcvSm9DeVhNV2l6NXRZUktHU1BJQ29T?=
- =?utf-8?B?MzY0OGNzQXgxZG1yY0lnQkI5UnV6YjFGY1drb0JtdHJOcE1qZ25jMHVnWUFy?=
- =?utf-8?B?bElGc1RaVkpwdlpSQnVBcDhGUVF4alJEVE1EQk9KTVZYcm5mYzM5cFFOanRi?=
- =?utf-8?B?WXNQdUJ4NVlXZ1hVTnRET1ZsOEhDRElYS3kxSFZkY3BDUzlUVytyMHpkZy9Q?=
- =?utf-8?B?NW56bWd5clVQdVZVUnA4T0dneVRaS3FvREh0T0ZFV0ZRL1JPYjBUN281TXJh?=
- =?utf-8?B?RkNlUXZQbzgvV2hFdnc2cHdDaWQ4R2ltcDdIazdGamRUeDBZaFpyT0NTRmlY?=
- =?utf-8?B?NDZqWmZ6Snh4UndET2txSnE2eENjMVhxKzUrR2ZLb3lDOWh5VlRDbWxkQWNk?=
- =?utf-8?B?SUI0cWZnUU8ybzBzVnRGaERmMVhFV0JLM0RjZmNkaWtJcEpsY3pYQnpBaUNX?=
- =?utf-8?B?MnZVWVMxVnVyN3l0QUJXSXluYWxaR082cWUzdlVMbjQza0xCN1J2RDFFWVpr?=
- =?utf-8?B?TW4yYlQvUlh0N2hqVWF0OXNReXpianFHZEhCSnBydjRZL2x6bWJxNzFLV2Qr?=
- =?utf-8?B?VFZaRXQ1bXVqd0lUOXZIZkxtMmZDWERBQk1IUzlMcWpZSjE0ZzZEZXorMG9j?=
- =?utf-8?B?SDJmOUs5K01EQ1FhY091MFRjUHFpSGJWdTg1R0xleDlZUHdZdE5SMEZ4L1J2?=
- =?utf-8?B?WnFibklqcVFySklRZFlvd1ovOHdaNkFRMDVTdHR2QWRKTWhsY2wwdWIrVmNz?=
- =?utf-8?B?UXBYa2JaYVA4RzR0bmlQTmVzRFlTRlRsbWhzOFRVUnNIdWtrN3ZSeURZTElS?=
- =?utf-8?Q?PBQcmr6qWlEo0B4PMirN/Vkzk?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5B04DDB33C0304489638882DC6BC5410@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6UJslnb"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a361c8a830so690402f8f.0;
+        Tue, 20 May 2025 15:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747781450; x=1748386250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
+        b=g6UJslnbp8hn+eIZ+6OBvLLuvpgyPVtPcV8/gLIfDTT+gUjT/PjG+8fozBtUTvugRO
+         IUFLibXkp5IyuFgWB7qatlG4X2ttE3Wvt/yEHuvxIPUutHjgm8fbNpCZQBxm7epvp6Dd
+         NAuKvvZMmTG4mnfq/42iu3nK0myGrOSVVA1jLGBGmR6nev0Nc/kMjeL4TvyQTE8hjTWy
+         27Fjyc9BdSj+lqMFoTpTc/PzxcO1Q4QfV7gL+Nn8//7UcLIvrW3Wx0MyiuBjmtP8B6GI
+         ianlAaACi10fBxt0MbtvIYQ3Hrw6j9qwvD7AvO8R3bXEaKMPpqdtVblz9Glaz9oddhcs
+         2akQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747781450; x=1748386250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
+        b=AgrkdtKDsoa17xcBLYZbbG5xYVp6aQj+qrZk7XplwEXttGfzgie6RSPJsPicZ7QiyZ
+         DHkFIFtNWPTVuzHkZ6+7Ps3TPzuIy0xUNewimxgOAHy8RpprdQiJNALvqEsfTCygLO+1
+         VxK7dGw6tPyoasg651Cm8LA/zJP6le2c7lNbY+vt7/HZCmZItwLEDoqwZqXbcBi6gJtL
+         naPFh4cR3O2tmzFs03gd84CN+IjROkvctMnivIBOPNCii1cCHAgUHhfFZAOGg1O1wuzP
+         bzsCc6hTdjWK5B0edZuC66YPg+u1mSAAnVbKF3pCA2HN11aHQtB0t5HWJMzcgmCuXRR+
+         Fjww==
+X-Forwarded-Encrypted: i=1; AJvYcCUhKP89ns8DN5zSH/XXAWmB0OmZAuOLu5VBUbx1LJfocpkX2sy2OmHmGAEcOnVb57jskX8nEYI+Q3A=@vger.kernel.org, AJvYcCVDjboxbOpsERGZUT4r8YwbnFirre+FZJK3r9z/Yn0gISnXohYBYypGq7QyWGe5P7tKSw+x4v1uPqzdePq2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCKJ05rKeoMtKBFuvx03ACsZPkh5yDpHMK+508ppXMm+a8WyJW
+	Ia3NekFRsAP5K5YWGXFqMUdgkjzJguk0TuMKrtLz5rp3hDJ8wEaB45yJ
+X-Gm-Gg: ASbGnculd/4l6fwSNp87r1kT6ZCggQrYwfTX7j5W6fq3sG9LOj4ll+FhAIWFCT/d7bg
+	ZdQix91rPysZ7iJu6YO8ivscT2jnehCKd2e5c3jrycw1z6m+lIUorTYaUO522vDHKw/DChQ0R1Z
+	2Bndgtbl8s9tfKkX9O+UlMQ2p2zcIj7DqzV6eInwiIMjmHx8s9VGrnpIg65ZYwHpz1eh+nJ8YNq
+	2g1I8lHcqXuFT/6XfTg/9ISS5zBkrYjWxhWErkVHEXuipPAGOX1rt4QBm3J59w22WaaiKy0RL64
+	7RBLCbqkJC6Tfj0WX3sKdUDongXOZUkPz7sOi+zdNX7OHAFCoPHLWAr8P09K7Tz/hc3wzPfbjnG
+	3m8HQqtUHpe24j20iC0n6aA==
+X-Google-Smtp-Source: AGHT+IFZWkOLTMpe0Rj7vle3YfkxL6BFvV+5p7cLKDL/YHH1BkvaOgfAZtFa1Vjfpd0zhglBmFtixw==
+X-Received: by 2002:a05:6000:1445:b0:3a3:7be3:d0f3 with SMTP id ffacd0b85a97d-3a37be3d3eamr1224286f8f.14.1747781450175;
+        Tue, 20 May 2025 15:50:50 -0700 (PDT)
+Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d105sm18101588f8f.11.2025.05.20.15.50.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 15:50:49 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	corbet@lwn.net,
+	lucas.p.stankus@gmail.com,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	l.rubusch@gmail.com
+Cc: linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 12/12] docs: iio: add ADXL313 accelerometer
+Date: Tue, 20 May 2025 22:50:07 +0000
+Message-Id: <20250520225007.10990-13-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250520225007.10990-1-l.rubusch@gmail.com>
+References: <20250520225007.10990-1-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe3b7f3f-bb2d-4974-3bd5-08dd97f09fff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 22:49:48.8262
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OO66yY7w7P/c1qnTRgneqMDp/KBGZudMu8OK8dBebDsAEsK/K1IuR2BLwod20RVwv5xo/FzZTzba2UzBFFDCSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF25FF87461
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDI1LTA1LTE5IGF0IDA4OjM5IC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiBPbiBTYXQsIE1heSAxNywgMjAyNSwgUGFvbG8gQm9uemluaSB3cm90ZToNCj4gPiBP
-biA1LzE2LzI1IDIzOjU0LCBTZWFuIENocmlzdG9waGVyc29uIHdyb3RlOg0KPiA+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gveDg2L2t2bS9zdm0vc3ZtLmMgYi9hcmNoL3g4Ni9rdm0vc3ZtL3N2bS5jDQo+
-ID4gPiBpbmRleCAwYWQxYTZkNGZiNmQuLmQxM2U0NzVjMzQwNyAxMDA2NDQNCj4gPiA+IC0tLSBh
-L2FyY2gveDg2L2t2bS9zdm0vc3ZtLmMNCj4gPiA+ICsrKyBiL2FyY2gveDg2L2t2bS9zdm0vc3Zt
-LmMNCj4gPiA+IEBAIC01Njc1LDYgKzU2NzUsOCBAQCBzdGF0aWMgaW50IF9faW5pdCBzdm1faW5p
-dCh2b2lkKQ0KPiA+ID4gICB7DQo+ID4gPiAgIAlpbnQgcjsNCj4gPiA+ICsJS1ZNX1NBTklUWV9D
-SEVDS19WTV9TVFJVQ1RfU0laRShrdm1fc3ZtKTsNCj4gPiA+ICsNCj4gPiA+ICAgCV9fdW51c2Vk
-X3NpemVfY2hlY2tzKCk7DQo+ID4gPiAgIAlpZiAoIWt2bV9pc19zdm1fc3VwcG9ydGVkKCkpDQo+
-ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZteC9tYWluLmMgYi9hcmNoL3g4Ni9rdm0v
-dm14L21haW4uYw0KPiA+ID4gaW5kZXggZDFlMDJlNTY3YjU3Li5lMThkZmFkYTJlOTAgMTAwNjQ0
-DQo+ID4gPiAtLS0gYS9hcmNoL3g4Ni9rdm0vdm14L21haW4uYw0KPiA+ID4gKysrIGIvYXJjaC94
-ODYva3ZtL3ZteC9tYWluLmMNCj4gPiA+IEBAIC02NCw2ICs2NCw4IEBAIHN0YXRpYyBfX2luaXQg
-aW50IHZ0X2hhcmR3YXJlX3NldHVwKHZvaWQpDQo+ID4gPiAgIAkJdnRfeDg2X29wcy5wcm90ZWN0
-ZWRfYXBpY19oYXNfaW50ZXJydXB0ID0gdGR4X3Byb3RlY3RlZF9hcGljX2hhc19pbnRlcnJ1cHQ7
-DQo+ID4gPiAgIAl9DQo+ID4gPiArCUtWTV9TQU5JVFlfQ0hFQ0tfVk1fU1RSVUNUX1NJWkUoa3Zt
-X3RkeCk7DQo+ID4gDQo+ID4gSSB3b3VsZCBwdXQgZWl0aGVyIGJvdGggb3Igbm8gY2hlY2tzIGlu
-IG1haW4uYy4NCj4gDQo+IFllYWgsIEkgYWdyZWUgdGhlIGN1cnJlbnQgc3BsaXQgaXMgdWdseS4g
-IEkgb3JpZ2luYWxseSBoYWQgJ2VtIGJvdGggaW4gbWFpbi5jLA0KPiBidXQgdGhlbiB0aGUgYXNz
-ZXJ0IGVmZmVjdGl2ZWx5IGJlY29tZXMgZGVwZW5kZW50IG9uIENPTkZJR19LVk1fSU5URUxfVERY
-PXkuDQo+IA0KPiBBaGEhICBJZiB3ZSBhZGQgYSBwcm9wZXIgdGR4X2hhcmR3YXJlX3NldHVwKCks
-IHRoZW4gdGhlcmUncyBhIGNvbnZlbmllbnQgbG9jYXRpb24NCj4gZm9yIHRoZSBhc3NlcnQsIElN
-TyBpdCdzIG11Y2ggZWFzaWVyIHRvIHNlZS9kb2N1bWVudCB0aGUgIlREWCBtb2R1bGUgbm90IGxv
-YWRlZCINCj4gYmVoYXZpb3IsIGFuZCB0aGUgVERYLXNwZWNpZmljIGt2bV94ODZfb3BzIGhvb2tz
-IGRvbid0IG5lZWQgdG8gYmUgdmlzaWJsZSBzeW1ib2xzLg0KPiANCj4gSSdsbCBzbG90IHRoZSBi
-ZWxvdyBpbiwgdW5sZXNzIHlvdSd2ZSBnb3QgYSBiZXR0ZXIgaWRlYS4NCg0KTG9va3MgZ29vZCB0
-byBtZSB0b28uICBNaW5vciB0aGluZ3MgYmVsb3cuDQoNCg0KWy4uLl0NCg0KPiArc3RhdGljIGlu
-dCB0ZHhfc2VwdF9yZW1vdmVfcHJpdmF0ZV9zcHRlKHN0cnVjdCBrdm0gKmt2bSwgZ2ZuX3QgZ2Zu
-LA0KPiArCQkJCQllbnVtIHBnX2xldmVsIGxldmVsLCBrdm1fcGZuX3QgcGZuKQ0KPiAgew0KPiAg
-CXN0cnVjdCBwYWdlICpwYWdlID0gcGZuX3RvX3BhZ2UocGZuKTsNCj4gIAlpbnQgcmV0Ow0KPiBA
-QCAtMzUwNywxMCArMzUwNywxNCBAQCBpbnQgX19pbml0IHRkeF9icmluZ3VwKHZvaWQpDQo+ICAJ
-ciA9IF9fdGR4X2JyaW5ndXAoKTsNCj4gIAlpZiAocikgew0KPiAgCQkvKg0KPiAtCQkgKiBEaXNh
-YmxlIFREWCBvbmx5IGJ1dCBkb24ndCBmYWlsIHRvIGxvYWQgbW9kdWxlIGlmDQo+IC0JCSAqIHRo
-ZSBURFggbW9kdWxlIGNvdWxkIG5vdCBiZSBsb2FkZWQuICBObyBuZWVkIHRvIHByaW50DQo+IC0J
-CSAqIG1lc3NhZ2Ugc2F5aW5nICJtb2R1bGUgaXMgbm90IGxvYWRlZCIgYmVjYXVzZSBpdCB3YXMN
-Cj4gLQkJICogcHJpbnRlZCB3aGVuIHRoZSBmaXJzdCBTRUFNQ0FMTCBmYWlsZWQuDQo+ICsJCSAq
-IERpc2FibGUgVERYIG9ubHkgYnV0IGRvbid0IGZhaWwgdG8gbG9hZCBtb2R1bGUgaWYgdGhlIFRE
-WA0KPiArCQkgKiBtb2R1bGUgY291bGQgbm90IGJlIGxvYWRlZC4gIE5vIG5lZWQgdG8gcHJpbnQg
-bWVzc2FnZSBzYXlpbmcNCj4gKwkJICogIm1vZHVsZSBpcyBub3QgbG9hZGVkIiBiZWNhdXNlIGl0
-IHdhcyBwcmludGVkIHdoZW4gdGhlIGZpcnN0DQo+ICsJCSAqIFNFQU1DQUxMIGZhaWxlZC4gIERv
-bid0IGJvdGhlciB1bndpbmRpbmcgdGhlIFMtRVBUIGhvb2tzIG9yDQo+ICsJCSAqIHZtX3NpemUs
-IGFzIGt2bV94ODZfb3BzIGhhdmUgYWxyZWFkeSBiZWVuIGZpbmFsaXplZCAoYW5kIGFyZQ0KPiAr
-CQkgKiBpbnRlbnRpb25hbGx5IG5vdCBleHBvcnRlZCkuICBUaGUgUy1FUFQgY29kZSBpcyB1bnJl
-YWNoYWJsZSwNCj4gKwkJICogYW5kIGFsbG9jYXRpbmcgYSBmZXcgbW9yZSBieXRlcyBwZXIgVk0g
-aW4gYSBzaG91bGQtYmUtcmFyZQ0KPiArCQkgKiBmYWlsdXJlIHNjZW5hcmlvIGlzIGEgbm9uLWlz
-c3VlLg0KPiAgCQkgKi8NCj4gIAkJaWYgKHIgPT0gLUVOT0RFVikNCj4gIAkJCWdvdG8gc3VjY2Vz
-c19kaXNhYmxlX3RkeDsNCj4gQEAgLTM1MjQsMyArMzUyOCwxOSBAQCBpbnQgX19pbml0IHRkeF9i
-cmluZ3VwKHZvaWQpDQo+ICAJZW5hYmxlX3RkeCA9IDA7DQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+
-ICsNCj4gKw0KPiArdm9pZCBfX2luaXQgdGR4X2hhcmR3YXJlX3NldHVwKHZvaWQpDQo+ICt7DQo+
-ICsJLyoNCj4gKwkgKiBOb3RlLCBpZiB0aGUgVERYIG1vZHVsZSBjYW4ndCBiZSBsb2FkZWQsIEtW
-TSBURFggc3VwcG9ydCB3aWxsIGJlDQo+ICsJICogZGlzYWJsZWQgYnV0IEtWTSB3aWxsIGNvbnRp
-bnVlIGxvYWRpbmcgKHNlZSB0ZHhfYnJpbmd1cCgpKS4NCj4gKwkgKi8NCg0KVGhpcyBjb21tZW50
-IHNlZW1zIGEgbGl0dGxlIGJpdCB3ZWlyZCB0byBtZS4gIEkgdGhpbmsgd2hhdCB5b3UgbWVhbnQg
-aGVyZSBpcyB0aGUNCkB2bV9zaXplIGFuZCB0aG9zZSBTLUVQVCBvcHMgYXJlIG5vdCB1bndvdW5k
-IHdoaWxlIFREWCBjYW5ub3QgYmUgYnJvdWdodCB1cCBidXQNCktWTSBpcyBzdGlsbCBsb2FkZWQu
-DQoNCj4gKwl2dF94ODZfb3BzLnZtX3NpemUgPSBtYXhfdCh1bnNpZ25lZCBpbnQsIHZ0X3g4Nl9v
-cHMudm1fc2l6ZSwgc2l6ZW9mKHN0cnVjdCBrdm1fdGR4KSk7DQo+ICsNCj4gKwl2dF94ODZfb3Bz
-LmxpbmtfZXh0ZXJuYWxfc3B0ID0gdGR4X3NlcHRfbGlua19wcml2YXRlX3NwdDsNCj4gKwl2dF94
-ODZfb3BzLnNldF9leHRlcm5hbF9zcHRlID0gdGR4X3NlcHRfc2V0X3ByaXZhdGVfc3B0ZTsNCj4g
-Kwl2dF94ODZfb3BzLmZyZWVfZXh0ZXJuYWxfc3B0ID0gdGR4X3NlcHRfZnJlZV9wcml2YXRlX3Nw
-dDsNCj4gKwl2dF94ODZfb3BzLnJlbW92ZV9leHRlcm5hbF9zcHRlID0gdGR4X3NlcHRfcmVtb3Zl
-X3ByaXZhdGVfc3B0ZTsNCj4gKwl2dF94ODZfb3BzLnByb3RlY3RlZF9hcGljX2hhc19pbnRlcnJ1
-cHQgPSB0ZHhfcHJvdGVjdGVkX2FwaWNfaGFzX2ludGVycnVwdDsNCj4gK30NCj4gZGlmZiAtLWdp
-dCBhL2FyY2gveDg2L2t2bS92bXgvdGR4LmggYi9hcmNoL3g4Ni9rdm0vdm14L3RkeC5oDQo+IGlu
-ZGV4IDUxZjk4NDQzZThhMi4uY2EzOWE5MzkxZGIxIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3g4Ni9r
-dm0vdm14L3RkeC5oDQo+ICsrKyBiL2FyY2gveDg2L2t2bS92bXgvdGR4LmgNCj4gQEAgLTgsNiAr
-OCw3IEBADQo+ICAjaWZkZWYgQ09ORklHX0tWTV9JTlRFTF9URFgNCj4gICNpbmNsdWRlICJjb21t
-b24uaCINCj4gIA0KPiArdm9pZCB0ZHhfaGFyZHdhcmVfc2V0dXAodm9pZCk7DQo+ICBpbnQgdGR4
-X2JyaW5ndXAodm9pZCk7DQo+ICB2b2lkIHRkeF9jbGVhbnVwKHZvaWQpOw0KPiAgDQoNClRoZXJl
-J3MgYSBidWlsZCBlcnJvciB3aGVuIENPTkZJR19LVk1fSU5URUxfVERYIGlzIG9mZjoNCg0Kdm14
-L21haW4uYzogSW4gZnVuY3Rpb24g4oCYdnRfaGFyZHdhcmVfc2V0dXDigJk6DQp2bXgvbWFpbi5j
-OjM0OjE3OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYdGR4X2hh
-cmR3YXJlX3NldHVw4oCZOw0KZGlkIHlvdSBtZWFuIOKAmHZteF9oYXJkd2FyZV9zZXR1cOKAmT8g
-Wy1XaW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dDQogICAzNCB8ICAgICAgICAgICAgICAg
-ICB0ZHhfaGFyZHdhcmVfc2V0dXAoKTsNCiAgICAgIHwgICAgICAgICAgICAgICAgIF5+fn5+fn5+
-fn5+fn5+fn5+fg0KICAgICAgfCAgICAgICAgICAgICAgICAgdm14X2hhcmR3YXJlX3NldHVwDQoN
-Ci4uIGZvciB3aGljaCB5b3UgbmVlZCBhIHN0dWIgZm9yIHRkeF9oYXJkd2FyZV9zZXR1cCgpIHdo
-ZW4gQ09ORklHX0tWTV9JTlRFTF9URFgNCmlzIG9mZi4NCg0KDQpBbmQgb25lIG1vcmUgdGhpbmc6
-DQoNCldpdGggdGhlIGFib3ZlIHBhdGNoLCB3ZSBzdGlsbCBoYXZlIGJlbG93IGNvZGUgaW4gdnRf
-aW5pdCgpOg0KDQogICAgICAgIC8qDQogICAgICAgICAqIFREWCBhbmQgVk1YIGhhdmUgZGlmZmVy
-ZW50IHZDUFUgc3RydWN0dXJlcy4gIENhbGN1bGF0ZSB0aGUNCiAgICAgICAgICogbWF4aW11bSBz
-aXplL2FsaWduIHNvIHRoYXQga3ZtX2luaXQoKSBjYW4gdXNlIHRoZSBsYXJnZXINCiAgICAgICAg
-ICogdmFsdWVzIHRvIGNyZWF0ZSB0aGUga21lbV92Y3B1X2NhY2hlLg0KICAgICAgICAgKi8NCiAg
-ICAgICAgdmNwdV9zaXplID0gc2l6ZW9mKHN0cnVjdCB2Y3B1X3ZteCk7DQogICAgICAgIHZjcHVf
-YWxpZ24gPSBfX2FsaWdub2ZfXyhzdHJ1Y3QgdmNwdV92bXgpOw0KICAgICAgICBpZiAoZW5hYmxl
-X3RkeCkgew0KICAgICAgICAgICAgICAgIHZjcHVfc2l6ZSA9IG1heF90KHVuc2lnbmVkLCB2Y3B1
-X3NpemUsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3QgdmNw
-dV90ZHgpKTsNCiAgICAgICAgICAgICAgICB2Y3B1X2FsaWduID0gbWF4X3QodW5zaWduZWQsIHZj
-cHVfYWxpZ24sDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fYWxpZ25vZl9fKHN0
-cnVjdCB2Y3B1X3RkeCkpOw0KICAgICAgICAgICAgICAgIGt2bV9jYXBzLnN1cHBvcnRlZF92bV90
-eXBlcyB8PSBCSVQoS1ZNX1g4Nl9URFhfVk0pOw0KICAgICAgICB9DQoNCkl0J3Mga2luZGEgdWds
-eSB0b28gSU1ITy4NCg0KU2luY2Ugd2UgYWxyZWFkeSBoYXZlIEB2bV9zaXplIGluIGt2bV94ODZf
-b3BzLCBob3cgYWJvdXQgYWxzbyBhZGRpbmcgdmNwdV9zaXplDQphbmQgdmNwdV9hbGlnbiB0byBp
-dD8gIFRoZW4gdGhleSBjYW4gYmUgdHJlYXRlZCBpbiB0aGUgc2FtZSB3YXkgYXMgdm1fc2l6ZSBm
-b3INClREWC4NCg0KVGhleSBhcmUgbm90IG5lZWRlZCBmb3IgU1ZNLCBidXQgaXQgZG9lc24ndCBo
-dXJ0IHRoYXQgbXVjaD8NCg0KQ29tcGlsZSB0ZXN0IG9ubHk6DQoNCkZyb20gYjNhNGIyOWNiZDM3
-MTE4OTg2MGIxMDM4MTMzNTQ4MTM5MTIwMTlmYSBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZy
-b206IEthaSBIdWFuZyA8a2FpLmh1YW5nQGludGVsLmNvbT4NCkRhdGU6IFdlZCwgMjEgTWF5IDIw
-MjUgMTA6MzI6MjggKzEyMDANClN1YmplY3Q6IFtQQVRDSF0gdmNwdSBzaXplL2FsaWduIGZvciBU
-RFgNCg0KU2lnbmVkLW9mZi1ieTogS2FpIEh1YW5nIDxrYWkuaHVhbmdAaW50ZWwuY29tPg0KLS0t
-DQogYXJjaC94ODYvaW5jbHVkZS9hc20va3ZtX2hvc3QuaCB8ICAyICsrDQogYXJjaC94ODYva3Zt
-L3N2bS9zdm0uYyAgICAgICAgICB8ICA2ICsrKystLQ0KIGFyY2gveDg2L2t2bS92bXgvbWFpbi5j
-ICAgICAgICAgfCAyMCArKystLS0tLS0tLS0tLS0tLS0tLQ0KIGFyY2gveDg2L2t2bS92bXgvdGR4
-LmMgICAgICAgICAgfCAgNyArKysrKysrDQogNCBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25z
-KCspLCAxOSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNt
-L2t2bV9ob3N0LmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oDQppbmRleCBlZDli
-NjU3ODVhMjQuLjdiOTZiNmIzMGE1YyAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNt
-L2t2bV9ob3N0LmgNCisrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2t2bV9ob3N0LmgNCkBAIC0x
-Njg0LDYgKzE2ODQsOCBAQCBzdHJ1Y3Qga3ZtX3g4Nl9vcHMgew0KICAgICAgICB2b2lkICgqdmNw
-dV9hZnRlcl9zZXRfY3B1aWQpKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSk7DQoNCiAgICAgICAgdW5z
-aWduZWQgaW50IHZtX3NpemU7DQorICAgICAgIHVuc2lnbmVkIGludCB2Y3B1X3NpemU7DQorICAg
-ICAgIHVuc2lnbmVkIGludCB2Y3B1X2FsaWduOw0KICAgICAgICBpbnQgKCp2bV9pbml0KShzdHJ1
-Y3Qga3ZtICprdm0pOw0KICAgICAgICB2b2lkICgqdm1fZGVzdHJveSkoc3RydWN0IGt2bSAqa3Zt
-KTsNCiAgICAgICAgdm9pZCAoKnZtX3ByZV9kZXN0cm95KShzdHJ1Y3Qga3ZtICprdm0pOw0KZGlm
-ZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9zdm0vc3ZtLmMgYi9hcmNoL3g4Ni9rdm0vc3ZtL3N2bS5j
-DQppbmRleCBkYzhlOWFmNDlmMTEuLjZhNDNkNjQwMjIxOSAxMDA2NDQNCi0tLSBhL2FyY2gveDg2
-L2t2bS9zdm0vc3ZtLmMNCisrKyBiL2FyY2gveDg2L2t2bS9zdm0vc3ZtLmMNCkBAIC01MDk0LDYg
-KzUwOTQsOSBAQCBzdGF0aWMgc3RydWN0IGt2bV94ODZfb3BzIHN2bV94ODZfb3BzIF9faW5pdGRh
-dGEgPSB7DQogICAgICAgIC52Y3B1X3Jlc2V0ID0gc3ZtX3ZjcHVfcmVzZXQsDQoNCiAgICAgICAg
-LnZtX3NpemUgPSBzaXplb2Yoc3RydWN0IGt2bV9zdm0pLA0KKyAgICAgICAudmNwdV9zaXplID0g
-c2l6ZW9mKHN0cnVjdCB2Y3B1X3N2bSksDQorICAgICAgIC52Y3B1X2FsaWduID0gX19hbGlnbm9m
-X18oc3RydWN0IHZjcHVfc3ZtKSwNCisNCiAgICAgICAgLnZtX2luaXQgPSBzdm1fdm1faW5pdCwN
-CiAgICAgICAgLnZtX2Rlc3Ryb3kgPSBzdm1fdm1fZGVzdHJveSwNCg0KQEAgLTU1NDMsOCArNTU0
-Niw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHN2bV9pbml0KHZvaWQpDQogICAgICAgICAqIENvbW1v
-biBLVk0gaW5pdGlhbGl6YXRpb24gX211c3RfIGNvbWUgbGFzdCwgYWZ0ZXIgdGhpcywgL2Rldi9r
-dm0gaXMNCiAgICAgICAgICogZXhwb3NlZCB0byB1c2Vyc3BhY2UhDQogICAgICAgICAqLw0KLSAg
-ICAgICByID0ga3ZtX2luaXQoc2l6ZW9mKHN0cnVjdCB2Y3B1X3N2bSksIF9fYWxpZ25vZl9fKHN0
-cnVjdCB2Y3B1X3N2bSksDQotICAgICAgICAgICAgICAgICAgICBUSElTX01PRFVMRSk7DQorICAg
-ICAgIHIgPSBrdm1faW5pdChzdm1feDg2X29wcy52Y3B1X3NpemUsIHN2bV94ODZfb3BzLnZjcHVf
-YWxpZ24sDQpUSElTX01PRFVMRSk7DQogICAgICAgIGlmIChyKQ0KICAgICAgICAgICAgICAgIGdv
-dG8gZXJyX2t2bV9pbml0Ow0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZteC9tYWluLmMg
-Yi9hcmNoL3g4Ni9rdm0vdm14L21haW4uYw0KaW5kZXggYzA2NGQ3OWI3NTUwLi44NmZkY2FjYTcw
-NjEgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0vdm14L21haW4uYw0KKysrIGIvYXJjaC94ODYv
-a3ZtL3ZteC9tYWluLmMNCkBAIC04NzksNiArODc5LDggQEAgc3RydWN0IGt2bV94ODZfb3BzIHZ0
-X3g4Nl9vcHMgX19pbml0ZGF0YSA9IHsNCiAgICAgICAgLmhhc19lbXVsYXRlZF9tc3IgPSB2dF9o
-YXNfZW11bGF0ZWRfbXNyLA0KDQogICAgICAgIC52bV9zaXplID0gc2l6ZW9mKHN0cnVjdCBrdm1f
-dm14KSwNCisgICAgICAgLnZjcHVfc2l6ZSA9IHNpemVvZihzdHJ1Y3QgdmNwdV92bXgpLA0KKyAg
-ICAgICAudmNwdV9hbGlnbiA9IF9fYWxpZ25vZl9fKHN0cnVjdCB2Y3B1X3ZteCksDQoNCiAgICAg
-ICAgLnZtX2luaXQgPSB2dF92bV9pbml0LA0KICAgICAgICAudm1fcHJlX2Rlc3Ryb3kgPSB2dF92
-bV9wcmVfZGVzdHJveSwNCkBAIC0xMDM1LDcgKzEwMzcsNiBAQCBtb2R1bGVfZXhpdCh2dF9leGl0
-KTsNCg0KIHN0YXRpYyBpbnQgX19pbml0IHZ0X2luaXQodm9pZCkNCiB7DQotICAgICAgIHVuc2ln
-bmVkIHZjcHVfc2l6ZSwgdmNwdV9hbGlnbjsNCiAgICAgICAgaW50IHI7DQoNCiAgICAgICAgciA9
-IHZteF9pbml0KCk7DQpAQCAtMTA0NywyNiArMTA0OCwxMSBAQCBzdGF0aWMgaW50IF9faW5pdCB2
-dF9pbml0KHZvaWQpDQogICAgICAgIGlmIChyKQ0KICAgICAgICAgICAgICAgIGdvdG8gZXJyX3Rk
-eF9icmluZ3VwOw0KDQotICAgICAgIC8qDQotICAgICAgICAqIFREWCBhbmQgVk1YIGhhdmUgZGlm
-ZmVyZW50IHZDUFUgc3RydWN0dXJlcy4gIENhbGN1bGF0ZSB0aGUNCi0gICAgICAgICogbWF4aW11
-bSBzaXplL2FsaWduIHNvIHRoYXQga3ZtX2luaXQoKSBjYW4gdXNlIHRoZSBsYXJnZXINCi0gICAg
-ICAgICogdmFsdWVzIHRvIGNyZWF0ZSB0aGUga21lbV92Y3B1X2NhY2hlLg0KLSAgICAgICAgKi8N
-Ci0gICAgICAgdmNwdV9zaXplID0gc2l6ZW9mKHN0cnVjdCB2Y3B1X3ZteCk7DQotICAgICAgIHZj
-cHVfYWxpZ24gPSBfX2FsaWdub2ZfXyhzdHJ1Y3QgdmNwdV92bXgpOw0KLSAgICAgICBpZiAoZW5h
-YmxlX3RkeCkgew0KLSAgICAgICAgICAgICAgIHZjcHVfc2l6ZSA9IG1heF90KHVuc2lnbmVkLCB2
-Y3B1X3NpemUsDQotICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3Qg
-dmNwdV90ZHgpKTsNCi0gICAgICAgICAgICAgICB2Y3B1X2FsaWduID0gbWF4X3QodW5zaWduZWQs
-IHZjcHVfYWxpZ24sDQotICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fYWxpZ25vZl9f
-KHN0cnVjdCB2Y3B1X3RkeCkpOw0KLSAgICAgICAgICAgICAgIGt2bV9jYXBzLnN1cHBvcnRlZF92
-bV90eXBlcyB8PSBCSVQoS1ZNX1g4Nl9URFhfVk0pOw0KLSAgICAgICB9DQotDQogICAgICAgIC8q
-DQogICAgICAgICAqIENvbW1vbiBLVk0gaW5pdGlhbGl6YXRpb24gX211c3RfIGNvbWUgbGFzdCwg
-YWZ0ZXIgdGhpcywgL2Rldi9rdm0gaXMNCiAgICAgICAgICogZXhwb3NlZCB0byB1c2Vyc3BhY2Uh
-DQogICAgICAgICAqLw0KLSAgICAgICByID0ga3ZtX2luaXQodmNwdV9zaXplLCB2Y3B1X2FsaWdu
-LCBUSElTX01PRFVMRSk7DQorICAgICAgIHIgPSBrdm1faW5pdCh2dF94ODZfb3BzLnZjcHVfc2l6
-ZSwgdnRfeDg2X29wcy52Y3B1X2FsaWduLCBUSElTX01PRFVMRSk7DQogICAgICAgIGlmIChyKQ0K
-ICAgICAgICAgICAgICAgIGdvdG8gZXJyX2t2bV9pbml0Ow0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYva3ZtL3ZteC90ZHguYyBiL2FyY2gveDg2L2t2bS92bXgvdGR4LmMNCmluZGV4IGI0OTg1YTY0
-NTAxYy4uZGM0NGNhYmY4OWU2IDEwMDY0NA0KLS0tIGEvYXJjaC94ODYva3ZtL3ZteC90ZHguYw0K
-KysrIGIvYXJjaC94ODYva3ZtL3ZteC90ZHguYw0KQEAgLTM1MjIsNiArMzUyMiw5IEBAIGludCBf
-X2luaXQgdGR4X2JyaW5ndXAodm9pZCkNCiAgICAgICAgICAgICAgICBlbmFibGVfdGR4ID0gMDsN
-CiAgICAgICAgfQ0KDQorICAgICAgIGlmIChlbmFibGVfdGR4KQ0KKyAgICAgICAgICAgICAgIGt2
-bV9jYXBzLnN1cHBvcnRlZF92bV90eXBlcyB8PSBCSVQoS1ZNX1g4Nl9URFhfVk0pOw0KKw0KICAg
-ICAgICByZXR1cm4gcjsNCg0KIHN1Y2Nlc3NfZGlzYWJsZV90ZHg6DQpAQCAtMzUzNyw2ICszNTQw
-LDEwIEBAIHZvaWQgX19pbml0IHRkeF9oYXJkd2FyZV9zZXR1cCh2b2lkKQ0KICAgICAgICAgKiBk
-aXNhYmxlZCBidXQgS1ZNIHdpbGwgY29udGludWUgbG9hZGluZyAoc2VlIHRkeF9icmluZ3VwKCkp
-Lg0KICAgICAgICAgKi8NCiAgICAgICAgdnRfeDg2X29wcy52bV9zaXplID0gbWF4X3QodW5zaWdu
-ZWQgaW50LCB2dF94ODZfb3BzLnZtX3NpemUsDQpzaXplb2Yoc3RydWN0IGt2bV90ZHgpKTsNCisg
-ICAgICAgdnRfeDg2X29wcy52Y3B1X3NpemUgPSBtYXhfdCh1bnNpZ25lZCBpbnQsIHZ0X3g4Nl9v
-cHMudmNwdV9zaXplLA0KKyAgICAgICAgICAgICAgICAgICAgICAgc2l6ZW9mKHN0cnVjdCB2Y3B1
-X3RkeCkpOw0KKyAgICAgICB2dF94ODZfb3BzLnZjcHVfYWxpZ24gPSBtYXhfdCh1bnNpZ25lZCBp
-bnQsIHZ0X3g4Nl9vcHMudmNwdV9hbGlnbiwNCisgICAgICAgICAgICAgICAgICAgICAgIF9fYWxp
-Z25vZl9fKHN0cnVjdCB2Y3B1X3RkeCkpOw0KIA0KICAgICAgICB2dF94ODZfb3BzLmxpbmtfZXh0
-ZXJuYWxfc3B0ID0gdGR4X3NlcHRfbGlua19wcml2YXRlX3NwdDsNCiAgICAgICAgdnRfeDg2X29w
-cy5zZXRfZXh0ZXJuYWxfc3B0ZSA9IHRkeF9zZXB0X3NldF9wcml2YXRlX3NwdGU7DQotLSANCjIu
-NDkuMA0KDQo=
+Add documentation for the ADXL313 accelerometer driver.
+
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+ Documentation/iio/adxl313.rst | 196 ++++++++++++++++++++++++++++++++++
+ Documentation/iio/index.rst   |   1 +
+ 2 files changed, 197 insertions(+)
+ create mode 100644 Documentation/iio/adxl313.rst
+
+diff --git a/Documentation/iio/adxl313.rst b/Documentation/iio/adxl313.rst
+new file mode 100644
+index 000000000000..8c4e2d141594
+--- /dev/null
++++ b/Documentation/iio/adxl313.rst
+@@ -0,0 +1,196 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===============
++ADXL313 driver
++===============
++
++This driver supports Analog Device's ADXL313 on SPI/I2C bus.
++
++1. Supported devices
++====================
++
++* `ADXL313 <https://www.analog.com/ADXL313>`_
++
++The ADXL313is a low noise density, low power, 3-axis accelerometer with
++selectable measurement ranges. The ADXL313 supports the ±0.5 g, ±1 g, ±2 g and
++±4 g ranges.
++
++2. Device attributes
++====================
++
++Accelerometer measurements are always provided.
++
++Temperature data are also provided. This data can be used to monitor the
++internal system temperature or to improve the temperature stability of the
++device via calibration.
++
++Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
++where X is the IIO index of the device. Under these folders reside a set of
++device files, depending on the characteristics and features of the hardware
++device in questions. These files are consistently generalized and documented in
++the IIO ABI documentation.
++
++The following tables show the adxl313 related device files, found in the
++specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
++
+++---------------------------------------------------+----------------------------------------------------------+
++| 3-Axis Accelerometer related device files         | Description                                              |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_scale                                    | Scale for the accelerometer channels.                    |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_x_calibbias                              | Calibration offset for the X-axis accelerometer channel. |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_x_raw                                    | Raw X-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_y_calibbias                              | y-axis acceleration offset correction                    |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_y_raw                                    | Raw Y-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_z_calibbias                              | Calibration offset for the Z-axis accelerometer channel. |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_z_raw                                    | Raw Z-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++
+++---------------------------------------+----------------------------------------------+
++| Miscellaneous device files            | Description                                  |
+++---------------------------------------+----------------------------------------------+
++| name                                  | Name of the IIO device.                      |
+++---------------------------------------+----------------------------------------------+
++| in_accel_sampling_frequency           | Currently selected sample rate.              |
+++---------------------------------------+----------------------------------------------+
++| in_accel_sampling_frequency_available | Available sampling frequency configurations. |
+++---------------------------------------+----------------------------------------------+
++
++Channels processed values
++-------------------------
++
++A channel value can be read from its _raw attribute. The value returned is the
++raw value as reported by the devices. To get the processed value of the channel,
++apply the following formula:
++
++.. code-block:: bash
++
++        processed value = (_raw + _offset) * _scale
++
++Where _offset and _scale are device attributes. If no _offset attribute is
++present, simply assume its value is 0.
++
++The ADXL313 driver offers data for a single types of channels, the table below
++shows the measurement units for the processed value, which are defined by the
++IIO framework:
++
+++-------------------------------------+---------------------------+
++| Channel type                        | Measurement unit          |
+++-------------------------------------+---------------------------+
++| Acceleration on X, Y, and Z axis    | Meters per Second squared |
+++-------------------------------------+---------------------------+
++
++Usage examples
++--------------
++
++Show device name:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat name
++        adxl313
++
++Show accelerometer channels value:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
++        2
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
++        -57
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
++        2
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
++        0.009576806
++
++- X-axis acceleration = in_accel_x_raw * in_accel_scale = 0.0191536 m/s^2
++- Y-axis acceleration = in_accel_y_raw * in_accel_scale = -0.5458779 m/s^2
++- Z-axis acceleration = in_accel_z_raw * in_accel_scale = 0.0191536 m/s^2
++
++Set calibration offset for accelerometer channels. Note, the calibration will be
++rounded according to the graduation of LSB units:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        0
++
++        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        48
++
++Set sampling frequency:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
++        100.000000
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency_available
++        6.250000 12.500000 25.000000 50.000000 100.000000 200.000000 400.000000 800.000000 1600.000000 3200.000000
++
++        root:/sys/bus/iio/devices/iio:device0> echo 400 > in_accel_sampling_frequency
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
++        400.000000
++
++3. Device buffers
++=================
++
++This driver supports IIO buffers.
++
++All devices support retrieving the raw acceleration measurements using buffers.
++
++Usage examples
++--------------
++
++Select channels for buffer read:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
++
++Set the number of samples to be stored in the buffer:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
++
++Enable buffer readings:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
++
++Obtain buffered data:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
++        ...
++        000000d0  01 fc 31 00 c7 ff 03 fc  31 00 c7 ff 04 fc 33 00  |..1.....1.....3.|
++        000000e0  c8 ff 03 fc 32 00 c5 ff  ff fc 32 00 c7 ff 0a fc  |....2.....2.....|
++        000000f0  30 00 c8 ff 06 fc 33 00  c7 ff 01 fc 2f 00 c8 ff  |0.....3...../...|
++        00000100  02 fc 32 00 c6 ff 04 fc  33 00 c8 ff 05 fc 33 00  |..2.....3.....3.|
++        00000110  ca ff 02 fc 31 00 c7 ff  02 fc 30 00 c9 ff 09 fc  |....1.....0.....|
++        00000120  35 00 c9 ff 08 fc 35 00  c8 ff 02 fc 31 00 c5 ff  |5.....5.....1...|
++        00000130  03 fc 32 00 c7 ff 04 fc  32 00 c7 ff 02 fc 31 00  |..2.....2.....1.|
++        00000140  c7 ff 08 fc 30 00 c7 ff  02 fc 32 00 c5 ff ff fc  |....0.....2.....|
++        00000150  31 00 c5 ff 04 fc 31 00  c8 ff 03 fc 32 00 c8 ff  |1.....1.....2...|
++        00000160  01 fc 31 00 c7 ff 05 fc  31 00 c3 ff 04 fc 31 00  |..1.....1.....1.|
++        00000170  c5 ff 04 fc 30 00 c7 ff  03 fc 31 00 c9 ff 03 fc  |....0.....1.....|
++        ...
++
++See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
++data is structured.
++
++4. IIO Interfacing Tools
++========================
++
++See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
++interfacing tools.
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+index 2d6afc5a8ed5..c106402a91f7 100644
+--- a/Documentation/iio/index.rst
++++ b/Documentation/iio/index.rst
+@@ -31,6 +31,7 @@ Industrial I/O Kernel Drivers
+    adis16475
+    adis16480
+    adis16550
++   adxl313
+    adxl380
+    bno055
+    ep93xx_adc
+-- 
+2.39.5
+
