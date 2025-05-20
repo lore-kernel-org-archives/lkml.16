@@ -1,184 +1,236 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2FC22B8B1
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A1D2686B1;
+	Tue, 20 May 2025 16:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757228; cv=none; b=IwKogueunjIXAWZH7NCHiWabsME/gsVq1tnyPP9jcyr8UTIeoLOoGDBVw0ZcQ+wIKIsppEQA8Phshi5DQk91+TkzjtNz+aF3vb2F0XECP+AFYPAUG8iwt0BtdYmT7XA9jB3iwnfT6NANAGAI8Ragk7UheSIGt1tb6qoVDucyxPY=
+	t=1747757241; cv=none; b=fLpGY8XK3hy6GBUsKpgn/4U8oPA0R5s4/EAatjZ+NqkQpq1Mn8LyVDDgWnq3Ph1C1TEVULFmePsgZqQv59Ap7+VG7+dOac4n2mrTWW/Ux8+e4qN/JpdymqbkrqMeYAns/iAvPvmL+i/b5C+5JjVbjzEq7mpNAQvqbDNNC6CYuhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757228; c=relaxed/simple;
-	bh=yWls8QfeA9fpnOgrHlH+dO1UEqW/dxD0zbRNGuCAoh0=;
+	s=arc-20240116; t=1747757241; c=relaxed/simple;
+	bh=lPPKaD6JIaa49k5hB+azXiSPpoE9hff6spghRgeoDPc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KcoVBRzlO6hjNd7gbV237Br17hzpJUALlj25UdkbrIH4iVZlMtruKdR7w36/s8Dx/FkrWfOiUFpdTCzs/fzeHDshniYjlSkllT4pZ/8Ci7I2jgqzq9JCEs8w1wE4Sa6ieb5vXukHRQeBUdKtHEBRFnHIHO4dmzIz0DCaroJiG9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQbBYW2u; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=OecATDFAT4EJZavb6WgLODw9DFppqJ9+4cHY2b4/5DR5J0EENSZaaxFj3pY/YQkkiG68uHBXOyedOK92BjPWJ/aJh6Q3EhPrab1iYJcD/FqRQxlUhKKX71Kew3XKnPNt4A3isTV7hEW72QfET0rRPS+Yq5rua0auLZhBvue2uog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXlHndhU; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQbBYW2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747757224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ybC/xEWalGJ0RhCZjvyrvjbHro7QE2FQq7vzTeEzDcM=;
-	b=UQbBYW2u/4yIQco5/AwfaZxL/4BGmOJlklfWyS2ORduuCa63/Zr0t3pvlDiCQl4vITwHUW
-	+tdYVpRpioygrcrEwv0GsHTX5lP/I7XnlOEiUC8kK5vkPrZDv1Qa1BCHeAfKgA9594vL/C
-	uYmqn/jxvcWorHmbCiuvqarLBG7gXNE=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-DnjjqL9nPxiRFt4iXGxjmA-1; Tue, 20 May 2025 12:07:03 -0400
-X-MC-Unique: DnjjqL9nPxiRFt4iXGxjmA-1
-X-Mimecast-MFC-AGG-ID: DnjjqL9nPxiRFt4iXGxjmA_1747757223
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-72e1e89b532so2782920a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:07:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXlHndhU"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-86a052d7897so390293539f.0;
+        Tue, 20 May 2025 09:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747757238; x=1748362038; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIlNhHqv93GvQWrqGB3ZPQbb3QiLFh5pTwSkFYPcNvg=;
+        b=XXlHndhU54C5oAYHlo/jsCDsq6q117SOyioyUiVKOFi0SpRwvqaey6qR2vcnUS1feU
+         O2/yC/bn1eP4llaGLGxmt+psJuvbkJX5LfwIE9Nu0N/zOI28RTElJJsQYN3BKd3tyNOE
+         FnfMBMT49RhIW30mivK7bpqoQJqYMuMxlo39hVMZAs0n1mMco5QHimG278qye/a6WTJc
+         NkpX13wEuE+0eSAWC3sVt9EU+sbuYhSYRC1jlb77MZtf4o6zJKx3zp2SdUrG60YUuOW+
+         aeJmuGC/88mds28W/C79CmpRV3sLJbYAi0UTXGLmvSSfIfjTOaGWUTxEgXCT/82tx8dv
+         WEiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747757222; x=1748362022;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ybC/xEWalGJ0RhCZjvyrvjbHro7QE2FQq7vzTeEzDcM=;
-        b=Yrf39cbp/aPHJzjx5nAfZV4xImp4LMDQ0CG2/5BL70koZOomKeXzi60eDihGeDozfh
-         zZdW7d7FFgVxo/g9C69i4lsybgRl/bYYFaX5TXftDnrIViRjmtP7s5ti4C2iY34tNXws
-         chSyPrXs/f7ZfZ4ctME02wkjhKCh4ghEWUBZGp+xhFaRYMhcQVKUWWhL4vGs5V1pFDvp
-         RSM6Ut7cTdzBh0DkhXIJkr4z5GDz4vGVGPL94tEo7kcqtY/i8UP8pQ+aR3m/FULahlUC
-         yYYesGWzSGpuV+xF3YTkt4CmaI/7opWQVu9Da6mmUH2qN6GSPbTzOXG8aiwsQ9SO/iMz
-         mGJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCOArohdYjwh0VqOm413Or88TU/oGuSfvJShgae5WbYGdlCqNX3cgTesrJrZmd/h8Mp2aHWRZZ3D3mrd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfC4vdbNIKqoczYSWW/6vNJpD627giKCUbVAmcU5+8V7X56ywM
-	bDOPqiGu8+ofg63/lz/xlALUJ5ddpD1Cm/SrTCTkcJTzkfx2lh6Llhr2tUGPjS+cVjGxFpe3xgN
-	Ml1Z1a08ZpsgwSLo+1P7mStuJqFyoWmvsL+RgITodqSI2ci8Fvjsm7uuC/bLpAENW/dLggCk4YR
-	9Gb8mKo7a4lP8dqgG1OaLL09240fo08F6/NhOXdaEm
-X-Gm-Gg: ASbGncvsmnJxpC8AVrFPBtIBXXfev+gjPlV+MvVI//vk3rldysptsU46573+mA9Xxvk
-	ns8eFo0klL3KNIrOuD4Kx3BDmq1gKrMjSfESqW/OVjZGzQLbCHI1zcNlH0jUrhhTKvIE=
-X-Received: by 2002:a05:6830:658c:b0:727:372e:600e with SMTP id 46e09a7af769-734f6b1a0cdmr10030125a34.14.1747757222614;
-        Tue, 20 May 2025 09:07:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1ly9i72+pYbDKe5Sks+06FCcNtf9xBC0iJ/paWfH1AFYyUe0Qn2IrAf+QY1o3hDZlmKZQmCGNGBhAxWj1dLY=
-X-Received: by 2002:a05:6830:658c:b0:727:372e:600e with SMTP id
- 46e09a7af769-734f6b1a0cdmr10030067a34.14.1747757222132; Tue, 20 May 2025
- 09:07:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747757238; x=1748362038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lIlNhHqv93GvQWrqGB3ZPQbb3QiLFh5pTwSkFYPcNvg=;
+        b=bCfwg5eJ8lkv6cUUkJb/ONjhgkJRkg0WZjYUC3/7FJkYk7Al1tfvu8jXRdFOJxMotQ
+         bQ61CrTH93UWddjTVD+3/XKMClZ7SlgdUEwvq7yfJjHY39StoBlf7Q4V1tMME6k++bIM
+         1KPrWRWIaDg6eFJ0dFFPnGgrT0zDYkkqqez8MpSgHeNl/dVp9BPoV7kHpc5KriVLzI2W
+         EqW76d0VTSFNPI/VNWOlgjmyfXmEFFVxxBD+/A3/um44Vrj1ikdRXwT9sE1Ss18hyzji
+         cCYGbHpCDpPWU4inC+y9eAv1cXFes7Tj1Ybll8vzC8RqsTjGjQLmCMqWkiHzHfZ25iyl
+         ZOdw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7qVBvCSPRA4qAYojBUtGm6t0O1hjvkfaSgaW7pZvXItb98mJsrArPdshEzMo9lPNBBUGvYII/rTBiQpLu@vger.kernel.org, AJvYcCXDpiSp7iFRZVwwuUD6F7OFbtY956MRRaEKioeWLi91TKh+tMwRI4zf3HpqkuLJTGyn0ZSrpFeV8f/6hXPl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEmm378Ip2EuitccIHngXAiVwy04hcLDB/uhUeZMKrVAe+IRVv
+	DvKAUKC9CV5E9vfAyFHG3mbtZAe008pyBLCKi8Y9UNnuEMGm2+cBfywmGSzPteIMJ8wKHcKGjiW
+	DQwK2SDxAQnpuU/l5wpoaOSj0cIzj8os=
+X-Gm-Gg: ASbGncvR0X+N6SGeoL/wPIqeD54FPtx4PUKayH668l+lHQgI+b2oHEh5aEVwoRUX3Mh
+	SmVjPKttEoHYOijYeUWDw8p5EsfNkWhc8Bo7Z8PjyNElPWzvWbAXzldi/9/sz/oxzQO2SPtRHWe
+	0/MgiMlEGpKd/sGL+AcRzI8v6aOZScDKJ4UWUVtLbbCSK+WFVd5wdIAo6kRPR5yB4=
+X-Google-Smtp-Source: AGHT+IFKjqLjdxKN137jXayMzSnHUHC3u3SlHWSxPDUnqzAx/6aHZ9mgDTFP7BV1sTPkWNww7XgabgYxTfCrrozjj6s=
+X-Received: by 2002:a05:6602:4186:b0:85c:c7f9:9a1c with SMTP id
+ ca18e2360f4ac-86a23283c78mr2385708639f.13.1747757237853; Tue, 20 May 2025
+ 09:07:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514134630.137621-1-sgarzare@redhat.com> <20250514134630.137621-5-sgarzare@redhat.com>
- <aCVHQ-LRqHeEVEAW@kernel.org>
-In-Reply-To: <aCVHQ-LRqHeEVEAW@kernel.org>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Tue, 20 May 2025 18:06:50 +0200
-X-Gm-Features: AX0GCFsTmlbq93tR0wE4C3RUpx9Z1D4kjkNOv4wLeycQRtYZ5zeOxDpm0iB8eVA
-Message-ID: <CAGxU2F5AsNY5mQPd=qajW1seFYHSYpB0Fa1iuR_f2QavtoB6sA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>, 
-	Jens Wiklander <jens.wiklander@linaro.org>, linux-integrity@vger.kernel.org, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>
+References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
+ <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
+ <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
+ <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
+ <aCYkk4Y7feltfp79@pollux> <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
+ <aCY42rgJC4sQ4tp4@pollux> <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+ <aCwqAGLLCC2ZLSBK@pollux>
+In-Reply-To: <aCwqAGLLCC2ZLSBK@pollux>
+From: Rob Clark <robdclark@gmail.com>
+Date: Tue, 20 May 2025 09:07:05 -0700
+X-Gm-Features: AX0GCFuJB8HyZPWl9Jg_jf4wMyFY6rVV8-Xlv-hqm4CZrVysg_4nnA4WGO4qoKc
+Message-ID: <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 15 May 2025 at 03:45, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+On Tue, May 20, 2025 at 12:06=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
 >
-> On Wed, May 14, 2025 at 03:46:30PM +0200, Stefano Garzarella wrote:
-> > From: Stefano Garzarella <sgarzare@redhat.com>
+> On Thu, May 15, 2025 at 12:56:38PM -0700, Rob Clark wrote:
+> > On Thu, May 15, 2025 at 11:56=E2=80=AFAM Danilo Krummrich <dakr@kernel.=
+org> wrote:
+> > >
+> > > On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
+> > > > On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@ker=
+nel.org> wrote:
+> > > > >
+> > > > > (Cc: Boris)
+> > > > >
+> > > > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
+> > > > > > For some context, other drivers have the concept of a "synchron=
+ous"
+> > > > > > VM_BIND ioctl which completes immediately, and drivers implemen=
+t it by
+> > > > > > waiting for the whole thing to finish before returning.
+> > > > >
+> > > > > Nouveau implements sync by issuing a normal async VM_BIND and sub=
+sequently
+> > > > > waits for the out-fence synchronously.
+> > > >
+> > > > As Connor mentioned, we'd prefer it to be async rather than blockin=
+g,
+> > > > in normal cases, otherwise with drm native context for using native
+> > > > UMD in guest VM, you'd be blocking the single host/VMM virglrender
+> > > > thread.
+> > > >
+> > > > The key is we want to keep it async in the normal cases, and not ha=
+ve
+> > > > weird edge case CTS tests blow up from being _too_ async ;-)
+> > >
+> > > I really wonder why they don't blow up in Nouveau, which also support=
+ full
+> > > asynchronous VM_BIND. Mind sharing which tests blow up? :)
 > >
-> > This driver does not support interrupts, and receiving the response is
-> > synchronous with sending the command.
-> >
-> > Enable synchronous send() with TPM_CHIP_FLAG_SYNC, which implies that
-> > ->send() already fills the provided buffer with a response, and ->recv()
-> > is not implemented.
-> >
-> > Keep using the same pre-allocated buffer to avoid having to allocate
-> > it for each command. We need the buffer to have the header required by
-> > the SVSM protocol and the command contiguous in memory.
-> >
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> > v5:
-> > - changed order and parameter names to match tpm_try_transmit() [Jarkko]
-> > v4:
-> > - reworked commit description [Jarkko]
-> > ---
-> >  drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
-> >  1 file changed, 11 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> > index 0847cbf450b4..f5ba0f64850b 100644
-> > --- a/drivers/char/tpm/tpm_svsm.c
-> > +++ b/drivers/char/tpm/tpm_svsm.c
-> > @@ -26,37 +26,31 @@ struct tpm_svsm_priv {
-> >  };
-> >
-> >  static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> > -                      size_t len)
-> > +                      size_t cmd_len)
-> >  {
-> >       struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> >       int ret;
-> >
-> > -     ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
-> > +     ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
-> >       if (ret)
-> >               return ret;
-> >
-> >       /*
-> >        * The SVSM call uses the same buffer for the command and for the
-> > -      * response, so after this call, the buffer will contain the response
-> > -      * that can be used by .recv() op.
-> > +      * response, so after this call, the buffer will contain the response.
-> > +      *
-> > +      * Note: we have to use an internal buffer because the device in SVSM
-> > +      * expects the svsm_vtpm header + data to be physically contiguous.
-> >        */
-> > -     return snp_svsm_vtpm_send_command(priv->buffer);
-> > -}
-> > -
-> > -static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-> > -{
-> > -     struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> > +     ret = snp_svsm_vtpm_send_command(priv->buffer);
-> > +     if (ret)
-> > +             return ret;
-> >
-> > -     /*
-> > -      * The internal buffer contains the response after we send the command
-> > -      * to SVSM.
-> > -      */
-> > -     return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-> > +     return svsm_vtpm_cmd_response_parse(priv->buffer, buf, bufsiz);
-> >  }
-> >
-> >  static struct tpm_class_ops tpm_chip_ops = {
-> >       .flags = TPM_OPS_AUTO_STARTUP,
-> > -     .recv = tpm_svsm_recv,
-> >       .send = tpm_svsm_send,
-> >  };
-> >
-> > @@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
-> >
-> >       dev_set_drvdata(&chip->dev, priv);
-> >
-> > +     chip->flags |= TPM_CHIP_FLAG_SYNC;
-> >       err = tpm2_probe(chip);
-> >       if (err)
-> >               return err;
-> > --
-> > 2.49.0
-> >
-> >
+> > Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buff=
+er_size_2_24,
 >
-> I can pick this for 6.16.
+> The test above is part of the smoke testing I do for nouveau, but I haven=
+'t seen
+> such issues yet for nouveau.
 
-Great, thanks!
+nouveau is probably not using async binds for everything?  Or maybe
+I'm just pointing to the wrong test.
 
-Stefano
+> > but I might be mixing that up, I'd have to back out this patch and see
+> > where things blow up, which would take many hours.
+>
+> Well, you said that you never had this issue with "real" workloads, but o=
+nly
+> with VK CTS, so I really think we should know what we are trying to fix h=
+ere.
+>
+> We can't just add new generic infrastructure without reasonable and *well
+> understood* justification.
 
+What is not well understood about this?  We need to pre-allocate
+memory that we likely don't need for pagetables.
+
+In the worst case, a large # of async PAGE_SIZE binds, you end up
+needing to pre-allocate 3 pgtable pages (4 lvl pgtable) per one page
+of mapping.  Queue up enough of those and you can explode your memory
+usage.
+
+> > There definitely was one where I was seeing >5k VM_BIND jobs pile up,
+> > so absolutely throttling like this is needed.
+>
+> I still don't understand why the kernel must throttle this? If userspace =
+uses
+> async VM_BIND, it obviously can't spam the kernel infinitely without runn=
+ing
+> into an OOM case.
+
+It is a valid question about whether the kernel or userspace should be
+the one to do the throttling.
+
+I went for doing it in the kernel because the kernel has better
+knowledge of how much it needs to pre-allocate.
+
+(There is also the side point, that this pre-allocated memory is not
+charged to the calling process from a PoV of memory accounting.  So
+with that in mind it seems like a good idea for the kernel to throttle
+memory usage.)
+
+> But let's assume we agree that we want to avoid that userspace can ever O=
+OM itself
+> through async VM_BIND, then the proposed solution seems wrong:
+>
+> Do we really want the driver developer to set an arbitrary boundary of a =
+number
+> of jobs that can be submitted before *async* VM_BIND blocks and becomes
+> semi-sync?
+>
+> How do we choose this number of jobs? A very small number to be safe, whi=
+ch
+> scales badly on powerful machines? A large number that scales well on pow=
+erful
+> machines, but OOMs on weaker ones?
+
+The way I am using it in msm, the credit amount and limit are in units
+of pre-allocated pages in-flight.  I set the enqueue_credit_limit to
+1024 pages, once there are jobs queued up exceeding that limit, they
+start blocking.
+
+The number of _jobs_ is irrelevant, it is # of pre-alloc'd pages in flight.
+
+> I really think, this isn't the correct solution, but more a workaround.
+>
+> > Part of the VM_BIND for msm series adds some tracepoints for amount of
+> > memory preallocated vs used for each job.  That plus scheduler
+> > tracepoints should let you see how much memory is tied up in
+> > prealloc'd pgtables.  You might not be noticing only because you are
+> > running on a big desktop with lots of RAM ;-)
+> >
+> > > > > > But this
+> > > > > > doesn't work for native context, where everything has to be
+> > > > > > asynchronous, so we're trying a new approach where we instead s=
+ubmit
+> > > > > > an asynchronous bind for "normal" (non-sparse/driver internal)
+> > > > > > allocations and only attach its out-fence to the in-fence of
+> > > > > > subsequent submits to other queues.
+> > > > >
+> > > > > This is what nouveau does and I think other drivers like Xe and p=
+anthor do this
+> > > > > as well.
+> > > >
+> > > > No one has added native context support for these drivers yet
+> > >
+> > > Huh? What exactly do you mean with "native context" then?
+> >
+> > It is a way to use native usermode driver in a guest VM, by remoting
+> > at the UAPI level, as opposed to the vk or gl API level.  You can
+> > generally get equal to native performance, but the guest/host boundary
+> > strongly encourages asynchronous to hide the guest->host latency.
+>
+> For the context we're discussing this isn't different to other drivers su=
+pporing
+> async VM_BIND utilizing it from the host, rather than from a guest.
+>
+> So, my original statement about nouveau, Xe, panthor doing the same thing
+> without running into trouble should be valid.
+
+Probably the difference is that we don't do any _synchronous_ binds.
+And that is partially motivated by the virtual machine case.
+
+BR,
+-R
