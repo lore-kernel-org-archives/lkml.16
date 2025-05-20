@@ -1,97 +1,133 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7BE257451;
-	Tue, 20 May 2025 03:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77157256C60;
+	Tue, 20 May 2025 03:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711214; cv=none; b=YH7g6Z506Uf+U7XnJMq0YtD2iVoXiyDgRi18mPvh+B+Gz3Bf9hZZgA/8FnCZX3WgVgpXAtjwJZu6iOwBY1XEU9SWukZsoKaK4TiV523eRUd8JLFNvuzjQFklRTP/69zpMiLEHlPMLbS6n1vk8wqYtH5YWnlUCCQvHExs+klK/s4=
+	t=1747711401; cv=none; b=TAYTZmnQmmNC5EBW4EXGVgfe3UDFiSNbW6YFN5HF1y4kNJrZn9QKak5JkTY1vBXzeyBb0Xz4Iuu7n9Jt5chRF7PHTGvDMKdOwK4jgaevMXYuko/Lny3JlAVELCrXMS5ZdxSKTdrNMY0hbkKeviBMVKF8JAYo/txElHZv6y+AVOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747711214; c=relaxed/simple;
-	bh=VKH7KRryI4ktofS9C7UuxsXcayJGKdrDWZTcnz1iCV8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fTHXDvtaz2kmz+pJdOpf3zvxjhukFkPFNxOv+V0MlQVgqS5YSVhvq//VSpKzb9ZEBTijDFqR4IZFTWRTGFdZoZJWg/kgT6/NsKhQiuY3sgwIS2HNhBVpD45OgETccWKLo8dQMqrM8Ozeg6y64Xf/L4gWkCM+fpkbqPaXptVKtCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=VOg79n2N; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1747711401; c=relaxed/simple;
+	bh=085HP7XPilFAqMffUta5x9Z+kE/97G6V4mggr3IBiuE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VS2ZcYYG5bVMsg5OUGd6d4soyxsprfibI6/pBUbfhMFUkHI8+i1DqGWzSCsXIObv3G7qxUnbONA8oztlreNQQINPZb6JIOv28UTyYuyvJC3FWg3We2JzTm/A7MWZLmgnd5dJDmjZyyvrSQm2zTWEAy5RKWZhqCOZc9xSVwICGzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bL1jQTW2; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="VOg79n2N"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54K3JglR61991624, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1747711182; bh=VKH7KRryI4ktofS9C7UuxsXcayJGKdrDWZTcnz1iCV8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=VOg79n2NWp3+9ktcKp9gtbrYjJUIk53irYbowRSnVHj9Ux8pIM2POAFnWSdpPZ8He
-	 QwbfGXyJoVDyWu2aMSLTfTyCLTeaCpChYYUQjfr2c8+VRAC1B3WoL9TEbbDWzT15Pr
-	 AIWgLgP0UnfM2ymQUE2ymcgcj6V1vup9/PfnhCUVd6VwdoNkZKkxb0TrT6kB3beEm/
-	 RKFX2pIcOqk96VElM0nQ06TPkV2UlmQd/kzhCUGWlY+krnYzQX5IQkBu6+xs8yS1Lc
-	 asJXJOxgPng6U42lBO2qp6HzQ9zOuebgyRcAS+SAm4kyur6U/3Hu8r2M1IZPnmC9aX
-	 FmDhcEXtd+Slg==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54K3JglR61991624
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 11:19:42 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 20 May 2025 11:19:42 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 20 May 2025 11:19:42 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 20 May 2025 11:19:41 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>, Joe Damato <jdamato@fastly.com>
-Subject: RE: [PATCH net-next v2] rtase: Use min() instead of min_t()
-Thread-Topic: [PATCH net-next v2] rtase: Use min() instead of min_t()
-Thread-Index: AQHbtawdSIC/HJstr0OxTEOUNg41/rPaAlkAgAAn8wCAAAG8AIAA1A0g
-Date: Tue, 20 May 2025 03:19:41 +0000
-Message-ID: <73c27a5a4c814a5a9cdf6319314f8480@realtek.com>
-References: <20250425063429.29742-1-justinlai0215@realtek.com>
-	<bb78d791abe34d9cbac30e75e7bec373@realtek.com>
-	<20250519153218.0036db7f@kernel.org> <20250519153830.112e1e0a@kernel.org>
-In-Reply-To: <20250519153830.112e1e0a@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bL1jQTW2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747711400; x=1779247400;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=085HP7XPilFAqMffUta5x9Z+kE/97G6V4mggr3IBiuE=;
+  b=bL1jQTW2vhUE2HKlb2xdFajj3IPsog84DX27urgr/agM7T0BENhezVOV
+   Ox+l6+8HPUYEtajj71DX/+HcuCZImmRrMAr7VO0K8u5fpZPbPLyB24JVg
+   N/DczRZXtqFGcj5woaCuQgMBLIJkUWia0+fOKFDkDJgoL3Rk+QpAG4kk5
+   m3hlnmPEK8SkXmEefsLYlM9XgRcUP0AyYtN4+FKgFTCpH9FIiyQbehv9R
+   l6AP44xrheh5H8Rp0E4nBChAVCBjfm0j/zJXaZnLAUtDrBNwqdzfmMbvV
+   Kkl8dpOw531I9orqKNCw3KXKmS76UHF5zGKZmiMaUJqdSw1iuLcoqmbLi
+   g==;
+X-CSE-ConnectionGUID: efESiNA4RXiwhkluJ2gB1g==
+X-CSE-MsgGUID: DUNidpCcSkqHdfVczSmbxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49765905"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49765905"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:23:17 -0700
+X-CSE-ConnectionGUID: 4BCxmwICTFGDp8jqz2FZ8w==
+X-CSE-MsgGUID: 0tKkvGx6SbOIwqDZv62iGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139289141"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 20:23:15 -0700
+Message-ID: <bcc3f629-7ada-4ec0-bcb1-92760583c9c1@linux.intel.com>
+Date: Mon, 19 May 2025 20:23:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 12/16] PCI/AER: Make all pci_print_aer() log levels
+ depend on error type
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-13-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-13-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> On Mon, 19 May 2025 15:32:18 -0700 Jakub Kicinski wrote:
-> > On Mon, 19 May 2025 12:16:11 +0000 Justin Lai wrote:
-> > > I apologize for the interruption, I would like to ask why this patch
-> > > is rejected on patchwork.
-> >
-> > Hm, unclear, sorry about that.
->=20
-> It doesn't apply, perhaps that's why? Please rebase and repost.
 
-Hi Jakub,
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>
+> Some existing logs in pci_print_aer() log with error severity by default.
+> Convert them to depend on error type (consistent with rest of AER logging).
+>
+> Link: https://lore.kernel.org/r/20250321015806.954866-3-pandoh@google.com
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-Thank you for your reply. I will rebase and repost.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Thanks,
-Justin
+>   drivers/pci/pcie/aer.c | 16 +++++++++++-----
+>   1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 73b03a195b14..06a7dda20846 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -788,15 +788,21 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+>   	agent = AER_GET_AGENT(aer_severity, status);
+>   
+> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> +	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
+> +		   status, mask);
+>   	__aer_print_error(dev, &info);
+> -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+> -		aer_error_layer[layer], aer_agent_string[agent]);
+> +	aer_printk(info.level, dev, "aer_layer=%s, aer_agent=%s\n",
+> +		   aer_error_layer[layer], aer_agent_string[agent]);
+>   
+>   	if (aer_severity != AER_CORRECTABLE)
+> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
+> -			aer->uncor_severity);
+> +		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
+> +			   aer->uncor_severity);
+>   
+> +	/*
+> +	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
+> +	 * tlp_header_valid is set, and info.level is always KERN_ERR in
+> +	 * that case.
+> +	 */
+>   	if (tlp_header_valid)
+>   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>   }
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
