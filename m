@@ -1,141 +1,130 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66130B644;
-	Tue, 20 May 2025 00:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A801B042C;
+	Tue, 20 May 2025 00:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747699737; cv=none; b=ZcUwjf+e8OlUUjvcfWy00hwBhnOQBngAOHmxf4cMhnrSo62OtUYVB+yIN0PeV+H4o2JrKR+pHMRnjYFrlzpwap5TccWQ2OB+fPob4N7Q+KX/d8UkQMtrhfXCVoTadVfStBbW0RFoE8kezwI9tUPjMQT4QlHLN4NdsOLiFDYeCS0=
+	t=1747699831; cv=none; b=QxdxdX6/9wncWYMbe0uZZ9bK0+wDQNCSkAjt4UlBA5WBbZHxXedT5hLU/mPzdo25HdvXRSYgAuSwG5J8RVBcnWWCe2QnGzBostiAVKXFAyXvDOxexX0/A1GE1rjI7hRm515p6QcEdGKtkRFtOJ4XD5DFB9tYM3zR6V3qnvNul3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747699737; c=relaxed/simple;
-	bh=rQJND3zRGI/bhZQWN9vYbpanxR/d2/v+qroESA4G6EQ=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=U4dD8tekkul+b30iwGe/3KJQX/zz+t6Pd0gQNTgyr8hvcpA4Aod6B6t2QrxPT1fNTQ6kG95bOPxJnT6vkGg2uzxgwALwGUZOmLWXE6HguOZqT99J4oIyP69ynhii+a6cKPRD413+2Q7a/n4e6FbMLo5YIraNGR8nheYS/91HKNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnO8P6ZZ; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747699831; c=relaxed/simple;
+	bh=fpW1z6JAwhT/LbCvwhlOwFt1f2dC69euiK/l3k6G1VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAwXoo998dkoaS5VFSKpJe0hi3zifLCkvqC934p9Ap03MJwwF80TSu9CFpu/TcPiyOOwbp6nbAAPGEC3MZYV6+HQf1/tcpl9ATCBQ1mtZSzVqfzuHewifwShvC7l98kyMT+5ZhoxYvEP9pkd9XSREWjztR5nkt4AxqsDHjS+324=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NASBEsxb; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnO8P6ZZ"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso4560162b3a.0;
-        Mon, 19 May 2025 17:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747699735; x=1748304535; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g+I/XtX5UL4QjFc3rQ1Mg+38x+bvcwlpWsXePaJ4Tl0=;
-        b=nnO8P6ZZHV4cgg9XDq4HN5phomdxsAzEP00s4G7NXPasA04EEGeTble86bVy9Bs8Pe
-         CRhmzVXUtkcWZ6xDXZXaKcbEWlBXnym0zo89pSxnGWb2pgIjBQIHU0SF2eVUbMbTfP6Q
-         r+Azupm2S5RNziaPZ3xRHvD7YoteylHQsevpo72dqhvsKMqZScEcdKBBjGRC+KYw/CJE
-         BI1tFsVMCMSqXb8NypDbzl78wINBIRWS6CSivgjdMBBx6k3R4oAWtK4wqMUt7gdmUgvO
-         yI8l2mXq8YP4/BlU1NToWBPfbaZg1iDFLmxXATcWG/hQBeWcJvEkcu4GF3ZykkE700/C
-         0P7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747699735; x=1748304535;
-        h=content-transfer-encoding:cc:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g+I/XtX5UL4QjFc3rQ1Mg+38x+bvcwlpWsXePaJ4Tl0=;
-        b=Gy+8lCXvxRHaqYmUrgS4/AJKU963DgWaKYtNgFsgnADwBDQlyScgWMaiYGbvU36n+F
-         X+ofD521TF8rJOU0284FwwjHrMUZq1erXtwjBhRpkuLg53kby+wruGAyQhxNoAN/0AvZ
-         /Wda/I+hKKCpBTmz0wvQn2oKm06TTgKQgRRxGjLzsQNb5mUxCZ/CRP5XGP3V5lnNRY4w
-         j98Qu/SID5TTr7TBQ+FNHrSdZV27r2K8pjbCPaHMssc7u80b06cTSaA7l4aUMXOQetgj
-         QlwtyJ/MwYLgPnx1AWOWfZHKHTYA3d/PcKeBhMsyyYOIOnpQl1hvMQqGrZpawAgYu1rb
-         k4gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFJEN+fhp8mf4OdkrjILhQkVexuyX6k5psG2OZqZqLWGcjtKK2NAHpr8Io8FGyDBsG69MTbI5d9PI4vhTP@vger.kernel.org, AJvYcCVHd9K4pcbSEhWMxfSaNtv6vkHIljWbpkcYcP3aieMcNfvS9eDpepFQApQ3/YKFMpKYhBycqvo7zWg=@vger.kernel.org, AJvYcCWTowBh3ayLf5PHgUWzWXzmDMP5abQ2dMlMins0mhMWRL/xXT6nSEsMiQjonivRZSz9Dyao7bVzZqDf9G/h@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS2MvBNqCyjwgEsp3reR7qTBnrxs4SphiO1tXf0pIMk3s5n2SG
-	h3eKHnNLDpQxOVdEJGT0m04ueFeQ7zEPAD1s5Ldv7mmrLlwVR/yJWZ8V
-X-Gm-Gg: ASbGncuazji+rN6FAZ5Tk125hvoAyjDxzUnxaxAMcYM1G7KuxMPM6peLrLTX3i6e6tB
-	UHdqDq7Rltc5P+13utUjc+axEexJigeeqMx19Zn3JmvO0IPdZqNzxwN2DjbvDkwiWMXQbd2x/Gb
-	iNgIFYMUCnvfUrgzKIRocE4W03ZsOFTBxAkz2qqJNQnHT34/hTc7/Wai54C114QS3WnOZQO0dWz
-	xaXGWRWiMpi76Hr3k6Ayprw3ICFVBznzaBZALno3nix8ddgeAnrYZBz2iFgri3S7lMcycK/UMO+
-	fMm5B1bTeIKkoMSXl71rhh5aLZIqZKwIzBsvGx/U00OhVyvS1pR+HC8Hi/P6YcEfNF9cBi+nEMS
-	pZwLViUiv/je/L2p37+iz7g==
-X-Google-Smtp-Source: AGHT+IHlTR91hd6ZzG26vEXQSvwMiQD8RFbYpAkHs1v0OVNua0WTHI4LzdtzC330roI18jGKppfCJg==
-X-Received: by 2002:a05:6a00:990:b0:73f:e8c:1aac with SMTP id d2e1a72fcca58-742acc8e959mr19480802b3a.2.1747699735481;
-        Mon, 19 May 2025 17:08:55 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96dfafbsm6798967b3a.4.2025.05.19.17.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 17:08:55 -0700 (PDT)
-Message-ID: <d9d0ff79-a243-456e-a7ed-eaca69d2eca7@gmail.com>
-Date: Tue, 20 May 2025 09:08:51 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NASBEsxb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747699828; x=1779235828;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fpW1z6JAwhT/LbCvwhlOwFt1f2dC69euiK/l3k6G1VE=;
+  b=NASBEsxbYEI6wy4mfvS7Ciwq8qEC6zrL/hMnRwwfwedy3VsctmA+u34D
+   xy55ayb0pi5RIjsQHR6vkICnSLzux0KldByBBQsXEADqvMgYv/Nhuc2q1
+   iQ/Wl9JQNfrWfzEAnFo2YzZIcCuftnhYpBS0zKHrHPOz5kT4OE37QWYZx
+   MX773lIKiRhAGgry4zM6ktxjy7Q+ih60R7CPiVlIFAAeoYiDOyuxiPmfv
+   5MwamvyQekf5IR8S6+IcgiIBbN5FLrWzZbr1Rc0XsRhm8vxzk1t2iNO4K
+   IYOl5zT2zssLJGv5B/0VzHN1QqMsYilAN6RZJ+sKHnSiBJQUG4/dyHGEl
+   A==;
+X-CSE-ConnectionGUID: 5TZX00j4Qd+E+V+vip8e6w==
+X-CSE-MsgGUID: GvzoYnDORhqcGlH398XCKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61008770"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="61008770"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 17:10:27 -0700
+X-CSE-ConnectionGUID: xb/wyjMtTACFqV1nNAi5Hw==
+X-CSE-MsgGUID: KuZYUgR7Rx+HLRDNJFgMHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139425255"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 19 May 2025 17:10:25 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHAYp-000M0a-1M;
+	Tue, 20 May 2025 00:10:23 +0000
+Date: Tue, 20 May 2025 08:09:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, adrian.hunter@intel.com,
+	vigneshr@ti.com, ulf.hansson@linaro.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] mmc: sdhci-omap: Add error handling for
+ sdhci_runtime_suspend_host()
+Message-ID: <202505200727.1k4LfYCQ-lkp@intel.com>
+References: <20250519125143.2331-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-From: Akira Yokosawa <akiyks@gmail.com>
-Subject: [PATCH] Makefile: Get back to kernel-doc.pl as KERNELDOC default
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Randy Dunlap
- <rdunlap@infradead.org>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519125143.2331-1-vulab@iscas.ac.cn>
 
-Recent conversion of kernel-doc into python has resulted in a couple of
-glitches in "make htmldocs" [1, 2, 3].
+Hi Wentao,
 
-This is because the python version has not gone through extensive tests
-such as fault-injection of erroneous kernel-doc comments and/or
-kernel-doc:: directives.
+kernel test robot noticed the following build errors:
 
-Python kernel-doc as it is does not meet the usual expectation of
-backward-compatibility with its perl predecessor.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Get back to the perl version as KENRELDOC default for now.
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/mmc-sdhci-omap-Add-error-handling-for-sdhci_runtime_suspend_host/20250519-205341
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250519125143.2331-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] mmc: sdhci-omap: Add error handling for sdhci_runtime_suspend_host()
+config: sparc-randconfig-001-20250520 (https://download.01.org/0day-ci/archive/20250520/202505200727.1k4LfYCQ-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505200727.1k4LfYCQ-lkp@intel.com/reproduce)
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Link: https://lore.kernel.org/20250508182504.418552ef@canb.auug.org.au/ [1]
-Link: https://lore.kernel.org/20250516193436.09bdf8cc@canb.auug.org.au/ [2]
-Link: https://lore.kernel.org/20250516200350.63be46cd@canb.auug.org.au/ [3]
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
-This one-liner is just a workaround, hence no Fixes: or Closes: tags.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505200727.1k4LfYCQ-lkp@intel.com/
 
-Jon, it looks like we are running out of time for the upcoming merge window.
-Let's take another development cycle for stabilizing kernel-doc in python.
+All errors (new ones prefixed by >>):
 
-Additional notes on glitches reported so far.
+   drivers/mmc/host/sdhci-omap.c: In function 'sdhci_omap_runtime_suspend':
+>> drivers/mmc/host/sdhci-omap.c:1449:6: error: void value not ignored as it ought to be
+     ret = sdhci_omap_context_save(omap_host);
+         ^
 
-* Depending on the version of Sphinx, the crashing message can be useless
-  for finding out what is going on [1, 2].
-  With up-to-date Sphinx, the message even suggests a *bug* somewhere in
-  Sphinx and includes a traceback to be reported as an issue at upstream
-  Sphinx [4].
 
-* The python version of kernel-doc fails to produce warnings on innocuous
-  issues under Sphinx runs [3], which have been available with the perl
-  version.
+vim +1449 drivers/mmc/host/sdhci-omap.c
 
-[4]: https://lore.kernel.org/879b49f5-7350-48e8-a84e-2c580a5b0ca8@gmail.com/
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  1435	
+  1436	static int __maybe_unused sdhci_omap_runtime_suspend(struct device *dev)
+  1437	{
+  1438		struct sdhci_host *host = dev_get_drvdata(dev);
+  1439		struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+  1440		struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+  1441		int ret;
+  1442	
+  1443		if (host->tuning_mode != SDHCI_TUNING_MODE_3)
+  1444			mmc_retune_needed(host->mmc);
+  1445	
+  1446		if (omap_host->con != -EINVAL)
+  1447			sdhci_runtime_suspend_host(host);
+  1448	
+> 1449		ret = sdhci_omap_context_save(omap_host);
+  1450		if (ret)
+  1451			return ret;
+  1452	
+  1453		pinctrl_pm_select_idle_state(dev);
+  1454	
+  1455		return 0;
+  1456	}
+  1457	
 
-diff --git a/Makefile b/Makefile
-index 2a05988740a9..c2c9f5af4986 100644
---- a/Makefile
-+++ b/Makefile
-@@ -460,7 +460,7 @@ HOSTPKG_CONFIG	= pkg-config
- 
- # the KERNELDOC macro needs to be exported, as scripts/Makefile.build
- # has a logic to call it
--KERNELDOC       = $(srctree)/scripts/kernel-doc.py
-+KERNELDOC       = $(srctree)/scripts/kernel-doc.pl
- export KERNELDOC
- 
- KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
-
-base-commit: a556bd882b9482f1b7ea00fcf07f9bc169f404c8
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
