@@ -1,121 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0332586EB;
-	Tue, 20 May 2025 18:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487B21FECC3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747764387; cv=none; b=UgKeh3UtPi25UpQU/4OzCKbc3jevgDnqMJ+QZ7zjEEeF4BDbng7XXV8AX7kwKRGNBTL/zLn6RuRecr1R0kdo4s7roFUfO09Y09QxR5J3yzj2WnLkri714tbQvs87L/kM1D9ft4CIcOpvfnftPS8ed0X/V6OeV2M/I5D5B2wCW5o=
+	t=1747764547; cv=none; b=nR4JJjX3DKjZnOQSse8fbyWKgwzp0UP1rzqHGr43HiZdzxAB2qFWa7lj7Edrqr8uvtvqdS5SMdBmQ4CTFdCaRTdIsAfvP6vTbczMNfPN7arJRFad/Ejt2dwfFScOlbXhLecDlOvfJJvW3MEy/LCuSRgicJVyCz1txxG/h/1S6mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747764387; c=relaxed/simple;
-	bh=7rPhaF4+Cy/tYmSEt2WlwqErAtQEjfZXAo1efvCcBdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qn9EXbEo8TNFR3skIQH9+dGPHBFH5GNPTevM1z11Epn2k2H0gce7WnvJfYh6/sfRwcfo/QN7kv90SCeIXFg2i2eQgasZ3+HSK6rj9L+YFzXjbFEz/7Ll1bdZzgb5BvxLoJ1ZQDwQoriUvmnOhGlPlvKnGL1nqn/PGNhHc9W4rXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ck9EQlqQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747764547; c=relaxed/simple;
+	bh=BaHb9YepuQP9xeHP9Bjcl5awLxF3SDbjBMq2/oSPwMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RU4iTStK7TXMYcCeViobr3VfBB2stHEfJ6ckWVT2fZsrF15CdRXe6C7VD8N34KWn66B3hs1z3rh1HfaaO5MPSSRHD+25K9SERkvprI+9s9YA4gjL7kvznX9z+eiAF7QFBUwiMskwAZyYFO28SfSXcZPLG+nSKJZ+kDsieq9gbFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ZR0u9wVD; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ck9EQlqQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DB6C4CEE9;
-	Tue, 20 May 2025 18:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747764387;
-	bh=7rPhaF4+Cy/tYmSEt2WlwqErAtQEjfZXAo1efvCcBdw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ck9EQlqQUkqaFVmien8B6+8LGaXz6+lbxOqj1p55mWngr6s2aepPnSG7MaqbzF2iV
-	 ISZWCaEohp/60hUy5oSTJBYilM1PmM9AtGhzHP8ppKd/92NqHlVla5GwkT+EL/Pk4d
-	 pDEFgDgF3tAqYwhJ3uthq0evUO1SzmfrN9ts2iUTPJ5EYiupEUfJmxXx/VnhAkAz0V
-	 KiFQVPt+7veNNK2Qf0N2oX7aRnREziWvi1/oNYMsMz5sAx5fKeI1CNshlgmwQHNhNn
-	 aikdIf9RED2fUxyywrepCkPh64Nrb5KWHW0tzXKnMxGWnf85LoxRea8GjZxw4gP5XG
-	 g25vm6vfJTUEQ==
-Date: Tue, 20 May 2025 11:06:25 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: "dongchenchen (A)" <dongchenchen2@huawei.com>, hawk@kernel.org,
- ilias.apalodimas@linaro.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhangchangzhong@huawei.com
-Subject: Re: [BUG Report] KASAN: slab-use-after-free in
- page_pool_recycle_in_ring
-Message-ID: <20250520110625.60455f42@kernel.org>
-In-Reply-To: <CAHS8izMenFPVAv=OT-PiZ-hLw899JwVpB-8xu+XF+_Onh_4KEw@mail.gmail.com>
-References: <20250513083123.3514193-1-dongchenchen2@huawei.com>
-	<CAHS8izOio0bnLp3+Vzt44NVgoJpmPTJTACGjWvOXvxVqFKPSwQ@mail.gmail.com>
-	<34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
-	<CAHS8izPh5Z-CAJpQzDjhLVN5ye=5i1zaDqb2xQOU3QP08f+Y0Q@mail.gmail.com>
-	<20250519154723.4b2243d2@kernel.org>
-	<CAHS8izMenFPVAv=OT-PiZ-hLw899JwVpB-8xu+XF+_Onh_4KEw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ZR0u9wVD"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7080dd5fe92so48493007b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1747764544; x=1748369344; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WU5udPTppsA55f4dR4/qInsRJDN9j9dX+VCWH1iJNOg=;
+        b=ZR0u9wVDuhtIZjvVK6P7ZIx8ZC+Jfsz8zMXZCENHW6Q1spqYxp1fgHcUovF1clzN6x
+         jYgRPW0qPRdQCf0YY7SO2qPzJ3JHd0jaHTow8gLRq212/xPIjAZml/bO7eoDghN2nupM
+         Q7BPZXwtz2k0DiYbfoHxzbiWCVHkwocI5pAMDf/nO0JhMsKePZUFAGaXZWlABRAVaz2t
+         jBHnqBCawJf5RdJYW4foAuahMe/irze9tmjYXphOdDvZwQ1ZUPIzfk/SmvcuzT2A+oX+
+         uZLZxHmghka2F7wmJEWFtEQHZwtqcssLUTuJLDc5tQwdVr2Cn9eL3xhxOIY/mfMpw0aU
+         S5Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747764544; x=1748369344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WU5udPTppsA55f4dR4/qInsRJDN9j9dX+VCWH1iJNOg=;
+        b=YKP7YGstZnFCHvtoHWddx9PSKK1Ksqdd1M2KhEOumrUPu3JTeLblRIH2VGMh8hnZNK
+         FLbd30dPvBtCFRcO4AP2hVjHTqgXOXHbY1iXsinSrDvqtZ/N+3d4LSrvr79A0R9hdniw
+         n0BkpRnRb2u1nLVjrzm1tbPsjuZ2ZRB73lQlEdICeg4TYvCWZbsFdEfYJrY/bSuhAyWW
+         fG/3tQU6kKDmwEHMLjfezCyv13LJq/9+gC7dbjObObqztXKum1lwki+q4+UFE6IsMuvK
+         aginT9yKm5Um9nXVezibM0FZUX6WB4OwAu8+U8WcD0M9yzWf8sYm9sb4s3/TSQsRJw7t
+         dmRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYO1djM6I2Yv4CPBzCm9XxciqGI/i1NpRD5wcl/EGg0qDKgoDD75xDg8nC45HIO+7JFUd5DapHL6jQlhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC/ZHPgr1XDnXJBojA5Bzap887LbOvLYzHCDjCgVFCgxPY7EBD
+	4xWRwDMYdEqxZB6vLODl7iIuIQrP1RaZbTXT3So1baIiJPD7ATUVcglM7UWLgn5fgfTBfJKmPs0
+	Z+Hd89a/+ZG4fGqI6uCj1q4oK4R10eRWukNAu/wG5
+X-Gm-Gg: ASbGnctS5/rZN8WM/lxOT/2FVJLtRQM5PHllz48AdRmk5B0MTDQ/qF2QJpbw3zb2tmt
+	iYu+uubK7ZeUxXPFJyV6i9wDM2SViSxx7gt4TPAlQJxLBCSDmNKfCeY/VJkhexfRB6QFNp9OQ5M
+	cfnqULvIPT1xwJ0v3CdF+okFtrVDCbMg5M
+X-Google-Smtp-Source: AGHT+IGNWng09pZ5ljk/Okxa5nCSJCuR564MKYI0xijFRLTiDNOVwhoe3rjTtp+IDNpD1Sbw9/3ctQDVNFoPrswyl9o=
+X-Received: by 2002:a05:690c:fc2:b0:70d:ee3b:bec8 with SMTP id
+ 00721157ae682-70dee3bc898mr20129937b3.16.1747764543919; Tue, 20 May 2025
+ 11:09:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <669e1abd542da9fbcfb466d134f01767@paul-moore.com> <20250520163355.13346-1-chath@bu.edu>
+In-Reply-To: <20250520163355.13346-1-chath@bu.edu>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 20 May 2025 14:08:53 -0400
+X-Gm-Features: AX0GCFs7DIkpyyhcy91W1pEATOT-GDHk2nbEDGbNZtBIXc8wd9A2olpvkvz8kXw
+Message-ID: <CAHC9VhTx72aCwfR7rOCmsscEJBPHkDqdsJePGP6eW=DE0ZUSWA@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] audit accesses to unassigned PCI config regions
+To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
+Cc: Yunxiang.Li@amd.com, alex.williamson@redhat.com, audit@vger.kernel.org, 
+	avihaih@nvidia.com, bhelgaas@google.com, chath@bu.edu, eparis@redhat.com, 
+	kevin.tian@intel.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	schnelle@linux.ibm.com, xin.zeng@intel.com, xwill@bu.edu, yahui.cao@intel.com, 
+	zhangdongdong@eswincomputing.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 19 May 2025 17:53:08 -0700 Mina Almasry wrote:
-> On Mon, May 19, 2025 at 3:47=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> =
+On Tue, May 20, 2025 at 12:34=E2=80=AFPM Chathura Rajapaksha
+<chathura.abeyrathne.lk@gmail.com> wrote:
+> On Fri, May 16, 2025 at 4:41=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
 wrote:
-> >
-> > On Mon, 19 May 2025 12:20:59 -0700 Mina Almasry wrote: =20
-> > > Clearly this is not working, but I can't tell why. =20
-> >
-> > I think your fix works but for the one line that collects recycling
-> > stats. If we put recycling stats under the producer lock we should
-> > be safe. =20
->=20
-> What are you referring to as recycle stats? Because I don't think
-> pool->recycle_stats have anything to do with freeing the page_pool.
->=20
-> Or do you mean that we should put all the call sites that increment
-> and decrement pool->pages_state_release_cnt and
-> pool->pages_state_hold_cnt under the producer lock?
+>
+> > In the commit description you talk about a general PCIe device issue
+> > in the first paragraph before going into the specifics of the VFIO
+> > driver.  That's all well and good, but it makes me wonder if this
+> > audit code above is better done as a generic PCI function that other
+> > PCI drivers could use if they had similar concerns?  Please correct
+> > me if I'm wrong, but other than symbol naming I don't see anyting
+> > above which is specific to VFIO.  Thoughts?
+>
+> While the issue is independent of VFIO, the security and availability
+> concerns arise when guests are able to write to unassigned PCI config
+> regions on devices passed through using VFIO. That's why we thought it
+> would be better to audit these accesses in the VFIO driver. Given this
+> context, do you think it would be more appropriate to audit these
+> accesses through a generic PCI function instead?
 
-No, just the "informational" recycling stats. Looking at what Dong
-Chenchen has shared:
+I would suggest a generic PCI function, e.g. pci_audit_access(...),
+that lives in the general PCI code and would be suitable for callers
+other than VFIO, that you can call from within vfio_config_do_rw()
+when Bad Things happen.
 
-page_pool_recycle_in_ring
- =C2=A0 ptr_ring_produce
- =C2=A0=C2=A0=C2=A0 spin_lock(&r->producer_lock);
- =C2=A0=C2=A0=C2=A0 WRITE_ONCE(r->queue[r->producer++], ptr)
- =C2=A0=C2=A0=C2=A0 spin_unlock(&r->producer_lock);
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 //recycle last page to pool
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page_pool_release
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page_pool_scrub
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page_pool_e=
-mpty_ring
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ptr_ring_consume
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- page_pool_return_page //release=20
-all page
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __page_pool_destroy
-free_percpu(pool->recycle_stats);
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree=
-(pool) //free
- =C2=A0 recycle_stat_inc(pool, ring); //uaf read
+Does that make sense?
 
-
-The thread which put the last page into the ring has released the
-producer lock and now it's trying to increment the recycling stats.
-Which is invalid, the page it put into the right was de facto the
-reference it held. So once it put that page in the ring it should
-no longer touch the page pool.
-
-It's not really related to the refcounting itself, the recycling
-stats don't control the lifetime of the object. With your patch
-to turn the producer lock into a proper barrier, the remaining
-issue feels to me like a basic UAF?
+--=20
+paul-moore.com
