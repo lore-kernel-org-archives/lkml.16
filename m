@@ -1,86 +1,90 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43A2280CFB
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B1C2836A3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770799; cv=none; b=p22e+Ym7oZh2C5mMTQEkLJ7NmVqncr2jJkiHeGO+gTPhAv94OjRD4Yj5Bq//uNZbfu8yVv0kBloBxgMOW5UgmuZ9J7xA2FYM2Ify/9Zf3RVwD9Ss2dT0Jh8Q7JqEPBZN/SD8uJsIPK+BTqdO38ozeDznZQ6ee6lqnTILOdaPx84=
+	t=1747770804; cv=none; b=GbJf6D4xHImCM39I+y04hi1j5bMjqVMgcrXjJeGBQwD+ZskMajg7yHoi6ngLX0qh5rK9F0k9SjoeiwRTm/jpmgFPNXlbpFGRA1HYvHUPSvQuM2CHSvOvPO2qd3vljGjFZlFOkf2HtyWIq4krIzvgHVlWmu57+8UkRWAQKxKhciE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770799; c=relaxed/simple;
-	bh=r02WTNLTkZ/4TsfbX5I3EifcoEkeGfFEmnTe1C+LMjo=;
+	s=arc-20240116; t=1747770804; c=relaxed/simple;
+	bh=cbcMcmlbjtAT8b4+gF8YGTWbSKSzZ8NVvIsgP/AKuwQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIAEofBBa4DanrYhWhmHkqZheQbAwQ0Ne4S5bIz5yPoitu9tm4EgtooI/by3mtq7hioMlXfWvJNfFWiGrD7AqkgwagxpuYeL4tj06JNskK8uKOBz1pxSAApC0dTrnM7bT8qkgG9sVq12096GvpPd68BkbqA3m2a/Kc1AnEKGN0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QvCktGuM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sL68f2ji; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QvCktGuM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sL68f2ji; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=F42nk8wFwjAW31r9S9I3FQkhPlA+cFrCGKX+u6P156XEWd5yoeZN/+P4NSq7sHS5wgJWFtthzTomTgefPZS0tTdlaIJ792f1xniYVXOLyV1XxKOrcdmgkv7BKo/yYhcM6haIIlBLdBwSW+UI5ABOeQtc6FXszU5wNqivJOm5S5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jDIzpdRS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QvCktGuM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sL68f2ji";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QvCktGuM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sL68f2ji"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A55B02225F;
-	Tue, 20 May 2025 19:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747770789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S34FQjO/spo0/EF5quOdXn1uELyrC8/pQ7dPMdPUKXs=;
-	b=QvCktGuMZWVjCcKAF6DQr/6K/g9d0kj8S88bvzkl9x+3GLmyUCJWBeakmlcbrgg6qgPJ7n
-	NejSFqWc6b+GsRzQh6T6rcK7XR4sI8EDwFCNJaErMjb9JP2dhqOPC9JC1YI9HYYB+qFyzY
-	jfxbpoGfWg8jz3yExwONwb5p+7uzWb8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747770789;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S34FQjO/spo0/EF5quOdXn1uELyrC8/pQ7dPMdPUKXs=;
-	b=sL68f2jiZoxPUe0MpvYNAOsabqTjxTgbFBzg8X4oCHV/MW8maD8NyEdzlpOlGr+xOvEfpk
-	h040HrHFg4xf3FCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747770789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S34FQjO/spo0/EF5quOdXn1uELyrC8/pQ7dPMdPUKXs=;
-	b=QvCktGuMZWVjCcKAF6DQr/6K/g9d0kj8S88bvzkl9x+3GLmyUCJWBeakmlcbrgg6qgPJ7n
-	NejSFqWc6b+GsRzQh6T6rcK7XR4sI8EDwFCNJaErMjb9JP2dhqOPC9JC1YI9HYYB+qFyzY
-	jfxbpoGfWg8jz3yExwONwb5p+7uzWb8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747770789;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S34FQjO/spo0/EF5quOdXn1uELyrC8/pQ7dPMdPUKXs=;
-	b=sL68f2jiZoxPUe0MpvYNAOsabqTjxTgbFBzg8X4oCHV/MW8maD8NyEdzlpOlGr+xOvEfpk
-	h040HrHFg4xf3FCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 77B7B13A3E;
-	Tue, 20 May 2025 19:53:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eI5+HKXdLGgYdQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 20 May 2025 19:53:09 +0000
-Date: Tue, 20 May 2025 21:53:00 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Gavin Guo <gavinguo@igalia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	akpm@linux-foundation.org, mike.kravetz@oracle.com,
-	kernel-dev@igalia.com, stable@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
-	Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-Message-ID: <aCzdnAmuOylilU1p@localhost.localdomain>
-References: <20250513093448.592150-1-gavinguo@igalia.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jDIzpdRS"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGhrlj009577
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:53:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=i5aonaPIAkvbsT0V7cfk3ibR
+	wHajdLgS0bN0SFcHVGg=; b=jDIzpdRSXFh9gEp4fLweqoJydK1dXbY7MKzVrcOz
+	a8uejzaGsLs4NZl2tTeX3svcKjGyZaC3JultHrSKGW4kJi35UtcnQ0V4i3Vix8Uv
+	TfOnGrn2qBy0yA64ykWm00zJskXGcWjkv/n6Afp643JA6iX+/T2aVdfp4fR7oFbe
+	jCSGAdkZ+G7j1aDnGqdWCpjmCNUVaXdEScKtnYzNQs1v5BnHdMr0XZMkHCi+ToVN
+	y87xKL9sZbuUGvBm49/ntuK31wJqCB5ffV0LiJ2QOYhGQbq1OroGBf6+SPAFIfP0
+	jr8+se2ZnTrgWN6rSWLPojZmssZY7B7zgoDPHyEHSmhnPg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0gg0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:53:22 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8d47383f3so49536926d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:53:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770801; x=1748375601;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i5aonaPIAkvbsT0V7cfk3ibRwHajdLgS0bN0SFcHVGg=;
+        b=rRCvOZjyjma1fpwNuriIRqEJjOw8j1DVFVolh2BRBdU4hY4oUSActkcy98VK5rBqho
+         k9D8LzCNl6fNuqfUfCbxsx1yr/nJaAXA8ARIgrZ7TRbfe9YvOa5s/YOQoG5aK++SzMnD
+         PfXMOXRaiAwahj/r1kk4d82JjTvphBs0839oa7Ma898O14r8lluupt+oOY2m8IW5L5Gf
+         0bnV/P9ReiGdyBnCd53dqUAd2d8h9eCX7YMx8uoC5OeGkLUE3apNOLSwiYsmQalAM+fp
+         ZPck67hVZ9Lne825R0/eMDDi6lC42nAW2yMQaod4IWJUyUzVh/0lUKoDF1WRhqPnl60s
+         k+qA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHrRbMBv8rUXQjt49lfjDQ8IU5ZZ98f8dcyfG92gK+PLMd4xTAk1hU4lZGFg3WOlT3bExgTKFVppnGOFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlf0MVxqvUU17lBs/bZ0xV77pES+oZOQR/p5G0vipAXcX5YVXO
+	gDn1rhX2QuEZuUKvEg1BwpTaqjJRpSnXacG/t9M+zvBoOB45KZOORaWGb4v08FiMVVoH0Y+uYP6
+	LdQBAawdeKn5S0kg+rx8gRJ+srB6vY4Yjf7cABf0OA0LDI+sI4NvKGWge7muc96BiOfc=
+X-Gm-Gg: ASbGncvTW6MkBq+Tz4024b7/OzgazGzmZzg0iF0z9lCnW/Ibvr++T2lydUKSkPWvJtL
+	JefcWe67bMn6gAXoYSB1tE4cKYwOKXcUdtdn9Uke3YysOqzJwQgAaCOonmgLS8eJi+qrQWW+yqA
+	NkN9aPaX7SIIC22X99nHgHYKcQW6xnt/+t2Yxoxh6pEahs6g/XMmfmXrA7Nt9lrDG48irNxXNku
+	S1L7PVHADVYA3N+uwQpHifqO7fWHKzTlEwNIYQpaoT8kKQJSphG+5yxShKez1dlSAhgBxD2JWSa
+	Jib4MMxzcwrDMNTW8+GymGkiA8JYGgzYm5kd9uQqoOBSR2/CHTTtVckONN372jy8ey2tZKQ7q7Q
+	=
+X-Received: by 2002:a05:6214:202e:b0:6f2:a537:f47e with SMTP id 6a1803df08f44-6f8b0881b36mr298714906d6.42.1747770801086;
+        Tue, 20 May 2025 12:53:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6seWDXes4rNoHVANTe5ljrtRMlWKBBOEr44H3bHaU05H3MV8xBXWEhAY/qN3HOFoCI+hEmA==
+X-Received: by 2002:a05:6214:202e:b0:6f2:a537:f47e with SMTP id 6a1803df08f44-6f8b0881b36mr298714416d6.42.1747770800694;
+        Tue, 20 May 2025 12:53:20 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f52csm2477061e87.234.2025.05.20.12.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 12:53:19 -0700 (PDT)
+Date: Tue, 20 May 2025 22:53:18 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
+        Todor Tomov <todor.too@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        =?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8939: Add camss and cci
+Message-ID: <5acpcyzscv47uyyjhtpfi3x7oh47wafo4n6kd5iu6zs7rkpzro@nwkupv5mpjpi>
+References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
+ <20250520-camss-8x39-vbif-v1-4-a12cd6006af9@mailoo.org>
+ <30dd203f-d7e7-420a-b310-2c36869f3aa8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,193 +93,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250513093448.592150-1-gavinguo@igalia.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
+In-Reply-To: <30dd203f-d7e7-420a-b310-2c36869f3aa8@linaro.org>
+X-Proofpoint-GUID: tzJ1C3uqbdQTz5hPOb4s6FUJxIWg2Pts
+X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=682cddb2 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=TqukyxIwAAAA:8 a=a9wmfB65m3qGRrS3yC4A:9 a=CjuIK1q_8ugA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22 a=e_wvXvRcY2B3oMitRgDS:22
+X-Proofpoint-ORIG-GUID: tzJ1C3uqbdQTz5hPOb4s6FUJxIWg2Pts
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE2MCBTYWx0ZWRfX4j2LN2rsQeXf
+ wRp6ZU8W4/+itZqWyOi3AUpGrYwKDIOMbomf+v+xjq3bpM5P8jxJJmimhW56hLQxDUnd8a4Np1y
+ MFrHI1pwWc1oTdHwPLc5CN/ZN93o5K7XkTtL3ljePgq/puBnNlkS1HqfaGsdFV/+f+FxT/XFTWe
+ BTk/gMI9Cg+EirvugRIi/4bbNzdenT97ga31WBosM4RFRrMHEQAOL7VN1jtoKp1is582A06fEkI
+ e/4ZimU/JpB8QqkQSMwpipH1Qg0iM2DElwzyPC5uThIeiBYA6tXgJ6nzVvwXJgN9X5+hjmPj2cK
+ Qgp8cvhIOpFkgpuEcEpcwnn9IG5Og/o+lYAovlshkbBle73JTM5iuz+ZMa2IQklpX3eaAwKHSB/
+ u/8fg8Z00bJdFjL3iQiBYfU28afr7dCxCe3fo4/a2/gkFABXEJVPgCYweTQ1KQ4xqgvM4z2I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_09,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 mlxlogscore=766 suspectscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505200160
 
-On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
-> The patch fixes a deadlock which can be triggered by an internal
-> syzkaller [1] reproducer and captured by bpftrace script [2] and its log
-> [3] in this scenario:
+On Tue, May 20, 2025 at 08:23:02PM +0100, Bryan O'Donoghue wrote:
+> On 20/05/2025 19:39, Vincent Knecht via B4 Relay wrote:
+> > From: Vincent Knecht <vincent.knecht@mailoo.org>
 > 
-> Process 1                              Process 2
-> ---				       ---
-> hugetlb_fault
->   mutex_lock(B) // take B
->   filemap_lock_hugetlb_folio
->     filemap_lock_folio
->       __filemap_get_folio
->         folio_lock(A) // take A
->   hugetlb_wp
->     mutex_unlock(B) // release B
->     ...                                hugetlb_fault
->     ...                                  mutex_lock(B) // take B
->                                          filemap_lock_hugetlb_folio
->                                            filemap_lock_folio
->                                              __filemap_get_folio
->                                                folio_lock(A) // blocked
->     unmap_ref_private
->     ...
->     mutex_lock(B) // retake and blocked
-> 
-...
-> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+> > +			compatible = "qcom,msm8939-camss";
+> > +			reg = <0x01b0ac00 0x200>,
+> <0x01b0ac00 0x0 0x200 0x0>
 
-I think this is more convoluted that it needs to be?
+No.
 
-hugetlb_wp() is called from hugetlb_no_page() and hugetlb_fault().
-hugetlb_no_page() locks and unlocks the lock itself, which leaves us
-with hugetlb_fault().
+                        #address-cells = <1>;
+                        #size-cells = <1>;
 
-hugetlb_fault() always passed the folio locked to hugetlb_wp(), and the
-latter only unlocks it when we have a cow from owner happening and we
-cannot satisfy the allocation.
-So, should not checking whether the folio is still locked after
-returning enough?
-What speaks against:
-
- diff --git a/mm/hugetlb.c b/mm/hugetlb.c
- index bd8971388236..23b57c5689a4 100644
- --- a/mm/hugetlb.c
- +++ b/mm/hugetlb.c
- @@ -6228,6 +6228,12 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
-  			u32 hash;
- 
-  			folio_put(old_folio);
- +			/*
- +			* The pagecache_folio needs to be unlocked to avoid
- +			* deadlock when the child unmaps the folio.
- +			*/
- +			if (pagecache_folio)
- +				folio_unlock(pagecache_folio);
-  			/*
-  			 * Drop hugetlb_fault_mutex and vma_lock before
-  			 * unmapping.  unmapping needs to hold vma_lock
- @@ -6825,7 +6831,12 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
-  	spin_unlock(vmf.ptl);
- 
-  	if (pagecache_folio) {
- -		folio_unlock(pagecache_folio);
- +		/*
- +		 * hugetlb_wp() might have already unlocked pagecache_folio, so
- +		 * skip it if that is the case.
- +		 */
- +		if (folio_test_locked(pagecache_folio))
- +			folio_unlock(pagecache_folio);
-  		folio_put(pagecache_folio);
-  	}
-  out_mutex:
-
-> ---
->  mm/hugetlb.c | 33 ++++++++++++++++++++++++++++-----
->  1 file changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index e3e6ac991b9c..ad54a74aa563 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -6115,7 +6115,8 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
->   * Keep the pte_same checks anyway to make transition from the mutex easier.
->   */
->  static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
-> -		       struct vm_fault *vmf)
-> +		       struct vm_fault *vmf,
-> +		       bool *pagecache_folio_unlocked)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
->  	struct mm_struct *mm = vma->vm_mm;
-> @@ -6212,6 +6213,22 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
->  			u32 hash;
->  
->  			folio_put(old_folio);
-> +			/*
-> +			 * The pagecache_folio needs to be unlocked to avoid
-> +			 * deadlock and we won't re-lock it in hugetlb_wp(). The
-> +			 * pagecache_folio could be truncated after being
-> +			 * unlocked. So its state should not be relied
-> +			 * subsequently.
-> +			 *
-> +			 * Setting *pagecache_folio_unlocked to true allows the
-> +			 * caller to handle any necessary logic related to the
-> +			 * folio's unlocked state.
-> +			 */
-> +			if (pagecache_folio) {
-> +				folio_unlock(pagecache_folio);
-> +				if (pagecache_folio_unlocked)
-> +					*pagecache_folio_unlocked = true;
-> +			}
->  			/*
->  			 * Drop hugetlb_fault_mutex and vma_lock before
->  			 * unmapping.  unmapping needs to hold vma_lock
-> @@ -6566,7 +6583,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
->  	hugetlb_count_add(pages_per_huge_page(h), mm);
->  	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
->  		/* Optimization, do the COW without a second fault */
-> -		ret = hugetlb_wp(folio, vmf);
-> +		ret = hugetlb_wp(folio, vmf, NULL);
->  	}
->  
->  	spin_unlock(vmf->ptl);
-> @@ -6638,6 +6655,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->  	struct hstate *h = hstate_vma(vma);
->  	struct address_space *mapping;
->  	int need_wait_lock = 0;
-> +	bool pagecache_folio_unlocked = false;
->  	struct vm_fault vmf = {
->  		.vma = vma,
->  		.address = address & huge_page_mask(h),
-> @@ -6792,7 +6810,8 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->  
->  	if (flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
->  		if (!huge_pte_write(vmf.orig_pte)) {
-> -			ret = hugetlb_wp(pagecache_folio, &vmf);
-> +			ret = hugetlb_wp(pagecache_folio, &vmf,
-> +					&pagecache_folio_unlocked);
->  			goto out_put_page;
->  		} else if (likely(flags & FAULT_FLAG_WRITE)) {
->  			vmf.orig_pte = huge_pte_mkdirty(vmf.orig_pte);
-> @@ -6809,10 +6828,14 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
->  out_ptl:
->  	spin_unlock(vmf.ptl);
->  
-> -	if (pagecache_folio) {
-> +	/*
-> +	 * If the pagecache_folio is unlocked in hugetlb_wp(), we skip
-> +	 * folio_unlock() here.
-> +	 */
-> +	if (pagecache_folio && !pagecache_folio_unlocked)
->  		folio_unlock(pagecache_folio);
-> +	if (pagecache_folio)
->  		folio_put(pagecache_folio);
-> -	}
->  out_mutex:
->  	hugetlb_vma_unlock_read(vma);
->  
-> 
-> base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
-> -- 
-> 2.43.0
-> 
-> 
 
 -- 
-Oscar Salvador
-SUSE Labs
+With best wishes
+Dmitry
