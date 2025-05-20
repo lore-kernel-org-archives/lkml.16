@@ -1,151 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FAE4317D;
-	Tue, 20 May 2025 01:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A0F2E628;
+	Tue, 20 May 2025 01:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747705793; cv=none; b=bW0robq0Ry99igXoU9Q7veGIrtrFQLZYHrXVTN7rPHVbrzRhKf+PbaEi8h0c5SyFUuYGuALUTpWWy083Dmv21VKtyVtRYvhTyiQ1ZNlx5FMtUtmo+1VVbYD5s11+MPf+2+A15reQd15LZxXAFBmKssGNSjZPNtisfsQfokp6uNU=
+	t=1747705795; cv=none; b=rWsIFvMB7nCHcs7bab2ISJXzYebHFgLl4WV0AaRpUu47I7tZak9erDxphrhlBEN9dq3peMo9VpWdVU4pAlumtfdGvsxXKbsKHcRZpCABflfDAI9fn/jjntb0xSsXY15PRwj7S5YjeVyMLx6T2p4OKd/9nJJqvLtdhFyMyuPCc2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747705793; c=relaxed/simple;
-	bh=vsLxZwJQaEjAfR/JuZ5NYNwq+/uZf2rMOMPY+vUbdi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gUVOna/FCb4eLL1eAudETBw1IYPbYv/9JWAA8tY6RQvauytUHc26bOFPdIvFsULDNUiguenf2ZAR/T7Pd5VSIZLqJzRpeaKRuHw8oneHjs8HRRdAW4vy3VaCmq/cYcPMH5GYQXT7zMve9JvTIzJntRm1UHdompzzshiIyqqjja8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQw6p0QQ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747705795; c=relaxed/simple;
+	bh=tjgdZhN+OuEJ5yG5UCg6mN4vKwI0aby5N97gzGTuyCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KbEwF53UkkLMhq/zku0JvaKOXY8hKw9Mw0n6i/77tqoeWxLZb2RuMZkEyrd18xfoIjYgozBlu7B0Xgl+xp8nUimKXdOP+lWDg0e41d8vOYBbV2sJUhvT3FexW62R54617UlOgPES2TjvDTqKTgrNzePgyHx6EpJwa636n/CPyKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=TCmOCbIO; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQw6p0QQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747705791; x=1779241791;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vsLxZwJQaEjAfR/JuZ5NYNwq+/uZf2rMOMPY+vUbdi0=;
-  b=BQw6p0QQUSuA3FH7Bn22sQuFxguF44kmr578kw81fyIaIHxCk3/ehn7o
-   1IAtkKx8IpPrWofYFGR9UjHhzOdpNjlPl73mZy0Wcw7b7U9YXOrecibTW
-   UU3HoemryXH3ntH09jd/Rmfgc99PvuODGwhjO/Wg/DVp7o6HbCwicgWaq
-   +AzgC/ngFRmr+R4/SvE0/sECy/Zf3rOxMRgl/tBi1VqKNmt9FsmtVf+A0
-   ExegUnW2Lj6wboTU56CYd6l+Nzot1sqLSHs2Aclu2BekGNSVnn80Y43Jo
-   hgfCFzUcwpLQP5KTTRVP/c1NTzLuP8wkAIby11P6sWl0QQo87LhlrANMr
-   A==;
-X-CSE-ConnectionGUID: n53HrImoS22L1ystEaXaOw==
-X-CSE-MsgGUID: WCZ4yYPOQFu1+gQySEeyHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48737300"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="48737300"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 18:49:50 -0700
-X-CSE-ConnectionGUID: 0zrs3Y+BSOak+jEDiEkNbQ==
-X-CSE-MsgGUID: md5biXXwRjyq3FH5wZYmvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140063943"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 18:49:49 -0700
-Message-ID: <6774c3a6-9d0e-4a73-bfb1-91507ce85411@linux.intel.com>
-Date: Mon, 19 May 2025 18:49:49 -0700
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="TCmOCbIO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1747705784;
+	bh=tjgdZhN+OuEJ5yG5UCg6mN4vKwI0aby5N97gzGTuyCk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=TCmOCbIOgQIeXikQSQB1ozY+xtpmBVyJmOYjAJ8T9H5njX6fBX5Esj2e1sVwLzqr9
+	 AZcEncTlsDx/wXJTnsGoID2qExBM0nFy8UrH+Rjrgei/IV8dpO/FvsEc/W7kllQTXx
+	 u1uu+Ifu3yBg7F1PICOOBfu6ddboYagg1RM3oxVw=
+X-QQ-mid: zesmtpsz4t1747705779t2221b87c
+X-QQ-Originating-IP: le8b3gHCP2RQLlA9jyaj+1lCF7gm/Q5QYaSKLrC7a7Q=
+Received: from mail-yw1-f172.google.com ( [209.85.128.172])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 20 May 2025 09:49:37 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12257961901285456275
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70ddcdba474so7782387b3.1;
+        Mon, 19 May 2025 18:49:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWfwfTDsWSgirS12tEreFX3GL7RtcCK0fkrA4TUEa8GeCBB0WWoq2BQSzvLaV2WXWcavmB58829SMQ=@vger.kernel.org, AJvYcCWy2kQWdd1YSk/JEu6d3/rXCmEFhaGE233calE1fdVsdh+UJSpoOZe54ydM11HrpUokgdkJJg7KxjcybTIMGg==@vger.kernel.org, AJvYcCXyDW1KHNi/TkEExgVCOuAOFgNVdBpRCmYZ4ln+UEg2PLLUFf0bc3Pr82sPNiLei6xhGyZjibl7ed0j7VQ4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLWEkvEoK8AGh1lvWkfFI8Qn2qBuAWuURsoVjBI5Oyg8OJ/Jun
+	dvwA2GJyrqOOA+zJDKblkRdGWR96trgpGZlI4fNmkLGJyoE8nEbx7HlHUGIQJJ4ECCwGNMeuTSn
+	M246pAkrgu0BskuQz9t1kEyO/2w47LZ8=
+X-Google-Smtp-Source: AGHT+IH810CjoYVfbOkhgjig/gQ9xaKS6QFeP6dyioXy8QiiAJzESs18soWLNXgX4ngPE49M6E9sOXnxpQYg9yXXdt8=
+X-Received: by 2002:a05:690c:ed3:b0:70c:b882:2e9 with SMTP id
+ 00721157ae682-70cb8820581mr152005717b3.3.1747705776947; Mon, 19 May 2025
+ 18:49:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 10/16] PCI/AER: Combine trace_aer_event() with
- statistics updates
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-11-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-11-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250507-fuse-passthrough-doc-v1-0-cc06af79c722@uniontech.com>
+ <20250507-fuse-passthrough-doc-v1-2-cc06af79c722@uniontech.com>
+ <CAOQ4uxiMh+3JqzqMbK+HpFt-hWaM6A2nW3UHNK9nNntDRkRBeQ@mail.gmail.com> <87tt5giqz0.fsf@trenco.lwn.net>
+In-Reply-To: <87tt5giqz0.fsf@trenco.lwn.net>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Tue, 20 May 2025 09:49:26 +0800
+X-Gmail-Original-Message-ID: <31BB50458BC05D76+CAC1kPDP9d+vQGk0Y5OpDp88b3KLot0N_h=kazQb_G5nGtoCiVQ@mail.gmail.com>
+X-Gm-Features: AX0GCFt18X2UERCjgrGPdUs4efMieIb2MBJHTjaEDO8l3Jo_-vV7H74ydc1xpwc
+Message-ID: <CAC1kPDP9d+vQGk0Y5OpDp88b3KLot0N_h=kazQb_G5nGtoCiVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] docs: filesystems: add fuse-passthrough.rst
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Amir Goldstein <amir73il@gmail.com>, chenlinxuan@uniontech.com, 
+	Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>, Bagas Sanjaya <bagasdotme@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: M4B45z97fsbxzGGTWoUxZYuYF+xIatUkGVd5OComXI7tqA0u/WUyjV7H
+	gBuqsk3thLbP8HIMvqmwL4ZZ/lDNX/014QhULlunmJYHYKbr+TpDeGB1hGyX0m58TiJPkxm
+	f/a2qTZtTf7seQRAFQt2NGL8sdepW3v9uQ6FRki5ipz4qP/ms0KCAnQzIz3nuPfpaY4UORk
+	mbwcU7qxOXnLqjq084d0ymQgSKwkgfKIuvt42OfMej3AFvCM3fHMYL8BMBCuWi7X2m8DvQQ
+	28oNag/AXq18yDjrrXvV8KWpKQHyBoVYcz0VRfjcd1RsgsxbXVT8cTMYgO6FXM8xuqi3vt2
+	lvGBWNaKfjXwVhWvXgXEXVnkBGTM1hBCDlyPsEZhho20jymuBlgsOQ5fvP/bA2SBjwou7xr
+	xZAG7XyK2+2pnUPULJAnyKkHpTcr5U55NRYZIr140EyOeElsD9YIWTicrRZB/nX/LFJTMN7
+	hD43WdbVpGxBDpA9wSAqZyOW3uHRV/0jKPoxd/+gcY5g8Q75L1IQ2zcWuSYSuHDx5XQ74Uc
+	ybget+H9pQcuz64k3LE5a3bu3boQ/+CoQl1H2OU7Q3mumgryy7exOc2Dd1gDswHbtoKguqM
+	gf34TpBEQmSQD3nVi2gt5fgUTA8TSk6nXPTa/KDuv4uDBwh9Ro4sukFXb9poxkfeY+uyRaA
+	xKsozVEm9SJ/rzY/i45EHFdJI31GYOQvEnUGEbGCJZU9RI72Yh8pJk29tr+kpuvhBrFWBfa
+	iuTLp2rh0nO6NYq7Li19o+W90eJgkVK0Z+kYOfUdRnUDtp1ntCvGB2NlryiSo2fHsF30ukt
+	7nCfatemYvVwHGHKHRqOTh/nGdfMhBIsV/0VhVsB1kbcBbHnLjM0frUJyZxEYR/2oUtqmaH
+	wnEGQSZTL+CL7coOAB3r3rjD/sYKV9fVT2AsNuhIk30rH2UTCYXuEyPD3q3qZAHEX+zYL3w
+	0y5CBk+u270imcukfo2aJZF/v9tx/jv1qBEseVwyD1is9oDpMxgdKdh+EGJ6AyOwmFe3mEC
+	UNHrbkJXR3l+86rcFZNyS87nFTT8OaBo65FIqvfA==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, May 19, 2025 at 11:02=E2=80=AFPM Jonathan Corbet <corbet@lwn.net> w=
+rote:
 >
-> As with the AER statistics, we always want to emit trace events, even if
-> the actual dmesg logging is rate limited.
+> Amir Goldstein <amir73il@gmail.com> writes:
 >
-> Call trace_aer_event() directly from pci_dev_aer_stats_incr(), where we
-> update the statistics.
+> > On Wed, May 7, 2025 at 7:17=E2=80=AFAM Chen Linxuan via B4 Relay
+> > <devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
+> >>
+> >> From: Chen Linxuan <chenlinxuan@uniontech.com>
+> >>
+> >> Add a documentation about FUSE passthrough.
+> >>
+> >> It's mainly about why FUSE passthrough needs CAP_SYS_ADMIN.
+> >>
+> >
+> > Hi Chen,
+> >
+> > Thank you for this contribution!
+> >
+> > Very good summary.
+> > with minor nits below fix you may add to both patches:
+> >
+> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 >
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->   drivers/pci/pcie/aer.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
+> It looks like these comments were never addressed ... ?
 >
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index eb80c382187d..4683a99c7568 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -625,6 +625,9 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   	u64 *counter = NULL;
->   	struct aer_stats *aer_stats = pdev->aer_stats;
->   
-> +	trace_aer_event(pci_name(pdev), (info->status & ~info->mask),
-> +			info->severity, info->tlp_header_valid, &info->tlp);
-> +
->   	if (!aer_stats)
->   		return;
->   
-> @@ -741,9 +744,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->   out:
->   	if (info->id && info->error_dev_num > 1 && info->id == id)
->   		pci_err(dev, "  Error of this Agent is reported first\n");
-> -
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> -			info->severity, info->tlp_header_valid, &info->tlp);
->   }
->   
->   #ifdef CONFIG_ACPI_APEI_PCIEAER
-> @@ -782,6 +782,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->   
->   	info.status = status;
->   	info.mask = mask;
-> +	info.tlp_header_valid = tlp_header_valid;
-> +	if (tlp_header_valid)
 
-I think you can skip this check. The trace call checks for valid flag before accessing
-the tlp buffer. If you want to keep it, try to set it to NULL for !tlp_header_valid case.
+See https://lore.kernel.org/all/20250507-fuse-passthrough-doc-v2-0-ae7c0dd8=
+bba6@uniontech.com/
 
-> +		info.tlp = aer->header_log;
->   
->   	pci_dev_aer_stats_incr(dev, &info);
->   
-> @@ -799,9 +802,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->   
->   	if (tlp_header_valid)
->   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> -
-> -	trace_aer_event(pci_name(dev), (status & ~mask),
-> -			aer_severity, tlp_header_valid, &aer->header_log);
->   }
->   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->   
+Thanks,
+Chen Linxuan.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+> Thanks,
+>
+> jon
+>
+>
