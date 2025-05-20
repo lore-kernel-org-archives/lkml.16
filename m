@@ -1,151 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4952673BF;
-	Tue, 20 May 2025 10:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C066926F468;
+	Tue, 20 May 2025 10:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737309; cv=none; b=YdXhRoLJTwHBKXBwSOeEm9Dejrcu2ctthC6jEFR3f58LI7I3m0GgMtsv+LXe4yFeCLVCJ27oiDppI1EyeOfLDCCCg3h44ypWG5eD9AHvXN0Uyz3aPwlK4GejamcAa4nIHmc9Z5rYa9MpAjXkMOnp6q1wPobI2sdduujXUGsJils=
+	t=1747737366; cv=none; b=WdC/dpHnqoU3vK1zS8neDEfuBbc24Iiz+Q9NcIiOpaClHORrRmOdzPbA9pte68FwbEvBM0HT4U5Sn8ILKKxqqSYUR/4b92xR5KHu8b6qxKm1BdrfUiXneH4J6ldquMQmNRbvpS04ng+pHGk1Cw3fpyOyA99imGBbCMC8uAiHuro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737309; c=relaxed/simple;
-	bh=ke+1+In4r/rZjrgzMhjI2/H/glCpSsOix+X86F/MPGU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NkV+b06b2hghmjcQoCsIxwIxqA0W9ICtY7JKo/+vU3qdq5kp4ltR8kA+Oo4YvrFmc2aN3sZTFF54xMSbHzMF+XA1kmCfgXj4TzL7v1vNsfmz7SmhHacZnO+nw9ZyizNAvnG5T+8mk45/QpCYkgupBPbelV4jng3Hr3Syhq1pkrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SbU9fgby; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SbU9fgby"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747737308; x=1779273308;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ke+1+In4r/rZjrgzMhjI2/H/glCpSsOix+X86F/MPGU=;
-  b=SbU9fgbykOMenx46A7OQZDUwhjUREXpTUXN9geILXFD7mnRBizSBBZGa
-   wyyV2w/S4dCG9OpIAK8kmQhMfABZz6eW4pRjTlFjlFKwXoCx1ejbJOat3
-   GxP3lge7pqT1VPWKW3CQduue+QM6dYWPReF/MBx1ABLft/QGC8hT0alUV
-   Hj9C8LE5UEtqIFnKpvED3Yjq4MzwO3a9FauUuu9hd9U+ULiMpc1tm4rsr
-   EwG+jiyUk9CPbyFDdfW5ZXWPu3XKmAyJBtv9Dp/fuA7NjZTiFy6iwaZ5x
-   kwQ8C19J5mvymKVJXQiywAoIITxpJyLHIv4XghhPDOrzBAKf0kUxuH2wc
-   Q==;
-X-CSE-ConnectionGUID: qNfKs11xRZ6XVcaQx+fgUw==
-X-CSE-MsgGUID: PdDf/RVMRxCUkkwaBzE6xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48918100"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="48918100"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:35:08 -0700
-X-CSE-ConnectionGUID: Z8NjBDTwQTerJuTOWjg9ag==
-X-CSE-MsgGUID: x7Ah4STFRAiD7xKkEQKxWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139555983"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:35:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 13:34:56 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 06/16] PCI/AER: Move aer_print_source() earlier in
- file
-In-Reply-To: <20250519213603.1257897-7-helgaas@kernel.org>
-Message-ID: <8b8fdf6d-d4b2-b15e-541d-f8e90b72923f@linux.intel.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-7-helgaas@kernel.org>
+	s=arc-20240116; t=1747737366; c=relaxed/simple;
+	bh=w7K5pMtdrZyVLt797Uyr9uyQu/cmuG0bNkwUckl/TuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3FqR7ECKYbNN+BsRItG+dG1Ilf1I25Q5KedEv93DoHMWAul8KomMhN2TcWXUbjS4qXBJEbj+l8FWsvScsZrN+t0XPsKXVSVOICRpm3/vZltjL+wytnJIeOSb5UQWh1yKf3DqwgoY+8hDKvfoAVeKE5YKiE6oja94oe/PGudOos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC3CF1516;
+	Tue, 20 May 2025 03:35:49 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC6343F6A8;
+	Tue, 20 May 2025 03:36:02 -0700 (PDT)
+Date: Tue, 20 May 2025 11:35:58 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH 03/10] perf: arm_spe: Add support for FEAT_SPE_EFT
+ extended filtering
+Message-ID: <20250520103558.GM412060@e132581.arm.com>
+References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
+ <20250506-james-perf-feat_spe_eft-v1-3-dd480e8e4851@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-265372137-1747737296=:936"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-3-dd480e8e4851@linaro.org>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, May 06, 2025 at 12:41:35PM +0100, James Clark wrote:
+> FEAT_SPE_EFT (optional from Armv9.4) adds mask bits for the existing
+> load, store and branch filters. It also adds two new filter bits for
+> SIMD and floating point with their own associated mask bits. The current
+> filters only allow OR filtering on samples that are load OR store etc,
+> and the new mask bits allow setting part of the filter to an AND, for
+> example filtering samples that are store AND SIMD. With mask bits set to
+> 0, the OR behavior is preserved, so the unless any masks are explicitly
+> set old filters will behave the same.
+> 
+> Add them all and make them behave the same way as existing format bits,
+> hidden and return EOPNOTSUPP if set when the feature doesn't exist.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
---8323328-265372137-1747737296=:936
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-On Mon, 19 May 2025, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> Move aer_print_source() earlier in the file so a future change can use it
-> from aer_print_error(), where it's easier to rate limit it.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/pcie/aer.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index eb42d50b2def..95a4cab1d517 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -696,6 +696,18 @@ static void __aer_print_error(struct pci_dev *dev,
->  =09pci_dev_aer_stats_incr(dev, info);
->  }
-> =20
-> +static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
-nfo,
-> +=09=09=09     const char *details)
-> +{
-> +=09u16 source =3D info->id;
+>  drivers/perf/arm_spe_pmu.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index d9f6d229dce8..9309b846f642 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -86,6 +86,7 @@ struct arm_spe_pmu {
+>  #define SPE_PMU_FEAT_ERND			(1UL << 5)
+>  #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
+>  #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
+> +#define SPE_PMU_FEAT_EFT			(1UL << 8)
+>  #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
+>  	u64					features;
+>  
+> @@ -197,6 +198,27 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+>  #define ATTR_CFG_FLD_discard_CFG		config	/* PMBLIMITR_EL1.FM = DISCARD */
+>  #define ATTR_CFG_FLD_discard_LO			35
+>  #define ATTR_CFG_FLD_discard_HI			35
+> +#define ATTR_CFG_FLD_branch_filter_mask_CFG	config	/* PMSFCR_EL1.Bm */
+> +#define ATTR_CFG_FLD_branch_filter_mask_LO	36
+> +#define ATTR_CFG_FLD_branch_filter_mask_HI	36
+> +#define ATTR_CFG_FLD_load_filter_mask_CFG	config	/* PMSFCR_EL1.LDm */
+> +#define ATTR_CFG_FLD_load_filter_mask_LO	37
+> +#define ATTR_CFG_FLD_load_filter_mask_HI	37
+> +#define ATTR_CFG_FLD_store_filter_mask_CFG	config	/* PMSFCR_EL1.STm */
+> +#define ATTR_CFG_FLD_store_filter_mask_LO	38
+> +#define ATTR_CFG_FLD_store_filter_mask_HI	38
+> +#define ATTR_CFG_FLD_simd_filter_CFG		config	/* PMSFCR_EL1.SIMD */
+> +#define ATTR_CFG_FLD_simd_filter_LO		39
+> +#define ATTR_CFG_FLD_simd_filter_HI		39
+> +#define ATTR_CFG_FLD_simd_filter_mask_CFG	config	/* PMSFCR_EL1.SIMDm */
+> +#define ATTR_CFG_FLD_simd_filter_mask_LO	40
+> +#define ATTR_CFG_FLD_simd_filter_mask_HI	40
+> +#define ATTR_CFG_FLD_float_filter_CFG		config	/* PMSFCR_EL1.FP */
+> +#define ATTR_CFG_FLD_float_filter_LO		41
+> +#define ATTR_CFG_FLD_float_filter_HI		41
+> +#define ATTR_CFG_FLD_float_filter_mask_CFG	config	/* PMSFCR_EL1.FPm */
+> +#define ATTR_CFG_FLD_float_filter_mask_LO	42
+> +#define ATTR_CFG_FLD_float_filter_mask_HI	42
+>  
+>  #define ATTR_CFG_FLD_event_filter_CFG		config1	/* PMSEVFR_EL1 */
+>  #define ATTR_CFG_FLD_event_filter_LO		0
+> @@ -215,8 +237,15 @@ GEN_PMU_FORMAT_ATTR(pa_enable);
+>  GEN_PMU_FORMAT_ATTR(pct_enable);
+>  GEN_PMU_FORMAT_ATTR(jitter);
+>  GEN_PMU_FORMAT_ATTR(branch_filter);
+> +GEN_PMU_FORMAT_ATTR(branch_filter_mask);
+>  GEN_PMU_FORMAT_ATTR(load_filter);
+> +GEN_PMU_FORMAT_ATTR(load_filter_mask);
+>  GEN_PMU_FORMAT_ATTR(store_filter);
+> +GEN_PMU_FORMAT_ATTR(store_filter_mask);
+> +GEN_PMU_FORMAT_ATTR(simd_filter);
+> +GEN_PMU_FORMAT_ATTR(simd_filter_mask);
+> +GEN_PMU_FORMAT_ATTR(float_filter);
+> +GEN_PMU_FORMAT_ATTR(float_filter_mask);
+>  GEN_PMU_FORMAT_ATTR(event_filter);
+>  GEN_PMU_FORMAT_ATTR(inv_event_filter);
+>  GEN_PMU_FORMAT_ATTR(min_latency);
+> @@ -228,8 +257,15 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
+>  	&format_attr_pct_enable.attr,
+>  	&format_attr_jitter.attr,
+>  	&format_attr_branch_filter.attr,
+> +	&format_attr_branch_filter_mask.attr,
+>  	&format_attr_load_filter.attr,
+> +	&format_attr_load_filter_mask.attr,
+>  	&format_attr_store_filter.attr,
+> +	&format_attr_store_filter_mask.attr,
+> +	&format_attr_simd_filter.attr,
+> +	&format_attr_simd_filter_mask.attr,
+> +	&format_attr_float_filter.attr,
+> +	&format_attr_float_filter_mask.attr,
+>  	&format_attr_event_filter.attr,
+>  	&format_attr_inv_event_filter.attr,
+>  	&format_attr_min_latency.attr,
+> @@ -250,6 +286,16 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
+>  	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
+>  		return 0;
+>  
+> +	if ((attr == &format_attr_branch_filter_mask.attr ||
+> +	     attr == &format_attr_load_filter_mask.attr ||
+> +	     attr == &format_attr_store_filter_mask.attr ||
+> +	     attr == &format_attr_simd_filter.attr ||
+> +	     attr == &format_attr_simd_filter_mask.attr ||
+> +	     attr == &format_attr_float_filter.attr ||
+> +	     attr == &format_attr_float_filter_mask.attr) &&
+> +	     !(spe_pmu->features & SPE_PMU_FEAT_EFT))
+> +		return 0;
 > +
-> +=09pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n=
-",
-> +=09=09 info->multi_error_valid ? "Multiple " : "",
-> +=09=09 aer_error_severity_string[info->severity],
-> +=09=09 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
-> +=09=09 PCI_SLOT(source), PCI_FUNC(source), details);
-> +}
-> +
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  =09int layer, agent;
-> @@ -733,18 +745,6 @@ void aer_print_error(struct pci_dev *dev, struct aer=
-_err_info *info)
->  =09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+>  	return attr->mode;
 >  }
-> =20
-> -static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
-nfo,
-> -=09=09=09     const char *details)
-> -{
-> -=09u16 source =3D info->id;
-> -
-> -=09pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n=
-",
-> -=09=09 info->multi_error_valid ? "Multiple " : "",
-> -=09=09 aer_error_severity_string[info->severity],
-> -=09=09 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
-> -=09=09 PCI_SLOT(source), PCI_FUNC(source), details);
-> -}
-> -
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
->  int cper_severity_to_aer(int cper_severity)
->  {
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-265372137-1747737296=:936--
+>  
+> @@ -341,8 +387,15 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
+>  	u64 reg = 0;
+>  
+>  	reg |= FIELD_PREP(PMSFCR_EL1_LD, ATTR_CFG_GET_FLD(attr, load_filter));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_LDm, ATTR_CFG_GET_FLD(attr, load_filter_mask));
+>  	reg |= FIELD_PREP(PMSFCR_EL1_ST, ATTR_CFG_GET_FLD(attr, store_filter));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_STm, ATTR_CFG_GET_FLD(attr, store_filter_mask));
+>  	reg |= FIELD_PREP(PMSFCR_EL1_B, ATTR_CFG_GET_FLD(attr, branch_filter));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_Bm, ATTR_CFG_GET_FLD(attr, branch_filter_mask));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_SIMD, ATTR_CFG_GET_FLD(attr, simd_filter));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_SIMDm, ATTR_CFG_GET_FLD(attr, simd_filter_mask));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_FP, ATTR_CFG_GET_FLD(attr, float_filter));
+> +	reg |= FIELD_PREP(PMSFCR_EL1_FPm, ATTR_CFG_GET_FLD(attr, float_filter_mask));
+>  
+>  	if (reg)
+>  		reg |= PMSFCR_EL1_FT;
+> @@ -716,6 +769,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+>  	u64 reg;
+>  	struct perf_event_attr *attr = &event->attr;
+>  	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
+> +	const u64 feat_spe_eft_bits = PMSFCR_EL1_LDm | PMSFCR_EL1_STm |
+> +				      PMSFCR_EL1_Bm | PMSFCR_EL1_SIMD |
+> +				      PMSFCR_EL1_SIMDm | PMSFCR_EL1_FP |
+> +				      PMSFCR_EL1_FPm;
+>  
+>  	/* This is, of course, deeply driver-specific */
+>  	if (attr->type != event->pmu->type)
+> @@ -761,6 +818,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+>  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
+>  		return -EOPNOTSUPP;
+>  
+> +	if ((reg & feat_spe_eft_bits) &&
+> +	    !(spe_pmu->features & SPE_PMU_FEAT_EFT))
+> +		return -EOPNOTSUPP;
+> +
+>  	if (ATTR_CFG_GET_FLD(&event->attr, discard) &&
+>  	    !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
+>  		return -EOPNOTSUPP;
+> @@ -1052,6 +1113,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
+>  	if (spe_pmu->pmsver >= ID_AA64DFR0_EL1_PMSVer_V1P2)
+>  		spe_pmu->features |= SPE_PMU_FEAT_DISCARD;
+>  
+> +	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
+> +		spe_pmu->features |= SPE_PMU_FEAT_EFT;
+> +
+>  	/* This field has a spaced out encoding, so just use a look-up */
+>  	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
+>  	switch (fld) {
+> 
+> -- 
+> 2.34.1
+> 
