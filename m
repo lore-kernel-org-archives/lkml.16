@@ -1,187 +1,120 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8141519EEBF;
-	Tue, 20 May 2025 21:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1C524C09E;
+	Tue, 20 May 2025 21:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747776753; cv=none; b=dghWz4iNmGXS6xhN5RoJZjhUzpCv4/UwlypXjaHFimjo9I/3D2uzV38QbN8Vx5zBKbpFkmHizOAP/hoygMfGCJwaOph/gopjicAhlqI2VUj+E6Nsvi+5D3iPQKTMaPgGYIkvBUN2XdKbb9rXaOqYqynxgnR9z1HWkFoiC4IkHVE=
+	t=1747776824; cv=none; b=BG4NHua2dY6u1/EPm2vPDRejZA6QgUD/Tw19FACYiBehGkdLk7Mo3r4TDdpvyq0O8pSStOORQQp1/ObF2CbV4mSLgmlv5WPHWB28qW/EGiM0c/Jc20cQ7xFQuV6S+HLnmSFhjA5XiSRV5TiqNgNDMu41YlA5OpqPpt70Vn01DP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747776753; c=relaxed/simple;
-	bh=9RE2EISU6c/hbKUEQN54v3k7Gdmvx8O8/Y1FSzxrXF4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hLwGo4sUYGt6D3H4W7utjtsZ7XVM9j0JxS/yMVD6bgPw8dU6ki/xBNvjo2qthbI/zvEghSC02cUSzq6lc72aGqm65de74xufbjILwypLqX2TcOvi5P4x7jITaYy/u7fgNZHZZHq0+yfeH2rI2+cAce2eolP9PYvChAezVixXWbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LAI8WccE; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747776824; c=relaxed/simple;
+	bh=2dBBkVKAjPqMQO6yAxkJdcJQvunb0imiwfvphMP3bMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mV/twWMJeYfcGzs1uNwmtMrYTsfNZ9+Z7oM1GmU0V8wXuTMesf9vLKbKxxfIGbzxh0x76mdgxkV2zAGoN9pTb9rf/LaJJU5r06SPYaok3C6Y4l/2QU7j+FaaQocA3ap9yHFIbG7kXN1ICaeVPFgOe9l9jdz/QlsT4HZVJkvmAmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3VL1+gF; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAI8WccE"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-600210e4219so9339648a12.0;
-        Tue, 20 May 2025 14:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747776750; x=1748381550; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PVyeTtgp442HJDMgT08Hm8NeOQ55yWX3pvKDV8NYv8M=;
-        b=LAI8WccEX7VosUYBMNolLhLwXahB7QTbH/TdmlsChjzHNfxr69NC32dzPygo72CUyU
-         UBJ8qLSfez9nkXyfJK/xvllERi4jDj/HtvASRgguzTyFhtW+XoXRrhDee5UpidWoUb7j
-         q9orX0ZXFxRtNuYNRxzq0K71MwxzABPZXfqMOiPGJzALusk4I2k5sZ4xs9c2jW2kD3Q8
-         AjhFYXyM8LJ17wItEIZ42mhFhUmchz7j1DRamlHZDWrOqpAkBGUonjVt/odsIc6ixoqT
-         j7m/1+t44TkpO/IXITk5I/wxHOR1X279/Zdjkf7AIPvobtvAaVhF5xWXFMnDgOdOGRR+
-         dtTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747776750; x=1748381550;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PVyeTtgp442HJDMgT08Hm8NeOQ55yWX3pvKDV8NYv8M=;
-        b=M2insMWz7p5bTWJ15lqEGJ69mKQCez5mLbxwTZ5yrNaBwvAO08k3l7xuFmPjg82gjv
-         5dfVOZBITrPABIWv7yscCuBDsnlj0LXLeT9uVuZF5sXqx5Rrw9odzKv6bPiWZFvbrajm
-         D3x8g6wVQ6rpG1fh9hCMsMyuPQ5yJ168QruoAw6YNmzjXDfa2LWOWKZwRx03pxFNxneB
-         rs8LfsmXpLKocTzCf2mZiymLwNBhsxFzacGWO60O+kR/OCNTzXlcXTT3riej3az6GESU
-         11umia5IKS8gtCrZQr0x44gYzxgMYpv+RWTNED4g0gYHcEtkoD4mpHlfy4fviF9F0cOj
-         WrAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9+RWEcdYxH+Z09o1J6i29XO4VlC2Yzd1l+/kkKTOxzmON9j5xgbN5ZnziIWIlN3ltubMbNmNvbclsjus=@vger.kernel.org, AJvYcCXrCcB8zMF2Y6Wt3KPb8dyyZmZiaTzW0hOKAAheDhVRo8hR4yQmGdF4SiRaK6dH7TJyst399WuhkOSQyVgFC1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTUMUvb3tMFd5Sd9+syYLgU9K6YZnamaj2/VR3dRwiz4VvRVhu
-	dCdHHSBnrZcMHXztY3S1GVf2FqMpxCfc+CInHnGizwvDvtDsJlrOBtUsLKZivLdE6F3XOX2u8GE
-	l8u2/aM/CirL8iTl3Ee9razowG6cV/KU=
-X-Gm-Gg: ASbGncskVrpUJBPoTg+C4kUJmRV9t6saJ/0U/Wm8/l/KteZf/B7nqwKCvVzCzEQFZA3
-	xJhRI+6yekUj6zvKfRrBCN65xqupG/iqb37cXzIuyvJjts638DmxfN1FaC783BBSwuqimLpy+wN
-	5gOo5r5GyDLiCKTiey6OL9nJNvLUNEDLE=
-X-Google-Smtp-Source: AGHT+IE6ZfjH0fXFNg73kcmkQydRGkPJxZXm2rI85X7IwGpF2mp4Nj2W8aK6jolZcs3JZ0Fq7YjChtSqklpPuK2uKKY=
-X-Received: by 2002:a17:906:4ad8:b0:ad5:46a8:1ca4 with SMTP id
- a640c23a62f3a-ad546a82c11mr1220923766b.7.1747776749497; Tue, 20 May 2025
- 14:32:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3VL1+gF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747776823; x=1779312823;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2dBBkVKAjPqMQO6yAxkJdcJQvunb0imiwfvphMP3bMs=;
+  b=U3VL1+gFt75Uj4DOsCKLH8QYfNgR1GPQY25lWmrGXmqBYWIqCGGvhOI2
+   98x8ef9oOE/zUESh2vz7JOiX7n743wjbCbOU+oxyMjIg3tbpIB4aTTSm2
+   K5vsfPpNre5pjFCby2u4AH7tyQBT0JnnpmUhGSfbwr9O/2CyIpw9+1n94
+   j37ai65XObRaCs62/h/1ZFZttnMil1/YAh3VFSKGLR7RklFSiKxqgQboX
+   HVARqCR13II+eoh8NNPg3E0ZwHbWIIcAHbntV2JaCeI05dPCE0pyHIdbf
+   lnwATr0nFw+A4a7E90pYxamnvm1QWvlv4q5/I2Y47Qed1yKy9qHXwf5mu
+   g==;
+X-CSE-ConnectionGUID: FX8r+Xt7Q9SzCLKEYX4Fig==
+X-CSE-MsgGUID: dvasTuh4QGuMPUdGONXEgQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49886560"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49886560"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 14:33:41 -0700
+X-CSE-ConnectionGUID: qKGsHbZ/Soe+T5yrGWF48w==
+X-CSE-MsgGUID: Rx5ednNxSfq2WVZorJIWPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="143811827"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 20 May 2025 14:33:35 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHUab-000NaO-0J;
+	Tue, 20 May 2025 21:33:33 +0000
+Date: Wed, 21 May 2025 05:32:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: a0282524688@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v11 6/7] hwmon: Add Nuvoton NCT6694 HWMON support
+Message-ID: <202505210555.mud6jZoi-lkp@intel.com>
+References: <20250520020355.3885597-7-tmyu0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com> <aCN_PIYEEzs73AqT@pollux>
- <4fee85be-a8c5-4a99-8397-c93e79d72d15@nvidia.com> <aCxLyxcERNHKzfvI@cassiopeiae>
- <3cfb7a8c-467e-44d0-9874-361f719748b8@nvidia.com> <aCyZPUaPSks_DhTn@cassiopeiae>
- <bdb290d4-b369-4b8e-b78d-8c8d3cc07057@nvidia.com> <aCyhkiBTXV86P_GF@cassiopeiae>
- <dcd249d6-7e99-476e-b216-8ca9e1a936e5@nvidia.com>
-In-Reply-To: <dcd249d6-7e99-476e-b216-8ca9e1a936e5@nvidia.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Wed, 21 May 2025 07:32:17 +1000
-X-Gm-Features: AX0GCFtnnWOjvTVc4bevf2USIhVR5JOAj-n3PIwluhf2VOt5T6BTyJ01ydh9IxA
-Message-ID: <CAPM=9typcavVsj-w_4zaBkU=eo-hsOagHn4cMekCsXPHwLK3Aw@mail.gmail.com>
-Subject: Re: [PATCH v3 16/19] nova-core: Add support for VBIOS ucode
- extraction for boot
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, Shirish Baskaran <sbaskaran@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520020355.3885597-7-tmyu0@nuvoton.com>
 
-On Wed, 21 May 2025 at 04:13, Joel Fernandes <joelagnelf@nvidia.com> wrote:
->
->
->
-> On 5/20/2025 11:36 AM, Danilo Krummrich wrote:
-> >>> If you want a helper type with Options while parsing that's totally fine, but
-> >>> the final result can clearly be without Options. For instance:
-> >>>
-> >>>     struct Data {
-> >>>        image: KVec<u8>,
-> >>>     }
-> >>>
-> >>>     impl Data {
-> >>>        fn new() -> Result<Self> {
-> >>>           let parser = DataParser::new();
-> >>>
-> >>>           Self { image: parser.parse()? }
-> >>>        }
-> >>>
-> >>>        fn load_image(&self) {
-> >>>           ...
-> >>>        }
-> >>>     }
-> >>>
-> >>>     struct DataParser {
-> >>>        // Only some images have a checksum.
-> >>>        checksum: Option<u64>,
-> >>>        // Some images have an extra offset.
-> >>>        offset: Option<u64>,
-> >>>        // Some images need to be patched.
-> >>>        patch: Option<KVec<u8>>,
-> >>>        image: KVec<u8>,
-> >>>     }
-> >>>
-> >>>     impl DataParser {
-> >>>        fn new() -> Self {
-> >>>           Self {
-> >>>              checksum: None,
-> >>>              offset: None,
-> >>>              patch: None,
-> >>>              bytes: KVec::new(),
-> >>>           }
-> >>>        }
-> >>>
-> >>>        fn parse(self) -> Result<KVec<u8>> {
-> >>>           // Fetch all the required data.
-> >>>           self.fetch_checksum()?;
-> >>>           self.fetch_offset()?;
-> >>>           self.fetch_patch()?;
-> >>>           self.fetch_byes()?;
-> >>>
-> >>>           // Doesn't do anything if `checksum == None`.
-> >>>           self.validate_checksum()?;
-> >>>
-> >>>           // Doesn't do anything if `offset == None`.
-> >>>           self.apply_offset()?;
-> >>>
-> >>>           // Doesn't do anything if `patch == None`.
-> >>>           self.apply_patch()?;
-> >>>
-> >>>           // Return the final image.
-> >>>           self.image
-> >>>        }
-> >>>     }
-> >>>
-> >>> I think the pattern here is the same, but in this example you keep working with
-> >>> the DataParser, instead of a new instance of Data.
-> >> I think this would be a fundamental rewrite of the patch. I am Ok with looking
-> >> into it as a future item, but right now I am not sure if it justifies not using
-> >> Option for these few. There's a lot of immediate work we have to do for boot,
-> >> lets please not block the patch on just this if that's Ok with you. If you want,
-> >> I could add a TODO here.
-> >
-> > Honestly, I don't think it'd be too bad to fix this up. It's "just" a bit of
-> > juggling fields and moving code around. The actual code should not change much.
-> >
-> > Having Option<T> where the corresponding value T isn't actually optional is
-> > extremely confusing and makes it hard for everyone, but especially new
-> > contributors, to understand the code and can easily trick people into taking
-> > wrong assumptions.
-> >
-> > Making the code reasonably accessible for (new) contributors is one of the
-> > objectives of nova and one of the learnings from nouveau.
+Hi,
 
-I just want to back Danilo up on this concept as well.
+kernel test robot noticed the following build errors:
 
-When I did the experiments code, I faced the not fully constructed
-object problem a lot, and I tried to resist the C pattern of Option<>
-all the things, it's a very C based thing where we create an object
-then initialise it as we go, and it's not a great pattern to have for
-rust code.
+[auto build test ERROR on andi-shyti/i2c/i2c-host]
+[also build test ERROR on mkl-can-next/testing groeck-staging/hwmon-next abelloni/rtc-next linus/master lee-mfd/for-mfd-fixes v6.15-rc7]
+[cannot apply to lee-mfd/for-mfd-next brgl/gpio/for-next next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I'm not a huge fan of constructor/builder objects either if they can
-be avoided, please do, and I tried to also avoid proliferating them,
-but I think for most things we can build the pieces and then the final
-object as we go, it just requires doing so from the start, and not
-giving into the Option<> pattern.
+url:    https://github.com/intel-lab-lkp/linux/commits/a0282524688-gmail-com/mfd-Add-core-driver-for-Nuvoton-NCT6694/20250520-100732
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
+patch link:    https://lore.kernel.org/r/20250520020355.3885597-7-tmyu0%40nuvoton.com
+patch subject: [PATCH v11 6/7] hwmon: Add Nuvoton NCT6694 HWMON support
+config: i386-randconfig-013-20250521 (https://download.01.org/0day-ci/archive/20250521/202505210555.mud6jZoi-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505210555.mud6jZoi-lkp@intel.com/reproduce)
 
-Dave.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505210555.mud6jZoi-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/hwmon/nct6694-hwmon.c:12:10: fatal error: linux<mfd/core.h: No such file or directory
+      12 | #include <linux<mfd/core.h>
+         |          ^~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+
+vim +12 drivers/hwmon/nct6694-hwmon.c
+
+  > 12	#include <linux<mfd/core.h>
+    13	#include <linux/mfd/nct6694.h>
+    14	#include <linux/module.h>
+    15	#include <linux/platform_device.h>
+    16	#include <linux/slab.h>
+    17	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
