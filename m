@@ -1,93 +1,145 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8335E12F5A5;
-	Tue, 20 May 2025 13:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EB921C9F5
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746304; cv=none; b=a+KscoiK2Vaj9bzAks8ZObnYICAejWSegZibTQssG+p2K3IiqbvczSLmiXI1v2VGQVdM6FTmfufLnNrTgTVzw7lNlGFzkOFJKxOMbvOMBn0EIB+fhcxwLVWaYaB9pnsvCbyjJqXCex8eDgbckXORzqHaoML8TeNX3Jwx4IDDlWg=
+	t=1747746369; cv=none; b=F0es2cv0jH/Z6Z3ubNBMpYdGS0oUbVlnLOsvoAZb6V4jN4DW3WJyqyPKjdBCjVSF5vw1hfL9Y0Abjpey0desi2stkdMsDm0CS2alXQfNwE0T7D53n3q239BBFVsW27utT4Ef0AUl83XF5eDuKaPnywq1OweEQSvZTqLoe7zuSqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746304; c=relaxed/simple;
-	bh=0muRCv3c3eJ7g6gmyBRD0irSfDgk2oTjiNhBPV+L93Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A1yXcsRjtEj7j8q/IWI3gsoMdjIf85pVzB+GXyFiqfNKkA8q/7KzcPR7drSNZtIzUUxVjWBQerMU7PBH6ppSxHfyRsSsRi0mMJ2Iz25qET+j41SXBd4nTwYLUVGf5/sLVpeix8bcDQXS5B5sdBlQhXi48TQXPEGsy3IvMnpdYlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b1vsC43rdz4f3l26;
-	Tue, 20 May 2025 21:04:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0B61A1A06DC;
-	Tue, 20 May 2025 21:04:58 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_4fSxoiCXqMw--.54580S3;
-	Tue, 20 May 2025 21:04:57 +0800 (CST)
-Message-ID: <a5145aba-1412-488d-9d8d-05a108029327@huaweicloud.com>
-Date: Tue, 20 May 2025 21:04:55 +0800
+	s=arc-20240116; t=1747746369; c=relaxed/simple;
+	bh=ygHawv2Kt/gl9imzYrpW3w0g6eLfPzMgRVuN3qs66T8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e/oP92596wENs2J5xmHDdTIIixK8y7FxumKGLmn51HqDP/abenp6ej4O7dUTX+5lQ7Emqbvhd8/FMz/wCrudbidl3/IUY21C8Ly+tB+0dQWzCJXaBEELbCyVNFQR0iaGv5Cjq9Dw6S5wFmewfGJP2UVMij5o44ouyLrqbMZ9w+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FfnwjPHI; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FfnwjPHI"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a3683d8314so2597091f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:06:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747746366; x=1748351166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ygHawv2Kt/gl9imzYrpW3w0g6eLfPzMgRVuN3qs66T8=;
+        b=FfnwjPHIT3Y31B4/i0S0surlbTjZDCbcO9lzjCQ62aJM+HlfeGyyWPMqI+ANJbLxp3
+         eibqCYXO54oCvgfe6yJ/6K7me6tP6I6/HxmNzVZ45ayTI0jmSkuFj6veny5Bc3pFYjL4
+         aQm55d6pSgkVq2t8Y9kqPmpURULqsdXNNQprIuuhLgfbLUVnbNJmr2xxkyZv2AvYxzfK
+         lKEr+H0h4be8wkon+zhJUflxhUvpjCpEXT49rhCo0YyaOpPw/VWi9cau7R04nXeB56ov
+         fHBeVx/kGc+g6GgOXftGjxhfGw0tXB4JTF6PrKztfoHRI8zH0DHm+ZJpMwsHaEs3VZ6J
+         lEsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747746366; x=1748351166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ygHawv2Kt/gl9imzYrpW3w0g6eLfPzMgRVuN3qs66T8=;
+        b=W6iZ1tVn2uWfyUX9BeaM5rWHm3IevmLp58mjOuPNRQJFLedQEhY4UPyQ+g8aoZqhG/
+         ujga46VKENzZvMj/c+jMvB3EedDBJMLz7z0HU1P9W5S8NUnC0/yZ2TEMSU4C9MET6ZYG
+         h3Ix9xjfF5p8MclVKefTywC1RXp7goWQhwoUgBcPB2KSqnn4gG9v7WBvCAUSJ12HPKLT
+         mj9V4aW/oPC+PnWDMhtycCryNiKwszB3+71w+aNLzdfFS1YO4HL0gIvaPfv1ZE0DTw/c
+         47hMqqJA/1F1/rehte4+ldVKzmk90Pzcdk9h4M1TWRwH2JgBnoc1nUXSdHrJoond/fOE
+         8W+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWVp1MfqxznRL0aMBk/ZarDtUSgOdTJ2baAn8eJzgTZilgqzvLnAH4dQAvvQYRGtykG5hvscoc5isj5X9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySSj+scNYp/IFcWL7agyx12ZebwJ0Z/xnrx/1KId3G47TpDXhZ
+	rz5eDFoCSfEuQR2v7gFPX0Suwcp1LjQnhd7HI+9UWenNbdaLeuUOhC4ZmU/kfpu/IxLoM7jF/Qz
+	fEv+5ssdp+lk1muiUak446EgROGq65obEgPUeKh8m
+X-Gm-Gg: ASbGncsMT8KPvG9OeuECccuaqH9qLUR72KaT37Ayucpfy3swjc+1NtAcHSI0fseNhIg
+	HNbDtdGUpqmWqUnqGI3AzKtmxtgFmiBhS1m2E/f5TijJXHZ6kMfJghdeUP5rnnFPGEo15TSOLrH
+	2gb0wZo3t5r5IO1VJbN+QmjJHVoqv40+Up2eWY76l0PW9W
+X-Google-Smtp-Source: AGHT+IGiwEyvaaxNGP3p8OmMJE8qylxD5/OsHsmXFSKNlYqPCGvMnZ49i5JjquiQOA3AGv5mJej974Pj0vxbhasJKGg=
+X-Received: by 2002:a05:6000:2907:b0:3a3:64b7:620b with SMTP id
+ ffacd0b85a97d-3a364b7643cmr11366256f8f.20.1747746365859; Tue, 20 May 2025
+ 06:06:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] ext4: correct the journal credits calculations of
- allocating blocks
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, adilger.kernel@dilger.ca,
- jack@suse.cz, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com,
- yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-6-yi.zhang@huaweicloud.com>
- <2e127ed8-20a2-4610-8fd8-e2095bde0577@huaweicloud.com>
- <20250519154800.GD38098@mit.edu>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250519154800.GD38098@mit.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgDXOl_4fSxoiCXqMw--.54580S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7JryUJrWrurWxZF4rurW8tFb_yoWDtFb_ZF
-	48ArZ2vFyUGF1xGanFkrs7CFs2vayfG345Gry8W34UKw1rAF4kGanYkr9xZrnxGFyrJr98
-	uFn0qr1aq3W2vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOB
-	MKDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com> <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
+ <aCwRZlkBWekRmDg7@Mac.home> <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
+ <aCx77cCum_b-IR4H@Mac.home>
+In-Reply-To: <aCx77cCum_b-IR4H@Mac.home>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 20 May 2025 06:05:52 -0700
+X-Gm-Features: AX0GCFuHsICvFNulDXvpM7f_XY9rp0cDon-cvyaK34Cte_mRien9oBSvi2v0fiM
+Message-ID: <CAH5fLgjqj7binVaLDh7Pc7SVKDM-XrYDEDj7GYBX_MnjHgufFg@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Jann Horn <jannh@google.com>, Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/5/19 23:48, Theodore Ts'o wrote:
-> On Mon, May 19, 2025 at 10:48:28AM +0800, Zhang Yi wrote:
->>
->> This patch conflicts with Jan's patch e18d4f11d240 ("ext4: fix
->> calculation of credits for extent tree modification") in
->> ext4_ext_index_trans_blocks(), the conflict should be resolved when
->> merging this patch. However, I checked the merged commit of this patch
->> in your dev branch[1], and the changes in ext4_ext_index_trans_blocks()
->> seem to be incorrect, which could result in insufficient credit
->> reservations on 1K block size filesystems.
-> 
-> Thanks so much for noticing the mis-merge!  I've fixed it in my tree,
-> and will be pushing it out shortly.  If you could take a look and make
-> sure that it's correct, that would be great.
-> 
+On Tue, May 20, 2025 at 5:56=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Tue, May 20, 2025 at 05:42:51AM -0700, Alice Ryhl wrote:
+> > On Mon, May 19, 2025 at 10:21=E2=80=AFPM Boqun Feng <boqun.feng@gmail.c=
+om> wrote:
+> > >
+> > > On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
+> > > > On Mon, May 19, 2025 at 4:56=E2=80=AFPM Boqun Feng <boqun.feng@gmai=
+l.com> wrote:
+> > > > >
+> > > > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
+> > > > > > On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.=
+com> wrote:
+> > > > > > > This is a port of the Binder data structure introduced in com=
+mit
+> > > > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor looku=
+p") to
+> > > > > > > Rust.
+> > > > > >
+> > > > > > Stupid high-level side comment:
+> > > > > >
+> > > > > > That commit looks like it changed a simple linear rbtree scan (=
+which
+> > > > > > is O(n) with slow steps) into a bitmap thing. A more elegant op=
+tion
+> > > > > > might have been to use an augmented rbtree, reducing the O(n) r=
+btree
+> > > > > > scan to an O(log n) rbtree lookup, just like how finding a free=
+ area
+> > > > >
+> > > > > I think RBTree::cursor_lower_bound() [1] does exactly what you sa=
+id
+> > > >
+> > > > We need the smallest ID without a value, not the smallest ID in use=
+.
+> > > >
+> > >
+> > > Ok, but it shouldn't be hard to write a Rust function that search tha=
+t,
+> > > right? My point was mostly the Rust rbtree binding can do O(log n)
+> > > search. I have no idea about "even so, should we try something like J=
+ann
+> > > suggested". And I think your other reply basically says no.
+> >
+> > We would need to store additional data in the r/b tree to know whether
+> > to go left or right, so it would be somewhat tricky. We don't have an
+>
+> Hmm... I'm confused, I thought you can implement a search like that by
+> doing what RBTree::raw_entry() does except that when Ordering::Equal you
+> always go left or right (depending on whether you want to get an unused
+> ID less or greater than a key value), i.e. you always search until you
+> get an Vacant entry. Why do you need store additional data for that?
+> Maybe I'm missing something here?
 
-The merge in ext4_ext_index_trans_blocks() appears to be correct now.
-However, the issue that Jan pointed out regarding the modification in
-ext4_meta_trans_blocks() is correct, it will also lead to insufficient
-credit reservations on some corner images. I will send out a fix ASAP.
+Let's say you're at the root node of an r/b tree, and you see that the
+root node has id 17, the left node has id 8, and the right node has id
+25. Do you go left or right?
 
-Best Regards.
-Yi.
-
+Alice
