@@ -1,97 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A84EEDE
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5B0EEDE;
+	Tue, 20 May 2025 14:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751422; cv=none; b=AH1W1M9HiKbMY1R16griWHiNCTDA6dXrrRdmkqz4TKAMOe0botX0UxcwX9RCdv/Rxqg1mZxXUtc3VRRevBgskBDdE88z5ag6xOoIhQVFhjlFsvGqVry+X3945BSr/RQ9tzS058vF8KRCXv9+KoyGvtOIahgpNMpAx3FtXtyadlE=
+	t=1747751428; cv=none; b=jrXnSUNzMZysOWxzmJe7zqu1KFJ+R9DFyHLJsOJbpswxtT1zoxKgLNBfczvfoKZxaf3izbuBYfyUxrkUXsTSsGjg6bWO55iI7c2HA2uI0NI8jDkIgqGHgMkVa8wXF2uesQw6y50qtLjcL//fsdK+zZGoKIQbTfUPga08kDBM+SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751422; c=relaxed/simple;
-	bh=tDxFg5u7htARHr4/+5MkmgEU9t8HaQ9XdhHL6oCTbIU=;
+	s=arc-20240116; t=1747751428; c=relaxed/simple;
+	bh=muApyINzTB9u4a/fQgtoIyPRGqFRWXQQmhe1H/OsntU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLdDlcbFY9pRa5+uQ6L25LVEDEgv1ZS++Xj/GiKPbMOMNfdiN59OqczkJw79s1pnP+Tkbh6nlEAdr0YUJoCC4antRmXapvZ6CnEsb3QEYs7+fSzhY8sKQvNtYizRwoTAQYTjYF9sYXRLjONAdnAPjKBUA57B/RQVmA2rK3OLbMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0i9OMxnJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=vFscY+q7Ny1cqnvRPY7gr3DnoIz86j9Y4gIg6ySqdWff4Hw3akHIeod+YIclMQ1+GNiqz2TV99BmTKcpnLOgXHPuh44IXndVSNjNr+9VtVEpdmqU7q6vVzwY1+Dhlc2ug7+l/H5q8fp+ubegzr40TgXCaY9SZlA1WYz6F46PPo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b1+f6y/q; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0i9OMxnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF68C4CEE9;
-	Tue, 20 May 2025 14:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747751422;
-	bh=tDxFg5u7htARHr4/+5MkmgEU9t8HaQ9XdhHL6oCTbIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0i9OMxnJZc8zYB9c3yoqFwnbfGGIK4pwY7ZJI1uEHMYiYQHZ791OpXV57EQfzzIYg
-	 k0+/7CCayFJkYr8ZnvQ5OCRUIJMF1BtKDiF8MD+jti2fu1iVGaS+oaB7W0ASXLqrZO
-	 aHoWyg7RTsSoazl7uvqL2y9A7xYnz3Ms38mdyPV8=
-Date: Tue, 20 May 2025 16:30:19 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] container_of: Document container_of() is not to be
- used in new code
-Message-ID: <2025052000-widen-lip-350b@gregkh>
-References: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
- <aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b1+f6y/q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=60oYgzAqshuD6yLOKdWI/2Zup0hrKz6aeKRaimHYHAU=; b=b1+f6y/qH2058NF2o/xrWpwO2L
+	8MoTZG0nKc3MTgGQfRLBEdPRafkGWEK3ijxCQ9bcpbumoeiNLv86XQr9TWXw/ZqLfeeD6OQBg83P1
+	CaOiweBnQ5dCVPAv5On3ryybfKlhWBMlvWfjvQ0OfkUjmAvZBizf7FXaqJj3BJ71oYsM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uHNz0-00D8Jc-Gt; Tue, 20 May 2025 16:30:18 +0200
+Date: Tue, 20 May 2025 16:30:18 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+	andrew@codeconstruct.com.au, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [net 0/4] net: ftgmac100: Add SoC reset support for RMII mode
+Message-ID: <cfb44996-ad63-43cd-bbc5-07f70939d019@lunn.ch>
+References: <20250520092848.531070-1-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
+In-Reply-To: <20250520092848.531070-1-jacky_chou@aspeedtech.com>
 
-On Tue, May 20, 2025 at 05:16:45PM +0300, Andy Shevchenko wrote:
-> On Tue, May 20, 2025 at 01:34:37PM +0300, Sakari Ailus wrote:
-> > There is a warning in the kerneldoc documentation of container_of() that
-> > constness of its ptr argument is lost. While this is a faible suggestion
-> > container_of_const() should be used instead, the vast majority of new code
-> > still uses container_of():
-> > 
-> > $ git diff v6.13 v6.14|grep container_of\(|wc -l
-> > 646
-> > $ git diff v6.13 v6.14|grep container_of_const|wc -l
-> > 9
-> > 
-> > Make an explicit recommendation to use container_of_const().
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> > Hi Greg, Andy,
-> > 
-> > I guess we generally agree the additional constness check in
-> > container_of_const() is useful, but adding the same check to
-> > container_of() generates warnings -- there are some errors, too -- such as
-> > this one currently:
-> > 
-> > In file included from /home/sailus/src/linux/include/linux/bcma/bcma.h:14,
-> >                  from /home/sailus/src/linux/arch/x86/kernel/early-quirks.c:17:
-> > /home/sailus/src/linux/include/linux/ssb/ssb.h: In function ‘dev_to_ssb_dev’:
-> > /home/sailus/src/linux/include/linux/ssb/ssb.h:291:14: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-> >   291 |         wrap = container_of(dev, struct __ssb_dev_wrapper, dev);
-> >       |              ^
-> > 
-> > As noted above, 646 new missing constness checks were introduced through
-> > container_of() macro use during the 6.14 cycle alone. Most of these are
-> > likely harmless, but with so many new users some are bound to be ignoring
-> > constness.
-> > 
-> > Once the warnings from bad container_of() use are worked out in a way or
-> > another, the constness check could be added to the container_of() macro
-> > and the current container_of_const() be dropped altogether.
-> > 
-> > If this patch is accepted, I'll see how to add a warning on container_of()
-> > to checkpatch.pl.
-> 
-> Hmm... Wouldn't be better to fix non-const cases and add the const check, etc
-> to the container_of() instead of doing these comments?
+On Tue, May 20, 2025 at 05:28:44PM +0800, Jacky Chou wrote:
+> This patch series adds support for an optional reset line to the
+> ftgmac100 ethernet controller, as used on Aspeed SoCs. On these SoCs,
+> the internal MAC reset is not sufficient to reset the RMII interface.
+> By providing a SoC-level reset via the device tree "resets" property,
+> the driver can properly reset both the MAC and RMII logic, ensuring
+> correct operation in RMII mode.
 
-Yes, fixing up the existing places where it is broken would be best, how
-many of them are there now?
+What tree is this for? You have net in the subject, but no Fixes:
+tags?
 
-thanks,
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
 
-greg k-h
+	Andrew
