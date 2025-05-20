@@ -1,100 +1,135 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DD225A334
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272925745F;
+	Tue, 20 May 2025 19:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767600; cv=none; b=NTFRM5AZ8UB3J5bO0jwQVhEYOBHJy/1D1vB4Z3pGcCjrMi2u2hsuibAfjl4tIhBbm2+LWT/91UU3IHnu4hGv4Ty0Ud+HY31dy0saqZU9akQWLjOPyT3yhSkxGJqTQfQ3lwfLPVEsxEPUVBiabSD7r27iqwioRWCpgdMFQtd7u50=
+	t=1747767609; cv=none; b=Ap3eSr+TMz4IYEbnB0Oq7Qs6xiANSZ06DOejMESccNqBL/f6pd6yjLzWXJKpMhKcZlthBD6Pqb467gJcDXF5XvretIf1tN5B1bn1YC0vJW2GqTm7DEVf3TesLNbv/t8gzo/FKOJeUAVT29d0DDuUqwhETGrpHOvza4qYffTGTXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767600; c=relaxed/simple;
-	bh=pm0N4KqimJM2q5oKpFTCB6IWl6vayRKp0yJfHFkSReI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifJZKKjawHwfdWwPRuMJ+dKJsKLDNVNIXuj0HNpBmfrGtesxwJzF4QYeiZ7M1zb8/bfaZDiZmHURGXx56Mwt4HQH11GsnY6x9qSqij+wLQzpsz2AUKJQK9u+8vv97/M70Dz5Zm1j45lCDSgiWRHdmTDon0ZPGORYJeFs9+VQZ2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoxI443M; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1747767609; c=relaxed/simple;
+	bh=HZcbWAnDrzpvnH9G0Q9jaOv82qQp+Qmcrd0rTVFy8i4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YS6ZxpCXWUhzwdX6DZDD3w+yzhR0CI+1eRO0e0j0S5uyQj3juiPj93o+DeQDncuD1fifTmANAdwb/bis4SdFHlud5ZcrGYnZ9dHOuFLAj6JesgtLlRCErc9k7MMWC+9zjsUWEl1b/7jkKrjQGkgx12jlXcwDv4cuh5OpBVgy0lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzJ7L1ia; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoxI443M"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c73f82dfso2530142b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:59:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzJ7L1ia"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7086dcab64bso56051857b3.1;
+        Tue, 20 May 2025 12:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747767597; x=1748372397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QCFeaFE9p5xYmCud9mGS54r/EjOthwHhG8Iy4AQvJ+g=;
-        b=VoxI443Mlu0tCypxvCAZo8Rp5YXClPCifBkNwMS3BX2LXYuCTx4rTxz2XGt5kcQsax
-         5WMvR+/ZyTPhkCGxJ7rL1NYaYGc76PfgB+J0cXwrMULgS0VYmbjnGz4SEfc3UbozyAXN
-         fCjeczMhS7USzpCpMj9oxYvG2Q/C/727sACDQFhw4W5N54yVnYXEjaDKnYiF12jXtXGD
-         nG1IERxFbiTP51eY/OlKyWg+nEmfcMIKgdiXPJUn1qbqmWOp+BjeymANxXMu1jmVsyz/
-         DHpYPoOurfI/yYJsYTZBWwO6uR00EJGlwEJWMqnWkC44uaSFm0XtdLQot15yF+sc477p
-         ltEg==
+        d=gmail.com; s=20230601; t=1747767607; x=1748372407; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nir6kkeRUNYnE5nlG8GRhALN4HusH3tor7I7uLCCtVE=;
+        b=hzJ7L1iaY41hO+AdkpY1P5TkExG55ZofZhNMAdHxOzI6ATNwkd1ijJH+7K5HukilFm
+         30A8lPyYRDRsslqIVrLnvJAPLPZ4pIC9gLm2f0Jc3VBbnK6IsIVdAGSpmuI0BKiLu5UF
+         QjJu2EMqRryFVkTGN+0T67nV96slxUYiGKWZgOcBhSQgUP07O950hmFOiHI1lhfgYm3l
+         wC2CZSH1c+kHMWCwk+eFahdcRYDwvKDAWsvSGMar4ZZMN061PYF8AaaZrRwY271e8w+o
+         N/qzd9K+TNfrZLdW1DfZCpcFhaOVWEVzEQe+WADbkxxE1iKk55X3MfQ7k+BFK7cD4Uq5
+         AW/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747767597; x=1748372397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747767607; x=1748372407;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QCFeaFE9p5xYmCud9mGS54r/EjOthwHhG8Iy4AQvJ+g=;
-        b=EiaRYq6Ff2CN7paa9BWotwC6eq0adIxsJ0ZxGEk8bAsyHf44RPQXTq6s2XRfgrDFGl
-         I44zYfO02kdZCSi8q7of8AncJ9vcIQng35u+7eBGptJ1So0ypQjS0qRzSFc0zUW7p0/7
-         zvVEP/ISej1ieNrTb6wEex1vprZytXbLOo590eSUVaxHOEWToE4PGGt1bRS7qqNN9u3h
-         YUZrCPqsZ7WKi+exuFJcq6VDHKS2tEsbmfa6IBkADwVgtQSd9uNqXvzjqxxBQEfEkNvZ
-         hakQ6xJep5uXiqTH7HnQe2HucY58eWUrS9u3UhAth/ZRjqoflgDhuYPf7dGka+Eou1Gk
-         nhvQ==
-X-Gm-Message-State: AOJu0YyzNjx6Df5fPqtHTpDCZ3QCzKMaj29+R6CYNgNwnJt6vImvLKep
-	l25n1x9m5s7KP/YT/R0hmSbdbeIzkrjT3TFdYT46f3TQJEQSZOkhbtD84ZcGwQql
-X-Gm-Gg: ASbGncurjy1adtq0z9U/WzM79nnNisqNoa/svMqTL+2JHioaAm7Pi6SgaqrEgvyFtG7
-	E3Ikc6eJFhxauEyB9ZfSr9u5lDOQDUHB9uK1FFX59GGip4T9tQnPfuKftoZh8AbgqVlisVctj4b
-	KSm64hisutxnqLUBaT+QdzMCvt/q+NJ1feagLeUx9kJLiIOVTWes96u+T5iT8NQRlXi8csVgb9+
-	9jtS11SYooRLDF4JvV4xJCgWHhdFksj5nxjqSw7ZHlMyYTBuxIJoHEIArqALFEsrW6omYpgezuz
-	/+hJe6OvQ9pJbC2haFGXIX4Xn3RS3iUfs6pzxiTrwJIOJPHmgNB++/k6hcXbwCNs
-X-Google-Smtp-Source: AGHT+IG6WhsRsT+fgNhzBA3ZelrE8DCiEzUzSxS2m1eG+NRTf0tOBkFisri6SwJDsxVLboEe2jvrwg==
-X-Received: by 2002:a05:6a00:2da5:b0:736:32d2:aa82 with SMTP id d2e1a72fcca58-742a98d4943mr24196150b3a.23.1747767597075;
-        Tue, 20 May 2025 11:59:57 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9871500sm8437126b3a.131.2025.05.20.11.59.56
+        bh=nir6kkeRUNYnE5nlG8GRhALN4HusH3tor7I7uLCCtVE=;
+        b=LUsp7vHnTcsO2b76v+jEkJGdiXObLH/+bEHmj4XQ3G9UA4cS355tLNWVqv5M5+Dl1d
+         sinPmIpo9WsWb4J5PxflJFd9X3P65rRME0ev/jM29HqZRVLxsiwQs7g/85bp4BHvdfne
+         EbH3iK/5TUj4zVF3o1WIqQTmgjSfidd2srVBMelh25KLYIosmqBS+ariin/68EJjF3Wd
+         jgDS1PwntklFFssl+puKoiqNbJL24f13Nx/J1HlkOQuLc83RUEMh+kS3+2M2Rzwz9/iP
+         GjRKng3tLYRUIepLcOQuT1qEJs5J8a49ZpiCs+iVVnWWs+p+MTbvs8U/g67SJLNVyzzw
+         babg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNTVAam2cdMisaN0E+Gb5sexOl/Ela8eRAj+xqRL++Su1B9chvGEkKAEWTW134QMLbAsuRCeFQ7O6D@vger.kernel.org, AJvYcCVTthWLecnc5kuAkMtbIXTw+yzFDTefWG8jvpJyR6g1OQWvEHm6Ftvqmho+Gjh3ysPfSpLF3shB9vRlXee6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVCHC9/LuJpjYzUlsRkQebeFzgQJ4IgXadY9AUrP2gDO+wqtgk
+	5sWcGyneWoWDZ3xYtJ/2S/gsiVAAzUQolJ6w/YYfVfBnlWaJQqv3nbyY
+X-Gm-Gg: ASbGnctUMz2moJ0XBqw+tyZxCHW8oonjN8SC9qYG+Kfz5q2SnrcFb55G+YFxiLyUIez
+	JFs0yGCkReNm/ZiimypDC1hy/Ab4WkzftO9pEH/+n7QT8ZxNde9Us9fmJZAmRsgadhHjC6qV0qY
+	vqXMC6m4KigLkzzrIfK3oituS0a/BUXt1vh4xHHns6bXpvGgHriQ8GAya3lJD/G9tPO8NZY0tsb
+	oAOOhPdxrbxHUij15zvTQb8e/4e0THzQlU1ubEw4a6JCa1k4I8qzC9Kv2WhFjfqyn/Nu9sl0eG5
+	3OYveruGKJizbXBx+EYpFUxWkLtZKVkxCGove788pSNroR5ccJ8=
+X-Google-Smtp-Source: AGHT+IHxf+Oh/vGp6cBjqEcIC0Qws0kB/8+qRetQYgkKEknE0CQAtz1R6fSe3QJttyS8pBn/KKYwBg==
+X-Received: by 2002:a05:690c:9a0a:b0:70d:ecdd:9bd3 with SMTP id 00721157ae682-70decdda059mr27302927b3.27.1747767606598;
+        Tue, 20 May 2025 12:00:06 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:70::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70ca852db7esm23412547b3.101.2025.05.20.12.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 11:59:56 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 20 May 2025 11:59:55 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 6.15-rc7
-Message-ID: <d097c63c-a475-452c-b3ac-7439b80b92d4@roeck-us.net>
-References: <CAHk-=whtwpdL9e_5j1oq8C=1EZud_cXerZeHqe5L8y7wG+34EA@mail.gmail.com>
+        Tue, 20 May 2025 12:00:06 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: gourry@gourry.net,
+	harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rakie.kim@sk.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Tue, 20 May 2025 12:00:03 -0700
+Message-ID: <20250520190004.274765-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250520113713.9b28c705b421c8bd3a51ac45@linux-foundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whtwpdL9e_5j1oq8C=1EZud_cXerZeHqe5L8y7wG+34EA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 18, 2025 at 02:19:03PM -0700, Linus Torvalds wrote:
-> So last week was reasonably uneventful, although I do wish we had a
-> bit less churn. In particular, we had another run of CPU bug
-> mitigations, which always adds some fun to the workday. Not. But the
-> fallout seems to have been fairly well contained this time.
+On Tue, 20 May 2025 11:37:13 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+
+> On Tue, 20 May 2025 11:11:24 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 > 
-> Aside from that, some drm Xe fixes stand out, and there's a slightly
-> bigger patch for sched-ext. The rest looks quite small and harmless.
+> > > Honggyu's Reviewed-by is the only change I'm seeing between v8 and v9,
+> > > which is unexpected?
+> > > 
+> > 
+> > Hello Andrew,
+> > 
+> > The code cleanups & wordsmithing were part of the fixlets that I submitted,
+> > so if you are diffing against the version of v8 with the fixlets already in,
+> > all you should see as diffs are Honggyu's review and test tag, as well as
+> > Ying's review tag.
+> > 
+> > I was not very familiar with the fixlet process, so I imagined that I needed
+> > so submit a new fixlet to add the 3 tags. If that is not the case (and you
+> > can just change the tags without adding a new fixlet) perhaps we can keep
+> > v8, just with the additional tags so we can keep the patch in the unstable
+> > branch?
 > 
-> So while I wish we hadn't had some of the excitement of last week, on
-> the whole it all still looks pretty solid, and unless something
-> strange happens I'll do the final 6.15 release next weekend.
-> 
+> Yes, while the patch is in mm-unstable I frequently update changelogs as
+> acks come in, as people provide testing results etc etc.
 
-From my testbed:
+Ah I see, sorry for the confusion in that case. Then I think all that should
+change is to add Honggyu's review / tested-by tags to the changelog:
 
-Build results:
-	total: 162 pass: 162 fail: 0
-Qemu test results:
-	total: 633 pass: 633 fail: 0
-Unit test results:
-	pass: 592633 fail: 0
+ Co-developed-by: Gregory Price <gourry@gourry.net>
+ Signed-off-by: Gregory Price <gourry@gourry.net>
+ Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+ Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+ Suggested-by: Oscar Salvador <osalvador@suse.de>
+ Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
+ Suggested-by: Harry Yoo <harry.yoo@oracle.com>
+ Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+ Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
++Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
++Tested-by: Honggyu Kim <honggyu.kim@sk.com>
 
-Guenter
+Thank you for your help as always, have a great day!
+Joshua
