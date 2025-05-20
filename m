@@ -1,121 +1,144 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074DA1D90C8;
-	Tue, 20 May 2025 04:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2414678F3E;
+	Tue, 20 May 2025 04:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747715676; cv=none; b=A6lR05RWfBB9N7qF4CQiiuTqz83oLt8CgavrjV5z8T6Re6xGx7NzQsU1qS2zw2fwvMBXhvoAAmAAGReNPEOp2DvFje0IGB3mN2nMZXpnh0pIUehs4ss0r1APQvlIQcWPTl4JS2XTwSGRQqk/JtNuH8fOBYgU+E7e3Ezw0mtDd4s=
+	t=1747715820; cv=none; b=FprbelXiBPr6gaysS+Gv05eEXFpL5fgzMfBTMbH/ybj38UMobGJx2tkw6b82EwHeyeaFvU24VCHf/Ov+KfzGajXWnVBG/Hm/lfNZXv67yu4VdKYVpszA0UCn6GjmxOdcw3QFaBuc4mH9WmyUVeV7u4SqFdQLmeUsFCxXku6qNk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747715676; c=relaxed/simple;
-	bh=yeGc+XD0k3LZ9UJmhqDSts9L4n+Fozk4dj67vHp5imw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AIf3G8WhWmaOD5TO6rqZb/z/19uAkYCRgrInI1fFoaLeANVnY1YhkoCF3vmS8CPRhDHs4FAhGaQXR4xF3XnY92f1hNlwaFNfmW8233vBSB+IklbhgM/GW3UpRtLeX0Cp6WpH6E+pgoBHl7WaH3bVAymNzWxHmH3Iz/uuBKOdJRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAfjpNUA; arc=none smtp.client-ip=209.85.219.182
+	s=arc-20240116; t=1747715820; c=relaxed/simple;
+	bh=NhQGxhQ0yL17B3iT/BXjOM4IQOEzGgZC+klQ1+d1vtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DlI/Y9/isg+V3/DCA6GbwLUe5HO6kZ1ccIFEh5U3/WkVg/moEzmkJS6UjMBq3uVSrJ5ZOdXWfgeahZczKEZ/uQ1Eg5S4dw1j8weSuPMdQgb5TSaI9WLMK3OyxOJ/yyTckvSakDJMKsTHP/eAch6ebKUMcoWJWjhCQh+L71KDDxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FpLi3S0G; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAfjpNUA"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e75668006b9so5370830276.3;
-        Mon, 19 May 2025 21:34:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpLi3S0G"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c277331eso5477637b3a.1;
+        Mon, 19 May 2025 21:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747715673; x=1748320473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KLdIEO3JhzFK3+pAV0v9OMiBG9saZVl50Zc3M7eZWJs=;
-        b=GAfjpNUA4VlvtaABDYx7D+bhiFosaXy3CWuMtv1O3coE2UNNb2ik74OIj0fN8+HngO
-         DgmjS36LwO/Cv+urjx8djQWuiOHa/Cd3NA8COyTaih62C9X0TEE7YxueThzLnOqAhEsv
-         XuPEttmuwsL6tKr8MCXSPpHkrirQtD40GGZy3SHYJSAly1nyBDQjaDFrhiqM/OtfWLDl
-         oXuFDkQ2o3j5e5q0hg2o2HLDjuPJe7Hco8OWOIHnf5/uowbEPTs6OqNOBXchXbxrMwNA
-         asrDAqaj18LeS5r29dfF5Baxu/1d4JETszqixOY2t+9FBMCXUXBA0gbL1UwuDc1xQ9iJ
-         ZVWg==
+        d=gmail.com; s=20230601; t=1747715815; x=1748320615; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SeMG9YLsg9XEA0NyUbXcqanyVq8FyPe8fnf9/EUxX8Y=;
+        b=FpLi3S0GgRwxxwpG5LXXZ09RgPoQJAgUGxwnLacjdUC24t9f8JwVteKH0jMquTqH5v
+         GWiEMUeWfbc0T9R48uZd1Egv0l/3wu/jb0YnxqLKMQq/ggmOVwd+fhxFqTVsg+VQ2RiN
+         8ksZ6p/gvXRenkwZPeUvOmJJ1Ndp7AyXaE9ulSiS5zCxzEzgjWIVCyjOz+NLb7e1xhfC
+         h9vh5IW8eB1o/xOpkCj1F5b4F3qMvAHk9aL2AxkflHWuYqnW9KFoT+EFg6FzkHEHodWR
+         KM+wsAU3DxWpSvAMiVa2W6KvQxxtLCtopq6AJMJK5uIOJk+0xuWFmAhj/X3NuG/9/1uA
+         snig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747715673; x=1748320473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KLdIEO3JhzFK3+pAV0v9OMiBG9saZVl50Zc3M7eZWJs=;
-        b=ra6Hdx2zqxLz4XULf1xjNlXFbeDcg7sBa99bDUkf7139SCD0IMvi4hVqKgqnFkD+s3
-         0aXgQ8M1brR7SKZavh6WORzT1QmNl5hsm+fsi10lNkwXCz/9gQCXlwyThMJg0h3YuDl2
-         bC/20Q/+73MUT88/b+FAPOszOgSBKs+5wYQZ9Vju4AMG8UIlxyUp3Vd56/QHPhw+ur1f
-         zkB17xrsfFS25jd/bo6fA6CdXH4SBAJLPARO+GG19ThH8YpuLnYvbCUjszXbwyxcU6El
-         82La4iRR1QJ7FqN4ZH9MAjmZtOfqJbHQHHPdKdG3Pgb6XTzTQHu9n2bxiyTVm8pM98a8
-         Gb+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUTPOn772RCoABF4LURdhswz7PoUbpQVqs0ASuQHe507S/17jCNlhIPy9R1bPsNjPyRLX94jwKUPsmFR34M@vger.kernel.org, AJvYcCWTr2Zn5EoyCRNq1CbCklaS3Ye8VfD3uq9397wnhFwItmAT79/O+7U66nNhgaUVFmG+OqZXYrGVcjd3D/w=@vger.kernel.org, AJvYcCXY0dvTSo/ZgjvDCi5PdGjMHc2/3WqTFbqHac9UqAlnU1jJhz9fR2SSzeNQA/NzBHVHSV+WRVaB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQpLnzvK/dzEvzhc4J5qOXHBnE9XN1e8oywqw5zkoA3hYXiJyN
-	iXHwaAwBfpKYrW7+Z+WJ7cdDQ7RUtTtr1N3oviP75WrSv/ZOoAv0NTIhQWa/HH0H6VAFAXtWP6d
-	mA6MfX/8BYn+E7MCtgRqO0TQIoxzGBzYLEA==
-X-Gm-Gg: ASbGncvmY79vqogWbNcJvKsHQvRX5C53NeNahKSJ7pRZj4R/Z8pxIkbQP5RBVLqQXlf
-	AVDtwK6yc0K/9ifnZTBYa3V7gYhDzpYtVHgeCjpjS3R0wi6u8mseJnL9/wUTretM07QjKHEwJF3
-	U28FAKo5R2+1PlkE0WtnrbOgqg6+W8ecgX
-X-Google-Smtp-Source: AGHT+IEx2HdcWVTUVwOuMeLPDKj8IZNpw5yYGNZx9DYx4yEeiOH/kPUiA83A02WG77XaxTg5xkdkMHTDx7HxMU2ZtyE=
-X-Received: by 2002:a05:6902:478e:b0:e7b:8add:805d with SMTP id
- 3f1490d57ef6-e7b8add8192mr13175077276.46.1747715672859; Mon, 19 May 2025
- 21:34:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747715815; x=1748320615;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SeMG9YLsg9XEA0NyUbXcqanyVq8FyPe8fnf9/EUxX8Y=;
+        b=betgChvQuUZHmG/qfecBa60Skmq8KQ03P+I/r4erfIdolCbfl3UQNeZfhryFphTpjm
+         NtH23A+qRgcNijY2aWM1tW1y52JAoqMAZdEGQfHLkEXpT90CcxMYnOjuQwlcZh5EAHJg
+         25fUWOJ9gIBCTG6zSMHKrwpu172hpJKyI5zgUWkzPmMQy/DlAIgA6Mv018y3i+bdp9NF
+         eahEWXwiyjDClZ74Z55NZSZ8hvpZ8B5lsdo2/AkNxPhSVfeU1VXb2Q3gOY7rXI5Z/eWb
+         r1/WoK52DLeaM6tgo/Qfu1A1qXobWBeCt0JEyHJkR0BMa6ibrqU9m7wqmVT7Fem0K9Wa
+         IqMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJChYSinpWRHqTNB08cS8rb0vmtA2bCf4vXOv8a8xaSlwCiIMiUpo3XWjBvMa7VM0ew8kgcBxFLhgA@vger.kernel.org, AJvYcCXJraCox+CGmveWXwryUkInUmeB/LjB9PLr/OtN8b59dFkctDBrZO0ZLUdekmSCB9vyoLrY/X0NyEsXEJAm@vger.kernel.org, AJvYcCXySua2aMuBgejtV9u8GRc0W0s8K+WdrDmp/a7i09dzxR7e9pa2F+luZUgyo+PT6EbuRyveElnPFpFO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+zkzsQtp8N3Do+xMjeXqE4xNCdVu9ZznMfEx8bUBI02Yn8bTe
+	RymnvAKP3JYCNCgpZwnDiEUc8WqwHREHzEKFMjgYg/646YJ8N5ne+bIHkofcXg==
+X-Gm-Gg: ASbGnct9ndmAAqEjGOdF+EEJc3dNvxRRjNctu3PTHv+r4X/wRIT2vxSKplGdkoyRM5o
+	fPy5S1vypmKpne1fOuAODPURKfVxSKlsbkXVBKtTFyOY4tWQ73TwRKhzkMa7nV5a+ngbj0GTGDq
+	MBJAIUDm/6NgivSATQIR06h1du1tD9Kg+lQIRIqAA4QUr1NfGSLDgqbA4ZehJO6evxfz4p/I35k
+	x2n6vQOwMGvn3rR/COqg2++DLsPKASDDyOfefUDRZxK/0Fs5Zgf4jDfZGMIEX1TbyqQ/jLnWWgc
+	ek1oLc7MY8hoUI0U8iA9ndS2axh773dWDVON9yxUqiCZC0aC7V8jHUG13i24o4S5fk40tgPesw=
+	=
+X-Google-Smtp-Source: AGHT+IHy+xxixyPtO+j4BLklrYKrnGOzYdiHTF+lhvpKzK6Qdz+fUN73wAY5ibkqoMQMBWP5ADq8Zg==
+X-Received: by 2002:a05:6a21:3384:b0:215:dc32:e993 with SMTP id adf61e73a8af0-2165f5e3ebbmr24708840637.3.1747715815231;
+        Mon, 19 May 2025 21:36:55 -0700 (PDT)
+Received: from [192.168.1.6] ([27.57.94.111])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a0ca7sm7029193b3a.158.2025.05.19.21.36.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 21:36:54 -0700 (PDT)
+Message-ID: <314cdaf1-b989-4cae-a275-d962186bd46c@gmail.com>
+Date: Tue, 20 May 2025 10:06:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514051043.3178659-1-bbhushan2@marvell.com>
- <20250514051043.3178659-4-bbhushan2@marvell.com> <aCqzAQH06FAoYpYO@gondor.apana.org.au>
- <CAAeCc_=QShbySa8x9zU+QnDqn1SLK3JLXMD8RYNoax+gh3NVEQ@mail.gmail.com> <aCrfNdnRzlQSr6sy@gondor.apana.org.au>
-In-Reply-To: <aCrfNdnRzlQSr6sy@gondor.apana.org.au>
-From: Bharat Bhushan <bharatb.linux@gmail.com>
-Date: Tue, 20 May 2025 10:04:21 +0530
-X-Gm-Features: AX0GCFs8BgWCUV4foeRy_615K0bqYt6Ee4N9DJIR-VtGMkL2q1NFBzBtrDbDkDI
-Message-ID: <CAAeCc_mKDq2jSM+yZ816nx_BPsFSWiCjEswfuu9HBzXrv+V+WQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4 RESEND] crypto: octeontx2: Fix address alignment on
- CN10K A0/A1 and OcteonTX2
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Bharat Bhushan <bbhushan2@marvell.com>, bbrezillon@kernel.org, arno@natisbad.org, 
-	schalla@marvell.com, davem@davemloft.net, giovanni.cabiddu@intel.com, 
-	linux@treblig.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: mmc: ti-omap: convert text based binding
+ to json schema
+To: Conor Dooley <conor@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519-ti-omap-v2-1-2a0dbc08fb9c@gmail.com>
+ <20250519-unstamped-tabasco-05d9c7223289@spud>
+Content-Language: en-US
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+In-Reply-To: <20250519-unstamped-tabasco-05d9c7223289@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025 at 1:05=E2=80=AFPM Herbert Xu <herbert@gondor.apana.or=
-g.au> wrote:
->
-> On Mon, May 19, 2025 at 11:47:18AM +0530, Bharat Bhushan wrote:
-> >
-> > > > +     /* Allocate extra memory for SG and response address alignmen=
-t */
-> > > > +     total_mem_len =3D ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN) +=
- dlen;
-> >
-> > This add extra memory for 8-byte (OTX2_CPT_DPTR_RPTR_ALIGN) alignment
-> >
-> > > > +     total_mem_len =3D ALIGN(total_mem_len, OTX2_CPT_RES_ADDR_ALIG=
-N) +
-> > > > +                      sizeof(union otx2_cpt_res_s);
-> >
-> > This add extra memory for 32-byte (OTX2_CPT_RES_ADDR_ALIGN))
-> > In case not observed,  OTX2_CPT_RES_ADDR_ALIGN is not the same as
-> > OTX2_CPT_DPTR_RPTR_ALIGN.
->
-> But it doesn't do that.  Look, assume that total_mem_len is 64,
-> then ALIGN(64, 32) will still be 64.  You're not adding any extra
-> space for the alignment padding.
->
-> OTOH, kmalloc can return something that has a page offset of 8,
-> and you will need 24 extra bytes in your structure to make it
-> align at 32.
->
-> Now of course if you're very lucky, and total_mem_len starts out
-> at 8, then it would work but that's purely by chance.
 
-Thanks for explaining, will change in the next version.
 
-Thanks
--Bharat
+On 19-05-2025 21:29, Conor Dooley wrote:
+> On Mon, May 19, 2025 at 01:11:17PM +0000, Charan Pedumuru wrote:
+>> Convert TI MMC host controller binding to YAML format.
+>> Changes during Conversion:
+>> - Add new properties 'dma', 'dma-names' under required.
+>> - Define two separate phandles for 'dmas' in the examples.
+>> - Include appropriate header file for interrupts and use
+>>   it in the examples.
+>>
+>> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+>> ---
+>> Changes in v2:
+>> - Added include statement for irq interrupt controller and
+>>   modified the interrupts under property to use header.
+>> - Changed maintainer to Rob Herring.
+>> - Defined two seperate phandles for 'dmas' under examples.
+>> - Rename the YAML file name to the compatible 'ti,omap2420-mmc'.
+>> - Added missing type and maxItems to 'ti,hwmods' under properties.
+>> - Link to v1: https://lore.kernel.org/r/20250510-ti-omap-v1-1-588b0ccb1823@gmail.com
+>> ---
+>>  .../devicetree/bindings/mmc/ti,omap2420-mmc.yaml   | 64 ++++++++++++++++++++++
+>>  Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
+>>  2 files changed, 64 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..195db77e0063b867f318ffc6b5f8811adb531515
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
+>> @@ -0,0 +1,64 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mmc/ti,omap2420-mmc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI MMC host controller for OMAP1 and 2420
+>> +
+>> +description:
+>> +  The MMC Host controller for TI OMAP1 and 2420 family provides
+>> +  an interface for MMC, SD and SDIO types of memory cards.
+>> +
+>> +allOf:
+>> +  - $ref: mmc-controller.yaml
+>> +
+>> +maintainers:
+>> +  - Rob Herring <robh@kernel.org>
+> 
+> This patch looks fine, but I don't want to ack this with Rob's name
+> there. Tony Lindgren <tony@atomide.com> wrote the original binding
+> as far as I saw from a quick check, maybe he's a more suitable pick?
 
->
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Sure, I will add Tony to the maintainers then.
+
+-- 
+Best Regards,
+Charan.
+
