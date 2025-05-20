@@ -1,67 +1,67 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE34259C92
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4342625D8F7
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728338; cv=none; b=rI0VhLPUGvjmeVhUwy//gjVYMk8+2eQe8SM2Fmi1adIhjmOx8nRmpfuyHaeXSNbIC8vzhDYdyZ9vZ5CPgdpxv7uN5ZhyZmN0WeHuD9u5jBgFKQ+Un0XVimukAfZW1ZjEQBK4rFSy791++nU5ZxjvSAB+KG3SKgXT6whsugAFcW0=
+	t=1747728352; cv=none; b=BDgMQN7Rkx72JgbUzTbAaw17VMzOuJKSYsnUPzdNzY4VHm2gsCKNoRWVbaxF8B1q4bErToWmIG5LEsJNRR0/ywuZqA2PduOH2pcuXjkjHHIoUlJNmSXb1XboJjAUglWOTEDkLzWLoaE+xk2TAhHqJl6wh5Zg8BN/cGoBszLcq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728338; c=relaxed/simple;
-	bh=U+fdJ+LN47DCRlLdlkpJ/e8m1KOM3FbjfTyZPhRrfH4=;
+	s=arc-20240116; t=1747728352; c=relaxed/simple;
+	bh=j4Y1lSzS/S3Lafdm6+QHQInQAjqnePQVzmbNZ55iDkY=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cN34/QpfHwQ6+/wK7OhsMXgEAS8cmcm0eXfEwEvq6OgOx6J847wWZ0nLj+SoguXe0GyNU5lg8UxGd9vtCjJZs+/1CUoqo1LShdkcLxffScdErF1ZHehPxotuiVnZvMN81d/YQMw1DzT5A5QLItkarVIwngt2IaS/SIGtELDme3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PslVIsdz; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:Content-Type; b=pbKeRC9Ns5adyVnI49QtnLUse20KhWfMrGMuXAC9Wfk8sODNn0AfrRs+N2hJjctJ22eBXI8P7d+p/s5vsAo3126d1pLw95JT1lBbWbs21HPjy6EDdCGHIZEx5nB5LMMWphcdHgwqb8ANZ31EMJDY6zL4b/mRz3P4V8ujcnAx93E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AMv9aklp; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PslVIsdz"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a375d758a0so1082960f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:05:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AMv9aklp"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso52510595e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747728334; x=1748333134; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747728348; x=1748333148; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tob6RuC8dgPV7JIzMkiLHumK10RCkOp4wHKrmtVQAT8=;
-        b=PslVIsdz0n+6FnjD21/icd2w/zmDwOuM9qPHT8Sx9SCnf9Ajqgwb48fNjUJFgFfRgS
-         R+rt4IQtmFbiZG/m9fVal+h0qU/J3DM1A2UDt2Q2RlVptULS1k18FvX147gDpW+qj4Ws
-         cHD9HGOAuwvlemMbSmj1Id9YYiqcOJB0kfsnB3lROIm/tS4TLEMiFzV36h3DuoWw2c4Y
-         jEEUDzDiwXLS/3pBZqjsNOyDNgj5LPWjSko4v3Yt1n6Wxjz+JwfoQK0NrAcw1+Kt8XLj
-         5us0YjbFeToZm34YDM1LOGc9Nno49e8flHRBL9BsUJiipsAbGND0S4v0ZZf20/DBrM+l
-         vP4g==
+        bh=LW4SBb8OdXfVHCDYjECI0HT6Bc340yiVBy2FcDLH3TI=;
+        b=AMv9aklpX8eMHzwmjcMlkCfJvjvem5Qo2b0QTSSlcLGb3yEGSQZ0464NBOnD/+URm0
+         Tl+yOKu+aN8PgOWKRIFVYW6o+r9IfxB3swsyimRf9nKIFcu1qzMZ8P4Gk9EEdburhKUE
+         aYrj7+QOIL1Yk4mz6/au9t0d1UBHDaOhlAB8P13/82xMrga6oUxSj34WpG/tGNrQPIaf
+         PHgrzt2tCSjd0o5ybr6nNYg0PuV8w5QQWjNLmmyAihYWRFJO5mslYAW+XF8r746/dmWd
+         yjeg/XcLVvIuQsJTkNfEIHUMPl3/kGfi3xdsgZ83RCN2/G9nJOLpANe+ALXM5VM/E/RZ
+         RTIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747728334; x=1748333134;
+        d=1e100.net; s=20230601; t=1747728348; x=1748333148;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=tob6RuC8dgPV7JIzMkiLHumK10RCkOp4wHKrmtVQAT8=;
-        b=avSQpXaKQJsXsgsjnyY/tGyxbWKhssb5y8hxDdAWBTi0Fh2P+pUgBa+KHNwH+/VOE+
-         TdY/Vv9VVjjSpz0nTVOsgUs8MMolNWA6UW/tsxZgE4AMe2omNbxBiyQBJIBhezjiLuy+
-         veYr7/02GuWDYmGD9YMNv7U6j8lC+Xx8jsnEeW8cKq/c1bKPHoPdrJFV7qq0kP4c1l1W
-         Tg7btxO1FHzrevvSl2vY5kvC/LYdy6VE5AtbwJStAFSrCzfMRgqgpneIOioEw3Ff54Xo
-         01vciubl3O74yJVjEOQ6wi5Avlt/hheEMXHU/x+lbuWLmQyiShfRUyXCQUNyDNDH5ZG4
-         OLBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUp7p9rETZX9dKBswaF+t349NifSjmtPrKO0F6guI98mj1MXl5tWwi9/DcjhIX9fgSwe0jbXJt+Za138s4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzERusBqmuH5unGtlHdFWjQu/tCuN1Y0coViQ+DK2YkViSdzPSj
-	4zPQQvD9xLXDVZcTSBXEpdp25HLFIKjJgLQpGYTFYjenYzEJct/bzORMrpzvEsoTrBY=
-X-Gm-Gg: ASbGnctpR1qyIFAgb1sCzJUMig2f4+G7pun8iXGjxqDouR2iW8WpJg3vDLDcehJieDt
-	JeSnoQNW7JbBhWC0lm1H6SgGvnu/U+XBcQDE0t3Eq8QDrWVzY7nltYY8UeSxFJKxsJLj+S9V1Ef
-	DWEhgywvnuXwO2Alkj7me9t/JkMYQ05Q4ArWCUEESnY1rUCOBTHPEnYq0pPUdM5USBZ3x34EsUP
-	DZ5eSbmvWYbX99qvgptley+Xg32jfUM+fR88qUvVU2nN5UAAepgAIthoeBlLU+nEttC/22IIFrf
-	en0ZZjDegWK1LlY0JWDyucUuEXSD3bx1QFOO8CZ+RGryfgHJFR12/EQNtCooGNDZ1qRGz99gwzm
-	TzAkBkJAwaoVlA0et5M4LesMhvLEkdXmm+89O9Y4=
-X-Google-Smtp-Source: AGHT+IHdSxS2nTGrvLuropA0rHENFxyZSFHMxOh0OmlD62ZrexTI0z/dDGvjnhVs7yeJPczsIO1oqA==
-X-Received: by 2002:a05:6000:c0b:b0:3a3:5c64:c60 with SMTP id ffacd0b85a97d-3a35c84beacmr9942754f8f.59.1747728334579;
-        Tue, 20 May 2025 01:05:34 -0700 (PDT)
+        bh=LW4SBb8OdXfVHCDYjECI0HT6Bc340yiVBy2FcDLH3TI=;
+        b=LzacOXf6pATeYSUFrGckh6+8riZVSFQM0bw1E8dsMy9xFzllDEZ1ykvXx58i0jghwB
+         7tStUlwGl0j7KtfI6uZMJao8GhAR1EyXSLSqrRtKjAWn7ZY36j77L1bhqKcAA85T3A/8
+         VOuQc/z5EVf+54prjbzQcG0mF6rNHiTHmvIhanfbUnibmCDjKgncxdyvVUgavj4HEQCg
+         7CU1//DQjxSTFTzQVnGBcbGP1eT8DFZT8ptIdTts3CPtMC3MTFj2ErjTBMf+OF+X0IXH
+         8UgjGJvgUT9KL99329WT9mB1+JtJ1DX4nzUrZXnWIImLmhTD1RCoz1C9gpZCHZUU7kI0
+         4j4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVWWOwZhrzfAWveXVtIraA8IlJ5ioMjbHXaXLnqJdDvAxgBM7bIBLjIkcIhn2KqCWaG0R8Nz+Ko9PcxMVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1alzG9hRNvHiTvM5uFGCJuPTEF7kILAvDk2tB1AWIIPzh/MBm
+	gvCnW3n5lWOTHcv4l54EYonZ1gVxXJD0x1GKiygXSdIa/boFvUOc1LtQT5krp3DiMik=
+X-Gm-Gg: ASbGncswcigLvALE9E4SZOU2Hsvi/XuIeVUF5ybeWBxEmRyIdoLHzTQXXTAKBK3vrES
+	mIwjy8CGDVEV4+T/dSNUWEw/jqk69jEeLmQvm1oq+NvpaAfh4BuB9rKFiGW2REAuQFDe0bEMfih
+	4GmAJh3fU2+nKll1Myt3FkBlpf3PIWV+gZH/6e4x5hky0EOy2YKtv3EjUadEXSXnxSmikWUTnYw
+	AOE0GYdKp5yqgZzxyC8fcOBgin2tJPjkMj4e4sCCjhL8Gwclm+n2VF8VfPt1KQubdBm+wuSCB3Q
+	IFCdEmk8BJmh0oT6Tv5flvxuFkCqy7lvVtZK+RkbUeeYNEWWbUvtzSz9/VdOiaYu5jWiZlH52sq
+	1BCfy3V3mkDA84Q/avNNN2SQx4bH/
+X-Google-Smtp-Source: AGHT+IE7kWMfshowMacPc017b313QcFKe4fD0gGGNCCmPlmLikmttBbY7CVV+/dDiL/UigiKXTVs+A==
+X-Received: by 2002:a05:600c:3d18:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-442fd672e0emr116929485e9.33.1747728348473;
+        Tue, 20 May 2025 01:05:48 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36c6eeaf8sm7997434f8f.48.2025.05.20.01.05.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b2979fsm21442065e9.1.2025.05.20.01.05.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:05:34 -0700 (PDT)
-Message-ID: <476a5609-ba9a-489c-bdd3-c6ca949a9b06@linaro.org>
-Date: Tue, 20 May 2025 10:05:33 +0200
+        Tue, 20 May 2025 01:05:48 -0700 (PDT)
+Message-ID: <a48be7fd-ac34-4829-b423-ae7d62034b43@linaro.org>
+Date: Tue, 20 May 2025 10:05:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,7 +71,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v4 29/30] drm/msm/dpu: drop ununused MIXER features
+Subject: Re: [PATCH v4 30/30] drm/msm/dpu: move features out of the
+ DPU_HW_BLK_INFO
 To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
@@ -81,7 +82,7 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
- <20250519-dpu-drop-features-v4-29-6c5e88e31383@oss.qualcomm.com>
+ <20250519-dpu-drop-features-v4-30-6c5e88e31383@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -108,44 +109,238 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250519-dpu-drop-features-v4-29-6c5e88e31383@oss.qualcomm.com>
+In-Reply-To: <20250519-dpu-drop-features-v4-30-6c5e88e31383@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19/05/2025 18:04, Dmitry Baryshkov wrote:
 > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> Drop unused LM features from the current codebase.
+> As features bits are now unused by some of the hardware block
+> configuration structures, remove the 'features' from the DPU_HW_BLK_INFO
+> so that it doesn't get included into hw info structures by default and
+> only include it when necessary.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 8 ++------
->   1 file changed, 2 insertions(+), 6 deletions(-)
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  1 -
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  1 -
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h         | 17 +++++++----------
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c         |  5 ++---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c         |  5 ++---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c             |  4 ++--
+>   6 files changed, 13 insertions(+), 20 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
+> index a065f102ce592311376f1186add7a47dca7fd84f..26883f6b66b3e506d14eeb1c0bd64f556d19fef8 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
+> @@ -20,7 +20,6 @@ static const struct dpu_caps sm6150_dpu_caps = {
+>   static const struct dpu_mdp_cfg sm6150_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = 0,
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_DMA0] = { .reg_off = 0x2ac, .bit_off = 8 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
+> index 2950245e7b3f5e38f3f501a7314bb97c66d05982..fbf50f279e6628cb0f92b0188e1fbdf156a899e2 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
+> @@ -22,7 +22,6 @@ static const struct dpu_caps sm6125_dpu_caps = {
+>   static const struct dpu_mdp_cfg sm6125_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = 0,
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_DMA0] = { .reg_off = 0x2ac, .bit_off = 8 },
 > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index c1488a2c160b0e2ab08243a6e2bd099329ae759b..d51f6c5cdf62f3c00829167172ef6fd61f069986 100644
+> index d51f6c5cdf62f3c00829167172ef6fd61f069986..47d82b83ac5378cb0001b3ea6605dc0f98aec5ef 100644
 > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -66,16 +66,12 @@ enum {
->   
->   /*
->    * MIXER sub-blocks/features
-> - * @DPU_MIXER_LAYER           Layer mixer layer blend configuration,
->    * @DPU_MIXER_SOURCESPLIT     Layer mixer supports source-split configuration
-> - * @DPU_MIXER_GC              Gamma correction block
->    * @DPU_MIXER_MAX             maximum value
+> @@ -154,14 +154,12 @@ enum {
+>    * @id:                enum identifying this block
+>    * @base:              register base offset to mdss
+>    * @len:               length of hardware block
+> - * @features           bit mask identifying sub-blocks/features
 >    */
->   enum {
-> -	DPU_MIXER_LAYER = 0x1,
-> -	DPU_MIXER_SOURCESPLIT,
-> -	DPU_MIXER_GC,
-> -	DPU_MIXER_MAX
-> +	DPU_MIXER_SOURCESPLIT = 0x1,
-> +	DPU_MIXER_MAX,
->   };
+>   #define DPU_HW_BLK_INFO \
+>   	char name[DPU_HW_BLK_NAME_LEN]; \
+>   	u32 id; \
+>   	u32 base; \
+> -	u32 len; \
+> -	unsigned long features
+> +	u32 len
 >   
 >   /**
+>    * struct dpu_scaler_blk: Scaler information
+> @@ -376,7 +374,6 @@ struct dpu_clk_ctrl_reg {
+>   /* struct dpu_mdp_cfg : MDP TOP-BLK instance info
+>    * @id:                index identifying this block
+>    * @base:              register base offset to mdss
+> - * @features           bit mask identifying sub-blocks/features
+>    * @clk_ctrls          clock control register definition
+>    */
+>   struct dpu_mdp_cfg {
+> @@ -392,6 +389,7 @@ struct dpu_mdp_cfg {
+>    */
+>   struct dpu_ctl_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	unsigned int intr_start;
+>   };
+>   
+> @@ -407,6 +405,7 @@ struct dpu_ctl_cfg {
+>    */
+>   struct dpu_sspp_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	const struct dpu_sspp_sub_blks *sblk;
+>   	u32 xin_id;
+>   	enum dpu_clk_ctrl_type clk_ctrl;
+> @@ -424,6 +423,7 @@ struct dpu_sspp_cfg {
+>    */
+>   struct dpu_lm_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	const struct dpu_lm_sub_blks *sblk;
+>   	u32 pingpong;
+>   	u32 dspp;
+> @@ -434,7 +434,6 @@ struct dpu_lm_cfg {
+>    * struct dpu_dspp_cfg - information of DSPP blocks
+>    * @id                 enum identifying this block
+>    * @base               register offset of this block
+> - * @features           bit mask identifying sub-blocks/features
+>    *                     supported by this block
+>    * @sblk               sub-blocks information
+>    */
+> @@ -447,7 +446,6 @@ struct dpu_dspp_cfg  {
+>    * struct dpu_pingpong_cfg - information of PING-PONG blocks
+>    * @id                 enum identifying this block
+>    * @base               register offset of this block
+> - * @features           bit mask identifying sub-blocks/features
+>    * @intr_done:         index for PINGPONG done interrupt
+>    * @intr_rdptr:        index for PINGPONG readpointer done interrupt
+>    * @sblk               sub-blocks information
+> @@ -464,8 +462,6 @@ struct dpu_pingpong_cfg  {
+>    * struct dpu_merge_3d_cfg - information of DSPP blocks
+>    * @id                 enum identifying this block
+>    * @base               register offset of this block
+> - * @features           bit mask identifying sub-blocks/features
+> - *                     supported by this block
+>    * @sblk               sub-blocks information
+>    */
+>   struct dpu_merge_3d_cfg  {
+> @@ -483,6 +479,7 @@ struct dpu_merge_3d_cfg  {
+>    */
+>   struct dpu_dsc_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	const struct dpu_dsc_sub_blks *sblk;
+>   };
+>   
+> @@ -490,7 +487,6 @@ struct dpu_dsc_cfg {
+>    * struct dpu_intf_cfg - information of timing engine blocks
+>    * @id                 enum identifying this block
+>    * @base               register offset of this block
+> - * @features           bit mask identifying sub-blocks/features
+>    * @type:              Interface type(DSI, DP, HDMI)
+>    * @controller_id:     Controller Instance ID in case of multiple of intf type
+>    * @prog_fetch_lines_worst_case	Worst case latency num lines needed to prefetch
+> @@ -521,6 +517,7 @@ struct dpu_intf_cfg  {
+>    */
+>   struct dpu_wb_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	u8 vbif_idx;
+>   	u32 maxlinewidth;
+>   	u32 xin_id;
+> @@ -589,6 +586,7 @@ struct dpu_vbif_qos_tbl {
+>    */
+>   struct dpu_vbif_cfg {
+>   	DPU_HW_BLK_INFO;
+> +	unsigned long features;
+>   	u32 default_ot_rd_limit;
+>   	u32 default_ot_wr_limit;
+>   	u32 xin_halt_timeout;
+> @@ -606,7 +604,6 @@ struct dpu_vbif_cfg {
+>    * @name               string name for debug purposes
+>    * @id                 enum identifying this block
+>    * @base               register offset of this block
+> - * @features           bit mask identifying sub-blocks/features
+>    */
+>   struct dpu_cdm_cfg {
+>   	DPU_HW_BLK_INFO;
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
+> index b9c433567262a954b7f02233f6670ee6a8476846..b3395e9c34a19363019ec0ccfb0c87943553b4c9 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
+> @@ -360,8 +360,7 @@ static void dpu_hw_dsc_bind_pingpong_blk_1_2(struct dpu_hw_dsc *hw_dsc,
+>   	DPU_REG_WRITE(hw, sblk->ctl.base + DSC_CTL, mux_cfg);
+>   }
+>   
+> -static void _setup_dcs_ops_1_2(struct dpu_hw_dsc_ops *ops,
+> -			       const unsigned long features)
+> +static void _setup_dcs_ops_1_2(struct dpu_hw_dsc_ops *ops)
+>   {
+>   	ops->dsc_disable = dpu_hw_dsc_disable_1_2;
+>   	ops->dsc_config = dpu_hw_dsc_config_1_2;
+> @@ -391,7 +390,7 @@ struct dpu_hw_dsc *dpu_hw_dsc_init_1_2(struct drm_device *dev,
+>   
+>   	c->idx = cfg->id;
+>   	c->caps = cfg;
+> -	_setup_dcs_ops_1_2(&c->ops, c->caps->features);
+> +	_setup_dcs_ops_1_2(&c->ops);
+>   
+>   	return c;
+>   }
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
+> index 0b3325f9c8705999e1003e5c88872562e880229b..83b1dbecddd2b30402f47155fa2f9a148ead02c1 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
+> @@ -33,8 +33,7 @@ static void dpu_hw_merge_3d_setup_3d_mode(struct dpu_hw_merge_3d *merge_3d,
+>   	}
+>   }
+>   
+> -static void _setup_merge_3d_ops(struct dpu_hw_merge_3d *c,
+> -				unsigned long features)
+> +static void _setup_merge_3d_ops(struct dpu_hw_merge_3d *c)
+>   {
+>   	c->ops.setup_3d_mode = dpu_hw_merge_3d_setup_3d_mode;
+>   };
+> @@ -62,7 +61,7 @@ struct dpu_hw_merge_3d *dpu_hw_merge_3d_init(struct drm_device *dev,
+>   
+>   	c->idx = cfg->id;
+>   	c->caps = cfg;
+> -	_setup_merge_3d_ops(c, c->caps->features);
+> +	_setup_merge_3d_ops(c);
+>   
+>   	return c;
+>   }
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> index 5c811f0142d5e2a012d7e9b3a918818f22ec11cf..96dc10589bee6cf144eabaecf9f8ec5777431ac3 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> @@ -264,7 +264,7 @@ static void dpu_hw_dp_phy_intf_sel(struct dpu_hw_mdp *mdp,
+>   }
+>   
+>   static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
+> -		unsigned long cap, const struct dpu_mdss_version *mdss_rev)
+> +			   const struct dpu_mdss_version *mdss_rev)
+>   {
+>   	ops->setup_split_pipe = dpu_hw_setup_split_pipe;
+>   	ops->setup_clk_force_ctrl = dpu_hw_setup_clk_force_ctrl;
+> @@ -313,7 +313,7 @@ struct dpu_hw_mdp *dpu_hw_mdptop_init(struct drm_device *dev,
+>   	 * Assign ops
+>   	 */
+>   	mdp->caps = cfg;
+> -	_setup_mdp_ops(&mdp->ops, mdp->caps->features, mdss_rev);
+> +	_setup_mdp_ops(&mdp->ops, mdss_rev);
+>   
+>   	return mdp;
+>   }
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
