@@ -1,32 +1,35 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC7D255E38;
-	Tue, 20 May 2025 06:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAB825CC6A;
+	Tue, 20 May 2025 06:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724212; cv=none; b=Mu9ucQ5YW5dmVZPnVUXPYxMVEv+xb/IQM1/qlh9Kwb0pKiFaRhAju3r4R3miZ6+cSubhsovTR78oXLkqiCZv0VqxaDR0uAxno7J5lSfIHcAK1eAZBBQVxd9QPOKoq7J98wtPLJfBfFhR+fBFWsvaKjfQ60HK1QCYR93DbkBgtl4=
+	t=1747724212; cv=none; b=gaJInANg8jigSc083fgyMXFropyvxSkIm5vN45+RTixAubQsqKDrc0cwCh1YXmjH45eAzCmvWP8EWqNifemJKMvad8LRAUU59z6uiICY37ehx5EMllzc4zYhxek0X/zY4xCG9vh90JijGOodv4fCc4UPwFyK/P7mkfhixttVfFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747724212; c=relaxed/simple;
-	bh=t02HdpVH7bByjCdpHA96IjGXEvuZGH0oFB9tYzj5jyQ=;
+	bh=obD3W9aalppgKCmnqrg4Z36XY9rCjKoeskW1Vsxn4LA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nLTKMwtvI4pwJsMPjxUBwib3uMPcEI3JaeMFIQyUjHw1IcASlDQoVEyM8oiJhCaBEGJNC/OyegH5Zl3e5S/1RRM3OAoj8bHpJcPjkhqrSfGuOVr1vZODG7h8z4hH2WYjImYy1yN/ZLy7CajEZqvtpK9zcSsivESUmGc7exTmpy0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Io1qXqlOuiv4GJjvkTNzodLjgqtgNlBsJ2IuLWKJzLFa8akrGdGVQPWyY9ThiMYqA8CEsiG1a5u2A5M6IwGAOutlIMReAg1E9JeQflf97EfOEIiXnXbISAf1q6iL62XBgqQtXC6/dHT0GHV/fjFRFSEpFQYERXdCFtQovWuscQ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1uHGu1-0006iT-00; Tue, 20 May 2025 08:56:41 +0200
+	id 1uHGu1-0006iP-00; Tue, 20 May 2025 08:56:41 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id A10A6C0609; Tue, 20 May 2025 08:56:11 +0200 (CEST)
-Date: Tue, 20 May 2025 08:56:11 +0200
+	id 3FA21C05FC; Tue, 20 May 2025 08:50:36 +0200 (CEST)
+Date: Tue, 20 May 2025 08:50:36 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] MIPS: bcm63xx: nvram: avoid inefficient use of
- crc32_le_combine()
-Message-ID: <aCwni0qo_2IxfffY@alpha.franken.de>
-References: <20250511182836.21611-1-ebiggers@kernel.org>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: SMP: Move the AP sync point before the
+ non-parallel aware functions
+Message-ID: <aCwmPKm3NjbhLiNA@alpha.franken.de>
+References: <20250505-hotplug-paralell-fix-v1-1-86f222cb6d90@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,28 +38,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250511182836.21611-1-ebiggers@kernel.org>
+In-Reply-To: <20250505-hotplug-paralell-fix-v1-1-86f222cb6d90@bootlin.com>
 
-On Sun, May 11, 2025 at 11:28:36AM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Mon, May 05, 2025 at 02:57:58PM +0200, Gregory CLEMENT wrote:
+> When CONFIG_HOTPLUG_PARALLEL is enabled, the code executing before
+> cpuhp_ap_sync_alive() is executed in parallel, while after it is
+> serialized. The functions set_cpu_sibling_map() and set_cpu_core_map()
+> were not designed to be executed in parallel, so by moving the
+> cpuhp_ap_sync_alive() before cpuhp_ap_sync_alive(), we then ensure
+> they will be called serialized.
 > 
-> bcm963xx_nvram_checksum() was using crc32_le_combine() to update a CRC
-> with four zero bytes.  However, this is about 5x slower than just
-> CRC'ing four zero bytes in the normal way.  Just do that instead.
+> The measurement done on EyeQ5 did not show any relevant boot time
+> increase after applying this patch.
 > 
-> (We could instead make crc32_le_combine() faster on short lengths.  But
-> all its callers do just fine without it, so I'd like to just remove it.)
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Reported-by: Huacai Chen <chenhuacai@kernel.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 > ---
+> Hello,
 > 
-> Please consider this patch for the mips tree for 6.16.  If it doesn't
-> get picked up, I'll take it through the crc tree.
+> As discussed last week [1], this is the patch that fixes the potential
+> issue with the functions set_cpu_sibling_map() and set_cpu_core_map().
 > 
->  include/linux/bcm963xx_nvram.h | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
+> Gregory
 
-applied to mips-next
+applied to mips-next with a Fixes tag added
 
 Thomas.
 
