@@ -1,146 +1,154 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD79252287
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE15025F7A1
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758173; cv=none; b=sLSo+Z8rz9PoXIh+wh9ZnueoZ9iCMHZj7Ql21ELI+Dn42r02szOwSwuwYXir+lgOnKELkYKOghAs+VF6Tm22UXrBlg0bJlK/BPnehH7175LdK/7ThAU9/acLaxpq0BBSHememQsqTj7BkA1vt7fk7KZfay/JK7nR0ZSc6W1Kh5o=
+	t=1747758259; cv=none; b=B+knRWIiuMpTi096c0Vu1I4Z/m6Lq1jprnGsuwaA395nyFK5ZfDdXATC1A37Q4LbHCTn7ZvJGBuxd6mZ7c6PmY9cFw1d3E1Iol5qFhwOK1oydMhKbWBkEHJ5wXKruNTrgeOWg4kOeqjsN3ZBqNFALUtdRuRcBcUvj9tSMLV8Z3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758173; c=relaxed/simple;
-	bh=OSFWaFcsN5NjFF+/2GsgSB2pvTMkxNpSCGwyaZXb+U0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sl9n/qwEhD3TQ5oj1AsOTxiULVVpB11mB0eukxhbthqpADAdt+DtezdErYloOmVlv3sGMoWD2v3sgF6r8TmQTOYZtdCkeAfCuCIbBo5sUlwqcObQPcUGdTRJaHE1c3VE0OV0ztRj1jG7SG1kZYrCKasdmz952b7jiIwOdCwN29g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cxq3Wesx; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747758259; c=relaxed/simple;
+	bh=78FknOum4lTKjAsvc0eg0s/POGfcidIyEMOYhOmAsbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ctE7kCZi0zlGWlyyZtrlxyTFK4GpqoXheSBrjxeS3MKI/FiBDBejfF8qWBg3C8cFIVTTuLi9NkT3PJ/KFR8/GiR9S8aHTQnIXdZWXaNqH5AqskvfX5wVOO+VWhFx0ZlyPu4fn1PuVbJYTkZ4uF4nS1dpYl5xb6vk650Gxw8llqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d+1/SusL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cxq3Wesx"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72ecc30903cso3439270a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747758170; x=1748362970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t0HWhoEGlvH4UanVLpaHgaFj5uaCvcRqQd2jUejSkZk=;
-        b=Cxq3WesxAxxpOzao4faGpB4mwjpIr+3j3g1fm4bOP1BhL1kt+gPJEmWSIeuzA3XJfd
-         wedVv7+FwKzwtrFxaM73vKhYkKeexc0oF843EXe/MvMWYcCTlnkWjtL7pQV8FfD+hayU
-         1v4HJZphWATBy+M2PramZnhztZnoS/3T9iMg6wUQcLb57//tPHnpFOnCZ06BS4YeIYvd
-         IDjgXI/7LIAFHfTT9LGL8IGa51nlM6JSfruw7s4p8dSVFe9odfCWqoONc2F4BbmnVqtY
-         cvPcj5oHYBQJT3aNUy5QBWJzE/aFDTlxDD6lcszUvA6aej1kBf+JGE6vdS+nFqvkjxLB
-         fgwg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d+1/SusL"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KD60nN023174
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:24:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mc9lmRtD13pABVPVoQTWMKl9Pn96ta+l7ubkM6Q9ldc=; b=d+1/SusLrTES4XDg
+	ye4QI0EKcPjS9Gz9gK3gLODyPkHYdHcXpAdKn+X5iCVm/jws3Zuro4jKHIYhZKsf
+	I2xkOU0Dh8HOURBhX15WQCLHr0g6W2n+RgJA2ZXtX+nI8rcEc0N6APEAt7fxk1tq
+	KSkPaN1mVEzbY5r7pFUGiq6gDLLApgII0ovhv+8unKJZzoEDSNBKAJjbQUn8aUuy
+	WcosqCX1BQg+wUyiQxGWOhWLW+wgeGSRyR9slk5Q0tP6WcNEhhbXk+y+68uE/0Ye
+	ILwNFBQq7ku6aY06hjlfcwCUq3a6oQLSujMUW+sAZO4FveWb/ICt8O81Dx2aEKd8
+	UKbu/Q==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r041vyrq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:24:16 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-740adfc7babso4797365b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:24:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758170; x=1748362970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t0HWhoEGlvH4UanVLpaHgaFj5uaCvcRqQd2jUejSkZk=;
-        b=VMsX1O54sy/4ys9S0t4fnzZlmMwUTSxwrTRQIJyUcgNS5TL0g5YDS4SJu83eOZJx8W
-         joavCk23omXKRYbkZX8t5EPTsf8hEXb2msKn7Gxk1DjinuLmaB1CE/noyjVZKQGl18Mr
-         5LTifR4+sFSD9GBt4IoXJnJxeRSwWRxp2U/6ctFuMGwF3liTkK45F2gpTYyPo5UJa7aE
-         qunmjNRuYluam0x2rwR3qhquUSUhPtg/z4Im/gvQc81ttstk5HDP9KOknliziKRY2FxM
-         cb/VhJnedBf7Vmkmm6usBHbWJLDPJd9Y+RaBvVH6lknJ3NhkSEZ2xe+WcdQhTSV79V4M
-         p7jw==
-X-Forwarded-Encrypted: i=1; AJvYcCU00FUlxfekbL9fXgFJgkO0S7C4G3r64pSr1xml5gTrTezwRKc3KY0qvXqzCnhGtS3fLWFRVTySMWvWH2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx53PyiVgqco73YVHXGfg+2upWU77VowKg08Y4u8jrIP6+Jbxzi
-	WE/vkOBsdrUg+74TPRrykp3e4FvnaA1PmYNeX8aOmUIXJy9szvL37WJB22G6OTr2ESYP+a0PRho
-	cDrw0f+bRpbs7LPDv8B1b/IzuNtTroDabEntKqgXHflj+
-X-Gm-Gg: ASbGnctggHeeGzOt7/Z7d27CdGlhTKZznVakIXaIkbp7TxH1eYT44OXewKhWrUPpb3h
-	8FAkTVVMUoPSFtDRpCWkfY7DJSLTiQ2jRmgCEDQfDJMpJdvc4wf7FPCPMVX0r1CMQxQrqNBvMwK
-	v35hA/Yulp6nByjk/tgIjGYLlIkJLGDNs9gbf1PawAvwK5
-X-Google-Smtp-Source: AGHT+IEGazgYcFFYqSWpOSkIHhn1MURd+j+lfv1uzCtxT/F1GutSwFjiAZmJjWp90mPosd+z0UJD6Cc/+Hr809fy1vY=
-X-Received: by 2002:a05:6830:4189:b0:731:cac7:3634 with SMTP id
- 46e09a7af769-734f6ac4e55mr12071806a34.3.1747758170553; Tue, 20 May 2025
- 09:22:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747758256; x=1748363056;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mc9lmRtD13pABVPVoQTWMKl9Pn96ta+l7ubkM6Q9ldc=;
+        b=PWq5fVKijW9QRjU8RaQmEjbAS+jsz/4sdvle+4iQrc7aXuJIddFbsVLsFyWwj+ORYr
+         up01Y9XPR6nw7l6Jm7RxuoH6BxXpaxO7Xy71ujbXHV9ugRqMewrZQczGHZu4WrFuk4Ic
+         pGsmxP18vQV9xXkkFtfxDplqzU9/qzpbyLyEhK/fVRvOQkfX9eR/sS6ufkALoFe1FLnV
+         a2aKhINK1Yci+0fKHlSQYyPcTfFNTvQSPMHGE9qnJE7dhLmod/SGxBEA47S3U2Yk2IVS
+         0I5b402zMmLXUMMFO37NAQn8HplR34BZai0Fh5CKFHCm3wtJyIB6KMJGxEVGWKCwhu7m
+         6idQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUU4o3JIYeFVGKMR9h44htbd8VQNPCApRmGvEyxZe6PbfPtDgczp0cV9TKzlqXmZsQg73mCmZ+biHgOzcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNvZqRKXeJwdiwxGggnDemzzYfT91ItvZdUFmCDtdeD0jvwPq9
+	htd6Tu3lVs9NbfMldwRtUMiZHhBDhqnc1HJ2Rgn5ulNCK1xUdAZ9dSSgQyPSoMI6T8m0ZKmR+vt
+	1PjMindHKY2AUcDhicv5Q6xQkCLs6wZvMRhrhLtUUOK7uozQHC+l4MJ+qlwGcPUZ0C7o=
+X-Gm-Gg: ASbGnctDUwj+DqXot5DVfFiKCMGMOeGVXlw86qYmtGuzQWyUHvJVGjzjoiHuzS8cZhh
+	/kXhip859ENoZ0s2GYYVAVRCLUg2rhiHZjuJ02SK/dwMCoyMwRszZxvTCR4WQGLiBsZBB1oHmNz
+	ezKFYOIhREAfT9K66YFXC6nP7P4kZKl1+us01hghzHPhQBvfwDKP4/ErwP5sjY7/A+b/U09gwZ6
+	3INcONEzZDgQh0V7zjGICAWYcZBgnGZJk5iNB/teJCJ/WBSXtxCEXGLtys38O7kd+/b3oTykzYL
+	dhu+vnuUNxQRJVVRhleJnbCVIynJDpsCA2tZq+QUlEuw3Rzb2G6rtmuIpQ3UgD7a90Y=
+X-Received: by 2002:a05:6a00:c8d:b0:740:6f69:f52a with SMTP id d2e1a72fcca58-742a9616b19mr25038851b3a.0.1747758255957;
+        Tue, 20 May 2025 09:24:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEM+P6tPnRzwoG1LUunHMikooT1SPgxABIhGAL5dyz7d1cGea/fg3o8MHyjvxeUEbIWNs5Feg==
+X-Received: by 2002:a05:6a00:c8d:b0:740:6f69:f52a with SMTP id d2e1a72fcca58-742a9616b19mr25038813b3a.0.1747758255475;
+        Tue, 20 May 2025 09:24:15 -0700 (PDT)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970d5c4sm8362171b3a.65.2025.05.20.09.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 09:24:15 -0700 (PDT)
+Message-ID: <54f50afa-3267-4829-8be6-1542c3fef606@oss.qualcomm.com>
+Date: Tue, 20 May 2025 09:24:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsPLAs+rCktbM_ao3bP3VZuaLqXSMpXZt1m-B9nqf91EQw@mail.gmail.com>
- <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
-In-Reply-To: <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 20 May 2025 21:22:39 +0500
-X-Gm-Features: AX0GCFuSeV0_iIfi2B7CrPBZxdbghCyFZ-5JMvI3TU0_KAOUPfiuj1Zu21ABgBM
-Message-ID: <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
-Subject: Re: 6.15-rc6/regression/bisected - after commit f1c6be3999d2 error
- appeared: *ERROR* dc_dmub_srv_log_diagnostic_data: DMCUB error
-To: "Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>
-Cc: "Chung, ChiaHsuan (Tom)" <ChiaHsuan.Chung@amd.com>, "Wu, Ray" <Ray.Wu@amd.com>, 
-	"Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: carl9170: micro-optimize carl9170_tx_shift_bm()
+To: Yury Norov <yury.norov@gmail.com>,
+        Christian Lamparter <chunkeey@gmail.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250326155200.39895-1-yury.norov@gmail.com>
+ <CAAd0S9BDCqw9XZSe=r5fcJuncUagJoJJ0jOe3fB2=UkyXgjozQ@mail.gmail.com>
+ <aA5McagnQw49MElr@yury>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <aA5McagnQw49MElr@yury>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEzNSBTYWx0ZWRfXxgsQGyJB9tGX
+ OUQ8pLDI9y/ecHg+C4IItWc4p3cIbcSps56qqk1UVbIiU0cNso2kHWzzzQuBLkBix5YoAxOULKH
+ gwbYI506K2CaNUtHLUGnqSxu+cWyYotaB+E/a8PGbYEMjobBk2rI5zQ76G+JcqFO5zK/r7j/7iz
+ 8UkgFf8msvKgAYBDRB+yegpkZl3u+qRrAxnltxOxAHbhjQw/G2LxCfjsY9Sf+OTJZwT70p4j3nS
+ 1ly+g+N5ZyOVVnQ9mGGLWMMNEtzHxknxocJSKrpAfkuX/O+0p1gDo2W3oKGSUWTPyV1DESpend0
+ B64pJu7SOVxOkvL2vZXz+rC2XrR77DY5tTILm33rRNhrTJa+tCQtK6bxKhJ+VMNbqvERjWdIHij
+ txQ0I7AXZUMq596PTViPM8FX69WccmI+TeJ53xxrZtXbeLustaVXWTKJFGaW1TqpwzZ+y4Rj
+X-Proofpoint-ORIG-GUID: 3w1QLjBvKncLl7Yo7LNqmldF8Ju-fp46
+X-Proofpoint-GUID: 3w1QLjBvKncLl7Yo7LNqmldF8Ju-fp46
+X-Authority-Analysis: v=2.4 cv=HIjDFptv c=1 sm=1 tr=0 ts=682cacb0 cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+ a=BVo14XG3ICVPsTfBwrYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 mlxlogscore=642 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200135
 
-On Tue, May 20, 2025 at 8:06=E2=80=AFPM Pillai, Aurabindo
-<Aurabindo.Pillai@amd.com> wrote:
->
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
->
-> Hi Mike,
->
-> Could you more details about your setup, and how you were able to repro i=
-t ?
->
+On 4/27/2025 8:25 AM, Yury Norov wrote:
+> On Wed, Mar 26, 2025 at 09:00:33PM +0100, Christian Lamparter wrote:
+>> Hi,
+>>
+>> On Wed, Mar 26, 2025 at 4:52 PM Yury Norov <yury.norov@gmail.com> wrote:
+>>>
+>>> The function calls bitmap_empty() just before find_first_bit(). Both
+>>> functions are O(N). Because find_first_bit() returns >= nbits in case of
+>>> empty bitmap, the bitmap_empty() test may be avoided.
+>>>
+>>
+>> I looked up bitmap_empty():
+>> <https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/bitmap.h#n423>
+>>
+>> apart from the small_const_nbits stuff (which carl9170 likely does not qualify
+>> for since from what I remember it's a 128bits bitmap) the function just does:
+>>
+>> |   return find_first_bit(src, nbits) == nbits;
+>>
+>> so yes, find_first_bit runs twice with same parameters... Unless the
+>> compiler is smart
+>> enough to detect this and (re-)use the intermediate result later. But
+>> I haven't check
+>> if this is the case with any current, old or future compilers. Has anyone?
+>>
+>> Anyway, Sure.
+>>
+>>> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+>>
+>> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> 
+> Thanks, Chrustian. So, how is that supposed to be merged?
+> I can move it with bitmap-for-next, unless there's no better
+> branch.
+> 
+> Thanks,
+> Yury
+> 
 
-Hi!
+Yury, did you take this?
+If not, I'll take it through the ath tree.
 
-Did the probe not include enough information?
-https://linux-hardware.org/?probe=3D4635c5fcb1
-
-Anyway, here's the output from inxi:
-
-> inxi -GSC -xx
-System:
-  Host: secondary-ws Kernel: 6.15.0-rc7-a5806cd506af-revert-f1c6be3999d2+
-    arch: x86_64 bits: 64 compiler: gcc v: 15.1.1
-  Desktop: GNOME v: 48.1 tk: GTK v: 3.24.49 wm: gnome-shell dm: GDM
-    Distro: Fedora Linux 43 (Workstation Edition Prerelease)
-CPU:
-  Info: 16-core model: AMD Ryzen 9 7950X bits: 64 type: MT MCP arch: Zen 4
-    rev: 2 cache: L1: 1024 KiB L2: 16 MiB L3: 64 MiB
-  Speed (MHz): avg: 5355 min/max: 425/5883 boost: enabled cores: 1: 5355
-    2: 5355 3: 5355 4: 5355 5: 5355 6: 5355 7: 5355 8: 5355 9: 5355 10: 535=
-5
-    11: 5355 12: 5355 13: 5355 14: 5355 15: 5355 16: 5355 17: 5355 18: 5355
-    19: 5355 20: 5355 21: 5355 22: 5355 23: 5355 24: 5355 25: 5355 26: 5355
-    27: 5355 28: 5355 29: 5355 30: 5355 31: 5355 32: 5355 bogomips: 287444
-  Flags: avx avx2 ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 svm
-Graphics:
-  Device-1: Advanced Micro Devices [AMD/ATI] Navi 21 [Radeon RX 6800/6800 X=
-T
-    / 6900 XT] driver: amdgpu v: kernel arch: RDNA-2 pcie: speed: 16 GT/s
-    lanes: 16 ports: active: HDMI-A-1 empty: DP-1, DP-2, DP-3, Writeback-1
-    bus-ID: 03:00.0 chip-ID: 1002:73bf
-  Display: wayland server: X.org v: 1.21.1.16 with: Xwayland v: 24.1.6
-    compositor: gnome-shell driver: X: loaded: amdgpu
-    unloaded: fbdev,modesetting,radeon,vesa dri: radeonsi gpu: amdgpu
-    display-ID: 0
-  Monitor-1: HDMI-A-1 model: LG (GoldStar) TV SSCR2 res: 3840x2160 dpi: 61
-    diag: 1836mm (72.3")
-  API: OpenGL v: 4.6 vendor: amd mesa v: 25.2.0-devel glx-v: 1.4 es-v: 3.2
-    direct-render: yes renderer: AMD Radeon RX 6900 XT (radeonsi navi21 LLV=
-M
-    20.1.3 DRM 3.63 6.15.0-rc7-a5806cd506af-revert-f1c6be3999d2+)
-    device-ID: 1002:73bf display-ID: :0.0
-  API: Vulkan v: 1.4.313 surfaces: N/A device: 0 type: discrete-gpu
-    driver: mesa radv device-ID: 1002:73bf device: 1 type: cpu
-    driver: mesa llvmpipe device-ID: 10005:0000
-  API: EGL Message: EGL data requires eglinfo. Check --recommends.
-  Info: Tools: api: glxinfo,vulkaninfo x11: xdriinfo, xdpyinfo, xprop,
-    xrandr
-
-I'm using an LG OLED42C3 TV as a monitor.
-
-Let me know if you need any other details!
-
-
---
-Best Regards,
-Mike Gavrilov.
