@@ -1,44 +1,46 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6E525FA0B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC0425FA0E;
 	Tue, 20 May 2025 22:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781794; cv=none; b=Wivld0QKmF/tuLJzDC1YzqGpFIIsUv6ywibvI7elYCyhSw3GUkPKdsvGffboPnfLIMU+/2h6BQkV0hD9iKW5CIcfC8EHsk6wO7/vE9/xO7nXmhbrATnk92ELa+mmSA0fMMbzjdfJj5agmK/q4txQ5mjpuhwoEIuAeLFCEQgI0tw=
+	t=1747781794; cv=none; b=sfgnA5teRmA7iOWbwVxl1j9PVwobwg3+zWrgWb1+Q2VQUzr9SSB5vR0hoYzgCOQZdeXt7DuN6bIILAYlAcvF92e6WZQmVnc48tHzDiIyXdER6eH8kj1ECJn6MzyBw4pzAPRJZZBe/W2t3uMpqeQA85JSFn9H4BH64/pfzKC7dyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747781794; c=relaxed/simple;
-	bh=+9/o4prQpeZc0AmfoSpveY11MqEyfGKVbpQfFFqt900=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K/PbjNTM2pwLR2Lcl3wHCeL/iH9Q/IktyE1hotb+J/lMK7GU3u2w0/ee9lSBciGZ2pUNc+GQu6SIVR0RCwDaeWJZewQ0PZf0PWTLY0SLPo1TcdN+8oTax2r6ABgP6LoLY3D53SW1dzYAy0q8ygm1YobAl/vKAR7pKpjdBYFBUSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=dXrhyDZO; arc=none smtp.client-ip=185.226.149.38
+	bh=GObFbfN2wVKimWgzJ9n0XeVJJnRB7nn/JUvS5QfYToA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DlPdyhh3tD88XPCjhzHKK584iIS5WadKjom258EDfRBUOT1GlnkaE9ZIspwQ90YHJ3uCKpmsfONEgwKFi9OJgy5aOq+s/syLmsO3Zu508i4rNt/hUcT5wa6vprbzMQvs5N+pX9MJ30eErtiCl6DjlfGGZQCs0sD8yR0FlkkFla4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=bZpY3pKB; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="dXrhyDZO"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="bZpY3pKB"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <mhal@rbox.co>)
-	id 1uHVsh-001Mh2-CL; Wed, 21 May 2025 00:56:19 +0200
+	id 1uHVsk-001MhP-KB; Wed, 21 May 2025 00:56:22 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From; bh=knfvcN2cjAGG2Tfr0KwPblV7ImwR2xWBY5X7KR10gL4=
-	; b=dXrhyDZO2nlEw4eqddXYOWApIZNmg2mrwscfo81kjw7h6WeLCuuXe/+RGh38/uzMekx46J5k9
-	TTBFS3P3Le31D6PKstfvgFvSLCCHDAdD7DlW5+nTIYECvJW8d0S8Ej7qHvUcwTIW/KByhBwKsjgEX
-	5kTpCVzfaZagJLJJpYQIBjupoabXAxss1RWLheFGAVq1BxGY0YPdjMk9ByLUX7V9ndszQ18dJ4is7
-	CHin3YqDG9wsaYI2cOlXbJbEALG6Pdht6e+4fBlokFwZb5442n7MjFke5Oy6WG+NFQ7YGgzJaDiUP
-	FTFInce+KYQpOJU+q8KeXTuXszZG6S+NWJeutg==;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=Ddvvjug14RF0dGT1UP+nZlt4T3wLWAXlbRy9MG84HCs=; b=bZpY3pKBQC8gEzbquxd94ltjNS
+	QuZWRKqhGby4mM7Ie09oGwO2X23GQ5s2QasdSusi0jj7r1Xbsk7Z+g2vgiB46IpXSaWJn/5GYIXAY
+	hNwynsVWH4gjM0ipRe1bWen9f7hNMgGBcOrAODx47ixVBCJUnTEsbvOFUBromrHLli7VvUlV99grx
+	AYyV5zfDjga4j8kn7MPGqgiqDv/dk6uJaGmBzi1vB8yrWu980nNoEl2O0RPaPnemIa7TWNbmk5GIo
+	wRg0URn0V/bjpMAgaWXBvcJb040LjDlNXgHn5A07rILCqijurvm6tsHUoVAmeMNtrnU9ggtL0py1m
+	//9v2HaA==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <mhal@rbox.co>)
-	id 1uHVsg-0007mv-Om; Wed, 21 May 2025 00:56:19 +0200
+	id 1uHVsk-00083n-Ah; Wed, 21 May 2025 00:56:22 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1uHVsW-00CxGf-4H; Wed, 21 May 2025 00:56:08 +0200
+	id 1uHVsY-00CxGf-S9; Wed, 21 May 2025 00:56:10 +0200
 From: Michal Luczaj <mhal@rbox.co>
-Subject: [PATCH net-next v5 0/5] vsock: SOCK_LINGER rework
-Date: Wed, 21 May 2025 00:55:18 +0200
-Message-Id: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+Date: Wed, 21 May 2025 00:55:22 +0200
+Subject: [PATCH net-next v5 4/5] vsock/test: Introduce enable_so_linger()
+ helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,12 +49,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFYILWgC/13NwW7DIBAE0F+JOIdqDQuGnPIfVQ/GrBvUyERgI
- VeR/72IS20fR6M382aZUqDMbpc3S1RCDnGuQV0vbHwM8zfx4GtmAoQCCchLjuMPf4ZaJW5BaFK
- TtUaPrJJXoimsbe6TzbTwmdaFfdXmEfIS02/7KV3r2yRCf5wsHQfeoTIgDUm04p5cXD/G2GaK2
- FHRnaiodCI7kfMatTZHKndUwonKSr131EunJKr+SPGfKji/YqWOBue8GcDgjm7b9geVTS4ZYQE
- AAA==
-X-Change-ID: 20250304-vsock-linger-9026e5f9986c
+Message-Id: <20250521-vsock-linger-v5-4-94827860d1d6@rbox.co>
+References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+In-Reply-To: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
 To: Stefano Garzarella <sgarzare@redhat.com>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -65,62 +64,85 @@ Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
  Michal Luczaj <mhal@rbox.co>
 X-Mailer: b4 0.14.2
 
-Change vsock's lingerning to wait on close() until all data is sent, i.e.
-until workers picked all the packets for processing.
-
-Changes in v5:
-- Move unsent_bytes fetching logic to utils.c
-- Add a helper for enabling SO_LINGER
-- Accommodate for close() taking a long time for reasons unrelated to
-  lingering
-- Separate and redo the testcase [Stefano]
-- Enrich the comment [Stefano]
-- Link to v4: https://lore.kernel.org/r/20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co
-
-Changes in v4:
-- While in virtio, stick to virtio_transport_unsent_bytes() [Stefano]
-- Squash the indentation reduction [Stefano]
-- Pull SOCK_LINGER check into vsock_linger() [Stefano]
-- Don't explicitly pass sk->sk_lingertime [Stefano]
-- Link to v3: https://lore.kernel.org/r/20250430-vsock-linger-v3-0-ddbe73b53457@rbox.co
-
-Changes in v3:
-- Set "vsock/virtio" topic where appropriate
-- Do not claim that Hyper-V and VMCI ever lingered [Stefano]
-- Move lingering to af_vsock core [Stefano] 
-- Link to v2: https://lore.kernel.org/r/20250421-vsock-linger-v2-0-fe9febd64668@rbox.co
-
-Changes in v2:
-- Comment that some transports do not implement unsent_bytes [Stefano]
-- Reduce the indentation of virtio_transport_wait_close() [Stefano] 
-- Do not linger on shutdown(), expand the commit messages [Paolo]
-- Link to v1: https://lore.kernel.org/r/20250407-vsock-linger-v1-0-1458038e3492@rbox.co
-
-Changes in v1:
-- Do not assume `unsent_bytes()` is implemented by all transports [Stefano]
-- Link to v0: https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
+Add a helper function that sets SO_LINGER. Adapt the caller.
 
 Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
-Michal Luczaj (5):
-      vsock/virtio: Linger on unsent data
-      vsock: Move lingering logic to af_vsock core
-      vsock/test: Introduce vsock_wait_sent() helper
-      vsock/test: Introduce enable_so_linger() helper
-      vsock/test: Add test for an unexpectedly lingering close()
+ tools/testing/vsock/util.c       | 13 +++++++++++++
+ tools/testing/vsock/util.h       |  4 ++++
+ tools/testing/vsock/vsock_test.c | 10 +---------
+ 3 files changed, 18 insertions(+), 9 deletions(-)
 
- include/net/af_vsock.h                  |  1 +
- net/vmw_vsock/af_vsock.c                | 33 ++++++++++++++
- net/vmw_vsock/virtio_transport_common.c | 21 +--------
- tools/testing/vsock/util.c              | 38 ++++++++++++++++
- tools/testing/vsock/util.h              |  5 +++
- tools/testing/vsock/vsock_test.c        | 80 ++++++++++++++++++++++-----------
- 6 files changed, 134 insertions(+), 44 deletions(-)
----
-base-commit: 9ab0ac0e532afd167b3bec39b2eb25c53486dcb5
-change-id: 20250304-vsock-linger-9026e5f9986c
+diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
+index 120277be14ab2f58e0350adcdd56fc18861399c9..41b47f7deadcda68fddc2b22a6d9bb7847cc0a14 100644
+--- a/tools/testing/vsock/util.c
++++ b/tools/testing/vsock/util.c
+@@ -823,3 +823,16 @@ void enable_so_zerocopy_check(int fd)
+ 	setsockopt_int_check(fd, SOL_SOCKET, SO_ZEROCOPY, 1,
+ 			     "setsockopt SO_ZEROCOPY");
+ }
++
++void enable_so_linger(int fd)
++{
++	struct linger optval = {
++		.l_onoff = 1,
++		.l_linger = LINGER_TIMEOUT
++	};
++
++	if (setsockopt(fd, SOL_SOCKET, SO_LINGER, &optval, sizeof(optval))) {
++		perror("setsockopt(SO_LINGER)");
++		exit(EXIT_FAILURE);
++	}
++}
+diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
+index e307f0d4f6940e984b84a95fd0d57598e7c4e35f..1b3d8eb2c4b3c41c9007584177455c4fa442334c 100644
+--- a/tools/testing/vsock/util.h
++++ b/tools/testing/vsock/util.h
+@@ -14,6 +14,9 @@ enum test_mode {
+ 
+ #define DEFAULT_PEER_PORT	1234
+ 
++/* Half of the default to not risk timing out the control channel */
++#define LINGER_TIMEOUT		(TIMEOUT / 2)
++
+ /* Test runner options */
+ struct test_opts {
+ 	enum test_mode mode;
+@@ -80,4 +83,5 @@ void setsockopt_int_check(int fd, int level, int optname, int val,
+ void setsockopt_timeval_check(int fd, int level, int optname,
+ 			      struct timeval val, char const *errmsg);
+ void enable_so_zerocopy_check(int fd);
++void enable_so_linger(int fd);
+ #endif /* UTIL_H */
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index 4c2c94151070d54d1ed6e6af5a6de0b262a0206e..f401c6a79495bc7fda97012e5bfeabec7dbfb60a 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1813,10 +1813,6 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
+ 
+ static void test_stream_linger_client(const struct test_opts *opts)
+ {
+-	struct linger optval = {
+-		.l_onoff = 1,
+-		.l_linger = 1
+-	};
+ 	int fd;
+ 
+ 	fd = vsock_stream_connect(opts->peer_cid, opts->peer_port);
+@@ -1825,11 +1821,7 @@ static void test_stream_linger_client(const struct test_opts *opts)
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
+-	if (setsockopt(fd, SOL_SOCKET, SO_LINGER, &optval, sizeof(optval))) {
+-		perror("setsockopt(SO_LINGER)");
+-		exit(EXIT_FAILURE);
+-	}
+-
++	enable_so_linger(fd);
+ 	close(fd);
+ }
+ 
 
-Best regards,
 -- 
-Michal Luczaj <mhal@rbox.co>
+2.49.0
 
