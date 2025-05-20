@@ -1,112 +1,210 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC8F265CB6
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC37025F78D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747730100; cv=none; b=Px52YARBRm7uj5TV1OKpdMi0TMDL1u2tsMFILZQ9zz0KPD+GcDxBDayNgR/opLkKBaaYgJl92Pfx4lut3uL7WRggc8mmYtK56bOE1apsG58NjilQ6BODmQGPzV8CIqo/VOFSQFQQsMNp1E2N5Wg1V/Gxf95ocyySX2j1m131rGA=
+	t=1747730290; cv=none; b=jOrn+d29o5qjvcrvZVN5dciKsZ2jtDHQ4DHJR24oC11/wYkhKhHZrFWvmYkZyNjQQxXX0jRWii+0qhvgGi/lpSGRFiBMYkdZ25REa9mWARhug+FkgUYB8EULIPf0Mp7shViNrmbsfg9LXXYggbXO41GPBOxCYklyqqYbvbVQTks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747730100; c=relaxed/simple;
-	bh=Tdh5UlTgTA7i3CrP20v5Ptgdnafwz59HG1w7O90i/UU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qgE9EVIomnct141XROUnXw0Rr4JzTLpYJfmH3wpD6C+9SDiuUJmuC4A+3bYN9+NUACGqW3/WXqVdwmlkblGf5HSTlMPLvOXdbcjh9TVcG3VrBCY4MfXl3WbrqFUlX4A8tbwB8FGCmi//zW42QL4UKsMg0H/NmCZ27kugWttJX4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b1nmW6zKFz6M4pS;
-	Tue, 20 May 2025 16:30:03 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A6BC21402FF;
-	Tue, 20 May 2025 16:34:53 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 20 May
- 2025 10:34:53 +0200
-Date: Tue, 20 May 2025 09:34:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
-	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
-	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>, Dongjiu Geng
-	<gengdongjiu1@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 04/20] Revert "hw/acpi/ghes: Make
- ghes_record_cper_errors() static"
-Message-ID: <20250520093451.0000245a@huawei.com>
-In-Reply-To: <1ee2df288540088176a1ac27c70cc2736d10ad16.1747722973.git.mchehab+huawei@kernel.org>
-References: <cover.1747722973.git.mchehab+huawei@kernel.org>
-	<1ee2df288540088176a1ac27c70cc2736d10ad16.1747722973.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747730290; c=relaxed/simple;
+	bh=pVbgUeB8xmrs2YpmoqucOE/VkNmaw9qf9ROyXBuU11Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=uSYZCpxX/OdwVr2Sb7S2nzRORaZNZLeM01+LITMO+Js1wuWeSwi2NWurzts8c0WIUqObVigtBPwzl3IEfMfOP13w/Z2TsqznQgVpc9wsSeL+eceOc0d7DqDNTD0f8R2PXLHB+pamy6P27BmyT/xzdiH/8qCbizvMUbLAZReLkCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=JmuUJ8y9; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="JmuUJ8y9"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1747730283;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xc5l2VvmMIPW9ABFDgM9NqgcmqQKSbvHQtPi+59terM=;
+	b=JmuUJ8y9vURKx87iMyEdKsjJXePbVbMMOAfU+oMzchxCPpTbTITlMDnWyH8FRjNaHmW//B
+	CRMwMWqbix8UCvufAaKEWRei7bODiHr7k9PW/FXoDVp04tkbf0COSXyC9zytB4p5sXYlZR
+	TJ9T8RxOpKaPUoPKNO4goIav5Z5xZnTi9y+AU1gCC1XnflktTpsW5f/U5ypNzakbqVqfVT
+	kpVsIxSg7lz3s/FGACch7PDm5t/WxHU1N0OVQiVpxNoNVCW6QYELLb+PXQDM/Xn19Y4uKn
+	B+NXxxQi3ReFnYllv2+8qwUQRYlwCPrHwa/vQAHoMrl4FKHajgKQQcKAppS3+g==
+Content-Type: multipart/signed;
+ boundary=2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Tue, 20 May 2025 10:37:38 +0200
+Message-Id: <DA0UO4TYFWAU.DOE3O1UBNN6U@cknow.org>
+Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/5] phy: rockchip: naneng-combphy: Add SoC prefix to
+ register definitions
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Yao Zi" <ziyao@disroot.org>, "Vinod Koul" <vkoul@kernel.org>, "Kishon
+ Vijay Abraham I" <kishon@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Frank Wang"
+ <frank.wang@rock-chips.com>, "Andy Yan" <andy.yan@rock-chips.com>,
+ "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>, "Detlev Casanova"
+ <detlev.casanova@collabora.com>, "Shresth Prasad"
+ <shresthprasad7@gmail.com>, "Chukun Pan" <amadeus@jmu.edu.cn>, "Jonas
+ Karlman" <jonas@kwiboo.se>
+References: <20250519161612.14261-1-ziyao@disroot.org>
+ <20250519161612.14261-4-ziyao@disroot.org>
+ <DA0DU2P8UWSV.3U07EFFLKBPXQ@cknow.org> <aCv8vRu8gjrvK8wr@pie.lan>
+In-Reply-To: <aCv8vRu8gjrvK8wr@pie.lan>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 20 May 2025 08:41:23 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+--2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-> The ghes_record_cper_errors() function was introduced to be used
-> by other types of errors, as part of the error injection
-> patch series. That's why it is not static.
-> 
-> Make it non-static again to allow its usage outside ghes.c
-> 
-> This reverts commit 611f3bdb20f7828b0813aa90d47d1275ef18329b.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-FWIW (which is maybe just that I don't read the commit message
-again if you have to do a v10 ;)
+On Tue May 20, 2025 at 5:53 AM CEST, Yao Zi wrote:
+> On Mon, May 19, 2025 at 09:26:05PM +0200, Diederik de Haas wrote:
+>> On Mon May 19, 2025 at 6:16 PM CEST, Yao Zi wrote:
+>> > All supported variants of naneng-combphy follow a register layout
+>> > similar to the RK3568 variant with some exceptions of SoC-specific
+>> > registers.
+>> >
+>> > Add RK3568 prefix for the common set of registers and the correspondin=
+g
+>> > SoC prefix for SoC-specific registers, making usage of definitions cle=
+ar
+>> > and preparing for future COMBPHY variants with a different register
+>> > layout.
+>> >
+>> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+>> > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>> > ---
+>> >  .../rockchip/phy-rockchip-naneng-combphy.c    | 560 +++++++++--------=
+-
+>> >  1 file changed, 288 insertions(+), 272 deletions(-)
+>> >
+>> > diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/driv=
+ers/phy/rockchip/phy-rockchip-naneng-combphy.c
+>> > index ce91fb1d5167..1d1c7723584b 100644
+>> > --- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+>> > +++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+>> > @@ -21,78 +21,80 @@
+>> >  #define REF_CLOCK_100MHz		(100 * HZ_PER_MHZ)
+>> > =20
+>> >  /* COMBO PHY REG */
+>> > <snip>
+>> > -#define PHYREG33_PLL_KVCO_VALUE_RK3576	4
+>> > +#define RK3568_PHYREG6				0x14
+>> > +#define RK3568_PHYREG6_PLL_DIV_MASK		GENMASK(7, 6)
+>> > +#define RK3568_PHYREG6_PLL_DIV_SHIFT		6
+>> > +#define RK3568_PHYREG6_PLL_DIV_2		1
+>> > +
+>> > +#define RK3568_PHYREG7				0x18
+>> > +#define RK3568_PHYREG7_TX_RTERM_MASK		GENMASK(7, 4)
+>> > +#define RK3568_PHYREG7_TX_RTERM_SHIFT		4
+>> > +#define RK3568_PHYREG7_TX_RTERM_50OHM		8
+>> > +#define RK3568_PHYREG7_RX_RTERM_MASK		GENMASK(3, 0)
+>> > +#define RK3568_PHYREG7_RX_RTERM_SHIFT		0
+>> > +#define RK3568_PHYREG7_RX_RTERM_44OHM		15
+>> > +
+>> > +#define RK3568_PHYREG8				0x1C
+>> > +#define RK3568_PHYREG8_SSC_EN			BIT(4)
+>> > +
+>> > +#define RK3568_PHYREG11				0x28
+>> > +#define RK3568_PHYREG11_SU_TRIM_0_7		0xF0
+>> > +
+>> > +#define RK3568_PHYREG12				0x2C
+>> > +#define RK3568_PHYREG12_PLL_LPF_ADJ_VALUE	4
+>> > +
+>> > +#define RK3568_PHYREG13				0x30
+>> > +#define RK3568_PHYREG13_RESISTER_MASK		GENMASK(5, 4)
+>> > +#define RK3568_PHYREG13_RESISTER_SHIFT		0x4
+>> > +#define RK3568_PHYREG13_RESISTER_HIGH_Z		3
+>> > +#define RK3568_PHYREG13_CKRCV_AMP0		BIT(7)
+>> > +
+>> > +#define RK3568_PHYREG14				0x34
+>> > +#define RK3568_PHYREG14_CKRCV_AMP1		BIT(0)
+>> > +
+>> > +#define RK3568_PHYREG15				0x38
+>> > +#define RK3568_PHYREG15_CTLE_EN			BIT(0)
+>> > +#define RK3568_PHYREG15_SSC_CNT_MASK		GENMASK(7, 6)
+>> > +#define RK3568_PHYREG15_SSC_CNT_SHIFT		6
+>> > +#define RK3568_PHYREG15_SSC_CNT_VALUE		1
+>> > +
+>> > +#define RK3568_PHYREG16				0x3C
+>> > +#define RK3568_PHYREG16_SSC_CNT_VALUE		0x5f
+>> > +
+>> > +#define RK3568_PHYREG18				0x44
+>> > +#define RK3568_PHYREG18_PLL_LOOP		0x32
+>> > +
+>> > +#define RK3568_PHYREG32				0x7C
+>> > +#define RK3568_PHYREG32_SSC_MASK		GENMASK(7, 4)
+>> > +#define RK3568_PHYREG32_SSC_DIR_MASK		GENMASK(5, 4)
+>> > +#define RK3568_PHYREG32_SSC_DIR_SHIFT		4
+>> > +#define RK3568_PHYREG32_SSC_UPWARD		0
+>> > +#define RK3568_PHYREG32_SSC_DOWNWARD		1
+>> > +#define RK3568_PHYREG32_SSC_OFFSET_MASK	GENMASK(7, 6)
+>> > +#define RK3568_PHYREG32_SSC_OFFSET_SHIFT	6
+>> > +#define RK3568_PHYREG32_SSC_OFFSET_500PPM	1
+>> > +
+>> > +#define RK3568_PHYREG33				0x80
+>> > +#define RK3568_PHYREG33_PLL_KVCO_MASK		GENMASK(4, 2)
+>> > +#define RK3568_PHYREG33_PLL_KVCO_SHIFT		2
+>> > +#define RK3568_PHYREG33_PLL_KVCO_VALUE		2
+>> > +#define RK3576_PHYREG33_PLL_KVCO_VALUE		4
+>> > +
+>> > +/* RK3588 COMBO PHY registers */
+>> > +#define RK3588_PHYREG27				0x6C
+>> > +#define RK3588_PHYREG27_RX_TRIM			0x4C
+>>=20
+>> Would it be better if RK3588_PHYREG* comes after RK3576_PHYREG*?
+>>=20
+>
+> It's intended to keep RK3576 definitions below RK3588 ones. The RK3576
+> driver makes use of a register introduced for RK3588 variant
+> (RK3588_PHYREG27). Since similar reusing doesn't happen reversely, I
+> consider the design of RK3576 a superset of the RK3588 one, and put
+> RK3576 definitions later in the file.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I understand that logic, but OTOH in patch 4 you put the defines for
+RK3528 before RK3568. And RK3568 is not a superset of RK3528 AFAIK.
+It's just different? That's why I think/thought sorting them (all)
+alphabetically would make more sense.
+
+My 0.02
+
+>> > +
+>> > +/* RK3576 COMBO PHY registers */
+>> > +#define RK3576_PHYREG10				0x24
+>> > +#define RK3576_PHYREG10_SSC_PCM_MASK		GENMASK(3, 0)
+>> > +#define RK3576_PHYREG10_SSC_PCM_3500PPM		7
+>> > +
+>> > +#define RK3576_PHYREG17				0x40
+>> > +
+>> > +#define RK3576_PHYREG21				0x50
+>> > +#define RK3576_PHYREG21_RX_SQUELCH_VAL		0x0D
+>> > +
+>> > +#define RK3576_PHYREG30				0x74
+>> > =20
+>> >  struct rockchip_combphy_priv;
+>> > <snip>
+>
+>
+> Thanks,
+> Yao Zi
 
 
-> ---
->  hw/acpi/ghes.c         | 6 ++++--
->  include/hw/acpi/ghes.h | 2 ++
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-> index b85bb48195a0..b709c177cdea 100644
-> --- a/hw/acpi/ghes.c
-> +++ b/hw/acpi/ghes.c
-> @@ -390,8 +390,8 @@ static void get_hw_error_offsets(uint64_t ghes_addr,
->      *read_ack_register_addr = ghes_addr + sizeof(uint64_t);
->  }
->  
-> -static void ghes_record_cper_errors(const void *cper, size_t len,
-> -                                    uint16_t source_id, Error **errp)
-> +void ghes_record_cper_errors(const void *cper, size_t len,
-> +                             uint16_t source_id, Error **errp)
->  {
->      uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
->      AcpiGedState *acpi_ged_state;
-> @@ -440,6 +440,8 @@ static void ghes_record_cper_errors(const void *cper, size_t len,
->  
->      /* Write the generic error data entry into guest memory */
->      cpu_physical_memory_write(cper_addr, cper, len);
-> +
-> +    return;
->  }
->  
->  int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
-> diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-> index 578a582203ce..39619a2457cb 100644
-> --- a/include/hw/acpi/ghes.h
-> +++ b/include/hw/acpi/ghes.h
-> @@ -75,6 +75,8 @@ void acpi_build_hest(GArray *table_data, GArray *hardware_errors,
->  void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
->                            GArray *hardware_errors);
->  int acpi_ghes_memory_errors(uint16_t source_id, uint64_t error_physical_addr);
-> +void ghes_record_cper_errors(const void *cper, size_t len,
-> +                             uint16_t source_id, Error **errp);
->  
->  /**
->   * acpi_ghes_present: Report whether ACPI GHES table is present
+--2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaCw/YgAKCRDXblvOeH7b
+btjKAP9j4L97yDM5TuPnM79GFXom5tqq+k4QLX4sjJJaNaHyGgD/W1GQwoE0qrXy
+fn0SRC1sVChHn22biqVDwNqUinN+rw0=
+=yOD8
+-----END PGP SIGNATURE-----
+
+--2f6aa86954b8eb8c99f3919d1846860d91999fb6d12d29116c5daae2c76b--
