@@ -1,98 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C8C253928;
-	Tue, 20 May 2025 20:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D1E1D63CD;
+	Tue, 20 May 2025 21:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747774775; cv=none; b=FPNEY4nQIsdrRMNoLlX9SY/3G+mo/u3uIQ0ZySI8TY3Cogo74/8DeTcsjrVdOgZs6vjvYD/T0L41wYBQQh0DvfwsoTgI7tjUqB5QluPw5Q2CAxEknIlCmh57tg5afCRVYefvu6lFeZ/Eu25wx8SgyhuEV4yPAu7KuooWzz41TOw=
+	t=1747774812; cv=none; b=ICPejCxvDVolfMPVJ0CcyrnJ2oKlfbNqhDQHIm1/hf3YbUAS7XKdIVUiDAsGsnyAmQaIqd/2c5cvav0Ey/9xtQ25RlcjCWRigkEJmv/T8NjpM2DseSf4y6K2/PQSFiWNXzEqFC2VVEACD+ovCFsbZ/q5mD8lgNF8/ZUPfgcBxlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747774775; c=relaxed/simple;
-	bh=HMFGC54+xi7z1x3xlo+6y1gcFl4iD/khkQKV23/T9MY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=q51WjxY3hWfbLvAbQNNSchIzKIjNc+70nvSbLzErqAp6ruOEuU+0GdSHmIUnIzCcmMDj04Ty0nta2B9aqhdToS79UNrAQJ44btiBKs2R5f32fticMFcaLBo6bMQ0Ux4F1yAxy/BJMTaNyWyKqjPK2Pg/gFocF4Y9q+wsZk4pqyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEAL58v7; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747774812; c=relaxed/simple;
+	bh=TCmfgAKEiuy8/eyQDVpqiioQKWp1uFsB8qyasicF/KU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eVtBRD3pkgcbTuge7Jc+2iHe8SQBLyZeQ1VWVRV6uUOzlZN0geUcvnvukDZ1BKPA0K2BQvqqVm5IQ9NSbMpoSGKhb2OEMIj75CKkpKcXjZp0UeWU8dmalIxB9kVkbcXpY8rniPAUdCANJb9EFzJ3otqSsWCd1WshhO+wMmrXI2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jfjuo6MU; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEAL58v7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747774773; x=1779310773;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=HMFGC54+xi7z1x3xlo+6y1gcFl4iD/khkQKV23/T9MY=;
-  b=XEAL58v7QKBHIhZsfnrN4C99qFZLgE34c3R/CA9n/X9AxVX4n83xG6Ba
-   Zli9Fzx1KNNI6C2pY7q8vxKwaK/nkH91R4uOehFBXg1Lvx9HaGKYXVggt
-   QSCuaPdVstoqw9O6xeMrAbTv1PyzM3xWbbO9H/XhvOvk+X/KaO/9b4iNU
-   Y19iFNr36LNo89nIgNJjkWrkkn1y3JXeeH+MOtH0JDwbcolYqqrevDmU4
-   85FfwXcsd7HK4Rb+XgLdg1ShkMhhk8DhjOfQGzOYnQ+ooCqiTYLOyYvcA
-   ZtrIbYK2QoostjzklIDOjKTM94qiuZvu07suuZy97N/iETjDZfBttH4Gf
-   g==;
-X-CSE-ConnectionGUID: RrnpK0RVSCOQ6297ulDRVQ==
-X-CSE-MsgGUID: y47BXB+zQJGpxFfbtk6VyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67142691"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="67142691"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 13:59:31 -0700
-X-CSE-ConnectionGUID: j5hEzU2hQZGhV41b0JmFXQ==
-X-CSE-MsgGUID: Q3FcPjtQQ6eZ8CMFEBjPxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139850866"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 13:59:31 -0700
-Received: from [10.54.75.26] (debox1-desk1.jf.intel.com [10.54.75.26])
-	by linux.intel.com (Postfix) with ESMTP id C8AB520B5736;
-	Tue, 20 May 2025 13:59:30 -0700 (PDT)
-Message-ID: <43b6f7e95a4ca1ff34798c668731a85178b15474.camel@linux.intel.com>
-Subject: Re: [PATCH 08/15] platform/x86/intel/pmt: Add PMT Discovery driver
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, 	srinivas.pandruvada@linux.intel.com,
- Andy Shevchenko	 <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-	xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Date: Tue, 20 May 2025 13:59:30 -0700
-In-Reply-To: <2caddb52-dc05-a589-e7d7-de4035e5c803@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com>
-	 <20250430212106.369208-9-david.e.box@linux.intel.com>
-	 <2caddb52-dc05-a589-e7d7-de4035e5c803@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jfjuo6MU"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30e85955bebso809032a91.0;
+        Tue, 20 May 2025 14:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747774809; x=1748379609; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RNW/X4RcAMR00pc7pYKVE9xKzvAbJyjyooPntVrY9n0=;
+        b=Jfjuo6MUsBJjObo81LmvHkQJGAowa57JWpihgM/OzRzfwet1gGyLsAY3V1IwZ+IFJ/
+         8gwcOODrj5Q8ty4hj5fTod7u+5zjFGW7vPMcLeMEWxFEydhIBsXH6L5pYAoPH7OsC89z
+         K7GwhCYkJoSxw/MbD3qUH4al1oboh4rT7pCL9ZIsRStFIOUKhIqzvFogpz3VU2AFQUU+
+         TyGlURUbY7SfS5dBIAG+6N/PKkyr9M9ttsAVuoEvBNYfTXoLE0SGMJDQjiRqIFvyIlLM
+         z9hnXepy8wMZbUSNaRGubiMX3zqvr5EmmQRQuRJq5irdtOaMIIwfG8UVuzgcbHKp86tw
+         Gy7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747774809; x=1748379609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RNW/X4RcAMR00pc7pYKVE9xKzvAbJyjyooPntVrY9n0=;
+        b=nuBe9OTDk57OFVc6I4uI3y0H1Td1uOIo9VJmjkq1IwwbfZKi+/T1SJ6Sfo/jazXsGZ
+         o9/ID4GEYzs1smQ+Nz35Fh1KtWUhdkKk8qSUjs1c2uGO+Vx1dU0Gm6qY0+uhBqsd5Hrv
+         vdf1WBw1a5TS7z+MbIzWD+OYAPAk0GbBCv1mqrScKMbmdpRnJj6q7dHx6wUWj9KB0gWX
+         02s6N9mfNq9PJp8+AO30Wo8QZPZrM4ZPXgKPYtLYCl0VO993oVyoNORaAlDx19UW8KkX
+         Mn4taLHBxboUCdBjHrqAH48y5JoT03hFQbv3TZBYUi+gzR1v66ObDB9TqxshZz5FiQUC
+         7LNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYNO+Zu2GsiYNi8//S7rORlBCH00GW177B+Iw4YfCCyE1IJzrGgtmDFLtvTWBWaE1RtSOwuEkhjoMEtBm6DYg=@vger.kernel.org, AJvYcCWQG5bDk3mWqn6SPHWm3T0DkFVQTM6Flt2ig1rhR3QwjGTgXBOUmFvTxpljgGVt3Z+7b8T6c+vUTB4MMOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye2e2mFP+o+khuAf64Jz3SVdiet0d6nTDUH05EZf1X5hoe83Dq
+	gYrouGBIVHW6lRHOXSaNVYB64mqGLlBn7Bh5emjpqxF4RGpYws6S12pjo81mJJO3HSlSYcHljWi
+	TKCP9uqNQl8QtRCwdTztyOQxIcp2lpxU=
+X-Gm-Gg: ASbGncuyYua7ykc2xjlATkdysvV7YJYaFbm+cj++Al+Ui0OriBlduaVZf3U78nh1HrG
+	Yo35JlG6ZuXPapxP3V8Vz6XZUw8pnXSYGXzz6DdzseUyGNnTeGUW9RPXWxI9tgJaLQLyjUCOYpm
+	0DzF3iBh1m67ppTUsZMFWcPtndOZ56Vsgu
+X-Google-Smtp-Source: AGHT+IF2bLjXa84B5EEHkuAl7vZvZNneAE31l/O3DlnlI+MPj4YtrPHRxAExKVLianfc+MOvdwFYTRUrtTP4qw8S68M=
+X-Received: by 2002:a17:90b:4d10:b0:2fe:7f51:d2ec with SMTP id
+ 98e67ed59e1d1-30e7d2dcca2mr9936919a91.0.1747774808939; Tue, 20 May 2025
+ 14:00:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250519143952.11412-1-lossin@kernel.org>
+In-Reply-To: <20250519143952.11412-1-lossin@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 20 May 2025 22:59:55 +0200
+X-Gm-Features: AX0GCFskJg9LBlxaS4mlmJ0G638iLQUypFdssJC0xwRqgjsToyx07lBt4CZ0eJY
+Message-ID: <CANiq72nOyDKY2JLHR0dY=3Yg4KL_7ojajLJ_WE5qjNQF9=X3Fg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: mailmap: update Benno Lossin's email address
+To: Benno Lossin <lossin@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-05-20 at 17:32 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 30 Apr 2025, David E. Box wrote:
+On Mon, May 19, 2025 at 4:39=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> Update Benno Lossin's email address to `@kernel.org`.
+>
+> Signed-off-by: Benno Lossin <lossin@kernel.org>
 
-...
+Applied to `rust-next` -- thanks!
 
-> > +/* Get the discovery table and use it to get the feature table */
-> > +static int pmt_features_discovery(struct pmt_features_priv *priv,
-> > +				=C2=A0 struct feature *feature,
-> > +				=C2=A0 struct intel_vsec_device *ivdev,
-> > +				=C2=A0 int idx)
-> > +{
-> > +	struct feature_discovery_table disc_tbl =3D {}; /* For static
-> > analyzers */
->=20
-> I suppose you meant the initialization is for static analyzers but that's=
-=20
-> not what the comment now reads.
+    [ Fixed email in `.mailmap`. - Miguel ]
 
-I'll change it to say "Zero-init to avoid false positives in static analysi=
-s
-tools"
-
-Ack on the other comments. Thanks.
-
-David
+Cheers,
+Miguel
