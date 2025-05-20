@@ -1,236 +1,165 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F50723496B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4B622D7AE;
+	Tue, 20 May 2025 13:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747469; cv=none; b=a6U3kvxd78v+lUPNlocqdrIySzU0S4Cb/M8Xrl9rCN2dBqsxMZTLdMGpeEeEDW69QSh3RmSJuelmz5mfHkc7juGQYSazq9ji9+SEA+JtUGeGMFgz08OF1B69GP/iBtWQY/lSwvv6iKDn7XQW70n3kRXmefjcTm/RlfDyDnXUJHY=
+	t=1747747543; cv=none; b=exZ18/dQU4/GWGxNdCuHm/aY/uh4IA0u5Oy5tFdqqXLUPW+JEsWsbrqmpxyw+1kit5YVyp7qfSZZ+jSBc1bLqH+HXbhvgrVBh0FIZbFl7Mrnc3luUiJw4jU4XDAKZBARhElOW6XkJpDP4Rvc+Ox4HVa881pmrXQRh1VkfD/W+uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747747469; c=relaxed/simple;
-	bh=EO7Bz8Z7ZpsEWzXQ/VGnf3r1ktTQqaVjzcs3ERWBOgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDgJsMfH3576lIecpnoGeoZn6zWru38qs2A4B5Ec1a2HyUgrrRFa1lAYXzyFMSxfsn5rCrIorl40wQZGqsvkz8wmoV9+WPL70Y/WE0TtvdCSU9M236pKdWthqAlWpwPb+QkirmpojCryAkYXOconKYsBMCSExf9bZaCtY/AyaKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ther39kV; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747747543; c=relaxed/simple;
+	bh=v+iza7MvoJ83MFy1z6F9QmgY8oCEYCu8KydWZP3roLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AdH0wEMXm1DIGu1ZeODwpb+5ndW0B1MU4pwZS+HqoKGcnTkufOiPV+hmfHzGTxcUa91ogV+zeGsxLhwXpRYn3Q3wbQU6IkwvKszC5XAjZWsr3oiNkYOGQrD0zvavb4ezVYh53+7dMMftj/fisl4UMwmM2V30SMaJQtDHF9Of4g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDHyVBIe; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ther39kV"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so33483775e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747747465; x=1748352265; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mQHlbMiBxLSmXP52BL1UDUEb0aWb4op30nkibuEcEDI=;
-        b=ther39kVhOOxFJDw1ClHBfxwFYzTnxzYPIbBiRLBtCa4gY2g8SYfqcg02T7DMU8j+h
-         wPmEaOMLUASNfoo8MKakQ72INoep7YFz2oMMxB1wv8ZpG/0XAst0QptUMXGiMstieA3j
-         GXH1DDE+2uoKlOwiE54JsUugnyGje1XL+Wb58G6ceMAr7DxUITRzS6DIWoSn2znoe9dj
-         m3cWuyo4nox8+H3L1o+dqqc/Z1jsbdasqXFM4hfxyvUFMB1ugozAvUj22qcWLHDJn3NI
-         +GuG5uuAfjXXgtWo2UktyDv641rMpdvY6V2oUD1YF4kQA565nvVWfwWKMCKZhAMFgzKZ
-         U05w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747747465; x=1748352265;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQHlbMiBxLSmXP52BL1UDUEb0aWb4op30nkibuEcEDI=;
-        b=v7LFbJKAKX8WlB30WNqiWetuAKhjGSmAmdkYstv86KIuG7V62HzA1GGAgCKtGnSN1C
-         uPmP+OPhEEK37TunDAEktdvtx51lZAGo+xlCOF8fMB7pt1UwZ7IeZ1k/OyApbiC5zppq
-         mvmDTjV9CQGJrIEXfzw70BWt5mBV4yJtJG1Bid61tMH38/CM9htdCkrf2xhzd2lMfnxG
-         UmN1OIoAgNoSxPMxD+72TNu6qcuqE9ViPQCOlyyXao7Ek/B6AqgGfnqdpktezqPOOxxD
-         NPESvuuYMf42+iiVmT3M/egftFxS9YnyR9eZuhOCM8O41Qmn91gckmEL2kQUWlbyO0kT
-         oQYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQJiMuBDv3lkkYYw5BnzanvaStYR8WHTxvfQWJgFcKpJZCe5l8+bGyTWiH3ySUt5pRnwUPXI2QZ9dc5Kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhzVdId1kBY4LkKLXB1NruZY3wEkDIChv3vc2XGJIevaYCL2WT
-	wfzvlC3+RDWdvrltMe56UkVLRJg6/Nro8XS2UFxbkuilyZ8zXfSgo/GZm4hHJQqJf4A=
-X-Gm-Gg: ASbGncu3SxOA7oMnpTcztNoaJt5JXTEZoVyY2TBXVlRmJMK/DEPNChRsgA851cGlQSe
-	O6lEn64+Ox5lo3NCdTq0vh3wd8vCoDc9ed5kgKRpoBvy3kkFFF2Pj6qo47RCnAjJ+0qWfADW+w6
-	7zDBd8rQd2mVIvzw4fM/JxlrPl8cbytbj5rtUhDaWNvYlIdqINOrPgMLcUlqsTWcTLvlP+Vl101
-	GoxsO5WOnkXEZDT2wwAVYHsVg+g0TvaH7lc3RRnS/Ggt2+IOiwelcXp4drHktatv/tGJdwQPaBK
-	eYFgxofI+CWjoX8nw5/cj186M5of8JImmvJXS47OsTCKtYO0TONefxvf
-X-Google-Smtp-Source: AGHT+IE3zELuhSN3TwYO27umiBhhWtesQN6BNGvzjaw7PU+Jb1bNssmWf19VcuZ1nvC7Yd9VZCvZug==
-X-Received: by 2002:a05:600c:4f42:b0:442:dc75:5625 with SMTP id 5b1f17b1804b1-442fd60cb7bmr151310375e9.5.1747747464942;
-        Tue, 20 May 2025 06:24:24 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca88735sm16788347f8f.69.2025.05.20.06.24.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 06:24:24 -0700 (PDT)
-Message-ID: <25d64842-79c7-4d70-a5d7-08cd60208681@linaro.org>
-Date: Tue, 20 May 2025 14:24:23 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDHyVBIe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747747542; x=1779283542;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v+iza7MvoJ83MFy1z6F9QmgY8oCEYCu8KydWZP3roLU=;
+  b=nDHyVBIeZxFfU4IyacdLYhGbXdLbv+6Oj+bDAl9VVk817nAGJPWLg+aC
+   GnGG6V2PKUL4oeQkrESk1ycKLMTqBLFTfPh9utiOQeECBbAhKr7+sWaya
+   9/gMM9w/GyBr0HNWN0SD11ugNr5EFGU8Qctjo+j0sGypdj+v8kiU6sVUa
+   65JOuH2G90k9jcfszbJiKzDWLwCsHp+32HANtRaANk/lndCoJvM18kajK
+   LWo2lz1AzuYKp5ixqIhHfIzd6eOfvZdUltRJhC6sb/y87AuecQ+QSwIV6
+   2bJte604RSRgmsBmf+7iq9j/Y/m/4AqJmbnQ+Nr3uQ7bgNTEBXT6/r2H4
+   w==;
+X-CSE-ConnectionGUID: eGjV86fhRr2IX/fkB7OjLA==
+X-CSE-MsgGUID: 5rpzE28OSC+3jcaT6p47rA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="72195729"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="72195729"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 06:25:41 -0700
+X-CSE-ConnectionGUID: ek/mB6MSQB2kFQKQzpEx3A==
+X-CSE-MsgGUID: 1cnDf9sPQSeAPKPAyY3ZLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="170704892"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 20 May 2025 06:25:39 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHMyO-000McC-2L;
+	Tue, 20 May 2025 13:25:36 +0000
+Date: Tue, 20 May 2025 21:25:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>, tj@kernel.org,
+	hannes@cmpxchg.org, longman@redhat.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	muchun.song@linux.dev, Zhongkun He <hezhongkun.hzk@bytedance.com>
+Subject: Re: [PATCH] cpuset: introduce non-blocking cpuset.mems setting option
+Message-ID: <202505202112.tmU9BTzA-lkp@intel.com>
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/10] perf: arm_spe: Add support for filtering on data
- source
-To: Leo Yan <leo.yan@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
- <20250520114309.GO412060@e132581.arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250520114309.GO412060@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+
+Hi Zhongkun,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on tj-cgroup/for-next]
+[also build test WARNING on linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Zhongkun-He/cpuset-introduce-non-blocking-cpuset-mems-setting-option/20250520-111737
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+patch link:    https://lore.kernel.org/r/20250520031552.1931598-1-hezhongkun.hzk%40bytedance.com
+patch subject: [PATCH] cpuset: introduce non-blocking cpuset.mems setting option
+config: s390-randconfig-002-20250520 (https://download.01.org/0day-ci/archive/20250520/202505202112.tmU9BTzA-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505202112.tmU9BTzA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505202112.tmU9BTzA-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/cgroup/cpuset.c:3246:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    3246 |                 bool skip_migrate_once = false;
+         |                 ^
+   1 warning generated.
 
 
+vim +3246 kernel/cgroup/cpuset.c
 
-On 20/05/2025 12:43 pm, Leo Yan wrote:
-> On Tue, May 06, 2025 at 12:41:39PM +0100, James Clark wrote:
->> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
->> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
->> when any of the filter bits are set.
->>
->> Each bit maps to data sources 0-63 described by bits[0:5] in the data
->> source packet (although the full range of data source is 16 bits so
->> higher value data sources can't be filtered on). The filter is an OR of
->> all the bits, so for example setting bits 0 and 3 filters packets from
->> data sources 0 OR 3.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/perf/arm_spe_pmu.c | 31 +++++++++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->> index 9309b846f642..d04318411f77 100644
->> --- a/drivers/perf/arm_spe_pmu.c
->> +++ b/drivers/perf/arm_spe_pmu.c
->> @@ -87,6 +87,7 @@ struct arm_spe_pmu {
->>   #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
->>   #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
->>   #define SPE_PMU_FEAT_EFT			(1UL << 8)
->> +#define SPE_PMU_FEAT_FDS			(1UL << 9)
->>   #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
->>   	u64					features;
->>   
->> @@ -232,6 +233,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
->>   #define ATTR_CFG_FLD_inv_event_filter_LO	0
->>   #define ATTR_CFG_FLD_inv_event_filter_HI	63
->>   
->> +#define ATTR_CFG_FLD_data_src_filter_CFG	config4	/* PMSDSFR_EL1 */
->> +#define ATTR_CFG_FLD_data_src_filter_LO	0
->> +#define ATTR_CFG_FLD_data_src_filter_HI	63
->> +
->>   GEN_PMU_FORMAT_ATTR(ts_enable);
->>   GEN_PMU_FORMAT_ATTR(pa_enable);
->>   GEN_PMU_FORMAT_ATTR(pct_enable);
->> @@ -248,6 +253,7 @@ GEN_PMU_FORMAT_ATTR(float_filter);
->>   GEN_PMU_FORMAT_ATTR(float_filter_mask);
->>   GEN_PMU_FORMAT_ATTR(event_filter);
->>   GEN_PMU_FORMAT_ATTR(inv_event_filter);
->> +GEN_PMU_FORMAT_ATTR(data_src_filter);
->>   GEN_PMU_FORMAT_ATTR(min_latency);
->>   GEN_PMU_FORMAT_ATTR(discard);
->>   
->> @@ -268,6 +274,7 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
->>   	&format_attr_float_filter_mask.attr,
->>   	&format_attr_event_filter.attr,
->>   	&format_attr_inv_event_filter.attr,
->> +	&format_attr_data_src_filter.attr,
->>   	&format_attr_min_latency.attr,
->>   	&format_attr_discard.attr,
->>   	NULL,
->> @@ -286,6 +293,9 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
->>   	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
->>   		return 0;
->>   
->> +	if (attr == &format_attr_data_src_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_FDS))
->> +		return 0;
->> +
->>   	if ((attr == &format_attr_branch_filter_mask.attr ||
->>   	     attr == &format_attr_load_filter_mask.attr ||
->>   	     attr == &format_attr_store_filter_mask.attr ||
->> @@ -406,6 +416,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
->>   	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
->>   		reg |= PMSFCR_EL1_FnE;
->>   
->> +	if (ATTR_CFG_GET_FLD(attr, data_src_filter))
->> +		reg |= PMSFCR_EL1_FDS;
->> +
->>   	if (ATTR_CFG_GET_FLD(attr, min_latency))
->>   		reg |= PMSFCR_EL1_FL;
->>   
->> @@ -430,6 +443,12 @@ static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
->>   	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
->>   }
->>   
->> +static u64 arm_spe_event_to_pmsdsfr(struct perf_event *event)
->> +{
->> +	struct perf_event_attr *attr = &event->attr;
->> +	return ATTR_CFG_GET_FLD(attr, data_src_filter);
->> +}
-> 
-> Seems to me, arm_spe_event_to_pmsdsfr() is not needed as it does not do
-> any conversion from event config to register value.  So simply read the
-> field value in opened code would be fine.
-> 
-> I am fine to keep it and would leave SPE driver maintainers to decide
-> which is preferring.  Otherwise, LGTM:
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> 
+  3215	
+  3216	/*
+  3217	 * Common handling for a write to a "cpus" or "mems" file.
+  3218	 */
+  3219	ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+  3220					    char *buf, size_t nbytes, loff_t off)
+  3221	{
+  3222		struct cpuset *cs = css_cs(of_css(of));
+  3223		struct cpuset *trialcs;
+  3224		int retval = -ENODEV;
+  3225	
+  3226		buf = strstrip(buf);
+  3227		cpus_read_lock();
+  3228		mutex_lock(&cpuset_mutex);
+  3229		if (!is_cpuset_online(cs))
+  3230			goto out_unlock;
+  3231	
+  3232		trialcs = alloc_trial_cpuset(cs);
+  3233		if (!trialcs) {
+  3234			retval = -ENOMEM;
+  3235			goto out_unlock;
+  3236		}
+  3237	
+  3238		switch (of_cft(of)->private) {
+  3239		case FILE_CPULIST:
+  3240			retval = update_cpumask(cs, trialcs, buf);
+  3241			break;
+  3242		case FILE_EXCLUSIVE_CPULIST:
+  3243			retval = update_exclusive_cpumask(cs, trialcs, buf);
+  3244			break;
+  3245		case FILE_MEMLIST:
+> 3246			bool skip_migrate_once = false;
+  3247	
+  3248			if ((of->file->f_flags & O_NONBLOCK) &&
+  3249				is_memory_migrate(cs) &&
+  3250				!cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 0))
+  3251				skip_migrate_once = true;
+  3252	
+  3253			retval = update_nodemask(cs, trialcs, buf);
+  3254	
+  3255			/* Restore the migrate flag */
+  3256			if (skip_migrate_once)
+  3257				cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 1);
+  3258			break;
+  3259		default:
+  3260			retval = -EINVAL;
+  3261			break;
+  3262		}
+  3263	
+  3264		free_cpuset(trialcs);
+  3265		if (force_sd_rebuild)
+  3266			rebuild_sched_domains_locked();
+  3267	out_unlock:
+  3268		mutex_unlock(&cpuset_mutex);
+  3269		cpus_read_unlock();
+  3270		flush_workqueue(cpuset_migrate_mm_wq);
+  3271		return retval ?: nbytes;
+  3272	}
+  3273	
 
-It's purely for consistency with the existing code. See 
-arm_spe_event_to_pmsevfr() etc.
-
->> +
->>   static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
->>   {
->>   	struct arm_spe_pmu_buf *buf = perf_get_aux(handle);
->> @@ -788,6 +807,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->>   	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
->>   		return -EOPNOTSUPP;
->>   
->> +	if (arm_spe_event_to_pmsdsfr(event) &&
->> +	    !(spe_pmu->features & SPE_PMU_FEAT_FDS))
->> +		return -EOPNOTSUPP;
->> +
->>   	if (attr->exclude_idle)
->>   		return -EOPNOTSUPP;
->>   
->> @@ -857,6 +880,11 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
->>   		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
->>   	}
->>   
->> +	if (spe_pmu->features & SPE_PMU_FEAT_FDS) {
->> +		reg = arm_spe_event_to_pmsdsfr(event);
->> +		write_sysreg_s(reg, SYS_PMSDSFR_EL1);
->> +	}
->> +
->>   	reg = arm_spe_event_to_pmslatfr(event);
->>   	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
->>   
->> @@ -1116,6 +1144,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
->>   	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
->>   		spe_pmu->features |= SPE_PMU_FEAT_EFT;
->>   
->> +	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
->> +		spe_pmu->features |= SPE_PMU_FEAT_FDS;
->> +
->>   	/* This field has a spaced out encoding, so just use a look-up */
->>   	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
->>   	switch (fld) {
->>
->> -- 
->> 2.34.1
->>
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
